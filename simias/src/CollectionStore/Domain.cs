@@ -54,16 +54,6 @@ namespace Simias.Storage
 		/// Configuration key name for an enterprise description.
 		/// </summary>
 		static internal string EnterpriseDescription = "EnterpriseDescription";
-
-		/// <summary>
-		/// Well known identitifer for workgroup.
-		/// </summary>
-		static public string WorkGroupDomainID = "363051d1-8841-4c7b-a1dd-71abbd0f4ada";
-
-		/// <summary>
-		/// Friendly name for the workgroup domain.
-		/// </summary>
-		static public string WorkGroupDomainName = "WorkGroup";
 		#endregion
 
 		#region Properties

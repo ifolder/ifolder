@@ -511,18 +511,17 @@ namespace Simias.Domain
 		/// <param name="domainID">The identifier of the domain to remove.</param>
 		internal void RemoveDomainInformation( string domainID )
 		{
-			// Cannot remove the workgroup domain.
-			if ( domainID == Simias.Storage.Domain.WorkGroupDomainID )
+			// Cannot remove the local domain.
+			if ( domainID == store.LocalDomain )
 			{
-				throw new SimiasException("The WorkGroup domain cannot be removed.");
+				throw new SimiasException("The local domain cannot be removed.");
 			}
 
 			// If the default domain is the one that is being deleted, set a new one.
 			if (store.DefaultDomain == domainID)
 			{
-				// If there are no other domains present, the default goes back to
-				// the workgroup domain.
-				string defaultDomain = Simias.Storage.Domain.WorkGroupDomainID;
+				// If there are no other domains present, there is no default.
+				string defaultDomain = null;
 
 				// Set the new default domain.
 				LocalDatabase ldb = store.GetDatabaseObject();
@@ -530,8 +529,8 @@ namespace Simias.Domain
 				foreach(ShallowNode sn in dList)
 				{
 					// Find the first domain that is not the one being deleted or is the
-					// WorkGroup domain.
-					if ((sn.ID != domainID) && (sn.ID != Simias.Storage.Domain.WorkGroupDomainID))
+					// local domain.
+					if ((sn.ID != domainID) && (sn.ID != store.LocalDomain))
 					{
 						defaultDomain = sn.ID;
 						break;
@@ -821,10 +820,10 @@ namespace Simias.Domain
 		/// If false, then the domain will be deleted from every workstation that the user owns.</param>
 		public void Unattach(string domainID, bool localOnly)
 		{
-			// Cannot remove the workgroup domain.
-			if ( domainID == Simias.Storage.Domain.WorkGroupDomainID )
+			// Cannot remove the local domain.
+			if ( domainID == store.LocalDomain )
 			{
-				throw new SimiasException("The WorkGroup domain cannot be removed.");
+				throw new SimiasException("The local domain cannot be removed.");
 			}
 
 			// Get the domain object.

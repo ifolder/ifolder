@@ -24,10 +24,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POBoxWS", "src\POBoxWS\POBo
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeWS", "src\SubscribeWS\SubscribeWS.csproj", "{921E6CCE-5DD8-4B20-B927-35B8077B9825}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncService\SyncService.csproj", "{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -70,10 +66,6 @@ Global
 		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Debug.Build.0 = Debug|.NET
 		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Release.ActiveCfg = Release|.NET
 		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Release.Build.0 = Release|.NET
-		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Debug.ActiveCfg = Debug|.NET
-		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Debug.Build.0 = Debug|.NET
-		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Release.ActiveCfg = Release|.NET
-		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Release.Build.0 = Release|.NET
 		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.ActiveCfg = Debug|.NET
 		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.Build.0 = Debug|.NET
 		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.ActiveCfg = Release|.NET

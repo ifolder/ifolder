@@ -302,30 +302,26 @@ namespace Simias.Web
 			{
 				Store store = Store.GetStore();
 
-				// Make sure the Domain ID is not workgroup
-				if (domainID != Simias.Storage.Domain.WorkGroupDomainID)
+				// roster
+				Roster roster = store.GetRoster(domainID);
+
+				// find user
+				Member cMember = roster.GetMemberByID(memberID);
+
+				NetCredential cCreds = 
+					new NetCredential("iFolder", domainID, true, cMember.Name, null);
+
+				UriBuilder cUri = 
+					new UriBuilder(
+						this.Context.Request.Url.Scheme,
+						this.Context.Request.Url.Host,
+						this.Context.Request.Url.Port,
+						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
+
+				NetworkCredential realCreds = cCreds.GetCredential(cUri.Uri, "BASIC");
+				if (realCreds != null)
 				{
-					// roster
-					Roster roster = store.GetRoster(domainID);
-
-					// find user
-					Member cMember = roster.GetMemberByID(memberID);
-
-					NetCredential cCreds = 
-						new NetCredential("iFolder", domainID, true, cMember.Name, null);
-
-					UriBuilder cUri = 
-						new UriBuilder(
-							this.Context.Request.Url.Scheme,
-							this.Context.Request.Url.Host,
-							this.Context.Request.Url.Port,
-							this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
-
-					NetworkCredential realCreds = cCreds.GetCredential(cUri.Uri, "BASIC");
-					if (realCreds != null)
-					{
-						status = true;
-					}
+					status = true;
 				}
 			}
 			catch(Exception e)
@@ -581,11 +577,6 @@ namespace Simias.Web
 			Member cMember = cRoster.GetCurrentMember();
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
-
-			this.Type =
-				(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-					? DomainType.Workgroup
-					: DomainType.Enterprise;
 
 			this.Active = new DomainAgent().IsDomainActive(cDomain.ID);
 			this.ID = domainID;

@@ -153,6 +153,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the ID of the local domain.
+		/// </summary>
+		internal string LocalDomain
+		{
+			get { return LocalDb.Domain; }
+		}
+
+		/// <summary>
 		/// Gets or sets the publisher event source identifier.
 		/// </summary>
 		internal string Publisher
@@ -308,7 +316,8 @@ namespace Simias.Storage
 					}
 
 					// Create an object that represents the database collection.
-					LocalDatabase ldb = new LocalDatabase( this, Domain.WorkGroupDomainID );
+					string localDomainID = Guid.NewGuid().ToString();
+					LocalDatabase ldb = new LocalDatabase( this, localDomainID );
 					localDb = ldb.ID;
 
 					// Create an identity that represents the current user.  This user will become the 
@@ -320,25 +329,25 @@ namespace Simias.Storage
 					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 					member.IsOwner = true;
 
-					// Create the default workgroup domain and add an identity mapping.
-					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID, SyncRoles.Master );
-					wgDomain.HostAddress = localUri;
+					// Create the local domain and add an identity mapping.
+					Domain localDomain = new Domain( "Local", localDomainID, SyncRoles.Local );
+					localDomain.HostAddress = localUri;
 
-					// Create a credential to use with workgroup domains.
+					// Create a credential to be used to identify the local user.
 					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
-					owner.AddDomainIdentity( owner.ID, wgDomain.ID, credential.ToXmlString( true ), CredentialType.PPK );
+					owner.AddDomainIdentity( owner.ID, localDomainID, credential.ToXmlString( true ), CredentialType.PPK );
 
 					// Save the local database changes.
-					ldb.Commit( new Node[] { ldb, member, owner, wgDomain } );
+					ldb.Commit( new Node[] { ldb, member, owner, localDomain } );
 
 					// Create a SyncInterval policy.
 					SyncInterval.Create( DefaultMachineSyncInterval );
 
-					// Create an empty roster for the workgroup domain.
-					Roster wgRoster = new Roster( this, wgDomain );
-					Member wgRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
-					wgRosterOwner.IsOwner = true;
-					wgRoster.Commit( new Node[] { wgRoster, wgRosterOwner } );
+					// Create an empty roster for the local domain.
+					Roster localRoster = new Roster( this, localDomain );
+					Member localRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+					localRosterOwner.IsOwner = true;
+					localRoster.Commit( new Node[] { localRoster, localRosterOwner } );
 
 					// See if there is a configuration parameter for an enterprise domain.
 					if ( IsEnterpriseServer )

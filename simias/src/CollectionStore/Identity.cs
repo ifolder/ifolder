@@ -58,7 +58,7 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
-		/// Gets the public/private key values for the specified identity.
+		/// Gets the public/private key values for the local identity.
 		/// </summary>
 		internal RSACryptoServiceProvider Credential
 		{
@@ -67,7 +67,7 @@ namespace Simias.Storage
 				RSACryptoServiceProvider credential = null;
 
 				// Lookup the credential property on the identity.
-				XmlDocument mapDoc = GetDocumentByDomain( Domain.WorkGroupDomainID );
+				XmlDocument mapDoc = GetDocumentByDomain( Store.GetStore().LocalDomain );
 				if ( mapDoc != null )
 				{
 					credential = new RSACryptoServiceProvider( Identity.DummyCsp );
@@ -364,13 +364,17 @@ namespace Simias.Storage
 		/// <returns>The modified identity object.</returns>
 		internal Identity DeleteDomainIdentity( string domainID )
 		{
-			if ( domainID == Domain.WorkGroupDomainID )
+			// Normalize the domain ID.
+			domainID = domainID.ToLower();
+
+			// Do not allow the local domain to be deleted.
+			if ( domainID == Store.GetStore().LocalDomain )
 			{
-				throw new CollectionStoreException( "Cannot remove the WorkGroup domain." );
+				throw new CollectionStoreException( "Cannot remove the local domain." );
 			}
 
 			// Find the property to be deleted.
-			Property p = GetPropertyByDomain( domainID.ToLower() );
+			Property p = GetPropertyByDomain( domainID );
 			if ( p != null )
 			{
 				p.DeleteProperty();
@@ -476,9 +480,9 @@ namespace Simias.Storage
 			XmlDocument mapDoc = p.Value as XmlDocument;
 			if ( type == CredentialType.None )
 			{
-				if ( domainID == Domain.WorkGroupDomainID )
+				if ( domainID == Store.GetStore().LocalDomain )
 				{
-					throw new CollectionStoreException( "Cannot remove the WorkGroup domain credentials." );
+					throw new CollectionStoreException( "Cannot remove the local domain credentials." );
 				}
 
 				mapDoc.DocumentElement.RemoveAttribute( CredentialTag );

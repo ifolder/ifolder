@@ -70,9 +70,6 @@ namespace Simias.POBox
 			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
-
-			// validate a default "Workgroup" PO Box
-			POBox.GetPOBox(store, Storage.Domain.WorkGroupDomainID);
 		}
 		/// <summary>
 		/// Start the PO Box manager.
@@ -83,26 +80,20 @@ namespace Simias.POBox
 			{
 				lock(this)
 				{
-					// create service
-					//service = new PostOffice(config);
-
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 
-					// marshal service
-					//RemotingServices.Marshal(service, PostOffice.EndPoint);
-				
-					// check for the server
-					Storage.Domain domain = store.GetDomain(store.DefaultDomain);
-
-					// only use collection managers on client machines
-					if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (domain.Role == SyncRoles.Slave))
+					// Get a list of all POBoxes.
+					ICSList poBoxList = store.GetCollectionsByType(typeof(POBox).Name);
+					foreach(ShallowNode sn in poBoxList)
 					{
-						// start collection managers
-						subscriber.Enabled = true;
-						
-						foreach(ShallowNode n in store.GetCollectionsByType(typeof(POBox).Name))
+						// Get the domain for this POBox.
+						POBox poBox = new POBox(store, sn);
+						Simias.Storage.Domain domain = store.GetDomain(poBox.Domain);
+						if (domain.Role == SyncRoles.Slave)
 						{
-							AddPOBoxManager(n.ID);
+							// start collection managers
+							subscriber.Enabled = true;
+							AddPOBoxManager(poBox.ID);
 						}
 					}
 				}

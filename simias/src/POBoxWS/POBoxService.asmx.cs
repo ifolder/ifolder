@@ -181,11 +181,7 @@ namespace Simias.POBoxService.Web
 				*/
 
 				// open the post office box
-				poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
-					? Simias.POBox.POBox.GetPOBox(store, domainID)
-					: Simias.POBox.POBox.GetPOBox(store, domainID, fromIdentity);
-
-				// check the post office box
+				poBox = Simias.POBox.POBox.FindPOBox(store, domainID, fromIdentity);
 				if (poBox != null)
 				{
 					// check that the message has already not been posted
@@ -305,11 +301,7 @@ namespace Simias.POBoxService.Web
 			*/
 
 			// open the post office box of the From user
-			toPOBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
-				? Simias.POBox.POBox.GetPOBox(store, domainID)
-				: Simias.POBox.POBox.GetPOBox(store, domainID, toIdentity);
-
-			// check the post office box
+			toPOBox = Simias.POBox.POBox.FindPOBox(store, domainID, toIdentity);
 			if (toPOBox == null)
 			{
 				log.Debug("DeclinedSubscription - PO Box not found");
@@ -413,10 +405,7 @@ namespace Simias.POBoxService.Web
 				// decline the subscription.
 
 				// open the post office box of the from and decline the subscription
-				Simias.POBox.POBox fromPOBox = 
-					(domainID == Simias.Storage.Domain.WorkGroupDomainID) 
-					? Simias.POBox.POBox.GetPOBox(store, domainID)
-					: Simias.POBox.POBox.FindPOBox(store, domainID, fromIdentity);
+				Simias.POBox.POBox fromPOBox = Simias.POBox.POBox.FindPOBox(store, domainID, fromIdentity);
 				if (fromPOBox != null)
 				{
 					Subscription cFromMemberSub = 
@@ -505,9 +494,7 @@ namespace Simias.POBoxService.Web
 				{
 					// open the post office box of the From user
 					Simias.POBox.POBox fromPOBox = 
-						(domainID == Simias.Storage.Domain.WorkGroupDomainID) 
-						? Simias.POBox.POBox.GetPOBox(store, domainID)
-						: Simias.POBox.POBox.FindPOBox(store, domainID, toIdentity);
+						Simias.POBox.POBox.FindPOBox(store, domainID, toIdentity);
 					if (fromPOBox != null)
 					{
 						// Remove the subscription from the "fromIdentity" PO box
@@ -560,11 +547,7 @@ namespace Simias.POBoxService.Web
 			*/
 
 			// open the post office box
-			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
-				? Simias.POBox.POBox.GetPOBox(store, domainID)
-				: Simias.POBox.POBox.GetPOBox(store, domainID, fromIdentity);
-
-			// check the post office box
+			poBox = Simias.POBox.POBox.FindPOBox(store, domainID, fromIdentity);
 			if (poBox == null)
 			{
 				log.Debug("AckSubscription - PO Box not found");
@@ -657,12 +640,7 @@ namespace Simias.POBoxService.Web
 			log.Debug("  for subscription: " + subscriptionID);
 
 			// open the post office box
-			poBox =
-				(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-				? Simias.POBox.POBox.GetPOBox(store, domainID)
-				: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
-			
-			// check the post office box
+			poBox =	Simias.POBox.POBox.FindPOBox(store, domainID, identityID);
 			if (poBox == null)
 			{
 				log.Debug("GetSubscriptionInfo - PO Box not found");
@@ -842,10 +820,7 @@ namespace Simias.POBoxService.Web
 			{
 				log.Debug("  looking up POBox for: " + toUserID);
 			
-				poBox = 
-					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-						? POBox.POBox.GetPOBox(store, domainID)
-						: POBox.POBox.GetPOBox(store, domainID, toUserID);
+				poBox = POBox.POBox.GetPOBox(store, domainID, toUserID);
 
 				cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID);
 				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;

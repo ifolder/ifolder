@@ -41,8 +41,23 @@ namespace Simias.Storage
 		/// </summary>
 		public string DefaultDomain
 		{
-			get { return properties.GetSingleProperty( PropertyTags.DefaultDomain ).ToString(); }
-			set { properties.ModifyNodeProperty( PropertyTags.DefaultDomain, value ); }
+			get 
+			{ 
+				Property p = properties.FindSingleValue( PropertyTags.DefaultDomain );
+				return (p != null ) ? p.ToString() : null; 
+			}
+
+			set 
+			{ 
+				if ( value == null )
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.DefaultDomain );
+				}
+				else
+				{
+					properties.ModifyNodeProperty( PropertyTags.DefaultDomain, value ); 
+				}
+			}
 		}
 		#endregion
 
@@ -55,7 +70,6 @@ namespace Simias.Storage
 		internal LocalDatabase( Store storeObject, string domainID ) :
 			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, domainID )
 		{
-			properties.AddNodeProperty( PropertyTags.DefaultDomain, Storage.Domain.WorkGroupDomainID );
 		}
 
 		/// <summary>
