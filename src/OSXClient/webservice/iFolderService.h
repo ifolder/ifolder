@@ -40,6 +40,7 @@
 -(NSArray *) GetiFolders;
 -(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID;
 -(iFolder *) AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)DomainID toPath:(NSString *)localPath;
+-(void) DeleteiFolder:(NSString *)iFolderID;
 
 
 @end

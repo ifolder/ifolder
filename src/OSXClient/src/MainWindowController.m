@@ -25,6 +25,8 @@
 #import "SyncLogWindowController.h"
 #import "LoginWindowController.h"
 #import "iFolderPrefsController.h"
+#import "CreateiFolderSheetController.h"
+#import "SetupiFolderSheetController.h"
 #include "SimiasEventHandlers.h"
 
 
@@ -57,41 +59,7 @@
 	[self setupToolbar];
 
 	[super setShouldCascadeWindows:NO];
-	[super setWindowFrameAutosaveName:@"ifolder_window"];
-
-/*
-    int i;
-	
-	items = [[NSMutableDictionary alloc] init];
-
-    for(i=0;i<50;i++)
-	{
-        NSString *name=[[NSString alloc] initWithFormat:@"Item %d",i];
-        NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:name];
-
-        [item setPaletteLabel:name]; // name for the "Customize Toolbar" sheet
-        [item setLabel:name]; // name for the item in the toolbar
-        [item setToolTip:[NSString stringWithFormat:@"This is item %d",i]]; // tooltip
-        [item setTarget:self]; // what should happen when it's clicked
-        [item setAction:@selector(toolbaritemclicked:)];
-		NSImage *icon = [NSImage imageNamed:@"ifolder-new"];
-		[icon setScalesWhenResized:YES];
-		[item setImage:icon];
-        
-        [items setObject:item forKey:name]; // add to toolbar list
-
-        [item release];
-        [name release];
-    }
-
-
-	
-	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderToolbar"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-	[[self window] setToolbar:toolbar];
-*/	
+	[super setWindowFrameAutosaveName:@"iFolderWindow"];
 
 	webService = [[iFolderService alloc] init];
 
@@ -112,27 +80,16 @@
 		{
 			[ifoldersController addObjects:newiFolders];
 		}
-
-		// if we have less than two domains, we don't have enterprise
-		// so we better ask the user to login
-/*
-		if([newDomains count] < 2)
-			[self showLoginWindow:self];
-		else
-		{
-			[self showWindow:self];
-		}
-*/
 	}
 	@catch (NSException *e)
 	{
 		[self addLog:@"Reading domains failed with exception"];
 	}
 
-	// Show the main iFolder window
-	// fix this so it uses prefs from last time run
+	// TODO: Show all of the windows that were open when quit last
 	[self showWindow:self];
 }
+
 
 
 
@@ -147,12 +104,6 @@
 		{
 			[ifoldersController setContent:newiFolders];
 		}
-
-		// if we have less than two domains, we don't have enterprise
-		// so we better ask the user to login
-//		if([newDomains count] < 2)
-//			[self showLoginWindow:self];
-//		else
 	}
 	@catch (NSException *e)
 	{
@@ -175,6 +126,8 @@
 }
 
 
+
+
 - (IBAction)showPrefs:(id)sender
 {
 	if(prefsController == nil)
@@ -184,6 +137,7 @@
 	
 	[prefsController showWindow:self];
 }
+
 
 
 
@@ -199,6 +153,7 @@
 
 
 
+
 - (IBAction)showHideToolbar:(id)sender
 {
 	[toolbar setVisible:![toolbar isVisible]];
@@ -206,10 +161,112 @@
 
 
 
+
 - (IBAction)customizeToolbar:(id)sender
 {
 	[toolbar runCustomizationPalette:sender];
 }
+
+
+
+
+- (IBAction)newiFolder:(id)sender
+{
+	[createSheetController showWindow:self];
+}
+
+
+
+
+- (IBAction)setupiFolder:(id)sender
+{
+}
+
+
+
+
+- (IBAction)revertiFolder:(id)sender
+{
+	int selIndex = [ifoldersController selectionIndex];
+	NSBeginAlertSheet(@"Revert iFolder", @"Yes", @"Cancel", nil,
+		[self window], self, @selector(revertiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+		@"Are you sure you want to revert the selected iFolder and make it a normal folder?");
+}
+
+
+- (void)revertiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	switch(returnCode)
+	{
+		case NSAlertDefaultReturn:		// Revert iFolder
+			NSLog(@"Reverting iFolder at index %d", (int)contextInfo);
+			break;
+	}
+}
+
+
+- (IBAction)deleteiFolder:(id)sender
+{
+	int selIndex = [ifoldersController selectionIndex];
+	NSBeginAlertSheet(@"Delete iFolder", @"Yes", @"Cancel", nil,
+		[self window], self, @selector(deleteiFolderResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+		@"Are you sure you want to delete the selected iFolder?");
+}
+
+
+- (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	switch(returnCode)
+	{
+		case NSAlertDefaultReturn:		// Revert iFolder
+		{
+			iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:(int)contextInfo];
+
+			NSLog(@"Deleting iFolder at index %@", [ifolder Name]);
+
+			[self addLog:[NSString stringWithFormat:@"Deleting iFolder at index %@", [ifolder Name]]];
+
+			@try
+			{
+				[webService DeleteiFolder:[ifolder ID]];
+				[ifoldersController removeObjectAtArrangedObjectIndex:(int)contextInfo];
+			}
+			@catch (NSException *e)
+			{
+				NSRunAlertPanel(@"Error deleting iFolder", [e name], @"OK",nil, nil);
+			}
+			break;
+		}
+	}
+}
+
+
+
+
+- (IBAction)openiFolder:(id)sender
+{
+	int selIndex = [ifoldersController selectionIndex];
+	
+	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
+	NSString *path = [ifolder Path];
+	if([path length] > 0)
+		[[NSWorkspace sharedWorkspace] openFile:path];
+}
+
+
+
+
+- (IBAction)showProperties:(id)sender
+{
+}
+
+
+
+
+- (IBAction)shareiFolder:(id)sender
+{
+}
+
 
 
 
@@ -283,6 +340,7 @@
 
 
 
+
 - (void)addLog:(NSString *)entry
 {
 	if(syncLogController != nil)
@@ -291,10 +349,69 @@
 	}
 }
 
+
+
+
 - (void)initializeSimiasEvents
 {
 	SimiasEventInitialize();
 }
+
+
+
+
+- (BOOL)validateUserInterfaceItem:(id)anItem
+{
+	SEL action = [anItem action];
+	
+	if(action == @selector(showLoginWindow:))
+	{
+		return YES;
+	}
+	else if(action == @selector(newiFolder:))
+	{
+		return YES;
+	}
+	else if(action == @selector(setupiFolder:))
+	{
+		if ([ifoldersController selectionIndex] != NSNotFound)
+		{
+			if([[[ifoldersController selection] 
+				valueForKeyPath:@"properties.IsSubscription"] boolValue] == YES)
+				return YES;
+		}
+		return NO;
+	}
+	else if(	(action == @selector(deleteiFolder:)) ||
+				(action == @selector(openiFolder:)) ||
+				(action == @selector(showProperties:)) ||
+				(action == @selector(shareiFolder:)) )
+	{
+		if ([ifoldersController selectionIndex] != NSNotFound)
+		{
+			if([[[ifoldersController selection] 
+				valueForKeyPath:@"properties.IsSubscription"] boolValue] == NO)
+				return YES;
+		}
+		return NO;
+	}
+	else if(action == @selector(revertiFolder:))
+	{
+		if ([ifoldersController selectionIndex] != NSNotFound)
+		{
+			if( ([[[ifoldersController selection] valueForKeyPath:@"properties.IsSubscription"] boolValue] == NO) &&
+				([[[ifoldersController selection] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) )
+				return YES;
+		}
+		return NO;
+	}
+
+	
+	return YES;
+}
+
+
+
 
 
 // Toobar Delegates
@@ -306,46 +423,16 @@
 }
 
 
-- (int)count
-{
-	return [toolbarItems count];
-}
-
-
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
 	return toolbarItemKeys;
 }
 
 
-
-
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,2)];
+	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,12)];
 }
-
-
-
-
-- (void)toolbaritemclicked:(NSToolbarItem *)item
-{
-	NSLog(@"Click %@!", [item label]);
-}
-
-
-- (BOOL)validateUserInterfaceItem:(id)anItem
-{
-	SEL action = [anItem action];
-	
-	if(action == @selector(showLoginWindow:))
-	{
-		return YES;
-	}
-	
-	return YES;
-}
-
 
 
 - (void)setupToolbar
@@ -354,26 +441,113 @@
 	toolbarItemKeys =	[[NSMutableArray alloc] init];
 
 	// New iFolder ToolbarItem
-	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"New iFolder"];
+	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"NewiFolder"];
 	[item setPaletteLabel:@"Create a new iFolder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"New iFolder"]; // name for the item in the toolbar
+	[item setLabel:@"New"]; // name for the item in the toolbar
 	[item setToolTip:@"Create a new iFolder"]; // tooltip
-    [item setTarget:createSheetController]; // what should happen when it's clicked
-    [item setAction:@selector(showWindow:)];
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(newiFolder:)];
 	[item setImage:[NSImage imageNamed:@"ifolder-new"]];
-    [toolbarItems setObject:item forKey:@"New iFolder"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"New iFolder"];
+    [toolbarItems setObject:item forKey:@"NewiFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"NewiFolder"];
 	[item release];
 
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Revert iFolder"];
-	[item setPaletteLabel:@"Revert to normal folder"]; // name for the "Customize Toolbar" sheet
-	[item setLabel:@"Revert iFolder"]; // name for the item in the toolbar
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"SetupiFolder"];
+	[item setPaletteLabel:@"Setup iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Setup"]; // name for the item in the toolbar
+	[item setToolTip:@"Setup a shared iFolder"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(setupiFolder:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"SetupiFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"SetupiFolder"];
+	[item release];
+	
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSpaceItemIdentifier];
+	[toolbarItems setObject:item forKey:@"NewSpacer"];
+	[toolbarItemKeys addObject:@"NewSpacer"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"RevertiFolder"];
+	[item setPaletteLabel:@"Revert iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Revert"]; // name for the item in the toolbar
 	[item setToolTip:@"Revert to a normal folder"]; // tooltip
-    [item setTarget:createSheetController]; // what should happen when it's clicked
-    [item setAction:@selector(showWindow:)];
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(revertiFolder:)];
 	[item setImage:[NSImage imageNamed:@"ifolderonserver24"]];
-    [toolbarItems setObject:item forKey:@"Revert iFolder"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"Revert iFolder"];
+    [toolbarItems setObject:item forKey:@"RevertiFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"RevertiFolder"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"DeleteiFolder"];
+	[item setPaletteLabel:@"Delete iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Delete"]; // name for the item in the toolbar
+	[item setToolTip:@"Delete an iFolder"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(deleteiFolder:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"DeleteiFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"DeleteiFolder"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSpaceItemIdentifier];
+	[toolbarItems setObject:item forKey:@"DeleteSpacer"];
+	[toolbarItemKeys addObject:@"DeleteSpacer"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"OpeniFolder"];
+	[item setPaletteLabel:@"Open iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Open"]; // name for the item in the toolbar
+	[item setToolTip:@"Open an iFolder in Finder"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(openiFolder:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"OpeniFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"OpeniFolder"];
+	[item release];
+
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"iFolderProperties"];
+	[item setPaletteLabel:@"iFolder Properties"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Properties"]; // name for the item in the toolbar
+	[item setToolTip:@"Open properties of an iFolder"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(showProperties:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"iFolderProperties"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"iFolderProperties"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"ShareiFolder"];
+	[item setPaletteLabel:@"Share an iFolder"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Share"]; // name for the item in the toolbar
+	[item setToolTip:@"Share an iFolder"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(shareiFolder:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"ShareiFolder"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"ShareiFolder"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier];
+	[toolbarItems setObject:item forKey:NSToolbarFlexibleSpaceItemIdentifier];
+	[toolbarItemKeys addObject:NSToolbarFlexibleSpaceItemIdentifier];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Refresh"];
+	[item setPaletteLabel:@"Refresh Window"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Refresh"]; // name for the item in the toolbar
+	[item setToolTip:@"Refresh Window"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(refreshWindow:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"RefreshWindow"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"RefreshWindow"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarCustomizeToolbarItemIdentifier];
+	[toolbarItems setObject:item forKey:NSToolbarCustomizeToolbarItemIdentifier];
+	[toolbarItemKeys addObject:NSToolbarCustomizeToolbarItemIdentifier];
 	[item release];
 
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"iFolderToolbar"];
@@ -381,11 +555,6 @@
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
-}
-
-- (NSArrayController*) DomainsController
-{
-	return domainsController;
 }
 
 

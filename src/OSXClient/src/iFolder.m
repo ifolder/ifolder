@@ -149,6 +149,21 @@
 	return state;
 }
 
+-(NSString *)Name
+{
+	return [properties objectForKey:@"Name"];
+}
+
+-(NSString *)ID
+{
+	return [properties objectForKey:@"ID"];
+}
+
+-(NSString *)Path
+{
+	return [properties objectForKey:@"Path"];
+}
+
 -(NSNumber *)IsSubscription
 {
 	return [properties objectForKey:@"IsSubscription"];

@@ -36,7 +36,7 @@
 	IBOutlet id mainWindow;
 
 }
-- (IBAction) showWindow:(id)sender;
+- (IBAction)showWindow:(id)sender;
 - (IBAction)browseForPath:(id)sender;
 - (IBAction)cancelSetup:(id)sender;
 - (IBAction)setupiFolder:(id)sender;

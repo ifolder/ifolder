@@ -65,6 +65,9 @@
 -(NSString *)Location;
 -(NSString *)Status;
 -(NSNumber *)IsSubscription;
+-(NSString *)Name;
+-(NSString *)ID;
+-(NSString *)Path;
 
 -(void) updateDisplayInformation;
 
