@@ -389,9 +389,7 @@ namespace Novell.FormsTrayApp
 		{
 			successful = true;
 
-			uint driveType = GetDriveType(Path.GetPathRoot(iFolderLocation.Text));
-			if ((driveType == DRIVE_FIXED) ||
-				(driveType == DRIVE_REMOVABLE))
+			if (GetDriveType(Path.GetPathRoot(iFolderLocation.Text)) == DRIVE_FIXED)
 			{
 				if (!Directory.Exists(iFolderLocation.Text))
 				{
