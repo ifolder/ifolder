@@ -47,6 +47,9 @@ public enum NodeStatus
 	/// <summary> node update was aborted due to update from other client </summary>
 	UpdateCollision,
 
+	/// <summary> node update was aborted due to update from other client </summary>
+	NameCollision,
+
 	/// <summary> node update was probably unsuccessful, unhandled exception on the server </summary>
 	ServerFailure,
 
@@ -139,6 +142,7 @@ public struct NodeStamp: IComparable
 		return id.CompareTo(((NodeStamp)obj).id);
 	}
 
+	//TODO: remove after verifying that 'node as BaseFileNode' works for this
 	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
 	{
 		if (collection.IsType(node, typeof(FileNode).Name))
@@ -148,6 +152,7 @@ public struct NodeStamp: IComparable
 		return null;
 	}
 
+	//TODO: remove after verifying that 'node as DirNode' works for this
 	internal static DirNode CastToDirNode(Collection collection, Node node)
 	{
 		if (collection.IsType(node, typeof(DirNode).Name))
@@ -318,6 +323,13 @@ internal class SyncIncomingNode
 
 	~SyncIncomingNode() { CleanUp(); }
 
+	static string ParentID(Node node)
+	{
+		Property p = node.Properties.GetSingleProperty(PropertyTags.Parent);
+		Relationship rship = p == null? null: (p.Value as Relationship);
+		return rship == null? null: rship.NodeID;
+	}
+
 	public void Start(Node node)
 	{
 		CleanUp();
@@ -325,15 +337,14 @@ internal class SyncIncomingNode
 		DirNode dnode = NodeStamp.CastToDirNode(collection, node);
 		if (dnode != null && !dnode.IsRoot || collection.IsType(node, typeof(FileNode).Name))
 		{
-			Property p = node.Properties.GetSingleProperty(PropertyTags.Parent);
-			Relationship rship = p == null? null: (p.Value as Relationship);
-			if (rship == null)
+			string parentID = ParentID(node);
+			if (parentID == null)
 				throw new ApplicationException("file or dir node has no parent");
-			Node n = collection.GetNodeByID(rship.NodeID);
+			Node n = collection.GetNodeByID(parentID);
 			if (n == null)
 			{
 				parentPath = null;
-				Log.Spew("could not get parent {1} of {0}, not here yet?", node.Name, rship.NodeID);
+				Log.Spew("could not get parent {1} of {0}, not here yet?", node.Name, parentID);
 			}
 			else
 			{
@@ -395,6 +406,7 @@ internal class SyncIncomingNode
 			Log.Spew("Create directory {0}", path);
 			Directory.CreateDirectory(path);
 		}
+		//TODO: verify this can be a check for collection.IsType(node, typeof(BaseFileNode).Name)
 		else if (!collection.IsType(node, typeof(FileNode).Name) && !collection.IsType(node, typeof(StoreFileNode).Name))
 		{
 			Log.Spew("commiting nonFile, nonDir {0}", node.Name);
@@ -419,6 +431,7 @@ internal class SyncIncomingNode
 		}
 	}
 
+	//TODO: this is just for debug, remove it when no longer needed
 	void CheckMasterIncarn(Nid nid)
 	{
 		Node n = collection.GetNodeByID(nid);
@@ -426,40 +439,42 @@ internal class SyncIncomingNode
 			Log.Spew("Just completed node {0} has no MasterIncarnation", node.Name);
 	}
 
+	Node IllegalDuplicateName()
+	{
+		string parentID = ParentID(node);
+
+		//TODO: what should happen here for StoreFileNodes?
+		if (parentID == null
+				|| !collection.IsType(node, typeof(FileNode).Name)
+				&& !collection.IsType(node, typeof(DirNode).Name))
+			return null;
+
+		foreach (ShallowNode sn in collection.GetNodesByName(node.Name))
+			if (sn.ID != node.ID)
+			{
+				Node n = new Node(collection, sn);
+				string npid = ParentID(n);
+				if (npid != null && npid == parentID && n.Name == node.Name
+						&& (collection.IsType(n, typeof(FileNode).Name) || collection.IsType(n, typeof(DirNode).Name)))
+					return n;
+			}
+		return null;
+	}
+
 	public NodeStatus Complete(ulong expectedIncarn)
 	{
-		Node curNode;
 		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
 
 		if (!onServer)
 		{
-			/* TODO: handle collision here, see discussion of server side below
-			 *
-			 * current plans:
-			 *
-			 *     ImportNode just sets state and expected incarn
-			 *     Set flag on node that temp file is complete
-		     *     set master incarn to new local incarn (how to avoid merging this?)
-			 *     Attempt commit
-			 *     if (LocalIncarn != expectedIncarn)
-			 *         abort commit
-			 *         mark and commit old node as loser (if a new one comes in, it still loses)
-			 *         copy file to collision collection
-			 *         copy node to collision collection
-			 *     force commit of node
-			 *     CommitFile();
-			 *     clear and commit tempFile flag
-			 *     return NodeStatus.Complete
-			 *
-			 * perhaps rename loser file first (does fs support a double move?) and then
-			 * copy loser data. Set node in collision collections in same transaction?
-			 * perhaps do rename of old file, then exclusive open, then see if it's the right one
-			 *
-			 *  consider a delegate to call back within transaction to do file system stuff?
-			 *
-			 *  what are the rules for dredger, file change events, applications
-			 *  and concurrent clients accessing this collection on the server?
-			 */
+			Node dupe = IllegalDuplicateName();
+			if (dupe != null)
+			{
+				Log.Spew("Node {0} has lost a name collision", node.Name);
+				//TODO move dupe node (subtree) data out of the way here to collision bin here.
+				Node[] deleted = collection.Delete(dupe, PropertyTags.Parent);
+				collection.Commit(deleted);
+			}
 			for (;;)
 			{
 				collection.ImportNode(node, expectedIncarn);
@@ -471,11 +486,9 @@ internal class SyncIncomingNode
 				}
 				catch (Collision c)
 				{
-					Log.Spew("Node {0} has lost a collision", node.Name);
+					Log.Spew("Node {0} has lost an update collision", node.Name);
 					//TODO move file and data out of the way here to collision bin here.
 					expectedIncarn = c.ExpectedIncarnation;
-					curNode = collection.GetNodeByID(node.ID);
-					expectedIncarn = curNode.LocalIncarnation;
 					continue;
 				}
 				CommitFile();
@@ -486,36 +499,11 @@ internal class SyncIncomingNode
 			}
 		}
 
-		/* TODO: this is a problem because we cannot lock curNode until commit
-		 *     rearrange this code when ImportNode/Commit does this for us
-		 *
-		 *  first we need to check that we should even try to support
-		 *     absolute sync update consistency during power failure.
-		 *     (if lower levels will fail, why should we work so hard to succeed?)
-		 *  if we do need to recover from power failure in mid sync:
-		 *
-		 *  replace curNode in what follows with:
-		 *     ImportNode just sets state and expected incarn
-		 *     Set flag on node that temp file is complete
-		 *     Attempt commit
-		 *     if (LocalIncarn != expectedIncarn)
-		 *         delete temp file
-		 *         return NodeStatus.UpdateCollision;
-		 *     CommitFile();
-		 *     clear tempFile flag
-		 *
-		 *  On sync process startup, if sync ended abnormally
-		 *   (actually, sync could just always check for this flag and
-		 *    just handle it, depending on how we handle concurrent
-		 *    clients)
-		 *     for each file with tempFileComplete flag
-		 *         if temp file exists
-		 *             CommitFile()
-		 *         Clear tempFileFlag
-		 *
-		 *  what are the rules for dredger, file change events, applications
-		 *  and concurrent clients accessing this collection on the server?
-		 */
+		if (IllegalDuplicateName() != null)
+		{
+			Log.Spew("Rejecting Node {0} due to name collision on server", node.Name);
+			return NodeStatus.NameCollision;
+		}
 		collection.ImportNode(node, expectedIncarn);
 		node.Properties.ModifyProperty("TemporaryFileComplete", true);
 		try

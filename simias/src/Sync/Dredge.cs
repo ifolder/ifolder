@@ -64,7 +64,7 @@ internal class Dredger
 
 		// delete nodes that are wrong type or dups
 		// TODO: perhaps we should move dups to trash or log as error
-		//TODO: handle issues of file name chars and case here?
+		// TODO: handle issues of file name chars and case here?
 		foreach (ShallowNode sn in collection.GetNodesByName(name))
 		{
 			Node n = new Node(collection, sn);

@@ -289,7 +289,7 @@ public class SyncTests: Assertion
 	//---------------------------------------------------------------------------
 	// test deletes: delete a file from each end, and cause deletion collision
 	// sync and make sure everything got sorted out
-//	[Test] public void NUSimpleDeletes() { Assert(SimpleDeletes()); }
+	[Test] public void NUSimpleDeletes() { Assert(SimpleDeletes()); }
 
 	public bool SimpleDeletes()
 	{
@@ -297,9 +297,11 @@ public class SyncTests: Assertion
 		string dirC = Path.Combine(clientFolder, "simpleTestDir");
 		int[] delNums = { 8, 12, 14, 16, 22, 28 };
 
+		// delete all but last two from client
 		for (int i = 0; i < delNums.Length - 2; ++i)
 			File.Delete(Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt"));
 
+		// delete last four from server (middle two deleted on both client and server)
 		for (int i = delNums.Length - 4; i < delNums.Length; ++i)
 			File.Delete(Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt"));
 
@@ -309,28 +311,30 @@ public class SyncTests: Assertion
 			return false;
 		}
 
+		bool worked = true;
+		string fname;
 		for (int i = 0; i < delNums.Length; ++i)
-			if (File.Exists(Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt")))
+			if (File.Exists(fname = Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt")))
 			{
-				Log.Spew("deleted file still exists on server after simple deletes");
-				return false;
+				Log.Spew("deleted file still exists on server after simple deletes: {0}", fname);
+				worked = false;
 			}
 
 		for (int i = 0; i < delNums.Length; ++i)
-			if (File.Exists(Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt")))
+			if (File.Exists(fname = Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt")))
 			{
-				Log.Spew("deleted file still exists on client after simple deletes");
-				return false;
+				Log.Spew("deleted file still exists on client after simple deletes: {0}", fname);
+				worked = false;
 			}
 
-		return Differ.CompareDirectories(serverFolder, clientFolder);
+		return worked && Differ.CompareDirectories(serverFolder, clientFolder);
 	}
 
 	//---------------------------------------------------------------------------
 	// test file creation collisions: create duplicate and non-dup files in multiple
 	//     level directory structure
 	// sync and make sure everything got sorted out
-//	[Test] public void NUFileCreationCollision() { Assert(FileCreationCollision()); }
+	[Test] public void NUFileCreationCollision() { Assert(FileCreationCollision()); }
 
 	public bool FileCreationCollision()
 	{
@@ -373,17 +377,29 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
+	int successCount = 0, failedCount = 0;
+	void AccountTest(string name, bool succeeded)
+	{
+		if (succeeded)
+			successCount++;
+		else
+			failedCount++;
+		Console.WriteLine("{0}: {1}", name, succeeded);
+	}
+
+	//---------------------------------------------------------------------------
 	void Run()
 	{
 		Console.WriteLine("init");
 		Init();
-		Console.WriteLine("invite: {0}", Invite());
-		Console.WriteLine("accept: {0}", Accept());
-		Console.WriteLine("firstSync: {0}", FirstSync());
-		Console.WriteLine("simpleAdds: {0}", SimpleAdds());
-		Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
-		Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());
+		AccountTest("invite", Invite());
+		AccountTest("accept", Accept());
+		AccountTest("firstSync", FirstSync());
+		AccountTest("simpleAdds", SimpleAdds());
+		AccountTest("simpleDeletes", SimpleDeletes());
+		AccountTest("FileCreationCollision", FileCreationCollision());
 		Cleanup();
+		Console.WriteLine("{0} tests succeeded, {1} failed", successCount, failedCount);
 	}
 
 	//---------------------------------------------------------------------------
