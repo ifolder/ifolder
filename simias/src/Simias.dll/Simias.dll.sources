@@ -70,7 +70,7 @@ AssemblyInfo.cs
 ../Location/Library/ILocationProvider.cs
 ../Location/Library/LocationProviderList.cs
 ../Location/Library/LocationService.cs
-../Location/Library/MDnsLocationProvider.cs
+../Location/Library/mDnsLocationProvider.cs
 ../Location/Tests/LocationTests.cs
 ../RemotingSniffer/Library/SnifferClientChannelSink.cs
 ../RemotingSniffer/Library/SnifferClientChannelSinkProvider.cs
