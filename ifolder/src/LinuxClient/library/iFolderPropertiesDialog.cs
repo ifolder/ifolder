@@ -44,10 +44,6 @@ namespace Novell.iFolder
 		private iFolderPropSharingPage SharingPage;
 		private iFolderPropSettingsPage SettingsPage; 
 
-
-		private Gtk.Combo			iFolderPickCombo;
-		private Gtk.Button			iFolderPickButton;
-
 		public int CurrentPage
 		{
 			set
@@ -85,7 +81,6 @@ namespace Novell.iFolder
 			ifHash = new Hashtable();
 
 			InitializeWidgets(ifolders);
-			iFolderPickCombo.Entry.Text = this.ifolder.UnManagedPath;
 		}
 
 
@@ -133,7 +128,6 @@ namespace Novell.iFolder
 			ifHash = new Hashtable();
 
 			InitializeWidgets(ifolders);
-			iFolderPickCombo.Entry.Text = this.ifolder.UnManagedPath;
 		}
 
 
@@ -151,71 +145,6 @@ namespace Novell.iFolder
 
 			this.SetDefaultSize (480, 480);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
-
-			//-----------------------------
-			// Create iFolder Picker List
-			//-----------------------------
-			HBox pickBox = new HBox();
-			dialogBox.PackStart(pickBox, false, true, 0);
-			pickBox.Spacing = 10;
-			Label pickLabel = new Label(Util.GS("iFolder:"));
-			pickLabel.Xalign = 0;
-			pickBox.PackStart(pickLabel, false, false, 0);
-
-			iFolderPickCombo = new Combo();
-			pickBox.PackStart(iFolderPickCombo, true, true, 0);
-			iFolderPickCombo.Entry.Editable = false;
-
-/*
-			iFolder[]	iFolderArray;
-			try
-			{
-				iFolderArray = this.ifws.GetAlliFolders();
-			}
-			catch(Exception e)
-			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													this, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
-				return;
-			}
-
-			ArrayList ifList = new ArrayList();
-			foreach(iFolder ifldr in iFolderArray)
-			{
-				if(!ifldr.IsSubscription)
-				{
-					ifList.Add(ifldr.UnManagedPath);
-					ifHash.Add(ifldr.UnManagedPath, ifldr);
-				}
-			}
-*/
-
-			ArrayList ifList = new ArrayList();
-			foreach(iFolderWeb ifldr in ifolders)
-			{
-				if(!ifldr.IsSubscription)
-				{
-					ifList.Add(ifldr.UnManagedPath);
-					ifHash.Add(ifldr.UnManagedPath, ifldr);
-				}
-			}
-
-			string[] strList = (string[])ifList.ToArray(typeof(string));
-			iFolderPickCombo.PopdownStrings = strList;
-
-			iFolderPickButton = new Button(Stock.Open);
-			pickBox.PackStart(iFolderPickButton, false, false, 0);
-			iFolderPickButton.Clicked += 
-				new EventHandler(OnOpenCurrentiFolder);
-
-			// set the text to blank so we will refresh when we set it
-			iFolderPickCombo.Entry.Text = "";
-			iFolderPickCombo.Entry.Changed += 
-						new EventHandler(OniFolderChanged);
-
 
 			//-----------------------------
 			// Create iFolder Conflict
@@ -301,14 +230,14 @@ namespace Novell.iFolder
 
 
 
-		private void OniFolderChanged(object o, EventArgs args)
-		{
-			if(iFolderPickCombo.Entry.Text.Length > 0)
-			{
-				ifolder = (iFolderWeb)ifHash[iFolderPickCombo.Entry.Text];
-				SetValues();
-			}
-		}
+//		private void OniFolderChanged(object o, EventArgs args)
+//		{
+//			if(iFolderPickCombo.Entry.Text.Length > 0)
+//			{
+//				ifolder = (iFolderWeb)ifHash[iFolderPickCombo.Entry.Text];
+//				SetValues();
+//			}
+//		}
 
 
 
@@ -339,26 +268,26 @@ namespace Novell.iFolder
 			// has any more conflicts
 		}
 
-		private void OnOpenCurrentiFolder(object o, EventArgs args)
-		{
-				try
-				{
-					Util.OpenInBrowser(ifolder.UnManagedPath);
-				}
-				catch(Exception e)
-				{
-					iFolderMsgDialog dg = new iFolderMsgDialog(
-						this,
-						iFolderMsgDialog.DialogType.Error,
-						iFolderMsgDialog.ButtonSet.Ok,
-						Util.GS("iFolder Error"),
-						Util.GS("Unable to launch File Browser"),
-						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
-					dg.Run();
-					dg.Hide();
-					dg.Destroy();
-				}
-		}
+//		private void OnOpenCurrentiFolder(object o, EventArgs args)
+//		{
+//				try
+//				{
+//					Util.OpenInBrowser(ifolder.UnManagedPath);
+//				}
+//				catch(Exception e)
+//				{
+//					iFolderMsgDialog dg = new iFolderMsgDialog(
+//						this,
+//						iFolderMsgDialog.DialogType.Error,
+//						iFolderMsgDialog.ButtonSet.Ok,
+//						Util.GS("iFolder Error"),
+//						Util.GS("Unable to launch File Browser"),
+//						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
+//					dg.Run();
+//					dg.Hide();
+//					dg.Destroy();
+//				}
+//		}
 
 	}
 }
