@@ -206,7 +206,7 @@ namespace Simias.Storage
 		public Collection( Store storeObject, Node node ) :
 			base( node )
 		{
-			if ( node.Type != "Collection" )
+			if ( type != "Collection" )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -218,11 +218,17 @@ namespace Simias.Storage
 		/// <summary>
 		/// Copy constructor for Collection object.
 		/// </summary>
-		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="collection">Collection object to construct new Collection object from.</param>
-		public Collection( Store storeObject, Collection collection ) :
-			this( storeObject, collection as Node )
+		public Collection( Collection collection ) :
+			base( collection )
 		{
+			if ( type != "Collection" )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+
+			store = collection.store;
+			accessControl = new AccessControl( this );
 		}
 
 		/// <summary>
