@@ -417,12 +417,15 @@ namespace Novell.AddressBook
 		/// </summary>
 		public void Delete()
 		{
-			if (this.parentContact != null)
+			try
 			{
-				this.parentContact.nameList.Remove(this);
+				if (this.parentContact != null)
+				{
+					this.parentContact.nameList.Remove(this);
+				}
 			}
-
-			this.Delete();
+			catch{}
+			return;
 		}
 
 		#endregion

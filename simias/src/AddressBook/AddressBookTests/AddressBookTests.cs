@@ -1032,7 +1032,105 @@ namespace Novell.AddressBook.Tests
 
 			Console.WriteLine("Ending \"Import Photo Test\"");
 		}
+
+		[Test]
+		public void InstantMessageTests()
+		{
+			Console.WriteLine("Starting \"Instant Message Tests\"");
+			const string tstUsername = "testuser";
+
+			const string im1Address = "banderso";
+			const string im1Provider = "GroupWise";
+			IMTypes im1Types = (IMTypes.work);
+
+			const string im2Address = "hackerboy";
+			const string im2Provider = "AIM";
+			IMTypes im2Types = (IMTypes.home | IMTypes.preferred);
+
+			const string im3Address = "banderso@novell.com";
+			const string im3Provider = "MSN";
+			IMTypes im3Types = (IMTypes.other);
+
+			AddressBook tstBook = null;
+
+			try
+			{
+				tstBook = new 
+					AddressBook(
+					"TestBookForIMTests",
+					Novell.AddressBook.AddressBookType.Private,
+					Novell.AddressBook.AddressBookRights.ReadWrite,
+					false);
+
+				abManager.AddAddressBook(tstBook);
+
+				// Create a contact in the new book
+
+				Contact tstContact = new Contact();
+				tstContact.UserName = tstUsername;
+
+				// create the IM objects
+				IM imOne = new IM(im1Address, im1Provider, im1Types);
+				IM imTwo = new IM(im2Address, im2Provider, im2Types);
+				IM imThree = new IM(im3Address, im3Provider, im3Types);
+
+				// Add 2 before we add to the address book
+				tstContact.AddInstantMessage(imOne);
+				tstContact.AddInstantMessage(imTwo);
+
+				tstBook.AddContact(tstContact);
+				tstContact.Commit();
+
+				// Now add the third and commit
+				tstContact.AddInstantMessage(imThree);
+				tstContact.Commit();
+
+				// Now read the contact back and verify
+				Contact cContact = tstBook.GetContact(tstContact.ID);
+				if (cContact != null)
+				{
+					Console.WriteLine("Username:  " + cContact.UserName);
+					if (cContact.UserName != tstUsername)
+					{
+						throw new ApplicationException( "InstantMessageTests::mismatched UserName" );
+					}
+
+					IM pref = cContact.GetPreferredInstantMessage();
+					if (pref != null)
+					{
+						Console.WriteLine("Preferred IM: " + pref.Address);
+						if (pref.Address != im2Address)
+						{
+							throw new ApplicationException( "InstantMessageTests::incorrect preferred IM" );
+						}
+
+						if (pref.Types != im2Types)
+						{
+							throw new ApplicationException( "InstantMessageTests::incorrect preferred IM types" );
+						}
+					}
+
+					//IABList imList = cContact.GetInstantMessageAccounts();
 	
+					Console.WriteLine("looping through IM objects");
+					foreach(IM cIM in cContact.GetInstantMessageAccounts())
+					{
+						Console.WriteLine("");
+						Console.WriteLine("IM Provider: " + cIM.Provider);
+						Console.WriteLine("IM Name:     " + cIM.Address);
+					}
+				}
+			}
+			finally
+			{
+				if (tstBook != null)
+				{
+					tstBook.Delete();
+				}
+			}
+			Console.WriteLine("Ending \"Instant Message Tests\"");
+		}
+
 		public class Tests
 		{
 			static void Main()
@@ -1051,8 +1149,9 @@ namespace Novell.AddressBook.Tests
 				tests.EnumContactsTest();
 				tests.BasicAddressTest();
 				tests.SearchNameTest();
-				*/
 				tests.ImportPhotoTest();
+				*/
+				tests.InstantMessageTests();
 			}
 		}
 	}

@@ -99,6 +99,21 @@ namespace Novell.AddressBook
 		internal static string	blogProperty = "AB:BLOG";
 
 		/// <summary>
+		/// web cam url property which is contained in a contact
+		/// </summary>
+		internal static string	webcamProperty = "AB:WEBCAM";
+
+		/// <summary>
+		/// calendar url property which is contained in a contact
+		/// </summary>
+		internal static string	calProperty = "AB:CAL";
+
+		/// <summary>
+		/// instant message property which is contained in a contact
+		/// </summary>
+		internal static string	imProperty = "AB:IM";
+
+		/// <summary>
 		/// Collection Store a contact is known by
 		/// </summary>
 		internal const string contactType = "AB:Contact";

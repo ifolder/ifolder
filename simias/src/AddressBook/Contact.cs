@@ -29,33 +29,6 @@ using Simias.Storage;
 namespace Novell.AddressBook
 {
 	/// <summary>
-	/// Bitmap of changed "known" properties
-	/// </summary>
-	internal enum ChangeMap : uint
-	{
-		username =		0x00000001,
-		title =			0x00000002,
-		role =			0x00000004,
-		organization =	0x00000008,
-		nickname =		0x00000010,
-		birthday =		0x00000020,
-		url =			0x00000040,
-		blog =			0x00000080,
-		workforce =		0x00000100,
-		manager =		0x00000200,
-		note =			0x00000400,
-		productid =		0x00000800,
-		photo =			0x00001000,
-		logo =			0x00002000,
-		sound =			0x00004000,
-		email =			0x00008000,
-		phone =			0x00010000,
-		address =		0x00020000,
-		name =			0x00040000,
-		unknown =		0x08000000
-	}
-
-	/// <summary>
 	/// Summary description for contact.
 	/// A contact is equivalent to a Node in the collection store.
 	/// </summary>
@@ -71,10 +44,8 @@ namespace Novell.AddressBook
 		internal	ArrayList		emailList;
 		internal	ArrayList		nameList;
 		internal	ArrayList		phoneList;
+		internal	ArrayList		imList;
 		private		Stream			photoStream = null;
-
-		// Map for keeping track of what properties actually changed
-		//private		ChangeMap		propertyChangeMap = 0;
 
 		#endregion
 
@@ -529,6 +500,79 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
+		/// Webcam: Specifies the contact's webcam url
+		///
+		/// Type Value: Single text value
+		///
+		/// Example: http://johndoe.doe.com/john/webcam
+		///
+		/// </summary>
+		public string Webcam
+		{
+			get
+			{
+				try
+				{
+					return(this.Properties.GetSingleProperty(Common.webcamProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.webcamProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.webcamProperty);
+					}
+				}
+				catch{}
+			}
+		}
+		/// <summary>
+		/// Calendar: Specifies the contact's calendar url
+		///
+		/// Type Value: Single text value
+		///
+		/// Example: http://johndoe.doe.com/johndoe/ical
+		///
+		/// </summary>
+		public string Calendar
+		{
+			get
+			{
+				try
+				{
+					return(this.Properties.GetSingleProperty(Common.calProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.calProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.calProperty);
+					}
+				}
+				catch{}
+			}
+		}
+
+		/// <summary>
 		/// Organization: Specifies the organization the contact belongs to
 		///
 		/// Type Value: Single text value
@@ -610,6 +654,7 @@ namespace Novell.AddressBook
 			this.nameList = new ArrayList();
 			this.emailList = new ArrayList();
 			this.phoneList = new ArrayList();
+			this.imList = new ArrayList();
 
 			this.ToObject();
 		}
@@ -623,6 +668,7 @@ namespace Novell.AddressBook
 			this.nameList = new ArrayList();
 			this.emailList = new ArrayList();
 			this.phoneList = new ArrayList();
+			this.imList = new ArrayList();
 		}
 
 		#endregion
@@ -720,6 +766,18 @@ namespace Novell.AddressBook
 				foreach(Property p in mList)
 				{
 					this.phoneList.Add(new Telephone(this, (string) p.Value));
+				}
+			}
+			catch{}
+
+			try
+			{
+				// Load up instant message addresses
+				this.imList.Clear();
+				MultiValuedList	mList = this.Properties.GetProperties(Common.imProperty);
+				foreach(Property p in mList)
+				{
+					this.imList.Add(new IM(this, (string) p.Value));
 				}
 			}
 			catch{}
@@ -829,6 +887,69 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
+		/// Add an instant message account to this contact.
+		/// </summary>
+		/// <param name="im">instant message object</param>
+		/// <remarks>
+		/// instant message consists of an address, provider and types
+		/// such as: "work", "personal" etc.
+		/// 
+		/// Each contact may have multiple instant message accounts but only
+		///  one can be preferred.
+		/// 
+		/// If for any reason the instant message object cannot be added to
+		/// the contact an exception will be raised.
+		/// </remarks>
+
+		public void AddInstantMessage(IM im)
+		{
+			try
+			{
+				im.Add(this);
+			}
+			catch{}
+			return;
+		}
+
+		/// <summary>
+		/// Gets all instant message accounts added to this contact
+		/// </summary>
+		/// <returns>An IABList object that contains the instant message objects.</returns>
+		public IABList GetInstantMessageAccounts()
+		{
+			IABList cList = new IABList();
+
+			try
+			{
+				foreach(IM cIM in this.imList)
+				{
+					cList.Add(cIM);
+				}
+			}
+			catch{}
+			return(cList);
+		}
+
+		/// <summary>
+		/// Gets the preferred instant message
+		/// </summary>
+		/// <remarks>if no instant message hsa been added to the contact
+		/// a null will be returned</remarks>
+		/// <returns>The preferred instant message object.</returns>
+		public IM GetPreferredInstantMessage()
+		{
+			foreach(IM cIM in this.imList)
+			{
+				if(cIM.Preferred == true)
+				{
+					return(cIM);
+				}
+			}
+
+			return(null);
+		}
+
+		/// <summary>
 		/// Add an telephone number to this contact.
 		/// </summary>
 		/// <param name="telephone">Telephone object</param>
@@ -915,6 +1036,11 @@ namespace Novell.AddressBook
 					Telephone.PersistToStore(this);
 				}
 
+				if (this.imList.Count > 0)
+				{
+					IM.PersistToStore(this);
+				}
+
 				if (this.nameList.Count > 0)
 				{
 					Novell.AddressBook.Name.PrepareToCommit(this);
@@ -965,6 +1091,16 @@ namespace Novell.AddressBook
 					}
 
 					this.addressList.Clear();
+				}
+
+				if (this.imList.Count > 0)
+				{
+					foreach(IM cIM in this.imList)
+					{
+						cIM.Delete();
+					}
+
+					this.imList.Clear();
 				}
 
 				this.Delete();

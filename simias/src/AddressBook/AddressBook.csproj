@@ -129,6 +129,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "InstantMessage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Manager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
