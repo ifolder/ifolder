@@ -233,7 +233,7 @@ namespace Simias.Gaim
 						{
 							machineName = 
 								attribValue.Substring(colonPos, 
-													  attribValue.Length - colonPos - 1);
+													  attribValue.Length - colonPos);
 						}
 					}
 				}
