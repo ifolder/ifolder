@@ -196,10 +196,11 @@ namespace Simias.Mail {
 #endif
         }
 
+		ISimiasLog	logger = SimiasLogManager.GetLogger(typeof(SmtpStream));
     /// debug printing 
         private void DebugPrint( string line )
         {
-            Console.WriteLine( "smtp: {0}" , line );
+            logger.Debug(line);
         }
 
     }

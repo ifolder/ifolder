@@ -126,8 +126,8 @@ namespace Simias.Storage.Provider.Sqlite
 					}
 					catch (Exception e)
 					{
-						Console.WriteLine(e.Message);
-						Console.WriteLine(e.StackTrace);
+						//Console.WriteLine(e.Message);
+						//Console.WriteLine(e.StackTrace);
 					}
 
 					return (err);
