@@ -83,17 +83,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets and sets the location in the external file system where all external files and directories
-		/// belonging to the collection are rooted.  If the root is changed, all external files and directories
-		/// belonging to the collection are moved to the new specified root in the external file system.
-		/// </summary>
-		public string Root
-		{
-			get { return ( properties.FindSingleValue( Property.Root ).Value as Uri ).LocalPath; }
-			set { properties.ModifyNodeProperty( Property.Root, new Uri( value ) ); }
-		}
-
-		/// <summary>
 		/// Gets or sets whether this collection can be shared.  By default, a collection is always shareable.
 		/// The Collection Store cannot prevent an application from sharing a collection even though this 
 		/// property is set non-shareable.  This property is only meant as a common means to indicate 
@@ -155,7 +144,7 @@ namespace Simias.Storage
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
 		/// <param name="collectionID">The globally unique identifier for this Collection object.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID ) : 
-			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.DomainName, storeObject.GetStoreManagedPath( collectionID ) )
+			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.DomainName )
 		{
 		}
 
@@ -168,9 +157,8 @@ namespace Simias.Storage
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
 		/// <param name="domainName">The domain that this object is stored in.</param>
-		/// <param name="collectionRoot">The location in the external file system where all external files 
 		/// and directories belonging to the collection are rooted.</param>
-		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName, string collectionRoot ) :
+		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName ) :
 			base( collectionName, collectionID, "Collection" )
 		{
 			store = storeObject;
@@ -181,16 +169,11 @@ namespace Simias.Storage
 				throw new ApplicationException( "Collection already exists with specified ID." );
 			}
 
-			// If the document root directory does not exist, create it.
-			if ( !Directory.Exists( collectionRoot ) )
+			// If the managed directory does not exist, create it.
+			if ( !Directory.Exists( ManagedPath ) )
 			{
-				Directory.CreateDirectory( collectionRoot );
+				Directory.CreateDirectory( ManagedPath );
 			}
-
-			// Add the collection root as a local property.
-			Property rootProp = new Property( Property.Root, new Uri( collectionRoot ) );
-			rootProp.LocalProperty = true;
-			properties.AddNodeProperty( rootProp );
 
 			// Add the owner identifier and domain name as properties.
 			properties.AddNodeProperty( Property.Owner, ownerGuid.ToLower() );
@@ -221,10 +204,10 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="node">Node object to construct Collection object from.</param>
-		internal protected Collection( Store storeObject, Node node ) :
+		public Collection( Store storeObject, Node node ) :
 			base( node )
 		{
-			if ( !IsType( node, "Collection" ) )
+			if ( node.Type != "Collection" )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -254,7 +237,7 @@ namespace Simias.Storage
 		private void ChangeToTombstone( Node node )
 		{
 			node.Name = "Tombstone:" + node.Name;
-			node.Type = "Tombstone";
+			node.BaseType = "Tombstone";
 			node.InternalList = new PropertyList( node.Name, node.ID, node.Type );
 			node.Properties.AddNodeProperty( Property.Types, "Tombstone" );
 			node.IncarnationUpdate = 0;
@@ -492,10 +475,9 @@ namespace Simias.Storage
 				store.StorageProvider.DeleteCollection( id );
 
 				// If there are store managed files, delete them also.
-				string rootPath = store.GetStoreManagedPath( id );
-				if ( Directory.Exists( rootPath ) )
+				if ( Directory.Exists( ManagedPath ) )
 				{
-					Directory.Delete( rootPath, true );
+					Directory.Delete( ManagedPath, true );
 				}
 			}
 			else
@@ -507,9 +489,6 @@ namespace Simias.Storage
 			// Walk the commit list and change all states to updated.
 			foreach( Node node in commitList )
 			{
-				// Clear the change list for each Node object.
-				node.Properties.ClearChangeList();
-
 				// Set the new state for the Node object.
 				if ( node.Properties.State != PropertyList.PropertyListState.Delete )
 				{
@@ -833,6 +812,25 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the DirNode object that represents the root directory in the collection.
+		/// </summary>
+		/// <returns>A DirNode object that represents the root directory in the Collection. A null may
+		/// be returned if no root directory has been specified for the Collection.</returns>
+		public DirNode GetRootDirectory()
+		{
+			DirNode rootDir = null;
+
+			ICSList results = Search( Property.Root, Syntax.Uri );
+			foreach ( ShallowNode shallowNode in results )
+			{
+				rootDir = new DirNode( this, shallowNode );
+				break;
+			}
+
+			return rootDir;
+		}
+
+		/// <summary>
 		/// Gets the first Node object that matches the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the Node object.</param>
@@ -922,6 +920,12 @@ namespace Simias.Storage
 					{
 						importCollection.accessControl.ChangeCollectionOwner( Owner, Access.Rights.Deny );
 					}
+				}
+
+				// If the managed directory does not exist, create it.
+				if ( !Directory.Exists( importCollection.ManagedPath ) )
+				{
+					Directory.CreateDirectory( importCollection.ManagedPath );
 				}
 			}
 
@@ -1233,6 +1237,8 @@ namespace Simias.Storage
 		/// <returns>An ICSList object that contains the results of the search.</returns>
 		public ICSList Search( string propertyName, Relationship propertyValue )
 		{
+			// Since GUIDs are unique, only search for the Node object GUID. Don't take the time to compare
+			// the Collection object GUID.
 			return Search( new Property( propertyName, propertyValue ), SearchOp.Equal );
 		}
 
@@ -1244,68 +1250,6 @@ namespace Simias.Storage
 		public void SetUserAccess( string userID, Access.Rights desiredRights )
 		{
 			accessControl.SetUserRights( userID, desiredRights );
-		}
-
-		/// <summary>
-		/// Updates the master and local incarnation properties on the specified Node object.
-		/// 
-		/// Note: This operation performs a commit on this node before returning.  The incarnation numbers 
-		/// will be updated immediately along with any other changes made to the node.  The collection 
-		/// incarnation numbers will not be updated and the property data will not be merged with an existing
-		/// Node object.
-		/// </summary>
-		/// <param name="master">New master incarnation to be set on the Node object.</param>
-		/// <returns>True if incarnation value was updated, otherwise false is returned indicating a collision.</returns>
-		public bool UpdateIncarnation( Node node, ulong master )
-		{
-			bool updated = false;
-
-			try
-			{
-				// Acquire the store lock.
-				store.LockStore();
-
-				// See if the node has been updated since the last time we checked.
-				Node currentNode = GetNodeByID( node.ID );
-				if ( ( currentNode == null ) || ( currentNode.LocalIncarnation == node.LocalIncarnation ) )
-				{
-					// Update both incarnation values to the specified value.
-					node.Properties.ModifyNodeProperty( Property.MasterIncarnation, master );
-					node.Properties.ModifyNodeProperty( Property.LocalIncarnation, master );
-
-					// If this is a new collection, create it.
-					if ( ( node.Properties.State == PropertyList.PropertyListState.Add ) && IsCollection( node ) )
-					{
-						store.StorageProvider.CreateCollection( node.ID );
-					}
-
-					// Call the store provider to update the records.
-					store.StorageProvider.CreateRecord( node.Properties.PropertyDocument.OuterXml, id );
-
-					// Node has been updated.
-					updated = true;
-				}
-			}
-			finally
-			{
-				// Release the store lock.
-				store.UnlockStore();
-			}
-
-			// If the node has been updated, a little more processing outside of the store lock is needed.
-			if ( updated )
-			{
-				// This node has been successfully committed to the database.
-				node.Properties.State = PropertyList.PropertyListState.Update;
-
-				if ( IsCollection( node ) )
-				{
-					// Update the access control list.
-					accessControl.GetAccessInfo();
-				}
-			}
-
-			return updated;
 		}
 		#endregion
 

@@ -71,9 +71,9 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the base type (Collection or Node) for this object.
+		/// Gets or sets the base type (Collection or Node) for this object.
 		/// </summary>
-		internal string Type
+		internal string BaseType
 		{
 			get { return type; }
 			set { type = value; }
@@ -99,6 +99,14 @@ namespace Simias.Storage
 				name = value;
 				properties.PropertyRoot.SetAttribute( XmlTags.NameAttr, name );
 			}
+		}
+
+		/// <summary>
+		/// Gets the base type (Collection or Node) for this object.
+		/// </summary>
+		public string Type
+		{
+			get { return type; }
 		}
 
 		/// <summary>

@@ -120,7 +120,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor used to create a new DirNode object with a specified ID.
 		/// </summary>
-		/// <param name="collection">Collection that this FileNode object will be associated with.</param>
+		/// <param name="collection">Collection that this DirNode object will be associated with.</param>
 		/// <param name="parentNode">The DirNode object that will be the parent to this object or null 
 		/// if this directory exists at the collection root.</param>
 		/// <param name="dirName">Name of the directory entry.</param>
@@ -128,26 +128,59 @@ namespace Simias.Storage
 		public DirNode( Collection collection, DirNode parentNode, string dirName, string dirID ) :
 			base ( dirName, dirID, "DirNode" )
 		{
-			string parentPath;
-			if ( parentNode != null )
-			{
-				// Set the parent attribute.
-				properties.ModifyNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
+			// Set the parent attribute.
+			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
 
-				// Get the full path to the directory entry.
-				parentPath = parentNode.GetFullPath( collection );
-			}
-			else
-			{
-				// Set the parent attribute.
-				properties.ModifyNodeProperty( Property.ParentID, new Relationship( collection.ID, RootID ) );
-
-				// Get the full path to the directory entry.
-				parentPath = collection.Root;
-			}
+			// Get the full path to the directory entry.
+			string parentPath = parentNode.GetFullPath( collection );
 
 			// Update the file properties. Make sure that the file exists.
 			DirectoryInfo dInfo = new DirectoryInfo( Path.Combine( parentPath, dirName ) );
+			if ( dInfo.Exists )
+			{
+				properties.AddNodeProperty( Property.DirCreationTime, dInfo.CreationTime );
+				properties.AddNodeProperty( Property.DirLastAccessTime, dInfo.LastAccessTime );
+				properties.AddNodeProperty( Property.DirLastWriteTime, dInfo.LastWriteTime );
+			}
+		}
+
+		/// <summary>
+		/// Constructor used to create a new DirNode object with a specified ID that represents a root 
+		/// directory in the Collection.
+		/// </summary>
+		/// <param name="collection">Collection that this DirNode object will be associated with.</param>
+		/// <param name="dirPath">An absolute path to a directory entry in the external file system.</param>
+		public DirNode( Collection collection, string dirPath ) :
+			this ( collection, dirPath, Guid.NewGuid().ToString() )
+		{
+		}
+
+		/// <summary>
+		/// Constructor used to create a new DirNode object with a specified ID that represents a root 
+		/// directory in the Collection.
+		/// </summary>
+		/// <param name="collection">Collection that this DirNode object will be associated with.</param>
+		/// <param name="dirPath">An absolute path to a directory entry in the external file system.</param>
+		/// <param name="dirID">Globally unique identifier for the directory entry.</param>
+		public DirNode( Collection collection, string dirPath, string dirID ) :
+			base ( Path.GetFileName( dirPath ), dirID, "DirNode" )
+		{
+			// Set the parent attribute.
+			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, RootID ) );
+
+			// Set the root path property.
+			string parentDir = Path.GetDirectoryName( dirPath );
+			if ( parentDir == String.Empty )
+			{
+				parentDir = Convert.ToString( Path.DirectorySeparatorChar );
+			}
+
+			Property p = new Property( Property.Root, new Uri( parentDir ) );
+			p.LocalProperty = true;
+			properties.AddNodeProperty( p );
+
+			// Update the file properties. Make sure that the file exists.
+			DirectoryInfo dInfo = new DirectoryInfo( dirPath );
 			if ( dInfo.Exists )
 			{
 				properties.AddNodeProperty( Property.DirCreationTime, dInfo.CreationTime );
@@ -256,8 +289,27 @@ namespace Simias.Storage
 		/// <returns>The absolute path to the directory.</returns>
 		public string GetFullPath( Collection collection )
 		{
+			string fullPath = null;
+
 			DirNode dirNode = GetParent( collection );
-			return Path.Combine( ( dirNode != null ) ? dirNode.GetFullPath( collection ) : collection.Root, name );
+			if ( dirNode != null )
+			{
+				fullPath = Path.Combine( dirNode.GetFullPath( collection ), name );
+			}
+			else
+			{
+				Property p = properties.GetSingleProperty( Property.Root );
+				if ( p != null )
+				{
+					fullPath = Path.Combine( ( p.Value as Uri ).LocalPath, name );
+				}
+				else
+				{
+					throw new ApplicationException( "Missing root path." );
+				}
+			}
+
+			return fullPath;
 		}
 
 		/// <summary>

@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Xml;
 using NUnit.Framework;
@@ -102,9 +104,6 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.Root, true );
-
 				// Delete the collection.
 				collection.Commit( collection.Delete() );
 				if ( store.GetCollectionByID( ID ) != null )
@@ -156,24 +155,21 @@ namespace Simias.Storage.Tests
 				}
 
 				// Delete the child node and then delete the tombstone.
-				collection.Delete( child );
+				collection.Commit( collection.Delete( child ) );
 
 				// See if the child node still exists.
-				if ( collection.GetNodeByID( child.ID ) != null )
+				if ( collection.GetSingleNodeByName( "CS_ChildNode" ) != null )
 				{
 					throw new ApplicationException( "Child node not deleted." );
 				}
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.Root, true );
-
 				// Get rid of this collection.
-				collection.Delete();
+				collection.Commit( collection.Delete() );
 			}
 		}
-/*
+
 		/// <summary>
 		/// Performs the various types of searches.
 		/// </summary>
@@ -181,7 +177,7 @@ namespace Simias.Storage.Tests
 		public void SearchTest()
 		{
 			// Create the collection.
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				string s1 = "The quick red fox jumps over the lazy brown dog.";
@@ -190,22 +186,23 @@ namespace Simias.Storage.Tests
 				// Add some properties that can be searched for.
 				collection.Properties.AddProperty( "CS_String", s1 );
 				collection.Properties.AddProperty( "CS_Int", 291 );
+				collection.Commit();
 			
-				Node child = collection.CreateChild( "CS_Child" );
-				child.Properties.AddProperty( "CS_String", s2 );
-				child.Properties.AddProperty( "CS_Int", -291 );
-
-				collection.Commit( true );
+				Node node = new Node( "CS_Node" );
+				node.Properties.AddProperty( "CS_String", s2 );
+				node.Properties.AddProperty( "CS_Int", -291 );
+				collection.Commit( node );
 
 				// Do the various types of searches for strings and values.
 
 				// Should return s1.
-				ICSEnumerator e = ( ICSEnumerator )collection.Search( "CS_String", s1, Property.Operator.Equal ).GetEnumerator();
+				ICSEnumerator e = ( ICSEnumerator )collection.Search( "CS_String", s1, SearchOp.Equal ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_String" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_String" );
 						if ( ( string )p.Value != s1 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -229,12 +226,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return s2.
-				e = ( ICSEnumerator )collection.Search( "CS_String", s1, Property.Operator.Not_Equal ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_String", s1, SearchOp.Not_Equal ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_String" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_String" );
 						if ( ( string )p.Value != s2 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -258,7 +256,7 @@ namespace Simias.Storage.Tests
 
 	
 				// Should return s1 and s2.
-				e = ( ICSEnumerator )collection.Search( "CS_String", "The", Property.Operator.Begins ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_String", "The", SearchOp.Begins ).GetEnumerator();
 				try
 				{
 					int count = 0;
@@ -275,12 +273,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return s2.
-				e = ( ICSEnumerator )collection.Search( "CS_String", "fox does.", Property.Operator.Ends ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_String", "fox does.", SearchOp.Ends ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_String" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_String" );
 						if ( ( string )p.Value != s2 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -304,7 +303,7 @@ namespace Simias.Storage.Tests
 
 
 				// Should return s1 and s2.
-				e = ( ICSEnumerator )collection.Search( "CS_String", "lazy brown dog", Property.Operator.Contains ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_String", "lazy brown dog", SearchOp.Contains ).GetEnumerator();
 				try
 				{
 					int count = 0;
@@ -321,12 +320,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return 291.
-				e = ( ICSEnumerator )collection.Search( "CS_Int", 291, Property.Operator.Equal ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_Int", 291, SearchOp.Equal ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_Int" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_Int" );
 						if ( ( int )p.Value != 291 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -350,12 +350,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return -291.
-				e = ( ICSEnumerator )collection.Search( "CS_Int", 291, Property.Operator.Not_Equal ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_Int", 291, SearchOp.Not_Equal ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_Int" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_Int" );
 						if ( ( int )p.Value != -291 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -379,12 +380,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return 291.
-				e = ( ICSEnumerator )collection.Search( "CS_Int", 0, Property.Operator.Greater ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_Int", 0, SearchOp.Greater ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_Int" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_Int" );
 						if ( ( int )p.Value != 291 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -408,12 +410,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return -291.
-				e = ( ICSEnumerator )collection.Search( "CS_Int", 0, Property.Operator.Less ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_Int", 0, SearchOp.Less ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_Int" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_Int" );
 						if ( ( int )p.Value != -291 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -437,7 +440,7 @@ namespace Simias.Storage.Tests
 
 
 				// Should return 291 and -291.
-				e = ( ICSEnumerator )collection.Search( "CS_Int", -291, Property.Operator.Greater_Equal ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_Int", -291, SearchOp.Greater_Equal ).GetEnumerator();
 				try
 				{
 					int count = 0;
@@ -454,12 +457,13 @@ namespace Simias.Storage.Tests
 
 
 				// Should return -291.
-				e = ( ICSEnumerator )collection.Search( "CS_Int", 281, Property.Operator.Less_Equal ).GetEnumerator();
+				e = ( ICSEnumerator )collection.Search( "CS_Int", 281, SearchOp.Less_Equal ).GetEnumerator();
 				try
 				{
 					if ( e.MoveNext() )
 					{
-						Property p = ( ( Node )e.Current ).Properties.GetSingleProperty( "CS_Int" );
+						Node sNode = new Node( collection, e.Current as ShallowNode );
+						Property p = sNode.Properties.GetSingleProperty( "CS_Int" );
 						if ( ( int )p.Value != -291 )
 						{
 							throw new ApplicationException( "Unexpected search results" );
@@ -483,11 +487,8 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -500,10 +501,10 @@ namespace Simias.Storage.Tests
 		{
 
 			// Create a collection to add properties to.
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
-				string id = collection.Id;
+				string ID = collection.ID;
 			
 				XmlDocument xmlTestDocument = new XmlDocument();
 				xmlTestDocument.LoadXml( "<ObjectList><Object name='XmlTest' type='string' id='1234' /></ObjectList>" );
@@ -530,7 +531,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Force the object to be retreived from the data base.
-				collection = ( Collection )collection.GetNodeById( id );
+				collection = store.GetCollectionByID( ID );
 
 				// Get each property individually and make sure that the values are valid.
 				Property p = collection.Properties.GetSingleProperty( "CS_String" );
@@ -660,7 +661,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Force the object to be retreived from the data base.
-				collection = ( Collection )collection.GetNodeById( id );
+				collection = store.GetCollectionByID( ID );
 
 				// Get each property individually and make sure that the values are valid.
 				p = collection.Properties.GetSingleProperty( "CS_String" );
@@ -768,14 +769,10 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete();
+				collection.Commit( collection.Delete() );
 			}
 		}
-
 
 		/// <summary>
 		/// Deletes a Property from a Collection.
@@ -783,7 +780,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void PropertyMethodsTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				// First property to add.
@@ -867,14 +864,8 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
-				// Delete the collection.
-				collection.Delete();
 			}
 		}
-
 
 		/// <summary>
 		/// Tries to add a reserved system property.
@@ -883,7 +874,7 @@ namespace Simias.Storage.Tests
 		[ExpectedException( typeof( ApplicationException ) )]
 		public void AddSystemPropertyTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				// Shouldn't allow this.
@@ -891,11 +882,6 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
-				// Delete the collection.
-				collection.Delete();
 			}
 		}
 
@@ -906,76 +892,43 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void FileTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection", new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" ) ) );
+			string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
+
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
-				string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
+				// Create a node to represent the collection root directory.
+				string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
+				Directory.CreateDirectory( rootDir );
+				DirNode rootNode = new DirNode( collection, rootDir );
 
 				// Create a file in the file system.
-				string filePath = Path.Combine( collection.DocumentRoot.LocalPath, "Test.txt" );
+				string filePath = Path.Combine( rootDir, "Test.txt" );
 				FileStream fs = new FileStream( filePath, FileMode.Create, FileAccess.Write, FileShare.None );
 				StreamWriter sw = new StreamWriter( fs );
 				sw.WriteLine( fileData );
 				sw.Close();
 
 				// Add this file to the collection, rooted at the collection.
-				FileEntry fe = collection.AddFileEntry( "CS_TestFile", Path.DirectorySeparatorChar + "Test.txt" );
-
-				// Add a directory to the collection also.
-				string testDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" + Path.DirectorySeparatorChar + "MyTestDir" );
-				Directory.CreateDirectory( testDir );
-				DirectoryEntry de = collection.AddDirectoryEntry( "CS_TestDir", testDir );
+				FileNode fileNode = new FileNode( collection, rootNode, "Test.txt" );				
 
 				// Commit all changes.
-				collection.Commit( true );
+				Node[] commitList = { collection, rootNode, fileNode };
+				collection.Commit( commitList );
 
-				// Get the file entries from the collection.
-				ICSList entryList = collection.GetFileSystemEntryList();
-				foreach ( FileSystemEntry fse in entryList )
+				// Get the file entry from the collection.
+				ICSList entryList = collection.Search( BaseSchema.ObjectType, "FileNode", SearchOp.Equal );
+				foreach ( ShallowNode sn in entryList )
 				{
-					if ( fse.IsDirectory )
-					{
-						if ( fse.Name != "CS_TestDir" )
-						{
-							throw new ApplicationException( "Found unexpected directory." );
-						}
-					}
-					else
-					{
-						if ( ( fse as FileEntry ).Name != "CS_TestFile" )
-						{
-							throw new ApplicationException( "Found unexpected file." );
-						}
-					}
+					FileNode fn = new FileNode( collection, sn );
+					Console.WriteLine( "File path = {0}", fn.GetFullPath( collection ) );
+					Console.WriteLine( "Parent path = {0}", fn.GetParent( collection ).GetFullPath( collection ) );
 				}
-
-				// Add a local property to the stream object.
-				Property p1 = new Property( "TestProperty", "This is a test" );
-				p1.LocalProperty = true;
-				fe.Properties.AddProperty( p1 );
-				collection.Commit();
-
-				// Export the node to make sure that this property doesn't appear.
-				XmlDocument xd = store.ExportSingleNodeToXml( collection, collection.Id );
-				
-				// Search for the property that should have been removed.
-				XmlNodeList xnl = xd.SelectNodes( "//Property[@name = 'TestProperty']" );
-				if ( xnl.Count != 0 )
-				{
-					throw new ApplicationException( "Failed to remove local property" );
-				}
-
-				// Delete the node stream object.
-				fe.Delete();
-				collection.Commit();
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -985,8 +938,8 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AccessControlTest()
 		{
-			Collection collection1 = store.CreateCollection( "CS_TestCollection1" );
-			Collection collection2 = store.CreateCollection( "CS_TestCollection2" );
+			Collection collection1 = new Collection( store, "CS_TestCollection1" );
+			Collection collection2 = new Collection( store, "CS_TestCollection2" );
 			Collection collection3;
 
 			try
@@ -996,22 +949,23 @@ namespace Simias.Storage.Tests
 				collection2.Commit();
 
 				// Get a user that can be impersonated.
-				Identity user = store.GetLocalAddressBook().GetSingleIdentityByName( "cameron" );
-				collection1.SetUserAccess( user.Id, Access.Rights.ReadWrite );
+				LocalAddressBook localAb = store.GetLocalAddressBook();
+				BaseContact user = new BaseContact( collection1, localAb.GetSingleNodeByName( "cameron" ) );
+				collection1.SetUserAccess( user.ID, Access.Rights.ReadWrite );
 				collection1.Commit();
 
 				try
 				{
 					// Try again to access the collection.
-					store.ImpersonateUser( user.Id );
-					collection3 = store.GetCollectionById( collection1.Id );
+					store.ImpersonateUser( user.ID );
+					collection3 = store.GetCollectionByID( collection1.ID );
 					collection3.Properties.AddProperty( "DisplayName", "Access Collection" );
 					collection3.Commit();
 
 					try
 					{
 						// Try to change the collection ownership.
-						collection3.ChangeOwner( user.Id, Access.Rights.ReadOnly );
+						collection3.ChangeOwner( user.ID, Access.Rights.ReadOnly );
 						throw new ApplicationException( "Change ownership access control check on impersonation failed" );
 					}
 					catch ( UnauthorizedAccessException )
@@ -1037,11 +991,11 @@ namespace Simias.Storage.Tests
 				}
 
 				// Change the ownership on the collection.
-				collection3.ChangeOwner( user.Id, Access.Rights.ReadOnly );
+				collection3.ChangeOwner( user.ID, Access.Rights.ReadOnly );
 				collection3.Commit();
 
 				// Make sure that it changed.
-				if ( collection3.Owner != user.Id )
+				if ( collection3.Owner != user.ID )
 				{
 					throw new ApplicationException( "Collection ownership did not change" );
 				}
@@ -1049,7 +1003,7 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// Enumerate the collections. Only collection1 one should be returned.
-					store.ImpersonateUser( user.Id );
+					store.ImpersonateUser( user.ID );
 					ICSEnumerator e1 = ( ICSEnumerator )store.GetEnumerator();
 					if ( !e1.MoveNext() || e1.MoveNext() )
 					{
@@ -1079,13 +1033,13 @@ namespace Simias.Storage.Tests
 				e2.Dispose();
 
 				// Set world rights on collection2.
-				collection2.SetUserAccess( Access.WorldRole, Access.Rights.ReadWrite );
+				collection2.SetUserAccess( Access.World, Access.Rights.ReadWrite );
 				collection2.Commit();
 
 				try
 				{
-					store.ImpersonateUser( user.Id );
-					collection3 = store.GetCollectionById( collection2.Id );
+					store.ImpersonateUser( user.ID );
+					collection3 = store.GetCollectionByID( collection2.ID );
 				}
 				finally
 				{
@@ -1094,23 +1048,8 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				try
-				{
-					// Operate as the store owner in order to delete the collections.
-					store.ImpersonateUser( Access.StoreAdminRole );
-
-					// Get rid of the root paths.
-					Directory.Delete( collection1.DocumentRoot.LocalPath, true );
-					Directory.Delete( collection2.DocumentRoot.LocalPath, true );
-
-					// Delete the collections.
-					collection1.Delete();
-					collection2.Delete();
-				}
-				finally
-				{
-					store.Revert();
-				}
+				collection1.Commit( collection1.Delete() );
+				collection2.Commit( collection2.Delete() );
 			}
 		}
 
@@ -1120,122 +1059,32 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void SerializeTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
-				string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
-
-				// Create a file in the file system.
-				string filePath = Path.Combine( collection.DocumentRoot.LocalPath, "Test.txt" );
-				FileStream fs = new FileStream( filePath, FileMode.Create, FileAccess.Write, FileShare.None );
-				StreamWriter sw = new StreamWriter( fs );
-				sw.WriteLine( fileData );
-				sw.Close();
-
-				// Create some children nodes.
-				collection.CreateChild( "ChildNode1" );
-				FileEntry fe = collection.CreateChild( "ChildNode2" ).AddFileEntry( "CS_TestFile", "Test.txt" );
-
 				// Commit the collection.
-				collection.Commit( true );
+				collection.Commit();
 
-				try
-				{
-					// Have to do all of this as the synchronization operator.
-					store.ImpersonateUser( Access.SyncOperatorRole );
+				// Serialize the collection object.
+				MemoryStream ms = new MemoryStream();
+				BinaryFormatter bf = new BinaryFormatter();
+				bf.Serialize( ms, new Node( collection ) );
 
-					// Get the document root for the collection.
-					Uri documentRoot = new Uri( Directory.GetParent( collection.DocumentRoot.LocalPath ).FullName );
+				// Delete the collection so it can be restored.
+				collection.Commit( collection.Delete() );
 
-					// Serialize/Deserialize the collection as the database owner and the collection existing.
-					XmlDocument doc = store.ExportNodesToXml( collection, collection.Id, true );
-					store.ImportNodesFromXml( doc, documentRoot );
+				// Reset the stream before deserializing.
+				ms.Seek( 0, SeekOrigin.Begin );
 
-					// Delete the collection so it can be restored.
-					collection.Delete( true );
-					collection = store.ImportNodesFromXml( doc, documentRoot );
-
-					// Deserialize the collection as a different identity.
-					// Get a user that can be impersonated.
-					Identity user = store.GetLocalAddressBook().GetSingleIdentityByName( "cameron" );
-
-					try
-					{
-						try
-						{
-							// Impersonate the user.
-							store.ImpersonateUser( user.Id );
-							store.ImportNodesFromXml( doc, documentRoot );
-							throw new ApplicationException( "Expected exception for improper deserialization access" );
-						}
-						finally
-						{
-							// Always revert back.
-							store.Revert();
-						}
-					}
-					catch ( UnauthorizedAccessException )
-					{
-						// This is expected.
-					}
-
-					// Set an ACE giving the impersonating user read/write rights to the collection.
-					collection.SetUserAccess( user.Id, Access.Rights.ReadWrite );
-					collection.Commit();
-
-					// Reserialize the collection so it contains the ace added for the impersonating user.
-					doc = store.ExportNodesToXml( collection, collection.Id, true );
-
-					try
-					{
-						// Impersonate the user.
-						store.ImpersonateUser( user.Id );
-						store.ImportNodesFromXml( doc, documentRoot );
-					}
-					finally
-					{
-						// Always revert back.
-						store.Revert();
-					}
-
-					// Then delete the collection and let the impersonating user restore it.
-					collection.Delete( true );
-
-					try
-					{
-						// Impersonate the user.
-						store.ImpersonateUser( user.Id );
-						store.ImportNodesFromXml( doc, documentRoot );
-					}
-					finally
-					{
-						// Always revert back.
-						store.Revert();
-					}
-
-					// Get back the original collection object.
-					collection = store.GetCollectionById( collection.Id );
-				}
-				finally
-				{
-					store.Revert();
-				}
+				// Restore the collection.
+				collection = new Collection( store, ( Node )bf.Deserialize( ms ) );
+				collection.ImportNode( collection );
+				collection.IncarnationUpdate = 2;
+				collection.Commit();
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
-				try
-				{
-					// Delete the collection.  Have to impersonate because we are no longer the owner.
-					store.ImpersonateUser( Access.StoreAdminRole );
-					collection.Delete( true );
-				}
-				finally
-				{
-					store.Revert();
-				}
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -1245,7 +1094,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void GetByNameTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				// Commit the collection.
@@ -1253,52 +1102,32 @@ namespace Simias.Storage.Tests
 
 				// Get the collection by name.
 				ICSList list = store.GetCollectionsByName( "CS_Test.*" );
-				ICSEnumerator e = ( ICSEnumerator )list.GetEnumerator();
-
+				ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
 				if ( e.MoveNext() == false )
 				{
 					throw new ApplicationException( "Cannot find collection by name" );
 				}
 
-				// Create nodes in the collection.
-				collection = ( Collection )e.Current;
-				collection.CreateChild( "Node1" ).CreateChild( "Node2" ).CreateChild( "Node3" );
-				collection.Commit( true );
-
-				// Get "Node3".
-				e = ( ICSEnumerator )collection.GetNodesByName( "Node3" ).GetEnumerator();
-				if ( !e.MoveNext() )
-				{
-					throw new ApplicationException( "Cannot get node by leaf name" );
-				}
-
-				Node node1 = ( Node )e.Current;
-				if ( e.MoveNext() )
-				{
-					throw new ApplicationException( "Cannot get node by leaf name" );
-				}
-
+				collection = new Collection( store, e.Current as ShallowNode );
 				e.Dispose();
 
-				// Get /CS_TetstCollection/Node1/Node2/Node3
-				Node node2 = collection.GetSingleNodeByPathName( "/CS_TestCollection/Node1/Node2/Node3" );
-				if ( node2 == null )
+				// Create a node in the collection.
+				collection.Commit( new Node( "CS_Node" ) );
+
+				// Get the node by name.
+				list = collection.GetNodesByName( "CS_Node" );
+				e = list.GetEnumerator() as ICSEnumerator;
+				if ( !e.MoveNext() )
 				{
 					throw new ApplicationException( "Cannot get node by name" );
 				}
 
-				if ( node1.Id != node2.Id )
-				{
-					throw new ApplicationException( "Found nodes do not reference same object" );
-				}
+				e.Dispose();
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -1318,12 +1147,12 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
-		/// Tests the ability to rollback pre-committed changes on a collection.
+		/// Tests the ability to abort pre-committed changes on a collection.
 		/// </summary>
 		[Test]
-		public void RollbackTest()
+		public void AbortTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				// Commit the collection.
@@ -1332,8 +1161,8 @@ namespace Simias.Storage.Tests
 				// Change the collection.
 				collection.Properties.AddProperty( "New Property", "This is a test" );
 
-				// Rollback the change from the node interface.
-				( ( Node )collection ).Rollback();
+				// Abort the change.
+				collection.Abort( collection );
 
 				// The added property should be gone.
 				Property p = collection.Properties.GetSingleProperty( "New Property" );
@@ -1341,171 +1170,11 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Added property did not rollback" );
 				}
-
-				// Add nodes to the collection.
-				Node node = collection.CreateChild( "CS_TestNode" );
-				collection.Commit( true );
-
-				// Modify the collection and the node.
-				collection.Properties.AddProperty( "New Property", "This is a test" );
-				node.Properties.AddProperty( "New Property", "This is a test" );
-
-				// Roll back the collection changes.
-				collection.Rollback();
-
-				// The node and collection should no longer have the property.
-				p = node.Properties.GetSingleProperty( "New Property" );
-				if ( p != null )
-				{
-					throw new ApplicationException( "Collection rollback on node failed." );
-				}
-
-				p = collection.Properties.GetSingleProperty( "New Property" );
-				if ( p != null )
-				{
-					throw new ApplicationException( "Collection rollback collection failed." );
-				}
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
-			}
-		}
-
-		/// <summary>
-		/// Test the ability to create a node from new.
-		/// </summary>
-		[Test]
-		public void NewupNodeTest()
-		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
-			try
-			{
-				// Commit the collection.
-				collection.Commit();
-
-				// Create a node associated with the collection.
-				Node node = new Node( collection, "CS_TestNode_1", Guid.NewGuid().ToString(), Node.Generic );
-				node.Properties.AddProperty( "CS_TestProperty", "This is a test" );
-
-				// Create a child node.
-				node.CreateChild( "CS_TestNode_2", Node.Generic );
-				
-				// A commit should cause an exception.
-				try
-				{
-					collection.Commit( true );
-					throw new ApplicationException( "Commit with no parent succeeded." );
-				}
-				catch
-				{
-					// This is expected.
-				}
-
-				// Add the node to the collection.
-				node.SetParent( collection );
-				collection.Commit( true );
-
-				// Find the added node.
-				if ( collection.GetNodeById( node.Id ) == null )
-				{
-					throw new ApplicationException( "New committed node not found." );
-				}
-			}
-			finally
-			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
-				// Delete the collection.
-				collection.Delete( true );
-			}
-		}
-
-		/// <summary>
-		/// Test to get the database object.
-		/// </summary>
-		[Test]
-		public void GetDatabaseObjectTest()
-		{
-			Collection dbo = store.GetDatabaseObject();
-			if ( dbo == null )
-			{
-				throw new ApplicationException( "Could not find database object." );
-			}
-		}
-
-		/// <summary>
-		/// Move a collection root test.
-		/// </summary>
-		[Test]
-		public void MoveCollectionRootTest()
-		{
-			Collection collection = store.CreateCollection( "CS_TestCollection", new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" ) ) );
-			try
-			{
-				string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
-				string filePath = null;
-
-				// Create some files in the file system.
-				for ( int i = 0; i < 10; ++i )
-				{
-					string fileName = "Test" + i + ".txt";
-					filePath = Path.Combine( collection.DocumentRoot.LocalPath, fileName );
-					FileStream fs = new FileStream( filePath, FileMode.Create, FileAccess.Write, FileShare.None );
-					StreamWriter sw = new StreamWriter( fs );
-					sw.WriteLine( fileData );
-					sw.Close();
-
-					// Add this file to the collection, rooted at the collection.
-					collection.AddFileEntry( "CS_TestFile", fileName );
-				}
-
-				// Commit all changes.
-				collection.Commit( true );
-
-				// Move the collection to a new directory.
-				string newDirString = Path.Combine( Directory.GetCurrentDirectory(), "CS_MovedTestCollection" );
-				Directory.CreateDirectory( newDirString );
-				newDirString = Path.Combine( newDirString, "TestDir" );
-				collection.DocumentRoot = new Uri( newDirString );
-
-				// Get the new document root and make sure that it changed.
-				if ( collection.DocumentRoot.LocalPath != newDirString )
-				{
-					throw new ApplicationException( "MoveRoot call failed." );
-				}
-
-				// Verify that the file can still be gotten.
-				ICSList feList = collection.GetFileSystemEntryList();
-				foreach ( FileSystemEntry tempEntry in feList )
-				{
-					if ( !tempEntry.Exists )
-					{
-						throw new ApplicationException( "Cannot find file after move of collection." );
-					}
-				}
-			}
-			finally
-			{
-				string oldDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
-				if ( Directory.Exists( oldDir ) )
-				{
-					Directory.Delete( oldDir, true );
-				}
-
-				string newDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_MovedTestCollection" );
-				if ( Directory.Exists( newDir ) )
-				{
-					Directory.Delete( newDir, true );
-				}
-
-				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -1515,40 +1184,41 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void TombstoneTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
-				// Create a bunch of nodes.
-				collection.CreateChild( "Node1" );
-				collection.CreateChild( "Node2" );
-				collection.CreateChild( "Node3" );
-				collection.Commit( true );
+				// Create a node.
+				Node node = new Node( "CS_Node" );
+				Node[] nodeList = { collection, node };
+				collection.Commit( nodeList);
 
-				// Delete the nodes.
-				foreach( Node delNode in collection )
+				// Delete the node.
+				collection.Commit( collection.Delete( node ) );
+
+				// Node should have turned into a tombstone.
+				node = collection.GetNodeByID( node.ID );
+				if ( !collection.IsType( node, "Tombstone" ) )
 				{
-					if ( delNode.Id != collection.Id )
-					{
-						delNode.Delete();
-					}
+					throw new ApplicationException( "Deleted node did not turn into a tombstone." );
 				}
 
-				// There should not be any nodes left.
-				if ( collection.HasChildren )
+				// Now delete the tombstone.
+				collection.Commit( collection.Delete( node ) );
+
+				// It should be really gone now.
+				// Node should have turned into a tombstone.
+				if ( collection.GetNodeByID( node.ID ) != null )
 				{
-					throw new ApplicationException( "Tombstones showing up as nodes." );
+					throw new ApplicationException( "Tombstone cannot be deleted." );
 				}
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
-
+/*
 		/// <summary>
 		/// Tests the incarnation values that they get updated correctly.
 		/// </summary>
@@ -1825,45 +1495,6 @@ namespace Simias.Storage.Tests
 
 				// Release the merge store handle.
 				mergeStore.Dispose();
-			}
-		}
-
-		/// <summary>
-		/// Tests the file property merge on a node.
-		/// </summary>
-		[Test]
-		public void FilePropertyTest()
-		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
-			try
-			{
-				// Add a file to the collection object.
-				FileEntry fEntry = collection.AddFileEntry( "CS_TestFile", "Test.txt" );
-
-				Property p = new Property( "MyFileProperty", "Hello world" );
-				fEntry.Properties.AddProperty( p );
-				collection.Commit();
-
-				// Modify the property.
-				fEntry.Properties.ModifyProperty( "MyFileProperty", "Hello again world" );
-				p.Value = "Goodbye";
-				collection.Commit();
-
-				// Add a property.
-				fEntry.Properties.AddProperty( "MyOtherProperty", "Test1" );
-
-				// Add a value after deleting the file entry. The new value should not be applied.
-				fEntry.Delete();
-				p.Value = "Hello";
-				collection.Commit();
-			}
-			finally
-			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
-				// Delete the collection.
-				collection.Delete( true );
 			}
 		}
 */		

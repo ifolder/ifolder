@@ -43,7 +43,7 @@ namespace Simias.Storage
 		/// <param name="ownerGuid">Owner identifier of this object.</param>
 		/// <param name="domainName">Name of the domain that this address book belongs to.</param>
 		internal LocalAddressBook( Store storeObject, string bookName, string bookID, string ownerGuid, string domainName ) :
-			base ( storeObject, bookName, bookID, ownerGuid, domainName, storeObject.GetStoreManagedPath( bookID ) )
+			base ( storeObject, bookName, bookID, ownerGuid, domainName )
 		{
 			// Add the properties that make this an address book.
 			properties.AddNodeProperty( Property.DefaultAddressBook, true );

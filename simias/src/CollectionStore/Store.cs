@@ -43,6 +43,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Cross process member used to control access to the constructor.
+		/// </summary>
+		private static string ctorLock = "";
+
+		/// <summary>
 		/// Directory where store-managed files are kept.
 		/// </summary>
 		private const string storeManagedDirectoryName = "CollectionFiles";
@@ -216,86 +221,92 @@ namespace Simias.Storage
 		/// or open the database.</param>
 		public Store( Configuration config )
 		{
-			bool created;
-
-			// Store the configuration that opened this instance.
-			this.config = config;
-
-			// Create or open the underlying database.
-			storageProvider = Persist.Provider.Connect( config.BasePath, out created );
-
-			// Set the path to the store.
-			storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
-
-			// Either create the store or authenticate to it.
-			if ( created )
+			lock( ctorLock )
 			{
-				try
-				{
-					// Create a domain name for this domain.
-					string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+				bool created;
 
-					// Create an identifier for the owner of this Collection Store.
-					string ownerGuid = Guid.NewGuid().ToString();
+				// Store the configuration that opened this instance.
+				this.config = config;
+
+				// Create or open the underlying database.
+				storageProvider = Persist.Provider.Connect( config.BasePath, out created );
+
+				// Set the path to the store.
+				storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
+
+				// Either create the store or authenticate to it.
+				if ( created )
+				{
+					try
+					{
+						// Create a domain name for this domain.
+						string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+
+						// Create an identifier for the owner of this Collection Store.
+						string ownerGuid = Guid.NewGuid().ToString();
+
+						// Create the database lock.
+						storeMutex = new Mutex( false, domainName );
+
+						// Create the local address book.
+						LocalAddressBook localAb = new LocalAddressBook( this, domainName, Guid.NewGuid().ToString(), ownerGuid, domainName );
+
+						// Create an identity that represents the current user.  This user will become the 
+						// database owner.
+						BaseContact ownerIdentity = new BaseContact( Environment.UserName, ownerGuid );
+
+						// Add a key pair to this identity to be used as credentials.
+						ownerIdentity.CreateKeyPair();
+
+						// Set the identity into the manager object.
+						identityManager = new IdentityManager( domainName, localAb, ownerIdentity );
+
+						// Add the well-known world identity and save the address book changes.
+						Node[] identities = { localAb, ownerIdentity, new BaseContact( "World", Access.World ) };
+						localAb.Commit( identities );
+
+						// Create an object that represents the database collection.
+						Collection localDb = new Collection( this, "LocalDatabase" );
+						localDb.Properties.AddNodeProperty( Property.LocalDatabase, true );
+						localDb.Synchronizable = false;
+						localDb.Commit();
+					}
+					catch ( Exception e )
+					{
+						// TODO: Log this error.
+						Console.WriteLine( "Could not initialize Collection Store. Caught exception: " + e.Message );
+
+						// The store didn't initialize delete it and rethrow the exception.
+						storageProvider.DeleteStore();
+						storageProvider.Dispose();
+						throw;
+					}
+				}
+				else
+				{
+					// Get the local address book.
+					LocalAddressBook localAb = GetLocalAddressBook();
+					if ( localAb == null )
+					{
+						throw new ApplicationException( "Local address book does not exist." );
+					}
+
+					// Look up to see if the current user has an identity.
+					BaseContact identity = new BaseContact( localAb, localAb.GetSingleNodeByName( Environment.UserName ) );
+					if ( identity == null )
+					{
+						throw new ApplicationException( "User does not exist in local address book." );
+					}
+
+					// Create a identity manager object that will be used by the store object from here on out.
+					identityManager = new IdentityManager( localAb.Name, localAb, identity );
 
 					// Create the database lock.
-					storeMutex = new Mutex( false, domainName );
-
-					// Create the local address book.
-					LocalAddressBook localAb = new LocalAddressBook( this, domainName, Guid.NewGuid().ToString(), ownerGuid, domainName );
-
-					// Create an identity that represents the current user.  This user will become the 
-					// database owner.
-					BaseContact ownerIdentity = new BaseContact( Environment.UserName, ownerGuid );
-
-					// Add a key pair to this identity to be used as credentials.
-					ownerIdentity.CreateKeyPair();
-
-					// Set the identity into the manager object.
-					identityManager = new IdentityManager( domainName, localAb, ownerIdentity );
-
-					// Add the well-known world identity and save the address book changes.
-					Node[] identities = { localAb, ownerIdentity, new BaseContact( "World", Access.World ) };
-					localAb.Commit( identities );
-
-					// Create an object that represents the database collection.
-					Collection localDb = new Collection( this, "LocalDatabase" );
-					localDb.Properties.AddNodeProperty( Property.LocalDatabase, true );
-					localDb.Synchronizable = false;
-					localDb.Commit();
-				}
-				catch ( Exception e )
-				{
-					// TODO: Log this error.
-					Console.WriteLine( "Could not initialize Collection Store. Caught exception: " + e.Message );
-
-					// The store didn't initialize delete it and rethrow the exception.
-					storageProvider.DeleteStore();
-					storageProvider.Dispose();
-					throw;
-				}
-			}
-			else
-			{
-				// Get the local address book.
-				LocalAddressBook localAb = GetLocalAddressBook();
-				if ( localAb == null )
-				{
-					throw new ApplicationException( "Local address book does not exist." );
+					storeMutex = new Mutex( false, identityManager.DomainName );
 				}
 
-				// Look up to see if the current user has an identity.
-				BaseContact identity = new BaseContact( localAb, localAb.GetSingleNodeByName( Environment.UserName ) );
-				if ( identity == null )
-				{
-					throw new ApplicationException( "User does not exist in local address book." );
-				}
-
-				// Create a identity manager object that will be used by the store object from here on out.
-				identityManager = new IdentityManager( localAb.Name, localAb, identity );
-
-				// Create the database lock.
-				storeMutex = new Mutex( false, identityManager.DomainName );
+				// Impersonate the current user so that access control will work.
+				identityManager.Impersonate( identityManager.CurrentUserGuid );
 			}
 		}
 		#endregion

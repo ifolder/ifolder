@@ -54,7 +54,7 @@ namespace Simias.Storage
 			base ( collection, fileName, fileID, "FileNode" )
 		{
 			// Set the parent attribute.
-			properties.ModifyNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
+			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
 
 			// Update the file properties. Make sure that the file exists.
 			FileInfo fInfo = new FileInfo( Path.Combine( parentNode.GetFullPath( collection ), fileName ) );

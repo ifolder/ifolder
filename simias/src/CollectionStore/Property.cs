@@ -86,8 +86,8 @@ namespace Simias.Storage
 				throw new ApplicationException( "Invalid relationship string." );
 			}
 
-			collectionID = relationString.Substring( 0, ( index - 1 ) );
-			nodeID = relationString.Substring( index + 1 );
+			nodeID = relationString.Substring( 0, index );
+			collectionID = relationString.Substring( index + 1 );
 		}
 		#endregion
 
@@ -98,7 +98,7 @@ namespace Simias.Storage
 		/// <returns>A string containing the internal representation of the relationship.</returns>
 		internal new string ToString()
 		{
-			return collectionID + ":" + nodeID;
+			return nodeID + ":" + collectionID;
 		}
 		#endregion
 	}
