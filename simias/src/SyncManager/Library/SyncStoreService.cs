@@ -31,15 +31,15 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncStoreService : MarshalByRefObject
 	{
-		private SyncStore store;
+		private SyncStoreManager manager;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="store">The sync store object.</param>
-		public SyncStoreService(SyncStore store)
+		/// <param name="manager">The sync store manager object.</param>
+		public SyncStoreService(SyncStoreManager manager)
 		{
-			this.store = store;
+			this.manager = manager;
 		}
 
 		/// <summary>
@@ -48,7 +48,17 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public SyncStoreInfo Ping()
 		{
-			return new SyncStoreInfo(store);
+			return new SyncStoreInfo(manager.Store);
+		}
+
+		/// <summary>
+		/// Get the sync collection service.
+		/// </summary>
+		/// <param name="id">The collection id.</param>
+		/// <returns>The sync collection service object.</returns>
+		public SyncCollectionService GetCollectionService(string id)
+		{
+			return null;
 		}
 	}
 }

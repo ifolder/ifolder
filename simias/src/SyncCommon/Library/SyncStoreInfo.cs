@@ -36,7 +36,11 @@ namespace Simias.Sync
 		private string os;
 		private string storeID;
 
-		internal SyncStoreInfo(SyncStore store)
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="store">The sync store object.</param>
+		public SyncStoreInfo(SyncStore store)
 		{
 			machine = Environment.MachineName;
 			user = Environment.UserName;

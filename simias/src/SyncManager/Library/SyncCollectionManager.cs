@@ -100,11 +100,7 @@ namespace Simias.Sync
 				switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// start the master
-						StartMaster();
-				
-						// start the watcher
-						if (watching) watcher.Start();
+						// ?
 						break;
 
 					case SyncCollectionRoles.Slave:
@@ -136,11 +132,7 @@ namespace Simias.Sync
 				switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// stop watcher
-						if (watching) watcher.Stop();
-
-						// stop the master
-						StopMaster();
+						// ?
 						break;
 
 					case SyncCollectionRoles.Slave:
@@ -153,6 +145,7 @@ namespace Simias.Sync
 
 					case SyncCollectionRoles.Local:
 					default:
+						// ?
 						break;
 				}
 			}
@@ -164,41 +157,10 @@ namespace Simias.Sync
 			}
 		}
 
-		private void StartMaster()
+		internal SyncCollectionService GetService()
 		{
-			lock(this)
-			{
-				// create channel
-				channel = syncManager.ChannelFactory.GetChannel(store, collection.Port);
-				
-				// service
-				service = syncManager.LogicFactory.GetCollectionService(collection);
-
-				// marshal service
-				RemotingServices.Marshal(service, collection.EndPoint);
-
-				MyTrace.WriteLine("{0} Service Url: http://0.0.0.0:{1}/{2}", collection.Name, collection.Port, collection.EndPoint);
-			}
-		}
-
-		private void StopMaster()
-		{
-			lock(this)
-			{
-				// release service
-				if (service != null)
-				{
-					RemotingServices.Disconnect(service);
-					service = null;
-				}
-
-				// release channel
-				if (channel != null)
-				{
-					channel.Dispose();
-					channel = null;
-				}
-			}
+			// service
+			return syncManager.LogicFactory.GetCollectionService(collection);
 		}
 
 		private void StartSlave()
@@ -208,9 +170,11 @@ namespace Simias.Sync
 				// create channel
 				channel = syncManager.ChannelFactory.GetChannel(store);
 				
-				// get a proxy to the collection object
-				service = (SyncCollectionService)Activator.GetObject(
-					syncManager.LogicFactory.GetCollectionServiceType(), collection.Url);
+				// get a proxy to the remote store object
+				SyncStoreService remoteStore = (SyncStoreService)Activator.GetObject(
+					typeof(SyncStoreService), collection.StoreUrl);
+
+				service = remoteStore.GetCollectionService(collection.ID);
 
 				// get the collection worker
 				worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
@@ -221,7 +185,7 @@ namespace Simias.Sync
 				syncWorkerThread.Start();
 			}
 
-			MyTrace.WriteLine("{0} Url: {1}", collection.Name, collection.Url);
+			MyTrace.WriteLine("{0} Url: {1}", collection.Name, collection.StoreUrl);
 		}
 
 		private void StopSlave()
@@ -257,7 +221,7 @@ namespace Simias.Sync
 				// get permission from sync manager
 				syncManager.ReadyToWork();
 
-				MyTrace.WriteLine("Sync Work Starting: {0} ({1})", collection.Name, collection.Url);
+				MyTrace.WriteLine("Sync Work Starting: {0} ({1})", collection.Name, collection.StoreUrl);
 
 				try
 				{

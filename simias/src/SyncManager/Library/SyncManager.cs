@@ -71,8 +71,6 @@ namespace Simias.Sync
 			Bad,
 		};
 
-		private int interval = 10;
-
 		private SyncProperties properties;
 		private SyncChannelFactory channelFactory;
 		private SyncStoreManager storeManager;
@@ -80,9 +78,6 @@ namespace Simias.Sync
 
 		private int active;
 		private object activeLock = new object();
-
-		private Thread monitorThread;
-		private bool monitoring;
 
 		public SyncManager(): this(new SyncProperties())
 		{
@@ -104,9 +99,6 @@ namespace Simias.Sync
 
 			// no one is working
 			active = 0;
-
-			// create monitor thread
-			monitorThread = new Thread(new ThreadStart(this.DoMonitorWork));
 		}
 
 		public void Start()
@@ -115,10 +107,6 @@ namespace Simias.Sync
 			{
 				// start the store manager
 				storeManager.Start();
-
-				// start monitoring
-				monitoring = true;
-				monitorThread.Start();
 			}
 		}
 
@@ -126,51 +114,8 @@ namespace Simias.Sync
 		{
 			lock(this)
 			{
-				// stop monitoring
-				monitoring = false;
-			
-				try
-				{
-					monitorThread.Join();
-				}
-				catch
-				{
-					// ignore
-				}
-
 				// stop the store manager
 				storeManager.Stop();
-			}
-		}
-
-		private void DoMonitorWork()
-		{
-			while(monitoring)
-			{
-				MyTrace.WriteLine("Monitoring Remoting Status...");
-
-				RemotingStates state = RemotingStates.Bad;
-				SyncStoreInfo info;
-				
-				info = SyncPing.PingStore(StoreManager.Store, Host, Port);
-				
-				if (info != null)
-				{
-					state = RemotingStates.Ok;
-				}
-
-				MyTrace.WriteLine("Remoting Status: {0}", state);
-
-				if (state == RemotingStates.Bad)
-				{
-					MyTrace.WriteLine("Reseting Remoting Services...");
-					Stop();
-					Start();
-					MyTrace.WriteLine("Remoting Services have been reset.");
-				}
-				
-				// sleep
-				if (monitoring) Thread.Sleep(TimeSpan.FromSeconds(interval));
 			}
 		}
 

@@ -87,7 +87,7 @@ namespace Simias.Sync
 					MyTrace.WriteLine("Starting Store Service: http://0.0.0.0:{0}/{1}", port, store.EndPoint);
 
 					// create service
-					service = new SyncStoreService(store);
+					service = new SyncStoreService(this);
 
 					// marshal service
 					RemotingServices.Marshal(service, store.EndPoint);
@@ -152,6 +152,20 @@ namespace Simias.Sync
 			}
 		}
 
+		internal SyncCollectionService GetCollectionService(string id)
+		{
+			SyncCollectionService service = null;
+
+			if (collectionManagers.Contains(id))
+			{
+				SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
+
+				service = scm.GetService();
+			}
+
+			return service;
+		}
+
 		private void OnCreatedCollection(string id)
 		{
 			SyncCollectionManager manager;
@@ -201,6 +215,9 @@ namespace Simias.Sync
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose of any open resources.
+		/// </summary>
 		public void Dispose()
 		{
 			// validate a stop

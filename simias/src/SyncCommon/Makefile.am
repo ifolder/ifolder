@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SyncCommon_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncChannelFormatters.cs $(srcdir)/Library/SyncCollection.cs $(srcdir)/Library/SyncCollectionInfo.cs $(srcdir)/Library/SyncCollectionRoles.cs $(srcdir)/Library/SyncCollectionService.cs $(srcdir)/Library/SyncCollectionWorker.cs $(srcdir)/Library/SyncLogicFactory.cs $(srcdir)/Library/SyncNode.cs $(srcdir)/Library/SyncNodeInfo.cs $(srcdir)/Library/SyncNodeStream.cs $(srcdir)/Library/SyncNodeStreamInfo.cs $(srcdir)/Library/SyncProperties.cs $(srcdir)/Library/SyncStore.cs $(srcdir)/Library/SyncStoreInfo.cs $(srcdir)/Library/SyncStoreService.cs
+SyncCommon_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncChannelFormatters.cs $(srcdir)/Library/SyncCollection.cs $(srcdir)/Library/SyncCollectionInfo.cs $(srcdir)/Library/SyncCollectionRoles.cs $(srcdir)/Library/SyncCollectionService.cs $(srcdir)/Library/SyncCollectionWorker.cs $(srcdir)/Library/SyncLogicFactory.cs $(srcdir)/Library/SyncNode.cs $(srcdir)/Library/SyncNodeInfo.cs $(srcdir)/Library/SyncNodeStream.cs $(srcdir)/Library/SyncNodeStreamInfo.cs $(srcdir)/Library/SyncProperties.cs $(srcdir)/Library/SyncStore.cs $(srcdir)/Library/SyncStoreInfo.cs
 SyncCommon_CSFILES_CSC := $(subst /,$(SEP),$(SyncCommon_CSFILES))
 SyncCommon_INCLUDES =
 SyncCommon_RESOURCES =

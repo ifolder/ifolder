@@ -69,6 +69,9 @@ namespace Simias.Sync
 		/// </summary>
 		public static readonly string LogicTypePropertyName = "Sync Logic";
 
+		// the collection store object
+		private SyncStore store;
+
 		// the wrappered collection object
 		private Collection baseCollection;
 
@@ -79,6 +82,7 @@ namespace Simias.Sync
 		public SyncCollection(Collection collection) : base(collection)
 		{
 			this.baseCollection = collection;
+			this.store = new SyncStore(collection.LocalStore);
 
 			// guarentee an existing document root
 			if (!Directory.Exists(collection.DocumentRoot.LocalPath))
@@ -274,19 +278,11 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The remoting endpoint for the base collection.
+		/// The syncing URL for the collection store service.
 		/// </summary>
-		public string EndPoint
+		public string StoreUrl
 		{
-			get { return ID + ".rem"; }
-		}
-
-		/// <summary>
-		/// The syncing URL for the base collection.
-		/// </summary>
-		public string Url
-		{
-			get { return (new UriBuilder("http", Host, Port, EndPoint).ToString()); }
+			get { return (new UriBuilder("http", Host, Port, store.EndPoint).ToString()); }
 		}
 
 		/// <summary>
@@ -326,10 +322,7 @@ namespace Simias.Sync
 		/// </summary>
 		public string AccessIdentity
 		{
-			get
-			{
-				return baseCollection.LocalStore.CurrentIdentity.GetDomainUserGuid(Domain);
-			}
+			get { return baseCollection.LocalStore.CurrentIdentity.GetDomainUserGuid(Domain); }
 		}
 
 		#endregion

@@ -51,7 +51,7 @@ namespace Simias.Sync
 		/// </summary>
 		public SyncCollectionInfo(SyncCollection collection) : base(collection)
 		{
-			this.url = collection.Url;
+			this.url = collection.StoreUrl;
 			this.logicType = collection.LogicType;
 			this.role = collection.Role;
 		}
