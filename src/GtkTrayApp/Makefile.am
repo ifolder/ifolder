@@ -25,7 +25,7 @@ CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sh
 CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
 
 
-DATA_FILES = ifolder.glade invitewiz.png contact.png contact_me.png property.xpm file.xpm ifolderfolder.png ifolder.png node.png leafnode.png ifolder.gif libegg.so egg-sharp.dll
+DATA_FILES = ifolder.glade contact.png contact_me.png folder.png ifolder.png ifolderfolder.png invitewiz.png leafnode.png node.png ifolder.gif property.png libegg.so egg-sharp.dll
 
 EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES)
 
