@@ -21,6 +21,24 @@
 			<appender-ref ref="RollingLogFile" />
 		</root>
 		
+		<appender name="AccessLogFile" type="log4net.Appender.RollingFileAppender">
+			<file value=".access.log" />
+			<rollingStyle value="size" />
+			<appendToFile value="true" />
+			<maximumFileSize value="10MB" />
+			<maxSizeRollBackups value="10" />
+			
+			<layout type="log4net.Layout.PatternLayout">
+				<header value="#version: 1.0%n#Fields:\tdate\ttime\tmethod\tstatus\tuser\turi\tid\t%n" />
+			</layout>
+		</appender>
+		
+		<logger name="AccessLogger" additivity="false">
+			<level value="INFO" />
+			<appender-ref ref="AccessLogFile" />
+		</logger>
+
+		
 	</log4net>
 	
 </configuration>

@@ -130,6 +130,8 @@ namespace Simias.Sync
 		string			syncContext;
 		bool			getAllNodes;
 		const int		MaxBuffSize = 1024 * 64;
+		SimiasAccessLogger logger;
+			
         
 		/// <summary>
 		/// Finalizer.
@@ -214,7 +216,6 @@ namespace Simias.Sync
 					collection.Impersonate(member);
 					rights = member.Rights;
 					si.Access = rights;
-					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
 				}
 			}
 
@@ -223,6 +224,8 @@ namespace Simias.Sync
 				si.Status = StartSyncStatus.AccessDenied;
 				return;
 			}
+
+			logger = new SimiasAccessLogger(member.Name, si.CollectionID);
 
 			switch (rights)
 			{
@@ -248,6 +251,7 @@ namespace Simias.Sync
 					{
 						nodeContainer = null;
 						si.Status = StartSyncStatus.Busy;
+						logger.LogAccess("Start", collection.Name, collection.ID, "Busy");
 						return;
 					}
 					// See if we need to return all of the nodes.
@@ -277,6 +281,7 @@ namespace Simias.Sync
 					break;
 				
 			}
+			logger.LogAccess("Start", collection.Name, collection.ID, si.Status.ToString());
 			return;
 		}
 
@@ -352,6 +357,7 @@ namespace Simias.Sync
 			}
 			getAllNodes = true;
 			log.Debug("BeginListAllNodes End{0}", enumerator == null ? " Error No Nodes" : "");
+			logger.LogAccess("GetChanges", "-", collection.ID, enumerator == null ? "Error" : "Success");
 			return enumerator;
 		}
 
@@ -385,6 +391,7 @@ namespace Simias.Sync
 					syncContext = eventContext.ToString();
 					contextValid = true;
 					getAllNodes = false;
+					logger.LogAccess("GetChanges", "-", collection.ID, "Success");
 					return enumerator;
 				}
 			}
@@ -398,6 +405,7 @@ namespace Simias.Sync
 			if (eventContext != null)
 				syncContext = eventContext.ToString();
 			log.Debug("BeginListChangedNodes End");
+			logger.LogAccess("GetChanges", "-", collection.ID, "Error");
 			contextValid = false;
 			return null;
 		}
@@ -409,7 +417,7 @@ namespace Simias.Sync
 		{
 			Dispose(false);
 			collection.Revert();
-			log.Info("Finished Sync of {0} for {1}.", collection.Name, member != null ? member.Name : null);
+			logger.LogAccess("Stop", "-", collection.ID, "Success");
 			this.collection = null;
 		}
 
@@ -483,17 +491,18 @@ namespace Simias.Sync
 						catch (CollisionException)
 						{
 							// The current node failed because of a collision.
-							statusList[i++].status = SyncStatus.UpdateConflict;
+							statusList[i].status = SyncStatus.UpdateConflict;
 						}
 						catch (LockException)
 						{
-							statusList[i++].status = SyncStatus.Locked;
+							statusList[i].status = SyncStatus.Locked;
 						}
 						catch
 						{
 							// Handle any other errors.
-							statusList[i++].status = SyncStatus.ServerFailure;
+							statusList[i].status = SyncStatus.ServerFailure;
 						}
+						logger.LogAccess("Put", node.ID, collection.ID, statusList[i].status.ToString());
 						i++;
 					}
 				}
@@ -523,6 +532,11 @@ namespace Simias.Sync
 			{
 				return false;
 			}
+
+			foreach (Node n in NodeList)
+			{
+				logger.LogAccess("Put", n.ID, collection.ID, "Success");
+			}
 		
 			return true;
 		}
@@ -545,6 +559,7 @@ namespace Simias.Sync
 				int i = 0;
 				foreach (SyncNode snode in nodes)
 				{
+					string path = "";
 					SyncNodeStatus status = new SyncNodeStatus();
 					statusList[i++] = status;
 					status.status = SyncStatus.ServerFailure;
@@ -553,14 +568,13 @@ namespace Simias.Sync
 						XmlDocument xNode = new XmlDocument();
 						xNode.LoadXml(snode.node);
 						DirNode node = (DirNode)Node.NodeFactory(store, xNode);
-						log.Debug("Updating {0} {1} from client", node.Name, node.Type);
+						log.Debug("{0}: Uploading Directory {1}", member.Name, node.Name);
 
 						status.nodeID = node.ID;
 						Import(node, snode.MasterIncarnation);
 			
 						// Get the old node to see if the node was renamed.
 						DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
-						string path;
 						if (node.IsRoot)
 						{
 							path = oldNode.GetFullPath(collection);
@@ -596,6 +610,7 @@ namespace Simias.Sync
 						status.status = SyncStatus.Locked;
 					}
 					catch {}
+					logger.LogAccess("PutDir", path, collection.ID, status.status.ToString());
 				}
 			}
 			finally
@@ -634,6 +649,7 @@ namespace Simias.Sync
 							nodes[i].Operation = SyncOperation.Delete;
 							nodes[i].node = "";
 						}
+						logger.LogAccess("GetNode", node.ID + "/" + node.BaseType, collection.ID, "Success");
 					}
 					catch
 					{
@@ -665,6 +681,7 @@ namespace Simias.Sync
 				int i = 0;
 				foreach (string id in nodeIDs)
 				{
+					string name = id;
 					SyncNodeStatus nStatus = new SyncNodeStatus();
 					try
 					{
@@ -673,17 +690,16 @@ namespace Simias.Sync
 						Node node = collection.GetNodeByID(id);
 						if (node == null)
 						{
-							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
 							nStatus.status = SyncStatus.Success;
 							continue;
 						}
 
-						log.Info("Deleting {0}", node.Name);
 						// If this is a directory remove the directory.
 						DirNode dn = node as DirNode;
 						if (dn != null)
 						{
 							string path = dn.GetFullPath(collection);
+							name = path;
 							if (Directory.Exists(path))
 								Directory.Delete(path, true);
 							// Do a deep delete.
@@ -696,7 +712,8 @@ namespace Simias.Sync
 							BaseFileNode bfn = node as BaseFileNode;
 							if (bfn != null)
 							{
-								SyncFile.DeleteFile(collection, bfn);
+								name = bfn.GetFullPath(collection);
+								SyncFile.DeleteFile(collection, bfn, name);
 							}
 							collection.Delete(node);
 							collection.Commit(node);
@@ -712,6 +729,7 @@ namespace Simias.Sync
 					{
 						nStatus.status = SyncStatus.ServerFailure;
 					}
+					logger.LogAccess("Delete", name, collection.ID, nStatus.status.ToString());
 				}
 			}
 			finally
@@ -731,10 +749,12 @@ namespace Simias.Sync
 		{
 			if (!IsAccessAllowed(Access.Rights.ReadWrite))
 			{
+				logger.LogAccess("PutFile", node.ID, collection.ID, "Access");
 				return SyncStatus.Access;
 			}
 			if (cLock == null) 
 			{
+				logger.LogAccess("PutFile", node.ID, collection.ID, "ClientError");
 				return SyncStatus.ClientError;
 			}
 
@@ -743,7 +763,9 @@ namespace Simias.Sync
 			{
 				inFile = new ServerInFile(collection, node, Policy);
 				outFile = null;
-				return inFile.Open();
+				SyncStatus status = inFile.Open();
+				logger.LogAccess("PutFile", inFile.Name, collection.ID, status.ToString());
+				return status;
 			}
 			finally
 			{
@@ -760,7 +782,10 @@ namespace Simias.Sync
 		public SyncNode GetFileNode(string nodeID)
 		{
 			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadOnly))
+			{
+				logger.LogAccess("GetFile", nodeID, collection.ID, "Access");
 				return null;
+			}
 
 			cLock.LockRequest();
 			try
@@ -772,8 +797,11 @@ namespace Simias.Sync
 				{
 					outFile = new ServerOutFile(collection, node);
 					outFile.Open(sessionID);
-					return new SyncNode(node);
+					SyncNode sNode = new SyncNode(node);
+					logger.LogAccess("GetFile", outFile.Name, collection.ID, "Success");
+					return sNode;
 				}
+				logger.LogAccess("GetFile", nodeID, collection.ID, "DoesNotExist");
 				return null;
 			}
 			finally
@@ -789,10 +817,21 @@ namespace Simias.Sync
 		/// <returns>The HashMap.</returns>
 		public byte[] GetHashMap(out int entryCount)
 		{
+			byte[] map;
+			string name = "-";
 			if (inFile != null)
-				return inFile.GetHashMap(out entryCount);
+			{
+				map = inFile.GetHashMap(out entryCount);
+				name = inFile.Name;
+			}
 			else
-				return outFile.GetHashMap(out entryCount);
+			{
+				map = outFile.GetHashMap(out entryCount);
+				name = outFile.Name;
+			}
+
+			logger.LogAccess("GetMapFile", name, collection.ID, map == null ? "DoesNotExist" : "Success");
+			return map;
 		}
 
 		/// <summary>
@@ -805,6 +844,7 @@ namespace Simias.Sync
 		{
 			inFile.WritePosition = offset;
 			inFile.Write(stream, count);
+			logger.LogAccess("WriteFile", inFile.Name, collection.ID, "Success");
 		}
 
 		/// <summary>
@@ -816,6 +856,7 @@ namespace Simias.Sync
 		public void Copy(long oldOffset, long offset, int count)
 		{
 			inFile.Copy(oldOffset, offset, count);
+			logger.LogAccess("CopyFile", inFile.Name, collection.ID, "Success");
 		}
 
 		/// <summary>
@@ -828,7 +869,9 @@ namespace Simias.Sync
 		public int Read(Stream stream, long offset, int count)
 		{
 			outFile.ReadPosition = offset;
-			return outFile.Read(stream, count);
+			int bytesRead = outFile.Read(stream, count);
+			logger.LogAccess("ReadFile", outFile.Name, collection.ID, "Success");
+			return bytesRead;
 		}
 
 		/// <summary>
@@ -864,12 +907,20 @@ namespace Simias.Sync
 			try
 			{
 				SyncNodeStatus status = null;
+				string name = "-";
 				if (inFile != null)
+				{
 					status = inFile.Close(commit);
+					name = inFile.Name;
+				}
 				else if (outFile != null)
+				{
 					status = outFile.Close();
+					name = outFile.Name;
+				}
 				inFile = null;
 				outFile = null;
+				logger.LogAccess("CloseFile", name, collection.ID, status.status.ToString());
 				return status;
 			}
 			finally

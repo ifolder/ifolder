@@ -258,8 +258,10 @@ namespace Simias.Sync
 					}
 					if (!shuttingDown || !paused)
 					{
+						bool serverWasConnected = cClient.Connected;
 						// Sync this collection now.
-						log.Info("{0} : Starting Sync.", cClient);
+						if (serverWasConnected)
+							log.Info("{0} : Starting Sync.", cClient);
 						try
 						{
 							cClient.SyncNow();
@@ -271,7 +273,15 @@ namespace Simias.Sync
 						}
 						catch (Exception ex)
 						{
-							log.Debug(ex, "Finished Sync. Error =  {0}", ex.Message);
+							if (!cClient.Connected)
+							{
+								if (serverWasConnected)
+									log.Info("Server for {0} is unavailable", cClient);
+							}
+							else
+							{
+								log.Error(ex, "Finished Sync. Error =  {0}", ex.Message);
+							}
 						}
 						try
 						{
@@ -534,6 +544,14 @@ namespace Simias.Sync
 		internal void Dispose()
 		{
 			Dispose(false);
+		}
+
+		/// <summary>
+		/// Get whether the server is connected.
+		/// </summary>
+		internal bool Connected
+		{
+			get { return serverAlive; }
 		}
 
 		/// <summary>

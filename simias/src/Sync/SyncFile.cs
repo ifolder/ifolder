@@ -584,9 +584,9 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
 		/// <param name="node">The node that represents the file.</param>
-		public static void DeleteFile(Collection collection, BaseFileNode node)
+		/// <param name="path">The full path to the file.</param>
+		public static void DeleteFile(Collection collection, BaseFileNode node, string path)
 		{
-			string path = node.GetFullPath(collection);
 			if (File.Exists(path))
 				File.Delete(path);
 			try

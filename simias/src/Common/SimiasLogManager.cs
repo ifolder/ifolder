@@ -134,6 +134,14 @@ namespace Simias
 								attr.Value = Path.Combine(storePath, name + attr.Value).Replace("\\", "/");
 							}
 
+							list = doc.GetElementsByTagName("header");
+							for (int i=0; i < list.Count; i++)
+							{   
+								XmlNode attr = list[i].Attributes.GetNamedItem("value");
+								attr.Value = attr.Value.Replace("%n", Environment.NewLine);
+							}
+
+
 							XmlTextWriter writer = new XmlTextWriter(configFile, null);
 							writer.Formatting = Formatting.Indented;
 							doc.Save(writer);

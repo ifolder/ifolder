@@ -25,6 +25,7 @@ using System;
 
 using log4net;
 using log4net.spi;
+using log4net.Layout;
 
 namespace Simias
 {
@@ -176,6 +177,92 @@ namespace Simias
 			if (log.IsFatalEnabled)
 			{
 				log.Fatal(String.Format(format, args), e);
+			}
+		}
+	}
+
+	public class SimiasAccessLogger
+	{
+		private static readonly string AccessLoggerName = "AccessLogger";
+		static string Fields;
+		static string FormatString;
+		
+		ILog	logger;
+		string	user;
+		string	collectionId;
+		
+		public SimiasAccessLogger(string user, string collectionId)
+		{
+			this.user = user;
+			this.collectionId = collectionId;
+			logger = LogManager.GetLogger(AccessLoggerName);
+					
+			lock (typeof (SimiasAccessLogger))
+			{
+				if (FormatString == null)
+				{
+					try
+					{
+						log4net.Repository.Hierarchy.Logger ll = logger.Logger as log4net.Repository.Hierarchy.Logger;
+						string header = ((log4net.Appender.AppenderSkeleton)ll.GetAppender("AccessLogFile")).Layout.Header;
+						string[] headers = header.Split('\n');
+						foreach (string line in headers)
+						{
+							if (line.StartsWith("#Fields:"))
+							{
+								Fields = line.ToLower();
+								string [] fields = Fields.Split(" \t".ToCharArray());
+					
+								// Now create the format string.
+								StringBuilder sb = new StringBuilder(512);
+								foreach (string field in fields)
+								{
+									switch(field)
+									{
+										case "date":
+											sb.Append("{5}\t");
+											break;
+										case "time":
+											sb.Append("{6}\t");
+											break;
+										case "user":
+											sb.Append("\"{0}\"\t");
+											break;
+										case "method":
+											sb.Append("\"{1}\"\t");
+											break;
+										case "uri":
+											sb.Append("\"{2}\"\t");
+											break;
+										case "id":
+											sb.Append("\"{3}\"\t");
+											break;
+										case "status":
+											sb.Append("\"{4}\"\t");
+											break;
+										default:
+											break;
+									}
+								}
+								FormatString = sb.ToString();
+								break;
+							}
+						}
+					}
+					catch
+					{
+						FormatString = "{5}\t{4}\t\"{0}\"\t\"{1}\"\t\"{2}\"\t\"{3}\"";
+					}
+				}
+			}
+		}
+
+		public void LogAccess(string method, string uri, string id, string status)
+		{
+			if (logger.IsInfoEnabled)
+			{
+				DateTime time = DateTime.Now;
+				logger.Info(string.Format(FormatString, user, method, uri, id, status, time.ToString("dd-MM-yyy"), time.ToString("HH:mm:ss")));
 			}
 		}
 	}
