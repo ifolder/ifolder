@@ -1997,7 +1997,7 @@ namespace Novell.FormsTrayApp
 						{
 							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
 
-							message = string.Format(syncEventArgs.Successful ? resourceManager.GetString("syncSucceeded") : resourceManager.GetString("syncFailed"), syncEventArgs.Name);
+							message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
 							if (lvi != null)
 							{
 								lvi.SubItems[2].Text = syncEventArgs.Successful ? resourceManager.GetString("statusOK") : resourceManager.GetString("statusSyncFailure");

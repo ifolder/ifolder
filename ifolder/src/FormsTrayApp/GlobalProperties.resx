@@ -4933,11 +4933,8 @@
 	<data name="synciFolder">
 		<value>Synchronizing {0}</value>
 	</data>
-	<data name="syncSucceeded">
-		<value>{0} synchronization succeeded.</value>
-	</data>
-	<data name="syncFailed">
-		<value>{0} synchronization failed.</value>
+	<data name="syncComplete">
+		<value>{0} synchronization complete.</value>
 	</data>
 	<data name="uploadFile">
 		<value>Uploading file {0}</value>
@@ -4955,7 +4952,7 @@
 		<value>Synchronizing</value>
 	</data>
 	<data name="statusSyncFailure">
-		<value>Failed synchronization</value>
+		<value>Out of sync</value>
 	</data>
 	<data name="readConfirmationError">
 		<value>An error was encountered while reading the show confirmation setting.</value>
