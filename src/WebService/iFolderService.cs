@@ -815,31 +815,27 @@ namespace Novell.iFolder.Web
 		public iFolderUser GetiFolderUserFromNodeID(string CollectionID,
 													string NodeID)
 		{
+			iFolderUser ifolderUser = null;
 			Store store = Store.GetStore();
 
 			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid CollectionID");
-
-			Node node = col.GetNodeByID(NodeID);
-			if(node != null)
+			if(col != null)
 			{
-				return new iFolderUser(new Member(node));
-			}
-			else
-			{
-				POBox poBox = POBox.GetPOBoxByID(store, CollectionID);
-				if (poBox != null)
+				Node node = col.GetNodeByID(NodeID);
+				if(node != null)
 				{
-					node = poBox.GetNodeByID(NodeID);
-					if (node != null)
+					try
 					{
-						return new iFolderUser(new Subscription(node));
+						ifolderUser = new iFolderUser(new Member(node));
+					}
+					catch
+					{
+						ifolderUser = new iFolderUser(new Subscription(node));
 					}
 				}
-
-				throw new Exception("Invalid NodeID");
 			}
+
+			return ifolderUser;
 		}
 
 
