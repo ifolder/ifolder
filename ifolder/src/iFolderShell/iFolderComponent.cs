@@ -60,7 +60,6 @@ namespace Novell.iFolderCom
 		/// <param name="hasConflicts">This parameter returns <b>true</b> if the path is an iFolder and the iFolder contains conflicts.</param>
 		/// <returns>This method returns <b>true</b> if the specified path is an iFolder; otherwise <b>false</b>.</returns>
 		bool IsiFolder([MarshalAs(UnmanagedType.LPWStr)] string path, out bool hasConflicts);
-//		bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path);
 
 		/// <summary>
 		/// Converts the specified path into an iFolder.
@@ -76,34 +75,6 @@ namespace Novell.iFolderCom
 		void DeleteiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
 
 		/// <summary>
-		/// Gets the node representing the specified path.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		//bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
-
-		/// <summary>
-		/// Checks to see if the specified path is contained in an iFolder.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		//bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
-
-		/// <summary>
-		/// Initializes the properties enumerator.
-		/// </summary>
-		/// <returns>This method returns <b>true</b> if the properties enumerator is successfully initialized; otherwise, <b>false</b>.</returns>
-		//bool GetiFolderPropInit();
-
-		/// <summary>
-		/// Walks the properties enumerator.
-		/// </summary>
-		/// <param name="name">This parameter returns the name of the property.</param>
-		/// <param name="val">This parameter returns the value of the property.</param>
-		/// <returns>This method returns <b>true</b> if a property is successfully read; otherwise, <b>false</b>.</returns>
-		//bool GetNextiFolderProp(out string name, out string val);
-
-		/// <summary>
 		/// Displays the Advanced Properties dialog for the specified iFolder.
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
@@ -117,7 +88,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
 		/// <param name="path">The path of the iFolder.</param>
-		//void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
+		void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 		
 		/// <summary>
 		/// Display the iFolder confirmation dialog.
@@ -131,13 +102,6 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="dllPath">The path where this assembly was loaded from.</param>
 		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
-
-		/// <summary>
-		/// Check if the specified iFolder path has conflicts.
-		/// </summary>
-		/// <param name="path">The path of the iFolder.</param>
-		/// <returns>This method returns <b>true</b> if the iFolder contains conflicts; otherwise, <b>false</b>.</returns>
-		bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path);
 	}
 
 	/// <summary>
@@ -255,7 +219,7 @@ namespace Novell.iFolderCom
 					ifolder = ifWebService.GetiFolderByLocalPath(path);
 					if (ifolder != null)
 					{
-	//					hasConflicts = ifolder.HasCollisions();
+						hasConflicts = ifolder.HasConflicts;
 					}
 				}
 			}
@@ -274,28 +238,6 @@ namespace Novell.iFolderCom
 
 			return ifolder != null;
 		}
-
-/*		public bool IsShareable([MarshalAs(UnmanagedType.LPWStr)] string path)
-		{
-			try
-			{
-				bool hasConflicts;
-				if (IsiFolder(path, out hasConflicts))
-				{
-					return manager.GetiFolderByPath(path).Shareable;
-				}
-			}
-			catch (SimiasException e)
-			{
-				e.LogError();
-			}
-			catch (Exception e)
-			{
-				logger.Debug(e, "GetiFolderByPath");
-			}
-
-			return false;
-		}*/
 
 		/// <summary>
 		/// Converts the specified path into an iFolder.
@@ -360,93 +302,6 @@ namespace Novell.iFolderCom
 		}
 
 		/// <summary>
-		/// Gets the node representing the specified path.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		/*public bool GetiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
-		{
-			System.Diagnostics.Debug.WriteLine("In GetiFolderNode()");
-
-			try
-			{
-				foreach(iFolder ifolder in manager)
-				{
-					if (path.StartsWith(ifolder.LocalPath))
-					{
-						ifoldernode = ifolder.GetiFolderNodeByPath(path);
-						if (ifoldernode != null)
-						{
-							System.Diagnostics.Debug.WriteLine("GetiFolderNode() returning true");
-							return true;
-						}
-
-						break;
-					}
-				}
-			}
-			catch (SimiasException e)
-			{
-				e.LogError();
-			}
-			catch (Exception e)
-			{
-				logger.Debug(e, "GetiFolderNode");
-			}
-
-			System.Diagnostics.Debug.WriteLine("GetiFolderNode() returning false");
-
-			return false;
-		}*/
-
-		/// <summary>
-		/// Checks to see if the specified path is contained in an iFolder.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		/*public bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path)
-		{
-			return manager.IsPathIniFolder(path);
-		}*/
-
-		/// <summary>
-		/// Initializes the properties enumerator.
-		/// </summary>
-		/// <returns>This method returns <b>true</b> if the properties enumerator is successfully initialized; otherwise, <b>false</b>.</returns>
-		/*public bool GetiFolderPropInit()
-		{
-			// Set up the enumerator to get the Properties on the Node.
-			propEnumerator = ( ICSEnumerator )ifoldernode.iFolder.Properties.GetEnumerator();
-
-			return (propEnumerator != null);
-		}*/
-
-		/// <summary>
-		/// Walks the properties enumerator.
-		/// </summary>
-		/// <param name="name">This parameter returns the name of the property.</param>
-		/// <param name="val">This parameter returns the value of the property.</param>
-		/// <returns>This method returns <b>true</b> if a property is successfully read; otherwise, <b>false</b>.</returns>
-		/*public bool GetNextiFolderProp(out string name, out string val)
-		{
-			if (propEnumerator.MoveNext())
-			{
-				Property p = (Property)propEnumerator.Current;
-				name = new string(p.Name.ToCharArray());
-				val = new string(p.Value.ToString().ToCharArray());
-				return true;
-			}
-			else
-			{
-				propEnumerator.Dispose();
-				name = null;
-				val = null;
-				ifoldernode = null;
-				return false;
-			}
-		}*/
-
-		/// <summary>
 		/// Displays the Advanced Properties dialog for the specified iFolder.
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
@@ -503,13 +358,26 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="dllPath">The path where the assembly was loaded from.</param>
 		/// <param name="path">The path of the iFolder.</param>
-		/*public void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
+		public void InvokeConflictResolverDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.IFolder = manager.GetiFolderByPath(path);
-			conflictResolver.LoadPath = dllPath;
-			conflictResolver.Show();		
-		}*/
+			try
+			{
+				iFolder ifolder = ifWebService.GetiFolderByLocalPath(path);
+				ConflictResolver conflictResolver = new ConflictResolver();
+				conflictResolver.iFolder = ifolder;
+				conflictResolver.iFolderWebService = ifWebService;
+				conflictResolver.LoadPath = dllPath;
+				conflictResolver.Show();		
+			}
+			catch (WebException e)
+			{
+				// TODO:
+			}
+			catch (Exception e)
+			{
+				// TODO:
+			}
+		}
 
 		/// <summary>
 		/// Display the iFolder confirmation dialog.
@@ -547,6 +415,7 @@ namespace Novell.iFolderCom
 		/// <param name="dllPath">The path where this assembly was loaded from.</param>
 		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath)
 		{
+			// TODO - may need to pass in a specific page to load.
 			// TODO - need to use locale-specific path
 			string helpPath = Path.Combine(dllPath, @"help\en\doc\user\data\front.html");
 
@@ -556,25 +425,9 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				//logger.Debug(e, "Opening help");
+				// TODO: Localize.
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
-		}
-
-		/// <summary>
-		/// Check if the specified iFolder path has conflicts.
-		/// </summary>
-		/// <param name="path">The path of the iFolder.</param>
-		/// <returns>This method returns <b>true</b> if the iFolder contains conflicts; otherwise, <b>false</b>.</returns>
-		public bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path)
-		{
-			iFolder ifolder = null;//manager.GetiFolderByPath(path);
-			if (ifolder != null)
-			{
-//				return ifolder.HasCollisions();
-			}
-
-			return false;
 		}
 
 		private void connectToWebService()
