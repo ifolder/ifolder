@@ -235,7 +235,7 @@ namespace Mono.ASPNET
  				
 			listen_socket = webSource.CreateSocket ();
 			listen_socket.Listen (500);
-//			listen_socket.Blocking = false;
+			listen_socket.Blocking = false;
 			runner = new Thread (new ThreadStart (RunServer));
 			runner.IsBackground = bgThread;
 			runner.Start ();
@@ -250,7 +250,7 @@ namespace Mono.ASPNET
 				throw new InvalidOperationException ("The server is not started.");
 
 			stop = true;	
-//			runner.Abort ();
+			runner.Abort ();
 			listen_socket.Close ();
 			UnloadAll ();
 			WebTrace.WriteLine ("Server stopped.");
@@ -289,8 +289,7 @@ namespace Mono.ASPNET
 			started = true;
 			Socket client;
 			int w;
-			while (!stop)
-			{
+			while (!stop){
 				w = wSockets.Count;
 
 				// Added by MEL - The desired behavior is to block indefinitely, if only
@@ -329,17 +328,13 @@ namespace Mono.ASPNET
 				}
 
 				w = wSockets.Count;
-				for (int i = 0; i < w; i++) 
-				{
+				for (int i = 0; i < w; i++) {
 					Socket s = (Socket) wSockets [i];
-					if (s == listen_socket) 
-					{
-						try 
-						{
+					if (s == listen_socket) {
+						try {
 							client = s.Accept ();
-						} 
-						catch 
-						{
+							client.Blocking = true;
+						} catch (Exception e) {
 							continue;
 						}
 						WebTrace.WriteLine ("Accepted connection.");
@@ -356,17 +351,14 @@ namespace Mono.ASPNET
 				}
 
 				w = timeouts.Count;
-				if (w > 0) 
-				{
+				if (w > 0) {
 					Socket [] socks_timeout = new Socket [w];
 					timeouts.Keys.CopyTo (socks_timeout, 0);
 					DateTime now = DateTime.UtcNow;
-					foreach (Socket k in socks_timeout) 
-					{
+					foreach (Socket k in socks_timeout) {
 						DateTime atime = (DateTime) timeouts [k];
 						TimeSpan diff = now - atime;
-						if (diff.TotalMilliseconds > 15 * 1000) 
-						{
+						if (diff.TotalMilliseconds > 15 * 1000) {
 							k.Close ();
 							allSockets.Remove (k);
 							timeouts.Remove (k);
@@ -376,13 +368,10 @@ namespace Mono.ASPNET
 				}
 				
 				wSockets.Clear ();
-				if (allSockets.Count == 1) 
-				{
+				if (allSockets.Count == 1) {
 					// shortcut, no foreach
 					wSockets.Add (listen_socket);
-				} 
-				else 
-				{
+				} else {
 					wSockets.AddRange (allSockets);
 				}
 			}
