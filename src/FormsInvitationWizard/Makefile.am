@@ -9,7 +9,7 @@ InvitationWizard_FLAGS = $(CSC_WINEXEFLAG)
 InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) iFolder.dll Agent.dll
 InvitationWizard_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
 
-DATA_FILES = App.ico Invitation.ico invitewiz.png
+DATA_FILES = App.ico Invitation.ico
 
 EXTRA_DIST = $(InvitationWizard_CSFILES) $(DATA_FILES)
 
