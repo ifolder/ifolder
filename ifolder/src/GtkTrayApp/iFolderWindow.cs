@@ -2515,7 +2515,7 @@ namespace Novell.iFolder
 						if(SyncFileName != args.Name)
 						{
 							LogMessage(string.Format(Util.GS(
-									"Deleing file: {0}"), args.Name));
+									"Deleting file: {0}"), args.Name));
 							SyncFileName = args.Name;
 						}
 					}
