@@ -638,7 +638,10 @@
 									readAvailableiFolder:[subNodeEvent nodeID]
 									inCollection:[subNodeEvent collectionID]];
 
-			[iFolderNotificationController newiFolderNotification:ifolder];
+			// if this wasn't an iFolder before we read it, notify the user
+			if( (ifolder != nil) &&
+				([[ifolder OwnerUserID] compare:[ifolder CurrentUserID]] != 0) )
+				[iFolderNotificationController newiFolderNotification:ifolder];
 			break;
 		}
 		case NODE_DELETED:
