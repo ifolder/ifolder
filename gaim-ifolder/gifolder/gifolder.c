@@ -51,7 +51,9 @@
 
 #include "gtkplugin.h"
 
-#include "buddy-sync.h"
+#include "gaim-domain.h"
+#include "event-handler.h"
+
 
 /****************************************************
  * Static Definitions (#defines)                    *
@@ -217,6 +219,8 @@ static gboolean out_inv_safe_to_write = FALSE;
 
 static GtkListStore *trusted_buddies_store = NULL;
 static gboolean trusted_buddies_safe_to_write = FALSE;
+
+SimiasEventClient ec;
 
 /****************************************************
  * Forward Declarations                             *
@@ -3405,8 +3409,40 @@ plugin_load(GaimPlugin *plugin)
 
 	/* Load, but don't show the Invitations Window */
 	init_invitations_window();
+	
+	/* Initialize the Simias Event Client */
+	if (sec_init(&ec, on_sec_state_event, &ec)) {
+		g_print("Error initializing Simias Event Client\n");
+		return FALSE;
+	}
+	
+	g_print("Simias Event Client initialized successfully\n");
+		
+	if (sec_register(ec)) {
+		g_print("Error Registering Simias Event Client\n");
+		return FALSE;
+	}
+	
+	g_print("Simias Event Client registered successfully\n");
 
 	return TRUE;
+}
+
+static gboolean
+plugin_unload(GaimPlugin *plugin)
+{
+	/* Cleanup/De-register the Simias Event Client */
+	if (sec_deregister(ec)) {
+		g_print("Simias Event Client deregistration failed!\n");
+		return FALSE;
+	}
+	
+	if (sec_cleanup(&ec)) {
+		g_print("Simias Event Client cleanup failed!\n");
+		return FALSE;
+	}
+	
+	return TRUE; /* Successfully Unloaded */
 }
 
 /**
@@ -3490,7 +3526,7 @@ static GaimPluginInfo info =
 	"Boyd Timothy <btimothy@novell.com>",
 	"http://www.ifolder.com/",
 	plugin_load,
-	NULL, /* FIXME: Add a plugin-unload function to store information */
+	plugin_unload, /* FIXME: Add a plugin-unload function to store information */
 	NULL,
 	&ui_info,
 	NULL,
