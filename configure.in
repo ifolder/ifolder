@@ -69,6 +69,8 @@ includedir="${prefix}/include"
 oldincludedir="/usr/include"
 infodir="${prefix}/info"
 mandir="${prefix}/man"
+webdir="${exec_prefix}/web"
+webbindir="${exec_prefix}/web/bin"
 
 if test -z "$PKG_CONFIG_PATH"; then
     export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig"
@@ -327,13 +329,15 @@ AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
 AC_SUBST(SYSTEM_XML)
 AC_SUBST(TLBX)
+AC_SUBST(webdir)
+AC_SUBST(webbindir)
 
 #
 # Set pkg-config variables
 #
 PKG_CONFIG_REQUIRES="simias >= 1.0"
 PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/lib:$bindir/bin /r:Novell.iFolder.dll /r:Novell.iFolder.Web.dll"
+PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(PKG_CONFIG_CONFLICTS)

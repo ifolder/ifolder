@@ -23,15 +23,14 @@ endif
 endif
 
 install-exec-local: Novell.iFolder.Web.dll $(DATA_FILES)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)/bin
-	$(INSTALL_PROGRAM) iFolder.asmx $(DEBUG_FILES) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Novell.iFolder.Web.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)/bin
+	$(mkinstalldirs) $(DESTDIR)$(webdir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) iFolder.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
+	$(INSTALL_PROGRAM) Novell.iFolder.Web.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolder.asmx $(DEBUG_FILES)
-	cd $(DESTDIR)$(bindir)/bin; rm -f Novell.iFolder.Web.dll $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir); rm -f iFolder.asmx $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f Novell.iFolder.Web.dll $(DEBUG_FILES)
     
 installcheck-local: install
 	
