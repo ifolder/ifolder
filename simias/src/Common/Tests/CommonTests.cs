@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.IO;
 using System.Diagnostics;
 
 using NUnit.Framework;
@@ -36,6 +37,8 @@ namespace Simias.Tests
 	[TestFixture]
 	public class CommonTests : Assertion
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CommonTests));
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
@@ -44,70 +47,41 @@ namespace Simias.Tests
 		}
 
 		/// <summary>
-		/// Test case setup
+		/// Test fixture setup
 		/// </summary>
-		[SetUp]
-		public void CaseSetup()
+		[TestFixtureSetUp]
+		public void FixtureSetup()
 		{
-			MyTrace.SendToConsole();
-			MyTrace.Switch.Level = TraceLevel.Verbose;
+			string path = Path.GetFullPath("./common1");
+			Directory.CreateDirectory(path);
+			SimiasLogManager.Configure(path);
 		}
 
 		/// <summary>
-		/// Trace Test 1
+		/// Log Test 1
 		/// </summary>
 		[Test]
-		public void TestTrace1()
+		public void TestLog1()
 		{
-			MyTrace.WriteLine("Test 1");
+			log.Debug("Test 1");
 		}
 
 		/// <summary>
-		/// Trace Test 2
+		/// Log Test 2
 		/// </summary>
 		[Test]
 		public void TestTrace2()
 		{
-			MyTrace.WriteLine("Test 2 : {0}", "hello");
+			log.Debug("Test 2 : {0}", "hello");
 		}
 
 		/// <summary>
-		/// Trace Test 3
+		/// Log Test 3
 		/// </summary>
 		[Test]
 		public void TestTrace3()
 		{
-			MyTrace.WriteLine(new Exception());
-		}
-
-		/// <summary>
-		/// Trace Test 1a
-		/// </summary>
-		[Test]
-		public void TestTrace1a()
-		{
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			MyTrace.WriteLine("Test 1");
-		}
-
-		/// <summary>
-		/// Trace Test 2a
-		/// </summary>
-		[Test]
-		public void TestTrace2a()
-		{
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			MyTrace.WriteLine("Test 2 : {0}", "hello");
-		}
-
-		/// <summary>
-		/// Trace Test 3a
-		/// </summary>
-		[Test]
-		public void TestTrace3a()
-		{
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			MyTrace.WriteLine(new Exception());
+			log.Debug(new Exception(), "Test 3");
 		}
 
 		/// <summary>
@@ -116,7 +90,7 @@ namespace Simias.Tests
 		[Test]
 		public void TestDns()
 		{
-			Console.WriteLine("Host: {0}", MyDns.GetHostName());
+			log.Debug("Host: {0}", MyDns.GetHostName());
 		}
 
 		/// <summary>
@@ -125,8 +99,8 @@ namespace Simias.Tests
 		[Test]
 		public void TestEnvironment()
 		{
-			Console.WriteLine("Platform: {0}", MyEnvironment.Platform);
-			Console.WriteLine("Runtime: {0}", MyEnvironment.Runtime);
+			log.Debug("Platform: {0}", MyEnvironment.Platform);
+			log.Debug("Runtime: {0}", MyEnvironment.Runtime);
 		}
 
 		/// <summary>
@@ -138,8 +112,8 @@ namespace Simias.Tests
 			string path1 = @"/home/jdoe";
 			string path2 = @"c:\home\jdoe";
 
-			Console.WriteLine("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path1), path1);
-			Console.WriteLine("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path2), path2);
+			log.Debug("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path1), path1);
+			log.Debug("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path2), path2);
 		}
 	}
 }

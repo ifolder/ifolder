@@ -22,52 +22,27 @@
  ***********************************************************************/
 
 using System;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 
 using log4net;
+using log4net.spi;
 
 namespace Simias
 {
 	/// <summary>
-	/// My Dns
+	/// Simias Log Interface
 	/// </summary>
-	public class MyDns
+	public interface ISimiasLog
 	{
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
-		private MyDns()
-		{
-		}
+		void Debug(string format, params object[] args);
+		void Info(string format, params object[] args);
+		void Warn(string format, params object[] args);
+		void Error(string format, params object[] args);
+		void Fatal(string format, params object[] args);
 
-		/// <summary>
-		/// Lookup the host name of the local computer.
-		/// </summary>
-		/// <returns>The DNS host name of the local computer.</returns>
-		public static string GetHostName()
-		{
-			// machine host name
-			string host = Dns.GetHostName();
-			IPHostEntry ipHostEntry = Dns.Resolve(host);
-			host = ipHostEntry.HostName;
-
-			// loop through addresses
-			foreach(IPAddress ipAddress in ipHostEntry.AddressList)
-			{
-				// skip loop-back addresses
-				if (IPAddress.IsLoopback(ipAddress)) continue;
-
-				// use the address
-				host = ipAddress.ToString();
-
-				// take the first one
-				break;
-			}
-
-			return host;
-		}
+		void Debug(Exception e, string format, params object[] args);
+		void Info(Exception e, string format, params object[] args);
+		void Warn(Exception e, string format, params object[] args);
+		void Error(Exception e, string format, params object[] args);
+		void Fatal(Exception e, string format, params object[] args);
 	}
 }

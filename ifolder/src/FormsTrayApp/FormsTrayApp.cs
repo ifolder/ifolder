@@ -43,7 +43,9 @@ namespace Novell.iFolder.FormsTrayApp
 	/// </summary>
 	public class FormsTrayApp : Form
 	{
-		#region Class Members
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+		
+        #region Class Members
 		private NotifyIcon notifyIcon1;
 		private ContextMenu contextMenu1;
 		private MenuItem menuItemExit;
@@ -358,6 +360,8 @@ namespace Novell.iFolder.FormsTrayApp
 //			sysManager = new SystemManager(conf);
 //			sysManager.StartServices();
 
+            SimiasLogManager.Configure(conf);
+
 			publisher = new EventPublisher(conf);
 
 			synkEvent = new AutoResetEvent(false);
@@ -384,15 +388,14 @@ namespace Novell.iFolder.FormsTrayApp
 			IntPtr handle = traceForm.Handle;
 
 			// Sync properties used by SyncManager.
-			SyncProperties properties = new SyncProperties();
+			SyncProperties properties = new SyncProperties(conf);
 
 			// Don't use secure channel for now.
 			properties.DefaultChannelSinks = 
 				SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
 			// Get the logic factory from the config file.
-			Configuration config = new Configuration();
-			string logicFactory = config.Get("iFolderApp", "SyncLogic", "SynkerA");
+			string logicFactory = conf.Get("iFolderApp", "SyncLogic", "SynkerA");
 			switch (logicFactory)
 			{
 				case "SynkerA":

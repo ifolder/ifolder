@@ -43,12 +43,10 @@ namespace Simias
 		
 		private Mutex mutex = new Mutex(false, "SimiasConfigMutex");
 
-		//[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
 		public Configuration() : this(null)
 		{
 		}
 
-		//[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
 		public Configuration(string path)
 		{
 			if (path == null)
@@ -78,7 +76,7 @@ namespace Simias
 		{
 		}
 
-		//[Obsolete("Use .StorePath instead of .BasePath.", false)]
+		[Obsolete("Use Configuration.StorePath instead.")]
 		public string BasePath
 		{
 			get { return storePath; }
@@ -209,7 +207,7 @@ namespace Simias
 
 		#region Static Methods
 		
-		[Obsolete("Stop using the DefaultPath.", false)]
+		[Obsolete("This method is being removed.")]
 		public static string DefaultPath
 		{
 			get
@@ -224,7 +222,7 @@ namespace Simias
 			}
 		}
 
-		[Obsolete("Stop using the fixupPath.", false)]
+		[Obsolete("This method is being removed.")]
 		public static string fixupPath(string path)
 		{
 			if ((path.EndsWith(".simias") == false) &&

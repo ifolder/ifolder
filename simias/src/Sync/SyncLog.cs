@@ -32,6 +32,7 @@ namespace Simias.Sync
 /// <summary>
 /// controlled tracing and debugging output by class categories
 /// </summary>
+[Obsolete("Use log4net instead.")]
 public class Log
 {
 	static TraceSwitch traceSwitch = new TraceSwitch("SyncTrace", "sync trace switch");

@@ -85,6 +85,14 @@ namespace Simias.Sync
 		{
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public SyncProperties(Configuration configuration)
+		{
+			this.path = configuration.StorePath;
+		}
+
 		#region ICloneable Members
 
 		/// <summary>

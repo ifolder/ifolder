@@ -35,21 +35,17 @@ namespace Simias
 	/// </summary>
 	public class MyTraceFormListener : TraceListener
 	{
-		private static readonly string NO_CATEGORY = "?";
-
 		private ListView list;
-		private TreeView tree;
 		private bool scrollLock = false;
 		private decimal sizeLimit = 100;
 
-		public delegate void WriteDelegate(string message, string category);
+		public delegate void WriteDelegate(string message);
 
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public MyTraceFormListener(TreeView tree, ListView list)
+		public MyTraceFormListener(ListView list)
 		{
-			this.tree = tree;
 			this.list = list;
 		}
 
@@ -59,7 +55,7 @@ namespace Simias
 		/// <param name="message">The trace message.</param>
 		public override void Write(string message)
 		{
-			WriteLine(message, NO_CATEGORY);
+			WriteLine(message);
 		}
 
 		/// <summary>
@@ -68,43 +64,12 @@ namespace Simias
 		/// <param name="message">The trace message.</param>
 		public override void WriteLine(string message)
 		{
-			WriteLine(message, NO_CATEGORY);
+			list.Invoke(new WriteDelegate(WriteCallBack), new string[] { message });
 		}
 
-		/// <summary>
-		/// Write a message to the trace listener.
-		/// </summary>
-		/// <param name="message">The trace message.</param>
-		/// <param name="category">The category of the message.</param>
-		public override void Write(string message, string category)
+		public void WriteCallBack(string message)
 		{
-			WriteLine(message, category);
-		}
-
-		/// <summary>
-		/// Write a message to the trace listener.
-		/// </summary>
-		/// <param name="message">The trace message.</param>
-		/// <param name="category">The category of the message.</param>
-		public override void WriteLine(string message, string category)
-		{
-			tree.Invoke(new WriteDelegate(WriteCallBack), new string[] { message, category });
-		}
-
-		public void WriteCallBack(string message, string category)
-		{
-			
-			// add category
-			TreeNode node = GetCategory(category);
-
-			string[] categories = Regex.Split(category, @"(\.)", RegexOptions.Compiled);
-
-			// add message
-			ListViewItem item = new ListViewItem(new string[]
-				{ message, categories[categories.Length - 1],
-					DateTime.Now.ToShortTimeString() + " "
-					+ DateTime.Now.ToShortDateString() });
-			item = list.Items.Add(item);
+			list.Items.Add(message.Trim());
 
 			if ((sizeLimit != -1) && (list.Items.Count > sizeLimit))
 			{
@@ -118,76 +83,6 @@ namespace Simias
 				list.EndUpdate();
 			}
 			
-			// associate category and message
-			if ((node.Tag == null) || (node.GetType() != typeof(ArrayList)))
-			{
-				node.Tag = new ArrayList();
-			}
-
-			// TODO: a database of options?
-			if (node.Checked)
-			{
-				(node.Tag as ArrayList).Add(item);
-
-				if (!scrollLock)
-				{
-					item.EnsureVisible();
-				}
-			}
-		}
-
-		private TreeNode GetCategory(string category)
-		{
-			TreeNode node = null;
-
-			string[] list = Regex.Split(category, @"(\.)", RegexOptions.Compiled);
-			
-			tree.BeginUpdate();
-
-			TreeNodeCollection nodes = tree.Nodes;
-
-			for(int i=0; i < list.Length; i++)
-			{
-				string text = list[i];
-
-				// skip periods
-				if (text.Equals(".")) continue;
-
-				node = ContainsNodeWithText(nodes, text);
-
-				if (node == null)
-				{
-					node = nodes.Add(text);
-					node.Checked = true;
-				}
-
-				node.EnsureVisible();
-
-				nodes = node.Nodes;
-			}
-
-			tree.EndUpdate();
-
-			return node;
-		}
-
-		private TreeNode ContainsNodeWithText(TreeNodeCollection nodes, string text)
-		{
-			TreeNode result = null;
-
-			if ((nodes != null) && (nodes.Count > 0))
-			{
-				foreach(TreeNode node in nodes)
-				{
-					if (node.Text.Equals(text))
-					{
-						result = node;
-						break;
-					}
-				}
-			}
-
-			return result;
 		}
 
 		/// <summary>
