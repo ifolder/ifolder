@@ -677,7 +677,7 @@ namespace Simias.Sync
 											ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
 											foreach (ShallowNode csn in csnList)
 											{
-												// Skip the collection.
+												// Skip the dirnode.
 												if (csn.ID == node.ID)
 													continue;
 
@@ -688,9 +688,12 @@ namespace Simias.Sync
 													if (childRP != null)
 													{
 														string newRP = childRP.ValueString;
-														childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
-														childNode.Properties.ModifyNodeProperty(childRP);
-														nodeList.Add(childNode);
+														if (newRP[oldRelativePath.Length] == '/')
+														{
+															childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
+															childNode.Properties.ModifyNodeProperty(childRP);
+															nodeList.Add(childNode);
+														}
 													}
 												}
 											}
