@@ -37,7 +37,7 @@ Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : simias = %{version}
-Requires     : mono >= 0.31
+Requires     : mono >= 0.30
 Requires     : gtk-sharp >= 0.17
 Obsoletes    : %{name} <= %{version}
 
