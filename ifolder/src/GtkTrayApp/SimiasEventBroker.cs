@@ -237,6 +237,11 @@ namespace Novell.iFolder
 		private Queue				NodeEventQueue;
 		private Queue				SyncEventQueue;
 		private Queue				FileEventQueue;
+		private Queue				SimiasEventQueue;
+		private bool				runEventThread;
+		private Thread				SEThread;
+		private ManualResetEvent	SEEvent;
+
 
 		public event iFolderAddedEventHandler iFolderAdded;
 		public event iFolderChangedEventHandler iFolderChanged;
@@ -253,6 +258,7 @@ namespace Novell.iFolder
 			NodeEventQueue = new Queue();
 			SyncEventQueue = new Queue();
 			FileEventQueue = new Queue();
+			SimiasEventQueue = new Queue();
 
 			SimiasEventFired = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OnSimiasEventFired) );
@@ -260,6 +266,10 @@ namespace Novell.iFolder
 							new Gtk.ReadyEvent(OnSyncEventFired) );
 			FileEventFired = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OnFileEventFired) );
+
+			SEThread = new Thread(new ThreadStart(SimiasEventThread));
+			SEThread.IsBackground = true;
+			SEEvent = new ManualResetEvent(false);
 		}
 
 
@@ -313,19 +323,22 @@ namespace Novell.iFolder
 			simiasEventClient.Register();
 
 			simiasEventClient.SetEvent( IProcEventAction.AddNodeCreated,
-				new IProcEventHandler( SimiasEventNodeCreatedHandler ) );
+				new IProcEventHandler( SimiasEventHandler ) );
 
 			simiasEventClient.SetEvent( IProcEventAction.AddNodeChanged,
-				new IProcEventHandler( SimiasEventNodeChangedHandler ) );
+				new IProcEventHandler( SimiasEventHandler ) );
 
 			simiasEventClient.SetEvent( IProcEventAction.AddNodeDeleted,
-				new IProcEventHandler( SimiasEventNodeDeletedHandler ) );
+				new IProcEventHandler( SimiasEventHandler ) );
 
 			simiasEventClient.SetEvent( IProcEventAction.AddCollectionSync,
 				new IProcEventHandler( SimiasEventSyncCollectionHandler) );
 
 			simiasEventClient.SetEvent( IProcEventAction.AddFileSync,
 				new IProcEventHandler( SimiasEventSyncFileHandler) );
+
+			runEventThread = true;
+			SEThread.Start();
 		}
 
 
@@ -341,9 +354,64 @@ namespace Novell.iFolder
 			{
 				// ignore
 			}
+
+			runEventThread = false;
 		}
 
 
+		private void SimiasEventHandler(SimiasEventArgs args)
+		{
+			lock(SimiasEventQueue)
+			{
+				SimiasEventQueue.Enqueue(args);
+			}
+			SEEvent.Set();
+		}
+
+
+		private void SimiasEventThread()
+		{
+			bool hasmore = false;
+
+			while(runEventThread)
+			{
+				lock(SimiasEventQueue)
+				{
+					hasmore = (SimiasEventQueue.Count > 0);
+				}
+
+				while(hasmore && runEventThread)
+				{
+					SimiasEventArgs args;
+
+					lock(NodeEventQueue)
+					{
+						args = (SimiasEventArgs)SimiasEventQueue.Dequeue();
+					}
+				
+					NodeEventArgs nargs = args as NodeEventArgs;
+					switch(nargs.ChangeType)
+					{
+						case Simias.Client.Event.EventType.NodeCreated:
+							NodeCreatedHandler(nargs);
+							break;
+						case Simias.Client.Event.EventType.NodeDeleted:
+							NodeDeletedHandler(nargs);
+							break;
+						case Simias.Client.Event.EventType.NodeChanged:
+							NodeChangedHandler(nargs);
+							break;
+					}
+
+					lock(SimiasEventQueue)
+					{
+						hasmore = (SimiasEventQueue.Count > 0);
+					}
+				}
+				SEEvent.WaitOne();
+				SEEvent.Reset();
+			}
+		}
 
 
 		private void ErrorHandler( ApplicationException e, object context )
@@ -385,10 +453,8 @@ namespace Novell.iFolder
 		}
 
 
-		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
+		private void NodeCreatedHandler(NodeEventArgs nargs)
 		{
-			NodeEventArgs nargs = args as NodeEventArgs;
-
 			switch(nargs.Type)
 			{
 				case "Node":
@@ -516,10 +582,8 @@ namespace Novell.iFolder
 
 
 
-		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
+		private void NodeChangedHandler(NodeEventArgs nargs)
 		{
-			NodeEventArgs nargs = args as NodeEventArgs;
-
 			switch(nargs.Type)
 			{
 				case "Collection":
@@ -615,10 +679,8 @@ namespace Novell.iFolder
 
 
 
-		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
+		private void NodeDeletedHandler(NodeEventArgs nargs)
 		{
-			NodeEventArgs nargs = args as NodeEventArgs;
-
 			switch(nargs.Type)
 			{
 				case "Node":

@@ -69,6 +69,7 @@ namespace Novell.iFolder
 		private Gtk.ThreadNotify	iFolderStateChanged;
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
+		private bool				winShown;
 
 		public iFolderApplication(string[] args)
 			: base("iFolder", "1.0", Modules.UI, args)
@@ -101,6 +102,7 @@ namespace Novell.iFolder
 
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
+			winShown = false;
 		}
 
 
@@ -120,22 +122,36 @@ namespace Novell.iFolder
 
 		private void StartiFolder()
 		{
+			bool simiasRunning = false;
+
 			CurrentState = iFolderState.Starting;
 			iFolderStateChanged.WakeupMain();
 
 			if(ifws == null)
 			{
+				Simias.Client.Manager.Start();
+
+				ifws = new iFolderWebService();
+				ifws.Url = 
+					Simias.Client.Manager.LocalServiceUrl.ToString() +
+						"/iFolder.asmx";
+
+				// wait for simias to start up
+				while(!simiasRunning)
+				{
+					try
+					{
+						ifws.Ping();
+						simiasRunning = true;
+					}
+					catch(Exception e)
+					{
+						simiasRunning = false;
+					}
+				}
+
 				try
 				{
-					Simias.Client.Manager.Start();
-
-					ifws = new iFolderWebService();
-					ifws.Url = 
-						Simias.Client.Manager.LocalServiceUrl.ToString() +
-							"/iFolder.asmx";
-
-					ifws.Ping();
-	
 					ifSettings = ifws.GetSettings();
 
 					EventBroker = new SimiasEventBroker();
@@ -179,6 +195,17 @@ namespace Novell.iFolder
 		}
 
 
+
+
+		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
+		{
+			if(ifwin != null)
+				ifwin.HandleFileSyncEvent(args);
+		}
+
+
+
+
 		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
 		{
 			switch(args.Action)
@@ -186,17 +213,19 @@ namespace Novell.iFolder
 				case Action.StartSync:
 				{
 					gAppIcon.FromAnimation = SyncingPixbuf;
-					// TODO: Add a log entry that we started
 					break;
 				}
 				case Action.StopSync:
 				{
 					gAppIcon.Pixbuf = RunningPixbuf;
-					// TODO: Add a log entry that we stopped
 					break;
 				}
 			}
+			if(ifwin != null)
+				ifwin.HandleSyncEvent(args);
 		}
+
+
 
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
@@ -215,6 +244,8 @@ namespace Novell.iFolder
 			if(ifwin != null)
 				ifwin.iFolderCreated(args.iFolder);
 		}
+
+
 
 
 		private void OniFolderChangedEvent(object o, 
@@ -239,12 +270,16 @@ namespace Novell.iFolder
 		}
 
 
+
+
 		private void OniFolderDeletedEvent(object o, 
 									iFolderDeletedEventArgs args)
 		{
 			if(ifwin != null)
 				ifwin.iFolderDeleted(args.iFolderID);
 		}
+
+
 
 
 		private void OniFolderUserAddedEvent(object o,
@@ -263,6 +298,8 @@ namespace Novell.iFolder
 		}
 
 
+
+
 		// ThreadNotify Method that will react to a fired event
 		private void OniFolderStateChanged()
 		{
@@ -273,8 +310,14 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Running:
-					if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
-						OnJoinEnterprise(null, null);
+					if(ifSettings != null)
+					{
+						ifwin = new iFolderWindow(ifws, ifSettings);
+
+						if(!ifSettings.HaveEnterprise)
+							OnJoinEnterprise(null, null);
+					}
+
 
 					if(EventBroker != null)
 					{
@@ -293,7 +336,9 @@ namespace Novell.iFolder
 						EventBroker.CollectionSyncEventFired +=
 							new CollectionSyncEventHandler(
 												OniFolderSyncEvent);
-
+						EventBroker.FileSyncEventFired +=
+							new FileSyncEventHandler(
+												OniFolderFileSyncEvent);
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
@@ -532,27 +577,11 @@ namespace Novell.iFolder
 		{
 			if(CheckWebService())
 			{
-				if(ifwin == null)
-				{
-					ifwin = new iFolderWindow(ifws, ifSettings);
+				if(!winShown)
 					ifwin.ShowAll();
-				}
 				else
-				{
-					// this will raise the window to the front
 					ifwin.Present();
-				}
-//				iFolderWindow win;
-
-//				win = new iFolderWindow(ifws);
-//				win.ShowAll();
 			}
-/*
-			ApplicationProperties propDialog;
-
-			propDialog = new ApplicationProperties();
-			propDialog.Run();
-*/
 		}
 
 
