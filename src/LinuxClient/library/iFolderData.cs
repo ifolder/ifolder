@@ -45,9 +45,16 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Web Service to access the data
+		/// Web Service to access the ifolder data
 		/// </summary>
 		private iFolderWebService ifws = null;
+
+
+		/// <summary>
+		/// Web Service to access the simias data
+		/// </summary>
+		private SimiasWebService simws = null;
+
 
 		/// <summary>
 		/// Hashtable to hold the ifolders
@@ -63,7 +70,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Hashtable to hold the domains
 		/// </summary>
-		private DomainWeb		defDomain = null;
+		private DomainInformation	defDomain = null;
 
 
 		/// <summary>
@@ -80,8 +87,22 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				throw new Exception("Unable to create web service");
+				ifws = null;
+				throw new Exception("Unable to create ifolder web service");
 			}
+			try
+			{
+				simws = new SimiasWebService();
+				simws.Url = 
+					Simias.Client.Manager.LocalServiceUrl.ToString() +
+					"/Simias.asmx";
+			}
+			catch(Exception e)
+			{
+				simws = null;
+				throw new Exception("Unable to create simias web service");
+			}
+
 
 			curiFolders = new Hashtable();
 			curDomains = new Hashtable();
@@ -152,10 +173,10 @@ namespace Novell.iFolder
 
 				// Refresh the Domains
 				curDomains.Clear();
-				DomainWeb[] domains = null;
+				DomainInformation[] domains = null;
 				try
 				{
-					domains = ifws.GetDomains();
+					domains = simws.GetDomains(false);
 				}
 				catch(Exception e)
 				{
@@ -164,7 +185,7 @@ namespace Novell.iFolder
 
 				if(domains != null)
 				{
-					foreach(DomainWeb domain in domains)
+					foreach(DomainInformation domain in domains)
 					{
 						curDomains.Add(domain.ID, domain);
 
@@ -205,7 +226,7 @@ namespace Novell.iFolder
 			lock(typeof(iFolderWeb))
 			{
 				ICollection icol = curDomains.Values;
-				foreach(DomainWeb domain in icol)
+				foreach(DomainInformation domain in icol)
 				{
 					if(domain.POBoxID.Equals(poBoxID))
 						return true;
@@ -339,9 +360,9 @@ namespace Novell.iFolder
 			lock(typeof(iFolderWeb))
 			{
 				ICollection icol = curDomains.Values;
-				foreach(DomainWeb domain in icol)
+				foreach(DomainInformation domain in icol)
 				{
-					if(domain.UserID.Equals(UserID))
+					if(domain.MemberID.Equals(UserID))
 						return true;
 				}
 				return false;
@@ -350,7 +371,7 @@ namespace Novell.iFolder
 
 
 
-		public void AddDomain(DomainWeb newDomain)
+		public void AddDomain(DomainInformation newDomain)
 		{
 			lock (typeof(iFolderData) )
 			{
@@ -379,11 +400,11 @@ namespace Novell.iFolder
 
 
 
-		public DomainWeb[] GetDomains()
+		public DomainInformation[] GetDomains()
 		{
 			lock(typeof(iFolderWeb))
 			{
-				DomainWeb[] domains = new DomainWeb[curDomains.Count];
+				DomainInformation[] domains = new DomainInformation[curDomains.Count];
 
 				ICollection icol = curDomains.Values;
 				icol.CopyTo(domains, 0);
@@ -394,7 +415,7 @@ namespace Novell.iFolder
 
 
 
-		public DomainWeb GetDefaultDomain()
+		public DomainInformation GetDefaultDomain()
 		{
 			lock(typeof(iFolderWeb))
 			{
@@ -404,13 +425,13 @@ namespace Novell.iFolder
 
 
 
-		public bool SetDefaultDomain(DomainWeb domain)
+		public bool SetDefaultDomain(DomainInformation domain)
 		{
 			lock(typeof(iFolderWeb))
 			{
 				try
 				{
-					ifws.SetDefaultDomain(domain.ID);
+					simws.SetDefaultDomain(domain.ID);
 					if(defDomain.ID != domain.ID)
 					{
 						defDomain.IsDefault = false;
