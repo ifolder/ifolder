@@ -57,18 +57,21 @@ namespace Simias.Web
 			// update the prefix of the installed directory
 			SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
 			Environment.CurrentDirectory = SimiasSetup.webbindir;
-			Console.WriteLine("Application Start Path: {0}", Environment.CurrentDirectory);
+			Console.Error.WriteLine("Application Start Path: {0}", Environment.CurrentDirectory);
 
-			serviceManager = new Simias.Service.Manager(Configuration.GetConfiguration());
+            if (serviceManager == null)
+            {
+                serviceManager = new Simias.Service.Manager(Configuration.GetConfiguration());
+            }
 			
-			Console.WriteLine("Starting Simias Process");
+			Console.Error.WriteLine("Starting Simias Process");
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
 
 			// Send the simias up event.
 			EventPublisher eventPub = new EventPublisher();
 			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Up", "The simias service is running", DateTime.Now) );
-			Console.WriteLine("Simias Process Running");
+			Console.Error.WriteLine("Simias Process Running");
 		}
  
 		/// <summary>
@@ -132,7 +135,7 @@ namespace Simias.Web
 		/// <param name="e"></param>
 		protected void Application_End(Object sender, EventArgs e)
 		{
-			Console.WriteLine("Starting Simias Process Shutdown");
+            Console.Error.WriteLine("Starting Simias Process Shutdown");
 
 			// Send the simias down event and wait for 1/2 second for the message to be routed.
 			EventPublisher eventPub = new EventPublisher();
@@ -142,7 +145,7 @@ namespace Simias.Web
 			serviceManager.StopServices();
 			serviceManager.WaitForServicesStopped();
 			serviceManager = null;
-			Console.WriteLine("Simias Process Shutdown");
+			Console.Error.WriteLine("Simias Process Shutdown");
 		}
 	}
 }
