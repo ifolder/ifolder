@@ -49,6 +49,10 @@ all: addressbook.spec addressbook-dist
 	
 addressbook-dist:
 	cd $(top_srcdir); make dist
+	@test "x" = "x$(SOURCE_TARBALLS)" || \
+		CMD='cp -f $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz "$(SOURCE_TARBALLS)"'; \
+		echo $$CMD; \
+		eval $$CMD
 
 install: $(RPM_FILE)
 	sudo rpm -Uvh $(RPM_FILE)
