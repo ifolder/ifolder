@@ -192,7 +192,7 @@ namespace Simias.Event
 			if (overrideConfig == true)
 				return false;
 			else
-                return true;
+				return true;
 		}
 		
 		/// <summary>
@@ -200,43 +200,46 @@ namespace Simias.Event
 		/// </summary>
 		public static void RegisterClientChannel(Configuration conf)
 		{
-			// Check if we should run in process.
-			if (!RunInProcess())
+			lock (typeof( EventBroker))
 			{
-				startService(conf);
-				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-				bool registered = false;
-
-				WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
-				foreach (WellKnownClientTypeEntry ct in cta)
+				// Check if we should run in process.
+				if (!RunInProcess())
 				{
-					Type t = typeof(EventBroker);
-					Type t1 = ct.ObjectType;
-					if (Type.Equals(t, t1))
+					startService(conf);
+					string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+					bool registered = false;
+
+					WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
+					foreach (WellKnownClientTypeEntry ct in cta)
 					{
-						registered = true;
-						break;
+						Type t = typeof(EventBroker);
+						Type t1 = ct.ObjectType;
+						if (Type.Equals(t, t1))
+						{
+							registered = true;
+							break;
+						}
 					}
-				}
-				if (!registered)
-				{
-					Hashtable props = new Hashtable();
-					props["port"] = 0;
+					if (!registered)
+					{
+						Hashtable props = new Hashtable();
+						props["port"] = 0;
 
-					BinaryServerFormatterSinkProvider
-						serverProvider = new BinaryServerFormatterSinkProvider();
-					BinaryClientFormatterSinkProvider
-						clientProvider = new BinaryClientFormatterSinkProvider();
+						BinaryServerFormatterSinkProvider
+							serverProvider = new BinaryServerFormatterSinkProvider();
+						BinaryClientFormatterSinkProvider
+							clientProvider = new BinaryClientFormatterSinkProvider();
 #if !MONO
-					serverProvider.TypeFilterLevel =
-						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+						serverProvider.TypeFilterLevel =
+							System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
 #endif
-					TcpChannel chan = new
-						TcpChannel(props,clientProvider,serverProvider);
-					ChannelServices.RegisterChannel(chan);
+						TcpChannel chan = new
+							TcpChannel(props,clientProvider,serverProvider);
+						ChannelServices.RegisterChannel(chan);
 
-					//ChannelServices.RegisterChannel(new TcpChannel());
-					RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
+						//ChannelServices.RegisterChannel(new TcpChannel());
+						RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
+					}
 				}
 			}
 		}
@@ -275,7 +278,7 @@ namespace Simias.Event
 				conf.Set(CFG_Section, CFG_UriKey, s[0]);
 			}
 		}
-
+	
 		private static void startService(Configuration conf)
 		{
 			bool createdMutex;
@@ -289,7 +292,7 @@ namespace Simias.Event
 			
 				// The service is not running start it.
 				System.Diagnostics.Process service = new Process();
-				service.StartInfo.CreateNoWindow = true;
+				//service.StartInfo.CreateNoWindow = true;
 				service.StartInfo.UseShellExecute = false;
 				if (MyEnvironment.Mono)
 				{
@@ -303,8 +306,14 @@ namespace Simias.Event
 				}
 				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + mutexName;
 				service.Start();
-				mutex.ReleaseMutex();
-				System.Threading.Thread.Sleep(500);
+                mutex.ReleaseMutex();
+				Thread.Sleep(100);
+				while (mutex.WaitOne(0, false))
+				{
+					mutex.ReleaseMutex();
+					Thread.Sleep(100);
+					//Console.WriteLine("After Release = {0}", DateTime.Now.Ticks);
+				}
 			}
 		}
 

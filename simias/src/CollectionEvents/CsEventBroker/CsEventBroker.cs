@@ -52,17 +52,17 @@ namespace Simias.Event
 				mutexName = args[1];
 			}
 
+			ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+			EventBroker.RegisterService(shutdownEvent, new Configuration(args[0]));
 			bool createdMutex;
 			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
 			if (!createdMutex)
 			{
 				mutex.WaitOne();
 			}
-
-			ManualResetEvent shutdownEvent = new ManualResetEvent(false);
-			EventBroker.RegisterService(shutdownEvent, new Configuration(args[0]));
 			// Wait (forever) until we are killed.
 			shutdownEvent.WaitOne();
+			mutex.Close();
 		}
 	}
 }
