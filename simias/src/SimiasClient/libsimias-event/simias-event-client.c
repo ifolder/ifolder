@@ -62,12 +62,12 @@
 /* union semun is defined by including <sys/sem.h> */
 #else
 /* according to X/OPEN we have to define it ourselves */
-//union semun {
-//		int val;
-//		struct semid_ds *buf;
-//		unsigned short *array;
-///		struct seminfo *__buf;//
-//};
+union semun {
+		int val;
+		struct semid_ds *buf;
+		unsigned short *array;
+		struct seminfo *__buf;
+};
 #endif
 #endif /* DARWIN */
 
