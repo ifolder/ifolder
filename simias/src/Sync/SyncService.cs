@@ -673,7 +673,9 @@ namespace Simias.Sync
 						DirNode dn = node as DirNode;
 						if (dn != null)
 						{
-							Directory.Delete(dn.GetFullPath(collection), true);
+							string path = dn.GetFullPath(collection);
+							if (Directory.Exists(path))
+								Directory.Delete(path, true);
 							// Do a deep delete.
 							Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 							collection.Commit(deleted);
@@ -683,8 +685,11 @@ namespace Simias.Sync
 							// If this is a file delete the file.
 							BaseFileNode bfn = node as BaseFileNode;
 							if (bfn != null)
-								File.Delete(bfn.GetFullPath(collection));
-
+							{
+								string path = bfn.GetFullPath(collection);
+								if (File.Exists(path))
+									File.Delete(bfn.GetFullPath(collection));
+							}
 							collection.Delete(node);
 							collection.Commit(node);
 						}
