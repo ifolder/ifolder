@@ -488,8 +488,9 @@ namespace Simias.Client.Event
 									{ 
 										cb( nodeArgs );
 									}
-									catch
+									catch ( Exception ex )
 									{
+										ReportError( new ApplicationException( "Removing subscriber because of exception", ex ) );
 										onChangedNodeEvent -= cb;
 									}
 								}
@@ -509,8 +510,9 @@ namespace Simias.Client.Event
 									{ 
 										cb( nodeArgs );
 									}
-									catch
+									catch ( Exception ex )
 									{
+										ReportError( new ApplicationException( "Removing subscriber because of exception", ex ) );
 										onCreatedNodeEvent -= cb;
 									}
 								}
@@ -530,8 +532,9 @@ namespace Simias.Client.Event
 									{ 
 										cb( nodeArgs );
 									}
-									catch
+									catch ( Exception ex )
 									{
+										ReportError( new ApplicationException( "Removing subscriber because of exception", ex ) );
 										onDeletedNodeEvent -= cb;
 									}
 								}
@@ -557,8 +560,9 @@ namespace Simias.Client.Event
 							{ 
 								cb( collectionArgs );
 							}
-							catch
+							catch ( Exception ex )
 							{
+								ReportError( new ApplicationException( "Removing subscriber because of exception", ex ) );
 								onCollectionSyncEvent -= cb;
 							}
 						}
@@ -579,8 +583,9 @@ namespace Simias.Client.Event
 							{ 
 								cb( fileArgs );
 							}
-							catch
+							catch ( Exception ex )
 							{
+								ReportError( new ApplicationException( "Removing subscriber because of exception", ex ) );
 								onFileSyncEvent -= cb;
 							}
 						}
@@ -601,8 +606,9 @@ namespace Simias.Client.Event
 							{
 								cb( notifyArgs );
 							}
-							catch
+							catch ( Exception ex )
 							{
+								ReportError( new ApplicationException( "Removing subscriber because of exception", ex ) );
 								onNotifyEvent -= cb;
 							}
 						}
