@@ -1460,7 +1460,7 @@ namespace AddressBookCmd
 							Console.WriteLine("Deleting contact: " + contactName);
 						}
 						
-						IABList cList = cAddressBook.SearchUsername(contactName, SearchOp.Equal);
+						IABList cList = cAddressBook.SearchUsername(contactName, Simias.Storage.SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							tmpContact.Delete();
