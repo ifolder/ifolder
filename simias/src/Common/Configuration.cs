@@ -74,13 +74,13 @@ namespace Simias
 		/// </summary>
 		public string StorePath
 		{
-			get { return fixupPath( CleanStorePath ); }
+			get { return fixupPath( StorePathRoot ); }
 		}
 
 		/// <summary>
 		/// Called to get the path where simias is installed (a clean un-fixed version).
 		/// </summary>
-		public string CleanStorePath
+		public string StorePathRoot
 		{
 			get { return Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) ; }
 			set { Set( storeProvider, storeProviderPath, value ); }
