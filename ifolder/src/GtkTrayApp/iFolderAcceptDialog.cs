@@ -51,7 +51,7 @@ namespace Novell.iFolder
 			this.VBox.BorderWidth = 10;
 			this.VBox.Homogeneous = false;
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						"Setup a Shared iFolder</span>");
+						"Setup Shared iFolder: " + ifolder.Name + "</span>");
 
 			l.LineWrap = false;
 			l.UseMarkup = true;

@@ -804,48 +804,59 @@ namespace Novell.iFolder
 
 		public void OnCreateiFolder(object o, EventArgs args)
 		{
-			// create a file selection dialog and turn off all of the
-			// file operations and controlls
-			FileSelection fs = new FileSelection ("Choose a folder...");
-			fs.FileList.Parent.Hide();
-			fs.SelectionEntry.Hide();
-			fs.FileopDelFile.Hide();
-			fs.FileopRenFile.Hide();
-			fs.TransientFor = this;
+			int rc = 0;
 
-			int rc = fs.Run ();
-			fs.Hide();
-			if(rc == -5)
+			do
 			{
-				try
+				// create a file selection dialog and turn off all of the
+				// file operations and controlls
+				FileSelection fs = new FileSelection ("Choose a folder...");
+				fs.FileList.Parent.Hide();
+				fs.SelectionEntry.Hide();
+				fs.FileopDelFile.Hide();
+				fs.FileopRenFile.Hide();
+				fs.TransientFor = this;
+
+				rc = fs.Run ();
+				fs.Hide();
+				if(rc == -5)
 				{
-    				iFolder newiFolder = 
-						iFolderWS.CreateLocaliFolder(fs.Filename);
-					iFolderTreeStore.AppendValues(newiFolder);
+					if(ShowBadiFolderPath(fs.Filename))
+						continue;
+
+					// break loop
+					rc = 0;
+					try
+					{
+   		 				iFolder newiFolder = 
+							iFolderWS.CreateLocaliFolder(fs.Filename);
+						iFolderTreeStore.AppendValues(newiFolder);
 
 // TODO: determine how to do this!
 //					if(IntroDialog.UseDialog())
 //					{
-						iFolderCreationDialog dlg = 
-							new iFolderCreationDialog(newiFolder);
-						dlg.TransientFor = this;
-						dlg.Run();
-						dlg.Hide();
-						dlg.Destroy();
-						dlg = null;
+							iFolderCreationDialog dlg = 
+								new iFolderCreationDialog(newiFolder);
+							dlg.TransientFor = this;
+							dlg.Run();
+							dlg.Hide();
+							dlg.Destroy();
+							dlg = null;
 //					}
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied = 
-						new iFolderExceptionDialog(
-							this,
-							e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog(
+								this,
+								e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+					}
 				}
 			}
+			while(rc == -5);
 		}
 
 
@@ -865,15 +876,27 @@ namespace Novell.iFolder
 				ifolder = (iFolder) tModel.GetValue(iter, 0);
 				if(ifolder == null)
 					return;
+				int rc = 0;
 
-				iFolderAcceptDialog iad = new iFolderAcceptDialog(ifolder);
-				iad.TransientFor = this;
-				int rc = iad.Run();
-				newPath = iad.Path;
-				iad.Hide();
-				iad.Destroy();
-				if(rc != -5)
-					return;
+				do
+				{
+					iFolderAcceptDialog iad = new iFolderAcceptDialog(ifolder);
+					iad.TransientFor = this;
+					rc = iad.Run();
+					newPath = iad.Path;
+					iad.Hide();
+					iad.Destroy();
+					if(rc != -5)
+						return;
+
+					// Crappy login here
+					// if the user selected OK, check the path they
+					// selectected, if we didn't show there was a bad
+					// path, set rc to 0 to accept the ifolder
+					if(!ShowBadiFolderPath(newPath))
+						rc = 0;
+				}
+				while(rc == -5);
 				
 				try
 				{
@@ -894,6 +917,38 @@ namespace Novell.iFolder
 					return;
 				}
 			}
+		}
+
+
+		private bool ShowBadiFolderPath(string path)
+		{
+			try
+			{
+				if(iFolderWS.CanBeiFolder(path) == false)
+				{
+					iFolderMsgDialog dg = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Info,
+						iFolderMsgDialog.ButtonSet.Ok,
+						"Invalid iFolder Path",
+						"Invalid iFolder path selected",
+						"iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder or has an iFolder in it.  Please select an alternate folder.");
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+					return true;
+				}
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														this, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return true;
+			}
+			return false;
 		}
 
 
