@@ -112,6 +112,13 @@
 
 
 //==========================================
+// Thread Safe calls
+//==========================================
+- (void)addLogTS:(NSString *)entry;
+- (void)showLoginWindowTS:(NSString *)domainID;
+
+
+//==========================================
 // Toolbar Methods
 //==========================================
 - (void)setupToolbar;
