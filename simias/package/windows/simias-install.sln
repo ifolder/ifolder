@@ -7,6 +7,14 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "simias-msi", "simias-msi\si
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "simias-sdk-msm", "simias-sdk-msm\simias-sdk-msm.vdproj", "{610401BB-C7B9-495E-9CBC-714F313ADBFA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "simias-sdk-msi", "simias-sdk-msi\simias-sdk-msi.vdproj", "{0F9E4271-6703-4970-A03D-DB524B171265}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -21,6 +29,12 @@ Global
 		{B57B6973-4116-449C-98A5-0CC5CBFC5320}.Debug.Build.0 = Debug
 		{B57B6973-4116-449C-98A5-0CC5CBFC5320}.Release.ActiveCfg = Release
 		{B57B6973-4116-449C-98A5-0CC5CBFC5320}.Release.Build.0 = Release
+		{610401BB-C7B9-495E-9CBC-714F313ADBFA}.Debug.ActiveCfg = Debug
+		{610401BB-C7B9-495E-9CBC-714F313ADBFA}.Debug.Build.0 = Debug
+		{610401BB-C7B9-495E-9CBC-714F313ADBFA}.Release.ActiveCfg = Release
+		{610401BB-C7B9-495E-9CBC-714F313ADBFA}.Release.Build.0 = Release
+		{0F9E4271-6703-4970-A03D-DB524B171265}.Debug.ActiveCfg = Debug
+		{0F9E4271-6703-4970-A03D-DB524B171265}.Release.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
