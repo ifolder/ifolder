@@ -36,9 +36,8 @@ namespace Novell.iFolder.iFolderCom
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+			// Center the window.
+			this.StartPosition = FormStartPosition.CenterScreen;
 		}
 
 		/// <summary>
@@ -75,7 +74,7 @@ namespace Novell.iFolder.iFolderCom
 			// close
 			// 
 			this.close.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.close.Location = new System.Drawing.Point(376, 232);
+			this.close.Location = new System.Drawing.Point(376, 160);
 			this.close.Name = "close";
 			this.close.TabIndex = 0;
 			this.close.Text = "Close";
@@ -85,13 +84,13 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.label1.Location = new System.Drawing.Point(16, 16);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(424, 40);
+			this.label1.Size = new System.Drawing.Size(424, 24);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "Congratulations, you\'ve just converted this folder into an iFolder!  ...";
 			// 
 			// iFolderProperties
 			// 
-			this.iFolderProperties.Location = new System.Drawing.Point(98, 173);
+			this.iFolderProperties.Location = new System.Drawing.Point(352, 125);
 			this.iFolderProperties.Name = "iFolderProperties";
 			this.iFolderProperties.Size = new System.Drawing.Size(136, 16);
 			this.iFolderProperties.TabIndex = 2;
@@ -101,34 +100,36 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// iFolderEmblem
 			// 
-			this.iFolderEmblem.Location = new System.Drawing.Point(16, 72);
+			this.iFolderEmblem.Location = new System.Drawing.Point(16, 52);
 			this.iFolderEmblem.Name = "iFolderEmblem";
-			this.iFolderEmblem.Size = new System.Drawing.Size(48, 50);
+			this.iFolderEmblem.Size = new System.Drawing.Size(48, 48);
 			this.iFolderEmblem.TabIndex = 3;
 			this.iFolderEmblem.TabStop = false;
+			this.iFolderEmblem.Paint += new System.Windows.Forms.PaintEventHandler(this.iFolderEmblem_Paint);
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(72, 72);
+			this.label2.Location = new System.Drawing.Point(72, 56);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(368, 56);
+			this.label2.Size = new System.Drawing.Size(368, 32);
 			this.label2.TabIndex = 4;
-			this.label2.Text = "iFolder are identified by ...";
+			this.label2.Text = "iFolders are identified by the Novell iFolder emblem being placed on the folder a" +
+				"s shown.";
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(16, 160);
+			this.label3.Location = new System.Drawing.Point(16, 112);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(424, 32);
 			this.label3.TabIndex = 5;
-			this.label3.Text = "You can manage your new iFolder by right-clicking on the folder and accessing the" +
-				" iFolder menus or";
+			this.label3.Text = "In order to fully utilize your new iFolder, you need to share it.  You can share " +
+				"the iFolder by right-clicking the folder and accessing the iFolder menu or";
 			// 
 			// dontAsk
 			// 
-			this.dontAsk.Location = new System.Drawing.Point(16, 208);
+			this.dontAsk.Location = new System.Drawing.Point(16, 160);
 			this.dontAsk.Name = "dontAsk";
-			this.dontAsk.Size = new System.Drawing.Size(416, 16);
+			this.dontAsk.Size = new System.Drawing.Size(304, 16);
 			this.dontAsk.TabIndex = 6;
 			this.dontAsk.Text = "Please don\'t show me this again.";
 			// 
@@ -136,7 +137,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.AcceptButton = this.close;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(456, 264);
+			this.ClientSize = new System.Drawing.Size(456, 192);
 			this.Controls.Add(this.dontAsk);
 			this.Controls.Add(this.iFolderProperties);
 			this.Controls.Add(this.label3);
@@ -149,7 +150,6 @@ namespace Novell.iFolder.iFolderCom
 			this.MinimizeBox = false;
 			this.Name = "NewiFolder";
 			this.Text = "iFolder Introduction";
-			this.Load += new System.EventHandler(this.NewiFolder_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -170,6 +170,11 @@ namespace Novell.iFolder.iFolderCom
 
 		public string LoadPath
 		{
+			get
+			{
+				return loadPath;
+			}
+
 			set
 			{
 				loadPath = value;
@@ -178,19 +183,12 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Event Handlers
-		private void NewiFolder_Load(object sender, System.EventArgs e)
-		{
-			try
-			{
-				iFolderEmblem.Image = Image.FromFile(Path.Combine(loadPath, "ifolder_emblem.ico"));
-			}
-			catch{}
-		}
-
 		private void iFolderProperties_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			// Invoke the iFolder properties dialog.
-			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
+//			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
+			iFolderComponent ifCom = new iFolderComponent();
+			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, false);
 		}
 
 		private void close_Click(object sender, System.EventArgs e)
@@ -202,6 +200,38 @@ namespace Novell.iFolder.iFolderCom
 
 			this.Close();
 		}
+
+		private void iFolderEmblem_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			try
+			{
+				IFSHFILEINFO fi;
+				IntPtr ret = Win32Window.ShGetFileInfo(
+					FolderName, 
+					Win32Window.FILE_ATTRIBUTE_DIRECTORY,
+					out fi,
+					342,
+					Win32Window.SHGFI_ICON | Win32Window.SHGFI_USEFILEATTRIBUTES);
+
+				if (ret != IntPtr.Zero)
+				{
+					Bitmap bmap = Bitmap.FromHicon(fi.hIcon);
+					e.Graphics.DrawImage(bmap, 0, 0);
+
+					IntPtr hIcon = Win32Window.LoadImageFromFile(
+						0,
+						Path.Combine(loadPath, "ifolder_emblem.ico"),
+						Win32Window.IMAGE_ICON,
+						32,
+						32,
+						Win32Window.LR_LOADFROMFILE);
+
+					bmap = Bitmap.FromHicon(hIcon);
+					e.Graphics.DrawImage(bmap, 0, 0);
+				}
+			}
+			catch{}
+		}
 		#endregion
-   	}
+	}
 }
