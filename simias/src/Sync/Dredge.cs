@@ -530,6 +530,10 @@ namespace Simias.Sync
 
 							if (fullName == null)
 							{
+								lock(changes)
+								{
+									changes.Remove(fc.eArgs.FullPath);
+								}
 								continue;
 							}
 							FileInfo fi = new FileInfo(fullName);

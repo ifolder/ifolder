@@ -51,7 +51,7 @@ namespace Simias.Sync
 	/// <summary>
 	/// Class used on ther server to determine the changes from the client file.
 	/// </summary>
-	public class ServerFile : SyncFile
+	public class ServerInFile : InFile
 	{
 		SyncNode snode;
 		#region Constructors
@@ -61,39 +61,25 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync.</param>
-		public ServerFile(Collection collection, SyncNode snode) :
-			base(collection, SyncDirection.IN)
+		public ServerInFile(Collection collection, SyncNode snode) :
+			base(collection)
 		{
 			this.snode = snode;
-		}
-
-		/// <summary>
-		/// Constructs a ServerFile object that can be used to sync a file in from a client.
-		/// </summary>
-		/// /// <param name="collection">The collection the node belongs to.</param>
-		/// <param name="node">The node to sync down</param>
-		public ServerFile(Collection collection, BaseFileNode node) :
-			base(collection, SyncDirection.OUT)
-		{
-			this.node = node;
 		}
 
 		#endregion
 
 		public void Open()
 		{
-			if (direction == SyncDirection.IN)
+			if (snode == null)
 			{
-				if (snode == null)
-				{
-					throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
-				}
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(snode.node);
-				node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
-				collection.ImportNode(node, false, 0);
-				node.IncarnationUpdate = node.LocalIncarnation;
+				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
 			}
+			XmlDocument xNode = new XmlDocument();
+			xNode.LoadXml(snode.node);
+			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
+			collection.ImportNode(node, false, 0);
+			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
 		}
 
@@ -107,22 +93,19 @@ namespace Simias.Sync
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
 			status.status = SyncNodeStatus.SyncStatus.Success;
-			if (direction == SyncDirection.IN)
+			try
 			{
-				try
-				{
-					collection.Commit(node);
-				}
-				catch (CollisionException)
-				{
-					commit = false;
-					status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
-				}
-				catch
-				{
-					commit = false;
-					status.status = SyncNodeStatus.SyncStatus.ServerFailure;
-				}
+				collection.Commit(node);
+			}
+			catch (CollisionException)
+			{
+				commit = false;
+				status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+			}
+			catch
+			{
+				commit = false;
+				status.status = SyncNodeStatus.SyncStatus.ServerFailure;
 			}
 			base.Close(commit);
 			return status;
@@ -213,5 +196,96 @@ namespace Simias.Sync
 				}
 			}
 		}
+	}
+
+	/// <summary>
+	/// Class used on ther server to determine the changes from the client file.
+	/// </summary>
+	public class ServerOutFile : OutFile
+	{
+		SyncNode snode;
+		#region Constructors
+
+		/// <summary>
+		/// Constructs a ServerFile object that can be used to sync a file in from a client.
+		/// </summary>
+		/// /// <param name="collection">The collection the node belongs to.</param>
+		/// <param name="node">The node to sync down</param>
+		public ServerOutFile(Collection collection, BaseFileNode node) :
+			base(collection)
+		{
+			this.node = node;
+		}
+
+		#endregion
+
+		public void Open()
+		{
+			base.Open(node);
+		}
+
+		/// <summary>
+		/// Called to close the file.
+		/// </summary>
+		/// <returns>The status of the sync.</returns>
+		public SyncNodeStatus Close()
+		{
+			SyncNodeStatus status = new SyncNodeStatus();
+			status.nodeID = node.ID;
+			status.status = SyncNodeStatus.SyncStatus.Success;
+			base.Close();
+			return status;
+		}
+
+		/// <summary>
+		/// Get a hashed map of the file.  This can then be
+		/// used to create an upload or download filemap.
+		/// </summary>
+		/// <returns></returns>
+		public HashData[] GetHashMap()
+		{
+			if (Length <= BlockSize)
+			{
+				return null;
+			}
+
+			int				blockCount = (int)(Length / BlockSize) + 1;
+			HashData[]		list = new HashData[blockCount];
+			byte[]			buffer = new byte[BlockSize];
+			StrongHash		sh = new StrongHash();
+			WeakHash		wh = new WeakHash();
+			int				bytesRead;
+			int				currentBlock = 0;
+		
+			lock (this)
+			{
+				// Compute the hash codes.
+				ReadPosition = 0;
+				int i = 0;
+				while ((bytesRead = Read(buffer, 0, BlockSize)) != 0)
+				{
+					HashData entry = new HashData();
+					entry.WeakHash = wh.ComputeHash(buffer, 0, (UInt16)bytesRead);
+					entry.StrongHash =  sh.ComputeHash(buffer, 0, bytesRead);
+					entry.BlockNumber = currentBlock++;
+					list[i++] = entry;
+				}
+			}
+			return list;
+		}
+
+		/// <summary>
+		/// Read binary data from the file.
+		/// </summary>
+		/// <param name="buffer">The buffer to place the data into.</param>
+		/// <param name="offset">The offset in the file where reading should begin.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <returns></returns>
+		public int Read(byte[] buffer, long offset, int count)
+		{
+			ReadPosition = offset;
+			return base.Read(buffer, 0, count);
+		}
+
 	}
 }

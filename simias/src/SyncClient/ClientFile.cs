@@ -107,35 +107,24 @@ namespace Simias.Sync.Client
 
 	#endregion
 
-	#region ClientFile
+	#region ClientInFile
 
 	/// <summary>
 	/// Used to find the deltas between
 	/// the local file and the server file.
 	/// </summary>
-	public class ClientFile : SyncFile
+	public class ClientInFile : InFile
 	{
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
 		SimiasSyncService		service;
+		const string			ConflictUpdatePrefix = ".simias.cu.";
+		const string			ConflictFilePrefix = ".simias.cf.";
 		
 		#endregion
 		
 		#region Constructors
-
-		/// <summary>
-		/// Contructs a ClientFile object that can be used to sync a file up to the server.
-		/// </summary>
-		/// <param name="collection">The collection the node belongs to.</param>
-		/// <param name="node">The node to sync up.</param>
-		/// <param name="service">The service to access the server file.</param>
-		public ClientFile(Collection collection, BaseFileNode node, SimiasSyncService service) :
-			base(collection, SyncDirection.OUT)
-		{
-			this.service = service;
-			this.node = node;
-		}
 
 		/// <summary>
 		/// Constructs a ClientFile object that can be used to sync a file down from the server.
@@ -143,8 +132,8 @@ namespace Simias.Sync.Client
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
 		/// <param name="service">The service to access the server file.</param>
-		public ClientFile(Collection collection, string nodeID, SimiasSyncService service) :
-			base(collection, SyncDirection.IN)
+		public ClientInFile(Collection collection, string nodeID, SimiasSyncService service) :
+			base(collection)
 		{
 			this.service = service;
 			this.nodeID = nodeID;
@@ -156,30 +145,16 @@ namespace Simias.Sync.Client
 
 		public void Open()
 		{
-			if (direction == SyncDirection.IN)
+			SyncNode snode = service.GetFileNode(nodeID);
+			if (snode == null)
 			{
-				SyncNode snode = service.GetFileNode(nodeID);
-				if (snode == null)
-				{
-					throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
-				}
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(snode.node);
-				node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
-				collection.ImportNode(node, false, 0);
-				node.IncarnationUpdate = node.LocalIncarnation;
+				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
 			}
-			else
-			{
-				SyncNode snode = new SyncNode();
-				snode.node = node.Properties.ToString(true);
-				snode.expectedIncarn = node.MasterIncarnation;
-						
-				if (!service.PutFileNode(snode))
-				{
-					throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
-				}
-			}
+			XmlDocument xNode = new XmlDocument();
+			xNode.LoadXml(snode.node);
+			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
+			collection.ImportNode(node, false, 0);
+			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
 		}
 
@@ -187,48 +162,48 @@ namespace Simias.Sync.Client
 		/// Called to close the file.
 		/// </summary>
 		/// <param name="commit">True if changes should be commited.</param>
-		public new void Close(bool commit)
+		/// <returns>true if successful.</returns>
+		public new bool Close(bool commit)
 		{
-			if (direction == SyncDirection.IN)
+			bool bStatus = true;
+			// Close the file on the server.
+			SyncNodeStatus status = service.CloseFileNode(commit);
+			if (commit)
 			{
-				node.SetMasterIncarnation(node.LocalIncarnation);
+				try
+				{
+					collection.Commit(node);
+				}
+				catch (CollisionException)
+				{
+					// Create an update conflict.
+					string collisionName = Path.Combine(Path.GetDirectoryName(workFile), ConflictUpdatePrefix + node.ID);
+					File.Copy(workFile, collisionName, true);
+					FileInfo fi = new FileInfo(collisionName);
+					fi.Attributes = fi.Attributes | FileAttributes.Hidden;
+					fi.LastWriteTime = node.LastWriteTime;
+					fi.CreationTime = node.CreationTime;
+					collection.CreateCollision(node, false);
+					collection.Commit(node);
+				}
+				catch
+				{
+					bStatus = false;
+				}
+			}
+			try
+			{
+				base.Close(commit);
+			}
+			catch
+			{
+				// BUGBUG this is a name collision.
+				string collisionName = Path.Combine(Path.GetDirectoryName(workFile), ConflictFilePrefix + node.ID);
+				File.Copy(workFile, collisionName, true);
+				collection.CreateCollision(node, true);
 				collection.Commit(node);
 			}
-			service.CloseFileNode(commit);
-			base.Close(commit);
-		}
-
-		
-		/// <summary>
-		/// Uploads the file to the server.
-		/// </summary>
-		public bool UploadFile()
-		{
-			ArrayList fileMap = GetUploadFileMap();
-
-			byte[] buffer = new byte[BlockSize];
-			long offset = 0;
-			foreach(FileSegment segment in fileMap)
-			{
-				if (segment is BlockSegment)
-				{
-					BlockSegment bs = (BlockSegment)segment;
-					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
-					service.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
-					offset += bytesToWrite;
-				}
-				else
-				{
-					// Write the bytes to the output stream.
-					OffsetSegment seg = (OffsetSegment)segment;
-					byte[] dataBuffer = new byte[seg.Length];
-					ReadPosition = seg.Offset;
-					int bytesRead = Read(dataBuffer, 0, seg.Length);
-					service.Write(dataBuffer, offset, bytesRead);
-					offset += seg.Length;
-				}
-			}
-			return true;
+			return bStatus;
 		}
 
 		/// <summary>
@@ -281,6 +256,225 @@ namespace Simias.Sync.Client
 
 					int bytesRead = service.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
+				}
+			}
+			return true;
+		}
+
+		#endregion
+		
+		#region privates
+		
+		/// <summary>
+		/// Compute the Blocks that need to be downloaded from the server. This builds
+		/// an array of offsets where the blocks need to be placed in the local file.
+		/// The block is represented by the index of the array.
+		/// </summary>
+		/// <returns>The file map.</returns>
+		private long[] GetDownloadFileMap()
+		{
+			// Since we are doing the diffing on the client we will download all blocks that
+			// don't match.
+			table.Clear();
+			HashData[] serverHashMap = service.GetHashMap(BlockSize);
+			table.Add(serverHashMap);
+			long[] fileMap = new long[serverHashMap.Length];
+
+			int				bytesRead = BlockSize * 16;
+			byte[]			buffer = new byte[BlockSize * 16];
+			int				readOffset = 0;
+			WeakHash		wh = new WeakHash();
+			StrongHash		sh = new StrongHash();
+			bool			recomputeWeakHash = true;
+			int				startByte = 0;
+			int				endByte = 0;
+			byte			dropByte = 0;
+
+			// Set the file map to not match anything.
+			for (int i = 0; i < fileMap.Length; ++ i)
+			{
+				fileMap[i] = -1;
+			}
+
+			ReadPosition = 0;					
+			while (bytesRead != 0)
+			{
+				bytesRead = Read(buffer, readOffset, bytesRead - readOffset);
+				if (bytesRead == 0)
+					break;
+				bytesRead = bytesRead == 0 ? bytesRead : bytesRead + readOffset;
+				
+				if (bytesRead >= BlockSize)
+				{
+					endByte = startByte + BlockSize - 1;
+					HashEntry entry = new HashEntry();
+					while (endByte < bytesRead)
+					{
+						if (recomputeWeakHash)
+						{
+							entry.WeakHash = wh.ComputeHash(buffer, startByte, BlockSize);
+							recomputeWeakHash = false;
+						}
+						else
+							entry.WeakHash = wh.RollHash(BlockSize, dropByte, buffer[endByte]);
+						if (table.Contains(entry.WeakHash))
+						{
+							entry.StrongHash = sh.ComputeHash(buffer, startByte, BlockSize);
+							HashEntry match = table.GetEntry(entry);
+							if (match != null)
+							{
+								// We found a match save the match;
+								fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
+							}
+						}
+						dropByte = buffer[startByte];
+						++startByte;
+						++endByte;
+					}
+
+					readOffset = bytesRead - startByte;
+					Array.Copy(buffer, startByte, buffer, 0, readOffset);
+					startByte = 0;
+				}
+				else
+				{
+					break;
+				}
+			}
+			return fileMap;
+		}
+
+		/// <summary>
+		/// Called to get a string description of the diffs.
+		/// </summary>
+		/// <param name="fileMap">The filmap array.</param>
+		/// <returns>The string description.</returns>
+		private string ReportDiffs(long[] fileMap)
+		{
+			StringWriter sw = new StringWriter();
+			int startBlock = -1;
+			int endBlock = 0;
+			for (int i = 0; i < fileMap.Length; ++i)
+			{
+				if (fileMap[i] == -1)
+				{
+					if (startBlock == -1)
+					{
+						startBlock = i;
+					}
+					endBlock = i;
+				}
+				else
+				{
+					if (startBlock != -1)
+						sw.WriteLine("Found Missing Block {0} to Block {1}", startBlock, endBlock);
+					startBlock = -1;
+				}
+			}
+			if (startBlock != -1)
+				sw.WriteLine("Found Missing Block {0} to Block {1}", startBlock, endBlock);
+			return sw.ToString();
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region ClientOutFile
+
+	/// <summary>
+	/// Used to find the deltas between
+	/// the local file and the server file.
+	/// </summary>
+	public class ClientOutFile : OutFile
+	{
+		#region fields
+
+		StrongWeakHashtable		table = new StrongWeakHashtable();
+		SimiasSyncService		service;
+		
+		#endregion
+		
+		#region Constructors
+
+		/// <summary>
+		/// Contructs a ClientFile object that can be used to sync a file up to the server.
+		/// </summary>
+		/// <param name="collection">The collection the node belongs to.</param>
+		/// <param name="node">The node to sync up.</param>
+		/// <param name="service">The service to access the server file.</param>
+		public ClientOutFile(Collection collection, BaseFileNode node, SimiasSyncService service) :
+			base(collection)
+		{
+			this.service = service;
+			this.node = node;
+		}
+
+		#endregion
+
+		#region publics
+
+		public void Open()
+		{
+			SyncNode snode = new SyncNode();
+			snode.node = node.Properties.ToString(true);
+			snode.expectedIncarn = node.MasterIncarnation;
+						
+			if (!service.PutFileNode(snode))
+			{
+				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
+			}
+			base.Open(node);
+		}
+
+		/// <summary>
+		/// Called to close the file.
+		/// </summary>
+		/// <param name="commit">True if changes should be commited.</param>
+		/// <returns>true if successful.</returns>
+		public bool Close(bool commit)
+		{
+			bool bStatus = true;
+			// Close the file on the server.
+			SyncNodeStatus status = service.CloseFileNode(commit);
+			if (commit)
+			{
+				node.SetMasterIncarnation(node.LocalIncarnation);
+				collection.Commit(node);
+			}
+			base.Close();
+			return bStatus;
+		}
+
+		
+		/// <summary>
+		/// Uploads the file to the server.
+		/// </summary>
+		public bool UploadFile()
+		{
+			ArrayList fileMap = GetUploadFileMap();
+
+			byte[] buffer = new byte[BlockSize];
+			long offset = 0;
+			foreach(FileSegment segment in fileMap)
+			{
+				if (segment is BlockSegment)
+				{
+					BlockSegment bs = (BlockSegment)segment;
+					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
+					service.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
+					offset += bytesToWrite;
+				}
+				else
+				{
+					// Write the bytes to the output stream.
+					OffsetSegment seg = (OffsetSegment)segment;
+					byte[] dataBuffer = new byte[seg.Length];
+					ReadPosition = seg.Offset;
+					int bytesRead = Read(dataBuffer, 0, seg.Length);
+					service.Write(dataBuffer, offset, bytesRead);
+					offset += seg.Length;
 				}
 			}
 			return true;
@@ -424,90 +618,11 @@ namespace Simias.Sync.Client
 		}
 
 		/// <summary>
-		/// Compute the Blocks that need to be downloaded from the server. This builds
-		/// an array of offsets where the blocks need to be placed in the local file.
-		/// The block is represented by the index of the array.
-		/// </summary>
-		/// <returns>The file map.</returns>
-		private long[] GetDownloadFileMap()
-		{
-			// Since we are doing the diffing on the client we will download all blocks that
-			// don't match.
-			table.Clear();
-			HashData[] serverHashMap = service.GetHashMap(BlockSize);
-			table.Add(serverHashMap);
-			long[] fileMap = new long[serverHashMap.Length];
-
-			int				bytesRead = BlockSize * 16;
-			byte[]			buffer = new byte[BlockSize * 16];
-			int				readOffset = 0;
-			WeakHash		wh = new WeakHash();
-			StrongHash		sh = new StrongHash();
-			bool			recomputeWeakHash = true;
-			int				startByte = 0;
-			int				endByte = 0;
-			byte			dropByte = 0;
-
-			// Set the file map to not match anything.
-			for (int i = 0; i < fileMap.Length; ++ i)
-			{
-				fileMap[i] = -1;
-			}
-
-			ReadPosition = 0;					
-			while (bytesRead != 0)
-			{
-				bytesRead = Read(buffer, readOffset, bytesRead - readOffset);
-				if (bytesRead == 0)
-					break;
-				bytesRead = bytesRead == 0 ? bytesRead : bytesRead + readOffset;
-				
-				if (bytesRead >= BlockSize)
-				{
-					endByte = startByte + BlockSize - 1;
-					HashEntry entry = new HashEntry();
-					while (endByte < bytesRead)
-					{
-						if (recomputeWeakHash)
-						{
-							entry.WeakHash = wh.ComputeHash(buffer, startByte, BlockSize);
-							recomputeWeakHash = false;
-						}
-						else
-							entry.WeakHash = wh.RollHash(BlockSize, dropByte, buffer[endByte]);
-						if (table.Contains(entry.WeakHash))
-						{
-							entry.StrongHash = sh.ComputeHash(buffer, startByte, BlockSize);
-							HashEntry match = table.GetEntry(entry);
-							if (match != null)
-							{
-								// We found a match save the match;
-								fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
-							}
-						}
-						dropByte = buffer[startByte];
-						++startByte;
-						++endByte;
-					}
-
-					readOffset = bytesRead - startByte;
-					Array.Copy(buffer, startByte, buffer, 0, readOffset);
-					startByte = 0;
-				}
-				else
-				{
-					break;
-				}
-			}
-			return fileMap;
-		}
-
-		/// <summary>
 		/// Called to get a string description of the Diffs.
 		/// </summary>
 		/// <param name="segments">An array of segment descriptions.</param>
 		/// <returns>The string description.</returns>
-		private string ReportUploadDiffs(ArrayList segments)
+		private string ReportDiffs(ArrayList segments)
 		{
 			StringWriter sw = new StringWriter();
 			foreach (FileSegment segment in segments)
@@ -526,40 +641,7 @@ namespace Simias.Sync.Client
 			return sw.ToString();
 		}
 
-		/// <summary>
-		/// Called to get a string description of the diffs.
-		/// </summary>
-		/// <param name="fileMap">The filmap array.</param>
-		/// <returns>The string description.</returns>
-		private string ReportDownloadDiffs(long[] fileMap)
-		{
-			StringWriter sw = new StringWriter();
-			int startBlock = -1;
-			int endBlock = 0;
-			for (int i = 0; i < fileMap.Length; ++i)
-			{
-				if (fileMap[i] == -1)
-				{
-					if (startBlock == -1)
-					{
-						startBlock = i;
-					}
-					endBlock = i;
-				}
-				else
-				{
-					if (startBlock != -1)
-						sw.WriteLine("Found Missing Block {0} to Block {1}", startBlock, endBlock);
-					startBlock = -1;
-				}
-			}
-			if (startBlock != -1)
-				sw.WriteLine("Found Missing Block {0} to Block {1}", startBlock, endBlock);
-			return sw.ToString();
-		}
-
 		#endregion
-
 	}
 
 	#endregion

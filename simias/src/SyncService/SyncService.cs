@@ -232,7 +232,8 @@ public class SyncService
 	Member			member;
 	Access.Rights	rights = Access.Rights.Deny;
 	ArrayList		NodeList = new ArrayList();
-	ServerFile		file;
+	ServerInFile	inFile;
+	ServerOutFile	outFile;
 	
 	/// <summary>
 	/// public ctor 
@@ -650,8 +651,9 @@ public class SyncService
 	/// <returns>True if successful.</returns>
 	public bool PutFileNode(SyncNode node)
 	{
-		file = new ServerFile(collection, node);
-		file.Open();
+		inFile = new ServerInFile(collection, node);
+		inFile.Open();
+		outFile = null;
 		return true;
 	}
 
@@ -664,10 +666,12 @@ public class SyncService
 	public SyncNode GetFileNode(string nodeID)
 	{
 		BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
+		inFile = null;
+		outFile = null;
 		if (node != null)
 		{
-			file = new ServerFile(collection, node);
-			file.Open();
+			outFile = new ServerOutFile(collection, node);
+			outFile.Open();
 			SyncNode snode = new SyncNode();
 			snode.node = node.Properties.ToString(true);
 			snode.expectedIncarn = node.MasterIncarnation;
@@ -683,7 +687,10 @@ public class SyncService
 	/// <returns>The HashMap.</returns>
 	public HashData[] GetHashMap(int blockSize)
 	{
-		return file.GetHashMap();
+		if (inFile != null)
+			return inFile.GetHashMap();
+		else
+			return outFile.GetHashMap();
 	}
 
 	/// <summary>
@@ -694,7 +701,7 @@ public class SyncService
 	/// <param name="count">The number of bytes to write.</param>
 	public void Write(byte[] buffer, long offset, int count)
 	{
-		file.Write(buffer, offset, count);
+		inFile.Write(buffer, offset, count);
 	}
 
 	/// <summary>
@@ -705,7 +712,7 @@ public class SyncService
 	/// <param name="count">The number of bytes to copy.</param>
 	public void Copy(long oldOffset, long offset, int count)
 	{
-		file.Copy(oldOffset, offset, count);
+		inFile.Copy(oldOffset, offset, count);
 	}
 
 	/// <summary>
@@ -729,7 +736,14 @@ public class SyncService
 	/// <returns>The status of the sync.</returns>
 	public SyncNodeStatus CloseFileNode(bool commit)
 	{
-		return file.Close(commit);
+		SyncNodeStatus status = null;
+		if (inFile != null)
+			status = inFile.Close(commit);
+		else if (outFile != null)
+			status = outFile.Close();
+		inFile = null;
+		outFile = null;
+		return status;
 	}
 
 	/// <summary>

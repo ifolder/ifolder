@@ -28,110 +28,41 @@ using Simias.Storage;
 
 namespace Simias.Sync
 {
+	#region OutFile
+
 	/// <summary>
-	/// Class used to determine the common data between two files.
-	/// This is done from a copy of the local file and a map of hash code for the server file.
+	/// Class to handle file operations for a file to be synced out.
 	/// </summary>
-	public class SyncFile
+	public abstract class OutFile : SyncFile
 	{
-		protected Collection	collection;
-		protected BaseFileNode	node;
-		protected string		nodeID;
-		protected SyncDirection	direction;
-		protected const int		BlockSize = 4096;
-		protected const int		MaxXFerSize = 1024 * 64;
-		string					file;
-		string					workFile;
-		FileStream				workStream;
-		FileStream				stream;
-		const string			ConflictUpdatePrefix = ".simias.cu.";
-		const string			ConflictFilePrefix = ".simias.cf.";
-		const string			WorkFilePrefix = ".simias.wf.";
+		#region fields
 
-		/// <summary>
-		/// Used to determine if the file is syncing in or out.
-		/// </summary>
-		protected enum SyncDirection
-		{
-			/// <summary>
-			/// The file is syncing in.
-			/// </summary>
-			IN,
-			/// <summary>
-			/// The file is syncing out.
-			/// </summary>
-			OUT
-		}
-	
-		/*
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main(string[] args)
-		{
-			if (args.Length != 2)
-			{
-				Console.WriteLine("Usage : {0} (file1) (file2)", "FileDelta");
-				return;
-			}
+		FileStream	workStream;
+
+		#endregion
 		
-			string file1 = Path.GetFullPath(args[0]);
-			string file2 = Path.GetFullPath(args[1]);
-			
-			// Get the file from the server.
-			ServerFile sFile = new ServerFile(file1);
-			sFile.Open(null);
-			ClientFile cFile = new ClientFile(file2, sFile.GetHashMap());
-			string DownFile = Path.Combine(Path.GetDirectoryName(file1), "Download");
-			File.Delete(DownFile);
-			cFile.Open(DownFile);
-			long[] downloadMap = cFile.GetDownloadFileMap();
-			Console.WriteLine("*****************************************");
-			Console.WriteLine("Download Changes");
-			Console.WriteLine(cFile.ReportDownloadDiffs(downloadMap));
-			Console.WriteLine("*****************************************");
-			cFile.DownLoadFile(downloadMap, sFile);
-			sFile.Close();
-			cFile.Close();
-
-
-			// Push the changes to the server.
-			sFile = new ServerFile(file1);
-			string UpFile = Path.Combine(Path.GetDirectoryName(file1), "Upload");
-			File.Delete(UpFile);
-			sFile.Open(UpFile);
-			cFile = new ClientFile(file2, sFile.GetHashMap());
-			cFile.Open(null);
-			ArrayList uploadMap = cFile.GetUploadFileMap();
-			Console.WriteLine("*****************************************");
-			Console.WriteLine("Upload Changes");
-			Console.WriteLine(cFile.ReportUploadDiffs(uploadMap));
-			Console.WriteLine("*****************************************");
-			cFile.UploadFile(uploadMap, sFile);
-			sFile.Close();
-			cFile.Close();
-		}
-		*/
+		#region Constructor / Finalizer
 
 		/// <summary>
-		/// 
+		/// Constructs an OutFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		/// <param name="direction">The direction of the sync.</param>
-		protected SyncFile(Collection collection, SyncDirection direction)
+		protected OutFile(Collection collection) :
+			base(collection)
 		{
-			this.collection = collection;
-			this.direction = direction;
 		}
 
 		/// <summary>
 		/// Finalizer.
 		/// </summary>
-		~SyncFile()
+		~OutFile()
 		{
-			Close (true, false);
+			Close (true);
 		}
+
+		#endregion
+
+		#region public methods.
 
 		/// <summary>
 		/// Reads data into the buffer.
@@ -142,14 +73,129 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public int Read(byte[] buffer, int offset, int count)
 		{
-			if (direction == SyncDirection.OUT)
+			return workStream.Read(buffer, offset, count);
+		}
+
+		/// <summary>
+		/// Gets or Sets the file position.
+		/// </summary>
+		public long ReadPosition
+		{
+			get { return workStream.Position; }
+			set { workStream.Position = value; }
+		}
+
+		/// <summary>
+		/// Gets the length of the stream.
+		/// </summary>
+		public long Length
+		{
+			get { return workStream.Length; }
+		}
+
+		#endregion
+
+		#region protected methods.
+
+		/// <summary>
+		/// Called to open the file.
+		/// </summary>
+		/// <param name="node">The node that represents the file.</param>
+		protected void Open(BaseFileNode node)
+		{
+			SetupFileNames(node);
+			// This file is being pushed make a copy to work from.
+			File.Copy(file, workFile, true);
+			workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
+			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
+		}
+
+		/// <summary>
+		/// Called to close the file and cleanup resources.
+		/// </summary>
+		protected void Close()
+		{
+			Close (false);
+		}
+
+		#endregion
+
+		#region private methods.
+
+		/// <summary>
+		/// Called to close the file and cleanup.
+		/// </summary>
+		/// <param name="InFinalizer">true if called from the finalizer.</param>
+		private void Close(bool InFinalizer)
+		{
+			if (!InFinalizer)
+				GC.SuppressFinalize(this);
+
+			if (workStream != null)
 			{
-				return workStream.Read(buffer, offset, count);
+				workStream.Close();
+				workStream = null;
 			}
-			else
-			{
-				return stream.Read(buffer, offset, count);
-			}
+			// We need to delete the temp file.
+			File.Delete(workFile);
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region InFile
+
+	/// <summary>
+	/// Class to handle files that are being imported.
+	/// </summary>
+	public abstract class InFile : SyncFile
+	{
+		#region fields
+
+		/// <summary>Stream to the Incoming file.</summary>
+		FileStream	workStream;
+		/// <summary>Stream to the Original file.</summary>
+		FileStream	stream;
+		/// <summary>The Old Node if it exists.</summary>
+		BaseFileNode	oldNode;
+
+		#endregion
+		
+		#region Constructor / Finalizer.
+
+		/// <summary>
+		/// Constructs an InFile object.
+		/// </summary>
+		/// <param name="collection">The collection that the node belongs to.</param>
+		protected InFile(Collection collection) :
+			base(collection)
+		{
+		}
+
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
+		~InFile()
+		{
+			Close (true, false);
+		}
+
+		#endregion
+
+		#region public methods.
+
+		/// <summary>
+		/// Reads data into the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer to read into.</param>
+		/// <param name="offset">The offset in the buffer to read into.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <returns></returns>
+		public int Read(byte[] buffer, int offset, int count)
+		{
+			return stream.Read(buffer, offset, count);
 		}
 
 		/// <summary>
@@ -160,14 +206,7 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(byte[] buffer, int offset, int count)
 		{
-			if (direction == SyncDirection.OUT)
-			{
-				throw new SimiasException("Invalid operation");
-			}
-			else
-			{
-				workStream.Write(buffer, offset, count);
-			}
+			workStream.Write(buffer, offset, count);
 		}
 
 		/// <summary>
@@ -178,17 +217,10 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public void Copy(long offset, int count)
 		{
-			if (direction == SyncDirection.OUT)
-			{
-				throw new SimiasException("Invalid operation");
-			}
-			else
-			{
-				byte[] buffer = new byte[count];
-				stream.Position = offset;
-				count = stream.Read(buffer, 0, count);
-				workStream.Write(buffer, 0, count);
-			}
+			byte[] buffer = new byte[count];
+			stream.Position = offset;
+			count = stream.Read(buffer, 0, count);
+			workStream.Write(buffer, 0, count);
 		}
 		
 
@@ -197,20 +229,8 @@ namespace Simias.Sync
 		/// </summary>
 		public long ReadPosition
 		{
-			get 
-			{ 
-				if (direction == SyncDirection.OUT)
-					return workStream.Position; 
-				else
-					return stream.Position;
-			}
-			set 
-			{ 
-				if (direction == SyncDirection.OUT)
-					workStream.Position = value; 
-				else
-					stream.Position = value;
-			}
+			get { return stream.Position; }
+			set { stream.Position = value; }
 		}
 
 		/// <summary>
@@ -218,20 +238,8 @@ namespace Simias.Sync
 		/// </summary>
 		public long WritePosition
 		{
-			get 
-			{ 
-				if (direction == SyncDirection.OUT)
-					throw new SimiasException("Invalid operation");
-				else
-                    return workStream.Position; 
-			}
-			set 
-			{ 
-				if (direction == SyncDirection.OUT)
-					throw new SimiasException("Invalid operation");
-				else
-					workStream.Position = value; 
-			}
+			get { return workStream.Position; }
+			set { workStream.Position = value; }
 		}
 
 		/// <summary>
@@ -239,14 +247,12 @@ namespace Simias.Sync
 		/// </summary>
 		public long Length
 		{
-			get
-			{
-				if (direction == SyncDirection.OUT)
-					return workStream.Length;
-				else
-					return stream.Length;
-			}
+			get { return stream.Length; }
 		}
+
+		#endregion
+
+		#region protected methods.
 
 		/// <summary>
 		/// Called to open the file.
@@ -254,24 +260,31 @@ namespace Simias.Sync
 		/// <param name="node">The node that represents the file.</param>
 		protected void Open(BaseFileNode node)
 		{
-			this.node = node;
-			file = node.GetFullPath(collection);
-			workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + node.ID);
-			if (direction == SyncDirection.OUT)
-			{
-				// This file is being pushed make a copy to work from.
-				File.Copy(file, workFile, true);
-				workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
-			}
-			else
-			{
-				// Open the file so that it cannot be modified.
-				stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
-				workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
-			}
+			this.SetupFileNames(node);
+			// Open the file so that it cannot be modified.
+			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
+			stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
+			workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
 			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
 		}
 
+		/// <summary>
+		/// Called to close the file and cleanup resources.
+		/// </summary>
+		protected void Close(bool commit)
+		{
+			Close (false, commit);
+		}
+
+		#endregion
+
+		#region private methods.
+
+		/// <summary>
+		/// Called to cleanup any resources and close the file.
+		/// </summary>
+		/// <param name="InFinalizer"></param>
+		/// <param name="commit"></param>
 		private void Close(bool InFinalizer, bool commit)
 		{
 			if (!InFinalizer)
@@ -289,25 +302,75 @@ namespace Simias.Sync
 			}
 			if (commit)
 			{
-				if (direction == SyncDirection.IN)
-				{
-					if (commit)
-					{
-						File.Copy(workFile, file, true);
-						File.SetAttributes(file, File.GetAttributes(file) & ~FileAttributes.Hidden);
-					}
-				}
-				// We need to delete the temp file.
-				File.Delete(workFile);
+				File.Copy(workFile, file, true);
+				FileInfo fi = new FileInfo(file);
+				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
+				fi.LastWriteTime = node.LastWriteTime;
+				fi.CreationTime = node.CreationTime;
 			}
+			// We need to delete the temp file.
+			File.Delete(workFile);
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region SyncFile
+
+	/// <summary>
+	/// Class used to determine the common data between two files.
+	/// This is done from a copy of the local file and a map of hash code for the server file.
+	/// </summary>
+	public abstract class SyncFile
+	{
+		#region fields
+
+		/// <summary>The Collection the file belongs to.</summary>
+		protected Collection	collection;
+		/// <summary> The node that represents the file.</summary>
+		protected BaseFileNode	node;
+		/// <summary>The ID of the node.</summary>
+		protected string		nodeID;
+		/// <summary>The size of the Blocks that are hashed.</summary>
+		protected const int		BlockSize = 4096;
+		/// <summary>The maximun size of a transfer.</summary>
+		protected const int		MaxXFerSize = 1024 * 64;
+		/// <summary>The name of the actual file.</summary>
+		protected string		file;
+		/// <summary>The name of the working file.</summary>
+		protected string		workFile;
+		/// <summary>The Prefix of the working file.</summary>
+		const string			WorkFilePrefix = ".simias.wf.";
+
+		#endregion
+
+		#region protected methods.
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection">The collection that the node belongs to.</param>
+		protected SyncFile(Collection collection)
+		{
+			this.collection = collection;
 		}
 
 		/// <summary>
-		/// Called to close the file and cleanup resources.
+		/// Called to get the name of the file and workFile;
 		/// </summary>
-		protected void Close(bool commit)
+		/// <param name="node">The node that represents the file.</param>
+		protected void SetupFileNames(BaseFileNode node)
 		{
-			Close (false, commit);
+			this.node = node;
+			this.nodeID = node.ID;
+			this.file = node.GetFullPath(collection);
+			this.workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + node.ID);
 		}
+
+		#endregion
 	}
+
+	#endregion
 }

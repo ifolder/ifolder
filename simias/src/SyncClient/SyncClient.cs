@@ -1123,24 +1123,24 @@ namespace Simias.Sync.Client
 						return;
 					}
 
-					ClientFile file = new ClientFile(collection, nodeID, service);
+					ClientInFile file = new ClientInFile(collection, nodeID, service);
 					file.Open();
 					bool success = false;
 					try
 					{
 						success = file.DownLoadFile();
-						if (success)
-						{
-							filesFromServer.Remove(nodeID);
-						}
-						else
-						{
-							SyncComplete = false;
-						}
 					}
 					finally
 					{
-						file.Close(success);
+						success = file.Close(success);
+					}
+					if (success)
+					{
+						filesFromServer.Remove(nodeID);
+					}
+					else
+					{
+						SyncComplete = false;
 					}
 				}
 				catch {}
@@ -1348,24 +1348,24 @@ namespace Simias.Sync.Client
 					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 					if (node != null)
 					{
-						ClientFile file = new ClientFile(collection, node, service);
+						ClientOutFile file = new ClientOutFile(collection, node, service);
 						file.Open();
 						bool success = false;
 						try
 						{
 							success = file.UploadFile();
-							if (success)
-							{
-								filesToServer.Remove(nodeID);
-							}
-							else
-							{
-								SyncComplete = false;
-							}
 						}
 						finally
 						{
-							file.Close(success);
+							success = file.Close(success);
+						}
+						if (success)
+						{
+							filesToServer.Remove(nodeID);
+						}
+						else
+						{
+							SyncComplete = false;
 						}
 					}
 				}
