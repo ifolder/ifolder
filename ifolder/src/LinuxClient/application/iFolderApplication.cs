@@ -23,16 +23,12 @@
 
 using System;
 using System.Collections;
-//using Simias;
-//using Simias.Sync;
-//using Simias.Domain;
 using System.Diagnostics;
 using System.Threading;
 
 using Gtk;
 using Gdk;
 using Gnome;
-//using Glade;
 using GtkSharp;
 using GLib;
 using Egg;
@@ -62,12 +58,14 @@ namespace Novell.iFolder
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
 		private iFolderWindow 		ifwin;
+		private LogWindow			logwin;
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
 		private bool				ShowReLoginWindow;
+		private bool				logwinShown;
 		private string				redomainID;
 
 		public iFolderApplication(string[] args)
@@ -102,6 +100,11 @@ namespace Novell.iFolder
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
 			ShowReLoginWindow = true;
+
+			logwin = new LogWindow();
+			logwin.Destroyed += 
+					new EventHandler(LogWindowDestroyedHandler);
+			logwinShown = false;
 		}
 
 
@@ -351,6 +354,8 @@ namespace Novell.iFolder
 		{
 			if(ifwin != null)
 				ifwin.HandleFileSyncEvent(args);
+			if(logwin != null)
+				logwin.HandleFileSyncEvent(args);
 		}
 
 
@@ -373,6 +378,9 @@ namespace Novell.iFolder
 			}
 			if(ifwin != null)
 				ifwin.HandleSyncEvent(args);
+
+			if(logwin != null)
+				logwin.HandleSyncEvent(args);
 		}
 
 
@@ -603,6 +611,11 @@ namespace Novell.iFolder
 			iFolders_item.Activated += 
 					new EventHandler(showiFolderWindow);
 
+			MenuItem logview_item = 
+					new MenuItem (Util.GS("Show Synchronization Log"));
+			trayMenu.Append (logview_item);
+			logview_item.Activated += 
+					new EventHandler(showLogWindow);
 			
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
@@ -652,6 +665,15 @@ namespace Novell.iFolder
 				ifwin = null;
 			}
 
+			if(logwin != null)
+			{
+				logwin.Destroyed -=
+					new EventHandler(LogWindowDestroyedHandler);
+				logwin.Hide();
+				logwin.Destroy();
+				logwin = null;
+			}
+
 			if(CurrentState == iFolderState.Stopping)
 			{
 				System.Environment.Exit(1);
@@ -694,9 +716,43 @@ namespace Novell.iFolder
 
 
 
+		private void showLogWindow(object o, EventArgs args)
+		{
+			if(logwin == null)
+			{
+				logwin = new LogWindow();
+				logwin.Destroyed += 
+						new EventHandler(LogWindowDestroyedHandler);
+				logwin.ShowAll();
+				logwinShown = true;
+			}
+			else
+			{
+				if(logwinShown)
+					logwin.Present();
+				else
+				{
+					logwinShown = true;
+					logwin.ShowAll();
+				}
+			}
+		}
+
+
+
+
 		private void OniFolderWindowDestroyed(object o, EventArgs args)
 		{
 			ifwin = null;
+		}
+
+
+
+
+		private void LogWindowDestroyedHandler(object o, EventArgs args)
+		{
+			logwin = null;
+			logwinShown = false;
 		}
 
 
