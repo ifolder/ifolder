@@ -40,10 +40,10 @@ endif
 
 install-exec-local: Location.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Location.dll $(DEBUG_FILES) $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Location.dll $(DEBUG_FILES) $(MDNSRESPONDER_DIR)/mDnsResponder*.exe $(MDNSRESPONDER_DIR)/mDnsResponder*.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Location.dll LocationTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) mDnsResponderApi.dll $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f Location.dll LocationTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) mDnsResponder*.exe mDnsResponder*.dll $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
