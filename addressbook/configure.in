@@ -83,7 +83,7 @@ case $ADDRESSBOOK_OS in
         LIBFLAG='-l'
         LIBS=''
         MONO=mono
-        MONO_PATH='$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(SIMIAS_INSTALL_PATH)/bin'
+        MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(SIMIAS_INSTALL_PATH)/bin'
         NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
