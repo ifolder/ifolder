@@ -20,6 +20,19 @@ Building the Gaim iFolder Plugin
 See the BUILDING file.
 
 
+--------------
+Prerequisites
+--------------
+
+You must have installed Simias and iFolder (http://www.ifolder.com)
+
+Make sure you've enabled the Gaim Domain by editing "simias-client-bootstrap.config"
+before you run simias for the first time.  Once you've run it, the file is
+named "Simias.config".  The following line should exist in the file:
+
+<Service name="Gaim Domain" assembly="Simias.Gaim.dll" enabled="True" type="Thread" class="Simias.Gaim.GaimService" />
+
+
 --------------------------------------
 Using/Testing the Gaim iFolder Plugin
 --------------------------------------
