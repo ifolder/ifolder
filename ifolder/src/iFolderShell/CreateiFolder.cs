@@ -44,7 +44,7 @@ namespace Novell.iFolderCom
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(CreateiFolder));
 		private iFolderWebService ifWebService;
 		private bool successful;
-		private DomainInfo selectedDomain;
+		private DomainItem selectedDomain;
 		private string loadPath;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
@@ -86,7 +86,7 @@ namespace Novell.iFolderCom
 		{
 			set
 			{
-				foreach (DomainInfo d in value)
+				foreach (DomainItem d in value)
 				{
 					servers.Items.Add(d);
 				}
@@ -96,7 +96,7 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the domain that will be initially selected in the dropdown list.
 		/// </summary>
-		public DomainInfo SelectedDomain
+		public DomainItem SelectedDomain
 		{
 			set { selectedDomain = value; }
 		}
@@ -382,12 +382,12 @@ namespace Novell.iFolderCom
 						string name = ((XmlElement)node).GetAttribute("name");
 						string id = ((XmlElement)node).GetAttribute("ID");
 
-						DomainInfo domainInfo = new DomainInfo(name, id);
-						servers.Items.Add(domainInfo);
+						DomainItem domainItem = new DomainItem(name, id);
+						servers.Items.Add(domainItem);
 
 						if (id.Equals(defaultID))
 						{
-							selectedDomain = domainInfo;
+							selectedDomain = domainItem;
 						}
 					}
 
@@ -453,10 +453,10 @@ namespace Novell.iFolderCom
 					Cursor.Current = Cursors.WaitCursor;
 					if (ifWebService.CanBeiFolder(ifolderPath.Text))
 					{
-						DomainInfo domainInfo = (DomainInfo)servers.SelectedItem;
+						DomainItem domainItem = (DomainItem)servers.SelectedItem;
 
 						// Create the iFolder.
-						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainInfo.ID);
+						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainItem.ID);
 
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);

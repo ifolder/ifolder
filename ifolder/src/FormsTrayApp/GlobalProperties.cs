@@ -1733,10 +1733,28 @@ namespace Novell.FormsTrayApp
 
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
+			// Build the list of domains to pass in to the create dialog.
+			ArrayList domains = new ArrayList();
+			Domain selectedDomain = (Domain)servers.SelectedItem;
+			selectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
+			DomainItem selectedDomainItem = null;
+			foreach (Domain d in servers.Items)
+			{
+				if (!d.ShowAll)
+				{
+					DomainItem domainItem = new DomainItem(d.Name, d.ID);
+					if (d.ID.Equals(selectedDomain.ID))
+					{
+						selectedDomainItem = domainItem;
+					}
+
+					domains.Add(domainItem);
+				}
+			}
+
 			CreateiFolder createiFolder = new CreateiFolder();
-//			createiFolder.Servers = servers.Items;
-//			Domain selectedDomain = (Domain)servers.SelectedItem;
-//			createiFolder.SelectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
+			createiFolder.Servers = domains;
+			createiFolder.SelectedDomain = selectedDomainItem;
 			createiFolder.LoadPath = Application.StartupPath;
 			createiFolder.iFolderWebService = ifWebService;
 
