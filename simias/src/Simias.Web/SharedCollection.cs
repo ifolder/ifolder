@@ -578,10 +578,46 @@ namespace Simias.Web
 		/// </returns>
 		public static void DeleteSharedCollection(string CollectionID)
 		{
+			DeleteSharedCollection(CollectionID, null);
+		}
+
+		/// <summary>
+		/// WebMethod that deletes a SharedCollection and removes all
+		/// subscriptions from all members.  Any files that were in place
+		/// if there was a DirNode will remain there
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing this iFolder to delete
+		/// </param>
+		/// <param name="accessID">Access User ID</param>
+		/// <returns>
+		/// true if the iFolder was successfully removed
+		/// </returns>
+		public static void DeleteSharedCollection(string CollectionID, string accessID)
+		{
 			Store store = Store.GetStore();
 			Collection collection = store.GetCollectionByID(CollectionID);
+			
 			if(collection != null)
 			{
+				// impersonate
+				if ((accessID != null) && (accessID.Length != 0))
+				{
+					Simias.Storage.Member member = collection.GetMemberByID(accessID);
+				
+					if(member == null)
+						throw new Exception("Invalid UserID");
+				
+					collection.Impersonate(member);
+
+					// admin rights
+					// note: check for admin rights before cleaning subscriptions
+					if (member.Rights != Access.Rights.Admin)
+					{
+						throw new AccessException(collection, member, Access.Rights.Admin);
+					}
+				}
+			
 				// first clean out all subscriptions for this iFolder
 				// if we are the server in a workgroup, then this
 				// will clean out everyone else's subscriptions too
@@ -1046,6 +1082,7 @@ namespace Simias.Web
 		private static void RemoveAllSubscriptions(Store store, Collection col)
 		{
 			ICSList memberlist = col.GetMemberList();
+			
 			foreach(ShallowNode sNode in memberlist)
 			{
 				// Get the member from the list
