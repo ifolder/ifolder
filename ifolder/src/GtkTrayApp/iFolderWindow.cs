@@ -271,7 +271,6 @@ namespace Novell.iFolder
 			imagebox.PackStart(iFolderScaledBanner, true, true, 0);
 			vbox.PackStart (imagebox, false, true, 0);
 
-
 			//-----------------------------
 			// Create Tabs
 			//-----------------------------
@@ -440,7 +439,7 @@ namespace Novell.iFolder
 			AboutMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
 			HelpMenu.Append(AboutMenuItem);
-//			AboutMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			AboutMenuItem.Activated += new EventHandler(OnAbout);
 
 			MenuItem MainHelpMenuItem = new MenuItem(Util.GS("_Help"));
 			MainHelpMenuItem.Submenu = HelpMenu;
@@ -2172,6 +2171,14 @@ namespace Novell.iFolder
 		{
 			Util.ShowHelp("front.html", this);
 		}
+
+		private void OnAbout(object o, EventArgs args)
+		{
+			Util.ShowAbout();
+		}
+
+
+
 
 	}
 }

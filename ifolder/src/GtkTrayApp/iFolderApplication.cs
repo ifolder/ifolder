@@ -565,14 +565,6 @@ namespace Novell.iFolder
 
 
 
-		private void show_about(object o, EventArgs args)
-		{
-			Util.ShowAbout();
-		}
-
-
-
-
 		private void show_properties(object o, EventArgs args)
 		{
 			if(CheckWebService())

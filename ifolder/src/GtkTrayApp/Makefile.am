@@ -23,7 +23,7 @@ INSTALL_BIN_FILES = $(srcdir)/ifolder
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-IMAGE_FILES = inviteduser.png currentuser.png ifolderuser.png serverifolder.png ifolder48.png ifolder.png ifolder-banner-scaled.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolder.gif ifolder-crash.png ifolder-crash.gif
+IMAGE_FILES = ifolder-about.png inviteduser.png currentuser.png ifolderuser.png serverifolder.png ifolder48.png ifolder.png ifolder-banner-scaled.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolder.gif ifolder-crash.png ifolder-crash.gif
 
 MIME_FILES = $(srcdir)/ifolder.mime $(srcdir)/ifolder.keys
 APPLICATIONS_FILES = $(srcdir)/ifolder.applications
