@@ -9,7 +9,7 @@ SimiasApp_FLAGS = $(CSC_EXEFLAG)
 SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll Simias.Web.dll System.Web.dll
 SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../Simias.dll ../WebService
 
-EXTRA_DIST = App.ico $(SimiasApp_CSFILES) simias.in simias.cmd simias.exe.config
+EXTRA_DIST = App.ico $(SimiasApp_CSFILES) simias.in simias.cmd SimiasApp.exe.config
 
 all: SimiasApp.exe
 
