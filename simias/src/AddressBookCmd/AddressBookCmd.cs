@@ -36,6 +36,7 @@ namespace AddressBookCmd
 	public class Abc
 	{
 		public	bool			timeIt = false;
+		public  bool			deleteProperty = false;
 		public  bool			deleteContact = false;
 		public	bool			exportVCard = false;
 		public	bool			listBooks = false;
@@ -49,7 +50,9 @@ namespace AddressBookCmd
 		public	string			currentContactName = null;
 		public	string			addressBookName = null;
 		public	string			vCardFile = null;
+		private ArrayList		addContactList = null;
 		private	ArrayList		propertyList = null;
+		private ArrayList       deletePropertyList = null;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -60,6 +63,12 @@ namespace AddressBookCmd
 			//
 			// TODO: Add code to start application here
 			//
+
+			if (args.Length == 0)
+			{
+				DisplayUsage();
+				return;
+			}
 
 			Abc		cAbc = new Abc();
 
@@ -154,6 +163,15 @@ namespace AddressBookCmd
 								cAbc.newAddressBook = args[++i];
 							}
 						}
+						else
+						if (args[i][2] == 'c')
+						{
+							// Add to the contact list
+							if (i + 1 <= args.Length)
+							{
+								cAbc.AddContact(args[++i]);
+							}
+						}
 					}
 					else
 					if (args[i][0] == '/' && args[i][1] == 'd')
@@ -166,6 +184,16 @@ namespace AddressBookCmd
 							{
 								cAbc.contactName = args[++i];
 								cAbc.deleteContact = true;
+							}
+						}
+						else
+						// delete a property
+						if (args[i][2] == 'p')
+						{
+							if (i + 1 <= args.Length)
+							{
+								cAbc.AddDeleteProperty(args[++i]);
+								cAbc.deleteProperty = true;
 							}
 						}
 					}
@@ -205,8 +233,10 @@ namespace AddressBookCmd
 			Console.WriteLine("   /c <contact> - contact to execute commands against");
 			Console.WriteLine("   /av <vcard file> - add or import vcard file");
 			Console.WriteLine("   /ab <address book> - add/create a new address book");
+			Console.WriteLine("   /ac <username> - add/create a new contact");
 			Console.WriteLine("   /db <address book> - delete an address book");
 			Console.WriteLine("   /dc <contact> - delete a contact from selected addres book");
+			Console.WriteLine("   /dp <property name> - delete the property");
 			Console.WriteLine("   /ev <vcard file> - export a vCard");
 			Console.WriteLine("   /lb = list address books");
 			Console.WriteLine("   /lc = list contacts");
@@ -222,30 +252,28 @@ namespace AddressBookCmd
 			Console.WriteLine("Listing properties for contact: " + cContact.UserName);
 			if (cContact.FN != "")
 			{
-				Console.WriteLine("   FN: " + cContact.FN);
+				Console.WriteLine("   FN:            " + cContact.FN);
 			}
 
-			/*
-			if (cContact.EMail != "")
+			if (cContact.Nickname != "")
 			{
-				Console.WriteLine("   Email: " + cContact.EMail);
+				Console.WriteLine("   Nickname:      " + cContact.Nickname);
 			}
-			*/
 
 			if (cContact.Title != "")
 			{
-				Console.WriteLine("   Title: " + cContact.Title);
+				Console.WriteLine("   Title:         " + cContact.Title);
 			}
 
 			if (cContact.Role != "")
 			{
-				Console.WriteLine("   Role: " + cContact.Role);
+				Console.WriteLine("   Role:          " + cContact.Role);
 			}
 
 			IABList mList = cContact.GetEmailAddresses();
 			foreach(Email tMail in mList)
 			{
-				Console.Write("   Email: " + tMail.Address);
+				Console.Write("   Email:         " + tMail.Address);
 				if ((tMail.Types & EmailTypes.work) == EmailTypes.work)
 				{
 					Console.Write(" WORK");
@@ -267,7 +295,7 @@ namespace AddressBookCmd
 			IABList tList = cContact.GetTelephoneNumbers();
 			foreach(Telephone tPhone in tList)
 			{
-				Console.Write("   Telephone: " + tPhone.Number);
+				Console.Write("   Telephone:     " + tPhone.Number);
 				if ((tPhone.Types & PhoneTypes.home) == PhoneTypes.home)
 				{
 					Console.Write(" HOME");
@@ -301,35 +329,50 @@ namespace AddressBookCmd
 				Console.WriteLine("");
 			}
 
+			if (cContact.Organization != "")
+			{
+				Console.WriteLine("   Organization:  " + cContact.Organization);
+			}
+
 			if (cContact.WorkForceID != "")
 			{
 				Console.WriteLine("   Work Force ID: " + cContact.WorkForceID);
 			}
 
-			if (cContact.Organization != "")
-			{
-				Console.WriteLine("   Organization: " + cContact.Organization);
-			}
-
 			if (cContact.ManagerID != "")
 			{
-				Console.WriteLine("   Manager ID: " + cContact.ManagerID);
+				Console.WriteLine("   Manager ID:    " + cContact.ManagerID);
+			}
+
+			if (cContact.Birthday != "")
+			{
+				Console.WriteLine("   Birthday:      " + cContact.Birthday);
 			}
 
 			if (cContact.Blog != "")
 			{
-				Console.WriteLine("   Blog Address: " + cContact.Blog);
+				Console.WriteLine("   Blog Address:  " + cContact.Blog);
 			}
 
 			if (cContact.Url != "")
 			{
-				Console.WriteLine("   Url Address: " + cContact.Url);
+				Console.WriteLine("   Url Address:   " + cContact.Url);
 			}
 
 			if (cContact.Note != "")
 			{
-				Console.WriteLine("   Note: " + cContact.Note);
+				Console.WriteLine("   Note:          " + cContact.Note);
 			}
+		}
+
+		public void	AddContact(string name)
+		{
+			if (this.addContactList == null)
+			{
+				this.addContactList = new ArrayList();
+			}
+
+			this.addContactList.Add(name);
 		}
 
 		// Property value string in the following format: property=value
@@ -341,6 +384,17 @@ namespace AddressBookCmd
 			}
 
 			this.propertyList.Add(propertyValue);
+		}
+
+		// Property value string in the following format: property=value
+		public void	AddDeleteProperty(string propertyValue)
+		{
+			if (this.deletePropertyList == null)
+			{
+				this.deletePropertyList = new ArrayList();
+			}
+
+			this.deletePropertyList.Add(propertyValue);
 		}
 
 		public void	ProcessCommands()
@@ -388,6 +442,125 @@ namespace AddressBookCmd
 					}
 
 					Console.WriteLine("");
+				}
+			}
+
+			if (this.addContactList != null)
+			{
+				foreach(String username in this.addContactList)
+				{
+					if (verbose == true)
+					{
+						Console.WriteLine("   Adding contact: " + username);
+					}
+
+					Contact	tmpContact = new Contact();
+					tmpContact.UserName = username;
+					cAddressBook.AddContact(tmpContact);
+					tmpContact.Commit();
+				}
+			}
+
+			if (deleteProperty == true && cContact != null)
+			{
+				bool	cUpdated = false;
+				foreach(string propertyString in this.deletePropertyList)
+				{
+					Regex o = new Regex(@"=");
+					IEnumerator enumTokens = o.Split(propertyString).GetEnumerator();
+					while(enumTokens.MoveNext())
+					{
+						string token = (string) enumTokens.Current;
+						token.ToLower();
+
+						if (token == "organization")
+						{
+							cContact.Organization = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "blog")
+						{
+							cContact.Blog = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "url")
+						{
+							cContact.Url = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "title")
+						{
+							cContact.Title = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "role")
+						{
+							cContact.Role = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "workforceid")
+						{
+							cContact.WorkForceID = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "birthday")
+						{
+							cContact.Birthday = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "email")
+						{
+							// email property line ex: email=banderso@novell.com
+							if (enumTokens.MoveNext())
+							{
+								IABList eAddresses = cContact.GetEmailAddresses();
+								foreach (Email tmpMail in eAddresses)
+								{
+									if (tmpMail.Address == (string) enumTokens.Current)
+									{
+										if (verbose == true)
+										{
+											Console.WriteLine("   Deleting e-mail address: " + tmpMail.Address);
+										}
+										tmpMail.Delete();
+										cUpdated = true;
+										break;
+									}
+								}
+							}
+						}
+						else
+						if (token == "managerid")
+						{
+							cContact.ManagerID = null;
+							cUpdated = true;
+							
+						}
+						else
+						if (token == "note")
+						{
+							cContact.Note = null;
+							cUpdated = true;
+						}
+						else
+						if (token == "nickname")
+						{
+							cContact.Nickname = null;
+							cUpdated = true;
+						}
+					}
+				}
+
+				if (cUpdated == true)
+				{
+					cContact.Commit();
 				}
 			}
 
@@ -481,6 +654,15 @@ namespace AddressBookCmd
 							}
 						}
 						else
+						if (token == "role")
+						{
+							if (enumTokens.MoveNext())
+							{
+								cContact.Role = (string) enumTokens.Current;
+								cUpdated = true;
+							}
+						}
+						else
 						if (token == "workforceid")
 						{
 							if (enumTokens.MoveNext())
@@ -501,10 +683,53 @@ namespace AddressBookCmd
 						else
 						if (token == "email")
 						{
+							// email property line ex: email=banderso@novell.com;home;preferred
 							if (enumTokens.MoveNext())
 							{
-								cContact.EMail = (string) enumTokens.Current;
-								cUpdated = true;
+								Regex x = new Regex(@";");
+
+								IEnumerator enumTokens1 = x.Split((string) enumTokens.Current).GetEnumerator();
+
+								if (enumTokens1.MoveNext())
+								{
+									EmailTypes	eTypes = 0;
+									Email cMail = new Email();
+									cMail.Address = (string) enumTokens1.Current;
+									cUpdated = true;
+
+									while(enumTokens1.MoveNext())
+									{
+										string typeToken = (string) enumTokens1.Current;
+										typeToken.ToLower();
+
+										if (typeToken == "preferred")
+										{
+											cMail.Preferred = true;
+										}
+										else
+										if (typeToken == "work")
+										{
+											eTypes |= EmailTypes.work;
+										}
+										else
+										if (typeToken == "personal")
+										{
+											eTypes |= EmailTypes.personal;
+										}
+										else
+										if (typeToken == "other")
+										{
+											eTypes |= EmailTypes.other;
+										}
+									}
+
+									if (eTypes != 0)
+									{
+										cMail.Types = eTypes;
+									}
+
+									cContact.AddEmailAddress(cMail);
+								}
 							}
 						}
 						else
@@ -530,7 +755,7 @@ namespace AddressBookCmd
 						{
 							if (enumTokens.MoveNext())
 							{
-								cContact.NickName = (string) enumTokens.Current;
+								cContact.Nickname = (string) enumTokens.Current;
 								cUpdated = true;
 							}
 						}
