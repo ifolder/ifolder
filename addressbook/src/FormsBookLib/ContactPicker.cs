@@ -199,6 +199,14 @@ namespace Novell.iFolder.FormsBookLib
 				this.booksContacts1.CurrentManager = value;
 			}
 		}
+
+		public string LoadPath
+		{
+			set
+			{
+				this.booksContacts1.LoadPath = value;
+			}
+		}
 		#endregion
 
 		#region Event Handlers

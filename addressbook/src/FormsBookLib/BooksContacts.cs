@@ -64,6 +64,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.ComboBox searchFor;
 		private System.Windows.Forms.ComboBox queryType;
 		private System.ComponentModel.IContainer components;
+		private string loadPath;
 		#endregion
 
 		public BooksContacts()
@@ -73,31 +74,6 @@ namespace Novell.iFolder.FormsBookLib
 
 			// TODO: Add any initialization after the InitializeComponent call
 			this.createContact.Enabled = false;
-
-			// Image lists...
-			try
-			{
-				// Create the books ImageList object.
-				ImageList booksImageList = new ImageList();
-
-				// Initialize the ImageList objects with icons.
-				string basePath = Path.Combine(Application.StartupPath, "res");
-				booksImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_add_bk.ico")));
-
-				//Assign the ImageList objects to the books ListView.
-				books.SmallImageList = booksImageList;
-
-				// Create the contacts ImageList object.
-				ImageList contactsImageList = new ImageList();
-
-				// Initialize the ImageList objects with icons.
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
-
-				//Assign the ImageList objects to the books ListView.
-				contacts.SmallImageList = contactsImageList;
-			}
-			catch{}
 
 			// Context menu for contacts list view.
 			editContactMenu = new MenuItem("Edit...");
@@ -356,6 +332,17 @@ namespace Novell.iFolder.FormsBookLib
 				return validSelectedContacts;
 			}
 		}
+
+		/// <summary>
+		/// The path where the assembly is loaded from.
+		/// </summary>
+		public string LoadPath
+		{
+			set
+			{
+				this.loadPath = value;
+			}
+		}
 		#endregion
 
 		#region Public Methods
@@ -409,6 +396,31 @@ namespace Novell.iFolder.FormsBookLib
 		#region Event Handlers
 		private void BooksContacts_Load(object sender, EventArgs e)
 		{
+			// Image lists...
+			try
+			{
+				// Create the books ImageList object.
+				ImageList booksImageList = new ImageList();
+
+				// Initialize the ImageList objects with icons.
+				string basePath = Path.Combine(loadPath != null ? loadPath : Application.StartupPath, "res");
+				booksImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_add_bk.ico")));
+
+				//Assign the ImageList objects to the books ListView.
+				books.SmallImageList = booksImageList;
+
+				// Create the contacts ImageList object.
+				ImageList contactsImageList = new ImageList();
+
+				// Initialize the ImageList objects with icons.
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
+
+				//Assign the ImageList objects to the books ListView.
+				contacts.SmallImageList = contactsImageList;
+			}
+			catch{}
+
 			// Set properties for the listviews
 			this.books.MultiSelect = false;
 			this.books.View = View.Details;
