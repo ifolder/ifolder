@@ -54,22 +54,12 @@ namespace Novell.FormsTrayApp
 		private System.Resources.ResourceManager resourceManager;
 		private bool shutdown = false;
 
-		private Thread workerThread = null;
-
 		private Icon trayIcon;
 		private Icon startupIcon;
-        private const int numberOfIcons = 2;//10;
-		private Icon[] uploadIcons = new Icon[numberOfIcons];
+        private const int numberOfSyncIcons = 10;
+		private Icon[] syncIcons = new Icon[numberOfSyncIcons];
+		private int index = 0;
 
-		private bool animateIcon = false;
-
-		/// <summary>
-		/// Event used to animate the notify icon.
-		/// </summary>
-		protected AutoResetEvent synkEvent = null;
-
-		private delegate void AnimateDelegate(int index);
-		private AnimateDelegate animateDelegate;
 		private System.Windows.Forms.MenuItem menuItem10;
 		private System.Windows.Forms.MenuItem menuSeparator1;
 		private System.Windows.Forms.MenuItem menuProperties;
@@ -87,6 +77,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuJoin;
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
 		private System.Windows.Forms.MenuItem menuTools;
+		private System.Windows.Forms.Timer syncAnimateTimer;
 		private int iconID;
 		//private const int waitTime = 3000;
 		#endregion
@@ -146,13 +137,12 @@ namespace Novell.FormsTrayApp
 
 					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
-					uploadIcons[0] = new Icon(trayIcon, trayIcon.Size);
-					uploadIcons[1] = new Icon(Path.Combine(basePath, "ifolder_message.ico"));
-	//				for (int i = 0; i < numberOfIcons; i++)
-	//				{
-	//					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
-	//					uploadIcons[i] = new Icon(upIcon);
-	//				}
+					syncIcons[0] = new Icon(trayIcon, trayIcon.Size);
+					for (int i = 0; i < numberOfSyncIcons; i++)
+					{
+						string syncIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
+						syncIcons[i] = new Icon(syncIcon);
+					}
 			
 					notifyIcon1.Icon = startupIcon;
 					this.ShowInTaskbar = false;
@@ -313,17 +303,6 @@ namespace Novell.FormsTrayApp
 
 					//iFolderManager.CreateDefaultExclusions(config);
 
-					synkEvent = new AutoResetEvent(false);
-
-					animateDelegate = new AnimateDelegate(AnimateIcon);
-
-					// Start the icon animation worker thread.
-					if (workerThread == null)
-					{
-						workerThread = new Thread(new ThreadStart(AnimateWorker));
-						workerThread.Start();
-					}
-
 					notifyIcon1.Icon = trayIcon;
 				}
 				catch (Exception ex)
@@ -360,6 +339,16 @@ namespace Novell.FormsTrayApp
 			globalProperties.ShowEnterpriseTab = true;
 			globalProperties.InitialConnect = true;
 		}
+
+		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
+		{
+			notifyIcon1.Icon = syncIcons[index];
+
+			if (++index > (numberOfSyncIcons - 1))
+			{
+				index = 0;
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -378,6 +367,7 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
+			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
 			// 
 			// notifyIcon1
 			// 
@@ -491,6 +481,11 @@ namespace Novell.FormsTrayApp
 			this.menuExit.Visible = ((bool)(resources.GetObject("menuExit.Visible")));
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
 			// 
+			// syncAnimateTimer
+			// 
+			this.syncAnimateTimer.Interval = 100;
+			this.syncAnimateTimer.Tick += new System.EventHandler(this.syncAnimateTimer_Tick);
+			// 
 			// FormsTrayApp
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -521,12 +516,15 @@ namespace Novell.FormsTrayApp
 			{
 				case Action.StartSync:
 				{
-					// TODO: start icon animation.
+					// Animate the icon.
+					syncAnimateTimer.Start();
 					break;
 				}
 				case Action.StopSync:
 				{
-					// TODO: stop icon animation
+					// Stop the icon animation.
+					syncAnimateTimer.Stop();
+					notifyIcon1.Icon = trayIcon;
 					break;
 				}
 			}
@@ -666,11 +664,6 @@ namespace Novell.FormsTrayApp
 
 				// Shut down the web server.
 				Manager.Stop();
-
-				if ((workerThread != null) && workerThread.IsAlive)
-				{
-					workerThread.Abort();
-				}
 			}
 			catch
 			{
@@ -685,45 +678,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			Application.Exit();
-		}
-
-		private void AnimateIcon(int index)
-		{
-			if (animateIcon)
-			{
-				notifyIcon1.Icon = uploadIcons[index];
-			}
-			else
-			{
-				notifyIcon1.Icon = trayIcon;
-			}
-		}
-		#endregion
-
-		#region Public Methods
-		/// <summary>
-		/// The worker thread for animating the notify icon.
-		/// </summary>
-		public void AnimateWorker()
-		{
-			int i = 0;
-			while (true)
-			{
-				IAsyncResult r = BeginInvoke(animateDelegate, new object[] {i});
-				if (animateIcon)
-				{
-					Thread.Sleep(1000);
-				}
-				else
-				{
-					synkEvent.WaitOne();
-				}
-
-				if (++i > (numberOfIcons - 1))
-				{
-					i = 0;
-				}
-			}
 		}
 		#endregion
 
