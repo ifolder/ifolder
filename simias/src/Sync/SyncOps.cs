@@ -525,6 +525,7 @@ internal class SyncOps
 							stamp.id = new Nid(rec.EventID);
 							stamp.name = "";
 							stamp.changeType = rec.Operation;
+							stampList.Add(stamp);
 						}
 					}
 				}
