@@ -239,6 +239,8 @@ public class Dredger
 										new Dredger(col, true);
 										break;
 									case SyncCollectionRoles.Local:
+									case SyncCollectionRoles.Slave:
+									default:
 										new Dredger(col, false);
 										break;
 								}
