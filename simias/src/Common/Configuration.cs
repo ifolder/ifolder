@@ -284,7 +284,7 @@ namespace Simias
 
 		private void UpdateConfigFile()
 		{
-			XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.ASCII);
+			XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.UTF8);
 			try
 			{
 				xtw.Formatting = Formatting.Indented;

@@ -199,7 +199,7 @@ namespace Simias.Client
 			// Check to see if the file needs to be written back out.
 			if ( updatedFile )
 			{
-				XmlTextWriter xtw = new XmlTextWriter(config.ConfigPath, Encoding.ASCII);
+				XmlTextWriter xtw = new XmlTextWriter(config.ConfigPath, Encoding.UTF8);
 				try
 				{
 					xtw.Formatting = Formatting.Indented;
