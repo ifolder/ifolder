@@ -153,14 +153,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the ID of the local domain.
-		/// </summary>
-		internal string LocalDomain
-		{
-			get { return LocalDb.Domain; }
-		}
-
-		/// <summary>
 		/// Gets or sets the publisher event source identifier.
 		/// </summary>
 		internal string Publisher
@@ -229,6 +221,14 @@ namespace Simias.Storage
 		public bool IsEnterpriseServer
 		{
 			get { return enterpriseServer; }
+		}
+
+		/// <summary>
+		/// Gets the ID of the local domain.
+		/// </summary>
+		public string LocalDomain
+		{
+			get { return LocalDb.Domain; }
 		}
 
 		/// <summary>
