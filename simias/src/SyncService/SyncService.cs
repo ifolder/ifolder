@@ -268,7 +268,7 @@ public class SyncService
 
 		// Check our rights.
 		string userID = Thread.CurrentPrincipal.Identity.Name;
-		if ((userID == null) || (userID.Length == 0))
+//		if ((userID == null) || (userID.Length == 0))
 		{
 			// Kludge: for now trust the client.  this need to be removed before shipping.
 			userID = user;
