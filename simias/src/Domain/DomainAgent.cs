@@ -27,9 +27,13 @@ using System.Web;
 using System.Xml;
 
 using Simias;
+using Simias.Authentication;
 using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
+
+using Novell.Security.ClientPasswordManager;
+
 using PostOffice = Simias.POBox;
 
 namespace Simias.Domain
@@ -318,6 +322,15 @@ namespace Simias.Domain
 			DomainService domainService = new DomainService();
 			domainService.Url = domainServiceUrl.ToString();
 
+			// Pass the credentials
+			domainService.Credentials = 
+				new NetworkCredential(
+					user,
+					password,
+					domainServiceUrl.ToString());
+
+			domainService.CookieContainer = new CookieContainer();
+
 			// provision user
 			ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
 			if (provisionInfo == null)
@@ -334,6 +347,9 @@ namespace Simias.Domain
 			// set the default domain
 			string previousDomain = store.DefaultDomain;
 			store.DefaultDomain = domainInfo.ID;
+
+			// authentication was successful - save the credentials
+			new NetCredential("iFolder", domainInfo.ID, true, user, password);
 
 			try
 			{
@@ -428,6 +444,11 @@ namespace Simias.Domain
 			DomainService domainService = new DomainService();
 			domainService.Url = domainConfiguration.ServiceUrl.ToString() + "/DomainService.asmx";
 
+			Credentials cSimiasCreds = new Credentials(collection.ID);
+			domainService.Credentials = cSimiasCreds.GetCredentials();
+			if (domainService.Credentials == null)
+				throw new ApplicationException("No credentials available for specified collection.");
+
 			string rootID = null;
 			string rootName = null;
 
@@ -439,9 +460,10 @@ namespace Simias.Domain
 			}
 
 			Member member = collection.Owner;
-
-			string uriString = domainService.CreateMaster(collection.ID, collection.Name,
-				rootID, rootName, member.UserID, member.Name, member.ID, member.Rights.ToString() );
+			string uriString = 
+				domainService.CreateMaster(
+					collection.ID, collection.Name, rootID, rootName, 
+					member.UserID, member.Name, member.ID, member.Rights.ToString() );
 
 			if (uriString == null)
 				throw new ApplicationException("Unable to create remote master collection.");
@@ -460,6 +482,12 @@ namespace Simias.Domain
 			// Construct the web client.
 			DomainService domainService = new DomainService();
 			domainService.Url = domainConfiguration.ServiceUrl.ToString() + "/DomainService.asmx";
+
+			Credentials cSimiasCreds = new Credentials(collection.ID);
+			domainService.Credentials = cSimiasCreds.GetCredentials();
+			if (domainService.Credentials == null)
+				throw new ApplicationException("No credentials available for specified collection.");
+
 			domainService.DeleteMaster(collection.ID);
 		}
 
