@@ -2,9 +2,14 @@
 // Microsoft Visual C++ generated include file.
 // Used by iFolderShell.rc
 //
-#define IDB_IMAGES                      103
+#define IDS_CONVERT                     105
+#define IDS_REVERT                      106
 #define IDD_IFOLDERPROP                 107
+#define IDS_RESOLVE                     107
 #define IDD_IFOLDERSHARINGPROP          108
+#define IDS_PROPERTIES                  108
+#define IDS_SHARE                       109
+#define IDS_HELP                        110
 #define IDC_PROPLIST                    1001
 #define IDC_EDIT1                       1002
 #define IDC_DESCRIPTION                 1002
@@ -19,7 +24,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        105
+#define _APS_NEXT_RESOURCE_VALUE        106
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           101
