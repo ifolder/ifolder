@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 using NUnit.Framework;
 
@@ -92,6 +93,8 @@ namespace Simias.Tests
 		{
 			// send trace messages to the console
 			MyTrace.SendToConsole();
+
+			MyTrace.Switch.Level = TraceLevel.Verbose;
 		}
 
 		/// <summary>
