@@ -374,7 +374,8 @@ namespace Simias.Sync
 		ServerInFile	inFile;
 		ServerOutFile	outFile;
 		SyncPolicy		policy;
-
+		string			sessionID;
+        
 		~SyncService()
 		{
 			Dispose(true);		
@@ -414,8 +415,10 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="si">The start info to initialize the sync.</param>
 		/// <param name="user">This is temporary.</param>
-		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
+		/// <param name="sessionID">The unique sessionID.</param>
+		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user, string sessionID)
 		{
+			this.sessionID = sessionID;
 			si.Status = SyncColStatus.Success;
 			rights = si.Access = Access.Rights.Deny;
 			SyncNodeStamp[] nodes = null;
@@ -920,7 +923,7 @@ namespace Simias.Sync
 				if (node != null)
 				{
 					outFile = new ServerOutFile(collection, node);
-					outFile.Open();
+					outFile.Open(sessionID);
 					SyncNode snode = new SyncNode();
 					snode.nodeID = node.ID;
 					snode.node = node.Properties.ToString(true);

@@ -260,12 +260,15 @@ namespace Simias.Sync.Client
 						{
 							// We need to get the next segment.
 							// Add the segment size to this read and skip over the segment.
-							readBufferSize += BlockSize;
-							i++;
-							if (readBufferSize >= MaxXFerSize)
+							if ((readBufferSize + BlockSize) >= MaxXFerSize)
 							{
 								// We don't allow bigger XFers than this get out.
 								break;
+							}
+							else
+							{
+								readBufferSize += BlockSize;
+								i++;
 							}
 						}
 						else
@@ -464,7 +467,7 @@ namespace Simias.Sync.Client
 			SyncStatus status = serverFile.PutFileNode(snode);
 			if (status == SyncStatus.Success)
 			{
-				base.Open(node);
+				base.Open(node, "");
 			}
 			return status;
 		}

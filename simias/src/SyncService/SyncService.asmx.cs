@@ -59,7 +59,7 @@ namespace Simias.Sync.Web
 			SyncService ss = new SyncService();
 			Service = ss;
 			Session.Timeout = 5;
-			SyncNodeStamp[] nodes = ss.Start(ref si, user);
+			SyncNodeStamp[] nodes = ss.Start(ref si, user, Session.SessionID);
 			siout = si;
 			// TODO:
 			// If we have work we need to get a lock.

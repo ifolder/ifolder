@@ -105,9 +105,10 @@ namespace Simias.Sync
 		/// Called to open the file.
 		/// </summary>
 		/// <param name="node">The node that represents the file.</param>
-		protected void Open(BaseFileNode node)
+		/// <param name="sessionID">The unique session ID.</param>
+		protected void Open(BaseFileNode node, string sessionID)
 		{
-			SetupFileNames(node);
+			SetupFileNames(node, sessionID);
 			Log.log.Debug("Opening File {0}", file);
 			// This file is being pushed make a copy to work from.
 			File.Copy(file, workFile, true);
@@ -293,7 +294,7 @@ namespace Simias.Sync
 		/// <param name="node">The node that represents the file.</param>
 		protected void Open(BaseFileNode node)
 		{
-			this.SetupFileNames(node);
+			this.SetupFileNames(node, "");
 			Log.log.Debug("Opening File {0}", file);
 			// Open the file so that it cannot be modified.
 			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
@@ -450,7 +451,8 @@ namespace Simias.Sync
 		/// Called to get the name of the file and workFile;
 		/// </summary>
 		/// <param name="node">The node that represents the file.</param>
-		protected void SetupFileNames(BaseFileNode node)
+		/// <param name="sessionID">The unique session ID.</param>
+		protected void SetupFileNames(BaseFileNode node, string sessionID)
 		{
 			this.node = node;
 			this.nodeID = node.ID;
@@ -461,7 +463,7 @@ namespace Simias.Sync
 				if (!Directory.Exists(workBin))
 					Directory.CreateDirectory(workBin);
 			}
-			this.workFile = Path.Combine(workBin, WorkFilePrefix + node.ID);
+			this.workFile = Path.Combine(workBin, WorkFilePrefix + node.ID + sessionID);
 		}
 
 		#endregion

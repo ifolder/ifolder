@@ -188,9 +188,10 @@ namespace Simias.Sync
 		/// <summary>
 		/// Open the file for download access.
 		/// </summary>
-		public void Open()
+		/// <param name="sessionID">The unique session ID.</param>
+		public void Open(string sessionID)
 		{
-			base.Open(node);
+			base.Open(node, sessionID);
 		}
 
 		/// <summary>
