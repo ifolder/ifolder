@@ -40,7 +40,7 @@ Note for Novell Linux Desktop (NLD)
     cd ~/gaim-1.1.4
     
     Linux:
-    ./autogen.sh	(or ./configure if you downloaded the source.tar.gz)
+    ./autogen.sh
     make
     make install
     
