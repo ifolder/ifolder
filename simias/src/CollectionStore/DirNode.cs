@@ -142,18 +142,6 @@ namespace Simias.Storage
 		{
 			// Set the parent attribute.
 			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
-
-			// Get the full path to the directory entry.
-			string parentPath = parentNode.GetFullPath( collection );
-
-			// Update the file properties. Make sure that the file exists.
-			DirectoryInfo dInfo = new DirectoryInfo( Path.Combine( parentPath, dirName ) );
-			if ( dInfo.Exists )
-			{
-				properties.AddNodeProperty( Property.DirCreationTime, dInfo.CreationTime );
-				properties.AddNodeProperty( Property.DirLastAccessTime, dInfo.LastAccessTime );
-				properties.AddNodeProperty( Property.DirLastWriteTime, dInfo.LastWriteTime );
-			}
 		}
 
 		/// <summary>
@@ -190,15 +178,6 @@ namespace Simias.Storage
 			Property p = new Property( Property.Root, new Uri( parentDir ) );
 			p.LocalProperty = true;
 			properties.AddNodeProperty( p );
-
-			// Update the file properties. Make sure that the file exists.
-			DirectoryInfo dInfo = new DirectoryInfo( dirPath );
-			if ( dInfo.Exists )
-			{
-				properties.AddNodeProperty( Property.DirCreationTime, dInfo.CreationTime );
-				properties.AddNodeProperty( Property.DirLastAccessTime, dInfo.LastAccessTime );
-				properties.AddNodeProperty( Property.DirLastWriteTime, dInfo.LastWriteTime );
-			}
 		}
 
 		/// <summary>
@@ -230,70 +209,7 @@ namespace Simias.Storage
 		}
 		#endregion
 
-		#region Private Methods
-		/// <summary>
-		/// Gets all of the child descendents of the specified Node.
-		/// </summary>
-		/// <param name="collection">Collection that the DirNode objects belong to.</param>
-		/// <param name="parentID">DirNode identifier to search for children under.</param>
-		/// <param name="childList">ArrayList to add Node children objects to.</param>
-		private void GetAllChildren( Collection collection, string parentID, ArrayList childList )
-		{
-			// Search for all objects that have this object as a relationship.
-			ICSList results = collection.Search( Property.ParentID, new Relationship( collection.ID, parentID ) );
-			foreach ( ShallowNode shallowNode in results )
-			{
-				childList.Add( new Node( collection, shallowNode ) );
-				GetAllChildren( collection, shallowNode.ID, childList );
-			}
-		}
-		#endregion
-
 		#region Public Methods
-		/// <summary>
-		/// Deletes this DirNode object and all children objects if specified.
-		/// </summary>
-		/// <param name="collection">Collection object that this object belongs to.</param>
-		/// <param name="deep">Delete all child objects.</param>
-		/// <returns>An array of Node objects that have been deleted. If there are no Nodes to be deleted,
-		/// null is returned.</returns>
-		public Node[] Delete( Collection collection, bool deep )
-		{
-			Node[] nodeList = null;
-			ArrayList tempList = new ArrayList();
-
-			// If the node has not been previously committed or is already deleted, don't add it to the list.
-			if ( properties.State == PropertyList.PropertyListState.Update )
-			{
-				// Add this DirNode object to the list.
-				tempList.Add( this );
-
-				if ( !deep )
-				{
-					if ( HasChildren( collection ) )
-					{
-						throw new ApplicationException( "Cannot delete object with children" );
-					}
-				}
-				else
-				{
-					// Get all of the children of this object.
-					GetAllChildren( collection, id, tempList );
-				}
-
-				nodeList = new Node[ tempList.Count ];
-				int index = 0;
-
-				foreach( Node node in tempList )
-				{
-					node.Properties.State = PropertyList.PropertyListState.Delete;
-					nodeList[ index++ ] = node;
-				}
-			}
-
-			return nodeList;
-		}
-
 		/// <summary>
 		/// Gets the full path of the directory entry.
 		/// </summary>
@@ -353,6 +269,24 @@ namespace Simias.Storage
 			}
 
 			return parent;
+		}
+
+		/// <summary>
+		/// Gets the path relative to the collection root directory.
+		/// </summary>
+		/// <param name="collection">Collection object that this object belongs to.</param>
+		/// <returns>The path relative to the collection root directory.</returns>
+		public string GetRelativePath( Collection collection )
+		{
+			string relativePath = "";
+
+			DirNode dirNode = GetParent( collection );
+			if ( dirNode != null )
+			{
+				relativePath = Path.Combine( dirNode.GetRelativePath( collection ), name );
+			}
+
+			return relativePath;
 		}
 
 		/// <summary>

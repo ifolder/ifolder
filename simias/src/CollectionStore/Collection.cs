@@ -259,6 +259,23 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets all of the child descendents of the specified Node for the specified relationship.
+		/// </summary>
+		/// <param name="name">Name of the relationship property.</param>
+		/// <param name="relationship">Relationship to use to search for children.</param>
+		/// <param name="childList">ArrayList to add Node children objects to.</param>
+		private void GetAllDescendants( string name, Relationship relationship, ArrayList childList )
+		{
+			// Search for all objects that have this object as a relationship.
+			ICSList results = Search( name, relationship );
+			foreach ( ShallowNode shallowNode in results )
+			{
+				childList.Add( new Node( this, shallowNode ) );
+				GetAllDescendants( name, new Relationship( id, shallowNode.ID ), childList );
+			}
+		}
+
+		/// <summary>
 		/// Increments the local incarnation property.
 		///
 		/// NOTE: The database must be locked before making this call and must continue to be held until
@@ -686,8 +703,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Deletes the specified collection from the persistent store.  If there are nodes
-		/// subordinate to this collection, an exception will be thrown.
+		/// Deletes the specified collection from the persistent store.
 		/// </summary>
 		/// <returns>The Node object that has been deleted.</returns>
 		public Node Delete()
@@ -696,11 +712,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Deletes the specified collection from the persistent store.  There is no access check on delete of a
-		/// collection.
-		///
-		/// Note: DirNode objects cannot be deleted with this method because they have special containment
-		/// rules which must be followed.  Use DirNode.Delete() instead.
+		/// Deletes the specified Node object from the persistent store.
 		/// </summary>
 		/// <param name="node">Node object to delete.</param>
 		/// <returns>The Node object that has been deleted.</returns>
@@ -711,39 +723,42 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Deletes the specified collection from the persistent store.  There is no access check on delete
-		/// of a collection.
-		///
-		/// Note: DirNode objects cannot be deleted with this method because they have special containment
-		/// rules which must be followed.  Use DirNode.Delete() instead.
+		/// Deletes an array of Node objects from the persistent store.
+		/// </summary>
+		/// <param name="nodeList">Array of Node objects to delete.</param>
+		/// <returns>An array of Node objects that has been deleted.</returns>
+		public Node[] Delete( Node[] nodeList )
+		{
+			foreach ( Node node in nodeList )
+			{
+				Delete( node, null );
+			}
+
+			return nodeList;
+		}
+
+		/// <summary>
+		/// Deletes the specified collection from the persistent store.
 		/// </summary>
 		/// <param name="node">Node to delete.</param>
 		/// <param name="relationshipName">If not null, indicates to delete all Node objects that have a
-		/// relationship to the specified Node object.</param>
-		/// <returns>An array of Nodes that have been deleted.</returns>
+		/// descendent relationship to the specified Node object.</param>
+		/// <returns>An array of Node objects that have been deleted.</returns>
 		public Node[] Delete( Node node, string relationshipName )
 		{
 			// Temporary holding list.
 			ArrayList tempList = new ArrayList();
 
 			// If the node has not been previously committed or is already deleted, don't add it to the list.
-			PropertyList.PropertyListState oldState = node.Properties.State;
-			if ( oldState == PropertyList.PropertyListState.Update )
+			if ( node.Properties.State == PropertyList.PropertyListState.Update )
 			{
 				tempList.Add( node );
 			}
 
 			if ( relationshipName != null )
 			{
-				// Search for all objects that have this object as a relationship.
-				ICSList results = Search( relationshipName, new Relationship( id, node.ID ) );
-
-				// Go through the list, setting the state to deleted.
-				foreach( ShallowNode shallowNode in results )
-				{
-					// Add the resultant Node objects to the temp list.
-					tempList.Add( new Node( this, shallowNode ) );
-				}
+				// Get all of the decendents of this object.
+				GetAllDescendants( relationshipName, new Relationship( id, node.ID ), tempList );
 			}
 
 			// Allocate the Node object array and copy over the results.
@@ -752,15 +767,6 @@ namespace Simias.Storage
 
 			foreach( Node n in tempList )
 			{
-				// If any of the Nodes objects are DirNode objects, don't allow them to be deleted here.
-				// They must go through DirNode.Delete().
-				if ( IsType( n, "DirNode" ) )
-				{
-					// Reset the old state in the specified Node object.
-					node.Properties.State = oldState;
-					throw new ApplicationException( "DirNode objects cannot be deleted through this method." );
-				}
-
 				n.Properties.State = PropertyList.PropertyListState.Delete;
 				nodeList[ index++ ] = n;
 			}
@@ -1037,7 +1043,16 @@ namespace Simias.Storage
 		/// <returns>An ICSList object that contains the results of the search.</returns>
 		public ICSList Search( string propertyName, Syntax propertySyntax )
 		{
-			return new ICSList( new NodeEnumerator( this, new Property( propertyName, propertySyntax, String.Empty ), SearchOp.Exists ) );
+			if ( propertySyntax == Syntax.Uri )
+			{
+				// The Uri object must contain a valid path or it cannot be constructed. Put in a bogus path
+				// so that it can be constructed. The value will be ignored in the search.
+				return new ICSList( new NodeEnumerator( this, new Property( propertyName,propertySyntax, Directory.GetCurrentDirectory() ), SearchOp.Exists ) );
+			}
+			else
+			{
+				return new ICSList( new NodeEnumerator( this, new Property( propertyName, propertySyntax, String.Empty ), SearchOp.Exists ) );
+			}
 		}
 
 		/// <summary>

@@ -152,7 +152,7 @@ namespace Simias.Storage
 			base ( fileName, fileID, fileType )
 		{
 			// If there are metadata collectors registered for this file type, add the extra metadata.
-			AddFileMetadata( collection );
+//			AddFileMetadata( collection );
 		}
 
 		/// <summary>

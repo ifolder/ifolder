@@ -921,8 +921,7 @@ namespace Simias.Storage.Tests
 				foreach ( ShallowNode sn in entryList )
 				{
 					FileNode fn = new FileNode( collection, sn );
-					Console.WriteLine( "File path = {0}", fn.GetFullPath( collection ) );
-					Console.WriteLine( "Parent path = {0}", fn.GetParent( collection ).GetFullPath( collection ) );
+					collection.Commit( collection.Delete( fn ) );
 				}
 			}
 			finally
@@ -1353,8 +1352,6 @@ namespace Simias.Storage.Tests
 					throw new ApplicationException( "Cannot find associated node." );
 				}
 
-				FileNode temp = new FileNode( collection, e.Current as ShallowNode );
-				Console.WriteLine( "Found file {0}", temp.GetFullPath( collection ) );
 				e.Dispose();
 			}
 			finally
@@ -1536,7 +1533,6 @@ namespace Simias.Storage.Tests
 				int count = 0;
 				foreach( ShallowNode sn in collection )
 				{
-					Console.WriteLine( "Found node {0}", sn.Name );
 					++count;
 				}
 

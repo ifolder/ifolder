@@ -55,16 +55,6 @@ namespace Simias.Storage
 		{
 			// Set the parent attribute.
 			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
-
-			// Update the file properties. Make sure that the file exists.
-			FileInfo fInfo = new FileInfo( Path.Combine( parentNode.GetFullPath( collection ), fileName ) );
-			if ( fInfo.Exists )
-			{
-				properties.AddNodeProperty( Property.FileCreationTime, fInfo.CreationTime );
-				properties.AddNodeProperty( Property.FileLastAccessTime, fInfo.LastAccessTime );
-				properties.AddNodeProperty( Property.FileLastWriteTime, fInfo.LastWriteTime );
-				properties.AddNodeProperty( Property.FileLength, fInfo.Length );
-			}
 		}
 
 		/// <summary>
@@ -114,6 +104,11 @@ namespace Simias.Storage
 		public override string GetFullPath( Collection collection )
 		{
 			DirNode dirNode = GetParent( collection );
+			if ( dirNode == null )
+			{
+				throw new ApplicationException( "FileNode does not contain mandatory parent relationship." );
+			}
+
 			return Path.Combine( dirNode.GetFullPath( collection ), name );
 		}
 
@@ -138,6 +133,22 @@ namespace Simias.Storage
 			}
 
 			return new DirNode( collection, node );
+		}
+
+		/// <summary>
+		/// Gets the file path relative to the collection root directory.
+		/// </summary>
+		/// <param name="collection">Collection object that this object belongs to.</param>
+		/// <returns>The file path relative to the collection root directory.</returns>
+		public string GetRelativePath( Collection collection )
+		{
+			DirNode dirNode = GetParent( collection );
+			if ( dirNode == null )
+			{
+				throw new ApplicationException( "FileNode does not contain mandatory parent relationship." );
+			}
+
+			return Path.Combine( dirNode.GetRelativePath( collection ), name );
 		}
 		#endregion
 	}
