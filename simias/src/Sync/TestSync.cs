@@ -52,7 +52,6 @@ public class SyncTests: Assertion
 	string host = "127.0.0.1";
 	string invitationFile = Path.Combine(storeDirB, "SyncTestInvitation.ifi");
 	bool runChildProcess = true;
-	bool useTCP = true;
 	bool useRemoteServer = false;
 
 	static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncTests));
@@ -74,15 +73,15 @@ public class SyncTests: Assertion
 	{
 		// run client code within this process
 		if (!runChildProcess)
-			return CmdClient.RunOnce(new Uri(storeDirB), new Uri(folderB), storeDirA, useTCP);
+			return CmdClient.RunOnce(new Uri(storeDirB), new Uri(folderB), storeDirA);
 
 		if (useRemoteServer)
-			return CmdClient.RunOnce(new Uri(storeDirB), new Uri(folderB), null, useTCP)
-					&& CmdClient.RunOnce(new Uri(storeDirA), new Uri(folderA), null, useTCP);
+			return CmdClient.RunOnce(new Uri(storeDirB), new Uri(folderB), null)
+					&& CmdClient.RunOnce(new Uri(storeDirA), new Uri(folderA), null);
 		
 		// running local child client process
-		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(storeDirA), useTCP);
-		string syncCmdLine = String.Format(" -s {0} {1} sync {2}", storeDirB, useTCP? "": "-h", folderB);
+		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(storeDirA));
+		string syncCmdLine = String.Format(" -s {0} sync {1}", storeDirB, folderB);
 
 		//TODO: very gross check to determine if we are on mono, find a better way
 		int err = Path.DirectorySeparatorChar == '/'?

@@ -165,6 +165,7 @@ public struct NodeStamp: IComparable
 /// <summary>
 /// a chunk of data from a particular data stream (fork) of a node
 /// </summary>
+// TODO: should this just be a nested class in ForkChunk
 [Serializable]
 public struct ForkChunk
 {
@@ -294,6 +295,8 @@ internal class SyncOutgoingNode
 /// </summary>
 internal class SyncIncomingNode
 {
+	public const string TempFilePrefix = ".simias.";
+
 	Collection collection;
 	bool onServer;
 	Node node;
@@ -396,10 +399,10 @@ internal class SyncIncomingNode
 				Log.Assert(chunk.name == ForkChunk.DataForkName);
 
 				if (fileInfo == null)
-					fileInfo = new FileInfo(Path.Combine(parentPath, String.Format(".simias.{0}", node.ID)));
+					fileInfo = new FileInfo(Path.Combine(parentPath, TempFilePrefix + node.ID));
 				Fork fork = new Fork();
 				fork.name = chunk.name;
-				fork.stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FileShare.None);
+				fork.stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FileShare.None);
 				fork.stream.Write(chunk.data, 0, chunk.data.Length);
 				forkList.Add(fork);
 			}
@@ -472,6 +475,42 @@ internal class SyncIncomingNode
 		return null;
 	}
 
+
+	/* TODO: This code handles naming and update collisions, renames the completed file
+	 * according to local file system rules, etc. This may involve a number of steps
+	 * with partial completion possible due to power failures, disk crashes and the like.
+	 * The Dredger should be run at each startup to collect changes that may have
+	 * been missed by the event system when it was not operational. Therefore, the dredger
+	 * should also be able to handle any incomplete incoming nodes.
+	 */
+
+
+	/*
+	ideas:
+		stream identity = lwt, size, csname
+		commit operation (preconditions) { atomic commit, check later and back off }
+		stored md4 (5)? fingerprint of node could be useful, and would be side effect of rsync algorithm
+		what about permissions and symlinks?
+
+	Scenarios:
+		non dredged file local, name collision from server
+		dredged file local,  name collision from server
+		multiple files from server, differ only by case
+
+	onserver:
+		have node and temp file
+		import and commit (localFileName)
+		if updateCollision
+			return
+		make proposed localFileName
+		does it match previous localFileName?
+		yes, commit file, remove temp flag and commit
+			if commit fails???
+			commit by double rename, after commit check out status before delete?
+		no, ...
+
+	*/
+		
 	public NodeStatus Complete(ulong expectedIncarn)
 	{
 		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);

@@ -36,6 +36,22 @@ namespace Simias.Sync
 /// class to sync a portion of the file system with a collection
 /// applying iFolder specific behavior
 /// </summary>
+
+/* TODO: SyncIncomingNode handles naming and update collisions, renames the completed file
+ * according to local file system rules, etc. Such updates may involve a number of steps
+ * with partial completion possible due to power failures, disk crashes and the like.
+ * The Dredger should be run at each startup to collect changes that may have
+ * been missed by the event system when it was not operational. Therefore, the dredger
+ * should also be able to handle any incomplete incoming nodes.
+ */
+
+/* TODO: need to handle if we are on a case-insensitive file system and file name
+ * changes only by case? Actually this would be a rather rare optimization and
+ * probably not worth it for the dredger (except perhaps for a directory rename).
+ * If the event system is up, we catch it as a rename. If not, the dredger treats
+ * it as a delete and create. Dredger should always be case sensitive.
+ */
+
 internal class Dredger
 {
 	Collection collection = null;
@@ -61,6 +77,10 @@ internal class Dredger
 	{
 		Node node = null;
 		string name = Path.GetFileName(path);
+
+		// don't let temp files from sync into the collection as regular nodes
+		if (name.StartsWith(SyncIncomingNode.TempFilePrefix) && type == typeof(FileNode).Name)
+			return null;
 
 		// delete nodes that are wrong type or dups
 		// TODO: perhaps we should move dups to trash or log as error
@@ -119,6 +139,22 @@ internal class Dredger
 	}
 
 	//--------------------------------------------------------------------
+	// only returns true if directory exists and name matches case exactly
+	bool DirThere(string path, string name)
+	{
+		FileInfo fi = new FileInfo(Path.Combine(path, name));
+		return fi.Exists && name == fi.Name;
+	}
+
+	//--------------------------------------------------------------------
+	// only returns true if file exists and name matches case exactly
+	bool FileThere(string path, string name)
+	{
+		DirectoryInfo di = new DirectoryInfo(Path.Combine(path, name));
+		return di.Exists && name == di.Name;
+	}
+
+	//--------------------------------------------------------------------
 	void DoSubtree(DirNode dnode)
 	{
 		string path = dnode.GetFullPath(collection);
@@ -127,10 +163,8 @@ internal class Dredger
 		foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 		{
 			Node kid = new Node(collection, sn);
-			if (collection.IsType(kid, typeof(DirNode).Name)
-					&& !Directory.Exists(Path.Combine(path, kid.Name))
-					|| collection.IsType(kid, typeof(FileNode).Name)
-					&& !File.Exists(Path.Combine(path, kid.Name)))
+			if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
+					|| collection.IsType(kid, typeof(FileNode).Name) && !FileThere(path, kid.Name))
 				DeleteNode(kid);
 		}
 

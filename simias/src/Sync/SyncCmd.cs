@@ -35,7 +35,6 @@ public class SyncCmd
 {
 	Uri storeLocation = null;
 	int port = 8088;
-	bool useTCP = true;
 	string host = null;
 
 	int Invite(string user, Uri docRoot, string invitationFile)
@@ -61,7 +60,7 @@ public class SyncCmd
 	{
 		if (host == null)
 			host = MyDns.GetHostName();
-		CmdServer server = new CmdServer(host, port, storeLocation, useTCP);
+		CmdServer server = new CmdServer(host, port, storeLocation);
 		Console.WriteLine("server {0} started, press enter to exit", port);
 		Console.ReadLine();
 		server.Stop();
@@ -98,7 +97,6 @@ public class SyncCmd
 			"        -l traceLevel (off, error, warning, info, verbose)",
 			"        -c traceClass (all or class name)",
 			"        -p port (used by server and invite operations)",
-			"        -h (use http and soap)",
 			"        -n (name to use for local host, can be ip address)",
 			"",
 		};
@@ -143,8 +141,6 @@ public class SyncCmd
 					//Log.SetCategory(args[i++]);
 					Console.WriteLine("category option '-c' not supported"); 
 				}
-				else if (s == "-h")
-					useTCP = false;
 				else if (s == "-n")
 					host = args[i++];
 				else
@@ -163,11 +159,11 @@ public class SyncCmd
 				case "sync":
 					if (args.Length - i != 1)
 						return Usage("operation 'sync' takes 1 param");
-					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), null, useTCP)? 0: 40;
+					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), null)? 0: 40;
 				case "localsync":
 					if (args.Length - i != 2)
 						return Usage("operation 'localsync' takes 2 params");
-					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), args[i + 1], useTCP)? 0: 41;
+					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), args[i + 1])? 0: 41;
 				case "server":
 					if (args.Length - i != 0)
 						return Usage("operation 'server' takes 0 params");

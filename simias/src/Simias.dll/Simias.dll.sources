@@ -136,8 +136,6 @@ AssemblyInfo.cs
 ../SyncCommon/Library/SyncProperties.cs
 ../SyncCommon/Library/SyncStoreInfo.cs
 ../SyncCommon/Tests/SyncCommonTests.cs
-../Sync/Differ.cs
-../Sync/Dredge.cs
 ../SyncLogicLite/Tests/SyncLogicLiteTests.cs
 ../SyncManager/Library/SyncChannel.cs
 ../SyncManager/Library/SyncChannelFactory.cs
@@ -149,8 +147,11 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncStoreManager.cs
 ../SyncManager/Library/SyncStoreService.cs
 ../SyncManager/Tests/SyncManagerTests.cs
+../Sync/Differ.cs
+../Sync/Dredge.cs
 ../Sync/SyncLog.cs
 ../Sync/SyncOps.cs
 ../Sync/SyncPass.cs
+../Sync/SyncSize.cs
 ../Sync/SyncUtil.cs
 ../Sync/TestSync.cs

@@ -186,22 +186,20 @@ public class CmdServer
 	const string serviceTag = "sync.rem";
 	const string channelName = "SyncCmdServer";
 
-	internal static string MakeUri(string host, int port, bool useTCP)
+	internal static string MakeUri(string host, int port)
 	{
-		return String.Format("{0}://{1}:{2}/{3}",
-				(useTCP? "tcp": "http"), host, port, serviceTag);
+		return String.Format("http://{0}:{1}/{2}", host, port, serviceTag);
 	}
 
 	/// <summary>
 	/// Create server on specified port using specified store and remoting channel type.
 	/// host is only used to generate a URI for debug messages.
 	/// </summary>
-	public CmdServer(string host, int port, Uri storeLocation, bool useTCP)
+	public CmdServer(string host, int port, Uri storeLocation)
 	{
-		uri = MakeUri(host, port, useTCP);
+		uri = MakeUri(host, port);
 		obj = new CmdService(storeLocation);
-		channel = useTCP? (IChannel)new TcpServerChannel(channelName, port):
-				(IChannel)new HttpServerChannel(channelName, port);
+		channel = new HttpServerChannel(channelName, port, new BinaryServerFormatterSinkProvider());
 		ChannelServices.RegisterChannel(channel);
 		objRef = RemotingServices.Marshal(obj, serviceTag);
 		Log.Info("CmdServer {0} is up and running from store '{1}'", uri, storeLocation);
@@ -243,15 +241,11 @@ public class CmdClient
 
 	const string channelName = "SyncCmdClient";
 
-	CmdClient(string host, int port, string collectionId, bool useTCP)
+	CmdClient(string host, int port, string collectionId)
 	{
-		if (useTCP)
-			channel = new TcpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
-		else
-			channel = new HttpClientChannel(channelName, new SoapClientFormatterSinkProvider());
-
+		channel = new HttpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
 		ChannelServices.RegisterChannel(channel);
-		string serverURL = CmdServer.MakeUri(host, port, useTCP);
+		string serverURL = CmdServer.MakeUri(host, port);
 		service = (CmdService)Activator.GetObject(typeof(CmdService), serverURL);
 		session = service.StartSession(collectionId);
 		Log.Spew("connected to server at {0}", serverURL);
@@ -259,7 +253,6 @@ public class CmdClient
 
 	void Stop()
 	{
-		//session.Done();
 		session = null;
 		service = null;
 		if (channel != null)
@@ -272,7 +265,7 @@ public class CmdClient
 	/// <summary>
 	/// instantiates a client and runs one sync pass for the specified collection to the specified server
 	/// </summary>
-	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation, bool useTCP)
+	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation)
 	{
 		Store store = new Store(new Configuration(storeLocation == null? null: storeLocation.LocalPath));
 		store.Revert();
@@ -295,7 +288,7 @@ public class CmdClient
 		}
 		else
 		{
-			CmdClient client = new CmdClient(csc.MasterUri.Host, csc.MasterUri.Port, csc.ID, useTCP);
+			CmdClient client = new CmdClient(csc.MasterUri.Host, csc.MasterUri.Port, csc.ID);
 			new SynkerWorkerA(client.session, csc).DoSyncWork();
 			client.Stop();
 		}

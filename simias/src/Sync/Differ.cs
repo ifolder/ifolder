@@ -75,8 +75,6 @@ class Differ
 		FileStream fsA = fiA.OpenRead(), fsB = fiB.OpenRead();
 		byte[] bufferA = new byte[64 * 1024];
 		byte[] bufferB = new byte[bufferA.Length];
-		//if (!Same(bufferA.Length, bufferA, bufferB))
-		//	Console.WriteLine("uninitialized buffers are not the same");
 			
 		int readA, readB;
 		do
@@ -90,15 +88,6 @@ class Differ
 				same = false;
 				break;
 			}
-
-			/* I would like to find a better way to compare two byte arrays,
-			 * for now just compare the whole array every time. This is a waste
-			 * for the last read when the array is not full, but it should work OK
-			 * since the bytes from init or previous read should compare.
-			 */
-			// this doesn't work
-			//if (bufferA != bufferB)
-			//	Console.WriteLine("{0} buffer != {1} buffer", fileA, fileB);
 
 			if (!Same(readA, bufferA, bufferB))
 			{
@@ -116,12 +105,10 @@ class Differ
 	/// Compare two files, specific differences are printed to Console.
 	/// returns false if comparison fails.
 	/// </summary>
-	// what about uid/gid/permissions?
+	// TODO: what about uid/gid/permissions?
 	public static bool CompareDirectories(string dirA, string dirB)
 	{
-		// Console.WriteLine( differences in files and subdirs);
 		bool same = true;
-
 		string[] filesA = Directory.GetFiles(dirA);
 		string[] filesB = Directory.GetFiles(dirB);
 		if (filesA.Length != filesB.Length)
