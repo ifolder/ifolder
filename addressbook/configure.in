@@ -58,12 +58,10 @@ AC_SUBST(SYSTEM_XML)
 SRCDIR='$(top_srcdir)/src'
 TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
-APIDOCDIR="$SRCDIR/api-doc"
 
 AC_SUBST(SRCDIR)
 AC_SUBST(TOOLDIR)
 AC_SUBST(DOCDIR)
-AC_SUBST(APIDOCDIR)
 
 EMPTY=
 SPACE='$(EMPTY) $(EMPTY)'
@@ -111,6 +109,7 @@ case $ADDRESSBOOK_OS in
         COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
+        NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -130,6 +129,7 @@ case $ADDRESSBOOK_OS in
         COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
+        NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
         NUNIT_FLAGS='/nologo'
@@ -146,6 +146,7 @@ esac
 AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
+AC_SUBST(NDOC)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
@@ -212,6 +213,25 @@ AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 
 
 #
+# Handle --with-ndoc-bindir
+#
+AC_ARG_WITH(ndoc-bindir, [
+  --with-ndoc-bindir=DIR
+                          path to NDoc executables [[NONE]]],
+    [ NDOC_BINDIR="$withval" ],
+    [ NDOC_BINDIR=NONE ]
+    )
+if test "$NDOC_BINDIR" = "NONE"; then
+    NDOC_BINDIR=''
+else
+    test -d "$NDOC_BINDIR" || AC_MSG_ERROR([$NDOC_BINDIR does not exist])
+    NDOC_BINDIR=`cd "$NDOC_BINDIR" && pwd`
+fi
+echo NDOC_BINDIR=$NDOC_BINDIR
+AC_SUBST(NDOC_BINDIR)
+AM_CONDITIONAL(NDOC, test -n "$NDOC_BINDIR")
+
+#
 # Handle --enable-debug
 #
 AC_ARG_ENABLE(debug, [
@@ -270,13 +290,13 @@ fi
 if expr "$PASSALONG_CONFIG_OPTIONS" : '.*--with-simias-install-path=[[^ ]][[^ ]]* *' > /dev/null; then
     PASSALONG_CONFIG_OPTIONS=`echo "$PASSALONG_CONFIG_OPTIONS" | sed 's/--with-simias-install-path=[[^ ]][[^ ]]* *//'`
 fi
-echo PASSALONG_CONFIG_OPTIONS=$PASSALONG_CONFIG_OPTIONS
+echo PASSALONG_CONFIG_OPTIONS="$PASSALONG_CONFIG_OPTIONS"
 
 #
 # Configure Simias subproject, if specified.
 #
 if test -n "$SIMIAS_BUILD_PATH"; then
-    CONFIG_OPTIONS=$PASSALONG_CONFIG_OPTIONS
+    CONFIG_OPTIONS="$PASSALONG_CONFIG_OPTIONS"
     if test -n "$SIMIAS_INSTALL_PATH"; then
         CONFIG_OPTIONS="--prefix=$SIMIAS_INSTALL_PATH ${CONFIG_OPTIONS}"
     else
@@ -288,7 +308,7 @@ if test -n "$SIMIAS_BUILD_PATH"; then
     else
         CONFIG_CMD="./autogen.sh"
     fi
-    CONFIG_CMD="$CONFIG_CMD  $CONFIG_OPTIONS"
+    CONFIG_CMD="$CONFIG_CMD $CONFIG_OPTIONS"
     echo "----------------------------------------------------------------------"
     echo "cd $SIMIAS_BUILD_PATH; $CONFIG_CMD"
     (cd $SIMIAS_BUILD_PATH; eval $CONFIG_CMD)
@@ -312,4 +332,5 @@ package/Makefile
 package/windows/Makefile
 package/linux/Makefile
 package/linux/addressbook.spec
+doc/Makefile
 ])
