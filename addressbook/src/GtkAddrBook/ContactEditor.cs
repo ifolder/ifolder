@@ -67,20 +67,14 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.Entry			organizationEntry;
 		[Glade.Widget] internal Gtk.Entry			userIDEntry;
 
-		[Glade.Widget] internal Gtk.Entry			phoneOneEntry;
-		[Glade.Widget] internal Gtk.Entry			phoneTwoEntry;
-		[Glade.Widget] internal Gtk.Entry			phoneThreeEntry;
+		[Glade.Widget] internal Gtk.Entry			workPhoneEntry;
+		[Glade.Widget] internal Gtk.Entry			mobilePhoneEntry;
+		[Glade.Widget] internal Gtk.Entry			homePhoneEntry;
 
-		[Glade.Widget] internal Gtk.Label			phoneOneLabel;
-		[Glade.Widget] internal Gtk.Label			phoneTwoLabel;
-		[Glade.Widget] internal Gtk.Label			phoneThreeLabel;
-		
 		[Glade.Widget] internal Gtk.Button			phoneButton;
 
-		[Glade.Widget] internal Gtk.Entry			emailOneEntry;
-		[Glade.Widget] internal Gtk.Label			emailOneLabel;
-		[Glade.Widget] internal Gtk.Entry			emailTwoEntry;
-		[Glade.Widget] internal Gtk.Label			emailTwoLabel;
+		[Glade.Widget] internal Gtk.Entry			workEmailEntry;
+		[Glade.Widget] internal Gtk.Entry			personalEmailEntry;
 		[Glade.Widget] internal Gtk.Button			emailButton;
 
 		[Glade.Widget] internal Gtk.Entry			webURLEntry;
@@ -101,15 +95,15 @@ namespace Novell.iFolder
 
 		internal Gtk.Dialog		contactEditorDialog;
 		internal Contact		currentContact;
-		internal Name			preferredName;
 		internal bool			isNewContact;
 
-		internal Email			emailOne;
-		internal Email			emailTwo;
-		internal Telephone		phoneOne;
-		internal Telephone		phoneTwo;
-		internal Telephone		phoneThree;
-		internal Address		currentAddress;
+		internal Name			preferredName;
+		internal Email			workEmail;
+		internal Email			personalEmail;
+		internal Telephone		workPhone;
+		internal Telephone		mobilePhone;
+		internal Telephone		homePhone;
+		internal Address		preferredAddress;
 
 		public event ContactEditedEventHandler	ContactEdited;
 		public event ContactCreatedEventHandler	ContactCreated;
@@ -145,6 +139,10 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// Method used to load the glade resources and setup default
+		/// behaviors in for the ContactEditor dialog
+		/// </summary>
 		private void Init()
 		{
 			Glade.XML gxml = new Glade.XML ("contact-editor.glade", 
@@ -163,14 +161,14 @@ namespace Novell.iFolder
 			widArray[2] = organizationEntry;
 			widArray[3] = userIDEntry;
 
-			widArray[4] = emailOneEntry;
-			widArray[5] = emailTwoEntry;
+			widArray[4] = workEmailEntry;
+			widArray[5] = personalEmailEntry;
 			widArray[6] = webURLEntry;
 			widArray[7] = blogURLEntry;
 
-			widArray[8] = phoneOneEntry;
-			widArray[9] = phoneTwoEntry;
-			widArray[10] = phoneThreeEntry;
+			widArray[8] = workPhoneEntry;
+			widArray[9] = mobilePhoneEntry;
+			widArray[10] = homePhoneEntry;
 
 			widArray[11] = streetEntry;
 			widArray[12] = cityEntry;
@@ -195,10 +193,46 @@ namespace Novell.iFolder
 
 			PopulateWidgets();
 		}
-		
+	
 
 
 
+		/// <summary>
+		/// Method to notify show the dialog
+		/// </summary>
+		public void ShowAll()
+		{
+			if(contactEditorDialog != null)
+			{
+				contactEditorDialog.Visible = true;
+				contactEditorDialog.Present();
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Method to notify delegates that the edit was done on this
+		/// contact
+		/// </summary>
+		private void NotifyContactEdit()
+		{
+			ContactEventArgs cArgs = new ContactEventArgs(currentContact);
+
+			if(isNewContact && (ContactCreated != null) )
+				ContactCreated(this, cArgs);
+			else if(ContactEdited != null)
+				ContactEdited(this, cArgs);
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to populate all of the data from the current
+		/// contact into the UI controls
+		/// </summary>
 		private void PopulateWidgets()
 		{
 			fullNameEntry.Text = preferredName.FN;
@@ -225,6 +259,12 @@ namespace Novell.iFolder
 		}
 
 
+
+
+		/// <summary>
+		/// Method used to retrieve a specific type of phone number
+		/// from the current contact
+		/// </summary>
 		internal Telephone GetPhoneType(PhoneTypes type)
 		{
 			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
@@ -235,217 +275,236 @@ namespace Novell.iFolder
 			return null;
 		}
 
+
+
+
+		/// <summary>
+		/// Method used to populate the phone controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
 		internal void PopulatePhoneNumbers()
 		{
-			phoneOne = GetPhoneType(PhoneTypes.preferred);
-			if(phoneOne != null)
+			workPhone = null;
+			mobilePhone = null;
+			homePhone = null;
+
+			workPhone = GetPhoneType(PhoneTypes.preferred);
+			if(workPhone != null)
 			{
-				phoneOneEntry.Text = phoneOne.Number;
-				SetPhoneLabelText(phoneOneLabel, phoneOne.Types);
+				// Check to see if the default is work 
+				if( (workPhone.Types & PhoneTypes.work) == PhoneTypes.work)
+				{
+					workPhoneEntry.Text = workPhone.Number;
+				}
+				// Check to see if the default is mobile
+				else if( (workPhone.Types & PhoneTypes.cell) == 
+						PhoneTypes.cell)
+				{
+					mobilePhone = workPhone;
+					workPhone = null;
+					mobilePhoneEntry.Text = mobilePhone.Number;
+				}
+				// Check to see if the default is home
+				else if( (homePhone.Types & PhoneTypes.home) == 
+						PhoneTypes.home)
+				{
+					homePhone = workPhone;
+					workPhone = null;
+					homePhoneEntry.Text = homePhone.Number;
+				}
+				// The default ie niether work, mobile or home, reset
+				else
+				{
+					workPhone = null;
+				}
 			}
 
-			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
+			// if it turns out that the default above was not work
+			// read it now
+			if(workPhone == null)
 			{
-				if(phoneOne == null)
-				{
-					phoneOne = tel;
-					phoneOneEntry.Text = tel.Number;
-					SetPhoneLabelText(phoneOneLabel, tel.Types);
-				}
-				else if(phoneOne.Number == tel.Number)
-				{
-					// do nothing
-				}
-				else if(phoneTwo == null)
-				{
-					phoneTwo = tel;
-					phoneTwoEntry.Text = tel.Number;
-					SetPhoneLabelText(phoneTwoLabel, tel.Types);
-				}
-				else if(phoneThree == null)
-				{
-					phoneThree = tel;
-					phoneThreeEntry.Text = tel.Number;
-					SetPhoneLabelText(phoneThreeLabel, tel.Types);
-				}
+				workPhone = GetPhoneType(PhoneTypes.work);
+				if(workPhone != null)
+					workPhoneEntry.Text = workPhone.Number;
+				else
+					workPhoneEntry.Text = "";
+			}
+
+			// if it turns out that the default above was not mobile 
+			// read it now
+			if(mobilePhone == null)
+			{
+				mobilePhone = GetPhoneType(PhoneTypes.cell);
+				if(mobilePhone != null)
+					mobilePhoneEntry.Text = mobilePhone.Number;
+				else
+					mobilePhoneEntry.Text = "";
+			}
+
+			// if it turns out that the default above was not home
+			// read it now
+			if(homePhone == null)
+			{
+				homePhone = GetPhoneType(PhoneTypes.home);
+				if(homePhone != null)
+					homePhoneEntry.Text = homePhone.Number;
+				else
+					homePhoneEntry.Text = "";
 			}
 		}
 
-		internal void SetPhoneLabelText(Label label, PhoneTypes type)
-		{
-			if( (type & PhoneTypes.work) == PhoneTypes.work)
-				label.Text = "Work Phone:";
-			else if( (type & PhoneTypes.cell) == PhoneTypes.cell)
-				label.Text = "Mobile Phone:";
-			else if( (type & PhoneTypes.home) == PhoneTypes.home)
-				label.Text = "Home Phone:";
-			else if( (type & PhoneTypes.pager) == PhoneTypes.pager)
-				label.Text = "Pager Phone:";
-			else if( (type & PhoneTypes.fax) == PhoneTypes.fax)
-				label.Text = "Fax Phone:";
-		}
 
+
+
+		/// <summary>
+		/// Method used to save phone numbers to the current contact
+		/// the current contact still needs to be persisted
+		/// </summary>
 		internal void SavePhoneNumbers()
 		{
-			bool setdefault = true;
-
-			if(phoneOne == null)
+			// --------------------------------
+			// Work Phone
+			// --------------------------------
+			if(workPhoneEntry.Text.Length > 0)
 			{
-				if(phoneOneEntry.Text.Length > 0)
+				if(workPhone == null)
 				{
-					phoneOne = new Telephone(phoneOneEntry.Text,
+					workPhone = new Telephone(workPhoneEntry.Text,
 							PhoneTypes.work);
-					currentContact.AddTelephoneNumber(phoneOne);
-					SetDefaultPhone(phoneOne);
-					setdefault = false;
-					Console.WriteLine("Saving phoneOne == null : " + 
-							phoneOne.Number);
-				}
-			}
-			else
-			{
-				if(phoneOneEntry.Text.Length > 0)
-				{
-					phoneOne.Number = phoneOneEntry.Text;
-					Console.WriteLine("Saving phoneOne : " + phoneOne.Number);
-					SetDefaultPhone(phoneOne);
-					setdefault = false;
+					currentContact.AddTelephoneNumber(workPhone);
 				}
 				else
 				{
-					Console.WriteLine("Removing phoneOne :" + phoneOne.Number);
-					phoneOne.Delete();
-					phoneOne = null;
+					workPhone.Number = workPhoneEntry.Text;
+				}
+			}
+			// If there is no text, check to see if we need to delete
+			else
+			{
+				if(workPhone != null)
+				{
+					workPhone.Delete();
 				}
 			}
 
-			if(phoneTwo == null)
+
+			// --------------------------------
+			// Mobile Phone
+			// --------------------------------
+			if(mobilePhoneEntry.Text.Length > 0)
 			{
-				if(phoneTwoEntry.Text.Length > 0)
+				if(mobilePhone == null)
 				{
-					phoneTwo = new Telephone(phoneTwoEntry.Text,
+					mobilePhone = new Telephone(mobilePhoneEntry.Text,
 							PhoneTypes.cell);
-					currentContact.AddTelephoneNumber(phoneTwo);
-					if(setdefault == true)
-					{
-						SetDefaultPhone(phoneTwo);
-						setdefault = false;
-					}
-					Console.WriteLine("Saving phoneTwo == null : " + 
-							phoneTwo.Number);
-				}
-			}
-			else
-			{
-				if(phoneTwoEntry.Text.Length > 0)
-				{
-					phoneTwo.Number = phoneTwoEntry.Text;
-					Console.WriteLine("Saving phoneTwo : " + phoneTwo.Number);
-					if(setdefault == true)
-					{
-						SetDefaultPhone(phoneTwo);
-						setdefault = false;
-					}
+					currentContact.AddTelephoneNumber(mobilePhone);
 				}
 				else
 				{
-					Console.WriteLine("Removing phoneTwo :" + phoneTwo.Number);
-					phoneTwo.Delete();
-					phoneTwo = null;
+					mobilePhone.Number = mobilePhoneEntry.Text;
+				}
+			}
+			// If there is no text, check to see if we need to delete
+			else
+			{
+				if(mobilePhone != null)
+				{
+					mobilePhone.Delete();
 				}
 			}
 
-			if(phoneThree == null)
+
+			// --------------------------------
+			// Home Phone
+			// --------------------------------
+			if(homePhoneEntry.Text.Length > 0)
 			{
-				if(phoneThreeEntry.Text.Length > 0)
+				if(homePhone == null)
 				{
-					phoneThree = new Telephone(phoneThreeEntry.Text,
+					homePhone = new Telephone(homePhoneEntry.Text,
 							PhoneTypes.home);
-					currentContact.AddTelephoneNumber(phoneThree);
-					if(setdefault == true)
-					{
-						SetDefaultPhone(phoneThree);
-						setdefault = false;
-					}
-					Console.WriteLine("Saving phoneThree == null : " + 
-							phoneThree.Number);
-				}
-			}
-			else
-			{
-				if(phoneThreeEntry.Text.Length > 0)
-				{
-					phoneThree.Number = phoneThreeEntry.Text;
-					Console.WriteLine("Saving phoneThree : " + phoneThree.Number);
-					if(setdefault == true)
-					{
-						SetDefaultPhone(phoneThree);
-						setdefault = false;
-					}
+					currentContact.AddTelephoneNumber(homePhone);
 				}
 				else
 				{
-					Console.WriteLine("Removing phoneThree :" + phoneThree.Number);
-					phoneThree.Delete();
-					phoneThree = null;
+					homePhone.Number = homePhoneEntry.Text;
+				}
+			}
+			// If there is no text, check to see if we need to delete
+			else
+			{
+				if(homePhone != null)
+				{
+					homePhone.Delete();
 				}
 			}
 		}
 
-		internal void SetDefaultPhone(Telephone curPhone)
-		{
-			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
-			{
-				tel.Types &= ~PhoneTypes.preferred;
-			}
-			curPhone.Types |= PhoneTypes.preferred;
-		}
 
+
+
+		/// <summary>
+		/// Method used to populate the email controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
 		internal void PopulateEmails()
 		{
-			emailOne = GetEmailType(EmailTypes.preferred);
-			if(emailOne != null)
-			{
-				Console.WriteLine("Read Preferred : " + emailOne.Address);
-				emailOneEntry.Text = emailOne.Address;
-				SetEmailLabelText(emailOneLabel, emailOne.Types);
-			}
+			workEmail = null;
+			personalEmail = null;
 
-			foreach(Email e in currentContact.GetEmailAddresses())
+			workEmail = GetEmailType(EmailTypes.preferred);
+			if(workEmail != null)
 			{
-				Console.WriteLine("read: "+e.Address);
-
-				if(emailOne == null)
+				// Check to see if the default is work 
+				if( (workEmail.Types & EmailTypes.work) == EmailTypes.work)
 				{
-					Console.WriteLine("emailOne == null : " + e.Address);
-					emailOne = e;
-					emailOneEntry.Text = e.Address;
-					SetEmailLabelText(emailOneLabel, emailOne.Types);
+					workEmailEntry.Text = workEmail.Address;
 				}
+				// Check to see if the default is personal
+				else if( (workEmail.Types & EmailTypes.personal) == 
+						EmailTypes.personal)
+				{
+					personalEmail = workEmail;
+					workEmail = null;
+					personalEmailEntry.Text = personalEmail.Address;
+				}
+				// The default ie niether work nor personal, reset workEmail
 				else
 				{
-					if( (emailOne.Address != e.Address) &&
-							(emailTwo == null) )
-					{
-						Console.WriteLine("emailTwo == null : " + e.Address);
-						emailTwo = e;
-						emailTwoEntry.Text = e.Address;
-						SetEmailLabelText(emailTwoLabel, emailTwo.Types);
-					}
+					workEmail = null;
 				}
+			}
+
+			// if it turns out that the default above was not work
+			// read it now
+			if(workEmail == null)
+			{
+				workEmail = GetEmailType(EmailTypes.work);
+				if(workEmail != null)
+					workEmailEntry.Text = workEmail.Address;
+				else
+					workEmailEntry.Text = "";
+			}
+
+			// if it turns out that the default above was not personal 
+			// read it now
+			if(personalEmail == null)
+			{
+				personalEmail = GetEmailType(EmailTypes.personal);
+				if(personalEmail != null)
+					personalEmailEntry.Text = personalEmail.Address;
+				else
+					personalEmailEntry.Text = "";
 			}
 		}
 
-		internal void SetEmailLabelText(Label label, EmailTypes type)
-		{
-			if( (type & EmailTypes.work) == EmailTypes.work)
-				label.Text = "Work Email:";
-			else if( (type & EmailTypes.personal) == EmailTypes.personal)
-				label.Text = "Home Email:";
-			else
-				label.Text = "Other Email:";
-		}
 
+
+
+		/// <summary>
+		/// Method used to retrieve a specific type of email from
+		/// the current contact
+		/// </summary>
 		internal Email GetEmailType(EmailTypes type)
 		{
 			foreach(Email e in currentContact.GetEmailAddresses())
@@ -456,101 +515,67 @@ namespace Novell.iFolder
 			return null;
 		}
 
+
+
+
+		/// <summary>
+		/// Method used to store the edited data to the currentContact
+		/// the contact must still be committed to persist the data
+		/// in the store
+		/// </summary>
 		internal void SaveCurrentEmails()
 		{
-			if(emailOne == null)
+			// --------------------------------
+			// Work Email
+			// --------------------------------
+			if(workEmailEntry.Text.Length > 0)
 			{
-				if(emailOneEntry.Text.Length > 0)
+				if(workEmail == null)
 				{
-					emailOne = new Email(EmailTypes.work,
-							emailOneEntry.Text);
-					Console.WriteLine("Saving emailOne == null : " + 
-							emailOne.Address);
-					currentContact.AddEmailAddress(emailOne);
-					SetDefaultEmail(emailOne);
-				}
-			}
-			else
-			{
-				if(emailOneEntry.Text.Length > 0)
-				{
-					Console.WriteLine("Saving emailOne : " + emailOne.Address);
-					emailOne.Address = emailOneEntry.Text;
-					SetDefaultEmail(emailOne);
+					workEmail = new Email(EmailTypes.work,
+							workEmailEntry.Text);
+					currentContact.AddEmailAddress(workEmail);
 				}
 				else
 				{
-					Console.WriteLine("Removing emailOne :" + emailOne.Address);
-					emailOne.Delete();
-					emailOne = null;
+					workEmail.Address = workEmailEntry.Text;
+				}
+			}
+			// If there is no text, check to see if we need to delete
+			else
+			{
+				if(workEmail != null)
+				{
+					workEmail.Delete();
 				}
 			}
 
-			if(emailTwo == null)
+			// --------------------------------
+			// Personal Email
+			// --------------------------------
+			if(personalEmailEntry.Text.Length > 0)
 			{
-				if(emailTwoEntry.Text.Length > 0)
+				if(personalEmail == null)
 				{
-					emailTwo = new Email(EmailTypes.personal,
-							emailTwoEntry.Text);
-					Console.WriteLine("Saving emailTwo == null : " + 
-							emailTwo.Address);
-					currentContact.AddEmailAddress(emailTwo);
-					if( (emailOne == null) || 
-							(emailOneEntry.Text.Length == 0) )
-						SetDefaultEmail(emailTwo);
-				}
-			}
-			else
-			{
-				if(emailTwoEntry.Text.Length > 0)
-				{
-					Console.WriteLine("Saving emailTwo : "+ emailTwo.Address);
-					emailTwo.Address = emailTwoEntry.Text;
-					if( (emailOne == null) || 
-							(emailOneEntry.Text.Length == 0) )
-						SetDefaultEmail(emailTwo);
+					personalEmail = new Email(EmailTypes.personal,
+							personalEmailEntry.Text);
+					currentContact.AddEmailAddress(personalEmail);
 				}
 				else
 				{
-					Console.WriteLine("Removing emailTwo : " +
-							emailTwo.Address);
-					emailTwo.Delete();
-					emailTwo = null;
+					personalEmail.Address = personalEmailEntry.Text;
+				}
+			}
+			// If there is no text, check to see if we need to delete
+			else
+			{
+				if(personalEmail != null)
+				{
+					personalEmail.Delete();
 				}
 			}
 		}
 
-		internal void SetDefaultEmail(Email curEmail)
-		{
-			foreach(Email e in currentContact.GetEmailAddresses())
-			{
-				e.Types &= ~EmailTypes.preferred;
-			}
-			curEmail.Types |= EmailTypes.preferred;
-		}
-
-
-
-		public void ShowAll()
-		{
-			if(contactEditorDialog != null)
-			{
-				contactEditorDialog.Visible = true;
-				contactEditorDialog.Present();
-			}
-		}
-
-
-
-		private void NotifyContactEdit()
-		{
-			ContactEventArgs cArgs = new ContactEventArgs(currentContact);
-
-			if(isNewContact && (ContactCreated != null) )
-				ContactCreated(this, cArgs);
-			else if(ContactEdited != null)
-				ContactEdited(this, cArgs);
-		}
 
 
 
@@ -682,48 +707,6 @@ namespace Novell.iFolder
 		}
 
 
-		private void handle_phone_one_options(object o,
-				OptionChangedEventArgs args)
-		{
-			switch(args.OptionIndex)
-			{
-				case 0: // Work phone 
-					break;
-				case 1: // Mobile phone
-					break;
-				case 2: // Home phone
-					break;
-				case 3: // Pager
-					break;
-				case 4: // Fax
-					break;
-			}
-		}
-
-
-		/*
-		   private void handle_email_options(object o, OptionChangedEventArgs args)
-		   {
-		   SaveCurrentEmail();
-		   switch(args.OptionIndex)
-		   {
-		   case 0: // Work email
-		   currentEmailType = EmailTypes.work;
-		   currentEmail = GetEmailType(currentEmailType);
-		   break;
-		   case 1: // Home email
-		   currentEmailType = EmailTypes.personal;
-		   currentEmail = GetEmailType(currentEmailType);
-		   break;
-		   case 2: // Other email
-		   currentEmailType = EmailTypes.other;
-		   currentEmail = GetEmailType(currentEmailType);
-		   break;
-		   }
-
-		   PopulateCurrentEmail();
-		   }
-		 */
 
 		private Pixbuf GetScaledPhoto(Contact c, int height)
 		{

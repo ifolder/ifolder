@@ -1020,7 +1020,7 @@ namespace Novell.iFolder
 					}
 					if((phone.Types & PhoneTypes.cell) == PhoneTypes.cell)
 					{
-						AddLabeledValue("cell", phone.Number);
+						AddLabeledValue("mobile", phone.Number);
 					}
 					if((phone.Types & PhoneTypes.pager) == PhoneTypes.pager)
 					{
