@@ -210,6 +210,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\ChangeLog\ChangeLog.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\ChangeLog\ChangeLogTests.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\CollectionEventsTests\CollectionEventsTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

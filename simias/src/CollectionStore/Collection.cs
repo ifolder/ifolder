@@ -283,10 +283,12 @@ namespace Simias.Storage
 		/// <param name="node">Node object to change.</param>
 		private void ChangeToTombstone( Node node )
 		{
+			string oldType = node.Type;
 			node.Name = "Tombstone:" + node.Name;
 			node.BaseType = "Tombstone";
 			node.InternalList = new PropertyList( node.Name, node.ID, node.Type );
 			node.Properties.AddNodeProperty( PropertyTags.Types, "Tombstone" );
+			node.Properties.AddNodeProperty( PropertyTags.TombstoneType, oldType );
 			node.IncarnationUpdate = 0;
 		}
 
@@ -638,31 +640,45 @@ namespace Simias.Storage
 			// Walk the commit list and change all states to updated.
 			foreach( Node node in commitList )
 			{
-				// Set the new state for the Node object.
-				switch ( node.Properties.State )
+				// If this Node object is a Tombstone that is beinging added, then it came into the commit as
+				// an actual node being deleted. Indicate that the object has been deleted. Otherwise do not
+				// indicate an event for a Tombstone operation.
+				if ( IsType( node, NodeTypes.TombstoneType ) )
 				{
-					case PropertyList.PropertyListState.Add:
-						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
-						node.Properties.State = PropertyList.PropertyListState.Update;
-						break;
-
-					case PropertyList.PropertyListState.Delete:
-						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
+					if ( node.Properties.State == PropertyList.PropertyListState.Add )
+					{
+						string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
+						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
-						break;
+					}
+				}
+				else
+				{
+					switch ( node.Properties.State )
+					{
+						case PropertyList.PropertyListState.Add:
+							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
+							node.Properties.State = PropertyList.PropertyListState.Update;
+							break;
 
-					case PropertyList.PropertyListState.Import:
-						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
-						node.Properties.State = PropertyList.PropertyListState.Update;
-						break;
+						case PropertyList.PropertyListState.Delete:
+							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
+							node.Properties.State = PropertyList.PropertyListState.Disposed;
+							break;
 
-					case PropertyList.PropertyListState.Update:
-						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
-						break;
+						case PropertyList.PropertyListState.Import:
+							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+							node.Properties.State = PropertyList.PropertyListState.Update;
+							break;
 
-					case PropertyList.PropertyListState.Internal:
-						node.Properties.State = PropertyList.PropertyListState.Update;
-						break;
+						case PropertyList.PropertyListState.Update:
+							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+							break;
+
+						case PropertyList.PropertyListState.Internal:
+							node.Properties.State = PropertyList.PropertyListState.Update;
+							break;
+					}
 				}
 			}
 		}

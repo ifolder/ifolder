@@ -788,7 +788,6 @@ namespace Simias.Storage.Provider.Sqlite
 					connTable.Clear();
 					count = 0;
 					File.Delete(DbPath);
-					Provider.Delete(storePath);
 				}
 			}
 			catch (Exception ex)

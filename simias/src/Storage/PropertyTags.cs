@@ -186,6 +186,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		public static string TombstoneType = "TombstoneType";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		public static string Types = "Types";
 
 		/// <summary>
@@ -242,6 +247,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( ServerCredential, null );
 			systemPropertyTable.Add( Shareable, null );
 			systemPropertyTable.Add( Syncable, null );
+			systemPropertyTable.Add( TombstoneType, null );
 			systemPropertyTable.Add( Types, null );
 		}
 		#endregion
