@@ -275,14 +275,20 @@ namespace Novell.iFolder.Web
 			if(pobox != null)
 			{
 
+				// Get all of the subscription obects in the POBox
 				ICSList poList = pobox.Search(
 						PropertyTags.Types,
 						typeof(Subscription).Name,
 						SearchOp.Equal);
-			
+
 				foreach(ShallowNode sNode in poList)
 				{
 					Subscription sub = new Subscription(pobox, sNode);
+
+					// if the subscription is not for us, we don't
+					// care
+					if(sub.ToIdentity != pobox.Owner.UserID)
+						continue;
 
 					// Filter out all subscriptions that match
 					// iFolders that are already local on our machine
@@ -293,14 +299,13 @@ namespace Novell.iFolder.Web
 					}
 					// CRG: this used to check for ready but the subscriptions
 					// for other users were showing up
-//					if (sub.SubscriptionState == SubscriptionStates.Ready)
+//					if( (sub.SubscriptionState == SubscriptionStates.Ready)||
 //					{
 //					}
+
 					list.Add(new iFolder(sub));
 				}
 			}
-
-
 			return (iFolder[])list.ToArray(typeof(iFolder));
 		}
 
@@ -745,7 +750,6 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid iFolderID");
 
 			Subscription sub = new Subscription(node);
-
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
 			if(sub.SubscriptionState == SubscriptionStates.Ready)

@@ -40,7 +40,7 @@ namespace Novell.iFolder
 		private iFolderWebService	iFolderWS;
 		private Gdk.Pixbuf			iFolderPixBuf;
 		private Gdk.Pixbuf			ServeriFolderPixBuf;
-		private Gdk.Pixbuf			CollisionPixBuf;
+//		private Gdk.Pixbuf			CollisionPixBuf;
 
 		private Statusbar			MainStatusBar;
 		private Gtk.Notebook		MainNoteBook;
@@ -82,6 +82,7 @@ namespace Novell.iFolder
 			this.SetDefaultSize (200, 400);
 			this.DeleteEvent += new DeleteEventHandler (WindowDelete);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.WindowPosition = Gtk.WindowPosition.Center;
 
 			VBox vbox = new VBox (false, 0);
 			this.Add (vbox);
@@ -301,8 +302,8 @@ namespace Novell.iFolder
 			ServeriFolderPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("serverifolder.png"));
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
-			CollisionPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
+//			CollisionPixBuf = 
+//				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
 
 
 
@@ -352,15 +353,21 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-//			if(ifolder.HasCollisions())
-//				((CellRendererText) cell).Text = "Has File Conflicts";
-//			else
-			if(ifolder.IsLocal)
-				((CellRendererText) cell).Text = "OK";
-			else if(ifolder.IsAccepted)
-				((CellRendererText) cell).Text = "On Server";
+			if(ifolder.State == "Local")
+			{
+//				if(ifolder.HasCollisions())
+//					((CellRendererText) cell).Text = "Has File Conflicts";
+//				else
+					((CellRendererText) cell).Text = "OK";
+			}
+			else if(ifolder.State == "Available")
+				((CellRendererText) cell).Text = "Available";
+			else if(ifolder.State == "WaitConnect")
+				((CellRendererText) cell).Text = "Waiting to Connect";
+			else if(ifolder.State == "WaitSync")
+				((CellRendererText) cell).Text = "Waiting to Sync";
 			else
-				((CellRendererText) cell).Text = "Not Accepted";
+				((CellRendererText) cell).Text = "Unknown";
 		}
 
 
@@ -382,11 +389,13 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-//			if(ifolder.HasCollisions())
-//				((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
-//			else
-			if(ifolder.IsLocal)
-				((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
+			if(ifolder.State == "Local")
+			{
+//				if(ifolder.HasCollisions())
+//					((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
+//				else
+					((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
+			}
 			else
 				((CellRendererPixbuf) cell).Pixbuf = ServeriFolderPixBuf;
 		}
@@ -454,13 +463,13 @@ namespace Novell.iFolder
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
-				uint nodeCount = 47;
-				ulong bytesToSend = 121823;
-				TreeModel tModel;
-				TreeIter iter;
+//				uint nodeCount = 47;
+//				ulong bytesToSend = 121823;
+//				TreeModel tModel;
+//				TreeIter iter;
 
-				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+//				tSelect.GetSelected(out tModel, out iter);
+//				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
 	//			This appears to hang?
 	//			SyncSize.CalculateSendSize(	ifolder, 
@@ -532,7 +541,7 @@ namespace Novell.iFolder
 							tSelect.GetSelected(out tModel, out iter);
 							ifolder = (iFolder) tModel.GetValue(iter, 0);
 
-							if(ifolder.IsLocal)
+							if(ifolder.State == "Local")
 							{
 								MenuItem item_open = 
 									new MenuItem ("Open");
@@ -574,24 +583,28 @@ namespace Novell.iFolder
 								item_properties.Activated += 
 									new EventHandler( OnShowProperties );
 							}
-							else if(ifolder.IsAccepted)
+							else if(ifolder.State == "Available")
 							{
 								MenuItem item_accept = 
-									new MenuItem ("Sync on this computer");
+									new MenuItem ("Setup iFolder");
 								ifMenu.Append (item_accept);
+								item_accept.Activated += new EventHandler(
+										OnSetupiFolder);
 
-								MenuItem item_remove = 
-									new MenuItem ("Delete from Server");
-								ifMenu.Append (item_remove);
+								MenuItem item_decline = 
+									new MenuItem ("Remove iFolder");
+								ifMenu.Append (item_decline);
+								item_decline.Activated += new EventHandler(
+										OnDeclineiFolder);
 							}
 							else
 							{
 								MenuItem item_accept = 
-									new MenuItem ("Accept on this computer");
+									new MenuItem ("Connect now...");
 								ifMenu.Append (item_accept);
 
 								MenuItem item_decline = 
-									new MenuItem ("Decline iFolder");
+									new MenuItem ("Remove iFolder");
 								ifMenu.Append (item_decline);
 							}
 						}
@@ -833,6 +846,92 @@ namespace Novell.iFolder
 					ied.Destroy();
 				}
 			}
+		}
+
+
+
+
+		private void OnSetupiFolder(object o, EventArgs args)
+		{
+			string newPath  = "";
+			iFolder ifolder = null;
+			TreeModel tModel;
+			TreeIter iter;
+
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				tSelect.GetSelected(out tModel, out iter);
+				ifolder = (iFolder) tModel.GetValue(iter, 0);
+				if(ifolder == null)
+					return;
+
+				iFolderAcceptDialog iad = new iFolderAcceptDialog(ifolder);
+				iad.TransientFor = this;
+				int rc = iad.Run();
+				newPath = iad.Path;
+				iad.Hide();
+				iad.Destroy();
+				if(rc != -5)
+					return;
+				
+				try
+				{
+   		 			iFolder newiFolder = iFolderWS.AcceptiFolderInvitation(
+											ifolder.ID,
+											newPath);
+	
+					// replace the old iFolder with this one
+					tModel.SetValue(iter, 0, newiFolder);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
+			}
+		}
+
+
+
+
+		private void OnDeclineiFolder(object o, EventArgs args)
+		{
+			iFolderMsgDialog dialog = new iFolderMsgDialog(
+				this,
+				iFolderMsgDialog.DialogType.Question,
+				iFolderMsgDialog.ButtonSet.YesNo,
+				"iFolder Confirmation",
+				"Decline shared iFolder?",
+				"This will remove your invitation and you will not be able to get it back unless the owner of this iFolder re-shares the iFolder with you.");
+			int rc = dialog.Run();
+			dialog.Hide();
+			dialog.Destroy();
+			if(rc == -8)
+			{
+				Console.WriteLine("Reverting Share iFolder");
+			}
+		}
+
+
+		private iFolder GetSelectediFolder()
+		{
+			iFolder ifolder = null;
+
+			TreeSelection tSelect = iFolderTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				ifolder = (iFolder) tModel.GetValue(iter, 0);
+			}
+			return ifolder;
 		}
 
 

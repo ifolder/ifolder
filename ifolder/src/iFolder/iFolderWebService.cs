@@ -638,13 +638,13 @@ public class iFolder {
     public string Description;
 
     /// <remarks/>
-    public bool IsLocal;
-
-    /// <remarks/>
-    public bool IsAccepted;
+    public string State;
 
     /// <remarks/>
     public bool IsSubscription;
+
+    /// <remarks/>
+    public int EnumeratedState;
 }
 
 /// <remarks/>

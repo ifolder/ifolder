@@ -52,9 +52,9 @@ namespace Novell.iFolder.Web
 		public bool Synchronizable;
 		public string Type;
 		public string Description;
-		public bool IsLocal;
-		public bool IsAccepted;
+		public string State;
 		public bool IsSubscription;
+		public int EnumeratedState;
 
 		public iFolder()
 		{
@@ -80,9 +80,9 @@ namespace Novell.iFolder.Web
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = iFolderType;
 			this.Description = "";
-			this.IsLocal = true;
-			this.IsAccepted = true;
+			this.State = "Local";
 			this.IsSubscription = false;
+			this.EnumeratedState = -1;
 		}
 
 
@@ -91,12 +91,41 @@ namespace Novell.iFolder.Web
 			this.Name = subscription.SubscriptionCollectionName;
 			this.ID = subscription.ID;
 			this.Description = subscription.CollectionDescription;
-			this.IsLocal = false;
-			if (subscription.SubscriptionState == SubscriptionStates.Ready)
-				this.IsAccepted = true;
-			else
-				this.IsAccepted = false;
 			this.IsSubscription = true;
+			this.EnumeratedState = (int) subscription.SubscriptionState;
+
+			if(	(subscription.SubscriptionState == 
+								SubscriptionStates.Ready) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Received) )
+			{
+				this.State = "Available";
+			}
+			else if(subscription.SubscriptionState == 
+									SubscriptionStates.Replied)
+			{
+				this.State = "WaitConnect";
+			}
+			else if(subscription.SubscriptionState == 
+								SubscriptionStates.Delivered)
+			{
+				this.State = "WaitSync";
+			}
+/*			else if(	(subscription.SubscriptionState == 
+								SubscriptionStates.Replied) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Delivered) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Pending) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Responded) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Acknowledged) )
+*/
+			else
+			{
+				this.State = "Unknown";
+			}
 		}
 	}
 }

@@ -28,12 +28,12 @@ namespace Novell.iFolder
 {
 	public class iFolderCreationDialog : Dialog
 	{
-		private iFolder ifolder;
+//		private iFolder ifolder;
 		private CheckButton cbutton;
 
 		public iFolderCreationDialog(iFolder ifolder) : base()
 		{
-			this.ifolder = ifolder;
+//			this.ifolder = ifolder;
 			this.Title = "iFolder Introduction";
 			this.HasSeparator = false;
 			this.BorderWidth = 6;
