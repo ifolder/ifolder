@@ -6,19 +6,17 @@ AddressBook_CSFILES_CSC := $(subst /,$(SEP),$(AddressBook_CSFILES))
 AddressBook_INCLUDES =
 AddressBook_RESOURCES =
 AddressBook_FLAGS = $(CSC_LIBFLAG)
-AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML)
-AddressBook_LIBPATH = 
+AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll
+AddressBook_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = $(AddressBook_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
-SIMIAS_LIBS = /r:../Simias.dll/Simias.dll
-
 all: Novell.AddressBook.dll
 
 Novell.AddressBook.dll: $(AddressBook_CSFILES) $(AddressBook_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(AddressBook_FLAGS) $(AddressBook_LIBS:%=/r:%) $(AddressBook_LIBPATH:%=/lib:%) $(AddressBook_CSFILES_CSC) /doc:AddressBook.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(AddressBook_FLAGS) $(AddressBook_LIBS:%=/r:%) $(AddressBook_LIBPATH:%=/lib:%) $(AddressBook_CSFILES_CSC) /doc:AddressBook.doc.xml
 
 if DEBUG
 if WINDOWS

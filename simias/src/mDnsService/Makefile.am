@@ -6,7 +6,7 @@ mDnsService_CSFILES_CSC := $(subst /,$(SEP),$(mDnsService_CSFILES))
 mDnsService_INCLUDES = 
 mDnsService_RESOURCES =
 mDnsService_FLAGS = $(CSC_EXEFLAG)
-mDnsService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll mDnsResponder.dll
+mDnsService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll mDnsResponder.dll
 mDnsService_LIBPATH = ../SimiasClient ../Simias.dll $(MDNSRESPONDER_DIR)
 
 PROJECT_FILES = $(srcdir)/mDnsService.csproj

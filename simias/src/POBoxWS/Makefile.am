@@ -6,8 +6,8 @@ POBoxWS_CSFILES := $(subst /,$(SEP),$(POBoxWS_CSFILES1))
 POBoxWS_INCLUDES =
 POBoxWS_RESOURCES =
 POBoxWS_FLAGS = $(CSC_LIBFLAG)
-POBoxWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
-POBoxWS_LIBPATH = ../Simias.dll
+POBoxWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
+POBoxWS_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = POBoxService.asmx $(POBoxWS_CSFILES)
 

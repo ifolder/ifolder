@@ -6,8 +6,8 @@ SimiasApp_CSFILES := $(subst /,$(SEP),$(SimiasApp_CSFILES1))
 SimiasApp_INCLUDES =
 SimiasApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 SimiasApp_FLAGS = $(CSC_EXEFLAG)
-SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll Simias.Web.dll System.Web.dll
-SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../Simias.dll ../WebService
+SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll Simias.Web.dll System.Web.dll
+SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../SimiasClient ../Simias.dll ../WebService
 
 EXTRA_DIST = App.ico $(SimiasApp_CSFILES) simias.in simias.cmd
 
