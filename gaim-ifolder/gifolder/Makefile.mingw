@@ -15,6 +15,8 @@ GAIM_TOP :=		../..
 GIFOLDER_ROOT :=		.
 GAIM_INSTALL_DIR :=	$(GAIM_TOP)/win32-install-dir
 DLL_INSTALL_DIR :=	$(GAIM_INSTALL_DIR)/plugins
+SIMIAS_LIB_DIR := ../../../win32-dev/simias
+SIMIAS_INCLUDE := $(SIMIAS_LIB_DIR)/include
 
 ##
 ## VARIABLE DEFINITIONS
@@ -50,12 +52,12 @@ INCLUDE_PATHS +=	-I$(GIFOLDER_ROOT) \
 			-I$(GAIM_TOP)/src \
 			-I$(GAIM_TOP)/src/win32 \
 			-I$(GAIM_TOP) \
-			$(SIMIAS_CLIENT_CFLAGS)
+			$(SIMIAS_INCLUDE)
 
 
 LIB_PATHS =		-L$(GTK_TOP)/lib \
 			-L$(GAIM_TOP)/src \
-			-L$(SIMIAS_CLIENT_PREFIX)
+			-L$(SIMIAS_LIB_DIR)
 
 
 ##
