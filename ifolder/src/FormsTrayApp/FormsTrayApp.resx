@@ -571,4 +571,13 @@
 	<data name="uploading">
 		<value>Uploading: {0}</value>
 	</data>
+	<data name="clientUpgradeTitle">
+		<value>iFolder Client Upgrade</value>
+	</data>
+	<data name="clientUpgradeFailure">
+		<value>The iFolder client upgrade has failed.</value>
+	</data>
+	<data name="clientUpgradePrompt">
+		<value>A newer version "{0}" of the iFolder Client is available. Would you like to upgrade now?</value>
+	</data>
 </root>

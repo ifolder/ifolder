@@ -1795,9 +1795,6 @@
 	<data name="removePrompt">
 		<value>Are you sure you want to remove this iFolder?</value>
 	</data>
-	<data name="notApplicable">
-		<value>N/A</value>
-	</data>
 	<data name="removeiFolder">
 		<value>This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive.</value>
 	</data>

@@ -223,14 +223,14 @@ namespace Novell.FormsTrayApp
 			if ( version != null )
 			{
 				// Pop up a dialog here and ask if the user wants to update the client.
-				MyMessageBox mmb = new MyMessageBox("Update client?"/*string.Format(resourceManager.GetString("clientUpgradePrompt"), version)*/, "Update"/*resourceManager.GetString("clientUpgradeTitle")*/, string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
+				MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("clientUpgradePrompt"), version), resourceManager.GetString("clientUpgradeTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
 				DialogResult result = mmb.ShowDialog();
 				if ( result == DialogResult.Yes )
 				{
 					updateStarted = cUpgrade.RunUpdate();
 					if ( updateStarted == false )
 					{
-						mmb = new MyMessageBox("Upgrade failure"/* TODO: resourceManager.GetString("clientUpgradeFailure")*/, string.Empty /* TODO: resourceManager.GetString("clientUpgradeTitle")*/, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("clientUpgradeTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 						mmb.ShowDialog();
 					}
 				}
