@@ -23,8 +23,8 @@
 #######################################################################
 
 # Startup iFolder
-export MONO_PATH=@prefix@/lib:@webbindir@
-export LD_LIBRARY_PATH=@prefix@/lib:@webbindir@
-cd @prefix@/bin
+export MONO_PATH=@_prefix_@/lib:@_webbindir_@
+export LD_LIBRARY_PATH=@_prefix_@/lib:@_webbindir_@
+cd @_prefix_@/bin
 mono iFolderClient.exe
 

@@ -12,6 +12,18 @@ endif
 
 EXTRA_DIST = tools $(srcdir)/$(PACKAGE)*.pc.in $(ADDITIONAL_LIB_FILES)
 
+IFOLDER3_PC_IN = ifolder3.pc.in
+
+ifolder3_pc: $(IFOLDER3_PC_IN)
+	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_libdir_@,@libdir@,g' -e 's,@_PKG_CONFIG_LIBS_@,@PKG_CONFIG_LIBS@,g' $< > $@
+	chmod +x $@
+	
+IFOLDER3_C_PC_IN = ifolder3-c.pc.in
+
+ifolder3_c_pc: $(IFOLDER3_C_PC_IN)
+	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_libdir_@,@libdir@,g' $< > $@
+	chmod +x $@
+
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 if WINDOWS
