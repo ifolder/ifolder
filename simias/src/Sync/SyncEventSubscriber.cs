@@ -67,6 +67,7 @@ namespace Simias.Sync
 
 		#region Private Fields
 
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SyncEventSubscriber));
 		DefaultSubscriber	subscriber = null;
 		bool		enabled;
 		bool		alreadyDisposed;
@@ -136,8 +137,9 @@ namespace Simias.Sync
 								{ 
 									cb(cArgs);
 								}
-								catch
+								catch(Exception ex)
 								{
+									logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 									CollectionSync -= cb;
 								}
 							}
@@ -157,8 +159,9 @@ namespace Simias.Sync
 									{ 
 										cb(fArgs);
 									}
-									catch
+									catch(Exception ex)
 									{
+										logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 										FileSync -= cb;
 									}
 								}

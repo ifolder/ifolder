@@ -41,6 +41,7 @@ namespace Simias.Event
 	public class NotifyEventSubscriber : IDisposable
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(NotifyEventSubscriber));
 		private DefaultSubscriber subscriber = null;
 		private bool enabled;
 		private bool alreadyDisposed;
@@ -104,8 +105,9 @@ namespace Simias.Event
 							{ 
 								cb( nArgs );
 							}
-							catch
+							catch(Exception ex)
 							{
+								logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 								NotifyEvent -= cb;
 							}
 						}

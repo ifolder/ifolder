@@ -47,6 +47,11 @@ namespace Simias.Event
 		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( IProcEventSubscriber ) );
 
 		/// <summary>
+		/// Table used to keep track of all subscriber objects.
+		/// </summary>
+		static private Hashtable subscriberTable = Hashtable.Synchronized( new Hashtable() );
+
+		/// <summary>
 		/// Socket that is used to communicate the event to the client.
 		/// </summary>
 		private Socket eventSocket;
@@ -60,6 +65,11 @@ namespace Simias.Event
 		/// Indicates the current amount of data in the buffer to be processed.
 		/// </summary>
 		private int bufferLength = 0;
+
+		/// <summary>
+		/// Port that is used as key to identify this client.
+		/// </summary>
+		private int port;
 
 		/// <summary>
 		/// Subscribers to simias events.
@@ -100,6 +110,15 @@ namespace Simias.Event
 			
 			// Turn off nagle.
 			socket.SetSocketOption( SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1 );
+
+			// Add this object to the table.
+			port = ( socket.LocalEndPoint as IPEndPoint ).Port;
+			if ( subscriberTable.ContainsKey( port ) )
+			{
+				log.Debug( "{0} : Old subscriber was left around", port );
+			}
+
+			subscriberTable[ port ] = this;
 		}
 		#endregion
 
@@ -119,7 +138,7 @@ namespace Simias.Event
 			catch ( Exception e )
 			{
 				DisposeSubscribers();
-				log.Error( e, "Error processing CollectionSyncEventCallback event for client." );
+				log.Error( e, String.Format( "{0} : Error processing CollectionSyncEventCallback event for client.", port ) );
 			}
 		}
 
@@ -128,6 +147,8 @@ namespace Simias.Event
 		/// </summary>
 		private void DisposeSubscribers()
 		{
+			log.Debug( "{0} : Disposing all subscribers.", port );
+
 			if ( simiasNodeEventSubscriber != null )
 			{
 				simiasNodeEventSubscriber.Dispose();
@@ -154,8 +175,16 @@ namespace Simias.Event
 		static private void EventSendComplete( IAsyncResult result )
 		{
 			// Get the subscriber object as context for this request.
-			IProcEventSubscriber sub = ( IProcEventSubscriber )result.AsyncState;
-			sub.eventSocket.EndSend( result );
+			IProcEventSubscriber sub = null;
+			try
+			{
+				sub = ( IProcEventSubscriber )result.AsyncState;
+				sub.eventSocket.EndSend( result );
+			}
+			catch ( Exception e )
+			{
+				log.Error( e, String.Format( "{0} : Error in send complete.", sub.port ) );
+			}
 		}
 
 		/// <summary>
@@ -173,7 +202,7 @@ namespace Simias.Event
 			catch ( Exception e )
 			{
 				DisposeSubscribers();
-				log.Error( e, "Error processing FileSyncEventCallback event for client." );
+				log.Error( e, String.Format( "{0} : Error processing FileSyncEventCallback event for client.", port ) );
 			}
 		}
 
@@ -192,7 +221,7 @@ namespace Simias.Event
 			catch ( Exception e )
 			{
 				DisposeSubscribers();
-				log.Error( e, "Error processing NodeEventCallback event for client." );
+				log.Error( e, String.Format( "{0} : Error processing NodeEventCallback event for client.", port ) );
 			}
 		}
 
@@ -211,7 +240,7 @@ namespace Simias.Event
 			catch ( Exception e )
 			{
 				DisposeSubscribers();
-				log.Error( e, "Error processing NotifyEventCallback event for client." );
+				log.Error( e, String.Format( "{0} : Error processing NotifyEventCallback event for client.", port ) );
 			}
 		}
 
@@ -258,6 +287,7 @@ namespace Simias.Event
 					{
 						if ( nodeChangedHandler == null )
 						{
+							log.Debug( "{0} : Added node change event.", port );
 							nodeChangedHandler = new NodeEventHandler( NodeEventCallback );
 							simiasNodeEventSubscriber.NodeChanged += nodeChangedHandler;
 						}
@@ -268,6 +298,7 @@ namespace Simias.Event
 					{
 						if ( nodeCreatedHandler == null )
 						{
+							log.Debug( "{0} : Added node create event.", port );
 							nodeCreatedHandler = new NodeEventHandler( NodeEventCallback );
 							simiasNodeEventSubscriber.NodeCreated += nodeCreatedHandler;
 						}
@@ -278,6 +309,7 @@ namespace Simias.Event
 					{
 						if ( nodeDeletedHandler == null )
 						{
+							log.Debug( "{0} : Added node delete event.", port );
 							nodeDeletedHandler = new NodeEventHandler( NodeEventCallback );
 							simiasNodeEventSubscriber.NodeDeleted += nodeDeletedHandler;
 						}
@@ -288,6 +320,7 @@ namespace Simias.Event
 					{
 						if ( collectionSyncHandler == null )
 						{
+							log.Debug( "{0} : Added collection sync event.", port );
 							collectionSyncHandler = new CollectionSyncEventHandler( CollectionSyncEventCallback );
 							simiasSyncEventSubscriber.CollectionSync += collectionSyncHandler;
 						}
@@ -298,6 +331,7 @@ namespace Simias.Event
 					{
 						if ( fileSyncHandler == null )
 						{
+							log.Debug( "{0} : Added file sync event.", port );
 							fileSyncHandler = new FileSyncEventHandler( FileSyncEventCallback );
 							simiasSyncEventSubscriber.FileSync += fileSyncHandler;
 						}
@@ -308,6 +342,7 @@ namespace Simias.Event
 					{
 						if ( notifyHandler == null )
 						{
+							log.Debug( "{0} : Added notify event.", port );
 							notifyHandler = new NotifyEventHandler( NotifyEventCallback );
 							simiasNotifyEventSubscriber.NotifyEvent += notifyHandler;
 						}
@@ -318,6 +353,7 @@ namespace Simias.Event
 					{
 						if ( nodeChangedHandler != null )
 						{
+							log.Debug( "{0} : Removed node change event.", port );
 							simiasNodeEventSubscriber.NodeChanged -= nodeChangedHandler;
 							nodeChangedHandler = null;
 						}
@@ -328,6 +364,7 @@ namespace Simias.Event
 					{
 						if ( nodeCreatedHandler != null )
 						{
+							log.Debug( "{0} : Removed node created event.", port );
 							simiasNodeEventSubscriber.NodeCreated -= nodeCreatedHandler;
 							nodeCreatedHandler = null;
 						}
@@ -338,6 +375,7 @@ namespace Simias.Event
 					{
 						if ( nodeDeletedHandler != null )
 						{
+							log.Debug( "{0} : Removed node deleted event.", port );
 							simiasNodeEventSubscriber.NodeDeleted -= nodeDeletedHandler;
 							nodeDeletedHandler = null;
 						}
@@ -348,6 +386,7 @@ namespace Simias.Event
 					{
 						if ( collectionSyncHandler != null )
 						{
+							log.Debug( "{0} : Removed collection sync event.", port );
 							simiasSyncEventSubscriber.CollectionSync -= collectionSyncHandler;
 							collectionSyncHandler = null;
 						}
@@ -358,6 +397,7 @@ namespace Simias.Event
 					{
 						if ( fileSyncHandler != null )
 						{
+							log.Debug( "{0} : Removed file sync event.", port );
 							simiasSyncEventSubscriber.FileSync -= fileSyncHandler;
 							fileSyncHandler = null;
 						}
@@ -368,6 +408,7 @@ namespace Simias.Event
 					{
 						if ( notifyHandler != null )
 						{
+							log.Debug( "{0} : Removed notify event.", port );
 							simiasNotifyEventSubscriber.NotifyEvent -= notifyHandler;
 							notifyHandler = null;
 						}
@@ -398,6 +439,7 @@ namespace Simias.Event
 					log.Error( String.Format( "An invalid address was specified in the registration message {0}.", er.RemoteAddress ) );
 					eventSocket.Shutdown( SocketShutdown.Both );
 					eventSocket.Close();
+					subscriberTable.Remove( port );
 				}
 
 				// See if the client is registering or deregistering.
@@ -431,6 +473,7 @@ namespace Simias.Event
 			}
 			else
 			{
+				log.Debug( "{0} : An invalid request message was received.", port );
 				throw new SimiasException( "An invalid request message was received." );
 			}
 		}
@@ -500,7 +543,7 @@ namespace Simias.Event
 					}
 					catch ( Exception e )
 					{
-						log.Error( e, "Error processing event message from client." );
+						log.Error( e, "{0} : Error processing event message from client.", sub.port );
 					}
 
 					// Repost the buffer.
@@ -514,11 +557,18 @@ namespace Simias.Event
 					sub.DisposeSubscribers();
 					sub.eventSocket.Shutdown( SocketShutdown.Both );
 					sub.eventSocket.Close();
+					IProcEventSubscriber.subscriberTable.Remove( sub.port );
 				}
 			}
 			catch ( SocketException e )
 			{
-				log.Error( e, "Error communication failure." );
+				log.Error( e, "{0} : Error communication failure.", sub.port );
+				IProcEventSubscriber.subscriberTable.Remove( sub.port );
+			}
+			catch ( Exception e )
+			{
+				log.Error( e, "{0} : Error exception occurred.", sub.port );
+				IProcEventSubscriber.subscriberTable.Remove( sub.port );
 			}
 		}
 		#endregion

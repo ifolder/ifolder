@@ -77,6 +77,7 @@ namespace Simias.Storage
 
 		#region Private Fields
 
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventSubscriber));
 		DefaultSubscriber	subscriber = null;
 		bool		enabled;
 		Regex		fileNameFilter;
@@ -255,8 +256,9 @@ namespace Simias.Storage
 										{ 
 											cb(nodeArgs);
 										}
-										catch
+										catch(Exception ex)
 										{
+											logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 											NodeChanged -= cb;
 										}
 									}
@@ -272,8 +274,9 @@ namespace Simias.Storage
 										{ 
 											cb(nodeArgs);
 										}
-										catch
+										catch(Exception ex)
 										{
+											logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 											NodeCreated -= cb;
 										}
 									}
@@ -289,8 +292,9 @@ namespace Simias.Storage
 										{ 
 											cb(nodeArgs);
 										}
-										catch
+										catch(Exception ex)
 										{
+											logger.Debug(ex, "Delegate {0}.{1} failed", cb.Target, cb.Method);
 											NodeDeleted -= cb;
 										}
 									}
