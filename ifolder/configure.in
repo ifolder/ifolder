@@ -234,11 +234,9 @@ case $IFOLDER_OS in
 		PKG_CONFIG_CONFLICTS=""
 
 		dnl Intl
-#		ALL_LINGUAS="da es fr"
-#		GETTEXT_PACKAGE=ifolderclient
-#		AC_SUBST(GETTEXT_PACKAGE)
-#		AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
-#		AM_GLIB_GNU_GETTEXT
+		ALL_LINGUAS="is"
+		AM_GNU_GETTEXT_VERSION(0.10.40)
+		AM_GNU_GETTEXT(external)
     ;;
     #
     # Windows-specific configuration
@@ -501,6 +499,7 @@ package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile
 help/Makefile
+po/Makefile.in
 ])
 
 

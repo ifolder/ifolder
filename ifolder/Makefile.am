@@ -1,4 +1,15 @@
+if LINUX
+SUBDIRS = po src help
+endif
+
+if DARWIN
 SUBDIRS = src help
+endif
+
+if WINDOWS
+SUBDIRS = src help
+endif
+
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
