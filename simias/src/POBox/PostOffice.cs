@@ -147,7 +147,10 @@ namespace Simias.POBox
 			// get the subscription object
 			Subscription subscription = new Subscription(node);
 			subscription.SubscriptionState = SubscriptionStates.Acknowledged;
-			box.Commit();
+			box.Commit(subscription);
+
+			// TODO: remove the subscription object?
+			box.Commit(box.Delete(subscription));
 		}
 
 		public SubscriptionStatus GetSubscriptionStatus(string domain, string identity, string message)
