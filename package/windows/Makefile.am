@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-EXTRA_DIST = $(srcdir)/ifolder-msi.ism $(srcdir)/ifolder-msm.ism $(srcdir)/ifolder-sdk-msm.ism
+EXTRA_DIST = $(srcdir)/$(PACKAGE)-msi.ism $(srcdir)/$(PACKAGE)-msm.ism $(srcdir)/$(PACKAGE)-sdk-msm.ism
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
@@ -44,23 +44,22 @@ MSM_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 SDK_MSM_FILE = $(PACKAGE)-sdk-$(VERSION)-$(RELEASE).msm
 endif
 
-MSI = ifolder-msi
-MSM = ifolder-msm
-SDK_MSM = ifolder-sdk-msm
+MSI = $(PACKAGE)-msi
+MSM = $(PACKAGE)-msm
+SDK_MSM = $(PACKAGE)-sdk-msm
 
 MSI_LOG_FILE     = issabld-$(MSI).log
 MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
 
-#ISSABLD = ../../tools/InstallShield/IsSABld.exe
 ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
 
 DISK1         = $(ISSABLD_CONFIG)/$(ISSABLD_RELEASE)/DiskImages/DISK1
 MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
-MSM_DISK1     = $(MSM)/$(DISK1)/ifolder.msm
-SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/ifolder_sdk.msm
+MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,$(PACKAGE)).msm
+SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,$(PACKAGE))_sdk.msm
 
 all: $(MSI_FILE)
 
@@ -80,7 +79,7 @@ $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 		echo $$CMD; \
 		eval $$CMD
 
-$(MSM_FILE): issabld ifolder-install $(MSM).ism
+$(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
 	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(MSM).ism"'; \
 		echo $$CMD; \
@@ -96,7 +95,7 @@ $(MSM_FILE): issabld ifolder-install $(MSM).ism
 		echo $$CMD; \
 		eval $$CMD
 
-$(SDK_MSM_FILE): issabld ifolder-doc $(SDK_MSM).ism
+$(SDK_MSM_FILE): issabld $(PACKAGE)-doc $(SDK_MSM).ism
 	@rm -f $@ "$(SDK_MSM_DISK1)" "$(SDK_MSM_LOG_FILE)"
 	@CMD='"$(ISSABLD)" -p "$(SDK_MSM).ism"'; \
 		echo $$CMD; \
@@ -112,7 +111,7 @@ $(SDK_MSM_FILE): issabld ifolder-doc $(SDK_MSM).ism
 		echo $$CMD; \
 		eval $$CMD
 
-.PHONY: issabld ifolder-install ifolder ifolder-configure ifolder-dist ifolder-doc
+.PHONY: issabld $(PACKAGE)-install $(PACKAGE) $(PACKAGE)-configure $(PACKAGE)-dist $(PACKAGE)-doc
 
 issabld:
 	@if test -z "$(ISSABLD)"; then \
@@ -125,13 +124,13 @@ issabld:
 		exit 1; \
 	fi
 
-ifolder-install: ifolder
+$(PACKAGE)-install: $(PACKAGE)
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) install
 	
-ifolder: ifolder-configure
+$(PACKAGE): $(PACKAGE)-configure
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) all
 	
-ifolder-configure: ifolder-dist
+$(PACKAGE)-configure: $(PACKAGE)-dist
 	rm -rf MSI
 	mkdir MSI
 	mkdir -p MSI/BUILD
@@ -141,10 +140,10 @@ ifolder-configure: ifolder-dist
 	cd MSI/BUILD/$(PACKAGE)-$(VERSION); \
 		./configure --prefix=$(CUR_DIR)/MSI/INSTALL $(DEBUG_OPTION)
 	
-ifolder-dist:
+$(PACKAGE)-dist:
 	$(MAKE) -C $(top_srcdir) dist
 
-ifolder-doc: ifolder
+$(PACKAGE)-doc: $(PACKAGE)
 	$(MAKE) -C $(top_srcdir)/doc all
 	
 clean-local:
@@ -153,11 +152,7 @@ clean-local:
 	rm -rf MSI $(MSI) $(MSM) $(SDK_MSM)
 
 distclean-local:
-	rm -rf $(COMMON_DISTCLEAN_FILES) ifolder.spec
+	rm -rf $(COMMON_DISTCLEAN_FILES) $(PACKAGE).spec $(PACKAGE)-sdk.spec
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
-
-# do nothing for the following standard targets
-all clean:
-
