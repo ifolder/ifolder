@@ -32,7 +32,7 @@ use POSIX qw(strftime);
 my $MAKEFILE = 'config.mk';         # configure makefile
 
 # product information
-my $product_name = 'denali';        # default product name
+my $product_name = 'ifolder';       # default product name
 my $major_version = '0';            # default major version
 my $minor_version = '5';            # default minor version (iteration)
 my $patch_level = '0';              # default patch level
@@ -95,7 +95,7 @@ USAGE: configure.pl [options]
     PRODUCT INFORMATION
 
     --product-name [value]      Specify the product name
-                                    i.e. 'denali'
+                                    i.e. 'ifolder'
     --major-version [value]     Specify the major version
                                     i.e. '3'
     --minor-version [value]     Specify the minor version
@@ -775,6 +775,9 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
+# Revision 1.2  2004/02/24 00:04:45  pthomas707
+# Rename product name from denali to ifolder
+#
 # Revision 1.1  2004/02/22 01:00:13  cgaisford
 # Modified project's build so a configure and make can be done at the top level
 #
