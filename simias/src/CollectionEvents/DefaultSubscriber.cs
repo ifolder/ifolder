@@ -34,6 +34,7 @@ namespace Simias.Event
 	{
 		#region fields
 
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(DefaultSubscriber));
 		// This is a singleton per Store.
 		static Hashtable	instanceTable = new Hashtable();
 		int					count;
@@ -175,6 +176,7 @@ namespace Simias.Event
 				}
 				Thread.Sleep(100);
 			}
+			logger.Info("Connected to event broker");
 			while (!alreadyDisposed)
 			{
 				try
@@ -214,8 +216,9 @@ namespace Simias.Event
 					{ 
 						cb(args);
 					}
-					catch 
+					catch (Exception ex)
 					{
+						logger.Debug(ex, "Dellegate {0}.{1} failed", cb.Target, cb.Method);
 					}
 				}
 			}

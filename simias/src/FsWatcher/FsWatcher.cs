@@ -101,7 +101,10 @@ namespace Simias.Event
 					{
 						System.GC.SuppressFinalize(this);
 					}
-					watcher.Dispose();
+					if (watcher != null)
+					{
+						watcher.Dispose();
+					}
 					disposed = true;
 				}
 			}

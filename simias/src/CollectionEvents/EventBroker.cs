@@ -58,6 +58,7 @@ namespace Simias.Event
 	public class EventBroker : MarshalByRefObject
 	{
 		#region Fields
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
 
 		bool shuttingDown = false;
 		Queue eventQueue;
@@ -127,7 +128,7 @@ namespace Simias.Event
 							{
 								// Remove the offending delegate.
 								CollectionEvent -= cb;
-								MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+								logger.Debug("Deregistered Subscriber {0}.{1}.", cb.Target, cb.Method);
 							}
 						}
 					}
@@ -151,7 +152,6 @@ namespace Simias.Event
 				eventQueue.Enqueue(args);
 				queued.Set();
 			}
-			//			MyTrace.WriteLine("Recieved Event {0}", args.ChangeType.ToString());
 		}
 
 		#endregion
@@ -206,8 +206,9 @@ namespace Simias.Event
 					TcpChannel chan = new
 						TcpChannel(props,clientProvider,serverProvider);
 					ChannelServices.RegisterChannel(chan);
-
-						clientRegistered = true;
+					clientRegistered = true;
+					
+					logger.Info("Event Client Channel Registered", null);
 				}
 			}
 			return clientRegistered;
@@ -254,6 +255,8 @@ namespace Simias.Event
 				serviceRegistered = true;
 				clientRegistered = true;
 				conf.Set(CFG_Section, CFG_UriKey, service);
+
+				logger.Info("Event Service Registered at {0}", service);
 			}
 		}
 
@@ -269,6 +272,9 @@ namespace Simias.Event
 			}
 			ChannelServices.UnregisterChannel(ChannelServices.GetChannel(channelName + conf.StorePath.GetHashCode().ToString()));
 			serviceRegistered = false;
+			string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+			conf.Set(CFG_Section, CFG_UriKey, CFG_Uri);
+			logger.Info("Event Service at {0} Deregistered", serviceUri);
 		}
 	
 		#endregion

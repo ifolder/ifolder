@@ -91,7 +91,7 @@ namespace Simias
 		/// <param name="v1">The version.</param>
 		/// <param name="v2">The expected version.</param>
 		public VersionException(string obj, string v1, string v2) :
-			base(string.Format("The {0} Version is {0} expected {1}.", obj, v1, v2))
+			base(string.Format("The {0} Version is {1} expected {2}.", obj, v1, v2))
 		{
 		}
 	}

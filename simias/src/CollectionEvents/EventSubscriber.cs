@@ -31,6 +31,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Security.Permissions;
 using System.Threading;
+using Simias;
 
 
 //[assembly:PermissionSetAttribute(SecurityAction.RequestMinimum, Name = "FullTrust")]
@@ -275,50 +276,65 @@ namespace Simias.Event
 
 		private void OnCollectionEvent(CollectionEventArgs args)
 		{
-			switch (args.GetType().ToString())
+			try
 			{
-				case "Simias.Event.NodeEventArgs":
-				case "Simias.Event.CollectionRootChangedEventArgs":
-					if (applyNodeFilter((NodeEventArgs)args))
-					{
-						switch (args.ChangeType)
+				switch (args.GetType().ToString())
+				{
+					case "Simias.Event.NodeEventArgs":
+					case "Simias.Event.CollectionRootChangedEventArgs":
+						if (applyNodeFilter((NodeEventArgs)args))
 						{
-							case EventType.NodeChanged:
-								NodeChanged((NodeEventArgs)args);
-								break;
-							case EventType.NodeCreated:
-								NodeCreated((NodeEventArgs)args);
-								break;
-							case EventType.NodeDeleted:
-								NodeDeleted((NodeEventArgs)args);
-								break;
-							case EventType.CollectionRootChanged:
-								CollectionRootChanged((CollectionRootChangedEventArgs)args);
-								break;
+							switch (args.ChangeType)
+							{
+								case EventType.NodeChanged:
+									if (NodeChanged != null)
+										NodeChanged((NodeEventArgs)args);
+									break;
+								case EventType.NodeCreated:
+									if (NodeCreated != null)
+										NodeCreated((NodeEventArgs)args);
+									break;
+								case EventType.NodeDeleted:
+									if (NodeDeleted != null)
+										NodeDeleted((NodeEventArgs)args);
+									break;
+								case EventType.CollectionRootChanged:
+									if (CollectionRootChanged != null)
+										CollectionRootChanged((CollectionRootChangedEventArgs)args);
+									break;
+							}
 						}
-					}
-					break;
-				case "Simias.Event.FileEventArgs":
-				case "Simias.Event.FileRenameEventArgs":
-					if (applyFileFilter((FileEventArgs)args))
-					{
-						switch (args.ChangeType)
+						break;
+					case "Simias.Event.FileEventArgs":
+					case "Simias.Event.FileRenameEventArgs":
+						if (applyFileFilter((FileEventArgs)args))
 						{
-							case EventType.FileChanged:
-								FileChanged((FileEventArgs)args);
-								break;
-							case EventType.FileCreated:
-								FileCreated((FileEventArgs)args);
-								break;
-							case EventType.FileDeleted:
-								FileDeleted((FileEventArgs)args);
-								break;
-							case EventType.FileRenamed:
-								FileRenamed((FileRenameEventArgs)args);
-								break;
+							switch (args.ChangeType)
+							{
+								case EventType.FileChanged:
+									if (FileChanged != null)
+										FileChanged((FileEventArgs)args);
+									break;
+								case EventType.FileCreated:
+									if (FileCreated != null)
+										FileCreated((FileEventArgs)args);
+									break;
+								case EventType.FileDeleted:
+									if (FileDeleted != null)
+										FileDeleted((FileEventArgs)args);
+									break;
+								case EventType.FileRenamed:
+									if (FileRenamed != null)
+										FileRenamed((FileRenameEventArgs)args);
+									break;
+							}
 						}
-					}
-					break;
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				new SimiasException(args.ToString(), ex);
 			}
 		}
 
