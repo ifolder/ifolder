@@ -279,6 +279,7 @@ namespace Simias.Sync
 							if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
 							// ping the store
+							log.Debug("Sync Work {0} - Sending Ping...", collection.Name);
 							log.Debug("Store Service Ping: {0}", storeService.Ping());
 
 							// get a proxy to the collection service object
@@ -340,6 +341,8 @@ namespace Simias.Sync
 								{
 									// try the location service on an exception
 									log.Debug("Updating Master Service Url...");
+									log.Debug("  Old Master Url: {0}", collection.MasterUrl);
+									log.Debug("  New Master Url: {0}", locationUrl);
 
 									collection.MasterUrl = locationUrl;
 
