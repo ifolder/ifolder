@@ -42,7 +42,7 @@
 		      <accelerator key="N" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image98">
+			<widget class="GtkImage" id="image107">
 			  <property name="visible">True</property>
 			  <property name="pixbuf">ifolder.png</property>
 			  <property name="xalign">0.5</property>
@@ -94,7 +94,7 @@
 		      <signal name="activate" handler="on_revert_menu" last_modification_time="Wed, 23 Jun 2004 15:43:32 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image99">
+			<widget class="GtkImage" id="image108">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-undo</property>
 			  <property name="icon_size">1</property>
@@ -149,7 +149,7 @@
 		      <signal name="activate" handler="on_refresh_menu" last_modification_time="Wed, 23 Jun 2004 15:43:32 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image100">
+			<widget class="GtkImage" id="image109">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -159,6 +159,39 @@
 			  <property name="ypad">0</property>
 			</widget>
 		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="separator1">
+		      <property name="visible">True</property>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="subscriptions1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Subscriptions</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_view_subscriptions" last_modification_time="Fri, 30 Jul 2004 14:03:07 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="invitation_assistant1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Invitation Assistant</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_view_assistant" last_modification_time="Fri, 30 Jul 2004 14:05:35 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="address_book1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Address Book</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_view_addressbook" last_modification_time="Fri, 30 Jul 2004 14:04:01 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -182,7 +215,7 @@
 		      <signal name="activate" handler="on_help_menu" last_modification_time="Wed, 23 Jun 2004 15:43:32 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image101">
+			<widget class="GtkImage" id="image110">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-help</property>
 			  <property name="icon_size">1</property>
