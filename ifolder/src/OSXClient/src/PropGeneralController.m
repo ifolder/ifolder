@@ -5,6 +5,7 @@
 #import "iFolder.h"
 #import "DiskSpace.h"
 #import "TimeSpan.h"
+#import "VerticalBarView.h"
 
 @implementation PropGeneralController
 
@@ -57,6 +58,8 @@
 			[currentSpace setStringValue:[NSString stringWithFormat:@"%qi", 
 										[diskSpace UsedSpace]/(1024 * 1024)]];
 
+			prevLimit = [diskSpace Limit];
+
 			if([diskSpace Limit] != 0)
 			{
 				[enableLimit setState:YES];
@@ -66,7 +69,8 @@
 										([diskSpace Limit]/(1024 * 1024))]];
 				[availableSpace setStringValue:[NSString stringWithFormat:@"%qi", 
 										([diskSpace AvailableSpace]/(1024 * 1024))]];
-				// update guage
+
+				[barView setBarSize:[diskSpace Limit] withFill:[diskSpace UsedSpace]];
 			}
 			else
 			{
@@ -75,18 +79,20 @@
 				[limitSpace setEnabled:NO];
 				[limitSpaceUnits setEnabled:NO];
 				[availableSpace setStringValue:@"0"];
-				// update guage													
+				[barView setBarSize:0 withFill:0];
 			}
 		}
 		@catch(NSException *ex)
 		{
+			prevLimit = 0;
+		
 			[enableLimit setState:NO];
 			[limitSpace setStringValue:@""];
 			[limitSpace setEnabled:NO];
 			[limitSpaceUnits setEnabled:NO];
 			[availableSpace setStringValue:@"0"];
 			[currentSpace setStringValue:@"0"];
-			// update guage													
+			[barView setBarSize:0 withFill:0];
 		}
 
 
@@ -135,9 +141,9 @@
 			[filesToSync setStringValue:@"unknown"];
 		}
 
-
 	}
 }
+
 
 
 
@@ -148,6 +154,7 @@
 		[limitSpace setStringValue:@"0"];
 		[limitSpace setEnabled:YES];
 		[limitSpaceUnits setEnabled:YES];
+		[barView setBarSize:0 withFill:0];
 	}
 	else
 	{
@@ -155,6 +162,7 @@
 		[limitSpace setStringValue:@""];
 		[limitSpace setEnabled:NO];
 		[limitSpaceUnits setEnabled:NO];
+		[barView setBarSize:0 withFill:0];
 
 		@try
 		{
@@ -191,7 +199,10 @@
 	long long limitValue = ([limitSpace doubleValue] * 1024 * 1024);
 
 	if(limitValue <= usedValue)
+	{
 		[availableSpace setStringValue:@"0"];
+		[barView setBarSize:1 withFill:1];
+	}
 	else
 	{
 		long long availSpace = 0;
@@ -200,14 +211,21 @@
 
 		[availableSpace setStringValue:
 			[NSString stringWithFormat:@"%qi", availSpace / (1024 * 1024)]];
+
+		[barView setBarSize:limitValue withFill:usedValue];
 	}
 
-	@try
+	if(prevLimit != limitValue)
 	{
-		[ifolderService SetiFolderDiskSpace:limitValue oniFolder:[curiFolder ID]];
-	}
-	@catch (NSException *e)
-	{
+		prevLimit = limitValue;
+		@try
+		{
+			NSLog(@"Saving the disk space settings");
+			[ifolderService SetiFolderDiskSpace:limitValue oniFolder:[curiFolder ID]];
+		}
+		@catch (NSException *e)
+		{
+		}
 	}
 }
 

@@ -13,6 +13,8 @@
 				3E4F5738078C30DA00313076,
 				3E6F7ACD07B3E55A00F46F36,
 				3E6F7ACE07B3E55A00F46F36,
+				3E15669C07C5330600972388,
+				3E15669B07C5330600972388,
 			);
 			isa = PBXGroup;
 			name = OtherWIndows;
@@ -366,6 +368,36 @@
 		};
 		3E09F86007C04CE200381F59 = {
 			fileRef = 3E09F85F07C04CE200381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E15669B07C5330600972388 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = VerticalBarView.m;
+			path = src/VerticalBarView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E15669C07C5330600972388 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = VerticalBarView.h;
+			path = src/VerticalBarView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E15669D07C5330600972388 = {
+			fileRef = 3E15669B07C5330600972388;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E15669E07C5330600972388 = {
+			fileRef = 3E15669C07C5330600972388;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1830,6 +1862,7 @@
 				3EE2781F07C44B7400A645A0,
 				3EE2787D07C45E2100A645A0,
 				3EE278EE07C46CD500A645A0,
+				3E15669E07C5330600972388,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1877,6 +1910,7 @@
 				3EE2782007C44B7400A645A0,
 				3EE2787E07C45E2100A645A0,
 				3EE278EF07C46CD500A645A0,
+				3E15669D07C5330600972388,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
