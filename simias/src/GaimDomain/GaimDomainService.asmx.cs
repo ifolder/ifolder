@@ -156,7 +156,7 @@ namespace Simias.Gaim.DomainService
 		
 		internal string GetMachineName()
 		{
-			string machineName = Environment.MachineName;
+			string machineName = Environment.MachineName.ToLower();
 			// If a machine name with domain is added, remove the domain information
 			int firstDot = machineName.IndexOf('.');
 			if (firstDot > 0)
