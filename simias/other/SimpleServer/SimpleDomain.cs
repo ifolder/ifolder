@@ -137,7 +137,7 @@ namespace Simias.SimpleServer
 		internal void Init()
 		{
 			hostAddress = MyDns.GetHostName();
-			log.Debug("  My Address: " + hostAddress);
+			//log.Debug("  My Address: " + hostAddress);
 			Store store = Store.GetStore();
 
 
@@ -251,8 +251,8 @@ namespace Simias.SimpleServer
 					ssRoster = new Roster( store, rDomain );
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
 
-					ssRoster.Role = SyncRoles.Master;
-					ssRoster.CreateMaster = false;
+					//ssRoster.Role = SyncRoles.Master;
+					//ssRoster.CreateMaster = false;
 
 					// Mark the roster as a master
 					/*
@@ -369,7 +369,8 @@ namespace Simias.SimpleServer
 							this.domainName,
 							id, 
 							this.description,
-							localUri);
+							localUri,
+							Simias.Sync.SyncRoles.Master );
 
 					if ( ssDomain != null )
 					{

@@ -46,8 +46,8 @@ namespace Simias.SimpleServer
 		private Simias.Storage.Store store = null;
 		private Simias.Storage.Roster roster = null;
 
-		private XmlDocument simpleServerDoc = null;
-		private XmlElement domainElement = null;
+		//private XmlDocument simpleServerDoc = null;
+		//private XmlElement domainElement = null;
 
 		#region Constructors
 		/// <summary>
