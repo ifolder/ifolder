@@ -97,6 +97,8 @@
 	if(domainWeb->UserName != nil)
 		[newProperties setObject:[NSString stringWithCString:domainWeb->UserName] forKey:@"UserName"];
 
+	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsDefault] forKey:@"IsDefault"];
+
 	[self setProperties:newProperties];
 }
 
@@ -140,5 +142,10 @@
 	return [properties objectForKey:@"Password"];
 }
 
+
+-(NSNumber *)IsDefault
+{
+	return [properties objectForKey:@"IsDefault"];
+}
 
 @end
