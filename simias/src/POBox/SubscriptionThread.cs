@@ -224,19 +224,24 @@ namespace Simias.POBox
 			else
 			{
 				log.Info("SubscriptionThread::DoInvited called");
-				POBoxStatus			wsStatus = POBoxStatus.UnknownError;
+				POBoxStatus wsStatus = POBoxStatus.UnknownError;
 
 				POBoxService poService = new POBoxService();
 				poService.Url = this.poServiceUrl;
 				poService.CookieContainer = new CookieContainer();
-				poService.PreAuthenticate = true;
+				Credentials cSimiasCreds = 
+					new Credentials(subscription.SubscriptionCollectionID);
+				poService.Credentials = cSimiasCreds.GetCredentials();
+
+				if (poService.Credentials == null)
+				{
+					log.Info("  no credentials - back to sleep");
+					return (false);
+				}
 
 				// Make sure the shared collection has sync'd to the server before inviting
 				try
 				{
-					Credentials cSimiasCreds = 
-						new Credentials(subscription.SubscriptionCollectionID);
-					poService.Credentials = cSimiasCreds.GetCredentials();
 					wsStatus =
 						poService.VerifyCollection(
 							subscription.DomainID,
@@ -305,6 +310,7 @@ namespace Simias.POBox
 			log.Info("DoReplied - Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 			bool status = false;
 			POBoxService poService = new POBoxService();
+			poService.CookieContainer = new CookieContainer();
 			poService.Url = this.poServiceUrl;
 			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
 
@@ -312,6 +318,12 @@ namespace Simias.POBox
 			{
 				Credentials cSimiasCreds = new Credentials(subscription.SubscriptionCollectionID);
 				poService.Credentials = cSimiasCreds.GetCredentials();
+
+				if (poService.Credentials == null)
+				{
+					log.Info("  no credentials - back to sleep");
+					return (status);
+				}
 
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
 				{
@@ -376,6 +388,10 @@ namespace Simias.POBox
 			bool result = false;
 
 			log.Info("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
+			log.Info("  calling the PO Box server to get subscription state");
+			log.Info("  domainID: " + subscription.DomainID);
+			log.Info("  fromID:   " + subscription.FromIdentity);
+			log.Info("  SubID:    " + subscription.MessageID);
 
 			POBoxService poService = new POBoxService();
 			poService.Url = this.poServiceUrl;
@@ -383,13 +399,15 @@ namespace Simias.POBox
 
 			try
 			{
-				log.Info("  calling the PO Box server to get subscription state");
-				log.Info("  domainID: " + subscription.DomainID);
-				log.Info("  fromID:   " + subscription.FromIdentity);
-				log.Info("  SubID:    " + subscription.MessageID);
 
 				Credentials cSimiasCreds = new Credentials(subscription.SubscriptionCollectionID);
 				poService.Credentials = cSimiasCreds.GetCredentials();
+
+				if (poService.Credentials == null)
+				{
+					log.Info("  no credentials - back to sleep");
+					return(result);
+				}
 
 				SubscriptionInformation subInfo =
 					poService.GetSubscriptionInfo(
