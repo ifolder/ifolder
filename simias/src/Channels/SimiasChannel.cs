@@ -45,7 +45,7 @@ namespace Simias.Channels
 			// register channel
 			ChannelServices.RegisterChannel(channel);
 
-			log.Debug("Channel Created: {0}", this);
+			log.Debug("Channel Created: {0}", Name);
 		}
 
 		public override string ToString()
@@ -88,7 +88,7 @@ namespace Simias.Channels
 				{
 					ChannelServices.UnregisterChannel(channel);
 
-					log.Debug("Channel Closed: {0}", this);
+					log.Debug("Channel Closed: {0}", Name);
 
 					channel = null;
 				}
