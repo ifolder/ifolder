@@ -33,7 +33,6 @@ using Simias;
 using Simias.Authentication;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Mail;
 
 namespace Simias.POBox
 {
