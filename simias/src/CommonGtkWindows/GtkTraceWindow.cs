@@ -59,8 +59,6 @@ namespace Simias
 		{
 			lock(messageQueue)
 			{
-				Console.WriteLine("Main Wokeup and is processing queue");
-
 				while(messageQueue.Count > 0)
 				{
 					string message = (string) messageQueue.Dequeue();
@@ -138,7 +136,6 @@ namespace Simias
 			lock(messageQueue)
 			{
 				messageQueue.Enqueue(message);
-				Console.WriteLine("Calling to WakeupMain");
 				threadNotify.WakeupMain();
 			}
 		}
