@@ -664,6 +664,7 @@ sec_process_message (SimiasEventClient *ec, char *message, int length)
 {
 	xmlDoc *doc;
 	void *message_struct;
+	char **struct_ptr;
 
 	/* Construct an xmlDoc from the message */	
 	xmlInitParser ();
@@ -675,14 +676,28 @@ sec_process_message (SimiasEventClient *ec, char *message, int length)
 			return -1;
 		}
 		
+		struct_ptr = (char **)message_struct;
+		
 		/* Call the right handler based on the type of message received */
-		if (strcmp ("NodeEventArgs", (char *)message_struct) == 0) {
-			printf ("NodeEventArgs message received\n");
-		} else if (strcmp ("CollectionSyncEventArgs", (char *)message_struct) == 0) {
+		if (strcmp ("NodeEventArgs", struct_ptr [0]) == 0) {
+			SimiasNodeEvent *event = (SimiasNodeEvent *)message_struct;
+			printf ("NodeEventArgs received\n");
+			printf ("\t%s: %s\n", "action", event->action);
+			printf ("\t%s: %s\n", "time", event->time);
+			printf ("\t%s: %s\n", "source", event->source);
+			printf ("\t%s: %s\n", "collection", event->collection);
+			printf ("\t%s: %s\n", "type", event->type);
+			printf ("\t%s: %s\n", "event_id", event->event_id);
+			printf ("\t%s: %s\n", "node", event->node);
+			printf ("\t%s: %s\n", "flags", event->flags);
+			printf ("\t%s: %s\n", "master_rev", event->master_rev);
+			printf ("\t%s: %s\n", "slave_rev", event->slave_rev);
+			printf ("\t%s: %s\n", "file_size", event->file_size);
+		} else if (strcmp ("CollectionSyncEventArgs", struct_ptr [0]) == 0) {
 			printf ("CollectionSyncEventArgs message received\n");
-		} else if (strcmp ("FileSyncEventArgs", (char *)message_struct) == 0) {
+		} else if (strcmp ("FileSyncEventArgs", struct_ptr [0]) == 0) {
 			printf ("FileSyncEventArgs message received\n");
-		} else if (strcmp ("NotifyEventArgs", (char *)message_struct) == 0) {
+		} else if (strcmp ("NotifyEventArgs", struct_ptr [0]) == 0) {
 			printf ("NotifyEventArgs message received\n");
 		}
 		
