@@ -116,6 +116,7 @@ namespace Simias.Client.Event
 		/// Winsock error that we care about.
 		/// </summary>
 		private const int WSAECONNREFUSED = 10061;
+		private const int WSAEHOSTDOWN =10064;
 
 		/// <summary>
 		/// File name and path of the IProcEvent configuration file.
@@ -166,6 +167,7 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// Queues used to keep track of SetEvent() and SetFilter() requests before the client has registered.
 		/// </summary>
+		private string subscribeLock = "SubscribeLock";
 		private Queue eventActionQueue = new Queue();
 		private Queue eventFilterQueue = new Queue();
 
@@ -414,15 +416,19 @@ namespace Simias.Client.Event
 							// Repost the buffer.
 							eventSocket.BeginReceive( receiveBuffer, bufferLength, receiveBuffer.Length - bufferLength, SocketFlags.None, new AsyncCallback( MessageHandler ), null );
 						}
+						catch ( SocketException e )
+						{
+							throw e;
+						}
 						catch ( Exception e )
 						{
-							Shutdown( new ApplicationException( "Error processing event message from server.", e ) );
+							ReportError( new ApplicationException( "Error processing event message from server.", e ) );
 						}
 					}
 					else
 					{
-						// The server has gone away or has terminated our connection. Clean up here.
-						Shutdown( null );
+						// The server has gone away or has terminated our connection.
+						throw new SocketException( WSAEHOSTDOWN );
 					}
 				}
 				catch ( SocketException e )
@@ -436,7 +442,8 @@ namespace Simias.Client.Event
 					}
 					else
 					{
-						Shutdown( new ApplicationException( "Socket receive failed", e ) );
+						ReportError( new ApplicationException( "Error processing event message from server.", e ) );
+						RestartClient();
 					}
 				}
 			}
@@ -447,16 +454,10 @@ namespace Simias.Client.Event
 		/// </summary>
 		private void ProcessEventActionQueue()
 		{
-			lock ( eventActionQueue )
+			// Go through each item on the queue and submit it to the server.
+			foreach ( EventActionQueueItem qi in eventActionQueue )
 			{
-				// Go through each item on the queue and submit it to the server.
-				foreach ( EventActionQueueItem qi in eventActionQueue )
-				{
-					SetEvent( qi.action, qi.handler );
-				}
-
-				// Clear the queue.
-				eventActionQueue.Clear();
+				SubscribeEvent( qi.action, qi.handler );
 			}
 		}
 
@@ -616,16 +617,10 @@ namespace Simias.Client.Event
 		/// </summary>
 		private void ProcessEventFilterQueue()
 		{
-			lock ( eventFilterQueue )
+			// Go through each item on the queue and submit it to the server.
+			foreach ( IProcEventFilter[] filters in eventFilterQueue )
 			{
-				// Go through each item on the queue and submit it to the server.
-				foreach ( IProcEventFilter[] filters in eventFilterQueue )
-				{
-					SetFilter( filters );
-				}
-
-				// Clear the queue.
-				eventFilterQueue.Clear();
+				SubscribeFilter( filters );
 			}
 		}
 
@@ -666,32 +661,6 @@ namespace Simias.Client.Event
 		}
 
 		/// <summary>
-		/// Queues up the event action set request until the client has registered.
-		/// </summary>
-		/// <param name="action">Action to take regarding the event.</param>
-		/// <param name="handler">Delegate that gets called when specified event happens or is
-		/// to be removed.</param>
-		private void QueueEventAction( IProcEventAction action, IProcEventHandler handler )
-		{
-			lock( eventActionQueue )
-			{
-				eventActionQueue.Enqueue( new EventActionQueueItem( action, handler ) );
-			}
-		}
-
-		/// <summary>
-		/// Queues up the event filter set request until the client has registered.
-		/// </summary>
-		/// <param name="filters">An array of EventFilter objects.</param>
-		private void QueueEventFilters( IProcEventFilter[] filters )
-		{
-			lock( eventFilterQueue )
-			{
-				eventFilterQueue.Enqueue( filters );
-			}
-		}
-
-		/// <summary>
 		/// Thread service routine that registers with the event service and then dies.
 		/// </summary>
 		private void RegistrationService()
@@ -721,14 +690,19 @@ namespace Simias.Client.Event
 							// Register our client.
 							SendMessage( new IProcEventRegistration( localEndPoint, true ).ToBuffer() );
 
-							// Set the state as running.
-							state = ClientState.Running;
+							// Process the queues within the lock so that any new actions or filters
+							// are sent to the server and not just queued and forgotten.
+							lock ( subscribeLock )
+							{
+								// Check to see if any set filter items have been queue.
+								ProcessEventFilterQueue();
 
-							// Check to see if any set filter items have been queue.
-							ProcessEventFilterQueue();
+								// Check to see if any set event actions have been queued.
+								ProcessEventActionQueue();
 
-							// Check to see if any set event actions have been queued.
-							ProcessEventActionQueue();
+								// Set the state as running.
+								state = ClientState.Running;
+							}
 						}
 						catch ( SocketException e )
 						{
@@ -748,14 +722,15 @@ namespace Simias.Client.Event
 						}
 					}
 				}
+
+				// This thread is going away.
+				regThreadState = RegThreadState.Terminated;
 			}
 			catch ( SocketException e )
 			{
-				Shutdown( new ApplicationException( "Error registering with the event service.", e ) );
+				ReportError( new ApplicationException( "Error registering with the event service.", e ) );
+				RestartClient();
 			}
-
-			// This thread is going away.
-			regThreadState = RegThreadState.Terminated;
 		}
 
 		/// <summary>
@@ -771,6 +746,34 @@ namespace Simias.Client.Event
 		}
 
 		/// <summary>
+		/// Puts the client back into a waiting to connect to the server state after having
+		/// received a socket exception.
+		/// </summary>
+		private void RestartClient()
+		{
+			// Reset the state back to initializing.
+			state = ClientState.Initializing;
+
+			// Reset the class variables.
+			bufferLength = 0;
+			localEndPoint = null;
+
+			// All events will be reset.
+			onCreatedNodeEvent = null;
+			onDeletedNodeEvent = null;
+			onChangedNodeEvent = null;
+			onCollectionSyncEvent = null;
+			onFileSyncEvent = null;
+			onNotifyEvent = null;
+
+			// Reinitialize the socket.
+			eventSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+
+			// Re-register for the events.
+			Register();
+		}
+
+		/// <summary>
 		/// Sends the specified message to the server.
 		/// </summary>
 		/// <param name="message">Message to send to the server.</param>
@@ -782,16 +785,15 @@ namespace Simias.Client.Event
 			}
 			catch ( SocketException e )
 			{
-				Shutdown( new ApplicationException( "Failed to send message to server.", e ) );
+				ReportError( new ApplicationException( "Failed to send message to server.", e ) );
+				RestartClient();
 			}
 		}
 
 		/// <summary>
 		/// Closes the socket and cleans up the client.
 		/// </summary>
-		/// <param name="exception">The exception that occurred if there was an error. Otherwise
-		/// this parameter is null.</param>
-		private void Shutdown( ApplicationException exception )
+		private void Shutdown()
 		{
 			lock ( this )
 			{
@@ -822,12 +824,131 @@ namespace Simias.Client.Event
 					catch {}
 				}
 			}
+		}
 
-			// Inform the application if an error occurred.
-			if ( exception != null )
+		/// <summary>
+		/// Starts subscribing to or unsubscribing from the specified event.
+		/// </summary>
+		/// <param name="action">Action to take regarding the event.</param>
+		/// <param name="handler">Delegate that gets called when specified event happens or is
+		/// to be removed.</param>
+		private void SubscribeEvent( IProcEventAction action, IProcEventHandler handler )
+		{
+			bool duplicateSubscriber = false;
+
+			// Build the listener message.
+			IProcEventListener message = new IProcEventListener();
+			message.AddEvent( action );
+
+			// Set the handler for the proper event type.
+			switch ( action )
 			{
-				ReportError( exception );
+				case IProcEventAction.AddNodeCreated:
+				{
+					duplicateSubscriber = ( onCreatedNodeEvent != null ) ? true : false;
+					onCreatedNodeEvent += handler;
+					break;
+				}
+
+				case IProcEventAction.AddNodeDeleted:
+				{
+					duplicateSubscriber = ( onDeletedNodeEvent != null ) ? true : false;
+					onDeletedNodeEvent += handler;
+					break;
+				}
+
+				case IProcEventAction.AddNodeChanged:
+				{
+					duplicateSubscriber = ( onChangedNodeEvent != null ) ? true : false;
+					onChangedNodeEvent += handler;
+					break;
+				}
+
+				case IProcEventAction.AddCollectionSync:
+				{
+					duplicateSubscriber = ( onCollectionSyncEvent != null ) ? true : false;
+					onCollectionSyncEvent += handler;
+					break;
+				}
+
+				case IProcEventAction.AddFileSync:
+				{
+					duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
+					onFileSyncEvent += handler;
+					break;
+				}
+
+				case IProcEventAction.AddNotifyMessage:
+				{
+					duplicateSubscriber = ( onNotifyEvent != null ) ? true : false;
+					onNotifyEvent += handler;
+					break;
+				}
+
+				case IProcEventAction.RemoveNodeCreated:
+				{
+					onCreatedNodeEvent -= handler;
+					duplicateSubscriber = ( onCreatedNodeEvent != null ) ? true : false;
+					break;
+				}
+
+				case IProcEventAction.RemoveNodeDeleted:
+				{
+					onDeletedNodeEvent -= handler;
+					duplicateSubscriber = ( onDeletedNodeEvent != null ) ? true : false;
+					break;
+				}
+
+				case IProcEventAction.RemoveNodeChanged:
+				{
+					onChangedNodeEvent -= handler;
+					duplicateSubscriber = ( onChangedNodeEvent != null ) ? true : false;
+					break;
+				}
+
+				case IProcEventAction.RemoveCollectionSync:
+				{
+					onCollectionSyncEvent -= handler;
+					duplicateSubscriber = ( onCollectionSyncEvent != null ) ? true : false;
+					break;
+				}
+
+				case IProcEventAction.RemoveFileSync:
+				{
+					onFileSyncEvent -= handler;
+					duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
+					break;
+				}
+
+				case IProcEventAction.RemoveNotifyMessage:
+				{
+					onNotifyEvent -= handler;
+					duplicateSubscriber = ( onNotifyEvent != null ) ? true : false;
+					break;
+				}
 			}
+
+			// Send the message if necessary.
+			if ( !duplicateSubscriber )
+			{
+				SendMessage( message.ToBuffer() );
+			}
+		}
+
+		/// <summary>
+		/// Sets the specified filters for the subscriber.
+		/// </summary>
+		/// <param name="filters">An array of EventFilter objects.</param>
+		private void SubscribeFilter( IProcEventFilter[] filters )
+		{
+			IProcEventListener message = new IProcEventListener();
+			foreach ( IProcEventFilter filter in filters )
+			{
+				message.AddFilter( filter );
+			}
+
+			// Send the message.
+			SendMessage( message.ToBuffer() );
 		}
 
 		/// <summary>
@@ -866,7 +987,7 @@ namespace Simias.Client.Event
 				SendMessage( new IProcEventRegistration( localEndPoint, false ).ToBuffer() );
 			}
 
-			Shutdown( null );
+			Shutdown();
 			errorCallback = null;
 			localEndPoint = null;
 		}
@@ -885,6 +1006,7 @@ namespace Simias.Client.Event
 			
 				// Start a thread which will process the registration request.
 				Thread thread = new Thread( new ThreadStart( RegistrationService ) );
+				thread.IsBackground = true;
 				thread.Start();
 			}
 		}
@@ -897,116 +1019,17 @@ namespace Simias.Client.Event
 		/// to be removed.</param>
 		public void SetEvent( IProcEventAction action, IProcEventHandler handler )
 		{
-			// If the client hasn't registered with the server yet, queue this request for later.
-			if ( state == ClientState.Registering )
+			lock ( subscribeLock )
 			{
-				QueueEventAction( action, handler );
-			}
-			else if ( state == ClientState.Running )
-			{
-				bool duplicateSubscriber = false;
+				// Queue the event so that if the client is not connected to the server, the event
+				// can be registered after the connection is made.
+				eventActionQueue.Enqueue( new EventActionQueueItem( action, handler ) );
 
-				// Build the listener message.
-				IProcEventListener message = new IProcEventListener();
-				message.AddEvent( action );
-
-				// Set the handler for the proper event type.
-				switch ( action )
+				// Only let through if connected.
+				if ( state == ClientState.Running )
 				{
-					case IProcEventAction.AddNodeCreated:
-					{
-						duplicateSubscriber = ( onCreatedNodeEvent != null ) ? true : false;
-						onCreatedNodeEvent += handler;
-						break;
-					}
-
-					case IProcEventAction.AddNodeDeleted:
-					{
-						duplicateSubscriber = ( onDeletedNodeEvent != null ) ? true : false;
-						onDeletedNodeEvent += handler;
-						break;
-					}
-
-					case IProcEventAction.AddNodeChanged:
-					{
-						duplicateSubscriber = ( onChangedNodeEvent != null ) ? true : false;
-						onChangedNodeEvent += handler;
-						break;
-					}
-
-					case IProcEventAction.AddCollectionSync:
-					{
-						duplicateSubscriber = ( onCollectionSyncEvent != null ) ? true : false;
-						onCollectionSyncEvent += handler;
-						break;
-					}
-
-					case IProcEventAction.AddFileSync:
-					{
-						duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
-						onFileSyncEvent += handler;
-						break;
-					}
-
-					case IProcEventAction.AddNotifyMessage:
-					{
-						duplicateSubscriber = ( onNotifyEvent != null ) ? true : false;
-						onNotifyEvent += handler;
-						break;
-					}
-
-					case IProcEventAction.RemoveNodeCreated:
-					{
-						onCreatedNodeEvent -= handler;
-						duplicateSubscriber = ( onCreatedNodeEvent != null ) ? true : false;
-						break;
-					}
-
-					case IProcEventAction.RemoveNodeDeleted:
-					{
-						onDeletedNodeEvent -= handler;
-						duplicateSubscriber = ( onDeletedNodeEvent != null ) ? true : false;
-						break;
-					}
-
-					case IProcEventAction.RemoveNodeChanged:
-					{
-						onChangedNodeEvent -= handler;
-						duplicateSubscriber = ( onChangedNodeEvent != null ) ? true : false;
-						break;
-					}
-
-					case IProcEventAction.RemoveCollectionSync:
-					{
-						onCollectionSyncEvent -= handler;
-						duplicateSubscriber = ( onCollectionSyncEvent != null ) ? true : false;
-						break;
-					}
-
-					case IProcEventAction.RemoveFileSync:
-					{
-						onFileSyncEvent -= handler;
-						duplicateSubscriber = ( onFileSyncEvent != null ) ? true : false;
-						break;
-					}
-
-					case IProcEventAction.RemoveNotifyMessage:
-					{
-						onNotifyEvent -= handler;
-						duplicateSubscriber = ( onNotifyEvent != null ) ? true : false;
-						break;
-					}
+					SubscribeEvent( action, handler );
 				}
-
-				// Send the message if necessary.
-				if ( !duplicateSubscriber )
-				{
-					SendMessage( message.ToBuffer() );
-				}
-			}
-			else
-			{
-				ReportError( new ApplicationException( "The client is in an invalid state for this operation." ) );
 			}
 		}
 
@@ -1025,25 +1048,19 @@ namespace Simias.Client.Event
 		/// <param name="filters">An array of EventFilter objects.</param>
 		public void SetFilter( IProcEventFilter[] filters )
 		{
-			// If the client hasn't registered with the server yet, queue this request for later.
-			if ( state == ClientState.Registering )
+			// Need to synchronize between this thread and the registration thread
+			// so the filter always gets sent to the server.
+			lock ( subscribeLock )
 			{
-				QueueEventFilters( filters );
-			}
-			else if ( state == ClientState.Running )
-			{
-				IProcEventListener message = new IProcEventListener();
-				foreach ( IProcEventFilter filter in filters )
-				{
-					message.AddFilter( filter );
-				}
+				// Queue the event so that if the client is not connected to the server, 
+				// the event can be registered after the connection is made.
+				eventFilterQueue.Enqueue( filters );
 
-				// Send the message.
-				SendMessage( message.ToBuffer() );
-			}
-			else
-			{
-				ReportError( new ApplicationException( "The client is in an invalid state for this operation." ) );
+				// See if the filter can be set right away.
+				if ( state == ClientState.Running )
+				{
+					SubscribeFilter( filters );
+				}
 			}
 		}
 		#endregion
