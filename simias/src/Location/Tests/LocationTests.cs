@@ -31,6 +31,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Location;
+using Simias.Service;
 
 namespace Simias.Location.Tests
 {
@@ -99,6 +100,11 @@ namespace Simias.Location.Tests
 			Collection collection = new Collection(store, "Location 2");
 			collection.Commit();
 
+			// start services
+			Manager manager = new Manager(config);
+
+			manager.StartServices();
+
 			// locate collection
 			LocationService service = new LocationService(config);
 
@@ -113,6 +119,8 @@ namespace Simias.Location.Tests
 			service.Unregister(collection.ID);
 
 			store.Dispose();
+
+			manager.StopServices();
 		}
 	}
 }

@@ -16,8 +16,8 @@ LocationTests_CSFILES_CSC := $(subst /,$(SEP),$(LocationTests_CSFILES))
 LocationTests_INCLUDES = 
 LocationTests_RESOURCES =
 LocationTests_FLAGS = $(CSC_LIBFLAG)
-LocationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll Location.dll nunit.util.dll nunit.framework.dll
-LocationTests_LIBPATH = $(NUNIT_LIBPATH) ../Common ../CollectionStore ../SyncCommon
+LocationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll Location.dll nunit.util.dll nunit.framework.dll Simias.Service.dll
+LocationTests_LIBPATH = $(NUNIT_LIBPATH) ../Common ../CollectionStore ../SyncCommon ../Service
 
 EXTRA_DIST = $(Location_CSFILES) $(LocationTests_CSFILES)
 

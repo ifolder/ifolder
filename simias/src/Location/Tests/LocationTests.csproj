@@ -104,6 +104,11 @@
                     Project = "{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Service"
+                    Project = "{CD27F275-744D-482D-A4C6-CCDCC64E2A83}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
