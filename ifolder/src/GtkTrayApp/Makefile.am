@@ -49,7 +49,7 @@ INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
 DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/collection-browser.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/crash-report.glade $(srcdir)/reunion-browser.glade $(srcdir)/ifolder-browser.glade $(srcdir)/collection.png $(srcdir)/Node.png $(srcdir)/Tombstone.png $(srcdir)/BaseContact.png $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/file.png $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/nuke.png
 
-EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_BIN_FILES) $(INSTALL_LIB_FILES)
+EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(ReunionBrowserGtk_CSFILES) $(iFolderBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_BIN_FILES) $(INSTALL_LIB_FILES)
 
 all: iFolderGtkApp.exe InvitationWizard.exe CollectionBrowser.exe ReunionBrowser.exe iFolderBrowser.exe
 
