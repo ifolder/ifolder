@@ -148,8 +148,15 @@ internal class IncomingNode
 		{
 			// make sure parent directory exists for temporary file
 			if ((path = ParentPath(collection, node)) == null)
-				throw new SimiasException("could not get parent path of incoming FileNode");
-			Directory.CreateDirectory(path);
+			{
+				// This is ok if the node is store managed.
+				if (!collection.IsType(node, typeof(StoreFileNode).Name))
+					throw new SimiasException("could not get parent path of incoming FileNode");
+			}
+			else
+			{
+				Directory.CreateDirectory(path);
+			}
 			this.node = SyncOps.CastToBaseFileNode(collection, node);
 		}
 		else
