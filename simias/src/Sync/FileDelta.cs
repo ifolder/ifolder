@@ -117,7 +117,7 @@ namespace Simias.Sync
 		{
 			Close (false);
 		}
-
+		
 		#endregion
 
 		#region private methods.
@@ -377,6 +377,18 @@ namespace Simias.Sync
 			this.nodeID = node.ID;
 			this.file = node.GetFullPath(collection);
 			this.workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + node.ID);
+		}
+
+		#endregion
+
+		#region public methods.
+
+		/// <summary>
+		/// Get the file name.
+		/// </summary>
+		public string Name
+		{
+			get { return Path.GetFileName(file); }
 		}
 
 		#endregion

@@ -568,6 +568,7 @@ namespace Simias.Sync.Client
 					continue;
 				}
 			}
+			log.Debug("GetNodeStamps returning {0} stamps", stampList.Count);
 			return (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
 		}
 			
@@ -622,6 +623,7 @@ namespace Simias.Sync.Client
 			}
 			catch
 			{
+				log.Debug("Could not get changes");
 			}
 			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
 			eventContext = logReader.GetEventContext();
@@ -836,6 +838,7 @@ namespace Simias.Sync.Client
 			// remove deleted nodes from client
 			if (killOnClient.Count > 0)
 			{
+				log.Info("Deleting {0} nodes on client", killOnClient.Count);
 				string[] idList = new string[killOnClient.Count];
 				killOnClient.Keys.CopyTo(idList, 0);
 				foreach (string id in idList)
@@ -907,6 +910,7 @@ namespace Simias.Sync.Client
 			// get small nodes and files from server
 			if (nodesFromServer.Count > 0)
 			{
+				log.Info("Downloading {0} Nodes from server", nodesFromServer.Count);
 				string[] nodeIDs = new string[nodesFromServer.Count];
 				nodesFromServer.Keys.CopyTo(nodeIDs, 0);
 				
@@ -951,7 +955,7 @@ namespace Simias.Sync.Client
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(sn.node);
 				Node node = Node.NodeFactory(store, xNode);
-				log.Info("Updating {0} {1} from server", node.Name, node.Type);
+				log.Info("Importing {0} {1} from server", node.Type, node.Name);
 				Import(node);
 				commitList[i++] = node;
 			}
@@ -1009,6 +1013,7 @@ namespace Simias.Sync.Client
 			// get small nodes and files from server
 			if (dirsFromServer.Count > 0)
 			{
+				log.Info("Downloading {0} Directories from server", dirsFromServer.Count);
 				string[] nodeIDs = new string[dirsFromServer.Count];
 				dirsFromServer.Keys.CopyTo(nodeIDs, 0);
 				
@@ -1065,7 +1070,7 @@ namespace Simias.Sync.Client
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(snode.node);
 				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
-				log.Info("Updating {0} {1} from server", node.Name, node.Type);
+				log.Info("Importing Directory {0} from server", node.Type);
 				Import(node);
 			
 				// Get the old node to see if the node was renamed.
@@ -1110,6 +1115,7 @@ namespace Simias.Sync.Client
 			if (filesFromServer.Count == 0)
 				return;
 
+			log.Info("Downloading {0} Files from server", dirsFromServer.Count);
 			string[] nodeIDs = new string[filesFromServer.Count];
 			filesFromServer.Keys.CopyTo(nodeIDs, 0);
 
@@ -1128,19 +1134,21 @@ namespace Simias.Sync.Client
 					bool success = false;
 					try
 					{
+						log.Info("Downloading File {0} To server", file.Name);
 						success = file.DownLoadFile();
 					}
 					finally
 					{
 						success = file.Close(success);
-					}
-					if (success)
-					{
-						filesFromServer.Remove(nodeID);
-					}
-					else
-					{
-						SyncComplete = false;
+						if (success)
+						{
+							filesFromServer.Remove(nodeID);
+						}
+						else
+						{
+							SyncComplete = false;
+							log.Info("Failed Downloading File {0}", file.Name);
+						}
 					}
 				}
 				catch {}
@@ -1157,6 +1165,7 @@ namespace Simias.Sync.Client
 			{
 				try
 				{
+					log.Info("Deleting {0} Nodes on server", killOnServer.Count);
 					string[] idList = new string[killOnServer.Count];
 					killOnServer.Keys.CopyTo(idList, 0);
 					SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
@@ -1196,9 +1205,9 @@ namespace Simias.Sync.Client
 		{
 			// get small nodes and files from server
 			if (nodesToServer.Count == 0)
-			{
 				return;
-			}
+
+			log.Info("Uploading {0} Nodes To server", nodesToServer.Count);
 			string[] nodeIDs = new string[nodesToServer.Count];
 			nodesToServer.Keys.CopyTo(nodeIDs, 0);
 				
@@ -1219,7 +1228,7 @@ namespace Simias.Sync.Client
 					Node node = collection.GetNodeByID(nodeIDs[i]);
 					if (node != null)
 					{
-						log.Info("Updating {0} {1} to server", node.Name, node.Type);
+						log.Info("Uploading {0} {1} to server", node.Type, node.Name);
 						nodes[i - offset] = node;
 						SyncNode snode = new SyncNode();
 						snode.node = node.Properties.ToString(true);
@@ -1266,9 +1275,9 @@ namespace Simias.Sync.Client
 		{
 			// get small nodes and files from server
 			if (dirsToServer.Count == 0)
-			{
 				return;
-			}
+			
+			log.Info("Uploading {0} Directories To server", dirsToServer.Count);
 			string[] nodeIDs = new string[dirsToServer.Count];
 			dirsToServer.Keys.CopyTo(nodeIDs, 0);
 				
@@ -1284,7 +1293,7 @@ namespace Simias.Sync.Client
 					Node node = collection.GetNodeByID(nodeIDs[i]);
 					if (node != null)
 					{
-						log.Info("Updating {0} {1} to server", node.Name, node.Type);
+						log.Info("Uploading Directory {1} to server", node.Name);
 						nodes[i - offset] = node;
 						SyncNode snode = new SyncNode();
 						snode.node = node.Properties.ToString(true);
@@ -1311,14 +1320,14 @@ namespace Simias.Sync.Client
 						case SyncStatus.UpdateConflict:
 						case SyncStatus.FileNameConflict:
 							// The file has been changed on the server lets get it next pass.
-							log.Debug("Skipping update of node {0} due to {1} on server",
+							log.Debug("Failed update of node {0} due to {1} on server",
 								status.nodeID, status.status);
 									
 							nodesFromServer.Add(node.ID, node.Type);
 							nodesToServer.Remove(node.ID);
 							break;
 						default:
-							log.Debug("Skipping update of node {0} due to {1} on server",
+							log.Debug("Failed update of node {0} due to {1} on server",
 								status.nodeID, status.status);
 							SyncComplete = false;
 							break;
@@ -1332,6 +1341,7 @@ namespace Simias.Sync.Client
 			if (filesToServer.Count == 0)
 				return;
 
+			log.Info("Uploading {0} Files To server", filesToServer.Count);
 			string[] nodeIDs = new string[filesToServer.Count];
 			filesToServer.Keys.CopyTo(nodeIDs, 0);
 
@@ -1353,23 +1363,27 @@ namespace Simias.Sync.Client
 						bool success = false;
 						try
 						{
+							log.Info("Uploading File {0} To server", file.Name);
 							success = file.UploadFile();
 						}
 						finally
 						{
 							success = file.Close(success);
-						}
-						if (success)
-						{
-							filesToServer.Remove(nodeID);
-						}
-						else
-						{
-							SyncComplete = false;
+							if (success)
+							{
+								filesToServer.Remove(nodeID);
+							}
+							else
+							{
+								SyncComplete = false;
+								log.Info("Failed Uploading File {0}", file.Name);
+							}
 						}
 					}
 				}
-				catch {}
+				catch 
+				{
+				}
 			}
 		}
 	}
