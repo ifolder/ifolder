@@ -306,6 +306,7 @@ public class SyncService
 				if (!si.ChangesOnly)
 				{
 					// We need to get all of the nodes.
+					si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
 					nodes = GetNodeStamps();
 					if (nodes.Length == 0)
 					{
