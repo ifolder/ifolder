@@ -134,19 +134,15 @@ namespace Novell.iFolder
 					"Paul Thomas",
 					"Russ Young",
 				};
-				string[] documentors = new string[]
-				{
-					"Catherine Craft",
-					"Sean Beall"
-				};
 
 				About about = new About("iFolder", "0.10",
 										"Copyright (C) 2004 Novell, Inc.",
 										"The iFolder Project is a file sharing solution for workgroup environments. The project is built on the mono/.Net framework to integrate seamlessly into existing desktop environments.",
 										authors,
-										documentors,
-										"iFolder is not translated yet",
-										null);
+										null,
+										null,
+										new Gdk.Pixbuf(Util.ImagesPath(
+											"ifolder-about.png")));
 				about.Show();
 			}
 			catch(Exception e)
