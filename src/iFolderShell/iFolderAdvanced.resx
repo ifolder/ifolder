@@ -4120,4 +4120,13 @@
 	<data name="userProperties">
 		<value>Properties for {0}</value>
 	</data>
+	<data name="helpFileError">
+		<value>An error was encountered while opening the help file.</value>
+	</data>
+	<data name="conflictDialogError">
+		<value>An error was encountered while attempting to display the Conflict Resolver dialog.</value>
+	</data>
+	<data name="propertiesDialogError">
+		<value>An error was encountered while attempting to display the iFolder properties dialog.</value>
+	</data>
 </root>

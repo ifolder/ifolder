@@ -115,6 +115,7 @@ namespace Novell.iFolderCom
 		static private long ticks = 0;
 		static private readonly long delta = 50000000; // 5 seconds
 
+		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
 
 //		public iFolderComponent(Uri location)
 //		{
@@ -185,8 +186,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine("Caught exception");
-				//logger.Debug(e, "CanBeiFolder");
+				System.Diagnostics.Debug.WriteLine("Caught exception - " + e.Message);
 			}
 
 			return false;
@@ -225,8 +225,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine("Caught exception");
-				//logger.Debug(e, "IsiFolder");
+				System.Diagnostics.Debug.WriteLine("Caught exception - " + e.Message);
 			}
 
 			return ifolder != null;
@@ -257,7 +256,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
+				System.Diagnostics.Debug.WriteLine("Caught exception - " + e.Message);
 			}
 
 			return (ifolder != null);
@@ -290,7 +289,7 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				//logger.Debug(e, "DeleteiFolderByPath");
+				System.Diagnostics.Debug.WriteLine("Caught exception - " + e.Message);
 			}
 		}
 
@@ -303,8 +302,7 @@ namespace Novell.iFolderCom
 		/// <param name="modal">Set to <b>true</b> to display the dialog modal.</param>
 		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, int tabPage, bool modal)
 		{
-			// TODO: Localize
-			string windowName = "iFolder Properties for " + Path.GetFileName(path);
+			string windowName = string.Format(resourceManager.GetString("iFolderProperties"), Path.GetFileName(path));
 
 			// Search for existing window and bring it to foreground ...
 			Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
@@ -335,8 +333,10 @@ namespace Novell.iFolderCom
 				}
 				catch (WebException e)
 				{
-					// TODO: Localize
-					MessageBox.Show("An error was encountered while attempting to display the iFolder properties dialog.");
+					MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("propertiesDialogError");
+					mmb.ShowDialog();
+
 					if (e.Status == WebExceptionStatus.ConnectFailure)
 					{
 						ifWebService = null;
@@ -344,8 +344,9 @@ namespace Novell.iFolderCom
 				}
 				catch (Exception e)
 				{
-					// TODO: Localize
-					MessageBox.Show("An error was encountered while attempting to display the iFolder properties dialog.");
+					MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("propertiesDialogError");
+					mmb.ShowDialog();
 				}
 			}
 		}
@@ -366,15 +367,11 @@ namespace Novell.iFolderCom
 				conflictResolver.LoadPath = dllPath;
 				conflictResolver.Show();		
 			}
-			catch (WebException e)
+			catch
 			{
-				// TODO: Localize
-				MessageBox.Show("An error was encountered while attempting to display the Conflict Resolver dialog.");
-			}
-			catch (Exception e)
-			{
-				// TODO: Localize
-				MessageBox.Show("An error was encountered while attempting to display the Conflict Resolver dialog.");
+				MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("conflictDialogError");
+				mmb.ShowDialog();
 			}
 		}
 
@@ -415,7 +412,7 @@ namespace Novell.iFolderCom
 		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath)
 		{
 			// TODO - may need to pass in a specific page to load.
-			// TODO - need to use locale-specific path
+			// TODO: i18n - need to use locale-specific path
 			string helpPath = Path.Combine(dllPath, @"help\en\doc\user\data\front.html");
 
 			try
@@ -424,8 +421,9 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception e)
 			{
-				// TODO: Localize.
-				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
+				MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("helpFileError") + "\n" + helpPath;
+				mmb.ShowDialog();
 			}
 		}
 

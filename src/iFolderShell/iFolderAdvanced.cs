@@ -45,7 +45,7 @@ namespace Novell.iFolderCom
 		private const string member = "Member";
 		private const string inviting = "Inviting";
 		private const double megaByte = 1048576;
-		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
+		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
