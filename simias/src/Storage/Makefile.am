@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Storage_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Syntax.cs $(srcdir)/XmlTags.cs $(srcdir)/BaseSchema.cs
 Storage_CSFILES_CSC := $(subst /,$(SEP),$(Storage_CSFILES))
 Storage_INCLUDES = 
