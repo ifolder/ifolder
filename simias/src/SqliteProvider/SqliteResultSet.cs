@@ -34,14 +34,16 @@ namespace Simias.Storage.Provider.Sqlite
 	public class SqliteResultSet : MarshalByRefObject, IResultSet
 	{
 		private bool AlreadyDisposed = false;
+		private bool includeCid;
 		IDataReader	Reader;
 		
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="reader">IDataReader to read the data from this resultset.</param>
-		public SqliteResultSet(IDataReader reader)
+		public SqliteResultSet(IDataReader reader, bool includeCid)
 		{
+			this.includeCid = includeCid;
 			Reader = reader;
 			if (Reader != null)
 			{
@@ -96,15 +98,25 @@ namespace Simias.Storage.Provider.Sqlite
 						string id = Reader[0].ToString();
 						string name = Reader[1].ToString();
 						string type = Reader[2].ToString();
+						string cid;
+						if (includeCid)
+						{
+							cid = string.Format(" {0}=\"{1}\"", XmlTags.CIdAttr, Reader[3].ToString());
+						}
+						else
+						{
+							cid = "";
+						}
 
-						string objectXml = string.Format("<{0} {1}=\"{2}\" {3}=\"{4}\" {5}=\"{6}\"/>", 
+						string objectXml = string.Format("<{0} {1}=\"{2}\" {3}=\"{4}\" {5}=\"{6}\"{7}/>", 
 								XmlTags.ObjectTag,
 								XmlTags.IdAttr,
 								id,
 								XmlTags.NameAttr,
 								name,
 								XmlTags.TypeAttr,
-								type);
+								type,
+								cid);
 
 						stringLen = objectXml.Length;
 						if (length > stringLen)
