@@ -24,8 +24,7 @@ using System;
 using System.Collections;
 using System.Net;
 using Simias;
-//using Simias.Client;
-using Simias.Domain;
+using Simias.DomainServices;
 using Simias.Event;
 using Simias.Storage;
 using Simias.Sync;
@@ -250,7 +249,7 @@ namespace Simias.Authentication
 				else
 				{
 					cDomain = this.store.GetDomain(this.domainID);
-					cMember = cDomain.Roster.GetMemberByID(this.memberID);
+					cMember = cDomain.GetMemberByID(this.memberID);
 				}
 
 				//

@@ -288,7 +288,7 @@ namespace Simias.Storage
 			get 
 			{ 
 				// POBox objects have a different sync interval than regular collections.
-				return ( IsType( this, typeof( POBox.POBox ).Name ) ) ?
+				return IsBaseType( this, NodeTypes.POBoxType ) ?
 					InviteInterval.Get( GetCurrentMember(), this ).Interval :
 					SyncInterval.Get( GetCurrentMember(), this ).Interval; 
 			}
@@ -1242,8 +1242,12 @@ namespace Simias.Storage
 					rCollection = new LocalDatabase( store, shallowNode );
 					break;
 
-				case "Roster":
-					rCollection = new Roster( store, shallowNode );
+				case "Domain":
+					rCollection = new Domain( store, shallowNode );
+					break;
+
+				case "POBox":
+					rCollection = new POBox.POBox( store, shallowNode );
 					break;
 
 				default:

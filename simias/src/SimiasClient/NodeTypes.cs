@@ -82,9 +82,19 @@ namespace Simias.Client
 			Member,
 
 			/// <summary>
+			/// Message
+			/// </summary>
+			Message,
+
+			/// <summary>
 			/// Node
 			/// </summary>
 			Node,
+
+			/// <summary>
+			/// POBox
+			/// </summary>
+			POBox,
 
 			/// <summary>
 			/// Policy
@@ -92,14 +102,14 @@ namespace Simias.Client
 			Policy,
 
 			/// <summary>
-			/// Roster
-			/// </summary>
-			Roster,
-
-			/// <summary>
 			/// StoreFileNode
 			/// </summary>
 			StoreFileNode,
+
+			/// <summary>
+			/// Subscription
+			/// </summary>
+			Subscription,
 
 			/// <summary>
 			/// Tombstone
@@ -188,11 +198,27 @@ namespace Simias.Client
 		}
 
 		/// <summary>
+		/// Gets the Message class name.
+		/// </summary>
+		static public string MessageType
+		{
+			get { return classNames[ 9 ]; }
+		}
+
+		/// <summary>
 		/// Gets the Node class name.
 		/// </summary>
 		static public string NodeType
 		{
-			get { return classNames[ 9 ]; }
+			get { return classNames[ 10 ]; }
+		}
+
+		/// <summary>
+		/// Gets the POBox class name.
+		/// </summary>
+		static public string POBoxType
+		{
+			get { return classNames[ 11 ]; }
 		}
 
 		/// <summary>
@@ -200,15 +226,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string PolicyType
 		{
-			get { return classNames[ 10 ]; }
-		}
-
-		/// <summary>
-		/// Gets the Roster class name.
-		/// </summary>
-		static public string RosterType
-		{
-			get { return classNames[ 11 ]; }
+			get { return classNames[ 12 ]; }
 		}
 
 		/// <summary>
@@ -216,7 +234,15 @@ namespace Simias.Client
 		/// </summary>
 		static public string StoreFileNodeType
 		{
-			get { return classNames[ 12 ]; }
+			get { return classNames[ 13 ]; }
+		}
+
+		/// <summary>
+		/// Gets the Subscription class name.
+		/// </summary>
+		static public string SubscriptionType
+		{
+			get { return classNames[ 14 ]; }
 		}
 
 		/// <summary>
@@ -224,7 +250,7 @@ namespace Simias.Client
 		/// </summary>
 		static public string TombstoneType
 		{
-			get { return classNames[ 13 ]; }
+			get { return classNames[ 15 ]; }
 		}
 		#endregion
 
@@ -243,10 +269,12 @@ namespace Simias.Client
 										  "LinkNode",
 										  "LocalDatabase",
 										  "Member",
+										  "Message",
 										  "Node",
+										  "POBox",
 										  "Policy",
-										  "Roster",
 										  "StoreFileNode",
+										  "Subscription",
 										  "Tombstone" };
 		}
 		#endregion

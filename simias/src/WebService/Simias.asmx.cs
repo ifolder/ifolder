@@ -38,7 +38,7 @@ using Novell.Security.ClientPasswordManager;
 
 using Simias;
 using Simias.Client;
-using Simias.Domain;
+using Simias.DomainServices;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Security.Web.AuthenticationService;
@@ -188,14 +188,7 @@ namespace Simias.Web
 				return  new Simias.Authentication.Status( 
 					Simias.Authentication.StatusCodes.UnknownDomain );
 
-			Roster roster = domain.Roster;
-			// There is no authentication error for this but UnknownUser
-			// is good because without the roster, no users are known
-			if(domain == null)
-				return  new Simias.Authentication.Status( 
-					Simias.Authentication.StatusCodes.UnknownUser );
-	
-			Member member = roster.GetCurrentMember();
+			Member member = domain.GetCurrentMember();
 			if(member == null)
 				return  new Simias.Authentication.Status( 
 					Simias.Authentication.StatusCodes.UnknownUser );
@@ -303,11 +296,11 @@ namespace Simias.Web
 			{
 				Store store = Store.GetStore();
 
-				// roster
-				Roster roster = store.GetRoster(domainID);
+				// domain
+				Domain domain = store.GetDomain(domainID);
 
 				// find user
-				Member cMember = roster.GetMemberByID(memberID);
+				Member cMember = domain.GetMemberByID(memberID);
 
 				NetCredential cCreds = 
 					new NetCredential("iFolder", domainID, true, cMember.Name, null);
@@ -527,16 +520,6 @@ namespace Simias.Web
 		public string ID;
 
 		/// <summary>
-		/// Domain Roster (Member List) Collection ID
-		/// </summary>
-		public string RosterID;
-
-		/// <summary>
-		/// Domain Roster (Member List) Collection Name
-		/// </summary>
-		public string RosterName;
-
-		/// <summary>
 		/// The unique member/user ID.
 		/// </summary>
 		public string MemberUserID;
@@ -586,9 +569,8 @@ namespace Simias.Web
 		{
 			Store store = Store.GetStore();
 
-			Simias.Storage.Domain cDomain = store.GetDomain(domainID);
-			Roster cRoster = cDomain.Roster;
-			Member cMember = cRoster.GetCurrentMember();
+			Domain cDomain = store.GetDomain(domainID);
+			Member cMember = cDomain.GetCurrentMember();
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
 			this.POBoxID = ( poBox != null ) ? poBox.ID : "";
@@ -597,15 +579,12 @@ namespace Simias.Web
 			this.ID = domainID;
 			this.Name = cDomain.Name;
 			this.Description = cDomain.Description;
-			this.RosterID = cRoster.ID;
-			this.RosterName = cRoster.Name;
-			this.RosterID = cRoster.ID;
 			this.MemberUserID = cMember.UserID;
 			this.MemberName = cMember.Name;
 			this.RemoteUrl = 
 				cDomain.HostAddress.ToString() + "/DomainService.asmx";
 			this.Host = cDomain.HostAddress.ToString();
-			this.IsSlave = cRoster.Role.Equals(Simias.Sync.SyncRoles.Slave);
+			this.IsSlave = cDomain.Role.Equals(Simias.Sync.SyncRoles.Slave);
 			this.IsDefault = domainID.Equals(store.DefaultDomain);
 		}
 
@@ -624,8 +603,6 @@ namespace Simias.Web
 			builder.AppendFormat("  Type             : {0}{1}", this.Type.ToString(), newLine);
 			builder.AppendFormat("  Name             : {0}{1}", this.Name, newLine);
 			builder.AppendFormat("  Description      : {0}{1}", this.Description, newLine);
-			builder.AppendFormat("  Roster ID        : {0}{1}", this.RosterID, newLine);
-			builder.AppendFormat("  Roster Name      : {0}{1}", this.RosterName, newLine);
 			builder.AppendFormat("  Member User ID   : {0}{1}", this.MemberUserID, newLine);
 			builder.AppendFormat("  Member Node Name : {0}{1}", this.MemberName, newLine);
 			builder.AppendFormat("  Remote Url       : {0}{1}", this.RemoteUrl, newLine);

@@ -44,7 +44,7 @@ using PostOffice = Simias.POBox;
 using SCodes = Simias.Authentication.StatusCodes;
 
 
-namespace Simias.Domain
+namespace Simias.DomainServices
 {
 	/// <summary>
 	/// Class used to assist in configuring the domain.
@@ -327,37 +327,54 @@ namespace Simias.Domain
 		#endregion
 
 		#region Private Methods
-		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info)
+		private void CreateDomainProxy(Store store, string userID, DomainInfo info, Uri hostAddress)
 		{
-			// Create a new roster
-			Roster roster = new Roster(store, info.RosterID, domain);
-			roster.Proxy = true;
-			
-			// Create roster member.
-			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
-			Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
-			member.Proxy = true;
-			member.IsOwner = true;
+			// Make sure the domain doesn't exist.
+			if (store.GetCollectionByID(info.ID) == null)
+			{
+				log.Debug("Creating Domain Proxy: {0}", info.Name);
 
-			// commit
-			roster.Commit( new Node[] { roster, member } );
+				// Create a new domain
+				Domain domain = new Domain(store, info.Name, info.ID, info.Description, SyncRoles.Slave, hostAddress);
+				domain.Proxy = true;
+				domain.SetType( domain, "Enterprise" );
+			
+				// Mark the domain inactive until we get the POBox created
+				Property p = new Property( activePropertyName, false );
+				p.LocalProperty = true;
+				domain.Properties.ModifyNodeProperty( p );
+
+				// Create domain member.
+				Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
+				Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
+				member.Proxy = true;
+				member.IsOwner = true;
+
+				// commit
+				domain.Commit( new Node[] { domain, member } );
+			}
 		}
 
 		private void CreatePOBoxProxy(Store store, string domainID, ProvisionInfo info)
 		{
-			// Create a new POBox
-			PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
-			poBox.Priority = 0;
-			poBox.Proxy = true;
+			if (store.GetCollectionByID(info.POBoxID) == null)
+			{
+				log.Debug( "Creating PO Box Proxy: {0}", info.POBoxName );
+
+				// Create a new POBox
+				PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
+				poBox.Priority = 0;
+				poBox.Proxy = true;
 			
-			// Create member.
-			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
-			Member member = new Member( info.MemberNodeName, info.MemberNodeID, info.UserID, rights, null );
-			member.Proxy = true;
-			member.IsOwner = true;
+				// Create member.
+				Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
+				Member member = new Member( info.MemberNodeName, info.MemberNodeID, info.UserID, rights, null );
+				member.Proxy = true;
+				member.IsOwner = true;
 			
-			// commit
-			poBox.Commit( new Node[] { poBox, member } );
+				// commit
+				poBox.Commit( new Node[] { poBox, member } );
+			}
 		}
 
 		/// <summary>
@@ -525,8 +542,7 @@ namespace Simias.Domain
 				string defaultDomain = null;
 
 				// Set the new default domain.
-				LocalDatabase ldb = store.GetDatabaseObject();
-				ICSList dList = ldb.GetNodesByType(NodeTypes.DomainType);
+				ICSList dList = store.GetDomainList();
 				foreach(ShallowNode sn in dList)
 				{
 					// Find the first domain that is not the one being deleted or is the
@@ -539,8 +555,7 @@ namespace Simias.Domain
 				}
 
 				// Set the new default domain.
-				ldb.DefaultDomain = defaultDomain;
-				ldb.Commit();
+				store.DefaultDomain = defaultDomain;
 			}
 
 			// Get a list of all the collections that belong to this domain and delete them.
@@ -555,7 +570,7 @@ namespace Simias.Domain
 			store.DeleteDomainIdentity(domainID);
 
 			// Remove the domain entry from the configuration file.
-			DomainConfig domainConfig = new DomainConfig( domainID);
+			DomainConfig domainConfig = new DomainConfig(domainID);
 			domainConfig.Delete();
 		}
 		#endregion
@@ -629,69 +644,24 @@ namespace Simias.Domain
 			// get domain info
 			DomainInfo domainInfo = domainService.GetDomainInfo(provisionInfo.UserID);
 
-			// create domain node
-			Storage.Domain domain = 
-				store.AddDomainIdentity(
-					provisionInfo.UserID,
-					domainInfo.Name, 
-					domainInfo.ID, 
-					domainInfo.Description,
-					hostUri,
-					SyncRoles.Slave);
+			// Create domain proxy
+			CreateDomainProxy(store, provisionInfo.UserID, domainInfo, hostUri);
 
-			// set the default domain
-			//string previousDomain = store.DefaultDomain;
-			//store.DefaultDomain = domainInfo.ID;
+			// Create PO Box proxy
+			CreatePOBoxProxy(store, domainInfo.ID, provisionInfo);
 
-			try
-			{
-				if ( domain != null )
-				{
-					// Mark the domain inactive until we get the POBox and
-					// the Roster created
-					Property p = new Property( this.activePropertyName, false );
-					p.LocalProperty = true;
-					domain.Properties.ModifyProperty( p );
+			// create domain identity mapping.
+			store.AddDomainIdentity(domainInfo.ID, provisionInfo.UserID);
 
-					// Add a type to indicate that this is an enterprise domain.
-					store.LocalDb.SetType( domain, "Enterprise" );
+			// Set the host and port number in the configuration file.
+			DomainConfig domainConfig = new DomainConfig( domainInfo.ID );
+			domainConfig.SetAttributes( domainInfo.Name, domainInfo.Description, hostUri, true );
 
-					// Commit the changes to the domain object.
-					store.LocalDb.Commit( domain );
+			// authentication was successful - save the credentials
+			new NetCredential( "iFolder", domainInfo.ID, true, user, password );
 
-					// create roster if needed
-					if (store.GetCollectionByID( domainInfo.RosterID ) == null)
-					{
-						// create roster proxy
-						CreateRosterProxy( store, domain, provisionInfo.UserID, domainInfo );
-						log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
-					}
-
-					if (store.GetCollectionByID( provisionInfo.POBoxID ) == null)
-					{
-						// create PO Box proxy
-						CreatePOBoxProxy( store, domainInfo.ID, provisionInfo );
-						log.Debug( "Creating PO Box Proxy: {0}", provisionInfo.POBoxName );
-					}
-
-					// Set the host and port number in the configuration file.
-					DomainConfig domainConfig = new DomainConfig( domainInfo.ID );
-					domainConfig.SetAttributes( domain.Name, domain.Description, hostUri, true );
-
-					// authentication was successful - save the credentials
-					new NetCredential( "iFolder", domainInfo.ID, true, user, password );
-
-					// Domain is ready to sync
-					this.SetDomainActive( domain.ID );
-				}
-			}
-			catch(Exception e)
-			{
-				// restore the previous domain
-				//store.DefaultDomain = previousDomain;
-				throw e;
-			}
-
+			// Domain is ready to sync
+			this.SetDomainActive( domainInfo.ID );
 			return domainInfo.ID;
 		}
 
@@ -705,7 +675,7 @@ namespace Simias.Domain
 
 			try
 			{
-				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+				Domain cDomain = store.GetDomain( domainID );
 					
 				// Make sure this domain is a slave 
 				if ( cDomain.Role == SyncRoles.Slave )
@@ -738,7 +708,7 @@ namespace Simias.Domain
 		Login(string domainID, string user, string password)
 		{
 			Simias.Authentication.Status status = null;
-			Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+			Domain cDomain = store.GetDomain( domainID );
 			if ( cDomain != null )
 			{
 				if ( cDomain.Role == SyncRoles.Slave )
@@ -773,13 +743,13 @@ namespace Simias.Domain
 		{
 			try
 			{
-				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+				Domain cDomain = store.GetDomain( domainID );
 				if ( cDomain.Role == SyncRoles.Slave )
 				{
 					Property p = new Property( this.activePropertyName, true );
 					p.LocalProperty = true;
-					cDomain.Properties.ModifyProperty( p );
-					store.GetDatabaseObject().Commit( cDomain );
+					cDomain.Properties.ModifyNodeProperty( p );
+					cDomain.Commit();
 				}
 			}
 			catch( Exception e )
@@ -799,13 +769,13 @@ namespace Simias.Domain
 		{
 			try
 			{
-				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+				Domain cDomain = store.GetDomain( domainID );
 				if ( cDomain.Role == SyncRoles.Slave )
 				{
 					Property p = new Property( this.activePropertyName, false );
 					p.LocalProperty = true;
-					cDomain.Properties.ModifyProperty( p );
-					store.GetDatabaseObject().Commit( cDomain );
+					cDomain.Properties.ModifyNodeProperty( p );
+					cDomain.Commit();
 				}
 			}
 			catch( Exception e )

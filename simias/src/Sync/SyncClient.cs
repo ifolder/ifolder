@@ -37,6 +37,7 @@ using Simias.Service;
 using Simias.Event;
 using Simias.Client;
 using Simias.Client.Event;
+using Simias.DomainServices;
 
 
 namespace Simias.Sync
@@ -615,7 +616,7 @@ namespace Simias.Sync
 			// Make sure the master exists.
 			if (collection.CreateMaster)
 			{
-				new Simias.Domain.DomainAgent().CreateMaster(collection);
+				new DomainAgent().CreateMaster(collection);
 			}
 			
 			// Only syncronize local changes when we have finished with the 
@@ -1436,7 +1437,7 @@ namespace Simias.Sync
 						workArray.RemoveNodeFromServer(nodeID);
 					}
 				}
-				catch (DirectoryNotFoundException ex)
+				catch (DirectoryNotFoundException)
 				{
 					// The directory has been deleted.
 					workArray.RemoveNodeFromServer(nodeID);

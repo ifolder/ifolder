@@ -541,16 +541,16 @@ namespace Simias.Policy
 		/// <param name="domainID">Identifier of domain to associate Policy with.</param>
 		public void CommitPolicy( Policy policy, string domainID )
 		{
-			// Add a relationship property to the Roster object.
-			Roster roster = store.GetRoster( domainID );
-			if ( roster == null )
+			// Add a relationship property to the Domain object.
+			Domain domain = store.GetDomain( domainID );
+			if ( domain == null )
 			{
-				throw new CollectionStoreException( String.Format( "Roster does not exist for domain {0}.", domainID ) );
+				throw new CollectionStoreException( String.Format( "Domain {0} does not exist.", domainID ) );
 			}
 
 			policy.IsSystemPolicy = true;
-			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( roster ) );
-			roster.Commit( policy );
+			policy.Properties.ModifyNodeProperty( PropertyTags.PolicyAssociation, new Relationship( domain ) );
+			domain.Commit( policy );
 		}
 
 		/// <summary>
@@ -731,14 +731,14 @@ namespace Simias.Policy
 		{
 			Policy policy = null;
 
-			// Search the domain roster for the specified policy.
-			Roster roster = store.GetRoster( domainID );
-			if ( roster != null )
+			// Search the domain for the specified policy.
+			Domain domain = store.GetDomain( domainID );
+			if ( domain != null )
 			{
-				ICSList list = roster.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
+				ICSList list = domain.Search( PropertyTags.PolicyID, policyID, SearchOp.Equal );
 				foreach ( ShallowNode sn in list )
 				{
-					Policy tempPolicy = new Policy( roster, sn );
+					Policy tempPolicy = new Policy( domain, sn );
 					if ( tempPolicy.IsSystemPolicy )
 					{
 						policy = tempPolicy;
@@ -922,14 +922,14 @@ namespace Simias.Policy
 		{
 			ICSList policyList = new ICSList();
 
-			// Get the roster for the specified domain.
-			Roster roster = store.GetRoster( domainID );
-			if ( roster != null )
+			// Get the specified domain.
+			Domain domain = store.GetDomain( domainID );
+			if ( domain != null )
 			{
-				ICSList tempList = roster.Search( BaseSchema.ObjectType, NodeTypes.PolicyType, SearchOp.Equal );
+				ICSList tempList = domain.Search( BaseSchema.ObjectType, NodeTypes.PolicyType, SearchOp.Equal );
 				foreach ( ShallowNode sn in tempList )
 				{
-					Policy p = new Policy( roster, sn );
+					Policy p = new Policy( domain, sn );
 					if ( p.IsSystemPolicy )
 					{
 						policyList.Add( p );

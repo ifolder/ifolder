@@ -16,18 +16,17 @@ using System.Web.Services;
 using System.Web.Services.Protocols;
 
 using Simias;
-using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
 
-namespace Novell.iFolder.DomainService
+namespace Simias.DomainService
 {
 	/// <summary>
 	/// Domain Service
 	/// </summary>
 	[WebService(
-		Namespace="http://novell.com/ifolder/domain",
+		Namespace="http://novell.com/simias/domain",
 		Name="Domain Service",
 		Description="Web Service providing access to domain server functionality.")]
 	public class DomainService : System.Web.Services.WebService
@@ -64,11 +63,8 @@ namespace Novell.iFolder.DomainService
 			info.Name = domain.Name;
 			info.Description = domain.Description;
 			
-			info.RosterID = domain.Roster.ID;
-			info.RosterName = domain.Roster.Name;
-
 			// member info
-			Member member = domain.Roster.GetMemberByID( userID );
+			Member member = domain.GetMemberByID( userID );
 			if ( member != null )
 			{
 				info.MemberNodeName = member.Name;
@@ -105,14 +101,14 @@ namespace Novell.iFolder.DomainService
 			}
 
 			// find user
-			Member member = domain.Roster.GetMemberByName( user );
+			Member member = domain.GetMemberByName( user );
 			if (member != null)
 			{
 				info = new ProvisionInfo();
 				info.UserID = member.UserID;
 
 				// post-office box
-				POBox poBox = POBox.GetPOBox( Store.GetStore(), domain.ID, info.UserID );
+				POBox.POBox poBox = POBox.POBox.GetPOBox( Store.GetStore(), domain.ID, info.UserID );
 
 				info.POBoxID = poBox.ID;
 				info.POBoxName = poBox.Name;
@@ -162,13 +158,6 @@ namespace Novell.iFolder.DomainService
 			c.Proxy = true;
 			nodeList.Add(c);
 			
-			// Make sure that the caller is the current owner.
-			Roster roster = domain.Roster;
-			if (roster == null)
-			{
-				throw new SimiasException( "Roster does not exist for the SimpleServer domain." );
-			}
-
 			string existingUserID = Thread.CurrentPrincipal.Identity.Name;
 			// BUGBUG!! - Take this out
 			if (existingUserID.Length == 0)
@@ -176,10 +165,10 @@ namespace Novell.iFolder.DomainService
 				existingUserID = userID;
 			}
 			// BUGBUG!!
-			Member existingMember = roster.GetMemberByID(existingUserID);
+			Member existingMember = domain.GetMemberByID(existingUserID);
 			if (existingMember == null)
 			{
-				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the roster.", Thread.CurrentPrincipal.Identity.Name));
+				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
 			}
 
 			// Make sure the creator and the owner are the same ID.
@@ -249,12 +238,6 @@ namespace Novell.iFolder.DomainService
 
 			// Make sure that the caller is the current owner.
 			Store store = Store.GetStore();
-			Roster roster = domain.Roster;
-			if (roster == null)
-			{
-				throw new SimiasException(String.Format("Roster does not exist for domain.", domainID));
-			}
-
 			string existingUserID = Thread.CurrentPrincipal.Identity.Name;
 			// BUGBUG!! - Take this out
 			if (existingUserID.Length == 0)
@@ -262,10 +245,10 @@ namespace Novell.iFolder.DomainService
 				existingUserID = userID;
 			}
 			// BUGBUG!!
-			Member existingMember = roster.GetMemberByID(existingUserID);
+			Member existingMember = domain.GetMemberByID(existingUserID);
 			if (existingMember == null)
 			{
-				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the roster.", Thread.CurrentPrincipal.Identity.Name));
+				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
 			}
 
 			// Make sure the creator and the owner are the same ID.
@@ -278,8 +261,8 @@ namespace Novell.iFolder.DomainService
 			ICSList cList = store.GetCollectionsByUser(userID);
 			foreach (ShallowNode sn in cList)
 			{
-				// Don't remove the membership from the roster collection.
-				if (sn.ID != roster.ID)
+				// Don't remove the membership from the domain collection.
+				if (sn.ID != domainID)
 				{
 					// Remove the user as a member of this collection.
 					Collection c = new Collection(store, sn);

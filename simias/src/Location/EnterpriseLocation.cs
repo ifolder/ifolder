@@ -87,8 +87,8 @@ namespace Simias.Location
 		/// specified domain. Otherwise, False is returned.</returns>
 		public bool OwnsDomain( string domainID )
 		{
-			Storage.Domain domain = store.GetDomain( domainID );
-			return ( ( domain != null ) && store.LocalDb.IsType( domain, "Enterprise" ) ) ? true : false;
+			Domain domain = store.GetDomain( domainID );
+			return ( ( domain != null ) && domain.IsType( domain, "Enterprise" ) ) ? true : false;
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolveLocation( string domainID, string collectionID )
 		{
-			Storage.Domain domain = store.GetDomain( domainID );
+			Domain domain = store.GetDomain( domainID );
 			return ( OwnsDomain( domainID ) && ( domain != null ) ) ? domain.HostAddress : null;
 		}
 
@@ -120,7 +120,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolveLocation( string domainID, string userID, string collectionID )
 		{
-			Storage.Domain domain = store.GetDomain( domainID );
+			Domain domain = store.GetDomain( domainID );
 			return ( OwnsDomain( domainID ) && ( domain != null ) ) ? domain.HostAddress : null;
 		}
 
@@ -134,7 +134,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
-			Storage.Domain domain = store.GetDomain( domainID );
+			Domain domain = store.GetDomain( domainID );
 			return ( OwnsDomain( domainID ) && ( domain != null ) ) ? domain.HostAddress : null;
 		}
 		#endregion

@@ -22,16 +22,16 @@ using System.Web.Services;
 /// <remarks/>
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Web.Services.WebServiceBindingAttribute(Name="Domain ServiceSoap", Namespace="http://novell.com/ifolder/domain")]
+[System.Web.Services.WebServiceBindingAttribute(Name="Domain ServiceSoap", Namespace="http://novell.com/simias/domain")]
 public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtocol {
     
     /// <remarks/>
     public DomainService() {
-        this.Url = "http://localhost:8086/simias10/DomainService.asmx";
+        this.Url = "http://127.0.0.1:8086/simias10/DomainService.asmx";
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/GetDomainInfo", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/GetDomainInfo", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public DomainInfo GetDomainInfo(string userID) {
         object[] results = this.Invoke("GetDomainInfo", new object[] {
                     userID});
@@ -51,7 +51,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/ProvisionUser", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/ProvisionUser", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public ProvisionInfo ProvisionUser(string user, string password) {
         object[] results = this.Invoke("ProvisionUser", new object[] {
                     user,
@@ -73,7 +73,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/CreateMaster", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/CreateMaster", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public string CreateMaster(string collectionID, string collectionName, string rootDirID, string rootDirName, string userID, string memberName, string memberID, string memberRights) {
         object[] results = this.Invoke("CreateMaster", new object[] {
                     collectionID,
@@ -107,7 +107,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/domain/RemoveServerCollections", RequestNamespace="http://novell.com/ifolder/domain", ResponseNamespace="http://novell.com/ifolder/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/domain/RemoveServerCollections", RequestNamespace="http://novell.com/simias/domain", ResponseNamespace="http://novell.com/simias/domain", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public void RemoveServerCollections(string domainID, string userID) {
         this.Invoke("RemoveServerCollections", new object[] {
                     domainID,
@@ -128,7 +128,7 @@ public class DomainService : System.Web.Services.Protocols.SoapHttpClientProtoco
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/ifolder/domain")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/domain")]
 public class DomainInfo {
     
     /// <remarks/>
@@ -141,12 +141,6 @@ public class DomainInfo {
     public string ID;
     
     /// <remarks/>
-    public string RosterID;
-    
-    /// <remarks/>
-    public string RosterName;
-    
-    /// <remarks/>
     public string MemberNodeID;
     
     /// <remarks/>
@@ -157,7 +151,7 @@ public class DomainInfo {
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/ifolder/domain")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/domain")]
 public class ProvisionInfo {
     
     /// <remarks/>

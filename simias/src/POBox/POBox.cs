@@ -22,6 +22,9 @@
  ***********************************************************************/
 
 using System;
+using System.Xml;
+
+using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -98,15 +101,24 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Constructor to create an existing POBox object from an Xml document object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="document">Xml document object to construct this object from.</param>
+		internal POBox( Store storeObject, XmlDocument document ) :
+			base( storeObject, document )
+		{
+		}
+
+		/// <summary>
 		/// Constructor to create a POBox object.
 		/// </summary>
 		/// <param name="storeObject">The Store object that the POBox will belong to.</param>
 		/// <param name="collectionName">The name of the POBox.</param>
 		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
 		public POBox(Store storeObject, string collectionName, string domainName) :
-			base (storeObject, collectionName, domainName)
+			this (storeObject, collectionName, Guid.NewGuid().ToString(), domainName)
 		{
-			SetType(this, typeof(POBox).Name);
 		}
 
 		/// <summary>
@@ -117,9 +129,8 @@ namespace Simias.POBox
 		/// <param name="collectionID">The identifier of the POBox.</param>
 		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
 		internal POBox(Store storeObject, string collectionName, string collectionID, string domainName) :
-			base( storeObject, collectionName, collectionID, domainName )
+			base( storeObject, collectionName, collectionID, NodeTypes.POBoxType, domainName )
 		{
-			SetType(this, typeof(POBox).Name);
 		}
 
 		#endregion
@@ -194,8 +205,8 @@ namespace Simias.POBox
 				string name = "POBox:" + domainId + ":" + userId;
 				poBox = new POBox(storeObject, name, domainId);
 				
-				Roster roster = storeObject.GetRoster( domainId );
-				Member current = roster.GetMemberByID(userId);
+				Domain domain = storeObject.GetDomain( domainId );
+				Member current = domain.GetMemberByID(userId);
 
 				Member member = new Member(current.Name, current.UserID, Access.Rights.ReadWrite);
 				member.IsOwner = true;
@@ -214,15 +225,7 @@ namespace Simias.POBox
 		/// <returns>The POBox object.</returns>
 		public static POBox GetPOBoxByID(Store store, string id)
 		{
-			POBox poBox = null;
-			Collection collection = store.GetCollectionByID(id);
-	
-			if ((collection != null) && collection.IsType(collection, typeof(POBox).Name))
-			{
-				poBox = new POBox(store, collection);
-			}
-
-			return poBox;
+			return store.GetCollectionByID(id) as POBox;
 		}
 		
 		/// <summary>

@@ -308,31 +308,21 @@ namespace Simias.Storage
 					// object.
 					string userName = identity.Name;
 
-					// Get the member that is represented in the roster.
-					Roster roster = store.GetRoster( collection.Domain );
-					if ( roster != null )
+					// Get the member that is represented in the domain.
+					Domain domain = store.GetDomain( collection.Domain );
+					if ( domain != null )
 					{
-						// Find the member in the roster.
-						Member rosterMember = roster.GetMemberByID( userID );
-						if ( rosterMember != null )
+						// Find the member in the domain.
+						Member domainMember = domain.GetMemberByID( userID );
+						if ( domainMember != null )
 						{
-							userName = rosterMember.Name;
+							userName = domainMember.Name;
 						}
 					}
 
 					if ( createMember )
 					{
-						// If the userID is equal to the Identity ID, then the domain is the local workgroup
-						// and the public key must be used.
-						if ( userID == identity.ID )
-						{
-							member = new Member( userName, userID, Access.Rights.Admin, identity.PublicKey );
-						}
-						else
-						{
-							member = new Member( userName, userID, Access.Rights.Admin );
-						}
-
+						member = new Member( userName, userID, Access.Rights.Admin );
 						member.IsOwner = true;
 					}
 					else

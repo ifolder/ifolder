@@ -691,12 +691,11 @@ namespace Simias.Security.Web
 				Simias.Storage.Domain domain = store.GetDomain( domainID[0] );
 				if ( domain != null )
 				{
-					Roster roster = domain.Roster;
-					Member member = roster.GetMemberByID( authStatus.UserID );
+					Member member = domain.GetMemberByID( authStatus.UserID );
 					Property p = new Property( "LastLogin", DateTime.Now );
 					p.LocalProperty = true;
 					member.Properties.ModifyProperty( p );
-					roster.Commit( member );
+					domain.Commit( member );
 				}
 			}
 		}

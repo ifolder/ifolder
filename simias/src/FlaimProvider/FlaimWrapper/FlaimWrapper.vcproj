@@ -119,7 +119,7 @@ if exist $(IntDir)\$(TargetName).pdb copy $(IntDir)\$(TargetName).pdb $(Solution
 				OutputFile=".\Debug/FlaimWrapper.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\external\flaim\nt\debug&quot;"
+				AdditionalLibraryDirectories="C:\Dev\iFolder\simias\external\flaim\nt\release"
 				IgnoreDefaultLibraryNames="LIBCMTD.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/FlaimWrapper.pdb"

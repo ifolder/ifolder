@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace Simias.Domain
+namespace Simias.DomainService
 {
 	/// <summary>
 	/// Domain information
@@ -46,16 +46,6 @@ namespace Simias.Domain
 		/// Domain ID
 		/// </summary>
 		public string ID;
-
-		/// <summary>
-		/// Domain Roster (Member List) Collection ID
-		/// </summary>
-		public string RosterID;
-
-		/// <summary>
-		/// Domain Roster (Member List) Collection Name
-		/// </summary>
-		public string RosterName;
 
 		/// <summary>
 		/// The unique ID for the member node for this user.
@@ -93,8 +83,6 @@ namespace Simias.Domain
 			builder.AppendFormat("  ID               : {0}{1}", this.ID, newLine);
 			builder.AppendFormat("  Name             : {0}{1}", this.Name, newLine);
 			builder.AppendFormat("  Description      : {0}{1}", this.Description, newLine);
-			builder.AppendFormat("  Roster ID        : {0}{1}", this.RosterID, newLine);
-			builder.AppendFormat("  Roster Name      : {0}{1}", this.RosterName, newLine);
 			builder.AppendFormat("  Member Node ID   : {0}{1}", this.MemberNodeID, newLine);
 			builder.AppendFormat("  Member Node Name : {0}{1}", this.MemberNodeName, newLine);
 			builder.AppendFormat("  Member Rights    : {0}{1}", this.MemberRights, newLine);

@@ -62,9 +62,9 @@ namespace Simias.Storage
 		static private string ProxyDNTag = "ProxyDN";
 
 		/// <summary>
-		/// Default sync interval for the enterprise roster. Only synchronizes once a day.
+		/// Default sync interval for the enterprise domain. Only synchronizes once a day.
 		/// </summary>
-		static private int DefaultRosterSyncInterval = 86400;
+		static private int DefaultDomainSyncInterval = 86400;
 
 		/// <summary>
 		/// Default sync interval for the machine. Synchronizes every 5 minutes.
@@ -149,7 +149,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal LocalDatabase LocalDb
 		{
-			get { return GetNodeByID( localDb, localDb ) as LocalDatabase; }
+			get { return GetCollectionByID( localDb ) as LocalDatabase; }
 		}
 
 		/// <summary>
@@ -325,29 +325,25 @@ namespace Simias.Storage
 					Identity owner = new Identity( userName, Guid.NewGuid().ToString() );
 					identity = owner.ID;
 
+					// Create a credential to be used to identify the local user.
+					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
+					owner.AddDomainIdentity( identity, localDomainID, credential.ToXmlString( true ), CredentialType.PPK );
+
 					// Create a member object that will own the local database.
 					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 					member.IsOwner = true;
 
-					// Create the local domain and add an identity mapping.
-					Domain localDomain = new Domain( "Local", localDomainID, SyncRoles.Local );
-					localDomain.HostAddress = localUri;
-
-					// Create a credential to be used to identify the local user.
-					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
-					owner.AddDomainIdentity( owner.ID, localDomainID, credential.ToXmlString( true ), CredentialType.PPK );
-
 					// Save the local database changes.
-					ldb.Commit( new Node[] { ldb, member, owner, localDomain } );
+					ldb.Commit( new Node[] { ldb, member, owner } );
+
+					// Create the local domain.
+					Domain localDomain = new Domain( this, "Local", localDomainID, "Local Machine Domain", SyncRoles.Local, localUri );
+					Member localDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+					localDomainOwner.IsOwner = true;
+					localDomain.Commit( new Node[] { localDomain, localDomainOwner } );
 
 					// Create a SyncInterval policy.
 					SyncInterval.Create( DefaultMachineSyncInterval );
-
-					// Create an empty roster for the local domain.
-					Roster localRoster = new Roster( this, localDomain );
-					Member localRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
-					localRosterOwner.IsOwner = true;
-					localRoster.Commit( new Node[] { localRoster, localRosterOwner } );
 
 					// See if there is a configuration parameter for an enterprise domain.
 					if ( IsEnterpriseServer )
@@ -365,23 +361,22 @@ namespace Simias.Storage
 						// Check if there is a description for this enterprise domain.
 						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
 
-						// Create the new domain object and add the identity mapping.
-						Domain eDomain = new Domain( enterpriseName, enterpriseID, description, SyncRoles.Master );
-						eDomain.HostAddress = localUri;
-						owner.AddDomainIdentity( owner.ID, eDomain.ID );
+						// Create the enterprise domain.
+						Domain enterpriseDomain = new Domain( this, enterpriseName, enterpriseID, description, SyncRoles.Master, localUri );
+						enterpriseDomain.SetType( enterpriseDomain, "Enterprise" );
+						Member enterpriseDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+						enterpriseDomainOwner.IsOwner = true;
+						enterpriseDomain.Commit( new Node[] { enterpriseDomain, enterpriseDomainOwner } );
+
+						// Create the identity mapping.
+						owner.AddDomainIdentity( owner.ID, enterpriseID );
 
 						// Add the enterprise domain as the default domain.
-						ldb.DefaultDomain = eDomain.ID;
-						ldb.Commit( new Node[] { ldb, eDomain, owner } );
+						ldb.DefaultDomain = enterpriseID;
+						ldb.Commit( new Node[] { ldb, owner } );
 
-						// Create a domain roster that will contain the member of the domain.
-						Roster entRoster = new Roster( this, eDomain );
-						Member entRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
-						entRosterOwner.IsOwner = true;
-						entRoster.Commit( new Node[] { entRoster, entRosterOwner } );
-
-						// Create a default sync interval policy for this roster.
-						SyncInterval.Create( entRoster, DefaultRosterSyncInterval );
+						// Create a default sync interval policy for this domain.
+						SyncInterval.Create( enterpriseDomain, DefaultDomainSyncInterval );
 					}
 				}
 				catch ( Exception e )
@@ -578,54 +573,31 @@ namespace Simias.Storage
 		/// <summary>
 		/// Adds a domain identity to the Collection Store.
 		/// </summary>
-		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
-		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
-		/// <param name="domainDescription">String that describes the specified domain.</param>
-		/// <param name="domainHost">The URI of where the domain is hosted.</param>
-		/// <param name="role">The type of sync role for this domain.</param>
-		/// <returns>The created Domain object.</returns>
-		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost, SyncRoles role )
+		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
+		public void AddDomainIdentity( string domainID, string userID )
 		{
-			return AddDomainIdentity( userID, null, CredentialType.None, domainName, domainID, domainDescription, domainHost, role );
+			AddDomainIdentity( domainID, userID, null, CredentialType.None );
 		}
 
 		/// <summary>
 		/// Adds a domain identity to the Collection Store.
 		/// </summary>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
 		///	<param name="credentials">Credentials for the user. May be null.</param>
 		///	<param name="credType">Type of credentials being stored.</param>
-		/// <param name="domainName">Name of the domain.</param>
-		/// <param name="domainID">Well known identity for the specified domain.</param>
-		/// <param name="domainDescription">String that describes the specified domain.</param>
-		/// <param name="domainHost">The URI of where the domain is hosted.</param>
-		/// <param name="role">The type of sync role for this domain.</param>
-		/// <returns>The created Domain object.</returns>
-		public Domain AddDomainIdentity( string userID, string credentials, CredentialType credType, string domainName, string domainID, string domainDescription, Uri domainHost, SyncRoles role )
+		public void AddDomainIdentity( string domainID, string userID, string credentials, CredentialType credType )
 		{
-			Node[] nodeList = new Node[ 2 ];
-
-			// Normalize the domain ID.
-			domainID = domainID.ToLower();
-
-			// Check to see if the domain already exists.
-			if ( GetDomain( domainID ) != null )
+			// Get the domain.
+			Domain domain = GetDomain( domainID.ToLower() );
+			if ( domain == null )
 			{
-				throw new AlreadyExistsException( "The specified domain already exists." );
+				throw new SimiasException( String.Format( "The domain {0} does not exist.", domainID ) );
 			}
 
-			// Create the domain object.
-			Domain domain = new Domain( domainName, domainID, domainDescription, role );
-			nodeList[ 0 ] = domain;
-			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID, credentials, credType );
-
-			// Add the uri.
-			domain.HostAddress = domainHost;
-			
-			// Commit the changes.
-			LocalDb.Commit( nodeList );
-			return domain;
+			// Add the domain mapping for the specified user.
+			LocalDb.Commit( CurrentUser.AddDomainIdentity( userID.ToLower(), domain.ID, credentials, credType ) );
 		}
 
 		/// <summary>
@@ -650,15 +622,8 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		public void DeleteDomainIdentity( string domainID )
 		{
-			Node[] nodeList = new Node[ 2 ];
-
-			// Delete the domain object.
-			LocalDatabase ldb = LocalDb;
-			nodeList[ 0 ] = ldb.Delete( GetDomain( domainID ) );
-			nodeList[ 1 ] = CurrentUser.DeleteDomainIdentity( domainID.ToLower() );
-
-			// Commit the changes.
-			ldb.Commit( nodeList );
+			// Delete the domain object and commit the changes.
+			LocalDb.Commit( CurrentUser.DeleteDomainIdentity( domainID.ToLower() ) );
 		}
 
 		/// <summary>
@@ -692,7 +657,7 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified domain.
 			ICSList collectionList = new ICSList();
 
-			Persist.Query query = new Persist.Query( PropertyTags.DomainID, SearchOp.Equal, domainID, Syntax.String );
+			Persist.Query query = new Persist.Query( PropertyTags.DomainID, SearchOp.Equal, domainID.ToLower(), Syntax.String );
 			Persist.IResultSet chunkIterator = storageProvider.Search( query );
 			if ( chunkIterator != null )
 			{
@@ -1001,7 +966,7 @@ namespace Simias.Storage
 		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
 		public Domain GetDomain( string domainID )
 		{
-			return GetNodeByID( localDb, domainID ) as Domain;
+			return GetCollectionByID( domainID ) as Domain;
 		}
 
 		/// <summary>
@@ -1010,7 +975,7 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing all of the domain objects.</returns>
 		public ICSList GetDomainList()
 		{
-			return LocalDb.GetNodesByType( NodeTypes.DomainType );
+			return GetCollectionsByType( NodeTypes.DomainType );
 		}
 
 		/// <summary>
@@ -1022,7 +987,7 @@ namespace Simias.Storage
 		/// <returns>The type of credentials.</returns>
 		public CredentialType GetDomainCredentials( string domainID, out string userID, out string credentials )
 		{
-			return CurrentUser.GetDomainCredentials( domainID.ToLower(), out userID, out credentials );
+			return CurrentUser.GetDomainCredentials( domainID, out userID, out credentials );
 		}
 
 		/// <summary>
@@ -1032,15 +997,8 @@ namespace Simias.Storage
 		/// <returns>Domain object that the specified user belongs to if successful. Otherwise returns a null.</returns>
 		public Domain GetDomainForUser( string userID )
 		{
-			Domain domain = null;
-
-			string domainID = CurrentUser.GetDomainFromUserID( userID );
-			if ( domainID != null )
-			{
-				domain = GetNodeByID( localDb, domainID ) as Domain;
-			}
-
-			return domain;
+			string domainID = CurrentUser.GetDomainFromUserID( userID.ToLower() );
+			return ( domainID != null ) ? GetDomain( domainID ) : null;
 		}
 
 		/// <summary>
@@ -1104,30 +1062,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the Roster object for the specified domain.
-		/// </summary>
-		/// <param name="domainID">Identifier for the domain to return the Roster object for.</param>
-		/// <returns>A reference to a Roster object if successful. Otherwise a null is returned.</returns>
-		public Roster GetRoster( string domainID )
-		{
-			Roster roster = null;
-			domainID = domainID.ToLower();
-
-			ICSList rosterList = GetCollectionsByType( NodeTypes.RosterType );
-			foreach ( ShallowNode sn in rosterList )
-			{
-				Roster r = new Roster( this, sn );
-				if ( r.Domain == domainID )
-				{
-					roster = r;
-					break;
-				}
-			}
-
-			return roster;
-		}
-
-		/// <summary>
 		/// Gets the first Collection object that matches the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the collection. This parameter may be
@@ -1174,7 +1108,7 @@ namespace Simias.Storage
 		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
 		public string GetUserIDFromDomainID( string domainID )
 		{
-			return CurrentUser.GetUserIDFromDomain( domainID );
+			return CurrentUser.GetUserIDFromDomain( domainID.ToLower() );
 		}
 
 		/// <summary>

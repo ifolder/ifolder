@@ -34,7 +34,6 @@ using System.IO;
 using System.Net;
 using Simias;
 using Simias.Client;
-using Simias.Domain;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
@@ -396,8 +395,7 @@ namespace Novell.iFolder.Web
 			}
 
 
-			LocalDatabase localDB = store.GetDatabaseObject();
-			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
+			ICSList domainList = store.GetDomainList();
 			foreach (ShallowNode sn in domainList)
 			{
 				// Now we need to get all of Subscriptions
@@ -826,21 +824,19 @@ namespace Novell.iFolder.Web
 
 			Store store = Store.GetStore();
 
-			Roster roster = 
-				store.GetRoster(DomainID);
-
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
+			Domain domain = store.GetDomain(DomainID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
 			Novell.AddressBook.Manager abMan = 
 						Novell.AddressBook.Manager.Connect();
 
-			ICSList memberlist = roster.GetMemberList();
+			ICSList memberlist = domain.GetMemberList();
 			foreach(ShallowNode sNode in memberlist)
 			{
 				userCount++;
 				Simias.Storage.Member simMem =
-					new Simias.Storage.Member(roster, sNode);
+					new Simias.Storage.Member(domain, sNode);
 
 				Contact c = abMan.GetContact(simMem.UserID);
 
@@ -880,10 +876,9 @@ namespace Novell.iFolder.Web
 
 			Store store = Store.GetStore();
 
-			Roster roster = store.GetRoster(DomainID);
-
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
+			Domain domain = store.GetDomain(DomainID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
 			Novell.AddressBook.Manager abMan = 
 						Novell.AddressBook.Manager.Connect();
@@ -891,7 +886,7 @@ namespace Novell.iFolder.Web
 			try
 			{
 				Novell.AddressBook.AddressBook book = 
-							abMan.GetAddressBook(roster.ID);
+							abMan.GetAddressBook(DomainID);
 
 				// First Name Search
 				IABList clist = book.SearchFirstName(SearchString,
@@ -899,7 +894,7 @@ namespace Novell.iFolder.Web
 				foreach(Contact c in clist)
 				{
 					Simias.Storage.Member simMem =
-						roster.GetMemberByID(c.UserID);
+						domain.GetMemberByID(c.UserID);
 					iFolderUser user = new iFolderUser(simMem, c);
 					idHash.Add(c.UserID, c);
 					list.Add(user);
@@ -914,7 +909,7 @@ namespace Novell.iFolder.Web
 					if(!idHash.Contains(c.UserID))
 					{
 						Simias.Storage.Member simMem =
-							roster.GetMemberByID(c.UserID);
+							domain.GetMemberByID(c.UserID);
 						iFolderUser user = new iFolderUser(simMem, c);
 						idHash.Add(c.UserID, c);
 						list.Add(user);
@@ -924,14 +919,14 @@ namespace Novell.iFolder.Web
 
 				// User Name Search
 				// We have to search the Members for this
-				ICSList searchList = roster.Search(BaseSchema.ObjectName, 
+				ICSList searchList = domain.Search(BaseSchema.ObjectName, 
 											SearchString, SearchOp.Begins);
 				foreach(ShallowNode sNode in searchList)
 				{
 					if (sNode.Type.Equals("Member"))
 					{
 						Simias.Storage.Member simMem =
-							new Simias.Storage.Member(roster, sNode);
+							new Simias.Storage.Member(domain, sNode);
 
 						Contact c = abMan.GetContact(simMem.UserID);
 
@@ -946,11 +941,11 @@ namespace Novell.iFolder.Web
 			}
 			catch (Exception e)
 			{
-				DateTime lastRosterSyncTime = SyncClient.GetLastSyncTime(roster.ID);
-				if (roster.Role.Equals(SyncRoles.Slave) && lastRosterSyncTime.Equals(DateTime.MinValue))
+				DateTime lastDomainSyncTime = SyncClient.GetLastSyncTime(DomainID);
+				if (domain.Role.Equals(SyncRoles.Slave) && lastDomainSyncTime.Equals(DateTime.MinValue))
 				{
-					// The roster is still syncing.
-					throw new Exception("The initial synchronization of the roster has not completed.");
+					// The domain is still syncing.
+					throw new Exception("The initial synchronization of the domain has not completed.");
 				}
 				else
 				{
@@ -966,7 +961,7 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that gets a member from the default Roster
+		/// WebMethod that gets a member from the default domain
 		/// </summary>
 		/// <param name = "UserID">
 		/// The ID of the member to be added
@@ -980,13 +975,11 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 
-			Roster roster = 
-					store.GetDomainForUser(UserID).Roster;
+			Domain domain = store.GetDomainForUser(UserID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
-
-			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			Simias.Storage.Member simMem = domain.GetMemberByID(UserID);
 			if(simMem == null)
 				throw new Exception("Invalid UserID");
 
@@ -1080,13 +1073,11 @@ namespace Novell.iFolder.Web
 			if(col == null)
 				throw new Exception("Invalid iFolderID");
 
-			Roster roster = 
-				store.GetRoster(col.Domain);
+			Domain domain = store.GetDomain(col.Domain);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
-			if(roster == null)
-				throw new Exception("Unable to access ifolder users");
-
-			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			Simias.Storage.Member member = domain.GetMemberByID(UserID);
 			if(member == null)
 				throw new Exception("Invalid UserID");
 
@@ -1104,8 +1095,8 @@ namespace Novell.iFolder.Web
 
 			// Use the POBox for the domain that this iFolder belongs to.
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						col.Domain, 
-						store.GetUserIDFromDomainID(col.Domain));
+						domain.ID, 
+						store.GetUserIDFromDomainID(domain.ID));
 
 			Subscription sub = poBox.CreateSubscription(col,
 										col.GetCurrentMember(),
@@ -1412,11 +1403,7 @@ namespace Novell.iFolder.Web
 			if(domain == null)
 				throw new Exception("ERROR:Invalid Domain ID");
 
-			Roster roster = domain.Roster;
-			if(domain == null)
-				throw new Exception("ERROR:Unable to obtain Roster");
-
-			Member member = roster.GetCurrentMember();
+			Member member = domain.GetCurrentMember();
 			if(member == null)
 				throw new Exception("ERROR:Unable locate user");
 
@@ -1669,12 +1656,11 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 
-			Roster roster = 
-                store.GetDomainForUser(UserID).Roster;
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
+			Domain domain = store.GetDomainForUser(UserID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
-			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			Simias.Storage.Member member = domain.GetMemberByID(UserID);
 			if(member == null)
 				throw new Exception("Invalid UserID");
 

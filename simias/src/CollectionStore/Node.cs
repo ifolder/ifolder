@@ -26,6 +26,7 @@ using System.Xml;
 
 using Simias;
 using Simias.Client;
+using Simias.POBox;
 
 namespace Simias.Storage
 {
@@ -492,15 +493,19 @@ namespace Simias.Storage
 					break;
 
 				case "Domain":
-					rNode = new Domain( document );
-					break;
-
-				case "Roster":
-					rNode = new Roster( store, document );
+					rNode = new Domain( store, document );
 					break;
 
 				case "Policy":
 					rNode = new Policy.Policy( document );
+					break;
+
+				case "POBox":
+					rNode = new POBox.POBox( store, document );
+					break;
+
+				case "Subscription":
+					rNode = new Subscription( document );
 					break;
 
 				default:
@@ -586,15 +591,19 @@ namespace Simias.Storage
 					break;
 
 				case "Domain":
-					rNode = new Domain( collection, shallowNode );
-					break;
-
-				case "Roster":
-					rNode = new Roster( collection.StoreReference, shallowNode );
+					rNode = new Domain( collection.StoreReference, shallowNode );
 					break;
 
 				case "Policy":
 					rNode = new Policy.Policy( collection, shallowNode );
+					break;
+
+				case "POBox":
+					rNode = new POBox.POBox( collection.StoreReference, shallowNode );
+					break;
+
+				case "Subscription":
+					rNode = new Subscription( collection, shallowNode );
 					break;
 
 				default:

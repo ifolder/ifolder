@@ -364,9 +364,6 @@ namespace Simias.Storage
 		/// <returns>The modified identity object.</returns>
 		internal Identity DeleteDomainIdentity( string domainID )
 		{
-			// Normalize the domain ID.
-			domainID = domainID.ToLower();
-
 			// Do not allow the local domain to be deleted.
 			if ( domainID == Store.GetStore().LocalDomain )
 			{
@@ -393,7 +390,7 @@ namespace Simias.Storage
 			string domainID = null;
 
 			// Find the property associated with the user ID.
-			XmlDocument document = GetDocumentByUserID( userID.ToLower() );
+			XmlDocument document = GetDocumentByUserID( userID );
 			if ( document != null )
 			{
 				domainID = document.DocumentElement.GetAttribute( DomainTag );
@@ -412,7 +409,7 @@ namespace Simias.Storage
 			string userID = null;
 
 			// Find the property associated with the user ID.
-			XmlDocument document = GetDocumentByDomain( domainID.ToLower() );
+			XmlDocument document = GetDocumentByDomain( domainID );
 			if ( document != null )
 			{
 				userID = document.DocumentElement.GetAttribute( UserTag );
@@ -470,7 +467,7 @@ namespace Simias.Storage
 		/// <returns>The modified identity object.</returns>
 		internal Identity SetDomainCredentials( string domainID, string credentials, CredentialType type )
 		{
-			Property p = GetPropertyByDomain( domainID.ToLower() );
+			Property p = GetPropertyByDomain( domainID );
 			if ( p == null )
 			{
 				throw new CollectionStoreException( "There is no mapping for this domain." );

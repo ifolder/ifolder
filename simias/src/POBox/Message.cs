@@ -23,6 +23,8 @@
 
 using System;
 using System.Xml;
+
+using Simias.Client;
 using Simias.Storage;
 
 namespace Simias.POBox
@@ -154,12 +156,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(MessageIDProperty);
+				Property p = properties.FindSingleValue(MessageIDProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(MessageIDProperty, value);
+				properties.ModifyNodeProperty(MessageIDProperty, value);
 			}
 		}
 		
@@ -170,12 +172,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(MessageTypeProperty);
+				Property p = properties.FindSingleValue(MessageTypeProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(MessageTypeProperty, value);
+				properties.ModifyNodeProperty(MessageTypeProperty, value);
 			}
 		}
 
@@ -186,12 +188,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(MessageStateProperty);
+				Property p = properties.FindSingleValue(MessageStateProperty);
 				return (p != null) ? (MessageState)p.Value : MessageState.Unknown;
 			}
 			set
 			{
-				Properties.ModifyProperty(MessageStateProperty, value);
+				properties.ModifyNodeProperty(MessageStateProperty, value);
 			}
 		}
 
@@ -202,12 +204,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubjectProperty);
+				Property p = properties.FindSingleValue(SubjectProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubjectProperty, value);
+				Properties.ModifyNodeProperty(SubjectProperty, value);
 			}
 		}
 
@@ -218,12 +220,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(BodyProperty);
+				Property p = properties.FindSingleValue(BodyProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(BodyProperty, value);
+				properties.ModifyNodeProperty(BodyProperty, value);
 			}
 		}
 
@@ -234,12 +236,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(ToNameProperty);
+				Property p = properties.FindSingleValue(ToNameProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(ToNameProperty, value);
+				properties.ModifyNodeProperty(ToNameProperty, value);
 			}
 		}
 
@@ -250,12 +252,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(ToAddressProperty);
+				Property p = properties.FindSingleValue(ToAddressProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(ToAddressProperty, value);
+				properties.ModifyNodeProperty(ToAddressProperty, value);
 			}
 		}
 
@@ -266,12 +268,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(ToIdentityProperty);
+				Property p = properties.FindSingleValue(ToIdentityProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(ToIdentityProperty, value);
+				properties.ModifyNodeProperty(ToIdentityProperty, value);
 			}
 		}
 
@@ -282,12 +284,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(FromNameProperty);
+				Property p = properties.FindSingleValue(FromNameProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(FromNameProperty, value);
+				properties.ModifyNodeProperty(FromNameProperty, value);
 			}
 		}
 
@@ -298,12 +300,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(FromAddressProperty);
+				Property p = properties.FindSingleValue(FromAddressProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(FromAddressProperty, value);
+				properties.ModifyNodeProperty(FromAddressProperty, value);
 			}
 		}
 
@@ -314,12 +316,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(FromIdentityProperty);
+				Property p = properties.FindSingleValue(FromIdentityProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(FromIdentityProperty, value);
+				properties.ModifyNodeProperty(FromIdentityProperty, value);
 			}
 		}
 
@@ -330,12 +332,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(MasterURLProperty);
+				Property p = properties.FindSingleValue(MasterURLProperty);
 				return (p != null) ? (Uri)p.Value : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(MasterURLProperty, value);
+				properties.ModifyNodeProperty(MasterURLProperty, value);
 			}
 		}
 		
@@ -346,12 +348,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(DomainIDProperty);
+				Property p = properties.FindSingleValue(DomainIDProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyNodeProperty(DomainIDProperty, value);
+				properties.ModifyNodeProperty(DomainIDProperty, value);
 			}
 		}
 		
@@ -362,12 +364,12 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(DomainNameProperty);
+				Property p = properties.FindSingleValue(DomainNameProperty);
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyNodeProperty(DomainNameProperty, value);
+				properties.ModifyNodeProperty(DomainNameProperty, value);
 			}
 		}
 
@@ -375,12 +377,121 @@ namespace Simias.POBox
 
 		#region Constructors
 
-		public Message() : base()
+		/// <summary>
+		/// Constructor for creating a new Message object with a specific ID.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the Message object.</param>
+		/// <param name="baseType">Base type of node.</param>
+		/// <param name="messageID">The ID of the Message object.</param>
+		public Message(string messageName, string baseType, string messageID) :
+			base (messageName, Guid.NewGuid().ToString(), baseType)
+		{
+			this.MessageID = messageID;
+
+			if (baseType != NodeTypes.MessageType)
+			{
+				properties.AddNodeProperty(PropertyTags.Types, NodeTypes.MessageType);
+			}
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Message object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="baseType">Base type of node.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The identity of the sender.</param>
+		public Message(string messageName, string baseType, string messageType, string fromIdentity) :
+			this (messageName, baseType, messageType, fromIdentity, null, null, null)
 		{
 		}
-		
+
 		/// <summary>
-		/// Constructor for creating a Message object from a Node object.
+		/// Constructor for creating a new Message object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="baseType">Base type of node.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
+		public Message(string messageName, string baseType, string messageType, string fromIdentity, string fromAddress) :
+			this (messageName, baseType, messageType, fromIdentity, fromAddress, null, null)
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Message object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="baseType">Base type of node.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
+		/// <param name="toAddress">The recipient's address.</param>
+		public Message(string messageName, string baseType, string messageType, string fromIdentity, string fromAddress, string toAddress) :
+			this (messageName, baseType, messageType, fromIdentity, fromAddress, toAddress, null)
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Message object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="baseType">Base type of node.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
+		/// <param name="toAddress">The recipient's address.</param>
+		/// <param name="toIdentity">The recipient's identity.</param>
+		public Message(string messageName, string baseType, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
+			base(messageName, Guid.NewGuid().ToString(), baseType)
+		{
+			MessageID = Guid.NewGuid().ToString();
+			State = MessageState.New;
+
+			if (messageType != null)
+			{
+				MessageType = messageType;
+			}
+
+			if (fromIdentity != null)
+			{
+				FromIdentity = fromIdentity;
+			}
+
+			if (toAddress != null)
+			{
+				ToAddress = toAddress;
+			}
+
+			if (fromAddress != null)
+			{
+				FromAddress = fromAddress;
+			}
+
+			if (toIdentity != null)
+			{
+				ToIdentity = toIdentity;
+			}
+
+			if (baseType != NodeTypes.MessageType)
+			{
+				properties.AddNodeProperty(PropertyTags.Types, NodeTypes.MessageType);
+			}
+		}
+
+		/// <summary>
+		/// Clone the message with a new ID.
+		/// </summary>
+		/// <param name="ID">The new node ID.</param>
+		/// <param name="message">The message to clone.</param>
+		public Message(string ID, Message message) : 
+			base(ID, message)
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing Message object from a Node object.
 		/// </summary>
 		/// <param name="node">The Node object to create the Message object from.</param>
 		public Message(Node node) :
@@ -389,20 +500,7 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Message object with a specific ID.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the Message object.</param>
-		/// <param name="messageID">The ID of the Message object.</param>
-		public Message(string messageName, string messageID) :
-			base (messageName)
-		{
-			this.MessageID = messageID;
-
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Message).Name);
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Message object.
+		/// Constructor for creating a existing Message object.
 		/// </summary>
 		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
 		/// <param name="shallowNode">ShallowNode object to create the Message object from.</param>
@@ -412,73 +510,14 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Message object.
+		/// Constructor for creating an existing Message object from an Xml document.
 		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="fromIdentity">The identity of the sender.</param>
-		public Message(string messageName, string messageType, string fromIdentity) :
-			base (messageName)
-		{
-			MessageID = Guid.NewGuid().ToString();
-			State = MessageState.New;
-			MessageType = messageType;
-			FromIdentity = fromIdentity;
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Message).Name);
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Message object.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="fromIdentity">The sender's identity.</param>
-		/// <param name="fromAddress">The sender's address.</param>
-		public Message(string messageName, string messageType, string fromIdentity, string fromAddress) :
-			this (messageName, messageType, fromIdentity)
-		{
-			FromAddress = fromAddress;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Message object.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="fromIdentity">The sender's identity.</param>
-		/// <param name="fromAddress">The sender's address.</param>
-		/// <param name="toAddress">The recipient's address.</param>
-		public Message(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress) :
-			this (messageName, messageType, fromIdentity, fromAddress)
-		{
-			ToAddress = toAddress;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Message object.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="fromIdentity">The sender's identity.</param>
-		/// <param name="fromAddress">The sender's address.</param>
-		/// <param name="toAddress">The recipient's address.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
-		public Message(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
-			this (messageName, messageType, fromIdentity, fromAddress, toAddress)
-		{
-			ToIdentity = toIdentity;
-		}
-
-		/// <summary>
-		/// Clone the message with a new ID.
-		/// </summary>
-		/// <param name="ID">The new node ID.</param>
-		/// <param name="message">The message to clone.</param>
-		public Message(string ID, Message message) : base(ID, message)
+		/// <param name="document">Xml document object to create Message object from.</param>
+		internal Message(XmlDocument document) :
+			base (document)
 		{
 		}
-
-		#endregion
+#endregion
 
 		#region Public Methods
 		

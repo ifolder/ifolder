@@ -72,7 +72,7 @@ namespace Simias.POBox
 			// events
 			subscriber = new EventSubscriber(poBox.ID);
 			subscriber.Enabled = false;
-			subscriber.NodeTypeFilter = NodeTypes.NodeType;
+			subscriber.NodeTypeFilter = NodeTypes.SubscriptionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnMessageChanged);
 			subscriber.NodeChanged += new NodeEventHandler(OnMessageChanged);
 		}
@@ -84,9 +84,13 @@ namespace Simias.POBox
 		{
 			subscriber.Enabled = true;
 			
+			// Indicate any new subscriptions in the POBox on startup.
 			foreach(ShallowNode n in poBox)
 			{
-				UpdateMessage(n.ID);
+				if (n.Type == NodeTypes.SubscriptionType)
+				{
+					UpdateMessage(n.ID);
+				}
 			}
 		}
 
@@ -105,21 +109,15 @@ namespace Simias.POBox
 
 		private void UpdateMessage(string id)
 		{
-			Node node = poBox.GetNodeByID(id);
-
-			if (node != null)
+			Subscription subNode = poBox.GetNodeByID(id) as Subscription;
+			if (subNode != null)
 			{
-				if (poBox.IsType(node, typeof(Subscription).Name))
-				{
-					UpdateSubscription(node);
-				}
+				UpdateSubscription(subNode);
 			}
 		}
 
-		private void UpdateSubscription(Node node)
+		private void UpdateSubscription(Subscription subscription)
 		{
-			Subscription subscription = new Subscription(node);
-
 			switch(subscription.SubscriptionState)
 			{
 				// invited (master)

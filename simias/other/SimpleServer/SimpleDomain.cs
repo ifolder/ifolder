@@ -180,46 +180,11 @@ namespace Simias.SimpleServer
 				}
 
 				//
-				// The current member of the local database will be
-				// the SimpleServer domain owner
-				//
-
-				Member ldbMember = null;
-				LocalDatabase ldb = store.GetDatabaseObject();
-				
-				ICSList memberList = ldb.GetNodesByName( ownerMember );
-				foreach( ShallowNode shallowNode in memberList )
-				{
-					Node cNode = new Node( ldb, shallowNode );
-					Simias.Storage.Property simpleProp = 
-						cNode.Properties.GetSingleProperty( "SimpleServer" );
-					if (simpleProp != null)
-					{
-						ldbMember = new Member( cNode );
-						break;
-					}
-				}
-
-				if ( ldbMember == null )
-				{
-					// Create a local member which is the owner of the Simple Server domain
-					ldbMember = new Member( ownerMember, Guid.NewGuid().ToString(), Access.Rights.Admin );
-					ldbMember.IsOwner = true;
-
-					Simias.Storage.Property simpleProp = new Property( "SimpleServer" , true );
-					simpleProp.LocalProperty = true;
-					ldbMember.Properties.AddProperty( simpleProp );
-
-					// Save the local database changes.
-					ldb.Commit( new Node[] { ldbMember } );
-				}
-
-				//
-				// Verify the SimpleServer domain exists
+				// Verify the SimpleServer domain exists or create it.
 				//
 			
 				Simias.Storage.Domain rDomain = 
-					this.GetSimpleServerDomain( true, ldbMember.ID );
+					this.GetSimpleServerDomain( true, ownerMember );
 
 				if ( rDomain == null )
 				{
@@ -232,52 +197,6 @@ namespace Simias.SimpleServer
 				//
 
 				store.DefaultDomain = rDomain.ID;
-
-				//
-				// Verify the SimpleServer roster
-				//
-
-				Simias.Storage.Roster ssRoster = null;
-				Member rMember;
-				ArrayList changeList = new ArrayList();
-
-				try
-				{
-					ssRoster = rDomain.Roster;
-				}
-				catch{}
-				if ( ssRoster == null )
-				{
-					ssRoster = new Roster( store, rDomain );
-					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
-
-					//ssRoster.Role = SyncRoles.Master;
-					//ssRoster.CreateMaster = false;
-
-					// Mark the roster as a master
-					/*
-					Property p = new Property( PropertyTags.SyncRole, SyncRoles.Master );
-					p.LocalProperty = true;
-					ssRoster.Properties.ModifyProperty( p );
-					*/
-
-					rMember.IsOwner = true;
-					changeList.Add( ssRoster );
-					changeList.Add( rMember );
-				}
-				else
-				{
-					// Make sure the member exists
-					rMember = ssRoster.GetMemberByID( ldbMember.ID );
-					if (rMember == null)
-					{
-						rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
-						rMember.IsOwner = true;
-						changeList.Add(rMember);
-					}
-				}
-
-				ssRoster.Commit( changeList.ToArray( typeof( Node ) ) as Node[] );
 
 				//
 				// Verify the POBox for the local SimpleServer owner
@@ -332,20 +251,19 @@ namespace Simias.SimpleServer
 		/// <summary>
 		/// Method to get the Simias simple server domain
 		/// If the the domain does not exist and the create flag is true
-		/// the domain will be created.  If create == false, ownerID is ignored
+		/// the domain will be created.  If create == false, ownerName is ignored
 		/// </summary>
-		internal Simias.Storage.Domain GetSimpleServerDomain( bool create, string ownerID )
+		internal Simias.Storage.Domain GetSimpleServerDomain( bool create, string ownerName )
 		{
 			//
 			//  Check if the SimpleServer domain exists in the store
 			//
 
 			Simias.Storage.Domain ssDomain = null;
+			Store store = Store.GetStore();
 
 			try
 			{
-				Store store = Store.GetStore();
-
 				foreach( ShallowNode sNode in store.GetDomainList() )
 				{
 					Simias.Storage.Domain tmpDomain = store.GetDomain( sNode.ID );
@@ -360,26 +278,43 @@ namespace Simias.SimpleServer
 
 				if ( ssDomain == null && create == true )
 				{
-					string id = Guid.NewGuid().ToString();
+					this.id = Guid.NewGuid().ToString();
 					Uri localUri = new Uri("http://" + MyDns.GetHostName() + "/simias10");
 
-					ssDomain =
-						store.AddDomainIdentity(
-							ownerID,
-							this.domainName,
-							id, 
-							this.description,
-							localUri,
-							Simias.Sync.SyncRoles.Master );
+					// Create the simple server domain.
+					ssDomain = 
+						new Simias.Storage.Domain(
+							store, 
+							this.domainName, 
+							this.id,
+							this.description, 
+							Simias.Sync.SyncRoles.Master, 
+							localUri );
 
-					if ( ssDomain != null )
-					{
-						Property p = new Property( "SimpleServer", true );
-						p.LocalProperty = true;
-						ssDomain.Properties.ModifyProperty( p );
-						store.GetDatabaseObject().Commit( ssDomain );
-						this.id = ssDomain.ID;
-					}
+					// This needs to be added to allow the enterprise location provider
+					// to be able to resolve this domain.
+					ssDomain.SetType( ssDomain, "Enterprise" );
+
+					// Set that this is a simple server domain.
+					Property p = new Property( "SimpleServer", true );
+					p.LocalProperty = true;
+					ssDomain.Properties.ModifyProperty( p );
+
+					// Create the owner member for the domain.
+					Member member = 
+						new Member(
+							ownerName, 
+							Guid.NewGuid().ToString(), 
+							Access.Rights.Admin );
+
+					member.IsOwner = true;
+
+					ssDomain.Commit( new Node[] { ssDomain, member } );
+
+					// Create the name mapping.
+					store.AddDomainIdentity(
+							ssDomain.ID,
+							member.UserID );
 				}
 			}
 			catch(Exception gssd)
@@ -429,31 +364,23 @@ namespace Simias.SimpleServer
 			}
 
 			Simias.Storage.Domain ssDomain = null;
-			Simias.Storage.Roster ssRoster = null;
 
 			try
 			{
 				ssDomain = this.GetSimpleServerDomain( false, "" );
-				ssRoster = ssDomain.Roster;
 			}
 			catch{}
 
-			if (ssRoster == null)
+			//
+			// If this domain isn't already an Address Book, make it one
+			//
+			if (ssDomain.IsType( ssDomain, "AB:AddressBook" ) == false)
 			{
-				log.Error( "Failed getting the SimpleServer roster" );
-				return;
+				ssDomain.SetType( ssDomain, "AB:AddressBook" );
+				ssDomain.Commit();
 			}
 
-			//
-			// If this roster isn't already an Address Book, make it one
-			//
-			if (ssRoster.IsType( ssRoster, "AB:AddressBook" ) == false)
-			{
-				ssRoster.SetType( ssRoster, "AB:AddressBook" );
-				ssRoster.Commit();
-			}
-
-			AddressBook systemBook = abManager.GetAddressBook( ssRoster.ID );
+			AddressBook systemBook = abManager.GetAddressBook( ssDomain.ID );
 
 			try
 			{
@@ -516,7 +443,7 @@ namespace Simias.SimpleServer
 						Simias.Storage.Member ssMember = null;
 						try
 						{	
-							ssMember = ssRoster.GetMemberByName( member );
+							ssMember = ssDomain.GetMemberByName( member );
 						}
 						catch{}
 
@@ -536,15 +463,15 @@ namespace Simias.SimpleServer
 								ssMember.Properties.DeleteSingleProperty( new Property( "SS:Password", "bogus" ));
 							}
 
-							ssRoster.Commit(ssMember);
+							ssDomain.Commit(ssMember);
 
 							//
 							// First get the contact that's related to this member
 							//
 
 							Contact ssContact = null;
-							Relationship contactMember = new Relationship( ssRoster.ID, ssMember.ID );
-							ICSList results = ssRoster.Search( "Member", contactMember );
+							Relationship contactMember = new Relationship( ssDomain.ID, ssMember.ID );
+							ICSList results = ssDomain.Search( "Member", contactMember );
 							IEnumerator contactEnum = results.GetEnumerator();
 							if (contactEnum.MoveNext() == false)
 							{
@@ -578,7 +505,7 @@ namespace Simias.SimpleServer
 									// communication.  
 									//
 
-									Relationship cRelationship = new Relationship( ssRoster.ID, ssMember.ID );
+									Relationship cRelationship = new Relationship( ssDomain.ID, ssMember.ID );
 									ssContact.Properties.ModifyProperty( "Member", cRelationship );
 									systemBook.AddContact( ssContact );
 									//ssContact.Commit();
@@ -601,7 +528,7 @@ namespace Simias.SimpleServer
 							catch{}
 
 							ssMember.Properties.ModifyProperty(syncP);
-							ssRoster.Commit( ssMember );
+							ssDomain.Commit( ssMember );
 						}
 						else
 						{
@@ -631,7 +558,7 @@ namespace Simias.SimpleServer
 									ssMember.Properties.ModifyProperty( pwd );
 								}
 
-								ssRoster.Commit(ssMember);
+								ssDomain.Commit(ssMember);
 							}
 							catch
 							{
@@ -669,7 +596,7 @@ namespace Simias.SimpleServer
 							// communication.  
 							//
 
-							Relationship cRelationship = new Relationship( ssRoster.ID, ssMember.ID );
+							Relationship cRelationship = new Relationship( ssDomain.ID, ssMember.ID );
 							ssContact.Properties.ModifyProperty( "Member", cRelationship );
 
 							// Update the contact properties
@@ -696,13 +623,13 @@ namespace Simias.SimpleServer
 			{
 				log.Debug("Checking for deleted SimpleServer.xml members");
 				ICSList	deleteList = 
-					ssRoster.Search( "SyncGuid", syncP.Value, SearchOp.Not_Equal );
+					ssDomain.Search( "SyncGuid", syncP.Value, SearchOp.Not_Equal );
 				try
 				{
 					foreach( ShallowNode cShallow in deleteList )
 					{
-						Node cNode = new Node( ssRoster, cShallow );
-						if ( ssRoster.IsType( cNode, "Member" ) == true )
+						Node cNode = new Node( ssDomain, cShallow );
+						if ( ssDomain.IsBaseType( cNode, "Member" ) == true )
 						{	
 							try
 							{
@@ -724,7 +651,7 @@ namespace Simias.SimpleServer
 
 							// Delete this sucker...
 							log.Debug("deleting: " + cNode.Name);
-							ssRoster.Commit( ssRoster.Delete( cNode ) );
+							ssDomain.Commit( ssDomain.Delete( cNode ) );
 						}
 					}
 				}

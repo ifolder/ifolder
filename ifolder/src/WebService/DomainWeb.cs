@@ -71,13 +71,8 @@ namespace Novell.iFolder.Web
 				this.POBoxID = poBox.ID;
 			}
 
-			Roster roster =	domain.Roster;
-			if (roster == null)
-				throw new Exception("Unable to access user roster");
-
-			this.UserName = roster.GetMemberByID(this.UserID).Name;
-			this.IsSlave = roster.Role.Equals(Simias.Sync.SyncRoles.Slave);
-
+			this.UserName = domain.GetMemberByID(this.UserID).Name;
+			this.IsSlave = domain.Role.Equals(Simias.Sync.SyncRoles.Slave);
 			this.IsEnabled = new Simias.Domain.DomainAgent().IsDomainActive(domainID);
 		}
 

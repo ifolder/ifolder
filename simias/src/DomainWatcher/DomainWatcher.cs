@@ -31,7 +31,7 @@ using System.Web;
 
 using Simias;
 using Simias.Client;
-using Simias.Domain;
+using Simias.DomainServices;
 
 //using Simias.Client.Event;
 using Simias.Event;
@@ -152,11 +152,10 @@ namespace Simias.DomainWatcher
 
 				try
 				{
-					LocalDatabase ldb = store.GetDatabaseObject();
-					ICSList domainList = ldb.GetNodesByType( "Domain" );
+					ICSList domainList = store.GetDomainList();
 					foreach( ShallowNode shallowNode in domainList )
 					{
-						Simias.Storage.Domain cDomain = store.GetDomain( shallowNode.ID );
+						Domain cDomain = store.GetDomain( shallowNode.ID );
 					
 						// Make sure this domain is a slave since we don't watch
 						// mastered domains.
@@ -178,12 +177,12 @@ namespace Simias.DomainWatcher
 							// Only basic type authentication is supported right now.
 							if ( credType != CredentialType.Basic )
 							{
-								cMember = cDomain.Roster.GetCurrentMember();
+								cMember = cDomain.GetCurrentMember();
 								credentials = null;
 							}
 							else
 							{
-								cMember = cDomain.Roster.GetMemberByID( userID );
+								cMember = cDomain.GetMemberByID( userID );
 							}
 
 							// Can we talk to the domain?

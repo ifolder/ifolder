@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace Simias.Domain
+namespace Simias.DomainService
 {
 	/// <summary>
 	/// Provision information

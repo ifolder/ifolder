@@ -46,7 +46,6 @@ namespace Simias.SimpleServer
 		private Simias.Storage.Domain domain = null;
 		private Simias.SimpleServer.Domain ssDomain = null;
 		private Simias.Storage.Store store = null;
-		private Simias.Storage.Roster roster = null;
 
 		//private XmlDocument simpleServerDoc = null;
 		//private XmlElement domainElement = null;
@@ -60,7 +59,6 @@ namespace Simias.SimpleServer
 			this.store = Store.GetStore();
 			this.ssDomain = new Simias.SimpleServer.Domain( true );
 			this.domain = store.GetDomain( ssDomain.ID );
-			this.roster = this.domain.Roster;
 
 			/*
 			this.simpleServerDoc = new XmlDocument();
@@ -99,12 +97,12 @@ namespace Simias.SimpleServer
 			try
 			{
 				//
-				// First verify the user exists in the SimpleServer roster
+				// First verify the user exists in the SimpleServer domain
 				//
 
-				if (this.roster != null)
+				if (this.domain != null)
 				{
-					Simias.Storage.Member member = this.roster.GetMemberByName( user );
+					Simias.Storage.Member member = this.domain.GetMemberByName( user );
 					if ( member != null )
 					{
 						Property pwd = member.Properties.GetSingleProperty( "SS:Password" );
@@ -130,7 +128,7 @@ namespace Simias.SimpleServer
 				}
 				else
 				{
-					log.Debug( "Failed to instantiate the Roster" );
+					log.Debug( "Failed to instantiate the domain" );
 				}
 			}
 			catch(Exception authEx)

@@ -87,9 +87,9 @@ namespace Novell.AddressBook
 			subscription.SubscriptionState = SubscriptionStates.Ready;
 
 			// TODO: This may not be right in the future.
-			// Get the master URL from the Roster for this domain.
-			Roster roster = store.GetRoster( ab.Domain );
-			subscription.SubscriptionCollectionURL = roster.MasterUrl.ToString();
+			// Get the master URL from the domain.
+			Domain domain = store.GetDomain( ab.Domain );
+			subscription.SubscriptionCollectionURL = domain.MasterUrl.ToString();
 
 			// Commit the subscription to the POBox.
 			poBox.Commit( subscription );

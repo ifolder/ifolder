@@ -26,7 +26,6 @@ AssemblyInfo.cs
 ../CollectionStore/Policy.cs
 ../CollectionStore/Property.cs
 ../CollectionStore/PropertyList.cs
-../CollectionStore/Roster.cs
 ../CollectionStore/ShallowNode.cs
 ../CollectionStore/Store.cs
 ../CollectionStore/StoreFileNode.cs

@@ -64,12 +64,11 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 
-			Roster roster = 
-                store.GetDomainForUser(UserID).Roster;
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
+			Domain domain = store.GetDomainForUser(UserID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
-			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			Simias.Storage.Member simMem = domain.GetMemberByID(UserID);
 			if(simMem == null)
 				throw new Exception("Invalid UserID");
 
@@ -125,12 +124,11 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 
-			Roster roster = 
-					store.GetDomainForUser(UserID).Roster;
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
+			Domain domain = store.GetDomainForUser(UserID);
+			if(domain == null)
+				throw new Exception("Unable to access domain");
 
-			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			Simias.Storage.Member simMem = domain.GetMemberByID(UserID);
 			if(simMem == null)
 				throw new Exception("Invalid UserID");
 

@@ -234,11 +234,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\Roster.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\CollectionStore\ShallowNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

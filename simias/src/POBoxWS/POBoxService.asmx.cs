@@ -60,7 +60,7 @@ namespace Simias.POBoxService.Web
 		UnknownPOBox,
 
 		/// <summary>
-		/// The specified identity was not found in the roster.
+		/// The specified identity was not found in the domain.
 		/// </summary>
 		UnknownIdentity,
 
@@ -791,25 +791,18 @@ namespace Simias.POBoxService.Web
 			}
 
 			// Verify and get additional information about the "To" user
-			Simias.Storage.Roster currentRoster = cDomain.Roster;
-			if (currentRoster == null)
-			{
-				log.Debug( "  no Roster existed for domain!" );
-				throw new ApplicationException("No member Roster exists for the specified Domain");
-			}
-
-			Member toMember = currentRoster.GetMemberByID( toUserID );
+			Member toMember = cDomain.GetMemberByID(toUserID);
 			if (toMember == null)
 			{
-				log.Debug( "  specified \"toUserID\" does not exist in the roster!" );
-				throw new ApplicationException("Specified \"toUserID\" does not exist in the Domain Roster");
+				log.Debug( "  specified \"toUserID\" does not exist in the domain!" );
+				throw new ApplicationException("Specified \"toUserID\" does not exist in the Domain");
 			}
 
-			Member fromMember = currentRoster.GetMemberByID( fromUserID );
-			if ( fromMember == null )
+			Member fromMember = cDomain.GetMemberByID(fromUserID);
+			if (fromMember == null)
 			{
-				log.Debug( "  specified \"fromUserID\" does not exist in the roster!" );
-				throw new ApplicationException("Specified \"fromUserID\" does not exist in the Domain Roster");
+				log.Debug( "  specified \"fromUserID\" does not exist in the domain!" );
+				throw new ApplicationException("Specified \"fromUserID\" does not exist in the Domain");
 			}
 
 			// In peer-to-peer the collection won't exist 

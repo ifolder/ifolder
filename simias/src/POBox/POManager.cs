@@ -30,7 +30,7 @@ using System.Diagnostics;
 using Simias;
 using Simias.Client;
 using Simias.Client.Event;
-using Simias.Domain;
+using Simias.DomainServices;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -67,7 +67,7 @@ namespace Simias.POBox
 			// events
 			subscriber = new EventSubscriber();
 			subscriber.Enabled = true;
-			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
+			subscriber.NodeTypeFilter = NodeTypes.POBoxType;
 			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
 		}
@@ -83,7 +83,7 @@ namespace Simias.POBox
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 
 					// Get a list of all POBoxes.
-					ICSList poBoxList = store.GetCollectionsByType(typeof(POBox).Name);
+					ICSList poBoxList = store.GetCollectionsByType(NodeTypes.POBoxType);
 					foreach(ShallowNode sn in poBoxList)
 					{
 						// Get the domain for this POBox.
@@ -203,8 +203,7 @@ namespace Simias.POBox
 		private void OnPOBoxCreated(NodeEventArgs args)
 		{
 			Collection c = store.GetCollectionByID(args.ID);
-
-			if (c.IsType(c, typeof(POBox).Name))
+			if (c.IsBaseType(c, NodeTypes.POBoxType))
 			{
 				AddPOBoxManager(args.ID);
 			}

@@ -25,8 +25,10 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Security.Cryptography;
+using System.Xml;
 
 using Simias;
+using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -220,21 +222,12 @@ namespace Simias.POBox
 		#region Constructors
 		
 		/// <summary>
-		/// Constructor for creating a Subscription object from a Node object.
-		/// </summary>
-		/// <param name="node">The Node object to create the Subscription object from.</param>
-		public Subscription(Node node) :
-			base (node)
-		{
-		}
-
-		/// <summary>
 		/// Constructor for creating a Subscription object from a SubscriptionInfo object.
 		/// </summary>
 		/// <param name="subscriptionName">The friendly name of the Subscription.</param>
 		/// <param name="subscriptionInfo">The SubscriptionInfo object to create the Subscription object from.</param>
 		public Subscription(string subscriptionName, SubscriptionInfo subscriptionInfo) :
-			base (subscriptionName, subscriptionInfo.SubscriptionID)
+			this (subscriptionName, subscriptionInfo.SubscriptionID)
 		{
 			DomainID = subscriptionInfo.DomainID;
 			DomainName = subscriptionInfo.DomainName;
@@ -243,17 +236,6 @@ namespace Simias.POBox
 			SubscriptionCollectionType = subscriptionInfo.SubscriptionCollectionType;
 			HasDirNode = subscriptionInfo.SubscriptionCollectionHasDirNode;
 			POServiceURL = subscriptionInfo.POServiceUrl;
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Subscription object.
-		/// </summary>
-		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
-		/// <param name="shallowNode">ShallowNode object to create the Subscription object from.</param>
-		public Subscription(Collection collection, ShallowNode shallowNode) :
-			base (collection, shallowNode)
-		{
 		}
 
 		/// <summary>
@@ -262,9 +244,8 @@ namespace Simias.POBox
 		/// <param name="messageName">The friendly name of the Subscription object.</param>
 		/// <param name="messageID">The ID of the Subscription object.</param>
 		public Subscription(string messageName, string messageID) :
-			base (messageName, messageID)
+			base (messageName, NodeTypes.SubscriptionType, messageID)
 		{
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 	
 		/// <summary>
@@ -274,10 +255,8 @@ namespace Simias.POBox
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="fromIdentity">The identity of the sender.</param>
 		public Subscription(string messageName, string messageType, string fromIdentity) :
-			base (messageName, messageType, fromIdentity)
+			this (messageName, messageType, fromIdentity, null, null, null)
 		{
-			SubscriptionState = SubscriptionStates.Invited;
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -288,10 +267,8 @@ namespace Simias.POBox
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="fromAddress">The sender's address.</param>
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress) :
-			base (messageName, messageType, fromIdentity, fromAddress)
+			this (messageName, messageType, fromIdentity, fromAddress, null, null)
 		{
-			SubscriptionState = SubscriptionStates.Invited;
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -303,10 +280,8 @@ namespace Simias.POBox
 		/// <param name="fromAddress">The sender's address.</param>
 		/// <param name="toAddress">The recipient's address.</param>
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress) :
-			base (messageName, messageType, fromIdentity, fromAddress, toAddress)
+			this (messageName, messageType, fromIdentity, fromAddress, toAddress, null)
 		{
-			SubscriptionState = SubscriptionStates.Invited;
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -319,10 +294,9 @@ namespace Simias.POBox
 		/// <param name="toAddress">The recipient's address.</param>
 		/// <param name="toIdentity">The recipient's identity.</param>
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
-			base (messageName, messageType, fromIdentity, fromAddress, toAddress, toIdentity)
+			base (messageName, NodeTypes.SubscriptionType, messageType, fromIdentity, fromAddress, toAddress, toIdentity)
 		{
 			SubscriptionState = SubscriptionStates.Invited;
-			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
 
 		/// <summary>
@@ -330,7 +304,36 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="ID">The new node ID.</param>
 		/// <param name="message">The message to clone.</param>
-		public Subscription(string ID, Message message) : base(ID, message)
+		public Subscription(string ID, Message message) : 
+			base(ID, message)
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing Subscription object from a Node object.
+		/// </summary>
+		/// <param name="node">The Node object to create the Subscription object from.</param>
+		public Subscription(Node node) :
+			base (node)
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing Subscription object.
+		/// </summary>
+		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
+		/// <param name="shallowNode">ShallowNode object to create the Subscription object from.</param>
+		public Subscription(Collection collection, ShallowNode shallowNode) :
+			base (collection, shallowNode)
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing Subscription object from an Xml document.
+		/// </summary>
+		/// <param name="document">Xml document object to create Subscription object from.</param>
+		internal Subscription(XmlDocument document) :
+			base (document)
 		{
 		}
 
@@ -345,13 +348,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionStateProperty);
+				Property p = properties.FindSingleValue(SubscriptionStateProperty);
 
 				return (p != null) ? (SubscriptionStates)p.Value : SubscriptionStates.Unknown;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionStateProperty, value);
+				properties.ModifyNodeProperty(SubscriptionStateProperty, value);
 			}
 		}
 
@@ -416,13 +419,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionCollectionNameProperty);
+				Property p = properties.FindSingleValue(SubscriptionCollectionNameProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionCollectionNameProperty, value);
+				properties.ModifyNodeProperty(SubscriptionCollectionNameProperty, value);
 			}
 		}
 
@@ -433,13 +436,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionCollectionIDProperty);
+				Property p = properties.FindSingleValue(SubscriptionCollectionIDProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionCollectionIDProperty, value);
+				properties.ModifyNodeProperty(SubscriptionCollectionIDProperty, value);
 			}
 		}
 
@@ -450,7 +453,7 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionCollectionTypeProperty);
+				Property p = properties.FindSingleValue(SubscriptionCollectionTypeProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
@@ -468,13 +471,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionCollectionURLProperty);
+				Property p = properties.FindSingleValue(SubscriptionCollectionURLProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionCollectionURLProperty, value);
+				properties.ModifyNodeProperty(SubscriptionCollectionURLProperty, value);
 			}
 		}
 
@@ -485,13 +488,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(POServiceURLProperty);
+				Property p = properties.FindSingleValue(POServiceURLProperty);
 
 				return (p != null) ? (Uri)p.Value : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(POServiceURLProperty, value);
+				properties.ModifyNodeProperty(POServiceURLProperty, value);
 			}
 		}
 
@@ -502,13 +505,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(CollectionDescriptionProperty);
+				Property p = properties.FindSingleValue(CollectionDescriptionProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(CollectionDescriptionProperty, value);
+				properties.ModifyNodeProperty(CollectionDescriptionProperty, value);
 			}
 		}
 
@@ -519,7 +522,7 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(CollectionRootProperty);
+				Property p = properties.FindSingleValue(CollectionRootProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
@@ -527,7 +530,7 @@ namespace Simias.POBox
 			{
 				Property property = new Property(CollectionRootProperty, value);
 				property.LocalProperty = true;
-				Properties.ModifyProperty(property);
+				properties.ModifyNodeProperty(property);
 			}
 		}
 
@@ -538,13 +541,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(DirNodeIDProperty);
+				Property p = properties.FindSingleValue(DirNodeIDProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(DirNodeIDProperty, value);
+				properties.ModifyNodeProperty(DirNodeIDProperty, value);
 			}
 		}
 
@@ -555,13 +558,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionCollectionHasDirNodeProperty);
+				Property p = properties.FindSingleValue(SubscriptionCollectionHasDirNodeProperty);
 
 				return (p != null) ? (bool)p.Value : false;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionCollectionHasDirNodeProperty, value);
+				properties.ModifyNodeProperty(SubscriptionCollectionHasDirNodeProperty, value);
 			}
 		}
 
@@ -572,13 +575,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(DirNodeNameProperty);
+				Property p = properties.FindSingleValue(DirNodeNameProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(DirNodeNameProperty, value);
+				properties.ModifyNodeProperty(DirNodeNameProperty, value);
 			}
 		}
 
@@ -589,13 +592,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionRightsProperty);
+				Property p = properties.FindSingleValue(SubscriptionRightsProperty);
 
 				return (p != null) ? (Access.Rights)p.Value : Access.Rights.Deny;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionRightsProperty, value);
+				properties.ModifyNodeProperty(SubscriptionRightsProperty, value);
 			}
 		}
 
@@ -606,13 +609,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionDispositionProperty);
+				Property p = properties.FindSingleValue(SubscriptionDispositionProperty);
 
 				return (p != null) ? (SubscriptionDispositions)p.Value : SubscriptionDispositions.Unknown;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionDispositionProperty, value);
+				properties.ModifyNodeProperty(SubscriptionDispositionProperty, value);
 			}
 		}
 
@@ -624,13 +627,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(SubscriptionKeyProperty);
+				Property p = properties.FindSingleValue(SubscriptionKeyProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionKeyProperty, value);
+				properties.ModifyNodeProperty(SubscriptionKeyProperty, value);
 			}
 		}
 
@@ -641,13 +644,13 @@ namespace Simias.POBox
 		{
 			get
 			{
-				Property p = Properties.GetSingleProperty(ToMemberNodeIDProperty);
+				Property p = properties.FindSingleValue(ToMemberNodeIDProperty);
 
 				return (p != null) ? p.ToString() : null;
 			}
 			set
 			{
-				Properties.ModifyProperty(ToMemberNodeIDProperty, value);
+				properties.ModifyNodeProperty(ToMemberNodeIDProperty, value);
 			}
 		}
 
@@ -682,19 +685,12 @@ namespace Simias.POBox
 			POBox poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
 			
 			ICSList list = poBox.Search(Message.MessageIDProperty, subscriptionInfo.SubscriptionID, SearchOp.Equal);
-			
-			ICSEnumerator e = (ICSEnumerator)list.GetEnumerator();
-			ShallowNode sn = null;
-
+			ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
 			if (e.MoveNext())
 			{
-				sn = (ShallowNode) e.Current;
-			}
-
-			if (sn != null)
-			{
 				// new up the subscription from the existing node.
-				subscription = new Subscription(poBox, sn);
+				subscription = new Subscription(poBox, e.Current as ShallowNode);
+				e.Dispose();
 			}
 			else
 			{

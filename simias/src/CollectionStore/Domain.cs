@@ -32,7 +32,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Class that represents a Domain object in the Collection Store.
 	/// </summary>
-	public class Domain : Node
+	public class Domain : Collection
 	{
 		#region Class Members
 		/// <summary>
@@ -82,13 +82,18 @@ namespace Simias.Storage
 				return ( p != null ) ? p.Value as Uri : null;
 			}
 
-			set { properties.ModifyNodeProperty( PropertyTags.HostAddress, value ); }
+			set 
+			{ 
+				Property p = new Property( PropertyTags.HostAddress, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p ); 
+			}
 		}
 
 		/// <summary>
 		/// The syncing role of the domain.
 		/// </summary>
-		public SyncRoles Role
+		new public SyncRoles Role
 		{
 			get 
 			{ 
@@ -103,37 +108,27 @@ namespace Simias.Storage
 				properties.ModifyNodeProperty( p );
 			}
 		}
-
-		/// <summary>
-		/// Gets the roster for this domain.
-		/// </summary>
-		public Roster Roster
-		{
-			get { return Store.GetStore().GetRoster( id ); }
-		}
 		#endregion
 
 		#region Constructors
-		/// <summary>
-		/// Constructor for creating a new Domain object.
-		/// </summary>
-		/// <param name="domainName">Name of the domain.</param>
-		/// <param name="domainID">Well known unique identifier for the domain.</param>
-		/// <param name="role">The synchronization role for this domain.</param>
-		internal Domain( string domainName, string domainID, SyncRoles role ) :
-			this ( domainName, domainID, null, role )
-		{
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Domain object.
-		/// </summary>
+		/// <param name="store">Store object.</param>
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
 		/// <param name="description">String that describes this domain.</param>
 		/// <param name="role">The synchronization role for this domain.</param>
-		internal Domain( string domainName, string domainID, string description, SyncRoles role ) :
-			base ( domainName, domainID, NodeTypes.DomainType )
+		public Domain( Store store, string domainName, string domainID, string description, SyncRoles role ) :
+			this ( store, domainName, domainID, description, role, null )
+		{
+		}
+
+		/// <param name="store">Store object.</param>
+		/// <param name="domainName">Name of the domain.</param>
+		/// <param name="domainID">Well known unique identifier for the domain.</param>
+		/// <param name="description">String that describes this domain.</param>
+		/// <param name="role">The synchronization role for this domain.</param>
+		/// <param name="locationAddress">The network address of the domain's location service.</param>
+		public Domain( Store store, string domainName, string domainID, string description, SyncRoles role, Uri locationAddress ) :
+			base ( store, domainName, domainID, NodeTypes.DomainType, domainID )
 		{
 			// Add the description attribute.
 			if ( ( description != null ) && ( description.Length > 0 ) )
@@ -141,82 +136,55 @@ namespace Simias.Storage
 				properties.AddNodeProperty( PropertyTags.Description, description );
 			}
 
+			// Add the location address.
+			if ( locationAddress != null )
+			{
+				HostAddress = locationAddress;
+			}
+
 			// Add the role attribute.
 			Role = role;
 		}
 
 		/// <summary>
-		/// Constructor that creates a Domain object from a Node object.
+		/// Constructor to create an existing Domain object from a Node object.
 		/// </summary>
-		/// <param name="node">Node object to create the Domain object from.</param>
-		internal Domain( Node node ) :
-			base( node )
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="node">Node object to construct this object from.</param>
+		public Domain( Store storeObject, Node node ) :
+			base( storeObject, node )
 		{
-			if ( type != NodeTypes.DomainType )
-			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.DomainType, type ) );
-			}
 		}
 
 		/// <summary>
-		/// Constructor that creates a Domain object from a ShallowNode object.
+		/// Constructor for creating an existing Domain object from a ShallowNode.
 		/// </summary>
-		/// <param name="collection">Collection that the specified Node object belongs to.</param>
-		/// <param name="shallowNode">ShallowNode object to create the Domain object from.</param>
-		internal Domain( Collection collection, ShallowNode shallowNode ) :
-			base( collection, shallowNode )
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="shallowNode">A ShallowNode object.</param>
+		public Domain( Store storeObject, ShallowNode shallowNode ) :
+			base( storeObject, shallowNode )
 		{
-			if ( type != NodeTypes.DomainType )
-			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.DomainType, type ) );
-			}
 		}
 
 		/// <summary>
-		/// Constructor that creates a Domain object from an Xml document object.
+		/// Constructor to create an existing Domain object from an Xml document object.
 		/// </summary>
-		/// <param name="document">Xml document object to create the Domain object from.</param>
-		internal Domain( XmlDocument document ) :
-			base( document )
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="document">Xml document object to construct this object from.</param>
+		internal Domain( Store storeObject, XmlDocument document ) :
+			base( storeObject, document )
 		{
-			if ( type != NodeTypes.DomainType )
-			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.DomainType, type ) );
-			}
 		}
 		#endregion
 
 		#region Public Methods
-		/// <summary>
-		/// Gets the domain roster for this domain.
-		/// </summary>
-		/// <param name="store">Store object.</param>
-		/// <returns>The Roster object associated with this domain. Null is returned if the call fails.</returns>
-		[ Obsolete( "This method should no longer be used. Use the property Roster instead.", false ) ]
-		public Roster GetRoster( Store store )
-		{
-			Roster roster = null;
-			ICSList list = store.GetCollectionsByType( NodeTypes.RosterType );
-			foreach( ShallowNode sn in list )
-			{
-				Roster r = new Roster( store, sn );
-				if ( r.Domain == id )
-				{
-					roster = r;
-					break;
-				}
-			}
-
-			return roster;
-		}
-
 		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
 		/// <returns>The friendly name of the domain.</returns>
 		public override string ToString()
 		{
-			return this.Name;
+			return Name;
 		}
 		#endregion
 	}
