@@ -288,10 +288,9 @@ namespace Novell.AddressBook.UI.gtk
 		private void EnableControls(bool bookSelected, bool contactSelected)
 		{
 			NewBookItem.Sensitive = true;
+			ConvertBookItem.Sensitive = true;
 			if(bookSelected)
 			{
-
-				ConvertBookItem.Sensitive = true;
 				ShareBookItem.Sensitive = true;
 				DeleteBookItem.Sensitive = true;
 				BookPropsItem.Sensitive = true;
@@ -324,7 +323,6 @@ namespace Novell.AddressBook.UI.gtk
 			}
 			else
 			{
-				ConvertBookItem.Sensitive = false;
 				ShareBookItem.Sensitive = false;
 				DeleteBookItem.Sensitive = false;
 				BookPropsItem.Sensitive = false;
@@ -433,7 +431,6 @@ namespace Novell.AddressBook.UI.gtk
 			if(rc == -5)
 			{
 				Collection col = cp.Collection;
-				Console.WriteLine("Convert collection {0}", col.Name);
 				col.SetType(col, "AB:AddressBook");
 				col.Commit();
 				RefreshBooks();

@@ -98,7 +98,6 @@
 	      <child>
 		<widget class="button" id="NewGroupButton">
 		  <property name="visible">True</property>
-		  <property name="sensitive">False</property>
 		  <property name="tooltip" translatable="yes">Create a new Group</property>
 		  <property name="label" translatable="yes">New _Group</property>
 		  <property name="use_underline">True</property>

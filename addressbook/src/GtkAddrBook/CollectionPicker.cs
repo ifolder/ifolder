@@ -101,7 +101,7 @@ namespace Novell.AddressBook.UI.gtk
 			coltvc.PackStart(colcrt, false);
 			coltvc.SetCellDataFunc(colcrt, new TreeCellDataFunc(
 						ColCellTextDataFunc));
-			coltvc.Title = "Teamspaces";
+			coltvc.Title = "Collections";
 			ColTreeView.AppendColumn(coltvc);
 			ColTreeView.Selection.Changed += new EventHandler(
 						on_collection_selection_changed);

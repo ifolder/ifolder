@@ -161,6 +161,9 @@ namespace Novell.AddressBook.UI.gtk
 
 			searchTimeoutID = 0;
 			selectedContacts = new Hashtable();
+
+			NewGroupButton.Sensitive = false;
+			NewContactButton.Sensitive = false;
 		}
 
 
@@ -663,7 +666,7 @@ namespace Novell.AddressBook.UI.gtk
 					tModel = null;
 				curAddrBook = (AddressBook) BookTreeStore.GetValue(iter,0);
 
-				//CreateContactButton.Sensitive = true;
+				NewContactButton.Sensitive = true;
 				ContactTreeStore.Clear();
 
 				foreach(Contact cont in curAddrBook)
@@ -676,6 +679,8 @@ namespace Novell.AddressBook.UI.gtk
 						Console.WriteLine("We were retuned a NULL contact.");
 				}
 			}
+			else
+				NewContactButton.Sensitive = false;
 		}
 
 

@@ -7,7 +7,7 @@
 <widget class="GtkDialog" id="CollectionDialog">
   <property name="width_request">256</property>
   <property name="height_request">331</property>
-  <property name="title" translatable="yes">Teamspace Picker</property>
+  <property name="title" translatable="yes">Available Collections</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
