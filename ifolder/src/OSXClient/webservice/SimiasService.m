@@ -434,7 +434,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 	loginToDomainMessage.domainID = (char *)[domainID cString];
 	loginToDomainMessage.password = (char *)[password cString];
 
-    init_gsoap (&soap);
+    init_simias_gsoap (&soap);
     err_code = soap_call___ns1__LoginToRemoteDomain(
 			&soap,
             NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
@@ -452,7 +452,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 		// add some crap here to deal with the results
 	}
 
-    cleanup_gsoap(&soap);
+    cleanup_simias_gsoap(&soap);
 }
 
 
