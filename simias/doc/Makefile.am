@@ -1,8 +1,8 @@
 .PHONY: simias-install ndoc ndoc-nodeps ndoc-clean
 
-all: $(DOC_TARGETS)
+all: ndoc
 
-clean-local: $(DOC_CLEAN_TARGETS)
+clean-local: ndoc-clean
 
 simias-install:
 	$(MAKE) -C .. install
@@ -11,8 +11,6 @@ ASSEMBLIES = Common Storage StoreProvider StoreWatcher CollectionEvents Collecti
 
 if WINDOWS
 if NDOC
-NDOC_TARGET := ndoc
-NDOC_CLEAN_TARGET := ndoc-clean
 
 ndoc: simias-install ndoc-nodeps
 
@@ -31,11 +29,18 @@ ndoc-nodeps: ndoc-clean
 ndoc-clean:
 	rm -rf ndoc ndoc.log
 
-endif
-endif
+else # NDOC
 
-DOC_TARGETS := $(NDOC_TARGET)
-DOC_CLEAN_TARGETS := $(NDOC_CLEAN_TARGET)
+ndoc ndoc-clean:
+	@echo NDOC is not configured
+
+endif # NDOC
+else # WINDOWS
+
+ndoc ndoc-clean:
+	@echo ndoc target is currently only supported on Windows
+
+endif # WINDOWS
 
 maintainer-clean-local:
 	rm -f Makefile.in

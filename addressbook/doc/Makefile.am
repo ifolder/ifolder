@@ -9,6 +9,7 @@ addressbook-install:
 
 ASSEMBLIES = FormsBookLib
 
+if WINDOWS
 if NDOC
 
 ndoc: addressbook-install ndoc-nodeps
@@ -34,6 +35,12 @@ ndoc ndoc-clean:
 	@echo NDOC is not configured
 
 endif # NDOC
+else # WINDOWS
+
+ndoc ndoc-clean:
+	@echo ndoc target is currently only supported on Windows
+
+endif # WINDOWS
 
 maintainer-clean-local:
 	rm -f Makefile.in
