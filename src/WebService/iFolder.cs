@@ -99,7 +99,7 @@ namespace Novell.iFolder.Web
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = iFolderType;
 			this.Description = "";
-			this.State = "Local";
+			this.State = collection.IsProxy ? "WaitSync" : "Local";
 			this.IsSubscription = false;
 			this.EnumeratedState = -1;
 			this.IsWorkgroup = 

@@ -4147,9 +4147,6 @@
 	<data name="diskQuotaReadError">
 		<value>An error was encountered while reading disk space restrictions.</value>
 	</data>
-	<data name="syncReadError">
-		<value>An error was encountered while reading sync statistics.</value>
-	</data>
 	<data name="memberReadError">
 		<value>An error was encountered while reading iFolder members.</value>
 	</data>
