@@ -2,7 +2,7 @@ InvitationWizard_CSFILES = $(srcdir)/AcceptDeclinePage.cs $(srcdir)/AssemblyInfo
 InvitationWizard_CSFILES_CSC := $(subst /,$(SEP),$(InvitationWizard_CSFILES))
 InvitationWizard_INCLUDES = 
 InvitationWizard_RESOURCES = $(srcdir)/App$(ICON_EXT)
-InvitationWizard_FLAGS = $(CSC_EXEFLAG)
+InvitationWizard_FLAGS = $(CSC_WINEXEFLAG)
 InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) iFolder.dll Agent.dll
 InvitationWizard_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
 

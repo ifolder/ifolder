@@ -58,6 +58,7 @@ case $ADDRESSBOOK_OS in
         COUT='-o'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
         CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
         CXX='c++ -c'
         CXXFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=@PACKAGE@ -DVERSION=@VERSION@";
@@ -122,6 +123,7 @@ case $ADDRESSBOOK_OS in
         COUT='-Fo'
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
         CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
         CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=@PACKAGE@ -DVERSION=@VERSION@";
         DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
@@ -174,6 +176,7 @@ AC_SUBST(CSC)
 AC_SUBST(CSCFLAGS)
 AC_SUBST(CSC_EXEFLAG)
 AC_SUBST(CSC_LIBFLAG)
+AC_SUBST(CSC_WINEXEFLAG)
 AC_SUBST(CXX)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(DEF)

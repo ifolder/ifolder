@@ -18,7 +18,7 @@ InviteAgentGui_CSFILES = $(srcdir)/FormApp/AssemblyInfo.cs $(srcdir)/FormApp/Mai
 InviteAgentGui_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgentGui_CSFILES))
 InviteAgentGui_INCLUDES =
 InviteAgentGui_RESOURCES = $(srcdir)/FormApp/App$(ICON_EXT)
-InviteAgentGui_FLAGS = $(CSC_EXEFLAG)
+InviteAgentGui_FLAGS = $(CSC_WINEXEFLAG)
 InviteAgentGui_LIBS = $(InviteAgent_LIBS) System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) InviteAgent.dll
 InviteAgentGui_LIBPATH = $(InviteAgent_LIBPATH)
 
