@@ -648,6 +648,8 @@ namespace Novell.iFolder.iFolderCom
 					subscr.ToAddress = contact.EMail;
 					
 					poBox.AddMessage(subscr);
+
+					slMember.Added = false;
 				}
 			}
 
