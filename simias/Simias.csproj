@@ -309,6 +309,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\DomainProvider\LocalProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\DomainWatcher\DomainWatcher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -464,11 +469,6 @@
                 />
                 <File
                     RelPath = "src\Policy\FileTypeFilter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Policy\InviteInterval.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -359,7 +359,7 @@ namespace Simias.DomainServices
 			string domainID = domainService.GetDomainID();
 			if ( ( domainID != null ) && ( store.GetDomain( domainID ) != null ) )
 			{
-				throw new ExistsException( String.Format( "A user is already provisioned in domain {0}", domainID ) );
+				throw new ExistsException( String.Format( "Domain {0}", domainID ) );
 			}
 
 			// Build a credential from the user name and password.

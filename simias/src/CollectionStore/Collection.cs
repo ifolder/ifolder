@@ -294,13 +294,7 @@ namespace Simias.Storage
 		/// </summary>
 		public int Interval
 		{
-			get 
-			{ 
-				// POBox objects have a different sync interval than regular collections.
-				return IsBaseType( this, NodeTypes.POBoxType ) ?
-					InviteInterval.Get( GetCurrentMember(), this ).Interval :
-					SyncInterval.Get( GetCurrentMember(), this ).Interval; 
-			}
+			get { return SyncInterval.Get( GetCurrentMember(), this ).Interval; }
 		}
 
 		/// <summary>

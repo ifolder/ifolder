@@ -41,6 +41,7 @@ AssemblyInfo.cs
 ../DomainProvider/DomainProvider.cs
 ../DomainProvider/EnterpriseProvider.cs
 ../DomainProvider/IDomainProvider.cs
+../DomainProvider/LocalProvider.cs
 ../DomainWatcher/Service.cs
 ../DomainWatcher/DomainWatcher.cs
 ../FlaimProvider/FlaimError.cs
@@ -66,7 +67,6 @@ AssemblyInfo.cs
 ../Policy/DiskSpaceQuota.cs
 ../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs
-../Policy/InviteInterval.cs
 ../Policy/SyncInterval.cs
 ../Service/BaseProcessService.cs
 ../Service/IThreadService.cs

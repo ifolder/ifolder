@@ -63,6 +63,11 @@ namespace Simias.Storage
 		static private string storeUnmanagedDirectoryName = "SimiasFiles";
 
 		/// <summary>
+		/// File used to store the private key for the local identity.
+		/// </summary>
+		static private string KeyFile = ".if.pri";
+
+		/// <summary>
 		/// XML configuration tags used to get the enterprise user name.
 		/// </summary>
 		static private string DomainTag = "Domain";
@@ -311,21 +316,18 @@ namespace Simias.Storage
 				{
 					// Default the user name to the machine user name.
 					string userName = Environment.UserName;
-					string adminDNName = null;
 
 					// Does the configuration indicate that this is an enterprise server?
-					if ( enterpriseServer )
+					if ( IsEnterpriseServer )
 					{
 						// Get the name of the user to create as the identity.
-						adminDNName = config.Get( DomainTag, AdminDNTag, null );
-						if ( adminDNName != null )
+						string adminDNName = config.Get( DomainTag, AdminDNTag, null );
+						if ( adminDNName == null )
 						{
-							userName = ParseUserName( adminDNName );
+							throw new SimiasException( "Enterprise administrator name not specified." );
 						}
-						else
-						{
-							throw new SimiasException( "Cannot get ldap DN name for simias admin." );
-						}
+
+						userName = ParseUserName( adminDNName );
 					}
 
 					// Create an object that represents the database collection.
@@ -340,9 +342,8 @@ namespace Simias.Storage
 					identity = owner.ID;
 
 					// Create a credential to be used to identify the local user.
-					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
-					owner.AddDomainIdentity( identity, localDomainID, credential.ToXmlString( true ), CredentialType.PPK );
-
+					owner.AddDomainIdentity( owner.ID, localDomainID, CreateLocalCredential(), CredentialType.PPK );
+                    
 					// Create a member object that will own the local database.
 					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 					member.IsOwner = true;
@@ -351,10 +352,10 @@ namespace Simias.Storage
 					ldb.Commit( new Node[] { ldb, member, owner } );
 
 					// Create the local domain.
-					Domain localDomain = new Domain( this, "Local", localDomainID, "Local Machine Domain", SyncRoles.Local, Domain.ConfigurationType.None );
-					Member localDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
-					localDomainOwner.IsOwner = true;
-					localDomain.Commit( new Node[] { localDomain, localDomainOwner } );
+					Domain domain = new Domain( this, "Local", localDomainID, "Local Machine Domain", SyncRoles.Local, Domain.ConfigurationType.None );
+					Member domainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin, owner.PublicKey );
+					domainOwner.IsOwner = true;
+					domain.Commit( new Node[] { domain, domainOwner } );
 
 					// Create a SyncInterval policy.
 					SyncInterval.Create( DefaultMachineSyncInterval );
@@ -362,39 +363,7 @@ namespace Simias.Storage
 					// See if there is a configuration parameter for an enterprise domain.
 					if ( IsEnterpriseServer )
 					{
-						// Get the name of the enterprise domain.
-						string enterpriseName = config.Get( Domain.SectionName, Domain.EnterpriseName, String.Empty );
-						if ( enterpriseName == String.Empty )
-						{
-							throw new CollectionStoreException( "Enterprise name is empty." );
-						}
-
-						// Check if an enterprise ID was specified or if it needs to be generated.
-						string enterpriseID = config.Get( Domain.SectionName, Domain.EnterpriseID, Guid.NewGuid().ToString().ToLower() );
-
-						// Check if there is a description for this enterprise domain.
-						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
-
-						// Create the enterprise domain.
-						Domain enterpriseDomain = new Domain( this, enterpriseName, enterpriseID, description, SyncRoles.Master, Domain.ConfigurationType.ClientServer );
-						enterpriseDomain.SetType( enterpriseDomain, "Enterprise" );
-						Member enterpriseDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
-						if ( adminDNName != null )
-						{
-							enterpriseDomainOwner.Properties.AddNodeProperty( "DN", adminDNName );
-						}
-						enterpriseDomainOwner.IsOwner = true;
-						enterpriseDomain.Commit( new Node[] { enterpriseDomain, enterpriseDomainOwner } );
-
-						// Create the identity mapping.
-						owner.AddDomainIdentity( owner.ID, enterpriseID );
-
-						// Add the enterprise domain as the default domain.
-						ldb.DefaultDomain = enterpriseID;
-						ldb.Commit( new Node[] { ldb, owner } );
-
-						// Create a default sync interval policy for this domain.
-						SyncInterval.Create( enterpriseDomain, DefaultDomainSyncInterval );
+						CreateEnterpriseDomain( ldb, owner );
 					}
 				}
 				catch ( Exception e )
@@ -476,6 +445,77 @@ namespace Simias.Storage
 		#endregion
 
 		#region Private Methods
+		/// <summary>
+		/// Creates an enterprise domain.
+		/// </summary>
+		/// <param name="ldb">The local database object.</param>
+		/// <param name="identity">The identity for this machine.</param>
+		private void CreateEnterpriseDomain( LocalDatabase ldb, Identity identity )
+		{
+			// Get the name of the enterprise domain.
+			string enterpriseName = config.Get( Domain.SectionName, Domain.EnterpriseName, String.Empty );
+			if ( enterpriseName == String.Empty )
+			{
+				throw new CollectionStoreException( "Enterprise name is empty." );
+			}
+
+			// Check if an enterprise ID was specified or if it needs to be generated.
+			string enterpriseID = config.Get( Domain.SectionName, Domain.EnterpriseID, Guid.NewGuid().ToString().ToLower() );
+
+			// Check if there is a description for this enterprise domain.
+			string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
+
+			// Create the enterprise domain.
+			Domain domain = 
+				new Domain( 
+					this, 
+					enterpriseName, 
+					enterpriseID, 
+					description, 
+					SyncRoles.Master, 
+					Domain.ConfigurationType.ClientServer );
+
+			// This is the tag that the Enterprise domain provider looks for.
+			domain.SetType( domain, "Enterprise" );
+
+			// Create the owner of the enterprise domain.
+			Member owner = new Member( identity.Name, identity.ID, Access.Rights.Admin );
+			owner.Properties.AddNodeProperty( "DN", config.Get( DomainTag, AdminDNTag, null ) );
+			owner.IsOwner = true;
+			domain.Commit( new Node[] { domain, owner } );
+
+			// Create the identity mapping.
+			identity.AddDomainIdentity( owner.UserID, domain.ID );
+
+			// Add the enterprise domain as the default domain.
+			ldb.DefaultDomain = domain.ID;
+			ldb.Commit( new Node[] { ldb, identity } );
+
+			// Create a default sync interval policy for this domain.
+			SyncInterval.Create( domain, DefaultDomainSyncInterval );
+		}
+
+		/// <summary>
+		/// Creates a local credential to be used to identify the local user.
+		/// </summary>
+		/// <returns>A string representation of the created credential </returns>
+		private string CreateLocalCredential()
+		{
+			// Create a credential to be used to identify the local user.
+			RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
+			string credentialString = credential.ToXmlString( true );
+
+			// Export the credential to a file stored in the directory where the simias store
+			// is located. The local web services will use the file credential to authenticate
+			// to the local box.
+			using ( StreamWriter sw = new StreamWriter( Path.Combine( StorePath, KeyFile ) ) )
+			{
+				sw.Write( credentialString );
+			}
+
+			return credentialString;
+		}
+
 		/// <summary>
 		/// Gets a list of collections that have been locked.
 		/// </summary>
