@@ -4,7 +4,6 @@ using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels;
-//using Mono.P2p.mDnsResponder;
 using Mono.P2p.mDnsResponderApi;
 using log4net;
 using log4net.Config;
@@ -26,6 +25,7 @@ class mDnsCmd
 	private	ArrayList	addressList = null;
 	private ArrayList	serviceList = null;
 	private ArrayList	textStrings = null;
+	private ArrayList	resourceTypeList = null;
 
 	public enum Commands : uint
 	{
@@ -33,6 +33,7 @@ class mDnsCmd
 		registerptr,
 		registerservicelocation,
 		registertextstrings,
+		getresources,
 		dumpresources,
 		dumplocalresources,
 		dumpstats
@@ -154,10 +155,11 @@ class mDnsCmd
 		Console.WriteLine("    registerptr  -p <ptr name> -h <target host> -l <TTL in seconds>");
 		Console.WriteLine("    registerservicelocation -h <hostname> -s <servicename> -p <port> -w <weight> -r <pRiority>");
 		Console.WriteLine("    registertextstrings -s <servicename> -t <textstring>");
+		Console.WriteLine("    getresources -rt <resourcetype>");
 		Console.WriteLine("    dumpresources");
 		Console.WriteLine("    dumplocalresources");
 		Console.WriteLine("	   dumpstats");
-		Console.WriteLine("   -t = time the command");
+		Console.WriteLine("   -t = lapsed time");
 		Console.WriteLine("   -v = verbose");
 		return;
 	}
@@ -203,7 +205,11 @@ class mDnsCmd
 			case "dumplocalresources":
 				this.cmd = Commands.dumplocalresources;
 				break;
-					
+
+			case "getresources":
+				this.cmd = Commands.getresources;
+				break;
+
 			default:
 				log.Error("invalid command");
 				return(false);
@@ -274,7 +280,7 @@ class mDnsCmd
 								this.AddTextStrings(args[i]);
 							}
 							else
-							if (Commands.registerservicelocation == this.cmd)
+								if (Commands.registerservicelocation == this.cmd)
 							{
 								this.AddService(args[i]);
 							}
@@ -320,9 +326,20 @@ class mDnsCmd
 					this.timeIt = true;
 				}
 				else
-					if (args[i] == "-v")
+				if (args[i] == "-v")
 				{
 					this.verbose = true;
+				}
+			}
+			else
+			if (args[i] == "-rt")
+			{
+				if (i + 1 <= args.Length)
+				{
+					if (args[++i] != null)
+					{
+						this.AddType(args[i]);
+					}
 				}
 			}
 		}
@@ -379,6 +396,19 @@ class mDnsCmd
 		this.textStrings.Add(txtStr);
 	}
 
+	public void AddType(string rtype)
+	{
+		if (this.resourceTypeList == null)
+		{
+			this.resourceTypeList = new ArrayList();
+		}
+
+		if (this.resourceTypeList.Contains(rtype) == false)
+		{
+			this.resourceTypeList.Add(rtype);
+		}
+	}
+
 	public bool	ProcessCommands()
 	{
 		//AddressBook	cAddressBook = null;
@@ -392,7 +422,7 @@ class mDnsCmd
 		IRemoteFactory factory = 
 			(IRemoteFactory) Activator.GetObject(
 			typeof(IRemoteFactory),
-			"http://localhost:8091/factory.soap");
+			"http://localhost:8091/mDnsRemoteFactory.soap");
 
 		if (this.cmd == Commands.registerptr)
 		{
@@ -486,6 +516,106 @@ class mDnsCmd
 			catch{}
 		}
 		else
+		if (this.cmd == Commands.getresources)
+		{
+			if (verbose == true)
+			{
+				log.Info("Command::getresources");
+			}
+
+			try
+			{
+				string[] ids = null;
+				IResourceQuery query = factory.GetQueryInstance();
+				if (this.resourceTypeList != null)
+				{
+					foreach(string rt in this.resourceTypeList)
+					{
+						if (rt == "hostaddress")
+						{
+							RHostAddress ha = null;
+							query.GetResourceRecords(mDnsType.hostAddress, out ids);
+							foreach(string id in ids)
+							{
+								log.Info("");
+								log.Info("ID:      " + id);
+								if(query.GetHostById(ids[0], ref ha) == 0)
+								{
+									log.Info("Host:    " + ha.Name);
+									log.Info("Address: " + ha.PrefAddress);
+								}
+							}
+						}
+						else
+						if (rt == "ptr")
+						{
+							RPtr ptr = null;
+							query.GetResourceRecords(mDnsType.ptr, out ids);
+							foreach(string id in ids)
+							{
+								log.Info("");
+								log.Info("ID:      " + id);
+								if(query.GetPtrById(ids[0], ref ptr) == 0)
+								{
+									log.Info("Source:    " + ptr.Name);
+									log.Info("Target:    " + ptr.Target);
+								}
+							}
+						}
+						else
+						if (rt == "service")
+						{
+							RServiceLocation sl = null;
+							query.GetResourceRecords(mDnsType.serviceLocation, out ids);
+							foreach(string id in ids)
+							{
+								log.Info("");
+								log.Info("ID:      " + id);
+								if(query.GetServiceById(ids[0], ref sl) == 0)
+								{
+									log.Info("Service: " + sl.Name);
+									log.Info("Port:    " + sl.Port.ToString());
+									log.Info("Priority:" + sl.Priority.ToString());
+									log.Info("Weight:  " + sl.Weight.ToString());
+									log.Info("Host:    " + sl.Target);
+								}
+							}
+						}
+						else
+						if (rt == "textstrings")
+						{
+							RTextStrings ts = null;
+							query.GetResourceRecords(mDnsType.textStrings, out ids);
+							foreach(string id in ids)
+							{
+								log.Info("");
+								log.Info("ID:      " + id);
+								if(query.GetTextStringsById(ids[0], ref ts) == 0)
+								{
+									log.Info("Name: " + ts.Name);
+
+									foreach(string txt in ts.GetTextStrings())
+									{
+										log.Info("TXT:     " + txt);
+									}
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					query.GetResourceRecords(mDnsType.all, out ids);
+
+					foreach(string id in ids)
+					{
+						log.Info("  ID: " + id);
+					}
+				}
+			}
+			catch{}
+		}
+		else
 		if (this.cmd == Commands.dumpresources)
 		{
 			if (verbose == true)
@@ -495,7 +625,7 @@ class mDnsCmd
 
 			try
 			{
-				ImDnsLog dl = factory.GetLogInstance();		
+				IMDnsLog dl = factory.GetLogInstance();		
 				dl.DumpResourceRecords();
 			}
 			catch{}
@@ -510,7 +640,7 @@ class mDnsCmd
 
 			try
 			{
-				ImDnsLog dl = factory.GetLogInstance();		
+				IMDnsLog dl = factory.GetLogInstance();		
 				dl.DumpLocalRecords();
 			}
 			catch{}

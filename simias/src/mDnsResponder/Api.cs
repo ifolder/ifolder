@@ -184,6 +184,205 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Public Methods
 
+		public int GetHostById(string id, ref RHostAddress ha)
+		{
+			//log.Info("GetHostById called");
+			int status = 0;
+			ha = null;
+			HostAddress cHost = Resources.GetHostAddressById(id);
+			if (cHost != null)
+			{
+				ha = new RHostAddress(cHost.Name, cHost.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cHost.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cHost.Class, false);
+				ha.ID = cHost.ID;
+				ha.AddIPAddress(cHost.PrefAddress);
+			}
+			else
+			{
+				status = -1;
+			}
+			
+			return(status);
+		}
+
+		public int GetHostByName(string hostName, ref RHostAddress ha)
+		{
+			//log.Info("GetHostByName called");
+			int status = 0;
+			ha = null;
+			HostAddress cHost = Resources.GetHostAddress(hostName);
+			if (cHost != null)
+			{
+				ha = new RHostAddress(cHost.Name, cHost.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cHost.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cHost.Class, false);
+				ha.ID = cHost.ID;
+				ha.AddIPAddress(cHost.PrefAddress);
+			}
+			else
+			{
+				status = -1;
+			}
+			
+			return(status);
+		}
+
+		public int GetServiceById(string id, ref RServiceLocation sl)
+		{
+			//log.Info("GetServiceById called");
+			int status = 0;
+			sl = null;
+			ServiceLocation cService = Resources.GetServiceLocationById(id);
+			if (cService != null)
+			{
+				sl = new RServiceLocation(cService.Name, cService.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cService.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cService.Class, false);
+				sl.ID = cService.ID;
+				sl.Priority = cService.Priority;
+				sl.Weight = cService.Weight;
+				sl.Port = cService.Port;
+				sl.Target = cService.Target;
+			}
+			else
+			{
+				status = -1;
+			}
+			
+			return(status);
+		}
+
+		public int GetServiceByName(string serviceName, ref RServiceLocation sl)
+		{
+			//log.Info("GetServiceByName called");
+			int status = 0;
+			sl = null;
+			ServiceLocation cService = Resources.GetServiceLocation(serviceName);
+			if (cService != null)
+			{
+				sl = new RServiceLocation(cService.Name, cService.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cService.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cService.Class, false);
+				sl.ID = cService.ID;
+				sl.Priority = cService.Priority;
+				sl.Weight = cService.Weight;
+				sl.Port = cService.Port;
+				sl.Target = cService.Target;
+			}
+			else
+			{
+				status = -1;
+			}
+			
+			return(status);
+		}
+
+		public int GetPtrById(string id, ref RPtr ptr)
+		{
+			int status;
+			ptr = null;
+			Ptr cPtr = null;
+
+			try
+			{
+				cPtr = (Ptr) Resources.GetResourceById(id);
+				if (cPtr != null)
+				{
+					ptr = new RPtr(cPtr.Name, cPtr.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cPtr.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cPtr.Class, false);
+					ptr.ID = cPtr.ID;
+					ptr.Target = cPtr.Target;
+					status = 0;
+				}
+				else
+				{
+					status = -1;
+				}
+			}
+			catch
+			{
+				status = -1;
+			}
+			
+			return(status);
+		}
+
+		public int GetTextStringsById(string id, ref RTextStrings ts)
+		{
+			int status;
+			ts = null;
+			TextStrings cTxt = null;
+
+			try
+			{
+				cTxt = (TextStrings) Resources.GetResourceById(id);
+				if (cTxt != null)
+				{
+					ts = new RTextStrings(cTxt.Name, cTxt.Ttl, (Mono.P2p.mDnsResponderApi.mDnsType) cTxt.Type, (Mono.P2p.mDnsResponderApi.mDnsClass) cTxt.Class, false);
+					ts.ID = cTxt.ID;
+
+					foreach(string s in cTxt.GetTextStrings())
+					{
+						ts.AddTextString(s);
+					}
+					status = 0;
+				}
+				else
+				{
+					status = -1;
+				}
+			}
+			catch
+			{
+				status = -1;
+			}
+			
+			return(status);
+		}
+
+		public int GetResourceRecords(mDnsResponderApi.mDnsType rType, out string[] IDs)
+		{
+			IDs = null;
+
+			if (Resources.resourceList.Count == 0)
+			{
+				return(0);
+			}
+
+			if (rType == mDnsResponderApi.mDnsType.all)
+			{
+				IDs = new string[Resources.resourceList.Count];
+				int	i = 0;
+				Resources.resourceMtx.WaitOne();
+				foreach(BaseResource cResource in Resources.resourceList)
+				{
+					if (rType == mDnsResponderApi.mDnsType.all ||
+						rType == (mDnsResponderApi.mDnsType) cResource.Type)
+					{
+						IDs[i++] = cResource.ID;
+					}
+				}
+				Resources.resourceMtx.ReleaseMutex();
+			}
+			else
+			{
+				string[] totalIDs = new string[Resources.resourceList.Count];
+				int	i = 0;
+				Resources.resourceMtx.WaitOne();
+				foreach(BaseResource cResource in Resources.resourceList)
+				{
+					if (rType == (mDnsResponderApi.mDnsType) cResource.Type)
+					{
+						totalIDs[i++] = cResource.ID;
+					}
+				}
+				Resources.resourceMtx.ReleaseMutex();
+
+				if (totalIDs[0] != null)
+				{
+					IDs = new string[i];
+					for(int x = 0; x < i; x++)
+					{
+						IDs[x] = totalIDs[x];
+					}
+				}
+			}
+
+			return(0);
+		}
+
 		public int LookupResource(string name, ref short rtype)
 		{
 			Console.WriteLine("LookupResource called");
@@ -391,7 +590,6 @@ namespace Mono.P2p.mDnsResponder
 		#region Static Methods
 		public static int Startup()
 		{
-			/*
 			Hashtable props = new Hashtable();
 			props["port"] = 8091;
 
@@ -406,15 +604,12 @@ namespace Mono.P2p.mDnsResponder
 #endif
 			HttpChannel chnl = new HttpChannel(props, clientProvider, serverProvider);
 
-			//HttpChannel chnl = new HttpChannel(8091);
-
 			ChannelServices.RegisterChannel(chnl);
 			
 			RemotingConfiguration.RegisterWellKnownServiceType(
 				typeof(mDnsRemoteFactory),
-				"factory.soap",
+				"mDnsRemoteFactory.soap",
 				WellKnownObjectMode.Singleton);
-			*/
 
 			Hashtable propsTcp = new Hashtable();
 			propsTcp["port"] = 8092;

@@ -23,6 +23,7 @@ namespace Mono.P2p.mDnsResponderApi
 		ipv6 = 28,
 		hostInfo = 31,
 		serviceLocation = 33,
+		all = 255,
 		dumpYourGuts = 1189
 	}
 	
@@ -45,6 +46,7 @@ namespace Mono.P2p.mDnsResponderApi
 		protected bool		owner = false;
 		protected string	name = null;
 		protected int		ttl = 0;
+		protected string	id = null;
 		protected mDnsType	dnsType;
 		protected mDnsClass dnsClass;
 		#endregion
@@ -107,6 +109,19 @@ namespace Mono.P2p.mDnsResponderApi
 			}
 		}
 
+		public string ID
+		{
+			get
+			{
+				return(this.id);
+			}
+
+			set
+			{
+				this.id = value;
+			}
+		}
+
 		#endregion
 
 		#region Constructors
@@ -118,7 +133,6 @@ namespace Mono.P2p.mDnsResponderApi
 			this.dnsType = dnsType;
 			this.dnsClass = dnsClass;
 			this.owner = owner;
-
 			this.update = DateTime.Now;
 		}
 		#endregion
@@ -128,6 +142,7 @@ namespace Mono.P2p.mDnsResponderApi
 		{
 			update = DateTime.Now;
 		}
+
 		#endregion
 
 		#region Static Methods
@@ -202,6 +217,174 @@ namespace Mono.P2p.mDnsResponderApi
 		#endregion
 	}
 
+	/// <summary>
+	/// Summary description for Service Resource
+	/// </summary>
+	[Serializable]
+	public class RServiceLocation : RBaseResource
+	{
+		#region Class Members
+		int			port;
+		int			priority;
+		int			weight;
+		string		target = "";
+		#endregion
+
+		#region Properties
+
+		public int	Port
+		{
+			get
+			{
+				return(this.port);
+			}
+
+			set
+			{
+				this.port = value;
+				this.Update();
+			}
+		}
+
+		public int	Priority
+		{
+			get
+			{
+				return(this.priority);
+			}
+
+			set
+			{
+				this.priority = value;
+				this.Update();
+			}
+		}
+
+		public int	Weight
+		{
+			get
+			{
+				return(this.weight);
+			}
+
+			set
+			{
+				this.weight = value;
+				this.Update();
+			}
+		}
+		
+		public string	Target
+		{
+			get
+			{
+				return(this.target);
+			}
+			
+			set
+			{
+				this.target = value;
+				this.Update();
+			}
+		}
+		#endregion
+
+		#region Constructors
+		public RServiceLocation(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			this.priority = 0;
+		}
+		
+		#endregion
+
+		#region Private Methods
+		#endregion
+
+		#region Static Methods
+		#endregion
+
+		#region Public Methods
+		#endregion
+	}
+
+	[Serializable]
+	public class RPtr : RBaseResource
+	{
+		#region Class Members
+		string		target;
+		#endregion
+
+		#region Properties
+
+		public string	Target
+		{
+			get
+			{
+				return(this.target);
+			}
+			
+			set
+			{
+				this.target = value;
+				this.Update();
+			}
+		}
+		#endregion
+
+		#region Constructors
+		public RPtr(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			this.target = "";			
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Summary description for TextString
+	/// </summary>
+	[Serializable]
+	public class RTextStrings : RBaseResource
+	{
+		#region Class Members
+		ArrayList	stringList = null;
+		#endregion
+
+		#region Properties
+		#endregion
+
+		#region Constructors
+		public RTextStrings(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			this.stringList = new ArrayList();
+		}
+		#endregion
+
+		#region Public Methods
+		public bool	AddTextString(string txtString)
+		{
+			this.stringList.Add(txtString);
+			return(true);
+		}
+
+		public bool RemoveTextString(string txtString)
+		{
+			this.stringList.Remove(txtString);
+			return(true);
+		}
+		
+		public bool RemoveAllTextStrings()
+		{
+			this.stringList.Clear();
+			return(true);
+		}
+
+		public ArrayList GetTextStrings()
+		{
+			return(this.stringList);
+		}
+		#endregion
+	}
+
 	public interface IResourceRegistration
 	{
 		int	RegisterHost(string host, string ipaddress);
@@ -216,10 +399,13 @@ namespace Mono.P2p.mDnsResponderApi
 	
 	public interface IResourceQuery
 	{
-		int LookupResource(string name, ref short rtype);
-		int	LookupServiceLocation(string serviceName, ref string host, ref int port, ref int priority, ref int weight);
-		int	LookupPtr(string domain, ref string target);
-		int LookupHost(string host, ref RHostAddress ha);	
+		int GetResourceRecords(mDnsResponderApi.mDnsType rType, out string[] IDs);
+		int	GetHostById(string id, ref RHostAddress ha);
+		int	GetHostByName(string hostName, ref RHostAddress ha);
+		int	GetServiceById(string id, ref RServiceLocation sl);
+		int GetServiceByName(string serviceName, ref RServiceLocation sl);
+		int	GetPtrById(string id, ref RPtr ptr);
+		int GetTextStringsById(string id, ref RTextStrings ts);
 	}
 
 	public interface IMDnsLog
@@ -234,7 +420,6 @@ namespace Mono.P2p.mDnsResponderApi
 		IResourceRegistration	GetRegistrationInstance();
 		IResourceQuery			GetQueryInstance();
 		IMDnsLog				GetLogInstance();
-//		IMDnsEvent				GetEventInstance();
 	}
 
 //	public delegate void mDnsEventHandler(mDnsEvent mEvent, mDnsType mType, string resourceID);
@@ -243,7 +428,6 @@ namespace Mono.P2p.mDnsResponderApi
 	public interface IMDnsEvent
 	{
 		event	mDnsEventHandler OnEvent;
-//		void	Publish(mDnsEvent mEvent, mDnsType mType, string resourceID);
 		void	Publish(string resourceID);
 	}
 
@@ -255,13 +439,6 @@ namespace Mono.P2p.mDnsResponderApi
 		{
 			OnLocalEvent(resourceID);
 		}
-
-		/*
-		public void LocalOnEvent(mDnsEvent mEvent, mDnsType mType, string resourceID)
-		{
-			OnLocalEvent(mEvent, mType, resourceID);
-		}
-		*/
 
 		public override object InitializeLifetimeService()
 		{

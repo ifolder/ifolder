@@ -247,7 +247,24 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 			return(rHost);
 		}
-		
+
+		static public HostAddress GetHostAddressById(string id)
+		{
+			log.Info("GetHostAddressById called");
+			HostAddress	rHost = null;
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.ID == id)
+				{
+					rHost = (HostAddress) cResource;
+					break;
+				}
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rHost);
+		}
+	
 		static public BaseResource GetResource(string name)
 		{
 			log.Info("GetResource called");
@@ -264,6 +281,23 @@ namespace Mono.P2p.mDnsResponder
 				}
 			}
 
+			Resources.resourceMtx.ReleaseMutex();
+			return(rResource);
+		}
+
+		static public BaseResource GetResourceById(string id)
+		{
+			log.Info("GetResourceById called");
+			BaseResource rResource = null;
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.ID == id)
+				{
+					rResource = cResource;
+					break;
+				}
+			}
 			Resources.resourceMtx.ReleaseMutex();
 			return(rResource);
 		}
@@ -314,13 +348,7 @@ namespace Mono.P2p.mDnsResponder
 				if (cResource.Name == service &&
 					cResource.Type == mDnsType.serviceLocation)
 				{
-					ServiceLocation cLocation = (ServiceLocation) cResource;
-					
-					rLocation = new ServiceLocation(cLocation.Name, cLocation.Ttl, cLocation.Type, cLocation.Class, false);
-					rLocation.Target = cLocation.Target;
-					rLocation.Port = cLocation.Port;
-					rLocation.Priority = cLocation.Priority;
-					rLocation.Weight = cLocation.Weight;
+					rLocation = (ServiceLocation) cResource;
 					break;
 				}
 			}
@@ -328,6 +356,24 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 			return(rLocation);
 		}
+
+		static public ServiceLocation GetServiceLocationById(string id)
+		{
+			log.Info("GetServiceLocationById called");
+			ServiceLocation rService = null;
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.ID == id)
+				{
+					rService = (ServiceLocation) cResource;
+					break;
+				}
+			}
+			Resources.resourceMtx.ReleaseMutex();
+			return(rService);
+		}
+
 
 		// TODO need to send a dying record out 
 		static public void RemoveServiceLocation(ServiceLocation serviceLocation)
@@ -576,6 +622,7 @@ namespace Mono.P2p.mDnsResponder
 		DateTime			update;
 		protected bool		owner = false;
 		protected string	name = null;
+		protected string	id = null;
 		protected int		ttl = 0;
 		protected mDnsType	dnsType;
 		protected mDnsClass dnsClass;
@@ -644,6 +691,22 @@ namespace Mono.P2p.mDnsResponder
 			}
 		}
 
+		public string ID
+		{
+			get
+			{
+				try
+				{
+					if (this.id != null)
+					{
+						return(this.id);
+					}
+				}
+				catch{}
+				return("");
+			}
+		}
+
 		#endregion
 
 		#region Constructors
@@ -655,7 +718,7 @@ namespace Mono.P2p.mDnsResponder
 			this.dnsType = dnsType;
 			this.dnsClass = dnsClass;
 			this.owner = owner;
-
+			this.id = Guid.NewGuid().ToString();
 			this.update = DateTime.Now;
 		}
 		#endregion
