@@ -489,6 +489,7 @@ namespace Novell.iFolder
 					break;
 				}
 				case Gtk.ResponseType.Cancel:
+				case Gtk.ResponseType.DeleteEvent:
 				{
 					// Prevent the auto login feature from being called again
 					try
