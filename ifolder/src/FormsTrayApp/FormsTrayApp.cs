@@ -320,9 +320,6 @@ namespace Novell.iFolder.FormsTrayApp
 
 				// Enable the tracer menu item.
 				this.menuItemTracer.Enabled = true;
-
-				// sync logging
-				Log.SetLevel("verbose");
 			}
 			catch (SimiasException ex)
 			{
