@@ -1,0 +1,57 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteProvider", "SqliteProvider.csproj", "{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{10D0F55B-F22A-4585-B892-80EC1C495A5E} = {10D0F55B-F22A-4585-B892-80EC1C495A5E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreProvider", "..\StoreProvider\StoreProvider.csproj", "{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteProviderTests", "SqliteProviderTests\SqliteProviderTests.csproj", "{1AA957C5-2704-4724-B2EF-2CD8C3E075BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7BD9D007-359B-4A8F-AC5D-48C75222D0A4} = {7BD9D007-359B-4A8F-AC5D-48C75222D0A4}
+		{A9C837C5-51F8-4AE5-9C7C-2F024C7594CE} = {A9C837C5-51F8-4AE5-9C7C-2F024C7594CE}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProviderTest", "..\StoreProvider\Test\ProviderTest.csproj", "{A9C837C5-51F8-4AE5-9C7C-2F024C7594CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB} = {4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteWrapper", "SqliteWrapper\SqliteWrapper.csproj", "{10D0F55B-F22A-4585-B892-80EC1C495A5E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}.Debug.ActiveCfg = Debug|.NET
+		{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}.Debug.Build.0 = Debug|.NET
+		{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}.Release.ActiveCfg = Release|.NET
+		{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}.Release.Build.0 = Release|.NET
+		{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}.Debug.ActiveCfg = Debug|.NET
+		{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}.Debug.Build.0 = Debug|.NET
+		{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}.Release.ActiveCfg = Release|.NET
+		{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}.Release.Build.0 = Release|.NET
+		{1AA957C5-2704-4724-B2EF-2CD8C3E075BB}.Debug.ActiveCfg = Debug|.NET
+		{1AA957C5-2704-4724-B2EF-2CD8C3E075BB}.Debug.Build.0 = Debug|.NET
+		{1AA957C5-2704-4724-B2EF-2CD8C3E075BB}.Release.ActiveCfg = Release|.NET
+		{1AA957C5-2704-4724-B2EF-2CD8C3E075BB}.Release.Build.0 = Release|.NET
+		{A9C837C5-51F8-4AE5-9C7C-2F024C7594CE}.Debug.ActiveCfg = Debug|.NET
+		{A9C837C5-51F8-4AE5-9C7C-2F024C7594CE}.Debug.Build.0 = Debug|.NET
+		{A9C837C5-51F8-4AE5-9C7C-2F024C7594CE}.Release.ActiveCfg = Release|.NET
+		{A9C837C5-51F8-4AE5-9C7C-2F024C7594CE}.Release.Build.0 = Release|.NET
+		{10D0F55B-F22A-4585-B892-80EC1C495A5E}.Debug.ActiveCfg = Debug|.NET
+		{10D0F55B-F22A-4585-B892-80EC1C495A5E}.Debug.Build.0 = Debug|.NET
+		{10D0F55B-F22A-4585-B892-80EC1C495A5E}.Release.ActiveCfg = Release|.NET
+		{10D0F55B-F22A-4585-B892-80EC1C495A5E}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

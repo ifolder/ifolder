@@ -1,0 +1,238 @@
+/***********************************************************************
+ *  Common.cs - Class that contains common types like property names.
+ * 
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this library; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Author: Brady Anderson <banderso@novell.com>
+ * 
+ ***********************************************************************/
+
+using System;
+using System.Collections;
+using System.IO;
+
+namespace Novell.AddressBook
+{
+	/// <summary>
+	/// Common class is used for setting up common types across the
+	/// AddressBook project.
+	/// </summary>
+	public class Common
+	{
+		#region Class Members
+		/// <summary>
+		/// email property which is contained in a contact
+		/// </summary>
+		internal static string	emailProperty = "VC:EMAIL";
+
+		/// <summary>
+		/// title property which is contained in a contact
+		/// </summary>
+		internal static string	titleProperty = "VC:TITLE";
+
+		/// <summary>
+		/// full name property which is contained in a contact
+		/// </summary>
+		internal static string	fnProperty = "VC:FN";
+
+		/// <summary>
+		/// role property which is contained in a contact
+		/// </summary>
+		internal static string	roleProperty = "VC:ROLE";
+
+		/// <summary>
+		/// nick name property which is contained in a contact
+		/// </summary>
+		internal static string	nicknameProperty = "VC:NICKNAME";
+
+		/// <summary>
+		/// birthday property which is contained in a contact
+		/// </summary>
+		internal static string	birthdayProperty = "VC:BDAY";
+
+		/// <summary>
+		/// url property which is contained in a contact
+		/// </summary>
+		internal static string	urlProperty = "VC:URL";
+
+		/// <summary>
+		/// vCard Note property which is contained in a contact
+		/// </summary>
+		internal const string noteProperty = "VC:NOTE";
+
+		/// <summary>
+		/// vCard Telephone property which is contained in a contact
+		/// </summary>
+		internal const string phoneProperty = "VC:TEL";
+
+		/// <summary>
+		/// vCard schema version currently supported by the address book
+		/// </summary>
+		internal static string	vcardSchemaVersion = "3.0";
+
+		/// <summary>
+		/// Collection Store a contact is known by
+		/// </summary>
+		internal const string contactType = "AB:Contact";
+
+		/// <summary>
+		/// vCard N (Name) property which is contained in a contact
+		/// </summary>
+		internal const string nameProperty = "VC:N";
+
+		/// <summary>
+		/// vCard given property which is contained in a name
+		/// 
+		/// </summary>
+		internal const string givenProperty = "VC:Given";
+
+		/// <summary>
+		/// vCard family property which is contained in a name
+		/// 
+		/// </summary>
+		internal const string familyProperty = "VC:Family";
+
+		/// <summary>
+		/// vCard ADR (Address) property which is contained in a contact
+		/// </summary>
+		internal const string addressProperty = "VC:ADR";
+
+		/// <summary>
+		/// vCard PHOTO property which is contained in a contact
+		/// </summary>
+		internal const string photoProperty = "VC:PHOTO";
+
+		/// <summary>
+		/// vCard SOUND property which is contained in a contact
+		/// </summary>
+		internal const string soundProperty = "VC:SOUND";
+
+		/// <summary>
+		/// vCard LOGO property which is contained in a contact
+		/// </summary>
+		internal const string logoProperty = "VC:LOGO";
+
+		/// <summary>
+		/// workForceID propoerty contained in a contact
+		/// NOTE! This property is not defined in the vCard schema
+		/// </summary>
+		internal const string workForceIDProperty = "AB:WorkForceID";
+
+		/// <summary>
+		/// mailStop propoerty contained in a contact
+		/// NOTE! This property is not defined in the vCard schema
+		/// </summary>
+		internal const string mailStopProperty = "AB:MailStop";
+
+		/// <summary>
+		/// pobox contained in an ADR property
+		/// </summary>
+		internal const string	poBoxProperty = "VC:Pobox";
+
+		/// <summary>
+		/// Extended address contained in an ADR property
+		/// </summary>
+		internal const string	extendedProperty = "VC:Extadd";
+
+		/// <summary>
+		/// Street address contained in a ADR property
+		/// NOTE! This property is not defined in the vCard schema
+		/// </summary>
+		internal const string	streetProperty = "VC:Street";
+
+		/// <summary>
+		/// Locality contained in an ADR property
+		/// </summary>
+		internal const string	localityProperty = "VC:Locality";
+
+		/// <summary>
+		/// Region contained in an ADR property
+		/// </summary>
+		internal const string	regionProperty = "VC:Region";
+
+		/// <summary>
+		/// Postal code contained in an ADR property
+		/// </summary>
+		internal const string	zipProperty = "VC:Pcode";
+
+		/// <summary>
+		/// Country contained in an ADR property
+		/// </summary>
+		internal const string	countryProperty = "VC:Country";
+
+		/// <summary>
+		/// mailStop propoerty contained in a contact
+		/// NOTE! This property is not defined in the vCard schema
+		/// </summary>
+		internal const string   addressTypeProperty = "VC:AddressType";
+
+		/// <summary>
+		/// Common preferred property contained in a contact
+		/// </summary>
+		internal const string	preferredProperty = "VC:Preferred";
+
+		/// <summary>
+		/// managerID propoerty contained in a contact
+		/// manager's work force ID for the contact
+		/// </summary>
+		internal const string managerIDProperty = "AB:ManagerID";
+		
+		/// <summary>
+		/// vCard PRODID property which is contained in a contact
+		/// </summary>
+		internal const string productIDProperty = "VC:PRODID";
+
+		/// <summary>
+		/// Address Book Identity property contained in a contact
+		/// !NOTE! will be obsolete
+		/// </summary>
+		internal const string identityProperty = "AB:Identity";
+
+		/// <summary>
+		/// Collection name for a contact list
+		/// !NOTE! obsolete
+		/// </summary>
+		internal const string contactListType = "AB:ContactList";
+
+		/// <summary>
+		/// AddressTypes
+		/// </summary>
+		internal const string addressTypesProperty = "AB:AddressTypes";
+		
+		/// <summary>
+		/// A vCard LABEL property may contain the following types
+		/// </summary>
+		internal static string[] labelTypes = new string[] {"home", "work", "dom", "intl", "postal", "parcel", "other"};
+
+		/// <summary>
+		/// Exception header for all application exceptions thrown by the address book
+		/// </summary>
+		internal const string abExceptionHeader = "Novell.AddressBook.Exception - ";
+		internal const string addressBookExceptionHeader = "Novell.AddressBook.Exception - ";
+
+		#endregion
+
+		#region Private Methods
+		#endregion
+
+		#region Static Methods
+		#endregion
+
+		#region Public Methods
+		#endregion
+	}
+}

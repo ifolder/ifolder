@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkGroupIdentity", "WorkGroupIdentity.csproj", "{8A7DADFF-FA0F-4DDD-828F-0A848895752D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkGroupIdentityTests", "WorkGroupIdentityTests\WorkGroupIdentityTests.csproj", "{242B70BF-CC69-4B65-873D-EF1FE6E6C6D8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8A7DADFF-FA0F-4DDD-828F-0A848895752D} = {8A7DADFF-FA0F-4DDD-828F-0A848895752D}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{8A7DADFF-FA0F-4DDD-828F-0A848895752D}.Debug.ActiveCfg = Debug|.NET
+		{8A7DADFF-FA0F-4DDD-828F-0A848895752D}.Debug.Build.0 = Debug|.NET
+		{8A7DADFF-FA0F-4DDD-828F-0A848895752D}.Release.ActiveCfg = Release|.NET
+		{8A7DADFF-FA0F-4DDD-828F-0A848895752D}.Release.Build.0 = Release|.NET
+		{242B70BF-CC69-4B65-873D-EF1FE6E6C6D8}.Debug.ActiveCfg = Debug|.NET
+		{242B70BF-CC69-4B65-873D-EF1FE6E6C6D8}.Debug.Build.0 = Debug|.NET
+		{242B70BF-CC69-4B65-873D-EF1FE6E6C6D8}.Release.ActiveCfg = Release|.NET
+		{242B70BF-CC69-4B65-873D-EF1FE6E6C6D8}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

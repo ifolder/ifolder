@@ -1,0 +1,65 @@
+The SyncCmd.exe program produced in this directory enables low-level
+testing of the synchronization code. It operates at a level below the
+SyncManager and InvitationAgent (i.e. no threading, authentication,
+or authorization) to allow for single pass operation in a distributed
+setting. Run with no parameters it gives a usage statement such as:
+
+------------------------
+
+Usage: SyncCmd [options] operation operationParams
+
+    operations:
+        invite folder invitationFile
+            prints the invitation info to the invitationFile
+            initializes the collection store if necessary
+
+        accept invitationFile folderRoot
+            accepts the invitation into the collection store
+
+        sync folder
+            does one sync of specified folder
+
+        localsync folder localServerStore
+            does one sync of specified folder
+
+        server
+            runs as simple server
+
+    options:
+        -s storeLocation
+        -l traceLevel (off, error, warning, info, verbose)
+        -c traceClass (all or class name)
+        -p port (used by server and invite operations)
+
+-------------------------
+Some examples of usage are:
+
+Set up a folder to share:
+  C:\> SyncCmd -s c:\testStore invite c:\stuff\folderToShare invitation.txt
+  $ mono --debug SyncCmd.exe -s ~/testStore stuff/folderToShare invitation.txt
+
+Now copy the invitation.txt file to destination machine (or another process
+on the same machine) and accept it like this:
+  C:\> SyncCmd -s c:\testStore accept invitation.txt c:\incomingStuff
+  $ mono --debug SyncCmd.exe -s ~/testStore accept invitation.txt ~/incomingStuff
+
+To run a server:
+  C:\> SyncCmd -s c:\testStore server
+  $ mono --debug SyncCmd.exe -s ~/testStore server
+
+To sync a folder with the server:
+  C:\> SyncCmd -s c:\testStore sync c:\incomingStuff\folderToShare
+  $ mono --debug SyncCmd.exe -s ~/testStore sync ~/incomingStuff/folderToShare
+
+Notes and WARNINGS:
+
+If you run both client and server on the same machine you must specify
+different collection stores.
+
+If you don't specify a collection store on every command, it will default to a
+store that Mike keeps in some magic location.
+
+If a port is not specified for the server or invite operations, it defaults
+to 8088.
+
+OF COURSE be careful with your data, sync happens.

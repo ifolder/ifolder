@@ -1,0 +1,62 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{82943066-AB67-455B-88B7-BA05CF10B9C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB2F7899-F3D5-4379-88A1-676F684D7588} = {DB2F7899-F3D5-4379-88A1-676F684D7588}
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831} = {C93C8AC4-945E-4080-BEC7-7A54ED198831}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormApp", "FormApp\FormApp.csproj", "{1514226A-AF2F-4441-98DB-5804C65263DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB2F7899-F3D5-4379-88A1-676F684D7588} = {DB2F7899-F3D5-4379-88A1-676F684D7588}
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831} = {C93C8AC4-945E-4080-BEC7-7A54ED198831}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{DB2F7899-F3D5-4379-88A1-676F684D7588}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryEmail", "LibraryEmail\LibraryEmail.csproj", "{C93C8AC4-945E-4080-BEC7-7A54ED198831}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB2F7899-F3D5-4379-88A1-676F684D7588} = {DB2F7899-F3D5-4379-88A1-676F684D7588}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{82943066-AB67-455B-88B7-BA05CF10B9C4} = {82943066-AB67-455B-88B7-BA05CF10B9C4}
+		{1514226A-AF2F-4441-98DB-5804C65263DB} = {1514226A-AF2F-4441-98DB-5804C65263DB}
+		{DB2F7899-F3D5-4379-88A1-676F684D7588} = {DB2F7899-F3D5-4379-88A1-676F684D7588}
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831} = {C93C8AC4-945E-4080-BEC7-7A54ED198831}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{82943066-AB67-455B-88B7-BA05CF10B9C4}.Debug.ActiveCfg = Debug|.NET
+		{82943066-AB67-455B-88B7-BA05CF10B9C4}.Debug.Build.0 = Debug|.NET
+		{82943066-AB67-455B-88B7-BA05CF10B9C4}.Release.ActiveCfg = Release|.NET
+		{82943066-AB67-455B-88B7-BA05CF10B9C4}.Release.Build.0 = Release|.NET
+		{1514226A-AF2F-4441-98DB-5804C65263DB}.Debug.ActiveCfg = Debug|.NET
+		{1514226A-AF2F-4441-98DB-5804C65263DB}.Debug.Build.0 = Debug|.NET
+		{1514226A-AF2F-4441-98DB-5804C65263DB}.Release.ActiveCfg = Release|.NET
+		{1514226A-AF2F-4441-98DB-5804C65263DB}.Release.Build.0 = Release|.NET
+		{DB2F7899-F3D5-4379-88A1-676F684D7588}.Debug.ActiveCfg = Debug|.NET
+		{DB2F7899-F3D5-4379-88A1-676F684D7588}.Debug.Build.0 = Debug|.NET
+		{DB2F7899-F3D5-4379-88A1-676F684D7588}.Release.ActiveCfg = Release|.NET
+		{DB2F7899-F3D5-4379-88A1-676F684D7588}.Release.Build.0 = Release|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Debug.ActiveCfg = Debug|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Debug.Build.0 = Debug|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Release.ActiveCfg = Release|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Release.Build.0 = Release|.NET
+		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Debug.ActiveCfg = Debug|.NET
+		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Debug.Build.0 = Debug|.NET
+		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Release.ActiveCfg = Release|.NET
+		{9BDABCB7-021A-4CB5-9133-D8FC74CA1C9C}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

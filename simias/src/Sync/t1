@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#set -v
+
+# Test case ideas:
+# subscribe to folder and sync
+# remove a subtree, create new file with same name as former subtree, sync
+# remove a file and create a subtree of same name, sync
+# do many combinations of the preceding two with no sync inbetween, then sync
+
+
+#setup
+rm -rf tmpServerData tmpClientData
+mkdir tmpServerData tmpClientData tmpServerData/testFolder
+mkdir tmpServerData/testFolder/emptydir
+mkdir tmpServerData/testFolder/subdir
+cp *.cs tmpServerData/testFolder
+cp ~/*.ogg tmpServerData/testFolder/subdir
+cp *.dll tmpServerData/testFolder/subdir
+
+#invite
+mono --debug SyncCmd.exe -s tmpServerData invite tmpServerData/testFolder tmpClientData/invitation
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: invite returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+#accept
+mono --debug SyncCmd.exe -s tmpClientData accept tmpClientData/invitation tmpClientData
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: accept returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+#localsync
+mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: first localsync returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+diff tmpClientData/testFolder tmpServerData/testFolder
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 1 returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+diff tmpClientData/testFolder/emptydir tmpServerData/testFolder/emptydir
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of emptydir after localsync 1 returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+diff tmpClientData/testFolder/subdir tmpServerData/testFolder/subdir
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of subdir after localsync 1 returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+# test deletes: delete a file from each end, and cause deletion collision
+# sync and make sure everything got sorted out
+
+rm -f tmpClientData/testFolder/SyncPoint.cs
+rm -f tmpServerData/testFolder/SyncPass.cs
+rm -f tmpServerData/testFolder/SyncOps.cs
+rm -f tmpClientData/testFolder/SyncOps.cs
+rm -f tmpClientData/testFolder/subdir/*.ogg
+rm -f tmpServerData/testFolder/subdir/Sync.dll
+rmdir tmpServerData/testFolder/emptydir
+
+#localsync
+mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: second localsync returned %s\n" $RETVAL; exit $RETVAL; fi
+
+diff tmpClientData/testFolder tmpServerData/testFolder
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+diff tmpClientData/testFolder/subdir tmpServerData/testFolder/subdir
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of subdir after localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi 
+
+if [ -f tmpClientData/testFolder/SyncPoint.cs ]; then printf "FAILED: deleted file still exists\n"; exit 1; fi 
+if [ -f tmpClientData/testFolder/SyncPass.cs ]; then printf "FAILED: deleted file still exists\n"; exit 2; fi 
+if [ -f tmpClientData/testFolder/SyncOps.cs ]; then printf "FAILED: deleted file still exists\n"; exit 3; fi 
+if [ -f tmpClientData/testFolder/subdir/*.ogg ]; then printf "FAILED: deleted file still exists\n"; exit 4; fi 
+if [ -f tmpClientData/testFolder/subdir/Sync.dll ]; then printf "FAILED: deleted file still exists\n"; exit 5; fi 
+if [ -d tmpClientData/testFolder/emptydir ]; then printf "FAILED: deleted file still exists\n"; exit 6; fi 
+
+echo "PASSED"

@@ -1,0 +1,56 @@
+TARGETS := Sync.dll SyncCmd.exe
+
+#OPTS := /warn:4 /debug+ /d:TRACE /d:DEBUG
+OPTS := /debug+ /d:TRACE /d:DEBUG
+DENALI_ROOT := ../..
+
+ifeq ($(OS),Windows_NT)
+CCS := csc
+RUNTIME := 
+UPD := c:\msys\bin\cp -u  
+RM := c:\msys\bin\rm -rf
+SQLITE := w32/sqlite.dll
+else
+CCS := mcs
+RUNTIME := mono --debug
+UPD := cp -u
+RM := rm -rf
+SQLITE := linux/libsqlite.so
+endif
+
+RLIBS := CollectionStore Identity WorkGroupIdentity StoreProvider \
+		SqliteProvider Common Configuration CollectionEvents \
+		SyncCommon Agent
+
+SLIBS := System.Runtime.Remoting System.Data System
+
+LIBOPTS = $(RLIBS:%=/r:%.dll) $(SLIBS:%=/r:%.dll) $(filter %.dll, $(^:%=/r:%))
+
+.PHONY: all clean test libs
+
+all: $(TARGETS)
+
+SyncCmd.exe: libs Sync.dll SyncCmd.cs 
+	$(CCS) /t:exe $(OPTS) $(LIBOPTS) /out:$@ $(filter %.cs,$^)
+
+Sync.dll: libs SyncPoint.cs SyncOps.cs SyncPass.cs SyncServ.cs Dredge.cs SyncLog.cs
+	$(CCS) /t:library $(OPTS) $(LIBOPTS) /out:$@ $(filter %.cs,$^)
+
+test: $(TARGETS)
+	./t1
+
+clean:
+	@$(RM) $(TARGETS) tmpServerData tmpClientData SqliteWrapper.dll \
+			$(notdir $(SQLITE)) Novell.iFolder.Configuration.dll \
+			*.pdb $(RLIBS:%=%.dll)
+
+libs:
+	@$(UPD) $(foreach LIB, $(RLIBS), $(DENALI_ROOT)/src/$(LIB)/$(LIB).dll) \
+			$(DENALI_ROOT)/external/sqlite/$(SQLITE) \
+			$(DENALI_ROOT)/src/SqliteProvider/SqliteWrapper.dll .
+
+pdbs:
+	@$(UPD) $(foreach LIB, $(RLIBS), $(DENALI_ROOT)/src/$(LIB)/$(LIB).pdb) \
+			$(DENALI_ROOT)/src/SqliteProvider/SqliteWrapper.pdb .
+
+#===========================================================================
