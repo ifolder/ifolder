@@ -864,6 +864,9 @@ public class iFolderSettings {
     
     /// <remarks/>
     public string CurrentUserID;
+
+    /// <remarks/>
+    public string CurrentUserName;
 }
 
 /// <remarks/>

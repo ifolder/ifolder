@@ -151,9 +151,6 @@ namespace Novell.iFolder
 				SyncUnitsLabel.Sensitive = true;
 			}
 
-
-			// This should change to check the value but I'm not sure
-			// which value to check
 			if(AutoSyncCheckButton.Active == true)
 			{
 				SyncSpinButton.Sensitive = true;
@@ -709,7 +706,7 @@ namespace Novell.iFolder
 			// create a hbox to provide spacing
 			HBox srvSpacerBox = new HBox();
 			srvSpacerBox.Spacing = 10;
-			srvSectionBox.PackStart(srvSpacerBox, true, true, 0);
+			srvSectionBox.PackStart(srvSpacerBox, false, true, 0);
 			Label srvSpaceLabel = new Label("");
 			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
 
@@ -719,7 +716,7 @@ namespace Novell.iFolder
 
 			// create a table to hold the values
 			Table srvTable = new Table(3,2,false);
-			srvWidgetBox.PackStart(srvTable, false, true, 0);
+			srvWidgetBox.PackStart(srvTable, true, true, 0);
 			srvTable.ColumnSpacing = 20;
 			srvTable.RowSpacing = 5;
 
@@ -727,7 +724,7 @@ namespace Novell.iFolder
 			usrNameLabel.Xalign = 0;
 			srvTable.Attach(usrNameLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usrNameValue = new Label(ifSettings.CurrentUserID);
+			Label usrNameValue = new Label(ifSettings.CurrentUserName);
 			usrNameValue.Xalign = 0;
 			srvTable.Attach(usrNameValue, 1,2,0,1);
 
@@ -743,13 +740,23 @@ namespace Novell.iFolder
 
 			Label srvDescLabel = new Label("Server description:");
 			srvDescLabel.Xalign = 0;
+			srvDescLabel.Yalign = 0;
 			srvTable.Attach(srvDescLabel, 0,1,2,3,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label srvDescValue = new Label(ifSettings.EnterpriseDescription);
-			srvDescValue.Xalign = 0;
-			srvDescValue.LineWrap = true;
-			srvTable.Attach(srvDescValue, 1,2,2,3);
+					AttachOptions.Shrink | AttachOptions.Fill, 
+					AttachOptions.Fill,0,0);
 
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			TextView srvDescValue = new TextView();
+			srvDescValue.Buffer.Text = ifSettings.EnterpriseDescription;
+			srvDescValue.WrapMode = Gtk.WrapMode.Word;
+			srvDescValue.Editable = false;
+			srvDescValue.CursorVisible = false;
+			srvDescValue.RightMargin = 5;
+			srvDescValue.LeftMargin = 5;
+			sw.Add(srvDescValue);
+			srvTable.Attach(sw, 1,2,2,3,
+					AttachOptions.Expand | AttachOptions.Fill , 0,0,0);
 
 
 
@@ -785,7 +792,7 @@ namespace Novell.iFolder
 			totalLabel.Xalign = 0;
 			diskTable.Attach(totalLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label totalValue = new Label("8000");
+			Label totalValue = new Label("0");
 			totalValue.Xalign = 1;
 			diskTable.Attach(totalValue, 1,2,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -797,7 +804,7 @@ namespace Novell.iFolder
 			usedLabel.Xalign = 0;
 			diskTable.Attach(usedLabel, 0,1,1,2,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label usedValue = new Label("500");
+			Label usedValue = new Label("0");
 			usedValue.Xalign = 1;
 			diskTable.Attach(usedValue, 1,2,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -809,7 +816,7 @@ namespace Novell.iFolder
 			availLabel.Xalign = 0;
 			diskTable.Attach(availLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
-			Label availValue = new Label("7500");
+			Label availValue = new Label("0");
 			availValue.Xalign = 1;
 			diskTable.Attach(availValue, 1,2,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -831,9 +838,9 @@ namespace Novell.iFolder
 			graphBox.PackStart(diskGraph, false, true, 0);
 
 			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
-			diskGraph.Text = "%3";
+//			diskGraph.Text = "%3";
 			diskGraph.PulseStep = .10;
-			diskGraph.Fraction = .30;
+			diskGraph.Fraction = 0;
 
 			VBox graphLabelBox = new VBox();
 			graphBox.PackStart(graphLabelBox, false, true, 0);
@@ -849,6 +856,74 @@ namespace Novell.iFolder
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
 
 
+			DiskSpace ds;
+			try
+			{
+				ds = iFolderWS.GetUserDiskSpace(ifSettings.CurrentUserID);
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				ds = null;
+			}
+
+			if(ds != null)
+			{
+				int tmpValue;
+
+				if(ds.Limit == 0)
+				{
+					totalValue.Text = "N/A";
+					totalUnit.Text = "";
+				}
+				else
+				{
+					tmpValue = (int)(ds.Limit / (1024 * 1024));
+					totalValue.Text = string.Format("{0}", tmpValue);
+					totalUnit.Text = "MB";
+				}
+
+				if(ds.AvailableSpace == 0)
+				{
+					availValue.Text = "N/A";
+					availUnit.Text = "";
+				}
+				else
+				{
+					tmpValue = (int)(ds.AvailableSpace / (1024 * 1024));
+					availValue.Text = string.Format("{0}",tmpValue);
+					availUnit.Text = "MB";
+				}
+
+				if(ds.UsedSpace == 0)
+				{
+					usedValue.Text = "N/A";
+					usedUnit.Text = "";
+				}
+				else
+				{
+					tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
+					usedValue.Text = string.Format("{0}", tmpValue);
+					usedUnit.Text = "MB";
+				}
+
+				if(ds.Limit == 0)
+				{
+					diskGraph.Fraction = 0;
+				}
+				else
+				{
+					if(ds.Limit < ds.UsedSpace)
+						diskGraph.Fraction = 1;
+					else
+						diskGraph.Fraction = ((double)ds.UsedSpace) / 
+												((double)ds.Limit);
+				}
+			}
 
 			return vbox;
 		}
