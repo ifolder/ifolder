@@ -6,8 +6,8 @@ FsProvider_CSFILES_CSC := $(subst /,$(SEP),$(FsProvider_CSFILES))
 FsProvider_INCLUDES = 
 FsProvider_RESOURCES =
 FsProvider_FLAGS = $(CSC_LIBFLAG)
-FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll Storage.dll StoreProvider.dll
-FsProvider_LIBPATH = ../Configuration ../Storage ../StoreProvider
+FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Storage.dll StoreProvider.dll
+FsProvider_LIBPATH = ../Storage ../StoreProvider
 
 NUNIT_TESTS := FsProviderTests.dll
 
@@ -16,8 +16,8 @@ FsProviderTests_CSFILES_CSC := $(subst /,$(SEP),$(FsProviderTests_CSFILES))
 FsProviderTests_INCLUDES = 
 FsProviderTests_RESOURCES =
 FsProviderTests_FLAGS = $(CSC_LIBFLAG)
-FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Configuration.dll StoreProvider.dll ProviderTest.dll
-FsProviderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Configuration ../StoreProvider
+FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll StoreProvider.dll ProviderTest.dll
+FsProviderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../StoreProvider
 
 EXTRA_DIST = $(FsProvider_CSFILES) $(FsProviderTests_CSFILES)
 

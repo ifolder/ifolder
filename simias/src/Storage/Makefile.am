@@ -1,10 +1,13 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Storage_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Syntax.cs $(srcdir)/XmlTags.cs $(srcdir)/BaseSchema.cs $(srcdir)/Search.cs
 Storage_CSFILES_CSC := $(subst /,$(SEP),$(Storage_CSFILES))
 Storage_INCLUDES = 
 Storage_RESOURCES =
 Storage_FLAGS = $(CSC_LIBFLAG)
-Storage_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Common.dll CollectionEvents.dll
-Storage_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common ../CollectionEvents
+Storage_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionEvents.dll
+Storage_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents
 
 
 EXTRA_DIST = $(Storage_CSFILES) 

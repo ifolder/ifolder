@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\&#xd;&#xa;copy $(SolutionDir)\external\SecureChannelSinks\*.dll $(SolutionDir)\stage\"
                 RootNamespace = "Simias.Storage"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -39,7 +39,7 @@
                     OutputPath = "bin\Debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "true"
+                    TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
                 />
                 <Config
@@ -59,7 +59,7 @@
                     OutputPath = "bin\Release\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "true"
+                    TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
                 />
             </Settings>
@@ -95,9 +95,9 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Configuration"
-                    Project = "{9B517041-29A3-4817-BA8E-02ECF03477C4}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "Novell.Security.SecureSink.SecurityProvider"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
+                    HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
                 />
                 <Reference
                     Name = "StoreProvider"
