@@ -29,22 +29,19 @@ namespace Mono.P2p.mDnsResponder
 			IPHostEntry ihe = Dns.GetHostByName(Dns.GetHostName());
 
 			string localHost = Environment.MachineName + ".local";
-			mDnsHost thisHost = new mDnsHost(Environment.MachineName, (int) ihe.AddressList[0].Address, true);
-		
 			log.Info("adding host");
-//			mDnsHost.Add(thisHost);
-			
 			HostAddress addrHost = new HostAddress(localHost, 300, mDnsType.hostAddress, mDnsClass.iNet, true);
 			addrHost.AddIPAddress(ihe.AddressList[0].Address);
 			Resources.AddHostAddress(addrHost);
 
-			string slName = "banderso@";
+			string slName = "jacko@";
 			slName += Environment.MachineName;
 			slName += "._presence._tcp.local";
 			ServiceLocation sl = new ServiceLocation(slName, 300, mDnsType.serviceLocation, mDnsClass.iNet, true);
 			sl.Port = 5298;
 			sl.Priority = 5;
 			sl.Weight = 10;
+			sl.Target = localHost;
 			Resources.AddServiceLocation(sl);
 
 			log.Info("starting RequestHandler thread");
@@ -53,7 +50,7 @@ namespace Mono.P2p.mDnsResponder
 			reqHandler.Start();
 
 			log.Info("starting Maintenance thread");
-			Thread maintThread = new Thread(new ThreadStart(mDnsHost.MaintenanceThread));
+			Thread maintThread = new Thread(new ThreadStart(Resources.MaintenanceThread));
 			maintThread.IsBackground = true;
 			maintThread.Start();
 

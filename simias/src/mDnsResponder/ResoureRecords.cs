@@ -29,6 +29,8 @@
 using System;
 using System.Collections;
 using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Mono.P2p.mDnsResponder
@@ -186,6 +188,329 @@ namespace Mono.P2p.mDnsResponder
 			}
 			
 			Resources.resourceMtx.ReleaseMutex();
+		}
+
+		// Used to send out the gratutious answers
+		internal static void MaintenanceThread()
+		{
+			byte[]		answer = new byte[4096];
+			int			index;
+			ushort		flags = 0x0084;
+			string		localLabel = "local";
+			string		presenceLabel = "_presence";
+			string		tcpLabel = "_tcp";
+
+			// Setup an endpoint to multi-cast datagrams
+			UdpClient server = new UdpClient("224.0.0.251", 5353);
+
+			while(true)
+			{
+				//				Thread.Sleep(120000);
+				Thread.Sleep(Defaults.maintenanceNapTime * 1000);
+				log.Info("Maintenance thread awake");
+				Resources.resourceMtx.WaitOne();
+				foreach(BaseResource cResource in Resources.resourceList)
+				{
+					if (cResource.Owner == true)
+					{
+						if (cResource.Type == mDnsType.hostAddress)
+						{
+							HostAddress	hostAddr = (HostAddress) cResource;
+					
+							index = 0;
+
+							// Send the host answer
+							// Transaction ID
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(0),
+								0,
+								answer,
+								index,
+								2);
+
+							index += 2;
+
+							// Flags
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(flags), 
+								0, 
+								answer, 
+								index, 
+								2);
+							index += 2;
+
+							// Questions
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(0),
+								0,
+								answer,
+								index,
+								2);
+
+							index += 2;
+
+							// Answers
+							short answers = 1;
+							answers = IPAddress.HostToNetworkOrder(answers);
+							Buffer.BlockCopy(BitConverter.GetBytes(answers), 0,	answer, index, 2);
+							index += 2;
+
+							// Authorities
+							Buffer.BlockCopy(BitConverter.GetBytes(0), 0, answer, index, 2);
+							index += 2;
+
+							// Additional
+							Buffer.BlockCopy(BitConverter.GetBytes(0), 0, answer, index, 2);
+							index += 2;
+
+							// Host Name
+
+							int	last = 0;
+							int	current = 0;
+							string	tmpName = hostAddr.Name;
+							while( current < tmpName.Length )
+							{
+								if (tmpName[current] == '.')
+								{
+									answer[index++] = (byte) (current - last);
+									while( last < current )
+									{
+										answer[index++] = (byte) tmpName[last++];
+									}
+						
+									current++;
+									last = current;
+								}
+								else
+								{	
+									current++;
+								}
+							}
+
+							answer[index++] = 0;
+
+							// Type
+							short	hostType = (short) hostAddr.Type;
+							hostType = IPAddress.HostToNetworkOrder(hostType);
+							Buffer.BlockCopy(BitConverter.GetBytes(hostType), 0, answer, index, 2);
+							index += 2;
+
+							// Class
+							//Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(1)), 0, answer, index, 2);
+							short	hostClass = (short) hostAddr.Class;
+							hostClass = IPAddress.HostToNetworkOrder(hostClass);
+							Buffer.BlockCopy(BitConverter.GetBytes(hostClass), 0, answer, index, 2);
+							index += 2;
+
+							// Time To Live
+							Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(hostAddr.Ttl)), 0, answer, index, 4);
+							index += 4;
+
+							// Data Length
+							short dataLength = 4;
+							dataLength = IPAddress.HostToNetworkOrder(dataLength);
+							Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, answer, index, 2);
+							index += 2;
+
+							// IP Address
+							Buffer.BlockCopy(
+								//						BitConverter.GetBytes(IPAddress.HostToNetworkOrder(host.IPV4Address)),
+								BitConverter.GetBytes(hostAddr.IPAddress),
+								0, 
+								answer, 
+								index, 
+								4);
+
+							index += 4;
+
+							try
+							{
+								server.Send(answer, index);
+							}
+							catch(Exception e)
+							{
+								log.Info("Failed sending Host Address record", e);
+								continue;
+							}
+						}
+						else
+						if (cResource.Type == mDnsType.serviceLocation)
+						{
+							ServiceLocation svcLoc = (ServiceLocation) cResource;
+					
+							index = 0;
+
+							// Send the host answer
+							// Transaction ID
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(0),
+								0,
+								answer,
+								index,
+								2);
+
+							index += 2;
+
+							// Flags
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(flags), 
+								0, 
+								answer, 
+								index, 
+								2);
+							index += 2;
+
+							// Questions
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(0),
+								0,
+								answer,
+								index,
+								2);
+
+							index += 2;
+
+							// Answers
+							short answers = 1;
+							answers = IPAddress.HostToNetworkOrder(answers);
+							Buffer.BlockCopy(BitConverter.GetBytes(answers), 0,	answer, index, 2);
+							index += 2;
+
+							// Authorities
+							Buffer.BlockCopy(BitConverter.GetBytes(0), 0, answer, index, 2);
+							index += 2;
+
+							// Additional
+							Buffer.BlockCopy(BitConverter.GetBytes(0), 0, answer, index, 2);
+							index += 2;
+
+							int	last = 0;
+							int	current = 0;
+							string	tmpName = svcLoc.Name;
+							Console.WriteLine("Host Name to convert: " + tmpName);
+							while( current < tmpName.Length )
+							{
+								if (tmpName[current] == '.')
+								{
+									answer[index++] = (byte) (current - last);
+									while( last < current )
+									{
+										answer[index++] = (byte) tmpName[last++];
+									}
+						
+									current++;
+									last = current;
+								}
+								else
+								{	
+									current++;
+								}
+							}
+
+							answer[index++] = 0;
+
+							// Type
+							short	hostType = (short) svcLoc.Type;
+							hostType = IPAddress.HostToNetworkOrder(hostType);
+							Buffer.BlockCopy(BitConverter.GetBytes(hostType), 0, answer, index, 2);
+							index += 2;
+
+							// Class
+							//Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(1)), 0, answer, index, 2);
+							short	hostClass = (short) svcLoc.Class;
+							hostClass = IPAddress.HostToNetworkOrder(hostClass);
+							Buffer.BlockCopy(BitConverter.GetBytes(hostClass), 0, answer, index, 2);
+							index += 2;
+
+							// Time To Live
+							Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(svcLoc.Ttl)), 0, answer, index, 4);
+							index += 4;
+
+							// Data Length
+							short dataLength = 8;
+							dataLength += (short) svcLoc.Target.Length;
+							dataLength += 1;
+							dataLength = IPAddress.HostToNetworkOrder(dataLength);
+							Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, answer, index, 2);
+							index += 2;
+
+							Buffer.BlockCopy(BitConverter.GetBytes(svcLoc.Priority), 0, answer, index, 2);
+							index += 2;
+
+							Buffer.BlockCopy(BitConverter.GetBytes(svcLoc.Weight), 0, answer, index, 2);
+							index += 2;
+
+							Buffer.BlockCopy(BitConverter.GetBytes(svcLoc.Port), 0, answer, index, 2);
+							index += 2;
+
+							last = 0;
+							current = 0;
+							tmpName = svcLoc.Target;
+							Console.WriteLine("Target to convert: " + tmpName);
+							while( current < tmpName.Length )
+							{
+								if (tmpName[current] == '.')
+								{
+									answer[index++] = (byte) (current - last);
+									while( last < current )
+									{
+										answer[index++] = (byte) tmpName[last++];
+									}
+						
+									current++;
+									last = current;
+								}
+								else
+								{	
+									current++;
+								}
+							}
+
+							answer[index++] = 0;
+
+
+							/*
+							lOffset += 6;
+							Common.BuildDomainName(receiveData, lOffset, ref lOffset, ref target);
+							service.Target = target;
+									
+							offset += dataLength;
+							*/
+
+							/*
+							// IP Address
+							Buffer.BlockCopy(
+								//						BitConverter.GetBytes(IPAddress.HostToNetworkOrder(host.IPV4Address)),
+								BitConverter.GetBytes(hostAddr.IPAddress),
+								0, 
+								answer, 
+								index, 
+								4);
+
+							index += 4;
+							*/
+
+							try
+							{
+								server.Send(answer, index);
+							}
+							catch(Exception e)
+							{
+								log.Info("Failed sending Host Address record", e);
+								continue;
+							}
+						}
+						else
+						if (cResource.Type == mDnsType.ptr)
+						{
+							Ptr ptr = (Ptr) cResource;
+							log.Info("  Target:    " + ptr.Target);
+						}
+						log.Info("");
+					}
+				}
+				Resources.resourceMtx.ReleaseMutex();
+			}
 		}
 	}
 

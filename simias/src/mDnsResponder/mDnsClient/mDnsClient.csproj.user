@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\code\log4net-1.2.0-beta8\bin\net\1.1\release\" >
+            <Settings ReferencePath = "C:\code\simias\external\log4net\bin\net\1.1\release\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
@@ -11,7 +11,7 @@
                     RemoteDebugEnabled = "false"
                     RemoteDebugMachine = ""
                     StartAction = "Project"
-                    StartArguments = ""calvin's music._daap._tcp.local -t ptr"
+                    StartArguments = ""
                     StartPage = ""
                     StartProgram = ""
                     StartURL = ""
@@ -32,7 +32,7 @@
                     StartProgram = ""
                     StartURL = ""
                     StartWorkingDirectory = ""
-                    StartWithIE = "true"
+                    StartWithIE = "false"
                 />
             </Settings>
         </Build>

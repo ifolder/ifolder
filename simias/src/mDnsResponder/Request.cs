@@ -232,10 +232,13 @@ namespace Mono.P2p.mDnsResponder
 			try
 			{
 				dnsReceiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+				/*
 				dnsReceiveSocket.SetSocketOption(
 					SocketOptionLevel.Socket,
 					SocketOptionName.ReuseAddress,
 					true);
+				*/
 					
 				dnsReceiveSocket.Bind(iep);
 				dnsReceiveSocket.SetSocketOption(
@@ -283,6 +286,7 @@ namespace Mono.P2p.mDnsResponder
 			
 			receivingDnsRequests = true;
 
+			log.Info("DnsReceive thread started...");
 			while(true)
 			{
 				bytesReceived = 0;

@@ -76,13 +76,13 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
-                    HintPath = "..\..\log4net-1.2.0-beta8\bin\net\1.1\release\log4net.dll"
+                    HintPath = "..\..\..\external\log4net\bin\net\1.1\release\log4net.dll"
                 />
             </References>
         </Build>
