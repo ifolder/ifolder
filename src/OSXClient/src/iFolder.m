@@ -65,6 +65,7 @@
 	{
 		[properties autorelease];
 		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
+		[self updateDisplayInformation];
 	}
 }
 

@@ -7,7 +7,7 @@
 - (void)awakeFromNib
 {
 	[self setShouldCascadeWindows:NO];
-	[self setWindowFrameAutosaveName:@"iFolder Preferences"];
+//	[self setWindowFrameAutosaveName:@"iFolder Preferences"];
 	
 	[[self window] setContentSize:[generalView frame].size];
 	[[self window] setContentView: generalView];

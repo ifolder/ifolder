@@ -203,7 +203,7 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 
 	NSAssert( (localPath != nil), @"Path was nil");
 	NSAssert( (DomainID != nil), @"DomainID was nil");
-	NSAssert( (iFolderID != nil), @"DomainID was nil");
+	NSAssert( (iFolderID != nil), @"iFolderID was nil");
 
 	struct _ns1__AcceptiFolderInvitation acceptiFolderMessage;
 	struct _ns1__AcceptiFolderInvitationResponse acceptiFolderResponse;
