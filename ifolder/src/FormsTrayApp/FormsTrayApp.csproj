@@ -152,6 +152,11 @@
                     DependentUpon = "FormsTrayApp.cs"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "Win32Window.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>
