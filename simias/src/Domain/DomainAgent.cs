@@ -30,14 +30,17 @@ using System.Xml;
 using Simias;
 using Simias.Authentication;
 using Simias.Client;
-//using Simias.Client.Authentication;
 using Simias.POBox;
 using Simias.Security.Web.AuthenticationService;
 using Simias.Storage;
 using Simias.Sync;
 
 using Novell.Security.ClientPasswordManager;
+
+// Alias
 using PostOffice = Simias.POBox;
+using SCodes = Simias.Authentication.StatusCodes;
+
 
 namespace Simias.Domain
 {
@@ -372,7 +375,7 @@ namespace Simias.Domain
 			HttpWebResponse response = null;
 
 			Simias.Authentication.Status status =	
-				new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Unknown );
+				new Simias.Authentication.Status( SCodes.Unknown );
 
 			Uri loginUri = 
 				new Uri( host, Simias.Security.Web.AuthenticationService.Login.Path.ToLower() );
@@ -380,6 +383,7 @@ namespace Simias.Domain
 			request.CookieContainer = cookie;
 			request.Credentials = networkCredential;
 			request.PreAuthenticate = true;
+			request.Headers.Add( "DomainID", "5" );
 
 			try
 			{
@@ -391,7 +395,7 @@ namespace Simias.Domain
 							Simias.Security.Web.AuthenticationService.Login.GraceTotalHeader );
 					if ( grace != null && grace != "" )
 					{
-						status.statusCode = Simias.Authentication.StatusCodes.SuccessInGrace;
+						status.statusCode = SCodes.SuccessInGrace;
 						status.TotalGraceLogins = Convert.ToInt32( grace );
 
 						grace = 
@@ -409,7 +413,7 @@ namespace Simias.Domain
 					}
 					else
 					{
-						status.statusCode = Simias.Authentication.StatusCodes.Success;
+						status.statusCode = SCodes.Success;
 					}
 				}
 			}
@@ -428,47 +432,47 @@ namespace Simias.Domain
 					{
 						if ( iFolderError == StatusCodes.InvalidPassword.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.InvalidPassword;
+							status.statusCode = SCodes.InvalidPassword;
 						}
 						else
 						if ( iFolderError == StatusCodes.AccountDisabled.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.AccountDisabled;
+							status.statusCode = SCodes.AccountDisabled;
 						}
 						else
 						if ( iFolderError == StatusCodes.AccountLockout.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.AccountLockout;
+							status.statusCode = SCodes.AccountLockout;
 						}
 						else
 						if ( iFolderError == StatusCodes.AmbiguousUser.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.AmbiguousUser;
+							status.statusCode = SCodes.AmbiguousUser;
 						}
 						else
 						if ( iFolderError == StatusCodes.UnknownDomain.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.UnknownDomain;
+							status.statusCode = SCodes.UnknownDomain;
 						}
 						else
 						if ( iFolderError == StatusCodes.InternalException.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.InternalException;
+							status.statusCode = SCodes.InternalException;
 						}
 						else
 						if ( iFolderError == StatusCodes.UnknownUser.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.UnknownUser;
+							status.statusCode = SCodes.UnknownUser;
 						}
 						else
 						if ( iFolderError == StatusCodes.MethodNotSupported.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.MethodNotSupported;
+							status.statusCode = SCodes.MethodNotSupported;
 						}
 						else
 						if ( iFolderError == StatusCodes.InvalidCredentials.ToString() )
 						{
-							status.statusCode = Simias.Authentication.StatusCodes.InvalidCredentials;
+							status.statusCode = SCodes.InvalidCredentials;
 						}
 					}
 				}
@@ -567,7 +571,7 @@ namespace Simias.Domain
 				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
 			}
 
-			NetworkCredential myCred = new NetworkCredential(user, password); 
+			NetworkCredential myCred = new NetworkCredential( user, password ); 
 			CookieContainer cookie = new CookieContainer();
 
 			Simias.Authentication.Status status = null;
@@ -576,8 +580,8 @@ namespace Simias.Domain
 					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
 					ref cookie, 
 					myCred );
-			if ( status.statusCode != Simias.Authentication.StatusCodes.Success && 
-				status.statusCode != Simias.Authentication.StatusCodes.SuccessInGrace )
+			if ( status.statusCode != SCodes.Success && 
+				status.statusCode != SCodes.SuccessInGrace )
 			{	
 				return "";
 			}
@@ -616,12 +620,12 @@ namespace Simias.Domain
 			// create domain node
 			Storage.Domain domain = 
 				store.AddDomainIdentity(
-				provisionInfo.UserID,
-				domainInfo.Name, 
-				domainInfo.ID, 
-				domainInfo.Description,
-				hostUri,
-				SyncRoles.Slave);
+					provisionInfo.UserID,
+					domainInfo.Name, 
+					domainInfo.ID, 
+					domainInfo.Description,
+					hostUri,
+					SyncRoles.Slave);
 
 			// set the default domain
 			//string previousDomain = store.DefaultDomain;
@@ -727,23 +731,20 @@ namespace Simias.Domain
 					CookieContainer cookie = new CookieContainer();
 					NetworkCredential netCred = new NetworkCredential( user, password );
 					status = this.Login( cDomain.HostAddress, ref cookie, netCred );
-					if ( status.statusCode == Simias.Authentication.StatusCodes.Success ||
-						status.statusCode == Simias.Authentication.StatusCodes.SuccessInGrace )
+					if ( status.statusCode == SCodes.Success ||
+						status.statusCode == SCodes.SuccessInGrace )
 					{
 						new NetCredential( "iFolder", domainID, true, user, password );
 					}
 				}
 				else
 				{
-					status = 
-						new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
+					status = new Simias.Authentication.Status( SCodes.UnknownDomain );
 				}
 			}
 			else
 			{
-				status = 
-					new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
-				//status = new Status( StatusCodes.UnknownDomain );
+				status = new Simias.Authentication.Status( SCodes.UnknownDomain );
 			}
 
 			return status;
