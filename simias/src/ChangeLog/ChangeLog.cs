@@ -1109,6 +1109,12 @@ namespace Simias.Storage
 								// Remove the ChangeLogWriter object from the table and dispose it.
 								ChangeLogWriter logWriter = logWriterTable[ work.Args.Collection ] as ChangeLogWriter;
 								logWriterTable.Remove( work.Args.Collection );
+
+								if ( File.Exists( logWriter.LogFile ) )
+								{
+									File.Delete( logWriter.LogFile );
+								}
+
 								logWriter.Dispose();
 								log.Debug( "Deleted ChangeLogWriter for collection {0}", work.Args.Collection );
 							}
@@ -1274,6 +1280,16 @@ namespace Simias.Storage
 		/// Contains the header to the log file.
 		/// </summary>
 		private LogFileHeader logHeader;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the file path for this change log.
+		/// </summary>
+		public string LogFile
+		{
+			get { return logFilePath; }
+		}
 		#endregion
 
 		#region Constructor
