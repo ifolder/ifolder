@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections;
+using System.IO;
+using System.Text;
 using System.Xml;
 
 using Simias;
@@ -53,6 +55,13 @@ namespace Simias.mDns
 		private string mDnsUserName;
 		private string mDnsUserID;
 		private string mDnsPOBoxID;
+
+		// For saving mdns user info to a xml file
+		private const string configDir = "mdns";
+		private const string configFile = "mdnsinfo.xml";
+		private const string rootLabel = "MemberInfo";
+		private const string nameLabel = "Name";
+		private const string idLabel = "ID";
 
 		/// <summary>
 		/// Used to log messages.
@@ -148,6 +157,8 @@ namespace Simias.mDns
 
 		internal void Init()
 		{
+			bool firstTime = false;
+			Member member = null;
 			hostAddress = MyDns.GetHostName();
 			Store store = Store.GetStore();
 
@@ -174,24 +185,30 @@ namespace Simias.mDns
 
 					rDomain.SetType( rDomain, "Rendezvous" );
 
-					// Create the owner member for the domain.
-					Member member = 
-						new Member(
-						mDnsUserName, 
-						Guid.NewGuid().ToString().ToLower(),
-						Access.Rights.Admin );
+					// See if we have setup an mdns user on this box previously
+					member = this.GetMemberInfoFromFile();
+					if ( member == null )
+					{
+						// Create the owner member for the domain.
+						member = new Member( mDnsUserName, Guid.NewGuid().ToString().ToLower(), Access.Rights.Admin );
+						firstTime = true;
+					}
 
 					member.IsOwner = true;
 					mDnsUserID = member.UserID;
-
 					rDomain.Commit( new Node[] { rDomain, member } );
 
 					// Create the name mapping.
 					store.AddDomainIdentity( rDomain.ID, member.UserID );
+
+					if ( firstTime == true )
+					{
+						SaveMemberInfoToFile( member );
+					}
 				}
 				else
 				{
-					Member member = rDomain.GetMemberByName( mDnsUserName );
+					member = rDomain.GetMemberByName( mDnsUserName );
 					if ( member == null )
 					{
 						string errMsg = String.Format( "Cannot find user {0} in domain {1}.", mDnsUserName, rDomain.Name );
@@ -211,81 +228,118 @@ namespace Simias.mDns
 			}
 			catch( Exception e1 )
 			{
-				log.Error(e1.Message);
-				log.Error(e1.StackTrace);
+				log.Error( e1.Message );
+				log.Error( e1.StackTrace );
 
 				throw e1;
-				// FIXME:: rethrow the exception
 			}			
+		}
+
+		/// <summary>
+		/// Method to use previously saved mdns user info.
+		/// </summary>
+		internal Member GetMemberInfoFromFile()
+		{
+			Member	member = null;
+			string	id = null;
+			string	name = null;
+
+			string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+			if ( ( path == null ) || ( path.Length == 0 ) )
+			{
+				path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+				if ( ( path == null ) || ( path.Length == 0 ) )
+				{
+					return null;
+				}
+			}
+
+			path = path + Path.DirectorySeparatorChar + configDir;
+			if ( Directory.Exists( path ) == false )
+			{
+				return null;
+			}
+
+			path += Path.DirectorySeparatorChar + configFile;
+
+			// Load the configuration document from the file.
+			XmlDocument mdnsInfo = new XmlDocument();
+			try
+			{
+				mdnsInfo.Load( path ); 
+				XmlElement domainElement = mdnsInfo.DocumentElement;
+				if ( domainElement.Name == rootLabel )
+				{
+					for ( int i = 0; i < domainElement.ChildNodes.Count; i++ )
+					{
+						if ( domainElement.ChildNodes[i].Name == nameLabel )
+						{
+							name = domainElement.ChildNodes[i].InnerText;
+						}
+						else
+						if ( domainElement.ChildNodes[i].Name == idLabel )
+						{
+							id = domainElement.ChildNodes[i].InnerText;
+						}
+					}
+				}
+
+				if ( name != null && id != null )
+				{
+					member = new Member( name, id, Access.Rights.Admin );
+				}
+			}
+			catch{}
+			return member;
+		}
+
+		/// <summary>
+		/// Method to save the member's name and GUID to a config file.
+		/// The purpose here is to attempt to always use the same GUID 
+		/// for the mdns user on this machine.  If a user deletes their
+		/// Simias store and restarts we should be able to use the same
+		/// mdns user and guid that was previously used.
+		/// </summary>
+		internal bool SaveMemberInfoToFile( Member member )
+		{
+			string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+			if ( ( path == null ) || ( path.Length == 0 ) )
+			{
+				path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+				if ( path == null || path.Length == 0 )
+				{
+					return false;
+				}
+			}
+
+			path += Path.DirectorySeparatorChar + configDir;
+			if ( Directory.Exists( path ) == false )
+			{
+				Directory.CreateDirectory( path );
+			}
+
+			// Delete the file if it exists
+			path += Path.DirectorySeparatorChar + configFile;
+			File.Delete( path );
+
+			// Create an XML document that will be serialized to the file
+			// Load the configuration document from the file.
+			XmlTextWriter writer = new XmlTextWriter( path, null );
+			writer.Formatting = Formatting.Indented;
+
+			writer.WriteStartDocument( true );
+			writer.WriteStartElement( rootLabel );
+			writer.WriteElementString( nameLabel, member.Name );
+			writer.WriteElementString( idLabel, member.UserID );
+			writer.WriteEndElement(); 
+
+			writer.Flush();
+			writer.Close();
+
+			return true;
 		}
 
 		#region Public Methods
-
-		/*
-		/// <summary>
-		/// Creates the local/master Rendezvous domain.
-		/// The Member, Roster and PO Box also gets created as well
-		/// </summary>
-		/// <returns>Throws an exception if the domain can't be created</returns>
-		public void Create()
-		{
-			string myAddress = MyDns.GetHostName();
-			log.Debug("  My Address: " + myAddress);
-			Store store = Store.GetStore();
-
-			try
-			{
-				Uri localUri = new Uri("http://" + myAddress);
-
-				//
-				// Verify the local Rendezvous user exists in the local database
-				LocalDatabase ldb = store.GetDatabaseObject();
-
-				ldb.GetSingleNodeByName( mDnsUserName );
-
-				// Create a local member which is the owner of the mDnsDomain
-				Member member = new Member( mDnsUserName, Guid.NewGuid().ToString(), Access.Rights.Admin );
-				member.IsOwner = true;
-				mDnsUserID = member.ID;
-
-				// Save the local database changes.
-				ldb.Commit( new Node[] { member } );
-
-				// Create the mDnsDomain and add an identity mapping.
-				store.AddDomainIdentity(
-					member.ID, 
-					this.mDnsDomainName, 
-					Simias.mDns.Domain.ID,
-					this.description,
-					localUri,
-					Simias.Sync.SyncRoles.Master );
-
-				// Create an empty roster for the mDns domain.
-				Roster mdnsRoster = new Roster( store, store.GetDomain( ID ));
-				Member rMember = new Member( member.Name, member.ID, Access.Rights.Admin );
-				rMember.IsOwner = true;
-				mdnsRoster.Commit( new Node[] { mdnsRoster, rMember } );
-
-				// Create the POBox for the user
-				string poBoxName = "POBox:" + ID + ":" + member.ID;
-
-				Simias.POBox.POBox poBox = 
-					new Simias.POBox.POBox( store, poBoxName, ID );
-				Member pMember = new Member( member.Name, member.ID, Access.Rights.ReadWrite );
-				pMember.IsOwner = true;
-				poBox.Commit(new Node[] { poBox, pMember });
-				mDnsPOBoxID = poBox.ID;
-			}
-			catch(Exception e1)
-			{
-				log.Error(e1.Message);
-				log.Error(e1.StackTrace);
-
-				throw e1;
-				// FIXME:: rethrow the exception
-			}			
-		}
-		*/
 
 		/// <summary>
 		/// Checks if the local/master Rendezvous domain exists.

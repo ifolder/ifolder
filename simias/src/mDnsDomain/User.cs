@@ -227,8 +227,7 @@ namespace Simias.mDns
 	/// </summary>
 	public class User
 	{
-
-		[ StructLayout( LayoutKind.Sequential, CharSet=CharSet.Ansi )]
+		[ StructLayout( LayoutKind.Sequential, CharSet=CharSet.Ansi ) ]
 		public class MemberInfo
 		{
 			[ MarshalAs( UnmanagedType.ByValTStr, SizeConst=64 ) ]
@@ -245,7 +244,6 @@ namespace Simias.mDns
 
 			public int Port;
 		}
-
 
 		#region DllImports
 		[ DllImport( "simdezvous" ) ]
@@ -449,13 +447,23 @@ namespace Simias.mDns
 		{
 			// Get the configured/generated web service path and store
 			// it away.  The port and path are broadcast in Rendezvous
-			XmlElement servicesElement = 
-				Store.GetStore().Config.GetElement( configSection, configServices );
-			webServiceUri = new Uri( servicesElement.GetAttribute( "value" ) );
-			if ( webServiceUri != null )
+
+			try
 			{
-				log.Debug( "Web Service URI: " + webServiceUri.ToString() );
-				log.Debug( "Absolute Path: " + webServiceUri.AbsolutePath );
+				XmlElement servicesElement = 
+					Store.GetStore().Config.GetElement( configSection, configServices );
+				webServiceUri = new Uri( servicesElement.GetAttribute( "value" ) );
+				if ( webServiceUri != null )
+				{
+					log.Debug( "Web Service URI: " + webServiceUri.ToString() );
+					log.Debug( "Absolute Path: " + webServiceUri.AbsolutePath );
+				}
+			}
+			catch( Exception ws )
+			{
+				log.Error( "Exception getting the \"webServiceUr\"" );
+				log.Error( ws.Message );
+				log.Error( ws.StackTrace );
 			}
 
 			/*
@@ -533,7 +541,6 @@ namespace Simias.mDns
 			try
 			{
 				RSACryptoServiceProvider publicKey = Store.GetStore().CurrentUser.PublicKey;
-				//RSACryptoServiceProvider credential = Store.GetStore().CurrentUser.Credential;
 				short sport = (short) webServiceUri.Port;
 
 				log.Debug( "  calling RegisterLocalMember" );
@@ -582,7 +589,7 @@ namespace Simias.mDns
 			if ( browseHandle.ToInt32() != 0 )
 			{
 				BrowseMembersShutdown( browseHandle.ToInt32() );
-				Thread.Sleep( 1000 );
+				Thread.Sleep( 100 );
 				if (User.browseThread.IsAlive == true )
 				{
 					// Shutdown the thread
@@ -628,13 +635,9 @@ namespace Simias.mDns
 		{ 
 			if ( errorCode == kErrorType.kDNSServiceErr_NoError )
 			{
-				// FIXME:: Need to handle the case where flags isn't set
-				// to add so I can remove users as well
-
-
 				log.Debug( "MemberCallback for: " + serviceName );
-
-				if ( ( flags & (int) kDNSServiceFlags.kDNSServiceFlagsAdd ) == (int) kDNSServiceFlags.kDNSServiceFlagsAdd )
+				if ( ( flags & (int) kDNSServiceFlags.kDNSServiceFlagsAdd ) == 
+					(int) kDNSServiceFlags.kDNSServiceFlagsAdd )
 				{
 					Member rMember = 
 						new Member( 
@@ -669,9 +672,8 @@ namespace Simias.mDns
 
 		#region Public Methods
 
-
 		/// <summary>
-		/// FIXME::Temporary method to automatically synchronize all mDns users
+		/// Method to move members from the staged list to the real mdns member list
 		/// </summary>
 		/// <returns>n/a</returns>
 		public void SynchronizeMembers()
@@ -680,8 +682,6 @@ namespace Simias.mDns
 			//char[] trimNull = { '\0' };
 
 			log.Debug( "Syncing mDns members" );
-			//Thread.Sleep( 30000 );
-
 			Simias.Storage.Member rMember;
 			lock( typeof( Simias.mDns.RendezvousUsers ) )
 			{
@@ -699,9 +699,7 @@ namespace Simias.mDns
 						log.Debug( "Calling GetMemberInfo for: " + rMember.UserID );
 
 						MemberInfo info = new MemberInfo();
-
 						status = GetMemberInfo( rMember.UserID, info );
-
 						if ( status == kErrorType.kDNSServiceErr_NoError )
 						{
 							log.Debug( "  Friendly Name: " + info.Name );
@@ -709,7 +707,6 @@ namespace Simias.mDns
 							log.Debug( "  Host:          " + info.Host );
 							log.Debug( "  Port:          " + info.Port.ToString() );
 							
-//							rMember.Name = (new string( infoName )).TrimEnd( trimNull );
 							rMember.Name = info.Name;
 							rMember.FN = rMember.Name;
 
@@ -725,7 +722,6 @@ namespace Simias.mDns
 								new Property( 
 								RendezvousUsers.PathProperty,
 								info.ServicePath );
-								//(new string( infoServicePath )).TrimEnd( trimNull ) );
 							path.LocalProperty = true;
 							rMember.Properties.AddProperty( path );
 
@@ -741,11 +737,9 @@ namespace Simias.mDns
 								new Property( 
 									RendezvousUsers.KeyProperty, 
 									info.PublicKey );
-//									pubKey.TrimEnd( trimNull ) );
 
 							rMember.Properties.AddProperty( key );
 
-							//rUser.PublicKey = (new string( infoPublicKey )).TrimEnd( trimNull );
 							log.Debug( "Adding meta-data for: " + rMember.Name );
 							RendezvousUsers.stagedList.Remove( rMember );
 							if ( RendezvousUsers.AddMember( rMember, true ) == false )
@@ -759,9 +753,8 @@ namespace Simias.mDns
 					}
 					catch ( Exception e2 )
 					{
-						log.Debug( e2.Message );
-						log.Debug( e2.StackTrace );
-
+						log.Error( e2.Message );
+						log.Error( e2.StackTrace );
 						break;
 					}
 				}

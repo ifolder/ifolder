@@ -94,7 +94,6 @@ namespace Simias.mDns
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
 			WebState webState = new WebState();
 			webState.InitializeWebRequest( request );
-			//request.Credentials = networkCredential;
 			
 			request.Headers.Add( 
 				Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
@@ -176,14 +175,14 @@ namespace Simias.mDns
 				}
 				else
 				{
-					log.Debug(webEx.Message);
-					log.Debug(webEx.StackTrace);
+					log.Debug( webEx.Message );
+					log.Debug( webEx.StackTrace );
 				}
 			}
 			catch(Exception ex)
 			{
-				log.Debug(ex.Message);
-				log.Debug(ex.StackTrace);
+				log.Error( ex.Message );
+				log.Error( ex.StackTrace );
 			}
 
 			return status;
