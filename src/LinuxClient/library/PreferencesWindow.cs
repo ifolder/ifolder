@@ -44,6 +44,20 @@ namespace Novell.iFolder
 		private PrefsAccountsPage		accountsPage;
 
 
+		public int CurrentPage
+		{
+			set
+			{
+				if(value <= PrefNoteBook.NPages)
+					PrefNoteBook.CurrentPage = value;
+			}
+			get
+			{
+				return PrefNoteBook.CurrentPage;
+			}
+		}
+
+
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
