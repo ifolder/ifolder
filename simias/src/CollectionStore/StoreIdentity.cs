@@ -80,12 +80,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Name of this domain that the store object belongs in.
 		/// </summary>
-		private string domainName = null;
+		private string domainName;
 
 		/// <summary>
 		/// Represents the identity of the user that instantiated this object.
 		/// </summary>
-		private Identity identity = null;
+		private Identity identity;
 
 		/// <summary>
 		/// Container used to keep track of the current identity for this store handle.
@@ -105,7 +105,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the current impersonating identity.
 		/// </summary>
-		private Identity CurrentIdentity
+		internal Identity CurrentIdentity
 		{
 			get { return ( impersonationId.Count == 0 ) ? identity : ( ( ImpersonationInfo )impersonationId.Peek() ).identity; }
 		}
@@ -124,16 +124,36 @@ namespace Simias.Storage
 		/// Constructor of the object.
 		/// </summary>
 		/// <param name="identity">Object that represents the current identity.</param>
-		private StoreIdentity( Identity identity )
+		/// <param name="domainName">Name of the domain for this identity.</param>
+		private StoreIdentity( Identity identity, string domainName )
 		{
 			this.identity = identity;
+			this.domainName = domainName;
+		}
+
+		/// <summary>
+		/// Constructor of the object.
+		/// </summary>
+		/// <param name="identity">Object that represents the current identity.</param>
+		private StoreIdentity( Identity identity ) :
+			this( identity, null )
+		{
+		}
+
+		/// <summary>
+		/// Constructor of the object.
+		/// </summary>
+		/// <param name="domainName">Name of the domain for this identity.</param>
+		private StoreIdentity( string domainName ) :
+			this( null, domainName )
+		{
 		}
 
 		/// <summary>
 		/// Constructor that allows for impersonation of well known Ids.
 		/// </summary>
 		private StoreIdentity() :
-			this( null )
+			this( null, null )
 		{
 		}
 		#endregion
@@ -142,16 +162,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Authenticates the identity that owns the database.
 		/// </summary>
-		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="store">Handle to the local database store.</param>
+		/// <param name="userName">Name of the user to authenticate.</param>
 		/// <returns>A store identity object that represents the database owner.</returns>
-		static public void Authenticate( Store store )
+		static public StoreIdentity Authenticate( Store store, string userName )
 		{
-			// Temporarily create an object that we can use to impersonate well known identities with.
-			store.LocalIdentity = new StoreIdentity();
-
-			// Impersonate the local store admin so that we can bootstrap ourselves.
-			store.ImpersonateUser( Access.StoreAdminRole );
-
 			// Open the local address book.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
 			if ( localAb == null )
@@ -160,14 +175,11 @@ namespace Simias.Storage
 			}
 
 			// Get the user that we are currently running as and get his identity information.
-			Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
+			Identity identity = localAb.GetSingleIdentityByName( userName );
 			if ( identity == null )
 			{
 				throw new ApplicationException( "No such user." );
 			}
-
-			// Create a store identity object that will be used by the store object from here on out.
-			store.LocalIdentity = new StoreIdentity( identity );
 
 			// Get the database object to check if this ID is the same as the owner.
 			Collection dbCollection = store.GetDatabaseObject();
@@ -177,48 +189,50 @@ namespace Simias.Storage
 			}
 
 			// Get the owner property and make sure that it is the same as the current user.
-			if ( dbCollection.Owner != store.CurrentUser )
+			if ( dbCollection.Owner != identity.Id )
 			{
 				throw new UnauthorizedAccessException( "Current user is not store owner." );
 			}
 
-			// Set the domain name for this identity.
-			store.LocalIdentity.domainName = dbCollection.DomainName;
+			// Create a store identity object that will be used by the store object from here on out.
+			return new StoreIdentity( identity, dbCollection.DomainName );
 		}
 
 		/// <summary>
 		/// Creates an identity representing the database owner.
 		/// </summary>
+		/// <param name="store">Handle to the local database store.</param>
+		/// <param name="domainName">Name of this new domain.</param>
+		/// <param name="userName">Name of the user to create as the store owner.</param>
 		/// <returns>A store identity object that represents the database owner.</returns>
-		static public void CreateIdentity( Store store )
+		static public StoreIdentity CreateIdentity( Store store, string domainName, string userName )
 		{
-			// Temporarily create an object that we can use to impersonate well known identities with.
-			store.LocalIdentity = new StoreIdentity();
-
-			// Impersonate the local store admin so that we can bootstrap ourselves.
-			store.ImpersonateUser( Access.StoreAdminRole );
-
-			// Create the name for this domain.
-			store.LocalIdentity.domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
-
 			// Create the local address book.
-			LocalAddressBook localAb = new LocalAddressBook( store, store.LocalIdentity.domainName );
+			LocalAddressBook localAb = new LocalAddressBook( store, domainName );
 
 			// Add the currently executing user as an identity in the address book.
-			Identity currentUser = new Identity( localAb, Environment.UserName );
+			Identity identity = new Identity( localAb, userName );
 
 			// Add a key pair to this identity to be used as credentials.
-			currentUser.CreateKeyPair();
+			identity.CreateKeyPair();
 
 			// Change the local address book to be owned by the current user.
-			localAb.ChangeOwner( currentUser.Id, Access.Rights.Deny );
+			localAb.ChangeOwner( identity.Id, Access.Rights.Deny );
 			localAb.Commit( true );
 
-			// Create a new identity object that represents the current user.
-			store.LocalIdentity = new StoreIdentity( currentUser );
+			// Create a new store identity object that will be used by the store object from here on out.
+			return new StoreIdentity( identity, domainName );
+		}
 
-			// Set the domain name in the new identity object.
-			store.LocalIdentity.domainName = localAb.Name;
+		/// <summary>
+		/// Gets an identity which represents the store administrator.
+		/// </summary>
+		/// <param name="domainName">Name of the domain.</param>
+		static internal StoreIdentity CreateStoreAdmin( string domainName )
+		{
+			StoreIdentity identity = new StoreIdentity( domainName );
+			identity.Impersonate( Access.StoreAdminRole );
+			return identity;
 		}
 
 		/// <summary>

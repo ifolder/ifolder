@@ -175,12 +175,19 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets the identity object associated with this store.
+		/// Gets the identity object associated with this store that represents the currently impersonating user.
+		/// </summary>
+		public Identity CurrentIdentity
+		{
+			get { return identity.CurrentIdentity; }
+		}
+
+		/// <summary>
+		/// Gets the store identity which controls identity impersonation among other things.
 		/// </summary>
 		internal StoreIdentity LocalIdentity
 		{
 			get { return identity; }
-			set { identity = value; }
 		}
 
 		/// <summary>
@@ -225,6 +232,14 @@ namespace Simias.Storage
 			// Set the path to the store.
 			storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, StoreManagedDirectoryName ) );
 
+			// Create a domain name for this domain.  If the store is created, this will be the new domain name for
+			// the store.  If the store already exists, it will be discarded.
+			string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+
+			// In order to bootstrap the authentication process, create an identity that represents the store
+			// administrator.  It will be replace as soon as the store owner identity is created or is authenticated.
+			identity = StoreIdentity.CreateStoreAdmin( domainName );
+
 			// Either create the store or authenticate to it.
 			if ( created )
 			{
@@ -250,7 +265,7 @@ namespace Simias.Storage
 		/// </summary>
 		private void AuthenticateStore()
 		{
-			StoreIdentity.Authenticate( this );
+			identity = StoreIdentity.Authenticate( this, Environment.UserName );
 		}
 
 		/// <summary>
@@ -316,7 +331,7 @@ namespace Simias.Storage
 		private bool InitializeStore()
 		{
 			// Get an identity that represents the current user.  This user will become the database owner.
-			StoreIdentity.CreateIdentity( this );
+			identity = StoreIdentity.CreateIdentity( this, LocalIdentity.DomainName, Environment.UserName );
 
 			// Create an object that represents the database.
 			bool created = CreateDatabaseObject();

@@ -87,7 +87,28 @@ namespace Simias.Storage
 		/// <returns>An Identity object representing the specified user.</returns>
 		public Identity AddIdentity( string userName, string userGuid )
 		{
-			return new Identity( this, userName, userGuid );
+			// Check to see if this identity already exists.
+			Identity identity = GetSingleIdentityByName( userName );
+			if ( identity == null )
+			{
+				// See if the same identity exists by Id.
+				identity = GetIdentityById( userGuid );
+				if ( identity == null )
+				{
+					// The identity doesn't exist, create it.
+					identity = new Identity( this, userName, userGuid );
+				}
+			}
+			else
+			{
+				// Don't want to have separate identities with the same user name.
+				if ( identity.Id != userGuid )
+				{
+					throw new ApplicationException( "Identity already exists by specified name." );
+				}
+			}
+
+			return identity;
 		}
 
 		/// <summary>

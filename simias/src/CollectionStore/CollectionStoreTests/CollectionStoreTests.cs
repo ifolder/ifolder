@@ -60,8 +60,13 @@ namespace Simias.Storage.Tests
 
 			// Add another identity to the database.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
-			localAb.AddIdentity( "cameron" );
-			localAb.Commit( true );
+
+			// Check to see if the identity already exist.
+			if ( localAb.GetSingleIdentityByName( "cameron" ) == null )
+			{
+				localAb.AddIdentity( "cameron" );
+				localAb.Commit( true );
+			}
 		}
 		#endregion
 
