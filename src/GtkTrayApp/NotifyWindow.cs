@@ -188,7 +188,7 @@ namespace Novell.iFolder
 
 				background = inactivebackground;
 
-				Gtk.Style style = new Gtk.Style();
+//				Gtk.Style style = new Gtk.Style();
 
 				if(mask != null)
 					this.ShapeCombineMask(mask, 0, 0);
