@@ -68,22 +68,22 @@ EXTRA_DIST = $(UILIB_CSFILES) $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(Co
 all: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe InvitationWizard.exe CollectionBrowser.exe ReunionBrowser.exe iFolderBrowser.exe
 
 Novell.iFolder.UI.gtk.dll: $(UILIB_CSFILES) $(UILIB_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(UILIB_FLAGS) $(GLADE_SHARP_LIBS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs /doc:Novell.iFolder.UI.gtk.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(UILIB_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs /doc:Novell.iFolder.UI.gtk.doc.xml
 
 iFolderGtkApp.exe: $(TrayAppGtk_CSFILES) $(TrayAppGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(GLADE_SHARP_LIBS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
 
 InvitationWizard.exe: $(InviteAppGtk_CSFILES) $(InviteAppGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAppGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(InviteAppGtk_LIBS:%=/r:%) $(InviteAppGtk_LIBPATH:%=/lib:%) $(InviteAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(InviteAppGtk_CSFILES_CSC) Util.cs /doc:InvitationWizard.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAppGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(InviteAppGtk_LIBS:%=/r:%) $(InviteAppGtk_LIBPATH:%=/lib:%) $(InviteAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(InviteAppGtk_CSFILES_CSC) Util.cs /doc:InvitationWizard.doc.xml
 
 CollectionBrowser.exe: $(CollectionBrowserGtk_CSFILES) $(CollectionBrowserGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(CollectionBrowserGtk_LIBS:%=/r:%) $(CollectionBrowserGtk_LIBPATH:%=/lib:%) $(CollectionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(CollectionBrowserGtk_CSFILES_CSC) Util.cs /doc:CollectionBrowser.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(CollectionBrowserGtk_LIBS:%=/r:%) $(CollectionBrowserGtk_LIBPATH:%=/lib:%) $(CollectionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(CollectionBrowserGtk_CSFILES_CSC) Util.cs /doc:CollectionBrowser.doc.xml
 
 ReunionBrowser.exe: $(ReunionBrowserGtk_CSFILES) $(ReunionBrowserGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(ReunionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(ReunionBrowserGtk_LIBS:%=/r:%) $(ReunionBrowserGtk_LIBPATH:%=/lib:%) $(ReunionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(ReunionBrowserGtk_CSFILES_CSC) Util.cs /doc:ReunionBrowser.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(ReunionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(ReunionBrowserGtk_LIBS:%=/r:%) $(ReunionBrowserGtk_LIBPATH:%=/lib:%) $(ReunionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(ReunionBrowserGtk_CSFILES_CSC) Util.cs /doc:ReunionBrowser.doc.xml
 
 iFolderBrowser.exe: $(iFolderBrowserGtk_CSFILES) $(iFolderBrowserGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(iFolderBrowserGtk_LIBS:%=/r:%) $(iFolderBrowserGtk_LIBPATH:%=/lib:%) $(iFolderBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(iFolderBrowserGtk_CSFILES_CSC) Util.cs /doc:iFolderBrowser.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(iFolderBrowserGtk_LIBS:%=/r:%) $(iFolderBrowserGtk_LIBPATH:%=/lib:%) $(iFolderBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(iFolderBrowserGtk_CSFILES_CSC) Util.cs /doc:iFolderBrowser.doc.xml
 
 install-exec-local: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe InvitationWizard.exe CollectionBrowser.exe ReunionBrowser.exe iFolderBrowser.exe $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images

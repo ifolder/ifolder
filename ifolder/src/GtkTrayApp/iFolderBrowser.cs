@@ -531,15 +531,17 @@ namespace Novell.iFolder
 				ifProp.CurrentiFolder = ifolder;
 				ifProp.ActiveTag = 1;
 				ifProp.Run();
-/*
-				PropertiesDialog pd = new PropertiesDialog();
-				pd.TransientFor = iFolderWindow;
-				pd.iFolder = ifolder;
-				pd.ActiveTag = 2;
-				pd.Run();
-*/
 			}
 		}
 
+		public void on_help_event(object o, EventArgs args)
+		{
+			Util.ShowHelp("bq6lwle.html", iFolderWindow);
+		}
+
+		public void on_about_event(object o, EventArgs args)
+		{
+			Util.ShowAbout();
+		}
 	}
 }

@@ -25,6 +25,7 @@ using System;
 
 using Gtk;
 using Gdk;
+using Gnome;
 using Glade;
 using GtkSharp;
 using GLib;
@@ -42,9 +43,10 @@ namespace Novell.iFolder
 		/// </summary>
 		public static void Main (string[] args)
 		{
+			Gnome.Program program =
+				new Program("ifolder-browser", "0.10.0", Modules.UI, args);
+			
 			iFolderBrowser fb;
-
-			Application.Init();
 
 //			if (args.Length == 0)
 				fb = new  iFolderBrowser();
@@ -55,7 +57,7 @@ namespace Novell.iFolder
 
 			fb.ShowAll();
 
-			Application.Run();
+			program.Run();
 		}
 
 		public static void on_browser_closed(object o, EventArgs args)

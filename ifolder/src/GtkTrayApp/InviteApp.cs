@@ -25,6 +25,7 @@ using System;
 
 using Gtk;
 using Gdk;
+using Gnome;
 using Glade;
 using GtkSharp;
 using GLib;
@@ -42,9 +43,10 @@ namespace Novell.iFolder
 		/// </summary>
 		public static void Main (string[] args)
 		{
-			InvitationWizard inviteWiz;
+			Gnome.Program program =
+				new Program("invitation-wizard", "0.10.0", Modules.UI, args);
 
-			Application.Init();
+			InvitationWizard inviteWiz;
 
 			// If at least one command line argument was given, pass it
 			// into the InvitationWizard to use as the invitation file.
@@ -56,7 +58,7 @@ namespace Novell.iFolder
 			inviteWiz.WizardClosed += new EventHandler(on_wizard_closed);
 			inviteWiz.ShowAll();
 
-			Application.Run();
+			program.Run();
 		}
 
 		public static void on_wizard_closed(object o, EventArgs args) 
