@@ -150,6 +150,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IdentityManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "LocalAddressBook.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -181,11 +186,6 @@
                 />
                 <File
                     RelPath = "Store.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "StoreIdentity.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

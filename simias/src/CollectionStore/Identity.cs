@@ -23,6 +23,7 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -73,11 +74,23 @@ namespace Simias.Storage
 		/// <param name="localAb">Address book that the identity will belong to.</param>
 		/// <param name="userName">User name of the identity.</param>
 		/// <param name="userGuid">Unique identifier for the user.</param>
-		public Identity( LocalAddressBook localAb, string userName, string userGuid ) :
-			base ( localAb, userName, userGuid, Property.IdentityType )
+		/// <param name="type">Type of identity to create.</param>
+		internal Identity( LocalAddressBook localAb, string userName, string userGuid, string type ) :
+			base ( localAb, userName, userGuid, type )
 		{
 			// Add the address book collection as the parent for this node.
 			SetParent( localAb );
+		}
+
+		/// <summary>
+		/// Constructor for creating an identity with a known GUID.
+		/// </summary>
+		/// <param name="localAb">Address book that the identity will belong to.</param>
+		/// <param name="userName">User name of the identity.</param>
+		/// <param name="userGuid">Unique identifier for the user.</param>
+		public Identity( LocalAddressBook localAb, string userName, string userGuid ) :
+			this ( localAb, userName, userGuid, Property.IdentityType )
+		{
 		}
 
 		/// <summary>
@@ -86,7 +99,7 @@ namespace Simias.Storage
 		/// <param name="localAb">Address book that the identity will belong to.</param>
 		/// <param name="userName">User name of the identity.</param>
 		public Identity( LocalAddressBook localAb, string userName ) :
-			this( localAb, userName, Guid.NewGuid().ToString().ToLower() )
+			this( localAb, userName, Guid.NewGuid().ToString().ToLower(), Property.IdentityType )
 		{
 		}
 
@@ -97,6 +110,8 @@ namespace Simias.Storage
 		internal Identity( Node node ) :
 			base( node.cNode )
 		{
+			// Need to convert the collection type to a local address book type.
+			InternalCollectionHandle = new LocalAddressBook( CollectionNode.LocalStore, CollectionNode );
 		}
 		#endregion
 
@@ -213,6 +228,52 @@ namespace Simias.Storage
 			}
 
 			return aliasList;
+		}
+
+		/// <summary>
+		/// Gets the identity of the current user and all of its aliases.
+		/// </summary>
+		/// <returns>An array list of guids that represents the current user and all of its aliases.</returns>
+		public ArrayList GetIdentityAndAliases()
+		{
+			ArrayList ids = new ArrayList();
+			ids.Add( Id );
+
+			// Add any aliases to the list also.
+			foreach ( Alias alias in GetAliasList() )
+			{
+				ids.Add( alias.Id );
+			}
+
+			return ids;
+		}
+
+		/// <summary>
+		/// Returns the user guid that the current user is known as in the specified domain.
+		/// </summary>
+		/// <param name="domain">The domain that the user is in.</param>
+		/// <returns>A string representing the user's guid in the specified domain.  If the user does not exist
+		/// in the specified domain, the current user guid is returned.</returns>
+		public string GetDomainUserGuid( string domain )
+		{
+			string userGuid = Id;
+
+			// If no domain is specified or it is the current domain, use the current identity.
+			if ( ( domain != null ) && ( domain != CollectionNode.DomainName ) )
+			{
+				// This is not the store's domain.  Look through the list of aliases that this
+				// identity is known by in other domains.
+				foreach ( Alias alias in GetAliasList() )
+				{
+					if ( alias.Domain == domain )
+					{
+						userGuid = alias.Id;
+						break;
+					}
+				}
+			}
+
+			return userGuid;
 		}
 		#endregion
 	}

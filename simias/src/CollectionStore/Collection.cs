@@ -174,7 +174,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal string DomainIdentity
 		{
-			get { return LocalStore.LocalIdentity.GetDomainUserGuid( DomainName ); }
+			get { return ( LocalStore.CurrentIdentity == null ) ? LocalStore.CurrentUser : LocalStore.CurrentIdentity.GetDomainUserGuid( DomainName ); }
 		}
 		#endregion
 
@@ -198,7 +198,7 @@ namespace Simias.Storage
 			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
 
 			// Don't allow another database object to be created.
-			if ( ( localStore.GetDatabaseObject() != null ) && ( type == Store.DatabaseType ) )
+			if ( ( type == Store.DatabaseType ) && ( localStore.GetDatabaseObject() != null ) )
 			{
 				throw new ApplicationException( Store.DatabaseType + " already exists." );
 			}

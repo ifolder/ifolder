@@ -20,7 +20,7 @@ CollectionStoreTests_LDFLAGS =
 #=============================================================================
 # CollectionStore variables
 #=============================================================================
-CollectionStore_SOURCES = AccessControl.cs Alias.cs AssemblyInfo.cs CacheNode.cs Collection.cs DirectoryEntry.cs FileEntry.cs FileSystemEntry.cs ICSEnumerator.cs Identity.cs LocalAddressBook.cs MultiValuedList.cs Node.cs NodeStream.cs Property.cs PropertyList.cs Store.cs StoreIdentity.cs
+CollectionStore_SOURCES = AccessControl.cs Alias.cs AssemblyInfo.cs CacheNode.cs Collection.cs DirectoryEntry.cs FileEntry.cs FileSystemEntry.cs ICSEnumerator.cs Identity.cs IdentityManager.cs LocalAddressBook.cs MultiValuedList.cs Node.cs NodeStream.cs Property.cs PropertyList.cs Store.cs
 CollectionStore_INCLUDES =
 CollectionStore_FLAGS = /t:library
 CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll System.Security.dll Identity.dll CollectionEvents.dll

@@ -335,6 +335,11 @@ namespace Simias.Storage
 		internal const string AliasParameters = "AliasParameters";
 
 		/// <summary>
+		///  Well known XML attribute.
+		/// </summary>
+		internal const string IdentityRole = "AB:Role";
+
+		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
 		internal const string TrueStr = "1";
@@ -648,6 +653,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Credential, null );
 			systemPropertyTable.Add( AliasParameters, null );
 			systemPropertyTable.Add( AddressBookType, null );
+			systemPropertyTable.Add( IdentityRole, null );
 
 			systemPropertyTable.Add( CollectionID, null );
 			systemPropertyTable.Add( CreationTime, null );

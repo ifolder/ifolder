@@ -84,7 +84,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Object that identifies the current owner or impersonator.
 		/// </summary>
-		private StoreIdentity identity = null;
+		private IdentityManager identityManager = null;
 
 		/// <summary>
 		/// Handle to the local store provider.
@@ -126,7 +126,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the owner of the store.
 		/// </summary>
-		public string StoreOwner
+		private string StoreAdmin
 		{
 			get { return Access.StoreAdminRole; }
 		}
@@ -136,15 +136,15 @@ namespace Simias.Storage
 		/// </summary>
 		public string CurrentUser
 		{
-			get { return identity.CurrentUserGuid; }
+			get { return identityManager.CurrentUserGuid; }
 		}
 
 		/// <summary>
 		/// Gets whether the current user is the store owner.
 		/// </summary>
-		public bool IsStoreOwner
+		private bool IsStoreAdmin
 		{
-			get { return ( StoreOwner == CurrentUser ) ? true : false; }
+			get { return ( StoreAdmin == CurrentUser ) ? true : false; }
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal string DomainName
 		{
-			get { return identity.DomainName; }
+			get { return identityManager.DomainName; }
 		}
 
 		/// <summary>
@@ -184,15 +184,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Identity CurrentIdentity
 		{
-			get { return identity.CurrentIdentity; }
-		}
-
-		/// <summary>
-		/// Gets the store identity which controls identity impersonation among other things.
-		/// </summary>
-		internal StoreIdentity LocalIdentity
-		{
-			get { return identity; }
+			get { return identityManager.CurrentIdentity; }
 		}
 
 		/// <summary>
@@ -220,45 +212,49 @@ namespace Simias.Storage
 		/// is null, the default database path is used.</param>
 		private Store( Uri databasePath )
 		{
-			bool created;
-
-			// Get the path where the assembly was loaded from.
-			assemblyPath = new Uri( Path.GetDirectoryName( Assembly.GetExecutingAssembly().CodeBase ) );
-
-			if ( databasePath == null )
+			// Don't let another process authenticate while the database is still being initialized.
+			lock( this )
 			{
-				storageProvider = Persist.Provider.Connect( out created );
-			}
-			else
-			{
-				storageProvider = Persist.Provider.Connect( databasePath.LocalPath, out created );
-			}
+				bool created;
 
-			// Set the path to the store.
-			storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, StoreManagedDirectoryName ) );
+				// Get the path where the assembly was loaded from.
+				assemblyPath = new Uri( Path.GetDirectoryName( Assembly.GetExecutingAssembly().CodeBase ) );
 
-			// Create a domain name for this domain.  If the store is created, this will be the new domain name for
-			// the store.  If the store already exists, it will be discarded.
-			string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
-
-			// In order to bootstrap the authentication process, create an identity that represents the store
-			// administrator.  It will be replace as soon as the store owner identity is created or is authenticated.
-			identity = StoreIdentity.CreateStoreAdmin( domainName );
-
-			// Either create the store or authenticate to it.
-			if ( created )
-			{
-				if ( !InitializeStore() )
+				if ( databasePath == null )
 				{
-					// The store didn't initialize delete it.
-					storageProvider.DeleteStore();
-					storageProvider.Dispose();
-					throw new ApplicationException( "Store could not be initialized." );
+					storageProvider = Persist.Provider.Connect( out created );
 				}
-			}
-			else
-			{
-				AuthenticateStore();
+				else
+				{
+					storageProvider = Persist.Provider.Connect( databasePath.LocalPath, out created );
+				}
+
+				// Set the path to the store.
+				storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, StoreManagedDirectoryName ) );
+
+				// Create a domain name for this domain.  If the store is created, this will be the new domain name for
+				// the store.  If the store already exists, it will be discarded.
+				string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+
+				// In order to bootstrap the authentication process, create an temporary identity that represents the store
+				// administrator.  It will be replace as soon as the store owner identity is created or is authenticated.
+				identityManager = IdentityManager.CreateStoreAdmin( domainName );
+
+				// Either create the store or authenticate to it.
+				if ( created )
+				{
+					if ( !InitializeStore( domainName ) )
+					{
+						// The store didn't initialize delete it.
+						storageProvider.DeleteStore();
+						storageProvider.Dispose();
+						throw new ApplicationException( "Store could not be initialized." );
+					}
+				}
+				else
+				{
+					AuthenticateStore();
+				}
 			}
 		}
 		#endregion
@@ -270,7 +266,34 @@ namespace Simias.Storage
 		/// </summary>
 		private void AuthenticateStore()
 		{
-			identity = StoreIdentity.Authenticate( this, Environment.UserName );
+			LocalAddressBook localAb = GetLocalAddressBook();
+			if ( localAb == null )
+			{
+				throw new ApplicationException( "Local address book does not exist." );
+			}
+
+			// Look up to see if the current user has an identity.
+			Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
+			if ( identity == null )
+			{
+				throw new ApplicationException( "No such user." );
+			}
+
+			// Get the database object to check if this ID is the same as the owner.
+			Collection dbCollection = GetDatabaseObject();
+			if ( dbCollection == null )
+			{
+				throw new ApplicationException( "Store database object does not exist" );
+			}
+
+			// Get the owner property and make sure that it is the same as the current user.
+			if ( dbCollection.Owner != identity.Id )
+			{
+				throw new UnauthorizedAccessException( "Current user is not store owner." );
+			}
+
+			// Create a identity manager object that will be used by the store object from here on out.
+			identityManager = new IdentityManager( identity );
 		}
 
 		/// <summary>
@@ -332,11 +355,34 @@ namespace Simias.Storage
 		/// <summary>
 		/// Initializes the Collection Store the first time the persistent database is created.
 		/// </summary>
+		/// <param name="domainName">Name of this store's domain.</param>
 		/// <returns>True if store was successfully initialized, otherwise false is returned.</returns>
-		private bool InitializeStore()
+		private bool InitializeStore( string domainName )
 		{
-			// Get an identity that represents the current user.  This user will become the database owner.
-			identity = StoreIdentity.CreateIdentity( this, LocalIdentity.DomainName, Environment.UserName );
+			// Create the local address book.
+			LocalAddressBook localAb = new LocalAddressBook( this, domainName );
+
+			// Create an identity that represents the current user.  This user will become the database owner.
+			Identity identity = new Identity( localAb, Environment.UserName );
+
+			// Add a key pair to this identity to be used as credentials.
+			identity.CreateKeyPair();
+
+			// Change the local address book to be owned by the current user.
+			localAb.ChangeOwner( identity.Id, Access.Rights.Deny );
+
+			// Set this new identity in the identity manager.
+			identityManager = new IdentityManager( identity );
+
+			// Create the role identities in the local address book.  These are used when impersonating.  They are not
+			// normal contact entries.
+			new Identity( localAb, "StoreAdmin", Access.StoreAdminRole, Property.IdentityRole );
+			new Identity( localAb, "SyncIdentityRole", Access.SyncOperatorRole, Property.IdentityRole );
+			new Identity( localAb, "BackupIdentityRole", Access.BackupOperatorRole, Property.IdentityRole );
+			new Identity( localAb, "WorldIdentityRole", Access.WorldRole, Property.IdentityRole );
+
+			// Save the address book changes.
+			localAb.Commit( true );
 
 			// Create an object that represents the database.
 			bool created = CreateDatabaseObject();
@@ -692,7 +738,7 @@ namespace Simias.Storage
 			}
 
 			// Check if the current user is the store owner.
-			if ( !IsStoreOwner )
+			if ( !IsStoreAdmin )
 			{
 				throw new UnauthorizedAccessException( "Current user is not the store owner." );
 			}
@@ -1028,7 +1074,7 @@ namespace Simias.Storage
 				throw new ObjectDisposedException( this.ToString() );
 			}
 
-			identity.Impersonate( userGuid.ToLower() );
+			identityManager.Impersonate( userGuid.ToLower() );
 		}
 
 		/// <summary>
@@ -1141,7 +1187,7 @@ namespace Simias.Storage
 				throw new ObjectDisposedException( this.ToString() );
 			}
 
-			identity.Revert();
+			identityManager.Revert();
 		}
 		#endregion
 
@@ -1217,9 +1263,9 @@ namespace Simias.Storage
 				this.localStore = localStore;
 
 				// If this user does not have owner rights, then get all the identities that he is known as.
-				if ( localStore.CurrentUser != localStore.StoreOwner )
+				if ( localStore.CurrentUser != localStore.StoreAdmin )
 				{
-					idsEnumerator = localStore.LocalIdentity.GetIdentityAndAliases().GetEnumerator();
+					idsEnumerator = localStore.CurrentIdentity.GetIdentityAndAliases().GetEnumerator();
 				}
 
 				Reset();
@@ -1236,7 +1282,7 @@ namespace Simias.Storage
 				Persist.Query query;
 
 				// Create a query object that will return a result set containing the children of this node.
-				if ( currentUserGuid == localStore.StoreOwner )
+				if ( currentUserGuid == localStore.StoreAdmin )
 				{
 					// If the store owner is doing the search, return all collections in his store.
 					query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Begins, Node.CollectionType, Property.Syntax.String.ToString() );
@@ -1308,7 +1354,7 @@ namespace Simias.Storage
 				else
 				{
 					// Perform a new query.
-					CollectionQuery( localStore.StoreOwner );
+					CollectionQuery( localStore.StoreAdmin );
 				}
 			}
 
