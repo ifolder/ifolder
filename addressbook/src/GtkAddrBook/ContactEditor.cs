@@ -148,7 +148,9 @@ namespace Novell.iFolder
 		internal Telephone		phoneTwo = null;
 		internal Telephone		phoneThree = null;
 		internal Telephone		phoneFour = null;
-		internal Address		preferredAddress;
+		internal Address		workAddress = null;
+		internal Address		homeAddress = null;
+		internal Address		otherAddress = null;
 
 
 		/// <summary>
@@ -272,48 +274,9 @@ namespace Novell.iFolder
 
 			BirthdayEntry.Text = currentContact.Birthday;
 			NoteTextView.Buffer.Text = currentContact.Note;
-/*
-			try
-			{
-				preferredAddress = currentContact.GetPreferredAddress();
-			}
-			catch(Exception e)
-			{
-				preferredAddress = null;
-			}
-*/
-
-/*			if(preferredAddress != null)
-			{
-				if(preferredAddress.Street.Length > 0)
-					streetEntry.Text = preferredAddress.Street;
-				if(preferredAddress.Locality.Length > 0)
-					cityEntry.Text = preferredAddress.Locality;
-				if(preferredAddress.Region.Length > 0)
-					stateEntry.Text = preferredAddress.Region;
-				if(preferredAddress.PostalCode.Length > 0)
-					zipEntry.Text = preferredAddress.PostalCode;
-				if(preferredAddress.Country.Length > 0)
-					countryEntry.Text = preferredAddress.Country;
-			}
-*/
-		}
 
 
-
-
-		/// <summary>
-		/// Method used to retrieve a specific type of phone number
-		/// from the current contact
-		/// </summary>
-		internal Telephone GetPhoneType(PhoneTypes type)
-		{
-			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
-			{
-				if( (tel.Types & type) == type)
-					return tel;
-			}
-			return null;
+			PopulateAddresses();
 		}
 
 
@@ -773,6 +736,177 @@ namespace Novell.iFolder
 
 
 		/// <summary>
+		/// Method used to retrieve a specific type of Address 
+		/// from the current contact
+		/// </summary>
+		internal Address GetAddressType(AddressTypes type)
+		{
+			foreach(Address addr in currentContact.GetAddresses())
+			{
+				if( (addr.Types & type) == type)
+					return addr;
+			}
+			return null;
+		}
+
+
+		/// <summary>
+		/// Method used to populate the address controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
+		internal void PopulateAddresses()
+		{
+			workAddress = GetAddressType(AddressTypes.work);
+			if(workAddress != null)
+			{
+				if(workAddress.Street.Length > 0)
+					WorkAddrEntry.Text = workAddress.Street;
+				if(workAddress.ExtendedAddress.Length > 0)
+					WorkAddr2Entry.Text = workAddress.ExtendedAddress;
+				if(workAddress.Locality.Length > 0)
+					WorkCityEntry.Text = workAddress.Locality;
+				if(workAddress.Region.Length > 0)
+					WorkStateEntry.Text = workAddress.Region;
+				if(workAddress.PostalCode.Length > 0)
+					WorkZipEntry.Text = workAddress.PostalCode;
+				if(workAddress.Country.Length > 0)
+					WorkCountryEntry.Text = workAddress.Country;
+			}
+
+			homeAddress = GetAddressType(AddressTypes.home);
+			if(homeAddress != null)
+			{
+				if(homeAddress.Street.Length > 0)
+					HomeAddrEntry.Text = homeAddress.Street;
+				if(homeAddress.ExtendedAddress.Length > 0)
+					HomeAddr2Entry.Text = homeAddress.ExtendedAddress;
+				if(homeAddress.Locality.Length > 0)
+					HomeCityEntry.Text = homeAddress.Locality;
+				if(homeAddress.Region.Length > 0)
+					HomeStateEntry.Text = homeAddress.Region;
+				if(homeAddress.PostalCode.Length > 0)
+					HomeZipEntry.Text = homeAddress.PostalCode;
+				if(homeAddress.Country.Length > 0)
+					HomeCountryEntry.Text = homeAddress.Country;
+			}
+
+			otherAddress = GetAddressType(AddressTypes.other);
+			if(otherAddress != null)
+			{
+				if(otherAddress.Street.Length > 0)
+					OtherAddrEntry.Text = otherAddress.Street;
+				if(otherAddress.ExtendedAddress.Length > 0)
+					OtherAddr2Entry.Text = otherAddress.ExtendedAddress;
+				if(otherAddress.Locality.Length > 0)
+					OtherCityEntry.Text = otherAddress.Locality;
+				if(otherAddress.Region.Length > 0)
+					OtherStateEntry.Text = otherAddress.Region;
+				if(otherAddress.PostalCode.Length > 0)
+					OtherZipEntry.Text = otherAddress.PostalCode;
+				if(otherAddress.Country.Length > 0)
+					OtherCountryEntry.Text = otherAddress.Country;
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to save addresses to the current contact
+		/// the current contact still needs to be persisted
+		/// </summary>
+		internal void SaveAddresses()
+		{
+			// Work Address
+			if( (WorkAddrEntry.Text.Length > 0) ||
+				(WorkAddr2Entry.Text.Length > 0) ||
+				(WorkCityEntry.Text.Length > 0) ||
+				(WorkStateEntry.Text.Length > 0) ||
+				(WorkZipEntry.Text.Length > 0) ||
+				(WorkCountryEntry.Text.Length > 0) )
+			{
+				if(workAddress == null)
+				{
+					workAddress = new Address();
+					currentContact.AddAddress(workAddress);
+				}
+				workAddress.Types = AddressTypes.work;
+				workAddress.Street = WorkAddrEntry.Text;
+				workAddress.ExtendedAddress = WorkAddr2Entry.Text;
+				workAddress.Locality = WorkCityEntry.Text;
+				workAddress.Region = WorkStateEntry.Text;
+				workAddress.PostalCode = WorkZipEntry.Text;
+				workAddress.Country = WorkCountryEntry.Text;
+			}
+			else
+			{
+				if(workAddress != null)
+				{
+					workAddress.Delete();
+				}
+			}
+
+			// Home Address
+			if( (HomeAddrEntry.Text.Length > 0) ||
+				(HomeAddr2Entry.Text.Length > 0) ||
+				(HomeCityEntry.Text.Length > 0) ||
+				(HomeStateEntry.Text.Length > 0) ||
+				(HomeZipEntry.Text.Length > 0) ||
+				(HomeCountryEntry.Text.Length > 0) )
+			{
+				if(homeAddress == null)
+				{
+					homeAddress = new Address();
+					currentContact.AddAddress(homeAddress);
+				}
+				homeAddress.Types = AddressTypes.home;
+				homeAddress.Street = HomeAddrEntry.Text;
+				homeAddress.ExtendedAddress = HomeAddr2Entry.Text;
+				homeAddress.Locality = HomeCityEntry.Text;
+				homeAddress.Region = HomeStateEntry.Text;
+				homeAddress.PostalCode = HomeZipEntry.Text;
+				homeAddress.Country = HomeCountryEntry.Text;
+			}
+			else
+			{
+				if(homeAddress != null)
+				{
+					homeAddress.Delete();
+				}
+			}
+
+			// Other Address
+			if( (OtherAddrEntry.Text.Length > 0) ||
+				(OtherAddr2Entry.Text.Length > 0) ||
+				(OtherCityEntry.Text.Length > 0) ||
+				(OtherStateEntry.Text.Length > 0) ||
+				(OtherZipEntry.Text.Length > 0) ||
+				(OtherCountryEntry.Text.Length > 0) )
+			{
+				if(otherAddress == null)
+				{
+					otherAddress = new Address();
+					currentContact.AddAddress(otherAddress);
+				}
+				otherAddress.Types = AddressTypes.other;
+				otherAddress.Street = OtherAddrEntry.Text;
+				otherAddress.ExtendedAddress = OtherAddr2Entry.Text;
+				otherAddress.Locality = OtherCityEntry.Text;
+				otherAddress.Region = OtherStateEntry.Text;
+				otherAddress.PostalCode = OtherZipEntry.Text;
+				otherAddress.Country = OtherCountryEntry.Text;
+			}
+			else
+			{
+				if(otherAddress != null)
+				{
+					otherAddress.Delete();
+				}
+			}
+		}
+
+
+		/// <summary>
 		/// Method used to gather data from entry fields that are not tied
 		/// in any way to the actual Contact object.
 		/// </summary>
@@ -844,33 +978,8 @@ namespace Novell.iFolder
 				currentContact.Note = NoteTextView.Buffer.Text;
 			else
 				currentContact.Note = null;
-/*
-			if( (streetEntry.Text.Length == 0) &&
-					(cityEntry.Text.Length == 0) &&
-					(stateEntry.Text.Length == 0) &&
-					(zipEntry.Text.Length == 0) &&
-					(countryEntry.Text.Length == 0) )
-			{
-				if(preferredAddress != null)
-					preferredAddress.Delete();
-			}
-			else
-			{
-				if(preferredAddress == null)
-				{
-					preferredAddress = new Address();
-					preferredAddress.Preferred = true;
-					currentContact.AddAddress(preferredAddress);
-				}
 
-				preferredAddress.Street = streetEntry.Text;
-				preferredAddress.Locality = cityEntry.Text;
-				preferredAddress.Region = stateEntry.Text;
-				preferredAddress.PostalCode = zipEntry.Text;
-				preferredAddress.Country = countryEntry.Text;
-
-			}
-*/
+			SaveAddresses();
 		}
 
 

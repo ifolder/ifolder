@@ -776,7 +776,7 @@ namespace Novell.iFolder
 			ContactPicker cp = new ContactPicker();
 			cp.AddrBookManager = abMan;
 			// cbWindow
-			int rc = cp.Run();
+			cp.Run();
 		}
 
 		// This is code to setup the HTML Text view thingy
