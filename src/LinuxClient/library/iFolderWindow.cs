@@ -693,6 +693,23 @@ namespace Novell.iFolder
 					}
 				}
 			}
+			
+			// Update the POBox for every domain so that the user can get
+			// notification of new iFolder subscriptions.
+			DomainInformation[] domains = ifdata.GetDomains();
+			if (domains != null)
+			{
+				foreach(DomainInformation domain in domains)
+				{
+					try
+					{
+						ifws.SynciFolderNow(domain.POBoxID);
+					}
+					catch
+					{
+					}
+				}
+			}
 		}
 
 
