@@ -43,7 +43,7 @@ namespace Simias
 		{
 			store = new TreeStore(typeof(string));
 			win = null;
-			
+
 			Trace.Listeners.Add(this);
 		}
 
@@ -106,17 +106,33 @@ namespace Simias
 
 		public override void WriteLine(string message)
 		{
-			//Console.WriteLine(message);
-
-			TreeIter ti = store.AppendValues(message);
-
-			if(win == null)
-				return;
-
-			if(!pause)
+			Gdk.Threads.Enter();
+			if(win != null)
 			{
-				tv.ScrollToCell(store.GetPath(ti), null, false, 0, 0);
+
+				Console.WriteLine("WriteLine is being called...");
+
+				TreeIter ti = store.AppendValues(message);
+
+				if(win == null)
+					return;
+
+				if(!pause)
+				{
+					tv.ScrollToCell(store.GetPath(ti), null, false, 0, 0);
+				}
+
+				//			Gnome.Client.Flush()
+				Console.WriteLine("Checking to pump messages...");
+				while(GLib.MainContext.Pending() == true)
+				{
+					Console.WriteLine("Pump...");
+					GLib.MainContext.Iteration(false);
+				}
 			}
+			Console.WriteLine("About to Leave threads...");
+			Gdk.Threads.Leave();
+			Console.WriteLine("We are out...");
 		}
 
 		public bool Pause
@@ -133,7 +149,7 @@ namespace Simias
 			win.Hide();
 		}
 
-		
+
 		private void on_stopstartButton_clicked(object obj, EventArgs args)
 		{
 			pause = !pause;
@@ -157,12 +173,12 @@ namespace Simias
 			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
-/*
-					if(args.Event.type == Gdk.EventType.TwoButtonPress)
-					{
-						show_browser(obj, args);
-					}
-*/
+					/*
+					   if(args.Event.type == Gdk.EventType.TwoButtonPress)
+					   {
+					   show_browser(obj, args);
+					   }
+					 */
 					break;
 				case 2: // second mouse button
 					break;
@@ -215,12 +231,12 @@ namespace Simias
 		{
 		}
 
-/*
-		private void PumpMessages()
-		{
-			while(Application.EventsPending())
-				Application.RunIteration(false);
-		}
-*/
+		/*
+		   private void PumpMessages()
+		   {
+		   while(Application.EventsPending())
+		   Application.RunIteration(false);
+		   }
+		 */
 	}
 }
