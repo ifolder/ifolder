@@ -10,7 +10,7 @@ MSVCR_DEBUG_DLL = $(shell find $(MSVCR_DEBUG_DLL_PATH) -name msvcr71d.dll)
 endif
 endif
 
-EXTRA_DIST = tools $(srcdir)/$(PACKAGE).pc.in $(ADDITIONAL_LIB_FILES)
+EXTRA_DIST = tools $(srcdir)/$(PACKAGE)*.pc.in $(ADDITIONAL_LIB_FILES)
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
@@ -24,7 +24,7 @@ endif
 install-exec-local: $(ADDITIONAL_LIB_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
-	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) $(PACKAGE)*.pc $(DESTDIR)$(libdir)/pkgconfig
 if WINDOWS
 if DEBUG	
 	$(INSTALL_PROGRAM) $(ADDITIONAL_LIB_FILES) $(DESTDIR)$(libdir)
@@ -37,7 +37,7 @@ if WINDOWS
 endif
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE).pc
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE)*.pc
 	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
 if WINDOWS
 if DEBUG	
