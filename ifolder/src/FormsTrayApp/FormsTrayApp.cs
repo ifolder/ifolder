@@ -384,9 +384,6 @@ namespace Novell.iFolder.FormsTrayApp
 				config = Configuration.GetConfiguration();
 				iFolderManager.CreateDefaultExclusions(config);
 
-				SimiasLogManager.Configure(config);
-				SimiasRemoting.Configure(config);
-
 				serviceManager = new Simias.Service.Manager(config);
 				serviceManager.StartServices();
 

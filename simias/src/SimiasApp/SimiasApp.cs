@@ -79,10 +79,6 @@ namespace Simias
 				{
 					Console.WriteLine("Starting...");
 
-					// configure
-					SimiasLogManager.Configure(config);
-					SimiasRemoting.Configure(config);
-
 					// create a manager
 					manager = new Manager(config);
 

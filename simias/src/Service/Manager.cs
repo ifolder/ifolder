@@ -81,12 +81,13 @@ namespace Simias.Service
 		/// <param name="conf">The Configuration location to manage.</param>
 		public Manager(Configuration conf)
 		{
+			// configure
+			SimiasLogManager.Configure(conf);
+			SimiasRemoting.Configure(conf);
+
 			// Get an event subscriber to handle shutdown events.
 			subscriber = new DefaultSubscriber();
 			subscriber.SimiasEvent +=new SimiasEventHandler(OnSimiasEvent);
-
-			// configure logging
-			SimiasLogManager.Configure(conf);
 
 			lock (this)
 			{
