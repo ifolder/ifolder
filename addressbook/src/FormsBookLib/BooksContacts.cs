@@ -145,6 +145,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.contacts.Name = "contacts";
 			this.contacts.Size = new System.Drawing.Size(245, 304);
 			this.contacts.TabIndex = 1;
+			this.contacts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.contacts_KeyDown);
 			this.contacts.DoubleClick += new System.EventHandler(this.contacts_DoubleClick);
 			this.contacts.SelectedIndexChanged += new System.EventHandler(this.contacts_SelectedIndexChanged);
 			// 
@@ -165,6 +166,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.books.Name = "books";
 			this.books.Size = new System.Drawing.Size(120, 304);
 			this.books.TabIndex = 0;
+			this.books.KeyDown += new System.Windows.Forms.KeyEventHandler(this.books_KeyDown);
 			this.books.SelectedIndexChanged += new System.EventHandler(this.books_SelectedIndexChanged);
 			// 
 			// BooksContacts
@@ -701,6 +703,22 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			this.createBookMenu.Enabled = this.books.SelectedItems.Count == 0;
 			this.deleteBookMenu.Enabled = this.books.SelectedItems.Count != 0;
+		}
+
+		private void contacts_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Delete)
+			{
+				deleteContact_Click(this, null);
+			}
+		}
+
+		private void books_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Delete)
+			{
+				deleteBook_Click(this, null);
+			}
 		}
 		#endregion
 	}
