@@ -516,7 +516,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[item setToolTip:@"Create a new iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(newiFolder:)];
-	[item setImage:[NSImage imageNamed:@"newifolder24"]];
+	[item setImage:[NSImage imageNamed:@"newifolder32"]];
     [toolbarItems setObject:item forKey:@"NewiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"NewiFolder"];
 	[item release];
@@ -527,7 +527,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[item setToolTip:@"Setup a shared iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(setupiFolder:)];
-	[item setImage:[NSImage imageNamed:@"setup24"]];
+	[item setImage:[NSImage imageNamed:@"setup32"]];
     [toolbarItems setObject:item forKey:@"SetupiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"SetupiFolder"];
 	[item release];
@@ -543,7 +543,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[item setToolTip:@"Sync selected iFolder now"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(synciFolder:)];
-	[item setImage:[NSImage imageNamed:@"sync24"]];
+	[item setImage:[NSImage imageNamed:@"sync32"]];
     [toolbarItems setObject:item forKey:@"SynciFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"SynciFolder"];
 	[item release];
@@ -555,7 +555,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[item setToolTip:@"Share an iFolder"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(shareiFolder:)];
-	[item setImage:[NSImage imageNamed:@"share24"]];
+	[item setImage:[NSImage imageNamed:@"share32"]];
     [toolbarItems setObject:item forKey:@"ShareiFolder"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"ShareiFolder"];
 	[item release];
@@ -566,7 +566,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[item setToolTip:@"Resolve file conflicts"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(resolveConflicts:)];
-	[item setImage:[NSImage imageNamed:@"conflict24"]];
+	[item setImage:[NSImage imageNamed:@"conflict32"]];
     [toolbarItems setObject:item forKey:@"ResolveConflicts"]; // add to toolbar list
 	[toolbarItemKeys addObject:@"ResolveConflicts"];
 	[item release];
