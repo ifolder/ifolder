@@ -656,39 +656,31 @@ namespace Simias.Web
 		/// <summary>
 		/// WebMethod that removes a subscription for an iFolder.
 		/// </summary>
-		/// <param name="CollectionID">
-		/// The ID of the collection representing the iFolder for which
-		/// the subscription will be removed.
+		/// <param name="DomainID">
+		/// The ID of the domain that the subscription belongs to.
 		/// </param>
-		/// <param name="UserID">
-		/// The ID of the member to which the subscription was sent.
+		/// <param name="SubsrciptionID">
+		/// The ID of the subscription to remove.
 		/// </param>
-		public static void RemoveSubscription(string CollectionID,
-											  string UserID)
+		public static void RemoveSubscription(string DomainID,
+											  string SubscriptionID)
 		{
 			Store store = Store.GetStore();
 
-			Collection col = store.GetCollectionByID(CollectionID);
-			if (col == null)
-			{
-				throw new Exception("Invalid CollectionID");
-			}
-
 			// Get the current member's POBox
 			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
-																   store.DefaultDomain);
+																   DomainID);
 
-			// Search for the matching subscription
-			Subscription sub = poBox.GetSubscriptionByCollectionID(CollectionID,
-																   UserID);
-			if(sub != null)
+			Node node = poBox.GetNodeByID(SubscriptionID);
+			if (node != null)
 			{
-				poBox.Delete(sub);
-				poBox.Commit(sub);
+				Subscription sub = new Subscription(node);
+				
+				if(sub != null)
+				{
+					poBox.Commit(poBox.Delete(sub));
+				}
 			}
-
-			// Remove the subscription from the recipient's POBox
-			RemoveMemberSubscription(store, col, UserID);
 		}
 
 
@@ -802,19 +794,19 @@ namespace Simias.Web
 														Collection col,
 														string UserID)
 		{
-			// TODO: this method needs to be fixed ... this will cause a POBox
-			// to be created on the local machine for the given UserID.
 			// Get the member's POBox
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
-												store.DefaultDomain, 
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+												col.Domain, 
 								UserID );
-
-			// Search for the matching subscription
-			Subscription sub = poBox.GetSubscriptionByCollectionID(col.ID);
-			if(sub != null)
+			if (poBox != null)
 			{
-				poBox.Delete(sub);
-				poBox.Commit(sub);
+				// Search for the matching subscription
+				Subscription sub = poBox.GetSubscriptionByCollectionID(col.ID);
+				if(sub != null)
+				{
+					poBox.Delete(sub);
+					poBox.Commit(sub);
+				}
 			}
 		}
 
