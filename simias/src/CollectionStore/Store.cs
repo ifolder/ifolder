@@ -243,7 +243,7 @@ namespace Simias.Storage
 					{
 						// Create an identity that represents the current user.  This user will become the 
 						// database owner.
-						identity = new Identity( Environment.UserName, Guid.NewGuid().ToString() );
+						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
 
 						// Create an object that represents the database collection.
 						localDb = new LocalDatabase( this );

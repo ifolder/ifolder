@@ -369,7 +369,7 @@ namespace Simias.Storage
 					break;
 
 				case "Identity":
-					rNode = new Identity( document );
+					rNode = new Identity( store, document );
 					break;
 
 				case "Member":
