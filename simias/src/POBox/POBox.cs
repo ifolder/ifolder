@@ -194,7 +194,7 @@ namespace Simias.POBox
 		/// <returns>A Subscription object.  This object must be added to the POBox using one of the AddMessage() methods.</returns>
 		public Subscription CreateSubscription(Collection collection, Member fromMember)
 		{
-			Subscription subscription = new Subscription("Subscription Message", Message.OutboundMessage, fromMember.UserID);
+			Subscription subscription = new Subscription(collection.Name + " subscription", Message.OutboundMessage, fromMember.UserID);
 
 			subscription.FromName = fromMember.Name;
 			subscription.SubscriptionCollectionID = collection.ID;

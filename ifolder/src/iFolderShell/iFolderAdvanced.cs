@@ -636,16 +636,8 @@ namespace Novell.iFolder.iFolderCom
 			{
 				ShareListMember slMember = (ShareListMember)lvitem.Tag;
 
-				// If the item is changed, process it.
-				if (slMember.Changed)
-				{
-					// Get the rights for this contact.
-					slMember.Member.Rights = stringToRights(lvitem.SubItems[2].Text);
-
-					// Reset the flags.
-					slMember.Changed = false;
-				}
-				else if (slMember.Added)
+				// Process added and changed members.
+				if (slMember.Added)
 				{
 					// TODO: we'll get the email a different way in the future.
 					if (sendersEmail == null)
@@ -677,6 +669,14 @@ namespace Novell.iFolder.iFolderCom
 					poBox.AddMessage(subscr);
 
 					slMember.Added = false;
+				}
+				else if (slMember.Changed)
+				{
+					// Get the rights for this contact.
+					slMember.Member.Rights = stringToRights(lvitem.SubItems[2].Text);
+
+					// Reset the flags.
+					slMember.Changed = false;
 				}
 			}
 
@@ -994,7 +994,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				lvi = shareWith.SelectedItems[0];
 			}
-			else if (shareWith.SelectedItems.Count > 1)
+			else
 			{
 				this.accessReadOnly.Checked = false;
 				this.accessReadWrite.Checked = false;
@@ -1009,7 +1009,7 @@ namespace Novell.iFolder.iFolderCom
 					this.remove.Enabled = false;
 					this.reinvite.Enabled = false;
 				}
-				else if (shareWith.SelectedItems.Count > 1)
+				else
 				{
 					this.accessControlButtons.Enabled = true;
 				}
@@ -1070,22 +1070,27 @@ namespace Novell.iFolder.iFolderCom
 				imageIndex = 1;
 			}
 
-/*			foreach (ListViewItem item in this.shareWith.SelectedItems)
+			foreach (ListViewItem lvi in shareWith.SelectedItems)
 			{
+				ShareListMember slMember = (ShareListMember)lvi.Tag;
+
 				try
 				{
-					if (((ShareListContact)item.Tag).CurrentContact.IsCurrentUser)
+					if (ifolder.GetCurrentMember().UserID == slMember.Member.UserID)
 					{
 						// Don't allow current user to be modified.
 					}
-					else if (item.SubItems[1].Text != access)
+					else if (lvi.SubItems[2].Text != access)
 					{
 						// Change the subitem text.
-						item.SubItems[1].Text = access;
-						item.ImageIndex = imageIndex;
+						lvi.SubItems[2].Text = access;
+
+						// Don't change the image if this item is not a member.
+						if (slMember.IsMember)
+							lvi.ImageIndex = imageIndex;
 
 						// Mark this item as changed.
-						((ShareListContact)item.Tag).Changed = true;
+						slMember.Changed = true;
 
 						// Enable the apply button.
 						this.apply.Enabled = true;
@@ -1093,7 +1098,7 @@ namespace Novell.iFolder.iFolderCom
 				}
 				catch{}
 			}
-*/		}
+		}
 
 		private void add_Click(object sender, System.EventArgs e)
 		{
