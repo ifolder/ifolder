@@ -42,6 +42,8 @@ namespace Simias.Client
 		private const string DefaultFileName = "Simias.config";
 		private const string storeProvider = "StoreProvider";
 		private const string storeProviderPath = "Path";
+		private const string serviceManager = "ServiceManager";
+		private const string webServiceUri = "WebServiceUri";
 
 		private string configFilePath;
 		private XmlDocument configDoc;
@@ -61,7 +63,20 @@ namespace Simias.Client
 		/// </summary>
 		public string StorePath
 		{
-			get { return fixupPath( Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) ); }
+			get { return fixupPath(Get(storeProvider, storeProviderPath)); }
+		}
+
+		/// <summary>
+		/// Gets the local service url so that applications can talk to the local webservice.
+		/// </summary>
+		static public Uri LocalServiceUrl
+		{
+			get
+			{
+				Configuration config = new Configuration();
+				string uriString = config.Get(serviceManager, webServiceUri);
+				return (uriString != null) ? new Uri(uriString) : null;
+			}
 		}
 
 		private static string DefaultPath
@@ -175,11 +190,10 @@ namespace Simias.Client
 		/// Returns the value for the specified key.
 		/// </summary>
 		/// <param name="key">The key to get the value for.</param>
-		/// <param name="defaultValue">The default value if no value exists.</param>
 		/// <returns>The value as a string or a null if the key does not exist.</returns>
-		public string Get(string key, string defaultValue)
+		public string Get(string key)
 		{
-			return Get(DefaultSection, key, defaultValue);
+			return Get(DefaultSection, key);
 		}
 
 		/// <summary>
@@ -187,9 +201,8 @@ namespace Simias.Client
 		/// </summary>
 		/// <param name="section">The section where the key exists.</param>
 		/// <param name="key">The key to get the value for.</param>
-		/// <param name="defaultValue">The default value if no value exists.</param>
 		/// <returns>The value as a string or a null if the section and key do not exist.</returns>
-		public string Get(string section, string key, string defaultValue)
+		public string Get(string section, string key)
 		{
 			string keyValue = null;
 
