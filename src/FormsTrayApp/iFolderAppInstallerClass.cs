@@ -93,6 +93,7 @@ namespace Novell.FormsTrayApp
 
 			fixAppConfigFile(Path.Combine(windowsDir, "explorer.exe.config"), installDir);
 			fixWebConfigFile(Path.Combine(installDir, @"web\web.config"));
+			fixBootstrapConfigFile(Path.Combine(installDir, @"etc\simias-client-bootstrap.config"), Path.Combine(installDir, "web"));
 		}
 		/// <summary>
 		/// Override the 'Commit' method.
@@ -183,6 +184,24 @@ namespace Novell.FormsTrayApp
 			}
 
 			return true;
+		}
+
+		private void fixBootstrapConfigFile(string bootstrapConfigFile, string installPath)
+		{
+			configDoc = new XmlDocument();
+			configDoc.Load(bootstrapConfigFile);
+
+			XmlElement sectionElement = (XmlElement)configDoc.DocumentElement.SelectSingleNode("//section[@name='ServiceManager']");
+			if (sectionElement != null)
+			{
+				XmlNode webServicePathNode = sectionElement.SelectSingleNode("//setting[@name='WebServicePath']");
+				if (webServicePathNode != null)
+				{
+					((XmlElement)webServicePathNode).SetAttribute("value", installPath);
+				}
+			}
+
+			saveXmlFile(configDoc, bootstrapConfigFile);
 		}
 
 		private void fixWebConfigFile(string webConfigFile)
