@@ -78,6 +78,14 @@ namespace Simias
 			set { Set( storeProvider, storeProviderPath, fixupPath( value ) ); }
 		}
 
+		/// <summary>
+		/// Called to get the file path of the default Simias.config file
+		/// </summary>
+		public static string DefaultFilePath
+		{
+			get { return Path.Combine(DefaultPath, DefaultFileName); }
+		}
+
 		private static string DefaultPath
 		{
 			get
