@@ -1273,10 +1273,13 @@ namespace Novell.iFolder.iFolderCom
 						// Remove the item from the listview.
 						lvi.Remove();
 
-						// Remove this from the hashtable.
-						lock (subscrHT)
+						// If this is a subscription, remove it from the hashtable.
+						if (slMember.Subscription != null)
 						{
-							subscrHT.Remove(slMember.Subscription.ID);
+							lock (subscrHT)
+							{
+								subscrHT.Remove(slMember.Subscription.ID);
+							}
 						}
 
 						// Enable the apply button.
