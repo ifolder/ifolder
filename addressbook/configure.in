@@ -69,7 +69,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)$(SEP),\$(COMMON_SUBDIRS))):`pkg-config --variable=libdir simias`"
+        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS))):`pkg-config --variable=libdir simias`"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
