@@ -24,10 +24,6 @@ namespace Novell.iFolder.iFolderCom
 		private iFolderManager manager;
 		private iFolder ifolder;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Splitter splitter1;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.ColumnHeader columnHeader2;
-		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private System.Windows.Forms.ColumnHeader columnHeader4;
 		private System.Windows.Forms.ColumnHeader columnHeader5;
 		private System.Windows.Forms.ContextMenu contextMenu1;
@@ -41,7 +37,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private int labelDelta;
-		private System.Windows.Forms.ListView localFiles;
 		private System.Windows.Forms.ListView conflictFiles;
 		private System.Windows.Forms.MenuItem menuFileOpen;
 		private System.Windows.Forms.MenuItem menuView;
@@ -50,6 +45,11 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.MenuItem menuFileSeparator;
 		private System.Windows.Forms.MenuItem menuFileExit;
 		private System.Windows.Forms.ColumnHeader columnHeader6;
+		private System.Windows.Forms.Splitter splitter1;
+		private System.Windows.Forms.ListView localFiles;
+		private System.Windows.Forms.ColumnHeader columnHeader1;
+		private System.Windows.Forms.ColumnHeader columnHeader2;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -63,7 +63,7 @@ namespace Novell.iFolder.iFolderCom
 			//
 			InitializeComponent();
 
-			labelDelta = label2.Left - splitter1.Left;
+			labelDelta = label1.Left - splitter1.Left;
 		}
 
 		/// <summary>
@@ -89,17 +89,17 @@ namespace Novell.iFolder.iFolderCom
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.conflictFiles = new System.Windows.Forms.ListView();
-			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
-			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-			this.menuOpen = new System.Windows.Forms.MenuItem();
-			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.localFiles = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuOpen = new System.Windows.Forms.MenuItem();
+			this.splitter1 = new System.Windows.Forms.Splitter();
+			this.conflictFiles = new System.Windows.Forms.ListView();
+			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
 			this.toolBar1 = new System.Windows.Forms.ToolBar();
 			this.toolBarButton1 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarButton2 = new System.Windows.Forms.ToolBarButton();
@@ -122,13 +122,65 @@ namespace Novell.iFolder.iFolderCom
 			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 				| System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
-			this.panel1.Controls.Add(this.conflictFiles);
-			this.panel1.Controls.Add(this.splitter1);
 			this.panel1.Controls.Add(this.localFiles);
+			this.panel1.Controls.Add(this.splitter1);
+			this.panel1.Controls.Add(this.conflictFiles);
 			this.panel1.Location = new System.Drawing.Point(8, 72);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(592, 416);
 			this.panel1.TabIndex = 1;
+			// 
+			// localFiles
+			// 
+			this.localFiles.CheckBoxes = true;
+			this.localFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																						 this.columnHeader1,
+																						 this.columnHeader2,
+																						 this.columnHeader3});
+			this.localFiles.ContextMenu = this.contextMenu1;
+			this.localFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.localFiles.FullRowSelect = true;
+			this.localFiles.HideSelection = false;
+			this.localFiles.Location = new System.Drawing.Point(339, 0);
+			this.localFiles.Name = "localFiles";
+			this.localFiles.Size = new System.Drawing.Size(253, 416);
+			this.localFiles.TabIndex = 4;
+			this.localFiles.View = System.Windows.Forms.View.Details;
+			this.localFiles.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.localFiles_ItemCheck);
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Name";
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = "Location";
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Date Modified";
+			this.columnHeader3.Width = 124;
+			// 
+			// contextMenu1
+			// 
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuOpen});
+			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
+			// 
+			// menuOpen
+			// 
+			this.menuOpen.Index = 0;
+			this.menuOpen.Text = "Open";
+			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
+			// 
+			// splitter1
+			// 
+			this.splitter1.Location = new System.Drawing.Point(336, 0);
+			this.splitter1.Name = "splitter1";
+			this.splitter1.Size = new System.Drawing.Size(3, 416);
+			this.splitter1.TabIndex = 3;
+			this.splitter1.TabStop = false;
+			this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitter1_SplitterMoved);
 			// 
 			// conflictFiles
 			// 
@@ -138,12 +190,16 @@ namespace Novell.iFolder.iFolderCom
 																							this.columnHeader6,
 																							this.columnHeader5});
 			this.conflictFiles.ContextMenu = this.contextMenu1;
-			this.conflictFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.conflictFiles.Location = new System.Drawing.Point(251, 0);
+			this.conflictFiles.Dock = System.Windows.Forms.DockStyle.Left;
+			this.conflictFiles.GridLines = true;
+			this.conflictFiles.Location = new System.Drawing.Point(0, 0);
+			this.conflictFiles.MultiSelect = false;
 			this.conflictFiles.Name = "conflictFiles";
-			this.conflictFiles.Size = new System.Drawing.Size(341, 416);
+			this.conflictFiles.Size = new System.Drawing.Size(336, 416);
 			this.conflictFiles.TabIndex = 2;
 			this.conflictFiles.View = System.Windows.Forms.View.Details;
+			this.conflictFiles.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.conflictFiles_AfterLabelEdit);
+			this.conflictFiles.SelectedIndexChanged += new System.EventHandler(this.conflictFiles_SelectedIndexChanged);
 			this.conflictFiles.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.conflictFiles_ItemCheck);
 			// 
 			// columnHeader4
@@ -160,60 +216,6 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.columnHeader5.Text = "Date Modified";
 			this.columnHeader5.Width = 182;
-			// 
-			// contextMenu1
-			// 
-			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.menuOpen});
-			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
-			// 
-			// menuOpen
-			// 
-			this.menuOpen.Index = 0;
-			this.menuOpen.Text = "Open";
-			this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
-			// 
-			// splitter1
-			// 
-			this.splitter1.Location = new System.Drawing.Point(248, 0);
-			this.splitter1.Name = "splitter1";
-			this.splitter1.Size = new System.Drawing.Size(3, 416);
-			this.splitter1.TabIndex = 1;
-			this.splitter1.TabStop = false;
-			this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitter1_SplitterMoved);
-			// 
-			// localFiles
-			// 
-			this.localFiles.CheckBoxes = true;
-			this.localFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						 this.columnHeader1,
-																						 this.columnHeader2,
-																						 this.columnHeader3});
-			this.localFiles.ContextMenu = this.contextMenu1;
-			this.localFiles.Dock = System.Windows.Forms.DockStyle.Left;
-			this.localFiles.FullRowSelect = true;
-			this.localFiles.GridLines = true;
-			this.localFiles.HideSelection = false;
-			this.localFiles.Location = new System.Drawing.Point(0, 0);
-			this.localFiles.Name = "localFiles";
-			this.localFiles.Size = new System.Drawing.Size(248, 416);
-			this.localFiles.TabIndex = 0;
-			this.localFiles.View = System.Windows.Forms.View.Details;
-			this.localFiles.SelectedIndexChanged += new System.EventHandler(this.localFiles_SelectedIndexChanged);
-			this.localFiles.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.localFiles_ItemCheck);
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "Name";
-			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = "Location";
-			// 
-			// columnHeader3
-			// 
-			this.columnHeader3.Text = "Date Modified";
-			this.columnHeader3.Width = 124;
 			// 
 			// toolBar1
 			// 
@@ -297,19 +299,19 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(8, 56);
+			this.label1.Location = new System.Drawing.Point(352, 56);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 3;
-			this.label1.Text = "Local Files:";
+			this.label1.Text = "Local File:";
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(264, 56);
+			this.label2.Location = new System.Drawing.Point(8, 56);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(100, 16);
 			this.label2.TabIndex = 4;
-			this.label2.Text = "Conflict File:";
+			this.label2.Text = "Conflict Files:";
 			// 
 			// ConflictResolver
 			// 
@@ -331,13 +333,26 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Private Methods
+		/// <summary>
+		/// Gets the iFolder for a given node.
+		/// </summary>
+		/// <param name="node">The node to get the iFolder for.</param>
+		/// <returns></returns>
+		private iFolder GetiFolder(Node node)
+		{
+			return this.ifolder != null ? this.ifolder : manager.GetiFolderById(node.Properties.GetSingleProperty("CollectionId").ToString());
+		}
+
+		/// <summary>
+		/// Opens the local file in the registered application.
+		/// </summary>
 		private void OpenLocalFile()
 		{
-			ListViewItem lvi = localFiles.SelectedItems[0];
+			ListViewItem lvi = conflictFiles.SelectedItems[0];
 			CollisionNode cn = (CollisionNode)lvi.Tag;
-			iFolder ifolder = manager.GetiFolderById(cn.LocalNode.Properties.GetSingleProperty("CollectionId").ToString());
+			iFolder ifolder = GetiFolder(cn.ConflictNode);
 			string path = cn.LocalNode.GetFullPath(ifolder);
-			//			string path = Path.Combine(lvi.SubItems[1].Text, lvi.SubItems[0].Text);
+
 			try
 			{
 				Process.Start(path);
@@ -348,13 +363,17 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Opens the conflict file in the registered application.
+		/// </summary>
 		private void OpenConflictFile()
 		{
 			ListViewItem lvi = conflictFiles.SelectedItems[0];
+			CollisionNode cn = (CollisionNode)lvi.Tag;
 
 			try
 			{
-				Process.Start((string)lvi.Tag);
+				Process.Start(cn.ConflictPath);
 			}
 			catch (Exception e)
 			{
@@ -362,6 +381,10 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Populates the conflict files list view with collisions from the specified iFolder.
+		/// </summary>
+		/// <param name="ifolder">The iFolder to display conflicts from.</param>
 		private void PutCollisionsInList(iFolder ifolder)
 		{
 			ICSList collisionList = ifolder.GetCollisions();
@@ -369,48 +392,79 @@ namespace Novell.iFolder.iFolderCom
 			{
 				// Get the collision node.
 				Node conflictNode = new Node(ifolder, sn);
+
+				// Make sure it is a file node.
 				if (ifolder.IsType(conflictNode, typeof(BaseFileNode).Name))
 				{
-					// Get the node that the collision occurred with.
-					FileNode fileNode = new FileNode(ifolder.GetNodeFromCollision(conflictNode));
-					//string collectionID = fileNode.Properties.GetSingleProperty("CollectionId").ToString();
+					Node localNode = ifolder.GetNodeFromCollision(conflictNode);
 
-					string path = Path.GetDirectoryName(fileNode.GetFullPath(ifolder));
-					string name = fileNode.GetFileName();
-					string[] items = new string[] {name, path, fileNode.LastWriteTime.ToString()};
+					// fileNode will be null for name collisions.
+					FileNode fileNode = null;
+					if (localNode != null)
+					{
+						// Get the node that the collision occurred with.
+						fileNode = new FileNode(localNode);
+					}
 
 					Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, conflictNode);
 
-					ListViewItem lvi = new ListViewItem(items);
+					// Create the ListViewItem
+					ListViewItem lvi = new ListViewItem(new string[] {
+													  fileNode != null ? fileNode.GetFileName() : sn.Name,
+													  conflict.IsFileNameConflict ? "Name" : "Update",
+													  new FileNode(conflictNode).LastWriteTime.ToString()});
+
+					// Create a CollisionNode to put on the ListViewItem.
 					CollisionNode cNode = new CollisionNode();
 					cNode.LocalNode = fileNode;
-					cNode.ConflictNode =  sn;
-					cNode.ConflictPath = conflict.UpdateConflictPath;
+					cNode.ConflictNode =  conflictNode;
+					cNode.ConflictPath = conflict.IsFileNameConflict ? conflict.FileNameConflictPath : conflict.UpdateConflictPath;
 					lvi.Tag = cNode;
-					lvi.StateImageIndex = 0;
-					this.localFiles.Items.Add(lvi);
+
+					// Set the state to unchecked.
+					lvi.Checked = false;
+
+					// Add the ListViewItem to the conflictFiles listview.
+					conflictFiles.Items.Add(lvi);
 				}
 			}
 		}
 
-		private void ProcessEntry(ListViewItem lviLocal)
+		/// <summary>
+		/// Processes a ListViewItem.
+		/// </summary>
+		/// <param name="lviConflict">The conflict ListViewItem to process.</param>
+		private void ProcessEntry(ListViewItem lviConflict)
 		{
 			try
 			{
-				CollisionNode cn = (CollisionNode)lviLocal.Tag;
-				iFolder ifolder = manager.GetiFolderById(cn.LocalNode.Properties.GetSingleProperty("CollectionId").ToString());
+				// Get the CollisionNode from the ListViewItem.
+				CollisionNode cn = (CollisionNode)lviConflict.Tag;
 
-				// Get the collision node.
-				Node conflictNode = new Node(ifolder, cn.ConflictNode);
-				Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, conflictNode);
+				// Get the iFolder for this node.
+				iFolder ifolder = GetiFolder(cn.ConflictNode);
 
-				if (lviLocal.Checked)
+				// Instantiate a Conflict object for this node.
+				Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, cn.ConflictNode);
+
+				// If the item is checked then the conflict wins.
+				if (lviConflict.Checked)
 				{
-					conflict.Resolve(true);
+					if (conflict.IsFileNameConflict)
+					{
+						// This is a filename conflict, resolve using the new name specified.
+						conflict.Resolve(lviConflict.Text);
+					}
+					else
+					{
+						// This is an update conflict, commit the conflict file and throw away local changes.
+						conflict.Resolve(false);
+					}
 				}
 				else if (cn.Checked)
 				{
-					conflict.Resolve(false);
+					// This is an update conflict and the local changes win ... throw away the conflict file.
+					conflict.Resolve(true);
 				}
 			}
 			catch (SimiasException e)
@@ -423,41 +477,37 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Refreshes the conflictFiles listview.
+		/// </summary>
 		private void RefreshList()
 		{
 			Cursor.Current = Cursors.WaitCursor;
+
+			// Clear the listviews.
 			conflictFiles.Items.Clear();
 			conflictFiles.SelectedItems.Clear();
 			localFiles.Items.Clear();
 			localFiles.SelectedItems.Clear();
-			localFiles.BeginUpdate();
+
+			// Wait before redrawing the listview.
+			conflictFiles.BeginUpdate();
 			
 			try
 			{
+				// Connect to the iFolderManager.
 				manager = iFolderManager.Connect();
 
 				if (this.ifolder != null)
 				{
+					// If an iFolder was passed in, then we will only display it's conflicts.
 					PutCollisionsInList(this.ifolder);
 				}
 				else
 				{
+					// Display conflicts for all iFolders in the store.
 					foreach (iFolder ifolder in manager)
 					{
-						// Temporary code to cause a collision.
-/*						ICSList list = ifolder.GetNodesByType(NodeTypes.FileNodeType);
-						foreach (ShallowNode sn in list)
-						{
-							bool b = false;
-							if (b)
-							{
-								FileNode fileNode = new FileNode(ifolder, sn);
-								Node colNode = ifolder.CreateCollision(fileNode);
-								ifolder.Commit(colNode);
-							}
-						}
-*/						// End Temporary code.
-
 						if (ifolder.HasCollisions())
 						{
 							PutCollisionsInList(ifolder);
@@ -471,12 +521,16 @@ namespace Novell.iFolder.iFolderCom
 				Application.Exit();
 			}
 
-			localFiles.EndUpdate();
+			// Redraw the listview.
+			conflictFiles.EndUpdate();
 			Cursor.Current = Cursors.Default;
 		}
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Sets the iFolder to resolve conflicts for.
+		/// </summary>
 		public iFolder IFolder
 		{
 			set
@@ -498,73 +552,125 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Event Handlers
-		private void localFiles_SelectedIndexChanged(object sender, System.EventArgs e)
+		private void conflictFiles_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			if (localFiles.SelectedItems.Count == 1)
+			if (conflictFiles.SelectedItems.Count == 1)
 			{
-				ListViewItem localLVI = localFiles.SelectedItems[0];
-				CollisionNode cn = (CollisionNode)localLVI.Tag;
-				iFolder ifolder = manager.GetiFolderById(cn.LocalNode.Properties.GetSingleProperty("CollectionId").ToString());
-				FileNode conflictNode = new FileNode(ifolder, cn.ConflictNode);
-				Simias.Sync.Conflict conflict = new Simias.Sync.Conflict(ifolder, conflictNode);
-				string type = conflict.IsFileNameConflict ? "Name" : "Update";
+				// Get the selected ListViewItem.
+				ListViewItem conflictLVI = conflictFiles.SelectedItems[0];
 
-				// TODO - name conflicts need to be handled differently
-				conflictFiles.LabelEdit = conflict.IsFileNameConflict;
+				// Are we dealing with name collisions?
+				// TODO: we may want to use the Conflict object for this rather than doing a string compare
+				bool nameCollision = conflictLVI.SubItems[1].Text.Equals("Name");
+				conflictFiles.LabelEdit = nameCollision;
 
-				string[] items = new string[] {localLVI.Text, type, conflictNode.LastWriteTime.ToString()};
-				ListViewItem conflictLVI = new ListViewItem(items);
-				conflictLVI.Tag = cn.ConflictPath;
-				conflictLVI.StateImageIndex = cn.Checked ? 1 : 0;
-				conflictFiles.Items.Add(conflictLVI);
+				if (!nameCollision)
+				{
+					// Get the CollisionNode.
+					CollisionNode cn = (CollisionNode)conflictLVI.Tag;
+	
+					// Get the iFolder for this node.
+					iFolder ifolder = GetiFolder(cn.ConflictNode);
+
+					// Create the ListViewItem.
+					ListViewItem localLVI = new ListViewItem(new string[] {
+													  cn.LocalNode.Name, 
+													  Path.GetDirectoryName(cn.LocalNode.GetFullPath(ifolder)), 
+													  cn.LocalNode.LastWriteTime.ToString()});
+
+					// Set the state based on the state of the CollisionNode.
+					localLVI.Checked = cn.Checked;
+
+					// Add the ListViewItem to the localFiles listview.
+					localFiles.Items.Add(localLVI);
+				}
+				else
+				{
+					// This is a name collision, so there is nothing to display in the localFiles listview.
+					localFiles.Items.Clear();
+				}
 			}
 			else
 			{
-				conflictFiles.Items.Clear();
+				// If multiple items are selected, disable label edit and clear the local files listview.
+				conflictFiles.LabelEdit = false;
+				localFiles.Items.Clear();
+			}
+		}
+
+		private void conflictFiles_AfterLabelEdit(object sender, System.Windows.Forms.LabelEditEventArgs e)
+		{
+			// We only care if changes were actually made.
+			if (e.Label != null)
+			{
+				// Get the ListViewItem.
+				ListViewItem lvi = conflictFiles.Items[e.Item];
+
+				// Get the CollisionNode.
+				CollisionNode cn = (CollisionNode)lvi.Tag;
+
+				// Get the iFolder.
+				iFolder ifolder = this.GetiFolder(cn.ConflictNode);
+
+				// Validate the name just entered.
+				// 1. Make sure there are no illegal characters.
+				// 2. Make sure there is not a name collision.
+				string fileName = Path.Combine(ifolder.LocalPath, e.Label);
+				try
+				{
+					// Test the name entered.
+					FileInfo fi = new FileInfo(fileName);
+					if (fi.Exists)
+					{
+						// Name collision.
+						MessageBox.Show("The name conflicts with an existing file name.  Please specify a different name.");
+						e.CancelEdit = true;
+					}
+				}
+				catch (Exception ex)
+				{
+					// The name most likely contains illegal characters.
+					MessageBox.Show(ex.Message);
+					e.CancelEdit = true;
+				}
+
+				if (e.CancelEdit)
+				{
+					// The name was not valid ... let the user try again.
+					cn.NameValidated = false;
+					lvi.BeginEdit();
+				}
+				else
+				{
+					// The name was validated ... set the state to checked.
+					cn.NameValidated = true;
+					lvi.Checked = true;
+				}
 			}
 		}
 
 		private void localFiles_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
 		{
+			// Make sure that the user caused this event.
 			Point point = localFiles.PointToClient(Control.MousePosition);
 			ListViewItem tlvi = localFiles.GetItemAt(point.X, point.Y);
-			if (localFiles.SelectedItems.Count == 1 &&
-				localFiles.SelectedItems[0] == localFiles.Items[e.Index] &&
-				tlvi == localFiles.Items[e.Index])
+			if (tlvi == localFiles.Items[e.Index])
 			{
-				ListViewItem lvi = conflictFiles.Items[0];
-
-				switch (e.NewValue)
-				{
-					case CheckState.Checked:
-						lvi.StateImageIndex = 0;
-						break;
-//					case CheckState.Unchecked:
-//						lvi.StateImageIndex = 1;
-//						break;
-					default:
-						break;
-				}
-			}
-		}
-
-		private void conflictFiles_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
-		{
-			Point point = conflictFiles.PointToClient(Control.MousePosition);
-			ListViewItem tlvi = conflictFiles.GetItemAt(point.X, point.Y);
-			if (tlvi == conflictFiles.Items[e.Index])
-			{
-				ListViewItem lvi = localFiles.SelectedItems[0];
+				// Get the ListViewItem for the corresponding conflict.
+				ListViewItem lvi = conflictFiles.SelectedItems[0];
 				CollisionNode cn = (CollisionNode)lvi.Tag;
 
 				switch (e.NewValue)
 				{
 					case CheckState.Checked:
-						lvi.StateImageIndex = 0;
+						// Uncheck the conflict
+						lvi.Checked = false;
+
+						// Save the state in the CollisionNode.
 						cn.Checked = true;
 						break;
 					case CheckState.Unchecked:
-//						lvi.StateImageIndex = 1;
+						// Save the state in the CollisionNode.
 						cn.Checked = false;
 						break;
 					default:
@@ -573,8 +679,77 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		private void conflictFiles_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
+		{
+			// Make sure the user set the state.
+			Point point = conflictFiles.PointToClient(Control.MousePosition);
+			ListViewItem tlvi = conflictFiles.GetItemAt(point.X, point.Y);
+			if (tlvi == conflictFiles.Items[e.Index])
+			{
+				CollisionNode cn = (CollisionNode)tlvi.Tag;
+
+				// TODO: may want to use Conflict object rather than name compare.
+				if (tlvi.SubItems[1].Text.Equals("Name"))
+				{
+					// If this is a name conflict then allow the name to be edited.
+					conflictFiles.LabelEdit = true;
+
+					switch (e.NewValue)
+					{
+						case CheckState.Checked:
+							// Make sure the name is validated.
+							if (!cn.NameValidated)
+							{
+								MessageBox.Show("The name must be changed before the file can be selected for resolving.");
+
+								// Uncheck the item.
+								e.NewValue = CheckState.Unchecked;
+
+								// Set the label to edit mode.
+								tlvi.BeginEdit();
+							}
+							break;
+						default:
+							break;
+					}
+				}
+				else
+				{
+					// This is an update conflict ...
+
+					// Don't allow the name to be edited.
+					conflictFiles.LabelEdit = false;
+
+					// See if there is a corresponding local files item.
+					ListViewItem lvi = null;
+					if (conflictFiles.SelectedItems.Count == 1 &&
+						conflictFiles.SelectedItems[0] == conflictFiles.Items[e.Index])
+					{
+						lvi = localFiles.Items[0];
+					}
+
+					switch (e.NewValue)
+					{
+						case CheckState.Checked:
+							if (lvi != null)
+							{
+								// Uncheck the localFiles ListViewItem.
+								lvi.Checked = false;
+							}
+
+							// Save state in the CollisionNode.
+							cn.Checked = false;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
+			// Open the file that has focus.
 			if (localFiles.Focused)
 			{
 				OpenLocalFile();
@@ -587,6 +762,7 @@ namespace Novell.iFolder.iFolderCom
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
+			// Enable the context menu if only one item is selected.
 			if (localFiles.Focused)
 			{
 				menuOpen.Enabled = localFiles.SelectedItems.Count == 1;
@@ -599,7 +775,7 @@ namespace Novell.iFolder.iFolderCom
 
 		private void splitter1_SplitterMoved(object sender, System.Windows.Forms.SplitterEventArgs e)
 		{
-			label2.Left = e.X + labelDelta;
+			label1.Left = e.X + labelDelta;
 		}
 
 		private void ConflictResolver_Load(object sender, System.EventArgs e)
@@ -618,7 +794,7 @@ namespace Novell.iFolder.iFolderCom
 					Cursor.Current = Cursors.WaitCursor;
 
 					// Process the list.
-					foreach (ListViewItem lvi in localFiles.Items)
+					foreach (ListViewItem lvi in conflictFiles.Items)
 					{
 						ProcessEntry(lvi);
 					}
@@ -628,7 +804,7 @@ namespace Novell.iFolder.iFolderCom
 					// Update the listview.
 					RefreshList();
 
-					if (localFiles.Items.Count == 0 && ConflictsResolved != null)
+					if (conflictFiles.Items.Count == 0 && ConflictsResolved != null)
 					{
 						// If all the conflicts have been resolved, fire the ConflictsResolved event.
 						ConflictsResolved(this, new EventArgs());
