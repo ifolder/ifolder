@@ -214,6 +214,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
 			GlobalProperties globalProperties = new GlobalProperties();
+			globalProperties.ServiceManager = this.serviceManager;
 			globalProperties.ShowDialog();
 		}
 
