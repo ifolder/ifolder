@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Security.Principal;
 using System.Threading;
 using System.Web;
 using System.Web.SessionState;
@@ -679,7 +680,7 @@ namespace Simias.POBoxService.Web
 			}
 
 			// Verify the fromMember is the caller
-			log.Info("Current Principal: " + Thread.CurrentPrincipal);
+			log.Info("Current Principal: " + Thread.CurrentPrincipal.Identity.Name);
 
 			/*
 			if (fromUserID != Thread.CurrentPrincipal)
