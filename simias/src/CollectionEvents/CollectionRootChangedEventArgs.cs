@@ -46,7 +46,24 @@ namespace Simias.Event
 		/// <param name="oldRoot">The old path to the root path.</param>
 		/// <param name="newRoot">The new path to the root path.</param>
 		public CollectionRootChangedEventArgs(string source, string collection, string domainName, string type, string oldRoot, string newRoot) :
-			base(source, collection, collection, domainName, type, CollectionEventArgs.EventType.RootChanged)
+			this(source, collection, domainName, type, oldRoot, newRoot, null)
+
+		{
+		}
+
+		/// <summary>
+		/// Constructs a CollectionRootChangedEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
+		/// </summary>
+		/// <param name="source">The source of the event.</param>
+		/// <param name="collection">The Collection that the node belongs to.</param>
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
+		/// <param name="type">The Type of the Node.</param>
+		/// <param name="oldRoot">The old path to the root path.</param>
+		/// <param name="newRoot">The new path to the root path.</param>
+		/// <param name="context">A user defined context only has meaning to a publisher.</param>
+		public CollectionRootChangedEventArgs(string source, string collection, string domainName, string type, string oldRoot, string newRoot, object context) :
+			base(source, collection, collection, domainName, type, CollectionEventArgs.EventType.RootChanged, context)
 
 		{
 			this.oldRoot = oldRoot;

@@ -42,8 +42,23 @@ namespace Simias.Event
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
 		public NodeEventArgs(string source, string node, string collection, string domainName, string type, EventType changeType) :
-			base(source, node, collection, domainName, type, changeType)
+			this(source, node, collection, domainName, type, changeType, null)
+		{
+		}
 
+		/// <summary>
+		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
+		/// </summary>
+		/// <param name="source">The source of the event.</param>
+		/// <param name="node">The object of the event.</param>
+		/// <param name="collection">The Collection that the node belongs to.</param>\
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
+		/// <param name="type">The Type of the Node.</param>
+		/// <param name="changeType">The type of change that occured.</param>
+		/// <param name="context">A user defined context only has meaning to a publisher.</param>
+		public NodeEventArgs(string source, string node, string collection, string domainName, string type, EventType changeType, object context) :
+			base(source, node, collection, domainName, type, changeType, context)
 		{
 		}
 

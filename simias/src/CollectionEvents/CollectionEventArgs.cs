@@ -78,7 +78,7 @@ namespace Simias.Event
 		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
-		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType)
+		/*internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType)
 		{
 			this.source = source;
 			this.id = id;
@@ -88,6 +88,30 @@ namespace Simias.Event
 			context = null;
 			this.changeType = changeType;
 		}
+		*/
+
+		/// <summary>
+		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
+		/// </summary>
+		/// <param name="source">The source of the event.</param>
+		/// <param name="id">The object of the event.</param>
+		/// <param name="collection">The Collection that the node belongs to.</param>
+		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
+		/// <param name="type">The Type of the Node.</param>
+		/// <param name="changeType">The type of change that occured.</param>
+		/// <param name="context">A user defined context only has meaning to a publisher.</param>
+		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType, object context)
+		{
+			this.source = source;
+			this.id = id;
+			this.collection = collection;
+			this.domainName = domainName;
+			this.type = type;
+			this.context = context;
+			this.changeType = changeType;
+		}
+
 
 		/// <summary>
 		/// Gets the string that represents the source of the event.
@@ -139,12 +163,12 @@ namespace Simias.Event
 		}
 
 		/// <summary>
-		/// Gets a Sets a context object.  A publisher can use this to detect circular events.
+		/// Gets a Sets a context object.  Usually null. 
+		/// Used by a publisher. Can be used to detect circular events.
 		/// </summary>
 		public object Context
 		{
 			get {return context;}
-			set {context = value;}
 		}
 	}
 }
