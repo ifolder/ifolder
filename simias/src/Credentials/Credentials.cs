@@ -213,6 +213,19 @@ namespace Simias.Authentication
 		}
 
 		/// <summary>
+		/// Constructor for checking if credentials exist for a 
+		/// collection and member
+		/// </summary>
+		public Credentials(string domainID, string collectionID, string memberID)
+		{
+			this.domainID = domainID;
+			this.collectionID = collectionID;
+			this.memberID = memberID;
+			this.store = Store.GetStore();
+		}
+
+
+		/// <summary>
 		/// Gets the credentials (if they exist) that are set against
 		/// the collection ID passed in the constructor.
 		/// </summary>
@@ -228,25 +241,45 @@ namespace Simias.Authentication
 			Simias.Storage.Domain cDomain = null;
 			Simias.Storage.Member cMember = null;
 
+			string memberName = "";
+			string memberID = this.memberID;
+
 			try
 			{
-				Store store = Store.GetStore();
+				if ( this.domainID != null && this.collectionID != null && this.memberID != null )
+				{
+					cDomain = store.GetDomain( this.domainID );
+					if ( cDomain != null )
+					{
+						cMember = cDomain.GetMemberByID( this.memberID );
+						if ( cMember != null )
+						{
+							memberName = cMember.Name;
+							memberID = cMember.UserID;
+						}
+					}
+				}
+				else
 				if ( this.collectionID != null )
 				{
 					// Validate the shared collection
-					Collection cCol = store.GetCollectionByID( collectionID );
+					Collection cCol = this.store.GetCollectionByID( collectionID );
 					if ( cCol != null )
 					{
-						cMember = cCol.GetCurrentMember();
+						cMember = 
+							( this.memberID != null ) 
+								? cCol.GetMemberByID( this.memberID ) 
+								: cCol.GetCurrentMember();
 						if ( cMember != null )
 						{
-							cDomain = store.GetDomain( cCol.Domain );
+							memberName = cMember.Name;
+							memberID = cMember.UserID;
+							cDomain = this.store.GetDomain( cCol.Domain );
 						}
 						else
 						{
 							log.Debug( "Credentials::GetCredentials - current member not found" );
 						}
-
 					}
 					else
 					{
@@ -257,6 +290,11 @@ namespace Simias.Authentication
 				{
 					cDomain = this.store.GetDomain( this.domainID );
 					cMember = cDomain.GetMemberByID( this.memberID );
+					if ( cMember != null )
+					{
+						memberName = cMember.Name;
+						memberID = cMember.UserID;
+					}
 				}
 
 				//
@@ -264,18 +302,18 @@ namespace Simias.Authentication
 				//
 
 				DomainAgent domainAgent = new DomainAgent();
-				if ( domainAgent.IsDomainActive( cDomain.ID ) &&
-					 domainAgent.IsDomainAuthenticated( cDomain.ID ) )
+				if ( domainAgent.IsDomainActive( cDomain.ID ) )
+				//	 domainAgent.IsDomainAuthenticated( cDomain.ID ) )
 				{
 					NetCredential cCreds = 
 						new NetCredential(
 							"iFolder", 
-							cDomain.ID, 
+							this.domainID,
 							true, 
-							cMember.Name, 
+							memberName,
 							null );
 
-					Uri cUri = Locate.ResolveLocation( cDomain.ID );
+					Uri cUri = DomainProvider.ResolveLocation( this.domainID );
 					realCreds = cCreds.GetCredential( cUri, "BASIC" );
 					if ( realCreds == null )
 					{
@@ -283,9 +321,9 @@ namespace Simias.Authentication
 						cCreds = 
 							new NetCredential(
 								"iFolder", 
-								cDomain.ID, 
+								this.domainID, 
 								true, 
-								cMember.UserID,
+								memberID,
 								null );
 
 						realCreds = cCreds.GetCredential( cUri, "BASIC" );
@@ -297,7 +335,7 @@ namespace Simias.Authentication
 								"iFolder", 
 								this.collectionID, 
 								true, 
-								cMember.UserID,
+								memberID,
 								null );
 
 							realCreds = cCreds.GetCredential( cUri, "BASIC" );

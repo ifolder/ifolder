@@ -45,7 +45,8 @@ namespace Simias
 		static CookieContainer		cookies = new CookieContainer();
 		IWebProxy					proxy;
 		NetworkCredential			credentials;
-		
+
+		/*
 		/// <summary>
 		/// Get a WebState object for the specified domain.
 		/// </summary>
@@ -59,6 +60,47 @@ namespace Simias
 			if (credentials == null)
 			{
 				new EventPublisher().RaiseEvent(new NeedCredentialsEventArgs(domainID, memberID));
+				throw new NeedCredentialsException();
+			}
+		}
+		*/
+
+		/// <summary>
+		/// Get a WebState object for the specified domain and collection.
+		/// </summary>
+		/// <param name="domainID">The domain ID.</param>
+		/// <param name="memberID">The member the client is running as.</param>
+		public WebState(string domainID, string collectionID) :
+			this()
+		{
+			Member currentMember = Store.GetStore().GetDomain( domainID ).GetCurrentMember();
+			if ( currentMember != null )
+			{
+				// Get the credentials for this collection.
+				credentials = new Credentials( domainID, collectionID, currentMember.UserID ).GetCredentials();
+			}
+
+			if (credentials == null)
+			{
+				new EventPublisher().RaiseEvent( new NeedCredentialsEventArgs( domainID, collectionID ));
+				throw new NeedCredentialsException();
+			}
+		}
+
+		/// <summary>
+		/// Get a WebState object for the specified domain.
+		/// </summary>
+		/// <param name="domainID">The domain ID.</param>
+		/// <param name="collectionID">The collection ID.</param>
+		/// <param name="memberID">The member the client is running as.</param>
+		public WebState(string domainID, string collectionID, string memberID) :
+			this()
+		{
+			// Get the credentials for this collection.
+			credentials = new Credentials( domainID, collectionID, memberID ).GetCredentials();
+			if (credentials == null)
+			{
+				new EventPublisher().RaiseEvent( new NeedCredentialsEventArgs( domainID, collectionID ) );
 				throw new NeedCredentialsException();
 			}
 		}
