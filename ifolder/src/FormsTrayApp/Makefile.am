@@ -11,7 +11,7 @@ iFolderApp_INCLUDES =
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 iFolderApp_RESOURCES_FILES = FormsTrayApp.resources GlobalProperties.resources ServerInfo.resources AcceptInvitation.resources
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
-iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll SimiasClient.dll Simias.dll
+iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll SimiasClient.dll
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
 DATA_FILES = App.ico ifolder_app.ico
@@ -25,7 +25,7 @@ EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFol
 all: iFolderApp.exe
 
 iFolderApp.exe: $(iFolderApp_RESOURCES_FILES) $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
 	
 %.resources : %.resx
 	$(RESG) $< Novell.FormsTrayApp.$@

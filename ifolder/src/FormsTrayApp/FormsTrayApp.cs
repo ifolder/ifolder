@@ -74,9 +74,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
-		//private Configuration config;
-		private Process simiasProc;
-		private iFolderWebService ifWebService;
+		private iFolderWebService ifWebService = null;
 		private iFolderSettings ifolderSettings = null;
 		private IProcEventClient eventClient;
 		private GlobalProperties globalProperties;
@@ -236,12 +234,6 @@ namespace Novell.FormsTrayApp
 			ShutdownTrayApp(null);
 		}
 
-		private void messages_MessagesServiced(object sender, EventArgs e)
-		{
-			// TODO: we may need to check that no conflicts exist before we stop animating the icon.
-			this.animateIcon = false;
-		}
-
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
 			// Show/hide store browser menu item based on whether or not the file is installed.
@@ -285,10 +277,10 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
-					Simias.Client.Manager.Start();
+					Manager.Start();
 
 					ifWebService = new iFolderWebService();
-					ifWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 					ifWebService.Ping();
 					//iFolderManager.CreateDefaultExclusions(config);
 
@@ -639,7 +631,7 @@ namespace Novell.FormsTrayApp
 				}
 
 				// Shut down the web server.
-				Simias.Client.Manager.Stop();
+				Manager.Stop();
 
 				if ((workerThread != null) && workerThread.IsAlive)
 				{

@@ -25,8 +25,6 @@ using System;
 using System.IO;
 using Microsoft.Win32;
 
-using Simias;
-
 namespace Novell.FormsTrayApp
 {
 	/// <summary>
@@ -35,8 +33,6 @@ namespace Novell.FormsTrayApp
 	public class iFolderMigration
 	{
 		#region Class Members
-		//private static readonly ISimiasLog d = SimiasLogManager.GetLogger(typeof(iFolderMigration));
-		private Configuration config;
 
 		private static readonly string iFolderRegistryKey = @"Software\Novell iFolder";
 		private static readonly string proxyRegistryKey = "Proxy";
@@ -46,9 +42,8 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Constructs an iFolderMigration object.
 		/// </summary>
-		public iFolderMigration(Configuration config)
+		public iFolderMigration()
 		{
-			this.config = config;
 		}
 
 		#region Public Methods
@@ -132,11 +127,7 @@ namespace Novell.FormsTrayApp
 				// Set the state in the registry.
 				SetMigratedValue(1);
 			}
-			catch (SimiasException e)
-			{
-				e.LogError();
-			}
-			catch (Exception e)
+			catch
 			{
 				//logger.Debug(e, "Migrating settings");
 			}
