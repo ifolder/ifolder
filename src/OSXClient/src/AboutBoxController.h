@@ -4,7 +4,6 @@
 
 @interface AboutBoxController : NSObject
 {
-    IBOutlet id appNameField;
     IBOutlet id copyrightField;
     IBOutlet id creditsField;
     IBOutlet id versionField;
