@@ -45,6 +45,7 @@ namespace Simias.Storage
 		public Roster( Store storeObject, Domain domain ) :
 			base ( storeObject, domain.Name + " Roster", Guid.NewGuid().ToString(), NodeTypes.RosterType, domain.ID )
 		{
+			Sealed = true;
 		}
 
 		/// <summary>

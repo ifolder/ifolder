@@ -129,6 +129,7 @@ namespace Simias.Domain
 			c.Properties.AddProperty(pu);
 
 			// commit
+			c.Sealed = true;
 			c.IsStub = true;
 			c.Commit();
 		}
