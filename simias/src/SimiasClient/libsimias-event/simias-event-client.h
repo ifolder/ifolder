@@ -21,6 +21,9 @@
  * 
  ***********************************************************************/
 
+#ifndef SIMIAS_EVENT_CLIENT_H
+#define SIMIAS_EVENT_CLIENT_H
+
 /**
  * SimiasEventClient is the main structure that is used to make the calls to the
  * Event Server.  In the sec_init function, memory is allocated for the
@@ -156,3 +159,5 @@ static int sec_deregister (SimiasEventClient sec);
 static int sec_set_event (SimiasEventClient sec, 
 						  IPROC_EVENT_ACTION action,
 						  void (*handler)(void *));
+
+#endif /* SIMIAS_EVENT_CLIENT_H */
