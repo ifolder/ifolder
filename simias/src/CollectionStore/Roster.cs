@@ -54,7 +54,7 @@ namespace Simias.Storage
 		/// <param name="rosterID">Identifier for the roster.</param>
 		/// <param name="domain">Domain object that this object will be associated with.</param>
 		public Roster( Store storeObject, string rosterID, Domain domain ) :
-			base ( storeObject, domain.Name + " Roster", rosterID, NodeTypes.RosterType, domain.ID )
+			base ( storeObject, domain.Name + " Roster", rosterID, NodeTypes.CollectionType, domain.ID )
 		{
 			Sealed = true;
 		}
@@ -67,10 +67,6 @@ namespace Simias.Storage
 		public Roster( Store storeObject, Node node ) :
 			base( storeObject, node )
 		{
-			if ( type != NodeTypes.RosterType )
-			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.RosterType, type ) );
-			}
 		}
 
 		/// <summary>
@@ -81,10 +77,6 @@ namespace Simias.Storage
 		public Roster( Store storeObject, ShallowNode shallowNode ) :
 			base( storeObject, shallowNode )
 		{
-			if ( type != NodeTypes.RosterType )
-			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.RosterType, type ) );
-			}
 		}
 
 		/// <summary>
@@ -95,10 +87,6 @@ namespace Simias.Storage
 		internal Roster( Store storeObject, XmlDocument document ) :
 			base( storeObject, document )
 		{
-			if ( type != NodeTypes.RosterType )
-			{
-				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.RosterType, type ) );
-			}
 		}
 		#endregion
 	}
