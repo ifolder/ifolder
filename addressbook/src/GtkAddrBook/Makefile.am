@@ -44,7 +44,7 @@ InvitationAssistant.exe: $(IA_CSFILES) $(IA_RESOURCES) Novell.AddressBook.UI.gtk
 Novell.AddressBook.UI.gtk.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:Novell.AddressBook.UI.gtk.doc.xml
 
-install-exec-local: ContactBrowser.exe Novell.AddressBook.UI.gtk.dll contactbrowser invitationassistant $(GLADE_FILES) $(IMAGE_FILES)
+install-exec-local: all contactbrowser invitationassistant $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images
 	$(INSTALL_PROGRAM) Novell.AddressBook.UI.gtk.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
