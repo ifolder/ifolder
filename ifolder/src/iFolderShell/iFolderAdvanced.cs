@@ -888,10 +888,7 @@ namespace Novell.iFolder.iFolderCom
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read_write.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_full.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
-
-				// TODO: These are icons are temporary...
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "mail_closed.ico")));
-				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "mail_opened.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(Path.GetDirectoryName(basePath), "Invitation.ico")));
 
 				//Assign the ImageList objects to the books ListView.
 				shareWith.SmallImageList = contactsImageList;
