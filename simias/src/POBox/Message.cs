@@ -95,17 +95,17 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the "From:" friendly name.
 		/// </summary>
-		public const string FromNameProperty = "FrmName";
+		public const string FromNameProperty = "FromName";
 
 		/// <summary>
 		/// The name of the property storing the "From:" identity.
 		/// </summary>
-		public const string FromIdentityProperty = "FrmID";
+		public const string FromIdentityProperty = "FromID";
 
 		/// <summary>
 		/// The name of the property storing the "From:" address.
 		/// </summary>
-		public const string FromAddressProperty = "FrmAddr";
+		public const string FromAddressProperty = "FromAddr";
 
 		/// <summary>
 		/// The name of the property storing the message body.

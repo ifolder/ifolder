@@ -75,6 +75,27 @@ namespace Simias.POBox
 	};
 
 	/// <summary>
+	/// The disposition of a subscription
+	/// </summary>
+	public enum Disposition
+	{
+		/// <summary>
+		/// The subscription was accepted.
+		/// </summary>
+		Accepted,
+
+		/// <summary>
+		/// The subscription was declined.
+		/// </summary>
+		Declined,
+
+		/// <summary>
+		/// The subscription was rejected.
+		/// </summary>
+		Rejected
+	};
+
+	/// <summary>
 	/// An Subscription object is a specialized message used for inviting someone to a team space.
 	/// </summary>
 	public class Subscription : Message
@@ -100,7 +121,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the sender's public key.
 		/// </summary>
-		public const string FromPublicKeyProperty = "FrmPKey";
+		public const string FromPublicKeyProperty = "FromPKey";
 
 		/// <summary>
 		/// The name of the property storing the collection name.
@@ -145,17 +166,22 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the DirNode ID.
 		/// </summary>
-		public const string DirNodeIdProperty = "DN:ID";
+		public const string DirNodeIdProperty = "DirNodeID";
 
 		/// <summary>
 		/// The name of the property storing the DirNode name.
 		/// </summary>
-		public const string DirNodeNameProperty = "DN:Name";
+		public const string DirNodeNameProperty = "DirNodeName";
 
 		/// <summary>
 		/// The name of the property storing the rights requested/granted.
 		/// </summary>
-		public const string SubscriptionRightsProperty = "SbRts";
+		public const string SubscriptionRightsProperty = "SbRights";
+
+		/// <summary>
+		/// The name of the property storing the status of the subscription (accepted, declined, etc.).
+		/// </summary>
+		public static readonly string SubscriptionDispositionProperty = "SbDisposition";
 		
 		#endregion
 
@@ -450,6 +476,21 @@ namespace Simias.POBox
 			set
 			{
 				Properties.ModifyProperty(SubscriptionRightsProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the disposition of the subscription.
+		/// </summary>
+		public Disposition SubscriptionDisposition
+		{
+			get
+			{
+				return (Disposition)Properties.GetSingleProperty(SubscriptionDispositionProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(SubscriptionDispositionProperty, value);
 			}
 		}
 		#endregion
