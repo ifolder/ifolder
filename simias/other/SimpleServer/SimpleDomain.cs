@@ -51,7 +51,7 @@ namespace Simias.SimpleServer
 		/// <summary>
 		/// Friendly name for the workgroup domain.
 		/// </summary>
-		private string domainName = "SimpleServer";
+		private string domainName = "Simple Server";
 		private string hostAddress;
 		private string description = "Simple Server domain";
 		private string ownerMember;
@@ -67,7 +67,7 @@ namespace Simias.SimpleServer
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private string serverDocumentPath = "SimpleServer.xml";
+		private string serverDocumentPath = "../../etc/SimpleServer.xml";
 		private XmlDocument serverDoc;
 
 		#endregion
