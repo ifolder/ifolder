@@ -245,7 +245,8 @@ internal class IncomingNode
 			fork.stream.Close();
 			fork.stream = null;
 		}
-		string path = bfn.GetFullPath(collection);
+		
+		path = bfn.GetFullPath(collection);
 		NodeStatus status = NodeStatus.Complete;
 		Log.Spew("placing file {0}", path);
 
