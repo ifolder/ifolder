@@ -39,8 +39,7 @@ EXTRA_DIST = ifolders $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFIL
 
 CUR_DIR := $(shell pwd)
 
-#all: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
-all: Novell.iFolder.dll iFolderd.exe
+all: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
 
 Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(SIMIAS_LIBS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
