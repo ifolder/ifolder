@@ -753,7 +753,6 @@ namespace Simias.Storage
 					if ( IsBaseType( node, NodeTypes.TombstoneType ) )
 					{
 						// Update the cache before indicating the event.
-						node.Properties.State = PropertyList.PropertyListState.Disposed;
 						store.Cache.Add( node );
 
 						// Indicate the event.
@@ -764,6 +763,8 @@ namespace Simias.Storage
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 						}
+
+						node.Properties.State = PropertyList.PropertyListState.Disposed;
 					}
 					else
 					{
@@ -776,26 +777,26 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Proxy:
 							{
 								// Update the cache before indicating the event.
-								node.Properties.State = PropertyList.PropertyListState.Update;
 								store.Cache.Add( node );
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Update;
 								break;
 							}
 
 							case PropertyList.PropertyListState.Delete:
 							{
 								// Update the cache before indicating the event.
-								node.Properties.State = PropertyList.PropertyListState.Disposed;
 								store.Cache.Remove( node.ID );
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Disposed;
 								break;
 							}
 
@@ -803,13 +804,13 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Restore:
 							{
 								// Update the cache before indicating the event.
-								node.Properties.State = PropertyList.PropertyListState.Update;
 								store.Cache.Add( node );
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
 								args.LocalOnly = node.LocalChanges;
 								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Update;
 								break;
 							}
 
@@ -843,7 +844,6 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Internal:
 							{
 								// Update the cache before indicating the event.
-								node.Properties.State = PropertyList.PropertyListState.Update;
 								store.Cache.Add( node );
 
 								// See if it is okay to indicate an event.
@@ -870,6 +870,8 @@ namespace Simias.Storage
 										}
 									}
 								}
+
+								node.Properties.State = PropertyList.PropertyListState.Update;
 								break;
 							}
 						}
