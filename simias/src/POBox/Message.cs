@@ -76,142 +76,202 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the message state.
 		/// </summary>
-		private const string MsgState = "MsgState";
+		public const string MessageStateProperty = "MessageState";
+
+		/// <summary>
+		/// The name of the property storing the "To:" friendly name.
+		/// </summary>
+		public const string ToNameProperty = "ToName";
 
 		/// <summary>
 		/// The name of the property storing the "To:" identity.
 		/// </summary>
-		private const string MsgToIdentity = "ToIdentity";
+		public const string ToIdentityProperty = "ToIdentity";
 
 		/// <summary>
 		/// The name of the property storing the "To:" address.
 		/// </summary>
-		private const string MsgToAddress = "ToAddress";
+		public const string ToAddressProperty = "ToAddress";
+
+		/// <summary>
+		/// The name of the property storing the "From:" friendly name.
+		/// </summary>
+		public const string FromNameProperty = "FromName";
 
 		/// <summary>
 		/// The name of the property storing the "From:" identity.
 		/// </summary>
-		private const string MsgFromIdentity = "FromIdentity";
+		public const string FromIdentityProperty = "FromIdentity";
 
 		/// <summary>
 		/// The name of the property storing the "From:" address.
 		/// </summary>
-		private const string MsgFromAddress = "FromAddress";
+		public const string FromAddressProperty = "FromAddress";
 
 		/// <summary>
 		/// The name of the property storing the message body.
 		/// </summary>
-		private const string MsgBody = "MsgBody";
+		public const string BodyProperty = "Body";
 
 		/// <summary>
 		/// The name of the property storing the message subject.
 		/// </summary>
-		private const string MsgSubject = "MsgSubject";
+		public const string SubjectProperty = "Subject";
+
+		/// <summary>
+		/// The name of the property storing the master URL.
+		/// </summary>
+		public const string MasterURLProperty = "Master Url";
 		#endregion
 
 		#region Properties
 		/// <summary>
 		/// Gets/sets the state of the Message object.
 		/// </summary>
-		public MessageState MessageState
+		public MessageState State
 		{
 			get
 			{
-				return (MessageState)Properties.GetSingleProperty(MsgState).Value;
+				return (MessageState)Properties.GetSingleProperty(MessageStateProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgState, value);
+				Properties.ModifyProperty(MessageStateProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the subject of the message.
 		/// </summary>
-		public string MessageSubject
+		public string Subject
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(MsgSubject).Value;
+				return (string)Properties.GetSingleProperty(SubjectProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgSubject, value);
+				Properties.ModifyProperty(SubjectProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the body of the message.
 		/// </summary>
-		public XmlDocument MessageBody
+		public string Body
 		{
 			get
 			{
-				return (XmlDocument)Properties.GetSingleProperty(MsgBody).Value;
+				return (string)Properties.GetSingleProperty(BodyProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgBody, value);
+				Properties.ModifyProperty(BodyProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the recipient's friendly name.
+		/// </summary>
+		public string ToName
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(ToNameProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(ToNameProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the recipient's address.
 		/// </summary>
-		public string MessageToAddress
+		public string ToAddress
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(MsgToAddress).Value;
+				return (string)Properties.GetSingleProperty(ToAddressProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgToAddress, value);
+				Properties.ModifyProperty(ToAddressProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the recipient's identity.
 		/// </summary>
-		public string MessageToIdentity
+		public string ToIdentity
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(MsgToIdentity).Value;
+				return (string)Properties.GetSingleProperty(ToIdentityProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgToIdentity, value);
+				Properties.ModifyProperty(ToIdentityProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the sender's friendly name.
+		/// </summary>
+		public string FromName
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(FromNameProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(FromNameProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the sender's address.
 		/// </summary>
-		public string MessageFromAddress
+		public string FromAddress
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(MsgFromAddress).Value;
+				return (string)Properties.GetSingleProperty(FromAddressProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgFromAddress, value);
+				Properties.ModifyProperty(FromAddressProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the sender's identity.
 		/// </summary>
-		public string MessageFromIdentity
+		public string FromIdentity
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(MsgFromIdentity).Value;
+				return (string)Properties.GetSingleProperty(FromIdentityProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(MsgFromIdentity, value);
+				Properties.ModifyProperty(FromIdentityProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the master URL for the collection.
+		/// </summary>
+		public Uri MasterURL
+		{
+			get
+			{
+				return (Uri)Properties.GetSingleProperty(MasterURLProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(MasterURLProperty, value);
 			}
 		}
 		#endregion
@@ -235,7 +295,7 @@ namespace Simias.POBox
 		public Message(string messageName, MessageType messageType) :
 			base (messageName)
 		{
-			this.Properties.AddProperty(MsgState, MessageState.New);
+			State = MessageState.New;
 			this.Properties.AddNodeProperty(PropertyTags.Types, messageType.ToString());
 		}
 
@@ -248,7 +308,7 @@ namespace Simias.POBox
 		public Message(string messageName, MessageType messageType, string toIdentity) :
 			this (messageName, messageType)
 		{
-			this.Properties.AddProperty(MsgToIdentity, toIdentity);
+			ToIdentity = toIdentity;
 		}
 
 		/// <summary>
@@ -261,7 +321,7 @@ namespace Simias.POBox
 		public Message(string messageName, MessageType messageType, string toIdentity, string fromIdentity) :
 			this (messageName, messageType, toIdentity)
 		{
-			this.Properties.AddProperty(MsgFromIdentity, fromIdentity);
+			FromIdentity = fromIdentity;
 		}
 
 		/// <summary>
@@ -275,7 +335,7 @@ namespace Simias.POBox
 		public Message(string messageName, MessageType messageType, string toIdentity, string fromIdentity, string toAddress) :
 			this (messageName, messageType, toIdentity, fromIdentity)
 		{
-			Properties.AddProperty(MsgToAddress, toAddress);
+			ToAddress = toAddress;
 		}
 
 		/// <summary>
@@ -290,7 +350,7 @@ namespace Simias.POBox
 		public Message(string messageName, MessageType messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
 			this (messageName, messageType, toIdentity, fromIdentity, toAddress)
 		{
-			Properties.AddProperty(MsgFromAddress, fromAddress);
+			FromAddress = fromAddress;
 		}
 		#endregion
 

@@ -46,7 +46,6 @@ namespace Simias.POBox
 		public POBox(Store storeObject, Node node) :
 			base (storeObject, node)
 		{
-			SetType(this, typeof(POBox).Name);
 		}
 
 		public POBox(Store storeObject, string name) :
