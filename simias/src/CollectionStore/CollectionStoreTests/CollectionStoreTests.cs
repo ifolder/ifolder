@@ -1699,7 +1699,7 @@ namespace Simias.Storage.Tests
 
 			// Get the aliases back.
 			int count = 0;
-			ICSList aliasList = identity.GetAliases();
+			ICSList aliasList = identity.GetAliasList();
 			foreach( Alias alias in aliasList )
 			{
 				// This check is make only to remove unused variable compiler warning.
@@ -1712,6 +1712,37 @@ namespace Simias.Storage.Tests
 			if ( count != 2 )
 			{
 				throw new ApplicationException( "Cannot find all of the aliases." );
+			}
+		}
+
+		/// <summary>
+		///  Tests the finding all nodes asssociated with a file.
+		/// </summary>
+		[Test]
+		public void FileToNodeTest()
+		{
+			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			try
+			{
+				// Add a file to the collection object.
+				collection.AddFileEntry( "CS_TestFile", "Test.txt" );
+				collection.Commit();
+
+				// See if the collection can be located.
+				ICSList list = store.GetNodesAssociatedWithPath( collection.DocumentRoot, "Test.txt" );
+				IEnumerator e = list.GetEnumerator();
+				if ( !e.MoveNext() )
+				{
+					throw new ApplicationException( "Cannot find associated node." );
+				}
+			}
+			finally
+			{
+				// Get rid of the root path.
+				Directory.Delete( collection.DocumentRoot.LocalPath, true );
+                
+				// Delete the collection.
+				collection.Delete( true );
 			}
 		}
 		#endregion

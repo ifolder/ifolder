@@ -433,6 +433,11 @@ namespace Simias.Storage
 		/// Well known XML attribute.
 		/// </summary>
 		public const string IdentityType = "AB:Contact";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		public const string DefaultAddressBook = "AB:Default";
 		#endregion
 
 		/// <summary>
@@ -642,6 +647,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Alias, null );
 			systemPropertyTable.Add( Credential, null );
 			systemPropertyTable.Add( AliasParameters, null );
+			systemPropertyTable.Add( AddressBookType, null );
 
 			systemPropertyTable.Add( CollectionID, null );
 			systemPropertyTable.Add( CreationTime, null );
@@ -660,7 +666,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( DomainName, null );
 			systemPropertyTable.Add( IdentityType, null );
-			systemPropertyTable.Add( AddressBookType, null );
+			systemPropertyTable.Add( DefaultAddressBook, null );
 		}
 
 		/// <summary>

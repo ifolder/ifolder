@@ -52,6 +52,11 @@ namespace Simias.Storage
 		private const int cacheNodeTableSize = 100;
 
 		/// <summary>
+		/// The allocation size of the results array.
+		/// </summary>
+		internal const int resultsArraySize = 4096;
+
+		/// <summary>
 		/// Type of collection that represents the store database.
 		/// </summary>
 		internal const string DatabaseType = "CsDatabase";
@@ -744,6 +749,68 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets all nodes that are associated with a file system entry.
+		/// </summary>
+		/// <param name="documentRoot">Uri object that contains the root path for the file system entry.</param>
+		/// <param name="relativePath">String containing a path relative to documentRoot that specifies a file or directory entry.</param>
+		/// <returns>An ICSList object containg nodes that reference the specified file system entry.</returns>
+		public ICSList GetNodesAssociatedWithPath( Uri documentRoot, string relativePath )
+		{
+			// Create an empty list.
+			ICSList nodeList = new ICSList();
+
+			// Build a query for the document root.
+			Persist.Query query = new Persist.Query( Property.DocumentRoot, Persist.Query.Operator.Equal, documentRoot.ToString(), Property.Syntax.Uri.ToString() );
+			char[] results = new char[ Store.resultsArraySize ];
+
+			// Do the search.
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			while ( chunkIterator != null )
+			{
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				if ( length > 0 )
+				{
+					// Set up the XML document that we will use as the granular query to the client.
+					XmlDocument xmlNodeList = new XmlDocument();
+					xmlNodeList.LoadXml( new string( results, 0, length ) );
+
+					// Enumerate through the results.
+					foreach ( XmlElement element in xmlNodeList.DocumentElement )
+					{
+						// Get the collection that contains this node.
+						Collection collection = GetCollectionById( element.GetAttribute( Property.IDAttr ) );
+						if ( collection != null )
+						{
+							// Search in this collection for the relative path.
+							ICSList pathList = collection.Search( Property.NodeFileSystemEntry, relativePath, Property.Operator.Contains );
+							foreach ( Node node in pathList )
+							{
+								// See if this node contains the proper path.
+								foreach ( FileSystemEntry fse in node.GetFileSystemEntryList() )
+								{
+									if ( fse.RelativePath == relativePath )
+									{
+										// This is a node that we are looking for.
+										nodeList.Add( node );
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					chunkIterator.Dispose();
+					chunkIterator = null;
+				}
+			}
+
+			return nodeList;
+		}
+
+		/// <summary>
 		/// Returns a collection object from the data store by its identifier.
 		/// </summary>
 		/// <param name="collectionId">Unique identifier for the collection.</param>
@@ -1105,11 +1172,6 @@ namespace Simias.Storage
 		{
 			#region Class Members
 			/// <summary>
-			/// The allocation size of the results array.
-			/// </summary>
-			private const int resultsArraySize = 4096;
-
-			/// <summary>
 			/// Indicates whether the object has been disposed.
 			/// </summary>
 			private bool disposed = false;
@@ -1137,7 +1199,7 @@ namespace Simias.Storage
 			/// <summary>
 			/// Array where the query results are stored.
 			/// </summary>
-			private char[] results = new char[ resultsArraySize ];
+			private char[] results = new char[ Store.resultsArraySize ];
 
 			/// <summary>
 			/// Enumerator used to enumerate all IDs that the user is known as.

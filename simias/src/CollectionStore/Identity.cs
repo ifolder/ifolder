@@ -203,7 +203,7 @@ namespace Simias.Storage
 		/// Gets the list of aliases that this user is known by in other domains.
 		/// </summary>
 		/// <returns>An ICSList object containing all of the aliases for this identity.</returns>
-		public ICSList GetAliases()
+		public ICSList GetAliasList()
 		{
 			ICSList aliasList = new ICSList();
 			MultiValuedList mvl = Properties.FindValues( Property.Alias );

@@ -125,11 +125,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Collection.resx"
-                    DependentUpon = "Collection.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "DirectoryEntry.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -170,11 +165,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Node.resx"
-                    DependentUpon = "Node.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "NodeStream.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -185,11 +175,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Property.resx"
-                    DependentUpon = "Property.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "PropertyList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -198,11 +183,6 @@
                     RelPath = "Store.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Store.resx"
-                    DependentUpon = "Store.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "StoreIdentity.cs"

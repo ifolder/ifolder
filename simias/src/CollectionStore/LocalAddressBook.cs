@@ -47,6 +47,11 @@ namespace Simias.Storage
 			// Add the local address book property.
 			Properties.AddNodeProperty( Property.LocalAddressBook, true );
 
+			// Make this the default address book.
+			Property p = new Property( Property.DefaultAddressBook, true );
+			p.LocalProperty = true;
+			Properties.AddNodeProperty( p );
+
 			// Set an ACL that allows everyone read/write access.
 			SetUserAccess( Access.WorldRole, Access.Rights.ReadWrite );
 

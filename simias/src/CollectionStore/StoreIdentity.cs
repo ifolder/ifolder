@@ -248,7 +248,7 @@ namespace Simias.Storage
 			if ( currentId != null )
 			{
 				// Get a list of aliases this user is known by in other domains.
-				ICSList aliasList = currentId.GetAliases();
+				ICSList aliasList = currentId.GetAliasList();
 				foreach ( Alias alias in aliasList )
 				{
 					ids.Add( alias.Id );
@@ -277,7 +277,7 @@ namespace Simias.Storage
 				if ( currentId != null )
 				{
 					// Get a list of aliases this user is known by in other domains.
-					ICSList aliasList = currentId.GetAliases();
+					ICSList aliasList = currentId.GetAliasList();
 					foreach ( Alias alias in aliasList )
 					{
 						if ( alias.Domain == domain )
