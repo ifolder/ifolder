@@ -22,6 +22,7 @@
  ***********************************************************************/
 using System;
 using System.IO;
+using System.Threading;
 using System.Collections;
 using System.Security.Cryptography;
 using Simias.Storage;
@@ -75,6 +76,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public int Read(byte[] buffer, int offset, int count)
 		{
+			Log.log.Debug("Reading File {0} : offset = {1}", file, ReadPosition);
 			return workStream.Read(buffer, offset, count);
 		}
 
@@ -106,6 +108,7 @@ namespace Simias.Sync
 		protected void Open(BaseFileNode node)
 		{
 			SetupFileNames(node);
+			Log.log.Debug("Opening File {0}", file);
 			// This file is being pushed make a copy to work from.
 			File.Copy(file, workFile, true);
 			workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
@@ -116,6 +119,7 @@ namespace Simias.Sync
 		/// </summary>
 		protected void Close()
 		{
+			Log.log.Debug("Closing File {0}", file);
 			Close (false);
 		}
 		
@@ -162,6 +166,9 @@ namespace Simias.Sync
 		FileStream	stream;
 		/// <summary>The Old Node if it exists.</summary>
 		protected BaseFileNode	oldNode;
+		Exception				exception;
+		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
+		
 		
 		#endregion
 		
@@ -209,7 +216,18 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(byte[] buffer, int offset, int count)
 		{
-			workStream.Write(buffer, offset, count);
+			asyncEvent.WaitOne();
+			asyncEvent.Reset();
+			if (exception == null)
+			{
+				Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
+				workStream.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
+			}
+			else
+			{
+				throw(exception);
+			}
+			//workStream.Write(buffer, offset, count);
 		}
 
 		/// <summary>
@@ -276,6 +294,7 @@ namespace Simias.Sync
 		protected void Open(BaseFileNode node)
 		{
 			this.SetupFileNames(node);
+			Log.log.Debug("Opening File {0}", file);
 			// Open the file so that it cannot be modified.
 			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
 			try
@@ -291,12 +310,31 @@ namespace Simias.Sync
 		/// </summary>
 		protected void Close(bool commit)
 		{
+			Log.log.Debug("Closing File {0}", file);
 			Close (false, commit);
 		}
 
 		#endregion
 
 		#region private methods.
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="result"></param>
+		private void WriteCallback(IAsyncResult result)
+		{
+			try
+			{
+				workStream.EndWrite(result);
+				asyncEvent.Set();
+			}
+			catch (Exception ex)
+			{
+				exception = ex;
+			}
+		}
+
 
 		/// <summary>
 		/// Called to cleanup any resources and close the file.
@@ -308,6 +346,7 @@ namespace Simias.Sync
 			if (!InFinalizer)
 				GC.SuppressFinalize(this);
 
+			asyncEvent.WaitOne();
 			if (stream != null)
 			{
 				stream.Close();
@@ -318,7 +357,7 @@ namespace Simias.Sync
 				workStream.Close();
 				workStream = null;
 			}
-			if (commit)
+			if (exception == null && commit)
 			{
 				string tmpFile = file + ".~stmp";
 				if (File.Exists(file))
@@ -351,6 +390,11 @@ namespace Simias.Sync
 
 			if (workFile != null)
 				File.Delete(workFile);
+
+			if (exception != null)
+			{
+				throw (exception);
+			}
 		}
 
 		#endregion
