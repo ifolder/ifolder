@@ -23,12 +23,13 @@
 using System;
 using System.Net;
 using Gtk;
+using Gnome;
 using Novell.iFolder;
 using Simias.Client;
 
 namespace Novell.iFolder.Nautilus
 {
-	public class NautilusiFolder
+	public class NautilusiFolder : Gnome.Program
 	{
 		public static int Main (string[] args)
 		{
@@ -65,11 +66,29 @@ namespace Novell.iFolder.Nautilus
 		
 		private static int showShareDialog (string[] args)
 		{
+			if (args.Length < 2) {
+				System.Console.Write ("ERROR: iFolder ID not specified\n");
+				return -1;
+			}
+			
+			iFolderPropertiesDialog propsDialog;
+			propsDialog = new iFolderPropertiesDialog (args [1]);
+			propsDialog.CurrentPage = 1;
+			propsDialog.Run ();
 			return 0;
 		}
 		
 		private static int showPropertiesDialog (string[] args)
 		{
+			if (args.Length < 2) {
+				System.Console.Write ("ERROR: iFolder ID not specified\n");
+				return -1;
+			}
+			
+			iFolderPropertiesDialog propsDialog;
+			propsDialog = new iFolderPropertiesDialog (args [1]);
+			propsDialog.CurrentPage = 0;
+			propsDialog.Run ();
 			return 0;
 		}
 		

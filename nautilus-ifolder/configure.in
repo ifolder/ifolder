@@ -25,6 +25,37 @@ GNOME_COMPILE_WARNINGS(maximum)
 AC_CHECK_PROG(CSC, mcs, mcs)
 test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
 
+#
+# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
+# packages 'make install'-ed to the same prefix.
+#
+# The default value of $prefix is not set until later in the script.
+# We set the default here, if needed.
+#
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+
+#
+# Installation directory options.
+#
+# These are normally left unexpanded so users can "make install exec_prefix=/foo".
+# However, we want them expanded.
+#
+bindir="${exec_prefix}/bin"
+sbindir="${exec_prefix}/sbin"
+libexecdir="${exec_prefix}/libexec"
+datadir="${prefix}/share"
+sysconfdir="${prefix}/etc"
+sharedstatedir="${prefix}/com"
+localstatedir="${prefix}/var"
+libdir="${exec_prefix}/lib"
+includedir="${prefix}/include"
+oldincludedir="/usr/include"
+infodir="${prefix}/info"
+mandir="${prefix}/man"
+webdir="${exec_prefix}/web"
+webbindir="${exec_prefix}/web/bin"
+
 dnl Check for pkgconfig first
 AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)
 
@@ -51,6 +82,11 @@ AC_SUBST(SIMIAS_CLIENT_LIBS)
 PKG_CHECK_MODULES(IFOLDER, ifolder3 >= $IFOLDER_MINIMUM_VERSION)
 AC_SUBST(IFOLDER_LIBS)
 
+gnome_root=$(pkg-config --variable=prefix libnautilus-extension)
+AC_SUBST(gnome_root)
+INSTALL_BIN_OPTS='--mode=755'
+AC_SUBST(INSTALL_BIN_OPTS)
+
 #
 # Configure C# compiler settings
 #
@@ -65,9 +101,14 @@ AC_SUBST(CSC_EXEFLAG)
 AC_SUBST(CSC_LIBFLAG)
 AC_SUBST(CSC_WINEXEFLAG)
 AC_SUBST(CSCFLAGS)
+AC_SUBST(libdir)
+AC_SUBST(webdir)
+AC_SUBST(webbindir)
 
 AC_OUTPUT([
   Makefile 
   src/Makefile
+  src/nautilus-ifolder.h
+  src/nautilus-ifolder
 ])
 

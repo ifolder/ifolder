@@ -36,6 +36,8 @@
 #include "iFolderClientStub.h"
 #include "iFolderClient.nsmap"
 
+#include "nautilus-ifolder.h"
+
 typedef struct {
 	GObject parent_slot;
 } iFolderNautilus;
@@ -381,13 +383,92 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 static void
 share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Share with... selected\n");	
+	g_print ("Share with... selected\n");
+	FILE *output;
+	gchar *ifolder_path;
+	gchar *ifolder_id;
+	GList *files;
+	NautilusFileInfo *file;
+	char args [1024];
+	memset (args, '\0', sizeof (args));
+	
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
+	if (file == NULL)
+		return;
+		
+	ifolder_path = get_file_path (file);
+	if (ifolder_path != NULL) {
+		ifolder_id = get_ifolder_id_by_local_path (ifolder_path);
+		if (ifolder_id != NULL) {
+			sprintf (args, "%s share %s", NAUTILUS_IFOLDER_SH_PATH, ifolder_id);
+			g_print ("args: ");
+			g_print (args);
+			g_print ("\n");
+			
+			g_free (ifolder_id);
+		}
+		
+		g_free (ifolder_path);
+	}
+	
+	if (strlen (args) <= 0)
+		return;
+		
+	output = popen (args, "r");
+	if (output == NULL) {
+		/* error calling mono nautilus-ifolder.exe */
+		g_print ("Error calling 'mono nautilus-ifolder.exe share");
+		return;
+	}
+	
+	pclose (output);
 }
 
 static void
 ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Properties selected\n");	
+	FILE *output;
+	gchar *ifolder_path;
+	gchar *ifolder_id;
+	GList *files;
+	NautilusFileInfo *file;
+	char args [1024];
+	memset (args, '\0', sizeof (args));
+	
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
+	if (file == NULL)
+		return;
+		
+	ifolder_path = get_file_path (file);
+	if (ifolder_path != NULL) {
+		ifolder_id = get_ifolder_id_by_local_path (ifolder_path);
+		if (ifolder_id != NULL) {
+			sprintf (args, "%s properties %s", 
+					 NAUTILUS_IFOLDER_SH_PATH, ifolder_id);
+			g_print ("args: ");
+			g_print (args);
+			g_print ("\n");
+			
+			g_free (ifolder_id);
+		}
+		
+		g_free (ifolder_path);
+	}
+	
+	if (strlen (args) <= 0)
+		return;
+		
+	output = popen (args, "r");
+	if (output == NULL) {
+		/* error calling mono nautilus-ifolder.exe */
+		g_print ("Error calling 'mono nautilus-ifolder.exe properties");
+		return;
+	}
+	
+	pclose (output);
 }
 
 static void
@@ -581,13 +662,17 @@ getLocalServiceUrl ()
 	char readBuffer [1024];
 	char tmpUrl [1024];
 	gchar *localServiceUrl = NULL;
+	char args [1024];
+	memset (args, '\0', sizeof (args));
 	
 	memset (readBuffer, '\0', sizeof (readBuffer));
 	memset (tmpUrl, '\0', sizeof (tmpUrl));
 
-	FILE *output;	
+	FILE *output;
 	
-	output = popen ("mono nautilus-ifolder.exe WebServiceURL", "r");
+	sprintf (args, "%s WebServiceURL", NAUTILUS_IFOLDER_SH_PATH);
+	
+	output = popen (args, "r");
 	if (output == NULL) {
 		/* error calling mono nautilus-ifolder.exe */
 		g_print ("Error calling 'mono nautilus-ifolder.exe WebServiceURL");
@@ -598,6 +683,9 @@ getLocalServiceUrl ()
 		strcpy (tmpUrl, readBuffer);
 		strcat (tmpUrl, "/iFolder.asmx");
 		localServiceUrl = strdup (tmpUrl);
+		g_print ("*** Web Service URL: ");
+		g_print (localServiceUrl);
+		g_print ("\n");
 	}
 
 	pclose (output);	
