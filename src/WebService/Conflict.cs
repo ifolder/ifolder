@@ -37,16 +37,60 @@ namespace Novell.iFolder.Web
 		private const long kilobyte = 1024;
 		private const long megabyte = 1048576;
 
+		/// <summary>
+		/// The ID of the iFolder with the conflict.
+		/// </summary>
 		public string	iFolderID;
+
+		/// <summary>
+		/// The ID of the conflict.
+		/// </summary>
 		public string	ConflictID;
+
+		/// <summary>
+		/// The name of the local file.
+		/// </summary>
 		public string	LocalName;
+
+		/// <summary>
+		/// The timestamp on the local file.
+		/// </summary>
 		public string	LocalDate;
+
+		/// <summary>
+		/// The size of the local file.
+		/// </summary>
 		public string	LocalSize;
+
+		/// <summary>
+		/// The full path of the local file.
+		/// </summary>
+		public string	LocalFullPath;
+
+		/// <summary>
+		/// Tells if this conflict is a name conflict.
+		/// </summary>
 		public bool 	IsNameConflict;
 
+		/// <summary>
+		/// The name of the server file.
+		/// </summary>
 		public string	ServerName;
+
+		/// <summary>
+		/// The timestamp on the server file.
+		/// </summary>
 		public string	ServerDate;
+
+		/// <summary>
+		/// The size of the server file.
+		/// </summary>
 		public string	ServerSize;
+
+		/// <summary>
+		/// The full path of the server (conflict) file.
+		/// </summary>
+		public string	ServerFullPath;
 
 		/// <summary>
 		/// Constructs a Conflict object.
@@ -83,10 +127,12 @@ namespace Novell.iFolder.Web
 				LocalName = localFileNode.GetFileName();
 				LocalDate = localFileNode.LastWriteTime.ToString();
 				LocalSize = formatFileSize(localFileNode.Length);
+				LocalFullPath = conflict.NonconflictedPath;
 			
 				ServerName = serverFileNode.GetFileName();
 				ServerDate = serverFileNode.LastWriteTime.ToString();
 				ServerSize = formatFileSize(serverFileNode.Length);
+				ServerFullPath = conflict.UpdateConflictPath;
 			}
 		}
 
@@ -146,11 +192,11 @@ namespace Novell.iFolder.Web
 			}
 			else if (fileLength < megabyte)
 			{
-				fileSize = Math.Round((double)fileLength / kilobyte, 1).ToString() + " KB";
+				fileSize = Math.Round((double)fileLength / kilobyte, 4).ToString() + " KB";
 			}
 			else
 			{
-				fileSize = Math.Round((double)fileLength / megabyte, 2).ToString() + " MB";
+				fileSize = Math.Round((double)fileLength / megabyte, 4).ToString() + " MB";
 			}
 
 			return fileSize;

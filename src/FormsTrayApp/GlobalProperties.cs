@@ -69,7 +69,6 @@ namespace Novell.FormsTrayApp
 
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private System.Timers.Timer updateEnterpriseTimer;
-		private short retryCount = 2;
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private SimiasWebService simiasWebService;
@@ -1314,10 +1313,10 @@ namespace Novell.FormsTrayApp
 			DomainInformation[] domains;
 			try
 			{
-				domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
-				foreach (DomainInformation dw in domains)
+				domains = simiasWebService.GetDomains(false);
+				foreach (DomainInformation di in domains)
 				{
-					AddDomainToList(dw);
+					AddDomainToList(di);
 				}
 			}
 			catch
@@ -1362,10 +1361,10 @@ namespace Novell.FormsTrayApp
 				DomainInformation[] domains;
 				try
 				{
-					domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
-					foreach (DomainInformation dw in domains)
+					domains = simiasWebService.GetDomains(false);
+					foreach (DomainInformation di in domains)
 					{
-						AddDomainToList(dw);
+						AddDomainToList(di);
 					}
 				}
 				catch{}

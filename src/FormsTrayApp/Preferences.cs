@@ -1947,13 +1947,10 @@ namespace Novell.FormsTrayApp
 				DomainInformation[] domains;
 				try
 				{
-					domains = simiasWebService.GetDomains(true);//ifWebService.GetDomains();
-					foreach (DomainInformation dw in domains)
+					domains = simiasWebService.GetDomains(true);
+					foreach (DomainInformation di in domains)
 					{
-//						if (dw.IsSlave)
-						{
-							AddDomainToList(dw);
-						}
+						AddDomainToList(di);
 					}
 				}
 				catch (Exception ex)
