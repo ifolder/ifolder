@@ -61,7 +61,7 @@ met so the iFolder team wrote AddressBook to the "Common AddressBook" spec.
 
 #=============================================================================
 %Build
-./configure --prefix=%{prefix} --with-simias-install-path=@SIMIAS_INSTALL_PATH@
+./configure --prefix=%{prefix}
 make
 
 #=============================================================================
