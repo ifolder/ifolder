@@ -2181,7 +2181,15 @@ namespace Novell.iFolder.FormsBookLib
 				catch (Exception ex)
 				{
 					logger.Debug(ex, "Loading photo");
-					pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
+
+					try
+					{
+						pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
+					}
+					catch (Exception ex2)
+					{
+						logger.Debug(ex2, "Loading default image");
+					}
 				}
 
 				LoadAddresses();
