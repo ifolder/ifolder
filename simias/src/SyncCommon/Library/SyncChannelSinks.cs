@@ -28,27 +28,28 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Channel Sinks
 	/// </summary>
+	[Flags]
 	public enum SyncChannelSinks
 	{
 		/// <summary>
 		/// Specifies a soap style formatter sink.
 		/// </summary>
-		Soap		= 0x0001,
+		Soap,
 
 		/// <summary>
 		/// Specifies a binary style formatter sink.
 		/// </summary>
-		Binary		= 0x0002,
+		Binary,
 
 		/// <summary>
 		/// Specifies a security sink.
 		/// </summary>
-		Security	= 0x0004,
+		Security,
 
 		/// <summary>
 		/// Specifies a monitor sink.
 		/// </summary>
-		Monitor		= 0x0008,
+		Monitor,
 	};
 
 }

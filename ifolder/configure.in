@@ -116,8 +116,8 @@ case $IFOLDER_OS in
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
-        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
-        NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/mono/NUnit/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
@@ -190,8 +190,8 @@ case $IFOLDER_OS in
         LIB_PRE=''
         LIBFLAG=''
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
-        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
-        NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
+        NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/net/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''

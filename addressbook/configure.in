@@ -110,8 +110,8 @@ case $ADDRESSBOOK_OS in
         COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
-        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
-        NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
@@ -129,8 +129,8 @@ case $ADDRESSBOOK_OS in
         COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
-        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
-        NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
+        NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/net/bin"
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
