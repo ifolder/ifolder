@@ -33,6 +33,7 @@ using Simias;
 using Simias.Authentication;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Sync.Client;
 using Simias.Mail;
 
 namespace Simias.POBox
@@ -256,14 +257,20 @@ namespace Simias.POBox
 				}
 
 				//
-				// Make sure the subscription node has sync'd to the server as well
+				// Make sure the subscription node has sync'd up to the server as well
 				//
-				
-				if (subscription.MasterIncarnation == 0)
+
+				Node cNode = this.poBox.Refresh(subscription);
+				if (cNode.MasterIncarnation == 0)
 				{
+					// force the PO box to be sync'd right away
+					SyncClient.ScheduleSync(poBox.ID);
+
 					log.Debug(
-						"Failed POBoxService::Invite - inviter's subscription {0) hasn't sync'd to the server yet",
+						"Failed POBoxService::Invite - inviter's subscription {0} hasn't sync'd to the server yet",
 						subscription.MessageID);
+
+
 					return (false);
 				}
 			
@@ -413,6 +420,16 @@ namespace Simias.POBox
 					if (wsStatus == POBoxStatus.Success)
 					{
 						// This subscription is done!
+						result = true;
+					}
+					else
+					if (wsStatus == POBoxStatus.UnknownCollection)
+					{
+						log.Debug("Failed declining a subscription");
+						log.Debug("The Collection did not exist on the server");
+						log.Debug("Deleting the local subscription");
+
+						poBox.Commit(poBox.Delete(subscription));
 						result = true;
 					}
 				}
