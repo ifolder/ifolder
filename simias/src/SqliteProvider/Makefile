@@ -13,19 +13,9 @@ include ../../config.mk
 SqliteProviderTests_SOURCES = SqliteProviderTests/AssemblyInfo.cs SqliteProviderTests/SqliteTests1.cs
 SqliteProviderTests_INCLUDES = 
 SqliteProviderTests_FLAGS = /t:library
-SqliteProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll ProviderTest.dll SqliteProvider.dll
-SqliteProviderTests_LIBPATH = SqliteProviderTests SqliteProviderTests/../../../tools/NUnit/bin SqliteProviderTests/../../stage SqliteProviderTests/../../stage
+SqliteProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Configuration.dll ProviderTest.dll SqliteProvider.dll
+SqliteProviderTests_LIBPATH = SqliteProviderTests ../../tools/NUnit/bin ../Configuration ../StoreProvider
 SqliteProviderTests_LDFLAGS = 
-
-#=============================================================================
-# StoreProvider variables
-#=============================================================================
-StoreProvider_SOURCES = ../StoreProvider/AssemblyInfo.cs ../StoreProvider/CSPException.cs ../StoreProvider/IProvider.cs ../StoreProvider/IResultSet.cs ../StoreProvider/Provider.cs ../StoreProvider/Query.cs ../StoreProvider/Record.cs
-StoreProvider_INCLUDES = 
-StoreProvider_FLAGS = /t:library
-StoreProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll
-StoreProvider_LIBPATH = ../StoreProvider ../StoreProvider/../stage
-StoreProvider_LDFLAGS = 
 
 #=============================================================================
 # SqliteWrapper variables
@@ -38,32 +28,34 @@ SqliteWrapper_LIBPATH = SqliteWrapper
 SqliteWrapper_LDFLAGS = 
 
 #=============================================================================
-# ProviderTest variables
-#=============================================================================
-ProviderTest_SOURCES = ../StoreProvider/Test/AssemblyInfo.cs ../StoreProvider/Test/ProviderTests1.cs
-ProviderTest_INCLUDES = 
-ProviderTest_FLAGS = /t:library
-ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll nunit.framework.dll
-ProviderTest_LIBPATH = ../StoreProvider/Test ../StoreProvider/Test/../../stage ../StoreProvider/Test/../../../tools/NUnit/bin
-ProviderTest_LDFLAGS = 
-
-#=============================================================================
 # SqliteProvider variables
 #=============================================================================
 SqliteProvider_SOURCES = AssemblyInfo.cs SqliteProvider.cs SqliteResultSet.cs
 SqliteProvider_INCLUDES = 
 SqliteProvider_FLAGS = /t:library
-SqliteProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll SqliteWrapper.dll
-SqliteProvider_LIBPATH = ../stage ../stage
+SqliteProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll SqliteWrapper.dll
+SqliteProvider_LIBPATH = ../Configuration ../StoreProvider
 SqliteProvider_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BUILD_LIB_FILES = SqliteWrapper.dll SqliteProvider.dll
+BIN_FILES =
+ifeq ($(TARGET_OS), linux)
+	LIB_FILES = $(BUILD_LIB_FILES) ../../external/sqlite/linux/libsqlite.so
+endif
+ifeq ($(TARGET_OS), windows)
+	LIB_FILES = $(BUILD_LIB_FILES) ../../external/sqlite/w32/sqlite.dll
+endif
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = SqliteProviderTests.dll 
+TEST_DATA_FILES = 
 
-TARGETS = SqliteProviderTests.dll StoreProvider.dll SqliteWrapper.dll ProviderTest.dll SqliteProvider.dll 
-CLEAN_FILES = Check.xml SqliteProviderTests.pdb SqliteProviderTests.Doc.xml Check.xml StoreProvider.pdb StoreProvider.Doc.xml Check.xml SqliteWrapper.pdb SqliteWrapper.Doc.xml Check.xml ProviderTest.pdb ProviderTest.Doc.xml Check.xml SqliteProvider.pdb SqliteProvider.Doc.xml  SqliteProvider.xml SqliteProvider.Doc.xml
-CLEAN_DIRS = SqliteProviderTests/bin SqliteProviderTests/obj ../StoreProvider/bin ../StoreProvider/obj SqliteWrapper/bin SqliteWrapper/obj ../StoreProvider/Test/bin ../StoreProvider/Test/obj bin obj 
+TARGETS = $(BIN_FILES) $(BUILD_LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+CLEAN_FILES = Check.xml SqliteProviderTests.pdb SqliteProviderTests.Doc.xml Check.xml SqliteWrapper.pdb SqliteWrapper.Doc.xml SqliteProvider.pdb SqliteProvider.Doc.xml  SqliteProvider.xml SqliteProvider.Doc.xml
+CLEAN_DIRS = SqliteProviderTests/bin SqliteProviderTests/obj SqliteWrapper/bin SqliteWrapper/obj bin obj 
 NUNIT_TESTS = SqliteProviderTests.dll 
 STAGE_FILES = $(TARGETS) SqliteProviderTests.Doc.xml StoreProvider.Doc.xml SqliteWrapper.Doc.xml ProviderTest.Doc.xml SqliteProvider.Doc.xml SqliteProviderTests.pdb StoreProvider.pdb SqliteWrapper.pdb ProviderTest.pdb SqliteProvider.pdb 
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
@@ -92,7 +84,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -130,22 +123,6 @@ SqliteProviderTests.dll: $(SqliteProviderTests_SOURCES) $(SqliteProviderTests_LI
 	$(CSC) /out:$@ /doc:SqliteProviderTests.Doc.xml $(CSCFLAGS) $(SqliteProviderTests_FLAGS) $(SqliteProviderTests_LIBS:%=/r:%) $(SqliteProviderTests_LIBPATH:%=/lib:%) $(SqliteProviderTests_SOURCES)
 
 #=============================================================================
-# StoreProvider targets
-#=============================================================================
-
-# fix path seperator
-StoreProvider_SOURCES := $(subst /,$(SEP), $(StoreProvider_SOURCES))
-StoreProvider_INCLUDES := $(subst /,$(SEP), $(StoreProvider_INCLUDES))
-StoreProvider_DEF := $(subst /,$(SEP), $(StoreProvider_DEF))
-StoreProvider_LIBPATH := $(subst /,$(SEP), $(StoreProvider_LIBPATH))
-
-# update VPATH
-VPATH := $(VPATH) $(StoreProvider_LIBPATH) $(StoreProvider_INCLUDES)
-
-StoreProvider.dll: $(StoreProvider_SOURCES) $(StoreProvider_LIBS) ../../config.mk
-	$(CSC) /out:$@ /doc:StoreProvider.Doc.xml $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_SOURCES)
-
-#=============================================================================
 # SqliteWrapper targets
 #=============================================================================
 
@@ -160,22 +137,6 @@ VPATH := $(VPATH) $(SqliteWrapper_LIBPATH) $(SqliteWrapper_INCLUDES)
 
 SqliteWrapper.dll: $(SqliteWrapper_SOURCES) $(SqliteWrapper_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SqliteWrapper.Doc.xml $(CSCFLAGS) $(SqliteWrapper_FLAGS) $(SqliteWrapper_LIBS:%=/r:%) $(SqliteWrapper_LIBPATH:%=/lib:%) $(SqliteWrapper_SOURCES)
-
-#=============================================================================
-# ProviderTest targets
-#=============================================================================
-
-# fix path seperator
-ProviderTest_SOURCES := $(subst /,$(SEP), $(ProviderTest_SOURCES))
-ProviderTest_INCLUDES := $(subst /,$(SEP), $(ProviderTest_INCLUDES))
-ProviderTest_DEF := $(subst /,$(SEP), $(ProviderTest_DEF))
-ProviderTest_LIBPATH := $(subst /,$(SEP), $(ProviderTest_LIBPATH))
-
-# update VPATH
-VPATH := $(VPATH) $(ProviderTest_LIBPATH) $(ProviderTest_INCLUDES)
-
-ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../../config.mk
-	$(CSC) /out:$@ /doc:ProviderTest.Doc.xml $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_SOURCES)
 
 #=============================================================================
 # SqliteProvider targets
@@ -193,3 +154,4 @@ VPATH := $(VPATH) $(SqliteProvider_LIBPATH) $(SqliteProvider_INCLUDES)
 SqliteProvider.dll: $(SqliteProvider_SOURCES) $(SqliteProvider_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SqliteProvider.Doc.xml $(CSCFLAGS) $(SqliteProvider_FLAGS) $(SqliteProvider_LIBS:%=/r:%) $(SqliteProvider_LIBPATH:%=/lib:%) $(SqliteProvider_SOURCES)
 
+include ../../common.mk

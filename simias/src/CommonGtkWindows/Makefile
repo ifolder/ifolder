@@ -32,8 +32,15 @@ ComGtkWinTests_STAGE_FILES =
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = 
+LIB_FILES = CommonGtkWindows.dll
+DATA_FILES = 
+TEST_BIN_FILES = CommonGtkWindowsTests.exe
+TEST_LIB_FILES = 
+TEST_DATA_FILES = 
 
-TARGETS = CommonGtkWindows.dll CommonGtkWindowsTests.exe
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = CommonGtkWindows.dll CommonGtkWindowsTests.exe
 CLEAN_FILES = GtkTraceWindow.xml
 NUNIT_TESTS = CommonGtkWindowsTests.exe
 STAGE_FILES = $(TARGETS)
@@ -55,7 +62,8 @@ CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
 STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
 
 # all
-all: $(TARGETS) $(STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES)
 
 # clean
 clean:
@@ -86,3 +94,6 @@ CommonGtkWindows.dll: $(CommonGtkWin_SOURCES) $(CommonGtkWin_RESOURCE) $(Commong
 
 CommonGtkWindowsTests.exe: $(ComGtkWinTests_SOURCES) $(ComGtkWinTests_RESOURCE) $(ComGtkWinTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:ComGtkWinTests.xml $(CSCFLAGS) $(ComGtkWinTests_FLAGS) $(ComGtkWinTests_LIBS:%=/r:%) $(ComGtkWinTests_LIBPATH:%=/lib:%) $(ComGtkWinTests_SOURCES)
+
+
+include ../../common.mk

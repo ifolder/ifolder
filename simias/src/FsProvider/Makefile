@@ -13,29 +13,9 @@ include ../../config.mk
 FsProvider_SOURCES = AssemblyInfo.cs FsProvider.cs FsResultSet.cs
 FsProvider_INCLUDES = 
 FsProvider_FLAGS = /t:library
-FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll StoreProvider.dll
-FsProvider_LIBPATH = ../stage
+FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll StoreProvider.dll
+FsProvider_LIBPATH = ../Configuration ../StoreProvider
 FsProvider_LDFLAGS = 
-
-#=============================================================================
-# StoreProvider variables
-#=============================================================================
-StoreProvider_SOURCES = ../StoreProvider/AssemblyInfo.cs ../StoreProvider/CSPException.cs ../StoreProvider/IProvider.cs ../StoreProvider/IResultSet.cs ../StoreProvider/Provider.cs ../StoreProvider/Query.cs ../StoreProvider/Record.cs
-StoreProvider_INCLUDES = 
-StoreProvider_FLAGS = /t:library
-StoreProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll
-StoreProvider_LIBPATH = ../StoreProvider ../StoreProvider/../stage
-StoreProvider_LDFLAGS = 
-
-#=============================================================================
-# ProviderTest variables
-#=============================================================================
-ProviderTest_SOURCES = ../StoreProvider/Test/AssemblyInfo.cs ../StoreProvider/Test/ProviderTests1.cs
-ProviderTest_INCLUDES = 
-ProviderTest_FLAGS = /t:library
-ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll nunit.framework.dll
-ProviderTest_LIBPATH = ../StoreProvider/Test ../StoreProvider/Test/../../stage ../StoreProvider/Test/../../../tools/NUnit/bin
-ProviderTest_LDFLAGS = 
 
 #=============================================================================
 # FsProviderTests variables
@@ -43,15 +23,22 @@ ProviderTest_LDFLAGS =
 FsProviderTests_SOURCES = FsProviderTests/AssemblyInfo.cs FsProviderTests/FsTests1.cs
 FsProviderTests_INCLUDES = 
 FsProviderTests_FLAGS = /t:library
-FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll StoreProvider.dll ProviderTest.dll
-FsProviderTests_LIBPATH = FsProviderTests FsProviderTests/../../../tools/NUnit/bin FsProviderTests/../../stage FsProviderTests/../../stage
+FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Configuration.dll StoreProvider.dll ProviderTest.dll
+FsProviderTests_LIBPATH = FsProviderTests ../../tools/NUnit/bin ../Configuration ../StoreProvider
 FsProviderTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = 
+LIB_FILES = FsProvider.dll
+DATA_FILES = 
+TEST_BIN_FILES = 
+TEST_LIB_FILES = FsProviderTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = FsProvider.dll StoreProvider.dll ProviderTest.dll FsProviderTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS =FsProvider.dll StoreProvider.dll ProviderTest.dll FsProviderTests.dll 
 CLEAN_FILES = Check.xml FsProvider.pdb FsProvider.Doc.xml Check.xml StoreProvider.pdb StoreProvider.Doc.xml Check.xml ProviderTest.pdb ProviderTest.Doc.xml Check.xml FsProviderTests.pdb FsProviderTests.Doc.xml  FsProvider.xml FsProvider.Doc.xml
 CLEAN_DIRS = bin obj ../StoreProvider/bin ../StoreProvider/obj ../StoreProvider/Test/bin ../StoreProvider/Test/obj FsProviderTests/bin FsProviderTests/obj 
 NUNIT_TESTS = FsProviderTests.dll 
@@ -82,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -167,3 +155,4 @@ VPATH := $(VPATH) $(FsProviderTests_LIBPATH) $(FsProviderTests_INCLUDES)
 FsProviderTests.dll: $(FsProviderTests_SOURCES) $(FsProviderTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:FsProviderTests.Doc.xml $(CSCFLAGS) $(FsProviderTests_FLAGS) $(FsProviderTests_LIBS:%=/r:%) $(FsProviderTests_LIBPATH:%=/lib:%) $(FsProviderTests_SOURCES)
 
+include ../../common.mk

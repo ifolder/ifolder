@@ -30,11 +30,11 @@ Configuration_LDFLAGS =
 #=============================================================================
 # globals
 #=============================================================================
-BIN_FILES = Configuration.dll
-LIB_FILES = 
+BIN_FILES =
+LIB_FILES = Configuration.dll
 DATA_FILES = 
-TEST_BIN_FILES = ConfTests.dll
-TEST_LIB_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = ConfTests.dll
 TEST_DATA_FILES = 
 
 TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)

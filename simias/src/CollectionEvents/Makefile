@@ -13,8 +13,8 @@ include ../../config.mk
 CollectionEventsTests_SOURCES = CollectionEventsTests/AssemblyInfo.cs CollectionEventsTests/CollectionEventsTests.cs
 CollectionEventsTests_INCLUDES = 
 CollectionEventsTests_FLAGS = /t:exe
-CollectionEventsTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll CollectionEvents.dll Common.dll
-CollectionEventsTests_LIBPATH = CollectionEventsTests CollectionEventsTests/../../../tools/NUnit/bin CollectionEventsTests/../../stage CollectionEventsTests/../../stage
+CollectionEventsTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Configuration.dll CollectionEvents.dll Common.dll
+CollectionEventsTests_LIBPATH = CollectionEventsTests ../../tools/NUnit/bin ../Common ../Configuration
 CollectionEventsTests_LDFLAGS = 
 
 #=============================================================================
@@ -24,7 +24,7 @@ CollectionEvents_SOURCES = AssemblyInfo.cs EventBroker.cs EventPublisher.cs Even
 CollectionEvents_INCLUDES = 
 CollectionEvents_FLAGS = /t:library
 CollectionEvents_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll
-CollectionEvents_LIBPATH = ../stage
+CollectionEvents_LIBPATH = ../Configuration
 CollectionEvents_LDFLAGS = 
 
 #=============================================================================
@@ -33,15 +33,22 @@ CollectionEvents_LDFLAGS =
 CsEventBroker_SOURCES = CsEventBroker/AssemblyInfo.cs CsEventBroker/CsEventBroker.cs
 CsEventBroker_INCLUDES = 
 CsEventBroker_FLAGS = /t:exe $(ICON_FLAG)CsEventBroker/App$(ICON_EXT)
-CsEventBroker_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll CollectionEvents.dll
-CsEventBroker_LIBPATH = CsEventBroker CsEventBroker/../../stage
+CsEventBroker_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll CollectionEvents.dll 
+CsEventBroker_LIBPATH = ../Common ../Configuration CsEventBroker
 CsEventBroker_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = CsEventBroker.exe
+LIB_FILES = CollectionEvents.dll
+DATA_FILES = 
+TEST_BIN_FILES = CollectionEventsTests.exe
+TEST_LIB_FILES = 
+TEST_DATA_FILES = 
 
-TARGETS = CollectionEventsTests.exe CollectionEvents.dll CsEventBroker.exe 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = CollectionEventsTests.exe CollectionEvents.dll CsEventBroker.exe 
 CLEAN_FILES = Check.xml CollectionEventsTests.pdb CollectionEventsTests.Doc.xml Check.xml CollectionEvents.pdb CollectionEvents.Doc.xml Check.xml CsEventBroker.pdb CsEventBroker.Doc.xml  CollectionEvents.xml CollectionEvents.Doc.xml
 CLEAN_DIRS = CollectionEventsTests/bin CollectionEventsTests/obj bin obj CsEventBroker/bin CsEventBroker/obj 
 NUNIT_TESTS = CollectionEventsTests.exe 
@@ -72,7 +79,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -140,4 +148,6 @@ VPATH := $(VPATH) $(CsEventBroker_LIBPATH) $(CsEventBroker_INCLUDES)
 
 CsEventBroker.exe: $(CsEventBroker_SOURCES) $(CsEventBroker_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CsEventBroker.Doc.xml $(CSCFLAGS) $(CsEventBroker_FLAGS) $(CsEventBroker_LIBS:%=/r:%) $(CsEventBroker_LIBPATH:%=/lib:%) $(CsEventBroker_SOURCES)
+
+include ../../common.mk
 

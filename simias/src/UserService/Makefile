@@ -13,15 +13,22 @@ include ../../config.mk
 UserService_SOURCES = AssemblyInfo.cs UserService.cs
 UserService_INCLUDES = 
 UserService_FLAGS = /t:library
-UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) CollectionEvents.dll
-UserService_LIBPATH = ../stage
+UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll CollectionEvents.dll
+UserService_LIBPATH = ../Configuration ../CollectionEvents
 UserService_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = 
+LIB_FILES = UserService.dll
+DATA_FILES = 
+TEST_BIN_FILES = 
+TEST_LIB_FILES = 
+TEST_DATA_FILES = 
 
-TARGETS = UserService.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = UserService.dll 
 CLEAN_FILES = Check.xml UserService.pdb UserService.Doc.xml  UserService.xml UserService.Doc.xml
 CLEAN_DIRS = bin obj 
 NUNIT_TESTS = 
@@ -52,7 +59,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -89,3 +97,4 @@ VPATH := $(VPATH) $(UserService_LIBPATH) $(UserService_INCLUDES)
 UserService.dll: $(UserService_SOURCES) $(UserService_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:UserService.Doc.xml $(CSCFLAGS) $(UserService_FLAGS) $(UserService_LIBS:%=/r:%) $(UserService_LIBPATH:%=/lib:%) $(UserService_SOURCES)
 
+include ../../common.mk

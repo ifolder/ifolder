@@ -30,8 +30,15 @@ CommonTests_LDFLAGS =
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = 
+LIB_FILES = Common.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = CommonTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = Common.dll CommonTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = Common.dll CommonTests.dll 
 CLEAN_FILES = Check.xml Common.pdb Common.Doc.xml Check.xml CommonTests.pdb CommonTests.Doc.xml  Common.xml Common.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = CommonTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(CommonTests_LIBPATH) $(CommonTests_INCLUDES)
 CommonTests.dll: $(CommonTests_SOURCES) $(CommonTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CommonTests.Doc.xml $(CSCFLAGS) $(CommonTests_FLAGS) $(CommonTests_LIBS:%=/r:%) $(CommonTests_LIBPATH:%=/lib:%) $(CommonTests_SOURCES)
 
+include ../../common.mk

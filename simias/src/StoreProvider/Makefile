@@ -14,7 +14,7 @@ StoreProvider_SOURCES = AssemblyInfo.cs CSPException.cs IProvider.cs IResultSet.
 StoreProvider_INCLUDES = 
 StoreProvider_FLAGS = /t:library
 StoreProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll
-StoreProvider_LIBPATH = ../stage
+StoreProvider_LIBPATH = ../Configuration
 StoreProvider_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ StoreProvider_LDFLAGS =
 ProviderTest_SOURCES = Test/AssemblyInfo.cs Test/ProviderTests1.cs
 ProviderTest_INCLUDES = 
 ProviderTest_FLAGS = /t:library
-ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll nunit.framework.dll
-ProviderTest_LIBPATH = Test Test/../../stage Test/../../../tools/NUnit/bin
+ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll nunit.framework.dll
+ProviderTest_LIBPATH = ../Configuration Test ../../tools/NUnit/bin
 ProviderTest_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = 
+LIB_FILES = StoreProvider.dll
+DATA_FILES = 
+TEST_BIN_FILES = 
+TEST_LIB_FILES = ProviderTest.dll
+TEST_DATA_FILES = 
 
-TARGETS = StoreProvider.dll ProviderTest.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = StoreProvider.dll ProviderTest.dll 
 CLEAN_FILES = Check.xml StoreProvider.pdb StoreProvider.Doc.xml Check.xml ProviderTest.pdb ProviderTest.Doc.xml  StoreProvider.xml StoreProvider.Doc.xml
 CLEAN_DIRS = bin obj Test/bin Test/obj 
 NUNIT_TESTS = 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(ProviderTest_LIBPATH) $(ProviderTest_INCLUDES)
 ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:ProviderTest.Doc.xml $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_SOURCES)
 
+include ../../common.mk
