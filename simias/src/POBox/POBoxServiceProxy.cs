@@ -27,7 +27,7 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     public POBoxService() {
-        this.Url = "http://192.168.1.112:8086/simias10/POBoxService.asmx";
+        this.Url = "http://137.65.57.4:8086/simias10/POBoxService.asmx";
     }
     
     /// <remarks/>
@@ -244,6 +244,9 @@ public class SubscriptionInformation {
     
     /// <remarks/>
     public string ToID;
+    
+    /// <remarks/>
+    public string ToNodeID;
     
     /// <remarks/>
     public string ToName;

@@ -406,6 +406,7 @@ namespace Simias.POBox
 							poBox.Commit(subscription);
 					
 							// create slave stub
+							subscription.ToMemberNodeID = subInfo.ToNodeID;
 							subscription.CreateSlave(poBox.StoreReference);
 						}
 

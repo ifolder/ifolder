@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -208,6 +209,11 @@ namespace Simias.POBox
 		/// The name of the property storing the subscription key.
 		/// </summary>
 		public static readonly string SubscriptionKeyProperty = "SbKey";
+
+		/// <summary>
+		/// The To member's node ID in the collection.
+		/// </summary>
+		public static readonly string ToMemberNodeIDProperty = "SbMemberNode";
 		
 		#endregion
 
@@ -628,6 +634,23 @@ namespace Simias.POBox
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the To user's NODE ID.
+		/// </summary>
+		public string ToMemberNodeID
+		{
+			get
+			{
+				Property p = Properties.GetSingleProperty(ToMemberNodeIDProperty);
+
+				return (p != null) ? p.ToString() : null;
+			}
+			set
+			{
+				Properties.ModifyProperty(ToMemberNodeIDProperty, value);
+			}
+		}
+
 		#endregion
 
 		#region Public Methods
@@ -760,6 +783,8 @@ namespace Simias.POBox
 		/// </summary>
 		public void CreateSlave(Store store)
 		{
+			ArrayList commitList = new ArrayList();
+
 			Collection c = new Collection(store, this.SubscriptionCollectionName,
 				this.SubscriptionCollectionID, this.DomainID);
 			
@@ -768,19 +793,24 @@ namespace Simias.POBox
 			c.SetType(c, this.SubscriptionCollectionType);
 			
 			// sync information
-			Property pr = new Property(SyncCollection.RolePropertyName,
-				SyncCollectionRoles.Slave);
+			Property pr = 
+				new Property(
+						SyncCollection.RolePropertyName,
+						SyncCollectionRoles.Slave);
 			pr.LocalProperty = true;
 			c.Properties.AddProperty(pr);
 			
-			Property pu = new Property(SyncCollection.MasterUrlPropertyName,
-				new Uri(this.SubscriptionCollectionURL));
+			Property pu = 
+				new Property(
+						SyncCollection.MasterUrlPropertyName,
+						new Uri(this.SubscriptionCollectionURL));
 			pu.LocalProperty = true;
 			c.Properties.AddProperty(pu);
 
-			// commit
-			c.Proxy = true;
-			c.Commit();
+			// Create the member as well
+			Member member = new Member(this.ToName, this.ToMemberNodeID, this.SubscriptionRights, null);
+			member.Proxy = true;
+			commitList.Add(member);
 
 			// check for a dir node
 			if (((this.DirNodeID != null) && (this.DirNodeID.Length > 0))
@@ -788,13 +818,14 @@ namespace Simias.POBox
 				&& (this.CollectionRoot != null) && (this.CollectionRoot.Length > 0))
 			{
 				string path = Path.Combine(this.CollectionRoot, this.DirNodeName);
-
 				DirNode dn = new DirNode(c, path, this.DirNodeID);
-
 				if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-				c.Commit(dn);
+				commitList.Add(dn);
 			}
+
+			c.Proxy = true;
+			c.Commit((Node[]) commitList.ToArray(typeof(Node)));
 		}
 
 		/// <summary>
@@ -836,6 +867,7 @@ namespace Simias.POBox
 			// state update
 			this.SubscriptionState = SubscriptionStates.Responded;
 			this.SubscriptionDisposition = SubscriptionDispositions.Accepted;
+			this.ToMemberNodeID = member.ID;
 
 			return member;
 		}

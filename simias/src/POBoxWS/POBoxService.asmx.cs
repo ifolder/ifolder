@@ -426,19 +426,15 @@ namespace Simias.POBoxService.Web
 				return(null);
 			}
 
-			// FIXME: got to be a better way
-			string colUrl =
-				(this.Context.Request.IsSecureConnection == true)
-				? "https://" : "http://";
+			UriBuilder colUri = 
+				new UriBuilder(
+					this.Context.Request.Url.Scheme,
+					this.Context.Request.Url.Host,
+					this.Context.Request.Url.Port,
+					this.Context.Request.ApplicationPath);
 
-			colUrl +=
-				this.Context.Request.Url.Host +
-				":" +
-				this.Context.Request.Url.Port.ToString() +
-				versionEndpoint;
-
-
-			SubscriptionInformation subInfo = new SubscriptionInformation(colUrl);
+			log.Info("URI: " + colUri.ToString());
+			SubscriptionInformation subInfo = new SubscriptionInformation(colUri.ToString());
 			subInfo.GenerateFromSubscription(cSub);
 
 			log.Info("POBoxService::GetSubscriptionInfo - exit");
@@ -535,6 +531,7 @@ namespace Simias.POBoxService.Web
 				cSub.FromIdentity = fromUserID;
 				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) rights;
 
+				/*
 				// FIXME: got to be a better way
 				string serviceUrl =
 					(this.Context.Request.IsSecureConnection == true)
@@ -546,9 +543,19 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Port.ToString() +
 						versionEndpoint +
 						"/POBoxService.asmx";
+				*/
 
-				log.Debug("  newup service url: " + serviceUrl);
-				cSub.POServiceURL = new Uri(serviceUrl);
+				UriBuilder poUri = 
+					new UriBuilder(
+						this.Context.Request.Url.Scheme,
+						this.Context.Request.Url.Host,
+						this.Context.Request.Url.Port,
+						this.Context.Request.ApplicationPath +
+						"/POBoxService.asmx");
+
+				log.Info("  newup service url: " + poUri.ToString());
+
+				cSub.POServiceURL = new Uri(poUri.ToString());
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
@@ -557,24 +564,16 @@ namespace Simias.POBoxService.Web
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 				cSub.MessageType = "Outbound";  // ????
 
-				/*
-				SyncCollection sc = new SyncCollection(sharedCollection);
-				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
-				*/
-				
-				// FIXME: got to be a better way
-				cSub.SubscriptionCollectionURL =
-					(this.Context.Request.IsSecureConnection == true)
-						? "https://" : "http://";
+				UriBuilder coUri = 
+					new UriBuilder(
+					this.Context.Request.Url.Scheme,
+					this.Context.Request.Url.Host,
+					this.Context.Request.Url.Port,
+					this.Context.Request.ApplicationPath);
 
-				cSub.SubscriptionCollectionURL +=
-					this.Context.Request.Url.Host +
-					":" +
-					this.Context.Request.Url.Port.ToString() +
-					this.versionEndpoint;
-
-				log.Debug("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
-				log.Debug("  getting the dir node"); 
+				cSub.SubscriptionCollectionURL = coUri.ToString();
+				log.Info("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
+ 
 				DirNode dirNode = sharedCollection.GetRootDirectory();
 				if(dirNode != null)
 				{
@@ -614,6 +613,7 @@ namespace Simias.POBoxService.Web
 		public string	FromID;
 		public string	FromName;
 		public string	ToID;
+		public string	ToNodeID;
 		public string	ToName;
 		public int		AccessRights;
 
@@ -648,6 +648,7 @@ namespace Simias.POBoxService.Web
 			this.FromID = cSub.FromIdentity;
 			this.FromName = cSub.FromName;
 			this.ToID = cSub.ToIdentity;
+			this.ToNodeID = cSub.ToMemberNodeID;
 			this.ToName = cSub.ToName;
 			this.AccessRights = (int) cSub.SubscriptionRights;
 
