@@ -24,9 +24,10 @@
 #define _SIMIAS_H 1
 
 #define SIMIAS_SUCCESS 0
-#define SIMIAS_ERROR_UNKNOWN		-1
-#define SIMIAS_ERROR_NOT_RUNNING	-101
-#define SIMIAS_ERROR_NO_CONFIG_FILE	-102
+#define SIMIAS_ERROR_UNKNOWN				-1
+#define SIMIAS_ERROR_NO_USER_PROFILE		-101
+#define SIMIAS_ERROR_NO_CONFIG_FILE			-102
+#define SIMIAS_ERROR_OPENING_CONFIG_FILE	-103
 
 /**
  * This function will return the full URL of where Simias is currently running.

@@ -22,30 +22,155 @@
  ***********************************************************************/
 #include "simias.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
+#ifdef DEBUG
+#define SIMIAS_DEBUG(args) (printf("libsimias: "), printf args)
+#else
+#define SIMIAS_DEBUG
+#endif
+
+#if defined(WIN32)
+#define DIR_SEP "\\"
+#else
+#define DIR_SEP "/"
+#endif
+
+/* Foward Declarations */
+static char *simias_get_user_profile_dir_path(char *dest_path);
+static char *parse_local_service_url(FILE *file);
+
+/* Function Implementations */
 int
 simias_get_local_service_url(char **url)
 {
-	char the_url[1024];
-	int b_found_url;
+	char user_profile_dir[1024];
+	char simias_config_file_path[1024];
+	FILE *simias_conf_file;
 	
-	b_found_url = 0;
-	
-#if defined(OSX)
-
-#elif defined(WIN32)
-
-#else
-	sprintf(the_url, "http://127.0.0.1:42227/simias10/boyd");
-	b_found_url = 1;
-#endif
-
-	if (b_found_url) {
-		*url = strdup(the_url);
-		return SIMIAS_SUCCESS;
+	if (!simias_get_user_profile_dir_path(user_profile_dir)) {
+		return SIMIAS_ERROR_NO_USER_PROFILE;
 	}
 
-	return SIMIAS_ERROR_UNKNOWN;
+	SIMIAS_DEBUG((stderr, "User Profile Dir: %s\n", user_profile_dir));
+
+	sprintf(simias_config_file_path, "%s%sSimias.config",
+			user_profile_dir, DIR_SEP);
+	
+	SIMIAS_DEBUG((stderr, "Simias Config File: %s\n", simias_config_file_path));
+
+	/* Attempt to open the file */
+	simias_conf_file = fopen(simias_config_file_path, "r");
+	if (!simias_conf_file) {
+		SIMIAS_DEBUG((stderr, "Error opening \"%s\"\n", simias_config_file_path));
+		return SIMIAS_ERROR_OPENING_CONFIG_FILE;
+	}
+
+	*url = parse_local_service_url(simias_conf_file);
+
+	fclose(simias_conf_file);
+	
+	if (!(*url)) {
+		SIMIAS_DEBUG((stderr, "Couldn't find Local Service URL in \"%s\"\n",
+					 simias_config_file_path));
+		return SIMIAS_ERROR_UNKNOWN;
+	}
+	
+	return SIMIAS_SUCCESS;
+}
+
+static char *
+simias_get_user_profile_dir_path(char *dest_path)
+{
+#if defined(WIN32)
+	char *user_profile;
+	/* Build the configuration file path. */
+	user_profile = getenv("USERPROFILE");
+	if (user_profile == NULL || strlen(user_profile) <= 0) {
+		SIMIAS_DEBUG((stderr, "Could not get the USERPROFILE directory\n"));
+		return NULL;
+	}
+
+	sprintf (dest_path, user_profile);
+#else
+	char *home_dir;
+	char dot_local_path[1024];
+	char dot_local_share_path[1024];
+	char dot_local_share_simias_path[1024];
+	
+	home_dir = getenv ("HOME");
+	if (home_dir == NULL || strlen(home_dir) <= 0) {
+		SIMIAS_DEBUG((stderr, "Could not get the HOME directory\n"));
+		return NULL;
+	}
+	
+	sprintf (dot_local_share_simias_path, "%s%s", home_dir, "/.local/share/simias");
+	sprintf (dest_path, dot_local_share_simias_path);
+#endif
+
+	return dest_path;
+}
+
+/**
+ * Parse through the file looking for the following line:
+ * 
+ * 	<setting name="WebServiceUri" value="http://127.0.0.1:12345/simias10/username"/>
+ * 
+ * Return a strdup of the URL inside "value" (the caller must free the char *
+ * when finished with it).
+ */
+static char *
+parse_local_service_url(FILE *file)
+{
+	long file_size;
+	char *buffer;
+	char *setting_idx;
+	char *value_idx;
+	char *start_quote_idx;
+	char *uri;
+	int b_uri_found;
+	
+	b_uri_found = 0;
+	
+	/* Determine the file size */
+	fseek(file, 0, SEEK_END);
+	file_size = ftell(file);
+	rewind(file);
+	
+	/* Allocate memory to suck in the whole file into the buffer */
+	buffer = (char *) malloc(file_size);
+	if (!buffer) {
+		SIMIAS_DEBUG((stderr, "Couldn't allocate memory to read Simias.config\n"));
+		return NULL;
+	}
+	
+	/* Read the contents of the file into the buffer */
+	fread(buffer, 1, file_size, file);
+	
+	/* Now parse for the URL */
+	/* Look for "WebServiceUri" */
+	setting_idx = strstr(buffer, "WebServiceUri");
+	if (setting_idx) {
+		value_idx = strstr(setting_idx, "value");
+		if (value_idx) {
+			start_quote_idx = strstr(value_idx, "\"");
+			if (start_quote_idx) {
+				uri = strtok(start_quote_idx + 1, "\"");
+				if (uri) {
+					b_uri_found = 1;
+				}
+			}
+		}
+	}
+	
+	/* Free up buffer memory */
+	free(buffer);
+	
+	if (!b_uri_found) {
+		return NULL;
+	}
+
+	return strdup(uri);
 }
