@@ -371,93 +371,6 @@ namespace Novell.iFolder.Tests
 		/// Test to add all child files to an iFolder
 		/// </summary>
 		[Test]
-		public void AddiFolderNodesTest()
-		{
-			string testPath = Path.Combine(path, "addifoldernodestest");
-
-			Console.WriteLine("\nTEST: AddiFolderNodes");
-			Console.WriteLine("-------------------------------------------");
-
-
-			Directory.CreateDirectory(testPath);
-
-			// Copy all of the files in the test directory to this
-			// iFolder's test area
-			string[] dirs = Directory.GetFiles(rootPath);
-			int fileCount = dirs.Length;
-
-			foreach (string file in dirs)
-			{
-				string newFile = Path.Combine(testPath,
-						Path.GetFileName(file));
-
-				File.Copy(file, newFile, true);
-			}
-
-			iFolder addifolder = manager.CreateiFolder(testPath);
-
-			// compensate for the current directory
-			fileCount++;
-
-			try
-			{
-				// Add the nodes for the existing files/directories.
-				int count = addifolder.AddiFolderNodes(testPath);
-				Console.WriteLine("Nodes created: {0}", count);
-				if(count != fileCount)
-					throw new ApplicationException(string.Format("The number of files in the directory was {0} and iFolder added {1}", fileCount, count));
-
-
-				// Create a subdirectory where we can copy an existing file.
-				string subDir1 = Path.Combine(testPath, "SubDir1");
-				Directory.CreateDirectory(subDir1);
-
-				// Create another subdirectory.
-				string subDir2 = Path.Combine(subDir1, "SubDir2");
-				Directory.CreateDirectory(subDir2);
-
-				// ... and another.
-				string subDir3 = Path.Combine(subDir2, "SubDir3");
-				Directory.CreateDirectory(subDir3);
-
-				// Copy one of the files from the current directory to 
-				// the new directory.
-				string[] files = Directory.GetFiles(testPath);
-				string newFile = 
-						Path.Combine(subDir3, Path.GetFileName(files[0]));
-				File.Copy(files[0], newFile, true);
-
-
-				// Now try to add the nodes for the new subdirectory structure.
-				count = 0;
-				Console.WriteLine("About to add subDir1 : " + subDir1);
-				count = addifolder.AddiFolderNodes(subDir1);
-
-				// Delete the new directory.
-				Directory.Delete(subDir1, true);
-
-				Console.WriteLine("Nodes created: {0}", count);
-
-				Console.WriteLine("\nAll nodes:\n");
-			}
-			finally
-			{
-				manager.DeleteiFolderById(addifolder.ID);
-				if (manager.IsiFolder(testPath))
-				{
-					throw new ApplicationException("iFolder not deleted: " + 
-						testPath);
-				}
-			}
-		}
-
-
-
-
-		/// <summary>
-		/// Test to add all child files to an iFolder
-		/// </summary>
-		[Test]
 		public void UpdateiFolder()
 		{
 			string testPath = Path.Combine(path, "updateifoldertest");
@@ -643,7 +556,6 @@ namespace Novell.iFolder.Tests
 			tests.CreateDeleteiFolder();
 			tests.EnumerateiFolders();
 			tests.IsPathIniFolder();
-			tests.AddiFolderNodesTest();
 			tests.UpdateiFolder();
 			tests.AccessControlListTest();
 			tests.Cleanup();

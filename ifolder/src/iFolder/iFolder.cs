@@ -28,7 +28,6 @@ using System.Net;
 
 using Simias;
 using Simias.Storage;
-using Simias.Sync;
 using Simias.Invite;
 using Novell.AddressBook;
 

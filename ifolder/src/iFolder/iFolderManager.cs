@@ -27,7 +27,6 @@ using System.IO;
 
 using Simias;
 using Simias.Storage;
-using Simias.Sync;
 using Simias.Invite;
 using Novell.AddressBook;
 
@@ -36,12 +35,11 @@ namespace Novell.iFolder
 	/// <summary>
 	/// Provides methods to manipulate iFolders.
 	/// </summary>
-	public class iFolderManager : IEnumerable, IEnumerator
+	public class iFolderManager : IEnumerable
 	{
 		#region Class Members
 		internal Store						store;
 		internal Novell.AddressBook.Manager	abMan;
-		private	IEnumerator	storeEnum = null;
 		#endregion
 
 		#region Constructors
@@ -338,49 +336,25 @@ namespace Novell.iFolder
 		/// </remarks>
 		public bool CanBeiFolder( string path )
 		{
-			try
+			bool isiFolder = true;
+
+			// Create a normalized path that can be compared on any platform.
+			Uri nPath = new Uri( path );
+
+			foreach ( iFolder ifolder in this )
 			{
-				// Replace slash/backslash with backslash/slash as needed
-				path = path.Replace(Path.AltDirectorySeparatorChar, 
-						Path.DirectorySeparatorChar);
+				Uri iPath = new Uri( ifolder.LocalPath );
 
-				foreach(iFolder ifolder in this)
+				// Check if the specified path is subordinate to or a parent of the iFolder root path.
+				if ( nPath.LocalPath.StartsWith( iPath.LocalPath ) || iPath.LocalPath.StartsWith( nPath.LocalPath ) )
 				{
-					// Adding a separator Char on the end of each so we
-					// can really match if this is a path
-					// /home/calvin should not match
-					// /home/calvin's stuff
-					// but
-					// /home/calvin should match
-					// /home/calvin/files
-					// Adding a slash on the end of each will test this
-					// correctly
-					string rootPath = ifolder.LocalPath + 
-							Path.DirectorySeparatorChar.ToString();
-					string testPath = path + 
-							Path.DirectorySeparatorChar.ToString();
-
-					// Check if path is within the iFolder
-					if (testPath.StartsWith(rootPath))
-						return false;
-
-					// Check if path contains the iFolder
-					if(rootPath.StartsWith(testPath))
-						return false;
+					isiFolder = false;
+					break;
 				}
 			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
-				return false;
-			}
 
-			return true;
+			return isiFolder;
 		}
-
-
-
 
 		/// <summary>
 		/// Checks whether a given path is within an existing iFolder.
@@ -392,45 +366,27 @@ namespace Novell.iFolder
 		/// <b>true</b> if <paramref name="path"/> is in an existing iFolder;
 		/// otherwise, <b>false</b>.
 		/// </returns>
-		public bool IsPathIniFolder(string path)
+		public bool IsPathIniFolder( string path )
 		{
-			try
-			{
-				// Replace slash/backslash with backslash/slash as needed
-				path = path.Replace(Path.AltDirectorySeparatorChar,
-						Path.DirectorySeparatorChar);
+			bool iniFolder = false;
 
-				foreach(iFolder ifolder in this)
+			// Create a normalized path that can be compared on any platform.
+			Uri nPath = new Uri( path );
+
+			foreach ( iFolder ifolder in this )
+			{
+				Uri iPath = new Uri( ifolder.LocalPath );
+
+				// Check if the specified path is subordinate to or a parent of the iFolder root path.
+				if ( nPath.LocalPath.StartsWith( iPath.LocalPath ) )
 				{
-					// Adding a separator Char on the end of each so we
-					// can really match if this is a path
-					// /home/calvin should not match
-					// /home/calvin's stuff
-					// but
-					// /home/calvin should match
-					// /home/calvin/files
-					// Adding a slash on the end of each will test this
-					// correctly.
-					string rootPath = ifolder.LocalPath +
-							Path.DirectorySeparatorChar.ToString();
-					string testPath = path + 
-							Path.DirectorySeparatorChar.ToString();
-					if (testPath.StartsWith(rootPath))
-					{
-						return true;
-					}
+					iniFolder = true;
+					break;
 				}
 			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
-			}
-			return false;
+
+			return iniFolder;
 		}
-
-
-
 
 		/// <summary>
 		/// Accepts an invitation to share an iFolder.
@@ -444,22 +400,18 @@ namespace Novell.iFolder
 		/// <exception cref="ApplicationException">
 		/// <paramref name="path"/> is within an existing iFolder."
 		/// </exception>
-		public void AcceptInvitation(Invitation invitation, string path)
+		public void AcceptInvitation( Invitation invitation, string path )
 		{
 			// Check the path to see if it is inside an existing iFolder
-			if(IsPathIniFolder(path))
+			if( IsPathIniFolder( path ) )
 			{
-				throw new ApplicationException("The path specified is " +
-						"located within an existing iFolder" );
+				throw new ApplicationException("The path specified is " + "located within an existing iFolder" );
 			}
 
 			invitation.RootPath = path;
-
-			InvitationService.Accept(store, invitation);
+			InvitationService.Accept( store, invitation );
 		}
-
-
-#endregion
+		#endregion
 
 		#region IEnumerable
 		/// <summary>
@@ -472,81 +424,151 @@ namespace Novell.iFolder
 		/// </returns>
 		public IEnumerator GetEnumerator()
 		{
-			//Console.WriteLine("Manager::GetEnumerator called");
-			storeEnum = store.GetEnumerator();
-			return(this);
+			return new iFolderEnumerator( store );
 		}
 
-
-
-
 		/// <summary>
-		/// Advances the enumerator to the next iFolder in the store.
+		/// Enumerator class for the Store object that allows enumeration of the Collection objects
+		/// within the Store.
 		/// </summary>
-		/// <returns>
-		/// <b>true</b> if the enumerator was successfully advanced to the
-		/// next iFolder; <b>false</b> if the enumerator has passed the end
-		/// of the store.
-		/// </returns>
-		public bool MoveNext()
+		private class iFolderEnumerator : ICSEnumerator
 		{
-			//Console.WriteLine("Manager::MoveNext called");
+			#region Class Members
+			/// <summary>
+			/// Indicates whether the object has been disposed.
+			/// </summary>
+			private bool disposed = false;
 
-			// Need to make sure the next object is an iFolder collection
-			while(storeEnum.MoveNext() == true)
+			/// <summary>
+			///  Collection Store object associated with this iFolder.
+			/// </summary>
+			private Store store;
+
+			/// <summary>
+			/// Object used to enumerate the iFolder collections.
+			/// </summary>
+			private ICSEnumerator enumerator;
+			#endregion
+
+			#region Constructor
+			/// <summary>
+			/// Constructor for the StoreEnumerator class.
+			/// </summary>
+			/// <param name="storeObject">Store object where to enumerate the collections.</param>
+			public iFolderEnumerator( Store storeObject )
 			{
-				Collection tmpCollection = (Collection) storeEnum.Current;
+				// Get all of the collections that are of iFolder type and save the enumerator to the results.
+				store = storeObject;
+				enumerator = store.GetCollectionsByType( iFolder.iFolderType ).GetEnumerator();
+			}
+			#endregion
 
-				if (tmpCollection.Type == iFolder.iFolderType)
+			#region IEnumerator Members
+			/// <summary>
+			/// Advances the enumerator to the next iFolder in the store.
+			/// </summary>
+			/// <returns>
+			/// <b>true</b> if the enumerator was successfully advanced to the
+			/// next iFolder; <b>false</b> if the enumerator has passed the end
+			/// of the store.
+			/// </returns>
+			public bool MoveNext()
+			{
+				if ( disposed )
 				{
-					return (true);
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return enumerator.MoveNext();
+			}
+
+			/// <summary>
+			/// Gets the current iFolder in the store.
+			/// </summary>
+			/// <returns>
+			/// An <see cref="iFolder"/> for the current iFolder.
+			/// </returns>
+			/// <remarks>
+			/// This property returns the current element in the enumerator.
+			/// </remarks>
+			public object Current
+			{
+				get	
+				{ 
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return GetiFolderById( ( enumerator.Current as ShallowNode ).ID ); 
 				}
 			}
 
-			return(false);
-		}
-
-
-
-
-		/// <summary>
-		/// Gets the current iFolder in the store.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="iFolder"/> for the current iFolder.
-		/// </returns>
-		/// <remarks>
-		/// This property returns the current element in the enumerator.
-		/// </remarks>
-		public object Current
-		{
-			get
+			/// <summary>
+			/// Sets the enumerator to its initial position, which is before the
+			/// first iFolder in the store.
+			/// </summary>
+			public void Reset()
 			{
-				//Console.WriteLine("Manager::Current called");
-				Collection currentCollection = (Collection) storeEnum.Current;
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-				iFolder ifolder =
-					this.GetiFolderById( (string) currentCollection.
-						Properties.GetSingleProperty( Property.CollectionID ).
-						Value );
-				//Console.WriteLine("   Name: {0}", addrBook.Name);
-				return(ifolder);
+				enumerator.Reset();
 			}
+			#endregion
+
+			#region IDisposable Members
+			/// <summary>
+			/// Allows for quick release of managed and unmanaged resources.
+			/// Called by applications.
+			/// </summary>
+			public void Dispose()
+			{
+				Dispose( true );
+				GC.SuppressFinalize( this );
+			}
+
+			/// <summary>
+			/// Dispose( bool disposing ) executes in two distinct scenarios.
+			/// If disposing equals true, the method has been called directly
+			/// or indirectly by a user's code. Managed and unmanaged resources
+			/// can be disposed.
+			/// If disposing equals false, the method has been called by the 
+			/// runtime from inside the finalizer and you should not reference 
+			/// other objects. Only unmanaged resources can be disposed.
+			/// </summary>
+			/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
+			private void Dispose( bool disposing )
+			{
+				// Check to see if Dispose has already been called.
+				if ( !disposed )
+				{
+					// Protect callers from accessing the freed members.
+					disposed = true;
+
+					// If disposing equals true, dispose all managed and unmanaged resources.
+					if ( disposing )
+					{
+						// Dispose managed resources.
+						enumerator.Dispose();
+					}
+				}
+			}
+		
+			/// <summary>
+			/// Use C# destructor syntax for finalization code.
+			/// This destructor will run only if the Dispose method does not get called.
+			/// It gives your base class the opportunity to finalize.
+			/// Do not provide destructors in types derived from this class.
+			/// </summary>
+			~iFolderEnumerator()      
+			{
+				Dispose( false );
+			}
+			#endregion
 		}
-
-
-
-
-		/// <summary>
-		/// Sets the enumerator to its initial position, which is before the
-		/// first iFolder in the store.
-		/// </summary>
-		public void Reset()
-		{
-			//Console.WriteLine("Manager::Reset called");
-			storeEnum.Reset();
-		}
-
-#endregion
+		#endregion
 	}
 }
