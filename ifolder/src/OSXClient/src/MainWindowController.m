@@ -75,10 +75,8 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
-	[self addLog:@"initializing Simias Events"];
-	[self initializeSimiasEvents];
-
 	[self addLog:@"Starting Simias Process"];
+	NSLog(@"Starting Simias Process");
     [NSThread detachNewThreadSelector:@selector(startSimiasThread:)
         toTarget:self withObject:nil];
 
@@ -97,19 +95,24 @@
 
 - (void)startSimiasThread:(id)arg
 {
+	NSLog(@"In Starting Simias Thread");
     NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
 
 	BOOL simiasRunning = NO;
-
+/*
 	@try
 	{
+		NSLog(@"Checking for existing Simias...");
 		simiasRunning = [ifolderService Ping];
 	}
 	@catch (NSException *e)
 	{
+		NSLog(@"Simias is not running");
 		simiasRunning = NO;
 	}
 
+	NSLog(@"Out of check...");
+*/
 
 	if(!simiasRunning)
 	{
@@ -140,6 +143,10 @@
 
 - (void)postSimiasLoadSetup:(id)arg
 {
+	[self addLog:@"initializing Simias Events"];
+	NSLog(@"initializing Simias Events");
+	[self initializeSimiasEvents];
+
 	[self addLog:@"iFolder reading all domains"];
 	@try
 	{
@@ -510,6 +517,22 @@
 
 
 
+- (void)addLogTS:(NSString *)entry
+{
+	[self performSelectorOnMainThread:@selector(addLog:) 
+				withObject:entry waitUntilDone:YES ];	
+}
+
+
+
+- (void)showLoginWindowTS:(NSString *)domainID
+{
+	[self performSelectorOnMainThread:@selector(showLoginWindow:) 
+				withObject:domainID waitUntilDone:YES ];	
+}
+
+
+
 - (void)addLog:(NSString *)entry
 {
 	if(syncLogController != nil)
@@ -517,7 +540,6 @@
 		[syncLogController logEntry:entry];
 	}
 }
-
 
 
 

@@ -26,7 +26,7 @@
 
 @interface LoginWindowController : NSWindowController
 {
-    IBOutlet NSTextField *passwordField;
+    IBOutlet NSSecureTextField *passwordField;
     IBOutlet NSTextField *serverField;
 	
 	NSString *authDomainID;

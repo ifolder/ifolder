@@ -37,12 +37,13 @@
 
 - (IBAction)authenticate:(id)sender
 {
-	NSString *password = [passwordField stringValue];
+	[passwordField selectText:self];
 	
 	if( ( [authDomainID length] > 0 ) &&
-		( [password length] > 0 ) )
+		( [[passwordField stringValue] length] > 0 ) )
 	{
-		if([[NSApp delegate] authenticateToDomain:authDomainID withPassword:password ] == YES)
+		if([[NSApp delegate] authenticateToDomain:authDomainID 
+						withPassword:[passwordField stringValue] ] == YES)
 			[[self window] orderOut:nil];
 	}
 }
@@ -50,8 +51,11 @@
 
 - (void)showLoginWindow:(id)sender withHost:(NSString *)host withDomain:(NSString *)domainID
 {
-	[serverField setStringValue:host];
-	authDomainID = domainID;
+	if(authDomainID == nil)
+	{
+		[serverField setStringValue:host];
+		authDomainID = [[NSString stringWithString:domainID] retain];
+	}
 	
 	[self showWindow:sender];
 }
