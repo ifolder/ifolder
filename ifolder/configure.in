@@ -194,8 +194,6 @@ case $IFOLDER_OS in
         # Set pkg-config variables
         #
         PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
-        UI_PKG_CONFIG_REQUIRES="ifolder = $VERSION gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        UI_PKG_CONFIG_LIBS="/r:TrayIcon.dll"
     ;;
     #
     # Linux-specific configuration
@@ -341,7 +339,7 @@ AC_SUBST(TLBX)
 #
 PKG_CONFIG_REQUIRES="simias >= 1.0"
 PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll"
+PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
@@ -453,29 +451,6 @@ esac
 
 case $IFOLDER_OS in
     linux)
-        PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
-        GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
-        GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
-        AC_SUBST(GTK_SHARP_PREFIX)
-        AC_SUBST(GTK_SHARP_LIBS)
-    
-        PKG_CHECK_MODULES(GNOME_SHARP, gnome-sharp >= $GNOME_SHARP_MINIMUM_VERSION)
-        AC_SUBST(GNOME_SHARP_PREFIX)
-        AC_SUBST(GNOME_SHARP_LIBS)
-    
-        PKG_CHECK_MODULES(GLADE_SHARP, glade-sharp >= $GLADE_SHARP_MINIMUM_VERSION)
-        AC_SUBST(GLADE_SHARP_PREFIX)
-        AC_SUBST(GLADE_SHARP_LIBS)
-    
-        PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
-        AC_SUBST(GDK20_CFLAGS)
-        AC_SUBST(GDK20_LIBS)
-    
-        PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
-        AC_SUBST(ATK_CFLAGS)
-        AC_SUBST(ATK_LIBS)
-    ;;
-    darwin)
         PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
         GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
         GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
