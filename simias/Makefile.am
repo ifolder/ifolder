@@ -22,7 +22,7 @@ simias-client-c.pc: $(srcdir)/simias-client-c.pc.in
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
-install-exec-local:
+install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(PACKAGE)*.pc $(DESTDIR)$(libdir)/pkgconfig

@@ -45,7 +45,7 @@ DEBUG_FILES = Simias.pdb
 endif
 endif
 
-install-exec-local: Simias.dll
+install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(sysconfdir) $(DESTDIR)$(datadir)/simias
 	$(INSTALL_PROGRAM) Simias.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(srcdir)/$(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DESTDIR)$(webbindir)
