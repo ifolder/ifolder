@@ -1140,6 +1140,32 @@ namespace Simias.Storage.Provider.Sqlite
 			return (doc);
 		}
 
+		/// <summary>
+		/// Called to get a shallow record.
+		/// </summary>
+		/// <param name="recordId">The record id to get.</param>
+		/// <returns>XmlDocument describing the shallow Record.</returns>
+		public XmlDocument GetShallowRecord(string recordId)
+		{
+			XmlDocument doc = null;
+			
+			string Name;
+			string Type;
+			InternalConnection conn = manager.GetConn();
+			SqliteConnection sqliteDb = conn.sqliteDb;
+			IDbCommand command = conn.command;
+			if (RecordTable.Select(recordId, command, out Name, out Type))
+			{
+				doc = new XmlDocument();
+				XmlElement node, root;
+				root = doc.CreateElement(XmlTags.ObjectListTag);
+				doc.AppendChild(root);
+				node = new Record(Name, recordId, Type).ToXml(doc);			
+				root.AppendChild(node);
+			}
+			return (doc);
+		}
+
 		#endregion
 		
 		#region Query Calls
