@@ -152,6 +152,7 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
+        EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -163,9 +164,12 @@ case $SIMIAS_OS in
         NUNITFLAGS_DEBUG=''
 	MONO=mono
         NUNITFLAGS_OPTIMIZE=''
+        OBJ_EXT='.o'
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
+        SHARED_LIB_EXT='.dylib'
+        SHARED_LIB_FLAG='-shared'
         SQLITELIB="sqlite"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
     ;;
@@ -176,6 +180,7 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
+        EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         INSTALL_EXE_OPTS='--mode=644'
@@ -186,9 +191,12 @@ case $SIMIAS_OS in
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
+        OBJ_EXT='.o'
         REPORT_DIR='$(DESTDIR)$(bindir)'
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
+        SHARED_LIB_EXT='.so'
+        SHARED_LIB_FLAG='-shared'
         SQLITELIB="libsqlite.so"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
     ;;
@@ -196,6 +204,7 @@ case $SIMIAS_OS in
     # Windows-specific configuration
     #
     windows)
+        EXE_EXT='.exe'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''
@@ -206,9 +215,12 @@ case $SIMIAS_OS in
         NUNIT_FLAGS='/nologo'
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
+        OBJ_EXT='.obj'
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         SEP='$(EMPTY)\\$(EMPTY)'
+        SHARED_LIB_EXT='.dll'
+        SHARED_LIB_FLAG='-dll'
         SQLITELIB="sqlite.dll"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
         #
