@@ -65,14 +65,17 @@ namespace Simias.Sync
 			this.syncManager = storeManager.Manager;
 			this.storeManager = storeManager;
 			
-			// open store and collection
+			// open store
 			// note: the store provider requires that we open a new store for each thread
 			store = new Store(syncManager.Config);
-			collection = new SyncCollection(store.GetCollectionByID(id));
-			Debug.Assert(collection != null);
 
 			// note: we need to revert any internal impersonations
 			store.Revert();
+
+			// open collection			
+			collection = new SyncCollection(store.GetCollectionByID(id));
+			Debug.Assert(collection != null);
+
 		}
 
 		/// <summary>
