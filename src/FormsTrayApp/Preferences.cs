@@ -2268,7 +2268,7 @@ namespace Novell.FormsTrayApp
 				{
 					try
 					{
-						ifWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
+						simiasWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
 						lvi.Remove();
 
 						string defaultDomainID = null;

@@ -1517,30 +1517,6 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that removes a domain account from the workstation.
-		/// </summary>
-		/// <param name = "DomainID">
-		/// The ID of the domain that the account belongs to.
-		/// </param>
-		/// <param name = "LocalOnly">
-		/// If true then the account is only removed from this workstation.
-		/// If false, then the account will be deleted from every workstation 
-		/// that the user owns.
-		/// </param>
-		[WebMethod(Description="Removes a domain account from the workstation")]
-		[SoapDocumentMethod]
-		public void LeaveDomain(	string DomainID,
-									bool LocalOnly)
-		{
-			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
-			da.Unattach(DomainID, LocalOnly);
-		}
-
-
-
-
-
-		/// <summary>
 		/// WebMethod that retuns all of an ifolder's Conflicts
 		/// </summary>
 		/// <param name = "iFolderID">
@@ -1714,36 +1690,6 @@ namespace Novell.iFolder.Web
 		
 		
 		
-		/// <summary>
-		/// WebMethod that changes the default domain.
-		/// </summary>
-		/// <param name="domainID">The ID of the domain to set as the default.</param>
-		[WebMethod(Description="Change the default domain to the specified domain ID")]
-		[SoapDocumentMethod]
-		public void SetDefaultDomain(string domainID)
-		{
-			SharedCollection.SetDefaultDomain(domainID);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets the ID of the default domain.
-		/// </summary>
-		/// <returns>The ID of the default domain.</returns>
-		[WebMethod(Description="Get the ID of the default domain")]
-		[SoapDocumentMethod]
-		public string GetDefaultDomainID()
-		{
-			Store store = Store.GetStore();
-
-			return store.DefaultDomain;
-		}
-
-
-
-
 		/// <summary>
 		/// WebMethod that deletes a File Size Limit policy from an iFolder.
 		/// </summary>
