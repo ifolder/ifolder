@@ -129,6 +129,11 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "src\AcceptanceTests\SyncTests.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\AddressBook\Address.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -179,15 +184,11 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Agent\Library\Agent.cs"
+                    RelPath = "src\AddressBook\AddressBookTests\AddressBookTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <File
-                    RelPath = "src\Agent\Library\IAgentService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
+                <Folder RelPath = "src\AddressBook\SimpleTests\" />
                 <File
                     RelPath = "src\CollectionEvents\CollectionEventArgs.cs"
                     SubType = "Code"
@@ -230,6 +231,11 @@
                 />
                 <File
                     RelPath = "src\CollectionEvents\NodeEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\CollectionEvents\CollectionEventsTests\CollectionEventsTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -339,6 +345,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\CollectionStoreTests\CollectionStoreTests.cs"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Common\Library\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -389,6 +399,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Common\Tests\CommonTests.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\FsWatcher\FsWatcher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -400,6 +415,16 @@
                 />
                 <File
                     RelPath = "src\Invitation\Library\InvitationService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Invitation\SmtpProvider\SmtpInvitationProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Invitation\Tests\InvitationTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -425,6 +450,11 @@
                 />
                 <File
                     RelPath = "src\Location\Library\MDnsLocationProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Location\Tests\LocationTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -499,7 +529,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\simias.dll\AssemblyInfo.cs"
+                    RelPath = "src\Service\ServiceTests\ServiceTests.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Simias.dll\AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -614,6 +649,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\SqliteProvider\SqliteProviderTests\SqliteTests1.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\SqliteProvider\SqliteWrapper\SqliteCommand.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -690,6 +730,11 @@
                 />
                 <File
                     RelPath = "src\StoreProvider\Record.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\StoreProvider\Test\ProviderTests1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -784,6 +829,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\SyncCommon\Tests\SyncCommonTests.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\SyncManager\Library\SyncChannel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -829,7 +879,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Invitation\SmtpProvider\SmtpInvitationProvider.cs"
+                    RelPath = "src\SyncManager\Tests\SyncManagerTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

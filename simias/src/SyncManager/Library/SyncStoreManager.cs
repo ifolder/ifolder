@@ -76,6 +76,7 @@ namespace Simias.Sync
 
 			// kludge thread
 			worker = new Thread(new ThreadStart(this.DoWork));
+			worker.Priority = ThreadPriority.BelowNormal;
 		}
 
 		/// <summary>

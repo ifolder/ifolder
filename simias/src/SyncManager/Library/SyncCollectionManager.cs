@@ -155,6 +155,7 @@ namespace Simias.Sync
 				
 				// create worker thread
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));
+				syncWorkerThread.Priority = ThreadPriority.BelowNormal;
 				working = true;
 				syncWorkerThread.Start();
 			}
