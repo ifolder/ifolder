@@ -380,7 +380,7 @@ case $IFOLDER_OS in
         PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
     GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
     GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
-    test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
+#    test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
     AC_SUBST(GTK_SHARP_PREFIX)
     
         PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
