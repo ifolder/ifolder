@@ -28,12 +28,14 @@ endif
 
 install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) SimpleServer.xml $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
 
 uninstall-local:
 
 installcheck-local: install
 	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTests.test.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(webbindir); rm -f  SimpleServer.xml
 	
 .PHONY: test
 test: installcheck
