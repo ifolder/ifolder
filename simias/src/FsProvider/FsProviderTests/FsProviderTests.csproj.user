@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\simias\tools\NUnit\bin\;C:\dev\simias\src\StoreProvider\;C:\dev\denali\src\stage\;C:\dev\denali\src\StoreProvider\bin\Debug\;C:\dev\denali\tools\NUnit\bin\;C:\dev\denali\src\StoreProvider\;C:\dev\denali\src\StoreProvider\Test\;C:\ifolder\denali\tools\NUnit\bin\;C:\ifolder\denali\src\stage\" >
+            <Settings ReferencePath = "C:\dev\simias\tools\NUnit\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
@@ -11,11 +11,11 @@
                     RemoteDebugEnabled = "false"
                     RemoteDebugMachine = ""
                     StartAction = "Program"
-                    StartArguments = "..\..\..\..\stage\FsProviderTests.dll"
+                    StartArguments = "FsProvider.dll"
                     StartPage = ""
-                    StartProgram = "C:\dev\denali\tools\NUnit\bin\nunit-gui.exe"
+                    StartProgram = "tools\NUnit\bin\nunit-gui.exe"
                     StartURL = ""
-                    StartWorkingDirectory = ""
+                    StartWorkingDirectory = "stage"
                     StartWithIE = "false"
                 />
                 <Config
@@ -26,12 +26,12 @@
                     EnableSQLServerDebugging = "false"
                     RemoteDebugEnabled = "false"
                     RemoteDebugMachine = ""
-                    StartAction = "Project"
-                    StartArguments = ""
+                    StartAction = "Program"
+                    StartArguments = "FsProvider.dll"
                     StartPage = ""
-                    StartProgram = ""
+                    StartProgram = "tools\NUnit\bin\nunit-gui.exe"
                     StartURL = ""
-                    StartWorkingDirectory = ""
+                    StartWorkingDirectory = "stage"
                     StartWithIE = "true"
                 />
             </Settings>

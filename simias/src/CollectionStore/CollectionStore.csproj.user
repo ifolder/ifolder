@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\simias\src\CollectionEvents\;C:\dev\simias\src\StoreProvider\;C:\Dev\denali\src\stage\;C:\ifolder\denali\src\stage\" >
+            <Settings ReferencePath = "" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

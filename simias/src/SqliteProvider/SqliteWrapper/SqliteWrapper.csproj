@@ -17,8 +17,8 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\..\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\..\stage\"
-                RootNamespace = "Novell.iFolder.Storage.Provider.Sqlite"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                RootNamespace = "Simias.Storage.Provider.Sqlite"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >

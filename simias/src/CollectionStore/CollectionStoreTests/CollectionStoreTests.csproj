@@ -17,8 +17,8 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\..\stage&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\..\stage"
-                RootNamespace = "Novell.iFolder.Storage.Tests"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                RootNamespace = "Simias.Storage.Tests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -80,19 +80,14 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\..\Identity\Identity.dll"
+                    Name = "CollectionStore"
+                    Project = "{CB7ACE79-DE8D-4A5C-A8EF-4606199B225D}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
-                />
-                <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\CollectionStore.dll"
+                    HintPath = "..\..\..\tools\nunit\bin\nunit.framework.dll"
                 />
             </References>
         </Build>

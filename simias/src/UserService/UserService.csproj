@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\..\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\..\stage\"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
                 RootNamespace = "UserService"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -81,8 +81,8 @@
                 />
                 <Reference
                     Name = "CollectionEvents"
-                    AssemblyName = "CollectionEvents"
-                    HintPath = "..\CollectionEvents\CollectionEvents.dll"
+                    Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

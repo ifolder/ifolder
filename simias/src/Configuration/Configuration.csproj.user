@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\denali\src\StoreProvider\" >
+            <Settings ReferencePath = "" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

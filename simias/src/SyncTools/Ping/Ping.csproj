@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Exe"
                 PreBuildEvent = ""
-                PostBuildEvent = "copy $(TargetPath) $(SolutionDir)..\stage"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
                 RootNamespace = "Novell.iFolder.Sync.Tools"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -80,19 +80,19 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "SyncManager"
-                    AssemblyName = "SyncManager"
-                    HintPath = "..\..\SyncManager\SyncManager.dll"
-                />
-                <Reference
                     Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\Common\Common.dll"
+                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
                     Name = "SyncCommon"
-                    AssemblyName = "SyncCommon"
-                    HintPath = "..\..\stage\SyncCommon.dll"
+                    Project = "{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "SyncManager"
+                    Project = "{7C3A9242-E1EF-43F2-8297-4C1C98892946}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\..\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\..\stage\"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
                 RootNamespace = "CollectionWatcher"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -86,8 +86,8 @@
                 />
                 <Reference
                     Name = "Configuration"
-                    AssemblyName = "Configuration"
-                    HintPath = "..\Configuration\Configuration.dll"
+                    Project = "{9B517041-29A3-4817-BA8E-02ECF03477C4}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\simias\src\CollectionStore\;C:\dev\simias\src\UserService\;C:\dev\simias\src\CollectionEvents\;" >
+            <Settings ReferencePath = "" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
@@ -13,9 +13,9 @@
                     StartAction = "Program"
                     StartArguments = ""
                     StartPage = ""
-                    StartProgram = "C:\dev\simias\src\stage\FsWatcher.exe"
+                    StartProgram = "FsWatcher.exe"
                     StartURL = ""
-                    StartWorkingDirectory = ""
+                    StartWorkingDirectory = "stage"
                     StartWithIE = "true"
                 />
                 <Config
@@ -26,12 +26,12 @@
                     EnableSQLServerDebugging = "false"
                     RemoteDebugEnabled = "false"
                     RemoteDebugMachine = ""
-                    StartAction = "Project"
+                    StartAction = "Program"
                     StartArguments = ""
                     StartPage = ""
-                    StartProgram = ""
+                    StartProgram = "FsWatcher.exe"
                     StartURL = ""
-                    StartWorkingDirectory = ""
+                    StartWorkingDirectory = "stage"
                     StartWithIE = "false"
                 />
             </Settings>

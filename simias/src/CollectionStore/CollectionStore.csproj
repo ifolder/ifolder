@@ -17,8 +17,8 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\..\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\..\stage\"
-                RootNamespace = "Novell.iFolder.Storage"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                RootNamespace = "Simias.Storage"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -85,14 +85,19 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "StoreProvider"
-                    AssemblyName = "StoreProvider"
-                    HintPath = "..\StoreProvider\StoreProvider.dll"
+                    Name = "CollectionEvents"
+                    Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "CollectionEvents"
-                    AssemblyName = "CollectionEvents"
-                    HintPath = "..\CollectionEvents\CollectionEvents.dll"
+                    Name = "StoreProvider"
+                    Project = "{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "SqliteProvider"
+                    Project = "{7BD9D007-359B-4A8F-AC5D-48C75222D0A4}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

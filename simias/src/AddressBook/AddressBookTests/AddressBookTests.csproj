@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Exe"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
                 RootNamespace = "AddressBookTests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -80,19 +80,14 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "nunit.util"
-                    AssemblyName = "nunit.util"
-                    HintPath = "..\..\..\tools\NUnit\bin\nunit.util.dll"
-                />
-                <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
                     HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
                 />
                 <Reference
                     Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\AddressBook.dll"
+                    Project = "{91EECEEF-0FD1-41A3-892C-D3A0F39BC711}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
