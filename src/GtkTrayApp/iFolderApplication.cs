@@ -236,7 +236,7 @@ namespace Novell.iFolder
 						tIcon, 
 						string.Format(Util.GS("New iFolder \"{0}\""), 
 													args.iFolder.Name),
-						Util.GS("This iFolder is available to sync on this computer"),
+						string.Format(Util.GS("{0} has invited you to participate in this shared iFolder"), args.iFolder.Owner),
 						Gtk.MessageType.Info, 10000);
 				notifyWin.ShowAll();
 			}
