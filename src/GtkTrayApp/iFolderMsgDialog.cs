@@ -54,7 +54,7 @@ public class iFolderMsgDialog : Dialog
 	{
 		this.Title = title;
 		this.HasSeparator = false;
-		this.BorderWidth = 10;
+//		this.BorderWidth = 10;
 		this.Resizable = false;
 		this.Modal = true;
 		if(parent != null)

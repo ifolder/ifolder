@@ -40,36 +40,68 @@ namespace Novell.iFolder
 
 		public iFolderAcceptDialog(iFolder ifolder) : base()
 		{
-			this.Title = "Setup Shared iFolder";
+			this.Title = "Setup iFolder \"" + ifolder.Name + "\"";
 			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 
-			this.BorderWidth = 10;
+//			this.BorderWidth = 10;
+			VBox dialogBox = new VBox();
+			dialogBox.Spacing = 10;
+			dialogBox.BorderWidth = 10;
+			dialogBox.Homogeneous = false;
+			this.VBox.PackStart(dialogBox, true, true, 0);
 
-			this.VBox.Spacing = 10;
-			this.VBox.BorderWidth = 10;
-			this.VBox.Homogeneous = false;
+
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						"Setup Shared iFolder: " + ifolder.Name + "</span>");
+						"Setup iFolder: \"" + ifolder.Name + "\"</span>");
 
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;
 			l.Xalign = 0; l.Yalign = 0;
-			this.VBox.PackStart(l, false, false, 0);
+			dialogBox.PackStart(l, false, false, 0);
 
-			l = new Label(string.Format("Select the location on your hard drive for this iFolder.  A new folder named \"{0}\" will be created and the iFolder will begin to sync files.", ifolder.Name));
 
-			l.LineWrap = true;
+			VBox detailBox = new VBox();
+			dialogBox.PackStart(detailBox, true, true, 0);
+
+			l = new Label("iFolder Details:");
+			l.Xalign = 0;
+			detailBox.PackStart(l, false, false, 0);
+
+			TextView tv = new TextView();
+			tv.LeftMargin = 10;
+			tv.RightMargin = 10;
+			tv.Editable = false;
+			tv.CursorVisible = false;
+			TextBuffer buffer = tv.Buffer;
+			buffer.Text = string.Format("iFolder name: {0}\niFolder Owner:{1}\n\niFolder Description: {2}", ifolder.Name, ifolder.Owner, ifolder.Description);
+
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			sw.Add(tv);
+			detailBox.PackStart(sw, true, true, 0);
+
+
+			l = new Label("Choose a location for the iFolder to be created on this computer.");
+
+			l.LineWrap = false;
 			l.Xalign = 0; l.Yalign = 0;
-			this.VBox.PackStart(l, true, true, 0);
+			dialogBox.PackStart(l, false, false, 0);
+
+
+
+			VBox locBox = new VBox();
+			dialogBox.PackEnd(locBox, false, true, 0);
+
+			Label pathLabel = new Label("iFolder Location:");
+			pathLabel.Xalign = 0;
+			locBox.PackStart(pathLabel, false, true, 0);
 
 			HBox pathBox = new HBox();
 			pathBox.Spacing = 10;
-
-			Label pathLabel = new Label("Path:");
-			pathBox.PackStart(pathLabel, false, false, 0);
+			locBox.PackStart(pathBox, false, true, 0);
 
 			pathEntry = new Entry();
 			pathEntry.Changed += new EventHandler(OnPathChanged);
@@ -79,7 +111,6 @@ namespace Novell.iFolder
 			pathButton.Clicked += new EventHandler(OnChoosePath);
 			pathBox.PackEnd(pathButton, false, false, 0);
 
-			this.VBox.PackEnd(pathBox, false, false, 0);
 
 			this.VBox.ShowAll();
 
