@@ -654,6 +654,9 @@ public class iFolder {
 
     /// <remarks/>
     public bool HasCollisions;
+
+    /// <remarks/>
+    public string CurrentUserID;
 }
 
 /// <remarks/>

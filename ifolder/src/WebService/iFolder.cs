@@ -93,7 +93,11 @@ namespace Novell.iFolder.Web
 			this.IsWorkgroup = 
 				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
 			this.HasCollisions = collection.HasCollisions();
-			this.CurrentUserID = collection.GetCurrentMember().UserID;
+			// This was throwing an exception so Added this because the 
+			// current user may not be available yet
+			Member tmpMember = collection.GetCurrentMember();
+			if(tmpMember != null)
+				this.CurrentUserID = tmpMember.UserID;
 		}
 
 
