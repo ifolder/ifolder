@@ -97,6 +97,9 @@ namespace Simias.Event
 		public IProcEventSubscriber( Socket socket )
 		{
 			eventSocket = socket;
+			
+			// Turn off nagle.
+			socket.SetSocketOption( SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1 );
 		}
 		#endregion
 
@@ -110,7 +113,8 @@ namespace Simias.Event
 			try
 			{
 				// Send the event to the client.
-				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+				byte[] buffer = new IProcEventData( args ).ToBuffer();
+				eventSocket.BeginSend( buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback( EventSendComplete ), this );
 			}
 			catch ( Exception e )
 			{
@@ -144,6 +148,17 @@ namespace Simias.Event
 		}
 
 		/// <summary>
+		/// Callback routine for handling send completes.
+		/// </summary>
+		/// <param name="result">The result of the asynchronous operation.</param>
+		static private void EventSendComplete( IAsyncResult result )
+		{
+			// Get the subscriber object as context for this request.
+			IProcEventSubscriber sub = ( IProcEventSubscriber )result.AsyncState;
+			sub.eventSocket.EndSend( result );
+		}
+
+		/// <summary>
 		/// Callback used to indicate that a file is being synchronized.
 		/// </summary>
 		/// <param name="args">Arguments that give information about the file.</param>
@@ -152,7 +167,8 @@ namespace Simias.Event
 			try
 			{
 				// Send the event to the client.
-				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+				byte[] buffer = new IProcEventData( args ).ToBuffer();
+				eventSocket.BeginSend( buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback( EventSendComplete ), this );
 			}
 			catch ( Exception e )
 			{
@@ -170,7 +186,8 @@ namespace Simias.Event
 			try
 			{
 				// Send the event to the client.
-				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+				byte[] buffer = new IProcEventData( args ).ToBuffer();
+				eventSocket.BeginSend( buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback( EventSendComplete ), this );
 			}
 			catch ( Exception e )
 			{
@@ -188,7 +205,8 @@ namespace Simias.Event
 			try
 			{
 				// Send the event to the client.
-				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+				byte[] buffer = new IProcEventData( args ).ToBuffer();
+				eventSocket.BeginSend( buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback( EventSendComplete ), this );
 			}
 			catch ( Exception e )
 			{
