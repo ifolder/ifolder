@@ -66,7 +66,7 @@ install-exec-local: InviteAgent.dll
 	$(INSTALL_PROGRAM) InviteAgent.dll EmailInviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll InviteAgentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll EmailInviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe InviteAgentTests.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
