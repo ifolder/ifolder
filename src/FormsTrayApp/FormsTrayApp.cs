@@ -35,6 +35,7 @@ using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
 using Simias.Client;
+using Simias.Client.Authentication;
 using Simias.Client.Event;
 using Novell.iFolder.Install;
 
@@ -850,8 +851,9 @@ namespace Novell.FormsTrayApp
 									notifyEventArgs.Message,
 									null);
 
-								if (domainAuth.Authenticate() != 
-									AuthenticationStatus.Success)
+								Status status = domainAuth.Authenticate();
+								if ( status.statusCode != StatusCodes.Success &&
+									status.statusCode != StatusCodes.SuccessInGrace )
 								{
 									string userID;
 									string credentials;
@@ -865,12 +867,15 @@ namespace Novell.FormsTrayApp
 										// There are credentials that were saved on the domain. Use them to authenticate.
 										// If the authentication fails for any reason, pop up and ask for new credentials.
 										domainAuth = new DomainAuthentication("iFolder", domainID, credentials);
-										AuthenticationStatus authStatus = domainAuth.Authenticate();
-										if (authStatus == AuthenticationStatus.Success)
+										Status authStatus = domainAuth.Authenticate();
+										if ( authStatus.statusCode == StatusCodes.Success ||
+											authStatus.statusCode == StatusCodes.SuccessInGrace )
 										{
 											break;
 										}
-										else if (authStatus == AuthenticationStatus.InvalidCredentials)
+										else if (authStatus.statusCode == StatusCodes.UnknownUser ||
+											authStatus.statusCode == StatusCodes.InvalidPassword ||
+											authStatus.statusCode == StatusCodes.InvalidCredentials )
 										{
 											// There are bad credentials stored. Remove them.
 											simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);

@@ -32,6 +32,7 @@ using System.Net;
 using Novell.iFolderCom;
 using Novell.iFolder.Install;
 using Simias.Client;
+using Simias.Client.Authentication;
 
 namespace Novell.FormsTrayApp
 {
@@ -434,11 +435,12 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainID, password.Text);
-				AuthenticationStatus authStatus = domainAuth.Authenticate();
+				Status authStatus = domainAuth.Authenticate();
 				MyMessageBox mmb;
-				switch (authStatus)
+				switch (authStatus.statusCode)
 				{
-					case AuthenticationStatus.Success:
+					case StatusCodes.Success:
+					case StatusCodes.SuccessInGrace:  // FIXME:: need to handle grace
 						try
 						{
 							updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
@@ -466,7 +468,8 @@ namespace Novell.FormsTrayApp
 						password.Clear();
 						Close();
 						break;
-					case AuthenticationStatus.InvalidCredentials:
+					case StatusCodes.InvalidCredentials:
+					case StatusCodes.InvalidPassword:
 						mmb = new MyMessageBox(resourceManager.GetString("badPassword"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 						break;
