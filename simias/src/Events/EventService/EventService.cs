@@ -22,74 +22,53 @@
  ***********************************************************************/
 
 using System;
-using System.Diagnostics;
 using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
+using Simias;
+using Simias.Service;
 
 namespace Simias.Event
 {
 	/// <summary>
-	/// Class used to publish events.
+	/// Summary description for Class1.
 	/// </summary>
-	public class EventPublisher
+	class EventService : BaseProcessService
 	{
-		#region Fields
-
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventPublisher));
-		EventBroker broker = null;
-		Configuration	conf;
-		bool loggedError = false;
-
-		#endregion
-			
-		#region Constructor
-
+		static EventService service;
 		/// <summary>
-		/// Creates an Event Publisher.
+		/// The main entry point for the application.
 		/// </summary>
-		/// <param name="conf">Configuration object.</param>
-		public EventPublisher(Configuration conf)
+		
+		static void Main(string[] args)
 		{
-			this.conf = conf;
+			service = new EventService();
+			service.Run();
 		}
 
-		#endregion
-
-		#region Publish Call.
-
-		/// <summary>
-		/// Called to publish a collection event.
-		/// </summary>
-		/// <param name="args"></param>
-		public void RaiseEvent(SimiasEventArgs args)
+		
+		protected override void Start()
 		{
-			try
-			{
-				if (broker == null)
-				{
-					broker = EventBroker.GetBroker(conf);
-					broker.RaiseEvent(args);
-					loggedError = false;
-				}
-				else
-				{
-					broker.RaiseEvent(args);
-				}
-			}
-			catch 
-			{
-				// Release the broker to try to connect latter.
-				broker = null;
-				if (!loggedError)
-				{
-					logger.Debug("Broker Not available");				
-					loggedError = true;
-				}
-			}
+			EventBroker.RegisterService(GetConfiguration());
 		}
 
-		#endregion
+		protected override void Stop()
+		{
+			EventBroker.DeRegisterService(GetConfiguration());
+		}
+
+		protected override void Pause()
+		{
+		}
+
+		protected override void Resume()
+		{
+		}
+
+		protected override void Custom(int message, string data)
+		{
+		}
 	}
 }

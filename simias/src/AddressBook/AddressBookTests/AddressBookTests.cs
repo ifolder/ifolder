@@ -40,6 +40,9 @@ namespace Novell.AddressBook.Tests
 
 		Manager abManager;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[TestFixtureSetUp]
 		public void Init()
 		{
@@ -53,6 +56,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Init exit");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void EnumerateMyAddressBooks()
 		{
@@ -72,6 +78,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void OpenDefaultBook()
 		{
@@ -84,6 +93,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("OpenDefaultBook exit");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void BasicContactTests()
 		{
@@ -164,6 +176,9 @@ namespace Novell.AddressBook.Tests
 			tstBook.Delete();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void EmailTests()
 		{
@@ -238,6 +253,9 @@ namespace Novell.AddressBook.Tests
 			tstBook.Delete();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void PhoneTests()
 		{
@@ -318,6 +336,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Phone Tests\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void CreateDeleteAddressBook()
 		{
@@ -388,6 +409,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("CreateDeleteAddressBook exit");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void SearchEmailTest()
 		{
 			Console.WriteLine("");
@@ -443,6 +467,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Search Email Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void BasicNameTests()
 		{
@@ -573,6 +600,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Basic Name Tests\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void BasicAddressTest()
 		{
@@ -751,6 +781,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Basic Address Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void SearchNameTest()
 		{
@@ -895,6 +928,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Search Name Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void EnumContactsTest()
 		{
@@ -973,6 +1009,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Enumerate Contacts Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void ImportPhotoTest()
 		{
@@ -1034,6 +1073,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Import Photo Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void InstantMessageTests()
 		{
@@ -1132,6 +1174,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Instant Message Tests\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void CleanupTest()
 		{
@@ -1199,6 +1244,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Cleanup Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Test]
 		public void BasicGroupTest()
 		{
@@ -1308,6 +1356,9 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Search Name Test\"");
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public class Tests
 		{
 			static void Main()

@@ -28,8 +28,9 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Simias;
 using Simias.Service;
+using Simias.Event;
 
-namespace Simias.Event
+namespace Simias.Storage
 {
 	/// <summary>
 	/// Test Fixture for the Collection Events.
@@ -68,6 +69,9 @@ namespace Simias.Event
 			subscribe();
 		}
 
+		/// <summary>
+		/// Get a publisher.
+		/// </summary>
 		public void publish()
 		{
 			publisher = new EventPublisher(conf);

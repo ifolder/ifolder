@@ -23,14 +23,55 @@
 
 using System;
 using System.Text;
+using Simias.Event;
 
-namespace Simias.Event
+namespace Simias.Storage
 {
+	/// <summary>
+	/// The Event types supported.
+	/// </summary>
+	[Flags]
+	public enum EventType : short
+	{
+		/// <summary>
+		/// The event is for a node create.
+		/// </summary>
+		NodeCreated = 1,
+		/// <summary>
+		/// The event is for a node delete.
+		/// </summary>
+		NodeDeleted = 2,
+		/// <summary>
+		/// The event is for a node change.
+		/// </summary>
+		NodeChanged = 4,
+		/// <summary>
+		/// The event is for a collection root path change.
+		/// </summary>
+		CollectionRootChanged = 8,
+		/// <summary>
+		/// The event is for a file create.
+		/// </summary>
+		FileCreated = 16,
+		/// <summary>
+		/// The event is for a file delete.
+		/// </summary>
+		FileDeleted = 32,
+		/// <summary>
+		/// The event is for a file change.
+		/// </summary>
+		FileChanged = 64,
+		/// <summary>
+		/// The event is for a file rename.
+		/// </summary>
+		FileRenamed = 128,
+	};
+
 	/// <summary>
 	/// The event arguments for a Collection event.
 	/// </summary>
 	[Serializable]
-	public class NodeEventArgs : CollectionEventArgs
+	public class NodeEventArgs : SimiasEventArgs
 	{
 		#region Fields
 
@@ -45,7 +86,7 @@ namespace Simias.Event
 		#region Constructor
 
 		/// <summary>
-		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
 		/// Descibes the node affected by the event.
 		/// </summary>
 		/// <param name="source">The source of the event.</param>
@@ -59,7 +100,7 @@ namespace Simias.Event
 		}
 
 		/// <summary>
-		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
 		/// Descibes the node affected by the event.
 		/// </summary>
 		/// <param name="source">The source of the event.</param>
@@ -69,7 +110,7 @@ namespace Simias.Event
 		/// <param name="changeType">The type of change that occured.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
 		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType, int eventId) :
-			base(changeType)
+			base(changeType.ToString())
 		{
 			this.source = source;
 			this.id = node;
@@ -78,44 +119,12 @@ namespace Simias.Event
 			this.eventId = eventId;
 		}
 
-		internal NodeEventArgs(string args)
-		{
-			int index = 0;
-			string [] aArgs = args.Split(seperatorChar);
-			MarshallFromString(aArgs, ref index);
-		}
-
 		internal NodeEventArgs()
 		{
 		}
 
 		#endregion
-
-		#region Marshallers
-
-		internal override string MarshallToString()
-		{
-            StringBuilder sb = new StringBuilder(base.MarshallToString());
-			sb.Append(source + seperatorChar);
-			sb.Append(id + seperatorChar);
-			sb.Append(collection + seperatorChar);
-			sb.Append(type + seperatorChar);
-			sb.Append(eventId.ToString() + seperatorChar);
-			return sb.ToString();
-		}
-
-		internal override void MarshallFromString(string [] args, ref int index)
-		{
-			base.MarshallFromString(args, ref index);
-			source = args[index++];
-			id = args[index++];
-			collection = args[index++];
-			type = args[index++];
-			eventId = int.Parse(args[index++]);
-		}
-
-		#endregion
-
+		
 		#region Properties
 
 		/// <summary>

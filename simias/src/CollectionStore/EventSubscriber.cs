@@ -32,10 +32,11 @@ using System.Runtime.Remoting.Channels.Tcp;
 using System.Security.Permissions;
 using System.Threading;
 using Simias;
+using Simias.Event;
 
 
 //[assembly:PermissionSetAttribute(SecurityAction.RequestMinimum, Name = "FullTrust")]
-namespace Simias.Event
+namespace Simias.Storage
 {
 	#region Delegate Definitions.
 
@@ -274,7 +275,7 @@ namespace Simias.Event
 
 		static string NodeEventArgsTypeString = typeof(NodeEventArgs).ToString();
 
-		private void OnCollectionEvent(CollectionEventArgs args)
+		private void OnCollectionEvent(SimiasEventArgs args)
 		{
 			try
 			{
@@ -284,7 +285,8 @@ namespace Simias.Event
 					case "Simias.Event.CollectionRootChangedEventArgs":
 						if (applyNodeFilter((NodeEventArgs)args))
 						{
-							switch (args.ChangeType)
+							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);
+							switch (changeType)
 							{
 								case EventType.NodeChanged:
 									if (NodeChanged != null)
@@ -309,7 +311,8 @@ namespace Simias.Event
 					case "Simias.Event.FileRenameEventArgs":
 						if (applyFileFilter((FileEventArgs)args))
 						{
-							switch (args.ChangeType)
+							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);
+							switch (changeType)
 							{
 								case EventType.FileChanged:
 									if (FileChanged != null)

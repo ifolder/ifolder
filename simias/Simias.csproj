@@ -190,16 +190,6 @@
                 />
                 <Folder RelPath = "src\AddressBook\SimpleTests\" />
                 <File
-                    RelPath = "src\CollectionEvents\CollectionEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionEvents\CollectionRootChangedEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\CollectionEvents\DefaultSubscriber.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -215,22 +205,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionEvents\EventSubscriber.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionEvents\FileEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionEvents\FileRenameEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionEvents\NodeEventArgs.cs"
+                    RelPath = "src\CollectionEvents\SimiasEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -265,6 +240,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\CollectionRootChangedEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\Collision.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -275,12 +255,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\EventSubscriber.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\Exception.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\FileEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\FileNode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\CollectionStore\FileRenameEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -316,6 +311,11 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\Node.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\CollectionStore\NodeEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

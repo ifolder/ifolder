@@ -23,53 +23,47 @@
 
 using System;
 using System.IO;
+using System.Text;
+using Simias.Event;
 
-namespace Simias.Event
+namespace Simias.Storage
 {
 	/// <summary>
 	/// The event arguments for file events.
 	/// </summary>
 	[Serializable]
-	public class FileEventArgs : NodeEventArgs
+	public class FileRenameEventArgs : FileEventArgs
 	{
+		string			oldPath;
+		
 		/// <summary>
-		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
 		/// Descibes the node affected by the event.
 		/// </summary>
 		/// <param name="source">The source of the event.</param>
 		/// <param name="fullPath">The full path of the modified file.</param>
 		/// <param name="collectionId">The collection that this file belongs to.</param>
-		/// <param name="changeType">The FileChangeType for this event.</param>
-		public FileEventArgs(string source, string fullPath, string collectionId, EventType changeType):
-			base(source, fullPath, collectionId, Path.GetExtension(fullPath), changeType, 0)
+		/// <param name="oldPath">The full path to the old name.</param>
+		public FileRenameEventArgs(string source, string fullPath, string collectionId, string oldPath):
+			base(source, fullPath, collectionId, EventType.FileRenamed)
 		{
+			this.oldPath = oldPath;
 		}
 
-		internal FileEventArgs(string args)
-		{
-			int index = 0;
-			string [] aArgs = args.Split(seperatorChar);
-			MarshallFromString(aArgs, ref index);
-		}
-
-		internal FileEventArgs()
-		{
-		}
-		
 		/// <summary>
-		/// Gets the full path of the file.
+		/// Gets the full path of the old name.
 		/// </summary>
-		public string FullPath
+		public string OldPath
 		{
-			get {return ID;}
+			get {return oldPath;}
 		}
 
 		/// <summary>
 		/// Gets the leaf name with extension.
 		/// </summary>
-		public string Name
+		public string OldName
 		{
-			get {return Path.GetFileName(ID);}
+			get {return Path.GetFileName(oldPath);}
 		}
 	}
 }

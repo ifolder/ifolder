@@ -22,8 +22,9 @@
  ***********************************************************************/
 using System;
 using System.Text;
+using Simias.Event;
 
-namespace Simias.Event
+namespace Simias.Storage
 {
 	/// <summary>
 	/// The event arguments for a Collection event.
@@ -65,30 +66,6 @@ namespace Simias.Event
 		{
 			this.oldRoot = oldRoot;
 			this.newRoot = newRoot;
-		}
-
-		internal CollectionRootChangedEventArgs(string args)
-		{
-			int index = 0;
-			string [] aArgs = args.Split(seperatorChar);
-			MarshallFromString(aArgs, ref index);
-		}
-
-		internal override string MarshallToString()
-		{
-			StringBuilder sb = new StringBuilder(base.MarshallToString());
-			sb.Append(oldRoot + seperatorChar);
-			sb.Append(newRoot + seperatorChar);
-			return sb.ToString();
-		}
-
-		internal override void MarshallFromString(string [] args, ref int index)
-		{
-			//int i = 0;
-			//string [] sArg = sArgs.Split(seperatorChar);
-			base.MarshallFromString(args, ref index);
-			oldRoot = args[index++];
-			newRoot = args[index++];
 		}
 
 		/// <summary>

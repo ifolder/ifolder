@@ -219,22 +219,48 @@ namespace Simias.Storage.Provider
 			}
 		}
 
+		/// <summary>
+		/// Get the specified configuration setting.
+		/// </summary>
+		/// <param name="key">The setting to retrieve.</param>
+		/// <param name="defaultValue">The default setting.</param>
+		/// <returns>The stored setting.</returns>
 		public string Get(string key, string defaultValue)
 		{
 			return (conf.Get(CFG_Section, key, defaultValue));
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="keyValue"></param>
 		public void Set(string key, string keyValue)
 		{
 			conf.Set(CFG_Section, key, keyValue);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class CommitException : SimiasException
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		public XmlDocument CreateDoc;
+		/// <summary>
+		/// 
+		/// </summary>
 		public XmlDocument DeleteDoc;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="createDoc"></param>
+		/// <param name="deleteDoc"></param>
+		/// <param name="ex"></param>
 		public CommitException(XmlDocument createDoc, XmlDocument deleteDoc, Exception ex) :
 			base("Failed to commite Records", ex)
 		{
@@ -242,6 +268,9 @@ namespace Simias.Storage.Provider
 			DeleteDoc = deleteDoc;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public override string Message
 		{
 			get

@@ -161,6 +161,10 @@ namespace Simias.Event
 
 		#region IThreadService Members
 
+		/// <summary>
+		/// Called when the service should start.
+		/// </summary>
+		/// <param name="conf">The configuration object to use.</param>
 		public void Start(Configuration conf)
 		{
 			lock (this)
@@ -180,6 +184,9 @@ namespace Simias.Event
 			}
 		}
 
+		/// <summary>
+		/// Called when the service should stop.
+		/// </summary>
 		public void Stop()
 		{
 			lock (this)
@@ -201,16 +208,27 @@ namespace Simias.Event
 			}
 		}
 
+		/// <summary>
+		/// Called to Resume the service.
+		/// </summary>
 		public void Resume()
 		{
 			Start(conf);
 		}
 
+		/// <summary>
+		/// Called to pause the service.
+		/// </summary>
 		public void Pause()
 		{
 			Stop();
 		}
 
+		/// <summary>
+		/// Called to send a custom message to the service.
+		/// </summary>
+		/// <param name="message">The custom message.</param>
+		/// <param name="data">Data for the message.</param>
 		public void Custom(int message, string data)
 		{
 		}

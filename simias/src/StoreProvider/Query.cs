@@ -130,6 +130,10 @@ namespace Simias.Storage.Provider
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString()
 		{
 			return string.Format("In {0} Collection, Return all Records with {1} {2} {3}", 
