@@ -1816,6 +1816,7 @@ namespace Novell.FormsTrayApp
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
+			this.VisibleChanged += new System.EventHandler(this.GlobalProperties_VisibleChanged);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
@@ -1845,6 +1846,12 @@ namespace Novell.FormsTrayApp
 					if (!tabControl1.Controls.Contains(tabPage5))
 					{
 						tabControl1.Controls.Add(this.tabPage5);
+						try
+						{
+							iFolderSettings ifSettings = ifWebService.GetSettings();
+							updateEnterpriseData(ifSettings);
+						}
+						catch {}
 					}
 				}
 				else
@@ -2065,6 +2072,38 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 			}
 		}
+
+		private void updateEnterpriseData(iFolderSettings ifSettings)
+		{
+			iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
+			userName.Text = ifolderUser.Name;
+			enterpriseName.Text = ifSettings.EnterpriseName;
+			enterpriseDescription.Text = ifSettings.EnterpriseDescription;
+
+			// Get the disk space.
+			DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
+			if (diskSpace.Limit != 0)
+			{
+				totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+
+				double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+				usedSpace.Text = used.ToString();
+				freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
+
+				// Set up the gauge chart.
+				gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
+				gaugeChart1.Used = used;
+				gaugeChart1.BarColor = SystemColors.ActiveCaption;
+			}
+			else
+			{
+				usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
+				gaugeChart1.Used = 0;
+			}
+
+			// Cause the gauge chart to be redrawn.
+			gaugeChart1.Invalidate(true);
+		}
 		#endregion
 
 		#region Event Handlers
@@ -2087,69 +2126,48 @@ namespace Novell.FormsTrayApp
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
 			}
 			catch {} // Non-fatal ... just missing some graphics.
+		}
 
-			try
+		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
+		{
+			if (this.Visible)
 			{
-				// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
-				// while the form is displayed.
-				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
-				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
-				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
-
-				iFolderSettings ifSettings = ifWebService.GetSettings();
-				currentUserID = ifSettings.CurrentUserID;
-				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
-				if (ifSettings.HaveEnterprise)
+				try
 				{
-					ShowEnterpriseTab = true;
-					iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
-					userName.Text = ifolderUser.Name;
-					enterpriseName.Text = ifSettings.EnterpriseName;
-					enterpriseDescription.Text = ifSettings.EnterpriseDescription;
+					// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
+					// while the form is displayed.
+					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
 
-					// Get the disk space.
-					DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
-					if (diskSpace.Limit != 0)
+					iFolderSettings ifSettings = ifWebService.GetSettings();
+					currentUserID = ifSettings.CurrentUserID;
+					displayConfirmation.Checked = ifSettings.DisplayConfirmation;
+					if (ifSettings.HaveEnterprise)
 					{
-						totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
-
-						double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-						usedSpace.Text = used.ToString();
-						freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
-
-						// Set up the gauge chart.
-						gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
-						gaugeChart1.Used = used;
-						gaugeChart1.BarColor = SystemColors.ActiveCaption;
-					}
-					else
-					{
-						usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
-						gaugeChart1.Used = 0;
+						ShowEnterpriseTab = true;
+						updateEnterpriseData(ifSettings);
 					}
 
-					// Cause the gauge chart to be redrawn.
-					gaugeChart1.Invalidate(true);
+					// Display the default sync interval.
+					defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
+					autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
+
+					autoStart.Checked = IsRunEnabled();
+
+					refreshiFolders();
+
+					useProxy.Checked = ifSettings.UseProxy;
+					proxy.Text = ifSettings.ProxyHost;
+					port.Value = (decimal)ifSettings.ProxyPort;
 				}
-
-				// Display the default sync interval.
-				defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
-				autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
-
-				autoStart.Checked = IsRunEnabled();
-
-				refreshiFolders();
-
-				useProxy.Checked = ifSettings.UseProxy;
-				proxy.Text = ifSettings.ProxyHost;
-				port.Value = (decimal)ifSettings.ProxyPort;
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("iFolderDataError");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("iFolderDataError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
+				}
 			}
 		}
 
@@ -2159,8 +2177,6 @@ namespace Novell.FormsTrayApp
 			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
-			eventClient.SetEvent(IProcEventAction.RemoveCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
-			eventClient.SetEvent(IProcEventAction.RemoveFileSync, new IProcEventHandler(global_fileSyncHandler));
 
 			if (defaultInterval.Focused)
 			{
@@ -2191,6 +2207,9 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 			}
+
+			e.Cancel = true;
+			Hide();
 		}
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
