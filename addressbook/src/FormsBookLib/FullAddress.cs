@@ -30,7 +30,7 @@ using System.Windows.Forms;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for FullAddress.
+	/// Dialog used to edit a contacts address.
 	/// </summary>
 	public class FullAddress : System.Windows.Forms.Form
 	{
@@ -59,6 +59,9 @@ namespace Novell.iFolder.FormsBookLib
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Initializes a new instance of the FullAddress class.
+		/// </summary>
 		public FullAddress()
 		{
 			//
@@ -284,6 +287,9 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the street.
+		/// </summary>
 		public string Street
 		{
 			get
@@ -296,6 +302,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the extended address.
+		/// </summary>
 		public string ExtendedAddress
 		{
 			get
@@ -308,6 +317,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the locality (city).
+		/// </summary>
 		public string Locality
 		{
 			get
@@ -320,6 +332,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the region (state).
+		/// </summary>
 		public string RegionAddr
 		{
 			get
@@ -332,6 +347,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the postal box.
+		/// </summary>
 		public string PostalBox
 		{
 			get
@@ -344,6 +362,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the postal or ZIP code.
+		/// </summary>
 		public string PostalCode
 		{
 			get
@@ -356,6 +377,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the country.
+		/// </summary>
 		public string Country
 		{
 			get

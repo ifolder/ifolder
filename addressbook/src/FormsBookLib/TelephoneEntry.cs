@@ -27,16 +27,22 @@ using Novell.AddressBook;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for TelephoneEntry.
+	/// A telephone entry for a contact.
 	/// </summary>
 	public class TelephoneEntry : GenericEntry
 	{
 		private Telephone phone;
 
+		/// <summary>
+		/// Initializes a new instance of the TelephoneEntry class.
+		/// </summary>
 		public TelephoneEntry()
 		{
 		}
 
+		/// <summary>
+		/// Gets/sets the telephone number.
+		/// </summary>
 		public Telephone Phone
 		{
 			get

@@ -30,7 +30,7 @@ using System.Windows.Forms;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for FullName.
+	/// Dialog used to edit the full name of a contact.
 	/// </summary>
 	public class FullName : System.Windows.Forms.Form
 	{
@@ -52,6 +52,9 @@ namespace Novell.iFolder.FormsBookLib
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Initializes a new instance of the FullName class.
+		/// </summary>
 		public FullName()
 		{
 			//
@@ -249,6 +252,9 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the prefix of the full name.
+		/// </summary>
 		public string Title
 		{
 			get
@@ -261,6 +267,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the first name.
+		/// </summary>
 		public string FirstName
 		{
 			get
@@ -273,6 +282,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the middle name.
+		/// </summary>
 		public string MiddleName
 		{
 			get
@@ -285,6 +297,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the last name.
+		/// </summary>
 		public string LastName
 		{
 			get
@@ -297,6 +312,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the suffix of the full name.
+		/// </summary>
 		public string Suffix
 		{
 			get

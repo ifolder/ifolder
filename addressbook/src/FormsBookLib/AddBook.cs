@@ -30,7 +30,7 @@ using System.Windows.Forms;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for AddBook.
+	/// Dialog used to specify the name of a new address book.
 	/// </summary>
 	public class AddBook : System.Windows.Forms.Form
 	{
@@ -45,6 +45,9 @@ namespace Novell.iFolder.FormsBookLib
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Initializes a new instance of the AddBook class.
+		/// </summary>
 		public AddBook()
 		{
 			//
@@ -140,6 +143,9 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the name of the book.
+		/// </summary>
 		public new string Name
 		{
 			get

@@ -26,13 +26,16 @@ using System;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for GenericEntry.
+	/// The base class for entries in a contact.
 	/// </summary>
 	public class GenericEntry
 	{
 		private bool add;
 		private bool remove;
 
+		/// <summary>
+		/// Initializes a new instance of the GenericEntry class.
+		/// </summary>
 		public GenericEntry()
 		{
 			remove = false;
@@ -40,6 +43,9 @@ namespace Novell.iFolder.FormsBookLib
 		}
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets a value indicating if the contact has been added.
+		/// </summary>
 		public bool Add
 		{
 			get
@@ -52,6 +58,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets a value indicating if the contact has been removed.
+		/// </summary>
 		public bool Remove
 		{
 			get

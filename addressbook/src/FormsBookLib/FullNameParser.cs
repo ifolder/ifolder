@@ -29,16 +29,25 @@ using Novell.AddressBook;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for FullNameParser.
+	/// Used to parse a string into a name object.
 	/// </summary>
 	public class FullNameParser
 	{
+		/// <summary>
+		/// Initializes a new instance of the FullNameParser class.
+		/// </summary>
 		public FullNameParser()
 		{
 		}
 
 		// TODO - we will need to provide a way to perform culture-specific parsing.
 
+		/// <summary>
+		/// Parses a string to a name object
+		/// </summary>
+		/// <param name="fullName">The string to parse.</param>
+		/// <param name="name">The resulting name object.</param>
+		/// <returns>true, if the name was parsed successfully.</returns>
 		public static bool Parse(string fullName, ref Name name)
 		{
 			bool validName = true;

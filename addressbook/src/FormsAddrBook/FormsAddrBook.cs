@@ -34,7 +34,7 @@ using Novell.AddressBook;
 namespace Novell.iFolder.FormsAddrBook
 {
 	/// <summary>
-	/// Summary description for FormsAddrBook.
+	/// The main interface for the address book.
 	/// </summary>
 	public class FormsAddrBook : System.Windows.Forms.Form
 	{
@@ -80,6 +80,9 @@ namespace Novell.iFolder.FormsAddrBook
 		private System.ComponentModel.IContainer components;
 		#endregion
 
+		/// <summary>
+		/// Initializes a new instance of the FormsAddrBook class.
+		/// </summary>
 		public FormsAddrBook()
 		{
 			//
@@ -541,7 +544,7 @@ namespace Novell.iFolder.FormsAddrBook
 
 		private void booksContacts_ContactSelected(object sender, ContactSelectedEventArgs e)
 		{
-			if (e.singleSelected)
+			if (e.SingleSelected)
 			{
 				contact = (Contact)((ListViewItem)booksContacts.SelectedContacts[0]).Tag;
 

@@ -34,7 +34,7 @@ using Simias.Storage;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for BooksContacts.
+	/// User control used to display address books and contacts.
 	/// </summary>
 	public class BooksContacts : System.Windows.Forms.UserControl
 	{
@@ -61,6 +61,9 @@ namespace Novell.iFolder.FormsBookLib
 		private string filter;
 		#endregion
 
+		/// <summary>
+		/// Initializes a new instance of the BooksContacts class.
+		/// </summary>
 		public BooksContacts()
 		{
 			// This call is required by the Windows.Forms Form Designer.
@@ -256,7 +259,7 @@ namespace Novell.iFolder.FormsBookLib
 		}
 
 		/// <summary>
-		/// The path where the assembly is loaded from.
+		/// Gets/sets the path where the assembly is loaded from.
 		/// </summary>
 		public string LoadPath
 		{
@@ -271,6 +274,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets the image list for the contact objects.
+		/// </summary>
 		public ImageList ContactImageList
 		{
 			get
@@ -279,6 +285,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the filter used when performing searches.
+		/// </summary>
 		public string Filter
 		{
 			get
@@ -294,6 +303,12 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// Adds a contact to the contact listview.
+		/// </summary>
+		/// <param name="contact">The contact to add to the listview.</param>
+		/// <param name="imageIndex">The index of the image to display for this contact.</param>
+		/// <param name="selected">Indicates if the contact is to be selected.</param>
 		public void AddContactToListView(Contact contact, int imageIndex, bool selected)
 		{
 			if (imageIndex == -1)
@@ -362,6 +377,10 @@ namespace Novell.iFolder.FormsBookLib
 			deleteContact_Click(this, null);
 		}
 
+		/// <summary>
+		/// Searches the selected address book for contacts based on the filter passed in.
+		/// </summary>
+		/// <param name="filter">The string used for the search filter. </param>
 		public void FilterList(string filter)
 		{
 			if (filter != null)
@@ -445,14 +464,34 @@ namespace Novell.iFolder.FormsBookLib
 		}
 		#endregion
 
+		#region Events
+		/// <summary>
+		/// Delegate used for the Contact Selected event.
+		/// </summary>
 		public delegate void ContactSelectedDelegate(object sender, ContactSelectedEventArgs e);
+		/// <summary>
+		/// Occurs when a contact has been selected.
+		/// </summary>
 		public event ContactSelectedDelegate ContactSelected;
 
+		/// <summary>
+		/// Delegate used for the Contact Double Clicked event.
+		/// </summary>
 		public delegate void ContactDoubleClickedDelegate(object sender, ContactDoubleClickedEventArgs e);
+		/// <summary>
+		/// Occurs when a contact has been double-clicked.
+		/// </summary>
 		public event ContactDoubleClickedDelegate ContactDoubleClicked;
 
+		/// <summary>
+		/// Delegate used for the Book Selected event.
+		/// </summary>
 		public delegate void BookSelectedDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs when a book has been selected.
+		/// </summary>
 		public event BookSelectedDelegate BookSelected;
+		#endregion
 
 		#region Event Handlers
 		private void BooksContacts_Load(object sender, EventArgs e)
@@ -738,29 +777,105 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 	}
 
+	/// <summary>
+	/// Event args used by the Contact Selected event.
+	/// </summary>
 	public class ContactSelectedEventArgs : EventArgs
 	{
-		public bool validSelected;
-		public bool singleSelected;
+		private bool validSelected;
+		private bool singleSelected;
 
+		/// <summary>
+		/// Initializes a new instance of the ContactSelectedEventArgs class.
+		/// </summary>
+		/// <param name="validSelected">Indicates if the selected contact can be placed in the picked list.</param>
+		/// <param name="singleSelected">Indicates if there is only a single contact selected.</param>
 		public ContactSelectedEventArgs(bool validSelected, bool singleSelected)
 		{
 			this.validSelected = validSelected;
 			this.singleSelected = singleSelected;
 		}
+
+		#region Properties
+		/// <summary>
+		/// Gets a value indicating if the selected contact can be placed in the picked list.
+		/// </summary>
+		public bool ValidSelected
+		{
+			get
+			{
+				return validSelected;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating if a single contact is selected.
+		/// </summary>
+		public bool SingleSelected
+		{
+			get
+			{
+				return singleSelected;
+			}
+		}
+		#endregion
 	}
 
+	/// <summary>
+	/// Event args used by the Contact Double Clicked event.
+	/// </summary>
 	public class ContactDoubleClickedEventArgs : EventArgs
 	{
-		public Contact contact;
-		public Novell.AddressBook.AddressBook addressBook;
-		public ListViewItem lvitem;
+		private Contact contact;
+		private Novell.AddressBook.AddressBook addressBook;
+		private ListViewItem lvitem;
 
+		/// <summary>
+		/// Initializes a new instance of the ContactDoubleClickedEventArgs class.
+		/// </summary>
+		/// <param name="addressBook">The book that contains the selected contact.</param>
+		/// <param name="contact">The contact associated with the selected item.</param>
+		/// <param name="lvitem">The item that was double-clicked</param>
 		public ContactDoubleClickedEventArgs(Novell.AddressBook.AddressBook addressBook, Contact contact, ListViewItem lvitem)
 		{
 			this.contact = contact;
 			this.addressBook = addressBook;
 			this.lvitem = lvitem;
 		}
+
+		#region Properties
+		/// <summary>
+		/// Gets the selected contact.
+		/// </summary>
+		public Contact Contact
+		{
+			get
+			{
+				return contact;
+			}
+		}
+
+		/// <summary>
+		/// Gets the selected address book.
+		/// </summary>
+		public Novell.AddressBook.AddressBook AddressBook
+		{
+			get
+			{
+				return addressBook;
+			}
+		}
+
+		/// <summary>
+		/// Gets the selected listview item.
+		/// </summary>
+		public ListViewItem LVitem
+		{
+			get
+			{
+				return lvitem;
+			}
+		}
+		#endregion
 	}
 }

@@ -32,7 +32,7 @@ using Novell.AddressBook;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for ContactEditor.
+	/// Dialog used to edit a contact.
 	/// </summary>
 	public class ContactEditor : System.Windows.Forms.Form
 	{
@@ -179,6 +179,9 @@ namespace Novell.iFolder.FormsBookLib
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Initializes a new instance of the ContactEditor class.
+		/// </summary>
 		public ContactEditor()
 		{
 			//

@@ -31,7 +31,7 @@ using Novell.AddressBook;
 namespace Novell.iFolder.FormsBookLib
 {
 	/// <summary>
-	/// Summary description for ContactPicker.
+	/// Dialog used to pick contacts from the address book.
 	/// </summary>
 	public class ContactPicker : System.Windows.Forms.Form
 	{
@@ -60,6 +60,9 @@ namespace Novell.iFolder.FormsBookLib
 		private System.ComponentModel.IContainer components;
 		#endregion
 
+		/// <summary>
+		/// Initializes a new instance of the ContactPicker class.
+		/// </summary>
 		public ContactPicker()
 		{
 			//
@@ -296,6 +299,9 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets the list of picked contacts.
+		/// </summary>
 		public ArrayList GetContactList
 		{
 			get
@@ -304,6 +310,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Sets the Address Book Manager.
+		/// </summary>
 		public Manager CurrentManager
 		{
 			set
@@ -313,6 +322,9 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the path where the assembly is loaded from.
+		/// </summary>
 		public string LoadPath
 		{
 			get
@@ -353,7 +365,7 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void booksContacts_ContactSelected(object sender, ContactSelectedEventArgs e)
 		{
-			this.add.Enabled = e.validSelected;
+			this.add.Enabled = e.ValidSelected;
 		}
 
 		private void booksContacts_ContactDoubleClicked(object sender, ContactDoubleClickedEventArgs e)
