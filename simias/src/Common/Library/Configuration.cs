@@ -69,8 +69,10 @@ namespace Simias
 			}
 
 			this.storePath = path;
+			CreateDefaults();
 		}
 
+		/*
 		internal Configuration(string path, bool remove)
 		{
 			this.storePath = path;
@@ -81,12 +83,34 @@ namespace Simias
 				CreateDefaults();
 			}
 		}
+		*/
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public void CreateDefaults()
 		{
+			mutex.WaitOne();
+			try
+			{
+				// If the file does not exist look for defaults.
+				if (!File.Exists(ConfigFilePath))
+				{
+					string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, DefaultFileName);
+					if (File.Exists(bootStrapFile))
+					{
+						File.Copy(bootStrapFile, ConfigFilePath);
+					}
+					else
+					{
+						File.Create(ConfigFilePath).Close();
+					}
+				}
+			}
+			finally
+			{
+				mutex.ReleaseMutex();
+			}
 		}
 
 		/// <summary>
