@@ -50,6 +50,7 @@ namespace Novell.FormsTrayApp
 		private const string iFolderRun = "iFolder";
 
 		private const double megaByte = 1048576;
+		private const int maxMessages = 300;
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
@@ -164,12 +165,8 @@ namespace Novell.FormsTrayApp
 			ifWebService = ifolderWebService;
 			this.eventClient = eventClient;
 
-			// Set up the event handlers to watch for iFolder creates/deletes.
-			eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
-			eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
-			eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
-
-			// Set up the event handlers for sync events.
+			// Set up the event handlers for sync events ... these need to be active here so that sync events can
+			// be written to the log listbox.
 			eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
 			eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(global_fileSyncHandler));
 
@@ -676,7 +673,6 @@ namespace Novell.FormsTrayApp
 			this.log.HorizontalScrollbar = true;
 			this.log.Location = new System.Drawing.Point(8, 48);
 			this.log.Name = "log";
-			this.log.ScrollAlwaysVisible = true;
 			this.log.Size = new System.Drawing.Size(408, 290);
 			this.log.TabIndex = 1;
 			// 
@@ -1140,6 +1136,21 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void addMessageToLog(DateTime dateTime, string message)
+		{
+			if (message != null)
+			{
+				log.Items.Add(dateTime.ToString() + " " + message);
+				log.SelectedIndex = log.Items.Count - 1;
+				saveLog.Enabled = clearLog.Enabled = true;
+
+				if (log.Items.Count > maxMessages)
+				{
+					log.Items.RemoveAt(0);
+				}
+			}
+		}
+
 		private void updateListViewItem(ListViewItem lvi)
 		{
 			iFolder ifolder = (iFolder)lvi.Tag;
@@ -1302,6 +1313,12 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
+				// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
+				// while the form is displayed.
+				eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
+				eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+
 				iFolderSettings ifSettings = ifWebService.GetSettings();
 				currentUserID = ifSettings.CurrentUserID;
 				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
@@ -1666,6 +1683,11 @@ namespace Novell.FormsTrayApp
 		private void clearLog_Click(object sender, System.EventArgs e)
 		{
 			log.Items.Clear();
+
+			// TODO: Localize
+			log.Items.Add(DateTime.Now.ToString() + " Log entries cleared.");
+
+			saveLog.Enabled = clearLog.Enabled = false;
 		}
 		#endregion
 
@@ -1865,21 +1887,25 @@ namespace Novell.FormsTrayApp
 			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
 
 			// TODO: Localize
+			string message = null;
 			switch (syncEventArgs.Action)
 			{
 				case Action.StartSync:
 				{
-					status.Text = "Synchronizing " + syncEventArgs.Name;
+					message = "Synchronizing " + syncEventArgs.Name;
+					status.Text = message;
 					break;
 				}
 				case Action.StopSync:
 				{
+					message = syncEventArgs.Name + (syncEventArgs.Successful ? " synchronization succeeded." : " synchronization failed.");
 					status.Text = "Idle";
 					break;
 				}
 			}
 
-			// TODO: Add message to log.
+			// Add message to log.
+			addMessageToLog(syncEventArgs.TimeStamp, message);
 		}
 
 		private void global_fileSyncHandler(SimiasEventArgs args)
@@ -1887,9 +1913,15 @@ namespace Novell.FormsTrayApp
 			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
 
 			// TODO: Localize
-			status.Text = "Synchronizing " + syncEventArgs.Name;
+			string message = "Synchronizing file " + syncEventArgs.Name;
+			status.Text = message;
 
-			// TODO: Add message to log.
+			// TODO: may want to include the direction as part of the message.
+
+			// Add message to log.
+			// TODO: Localize
+			message += " size = " + syncEventArgs.Size.ToString() + " total size to sync = " + syncEventArgs.SizeToSync.ToString() + " remaining size to sync = " + syncEventArgs.SizeRemaining.ToString();
+			addMessageToLog(syncEventArgs.TimeStamp, message);
 		}
 		#endregion
 
