@@ -43,7 +43,7 @@
 #define SIMIAS_PREF_SYNC_INTERVAL "/plugins/simias/sync_interval"
 #define SIMIAS_PREF_SYNC_INTERVAL_DEF 1 /* minute */
 
-#define SIMIAS_PREF_PING_REPLY_TYPE "/plugins/simias/sync_interval"
+#define SIMIAS_PREF_PING_REPLY_TYPE "/plugins/simias/ping_reply_type"
 #define SIMIAS_PREF_PING_REPLY_TYPE_BLIST "buddy-list"
 #define SIMIAS_PREF_PING_REPLY_TYPE_ANY "any"
 #define SIMIAS_PREF_PING_REPLY_TYPE_DEF SIMIAS_PREF_PING_REPLY_TYPE_BLIST
