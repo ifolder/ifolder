@@ -47,8 +47,8 @@ namespace Novell.iFolder
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
-		static Gtk.ThreadNotify mainThreadNotify;
-		static SyncManagerStates syncState;
+//		static Gtk.ThreadNotify mainThreadNotify;
+//		static SyncManagerStates syncState;
 
 		public static void Main (string[] args)
 		{
@@ -76,10 +76,10 @@ namespace Novell.iFolder
 
 			tIcon.ShowAll();
 
-			syncState = SyncManagerStates.Idle;
+//			syncState = SyncManagerStates.Idle;
 
-			mainThreadNotify =
-				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
+//			mainThreadNotify =
+//				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
 			twin = new GtkTraceWindow();
 
@@ -90,6 +90,7 @@ namespace Novell.iFolder
 
 
 
+/*
 		static void ChangeState()
 		{
 			lock(syncManager)
@@ -129,7 +130,7 @@ namespace Novell.iFolder
 				mainThreadNotify.WakeupMain();
 			}
 		}
-
+*/
 
 
 
@@ -201,7 +202,7 @@ namespace Novell.iFolder
 
 		static void quit_ifolder(object o, EventArgs args)
 		{
-			syncManager.Stop();
+//			syncManager.Stop();
 			Application.Quit();
 		}
 

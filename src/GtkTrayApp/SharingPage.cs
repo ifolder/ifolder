@@ -417,13 +417,12 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
+
 				SharingListHolder slh = (SharingListHolder)
-					ContactTreeStore.GetValue(iter,0);
+					tModel.GetValue(iter,0);
 
 				ifldr.RemoveRights(slh.Contact);
-				ContactTreeStore.Remove(out iter);
+				ContactTreeStore.Remove(ref iter);
 				guidList.Remove(slh.Contact.ID);
 				removeSharingButton.Sensitive = false;
 				FullControlRB.Sensitive = false;

@@ -69,7 +69,7 @@ namespace Novell.iFolder
 			Init();
 
 			Configuration config = new Configuration();
-			store = Store.Connect(config);
+			store = new Store(config);
 
 			SetCurrentNode(null);
 		}
@@ -79,7 +79,7 @@ namespace Novell.iFolder
 			Init();
 
 			Configuration config = new Configuration(storeLocation);
-			store = Store.Connect(config);
+			store = new Store(config);
 
 			SetCurrentNode(null);
 		}
@@ -119,16 +119,18 @@ namespace Novell.iFolder
 				foreach(Simias.Storage.Node node in store)
 				{
 					nodeArray.Add(node);
-					if(!node.HasChildren)
+				/*	if(!node.HasChildren)
 						BrowserIconList.AppendPixbuf(LeafNodePixBuf,
 										null,
 										node.Name);
 					else
+				*/
 						BrowserIconList.AppendPixbuf(NodePixBuf,
 										null,
 										node.Name);
 				}
 			}
+/*
 			else
 			{
 				foreach(Simias.Storage.Node node in nifNode)
@@ -144,6 +146,7 @@ namespace Novell.iFolder
 										node.Name);
 				}
 			}
+*/
 		}
 
 		public void ShowAll()
@@ -167,8 +170,8 @@ namespace Novell.iFolder
 
 		public void on_UpButton_clicked(object o, EventArgs args)
 		{
-			if(curNode != null)
-				SetCurrentNode(curNode.GetParent());
+//			if(curNode != null)
+//				SetCurrentNode(curNode.GetParent());
 		}
 
 		public void on_HomeButton_clicked(object o, EventArgs args)
@@ -234,6 +237,7 @@ namespace Novell.iFolder
 						on_open_context_menu);
 				trayMenu.Append (open_item);
 
+				/*
 				if(!node.HasChildren)
 				{
 					MenuItem delete_item = new MenuItem ("Delete");
@@ -241,7 +245,7 @@ namespace Novell.iFolder
 						on_delete_context_menu);
 					trayMenu.Append (delete_item);
 				}
-
+				*/
 				trayMenu.Append(new SeparatorMenuItem());
 
 				MenuItem properties_item = new MenuItem (
@@ -284,7 +288,7 @@ namespace Novell.iFolder
 		{
 			Node node = GetSelectedItem();
 
-			node.Delete(true);
+			//node.Delete(true);
 
 			on_refresh();
 		}
@@ -295,11 +299,13 @@ namespace Novell.iFolder
 
 			if(node != null)
 			{
+				/*
 				if(node.HasChildren)
 				{
 					SetCurrentNode(node);
 				}
 				else
+				*/
 				{
 					PropertiesDialog pd = new PropertiesDialog();
 					pd.Node = node;
