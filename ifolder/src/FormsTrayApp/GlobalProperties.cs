@@ -37,6 +37,7 @@ using Novell.Win32Util;
 using Simias;
 using Simias.Event;
 using Simias.Storage;
+using Simias.Sync;
 
 namespace Novell.FormsTrayApp
 {
@@ -167,6 +168,10 @@ namespace Novell.FormsTrayApp
 			eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
 			eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
 			eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+
+			// Set up the event handlers for sync events.
+			eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
+			eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(global_fileSyncHandler));
 
 			ht = new Hashtable();
 
@@ -654,6 +659,7 @@ namespace Novell.FormsTrayApp
 			this.clearLog.Name = "clearLog";
 			this.clearLog.TabIndex = 3;
 			this.clearLog.Text = "&Clear";
+			this.clearLog.Click += new System.EventHandler(this.clearLog_Click);
 			// 
 			// saveLog
 			// 
@@ -663,6 +669,7 @@ namespace Novell.FormsTrayApp
 			this.saveLog.Name = "saveLog";
 			this.saveLog.TabIndex = 2;
 			this.saveLog.Text = "&Save";
+			this.saveLog.Click += new System.EventHandler(this.saveLog_Click);
 			// 
 			// log
 			// 
@@ -1361,6 +1368,8 @@ namespace Novell.FormsTrayApp
 			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveFileSync, new IProcEventHandler(global_fileSyncHandler));
 
 			if (defaultInterval.Focused)
 			{
@@ -1638,6 +1647,26 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Log Tab
+		private void saveLog_Click(object sender, System.EventArgs e)
+		{
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				StreamWriter streamWriter = File.CreateText(saveFileDialog.FileName);
+				foreach (string s in log.Items)
+				{
+					streamWriter.WriteLine(s);
+				}
+
+				streamWriter.Flush();
+				streamWriter.Close();
+			}
+		}
+
+		private void clearLog_Click(object sender, System.EventArgs e)
+		{
+			log.Items.Clear();
+		}
 		#endregion
 
 		#region Preferences Tab
@@ -1829,6 +1858,38 @@ namespace Novell.FormsTrayApp
 					ht.Remove(eventArgs.Node);
 				}
 			}
+		}
+
+		private void global_collectionSyncHandler(SimiasEventArgs args)
+		{
+			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
+
+			// TODO: Localize
+			switch (syncEventArgs.Action)
+			{
+				case Action.StartSync:
+				{
+					status.Text = "Synchronizing " + syncEventArgs.Name;
+					break;
+				}
+				case Action.StopSync:
+				{
+					status.Text = "Idle";
+					break;
+				}
+			}
+
+			// TODO: Add message to log.
+		}
+
+		private void global_fileSyncHandler(SimiasEventArgs args)
+		{
+			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+
+			// TODO: Localize
+			status.Text = "Synchronizing " + syncEventArgs.Name;
+
+			// TODO: Add message to log.
 		}
 		#endregion
 
