@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Xml;
 using System.Threading;
@@ -53,6 +54,13 @@ namespace Simias
 		private const string clientBootStrapFileName = "simias-client-bootstrap.config";
 		private const string storeProvider = "StoreProvider";
 		private const string storeProviderPath = "Path";
+
+		/// <summary>
+		/// XML configuation tags.
+		/// </summary>
+		private const string CFG_Section = "ServiceManager";
+		private const string CFG_Services = "Services";
+		private const string CFG_WebServiceUri = "WebServiceUri";
 
 		/// <summary>
 		/// Only a single instance of this class in the process.
@@ -176,6 +184,114 @@ namespace Simias
 			// Load the configuration document from the file.
 			configDoc = new XmlDocument();
 			configDoc.Load(configFilePath);
+
+			// If necessary, update the WebServiceUri setting
+			SetWebServiceUriInConfig();
+		}
+
+		private bool SetWebServiceUriInConfig()
+		{
+			const string portTag = "--port";
+			const string appTag = "--applications";
+			const string sepChar = ":";
+			int	x;
+
+			string port = null;
+			string vPath = null;
+
+			try
+			{
+				string[] args = System.Environment.GetCommandLineArgs();
+				if ( args.Length > 0 )
+				{
+					for( x = 0; x < args.Length; x++ )
+					{
+						if ( args[x].ToLower() == portTag )
+						{
+							if ( ++x < args.Length )
+							{
+								port = args[x];
+							}
+						}
+						else
+						if ( args[x].ToLower() == appTag )
+						{
+							if ( ++x < args.Length )
+							{
+								string[] bothPaths = args[x].Split( sepChar.ToCharArray() );
+								if ( bothPaths[0] != null )
+								{
+									vPath = bothPaths[0];
+								}
+							}
+						}
+					}
+				}
+
+				if ( vPath == null )
+				{
+					vPath = String.Format( "/simias10/{0}", Environment.UserName );
+				}
+
+				if ( port != null )
+				{
+					Uri uri = 
+						new Uri( 
+							new UriBuilder( 
+									"http", 
+									IPAddress.Loopback.ToString(), 
+									Convert.ToInt32( port ), 
+									vPath ).ToString() );
+
+					foreach ( XmlElement section in configDoc.DocumentElement )
+					{
+						// Only look at section nodes for the ServiceManager section.
+						if ( ( section.Name == Configuration.SectionTag ) && 
+							( section.GetAttribute( Configuration.NameAttr ) == CFG_Section ) )
+						{
+							XmlElement uriElement = null;
+							foreach( XmlElement setting in section )
+							{
+								// Now look for an existing element for the uri property.
+								if ( ( setting.Name == Configuration.SettingTag ) && 
+									( setting.GetAttribute( Configuration.NameAttr ) == CFG_WebServiceUri ) )
+								{
+									uriElement = setting;
+									break;
+								}
+							}
+
+							// Check to see if an existing element was found.
+							if ( uriElement == null )
+							{
+								uriElement = configDoc.CreateElement( Configuration.SettingTag );
+								uriElement.SetAttribute( Configuration.NameAttr, CFG_WebServiceUri );
+								section.AppendChild( uriElement );
+
+								// Set the element value attribute.
+								uriElement.SetAttribute( Configuration.ValueAttr, uri.ToString() );
+								UpdateConfigFile();
+							}
+							else
+							{
+								string current = uriElement.GetAttribute( CFG_WebServiceUri );
+								if ( current != null )
+								{
+									if ( current != uri.ToString() )
+									{
+										// Set the element value attribute.
+										uriElement.SetAttribute( Configuration.ValueAttr, uri.ToString() );
+										UpdateConfigFile();
+									}
+								}
+							}
+							break;
+						}
+					}
+				}
+			}
+			catch{}
+			return true;
 		}
 
 		#endregion
