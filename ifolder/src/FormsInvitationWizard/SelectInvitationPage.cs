@@ -96,6 +96,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// fileBrowser
 			// 
+			this.fileBrowser.FlatStyle = FlatStyle.System;
 			this.fileBrowser.Location = new System.Drawing.Point(440, 142);
 			this.fileBrowser.Name = "fileBrowser";
 			this.fileBrowser.Size = new System.Drawing.Size(24, 24);
