@@ -46,7 +46,7 @@ ReunionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll $(SYSTEM_
 ReunionBrowserGtk_LIBPATH = ../iFolder
 
 
-INSTALL_BIN_FILES = $(srcdir)/invitationwizard $(srcdir)/collectionbrowser $(srcdir)/ifolder
+INSTALL_BIN_FILES = $(srcdir)/collectionbrowser $(srcdir)/ifolder
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
@@ -107,7 +107,6 @@ clean-local:
     
 distclean-local:
 	rm -f ifolder
-	rm -f invitationwizard
 	rm -f collectionbrowser
 
 maintainer-clean-local:
