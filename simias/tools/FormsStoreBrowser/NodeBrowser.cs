@@ -130,10 +130,10 @@ namespace StoreBrowser
 	public class DisplayNode : IEnumerable
 	{
 		#region Class Members
-		private static string ObjectTag = "O";
-		private static string NameTag = "n";
-		private static string IDTag = "i";
-		private static string TypeTag = "t";
+		private static string ObjectTag = "Object";
+		private static string NameTag = "name";
+		private static string IDTag = "id";
+		private static string TypeTag = "type";
 		private static string CollectionIDTag = "CollectionId";
 
 		private XmlDocument document;

@@ -18,6 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Dale Olds <olds@novell.com>
+ *			Russ Young
  *
  ***********************************************************************/
 using System;

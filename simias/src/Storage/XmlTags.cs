@@ -33,35 +33,35 @@ namespace Simias.Storage
 		/// <summary>
 		/// Xml Tag for a list of objects.
 		/// </summary>
-		public const string ObjectListTag = "L";
+		public const string ObjectListTag = "ObjectList";
 		/// <summary>
 		/// Xml Tag for an object definition.
 		/// </summary>
-		public const string ObjectTag = "O";
+		public const string ObjectTag = "Object";
 		/// <summary>
 		/// Xml tag for a property definition.
 		/// </summary>
-		public const string PropertyTag = "P";
+		public const string PropertyTag = "Property";
 		/// <summary>
 		/// Xml attribute for name.
 		/// </summary>
-		public const string NameAttr = "n";
+		public const string NameAttr = "name";
 		/// <summary>
 		/// Xml attribute for id.
 		/// </summary>
-		public const string IdAttr = "i";
+		public const string IdAttr = "id";
 		/// <summary>
 		/// Xml attribute for colliction id.
 		/// </summary>
-		public const string CIdAttr = "c";
+		public const string CIdAttr = "cid";
 		/// <summary>
 		/// Xml attribute for type.
 		/// </summary>
-		public const string TypeAttr = "t";
+		public const string TypeAttr = "type";
 
 		/// <summary>
 		/// Xml attribute for property flags.
 		/// </summary>
-		public const string FlagsAttr = "f";
+		public const string FlagsAttr = "flags";
 	}
 }

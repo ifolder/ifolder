@@ -148,20 +148,20 @@ typedef __int64				LONGLONG;
 #define CSP_Type_Relationship_String (FLMUNICODE*)L"Relationship"
 
 
-#define XmlObectListString		L"<L>"
-#define	XmlObectNameString 		L"<O n=\""
-#define	XmlIdString 			L"\" i=\""
-#define	XmlTypeString 			L"\" t=\""
-#define	XmlColIdString 			L"\" c=\""
+#define XmlObectListString		L"<ObjectList>"
+#define	XmlObectNameString 		L"<Object name=\""
+#define	XmlIdString 			L"\" id=\""
+#define	XmlTypeString 			L"\" type=\""
+#define	XmlColIdString 			L"\" cid=\""
 #define XmlEndTag				L"\">"
 #define XmlEndTagNoChildren		L"\"/>"
-#define	XmlObjectEndString 		L"</O>"
-#define	XmlObjectListEndString 	L"</L>"
-#define	XmlPropertyNameString 	L"<P n=\""
-#define	XmlTypeString 			L"\" t=\""
-#define XmlFlagsString			L"\" f=\""
+#define	XmlObjectEndString 		L"</Object>"
+#define	XmlObjectListEndString 	L"</ObjectList>"
+#define	XmlPropertyNameString 	L"<Property name=\""
+#define	XmlTypeString 			L"\" type=\""
+#define XmlFlagsString			L"\" flags=\""
 #define XmlQEndTag				L"\">"
-#define	XmlPropertyEndString	L"</P>"
+#define	XmlPropertyEndString	L"</Property>"
 
 
 #define FLM_UNDEFINED_TYPE 0xffff
