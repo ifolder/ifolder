@@ -41,6 +41,22 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			ConflictPixBuf;
 
 
+		private Gtk.Frame			ServerFrame;
+		private Gtk.Frame			LocalFrame;
+		private Gtk.Label			LocalNameLabel;
+		private Gtk.Label			LocalNameValue;
+		private Gtk.Label			LocalDateLabel;
+		private Gtk.Label			LocalDateValue;
+		private Gtk.Label			LocalSizeLabel;
+		private Gtk.Label			LocalSizeValue;
+		private Gtk.Button			LocalSaveButton;
+		private Gtk.Label			ServerNameLabel;
+		private Gtk.Label			ServerNameValue;
+		private Gtk.Label			ServerDateLabel;
+		private Gtk.Label			ServerDateValue;
+		private Gtk.Label			ServerSizeLabel;
+		private Gtk.Label			ServerSizeValue;
+		private Gtk.Button			ServerSaveButton;
 
 
 		/// <summary>
@@ -64,6 +80,7 @@ namespace Novell.iFolder
 				this.TransientFor = parent;
 
 			InitializeWidgets();
+			EnableConflictControls(false);
 		}
 
 
@@ -74,43 +91,54 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.SetDefaultSize (300, 400);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.SetDefaultSize (600, 400);
+			this.Icon = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
 
+			this.VBox.Spacing = 10;
 
-			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-					"Conflicts were found in the following iFolder:</span>");
+			HBox topbox = new HBox();
+			topbox.Spacing = 10;
 
-			l.LineWrap = false;
-			l.UseMarkup = true;
-			l.Selectable = false;
-			l.Xalign = 0; l.Yalign = 0;
-			this.VBox.PackStart(l, false, false, 0);
-			
+			Image conflictImage = new Image(this.Icon);
+			conflictImage.Yalign = 0;
+			topbox.PackStart(conflictImage, false, false, 0);
+
+			VBox textbox = new VBox();
+			textbox.Spacing = 10;
+
+			Label l = new Label("Select a conflict from the list below.  To resolve the conflict, save the local version or the server version.  The version you save will be synced to this iFolder. ");
+			l.LineWrap = true;
+			l.Xalign = 0;
+			textbox.PackStart(l, true, true, 0);
 
 			Table ifTable = new Table(2,2,false);
-			ifTable.BorderWidth = 6;
-			ifTable.RowSpacing = 6;
 			ifTable.ColumnSpacing = 6;
+			ifTable.Homogeneous = false;
 
 			Label nameLabel = new Label("iFolder Name:");
 			nameLabel.Xalign = 0;
-			ifTable.Attach(nameLabel, 0,1,0,1);
+			ifTable.Attach(nameLabel, 0,1,0,1,
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
 			Label nameValue = new Label(ifolder.Name);
-			nameValue.Xalign = 1;
+			nameValue.Xalign = 0;
 			ifTable.Attach(nameValue, 1,2,0,1);
 
 			Label pathLabel = new Label("iFolder Path:");
 			pathLabel.Xalign = 0;
-			ifTable.Attach(pathLabel, 0,1,1,2);
+			ifTable.Attach(pathLabel, 0,1,1,2,
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
 
 			Label pathValue = new Label(ifolder.UnManagedPath);
-			pathValue.Xalign = 1;
+			pathValue.Xalign = 0;
 			ifTable.Attach(pathValue, 1,2,1,2);
 
-			this.VBox.PackStart(ifTable, true, true, 0);
+			textbox.PackStart(ifTable, false, true, 0);
 
+			topbox.PackStart(textbox, true, true, 0);
+
+			this.VBox.PackStart(topbox, false, true, 0);
 
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
@@ -118,6 +146,95 @@ namespace Novell.iFolder
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.Add(ConflictTreeView);
 			this.VBox.PackStart(sw, true, true, 0);
+
+
+			HBox bottombox = new HBox();
+			bottombox.Spacing = 10;
+
+			LocalFrame = new Frame("Local Version");
+			bottombox.PackStart(LocalFrame, true, true, 0);
+
+			Table localTable = new Table(2,4,false);
+			localTable.BorderWidth = 10;
+			localTable.ColumnSpacing = 10;
+
+			LocalNameLabel = new Label("Name:");
+			LocalNameLabel.Xalign = 0;
+			localTable.Attach(LocalNameLabel, 0,1,0,1, 
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
+
+			LocalNameValue = new Label("");
+			LocalNameValue.Xalign = 0;
+			localTable.Attach(LocalNameValue, 1,2,0,1);
+
+			LocalDateLabel = new Label("Date:");
+			LocalDateLabel.Xalign = 0;
+			localTable.Attach(LocalDateLabel, 0,1,1,2,
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
+
+			LocalDateValue = new Label("");
+			LocalDateValue.Xalign = 0;
+			localTable.Attach(LocalDateValue, 1,2,1,2);
+
+			LocalSizeLabel = new Label("Size:");
+			LocalSizeLabel.Xalign = 0;
+			localTable.Attach(LocalSizeLabel, 0,1,2,3,
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
+
+			LocalSizeValue = new Label("");
+			LocalSizeValue.Xalign = 0;
+			localTable.Attach(LocalSizeValue, 1,2,2,3);
+
+			LocalSaveButton = new Button(Stock.Save);
+			localTable.Attach(LocalSaveButton, 0,1,3,4,
+				Gtk.AttachOptions.Shrink, Gtk.AttachOptions.Shrink, 0, 5);
+
+			LocalFrame.Add(localTable);
+
+
+
+			ServerFrame = new Frame("Server Version");
+			bottombox.PackStart(ServerFrame, true, true, 0);
+
+			Table serverTable = new Table(2,4,false);
+			serverTable.BorderWidth = 10;
+			serverTable.ColumnSpacing = 10;
+
+			ServerNameLabel = new Label("Name:");
+			ServerNameLabel.Xalign = 0;
+			serverTable.Attach(ServerNameLabel, 0,1,0,1, 
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
+
+			ServerNameValue = new Label("");
+			ServerNameValue.Xalign = 0;
+			serverTable.Attach(ServerNameValue, 1,2,0,1);
+
+			ServerDateLabel = new Label("Date:");
+			ServerDateLabel.Xalign = 0;
+			serverTable.Attach(ServerDateLabel, 0,1,1,2,
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
+
+			ServerDateValue = new Label("");
+			ServerDateValue.Xalign = 0;
+			serverTable.Attach(ServerDateValue, 1,2,1,2);
+
+			ServerSizeLabel = new Label("Size:");
+			ServerSizeLabel.Xalign = 0;
+			serverTable.Attach(ServerSizeLabel, 0,1,2,3,
+				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
+
+			ServerSizeValue = new Label("");
+			ServerSizeValue.Xalign = 0;
+			serverTable.Attach(ServerSizeValue, 1,2,2,3);
+
+			ServerSaveButton = new Button(Stock.Save);
+			serverTable.Attach(ServerSaveButton, 0,1,3,4,
+				Gtk.AttachOptions.Shrink, Gtk.AttachOptions.Shrink, 0, 5);
+
+			ServerFrame.Add(serverTable);
+
+			this.VBox.PackStart(bottombox, false, false, 0);
+
 
 
 			// Setup the iFolder TreeView
@@ -139,21 +256,13 @@ namespace Novell.iFolder
 			ConflictTreeView.AppendColumn(memberColumn);
 			ConflictTreeView.Selection.Mode = SelectionMode.Multiple;
 
-
-//			ConflictTreeView.Selection.Changed += new EventHandler(
-//						OnConflictSelectionChanged);
-
-//			ConflictTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-//						OnConflictButtonPressed);
-
-//			ConflictTreeView.RowActivated += new RowActivatedHandler(
-//						OnConflictRowActivated);
+			ConflictTreeView.Selection.Changed += new EventHandler(
+						OnConflictSelectionChanged);
 
 			ConflictPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 
-			this.AddButton(Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Stock.Ok, ResponseType.Ok);
+			this.AddButton(Stock.Close, ResponseType.Ok);
 			this.AddButton(Stock.Help, ResponseType.Help);
 
 			RefreshConflictList();
@@ -194,6 +303,72 @@ namespace Novell.iFolder
 		}
 
 
+
+
+		private void OnConflictSelectionChanged(object o, EventArgs args)
+		{
+			TreeSelection tSelect = ConflictTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				Conflict con = (Conflict) tModel.GetValue(iter, 0);
+
+				UpdateFields(con);
+			}
+		}
+
+
+
+		private void UpdateFields(Conflict con)
+		{
+			if(con == null)
+			{
+				EnableConflictControls(false);
+				LocalNameValue.Text = "";
+				LocalDateValue.Text = "";
+				LocalSizeValue.Text = "";
+			
+				ServerNameValue.Text = "";
+				ServerDateValue.Text = "";
+				ServerSizeValue.Text = "";
+
+				return;
+			}
+			
+			EnableConflictControls(true);
+			LocalNameValue.Text = con.LocalName;
+			LocalDateValue.Text = con.LocalDate;
+			LocalSizeValue.Text = con.LocalSize;
+			
+			ServerNameValue.Text = con.ServerName;
+			ServerDateValue.Text = con.ServerDate;
+			ServerSizeValue.Text = con.ServerSize;
+		}
+
+
+
+		private void EnableConflictControls(bool enable)
+		{
+			ServerFrame.Sensitive = enable;
+			LocalFrame.Sensitive = enable;
+			LocalNameLabel.Sensitive = enable;
+			LocalNameValue.Sensitive = enable;
+			LocalDateLabel.Sensitive = enable;
+			LocalDateValue.Sensitive = enable;
+			LocalSizeLabel.Sensitive = enable;
+			LocalSizeValue.Sensitive = enable;
+			LocalSaveButton.Sensitive = enable;
+			ServerNameLabel.Sensitive = enable;
+			ServerNameValue.Sensitive = enable;
+			ServerDateLabel.Sensitive = enable;
+			ServerDateValue.Sensitive = enable;
+			ServerSizeLabel.Sensitive = enable;
+			ServerSizeValue.Sensitive = enable;
+			ServerSaveButton.Sensitive = enable;
+		}
 
 
 

@@ -40,7 +40,7 @@ namespace Novell.iFolder
 		private iFolderWebService	iFolderWS;
 		private Gdk.Pixbuf			iFolderPixBuf;
 		private Gdk.Pixbuf			ServeriFolderPixBuf;
-//		private Gdk.Pixbuf			CollisionPixBuf;
+		private Gdk.Pixbuf			ConflictPixBuf;
 
 		private Statusbar			MainStatusBar;
 		private Gtk.Notebook		MainNoteBook;
@@ -58,6 +58,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		HelpMenuItem;
 		private ImageMenuItem		AboutMenuItem;
 
+		private iFolderConflictDialog ConflictDialog;
 		private iFolderPropertiesDialog PropertiesDialog;
 
 		/// <summary>
@@ -165,7 +166,7 @@ namespace Novell.iFolder
 
 			ConflictMenuItem = new MenuItem ("Re_solve Conflicts");
 			iFolderMenu.Append(ConflictMenuItem);
-//			ConflictMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			ConflictMenuItem.Activated += new EventHandler(OnResolveConflicts);
 
 			RevertMenuItem = new ImageMenuItem ("Re_vert");
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
@@ -304,9 +305,8 @@ namespace Novell.iFolder
 			ServeriFolderPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("serverifolder.png"));
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
-//			CollisionPixBuf = 
-//				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
-
+			ConflictPixBuf = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
 
 
 			// Create an HBox that is not homogeneous and spacing of 6
@@ -357,9 +357,9 @@ namespace Novell.iFolder
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
 			if(ifolder.State == "Local")
 			{
-//				if(ifolder.HasCollisions())
-//					((CellRendererText) cell).Text = "Has File Conflicts";
-//				else
+				if(ifolder.HasConflicts)
+					((CellRendererText) cell).Text = "Has File Conflicts";
+				else
 					((CellRendererText) cell).Text = "OK";
 			}
 			else if(ifolder.State == "Available")
@@ -393,9 +393,9 @@ namespace Novell.iFolder
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
 			if(ifolder.State == "Local")
 			{
-//				if(ifolder.HasCollisions())
-//					((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
-//				else
+				if(ifolder.HasConflicts)
+					((CellRendererPixbuf) cell).Pixbuf = ConflictPixBuf;
+				else
 					((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
 			}
 			else
@@ -467,11 +467,11 @@ namespace Novell.iFolder
 			{
 //				uint nodeCount = 47;
 //				ulong bytesToSend = 121823;
-//				TreeModel tModel;
-//				TreeIter iter;
+				TreeModel tModel;
+				TreeIter iter;
 
-//				tSelect.GetSelected(out tModel, out iter);
-//				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				tSelect.GetSelected(out tModel, out iter);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
 	//			This appears to hang?
 	//			SyncSize.CalculateSendSize(	ifolder, 
@@ -481,8 +481,7 @@ namespace Novell.iFolder
 	//			UploadLabel.Text = bytesToSend.ToString();
 	//			SyncFilesLabel.Text = nodeCount.ToString();
 
-/*
-				if(	(ifolder != null) && (ifolder.HasCollisions()) )
+				if(	(ifolder != null) && (ifolder.HasConflicts) )
 				{
 					ConflictMenuItem.Sensitive = true;
 				}
@@ -490,8 +489,7 @@ namespace Novell.iFolder
 				{
 					ConflictMenuItem.Sensitive = false;
 				}
-*/
-					ConflictMenuItem.Sensitive = false;
+
 				ShareMenuItem.Sensitive = true;
 				OpenMenuItem.Sensitive = true;
 				RevertMenuItem.Sensitive = true;
@@ -565,19 +563,17 @@ namespace Novell.iFolder
 
 								ifMenu.Append(new SeparatorMenuItem());
 
-/*
 								if(	(ifolder != null) && 
-										(ifolder.HasCollisions()) )
+										(ifolder.HasConflicts) )
 								{
 									MenuItem item_resolve = 
 										new MenuItem ("Resolve Conflicts");
 									ifMenu.Append (item_resolve);
 									item_resolve.Activated += new EventHandler(
-										on_show_conflict_resolver);
+										OnResolveConflicts);
 							
 									ifMenu.Append(new SeparatorMenuItem());
 								}
-*/
 	
 								MenuItem item_properties = 
 									new MenuItem ("Properties");
@@ -991,10 +987,10 @@ namespace Novell.iFolder
 		}
 
 
-		private iFolder GetSelectediFolder()
-		{
-			iFolder ifolder = null;
 
+
+		private void OnResolveConflicts(object o, EventArgs args)
+		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
@@ -1002,9 +998,32 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				ifolder = (iFolder) tModel.GetValue(iter, 0);
+				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+			
+				
+				ConflictDialog = new iFolderConflictDialog(
+										this,
+										ifolder,
+										iFolderWS);
+				ConflictDialog.Response += 
+							new ResponseHandler(OnConflictDialogResponse);
+				ConflictDialog.ShowAll();
 			}
-			return ifolder;
+		}
+
+
+
+		private void OnConflictDialogResponse(object o, ResponseArgs args)
+		{
+			if(ConflictDialog != null)
+			{
+				ConflictDialog.Hide();
+				ConflictDialog.Destroy();
+				ConflictDialog = null;
+			}
+			// CRG: TODO
+			// At this point, refresh the selected iFolder to see if it
+			// has any more conflicts
 		}
 
 
