@@ -1,5 +1,6 @@
 src/LinuxClient/application/iFolderApplication.cs
 src/LinuxClient/library/CompatFileChooserDialog.cs
+src/LinuxClient/library/CreateDialog.cs
 src/LinuxClient/library/iFolderAcceptDialog.cs
 src/LinuxClient/library/iFolderAccessDialog.cs
 src/LinuxClient/library/iFolderConflictDialog.cs

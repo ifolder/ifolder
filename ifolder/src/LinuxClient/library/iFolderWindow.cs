@@ -147,7 +147,7 @@ namespace Novell.iFolder
 	{
 		// for the statusbar
 		const int ctx = 1;
-		private iFolderWebService	iFolderWS;
+		private iFolderWebService	ifws;
 		private Gdk.Pixbuf			iFolderPixBuf;
 		private Gdk.Pixbuf			ServeriFolderPixBuf;
 		private Gdk.Pixbuf			ConflictPixBuf;
@@ -193,13 +193,13 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public iFolderWindow(iFolderWebService ifws)
+		public iFolderWindow(iFolderWebService webService)
 			: base ("iFolder")
 		{
-			if(ifws == null)
+			if(webService == null)
 				throw new ApplicationException("iFolderWebServices was null");
 
-			iFolderWS = ifws;
+			ifws = webService;
 			curiFolders = new Hashtable();
 			CreateWidgets();
 		}
@@ -618,7 +618,7 @@ namespace Novell.iFolder
 			iFolderWeb[]	iFolderArray;
 			try
 			{
-				iFolderArray = iFolderWS.GetAlliFolders();
+				iFolderArray = ifws.GetAlliFolders();
 			}
 			catch(Exception e)
 			{
@@ -1023,7 +1023,7 @@ namespace Novell.iFolder
 						new iFolderPropertiesDialog(this, 
 									ifHolder.iFolder, 
 									ifList,
-									iFolderWS);
+									ifws);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
 					PropertiesDialog.CurrentPage = currentPage;
@@ -1085,7 +1085,7 @@ namespace Novell.iFolder
 
 				try
 				{
-    				iFolderWS.SynciFolderNow(ifHolder.iFolder.ID);
+    				ifws.SynciFolderNow(ifHolder.iFolder.ID);
 				}
 				catch(Exception e)
 				{
@@ -1130,7 +1130,7 @@ namespace Novell.iFolder
 					try
 					{
     					iFolderWeb newiFolder = 
-								iFolderWS.RevertiFolder(ifHolder.iFolder.ID);
+								ifws.RevertiFolder(ifHolder.iFolder.ID);
 						curiFolders.Remove(ifHolder.iFolder.ID);
 
 						// Set the value of the returned value for the one
@@ -1203,7 +1203,7 @@ namespace Novell.iFolder
 				try
 				{
 					curiFolders.Remove(ifHolder.iFolder.ID);
-   		 			iFolderWeb newiFolder = iFolderWS.AcceptiFolderInvitation(
+   		 			iFolderWeb newiFolder = ifws.AcceptiFolderInvitation(
 											ifHolder.iFolder.DomainID,
 											ifHolder.iFolder.ID,
 											newPath);
@@ -1236,18 +1236,18 @@ namespace Novell.iFolder
 				bool isGood = true;
 				if(name != null)
 				{
-					isGood = !iFolderWS.IsPathIniFolder(path);
+					isGood = !ifws.IsPathIniFolder(path);
 					if(isGood)
 					{
 						// now we need to check if there is already an
 						// ifolder at that path
-						isGood = !iFolderWS.IsPathIniFolder(
+						isGood = !ifws.IsPathIniFolder(
 								System.IO.Path.Combine(path, name));
 					}
 				}
 				else
 				{
-					isGood = iFolderWS.CanBeiFolder(path);
+					isGood = ifws.CanBeiFolder(path);
 				}
 
 				if(!isGood)
@@ -1310,7 +1310,7 @@ namespace Novell.iFolder
 					try
 					{
     					remiFolder = 
-								iFolderWS.RevertiFolder(ifHolder.iFolder.ID);
+								ifws.RevertiFolder(ifHolder.iFolder.ID);
 						curiFolders.Remove(ifHolder.iFolder.ID);
 
 						// Set the value of the returned value for the one
@@ -1337,7 +1337,7 @@ namespace Novell.iFolder
 				{
 					// remove the current iFolder so events don't replace it
 					curiFolders.Remove(remiFolder.ID);
-   		 			iFolderWS.DeclineiFolderInvitation(remiFolder.DomainID, remiFolder.ID);
+   		 			ifws.DeclineiFolderInvitation(remiFolder.DomainID, remiFolder.ID);
 					// if no exception, remove it from the list
 					iFolderTreeStore.Remove(ref iter);
 				}
@@ -1412,7 +1412,7 @@ namespace Novell.iFolder
 				ConflictDialog = new iFolderConflictDialog(
 										this,
 										ifHolder.iFolder,
-										iFolderWS);
+										ifws);
 				ConflictDialog.Response += 
 							new ResponseHandler(OnConflictDialogResponse);
 				ConflictDialog.ShowAll();
@@ -1465,7 +1465,7 @@ namespace Novell.iFolder
 					// this is a subscription, check to see if we
 					// have a matching ifolder to yank this one
 					// out if we need to
-					iFolderWeb realiFolder = iFolderWS.GetiFolder(
+					iFolderWeb realiFolder = ifws.GetiFolder(
 							ifolder.CollectionID);
 					if(realiFolder != null)
 					{
@@ -1532,7 +1532,7 @@ namespace Novell.iFolder
 
 							try
 							{
-								updatediFolder = iFolderWS.GetiFolder(
+								updatediFolder = ifws.GetiFolder(
 									args.ID);
 							}
 							catch(Exception e)
@@ -1570,7 +1570,7 @@ namespace Novell.iFolder
 							iFolderWeb updatediFolder;
 							try
 							{
-								updatediFolder = iFolderWS.GetiFolder(
+								updatediFolder = ifws.GetiFolder(
 									args.ID);
 							}
 							catch(Exception e)
@@ -1685,33 +1685,37 @@ namespace Novell.iFolder
 
 		private void CreateNewiFolder()
 		{
-			iFolderMsgDialog dg = new iFolderMsgDialog(
-				this,
-				iFolderMsgDialog.DialogType.Info,
-				iFolderMsgDialog.ButtonSet.Ok,
-				Util.GS("New iFolder"),
-				Util.GS("Create a new iFolder"),
-				Util.GS("This is a placeholder until I write the code to actually create a new iFolder"));
-			dg.Run();
-			dg.Hide();
-			dg.Destroy();
-			/*
-			// This is what we used to do, fix it to ask for the domain
-			int rc = 0;
+			// Read all current domains before letting them create
+			// a new ifolder
+			DomainWeb[] domains;
+			try
+			{
+				domains = ifws.GetDomains();
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													this, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
 
+
+			CreateDialog cd = new CreateDialog(domains);
+			cd.TransientFor = this;
+
+			int rc = 0;
 			do
 			{
-				// Switched out to use the compatible file selector
-				CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-					Util.GS("Choose a folder..."), this, 
-					CompatFileChooserDialog.Action.SelectFolder);
-
-				rc = cfcd.Run();
-				cfcd.Hide();
+				rc = cd.Run();
+				cd.Hide();
 
 				if(rc == -5)
 				{
-					string selectedFolder = cfcd.Selections[0];
+					string selectedFolder = cd.iFolderPath;
+					string selectedDomain = cd.DomainID;
 
 					if(ShowBadiFolderPath(selectedFolder, null))
 						continue;
@@ -1721,7 +1725,9 @@ namespace Novell.iFolder
 					try
 					{
    		 				iFolderWeb newiFolder = 
-							iFolderWS.CreateLocaliFolder(selectedFolder);
+							ifws.CreateiFolderInDomain(selectedFolder,
+														selectedDomain);
+
 						if(newiFolder == null)
 							throw new Exception("Simias returned null");
 
@@ -1729,7 +1735,6 @@ namespace Novell.iFolder
 							iFolderTreeStore.AppendValues(
 								new iFolderHolder(newiFolder));
 						curiFolders.Add(newiFolder.ID, iter);
-
 
 						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
 										"true") == "true")
@@ -1755,8 +1760,8 @@ namespace Novell.iFolder
 									ClientConfig.KEY_SHOW_CREATION, "false");
 							}
 
-							dlg.Destroy();
-							dlg = null;
+							cd.Destroy();
+							cd = null;
 						}
 					}
 					catch(Exception e)
@@ -1772,7 +1777,6 @@ namespace Novell.iFolder
 				}
 			}
 			while(rc == -5);
-			*/
 		}
 
 /*
