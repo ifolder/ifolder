@@ -152,6 +152,8 @@ static void * sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx);
 static int sec_process_message (SimiasEventClient *ec, 
 								char *message, 
 								int length);
+/* Anytime an event struct is returned, it must be freed using this function. */
+static void sec_free_event_struct (void *event_struct);
 /* #endregion */
 
 /* #region Public Functions */
@@ -362,10 +364,9 @@ printf ("SEC: sec_thread: recv () called\n");
 			real_length = *((int *)buf);
 			printf ("real_length: %d\n", real_length);
 			if (real_length > 0) {
-				real_message = malloc (sizeof (char) * real_length + 1);
+				real_message = malloc (sizeof (char) * real_length);
 				
 				strncpy (real_message, buf + 4, real_length);
-				real_message [real_length] = '\0';
 				
 				printf ("Message received:\n\n%s\n\n", real_message);
 				
@@ -592,6 +593,7 @@ sec_get_server_host_address (SimiasEventClient *ec,
 	while (!b_addr_read) {
 		if ((stat (config_file_path, &file_stat)) == 0) {
 			/* Attempt to read the XML config file. */
+			xmlInitParser ();
 			doc = xmlReadFile (config_file_path, NULL, 0);
 			if (doc != NULL) {
 
@@ -605,12 +607,14 @@ sec_get_server_host_address (SimiasEventClient *ec,
 				bzero ((char *)sin, sizeof (struct sockaddr_in));
 				sin->sin_family = AF_INET;
 				sin->sin_addr.s_addr = 
-					inet_addr (((SimiasEventServerConfig *)server_config)->host);
+					inet_addr (server_config->host);
 				sin->sin_port = 
-					htons (atoi (((SimiasEventServerConfig *)server_config)->port));
+					htons (atoi (server_config->port));
 					
 				b_addr_read = 1;
 				
+				free (server_config->host);
+				free (server_config->port);
 				free (server_config);
 				xmlFreeDoc (doc);
 			} else {
@@ -662,7 +666,8 @@ sec_process_message (SimiasEventClient *ec, char *message, int length)
 	void *message_struct;
 
 	/* Construct an xmlDoc from the message */	
-	doc = xmlReadMemory (message, length, "message.xml", NULL, XML_PARSE_RECOVER | XML_PARSE_NOERROR | XML_PARSE_NOWARNING);
+	xmlInitParser ();
+	doc = xmlReadMemory (message, length, "message.xml", NULL, 0);
 	if (doc != NULL) {
 		message_struct = sec_parse_struct_from_doc (doc);
 		if (message_struct == NULL) {
@@ -681,7 +686,7 @@ sec_process_message (SimiasEventClient *ec, char *message, int length)
 			printf ("NotifyEventArgs message received\n");
 		}
 		
-		free (message_struct);
+		sec_free_event_struct (message_struct);
 		xmlFreeDoc (doc);
 	} else {
 		fprintf (stderr, "SEC: Invalid XML received from event server\n");
@@ -854,6 +859,47 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 	}
 	
 	return data_struct;
+}
+
+static void
+sec_free_event_struct (void *event_struct)
+{
+	char **element_names = NULL;
+	char *element_name = NULL;
+	char **struct_ptr;
+	int i, struct_pos;
+
+	struct_ptr = (char **)event_struct;
+
+	/* Determine the type of struct we're dealing with */
+	if (!strcmp ("NodeEventArgs", struct_ptr [0])) {
+printf ("SEC: Freeing NodeEventArgs\n");
+		element_names = sec_node_event_elements;
+	} else if (!strcmp ("CollectionSyncEventArgs", struct_ptr [0])) {
+printf ("SEC: Freeing CollectionSyncEventArgs\n");
+		element_names = sec_collection_sync_event_elements;
+	} else if (!strcmp ("FileSyncEventArgs", struct_ptr [0])) {
+printf ("SEC: Freeing FileSyncEventArgs\n");
+		element_names = sec_file_sync_event_elements;
+	} else if (!strcmp ("NotifyEventArgs", struct_ptr [0])) {
+printf ("SEC: Freeing NotifyEventArgs\n");
+		element_names = sec_notify_event_elements;
+	} else {
+printf ("SEC: Freeing unknown event type (memory leak possible)\n");
+		free (event_struct);
+		return;
+	}
+	
+	element_name = element_names [0];
+	
+	for (i = 0; element_name; i++) {
+		free (struct_ptr [i]);
+
+		/* Advance to the next XPath expression */
+		element_name = element_names [i + 1];
+	}
+	
+	free (event_struct);
 }
 /* #endregion */
 
