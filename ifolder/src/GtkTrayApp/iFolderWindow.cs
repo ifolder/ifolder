@@ -108,6 +108,9 @@ namespace Novell.iFolder
 		private Gtk.MenuItem		ConflictMenuItem;
 		private Gtk.MenuItem		SyncNowMenuItem;
 		private ImageMenuItem		RevertMenuItem;
+		private ImageMenuItem		DeleteMenuItem;
+		private ImageMenuItem		RemoveMenuItem;
+		private Gtk.MenuItem		SetupMenuItem;
 		private ImageMenuItem		PropMenuItem;
 		private ImageMenuItem		CloseMenuItem;
 		private ImageMenuItem		RefreshMenuItem;
@@ -308,6 +311,10 @@ namespace Novell.iFolder
 			// Set Menu Status
 			//-----------------------------
 			CreateMenuItem.Sensitive = true;
+			SetupMenuItem.Sensitive = false;
+			DeleteMenuItem.Sensitive = false;
+			RemoveMenuItem.Sensitive = false;
+			RemoveMenuItem.Visible = false;
 			ShareMenuItem.Sensitive = false;
 			OpenMenuItem.Sensitive = false;
 			SyncNowMenuItem.Sensitive = false;
@@ -374,6 +381,23 @@ namespace Novell.iFolder
 				new AccelKey(Gdk.Key.N, Gdk.ModifierType.ControlMask,
 								AccelFlags.Visible));
 			CreateMenuItem.Activated += new EventHandler(OnCreateiFolder);
+
+			SetupMenuItem =
+				new MenuItem (Util.GS("_Setup iFolder"));
+			iFolderMenu.Append(SetupMenuItem);
+			SetupMenuItem.Activated += new EventHandler(OnSetupiFolder);
+
+			DeleteMenuItem =
+				new ImageMenuItem (Util.GS("_Delete iFolder"));
+			DeleteMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
+			iFolderMenu.Append(DeleteMenuItem);
+			DeleteMenuItem.Activated += new EventHandler(OnRemoveiFolder);
+
+			RemoveMenuItem =
+				new ImageMenuItem (Util.GS("Re_move iFolder"));
+			RemoveMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
+			iFolderMenu.Append(RemoveMenuItem);
+			RemoveMenuItem.Activated += new EventHandler(OnRemoveiFolder);
 
 			iFolderMenu.Append(new SeparatorMenuItem());
 			OpenMenuItem = new ImageMenuItem ( Stock.Open, agrp );
@@ -1262,11 +1286,41 @@ namespace Novell.iFolder
 					ConflictMenuItem.Sensitive = false;
 				}
 
-				ShareMenuItem.Sensitive = true;
-				OpenMenuItem.Sensitive = true;
-				SyncNowMenuItem.Sensitive = true;
-				RevertMenuItem.Sensitive = true;
-				PropMenuItem.Sensitive = true;
+				if(!ifHolder.iFolder.IsSubscription)
+				{
+					SetupMenuItem.Sensitive = false;
+					ShareMenuItem.Sensitive = true;
+					OpenMenuItem.Sensitive = true;
+					SyncNowMenuItem.Sensitive = true;
+					RevertMenuItem.Sensitive = true;
+					PropMenuItem.Sensitive = true;
+				}
+				else
+				{
+					SetupMenuItem.Sensitive = true;
+					ShareMenuItem.Sensitive = false;
+					OpenMenuItem.Sensitive = false;
+					SyncNowMenuItem.Sensitive = false;
+					RevertMenuItem.Sensitive = false;
+					PropMenuItem.Sensitive = false;
+				}
+
+
+				if(ifHolder.iFolder.OwnerID == 
+						ifSettings.CurrentUserID)
+				{
+					DeleteMenuItem.Sensitive = true;
+					DeleteMenuItem.Visible = true;
+					RemoveMenuItem.Sensitive = false;
+					RemoveMenuItem.Visible = false;
+				}
+				else
+				{
+					DeleteMenuItem.Sensitive = false;
+					DeleteMenuItem.Visible = false;
+					RemoveMenuItem.Sensitive = true;
+					RemoveMenuItem.Visible = true;
+				}
 			}
 			else
 			{
@@ -1275,7 +1329,12 @@ namespace Novell.iFolder
 				SyncNowMenuItem.Sensitive = false;
 				ConflictMenuItem.Sensitive = false;
 				RevertMenuItem.Sensitive = false;
+				DeleteMenuItem.Sensitive = false;
+//				DeleteMenuItem.Visible = false;
+				RemoveMenuItem.Sensitive = false;
+				RemoveMenuItem.Visible = false;
 				PropMenuItem.Sensitive = false;
+				SetupMenuItem.Sensitive = false;
 			}
 		}
 
@@ -1354,6 +1413,25 @@ namespace Novell.iFolder
 								item_revert.Activated += new EventHandler(
 										OnRevertiFolder);
 
+								if(ifHolder.iFolder.OwnerID == 
+												ifSettings.CurrentUserID)
+								{
+									MenuItem item_delete = new MenuItem (
+											Util.GS("Delete iFolder"));
+									ifMenu.Append (item_delete);
+									item_delete.Activated += new EventHandler(
+											OnRemoveiFolder);
+								}
+								else
+								{
+									MenuItem item_delete = new MenuItem (
+											Util.GS("Remove iFolder"));
+									ifMenu.Append (item_delete);
+									item_delete.Activated += new EventHandler(
+											OnRemoveiFolder);
+								}
+
+
 								ifMenu.Append(new SeparatorMenuItem());
 	
 								MenuItem item_properties = 
@@ -1370,18 +1448,26 @@ namespace Novell.iFolder
 								item_accept.Activated += new EventHandler(
 										OnSetupiFolder);
 
-								MenuItem item_decline = 
+								if(ifHolder.iFolder.OwnerID == 
+												ifSettings.CurrentUserID)
+								{
+									MenuItem item_decline = 
+										new MenuItem(Util.GS("Delete iFolder"));
+									ifMenu.Append (item_decline);
+									item_decline.Activated += new EventHandler(
+											OnRemoveiFolder);
+								}
+								else
+								{
+									MenuItem item_decline = 
 									new MenuItem (Util.GS("Remove iFolder"));
-								ifMenu.Append (item_decline);
-								item_decline.Activated += new EventHandler(
-										OnRemoveiFolder);
+									ifMenu.Append (item_decline);
+									item_decline.Activated += new EventHandler(
+											OnRemoveiFolder);
+								}
 							}
 							else
 							{
-								MenuItem item_accept = 
-									new MenuItem (Util.GS("Connect now..."));
-								ifMenu.Append (item_accept);
-
 								MenuItem item_decline = 
 									new MenuItem (Util.GS("Remove iFolder"));
 								ifMenu.Append (item_decline);
@@ -1832,51 +1918,56 @@ namespace Novell.iFolder
 					return;
 				int rc = 0;
 
-				if(ifHolder.iFolder.OwnerID == ifSettings.CurrentUserID)
-				{
-					iFolderMsgDialog dialog = new iFolderMsgDialog(
-						this,
-						iFolderMsgDialog.DialogType.Question,
-						iFolderMsgDialog.ButtonSet.YesNo,
-						Util.GS("Remove iFolder Confirmation"),
-						string.Format(Util.GS("Remove iFolder {0}?"),
-												ifHolder.iFolder.Name),
-						Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
-					rc = dialog.Run();
-					dialog.Hide();
-					dialog.Destroy();
-				}
-				else
-				{
-					iFolderMsgDialog dialog = new iFolderMsgDialog(
-						this,
-						iFolderMsgDialog.DialogType.Question,
-						iFolderMsgDialog.ButtonSet.YesNo,
-						Util.GS("Remove iFolder Confirmation"),
-						string.Format(Util.GS("Remove iFolder {0}?"),
-												ifHolder.iFolder.Name),
-						Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
-					rc = dialog.Run();
-					dialog.Hide();
-					dialog.Destroy();
-				}
+				rc = AskRemoveiFolder(ifHolder);
 
 				// User pressed OK?
 				if(rc != -8)
 					return;
 
+				iFolderWeb remiFolder = ifHolder.iFolder;
+
+				// Check if this is a subscription
+				// if it is not, the revert the ifolder first
+				if(!ifHolder.iFolder.IsSubscription)
+				{
+					try
+					{
+    					remiFolder = 
+								iFolderWS.RevertiFolder(ifHolder.iFolder.ID);
+						curiFolders.Remove(ifHolder.iFolder.ID);
+
+						// Set the value of the returned value for the one
+						// that was there
+						iFolderTreeStore.SetValue(iter, 0, 
+								new iFolderHolder(remiFolder));
+						curiFolders.Add(remiFolder.ID, iter);
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog(
+								this,
+								e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						return;
+					}
+				}
+
+
 				try
 				{
 					// remove the current iFolder so events don't replace it
-					curiFolders.Remove(ifHolder.iFolder.ID);
-   		 			iFolderWS.DeclineiFolderInvitation(ifHolder.iFolder.ID);
+					curiFolders.Remove(remiFolder.ID);
+   		 			iFolderWS.DeclineiFolderInvitation(remiFolder.ID);
 					// if no exception, remove it from the list
 					iFolderTreeStore.Remove(ref iter);
 				}
 				catch(Exception e)
 				{
 					// if we threw an exceptoin, add the old ifolder back
-					curiFolders.Add(ifHolder.iFolder.ID, iter);
+					curiFolders.Add(remiFolder.ID, iter);
 
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
 														this, e);
@@ -1888,6 +1979,43 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
+		private int AskRemoveiFolder(iFolderHolder ifHolder)
+		{
+			int rc = 0;
+
+			if(ifHolder.iFolder.OwnerID == ifSettings.CurrentUserID)
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					Util.GS("Remove iFolder Confirmation"),
+					string.Format(Util.GS("Remove iFolder {0}?"),
+											ifHolder.iFolder.Name),
+					Util.GS("This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive."));
+				rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+			}
+			else
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					this,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					Util.GS("Remove iFolder Confirmation"),
+					string.Format(Util.GS("Remove iFolder {0}?"),
+											ifHolder.iFolder.Name),
+					Util.GS("This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive."));
+				rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+			}
+			return rc;
+		}
 
 
 
@@ -2050,8 +2178,13 @@ namespace Novell.iFolder
 				SyncNowMenuItem.Sensitive = false;
 				ConflictMenuItem.Sensitive = false;
 				RevertMenuItem.Sensitive = false;
+				DeleteMenuItem.Sensitive = false;
+//				DeleteMenuItem.Visible = false;
+				RemoveMenuItem.Sensitive = false;
+//				RemoveMenuItem.Visible = false;
 				PropMenuItem.Sensitive = false;;
 				RefreshMenuItem.Sensitive = false;
+				SetupMenuItem.Sensitive = false;
 			}
 			else
 			{
