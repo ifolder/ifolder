@@ -70,13 +70,20 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Post
-# If path is not already in ld.so.conf, append it
-if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
-    echo "%{prefix}/bin" >> /etc/ld.so.conf
-    /sbin/ldconfig
-fi
-# Create simias.sh in /etc/profile.d to set PKG_CONFIG_PATH
-cat<<HERE > /etc/profile.d/simias.sh
+INSTANCES_AFTER_INSTALL=$1
+if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+    #
+    # If path is not already in ld.so.conf, append it
+    #
+    if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
+        echo "%{prefix}/bin" >> /etc/ld.so.conf
+        /sbin/ldconfig
+    fi
+
+    #
+    # Create simias.sh in /etc/profile.d to set PKG_CONFIG_PATH
+    #
+    cat<<HERE > /etc/profile.d/simias.sh
 if test -z "\$PKG_CONFIG_PATH" ; then
     export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
 else
@@ -84,9 +91,17 @@ else
 fi
 HERE
 
+fi
+
 #=============================================================================
 %Postun
-%{__rm} -f /etc/profile.d/simias.sh
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+    #
+    # Remove simias.sh from /etc/profile.d
+    #
+    %{__rm} -f /etc/profile.d/simias.sh
+fi
 
 #=============================================================================
 %Files

@@ -338,5 +338,6 @@ package/Makefile
 package/windows/Makefile
 package/linux/Makefile
 package/linux/addressbook.spec
+package/linux/addressbook.pc
 doc/Makefile
 ])

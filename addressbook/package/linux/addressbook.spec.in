@@ -37,7 +37,7 @@ Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : simias = %{version}
-Requires     : mono >= 0.30
+Requires     : mono >= 0.31
 Requires     : gtk-sharp >= 0.17
 Obsoletes    : %{name} <= %{version}
 
@@ -71,16 +71,40 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Post
-# If path is not already in ld.so.conf, append it
-if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
-    echo "%{prefix}/bin" >> /etc/ld.so.conf
-    /sbin/ldconfig
+INSTANCES_AFTER_INSTALL=$1
+if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+    #
+    # If path is not already in ld.so.conf, append it
+    #
+    if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
+        echo "%{prefix}/bin" >> /etc/ld.so.conf
+        /sbin/ldconfig
+    fi
+
+    #
+    # Create addressbook.sh in /etc/profile.d to set PKG_CONFIG_PATH
+    #
+    cat<<HERE > /etc/profile.d/addressbook.sh
+if test -z "\$PKG_CONFIG_PATH" ; then
+    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
+else
+    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
+fi
+HERE
+
+fi
+#=============================================================================
+%Postun
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+    #
+    # Remove addressbook.sh from /etc/profile.d
+    #
+    %{__rm} -f /etc/profile.d/addressbook.sh
 fi
 
 #=============================================================================
 %Files
 %defattr(-,root,root)
-%{prefix}/bin/*
-#%{prefix}/lib/*
-#%{prefix}/share/*
+%{prefix}/*
 

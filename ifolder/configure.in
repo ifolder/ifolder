@@ -518,5 +518,6 @@ package/Makefile
 package/windows/Makefile
 package/linux/Makefile
 package/linux/ifolder.spec
+package/linux/ifolder.pc
 doc/Makefile
 ])
