@@ -687,7 +687,9 @@ namespace Novell.FormsTrayApp
 					{
 						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-						string message = string.Format(resourceManager.GetString("newMemberMessage"), ifolderUser.Name, ifolder.Name);
+						string message = string.Format(resourceManager.GetString("newMemberMessage"), 
+							(ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name, 
+							ifolder.Name);
 							
 						balloonTip.ShowBalloon(
 							hwnd,
