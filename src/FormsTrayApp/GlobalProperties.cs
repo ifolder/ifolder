@@ -142,9 +142,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label freeSpace;
 		private System.Windows.Forms.Label usedSpace;
 		private System.Windows.Forms.Label totalSpace;
-		private System.Windows.Forms.Label label14;
-		private System.Windows.Forms.Label label15;
-		private System.Windows.Forms.Label label16;
 		private Novell.iFolderCom.GaugeChart gaugeChart1;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.Label label18;
@@ -173,6 +170,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox notifyShared;
 		private System.Windows.Forms.CheckBox notifyCollisions;
 		private System.Windows.Forms.CheckBox notifyJoins;
+		private System.Windows.Forms.Label totalSpaceUnits;
+		private System.Windows.Forms.Label usedSpaceUnits;
+		private System.Windows.Forms.Label freeSpaceUnits;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -296,9 +296,9 @@ namespace Novell.FormsTrayApp
 			this.label18 = new System.Windows.Forms.Label();
 			this.label17 = new System.Windows.Forms.Label();
 			this.gaugeChart1 = new Novell.iFolderCom.GaugeChart();
-			this.label16 = new System.Windows.Forms.Label();
-			this.label15 = new System.Windows.Forms.Label();
-			this.label14 = new System.Windows.Forms.Label();
+			this.totalSpaceUnits = new System.Windows.Forms.Label();
+			this.usedSpaceUnits = new System.Windows.Forms.Label();
+			this.freeSpaceUnits = new System.Windows.Forms.Label();
 			this.totalSpace = new System.Windows.Forms.Label();
 			this.usedSpace = new System.Windows.Forms.Label();
 			this.freeSpace = new System.Windows.Forms.Label();
@@ -1336,9 +1336,9 @@ namespace Novell.FormsTrayApp
 			this.groupBox6.Controls.Add(this.label18);
 			this.groupBox6.Controls.Add(this.label17);
 			this.groupBox6.Controls.Add(this.gaugeChart1);
-			this.groupBox6.Controls.Add(this.label16);
-			this.groupBox6.Controls.Add(this.label15);
-			this.groupBox6.Controls.Add(this.label14);
+			this.groupBox6.Controls.Add(this.totalSpaceUnits);
+			this.groupBox6.Controls.Add(this.usedSpaceUnits);
+			this.groupBox6.Controls.Add(this.freeSpaceUnits);
 			this.groupBox6.Controls.Add(this.totalSpace);
 			this.groupBox6.Controls.Add(this.usedSpace);
 			this.groupBox6.Controls.Add(this.freeSpace);
@@ -1423,71 +1423,71 @@ namespace Novell.FormsTrayApp
 			this.gaugeChart1.TabIndex = ((int)(resources.GetObject("gaugeChart1.TabIndex")));
 			this.gaugeChart1.Visible = ((bool)(resources.GetObject("gaugeChart1.Visible")));
 			// 
-			// label16
+			// totalSpaceUnits
 			// 
-			this.label16.AccessibleDescription = resources.GetString("label16.AccessibleDescription");
-			this.label16.AccessibleName = resources.GetString("label16.AccessibleName");
-			this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label16.Anchor")));
-			this.label16.AutoSize = ((bool)(resources.GetObject("label16.AutoSize")));
-			this.label16.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label16.Dock")));
-			this.label16.Enabled = ((bool)(resources.GetObject("label16.Enabled")));
-			this.label16.Font = ((System.Drawing.Font)(resources.GetObject("label16.Font")));
-			this.label16.Image = ((System.Drawing.Image)(resources.GetObject("label16.Image")));
-			this.label16.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label16.ImageAlign")));
-			this.label16.ImageIndex = ((int)(resources.GetObject("label16.ImageIndex")));
-			this.label16.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label16.ImeMode")));
-			this.label16.Location = ((System.Drawing.Point)(resources.GetObject("label16.Location")));
-			this.label16.Name = "label16";
-			this.label16.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label16.RightToLeft")));
-			this.label16.Size = ((System.Drawing.Size)(resources.GetObject("label16.Size")));
-			this.label16.TabIndex = ((int)(resources.GetObject("label16.TabIndex")));
-			this.label16.Text = resources.GetString("label16.Text");
-			this.label16.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label16.TextAlign")));
-			this.label16.Visible = ((bool)(resources.GetObject("label16.Visible")));
+			this.totalSpaceUnits.AccessibleDescription = resources.GetString("totalSpaceUnits.AccessibleDescription");
+			this.totalSpaceUnits.AccessibleName = resources.GetString("totalSpaceUnits.AccessibleName");
+			this.totalSpaceUnits.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("totalSpaceUnits.Anchor")));
+			this.totalSpaceUnits.AutoSize = ((bool)(resources.GetObject("totalSpaceUnits.AutoSize")));
+			this.totalSpaceUnits.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("totalSpaceUnits.Dock")));
+			this.totalSpaceUnits.Enabled = ((bool)(resources.GetObject("totalSpaceUnits.Enabled")));
+			this.totalSpaceUnits.Font = ((System.Drawing.Font)(resources.GetObject("totalSpaceUnits.Font")));
+			this.totalSpaceUnits.Image = ((System.Drawing.Image)(resources.GetObject("totalSpaceUnits.Image")));
+			this.totalSpaceUnits.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("totalSpaceUnits.ImageAlign")));
+			this.totalSpaceUnits.ImageIndex = ((int)(resources.GetObject("totalSpaceUnits.ImageIndex")));
+			this.totalSpaceUnits.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("totalSpaceUnits.ImeMode")));
+			this.totalSpaceUnits.Location = ((System.Drawing.Point)(resources.GetObject("totalSpaceUnits.Location")));
+			this.totalSpaceUnits.Name = "totalSpaceUnits";
+			this.totalSpaceUnits.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("totalSpaceUnits.RightToLeft")));
+			this.totalSpaceUnits.Size = ((System.Drawing.Size)(resources.GetObject("totalSpaceUnits.Size")));
+			this.totalSpaceUnits.TabIndex = ((int)(resources.GetObject("totalSpaceUnits.TabIndex")));
+			this.totalSpaceUnits.Text = resources.GetString("totalSpaceUnits.Text");
+			this.totalSpaceUnits.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("totalSpaceUnits.TextAlign")));
+			this.totalSpaceUnits.Visible = ((bool)(resources.GetObject("totalSpaceUnits.Visible")));
 			// 
-			// label15
+			// usedSpaceUnits
 			// 
-			this.label15.AccessibleDescription = resources.GetString("label15.AccessibleDescription");
-			this.label15.AccessibleName = resources.GetString("label15.AccessibleName");
-			this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label15.Anchor")));
-			this.label15.AutoSize = ((bool)(resources.GetObject("label15.AutoSize")));
-			this.label15.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label15.Dock")));
-			this.label15.Enabled = ((bool)(resources.GetObject("label15.Enabled")));
-			this.label15.Font = ((System.Drawing.Font)(resources.GetObject("label15.Font")));
-			this.label15.Image = ((System.Drawing.Image)(resources.GetObject("label15.Image")));
-			this.label15.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label15.ImageAlign")));
-			this.label15.ImageIndex = ((int)(resources.GetObject("label15.ImageIndex")));
-			this.label15.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label15.ImeMode")));
-			this.label15.Location = ((System.Drawing.Point)(resources.GetObject("label15.Location")));
-			this.label15.Name = "label15";
-			this.label15.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label15.RightToLeft")));
-			this.label15.Size = ((System.Drawing.Size)(resources.GetObject("label15.Size")));
-			this.label15.TabIndex = ((int)(resources.GetObject("label15.TabIndex")));
-			this.label15.Text = resources.GetString("label15.Text");
-			this.label15.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label15.TextAlign")));
-			this.label15.Visible = ((bool)(resources.GetObject("label15.Visible")));
+			this.usedSpaceUnits.AccessibleDescription = resources.GetString("usedSpaceUnits.AccessibleDescription");
+			this.usedSpaceUnits.AccessibleName = resources.GetString("usedSpaceUnits.AccessibleName");
+			this.usedSpaceUnits.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("usedSpaceUnits.Anchor")));
+			this.usedSpaceUnits.AutoSize = ((bool)(resources.GetObject("usedSpaceUnits.AutoSize")));
+			this.usedSpaceUnits.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("usedSpaceUnits.Dock")));
+			this.usedSpaceUnits.Enabled = ((bool)(resources.GetObject("usedSpaceUnits.Enabled")));
+			this.usedSpaceUnits.Font = ((System.Drawing.Font)(resources.GetObject("usedSpaceUnits.Font")));
+			this.usedSpaceUnits.Image = ((System.Drawing.Image)(resources.GetObject("usedSpaceUnits.Image")));
+			this.usedSpaceUnits.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("usedSpaceUnits.ImageAlign")));
+			this.usedSpaceUnits.ImageIndex = ((int)(resources.GetObject("usedSpaceUnits.ImageIndex")));
+			this.usedSpaceUnits.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("usedSpaceUnits.ImeMode")));
+			this.usedSpaceUnits.Location = ((System.Drawing.Point)(resources.GetObject("usedSpaceUnits.Location")));
+			this.usedSpaceUnits.Name = "usedSpaceUnits";
+			this.usedSpaceUnits.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("usedSpaceUnits.RightToLeft")));
+			this.usedSpaceUnits.Size = ((System.Drawing.Size)(resources.GetObject("usedSpaceUnits.Size")));
+			this.usedSpaceUnits.TabIndex = ((int)(resources.GetObject("usedSpaceUnits.TabIndex")));
+			this.usedSpaceUnits.Text = resources.GetString("usedSpaceUnits.Text");
+			this.usedSpaceUnits.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("usedSpaceUnits.TextAlign")));
+			this.usedSpaceUnits.Visible = ((bool)(resources.GetObject("usedSpaceUnits.Visible")));
 			// 
-			// label14
+			// freeSpaceUnits
 			// 
-			this.label14.AccessibleDescription = resources.GetString("label14.AccessibleDescription");
-			this.label14.AccessibleName = resources.GetString("label14.AccessibleName");
-			this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label14.Anchor")));
-			this.label14.AutoSize = ((bool)(resources.GetObject("label14.AutoSize")));
-			this.label14.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label14.Dock")));
-			this.label14.Enabled = ((bool)(resources.GetObject("label14.Enabled")));
-			this.label14.Font = ((System.Drawing.Font)(resources.GetObject("label14.Font")));
-			this.label14.Image = ((System.Drawing.Image)(resources.GetObject("label14.Image")));
-			this.label14.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label14.ImageAlign")));
-			this.label14.ImageIndex = ((int)(resources.GetObject("label14.ImageIndex")));
-			this.label14.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label14.ImeMode")));
-			this.label14.Location = ((System.Drawing.Point)(resources.GetObject("label14.Location")));
-			this.label14.Name = "label14";
-			this.label14.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label14.RightToLeft")));
-			this.label14.Size = ((System.Drawing.Size)(resources.GetObject("label14.Size")));
-			this.label14.TabIndex = ((int)(resources.GetObject("label14.TabIndex")));
-			this.label14.Text = resources.GetString("label14.Text");
-			this.label14.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label14.TextAlign")));
-			this.label14.Visible = ((bool)(resources.GetObject("label14.Visible")));
+			this.freeSpaceUnits.AccessibleDescription = resources.GetString("freeSpaceUnits.AccessibleDescription");
+			this.freeSpaceUnits.AccessibleName = resources.GetString("freeSpaceUnits.AccessibleName");
+			this.freeSpaceUnits.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("freeSpaceUnits.Anchor")));
+			this.freeSpaceUnits.AutoSize = ((bool)(resources.GetObject("freeSpaceUnits.AutoSize")));
+			this.freeSpaceUnits.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("freeSpaceUnits.Dock")));
+			this.freeSpaceUnits.Enabled = ((bool)(resources.GetObject("freeSpaceUnits.Enabled")));
+			this.freeSpaceUnits.Font = ((System.Drawing.Font)(resources.GetObject("freeSpaceUnits.Font")));
+			this.freeSpaceUnits.Image = ((System.Drawing.Image)(resources.GetObject("freeSpaceUnits.Image")));
+			this.freeSpaceUnits.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("freeSpaceUnits.ImageAlign")));
+			this.freeSpaceUnits.ImageIndex = ((int)(resources.GetObject("freeSpaceUnits.ImageIndex")));
+			this.freeSpaceUnits.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("freeSpaceUnits.ImeMode")));
+			this.freeSpaceUnits.Location = ((System.Drawing.Point)(resources.GetObject("freeSpaceUnits.Location")));
+			this.freeSpaceUnits.Name = "freeSpaceUnits";
+			this.freeSpaceUnits.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("freeSpaceUnits.RightToLeft")));
+			this.freeSpaceUnits.Size = ((System.Drawing.Size)(resources.GetObject("freeSpaceUnits.Size")));
+			this.freeSpaceUnits.TabIndex = ((int)(resources.GetObject("freeSpaceUnits.TabIndex")));
+			this.freeSpaceUnits.Text = resources.GetString("freeSpaceUnits.Text");
+			this.freeSpaceUnits.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("freeSpaceUnits.TextAlign")));
+			this.freeSpaceUnits.Visible = ((bool)(resources.GetObject("freeSpaceUnits.Visible")));
 			// 
 			// totalSpace
 			// 
@@ -2538,6 +2538,8 @@ namespace Novell.FormsTrayApp
 				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
 				if (diskSpace.Limit != 0)
 				{
+					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
+						resourceManager.GetString("freeSpaceUnits.Text");
 					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
 
 					double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
@@ -2551,6 +2553,8 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
+					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text =
+						resourceManager.GetString("notApplicable");
 					usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
 					gaugeChart1.Used = 0;
 				}
