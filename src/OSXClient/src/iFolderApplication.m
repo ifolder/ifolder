@@ -284,6 +284,7 @@
 													PREFKEY_NOTIFYUSER,
 													PREFKEY_NOTIFYBYINDEX,
 													STATE_SHOWMAINWINDOW,
+													PREFKEY_NOTIFYSOUND,
 													nil];
 
 	NSArray *values = [NSArray arrayWithObjects:	[NSNumber numberWithBool:YES],
@@ -294,6 +295,7 @@
 													[NSNumber numberWithBool:YES],
 													[NSNumber numberWithInt:0],
 													[NSNumber numberWithBool:YES],
+													@"Glass",
 													nil];
 
 	NSDictionary *defaults = [[NSMutableDictionary alloc]
@@ -580,9 +582,6 @@
  			// need to in case of a new iFolder
 			[[iFolderData sharedInstance] 
 								readiFolder:[colNodeEvent collectionID]];
-
-			[iFolderNotificationController newiFolderNotification:nil];
-
 			break;
 		}
 		case NODE_DELETED:
@@ -609,8 +608,11 @@
 
 			if(isiFolder)
 			{
-				[[iFolderData sharedInstance] 
-								readiFolder:[colNodeEvent collectionID]];
+				iFolder *ifolder = [[iFolderData sharedInstance] 
+										readiFolder:[colNodeEvent collectionID]];
+									
+				if([ifolder HasConflicts])
+					[iFolderNotificationController collisionNotification:ifolder];								
 			}
 			break;
 		}
@@ -635,7 +637,7 @@
 									readAvailableiFolder:[subNodeEvent nodeID]
 									inCollection:[subNodeEvent collectionID]];
 //			if(ifolder != nil) trigger some event
-			[iFolderNotificationController newiFolderNotification:nil];
+			[iFolderNotificationController newiFolderNotification:ifolder];
 			break;
 		}
 		case NODE_DELETED:

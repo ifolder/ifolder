@@ -34,6 +34,7 @@ NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
 NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
 NSDictionary *getDiskSpaceProperties(struct ns1__DiskSpace *ds);
 NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
+NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
 -(BOOL) Ping
@@ -1031,6 +1032,133 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
 
 
 
+-(NSArray *) GetiFolderConflicts:(NSString *)ifolderID
+{
+	NSMutableArray *conflicts = nil;
+	
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+
+	struct _ns1__GetiFolderConflicts			getConflictsMessage;
+	struct _ns1__GetiFolderConflictsResponse	getConflictsResponse;
+
+	getConflictsMessage.iFolderID = (char *)[ifolderID cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__GetiFolderConflicts(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &getConflictsMessage,
+            &getConflictsResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in GetiFolderUsers"];
+	}
+	else
+	{
+		int conflictcount = getConflictsResponse.GetiFolderConflictsResult->__sizeConflict;
+		if(conflictcount > 0)
+		{
+			conflicts = [[NSMutableArray alloc] initWithCapacity:conflictcount];
+			
+			int counter;
+			for( counter = 0; counter < conflictcount; counter++ )
+			{
+				struct ns1__Conflict *curConflict;
+			
+				curConflict = getConflictsResponse.GetiFolderConflictsResult->Conflict[counter];
+				iFolderConflict *newConflict = [[iFolderConflict alloc] init];
+
+				[newConflict setProperties:getConflictProperties(curConflict)];
+				
+				[conflicts addObject:newConflict];
+			}
+		}
+    }
+
+    cleanup_gsoap(&soap);
+
+	return conflicts;
+}
+
+
+
+
+-(void) ResolveFileConflict:(NSString *)ifolderID withID:(NSString *)conflictID localChanges:(bool)saveLocal
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (conflictID != nil), @"conflictID was nil");
+
+	struct _ns1__ResolveFileConflict			resolveMessage;
+	struct _ns1__ResolveFileConflictResponse	resolveResponse;
+
+	resolveMessage.iFolderID = (char *)[ifolderID cString];
+	resolveMessage.conflictID = (char *)[conflictID cString];
+	resolveMessage.localChangesWin = saveLocal;
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__ResolveFileConflict(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &resolveMessage,
+            &resolveResponse);
+
+ 	if(soap.error)
+	{
+	    cleanup_gsoap(&soap);
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in ResolveFileConflict"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
+
+
+-(void) ResolveNameConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingName:(NSString *)newName
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (conflictID != nil), @"conflictID was nil");
+	NSAssert( (newName != nil), @"newName was nil");
+
+	struct _ns1__ResolveNameConflict			resolveMessage;
+	struct _ns1__ResolveNameConflictResponse	resolveResponse;
+
+	resolveMessage.iFolderID = (char *)[ifolderID cString];
+	resolveMessage.conflictID = (char *)[conflictID cString];
+	resolveMessage.newLocalName = (char *)[newName cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__ResolveNameConflict(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &resolveMessage,
+            &resolveResponse);
+
+ 	if(soap.error)
+	{
+	    cleanup_gsoap(&soap);
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in ResolveNameConflict"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
 
 
 
@@ -1169,6 +1297,48 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss)
 	
 	return newProperties;
 }
+
+
+NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+
+	if(conflict->iFolderID != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->iFolderID] forKey:@"iFolderID"];
+
+	if(conflict->ConflictID != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->ConflictID] forKey:@"ConflictID"];
+
+	if(conflict->LocalName != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->LocalName] forKey:@"LocalName"];
+
+	if(conflict->LocalDate != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->LocalDate] forKey:@"LocalDate"];
+
+	if(conflict->LocalSize != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->LocalSize] forKey:@"LocalSize"];
+
+	if(conflict->LocalFullPath != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->LocalFullPath] forKey:@"LocalFullPath"];
+
+	if(conflict->ServerName != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->ServerName] forKey:@"ServerName"];
+
+	if(conflict->ServerDate != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->ServerDate] forKey:@"ServerDate"];
+
+	if(conflict->ServerSize != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->ServerSize] forKey:@"ServerSize"];
+
+	if(conflict->ServerFullPath != nil)
+		[newProperties setObject:[NSString stringWithCString:conflict->ServerFullPath] forKey:@"ServerFullPath"];
+
+	[newProperties setObject:[NSNumber numberWithBool:conflict->IsNameConflict] forKey:@"IsNameConflict"];
+
+	return newProperties;
+}
+
+
 
 
 @end

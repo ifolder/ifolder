@@ -13,6 +13,8 @@
 				3E4F5738078C30DA00313076,
 				3E6F7ACD07B3E55A00F46F36,
 				3E6F7ACE07B3E55A00F46F36,
+				3E0E6CFF07C7E7290057D505,
+				3E0E6CFE07C7E7290057D505,
 			);
 			isa = PBXGroup;
 			name = OtherWIndows;
@@ -171,8 +173,9 @@
 				3E6F7AC907B3E4DB00F46F36,
 				3EE8876907B9503200484B9F,
 				3EE8881407B9603E00484B9F,
-				3E09F85F07C04CE200381F59,
+				3EA98A9F07C7A4520078451D,
 				3E49BC6B0765224B0040812D,
+				3E09F85F07C04CE200381F59,
 				3E09F83307C048B700381F59,
 				3E09F82D07C048AA00381F59,
 				3E09F82707C0489F00381F59,
@@ -367,6 +370,66 @@
 		};
 		3E09F86007C04CE200381F59 = {
 			fileRef = 3E09F85F07C04CE200381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E0E6CBC07C7D41B0057D505 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = iFolderConflict.h;
+			path = src/iFolderConflict.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E0E6CBD07C7D41B0057D505 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = iFolderConflict.m;
+			path = src/iFolderConflict.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E0E6CBE07C7D41B0057D505 = {
+			fileRef = 3E0E6CBC07C7D41B0057D505;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E0E6CBF07C7D41B0057D505 = {
+			fileRef = 3E0E6CBD07C7D41B0057D505;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E0E6CFE07C7E7290057D505 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ConflictWindowController.m;
+			path = src/ConflictWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E0E6CFF07C7E7290057D505 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ConflictWindowController.h;
+			path = src/ConflictWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E0E6D0007C7E7290057D505 = {
+			fileRef = 3E0E6CFE07C7E7290057D505;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E0E6D0107C7E7290057D505 = {
+			fileRef = 3E0E6CFF07C7E7290057D505;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1246,6 +1309,30 @@
 			settings = {
 			};
 		};
+		3EA98A9F07C7A4520078451D = {
+			children = (
+				3EA98AA007C7A4520078451D,
+			);
+			isa = PBXVariantGroup;
+			name = ConflictResolver.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EA98AA007C7A4520078451D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = English.lproj/ConflictResolver.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EA98AA107C7A4520078451D = {
+			fileRef = 3EA98A9F07C7A4520078451D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EAEF5050769104900B98AF6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -1817,6 +1904,8 @@
 		};
 		3EEA9A6507B1DBCC0015FCF4 = {
 			children = (
+				3E0E6CBC07C7D41B0057D505,
+				3E0E6CBD07C7D41B0057D505,
 				3EE278EC07C46CD500A645A0,
 				3EE278ED07C46CD500A645A0,
 				3EE2781D07C44B7400A645A0,
@@ -2029,6 +2118,9 @@
 				3E8853D807C6F80A00E8B6CD,
 				3E8853DA07C6F80A00E8B6CD,
 				3E8853DC07C6F80A00E8B6CD,
+				3EA98AA107C7A4520078451D,
+				3E0E6CBE07C7D41B0057D505,
+				3E0E6D0107C7E7290057D505,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2082,6 +2174,8 @@
 				3E8853D907C6F80A00E8B6CD,
 				3E8853DB07C6F80A00E8B6CD,
 				3E8853DD07C6F80A00E8B6CD,
+				3E0E6CBF07C7D41B0057D505,
+				3E0E6D0007C7E7290057D505,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

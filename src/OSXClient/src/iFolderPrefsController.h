@@ -51,6 +51,7 @@
 - (IBAction)toggleSyncEnabled:(id)sender;
 - (IBAction)updateSyncValue:(id)sender;
 - (IBAction)changeSyncUnits:(id)sender;
+- (IBAction)playSound:(id)sender;
 
 + (iFolderPrefsController *)sharedInstance;
 

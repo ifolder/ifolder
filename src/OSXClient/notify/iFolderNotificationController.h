@@ -18,7 +18,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  based on the JVNotificationController
- *		Author: Timothy Hatcher <timothy@colloquy.info>
+ *		Authors: Timothy Hatcher <timothy@colloquy.info>
+ *				 Karl Adam <karl@colloquy.info>
  * 
  *	Modifications for iFolder: Calvin Gaisford <cgaisford@novell.com>
  *

@@ -18,7 +18,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  based on the JVNotificationController
- *		Author: Timothy Hatcher <timothy@colloquy.info>
+ *		Authors: Timothy Hatcher <timothy@colloquy.info>
+ *				 Karl Adam <karl@colloquy.info>
  * 
  *	Modifications for iFolder: Calvin Gaisford <cgaisford@novell.com>
  * 
@@ -102,9 +103,10 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
 	{
-		[notifyContext setObject:@"New iFolder" forKey:@"title"];
-		[notifyContext setObject:@"You were invited to an iFolder" forKey:@"description"];
-
+		[notifyContext setObject:[NSString stringWithFormat:@"New iFolder \"%2\"", [ifolder Name]]
+										forKey:@"title"];
+		[notifyContext setObject:[NSString stringWithFormat:@"%2 has invited you to participate in this shared iFolder", [ifolder Name]]
+										forKey:@"description"];
 		[self performNotification:notifyContext];
 	}
 }
@@ -125,8 +127,9 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYCOLL])
 	{
-		[notifyContext setObject:@"Collisions were found" forKey:@"title"];
-		[notifyContext setObject:@"You have collisions in your iFolder" forKey:@"description"];
+		[notifyContext setObject:[NSString stringWithFormat:@"Error synchronizing \"%2\"", [ifolder Name]]
+									forKey:@"title"];
+		[notifyContext setObject:@"Collisions have been detected and must be resolved" forKey:@"description"];
 
 		[self performNotification:notifyContext];
 	}
@@ -141,22 +144,20 @@ static iFolderNotificationController *sharedInstance = nil;
 		[self _playSound:@"bogus"];
 
 
-// Do something here to bounce the icon or not
-//													[NSNumber numberWithInt:0],
-//	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYBYINDEX])
-
-
 //	if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] )
 //	{
 //		if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )
 //			[self _bounceIconContinuously];
 //		else [self _bounceIconOnce];
 //	}
+	if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_NOTIFYBYINDEX] == 0)
+		[self _bounceIconOnce];
+	else
+		[self _bounceIconContinuously];
 
-//	if( [[eventPrefs objectForKey:@"showBubble"] boolValue] )
-//	{
+
+	if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_NOTIFYBYINDEX] == 0)
 		[self _showBubble:context];
-//	}
 }
 @end
 
@@ -165,12 +166,12 @@ static iFolderNotificationController *sharedInstance = nil;
 @implementation iFolderNotificationController (iFolderNotificationControllerPrivate)
 - (void) _bounceIconOnce
 {
-	[[NSApplication sharedApplication] requestUserAttention:NSInformationalRequest];
+	[NSApp requestUserAttention:NSInformationalRequest];
 }
 
 - (void) _bounceIconContinuously
 {
-	[[NSApplication sharedApplication] requestUserAttention:NSCriticalRequest];
+	[NSApp requestUserAttention:NSCriticalRequest];
 }
 
 - (void) _showBubble:(NSDictionary *) context
@@ -218,7 +219,12 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	// This sucks, fix this up as soon as possible to let the users
 	// pick a sound!
-	NSSound *sound = [NSSound soundNamed:@"Glass"];
+	NSString *sName = [[NSUserDefaults standardUserDefaults] objectForKey:PREFKEY_NOTIFYSOUND];
+	// uh... this sucks! Can you say English only?
+	if([sName compare:@"No sound"] == 0)
+		return;
+
+	NSSound *sound = [NSSound soundNamed:sName];
 	
 //	if( ! path ) return;
 

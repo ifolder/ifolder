@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  * 
- *  Copyright © 2003-2004, Timothy Hatcher
+ *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -17,15 +17,55 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Authors: Timothy Hatcher <timothy@colloquy.info>
- *			 Karl Adam <karl@colloquy.info>
+ *  Author: Calvin Gaisford <cgaisford@novell.com>
  * 
  ***********************************************************************/
 
-#import <Cocoa/Cocoa.h>
+#import "iFolderConflict.h"
 
-@interface KABubbleWindow : NSWindow
+
+@implementation iFolderConflict
+
+- (id) init
 {
-	NSPoint startingPoint;
+	if(self = [super init])
+	{
+		NSArray *keys = [NSArray arrayWithObjects:
+			@"Name", nil];
+			
+		NSArray *values		= [NSArray arrayWithObjects:
+			@"nil conflict", nil];
+		
+		properties = [[NSMutableDictionary alloc]
+			initWithObjects:values forKeys: keys];
+	}
+	return self;
 }
+
+
+-(void) dealloc
+{
+	[properties release];
+
+	[super dealloc];
+}
+
+
+-(NSMutableDictionary *) properties
+{
+	return properties;
+}
+
+
+-(void) setProperties: (NSDictionary *)newProperties
+{
+	if(properties != newProperties)
+	{
+		[properties autorelease];
+		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
+	}
+}
+
+
+
 @end

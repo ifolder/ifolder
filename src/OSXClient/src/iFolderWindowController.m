@@ -26,6 +26,7 @@
 #import "CreateiFolderSheetController.h"
 #import "SetupiFolderSheetController.h"
 #import "PropertiesWindowController.h"
+#import "ConflictWindowController.h"
 #import "iFolder.h"
 #import "iFolderDomain.h"
 #import "iFolderData.h"
@@ -305,6 +306,13 @@ static iFolderWindowController *sharedInstance = nil;
 
 
 
+- (IBAction)resolveConflicts:(id)sender
+{
+	[[ConflictWindowController sharedInstance] showWindow:self];
+}
+
+
+
 - (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	switch(returnCode)
@@ -501,6 +509,20 @@ static iFolderWindowController *sharedInstance = nil;
 		{
 			if( ([[[ifoldersController arrangedObjects] objectAtIndex:selIndex] IsSubscription] == NO) &&
 				([[[[ifoldersController arrangedObjects] objectAtIndex:selIndex] valueForKeyPath:@"properties.IsWorkgroup"] boolValue] == NO) )
+				return YES;
+		}
+		return NO;
+	}
+	else if(action == @selector(resolveConflicts:))
+	{
+		if([[NSApp delegate] simiasIsRunning] == NO)
+			return NO;
+
+		int selIndex = [ifoldersController selectionIndex];
+
+		if (selIndex != NSNotFound)
+		{
+			if([[[ifoldersController arrangedObjects] objectAtIndex:selIndex] HasConflicts] == YES)
 				return YES;
 		}
 		return NO;
