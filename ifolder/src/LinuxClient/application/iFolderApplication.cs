@@ -82,7 +82,7 @@ namespace Novell.iFolder
 				new ButtonPressEventHandler(trayapp_clicked);
 
 			RunningPixbuf = 
-					new Pixbuf(Util.ImagesPath("ifolder.png"));
+					new Pixbuf(Util.ImagesPath("ifolder24.png"));
 			StartingPixbuf = 
 					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
 			StoppingPixbuf = 

@@ -219,7 +219,7 @@ namespace Novell.iFolder
 		{
 			this.SetDefaultSize (600, 480);
 			this.Icon = 
-				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
 			VBox vbox = new VBox();
 			vbox.Spacing = 10;
 			vbox.BorderWidth = 10;
@@ -391,7 +391,7 @@ namespace Novell.iFolder
 						OnConflictSelectionChanged);
 
 			ConflictPixBuf = 
-				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
+				new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"));
 
 			this.AddButton(Stock.Close, ResponseType.Ok);
 			this.AddButton(Stock.Help, ResponseType.Help);

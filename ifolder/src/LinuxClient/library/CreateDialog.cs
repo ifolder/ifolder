@@ -59,7 +59,7 @@ namespace Novell.iFolder
 
 			this.SetDefaultSize (500, 200);
 
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 
 			VBox dialogBox = new VBox();
 			dialogBox.Spacing = 10;

@@ -150,7 +150,7 @@ namespace Novell.iFolder
 			dialogBox.Spacing = 10;
 
 			this.SetDefaultSize (480, 480);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 
 			//-----------------------------
 			// Create iFolder Picker List
@@ -268,7 +268,7 @@ namespace Novell.iFolder
 					ConflictBox.BorderWidth = 10;
 
 					Gdk.Pixbuf conPix = new Gdk.Pixbuf(
-								Util.ImagesPath("ifolder-collision.png"));
+								Util.ImagesPath("conflict24.png"));
 					Image conImage = new Image(conPix);
 
 					conImage.SetAlignment(0.5F, 0);

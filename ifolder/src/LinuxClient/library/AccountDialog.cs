@@ -46,7 +46,7 @@ namespace Novell.iFolder
 		private void SetupDialog()
 		{
 			this.Title = Util.GS("Account Statistics");
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png"));
 			this.HasSeparator = false;
 
 			this.Resizable = false;
