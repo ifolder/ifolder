@@ -2035,7 +2035,7 @@ namespace Novell.FormsTrayApp
 				apply.Enabled = true;
 			}
 
-			defaultInterval.Enabled = autoSync.Checked;
+			defaultInterval.Enabled = timeUnit.Enabled = autoSync.Checked;			
 		}
 
 		private void notifyShared_CheckedChanged(object sender, System.EventArgs e)
