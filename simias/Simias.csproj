@@ -205,16 +205,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\Alias.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionStore\BaseContact.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\CollectionStore\BaseFileNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -270,7 +260,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\IdentityManager.cs"
+                    RelPath = "src\CollectionStore\Identity.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -280,12 +270,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\LocalAddressBook.cs"
+                    RelPath = "src\CollectionStore\LocalDatabase.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\LocalDatabase.cs"
+                    RelPath = "src\CollectionStore\Member.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -331,11 +321,6 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\StoreFileNode.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionStore\WorkGroup.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
