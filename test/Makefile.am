@@ -1,4 +1,4 @@
-SUBDIRS = iFolder
+SUBDIRS = iFolder iFolderComponent
 	
 DIST_SUBDIRS = $(SUBDIRS)
 

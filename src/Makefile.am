@@ -17,11 +17,6 @@ install-exec-local: install-ifolder-to-gac
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f install-ifolder-to-gac
 
-installcheck-summary:
-	rm -f $(REPORT_DIR)/*.test.xml
-	$(MAKE) -i installcheck
-	$(REPORT_EXE) $(REPORT_DIR)
-
 register unregister:
 if WINDOWS
 	$(MAKE) -C iFolderShell $@
