@@ -440,7 +440,7 @@ namespace Novell.iFolder
 
 				// First Name Search
 				IABList clist = curAddrBook.SearchFirstName(SearchEntry.Text,
-						Simias.Storage.Property.Operator.Begins);
+						Simias.Storage.SearchOp.Begins);
 				foreach(Contact c in clist)
 				{
 					idHash.Add(c.ID, c);
@@ -448,7 +448,7 @@ namespace Novell.iFolder
 
 				// Last Name Search
 				clist = curAddrBook.SearchLastName(SearchEntry.Text,
-						Simias.Storage.Property.Operator.Begins);
+						Simias.Storage.SearchOp.Begins);
 				foreach(Contact c in clist)
 				{
 					if(!idHash.Contains(c.ID))
@@ -457,7 +457,7 @@ namespace Novell.iFolder
 
 				// UserName Name Search
 				clist = curAddrBook.SearchUsername(SearchEntry.Text,
-						Simias.Storage.Property.Operator.Begins);
+						Simias.Storage.SearchOp.Begins);
 				foreach(Contact c in clist)
 				{
 					if(!idHash.Contains(c.ID))
@@ -466,7 +466,7 @@ namespace Novell.iFolder
 
 				// Email Name Search
 				clist = curAddrBook.SearchEmail(SearchEntry.Text,
-						Simias.Storage.Property.Operator.Begins);
+						Simias.Storage.SearchOp.Begins);
 				foreach(Contact c in clist)
 				{
 					if(!idHash.Contains(c.ID))
