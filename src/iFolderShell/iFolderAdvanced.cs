@@ -2013,9 +2013,10 @@ namespace Novell.iFolderCom
 				connectToWebService();
 
 				// Update the sync interval.
-				if (currentiFolder.SyncInterval != (int)syncInterval.Value)
+				if ((currentiFolder.SyncInterval != (int)syncInterval.Value) ||
+					(autoSync.Checked != (currentiFolder.SyncInterval != System.Threading.Timeout.Infinite)))
 				{
-					ifWebService.SetiFolderSyncInterval(currentiFolder.ID, (int)syncInterval.Value);
+					ifWebService.SetiFolderSyncInterval(currentiFolder.ID, autoSync.Checked ? (int)syncInterval.Value : Timeout.Infinite);
 				}
 
 				// Update the disk quota policy.
@@ -2743,10 +2744,6 @@ namespace Novell.iFolderCom
 		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
 		{
 			syncInterval.Enabled = autoSync.Checked;
-			if (!autoSync.Checked)
-			{
-				syncInterval.Value = Timeout.Infinite;
-			}
 
 			// Enable the apply button if the user checked/unchecked the box.
 			if (autoSync.Focused)
@@ -2757,7 +2754,14 @@ namespace Novell.iFolderCom
 		{
 			// Enable the apply button if the user changed the interval.
 			if (syncInterval.Focused)
-				apply.Enabled = true;		
+			{
+				if (!syncInterval.Text.Equals(string.Empty))
+				{
+					syncInterval.Value = decimal.Parse(syncInterval.Text);
+				}
+
+				apply.Enabled = true;
+			}
 		}
 
 		private void conflicts_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
