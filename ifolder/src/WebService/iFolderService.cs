@@ -297,11 +297,14 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolder GetiFolderByLocalPath(string LocalPath)
 		{
+			iFolder ifolder = null;
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
-			if(col == null)
-				throw new Exception("Path not an iFolder");
+			if(col != null)
+			{
+				ifolder = new iFolder(col);
+			}
 
-			return new iFolder(col);
+			return ifolder;
 		}
 
 
