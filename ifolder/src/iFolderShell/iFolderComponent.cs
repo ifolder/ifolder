@@ -60,7 +60,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="path">The path to convert into an iFolder.</param>
 		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
-		bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path);
+		bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 
 		/// <summary>
 		/// Reverts the specified path back to a normal folder.
@@ -224,11 +224,12 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="path">The path to convert into an iFolder.</param>
 		/// <returns>This method returns <b>true</b> if the specified path is successfully converted into an iFolder; otherwise, <b>false</b>.</returns>
-		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string path)
+		public bool CreateiFolder([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
 			CreateiFolder createiFolder = new CreateiFolder();
 			createiFolder.iFolderWebService = ifWebService;
 			createiFolder.iFolderPath = path;
+			createiFolder.LoadPath = dllPath;
 			if (DialogResult.OK == createiFolder.ShowDialog())
 				return true;
 

@@ -23,39 +23,56 @@
 
 using System;
 using System.Text;
-using System.Runtime.InteropServices;
 
-using Simias.Client;
-
-namespace Novell.iFolderCom
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for Domain.
 	/// </summary>
-	[ComVisible(false)]
-	public class DomainInfo
+	public class Domain
 	{
+		private DomainInformation domainInfo;
 		private string name;
-		private string id;
+		private bool showAll = false;
 
 		/// <summary>
-		/// Constructs a DomainInfo object.
+		/// Constructs a Domain object.
 		/// </summary>
-		/// <param name="name">The name of the object.</param>
-		/// <param name="ID">The ID of the object.</param>
-		public DomainInfo(string name, string ID)
+		/// <param name="domainInfo">The web service DomainInformation object to base this domain object on.</param>
+		public Domain(DomainInformation domainInfo)
+		{
+			this.domainInfo = domainInfo;
+		}
+
+		/// <summary>
+		/// Constructs a Domain object representing a wild card "Show All" Domain.
+		/// </summary>
+		/// <param name="name">The name of the Domain.</param>
+		public Domain(string name)
 		{
 			this.name = name;
-			this.id = ID;
+			this.showAll = true;
 		}
 
 		#region Properties
+		/// <summary>
+		/// Gets the web service domain object.
+		/// </summary>
+		public DomainInformation DomainInfo
+		{
+			get { return domainInfo; }
+			set { domainInfo = value; }
+		}
+
 		/// <summary>
 		/// Gets/sets the name of the domain object.
 		/// </summary>
 		public string Name
 		{
-			get { return name;	}
+			get 
+			{
+				return showAll ? name : domainInfo.Name;
+			}
 			set { name = value; }
 		}
 
@@ -64,7 +81,21 @@ namespace Novell.iFolderCom
 		/// </summary>
 		public string ID
 		{
-			get	{ return id; }
+			get
+			{
+				if (showAll)
+					return name;
+				else
+					return domainInfo.ID;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating if this is the wild card domain.
+		/// </summary>
+		public bool ShowAll
+		{
+			get { return showAll; }
 		}
 		#endregion
 
@@ -74,7 +105,10 @@ namespace Novell.iFolderCom
 		/// <returns>A string representing the name of the Domain object.</returns>
 		public override string ToString()
 		{
-			return name;
+			if (showAll)
+				return name;
+			else
+				return domainInfo.Name;
 		}
 	}
 }
