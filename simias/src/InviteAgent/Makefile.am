@@ -40,7 +40,7 @@ InviteAgentTests_FLAGS = $(CSC_LIBFLAG)
 InviteAgentTests_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) nunit.framework.dll
 InviteAgentTests_LIBPATH = $(InviteAgent_LIBPATH) $(srcdir)/../../tools/NUnit/bin
 
-EXTRA_DIST = $(InviteAgent_CSFILES) $(InviteAgentTests_CSFILES)
+EXTRA_DIST = $(InviteAgent_CSFILES) $(InviteAgentConsole_CSFILES) $(InviteAgentGui_CSFILES) $(EmailInviteAgent_CSFILES) $(InviteAgentTests_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
