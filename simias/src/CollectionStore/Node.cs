@@ -147,6 +147,14 @@ namespace Simias.Storage
 
 		#region Constructors
 		/// <summary>
+		/// Constructor for creating a new Node object without a name.
+		/// </summary>
+		public Node() :
+			this( String.Empty )
+		{
+		}
+
+		/// <summary>
 		/// Constructor for creating a new Node object.
 		/// </summary>
 		/// <param name="nodeName">This is the friendly name that is used by applications to describe the object.</param>
