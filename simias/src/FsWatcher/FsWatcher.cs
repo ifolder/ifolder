@@ -67,14 +67,40 @@ namespace Simias.Event
 
 		private void OnChanged(object source, FileSystemEventArgs e)
 		{
+			string fullPath = e.FullPath;
+			if (!MyEnvironment.Mono)
+			{
+				try
+				{
+					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), e.Name);
+					if (caseSensitivePath.Length == 1)
+					{
+						fullPath = caseSensitivePath[0];
+					}
+				}
+				catch {}
+			}
 			// Specify what is done when a file is changed, created, or deleted.
-			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileChanged));
+			publish.RaiseEvent(new FileEventArgs(source.ToString(), fullPath, collectionId, EventType.FileChanged));
 		}
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
+			string fullPath = e.FullPath;
+			if (!MyEnvironment.Mono)
+			{
+				try
+				{
+					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), e.Name);
+					if (caseSensitivePath.Length == 1)
+					{
+						fullPath = caseSensitivePath[0];
+					}
+				}
+				catch {}
+			}
 			// Specify what is done when a file is renamed.
-			publish.RaiseEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
+			publish.RaiseEvent(new FileRenameEventArgs(source.ToString(), fullPath, collectionId, e.OldFullPath));
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
@@ -85,8 +111,21 @@ namespace Simias.Event
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
+			string fullPath = e.FullPath;
+			if (!MyEnvironment.Mono)
+			{
+				try
+				{
+					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), e.Name);
+					if (caseSensitivePath.Length == 1)
+					{
+						fullPath = caseSensitivePath[0];
+					}
+				}
+				catch {}
+			}
 			// Specify what is done when a file is renamed.
-			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileCreated));
+			publish.RaiseEvent(new FileEventArgs(source.ToString(), fullPath, collectionId, EventType.FileCreated));
 		}
 
 		private void Dispose(bool inFinalize)

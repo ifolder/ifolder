@@ -412,18 +412,6 @@ public class Dredger
 		{
 			isFile = false;
 
-			if (!MyEnvironment.Mono)
-			{
-				try
-				{
-					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
-					if (caseSensitivePath.Length == 1)
-					{
-						fullPath = caseSensitivePath[0];
-					}
-				}
-			}
-			catch {}
 			string name = Path.GetFileName(fullPath);
 			Node node = null;
 				// find if node for this file or dir already exists
