@@ -444,11 +444,15 @@ namespace Simias.SimpleServer
 			log.Debug( "  with domain: " + domainID );
 
 			Simias.SimpleServer.Domain thisDomain = new Simias.SimpleServer.Domain( false );
-			log.Debug( "  this SimpleServer domain is: " + thisDomain.ID );
-			if ( thisDomain.ID == domainID )
+			Simias.Storage.Domain ssDomain = thisDomain.GetSimpleServerDomain( false, "" );
+			if ( ssDomain != null )
 			{
-				log.Debug( "  returning true" );
-				return true;
+				log.Debug( "  this SimpleServer domain is: " + ssDomain.ID );
+				if ( ssDomain.ID == domainID )
+				{
+					log.Debug( "  returning true" );
+					return true;
+				}
 			}
 
 			log.Debug( "Returning false" );
