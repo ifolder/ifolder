@@ -19,6 +19,14 @@ all %:
 	@echo PREFIX=$(PREFIX)
 	$(MAKE) -C simias $@
 	$(MAKE) -C ifolder $@
+
+#
+# Support install-util/uninstall-util targets for iFolder on Windows
+#
+install-util uninstall-util:
+	@-if `uname -o | grep -iq cygwin`; then \
+		$(MAKE) -C ifolder $@; \
+	fi
 	
 #
 # Support register/unregister targets for iFolder on Windows

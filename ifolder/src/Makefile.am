@@ -18,6 +18,11 @@ dist-hook:
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys images
 
+install-util uninstall-util:
+if WINDOWS
+	$(MAKE) -C FormsTrayApp $@
+endif
+
 register unregister:
 if WINDOWS
 	$(MAKE) -C iFolderShell $@
