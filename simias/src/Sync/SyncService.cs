@@ -615,7 +615,15 @@ namespace Simias.Sync
 					try
 					{
 						Node node = collection.GetNodeByID(nodeIDs[i]);
-						nodes[i] = new SyncNode(node);
+						if (node != null)
+							nodes[i] = new SyncNode(node);
+						else
+						{
+							nodes[i] = new SyncNode();
+							nodes[i].ID = nodeIDs[i];
+							nodes[i].Operation = SyncOperation.Delete;
+							nodes[i].node = "";
+						}
 					}
 					catch
 					{

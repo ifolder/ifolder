@@ -248,6 +248,13 @@ namespace Simias.Sync
 		#region Constructor
 
 		/// <summary>
+		/// 
+		/// </summary>
+		internal SyncNode()
+		{
+		}
+
+		/// <summary>
 		/// Create a SyncNode from a Node.
 		/// </summary>
 		/// <param name="node">The node used to create the sync node.</param>

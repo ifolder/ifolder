@@ -46,75 +46,64 @@ namespace Simias.Sync.Web
 			SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);
 			if (string.Compare(httpMethod, "POST", true) == 0)
 			{
-				if (Service == null)
+					// Determine What work we need to do.
+				switch (method)
 				{
-					if (method == SyncMethod.StartSync)
-					{
+					case SyncMethod.StartSync:
 						Session.Timeout = 2;
 						Service = new HttpService();
 						Session[ServiceString] = Service;
 						Service.StartSync(Request, Response, Session);
-					}
-					else
-					{
+						break;
+					case SyncMethod.GetNextInfoList:
+						Service.GetNextInfoList(Request, Response);
+						break;
+					case SyncMethod.PutNodes:
+						Service.PutNodes(Request, Response);
+						break;
+					case SyncMethod.GetNodes:
+						Service.GetNodes(Request, Response);
+						break;
+					case SyncMethod.PutDirs:
+						Service.PutDirs(Request, Response);
+						break;
+					case SyncMethod.GetDirs:
+						Service.GetDirs(Request, Response);
+						break;
+					case SyncMethod.DeleteNodes:
+						Service.DeleteNodes(Request, Response);
+						break;
+					case SyncMethod.OpenFilePut:
+						Service.OpenFilePut(Request, Response);
+						break;
+					case SyncMethod.OpenFileGet:
+						Service.OpenFileGet(Request, Response);
+						break;
+					case SyncMethod.GetHashMap:
+						Service.GetHashMap(Request, Response);
+						break;
+					case SyncMethod.PutHashMap:
+						Service.PutHashMap(Request, Response);
+						break;
+					case SyncMethod.ReadFile:
+						Service.ReadFile(Request, Response);
+						break;
+					case SyncMethod.WriteFile:
+						Service.WriteFile(Request, Response);
+						break;
+					case SyncMethod.CopyFile:
+						Service.CopyFile(Request, Response);
+						break;
+					case SyncMethod.CloseFile:
+						Service.CloseFile(Request, Response);
+						break;
+					case SyncMethod.EndSync:
+						Service.EndSync(Request, Response);
+						Session.Remove(ServiceString);
+						break;
+					default:
 						Response.StatusCode = (int)HttpStatusCode.BadRequest;
-					}
-				}
-				else
-				{
-					// Determine What work we need to do.
-					switch (method)
-					{
-						case SyncMethod.GetNextInfoList:
-							Service.GetNextInfoList(Request, Response);
-							break;
-						case SyncMethod.PutNodes:
-							Service.PutNodes(Request, Response);
-							break;
-						case SyncMethod.GetNodes:
-							Service.GetNodes(Request, Response);
-							break;
-						case SyncMethod.PutDirs:
-							Service.PutDirs(Request, Response);
-							break;
-						case SyncMethod.GetDirs:
-							Service.GetDirs(Request, Response);
-							break;
-						case SyncMethod.DeleteNodes:
-							Service.DeleteNodes(Request, Response);
-							break;
-						case SyncMethod.OpenFilePut:
-							Service.OpenFilePut(Request, Response);
-							break;
-						case SyncMethod.OpenFileGet:
-							Service.OpenFileGet(Request, Response);
-							break;
-						case SyncMethod.GetHashMap:
-							Service.GetHashMap(Request, Response);
-							break;
-						case SyncMethod.PutHashMap:
-							Service.PutHashMap(Request, Response);
-							break;
-						case SyncMethod.ReadFile:
-							Service.ReadFile(Request, Response);
-							break;
-						case SyncMethod.WriteFile:
-							Service.WriteFile(Request, Response);
-							break;
-						case SyncMethod.CopyFile:
-							Service.CopyFile(Request, Response);
-							break;
-						case SyncMethod.CloseFile:
-							Service.CloseFile(Request, Response);
-							break;
-						case SyncMethod.EndSync:
-							Service.EndSync(Request, Response);
-							Session.Remove(ServiceString);
-							break;
-						default:
-							Response.StatusCode = (int)HttpStatusCode.BadRequest;
-							break;
-					}
+						break;
 				}
 			}
 			else

@@ -1168,7 +1168,7 @@ namespace Simias.Sync
 			// Try to commit all the nodes at once.
 			foreach (SyncNode sn in nodes)
 			{
-				if (sn.node != null)
+				if (sn.node != null && sn.node.Length != 0)
 				{
 					XmlDocument xNode = new XmlDocument();
 					xNode.LoadXml(sn.node);
@@ -1287,7 +1287,7 @@ namespace Simias.Sync
 		{
 			try
 			{
-				if (snode.node != null)
+				if (snode.node != null && snode.node.Length != 0)
 				{
 					XmlDocument xNode = new XmlDocument();
 					xNode.LoadXml(snode.node);
