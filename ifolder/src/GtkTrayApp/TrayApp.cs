@@ -250,6 +250,11 @@ namespace Novell.iFolder
 													loginDialog.Password,
 													loginDialog.Host);
 					ifSettings = tmpSettings;
+
+					if(ifwin != null)
+					{
+						ifwin.GlobalSettings = ifSettings;
+					}
 				}
 				catch(Exception e)
 				{
