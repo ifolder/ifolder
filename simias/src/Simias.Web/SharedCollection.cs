@@ -493,32 +493,6 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// WebMethod that gets the owner of a Collection
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the collection representing the iFolder to which
-		/// the member is to be added
-		/// </param>
-		/// <returns>
-		/// Member that is the owner of the iFolder
-		/// </returns>
-		public static Simias.Web.Member GetOwner( string CollectionID )
-		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid iFolderID");
-
-			Simias.Web.Member member = new Simias.Web.Member(col.Owner);
-			return member;
-		}
-
-
-
-
-
-		/// <summary>
 		/// WebMethod that sets the owner of a Collection
 		/// </summary>
 		/// <param name = "CollectionID">
@@ -632,6 +606,135 @@ namespace Simias.Web
 
 
 		/// <summary>
+		/// WebMethod that invites an Enterprise member to an Enterprise
+		/// Collection granting the Rights specified.  Note:  This will
+		/// not add the as user but place a subscription in their
+		/// POBox
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the Collection to which
+		/// the member is to be invited
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be invited
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly invited member
+		/// </param>
+		public static void InviteEnterpriseUser(	string CollectionID, 
+													string UserID,
+													string Rights)
+		{
+			Store store = Store.GetStore();
+
+			// Check to be sure we are not in Workgroup Mode
+			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid CollectionID");
+
+			if(col.Domain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("Collection is a Workgroup Collection.  Users cannot be invited to a workgroup Collection.");
+
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("Invalid UserID");
+
+			Access.Rights newRights;
+
+			if(Rights == "Admin")
+				newRights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				newRights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				newRights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+											store, 
+											store.DefaultDomain);
+
+			// TODO: Fix this, this is LAME!!!!
+			string collectionType;
+			if(col.IsType(col, "iFolder"))
+				collectionType = "iFolder";
+			else
+				collectionType = "Collection";
+
+			Subscription sub = poBox.CreateSubscription(col,
+										col.GetCurrentMember(),
+										collectionType);
+
+			sub.SubscriptionRights = newRights;
+			sub.ToName = member.Name;
+			sub.ToIdentity = UserID;
+
+			poBox.AddMessage(sub);
+		}
+
+
+
+
+		/// <summary>
+		/// Accpets and Enterprise Subscription
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the Collection to which
+		/// the member is to be invited
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be invited
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly invited member
+		/// </param>
+		public static void AcceptEnterpriseSubscription(
+													string SubscriptionID, 
+													string LocalPath)
+		{
+			Store store = Store.GetStore();
+
+			// Check to be sure we are not in Workgroup Mode
+			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
+
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
+											store, 
+											store.DefaultDomain);
+
+			Node node = poBox.GetNodeByID(SubscriptionID);
+			if(node == null)
+				throw new Exception("Invalid SubscriptionID");
+				
+			Subscription sub = new Subscription(node);
+
+			sub.CollectionRoot = Path.GetFullPath(LocalPath);
+			if(sub.SubscriptionState == SubscriptionStates.Ready)
+			{
+				poBox.Commit(sub);
+				sub.CreateSlave(store);
+			}
+			else
+			{
+				sub.Accept(store, SubscriptionDispositions.Accepted);
+				poBox.Commit(sub);
+			}
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that removes a member from a Collection. The subscription
 		/// is also removed from the member's POBox.
 		/// </summary>
@@ -669,301 +772,6 @@ namespace Simias.Web
 										col,
 										UserID);
 		}
-	
-
-
-
-		/// <summary>
-		/// WebMethod that Lists all members of a Collection
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the Collection representing the iFolder 
-		/// </param>
-		/// <returns>
-		/// An array of Members
-		/// </returns>
-		public static Simias.Web.Member[] GetMembers(string CollectionID)
-		{
-			ArrayList list = new ArrayList();
-
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid CollectionID");
-
-			ICSList memberlist = col.GetMemberList();
-			foreach(ShallowNode sNode in memberlist)
-			{
-				Simias.Storage.Member simMem =
-					new Simias.Storage.Member(col, sNode);
-
-				Simias.Web.Member member = new Simias.Web.Member(simMem);
-				list.Add(member);
-			}
-			return (Simias.Web.Member[])
-						(list.ToArray(typeof(Simias.Web.Member)));
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that returns a list of all members from the default
-		/// domain of the iFolder Enterprise Server.  This list represents
-		/// the "Roster" of the default domain.
-		/// </summary>
-		/// <returns>
-		/// An array of members
-		/// </returns>
-		public static Simias.Web.Member[] GetAllMembers()
-		{
-			ArrayList list = new ArrayList();
-
-			Store store = Store.GetStore();
-
-			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
-
-
-			ICSList memberlist = roster.GetMemberList();
-			foreach(ShallowNode sNode in memberlist)
-			{
-				Simias.Storage.Member simMem =
-					new Simias.Storage.Member(roster, sNode);
-
-				Simias.Web.Member member = 
-						new Simias.Web.Member(simMem);
-				list.Add(member);
-			}
-
-			return (Member[])(list.ToArray(typeof(Member)));
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets a member from the default Roster
-		/// </summary>
-		/// <param name = "UserID">
-		/// The ID of the member to be added
-		/// </param>
-		/// <returns>
-		/// Member that matches the UserID
-		/// </returns>
-		public static Simias.Web.Member GetMember( string UserID )
-		{
-			Store store = Store.GetStore();
-
-			Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-			if(roster == null)
-				throw new Exception("Unable to access user roster");
-
-			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
-			if(simMem == null)
-				throw new Exception("Invalid UserID");
-
-			return new Simias.Web.Member(simMem);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets a member from the specified collection
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the collection to get the member
-		/// </param>
-		/// <param name = "UserID">
-		/// The ID of the member to get
-		/// </param>
-		/// <returns>
-		/// Member that matches the UserID
-		/// </returns>
-		public static Simias.Web.Member GetCollectionMember( string CollectionID,
-						string UserID)
-		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid iFolderID");
-
-			Simias.Storage.Member simMem = col.GetMemberByID(UserID);
-			if(simMem == null)
-				throw new Exception("Invalid UserID");
-
-			return new Simias.Web.Member(simMem);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets the DiskSpaceQuota for a given member
-		/// </summary>
-		/// <param name = "UserID">
-		/// The ID of the member to get the DiskSpaceQuota
-		/// </param>
-		/// <returns>
-		/// DiskSpaceQuota for the specified member
-		/// </returns>
-		public static Simias.Web.DiskSpaceQuota GetMemberDiskQuota( 
-											string UserID )
-		{
-			return DiskSpaceQuota.GetMemberQuota( UserID );
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets the DiskSpaceQuota for a given CollectionId 
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the iFolder to get the DiskSpaceQuota
-		/// </param>
-		/// <returns>
-		/// DiskSpaceQuota for the specified iFolder
-		/// </returns>
-		public static Simias.Web.DiskSpaceQuota 
-					GetCollectionDiskQuota( string CollectionID )
-		{
-			return Simias.Web.DiskSpaceQuota.GetiFolderQuota( CollectionID );
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that sets the disk space limit for a member
-		/// </summary>
-		/// <param name = "UserID">
-		/// The ID of the member to set the disk space limit
-		/// </param>
-		/// <param name = "Limit">
-		/// The size to set in MegaBytes
-		/// </param>
-		public static void SetMemberSpaceLimit( string UserID, long Limit )
-		{
-			Simias.Web.DiskSpaceQuota.SetMemberSpaceLimit(UserID, Limit);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that sets the disk space limit for an iFolder 
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the Collection to set the disk space limit
-		/// </param>
-		/// <param name = "Limit">
-		/// The size to set in MegaBytes
-		/// </param>
-		public static void SetCollectionSpaceLimit( 
-								string CollectionID, long Limit )
-		{
-			Simias.Web.DiskSpaceQuota.SetiFolderSpaceLimit(CollectionID, Limit);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that sets a Collection's SyncInterval
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the Collection to set the disk space limit
-		/// </param>
-		/// <param name = "Interval">
-		/// The Sync interval to be set in seconds
-		/// </param>
-		public static void SetCollectionSyncInterval( 
-								string CollectionID, int Interval )
-		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid CollectionID");
-
-			Simias.Policy.SyncInterval.Set(col, Interval);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that sets the current User's default SyncInterval
-		/// </summary>
-		/// <param name = "Interval">
-		/// The Sync interval to be set in seconds
-		/// </param>
-		public static void SetDefaultSyncInterval( int Interval )
-		{
-			Simias.Policy.SyncInterval.Set( Interval );
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets a Collection's SyncInterval
-		/// </summary>
-		/// <param name = "CollectionID">
-		/// The ID of the Collection to set the disk space limit
-		/// </param>
-		/// <returns>
-		/// The SyncInterval for the specified Collection
-		/// </returns>
-		public static int GetCollectionSyncInterval( string CollectionID )
-		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col == null)
-				throw new Exception("Invalid CollectionID");
-
-			return Simias.Policy.SyncInterval.GetInterval(col);
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets the current User's default SyncInterval
-		/// </summary>
-		/// <returns>
-		/// The SyncInterval for the current user
-		/// </returns>
-		public static int GetDefaultSyncInterval()
-		{
-			return Simias.Policy.SyncInterval.GetInterval();
-		}
-
-
-
-
-		/// <summary>
-		/// WebMethod that gets the current Settings
-		/// </summary>
-		/// <returns>
-		/// The Current Settings
-		/// </returns>
-		public static Settings GetSettings()
-		{
-			return new Settings();
-		}
-
-
 
 
 
@@ -1000,9 +808,16 @@ namespace Simias.Web
 				Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain, 
 												newMember.UserID );
 
+			// TODO: Fix this, this is LAME!!!!
+			string collectionType;
+			if(collection.IsType(collection, "iFolder"))
+				collectionType = "iFolder";
+			else
+				collectionType = "Collection";
+
 			Subscription sub = poBox.CreateSubscription(collection,
 														inviteMember,
-														"Collection");
+														collectionType);
 			sub.ToName = newMember.Name;
 			sub.ToIdentity = newMember.UserID;
 			sub.ToPublicKey = newMember.PublicKey;
