@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace Simias.Event
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// The event arguments for a Collection event.

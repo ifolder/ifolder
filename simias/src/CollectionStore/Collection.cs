@@ -29,6 +29,7 @@ using System.IO;
 using System.Xml;
 
 using Simias;
+using Simias.Client.Event;
 using Simias.Event;
 using Persist = Simias.Storage.Provider;
 

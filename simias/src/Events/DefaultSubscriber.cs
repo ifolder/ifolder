@@ -25,6 +25,8 @@ using System;
 using System.Collections;
 using System.Threading;
 
+using Simias.Client.Event;
+
 namespace Simias.Event
 {
 	/// <summary>

@@ -24,7 +24,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Simias
+namespace Simias.Client
 {
 	/// <summary>
 	/// My Environment

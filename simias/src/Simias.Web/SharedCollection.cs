@@ -26,6 +26,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using Simias;
+using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;

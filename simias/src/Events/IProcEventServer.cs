@@ -119,11 +119,11 @@ namespace Simias.Event
 						clientSocket.Close();
 					}
 				}
-				catch ( SocketException e )
+				catch ( SocketException )
 				{
 					exitLoop = true;
 				}
-				catch ( Exception e )
+				catch ( Exception )
 				{
 					// Stay in the loop until the socket is closed.
 				}

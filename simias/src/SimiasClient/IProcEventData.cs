@@ -25,9 +25,7 @@ using System.Collections;
 using System.Text;
 using System.Xml;
 
-using Simias.Storage;
-
-namespace Simias.Event
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// Describes the name-value pair contained in an IProcEventData object.
@@ -94,18 +92,35 @@ namespace Simias.Event
 		/// <summary>
 		/// Xml tags used to describe a NodeEventArgs object.
 		/// </summary>
-		private const string ActionTag = "Action";
-		private const string TimeTag = "Time";
-		private const string SourceTag = "Source";
-		private const string CollectionTag = "Collection";
-		private const string TypeTag = "Type";
-		private const string EventIDTag = "EventID";
-		private const string NodeTag = "Node";
-		private const string FlagsTag = "Flags";
-		private const string MasterRevTag = "MasterRev";
-		private const string SlaveRevTag = "SlaveRev";
-		private const string FileSizeTag = "FileSize";
+		private const string NEA_ActionTag = "Action";
+		private const string NEA_TimeTag = "Time";
+		private const string NEA_SourceTag = "Source";
+		private const string NEA_CollectionTag = "Collection";
+		private const string NEA_TypeTag = "Type";
+		private const string NEA_EventIDTag = "EventID";
+		private const string NEA_NodeTag = "Node";
+		private const string NEA_FlagsTag = "Flags";
+		private const string NEA_MasterRevTag = "MasterRev";
+		private const string NEA_SlaveRevTag = "SlaveRev";
+		private const string NEA_FileSizeTag = "FileSize";
 
+		/// <summary>
+		/// Xml tags used to describe a CollectionSyncEventArgs object.
+		/// </summary>
+		private const string CEA_NameTag = "Name";
+		private const string CEA_IDTag = "ID";
+		private const string CEA_ActionTag = "Action";
+		private const string CEA_SuccessfulTag = "Successful";
+
+		/// <summary>
+		/// Xml tags used to describe a FileSyncEventArgs object.
+		/// </summary>
+		private const string FEA_NameTag = "Name";
+		private const string FEA_SizeTag = "Size";
+		private const string FEA_SizeToSyncTag = "SizeToSync";
+		private const string FEA_SizeRemainingTag = "SizeRemaining";
+		private const string FEA_DirectionTag = "Direction";
+		
 		/// <summary>
 		/// Xml document used to hold event data.
 		/// </summary>
@@ -126,6 +141,32 @@ namespace Simias.Event
 		/// <summary>
 		/// Initializes an instance of the object.
 		/// </summary>
+		/// <param name="args">Information regarding the collection sync event.</param>
+		public IProcEventData( CollectionSyncEventArgs args )
+		{
+			document = new XmlDocument();
+			XmlElement element = document.CreateElement( EventTag );
+			element.SetAttribute( EventTypeTag, typeof( CollectionSyncEventArgs ).Name );
+			document.AppendChild( element );
+			FromCollectionSyncEventArgs( args );
+		}
+
+		/// <summary>
+		/// Initializes an instance of the object.
+		/// </summary>
+		/// <param name="args">Information regarding the file sync event.</param>
+		public IProcEventData( FileSyncEventArgs args )
+		{
+			document = new XmlDocument();
+			XmlElement element = document.CreateElement( EventTag );
+			element.SetAttribute( EventTypeTag, typeof( FileSyncEventArgs ).Name );
+			document.AppendChild( element );
+			FromFileSyncEventArgs( args );
+		}
+
+		/// <summary>
+		/// Initializes an instance of the object.
+		/// </summary>
 		/// <param name="args">Information regarding the node event.</param>
 		public IProcEventData( NodeEventArgs args )
 		{
@@ -135,19 +176,6 @@ namespace Simias.Event
 			document.AppendChild( element );
 			FromNodeEventArgs( args );
 		}
-
-		/// <summary>
-		/// Initializes an instance of the object.
-		/// </summary>
-		/// <param name="args">Information regarding the node event.</param>
-//		public IProcEventData( SyncEventArgs args )
-//		{
-//			document = new XmlDocument();
-//			XmlElement element = document.CreateElement( EventTag );
-//			element.SetAttribute( EventTypeTag, typeof( SyncEventArgs ).Name );
-//			document.AppendChild( element );
-//			FromSyncEventArgs( args );
-//		}
 
 		/// <summary>
 		/// Initializes an instance of the object.
@@ -166,37 +194,43 @@ namespace Simias.Event
 		/// <param name="args">NodeEventArgs containing Node event information.</param>
 		private void FromNodeEventArgs( NodeEventArgs args )
 		{
-			AddData( new IProcEventNameValue( ActionTag, args.EventData ) );
-			AddData( new IProcEventNameValue( TimeTag, args.TimeStamp.Ticks.ToString() ) );
-			AddData( new IProcEventNameValue( SourceTag, args.Source ) );
-			AddData( new IProcEventNameValue( CollectionTag, args.Collection ) );
-			AddData( new IProcEventNameValue( TypeTag, args.Type ) );
-			AddData( new IProcEventNameValue( EventIDTag, args.EventId.ToString() ) );
-			AddData( new IProcEventNameValue( NodeTag, args.Node ) );
-			AddData( new IProcEventNameValue( FlagsTag, args.Flags.ToString() ) );
-			AddData( new IProcEventNameValue( MasterRevTag, args.MasterRev.ToString() ) );
-			AddData( new IProcEventNameValue( SlaveRevTag, args.SlaveRev.ToString() ) );
-			AddData( new IProcEventNameValue( FileSizeTag, args.FileSize.ToString() ) );
+			AddData( new IProcEventNameValue( NEA_ActionTag, args.EventData ) );
+			AddData( new IProcEventNameValue( NEA_TimeTag, args.TimeStamp.Ticks.ToString() ) );
+			AddData( new IProcEventNameValue( NEA_SourceTag, args.Source ) );
+			AddData( new IProcEventNameValue( NEA_CollectionTag, args.Collection ) );
+			AddData( new IProcEventNameValue( NEA_TypeTag, args.Type ) );
+			AddData( new IProcEventNameValue( NEA_EventIDTag, args.EventId.ToString() ) );
+			AddData( new IProcEventNameValue( NEA_NodeTag, args.Node ) );
+			AddData( new IProcEventNameValue( NEA_FlagsTag, args.Flags.ToString() ) );
+			AddData( new IProcEventNameValue( NEA_MasterRevTag, args.MasterRev.ToString() ) );
+			AddData( new IProcEventNameValue( NEA_SlaveRevTag, args.SlaveRev.ToString() ) );
+			AddData( new IProcEventNameValue( NEA_FileSizeTag, args.FileSize.ToString() ) );
 		}
 
 		/// <summary>
-		/// Translates the information in the SyncEventArgs object into the IProcEventData object.
+		/// Translates the information in the CollectionSyncEventArgs object into the IProcEventData object.
 		/// </summary>
-		/// <param name="args">SyncEventArgs containing Sync event information.</param>
-//		private void FromSyncEventArgs( SyncEventArgs args )
-//		{
-//			AddData( new IProcEventNameValue( ActionTag, args.EventData ) );
-//			AddData( new IProcEventNameValue( TimeTag, args.TimeStamp.Ticks.ToString() ) );
-//			AddData( new IProcEventNameValue( SourceTag, args.Source ) );
-//			AddData( new IProcEventNameValue( CollectionTag, args.Collection ) );
-//			AddData( new IProcEventNameValue( TypeTag, args.Type ) );
-//			AddData( new IProcEventNameValue( EventIDTag, args.EventId.ToString() ) );
-//			AddData( new IProcEventNameValue( NodeTag, args.Node ) );
-//			AddData( new IProcEventNameValue( FlagsTag, args.Flags.ToString() ) );
-//			AddData( new IProcEventNameValue( MasterRevTag, args.MasterRev.ToString() ) );
-//			AddData( new IProcEventNameValue( SlaveRevTag, args.SlaveRev.ToString() ) );
-//			AddData( new IProcEventNameValue( FileSizeTag, args.FileSize.ToString() ) );
-//		}
+		/// <param name="args">CollectionSyncEventArgs containing Sync event information.</param>
+		private void FromCollectionSyncEventArgs( CollectionSyncEventArgs args )
+		{
+			AddData( new IProcEventNameValue( CEA_NameTag, args.Name ) );
+			AddData( new IProcEventNameValue( CEA_IDTag, args.ID ) );
+			AddData( new IProcEventNameValue( CEA_ActionTag, args.Action.ToString() ) );
+			AddData( new IProcEventNameValue( CEA_SuccessfulTag, args.Successful.ToString() ) );
+		}
+
+		/// <summary>
+		/// Translates the information in the FileSyncEventArgs object into the IProcEventData object.
+		/// </summary>
+		/// <param name="args">FileSyncEventArgs containing Sync event information.</param>
+		private void FromFileSyncEventArgs( FileSyncEventArgs args )
+		{
+			AddData( new IProcEventNameValue( FEA_NameTag, args.Name ) );
+			AddData( new IProcEventNameValue( FEA_SizeTag, args.Size.ToString() ) );
+			AddData( new IProcEventNameValue( FEA_SizeToSyncTag, args.SizeToSync.ToString() ) );
+			AddData( new IProcEventNameValue( FEA_SizeRemainingTag, args.SizeRemaining.ToString() ) );
+			AddData( new IProcEventNameValue( FEA_DirectionTag, args.Direction.ToString() ) );
+		}
 		#endregion
 
 		#region Public Methods
@@ -237,6 +271,107 @@ namespace Simias.Event
 		}
 
 		/// <summary>
+		/// Converts the IProcEventData object into a CollectionSyncEventArgs object.
+		/// </summary>
+		/// <returns>A CollectionSyncEventArgs object.</returns>
+		public CollectionSyncEventArgs ToCollectionSyncEventArgs()
+		{
+			// Preinitialize all of the node event arguments.
+			string name = string.Empty;
+			string ID = string.Empty;
+			Action action = Action.StartSync;
+			bool successful = true;
+
+			// Walk through each named/value pair and convert the xml data back into CollectionSyncEventArgs data.
+			foreach ( XmlNode xn in document.DocumentElement )
+			{
+				switch ( xn.Name )
+				{
+					case CEA_NameTag:
+					{
+						name = xn.InnerText;
+						break;
+					}
+
+					case CEA_IDTag:
+					{
+						ID = xn.InnerText;
+						break;
+					}
+
+					case CEA_ActionTag:
+					{
+						action = ( Action )Enum.Parse( typeof( Action ), xn.InnerText, false );
+						break;
+					}
+
+					case CEA_SuccessfulTag:
+					{
+						successful = Boolean.Parse( xn.InnerText );
+						break;
+					}
+				}
+			}
+			
+			// Create the object and set the flags.
+			return new CollectionSyncEventArgs( name, ID, action, successful );
+		}
+
+		/// <summary>
+		/// Converts the IProcEventData object into a FileSyncEventArgs object.
+		/// </summary>
+		/// <returns>A FileSyncEventArgs object.</returns>
+		public FileSyncEventArgs ToFileSyncEventArgs()
+		{
+			// Preinitialize all of the node event arguments.
+			string name = string.Empty;
+			long size = 0;
+			long sizeToSync = 0;
+			long sizeRemaining = 0;
+			Direction direction = Direction.Downloading;
+
+			// Walk through each named/value pair and convert the xml data back into FileSyncEventArgs data.
+			foreach ( XmlNode xn in document.DocumentElement )
+			{
+				switch ( xn.Name )
+				{
+					case FEA_NameTag:
+					{
+						name = xn.InnerText;
+						break;
+					}
+
+					case FEA_SizeTag:
+					{
+						size = Convert.ToInt64( xn.InnerText );
+						break;
+					}
+
+					case FEA_SizeToSyncTag:
+					{
+						sizeToSync = Convert.ToInt64( xn.InnerText );
+						break;
+					}
+
+					case FEA_SizeRemainingTag:
+					{
+						sizeRemaining = Convert.ToInt64( xn.InnerText );
+						break;
+					}
+
+					case FEA_DirectionTag:
+					{
+						direction = ( Direction )Enum.Parse( typeof( Direction ), xn.InnerText, false );
+						break;
+					}
+				}
+			}
+			
+			// Create the object and set the flags.
+			return new FileSyncEventArgs( name, size, sizeToSync, sizeRemaining, direction );
+		}
+
+		/// <summary>
 		/// Converts the IProcEventData object into a NodeEventArgs object.
 		/// </summary>
 		/// <returns>A NodeEventArgs object.</returns>
@@ -260,67 +395,67 @@ namespace Simias.Event
 			{
 				switch ( xn.Name )
 				{
-					case ActionTag:
+					case NEA_ActionTag:
 					{
 						changeType = ( EventType )Enum.Parse( typeof( EventType ), xn.InnerText );
 						break;
 					}
 
-					case TimeTag:
+					case NEA_TimeTag:
 					{
 						time = new DateTime( Convert.ToInt64( xn.InnerText ) );
 						break;
 					}
 
-					case SourceTag:
+					case NEA_SourceTag:
 					{
 						source = xn.InnerText;
 						break;
 					}
 
-					case CollectionTag:
+					case NEA_CollectionTag:
 					{
 						collection = xn.InnerText;
 						break;
 					}
 
-					case TypeTag:
+					case NEA_TypeTag:
 					{
 						type = xn.InnerText;
 						break;
 					}
 
-					case EventIDTag:
+					case NEA_EventIDTag:
 					{
 						eventID = Convert.ToInt32( xn.InnerText );
 						break;
 					}
 
-					case NodeTag:
+					case NEA_NodeTag:
 					{
 						node = xn.InnerText;
 						break;
 					}
 						
-					case FlagsTag:
+					case NEA_FlagsTag:
 					{
 						flags = Convert.ToUInt16( xn.InnerText );
 						break;
 					}
 						
-					case MasterRevTag:
+					case NEA_MasterRevTag:
 					{
 						masterRev = Convert.ToUInt64( xn.InnerText );
 						break;
 					}
 
-					case SlaveRevTag:
+					case NEA_SlaveRevTag:
 					{
 						slaveRev = Convert.ToUInt64( xn.InnerText );
 						break;
 					}
 
-					case FileSizeTag:
+					case NEA_FileSizeTag:
 					{
 						fileSize = Convert.ToInt64( xn.InnerText );
 						break;
@@ -330,7 +465,7 @@ namespace Simias.Event
 			
 			// Create the object and set the flags.
 			NodeEventArgs args = new NodeEventArgs( source, node, collection, type, changeType, eventID, time, masterRev, slaveRev, fileSize );
-//			args.Flags = flags;
+			args.Flags = flags;
 			return args;
 		}
 
@@ -340,7 +475,7 @@ namespace Simias.Event
 		/// <returns>A string that represents the IProcEventData object.</returns>
 		public override string ToString()
 		{
-			return document.InnerXml;
+			return document.OuterXml;
 		}
 		#endregion
 

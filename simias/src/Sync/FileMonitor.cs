@@ -29,6 +29,7 @@ using System.Diagnostics;
 
 using Simias.Storage;
 using Simias;
+using Simias.Client;
 using Simias.Service;
 using Simias.Event;
 

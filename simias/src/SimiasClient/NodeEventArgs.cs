@@ -23,9 +23,8 @@
 
 using System;
 using System.Text;
-using Simias.Event;
 
-namespace Simias.Storage
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// The Event types supported.

@@ -25,7 +25,7 @@ using System.Collections;
 using System.Text;
 using System.Xml;
 
-namespace Simias.Event
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// Implements the parsing of event listener message to and from its serialized

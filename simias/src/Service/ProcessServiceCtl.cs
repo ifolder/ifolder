@@ -26,6 +26,8 @@ using System.Xml;
 using System.Reflection;
 using System.Diagnostics;
 
+using Simias.Client;
+
 namespace Simias.Service
 {
 	/// <summary>

@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 
-namespace Simias
+namespace Simias.Client
 {
 	/// <summary>
 	/// Summary description for MyPath.

@@ -29,9 +29,7 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 
-using Simias.Storage;
-
-namespace Simias.Event
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// Delegate used to indicate events to the client subscriber.
@@ -180,9 +178,6 @@ namespace Simias.Event
 		/// changes.
 		/// </summary>
 		private ManualResetEvent regServiceEvent = new ManualResetEvent( false );
-		#endregion
-
-		#region Properties
 		#endregion
 
 		#region Constructor
@@ -450,8 +445,25 @@ namespace Simias.Event
 					break;
 				}
 
-				case "SyncEventArgs":
+				case "CollectionSyncEventArgs":
 				{
+					// Get the collection sync arguments from the document.
+					CollectionSyncEventArgs collectionArgs = ed.ToCollectionSyncEventArgs();
+					if ( onCollectionSyncEvent != null )
+					{
+						onCollectionSyncEvent( collectionArgs );
+					}
+					break;
+				}
+
+				case "FileSyncEventArgs":
+				{
+					// Get the file sync arguments from the document.
+					FileSyncEventArgs fileArgs = ed.ToFileSyncEventArgs();
+					if ( onFileSyncEvent != null )
+					{
+						onFileSyncEvent( fileArgs );
+					}
 					break;
 				}
 			}

@@ -31,6 +31,7 @@ using System.Text;
 using System.Threading;
 
 using Simias;
+using Simias.Client.Event;
 using Simias.Event;
 using Simias.Service;
 using Simias.Storage;

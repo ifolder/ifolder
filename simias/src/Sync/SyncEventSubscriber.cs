@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Simias;
 using Simias.Event;
+using Simias.Client.Event;
 
 
 namespace Simias.Sync

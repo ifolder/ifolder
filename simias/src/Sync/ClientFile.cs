@@ -25,6 +25,7 @@ using System.IO;
 using System.Xml;
 using System.Collections;
 using System.Security.Cryptography;
+using Simias.Client.Event;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Event;

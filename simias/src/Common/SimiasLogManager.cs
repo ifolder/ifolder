@@ -33,6 +33,8 @@ using log4net.Repository;
 using log4net.spi;
 using log4net.Layout;
 
+using Simias.Client;
+
 namespace Simias
 {
 	/// <summary>

@@ -30,8 +30,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Net;
 using Simias.Client;
-using Simias.Event;
-using Simias.Storage;
+using Simias.Client.Event;
 
 namespace Novell.iFolderCom
 {

@@ -26,6 +26,7 @@ using System.Collections;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
 using Simias;
+using Simias.Client.Event;
 
 
 namespace Simias.Event

@@ -26,7 +26,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
-namespace Simias.Event
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// Implements the parsing of event registration data to and from is serialized

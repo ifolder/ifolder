@@ -22,7 +22,7 @@
  ***********************************************************************/
 using System;
 
-namespace Simias.Event
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// Actions that indicate what to do with the simias events.

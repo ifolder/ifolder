@@ -28,7 +28,10 @@ using System.Text;
 using System.Xml;
 
 using Simias;
+using Simias.Client.Event;
+using Simias.Event;
 using Simias.Storage;
+using Simias.Sync;
 
 namespace Simias.Event
 {
@@ -59,9 +62,24 @@ namespace Simias.Event
 		private int bufferLength = 0;
 
 		/// <summary>
-		/// Subscriber to simias events.
+		/// Subscribers to simias events.
 		/// </summary>
-		private EventSubscriber simiasEventSubscriber = null;
+		private EventSubscriber simiasNodeEventSubscriber = null;
+		private SyncEventSubscriber simiasSyncEventSubscriber = null;
+
+		/// <summary>
+		/// Event handlers defined for this server.
+		/// </summary>
+		private NodeEventHandler addNodeChanged = null;
+		private NodeEventHandler addNodeCreated = null;
+		private NodeEventHandler addNodeDeleted = null;
+		private NodeEventHandler removeNodeChanged = null;
+		private NodeEventHandler removeNodeCreated = null;
+		private NodeEventHandler removeNodeDeleted = null;
+		private CollectionSyncEventHandler addCollectionSync = null;
+		private CollectionSyncEventHandler removeCollectionSync = null;
+		private FileSyncEventHandler addFileSync = null;
+		private FileSyncEventHandler removeFileSync = null;
 		#endregion
 
 		#region Properties
@@ -87,10 +105,10 @@ namespace Simias.Event
 
 		#region Private Methods
 		/// <summary>
-		/// Callback used to indicate that a Node object has changed.
+		/// Callback used to indicate that a collection is beginning or ending a sync cycle.
 		/// </summary>
-		/// <param name="args">Arguments that give information about the Node object that has changed.</param>
-		private void NodeEventHandler( NodeEventArgs args )
+		/// <param name="args">Arguments that give information about the collection.</param>
+		private void CollectionSyncEventCallback( CollectionSyncEventArgs args )
 		{
 			try
 			{
@@ -99,9 +117,62 @@ namespace Simias.Event
 			}
 			catch ( Exception e )
 			{
-				simiasEventSubscriber.Dispose();
-				simiasEventSubscriber = null;
-				log.Error( e, "Error processing NodeEventHandler event for client." );
+				DisposeSubscribers();
+				log.Error( e, "Error processing CollectionSyncEventCallback event for client." );
+			}
+		}
+
+		/// <summary>
+		/// Disposes the event subscribers.
+		/// </summary>
+		private void DisposeSubscribers()
+		{
+			if ( simiasNodeEventSubscriber != null )
+			{
+				simiasNodeEventSubscriber.Dispose();
+				simiasNodeEventSubscriber = null;
+			}
+
+			if ( simiasSyncEventSubscriber != null )
+			{
+				simiasSyncEventSubscriber.Dispose();
+				simiasSyncEventSubscriber = null;
+			}
+		}
+
+		/// <summary>
+		/// Callback used to indicate that a file is being synchronized.
+		/// </summary>
+		/// <param name="args">Arguments that give information about the file.</param>
+		private void FileSyncEventCallback( FileSyncEventArgs args )
+		{
+			try
+			{
+				// Send the event to the client.
+				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+			}
+			catch ( Exception e )
+			{
+				DisposeSubscribers();
+				log.Error( e, "Error processing FileSyncEventCallback event for client." );
+			}
+		}
+
+		/// <summary>
+		/// Callback used to indicate that a Node object has changed.
+		/// </summary>
+		/// <param name="args">Arguments that give information about the Node object that has changed.</param>
+		private void NodeEventCallback( NodeEventArgs args )
+		{
+			try
+			{
+				// Send the event to the client.
+				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
+			}
+			catch ( Exception e )
+			{
+				DisposeSubscribers();
+				log.Error( e, "Error processing NodeEventCallback event for client." );
 			}
 		}
 
@@ -120,19 +191,19 @@ namespace Simias.Event
 				{
 					case IProcFilterType.Collection:
 					{
-						simiasEventSubscriber.CollectionId = filter.Data;
+						simiasNodeEventSubscriber.CollectionId = filter.Data;
 						break;
 					}
 
 					case IProcFilterType.NodeID:
 					{
-						simiasEventSubscriber.NodeIDFilter = filter.Data;
+						simiasNodeEventSubscriber.NodeIDFilter = filter.Data;
 						break;
 					}
 
 					case IProcFilterType.NodeType:
 					{
-						simiasEventSubscriber.NodeTypeFilter = filter.Data;
+						simiasNodeEventSubscriber.NodeTypeFilter = filter.Data;
 						break;
 					}
 				}
@@ -146,57 +217,106 @@ namespace Simias.Event
 				{
 					case IProcEventAction.AddNodeChanged:
 					{
-						simiasEventSubscriber.NodeChanged += new NodeEventHandler( NodeEventHandler );
+						if ( addNodeChanged == null )
+						{
+							addNodeChanged = new NodeEventHandler( NodeEventCallback );
+							simiasNodeEventSubscriber.NodeChanged += addNodeChanged;
+						}
+
 						break;
 					}
 
 					case IProcEventAction.AddNodeCreated:
 					{
-						simiasEventSubscriber.NodeCreated += new NodeEventHandler( NodeEventHandler );
+						if ( addNodeCreated == null )
+						{
+							addNodeCreated = new NodeEventHandler( NodeEventCallback );
+							simiasNodeEventSubscriber.NodeCreated += addNodeCreated;
+						}
+
 						break;
 					}
 
 					case IProcEventAction.AddNodeDeleted:
 					{
-						simiasEventSubscriber.NodeDeleted += new NodeEventHandler( NodeEventHandler );
+						if ( addNodeDeleted == null )
+						{
+							addNodeDeleted = new NodeEventHandler( NodeEventCallback );
+							simiasNodeEventSubscriber.NodeDeleted += addNodeDeleted;
+						}
+
 						break;
 					}
 
 					case IProcEventAction.AddCollectionSync:
 					{
+						if ( addCollectionSync == null )
+						{
+							addCollectionSync = new CollectionSyncEventHandler( CollectionSyncEventCallback );
+							simiasSyncEventSubscriber.CollectionSync += addCollectionSync;
+						}
+
 						break;
 					}
 
 					case IProcEventAction.AddFileSync:
 					{
+						if ( addFileSync == null )
+						{
+							addFileSync = new FileSyncEventHandler( FileSyncEventCallback );
+							simiasSyncEventSubscriber.FileSync += addFileSync;
+						}
+
 						break;
 					}
 
 					case IProcEventAction.RemoveNodeChanged:
 					{
-						simiasEventSubscriber.NodeChanged -= new NodeEventHandler( NodeEventHandler );
+						if ( removeNodeChanged != null )
+						{
+							simiasNodeEventSubscriber.NodeChanged -= removeNodeChanged;
+							removeNodeChanged = null;
+						}
 						break;
 					}
 
 					case IProcEventAction.RemoveNodeCreated:
 					{
-						simiasEventSubscriber.NodeCreated -= new NodeEventHandler( NodeEventHandler );
+						if ( removeNodeCreated != null )
+						{
+							simiasNodeEventSubscriber.NodeCreated -= removeNodeCreated;
+							removeNodeCreated = null;
+						}
 						break;
 					}
 
 					case IProcEventAction.RemoveNodeDeleted:
 					{
-						simiasEventSubscriber.NodeDeleted -= new NodeEventHandler( NodeEventHandler );
+						if ( removeNodeDeleted != null )
+						{
+							simiasNodeEventSubscriber.NodeDeleted -= removeNodeDeleted;
+							removeNodeDeleted = null;
+						}
 						break;
 					}
 
 					case IProcEventAction.RemoveCollectionSync:
 					{
+						if ( removeCollectionSync != null )
+						{
+							simiasSyncEventSubscriber.CollectionSync -= removeCollectionSync;
+							removeCollectionSync = null;
+						}
 						break;
 					}
 
 					case IProcEventAction.RemoveFileSync:
 					{
+						if ( removeFileSync != null )
+						{
+							simiasSyncEventSubscriber.FileSync -= removeFileSync;
+							removeFileSync = null;
+						}
 						break;
 					}
 				}
@@ -229,25 +349,21 @@ namespace Simias.Event
 				// See if the client is registering or deregistering.
 				if ( er.Registering )
 				{
-					// Create an event subscriber.
-					simiasEventSubscriber = new EventSubscriber();
+					// Create the event subscribers.
+					simiasNodeEventSubscriber = new EventSubscriber();
+					simiasSyncEventSubscriber = new SyncEventSubscriber();
 					log.Debug( "Client {0}:{1} has registered for interprocess events", er.RemoteAddress, er.Port );
 				}
 				else
 				{
-					if ( simiasEventSubscriber != null )
-					{
-						simiasEventSubscriber.Dispose();
-						simiasEventSubscriber = null;
-					}
-
+					DisposeSubscribers();
 					log.Debug( "Client {0}:{1} has deregistered for interprocess events", er.RemoteAddress, er.Port );
 				}
 			}
 			else if ( IProcEventListener.IsValidRequest( document ) )
 			{
 				// Make sure that registration has occurred.
-				if ( simiasEventSubscriber == null )
+				if ( ( simiasNodeEventSubscriber == null ) || ( simiasSyncEventSubscriber == null ) )
 				{
 					log.Error( "Client must be registered before subscribing for events." );
 					throw new SimiasException( "Client must be registered before subscribing for events." );
@@ -338,11 +454,7 @@ namespace Simias.Event
 					// The client is going away. Clean up his events.
 					log.Debug( "Client {0} has terminated the connection.", ( sub.eventSocket.RemoteEndPoint as IPEndPoint ).Address );
 
-					if ( sub.simiasEventSubscriber != null )
-					{
-						sub.simiasEventSubscriber.Dispose();
-					}
-
+					sub.DisposeSubscribers();
 					sub.eventSocket.Shutdown( SocketShutdown.Both );
 					sub.eventSocket.Close();
 				}

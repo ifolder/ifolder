@@ -25,6 +25,8 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 
+using Simias.Client.Event;
+
 namespace Simias.Event
 {
 	/// <summary>

@@ -22,9 +22,8 @@
  ***********************************************************************/
 
 using System;
-using Simias.Event;
 
-namespace Simias.Sync
+namespace Simias.Client.Event
 {
 	/// <summary>
 	/// The action supported.

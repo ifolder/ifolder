@@ -30,6 +30,7 @@ using System.Threading;
 
 using Simias.Storage;
 using Simias;
+using Simias.Client.Event;
 
 namespace Simias.Sync
 {

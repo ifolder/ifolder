@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Simias
+namespace Simias.Client
 {
 	/// <summary>
 	/// My Runtime ID

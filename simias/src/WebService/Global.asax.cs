@@ -28,6 +28,7 @@ using System.Web.SessionState;
 using System.IO;
 
 using Simias;
+using Simias.Client;
 
 namespace Simias.Web
 {
