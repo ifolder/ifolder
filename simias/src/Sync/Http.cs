@@ -206,7 +206,7 @@ namespace Simias.Sync.Http
 		private HttpWebRequest GetRequest(SyncMethod method)
 		{
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-			webState.InitializeWebRequest(request);
+			webState.InitializeWebRequest(request, collection.Domain);
 			request.ContentType = "application/octet-stream";
 			request.Method = "POST";
 			WebHeaderCollection headers = request.Headers;

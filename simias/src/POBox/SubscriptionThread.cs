@@ -137,11 +137,12 @@ namespace Simias.POBox
 			Domain domain = store.GetDomain( subscription.DomainID );
 			if ( domain.ConfigType == Simias.Storage.Domain.ConfigurationType.ClientServer )
 			{
-				WebState webState = 
-					new WebState( subscription.DomainID, subscription.FromIdentity );
 				try
 				{
-					webState.InitializeWebClient( poService );
+					WebState webState = 
+						new WebState( subscription.DomainID, subscription.FromIdentity );
+
+					webState.InitializeWebClient( poService, domain.ID );
 				}
 				catch ( NeedCredentialsException )
 				{
@@ -249,14 +250,16 @@ namespace Simias.POBox
 
 			bool result = false;
 			POBoxService poService = new POBoxService();
-			WebState webState = 
+
+			try
+			{
+				WebState webState = 
 				new WebState(
 					subscription.DomainID, 
 					subscription.SubscriptionCollectionID, 
 					subscription.ToIdentity);
-			try
-			{
-				webState.InitializeWebClient(poService);
+
+				webState.InitializeWebClient(poService, subscription.DomainID);
 			}
 			catch (NeedCredentialsException)
 			{
@@ -374,14 +377,15 @@ namespace Simias.POBox
 			log.Debug("  SubID:    " + subscription.MessageID );
 
 			POBoxService poService = new POBoxService();
-			WebState webState = 
-				new WebState(
-					subscription.DomainID, 
-					subscription.SubscriptionCollectionID, 
-					subscription.ToIdentity);
 			try
 			{
-				webState.InitializeWebClient(poService);
+				WebState webState = 
+					new WebState(
+						subscription.DomainID, 
+						subscription.SubscriptionCollectionID, 
+						subscription.ToIdentity);
+
+				webState.InitializeWebClient(poService, subscription.DomainID);
 			}
 			catch (NeedCredentialsException)
 			{

@@ -147,7 +147,7 @@ namespace Simias.DomainServices
 		/// </returns>
 		private 
 		Simias.Authentication.Status
-		Login(Uri host, string domainID, ref CookieContainer cookie, NetworkCredential networkCredential)
+		Login(Uri host, string domainID, NetworkCredential networkCredential)
 		{
 			HttpWebResponse response = null;
 
@@ -157,8 +157,8 @@ namespace Simias.DomainServices
 			Uri loginUri = 
 				new Uri( host, Simias.Security.Web.AuthenticationService.Login.Path );
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
-			WebState webState = new WebState();
-			webState.InitializeWebRequest(request);
+			WebState webState = new WebState(domainID);
+			webState.InitializeWebRequest(request, domainID);
 			request.Credentials = networkCredential;
 			
 			if ( domainID != null && domainID != "")
@@ -391,13 +391,11 @@ namespace Simias.DomainServices
 
 			// Build a credential from the user name and password.
 			NetworkCredential myCred = new NetworkCredential( user, password ); 
-			CookieContainer cookie = new CookieContainer();
 
 			status = 
 				this.Login( 
 					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
 					domainID,
-					ref cookie, 
 					myCred );
 			if ( ( status.statusCode != SCodes.Success ) && ( status.statusCode != SCodes.SuccessInGrace ) )
 			{
@@ -410,8 +408,8 @@ namespace Simias.DomainServices
 			Uri hostUri = new Uri( hostString.Remove( startIndex, hostString.Length - startIndex ) );
 
 			// The web state object lets the connection use common state information.
-			WebState webState = new WebState();
-			webState.InitializeWebClient(domainService);
+			WebState webState = new WebState(domainID);
+			webState.InitializeWebClient(domainService, domainID);
 
 			// Save the credentials
 			CredentialCache myCache = new CredentialCache();
@@ -499,9 +497,10 @@ namespace Simias.DomainServices
 			{
 				if ( cDomain.Role == SyncRoles.Slave )
 				{
-					CookieContainer cookie = new CookieContainer();
+					// Logout before loging in.
+					Logout(domainID);
 					NetworkCredential netCred = new NetworkCredential( user, password );
-					status = this.Login( DomainProvider.ResolveLocation(domainID), domainID, ref cookie, netCred );
+					status = this.Login( DomainProvider.ResolveLocation(domainID), domainID, netCred );
 					if ( status.statusCode == SCodes.Success ||
 						status.statusCode == SCodes.SuccessInGrace )
 					{
@@ -540,7 +539,7 @@ namespace Simias.DomainServices
 			}
 
 			// Clear the cookies for this Uri.
-			WebState.ResetWebState();
+			WebState.ResetWebState(domainID);
 
 			// Set the state for this domain.
 			SetDomainState(domainID, false, false);
@@ -649,7 +648,7 @@ namespace Simias.DomainServices
 
 				domainService.Url = uri.ToString() + "/DomainService.asmx";
 				WebState webState = new WebState(domainID, userID);
-				webState.InitializeWebClient(domainService);
+				webState.InitializeWebClient(domainService, domainID);
 			}
 
 			// Find the user's POBox for this domain.
@@ -686,7 +685,7 @@ namespace Simias.DomainServices
 			DomainService domainService = new DomainService();
 			domainService.Url = uri.ToString() + "/DomainService.asmx";
 			WebState webState = new WebState(collection.Domain, store.GetUserIDFromDomainID(collection.Domain));
-			webState.InitializeWebClient(domainService);
+			webState.InitializeWebClient(domainService, collection.Domain);
 			
 			string rootID = null;
 			string rootName = null;

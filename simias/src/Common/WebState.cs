@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
 using System.Web;
 using System.Net;
 using System.Web.Services.Protocols;
@@ -42,9 +43,9 @@ namespace Simias
 			+ System.Reflection.Assembly.GetCallingAssembly().ImageRuntimeVersion 
 			+ " OS=" 
 			+ System.Environment.OSVersion.ToString();
-		static CookieContainer		cookies = new CookieContainer();
 		IWebProxy					proxy;
 		NetworkCredential			credentials;
+		static Hashtable			cookieHash = new Hashtable();
 
 		/*
 		/// <summary>
@@ -71,7 +72,7 @@ namespace Simias
 		/// <param name="domainID">The domain ID.</param>
 		/// <param name="memberID">The member the client is running as.</param>
 		public WebState(string domainID, string collectionID) :
-			this()
+			this(domainID)
 		{
 			Member currentMember = Store.GetStore().GetDomain( domainID ).GetCurrentMember();
 			if ( currentMember != null )
@@ -94,7 +95,7 @@ namespace Simias
 		/// <param name="collectionID">The collection ID.</param>
 		/// <param name="memberID">The member the client is running as.</param>
 		public WebState(string domainID, string collectionID, string memberID) :
-			this()
+			this(domainID)
 		{
 			// Get the credentials for this collection.
 			credentials = new Credentials( domainID, collectionID, memberID ).GetCredentials();
@@ -108,9 +109,17 @@ namespace Simias
 		/// <summary>
 		/// Get a WebState with the specified credential.
 		/// </summary>
-		public WebState()
+		/// <param name="domainID">The identifier for the domain.</param>
+		public WebState( string domainID )
 		{
-			// Now set the proxy.
+			lock( cookieHash )
+			{
+				if (!cookieHash.ContainsKey(domainID))
+				{
+					cookieHash[ domainID ] = new CookieContainer();
+				}
+			}
+
 			proxy = null;
 		}
 		
@@ -118,11 +127,12 @@ namespace Simias
 		/// Initialize the HttpWebRequest.
 		/// </summary>
 		/// <param name="request">The request to initialize.</param>
-		public void InitializeWebRequest(HttpWebRequest request)
+		/// <param name="domainID">The identifier for the domain.</param>
+		public void InitializeWebRequest(HttpWebRequest request, string domainID)
 		{
 			request.UserAgent = userAgent;
 			request.Credentials = credentials;
-			request.CookieContainer = cookies;
+			request.CookieContainer = cookieHash[ domainID ] as CookieContainer;
 			// request.Proxy = proxy;
 			request.PreAuthenticate = true;
 		}
@@ -131,11 +141,12 @@ namespace Simias
 		/// Initialize the web service proxy stub.
 		/// </summary>
 		/// <param name="request">The client proxy to initialize</param>
-		public void InitializeWebClient(HttpWebClientProtocol request)
+		/// <param name="domainID">The identifier for the domain.</param>
+		public void InitializeWebClient(HttpWebClientProtocol request, string domainID)
 		{
 			request.UserAgent = userAgent;
 			request.Credentials = credentials;
-			request.CookieContainer = cookies;
+			request.CookieContainer = cookieHash[ domainID ] as CookieContainer;
 			// request.Proxy = proxy;
 			request.PreAuthenticate = true;
 		}
@@ -143,9 +154,13 @@ namespace Simias
 		/// <summary>
 		/// Resets the WebState object.
 		/// </summary>
-		static public void ResetWebState()
+		/// <param name="domainID">The identifier for the domain.</param>
+		static public void ResetWebState( string domainID )
 		{
-			cookies = new CookieContainer();
+			lock( cookieHash )
+			{
+				cookieHash[ domainID ] = new CookieContainer();
+			}
 		}
 	}
 }
