@@ -33,147 +33,23 @@ using Simias.Sync;
 namespace Simias.Sync.Tests
 {
 
-//---------------------------------------------------------------------------
-class FileTestOps
-{
-	/// <summary>
-	/// Compare two files, specific differences are printed to Console.
-	/// returns false if comparison fails.
-	/// </summary>
-	// what about uid/gid/permissions?
-	public static bool CompareFiles(string fileA, string fileB)
-	{
-		bool same = true;
-
-		FileInfo fiA = new FileInfo(fileA), fiB = new FileInfo(fileB);
-
-		if (fiA.Attributes != fiB.Attributes)
-		{
-			Console.WriteLine("{0} attributes {1} != {2} attributes {3}", fileA, fiA.Attributes, fileB, fiB.Attributes);
-			same = false;
-		}
-		if (fiA.CreationTimeUtc != fiB.CreationTimeUtc)
-		{
-			Console.WriteLine("{0} creation time {1} != {2} creation time {3}", fileA, fiA.CreationTimeUtc, fileB, fiB.CreationTimeUtc);
-			same = false;
-		}
-		if (fiA.LastAccessTimeUtc != fiB.LastAccessTimeUtc)
-		{
-			Console.WriteLine("{0} access time {1} != {2} access time {3}", fileA, fiA.LastAccessTimeUtc, fileB, fiB.LastAccessTimeUtc);
-			same = false;
-		}
-		if (fiA.LastWriteTimeUtc != fiB.LastWriteTimeUtc)
-		{
-			Console.WriteLine("{0} write time {1} != {2} write time {3}", fileA, fiA.LastWriteTimeUtc, fileB, fiB.LastWriteTimeUtc);
-			same = false;
-		}
-
-		FileStream fsA = fiA.OpenRead(), fsB = fiB.OpenRead();
-		byte[] bufferA = new byte[64 * 1024];
-		byte[] bufferB = new byte[bufferA.Length];
-		int readA, readB;
-		do
-		{
-			readA = fsA.Read(bufferA, 0, bufferA.Length);
-			readB = fsB.Read(bufferB, 0, bufferB.Length);
-
-			/* I would like to find a better way to compare two byte arrays,
-			 * for now just compare the whole array every time. This is a waste
-			 * for the last read when the array is not full, but it should work OK
-			 * since the bytes from init or previous read should compare.
-			 */
-			if (readA != readB || bufferA != bufferB)
-			{
-				Console.WriteLine("{0} contents != {2} contents", fileA, fileB);
-				same = false;
-				break;
-			}
-		} while (readA != 0);
-		fsA.Close();
-		fsB.Close();
-		return same;
-	}
-
-	/// <summary>
-	/// Compare two files, specific differences are printed to Console.
-	/// returns false if comparison fails.
-	/// </summary>
-	// what about uid/gid/permissions?
-	public static bool CompareDirectories(string dirA, string dirB)
-	{
-		// Console.WriteLine( differences in files and subdirs);
-		bool same = true;
-
-		string[] filesA = Directory.GetFiles(dirA);
-		string[] filesB = Directory.GetFiles(dirB);
-		if (filesA.Length != filesB.Length)
-		{
-			Console.WriteLine("{0} contains {1} files != {2} contains {3} files", dirA, filesA.Length, dirB, filesB.Length);
-			same = false;
-		}
-		else
-		{
-			Array.Sort(filesA);
-			Array.Sort(filesB);
-			for (uint i = 0; i < filesA.Length; ++i)
-			{
-				if (!CompareFiles(filesA[i], filesB[i]))
-					same = false;
-			}
-		}
-
-		string[] dirsA = Directory.GetDirectories(dirA);
-		string[] dirsB = Directory.GetDirectories(dirB);
-		if (dirsA.Length != dirsB.Length)
-		{
-			Console.WriteLine("{0} contains {1} subdirs != {2} contains {3} subdirs", dirA, dirsA.Length, dirB, dirsB.Length);
-			same = false;
-		}
-		else
-		{
-			Array.Sort(dirsA);
-			Array.Sort(dirsB);
-			for (uint i = 0; i < dirsA.Length; ++i)
-			{
-				//TODO: compare dir names here
-				if (!CompareDirectories(dirsA[i], dirsB[i]))
-					same = false;
-			}
-		}
-		return same;
-	}
-
-	public static void CreateFile(string name, string contents)
-	{
-		StreamWriter s = new StreamWriter(File.Create(name));
-		s.Write(contents);
-		s.Close();
-	}
-
-	public static void CreateFile(string name, byte[] contents)
-	{
-		BinaryWriter s = new BinaryWriter(File.Create(name));
-		s.Write(contents);
-		s.Close();
-	}
-
-	public static void CreateFile(string name, uint size)
-	{
-		// Console.WriteLine( differences in contents and attributes);
-	}
-}
-
-//---------------------------------------------------------------------------
 /// <summary>
 /// Sync Tests
 /// </summary>
 [TestFixture]
-public class Tests : Assertion
+public class SyncTests: Assertion
 {
 	private const string host = "127.0.0.1";
 	private const int serverPort = 1100;
-	private const string srvDir = "SyncTestServerData";
-	private const string cltDir = "SyncTestClientData";
+	private const string folderName = "testFolder";
+	private const string invitationFile = "SyncTestInvitation.ifi";
+	private const bool useTCP = true;
+	private static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
+	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
+	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
+	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
+
+	//private CmdServer cmdServer = null;
 
 	public static int Run(string program, string args)
 	{
@@ -186,14 +62,12 @@ public class Tests : Assertion
 		return exitCode;
 	}
 
-	// initialization helper methods
-	//private static Store InitStore(string name)
-	//{
-	//	//Console.WriteLine("connecting to store {0}", name);
-	//	Uri loc = new Uri(Path.Combine(Directory.GetCurrentDirectory(), name));
-	//	Store tmp = Store.Connect(loc);
-	//	return tmp;
-	//}
+	private void DeleteFileData()
+	{
+		Directory.Delete(serverDir, true);
+		Directory.Delete(clientDir, true);
+		File.Delete(invitationFile);
+	}
 
 	/// <summary>
 	/// Performs pre-initialization tasks.
@@ -203,63 +77,153 @@ public class Tests : Assertion
 	{
 		try
 		{
+			Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
+			Log.SetLevel("verbose");
+
 			// set up server store and collections, and some ifolder file data
-			/*
+			if (Directory.Exists(serverDir) || Directory.Exists(clientDir)
+					|| File.Exists(serverDir) || File.Exists(clientDir))
+			{
+				//throw new ApplicationException(String.Format("can't run tests: {0} or {1} already exist, remove and retry", serverDir, clientDir));
+				DeleteFileData();
+			}
 
-
-			if exists srvDir or cltDir
-				abort, previous not cleaned up
-
-			mkdir srvDir cltDir srvDir/testFolder
-			mkdir srvDir/testFolder/emptydir
-			mkdir srvDir/testFolder/subdir
-
-			TestOps.CreateFile(srvDir/testFolder, "small file 1");
-			TestOps.CreateFile(srvDir/testFolder, "small file 2");
-			TestOps.CreateFile(srvDir/testFolder, "small file 3");
-			TestOps.CreateFile(srvDir/testFolder, 1024 * 1024);
-
-			open server
-
-			*/
+			string dir1 = Path.Combine(serverFolder, "subdir1");
+			string dir2 = Path.Combine(serverFolder, "sub dir with spaces");
+			Directory.CreateDirectory(clientDir);
+			Directory.CreateDirectory(dir1);
+			Directory.CreateDirectory(dir2);
+			Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
+			//cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
+			Log.Spew("Init: created store, folders and files");
 		}
 		catch (System.Exception e)
 		{
-			Console.WriteLine("Uncaught exception in Init: {0}", e.Message);
+			Console.WriteLine("Uncaught exception in SyncTests.Init: {0}", e.Message);
 			throw;
 		}
 		catch
 		{
-			Console.WriteLine("Foreign exception in Init");
+			Console.WriteLine("Foreign exception in SyncTests.Init");
 			throw;
 		}
 	}
 
-	[Test]
-	public void T0()
+	public bool Invite()
 	{
+		Log.Spew("Creating collection and invitation");
+		FileInviter fi = new FileInviter(new Uri(serverDir));
+		return fi.Invite(null, new Uri(serverFolder), host, serverPort, invitationFile);
 	}
 
-	[Test]
-	public void T1()
+	[Test] public void T0() { Assert(Invite()); }
+
+	public bool Accept()
 	{
+		Log.Spew("accepting collection and invitation");
+		FileInviter fi = new FileInviter(new Uri(clientDir));
+		return fi.Accept(clientDir, invitationFile);
 	}
+
+	[Test] public void T1()  { Assert(Accept()); }
+
+	public bool FirstLocalSync()
+	{
+		if (!CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP))
+		{
+			Log.Spew("failed first sync");
+			return false;
+		}
+		return Differ.CompareDirectories(serverFolder, clientFolder);
+	}
+
+	[Test] public void T2() { Assert(FirstLocalSync()); }
+
+//   
+//   #---------------------------------------------------------------------------
+//   # test deletes: delete a file from each end, and cause deletion collision
+//   # sync and make sure everything got sorted out
+//   
+//   rm -f tmpClientData/testFolder/SyncPoint.cs
+//   rm -f tmpServerData/testFolder/SyncPass.cs
+//   rm -f tmpServerData/testFolder/SyncOps.cs
+//   rm -f tmpClientData/testFolder/SyncOps.cs
+//   #rm -f tmpClientData/testFolder/subdir/*.ogg
+//   rm -f tmpServerData/testFolder/subdir/Sync.dll
+//   rmdir tmpServerData/testFolder/emptydir
+//   
+//   #localsync
+//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi
+//   
+//   diff tmpClientData/testFolder tmpServerData/testFolder
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi 
+//   
+//   diff tmpClientData/testFolder/subdir tmpServerData/testFolder/subdir
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of subdir after localsync 2 returned %s\n" $RETVAL; exit $RETVAL; fi 
+//   
+//   if [ -f tmpClientData/testFolder/SyncPoint.cs ]; then printf "FAILED: deleted file still exists\n"; exit 1; fi 
+//   if [ -f tmpClientData/testFolder/SyncPass.cs ]; then printf "FAILED: deleted file still exists\n"; exit 2; fi 
+//   if [ -f tmpClientData/testFolder/SyncOps.cs ]; then printf "FAILED: deleted file still exists\n"; exit 3; fi 
+//   #if [ -f tmpClientData/testFolder/subdir/*.ogg ]; then printf "FAILED: deleted file still exists\n"; exit 4; fi 
+//   if [ -f tmpClientData/testFolder/subdir/Sync.dll ]; then printf "FAILED: deleted file still exists\n"; exit 5; fi 
+//   if [ -d tmpClientData/testFolder/emptydir ]; then printf "FAILED: deleted file still exists\n"; exit 6; fi
+//   
+//   #---------------------------------------------------------------------------
+//   # test duplicate adds: add different files of the same name both sides
+//   # sync and make sure everything got sorted out
+//   
+//   echo "This is file 1" > tmpServerData/testFolder/CollisionFile.txt
+//   echo "This is file 2 and is longer" > tmpClientData/testFolder/CollisionFile.txt
+//   
+//   # localsync
+//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
+//   
+//   # localsync
+//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
+//   
+//   # localsync
+//   mono --debug SyncCmd.exe -s tmpClientData localsync tmpClientData/testFolder tmpServerData
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi
+//   
+//   diff tmpClientData/testFolder tmpServerData/testFolder
+//   RETVAL=$?
+//   if [ $RETVAL -ne 0 ]; then printf "FAILED: diff of testFolder after localsync 3 returned %s\n" $RETVAL; exit $RETVAL; fi 
+//   
+//   if ! [ -f tmpClientData/testFolder/CollisionFile.txt ]; then printf "FAILED: added file does not exists\n"; exit 1; fi
+//   
+//   cat tmpServerData/testFolder/CollisionFile.txt
+//   
 
 	[TestFixtureTearDown]
 	public void Cleanup()
 	{
-		Console.WriteLine("Deleting stores");
-		Directory.Delete(srvDir, true);
-		Directory.Delete(cltDir, true);
+		//cmdServer.Stop();
+		//DeleteFileData();
+	}
+
+	void Run()
+	{
+		Console.WriteLine("init");
+		Init();
+		Console.WriteLine("invite: {0}", Invite());
+		Console.WriteLine("accept: {0}", Accept());
+		Console.WriteLine("firstLocalSync: {0}", FirstLocalSync());
+		Cleanup();
 	}
 
 	static void Main()
 	{
-		Tests t = new Tests();
-		t.Init();
-		t.T0();
-		t.T1();
-		t.Cleanup();
+		SyncTests t = new SyncTests();
+		t.Run();
 	}
 }
 

@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Sync_CSFILES = $(srcdir)/SyncPass.cs $(srcdir)/SyncOps.cs $(srcdir)/Dredge.cs $(srcdir)/SyncLog.cs $(srcdir)/FileInviter.cs
+Sync_CSFILES = $(srcdir)/SyncPass.cs $(srcdir)/SyncOps.cs $(srcdir)/Dredge.cs $(srcdir)/SyncLog.cs $(srcdir)/SyncUtil.cs
 Sync_CSFILES_CSC := $(subst /,$(SEP),$(Sync_CSFILES))
 Sync_INCLUDES =
 Sync_RESOURCES =
@@ -19,11 +19,11 @@ SyncCmd_LIBPATH = $(Sync_LIBPATH)
 
 NUNIT_TESTS := TestSync.exe
 
-TestSync_CSFILES = $(srcdir)/TestSync.cs
+TestSync_CSFILES = $(srcdir)/TestSync.cs $(srcdir)/Differ.cs
 TestSync_CSFILES_CSC := $(subst /,$(SEP),$(TestSync_CSFILES))
 TestSync_INCLUDES =
 TestSync_RESOURCES =
-TestSync_FLAGS = $(CSC_LIBFLAG)
+TestSync_FLAGS = $(CSC_EXEFLAG)
 TestSync_LIBS = $(Sync_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll
 TestSync_LIBPATH = $(Sync_LIBPATH) ../../tools/NUnit/bin $(srcdir)/../../tools/NUnit/bin
 

@@ -23,114 +23,9 @@
 using System;
 using System.IO;
 using System.Diagnostics;
-using System.Threading;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Http;
-using System.Runtime.Remoting.Channels.Tcp;
-
-using Simias.Storage;
-using Simias.Agent;
 
 namespace Simias.Sync
 {
-
-//---------------------------------------------------------------------------
-public class Service: MarshalByRefObject
-{
-	private Uri storeLocation;
-
-	public Service(Uri storeLocation)
-	{
-		this.storeLocation = storeLocation;
-	}
-
-	public SynkerServiceA StartSession(string collectionId)
-	{
-		try
-		{
-			SyncStore store = new SyncStore(storeLocation.LocalPath);
-			SyncCollection c = store.OpenCollection(collectionId);
-			return c == null? null: new SynkerServiceA(c, true);
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return null;
-	}
-}
-
-//---------------------------------------------------------------------------
-public class Server
-{
-	Service obj = null;
-	IChannel channel = null;
-	ObjRef objRef = null;
-	string uri;
-
-	const string serviceTag = "sync.rem";
-	const string channelName = "SyncCmdServer";
-
-	public static string MakeUri(string host, int port, bool useTCP)
-	{
-		return String.Format("{0}://{1}:{2}/{3}",
-				(useTCP? "tcp": "http"), host, port, serviceTag);
-	}
-
-	public Server(string host, int port, Uri storeLocation, bool useTCP)
-	{
-		uri = MakeUri(host, port, useTCP);
-		obj = new Service(storeLocation);
-		channel = useTCP? (IChannel)new TcpServerChannel(channelName, port):
-				(IChannel)new HttpServerChannel(channelName, port);
-		ChannelServices.RegisterChannel(channel);
-		objRef = RemotingServices.Marshal(obj, serviceTag);
-		Log.Info("Server {0} is up and running from store '{1}'", uri, storeLocation);
-	}
-
-	public void Stop()
-	{
-		Log.Spew("Server {0} stopping", uri);
-		if (obj != null)
-			RemotingServices.Disconnect(obj);
-		if (channel != null)
-			ChannelServices.UnregisterChannel(channel);
-	}
-}
-
-//---------------------------------------------------------------------------
-public class Client
-{
-	Service service = null;
-	IChannel channel = null;
-	public SynkerServiceA session = null;
-
-	const string channelName = "SyncCmdClient";
-
-	public Client(string host, int port, string collectionId, bool useTCP)
-	{
-		if (useTCP)
-			channel = new TcpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
-		else
-			channel = new HttpClientChannel(channelName, new SoapClientFormatterSinkProvider());
-
-		ChannelServices.RegisterChannel(channel);
-		string serverURL = Server.MakeUri(host, port, useTCP);
-		service = (Service)Activator.GetObject(typeof(Service), serverURL);
-		session = service.StartSession(collectionId);
-		Log.Spew("connected to server at {0}", serverURL);
-	}
-
-	public void Stop()
-	{
-		//session.Done();
-		session = null;
-		service = null;
-		if (channel != null)
-		{
-			ChannelServices.UnregisterChannel(channel);
-			channel = null;
-		}
-	}
-}
 
 //---------------------------------------------------------------------------
 /// <summary>
@@ -143,45 +38,13 @@ public class SyncCmd
 	bool useTCP = true;
 	string host = MyDns.GetHostName();
 
-	int RunSync(Uri docRoot, string serverStoreLocation)
-	{
-		Store store = Store.Connect(new Configuration(
-				storeLocation == null? null: storeLocation.LocalPath));
-		Collection c = FileInviter.FindCollection(store, docRoot);
-		if (c == null)
-		{
-			Log.Error("Could not find collection {0}", docRoot);
-			return 2;
-		}
-
-		SyncCollection csc = new SyncCollection(c);
-		if (serverStoreLocation != null)
-		{
-			SyncStore servStore = new SyncStore(serverStoreLocation);
-			SynkerServiceA ssa = new SynkerServiceA(servStore.OpenCollection(csc.ID));
-			new SynkerWorkerA(ssa, csc).DoSyncWork();
-		}
-		else
-		{
-			Client client = new Client(csc.Host, csc.Port, csc.ID, useTCP);
-			new SynkerWorkerA(client.session, csc).DoSyncWork();
-			client.Stop();
-		}
-		return 0;
-	}
-
-	//TODO: doesn't specify user -- just use collection owner
-	int Invite(Uri docRoot, string invitationFile)
+	int Invite(string user, Uri docRoot, string invitationFile)
 	{
 		FileInviter fi = new FileInviter(storeLocation);
-		if (!fi.Create(docRoot, invitationFile))
+		if (!fi.Invite(user, docRoot, host, port, invitationFile))
 		{
-			fi.InitMaster(host, port, docRoot);
-			if (!fi.Create(docRoot, invitationFile))
-			{
-				Log.Error("could not make invitation");
-				return 3;
-			}
+			Log.Error("could not make invitation");
+			return 20;
 		}
 		return 0;
 	}
@@ -189,12 +52,12 @@ public class SyncCmd
 	int Accept(string invitationFile, string docRootParent)
 	{
 		FileInviter fi = new FileInviter(storeLocation);
-		return fi.Accept(docRootParent, invitationFile)? 0: 4;
+		return fi.Accept(docRootParent, invitationFile)? 0: 30;
 	}
 
 	int RunServer()
 	{
-		Server server = new Server(host, port, storeLocation, useTCP);
+		CmdServer server = new CmdServer(host, port, storeLocation, useTCP);
 		Console.WriteLine("server {0} started, press enter to exit", port);
 		Console.ReadLine();
 		server.Stop();
@@ -210,7 +73,7 @@ public class SyncCmd
 			"Usage: " + name + " [options] operation operationParams",
 			"",
 			"    operations:",
-			"        invite folder invitationFile",
+			"        invite folder invitationFile [userToInvite]",
 			"            prints the invitation info to the invitationFile",
 			"            initializes the collection store if necessary",
 			"",
@@ -228,10 +91,8 @@ public class SyncCmd
 			"",
 			"    options:",
 			"        -s storeLocation",
-//			"        -u userName (to impersonate to collection store)",
 			"        -l traceLevel (off, error, warning, info, verbose)",
 			"        -c traceClass (all or class name)",
-//			"        -w password (yeah, I know this is bad -- fix soon)",
 			"        -p port (used by server and invite operations)",
 			"        -h (use http and soap)",
 			"        -n (name to use for local host, can be ip address)",
@@ -263,10 +124,6 @@ public class SyncCmd
 					return Usage("incomplete option");
 				if (s == "-s")
 					storeLocation = new Uri(Path.GetFullPath(args[i++]));
-				//else if (s == "-u")
-				//	userName = args[i++];
-				//else if (s == "-w")
-				//	credential = args[i++];
 				else if (s == "-p")
 				{
 					port = Int32.Parse(args[i++]);
@@ -290,9 +147,9 @@ public class SyncCmd
 			else switch (s)
 			{
 				case "invite":
-					if (args.Length - i != 2)
-						return Usage("operation 'invite' takes 2 params");
-					return Invite(new Uri(Path.GetFullPath(args[i])), args[i + 1]);
+					if (args.Length - i != 2 && args.Length - i != 3)
+						return Usage("operation 'invite' takes 2 or 3 params");
+					return Invite(args.Length - i == 2? null: args[i + 2], new Uri(Path.GetFullPath(args[i])), args[i + 1]);
 				case "accept":
 					if (args.Length - i != 2)
 						return Usage("operation 'accept' takes 2 params");
@@ -300,11 +157,11 @@ public class SyncCmd
 				case "sync":
 					if (args.Length - i != 1)
 						return Usage("operation 'sync' takes 1 param");
-					return RunSync(new Uri(Path.GetFullPath(args[i])), null);
+					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), null, useTCP)? 0: 40;
 				case "localsync":
 					if (args.Length - i != 2)
 						return Usage("operation 'localsync' takes 2 params");
-					return RunSync(new Uri(Path.GetFullPath(args[i])), args[i + 1]);
+					return CmdClient.RunOnce(storeLocation, new Uri(Path.GetFullPath(args[i])), args[i + 1], useTCP)? 0: 41;
 				case "server":
 					if (args.Length - i != 0)
 						return Usage("operation 'server' takes 0 params");
@@ -339,10 +196,8 @@ public class SyncCmd
 		finally
 		{
 			// just trying to get repeatable results
-			GC.Collect();
-			Thread.Sleep(1000);
-			GC.Collect();
-			Thread.Sleep(1000);
+			//GC.Collect();
+			//Thread.Sleep(1000);
 		}
 		return 42;
 	}
