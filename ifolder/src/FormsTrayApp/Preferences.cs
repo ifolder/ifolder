@@ -1564,23 +1564,28 @@ namespace Novell.FormsTrayApp
 					simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
 				}*/
 
-				try
+				if (!domain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
 				{
-					// TODO: only call this if the password has been changed or the state of the checkbox has changed.
-					if (rememberPassword.Checked)
+					try
 					{
-						simiasWebService.SaveDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
+						// TODO: only call this if the password has been changed or the state of the checkbox has changed.
+						if (rememberPassword.Checked)
+						{
+							simiasWebService.SaveDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
+						}
+						else
+						{
+							simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
+						}
 					}
-					else
+					catch (Exception ex)
 					{
-						simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
+						result = false;
+						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
 					}
-				}
-				catch (Exception ex)
-				{
-					result = false;
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
+
+					// TODO: update autoLogin setting.
 				}
 			}
 
@@ -1979,7 +1984,7 @@ namespace Novell.FormsTrayApp
 							// This is a new account.
 							newAccountLvi = lvi;
 							userName.ReadOnly = server.ReadOnly = false;
-							autoLogin.Enabled = removeAccount.Enabled = true;
+							removeAccount.Enabled = true;
 							details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
 							userName.Focus();
 						}
@@ -1991,9 +1996,17 @@ namespace Novell.FormsTrayApp
 							defaultServer.Checked = domain.DomainWeb.IsDefault;
 							defaultServer.Enabled = !defaultServer.Checked;
 
-							// TODO: Don't allow the workgroup account to be removed.
 							// Don't allow the default account to be removed.
 							removeAccount.Enabled = !defaultServer.Checked;
+
+							if (domain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
+							{
+								// Don't allow the workgroup account to be modified or removed.
+								rememberPassword.Enabled = autoLogin.Enabled = 
+									password.Enabled = removeAccount.Enabled = false;
+
+								rememberPassword.Checked = true;
+							}
 
 							// Check for a saved password.
 							try
