@@ -73,15 +73,7 @@ namespace Simias.Gaim
 
 		public GaimDomainProvider()
 		{
-			log.Debug( "Instance constructor called" );
-			try
-			{
-			}
-			catch( Exception e )
-			{
-				log.Debug( e.Message );
-				log.Debug( e.StackTrace );
-			}
+			log.Debug( "Instantiated" );
 		}
 
 		#endregion
@@ -203,8 +195,6 @@ namespace Simias.Gaim
 				GaimDomainSearchContext newSearchContext = new GaimDomainSearchContext();
 				newSearchContext.Members = allMembers;
 				newSearchContext.CurrentIndex = members.Count;
-//System.Console.WriteLine("Members Count: {0}", members.Count);
-//System.Console.WriteLine("Initial CurrentIndex: {0}", newSearchContext.CurrentIndex);
 				searchContext = newSearchContext.ID;
 				lock (searchContexts.SyncRoot)
 				{
@@ -242,7 +232,6 @@ namespace Simias.Gaim
 
 				while (i < gaimDomainSearchContext.Count)
 				{
-//System.Console.WriteLine("Current Index: {0}", i);
 					Member member = (Member)gaimDomainSearchContext.Members[i];
 					if (member != null)
 					{
@@ -288,9 +277,57 @@ namespace Simias.Gaim
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindPreviousDomainMembers( ref string searchContext, int count, out Member[] memberList )
 		{
-			// FIXME: Implement FindPreviousDomainMembers()
+			bool bMoreEntries = false;
+			ArrayList members = new ArrayList();
 			memberList = null;
-			return false;
+
+			if (searchContext == null)
+				throw new ArgumentNullException("searchContext cannot be null when calling FindPreviousDomainMembers");
+
+			lock (searchContexts.SyncRoot)
+			{
+				if (!searchContexts.Contains(searchContext))
+					return false;
+
+				GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContexts[searchContext];
+				
+				int i = gaimDomainSearchContext.CurrentIndex - 1;
+
+				while (i >= 0)
+				{
+					Member member = (Member)gaimDomainSearchContext.Members[i];
+					if (member != null)
+					{
+						if (members.Count < count)
+						{
+							members.Add(member);
+						}
+						else
+						{
+							bMoreEntries = true;
+							break;
+						}
+					}
+					
+					i--;
+				}
+
+				if (i < 0)
+				{
+					gaimDomainSearchContext.CurrentIndex = 0;
+				}
+				else
+				{
+					gaimDomainSearchContext.CurrentIndex = i;
+				}
+			}
+
+			if (members.Count > 0)
+			{
+				memberList = members.ToArray(typeof (Member)) as Member[];
+			}
+
+			return bMoreEntries;
 		}
 
 		/// <summary>
@@ -304,9 +341,26 @@ namespace Simias.Gaim
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindSeekDomainMembers( ref string searchContext, int offset, int count, out Member[] memberList )
 		{
-			// FIXME: Implement FindSeekDomainMembers()
+			bool bMoreEntries = false;
+			ArrayList members = new ArrayList();
 			memberList = null;
-			return false;
+
+			if (searchContext == null)
+				throw new ArgumentNullException("searchContext cannot be null when calling FindSeekDomainMembers");
+			lock (searchContexts.SyncRoot)
+			{
+				if (!searchContexts.Contains(searchContext))
+					return false;
+
+				GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContexts[searchContext];
+				
+				if (offset < 0 || offset >= gaimDomainSearchContext.Count)
+					throw new IndexOutOfRangeException("offset is out of bounds with the total number of members available in the search");
+					
+				gaimDomainSearchContext.CurrentIndex = offset;
+				
+				return FindNextDomainMembers(ref searchContext, count, out memberList);
+			}
 		}
 
 		/// <summary>
