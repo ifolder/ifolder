@@ -482,15 +482,19 @@ static void *
 sec_thread (void *user_data)
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)user_data;
-	int new_s, sin_size, len, real_length;
-	char my_host_name [512];
-	struct hostent *hp;
-	char err_msg [2048];
-	char buf [4096];
-	char * real_message = NULL;
+	char recv_buf [512];
+	char *buffer;
+	char *temp_buffer;
+	char *message;
+	int bytes_received;
+	int buffer_length;
+	int stated_message_length;
+	int message_length;
+	int bytes_to_process;
+	int buffer_index;
 	
 printf ("SEC: sec_thread () called\n");	
-
+	
 	/* Wait until the register thread marks us as registered before continuing */
 	while (ec->state != CLIENT_STATE_RUNNING) {
 		if (ec->state == CLIENT_STATE_SHUTDOWN) {
@@ -499,30 +503,125 @@ printf ("SEC: sec_thread () called\n");
 		printf ("SEC: sec_thread () waiting for register thread to complete\n");
 		sleep (2);
 	}
+	
+	buffer = NULL;
+	buffer_length = 0;
 
-	while ((len = recv (ec->event_socket, buf, sizeof (buf), 0)) > 0) {
-printf ("SEC: sec_thread: recv () called\n");
-		real_length = *((int *)buf);
-		printf ("real_length: %d\n", real_length);
-		if (real_length > 0 && (real_length == (len - 4))) {
-			real_message = malloc (sizeof (char) * real_length + 1);
-			memset (real_message, '\0', real_length + 1);
-			strncpy (real_message, buf + 4, real_length);
+	while ((bytes_received = recv (ec->event_socket, 
+								   recv_buf, sizeof (recv_buf), 0)) > 0) {
+
+//printf ("\n=====Dumping %d bytes received:=====\n", bytes_received);
+//int i;
+//for (i = 0; i < bytes_received; i++) {
+//	putchar (recv_buf [i]);
+//}
+//printf ("\n=====SEC: recv(): Dump complete=====\n\n");
+
+		if (buffer == NULL) {
+printf ("SEC: recv (): Creating new buffer of %d bytes\n", bytes_received);
+			buffer = malloc (bytes_received);
+			if (!buffer) {
+				fprintf (stderr, "Out of memory!\n");
+				break;
+			}
 			
-			printf ("Message received:\n\n%s\n\n", real_message);
+			memcpy (buffer, recv_buf, bytes_received);
+			buffer_length = bytes_received;
 			
-			sec_process_message (ec, real_message, real_length);
-			
-			free (real_message);
+//printf ("\n-----Dumping %d bytes added to new buffer:-----\n", bytes_received);
+//for (i = 0; i < bytes_received; i++) {
+//	putchar (buffer [i + 4]);
+//}
+//printf ("\n-----SEC: recv(): Dump complete-----\n\n");
 		} else {
-			printf ("SEC: recv () returned %d bytes\n", len);
-			int i;
-			for (i = 0; i < len; i++) {
-				putchar (buf [i]);
+printf ("SEC: recv (): Adding %d bytes to existing buffer of %d bytes\n", bytes_received, buffer_length);
+			temp_buffer = malloc (bytes_received + buffer_length);
+			if (!temp_buffer) {
+				fprintf (stderr, "Out of memory!\n");
+				break;
+			}
+			
+			/* Concatenate the old buffer bytes with the new bytes */
+			memcpy (temp_buffer, buffer, buffer_length);
+			memcpy (temp_buffer + buffer_length, recv_buf, bytes_received);
+			
+			/* Free the memory from the old buffer */
+			free (buffer);
+			buffer = temp_buffer;
+			buffer_length += bytes_received;
+		}
+		
+		/**
+		 * Once the code reaches here, buffer and buffer_length represent all
+		 * the data we've received up to this point.
+		 */
+		bytes_to_process = buffer_length;
+		buffer_index = 0;
+		while (bytes_to_process > 0) {
+			/* There needs to be at least 4 bytes for the stated message length */
+			if (bytes_to_process >= 4) {
+				/* Get the length of the message.  Add in the prepended length. */
+				stated_message_length = *((int *)(buffer + buffer_index));
+
+if (stated_message_length == 0) {
+	printf ("SEC: recv (): Stated message length cannot be 0!\n");
+	break;
+} else {
+	printf ("SEC: recv (): Stated message length = %d\n", stated_message_length);				
+}
+				
+				message_length = stated_message_length + 4;
+
+				/* See if the entire message is inside the buffer */
+				if (bytes_to_process >= message_length) {
+					/* FIXME: If an incoming message queue is desired, add to it here */
+					
+					/* Process the message received from the Event Server */
+					message = malloc (sizeof (char) * (stated_message_length + 1));
+					message [stated_message_length] = '\0';
+					memcpy (message, 
+							 &(buffer [buffer_index + 4]), 
+							 stated_message_length);
+
+//printf ("\n*****Dumping message to send to process_message:*****\n");
+//for (i = 0; i < stated_message_length; i++) {
+//	putchar (message [i]);
+//}
+//printf ("\n*****Dump complete*****\n\n");
+
+					sec_process_message (ec, message, stated_message_length);
+					free (message);
+
+					/* Update the buffer_index */
+					buffer_index += message_length;
+					bytes_to_process -= message_length;					
+				} else {
+					/* Cannot process the message until we receive more data */
+					break;
+				}
+			} else {
+				break;
 			}
 		}
-	}
 		
+		/* Update the buffer to only contain data that still needs processing */
+		if (bytes_to_process == 0) {
+printf ("SEC: recv (): All bytes in buffer processed.\n");
+			/* The buffer is empty and should be freed and nulled */
+			free (buffer);
+			buffer = NULL;
+			buffer_length = 0;
+		} else {
+printf ("SEC: recv (): %d bytes in buffer remain.\n", bytes_to_process);
+			/* A new buffer needs to be setup to store the remaining bytes */
+			temp_buffer = malloc (bytes_to_process);
+			memcpy (temp_buffer, buffer + buffer_index, bytes_to_process);
+			free (buffer);
+			buffer = temp_buffer;
+			buffer_length = bytes_to_process;
+		}
+	}
+
 	/**
 	 * If len == -1, there was some type of socket error.
 	 * If len == 0, the Simias Event Server has properly shutdown.
@@ -536,7 +635,7 @@ printf ("SEC: sec_thread: recv () called\n");
 		sec_shutdown (ec, "Could not reconnect the Simias Event Client");
 	}
 }
-
+		
 static void *
 sec_reg_thread (void *user_data)
 {
