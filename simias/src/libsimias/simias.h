@@ -55,8 +55,6 @@ struct _SimiasDomainInfo {
 	char *				name;
 	char *				description;
 	char *				id;
-	char *				roster_id;
-	char *				roster_name;
 	char *				member_user_id;
 	char *				member_name;
 	char *				remote_url;

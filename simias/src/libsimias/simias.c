@@ -273,12 +273,6 @@ simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 				/* ID */
 				domain->id = strdup(domainsA[i]->ID);
 
-				/* RosterID */
-				domain->roster_id = strdup(domainsA[i]->RosterID);
-
-				/* RosterName */
-				domain->roster_name = strdup(domainsA[i]->RosterName);
-
 				/* MemberUserID */
 				domain->member_user_id = strdup(domainsA[i]->MemberUserID);
 
@@ -342,8 +336,6 @@ simias_free_domains(SimiasDomainInfo **domainsA[])
 		free(curr_domain->name);
 		free(curr_domain->description);
 		free(curr_domain->id);
-		free(curr_domain->roster_id);
-		free(curr_domain->roster_name);
 		free(curr_domain->member_user_id);
 		free(curr_domain->member_name);
 		free(curr_domain->remote_url);
