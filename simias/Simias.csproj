@@ -759,16 +759,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\SyncCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SyncCollectionRoles.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Sync\SyncEventSubscriber.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -790,6 +780,11 @@
                 />
                 <File
                     RelPath = "src\Sync\SyncPolicy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncRoles.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

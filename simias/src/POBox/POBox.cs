@@ -60,8 +60,7 @@ namespace Simias.POBox
 				}
 				else
 				{
-					SyncCollection sc = new SyncCollection(this);
-					result = sc.MasterUrl.ToString() + "/POService.asmx";
+					result = this.MasterUrl.ToString() + "/POService.asmx";
 				}
 
 				return result;

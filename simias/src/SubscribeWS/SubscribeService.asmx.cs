@@ -169,9 +169,7 @@ namespace Simias.Subscribe.Web
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 				cSub.MessageType = "Inbound";
-
-				SyncCollection sc = new SyncCollection(sharedCollection);
-				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+				cSub.SubscriptionCollectionURL = sharedCollection.MasterUrl.ToString();
 
 				DirNode dirNode = sharedCollection.GetRootDirectory();
 				if(dirNode != null)

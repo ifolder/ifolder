@@ -422,7 +422,7 @@ namespace Simias.Sync
 		HttpSyncProxy		service;
 		SyncWorkArray	workArray;
 		Store			store;
-		SyncCollection	collection;
+		Collection		collection;
 		bool			queuedChanges;
 		bool			serverAlive;
 		StartSyncStatus	serverStatus;
@@ -468,7 +468,7 @@ namespace Simias.Sync
 		internal CollectionSyncClient(string nid, TimerCallback callback)
 		{
 			store = Store.GetStore();
-			collection = new SyncCollection(store.GetCollectionByID(nid));
+			collection = store.GetCollectionByID(nid);
 			this.callback = callback;
 			stopping = false;
 			Initialize();
@@ -513,7 +513,7 @@ namespace Simias.Sync
 		/// <param name="SyncNow">If true schedule now.</param>
 		internal void Reschedule(bool SyncNow)
 		{
-			if (collection.Role != SyncCollectionRoles.Slave)
+			if (collection.Role != SyncRoles.Slave)
 			{
 				timer.Change(Timeout.Infinite, Timeout.Infinite);
 				return;
@@ -606,7 +606,7 @@ namespace Simias.Sync
 			
 			// Sync the file system with the local store.
 			fileMonitor.CheckForFileChanges();
-			if (collection.Role != SyncCollectionRoles.Slave)
+			if (collection.Role != SyncRoles.Slave)
 				return;
 
 			// We may have just created or deleted nodes wait for the events to settle.
@@ -761,13 +761,13 @@ namespace Simias.Sync
 			fileMonitor = new FileWatcher(collection, false);
 			switch(collection.Role)
 			{
-				case SyncCollectionRoles.Master:
-				case SyncCollectionRoles.Local:
+				case SyncRoles.Master:
+				case SyncRoles.Local:
 				default:
 					timer = new Timer(callback, this, initialSyncDelay, Timeout.Infinite);				
 					break;
 
-				case SyncCollectionRoles.Slave:
+				case SyncRoles.Slave:
 					InitializeSlave(this);
 					break;
 			}
@@ -1670,7 +1670,7 @@ namespace Simias.Sync
 		/// Array of items to sync.
 		/// </summary>
 		/// <param name="collection">The collection.</param>
-		internal SyncWorkArray(SyncCollection collection)
+		internal SyncWorkArray(Collection collection)
 		{
 			this.collection = collection;
 			nodesFromServer = new Hashtable();

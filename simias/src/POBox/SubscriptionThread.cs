@@ -73,8 +73,7 @@ namespace Simias.POBox
 					throw new ApplicationException("Invalid shared collection ID");
 				}
 
-				SyncCollection sc = new SyncCollection(cCollection);
-				poServiceUrl = sc.MasterUrl.ToString() + poServiceLabel;
+				poServiceUrl = cCollection.MasterUrl.ToString() + poServiceLabel;
 			}
 		}
 

@@ -92,7 +92,7 @@ namespace Novell.AddressBook.UI.gtk
 		private void Init_Page()
 		{
 			AutoSyncCheckButton.Active = true;
-			RefreshSpinButton.Value = new SyncCollection(collection).Interval;
+			RefreshSpinButton.Value = collection.Interval;
 		}
 
 		private void on_AutoSyncCheckButton_toggled(object o, EventArgs args)

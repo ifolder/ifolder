@@ -184,10 +184,8 @@ namespace Simias.Presence
 
 			if (collection != null)
 			{
-				SyncCollection sc = new SyncCollection(c);
-
 				// service
-				string service = String.Format("{0}.{1}", sc.Name, NAME);
+				string service = String.Format("{0}.{1}", c.Name, NAME);
 				string host;
 
 				// ptr
@@ -229,11 +227,11 @@ namespace Simias.Presence
 				{
 					ArrayList list = new ArrayList();
 
-					list.Add(String.Format("name={0}", sc.Name));
-					list.Add(String.Format("domain={0}", sc.Domain));
-					list.Add(String.Format("id={0}", sc.ID));
+					list.Add(String.Format("name={0}", c.Name));
+					list.Add(String.Format("domain={0}", c.Domain));
+					list.Add(String.Format("id={0}", c.ID));
 					list.Add("public=true");
-					if(sc.GetRootDirectory() != null)
+					if(c.GetRootDirectory() != null)
 						list.Add("hasDirNode=true");
 					else
 						list.Add("hasDirNode=false");

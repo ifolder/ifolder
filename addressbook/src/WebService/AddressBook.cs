@@ -68,7 +68,7 @@ namespace Novell.AddressBook.Web
 			this.MasterIncarnation = collection.MasterIncarnation;
 			this.Name = collection.Name;
 			this.Owner = collection.Owner.Name;
-			this.RefreshInterval = new SyncCollection(collection).Interval;
+			this.RefreshInterval = collection.Interval;
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = "AB:AddressBook";
 			this.Description = "";

@@ -56,7 +56,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// The collection to monitor.
 		/// </summary>
-		public SyncCollection collection = null;
+		public Collection collection = null;
 
 		/* TODO: onServer needs to be removed. It controls how tombstones are handled:
 		 *   they are deleted on the server but left on the client. What it
@@ -106,10 +106,10 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="collection"></param>
 		/// <param name="onServer"></param>
-		public FileWatcher(SyncCollection collection, bool onServer)
+		public FileWatcher(Collection collection, bool onServer)
 		{
 			// TODO: Syncronize the dredger with the sync engine.
-			this.collection = new SyncCollection(collection);
+			this.collection = collection;
 			this.onServer = onServer;
 //			this.collectionId = collection.ID;
 			

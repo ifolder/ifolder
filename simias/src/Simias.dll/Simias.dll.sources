@@ -110,13 +110,12 @@ AssemblyInfo.cs
 ../Sync/StrongHash.cs
 ../Sync/StrongWeakHashtable.cs
 ../Sync/SyncClient.cs
-../Sync/SyncCollection.cs
-../Sync/SyncCollectionRoles.cs
 ../Sync/SyncEventSubscriber.cs
 ../Sync/SyncFile.cs
 ../Sync/SyncLog.cs
 ../Sync/SyncNode.cs
 ../Sync/SyncPolicy.cs
+../Sync/SyncRoles.cs
 ../Sync/SyncService.cs
 ../Sync/WeakHash.cs
 

@@ -45,7 +45,7 @@ namespace Simias.Sync
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="snode">The node to sync.</param>
 		/// <param name="policy">The policy to check the file against.</param>
-		public ServerInFile(SyncCollection collection, SyncNode snode, SyncPolicy policy) :
+		public ServerInFile(Collection collection, SyncNode snode, SyncPolicy policy) :
 			base(collection)
 		{
 			this.snode = snode;
@@ -198,7 +198,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync down</param>
-		public ServerOutFile(SyncCollection collection, BaseFileNode node) :
+		public ServerOutFile(Collection collection, BaseFileNode node) :
 			base(collection)
 		{
 			this.node = node;

@@ -1130,8 +1130,7 @@ namespace Simias.Web
 			// in the future
 			Roster roster = 
 				store.GetDomain(collection.Domain).GetRoster(store);
-			SyncCollection sc = new SyncCollection(roster);
-			sub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+			sub.SubscriptionCollectionURL = roster.MasterUrl.ToString();
 
 			DirNode dirNode = collection.GetRootDirectory();
 			if(dirNode != null)

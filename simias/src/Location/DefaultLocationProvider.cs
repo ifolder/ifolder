@@ -67,11 +67,9 @@ namespace Simias.Location
 
 			Collection c = store.GetCollectionByID(collection);
 
-			if (collection != null)
+			if (c != null)
 			{
-				SyncCollection sc = new SyncCollection(c);
-
-				result = sc.MasterUrl;
+				result = c.MasterUrl;
 			}
 
 			return result;

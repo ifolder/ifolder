@@ -26,6 +26,7 @@ using System.Web;
 using System.Web.SessionState;
 using System.Net;
 using System.Collections;
+using Simias.Storage;
 using Simias.Sync;
 using Simias.Sync.Delta;
 using Simias.Authentication;
@@ -155,7 +156,7 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class HttpSyncProxy
 	{
-		SyncCollection		collection;
+		Collection			collection;
 		string				url;
 		string				userName;
 		string				userID;
@@ -169,7 +170,7 @@ namespace Simias.Sync.Http
 		/// <param name="collection"></param>
 		/// <param name="userName"></param>
 		/// <param name="userID"></param>
-		public HttpSyncProxy(SyncCollection collection, string userName, string userID)
+		public HttpSyncProxy(Collection collection, string userName, string userID)
 		{
 			this.collection = collection;
 			url = collection.MasterUrl.ToString().TrimEnd('/') + "/SyncHandler.ashx";

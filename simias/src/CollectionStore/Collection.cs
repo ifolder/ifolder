@@ -268,12 +268,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// The syncing role of the base collection.
 		/// </summary>
-		public SyncCollectionRoles Role
+		public SyncRoles Role
 		{
 			get 
 			{ 
 				Property p = properties.FindSingleValue( PropertyTags.SyncRole );
-				return ( p != null ) ? ( SyncCollectionRoles )p.Value : SyncCollectionRoles.None;
+				return ( p != null ) ? ( SyncRoles )p.Value : SyncRoles.None;
 			}
 
 			set	
@@ -674,7 +674,7 @@ namespace Simias.Storage
 							// to be set to tell the sync process what to do with this collection.
 							if ( IsType( node, NodeTypes.CollectionType ) )
 							{
-								SyncCollectionRoles role;
+								SyncRoles role;
 								Collection collection = new Collection( store, node );
 								if ( collection.Synchronizable )
 								{
@@ -682,11 +682,11 @@ namespace Simias.Storage
 									// will always be the master.
 									if ( store.IsEnterpriseServer || ( collection.Domain == Simias.Storage.Domain.WorkGroupDomainID ) )
 									{
-										role = SyncCollectionRoles.Master;
+										role = SyncRoles.Master;
 									}
 									else
 									{
-										role = SyncCollectionRoles.Slave;
+										role = SyncRoles.Slave;
 
 										// Inform sync process that this collection needs to be pushed to the server.
 										Property m = new Property( PropertyTags.CreateMaster, true );
@@ -696,7 +696,7 @@ namespace Simias.Storage
 								}
 								else
 								{
-									role = SyncCollectionRoles.Local;
+									role = SyncRoles.Local;
 								}
 
 								// Set the role.
@@ -877,7 +877,7 @@ namespace Simias.Storage
 							if ( IsType( node, NodeTypes.CollectionType ) )
 							{
 								// Set the role.
-								Property p = new Property( PropertyTags.SyncRole, ( store.IsEnterpriseServer ) ? SyncCollectionRoles.Master : SyncCollectionRoles.Slave );
+								Property p = new Property( PropertyTags.SyncRole, ( store.IsEnterpriseServer ) ? SyncRoles.Master : SyncRoles.Slave );
 								p.LocalProperty = true;
 								node.Properties.ModifyNodeProperty( p );
 							}
@@ -1363,7 +1363,10 @@ namespace Simias.Storage
 				bool doAdminCheck = false;
 				bool hasCollection = false;
 				bool hasFileNode = false;
+				bool hasCurrentOwner = false;
+				bool isProxy = false;
 				Member collectionOwner = null;
+				Member currentOwner = Owner;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
@@ -1380,6 +1383,10 @@ namespace Simias.Storage
 							{
 								createCollection = true;
 							}
+							else if ( node.Properties.State == PropertyList.PropertyListState.Proxy )
+							{
+								isProxy = true;
+							}
 
 							hasCollection = true;
 						}
@@ -1387,6 +1394,12 @@ namespace Simias.Storage
 						{
 							// Administrative access needs to be checked because collection membership has changed.
 							doAdminCheck = true;
+
+							// Remember if the current collection owner is in the list.
+							if ( ( currentOwner != null ) && ( currentOwner.ID == node.ID ) )
+							{
+								hasCurrentOwner = true;
+							}
 
 							// Keep track of any ownership changes.
 							if ( node.Properties.HasProperty( PropertyTags.Owner ) )
@@ -1455,6 +1468,14 @@ namespace Simias.Storage
 					}
 					else
 					{
+						// Make sure that ownership of the collection is right.
+						if ( ( ( hasCurrentOwner && ( collectionOwner == null ) ) ||
+							 ( !hasCurrentOwner && ( collectionOwner != null ) ) ) &&
+							 ( isProxy == false ) )
+						{
+							throw new CollectionStoreException( "Collection owner is in an invalid state." );
+						}
+
 						// If there is no user being impersonated on this collection, there is no need to do any
 						// rights checking. Access rights are only checked for impersonated users.
 						if ( accessControl.IsImpersonating )
@@ -1480,9 +1501,6 @@ namespace Simias.Storage
 								// If ownership rights are changing, make sure the current user has sufficient rights.
 								if ( collectionOwner != null )
 								{
-									// Get the current owner of the collection.
-									Member currentOwner = Owner;
-
 									// See if ownership is changing and if it is, then the current user has to be
 									// the current owner.
 									if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )

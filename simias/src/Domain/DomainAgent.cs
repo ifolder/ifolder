@@ -662,7 +662,7 @@ namespace Simias.Domain
 		/// Create the master on the server.
 		/// </summary>
 		/// <param name="collection">Collection to create on the enterprise server.</param>
-		public void CreateMaster(SyncCollection collection)
+		public void CreateMaster(Collection collection)
 		{
 			// Get the domain object.
 			Simias.Storage.Domain domain = store.GetDomain(collection.Domain);

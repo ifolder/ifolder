@@ -275,7 +275,7 @@ namespace Simias.Sync
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
 		/// <param name="syncService">The client used to access the server.</param>
-		public HttpClientInFile(SyncCollection collection, string nodeID, HttpSyncProxy syncService) :
+		public HttpClientInFile(Collection collection, string nodeID, HttpSyncProxy syncService) :
 			base(collection)
 		{
 			this.syncService = syncService;
@@ -616,7 +616,7 @@ namespace Simias.Sync
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync up.</param>
 		/// <param name="syncService">The service to access the server side sync.</param>
-		public HttpClientOutFile(SyncCollection collection, BaseFileNode node, HttpSyncProxy syncService) :
+		public HttpClientOutFile(Collection collection, BaseFileNode node, HttpSyncProxy syncService) :
 			base(collection)
 		{
 			this.node = node;

@@ -174,26 +174,24 @@ namespace Simias.Location
 
 			if (collection != null)
 			{
-				SyncCollection sc = new SyncCollection(c);
-			
 				// service
-				string service = String.Format("{0}.{1}", sc.ID, SUFFIX);
+				string service = String.Format("{0}.{1}", c.ID, SUFFIX);
 
 				// ptr
 				register.RegisterPointer(SUFFIX, service);
 				
 				// service location
 				if (register.RegisterServiceLocation(host,
-					service, sc.MasterUrl.Port, 0, 0) == 0)
+					service, c.MasterUrl.Port, 0, 0) == 0)
 				{
 					log.Debug("Registered {0} with Reunion.", service);
 
 					ArrayList list = new ArrayList();
 
-					list.Add(String.Format("name={0}", sc.Name));
-					list.Add(String.Format("domain={0}", sc.Domain));
-					list.Add(String.Format("type={0}", sc.Type));
-					list.Add(String.Format("scheme={0}", sc.MasterUrl.Scheme));
+					list.Add(String.Format("name={0}", c.Name));
+					list.Add(String.Format("domain={0}", c.Domain));
+					list.Add(String.Format("type={0}", c.Type));
+					list.Add(String.Format("scheme={0}", c.MasterUrl.Scheme));
 
 					register.RegisterTextStrings(service, (string[]) list.ToArray(typeof(string)));
 				}

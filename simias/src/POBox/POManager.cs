@@ -94,10 +94,9 @@ namespace Simias.POBox
 					// check for the server
 					Storage.Domain domain = store.GetDomain(store.DefaultDomain);
 					Roster roster = domain.GetRoster(store);
-					SyncCollection sc = new SyncCollection(roster);
 
 					// only use collection managers on client machines
-					if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (sc.Role == SyncCollectionRoles.Slave))
+					if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (roster.Role == SyncRoles.Slave))
 					{
 						// start collection managers
 						subscriber.Enabled = true;

@@ -41,7 +41,7 @@ namespace Simias.Sync
 		/// Constructs a SyncPolicy object.
 		/// </summary>
 		/// <param name="collection">The collection the policy belongs to.</param>
-		public SyncPolicy(SyncCollection collection)
+		public SyncPolicy(Collection collection)
 		{
 			// Check if files pass policy.
 			Member member = collection.GetCurrentMember();

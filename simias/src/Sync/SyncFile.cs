@@ -58,7 +58,7 @@ namespace Simias.Sync
 		/// Constructs an OutFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected OutFile(SyncCollection collection) :
+		protected OutFile(Collection collection) :
 			base(collection)
 		{
 		}
@@ -211,7 +211,7 @@ namespace Simias.Sync
 		/// Constructs an InFile object.
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected InFile(SyncCollection collection) :
+		protected InFile(Collection collection) :
 			base(collection)
 		{
 		}
@@ -332,7 +332,7 @@ namespace Simias.Sync
 			catch (FileNotFoundException)
 			{
 				// Check to see if we have a partially downloaded file to delta sync with.
-				if (collection.Role == SyncCollectionRoles.Slave && File.Exists(workFile))
+				if (collection.Role == SyncRoles.Slave && File.Exists(workFile))
 				{
 					partialFile = workFile + ".part";
 					File.Move(workFile, partialFile);
@@ -416,7 +416,7 @@ namespace Simias.Sync
 
 			// We need to delete the temp file if we are the master.
 			// On the client leave for a delta sync.
-			if (workFile != null && !(collection.Role == SyncCollectionRoles.Slave))
+			if (workFile != null && !(collection.Role == SyncRoles.Slave))
 				File.Delete(workFile);
 
 			if (partialFile != null)
@@ -439,7 +439,7 @@ namespace Simias.Sync
 		#region fields
 
 		/// <summary>The Collection the file belongs to.</summary>
-		protected SyncCollection	collection;
+		protected Collection	collection;
 		/// <summary> The node that represents the file.</summary>
 		protected BaseFileNode	node;
 		/// <summary>The ID of the node.</summary>
@@ -466,7 +466,7 @@ namespace Simias.Sync
 		/// 
 		/// </summary>
 		/// <param name="collection">The collection that the node belongs to.</param>
-		protected SyncFile(SyncCollection collection)
+		protected SyncFile(Collection collection)
 		{
 			this.collection = collection;
 		}

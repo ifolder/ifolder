@@ -117,7 +117,7 @@ namespace Simias.Sync
 		/// Used to log to the log file.
 		/// </summary>
 		public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncService));
-		SyncCollection collection;
+		Collection collection;
 		CollectionLock	cLock;
 		Member			member;
 		Access.Rights	rights = Access.Rights.Deny;
@@ -200,8 +200,6 @@ namespace Simias.Sync
 				return;
 			}
 		
-			collection = new SyncCollection(col);
-
 			// Check our rights.
 			string userID = Thread.CurrentPrincipal.Identity.Name;
 			if (userID != null)
@@ -211,13 +209,13 @@ namespace Simias.Sync
 					userID = user;
 				// End BUGBUG
 				if (userID.Length != 0)
-					member = collection.GetMemberByID(userID);
+					member = col.GetMemberByID(userID);
 				if (member != null)
 				{
-					collection.Impersonate(member);
+					col.Impersonate(member);
 					rights = member.Rights;
 					si.Access = rights;
-					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
+					log.Info("Starting Sync of {0} for {1} rights : {2}.", col.Name, member.Name, rights);
 				}
 			}
 			else
@@ -244,7 +242,7 @@ namespace Simias.Sync
 						}
 					}
 
-					cLock = CollectionLock.GetLock(collection.ID);
+					cLock = CollectionLock.GetLock(col.ID);
 					if (cLock == null)
 					{
 						si.Status = StartSyncStatus.Busy;
@@ -257,7 +255,7 @@ namespace Simias.Sync
 						try
 						{
 							// We need to get all of the nodes.
-							si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
+							si.Context = new ChangeLogReader(col).GetEventContext().ToString();
 							nodeContainer = this.BeginListAllNodes();
 						}
 						finally

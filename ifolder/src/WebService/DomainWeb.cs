@@ -77,7 +77,7 @@ namespace Novell.iFolder.Web
 				throw new Exception("Unable to access user roster");
 
 			this.UserName = roster.GetMemberByID(this.UserID).Name;
-			this.IsSlave = roster.Role.Equals(Simias.Sync.SyncCollectionRoles.Slave);
+			this.IsSlave = roster.Role.Equals(Simias.Sync.SyncRoles.Slave);
 
 			this.IsEnabled = new Simias.Domain.DomainAgent().IsDomainActive(domainID);
 		}
