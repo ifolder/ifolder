@@ -383,4 +383,10 @@
 	[[self window] setToolbar:toolbar];
 }
 
+- (NSArrayController*) DomainsController
+{
+	return domainsController;
+}
+
+
 @end
