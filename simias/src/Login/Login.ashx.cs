@@ -65,7 +65,8 @@ namespace Simias
 				if ( ( String.Compare( request.HttpMethod, "GET", true ) == 0 ) ||
 					 ( String.Compare( request.HttpMethod, "POST", true ) == 0 ) )
 				{
-					Http.GetMember( context );
+					string domainID = context.Request.Headers[ Simias.Security.Web.AuthenticationService.Login.DomainIDHeader ];
+					Http.GetMember( domainID, context );
 				}
 				else
 				{

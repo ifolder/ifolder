@@ -164,6 +164,7 @@ namespace Simias.Sync.Http
 	{
 		static string				version = "1.0";
 		Collection					collection;
+		string						domainId;
 		string						url;
 		string						userName;
 		string						userID;
@@ -179,6 +180,7 @@ namespace Simias.Sync.Http
 		public HttpSyncProxy(Collection collection, string userName, string userID)
 		{
 			this.collection = collection;
+			this.domainId = collection.Domain;
 			url = collection.MasterUrl.ToString().TrimEnd('/') + "/SyncHandler.ashx";
 			this.userName = userName;
 			this.userID = userID;
@@ -203,6 +205,7 @@ namespace Simias.Sync.Http
 			headers.Add(SyncHeaders.UserID, userID);
 			headers.Add(SyncHeaders.CollectionName, collection.Name);
 			headers.Add(SyncHeaders.CollectionID, collection.ID);
+			headers.Add(Simias.Security.Web.AuthenticationService.Login.DomainIDHeader, domainId);
 			return request;
 		}
 

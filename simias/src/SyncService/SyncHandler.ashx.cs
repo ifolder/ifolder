@@ -43,8 +43,10 @@ namespace Simias.Sync.Web
 			// Set no cache-ing.
 			Response.Cache.SetCacheability(HttpCacheability.NoCache);
 
+			// Get the Domain ID.
+			string domainId = Request.Headers.Get(Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
 			// Set the current principal on this thread.
-			if ( Simias.Authentication.Http.GetMember( context ) != null )
+			if ( Simias.Authentication.Http.GetMember( domainId, context ) != null )
 			{
 				string httpMethod = Request.HttpMethod;
 				SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);

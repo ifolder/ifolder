@@ -91,7 +91,9 @@ namespace Simias.Gaim
 		/// <returns>The status from the authentication.</returns>
 		public Authentication.Status Authenticate( Simias.Storage.Domain domain, HttpContext httpContext )
 		{
-			return new Authentication.Status( Authentication.StatusCodes.Success );
+			Authentication.Status status = new Authentication.Status( Authentication.StatusCodes.Success );
+			status.DomainID = domain.ID;
+			return status;
 		}
 
 		/// <summary>

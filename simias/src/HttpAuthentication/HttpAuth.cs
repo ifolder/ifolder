@@ -176,9 +176,22 @@ namespace Simias.Authentication
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ctx"></param>
+		/// <returns></returns>
+		static public Simias.Storage.Member GetMember( HttpContext ctx )
+		{
+			return GetMember( null, ctx );
+		}
+		
+
+		/// <summary>
 		/// Summary description for Http
 		/// </summary>
-		static public Simias.Storage.Member GetMember( HttpContext ctx )
+		/// <param name="domainID"></param>
+		/// <param name="ctx"></param>
+		static public Simias.Storage.Member GetMember( string domainID, HttpContext ctx )
 		{
 			Simias.Authentication.Session simiasSession;
 			Simias.Authentication.Status status;
@@ -193,7 +206,6 @@ namespace Simias.Authentication
 			// header doesn't exist use the default domain
 			//
 
-			string domainID = ctx.Request.Headers[ DomainIDHeader ];
 			if ( domainID != null && domainID != "" )
 			{
 				domain = store.GetDomain( domainID );

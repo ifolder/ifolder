@@ -234,7 +234,7 @@ namespace Simias.POBoxService.Web
 		{
 			POBoxStatus			status = POBoxStatus.UnknownError;
 
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			if ( Simias.Authentication.Http.GetMember( subMsg.DomainID, Context ) != null )
 			{
 				Simias.POBox.POBox	poBox;
 				Store				store = Store.GetStore();
@@ -354,7 +354,7 @@ namespace Simias.POBoxService.Web
 		{
 			POBoxStatus	status = POBoxStatus.UnknownError;
 
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			if ( Simias.Authentication.Http.GetMember( subMsg.DomainID, Context ) != null )
 			{
 				Simias.POBox.POBox	toPOBox;
 				Store				store = Store.GetStore();
@@ -597,7 +597,7 @@ namespace Simias.POBoxService.Web
 		{
 			POBoxStatus	status = POBoxStatus.UnknownError;
 
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			if ( Simias.Authentication.Http.GetMember( subMsg.DomainID, Context ) != null )
 			{
 				Simias.POBox.POBox	poBox;
 				Store				store = Store.GetStore();
@@ -707,7 +707,7 @@ namespace Simias.POBoxService.Web
 		{
 			SubscriptionInformation subInfo = null;
 
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			if ( Simias.Authentication.Http.GetMember( domainID, Context ) != null )
 			{
 				Simias.POBox.POBox	poBox;
 				Store store = Store.GetStore();
@@ -781,7 +781,7 @@ namespace Simias.POBoxService.Web
 		{
 			POBoxStatus	wsStatus = POBoxStatus.UnknownCollection;
 
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			if ( Simias.Authentication.Http.GetMember( domainID, Context ) != null )
 			{
 				Store store = Store.GetStore();
 
@@ -839,7 +839,7 @@ namespace Simias.POBoxService.Web
 			}
 
 			if ( ( cDomain.ConfigType == Domain.ConfigurationType.ClientServer ) && 
-				 ( Simias.Authentication.Http.GetMember( Context ) == null ) )
+				 ( Simias.Authentication.Http.GetMember( subMsg.DomainID, Context ) == null ) )
 			{
 				return status;
 			}
@@ -1012,7 +1012,7 @@ namespace Simias.POBoxService.Web
 		[WebMethod(EnableSession = true)]
 		public string GetDefaultDomain(int dummy)
 		{
-			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			if ( Simias.Authentication.Http.GetMember( Store.GetStore().DefaultDomain, Context ) != null )
 			{
 				return(Store.GetStore().DefaultDomain);
 			}
