@@ -170,8 +170,8 @@
 				3E6F7AC907B3E4DB00F46F36,
 				3EE8876907B9503200484B9F,
 				3EE8881407B9603E00484B9F,
-				3E49BC6B0765224B0040812D,
 				3E09F85F07C04CE200381F59,
+				3E49BC6B0765224B0040812D,
 				3E09F83307C048B700381F59,
 				3E09F82D07C048AA00381F59,
 				3E09F82707C0489F00381F59,
@@ -215,8 +215,8 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				3EB7842507C2D31400E2B733,
 				3E67778607AEACEF0027130D,
-				3ECCEE29078B050C0011719F,
 				3E34A2810772BF1A009AC400,
 				3EAEF5050769104900B98AF6,
 				1058C7A0FEA54F0111CA2CBB,
@@ -1127,6 +1127,19 @@
 			settings = {
 			};
 		};
+		3EB7842507C2D31400E2B733 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			path = "libsimias-event.dylib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EB7842607C2D31400E2B733 = {
+			fileRef = 3EB7842507C2D31400E2B733;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EB8C509079392230082AA86 = {
 			children = (
 				3EB8C50A079392230082AA86,
@@ -1177,19 +1190,6 @@
 		};
 		3EB8C513079393B60082AA86 = {
 			fileRef = 3EB8C511079393B60082AA86;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3ECCEE29078B050C0011719F = {
-			isa = PBXFileReference;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			path = "libsimias-event.0.dylib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3ECCEE2A078B050C0011719F = {
-			fileRef = 3ECCEE29078B050C0011719F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1629,7 +1629,7 @@
 				GCC_PREFIX_HEADER = iFolder_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "/Users/calvin/code/ifolder/ifolder/src/libifolder/libs /Users/calvin/code/ifolder/ifolder/src/OSXClient /Users/calvin/code/ifolder/ifolder/src/OSXClient/build /Users/calvin/test/lib";
+				LIBRARY_SEARCH_PATHS = "/Users/calvin/code/ifolder/ifolder/src/libifolder/libs /Users/calvin/code/ifolder/ifolder/src/OSXClient /Users/calvin/code/ifolder/ifolder/src/OSXClient/build /Users/calvin/test/lib /Users/calvin";
 				PRODUCT_NAME = iFolder;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1761,8 +1761,8 @@
 				3E23FEF10768CDCA00877BDF,
 				3EAEF5060769104900B98AF6,
 				3E34A2820772BF1A009AC400,
-				3ECCEE2A078B050C0011719F,
 				3E67778707AEACEF0027130D,
+				3EB7842607C2D31400E2B733,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

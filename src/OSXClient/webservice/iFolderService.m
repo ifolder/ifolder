@@ -54,6 +54,14 @@ NSDictionary *getiFolderUserProperties(struct ns1__iFolderUser *user);
     {
         isRunning = YES;
     }
+	else
+	{
+		NSString *faultString = [NSString stringWithCString:soap.fault->faultstring];
+
+		cleanup_gsoap(&soap);
+
+		[NSException raise:faultString format:@"Error in Ping"];
+	}
 
     cleanup_gsoap(&soap);
 
