@@ -536,6 +536,7 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 			NULL);
 
 	gtk_dialog_set_has_separator(GTK_DIALOG(dialog), FALSE);
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
 
 	vbox = gtk_vbox_new(FALSE, 10);
 	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
@@ -546,7 +547,6 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 
 	name_entry = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(name_entry), "My iFolder");
-	/* FIXME: The next line doesn't seem to activate the OK button when pressing Enter when name_entry has the focus.  Perhaps we need to make the OK button default.  Figure out how to do that. */
 	gtk_entry_set_activates_default(GTK_ENTRY(name_entry), TRUE);
 	gtk_editable_select_region(GTK_EDITABLE(name_entry), 0, -1);
 	gtk_widget_grab_focus(name_entry);
