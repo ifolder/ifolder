@@ -220,6 +220,7 @@ namespace Simias.Service
 							if (svc.state == State.Running && svc.HasExited)
 							{
 								// The service has exited. Restart it.
+								logger.Info("\"{0}\" service exited.  Restarting ....", svc.Name);
 								svc.state = State.Stopped;
 								svc.Start();
 							}
