@@ -109,7 +109,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button details;
 		private bool showDetails = false;
-		private bool first = true;
 		private MyMessageBoxDefaultButton defaultButton;
 		private System.Windows.Forms.TextBox detailsBox;
 		/// <summary>
@@ -468,62 +467,6 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void MyMessageBox_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			if (first)
-			{
-				first = false;
-
-				float width = 0;
-				float height = 0;
-				SizeF size = new SizeF(0, 0);
-
-				// Split the string at the newline boundaries.
-				Regex regex = new Regex("[\n]+");
-				foreach (string s in regex.Split(message.Text))
-				{
-					// Calculate the size for each string.
-					size = e.Graphics.MeasureString(s, message.Font);
-					width = Math.Max((size.Width / maxWidth) > 1 ? maxWidth : size.Width, width);
-					height += (float)Math.Ceiling(size.Width / width) * size.Height;
-				}
-				
-				int index = 0;
-				int newlineCount = 0;
-
-				// Count how many blank lines we have.
-				while ((index = message.Text.IndexOf("\n", index)) != -1)
-				{
-					while (message.Text[++index] == '\n')
-					{
-						newlineCount++;
-						if (index > message.Text.Length - 1)
-							break;						
-					}
-				}
-
-				// Adjust the height to include the blank lines.
-				height += (size.Height * newlineCount) + 2;
-
-				message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
-
-				// Calculate the size of the message box.
-				int msgWidth = message.Width + message.Left + 4;
-				this.Width = Math.Max(msgWidth, details.Visible ? 2 * (details.Width + 14) + ok.Width : 0);
-
-				// Place the buttons.
-				ok.Left = (ClientRectangle.Width - ok.Width) / 2;
-				ok.Top = message.Bottom + 12;
-
-				yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
-				no.Left = yes.Right + 4;
-				yes.Top = no.Top = ok.Top;
-				this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
-
-				details.Top = ok.Top;
-				details.Left = ClientRectangle.Right - (details.Width + 8);
-				detailsBox.Top = ok.Bottom + 8;
-				detailsBox.Width = ClientRectangle.Right - (detailsBox.Left * 2);
-			}
-
 			if (showDetails)
 			{
 				this.Height = detailsBox.Bottom + (this.Height - ClientRectangle.Height) + 8;
@@ -549,6 +492,9 @@ namespace Novell.iFolderCom
 				IntPtr hMenu = GetSystemMenu(this.Handle, false);
 				EnableMenuItem(hMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
 			}
+
+			resizeControl();
+			CenterToParent();
 		}
 
 		private void MyMessageBox_Activated(object sender, System.EventArgs e)
@@ -572,6 +518,66 @@ namespace Novell.iFolderCom
 					no.Focus();
 					break;
 			}
+		}
+		#endregion
+
+		#region Private Methods
+		private void resizeControl()
+		{
+			float width = 0;
+			float height = 0;
+			SizeF size = new SizeF(0, 0);
+
+			Graphics g = message.CreateGraphics();
+
+			// Split the string at the newline boundaries.
+			Regex regex = new Regex("[\n]+");
+			foreach (string s in regex.Split(message.Text))
+			{
+				// Calculate the size for each string.
+				size = g.MeasureString(s, message.Font);
+				width = Math.Max((size.Width / maxWidth) > 1 ? maxWidth : size.Width, width);
+				height += (float)Math.Ceiling(size.Width / width) * size.Height;
+			}
+
+			g.Dispose();
+
+			int index = 0;
+			int newlineCount = 0;
+
+			// Count how many blank lines we have.
+			while ((index = message.Text.IndexOf("\n", index)) != -1)
+			{
+				while (message.Text[++index] == '\n')
+				{
+					newlineCount++;
+					if (index > message.Text.Length - 1)
+						break;						
+				}
+			}
+
+			// Adjust the height to include the blank lines.
+			height += (size.Height * newlineCount) + 2;
+
+			message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
+
+			// Calculate the size of the message box.
+			int msgWidth = message.Width + message.Left + 4;
+			this.Width = Math.Max(msgWidth, details.Visible ? 2 * (details.Width + 14) + ok.Width : 0);
+
+			// Place the buttons.
+			ok.Left = (ClientRectangle.Width - ok.Width) / 2;
+			ok.Top = message.Bottom + 12;
+
+			yes.Left = (ClientRectangle.Width / 2) - (yes.Width + 4);
+			no.Left = yes.Right + 4;
+			yes.Top = no.Top = ok.Top;
+			this.Height = ok.Bottom + (this.Height - ClientRectangle.Height) + 12;
+
+			details.Top = ok.Top;
+			details.Left = ClientRectangle.Right - (details.Width + 8);
+			detailsBox.Top = ok.Bottom + 8;
+			detailsBox.Width = ClientRectangle.Right - (detailsBox.Left * 2);
 		}
 		#endregion
 

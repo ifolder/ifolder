@@ -410,17 +410,6 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
-		#region Events
-		/// <summary>
-		/// Delegate used when successfully connected to Enterprise Server.
-		/// </summary>
-		public delegate void EnterpriseConnectDelegate(object sender, DomainConnectEventArgs e);
-		/// <summary>
-		/// Occurs when all successfully connected to enterprise.
-		/// </summary>
-		public event EnterpriseConnectDelegate EnterpriseConnect;
-		#endregion
-
 		#region Event Handlers
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
