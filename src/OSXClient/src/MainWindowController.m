@@ -22,7 +22,10 @@
  ***********************************************************************/
 
 #import "MainWindowController.h"
+#import "SyncLogWindowController.h"
+#import "LoginWindowController.h"
 #include "SimiasEventHandlers.h"
+
 
 
 @implementation MainWindowController
@@ -122,6 +125,16 @@
 }
 
 
+- (IBAction)showSyncLog:(id)sender
+{
+	if(syncLogController == nil)
+	{
+		syncLogController = [[SyncLogWindowController alloc] initWithWindowNibName:@"SyncLogWindow"];
+	}
+	
+	[syncLogController showWindow:self];
+}
+
 
 
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server
@@ -196,8 +209,10 @@
 
 - (void)addLog:(NSString *)entry
 {
-	NSString *logMessage = [NSString stringWithFormat:@"%@ %@", [[NSDate date] descriptionWithCalendarFormat:@"%m/%d/%Y %H:%M:%S" timeZone:nil locale:nil], entry];
-	[logController addObject:logMessage];
+	if(syncLogController != nil)
+	{
+		[syncLogController logEntry:entry];
+	}
 }
 
 - (void)initializeSimiasEvents

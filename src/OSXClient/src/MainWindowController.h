@@ -30,6 +30,7 @@
 
 // Forward Declarations
 @class LoginWindowController;
+@class SyncLogWindowController;
 
 @interface MainWindowController : NSWindowController
 {
@@ -37,15 +38,15 @@
 	iFolderService					*webService;
 	NSMutableArray					*domains;
 	NSMutableArray					*ifolders;
-	NSMutableArray					*synclog;
     IBOutlet NSArrayController		*ifoldersController;
     IBOutlet NSArrayController		*domainsController;
-	IBOutlet NSArrayController		*logController;
+	IBOutlet SyncLogWindowController *syncLogController;
 	
 	iFolder *selectediFolder;	
 }
 
 - (IBAction)showLoginWindow:(id)sender;
+- (IBAction)showSyncLog:(id)sender;
 - (IBAction)refreshWindow:(id)sender;
 
 
