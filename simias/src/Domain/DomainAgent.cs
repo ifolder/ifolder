@@ -32,20 +32,32 @@ namespace Simias.Domain
 	/// </summary>
 	public class DomainAgent
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(DomainAgent));
+
+		private static readonly string SectionName = "Domain";
+
 		/// <summary>
 		/// The suggested service url for the current machine.
 		/// </summary>
 		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
 			MyDns.GetHostName(), 6346, EndPoint)).Uri;
 
-		private static readonly string SectionName = "Domain";
 		private static readonly string UrlKeyName = "Service Url";
+		
+		/// <summary>
+		/// The enabled state of using the domain service.
+		/// </summary>
+		private static readonly bool DefaultEnabled = false;
 
+		private static readonly string EnabledKeyName = "Enabled";
+		
 		private Configuration config;
 
 		public DomainAgent(Configuration config)
 		{
 			this.config = config;
+			log.Info("Domain Service Enabled: {0}", Enabled);
+			log.Info("Domain Service Url: {0}", ServiceUrl);
 		}
 
 		public IDomainService Connect()
@@ -69,6 +81,13 @@ namespace Simias.Domain
 			get { return new Uri(config.Get(SectionName, UrlKeyName, DefaultServiceUrl.ToString())); }
 
 			set { config.Set(SectionName, UrlKeyName, value.ToString()); }
+		}
+
+		public bool Enabled
+		{
+			get { return bool.Parse(config.Get(SectionName, EnabledKeyName, DefaultEnabled.ToString())); }
+
+			set { config.Set(SectionName, EnabledKeyName, value.ToString()); }
 		}
 
 		#endregion

@@ -269,7 +269,8 @@ namespace Simias.Sync
 				{
 					DomainAgent agent = new DomainAgent(this.StoreReference.Config);
 
-					if (Synchronizable && (agent.ServiceUrl != null))
+					// TODO: this should be set when the collection is being created
+					if (Synchronizable && agent.Enabled)
 					{
 						role = SyncCollectionRoles.Slave;
 						DomainUrl = agent.ServiceUrl;
