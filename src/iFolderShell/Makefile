@@ -8,6 +8,16 @@
 include ../../config.mk
 
 #=============================================================================
+# iFolderComponent variables
+#=============================================================================
+iFolderComponent_SOURCES = AssemblyInfo.cs iFolderAdvanced.cs iFolderComponent.cs
+iFolderComponent_INCLUDES = 
+iFolderComponent_FLAGS = /t:library
+iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) iFolder.dll CollectionStore.dll System.Drawing.dll System.Windows.Forms.dll AddressBook.dll FormsBookLib.dll
+iFolderComponent_LIBPATH = $(ADDRESSBOOK_ROOT)/src/stage $(SIMIAS_ROOT)/src/stage ../iFolder ../FormsBookLib
+iFolderComponent_LDFLAGS = 
+
+#=============================================================================
 # iFolderComponentTests variables
 #=============================================================================
 iFolderComponentTests_SOURCES = iFolderComponentTests/AssemblyInfo.cs iFolderComponentTests/iFolderComponentTests.cs
@@ -29,20 +39,10 @@ iFolderShell_LDFLAGS = $(SHARED_LIB_FLAG)
 iFolderShell_DEF = $(DEF)iFolderShell/iFolderShell.Def
 
 #=============================================================================
-# iFolderComponent variables
-#=============================================================================
-iFolderComponent_SOURCES = AssemblyInfo.cs iFolderAdvanced.cs iFolderComponent.cs
-iFolderComponent_INCLUDES = 
-iFolderComponent_FLAGS = /t:library
-iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) iFolder.dll CollectionStore.dll System.Drawing.dll System.Windows.Forms.dll AddressBook.dll FormsBookLib.dll
-iFolderComponent_LIBPATH = $(ADDRESSBOOK_ROOT)/src/stage $(SIMIAS_ROOT)/src/stage ../iFolder ../FormsBookLib
-iFolderComponent_LDFLAGS = 
-
-#=============================================================================
 # globals
 #=============================================================================
 
-TARGETS = iFolderComponentTests.dll $(LIB_PRE)iFolderShell$(SHARED_LIB_EXT) iFolderComponent.dll iFolderComponent$(TYPE_LIB_EXT) 
+TARGETS = iFolderComponent.dll iFolderComponent$(TYPE_LIB_EXT) iFolderComponentTests.dll $(LIB_PRE)iFolderShell$(SHARED_LIB_EXT)
 CLEAN_FILES = Check.xml iFolderComponentTests.pdb iFolderComponentTests.Doc.xml iFolderShell.exp iFolderShell.lib Test.xml Check.xml iFolderShell.pdb iFolderShell.Doc.xml iFolderShell/ContextMenu$(OBJ_EXT) iFolderShell/IconOverlay$(OBJ_EXT) iFolderShell/iFolderShell$(OBJ_EXT) iFolderShell/PropertySheet$(OBJ_EXT) iFolderShell/Registry$(OBJ_EXT) iFolderShell/ShareiFolder$(OBJ_EXT) iFolderShell/iFolderShell$(RES_EXT) Check.xml iFolderComponent.pdb iFolderComponent.Doc.xml  iFolderComponent.xml iFolderComponent.Doc.xml
 CLEAN_DIRS = iFolderComponentTests/bin iFolderComponentTests/obj  bin obj 
 NUNIT_TESTS = iFolderComponentTests.dll 
@@ -95,6 +95,29 @@ $(EXTRA_STAGE_FILES):
 	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
+# iFolderComponent targets
+#=============================================================================
+
+# fix path seperator
+iFolderComponent_SOURCES := $(subst /,$(SEP), $(iFolderComponent_SOURCES))
+iFolderComponent_INCLUDES := $(subst /,$(SEP), $(iFolderComponent_INCLUDES))
+iFolderComponent_DEF := $(subst /,$(SEP), $(iFolderComponent_DEF))
+iFolderComponent_LIBPATH := $(subst /,$(SEP), $(iFolderComponent_LIBPATH))
+
+# update VPATH
+VPATH := $(VPATH) $(iFolderComponent_LIBPATH) $(iFolderComponent_INCLUDES)
+
+iFolderComponent.dll: $(iFolderComponent_SOURCES) $(iFolderComponent_LIBS) ../../config.mk
+	$(CSC) /out:$@ /doc:iFolderComponent.Doc.xml $(CSCFLAGS) $(iFolderComponent_FLAGS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_SOURCES)
+
+#=============================================================================
+# iFolderComponent type library targets
+#=============================================================================
+
+iFolderComponent$(TYPE_LIB_EXT): iFolderComponent.dll
+	$(TLBX) $< $(LDOUT)$@
+	
+#=============================================================================
 # iFolderComponentTests targets
 #=============================================================================
 
@@ -134,27 +157,4 @@ VPATH := $(VPATH) $(iFolderShell_LIBPATH) $(iFolderShell_INCLUDES)
 
 $(LIB_PRE)iFolderShell$(SHARED_LIB_EXT): $(iFolderShell_SOURCES) ../../config.mk
 	$(LD) $(iFolderShell_LDFLAGS) $(LDFLAGS) $(LDOUT)$@ $(iFolderShell_LIBPATH:%=$(LDINC)%) $(iFolderShell_DEF) $(iFolderShell_SOURCES) $(iFolderShell_LIBS:%=$(LIBFLAG)%) $(LIBS)
-
-#=============================================================================
-# iFolderComponent targets
-#=============================================================================
-
-# fix path seperator
-iFolderComponent_SOURCES := $(subst /,$(SEP), $(iFolderComponent_SOURCES))
-iFolderComponent_INCLUDES := $(subst /,$(SEP), $(iFolderComponent_INCLUDES))
-iFolderComponent_DEF := $(subst /,$(SEP), $(iFolderComponent_DEF))
-iFolderComponent_LIBPATH := $(subst /,$(SEP), $(iFolderComponent_LIBPATH))
-
-# update VPATH
-VPATH := $(VPATH) $(iFolderComponent_LIBPATH) $(iFolderComponent_INCLUDES)
-
-iFolderComponent.dll: $(iFolderComponent_SOURCES) $(iFolderComponent_LIBS) ../../config.mk
-	$(CSC) /out:$@ /doc:iFolderComponent.Doc.xml $(CSCFLAGS) $(iFolderComponent_FLAGS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_SOURCES)
-
-#=============================================================================
-# iFolderComponent type library targets
-#=============================================================================
-
-iFolderComponent$(TYPE_LIB_EXT): iFolderComponent.dll
-	$(TLBX) $< $(LDOUT)$@
 
