@@ -166,9 +166,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 	}
 
-	static Nid[] MoveIdsToArray(ArrayList idList)
+	static string[] MoveIdsToArray(ArrayList idList)
 	{
-		Nid[] ids = (Nid[])idList.ToArray(typeof(Nid));
+		string[] ids = (string[])idList.ToArray(typeof(string));
 		idList.Clear();
 		return ids;
 	}
@@ -420,7 +420,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			while (offset < smallStamps.Length)
 			{
 				int batchCount = smallStamps.Length - offset < BATCH_SIZE ? smallStamps.Length - offset : BATCH_SIZE;
-				Nid[] ids = new Nid[batchCount];
+				string[] ids = new string[batchCount];
 				for (int i = 0; i < batchCount; ++i)
 				{
 					ids[i] = smallStamps[offset + i].id;
@@ -437,7 +437,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 							// Set the expected incarnation.
 							if (updates[i].node != null)
 							{
-								NodeStamp ns = (NodeStamp)nodesFromServer[(Nid)updates[i].node.ID];
+								NodeStamp ns = (NodeStamp)nodesFromServer[updates[i].node.ID];
 								updates[i].expectedIncarn = ns.masterIncarn;
 
 								NodeStatus status = ops.PutSmallNode(updates[i]);
@@ -446,7 +446,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 									status == NodeStatus.UpdateConflict)
 								{
 									// This was successful remove the node from the hashtable.
-									nodesFromServer.Remove((Nid)updates[i].node.ID);
+									nodesFromServer.Remove(updates[i].node.ID);
 								}
 								else
 								{
@@ -532,13 +532,13 @@ public class SynkerWorkerA: SyncCollectionWorker
 					if (updateIncarn == true)
 					{
 						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-							ops.DeleteNode((Nid)nc.node.ID, false);
+							ops.DeleteNode(nc.node.ID, false);
 						else
-							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+							ops.UpdateIncarn(nc.node.ID, nc.node.LocalIncarnation);
 					}
 					if (removeFromList)
 					{
-						nodesToServer.Remove((Nid)nc.node.ID);
+						nodesToServer.Remove(nc.node.ID);
 					}
 				}
 			}
@@ -570,7 +570,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 					if ((node = outNode.Start(stamp.id)) == null)
 					{
-						largeToServer.Remove((Nid)node.ID);
+						largeToServer.Remove(node.ID);
 						continue;
 					}
 
@@ -599,8 +599,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 					NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
 					if (status == NodeStatus.Complete || status == NodeStatus.FileNameConflict)
 					{
-						ops.UpdateIncarn((Nid)node.ID, node.LocalIncarnation);
-						largeToServer.Remove((Nid)node.ID);
+						ops.UpdateIncarn(node.ID, node.LocalIncarnation);
+						largeToServer.Remove(node.ID);
 					}
 					else
 					{
@@ -648,7 +648,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 						status == NodeStatus.FileNameConflict ||
 						status == NodeStatus.UpdateConflict)
 					{
-						largeFromServer.Remove((Nid)stamp.id);
+						largeFromServer.Remove(stamp.id);
 					}
 					else
 					{

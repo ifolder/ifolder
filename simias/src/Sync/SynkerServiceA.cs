@@ -200,7 +200,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// gets an array of small nodes
 	/// </summary>
-	public NodeChunk[] GetSmallNodes(Nid[] nids)
+	public NodeChunk[] GetSmallNodes(string[] nids)
 	{
 		try
 		{
@@ -252,7 +252,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// gets metadata and first chunk of data for a large node
 	/// </summary>
-	public NodeChunk ReadLargeNode(Nid nid, int maxSize)
+	public NodeChunk ReadLargeNode(string nid, int maxSize)
 	{
 		try
 		{

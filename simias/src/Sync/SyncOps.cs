@@ -39,93 +39,35 @@ namespace Simias.Sync
 
 //---------------------------------------------------------------------------
 /// <summary>
-/// struct to encapsulate a GUID string, provides a case-insensitive compare,
-/// ensures proper format and characters, etc.
-/// </summary>
-[Serializable]
-public struct Nid
-{
-	private string g;
-
-	/// <summary>
-	/// runs string through Guid constructor to throw exception if bad format
-	/// </summary>
-	public Nid(string s)
-	{
-		try { g = new Guid(s).ToString(); }
-		catch (FormatException) { Log.Spew("'{0}' is not a valid guid", s); throw; }
-	}
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static explicit operator Nid(string s) { return new Nid(s); }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static implicit operator string(Nid n) { return n.g; }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public override bool Equals(object o) { return CompareTo(o) == 0; }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static bool operator!=(Nid a, Nid b) { return !a.Equals(b); }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public override string ToString() { return g; }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public override int GetHashCode() { return g.GetHashCode(); }
-
-	internal bool Valid() { return Valid(g); }
-	internal void Validate() { Log.Assert(Valid(g)); }
-	static internal void Validate(string g) { Log.Assert(Valid(g)); }
-
-	static internal bool Valid(string g)
-	{
-		try { return String.Compare(new Nid(g).ToString(), g, true) == 0; }
-		catch (FormatException) { return false; }
-	}
-
-	internal int CompareTo(object obj)
-	{
-		if (!(obj is Nid))
-			throw new ArgumentException("object is not Nid");
-		return String.Compare(((Nid)obj).g, g, true);
-	}
-}
-
-//---------------------------------------------------------------------------
-/// <summary>
 /// struct to represent the minimal information that the sync code would need
 /// to know about a node to determine if it needs to be synced.
 /// </summary>
 [Serializable]
 public struct NodeStamp: IComparable
 {
-	internal Nid id;
+	public string id;
 
 	// if localIncarn == UInt64.MaxValue, node is a tombstone
-	internal ulong localIncarn, masterIncarn;
+	public ulong localIncarn, masterIncarn;
 
 	// total size of all streams, expected to be used for sync progress meter
 	// if -1, this node is not derived from BaseFileNode.
-	internal long streamsSize;
+	public long streamsSize;
 
 	/// <summary>
 	/// 
 	/// </summary>
-	internal string name; //just for debug
+	public string name; //just for debug
 
 	/// <summary>
 	/// 
 	/// </summary>
-	internal bool isDir;
+	public bool isDir;
 
 	/// <summary>
 	/// 
 	/// </summary>
-	internal ChangeLogRecord.ChangeLogOp changeType;
+	public ChangeLogRecord.ChangeLogOp changeType;
 
 	/// <summary> implement some convenient operator overloads </summary>
 	public int CompareTo(object obj)
@@ -144,9 +86,9 @@ public struct NodeStamp: IComparable
 [Serializable]
 public struct ForkChunk
 {
-	internal const string DataForkName = "data";
-	internal string name;
-	internal byte[] data;
+	public const string DataForkName = "data";
+	public string name;
+	public byte[] data;
 }
 
 //---------------------------------------------------------------------------
@@ -156,12 +98,13 @@ public struct ForkChunk
 [Serializable]
 public struct NodeChunk
 {
-	internal const int MaxSize = 128 * 1024;
 	internal Node node;
-	internal ulong expectedIncarn;
-	internal int totalSize;
-	internal string relativePath;
-	internal ForkChunk[] forkChunks;
+	public const int MaxSize = 128 * 1024;
+	public string nodeString;
+	public ulong expectedIncarn;
+	public int totalSize;
+	public string relativePath;
+	public ForkChunk[] forkChunks;
 }
 
 //---------------------------------------------------------------------------
@@ -171,9 +114,9 @@ public struct NodeChunk
 [Serializable]
 public struct RejectedNode
 {
-	internal Nid nid;
-	internal NodeStatus status;
-	internal RejectedNode(Nid nid, NodeStatus status)
+	public string nid;
+	public NodeStatus status;
+	internal RejectedNode(string nid, NodeStatus status)
 	{
 		this.nid = nid;
 		this.status = status;
@@ -253,7 +196,7 @@ internal class SyncOps
 	/// deletes a list of nodes from a collection and deals with
 	/// tombstones, files, and directories
 	/// </summary>
-	public void DeleteNode(Nid nid, bool whackFile)
+	public void DeleteNode(string nid, bool whackFile)
 	{
 		Node node = collection.GetNodeByID(nid);
 		if (node == null)
@@ -307,7 +250,7 @@ internal class SyncOps
 	/// <summary>
 	/// returns a node chunk
 	/// </summary>
-	public NodeChunk GetSmallNode(Nid nid)
+	public NodeChunk GetSmallNode(string nid)
 	{
 		OutgoingNode ogn = new OutgoingNode(collection);
 		NodeChunk chunk = new NodeChunk();
@@ -338,11 +281,11 @@ internal class SyncOps
 	/// this one takes Nids and does not fill in the expectedIncarn
 	/// in the NodeChunks -- only called on the server
 	/// </summary>
-	public NodeChunk[] GetSmallNodes(Nid[] nids)
+	public NodeChunk[] GetSmallNodes(string[] nids)
 	{
 		NodeChunk[] chunks = new NodeChunk[nids.Length];
 		uint i = 0;
-		foreach (Nid nid in nids)
+		foreach (string nid in nids)
 		{
 			chunks[i++] = GetSmallNode(nid);
 		}	
@@ -386,7 +329,7 @@ internal class SyncOps
 		if (collection.IsType(nc.node, NodeTypes.TombstoneType))
 		{
 			//Log.Assert(onServer); // should not get tombstones on client from server
-			DeleteNode((Nid)nc.node.ID, true);
+			DeleteNode(nc.node.ID, true);
 			return NodeStatus.Complete;
 		}
 		
@@ -410,7 +353,7 @@ internal class SyncOps
 				NodeStatus status = PutSmallNode(nc);
 				if (status != NodeStatus.Complete)
 				{
-					rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
+					rejects.Add(new RejectedNode(nc.node.ID, status));
 				}
 			}
 		}
@@ -421,7 +364,7 @@ internal class SyncOps
 	/// only called on the client after the node has been updated on the
 	/// server. Just sets the MasterIncarnation to the LocalIncarnation
 	/// </summary>
-	public void UpdateIncarn(Nid nid, ulong masterIncarn)
+	public void UpdateIncarn(string nid, ulong masterIncarn)
 	{
 		Log.Assert(!onServer);
         Node node = collection.GetNodeByID(nid);
@@ -480,7 +423,7 @@ internal class SyncOps
 								NodeStamp stamp = new NodeStamp();
 								stamp.localIncarn = UInt64.MaxValue;
 								stamp.masterIncarn = 0;
-								stamp.id = new Nid(rec.EventID);
+								stamp.id = rec.EventID;
 								stamp.name = "";
 								stamp.changeType = rec.Operation;
 								stampList.Add(stamp);

@@ -98,7 +98,7 @@ internal class OutgoingNode
 		bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 		stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 		stamp.masterIncarn = cf.IsUpdateConflict ? node.LocalIncarnation : node.MasterIncarnation;
-		stamp.id = (Nid)node.ID;
+		stamp.id = node.ID;
 		stamp.name = node.Name;
 		stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
 		stamp.changeType = changeType;
@@ -118,9 +118,8 @@ internal class OutgoingNode
 	}
 
 
-	public Node Start(Nid nid)
+	public Node Start(string nid)
 	{
-		nid.Validate();
 		forkList = null;
 
 		/* always construct a plain node instead of the one returned by
