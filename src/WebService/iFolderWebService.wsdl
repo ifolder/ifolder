@@ -638,6 +638,9 @@
           <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string"/>
           <xs:element minOccurs="1" maxOccurs="1" name="IsDefault" type="xs:boolean"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="IsSlave" type="xs:boolean"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="AutoLogin" type="xs:boolean"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="IsConnected" type="xs:boolean"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="ConnectToDomainResponse">
