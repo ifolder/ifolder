@@ -42,6 +42,11 @@ if DEBUG
 endif
 endif
 
+install-util uninstall-util:
+if WINDOWS
+	$(MAKE) -C src $@
+endif
+
 register unregister:
 if WINDOWS
 	$(MAKE) -C src $@
