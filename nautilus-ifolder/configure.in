@@ -27,7 +27,11 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [gettext package])
 AC_DEFINE_UNQUOTED(GNOME_EXPLICIT_TRANSLATION_DOMAIN,"$GETTEXT_PACKAGE", [library gettext package])
 
+dnl Check for ngettext
+AC_CHECK_FUNCS(ngettext)
+
 AM_GLIB_GNU_GETTEXT
+AM_GLIB_DEFINE_LOCALEDIR([GNOMELOCALEDIR])
 
 AC_PROG_INTLTOOL
 dnl ==========================================================================
