@@ -39,6 +39,7 @@ namespace Novell.iFolder.FormsBookLib
 	{
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ContactPicker));
+		private const string applicationIcon = @"res\ifolder_contact_card.ico";
 		private System.Windows.Forms.Button add;
 		private System.Windows.Forms.ListView addedContacts;
 		private System.Windows.Forms.Button ok;
@@ -461,7 +462,7 @@ namespace Novell.iFolder.FormsBookLib
 			// Load the application icon.
 			try
 			{
-				this.Icon = new Icon(Path.Combine(LoadPath, @"res\ifolder_contact_card.ico"));
+				this.Icon = new Icon(Path.Combine(LoadPath, applicationIcon));
 			}
 			catch (Exception ex)
 			{

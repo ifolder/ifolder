@@ -39,6 +39,7 @@ namespace Novell.iFolder.FormsBookLib
 	{
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ContactEditor));
+		private const string applicationIcon = @"res\ifolder_contact_card.ico";
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.Button cancel;
@@ -2124,11 +2125,11 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				if (loadPath != null)
 				{
-					this.Icon = new Icon(Path.Combine(loadPath, @"res\ifolder_contact_card.ico"));
+					this.Icon = new Icon(Path.Combine(loadPath, applicationIcon));
 				}
 				else
 				{
-					this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_contact_card.ico"));
+					this.Icon = new Icon(Path.Combine(Application.StartupPath, applicationIcon));
 				}
 			}
 			catch (Exception ex)
