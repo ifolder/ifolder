@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = "App.ico"
+                ApplicationIcon = "ifolder_app.ico"
                 AssemblyKeyContainerName = ""
                 AssemblyName = "iFolderApp"
                 AssemblyOriginatorKeyFile = ""
@@ -154,10 +154,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -211,6 +207,10 @@
                     RelPath = "GlobalProperties.resx"
                     DependentUpon = "GlobalProperties.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ifolder_app.ico"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "iFolderAppInstallerClass.cs"

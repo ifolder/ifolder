@@ -86,6 +86,7 @@ namespace Novell.FormsTrayApp
         private const int numberOfSyncIcons = 10;
 		private Icon[] syncIcons = new Icon[numberOfSyncIcons];
 		private int index = 0;
+		private bool syncToServer = false;
 
 		private Queue eventQueue;
 		private Thread worker = null;
@@ -183,7 +184,6 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					string basePath = Path.Combine(Application.StartupPath, "res");
-					this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
 
 					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
@@ -614,9 +614,19 @@ namespace Novell.FormsTrayApp
 		{
 			shellNotifyIcon.Icon = syncIcons[index];
 
-			if (++index > (numberOfSyncIcons - 1))
+			if (syncToServer)
 			{
-				index = 0;
+				if (--index < 0)
+				{
+					index = numberOfSyncIcons - 1;
+				}
+			}
+			else
+			{
+				if (++index > (numberOfSyncIcons - 1))
+				{
+					index = 0;
+				}
 			}
 		}
 
@@ -998,6 +1008,7 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
+				syncToServer = syncEventArgs.Direction == Direction.Uploading;
 				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
 				{
 					shellNotifyIcon.Text = resourceManager.GetString("iFolderServices") + "\n" + 
