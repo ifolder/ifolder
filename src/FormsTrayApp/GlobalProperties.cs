@@ -624,15 +624,15 @@ namespace Novell.iFolder.FormsTrayApp
 
 			if (iFolderView.SelectedItems.Count == 1)
 			{
-				uint nodeCount;
-				ulong bytesToSend;
-
 				Cursor.Current = Cursors.WaitCursor;
 
+				ListViewItem lvi = iFolderView.SelectedItems[0];
 				try
 				{
 					// Get the sync node and byte counts.
-					iFolder ifolder = manager.GetiFolderById((string)iFolderView.SelectedItems[0].Tag);
+					uint nodeCount;
+					ulong bytesToSend;
+					iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
 					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
 					objectCount.Text = nodeCount.ToString();
 					byteCount.Text = bytesToSend.ToString();
@@ -643,6 +643,7 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
+					logger.Debug(ex, "Selecting iFolder");
 				}
 
 				Cursor.Current = Cursors.Default;
@@ -707,6 +708,7 @@ namespace Novell.iFolder.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
+						logger.Debug(ex, "Creating iFolder");
 					}
 				}
 				else
