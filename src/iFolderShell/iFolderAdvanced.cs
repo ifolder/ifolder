@@ -132,23 +132,9 @@ namespace Novell.iFolder.iFolderCom
 		{
 			this.components = new System.ComponentModel.Container();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.tabSharing = new System.Windows.Forms.TabPage();
-			this.reinvite = new System.Windows.Forms.Button();
-			this.accessControlButtons = new System.Windows.Forms.GroupBox();
-			this.accessReadOnly = new System.Windows.Forms.RadioButton();
-			this.accessReadWrite = new System.Windows.Forms.RadioButton();
-			this.accessFullControl = new System.Windows.Forms.RadioButton();
-			this.add = new System.Windows.Forms.Button();
-			this.remove = new System.Windows.Forms.Button();
-			this.shareWith = new System.Windows.Forms.ListView();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
-			this.ok = new System.Windows.Forms.Button();
-			this.cancel = new System.Windows.Forms.Button();
-			this.apply = new System.Windows.Forms.Button();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.conflicts = new System.Windows.Forms.LinkLabel();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.label5 = new System.Windows.Forms.Label();
@@ -161,16 +147,30 @@ namespace Novell.iFolder.iFolderCom
 			this.label2 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.byteCount = new System.Windows.Forms.Label();
-			this.conflicts = new System.Windows.Forms.LinkLabel();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.tabSharing = new System.Windows.Forms.TabPage();
+			this.reinvite = new System.Windows.Forms.Button();
+			this.accessControlButtons = new System.Windows.Forms.GroupBox();
+			this.accessReadOnly = new System.Windows.Forms.RadioButton();
+			this.accessReadWrite = new System.Windows.Forms.RadioButton();
+			this.accessFullControl = new System.Windows.Forms.RadioButton();
+			this.add = new System.Windows.Forms.Button();
+			this.remove = new System.Windows.Forms.Button();
+			this.shareWith = new System.Windows.Forms.ListView();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.ok = new System.Windows.Forms.Button();
+			this.cancel = new System.Windows.Forms.Button();
+			this.apply = new System.Windows.Forms.Button();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.tabControl1.SuspendLayout();
-			this.tabSharing.SuspendLayout();
-			this.accessControlButtons.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).BeginInit();
 			this.groupBox4.SuspendLayout();
+			this.tabSharing.SuspendLayout();
+			this.accessControlButtons.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -185,126 +185,6 @@ namespace Novell.iFolder.iFolderCom
 			this.tabControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
 			this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
-			// tabSharing
-			// 
-			this.tabSharing.Controls.Add(this.reinvite);
-			this.tabSharing.Controls.Add(this.accessControlButtons);
-			this.tabSharing.Controls.Add(this.add);
-			this.tabSharing.Controls.Add(this.remove);
-			this.tabSharing.Controls.Add(this.shareWith);
-			this.tabSharing.Location = new System.Drawing.Point(4, 22);
-			this.tabSharing.Name = "tabSharing";
-			this.tabSharing.Size = new System.Drawing.Size(336, 374);
-			this.tabSharing.TabIndex = 0;
-			this.tabSharing.Text = "Sharing";
-			// 
-			// reinvite
-			// 
-			this.reinvite.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.reinvite, "Click to send another invitation to the selected contacts.");
-			this.reinvite.Location = new System.Drawing.Point(8, 232);
-			this.reinvite.Name = "reinvite";
-			this.helpProvider1.SetShowHelp(this.reinvite, true);
-			this.reinvite.TabIndex = 1;
-			this.reinvite.Text = "R&e-invite";
-			this.reinvite.Click += new System.EventHandler(this.reinvite_Click);
-			// 
-			// accessControlButtons
-			// 
-			this.accessControlButtons.Controls.Add(this.accessReadOnly);
-			this.accessControlButtons.Controls.Add(this.accessReadWrite);
-			this.accessControlButtons.Controls.Add(this.accessFullControl);
-			this.accessControlButtons.Location = new System.Drawing.Point(8, 264);
-			this.accessControlButtons.Name = "accessControlButtons";
-			this.accessControlButtons.Size = new System.Drawing.Size(320, 100);
-			this.accessControlButtons.TabIndex = 4;
-			this.accessControlButtons.TabStop = false;
-			this.accessControlButtons.Text = "Access";
-			// 
-			// accessReadOnly
-			// 
-			this.accessReadOnly.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.accessReadOnly, "Grants read only permission to the iFolder.");
-			this.accessReadOnly.Location = new System.Drawing.Point(24, 72);
-			this.accessReadOnly.Name = "accessReadOnly";
-			this.helpProvider1.SetShowHelp(this.accessReadOnly, true);
-			this.accessReadOnly.Size = new System.Drawing.Size(280, 16);
-			this.accessReadOnly.TabIndex = 2;
-			this.accessReadOnly.Text = "Read &Only";
-			this.accessReadOnly.Click += new System.EventHandler(this.accessButton_Click);
-			// 
-			// accessReadWrite
-			// 
-			this.accessReadWrite.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.accessReadWrite, "Grants read/write permission to the iFolder.");
-			this.accessReadWrite.Location = new System.Drawing.Point(24, 48);
-			this.accessReadWrite.Name = "accessReadWrite";
-			this.helpProvider1.SetShowHelp(this.accessReadWrite, true);
-			this.accessReadWrite.Size = new System.Drawing.Size(280, 16);
-			this.accessReadWrite.TabIndex = 1;
-			this.accessReadWrite.Text = "Read/&Write";
-			this.accessReadWrite.Click += new System.EventHandler(this.accessButton_Click);
-			// 
-			// accessFullControl
-			// 
-			this.accessFullControl.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.accessFullControl, "Grants read/write permission to the iFolder and allows a user to share this iFold" +
-				"er with other users.");
-			this.accessFullControl.Location = new System.Drawing.Point(24, 24);
-			this.accessFullControl.Name = "accessFullControl";
-			this.helpProvider1.SetShowHelp(this.accessFullControl, true);
-			this.accessFullControl.Size = new System.Drawing.Size(280, 16);
-			this.accessFullControl.TabIndex = 0;
-			this.accessFullControl.Text = "&Full Control";
-			this.accessFullControl.Click += new System.EventHandler(this.accessButton_Click);
-			// 
-			// add
-			// 
-			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.add, "Click to add contacts to share this iFolder with.");
-			this.add.Location = new System.Drawing.Point(176, 232);
-			this.add.Name = "add";
-			this.helpProvider1.SetShowHelp(this.add, true);
-			this.add.TabIndex = 2;
-			this.add.Text = "A&dd...";
-			this.add.Click += new System.EventHandler(this.add_Click);
-			// 
-			// remove
-			// 
-			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.remove, "Click to stop sharing this iFolder with the selected contact(s).");
-			this.remove.Location = new System.Drawing.Point(256, 232);
-			this.remove.Name = "remove";
-			this.helpProvider1.SetShowHelp(this.remove, true);
-			this.remove.TabIndex = 3;
-			this.remove.Text = "&Remove";
-			this.remove.Click += new System.EventHandler(this.remove_Click);
-			// 
-			// shareWith
-			// 
-			this.shareWith.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						this.columnHeader1,
-																						this.columnHeader2});
-			this.helpProvider1.SetHelpString(this.shareWith, "Lists the contacts that this iFolder is currently being shared with.");
-			this.shareWith.HideSelection = false;
-			this.shareWith.Location = new System.Drawing.Point(8, 8);
-			this.shareWith.Name = "shareWith";
-			this.helpProvider1.SetShowHelp(this.shareWith, true);
-			this.shareWith.Size = new System.Drawing.Size(320, 216);
-			this.shareWith.TabIndex = 0;
-			this.shareWith.View = System.Windows.Forms.View.Details;
-			this.shareWith.SelectedIndexChanged += new System.EventHandler(this.shareWith_SelectedIndexChanged);
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "Share with";
-			this.columnHeader1.Width = 172;
-			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = "Access";
-			this.columnHeader2.Width = 144;
-			// 
 			// tabGeneral
 			// 
 			this.tabGeneral.Controls.Add(this.conflicts);
@@ -316,34 +196,26 @@ namespace Novell.iFolder.iFolderCom
 			this.tabGeneral.TabIndex = 1;
 			this.tabGeneral.Text = "General";
 			// 
-			// ok
+			// conflicts
 			// 
-			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(112, 432);
-			this.ok.Name = "ok";
-			this.ok.TabIndex = 1;
-			this.ok.Text = "OK";
-			this.ok.Click += new System.EventHandler(this.ok_Click);
+			this.conflicts.LinkArea = new System.Windows.Forms.LinkArea(44, 10);
+			this.conflicts.Location = new System.Drawing.Point(44, 296);
+			this.conflicts.Name = "conflicts";
+			this.conflicts.Size = new System.Drawing.Size(280, 32);
+			this.conflicts.TabIndex = 6;
+			this.conflicts.TabStop = true;
+			this.conflicts.Text = "This iFolder currently contains conflicts.  Click here to resolve the conflicts.";
+			this.conflicts.Visible = false;
+			this.conflicts.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.conflicts_LinkClicked);
 			// 
-			// cancel
+			// pictureBox1
 			// 
-			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(192, 432);
-			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 2;
-			this.cancel.Text = "Cancel";
-			this.cancel.Click += new System.EventHandler(this.cancel_Click);
-			// 
-			// apply
-			// 
-			this.apply.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.apply.Location = new System.Drawing.Point(272, 432);
-			this.apply.Name = "apply";
-			this.apply.TabIndex = 3;
-			this.apply.Text = "&Apply";
-			this.apply.Click += new System.EventHandler(this.apply_Click);
+			this.pictureBox1.Location = new System.Drawing.Point(12, 296);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(24, 24);
+			this.pictureBox1.TabIndex = 7;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Visible = false;
 			// 
 			// groupBox1
 			// 
@@ -477,25 +349,154 @@ namespace Novell.iFolder.iFolderCom
 			this.byteCount.Size = new System.Drawing.Size(80, 16);
 			this.byteCount.TabIndex = 7;
 			// 
-			// conflicts
+			// tabSharing
 			// 
-			this.conflicts.LinkArea = new System.Windows.Forms.LinkArea(44, 10);
-			this.conflicts.Location = new System.Drawing.Point(44, 296);
-			this.conflicts.Name = "conflicts";
-			this.conflicts.Size = new System.Drawing.Size(280, 32);
-			this.conflicts.TabIndex = 6;
-			this.conflicts.TabStop = true;
-			this.conflicts.Text = "This iFolder currently contains conflicts.  Click here to resolve the conflicts.";
-			this.conflicts.Visible = false;
+			this.tabSharing.Controls.Add(this.reinvite);
+			this.tabSharing.Controls.Add(this.accessControlButtons);
+			this.tabSharing.Controls.Add(this.add);
+			this.tabSharing.Controls.Add(this.remove);
+			this.tabSharing.Controls.Add(this.shareWith);
+			this.tabSharing.Location = new System.Drawing.Point(4, 22);
+			this.tabSharing.Name = "tabSharing";
+			this.tabSharing.Size = new System.Drawing.Size(336, 374);
+			this.tabSharing.TabIndex = 0;
+			this.tabSharing.Text = "Sharing";
 			// 
-			// pictureBox1
+			// reinvite
 			// 
-			this.pictureBox1.Location = new System.Drawing.Point(12, 296);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(24, 24);
-			this.pictureBox1.TabIndex = 7;
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Visible = false;
+			this.reinvite.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.reinvite, "Click to send another invitation to the selected contacts.");
+			this.reinvite.Location = new System.Drawing.Point(8, 232);
+			this.reinvite.Name = "reinvite";
+			this.helpProvider1.SetShowHelp(this.reinvite, true);
+			this.reinvite.TabIndex = 1;
+			this.reinvite.Text = "R&e-invite";
+			this.reinvite.Click += new System.EventHandler(this.reinvite_Click);
+			// 
+			// accessControlButtons
+			// 
+			this.accessControlButtons.Controls.Add(this.accessReadOnly);
+			this.accessControlButtons.Controls.Add(this.accessReadWrite);
+			this.accessControlButtons.Controls.Add(this.accessFullControl);
+			this.accessControlButtons.Location = new System.Drawing.Point(8, 264);
+			this.accessControlButtons.Name = "accessControlButtons";
+			this.accessControlButtons.Size = new System.Drawing.Size(320, 100);
+			this.accessControlButtons.TabIndex = 4;
+			this.accessControlButtons.TabStop = false;
+			this.accessControlButtons.Text = "Access";
+			// 
+			// accessReadOnly
+			// 
+			this.accessReadOnly.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.accessReadOnly, "Grants read only permission to the iFolder.");
+			this.accessReadOnly.Location = new System.Drawing.Point(24, 72);
+			this.accessReadOnly.Name = "accessReadOnly";
+			this.helpProvider1.SetShowHelp(this.accessReadOnly, true);
+			this.accessReadOnly.Size = new System.Drawing.Size(280, 16);
+			this.accessReadOnly.TabIndex = 2;
+			this.accessReadOnly.Text = "Read &Only";
+			this.accessReadOnly.Click += new System.EventHandler(this.accessButton_Click);
+			// 
+			// accessReadWrite
+			// 
+			this.accessReadWrite.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.accessReadWrite, "Grants read/write permission to the iFolder.");
+			this.accessReadWrite.Location = new System.Drawing.Point(24, 48);
+			this.accessReadWrite.Name = "accessReadWrite";
+			this.helpProvider1.SetShowHelp(this.accessReadWrite, true);
+			this.accessReadWrite.Size = new System.Drawing.Size(280, 16);
+			this.accessReadWrite.TabIndex = 1;
+			this.accessReadWrite.Text = "Read/&Write";
+			this.accessReadWrite.Click += new System.EventHandler(this.accessButton_Click);
+			// 
+			// accessFullControl
+			// 
+			this.accessFullControl.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.accessFullControl, "Grants read/write permission to the iFolder and allows a user to share this iFold" +
+				"er with other users.");
+			this.accessFullControl.Location = new System.Drawing.Point(24, 24);
+			this.accessFullControl.Name = "accessFullControl";
+			this.helpProvider1.SetShowHelp(this.accessFullControl, true);
+			this.accessFullControl.Size = new System.Drawing.Size(280, 16);
+			this.accessFullControl.TabIndex = 0;
+			this.accessFullControl.Text = "&Full Control";
+			this.accessFullControl.Click += new System.EventHandler(this.accessButton_Click);
+			// 
+			// add
+			// 
+			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.add, "Click to add contacts to share this iFolder with.");
+			this.add.Location = new System.Drawing.Point(176, 232);
+			this.add.Name = "add";
+			this.helpProvider1.SetShowHelp(this.add, true);
+			this.add.TabIndex = 2;
+			this.add.Text = "A&dd...";
+			this.add.Click += new System.EventHandler(this.add_Click);
+			// 
+			// remove
+			// 
+			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.remove, "Click to stop sharing this iFolder with the selected contact(s).");
+			this.remove.Location = new System.Drawing.Point(256, 232);
+			this.remove.Name = "remove";
+			this.helpProvider1.SetShowHelp(this.remove, true);
+			this.remove.TabIndex = 3;
+			this.remove.Text = "&Remove";
+			this.remove.Click += new System.EventHandler(this.remove_Click);
+			// 
+			// shareWith
+			// 
+			this.shareWith.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																						this.columnHeader1,
+																						this.columnHeader2});
+			this.helpProvider1.SetHelpString(this.shareWith, "Lists the contacts that this iFolder is currently being shared with.");
+			this.shareWith.HideSelection = false;
+			this.shareWith.Location = new System.Drawing.Point(8, 8);
+			this.shareWith.Name = "shareWith";
+			this.helpProvider1.SetShowHelp(this.shareWith, true);
+			this.shareWith.Size = new System.Drawing.Size(320, 216);
+			this.shareWith.TabIndex = 0;
+			this.shareWith.View = System.Windows.Forms.View.Details;
+			this.shareWith.SelectedIndexChanged += new System.EventHandler(this.shareWith_SelectedIndexChanged);
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Share with";
+			this.columnHeader1.Width = 172;
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = "Access";
+			this.columnHeader2.Width = 144;
+			// 
+			// ok
+			// 
+			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.ok.Location = new System.Drawing.Point(112, 432);
+			this.ok.Name = "ok";
+			this.ok.TabIndex = 1;
+			this.ok.Text = "OK";
+			this.ok.Click += new System.EventHandler(this.ok_Click);
+			// 
+			// cancel
+			// 
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.cancel.Location = new System.Drawing.Point(192, 432);
+			this.cancel.Name = "cancel";
+			this.cancel.TabIndex = 2;
+			this.cancel.Text = "Cancel";
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			// 
+			// apply
+			// 
+			this.apply.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.apply.Location = new System.Drawing.Point(272, 432);
+			this.apply.Name = "apply";
+			this.apply.TabIndex = 3;
+			this.apply.Text = "&Apply";
+			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
 			// iFolderAdvanced
 			// 
@@ -515,13 +516,13 @@ namespace Novell.iFolder.iFolderCom
 			this.ShowInTaskbar = false;
 			this.Load += new System.EventHandler(this.iFolderAdvanced_Load);
 			this.tabControl1.ResumeLayout(false);
-			this.tabSharing.ResumeLayout(false);
-			this.accessControlButtons.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).EndInit();
 			this.groupBox4.ResumeLayout(false);
+			this.tabSharing.ResumeLayout(false);
+			this.accessControlButtons.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
