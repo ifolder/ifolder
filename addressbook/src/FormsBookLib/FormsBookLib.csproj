@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = 'copy FormsBookLib.dll "c:\program files\novell\ifolder3"&#xd;&#xa;copy FormsBookLib.pdb "c:\program files\novell\ifolder3"'
                 RootNamespace = "FormsBookLib"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -114,6 +114,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "AddressEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -147,6 +152,41 @@
                     RelPath = "ContactPicker.resx"
                     DependentUpon = "ContactPicker.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "EmailEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FullAddress.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FullAddress.resx"
+                    DependentUpon = "FullAddress.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "FullName.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FullName.resx"
+                    DependentUpon = "FullName.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "GenericEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TelephoneEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

@@ -987,9 +987,14 @@ namespace Novell.iFolder.FormsBookLib
 						IDictionaryEnumerator enumerator = emailHT.GetEnumerator();
 						while (enumerator.MoveNext())
 						{
-							if (((EmailEntry)enumerator.Value).Add)
+							EmailEntry entry = (EmailEntry)enumerator.Value;
+							if (entry.Add)
 							{
-								contact.AddEmailAddress(((EmailEntry)enumerator.Value).EMail);
+								contact.AddEmailAddress(entry.EMail);
+							}
+							else if (entry.Remove)
+							{
+								entry.EMail.Delete();
 							}
 						}
 					}
@@ -1001,9 +1006,14 @@ namespace Novell.iFolder.FormsBookLib
 						IDictionaryEnumerator enumerator = phoneHT.GetEnumerator();
 						while (enumerator.MoveNext())
 						{
-							if (((TelephoneEntry)enumerator.Value).Add)
+							TelephoneEntry entry = (TelephoneEntry)enumerator.Value;
+							if (entry.Add)
 							{
-								contact.AddTelephoneNumber(((TelephoneEntry)enumerator.Value).Phone);
+								contact.AddTelephoneNumber(entry.Phone);
+							}
+							else if (entry.Remove)
+							{
+								entry.Phone.Delete();
 							}
 						}
 					}
@@ -1299,9 +1309,14 @@ namespace Novell.iFolder.FormsBookLib
 		private void fullNameButton_Click(object sender, System.EventArgs e)
 		{
 			FullName fullNameDlg = new FullName();
+			bool newName = false;
+
 			// Initialize.
 			if (name == null)
+			{
 				name = new Name();
+				newName = true;
+			}
 
 			fullNameDlg.Title = name.Prefix;
 			fullNameDlg.FirstName = name.Given;
@@ -1312,10 +1327,21 @@ namespace Novell.iFolder.FormsBookLib
 			if (result == DialogResult.OK)
 			{
 				// Save the information.
-				name.Prefix = fullNameDlg.Title;
-				name.Given = fullNameDlg.FirstName;
-				name.Family = fullNameDlg.LastName;
-				name.Suffix = fullNameDlg.Suffix;
+				if (name.Prefix != fullNameDlg.Title)
+					name.Prefix = fullNameDlg.Title;
+				// BUGBUG - Given name changes aren't sticking
+				if (name.Given != fullNameDlg.FirstName)
+					name.Given = fullNameDlg.FirstName;
+				if (name.Family != fullNameDlg.LastName)
+					name.Family = fullNameDlg.LastName;
+				if (name.Suffix != fullNameDlg.Suffix)
+					name.Suffix = fullNameDlg.Suffix;
+
+				if (newName && (contact != null))
+				{
+					name.Preferred = true;
+					contact.AddName(name);
+				}
 
 				fullName.Text = name.FN;
 			}
@@ -1483,6 +1509,7 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void changePicture_Click(object sender, System.EventArgs e)
 		{
+			// BUGBUG - need to newup a contact on create so that the photo can be imported.
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 			openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
 

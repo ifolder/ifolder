@@ -511,30 +511,27 @@ namespace Novell.iFolder.FormsBookLib
 		private void contacts_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			// A contact was selected/unselected.
-			if (this.contacts.SelectedItems.Count > 0)
+			bool validSelected = false;
+
+			// Is a single item selected?
+			bool singleSelected = this.contacts.SelectedItems.Count == 1;
+
+			// Walk the selected items collection to see if valid items were selected.
+			foreach (ListViewItem item in this.contacts.SelectedItems)
 			{
-				bool validSelected = false;
-
-				// Is a single item selected?
-				bool singleSelected = this.contacts.SelectedItems.Count == 1;
-
-				// Walk the selected items collection to see if valid items were selected.
-				foreach (ListViewItem item in this.contacts.SelectedItems)
+				// If the fore color is gray the item is not valid.
+				if (item.ForeColor != Color.Gray)
 				{
-					// If the fore color is gray the item is not valid.
-					if (item.ForeColor != Color.Gray)
-					{
-						validSelected = true;
-						break;
-					}
+					validSelected = true;
+					break;
 				}
+			}
 
-				// Fire the event that contacts have been selected.
-				ContactSelectedEventArgs args = new ContactSelectedEventArgs(validSelected, singleSelected);
-				if (ContactSelected != null)
-				{
-					ContactSelected(this, args);
-				}
+			// Fire the event that contacts have been selected.
+			ContactSelectedEventArgs args = new ContactSelectedEventArgs(validSelected, singleSelected);
+			if (ContactSelected != null)
+			{
+				ContactSelected(this, args);
 			}
 		}
 
