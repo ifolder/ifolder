@@ -747,8 +747,8 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				HEADER_SEARCH_PATHS = ../libifolder;
-				LIBRARY_SEARCH_PATHS = ../libifolder/.libs;
+				HEADER_SEARCH_PATHS = "../libifolder ../../../simias/src/SimiasClient/libsimias-event";
+				LIBRARY_SEARCH_PATHS = "../libifolder/.libs ../../../simias/src/SimiasClient/libsimias-event/.libs";
 				OTHER_LDFLAGS = "-flat_namespace";
 				ZERO_LINK = NO;
 			};
