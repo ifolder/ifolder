@@ -350,8 +350,6 @@ namespace Simias.Gaim
 			}
 			catch (Exception e)
 			{
-				log.Error( e.Message );
-				log.Error( e.StackTrace );
 				return;
 			}
 			XmlElement topPrefElement = prefsDoc.DocumentElement;
@@ -570,8 +568,6 @@ namespace Simias.Gaim
 			}
 			catch (Exception e)
 			{
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
 				return (GaimAccount[])accounts.ToArray(typeof(Simias.Gaim.GaimAccount));
 			}
 			XmlElement accountsElement = accountsDoc.DocumentElement;
@@ -608,8 +604,6 @@ namespace Simias.Gaim
 			}
 			catch (Exception e)
 			{
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
@@ -783,8 +777,6 @@ namespace Simias.Gaim
 			}
 			catch (Exception e)
 			{
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
 				return;
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
