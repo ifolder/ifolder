@@ -56,16 +56,16 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.Spacing = 10;
-			this.BorderWidth = 10;
+			this.Spacing = 6;
+			this.BorderWidth = 6;
 
 			// Main Sync Box
 //			Frame SyncFrame = new Frame("Synchronization");
 //			this.PackStart(SyncFrame, true, true, 0);
 
 			VBox vbox = new VBox();
-			vbox.Spacing = 10;
-			vbox.BorderWidth = 10;
+			vbox.Spacing = 6;
+			vbox.BorderWidth = 6;
 
 			AutoSyncCheckButton = new CheckButton("Automatic Sync");
 			vbox.PackStart(AutoSyncCheckButton, false, false, 0);
@@ -77,15 +77,15 @@ namespace Novell.iFolder
 			vbox.PackStart(SyncToHostFrame, true, true, 0);
 
 			VBox syncVBox = new VBox();
-			syncVBox.Spacing = 10;
-			syncVBox.BorderWidth = 10;
+			syncVBox.Spacing = 6;
+			syncVBox.BorderWidth = 6;
 
 			Label syncHelp = new Label("This sets the value for how often the host will be contacted to perform a sync.");
 			syncHelp.LineWrap = true;
 			syncVBox.PackStart(syncHelp, false, false, 0);
 
 			HBox syncHBox = new HBox();
-			syncHBox.Spacing = 10;
+			syncHBox.Spacing = 6;
 
 			Label syncLabel = new Label("Sync to host every:");
 			syncHBox.PackStart(syncLabel, false, false, 0);
@@ -104,9 +104,9 @@ namespace Novell.iFolder
 			Frame StatisticsFrame = new Frame("Statistics");
 
 			Table statsTable = new Table(2,2,false);
-			statsTable.BorderWidth = 10;
-			statsTable.RowSpacing = 10;
-			statsTable.ColumnSpacing = 10;
+			statsTable.BorderWidth = 6;
+			statsTable.RowSpacing = 6;
+			statsTable.ColumnSpacing = 6;
 
 			Label amountLabel = new Label("Amount to upload:");
 			amountLabel.Xalign = 0;

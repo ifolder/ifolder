@@ -52,7 +52,7 @@ namespace Novell.iFolder
 			this.ifolder = ifolder;
 			this.HasSeparator = false;
 			this.BorderWidth = 6;
-			this.Resizable = false;
+//			this.Resizable = false;
 			this.Modal = true;
 			if(parent != null)
 				this.TransientFor = parent;
@@ -73,15 +73,15 @@ namespace Novell.iFolder
 
 			propNoteBook = new Gtk.Notebook();
 
-			iFolderPropSharingPage sharingPage = 
-				new iFolderPropSharingPage(ifolder, ifws);
-
-			propNoteBook.AppendPage(sharingPage, new Label("Sharing"));
-
 			iFolderPropSettingsPage settingsPage = 
 				new iFolderPropSettingsPage(ifolder, ifws);
 
 			propNoteBook.AppendPage(settingsPage, new Label("Settings"));
+
+			iFolderPropSharingPage sharingPage = 
+				new iFolderPropSharingPage(ifolder, ifws);
+
+			propNoteBook.AppendPage(sharingPage, new Label("Sharing"));
 
 			this.VBox.PackStart(propNoteBook);
 			propNoteBook.ShowAll();

@@ -57,6 +57,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		HelpMenuItem;
 		private ImageMenuItem		AboutMenuItem;
 
+		private iFolderPropertiesDialog PropertiesDialog;
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
@@ -681,16 +682,21 @@ namespace Novell.iFolder
 
 				try
 				{
-					iFolderPropertiesDialog propDialog = 
+					PropertiesDialog = 
 						new iFolderPropertiesDialog(this, ifolder, iFolderWS);
-//					int rc = propDialog.Run();
-					int rc = propDialog.Run();
-					propDialog.Hide();
-					propDialog.Destroy();
-					propDialog = null;
+					PropertiesDialog.Response += 
+							new ResponseHandler(OnPropertiesDialogResponse);
+					PropertiesDialog.ShowAll();
 				}
 				catch(Exception e)
 				{
+					if(PropertiesDialog != null)
+					{
+						PropertiesDialog.Hide();
+						PropertiesDialog.Destroy();
+						PropertiesDialog = null;
+					}
+
 					iFolderExceptionDialog ied = 
 						new iFolderExceptionDialog(this, e);
 					ied.Run();
@@ -702,6 +708,16 @@ namespace Novell.iFolder
 		}
 
 
+		private void OnPropertiesDialogResponse(object o, ResponseArgs args)
+		{
+	//		if(args.ResponseId
+			if(PropertiesDialog != null)
+			{
+				PropertiesDialog.Hide();
+				PropertiesDialog.Destroy();
+				PropertiesDialog = null;
+			}
+		}
 
 
 		public void OnDeleteiFolder(object o, EventArgs args)
