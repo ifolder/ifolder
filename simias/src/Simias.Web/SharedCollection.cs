@@ -337,52 +337,71 @@ namespace Simias.Web
 			// happening
 			try
 			{
-			// This will check on Linux to see if a path is on a physical
-			// drive and not mounted off the network
-			if(File.Exists("/proc/mounts"))
-			{
-				bool retval = false;
-
-				FileStream fs = File.OpenRead("/proc/mounts");
-				if(fs != null)
+				// This will check on Linux to see if a path is on a physical
+				// drive and not mounted off the network
+				if(File.Exists("/proc/mounts"))
 				{
-					StreamReader sr = new StreamReader(fs);
-					string mntLine = sr.ReadLine();
-
-					// Get the stat structure on the path
-					Stat pathStat;
-					Mono.Posix.Syscall.stat(path, out pathStat);
-
-					while(mntLine != null)
+					bool retval = false;
+					string ifPath = null; 
+	
+					// Sometimes we are asking about a folder that exists and
+					// sometimes we are asking about one that doesn't.  If the
+					// current folder doesn't exist, and the parent doesn't
+					// exist, it ain't valid, return false;
+					if(!System.IO.Directory.Exists(path))
 					{
-						// verify it's a device on this box
-						if(mntLine.StartsWith("/dev"))
-						{
-							Stat stat;
-							string[] entries;
-	
-							entries = mntLine.Split(' ');
-							Mono.Posix.Syscall.stat(entries[1], out stat);
-	
-							if(stat.Device == pathStat.Device)
-							{
-								retval = true;
-								break;
-							}
-						}
-						mntLine = sr.ReadLine();
+						DirectoryInfo di = System.IO.Directory.GetParent(path);
+						if(di.Exists)
+							ifPath = di.FullName;
+						else
+							return false;
 					}
-					sr.Close();
+					else
+						ifPath = path;
+	
+	
+					FileStream fs = File.OpenRead("/proc/mounts");
+					if( (fs != null) && (ifPath != null) )
+					{
+						StreamReader sr = new StreamReader(fs);
+						string mntLine = sr.ReadLine();
+	
+						// Get the stat structure on the path
+						Stat pathStat;
+						Mono.Posix.Syscall.stat(ifPath, out pathStat);
+	
+						while(mntLine != null)
+						{
+							// verify it's a device on this box
+							if(mntLine.StartsWith("/dev"))
+							{
+								Stat stat;
+								string[] entries;
+		
+								entries = mntLine.Split(' ');
+								Mono.Posix.Syscall.stat(entries[1], out stat);
+		
+								if(stat.Device == pathStat.Device)
+								{
+									retval = true;
+									break;
+								}
+							}
+							mntLine = sr.ReadLine();
+						}
+						sr.Close();
+					}
+					else
+					{
+						Console.WriteLine("ERROR: Unable to open /proc/mounts");
+					}
+	
+					if(!retval)
+					{
+						Console.WriteLine("Unable to find a physical device for: {0}", ifPath);
+						return retval;
+					}
 				}
-				else
-					Console.WriteLine("ERROR: Unable to open /proc/mounts");
-
-				if(!retval)
-				{
-					Console.WriteLine("Unable to find a physical device for: {0}", path);
-					return retval;
-				}
-			}
 			}
 			catch(Exception e)
 			{
