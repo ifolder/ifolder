@@ -27,6 +27,9 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Threading;
 
+using Simias;
+using Simias.Location;
+
 namespace Simias.Sync
 {
 	/// <summary>
@@ -75,6 +78,7 @@ namespace Simias.Sync
 		private SyncChannelFactory channelFactory;
 		private SyncStoreManager storeManager;
 		private SyncLogicFactory logicFactory;
+		private LocationService locationService;
 
 		private int active;
 		private object activeLock = new object();
@@ -99,6 +103,12 @@ namespace Simias.Sync
 
 			// no one is working
 			active = 0;
+
+			// TODO: fix sync manager to use configuration
+			// create the location service
+			Configuration configuration = new Configuration(properties.StorePath);
+
+			locationService = new LocationService(configuration);
 		}
 
 		public void Start()
@@ -199,6 +209,11 @@ namespace Simias.Sync
 		public SyncLogicFactory LogicFactory
 		{
 			get { return logicFactory; }
+		}
+
+		public LocationService Location
+		{
+			get { return locationService; }
 		}
 
 		#endregion

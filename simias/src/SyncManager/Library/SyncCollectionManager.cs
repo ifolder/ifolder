@@ -224,12 +224,26 @@ namespace Simias.Sync
 				// get permission from sync manager
 				syncManager.ReadyToWork();
 
-				MyTrace.WriteLine("Sync Cycle Starting: {0} ({1})", collection.Name, collection.ServiceUrl);
+				MyTrace.WriteLine("Sync Cycle Starting: {0}", collection.Name);
 
 				// TODO: the remoting connection is currently being created with each sync interval,
 				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
+					// Find the url with the location service
+					UriBuilder serviceUri = new UriBuilder(collection.ServiceUrl);
+					Uri locationUri = syncManager.Location.Locate(collection.ID);
+
+					if (locationUri != null)
+					{
+						serviceUri.Host = locationUri.Host;
+						serviceUri.Port = locationUri.Port;
+					}
+
+					string serviceUrl = serviceUri.ToString();
+
+					MyTrace.WriteLine("Sync Store Service URL: {0}", serviceUrl);
+
 					// get a proxy to the store service object
 					MyTrace.WriteLine("Connecting to the Sync Store Service...");
 					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);

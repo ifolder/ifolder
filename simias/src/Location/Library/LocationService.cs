@@ -52,6 +52,7 @@ namespace Simias.Location
 		/// </summary>
 		/// <param name="collection">The collection id.</param>
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
+		/// <remarks>The first non-null URI from the provider list is always returned.</remarks>
 		public Uri Locate(string collection)
 		{
 			Uri result = null;
