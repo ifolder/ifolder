@@ -228,7 +228,6 @@
 				3ED2848507C5179100F2B104,
 				3ED2848607C5179100F2B104,
 				3ED2848707C5179100F2B104,
-				3ED2848807C5179100F2B104,
 				3ED2848907C5179100F2B104,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -449,7 +448,6 @@
 				3ED2848007C5179100F2B104,
 				3ED2848107C5179100F2B104,
 				3ED2848207C5179100F2B104,
-				3ED2848307C5179100F2B104,
 				3ED2848407C5179100F2B104,
 			);
 			isa = PBXGroup;
@@ -484,15 +482,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		3ED2848307C5179100F2B104 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.java;
-			name = StoreTreeModelListener.java;
-			path = ../src/com/novell/simias/storebrowser/StoreTreeModelListener.java;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3ED2848407C5179100F2B104 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -516,12 +505,6 @@
 		};
 		3ED2848707C5179100F2B104 = {
 			fileRef = 3ED2848207C5179100F2B104;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3ED2848807C5179100F2B104 = {
-			fileRef = 3ED2848307C5179100F2B104;
 			isa = PBXBuildFile;
 			settings = {
 			};
