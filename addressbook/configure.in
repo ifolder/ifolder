@@ -1,6 +1,6 @@
 AC_INIT(src/FormsBookLib/BooksContacts.cs)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(addressbook, 0.8)
+AM_INIT_AUTOMAKE(addressbook, 0.10)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 
