@@ -41,7 +41,6 @@ namespace Novell.AddressBook
 		private AddressBook		addressBook = null;
 		private	IEnumerator		thisEnum = null;
 		private string			userName = "";
-		private string			identity;
 		private string			id;
 		private string			url;
 		private string			nickName;
@@ -342,34 +341,6 @@ namespace Novell.AddressBook
 				this.url = value;
 				propertyChanged = true;
 			}
-		}
-
-		/// <summary>
-		/// Identity: Specifies the primary identity for this contact
-		///
-		/// Type Value: Single text value
-		/// </summary>
-		public string Identity
-		{
-			get
-			{
-				if(this.identity != null)
-				{
-					return(this.identity);
-				}
-				else
-				{
-					return("");
-				}
-			}
-
-			/*
-			set
-			{
-				propertyChanged = true;
-				thisNode.Properties.ModifyProperty( Common.identityProperty, value );
-			}
-			*/
 		}
 
 		/// <summary>
@@ -760,7 +731,13 @@ namespace Novell.AddressBook
 
 						try
 						{
-							this.identity = cNode.Properties.GetSingleProperty(Common.identityProperty).ToString();
+							this.organization = cNode.Properties.GetSingleProperty(Common.organizationProperty).ToString();
+						}
+						catch{}
+
+						try
+						{
+							this.blogUrl = cNode.Properties.GetSingleProperty(Common.blogProperty).ToString();
 						}
 						catch{}
 
@@ -777,29 +754,6 @@ namespace Novell.AddressBook
 		#endregion
 
 		#region Public Methods
-
-		/// <summary>
-		/// Add identity to contact
-		/// </summary>
-		/// <param name="identity"></param>
-		/// <remarks>
-		/// !NOTE! This API will become obsolete
-		/// !FINISH API DOC!
-		/// </remarks>
-		/// <returns>A list of contacts which matched the search string.</returns>
-		public void AddIdentity(string identity)
-		{
-			this.identity = identity;
-			try
-			{
-				if (this.thisNode != null)
-				{
-					thisNode.Properties.AddProperty(Common.identityProperty, identity);
-				}
-			}
-			catch{}
-			propertyChanged = true;
-		}
 
 		/// <summary>
 		/// Add an e-mail address to this contact.
@@ -848,8 +802,8 @@ namespace Novell.AddressBook
 					MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.emailProperty);
 					foreach(Property p in mList)
 					{
-						Email tmpMail = new Email(this.collection, this.thisNode, this, (string) p.Value);
-						cList.Add(tmpMail);
+						//Email tmpMail = new Email(this.collection, this.thisNode, this, (string) p.Value);
+						cList.Add(new Email(this.collection, this.thisNode, this, (string) p.Value));
 					}
 				}
 				else
@@ -961,46 +915,12 @@ namespace Novell.AddressBook
 			throw new ApplicationException(Common.addressBookExceptionHeader + "A preferred telephone number does not exist");
 		}
 
-		/*
-		public void Create(string userName)
-		{
-			this.thisNode = this.collection.CreateChild(userName, Common.contactType);
-			if(this.thisNode != null)
-			{
-				// Add the product ID property
-				this.thisNode.Properties.ModifyProperty(Common.productIDProperty, "Novell.Address.Book");
-
-				//
-				// !BUGBUG! This is a hack for the December 19th 2003 iteration
-				// Anytime we create a contact we will also create an identity
-				// with the secret set to "novell"
-				//
-
-				IIdentityFactory idFactory = IdentityManager.Connect();
-				IIdentity id = idFactory.Create( userName, "novell" );
-					
-				// Store the guid of the identity in the contact
-				//this.Identity = id.Id;
-				this.thisNode.Properties.ModifyProperty( Common.identityProperty, id.UserGuid );
-
-				//string				secret = "novell";
-				//IIdentityFactory	idFactory = IIdentityFactory();
-				//IIdentity id = idFactory.Create(userName, secret);
-				//this.Identity = id.CurrentId;
-			}
-			else
-			{
-				Console.WriteLine("We have a null object");
-			}
-		}
-		*/
-
 		/// <summary>
 		/// Commits any changes to the Contact object.
 		/// </summary>
 		public void Commit()
 		{
-			if(propertyChanged == true)
+			if(propertyChanged == true && this.thisNode != null)
 			{
 				try
 				{
@@ -1247,37 +1167,6 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
-		/// Creates a vCard Name property for this contact.
-		/// </summary>
-		/// <param name="given">Given Name</param>
-		/// <param name="family">Family Name</param>
-		/// <param name="preferred">true if this Name is the preferred - false if Name is secondary</param>
-		/// <remarks>
-		/// vCard Name is a structured property consisting of:
-		/// Family Name, Given Name, Additional Names, Honorific Prefixes
-		/// and Honorific Suffixes
-		/// 
-		/// Each contact may have one preferred Name.
-		/// 
-		/// If for any reason the Name cannot be created an exception is raised.
-		/// </remarks>
-		/// <returns>A Name object with valid given and family properties.</returns>
-		[ Obsolete( "This method is marked for eventual removal. Use method 'AddName' instead.", false ) ]
-		public Name CreateName(string given, string family, bool preferred)
-		{
-			try
-			{
-				Name name = new Name(given, family);
-				name.Preferred = preferred;
-				name.Create(this.collection, thisNode, this);
-				this.collection.Commit( true );
-				return(name);
-			}
-			catch{}
-			throw new ApplicationException(Common.abExceptionHeader + "Name " + given + " " + family + "not created");
-		}
-
-		/// <summary>
 		/// Gets a Name object by specified ID.
 		/// </summary>
 		/// <remarks>
@@ -1350,8 +1239,7 @@ namespace Novell.AddressBook
 					{
 						if (cnode.Type == Common.nameProperty)
 						{
-							Name name = GetName(cnode.Id);
-							cList.Add(name);
+							cList.Add(GetName(cnode.Id));
 						}
 					}
 				}

@@ -682,47 +682,6 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
-		/// Retrieve the contact by the specified identity.
-		/// </summary>
-		/// <param name="identityID">Specified Identity ID</param>
-		/// <remarks>
-		/// Each contact contains an associated primary identity.
-		/// Consumers may call the Identity interface to retrieve their current
-		/// identity.  With the ID of the current identity, consumers can then
-		/// issue this method call to retrieve full contact information for the
-		/// specified identity.
-		/// 
-		/// If an associated contact is not found an application exception is raised
-		/// </remarks>
-		/// <returns>A Contact object with at minimum a valid username property.</returns>
-		/// 
-		[ Obsolete( "This method is marked for removal. Contacts and Identities are no longer separate.", false ) ]
-		public Contact GetContactByIdentity(string identityID)
-		{
-			/*
-			// First make sure we get the master ID
-			IIdentityFactory idFactory = IdentityManager.Connect();
-			IIdentity masterID = idFactory.GetIdentityFromUserGuid( identityID );
-
-			ICSList searchResults = 
-				this.collection.Search(Common.identityProperty, masterID.UserGuid, Property.Operator.Equal);
-
-			try
-			{
-				foreach(Node node in searchResults)
-				{
-					if (node.Type == Common.contactType)
-					{
-						return(this.GetContact(node.Id));
-					}
-				}
-			}
-			catch{}
-			*/
-			throw new ApplicationException(Common.addressBookExceptionHeader + "Contact does not exist");
-		}
-
-		/// <summary>
 		/// Import a vCard via a full path to a vCard file.
 		/// </summary>
 		/// <param name="fileName">vCard file to import</param>
