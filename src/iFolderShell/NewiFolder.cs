@@ -47,7 +47,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.CheckBox dontAsk;
 		private string folderName;
 		private string loadPath;
-		private iFolderWebService ifWebService;
 		private const int SHOP_FILEPATH = 0x2;
 		private System.Windows.Forms.LinkLabel iFolderHelp;
 		/// <summary>
@@ -335,14 +334,6 @@ namespace Novell.iFolderCom
 				loadPath = value;
 			}
 		}
-
-		/// <summary>
-		/// Sets the iFolderService object to use.
-		/// </summary>
-		public iFolderWebService iFolderWebService
-		{
-			set { ifWebService = value; }
-		}
 		#endregion
 
 		#region Event Handlers
@@ -362,16 +353,7 @@ namespace Novell.iFolderCom
 		{
 			if (dontAsk.Checked)
 			{
-				try
-				{
-					ifWebService.SetDisplayConfirmation(false);
-				}
-				catch (Exception ex)
-				{
-					System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(NewiFolder));
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveConfigError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
+				iFolderComponent.DisplayConfirmationEnabled = !dontAsk.Checked;
 			}
 
 			this.Close();
