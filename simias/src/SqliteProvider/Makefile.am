@@ -30,7 +30,7 @@ CUR_DIR := $(shell pwd)
 
 all: SqliteWrapper.dll SqliteProvider.dll
 
-SqliteProvider.dll: $(SqliteProvider_CSFILES) $(SqliteProvider_RESOURCES)
+SqliteProvider.dll: $(SqliteProvider_CSFILES) $(SqliteProvider_RESOURCES) SqliteWrapper.dll
 	$(CSC) /out:$@ $(CSCFLAGS) $(SqliteProvider_FLAGS) $(SqliteProvider_LIBS:%=/r:%) $(SqliteProvider_LIBPATH:%=/lib:%) $(SqliteProvider_CSFILES_CSC) /doc:SqliteProvider.xml
 
 SqliteWrapper.dll: $(SqliteWrapper_CSFILES) $(SqliteWrapper_RESOURCES)
