@@ -275,6 +275,12 @@ namespace Novell.iFolder.FormsTrayApp
 			// Get the POBox for the selected domain.
 			poBox = POBox.GetPOBox(store, domain.ID);
 
+			// Dispose the old subscriber if one exists.
+			if (subscriber != null)
+			{
+				subscriber.Dispose();
+			}
+
 			// Set up the event handlers for the POBox.
 			subscriber = new EventSubscriber();
 			subscriber.CollectionId = poBox.ID;
