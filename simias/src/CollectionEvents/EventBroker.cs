@@ -154,7 +154,11 @@ namespace Simias.Event
 						}
 						if (((ServiceEventArgs)args).ControlEvent == ServiceControl.Shutdown)
 						{
-							shuttingDown = true;
+							if (((ServiceEventArgs)args).Target == ServiceEventArgs.TargetAll || 
+								((ServiceEventArgs)args).Target == System.Diagnostics.Process.GetCurrentProcess().Id)
+							{
+								shuttingDown = true;
+							}
 						}
 					}
 				}
@@ -298,7 +302,7 @@ namespace Simias.Event
 			
 				// The service is not running start it.
 				System.Diagnostics.Process service = new Process();
-				//service.StartInfo.CreateNoWindow = true;
+				service.StartInfo.CreateNoWindow = true;
 				service.StartInfo.UseShellExecute = false;
 				if (MyEnvironment.Mono)
 				{
