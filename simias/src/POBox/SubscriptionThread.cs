@@ -54,6 +54,9 @@ namespace Simias.POBox
 			this.threads = threads;
 		}
 
+		/// <summary>
+		/// Thread Run
+		/// </summary>
 		public void Run()
 		{
 			bool done = false;

@@ -34,7 +34,14 @@ namespace Simias.Location
 	/// </summary>
 	public class LocationProviderList : IEnumerable, IEnumerator
 	{
+		/// <summary>
+		/// Location service node name
+		/// </summary>
 		public static readonly string LocationServiceNodeName = "Location Service";
+		
+		/// <summary>
+		/// Location provider list property name
+		/// </summary>
 		public static readonly string LocationProviderListPropertyName = "Location Providers";
 		
 		private Store store;

@@ -212,7 +212,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// POBox factory method that constructs a POBox object from it's id.
 		/// </summary>
-		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
+		/// <param name="store">The Store object that the POBox belongs to.</param>
 		/// <param name="id">The ID of the POBox collection.</param>
 		/// <returns>The POBox object.</returns>
 		public static POBox GetPOBoxByID(Store store, string id)
@@ -323,6 +323,7 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="collection">The Collection object that will be shared.</param>
 		/// <param name="fromMember">The Member that is sharing the collection.</param>
+		/// <param name="type"></param>
 		/// <returns>A Subscription object.  This object must be added to the POBox using one of the AddMessage() methods.</returns>
 		public Subscription CreateSubscription(Collection collection, Member fromMember, string type)
 		{

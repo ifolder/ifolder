@@ -47,6 +47,11 @@ namespace Simias.POBox
 		private EventSubscriber subscriber;
 		private Hashtable threads;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="poManager"></param>
+		/// <param name="id"></param>
 		public POBoxManager(POManager poManager, string id)
 		{
 			this.poManager = poManager;
@@ -146,6 +151,9 @@ namespace Simias.POBox
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose
+		/// </summary>
 		public void Dispose()
 		{
 		}

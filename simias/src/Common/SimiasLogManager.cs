@@ -83,15 +83,16 @@ namespace Simias
                 // only configure once
                 if (!configured)
                 {
-					// process name
 					string name;
 					
 					try
 					{
+						// process name
 						name = Assembly.GetEntryAssembly().GetName().Name;
 					}
 					catch
 					{
+						// note: this is only known to happen inside of NUnit
 						name = "UnknownProcess";
 					}
 					
@@ -119,7 +120,7 @@ namespace Simias
 						{
 							File.Copy(bootStrapFile, configFile);
 
-							// update log file names to store
+							// update log file names to process name
 							XmlDocument doc = new XmlDocument();
 							doc.Load(configFile);
 

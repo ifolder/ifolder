@@ -42,6 +42,9 @@ namespace Simias.Location
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(mDnsLocationProvider));
 
+		/// <summary>
+		/// Collection mDNS suffix
+		/// </summary>
 		public static readonly string SUFFIX = "_collection._tcp._local";
 
 		private string host;

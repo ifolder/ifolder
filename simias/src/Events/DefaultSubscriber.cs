@@ -52,6 +52,9 @@ namespace Simias.Event
 
 		#region Constructor / Finalizer
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public DefaultSubscriber()
 		{
 			alreadyDisposed = false;

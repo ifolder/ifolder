@@ -34,6 +34,9 @@ namespace Simias.POBox
 	/// </summary>
 	public class PostOffice : MarshalByRefObject
 	{
+		/// <summary>
+		/// Post Office remoting end point
+		/// </summary>
 		public static readonly string EndPoint = "PostOffice.rem";
 
 		private Store store;
@@ -60,6 +63,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// Post a message
 		/// </summary>
+		/// <param name="user"></param>
 		/// <param name="message">A message object</param>
 		/// <returns>true if the message was posted</returns>
 		public bool Post(string user, Message message)
@@ -196,6 +200,12 @@ namespace Simias.POBox
 			return result;
 		}
 
+		/// <summary>
+		/// Acknowledge the subscription.
+		/// </summary>
+		/// <param name="domain"></param>
+		/// <param name="identity"></param>
+		/// <param name="message"></param>
 		public void AckSubscription(string domain, string identity, string message)
 		{
 			bool workgroup = (domain == Simias.Storage.Domain.WorkGroupDomainID);
@@ -238,6 +248,13 @@ namespace Simias.POBox
 			box.Commit(box.Delete(subscription));
 		}
 
+		/// <summary>
+		/// Get the subscription status
+		/// </summary>
+		/// <param name="domain"></param>
+		/// <param name="identity"></param>
+		/// <param name="message"></param>
+		/// <returns></returns>
 		public SubscriptionStatus GetSubscriptionStatus(string domain, string identity, string message)
 		{
 			SubscriptionStatus status = null;
@@ -279,6 +296,13 @@ namespace Simias.POBox
 			return status;
 		}
 
+		/// <summary>
+		/// Get the subscription details.
+		/// </summary>
+		/// <param name="domain"></param>
+		/// <param name="identity"></param>
+		/// <param name="collection"></param>
+		/// <returns></returns>
 		public SubscriptionDetails GetSubscriptionDetails(string domain, string identity, string collection)
 		{
 			SubscriptionDetails details = new SubscriptionDetails();

@@ -38,37 +38,37 @@ namespace Simias.Domain
 		public string Name;
 
 		/// <summary>
-		// Domain Description
+		/// Domain Description
 		/// </summary>
 		public string Description;
 
 		/// <summary>
-		// Domain ID
+		/// Domain ID
 		/// </summary>
 		public string ID;
 
 		/// <summary>
-		// Domain URL
+		/// Domain URL
 		/// </summary>
 		public string Url;
 
 		/// <summary>
-		// Domain Roster (Member List) Collection ID
+		/// Domain Roster (Member List) Collection ID
 		/// </summary>
 		public string RosterID;
 
 		/// <summary>
-		// Domain Roster (Member List) Collection Name
+		/// Domain Roster (Member List) Collection Name
 		/// </summary>
 		public string RosterName;
 
 		/// <summary>
-		// Sync Service Url
+		/// Sync Service Url
 		/// </summary>
 		public string SyncServiceUrl;
 
 		/// <summary>
-		// Post-Office Service Url
+		/// Post-Office Service Url
 		/// </summary>
 		public string POServiceUrl;
 

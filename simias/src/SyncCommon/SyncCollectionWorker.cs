@@ -30,6 +30,9 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncCollectionWorker
 	{
+		/// <summary>
+		/// The current collection.
+		/// </summary>
 		protected SyncCollection collection;
 
 		/// <summary>

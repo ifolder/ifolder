@@ -50,11 +50,21 @@ namespace Simias.Domain
 		
 		private Configuration config;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="config"></param>
 		public DomainAgent(Configuration config)
 		{
 			this.config = config;
 		}
 
+		/// <summary>
+		/// Attach to an enterprise system.
+		/// </summary>
+		/// <param name="host"></param>
+		/// <param name="user"></param>
+		/// <param name="password"></param>
 		public void Attach(string host, string user, string password)
 		{
 			// disable any current domain
@@ -171,6 +181,10 @@ namespace Simias.Domain
 			poBox.Commit();
 		}
 
+		/// <summary>
+		/// Create the master on the server.
+		/// </summary>
+		/// <param name="collection"></param>
 		public void CreateMaster(SyncCollection collection)
 		{
 			// connect
@@ -220,11 +234,17 @@ namespace Simias.Domain
 
 		#region Properties
 		
+		/// <summary>
+		/// Domain service end point
+		/// </summary>
 		public static string EndPoint
 		{
 			get { return "DomainService.rem"; }
 		}
 
+		/// <summary>
+		/// Domain service URL
+		/// </summary>
 		public Uri ServiceUrl
 		{
 			get { return new Uri(config.Get(SectionName, UrlKeyName, SimiasRemoting.GetServiceUrl(EndPoint).ToString())); }
@@ -232,6 +252,9 @@ namespace Simias.Domain
 			set { config.Set(SectionName, UrlKeyName, value.ToString()); }
 		}
 
+		/// <summary>
+		/// Is the server enterprise domain enabled for this client?
+		/// </summary>
 		public bool Enabled
 		{
 			get { return bool.Parse(config.Get(SectionName, EnabledKeyName, DefaultEnabled.ToString())); }

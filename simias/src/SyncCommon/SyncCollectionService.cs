@@ -33,6 +33,9 @@ namespace Simias.Sync
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionService));
 
+		/// <summary>
+		/// The current collection.
+		/// </summary>
 		protected SyncCollection collection;
 
 		/// <summary>

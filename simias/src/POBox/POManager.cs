@@ -230,6 +230,9 @@ namespace Simias.POBox
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Dispose
+		/// </summary>
 		public void Dispose()
 		{
 			Stop();
@@ -239,12 +242,18 @@ namespace Simias.POBox
 
 		#region Properties
 		
+		/// <summary>
+		/// Service URL
+		/// </summary>
 		public Uri ServiceUrl
 		{
 			get { return serviceUrl; }
 			set { serviceUrl = value; }
 		}
 
+		/// <summary>
+		/// Configuration object
+		/// </summary>
 		public Configuration Config
 		{
 			get { return config; }

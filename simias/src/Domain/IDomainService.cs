@@ -30,10 +30,29 @@ namespace Simias.Domain
 	/// </summary>
 	public interface IDomainService
 	{
+		/// <summary>
+		/// Get the domain information.
+		/// </summary>
+		/// <returns></returns>
 		DomainInfo GetDomainInfo();
 
+		/// <summary>
+		/// Provision the user.
+		/// </summary>
+		/// <param name="user"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
 		ProvisionInfo ProvisionUser(string user, string password);
 
+		/// <summary>
+		/// Create the master on the server.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="name"></param>
+		/// <param name="rootID"></param>
+		/// <param name="rootName"></param>
+		/// <param name="user"></param>
+		/// <returns></returns>
 		string CreateMaster(string id, string name, string rootID, string rootName, string user);
 	}
 }

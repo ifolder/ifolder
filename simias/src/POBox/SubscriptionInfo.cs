@@ -35,7 +35,9 @@ namespace Simias.POBox
 	/// </summary>
 	public class SubscriptionInfo
 	{
-		// subscription info extension
+		/// <summary>
+		/// subscription info extension 
+		/// </summary>
 		public static readonly string Extension = ".csi";
 
 		// subscription info fields

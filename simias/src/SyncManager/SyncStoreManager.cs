@@ -231,6 +231,10 @@ namespace Simias.Sync
 			RemoveCollectionManager(args.ID);
 		}
 
+		/// <summary>
+		/// Sync the collection now.
+		/// </summary>
+		/// <param name="id">The id of the collection to sync.</param>
 		public void SyncCollectionNow(string id)
 		{
 			SyncCollectionManager manager;
@@ -255,6 +259,9 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// Sync all of the collections now.
+		/// </summary>
 		public void SyncAllNow()
 		{
 			lock(collectionManagers.SyncRoot)

@@ -38,7 +38,7 @@ namespace Simias
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasRemoting));
 
-		private static readonly string DefaultConfigFile = "Simias.remoting";
+		private static readonly string DefaultConfigFile = "Simias";
 		private static readonly string ConfigFileExtension = ".remoting";
 
 		private static readonly string RemotingSection = "Remoting";
@@ -57,7 +57,7 @@ namespace Simias
 		/// <summary>
 		/// Configure remoting to a specific Simias store.
 		/// </summary>
-		/// <param name="configuration">A Simias configuration object.</param>
+		/// <param name="config">A Simias configuration object.</param>
 		public static void Configure(Configuration config)
 		{
 			lock(typeof(SimiasRemoting))
@@ -66,16 +66,16 @@ namespace Simias
 				if (SimiasRemoting.config == null)
 				{
 					string storePath = config.StorePath;
-
-					// process name
 					string name;
 					
 					try
 					{
+						// process name
 						name = Assembly.GetEntryAssembly().GetName().Name;
 					}
 					catch
 					{
+						// note: this is only known to happen inside of NUnit
 						name = "UnknownProcess";
 					}
 
@@ -85,7 +85,8 @@ namespace Simias
 					// bootstrap config
 					if (!File.Exists(configFile))
 					{
-						string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, DefaultConfigFile);
+						string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir,
+							DefaultConfigFile + ConfigFileExtension);
 
 						if (File.Exists(bootStrapFile))
 						{
@@ -93,18 +94,29 @@ namespace Simias
 						}
 					}
 
-					// remoting configuration
-					RemotingConfiguration.Configure(configFile);
+					try
+					{
+						// remoting configuration
+						RemotingConfiguration.Configure(configFile);
 
-					// save remoting parameters
-					XmlDocument doc = new XmlDocument();
-					doc.Load(configFile);
+						// save remoting parameters
+						XmlDocument doc = new XmlDocument();
+						doc.Load(configFile);
 
-					XmlNode node = doc.SelectSingleNode("//channel[@port]");
-					XmlNode attr = node.Attributes.GetNamedItem("port");
-					SimiasRemoting.port = int.Parse(attr.Value);
+						// port
+						XmlNode node = doc.SelectSingleNode("//channel[@port]");
+						XmlNode attr = node.Attributes.GetNamedItem("port");
+						SimiasRemoting.port = int.Parse(attr.Value);
 
-					log.Debug("Server Port: {0}", SimiasRemoting.port);
+						// report port
+						log.Debug("Server Port: {0}", SimiasRemoting.port);
+					}
+					catch(Exception e)
+					{
+						throw new ApplicationException(String.Format(
+							"Unable to read required configuration file: {0}",
+							configFile), e);
+					}
 
 					// save configuration object
 					SimiasRemoting.config = config;
