@@ -7,7 +7,7 @@ REPORT_DIR = $(CYGWIN_PATH)/$(DESTDIR)$(bindir)
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
-	$(MAKE) -i installcheck-recursive
+	$(MAKE) -i installcheck
 	$(REPORT_EXE) $(REPORT_DIR)
 
 clean-local:
