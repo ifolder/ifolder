@@ -24,6 +24,7 @@ using Simias;
 using Simias.Storage;
 
 using System;
+using System.IO;
 
 namespace Novell.iFolder.Web
 {
@@ -115,7 +116,23 @@ namespace Novell.iFolder.Web
 			if(conflict.IsFileNameConflict)
 			{
 				IsNameConflict = true;
-				ServerName = conflict.NonconflictedPath;
+
+				FileNode fileNode = new FileNode(node);
+				string name = Path.GetFileName(conflict.NonconflictedPath);
+				if (name.Equals(Path.GetFileName(conflict.FileNameConflictPath)))
+				{
+					LocalName = name;
+					LocalDate = fileNode.LastWriteTime.ToString();
+					LocalSize = formatFileSize(fileNode.Length);
+					LocalFullPath = conflict.FileNameConflictPath;
+				}
+				else
+				{
+					ServerName = name;
+					ServerDate = fileNode.LastWriteTime.ToString();
+					ServerSize = formatFileSize(fileNode.Length);
+					ServerFullPath = conflict.FileNameConflictPath;
+				}
 			}
 			else
 			{
