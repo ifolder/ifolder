@@ -34,14 +34,16 @@ namespace Simias.Client
 	public sealed class Configuration
 	{
 		#region Class Members
-		private const string SectionTag = "section";
-		private const string SettingTag = "setting";
-		private const string NameAttr = "name";
-		private const string ValueAttr = "value";
+		internal const string SectionTag = "section";
+		internal const string SettingTag = "setting";
+		internal const string NameAttr = "name";
+		internal const string ValueAttr = "value";
 		private const string DefaultSection = "SimiasDefault";
 		private const string DefaultFileName = "Simias.config";
 		private const string storeProvider = "StoreProvider";
 		private const string storeProviderPath = "Path";
+
+		private const string clientBootStrapFileName = "simias-client-bootstrap.config";
 
 		private string configFilePath;
 		private XmlDocument configDoc;
@@ -89,7 +91,14 @@ namespace Simias.Client
 			configFilePath = Path.Combine( DefaultPath, DefaultFileName );
 			if ( !File.Exists( configFilePath ) )
 			{
-				throw new ApplicationException( String.Format( "Cannot locate {0}", configFilePath ) );
+				string bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, clientBootStrapFileName );
+				if ( !File.Exists( bootStrapFilePath ) )
+				{
+					throw new ApplicationException( String.Format( "Cannot locate {0} or {1}", configFilePath, bootStrapFilePath ) );
+				}
+
+				// Copy the bootstrap file to the configuration file.
+				File.Copy( bootStrapFilePath, configFilePath );
 			}
 
 			// Load the configuration document from the file.
@@ -142,6 +151,11 @@ namespace Simias.Client
 				(path.EndsWith(@"simias\") == false))
 			{
 				path = Path.Combine(path, "simias");
+			}
+
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
 			}
 
 			return path;

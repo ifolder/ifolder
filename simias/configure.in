@@ -406,7 +406,7 @@ Makefile
 simias.pc
 simias-client.pc
 src/Makefile
-src/Common/SimiasSetup.cs
+src/SimiasClient/SimiasSetup.cs
 src/Common/MyDns.cs
 src/SimiasClient/Makefile
 src/Simias.dll/Makefile

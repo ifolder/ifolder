@@ -28,8 +28,6 @@ using System.Collections;
 using System.Xml;
 using System.Threading;
 using System.Reflection;
-using System.Net;
-using System.Net.Sockets;
 using Simias;
 using Simias.Event;
 
@@ -48,8 +46,6 @@ namespace Simias.Service
 		static public ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
 		static private Configuration conf;
-		static private Process webProcess = null;
-		static private EventHandler appDomainUnloadEvent;
 
 		static internal string XmlTypeAttr = "type";
 		static internal string XmlAssemblyAttr = "assembly";
@@ -64,10 +60,6 @@ namespace Simias.Service
 
 		private const string CFG_Section = "ServiceManager";
 		private const string CFG_Services = "Services";
-		private const string CFG_WebServicePath = "WebServicePath";
-		private const string CFG_ShowOutput = "WebServiceOutput";
-		private const string CFG_WebServiceUri = "WebServiceUri";
-		private const string CFG_WebServicePort = "WebServicePort";
 		private const string XmlServiceTag = "Service";
 
 		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
@@ -358,61 +350,6 @@ namespace Simias.Service
 
 		#region Control Methods.
 		/// <summary>
-		/// 
-		/// </summary>
-		static public void Start()
-		{
-			lock ( typeof( Manager ) )
-			{
-				// Make sure the process is not already started.
-				if ( webProcess == null )
-				{
-					// Set up the process info to start the XSP process.
-					webProcess = new Process();
-					appDomainUnloadEvent = new EventHandler( XspProcessExited );
-					webProcess.Exited += appDomainUnloadEvent;
-
-					// Get the web service path from the configuration file.
-					Configuration config = ( conf != null ) ? conf : Configuration.GetConfiguration();
-					string webPath = config.Get( CFG_Section, CFG_WebServicePath, Directory.GetCurrentDirectory() );
-					string webApp = Path.Combine( webPath, String.Format( "bin{0}SimiasApp.exe", Path.DirectorySeparatorChar ) );
-
-					webProcess.StartInfo.FileName = webApp;
-					webProcess.StartInfo.UseShellExecute = false;
-					webProcess.StartInfo.RedirectStandardInput = true;
-					webProcess.StartInfo.CreateNoWindow = ( String.Compare( config.Get( CFG_Section, CFG_ShowOutput, false.ToString() ), "True", true ) == 0 ) ? false : true;
-					webProcess.EnableRaisingEvents = true;
-
-					if ( !Path.IsPathRooted( webPath ) )
-					{
-						throw new SimiasException( String.Format( "Web service path must be absolute: {0}", webPath ) );
-					}
-
-					// See if there is already a uri specified in the configuration file.
-					Uri uri = null;
-					if ( config.Exists( CFG_Section, CFG_WebServiceUri ) )
-					{
-						uri = new Uri( config.Get( CFG_Section, CFG_WebServiceUri, null ) );
-					}
-					else
-					{
-						// Get the dynamic port that xsp should use and write it out to the config file.
-						string virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
-						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort( config ), virtualRoot ).ToString() );
-						config.Set( CFG_Section, CFG_WebServiceUri, uri.ToString() );
-					}
-
-					// Strip off the volume if it exists and the file name and make the path absolute from the root.
-					string appPath = String.Format( "{0}{1}", Path.DirectorySeparatorChar, webPath.Remove( 0, Path.GetPathRoot( webPath ).Length ) );
-					webProcess.StartInfo.Arguments = String.Format( "--applications {0}:{1} --port {2}", uri.PathAndQuery, appPath, uri.Port.ToString() );
-					webProcess.Start();
-
-					logger.Info( "SimiasApp process has been started." );
-				}
-			}
-		}
-
-		/// <summary>
 		/// Start the installed services.
 		/// This call is asynchronous. Use ServicesStarted to now when this call has finished.
 		/// </summary>
@@ -441,27 +378,6 @@ namespace Simias.Service
 		}
 
 		/// <summary>
-		/// Shuts down the XSP process.
-		/// </summary>
-		static public void Stop()
-		{
-			lock ( typeof( Manager ) )
-			{
-				if ( webProcess != null )
-				{
-					// Remove the exit event handler before shutting down the process.
-					webProcess.Exited -= appDomainUnloadEvent;
-
-					// Tell XSP to terminate and wait for it to exit.
-					webProcess.StandardInput.WriteLine( "" );
-					webProcess.WaitForExit();
-					webProcess = null;
-					logger.Info( "SimiasApp Process has been stopped." );
-				}
-			}
-		}
-	
-		/// <summary>
 		/// Stop the installed services.
 		/// This call is asynchronous. Use ServicesStarted to now when this call has finished.
 		/// </summary>
@@ -487,7 +403,6 @@ namespace Simias.Service
 			stopThread = null;
 		}
 		
-
 		/// <summary>
 		/// Block until services are started.
 		/// </summary>
@@ -521,52 +436,9 @@ namespace Simias.Service
 				return null;
 			}
 		}
-
-		/// <summary>
-		/// Callback that gets notified when the XSP process terminates.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		static private void XspProcessExited(object sender, EventArgs e)
-		{
-			lock( typeof( Manager ) )
-			{
-				if ( webProcess != null )
-				{
-					logger.Info( "XSP process has exited. Restarting..." );
-					webProcess = null;
-					Start();
-				}
-			}
-		}
-
-		static private int GetXspPort( Configuration config )
-		{
-			// See if there is a port already configured to be used.
-			string portString = config.Get( CFG_Section, CFG_WebServicePort, null );
-			if ( portString != null )
-			{
-				return Convert.ToInt32( portString );
-			}
-			else
-			{
-				Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-				try
-				{
-					s.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
-					return ( s.LocalEndPoint as IPEndPoint ).Port;
-				}
-				finally
-				{
-					s.Close();
-				}
-			}
-		}
-
 		#endregion
 
 		#region Properties
-		
 		/// <summary>
 		/// Get the configuration for this instance.
 		/// </summary>
@@ -589,20 +461,6 @@ namespace Simias.Service
 		public bool ServicesStopped
 		{
 			get { return servicesStopped.WaitOne(0, false); }
-		}
-
-		/// <summary>
-		/// Gets the local service url so that applications can talk to the local webservice.
-		/// </summary>
-		static public Uri LocalServiceUrl
-		{
-			get
-			{
-				// Get the configuration object.
-				Configuration config = ( conf != null ) ? conf : Configuration.GetConfiguration();
-				string uriString = config.Get( CFG_Section, CFG_WebServiceUri, null );
-				return ( uriString != null ) ? new Uri( uriString ) : null;
-			}
 		}
 		#endregion
 

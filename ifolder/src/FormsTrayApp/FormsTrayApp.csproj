@@ -110,14 +110,14 @@
                     HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
                 />
                 <Reference
-                    Name = "Novell.iFolder"
-                    AssemblyName = "Novell.iFolder"
-                    HintPath = "..\..\..\final\Novell.iFolder.dll"
-                />
-                <Reference
                     Name = "iFolderComponent"
                     AssemblyName = "iFolderComponent"
-                    HintPath = "..\..\..\final\iFolderComponent.dll"
+                    HintPath = "..\iFolderShell\iFolderComponent.dll"
+                />
+                <Reference
+                    Name = "Novell.iFolder"
+                    AssemblyName = "Novell.iFolder"
+                    HintPath = "..\iFolder\Novell.iFolder.dll"
                 />
             </References>
         </Build>

@@ -194,7 +194,7 @@ namespace Simias.Sync
 					// There will only ever be one listener in workgroup. Therefore URL is
 					// the same as the one that gets used by the local web service except
 					// the host name is not loopback.
-					UriBuilder ub = new UriBuilder( Manager.LocalServiceUrl );
+					UriBuilder ub = new UriBuilder( Simias.Client.Manager.LocalServiceUrl );
 					ub.Host = MyDns.GetHostName();
 					result = ub.Uri;
 				}

@@ -32,10 +32,6 @@ AssemblyInfo.cs
 ../Common/Configuration.cs
 ../Common/Exception.cs
 ../Common/ISimiasLog.cs
-../Common/MyEnvironment.cs
-../Common/MyPath.cs
-../Common/MyPlatformID.cs
-../Common/MyRuntimeID.cs
 ../Common/SimiasLog.cs
 ../Common/SimiasLogManager.cs
 ../Domain/DomainAgent.cs
