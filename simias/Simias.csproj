@@ -754,6 +754,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\CollectionSyncEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\Conflict.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -765,6 +770,11 @@
                 />
                 <File
                     RelPath = "src\Sync\Dredge.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\FileSyncEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

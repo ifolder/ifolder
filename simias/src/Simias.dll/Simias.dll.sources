@@ -143,9 +143,11 @@ AssemblyInfo.cs
 ../SyncManager/SyncPing.cs
 ../SyncManager/SyncStoreManager.cs
 ../SyncManager/SyncManagerService.cs
+../Sync/CollectionSyncEventArgs.cs
 ../Sync/Conflict.cs
 ../Sync/Differ.cs
 ../Sync/Dredge.cs
+../Sync/FileSyncEventArgs.cs
 ../Sync/IncomingNode.cs
 ../Sync/OutgoingNode.cs
 ../Sync/SyncCmd.cs
