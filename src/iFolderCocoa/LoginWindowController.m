@@ -14,9 +14,8 @@
 		( [ [serverField stringValue] length] > 0 ) )
 	{
 		[[NSApp delegate] login:[userNameField stringValue] withPassword:[passwordField stringValue] 
-				toServer:[serverField stringValue]];
+					toServer:[serverField stringValue] ];
 	}
-		
 }
 
 @end
