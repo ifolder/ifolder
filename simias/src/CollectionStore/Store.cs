@@ -67,7 +67,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Default sync interval for the machine. Synchronizes every 5 minutes.
 		/// </summary>
-		static internal int DefaultMachineSyncInterval = 300;
+		static private int DefaultMachineSyncInterval = 300;
 
 		/// <summary>
 		/// Handle to the local store provider.

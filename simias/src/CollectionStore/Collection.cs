@@ -317,17 +317,10 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				int interval = Store.DefaultMachineSyncInterval;
-
 				// POBox objects have a different sync interval than regular collections.
-				if ( IsType( this, typeof( POBox.POBox ).Name ) )
-				{
-					return InviteInterval.Get( GetCurrentMember(), this ).Interval; 
-				}
-				else
-				{
-					return SyncInterval.Get( GetCurrentMember(), this ).Interval; 
-				}
+				return ( IsType( this, typeof( POBox.POBox ).Name ) ) ?
+					InviteInterval.Get( GetCurrentMember(), this ).Interval :
+					SyncInterval.Get( GetCurrentMember(), this ).Interval; 
 			}
 		}
 
