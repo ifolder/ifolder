@@ -390,7 +390,7 @@ namespace Novell.iFolder
 					}
 				
 					NodeEventArgs nargs = args as NodeEventArgs;
-					switch(nargs.ChangeType)
+					switch(nargs.EventType)
 					{
 						case Simias.Client.Event.EventType.NodeCreated:
 							NodeCreatedHandler(nargs);
