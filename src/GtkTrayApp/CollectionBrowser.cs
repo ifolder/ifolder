@@ -74,6 +74,16 @@ namespace Novell.iFolder
 			SetCurrentNode(null);
 		}
 
+		public CollectionBrowser(string storeLocation) 
+		{
+			Init();
+
+			Configuration config = new Configuration(storeLocation);
+			store = Store.Connect(config);
+
+			SetCurrentNode(null);
+		}
+
 		private void Init()
 		{
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", 

@@ -46,7 +46,10 @@ namespace Novell.iFolder
 
 			Application.Init();
 
-			cb = new  CollectionBrowser();
+			if (args.Length == 0)
+				cb = new  CollectionBrowser();
+			else
+				cb = new  CollectionBrowser(args[0]);
 
 			cb.BrowserClosed += new EventHandler(on_browser_closed);
 
