@@ -77,8 +77,6 @@ typedef enum
 	CSP_Type_Max
 } CSP_TYPE;
 
-#define SIMIAS_TYPE 1000
-
 #define CS_Name_Node_Type			(FLMUNICODE*)L"Object Type"
 #define CS_Type_Node_Type			CSP_Type_String
 #define CS_Id_Node_Type				1
@@ -211,6 +209,7 @@ public:
 	virtual ~CSPDB();
 	void AddRef();
 	void Release();
+	void CSPDB::SetupNameTable(HFDB hFlaim);
 	RCODE initializeDB(HFDB hFlaim, FLMBOOL created);
 	RCODE RegisterField(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT type, FLMUINT* pFieldId);
 	RCODE AddIndex(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT fieldId);

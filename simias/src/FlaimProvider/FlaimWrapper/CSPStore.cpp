@@ -162,6 +162,26 @@ void CSPDB::Release()
 	}
 }
 
+void CSPDB::SetupNameTable(HFDB hFlaim)
+{
+	RCODE		rc = FERR_OK;
+	FLMUINT		drn = 1;
+	FlmRecord	*pRec;
+	void		*pvField;
+	FLMUNICODE	name[MAX_PROPERTY_NAME];
+	FLMUINT		buffSize;
+
+	F_NameTable		nameTable;
+	nameTable.setupFromDb(hFlaim);
+
+	while(nameTable.getFromTagNum(drn, name, NULL, MAX_PROPERTY_NAME))
+	{
+		m_NameTable.addTag(name, 0, drn, 0, 0, TRUE);
+		++drn;
+	}
+
+	nameTable.clearTable();
+}
 
 RCODE CSPDB::initializeDB(HFDB hFlaim, FLMBOOL created)
 {
@@ -169,7 +189,7 @@ RCODE CSPDB::initializeDB(HFDB hFlaim, FLMBOOL created)
 		
 	if (!m_flaimInitialized)
 	{
-		rc = m_NameTable.setupFromDb(hFlaim);
+		SetupNameTable(hFlaim);
 		if (RC_OK(rc))
 		{
 			if (created)
@@ -246,7 +266,7 @@ RCODE CSPDB::RegisterField(HFDB hFlaim, FLMUNICODE *pFieldName, FLMUINT flmType,
 							rc = FlmRecordAdd(hFlaim, FLM_DICT_CONTAINER, pFieldId, pRec, 0);
 							if (RC_OK(rc))
 							{
-								m_NameTable.addTag((FLMUNICODE*)pFieldName, 0, *pFieldId, SIMIAS_TYPE, 0, TRUE);
+								rc = m_NameTable.addTag((FLMUNICODE*)pFieldName, 0, *pFieldId, 0, 0, TRUE);
 							}
 						}
 					}
