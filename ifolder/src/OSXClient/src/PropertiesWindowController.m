@@ -22,7 +22,6 @@
  ***********************************************************************/
 
 #import "PropertiesWindowController.h"
-#import "MainWindowController.h"
 #import "PropGeneralController.h"
 #import "PropSharingController.h"
 #import "iFolderWindowController.h"

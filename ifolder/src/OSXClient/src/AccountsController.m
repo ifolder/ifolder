@@ -115,7 +115,7 @@
 				@try
 				{
 					authStatus = [[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]] retain];
-					statusCode = [[authStatus statusCode] intValue];
+					statusCode = [[authStatus statusCode] unsignedIntValue];
 				}
 				@catch (NSException *e)
 				{
