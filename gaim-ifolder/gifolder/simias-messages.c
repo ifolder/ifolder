@@ -37,6 +37,13 @@
 #include "internal.h"
 #include "network.h"
 #include "util.h"
+#include "connection.h"
+
+/**
+ * Oscar Protocol Includes (needed to get the socket file descriptor to
+ * determine the correct IP address).
+ */
+#include "aim.h"
 
 /**
  * Non-public Functions
@@ -88,7 +95,7 @@ fprintf(stderr, "Sending message: %s\n", msg);
  * The returned string must be freed.
  */
 static char *
-convert_url_to_public(const char *start_url)
+convert_url_to_public(const char *start_url, GaimConnection *gc)
 {
 	char new_url[1024];
 	const char *public_ip;
@@ -96,10 +103,20 @@ convert_url_to_public(const char *start_url)
 	char *host = NULL;
 	char *port = NULL;
 	char *path = NULL;
+	void **od_pointer; /* Oscar Data Struct isn't in aim.h */
+	void *od_struct;
+	aim_conn_t *aim_conn;
 
 	if (simias_url_parse(start_url, &proto, &host, &port, &path)) {
+	
+		// The second item in the OscarData struct is the aim_conn_t;
+		od_pointer = (void **)gc->proto_data;
+		od_struct = (void *)*od_pointer;
+		od_struct++;
 		
-		public_ip = gaim_network_get_my_ip(-1);
+		aim_conn = (aim_conn_t *)od_struct;
+		
+		public_ip = gaim_network_get_my_ip(aim_conn ? aim_conn->fd : -1);
 		
 		if (path) {
 			sprintf(new_url, "%s://%s:%s/%s", proto, public_ip, port, path);
@@ -131,6 +148,7 @@ send_ping(GaimBuddy *recipient, const char *ping_type)
 	char *simias_service_url;
 	char *escaped_url;
 	char *public_url;
+	GaimConnection *gc;
 	int err;
 
 	/* Get the PublicKey for the user */
@@ -158,8 +176,10 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 
 	escaped_url = simias_escape_spaces(simias_service_url);
 	free(simias_service_url);
+	
+	gc = gaim_account_get_connection(recipient->account);
 
-	public_url = convert_url_to_public(escaped_url);
+	public_url = convert_url_to_public(escaped_url, gc);
 	if (public_url) {
 		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, base64Key, machineName, userID, public_url);
 		free(public_url);
