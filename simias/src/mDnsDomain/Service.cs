@@ -33,10 +33,13 @@ using System.Text;
 using System.Threading;
 
 using Simias;
+using Simias.Authentication;
+using Simias.Client;
 using Simias.Event;
 using Simias.POBox;
 using Simias.Service;
 using Simias.Storage;
+using Simias.Sync;
 
 using Mono.P2p.mDnsResponderApi;
 using Novell.Security.ClientPasswordManager;
@@ -53,7 +56,7 @@ namespace Simias.mDns
 		/// Used to log messages.
 		/// </summary>
 		private static readonly ISimiasLog log = 
-			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
@@ -113,14 +116,23 @@ namespace Simias.mDns
 				this.mDnsProvider = new Simias.Location.mDnsProvider();
 				Simias.Location.Locate.RegisterProvider( this.mDnsProvider );
 
+				// Register for authentication events
+				Simias.Authentication.NeedCredentialsEventSubscriber needCreds =
+					new NeedCredentialsEventSubscriber();
+				needCreds.NeedCredentials += 
+					new Simias.Authentication.NeedCredentialsEventHandler(OnCredentialsEventHandler);
+				//needCreds.NeedCredentials = 
+
 				// Last add some fake credentials for the mDns domain
+				/*
 				string mDnsTagAndPassword = "@ppk@" + "blah";
 				new NetCredential( "iFolder", Simias.mDns.Domain.ID, true, mDnsUser.ID, mDnsTagAndPassword );
+				*/
 			}
 			catch(Exception e)
 			{
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
+				log.Error( e.Message );
+				log.Error( e.StackTrace );
 			}
 		}
 
@@ -152,7 +164,7 @@ namespace Simias.mDns
 		/// </summary>
 		public void Stop()
 		{
-			log.Debug("Stop called");
+			log.Debug( "Stop called" );
 
 			if ( this.mDnsProvider != null )
 			{
@@ -166,6 +178,45 @@ namespace Simias.mDns
 
 			Simias.mDns.Sync.StopSyncThread();
 			Channel.UnregisterChannel();
+		}
+
+		/// <summary>
+		/// Handler that's called for all NeedCredential events
+		/// If the collection is a mDns slave, authenticate
+		/// to the remote server.
+		/// </summary>
+		public 
+		static 
+		void 
+		OnCredentialsEventHandler( 
+			Simias.Client.Event.NeedCredentialsEventArgs args)
+		{
+			if ( args.DomainID == Simias.mDns.Domain.ID )
+			{
+				// Attempt to authenticate
+				Simias.Storage.Collection collection =
+					Store.GetStore().GetCollectionByID( args.CollectionID );
+				if ( collection != null )
+				{
+					if ( collection.Role == SyncRoles.Slave )
+					{
+						Simias.mDns.ClientAuthentication clientAuth =
+							new Simias.mDns.ClientAuthentication();
+
+						if ( clientAuth.Authenticate( args.CollectionID ) == true )
+						{
+							// Set credentials for this collection
+							new NetCredential( 
+									"iFolder", 
+									args.CollectionID, 
+									true, 
+									collection.GetCurrentMember().UserID,
+									"@PPK@" );
+
+						}
+					}
+				}
+			}
 		}
 
 		#endregion

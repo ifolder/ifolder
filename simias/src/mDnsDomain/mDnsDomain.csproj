@@ -94,10 +94,35 @@
                     AssemblyName = "Simias"
                     HintPath = "..\..\stage\web\bin\Simias.dll"
                 />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\stage\web\bin\SimiasClient.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.Web"
+                    AssemblyName = "System.Web"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                />
+                <Reference
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "Auth.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "Channel.cs"
                     SubType = "Code"
@@ -111,6 +136,11 @@
                 <File
                     RelPath = "Location.cs"
                     SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "mDnsStub.cs"
+                    SubType = "code"
                     BuildAction = "Compile"
                 />
                 <File
