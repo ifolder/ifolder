@@ -360,6 +360,9 @@ namespace Novell.iFolder.InvitationWizard
 				{
 					subscription.SubscriptionState = SubscriptionStates.Replied;
 					subscription.SubscriptionDisposition = acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined;
+					Member member = poBox.GetCurrentMember();
+					subscription.FromName = member.Name;
+					subscription.FromIdentity = member.UserID;
 					poBox.Commit(subscription);
 				}
 				catch (SimiasException ex)
