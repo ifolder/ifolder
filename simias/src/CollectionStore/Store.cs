@@ -56,9 +56,10 @@ namespace Simias.Storage
 		static private string storeVersion = "1.0.0";
 
 		/// <summary>
-		/// Directory where store-managed files are kept.
+		/// Directories where store-managed and unmanaged files are kept.
 		/// </summary>
 		static private string storeManagedDirectoryName = "CollectionFiles";
+		static private string storeUnmanagedDirectoryName = "SimiasFiles";
 
 		/// <summary>
 		/// XML configuration tags used to get the enterprise user name.
@@ -85,6 +86,11 @@ namespace Simias.Storage
 		/// Path to where store managed files are kept.
 		/// </summary>
 		private string storeManagedPath;
+
+		/// <summary>
+		/// Path to where the unmanged files are kept.
+		/// </summary>
+		private string storeUnmanagedPath;
 
 		/// <summary>
 		/// Configuration object passed during connect.
@@ -278,8 +284,9 @@ namespace Simias.Storage
 			// Create or open the underlying database.
 			storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );
 
-			// Set the path to the store.
+			// Set the managed and unmanaged paths to the store.
 			storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
+			storeUnmanagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeUnmanagedDirectoryName );
 
 			// Either create the store or authenticate to it.
 			if ( created )
@@ -542,6 +549,16 @@ namespace Simias.Storage
 		internal string GetStoreManagedPath( string collectionID )
 		{
 			return Path.Combine( storeManagedPath, collectionID.ToLower() );
+		}
+
+		/// <summary>
+		/// Gets a path to where the store unmanaged files for the specified collection should be created.
+		/// </summary>
+		/// <param name="collectionID">Collection identifier that files will be associated with.</param>
+		/// <returns>A path string that represents the store unmanaged path.</returns>
+		internal string GetStoreUnmanagedPath( string collectionID )
+		{
+			return Path.Combine( storeUnmanagedPath, collectionID.ToLower() );
 		}
 
 		/// <summary>

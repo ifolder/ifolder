@@ -140,6 +140,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the path to where the data files are stored if this is an enterprise
+		/// server. Otherwise this returns a null.
+		/// </summary>
+		public string UnmanagedPath
+		{
+			get { return ( store.IsEnterpriseServer ) ? store.GetStoreUnmanagedPath( id ) : null; }
+		}
+
+		/// <summary>
 		/// Get the master url where the collection is hosted.
 		/// </summary>
 		public Uri MasterUrl
@@ -853,6 +862,15 @@ namespace Simias.Storage
 					Directory.Delete( ManagedPath, true );
 				}
 
+				// If this is an enterprise server delete where the files are stored
+				// for this collection.
+				string dirPath = UnmanagedPath;
+				if ( ( dirPath != null ) && Directory.Exists( dirPath ) )
+				{
+					Directory.Delete( dirPath, true );
+					dirPath = null;
+				}
+
 				// Dump all nodes in the cache that belong to this collection.
 				store.Cache.DumpCache( id );
 			}
@@ -1130,27 +1148,43 @@ namespace Simias.Storage
 			}
 
 			// Make sure that there is a collection object.
-			if ( ( cNode != null ) && ( storeBytes != 0 ) )
+			if ( cNode != null )
 			{
-				// See if this collection is new.
-				if ( cNode.Properties.State == PropertyList.PropertyListState.Add )
+				if ( storeBytes != 0 )
 				{
-					// No need to look up the old amount, just add the new amount.
-					Property p = new Property( PropertyTags.StorageSize, storeBytes );
-					p.LocalProperty = true;
-					cNode.Properties.ModifyNodeProperty( p );
+					// See if this collection is new or being restored.
+					if ( ( cNode.Properties.State == PropertyList.PropertyListState.Add ) ||
+						( cNode.Properties.State == PropertyList.PropertyListState.Restore ) )
+					{
+						// No need to look up the old amount, just add the new amount.
+						Property p = new Property( PropertyTags.StorageSize, storeBytes );
+						p.LocalProperty = true;
+						cNode.Properties.ModifyNodeProperty( p );
+					}
+					else
+					{
+						// Get the old storage size and add the delta change size.
+						Collection diskCollection = store.GetCollectionByID( id );
+						if ( diskCollection != null )
+						{
+							// Save this so it doesn't have to be looked up again by the commit code.
+							cNode.DiskNode = diskCollection;
+
+							// Set the new storage size for the collection.
+							Property p = new Property( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
+							p.LocalProperty = true;
+							cNode.Properties.ModifyNodeProperty( p );
+						}
+					}
 				}
 				else
 				{
-					// Get the old storage size and add the delta change size.
-					Collection diskCollection = store.GetCollectionByID( id );
-					if ( diskCollection != null )
+					// If this collection is in the restore state, but there are no file nodes in this
+					// commit instance, just set the size to zero.
+					if ( cNode.Properties.State == PropertyList.PropertyListState.Restore )
 					{
-						// Save this so it doesn't have to be looked up again by the commit code.
-						cNode.DiskNode = diskCollection;
-
-						// Set the new storage size for the collection.
-						Property p = new Property( PropertyTags.StorageSize, diskCollection.StorageSize + storeBytes );
+						// No need to look up the old amount, just add the new amount.
+						Property p = new Property( PropertyTags.StorageSize, storeBytes );
 						p.LocalProperty = true;
 						cNode.Properties.ModifyNodeProperty( p );
 					}
