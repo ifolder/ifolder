@@ -133,6 +133,14 @@ namespace Simias.Storage.Provider.Sqlite
 		{
 			get 
 			{
+				return 0;
+			}
+		}
+
+		public int BusyTimeout
+		{
+			get 
+			{
 				return timeout;
 			}
 			set 
