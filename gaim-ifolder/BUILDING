@@ -2,6 +2,13 @@
  Building the Gaim iFolder Plugin (gifolder)
 ===============================================================================
 
+Note for Novell Linux Desktop (NLD)
+------------------------------------
+
+	Use this revision tag: v0_82
+	Use this directory name: gaim-0.82
+
+
 1. Checkout gaim-1.1.4 from CVS
 ---------------------------------
 
