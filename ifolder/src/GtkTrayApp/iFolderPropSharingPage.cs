@@ -39,6 +39,10 @@ namespace Novell.iFolder
 		private ListStore			MemberTreeStore;
 		private Gdk.Pixbuf			ContactPixBuf;
 
+		private Button 				AddButton;
+		private Button				RemoveButton;
+		private Button				AccessButton;
+
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
@@ -106,8 +110,39 @@ namespace Novell.iFolder
 //					new Gdk.Pixbuf(Util.ImagesPath("invited-contact.png"));
 
 
+			// Setup buttons for add/remove/accept/decline
+			HBox buttonBox = new HBox();
+			buttonBox.Spacing = 6;
+			this.PackStart(buttonBox, false, false, 0);
 
+			HBox leftBox = new HBox();
+			leftBox.Spacing = 6;
+			buttonBox.PackStart(leftBox, false, false, 0);
+			HBox midBox = new HBox();
+			midBox.Spacing = 6;
+			buttonBox.PackStart(midBox, true, true, 0);
+			HBox rightBox = new HBox();
+			rightBox.Spacing = 6;
+			buttonBox.PackStart(rightBox, false, false, 0);
+
+			AddButton = new Button(Gtk.Stock.Add);
+			rightBox.PackStart(AddButton);
+			RemoveButton = new Button(Gtk.Stock.Remove);
+			rightBox.PackStart(RemoveButton);
+
+			AccessButton = new Button("Set Access");
+			leftBox.PackStart(AccessButton);
+
+			RefreshMemberList();
 		}
+
+
+		private void RefreshMemberList()
+		{
+    		Member1[] memberlist =  ifws.GetMembers(ifolder.ID);
+			MemberTreeStore.AppendValues(memberlist);
+		}
+
 
 
 
