@@ -70,8 +70,6 @@ namespace Novell.iFolder
 
 				sManager = new Simias.Service.Manager(conf);
 
-				SimiasLogManager.Configure(conf);
-
 				SyncProperties props = new SyncProperties(conf);
 				props.LogicFactory = typeof(SynkerA);
 

@@ -162,9 +162,6 @@ namespace Novell.iFolder
 		{
 			SetServiceState(ServiceStates.starting);
 
-			SimiasLogManager.Configure(conf);
-			SimiasRemoting.Configure(conf);
-
 			sManager.StartServices();
 			sManager.WaitForServicesStarted();
 
@@ -337,7 +334,6 @@ namespace Novell.iFolder
 
 		static void show_server_info(object o, EventArgs args)
 		{
-			SimiasLogManager.Configure(conf);
 			ServerInfoDialog sid = new ServerInfoDialog();
 			int rc = sid.Run();
 			if(rc == -5)
