@@ -67,8 +67,6 @@ namespace Simias
 				{
 					// location of the entry assembly as the prefix
 					newprefix = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-					newprefix = Path.Combine(newprefix, "../..");
-					newprefix = Path.GetFullPath(newprefix);
 				}
 				catch
 				{
