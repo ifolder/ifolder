@@ -902,6 +902,9 @@ namespace Novell.iFolder.FormsTrayApp
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Sets the ServiceManager.
+		/// </summary>
 		public Simias.Service.Manager ServiceManager
 		{
 			set
@@ -910,6 +913,9 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
+		/// <summary>
+		/// Sets the iFolderManager.
+		/// </summary>
 		public iFolderManager IFManager
 		{
 			set
@@ -920,6 +926,10 @@ namespace Novell.iFolder.FormsTrayApp
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// Set the run value in the Windows registery.
+		/// </summary>
+		/// <param name="enable"><b>True</b> will set the run value.</param>
 		static public void SetRunValue(bool enable)
 		{
 			RegistryKey runKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");

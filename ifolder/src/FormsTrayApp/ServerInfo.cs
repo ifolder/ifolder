@@ -53,6 +53,10 @@ namespace Novell.iFolder.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs a ServerInfo object.
+		/// </summary>
+		/// <param name="config">The Configuration object to use.</param>
 		public ServerInfo(Configuration config)
 		{
 			//

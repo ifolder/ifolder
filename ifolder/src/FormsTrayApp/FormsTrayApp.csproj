@@ -123,6 +123,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "BalloonType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FormsTrayApp.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -156,6 +161,11 @@
                     RelPath = "MessageForm.resx"
                     DependentUpon = "MessageForm.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NotifyIconBalloonTip.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "ServerInfo.cs"

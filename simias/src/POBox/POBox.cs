@@ -223,7 +223,7 @@ namespace Simias.POBox
 			POBox poBox = null;
 			Collection collection = store.GetCollectionByID(id);
 	
-			if (collection != null)
+			if ((collection != null) && collection.IsType(collection, typeof(POBox).Name))
 			{
 				poBox = new POBox(store, collection);
 			}

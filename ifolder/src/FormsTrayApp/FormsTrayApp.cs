@@ -36,6 +36,9 @@ using Novell.iFolder.Win32Util;
 using Simias;
 using Simias.Event;
 using Simias.Service;
+using Simias.Storage;
+using Simias.POBox;
+using CustomUIControls;
 
 namespace Novell.iFolder.FormsTrayApp
 {
@@ -51,15 +54,19 @@ namespace Novell.iFolder.FormsTrayApp
 		private Thread workerThread = null;
 
 		private Icon trayIcon;
-        private const int numberOfIcons = 10;
+        private const int numberOfIcons = 2;//10;
 		private Icon[] uploadIcons = new Icon[numberOfIcons];
 
 		private SyncManagerStates syncState = SyncManagerStates.Idle;
+
+		/// <summary>
+		/// Event used to animate the notify icon.
+		/// </summary>
 		protected AutoResetEvent synkEvent = null;
 
 //		private MyTraceForm traceForm;
 
-		private bool noTray = false;
+//		private bool noTray = false;
 
 		private delegate void AnimateDelegate(int index);
 		private AnimateDelegate animateDelegate;
@@ -85,6 +92,9 @@ namespace Novell.iFolder.FormsTrayApp
 		private iFolderManager ifManager;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		private Configuration config;
+		private EventSubscriber subscriber;
+		private IntPtr hwnd;
+		private int iconID;
 		//private const int waitTime = 3000;
 		#endregion
 
@@ -111,6 +121,9 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
+		/// <summary>
+		/// Constructs a FormsTrayApp object.
+		/// </summary>
 		public FormsTrayApp()
 		{
 			InitializeComponent();
@@ -129,11 +142,13 @@ namespace Novell.iFolder.FormsTrayApp
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
 
 				trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
-				for (int i = 0; i < numberOfIcons; i++)
-				{
-					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
-					uploadIcons[i] = new Icon(upIcon);
-				}
+				uploadIcons[0] = new Icon(trayIcon, trayIcon.Size);
+				uploadIcons[1] = new Icon(Path.Combine(basePath, "ifolder_message.ico"));
+//				for (int i = 0; i < numberOfIcons; i++)
+//				{
+//					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
+//					uploadIcons[i] = new Icon(upIcon);
+//				}
 			
 				notifyIcon1.Icon = trayIcon;
 				this.ShowInTaskbar = false;
@@ -147,19 +162,27 @@ namespace Novell.iFolder.FormsTrayApp
 			catch (Exception e)
 			{
 				logger.Debug(e, "Loading icons");
-				noTray = true;
+//				noTray = true;
 			}		
+
+			Type t = notifyIcon1.GetType();
+			hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
+			iconID = (int)t.GetField("id",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1);
 
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.FormsTrayApp_Closing);
 			this.Load += new System.EventHandler(FormsTrayApp_Load);
 		}
 
+		/// <summary>
+		/// Disposes the object.
+		/// </summary>
+		/// <param name="disposing"></param>
 		protected override void Dispose( bool disposing )
 		{
 			// Clean up any components being used.
-				if( disposing )
-					if (components != null)
-						components.Dispose();
+			if( disposing )
+				if (components != null)
+					components.Dispose();
 
 			base.Dispose( disposing );
 		}
@@ -187,6 +210,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuPOBox_Click(object sender, System.EventArgs e)
 		{
 			MessageForm messages = new MessageForm(config);
+			messages.MessagesServiced += new Novell.iFolder.FormsTrayApp.MessageForm.MessagesServicedDelegate(messages_MessagesServiced);
 			messages.ShowDialog();
 		}
 
@@ -228,6 +252,7 @@ namespace Novell.iFolder.FormsTrayApp
 			else
 			{
 				ConflictResolver conflictResolver = new ConflictResolver();
+				conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
 				conflictResolver.Show();
 			}
 		}
@@ -278,12 +303,36 @@ namespace Novell.iFolder.FormsTrayApp
 			ShutdownTrayApp();
 		}
 
+		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
+		{
+			// TODO: we may need to check the state of messages before we stop animating the icon.
+			this.syncState = SyncManagerStates.Idle;
+		}
+
+		private void messages_MessagesServiced(object sender, EventArgs e)
+		{
+			// TODO: we may need to check that no conflicts exist before we stop animating the icon.
+			this.syncState = SyncManagerStates.Idle;
+		}
+
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
 			// Show/hide store browser menu item based on whether or not the file is installed.
 			this.menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
 			this.menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
 			this.menuSeparator1.Visible = this.menuStoreBrowser.Visible | this.menuEventLogReader.Visible;
+
+			bool collisions = false;
+			foreach (iFolder ifolder in ifManager)
+			{
+				if (ifolder.HasCollisions())
+				{
+					collisions = true;
+					break;
+				}
+			}
+
+			this.menuConflictResolver.Enabled = collisions;
 		}
 
 		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
@@ -340,7 +389,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 				synkEvent = new AutoResetEvent(false);
 
-//				animateDelegate = new AnimateDelegate(AnimateIcon);
+				animateDelegate = new AnimateDelegate(AnimateIcon);
 
 				// Start the icon animation worker thread.
 				if (workerThread == null)
@@ -350,6 +399,12 @@ namespace Novell.iFolder.FormsTrayApp
 					Console.WriteLine("Starting worker thread");
 					workerThread.Start();
 				}
+
+				// Set up the event handlers to watch for create, delete, and change events.
+				subscriber = new EventSubscriber();
+				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
+				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
+				subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
 
 				// Create the trace window ... initially hidden.
 /*				traceForm = new MyTraceForm();
@@ -389,6 +444,104 @@ namespace Novell.iFolder.FormsTrayApp
 		private void serviceManager_Shutdown(ShutdownEventArgs args)
 		{
 			ShutdownTrayApp();
+		}
+
+		private void subscriber_NodeCreated(NodeEventArgs args)
+		{
+			try
+			{
+				POBox poBox = POBox.GetPOBoxByID(Store.GetStore(), args.Collection);
+				if (poBox != null)
+				{
+					Node node = poBox.GetNodeByID(args.ID);
+					if (node != null)
+					{
+						Subscription sub = new Subscription(node);
+
+						if ((sub.SubscriptionState == SubscriptionStates.Received) &&
+							(!poBox.Domain.Equals(Domain.WorkGroupDomainID)))
+						{
+							syncState = SyncManagerStates.Active;
+
+							// TODO: check this...
+							this.Text = "A message needs your attention";
+
+							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+							balloonTip.ShowBalloon(
+								hwnd,
+								iconID,
+								BalloonType.Info,
+								"Action Required",
+								"A subscription has just been received from " + sub.FromName);
+
+							synkEvent.Set();
+						}
+					}
+				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "OnNodeCreated");
+			}
+		}
+
+		private void subscriber_NodeDeleted(NodeEventArgs args)
+		{
+			// TODO: implement this if needed.
+		}
+
+		private void subscriber_NodeChanged(NodeEventArgs args)
+		{
+			POBox poBox = POBox.GetPOBoxByID(Store.GetStore(), args.Collection);
+			if (poBox != null)
+			{
+				Node node = poBox.GetNodeByID(args.ID);
+				if (node != null)
+				{
+					Subscription sub = new Subscription(node);
+
+					if (sub.SubscriptionState == SubscriptionStates.Pending)
+					{
+						syncState = SyncManagerStates.Active;
+
+						// TODO: this doesn't work.
+						this.Text = "A message needs your attention";
+
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							"Action Required",
+							"A subscription from " + sub.ToName + " needs your approval.");
+						synkEvent.Set();
+					}
+				}
+			}
+			else
+			{
+				Collection c = Store.GetStore().GetCollectionByID(args.Collection);
+				if (c != null)
+				{
+					if (c.HasCollisions() && c.IsType(c, typeof(iFolder).Name))
+					{
+						syncState = SyncManagerStates.Active;
+
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							"Action Required",
+							"A collision has been detected in iFolder:\n" + c.Name);
+						synkEvent.Set();
+					}
+				}
+			}
 		}
 		#endregion
 
@@ -550,22 +703,6 @@ namespace Novell.iFolder.FormsTrayApp
 
 		}
 
-/*		private void AnimateIcon(int index)
-		{
-			Console.WriteLine("In AnimateIcon: state = " + syncState.ToString());
-			switch (syncState)
-			{
-				case SyncManagerStates.Active:
-					notifyIcon1.Icon = uploadIcons[index];
-					break;
-				default:
-					notifyIcon1.Icon = trayIcon;
-					break;
-			}
-
-			Console.WriteLine("Leaving AnimateWorker");
-		}*/
-
 		private void ShutdownTrayApp()
 		{
 			Cursor.Current = Cursors.WaitCursor;
@@ -616,9 +753,28 @@ namespace Novell.iFolder.FormsTrayApp
 
 			Application.Exit();
 		}
+
+		private void AnimateIcon(int index)
+		{
+			Console.WriteLine("In AnimateIcon: state = " + syncState.ToString());
+			switch (syncState)
+			{
+				case SyncManagerStates.Active:
+					notifyIcon1.Icon = uploadIcons[index];
+					break;
+				default:
+					notifyIcon1.Icon = trayIcon;
+					break;
+			}
+
+			Console.WriteLine("Leaving AnimateWorker");
+		}
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// The worker thread for animating the notify icon.
+		/// </summary>
 		public void AnimateWorker()
 		{
 			int i = 0;
@@ -628,7 +784,7 @@ namespace Novell.iFolder.FormsTrayApp
 				IAsyncResult r = BeginInvoke(animateDelegate, new object[] {i});
 				if (syncState == SyncManagerStates.Active)
 				{
-					Thread.Sleep(100);
+					Thread.Sleep(1000);
 				}
 				else
 				{
@@ -642,5 +798,25 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 		#endregion
+
+		private const int WM_MYID = 0xbd1;
+
+		/// <summary>
+		/// Process messages in the Windows message loop.
+		/// </summary>
+		/// <param name="m"></param>
+		[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
+		protected override void WndProc(ref System.Windows.Forms.Message m) 
+		{
+//			Debug.WriteLine("Message = " + m.Msg.ToString());
+			// Listen for operating system messages.
+			switch (m.Msg)
+			{
+					// TODO: need to get this message to fire from the balloon window.
+				case WM_MYID:
+					break;                
+			}
+			base.WndProc(ref m);
+		}
 	}
 }
