@@ -25,11 +25,13 @@
 using System;
 using System.IO;
 using System.Text;
+
 using NUnit.Framework;
-using Novell.iFolder;
-using Simias.Identity;
+
 using Simias.Storage;
 using Simias.Agent;
+
+using Novell.iFolder;
 
 namespace Novell.iFolder.Tests
 {

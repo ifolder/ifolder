@@ -28,6 +28,8 @@ using System.Net;
 using Simias.Storage;
 using Simias.Agent;
 
+using Novell.AddressBook;
+
 namespace Novell.iFolder
 {
 	/// <summary>
@@ -1055,7 +1057,7 @@ namespace Novell.iFolder
 			if (invite)
 			{
 				// inform the notification service that we have shared
-				InviteAgent agent = (new AgentFactory()).GetInviteAgent();
+				IInviteAgent agent = (new AgentFactory()).GetInviteAgent();
 				Invitation invitation = agent.CreateInvitation(collection, userID);
 
 				// TODO: where should we discover the contact information?
