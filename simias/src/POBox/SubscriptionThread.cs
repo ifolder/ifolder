@@ -295,18 +295,28 @@ namespace Simias.POBox
 		{
 			bool result = false;
 
-			log.Info("DoDelivered::Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+			log.Info("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
 
 			POBoxService poService = new POBoxService();
 			poService.Url = this.poServiceUrl;
 
 			try
 			{
+				log.Info("  calling the PO Box server to get subscription state");
+
 				SubscriptionInformation subInfo =
 					poService.GetSubscriptionInfo(
 						subscription.DomainID,
 						subscription.FromIdentity,
 						subscription.MessageID);
+
+				if (subInfo != null)
+				{
+					log.Info("  subInfo.FromName: " + subInfo.FromName);
+					log.Info("  subInfo.ToName: " + subInfo.ToName);
+					log.Info("  subInfo.State: " + subInfo.State.ToString());
+					log.Info("  subInfo.Disposition: " + subInfo.Disposition.ToString());
+				}
 
 				// update subscription
 				if (subInfo.State == (int) SubscriptionStates.Responded)
