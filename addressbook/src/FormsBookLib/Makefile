@@ -13,15 +13,24 @@ include ../../config.mk
 FormsBookLib_SOURCES = AddBook.cs AssemblyInfo.cs BooksContacts.cs ContactEditor.cs ContactPicker.cs
 FormsBookLib_INCLUDES = 
 FormsBookLib_FLAGS = /t:library
-FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll AddressBook.dll CollectionStore.dll
-FormsBookLib_LIBPATH = $(SIMIAS_ROOT)/src/stage
+FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+FormsBookLib_LIBPATH = Identity Configuration StoreProvider CollectionEvents CollectionStore AddressBook
 FormsBookLib_LDFLAGS = 
+FormsBookLib_LIBPATH := $(addprefix $(SIMIAS_ROOT)/src/, $(FormsBookLib_LIBPATH))
+
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = FormsBookLib.dll
+DATA_FILES =
+TEST_BIN_FILES =
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
-TARGETS = FormsBookLib.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES)
+#TARGETS = FormsBookLib.dll 
 CLEAN_FILES = Check.xml FormsBookLib.pdb FormsBookLib.Doc.xml  FormsBookLib.xml FormsBookLib.Doc.xml
 CLEAN_DIRS = bin obj 
 NUNIT_TESTS = 
@@ -52,26 +61,26 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
 
 # clean
 clean: $(CLEAN_TARGETS)
-	-$(RMDIR) $(CLEAN_DIRS)
+#	-$(RMDIR) $(CLEAN_DIRS)
 
 $(CLEAN_TARGETS): 
 	$(call RM_IF_EXISTS,$(subst clean.,,$@))
 
 # test
-test:
-	@echo No NUnit test assemblies found.
+#test:
+#	@echo No NUnit test assemblies found.
 
 # stage files
-$(STAGE_FILES): $(TARGETS)
-	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
+# $(STAGE_FILES): $(TARGETS)
+#	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
 
 # extra stage files
-$(EXTRA_STAGE_FILES):
-	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
+#$(EXTRA_STAGE_FILES):
+#	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
 # FormsBookLib targets
@@ -88,4 +97,6 @@ VPATH := $(VPATH) $(FormsBookLib_LIBPATH) $(FormsBookLib_INCLUDES)
 
 FormsBookLib.dll: $(FormsBookLib_SOURCES) $(FormsBookLib_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:FormsBookLib.Doc.xml $(CSCFLAGS) $(FormsBookLib_FLAGS) $(FormsBookLib_LIBS:%=/r:%) $(FormsBookLib_LIBPATH:%=/lib:%) $(FormsBookLib_SOURCES)
+
+include ../../common.mk
 

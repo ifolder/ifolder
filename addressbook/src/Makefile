@@ -133,7 +133,7 @@ $(SUBDIRS):
 #=============================================================================
 CLEAN_SUBDIRS = $(addprefix clean., $(SUBDIRS))
 
-.PHONY: clean $(CLEAN_SUBDIRS)
+.PHONY: clean
 
 clean: $(CLEAN_SUBDIRS)
 
@@ -319,6 +319,9 @@ report:
 # File CVS History:
 #
 # $Log$
+# Revision 1.3.2.2  2004/02/25 05:34:13  cgaisford
+# updated all makefiles to support new targets
+#
 # Revision 1.3.2.1  2004/02/25 04:41:04  cgaisford
 # updated files to use new make targets
 #

@@ -61,7 +61,7 @@ TARGETS = $(BIN_FILES) $(LIB_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES)
 CLEAN_FILES = Check.xml iFolder.xml Check.xml
 NUNIT_TESTS =
 #STAGE_FILES = $(TARGETS) *.png
-STAGE_FILES = $(TARGETS) book.png briefcase.png contact.png contact_me.png cellphone.png connect_to_url-16.xpm galeon.png globe.png house.png ico-mail.png blankhead.png addressbook.glade
+#STAGE_FILES = $(TARGETS) book.png briefcase.png contact.png contact_me.png cellphone.png connect_to_url-16.xpm galeon.png globe.png house.png ico-mail.png blankhead.png addressbook.glade
 #STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
 
 #=============================================================================

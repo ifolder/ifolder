@@ -13,15 +13,24 @@ include ../../config.mk
 Book_SOURCES = AssemblyInfo.cs FormsAddrBook.cs
 Book_INCLUDES = 
 Book_FLAGS = /t:winexe $(ICON_FLAG)App$(ICON_EXT)
-Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll AddressBook.dll
-Book_LIBPATH = ../FormsBookLib $(SIMIAS_ROOT)/src/stage
+Book_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) FormsBookLib.dll  Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+Book_LIBPATH = Identity Configuration StoreProvider CollectionEvents CollectionStore AddressBook
 Book_LDFLAGS = 
+Book_LIBPATH := ../FormsBookLib $(addprefix $(SIMIAS_ROOT)/src/, $(Book_LIBPATH))
+
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = Book.exe
+LIB_FILES = 
+DATA_FILES =
+TEST_BIN_FILES =
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
-TARGETS = Book.exe 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES)
+#TARGETS = Book.exe 
 CLEAN_FILES = Check.xml Book.pdb Book.Doc.xml  FormsAddrBook.xml FormsAddrBook.Doc.xml
 CLEAN_DIRS = bin obj 
 NUNIT_TESTS = 
@@ -52,26 +61,26 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
 
 # clean
 clean: $(CLEAN_TARGETS)
-	-$(RMDIR) $(CLEAN_DIRS)
+#	-$(RMDIR) $(CLEAN_DIRS)
 
 $(CLEAN_TARGETS): 
 	$(call RM_IF_EXISTS,$(subst clean.,,$@))
 
 # test
-test:
-	@echo No NUnit test assemblies found.
+#test:
+#	@echo No NUnit test assemblies found.
 
 # stage files
-$(STAGE_FILES): $(TARGETS)
-	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
+#$(STAGE_FILES): $(TARGETS)
+#	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
 
 # extra stage files
-$(EXTRA_STAGE_FILES):
-	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
+#$(EXTRA_STAGE_FILES):
+#	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
 # Book targets
@@ -88,4 +97,6 @@ VPATH := $(VPATH) $(Book_LIBPATH) $(Book_INCLUDES)
 
 Book.exe: $(Book_SOURCES) $(Book_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Book.Doc.xml $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_SOURCES)
+
+include ../../common.mk
 
