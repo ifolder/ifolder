@@ -35,8 +35,6 @@ install-exec-local: Simias.dll
 	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
 	cp -f $(srcdir)/$(LOG4NET_DIR)/../../../../LICENSE.txt $(DESTDIR)$(datadir)/simias/log4net.LICENSE.txt
 
-installcheck-local: install
-
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f $(SQLITELIB)
 	cd $(DESTDIR)$(libdir); rm -f Novell.Security.SecureSink*.dll
@@ -46,7 +44,7 @@ uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f $(SQLITELIB)
 	cd $(DESTDIR)$(datadir)/simias; rm -f log4net.LICENSE.txt
 
-CLEAN_FILES = Simias.dll Simias.doc.xml
+CLEAN_FILES = Simias.dll Simias.doc.xml $(DEBUG_FILES)
 
 clean-local:
 	rm -rf $(CLEAN_FILES)
