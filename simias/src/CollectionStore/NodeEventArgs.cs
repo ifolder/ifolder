@@ -80,6 +80,20 @@ namespace Simias.Storage
 		string					collection;
 		string					type;
 		int						eventId;
+
+		/// <summary>
+		/// Flags for the node event.
+		/// </summary>
+		[Flags]
+		enum EventFlags : short
+		{
+			/// <summary>
+			/// The event was caused by local only properties.
+			/// </summary>
+			LocalOnly = 1,
+		}
+
+		EventFlags				flags;
 		
 		#endregion
 
@@ -174,6 +188,24 @@ namespace Simias.Storage
 		public string Node
 		{
 			get {return ID;}
+		}
+
+		/// <summary>
+		/// Gets or sets if the event refers to local only changes.
+		/// </summary>
+		public bool LocalOnly
+		{
+			get
+			{
+				return ((flags & EventFlags.LocalOnly) > 0);
+			}
+			set
+			{
+				if (value)
+					flags |= EventFlags.LocalOnly;
+				else
+					flags &= ~EventFlags.LocalOnly;
+			}
 		}
 
 		#endregion

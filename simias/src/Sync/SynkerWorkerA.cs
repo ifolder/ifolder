@@ -73,6 +73,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 		ss = (SynkerServiceA)service;
 		HadErrors = false;
 
+		// Run the dredger
+		new Dredger(collection, false);
+
 		stopping = false;
 		Log.log.Debug("-------- starting sync pass for collection {0}", collection.Name);
 		try

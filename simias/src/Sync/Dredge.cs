@@ -145,9 +145,12 @@ public class Dredger
 			// it's a new node
 			if (type == typeof(FileNode).Name)
 			{
+				FileInfo fi = new FileInfo(path);
 				FileNode fnode = new FileNode(collection, parentNode, name);
-				fnode.LastWriteTime = File.GetLastWriteTime(path);
-				fnode.CreationTime = File.GetCreationTime(path);
+				fnode.LastWriteTime = fi.LastWriteTime;
+				fnode.LastAccessTime = fi.LastAccessTime;
+				fnode.CreationTime = fi.CreationTime;
+				fnode.Length = fi.Length;
 				log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 				collection.Commit(fnode);
 				foundChange = true;
@@ -168,13 +171,16 @@ public class Dredger
 		else if (type == typeof(FileNode).Name)
 		{
 			// here we are just checking for modified files
+			FileInfo fi = new FileInfo(path);
 			FileNode unode = new FileNode(node);
-			DateTime lastWrote = File.GetLastWriteTime(path);
-			DateTime created = File.GetCreationTime(path);
+			DateTime lastWrote = fi.LastWriteTime;
+			
 			if (unode.LastWriteTime != lastWrote)
 			{
+				// Don't reset the Createion time.
 				unode.LastWriteTime = lastWrote;
-				unode.CreationTime = created;
+				unode.LastAccessTime = fi.LastAccessTime;
+				unode.Length = fi.Length;
 				log.Debug("Updating file node for {0} {1}", path, node.ID);
 				collection.Commit(unode);
 				foundChange = true;
@@ -354,9 +360,11 @@ public class Dredger
 											new Dredger(col, true);
 											break;
 										case SyncCollectionRoles.Local:
-										case SyncCollectionRoles.Slave:
-										default:
 											new Dredger(col, false);
+											break;
+										case SyncCollectionRoles.Slave:
+											// This will be dreged from the sync service.
+										default:
 											break;
 									}
 								}
