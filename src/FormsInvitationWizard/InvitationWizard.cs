@@ -233,7 +233,7 @@ namespace Novell.iFolder.InvitationWizard
 			this.welcomePage.Name = "welcomePage";
 			this.welcomePage.Size = new System.Drawing.Size(496, 304);
 			this.welcomePage.TabIndex = 1;
-			this.welcomePage.WelcomeTitle = "Welcome to the Denali Invitation Wizard";
+			this.welcomePage.WelcomeTitle = "Welcome to the iFolder Invitation Wizard";
 			// 
 			// selectInvitationPage
 			// 
@@ -269,7 +269,7 @@ namespace Novell.iFolder.InvitationWizard
 			this.completionPage.Name = "completionPage";
 			this.completionPage.Size = new System.Drawing.Size(496, 304);
 			this.completionPage.TabIndex = 1;
-			this.completionPage.WelcomeTitle = "Completing the Denali Invitation Wizard";
+			this.completionPage.WelcomeTitle = "Completing the iFolder Invitation Wizard";
 			// 
 			// InvitationWizard
 			// 
@@ -424,7 +424,7 @@ namespace Novell.iFolder.InvitationWizard
 			get
 			{
 				// TODO - may need to re-work this ... especially for localization (not good to cat strings together).
-				StringBuilder sb = new StringBuilder("You have successfully completed the Denali Invitation Wizard.\n\n");
+				StringBuilder sb = new StringBuilder("You have successfully completed the iFolder Invitation Wizard.\n\n");
 				sb.AppendFormat("You have choosen to {0} the {1} iFolder from {2}.\n\n", this.acceptDeclinePage.Accept ? "accept" : "decline", this.Invitation.CollectionName, this.Invitation.FromName);
 				if (this.acceptDeclinePage.Accept)
 				{
