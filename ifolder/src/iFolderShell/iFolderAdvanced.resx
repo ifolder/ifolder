@@ -4229,15 +4229,15 @@
 		<value>This iFolder will sync with the host every {0} {1}.</value>
 	</data>
 	<data name="seconds">
-		<value>seconds</value>
+		<value>second(s)</value>
 	</data>
 	<data name="minutes">
-		<value>minutes</value>
+		<value>minute(s)</value>
 	</data>
 	<data name="hours">
-		<value>hours</value>
+		<value>hour(s)</value>
 	</data>
 	<data name="days">
-		<value>days</value>
+		<value>day(s)</value>
 	</data>
 </root>
