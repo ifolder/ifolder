@@ -496,7 +496,8 @@ internal class SyncOps
 		{
 			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
 			eventCookie = logReader.GetEventContext();
-			cookie = eventCookie.ToString();
+			if (eventCookie != null)
+				cookie = eventCookie.ToString();
 			return false;
 		}
 	}

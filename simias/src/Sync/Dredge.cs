@@ -337,6 +337,9 @@ namespace Simias.Sync
 		void DoNode(DirNode parentNode, string path, bool isDir)
 		{
 			string name = Path.GetFileName(path);
+
+			if (isSyncFile(name))
+				return;
 		
 			// find if node for this file or dir already exists
 			// delete nodes that are wrong type
@@ -458,7 +461,7 @@ namespace Simias.Sync
 			// merge files from file system to store
 			foreach (string file in Directory.GetFiles(path))
 			{
-				if (File.GetLastWriteTime(file) > lastDredgeTime)
+				if (File.GetLastWriteTime(file) > lastDredgeTime && !isSyncFile(Path.GetFileName(file)))
 				{
 					// here we are just checking for modified files
 					BaseFileNode unode = (BaseFileNode)collection.GetNodeByID(Path.GetFileName(file));
