@@ -191,7 +191,7 @@ namespace Simias.mDns
 						this.id, 
 						this.description,
 						localUri,
-						Simias.Storage.Domain.DomainRole.Master);
+						Simias.Sync.SyncRoles.Master );
 				}
 
 				//
@@ -204,16 +204,16 @@ namespace Simias.mDns
 
 				try
 				{
-					mdnsRoster = rDomain.GetRoster( store );
+					mdnsRoster = rDomain.Roster;
 				}
 				catch{}
 				if (mdnsRoster == null)
 				{
-					mdnsRoster = new Roster( store, store.GetDomain( this.id ));
+					mdnsRoster = new Roster( store, store.GetDomain( this.id ) );
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
 					rMember.IsOwner = true;
 					//rMember.Properties.ModifyProperty( "POBox", hostAddress );
-					changeList.Add(mdnsRoster);
+					changeList.Add( mdnsRoster );
 					//mdnsRoster.Commit( new Node[] { mdnsRoster, rMember } );
 				}
 				else
@@ -263,7 +263,6 @@ namespace Simias.mDns
 							new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
 						pMember.IsOwner = true;
 						poBox.Commit(new Node[] { pMember });
-
 					}
 				}
 
@@ -317,7 +316,7 @@ namespace Simias.mDns
 					this.id, 
 					this.description,
 					localUri,
-					Simias.Storage.Domain.DomainRole.Master);
+					Simias.Sync.SyncRoles.Master );
 
 				// Create an empty roster for the mDns domain.
 				Roster mdnsRoster = new Roster( store, store.GetDomain( this.id ));
@@ -357,14 +356,14 @@ namespace Simias.mDns
 			try
 			{
 				Store store = Store.GetStore();
-				mdnsDomain = store.GetDomain(this.id);
-				if (mdnsDomain != null)
+				mdnsDomain = store.GetDomain( this.id );
+				if ( mdnsDomain != null )
 				{
-					Roster roster = mdnsDomain.GetRoster(store);
-					Member member = roster.GetMemberByName(mDnsUserName);
+					Roster roster = mdnsDomain.Roster;
+					Member member = roster.GetMemberByName( mDnsUserName );
 					mDnsUserID = member.ID;
 					Simias.POBox.POBox pobox = 
-						Simias.POBox.POBox.FindPOBox(store, this.id, member.ID);
+						Simias.POBox.POBox.FindPOBox( store, this.id, member.ID );
 					mDnsPOBoxID = pobox.ID;
 					exists = true;
 				}

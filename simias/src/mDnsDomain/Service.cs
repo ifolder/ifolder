@@ -57,11 +57,10 @@ namespace Simias.mDns
 
 		//private string mDnsUserID;
 		//private string mDnsPOBoxID;
-		private bool registered = false;
-		private IResourceRegistration rr = null;
 		private	IMDnsEvent cEvent = null;
 
 		private	Store store = null;
+		private Simias.mDns.User mDnsUser = null;
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
@@ -103,110 +102,14 @@ namespace Simias.mDns
 			Simias.mDns.Domain mdnsDomain = null;
 			try
 			{
-				mdnsDomain = new Simias.mDns.Domain(true);
+				mdnsDomain = new Simias.mDns.Domain( true );
+				this.mDnsUser = new Simias.mDns.User();
+				this.mDnsUser.BroadcastUp();
 			}
 			catch(Exception e)
 			{
 				log.Error(e.Message);
 				log.Error(e.StackTrace);
-			}
-
-			store.DefaultDomain = mdnsDomain.ID;
-
-			//
-			// Don't register with mDns unless the mDnsDomain appears
-			// setup and in working order
-			//
-
-			if (mdnsDomain != null)
-			{
-				try
-				{
-					Hashtable propsTcp = new Hashtable();
-					propsTcp["port"] = 0;
-					propsTcp["rejectRemoteRequests"] = true;
-
-					BinaryServerFormatterSinkProvider
-						serverBinaryProvider = new BinaryServerFormatterSinkProvider();
-
-					BinaryClientFormatterSinkProvider
-						clientBinaryProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-					serverBinaryProvider.TypeFilterLevel =
-						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-					TcpChannel tcpChnl = new TcpChannel(propsTcp, clientBinaryProvider, serverBinaryProvider);
-					ChannelServices.RegisterChannel(tcpChnl);
-
-					/*
-					TcpChannel chnl = new TcpChannel();
-					ChannelServices.RegisterChannel(chnl);
-					*/
-
-					//
-					// Temp code automatically add new Rendezvous
-					// _ifolder_members to my Rendezvous Workgroup Roster
-					//
-
-					this.cEvent = 
-						(IMDnsEvent) Activator.GetObject(
-						typeof(Mono.P2p.mDnsResponderApi.IMDnsEvent),
-						"tcp://localhost:8091/IMDnsEvent.tcp");
-
-					mDnsEventWrapper eventWrapper = new mDnsEventWrapper();
-					eventWrapper.OnLocalEvent += new mDnsEventHandler(OnMDnsEvent);
-					mDnsEventHandler evntHandler = new mDnsEventHandler(eventWrapper.LocalOnEvent);
-					cEvent.OnEvent += evntHandler;
-
-					IRemoteFactory factory = 
-						(IRemoteFactory) Activator.GetObject(
-						typeof(IRemoteFactory),
-						"tcp://localhost:8091/mDnsRemoteFactory.tcp");
-					
-					rr = factory.GetRegistrationInstance();
-
-					int status = rr.RegisterHost(mdnsDomain.Host, myAddress);
-					if (status == 0)
-					{
-						// Register member as a service location
-						status = 
-							rr.RegisterServiceLocation(
-								mdnsDomain.Host,
-								mdnsDomain.User,
-								(int) 8086, 
-								0, 
-								0);
-						if (status == 0)
-						{
-							status = 
-								rr.RegisterPointer(
-									"_ifolder_member._tcp.local", 
-									mdnsDomain.User);
-							if (status == 0)
-							{
-								registered = true;
-							}
-							else
-							{
-								rr.DeregisterServiceLocation(mdnsDomain.Host, mdnsDomain.User);
-								rr.DeregisterHost(mdnsDomain.Host);
-							}
-						}
-						else
-						{
-							rr.DeregisterHost(mdnsDomain.Host);
-						}
-					}
-				}
-				catch(Exception e2)
-				{
-					log.Error(e2.Message);
-					log.Error(e2.StackTrace);
-				}			
-			}
-			else
-			{
-				log.Error("Failed to create/open the mDns Domain, Roster, POBox");
 			}
 		}
 
@@ -240,12 +143,9 @@ namespace Simias.mDns
 		{
 			log.Debug("Stop called");
 
-			if ( this.registered == true && rr != null )
+			if ( this.mDnsUser != null )
 			{
-				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain(false);
-				rr.DeregisterPointer("_ifolder_member._tcp.local", mdnsDomain.User);
-				rr.DeregisterServiceLocation(mdnsDomain.Host, mdnsDomain.User);
-				rr.DeregisterHost(mdnsDomain.Host);
+				this.mDnsUser.BroadcastDown();
 			}
 		}
 
@@ -298,7 +198,7 @@ namespace Simias.mDns
 						Store store = Store.GetStore();
 						Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain(false);
 						Simias.Storage.Domain rDomain = store.GetDomain( mdnsDomain.ID );
-						Simias.Storage.Roster mdnsRoster = rDomain.GetRoster( store );
+						Simias.Storage.Roster mdnsRoster = rDomain.Roster;
 
 						Member mdnsMember = mdnsRoster.GetMemberByName( ((Ptr) cResource).Target );
 						if ( mdnsMember != null )
@@ -319,8 +219,8 @@ namespace Simias.mDns
 					}
 					catch(Exception e)
 					{
-						log.Error(e.Message);
-						log.Error(e.StackTrace);
+						log.Error( e.Message );
+						log.Error( e.StackTrace );
 					}
 				}
 			}
