@@ -221,7 +221,7 @@ namespace SloggerApplication
 					EntryTreeStore.GetValue(iter,0);
 
 				TitleEntry.Text = curSlogEntry.Title;
-				DateEntry.Text = curSlogEntry.Name;
+				DateEntry.Text = curSlogEntry.PublishDate;
 				SlogTextView.Buffer.Text = curSlogEntry.Description;
 
 				DeleteButton.Sensitive = true;

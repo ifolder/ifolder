@@ -127,7 +127,8 @@ namespace Novell.Collaboration
 				// FIXME should just get the creation date of the node
 				try
 				{
-					return(this.Properties.GetSingleProperty(dateProperty).ToString());
+					return(this.CreationTime.ToString());
+					//return(this.Properties.GetSingleProperty(dateProperty).ToString());
 				}
 				catch{}
 				return("");
@@ -139,11 +140,12 @@ namespace Novell.Collaboration
 				{
 					if (value != null)
 					{
-						this.Properties.ModifyProperty(dateProperty, (string) value);
+						
+						//this.Properties.ModifyProperty(dateProperty, (string) value);
 					}
 					else
 					{
-						this.Properties.DeleteProperties(dateProperty);
+						//this.Properties.DeleteProperties(dateProperty);
 					}
 				}
 				catch{}
