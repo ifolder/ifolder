@@ -45,7 +45,7 @@ namespace Novell.FormsTrayApp
 	{
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Preferences));
-		private const decimal minimumSeconds = 60;
+		private const decimal defaultMinimumSeconds = 60;
 		private const decimal maximumSeconds = int.MaxValue;
 		private const decimal maximumMinutes = (decimal)(maximumSeconds / 60);
 		private const decimal maximumHours = (decimal)(maximumMinutes / 60);
@@ -56,6 +56,7 @@ namespace Novell.FormsTrayApp
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
 		private decimal minimumSyncInterval;
+		private decimal minimumSeconds;
 		private iFolderWebService ifWebService;
 		private SimiasWebService simiasWebService;
 		private bool shutdown = false;
@@ -1973,7 +1974,7 @@ namespace Novell.FormsTrayApp
 				tabGeneral.BackColor = tabAccounts.BackColor = Color.FromKnownColor(KnownColor.ControlLightLight);
 			}
 
-			minimumSyncInterval = minimumSeconds;
+			minimumSyncInterval = minimumSeconds = defaultMinimumSeconds;
 			timeUnit.Items.Add(resourceManager.GetString("seconds"));
 			timeUnit.Items.Add(resourceManager.GetString("minutes"));
 			timeUnit.Items.Add(resourceManager.GetString("hours"));
@@ -2017,7 +2018,10 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					// Update the default sync interval setting.
-					displaySyncInterval(ifWebService.GetDefaultSyncInterval());
+					int syncInterval = ifWebService.GetDefaultSyncInterval();
+					minimumSeconds = syncInterval < (int)defaultMinimumSeconds ? (decimal)syncInterval : defaultMinimumSeconds;
+
+					displaySyncInterval(syncInterval);
 				}
 				catch (Exception ex)
 				{
