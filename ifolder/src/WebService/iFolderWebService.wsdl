@@ -472,6 +472,7 @@
       <xs:element name="AcceptiFolderInvitation">
         <xs:complexType>
           <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
             <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
             <xs:element minOccurs="0" maxOccurs="1" name="LocalPath" type="xs:string"/>
           </xs:sequence>

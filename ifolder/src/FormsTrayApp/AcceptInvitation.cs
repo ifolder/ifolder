@@ -473,7 +473,7 @@ namespace Novell.FormsTrayApp
 						try
 						{
 							// Accept the invitation.
-							ifWebService.AcceptiFolderInvitation(ifolder.ID, iFolderLocation.Text);
+							ifWebService.AcceptiFolderInvitation(ifolder.DomainID, ifolder.ID, iFolderLocation.Text);
 						}
 						catch (Exception ex)
 						{
