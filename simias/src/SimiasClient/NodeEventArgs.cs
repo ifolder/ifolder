@@ -62,6 +62,7 @@ namespace Simias.Client.Event
 		ulong					masterRev;
 		ulong					slaveRev;
 		long					fileSize;
+		EventType				changeType;
 
 		/// <summary>
 		/// Flags for the node event.
@@ -107,6 +108,7 @@ namespace Simias.Client.Event
 			this.masterRev = masterRev;
 			this.slaveRev = slaveRev;
 			this.fileSize = fileSize;
+			this.changeType = changeType;
 		}
 
 		#endregion
@@ -214,6 +216,13 @@ namespace Simias.Client.Event
 			get { return fileSize; }
 		}
 
+		/// <summary>
+		/// Gets the type of change that happened.
+		/// </summary>
+		public EventType ChangeType
+		{
+			get { return changeType; }
+		}
 		#endregion
 	}
 }
