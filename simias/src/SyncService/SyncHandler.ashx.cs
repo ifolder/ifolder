@@ -46,12 +46,19 @@ namespace Simias.Sync.Web
 			SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);
 			if (string.Compare(httpMethod, "POST", true) == 0)
 			{
-				if (Service == null && method == SyncMethod.StartSync)
+				if (Service == null)
 				{
-					Session.Timeout = 5;
-					Service = new HttpService();
-					Session[ServiceString] = Service;
-					Service.StartSync(Request, Response, Session);
+					if (method == SyncMethod.StartSync)
+					{
+						Session.Timeout = 5;
+						Service = new HttpService();
+						Session[ServiceString] = Service;
+						Service.StartSync(Request, Response, Session);
+					}
+					else
+					{
+						Response.StatusCode = (int)HttpStatusCode.BadRequest;
+					}
 				}
 				else
 				{

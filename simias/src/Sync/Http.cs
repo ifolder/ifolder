@@ -243,6 +243,7 @@ namespace Simias.Sync.Http
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.GetNextInfoList);
 			request.ContentLength = 0;
+			request.GetRequestStream().Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
@@ -502,6 +503,7 @@ namespace Simias.Sync.Http
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.GetHashMap);
 			request.ContentLength = 0;
+			request.GetRequestStream().Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
@@ -693,6 +695,7 @@ namespace Simias.Sync.Http
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.EndSync);
 			request.ContentLength = 0;
+			request.GetRequestStream().Close();
 			request.KeepAlive = false;
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
