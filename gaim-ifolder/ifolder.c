@@ -548,6 +548,8 @@ init_invitations_window()
 	in_inv_scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(in_inv_scrolled_win),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(
+		GTK_SCROLLED_WINDOW(in_inv_scrolled_win), GTK_SHADOW_IN);
 	gtk_box_pack_start(GTK_BOX(in_inv_hbox),
 			   in_inv_scrolled_win, TRUE, TRUE, 0);
 
@@ -639,6 +641,8 @@ init_invitations_window()
 	out_inv_scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(out_inv_scrolled_win),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(
+		GTK_SCROLLED_WINDOW(out_inv_scrolled_win), GTK_SHADOW_IN);
 	gtk_box_pack_start(GTK_BOX(out_inv_hbox),
 			   out_inv_scrolled_win, TRUE, TRUE, 0);
 
