@@ -34,32 +34,42 @@ namespace Simias.POBox
 		/// <summary>
 		/// The Subscription has been created but not sent.
 		/// </summary>
-		Pending,
+		Invited,
 
 		/// <summary>
 		/// The Subscription has been sent.
 		/// </summary>
-		Invited,
-
-		/// <summary>
-		/// The Subscription, a request to join, has been sent.
-		/// </summary>
 		Posted,
 
 		/// <summary>
-		/// The Subscription, a request to join, has been rejected.
+		/// The Subscription has been received.
 		/// </summary>
-		Rejected,
+		Received,
 
 		/// <summary>
-		/// The Subscription has been accepted.
+		/// The Subscription has been replied to.
 		/// </summary>
-		Accepted,
+		Replied,
 
 		/// <summary>
-		/// The Subscription has been declined.
+		/// The Subscription reply has been delivered.
 		/// </summary>
-		Declined
+		Delivered,
+
+		/// <summary>
+		/// The Subscription is waiting to be accepted/declined by the owner.
+		/// </summary>
+		Pending,
+
+		/// <summary>
+		/// The Subscription has been accepted/declined.
+		/// </summary>
+		Responded,
+
+		/// <summary>
+		/// The Subscription acceptance/denial has been acknowledged.
+		/// </summary>
+		Acknowledged
 	};
 
 	/// <summary>
@@ -143,7 +153,7 @@ namespace Simias.POBox
 		public Subscription(string subscriptionName, string messageType) :
 			base (subscriptionName, messageType)
 		{
-			InviteState = SubscriptionState.Pending;
+			SubscribeState = SubscriptionState.Invited;
 		}
 
 		/// <summary>
@@ -155,7 +165,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string toIdentity) :
 			base (messageName, messageType, toIdentity)
 		{
-			InviteState = SubscriptionState.Pending;
+			SubscribeState = SubscriptionState.Invited;
 		}
 
 		/// <summary>
@@ -168,7 +178,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity) :
 			base (messageName, messageType, toIdentity, fromIdentity)
 		{
-			InviteState = SubscriptionState.Pending;
+			SubscribeState = SubscriptionState.Invited;
 		}
 
 		/// <summary>
@@ -182,7 +192,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
 			base (messageName, messageType, toIdentity, fromIdentity, toAddress)
 		{
-			InviteState = SubscriptionState.Pending;
+			SubscribeState = SubscriptionState.Invited;
 		}
 
 		/// <summary>
@@ -197,7 +207,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
 			base (messageName, messageType, toIdentity, fromIdentity, toAddress, fromAddress)
 		{
-			InviteState = SubscriptionState.Pending;
+			SubscribeState = SubscriptionState.Invited;
 		}
 		#endregion
 
@@ -205,7 +215,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the state of the Subscription object.
 		/// </summary>
-		public SubscriptionState InviteState
+		public SubscriptionState SubscribeState
 		{
 			get
 			{
@@ -280,15 +290,18 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the types of the collection to share.
 		/// </summary>
-		public string SubscriptionCollectionTypes
+		public MultiValuedList SubscriptionCollectionTypes
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionTypesProperty).Value;
+				return Properties.GetProperties(SubscriptionCollectionTypesProperty);
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionCollectionTypesProperty, value);
+				foreach (Property p in value)
+				{
+					Properties.AddProperty(SubscriptionCollectionTypesProperty, p);
+				}
 			}
 		}
 
