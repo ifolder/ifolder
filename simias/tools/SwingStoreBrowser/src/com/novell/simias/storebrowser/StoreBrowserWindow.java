@@ -310,7 +310,9 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		if (jPanel == null) {
 			jPanel = new JPanel();
 			jPanel.setLayout(new BorderLayout());
-			jPanel.add(getJJMenuBar(), java.awt.BorderLayout.NORTH);
+			this.setJMenuBar(getJJMenuBar());
+// CRG- If you do this, it will be more compatible on OS X
+//			jPanel.add(getJJMenuBar(), java.awt.BorderLayout.NORTH);
 		}
 		return jPanel;
 	}

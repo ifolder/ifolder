@@ -1,0 +1,632 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		010FB80D00814DD77F000001 = {
+			fileRef = 10F9BF62FEEDA25E11DB9C8B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		01F12F4CFEC8CE2211DB9C8B = {
+			buildSettings = {
+			};
+			buildStyles = (
+				0E20B662001FAFA711DB9C8B,
+				0E20B663001FAFA711DB9C8B,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 01F12F4DFEC8CE2211DB9C8B;
+			productRefGroup = 01F12F4FFEC8CEF111DB9C8B;
+			projectDirPath = "";
+			targets = (
+				1601BCDBFEEE210811DB9C8B,
+			);
+		};
+		01F12F4DFEC8CE2211DB9C8B = {
+			children = (
+				3ED2848B07C5183900F2B104,
+				3ED2847F07C5178300F2B104,
+				3ED2847207C5176E00F2B104,
+				10F9BF62FEEDA25E11DB9C8B,
+				6AAAF050023EA31A0CC91562,
+				01F12F4FFEC8CEF111DB9C8B,
+			);
+			isa = PBXGroup;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		01F12F4FFEC8CEF111DB9C8B = {
+			children = (
+				06D05853FF24F2DB11DB9C8B,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//010
+//011
+//012
+//013
+//014
+//060
+//061
+//062
+//063
+//064
+		06D05853FF24F2DB11DB9C8B = {
+			explicitFileType = wrapper.application;
+			isa = PBXFileReference;
+			path = StoreBrowser.app;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+//060
+//061
+//062
+//063
+//064
+//0E0
+//0E1
+//0E2
+//0E3
+//0E4
+		0E20B662001FAFA711DB9C8B = {
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		0E20B663001FAFA711DB9C8B = {
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//0E0
+//0E1
+//0E2
+//0E3
+//0E4
+//100
+//101
+//102
+//103
+//104
+		10F9BF62FEEDA25E11DB9C8B = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			path = StoreBrowser.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//100
+//101
+//102
+//103
+//104
+//160
+//161
+//162
+//163
+//164
+		1601BCDBFEEE210811DB9C8B = {
+			buildPhases = (
+				1601BCDCFEEE210811DB9C8B,
+				1601BCDEFEEE210811DB9C8B,
+				1601BCDFFEEE210811DB9C8B,
+				1601BCE2FEEE210811DB9C8B,
+				6A869E8001E69FA10CC91562,
+			);
+			buildSettings = {
+				JAVA_ARCHIVE_COMPRESSION = NO;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_ONLY = YES;
+				JAVA_SOURCE_SUBDIR = .;
+				PRODUCT_NAME = StoreBrowser;
+			};
+			dependencies = (
+			);
+			isa = PBXApplicationTarget;
+			name = StoreBrowser;
+			productName = StoreBrowser;
+			productReference = 06D05853FF24F2DB11DB9C8B;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>StoreBrowser</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string>StoreBrowser.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>StoreBrowser</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.1</string>
+	<key>Java</key>
+	<dict>
+		<key>ClassPath</key>
+		<string>$JAVAROOT/StoreBrowser.jar</string>
+		<key>JVMVersion</key>
+		<string>1.4+</string>
+		<key>MainClass</key>
+		<string>com.novell.simias.storebrowser.SwingStoreBrowser</string>
+		<key>Properties</key>
+		<dict>
+			<key>apple.laf.useScreenMenuBar</key>
+			<string>true</string>
+		</dict>
+	</dict>
+	<key>NSJavaNeeded</key>
+	<string>YES</string>
+	<key>NSJavaPath</key>
+	<array>
+		<string>StoreBrowser.jar</string>
+		<string>log4j-1.2.8.jar</string>
+		<string>saaj.jar</string>
+		<string>wsdl4j.jar</string>
+		<string>axis-ant.jar</string>
+		<string>axis.jar</string>
+		<string>commons-discovery.jar</string>
+		<string>commons-logging.jar</string>
+		<string>jaxrpc.jar</string>
+	</array>
+	<key>NSJavaRoot</key>
+	<string>Contents/Resources/Java</string>
+</dict>
+</plist>
+";
+		};
+		1601BCDCFEEE210811DB9C8B = {
+			buildActionMask = 2147483647;
+			files = (
+				3ED2847907C5177A00F2B104,
+				3ED2847A07C5177A00F2B104,
+				3ED2847B07C5177A00F2B104,
+				3ED2847C07C5177A00F2B104,
+				3ED2847D07C5177A00F2B104,
+				3ED2847E07C5177A00F2B104,
+				3ED2848507C5179100F2B104,
+				3ED2848607C5179100F2B104,
+				3ED2848707C5179100F2B104,
+				3ED2848807C5179100F2B104,
+				3ED2848907C5179100F2B104,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1601BCDEFEEE210811DB9C8B = {
+			buildActionMask = 2147483647;
+			files = (
+				6AAAF057023EA5D30CC91562,
+			);
+			isa = PBXJavaArchiveBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1601BCDFFEEE210811DB9C8B = {
+			buildActionMask = 2147483647;
+			files = (
+				010FB80D00814DD77F000001,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1601BCE2FEEE210811DB9C8B = {
+			buildActionMask = 2147483647;
+			files = (
+				3ED2849007C5184600F2B104,
+				3ED2849107C5184600F2B104,
+				3ED2849207C5184600F2B104,
+				3ED2849307C5184600F2B104,
+				3ED2849807C5185600F2B104,
+				3ED2849907C5185600F2B104,
+				3ED2849A07C5185600F2B104,
+				3ED2849B07C5185600F2B104,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+//160
+//161
+//162
+//163
+//164
+//3E0
+//3E1
+//3E2
+//3E3
+//3E4
+		3ED2847207C5176E00F2B104 = {
+			children = (
+				3ED2847307C5177A00F2B104,
+				3ED2847407C5177A00F2B104,
+				3ED2847507C5177A00F2B104,
+				3ED2847607C5177A00F2B104,
+				3ED2847707C5177A00F2B104,
+				3ED2847807C5177A00F2B104,
+			);
+			isa = PBXGroup;
+			name = browser;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847307C5177A00F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = ArrayOfBrowserNode.java;
+			path = ../src/com/novell/simias/browser/ArrayOfBrowserNode.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847407C5177A00F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = Browser_x0020_Service.java;
+			path = ../src/com/novell/simias/browser/Browser_x0020_Service.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847507C5177A00F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = Browser_x0020_ServiceLocator.java;
+			path = ../src/com/novell/simias/browser/Browser_x0020_ServiceLocator.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847607C5177A00F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = Browser_x0020_ServiceSoap.java;
+			path = ../src/com/novell/simias/browser/Browser_x0020_ServiceSoap.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847707C5177A00F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = Browser_x0020_ServiceSoapStub.java;
+			path = ../src/com/novell/simias/browser/Browser_x0020_ServiceSoapStub.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847807C5177A00F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = BrowserNode.java;
+			path = ../src/com/novell/simias/browser/BrowserNode.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2847907C5177A00F2B104 = {
+			fileRef = 3ED2847307C5177A00F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2847A07C5177A00F2B104 = {
+			fileRef = 3ED2847407C5177A00F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2847B07C5177A00F2B104 = {
+			fileRef = 3ED2847507C5177A00F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2847C07C5177A00F2B104 = {
+			fileRef = 3ED2847607C5177A00F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2847D07C5177A00F2B104 = {
+			fileRef = 3ED2847707C5177A00F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2847E07C5177A00F2B104 = {
+			fileRef = 3ED2847807C5177A00F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2847F07C5178300F2B104 = {
+			children = (
+				3ED2848007C5179100F2B104,
+				3ED2848107C5179100F2B104,
+				3ED2848207C5179100F2B104,
+				3ED2848307C5179100F2B104,
+				3ED2848407C5179100F2B104,
+			);
+			isa = PBXGroup;
+			name = storebrowser;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848007C5179100F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = SimiasNode.java;
+			path = ../src/com/novell/simias/storebrowser/SimiasNode.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848107C5179100F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = SimiasNodeProperty.java;
+			path = ../src/com/novell/simias/storebrowser/SimiasNodeProperty.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848207C5179100F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = StoreBrowserWindow.java;
+			path = ../src/com/novell/simias/storebrowser/StoreBrowserWindow.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848307C5179100F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = StoreTreeModelListener.java;
+			path = ../src/com/novell/simias/storebrowser/StoreTreeModelListener.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848407C5179100F2B104 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = SwingStoreBrowser.java;
+			path = ../src/com/novell/simias/storebrowser/SwingStoreBrowser.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848507C5179100F2B104 = {
+			fileRef = 3ED2848007C5179100F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2848607C5179100F2B104 = {
+			fileRef = 3ED2848107C5179100F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2848707C5179100F2B104 = {
+			fileRef = 3ED2848207C5179100F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2848807C5179100F2B104 = {
+			fileRef = 3ED2848307C5179100F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2848907C5179100F2B104 = {
+			fileRef = 3ED2848407C5179100F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2848B07C5183900F2B104 = {
+			children = (
+				3ED2849407C5185500F2B104,
+				3ED2849507C5185600F2B104,
+				3ED2849607C5185600F2B104,
+				3ED2849707C5185600F2B104,
+				3ED2848C07C5184600F2B104,
+				3ED2848D07C5184600F2B104,
+				3ED2848E07C5184600F2B104,
+				3ED2848F07C5184600F2B104,
+			);
+			isa = PBXGroup;
+			name = jarfiles;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3ED2848C07C5184600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = "axis-ant.jar";
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/axis-ant.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2848D07C5184600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = axis.jar;
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/axis.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2848E07C5184600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = "commons-discovery.jar";
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/commons-discovery.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2848F07C5184600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = "commons-logging.jar";
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/commons-logging.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2849007C5184600F2B104 = {
+			fileRef = 3ED2848C07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849107C5184600F2B104 = {
+			fileRef = 3ED2848D07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849207C5184600F2B104 = {
+			fileRef = 3ED2848E07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849307C5184600F2B104 = {
+			fileRef = 3ED2848F07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849407C5185500F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = jaxrpc.jar;
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/jaxrpc.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2849507C5185600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = "log4j-1.2.8.jar";
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/log4j-1.2.8.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2849607C5185600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = saaj.jar;
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/saaj.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2849707C5185600F2B104 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.jar;
+			name = wsdl4j.jar;
+			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/wsdl4j.jar";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3ED2849807C5185600F2B104 = {
+			fileRef = 3ED2849407C5185500F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849907C5185600F2B104 = {
+			fileRef = 3ED2849507C5185600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849A07C5185600F2B104 = {
+			fileRef = 3ED2849607C5185600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3ED2849B07C5185600F2B104 = {
+			fileRef = 3ED2849707C5185600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//3E0
+//3E1
+//3E2
+//3E3
+//3E4
+//6A0
+//6A1
+//6A2
+//6A3
+//6A4
+		6A869E8001E69FA10CC91562 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#\n# This script copies alert strings into the application\n# so that if the application cannot be launched on an \n# older version of the operating system, the user gets a \n# localized error message.  \n#\n# The particular localizations copied into the application\n# are dependent upon the set of localizations installed on\n# the machine the application is built on.\n#\n\nif [ \"${TARGET_BUILD_DIR}\" = \"\" ]; \nthen\n    TARGET_BUILD_DIR=${BUILD_DIR}\nfi\n\nALERTSTRINGS=\"OldJavaAlert.strings\"\nAPPLAUNCHRESDIR=\"/System/Library/PrivateFrameworks/JavaApplicationLauncher.framework/Resources\";\nLSH=`/bin/ls $APPLAUNCHRESDIR | /usr/bin/grep lproj`;\nRESOURCEDIR=\"${TARGET_BUILD_DIR}/$TARGET_NAME.app/Contents/Resources\"\n\nfor COPYDIR in $LSH\ndo\n        /bin/mkdir -p \"$RESOURCEDIR/$COPYDIR\"\n        /bin/cp \"$APPLAUNCHRESDIR/$COPYDIR/$ALERTSTRINGS\" \"$RESOURCEDIR/$COPYDIR\"\ndone";
+		};
+		6AAAF050023EA31A0CC91562 = {
+			children = (
+				6AAAF056023EA5D30CC91562,
+			);
+			isa = PBXGroup;
+			name = Resources;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6AAAF056023EA5D30CC91562 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = StoreBrowserstrings.properties;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6AAAF057023EA5D30CC91562 = {
+			fileRef = 6AAAF056023EA5D30CC91562;
+			isa = PBXBuildFile;
+			settings = {
+				JAVA_ARCHIVE_SUBDIR = "";
+			};
+		};
+	};
+	rootObject = 01F12F4CFEC8CE2211DB9C8B;
+}
