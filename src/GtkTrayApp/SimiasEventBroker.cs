@@ -27,9 +27,8 @@ using System.Diagnostics;
 using System.Threading;
 using Gtk;
 
-using Simias.Event;
-using Simias;
-using Simias.Storage;
+using Simias.Client.Event;
+using Simias.Client;
 
 
 
