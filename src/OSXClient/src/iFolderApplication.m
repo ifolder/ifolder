@@ -33,7 +33,6 @@
 #import "SMEvents.h"
 
 
-
 @implementation iFolderApplication
 
 
@@ -149,6 +148,16 @@
 	}
 }
 
+
+
+//===================================================================
+// clearLog
+// clears the log
+//===================================================================
+- (void)clearLog
+{
+	[[logController arrangedObjects] removeAllObjects];
+}
 
 
 
