@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressBookCmd", "AddressBookCmd.csproj", "{DBEAC14C-20BF-478A-88CD-CE615FF5EFFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressBookCmd", "AddressBookCmd.csproj", "{5D74CCD9-8904-416F-A0B9-028A4A08F703}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -9,10 +9,10 @@ Global
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{DBEAC14C-20BF-478A-88CD-CE615FF5EFFE}.Debug.ActiveCfg = Debug|.NET
-		{DBEAC14C-20BF-478A-88CD-CE615FF5EFFE}.Debug.Build.0 = Debug|.NET
-		{DBEAC14C-20BF-478A-88CD-CE615FF5EFFE}.Release.ActiveCfg = Release|.NET
-		{DBEAC14C-20BF-478A-88CD-CE615FF5EFFE}.Release.Build.0 = Release|.NET
+		{5D74CCD9-8904-416F-A0B9-028A4A08F703}.Debug.ActiveCfg = Debug|.NET
+		{5D74CCD9-8904-416F-A0B9-028A4A08F703}.Debug.Build.0 = Debug|.NET
+		{5D74CCD9-8904-416F-A0B9-028A4A08F703}.Release.ActiveCfg = Release|.NET
+		{5D74CCD9-8904-416F-A0B9-028A4A08F703}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -43,6 +43,7 @@ namespace AddressBookCmd
 		public	bool			listProperties = false;
 		public	bool			updateContact = false;
 		public	bool			verbose = false;
+		public  bool			importVCard = false;
 		public	string			newAddressBook = null;
 		public	string			listContactsBy = null;
 		public	string			contactName = null;
@@ -54,6 +55,7 @@ namespace AddressBookCmd
 		private ArrayList       deletePropertyList = null;
 		private ArrayList		addAddressList = null;
 		private ArrayList		addNameList = null;
+		private ArrayList		fileList = null;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -61,17 +63,28 @@ namespace AddressBookCmd
 		[STAThread]
 		static void Main(string[] args)
 		{
-			//
-			// TODO: Add code to start application here
-			//
-
 			if (args.Length == 0)
 			{
 				DisplayUsage();
 				return;
 			}
 
+			args[0].ToLower();
+			if (args[0] == "--help")
+			{
+				DisplayUsage();
+				return;
+			}
+
 			Abc		cAbc = new Abc();
+
+			// Which command
+			switch(args[0])
+			{
+				case "importvcard":
+					cAbc.importVCard = true;
+					break;
+			}
 
 			for(int i = 0; i < args.Length; i++)
 			{
@@ -83,6 +96,24 @@ namespace AddressBookCmd
 					{
 						DisplayUsage();
 						return;
+					}
+					else
+					if (args[i] == "--help")
+					{
+						DisplayUsage();
+						return;
+					}
+					else
+					if (args[i][0] == '-' && args[i][1] == 'f')
+					{
+						// Get the filename used for the command
+						if (i + 1 <= args.Length)
+						{
+							if (args[++i] != null)
+							{
+								cAbc.AddFile(args[i]);
+							}
+						}
 					}
 					else
 					if (args[i] == "/b")
@@ -107,17 +138,17 @@ namespace AddressBookCmd
 						}
 					}
 					else
-						if (args[i] == "/l")
+					if (args[i] == "/l")
 					{
 						cAbc.listBooks = true;
 					}
 					else
-					if (args[i] == "/t")
+						if (args[i] == "/t")
 					{	
 						cAbc.timeIt = true;
 					}
 					else
-					if (args[i] == "/v")
+						if (args[i] == "/v")
 					{
 						cAbc.verbose = true;
 					}
@@ -133,12 +164,12 @@ namespace AddressBookCmd
 							cAbc.listBooks = true;
 						}
 						else
-						if (args[i][2] == 'c')
+							if (args[i][2] == 'c')
 						{
 							cAbc.listContacts = true;
 						}
 						else
-						if (args[i][2] == 'p')
+							if (args[i][2] == 'p')
 						{
 							cAbc.listProperties = true;
 						}
@@ -198,7 +229,7 @@ namespace AddressBookCmd
 						// delete a contact
 						if (args[i][2] == 'c')
 						{
-                            // delete a contact
+							// delete a contact
 							if (i + 1 <= args.Length)
 							{
 								cAbc.contactName = args[++i];
@@ -248,7 +279,8 @@ namespace AddressBookCmd
 
 		static void DisplayUsage()
 		{
-			Console.WriteLine("AddressBookCmd /b <AddressBook> /l<list> /a<add> /d<delete> /e<export> /t /v");
+			Console.WriteLine("AddressBookCmd [command] /b <AddressBook> /l<list> /a<add> /d<delete> /e<export> /t /v");
+			Console.WriteLine("    importvcard -f <vcard file> -b <AddressBook>");
 			Console.WriteLine("   /b <address book> - book to run commands against"); 
 			Console.WriteLine("   /c <contact> - contact to execute commands against");
 			Console.WriteLine("   /av <vcard file> - add or import vcard file");
@@ -578,6 +610,17 @@ namespace AddressBookCmd
 			this.addNameList.Add(nameValue);
 		}
 
+		// Name value string in the following format: given=value;family=value;   etc.
+		public void AddFile(string fileName)
+		{
+			if (this.fileList == null)
+			{
+				this.fileList = new ArrayList();
+			}
+
+			this.fileList.Add(fileName);
+		}
+
 		// Property value string in the following format: property=value
 		public void	AddDeleteProperty(string propertyValue)
 		{
@@ -596,6 +639,10 @@ namespace AddressBookCmd
 			Manager		abManager;
 			DateTime	start = DateTime.Now;
 
+			//
+			// For every command we'll instantiate an address book even
+			// though some commands may not need one (ex. enumerating current books)
+			//
 			abManager = Manager.Connect( );
 			if (addressBookName == null)
 			{
@@ -619,6 +666,26 @@ namespace AddressBookCmd
 			if (cAddressBook == null)
 			{
 				return;
+			}
+
+			if (importVCard == true)
+			{
+				if (this.fileList != null && this.fileList.Count > 0)
+				{
+					foreach(String filename in this.fileList)
+					{
+						if (verbose == true)
+						{
+							Console.WriteLine("   Importing vCards(s) from file: " + filename);
+						}
+
+						cAddressBook.ImportVCard(filename);
+					}
+				}
+				else
+				{
+					Console.WriteLine("invalid parameters");
+				}
 			}
 
 			// Instantiate the current contact object
