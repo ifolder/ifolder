@@ -142,10 +142,7 @@ ifolder-doc: ifolder
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
 	rm -rf *-setup.exe *.msi *.msm *.log
-	rm -rf MSI
-	rm -rf $(MSI)/$(ISSABLD_CONFIG)
-	rm -rf $(MSM)/$(ISSABLD_CONFIG)
-	rm -rf $(SDK_MSM)/$(ISSABLD_CONFIG)
+	rm -rf MSI $(MSI) $(MSM) $(SDK_MSM)
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES) ifolder.spec
