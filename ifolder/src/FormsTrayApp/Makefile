@@ -10,7 +10,7 @@ include ../../config.mk
 #=============================================================================
 # iFolderApp variables
 #=============================================================================
-iFolderApp_SOURCES = AssemblyInfo.cs FormsTrayApp.cs
+iFolderApp_SOURCES = AssemblyInfo.cs FormsTrayApp.cs Win32Window.cs
 iFolderApp_INCLUDES = 
 iFolderApp_FLAGS = /t:winexe $(ICON_FLAG)App$(ICON_EXT)
 iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Sync.dll SyncManager.dll SyncCommon.dll CommonFormWindows.dll Common.dll SyncLogicLite.dll Configuration.dll CollectionEvents.dll
