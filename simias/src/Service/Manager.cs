@@ -95,6 +95,7 @@ namespace Simias.Service
 				else
 				{
 					mutex.Close();
+					serviceList.Clear();
 					throw new ApplicationException("Services Already running");
 				}
 			}
@@ -191,27 +192,17 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				string mutexName = mutexBaseName + conf.StorePath.GetHashCode().ToString();
-				Mutex mutex = new Mutex(false, mutexName);
-				if (serviceMutex != null || mutex.WaitOne(200, false))
+				foreach (ServiceCtl svc in this)
 				{
-					serviceMutex = mutex;
-					foreach (ServiceCtl svc in this)
+					try
 					{
-						try
-						{
+						if (svc.State == State.Stopped)
 							svc.Start();
-						}
-						catch 
-						{
-							//log4net.LogManager.
-						}
 					}
-				}
-				else
-				{
-					mutex.Close();
-					throw new ApplicationException("Services Already running");
+					catch 
+					{
+						//log4net.LogManager.
+					}
 				}
 			}
 		}

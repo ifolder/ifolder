@@ -400,7 +400,8 @@ namespace Simias.Storage.Provider.Sqlite
 
 		internal void Dispose()
 		{
-			command.Dispose();
+			if (command != null)
+				command.Dispose();
 			sqliteDb.Close();
 		}
 	}

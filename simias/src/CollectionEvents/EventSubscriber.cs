@@ -283,7 +283,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnNodeChanged(NodeEventArgs args)
+		private void OnNodeChanged(NodeEventArgs args)
 		{
 			if (applyNodeFilter(args))
 				NodeChanged(args);
@@ -294,7 +294,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnNodeCreated(NodeEventArgs args)
+		private void OnNodeCreated(NodeEventArgs args)
 		{
 			if (applyNodeFilter(args))
 				NodeCreated(args);
@@ -305,7 +305,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnNodeDeleted(NodeEventArgs args)
+		private void OnNodeDeleted(NodeEventArgs args)
 		{
 			if (applyNodeFilter(args))
 				NodeDeleted(args);
@@ -316,7 +316,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args"></param>
 		//[OneWay]
-		public void OnCollectionRootChanged(CollectionRootChangedEventArgs args)
+		private void OnCollectionRootChanged(CollectionRootChangedEventArgs args)
 		{
 			if (applyNodeFilter(args))
 				CollectionRootChanged(args);
@@ -327,7 +327,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnFileChanged(FileEventArgs args)
+		private void OnFileChanged(FileEventArgs args)
 		{
 			if (applyFileFilter(args))
 				FileChanged(args);
@@ -338,7 +338,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnFileCreated(FileEventArgs args)
+		private void OnFileCreated(FileEventArgs args)
 		{
 			if (applyFileFilter(args))
 				FileCreated(args);
@@ -349,7 +349,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnFileDeleted(FileEventArgs args)
+		private void OnFileDeleted(FileEventArgs args)
 		{
 			if (applyFileFilter(args))
 				FileDeleted(args);
@@ -360,7 +360,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
 		//[OneWay]
-		public void OnFileRenamed(FileRenameEventArgs args)
+		private void OnFileRenamed(FileRenameEventArgs args)
 		{
 			if (applyFileFilter(args))
 				FileRenamed(args);
@@ -470,7 +470,7 @@ namespace Simias.Event
 
 		#endregion
 
-		public void broker_InternalEvent(EventType type, string args)
+		internal void broker_InternalEvent(EventType type, string args)
 		{
 			Console.WriteLine(args);
 		}
