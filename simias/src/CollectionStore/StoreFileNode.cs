@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Xml;
 
 namespace Simias.Storage
 {
@@ -73,12 +74,38 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for creating an existing StoreFileNode object.
 		/// </summary>
-		/// <param name="collection">Collection that the Node object belongs to.</param>
 		/// <param name="node">Node object to create StoreFileNode object from.</param>
-		public StoreFileNode( Collection collection, Node node ) :
+		public StoreFileNode( Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, NodeTypes.StoreFileNodeType ) )
+			if ( type != NodeTypes.StoreFileNodeType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing StoreFileNode object from a ShallowNode object.
+		/// </summary>
+		/// <param name="collection">Collection that the Node object belongs to.</param>
+		/// <param name="shallowNode">ShallowNode object to create StoreFileNode object from.</param>
+		public StoreFileNode( Collection collection, ShallowNode shallowNode ) :
+			base ( collection, shallowNode )
+		{
+			if ( type != NodeTypes.StoreFileNodeType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing StoreFileNode object from an Xml document.
+		/// </summary>
+		/// <param name="document">Xml document object to create StoreFileNode object from.</param>
+		internal StoreFileNode( XmlDocument document ) :
+			base ( document )
+		{
+			if ( type != NodeTypes.StoreFileNodeType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

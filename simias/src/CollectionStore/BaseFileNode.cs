@@ -151,6 +151,9 @@ namespace Simias.Storage
 		internal protected BaseFileNode( Collection collection, string fileName, string fileID, string fileType ) :
 			base ( fileName, fileID, fileType )
 		{
+			// Add to the Types list.
+			properties.AddNodeProperty( PropertyTags.Types, NodeTypes.BaseFileNodeType );
+
 			// If there are metadata collectors registered for this file type, add the extra metadata.
 			AddFileMetadata( collection );
 		}
@@ -171,6 +174,15 @@ namespace Simias.Storage
 		/// <param name="shallowNode">ShallowNode object to create new BaseFileNode object from.</param>
 		internal protected BaseFileNode( Collection collection, ShallowNode shallowNode ) :
 			base( collection, shallowNode )
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing BaseFileNode object from an Xml document object.
+		/// </summary>
+		/// <param name="document">Xml document object to create BaseFileNode object from.</param>
+		internal protected BaseFileNode( XmlDocument document ) :
+			base ( document )
 		{
 		}
 		#endregion

@@ -185,7 +185,7 @@ namespace Simias.Storage
 		public override void AcceptClientPrincipalCredentials(string realm, string principalName, RSACryptoServiceProvider rsaKeys)
 		{
 			// Find this contact.
-			BaseContact tempIdentity = new BaseContact( localAb, localAb.GetNodeByID( principalName ) );
+			BaseContact tempIdentity = localAb.GetNodeByID( principalName ) as BaseContact;
 			if ( tempIdentity == null )
 			{
 				throw new ApplicationException( "No such identity." );
@@ -214,7 +214,7 @@ namespace Simias.Storage
 			else
 			{
 				// Find the specified contact and return the public key information.
-				BaseContact tempIdentity = new BaseContact( localAb, localAb.GetNodeByID( principalName ) );
+				BaseContact tempIdentity = localAb.GetNodeByID( principalName ) as BaseContact;
 				if ( tempIdentity != null )
 				{
 					rsaKeys = tempIdentity.GetDomainPublicKey( realm );
@@ -315,7 +315,7 @@ namespace Simias.Storage
 		public void Impersonate( string userGuid )
 		{
 			// Look up the specified user in the local address book.
-			BaseContact impersonator = new BaseContact( localAb, localAb.GetNodeByID( userGuid ) );
+			BaseContact impersonator = localAb.GetNodeByID( userGuid ) as BaseContact;
 			if ( impersonator == null )
 			{
 				throw new ApplicationException( "No such user." );

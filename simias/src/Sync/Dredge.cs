@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Dale Olds <olds@novell.com>
- * 
+ *
  ***********************************************************************/
 using System;
 using System.Collections;
@@ -102,10 +102,10 @@ internal class Dredger
 			return dnode;
 		}
 		if (type != typeof(FileNode).Name)
-			return new DirNode(collection, node);
+			return new DirNode(node);
 
 		// from here we are just checking for modified files
-		FileNode unode = new FileNode(collection, node);
+		FileNode unode = new FileNode(node);
 		DateTime lastWrote = File.GetLastWriteTime(path);
 		DateTime created = File.GetCreationTime(path);
 		if (unode.LastWriteTime != lastWrote || unode.CreationTime != created)

@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Xml;
 
 namespace Simias.Storage
 {
@@ -56,12 +57,38 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for creating an existing LinkNode object.
 		/// </summary>
-		/// <param name="collection">Collection that the Node object belongs to.</param>
 		/// <param name="node">Node object to create LinkNode object from.</param>
-		protected LinkNode( Collection collection, Node node ) :
+		public LinkNode( Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, NodeTypes.LinkNodeType ) )
+			if ( type != NodeTypes.LinkNodeType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor that creates a LinkNode object from a ShallowNode object.
+		/// </summary>
+		/// <param name="collection">Collection that the specified Node object belongs to.</param>
+		/// <param name="shallowNode">ShallowNode object to create the LinkNode object from.</param>
+		public LinkNode( Collection collection, ShallowNode shallowNode ) :
+			base( collection, shallowNode )
+		{
+			if ( type != NodeTypes.LinkNodeType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing LinkNode object from an Xml document object.
+		/// </summary>
+		/// <param name="document">Xml document object to create LinkNode object from.</param>
+		internal LinkNode( XmlDocument document ) :
+			base ( document )
+		{
+			if ( type != NodeTypes.LinkNodeType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

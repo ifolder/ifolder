@@ -177,12 +177,38 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor that creates a BaseContact object from a Node object.
 		/// </summary>
-		/// <param name="collection">Collection that the specified Node object belongs to.</param>
 		/// <param name="node">Node object to create the BaseContact object from.</param>
-		public BaseContact( Collection collection, Node node ) :
+		public BaseContact( Node node ) :
 			base( node )
 		{
-			if ( !collection.IsType( node, NodeTypes.BaseContactType ) )
+			if ( type != NodeTypes.BaseContactType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor that creates a BaseContact object from a ShallowNode object.
+		/// </summary>
+		/// <param name="collection">Collection that the specified Node object belongs to.</param>
+		/// <param name="shallowNode">ShallowNode object to create the BaseContact object from.</param>
+		public BaseContact( Collection collection, ShallowNode shallowNode ) :
+			base( collection, shallowNode )
+		{
+			if ( type != NodeTypes.BaseContactType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor that creates a BaseContact object from an Xml document object.
+		/// </summary>
+		/// <param name="document">Xml document object to create the BaseContact object from.</param>
+		internal BaseContact( XmlDocument document ) :
+			base( document )
+		{
+			if ( type != NodeTypes.BaseContactType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

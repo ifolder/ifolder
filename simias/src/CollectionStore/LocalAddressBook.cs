@@ -53,16 +53,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Constructor for creating an existing LocalAddressBook object.
-		/// </summary>
-		/// <param name="storeObject">Store object.</param>
-		/// <param name="labDocument">Xml document that describes a LocalAddressBook object.</param>
-		internal LocalAddressBook( Store storeObject, XmlDocument labDocument ) :
-			base( storeObject, labDocument )
-		{
-		}
-
-		/// <summary>
 		/// Constructor to create an existing LocalAddressBook object from a Node object.
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
@@ -70,7 +60,7 @@ namespace Simias.Storage
 		internal LocalAddressBook( Store storeObject, Node node ) :
 			base( storeObject, node )
 		{
-			if ( !IsType( node, NodeTypes.LocalAddressBookType ) )
+			if ( !IsType( this, NodeTypes.LocalAddressBookType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -84,6 +74,24 @@ namespace Simias.Storage
 		internal LocalAddressBook( Store storeObject, ShallowNode shallowNode ) :
 			base( storeObject, shallowNode )
 		{
+			if ( !IsType( this, NodeTypes.CollectionType ) )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor to create an existing LocalAddressBook object from an Xml document object.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="document">Xml document object to construct this object from.</param>
+		internal LocalAddressBook( Store storeObject, XmlDocument document ) :
+			base( storeObject, document )
+		{
+			if ( !IsType( this, NodeTypes.LocalAddressBookType ) )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
 		}
 		#endregion
 
@@ -95,7 +103,7 @@ namespace Simias.Storage
 		/// <returns>A BaseContact object that matches the specified ID.</returns>
 		public BaseContact GetContactByID( string ID )
 		{
-			return new BaseContact( this, GetNodeByID( ID ) );
+			return GetNodeByID( ID ) as BaseContact;
 		}
 
 		/// <summary>
@@ -105,7 +113,7 @@ namespace Simias.Storage
 		/// <returns>A BaseContact object that matches the specified name.</returns>
 		public BaseContact GetContactByName( string name )
 		{
-			return new BaseContact( this, GetSingleNodeByName( name ) );
+			return GetSingleNodeByName( name ) as BaseContact;
 		}
 		#endregion
 	}

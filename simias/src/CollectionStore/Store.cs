@@ -308,7 +308,7 @@ namespace Simias.Storage
 					}
 
 					// Look up to see if the current user has an identity.
-					BaseContact identity = new BaseContact( localAb, localAb.GetSingleNodeByName( Environment.UserName ) );
+					BaseContact identity = localAb.GetSingleNodeByName( Environment.UserName ) as BaseContact;
 					if ( identity == null )
 					{
 						throw new ApplicationException( "User does not exist in local address book." );
@@ -415,7 +415,7 @@ namespace Simias.Storage
 			XmlDocument document = storageProvider.GetRecord( normalizedID, normalizedID );
 			if ( document != null )
 			{
-				collection = new Collection( this, document );
+				collection = Node.NodeFactory( this, document ) as Collection;
 				
 				// Make sure that access is allowed to the Collection object.
 				if ( !collection.IsAccessAllowed( Access.Rights.ReadOnly ) )
@@ -483,7 +483,7 @@ namespace Simias.Storage
 			// Look at each collection that this user has rights to and match up on the name.
 			foreach ( ShallowNode shallowNode in this )
 			{
-				Collection collection = new Collection( this, shallowNode );
+				Collection collection = Collection.CollectionFactory( this, shallowNode );
 				MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Types );
 				foreach ( Property property in mvl )
 				{

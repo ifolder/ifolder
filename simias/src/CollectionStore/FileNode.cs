@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Xml;
 
 namespace Simias.Storage
 {
@@ -60,12 +61,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for creating an existing FileNode object.
 		/// </summary>
-		/// <param name="collection">Collection that the Node object belongs to.</param>
 		/// <param name="node">Node object to create FileNode object from.</param>
-		public FileNode( Collection collection, Node node ) :
+		public FileNode( Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, NodeTypes.FileNodeType ) )
+			if ( type != NodeTypes.FileNodeType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -79,7 +79,20 @@ namespace Simias.Storage
 		public FileNode( Collection collection, ShallowNode shallowNode ) :
 			base ( collection, shallowNode )
 		{
-			if ( !collection.IsType( this, NodeTypes.FileNodeType ) )
+			if ( type != NodeTypes.FileNodeType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing FileNode object from an Xml document.
+		/// </summary>
+		/// <param name="document">Xml document object to create FileNode object from.</param>
+		internal FileNode( XmlDocument document ) :
+			base ( document )
+		{
+			if ( type != NodeTypes.FileNodeType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -126,13 +139,13 @@ namespace Simias.Storage
 			}
 
 			Relationship parent = property.Value as Relationship;
-			Node node = collection.GetNodeByID( parent.NodeID );
-			if ( node == null )
+			DirNode dirNode = collection.GetNodeByID( parent.NodeID ) as DirNode;
+			if ( dirNode == null )
 			{
 				throw new ApplicationException( "FileNode's parent directory does not exist." );
 			}
 
-			return new DirNode( collection, node );
+			return dirNode;
 		}
 
 		/// <summary>

@@ -246,5 +246,133 @@ namespace Simias.Storage
 			properties = new PropertyList( document );
 		}
 		#endregion
+
+		#region Internal Methods
+		/// <summary>
+		/// Node factory method that constructs a derived Node object type from the specified Node object.
+		/// </summary>
+		/// <param name="store">Store object.</param>
+		/// <param name="document">Xml document to construct new Node from.</param>
+		/// <returns>Downcasts the derived Node object back to a Node that can then be explicitly casted back up.</returns>
+		internal static Node NodeFactory( Store store, XmlDocument document )
+		{
+			XmlElement nodeObject = document.DocumentElement[ XmlTags.ObjectTag ];
+			Node rNode = null;
+
+			switch ( nodeObject.GetAttribute( XmlTags.TypeAttr ) )
+			{
+				case "Node":
+					rNode = new Node( document );
+					break;
+
+				case "BaseContact":
+					rNode = new BaseContact( document );
+					break;
+
+				case "DirNode":
+					rNode = new DirNode( document );
+					break;
+
+				case "FileNode":
+					rNode = new FileNode( document );
+					break;
+
+				case "LinkNode":
+					rNode = new LinkNode( document );
+					break;
+
+				case "StoreFileNode":
+					rNode = new StoreFileNode( document );
+					break;
+
+				case "Collection":
+					rNode = new Collection( store, document );
+					break;
+
+				case "LocalAddressBook":
+					rNode = new LocalAddressBook( store, document );
+					break;
+
+				case "Tombstone":
+					rNode = new Node( document );
+					break;
+
+				default:
+					rNode = new Node( document );
+					break;
+			}
+
+			return rNode;
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Node factory method that constructs a derived Node object type from the specified ShallowNode object.
+		/// </summary>
+		/// <param name="collection">Collection object associated with the specified Node object.</param>
+		/// <param name="shallowNode">ShallowNode object to construct new Node from.</param>
+		/// <returns>Downcasts the derived Node object back to a Node that can then be explicitly casted back up.</returns>
+		public static Node NodeFactory( Collection collection, ShallowNode shallowNode )
+		{
+			Node rNode = null;
+
+			switch ( shallowNode.Type )
+			{
+				case "Node":
+					rNode = new Node( collection, shallowNode );
+					break;
+
+				case "BaseContact":
+					rNode = new BaseContact( collection, shallowNode );
+					break;
+
+				case "DirNode":
+					rNode = new DirNode( collection, shallowNode );
+					break;
+
+				case "FileNode":
+					rNode = new FileNode( collection, shallowNode );
+					break;
+
+				case "LinkNode":
+					rNode = new LinkNode( collection, shallowNode );
+					break;
+
+				case "StoreFileNode":
+					rNode = new StoreFileNode( collection, shallowNode );
+					break;
+
+				case "Collection":
+					rNode = new Collection( collection.StoreReference, shallowNode );
+					break;
+
+				case "LocalAddressBook":
+					rNode = new LocalAddressBook( collection.StoreReference, shallowNode );
+					break;
+
+				case "Tombstone":
+					rNode = new Node( collection, shallowNode );
+					break;
+
+				default:
+					rNode = new Node( collection, shallowNode );
+					break;
+			}
+
+			return rNode;
+		}
+
+		/// <summary>
+		/// Node factory method that constructs a derived Node object type from the specified Node object.
+		/// </summary>
+		/// <param name="collection">Collection object associated with the specified Node object.</param>
+		/// <param name="node">Node object to construct new Node from.</param>
+		/// <returns>Downcasts the derived Node object back to a Node that can then be explicitly casted back up.</returns>
+		public static Node NodeFactory( Collection collection, Node node )
+		{
+			return NodeFactory( collection.StoreReference, node.Properties.PropertyDocument );
+		}
+		#endregion
 	}
 }

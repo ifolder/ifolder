@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Xml;
 
 namespace Simias.Storage
 {
@@ -181,7 +182,7 @@ namespace Simias.Storage
 		public DirNode( Collection collection, ShallowNode shallowNode ) :
 			base ( collection, shallowNode )
 		{
-			if ( !collection.IsType( this, NodeTypes.DirNodeType ) )
+			if ( type != NodeTypes.DirNodeType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -190,12 +191,24 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for creating an existing DirNode object.
 		/// </summary>
-		/// <param name="collection">Collection that Node object belongs to.</param>
 		/// <param name="node">Node object to create DirNode object from.</param>
-		public DirNode( Collection collection, Node node ) :
+		public DirNode( Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, NodeTypes.DirNodeType ) )
+			if ( type != NodeTypes.DirNodeType )
+			{
+				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+
+		/// <summary>
+		/// Constructor for creating an existing DirNode object from an Xml document object.
+		/// </summary>
+		/// <param name="document">Xml document object to create DirNode object from.</param>
+		internal DirNode( XmlDocument document ) :
+			base ( document )
+		{
+			if ( type != NodeTypes.DirNodeType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -249,11 +262,7 @@ namespace Simias.Storage
 				Relationship relationship = property.Value as Relationship;
 				if ( !relationship.IsRoot )
 				{
-					Node node = collection.GetNodeByID( relationship.NodeID );
-					if ( node != null )
-					{
-						parent = new DirNode( collection, node );
-					}
+					parent = collection.GetNodeByID( relationship.NodeID ) as DirNode;
 				}
 			}
 			else

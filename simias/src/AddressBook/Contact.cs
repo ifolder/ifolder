@@ -59,7 +59,7 @@ namespace Novell.AddressBook
 		/// Type Value: A read-only single text value
 		///
 		/// Example: FN:Mr. John Q. Public\, Esq.
-		/// Note: The FN property is built from the preferred Name attribute 
+		/// Note: The FN property is built from the preferred Name attribute
 		/// // which is a complex attribute.
 		///
 		/// </summary>
@@ -269,7 +269,7 @@ namespace Novell.AddressBook
 			set
 			{
 				try
-				{ 
+				{
 					Email tmpMail = new Email((EmailTypes.internet | EmailTypes.work), value);
 					tmpMail.Preferred = true;
 					this.AddEmailAddress(tmpMail);
@@ -633,7 +633,7 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					if (this.addressBook != null && 
+					if (this.addressBook != null &&
 						this.addressBook.store != null &&
 						this.addressBook.store.CurrentUserGuid == this.ID)
 					{
@@ -684,7 +684,7 @@ namespace Novell.AddressBook
 				if (this.Name != null && this.Name != "")
 				{
 					// Add a relationship that will reference the parent Node.
-					Relationship parentChild = new 
+					Relationship parentChild = new
 						Relationship( addressBook.collection.ID, this.ID );
 					this.Properties.AddProperty( Common.contactToAddressBook, parentChild );
 
@@ -694,7 +694,7 @@ namespace Novell.AddressBook
 					{
 						foreach(Name cName in this.nameList)
 						{
-							Relationship nameAndContact = new 
+							Relationship nameAndContact = new
 								Relationship(addressBook.collection.ID, this.ID );
 							cName.Properties.AddProperty( Common.nameToContact, nameAndContact );
 						}
@@ -706,7 +706,7 @@ namespace Novell.AddressBook
 					{
 						foreach(Address cAddress in this.addressList)
 						{
-							Relationship addressAndContact = new 
+							Relationship addressAndContact = new
 								Relationship(addressBook.collection.ID, this.ID );
 							cAddress.Properties.AddProperty( Common.addressToContact, addressAndContact );
 						}
@@ -741,7 +741,7 @@ namespace Novell.AddressBook
 		/// <param name="parentCollection">Parent collection for this contact</param>
 		/// <param name="contactID">The node ID of contact to retrieve</param>
 		/// <remarks>
-		/// An exception is thrown if the contact can't be find by the 
+		/// An exception is thrown if the contact can't be find by the
 		/// specified ID
 		/// </remarks>
 		/// <returns>None</returns>
@@ -787,9 +787,9 @@ namespace Novell.AddressBook
 			{
 				// Load up any names
 				this.nameList.Clear();
-				Relationship parentChild = 
+				Relationship parentChild =
 					new Relationship( this.addressBook.collection.ID, this.ID );
-				ICSList results = 
+				ICSList results =
 					this.addressBook.collection.Search( Common.nameToContact, parentChild );
 				foreach ( ShallowNode cShallow in results )
 				{
@@ -806,9 +806,9 @@ namespace Novell.AddressBook
 			{
 				// Load up the addresses
 				this.addressList.Clear();
-				Relationship parentChild = 
+				Relationship parentChild =
 					new Relationship( this.addressBook.collection.ID, this.ID );
-				ICSList results = 
+				ICSList results =
 					this.addressBook.collection.Search( Common.addressToContact, parentChild );
 				foreach ( ShallowNode cShallow in results )
 				{
@@ -832,9 +832,9 @@ namespace Novell.AddressBook
 		/// <remarks>
 		/// e-mail consists of the e-mail name itself and the type of e-mail
 		/// such as: "work", "personal" etc.
-		/// 
+		///
 		/// Each contact may have multiple e-mail addresses but only one can be preferred.
-		/// 
+		///
 		/// If for any reason the e-mail object cannot be added to the contact
 		/// an exception will be raised.
 		/// </remarks>
@@ -894,10 +894,10 @@ namespace Novell.AddressBook
 		/// <remarks>
 		/// instant message consists of an address, provider and types
 		/// such as: "work", "personal" etc.
-		/// 
+		///
 		/// Each contact may have multiple instant message accounts but only
 		///  one can be preferred.
-		/// 
+		///
 		/// If for any reason the instant message object cannot be added to
 		/// the contact an exception will be raised.
 		/// </remarks>
@@ -957,9 +957,9 @@ namespace Novell.AddressBook
 		/// <remarks>
 		/// Telephone consists of the number itself and the type of phone
 		/// such as: "WORK", "HOME" etc.
-		/// 
+		///
 		/// Each contact may have multiple telephone numbers but only one can be preferred.
-		/// 
+		///
 		/// If for any reason the telephone object cannot be added to the contact
 		/// an exception will be raised.
 		/// </remarks>
@@ -994,7 +994,7 @@ namespace Novell.AddressBook
 
 		/// <summary>
 		/// Gets the preferred telephone number
-		/// If a preferred telephone number does not exist a null 
+		/// If a preferred telephone number does not exist a null
 		/// is returned.
 		/// </summary>
 		/// <returns>The preferred Telephone object.</returns>
@@ -1141,9 +1141,9 @@ namespace Novell.AddressBook
 		/// <remarks>
 		/// vCard ADR is a structured property consisting of:
 		/// Street, Region, Locality, Country and Extended Address
-		/// 
+		///
 		/// Each contact may have one preferred ADR.
-		/// 
+		///
 		/// If for any reason the ADR cannot be created an exception is raised.
 		/// </remarks>
 		public void AddAddress(Address addr)
@@ -1218,11 +1218,11 @@ namespace Novell.AddressBook
 		/// <param name="addressID">Address ID</param>
 		/// <remarks>
 		/// vCard Address is a structured property consisting of:
-		/// Post Office Box, Extended Address, Street Address, Locality, 
+		/// Post Office Box, Extended Address, Street Address, Locality,
 		/// Region, Postal Code and Country
-		/// 
+		///
 		/// Each contact may have one preferred Address.
-		/// 
+		///
 		/// If for any reason the Address can't be retrieved an an exception is raised.
 		/// </remarks>
 		/// <returns>An Address object with a valid postal code property.</returns>
@@ -1250,9 +1250,9 @@ namespace Novell.AddressBook
 		/// vCard Name is a structured property consisting of:
 		/// Family Name, Given Name, Additional Names, Honorific Prefixes
 		/// and Honorific Suffixes
-		/// 
+		///
 		/// Each contact may have one preferred Name.
-		/// 
+		///
 		/// If for any reason the Name cannot be created an exception is raised.
 		/// </remarks>
 		public void AddName(Name name)
@@ -1273,8 +1273,8 @@ namespace Novell.AddressBook
 		/// vCard Name is a structured property consisting of:
 		/// Family Name, Given Name, Additional Names, Honorific Prefixes
 		/// and Honorific Suffixes
-		/// 
-		/// If the contact does not have a Name by the specified ID 
+		///
+		/// If the contact does not have a Name by the specified ID
 		/// a null is returned.
 		/// </remarks>
 		/// <returns>A Name object with at least given and family properties.</returns>
@@ -1301,7 +1301,7 @@ namespace Novell.AddressBook
 		/// vCard Name is a structured property consisting of:
 		/// Family Name, Given Name, Additional Names, Honorific Prefixes
 		/// and Honorific Suffixes
-		/// 
+		///
 		/// If the contact does not have a preferred Name a
 		/// null is returned.
 		/// </remarks>
@@ -1346,13 +1346,13 @@ namespace Novell.AddressBook
 		/// <summary>
 		/// Export the contact photo via a binary Stream object.
 		/// </summary>
-		/// <remarks>  
+		/// <remarks>
 		/// vCard PHOTO is a single valued binary property
-		/// 
+		///
 		/// An exception is raised if the contact does not contain
 		/// a photo property.
-		/// 
-		/// NOTE: The caller is expected to close the returned 
+		///
+		/// NOTE: The caller is expected to close the returned
 		/// stream object when finished.
 		/// </remarks>
 		/// <returns>A binary stream object which the caller can read from.</returns>
@@ -1366,22 +1366,22 @@ namespace Novell.AddressBook
 					Property p = this.Properties.GetSingleProperty(Common.contactToPhoto);
 					if (p != null)
 					{
-						Simias.Storage.Relationship relationship = 
+						Simias.Storage.Relationship relationship =
 							(Simias.Storage.Relationship) p.Value;
 
-						Node cPhotoNode = 
+						Node cPhotoNode =
 							this.addressBook.collection.GetNodeByID(relationship.NodeID);
 
 						if (cPhotoNode != null)
 						{
 							StoreFileNode sfn =
-								new StoreFileNode(this.addressBook.collection, cPhotoNode);
+								new StoreFileNode(cPhotoNode);
 							
-							return(new 
-								FileStream( 
+							return(new
+								FileStream(
 									sfn.GetFullPath(this.addressBook.collection),
-									FileMode.Open, 
-									FileAccess.Read, 
+									FileMode.Open,
+									FileAccess.Read,
 									FileShare.Read ));
 						}
 					}
@@ -1404,7 +1404,7 @@ namespace Novell.AddressBook
 		/// Imports a photo from a a file name.
 		/// </summary>
 		/// <param name="fileName">Source Filename</param>
-		/// <remarks>  
+		/// <remarks>
 		/// vCard PHOTO is a single valued binary property
 		/// </remarks>
 		/// <returns>true if the photo was successfully imported.</returns>
@@ -1435,7 +1435,7 @@ namespace Novell.AddressBook
 		/// Imports a photo from a stream object.
 		/// </summary>
 		/// <param name="srcStream">Source Stream</param>
-		/// <remarks>  
+		/// <remarks>
 		/// vCard PHOTO is a single valued binary property
 		/// </remarks>
 		/// <returns>true if the photo was successfully imported.</returns>
@@ -1452,11 +1452,11 @@ namespace Novell.AddressBook
 				{
 					// See if a photo stream already exists for this contact node.
 					// If one is found - delete it
-					Property p = 
+					Property p =
 						this.Properties.GetSingleProperty(Common.contactToPhoto);
 					if (p != null)
 					{
-						Simias.Storage.Relationship relationship = 
+						Simias.Storage.Relationship relationship =
 							(Simias.Storage.Relationship) p.Value;
 
 						Node cPhotoNode = this.addressBook.collection.GetNodeByID(relationship.NodeID);
@@ -1472,11 +1472,11 @@ namespace Novell.AddressBook
 				// Create the new node
 				try
 				{
-					sfn = 
+					sfn =
 						new StoreFileNode(this.addressBook.collection, Common.photoProperty, srcStream);
 
-					Relationship parentChild = new 
-						Relationship( 
+					Relationship parentChild = new
+						Relationship(
 							this.addressBook.collection.ID,
 							sfn.ID);
 
@@ -1544,7 +1544,7 @@ namespace Novell.AddressBook
 		/// Export a standard vCard to the specified file.
 		/// </summary>
 		/// <param name="filePath">Source Stream</param>
-		/// <remarks>  
+		/// <remarks>
 		/// Export the contact to the specified file in standard vCard format
 		/// </remarks>
 		/// <returns>true if the vCard was successfully exported.</returns>
@@ -1599,7 +1599,7 @@ namespace Novell.AddressBook
 		/// <summary>
 		/// Export a standard vCard via a memory stream.
 		/// </summary>
-		/// <remarks>  
+		/// <remarks>
 		/// Export the contact in standard vCard format to a memory stream.
 		/// </remarks>
 		/// <returns>Memory stream which can be read from</returns>
@@ -2379,23 +2379,23 @@ namespace Novell.AddressBook
 
 					// Convert the binary input into Base64 UUEncoded output.
 					// Each 3 byte sequence in the source data becomes a 4 byte
-					// sequence in the character array. 
+					// sequence in the character array.
 					long arrayLength = (long) ((4.0d/3.0d) * binaryData.Length);
-    
+
 					// If array length is not divisible by 4, go up to the next
 					// multiple of 4.
-					if (arrayLength % 4 != 0) 
+					if (arrayLength % 4 != 0)
 					{
 						arrayLength += 4 - arrayLength % 4;
 					}
-    
+
 					char[] base64CharArray = new char[arrayLength];
 
 					try
 					{
 						int bytesConverted =
 							System.Convert.ToBase64CharArray(
-								binaryData, 
+								binaryData,
 								0,
 								binaryData.Length,
 								base64CharArray,

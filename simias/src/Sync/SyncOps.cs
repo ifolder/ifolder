@@ -1,6 +1,6 @@
 /***********************************************************************
  *  $RCSfile$
- * 
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Dale Olds <olds@novell.com>
- * 
+ *
  ***********************************************************************/
 using System;
 using System.Collections;
@@ -142,16 +142,16 @@ public struct NodeStamp: IComparable
 	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
 	{
 		if (collection.IsType(node, typeof(FileNode).Name))
-			return new FileNode(collection, node);
+			return new FileNode(node);
 		if (collection.IsType(node, typeof(StoreFileNode).Name))
-			return new StoreFileNode(collection, node);
+			return new StoreFileNode(node);
 		return null;
 	}
 
 	internal static DirNode CastToDirNode(Collection collection, Node node)
 	{
 		if (collection.IsType(node, typeof(DirNode).Name))
-			return new DirNode(collection, node);
+			return new DirNode(node);
 		return null;
 	}
 }
@@ -390,7 +390,7 @@ internal class SyncIncomingNode
 		//TODO: check here for whether the proposed file name is available, i.e. make current and proposed LocalFileName
 		if (collection.IsType(node, typeof(DirNode).Name))
 		{
-			DirNode pn = new DirNode(collection, node);
+			DirNode pn = new DirNode(node);
 			string path = pn.GetFullPath(collection);
 			Log.Spew("Create directory {0}", path);
 			Directory.CreateDirectory(path);
@@ -408,7 +408,7 @@ internal class SyncIncomingNode
 				fork.stream.Close();
 				fork.stream = null;
 			}
-			FileNode fn = new FileNode(collection, node);
+			FileNode fn = new FileNode(node);
 			string path = fn.GetFullPath(collection);
 			Log.Spew("placing file {0}", path);
 			File.Delete(path); //TODO: delete current LocalFileName
@@ -450,7 +450,7 @@ internal class SyncIncomingNode
 			 *
 			 *  consider a delegate to call back within transaction to do file system stuff?
 			 *
-			 *  what are the rules for dredger, file change events, applications 
+			 *  what are the rules for dredger, file change events, applications
 			 *  and concurrent clients accessing this collection on the server?
 			 */
 			for (;;)
@@ -505,7 +505,7 @@ internal class SyncIncomingNode
 		 *             CommitFile()
 		 *         Clear tempFileFlag
 		 *
-		 *  what are the rules for dredger, file change events, applications 
+		 *  what are the rules for dredger, file change events, applications
 		 *  and concurrent clients accessing this collection on the server?
 		 */
 		collection.ImportNode(node, expectedIncarn);

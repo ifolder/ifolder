@@ -270,7 +270,7 @@ namespace Simias.Storage
 			ICSList results = Search( name, relationship );
 			foreach ( ShallowNode shallowNode in results )
 			{
-				childList.Add( new Node( this, shallowNode ) );
+				childList.Add( Node.NodeFactory( this, shallowNode ) );
 				GetAllDescendants( name, new Relationship( id, shallowNode.ID ), childList );
 			}
 		}
@@ -672,6 +672,35 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Collection factory method that constructs a derived Collection object type from the specified 
+		/// ShallowNode object.
+		/// </summary>
+		/// <param name="store">Store object.</param>
+		/// <param name="shallowNode">ShallowNode object to construct new Collection object from.</param>
+		/// <returns>Downcasts the derived Collection object back to a Collection that can then be 
+		/// explicitly casted back up.</returns>
+		public static Collection CollectionFactory( Store store, ShallowNode shallowNode )
+		{
+			Collection rCollection = null;
+
+			switch ( shallowNode.Type )
+			{
+				case "Collection":
+					rCollection = new Collection( store, shallowNode );
+					break;
+
+				case "LocalAddressBook":
+					rCollection = new LocalAddressBook( store, shallowNode );
+					break;
+
+				default:
+					throw new CollectionStoreException( "An unknown type: " + shallowNode.Type + " was specified." );
+			}
+
+			return rCollection;
+		}
+
+		/// <summary>
 		/// Commits all of the changes made to the Collection object to persistent storage.
 		/// After a Node object has been committed, it will be updated to reflect any new changes that
 		/// have occurred if it had to be merged with the current Node object in the database.
@@ -899,7 +928,7 @@ namespace Simias.Storage
 			if ( document != null )
 			{
 				// Construct a temporary Node object from the DOM.
-				node = new Node( document );
+				node = Node.NodeFactory( store, document );
 			}
 
 			return node;
@@ -958,7 +987,7 @@ namespace Simias.Storage
 			ICSList nodeList = GetNodesByName( name );
 			foreach( ShallowNode shallowNode in nodeList )
 			{
-				node = new Node( this, shallowNode );
+				node = Node.NodeFactory( this, shallowNode );
 				break;
 			}
 
@@ -977,7 +1006,7 @@ namespace Simias.Storage
 			ICSList nodeList = GetNodesByType( typeString );
 			foreach ( ShallowNode shallowNode in nodeList )
 			{
-				node = new Node( this, shallowNode );
+				node = Node.NodeFactory( this, shallowNode );
 				break;
 			}
 
