@@ -25,9 +25,9 @@ ReunionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 ReunionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll $(SYSTEM_XML) Novell.iFolder.dll Simias.dll Novell.iFolder.UI.gtk.dll
 ReunionBrowserGtk_LIBPATH = ../iFolder
 
-INSTALL_BIN_FILES = $(srcdir)/collectionbrowser $(srcdir)/ifolder
+INSTALL_BIN_FILES = $(srcdir)/collectionbrowser
 
-GLADE_FILES = server-info.glade conflict-resolver.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade ifolder-confirmation.glade crash-report.glade reunion-browser.glade collection.png folder.png ifolder-collision.png ifolder.png ifolderfolder.png invitewiz.png nuke.png
+GLADE_FILES = server-info.glade conflict-resolver.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade ifolder-confirmation.glade crash-report.glade reunion-browser.glade collection.png folder.png ifolder-collision.png ifolder.png ifolderfolder.png nuke.png
 
 IMAGE_FILES = collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png 
 
@@ -66,7 +66,6 @@ clean-local:
 	rm -rf *.dbg *.exe $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local:
-	rm -f ifolder
 	rm -f collectionbrowser
 
 maintainer-clean-local:
