@@ -1,27 +1,55 @@
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias-install.sln $(srcdir)/simias-msi/simias-msi.vdproj $(srcdir)/simias-msm/simias-msm.vdproj
 
+RELEASE = 1
+MSI_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msi
+MSM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
+MSI_LOG_FILE = devenv-simias-msi.log
+MSM_LOG_FILE = devenv-simias-msm.log
+
 .PHONY: package package-clean package-install package-uninstall simias
 
 all clean:
 
-package: simias.msi
+package: $(MSI_FILE)
 
-simias.msi: simias.msm simias-install.sln simias-msi/simias-msi.vdproj
-	"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msi /out devenv-simias-msi.log
-	mv simias-msi/$(DEVENV_CONFIGURATION)/simias.msi $@
+$(MSI_FILE): $(MSM_FILE) simias-install.sln simias-msi/simias-msi.vdproj
+	@rm -f $(MSI_LOG_FILE) $@
+	@CMD='"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msi /out $(MSI_LOG_FILE)'; \
+	echo $$CMD; \
+	if eval $$CMD; then \
+		mv simias-msi/$(DEVENV_CONFIGURATION)/simias.msi .; \
+		ln simias.msi $@; \
+	else \
+		grep -a "ERROR:" $(MSI_LOG_FILE); \
+	fi
 
-simias.msm: simias simias-install.sln simias-msm/simias-msm.vdproj
-	"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msm /out devenv-simias-msm.log
-	mv simias-msm/$(DEVENV_CONFIGURATION)/simias.msm $@
+$(MSM_FILE): simias simias-install.sln simias-msm/simias-msm.vdproj
+	@rm -f $(MSM_LOG_FILE) $@
+	@CMD='"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msm /out $(MSM_LOG_FILE)'; \
+	echo $$CMD; \
+	if eval $$CMD; then \
+		mv simias-msm/$(DEVENV_CONFIGURATION)/simias.msm .; \
+		ln simias.msm $@; \
+	else \
+		grep -a "ERROR:" $(MSM_LOG_FILE); \
+	fi
 
 simias:
 	make -C ../.. all
 	
-package-install: simias.msi
-	msiexec /i simias.msi /q /L* install-msi.log
+package-install: $(MSI_FILE)
+	@CMD='msiexec /i $(MSI_FILE) /qb+ /L* install-msi.log'; \
+	echo $$CMD; \
+	if ! eval $$CMD; then \
+		grep -a "ERROR:" install-msi.log; \
+	fi
 	
 package-uninstall:
-	msiexec /x simias.msi /q /L* uninstall-msi.log
+	@CMD='msiexec /x $(MSI_FILE) /qb+ /L* uninstall-msi.log'; \
+	echo $$CMD; \
+	if ! eval $$CMD; then \
+		grep -a "ERROR:" uninstall-msi.log; \
+	fi
 
 package-clean clean-local:
 	rm -rf  *.msi *.msm Release Debug */Release */Debug *.log *.suo
