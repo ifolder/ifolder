@@ -15,6 +15,12 @@ namespace Win32Util
 	{
 		IntPtr window;
 
+		public const int LR_LOADFROMFILE = 0x10;
+		public const int IMAGE_ICON = 1;
+		public const int FILE_ATTRIBUTE_DIRECTORY = 0x10;
+		public const int SHGFI_ICON = 0x100;
+		public const int SHGFI_USEFILEATTRIBUTES = 0x10;
+
 		/// <summary>
 		/// Create a Win32Window
 		/// </summary>
@@ -63,6 +69,15 @@ namespace Win32Util
 			return SHObjectProperties(window, type, objectName, pageName);
 		}
 
+		public static IntPtr ShGetFileInfo(string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags)
+		{
+			return SHGetFileInfo(path, attr, out fi, cbfi, flags);
+		}
+
+		public static IntPtr LoadImageFromFile(int hInst, string name, int type, int cx, int cy, int load)
+		{
+			return LoadImage(hInst, name, type, cx, cy, load);
+		}
 
 		[DllImport("user32.dll")]
 		static extern bool BringWindowToTop(IntPtr window);
@@ -72,5 +87,23 @@ namespace Win32Util
 
 		[DllImport("shell32.dll")]
 		static extern bool SHObjectProperties(IntPtr window, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
+
+		[DllImportAttribute("user32.dll")]
+		static extern IntPtr LoadImage(int hInst, string name, int type, int cx, int cy, int load);
+
+		[DllImport("shell32.dll")]
+		static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPWStr)] string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags);
 	}
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct IFSHFILEINFO
+{
+	public IntPtr hIcon;
+	public int iIcon;
+	public int attributes;
+	[MarshalAs(UnmanagedType.LPWStr, SizeConst=256)]
+	public String displayName;
+	[MarshalAs(UnmanagedType.LPWStr, SizeConst=80)]
+	public String typeName;
 }
