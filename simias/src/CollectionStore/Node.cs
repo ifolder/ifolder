@@ -292,6 +292,14 @@ namespace Simias.Storage
 			{
 				p.DeleteProperty();
 			}
+
+			// Reset the new incarnation values.
+			Property mvProp = new Property( PropertyTags.MasterIncarnation, ( ulong )0 );
+			mvProp.LocalProperty = true;
+			properties.ModifyNodeProperty( mvProp );
+
+			Property lvProp = new Property( PropertyTags.LocalIncarnation, ( ulong )0 );
+			properties.ModifyNodeProperty( lvProp );
 		}
 
 		/// <summary>
