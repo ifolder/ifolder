@@ -1496,11 +1496,32 @@ namespace Novell.iFolder
 				iFolderHolder ifHolder = 
 							(iFolderHolder) tModel.GetValue(iter, 0);
 
+				// build an array of all current iFolders and
+				// hand it to the Properties Dialog
+				iFolder[] ifList;
+				ArrayList list = new ArrayList();
+
+				if(iFolderTreeStore.GetIterFirst(out iter))
+				{
+					do
+					{
+						iFolderHolder tmpHldr = (iFolderHolder) 
+									iFolderTreeStore.GetValue(iter,0);
+						if(!tmpHldr.iFolder.IsSubscription)
+							list.Add(tmpHldr.iFolder);
+					}
+					while(iFolderTreeStore.IterNext(ref iter));
+				}
+
+				ifList = (iFolder[])(list.ToArray(typeof(iFolder)));
+
 				try
 				{
 					PropertiesDialog = 
 						new iFolderPropertiesDialog(this, 
-									ifHolder.iFolder, iFolderWS);
+									ifHolder.iFolder, 
+									ifList,
+									iFolderWS);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
 					PropertiesDialog.CurrentPage = currentPage;
@@ -1636,9 +1657,9 @@ namespace Novell.iFolder
 							throw new Exception("Simias returned null");
 
 						TreeIter iter = 
-							iFolderTreeStore.AppendValues(newiFolder);
+							iFolderTreeStore.AppendValues(
+								new iFolderHolder(newiFolder));
 						curiFolders.Add(newiFolder.ID, iter);
-
 
 
 						if(ifSettings.DisplayConfirmation)
@@ -2040,7 +2061,8 @@ namespace Novell.iFolder
 		{
 			if(!curiFolders.ContainsKey(ifolder.ID))
 			{
-				TreeIter iter = iFolderTreeStore.AppendValues(ifolder);
+				TreeIter iter = iFolderTreeStore.AppendValues(
+						new iFolderHolder(ifolder));
 				curiFolders.Add(ifolder.ID, iter);
 			}
 		}

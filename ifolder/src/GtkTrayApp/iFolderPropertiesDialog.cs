@@ -68,6 +68,7 @@ namespace Novell.iFolder
 		/// </summary>
 		public iFolderPropertiesDialog(	Gtk.Window parent,
 										iFolder ifolder, 
+										iFolder[] ifolders,
 										iFolderWebService iFolderWS)
 			: base()
 		{
@@ -83,7 +84,7 @@ namespace Novell.iFolder
 
 			ifHash = new Hashtable();
 
-			InitializeWidgets();
+			InitializeWidgets(ifolders);
 			iFolderPickCombo.Entry.Text = this.ifolder.UnManagedPath;
 		}
 
@@ -93,7 +94,7 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Setup the UI inside the Window
 		/// </summary>
-		private void InitializeWidgets()
+		private void InitializeWidgets(iFolder[] ifolders)
 		{
 			VBox dialogBox = new VBox();
 			this.VBox.PackStart(dialogBox);
@@ -117,6 +118,7 @@ namespace Novell.iFolder
 			pickBox.PackStart(iFolderPickCombo, true, true, 0);
 			iFolderPickCombo.Entry.Editable = false;
 
+/*
 			iFolder[]	iFolderArray;
 			try
 			{
@@ -134,6 +136,17 @@ namespace Novell.iFolder
 
 			ArrayList ifList = new ArrayList();
 			foreach(iFolder ifldr in iFolderArray)
+			{
+				if(!ifldr.IsSubscription)
+				{
+					ifList.Add(ifldr.UnManagedPath);
+					ifHash.Add(ifldr.UnManagedPath, ifldr);
+				}
+			}
+*/
+
+			ArrayList ifList = new ArrayList();
+			foreach(iFolder ifldr in ifolders)
 			{
 				if(!ifldr.IsSubscription)
 				{

@@ -578,7 +578,10 @@ namespace Novell.iFolder
 			if(CheckWebService())
 			{
 				if(!winShown)
+				{
 					ifwin.ShowAll();
+					winShown = true;
+				}
 				else
 					ifwin.Present();
 			}
