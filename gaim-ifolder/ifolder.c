@@ -1478,6 +1478,8 @@ write_invitations_file(FILE *file, GtkListStore *store)
 	
 	fprintf(file, "\t</invitations>\n");
 	fprintf(file, "</simias>\n");
+
+	return TRUE;
 }
 
 /**
@@ -1876,6 +1878,8 @@ write_trusted_buddies_file(FILE *file, GtkListStore *store)
 	
 	fprintf(file, "\t</buddies>\n");
 	fprintf(file, "</simias>\n");
+
+	return TRUE;
 }
 
 static void
