@@ -70,53 +70,39 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Post
-# If path is not already in ld.so.conf, append it
-if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
-    echo "%{prefix}/bin" >> /etc/ld.so.conf
-    /sbin/ldconfig
+INSTANCES_AFTER_INSTALL=$1
+if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+    #
+    # If path is not already in ld.so.conf, append it
+    #
+    if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
+        echo "%{prefix}/bin" >> /etc/ld.so.conf
+        /sbin/ldconfig
+    fi
+    
+    #
+    # Configure tray app to start on user login for each desktop user
+    #
+    HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
+    for path in $HOME_DIRS
+    do
+	%{prefix}/bin/setup-autostart $path
+    done 2>/dev/null
 fi
 
-#
-# Configure tray app to start on user login for each desktop user
-#
-#for path in \`find /home -name \.gnome2 -print\`
-#do
-#    $TOP_INSTALL/bin/config-startup \`dirname \$path\`
-#done 2>/dev/null
-
-#if [ "$1" = "1" ]; then
-#    # do things appropriate for a new install
-#    echo "%Post ($1 - install)"
-#elif [ "$1" = "2" ]; then
-#    # do things appropriate for an upgrade
-#    echo "%Post ($1 - upgrade)"
-#fi
-
 #=============================================================================
-#%Preun
-#if [ "$1" != "1" ]; then
-#    # do things appropriate for a remove
-#    #
-#    # Unconfigure tray app to start on user login for each desktop user
-#    #
-#    for path in \`find /home -name \.gnome2 -print\`
-#    do
-#        $TOP_INSTALL/bin/config-startup -e \`dirname \$path\`
-#    done 2>/dev/null
-#elif [ "$1" = "1" ]; then
-#    # do things appropriate for an upgrade
-#    echo "%Postun ($1 - upgrade)"
-#fi
-
-#=============================================================================
-#%Postun
-#if [ "$1" != "1" ]; then
-#    # do things appropriate for a remove
-#    echo "%Postun ($1 - remove)"
-#elif [ "$1" = "1" ]; then
-#    # do things appropriate for an upgrade
-#    echo "%Postun ($1 - upgrade)"
-#fi
+%Preun
+INSTANCES_AFTER_UNINSTALL=$1
+if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+    #
+    # Unconfigure tray app to start on user login for each desktop user
+    #
+    HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
+    for path in $HOME_DIRS
+    do
+        %{prefix}/bin/setup-autostart -e $path
+    done 2>/dev/null
+fi
 
 #=============================================================================
 %Files
