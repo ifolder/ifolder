@@ -123,6 +123,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PropertyEditor.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyEditor.resx"
+                    DependentUpon = "PropertyEditor.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "PropertyForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyForm.resx"
+                    DependentUpon = "PropertyForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "ProviderBrowser.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

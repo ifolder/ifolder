@@ -79,6 +79,7 @@ namespace StoreBrowser
 			if (tNode.Tag != null)
 			{
 				Node cNode = (Node)tNode.Tag;
+				lView.Tag = cNode;
 				// Add the name;
 				ListViewItem item = new ListViewItem("Name");
 				item.BackColor = Color.LightBlue;
@@ -105,6 +106,7 @@ namespace StoreBrowser
 				{
 					c = c == Color.LightBlue ? Color.White : Color.LightBlue;
 					item = new ListViewItem(p.Name);
+					item.Tag = p;
 					item.BackColor = c;
 
 					if (p.Type == Syntax.Relationship)
@@ -199,7 +201,7 @@ namespace StoreBrowser
 							TreeNode nNode = new TreeNode(n.Name);
 							nNode.Tag = n;
 							tNode.Nodes.Add(nNode);
-							nNode.Nodes.Add("temp");
+							//nNode.Nodes.Add("temp");
 						}
 					}
 				}

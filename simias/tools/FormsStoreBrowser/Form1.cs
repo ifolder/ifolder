@@ -60,6 +60,13 @@ namespace StoreBrowser
 		private System.Windows.Forms.ColumnHeader Type;
 		private System.Windows.Forms.ColumnHeader Flags;
 		private System.Windows.Forms.ColumnHeader CName;
+		private System.Windows.Forms.ContextMenu NodeMenu;
+		private System.Windows.Forms.MenuItem cmDelete;
+		private System.Windows.Forms.MenuItem CmNew;
+		private System.Windows.Forms.ContextMenu PropertyMenu;
+		private System.Windows.Forms.MenuItem pcmDelete;
+		private System.Windows.Forms.MenuItem pcmNew;
+		private System.Windows.Forms.MenuItem pcmEdit;
 		private System.ComponentModel.IContainer components;
 
 		public Form1()
@@ -118,6 +125,13 @@ namespace StoreBrowser
 			this.Value = new System.Windows.Forms.ColumnHeader();
 			this.Type = new System.Windows.Forms.ColumnHeader();
 			this.Flags = new System.Windows.Forms.ColumnHeader();
+			this.NodeMenu = new System.Windows.Forms.ContextMenu();
+			this.cmDelete = new System.Windows.Forms.MenuItem();
+			this.CmNew = new System.Windows.Forms.MenuItem();
+			this.PropertyMenu = new System.Windows.Forms.ContextMenu();
+			this.pcmDelete = new System.Windows.Forms.MenuItem();
+			this.pcmNew = new System.Windows.Forms.MenuItem();
+			this.pcmEdit = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -191,8 +205,10 @@ namespace StoreBrowser
 			this.tView.Name = "tView";
 			this.tView.SelectedImageIndex = -1;
 			this.tView.Size = new System.Drawing.Size(296, 574);
+			this.tView.Sorted = true;
 			this.tView.TabIndex = 0;
 			this.tView.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tView_AfterCollapse);
+			this.tView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tView_MouseUp);
 			this.tView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tView_AfterSelect);
 			this.tView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tView_BeforeExpand);
 			// 
@@ -229,13 +245,16 @@ namespace StoreBrowser
 																						this.Type,
 																						this.Flags});
 			this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listView1.FullRowSelect = true;
 			this.listView1.GridLines = true;
 			this.listView1.Location = new System.Drawing.Point(299, 0);
+			this.listView1.MultiSelect = false;
 			this.listView1.Name = "listView1";
 			this.listView1.Size = new System.Drawing.Size(613, 574);
 			this.listView1.TabIndex = 4;
 			this.listView1.View = System.Windows.Forms.View.Details;
 			this.listView1.Resize += new System.EventHandler(this.listView1_Resize);
+			this.listView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseUp);
 			// 
 			// CName
 			// 
@@ -256,6 +275,49 @@ namespace StoreBrowser
 			// 
 			this.Flags.Text = "Flags";
 			this.Flags.Width = 40;
+			// 
+			// NodeMenu
+			// 
+			this.NodeMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					 this.cmDelete,
+																					 this.CmNew});
+			// 
+			// cmDelete
+			// 
+			this.cmDelete.Index = 0;
+			this.cmDelete.Text = "Delete";
+			this.cmDelete.Click += new System.EventHandler(this.cmDelete_Click);
+			// 
+			// CmNew
+			// 
+			this.CmNew.Index = 1;
+			this.CmNew.Text = "New";
+			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
+			// 
+			// PropertyMenu
+			// 
+			this.PropertyMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.pcmDelete,
+																						 this.pcmNew,
+																						 this.pcmEdit});
+			// 
+			// pcmDelete
+			// 
+			this.pcmDelete.Index = 0;
+			this.pcmDelete.Text = "Delete";
+			this.pcmDelete.Click += new System.EventHandler(this.pcmDelete_Click);
+			// 
+			// pcmNew
+			// 
+			this.pcmNew.Index = 1;
+			this.pcmNew.Text = "New";
+			this.pcmNew.Click += new System.EventHandler(this.pcmNew_Click);
+			// 
+			// pcmEdit
+			// 
+			this.pcmEdit.Index = 2;
+			this.pcmEdit.Text = "Edit";
+			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
 			// Form1
 			// 
@@ -351,6 +413,141 @@ namespace StoreBrowser
 		{
 			int cwidth = listView1.Width / 4;
 			listView1.Columns[0].Width = listView1.Columns[1].Width = listView1.Columns[2].Width = listView1.Columns[3].Width = cwidth;
+		}
+
+		private void tView_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				TreeNode tn = tView.GetNodeAt(e.X, e.Y);
+				tView.SelectedNode = tn;
+				if (tn.Tag == null || tn.Tag is Collection)
+				{
+					CmNew.Enabled = true;
+				}
+				else
+				{
+					CmNew.Enabled = false;
+				}
+				NodeMenu.Show(tView, new Point(e.X, e.Y));
+			}
+		}
+
+		private void cmDelete_Click(object sender, System.EventArgs e)
+		{
+			tView.BeginUpdate();
+			TreeNode tn = tView.SelectedNode;
+			if (tn.Tag is Collection)
+			{
+				Collection col = (Collection)tn.Tag;
+				col.Delete();
+				col.Commit();
+				tn.Remove();
+			}
+			else if (tn.Tag is Node)
+			{
+				Collection col = (Collection)tn.Parent.Tag;
+				col.Delete((Node)tn.Tag);
+				col.Commit((Node)tn.Tag);
+				tn.Remove();
+			}
+			tView.EndUpdate();
+			tView.Update();
+		}
+
+		private void CmNew_Click(object sender, System.EventArgs e)
+		{
+		
+		}
+
+		private void listView1_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				ListViewItem lvi = listView1.GetItemAt(e.X, e.Y);
+				if (lvi != null)
+				{
+					lvi.Selected = true;
+					pcmDelete.Enabled = true;
+				}
+				else
+				{
+					pcmDelete.Enabled = false;
+				}
+				PropertyMenu.Show(listView1, new Point(e.X, e.Y));
+			}
+		}
+
+		private void pcmEdit_Click(object sender, System.EventArgs e)
+		{
+			Collection col;
+			Node node = (Node)tView.SelectedNode.Tag;
+			if (node is Collection)
+				col = (Collection)node;
+			else
+				col = (Collection)tView.SelectedNode.Parent.Tag;
+
+			ListView.SelectedListViewItemCollection itemList = listView1.SelectedItems;
+			if (itemList.Count == 1)
+			{
+				ListViewItem.ListViewSubItemCollection items = itemList[0].SubItems;
+				MultiValuedList mvList = node.Properties.GetProperties(items[0].Text);
+				Property property = null;
+				if (mvList.Count > 1)
+				{
+					foreach (Property p in mvList)
+					{
+						if (p.Value.ToString() == items[1].Text)
+						{
+							property = p;
+							break;
+						}
+					}
+				}
+				else
+				{
+					property = mvList[0];
+				}
+
+				new PropertyForm(col, node, property).Show();
+			}
+			tView.SelectedNode.Tag = col.Refresh(node);
+			browser.ShowNode(tView.SelectedNode);
+			listView1.Refresh();
+		}
+
+		private void pcmNew_Click(object sender, System.EventArgs e)
+		{
+			Collection col;
+			Node node = (Node)tView.SelectedNode.Tag;
+			if (node is Collection)
+				col = (Collection)node;
+			else
+				col = (Collection)tView.SelectedNode.Parent.Tag;
+			new PropertyForm(col, node, null).Show();
+			tView.SelectedNode.Tag = col.Refresh(node);
+			listView1.Refresh();
+			browser.ShowNode(tView.SelectedNode);
+		}
+
+		private void pcmDelete_Click(object sender, System.EventArgs e)
+		{
+			Collection col;
+			Node node = (Node)tView.SelectedNode.Tag;
+			if (node is Collection)
+				col = (Collection)node;
+			else
+				col = (Collection)tView.SelectedNode.Parent.Tag;
+			
+			ListView.SelectedListViewItemCollection itemList = listView1.SelectedItems;
+			foreach (ListViewItem item in itemList)
+			{
+				node.Properties.DeleteSingleProperty(item.Text);
+				col.Commit(node);
+			}
+			tView.SelectedNode.Tag = col.Refresh(node);
+			listView1.Refresh();
+			browser.ShowNode(tView.SelectedNode);
 		}
 	}
 
