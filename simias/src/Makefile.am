@@ -1,4 +1,4 @@
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService mDnsDomain AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
 
 DIST_SUBDIRS = $(SUBDIRS)
 

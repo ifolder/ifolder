@@ -453,6 +453,7 @@ src/SimiasServer/Makefile
 src/SimiasServer/simias
 src/AddressBook/Makefile
 src/mDnsService/Makefile
+src/mDnsDomain/Makefile
 src/WebService/Makefile
 src/POBoxWS/Makefile
 src/SyncService/Makefile
