@@ -1,6 +1,5 @@
 # Setup install targets
 
-
 TEST_RUN_MAKEFILE := $(DESTDIR)$(bindir)$(SEP)test.mk
 
 .PHONY: install

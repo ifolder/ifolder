@@ -355,13 +355,16 @@ api-doc-clean:
 
 report:
 	$(call HEADER,$@)
-	$(REPORT) $(STAGE_DIR)
+	$(REPORT) $(DESTDIR)$(bindir)
 
 
 #=============================================================================
 # File CVS History:
 #
 # $Log$
+# Revision 1.5.2.4  2004/02/25 03:23:58  cgaisford
+# update make files to run and report on tests
+#
 # Revision 1.5.2.3  2004/02/25 01:11:41  cgaisford
 # updated all of the makefiles to run test cases
 #

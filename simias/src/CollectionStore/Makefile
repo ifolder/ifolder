@@ -42,7 +42,7 @@ TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_F
 #TARGETS = CollectionStoreTests.dll CollectionStore.dll 
 CLEAN_FILES = Check.xml CollectionStoreTests.pdb CollectionStoreTests.Doc.xml Check.xml CollectionStore.pdb CollectionStore.Doc.xml  CollectionStore.xml CollectionStore.Doc.xml
 CLEAN_DIRS = CollectionStoreTests/bin CollectionStoreTests/obj bin obj 
-NUNIT_TESTS = CollectionStoreTests.dll 
+#NUNIT_TESTS = CollectionStoreTests.dll 
 STAGE_FILES = $(TARGETS) CollectionStoreTests.Doc.xml CollectionStore.Doc.xml CollectionStoreTests.pdb CollectionStore.pdb 
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
 
