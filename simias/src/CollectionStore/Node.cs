@@ -376,6 +376,10 @@ namespace Simias.Storage
 					rNode = new Member( document );
 					break;
 
+				case "Domain":
+					rNode = new Domain( document );
+					break;
+
 				default:
 					rNode = new Node( document );
 					break;
@@ -446,6 +450,10 @@ namespace Simias.Storage
 
 				case "Member":
 					rNode = new Member( collection, shallowNode );
+					break;
+
+				case "Domain":
+					rNode = new Domain( collection, shallowNode );
 					break;
 
 				default:

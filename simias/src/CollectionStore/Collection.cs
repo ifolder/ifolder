@@ -55,6 +55,11 @@ namespace Simias.Storage
 		/// Access control object for this Collection object.
 		/// </summary>
 		private AccessControl accessControl;
+
+		/// <summary>
+		/// Used to do a quick lookup of the domain ID.
+		/// </summary>
+		string domainID = null;
 		#endregion
 
 		#region Properties
@@ -63,7 +68,16 @@ namespace Simias.Storage
 		/// </summary>
 		public string Domain
 		{
-			get { return properties.FindSingleValue( PropertyTags.DomainName ).Value as string; }
+			get 
+			{ 
+				if ( domainID == null )
+				{
+					// Only look it up one time.
+					domainID = properties.FindSingleValue( PropertyTags.DomainName ).Value as string; 
+				}
+
+				return domainID;
+			}
 		}
 
 		/// <summary>
@@ -132,9 +146,9 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
-		/// <param name="domainName">The domain that this object is stored in.</param>
-		public Collection( Store storeObject, string collectionName, string domainName ) :
-			this ( storeObject, collectionName, Guid.NewGuid().ToString(), domainName )
+		/// <param name="domainID">The domain that this object is stored in.</param>
+		public Collection( Store storeObject, string collectionName, string domainID ) :
+			this ( storeObject, collectionName, Guid.NewGuid().ToString(), domainID )
 		{
 		}
 
@@ -145,9 +159,9 @@ namespace Simias.Storage
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe
 		/// this object.</param>
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
-		/// <param name="domainName">The domain that this object is stored in.</param>
-		public Collection( Store storeObject, string collectionName, string collectionID, string domainName ) :
-			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainName )
+		/// <param name="domainID">The domain that this object is stored in.</param>
+		public Collection( Store storeObject, string collectionName, string collectionID, string domainID ) :
+			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainID )
 		{
 		}
 
@@ -198,8 +212,8 @@ namespace Simias.Storage
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe this object.</param>
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="collectionType">Base type of collection object.</param>
-		/// <param name="domainName">The domain that this object is stored in.</param>
-		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainName ) :
+		/// <param name="domainID">The domain that this object is stored in.</param>
+		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainID ) :
 			base( collectionName, collectionID, collectionType )
 		{
 			store = storeObject;
@@ -222,8 +236,8 @@ namespace Simias.Storage
 				properties.AddNodeProperty( PropertyTags.Types, NodeTypes.CollectionType );
 			}
 
-			// Add the domain name as a property.
-			properties.AddNodeProperty( PropertyTags.DomainName, domainName );
+			// Add the domain ID as a property.
+			properties.AddNodeProperty( PropertyTags.DomainName, domainID );
 
 			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );

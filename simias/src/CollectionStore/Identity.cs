@@ -164,7 +164,7 @@ namespace Simias.Storage
 		public override void GetLocalCredentialsForServer(string serverRealm, string server, out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
 			Identity identity = store.CurrentUser;
-			realm = Identity.workGroupDomain;
+			realm = Domain.WorkGroupDomainID;
 			principalName = identity.ID;
 			rsaKeys = identity.Credential;
 		}
@@ -180,7 +180,7 @@ namespace Simias.Storage
 		public override void GetServerCredentials(out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
 		{
 			Identity identity = store.CurrentUser;
-			realm = Identity.workGroupDomain;
+			realm = Domain.WorkGroupDomainID;
 			principalName = identity.ID;
 			rsaKeys = identity.Credential;
 		}
@@ -218,15 +218,10 @@ namespace Simias.Storage
 		/// object is instantiated. This is passed as a parameter to the constructor and will initially
 		/// use the dummy key set until the real key set is imported.
 		/// </summary>
-		static internal CspParameters dummyCsp;
+		static internal CspParameters DummyCsp;
 
 		/// <summary>
-		/// Well known identitifer for workgroup.
-		/// </summary>
-		static internal string workGroupDomain = "363051D1-8841-4c7b-A1DD-71ABBD0F4ADA";
-
-		/// <summary>
-		/// Used to separate the ID and domain values.
+		/// Used to separate the user ID and domain ID in the Domain property.
 		/// </summary>
 		static private char valueSeparator = ':';
 
@@ -250,7 +245,7 @@ namespace Simias.Storage
 				Property p = properties.FindSingleValue( PropertyTags.Credential );
 				if ( p != null )
 				{
-					credential = new RSACryptoServiceProvider( Identity.dummyCsp );
+					credential = new RSACryptoServiceProvider( Identity.DummyCsp );
 					credential.FromXmlString( p.Value as string );
 				}
 
@@ -278,7 +273,7 @@ namespace Simias.Storage
 				RSACryptoServiceProvider credential = Credential;
 				if ( credential != null )
 				{
-					pk = new RSACryptoServiceProvider( Identity.dummyCsp );
+					pk = new RSACryptoServiceProvider( Identity.DummyCsp );
 					pk.ImportParameters( credential.ExportParameters( false ) );
 				}
 
@@ -294,9 +289,9 @@ namespace Simias.Storage
 		static Identity()
 		{
 			// Set up the dummy key store so that it will contain a dummy key set.
-			dummyCsp = new CspParameters();
-			dummyCsp.KeyContainerName = "DummyKeyStore";
-			new RSACryptoServiceProvider( dummyCsp );
+			DummyCsp = new CspParameters();
+			DummyCsp.KeyContainerName = "DummyKeyStore";
+			new RSACryptoServiceProvider( DummyCsp );
 		}
 
 		/// <summary>
@@ -310,9 +305,6 @@ namespace Simias.Storage
 		{
 			// Setup the key store.
 			keyStore = new IdentityKeyStore( store );
-
-			// Store the default local domain and identity.
-			AddDomainIdentity( userGuid, workGroupDomain );
 
 			// Create a local, hidden property to store the credential in.
 			Property p;
@@ -391,16 +383,16 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the specified Domain property.
 		/// </summary>
-		/// <param name="domainName">Name to use to discover domain property.</param>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <returns>A Property object containing the found domain property.</returns>
-		private Property GetPropertyByDomain( string domainName )
+		private Property GetPropertyByDomain( string domainID )
 		{
 			Property property = null;
 
 			MultiValuedList mvl = properties.GetProperties( PropertyTags.Domain );
 			foreach ( Property p in mvl )
 			{
-				if ( ( p.Value as string ).EndsWith( domainName ) )
+				if ( ( p.Value as string ).EndsWith( domainID ) )
 				{
 					property = p;
 					break;
@@ -433,39 +425,44 @@ namespace Simias.Storage
 		}
 		#endregion
 
-		#region Public Methods
+		#region Internal Methods
 		/// <summary>
 		/// Adds a domain identity property to the Identity object.
 		/// </summary>
 		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
-		/// <param name="domainName">Domain to create a mapping for.</param>
-		public void AddDomainIdentity( string userID, string domainName )
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		/// <returns>The modified identity object.</returns>
+		internal Identity AddDomainIdentity( string userID, string domainID )
 		{
-			properties.AddNodeProperty( PropertyTags.Domain, userID.ToLower() + valueSeparator + domainName );
+			properties.AddNodeProperty( PropertyTags.Domain, userID.ToLower() + valueSeparator + domainID );
+			return this;
 		}
 
 		/// <summary>
 		/// Removes the specified domain mapping from the identity object.
 		/// </summary>
 		/// <param name="localDb">Reference to the local database object.</param>
-		/// <param name="domainName">Name of the domain mapping to remove.</param>
-		public void DeleteDomainIdentity( LocalDatabase localDb, string domainName )
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		/// <returns>The modified identity object.</returns>
+		internal Identity DeleteDomainIdentity( LocalDatabase localDb, string domainID )
 		{
 			// Find the property to be deleted.
-			Property p = GetPropertyByDomain( domainName );
+			Property p = GetPropertyByDomain( domainID );
 			if ( ( p == null ) && ( localDb != null ) )
 			{
 				// This may be caused by a stale node. It needs to be refreshed.
 				localDb.Refresh( this );
 				
 				// Try again.
-				p = GetPropertyByDomain( domainName );
+				p = GetPropertyByDomain( domainID );
 			}
 
 			if ( p != null )
 			{
 				p.DeleteProperty();
 			}
+
+			return this;
 		}
 
 		/// <summary>
@@ -474,7 +471,7 @@ namespace Simias.Storage
 		/// <param name="localDb">Reference to the local database object.</param>
 		/// <param name="userID">User ID to find the associated domain for.</param>
 		/// <returns>Domain name associated with the specified user ID if it exists. Otherwise null is returned.</returns>
-		public string GetDomainFromUserID( LocalDatabase localDb, string userID )
+		internal string GetDomainFromUserID( LocalDatabase localDb, string userID )
 		{
 			string normalizedID = userID.ToLower();
 
@@ -493,22 +490,22 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the user ID associated with the specified domain name.
+		/// Gets the user ID associated with the specified domain ID.
 		/// </summary>
 		/// <param name="localDb">Reference to the local database object.</param>
-		/// <param name="domainName">Domain name to find userID for.</param>
-		/// <returns>User ID associated with the specified domain name if it exists. Otherwise null is returned.</returns>
-		public string GetUserIDFromDomain( LocalDatabase localDb, string domainName )
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		/// <returns>User ID associated with the specified domain ID if it exists. Otherwise null is returned.</returns>
+		internal string GetUserIDFromDomain( LocalDatabase localDb, string domainID )
 		{
 			// Find the property associated with the user ID.
-			Property p = GetPropertyByDomain( domainName );
+			Property p = GetPropertyByDomain( domainID );
 			if ( ( p == null ) && ( localDb != null ) )
 			{
 				// This may be caused by a stale node. It needs to be refreshed.
 				localDb.Refresh( this );
 
 				// Try again.
-				p = GetPropertyByDomain( domainName );
+				p = GetPropertyByDomain( domainID );
 			}
 
 			return ( p != null ) ? ( p.Value as string ).Substring( 0, id.Length ) : null;

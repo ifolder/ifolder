@@ -62,12 +62,21 @@ namespace Simias.Storage
 			get { return classNames[ 2 ]; }
 		}
 
+
+		/// <summary>
+		/// Gets the Domain class name.
+		/// </summary>
+		static public string DomainType
+		{
+			get { return classNames[ 3 ]; }
+		}
+
 		/// <summary>
 		/// Gets the FileNode class name.
 		/// </summary>
 		static public string FileNodeType
 		{
-			get { return classNames[ 3 ]; }
+			get { return classNames[ 4 ]; }
 		}
 
 		/// <summary>
@@ -75,7 +84,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string IdentityType
 		{
-			get { return classNames[ 4 ]; }
+			get { return classNames[ 5 ]; }
 		}
 
 		/// <summary>
@@ -83,7 +92,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string LinkNodeType
 		{
-			get { return classNames[ 5 ]; }
+			get { return classNames[ 6 ]; }
 		}
 
 		/// <summary>
@@ -91,7 +100,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string LocalDatabaseType
 		{
-			get { return classNames[ 6 ]; }
+			get { return classNames[ 7 ]; }
 		}
 
 		/// <summary>
@@ -99,7 +108,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string MemberType
 		{
-			get { return classNames[ 7 ]; }
+			get { return classNames[ 8 ]; }
 		}
 
 		/// <summary>
@@ -107,7 +116,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string NodeType
 		{
-			get { return classNames[ 8 ]; }
+			get { return classNames[ 9 ]; }
 		}
 
 		/// <summary>
@@ -115,7 +124,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string StoreFileNodeType
 		{
-			get { return classNames[ 9 ]; }
+			get { return classNames[ 10 ]; }
 		}
 
 		/// <summary>
@@ -123,7 +132,7 @@ namespace Simias.Storage
 		/// </summary>
 		static public string TombstoneType
 		{
-			get { return classNames[ 10 ]; }
+			get { return classNames[ 11 ]; }
 		}
 		#endregion
 
@@ -136,6 +145,7 @@ namespace Simias.Storage
 			classNames = new string[] {	  typeof( BaseFileNode ).Name,
 										  typeof( Collection ).Name,
 										  typeof( DirNode ).Name,
+										  typeof( Domain ).Name,
 										  typeof( FileNode ).Name,
 										  typeof( Identity ).Name,
 										  typeof( LinkNode ).Name,

@@ -280,10 +280,10 @@ namespace Simias.Storage
 		/// Gets the Member object that represents the currently executing security context.
 		/// </summary>
 		/// <param name="store">Store object.</param>
-		/// <param name="domainName">The domain used to map the current user to.</param>
+		/// <param name="domainID">The domain used to map the current user to.</param>
 		/// <param name="createMember">If true, creates Member object if it does not exist.</param>
 		/// <returns>A Member object that represents the currently executing security context.</returns>
-		public Member GetCurrentMember( Store store, string domainName, bool createMember )
+		public Member GetCurrentMember( Store store, string domainID, bool createMember )
 		{
 			// See if there is a currently impersonating user.
 			Member member = ImpersonationMember;
@@ -292,11 +292,11 @@ namespace Simias.Storage
 				// This collection is not currently being impersonated, go look up the Member object of 
 				// the current identity in the store.
 				Identity identity = store.CurrentUser;
-				string userID = identity.GetUserIDFromDomain( store.LocalDb, domainName );
+				string userID = identity.GetUserIDFromDomain( store.LocalDb, domainID );
 				if ( userID == null )
 				{
 					// The domain mapping has to exist or it means that we never were invited to this domain.
-					throw new DoesNotExistException( String.Format( "There is no identity mapping for identity {0} to domain {1}.", identity.ID, domainName ) );
+					throw new DoesNotExistException( String.Format( "There is no identity mapping for identity {0} to domain {1}.", identity.ID, domainID ) );
 				}
 
 				// Check in the local store to see if there is an existing member.

@@ -18,6 +18,7 @@ AssemblyInfo.cs
 ../CollectionStore/Collection.cs
 ../CollectionStore/Collision.cs
 ../CollectionStore/DirNode.cs
+../CollectionStore/Domain.cs
 ../CollectionStore/Exception.cs
 ../CollectionStore/FileNode.cs
 ../CollectionStore/ICSEnumerator.cs

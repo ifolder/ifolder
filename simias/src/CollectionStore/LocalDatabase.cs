@@ -35,7 +35,7 @@ namespace Simias.Storage
 	{
 		#region Properties
 		/// <summary>
-		/// Gets or sets the default domain name.
+		/// Gets or sets the default domain ID.
 		/// </summary>
 		public string DefaultDomain
 		{
@@ -50,9 +50,9 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object.</param>
 		internal LocalDatabase( Store storeObject ) :
-			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, Identity.workGroupDomain )
+			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, Storage.Domain.WorkGroupDomainID )
 		{
-			properties.AddNodeProperty( PropertyTags.DefaultDomain, Identity.workGroupDomain );
+			properties.AddNodeProperty( PropertyTags.DefaultDomain, Storage.Domain.WorkGroupDomainID );
 			Synchronizable = false;
 		}
 

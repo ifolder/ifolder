@@ -167,7 +167,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets the default domain name.
+		/// Gets or sets the default domain ID.
 		/// </summary>
 		public string DefaultDomain
 		{
@@ -241,19 +241,23 @@ namespace Simias.Storage
 				{
 					try
 					{
-						// Create an identity that represents the current user.  This user will become the 
-						// database owner.
-						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
-
 						// Create an object that represents the database collection.
 						localDb = new LocalDatabase( this );
+
+						// Create the default workgroup domain.
+						Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
+
+						// Create an identity that represents the current user.  This user will become the 
+						// database owner. Add the domain mapping to the identity.
+						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
+						identity.AddDomainIdentity( identity.ID, wgDomain.ID );
 
 						// Create the database lock.
 						storeMutex = new Mutex( false, ID );
 
 						// Save the local database changes.
-						Node[] identities = { localDb, identity };
-						localDb.Commit( identities );
+						Node[] nodeList = { localDb, identity, wgDomain };
+						localDb.Commit( nodeList );
 					}
 					catch ( Exception e )
 					{
@@ -343,6 +347,24 @@ namespace Simias.Storage
 
 		#region Public Methods
 		/// <summary>
+		/// Adds a domain identity to the Collection Store.
+		/// </summary>
+		/// <param name="userID">Identity that this user is known as in the specified domain.</param>
+		/// <param name="domainName">Name of the domain.</param>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		public void AddDomainIdentity( string userID, string domainName, string domainID )
+		{
+			Node[] nodeList = new Node[ 2 ];
+
+			// Create the domain object.
+			nodeList[ 0 ] = new Domain( domainName, domainID );
+			nodeList[ 1 ] = identity.AddDomainIdentity( userID, domainID );
+			
+			// Commit the changes.
+			localDb.Commit( nodeList );
+		}
+
+		/// <summary>
 		/// Deletes the persistent store database and disposes this object.
 		/// </summary>
 		public void Delete()
@@ -361,6 +383,22 @@ namespace Simias.Storage
 			// Say bye-bye to the store.
 			storageProvider.DeleteStore();
 			Dispose();
+		}
+
+		/// <summary>
+		/// Removes the specified domain identity from the Collection Store.
+		/// </summary>
+		/// <param name="domainID">Well known identity for the specified domain.</param>
+		public void DeleteDomainIdentity( string domainID )
+		{
+			Node[] nodeList = new Node[ 2 ];
+
+			// Delete the domain object.
+			nodeList[ 0 ] = localDb.Delete( GetDomain( domainID ) );
+			nodeList[ 1 ] = identity.DeleteDomainIdentity( localDb, domainID );
+
+			// Commit the changes.
+			localDb.Commit( nodeList );
 		}
 
 		/// <summary>
@@ -495,6 +533,34 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the Domain object from its ID.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
+		public Domain GetDomain( string domainID )
+		{
+			return localDb.GetNodeByID( domainID ) as Domain;
+		}
+
+		/// <summary>
+		/// Gets the Domain object that the specified user belongs to.
+		/// </summary>
+		/// <param name="userID">Identifier for the user.</param>
+		/// <returns>Domain object that the specified user belongs to if successful. Otherwise returns a null.</returns>
+		public Domain GetDomainForUser( string userID )
+		{
+			Domain domain = null;
+
+			string domainID = identity.GetDomainFromUserID( localDb, userID );
+			if ( domainID != null )
+			{
+				domain = localDb.GetNodeByID( domainID ) as Domain;
+			}
+
+			return domain;
+		}
+
+		/// <summary>
 		/// Gets the first Collection object that matches the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the collection. This parameter may be
@@ -542,6 +608,16 @@ namespace Simias.Storage
 			}
 
 			return collection;
+		}
+
+		/// <summary>
+		/// Gets the user ID that the logged on user is known as in the specified domain.
+		/// </summary>
+		/// <param name="domainID">Well known domain identifier.</param>
+		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
+		public string GetUserIDFromDomainID( string domainID )
+		{
+			return identity.GetUserIDFromDomain( localDb, domainID );
 		}
 		#endregion
 
