@@ -109,9 +109,6 @@ namespace Simias
 			Gdk.Threads.Enter();
 			if(win != null)
 			{
-
-				Console.WriteLine("WriteLine is being called...");
-
 				TreeIter ti = store.AppendValues(message);
 
 				if(win == null)
@@ -123,16 +120,12 @@ namespace Simias
 				}
 
 				//			Gnome.Client.Flush()
-				Console.WriteLine("Checking to pump messages...");
 				while(GLib.MainContext.Pending() == true)
 				{
-					Console.WriteLine("Pump...");
 					GLib.MainContext.Iteration(false);
 				}
 			}
-			Console.WriteLine("About to Leave threads...");
 			Gdk.Threads.Leave();
-			Console.WriteLine("We are out...");
 		}
 
 		public bool Pause
