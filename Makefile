@@ -18,7 +18,7 @@ endif
 all %:
 	@echo PREFIX=$(PREFIX)
 	$(MAKE) -C simias $@
-	$(MAKE) -C addressbook $@
+#	$(MAKE) -C addressbook $@
 	$(MAKE) -C ifolder $@
 	
 #
@@ -45,8 +45,8 @@ ag autogen:
 	@echo PREFIX=$(PREFIX)
 	cd simias; $(AUTOGEN_CMD)
 	$(MAKE) -C simias install
-	cd addressbook; $(AUTOGEN_CMD)
-	$(MAKE) -C addressbook install
+#	cd addressbook; $(AUTOGEN_CMD)
+#	$(MAKE) -C addressbook install
 	cd ifolder; $(AUTOGEN_CMD)
 	$(MAKE) -C ifolder install
 
@@ -55,8 +55,8 @@ agd autogen-debug:
 	@echo PREFIX=$(PREFIX)
 	cd simias; $(AUTOGEN_DEBUG_CMD)
 	$(MAKE) -C simias install
-	cd addressbook; $(AUTOGEN_DEBUG_CMD)
-	$(MAKE) -C addressbook install
+#	cd addressbook; $(AUTOGEN_DEBUG_CMD)
+#	$(MAKE) -C addressbook install
 	cd ifolder; $(AUTOGEN_DEBUG_CMD)
 	$(MAKE) -C ifolder install
 
@@ -65,8 +65,8 @@ agsdk autogen-sdk:
 	@echo PREFIX=$(PREFIX)
 	cd simias; $(AUTOGEN_SDK_CMD)
 	$(MAKE) -C simias install
-	cd addressbook; $(AUTOGEN_SDK_CMD)
-	$(MAKE) -C addressbook install
+#	cd addressbook; $(AUTOGEN_SDK_CMD)
+#	$(MAKE) -C addressbook install
 	cd ifolder; $(AUTOGEN_SDK_CMD)
 	$(MAKE) -C ifolder install
 
