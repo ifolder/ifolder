@@ -99,6 +99,11 @@
                     AssemblyName = "iFolderComponent"
                     HintPath = "..\iFolderShell\iFolderComponent.dll"
                 />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\final\web\bin\Simias.dll"
+                />
             </References>
         </Build>
         <Files>

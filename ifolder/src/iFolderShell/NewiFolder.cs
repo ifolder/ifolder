@@ -253,8 +253,10 @@ namespace Novell.iFolderCom
 				}
 				catch
 				{
+					MyMessageBox mmb = new MyMessageBox();
 					// TODO: Localize
-					MessageBox.Show("An error was encountered while saving configuration.");
+					mmb.Message = "An error was encountered while saving configuration.";
+					mmb.ShowDialog();
 				}
 			}
 

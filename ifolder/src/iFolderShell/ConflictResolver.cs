@@ -394,13 +394,17 @@ namespace Novell.iFolderCom
 					}
 					catch (WebException ex)
 					{
+						MyMessageBox mmb = new MyMessageBox();
 						// TODO: Localize
-						MessageBox.Show("An error was encountered while attempting to resolve the conflict.");
+						mmb.Message = "An error was encountered while attempting to resolve the conflict.";
+						mmb.ShowDialog();
 					}
 					catch (Exception ex)
 					{
+						MyMessageBox mmb = new MyMessageBox();
 						// TODO: Localize
-						MessageBox.Show("An error was encountered while attempting to resolve the conflict.");
+						mmb.Message = "An error was encountered while attempting to resolve the conflict.";
+						mmb.ShowDialog();
 					}
 				}
 				else if (!localWins)
@@ -499,13 +503,17 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the conflicts.");
+				mmb.Message = "An error was encountered while reading the conflicts.";
+				mmb.ShowDialog();
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the conflicts.");
+				mmb.Message = "An error was encountered while reading the conflicts.";
+				mmb.ShowDialog();
 			}
 		}
 

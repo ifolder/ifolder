@@ -32,6 +32,9 @@ using System.IO;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
+using Simias;
+using Simias.Event;
+using Simias.Storage;
 
 namespace Novell.FormsTrayApp
 {
@@ -73,6 +76,8 @@ namespace Novell.FormsTrayApp
 		private Process simiasProc;
 		private iFolderWebService ifWebService;
 		//private EventSubscriber subscriber;
+		private IProcEventClient eventClient;
+		private bool eventError = false;
 		private IntPtr hwnd;
 		private System.Windows.Forms.MenuItem menuJoin;
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
@@ -207,7 +212,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			GlobalProperties globalProperties = new GlobalProperties(ifWebService);
+			GlobalProperties globalProperties = new GlobalProperties(ifWebService, eventClient);
 			globalProperties.ShowDialog();
 		}
 
@@ -232,7 +237,7 @@ namespace Novell.FormsTrayApp
 			// Disable the exit menu item so it cannot be clicked again.
 			menuExit.Enabled = false;
 
-			ShutdownTrayApp();
+			ShutdownTrayApp(null);
 		}
 
 		private void messages_MessagesServiced(object sender, EventArgs e)
@@ -267,7 +272,7 @@ namespace Novell.FormsTrayApp
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			ShutdownTrayApp();
+			ShutdownTrayApp(null);
 		}
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
@@ -302,6 +307,15 @@ namespace Novell.FormsTrayApp
 				notifyIcon1.Icon = trayIcon;
 
 				// Set up the event handlers to watch for create, delete, and change events.
+				eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
+				eventClient.Register();
+				if (!eventError)
+				{
+					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeChangeHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeCreateHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeDeleteHandler));
+				}
+
 /*				subscriber = new EventSubscriber();
 				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
 				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
@@ -309,11 +323,11 @@ namespace Novell.FormsTrayApp
 */			}
 			catch (WebException ex)
 			{
-				CleanupTrayApp(ex);
+				ShutdownTrayApp(ex);
 			}
 			catch (Exception ex)
 			{
-				CleanupTrayApp(ex);
+				ShutdownTrayApp(ex);
 			}
 		}
 
@@ -321,6 +335,29 @@ namespace Novell.FormsTrayApp
 //		{
 //			ShutdownTrayApp();
 //		}
+
+		private void errorHandler(SimiasException e, object context)
+		{
+			eventError = true;
+		}
+
+		private void trayApp_nodeChangeHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs nea = args as NodeEventArgs;
+			bool bOOM = true;
+		}
+
+		private void trayApp_nodeCreateHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs nea = args as NodeEventArgs;
+			bool bOOM = true;
+		}
+
+		private void trayApp_nodeDeleteHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs nea = args as NodeEventArgs;
+			bool bOOM = true;
+		}
 
 /*		private void subscriber_NodeCreated(NodeEventArgs args)
 		{
@@ -523,12 +560,23 @@ namespace Novell.FormsTrayApp
 
 		}
 
-		private void ShutdownTrayApp()
+		private void ShutdownTrayApp(Exception ex)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
+			if (ex != null)
+			{
+				// TODO: Localize.
+				MessageBox.Show("A fatal error was encountered during iFolder initialization.\n\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+			}
+
 			try
 			{
+				if (eventClient != null)
+				{
+					eventClient.Deregister();
+				}
+
 				if ((simiasProc != null) && !simiasProc.HasExited)
 				{
 					StreamWriter simiasStdIn = simiasProc.StandardInput;

@@ -34,6 +34,9 @@ using System.Net;
 using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
+using Simias;
+using Simias.Event;
+using Simias.Storage;
 
 namespace Novell.FormsTrayApp
 {
@@ -46,9 +49,9 @@ namespace Novell.FormsTrayApp
 		private const string iFolderRun = "iFolder";
 
 		private const double megaByte = 1048576;
-		//private Hashtable ht;
-		//private EventSubscriber subscriber;
+		private Hashtable ht;
 		private iFolderWebService ifWebService;
+		private IProcEventClient eventClient;
 		private string currentUserID;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
@@ -146,7 +149,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Instantiates a GlobalProperties object.
 		/// </summary>
-		public GlobalProperties(iFolderWebService ifolderWebService)
+		public GlobalProperties(iFolderWebService ifolderWebService, IProcEventClient eventClient)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -159,31 +162,20 @@ namespace Novell.FormsTrayApp
 			tabControl1.SelectedTab = tabPage1;
 
 			ifWebService = ifolderWebService;
+			this.eventClient = eventClient;
+
+			// Set up the event handlers to watch for iFolder creates/deletes.
+			eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
+			eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
+			eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+
+			ht = new Hashtable();
 
 			// Set the min/max values for port.
 			port.Minimum = IPEndPoint.MinPort;
 			port.Maximum = IPEndPoint.MaxPort;
 
-			// Set up the event handlers to watch for iFolder creates/deletes.
-/*			subscriber = new EventSubscriber();
-			subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
-			subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
-			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
-
-			ht = new Hashtable();
-
-			try
-			{
-				manager = iFolderManager.Connect();
-			}
-			catch (SimiasException e)
-			{
-				e.LogFatal();
-			}
-			catch (Exception e)
-			{
-				logger.Fatal(e, "Fatal error initializing");
-			}*/
+			this.StartPosition = FormStartPosition.CenterScreen;
 		}
 
 		/// <summary>
@@ -1064,6 +1056,7 @@ namespace Novell.FormsTrayApp
 			this.Name = "GlobalProperties";
 			this.Text = "iFolder";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
+			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
@@ -1130,16 +1123,16 @@ namespace Novell.FormsTrayApp
 		#region Private Methods
 		private void addiFolderToListView(iFolder ifolder)
 		{
-			//lock (ht)
+			lock (ht)
 			{
 				// Add only if it isn't already in the list.
-				//if (ht[ifolder.ID] == null)
+				if (ht[ifolder.ID] == null)
 				{
 					string[] items = new string[3];
 					int imageIndex;
 
 					items[0] = ifolder.Name;
-					items[1] = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
+					items[1] = ifolder.IsSubscription ? ifolder.Owner : ifolder.UnManagedPath;
 					items[2] = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
 
 					ListViewItem lvi = new ListViewItem(items, imageIndex);
@@ -1147,8 +1140,32 @@ namespace Novell.FormsTrayApp
 					iFolderView.Items.Add(lvi);
 
 					// Add the listviewitem to the hashtable.
-					//ht.Add(ifolder.ID, lvi);
+					ht.Add(ifolder.ID, lvi);
 				}
+			}
+		}
+
+		private void updateListViewItem(ListViewItem lvi)
+		{
+			iFolder ifolder = (iFolder)lvi.Tag;
+
+			if (ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) != null))
+			{
+				// The iFolder already exists locally ... remove it from the list.
+				lock (ht)
+				{
+					ht.Remove(((iFolder)lvi.Tag).ID);
+				}
+
+				lvi.Remove();
+			}
+			else
+			{
+				int imageIndex;
+				lvi.SubItems[0].Text = ifolder.Name;
+				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
+				lvi.SubItems[2].Text = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
+				lvi.ImageIndex = imageIndex;
 			}
 		}
 
@@ -1217,10 +1234,10 @@ namespace Novell.FormsTrayApp
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
 
-/*			lock(ht)
+			lock(ht)
 			{
 				ht.Clear();
-			}*/
+			}
 
 			iFolderView.BeginUpdate();
 
@@ -1244,7 +1261,14 @@ namespace Novell.FormsTrayApp
 
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
-			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
+			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
+			ifolderAdvanced.CurrentiFolder = (iFolder)lvi.Tag;
+			ifolderAdvanced.LoadPath = Application.StartupPath;
+			ifolderAdvanced.ActiveTab = activeTab;
+			ifolderAdvanced.EventClient = eventClient;
+			ifolderAdvanced.ShowDialog();
+			ifolderAdvanced.Dispose();
+//			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
 		}
 
 		private void synciFolder(string iFolderID)
@@ -1382,6 +1406,14 @@ namespace Novell.FormsTrayApp
 			Cursor.Current = Cursors.Default;
 		}
 
+		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			// Remove event handlers for this object.
+			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+		}
+
 		private void menuFileExit_Click(object sender, System.EventArgs e)
 		{
 			this.ok_Click(this, e);
@@ -1479,17 +1511,20 @@ namespace Novell.FormsTrayApp
 				iFolder ifolder = (iFolder)lvi.Tag;
 
 				// Delete the iFolder.
-				ifWebService.DeleteiFolder(ifolder.ID);
+				iFolder newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 
 				// Notify the shell.
 				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-/*				lock (ht)
-				{
-					ht.Remove((string)lvi.Tag);
-				}*/
+				lvi.Tag = newiFolder;
 
-				lvi.Remove();
+				lock (ht)
+				{
+					ht.Remove(ifolder.ID);
+					ht.Add(newiFolder.ID, lvi);
+				}
+
+				updateListViewItem(lvi);
 			}
 			catch (WebException ex)
 			{
@@ -1584,9 +1619,11 @@ namespace Novell.FormsTrayApp
 
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
-			iFolder ifolder = (iFolder)iFolderView.SelectedItems[0].Tag;
+			ListViewItem lvi = iFolderView.SelectedItems[0];
+			iFolder ifolder = (iFolder)lvi.Tag;
 
 			AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolder);
+			// TODO: get iFolder from acceptInvitation and update the listviewitem with it.
 			acceptInvitation.ShowDialog();
 		}
 
@@ -1634,44 +1671,84 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
-		#region Subscriber Handlers
-/*		private void subscriber_NodeCreated(NodeEventArgs args)
+		#region Node Event Handlers
+		private void global_nodeChangeHandler(SimiasEventArgs args)
 		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
 			try
 			{
-				iFolder ifolder = manager.GetiFolderById(args.ID);
+				iFolder ifolder;
+				if (eventArgs.Type == "Collection")
+				{
+					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+				}
+				else
+				{
+					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+				}
+
 				if (ifolder != null)
+				{
+					ListViewItem lvi;
+					lock (ht)
+					{
+						lvi = (ListViewItem)ht[eventArgs.Node];
+					}
+
+					if (lvi != null)
+					{
+						updateListViewItem(lvi);
+					}
+				}
+			}
+			catch
+			{
+			}
+		}
+
+		private void global_nodeCreateHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			try
+			{
+				iFolder ifolder;
+				if (eventArgs.Type == "Collection")
+				{
+					// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
+					// need to put some extra code in to handle this.
+					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+				}
+				else
+				{
+					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+				}
+
+				if ((ifolder != null) &&
+					(!ifolder.OwnerID.Equals(this.currentUserID) || ifolder.State.Equals("Available")))
 				{
 					addiFolderToListView(ifolder);
 				}
 			}
-			catch (SimiasException ex)
+			catch
 			{
-				ex.LogError();
-			}
-			catch (Exception ex)
-			{
-				//logger.Debug(ex, "OnNodeCreated");
 			}
 		}
 
-		private void subscriber_NodeDeleted(NodeEventArgs args)
+		private void global_nodeDeleteHandler(SimiasEventArgs args)
 		{
+			NodeEventArgs eventArgs = args as NodeEventArgs;
 			lock (ht)
 			{
-				ListViewItem lvi = (ListViewItem)ht[args.Node];
+				ListViewItem lvi = (ListViewItem)ht[eventArgs.Node];
 				if (lvi != null)
 				{
 					lvi.Remove();
-					ht.Remove(args.Node);
+					ht.Remove(eventArgs.Node);
 				}
 			}
 		}
-
-		private void subscriber_NodeChanged(NodeEventArgs args)
-		{
-			// TODO: implement this if needed.
-		}*/
 		#endregion
 
 		#endregion
