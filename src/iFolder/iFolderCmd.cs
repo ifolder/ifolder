@@ -23,6 +23,8 @@
 
 using System;
 
+using Simias.Invite;
+using Simias.Sync;
 using Novell.iFolder;
 using Novell.AddressBook;
 
@@ -276,6 +278,75 @@ public class iFolderCmd
 
 
 
+	static bool ViewInviteFile(string [] args)
+	{
+		if(args[0] != "viewinvitefile")
+			return false;
+
+		if(args.Length != 2)
+		{
+			DisplayUsage();
+			return true;
+		}
+
+		try
+		{
+			Invitation invitation = new Invitation();
+
+			invitation.Load(args[1]);
+			Console.WriteLine("  iFolder  : {0}", invitation.CollectionName);
+			Console.WriteLine("  From     : {0}", invitation.FromName);
+			Console.WriteLine("  Sender   : {0}", invitation.FromEmail);
+			Console.WriteLine("  Rights   : {0}", invitation.CollectionRights);
+		}
+		catch(Exception e)
+		{
+			Console.WriteLine("Unable to load file: {0}", args[1]);
+		}
+		return true;
+	}
+
+
+
+
+	static bool AcceptInviteFile(string [] args)
+	{
+		if(args[0] != "acceptinvitefile")
+			return false;
+
+		if(args.Length != 3)
+		{
+			DisplayUsage();
+			return true;
+		}
+
+		try
+		{
+			iFolderManager manager = iFolderManager.Connect();
+			if(manager.IsPathIniFolder(args[2]))
+			{
+				Console.WriteLine("Path is located within an existing iFolder: {0}", args[2]);
+				return true;
+			}
+
+			Invitation invitation = new Invitation();
+
+			invitation.Load(args[1]);
+
+			manager.AcceptInvitation(invitation, args[2]);
+
+			Console.WriteLine("Invitation file was Accepted");
+		}
+		catch(Exception e)
+		{
+			Console.WriteLine("Unable to accept invitation file: " + args[3]);
+		}
+		return true;
+	}
+
+
+
+
 	static void DisplayUsage()
 	{
 		Console.WriteLine("Usage: iFolderCmd <command> [options]");
@@ -285,6 +356,8 @@ public class iFolderCmd
 		Console.WriteLine("  setrights <ifolder path> <contact name> <full|rw|ro>");
 		Console.WriteLine("  removerights <ifolder path> <contact name>");
 		Console.WriteLine("  createinvitefile <ifolder path> <contact name> <filename>");
+		Console.WriteLine("  viewinvitefile <filename>");
+		Console.WriteLine("  acceptinvitefile <filename> <new ifolder parent path>");
 		return;
 	}
 
@@ -311,6 +384,10 @@ public class iFolderCmd
 			if(RemoveRights(args) == true)
 				return;
 			if(CreateInviteFile(args) == true)
+				return;
+			if(ViewInviteFile(args) == true)
+				return;
+			if(AcceptInviteFile(args) == true)
 				return;
 
 			Console.WriteLine("Unknown command: " + args[0]);
