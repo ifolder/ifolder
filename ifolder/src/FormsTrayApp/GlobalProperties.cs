@@ -127,7 +127,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuHelp;
 		private System.Windows.Forms.MenuItem menuHelpHelp;
 		private System.Windows.Forms.MenuItem menuHelpAbout;
-		private System.Windows.Forms.Label status;
 		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.Windows.Forms.MenuItem menuRemove;
 		private System.Windows.Forms.MenuItem menuActionRemove;
@@ -139,6 +138,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ToolBarButton toolBarResolve;
 		private System.Windows.Forms.ToolBarButton toolBarSync;
 		private System.Windows.Forms.ToolBarButton toolBarShare;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.StatusBar statusBar1;
+		private System.Windows.Forms.GroupBox groupBox1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -194,16 +196,19 @@ namespace Novell.FormsTrayApp
 
 				// Add the normal image list to the toolbar.
 				toolBar1.ImageList = new ImageList();
+				toolBar1.ImageList.ImageSize = new Size(24, 24);
 				toolBar1.ImageList.TransparentColor = Color.White;
 				toolBar1.ImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_nor.bmp")));
 
 				// Add the disabled image list to the toolbar.
 				toolBar1.DisabledImageList = new ImageList();
+				toolBar1.DisabledImageList.ImageSize = new Size(24, 24);
 				toolBar1.DisabledImageList.TransparentColor = Color.White;
 				toolBar1.DisabledImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_dis.bmp")));
 
 				// Add the hot image list to the toolbar.
 				toolBar1.HotImageList = new ImageList();
+				toolBar1.HotImageList.ImageSize = new Size(24, 24);
 				toolBar1.HotImageList.TransparentColor = Color.White;
 				toolBar1.HotImageList.Images.AddStrip(Image.FromFile(Path.Combine(Application.StartupPath, @"res\mtoolbar_hot.bmp")));
 
@@ -280,14 +285,17 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
-			this.status = new System.Windows.Forms.Label();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
-			this.toolBar1 = new ToolBarEx();
+			this.toolBar1 = new Novell.FormsTrayApp.ToolBarEx();
 			this.toolBarCreate = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSetup = new System.Windows.Forms.ToolBarButton();
 			this.toolBarShare = new System.Windows.Forms.ToolBarButton();
 			this.toolBarResolve = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSync = new System.Windows.Forms.ToolBarButton();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.statusBar1 = new System.Windows.Forms.StatusBar();
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// servers
@@ -733,28 +741,6 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout.Visible = ((bool)(resources.GetObject("menuHelpAbout.Visible")));
 			this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
 			// 
-			// status
-			// 
-			this.status.AccessibleDescription = resources.GetString("status.AccessibleDescription");
-			this.status.AccessibleName = resources.GetString("status.AccessibleName");
-			this.status.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("status.Anchor")));
-			this.status.AutoSize = ((bool)(resources.GetObject("status.AutoSize")));
-			this.status.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("status.Dock")));
-			this.status.Enabled = ((bool)(resources.GetObject("status.Enabled")));
-			this.status.Font = ((System.Drawing.Font)(resources.GetObject("status.Font")));
-			this.status.Image = ((System.Drawing.Image)(resources.GetObject("status.Image")));
-			this.status.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("status.ImageAlign")));
-			this.status.ImageIndex = ((int)(resources.GetObject("status.ImageIndex")));
-			this.status.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("status.ImeMode")));
-			this.status.Location = ((System.Drawing.Point)(resources.GetObject("status.Location")));
-			this.status.Name = "status";
-			this.status.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("status.RightToLeft")));
-			this.status.Size = ((System.Drawing.Size)(resources.GetObject("status.Size")));
-			this.status.TabIndex = ((int)(resources.GetObject("status.TabIndex")));
-			this.status.Text = resources.GetString("status.Text");
-			this.status.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("status.TextAlign")));
-			this.status.Visible = ((bool)(resources.GetObject("status.Visible")));
-			// 
 			// progressBar1
 			// 
 			this.progressBar1.AccessibleDescription = resources.GetString("progressBar1.AccessibleDescription");
@@ -788,10 +774,12 @@ namespace Novell.FormsTrayApp
 																						this.toolBarResolve,
 																						this.toolBarSync});
 			this.toolBar1.ButtonSize = ((System.Drawing.Size)(resources.GetObject("toolBar1.ButtonSize")));
+			this.toolBar1.DisabledImageList = null;
 			this.toolBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("toolBar1.Dock")));
 			this.toolBar1.DropDownArrows = ((bool)(resources.GetObject("toolBar1.DropDownArrows")));
 			this.toolBar1.Enabled = ((bool)(resources.GetObject("toolBar1.Enabled")));
 			this.toolBar1.Font = ((System.Drawing.Font)(resources.GetObject("toolBar1.Font")));
+			this.toolBar1.HotImageList = null;
 			this.toolBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("toolBar1.ImeMode")));
 			this.toolBar1.Location = ((System.Drawing.Point)(resources.GetObject("toolBar1.Location")));
 			this.toolBar1.Name = "toolBar1";
@@ -844,6 +832,67 @@ namespace Novell.FormsTrayApp
 			this.toolBarSync.ToolTipText = resources.GetString("toolBarSync.ToolTipText");
 			this.toolBarSync.Visible = ((bool)(resources.GetObject("toolBarSync.Visible")));
 			// 
+			// panel1
+			// 
+			this.panel1.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
+			this.panel1.AccessibleName = resources.GetString("panel1.AccessibleName");
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
+			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
+			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
+			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
+			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
+			this.panel1.Controls.Add(this.servers);
+			this.panel1.Controls.Add(this.label1);
+			this.panel1.Controls.Add(this.groupBox1);
+			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
+			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
+			this.panel1.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
+			this.panel1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
+			this.panel1.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
+			this.panel1.Name = "panel1";
+			this.panel1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
+			this.panel1.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
+			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
+			this.panel1.Text = resources.GetString("panel1.Text");
+			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
+			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
+			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
+			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
+			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
+			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
+			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
+			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
+			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = resources.GetString("groupBox1.Text");
+			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			// 
+			// statusBar1
+			// 
+			this.statusBar1.AccessibleDescription = resources.GetString("statusBar1.AccessibleDescription");
+			this.statusBar1.AccessibleName = resources.GetString("statusBar1.AccessibleName");
+			this.statusBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("statusBar1.Anchor")));
+			this.statusBar1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("statusBar1.BackgroundImage")));
+			this.statusBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("statusBar1.Dock")));
+			this.statusBar1.Enabled = ((bool)(resources.GetObject("statusBar1.Enabled")));
+			this.statusBar1.Font = ((System.Drawing.Font)(resources.GetObject("statusBar1.Font")));
+			this.statusBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("statusBar1.ImeMode")));
+			this.statusBar1.Location = ((System.Drawing.Point)(resources.GetObject("statusBar1.Location")));
+			this.statusBar1.Name = "statusBar1";
+			this.statusBar1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("statusBar1.RightToLeft")));
+			this.statusBar1.Size = ((System.Drawing.Size)(resources.GetObject("statusBar1.Size")));
+			this.statusBar1.TabIndex = ((int)(resources.GetObject("statusBar1.TabIndex")));
+			this.statusBar1.Text = resources.GetString("statusBar1.Text");
+			this.statusBar1.Visible = ((bool)(resources.GetObject("statusBar1.Visible")));
+			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -854,12 +903,11 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.iFolderView);
+			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.toolBar1);
 			this.Controls.Add(this.progressBar1);
-			this.Controls.Add(this.status);
-			this.Controls.Add(this.servers);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.iFolderView);
+			this.Controls.Add(this.statusBar1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -877,6 +925,7 @@ namespace Novell.FormsTrayApp
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
 			this.Move += new System.EventHandler(this.GlobalProperties_Move);
 			this.VisibleChanged += new System.EventHandler(this.GlobalProperties_VisibleChanged);
+			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1296,7 +1345,7 @@ namespace Novell.FormsTrayApp
 				{
 					case Action.StartSync:
 					{
-						status.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
+						statusBar1.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
 						lock (ht)
 						{
 							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
@@ -1332,7 +1381,7 @@ namespace Novell.FormsTrayApp
 							objectsToSync = 0;
 						}
 
-						status.Text = resourceManager.GetString("status.Text");
+						statusBar1.Text = resourceManager.GetString("statusBar1.Text");
 						if (initialConnect)
 						{
 							initialConnect = false;
@@ -1374,23 +1423,23 @@ namespace Novell.FormsTrayApp
 					switch (syncEventArgs.ObjectType)
 					{
 						case ObjectType.File:
-							status.Text = syncEventArgs.Delete ? 
+							statusBar1.Text = syncEventArgs.Delete ? 
 								string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name) :
 								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
 							break;
 						case ObjectType.Directory:
-							status.Text = syncEventArgs.Delete ? 
+							statusBar1.Text = syncEventArgs.Delete ? 
 								string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name) :
 								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDir" : "downloadDir"), syncEventArgs.Name);
 							break;
 						case ObjectType.Unknown:
-							status.Text = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
+							statusBar1.Text = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
 							break;
 					}
 				}
 				else
 				{
-					status.Text = syncEventArgs.Name;
+					statusBar1.Text = syncEventArgs.Name;
 					progressBar1.Value = syncEventArgs.SizeToSync > 0 ? (int)(syncEventArgs.SizeToSync - syncEventArgs.SizeRemaining) : progressBar1.Maximum;
 				}
 			}
