@@ -364,6 +364,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\HttpAuthentication\HttpAuth.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\HttpAuthentication\IAuthService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
