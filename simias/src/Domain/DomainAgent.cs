@@ -27,6 +27,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Channels;
+using Simias.POBox;
 
 namespace Simias.Domain
 {
@@ -97,7 +98,9 @@ namespace Simias.Domain
 			
 			// create PO Box stub
 			CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
-				provisionInfo.POBoxName, provisionInfo.POBoxUrl);
+				provisionInfo.POBoxName, domainInfo.RosterUrl);
+
+			POBox.POBox poBox = POBox.POBox.GetPOBoxByID(store, provisionInfo.POBoxID);
 
 			// set the default domain
 			store.DefaultDomain = domainInfo.ID;
