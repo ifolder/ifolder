@@ -9,7 +9,7 @@ mDnsDomain_FLAGS = $(CSC_LIBFLAG)
 mDnsDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll mDnsResponderApi.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 mDnsDomain_LIBPATH = ../SimiasClient ../Simias.dll $(MDNSRESPONDER_DIR) $(NOVELL_SECURITY_DIR)
 
-EXTRA_DIST = $(mDnsDomain_CSFILES)
+EXTRA_DIST = $(mDnsDomain_CSFILES1)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
