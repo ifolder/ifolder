@@ -44,6 +44,10 @@ namespace Simias.Event
 			base(source, fullPath, collectionId, Path.GetExtension(fullPath), changeType, 0)
 		{
 		}
+
+		internal FileEventArgs()
+		{
+		}
 		
 		/// <summary>
 		/// Gets the full path of the file.

@@ -344,8 +344,6 @@ namespace Simias.Event
 		// This is a singleton per Store.
 		static Hashtable	instanceTable = new Hashtable();
 		int					count;
-		bool				threadStarted;
-		bool				serviceRegistered;
 		Configuration		conf;
 		Queue				eventQueue;
 		ManualResetEvent	queued;
@@ -414,63 +412,12 @@ namespace Simias.Event
 				{
 					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
 				}
-				if (!instance.threadStarted)
-				{
-					instance.broker.CollectionEvent += new CollectionEventHandler(instance.OnCollectionEvent);
-					// Start a thread to handle events.
-					instance.eventQueue = new Queue();
-					instance.queued = new ManualResetEvent(false);
-					System.Threading.Thread t = new Thread(new ThreadStart(instance.EventThread));
-					t.Start();
-					instance.threadStarted = true;
-				}
 				++instance.count;
 			}
 			return instance;
 		}
 
-		internal static InProcessEventBroker GetPublishBroker(Configuration conf)
-		{
-			InProcessEventBroker instance;
-			lock (typeof(InProcessEventBroker))
-			{
-				if (!instanceTable.Contains(conf.BasePath))
-				{
-					instance = new InProcessEventBroker(conf);
-					instanceTable.Add(conf.BasePath, instance);
-				}
-				else
-				{
-					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
-				}
-				++instance.count;
-			}
-			return instance;
-		}
-
-		internal static InProcessEventBroker GetServiceBroker(Configuration conf)
-		{
-			InProcessEventBroker instance;
-			lock (typeof(InProcessEventBroker))
-			{
-				if (!instanceTable.Contains(conf.BasePath))
-				{
-					instance = new InProcessEventBroker(conf);
-					instanceTable.Add(conf.BasePath, instance);
-				}
-				else
-				{
-					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
-				}
-				if (!instance.serviceRegistered)
-				{
-					instance.broker.ServiceEvent += new ServiceEventHandler(instance.OnServiceEvent);
-				}
-				++instance.count;
-			}
-			return instance;
-		}
-
+		
 		#endregion
 
 		#region Constructor / Finalizer
@@ -480,10 +427,15 @@ namespace Simias.Event
 			alreadyDisposed = false;
 			this.conf = conf;
 			count = 0;
-			threadStarted = false;
-			serviceRegistered = false;
 			EventBroker.RegisterClientChannel(conf);
 			broker = new EventBroker();
+
+			broker.CollectionEvent += new CollectionEventHandler(OnCollectionEvent);
+			// Start a thread to handle events.
+			eventQueue = new Queue();
+			queued = new ManualResetEvent(false);
+			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+			t.Start();
 		}
 
 		~InProcessEventBroker()
@@ -516,11 +468,6 @@ namespace Simias.Event
 		public void OnCollectionEvent(CollectionEventArgs args)
 		{
 			queueEvent(args);
-		}
-
-		public void OnServiceEvent(ServiceEventArgs args)
-		{
-			this.callSvcDelegate(args);
 		}
 
 		#endregion
@@ -699,27 +646,6 @@ namespace Simias.Event
 			}
 		}
 
-		void callSvcDelegate(ServiceEventArgs args)
-		{
-			if (ServiceControl != null)
-			{
-				Delegate[] cbList = ServiceControl.GetInvocationList();
-				foreach (ServiceEventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						ServiceControl -= cb;
-						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-					}
-				}
-			}
-		}
-
 		#endregion
 
 		#region private Dispose
@@ -738,8 +664,7 @@ namespace Simias.Event
 							instanceTable.Remove(conf);
 							alreadyDisposed = true;
 							broker.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
-							broker.ServiceEvent -= new ServiceEventHandler(OnServiceEvent);
-
+							
 							// Signal thread so it can exit.
 							queued.Set();
 							if (!inFinalize)

@@ -49,6 +49,10 @@ namespace Simias.Event
 			this.oldPath = oldPath;
 		}
 
+		internal FileRenameEventArgs()
+		{
+		}
+	
 		internal override string MarshallToString()
 		{
 			StringBuilder sb = new StringBuilder(base.MarshallToString());
@@ -56,11 +60,10 @@ namespace Simias.Event
 			return sb.ToString();
 		}
 
-		internal override void MarshallFromString(string sArgs)
+		internal override void MarshallFromString(string [] args, ref int index)
 		{
-			int i = 0;
-			string [] sArg = sArgs.Split(seperatorChar);
-			oldPath = sArg[i++];
+			base.MarshallFromString(args, ref index);
+			oldPath = args[index++];
 		}
 		
 		/// <summary>

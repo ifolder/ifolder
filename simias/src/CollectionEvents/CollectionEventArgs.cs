@@ -89,16 +89,20 @@ namespace Simias.Event
 			this.changeType = changeType;
 		}
 
+		internal CollectionEventArgs()
+		{
+		}
+	
 		internal virtual string MarshallToString()
 		{
-        	return (changeType.ToString() + seperatorChar);
+			return (changeType.ToString() + seperatorChar);
 		}
 
-		internal virtual void MarshallFromString(string sArgs)
+		internal virtual void MarshallFromString(string [] args, ref int index)
 		{
-			int i = 0;
-			string [] sArg = sArgs.Split(seperatorChar);
-			changeType = (EventType)Enum.Parse(typeof(EventType), sArg[i++], false);
+			//int i = 0;
+			//string [] sArg = sArgs.Split(seperatorChar);
+			changeType = (EventType)Enum.Parse(typeof(EventType), args[index], false);
 		}
 
 		#region Properties

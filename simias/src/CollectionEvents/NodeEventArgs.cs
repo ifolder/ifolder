@@ -78,6 +78,10 @@ namespace Simias.Event
 			this.eventId = eventId;
 		}
 
+		internal NodeEventArgs()
+		{
+		}
+
 		#endregion
 
 		#region Marshallers
@@ -93,15 +97,14 @@ namespace Simias.Event
 			return sb.ToString();
 		}
 
-		internal override void MarshallFromString(string sArgs)
+		internal override void MarshallFromString(string [] args, ref int index)
 		{
-			int i = 0;
-			string [] sArg = sArgs.Split(seperatorChar);
-			source = sArg[i++];
-			id = sArg[i++];
-			collection = sArg[i++];
-			type = sArg[i++];
-			eventId = int.Parse(sArg[i++]);
+			base.MarshallFromString(args, ref index);
+			source = args[index++];
+			id = args[index++];
+			collection = args[index++];
+			type = args[index++];
+			eventId = int.Parse(args[index++]);
 		}
 
 		#endregion
