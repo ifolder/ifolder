@@ -20,8 +20,9 @@
  *
  *  Author: Boyd Timothy <btimothy@novell.com>
  * 
- *  Some code in this file is directly based on code found in Gaim's
- *  core & plugin files, which is distributed under the GPL.
+ *  Some code in this file (mostly the saving and reading of the XML files) is
+ *  directly based on code found in Gaim's core & plugin files, which is
+ *  distributed under the GPL.
  ***********************************************************************/
 
 #include "internal.h"
@@ -65,7 +66,11 @@
 #define PING_REQUEST_MSG		"[simias:ping-request:"
 #define PING_RESPONSE_MSG		"[simias:ping-response:"
 
-#define TIMESTAMP_FORMAT "%I/%d/%Y %H:%M %p"
+#define TIMESTAMP_FORMAT "%I/%d/%Y %I:%M %p"
+
+#define FILENAME_IN_INVITATIONS "simias-in-invitations.xml"
+#define FILENAME_OUT_INVITATIONS "simias-out-invitations.xml"
+#define FILENAME_TRUSTED_BUDDIES "simias-trusted-buddies.xml"
 
 #define SIMIAS_PREF_PATH "/plugins/gtk/simias"
 
@@ -194,14 +199,17 @@ static GtkWidget *in_inv_tree = NULL;
 static GtkListStore *in_inv_store = NULL;
 static GtkWidget *in_inv_accept_button = NULL;
 static GtkWidget *in_inv_reject_button = NULL;
+static gboolean in_inv_safe_to_write = FALSE;
 
 static GtkWidget *out_inv_tree = NULL;
 static GtkListStore *out_inv_store = NULL;
 static GtkWidget *out_inv_resend_button = NULL;
 static GtkWidget *out_inv_cancel_button = NULL;
 static GtkWidget *out_inv_remove_button = NULL;
+static gboolean out_inv_safe_to_write = FALSE;
 
 static GtkListStore *trusted_buddies_store = NULL;
+static gboolean trusted_buddies_safe_to_write = FALSE;
 
 /****************************************************
  * Forward Declarations                             *
@@ -247,6 +255,8 @@ static char * fill_state_str(char *state_str, INVITATION_STATE state);
 static void add_invitation_to_store(GtkListStore *store,
 									Invitation *invitation);
 static void init_default_prefs();
+static gboolean write_invitations_file(FILE *file, GtkListStore *store);
+static void simias_invitations_write(GtkListStore *store);
 static gboolean invitations_read(GtkListStore *store, const char *filename);
 static void load_invitations_from_file(GtkListStore *store, const char *name);
 static void init_invitation_stores();
@@ -588,6 +598,8 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 			sprintf(invitation->collection_id, guid);
 			sprintf(invitation->collection_type, collection_type);
 			sprintf(invitation->collection_name, name);
+			sprintf(invitation->ip_addr, "0.0.0.0");
+			sprintf(invitation->ip_port, "0");
 
 			result = send_invitation_request_msg(buddy, guid, collection_type,
 												(char *)name);
@@ -716,6 +728,10 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 			STATE_COL,				state_str,
 			-1);
 		
+		/* Save the updates to a file */
+g_print("about_to_write 1\n");
+		simias_invitations_write(GTK_LIST_STORE(model));
+
 		/* Make sure the buttons are in the correct state */
 		in_inv_sel_changed_cb(sel, GTK_TREE_VIEW(in_inv_tree));
 	
@@ -744,6 +760,11 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	 */
 	gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 	free(invitation);
+
+	/* Save the updates to a file */
+g_print("about_to_write 1.1\n");
+	simias_invitations_write(GTK_LIST_STORE(model));
+
 }
 
 /**
@@ -825,6 +846,10 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 			STATE_COL,				state_str,
 			-1);
 
+		/* Save the updates to a file */
+g_print("about_to_write 2\n");
+		simias_invitations_write(GTK_LIST_STORE(model));
+
 		/* Make sure the buttons are in the correct state */
 		in_inv_sel_changed_cb(sel, GTK_TREE_VIEW(in_inv_tree));
 	
@@ -852,6 +877,9 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 	 */
 	gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 	free(invitation);
+
+	/* Save the updates to a file */
+	simias_invitations_write(GTK_LIST_STORE(model));
 }
 
 static void
@@ -960,6 +988,10 @@ out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
 			STATE_COL,				state_str,
 			-1);
 		
+		/* Save the updates to a file */
+g_print("about_to_write 3\n");
+		simias_invitations_write(GTK_LIST_STORE(model));
+
 		return; /* That's about all we can do at this point */
 	}
 
@@ -1001,6 +1033,10 @@ out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
 		TIME_COL,				time_str,
 		STATE_COL,				state_str,
 		-1);
+
+	/* Save the updates to a file */
+g_print("about_to_write 4\n");
+	simias_invitations_write(GTK_LIST_STORE(model));
 }
 
 static void
@@ -1040,10 +1076,12 @@ out_inv_remove_button_cb(GtkWindow *w, GtkTreeView *tree)
 		|| invitation->state == STATE_REJECTED) {
 		gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 		free(invitation);
+
+		/* Save the updates to a file */
+		simias_invitations_write(GTK_LIST_STORE(model));
 	} else {
 		g_print("out_inv_remove_button_cb() called on an invitation that is not in the STATE_ACCEPTED or STATE_REJECTED state\n");
 	}
-
 }
 
 static void
@@ -1196,6 +1234,10 @@ g_print("add_invitation_to_store() entered\n");
 		INVITATION_PTR,			invitation,
 		-1);
 		
+	/* Save the updates to a file */
+g_print("about_to_write 5\n");
+	simias_invitations_write(store);
+
 	if (invitation_icon)
 		g_object_unref(invitation_icon);
 }
@@ -1231,6 +1273,144 @@ init_default_prefs()
 		gaim_prefs_add_bool(SIMIAS_PREF_SIMIAS_AUTO_START,
 							SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
 	}
+}
+
+static gboolean
+write_invitations_file(FILE *file, GtkListStore *store)
+{
+	GtkTreeIter iter;
+	Invitation *invitation;
+	gboolean valid;
+	char time_str[32];
+
+	gaim_debug(GAIM_DEBUG_INFO, "simias",
+			   "write_invitations_file() called on: %s",
+			   (store == in_inv_store ? "Incoming Invitations" :
+			   		store == out_inv_store ? "Outgoing Invitations" :
+			   			"Unknown Invitation Store"));
+
+	fprintf(file, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n\n");
+	fprintf(file, "<simias>\n");
+	fprintf(file, "\t<invitations>\n");
+
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(store), &iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter,
+					INVITATION_PTR, &invitation,
+					-1);
+
+		if (!invitation) {
+			continue;
+		}
+		
+		fprintf(file, "\t\t<invitation\n");
+		
+		fprintf(file, "\t\t\taccount-name=\"%s\"\n",
+				gaim_account_get_username(invitation->gaim_account));
+		fprintf(file, "\t\t\taccount-proto=\"%s\"\n",
+				gaim_account_get_protocol_id(invitation->gaim_account));
+		fprintf(file, "\t\t\tbuddy-name=\"%s\"\n", invitation->buddy_name);
+		fprintf(file, "\t\t\tstate=\"%d\"\n", invitation->state);
+
+		/* Format the time to a string */
+		fill_time_str(time_str, 32, invitation->time);
+		fprintf(file, "\t\t\ttime=\"%s\"\n", time_str);
+
+		fprintf(file, "\t\t\tcollection-id=\"%s\"\n", invitation->collection_id);
+		fprintf(file, "\t\t\tcollection-type=\"%s\"\n", invitation->collection_type);
+		fprintf(file, "\t\t\tcollection-name=\"%s\"\n", g_markup_escape_text(invitation->collection_name, -1));
+		fprintf(file, "\t\t\tip-addr=\"%s\"\n", invitation->ip_addr);
+		fprintf(file, "\t\t\tip-port=\"%s\"\n", invitation->ip_port);
+		
+		fprintf(file, "\t\t/>\n");
+
+		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(store), &iter);
+	}
+	
+	fprintf(file, "\t</invitations>\n");
+	fprintf(file, "</simias>\n");
+}
+
+/**
+ * FIXME: Need to put this function in a thread or something so that the messages
+ * to write to the file just queue up the requests and only write if it's been
+ * at least 5 seconds or so...so that we're not just writing all the time.
+ */
+static void
+simias_invitations_write(GtkListStore *store)
+{
+	FILE *file;
+	struct stat st;
+	char *user_dir = gaim_user_dir();
+	char *filename;
+	char filename_save[512];
+	char *filename_real;
+	
+	gaim_debug(GAIM_DEBUG_INFO, "simias",
+			   "simias_invitations_write() called on: %s",
+			   (store == in_inv_store ? "Incoming Invitations" :
+			   		store == out_inv_store ? "Outgoing Invitations" :
+			   			"Unknown Invitation Store"));
+
+	if (store == in_inv_store && !in_inv_safe_to_write) {
+		gaim_debug(GAIM_DEBUG_WARNING, "simias",
+				   "Tried to write to the incoming invitations file before reading it!\n");
+		return;
+	} else if (store == out_inv_store && !out_inv_safe_to_write) {
+		gaim_debug(GAIM_DEBUG_WARNING, "simias",
+				   "Tried to write to the outgoing invitations file before reading it!\n");
+		return;
+	}
+	
+	file = fopen(user_dir, "r");
+	if (!file)
+		mkdir(user_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+	else
+		fclose(file);
+	
+	if (store == in_inv_store) {
+		sprintf(filename_save, "%s.save", FILENAME_IN_INVITATIONS);
+	} else if (store == out_inv_store) {
+		sprintf(filename_save, "%s.save", FILENAME_OUT_INVITATIONS);
+	} else {
+		sprintf(filename_save, "simias-unknown-invitations.xml.save");
+	}
+		
+	filename = g_build_filename(user_dir, filename_save, NULL);
+
+	if ((file = fopen(filename, "w"))) {
+		write_invitations_file(file, store);
+		fclose(file);
+		chmod(filename, S_IRUSR | S_IWUSR);
+	} else {
+		gaim_debug(GAIM_DEBUG_ERROR, "simias", "Unable to write %s\n",
+				   filename);
+		g_free(filename);
+		return;
+	}
+
+	if (stat(filename, &st) || (st.st_size == 0)) {
+		gaim_debug_error("simias", "Failed to save invitations file\n");
+		unlink(filename);
+		g_free(filename);
+		return;
+	}
+
+	filename_real = g_build_filename(user_dir,
+						(store == in_inv_store ?
+							FILENAME_IN_INVITATIONS :
+								store == out_inv_store ?
+									FILENAME_OUT_INVITATIONS :
+										"simias-unknown-invitations.xml"),
+						NULL);
+
+	if (rename(filename, filename_real) < 0)
+		gaim_debug(GAIM_DEBUG_ERROR, "simias",
+				   "Error renaming %s to %s\n", filename, filename_real);
+
+	g_free(filename);
+	g_free(filename_real);
 }
 
 static gboolean
@@ -1440,7 +1620,8 @@ g_print("init_invitation_stores() entered\n");
 										1, GTK_SORT_ASCENDING);
 
 	/* Load in data from file */
-	load_invitations_from_file(in_inv_store, "simias-in-invitations.xml");
+	load_invitations_from_file(in_inv_store, FILENAME_IN_INVITATIONS);
+	in_inv_safe_to_write = TRUE;
 
 	out_inv_store = gtk_list_store_new(N_COLS,
 					GDK_TYPE_PIXBUF,
@@ -1452,7 +1633,8 @@ g_print("init_invitation_stores() entered\n");
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(out_inv_store),
 										1, GTK_SORT_ASCENDING);
 	/* Load in data from file */
-	load_invitations_from_file(out_inv_store, "simias-out-invitations.xml");
+	load_invitations_from_file(out_inv_store, FILENAME_OUT_INVITATIONS);
+	out_inv_safe_to_write = TRUE;
 }
 
 static void
@@ -1610,6 +1792,8 @@ load_trusted_buddies_from_file(GtkListStore *store, const char *name)
 		g_print("load_trusted_buddies_from_file() got NULL response from gaim_user_dir()\n");
 	}
 	
+	trusted_buddies_safe_to_write = TRUE;
+	
 	filename = g_build_filename(user_dir, name, NULL);
 	
 	if (g_file_test(filename, G_FILE_TEST_EXISTS)) {
@@ -1650,7 +1834,7 @@ init_trusted_buddies_store()
 			G_TYPE_POINTER);	/* GaimAccount * */
 	
 	/* Load in the data from a config file */
-	load_trusted_buddies_from_file(trusted_buddies_store, "simias-trusted-buddies.xml");
+	load_trusted_buddies_from_file(trusted_buddies_store, FILENAME_TRUSTED_BUDDIES);
 }
 
 /**
@@ -1690,6 +1874,7 @@ init_invitations_window()
 				NULL);
 					
 	/* Setup the properties of the window */
+	/* FIXME: Make it so that this dialog isn't "top-most" to the gaim windows */
 	gtk_dialog_set_has_separator(GTK_DIALOG(invitations_dialog), FALSE);
 	gtk_window_set_resizable(GTK_WINDOW(invitations_dialog), TRUE);
 	gtk_window_set_default_size(GTK_WINDOW(invitations_dialog), 600, 500);
@@ -2311,6 +2496,10 @@ g_print("handle_invitation_request() entered\n");
 			TIME_COL,				time_str,
 			STATE_COL,				state_str,
 			-1);
+
+		/* Save the updates to a file */
+g_print("about_to_write 7\n");
+		simias_invitations_write(in_inv_store);
 	} else {
 		/**
 		 * Construct an Invitation, fill it with information, add it to the
@@ -2447,6 +2636,10 @@ handle_invitation_request_deny(GaimAccount *account,
 		STATE_COL,				state_str,
 		-1);
 
+	/* Save the updates to a file */
+g_print("about_to_write 8\n");
+	simias_invitations_write(out_inv_store);
+
 	/* Make sure the buttons are in the correct state */
 	out_inv_sel_changed_cb(
 		gtk_tree_view_get_selection(GTK_TREE_VIEW(out_inv_tree)),
@@ -2574,6 +2767,10 @@ handle_invitation_request_accept(GaimAccount *account,
 		TIME_COL,				time_str,
 		STATE_COL,				state_str,
 		-1);
+
+	/* Save the updates to a file */
+g_print("about_to_write 9\n");
+	simias_invitations_write(out_inv_store);
 
 	/* Make sure the buttons are in the correct state */
 	out_inv_sel_changed_cb(
@@ -2771,6 +2968,8 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 
 	Invitation *invitation;
 	gboolean valid;
+	gboolean b_in_store_updated = FALSE;
+	gboolean b_out_store_updated = FALSE;
 	
 	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(out_inv_store), &iter);
 	while (valid) {
@@ -2817,6 +3016,8 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 					TIME_COL, time_str,
 					STATE_COL, state_str,
 					-1);
+
+				b_out_store_updated = TRUE;
 			}
 		}
 
@@ -2874,6 +3075,8 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 				gtk_list_store_set(in_inv_store, &iter,
 					TIME_COL, time_str,
 					-1);
+
+				b_in_store_updated = TRUE;
 			} else {
 				/**
 				 * The message was sent successfully and so we can remove the
@@ -2881,10 +3084,21 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 				 */
 				gtk_list_store_remove(in_inv_store, &iter);
 				free(invitation);
+
+				b_in_store_updated = TRUE;
 			}
 		}
 
 		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(in_inv_store), &iter);
+	}
+
+	if (b_in_store_updated) {
+		/* Save the updates to a file */
+		simias_invitations_write(in_inv_store);
+	}
+	if (b_out_store_updated) {
+		/* Save the updates to a file */
+		simias_invitations_write(out_inv_store);
 	}
 }
 
