@@ -17,21 +17,13 @@ iFolderCmd_FLAGS = $(CSC_EXEFLAG)
 iFolderCmd_LIBS = System.dll $(SYSTEM_XML) Novell.iFolder.dll
 iFolderCmd_LIBPATH =
 
-iFolderd_CSFILES = $(srcdir)/iFolderDaemon.cs
-iFolderd_CSFILES_CSC := $(subst /,$(SEP),$(iFolderd_CSFILES))
-iFolderd_INCLUDES =
-iFolderd_RESOURCES =
-iFolderd_FLAGS = $(CSC_EXEFLAG)
-iFolderd_LIBS = System.dll $(SYSTEM_XML) Novell.iFolder.dll
-iFolderd_LIBPATH =
-
 PROJECT_FILES = $(srcdir)/iFolder.csproj
 
-EXTRA_DIST = ifolders $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderd_CSFILES) $(PROJECT_FILES)
+EXTRA_DIST = $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 
-all: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
+all: Novell.iFolder.dll iFolderCmd.exe
 
 Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(SIMIAS_LIBS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
@@ -39,20 +31,17 @@ Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
 iFolderCmd.exe: $(iFolderCmd_CSFILES) $(iFolderCmd_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderCmd_FLAGS) $(SIMIAS_LIBS) $(iFolderCmd_LIBS:%=/r:%) $(iFolderCmd_LIBPATH:%=/lib:%) $(iFolderCmd_CSFILES_CSC) /doc:iFolderCmd.doc.xml
 
-iFolderd.exe: $(iFolderd_CSFILES) $(iFolderd_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderd_FLAGS) $(SIMIAS_LIBS) $(iFolderd_LIBS:%=/r:%) $(iFolderd_LIBPATH:%=/lib:%) $(iFolderd_CSFILES_CSC) /doc:iFolderd.doc.xml
-
 if DEBUG
 if WINDOWS
-DEBUG_FILES = Novell.iFolder.pdb iFolderCmd.pdb iFolderd.pdb
+DEBUG_FILES = Novell.iFolder.pdb iFolderCmd.pdb
 endif
 endif
 
-install-exec-local: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
+install-exec-local: Novell.iFolder.dll iFolderCmd.exe
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Novell.iFolder.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderd.exe $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) iFolderCmd ifolders $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderCmd $(DESTDIR)$(bindir)
 if WINDOWS
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
@@ -61,14 +50,14 @@ endif
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd iFolderd.exe ifolders
+	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd
 if WINDOWS
 if DEBUG	
 	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
 endif
 endif
 
-CLEAN_FILES = Novell.iFolder.dll iFolderCmd.exe iFolderd.exe Novell.iFolder.doc.xml iFolderCmd.doc.xml
+CLEAN_FILES = Novell.iFolder.dll iFolderCmd.exe Novell.iFolder.doc.xml iFolderCmd.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
