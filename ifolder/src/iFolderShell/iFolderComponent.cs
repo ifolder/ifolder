@@ -31,6 +31,7 @@ using Novell.iFolder;
 using Simias.Storage;
 using Novell.AddressBook;
 using Novell.iFolder.FormsBookLib;
+using Simias;
 
 namespace Novell.iFolder.iFolderCom
 {
@@ -47,6 +48,7 @@ namespace Novell.iFolder.iFolderCom
 		bool GetiFolderPropInit();
 		bool GetNextiFolderProp(out string name, out string val);
 		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
+		void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 	}
 
 	/// <summary>
@@ -293,6 +295,19 @@ namespace Novell.iFolder.iFolderCom
 				{
 					ifolderAdvanced.Show();
 				}
+			}
+		}
+
+		public void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
+		{
+			Configuration config = new Configuration();
+			string showWizard = config.Get("iFolderShell", "Show wizard", "true");
+			if (showWizard == "true")
+			{
+				NewiFolder newiFolder = new NewiFolder();
+				newiFolder.FolderName = path;
+				newiFolder.LoadPath = dllPath;
+				newiFolder.Show();
 			}
 		}
 	}
