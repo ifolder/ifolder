@@ -101,33 +101,33 @@ namespace Novell.iFolder
 			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
 
 			// create a table to hold the values
-			Table srvTable = new Table(3,2,false);
+			Table srvTable = new Table(2,2,false);
 			srvWidgetBox.PackStart(srvTable, true, true, 0);
 			srvTable.ColumnSpacing = 20;
 			srvTable.RowSpacing = 5;
 
-			Label usrNameLabel = new Label(Util.GS("User name:"));
-			usrNameLabel.Xalign = 0;
-			srvTable.Attach(usrNameLabel, 0,1,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usrNameValue = new Label(domain.MemberName);
-			usrNameValue.Xalign = 0;
-			srvTable.Attach(usrNameValue, 1,2,0,1);
+//			Label usrNameLabel = new Label(Util.GS("User name:"));
+//			usrNameLabel.Xalign = 0;
+//			srvTable.Attach(usrNameLabel, 0,1,0,1,
+//					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+//			Label usrNameValue = new Label(domain.MemberName);
+//			usrNameValue.Xalign = 0;
+//			srvTable.Attach(usrNameValue, 1,2,0,1);
 
 
 			Label srvNameLabel = new Label(Util.GS("Server:"));
 			srvNameLabel.Xalign = 0;
-			srvTable.Attach(srvNameLabel, 0,1,1,2,
+			srvTable.Attach(srvNameLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			Label srvNameValue = new Label(domain.Name);
 			srvNameValue.Xalign = 0;
-			srvTable.Attach(srvNameValue, 1,2,1,2);
+			srvTable.Attach(srvNameValue, 1,2,0,1);
 
 			Label srvDescLabel = new Label(Util.GS("Server description:"));
 			srvDescLabel.Xalign = 0;
 			srvDescLabel.Yalign = 0;
-			srvTable.Attach(srvDescLabel, 0,1,2,3,
+			srvTable.Attach(srvDescLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 
 					AttachOptions.Fill,0,0);
 
@@ -142,7 +142,7 @@ namespace Novell.iFolder
 			srvDescValue.RightMargin = 5;
 			srvDescValue.LeftMargin = 5;
 			sw.Add(srvDescValue);
-			srvTable.Attach(sw, 1,2,2,3,
+			srvTable.Attach(sw, 1,2,1,2,
 					AttachOptions.Expand | AttachOptions.Fill , 0,0,0);
 
 
