@@ -316,48 +316,66 @@ namespace Novell.iFolder.iFolderCom
 
 			foreach (ListViewItem lvitem in this.shareWith.Items)
 			{
+				ShareListContact slContact = (ShareListContact)lvitem.Tag;
+
 				// If the item is newly added or changed, then process it.
-				if (((ShareListContact)lvitem.Tag).Added || ((ShareListContact)lvitem.Tag).Changed)
+				if (slContact.Added || slContact.Changed)
 				{
 					// Get the rights for this contact.
-					Access.Rights rights;
+					iFolder.Rights rights;
 					switch (lvitem.SubItems[1].Text)
 					{
 						case "Full Control":
 						{
-							rights = Access.Rights.Admin;
+							rights = iFolder.Rights.Admin;
 							break;
 						}
 						case "Read/Write":
 						{
-							rights = Access.Rights.ReadWrite;
+							rights = iFolder.Rights.ReadWrite;
 							break;
 						}
 						case "Read Only":
 						{
-							rights = Access.Rights.ReadOnly;
+							rights = iFolder.Rights.ReadOnly;
 							break;
 						}
 						default:
 						{
-							rights = Access.Rights.Deny;
+							rights = iFolder.Rights.Deny;
 							break;
 						}
 					}
 
-					// Reset the flags.
-					((ShareListContact)lvitem.Tag).Added = false;
-					((ShareListContact)lvitem.Tag).Changed = false;
-
+					bool accessSet = false;
 					try
 					{
-						// Set the ACE and send an invitation.
-						ifolder.Share(((ShareListContact)lvitem.Tag).CurrentContact.ID, rights, true);
+						// Set the ACE.
+						ifolder.SetRights(slContact.CurrentContact, rights);
+						accessSet = true;
+
+						// Reset the flags.
+						slContact.Added = false;
+						slContact.Changed = false;
 					}
 					catch (Exception e)
 					{
 						// TODO
-						MessageBox.Show("Share failed with the following exception: \n\n" + e.Message, "Share Failure");
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Rights Failure");
+					}
+
+					if (accessSet)
+					{
+						try
+						{
+							// Send the invitation.
+							ifolder.Invite(slContact.CurrentContact);
+						}
+						catch(Exception e)
+						{
+							// TODO
+							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + e.Message, "Send Invitation Failure");
+						}
 					}
 				}
 			}
@@ -370,7 +388,7 @@ namespace Novell.iFolder.iFolderCom
 					try
 					{
 						// Remove the ACE and don't send an invitation.
-						ifolder.Share(slContact.CurrentContact.ID, Access.Rights.Deny, false);
+						ifolder.RemoveRights(slContact.CurrentContact);
 
 						// Remove this entry from the list.
 						removedList.Remove(slContact);
@@ -775,44 +793,81 @@ namespace Novell.iFolder.iFolderCom
 			
 			foreach (ListViewItem lvitem in this.shareWith.Items)
 			{
+				ShareListContact slContact = (ShareListContact)lvitem.Tag;
+
 				// Get the rights for this contact.
-				Access.Rights rights;
+				iFolder.Rights rights;
 				switch (lvitem.SubItems[1].Text)
 				{
 					case "Full Control":
 					{
-						rights = Access.Rights.Admin;
+						rights = iFolder.Rights.Admin;
 						break;
 					}
 					case "Read/Write":
 					{
-						rights = Access.Rights.ReadWrite;
+						rights = iFolder.Rights.ReadWrite;
 						break;
 					}
 					case "Read Only":
 					{
-						rights = Access.Rights.ReadOnly;
+						rights = iFolder.Rights.ReadOnly;
 						break;
 					}
 					default:
 					{
-						rights = Access.Rights.Deny;
+						rights = iFolder.Rights.Deny;
 						break;
 					}
 				}
 
-				// Reset the listview item since it has been committed.
-				((ShareListContact)lvitem.Tag).Added = false;
-				((ShareListContact)lvitem.Tag).Changed = false;
+				if (slContact.Added || slContact.Changed)
+				{
+					// If the share contact is newly added or has been changed,
+					// we need to reset the ACE.
+					bool accessSet = false;
+					try
+					{
+						// Set the ACE.
+						ifolder.SetRights(slContact.CurrentContact, rights);
+						accessSet = true;
 
-				try
-				{
-					// Set the ACE and send an invitation.
-					ifolder.Share(((ShareListContact)lvitem.Tag).CurrentContact.ID, rights, true);
+						// Reset the listview item since it has been committed.
+						slContact.Added = false;
+						slContact.Changed = false;
+					}
+					catch (Exception ex)
+					{
+						// TODO
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
+					}
+
+					if (accessSet)
+					{
+						try
+						{
+							// Send the invitation.
+							ifolder.Invite(slContact.CurrentContact);
+						}
+						catch(Exception ex)
+						{
+							// TODO
+							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
+						}
+					}
 				}
-				catch
+				else
 				{
-					// TODO
+					// Just send the invitation.
+					try
+					{
+						ifolder.Invite(slContact.CurrentContact);
+					}
+					catch(Exception ex)
+					{
+						// TODO
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
+					}
 				}
 			}		
 

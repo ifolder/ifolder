@@ -109,6 +109,11 @@
                     AssemblyName = "iFolder"
                     HintPath = "..\iFolder\iFolder.dll"
                 />
+                <Reference
+                    Name = "Configuration"
+                    AssemblyName = "Configuration"
+                    HintPath = "..\..\..\simias\src\Configuration\Configuration.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -141,6 +146,16 @@
                 <File
                     RelPath = "MyMessageBox.resx"
                     DependentUpon = "MyMessageBox.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NewiFolder.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NewiFolder.resx"
+                    DependentUpon = "NewiFolder.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -58,10 +58,19 @@ namespace Win32Util
 			return win32Window;
 		}
 
+		public static bool ShObjectProperties(IntPtr window, int type, string objectName, string pageName)
+		{
+			return SHObjectProperties(window, type, objectName, pageName);
+		}
+
+
 		[DllImport("user32.dll")]
 		static extern bool BringWindowToTop(IntPtr window);
 		
 		[DllImport("user32.dll", EntryPoint="FindWindow")]
 		static extern IntPtr FindWindowWin32(string className, string windowName);
+
+		[DllImport("shell32.dll")]
+		static extern bool SHObjectProperties(IntPtr window, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
 	}
 }
