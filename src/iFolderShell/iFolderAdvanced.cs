@@ -86,9 +86,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.TabPage tabSharing;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
-		private System.Windows.Forms.ContextMenu contextMenu1;
-		private System.Windows.Forms.MenuItem menuAccept;
-		private System.Windows.Forms.MenuItem menuDecline;
 		private System.Windows.Forms.Button accept;
 		private System.Windows.Forms.Button decline;
 		private System.ComponentModel.IContainer components;
@@ -165,9 +162,6 @@ namespace Novell.iFolder.iFolderCom
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-			this.menuAccept = new System.Windows.Forms.MenuItem();
-			this.menuDecline = new System.Windows.Forms.MenuItem();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
@@ -470,7 +464,6 @@ namespace Novell.iFolder.iFolderCom
 																						this.columnHeader1,
 																						this.columnHeader3,
 																						this.columnHeader2});
-			this.shareWith.ContextMenu = this.contextMenu1;
 			this.helpProvider1.SetHelpString(this.shareWith, "Lists the contacts that this iFolder is currently being shared with.");
 			this.shareWith.HideSelection = false;
 			this.shareWith.Location = new System.Drawing.Point(8, 8);
@@ -495,25 +488,6 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.columnHeader2.Text = "Access";
 			this.columnHeader2.Width = 70;
-			// 
-			// contextMenu1
-			// 
-			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.menuAccept,
-																						 this.menuDecline});
-			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
-			// 
-			// menuAccept
-			// 
-			this.menuAccept.Index = 0;
-			this.menuAccept.Text = "Accept";
-			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
-			// 
-			// menuDecline
-			// 
-			this.menuDecline.Index = 1;
-			this.menuDecline.Text = "Decline";
-			this.menuDecline.Click += new System.EventHandler(this.menuDecline_Click);
 			// 
 			// ok
 			// 
@@ -674,15 +648,14 @@ namespace Novell.iFolder.iFolderCom
 
 					// Take the relationship off the ShareListMember and put it on the Subscription object.  This will
 					// be used to hook up the Member and Contact objects after the subscription has been accepted.
-					Relationship relationship = (Relationship)slMember.Member.Properties.GetSingleProperty("Contact").Value;
-					Property property = new Property("Contact", relationship);
+					Property property = slMember.Member.Properties.GetSingleProperty("Contact");
 					property.LocalProperty = true;
 					subscr.Properties.AddProperty(property);
+					Relationship relationship = (Relationship)property.Value;
 
 					// Get the contact so that we can get the e-mail address from it.
-					Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
-					Contact contact = ab.GetContact(relationship.NodeID);
-					subscr.ToAddress = contact.EMail;
+					Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(relationship.CollectionID);
+					subscr.ToAddress = ab.GetContact(relationship.NodeID).EMail;
 					
 					// Put the subscription in the POBox.
 					poBox.AddMessage(subscr);
@@ -1179,7 +1152,11 @@ namespace Novell.iFolder.iFolderCom
 					{
 						// The contact was not in the removed list, so create a new one.
 						shareMember = new ShareListMember();
+
+						// Create a place-holder member.
 						Member member = new Member(c.FN, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
+
+						// Create a relationship on the member ... this will be put on the Subscription object later on.
 						string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
 						member.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
 						shareMember.Member = member;
@@ -1249,19 +1226,22 @@ namespace Novell.iFolder.iFolderCom
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
 			slMember.Member = slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
 
-			// Take the relationship off the ShareListMember and put it on the Subscription object.  This will
-			// be used to hook up the Member and Contact objects after the subscription has been accepted.
+			// Take the relationship off the Subsription object
 			Relationship relationship = (Relationship)slMember.Subscription.Properties.GetSingleProperty("Contact").Value;
 
-			// Get the contact
+			// Get the contact from the relationship.
 			Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
 			Contact contact = ab.GetContact(relationship.NodeID);
+
+			// Put the Member userID into the Contact userID.
 			contact.UserID = slMember.Member.UserID;
 			ab.Commit(contact);
-			
-			slMember.IsMember = true;
-			updateListViewItem(lvi, slMember.Member.Rights);
 			poBox.Commit(slMember.Subscription);
+			
+			// This entry is now a member.
+			slMember.IsMember = true;
+
+			updateListViewItem(lvi, slMember.Member.Rights);
 		}
 
 		private void decline_Click(object sender, System.EventArgs e)
@@ -1328,37 +1308,6 @@ namespace Novell.iFolder.iFolderCom
 		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
 		{
 			conflicts.Visible = pictureBox1.Visible = false;
-		}
-
-		// TODO: remove this
-		private void menuAccept_Click(object sender, System.EventArgs e)
-		{
-			ListViewItem lvi = this.shareWith.SelectedItems[0];
-			ShareListMember slMember = (ShareListMember)lvi.Tag;
-			slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
-			poBox.Commit(slMember.Subscription);
-		}
-
-		// TODO: remove this
-		private void menuDecline_Click(object sender, System.EventArgs e)
-		{
-			ListViewItem lvi = this.shareWith.SelectedItems[0];
-			ShareListMember slMember = (ShareListMember)lvi.Tag;
-			slMember.Subscription.Decline();
-			poBox.Commit(slMember.Subscription);
-		}
-
-		private void contextMenu1_Popup(object sender, System.EventArgs e)
-		{
-			if (shareWith.SelectedItems.Count == 1)
-			{
-				ListViewItem lvi = shareWith.SelectedItems[0];
-				menuAccept.Visible = menuDecline.Visible = lvi.SubItems[1].Text.Equals(SubscriptionStates.Pending.ToString());
-			}
-			else
-			{
-				menuAccept.Visible = menuDecline.Visible = false;
-			}
 		}
 		#endregion
 
