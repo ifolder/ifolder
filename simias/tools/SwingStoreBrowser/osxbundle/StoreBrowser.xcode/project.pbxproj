@@ -229,6 +229,8 @@
 				3ED2848607C5179100F2B104,
 				3ED2848707C5179100F2B104,
 				3ED2848907C5179100F2B104,
+				21173F4507CB97DA009ED2B1,
+				21173F5607CBAB77009ED2B1,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,6 +271,46 @@
 //162
 //163
 //164
+//210
+//211
+//212
+//213
+//214
+		21173F4407CB97DA009ED2B1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = OpenStoreDialog.java;
+			path = ../src/com/novell/simias/storebrowser/OpenStoreDialog.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		21173F4507CB97DA009ED2B1 = {
+			fileRef = 21173F4407CB97DA009ED2B1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		21173F5507CBAB77009ED2B1 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.java;
+			name = Config.java;
+			path = ../src/com/novell/simias/storebrowser/Config.java;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		21173F5607CBAB77009ED2B1 = {
+			fileRef = 21173F5507CBAB77009ED2B1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//210
+//211
+//212
+//213
+//214
 //3E0
 //3E1
 //3E2
@@ -445,6 +487,8 @@
 		};
 		3ED2847F07C5178300F2B104 = {
 			children = (
+				21173F5507CBAB77009ED2B1,
+				21173F4407CB97DA009ED2B1,
 				3ED2848007C5179100F2B104,
 				3ED2848107C5179100F2B104,
 				3ED2848207C5179100F2B104,
