@@ -84,7 +84,6 @@ namespace Novell.iFolder
 		ListStore ContactTreeStore;
 		Pixbuf	ContactPixBuf;
 		Pixbuf	CurContactPixBuf;
-		ContactPicker cp;
 		Novell.AddressBook.Manager 	abMan;
 		AddressBook	dAddrBook;
 		ArrayList	guidList;
@@ -144,6 +143,7 @@ namespace Novell.iFolder
 				SharingListHolder slh = new SharingListHolder(
 						iface.Rights, iface.Contact);
 				ContactTreeStore.AppendValues(slh);
+				guidList.Add(iface.Contact.ID);
 			}
 
 			/*			ICSList acl = ifldr.GetShareAccess();
@@ -332,40 +332,31 @@ namespace Novell.iFolder
 					}
 					else
 					{
-						ContactEditor ce = new ContactEditor(
-								(Gtk.Window)GetWidget().Toplevel,
-								owner);
-
-						ce.ContactEdited += new ContactEditedEventHandler(
-								ContactEditedHandler);
-						ce.ShowAll();
+						ContactEditor ce = new ContactEditor();
+						ce.TransientFor = (Gtk.Window)GetWidget().Toplevel;
+						ce.Contact = owner;
+						ce.Run();
+						owner.Commit();
 					}
 				}
 			}
 			else
 			{
-				if( (cp == null) || (!cp.IsValid()) )
+				ContactPicker cp = new ContactPicker();
+				cp.TransientFor = (Gtk.Window)GetWidget().Toplevel;
+				cp.AddrBookManager = abMan;
+				if(cp.Run() == -5)
 				{
-					cp = new ContactPicker((Gtk.Window)GetWidget().Toplevel);
-					cp.ContactsPicked += new ContactsPickedEventHandler(
-							onContactsPicked);
+					foreach(Contact c in cp.Contacts)
+					{
+						ShareWithContact(c);
+					}
 				}
-
-				cp.ShowAll();
 			}
 		}
 
-		public void ContactEditedHandler(object o,
-				ContactEventArgs args)
+		public void ShareWithContact(Contact c)
 		{
-			Contact contact = args.Contact;
-			contact.Commit();
-		}
-
-		public void onContactsPicked(object o, ContactsPickedEventArgs args)
-		{
-			Contact c = args.Contact;
-
 			if(!guidList.Contains(c.ID))
 			{
 				try
@@ -454,16 +445,6 @@ namespace Novell.iFolder
 		private void on_fullcontrol_clicked(object o, EventArgs args)
 		{
 			SetCurrentAccessRights(iFolder.Rights.Admin);
-		}
-
-		private void on_unrealize(object o, EventArgs args) 
-		{
-			// Close out the contact picker
-			if(cp != null)
-			{
-				cp.Close();
-				cp = null;
-			}
 		}
 	}
 }

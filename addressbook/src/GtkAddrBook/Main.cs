@@ -29,18 +29,18 @@ using GtkSharp;
 
 namespace Novell.iFolder
 {
-	public class AddrBookRunner 
+	public class ContactBrowserApp 
 	{
 		public static void Main (string[] args)
 		{
 			Application.Init();
-			AddrBookWindow win = new AddrBookWindow();
-			win.AddrBookClosed += new EventHandler(on_addrbook_closed);
-			win.ShowAll();
+			ContactBrowser cb = new ContactBrowser();
+			cb.AddrBookClosed += new EventHandler(on_cb_closed);
+			cb.ShowAll();
 			Application.Run();
 		}
 
-		public static void on_addrbook_closed(object o, EventArgs args) 
+		public static void on_cb_closed(object o, EventArgs args) 
 		{
 			Application.Quit();
 		}

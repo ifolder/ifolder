@@ -261,8 +261,8 @@ namespace Novell.iFolder
 
 		static void show_AddrBook(object o, EventArgs args)
 		{
-			AddrBookWindow win = new AddrBookWindow();
-			win.ShowAll();
+			ContactBrowser cb = new ContactBrowser();
+			cb.ShowAll();
 		}
 
 		static void show_invwizard(object o, EventArgs args)

@@ -35,100 +35,54 @@ using GLib;
 
 namespace Novell.iFolder
 {
-	public class CPListData
-	{
-		private readonly Pixbuf pb;
-		private readonly string name;
-
-		public CPListData(Pixbuf pb, string name)
-		{
-			this.pb = pb;
-			this.name = name;
-		}
-
-		public Pixbuf Icon
-		{     
-			get { return pb;}      
-		}
-
-		public string Name
-		{     
-			get { return name;}      
-		}
-	}
-
-	public class ContactsPickedEventArgs : EventArgs
-	{
-		//private readonly string ContactName;
-		private readonly Contact c;
-
-		//Constructor.
-		//
-		public ContactsPickedEventArgs(Contact contact)
-		{
-			this.c = contact;
-		}
-
-		public Contact Contact
-		{     
-			get { return c;}      
-		}
-	}
-
-	// Delegate declaration
-	//
-	public delegate void ContactsPickedEventHandler(object sender,
-			ContactsPickedEventArgs e);
-
 	public class ContactPicker
 	{
-		[Glade.Widget] internal Gtk.Entry ceFullName;
 		[Glade.Widget] internal TreeView	BookTreeView;
 		[Glade.Widget] internal TreeView	ContactTreeView;
-		[Glade.Widget] internal Gtk.Entry SearchEntry;
+		[Glade.Widget] internal Gtk.Entry	SearchEntry;
+		[Glade.Widget] internal Gtk.Button	AddButton;
+		[Glade.Widget] internal Gtk.Button	RemoveButton;
+		[Glade.Widget] internal Gtk.Button	NewBookButton;
+		[Glade.Widget] internal Gtk.Button	NewGroupButton;
+		[Glade.Widget] internal Gtk.Button	NewContactButton;
+		[Glade.Widget] internal Gtk.Button	HelpButton;
+		[Glade.Widget] internal TreeView	SelectedTreeView;
 
-		Manager 	abMan;
-		AddressBook curAddrBook;
-		Gtk.Window cpwin;
-		ListStore BookTreeStore;
-		ListStore ContactTreeStore;
-		Pixbuf	UserCardPixBuf;
-		Pixbuf	CurCardPixBuf;
-		Pixbuf	BookPixBuf;
+		private Manager 	abMan;
+		private AddressBook curAddrBook;
+		private Gtk.Dialog	cpDialog;
+		private ListStore	BookTreeStore;
+		private ListStore	ContactTreeStore;
+		private ListStore	SelectedTreeStore;
+		private Pixbuf		UserCardPixBuf;
+		private Pixbuf		CurCardPixBuf;
+		private Pixbuf		BookPixBuf;
+		private uint		searchTimeoutID;
+		private Hashtable	selectedContacts;
 
-		public event ContactsPickedEventHandler ContactsPicked;
-
-		public ContactPicker (Manager abMan, Gtk.Window parentWin)
+		public ICollection Contacts
 		{
-			Int32 pX, pY, pdX, pdY;
-
-			parentWin.GetPosition(out pX, out pY);
-			parentWin.GetSize(out pdX, out pdY);
-			if(pdY == 0)
-				pdY = 0;
-
-			this.abMan = abMan;
-
-			InitUI();
-			cpwin.Move(pX + pdX + 10, pY);
+			get
+			{
+				return selectedContacts.Values;
+			}
 		}
 
-		public ContactPicker (Gtk.Window parentWin) 
+		public Manager AddrBookManager
 		{
-			Int32 pX, pY, pdX, pdY;
-
-			parentWin.GetPosition(out pX, out pY);
-			parentWin.GetSize(out pdX, out pdY);
-			if(pdY == 0)
-				pdY = 0;
-			InitUI();
-			cpwin.Move(pX + pdX + 10, pY);
+			set
+			{
+				abMan = value;
+			}
 		}
 
-		public ContactPicker (Manager abMan) 
+		public Gtk.Window TransientFor
 		{
-			this.abMan = abMan;
-			InitUI();
+			set
+			{
+				if(cpDialog != null)
+					cpDialog.TransientFor = value;
+			}
 		}
 
 		public ContactPicker () 
@@ -138,13 +92,13 @@ namespace Novell.iFolder
 
 		private void InitUI () 
 		{
-			Glade.XML gxml = new Glade.XML ("addressbook.glade",
-					"abContactPicker", null);
+			Glade.XML gxml = new Glade.XML ("contact-picker.glade",
+					"ContactPickerDialog", null);
 			gxml.Autoconnect (this);
 
-			cpwin = (Gtk.Window) gxml.GetWidget("abContactPicker");
-			cpwin.Move(2,2);
+			cpDialog = (Gtk.Dialog) gxml.GetWidget("ContactPickerDialog");
 
+			// Setup the Book TreeView
 			BookTreeStore = new ListStore(typeof(AddressBook));
 			BookTreeView.Model = BookTreeStore;
 			CellRendererPixbuf bcrp = new CellRendererPixbuf();
@@ -162,6 +116,8 @@ namespace Novell.iFolder
 			BookTreeView.Selection.Changed += new EventHandler(
 					on_book_selection_changed);
 
+
+			// Setup the Contact TreeView
 			ContactTreeStore = new ListStore(typeof(Contact));
 			ContactTreeView.Model = ContactTreeStore;
 			CellRendererPixbuf ccrp = new CellRendererPixbuf();
@@ -176,17 +132,56 @@ namespace Novell.iFolder
 					ContactCellTextDataFunc));
 			ctvc.Title = "Contacts";
 			ContactTreeView.AppendColumn(ctvc);
+			ContactTreeView.Selection.Mode = SelectionMode.Multiple;
+			ContactTreeView.Selection.Changed += new EventHandler(
+					on_contact_selection_changed);
+
+
+			// Setup the Selected TreeView
+			SelectedTreeStore = new ListStore(typeof(Contact));
+			SelectedTreeView.Model = SelectedTreeStore;
+			CellRendererPixbuf scrp = new CellRendererPixbuf();
+			TreeViewColumn stvc = new TreeViewColumn();
+			stvc.PackStart(scrp, false);
+			stvc.SetCellDataFunc(scrp, new TreeCellDataFunc(
+					ContactCellPixbufDataFunc));
+
+			CellRendererText scrt = new CellRendererText();
+			stvc.PackStart(scrt, false);
+			stvc.SetCellDataFunc(scrt, new TreeCellDataFunc(
+					ContactCellTextDataFunc));
+			stvc.Title = "Picked";
+			SelectedTreeView.AppendColumn(stvc);
+			SelectedTreeView.Selection.Mode = SelectionMode.Multiple;
+			SelectedTreeView.Selection.Changed += new EventHandler(
+					on_selectedTreeView_selection_changed);
 
 			UserCardPixBuf = new Pixbuf("contact.png");
 			CurCardPixBuf = new Pixbuf("contact_me.png");
 			BookPixBuf = new Pixbuf("book.png");
 
+			searchTimeoutID = 0;
+			selectedContacts = new Hashtable();
+		}
+
+
+		private void PopulateWidgets () 
+		{
 			if(abMan == null)
 			{
 				try
 				{
 					abMan = Manager.Connect( );
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(
+							"Unable to connect to the Address Book: " + e);
+				}
+			}
 
+			if(abMan != null)
+			{
 					foreach(AddressBook ab in abMan)
 					{
 						BookTreeStore.AppendValues(ab);
@@ -198,12 +193,10 @@ namespace Novell.iFolder
 					{
 						ContactTreeStore.AppendValues(c);
 					}
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine(
-							"Unable to connect to the Address Book: " + e);
-				}
+			}
+			else
+			{
+				Console.WriteLine("AddresBook == null");
 			}
 		}
 
@@ -238,7 +231,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
+			Contact cnt = (Contact) tree_model.GetValue(iter,0);
 			if(cnt != null)
 			{
 				if( (cnt.FN != null) && (cnt.FN.Length > 0) )
@@ -259,7 +252,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
+			Contact cnt = (Contact) tree_model.GetValue(iter,0);
 
 			if(cnt != null)
 			{
@@ -275,172 +268,163 @@ namespace Novell.iFolder
 		}
 
 
-
-
-		protected virtual void OnContactsPicked(ContactsPickedEventArgs e)
+		public int Run()
 		{
-			if(ContactsPicked != null)
+			int rc = 0;
+			if(cpDialog != null)
 			{
-				ContactsPicked(this, e);
+				PopulateWidgets();
+				rc = cpDialog.Run();
+				cpDialog.Hide();
+				cpDialog.Destroy();
+				cpDialog = null;
 			}
+			return rc;
 		}
-
-
-
-
-		public void ShowAll()
-		{
-			if(cpwin != null)
-			{
-				cpwin.Present();
-			}
-		}
-
-
-
-
-		public bool IsValid()
-		{
-			if(cpwin != null)
-				return true;
-			else
-				return false;
-		}
-
 
 
 
 		private void on_contact_row_activated(object obj,
 				RowActivatedArgs args)
 		{
-			onAdd(obj, args);
+			on_AddButton_clicked(obj, args);
 		}
 
 
 
 
-		public void onAdd(object o, EventArgs args)
+		public void on_AddButton_clicked(object o, EventArgs args)
 		{
+			TreeModel tModel;
+
 			TreeSelection tSelect = ContactTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+
+			foreach(TreePath tPath in treePaths)
 			{
-				TreeModel tModel;
 				TreeIter iter;
 
-				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				Contact c = (Contact) ContactTreeStore.GetValue(iter,0);
-
-				ContactsPickedEventArgs e = new 
-						ContactsPickedEventArgs(c);
-
-				OnContactsPicked(e);
+				if(ContactTreeStore.GetIter(out iter, tPath))
+				{
+					Contact c = (Contact) ContactTreeStore.GetValue(iter,0);
+					if(!selectedContacts.ContainsKey(c.ID))
+					{
+						selectedContacts.Add(c.ID, c);
+						SelectedTreeStore.AppendValues(c);
+					}
+				}
 			}
 		}
-	
 
 
 
-		public void Close()
+		public void on_RemoveButton_clicked(object o, EventArgs args)
 		{
-			if(cpwin != null)
+			TreeModel tModel;
+			Queue	iterQueue;
+
+			iterQueue = new Queue();
+			TreeSelection tSelect = SelectedTreeView.Selection;
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+			
+			// We can't remove anything while getting the iters
+			// because it will change the paths and we'll remove
+			// the wrong stuff.
+			foreach(TreePath tPath in treePaths)
 			{
-				cpwin.Hide();
-				cpwin.Destroy();
+				TreeIter iter;
+
+				if(SelectedTreeStore.GetIter(out iter, tPath))
+				{
+					iterQueue.Enqueue(iter);
+				}
 			}
-			cpwin = null;
+			
+			// Now that we have all of the TreeIters, loop and
+			// remove them all
+			while(iterQueue.Count > 0)
+			{
+				TreeIter iter = (TreeIter) iterQueue.Dequeue();
+				Contact c = (Contact) SelectedTreeStore.GetValue(iter,0);
+				selectedContacts.Remove(c.ID);
+				SelectedTreeStore.Remove(out iter);
+			}
 		}
 
 
-
-
-		public void onCancel(object o, EventArgs args) 
-		{
-			Close();
-		}
-
-
-
-
-		public void on_delete (object o, DeleteEventArgs args) 
-		{
-			Close();
-		}
-
-
-
-
-		public void on_add_contact_clicked(object o, EventArgs args) 
-		{
-			ContactEditor ce = new ContactEditor(cpwin);
-
-			ce.ContactCreated +=
-				new ContactCreatedEventHandler(ContactCreatedEventHandler);
-
-			ce.ShowAll();
-		}
-
-
-
-
-		public void on_add_book_clicked(object o, EventArgs args)
+		public void on_NewBookButton_clicked(object o, EventArgs args)
 		{
 			BookEditor be = new BookEditor();
-			be.BookEdited += new BookEditEventHandler(CreateBookEventHandler);
-			be.ShowAll();
-		}
+			be.TransientFor = cpDialog;
 
+			int rc = be.Run();
 
-
-
-		public void onKeyPressed(object o, KeyPressEventArgs args)
-		{
-			switch(args.Event.HardwareKeycode)
+			if((rc == -5) && (abMan != null))
 			{
-				case 9:
-					onCancel(o, args);
-					break;
-				case 36:
-					onAdd(o, args);
-					break;					
-			}
-		}
-
-
-
-
-		public void ContactCreatedEventHandler(object o,
-				ContactEventArgs args)
-		{
-			Contact contact = args.Contact;
-
-			curAddrBook.AddContact(contact);
-
-			contact.Commit();
-
-			ContactTreeStore.AppendValues(contact);
-		}
-
-
-
-
-		public void CreateBookEventHandler(object o, BookEditEventArgs args)
-		{
-			if(abMan != null)
-			{
-				AddressBook ab = new AddressBook(args.NewName);
+				AddressBook ab = new AddressBook(be.Name);
 
 				abMan.AddAddressBook(ab);
 				ab.Commit();
 				BookTreeStore.AppendValues(ab);
 			}
-			else
+		}
+
+
+
+		public void on_NewGroupButton_clicked(object o, EventArgs args)
+		{
+			MessageDialog dialog = new MessageDialog(	cpDialog,
+				DialogFlags.Modal | DialogFlags.DestroyWithParent,
+				MessageType.Info,
+				ButtonsType.Close,
+				"Groups are not that important to me, kinda like OS X\rWe'll add this feature in the future.");
+
+			dialog.Title = "Scotty's Helpful Hints";
+			dialog.Run();
+			dialog.Hide();
+		}
+
+
+
+		public void on_NewContactButton_clicked(object o, EventArgs args)
+		{
+			ContactEditor ce = new ContactEditor();
+			ce.TransientFor = cpDialog;
+			ce.Contact = new Contact();
+
+			int rc = ce.Run();
+
+			if(rc == -5)
 			{
-				Console.WriteLine("Not c  onnected to an addresbook store");
+				curAddrBook.AddContact(ce.Contact);
+
+				ce.Contact.Commit();
+
+				ContactTreeStore.AppendValues(ce.Contact);
 			}
 		}
 
+
+
+
+		public void on_HelpButton_clicked(object o, EventArgs args)
+		{
+			MessageDialog dialog = new MessageDialog(	cpDialog,
+				DialogFlags.Modal | DialogFlags.DestroyWithParent,
+				MessageType.Info,
+				ButtonsType.Close,
+				"Help will be in this iteration, just not yet.");
+
+			dialog.Title = "Scotty's Helpful Hints";
+			dialog.Run();
+			dialog.Hide();
+		}
 
 
 
@@ -525,7 +509,7 @@ namespace Novell.iFolder
 					TreeSelection tSelect = ContactTreeView.Selection;
 					if(tSelect.CountSelectedRows() > 0)
 					{
-						MessageDialog dialog = new MessageDialog(	cpwin,
+						MessageDialog dialog = new MessageDialog(	cpDialog,
 						DialogFlags.Modal | DialogFlags.DestroyWithParent,
 						MessageType.Question,
 						ButtonsType.YesNo,
@@ -576,7 +560,7 @@ namespace Novell.iFolder
 				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
 				if(cnt.IsCurrentUser)
 				{
-					MessageDialog med = new MessageDialog(cpwin,
+					MessageDialog med = new MessageDialog(cpDialog,
 							DialogFlags.DestroyWithParent | DialogFlags.Modal,
 							MessageType.Error,
 							ButtonsType.Close,
@@ -613,7 +597,7 @@ namespace Novell.iFolder
 						TreeSelection tSelect = BookTreeView.Selection;
 						if(tSelect.CountSelectedRows() > 0)
 						{
-							MessageDialog dialog = new MessageDialog(	cpwin,
+							MessageDialog dialog = new MessageDialog(	cpDialog,
 									DialogFlags.Modal | DialogFlags.DestroyWithParent,
 									MessageType.Question,
 									ButtonsType.YesNo,
@@ -663,7 +647,7 @@ namespace Novell.iFolder
 				AddressBook ab = (AddressBook) BookTreeStore.GetValue(iter,0);
 				if(ab.Default)
 				{
-					MessageDialog med = new MessageDialog(cpwin,
+					MessageDialog med = new MessageDialog(cpDialog,
 							DialogFlags.DestroyWithParent | DialogFlags.Modal,
 							MessageType.Error,
 							ButtonsType.Close,
@@ -723,22 +707,58 @@ namespace Novell.iFolder
 
 
 
-		public void on_search_key_press(object o, KeyPressEventArgs args)
+		public void on_contact_selection_changed(object o, EventArgs args)
 		{
-			switch(args.Event.HardwareKeycode)
+			TreeSelection tSelect = ContactTreeView.Selection;
+
+			if(tSelect.CountSelectedRows() > 0)
 			{
-				case 36: // Enter key
-					SearchAddrBook();
-					break;					
+				AddButton.Sensitive = true;
+			}
+			else
+			{
+				AddButton.Sensitive = false;
 			}
 		}
 
 
 
+		public void on_selectedTreeView_selection_changed(
+				object o, EventArgs args)
+		{
+			TreeSelection tSelect = SelectedTreeView.Selection;
 
-		public void on_search_button_clicked(object o, EventArgs args)
+			if(tSelect.CountSelectedRows() > 0)
+			{
+				RemoveButton.Sensitive = true;
+			}
+			else
+			{
+				RemoveButton.Sensitive = false;
+			}
+		}
+
+
+
+		public void on_SearchEntry_changed(object o, EventArgs args)
+		{
+			if(searchTimeoutID != 0)
+			{
+				Gtk.Timeout.Remove(searchTimeoutID);
+				searchTimeoutID = 0;
+			}
+
+			searchTimeoutID = Gtk.Timeout.Add(500, new Gtk.Function(
+					SearchCallback));
+		}
+
+
+
+
+		private bool SearchCallback()
 		{
 			SearchAddrBook();
+			return false;
 		}
 	}
 }

@@ -33,92 +33,65 @@ using GLib;
 
 namespace Novell.iFolder
 {
-	public class BookEditEventArgs : EventArgs
-	{
-		private readonly string newBookName;
-		private readonly bool changed;
-
-		//Constructor.
-		//
-		public BookEditEventArgs(bool changed, string newName)
-		{
-			this.newBookName = newName;
-			this.changed = changed;
-		}
-
-		public string NewName
-		{     
-			get { return newBookName;}      
-		}
-
-		public bool Changed
-		{
-			get {return changed;}
-		}
-	}
-
-	// Delegate declaration
-	//
-	public delegate void BookEditEventHandler(object sender,
-			BookEditEventArgs e);
-
 	public class BookEditor
 	{
 		[Glade.Widget] internal Gtk.Entry beName;
+		[Glade.Widget] internal Gtk.Button okButton;
 
 		Gtk.Dialog 		beDlg = null;
+		private string name;
 
-		public event BookEditEventHandler BookEdited;
-
-		public BookEditor () 
+		public string Name
 		{
-			Glade.XML gxml = new Glade.XML ("addressbook.glade",
+			get
+			{
+				return name;
+			}
+
+			set
+			{
+				name = value;
+			}
+		}
+
+		public Gtk.Window TransientFor
+		{
+			set
+			{
+				if(beDlg != null)
+					beDlg.TransientFor = value;
+			}
+		}
+
+		public BookEditor() 
+		{
+			Glade.XML gxml = new Glade.XML ("contact-browser.glade",
 					"BookEditor", null);
 			gxml.Autoconnect (this);
 
 			beDlg = (Gtk.Dialog) gxml.GetWidget("BookEditor");
 		}
 
-
-		public void ShowAll()
+		public int Run()
 		{
+			int rc = 0;
 			if(beDlg != null)
 			{
-				beDlg.ShowAll();
+				rc = beDlg.Run();
+				name = beName.Text;
+				beDlg.Hide();
+				beDlg.Destroy();
+				beDlg = null;
 			}
+			return rc;
 		}
 
-
-		public void on_okButton_clicked(object o, EventArgs args)
+		public void on_beName_changed(object o, EventArgs args)
 		{
-			if(BookEdited != null)
-			{
-				BookEditEventArgs e = new BookEditEventArgs(true, beName.Text);
-				BookEdited(this, e);
-			}
-
-			CloseDialog();
-		}
-
-
-		public void on_cancelButton_clicked(object o, EventArgs args)
-		{
-			CloseDialog();
-		}
-
-
-		private void CloseDialog()
-		{
-			beDlg.Hide();
-			beDlg.Destroy();
-			beDlg = null;
-		}
-
-
-		private void on_BookEditor_delete_event(object o,
-				DeleteEventArgs args) 
-		{
-			CloseDialog();
+			if(beName.Text.Length > 0)
+				okButton.Sensitive = true;
+			else
+				okButton.Sensitive = false;
 		}
 	}
 }

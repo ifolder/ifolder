@@ -55,9 +55,9 @@ namespace Novell.iFolder
 		}
 	}
 
-	public class AddrBookWindow 
+	public class ContactBrowser 
 	{
-		[Glade.Widget] internal Gtk.Window abMainWin;
+		[Glade.Widget] internal Gtk.Window cbWindow;
 		[Glade.Widget] internal TreeView	BookTreeView;
 		[Glade.Widget] internal TreeView	ContactTreeView;
 		[Glade.Widget] internal Button CreateContactButton;
@@ -77,19 +77,18 @@ namespace Novell.iFolder
 		Pixbuf	CurCardPixBuf;
 		Pixbuf	BookPixBuf;
 		Pixbuf	BlankHeadPixBuf;
-		ContactPicker cp;
-		uint		searchTimeoutID;
+		uint	searchTimeoutID;
 		//Timer searchTimer;
 
 		public event EventHandler AddrBookClosed;
 
-		public AddrBookWindow (Manager abMan) 
+		public ContactBrowser (Manager abMan) 
 		{
 			this.abMan = abMan;
 			Init();
 		}
 
-		public AddrBookWindow () 
+		public ContactBrowser () 
 		{
 			Init();
 		}
@@ -108,8 +107,8 @@ namespace Novell.iFolder
 				}
 			}
 
-			Glade.XML gxml = new Glade.XML ("addressbook.glade",
-					"abMainWin", null);
+			Glade.XML gxml = new Glade.XML ("contact-browser.glade",
+					"cbWindow", null);
 
 			gxml.Autoconnect (this);
 
@@ -257,7 +256,7 @@ namespace Novell.iFolder
 
 		public void ShowAll()
 		{
-			abMainWin.ShowAll();
+			cbWindow.ShowAll();
 		}
 
 		public void on_abMainWin_delete (object o, DeleteEventArgs args) 
@@ -336,20 +335,38 @@ namespace Novell.iFolder
 		public void onCreateBook(object o, EventArgs args)
 		{
 			BookEditor be = new BookEditor();
-			be.BookEdited += new BookEditEventHandler(CreateBookEventHandler);
-			be.ShowAll();
+			be.TransientFor = cbWindow;
+
+			int rc = be.Run();
+
+			if((rc == -5) && (abMan != null))
+			{
+				AddressBook ab = new AddressBook(be.Name);
+
+				abMan.AddAddressBook(ab);
+				ab.Commit();
+				BookTreeStore.AppendValues(ab);
+			}
 		}
 
 		public void onCreateContact(object o, EventArgs args)
 		{
 			if(CreateContactButton.Sensitive == true)
 			{
-				ContactEditor ce = new ContactEditor(abMainWin);
+				ContactEditor ce = new ContactEditor();
+				ce.TransientFor = cbWindow;
+				ce.Contact = new Contact();
 
-				ce.ContactCreated +=
-					new ContactCreatedEventHandler(ContactCreatedEventHandler);
+				int rc = ce.Run();
 
-				ce.ShowAll();
+				if(rc == -5)
+				{
+					curAddrBook.AddContact(ce.Contact);
+
+					ce.Contact.Commit();
+
+					ContactTreeStore.AppendValues(ce.Contact);
+				}
 			}
 		}
 
@@ -453,7 +470,7 @@ namespace Novell.iFolder
 				AddressBook ab = (AddressBook) BookTreeStore.GetValue(iter,0);
 				if(ab.Default)
 				{
-					MessageDialog med = new MessageDialog(abMainWin,
+					MessageDialog med = new MessageDialog(cbWindow,
 							DialogFlags.DestroyWithParent | DialogFlags.Modal,
 							MessageType.Error,
 							ButtonsType.Close,
@@ -489,7 +506,7 @@ namespace Novell.iFolder
 						TreeSelection tSelect = BookTreeView.Selection;
 						if(tSelect.CountSelectedRows() > 0)
 						{
-							MessageDialog dialog = new MessageDialog(abMainWin,
+							MessageDialog dialog = new MessageDialog(cbWindow,
 									DialogFlags.Modal | 
 											DialogFlags.DestroyWithParent,
 									MessageType.Question,
@@ -573,27 +590,6 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void ContactCreatedEventHandler(object o,
-				ContactEventArgs args)
-		{
-			Contact contact = args.Contact;
-
-			curAddrBook.AddContact(contact);
-
-			contact.Commit();
-
-			ContactTreeStore.AppendValues(contact);
-		}
-
-		public void ContactEditedEventHandler(object o,
-				ContactEventArgs args)
-		{
-			Contact contact = args.Contact;
-
-			contact.Commit();
-
-			on_contact_selection_changed(o, args);
-		}
 
 		public void on_contact_key_press(object o, KeyPressEventArgs args)
 		{
@@ -605,7 +601,7 @@ namespace Novell.iFolder
 						TreeSelection tSelect = ContactTreeView.Selection;
 						if(tSelect.CountSelectedRows() > 0)
 						{
-							MessageDialog dialog = new MessageDialog(abMainWin,
+							MessageDialog dialog = new MessageDialog(cbWindow,
 									DialogFlags.Modal | 
 											DialogFlags.DestroyWithParent,
 									MessageType.Question,
@@ -664,22 +660,6 @@ namespace Novell.iFolder
 			dialog.Destroy();
 		}
 
-		public void CreateBookEventHandler(object o, BookEditEventArgs args)
-		{
-			if(abMan != null)
-			{
-				AddressBook ab = new AddressBook(args.NewName);
-
-				abMan.AddAddressBook(ab);
-				ab.Commit();
-				BookTreeStore.AppendValues(ab);
-			}
-			else
-			{
-				Console.WriteLine("Not c  onnected to an addresbook store");
-			}
-		}
-
 		public void DeleteSelectedContacts()
 		{
 			TreeSelection tSelect = ContactTreeView.Selection;
@@ -694,7 +674,7 @@ namespace Novell.iFolder
 				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
 				if(cnt.IsCurrentUser)
 				{
-					MessageDialog med = new MessageDialog(abMainWin,
+					MessageDialog med = new MessageDialog(cbWindow,
 							DialogFlags.DestroyWithParent | DialogFlags.Modal,
 							MessageType.Error,
 							ButtonsType.Close,
@@ -736,7 +716,7 @@ namespace Novell.iFolder
 		   }
 		 */
 
-		internal void EditSelectedContact()
+		internal void EditSelectedContact(object obj, EventArgs args)
 		{
 			TreeSelection tSelect = ContactTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -751,38 +731,38 @@ namespace Novell.iFolder
 				Contact c = (Contact) 
 					ContactTreeStore.GetValue(iter,0);
 
-				ContactEditor ce = new ContactEditor(abMainWin, c);
-				ce.ContactEdited +=
-					new ContactEditedEventHandler(
-							ContactEditedEventHandler);
-				ce.ShowAll();
+				ContactEditor ce = new ContactEditor();
+				ce.TransientFor = cbWindow;
+				ce.Contact = c;
+
+				int rc = ce.Run();
+
+				if(rc == -5)
+				{
+					c.Commit();
+
+					on_contact_selection_changed(obj, args);
+				}
 			}
 		}
 
 		internal void on_editContactButton_clicked(object obj, EventArgs args)
 		{
-			EditSelectedContact();
+			EditSelectedContact(obj, args);
 		}
 
 
 		internal void on_contact_row_activated(object obj,
 				RowActivatedArgs args)
 		{
-			EditSelectedContact();
+			EditSelectedContact(obj, args);
 		}
 
 		public void on_quit(object o, EventArgs args)
 		{
-			// Close out the contact picker
-			if(cp != null)
-			{
-				cp.Close();
-				cp = null;
-			}
-
-			abMainWin.Hide();
-			abMainWin.Destroy();
-			abMainWin = null;
+			cbWindow.Hide();
+			cbWindow.Destroy();
+			cbWindow = null;
 
 			if(AddrBookClosed != null)
 			{
@@ -793,10 +773,19 @@ namespace Novell.iFolder
 
 		public void on_show_picker(object o, EventArgs args)
 		{
-			if( (cp == null) || (!cp.IsValid()) )
-				cp = new ContactPicker(abMainWin);
 
-			cp.ShowAll();
+			ContactPicker cp = new ContactPicker();
+			cp.AddrBookManager = abMan;
+			// cbWindow
+			int rc = cp.Run();
+			if(rc == -5)
+			{
+				foreach(Contact c in cp.Contacts)
+				{
+					Console.WriteLine("Contact Picked: {0}", c.FN);
+				}
+			}
+			Console.WriteLine("Returned from running: {0}", rc);
 		}
 
 		// This is code to setup the HTML Text view thingy

@@ -37,41 +37,32 @@ using GLib;
 namespace Novell.iFolder
 {
 	/// <summary>
-	/// This class represents is the EventArgs used to pass to delegates
-	/// that which to be called when a Contact is Done being Edited or
-	/// Created.
-	/// </summary>
-	public class ContactEventArgs : EventArgs
-	{
-		private Contact contact;
-
-		/// <summary>
-		/// Constructor for creating a new ContactEventArgs
-		/// </summary>
-		/// <param name="contact">Contact that was edited</param>
-		public ContactEventArgs(Contact contact)
-		{
-			this.contact = contact;
-		}
-
-		public Contact Contact 
-		{     
-			get { return contact;}      
-		}
-	}
-
-	// Delegate declaration
-	public delegate void ContactEditedEventHandler(object sender, 
-			ContactEventArgs args);
-
-	public delegate void ContactCreatedEventHandler(object sender, 
-			ContactEventArgs args);
-
-	/// <summary>
 	/// This class is used to edit all data stored on a contact.
 	/// </summary>
 	public class ContactEditor
 	{
+		public Contact Contact
+		{
+			get
+			{
+				return currentContact;
+			}
+
+			set
+			{
+				currentContact = value;
+			}
+		}
+
+		public Gtk.Window TransientFor
+		{
+			set
+			{
+				contactEditorDialog.TransientFor = value;
+			}
+		}
+
+
 		// Glade "autoconnected" members
 		[Glade.Widget] internal Gtk.Image			userImage;
 		[Glade.Widget] internal Gtk.Entry			firstNameEntry;
@@ -116,57 +107,21 @@ namespace Novell.iFolder
 		internal Telephone		homePhone;
 		internal Address		preferredAddress;
 
-		public event ContactEditedEventHandler	ContactEdited;
-		public event ContactCreatedEventHandler	ContactCreated;
-
-
-
 
 		/// <summary>
 		/// Constructs a new ContactEditor
 		/// </summary>
-		/// <param name="parentwin">The parent window the Contact Editor
-		///	should be transient to</param>
-		/// <param name="contact">The contact to be edited</param>
-		public ContactEditor (Gtk.Window parentwin, Contact contact)
+		public ContactEditor()
 		{
-			if(contact == null)
-			{
-				currentContact = new Contact();
-				isNewContact = true;
-			}
-			else
-			{
-				currentContact = contact;
-				isNewContact = false;
-			}
-
-			Init();
-
-			contactEditorDialog.TransientFor = parentwin;
+			InitGlade();
 		}
-
-
-
-
-		/// <summary>
-		/// Constructs a new ContactEditor with a new Contact to edit
-		/// </summary>
-		/// <param name="parentwin">The parent window the Contact Editor
-		///	should be transient to</param>
-		public ContactEditor (Gtk.Window parentwin) :
-			this(parentwin, null)
-		{
-		}
-
-
 
 
 		/// <summary>
 		/// Method used to load the glade resources and setup default
 		/// behaviors in for the ContactEditor dialog
 		/// </summary>
-		private void Init()
+		private void InitGlade()
 		{
 			Glade.XML gxml = new Glade.XML ("contact-editor.glade", 
 					"contactEditor", null);
@@ -174,8 +129,6 @@ namespace Novell.iFolder
 			gxml.Autoconnect (this);
 
 			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("contactEditor");
-	
-
 
 			//------------------------------
 			// This will setup the tab stops
@@ -203,10 +156,42 @@ namespace Novell.iFolder
 
 			generalTabTable.FocusChain = widArray;
 
-
-
 			firstNameEntry.HasFocus = true;
+		}
+	
 
+
+		/// <summary>
+		/// Method to run the dialog
+		/// </summary>
+		public int Run()
+		{
+			int rc = 0;
+
+			if(contactEditorDialog != null)
+			{
+				if(currentContact == null)
+					currentContact = new Contact();
+
+				PopulateWidgets();
+				rc = contactEditorDialog.Run();
+				if(rc == -5)
+					SaveContact();
+				contactEditorDialog.Hide();
+				contactEditorDialog.Destroy();
+				contactEditorDialog = null;
+			}
+			return rc;
+		}
+
+
+
+		/// <summary>
+		/// Method used to populate all of the data from the current
+		/// contact into the UI controls
+		/// </summary>
+		private void PopulateWidgets()
+		{
 			try
 			{
 				preferredName = currentContact.GetPreferredName();
@@ -227,50 +212,8 @@ namespace Novell.iFolder
 				preferredAddress = null;
 			}
 
-			PopulateWidgets();
-		}
-	
 
 
-
-		/// <summary>
-		/// Method to notify show the dialog
-		/// </summary>
-		public void ShowAll()
-		{
-			if(contactEditorDialog != null)
-			{
-				contactEditorDialog.Visible = true;
-				contactEditorDialog.Present();
-			}
-		}
-
-
-
-
-		/// <summary>
-		/// Method to notify delegates that the edit was done on this
-		/// contact
-		/// </summary>
-		private void NotifyContactEdit()
-		{
-			ContactEventArgs cArgs = new ContactEventArgs(currentContact);
-
-			if(isNewContact && (ContactCreated != null) )
-				ContactCreated(this, cArgs);
-			else if(ContactEdited != null)
-				ContactEdited(this, cArgs);
-		}
-
-
-
-
-		/// <summary>
-		/// Method used to populate all of the data from the current
-		/// contact into the UI controls
-		/// </summary>
-		private void PopulateWidgets()
-		{
 			firstNameEntry.Text = preferredName.Given;
 			lastNameEntry.Text = preferredName.Family;
 
@@ -688,56 +631,6 @@ namespace Novell.iFolder
 		}
 
 
-
-
-		/// <summary>
-		/// Method used internally to close and hide the Contact Editor
-		/// </summary>
-		private void CloseDialog()
-		{
-			contactEditorDialog.Hide();
-			contactEditorDialog.Destroy();
-			contactEditorDialog = null;
-		}
-
-
-
-
-		/// <summary>
-		/// Glade autoconnected method that is called when the Gtk.Dialog
-		/// is deleted;
-		/// </summary>
-		private void on_contactEditor_delete_event(object o,
-				DeleteEventArgs args) 
-		{
-			CloseDialog();
-		}
-
-
-
-
-		/// <summary>
-		/// Glade autoconnected method that is called when the cancel
-		/// button on the dialog is pressed.
-		/// </summary>
-		private void on_cancelButton_clicked(object o, EventArgs args) 
-		{
-			CloseDialog();
-		}
-
-
-
-
-		/// <summary>
-		/// Glade autoconnected method that is called when the ok
-		/// button on the dialog is pressed.
-		/// </summary>
-		private void on_okButton_clicked(object o, EventArgs args) 
-		{
-			SaveContact();
-			NotifyContactEdit();
-			CloseDialog();
-		}
 
 
 		/// <summary>

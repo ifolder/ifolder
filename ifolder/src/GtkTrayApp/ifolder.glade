@@ -276,7 +276,6 @@
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
       <property name="spacing">0</property>
-      <signal name="unrealize" handler="on_unrealize" last_modification_time="Thu, 18 Dec 2003 20:27:32 GMT"/>
 
       <child>
 	<widget class="GtkScrolledWindow" id="scrolledwindow2">
