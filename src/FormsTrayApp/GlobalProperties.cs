@@ -1520,7 +1520,10 @@ namespace Novell.iFolder.FormsTrayApp
 
 				string proxyValue = null;
 				string portValue = null;
-				useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue);
+				
+				// TODO: fix
+				//useProxy.Checked = Simias.Channels.SimiasChannelFactory.GetProxy(ref proxyValue, ref portValue);
+				
 				if (proxyValue != null && portValue != null)
 				{
 					proxy.Text = proxyValue;
@@ -1564,7 +1567,8 @@ namespace Novell.iFolder.FormsTrayApp
 				UpdateServices();
 
 				// Save the proxy settings.
-				Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);
+				// TODO: fix
+				//Simias.Channels.SimiasChannelFactory.SetProxy(useProxy.Checked, proxy.Text, port.Text);
 			}
 			catch (SimiasException ex)
 			{

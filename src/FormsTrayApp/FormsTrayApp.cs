@@ -385,10 +385,8 @@ namespace Novell.iFolder.FormsTrayApp
 				iFolderManager.CreateDefaultExclusions(config);
 
 				SimiasLogManager.Configure(config);
-			
-				SyncProperties props = new SyncProperties(config);
-				props.LogicFactory = typeof(SynkerA);
-			
+				SimiasRemoting.Configure(config);
+
 				serviceManager = new Simias.Service.Manager(config);
 				serviceManager.StartServices();
 

@@ -163,9 +163,7 @@ namespace Novell.iFolder
 			SetServiceState(ServiceStates.starting);
 
 			SimiasLogManager.Configure(conf);
-
-			SyncProperties props = new SyncProperties(conf);
-			props.LogicFactory = typeof(SynkerA);
+			SimiasRemoting.Configure(conf);
 
 			sManager.StartServices();
 			sManager.WaitForServicesStarted();
