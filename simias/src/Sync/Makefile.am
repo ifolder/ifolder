@@ -58,10 +58,13 @@ uninstall-local:
 		rm -f Sync.dll SyncCmd.exe TestSync.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES); \
 		rm -rf tmpS tmpStoreC tmpStoreS
 
-installcheck-local: install $(NUNIT_TESTS)
+installcheck-local: install $(NUNIT_TESTS) it
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:TestSync.test.xml $(NUNIT_TESTS)
+
+# install tests
+it: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:TestSync.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Sync.dll SyncCmd.exe TestSync.exe $(NUNIT_TESTS) Sync.doc.xml SyncCmd.doc.xml TestSync.doc.xml
 

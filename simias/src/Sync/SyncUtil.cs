@@ -52,19 +52,17 @@ public class FileInviter
 	public FileInviter(Uri storeLocation)
 	{
 		config = new Configuration(storeLocation.LocalPath);
-
         store = new Store(config);
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
 	internal static Collection FindCollection(Store store, Uri docRoot)
 	{
-		DirNode dn;
-		//foreach (Collection c in store)
-		//foreach (Collection c in store.GetCollectionsByType("*"))
 		foreach (ShallowNode sn in store)
 		{
 			Collection c = new Collection(store, sn);
+			DirNode dn = c.GetRootDirectory();
+			Log.Spew("Collection {0} {1} {2}", c.Name, c.ID, dn == null? "<null>": dn.GetFullPath(c));
 			if ((dn = c.GetRootDirectory()) != null && dn.GetFullPath(c) == docRoot.LocalPath)
 				return c;
 		}
@@ -100,16 +98,16 @@ public class FileInviter
 			return false;
 		}
 
-		//TODO: what happened to this commit() method? Does SyncCollection do this now?
-		// add the secret to the current identity chain
-		//store.CurrentIdentity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
-		//store.CurrentIdentity.Commit();
-
 		// add the invitation information to the store collection
-		
 		SyncCollection sc = new SyncCollection(store, invitation);
 		sc.Commit();
-		Log.Spew("Created new client collection for {0}, id {1}", docRoot.LocalPath, sc.ID);
+		sc.Commit(sc);
+
+		DirNode dn = sc.GetRootDirectory();
+		Log.Spew("Created new client collection {0} {1} {2}", sc.Name, sc.ID, dn == null? "<null>": dn.GetFullPath(sc));
+
+		c = FindCollection(store, docRoot);
+		Log.Spew("Just after commit, found collection {0}",  c == null? "<null>": c.Name);
 		return true;
 	}
 

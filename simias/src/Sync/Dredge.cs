@@ -87,14 +87,14 @@ internal class Dredger
 				FileNode fnode = new FileNode(collection, parentNode, name);
 				fnode.LastWriteTime = File.GetLastWriteTime(path);
 				fnode.CreationTime = File.GetCreationTime(path);
-				Log.Spew("Dredger adding file node for {0} {1}", path, node.ID);
+				Log.Spew("Dredger adding file node for {0} {1}", path, fnode.ID);
 				collection.Commit(fnode);
 				return null;
 			}
 			DirNode dnode = new DirNode(collection, parentNode, name);
 			dnode.LastWriteTime = Directory.GetLastWriteTime(path);
 			dnode.CreationTime = Directory.GetCreationTime(path);
-			Log.Spew("Dredger adding dir node for {0} {1}", path, node.ID);
+			Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
 			collection.Commit(dnode);
 			return dnode;
 		}

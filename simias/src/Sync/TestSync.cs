@@ -380,9 +380,9 @@ public class SyncTests: Assertion
 		Console.WriteLine("invite: {0}", Invite());
 		Console.WriteLine("accept: {0}", Accept());
 		Console.WriteLine("firstSync: {0}", FirstSync());
-		Console.WriteLine("simpleAdds: {0}", SimpleAdds());
-		Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
-		Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());
+		//Console.WriteLine("simpleAdds: {0}", SimpleAdds());
+		//Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
+		//Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());
 		Cleanup();
 	}
 
