@@ -223,6 +223,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Security.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ServerDetails.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
