@@ -79,7 +79,7 @@ namespace Simias
 		{
 			if(win == null)
 			{
-				win = new Gtk.Window ("Denali Trace Window");
+				win = new Gtk.Window ("iFolder Trace Window");
 				win.DeleteEvent += new DeleteEventHandler (Window_Delete);
 				win.SetDefaultSize(640, 480);
 
