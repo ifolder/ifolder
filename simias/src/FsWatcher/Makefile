@@ -13,15 +13,22 @@ include ../../config.mk
 FsWatcher_SOURCES = AssemblyInfo.cs FsWatcher.cs
 FsWatcher_INCLUDES = 
 FsWatcher_FLAGS = /t:exe $(ICON_FLAG)App$(ICON_EXT)
-FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) CollectionStore.dll CollectionEvents.dll UserService.dll
-FsWatcher_LIBPATH = ../CollectionStore ../CollectionEvents ../UserService
+FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll Identity.dll CollectionStore.dll UserService.dll
+FsWatcher_LIBPATH = ../Configuration ../StoreProvider ../CollectionStore ../CollectionEvents ../UserService ../Identity
 FsWatcher_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = FsWatcher.exe
+LIB_FILES = 
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
-TARGETS = FsWatcher.exe 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = FsWatcher.exe 
 CLEAN_FILES = Check.xml FsWatcher.pdb FsWatcher.Doc.xml  FsWatcher.xml FsWatcher.Doc.xml
 CLEAN_DIRS = bin obj 
 NUNIT_TESTS = 
@@ -52,7 +59,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -89,3 +97,4 @@ VPATH := $(VPATH) $(FsWatcher_LIBPATH) $(FsWatcher_INCLUDES)
 FsWatcher.exe: $(FsWatcher_SOURCES) $(FsWatcher_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:FsWatcher.Doc.xml $(CSCFLAGS) $(FsWatcher_FLAGS) $(FsWatcher_LIBS:%=/r:%) $(FsWatcher_LIBPATH:%=/lib:%) $(FsWatcher_SOURCES)
 
+include ../../common.mk

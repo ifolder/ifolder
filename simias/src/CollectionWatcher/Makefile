@@ -13,8 +13,8 @@ include ../../config.mk
 CollectionWatcher_SOURCES = Library/AssemblyInfo.cs Library/CollectionWatcher.cs
 CollectionWatcher_INCLUDES = 
 CollectionWatcher_FLAGS = /t:library
-CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) CollectionStore.dll StoreProvider.dll Identity.dll Common.dll SyncCommon.dll
-CollectionWatcher_LIBPATH = Library Library/../../CollectionStore Library/../../StoreProvider Library/../../Identity Library/../../Common Library/../../stage
+CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll Common.dll Agent.dll SyncCommon.dll
+CollectionWatcher_LIBPATH = Library ../CollectionStore ../StoreProvider ../Identity ../Common ../SyncCommon ../Configuration ../CollectionEvents ../Agent
 CollectionWatcher_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ CollectionWatcher_LDFLAGS =
 CollectionWatcherTests_SOURCES = Tests/AssemblyInfo.cs Tests/CollectionWatcherTests.cs
 CollectionWatcherTests_INCLUDES = 
 CollectionWatcherTests_FLAGS = /t:library
-CollectionWatcherTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll CollectionStore.dll Identity.dll StoreProvider.dll Common.dll CollectionWatcher.dll
-CollectionWatcherTests_LIBPATH = Tests Tests/../../../tools/NUnit/bin Tests/../../CollectionStore Tests/../../Identity Tests/../../StoreProvider Tests/../../Common Tests/../Library
+CollectionWatcherTests_LIBS = $(CollectionWatcher_LIBS) $(SYSTEM_XML) nunit.framework.dll CollectionWatcher.dll
+CollectionWatcherTests_LIBPATH = $(CollectionWatcher_LIBPATH) Tests ../../tools/NUnit/bin
 CollectionWatcherTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = CollectionWatcher.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = CollectionWatcherTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = CollectionWatcher.dll CollectionWatcherTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = CollectionWatcher.dll CollectionWatcherTests.dll 
 CLEAN_FILES = Check.xml CollectionWatcher.pdb CollectionWatcher.Doc.xml Check.xml CollectionWatcherTests.pdb CollectionWatcherTests.Doc.xml  CollectionWatcher.xml CollectionWatcher.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = CollectionWatcherTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(CollectionWatcherTests_LIBPATH) $(CollectionWatcherTests_INC
 CollectionWatcherTests.dll: $(CollectionWatcherTests_SOURCES) $(CollectionWatcherTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionWatcherTests.Doc.xml $(CSCFLAGS) $(CollectionWatcherTests_FLAGS) $(CollectionWatcherTests_LIBS:%=/r:%) $(CollectionWatcherTests_LIBPATH:%=/lib:%) $(CollectionWatcherTests_SOURCES)
 
+include ../../common.mk

@@ -13,8 +13,8 @@ include ../../config.mk
 InviteAgent_SOURCES = Library/AssemblyInfo.cs Library/InviteAgent.cs
 InviteAgent_INCLUDES = 
 InviteAgent_FLAGS = /t:library
-InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll CollectionStore.dll StoreProvider.dll Identity.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
-InviteAgent_LIBPATH = Library Library/../../CollectionStore Library/../../StoreProvider Library/../../Identity Library/../../Agent Library/../../AddressBook Library/../../Common Library/../../stage
+InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
+InviteAgent_LIBPATH = Library ../CollectionStore ../StoreProvider ../Identity ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../CollectionEvents
 InviteAgent_LDFLAGS = 
 
 #=============================================================================
@@ -23,8 +23,8 @@ InviteAgent_LDFLAGS =
 InviteAgentConsole_SOURCES = ConsoleApp/AssemblyInfo.cs ConsoleApp/MainClass.cs
 InviteAgentConsole_INCLUDES = 
 InviteAgentConsole_FLAGS = /t:exe $(ICON_FLAG)ConsoleApp/App$(ICON_EXT)
-InviteAgentConsole_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Agent.dll CollectionStore.dll StoreProvider.dll Identity.dll
-InviteAgentConsole_LIBPATH = ConsoleApp ConsoleApp/../../Agent ConsoleApp/../../CollectionStore ConsoleApp/../../StoreProvider ConsoleApp/../../Identity
+InviteAgentConsole_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) InviteAgent.dll
+InviteAgentConsole_LIBPATH = $(InviteAgent_LIBPATH)
 InviteAgentConsole_LDFLAGS = 
 
 #=============================================================================
@@ -33,8 +33,8 @@ InviteAgentConsole_LDFLAGS =
 InviteAgentGui_SOURCES = FormApp/AssemblyInfo.cs FormApp/MainForm.cs
 InviteAgentGui_INCLUDES = 
 InviteAgentGui_FLAGS = /t:winexe $(ICON_FLAG)FormApp/App$(ICON_EXT)
-InviteAgentGui_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Agent.dll CollectionStore.dll StoreProvider.dll Identity.dll
-InviteAgentGui_LIBPATH = FormApp FormApp/../../Agent FormApp/../../CollectionStore FormApp/../../StoreProvider FormApp/../../Identity
+InviteAgentGui_LIBS = $(InviteAgent_LIBS) System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) InviteAgent.dll
+InviteAgentGui_LIBPATH = $(InviteAgent_LIBPATH)
 InviteAgentGui_LDFLAGS = 
 
 #=============================================================================
@@ -43,8 +43,8 @@ InviteAgentGui_LDFLAGS =
 EmailInviteAgent_SOURCES = LibraryEmail/AssemblyInfo.cs LibraryEmail/EmailInviteAgent.cs
 EmailInviteAgent_INCLUDES = 
 EmailInviteAgent_FLAGS = /t:library
-EmailInviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Agent.dll StoreProvider.dll Identity.dll AddressBook.dll CollectionStore.dll InviteAgent.dll Common.dll Configuration.dll Smtp.dll
-EmailInviteAgent_LIBPATH = LibraryEmail LibraryEmail/../../Agent LibraryEmail/../../StoreProvider LibraryEmail/../../Identity LibraryEmail/../../AddressBook LibraryEmail/../../CollectionStore LibraryEmail/../Library LibraryEmail/../../Common LibraryEmail/../../Configuration LibraryEmail/../../Smtp
+EmailInviteAgent_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) InviteAgent.dll Smtp.dll
+EmailInviteAgent_LIBPATH = $(InviteAgent_LIBPATH) LibraryEmail ../AddressBook ../Smtp
 EmailInviteAgent_LDFLAGS = 
 
 #=============================================================================
@@ -53,15 +53,22 @@ EmailInviteAgent_LDFLAGS =
 InviteAgentTests_SOURCES = Tests/AssemblyInfo.cs Tests/InviteAgentTests.cs
 InviteAgentTests_INCLUDES = 
 InviteAgentTests_FLAGS = /t:library
-InviteAgentTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) CollectionStore.dll AddressBook.dll nunit.framework.dll Agent.dll StoreProvider.dll Identity.dll InviteAgent.dll Common.dll SyncCommon.dll
-InviteAgentTests_LIBPATH = Tests Tests/../../CollectionStore Tests/../../AddressBook Tests/../../../tools/NUnit/bin Tests/../../Agent Tests/../../StoreProvider Tests/../../Identity Tests/../InviteAgent Tests/../../Common Tests/../../stage
+InviteAgentTests_LIBS = $(InviteAgent_LIBS) $(SYSTEM_XML) nunit.framework.dll
+InviteAgentTests_LIBPATH = $(InviteAgent_LIBPATH) ../../tools/NUnit/bin
 InviteAgentTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = InviteAgentConsole.exe InviteAgentGui.exe
+LIB_FILES = InviteAgent.dll EmailInviteAgent.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = InviteAgentTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = InviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe EmailInviteAgent.dll InviteAgentTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = InviteAgent.dll InviteAgentConsole.exe InviteAgentGui.exe EmailInviteAgent.dll InviteAgentTests.dll 
 CLEAN_FILES = Check.xml InviteAgent.pdb InviteAgent.Doc.xml Check.xml InviteAgentConsole.pdb InviteAgentConsole.Doc.xml Check.xml InviteAgentGui.pdb InviteAgentGui.Doc.xml Check.xml EmailInviteAgent.pdb EmailInviteAgent.Doc.xml Check.xml InviteAgentTests.pdb InviteAgentTests.Doc.xml  InviteAgent.xml InviteAgent.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj ConsoleApp/bin ConsoleApp/obj FormApp/bin FormApp/obj LibraryEmail/bin LibraryEmail/obj Tests/bin Tests/obj 
 NUNIT_TESTS = InviteAgentTests.dll 
@@ -92,7 +99,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -193,3 +201,4 @@ VPATH := $(VPATH) $(InviteAgentTests_LIBPATH) $(InviteAgentTests_INCLUDES)
 InviteAgentTests.dll: $(InviteAgentTests_SOURCES) $(InviteAgentTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:InviteAgentTests.Doc.xml $(CSCFLAGS) $(InviteAgentTests_FLAGS) $(InviteAgentTests_LIBS:%=/r:%) $(InviteAgentTests_LIBPATH:%=/lib:%) $(InviteAgentTests_SOURCES)
 
+include ../../common.mk

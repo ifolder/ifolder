@@ -44,10 +44,17 @@ SyncTests_LDFLAGS :=
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = SyncCmd.exe
+LIB_FILES = Sync.dll
+DATA_FILES = 
+TEST_BIN_FILES = TestSync.exe
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
 NUNIT_TESTS := TestSync.exe
 #NUNIT_TESTS := TestSync.exe SyncTests.dll 
-TARGETS := Sync.dll SyncCmd.exe $(NUNIT_TESTS)
+#TARGETS := Sync.dll SyncCmd.exe $(NUNIT_TESTS)
 CLEAN_FILES = Sync.xml SyncCmd.xml TestSync.xml
 STAGE_FILES := $(TARGETS) Sync.pdb TestSync.pdb
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
@@ -69,10 +76,11 @@ endif
 CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
 STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
 
-all: $(TARGETS) $(STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES)
 
 clean:
-	-$(RM) $(TARGETS) $(CLEAN_FILES) $(STAGE_FILES)
+	-$(RM) $(TARGETS) $(CLEAN_FILES)
 
 test:
 	-$(RMDIR) tmp*
@@ -141,3 +149,4 @@ VPATH := $(VPATH) $(SyncTests_LIBPATH) $(SyncTests_INCLUDES)
 SyncTests.dll: $(SyncTests_SOURCES) $(SyncTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncTests.xml $(CSCFLAGS) $(SyncTests_FLAGS) $(SyncTests_LIBS:%=/r:%) $(SyncTests_LIBPATH:%=/lib:%) $(SyncTests_SOURCES)
 
+include ../../common.mk

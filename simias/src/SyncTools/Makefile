@@ -13,15 +13,22 @@ include ../../config.mk
 SyncPing_SOURCES = Ping/AssemblyInfo.cs Ping/SyncPinger.cs
 SyncPing_INCLUDES = 
 SyncPing_FLAGS = /t:exe $(ICON_FLAG)Ping/App$(ICON_EXT)
-SyncPing_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SyncManager.dll Common.dll SyncCommon.dll
-SyncPing_LIBPATH = Ping Ping/../../SyncManager Ping/../../Common Ping/../../stage
+SyncPing_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Configuration.dll StoreProvider.dll CollectionEvents.dll Identity.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll StoreWatcher.dll SyncManager.dll
+SyncPing_LIBPATH = Ping ../SyncCommon ../SyncManager ../Common ../CollectionEvents ../CollectionStore ../Configuration ../StoreProvider ../Identity ../Agent ../CollectionWatcher ../StoreWatcher
 SyncPing_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES = SyncPing.exe
+LIB_FILES =
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
-TARGETS = SyncPing.exe 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = SyncPing.exe 
 CLEAN_FILES = Check.xml SyncPing.pdb SyncPing.Doc.xml  SyncTools.xml SyncTools.Doc.xml
 CLEAN_DIRS = Ping/bin Ping/obj 
 NUNIT_TESTS = 
@@ -52,7 +59,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -89,3 +97,4 @@ VPATH := $(VPATH) $(SyncPing_LIBPATH) $(SyncPing_INCLUDES)
 SyncPing.exe: $(SyncPing_SOURCES) $(SyncPing_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncPing.Doc.xml $(CSCFLAGS) $(SyncPing_FLAGS) $(SyncPing_LIBS:%=/r:%) $(SyncPing_LIBPATH:%=/lib:%) $(SyncPing_SOURCES)
 
+include ../../common.mk

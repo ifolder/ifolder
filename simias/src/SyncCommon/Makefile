@@ -13,8 +13,8 @@ include ../../config.mk
 SyncCommon_SOURCES = Library/AssemblyInfo.cs Library/SyncChannelFormatters.cs Library/SyncCollection.cs Library/SyncCollectionInfo.cs Library/SyncCollectionRoles.cs Library/SyncCollectionService.cs Library/SyncCollectionWorker.cs Library/SyncLogicFactory.cs Library/SyncNode.cs Library/SyncNodeInfo.cs Library/SyncNodeStream.cs Library/SyncNodeStreamInfo.cs Library/SyncProperties.cs Library/SyncStore.cs Library/SyncStoreInfo.cs Library/SyncStoreService.cs
 SyncCommon_INCLUDES = 
 SyncCommon_FLAGS = /t:library
-SyncCommon_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll StoreProvider.dll CollectionStore.dll Common.dll System.Runtime.Remoting.dll Agent.dll
-SyncCommon_LIBPATH = Library Library/../../stage Library/../../stage Library/../../stage Library/../../stage Library/../../stage
+SyncCommon_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Identity.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Common.dll System.Runtime.Remoting.dll Agent.dll
+SyncCommon_LIBPATH = Library ../Configuration ../Identity ../StoreProvider ../CollectionEvents ../CollectionStore ../Common ../Agent 
 SyncCommon_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ SyncCommon_LDFLAGS =
 SyncCommonTests_SOURCES = Tests/AssemblyInfo.cs Tests/SyncCommonTests.cs
 SyncCommonTests_INCLUDES = 
 SyncCommonTests_FLAGS = /t:library
-SyncCommonTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SyncCommon.dll CollectionStore.dll Common.dll Identity.dll nunit.framework.dll StoreProvider.dll
-SyncCommonTests_LIBPATH = Tests Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage
+SyncCommonTests_LIBS = $(SyncCommon_LIBS) $(SYSTEM_XML) SyncCommon.dll CollectionStore.dll Common.dll Identity.dll nunit.framework.dll StoreProvider.dll
+SyncCommonTests_LIBPATH = $(SyncCommon_LIBPATH) Tests ../../tools/NUnit/bin
 SyncCommonTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = SyncCommon.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = SyncCommonTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = SyncCommon.dll SyncCommonTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = SyncCommon.dll SyncCommonTests.dll 
 CLEAN_FILES = Check.xml SyncCommon.pdb SyncCommon.Doc.xml Check.xml SyncCommonTests.pdb SyncCommonTests.Doc.xml  SyncCommon.xml SyncCommon.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = SyncCommonTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(SyncCommonTests_LIBPATH) $(SyncCommonTests_INCLUDES)
 SyncCommonTests.dll: $(SyncCommonTests_SOURCES) $(SyncCommonTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncCommonTests.Doc.xml $(CSCFLAGS) $(SyncCommonTests_FLAGS) $(SyncCommonTests_LIBS:%=/r:%) $(SyncCommonTests_LIBPATH:%=/lib:%) $(SyncCommonTests_SOURCES)
 
+include ../../common.mk

@@ -14,7 +14,7 @@ WorkGroupIdentityTests_SOURCES = WorkGroupIdentityTests/AssemblyInfo.cs WorkGrou
 WorkGroupIdentityTests_INCLUDES = 
 WorkGroupIdentityTests_FLAGS = /t:library
 WorkGroupIdentityTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.tests.dll nunit.extensions.dll nunit.framework.dll Identity.dll WorkGroupIdentity.dll
-WorkGroupIdentityTests_LIBPATH = WorkGroupIdentityTests WorkGroupIdentityTests/../../../tools/NUnit/bin WorkGroupIdentityTests/../../../tools/NUnit/bin WorkGroupIdentityTests/../../../tools/NUnit/bin WorkGroupIdentityTests/../../stage WorkGroupIdentityTests/../../stage
+WorkGroupIdentityTests_LIBPATH = WorkGroupIdentityTests ../../tools/NUnit/bin ../Identity
 WorkGroupIdentityTests_LDFLAGS = 
 
 #=============================================================================
@@ -24,14 +24,21 @@ WorkGroupIdentity_SOURCES = AssemblyInfo.cs WorkGroupIdentity.cs
 WorkGroupIdentity_INCLUDES = 
 WorkGroupIdentity_FLAGS = /t:library
 WorkGroupIdentity_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll
-WorkGroupIdentity_LIBPATH = ../stage
+WorkGroupIdentity_LIBPATH = ../Identity
 WorkGroupIdentity_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = WorkGroupIdentity.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = WorkGroupIdentityTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = WorkGroupIdentityTests.dll WorkGroupIdentity.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = WorkGroupIdentityTests.dll WorkGroupIdentity.dll 
 CLEAN_FILES = Check.xml WorkGroupIdentityTests.pdb WorkGroupIdentityTests.Doc.xml Check.xml WorkGroupIdentity.pdb WorkGroupIdentity.Doc.xml  WorkGroupIdentity.xml WorkGroupIdentity.Doc.xml
 CLEAN_DIRS = WorkGroupIdentityTests/bin WorkGroupIdentityTests/obj bin obj 
 NUNIT_TESTS = WorkGroupIdentityTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(WorkGroupIdentity_LIBPATH) $(WorkGroupIdentity_INCLUDES)
 WorkGroupIdentity.dll: $(WorkGroupIdentity_SOURCES) $(WorkGroupIdentity_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:WorkGroupIdentity.Doc.xml $(CSCFLAGS) $(WorkGroupIdentity_FLAGS) $(WorkGroupIdentity_LIBS:%=/r:%) $(WorkGroupIdentity_LIBPATH:%=/lib:%) $(WorkGroupIdentity_SOURCES)
 
+include ../../common.mk

@@ -8,30 +8,38 @@
 include ../../config.mk
 
 #=============================================================================
-# CollectionStoreTests variables
-#=============================================================================
-CollectionStoreTests_SOURCES = CollectionStoreTests/AssemblyInfo.cs CollectionStoreTests/CollectionStoreTests.cs
-CollectionStoreTests_INCLUDES = 
-CollectionStoreTests_FLAGS = /t:library
-CollectionStoreTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll nunit.extensions.dll nunit.framework.dll CollectionStore.dll CollectionEvents.dll
-CollectionStoreTests_LIBPATH = CollectionStoreTests CollectionStoreTests/../../stage CollectionStoreTests/../../../tools/NUnit/bin CollectionStoreTests/../../../tools/NUnit/bin CollectionStoreTests/../../stage CollectionStoreTests/../../stage
-CollectionStoreTests_LDFLAGS = 
-
-#=============================================================================
 # CollectionStore variables
 #=============================================================================
 CollectionStore_SOURCES = AccessControl.cs AssemblyInfo.cs CacheNode.cs Collection.cs DirectoryEntry.cs FileEntry.cs FileSystemEntry.cs ICSEnumerator.cs MultiValuedList.cs Node.cs NodeStream.cs Property.cs PropertyList.cs Store.cs StoreIdentity.cs
 CollectionStore_INCLUDES = 
 CollectionStore_FLAGS = /t:library
-CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll System.Security.dll Identity.dll CollectionEvents.dll
-CollectionStore_LIBPATH = ../stage ../stage ../stage
+CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll System.Security.dll Identity.dll CollectionEvents.dll
+CollectionStore_LIBPATH = ../Configuration ../StoreProvider ../Identity ../CollectionEvents
 CollectionStore_LDFLAGS = 
+
+#=============================================================================
+# CollectionStoreTests variables
+#=============================================================================
+CollectionStoreTests_SOURCES = CollectionStoreTests/AssemblyInfo.cs CollectionStoreTests/CollectionStoreTests.cs
+CollectionStoreTests_INCLUDES = 
+CollectionStoreTests_FLAGS = /t:library
+CollectionStoreTests_LIBS = $(CollectionStore_LIBS) CollectionStore.dll $(SYSTEM_XML) nunit.extensions.dll nunit.framework.dll
+CollectionStoreTests_LIBPATH = $(CollectionStore_LIBPATH) CollectionStoreTests ../../tools/NUnit/bin
+CollectionStoreTests_LDFLAGS = 
+
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = CollectionStore.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = CollectionStoreTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = CollectionStoreTests.dll CollectionStore.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = CollectionStoreTests.dll CollectionStore.dll 
 CLEAN_FILES = Check.xml CollectionStoreTests.pdb CollectionStoreTests.Doc.xml Check.xml CollectionStore.pdb CollectionStore.Doc.xml  CollectionStore.xml CollectionStore.Doc.xml
 CLEAN_DIRS = CollectionStoreTests/bin CollectionStoreTests/obj bin obj 
 NUNIT_TESTS = CollectionStoreTests.dll 
@@ -62,7 +70,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +124,4 @@ VPATH := $(VPATH) $(CollectionStore_LIBPATH) $(CollectionStore_INCLUDES)
 CollectionStore.dll: $(CollectionStore_SOURCES) $(CollectionStore_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionStore.Doc.xml $(CSCFLAGS) $(CollectionStore_FLAGS) $(CollectionStore_LIBS:%=/r:%) $(CollectionStore_LIBPATH:%=/lib:%) $(CollectionStore_SOURCES)
 
+include ../../common.mk

@@ -13,8 +13,8 @@ include ../../config.mk
 Agent_SOURCES = Library/AgentFactory.cs Library/AssemblyInfo.cs Library/IInviteAgent.cs Library/Invitation.cs
 Agent_INCLUDES = 
 Agent_FLAGS = /t:library
-Agent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll StoreProvider.dll CollectionStore.dll
-Agent_LIBPATH = Library Library/../../stage Library/../../stage Library/../../stage
+Agent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Identity.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll
+Agent_LIBPATH = ../Configuration ../Identity ../StoreProvider ../CollectionEvents ../CollectionStore Library 
 Agent_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ Agent_LDFLAGS =
 AgentTests_SOURCES = Tests/AgentTests.cs Tests/AssemblyInfo.cs
 AgentTests_INCLUDES = 
 AgentTests_FLAGS = /t:library
-AgentTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Agent.dll nunit.framework.dll StoreProvider.dll Common.dll CollectionStore.dll Identity.dll
-AgentTests_LIBPATH = Tests Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage
+AgentTests_LIBS = $(Agent_LIBS) $(SYSTEM_XML) Common.dll Agent.dll nunit.framework.dll 
+AgentTests_LIBPATH = $(Agent_LIBPATH) ../Common Tests ../../tools/NUnit/bin
 AgentTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = Agent.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = AgentTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = Agent.dll AgentTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = Agent.dll AgentTests.dll 
 CLEAN_FILES = Check.xml Agent.pdb Agent.Doc.xml Check.xml AgentTests.pdb AgentTests.Doc.xml  Agent.xml Agent.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = AgentTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(AgentTests_LIBPATH) $(AgentTests_INCLUDES)
 AgentTests.dll: $(AgentTests_SOURCES) $(AgentTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:AgentTests.Doc.xml $(CSCFLAGS) $(AgentTests_FLAGS) $(AgentTests_LIBS:%=/r:%) $(AgentTests_LIBPATH:%=/lib:%) $(AgentTests_SOURCES)
 
+include ../../common.mk

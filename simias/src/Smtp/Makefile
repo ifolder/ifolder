@@ -35,8 +35,15 @@ SmtpTests_LDFLAGS =
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = Smtp.dll
+DATA_FILES = 
+TEST_BIN_FILES = SmtpTests.exe
+TEST_LIB_FILES = 
+TEST_DATA_FILES = smtptst1.gif smtptst2.gif
 
-TARGETS = Smtp.dll SmtpTests.exe
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) 
+#TARGETS = Smtp.dll SmtpTests.exe
 CLEAN_FILES = Smtp.xml SmtpTests.xml default.conf
 NUNIT_TESTS = SmtpTests.exe
 # for now we are including libegg.so and egg-sharp.dll until this gets
@@ -60,11 +67,12 @@ CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
 STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
 
 # all
-all: $(TARGETS) $(STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES)
 
 # clean
 clean:
-	$(RM) $(TARGETS) $(CLEAN_FILES) $(STAGE_FILES)
+	$(RM) $(TARGETS)
 
 # test
 test:
@@ -95,3 +103,5 @@ Smtp.dll: $(Smtp_SOURCES) $(Smtp_RESOURCE) $(Smtp_LIBS) ../../config.mk
 
 SmtpTests.exe: $(SmtpTests_SOURCES) $(SmtpTests_RESOURCE) $(SmtpTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SmtpTests.xml $(CSCFLAGS) $(SmtpTests_FLAGS) $(SmtpTests_LIBS:%=/r:%) $(SmtpTests_LIBPATH:%=/lib:%) $(SmtpTests_SOURCES)
+
+include ../../common.mk

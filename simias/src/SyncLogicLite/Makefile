@@ -13,8 +13,8 @@ include ../../config.mk
 SyncLogicLite_SOURCES = Library/AssemblyInfo.cs Library/SyncCollectionServiceLite.cs Library/SyncCollectionWorkerLite.cs Library/SyncLogicFactoryLite.cs Library/SyncPacket.cs Library/SyncPacketData.cs Library/SyncPacketHeader.cs
 SyncLogicLite_INCLUDES = 
 SyncLogicLite_FLAGS = /t:library
-SyncLogicLite_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll SyncCommon.dll Identity.dll StoreProvider.dll CollectionStore.dll
-SyncLogicLite_LIBPATH = Library Library/../../stage Library/../../stage Library/../../stage Library/../../stage Library/../../stage
+SyncLogicLite_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Identity.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll
+SyncLogicLite_LIBPATH = Library ../Common ../Identity ../SyncCommon ../StoreProvider ../CollectionStore ../Configuration ../CollectionEvents ../Agent
 SyncLogicLite_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ SyncLogicLite_LDFLAGS =
 SyncLogicLiteTests_SOURCES = Tests/AssemblyInfo.cs Tests/SyncLogicLiteTests.cs
 SyncLogicLiteTests_INCLUDES = 
 SyncLogicLiteTests_FLAGS = /t:library
-SyncLogicLiteTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Common.dll Identity.dll StoreProvider.dll SyncCommon.dll SyncLogicLite.dll SyncManager.dll CollectionStore.dll
-SyncLogicLiteTests_LIBPATH = Tests Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage Tests/../../stage
+SyncLogicLiteTests_LIBS = $(SyncLogicLite_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncLogicLite.dll
+SyncLogicLiteTests_LIBPATH = $(SyncLogicLite_LIBPATH) Tests ../../tools/NUnit/bin
 SyncLogicLiteTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = SyncLogicLite.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = SyncLogicLiteTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = SyncLogicLite.dll SyncLogicLiteTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = SyncLogicLite.dll SyncLogicLiteTests.dll 
 CLEAN_FILES = Check.xml SyncLogicLite.pdb SyncLogicLite.Doc.xml Check.xml SyncLogicLiteTests.pdb SyncLogicLiteTests.Doc.xml  SyncLogicLite.xml SyncLogicLite.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = SyncLogicLiteTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(SyncLogicLiteTests_LIBPATH) $(SyncLogicLiteTests_INCLUDES)
 SyncLogicLiteTests.dll: $(SyncLogicLiteTests_SOURCES) $(SyncLogicLiteTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncLogicLiteTests.Doc.xml $(CSCFLAGS) $(SyncLogicLiteTests_FLAGS) $(SyncLogicLiteTests_LIBS:%=/r:%) $(SyncLogicLiteTests_LIBPATH:%=/lib:%) $(SyncLogicLiteTests_SOURCES)
 
+include ../../common.mk

@@ -13,8 +13,8 @@ include ../../config.mk
 AddressBook_SOURCES = Address.cs AddressBook.cs AssemblyInfo.cs Common.cs Contact.cs ContactList.cs Email.cs Manager.cs Name.cs Phone.cs
 AddressBook_INCLUDES = 
 AddressBook_FLAGS = /t:library
-AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML) CollectionStore.dll Identity.dll WorkGroupIdentity.dll StoreProvider.dll SqliteProvider.dll
-AddressBook_LIBPATH = ../stage
+AddressBook_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Configuration.dll StoreProvider.dll CollectionEvents.dll Identity.dll CollectionStore.dll Identity.dll WorkGroupIdentity.dll StoreProvider.dll
+AddressBook_LIBPATH = ../Common ../CollectionEvents ../CollectionStore ../Configuration ../StoreProvider ../Identity ../CollectionWatcher ../StoreWatcher ../WorkGroupIdentity
 AddressBook_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ AddressBook_LDFLAGS =
 AddressBookTests_SOURCES = AddressBookTests/AddressBookTests.cs AddressBookTests/AssemblyInfo.cs
 AddressBookTests_INCLUDES = 
 AddressBookTests_FLAGS = /t:exe
-AddressBookTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll AddressBook.dll
-AddressBookTests_LIBPATH = AddressBookTests AddressBookTests/../../../tools/NUnit/bin AddressBookTests/../../../tools/NUnit/bin
+AddressBookTests_LIBS = $(AddressBook_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll AddressBook.dll
+AddressBookTests_LIBPATH = $(AddressBook_LIBPATH) AddressBookTests ../../tools/NUnit/bin
 AddressBookTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = AddressBook.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = AddressBookTests.exe
+TEST_DATA_FILES = 
 
-TARGETS = AddressBook.dll AddressBookTests.exe 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = AddressBook.dll AddressBookTests.exe 
 CLEAN_FILES = Check.xml AddressBook.pdb AddressBook.Doc.xml Check.xml AddressBookTests.pdb AddressBookTests.Doc.xml  AddressBook.xml AddressBook.Doc.xml
 CLEAN_DIRS = bin obj AddressBookTests/bin AddressBookTests/obj 
 NUNIT_TESTS = AddressBookTests.exe 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(AddressBookTests_LIBPATH) $(AddressBookTests_INCLUDES)
 AddressBookTests.exe: $(AddressBookTests_SOURCES) $(AddressBookTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:AddressBookTests.Doc.xml $(CSCFLAGS) $(AddressBookTests_FLAGS) $(AddressBookTests_LIBS:%=/r:%) $(AddressBookTests_LIBPATH:%=/lib:%) $(AddressBookTests_SOURCES)
 
+include ../../common.mk

@@ -13,8 +13,8 @@ include ../../config.mk
 SyncManager_SOURCES = Library/AssemblyInfo.cs Library/DebugServerChannelSink.cs Library/DebugServerChannelSinkProvider.cs Library/SyncChannel.cs Library/SyncChannelFactory.cs Library/SyncCollectionManager.cs Library/SyncCredentialCache.cs Library/SyncManager.cs Library/SyncPing.cs Library/SyncStoreManager.cs
 SyncManager_INCLUDES = 
 SyncManager_FLAGS = /t:library
-SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) CollectionStore.dll Identity.dll StoreProvider.dll Common.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll SyncCommon.dll
-SyncManager_LIBPATH = Library Library/../../CollectionStore Library/../../Identity Library/../../StoreProvider Library/../../Common Library/../../CollectionWatcher Library/../../StoreWatcher Library/../../stage
+SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Identity.dll Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll System.Runtime.Remoting.dll StoreWatcher.dll
+SyncManager_LIBPATH = Library ../SyncCommon ../CollectionEvents ../CollectionStore ../Identity ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher
 SyncManager_LDFLAGS = 
 
 #=============================================================================
@@ -23,15 +23,22 @@ SyncManager_LDFLAGS =
 SyncManagerTests_SOURCES = Tests/AssemblyInfo.cs Tests/SyncManagerTests.cs
 SyncManagerTests_INCLUDES = 
 SyncManagerTests_FLAGS = /t:library
-SyncManagerTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll SyncManager.dll Common.dll SyncCommon.dll
-SyncManagerTests_LIBPATH = Tests Tests/../../../tools/NUnit/bin Tests/../../Common Tests/../../stage
+SyncManagerTests_LIBS = $(SyncManager_LIBS) $(SYSTEM_XML) nunit.framework.dll SyncManager.dll
+SyncManagerTests_LIBPATH = $(SyncManager_LIBPATH) Tests ../../tools/NUnit/bin
 SyncManagerTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = SyncManager.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES = SyncManagerTests.dll
+TEST_DATA_FILES = 
 
-TARGETS = SyncManager.dll SyncManagerTests.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = SyncManager.dll SyncManagerTests.dll 
 CLEAN_FILES = Check.xml SyncManager.pdb SyncManager.Doc.xml Check.xml SyncManagerTests.pdb SyncManagerTests.Doc.xml  SyncManager.xml SyncManager.Doc.xml
 CLEAN_DIRS = Library/bin Library/obj Tests/bin Tests/obj 
 NUNIT_TESTS = SyncManagerTests.dll 
@@ -62,7 +69,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -115,3 +123,4 @@ VPATH := $(VPATH) $(SyncManagerTests_LIBPATH) $(SyncManagerTests_INCLUDES)
 SyncManagerTests.dll: $(SyncManagerTests_SOURCES) $(SyncManagerTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncManagerTests.Doc.xml $(CSCFLAGS) $(SyncManagerTests_FLAGS) $(SyncManagerTests_LIBS:%=/r:%) $(SyncManagerTests_LIBPATH:%=/lib:%) $(SyncManagerTests_SOURCES)
 
+include ../../common.mk

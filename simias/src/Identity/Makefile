@@ -20,8 +20,15 @@ Identity_LDFLAGS =
 #=============================================================================
 # globals
 #=============================================================================
+BIN_FILES =
+LIB_FILES = Identity.dll
+DATA_FILES = 
+TEST_BIN_FILES =
+TEST_LIB_FILES =
+TEST_DATA_FILES = 
 
-TARGETS = Identity.dll 
+TARGETS = $(BIN_FILES) $(LIB_FILES) $(DATA_FILES) $(TEST_BIN_FILES) $(TEST_LIB_FILES) $(TEST_DATA_FILES)
+#TARGETS = Identity.dll 
 CLEAN_FILES = Check.xml Identity.pdb Identity.Doc.xml  Identity.xml Identity.Doc.xml
 CLEAN_DIRS = bin obj 
 NUNIT_TESTS = 
@@ -52,7 +59,8 @@ CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
 .PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
+all: $(TARGETS)
+#all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
 clean: $(CLEAN_TARGETS)
@@ -89,3 +97,4 @@ VPATH := $(VPATH) $(Identity_LIBPATH) $(Identity_INCLUDES)
 Identity.dll: $(Identity_SOURCES) $(Identity_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Identity.Doc.xml $(CSCFLAGS) $(Identity_FLAGS) $(Identity_LIBS:%=/r:%) $(Identity_LIBPATH:%=/lib:%) $(Identity_SOURCES)
 
+include ../../common.mk
