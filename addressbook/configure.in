@@ -132,6 +132,9 @@ case $host_os in
     ;;
 esac
 
+# We are currently not building ABGui but want maintainer-clean to clean it up
+NON_PLATFORM_SUBDIRS="$NON_PLATFORM_SUBDIRS ABGui"
+
 AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
