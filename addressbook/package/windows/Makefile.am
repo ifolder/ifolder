@@ -28,8 +28,13 @@ export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 CUR_DIR := $(shell pwd)
 OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
 
+if WINDOWS
 MERGE_MODULES_WIN  := $(shell cygpath --windows "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
 MERGE_MODULES_UNIX := $(shell cygpath --unix "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
+else
+MERGE_MODULES_WIN  := 
+MERGE_MODULES_UNIX := 
+endif
 
 RELEASE = 1
 
