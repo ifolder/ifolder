@@ -309,7 +309,7 @@ fi
 #
 # Check for required packages
 #
-PKG_CHECK_MODULES(SIMIAS, simias = $VERSION)
+PKG_CHECK_MODULES(SIMIAS, simias >= 0)
 AC_SUBST(SIMIAS_LIBS)
 
 case $ADDRESSBOOK_OS in
