@@ -2305,30 +2305,52 @@ namespace Novell.FormsTrayApp
 		{
 			currentUserID = ifSettings.CurrentUserID;
 			currentPOBoxID = ifSettings.DefaultPOBoxID;
-			iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
-			userName.Text = ifolderUser.Name;
+
+			try
+			{
+				iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
+				userName.Text = ifolderUser.Name;
+			}
+			catch (Exception e)
+			{
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("readUserError");
+				mmb.Details = e.Message;
+				mmb.ShowDialog();
+			}
+
 			enterpriseName.Text = ifSettings.EnterpriseName;
 			enterpriseDescription.Text = ifSettings.EnterpriseDescription;
 
-			// Get the disk space.
-			DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
-			if (diskSpace.Limit != 0)
+			try
 			{
-				totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+				// Get the disk space.
+				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
+				if (diskSpace.Limit != 0)
+				{
+					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
 
-				double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-				usedSpace.Text = used.ToString();
-				freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
+					double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+					usedSpace.Text = used.ToString();
+					freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
 
-				// Set up the gauge chart.
-				gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
-				gaugeChart1.Used = used;
-				gaugeChart1.BarColor = SystemColors.ActiveCaption;
+					// Set up the gauge chart.
+					gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
+					gaugeChart1.Used = used;
+					gaugeChart1.BarColor = SystemColors.ActiveCaption;
+				}
+				else
+				{
+					usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
+					gaugeChart1.Used = 0;
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
-				gaugeChart1.Used = 0;
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("readQuotaError");
+				mmb.Details = e.Message;
+				mmb.ShowDialog();
 			}
 
 			// Cause the gauge chart to be redrawn.
@@ -2367,26 +2389,47 @@ namespace Novell.FormsTrayApp
 			{
 				apply.Enabled = cancel.Enabled = false;
 
+				// Update the auto start setting.
+				autoStart.Checked = IsRunEnabled();
+				iFolderSettings ifSettings = null;
+
 				try
 				{
-					iFolderSettings ifSettings = ifWebService.GetSettings();
+					ifSettings = ifWebService.GetSettings();
 					currentUserID = ifSettings.CurrentUserID;
 					currentPOBoxID = ifSettings.DefaultPOBoxID;
 
 					// Update the display confirmation setting.
 					displayConfirmation.Checked = ifSettings.DisplayConfirmation;
-					if (ifSettings.HaveEnterprise)
-					{
-						ShowEnterpriseTab = true;
-						updateEnterpriseData(ifSettings);
-					}
+				}
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("readConfirmationError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
+				}
 
+				try
+				{
 					// Update the default sync interval setting.
 					defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
 					autoSync.Checked = defaultInterval.Value != System.Threading.Timeout.Infinite;
+				}
+				catch (Exception ex)
+				{
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+					mmb.Message = resourceManager.GetString("readSyncError");
+					mmb.Details = ex.Message;
+					mmb.ShowDialog();
+				}
 
-					// Update the auto start setting.
-					autoStart.Checked = IsRunEnabled();
+				try
+				{
+					if (ifSettings == null)
+					{
+						ifSettings = ifWebService.GetSettings();
+					}
 
 					// Update the proxy settings.
 					useProxy.Checked = ifSettings.UseProxy;
@@ -2396,9 +2439,15 @@ namespace Novell.FormsTrayApp
 				catch (Exception ex)
 				{
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-					mmb.Message = resourceManager.GetString("iFolderDataError");
+					mmb.Message = resourceManager.GetString("readProxyError");
 					mmb.Details = ex.Message;
 					mmb.ShowDialog();
+				}
+
+				if (ifSettings.HaveEnterprise)
+				{
+					ShowEnterpriseTab = true;
+					updateEnterpriseData(ifSettings);
 				}
 
 				Activate();
