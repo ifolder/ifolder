@@ -1132,7 +1132,7 @@ namespace Simias.Sync.Client
 			}
 			try
 			{
-				commitList = (Node[])commitArray.ToArray();
+				commitList = (Node[])commitArray.ToArray(typeof(Node));
 				collection.Commit(commitList);
 				foreach ( Node node in commitList)
 				{
