@@ -52,5 +52,6 @@
 -(NSArray *)getDomains;
 -(NSArray *)getiFolders;
 -(iFolderDomain *)getDefaultDomain;
+-(int)getDomainCount;
 
 @end

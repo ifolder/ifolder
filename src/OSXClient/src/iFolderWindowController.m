@@ -147,9 +147,17 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (IBAction)newiFolder:(id)sender
 {
-	
-	[createSheetController setSelectedDomain:[[iFolderData sharedInstance] getDefaultDomain]];
-	[createSheetController showWindow:self];
+	if([[iFolderData sharedInstance] getDomainCount] < 1)
+	{
+		NSBeginAlertSheet(@"No iFolder Domains", @"OK", nil, nil,
+			[self window], self, nil, nil, NULL, 
+			@"A new iFolder cannot be created because you have not attached to any iFolder Servers.");
+	}
+	else
+	{
+		[createSheetController setSelectedDomain:[[iFolderData sharedInstance] getDefaultDomain]];
+		[createSheetController showWindow:self];
+	}
 }
 
 
@@ -313,6 +321,7 @@ static iFolderWindowController *sharedInstance = nil;
 		NSRunAlertPanel(@"Error creating iFolder", [e name], @"OK",nil, nil);
 	}
 }
+
 
 
 
