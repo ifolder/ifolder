@@ -135,95 +135,114 @@ namespace Simias.DomainWatcher
 			this.started = true;
 			EventPublisher cEvent = new EventPublisher();
 
-			// See if the user has credentials stored for this domain.
-			string domainID = store.DefaultDomain;
 			string userID;
 			string credentials;
-			CredentialType credType = store.GetDomainCredentials(domainID, out userID, out credentials);
-
-			// Only basic type authentication is supported right now.
-			if ( credType != CredentialType.Basic )
-			{
-				credentials = null;
-			}
 
 			do 
 			{
 				//
 				// Cycle through the domains
-				// uh, right now there can only be one Enterprise Domain
 				//
 
 				try
 				{
-					Simias.Storage.Domain cDomain = store.GetDomain(domainID);
-					if (cDomain != null &&
-						cDomain.ID != Simias.Storage.Domain.WorkGroupDomainID) 
+					LocalDatabase ldb = store.GetDatabaseObject();
+					ICSList domainList = ldb.GetNodesByType( "Domain" );
+					foreach( ShallowNode shallowNode in domainList )
 					{
-						log.Debug("checking Domain: " + cDomain.Name);
-						Roster cRoster = cDomain.GetRoster(store);
-						Member cMember = cRoster.GetMemberByID(userID);
+						Simias.Storage.Domain cDomain = store.GetDomain( shallowNode.ID );
+					
+						// Make sure this domain is a slave since we don't watch
+						// mastered domains.  We can tell by looking at the Roster
 
-						// Can we talk to the domain?
-						// Check to see if a full set of credentials exist
-						// for this domain
+						Roster cRoster = cDomain.GetRoster( store );
+						if ( cRoster.Role.ToString() == "Slave" )
+						{
+							Member cMember;
+							log.Debug("checking Domain: " + cDomain.Name);
 
-						NetCredential cCreds = 
-							new NetCredential(
+							// Is the domain marked off-line
+							Property p = cDomain.Properties.GetSingleProperty( "Offline" );
+							if ( p != null && p.Value.ToString() == "true" )
+							{
+								log.Debug( "Domain: " + cDomain.Name + " is off-line" );
+								continue;
+							}
+
+							CredentialType credType = 
+								store.GetDomainCredentials(cDomain.ID, out userID, out credentials);
+
+							// Only basic type authentication is supported right now.
+							if ( credType != CredentialType.Basic )
+							{
+								cMember = cRoster.GetCurrentMember();
+								credentials = null;
+							}
+							else
+							{
+								cMember = cRoster.GetMemberByID(userID);
+							}
+
+							// Can we talk to the domain?
+							// Check to see if a full set of credentials exist
+							// for this domain
+
+							NetCredential cCreds = 
+								new NetCredential(
 								"iFolder", 
-								domainID, 
+								cDomain.ID, 
 								true, 
 								cMember.Name, 
 								credentials);
 
-						Uri cUri = new Uri(cDomain.HostAddress.ToString());
-						NetworkCredential netCreds = cCreds.GetCredential(cUri, "BASIC");
-						if ((netCreds == null) || firstTime)
-						{
-							firstTime = false;
+							Uri cUri = new Uri(cDomain.HostAddress.ToString());
+							NetworkCredential netCreds = cCreds.GetCredential(cUri, "BASIC");
+							if ((netCreds == null) || firstTime)
+							{
+								firstTime = false;
 
-							// Create the domain service web client object.
-							DomainService domainSvc = new DomainService();
-							domainSvc.Url = 
-								cDomain.HostAddress.ToString() + "/DomainService.asmx";
-							domainSvc.Credentials = netCreds;
-
-							domainSvc.Timeout = 30000;
+								// Create the domain service web client object.
+								DomainService domainSvc = new DomainService();
+								domainSvc.Url = 
+									cDomain.HostAddress.ToString() + "/DomainService.asmx";
+								domainSvc.Credentials = netCreds;
+								domainSvc.Timeout = 30000;
 							
-							try
-							{
-								log.Debug("Calling remote domain at: " + domainSvc.Url);
-								domainSvc.GetDomainInfo(userID);
-								status = 0;
-							}
-							catch(WebException webEx)
-							{
-								status = -1;
-								log.Error("failed getting Domain Information  status: " + webEx.Status.ToString());
-								if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
-									webEx.Status == System.Net.WebExceptionStatus.TrustFailure )
+								try
 								{
-									credentials = null;
+									log.Debug("Calling remote domain at: " + domainSvc.Url);
+									domainSvc.GetDomainInfo(userID);
 									status = 0;
 								}
-							}
-							catch(Exception ex)
-							{
-								status = -1;
-								log.Error("failed getting Domain Information - normal exception status: " + ex.Message);
-							}
+								catch(WebException webEx)
+								{
+									status = -1;
+									log.Error("failed getting Domain Information  status: " + webEx.Status.ToString());
+									if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
+										webEx.Status == System.Net.WebExceptionStatus.TrustFailure )
+									{
+										credentials = null;
+										status = 0;
+									}
+								}
+								catch(Exception ex)
+								{
+									status = -1;
+									log.Error("failed getting Domain Information - normal exception status: " + ex.Message);
+								}
 
-							domainSvc = null;
+								domainSvc = null;
 
-							if (status == 0)
-							{
-								Simias.Client.Event.NotifyEventArgs cArg =
-									new Simias.Client.Event.NotifyEventArgs(
-									"Domain-Up", 
-									domainID, 
-									System.DateTime.Now);
+								if (status == 0)
+								{
+									Simias.Client.Event.NotifyEventArgs cArg =
+										new Simias.Client.Event.NotifyEventArgs(
+										"Domain-Up", 
+										cDomain.ID, 
+										System.DateTime.Now);
 
-								cEvent.RaiseEvent(cArg);
+									cEvent.RaiseEvent(cArg);
+								}
 							}
 						}
 					}
