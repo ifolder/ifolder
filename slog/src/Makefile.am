@@ -2,6 +2,10 @@ if LINUX
 SUBDIRS = Slog GtkSlogger
 endif
 
+if DARWIN
+SUBDIRS = Slog GtkSlogger
+endif
+
 if WINDOWS
 SUBDIRS = Slog
 endif

@@ -7,7 +7,7 @@ Slogger_INCLUDES =
 Slogger_RESOURCES =
 Slogger_FLAGS = $(CSC_EXEFLAG)
 Slogger_LIBS = System.dll System.Drawing.dll System.Data.dll Slog.dll Novell.AddressBook.UI.gtk.dll
-TrayAppGtk_LIBPATH = $(srcdir)/../Slog
+Slogger_LIBPATH = $(srcdir)/../Slog
 
 INSTALL_BIN_FILES = $(srcdir)/slogger
 
