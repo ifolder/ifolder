@@ -192,17 +192,17 @@ namespace Simias.Gaim.DomainService
 		}
 		
 		/// <summary>
-		/// EncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider
-		/// in XML format) to encrypt UnencryptedString.
+		/// RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider
+		/// in XML format representing a public key) to encrypt UnencryptedString.
 		/// </summary>
 		/// <param name="RsaCryptoXml">XML string representing the a .NET RSACryptoServiceProvider</param>
 		/// <param name="UnencryptedString">The string to be encrypted with the RSACryptoServiceProvider</param>
 		/// <returns>
 		/// Returns a string encrypted with the RSACryptoServiceProvider and Base64 Encoded.
 		/// </returns>
-		[WebMethod(Description="EncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format) to encrypt UnencryptedString.")]
+		[WebMethod(Description="RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a public key) to encrypt UnencryptedString.")]
 		[SoapDocumentMethod]
-		public string EncryptString(string RsaCryptoXml, string UnencryptedString)
+		public string RSAEncryptString(string RsaCryptoXml, string UnencryptedString)
 		{
 			RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider();
 			rsaProvider.FromXmlString(RsaCryptoXml);
@@ -214,32 +214,74 @@ namespace Simias.Gaim.DomainService
 		}
 		
 		/// <summary>
-		/// DecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider
-		/// in XML format) to decrypt EncryptedString.
+		/// RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider
+		/// in XML format representing a private key) to decrypt EncryptedString.
 		/// </summary>
 		/// <param name="RsaCryptoXml">XML string representing the a .NET RSACryptoServiceProvider</param>
 		/// <param name="EncryptedString">A Base64 Encoded string to be decrypted with the RSACryptoServiceProvider</param>
 		/// <returns>
 		/// Returns a string decrypted with the RSACryptoServiceProvider
 		/// </returns>
-		[WebMethod(Description="DecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format) to decrypt EncryptedString.")]
+		[WebMethod(Description="RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a private key) to decrypt EncryptedString.")]
 		[SoapDocumentMethod]
-		public string DecryptString(string RsaCryptoXml, string EncryptedString)
+		public string RSADecryptString(string RsaCryptoXml, string EncryptedString)
 		{
 			RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider();
 			rsaProvider.FromXmlString(RsaCryptoXml);
-System.Console.WriteLine("0");
 
 			byte[] stringBytes = Convert.FromBase64String(EncryptedString);
-System.Console.WriteLine("1");
 			byte[] decryptedText = rsaProvider.Decrypt(stringBytes, false);
-System.Console.WriteLine("2");
 
 			UTF8Encoding utf8 = new UTF8Encoding();
-System.Console.WriteLine("3");
 			return utf8.GetString( decryptedText );
 		}
 		
+		/// <summary>
+		/// Generates a Base64 Encoded DES Symmetric Key
+		/// </summary>
+		/// <returns>
+		/// Returns a Base64 Encoded DES Symmetric Key
+		/// </returns>
+		[WebMethod(Description="Generates a Base64 Encoded DES Symmetric Key")]
+		[SoapDocumentMethod]
+		public string GenerateSymmetricKey()
+		{
+			DESCryptoServiceProvider des = (DESCryptoServiceProvider) DESCryptoServiceProvider.Create();
+			return Convert.ToBase64String(des.Key);
+		}
+		
+		/// <summary>
+		/// DESEncryptString() uses SymmetricKey (A Base64 encoded DES key) to
+		/// encrypt UnencryptedString.
+		/// </summary>
+		/// <param name="SymmetricKey">The Base64 Encoded Key</param>
+		/// <param name="UnencryptedString">The string to be encrypted</param>
+		/// <returns>
+		/// Returns a string encrypted with the DES key and Base64 encoded.
+		/// </returns>
+		[WebMethod(Description="DESEncryptString() uses SymmetricKey (A Base64 encoded DES key) to encrypt UnencryptedString.")]
+		[SoapDocumentMethod]
+		public string DESEncryptString(string SymmetricKey, string UnencryptedString)
+		{
+			return Crypto.EncryptData(SymmetricKey, UnencryptedString);
+		}
+
+		/// <summary>
+		/// DESDecryptString() uses SymmetricKey (A Base64 encoded DES key) to
+		/// decrypt EncryptedString.
+		/// </summary>
+		/// <param name="SymmetricKey">The Base64 Encoded Key</param>
+		/// <param name="EncryptedString">The Base64 encoded + encrypted string to be decrypted</param>
+		/// <returns>
+		/// Returns a string decrypted with the DES key
+		/// </returns>
+		[WebMethod(Description="DESDecryptString() uses SymmetricKey (A Base64 encoded DES key) to decrypt EncryptedString.")]
+		[SoapDocumentMethod]
+		public string DESDecryptString(string SymmetricKey, string EncryptedString)
+		{
+			return Crypto.DecryptData(SymmetricKey, EncryptedString);
+		}
+
 		internal string GetMachineName()
 		{
 			string machineName = Environment.MachineName.ToLower();
@@ -250,5 +292,114 @@ System.Console.WriteLine("3");
 				
 			return machineName;
 		}
+
+		/// <summary>
+		/// Class for encrypting strings.
+		/// </summary>
+		internal class Crypto
+		{
+			//////////////////////////
+			//Function to encrypt data
+			public static string EncryptData(string base64Key, string
+				strData)
+			{
+				string strResult; //Return Result
+
+				DESCryptoServiceProvider descsp = new DESCryptoServiceProvider();
+
+				descsp.Key	= Convert.FromBase64String(base64Key);
+				descsp.IV	= Convert.FromBase64String(base64Key);
+
+				ICryptoTransform desEncrypt = descsp.CreateEncryptor();
+
+				MemoryStream mOut = new MemoryStream();
+				CryptoStream encryptStream = new CryptoStream(mOut,
+					desEncrypt, CryptoStreamMode.Write);
+
+				byte[] rbData = UnicodeEncoding.Unicode.GetBytes(strData);
+				try
+				{
+					encryptStream.Write(rbData, 0,
+						rbData.Length);
+				}
+				catch(Exception e)
+				{
+					// Catch it
+				}
+
+				// ADD: tell crypto stream you are done encrypting
+				encryptStream.FlushFinalBlock();
+
+				if (mOut.Length == 0)
+					strResult = "";
+				else
+				{
+					// ADD: use ToArray(). GetBuffer
+					byte []buff = mOut.ToArray();
+					strResult = Convert.ToBase64String(buff, 0,
+						buff.Length);
+				}
+
+				try
+				{
+					encryptStream.Close();
+				}
+				catch (Exception e)
+				{
+					// Catch it
+				}
+
+				return strResult;
+			}
+
+			//////////////////////////
+			//Function to decrypt data
+			public static string DecryptData(string base64Key, string
+				strData)
+			{
+				string strResult;
+
+				DESCryptoServiceProvider descsp = new
+					DESCryptoServiceProvider();
+
+				descsp.Key = Convert.FromBase64String(base64Key);
+				descsp.IV = Convert.FromBase64String(base64Key);
+
+				ICryptoTransform desDecrypt = descsp.CreateDecryptor();
+
+				MemoryStream mOut = new MemoryStream();
+				CryptoStream decryptStream = new CryptoStream(mOut,
+					desDecrypt, CryptoStreamMode.Write);
+				char [] carray = strData.ToCharArray();
+				byte[] rbData = Convert.FromBase64CharArray(carray,
+					0, carray.Length);
+				try
+				{
+					decryptStream.Write(rbData, 0,
+						rbData.Length);
+				}
+				catch (Exception e)
+				{
+					// Catch it
+				}
+
+				decryptStream.FlushFinalBlock();
+
+				UnicodeEncoding aEnc = new UnicodeEncoding();
+				strResult = aEnc.GetString(mOut.ToArray());
+
+				try
+				{
+					decryptStream.Close();
+				}
+				catch (Exception e)
+				{
+					// Catch it
+				}
+
+				return strResult;
+			}
+		}	
+	
 	}
 }
