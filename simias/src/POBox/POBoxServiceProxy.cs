@@ -27,7 +27,7 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     public POBoxService() {
-        this.Url = "http://localhost:8086/POBoxService.asmx";
+        this.Url = "http://137.65.57.4:8086/simias10/POBoxService.asmx";
     }
     
     /// <remarks/>
@@ -154,24 +154,26 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/Invite", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public string Invite(string domainID, string fromUserID, string toUserID, string sharedCollectionID, string sharedCollectionType) {
+    public string Invite(string domainID, string fromUserID, string toUserID, string sharedCollectionID, string sharedCollectionType, int rights) {
         object[] results = this.Invoke("Invite", new object[] {
                     domainID,
                     fromUserID,
                     toUserID,
                     sharedCollectionID,
-                    sharedCollectionType});
+                    sharedCollectionType,
+                    rights});
         return ((string)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginInvite(string domainID, string fromUserID, string toUserID, string sharedCollectionID, string sharedCollectionType, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginInvite(string domainID, string fromUserID, string toUserID, string sharedCollectionID, string sharedCollectionType, int rights, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("Invite", new object[] {
                     domainID,
                     fromUserID,
                     toUserID,
                     sharedCollectionID,
-                    sharedCollectionType}, callback, asyncState);
+                    sharedCollectionType,
+                    rights}, callback, asyncState);
     }
     
     /// <remarks/>

@@ -459,7 +459,8 @@ namespace Simias.POBoxService.Web
 			string			fromUserID,
 			string			toUserID,
 			string			sharedCollectionID,
-			string			sharedCollectionType)
+			string			sharedCollectionType,
+			int				rights)
 		{
 			Collection			sharedCollection;
 			Simias.POBox.POBox	poBox = null;
@@ -507,6 +508,11 @@ namespace Simias.POBoxService.Web
 				throw new ApplicationException("Invalid shared collection ID");
 			}
 
+			if (rights > (int) Simias.Storage.Access.Rights.Admin)
+			{
+				throw new ApplicationException("Invalid access rights");
+			}
+
 			try
 			{
 				log.Debug("  looking up POBox for: " + toUserID);
@@ -523,6 +529,7 @@ namespace Simias.POBoxService.Web
 				cSub.ToIdentity = toUserID;
 				cSub.FromName = fromMember.Name;
 				cSub.FromIdentity = fromUserID;
+				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) rights;
 
 				// FIXME: got to be a better way
 				string serviceUrl =

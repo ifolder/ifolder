@@ -259,7 +259,8 @@ namespace Simias.POBox
 								subscription.FromIdentity,
 								subscription.ToIdentity,
 								subscription.SubscriptionCollectionID,
-								subscription.SubscriptionCollectionType);
+								subscription.SubscriptionCollectionType,
+								(int) subscription.SubscriptionRights);
 						if (subID != null && subID != "")
 						{
 							subscription.SubscriptionState = SubscriptionStates.Posted;
