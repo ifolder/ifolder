@@ -19,6 +19,9 @@
  *
  *  Author: Russ Young
  *
+ * 
+ * Thanks to Andrew Tridgell for the rsync algorythm.
+ * http://samba.anu.edu.au/rsync/tech_report/
  ***********************************************************************/
 using System;
 using System.IO;
