@@ -303,24 +303,37 @@ namespace Simias.Storage
 				if ( member == null )
 				{
 					// The Member object does not exist, we were specified to create it with full rights.
-					if ( createMember )
+					// If this is a collection in a proxy state, create a special member for it with read
+					// only rights. This member will not be committable and should be treated as a read-only
+					// object.
+					if ( createMember || collection.IsProxy )
 					{
+						Access.Rights rights = createMember ? Access.Rights.Admin : Access.Rights.ReadOnly;
+
 						// If the userID is equal to the Identity ID, then the domain is the local workgroup
 						// and the public key must be used.
 						if ( userID == identity.ID )
 						{
-							member = new Member( identity.Name, userID, Access.Rights.Admin, identity.PublicKey );
+							member = new Member( identity.Name, userID, rights, identity.PublicKey );
 						}
 						else
 						{
-							member = new Member( identity.Name, userID, Access.Rights.Admin );
+							member = new Member( identity.Name, userID, rights );
 						}
 
-						member.IsOwner = true;
+						// Proxy members can never be the owner.
+						if ( createMember )
+						{
+							member.IsOwner = true;
+						}
+						else
+						{
+							member.IsProxyMember = true;
+						}
 					}
 					else
 					{
-						throw new DoesNotExistException( String.Format( "The identity {0} - ID: {1} is not a member of collection {2} - ID: {3}.", identity.Name, identity.ID, collection.Name, collection.ID ) );
+						throw new DoesNotExistException( String.Format( "The identity {0} - ID: {1} is not a member of collection {2} - ID: {3}.", identity.Name, userID, collection.Name, collection.ID ) );
 					}
 				}
 			}

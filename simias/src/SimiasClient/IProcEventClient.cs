@@ -212,6 +212,7 @@ namespace Simias.Client.Event
 
 			// Start the event thread waiting for event messages.
 			Thread thread = new Thread( new ThreadStart( EventThread ) );
+			thread.IsBackground = true;
 			thread.Start();
 		}
 		#endregion

@@ -103,9 +103,8 @@ namespace Novell.iFolder.Web
 			this.IsWorkgroup = 
 				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
 			this.HasConflicts = collection.HasCollisions();
-			// This was throwing an exception so Added this because the 
-			// current user may not be available yet
-			try
+
+			if(!collection.IsProxy)
 			{
 				Member tmpMember = collection.GetCurrentMember();
 				if(tmpMember != null)
@@ -113,9 +112,6 @@ namespace Novell.iFolder.Web
 					this.CurrentUserID = tmpMember.UserID;
 					this.CurrentUserRights = tmpMember.Rights.ToString();
 				}
-			}
-			catch
-			{
 			}
 		}
 

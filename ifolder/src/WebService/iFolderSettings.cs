@@ -50,69 +50,68 @@ namespace Novell.iFolder.Web
 		public iFolderSettings()
 		{
 			Store store = Store.GetStore();
-			DefaultDomainID = store.DefaultDomain;
-			
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						store.DefaultDomain, 
-						store.GetUserIDFromDomainID(store.DefaultDomain));
-
-			if( (poBox == null) && (DefaultDomainID ==
-										Domain.WorkGroupDomainID) )
-			{
-				poBox = Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain);
-			}
-
-			if(poBox != null)
-				DefaultPOBoxID = poBox.ID;
-
-			HaveEnterprise = false;
-			Domain enterpriseDomain = null;
-			LocalDatabase localDB = store.GetDatabaseObject();
-			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
-			foreach (ShallowNode sn in domainList)
-			{
-				if (!sn.Name.Equals(Domain.WorkGroupDomainName))
-				{
-					HaveEnterprise = true;
-					enterpriseDomain = store.GetDomain(sn.ID);
-					break;
-				}
-			}
-
-			if (enterpriseDomain != null)
-			{
-				EnterpriseName = enterpriseDomain.Name;
-				EnterpriseDescription = enterpriseDomain.Description;
-			}
-			
-			Configuration config = Configuration.GetConfiguration();
-			bool defaultValue = true;
-			DisplayConfirmation = config.Get("iFolderUI", 
-						"Display Confirmation", 
-						defaultValue.ToString()) == defaultValue.ToString();
-
-			DefaultSyncInterval = 
-				Simias.Policy.SyncInterval.GetInterval();
 
 			// I don't know how to do this but I know we'll need it
 			UseProxy = false;
 
-			CurrentUserID = store.GetUserIDFromDomainID(DefaultDomainID);
+			string dcString = store.Config.Get("iFolderUI",
+				"Display Confirmation",
+				Boolean.TrueString);
 
-			try
+			DisplayConfirmation = String.Compare(dcString,
+				Boolean.TrueString,
+				true) == 0;
+
+			// Get the interval for the current machine.
+			DefaultSyncInterval = 
+				Simias.Policy.SyncInterval.GetInterval();
+
+			DefaultDomainID = store.DefaultDomain;
+			CurrentUserID = store.GetUserIDFromDomainID(DefaultDomainID);
+			
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+						DefaultDomainID, 
+						CurrentUserID);
+
+			if (DefaultDomainID == Domain.WorkGroupDomainID)
 			{
-				// On first connect this will cause an exception because the 
-				// roster hasn't sync'd yet.
-				Member currentMember = 
-						store.GetRoster(DefaultDomainID).GetCurrentMember();
-				if (currentMember != null)
+				if (poBox == null)
+				{
+					// Create the POBox on workgroup if it doesn't exist.
+					poBox = Simias.POBox.POBox.GetPOBox(store, 
+						DefaultDomainID);
+				}
+
+				// Check if there is an enterprise domain, but the default is
+				// selected to be workgroup.
+				HaveEnterprise = store.IsEnterpriseClient;
+			}
+			else
+			{
+				HaveEnterprise = true;
+				Domain enterpriseDomain = store.GetDomain(DefaultDomainID);
+				if(enterpriseDomain != null)
+				{
+					EnterpriseName = enterpriseDomain.Name;
+					EnterpriseDescription = enterpriseDomain.Description;
+				}
+			}
+
+			if(poBox != null)
+			{
+				DefaultPOBoxID = poBox.ID;
+			}
+
+			// If the LocalIncarnation number is zero, this collection is a
+			// proxy and there is no current member yet.
+			Roster roster = store.GetRoster(DefaultDomainID);
+			if(!roster.IsProxy)
+			{
+				Member currentMember = roster.GetCurrentMember();
+				if(currentMember != null)
 				{
 					CurrentUserName = currentMember.Name;
 				}
-			}
-			catch
-			{
-				// Ignore.
 			}
 		}
 

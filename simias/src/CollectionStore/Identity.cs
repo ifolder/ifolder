@@ -73,6 +73,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Returns the number of subscribed domains.
+		/// </summary>
+		internal int DomainCount
+		{
+			get
+			{
+				MultiValuedList mvl = properties.GetProperties( PropertyTags.Domain );
+				return mvl.Count;
+			}
+		}
+
+		/// <summary>
 		/// Gets the public key for the Identity object.
 		/// </summary>
 		public RSACryptoServiceProvider PublicKey
