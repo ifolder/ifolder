@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\denali\src\iFolderShell\bin\Debug\;C:\dev\denali\tools\NUnit\bin\;C:\ifolder\denali\tools\NUnit\bin\" >
+            <Settings ReferencePath = "C:\dev\ifolder\tools\NUnit\bin\;C:\dev\ifolder\src\iFolderShell\;C:\dev\denali\src\iFolderShell\bin\Debug\;C:\dev\denali\tools\NUnit\bin\;C:\ifolder\denali\tools\NUnit\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

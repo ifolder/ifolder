@@ -28,9 +28,12 @@ using System.Threading;
 using System.Text;
 using System.Net;
 using System.Diagnostics;
+using System.IO;
 using Simias.Sync;
 using Novell.iFolder;
+using Novell.iFolder.Win32Util;
 using Simias;
+using Simias.Event;
 
 
 namespace Novell.iFolder.FormsTrayApp
@@ -68,6 +71,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private	EventPublisher publisher;
 		System.Diagnostics.Process monitor;
+		private const int waitTime = 3000;
 		#endregion
 
 		[STAThread]
@@ -118,12 +122,13 @@ namespace Novell.iFolder.FormsTrayApp
 			// in the systray for this application.
 			try
 			{
-				this.Icon = new Icon(@".\res\ifolder_loaded.ico");
+				string basePath = Path.Combine(Application.StartupPath, "res");
+				this.Icon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 
-				trayIcon = new Icon(@".\res\ifolder_loaded.ico");
+				trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
 				for (int i = 0; i < numberOfIcons; i++)
 				{
-					string upIcon = string.Format(@".\res\ifolder_sync{0}.ico", i+1);
+					string upIcon = string.Format(Path.Combine(basePath, "ifolder_sync{0}.ico"), i+1);
 					uploadIcons[i] = new Icon(upIcon);
 				}
 			
@@ -132,6 +137,8 @@ namespace Novell.iFolder.FormsTrayApp
 				this.WindowState = FormWindowState.Minimized;
 				//this.Hide();
 
+				Win32Window win32Window = new Win32Window(this.Handle);
+				win32Window.MakeToolWindow();
 			}
 			catch (Exception e)
 			{
@@ -191,9 +198,24 @@ namespace Novell.iFolder.FormsTrayApp
 				workerThread.Abort();
 			}
 
-			syncManager.Stop();
-			publisher.FireServiceControl(0, ServiceEventType.Shutdown);
-			monitor.Kill();
+			if (syncManager != null)
+			{
+				syncManager.Stop();
+			}
+
+			if (publisher != null)
+			{
+				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEventArgs.ServiceEvent.Shutdown);
+				publisher.RaiseServiceEvent(args);
+			}
+
+			if (monitor != null)
+			{
+				// Give the broker a chance to send the shutdown event.
+				Thread.Sleep(waitTime);
+				monitor.Kill();
+			}
+
 			Cursor.Current = Cursors.Default;
 			//			traceForm.Close();
 			Application.Exit();
@@ -201,14 +223,30 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuItemInviteWizard_Click(object Sender, System.EventArgs e)
 		{
-			// TODO - check for currently running instance and switch to it.
-			Process.Start("InvitationWizard.exe");
+			// Check for currently running instance and switch to it.
+//			Win32Window win32Window = Win32Window.FindWindow(null, "InvitationWizard");
+//			if (win32Window != null)
+//			{
+//				win32Window.BringWindowToTop();
+//			}
+//			else
+			{
+				Process.Start("InvitationWizard.exe");
+			}
 		}
 
 		private void menuItemAddrBook_Click(object sender, System.EventArgs e)
 		{
-			// TODO - check for currently running instance and switch to it.
-			Process.Start("Book.exe");
+			// Check for currently running instance and switch to it.
+//			Win32Window win32Window = Win32Window.FindWindow(null, "FormsAddrBook");
+//			if (win32Window != null)
+//			{
+//				win32Window.BringWindowToTop();
+//			}
+//			else
+			{
+				Process.Start("Book.exe");
+			}
 		}
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -219,9 +257,24 @@ namespace Novell.iFolder.FormsTrayApp
 				workerThread.Abort();
 			}
 
-			syncManager.Stop();
-			publisher.FireServiceControl(0, ServiceEventType.Shutdown);
-			monitor.Kill();
+			if (syncManager != null)
+			{
+				syncManager.Stop();
+			}
+
+			if (publisher != null)
+			{
+				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEventArgs.ServiceEvent.Shutdown);
+				publisher.RaiseServiceEvent(args);
+			}
+
+			if (monitor != null)
+			{
+				// Give the broker a chance to send the shutdown event.
+				Thread.Sleep(waitTime);
+				monitor.Kill();
+			}
+
 			Cursor.Current = Cursors.Default;
 			Application.Exit();
 		}
@@ -248,6 +301,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
 		{
 			// Start the event broker.
+			// TODO - check for currently running broker.
 			monitor = new Process();
 			monitor.StartInfo.RedirectStandardInput = true;
 			monitor.StartInfo.RedirectStandardInput = true;
@@ -280,7 +334,8 @@ namespace Novell.iFolder.FormsTrayApp
 			SyncProperties properties = new SyncProperties();
 
 			// Get the logic factory from the config file.
-			string logicFactory = Configuration.Get("iFolderApp", "SyncLogic", "SynkerA");
+			Configuration config = new Configuration();
+			string logicFactory = config.Get("iFolderApp", "SyncLogic", "SynkerA");
 			switch (logicFactory)
 			{
 				case "SynkerA":
@@ -293,15 +348,23 @@ namespace Novell.iFolder.FormsTrayApp
 					break;
 			}
 
-			syncManager = new SyncManager(properties);
-			syncManager.ChangedState += new ChangedSyncStateEventHandler(syncManager_ChangedState);
+			try
+			{
+				syncManager = new SyncManager(properties);
+				syncManager.ChangedState += new ChangedSyncStateEventHandler(syncManager_ChangedState);
 
-			// Trace levels.
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			Log.SetLevel("verbose");
+				// Trace levels.
+				MyTrace.Switch.Level = TraceLevel.Verbose;
+				Log.SetLevel("verbose");
 
-			Console.WriteLine("Starting sync object");
-			syncManager.Start();
+				Console.WriteLine("Starting sync object");
+				syncManager.Start();
+			}
+			catch(Exception exception)
+			{
+				MessageBox.Show("Exception caught in SyncManager:\n\n" + exception.Message);
+				this.Close();
+			}
 		}
 
 		private void syncManager_ChangedState(SyncManagerStates state)

@@ -4,7 +4,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # TrayAppGtk variables
@@ -97,12 +97,12 @@ TrayAppGtk_LIBPATH := $(subst /,$(SEP), $(TrayAppGtk_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(TrayAppGtk_LIBPATH) $(TrayAppGtk_INCLUDES) $(InviteApp_LIBPATH) $(InviteApp_INCLUDES)
 
-iFolderApp.exe: $(TrayAppGtk_SOURCES) $(TrayAppGtk_RESOURCE) $(TrayAppGtk_LIBS) ../config.mk
+iFolderApp.exe: $(TrayAppGtk_SOURCES) $(TrayAppGtk_RESOURCE) $(TrayAppGtk_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:TrayAppGtk.xml $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_SOURCES)
 
-InvitationWizard.exe: $(InviteApp_SOURCES) $(InviteApp_RESOURCE) $(InviteApp_LIBS) ../config.mk
+InvitationWizard.exe: $(InviteApp_SOURCES) $(InviteApp_RESOURCE) $(InviteApp_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:TrayAppGtk.xml $(CSCFLAGS) $(InviteApp_FLAGS) $(InviteApp_LIBS:%=/r:%) $(InviteApp_LIBPATH:%=/lib:%) $(InviteApp_SOURCES)
 
-CollectionBrowser.exe: $(CBApp_SOURCES) $(CBApp_RESOURCE) $(CBApp_LIBS) ../config.mk
+CollectionBrowser.exe: $(CBApp_SOURCES) $(CBApp_RESOURCE) $(CBApp_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:TrayAppGtk.xml $(CSCFLAGS) $(CBApp_FLAGS) $(CBApp_LIBS:%=/r:%) $(CBApp_LIBPATH:%=/lib:%) $(CBApp_SOURCES)
 

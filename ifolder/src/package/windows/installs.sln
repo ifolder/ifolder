@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "client", "client\client.vdproj", "{C6E214E2-39D0-40DF-BCAD-60B51E263D3C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "server", "server\server.vdproj", "{484F281C-DA8D-4D68-889D-8DB1EFD0F251}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShutdowniFolder", "ShutdowniFolder\ShutdowniFolder.csproj", "{420DE43D-5262-4718-8C2F-5DA1DACEA64D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{C6E214E2-39D0-40DF-BCAD-60B51E263D3C}.Debug.ActiveCfg = Debug
+		{C6E214E2-39D0-40DF-BCAD-60B51E263D3C}.Debug.Build.0 = Debug
+		{C6E214E2-39D0-40DF-BCAD-60B51E263D3C}.Release.ActiveCfg = Release
+		{C6E214E2-39D0-40DF-BCAD-60B51E263D3C}.Release.Build.0 = Release
+		{484F281C-DA8D-4D68-889D-8DB1EFD0F251}.Debug.ActiveCfg = Debug
+		{484F281C-DA8D-4D68-889D-8DB1EFD0F251}.Release.ActiveCfg = Release
+		{420DE43D-5262-4718-8C2F-5DA1DACEA64D}.Debug.ActiveCfg = Debug|.NET
+		{420DE43D-5262-4718-8C2F-5DA1DACEA64D}.Debug.Build.0 = Debug|.NET
+		{420DE43D-5262-4718-8C2F-5DA1DACEA64D}.Release.ActiveCfg = Release|.NET
+		{420DE43D-5262-4718-8C2F-5DA1DACEA64D}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

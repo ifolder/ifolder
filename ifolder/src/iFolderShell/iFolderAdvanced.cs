@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.IO;
 using Novell.iFolder;
 using Novell.AddressBook;
 using Simias.Storage;
@@ -63,6 +64,7 @@ namespace Novell.iFolder.iFolderCom
 		private iFolder ifolder;
 		private ArrayList removedList;
 		private System.Windows.Forms.Button reinvite;
+		private string loadPath;
 
 		/// <summary>
 		/// Required designer variable.
@@ -271,6 +273,7 @@ namespace Novell.iFolder.iFolderCom
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 2;
 			this.cancel.Text = "Cancel";
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
 			// 
 			// apply
 			// 
@@ -282,7 +285,9 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// iFolderAdvanced
 			// 
+			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.cancel;
 			this.ClientSize = new System.Drawing.Size(360, 462);
 			this.Controls.Add(this.apply);
 			this.Controls.Add(this.cancel);
@@ -434,11 +439,41 @@ namespace Novell.iFolder.iFolderCom
 				this.ifolder = value;
 			}
 		}
+
+		/// <summary>
+		/// The path where the DLL is running from.
+		/// </summary>
+		public string LoadPath
+		{
+			set
+			{
+				this.loadPath = value;
+			}
+		}
 		#endregion
 
 		#region Event Handlers
 		private void iFolderAdvanced_Load(object sender, EventArgs e)
 		{
+			// Image list...
+			try
+			{
+				// Create the ImageList object.
+				ImageList contactsImageList = new ImageList();
+
+				// Initialize the ImageList objects with icons.
+				string basePath = Path.Combine(loadPath, "res");
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read_write.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_full.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
+
+				//Assign the ImageList objects to the books ListView.
+				shareWith.SmallImageList = contactsImageList;
+			}
+			catch{}
+
 			defaultAddressBook = abManager.OpenDefaultAddressBook();
 
 			// Enable/disable the Add button.
@@ -480,31 +515,41 @@ namespace Novell.iFolder.iFolderCom
 							items[0] = contact.UserName;
 						}
 
+						int imageIndex;
 						switch (ace.Rights)
 						{
 							case Access.Rights.Admin:
 							{
 								items[1] = "Full Control";
+								imageIndex = 3;
 								break;
 							}
 							case Access.Rights.ReadWrite:
 							{
 								items[1] = "Read/Write";
+								imageIndex = 2;
 								break;
 							}
 							case Access.Rights.ReadOnly:
 							{
 								items[1] = "Read Only";
+								imageIndex = 1;
 								break;
 							}
 							default:
 							{
 								items[1] = "Unknown";
+								imageIndex = 4;
 								break;
 							}
 						}
 
-						ListViewItem lvitem = new ListViewItem(items);
+						if (contact.IsCurrentUser)
+						{
+							imageIndex = 0;
+						}
+
+						ListViewItem lvitem = new ListViewItem(items, imageIndex);
 						ShareListContact shareContact = new ShareListContact();
 						shareContact.CurrentContact = contact;
 						lvitem.Tag = shareContact;
@@ -583,17 +628,22 @@ namespace Novell.iFolder.iFolderCom
 		private void accessButton_Click(object sender, EventArgs e)
 		{
 			string access;
+			int imageIndex;
+
 			if (this.accessFullControl.Checked)
 			{
 				access = "Full Control";
+				imageIndex = 3;
 			}
 			else if ( this.accessReadWrite.Checked)
 			{
 				access = "Read/Write";
+				imageIndex = 2;
 			}
 			else
 			{
 				access = "Read Only";
+				imageIndex = 1;
 			}
 
 			foreach (ListViewItem item in this.shareWith.SelectedItems)
@@ -606,6 +656,7 @@ namespace Novell.iFolder.iFolderCom
 				{
 					// Change the subitem text.
 					item.SubItems[1].Text = access;
+					item.ImageIndex = imageIndex;
 
 					// Mark this item as changed.
 					((ShareListContact)item.Tag).Changed = true;
@@ -624,6 +675,7 @@ namespace Novell.iFolder.iFolderCom
 			// TODO - Initialize the picker with the names that are already in the share list.
 			ContactPicker picker = new ContactPicker();
 			picker.CurrentManager = abManager;
+			picker.LoadPath = loadPath;
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
@@ -638,7 +690,7 @@ namespace Novell.iFolder.iFolderCom
 					string[] items = new string[2];
 					items[0] = c.FN;
 					items[1] = "Read/Write";
-					ListViewItem lvitem = new ListViewItem(items);
+					ListViewItem lvitem = new ListViewItem(items, 2);
 
 					ShareListContact shareContact = null;
 
@@ -705,6 +757,7 @@ namespace Novell.iFolder.iFolderCom
 		private void ok_Click(object sender, System.EventArgs e)
 		{
 			this.ProcessChanges();
+			this.Close();
 		}
 
 		private void reinvite_Click(object sender, System.EventArgs e)
@@ -771,6 +824,11 @@ namespace Novell.iFolder.iFolderCom
 		
 			// Disable the apply button.
 			this.apply.Enabled = false;
+		}
+
+		private void cancel_Click(object sender, System.EventArgs e)
+		{
+			this.Close();	
 		}
 		#endregion
 	}
