@@ -533,6 +533,7 @@ namespace Novell.iFolderCom
 			this.attributeName.TabIndex = ((int)(resources.GetObject("attributeName.TabIndex")));
 			this.attributeName.Text = resources.GetString("attributeName.Text");
 			this.attributeName.Visible = ((bool)(resources.GetObject("attributeName.Visible")));
+			this.attributeName.SelectedIndexChanged += new System.EventHandler(this.attributeName_SelectedIndexChanged);
 			// 
 			// Picker
 			// 
@@ -820,13 +821,13 @@ namespace Novell.iFolderCom
 			while (true)
 			{
 				int totalMembers = 0;
-				int currentIndex = -1;
+				bool moreUsers = true;
 
 				try
 				{
 					BeginInvoke(beginAddLVItemEventDelegate);
 
-					while (!stopThread && currentIndex < totalMembers)
+					while (!stopThread && moreUsers)
 					{
 						iFolderUser[] ifolderUsers;
 				
@@ -848,7 +849,7 @@ namespace Novell.iFolderCom
 										break;
 								}
 
-								ifWebService.FindFirstSpecificiFolderMembers(
+								moreUsers = ifWebService.FindFirstSpecificiFolderMembers(
 									domainID,
 									attribute,
 									searchText,
@@ -860,7 +861,7 @@ namespace Novell.iFolderCom
 							}
 							else
 							{
-								ifWebService.FindFirstiFolderMembers(
+								moreUsers = ifWebService.FindFirstiFolderMembers(
 									domainID,
 									25,
 									out searchContext,
@@ -870,7 +871,7 @@ namespace Novell.iFolderCom
 						}
 						else
 						{
-							ifWebService.FindNextiFolderMembers(
+							moreUsers = ifWebService.FindNextiFolderMembers(
 								domainID,
 								ref searchContext,
 								25,
@@ -879,15 +880,6 @@ namespace Novell.iFolderCom
 
 						if (ifolderUsers != null)
 						{
-							if (currentIndex == -1)
-							{
-								currentIndex = ifolderUsers.Length;
-							}
-							else
-							{
-								currentIndex += ifolderUsers.Length;
-							}
-
 							// Signal the event so the wait cursor can be removed.
 							waitEvent.Set();
 
@@ -1092,6 +1084,17 @@ namespace Novell.iFolderCom
 				stopThread = true;
 
 				// Reset the timer when search text is entered.
+				searchTimer.Stop();
+				searchTimer.Start();
+			}
+		}
+
+		private void attributeName_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (attributeName.Focused)
+			{
+				stopThread = true;
+
 				searchTimer.Stop();
 				searchTimer.Start();
 			}
