@@ -36,9 +36,8 @@ using Gnome;
 using GtkSharp;
 using GLib;
 using Egg;
-using Simias.Event;
-using Simias;
-using Simias.Storage;
+using Simias.Client.Event;
+using Simias.Client;
 
 
 
