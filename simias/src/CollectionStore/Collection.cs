@@ -327,7 +327,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="node">Node to check to see if it is a deleted Node object.</param>
 		/// <returns>True if the specified Node object is a deleted Node object. Otherwise false.</returns>
-		public bool IsTombstone( Node node )
+		private bool IsTombstone( Node node )
 		{
 			return ( node.Type == "Tombstone" ) ? true : false;
 		}
