@@ -382,20 +382,45 @@ namespace Novell.AddressBook.UI.gtk
 
 		public void ShareWithContact(Contact c)
 		{
+
+			if( (!collection.Domain.Equals(Domain.WorkGroupDomainID)) &&
+				( (c.UserID == null) || (c.UserID.Length == 0) ) )
+			{
+				MessageDialog md = new MessageDialog(
+					(Gtk.Window) SharingVBox.Toplevel,
+					DialogFlags.DestroyWithParent | DialogFlags.Modal,
+					MessageType.Error,
+					ButtonsType.Close,
+					"Unable to share with the following incomplete user:\n\n" + c.FN);
+				md.Run();
+				md.Hide();
+				return;	
+			}
+
 			try
 			{
 				Subscription sub = pobox.CreateSubscription(collection,
 										collection.GetCurrentMember(),
 										"iFolder");
 
-				sub.FromAddress = String.Format("{0}@{1}", 
-									System.Environment.UserName, 
-									Simias.MyDns.GetHostName());
-
 				sub.SubscriptionRights = Access.Rights.ReadWrite;
 				sub.ToName = c.FN;
-				sub.ToAddress = c.EMail;
-//				sub.FromIdentity = c.UserID;
+
+				if(collection.Domain.Equals(Domain.WorkGroupDomainID))
+				{
+					// TODO:  Read this from the current contact
+					// so we don't have bogus email addresses
+					sub.FromAddress = String.Format("{0}@{1}", 
+										System.Environment.UserName, 
+										Simias.MyDns.GetHostName());
+					sub.ToAddress = c.EMail;
+					sub.ToIdentity = c.UserID;
+				}
+				else
+				{
+					sub.ToIdentity = c.UserID;
+				}
+
 				pobox.AddMessage(sub);
 
 				SharingListHolder slh = new SharingListHolder(null, sub);
