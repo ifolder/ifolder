@@ -7,7 +7,7 @@ SimiasWebService_INCLUDES =
 SimiasWebService_RESOURCES =
 SimiasWebService_FLAGS = $(CSC_LIBFLAG)
 SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll Novell.Security.ClientPasswordManager.NetCredential.dll
-SimiasWebService_LIBPATH = ../SimiasClient ../Simias.dll ../../external/Novell.Security
+SimiasWebService_LIBPATH = ../SimiasClient ../Simias.dll $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = web.config Global.asax Simias.asmx SimiasBrowser.asmx $(SimiasWebService_CSFILES)
 
