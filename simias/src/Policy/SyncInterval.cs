@@ -27,11 +27,6 @@ namespace Simias.Policy
 		static private string IntervalTag = "Interval";
 
 		/// <summary>
-		/// The default synchronization interval in seconds.
-		/// </summary>
-		static public int DefaultSyncInterval = 60;
-
-		/// <summary>
 		/// Implies to never synchronize.
 		/// </summary>
 		static public int InfiniteSyncInterval = -1;
@@ -52,7 +47,7 @@ namespace Simias.Policy
 			get
 			{
 				// Set to the default interval.
-				int interval = DefaultSyncInterval;
+				int interval = 0;
 
 				// If there is a policy find the greatest interval.
 				if ( policy != null )
@@ -332,7 +327,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, domainID );
-			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : DefaultSyncInterval;
+			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : 0;
 		}
 
 		/// <summary>
@@ -344,7 +339,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, member );
-			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : DefaultSyncInterval;
+			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : 0;
 		}
 
 		/// <summary>
@@ -356,7 +351,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, collection );
-			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : DefaultSyncInterval;
+			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : 0;
 		}
 
 		/// <summary>
@@ -367,7 +362,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID );
-			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : DefaultSyncInterval;
+			return ( policy != null ) ? ( int )policy.GetValue( IntervalTag ) : 0;
 		}
 
 		/// <summary>

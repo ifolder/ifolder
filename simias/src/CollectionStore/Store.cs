@@ -65,6 +65,11 @@ namespace Simias.Storage
 		static private int DefaultRosterSyncInterval = 86400;
 
 		/// <summary>
+		/// Default sync interval for the machine. Synchronizes every 60 seconds.
+		/// </summary>
+		static private int DefaultMachineSyncInterval = 60;
+
+		/// <summary>
 		/// Handle to the local store provider.
 		/// </summary>
 		private Persist.IProvider storageProvider = null;
@@ -302,6 +307,9 @@ namespace Simias.Storage
 
 					// Save the local database changes.
 					ldb.Commit( new Node[] { ldb, member, owner, wgDomain } );
+
+					// Create a SyncInterval policy.
+					SyncInterval.Create( DefaultMachineSyncInterval );
 
 					// Create an empty roster for the workgroup domain.
 					Roster wgRoster = new Roster( this, wgDomain );
