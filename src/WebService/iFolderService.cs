@@ -1291,7 +1291,8 @@ namespace Novell.iFolder.Web
 		/// </param>
 		[WebMethod(Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
 		[SoapDocumentMethod]
-		public iFolderWeb AcceptiFolderInvitation( string iFolderID, 
+		public iFolderWeb AcceptiFolderInvitation( string DomainID,
+												   string iFolderID, 
 												string LocalPath)
 		{
 			Store store = Store.GetStore();
@@ -1301,11 +1302,8 @@ namespace Novell.iFolder.Web
 				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
 
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						store.DefaultDomain, 
-						store.GetUserIDFromDomainID(store.DefaultDomain));
-//			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
-//											store, 
-//											store.DefaultDomain);
+						DomainID, 
+						store.GetUserIDFromDomainID(DomainID));
 
 			// iFolders returned in the Web service are also
 			// Subscriptions and it ID will be the subscription ID

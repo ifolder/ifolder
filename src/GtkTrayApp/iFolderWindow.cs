@@ -1920,6 +1920,7 @@ namespace Novell.iFolder
 				{
 					curiFolders.Remove(ifHolder.iFolder.ID);
    		 			iFolderWeb newiFolder = iFolderWS.AcceptiFolderInvitation(
+											ifHolder.iFolder.DomainID,
 											ifHolder.iFolder.ID,
 											newPath);
 	
