@@ -69,6 +69,8 @@ namespace Novell.iFolder
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
 		private bool				winShown;
+		private bool				ShowReLoginWindow;
+		private string				redomainID;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -102,6 +104,7 @@ namespace Novell.iFolder
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
 			winShown = false;
+			ShowReLoginWindow = true;
 		}
 
 
@@ -214,31 +217,45 @@ namespace Novell.iFolder
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
-			switch(args.EventData)
+			if(ShowReLoginWindow)
 			{
-				case "Domain-Up":
+				switch(args.EventData)
 				{
-					if(LoginDialog == null)
+					case "Domain-Up":
 					{
-						DomainInformation di = 
-									GetDomainInformation(args.Message);
-						if(di != null)
-						{
-							LoginDialog = new iFolderLoginDialog(
-								di.ID, di.Name, di.MemberName);
-
-							LoginDialog.Response +=
-								new ResponseHandler(OnReLoginDialogResponse);
-							LoginDialog.ShowAll();
-						}
+						redomainID = args.Message;
+						ReLogin(args.Message);
+						break;
 					}
-					else
-						LoginDialog.Present();
-					break;
 				}
 			}
 		}
 
+		private void OnShowReLogin(object o, EventArgs args)
+		{
+			ShowReLoginWindow = true;
+			ReLogin(redomainID);
+		}
+
+		private void ReLogin(string domainID)
+		{
+			if(LoginDialog == null)
+			{
+				DomainInformation di = 
+							GetDomainInformation(domainID);
+				if(di != null)
+				{
+					LoginDialog = new iFolderLoginDialog(
+						di.ID, di.Name, di.MemberName);
+
+					LoginDialog.Response += new ResponseHandler(
+								OnReLoginDialogResponse);
+					LoginDialog.ShowAll();
+				}
+			}
+			else
+				LoginDialog.Present();
+		}
 
 		private void OnReLoginDialogResponse(object o, ResponseArgs args)
 		{
@@ -266,6 +283,11 @@ namespace Novell.iFolder
 						mDialog = null;
 					}
 
+					break;
+				}
+				case Gtk.ResponseType.Cancel:
+				{
+					ShowReLoginWindow = false;
 					break;
 				}
 			}
@@ -545,6 +567,14 @@ namespace Novell.iFolder
 						new MenuItem (Util.GS("Join Enterprise Server"));
 				trayMenu.Append (connect_item);
 				connect_item.Activated += new EventHandler(OnJoinEnterprise);
+			}
+
+			if(!ShowReLoginWindow)
+			{
+				MenuItem show_relogin =
+						new MenuItem(Util.GS("Login to iFolder Server"));
+				trayMenu.Append(show_relogin);
+				show_relogin.Activated += new EventHandler(OnShowReLogin);
 			}
 
 			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
