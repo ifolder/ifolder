@@ -841,10 +841,11 @@ namespace Novell.FormsTrayApp
 				{
 					if (preferences.NotifyShareEnabled)
 					{
+						string title = string.Format(resourceManager.GetString("subscriptionTitle"), ifolder.Name);
 						string message = string.Format(resourceManager.GetString("subscriptionMessage"), ifolder.Owner);
 
 						notifyType = NotifyType.Subscription;
-						shellNotifyIcon.DisplayBalloonTooltip(resourceManager.GetString("actionRequiredTitle"), message, BalloonType.Info);
+						shellNotifyIcon.DisplayBalloonTooltip(title, message, BalloonType.Info);
 
 						// TODO: Change the icon?
 					}
