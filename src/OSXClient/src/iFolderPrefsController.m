@@ -179,7 +179,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	[item setToolTip:@"General Settings"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(generalPreferences:)];
-	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+	[item setImage:[NSImage imageNamed:@"prefs-general32"]];
     [toolbarItemDict setObject:item forKey:@"General"]; // add to toolbar list
 	[toolbarItemArray addObject:@"General"];
 	[item release];	
@@ -191,7 +191,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	[item setToolTip:@"Accounts"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(accountPreferences:)];
-	[item setImage:[NSImage imageNamed:@"prefs-accounts"]];
+	[item setImage:[NSImage imageNamed:@"prefs-accounts32"]];
     [toolbarItemDict setObject:item forKey:@"Accounts"]; // add to toolbar list
 	[toolbarItemArray addObject:@"Accounts"];
 	[item release];
@@ -204,7 +204,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(syncPreferences:)];
 	[item setImage:[NSImage imageNamed:@"prefs-sync"]];
-    [toolbarItemDict setObject:item forKey:@"Synchronization"]; // add to toolbar list
+    [toolbarItemDict setObject:item forKey:@"Synchronization32"]; // add to toolbar list
 	[toolbarItemArray addObject:@"Synchronization"];
 	[item release];
 	
@@ -215,7 +215,7 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	[item setToolTip:@"Notification"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(notifyPreferences:)];
-	[item setImage:[NSImage imageNamed:@"prefs-notification"]];
+	[item setImage:[NSImage imageNamed:@"prefs-notification32"]];
     [toolbarItemDict setObject:item forKey:@"Notification"]; // add to toolbar list
 	[toolbarItemArray addObject:@"Notification"];
 	[item release];	
