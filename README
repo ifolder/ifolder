@@ -43,6 +43,10 @@ Linux
     You can get mono and gtk-sharp from http://www.go-mono.com or Ximian Red
     Carpet.
        
+    - automake 1.7 (or later)
+    - autoconf 2.57 (or later)
+    - m4 1.40 (or later)
+       
     To compile use the traditional:
         ./configure --prefix=<install_path>
         make
