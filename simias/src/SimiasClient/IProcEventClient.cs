@@ -169,6 +169,18 @@ namespace Simias.Client.Event
 		private Queue eventFilterQueue = new Queue();
 
 		/// <summary>
+		/// Producer/Consumer queues used to handle node and sync event messages. Sync events have precedence
+		/// over node events.
+		/// </summary>
+		private Queue nodeEventMessageQueue = new Queue();
+		private Queue syncEventMessageQueue = new Queue();
+
+		/// <summary>
+		/// Event that indicates that a message was placed in the queue.
+		/// </summary>
+		private ManualResetEvent messageReadyEvent = new ManualResetEvent( false );
+
+		/// <summary>
 		/// Tells the state of the registration thread. This is a work around for the error
 		/// that gets thrown when the registration thread exits with a pending async receive.
 		/// </summary>
@@ -197,6 +209,10 @@ namespace Simias.Client.Event
 			// Save the error handling information.
 			errorCallback = errorHandler;
 			errorContext = context;
+
+			// Start the event thread waiting for event messages.
+			Thread thread = new Thread( new ThreadStart( EventThread ) );
+			thread.Start();
 		}
 		#endregion
 
@@ -220,6 +236,63 @@ namespace Simias.Client.Event
 		{
 			// The configuration file has changed. Wake up the registration thread.
 			regServiceEvent.Set();
+		}
+
+		/// <summary>
+		/// Thread that indicates node and sync events via registered delegates.
+		/// </summary>
+		private void EventThread()
+		{
+			// Stay in the loop until the client has been shutdown.
+			while ( state != ClientState.Shutdown )
+			{
+				IProcEventData eventData = null;
+
+				try
+				{
+					// See if there are any sync events to process.
+					lock ( syncEventMessageQueue )
+					{
+						if ( syncEventMessageQueue.Count > 0 )
+						{
+							eventData = syncEventMessageQueue.Dequeue() as IProcEventData;
+						}
+					}
+
+					if ( eventData != null )
+					{
+						ProcessEventData( eventData );
+					}
+					else
+					{
+						// See if there are any node events to process.
+						lock ( nodeEventMessageQueue )
+						{
+							if ( nodeEventMessageQueue.Count > 0 )
+							{
+								eventData = nodeEventMessageQueue.Dequeue() as IProcEventData;
+							}
+						}
+
+						if ( eventData != null )
+						{
+							ProcessEventData( eventData );
+						}
+					}
+				}
+				catch ( Exception e )
+				{
+					// Don't let the thread terminate because of an exception.
+					ReportError( new ApplicationException( "Error in event thread.", e ) );
+				}
+
+				// See if there are any message left to process.
+				if ( eventData == null )
+				{
+					messageReadyEvent.WaitOne();
+					messageReadyEvent.Reset();
+				}
+			}
 		}
 
 		/// <summary>
@@ -386,6 +459,135 @@ namespace Simias.Client.Event
 		}
 
 		/// <summary>
+		/// Processes queued event data messages by calling the delegates registered for the respective events.
+		/// </summary>
+		/// <param name="eventData">Event message received from the server.</param>
+		private void ProcessEventData( IProcEventData eventData )
+		{
+			switch ( eventData.Type )
+			{
+				case "NodeEventArgs":
+				{
+					// Get the node arguments from the document.
+					NodeEventArgs nodeArgs = eventData.ToNodeEventArgs();
+
+					// Determine the type of event that occurred.
+					switch ( ( EventType )Enum.Parse( typeof( EventType ), nodeArgs.EventData ) )
+					{
+						case EventType.NodeChanged:
+						{
+							if ( onChangedNodeEvent != null )
+							{
+								Delegate[] cbList = onChangedNodeEvent.GetInvocationList();
+								foreach ( IProcEventHandler cb in cbList )
+								{
+									try 
+									{ 
+										cb( nodeArgs );
+									}
+									catch
+									{
+										onChangedNodeEvent -= cb;
+									}
+								}
+							}
+
+							break;
+						}
+
+						case EventType.NodeCreated:
+						{
+							if ( onCreatedNodeEvent != null )
+							{
+								Delegate[] cbList = onCreatedNodeEvent.GetInvocationList();
+								foreach ( IProcEventHandler cb in cbList )
+								{
+									try 
+									{ 
+										cb( nodeArgs );
+									}
+									catch
+									{
+										onCreatedNodeEvent -= cb;
+									}
+								}
+							}
+
+							break;
+						}
+
+						case EventType.NodeDeleted:
+						{
+							if ( onDeletedNodeEvent != null )
+							{
+								Delegate[] cbList = onDeletedNodeEvent.GetInvocationList();
+								foreach ( IProcEventHandler cb in cbList )
+								{
+									try 
+									{ 
+										cb( nodeArgs );
+									}
+									catch
+									{
+										onDeletedNodeEvent -= cb;
+									}
+								}
+							}
+
+							break;
+						}
+					}
+			
+					break;
+				}
+
+				case "CollectionSyncEventArgs":
+				{
+					// Get the collection sync arguments from the document.
+					CollectionSyncEventArgs collectionArgs = eventData.ToCollectionSyncEventArgs();
+					if ( onCollectionSyncEvent != null )
+					{
+						Delegate[] cbList = onCollectionSyncEvent.GetInvocationList();
+						foreach ( IProcEventHandler cb in cbList )
+						{
+							try 
+							{ 
+								cb( collectionArgs );
+							}
+							catch
+							{
+								onCollectionSyncEvent -= cb;
+							}
+						}
+					}
+					break;
+				}
+
+				case "FileSyncEventArgs":
+				{
+					// Get the file sync arguments from the document.
+					FileSyncEventArgs fileArgs = eventData.ToFileSyncEventArgs();
+					if ( onFileSyncEvent != null )
+					{
+						Delegate[] cbList = onFileSyncEvent.GetInvocationList();
+						foreach ( IProcEventHandler cb in cbList )
+						{
+							try 
+							{ 
+								cb( fileArgs );
+							}
+							catch
+							{
+								onFileSyncEvent -= cb;
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Dequeues any event filter items and submits them to the server.
 		/// </summary>
 		private void ProcessEventFilterQueue()
@@ -416,123 +618,34 @@ namespace Simias.Client.Event
 			{
 				case "NodeEventArgs":
 				{
-					// Get the node arguments from the document.
-					NodeEventArgs nodeArgs = ed.ToNodeEventArgs();
-
-					// Determine the type of event that occurred.
-					switch ( ( EventType )Enum.Parse( typeof( EventType ), nodeArgs.EventData ) )
+					lock ( nodeEventMessageQueue )
 					{
-						case EventType.NodeChanged:
-						{
-							if ( onChangedNodeEvent != null )
-							{
-								Delegate[] cbList = onChangedNodeEvent.GetInvocationList();
-								foreach ( IProcEventHandler cb in cbList )
-								{
-									try 
-									{ 
-										cb.BeginInvoke( nodeArgs, new AsyncCallback( EventCompleteCallback ), null );
-									}
-									catch
-									{
-										onChangedNodeEvent -= cb;
-									}
-								}
-							}
-
-							break;
-						}
-
-						case EventType.NodeCreated:
-						{
-							if ( onCreatedNodeEvent != null )
-							{
-								Delegate[] cbList = onCreatedNodeEvent.GetInvocationList();
-								foreach ( IProcEventHandler cb in cbList )
-								{
-									try 
-									{ 
-										cb.BeginInvoke( nodeArgs, new AsyncCallback( EventCompleteCallback ), null );
-									}
-									catch
-									{
-										onCreatedNodeEvent -= cb;
-									}
-								}
-							}
-
-							break;
-						}
-
-						case EventType.NodeDeleted:
-						{
-							if ( onDeletedNodeEvent != null )
-							{
-								Delegate[] cbList = onDeletedNodeEvent.GetInvocationList();
-								foreach ( IProcEventHandler cb in cbList )
-								{
-									try 
-									{ 
-										cb.BeginInvoke( nodeArgs, new AsyncCallback( EventCompleteCallback ), null );
-									}
-									catch
-									{
-										onDeletedNodeEvent -= cb;
-									}
-								}
-							}
-
-							break;
-						}
+						nodeEventMessageQueue.Enqueue( ed );
 					}
-			
 					break;
 				}
 
 				case "CollectionSyncEventArgs":
 				{
-					// Get the collection sync arguments from the document.
-					CollectionSyncEventArgs collectionArgs = ed.ToCollectionSyncEventArgs();
-					if ( onCollectionSyncEvent != null )
+					lock ( syncEventMessageQueue )
 					{
-						Delegate[] cbList = onCollectionSyncEvent.GetInvocationList();
-						foreach ( IProcEventHandler cb in cbList )
-						{
-							try 
-							{ 
-								cb.BeginInvoke( collectionArgs, new AsyncCallback( EventCompleteCallback ), null );
-							}
-							catch
-							{
-								onCollectionSyncEvent -= cb;
-							}
-						}
+						syncEventMessageQueue.Enqueue( ed );
 					}
 					break;
 				}
 
 				case "FileSyncEventArgs":
 				{
-					// Get the file sync arguments from the document.
-					FileSyncEventArgs fileArgs = ed.ToFileSyncEventArgs();
-					if ( onFileSyncEvent != null )
+					lock ( syncEventMessageQueue )
 					{
-						Delegate[] cbList = onFileSyncEvent.GetInvocationList();
-						foreach ( IProcEventHandler cb in cbList )
-						{
-							try 
-							{ 
-								cb.BeginInvoke( fileArgs, new AsyncCallback( EventCompleteCallback ), null );
-							}
-							catch
-							{
-								onFileSyncEvent -= cb;
-							}
-						}
+						syncEventMessageQueue.Enqueue( ed );
 					}
 					break;
 				}
 			}
+
+			// Indicate that a message is ready to process.
+			messageReadyEvent.Set();
 		}
 
 		/// <summary>
