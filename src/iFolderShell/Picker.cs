@@ -165,6 +165,7 @@ namespace Novell.iFolderCom
 			this.rosterLV.View = System.Windows.Forms.View.Details;
 			this.rosterLV.Visible = ((bool)(resources.GetObject("rosterLV.Visible")));
 			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
+			this.rosterLV.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.rosterLV_ColumnClick);
 			this.rosterLV.SelectedIndexChanged += new System.EventHandler(this.rosterLV_SelectedIndexChanged);
 			// 
 			// columnHeader1
@@ -196,6 +197,7 @@ namespace Novell.iFolderCom
 			this.addedLV.View = System.Windows.Forms.View.Details;
 			this.addedLV.Visible = ((bool)(resources.GetObject("addedLV.Visible")));
 			this.addedLV.DoubleClick += new System.EventHandler(this.remove_Click);
+			this.addedLV.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.addedLV_ColumnClick);
 			this.addedLV.SelectedIndexChanged += new System.EventHandler(this.addedLV_SelectedIndexChanged);
 			// 
 			// columnHeader2
@@ -696,6 +698,50 @@ namespace Novell.iFolderCom
 				if (selectedUser.UserID.Equals(currentUser.UserID) || selectedUser.UserID.Equals(currentOwner.UserID))
 				{
 					remove.Enabled = false;
+				}
+			}
+		}
+
+		private void rosterLV_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
+		{
+			switch (rosterLV.Sorting)
+			{
+				case SortOrder.None:
+				{
+					rosterLV.Sorting = SortOrder.Ascending;
+					break;
+				}
+				case SortOrder.Ascending:
+				{
+					rosterLV.Sorting = SortOrder.Descending;
+					break;
+				}
+				case SortOrder.Descending:
+				{
+					rosterLV.Sorting = SortOrder.Ascending;
+					break;
+				}
+			}
+		}
+
+		private void addedLV_ColumnClick(object sender, System.Windows.Forms.ColumnClickEventArgs e)
+		{
+			switch (addedLV.Sorting)
+			{
+				case SortOrder.None:
+				{
+					addedLV.Sorting = SortOrder.Ascending;
+					break;
+				}
+				case SortOrder.Ascending:
+				{
+					addedLV.Sorting = SortOrder.Descending;
+					break;
+				}
+				case SortOrder.Descending:
+				{
+					addedLV.Sorting = SortOrder.Ascending;
+					break;
 				}
 			}
 		}
