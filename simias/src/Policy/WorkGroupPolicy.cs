@@ -10,7 +10,7 @@ namespace Simias.Policy
 	{
 		#region Public Methods
 		/// <summary>
-		/// Saves the specified SystemPolicy object that will be applied system-wide for the specified domain.
+		/// Saves the specified system Policy object that will be applied system-wide for the specified domain.
 		/// The caller must possess Admin rights in order to commit a system policy.
 		/// </summary>
 		/// <param name="policy">SystemPolicy object to be saved.</param>
@@ -20,7 +20,7 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
-		/// Saves the specified Policy object and associates it with the specified user.
+		/// Saves the specified system or user Policy object and associates it with the specified user.
 		/// The caller must possess Admin rights in order to commit a system policy.
 		/// The caller must have read-write rights to commit a user policy.
 		/// </summary>
@@ -53,7 +53,7 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
-		/// Deletes the specified policy.
+		/// Deletes the specified system or user policy.
 		/// </summary>
 		/// <param name="policy">Policy object to delete.</param>
 		public void DeletePolicy( IPolicy policy )
@@ -73,7 +73,7 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
-		/// Gets the specified policy that is associated with the specified user.
+		/// Gets the specified system or user policy that is associated with the specified user.
 		/// </summary>
 		/// <param name="strongName">Strong name of the policy.</param>
 		/// <param name="member">Member object to use to lookup the specified policy.</param>
@@ -85,7 +85,7 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
-		/// Gets a list of all Policy objects for the specified user.
+		/// Gets a list of all the system and user Policy objects for the specified user.
 		/// </summary>
 		/// <param name="member">Member object to get policies for.</param>
 		/// <returns>A reference to an ICSList object that contains all of the IPolicy objects that apply to the

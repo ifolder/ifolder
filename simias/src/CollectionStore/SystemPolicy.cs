@@ -29,7 +29,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Returns the list of Rule objects for this policy.
 		/// </summary>
-		public ICSList Rules
+		public virtual ICSList Rules
 		{
 			get { return new ICSList(); }
 		}
@@ -45,7 +45,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Returns the list of TimeCondition objects for this policy.
 		/// </summary>
-		public ICSList TimeConditions
+		public virtual ICSList TimeConditions
 		{
 			get { return new ICSList(); }
 		}
@@ -117,7 +117,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Adds a time condition to the rule to indicate when the rule is effective.
 		/// </summary>
-		public void AddTimeCondition( TimeCondition time )
+		public virtual void AddTimeCondition( TimeCondition time )
 		{
 		}
 
@@ -125,7 +125,7 @@ namespace Simias.Storage
 		/// Adds a rule to the policy.
 		/// </summary>
 		/// <param name="rule">Object that is used to match against the input in the policy.</param>
-		public void AddRule( Rule rule )
+		public virtual void AddRule( Rule rule )
 		{
 		}
 
@@ -135,7 +135,7 @@ namespace Simias.Storage
 		/// <param name="input">Object that is used to match against the policy rules. The type of object must be
 		/// one of the Simias.Syntax types.</param>
 		/// <returns>True if the policy allows the operation, otherwise false is returned.</returns>
-		public Policy.Policy.RuleResult Apply( object input )
+		public virtual Policy.Policy.RuleResult Apply( object input )
 		{
 			return Policy.Policy.RuleResult.Allow;
 		}
@@ -143,7 +143,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Removes the time condition for the policy.
 		/// </summary>
-		public void DeleteTimeCondition( TimeCondition time )
+		public virtual void DeleteTimeCondition( TimeCondition time )
 		{
 		}
 
@@ -151,7 +151,7 @@ namespace Simias.Storage
 		/// Removes the specified rule from the policy.
 		/// </summary>
 		/// <param name="rule">Rule that is used to match against the input in the policy.</param>
-		public void DeleteRule( Rule rule )
+		public virtual void DeleteRule( Rule rule )
 		{
 		}
 		#endregion
