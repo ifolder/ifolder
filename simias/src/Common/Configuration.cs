@@ -44,7 +44,6 @@ namespace Simias
 		private static readonly string DefaultSection = "SimiasDefault";
 		private static readonly string DefaultFileName = "simias.conf";
 
-		private SimiasMutex mutex = new SimiasMutex( "ConfigurationMutex" );
 		private string storePath;
 		private FileStream fs = null;
 		private bool modified;
@@ -124,8 +123,7 @@ namespace Simias
 		/// </summary>
 		public void CreateDefaults()
 		{
-			mutex.WaitOne();
-			try
+			lock (typeof(Configuration))
 			{
 				// If the file does not exist look for defaults.
 				if (!File.Exists(ConfigFilePath))
@@ -142,33 +140,29 @@ namespace Simias
 						bootStrapDir = SimiasSetup.sysconfdir;
 					}
 					string bootStrapPath = Path.Combine(bootStrapDir, DefaultFileName);
-					log.Debug("Boot Strap Path: {0}", bootStrapPath);
+                    log.Debug("Boot Strap Path: {0}", bootStrapPath);
 
 					if (File.Exists(bootStrapPath))
 					{
-						log.Debug("Initializing \"{0}\" with \"{1}\"...", ConfigFilePath, bootStrapPath);
+                        log.Debug("Initializing \"{0}\" with \"{1}\"...", ConfigFilePath, bootStrapPath);
 						File.Copy(bootStrapPath, ConfigFilePath);
 					}
 					else
 					{
-						fs = new FileStream(ConfigFilePath, FileMode.CreateNew, FileAccess.ReadWrite );
-						try
-						{
-							doc = new XmlDocument();
-							doc.AppendChild(doc.CreateElement(RootElementTag));
-							doc.Save(fs);
-						}
-						finally
-						{
+						fs = new FileStream(ConfigFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None );
+                        try
+                        {
+                            doc = new XmlDocument();
+                            doc.AppendChild(doc.CreateElement(RootElementTag));
+                            doc.Save(fs);
+                        }
+                        finally
+                        {
 							doc = null;
 							fs.Close();
-						}
+                        }
 					}
 				}
-			}
-			finally
-			{
-				mutex.ReleaseMutex();
 			}
 		}
 
@@ -414,30 +408,55 @@ namespace Simias
 
 		private void LoadConfigDocument()
 		{
-			// Acquire the mutex.
-			mutex.WaitOne();
-			fs = null;
+			// Open the configuration file.
+			OpenConfigFile();
 
 			try
 			{
-				// Open the configuration file.
-				fs = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite );
 				modified = false;
 				doc = new XmlDocument();
 				doc.Load(fs);
 			}
-			catch
+			catch(Exception e)
 			{
 				doc = null;
+				fs.Close();
+				throw new SimiasException("Failed to load config document.", e);
+			}
+		}
 
-				if (fs != null)
+		/// <summary>
+		/// Opens the configuration file, retrying if the file is currently in use.
+		/// </summary>
+		/// <returns>A FileStream object associated with the configuration file.</returns>
+		private void OpenConfigFile()
+		{
+			FileStream fsLocal = null;
+
+			lock (typeof(Configuration))
+			{
+				// Stay in the loop until the file is opened.
+				while ( fsLocal == null )
 				{
-					fs.Close();
+					try
+					{
+						// Open the configuration file.
+						fsLocal = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
+					}
+					catch ( IOException )
+					{
+						// Wait for a moment before trying to open the file again.
+						Thread.Sleep( 100 );
+					}
+					catch ( Exception e )
+					{
+						log.Error(e, "Unhandled Exception");
+
+						throw new Exception("Unhandled Exception", e);
+					}
 				}
 
-				// Release the mutex on an error.
-				mutex.ReleaseMutex();
-				throw;
+				fs = fsLocal;
 			}
 		}
 
@@ -452,10 +471,9 @@ namespace Simias
 			}
 
 			doc = null;
-			fs.Close();
 
-			// No member variables should be touched after the release of the mutex.
-			mutex.ReleaseMutex();
+			// No member variables should be touched after the close.
+			fs.Close();
 		}
 
 		#region Static Methods

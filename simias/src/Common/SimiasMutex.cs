@@ -20,233 +20,99 @@
  *  Author: Calvin Gaisford <cgaisford@novell.com>
  *
  ***********************************************************************/
+ 
 
 // This class is a temporary hack to get around the problems that
 // exist with a Mutex and multiple processes
+
 // It's slow, it's dirty, but it's damn solid
 
-// TODO: Take this out once Paul puts in the platform defines. Mac is broken until then.
-#define LINUX
 
 using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace Simias
 {
-	/// <summary>
-	/// Class used to control cross process synchronization.
-	/// </summary>
 	public class SimiasMutex
 	{
-		#region Class Members
-#if MONO
-		// TODO: Remove for debug purposes only.
-		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( SimiasMutex ) );
-
-		[Flags]
-		enum Operation
-		{
-			LOCK_SH = 1,
-			LOCK_EX = 2,
-			LOCK_NB = 4,
-			LOCK_UN = 8
-		};
-
-#if LINUX
-        private static int O_CREAT = 0100;
-#elif DARWIN
-        private static int O_CREAT = 0x200;
-#endif
-		private static int Success = 0;
-		private static string dirPath = null;
-		private static string lockDir = "Locks";
-		private string name;
-		private int acquired;
-		private int fd;
-		private int threadID;
-
-		[DllImport ("libc")]
-	static extern int open(string name, int flags);
-
-		[DllImport ("libc")]
-        static extern int close(int fd);
-
-		[DllImport ("libc")]
-		static extern int flock(int fd, int operation);
-#else
+		private string muxPath;
+		private FileStream fs;
 		private Mutex mux;
-#endif
-		private bool disposed = true;
-		#endregion
 
-		#region Constructor
-		/// <summary>
-		/// Initializes a new instance of the object.
-		/// </summary>
-		/// <param name="name">Name of the cross process mutex.</param>
 		public SimiasMutex(string name)
 		{
-#if MONO
-			this.name = name;
-			this.acquired = 0;
-
-			if (dirPath == null)
+			if(MyEnvironment.Mono)
 			{
-				// Setup the path to the Lock directory.
-				dirPath = Path.Combine(Configuration.GetConfiguration().StorePath, lockDir);
-				if (!Directory.Exists(dirPath))
-				{
-					Directory.CreateDirectory(dirPath);
-					log.Debug("Created lock path {0}", dirPath);
-				}
+				muxPath = fixupPath(name);
+				mux = null;
 			}
-
-			// Build the path to the mutex file.
-			this.name = Path.Combine(dirPath, name);
-
-			// Try to create the file.
-			log.Debug("Creating mutex: {0}", name);
-            fd = open(this.name, O_CREAT);
-			if (fd == -1)
+			else
 			{
-				throw new IOException("Failed to create mutex " + this.name);
+				fs = null;
+				mux = new Mutex(false, name);
 			}
-
-			disposed = false;
-#else
-			mux = new Mutex(false, name);
-#endif
-		}
-		#endregion
-
-		#region Public Methods
-		/// <summary>
-		/// Disposes of the mutex
-		/// </summary>
-		public void Close()
-		{
-#if MONO
-			GC.SuppressFinalize(this);
-			Dispose(false);
-#else
-			mux.Close();
-#endif
 		}
 
-		/// <summary>
-		/// Waits to acquire the mutext.
-		/// </summary>
 		public void WaitOne()
 		{
-#if MONO
-			lock (this)
+			if(mux == null)
 			{
-				if (acquired != 0)
+				while(fs == null)
 				{
-					log.Debug("In WaitOne() - Mutex is acquired");
-					if (Thread.CurrentThread.GetHashCode() == threadID)
+					try
 					{
-						// We already own the lock just bump the count.
-						log.Debug("Mutex already acquired by thread {0}", threadID);
-						acquired++;
-						return;
+						fs = new FileStream(muxPath, FileMode.OpenOrCreate,
+										FileAccess.ReadWrite, FileShare.None);
 					}
-				}
-			}
-
-			// If we get here we need to acquire the lock.
-			int error = flock(fd, (int)Operation.LOCK_EX);
-			if (error == Success)
-			{
-				lock (this)
-				{
-					acquired++;
-					threadID = Thread.CurrentThread.GetHashCode();
-					log.Debug("Acquired mutex by thread {0}", threadID );
+					catch
+					{
+						Thread.Sleep(100);
+					}
 				}
 			}
 			else
 			{
-				throw new SimiasException("Wait for mutex failed.");
+				mux.WaitOne();
 			}
-#else
-			mux.WaitOne();
-#endif
 		}
 
-		/// <summary>
-		/// Releases the mutex.
-		/// </summary>
 		public void ReleaseMutex()
 		{
-#if MONO
-			bool needToRelease = false;
-			lock (this)
+			if(mux == null)
 			{
-				if (acquired != 0)
+				if(fs != null)
 				{
-					log.Debug("In ReleaseMutext() - Mutex is acquired");
-					if (Thread.CurrentThread.GetHashCode() == threadID)
-					{
-						// Release the mutex.
-						if (--acquired == 0)
-						{
-							log.Debug("NeedToRelease is true" );
-							needToRelease = true;
-						}
-					}
+					fs.Close();
+					fs = null;
 				}
 			}
-
-			if (needToRelease)
+			else
 			{
-				int error = flock(fd, (int)Operation.LOCK_UN);
-				if (error != Success)
-				{
-					lock (this)
-					{
-						log.Debug("Failed to release mutex");
-						++acquired;
-					}
-
-					// This thread does not own the mutex. Exception.
-					throw new ApplicationException("Failed To release mutex.");				}
-			}
-#else
-			mux.ReleaseMutex();
-#endif
-		}
-		#endregion
-
-		#region Disposable Methods
-		/// <summary>
-		/// Finalizer for the class.
-		/// </summary>
-		~SimiasMutex()
-		{
-			Dispose(true);
-		}
-
-		/// <summary>
-		/// Disposes of owned resources.
-		/// </summary>
-		/// <param name="inFinalizer">Set to true if this routine was called from the finalizer.</param>
-		private void Dispose(bool inFinalizer)
-		{
-			if (!disposed)
-			{
-				disposed = true;
-#if MONO
-				// We need to close the file
-                close(fd);
-				log.Debug("File handle closed");
-#endif
+				mux.ReleaseMutex();
 			}
 		}
-		#endregion
+
+		private string fixupPath(string name)
+		{
+			string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+			if (path == null || path.Length == 0)
+			{
+				path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			}
+
+			path = Path.Combine(path, "simias");
+			path = Path.Combine(path, "mutex");
+
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+
+			path = Path.Combine(path, name);
+
+			return path;
+		}
 	}
 }
-
