@@ -60,12 +60,12 @@ namespace Simias.POBox
 		/// <summary>
 		/// The type for an inbound message.
 		/// </summary>
-		public const string InboundMessage = "Inbound";
+		public static readonly string InboundMessage = "Inbound";
 
 		/// <summary>
 		/// The type for an outbound message.
 		/// </summary>
-		public const string OutboundMessage = "Outbound";
+		public static readonly string OutboundMessage = "Outbound";
 
 		/// <summary>
 		/// The name of the property storing the message type.
@@ -317,26 +317,13 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The identity of the recipient.</param>
-		public Message(string messageName, string messageType, string toIdentity) :
+		/// <param name="fromIdentity">The identity of the sender.</param>
+		public Message(string messageName, string messageType, string fromIdentity) :
 			base (messageName)
 		{
 			State = MessageState.New;
 			MessageType = messageType;
 			Properties.AddProperty(PropertyTags.Types, typeof(Message).Name);
-			ToIdentity = toIdentity;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Message object.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
-		/// <param name="fromIdentity">The sender's identity.</param>
-		public Message(string messageName, string messageType, string toIdentity, string fromIdentity) :
-			this (messageName, messageType, toIdentity)
-		{
 			FromIdentity = fromIdentity;
 		}
 
@@ -345,11 +332,24 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
+		public Message(string messageName, string messageType, string fromIdentity, string fromAddress) :
+			this (messageName, messageType, fromIdentity)
+		{
+			FromAddress = fromAddress;
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Message object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
 		/// <param name="toAddress">The recipient's address.</param>
-		public Message(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
-			this (messageName, messageType, toIdentity, fromIdentity)
+		public Message(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress) :
+			this (messageName, messageType, fromIdentity, fromAddress)
 		{
 			ToAddress = toAddress;
 		}
@@ -359,14 +359,14 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
-		/// <param name="toAddress">The recipient's address.</param>
 		/// <param name="fromAddress">The sender's address.</param>
-		public Message(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
-			this (messageName, messageType, toIdentity, fromIdentity, toAddress)
+		/// <param name="toAddress">The recipient's address.</param>
+		/// <param name="toIdentity">The recipient's identity.</param>
+		public Message(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
+			this (messageName, messageType, fromIdentity, fromAddress, toAddress)
 		{
-			FromAddress = fromAddress;
+			ToIdentity = toIdentity;
 		}
 		#endregion
 

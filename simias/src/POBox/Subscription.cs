@@ -189,9 +189,9 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The identity of the recipient.</param>
-		public Subscription(string messageName, string messageType, string toIdentity) :
-			base (messageName, messageType, toIdentity)
+		/// <param name="fromIdentity">The identity of the sender.</param>
+		public Subscription(string messageName, string messageType, string fromIdentity) :
+			base (messageName, messageType, fromIdentity)
 		{
 			SubscribeState = SubscriptionState.Invited;
 		}
@@ -201,39 +201,39 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
-		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity) :
-			base (messageName, messageType, toIdentity, fromIdentity)
-		{
-			SubscribeState = SubscriptionState.Invited;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Subscription object.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
-		/// <param name="fromIdentity">The sender's identity.</param>
-		/// <param name="toAddress">The recipient's address.</param>
-		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
-			base (messageName, messageType, toIdentity, fromIdentity, toAddress)
-		{
-			SubscribeState = SubscriptionState.Invited;
-		}
-
-		/// <summary>
-		/// Constructor for creating a new Subscription object.
-		/// </summary>
-		/// <param name="messageName">The friendly name of the message.</param>
-		/// <param name="messageType">The type of the message.</param>
-		/// <param name="toIdentity">The recipient's identity.</param>
-		/// <param name="fromIdentity">The sender's identity.</param>
-		/// <param name="toAddress">The recipient's address.</param>
 		/// <param name="fromAddress">The sender's address.</param>
-		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
-			base (messageName, messageType, toIdentity, fromIdentity, toAddress, fromAddress)
+		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress) :
+			base (messageName, messageType, fromIdentity, fromAddress)
+		{
+			SubscribeState = SubscriptionState.Invited;
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Subscription object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
+		/// <param name="toAddress">The recipient's address.</param>
+		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress) :
+			base (messageName, messageType, fromIdentity, fromAddress, toAddress)
+		{
+			SubscribeState = SubscriptionState.Invited;
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Subscription object.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the message.</param>
+		/// <param name="messageType">The type of the message.</param>
+		/// <param name="fromIdentity">The sender's identity.</param>
+		/// <param name="fromAddress">The sender's address.</param>
+		/// <param name="toAddress">The recipient's address.</param>
+		/// <param name="toIdentity">The recipient's identity.</param>
+		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
+			base (messageName, messageType, fromIdentity, fromAddress, toAddress, toIdentity)
 		{
 			SubscribeState = SubscriptionState.Invited;
 		}

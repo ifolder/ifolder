@@ -164,6 +164,26 @@ namespace Simias.POBox
 		{
 			return this.Search(Message.MessageTypeProperty, type, SearchOp.Equal);
 		}
+
+		/// <summary>
+		/// Creates a Subscription object for the specified collection.
+		/// </summary>
+		/// <param name="collection">The Collection object that will be shared.</param>
+		/// <param name="fromMember">The Member that is sharing the collection.</param>
+		/// <returns>A Subscription object.  This object must be added to the POBox using one of the AddMessage() methods.</returns>
+		public Subscription CreateSubscription(Collection collection, Member fromMember)
+		{
+			Subscription subscription = new Subscription("Subscription Message", Message.OutboundMessage, fromMember.UserID);
+
+			subscription.FromName = fromMember.Name;
+			subscription.SubscriptionCollectionId = collection.ID;
+			subscription.SubscriptionCollectionDomainId = collection.Domain;
+			subscription.SubscriptionCollectionDomainName = collection.StoreReference.GetDomain(collection.Domain).Name;
+
+			// TODO: fromAddress, toAddress, toName
+
+			return subscription;
+		}
 		#endregion
 	}
 }
