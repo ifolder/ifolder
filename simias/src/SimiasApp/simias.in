@@ -14,5 +14,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@libdir@
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@libdir@
 cd @bindir@
 
-mono ../web/bin/SimiasApp.exe --application /:../web --port 8086 $1 $2 $3 $4 $5 $6 $7 $8 $9
+mono ../web/bin/SimiasApp.exe --applications /:../web --port 8086 $1 $2 $3 $4 $5 $6 $7 $8 $9
 
