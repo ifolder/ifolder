@@ -704,7 +704,7 @@ namespace Simias.Sync
 									filesFromServer = workArray.DownCount;
 									queuedChanges = true;
 									ExecuteSync();
-									if (filesFromServer == 0 || filesFromServer == workArray.DownCount)
+									if (si.ChangesOnly && (filesFromServer == 0 || filesFromServer == workArray.DownCount))
 										break;
 								}
 							}
