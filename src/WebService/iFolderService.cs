@@ -1304,15 +1304,56 @@ namespace Novell.iFolder.Web
 		[WebMethod(Description="Connects to an iFolder Domain")]
 		[SoapRpcMethod]
 		public DomainWeb ConnectToDomain(	string UserName,
-										string Password,
-										string Host)
+											string Password,
+											string Host)
 		{
+			DomainWeb domain = null;
 			Simias.Configuration conf = Simias.Configuration.GetConfiguration();
 			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
 			string domainID = da.Attach(Host, UserName, Password);
-			DomainWeb domain = new DomainWeb(domainID);
+			domain = new DomainWeb(domainID);
 			domain.UserName = UserName;
 			return domain;
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that returns all of the Domains setup in
+		/// the store including the WorkGroup Domain
+		/// </summary>
+		/// <returns>
+		/// An Array of Domain objects
+		/// </returns>
+		[WebMethod(Description="Retuns all currently configured Domains")]
+		[SoapRpcMethod]
+		public DomainWeb[] GetDomains()
+		{
+			Console.WriteLine("GetDomains is called");
+			ArrayList list = new ArrayList();
+			try
+			{
+
+			Store store = Store.GetStore();
+			
+			LocalDatabase ldb = store.GetDatabaseObject();
+
+			ICSList domainList = ldb.FindType(NodeTypes.DomainType);
+
+			foreach( ShallowNode sn in domainList )
+			{
+				Console.WriteLine("Adding Domain {0}", sn.ID);
+				DomainWeb dw = new DomainWeb(sn.ID);
+				list.Add(dw);
+			}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+			}
+
+			return (DomainWeb[])list.ToArray(typeof(DomainWeb));
 		}
 
 

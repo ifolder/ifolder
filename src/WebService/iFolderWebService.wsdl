@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <definitions xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://novell.com/ifolder/web/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" name="iFolderWebService" targetNamespace="http://novell.com/ifolder/web/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
     <xs:schema xmlns:tns="http://novell.com/ifolder/web/encodedTypes" targetNamespace="http://novell.com/ifolder/web/encodedTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -93,6 +93,13 @@
           <xs:element minOccurs="1" maxOccurs="1" name="UserID" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="UserName" type="xs:string" />
         </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfDomainWeb">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:attribute ref="soapenc:arrayType" d7p1:arrayType="tns:DomainWeb[]" xmlns:d7p1="http://schemas.xmlsoap.org/wsdl/" />
+          </xs:restriction>
+        </xs:complexContent>
       </xs:complexType>
       <xs:complexType name="ArrayOfConflict">
         <xs:complexContent mixed="false">
@@ -217,6 +224,12 @@
         </xs:sequence>
       </xs:complexType>
       <xs:element name="DomainWeb" type="s0:DomainWeb" />
+      <xs:complexType name="ArrayOfDomainWeb">
+        <xs:sequence>
+          <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="DomainWeb" type="s0:DomainWeb" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfDomainWeb" type="s0:ArrayOfDomainWeb" />
       <xs:complexType name="ArrayOfConflict">
         <xs:sequence>
           <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded" name="Conflict" type="s0:Conflict" />
@@ -439,11 +452,15 @@
   <message name="ConnectToDomainSoapOut">
     <part name="ConnectToDomainResult" xmlns:q20="http://novell.com/ifolder/web/encodedTypes" type="q20:DomainWeb" />
   </message>
+  <message name="GetDomainsSoapIn" />
+  <message name="GetDomainsSoapOut">
+    <part name="GetDomainsResult" xmlns:q21="http://novell.com/ifolder/web/encodedTypes" type="q21:ArrayOfDomainWeb" />
+  </message>
   <message name="GetiFolderConflictsSoapIn">
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="GetiFolderConflictsSoapOut">
-    <part name="GetiFolderConflictsResult" xmlns:q21="http://novell.com/ifolder/web/encodedTypes" type="q21:ArrayOfConflict" />
+    <part name="GetiFolderConflictsResult" xmlns:q22="http://novell.com/ifolder/web/encodedTypes" type="q22:ArrayOfConflict" />
   </message>
   <message name="ResolveFileConflictSoapIn">
     <part name="iFolderID" type="s:string" />
@@ -468,7 +485,7 @@
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="CalculateSyncSizeSoapOut">
-    <part name="CalculateSyncSizeResult" xmlns:q22="http://novell.com/ifolder/web/encodedTypes" type="q22:SyncSize" />
+    <part name="CalculateSyncSizeResult" xmlns:q23="http://novell.com/ifolder/web/encodedTypes" type="q23:SyncSize" />
   </message>
   <message name="SynciFolderNowSoapIn">
     <part name="iFolderID" type="s:string" />
@@ -667,6 +684,10 @@
   </message>
   <message name="ConnectToDomainHttpGetOut">
     <part name="Body" element="s0:DomainWeb" />
+  </message>
+  <message name="GetDomainsHttpGetIn" />
+  <message name="GetDomainsHttpGetOut">
+    <part name="Body" element="s0:ArrayOfDomainWeb" />
   </message>
   <message name="GetiFolderConflictsHttpGetIn">
     <part name="iFolderID" type="s:string" />
@@ -897,6 +918,10 @@
   <message name="ConnectToDomainHttpPostOut">
     <part name="Body" element="s0:DomainWeb" />
   </message>
+  <message name="GetDomainsHttpPostIn" />
+  <message name="GetDomainsHttpPostOut">
+    <part name="Body" element="s0:ArrayOfDomainWeb" />
+  </message>
   <message name="GetiFolderConflictsHttpPostIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -1107,6 +1132,11 @@
       <input message="s0:ConnectToDomainSoapIn" />
       <output message="s0:ConnectToDomainSoapOut" />
       <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsSoapIn" />
+      <output message="s0:GetDomainsSoapOut" />
+      <documentation>Retuns all currently configured Domains</documentation>
     </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsSoapIn" />
@@ -1320,6 +1350,11 @@
       <output message="s0:ConnectToDomainHttpGetOut" />
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsHttpGetIn" />
+      <output message="s0:GetDomainsHttpGetOut" />
+      <documentation>Retuns all currently configured Domains</documentation>
+    </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsHttpGetIn" />
       <output message="s0:GetiFolderConflictsHttpGetOut" />
@@ -1531,6 +1566,11 @@
       <input message="s0:ConnectToDomainHttpPostIn" />
       <output message="s0:ConnectToDomainHttpPostOut" />
       <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
+    <operation name="GetDomains">
+      <input message="s0:GetDomainsHttpPostIn" />
+      <output message="s0:GetDomainsHttpPostOut" />
+      <documentation>Retuns all currently configured Domains</documentation>
     </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsHttpPostIn" />
@@ -1878,6 +1918,15 @@
     </operation>
     <operation name="ConnectToDomain">
       <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToDomain" style="rpc" />
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </output>
+    </operation>
+    <operation name="GetDomains">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDomains" style="rpc" />
       <input>
         <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
@@ -2244,6 +2293,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetDomains">
+      <http:operation location="/GetDomains" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderConflicts">
       <http:operation location="/GetiFolderConflicts" />
       <input>
@@ -2593,6 +2651,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetDomains">
+      <http:operation location="/GetDomains" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderConflicts">
       <http:operation location="/GetiFolderConflicts" />
       <input>
@@ -2649,13 +2716,13 @@
   </binding>
   <service name="iFolderWebService">
     <port name="iFolderWebServiceSoap" binding="s0:iFolderWebServiceSoap">
-      <soap:address location="http://localhost:45215/simias10/bgetter/iFolder.asmx" />
+      <soap:address location="http://127.0.0.1:8086/simias10/iFolder.asmx" />
     </port>
     <port name="iFolderWebServiceHttpGet" binding="s0:iFolderWebServiceHttpGet">
-      <http:address location="http://localhost:45215/simias10/bgetter/iFolder.asmx" />
+      <http:address location="http://127.0.0.1:8086/simias10/iFolder.asmx" />
     </port>
     <port name="iFolderWebServiceHttpPost" binding="s0:iFolderWebServiceHttpPost">
-      <http:address location="http://localhost:45215/simias10/bgetter/iFolder.asmx" />
+      <http:address location="http://127.0.0.1:8086/simias10/iFolder.asmx" />
     </port>
     <documentation>Web Service providing access to iFolder</documentation>
   </service>
