@@ -7,36 +7,18 @@ clean-local: ndoc-clean
 ifolder-install:
 	$(MAKE) -C .. install
 
-ASSEMBLIES = iFolder
-
 if NDOC
 
 ndoc: ifolder-install ndoc-nodeps
 
 ndoc-nodeps:
-	rm -rf ndoc
-	@echo "$(NDOC_CMD) ... -documenter=MSDN -Title=iFolder -OutputDirectory=ndoc"
+	rm -rf ifolder-ndoc
 if WINDOWS
-	@ifolder_dir=`cd .. && pwd`; \
-	cd $(bindir); \
-	for asmbly in $(ASSEMBLIES); do \
-		doc_xml=`cygpath --windows "$$ifolder_dir/src/$$asmbly/$$asmbly.doc.xml"`; \
-		asmbly=`cygpath --windows "$(bindir)/$$asmbly.dll"`; \
-		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
-	done; \
-	output_dir=`cygpath --windows "$$ifolder_dir/doc/ndoc"`; \
-	"$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
+	"$(NDOC_CMD)" `cygpath --windows "$(bindir)/Novell.iFolder.dll"`,`cygpath --windows "../src/iFolder/Novell.iFolder.doc.xml"` -documenter=MSDN -Title=iFolder -OutputDirectory=ifolder-ndoc
 else # NOT WINDOWS
-	@ifolder_dir=`cd .. && pwd`; \
-	cd $(bindir); \
-	for asmbly in $(ASSEMBLIES); do \
-		doc_xml="$$ifolder_dir/src/$$asmbly/$$asmbly.doc.xml"; \
-		asmbly="$(bindir)/$$asmbly.dll"; \
-		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
-	done; \
-	output_dir="$$ifolder_dir/doc/ndoc"; \
-	$(MONO) "$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
+	"$(NDOC_CMD)" "$(bindir)/Novell.iFolder.dll","../src/iFolder/Novell.iFolder.doc.xml" -documenter=MSDN -Title=iFolder -OutputDirectory=ifolder-ndoc
 endif # WINDOWS
+	tar -czf ifolder-ndoc.tar.gz ifolder-ndoc
 
 else # NDOC
 
@@ -46,7 +28,7 @@ ndoc:
 endif # NDOC
 
 clean-local:
-	rm -rf ndoc
+	rm -rf ifolder-ndoc ifolder-ndoc.tar.gz
 
 maintainer-clean-local:
 	rm -f Makefile.in

@@ -1,7 +1,7 @@
 .PHONY: addressbook-install ndoc ndoc-nodeps ndoc-clean
 
 all:
-	@echo There are currently no APIs to document for Address Book
+	@echo "Novell.AddressBook APIs are currently in Simias, but will move here shortly"
 
 #all: ndoc
 
@@ -10,36 +10,18 @@ all:
 addressbook-install:
 	$(MAKE) -C .. install
 
-ASSEMBLIES = FormsBookLib
-
 if NDOC
 
 ndoc: addressbook-install ndoc-nodeps
 
 ndoc-nodeps:
-	rm -rf ndoc
-	@echo "$(NDOC_CMD) ... -documenter=MSDN -Title=\"Address Book\" -OutputDirectory=ndoc"
+	rm -rf addressbook-ndoc
 if WINDOWS
-	@addressbook_dir=`cd .. && pwd`; \
-	cd $(bindir); \
-	for asmbly in $(ASSEMBLIES); do \
-		doc_xml=`cygpath --windows "$$addressbook_dir/src/$$asmbly/$$asmbly.doc.xml"`; \
-		asmbly=`cygpath --windows "$(bindir)/$$asmbly.dll"`; \
-		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
-	done; \
-	output_dir=`cygpath --windows "$$addressbook_dir/doc/ndoc"`; \
-	"$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title="Address Book" -OutputDirectory=$$output_dir
+	"$(NDOC_CMD)" `cygpath --windows "$(bindir)/Novell.Addressbook.dll"`,`cygpath --windows "../src/Addressbook/Novell.Addressbook.doc.xml"` -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
 else # NOT WINDOWS
-	@addressbook_dir=`cd .. && pwd`; \
-	cd $(bindir); \
-	for asmbly in $(ASSEMBLIES); do \
-		doc_xml="$$addressbook_dir/src/$$asmbly/$$asmbly.doc.xml"; \
-		asmbly="$(bindir)/$$asmbly.dll"; \
-		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
-	done; \
-	output_dir="$$addressbook_dir/doc/ndoc"; \
-	$(MONO) "$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title="Address Book" -OutputDirectory=$$output_dir
+	"$(NDOC_CMD)" "$(bindir)/Novell.Addressbook.dll","../src/Addressbook/Novell.Addressbook.doc.xml" -documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
 endif # WINDOWS
+	tar -czf addressbook-ndoc.tar.gz addressbook-ndoc
 
 else # NDOC
 
@@ -49,7 +31,7 @@ ndoc:
 endif # NDOC
 
 clean-local:
-	rm -rf ndoc
+	rm -rf addressbook-ndoc addressbook-ndoc.tar.gz
 
 maintainer-clean-local:
 	rm -f Makefile.in
