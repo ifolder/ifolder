@@ -1514,7 +1514,7 @@ namespace Novell.iFolderCom
 						lvi.Tag = slMember;
 						updateListViewItem(lvi);
 					}
-					else
+					else if (eventData.Equals("NodeCreated"))
 					{
 						addiFolderUserToListView(ifolderUser);
 					}
@@ -1529,7 +1529,20 @@ namespace Novell.iFolderCom
 						{
 							// Remove the listview item.
 							lvi.Remove();
+
+							// Remove the item from the hashtables.
 							subscrHT.Remove(eventData);
+
+							lock (userIDHT)
+							{
+								// If a listview item corresponding to the node ID exists, don't remove the
+								// item from the userID hashtable.
+								ListViewItem lvitem = (ListViewItem)userIDHT[((ShareListMember)lvi.Tag).iFolderUser.UserID];
+								if ((lvitem != null) && (subscrHT[((ShareListMember)lvitem.Tag).iFolderUser.ID] == null))
+								{							
+									userIDHT.Remove(((ShareListMember)lvi.Tag).iFolderUser.UserID);
+								}
+							}
 						}
 					}
 				}
@@ -1568,44 +1581,80 @@ namespace Novell.iFolderCom
 				lvitem = (ListViewItem)subscrHT[ifolderUser.ID];
 				if (lvitem == null)
 				{
-					ShareListMember slMember = new ShareListMember();
-					slMember.iFolderUser = ifolderUser;
+					bool addItem = true;
 
-					string[] items = new string[3];
-
-					items[0] = ifolderUser.Name;
-					items[1] = stateToString(ifolderUser.State, ifolderUser.UserID);
-					int imageIndex = 1;
-					items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
-
-					if ((currentUser != null) && currentUser.UserID.Equals(ifolderUser.UserID))
+					// See if the user is already in the list (this will happen if the current user
+					// invited a user and another user invited the same user).
+					ListViewItem lvi;
+					lock (userIDHT)
 					{
-						imageIndex = 0;
+						lvi = (ListViewItem)userIDHT[ifolderUser.UserID];
 					}
-					else if ((ifolderUser.State != null) && !ifolderUser.State.Equals(member))
+					if (lvi != null)
 					{
-						imageIndex = 2;
-					}
+						// The item is already in the list ... if this is a subscribtion then delete it.
+						if (!ifolderUser.State.Equals(member))
+						{
+							addItem = false;
 
-					lvitem = new ListViewItem(items, imageIndex);
+							try
+							{
+								connectToWebService();
 
-					if (ifolderUser.State.Equals(inviting))
-					{
-						// This is a newly added user.
-						slMember.Added = true;
-					}
-					else
-					{
-						// Add the listviewitem to the hashtable so we can quickly find it.
-						// Only add it if it's not a newly added user.
-						subscrHT.Add(slMember.iFolderUser.ID, lvitem);
+								// Delete the subscription.
+								ifWebService.RemoveiFolderUser(currentiFolder.ID, ifolderUser.UserID);
+							}
+							catch
+							{
+								// Ignore.
+							}
+						}
 					}
 
-					lvitem.Tag = slMember;
-					shareWith.Items.Add(lvitem);
+					if (addItem)
+					{
+						ShareListMember slMember = new ShareListMember();
+						slMember.iFolderUser = ifolderUser;
 
-					// Add the user to the UserID hashtable.
-					userIDHT.Add(slMember.iFolderUser.UserID, lvitem);
+						string[] items = new string[3];
+
+						items[0] = ifolderUser.Name;
+						items[1] = stateToString(ifolderUser.State, ifolderUser.IsOwner);
+						int imageIndex = 1;
+						items[2] = rightsToString(ifolderUser.Rights/*, out imageIndex*/);
+
+						if ((currentUser != null) && currentUser.UserID.Equals(ifolderUser.UserID))
+						{
+							imageIndex = 0;
+						}
+						else if ((ifolderUser.State != null) && !ifolderUser.State.Equals(member))
+						{
+							imageIndex = 2;
+						}
+
+						lvitem = new ListViewItem(items, imageIndex);
+
+						if (ifolderUser.State.Equals(inviting))
+						{
+							// This is a newly added user.
+							slMember.Added = true;
+						}
+						else
+						{
+							// Add the listviewitem to the hashtable so we can quickly find it.
+							// Only add it if it's not a newly added user.
+							subscrHT.Add(slMember.iFolderUser.ID, lvitem);
+						}
+
+						lvitem.Tag = slMember;
+						shareWith.Items.Add(lvitem);
+
+						// Add/update the user to the UserID hashtable.
+						lock (userIDHT)
+						{
+							userIDHT[slMember.iFolderUser.UserID] = lvitem;
+						}
+					}
 				}
 			}
 
@@ -1720,7 +1769,10 @@ namespace Novell.iFolderCom
 					subscrHT.Clear();
 				}
 
-				userIDHT.Clear();
+				lock (userIDHT)
+				{
+					userIDHT.Clear();
+				}
 
 				// Load the member list.
 				connectToWebService();
@@ -1801,7 +1853,7 @@ namespace Novell.iFolderCom
 			return rightsString;
 		}
 
-		private string stateToString(string state, string userID)
+		private string stateToString(string state, bool isOwner)
 		{
 			string stateString;
 
@@ -1815,7 +1867,7 @@ namespace Novell.iFolderCom
 					stateString = resourceManager.GetString(state);
 					break;
 				case member:
-					stateString = userID.Equals(currentiFolder.OwnerID) ? resourceManager.GetString("owner") : "";
+					stateString = isOwner ? resourceManager.GetString("owner") : "";
 					break;
 				default:
 					stateString = resourceManager.GetString("unknown");
@@ -2070,7 +2122,7 @@ namespace Novell.iFolderCom
 					if (slMember.iFolderUser.State.Equals(member))
 					{
 						//lvi.ImageIndex = imageIndex;
-						lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.UserID);
+						lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.IsOwner);
 					}
 				}
 			}
@@ -2080,6 +2132,10 @@ namespace Novell.iFolderCom
 		private void updateListViewItem(ListViewItem lvi)
 		{
 			ShareListMember slMember = (ShareListMember)lvi.Tag;
+
+			lvi.SubItems[0].Text = slMember.iFolderUser.Name;
+			lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.IsOwner);
+			lvi.SubItems[2].Text = rightsToString(slMember.iFolderUser.Rights);
 
 			if (slMember.iFolderUser.UserID.Equals(currentUser.UserID))
 			{
@@ -2097,18 +2153,20 @@ namespace Novell.iFolderCom
 				menuFullControl.Enabled = menuReadWrite.Enabled = menuReadOnly.Enabled = 
 					menuFullControl.Enabled ? add.Enabled : false;
 
-				// Update the disk space restriction controls (in case the current user's ownership has changed).
-//				setLimit.Visible = limitEdit.Visible = currentUser.UserID.Equals(currentiFolder.OwnerID);
-//				limitLabel.Visible = limit.Visible = !setLimit.Visible;
+				if (slMember.iFolderUser.IsOwner && !ownerLvi.Equals(lvi))
+				{
+					// Update the disk space restriction controls.
+					setLimit.Visible = limitEdit.Visible = true;
+					limitLabel.Visible = limit.Visible = false;
+
+					ownerLvi.SubItems[1].Text = "";
+					ownerLvi = lvi;
+				}
 			}
 			else
 			{
 				lvi.ImageIndex = slMember.iFolderUser.State.Equals(member) ? 1 : 2;
 			}
-
-			lvi.SubItems[0].Text = slMember.iFolderUser.Name;
-			lvi.SubItems[1].Text = stateToString(slMember.iFolderUser.State, slMember.iFolderUser.UserID);
-			lvi.SubItems[2].Text = rightsToString(slMember.iFolderUser.Rights);
 		}
 
 		private void eventThreadProc()
@@ -2422,7 +2480,13 @@ namespace Novell.iFolderCom
 				{
 					iFolderUser user = (iFolderUser)((ListViewItem)lvi.Tag).Tag;
 
-					if (userIDHT[user.UserID] == null)
+					ListViewItem lvitem;
+					lock (userIDHT)
+					{
+						lvitem = (ListViewItem)userIDHT[user.UserID];
+					}
+
+					if (lvitem == null)
 					{
 						user.Rights = "ReadWrite";
 						user.State = inviting;
@@ -2452,15 +2516,21 @@ namespace Novell.iFolderCom
 						}
 						else
 						{
-							lvi = (ListViewItem)userIDHT[ifUser.UserID];
-							if (lvi != null)
+							lock (userIDHT)
 							{
-								lvi.Remove();
+								lvi = (ListViewItem)userIDHT[ifUser.UserID];
+								if (lvi != null)
+								{
+									lvi.Remove();
+								}
 							}
 						}
 					}
 
-					userIDHT.Remove(ifUser.UserID);
+					lock (userIDHT)
+					{
+						userIDHT.Remove(ifUser.UserID);
+					}
 				}
 
 				Cursor.Current = Cursors.Default;
@@ -2612,7 +2682,10 @@ namespace Novell.iFolderCom
 							subscrHT.Remove(slMember.iFolderUser.ID);
 						}
 
-						userIDHT.Remove(slMember.iFolderUser.UserID);
+						lock (userIDHT)
+						{
+							userIDHT.Remove(slMember.iFolderUser.UserID);
+						}
 
 						// Enable the apply button.
 						apply.Enabled = true;

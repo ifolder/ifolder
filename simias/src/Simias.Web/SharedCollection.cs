@@ -713,50 +713,48 @@ namespace Simias.Web
 			if(col == null)
 				throw new Exception("Invalid CollectionID");
 
-			Simias.Storage.Member member = col.GetMemberByID(UserID);
-			if(member != null)
+			// try to find a subscription with this ID
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
+																   col.Domain);
+
+			if(poBox == null)
 			{
-				if(member.IsOwner)
-					throw new Exception("UserID is the iFolder owner");
+				throw new Exception("Unable to access POBox");
+			}
 
-				col.Delete(member);
-				col.Commit(member);
 
-				// even if the member is null, try to clean up the subscription
-				RemoveMemberSubscription(	store, 
-											col,
-											UserID);
+			ICSList poList = poBox.Search(
+					Subscription.ToIdentityProperty,
+					UserID,
+					SearchOp.Equal);
+
+			Subscription sub = null;
+			foreach(ShallowNode sNode in poList)
+			{
+				sub = new Subscription(poBox, sNode);
+				break;
+			}
+
+			if (sub != null)
+			{
+				poBox.Commit(poBox.Delete(sub));
 			}
 			else
 			{
-				// try to find a subscription with this ID
-				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
-									col.Domain);
-
-				if(poBox == null)
+				Simias.Storage.Member member = col.GetMemberByID(UserID);
+				if(member != null)
 				{
-					throw new Exception("Unable to access POBox");
+					if(member.IsOwner)
+						throw new Exception("UserID is the iFolder owner");
+
+					col.Delete(member);
+					col.Commit(member);
+
+					// even if the member is null, try to clean up the subscription
+					RemoveMemberSubscription(	store, 
+												col,
+												UserID);
 				}
-
-
-				ICSList poList = poBox.Search(
-						Subscription.ToIdentityProperty,
-						UserID,
-						SearchOp.Equal);
-
-				Subscription sub = null;
-				foreach(ShallowNode sNode in poList)
-				{
-					sub = new Subscription(poBox, sNode);
-					break;
-				}
-
-				if (sub == null)
-				{
-					throw new Exception("Invalid UserID");
-				}
-
-				poBox.Commit(poBox.Delete(sub));
 			}
 		}
 
