@@ -1116,7 +1116,7 @@ namespace Novell.iFolder.Web
 		/// <returns>The number of nodes that need to be sync'd.</returns>
 		[WebMethod(Description="Calculates the number of nodes and bytes that need to be sync'd.")]
 		[SoapDocumentMethod]
-		public uint CalculateSyncSize(string iFolderID, out ulong SyncByteCount)
+		public SyncSize CalculateSyncSize(string iFolderID)
 		{
 			Collection col = Store.GetStore().GetCollectionByID(iFolderID);
 			if (col == null)
@@ -1125,9 +1125,10 @@ namespace Novell.iFolder.Web
 			}
 
 			uint SyncNodeCount;
+			ulong SyncByteCount;
 			SharedCollection.CalculateSendSize(col, out SyncNodeCount, out SyncByteCount);
 			
-			return SyncNodeCount;
+			return new SyncSize(SyncNodeCount, SyncByteCount);
 		}
 	}
 }

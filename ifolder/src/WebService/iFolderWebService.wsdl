@@ -529,11 +529,16 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:complexType name="SyncSize">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="SyncNodeCount" type="xs:unsignedInt" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SyncByteCount" type="xs:unsignedLong" />
+        </xs:sequence>
+      </xs:complexType>
       <xs:element name="CalculateSyncSizeResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="SyncNodeCount" type="xs:unsignedInt" />
-            <xs:element minOccurs="1" maxOccurs="1" name="SyncByteCount" type="xs:unsignedLong" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CalculateSyncSizeResult" type="s0:SyncSize" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -965,11 +970,10 @@
   <message name="RemoveProxyHttpGetIn" />
   <message name="RemoveProxyHttpGetOut" />
   <message name="CalculateSyncSizeHttpGetIn">
-    <part name="iFolderID" type="s:string" />
+    <part name="iFolderIDHost" type="s:string" />
   </message>
   <message name="CalculateSyncSizeHttpGetOut">
-    <part name="SyncNodeCount" type="s:uint" />
-    <part name="SyncByteCount" type="s:ulong" />
+    <part name="Body" element="s0:SyncSize" />
   </message>
   <message name="PingHttpPostIn" />
   <message name="PingHttpPostOut" />
@@ -1166,11 +1170,10 @@
   <message name="RemoveProxyHttpPostIn" />
   <message name="RemoveProxyHttpPostOut" />
   <message name="CalculateSyncSizeHttpPostIn">
-    <part name="iFolderID" type="s:string" />
+    <part name="iFolderIDHost" type="s:string" />
   </message>
   <message name="CalculateSyncSizeHttpPostOut">
-    <part name="SyncNodeCount" type="s:uint" />
-    <part name="SyncByteCount" type="s:ulong" />
+    <part name="Body" element="s0:SyncSize" />
   </message>
   <portType name="iFolder Web ServiceSoap">
     <operation name="Ping">
@@ -1356,7 +1359,7 @@
     <operation name="CalculateSyncSize">
       <input message="s0:CalculateSyncSizeSoapIn" />
       <output message="s0:CalculateSyncSizeSoapOut" />
-      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
+      <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
     </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpGet">
@@ -1543,7 +1546,7 @@
     <operation name="CalculateSyncSize">
       <input message="s0:CalculateSyncSizeHttpGetIn" />
       <output message="s0:CalculateSyncSizeHttpGetOut" />
-      <documentation>Calculates the number of nodes and bytes that need to be sync'd</documentation>
+      <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
     </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpPost">
@@ -1730,7 +1733,7 @@
     <operation name="CalculateSyncSize">
       <input message="s0:CalculateSyncSizeHttpPostIn" />
       <output message="s0:CalculateSyncSizeHttpPostOut" />
-      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
+      <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
     </operation>
   </portType>
   <binding name="iFolder Web ServiceSoap" type="s0:iFolder Web ServiceSoap">

@@ -1782,10 +1782,11 @@ namespace Novell.FormsTrayApp
 					// Get the sync node and byte counts.
 					iFolder ifolder = (iFolder)lvi.Tag;
 
-					ulong syncByteCount;;
-					uint syncNodeCount = ifWebService.CalculateSyncSize(ifolder.ID, out syncByteCount);
-					objectCount.Text = syncNodeCount.ToString();
-					byteCount.Text = syncByteCount.ToString();
+					//ulong syncByteCount;;
+					//uint syncNodeCount = ifWebService.CalculateSyncSize(ifolder.ID, out syncByteCount);
+					SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
+					objectCount.Text = syncSize.SyncNodeCount.ToString();
+					byteCount.Text = syncSize.SyncByteCount.ToString();
 				}
 				catch (WebException ex)
 				{
