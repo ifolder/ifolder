@@ -29,7 +29,7 @@ CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_
 
 INSTALL_FILES = $(srcdir)/ifolder $(srcdir)/setup-autostart
 
-DATA_FILES = ifolder.glade folder.png ifolder.png ifolderfolder.png invitewiz.png leafnode.png node.png file.xpm ifolder.gif property.png libegg.so egg-sharp.dll
+DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/libegg.so $(srcdir)/egg-sharp.dll
 
 EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_FILES)
 
@@ -49,7 +49,7 @@ install-exec-local: iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(
 	$(INSTALL_PROGRAM) iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES) $(INSTALL_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES) $(notdir $(INSTALL_FILES))
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(notdir $(DATA_FILES)) $(notdir $(INSTALL_FILES))
     
 installcheck-local: install
 	

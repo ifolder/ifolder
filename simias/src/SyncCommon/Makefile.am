@@ -7,7 +7,7 @@ SyncCommon_INCLUDES =
 SyncCommon_RESOURCES =
 SyncCommon_FLAGS = $(CSC_LIBFLAG)
 SyncCommon_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Common.dll System.Runtime.Remoting.dll Agent.dll
-SyncCommon_LIBPATH = Library ../Configuration ../StoreProvider ../Common ../CollectionEvents ../CollectionStore  ../../external/SecureChannelSinks ../Common ../Agent
+SyncCommon_LIBPATH = Library ../Configuration ../StoreProvider ../Common ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../Common ../Agent
 
 NUNIT_TESTS := SyncCommonTests.dll
 

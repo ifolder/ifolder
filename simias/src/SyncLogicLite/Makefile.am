@@ -7,7 +7,7 @@ SyncLogicLite_INCLUDES =
 SyncLogicLite_RESOURCES =
 SyncLogicLite_FLAGS = $(CSC_LIBFLAG)
 SyncLogicLite_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll
-SyncLogicLite_LIBPATH = Library ../Common ../SyncCommon ../StoreProvider ../CollectionStore  ../../external/SecureChannelSinks ../Configuration ../CollectionEvents ../Agent
+SyncLogicLite_LIBPATH = Library ../Common ../SyncCommon ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../Configuration ../CollectionEvents ../Agent
 
 NUNIT_TESTS := SyncLogicLiteTests.dll
 

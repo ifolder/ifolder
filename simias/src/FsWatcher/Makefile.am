@@ -7,7 +7,7 @@ FsWatcher_INCLUDES =
 FsWatcher_RESOURCES =
 FsWatcher_FLAGS = $(CSC_EXEFLAG) $(ICON_FLAG)$(srcdir)/App$(ICON_EXT)
 FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll UserService.dll
-FsWatcher_LIBPATH = ../Configuration ../Common ../StoreProvider ../CollectionStore  ../../external/SecureChannelSinks ../CollectionEvents ../UserService
+FsWatcher_LIBPATH = ../Configuration ../Common ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../UserService
 
 NUNIT_TESTS :=
 
