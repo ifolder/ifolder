@@ -2082,6 +2082,29 @@ namespace Novell.iFolder
 						iFolderHolder ifHolder = 
 							(iFolderHolder) iFolderTreeStore.GetValue(iter,0);
 						ifHolder.IsSyncing = true;
+
+						// This is kind of a hack
+						// Sometimes, iFolders will be in the list but
+						// they don't have the path.  Check for the path
+						// here and if it is missing, re-read the ifolder
+						// 'cause we'll have the path at this poing
+						if( (ifHolder.iFolder.UnManagedPath == null) ||
+								(ifHolder.iFolder.UnManagedPath.Length == 0) )
+						{
+							iFolder updatediFolder;
+
+							try
+							{
+								updatediFolder = iFolderWS.GetiFolder(
+									args.ID);
+							}
+							catch(Exception e)
+							{
+								updatediFolder = null;
+							}
+							if(updatediFolder != null)
+								ifHolder.iFolder = updatediFolder;
+						}
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 
 						LogMessage(string.Format(Util.GS(
@@ -2098,19 +2121,43 @@ namespace Novell.iFolder
 					if(SyncBar != null)
 						SyncBar.Hide();
 
+					if(curiFolders.ContainsKey(args.ID))
+					{
+						TreeIter iter = (TreeIter)curiFolders[args.ID];
+						iFolderHolder ifHolder = (iFolderHolder) 
+								iFolderTreeStore.GetValue(iter,0);
+						ifHolder.IsSyncing = false;
+						ifHolder.SyncSuccessful = args.Successful;
+
+						// This is kind of a hack
+						// Sometimes, iFolders will come through that
+						// don't have members so we need to update them
+						// to have the members
+						if( (ifHolder.iFolder.CurrentUserID == null) ||
+								(ifHolder.iFolder.CurrentUserID.Length == 0) )
+						{
+							iFolder updatediFolder;
+							try
+							{
+								updatediFolder = iFolderWS.GetiFolder(
+									args.ID);
+							}
+							catch(Exception e)
+							{
+								updatediFolder = null;
+							}
+							if(updatediFolder != null)
+								ifHolder.iFolder = updatediFolder;
+						}
+						iFolderTreeStore.SetValue(iter, 0, ifHolder);
+					}
+
 					if(args.Successful)
 					{
 						UpdateStatus(Util.GS("Idle..."));
 
 						if(curiFolders.ContainsKey(args.ID))
 						{
-							TreeIter iter = (TreeIter)curiFolders[args.ID];
-							iFolderHolder ifHolder = (iFolderHolder) 
-									iFolderTreeStore.GetValue(iter,0);
-							ifHolder.IsSyncing = false;
-							ifHolder.SyncSuccessful = true;
-							iFolderTreeStore.SetValue(iter, 0, ifHolder);
-
 							LogMessage(string.Format(Util.GS(
 								"Finshed sync of iFolder {0}"), args.Name));
 						}
@@ -2124,13 +2171,6 @@ namespace Novell.iFolder
 
 						if(curiFolders.ContainsKey(args.ID))
 						{
-							TreeIter iter = (TreeIter)curiFolders[args.ID];
-							iFolderHolder ifHolder = (iFolderHolder) 
-									iFolderTreeStore.GetValue(iter,0);
-							ifHolder.IsSyncing = false;
-							ifHolder.SyncSuccessful = false;
-							iFolderTreeStore.SetValue(iter, 0, ifHolder);
-
 							LogMessage(string.Format(Util.GS(
 								"Failed sync of iFolder {0}"), args.Name));
 						}
@@ -2184,7 +2224,6 @@ namespace Novell.iFolder
 				{
 					SyncBar.Show();
 					SyncBar.Fraction = 0;
-					Console.WriteLine("Show fraction 0");
 				}
 				else
 					SyncBar.Hide();
