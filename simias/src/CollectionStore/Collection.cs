@@ -1003,7 +1003,6 @@ namespace Simias.Storage
 		/// Gets a new copy of the Collection object data from the database. All changed Collection object data
 		/// will be lost.
 		/// </summary>
-		/// <param name="node">Node object to refresh.</param>
 		public void Refresh()
 		{
 			Refresh( this );
