@@ -64,6 +64,7 @@ namespace Novell.iFolder
 		private Gtk.MenuItem		ShareMenuItem;
 		private ImageMenuItem		OpenMenuItem;
 		private Gtk.MenuItem		ConflictMenuItem;
+		private Gtk.MenuItem		SyncNowMenuItem;
 		private ImageMenuItem		RevertMenuItem;
 		private ImageMenuItem		PropMenuItem;
 		private ImageMenuItem		CloseMenuItem;
@@ -244,6 +245,7 @@ namespace Novell.iFolder
 			CreateMenuItem.Sensitive = true;
 			ShareMenuItem.Sensitive = false;
 			OpenMenuItem.Sensitive = false;
+			SyncNowMenuItem.Sensitive = false;
 			ConflictMenuItem.Sensitive = false;
 			RevertMenuItem.Sensitive = false;
 			PropMenuItem.Sensitive = false;;
@@ -317,11 +319,15 @@ namespace Novell.iFolder
 			iFolderMenu.Append(ShareMenuItem);
 			ShareMenuItem.Activated += new EventHandler(OnShareProperties);
 
-			ConflictMenuItem = new MenuItem ("Re_solve Conflicts");
+			ConflictMenuItem = new MenuItem ("Re_solve conflicts");
 			iFolderMenu.Append(ConflictMenuItem);
 			ConflictMenuItem.Activated += new EventHandler(OnResolveConflicts);
 
-			RevertMenuItem = new ImageMenuItem ("Re_vert");
+			SyncNowMenuItem = new MenuItem("Sync _now");
+			iFolderMenu.Append(SyncNowMenuItem);
+			SyncNowMenuItem.Activated += new EventHandler(OnSyncNow);
+
+			RevertMenuItem = new ImageMenuItem ("Re_vert to a normal folder");
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(OnRevertiFolder);
@@ -419,21 +425,9 @@ namespace Novell.iFolder
 			ifolderColumn.PackStart(ifcrt, false);
 			ifolderColumn.SetCellDataFunc(ifcrt, new TreeCellDataFunc(
 						iFolderCellTextDataFunc));
-			ifolderColumn.Title = "iFolders";
+			ifolderColumn.Title = "Name";
 			ifolderColumn.Resizable = true;
 			iFolderTreeView.AppendColumn(ifolderColumn);
-
-
-			// Setup Text Rendering for "Status" column
-			CellRendererText statusTR = new CellRendererText();
-			statusTR.Xpad = 10;
-			TreeViewColumn statusColumn = new TreeViewColumn();
-			statusColumn.PackStart(statusTR, false);
-			statusColumn.SetCellDataFunc(statusTR, new TreeCellDataFunc(
-						iFolderStatusCellTextDataFunc));
-			statusColumn.Title = "Status";
-			statusColumn.Resizable = true;
-			iFolderTreeView.AppendColumn(statusColumn);
 
 
 			// Setup Text Rendering for "Location" column
@@ -445,7 +439,22 @@ namespace Novell.iFolder
 						iFolderLocationCellTextDataFunc));
 			locColumn.Title = "Location";
 			locColumn.Resizable = true;
+			locColumn.MinWidth = 250;
 			iFolderTreeView.AppendColumn(locColumn);
+
+
+			// Setup Text Rendering for "Status" column
+			CellRendererText statusTR = new CellRendererText();
+			statusTR.Xpad = 10;
+			TreeViewColumn statusColumn = new TreeViewColumn();
+			statusColumn.PackStart(statusTR, false);
+			statusColumn.SetCellDataFunc(statusTR, new TreeCellDataFunc(
+						iFolderStatusCellTextDataFunc));
+			statusColumn.Title = "Status";
+			statusColumn.Resizable = false;
+			iFolderTreeView.AppendColumn(statusColumn);
+
+
 
 
 			iFolderTreeView.Selection.Changed += new EventHandler(
@@ -471,11 +480,11 @@ namespace Novell.iFolder
 			// so they will line up to the right and be the same
 			// widgth
 			HBox leftHBox = new HBox(true, 10);
-			Button add_button = new Button(Gtk.Stock.Add);
+			Button create_button = new Button(" _Create ");
 
-			add_button.Clicked += new EventHandler(OnCreateiFolder);
+			create_button.Clicked += new EventHandler(OnCreateiFolder);
 			
-			leftHBox.PackEnd(add_button);
+			leftHBox.PackEnd(create_button);
 			hbox.PackEnd(leftHBox, false, false, 0);
 			vbox.PackStart(hbox, false, false, 0);
 		
@@ -528,7 +537,7 @@ namespace Novell.iFolder
 			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
-				new CheckButton("Show creation dialog when creating iFolders");
+				new CheckButton("Show confirmation dialog when creating iFolders");
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
@@ -630,6 +639,14 @@ namespace Novell.iFolder
 					new EventHandler(OnProxySettingsChanged);
 			pSettingBox.PackStart(ProxyPortSpinButton, false, true, 0);
 
+
+			// Disable all proxy stuff right now
+			proxySectionLabel.Sensitive = false;
+			UseProxyButton.Sensitive = false;
+			ProxyHostLabel.Sensitive = false;
+			ProxyHostEntry.Sensitive = false;
+			ProxyPortSpinButton.Sensitive = false;
+			ProxyPortLabel.Sensitive = false;
 
 			return vbox;
 		}
@@ -1007,6 +1024,7 @@ namespace Novell.iFolder
 
 				ShareMenuItem.Sensitive = true;
 				OpenMenuItem.Sensitive = true;
+				SyncNowMenuItem.Sensitive = true;
 				RevertMenuItem.Sensitive = true;
 				PropMenuItem.Sensitive = true;
 			}
@@ -1014,6 +1032,7 @@ namespace Novell.iFolder
 			{
 				ShareMenuItem.Sensitive = false;
 				OpenMenuItem.Sensitive = false;
+				SyncNowMenuItem.Sensitive = false;
 				ConflictMenuItem.Sensitive = false;
 				RevertMenuItem.Sensitive = false;
 				PropMenuItem.Sensitive = false;
@@ -1064,11 +1083,31 @@ namespace Novell.iFolder
 								item_open.Activated += new EventHandler(
 										OnOpeniFolderMenu);
 
+								ifMenu.Append(new SeparatorMenuItem());
+
 								MenuItem item_share = 
 									new MenuItem ("Share with...");
 								ifMenu.Append (item_share);
 								item_share.Activated += new EventHandler(
 										OnShareProperties);
+
+								if(	(ifolder != null) && 
+										(ifolder.HasConflicts) )
+								{
+									MenuItem item_resolve = 
+										new MenuItem ("Resolve conflicts");
+									ifMenu.Append (item_resolve);
+									item_resolve.Activated += new EventHandler(
+										OnResolveConflicts);
+							
+									ifMenu.Append(new SeparatorMenuItem());
+								}
+
+								MenuItem item_sync =
+									new MenuItem("Sync now");
+								ifMenu.Append (item_sync);
+								item_sync.Activated += new EventHandler(
+										OnSyncNow);
 
 								MenuItem item_revert = 
 									new MenuItem ("Revert to a Normal Folder");
@@ -1077,18 +1116,6 @@ namespace Novell.iFolder
 										OnRevertiFolder);
 
 								ifMenu.Append(new SeparatorMenuItem());
-
-								if(	(ifolder != null) && 
-										(ifolder.HasConflicts) )
-								{
-									MenuItem item_resolve = 
-										new MenuItem ("Resolve Conflicts");
-									ifMenu.Append (item_resolve);
-									item_resolve.Activated += new EventHandler(
-										OnResolveConflicts);
-							
-									ifMenu.Append(new SeparatorMenuItem());
-								}
 	
 								MenuItem item_properties = 
 									new MenuItem ("Properties");
@@ -1131,7 +1158,7 @@ namespace Novell.iFolder
 							new EventHandler(OnCreateiFolder);
 
 						MenuItem item_refresh = 
-							new MenuItem ("Refresh List");
+							new MenuItem ("Refresh list");
 						ifMenu.Append (item_refresh);
 						item_refresh.Activated += 
 							new EventHandler(RefreshiFolderTreeView);
@@ -1194,7 +1221,8 @@ namespace Novell.iFolder
 					process.StartInfo.CreateNoWindow = true;
 					process.StartInfo.UseShellExecute = false;
 					process.StartInfo.FileName = "nautilus";
-					process.StartInfo.Arguments = ifolder.UnManagedPath;
+					process.StartInfo.Arguments = "\"" + 
+										ifolder.UnManagedPath + "\"";
 					process.Start();
 				}
 				catch(Exception e)
@@ -1283,6 +1311,10 @@ namespace Novell.iFolder
 			}
 		}
 
+		public void	OnSyncNow(object o, EventArgs args)
+		{
+			// Call to sync right now
+		}
 
 		public void OnRevertiFolder(object o, EventArgs args)
 		{
@@ -1648,6 +1680,7 @@ namespace Novell.iFolder
 				CreateMenuItem.Sensitive = false;
 				ShareMenuItem.Sensitive = false;
 				OpenMenuItem.Sensitive = false;
+				SyncNowMenuItem.Sensitive = false;
 				ConflictMenuItem.Sensitive = false;
 				RevertMenuItem.Sensitive = false;
 				PropMenuItem.Sensitive = false;;

@@ -107,6 +107,7 @@ namespace Novell.iFolder
 					new TreeCellDataFunc(StateCellTextDataFunc));
 //			stateColumn.Alignment = 1;
 			stateColumn.Resizable = true;
+			stateColumn.MinWidth = 200;
 
 			CellRendererText accesscr = new CellRendererText();
 //			accesscr.Xalign = 1;
