@@ -270,8 +270,6 @@ simias_get_web_service_credential(char *username, char *password)
 	
 	sprintf(username, "%s", user);
 	
-	fprintf(stderr, "libsimias: Returning %s, %s\n", username, password);
-	
 	return SIMIAS_SUCCESS;
 }
 
