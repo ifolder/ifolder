@@ -149,7 +149,12 @@ namespace Simias.Sync
 		/// <summary>
 		/// The Master incarnation for the node.
 		/// </summary>
-		public ulong Incarnation;
+		public ulong MasterIncarnation;
+
+		/// <summary>
+		/// The local incarnation for the node.
+		/// </summary>
+		public ulong LocalIncarnation;
 
 		/// <summary>
 		///	The base type of this node. 
@@ -161,14 +166,60 @@ namespace Simias.Sync
 		/// </summary>
 		public SyncOperation Operation;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public SyncNodeStamp()
 		{
+		}
+
+		/// <summary>
+		/// Construct a SyncNodeStamp from a Node.
+		/// </summary>
+		/// <param name="node">the node to use.</param>
+		internal SyncNodeStamp(Node node)
+		{
+			this.ID = node.ID;
+			this.LocalIncarnation = node.LocalIncarnation;
+			this.MasterIncarnation = node.MasterIncarnation;
+			this.BaseType = node.Type;
+			this.Operation = SyncOperation.Unknown;
+		}
+
+		/// <summary>
+		/// Consturct a SyncNodeStamp from a ChangeLogRecord.
+		/// </summary>
+		/// <param name="record">The record to use.</param>
+		internal SyncNodeStamp(ChangeLogRecord record)
+		{
+			this.ID = record.EventID;
+			this.LocalIncarnation = record.SlaveRev;
+			this.MasterIncarnation = record.MasterRev;
+			this.BaseType = record.Type.ToString();
+			switch (record.Operation)
+			{
+				case ChangeLogRecord.ChangeLogOp.Changed:
+					this.Operation = SyncOperation.Change;
+					break;
+				case ChangeLogRecord.ChangeLogOp.Created:
+					this.Operation = SyncOperation.Create;
+					break;
+				case ChangeLogRecord.ChangeLogOp.Deleted:
+					this.Operation = SyncOperation.Delete;
+					break;
+				case ChangeLogRecord.ChangeLogOp.Renamed:
+					this.Operation = SyncOperation.Rename;
+					break;
+				default:
+					this.Operation = SyncOperation.Unknown;
+					break;
+			}
 		}
 
 		internal SyncNodeStamp(string id, ulong incarnation, string baseType, SyncOperation operation)
 		{
 			ID = id;
-			Incarnation = incarnation;
+			LocalIncarnation = incarnation;
 			BaseType = baseType;
 			Operation = operation;
 		}
@@ -222,552 +273,827 @@ namespace Simias.Sync
 			/// The File is in use.
 			/// </summary>
 			InUse,
+			/// <summary>
+			/// The Server is busy.
+			/// </summary>
+			Busy,
 		}
 	}
 
+	/// <summary>
+	/// Class to synchronize access to a collection.
+	/// </summary>
+	internal class CollectionLock
+	{
+		static Hashtable	CollectionLocks = new Hashtable();
+		const int			queueDepth = 10;	
+		int					count = 0;
+		
+		/// <summary>
+		/// Gets a lock on the collection.
+		/// </summary>
+		/// <param name="collectionID">The collection to block on.</param>
+		internal static CollectionLock GetLock(string collectionID)
+		{
+			CollectionLock cLock;
+			lock (CollectionLocks)
+			{
+				cLock = (CollectionLock)CollectionLocks[collectionID];
+				if (cLock == null)
+				{
+					cLock = new CollectionLock();
+					CollectionLocks.Add(collectionID, cLock);
+				}
+			}
+			lock (cLock)
+			{
+				if (cLock.count > queueDepth)
+				{
+					return null;
+				}
+				else
+				{
+					cLock.count++;
+				}
+			}
+
+			return cLock;
+		}
+
+		/// <summary>
+		/// Release the Lock on the collection.
+		/// </summary>
+		internal void ReleaseLock()
+		{
+			lock (this)
+			{
+				count--;
+			}
+		}
+
+		/// <summary>
+		/// Called to Synchronize access to this collection.
+		/// </summary>
+		internal void LockRequest()
+		{
+			Monitor.Enter(this);
+		}
+
+		/// <summary>
+		/// Called to Release the request lock.
+		/// </summary>
+		internal void ReleaseRequest()
+		{
+			Monitor.Exit(this);
+		}
+	}
+
+	/*
+	/// <summary>
+	/// Class used to syncronize access to a collection.
+	/// </summary>
+	internal class CollectionLock
+	{
+		static Hashtable CollectionLocks = new Hashtable();
+		string		CollectionID;
+		DateTime	LastAccess;
+		bool		requestLocked;
+		const	int timeOut = 5;
+
+		private CollectionLock(string collectionID)
+		{
+			CollectionID = collectionID;
+			LastAccess = DateTime.Now;
+			requestLocked = true;
+		}
+
+		/// <summary>
+		/// Called to get a lock for the specified collection.
+		/// The request will be locked and must be released.
+		/// The lock will expire if the client does not call for 5 seconds.
+		/// </summary>
+		/// <param name="collectionID">The ID of the collection to lock.</param>
+		/// <returns>true if locked.</returns>
+		internal static CollectionLock GetLock(string collectionID)
+		{
+			CollectionLock cl = null;
+			lock (CollectionLocks)
+			{
+				cl = (CollectionLock)CollectionLocks[collectionID];
+				if (cl == null)
+				{
+					// There is no lock held on the collection.
+					cl = new CollectionLock(collectionID);
+					CollectionLocks.Add(collectionID, cl);
+				}
+				else
+				{
+					lock (cl)
+					{
+						// Check to see if the lock should be timed out.
+						if (!cl.requestLocked)
+						{
+							TimeSpan ts = DateTime.Now - cl.LastAccess;
+							if (ts.Seconds >= timeOut)
+							{
+								cl.Release();
+								cl = new CollectionLock(collectionID);
+								CollectionLocks.Add(collectionID, cl);
+							}
+						}
+					}
+				}
+			}
+			return cl;
+		}
+
+		/// <summary>
+		/// Obtaines the lock for the current request.
+		/// The lock was acquired from GetLock.
+		/// </summary>
+		/// <returns>true if valid.</returns>
+		internal bool LockRequest()
+		{
+			bool lockValid;
+			lock (this)
+			{
+				if (LastAccess == DateTime.MinValue)
+					lockValid = false;
+				else
+				{
+					lockValid = true;
+					this.requestLocked = true;
+				}
+			}
+			return lockValid;
+		}
+
+		/// <summary>
+		/// Releases the lock for the current request.
+		/// The lock can be timed out.
+		/// </summary>
+		internal void ReleaseRequest()
+		{
+			lock (this)
+			{
+				this.requestLocked = false;
+				LastAccess = DateTime.Now;
+			}
+		}
+	
+		/// <summary>
+		/// Release the collection lock.
+		/// Must be called when a sync cycle has finished.
+		/// </summary>
+		internal void Release()
+		{
+			lock (CollectionLocks)
+			{
+				lock (this)
+				{
+					CollectionLocks.Remove(CollectionID);
+					LastAccess = DateTime.MinValue;
+				}
+			}
+		}
+	}
+	*/
+	
 //---------------------------------------------------------------------------
 /// <summary>
 /// server side top level class of SynkerA-style synchronization
 /// </summary>
-public class SyncService
-{
-	public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncService));
-	SyncCollection collection;
-	Store			store;
-	Member			member;
-	Access.Rights	rights = Access.Rights.Deny;
-	ArrayList		NodeList = new ArrayList();
-	ServerInFile	inFile;
-	ServerOutFile	outFile;
-	
-	/// <summary>
-	/// public ctor 
-	/// </summary>
-	public SyncService(string collectionID)
+	public class SyncService
 	{
-		
-	}
+		static Store store = Store.GetStore();
+		public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncService));
+		SyncCollection collection;
+		CollectionLock	cLock;
+		Member			member;
+		Access.Rights	rights = Access.Rights.Deny;
+		ArrayList		NodeList = new ArrayList();
+		ServerInFile	inFile;
+		ServerOutFile	outFile;
 
+		~SyncService()
+		{
+			Dispose(true);		
+		}
+
+		private void Dispose(bool inFinalize)
+		{
+			lock (this)
+			{
+				if (inFinalize)
+				{
+					GC.SuppressFinalize(this);
+				}
+				if (cLock != null)
+				{
+					cLock.ReleaseLock();
+					cLock = null;
+				}
+			}
+		}
 	
-	/// <summary>
-	/// start sync of this collection -- perform basic role checks and dredge server file system
-	/// </summary>
-	/// <param name="si">The start info to initialize the sync.</param>
-	/// <param name="user">This is temporary.</param>
-	public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
-	{
-		si.Status = SyncColStatus.Success;
-		si.Access = Access.Rights.Deny;
-		SyncNodeStamp[] nodes = null;
+		/// <summary>
+		/// start sync of this collection -- perform basic role checks and dredge server file system
+		/// </summary>
+		/// <param name="si">The start info to initialize the sync.</param>
+		/// <param name="user">This is temporary.</param>
+		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
+		{
+			si.Status = SyncColStatus.Success;
+			si.Access = Access.Rights.Deny;
+			SyncNodeStamp[] nodes = null;
+			cLock = null;
 		
-		store = Store.GetStore();
-		Collection col = store.GetCollectionByID(si.CollectionID);
-		if (col == null)
-		{
-			si.Status = SyncColStatus.NotFound;
-			return null;
-		}
-		
-		collection = new SyncCollection(col);
-		// BUGBUG SyncAccess access = SyncAccess.Busy;
-
-		// Check our rights.
-		string userID = Thread.CurrentPrincipal.Identity.Name;
-//		if ((userID == null) || (userID.Length == 0))
-		{
-			// Kludge: for now trust the client.  this need to be removed before shipping.
-			userID = user;
-		}
-		member = collection.GetMemberByID(userID);
-		if (member != null)
-		{
-			collection.Impersonate(member);
-			rights = member.Rights;
-			si.Access = rights;
-			log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
-		}
-
-		switch (rights)
-		{
-			case Access.Rights.Admin:
-			case Access.Rights.ReadOnly:
-			case Access.Rights.ReadWrite:
-				// See if there is any work to do before we try to get the lock.
-				if (si.ChangesOnly)
-				{
-					// we only need the changes.
-					si.ChangesOnly = GetChangedNodeStamps(out nodes, ref si.Context);
-				}
-
-				// If we failed to get the changes get all.
-				if (!si.ChangesOnly)
-				{
-					// We need to get all of the nodes.
-					si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
-					nodes = GetNodeStamps();
-					if (nodes.Length == 0)
-					{
-						rights = Access.Rights.Deny;
-						si.Access = rights;
-					}
-				}
-				else if (!si.ClientHasChanges && nodes.Length == 0)
-				{
-					si.Status = SyncColStatus.NoWork;
-					nodes = null;
-				}
-				break;
-			case Access.Rights.Deny:
-				nodes = null;
+			Collection col = store.GetCollectionByID(si.CollectionID);
+			if (col == null)
+			{
 				si.Status = SyncColStatus.NotFound;
-				break;
-		}
-		return nodes;
-	}
-
-	/// <summary>
-	/// Called when done with the sync cycle.
-	/// </summary>
-	public void Stop()
-	{
-		collection.Revert();
-		log.Info("Finished Sync of {0} for {1}.", collection.Name, member != null ? member.Name : null);
-		this.collection = null;
-	}
-
-	/// <summary>
-	/// Checks if the current user has rights to perform the desired operation.
-	/// </summary>
-	/// <param name="desiredRights">The desired operation.</param>
-	/// <returns>True if allowed.</returns>
-	private bool IsAccessAllowed(Access.Rights desiredRights)
-	{
-		return (rights >= desiredRights) ? true : false;
-	}
-
-	void Import(Node node, ulong expectedIncarn)
-	{
-		collection.ImportNode(node, true, expectedIncarn);
-		node.IncarnationUpdate = node.LocalIncarnation;
-	}
-
-	public SyncNodeStatus[] PutNonFileNodes(SyncNode [] nodes)
-	{
-		SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
-
-		// Try to commit all the nodes at once.
-		int i = 0;
-		foreach (SyncNode sn in nodes)
-		{
-			statusList[i] = new SyncNodeStatus();
-			statusList[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
-				
-			if (sn != null)
-			{
-				statusList[i].nodeID = sn.nodeID;
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(sn.node);
-				Node node = Node.NodeFactory(store, xNode);
-				Import(node, sn.expectedIncarn);
-				NodeList.Add(node);
-				statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+				return null;
 			}
-			else
-			{
-				NodeList.Add(null);
-			}
-		}
-		if (!CommitNonFileNodes())
-		{
-			i = 0;
-			// If we get here the import failed try to commit the nodes one at a time.
-			foreach (Node node in NodeList)
-			{
-				if (node == null)
-					continue;
-				try
-				{
-					collection.Commit(node);
-				}
-				catch (CollisionException)
-				{
-					// The current node failed because of a collision.
-					statusList[i++].status = SyncNodeStatus.SyncStatus.UpdateConflict;
-				}
-				catch
-				{
-					// Handle any other errors.
-					statusList[i++].status = SyncNodeStatus.SyncStatus.ServerFailure;
-				}
-				i++;
-			}
-		}
-		NodeList.Clear();
-		return (statusList);
-	}
-
-	public bool CommitNonFileNodes()
-	{
-		try
-		{
-			if (NodeList.Count > 0)
-			{
-				collection.Commit((Node[])(NodeList.ToArray(typeof(Node))));
-			}
-		}
-		catch
-		{
-			return false;
-		}
 		
-		return true;
-	}
+			collection = new SyncCollection(col);
 
-	public SyncNodeStatus[] PutDirs(SyncNode [] nodes)
-	{
-		SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
+			cLock = CollectionLock.GetLock(collection.ID);
+			if (cLock == null)
+			{
+				si.Status = SyncColStatus.Busy;
+				return null;
+			}
 
-		int i = 0;
-		foreach (SyncNode snode in nodes)
-		{
-			SyncNodeStatus status = new SyncNodeStatus();
-			statusList[i++] = status;
-			status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+			cLock.LockRequest();
 			try
 			{
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(snode.node);
-				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
-				log.Debug("Updating {0} {1} from client", node.Name, node.Type);
+				// BUGBUG SyncAccess access = SyncAccess.Busy;
 
-				status.nodeID = node.ID;
-				Import(node, snode.expectedIncarn);
-			
-				// Get the old node to see if the node was renamed.
-				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
-				string path;
-				if (node.IsRoot)
+				// Check our rights.
+				string userID = Thread.CurrentPrincipal.Identity.Name;
+				//		if ((userID == null) || (userID.Length == 0))
+			{
+				// Kludge: for now trust the client.  this need to be removed before shipping.
+				userID = user;
+			}
+				member = collection.GetMemberByID(userID);
+				if (member != null)
 				{
-					path = oldNode.GetFullPath(collection);
+					collection.Impersonate(member);
+					rights = member.Rights;
+					si.Access = rights;
+					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
 				}
-				else
+
+				switch (rights)
 				{
-					path = node.GetFullPath(collection);
-					if (oldNode != null)
-					{
-						// We already have this node look for a rename.
-						string oldPath = oldNode.GetFullPath(collection);
-						if (oldPath != path)
+					case Access.Rights.Admin:
+					case Access.Rights.ReadOnly:
+					case Access.Rights.ReadWrite:
+						// See if there is any work to do before we try to get the lock.
+						if (si.ChangesOnly)
 						{
-							Directory.Move(oldPath, path);
+							// we only need the changes.
+							si.ChangesOnly = GetChangedNodeStamps(out nodes, ref si.Context);
+							// Check if we have any work to do
+							if (si.ChangesOnly && !si.ClientHasChanges && nodes.Length == 0)
+							{
+								si.Status = SyncColStatus.NoWork;
+								nodes = null;
+								break;
+							}
 						}
+
+						// See if we need to return all of the nodes.
+						if (!si.ChangesOnly)
+						{
+							// We need to get all of the nodes.
+							si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
+							nodes = GetNodeStamps();
+							if (nodes.Length == 0)
+							{
+								rights = Access.Rights.Deny;
+								si.Access = rights;
+							}
+						}
+						break;
+					case Access.Rights.Deny:
+						nodes = null;
+						si.Status = SyncColStatus.NotFound;
+						break;
+				}
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+			return nodes;
+		}
+
+		/// <summary>
+		/// Called when done with the sync cycle.
+		/// </summary>
+		public void Stop()
+		{
+			Dispose(false);
+			collection.Revert();
+			log.Info("Finished Sync of {0} for {1}.", collection.Name, member != null ? member.Name : null);
+			this.collection = null;
+		}
+
+		/// <summary>
+		/// Checks if the current user has rights to perform the desired operation.
+		/// </summary>
+		/// <param name="desiredRights">The desired operation.</param>
+		/// <returns>True if allowed.</returns>
+		private bool IsAccessAllowed(Access.Rights desiredRights)
+		{
+			return (rights >= desiredRights) ? true : false;
+		}
+
+		private void Import(Node node, ulong expectedIncarn)
+		{
+			collection.ImportNode(node, true, expectedIncarn);
+			node.IncarnationUpdate = node.LocalIncarnation;
+		}
+
+		public SyncNodeStatus[] PutNonFileNodes(SyncNode [] nodes)
+		{
+			if (cLock == null)
+			{
+				return null;
+			}
+
+			SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
+			
+			cLock.LockRequest();
+			try
+			{
+				// Try to commit all the nodes at once.
+				int i = 0;
+				foreach (SyncNode sn in nodes)
+				{
+					statusList[i] = new SyncNodeStatus();
+					statusList[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
+				
+					if (sn != null)
+					{
+						statusList[i].nodeID = sn.nodeID;
+						XmlDocument xNode = new XmlDocument();
+						xNode.LoadXml(sn.node);
+						Node node = Node.NodeFactory(store, xNode);
+						Import(node, sn.expectedIncarn);
+						NodeList.Add(node);
+						statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+					}
+					else
+					{
+						NodeList.Add(null);
 					}
 				}
-
-				if (!Directory.Exists(path))
+				if (!CommitNonFileNodes())
 				{
-					Directory.CreateDirectory(path);
+					i = 0;
+					// If we get here the import failed try to commit the nodes one at a time.
+					foreach (Node node in NodeList)
+					{
+						if (node == null)
+							continue;
+						try
+						{
+							collection.Commit(node);
+						}
+						catch (CollisionException)
+						{
+							// The current node failed because of a collision.
+							statusList[i++].status = SyncNodeStatus.SyncStatus.UpdateConflict;
+						}
+						catch
+						{
+							// Handle any other errors.
+							statusList[i++].status = SyncNodeStatus.SyncStatus.ServerFailure;
+						}
+						i++;
+					}
 				}
-				collection.Commit(node);
-				status.status = SyncNodeStatus.SyncStatus.Success;
 			}
-			catch (CollisionException)
+			finally
 			{
-				// The current node failed because of a collision.
-				status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+				cLock.ReleaseRequest();
 			}
-			catch {}
+			NodeList.Clear();
+			return (statusList);
 		}
-		return statusList;
-	}
 
-	public SyncNode[] GetNonFileNodes(string[] nodeIDs)
-	{
-		SyncNode[] nodes = new SyncNode[nodeIDs.Length];
-
-		for (int i = 0; i < nodeIDs.Length; ++i)
+		private bool CommitNonFileNodes()
 		{
-			SyncNode snode = new SyncNode();
 			try
 			{
-				nodes[i] = snode;
-				snode.nodeID = nodeIDs[i];
-				Node node = collection.GetNodeByID(nodeIDs[i]);
-				snode.node = node.Properties.ToString(true);
-				snode.expectedIncarn = node.MasterIncarnation;
+				if (NodeList.Count > 0)
+				{
+					collection.Commit((Node[])(NodeList.ToArray(typeof(Node))));
+				}
 			}
 			catch
 			{
+				return false;
 			}
+		
+			return true;
 		}
-		return nodes;
-	}
 
-	public SyncNodeStamp[] GetNodeStamps()
-	{
-		log.Debug("GetNodeStamps start");
-		if (!IsAccessAllowed(Access.Rights.ReadOnly))
-			throw new UnauthorizedAccessException("Current user cannot read this collection");
-
-		ArrayList stampList = new ArrayList();
-		foreach (ShallowNode sn in collection)
+		public SyncNodeStatus[] PutDirs(SyncNode [] nodes)
 		{
-			Node node;
+			if (cLock == null)
+				return null;
+
+			SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
+
+			cLock.LockRequest();
 			try
 			{
-				node = new Node(collection, sn);
-				SyncNodeStamp stamp = new SyncNodeStamp(node.ID, node.LocalIncarnation, node.Type, SyncOperation.Unknown);
-				stampList.Add(stamp);
-			}
-			catch (Storage.DoesNotExistException)
-			{
-				log.Debug("Node: Name:{0} ID:{1} Type:{2} no longer exists.", sn.Name, sn.ID, sn.Type);
-				continue;
-			}
-		}
-		log.Debug("Returning {0} SyncNodeStamps", stampList.Count);
-		return (SyncNodeStamp[])stampList.ToArray(typeof(SyncNodeStamp));
-	}
-
-
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="nodes"></param>
-	/// <param name="context"></param>
-	/// <returns></returns>
-	public bool GetChangedNodeStamps(out SyncNodeStamp[] nodes, ref string context)
-	{
-		log.Debug("GetChangedNodeStamps Start");
-
-		EventContext eventContext;
-		// Create a change log reader.
-		ChangeLogReader logReader = new ChangeLogReader( collection );
-		nodes = null;
-		bool more = true;
-		try
-		{	
-			// Read the cookie from the last sync and then get the changes since then.
-			if (context != null)
-			{
-				ArrayList changeList = null;
-				ArrayList stampList = new ArrayList();
-
-				eventContext = new EventContext(context);
-				while(more)
+				int i = 0;
+				foreach (SyncNode snode in nodes)
 				{
-				more = logReader.GetEvents(eventContext, out changeList);
-					foreach( ChangeLogRecord rec in changeList )
+					SyncNodeStatus status = new SyncNodeStatus();
+					statusList[i++] = status;
+					status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+					try
 					{
-						// Make sure the events are not for local only changes.
-						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+						XmlDocument xNode = new XmlDocument();
+						xNode.LoadXml(snode.node);
+						DirNode node = (DirNode)Node.NodeFactory(store, xNode);
+						log.Debug("Updating {0} {1} from client", node.Name, node.Type);
+
+						status.nodeID = node.ID;
+						Import(node, snode.expectedIncarn);
+			
+						// Get the old node to see if the node was renamed.
+						DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
+						string path;
+						if (node.IsRoot)
 						{
-							SyncOperation operation = SyncOperation.Unknown;
-							switch (rec.Operation)
+							path = oldNode.GetFullPath(collection);
+						}
+						else
+						{
+							path = node.GetFullPath(collection);
+							if (oldNode != null)
 							{
-								case ChangeLogRecord.ChangeLogOp.Changed:
-									operation = SyncOperation.Change;
-									break;
-								case ChangeLogRecord.ChangeLogOp.Created:
-									operation = SyncOperation.Create;
-									break;
-								case ChangeLogRecord.ChangeLogOp.Deleted:
-									operation = SyncOperation.Delete;
-									break;
-								case ChangeLogRecord.ChangeLogOp.Renamed:
-									operation = SyncOperation.Rename;
-									break;
+								// We already have this node look for a rename.
+								string oldPath = oldNode.GetFullPath(collection);
+								if (oldPath != path)
+								{
+									Directory.Move(oldPath, path);
+								}
 							}
-							SyncNodeStamp stamp = new SyncNodeStamp(
-								rec.EventID, rec.SlaveRev, rec.Type.ToString(), operation);
+						}
+
+						if (!Directory.Exists(path))
+						{
+							Directory.CreateDirectory(path);
+						}
+						collection.Commit(node);
+						status.status = SyncNodeStatus.SyncStatus.Success;
+					}
+					catch (CollisionException)
+					{
+						// The current node failed because of a collision.
+						status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+					}
+					catch {}
+				}
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+			return statusList;
+		}
+
+		public SyncNode[] GetNonFileNodes(string[] nodeIDs)
+		{
+			if (cLock == null)
+				return null;
+
+			SyncNode[] nodes = new SyncNode[nodeIDs.Length];
+
+			cLock.LockRequest();
+			try
+			{
+				for (int i = 0; i < nodeIDs.Length; ++i)
+				{
+					SyncNode snode = new SyncNode();
+					try
+					{
+						nodes[i] = snode;
+						snode.nodeID = nodeIDs[i];
+						Node node = collection.GetNodeByID(nodeIDs[i]);
+						snode.node = node.Properties.ToString(true);
+						snode.expectedIncarn = node.MasterIncarnation;
+					}
+					catch
+					{
+					}
+				}
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+			return nodes;
+		}
+
+		private SyncNodeStamp[] GetNodeStamps()
+		{
+			log.Debug("GetNodeStamps start");
+			if (!IsAccessAllowed(Access.Rights.ReadOnly))
+				throw new UnauthorizedAccessException("Current user cannot read this collection");
+
+			ArrayList stampList = new ArrayList();
+			foreach (ShallowNode sn in collection)
+			{
+				Node node;
+				try
+				{
+					node = new Node(collection, sn);
+					SyncNodeStamp stamp = new SyncNodeStamp(node);
+					stampList.Add(stamp);
+				}
+				catch (Storage.DoesNotExistException)
+				{
+					log.Debug("Node: Name:{0} ID:{1} Type:{2} no longer exists.", sn.Name, sn.ID, sn.Type);
+					continue;
+				}
+			}
+			log.Debug("Returning {0} SyncNodeStamps", stampList.Count);
+			return (SyncNodeStamp[])stampList.ToArray(typeof(SyncNodeStamp));
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="nodes"></param>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		private bool GetChangedNodeStamps(out SyncNodeStamp[] nodes, ref string context)
+		{
+			log.Debug("GetChangedNodeStamps Start");
+
+			EventContext eventContext;
+			// Create a change log reader.
+			ChangeLogReader logReader = new ChangeLogReader( collection );
+			nodes = null;
+			bool more = true;
+			try
+			{	
+				// Read the cookie from the last sync and then get the changes since then.
+				if (context != null)
+				{
+					ArrayList changeList = null;
+					ArrayList stampList = new ArrayList();
+
+					eventContext = new EventContext(context);
+					while(more)
+					{
+						more = logReader.GetEvents(eventContext, out changeList);
+						foreach( ChangeLogRecord rec in changeList )
+						{
+							SyncNodeStamp stamp = new SyncNodeStamp(rec);
 							stampList.Add(stamp);
 						}
 					}
-				}
 			
-				log.Debug("Found {0} changed nodes.", stampList.Count);
-				nodes = (SyncNodeStamp[])stampList.ToArray(typeof(SyncNodeStamp));
-				context = eventContext.ToString();
-				return true;
-			}
-		}
-		catch
-		{
-		}
-
-		// The cookie is invalid.  Get a valid cookie and save it for the next sync.
-		eventContext = logReader.GetEventContext();
-		if (eventContext != null)
-			context = eventContext.ToString();
-		return false;
-	}
-
-	public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
-	{
-		SyncNodeStatus[] nodeStatus = new SyncNodeStatus[nodeIDs.Length];
-		
-		int i = 0;
-		foreach (string id in nodeIDs)
-		{
-			try
-			{
-				nodeStatus[i] = new SyncNodeStatus();
-				nodeStatus[i].nodeID = id;
-				Node node = collection.GetNodeByID(id);
-				if (node == null)
-				{
-					log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-					nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
-					continue;
+					log.Debug("Found {0} changed nodes.", stampList.Count);
+					nodes = (SyncNodeStamp[])stampList.ToArray(typeof(SyncNodeStamp));
+					context = eventContext.ToString();
+					return true;
 				}
-
-				log.Info("Deleting {0}", node.Name);
-				// If this is a directory remove the directory.
-				DirNode dn = node as DirNode;
-				if (dn != null)
-				{
-					Directory.Delete(dn.GetFullPath(collection), true);
-					// Do a deep delete.
-					Node[] deleted = collection.Delete(node, PropertyTags.Parent);
-					collection.Commit(deleted);
-				}
-				else
-				{
-					// If this is a file delete the file.
-					BaseFileNode bfn = node as BaseFileNode;
-					if (bfn != null)
-						File.Delete(bfn.GetFullPath(collection));
-
-					collection.Delete(node);
-					collection.Commit(node);
-				}
-
-				nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
 			}
 			catch
 			{
-				nodeStatus[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
 			}
-			i++;
+
+			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
+			eventContext = logReader.GetEventContext();
+			if (eventContext != null)
+				context = eventContext.ToString();
+			return false;
 		}
-		return nodeStatus;
-	}
 
-	/// <summary>
-	/// Put the node that represents the file to the server. This call is made to begin
-	/// an upload of a file.  Close must be called to cleanup resources.
-	/// </summary>
-	/// <param name="node">The node to put to ther server.</param>
-	/// <returns>True if successful.</returns>
-	public bool PutFileNode(SyncNode node)
-	{
-		inFile = new ServerInFile(collection, node);
-		inFile.Open();
-		outFile = null;
-		return true;
-	}
-
-	/// <summary>
-	/// Get the node that represents the file. This call is made to begin
-	/// a download of a file.  Close must be called to cleanup resources.
-	/// </summary>
-	/// <param name="nodeID">The node to get.</param>
-	/// <returns>The SyncNode.</returns>
-	public SyncNode GetFileNode(string nodeID)
-	{
-		BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
-		inFile = null;
-		outFile = null;
-		if (node != null)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="nodeIDs"></param>
+		/// <returns></returns>
+		public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
 		{
-			outFile = new ServerOutFile(collection, node);
-			outFile.Open();
-			SyncNode snode = new SyncNode();
-			snode.nodeID = node.ID;
-			snode.node = node.Properties.ToString(true);
-			snode.expectedIncarn = node.MasterIncarnation;
-			return snode;
+			if (cLock == null)
+				return null;
+
+			SyncNodeStatus[] nodeStatus = new SyncNodeStatus[nodeIDs.Length];
+		
+			cLock.LockRequest();
+			try
+			{
+				int i = 0;
+				foreach (string id in nodeIDs)
+				{
+					try
+					{
+						nodeStatus[i] = new SyncNodeStatus();
+						nodeStatus[i].nodeID = id;
+						Node node = collection.GetNodeByID(id);
+						if (node == null)
+						{
+							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
+							nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
+							continue;
+						}
+
+						log.Info("Deleting {0}", node.Name);
+						// If this is a directory remove the directory.
+						DirNode dn = node as DirNode;
+						if (dn != null)
+						{
+							Directory.Delete(dn.GetFullPath(collection), true);
+							// Do a deep delete.
+							Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+							collection.Commit(deleted);
+						}
+						else
+						{
+							// If this is a file delete the file.
+							BaseFileNode bfn = node as BaseFileNode;
+							if (bfn != null)
+								File.Delete(bfn.GetFullPath(collection));
+
+							collection.Delete(node);
+							collection.Commit(node);
+						}
+
+						nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
+					}
+					catch
+					{
+						nodeStatus[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
+					}
+					i++;
+				}
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+			return nodeStatus;
 		}
-		return null;
-	}
 
-	/// <summary>
-	/// Get a HashMap of the file.
-	/// </summary>
-	/// <param name="blockSize">The block size to be hashed.</param>
-	/// <returns>The HashMap.</returns>
-	public HashData[] GetHashMap(int blockSize)
-	{
-		if (inFile != null)
-			return inFile.GetHashMap();
-		else
-			return outFile.GetHashMap();
-	}
+		/// <summary>
+		/// Put the node that represents the file to the server. This call is made to begin
+		/// an upload of a file.  Close must be called to cleanup resources.
+		/// </summary>
+		/// <param name="node">The node to put to ther server.</param>
+		/// <returns>True if successful.</returns>
+		public bool PutFileNode(SyncNode node)
+		{
+			if (cLock == null)
+				return false;
+			cLock.LockRequest();
+			try
+			{
+				inFile = new ServerInFile(collection, node);
+				inFile.Open();
+				outFile = null;
+				return true;
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+		}
 
-	/// <summary>
-	/// Write the included data to the new file.
-	/// </summary>
-	/// <param name="buffer">The data to write.</param>
-	/// <param name="offset">The offset in the new file of where to write.</param>
-	/// <param name="count">The number of bytes to write.</param>
-	public void Write(byte[] buffer, long offset, int count)
-	{
-		inFile.WritePosition = offset;
-		inFile.Write(buffer, 0, count);
-	}
+		/// <summary>
+		/// Get the node that represents the file. This call is made to begin
+		/// a download of a file.  Close must be called to cleanup resources.
+		/// </summary>
+		/// <param name="nodeID">The node to get.</param>
+		/// <returns>The SyncNode.</returns>
+		public SyncNode GetFileNode(string nodeID)
+		{
+			if (cLock == null)
+				return null;
 
-	/// <summary>
-	/// Copy data from the old file to the new file.
-	/// </summary>
-	/// <param name="oldOffset">The offset in the old (original file).</param>
-	/// <param name="offset">The offset in the new file.</param>
-	/// <param name="count">The number of bytes to copy.</param>
-	public void Copy(long oldOffset, long offset, int count)
-	{
-		inFile.Copy(oldOffset, offset, count);
-	}
+			cLock.LockRequest();
+			try
+			{
+				BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
+				inFile = null;
+				outFile = null;
+				if (node != null)
+				{
+					outFile = new ServerOutFile(collection, node);
+					outFile.Open();
+					SyncNode snode = new SyncNode();
+					snode.nodeID = node.ID;
+					snode.node = node.Properties.ToString(true);
+					snode.expectedIncarn = node.MasterIncarnation;
+					return snode;
+				}
+				return null;
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+		}
 
-	/// <summary>
-	/// Read data from the currently opened file.
-	/// </summary>
-	/// <param name="buffer">Byte array of bytes read.</param>
-	/// <param name="offset">The offset to begin reading.</param>
-	/// <param name="count">The number of bytes to read.</param>
-	/// <returns>The number of bytes read.</returns>
-	public int Read(out byte[] buffer, long offset, int count)
-	{
-		outFile.ReadPosition = offset;
-		buffer = new byte[count];
-		return outFile.Read(buffer, 0, count);
-	}
+		/// <summary>
+		/// Get a HashMap of the file.
+		/// </summary>
+		/// <param name="blockSize">The block size to be hashed.</param>
+		/// <returns>The HashMap.</returns>
+		public HashData[] GetHashMap(int blockSize)
+		{
+			if (inFile != null)
+				return inFile.GetHashMap();
+			else
+				return outFile.GetHashMap();
+		}
 
-	/// <summary>
-	/// Close the current file.
-	/// </summary>
-	/// <param name="commit">True: commit the filenode and file.
-	/// False: Abort the changes.</param>
-	/// <returns>The status of the sync.</returns>
-	public SyncNodeStatus CloseFileNode(bool commit)
-	{
-		SyncNodeStatus status = null;
-		if (inFile != null)
-			status = inFile.Close(commit);
-		else if (outFile != null)
-			status = outFile.Close();
-		inFile = null;
-		outFile = null;
-		return status;
-	}
+		/// <summary>
+		/// Write the included data to the new file.
+		/// </summary>
+		/// <param name="buffer">The data to write.</param>
+		/// <param name="offset">The offset in the new file of where to write.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Write(byte[] buffer, long offset, int count)
+		{
+			inFile.WritePosition = offset;
+			inFile.Write(buffer, 0, count);
+		}
 
-	/// <summary>
-	/// simple version string, also useful to check remoting
-	/// </summary>
-	public string Version
-	{
-		get { return "0.0.0"; }
-	}
-}
+		/// <summary>
+		/// Copy data from the old file to the new file.
+		/// </summary>
+		/// <param name="oldOffset">The offset in the old (original file).</param>
+		/// <param name="offset">The offset in the new file.</param>
+		/// <param name="count">The number of bytes to copy.</param>
+		public void Copy(long oldOffset, long offset, int count)
+		{
+			inFile.Copy(oldOffset, offset, count);
+		}
 
-//===========================================================================
+		/// <summary>
+		/// Read data from the currently opened file.
+		/// </summary>
+		/// <param name="buffer">Byte array of bytes read.</param>
+		/// <param name="offset">The offset to begin reading.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <returns>The number of bytes read.</returns>
+		public int Read(out byte[] buffer, long offset, int count)
+		{
+			outFile.ReadPosition = offset;
+			buffer = new byte[count];
+			return outFile.Read(buffer, 0, count);
+		}
+
+		/// <summary>
+		/// Close the current file.
+		/// </summary>
+		/// <param name="commit">True: commit the filenode and file.
+		/// False: Abort the changes.</param>
+		/// <returns>The status of the sync.</returns>
+		public SyncNodeStatus CloseFileNode(bool commit)
+		{
+			if (cLock == null)
+				return null;
+
+			cLock.LockRequest();
+			try
+			{
+				SyncNodeStatus status = null;
+				if (inFile != null)
+					status = inFile.Close(commit);
+				else if (outFile != null)
+					status = outFile.Close();
+				inFile = null;
+				outFile = null;
+				return status;
+			}
+			finally
+			{
+				cLock.ReleaseRequest();
+			}
+		}
+
+		/// <summary>
+		/// simple version string, also useful to check remoting
+		/// </summary>
+		public string Version
+		{
+			get { return "0.9.0"; }
+		}
+	}
 }
