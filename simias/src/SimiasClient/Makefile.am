@@ -30,7 +30,7 @@ if WINDOWS
 	wsdl /out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 if LINUX
-	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
+	-wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 if DARWIN
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
