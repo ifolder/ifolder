@@ -42,7 +42,7 @@ using Simias.Policy;
 using Simias.Web;
 using System.Xml;
 using System.Xml.Serialization;
-using Novell.AddressBook;
+//using Novell.AddressBook;
 
 using Novell.Security.ClientPasswordManager;
 
@@ -66,6 +66,31 @@ namespace Novell.iFolder.Web
 		}
 
 
+		internal class UserComparer : IComparer  
+		{
+			int IComparer.Compare( Object x, Object y )  
+			{
+				iFolderUser memberX = x as iFolderUser;
+				iFolderUser memberY = y as iFolderUser;
+
+				if ( memberX.FN != null )
+				{
+					if (memberY.FN != null)
+					{
+						return (new CaseInsensitiveComparer()).Compare( memberX.FN, memberY.FN );
+					}
+
+					return (new CaseInsensitiveComparer()).Compare( memberX.FN, memberY.Name );
+				}
+				else
+				if ( memberY.FN != null )
+				{
+					return ( new CaseInsensitiveComparer()).Compare( memberX.Name, memberY.FN );
+				}
+
+				return ( new CaseInsensitiveComparer()).Compare( memberX.Name, memberY.Name );
+			}
+		}
 
 
 		/// <summary>
@@ -667,12 +692,7 @@ namespace Novell.iFolder.Web
 			if(col == null)
 				throw new Exception("Invalid iFolderID");
 
-			Novell.AddressBook.Manager abMan = 
-						Novell.AddressBook.Manager.Connect();
-
-			Contact c = abMan.GetContact(col.Owner.UserID);
-
-			iFolderUser user = new iFolderUser(col.Owner, c);
+			iFolderUser user = new iFolderUser( col.Owner );
 			return user;
 		}
 
@@ -746,38 +766,38 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolderUser[] GetiFolderUsers(string iFolderID)
 		{
-			ArrayList list = new ArrayList();
+			ArrayList members = new ArrayList();
+			ICSList memberList;
 
 			Store store = Store.GetStore();
-
 			Collection col = store.GetCollectionByID(iFolderID);
 			if(col == null)
-				throw new Exception("Invalid iFolderID");
+				throw new SimiasException("Invalid iFolderID");
 
-			Novell.AddressBook.Manager abMan = 
-						Novell.AddressBook.Manager.Connect();
-
-			ICSList memberlist = col.GetMemberList();
-			foreach(ShallowNode sNode in memberlist)
+			Simias.Storage.Domain domain = store.GetDomain( col.Domain );
+			if ( domain == null )
 			{
-				Simias.Storage.Member simMem =
-					new Simias.Storage.Member(col, sNode);
-
-				Contact c = abMan.GetContact(simMem.UserID);
-
-				iFolderUser user = new iFolderUser(simMem, c);
-				list.Add(user);
+				throw new SimiasException( "iFolderID isn't linked to a valid domain " );
 			}
+
+			memberList = col.GetMemberList();
+			foreach( ShallowNode sNode in memberList )
+			{
+				if ( sNode.Type.Equals( "Member" ) )
+				{
+					members.Add( new iFolderUser( new Member( domain, sNode ) ) );
+				}
+			}	
 
 			// Use the POBox for the domain that this iFolder belongs to.
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						col.Domain, 
-						store.GetUserIDFromDomainID(col.Domain));
+				col.Domain, 
+				store.GetUserIDFromDomainID(col.Domain));
 
 			ICSList poList = poBox.Search(
-					Subscription.SubscriptionCollectionIDProperty,
-					col.ID,
-					SearchOp.Equal);
+				Subscription.SubscriptionCollectionIDProperty,
+				col.ID,
+				SearchOp.Equal);
 
 			foreach(ShallowNode sNode in poList)
 			{
@@ -788,20 +808,22 @@ namespace Novell.iFolder.Web
 				if (sub.SubscriptionState == SubscriptionStates.Ready)
 				{
 					if (poBox.StoreReference.GetCollectionByID(
-							sub.SubscriptionCollectionID) != null)
+						sub.SubscriptionCollectionID) != null)
 					{
 						continue;
 					}
 				}
 
-				Contact c = abMan.GetContact(sub.ToIdentity);
-
-				iFolderUser user = new iFolderUser(sub, c);
-				list.Add(user);
+				members.Add( new iFolderUser( sub ) );
 			}
 
+			if ( members.Count > 0 )
+			{
+				UserComparer comparer = new UserComparer();
+				members.Sort( 0, members.Count, comparer );
+			}
 
-			return (iFolderUser[]) (list.ToArray(typeof(iFolderUser)));
+			return ( iFolderUser[] ) ( members.ToArray( typeof( iFolderUser ) ) );
 		}
 
 
@@ -821,41 +843,37 @@ namespace Novell.iFolder.Web
 		public iFolderUser[] GetDomainUsers(string DomainID, int numUsers)
 		{
 			int userCount = 0;
-			ArrayList list = new ArrayList();
+			ArrayList members = new ArrayList();
 
-			Store store = Store.GetStore();
-
-			Domain domain = store.GetDomain(DomainID);
-			if(domain == null)
-				throw new Exception("Unable to access domain");
-
-			Novell.AddressBook.Manager abMan = 
-						Novell.AddressBook.Manager.Connect();
-
-			ICSList memberlist = domain.GetMemberList();
-			foreach(ShallowNode sNode in memberlist)
+			Domain domain = Store.GetStore().GetDomain( DomainID );
+			if( domain == null )
 			{
-				userCount++;
-				Simias.Storage.Member simMem =
-					new Simias.Storage.Member(domain, sNode);
-
-				Contact c = abMan.GetContact(simMem.UserID);
-
-				iFolderUser user = new iFolderUser(simMem, c);
-
-				list.Add(user);
-				if(numUsers != -1)
-				{
-					if(userCount > numUsers)
-					{
-						// Empty the list and break;
-						list.Clear();
-						break;
-					}
-				}
+				throw new SimiasException( "Invalid domain ID " );
 			}
 
-			return (iFolderUser[])(list.ToArray(typeof(iFolderUser)));
+			ICSList memberList = domain.GetMemberList();
+			foreach( ShallowNode sNode in memberList )
+			{
+				if ( sNode.Type.Equals( "Member" ) )
+				{
+					if( numUsers != -1 && ++userCount > numUsers )
+					{
+						// Empty the list and break;
+						members.Clear();
+						break;
+					}
+
+					members.Add( new iFolderUser( new Member( domain, sNode ) ) );
+				}
+			}	
+
+			if ( members.Count > 0 )
+			{
+				UserComparer comparer = new UserComparer();
+				members.Sort( 0, members.Count, comparer );
+			}
+
+			return ( iFolderUser[] )( members.ToArray( typeof( iFolderUser ) ) );
 		}
 
 
@@ -872,89 +890,57 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolderUser[] SearchForDomainUsers(string DomainID, string SearchString)
 		{
-			Hashtable idHash = new Hashtable();
-			ArrayList list = new ArrayList();
+			ArrayList members = new ArrayList();
+			Hashtable matches = new Hashtable();
 
-			Store store = Store.GetStore();
-
-			Domain domain = store.GetDomain(DomainID);
-			if(domain == null)
-				throw new Exception("Unable to access domain");
-
-			Novell.AddressBook.Manager abMan = 
-						Novell.AddressBook.Manager.Connect();
-
-			try
+			Domain domain = Store.GetStore().GetDomain( DomainID );
+			if( domain == null )
 			{
-				Novell.AddressBook.AddressBook book = 
-							abMan.GetAddressBook(DomainID);
+				throw new SimiasException( "Invalid domain ID " );
+			}
 
-				// First Name Search
-				IABList clist = book.SearchFirstName(SearchString,
-						Simias.Storage.SearchOp.Begins);
-				foreach(Contact c in clist)
+			ICSList	searchList = domain.Search( PropertyTags.FullName, SearchString, SearchOp.Begins );
+			foreach( ShallowNode sNode in searchList )
+			{
+				if ( sNode.Type.Equals( "Member" ) )
 				{
-					Simias.Storage.Member simMem =
-						domain.GetMemberByID(c.UserID);
-					iFolderUser user = new iFolderUser(simMem, c);
-					idHash.Add(c.UserID, c);
-					list.Add(user);
+					Member member = new Member( domain, sNode );
+					matches.Add( sNode.ID, member );
+					members.Add( new iFolderUser( member ) );
 				}
+			}	
 
-
-				// Last Name Search
-				clist = book.SearchLastName(SearchString,
-						Simias.Storage.SearchOp.Begins);
-				foreach(Contact c in clist)
+			searchList = domain.Search( PropertyTags.Family, SearchString, SearchOp.Begins );
+			foreach( ShallowNode sNode in searchList )
+			{
+				if ( sNode.Type.Equals( "Member" ) )
 				{
-					if(!idHash.Contains(c.UserID))
+					if ( matches.Contains( sNode.ID ) == false )
 					{
-						Simias.Storage.Member simMem =
-							domain.GetMemberByID(c.UserID);
-						iFolderUser user = new iFolderUser(simMem, c);
-						idHash.Add(c.UserID, c);
-						list.Add(user);
+						members.Add( new iFolderUser( new Member( domain, sNode ) ) );
 					}
 				}
+			}	
 
-
-				// User Name Search
-				// We have to search the Members for this
-				ICSList searchList = domain.Search(BaseSchema.ObjectName, 
-											SearchString, SearchOp.Begins);
-				foreach(ShallowNode sNode in searchList)
+			searchList = domain.Search( BaseSchema.ObjectName, SearchString, SearchOp.Begins );
+			foreach( ShallowNode sNode in searchList )
+			{
+				if ( sNode.Type.Equals( "Member" ) )
 				{
-					if (sNode.Type.Equals("Member"))
+					if ( matches.Contains( sNode.ID ) == false )
 					{
-						Simias.Storage.Member simMem =
-							new Simias.Storage.Member(domain, sNode);
-
-						Contact c = abMan.GetContact(simMem.UserID);
-
-						if(!idHash.Contains(simMem.UserID) )
-						{
-							idHash.Add(simMem.UserID, simMem);
-							iFolderUser user = new iFolderUser(simMem, c);
-							list.Add(user);
-						}
+						members.Add( new iFolderUser( new Member( domain, sNode ) ) );
 					}
 				}
 			}
-			catch (Exception e)
+
+			if ( members.Count > 0 )
 			{
-				DateTime lastDomainSyncTime = SyncClient.GetLastSyncTime(DomainID);
-				if (domain.Role.Equals(SyncRoles.Slave) && lastDomainSyncTime.Equals(DateTime.MinValue))
-				{
-					// The domain is still syncing.
-					throw new Exception("The initial synchronization of the domain has not completed.");
-				}
-				else
-				{
-					throw e;
-				}
+				UserComparer comparer = new UserComparer();
+				members.Sort( 0, members.Count, comparer );
 			}
 
-			return (iFolderUser[])(list.ToArray(typeof(iFolderUser)));
+			return ( iFolderUser[] )( members.ToArray( typeof( iFolderUser ) ) );
 		}
 
 
@@ -984,12 +970,7 @@ namespace Novell.iFolder.Web
 			if(simMem == null)
 				throw new Exception("Invalid UserID");
 
-			Novell.AddressBook.Manager abMan = 
-						Novell.AddressBook.Manager.Connect();
-
-			Contact c = abMan.GetContact(simMem.UserID);
-
-			return new iFolderUser(simMem, c);
+			return new iFolderUser( simMem );
 		}
 
 
@@ -1021,20 +1002,13 @@ namespace Novell.iFolder.Web
 				Node node = col.GetNodeByID(NodeID);
 				if(node != null)
 				{
-					Novell.AddressBook.Manager abMan = 
-						Novell.AddressBook.Manager.Connect();
-
 					if (col.IsBaseType(node, NodeTypes.MemberType))
 					{
-						Member mem = new Member(node);
-						Contact c = abMan.GetContact(mem.UserID);
-						ifolderUser = new iFolderUser(mem, c);
+						ifolderUser = new iFolderUser( new Member( node ) );
 					}
 					else if (col.IsType(node, typeof( Subscription ).Name))
 					{
-						Subscription sub = new Subscription(node);
-						Contact c = abMan.GetContact(sub.ToIdentity);
-						ifolderUser = new iFolderUser(sub, c);
+						ifolderUser = new iFolderUser( new Subscription( node ) );
 					}
 				}
 			}
@@ -1109,19 +1083,21 @@ namespace Novell.iFolder.Web
 
 			poBox.AddMessage(sub);
 
+			/*
 			Novell.AddressBook.Manager abMan = 
 				Novell.AddressBook.Manager.Connect();
 
 			Contact c = abMan.GetContact(sub.ToIdentity);
+			*/
 
-			iFolderUser user = new iFolderUser(sub, c);
+			iFolderUser user = new iFolderUser( sub );
 			return user;
 		}
 
 
 
 		/// <summary>
-		/// Accpets and Enterprise Subscription
+		/// Accepts an Enterprise Subscription
 		/// </summary>
 		/// <param name = "iFolderID">
 		/// The ID of the iFolder to accept the invitation for
