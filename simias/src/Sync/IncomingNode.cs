@@ -247,7 +247,7 @@ internal class IncomingNode
 		BaseFileNode bfn = SyncOps.CastToBaseFileNode(collection, node);
 		if (bfn == null)
 		{
-			Log.log.Debug("commiting nonFile, nonDir {0}", node.Name);
+			Log.log.Debug("commiting nonFile, nonDir {0}", bfn.GetFileName());
 			Log.Assert(forkList == null);
 			ClearTemp();
 			return status;
@@ -261,8 +261,8 @@ internal class IncomingNode
 		}
 
 		path = status == NodeStatus.UpdateConflict?
-				Path.Combine(path, ConflictUpdatePrefix + node.ID + Path.GetExtension(node.Name)):
-				Path.Combine(path, node.Name);
+				Path.Combine(path, ConflictUpdatePrefix + bfn.ID + Path.GetExtension(bfn.GetFileName())):
+				Path.Combine(path, bfn.GetFileName());
 
 		Log.log.Debug("placing file {0}", path);
 
