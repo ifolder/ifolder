@@ -1069,7 +1069,7 @@ namespace Simias.Storage.Tests
 
 				// Restore the collection.
 				collection = new Collection( store, ( Node )bf.Deserialize( ms ) );
-				collection.ImportNode( collection, collection.LocalIncarnation );
+				collection.ImportNode( collection, true, collection.LocalIncarnation );
 				collection.IncarnationUpdate = 2;
 				collection.Commit();
 			}
@@ -1281,7 +1281,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Finally, set the master version of the collection.
-				collection.ImportNode( collection, collection.LocalIncarnation );
+				collection.ImportNode( collection, true, collection.LocalIncarnation );
 				collection.IncarnationUpdate = 1;
 				collection.Commit();
 				collection.Refresh();

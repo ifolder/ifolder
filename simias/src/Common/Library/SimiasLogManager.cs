@@ -39,15 +39,12 @@ namespace Simias
 	/// </summary>
 	public class SimiasLogManager
 	{
-		private static readonly string SimiasLogConfigFile = "simias.log.config";
 		private static readonly string SimiasLogFile = "simias.log";
-		
-		// TEMP
 		private static readonly string SimiasPatternLayout = "%d [%t] %-5p %c - %m%n";
 		
 		static SimiasLogManager()
 		{
-			// TEMP
+			// TODO: temp
 			BasicConfigurator.Configure(new ConsoleAppender(new PatternLayout(SimiasPatternLayout), true));
 			BasicConfigurator.Configure(new TraceAppender(new PatternLayout(SimiasPatternLayout)));
 		}
@@ -84,13 +81,22 @@ namespace Simias
 		/// <param name="storePath">The full path to the store directory.</param>
 		public static void Configure(String storePath)
 		{
-			// TEMP: log file
-//			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
-//				Path.Combine(storePath, SimiasLogFile)));
+			// TODO: temp
+			string[] args = Environment.GetCommandLineArgs();
 
-			// config file
-			FileInfo info = new FileInfo(Path.Combine(storePath, SimiasLogConfigFile));
-			DOMConfigurator.ConfigureAndWatch(info);
+			string file = SimiasLogFile;
+
+			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0) && !args[0].StartsWith("mono"))
+			{
+				file = args[0] + ".log";
+			}
+			else if ((args.Length > 1) && (args[1] != null) && (args[1].Length > 0))
+			{
+				file = args[1] + ".log";
+			}
+
+			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
+				Path.Combine(storePath, file)));
 		}
 	}
 }
