@@ -634,101 +634,142 @@ namespace Novell.iFolder
 			}
 		}
 
-
 		private void OnLoginAccount(object o, EventArgs args)
 		{
-			if(NewAccountMode)
+			iFolderMsgDialog dg;
+			
+			if (NewAccountMode)
 			{
 				try
 				{
-					DomainInformation dw = null;
-					dw = simws.ConnectToDomain(nameEntry.Text,
-											   passEntry.Text,
-											   serverEntry.Text);
-					if (dw == null)
+					DomainInformation domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);
+					if (domainInfo != null)
 					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Invalid Account Settings"),
-							Util.GS("The account settings you've specified are invalid.  Please check the values and try again."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
-						return;
-					}
+						// Set the credentials in the current process.
+						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, passEntry.Text);
+						Status authStatus = domainAuth.Authenticate();
 	
-					ifdata.AddDomain(dw);
+						switch (authStatus.statusCode)
+						{
+							case StatusCodes.Success:
+							case StatusCodes.SuccessInGrace:
+								ifdata.AddDomain(domainInfo);
 
-					NewAccountMode = false;
-					TreeIter iter = AccTreeStore.AppendValues(dw);
-					TreeSelection sel = AccTreeView.Selection;
-					curDomain = dw;
-
-					if(savePasswordButton.Active == true)
-						SavePasswordNow();
-
-					if(defaultAccButton.Active == true)
-					{
-						if(ifdata.SetDefaultDomain(curDomain))
-							defaultAccButton.Sensitive = false;
-					}
-
-					sel.SelectIter(iter);
-					try
-					{
-						// Finally, we have to set the credentials down in
-						// Simias because if we don't, when simias rolls
-						// over, the user will get prompted for the
-						// password again
-						DomainAuthentication domainAuth = 
-							new DomainAuthentication(
-									"iFolder",
-									dw.ID, 
-									passEntry.Text);
-
-						domainAuth.Authenticate();
-					}
-					catch(Exception e)
-					{
-						// oh well, user will have to enter password
-					}
-				}
-				catch(Exception e)
-				{
-					if(e.Message.IndexOf("HTTP status 401") != -1)
-					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
-							topLevelWindow,
-							iFolderMsgDialog.DialogType.Error,
-							iFolderMsgDialog.ButtonSet.Ok,
-							Util.GS("iFolder Error"),
-							Util.GS("Invalid credentials"),
-							Util.GS("The username or password entered is not valid.  Please check the values and try again."));
-						dg.Run();
-						dg.Hide();
-						dg.Destroy();
+								NewAccountMode = false;
+								TreeIter iter = AccTreeStore.AppendValues(domainInfo);
+								TreeSelection sel = AccTreeView.Selection;
+								curDomain = domainInfo;
+								
+								if (savePasswordButton.Active)
+								{
+									SavePasswordNow();
+								}
+								
+								if (defaultAccButton.Active)
+								{
+									if (ifdata.SetDefaultDomain(curDomain))
+									{
+										defaultAccButton.Sensitive = false;
+									}
+								}
+								
+								sel.SelectIter(iter);
+								
+								if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
+								{
+									dg = new iFolderMsgDialog(
+										topLevelWindow,
+										iFolderMsgDialog.DialogType.Error,
+										iFolderMsgDialog.ButtonSet.Ok,
+										Util.GS("iFolder Error"),
+										Util.GS("Expired Password"),
+										string.Format(Util.GS("Your password has expired.  You have {0} grace logins remaining."), authStatus.RemainingGraceLogins));
+									dg.Run();
+									dg.Hide();
+									dg.Destroy();
+								}
+							
+								break;
+							case StatusCodes.InvalidCredentials:
+							case StatusCodes.InvalidPassword:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("The user name or password is invalid.  Please try again."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+							case StatusCodes.AccountDisabled:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("The user account is disabled.  Please contact your network administrator for assistance."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+							case StatusCodes.AccountLockout:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("The user account has been locked out.  Please contact your network administrator for assistance."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+							default:
+								dg = new iFolderMsgDialog(
+									topLevelWindow,
+									iFolderMsgDialog.DialogType.Error,
+									iFolderMsgDialog.ButtonSet.Ok,
+									Util.GS("iFolder Error"),
+									Util.GS("Unable to Connect to iFolder Server"),
+									Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+								dg.Run();
+								dg.Hide();
+								dg.Destroy();
+								break;
+						}
 					}
 					else
 					{
-						iFolderMsgDialog dg = new iFolderMsgDialog(
+						dg = new iFolderMsgDialog(
 							topLevelWindow,
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
 							Util.GS("iFolder Error"),
-							Util.GS("Connect Error"),
-							Util.GS("The following error occurred when attempting to authenticate: ") + e.Message);
+							Util.GS("Unable to Connect to iFolder Server"),
+							Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
 						dg.Run();
 						dg.Hide();
 						dg.Destroy();
 					}
 				}
+				catch (Exception ex)
+				{
+					dg = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						Util.GS("iFolder Error"),
+						Util.GS("Unable to Connect to iFolder Server"),
+						Util.GS("An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."));
+					dg.Run();
+					dg.Hide();
+					dg.Destroy();
+				}
 			}
-
 		}
-		
 
 
 		private void OnFieldsChanged(object obj, EventArgs args)
