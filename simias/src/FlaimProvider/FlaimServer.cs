@@ -705,7 +705,7 @@ namespace Simias.Storage.Provider.Flaim
 							{
 								IdQueue.Enqueue(flmId);
 							}
-							else
+							else if (rc != FlaimError.Error.FERR_NOT_FOUND)
 							{
 								throw FlaimError.GetException(rc);
 							}
