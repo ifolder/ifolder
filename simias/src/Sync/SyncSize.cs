@@ -37,14 +37,17 @@ namespace Simias.Sync
 /// to be retrieved from the master. It also does not account for
 /// delta-sync algorithms that may reduce what needs to be sent
 /// </summary>
-internal class SyncSize
+public class SyncSize
 {
 	//--------------------------------------------------------------------
-	public static void CalculateSendSize(Collection collection, out uint fileCount, out ulong maxBytesToSend)
+	public static void CalculateSendSize(Collection collection, out uint nodeCount, out ulong maxBytesToSend)
 	{
 		maxBytesToSend = 0;
-		fileCount = 0;
-		Log.Spew("starting to calculate size to send to master for collection {1}", collection.Name);
+		nodeCount = 0;
+		Log.Spew("starting to calculate size to send to master for collection {0}", collection.Name);
+
+		// TODO: this call can leave tombstones on the server. see note in Dredger
+		new Dredger(collection, false);
 
 		// TODO: would be nice to have the database find all nodes for which MasterIncarnation != LocalIncarnation
 		foreach (ShallowNode sn in collection)
@@ -53,20 +56,24 @@ internal class SyncSize
 			if (node.MasterIncarnation != node.LocalIncarnation)
 			{
 				long fileSize = 0;
-				if (collection.IsType(node, typeof(BaseFileNode).Name))
-				{
-					BaseFileNode bfn = (BaseFileNode)node;
-					FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
-					fileSize = fi.Length;
-				}
+
+				BaseFileNode bfn = null;
+				if (collection.IsType(node, typeof(FileNode).Name))
+					bfn = new FileNode(node);
+				else if (collection.IsType(node, typeof(StoreFileNode).Name))
+					bfn = new StoreFileNode(node);
+
+				if (bfn != null)
+					fileSize = new FileInfo(bfn.GetFullPath(collection)).Length;
 
 				// TODO: would be nice to have a faster to get serializable-size rather than actually serializing it.
 				MemoryStream ms = new MemoryStream();
 				BinaryFormatter bf = new BinaryFormatter();
 				bf.Serialize(ms, node);
-				Log.Spew("Adding node {0} to send size: fileSize = {1}, nodeSize = {2}", node.Name, fileSize, ms.Length);
+
+				//Log.Spew("Adding node {0} to send size: fileSize = {1}, nodeSize = {2}", node.Name, fileSize, ms.Length);
 				maxBytesToSend += (ulong)fileSize + (ulong)ms.Length;
-				fileCount++;
+				nodeCount++;
 			}
 		}
 	}

@@ -57,7 +57,7 @@ public class FileInviter
 	}
 
 	// TODO: is the following path comparison correct? should it be case insensitive?
-	internal static Collection FindCollection(Store store, Uri docRoot)
+	public static Collection FindCollection(Store store, Uri docRoot)
 	{
 		foreach (ShallowNode sn in store)
 		{

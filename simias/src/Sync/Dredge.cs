@@ -37,14 +37,6 @@ namespace Simias.Sync
 /// applying iFolder specific behavior
 /// </summary>
 
-/* TODO: SyncIncomingNode handles naming and update collisions, renames the completed file
- * according to local file system rules, etc. Such updates may involve a number of steps
- * with partial completion possible due to power failures, disk crashes and the like.
- * The Dredger should be run at each startup to collect changes that may have
- * been missed by the event system when it was not operational. Therefore, the dredger
- * should also be able to handle any incomplete incoming nodes.
- */
-
 /* TODO: need to handle if we are on a case-insensitive file system and file name
  * changes only by case? Actually this would be a rather rare optimization and
  * probably not worth it for the dredger (except perhaps for a directory rename).
@@ -55,6 +47,14 @@ namespace Simias.Sync
 internal class Dredger
 {
 	Collection collection = null;
+
+	/* TODO: onServer needs to be removed. It controls how tombstones are handled:
+	 *   they are deleted on the server but left on the client. What it
+	 *   really needs to be is deleted if there is no upstream server. Perhaps
+	 *   the best way to handle it would be for this code to always leave a
+	 *   tombstone, but the sync code would just remove them if there was no
+	 *   upstream server.
+	 */
 	bool onServer = false;
 
 	//--------------------------------------------------------------------

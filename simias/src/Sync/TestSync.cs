@@ -204,6 +204,40 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
+	[Test] public void NUSizeSync() { Assert(SizeSync()); }
+
+	public bool SizeSync()
+	{
+		log.Debug("+++++++++++ creating subdir to check syncSize");
+		string dir1 = Path.Combine(folderB, "subdirSized");
+		Directory.CreateDirectory(dir1);
+
+		int[] sizes = { 113*1024, 5, 42, 888, 255 * 1024 + 5 };
+		Differ.CreateFile(Path.Combine(dir1, "sizedFile0"), sizes[0]);
+		Differ.CreateFile(Path.Combine(dir1, "sizedFile1"), sizes[1]);
+		Differ.CreateFile(Path.Combine(dir1, "sizedFile2"), sizes[2]);
+		Differ.CreateFile(Path.Combine(dir1, "sizedFile3"), sizes[3]);
+		Differ.CreateFile(Path.Combine(dir1, "sizedFile4"), sizes[4]);
+		ulong totalSize = 0;
+		foreach (int size in sizes)
+			totalSize += (uint)size;
+
+        Store store = new Store(new Configuration(storeDirB));
+		store.Revert();
+		Collection collection = FileInviter.FindCollection(store, new Uri(folderB));
+
+		uint nodeCount;
+		ulong maxBytesToSend;
+		SyncSize.CalculateSendSize(collection, out nodeCount, out maxBytesToSend);
+
+		log.Debug("+++++++++++ syncSize: {0} nodes, {1} totalSize", nodeCount, maxBytesToSend);
+
+		return nodeCount == 7
+				&& maxBytesToSend > totalSize + 7 * 1000
+				&& maxBytesToSend < totalSize + 7 * 2000;
+	}
+
+	//---------------------------------------------------------------------------
 	// test deletes: delete a file from each end, and cause deletion collision
 	// sync and make sure everything got sorted out
 	[Test] public void NUSimpleAdds() { Assert(SimpleAdds()); }
@@ -405,10 +439,11 @@ public class SyncTests: Assertion
 		AccountTest("invite", Invite());
 		AccountTest("accept", Accept());
 		AccountTest("firstSync", FirstSync());
+		AccountTest("syncSize", SizeSync());
 		AccountTest("simpleAdds", SimpleAdds());
 		AccountTest("simpleDeletes", SimpleDeletes());
 		AccountTest("FileCreationCollision", FileCreationCollision());
-		AccountTest("DeepSubDirs", DeepSubDirs());
+		//AccountTest("DeepSubDirs", DeepSubDirs());
 		Cleanup();
 		Console.WriteLine("{0} tests succeeded, {1} failed", successCount, failedCount);
 	}

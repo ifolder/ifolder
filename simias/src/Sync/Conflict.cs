@@ -32,7 +32,7 @@ namespace Simias.Sync
 /// <summary>
 /// class to assist in conflict resolution
 /// </summary>
-internal class Conflict
+public class Conflict
 {
 	Collection collection;
 	Node node;
@@ -73,8 +73,8 @@ internal class Conflict
 	{
 		if (localChangesWin)
 		{
-			// remove temp file and node propoerty
-			// update incarnation to > conflict incarn
+			// remove temp file and node property
+			// update incarnation to conflict incarn + 1
 		}
 		else
 		{
