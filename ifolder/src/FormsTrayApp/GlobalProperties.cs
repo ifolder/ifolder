@@ -1168,17 +1168,17 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuStart_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = services.SelectedItems[0];
-			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
 
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				svc.Start();
+				service.Svc.Start();
 			}
 			catch{}
 
-			lvi.SubItems[1].Text = svc.State.ToString();
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
 
 			Cursor.Current = Cursors.Default;
 		}
@@ -1186,19 +1186,19 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuRestart_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = services.SelectedItems[0];
-			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
 
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				svc.Stop();
-				lvi.SubItems[1].Text = svc.State.ToString();
-				svc.Start();
+				service.Svc.Stop();
+				lvi.SubItems[1].Text = service.Svc.State.ToString();
+				service.Svc.Start();
 			}
 			catch{}
 
-			lvi.SubItems[1].Text = svc.State.ToString();
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
 
 			Cursor.Current = Cursors.Default;
 		}
@@ -1206,17 +1206,17 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuStop_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = services.SelectedItems[0];
-			ServiceCtl svc = (ServiceCtl)lvi.Tag;
+			ServiceWithState service = (ServiceWithState)lvi.Tag;
 
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				svc.Stop();
+				service.Svc.Stop();
 			}
 			catch{}
 
-			lvi.SubItems[1].Text = svc.State.ToString();
+			lvi.SubItems[1].Text = service.Svc.State.ToString();
 
 			Cursor.Current = Cursors.Default;
 		}
