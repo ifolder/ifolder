@@ -94,8 +94,8 @@ endif
 if DARWIN
 if DEBUG
 FLAIMLIBDIR="../../../external/flaim/macosx/debug"
-CXX_FLAGS= -I"../../../external/flaim/macosx/include" -fshort-wchar -DDEBUG -DUNIX -D_REENTRANT -DFLAIMWRAPPER_EXPORTS -c
-MYLDFLAGS=-L$(FLAIMLIBDIR) -lflm -lstdc++ -lpthread -shared
+CXX_FLAGS= -I"../../../external/flaim/macosx/include" -fshort-wchar -DDEBUG -DUNIX -D_REENTRANT -DFLAIMWRAPPER_EXPORTS -DOSX -c
+MYLDFLAGS=-dynamiclib -L$(FLAIMLIBDIR) -lflm -lstdc++ -lpthread -dylib
 else
 FLAIMLIBDIR="../../../external/flaim/macosx/release"
 CXX_FLAGS= -I"../../../external/flaim/macosx/include" -fshort-wchar -DUNIX -D_REENTRANT -DFLAIMWRAPPER_EXPORTS -DOSX -c
