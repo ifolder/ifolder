@@ -173,7 +173,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	protected void openStore() {
 		
 		// TODO: Figure out how to retrieve the most recently used URLs
-		String url = (String) JOptionPane.showInputDialog(this, "Simias Store URL", "Open Simias Store",
+		String url = (String) JOptionPane.showInputDialog(this, "Simias Store URL:                                                                                                                                    ", "Open Simias Store",
 												 JOptionPane.QUESTION_MESSAGE, null, null,
 												 "http://bht-linux.provo.novell.com:49448/simias10/boyd/SimiasBrowser.asmx");
 		if (url == null)
