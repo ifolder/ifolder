@@ -32,6 +32,8 @@ using Simias.Security.Web.AuthenticationService;
 using Simias.Service;
 using Simias.Storage;
 
+using SCodes = Simias.Authentication.StatusCodes;
+
 
 namespace Simias.SimpleServer
 {
@@ -92,7 +94,7 @@ namespace Simias.SimpleServer
 		public Simias.Authentication.Status AuthenticateByName(string user, string password)
 		{
 			Simias.Authentication.Status status =
-				new Simias.Authentication.Status(Simias.Authentication.StatusCodes.Unknown);
+				new Simias.Authentication.Status(SCodes.Unknown);
 
 			try
 			{
@@ -110,19 +112,20 @@ namespace Simias.SimpleServer
 						{
 							if (password == (string) pwd.Value)
 							{
-								status.statusCode = Simias.Authentication.StatusCodes.Success;
+								status.statusCode = SCodes.Success;
 								status.UserID = member.UserID;
 								status.UserName = member.Name;
 							}
 							else
 							{
-								status.statusCode = Simias.Authentication.StatusCodes.InvalidPassword;
+								status.statusCode = SCodes.InvalidPassword;
 							}
 						}
 					}
 					else
 					{
-						status.statusCode = Simias.Authentication.StatusCodes.UnknownUser;
+						log.Debug( "Unknown user: " + user + " attempted to authenticate" );
+						status.statusCode = SCodes.UnknownUser;
 					}
 				}
 				else
@@ -135,7 +138,7 @@ namespace Simias.SimpleServer
 				log.Debug(authEx.Message);
 				log.Debug(authEx.StackTrace);
 
-				status.statusCode = Simias.Authentication.StatusCodes.InternalException;
+				status.statusCode = SCodes.InternalException;
 				status.ExceptionMessage = authEx.Message;
 			}
 
@@ -151,7 +154,7 @@ namespace Simias.SimpleServer
 
 		public Simias.Authentication.Status AuthenticateByID(string id, string password)
 		{
-			return	new Simias.Authentication.Status(Simias.Authentication.StatusCodes.MethodNotSupported);
+			return new Simias.Authentication.Status(SCodes.MethodNotSupported);
 		}
     }
 }
