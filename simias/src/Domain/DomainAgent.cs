@@ -23,6 +23,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using System.Web;
 using System.Xml;
 
@@ -342,19 +343,28 @@ namespace Simias.Domain
 			DomainService domainService = new DomainService();
 			domainService.Url = domainServiceUrl.ToString();
 
-			// Pass the credentials
-			domainService.Credentials = 
-				new NetworkCredential(
-					user,
-					password,
-					domainServiceUrl.ToString());
-
+			// Setup the credentials
+			NetworkCredential myCred = new NetworkCredential(user, password); 
+			CredentialCache myCache = new CredentialCache();
+			myCache.Add(new Uri(domainService.Url), "Basic", myCred);
+			domainService.Credentials = myCache;
 			domainService.CookieContainer = new CookieContainer();
+			domainService.PreAuthenticate = true;
+			domainService.Timeout = 30000;
+			
+			int normalThreads = 9999;
+			int	completionPortThreads = 8888;
+			ThreadPool.GetAvailableThreads(out normalThreads, out completionPortThreads);
+			
+			log.Debug("Available threads: " + normalThreads.ToString());
+			log.Debug("Calling " + domainService.Url + " to provision the user");
 
 			// provision user
 			ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
 			if (provisionInfo == null)
 				throw new ApplicationException("User does not exist on server.");
+				
+			log.Debug("the user has been provisioned on the remote domain");
 
 			// get domain info
 			DomainInfo domainInfo = domainService.GetDomainInfo(provisionInfo.UserID);
@@ -466,11 +476,9 @@ namespace Simias.Domain
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			domainService.Credentials = cSimiasCreds.GetCredentials();
 
-			/*
-			 * FIXME:: for now let this go through
 			if (domainService.Credentials == null)
 				throw new ApplicationException("No credentials available for specified collection.");
-			*/
+			domainService.PreAuthenticate = true;
 
 			string rootID = null;
 			string rootName = null;
