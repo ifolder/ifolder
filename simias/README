@@ -32,11 +32,6 @@ Linux
     - autoconf 2.57 (or later)
     - m4 1.40 (or later)
        
-    To compile use the traditional:
-        ./configure --prefix=<install_path>
-        make
-        make install
-
 Win32
 ------
     Tested platforms:
@@ -69,22 +64,24 @@ Win32
         
         call "%VS71COMNTOOLS%\vsvars32.bat" > NUL
 
-    To compile use the traditional:
-        ./configure --prefix=<install_path>
-        make
-        make install
-
 OS X
 -----
     We are working to get Simias working on OS X.  Right now there are some 
     issues too large to cover here.  Once you do get mono going on OS X, the
     Simias project should work much like it does on Linux.
 
-    To compile use the traditional:
+All Platforms
+--------------
+    To compile from a source distribution:
         ./configure --prefix=<install_path>
         make
         make install
-
+    
+    To compile source from CVS:
+        ./autogen.sh --prefix=<install_path>
+        make
+        make install
+    
 
 ---------------------
 Discussion & Support
