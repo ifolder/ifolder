@@ -139,16 +139,16 @@ internal class Dredger
 	}
 
 	//--------------------------------------------------------------------
-	// only returns true if directory exists and name matches case exactly
-	bool DirThere(string path, string name)
+	// only returns true if file exists and name matches case exactly
+	bool FileThere(string path, string name)
 	{
 		FileInfo fi = new FileInfo(Path.Combine(path, name));
 		return fi.Exists && name == fi.Name;
 	}
 
 	//--------------------------------------------------------------------
-	// only returns true if file exists and name matches case exactly
-	bool FileThere(string path, string name)
+	// only returns true if directory exists and name matches case exactly
+	bool DirThere(string path, string name)
 	{
 		DirectoryInfo di = new DirectoryInfo(Path.Combine(path, name));
 		return di.Exists && name == di.Name;

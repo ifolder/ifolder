@@ -146,6 +146,7 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncStoreManager.cs
 ../SyncManager/Library/SyncStoreService.cs
 ../SyncManager/Tests/SyncManagerTests.cs
+../Sync/Conflict.cs
 ../Sync/Differ.cs
 ../Sync/Dredge.cs
 ../Sync/SyncLog.cs
