@@ -301,6 +301,13 @@ namespace Simias.Domain
 		private static string DomainServiceType = "Domain Service";
 		private static string DomainServicePath = "/simias10/DomainService.asmx";
 
+		/// <summary>
+		/// Property name for declaring a domain active/inactive.
+		/// If the property doesn't exist on a Domain, then that
+		/// domain by default is active
+		/// </summary>
+		private readonly string activePropertyName = "Active";
+
 		private Store store = Store.GetStore();
 		#endregion
 
@@ -442,11 +449,6 @@ namespace Simias.Domain
 			domainService.PreAuthenticate = true;
 			domainService.Timeout = 30000;
 			
-			int normalThreads = 9999;
-			int	completionPortThreads = 8888;
-			ThreadPool.GetAvailableThreads(out normalThreads, out completionPortThreads);
-			
-			log.Debug("Available threads: " + normalThreads.ToString());
 			log.Debug("Calling " + domainService.Url + " to provision the user");
 
 			// provision user
@@ -511,6 +513,87 @@ namespace Simias.Domain
 			}
 
 			return domainInfo.ID;
+		}
+
+		/// <summary>
+		/// Check if the domain is marked Active or in a connected state
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to check status on.</param>
+		public bool IsDomainActive(string domainID)
+		{
+			bool active = true;
+
+			try
+			{
+				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+					
+				// Make sure this domain is a slave 
+				Roster cRoster = cDomain.GetRoster( Store.GetStore() );
+				if ( cRoster.Role.ToString() == "Slave" )
+				{
+					Property p = 
+						cDomain.Properties.GetSingleProperty( this.activePropertyName );
+
+					if ( p != null && (bool) p.Value == false )
+					{
+						active = false;
+					}
+				}
+			}
+			catch{}
+			return active;
+		}
+
+		/// <summary>
+		/// Sets the status of the specified domain to Active.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain.</param>
+		public void SetDomainActive(string domainID)
+		{
+			try
+			{
+				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+				Roster cRoster = cDomain.GetRoster( Store.GetStore() );
+				if ( cRoster.Role.ToString() == "Slave" )
+				{
+					Property p = new Property( this.activePropertyName, true );
+					p.LocalProperty = true;
+					cDomain.Properties.ModifyProperty( p );
+					store.GetDatabaseObject().Commit( cDomain );
+				}
+			}
+			catch( Exception e )
+			{
+				log.Error( e.Message );
+				log.Error( e.StackTrace);
+			}
+		}
+
+		/// <summary>
+		/// Sets the status of the specified domain to Inactive.
+		/// setting a domain to inactive will disable all 
+		/// synchronization activity.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain.</param>
+		public void SetDomainInactive(string domainID)
+		{
+			try
+			{
+				Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+				Roster cRoster = cDomain.GetRoster( Store.GetStore() );
+				if ( cRoster.Role.ToString() == "Slave" )
+				{
+					Property p = new Property( this.activePropertyName, false );
+					p.LocalProperty = true;
+					cDomain.Properties.ModifyProperty( p );
+					store.GetDatabaseObject().Commit( cDomain );
+				}
+			}
+			catch( Exception e )
+			{
+				log.Error( e.Message );
+				log.Error( e.StackTrace);
+			}
 		}
 
 		/// <summary>
