@@ -161,11 +161,32 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (IBAction)refreshWindow:(id)sender
 {
+	int domainCount;
 	[[NSApp delegate] addLog:NSLocalizedString(@"Refreshing iFolder view", nil)];
 
 	if([[NSApp delegate] simiasIsRunning])
 		[[iFolderData sharedInstance] refresh:NO];
 
+	// Get all of the domains and refresh their POBoxes
+	NSArray *domains = [[iFolderData sharedInstance] getDomains];
+	
+	for(domainCount = 0; domainCount < [domains count]; domainCount++)
+	{
+		iFolderDomain *dom = [domains objectAtIndex:domainCount];
+		
+		if(dom != nil)
+		{
+			@try
+			{
+				NSLog(@"Calling to refresh on poBox %@", [dom poBoxID]);
+				[ifolderService SynciFolderNow:[dom poBoxID]];
+			}
+			@catch (NSException *e)
+			{
+			}
+		}
+	}
+	
 	// calling refresh on iFolderData calls refreshDomains
 //	[self refreshDomains];
 
@@ -262,8 +283,6 @@ static iFolderWindowController *sharedInstance = nil;
 		{
 			iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:(int)contextInfo];
 
-			NSLog(NSLocalizedString(@"Reverting iFolder %@", nil), [ifolder Name]);
-
 			[[NSApp delegate] addLog:[NSString stringWithFormat:NSLocalizedString(@"Reverting iFolder %@", nil), [ifolder Name]]];
 
 			@try
@@ -321,8 +340,6 @@ static iFolderWindowController *sharedInstance = nil;
 		case NSAlertDefaultReturn:		// Revert iFolder
 		{
 			iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:(int)contextInfo];
-
-			NSLog(@"Deleting iFolder at index %@", [ifolder Name]);
 
 			@try
 			{
