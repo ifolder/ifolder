@@ -391,11 +391,14 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					Subscription sub = new Subscription(node);
 
-					string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
-					ListViewItem lvi = new ListViewItem(items, 0);
-					lvi.Tag = sub;
-					messages.Items.Add(lvi);
-					ht.Add(sub.ID, lvi);
+					if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
+					{
+						string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
+						ListViewItem lvi = new ListViewItem(items, 0);
+						lvi.Tag = sub;
+						messages.Items.Add(lvi);
+						ht.Add(sub.ID, lvi);
+					}
 				}
 			}
 			catch (SimiasException ex)
@@ -432,6 +435,7 @@ namespace Novell.iFolder.FormsTrayApp
 						if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
 						{
 							lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+							lvi.Tag = sub;
 						}
 						else
 						{
