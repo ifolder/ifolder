@@ -3,7 +3,7 @@ SUBDIRS = WebService iFolder ClientUpgrade TrayIcon GtkTrayApp
 endif
 
 if DARWIN
-SUBDIRS = WebService iFolder ClientUpgrade
+SUBDIRS = WebService
 endif
 
 if WINDOWS
