@@ -52,7 +52,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.TextBox phone4;
 		private System.Windows.Forms.ComboBox phoneSelect4;
 		private System.Windows.Forms.ComboBox phoneSelect3;
-		private System.Windows.Forms.CheckBox mailHTML;
 		private System.Windows.Forms.ComboBox addressSelect;
 		private System.Windows.Forms.CheckBox mailAddress;
 		private System.Windows.Forms.GroupBox groupBox2;
@@ -88,6 +87,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.TextBox fullName;
 		private System.Windows.Forms.TextBox jobTitle;
 		private System.Windows.Forms.ComboBox emailSelect;
+		private System.Windows.Forms.CheckBox preferredEmail;
 
 		/// <summary>
 		/// Required designer variable.
@@ -163,7 +163,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addressSelect = new System.Windows.Forms.ComboBox();
 			this.pictureAddress = new System.Windows.Forms.PictureBox();
 			this.address = new System.Windows.Forms.ListBox();
-			this.mailHTML = new System.Windows.Forms.CheckBox();
+			this.preferredEmail = new System.Windows.Forms.CheckBox();
 			this.phoneSelect3 = new System.Windows.Forms.ComboBox();
 			this.phoneSelect4 = new System.Windows.Forms.ComboBox();
 			this.picturePhone = new System.Windows.Forms.PictureBox();
@@ -193,10 +193,10 @@ namespace Novell.iFolder.FormsBookLib
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
+			this.tabControl1.Location = new System.Drawing.Point(8, 8);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(792, 312);
+			this.tabControl1.Size = new System.Drawing.Size(736, 312);
 			this.tabControl1.TabIndex = 0;
 			// 
 			// tabPage1
@@ -218,7 +218,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.addressSelect);
 			this.tabPage1.Controls.Add(this.pictureAddress);
 			this.tabPage1.Controls.Add(this.address);
-			this.tabPage1.Controls.Add(this.mailHTML);
+			this.tabPage1.Controls.Add(this.preferredEmail);
 			this.tabPage1.Controls.Add(this.phoneSelect3);
 			this.tabPage1.Controls.Add(this.phoneSelect4);
 			this.tabPage1.Controls.Add(this.picturePhone);
@@ -241,7 +241,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.fullName);
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Size = new System.Drawing.Size(784, 286);
+			this.tabPage1.Size = new System.Drawing.Size(728, 286);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "General";
 			// 
@@ -309,7 +309,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// addr
 			// 
-			this.addr.Location = new System.Drawing.Point(472, 192);
+			this.addr.Location = new System.Drawing.Point(424, 192);
 			this.addr.Name = "addr";
 			this.addr.Size = new System.Drawing.Size(96, 23);
 			this.addr.TabIndex = 22;
@@ -318,9 +318,9 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// groupBox4
 			// 
-			this.groupBox4.Location = new System.Drawing.Point(400, 144);
+			this.groupBox4.Location = new System.Drawing.Point(376, 144);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(368, 4);
+			this.groupBox4.Size = new System.Drawing.Size(344, 4);
 			this.groupBox4.TabIndex = 48;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "groupBox4";
@@ -353,14 +353,14 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.groupBox2.Location = new System.Drawing.Point(8, 208);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(376, 4);
+			this.groupBox2.Size = new System.Drawing.Size(362, 4);
 			this.groupBox2.TabIndex = 43;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "groupBox2";
 			// 
 			// mailAddress
 			// 
-			this.mailAddress.Location = new System.Drawing.Point(584, 264);
+			this.mailAddress.Location = new System.Drawing.Point(528, 264);
 			this.mailAddress.Name = "mailAddress";
 			this.mailAddress.Size = new System.Drawing.Size(160, 16);
 			this.mailAddress.TabIndex = 24;
@@ -372,7 +372,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addressSelect.Items.AddRange(new object[] {
 															   "Business:",
 															   "Home:"});
-			this.addressSelect.Location = new System.Drawing.Point(472, 160);
+			this.addressSelect.Location = new System.Drawing.Point(424, 160);
 			this.addressSelect.Name = "addressSelect";
 			this.addressSelect.Size = new System.Drawing.Size(96, 21);
 			this.addressSelect.TabIndex = 21;
@@ -380,7 +380,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// pictureAddress
 			// 
-			this.pictureAddress.Location = new System.Drawing.Point(408, 168);
+			this.pictureAddress.Location = new System.Drawing.Point(374, 160);
 			this.pictureAddress.Name = "pictureAddress";
 			this.pictureAddress.Size = new System.Drawing.Size(48, 48);
 			this.pictureAddress.TabIndex = 40;
@@ -388,18 +388,18 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// address
 			// 
-			this.address.Location = new System.Drawing.Point(576, 160);
+			this.address.Location = new System.Drawing.Point(528, 160);
 			this.address.Name = "address";
 			this.address.Size = new System.Drawing.Size(192, 95);
 			this.address.TabIndex = 23;
 			// 
-			// mailHTML
+			// preferredEmail
 			// 
-			this.mailHTML.Location = new System.Drawing.Point(176, 184);
-			this.mailHTML.Name = "mailHTML";
-			this.mailHTML.Size = new System.Drawing.Size(168, 16);
-			this.mailHTML.TabIndex = 8;
-			this.mailHTML.Text = "Wants to receive HTML mail";
+			this.preferredEmail.Location = new System.Drawing.Point(176, 184);
+			this.preferredEmail.Name = "preferredEmail";
+			this.preferredEmail.Size = new System.Drawing.Size(168, 16);
+			this.preferredEmail.TabIndex = 8;
+			this.preferredEmail.Text = "&Preferred email account";
 			// 
 			// phoneSelect3
 			// 
@@ -410,7 +410,7 @@ namespace Novell.iFolder.FormsBookLib
 															  "Mobile:",
 															  "Home:",
 															  "Pager:"});
-			this.phoneSelect3.Location = new System.Drawing.Point(472, 80);
+			this.phoneSelect3.Location = new System.Drawing.Point(424, 80);
 			this.phoneSelect3.Name = "phoneSelect3";
 			this.phoneSelect3.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect3.TabIndex = 17;
@@ -426,7 +426,7 @@ namespace Novell.iFolder.FormsBookLib
 															  "Mobile:",
 															  "Home:",
 															  "Pager:"});
-			this.phoneSelect4.Location = new System.Drawing.Point(472, 112);
+			this.phoneSelect4.Location = new System.Drawing.Point(424, 112);
 			this.phoneSelect4.Name = "phoneSelect4";
 			this.phoneSelect4.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect4.TabIndex = 19;
@@ -435,7 +435,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// picturePhone
 			// 
-			this.picturePhone.Location = new System.Drawing.Point(408, 16);
+			this.picturePhone.Location = new System.Drawing.Point(374, 16);
 			this.picturePhone.Name = "picturePhone";
 			this.picturePhone.Size = new System.Drawing.Size(48, 48);
 			this.picturePhone.TabIndex = 35;
@@ -450,7 +450,7 @@ namespace Novell.iFolder.FormsBookLib
 															  "Mobile:",
 															  "Home:",
 															  "Pager:"});
-			this.phoneSelect1.Location = new System.Drawing.Point(472, 16);
+			this.phoneSelect1.Location = new System.Drawing.Point(424, 16);
 			this.phoneSelect1.Name = "phoneSelect1";
 			this.phoneSelect1.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect1.TabIndex = 13;
@@ -466,7 +466,7 @@ namespace Novell.iFolder.FormsBookLib
 															  "Mobile:",
 															  "Home:",
 															  "Pager:"});
-			this.phoneSelect2.Location = new System.Drawing.Point(472, 48);
+			this.phoneSelect2.Location = new System.Drawing.Point(424, 48);
 			this.phoneSelect2.Name = "phoneSelect2";
 			this.phoneSelect2.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect2.TabIndex = 15;
@@ -491,7 +491,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phone4
 			// 
-			this.phone4.Location = new System.Drawing.Point(576, 112);
+			this.phone4.Location = new System.Drawing.Point(528, 112);
 			this.phone4.Name = "phone4";
 			this.phone4.Size = new System.Drawing.Size(192, 20);
 			this.phone4.TabIndex = 20;
@@ -501,7 +501,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phone3
 			// 
-			this.phone3.Location = new System.Drawing.Point(576, 80);
+			this.phone3.Location = new System.Drawing.Point(528, 80);
 			this.phone3.Name = "phone3";
 			this.phone3.Size = new System.Drawing.Size(192, 20);
 			this.phone3.TabIndex = 18;
@@ -511,7 +511,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phone2
 			// 
-			this.phone2.Location = new System.Drawing.Point(576, 48);
+			this.phone2.Location = new System.Drawing.Point(528, 48);
 			this.phone2.Name = "phone2";
 			this.phone2.Size = new System.Drawing.Size(192, 20);
 			this.phone2.TabIndex = 16;
@@ -521,7 +521,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// phone1
 			// 
-			this.phone1.Location = new System.Drawing.Point(576, 16);
+			this.phone1.Location = new System.Drawing.Point(528, 16);
 			this.phone1.Name = "phone1";
 			this.phone1.Size = new System.Drawing.Size(192, 20);
 			this.phone1.TabIndex = 14;
@@ -550,7 +550,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			this.groupBox1.Location = new System.Drawing.Point(8, 144);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(376, 4);
+			this.groupBox1.Size = new System.Drawing.Size(362, 4);
 			this.groupBox1.TabIndex = 18;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "groupBox1";
@@ -607,7 +607,7 @@ namespace Novell.iFolder.FormsBookLib
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Location = new System.Drawing.Point(624, 320);
+			this.ok.Location = new System.Drawing.Point(584, 328);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 1;
 			this.ok.Text = "OK";
@@ -616,7 +616,7 @@ namespace Novell.iFolder.FormsBookLib
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.Location = new System.Drawing.Point(704, 320);
+			this.cancel.Location = new System.Drawing.Point(664, 328);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 2;
 			this.cancel.Text = "Cancel";
@@ -627,7 +627,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(786, 352);
+			this.ClientSize = new System.Drawing.Size(754, 360);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.tabControl1);
