@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -57,6 +58,13 @@ namespace Simias.Storage
 		/// Directory where store-managed files are kept.
 		/// </summary>
 		private const string storeManagedDirectoryName = "CollectionFiles";
+
+#if ( DEBUG )
+		/// <summary>
+		/// Used for debugging to tell who allocated this object.
+		/// </summary>
+		private string allocator = null;
+#endif
 
 		/// <summary>
 		/// Specifies whether object is viable.
@@ -267,6 +275,10 @@ namespace Simias.Storage
 		/// or open the database.</param>
 		public Store( Configuration config )
 		{
+#if ( DEBUG )
+			StackFrame sf = new StackFrame( 1, true );
+			allocator = String.Format( "Store object allocated by {0} in file {1} at line number {2}", sf.GetMethod(), sf.GetFileName(), sf.GetFileLineNumber() );
+#endif
 			lock( ctorLock )
 			{
 				bool created;
@@ -1015,6 +1027,9 @@ namespace Simias.Storage
 		/// </summary>
 		~Store()      
 		{
+#if ( DEBUG )
+			log.Warn( "Object should have been disposed. {0}", allocator );
+#endif
 			Dispose( false );
 		}
 		#endregion
