@@ -345,7 +345,7 @@ internal class IncomingNode
 							// Compare the name to see if this node represents the file.
 						
 							BaseFileNode oldBfn = (BaseFileNode)oldNode;
-							if (oldFi.LastWriteTime != oldBfn.LastWriteTime)
+							if (oldFi.LastWriteTime > oldBfn.LastWriteTime)
 							{
 								// The file has changed locally update the lastWrite and commit.
 								oldBfn.LastWriteTime = oldFi.LastWriteTime;
