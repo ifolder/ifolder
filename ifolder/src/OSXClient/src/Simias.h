@@ -29,7 +29,6 @@
 	NSTask			*simiasTask;
 	NSPipe			*stdInPipe;
     NSFileHandle	*stdInHandle;
-	
 }
 
 + (Simias *)getInstance;

@@ -82,27 +82,21 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 	switch(state_event)
 	{
 		case SEC_STATE_EVENT_CONNECTED:
-			[[NSApp delegate] addLogTS:@"Simias Event Client Event Connected... Registering for events"];
+			NSLog(@"Event client connected");
+			[[NSApp delegate] simiasHasStarted];
 			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNode, nil);
-			[[NSApp delegate] addLogTS:@"Registered for Node Created Events"];
 			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNode, nil);
-			[[NSApp delegate] addLogTS:@"Registered for Node Deleted Events"];
 			sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNode, nil);
-			[[NSApp delegate] addLogTS:@"Registered for Node Changed Events"];
 
 			sec_set_event(*sec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)SimiasEventSyncCollection, nil);
-			[[NSApp delegate] addLogTS:@"Registered for Collection Sync Events"];
 			sec_set_event(*sec, ACTION_FILE_SYNC, true, (SimiasEventFunc)SimiasEventSyncFile, nil);
-			[[NSApp delegate] addLogTS:@"Registered for File Sync Events"];
 			sec_set_event(*sec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)SimiasEventNotifyMessage, nil);
-			[[NSApp delegate] addLogTS:@"Registered for Notify Message Events"];
-
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
-			[[NSApp delegate] addLogTS:@"Simias Event Client Event Disconnected"];		
+			NSLog(@"Event client disconnected!");
 			break;
 		case SEC_STATE_EVENT_ERROR:
-			[[NSApp delegate] addLogTS:@"Simias Event Client Event Error!"];		
+			NSLog(@"ERROR with Simias Event Client");
 			break;
 	}
     [pool release];	

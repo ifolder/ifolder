@@ -44,6 +44,8 @@
 //===================================================================
 -(void)awakeFromNib
 {
+	NSLog(@"Waiting for app to enable multithreading");
+
 	// this baby will get cocoa objects ready for mutlitple threads
     [NSThread detachNewThreadSelector:@selector(enableThreads:)
         toTarget:self withObject:nil];
@@ -60,7 +62,9 @@
 	[self initializeSimiasEvents];
 	
 	NSLog(@"Starting Simias Process");
-	[self startSimiasThread:self];
+	[ [Simias getInstance] start];
+//	[self startSimiasThread:self];
+
 
 	ifolderdata = [[iFolderData alloc] init];
 }
@@ -216,6 +220,10 @@
 //===================================================================
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+}
+
+- (void)postSimiasInit:(id)arg
+{
 	runThreads = YES;
 
 	NSLog(@"Creating and loading iFolderData");
@@ -230,6 +238,12 @@
 	[iFolderWindowController updateStatusTS:@"Idle..."];
 }
 
+-(void)simiasHasStarted
+{
+	[self performSelectorOnMainThread:@selector(postSimiasInit:) 
+				withObject:nil waitUntilDone:NO ];
+}
+
 
 
 
@@ -241,11 +255,12 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	runThreads = NO;
-	[self addLog:@"Unregistering events..."];
-	SimiasEventDisconnect();
 	[self addLog:@"Shutting down Simias..."];
 	[ [Simias getInstance] stop];
 	[self addLog:@"Simias is shut down"];
+
+	[self addLog:@"Unregistering events..."];
+	SimiasEventDisconnect();
 }
 
 
@@ -280,21 +295,26 @@
 		NSLog(@"Simias is not running, starting....");
 		iFolderService *threadWebService;
 		
-		threadWebService = [[iFolderService alloc] init];		
-		
 		// Startup simias Process
-		[ [Simias getInstance] start];	
-
+		[ [Simias getInstance] start];
 		
+		// Wait 5 seconds for simias to load, then start pinging
+		[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
+
 		while(!simiasRunning)
 		{
+			threadWebService = [[iFolderService alloc] init];		
+		
 			@try
 			{
 				NSLog(@"Pinging simias to check for startup...");
 				simiasRunning = [threadWebService Ping];
+				NSLog(@"Back from pinging simias!");
 			}
 			@catch(NSException *e)
 			{
+				NSLog(@"Exception in Ping: %@ - %@", [e name], [e reason]);
+				NSLog(@"Failed to ping simias!");
 				simiasRunning = NO;
 			}
 			// I tried doing this in the catch above but sometimes we fail
@@ -305,6 +325,10 @@
 				NSLog(@"Simias is not running, sleeping.");
 				[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
 			}
+
+			NSLog(@"freeing up threadWebService");
+			[threadWebService release];
+			threadWebService = nil;
 		}
 	}
 }

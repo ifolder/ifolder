@@ -62,12 +62,14 @@ static Simias *sharedInstance = nil;
 		[simiasTask setLaunchPath:[NSString stringWithCString:SIMIAS_BINARY]];
 		[simiasTask setArguments:parameters];
 		[simiasTask setStandardInput:stdInPipe];
+
 	    stdInHandle = [stdInPipe fileHandleForWriting];
 	}
 
 	if(![simiasTask isRunning])
-		[simiasTask launch];		
+		[simiasTask launch];
 }
+
 
 
 //Stops the simias process
@@ -79,14 +81,13 @@ static Simias *sharedInstance = nil;
 
 		if([simiasTask isRunning])
 		{
-			int termcount = 5;
+			int termcount = 10;
 
 			NSLog(@"Sending a signal to Simias to terminate");
-//			[simiasTask interrupt];
 						
 			[stdInHandle writeData:[NSData dataWithBytes:returnChar length:2]];
 
-			[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:2]];
+//			[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:2]];
 
 			// for some reason, waitUntilExit was crashing but this loop doesn't
 			// so, I'll stick with my own loop
@@ -95,7 +96,14 @@ static Simias *sharedInstance = nil;
 			while(	(simiasTask != nil) &&
 					([simiasTask isRunning]) )
 			{
-				if(termcount == 0)
+				if(termcount == 5)
+				{
+					NSLog(@"Interrupting the simias process");
+					[simiasTask interrupt];
+					[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:2]];
+					termcount--;					
+				}
+				else if(termcount == 0)
 				{
 					NSLog(@"Terminating the simias process");
 					[simiasTask terminate];
