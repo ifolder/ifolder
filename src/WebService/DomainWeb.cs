@@ -42,7 +42,7 @@ namespace Novell.iFolder.Web
 		public string UserName;
 		public bool IsDefault;
 		public bool IsSlave;
-		public bool AutoLogin;
+		public bool IsEnabled;
 		public bool IsConnected;
 
 		public DomainWeb()
@@ -79,8 +79,7 @@ namespace Novell.iFolder.Web
 			this.UserName = roster.GetMemberByID(this.UserID).Name;
 			this.IsSlave = roster.Role.Equals(Simias.Sync.SyncCollectionRoles.Slave);
 
-			this.AutoLogin = true;
-			this.IsConnected = new Simias.Domain.DomainAgent().IsDomainActive(domainID);
+			this.IsEnabled = new Simias.Domain.DomainAgent().IsDomainActive(domainID);
 		}
 
 	}
