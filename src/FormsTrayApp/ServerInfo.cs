@@ -492,12 +492,16 @@ namespace Novell.FormsTrayApp
 							mmb.ShowDialog();
 						}
 						
-						try
+						// Don't burn a grace login looking for an update.
+						if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
 						{
-							updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
-						}
-						catch // Ignore
-						{
+							try
+							{
+								updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
+							}
+							catch // Ignore
+							{
+							}
 						}
 
 						if (rememberPassword.Checked)

@@ -1609,21 +1609,25 @@ namespace Novell.FormsTrayApp
 
 							activate.Enabled = false;
 
-							try
+							// Don't burn a grace login looking for an update.
+							if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
 							{
-								// Check for an update.
-								bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
-								if (updateStarted)
+								try
 								{
-									if (ShutdownTrayApp != null)
+									// Check for an update.
+									bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
+									if (updateStarted)
 									{
-										// Shut down the tray app.
-										ShutdownTrayApp(this, new EventArgs());
+										if (ShutdownTrayApp != null)
+										{
+											// Shut down the tray app.
+											ShutdownTrayApp(this, new EventArgs());
+										}
 									}
 								}
-							}
-							catch // Ignore
-							{
+								catch // Ignore
+								{
+								}
 							}
 
 							if (!rememberPassword.Checked)
