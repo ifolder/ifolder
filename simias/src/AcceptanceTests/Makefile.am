@@ -17,7 +17,7 @@ CUR_DIR := $(shell pwd)
 
 all:
 
-AcceptanceTests.dll: $(SyncManagerTests_CSFILES) $(SyncManagerTests_RESOURCES)
+AcceptanceTests.dll: $(AcceptanceTests_CSFILES) $(AcceptanceTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(AcceptanceTests_FLAGS) $(AcceptanceTests_LIBS:%=/r:%) $(AcceptanceTests_LIBPATH:%=/lib:%) $(AcceptanceTests_CSFILES_CSC)
 	
 if DEBUG
@@ -26,9 +26,9 @@ DEBUG_CHECK_FILES = AcceptanceTests.pdb
 endif
 endif
 
-#install-exec-local: AcceptanceTests.dll
-#	$(mkinstalldirs) $(DESTDIR)$(bindir)
-#	$(INSTALL_PROGRAM) AcceptanceTests.dll $(DESTDIR)$(bindir)
+install-exec-local: AcceptanceTests.dll
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) AcceptanceTests.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \

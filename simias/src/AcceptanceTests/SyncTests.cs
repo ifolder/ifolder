@@ -157,8 +157,10 @@ namespace Simias.Tests
 
 				// accept the invitation on B and C
 				IInviteAgent agent = AgentFactory.GetInviteAgent();
-				agent.Accept(storeB, invitation1);
+				invitation1.RootPath = storePathB;
+                agent.Accept(storeB, invitation1);
 				MyTrace.WriteLine("Accepted Invitation 1 on Store B.");
+				invitation1.RootPath = storePathC;
 				agent.Accept(storeC, invitation1);
 				MyTrace.WriteLine("Accepted Invitation 1 on Store C.");
 
@@ -167,13 +169,15 @@ namespace Simias.Tests
 
 				// get slave collection on B
 				collection1B = storeB.GetCollectionById(collection1A.Id);
-				Assert("Sync collection on found on store B.", collection1B != null);
+				Assert("Sync collection not found on store B.", collection1B != null);
+                Assert("Sync collection directory not found in store B.", Directory.Exists(collectionPath1B));
 				sc1B = new SyncCollection(collection1B);
 				MyTrace.WriteLine("Found Slave Collection 1B: {0}", sc1B);
 
 				// get slave collection on C
 				collection1C = storeC.GetCollectionById(collection1A.Id);
-				Assert("Sync collection on found on store C.", collection1C != null);
+				Assert("Sync collection not found on store C.", collection1C != null);
+                Assert("Sync collection directory not found in store C.", Directory.Exists(collectionPath1C));
 				sc1C = new SyncCollection(collection1C);
 				MyTrace.WriteLine("Found Slave Collection 1C: {0}", sc1C);
 			}
@@ -238,11 +242,124 @@ namespace Simias.Tests
 		{
 		}
 
+		/// <summary>
+		/// Test creating a new file in the master collection.
+		/// </summary>
 		[Test]
-		public void TestCollectionSync()
+		public void TestCreateMasterFile()
 		{
-			
+			const string file = "hello.txt";
 
+			StreamWriter writer = File.CreateText(Path.Combine(collectionPath1A, file));
+			writer.WriteLine("Hello, World!");
+			writer.Close();
+
+			// sleep for the sync interval
+			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 1));
+			
+			Assert("File not found in store B.", File.Exists(Path.Combine(collectionPath1B, file)));
+			
+			Assert("File not found in store C.", File.Exists(Path.Combine(collectionPath1C, file)));
+		}
+
+		/// <summary>
+		/// Test modifying a file in the master collection.
+		/// </summary>
+		[Test]
+		public void TestModifyMasterFile()
+		{
+			const string file = "hello.txt";
+
+			StreamWriter writer = File.AppendText(Path.Combine(collectionPath1A, file));
+			writer.WriteLine("Hello, Again!");
+			writer.Close();
+
+			long length = File.OpenRead(Path.Combine(collectionPath1A, file)).Length;
+
+			// sleep for the sync interval
+			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 1));
+			
+			Assert("File not modified in store B.", File.OpenRead(Path.Combine(collectionPath1B, file)).Length == length);
+			
+			Assert("File not modified in store C.", File.OpenRead(Path.Combine(collectionPath1C, file)).Length == length);
+		}
+
+		/// <summary>
+		/// Test deleting a file in the master collection.
+		/// </summary>
+		[Test]
+		public void TestDeleteMasterFile()
+		{
+			const string file = "hello.txt";
+
+			File.Delete(Path.Combine(collectionPath1A, file));
+
+			// sleep for the sync interval
+			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 1));
+			
+			Assert("File not deleted in store B.", !File.Exists(Path.Combine(collectionPath1B, file)));
+			
+			Assert("File not deleted in store C.", !File.Exists(Path.Combine(collectionPath1C, file)));
+		}
+
+		/// <summary>
+		/// Test creating a file in the slave collection.
+		/// </summary>
+		[Test]
+		public void TestCreateSlaveFile()
+		{
+			const string file = "hello2.txt";
+
+			StreamWriter writer = File.CreateText(Path.Combine(collectionPath1B, file));
+			writer.WriteLine("Hello, World!");
+			writer.Close();
+
+			// sleep for the sync interval
+			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 2));
+			
+			Assert("File not found in store A.", File.Exists(Path.Combine(collectionPath1A, file)));
+			
+			Assert("File not found in store C.", File.Exists(Path.Combine(collectionPath1C, file)));
+		}
+
+		/// <summary>
+		/// Test modifying a file in the slave collection.
+		/// </summary>
+		[Test]
+		public void TestModifySlaveFile()
+		{
+			const string file = "hello2.txt";
+
+			StreamWriter writer = File.AppendText(Path.Combine(collectionPath1B, file));
+			writer.WriteLine("Hello, Again!");
+			writer.Close();
+
+			long length = File.OpenRead(Path.Combine(collectionPath1B, file)).Length;
+
+			// sleep for the sync interval
+			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 2));
+			
+			Assert("File not modified in store A.", File.OpenRead(Path.Combine(collectionPath1A, file)).Length == length);
+			
+			Assert("File not modified in store C.", File.OpenRead(Path.Combine(collectionPath1C, file)).Length == length);
+		}
+
+		/// <summary>
+		/// Test deleting a file in the slave collection.
+		/// </summary>
+		[Test]
+		public void TestDeleteSlaveFile()
+		{
+			const string file = "hello2.txt";
+
+			File.Delete(Path.Combine(collectionPath1B, file));
+
+			// sleep for the sync interval
+			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 2));
+			
+			Assert("File not deleted in store A.", !File.Exists(Path.Combine(collectionPath1A, file)));
+			
+			Assert("File not deleted in store C.", !File.Exists(Path.Combine(collectionPath1C, file)));
 		}
 	}
 }
