@@ -65,35 +65,11 @@ namespace Novell.iFolder
 		internal iFolderManager( Configuration config )
 		{
 			this.config = config;
-            this.store = new Store( config );
+            this.store = Store.GetStore();
 		}
 		#endregion
 
 		#region Static Methods
-		/// <summary>
-		/// Authenticates the current user to a persistent store at a specified
-		/// location and returns an <see cref="iFolderManager"/> that can be 
-		/// used
-		/// to manipulate iFolders in that store.
-		/// </summary>
-		///	<param name="location">
-		///	<see cref="Uri"/> specifying the location of the persistent store 
-		/// server.
-		///	</param>
-		///	<returns>
-		///	An <see cref="iFolderManager"/> that can be used
-		/// to manipulate iFolders in the specified store.
-		///	</returns>
-		public static iFolderManager Connect( Uri location )
-		{
-			//
-			// TODO: Hook up with Copernicus here!
-			//
-
-			Configuration config = ( location == null ) ? new Configuration() : new Configuration( location.LocalPath );
-			return new iFolderManager( config );
-		}
-
 		/// <summary>
 		/// Authenticates the current user to the default local store and
 		/// returns an <see cref="iFolderManager"/> that can be used
@@ -108,8 +84,7 @@ namespace Novell.iFolder
 			//
 			// TODO: Hook up with Copernicus here!
 			//
-			
-			return Connect( null );
+			return new iFolderManager(Configuration.GetConfiguration());
 		}
 		#endregion
 

@@ -220,7 +220,7 @@ namespace Novell.iFolder
 			on_refreshiFolders(null, null);
 
 			if(config == null)
-				config = new Configuration();
+				config = Configuration.GetConfiguration();
 			string showWizard = config.Get("iFolderTrayApp", 
 					"Show wizard", "true");
 			if (showWizard == "true")
@@ -308,7 +308,7 @@ namespace Novell.iFolder
 				EventArgs args)
 		{
 			if(config == null)
-				config = new Configuration();
+				config = Configuration.GetConfiguration();
 
 			if(DisplayCreationCheckButton.Active == true)
 				config.Set("iFolderTrayApp", "Show wizard", "true");

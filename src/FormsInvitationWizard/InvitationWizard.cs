@@ -341,7 +341,7 @@ namespace Novell.iFolder.InvitationWizard
 		#region Event Handlers
 		private void InvitationWizard_Load(object sender, System.EventArgs e)
 		{
-			store = new Store(new Configuration());
+			store = Store.GetStore();
 
 			if (subscriptionMode)
 			{

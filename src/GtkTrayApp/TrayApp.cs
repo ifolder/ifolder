@@ -69,7 +69,7 @@ namespace Novell.iFolder
 
 		public static void Main (string[] args)
 		{
-			conf = new Configuration();
+			conf = Configuration.GetConfiguration();
 			Process[] processes = 
 				System.Diagnostics.Process.GetProcessesByName("iFolderGtkApp");
 

@@ -305,7 +305,7 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			try
 			{
-				config = new Configuration();
+				config = Configuration.GetConfiguration();
 
 				SimiasLogManager.Configure(config);
 			

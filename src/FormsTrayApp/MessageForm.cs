@@ -70,9 +70,9 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				this.config = config;
-				abManager = Manager.Connect(config);
+				abManager = Manager.Connect();
 
-				store = new Store(config);
+				store = Store.GetStore();
 
 				// TODO: pass in correct domain ... for now just use the default.
 				poBox = POBox.GetPOBox(store, store.DefaultDomain);
@@ -234,7 +234,7 @@ namespace Novell.iFolder.FormsTrayApp
 				logger.Debug(ex, "Loading graphics");
 			}
 
-			subscriber = new EventSubscriber(config);
+			subscriber = new EventSubscriber();
 
 			// TODO: Will need to change this when a different POBox is selectable.
 			subscriber.CollectionId = poBox.ID;
