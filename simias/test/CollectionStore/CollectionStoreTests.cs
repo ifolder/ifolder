@@ -2298,6 +2298,47 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 			}
 		}
+
+		/// <summary>
+		/// Test the backup/restore apis
+		/// </summary>
+		[Test]
+		public void BackupRestoreTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			try
+			{
+				// Commit the collection.
+				collection.Commit();
+
+				// Turn the node into a string.
+				string nodeString = collection.Properties.ToString( false );
+
+				// Restore the collection back over the top of the existing one.
+				XmlDocument doc = new XmlDocument();
+				doc.LoadXml( nodeString );
+				Node restoreNode = new Node( doc );
+
+				// Set the node's state to restore.
+				collection.RestoreNode( restoreNode );
+				collection.Commit( restoreNode );
+
+				// Delete the collection and restore it again.
+				collection.Commit( collection.Delete() );
+
+				// Restore the collection back over the top of the existing one.
+				doc.LoadXml( nodeString );
+				collection = new Collection( store, new Node( doc ) );
+
+				// Set the node's state to restore.
+				collection.RestoreNode( collection );
+				collection.Commit();
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up

@@ -1309,11 +1309,11 @@ namespace Simias.Storage
 			{
 				XmlDocument stringDoc = nodeDocument.Clone() as XmlDocument;
 				StripLocalProperties( stringDoc );
-				return stringDoc.InnerText;
+				return stringDoc.OuterXml;
 			}
 			else
 			{
-				return nodeDocument.InnerText;
+				return nodeDocument.OuterXml;
 			}
 		}
 		#endregion
