@@ -1871,6 +1871,8 @@ sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void
 	return 0;
 }
 
+/*
+// CRG- this must be commented out for OS X to build correctly
 int
 main (int argc, char *argv[])
 {
@@ -1905,5 +1907,6 @@ main (int argc, char *argv[])
 	
 	return 0;
 }
+*/
 
 /* #endregion */
