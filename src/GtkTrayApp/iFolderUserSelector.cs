@@ -39,27 +39,33 @@ namespace Novell.iFolder
 		private Gtk.ListStore		UserTreeStore;
 		private Gdk.Pixbuf			UserPixBuf;
 
+		private Gtk.TreeView		SelTreeView;
+		private Gtk.ListStore		SelTreeStore;
+
+		private Gtk.Entry			SearchEntry;
+		private Gtk.Button			UserAddButton;
+		private Gtk.Button			UserDelButton;
+		private uint				searchTimeoutID;
+		private Hashtable			selectedUsers;
+
 		public iFolderUser[] SelectedUsers
 		{
 			get
 			{
 				ArrayList list = new ArrayList();
-				TreeModel tModel;
+				TreeIter iter;
 
-				TreeSelection tSelect = UserTreeView.Selection;
-				Array treePaths = tSelect.GetSelectedRows(out tModel);
-
-				foreach(TreePath tPath in treePaths)
+				if(SelTreeStore.GetIterFirst(out iter))
 				{
-					TreeIter iter;
-
-					if(tModel.GetIter(out iter, tPath))
+					do
 					{
 						iFolderUser user = (iFolderUser) 
-											tModel.GetValue(iter,0);
+											SelTreeStore.GetValue(iter,0);
 						list.Add(user);
 					}
+					while(SelTreeStore.IterNext(ref iter));
 				}
+
 				return (iFolderUser[]) (list.ToArray(typeof(iFolderUser)));
 			}
 		}
@@ -78,13 +84,16 @@ namespace Novell.iFolder
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
 			this.HasSeparator = false;
-			this.BorderWidth = 10;
+//			this.BorderWidth = 10;
 			this.Resizable = true;
 			this.Modal = true;
 			if(parent != null)
 				this.TransientFor = parent;
 
 			InitializeWidgets();
+
+			searchTimeoutID = 0;
+			selectedUsers = new Hashtable();
 		}
 
 
@@ -95,17 +104,48 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.SetDefaultSize (300, 400);
+			this.SetDefaultSize (500, 400);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
 
+			VBox dialogBox = new VBox();
+			dialogBox.Spacing = 10;
+			dialogBox.BorderWidth = 10;
+			this.VBox.PackStart(dialogBox, true, true, 0);
 
+
+			//------------------------------
+			// Search Entry
+			//------------------------------
+			HBox searchBox = new HBox();
+			searchBox.Spacing = 10;
+			Label searchLabel = new Label("Search:");
+			searchBox.PackStart(searchLabel, false, true, 0);
+
+			SearchEntry = new Gtk.Entry();
+			searchBox.PackStart(SearchEntry, true, true, 0);
+			SearchEntry.Changed += new EventHandler(OnSearchEntryChanged);
+
+			dialogBox.PackStart(searchBox, false, true, 0);
+
+
+			//------------------------------
+			// Selection Area
+			//------------------------------
+			HBox selBox = new HBox();
+			selBox.Spacing = 10;
+			dialogBox.PackStart(selBox, true, true, 0);
+
+
+			//------------------------------
+			// All Users tree
+			//------------------------------
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
 			UserTreeView = new TreeView();
 			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(UserTreeView);
-			this.VBox.PackStart(sw, true, true, 0);
-
+			selBox.PackStart(sw, true, true, 0);
 
 			// Setup the iFolder TreeView
 			UserTreeStore = new ListStore(typeof(iFolderUser));
@@ -126,15 +166,69 @@ namespace Novell.iFolder
 			UserTreeView.AppendColumn(memberColumn);
 			UserTreeView.Selection.Mode = SelectionMode.Multiple;
 
-
-//			UserTreeView.Selection.Changed += new EventHandler(
-//						OnUserSelectionChanged);
+			UserTreeView.Selection.Changed += new EventHandler(
+						OnUserSelectionChanged);
 
 //			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
 //						OnUserButtonPressed);
 
 //			UserTreeView.RowActivated += new RowActivatedHandler(
 //						OnUserRowActivated);
+
+
+			//------------------------------
+			// Buttons
+			//------------------------------
+			VBox btnBox = new VBox();
+			btnBox.Spacing = 10;
+			selBox.PackStart(btnBox, false, true, 0);
+
+			UserAddButton = new Button("Add ->");
+			btnBox.PackStart(UserAddButton, false, true, 0);
+			UserAddButton.Clicked += new EventHandler(OnAddButtonClicked);
+
+			UserDelButton = new Button("Remove");
+			btnBox.PackStart(UserDelButton, false, true, 0);
+			UserDelButton.Clicked += new EventHandler(OnRemoveButtonClicked);
+
+
+			//------------------------------
+			// Selected Users tree
+			//------------------------------
+			SelTreeView = new TreeView();
+			ScrolledWindow ssw = new ScrolledWindow();
+			ssw.ShadowType = Gtk.ShadowType.EtchedIn;
+			ssw.Add(SelTreeView);
+			selBox.PackStart(ssw, true, true, 0);
+
+			// Setup the iFolder TreeView
+			SelTreeStore = new ListStore(typeof(iFolderUser));
+			SelTreeView.Model = SelTreeStore;
+
+			// Setup Pixbuf and Text Rendering for "iFolder Users" column
+			CellRendererPixbuf smcrp = new CellRendererPixbuf();
+			TreeViewColumn selmemberColumn = new TreeViewColumn();
+			selmemberColumn.PackStart(smcrp, false);
+			selmemberColumn.SetCellDataFunc(smcrp, new TreeCellDataFunc(
+						UserCellPixbufDataFunc));
+			CellRendererText smcrt = new CellRendererText();
+			selmemberColumn.PackStart(smcrt, false);
+			selmemberColumn.SetCellDataFunc(smcrt, new TreeCellDataFunc(
+						UserCellTextDataFunc));
+			selmemberColumn.Title = "Selected Users";
+			selmemberColumn.Resizable = true;
+			SelTreeView.AppendColumn(selmemberColumn);
+			SelTreeView.Selection.Mode = SelectionMode.Multiple;
+
+			SelTreeView.Selection.Changed += new EventHandler(
+						OnSelUserSelectionChanged);
+
+//			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
+//						OnUserButtonPressed);
+
+//			UserTreeView.RowActivated += new RowActivatedHandler(
+//						OnUserRowActivated);
+
 
 			UserPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
@@ -143,19 +237,7 @@ namespace Novell.iFolder
 			this.AddButton(Stock.Ok, ResponseType.Ok);
 			this.AddButton(Stock.Help, ResponseType.Help);
 
-			RefreshUserList();
-		}
-
-
-
-
-		private void RefreshUserList()
-		{
-			iFolderUser[] userlist = ifws.GetAlliFolderUsers();
-			foreach(iFolderUser user in userlist)
-			{
-				UserTreeStore.AppendValues(user);
-			}
+			SearchiFolderUsers();
 		}
 
 
@@ -181,6 +263,154 @@ namespace Novell.iFolder
 		}
 
 
+
+
+		public void OnUserSelectionChanged(object o, EventArgs args)
+		{
+			TreeSelection tSelect = UserTreeView.Selection;
+
+			if(tSelect.CountSelectedRows() > 0)
+			{
+				UserAddButton.Sensitive = true;
+			}
+			else
+			{
+				UserAddButton.Sensitive = false;
+			}
+		}
+
+
+
+
+		public void OnSelUserSelectionChanged(object o, EventArgs args)
+		{
+			TreeSelection tSelect = SelTreeView.Selection;
+
+			if(tSelect.CountSelectedRows() > 0)
+			{
+				UserDelButton.Sensitive = true;
+			}
+			else
+			{
+				UserDelButton.Sensitive = false;
+			}
+		}
+
+
+
+
+		public void OnSearchEntryChanged(object o, EventArgs args)
+		{
+			if(searchTimeoutID != 0)
+			{
+				Gtk.Timeout.Remove(searchTimeoutID);
+				searchTimeoutID = 0;
+			}
+
+			searchTimeoutID = Gtk.Timeout.Add(500, new Gtk.Function(
+						SearchCallback));
+		}
+
+
+
+
+		private bool SearchCallback()
+		{
+			SearchiFolderUsers();
+			return false;
+		}
+
+
+
+
+		private void SearchiFolderUsers()
+		{
+			UserTreeStore.Clear();
+
+			if(SearchEntry.Text.Length > 0)
+			{
+			
+			
+			}
+			else
+			{
+				iFolderUser[] userlist = ifws.GetAlliFolderUsers();
+				foreach(iFolderUser user in userlist)
+				{
+					UserTreeStore.AppendValues(user);
+				}
+			}
+
+			UserAddButton.Sensitive = false;
+			UserDelButton.Sensitive = false;
+		}
+
+
+		public void OnAddButtonClicked(object o, EventArgs args)
+		{
+			TreeModel tModel;
+
+			TreeSelection tSelect = UserTreeView.Selection;
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+
+			foreach(TreePath tPath in treePaths)
+			{
+				TreeIter iter;
+
+				if(UserTreeStore.GetIter(out iter, tPath))
+				{
+					iFolderUser user = 
+							(iFolderUser) UserTreeStore.GetValue(iter,0);
+
+					if(!selectedUsers.ContainsKey(user.ID))
+					{
+						selectedUsers.Add(user.ID, user);
+						SelTreeStore.AppendValues(user);
+					}
+				}
+			}
+		}
+
+
+		public void OnRemoveButtonClicked(object o, EventArgs args)
+		{
+			TreeModel tModel;
+			Queue   iterQueue;
+
+			iterQueue = new Queue();
+			TreeSelection tSelect = SelTreeView.Selection;
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+
+			// We can't remove anything while getting the iters
+			// because it will change the paths and we'll remove
+			// the wrong stuff.
+			foreach(TreePath tPath in treePaths)
+			{
+				TreeIter iter;
+
+				if(SelTreeStore.GetIter(out iter, tPath))
+				{
+					iterQueue.Enqueue(iter);
+				}
+			}
+
+			// Now that we have all of the TreeIters, loop and
+			// remove them all
+			while(iterQueue.Count > 0)
+			{
+				TreeIter iter = (TreeIter) iterQueue.Dequeue();
+				iFolderUser user = 
+						(iFolderUser) SelTreeStore.GetValue(iter,0);
+				selectedUsers.Remove(user.ID);
+				SelTreeStore.Remove(ref iter);
+			}
+		}
 
 
 
