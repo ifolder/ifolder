@@ -227,6 +227,12 @@ namespace Simias.mDns
 	/// </summary>
 	public class User
 	{
+#if DARWIN
+		private const string nativeLib = "libsimdezvous.dylib";
+#else
+		private const string nativeLib = "simdezvous";
+#endif
+
 		[ StructLayout( LayoutKind.Sequential, CharSet=CharSet.Ansi ) ]
 		public class MemberInfo
 		{
@@ -246,7 +252,7 @@ namespace Simias.mDns
 		}
 
 		#region DllImports
-		[ DllImport( "simdezvous" ) ]
+		[ DllImport( nativeLib ) ]
 		private 
 		extern 
 		static 
@@ -259,14 +265,14 @@ namespace Simias.mDns
 			string		PublicKey,
 			ref IntPtr	Cookie);
 
-		[ DllImport( "simdezvous" ) ]
+		[ DllImport( nativeLib ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		DeregisterLocalMember(string ID, int Cookie);
 
-		[ DllImport( "simdezvous", CharSet=CharSet.Auto ) ]
+		[ DllImport( nativeLib, CharSet=CharSet.Auto ) ]
 		private 
 		extern 
 		static 
@@ -275,21 +281,21 @@ namespace Simias.mDns
 			[MarshalAs(UnmanagedType.LPStr)] string	ID,
 			[In, Out] MemberInfo Info);
 
-		[ DllImport( "simdezvous" ) ]
+		[ DllImport( nativeLib ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		BrowseMembersInit( MemberBrowseCallback	callback, ref IntPtr handle );
 		
-		[ DllImport( "simdezvous" ) ]
+		[ DllImport( nativeLib ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
 		BrowseMembersShutdown( int handle );
 
-		[ DllImport( "simdezvous" ) ]
+		[ DllImport( nativeLib ) ]
 		private 
 		extern 
 		static 
