@@ -65,6 +65,8 @@ case $host_os in
         NON_PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
 		SQLITELIB_PATH="../../external/sqlite/linux"
 		SQLITELIB="libsqlite.so"
+        ICON_FLAG='/resource:'
+        ICON_EXT='.ico'
     ;;
     cygwin)
         AC_CHECK_PROG(CSC, csc, csc)
@@ -122,6 +124,8 @@ case $host_os in
         NON_PLATFORM_SUBDIRS=$LINUX_SUBDIRS
 		SQLITELIB_PATH="../../external/sqlite/w32"
 		SQLITELIB="sqlite.dll"
+        ICON_FLAG='/win32icon:'
+        ICON_EXT='.ico'
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -193,6 +197,8 @@ AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(NON_PLATFORM_SUBDIRS)
 AC_SUBST(SQLITELIB_PATH)
 AC_SUBST(SQLITELIB)
+AC_SUBST(ICON_FLAG)
+AC_SUBST(ICON_EXT)
 
 AC_OUTPUT([
 Makefile
