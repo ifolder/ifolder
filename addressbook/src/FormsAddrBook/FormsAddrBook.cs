@@ -970,7 +970,7 @@ namespace Novell.iFolder.FormsAddrBook
 		private void menuTools_Popup(object sender, System.EventArgs e)
 		{
 			selectedContacts = booksContacts.SelectedContacts;
-			menuToolsExportVCard.Enabled = selectedContacts.Count == 1;
+			menuToolsExportVCard.Enabled = selectedContacts.Count > 0;
 
 			menuToolsImportVCard.Enabled = selectedBook != null;
 		}
