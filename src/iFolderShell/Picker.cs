@@ -802,8 +802,15 @@ namespace Novell.iFolderCom
 			{
 				iFolderUser selectedUser = GetiFolderUserFromListViewItem(addedLV.SelectedItems[0]);
 
-				// Disable the remove button if only one user is selected, and it's the current user or current owner.
-				if ((selectedUser != null) && (selectedUser.UserID.Equals(currentUser.UserID) || selectedUser.UserID.Equals(currentOwner.UserID)))
+				try
+				{
+					// Disable the remove button if only one user is selected, and it's the current user or current owner.
+					if ((selectedUser != null) && (selectedUser.UserID.Equals(currentUser.UserID) || selectedUser.UserID.Equals(currentOwner.UserID)))
+					{
+						remove.Enabled = false;
+					}
+				}
+				catch
 				{
 					remove.Enabled = false;
 				}
