@@ -280,7 +280,8 @@ namespace Novell.iFolder.FormsTrayApp
 			SyncProperties properties = new SyncProperties();
 
 			// Get the logic factory from the config file.
-			string logicFactory = Configuration.Get("iFolderApp", "SyncLogic", "SynkerA");
+			Configuration config = new Configuration();
+			string logicFactory = config.Get("iFolderApp", "SyncLogic", "SynkerA");
 			switch (logicFactory)
 			{
 				case "SynkerA":
