@@ -229,8 +229,8 @@ namespace Simias.POBox
 			if (c.IsType(c, typeof(POBox).Name))
 			{
 				// This POBox is being deleted. Call to get rid of the domain information.
-				DomainAgent agent = new DomainAgent(c.Domain);
-				agent.RemoveDomainInformation();
+				DomainAgent agent = new DomainAgent();
+				agent.RemoveDomainInformation(c.Domain);
 				RemovePOBoxManager(args.ID);
 			}
 		}

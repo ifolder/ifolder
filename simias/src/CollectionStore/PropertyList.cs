@@ -228,6 +228,12 @@ namespace Simias.Storage
 			nodeDocument = properties.nodeDocument.Clone() as XmlDocument;
 			propertyRoot = nodeDocument.DocumentElement[ XmlTags.ObjectTag ];
 			state = properties.state;
+
+			// Copy the change list.
+			foreach ( Property p in properties.changeList )
+			{
+				changeList.Add( p );
+			}
 		}
 
 		/// <summary>

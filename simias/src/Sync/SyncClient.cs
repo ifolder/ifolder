@@ -593,7 +593,7 @@ namespace Simias.Sync
 			// Make sure the master exists.
 			if (collection.CreateMaster)
 			{
-				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
+				new Simias.Domain.DomainAgent().CreateMaster(collection);
 			}
 			
 			// Sync the file system with the local store.

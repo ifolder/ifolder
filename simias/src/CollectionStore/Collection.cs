@@ -32,6 +32,8 @@ using Simias;
 using Simias.Client;
 using Simias.Client.Event;
 using Simias.Event;
+using Simias.Policy;
+using Simias.Sync;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -260,6 +262,67 @@ namespace Simias.Storage
 	
 				return locked;
 			}
+		}
+
+		/// <summary>
+		/// The syncing role of the base collection.
+		/// </summary>
+		public SyncCollectionRoles Role
+		{
+			get 
+			{ 
+				Property p = properties.FindSingleValue( PropertyTags.SyncRole );
+				return ( p != null ) ? ( SyncCollectionRoles )p.Value : SyncCollectionRoles.None;
+			}
+
+			set	
+			{ 
+				Property p = new Property( PropertyTags.SyncRole, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p );
+			}
+		}
+
+		/// <summary>
+		/// Does the master collection need to be created?
+		/// </summary>
+		public bool CreateMaster
+		{
+			get 
+			{ 
+				Property p = properties.FindSingleValue( PropertyTags.CreateMaster );
+				return ( p != null ) ? ( bool )p.Value : false;
+			}
+
+			set 
+			{ 
+				if ( value )
+				{
+					Property p = new Property( PropertyTags.CreateMaster, value );
+					p.LocalProperty = true;
+					properties.ModifyNodeProperty( p );
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.CreateMaster );
+				}
+			}
+		}
+
+		/// <summary>
+		/// The syncing interval of the collection.
+		/// </summary>
+		public int Interval
+		{
+			get { return SyncInterval.Get( GetCurrentMember(), this ).Interval; }
+		}
+
+		/// <summary>
+		/// The store path of the collection.
+		/// </summary>
+		public string StorePath
+		{
+			get { return store.StorePath; }
 		}
 		#endregion
 
@@ -597,9 +660,46 @@ namespace Simias.Storage
 							// Increment the local incarnation number for the object.
 							IncrementLocalIncarnation( node );
 
-							// If this is a StoreFileNode, commit the buffered stream to disk.
-							if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
+							// Set the update time of the node.
+							node.UpdateTime = commitTime;
+
+							// If this is a collection object being created, the sync role needs
+							// to be set to tell the sync process what to do with this collection.
+							if ( IsType( node, NodeTypes.CollectionType ) )
 							{
+								SyncCollectionRoles role;
+								Collection collection = new Collection( store, node );
+								if ( collection.Synchronizable )
+								{
+									// If this collection's domain is the workgroup domain, this collection
+									// will always be the master.
+									if ( store.IsEnterpriseServer || ( collection.Domain == Simias.Storage.Domain.WorkGroupDomainID ) )
+									{
+										role = SyncCollectionRoles.Master;
+									}
+									else
+									{
+										role = SyncCollectionRoles.Slave;
+
+										// Inform sync process that this collection needs to be pushed to the server.
+										Property m = new Property( PropertyTags.CreateMaster, true );
+										m.LocalProperty = true;
+										node.Properties.ModifyNodeProperty( m );
+									}
+								}
+								else
+								{
+									role = SyncCollectionRoles.Local;
+								}
+
+								// Set the role.
+								Property p = new Property( PropertyTags.SyncRole, role );
+								p.LocalProperty = true;
+								node.Properties.ModifyNodeProperty( p );
+							}
+							else if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
+							{
+								// If this is a StoreFileNode, commit the buffered stream to disk.
 								// This cast is safe because a Node object cannot be a StoreFileNode object
 								// and be in the the Add state without having been derived as the right class.
 								StoreFileNode sfn = node as StoreFileNode;
@@ -608,9 +708,6 @@ namespace Simias.Storage
 									sfn.FlushStreamData( this );
 								}
 							}
-
-							// Set the update time of the node.
-							node.UpdateTime = commitTime;
 
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -767,6 +864,16 @@ namespace Simias.Storage
 						{
 							// Validate this Collection object.
 							ValidateNodeForCommit( node );
+
+							// If this is a collection object being created as a proxy, the sync role needs
+							// to be set to tell the sync process what to do with this collection.
+							if ( IsType( node, NodeTypes.CollectionType ) )
+							{
+								// Set the role.
+								Property p = new Property( PropertyTags.SyncRole, ( store.IsEnterpriseServer ) ? SyncCollectionRoles.Master : SyncCollectionRoles.Slave );
+								p.LocalProperty = true;
+								node.Properties.ModifyNodeProperty( p );
+							}
 
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );

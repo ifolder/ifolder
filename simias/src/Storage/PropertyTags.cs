@@ -49,6 +49,11 @@ namespace Simias.Storage
 		static public string CollectionLock = "Lock";
 
 		/// <summary>
+		/// Does the master collection need to be created?
+		/// </summary>
+		static public string CreateMaster = "Create Master Collection";
+
+		/// <summary>
 		/// Well known property name.
 		/// </summary>
 		static public string CreationTime = "Create";
@@ -186,6 +191,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string SyncRole = "Sync Role";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string SystemPolicy = "SystemPolicy";
 
 		/// <summary>
@@ -222,6 +232,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( BaseSchema.CollectionId, null );
 			systemPropertyTable.Add( Collision, null );
 			systemPropertyTable.Add( CollectionLock, null );
+			systemPropertyTable.Add( CreateMaster, null );
 			systemPropertyTable.Add( CreationTime, null );
 			systemPropertyTable.Add( Credential, null );
 			systemPropertyTable.Add( DefaultDomain, null );
@@ -247,6 +258,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Root, null );
 			systemPropertyTable.Add( StorageSize, null );
 			systemPropertyTable.Add( Syncable, null );
+			systemPropertyTable.Add( SyncRole, null );
 			systemPropertyTable.Add( SystemPolicy, null );
 			systemPropertyTable.Add( TombstoneType, null );
 			systemPropertyTable.Add( Types, null );

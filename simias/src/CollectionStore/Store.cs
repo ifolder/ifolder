@@ -243,6 +243,13 @@ namespace Simias.Storage
 			// Store the configuration that opened this instance.
 			this.config = config;
 
+			// Does the configuration indicate that this is an enterprise server?
+			if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
+			{
+				// This instance is running on an enterprise server.
+				enterpriseServer = true;
+			}
+
 			// Setup the event publisher object.
 			eventPublisher = new EventPublisher();
 
@@ -265,11 +272,8 @@ namespace Simias.Storage
 					Uri localUri = null;
 
 					// Does the configuration indicate that this is an enterprise server?
-					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
+					if ( enterpriseServer )
 					{
-						// This instance is running on an enterprise server.
-						enterpriseServer = true;
-
 						// Set the local uri address for the domains. This will have to change
 						// when we support upstream servers.
 						localUri = new UriBuilder( Uri.UriSchemeHttp, MyDns.GetHostName(), 80, "simias10" ).Uri;

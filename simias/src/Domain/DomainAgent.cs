@@ -288,7 +288,6 @@ namespace Simias.Domain
 		private static string DomainServicePath = "/simias10/DomainService.asmx";
 
 		private Store store = Store.GetStore();
-		private DomainConfig domainConfiguration;
 		#endregion
 
 		#region Constructors
@@ -297,38 +296,106 @@ namespace Simias.Domain
 		/// </summary>
 		public DomainAgent()
 		{
-			if (store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
-			{
-//				throw new SimiasException("The WorkGroup domain cannot be used.");
-			}
-
-			domainConfiguration = new DomainConfig(store.DefaultDomain);
 		}
 
 		/// <summary>
 		/// TODO: Remove this constructor once the iFolderService.cs file has been updated.
 		/// </summary>
 		/// <param name="config"></param>
+		[ Obsolete( "This call has been deprecated. Use different constructor instead.", false ) ]
 		public DomainAgent(Configuration config) :
 			this()
 		{
 		}
+		#endregion
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="domainID">Identifier for the domain.</param>
-		public DomainAgent(string domainID)
+		#region Private Methods
+		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info, Uri host)
 		{
-			if (domainID == Simias.Storage.Domain.WorkGroupDomainID)
-			{
-//				throw new SimiasException("The WorkGroup domain cannot be used.");
-			}
+			// Create a new roster
+			Roster roster = new Roster(store, info.RosterID, domain);
+			roster.Proxy = true;
+			
+			// Create roster member.
+			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
+			Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
+			member.Proxy = true;
+			member.IsOwner = true;
 
-			domainConfiguration = new DomainConfig(domainID);
+			// commit
+			roster.Commit( new Node[] { roster, member } );
+		}
+
+		private void CreatePOBoxProxy(Store store, string domainID, ProvisionInfo info, Uri host)
+		{
+			// Create a new POBox
+			PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
+			poBox.Priority = 0;
+			poBox.Proxy = true;
+			
+			// Create member.
+			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
+			Member member = new Member( info.MemberNodeName, info.MemberNodeID, info.UserID, rights, null );
+			member.Proxy = true;
+			member.IsOwner = true;
+			
+			// commit
+			poBox.Commit( new Node[] { poBox, member } );
 		}
 		#endregion
 
+		#region Internal Methods
+		/// <summary>
+		/// Removes all traces of the domain from this machine.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to remove.</param>
+		internal void RemoveDomainInformation( string domainID )
+		{
+			// Cannot remove the workgroup domain.
+			if ( domainID == Simias.Storage.Domain.WorkGroupDomainID )
+			{
+				throw new SimiasException("The WorkGroup domain cannot be removed.");
+			}
+
+			// If the default domain is the one that is being deleted, set a new one.
+			if (store.DefaultDomain == domainID)
+			{
+				// If there are no other domains present, the default goes back to
+				// the workgroup domain.
+				string defaultDomain = Simias.Storage.Domain.WorkGroupDomainID;
+
+				// Set the new default domain.
+				LocalDatabase ldb = store.GetDatabaseObject();
+				ICSList dList = ldb.GetNodesByType(NodeTypes.DomainType);
+				foreach(ShallowNode sn in dList)
+				{
+					// Find the first domain that is not the one being deleted or is the
+					// WorkGroup domain.
+					if ((sn.ID != domainID) && (sn.ID != Simias.Storage.Domain.WorkGroupDomainID))
+					{
+						defaultDomain = sn.ID;
+						break;
+					}
+				}
+
+				// Set the new default domain.
+				ldb.DefaultDomain = defaultDomain;
+			}
+
+			// Get a list of all the collections that belong to this domain and delete them.
+			ICSList cList = store.GetCollectionsByDomain(domainID);
+			foreach(ShallowNode sn in cList)
+			{
+				Collection c = new Collection(store, sn);
+				c.Commit(c.Delete());
+			}
+
+			// Remove the local domain information.
+			store.DeleteDomainIdentity(domainID);
+		}
+		#endregion
+
+		#region Public Methods
 		/// <summary>
 		/// Attach to an enterprise system.
 		/// </summary>
@@ -388,11 +455,11 @@ namespace Simias.Domain
 			// create domain node
 			Storage.Domain domain = 
 				store.AddDomainIdentity(
-					provisionInfo.UserID,
-					domainInfo.Name, 
-					domainInfo.ID, 
-					domainInfo.Description,
-					hostUri);
+				provisionInfo.UserID,
+				domainInfo.Name, 
+				domainInfo.ID, 
+				domainInfo.Description,
+				hostUri);
 
 			// set the default domain
 			string previousDomain = store.DefaultDomain;
@@ -419,9 +486,10 @@ namespace Simias.Domain
 				}
 
 				// Set the host and port number in the configuration file.
-				domainConfiguration = new DomainConfig(domainInfo.ID);
-				domainConfiguration.SetAttributes(domain.Name, domain.Description, hostUri, true);
+				DomainConfig domainConfig = new DomainConfig(domainInfo.ID);
+				domainConfig.SetAttributes(domain.Name, domain.Description, hostUri, true);
 
+				// Commit the changes to the domain object.
 				store.LocalDb.Commit( domain );
 			}
 			catch(Exception e)
@@ -430,6 +498,7 @@ namespace Simias.Domain
 				store.DefaultDomain = previousDomain;
 				throw e;
 			}
+
 			return domainInfo.ID;
 		}
 
@@ -437,11 +506,25 @@ namespace Simias.Domain
 		/// Removes this workstation from the domain or removes the workstation from all machines
 		/// owned by the user.
 		/// </summary>
+		/// <param name="domainID">The identifier of the domain to remove.</param>
 		/// <param name="localOnly">If true then only this workstation is removed from the domain.
 		/// If false, then the domain will be deleted from every workstation that the user owns.</param>
-		public void Unattach(bool localOnly)
+		public void Unattach(string domainID, bool localOnly)
 		{
-			string domainID = domainConfiguration.ID;
+			// Cannot remove the workgroup domain.
+			if ( domainID == Simias.Storage.Domain.WorkGroupDomainID )
+			{
+				throw new SimiasException("The WorkGroup domain cannot be removed.");
+			}
+
+			// Get the domain object.
+			Simias.Storage.Domain domain = store.GetDomain(domainID);
+			if (domain == null)
+			{
+				throw new SimiasException("The domain does not exist in the store.");
+			}
+
+			// Get who the user is in the specified domain.
 			string userID = store.GetUserIDFromDomainID(domainID);
 
 			// Construct the web client.
@@ -451,13 +534,7 @@ namespace Simias.Domain
 			if ( !localOnly )
 			{
 				// Set the address to the server.
-				Uri uri = domainConfiguration.ServiceUrl;
-				if (uri == null)
-				{
-					throw new SimiasException("Domain URL is not set.");
-				}
-
-				domainService.Url = uri.ToString() + "/DomainService.asmx";
+				domainService.Url = domain.HostAddress.ToString() + "/DomainService.asmx";
 
 				// Get the credentials for this user.
 				Credentials cSimiasCreds = new Credentials(domainID, userID);
@@ -483,95 +560,8 @@ namespace Simias.Domain
 			if (!localOnly)
 			{
 				// Remove the user from the domain server.
-//				RemoveServerCollections(domainID, userID);
+				domainService.RemoveServerCollections(domainID, userID);
 			}
-		}
-
-		/// <summary>
-		/// Removes all traces of the domain from this machine.
-		/// </summary>
-		public void RemoveDomainInformation()
-		{
-			string domainID = domainConfiguration.ID;
-
-			// If the default domain is the one that is being deleted, set a new one.
-			if (store.DefaultDomain == domainID)
-			{
-				// If there are no other domains present, the default goes back to
-				// the workgroup domain.
-				string defaultDomain = Simias.Storage.Domain.WorkGroupDomainID;
-
-				// Set the new default domain.
-				LocalDatabase ldb = store.GetDatabaseObject();
-				ICSList dList = ldb.GetNodesByType(NodeTypes.DomainType);
-				foreach(ShallowNode sn in dList)
-				{
-					// Find the first domain that is not the one being deleted or is the
-					// WorkGroup domain.
-					if ((sn.ID != domainID) && (sn.ID != Simias.Storage.Domain.WorkGroupDomainID))
-					{
-						defaultDomain = sn.ID;
-						break;
-					}
-				}
-
-				// Set the new default domain.
-				ldb.DefaultDomain = defaultDomain;
-			}
-
-			// Get a list of all the collections that belong to this domain and delete them.
-			ICSList cList = store.GetCollectionsByDomain(domainID);
-			foreach(ShallowNode sn in cList)
-			{
-				Collection c = new Collection(store, sn);
-				c.Commit(c.Delete());
-			}
-
-			// Remove the local domain information.
-			store.DeleteDomainIdentity(domainID);
-		}
-
-		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info, Uri host)
-		{
-			// Create a new roster
-			Roster roster = new Roster(store, info.RosterID, domain);
-			roster.Proxy = true;
-			
-			// sync information
-			Property p = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
-			p.LocalProperty = true;
-			roster.Properties.AddProperty(p);
-
-			// Create roster member.
-			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
-			Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
-			member.Proxy = true;
-			member.IsOwner = true;
-
-			// commit
-			roster.Commit( new Node[] { roster, member } );
-		}
-
-		private void CreatePOBoxProxy(Store store, string domainID, ProvisionInfo info, Uri host)
-		{
-			// Create a new POBox
-			PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
-			poBox.Priority = 0;
-			poBox.Proxy = true;
-			
-			// sync information
-			Property p = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
-			p.LocalProperty = true;
-			poBox.Properties.AddProperty(p);
-
-			// Create member.
-			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
-			Member member = new Member( info.MemberNodeName, info.MemberNodeID, info.UserID, rights, null );
-			member.Proxy = true;
-			member.IsOwner = true;
-			
-			// commit
-			poBox.Commit( new Node[] { poBox, member } );
 		}
 
 		/// <summary>
@@ -580,20 +570,24 @@ namespace Simias.Domain
 		/// <param name="collection">Collection to create on the enterprise server.</param>
 		public void CreateMaster(SyncCollection collection)
 		{
-			// Construct the web client.
-			DomainService domainService = new DomainService();
-			Uri uri = domainConfiguration.ServiceUrl;
-			if (uri == null)
+			// Get the domain object.
+			Simias.Storage.Domain domain = store.GetDomain(collection.Domain);
+			if (domain == null)
 			{
-				throw new SimiasException("Domain URL is not set.");
+				throw new SimiasException("The domain does not exist in the store.");
 			}
 
-			domainService.Url = uri.ToString() + "/DomainService.asmx";
+			// Construct the web client.
+			DomainService domainService = new DomainService();
+			domainService.Url = domain.HostAddress.ToString() + "/DomainService.asmx";
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			domainService.Credentials = cSimiasCreds.GetCredentials();
 
 			if (domainService.Credentials == null)
+			{
 				throw new ApplicationException("No credentials available for specified collection.");
+			}
+
 			domainService.PreAuthenticate = true;
 
 			string rootID = null;
@@ -611,7 +605,8 @@ namespace Simias.Domain
 			domainService.CreateMaster(
 				collection.ID, 
 				collection.Name, 
-				rootID, rootName, 
+				rootID, 
+				rootName, 
 				member.UserID, 
 				member.Name, 
 				member.ID, 
@@ -619,25 +614,6 @@ namespace Simias.Domain
 
 			collection.CreateMaster = false;
 			collection.Commit();
-		}
-
-		#region Properties
-		/// <summary>
-		/// Domain service URL
-		/// </summary>
-		public Uri ServiceUrl
-		{
-			get { return domainConfiguration.ServiceUrl; }
-			set { domainConfiguration.ServiceUrl = value; }
-		}
-
-		/// <summary>
-		/// Is the server enterprise domain enabled for this client?
-		/// </summary>
-		public bool Enabled
-		{
-			get { return domainConfiguration.Enabled; }
-			set { domainConfiguration.Enabled = value; }
 		}
 		#endregion
 	}

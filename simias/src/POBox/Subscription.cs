@@ -794,14 +794,6 @@ namespace Simias.POBox
 			// TODO: sc.SetType(this, this.SubscriptionCollectionTypes);
 			c.SetType(c, this.SubscriptionCollectionType);
 			
-			// sync information
-			Property pr = 
-				new Property(
-						SyncCollection.RolePropertyName,
-						SyncCollectionRoles.Slave);
-			pr.LocalProperty = true;
-			c.Properties.AddProperty(pr);
-			
 			// Create the member as well
 			if (this.ToMemberNodeID != null && this.ToMemberNodeID != "")
 			{
