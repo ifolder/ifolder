@@ -19,83 +19,13 @@
 #*
 #***********************************************************************/
 
-include config.mk
+# This appears to work and is much simpler than what I had
 
-#=============================================================================
-# All of the targets get passed down to src
-#=============================================================================
+.PHONY: all
 all:
 	@$(MAKE) -C src $@
-
-stage:
-	@$(MAKE) -C src $@
-
-stage-clean:
-	@$(MAKE) -C src $@
-
-clean:
-	@$(MAKE) -C src $@
-
-distclean:
-	@$(MAKE) -C src $@
-	$(call RM_IF_EXISTS,config.mk)
-
-test:
-	@$(MAKE) -C src $@
 	
-check:
+%: force
 	@$(MAKE) -C src $@
 
-dist:
-	@$(MAKE) -C src $@
-
-package:
-	@$(MAKE) -C src $@
-
-package-nodeps:
-	@$(MAKE) -C src $@
-
-package-clean:
-	@$(MAKE) -C src $@
-
-package-test:
-	@$(MAKE) -C src $@
-
-install:
-	@$(MAKE) -C src $@
-
-uninstall:
-	@$(MAKE) -C src $@
-
-doc:
-	@$(MAKE) -C src $@
-
-doc-nodeps:
-	@$(MAKE) -C src $@
-
-doc-clean:
-	@$(MAKE) -C src $@
-
-api-doc:
-	@$(MAKE) -C src $@
-
-api-doc-nodeps:
-	@$(MAKE) -C src $@
-
-api-doc-clean:
-	@$(MAKE) -C src $@
-
-report:
-	@$(MAKE) -C src $@
-
-
-#=============================================================================
-# File CVS History:
-#
-# $Log$
-# Revision 1.1  2004/02/21 23:59:58  cgaisford
-# Modified the build process and structure.  Now configure can be run at the root level and then make can be run.  Cleaned up configure stuff that used to be down in src
-#
-#
-#
-#=============================================================================
+force: ;
