@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-%define prefix /opt/ifolder
+%define prefix /usr
 
 Summary      : iFolder
 Name         : @PACKAGE@
@@ -79,10 +79,10 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
     # If path is not already in ld.so.conf, append it
     #
-    if ! grep -q "^%{prefix}/lib$" /etc/ld.so.conf ; then
-        echo "%{prefix}/lib" >> /etc/ld.so.conf
-        /sbin/ldconfig
-    fi
+#    if ! grep -q "^%{prefix}/lib$" /etc/ld.so.conf ; then
+#        echo "%{prefix}/lib" >> /etc/ld.so.conf
+#        /sbin/ldconfig
+#    fi
     
     #
     # Configure tray app to start on user login for each desktop user
@@ -96,17 +96,17 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
     # Create ifolder.sh in /etc/profile.d to set PKG_CONFIG_PATH
     #
-    cat<<HERE > /etc/profile.d/ifolder.sh
-if test -z "\$PKG_CONFIG_PATH" ; then
-    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
-else
-    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
-fi
-HERE
+#    cat<<HERE > /etc/profile.d/ifolder.sh
+#if test -z "\$PKG_CONFIG_PATH" ; then
+#    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
+#else
+#    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
+#fi
+#HERE
     #
     # Install assemblies into the gac
     #
-    %{prefix}/bin/install-ifolder-to-gac -i
+#    %{prefix}/bin/install-ifolder-to-gac -i
 fi
 
 #=============================================================================
@@ -124,18 +124,18 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
     # Remove assemblies from the gac
     #
-    %{prefix}/bin/install-ifolder-to-gac -u
+#    %{prefix}/bin/install-ifolder-to-gac -u
 fi
     
 #=============================================================================
 %Postun
-INSTANCES_AFTER_UNINSTALL=$1
-if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+#INSTANCES_AFTER_UNINSTALL=$1
+#if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
     # Remove ifolder.sh from /etc/profile.d
     #
-    %{__rm} -f /etc/profile.d/ifolder.sh
-fi
+#    %{__rm} -f /etc/profile.d/ifolder.sh
+#fi
 
 #=============================================================================
 %Files
