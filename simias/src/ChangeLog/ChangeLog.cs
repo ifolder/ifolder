@@ -365,22 +365,6 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Log file states.
-		/// </summary>
-		public enum LogState
-		{
-			/// <summary>
-			/// The log file has been closed.
-			/// </summary>
-			Closed,
-
-			/// <summary>
-			/// The log file is open.
-			/// </summary>
-			Opened
-		};
-
-		/// <summary>
 		/// Encoded lengths of the object fields.
 		/// </summary>
 		private const int logFileIDSize = 16;
@@ -391,10 +375,6 @@ namespace Simias.Storage
 		/// This is the total encoded record size.
 		/// </summary>
 		private const int encodedRecordSize = logFileIDSize + maxLogRecordsSize + maxFlagsSize;
-
-		// File states that indicate a graceful shutdown.
-		private const uint opened = 1;
-		private const uint closed = 0;
 
 		/// <summary>
 		/// Contains the identifier for this log file.
@@ -407,7 +387,7 @@ namespace Simias.Storage
 		private uint maxLogRecords;
 
 		/// <summary>
-		/// Flags used to tell if the service went down nicely.
+		/// Flags
 		/// </summary>
 		private uint flags;
 		#endregion
@@ -445,15 +425,6 @@ namespace Simias.Storage
 		static public int RecordSize
 		{
 			get { return encodedRecordSize; }
-		}
-
-		/// <summary>
-		/// Gets or sets the log state.
-		/// </summary>
-		public LogState State
-		{
-			get { return ( flags == opened ) ? LogState.Opened : LogState.Closed; }
-			set { flags = ( value == LogState.Opened ) ? opened : closed; }
 		}
 		#endregion
 
@@ -1151,7 +1122,7 @@ namespace Simias.Storage
 
 		#region Private Methods
 		/// <summary>
-		/// Checks to see if the file was gracefully shutdown. If it was not, the file contents are
+		/// Checks to see if the file header is valid. If it was not, the file contents are
 		/// truncated and reinitialized.
 		/// </summary>
 		/// <param name="fs">File stream that reference the log file.</param>
@@ -1159,22 +1130,20 @@ namespace Simias.Storage
 		/// <returns>True if the file data is good, otherwise false.</returns>
 		private bool CheckIntegrity( FileStream fs, string collectionID )
 		{
+			bool result = true;
+
 			LogFileHeader logHeader = GetLogFileHeader( fs );
-			if ( ( logHeader.LogFileID == collectionID ) && ( logHeader.State == LogFileHeader.LogState.Closed ) )
-			{
-				// Set the status to opened.
-				WriteLogFileStatus( fs, LogFileHeader.LogState.Opened );
-				return true;
-			}
-			else
+			if ( logHeader.LogFileID != collectionID )
 			{
 				log.Error( "Log file corrupted. Reinitializing contents." );
 
 				// Truncate the file data.
 				fs.SetLength( 0 );
 				CreateLogFileHeader( fs, collectionID );
-				return false;
+				result = false;
 			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -1186,7 +1155,6 @@ namespace Simias.Storage
 		{
 			// Build the new log file header.
 			LogFileHeader header = new LogFileHeader( collectionID, defaultMaxPersistedRecords );
-			header.State = LogFileHeader.LogState.Opened;
 
 			try
 			{
@@ -1393,71 +1361,6 @@ namespace Simias.Storage
 				mutex.ReleaseMutex( collectionID );
 			}
 		}
-
-		/// <summary>
-		/// Write the log file status out to the log file.
-		/// </summary>
-		/// <param name="status">Status of the log file.</param>
-		private void WriteLogFileStatus( LogFileHeader.LogState status )
-		{
-			// Acquire the mutex protecting the log file.
-			mutex.WaitOne( collectionID );
-			try
-			{
-				try
-				{
-					// Open the log file.
-					FileStream fs = new FileStream( logFilePath, FileMode.Open, FileAccess.ReadWrite );
-					try
-					{
-						WriteLogFileStatus( fs, status );
-					}
-					finally
-					{
-						fs.Close();
-					}
-				}
-				catch( IOException e )
-				{
-					log.Error( "Failed to open event log file. Lost status - status: {0}. Exception: {1}", status, e.Message );
-				}
-			}
-			finally
-			{
-				mutex.ReleaseMutex( collectionID );
-			}
-		}
-
-		/// <summary>
-		/// Write the log file status out to the log file.
-		/// </summary>
-		/// <param name="fs">FileStream object that references the log file.</param>
-		/// <param name="status">Status of the log file.</param>
-		private void WriteLogFileStatus( FileStream fs, LogFileHeader.LogState status )
-		{
-			try
-			{
-				// Get the LogFileHeader.
-				LogFileHeader logHeader = GetLogFileHeader( fs );
-				if ( logHeader != null )
-				{
-					// Set the status in the header.
-					logHeader.State = status;
-
-					// Position the file pointer to the right position within the file.
-					fs.Position = 0;
-					fs.Write( logHeader.ToByteArray(), 0, logHeader.Length );
-				}
-				else
-				{
-					log.Error( "Failed to read log file header." );
-				}
-			}
-			catch ( IOException e )
-			{
-				log.Error( "Failed to write log file status. {0}", e.Message );
-			}
-		}
 		#endregion
 
 		#region IDisposable Members
@@ -1494,9 +1397,6 @@ namespace Simias.Storage
 				{
 					// Dispose managed resources.
 					subscriber.Dispose();
-
-					// Write out to the log file that it closed nicely.
-					WriteLogFileStatus( LogFileHeader.LogState.Closed );
 				}
 			}
 		}

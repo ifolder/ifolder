@@ -415,7 +415,7 @@ namespace Simias.Domain
 		/// Deletes the specified collection off of the enterprise server.
 		/// </summary>
 		/// <param name="collection">Collection to delete from the server.</param>
-		public void DeleteMaster(SyncCollection collection)
+		public void DeleteMaster(Collection collection)
 		{
 			// Construct the web client.
 			DomainService domainService = new DomainService();
