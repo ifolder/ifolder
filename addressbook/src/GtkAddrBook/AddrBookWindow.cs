@@ -211,18 +211,14 @@ namespace Novell.iFolder
 				if(userName == null)
 					userName = cnt.UserName;
 
-//				cPhoto = GetScaledPhoto(cnt, 24);
-//				if(cPhoto == null)
-//				{
-					if(cnt.IsCurrentUser)
-						cPhoto = CurCardPixBuf;
-					else
-						cPhoto =  UserCardPixBuf;
-//				}
+				if(cnt.IsCurrentUser)
+					cPhoto = CurCardPixBuf;
+				else
+					cPhoto =  UserCardPixBuf;
+
 				listHash.Add(iter, new ListData(cPhoto, userName));
 
 				((CellRendererText) cell).Text = userName;
-//				Console.WriteLine("Getting Name : " + userName);
 			}
 		}
 
@@ -244,37 +240,16 @@ namespace Novell.iFolder
 				if(userName == null)
 					userName = cnt.UserName;
 				
-//				cPhoto = GetScaledPhoto(cnt, 24);
-//				if(cPhoto == null)
-//				{
-					if(cnt.IsCurrentUser)
-						cPhoto = CurCardPixBuf;
-					else
-						cPhoto =  UserCardPixBuf;
-//				}
+				if(cnt.IsCurrentUser)
+					cPhoto = CurCardPixBuf;
+				else
+					cPhoto =  UserCardPixBuf;
+
 				listHash.Add(iter, new ListData(cPhoto, userName));
 
 				((CellRendererPixbuf) cell).Pixbuf = cPhoto;
 
-//				Console.WriteLine("Getting Icon for : " + userName);
 			}
-/*
-			if(((CellRendererPixbuf)cell).Pixbuf == null)
-			{
-
-			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-			Pixbuf cPhoto = GetScaledPhoto(cnt, 24);
-			if(cPhoto != null)
-				((CellRendererPixbuf) cell).Pixbuf = cPhoto;
-			else
-			{
-				if(cnt.IsCurrentUser)
-					((CellRendererPixbuf) cell).Pixbuf = CurCardPixBuf;
-				else
-					((CellRendererPixbuf) cell).Pixbuf = UserCardPixBuf;
-			}
-			}
-*/
 		}
 
 		public void ShowAll()
@@ -365,6 +340,25 @@ namespace Novell.iFolder
 				ce.ContactEdited +=
 					new ContactEditEventHandler(CreateContactEventHandler);
 				ce.ShowAll();
+			}
+		}
+
+		public void onImportVCard(object o, EventArgs args)
+		{
+			FileSelection fs = new FileSelection ("Select VCard");
+
+			int rc = fs.Run ();
+			fs.Hide ();
+			if(rc == -5)
+			{
+				Contact c = curAddrBook.ImportVCard(fs.Filename);
+				if(c != null)
+				{
+					c.Commit();
+
+					ContactTreeStore.AppendValues(c);
+			//		curAddrBook.AddContact(c);
+				}
 			}
 		}
 
@@ -562,6 +556,30 @@ namespace Novell.iFolder
 						break;					
 					}
 			}
+		}
+
+		public void on_contact_button_press(object o, ButtonPressEventArgs args)
+		{
+//			if(args.Event.Button == 3)
+//			{
+				Menu cMenu = new Menu();
+
+				MenuItem edit_item = new MenuItem ("Edit Contact");
+				cMenu.Append (edit_item);
+				//edit_item.Activated += new EventHandler(show_browser);
+				MenuItem delete_item = new MenuItem ("Delete Contact");
+				cMenu.Append (delete_item);
+				//delete_item.Activated += new EventHandler(show_colbrowser);
+
+				cMenu.Append(new SeparatorMenuItem());
+				MenuItem export_item = new MenuItem ("Export VCard");
+				//export_item.Activated += new EventHandler(quit_ifolder);
+				cMenu.Append (export_item);
+
+				cMenu.ShowAll();
+
+				cMenu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
+//			}
 		}
 
 		public void DeleteContactResponse(object sender, ResponseArgs args)
