@@ -119,11 +119,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "SyncService.asmx.resx"
-                    DependentUpon = "SyncService.asmx.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "SyncService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

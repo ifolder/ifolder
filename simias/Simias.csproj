@@ -429,6 +429,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\POBox\POBoxServiceProxy.cs"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\POManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -754,12 +759,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\CollectionSyncEventArgs.cs"
+                    RelPath = "src\Sync\ClientFile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\ClientFile.cs"
+                    RelPath = "src\Sync\CollectionSyncEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
