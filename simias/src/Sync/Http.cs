@@ -26,6 +26,7 @@ using System.Web;
 using System.Web.SessionState;
 using System.Net;
 using System.Collections;
+using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Sync.Delta;
@@ -166,6 +167,7 @@ namespace Simias.Sync.Http
 		string						url;
 		string						userName;
 		string						userID;
+		WebState					webState;
 		static CookieContainer		cookies = new CookieContainer();
 		NetworkCredential			credentials;
 
@@ -182,13 +184,7 @@ namespace Simias.Sync.Http
 			url = collection.MasterUrl.ToString().TrimEnd('/') + "/SyncHandler.ashx";
 			this.userName = userName;
 			this.userID = userID;
-			
-			// credentials
-			credentials = new Credentials(collection.ID).GetCredentials();
-			if (credentials == null)
-			{
-				throw new NeedCredentialsException();
-			}
+			webState = new WebState(collection.ID);
 		}
 
 		/// <summary>
@@ -199,12 +195,9 @@ namespace Simias.Sync.Http
 		private HttpWebRequest GetRequest(SyncMethod method)
 		{
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-			request.UserAgent = "Simias Sync Client " + version;
+			webState.InitializeWebRequest(request);
 			request.ContentType = "application/octet-stream";
-			request.Credentials = credentials;
-			request.CookieContainer = cookies;
 			request.Method = "POST";
-			request.PreAuthenticate = true;
 			WebHeaderCollection headers = request.Headers;
 			headers.Add(SyncHeaders.SyncVersion, version);
 			headers.Add(SyncHeaders.Method, method.ToString());
