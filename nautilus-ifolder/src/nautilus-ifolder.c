@@ -109,18 +109,18 @@ is_ifolder (NautilusFileInfo *file)
 static gint
 create_local_ifolder (NautilusFileInfo *file)
 {
-//	gchar *folder_path;
+	gchar *folder_path;
 	
-//	folder_path = get_file_path (file);
-//	if (folder_path != NULL) {
-//		/* FIXME: Call CreateLocaliFolder (folder_path) in iFolder.asmx */
-//		
-//		g_free (folder_path);
-//	}
-//	 else {
-//		/* Error getting the folder path */
-//		return -1;
-//	}
+	folder_path = get_file_path (file);
+	if (folder_path != NULL) {
+		/* FIXME: Call CreateLocaliFolder (folder_path) in iFolder.asmx */
+		
+		g_free (folder_path);
+	}
+	 else {
+		/* Error getting the folder path */
+		return -1;
+	}
 	
 	return 0;
 }
@@ -166,10 +166,12 @@ static void
 create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Convert to iFolder selected\n");	
+	GList *files;
 	NautilusFileInfo *file;
 	gint error;
-	file = NAUTILUS_FILE_INFO (g_object_get_data (G_OBJECT (item), "files"));
-//	file = (NautilusFileInfo *)user_data;
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
+	g_object_unref (G_OBJECT (files->data));
 	if (file == NULL)
 		return;
 
