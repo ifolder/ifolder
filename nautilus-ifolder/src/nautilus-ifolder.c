@@ -1134,7 +1134,7 @@ show_ifolder_creation_dialog (void *user_data)
 
 	sprintf (label_str,
 			 "<span weight=\"bold\" size=\"larger\">%s</span>",
-			 _("Congratulations! A new iFolder was created"));
+			 _("Congratulations!  A new iFolder was created."));
 	label = gtk_label_new ("");
 	gtk_label_set_line_wrap		(GTK_LABEL (label), FALSE);
 	gtk_label_set_markup		(GTK_LABEL (label), label_str);
