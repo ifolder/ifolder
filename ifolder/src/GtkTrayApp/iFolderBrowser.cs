@@ -332,11 +332,18 @@ namespace Novell.iFolder
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 				try
 				{
+					iFolderProperties ifProps = new iFolderProperties();
+					ifProps.CurrentiFolder = ifolder;
+					ifProps.TransientFor = iFolderWindow;
+					ifProps.Run();
+
+/*
 					PropertiesDialog pd = new PropertiesDialog();
 					pd.iFolder = ifolder;
 					pd.TransientFor = iFolderWindow; 
 					pd.ActiveTag = 3;
 					pd.Run();
+*/
 				}
 				catch(Exception e)
 				{
@@ -519,11 +526,18 @@ namespace Novell.iFolder
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
 
+				iFolderProperties ifProp = new iFolderProperties();
+				ifProp.TransientFor = iFolderWindow;
+				ifProp.CurrentiFolder = ifolder;
+				ifProp.ActiveTag = 1;
+				ifProp.Run();
+/*
 				PropertiesDialog pd = new PropertiesDialog();
 				pd.TransientFor = iFolderWindow;
 				pd.iFolder = ifolder;
 				pd.ActiveTag = 2;
 				pd.Run();
+*/
 			}
 		}
 

@@ -289,9 +289,9 @@ namespace Novell.iFolder
 
 		static void show_properties(object o, EventArgs args)
 		{
-			iFolderProperties propDialog;
+			ApplicationProperties propDialog;
 
-			propDialog = new iFolderProperties();
+			propDialog = new ApplicationProperties();
 			propDialog.Run();
 		}
 
