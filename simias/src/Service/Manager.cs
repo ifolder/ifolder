@@ -227,7 +227,7 @@ namespace Simias.Service
 		private void installDefaultServices()
 		{
 			Install(new ProcessServiceCtl(conf, "Simias Event Service", "EventService.exe"), 0);
-			Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "Simias", "Simias.Event.FsWatcher"), 1);
+			//Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "Simias", "Simias.Event.FsWatcher"), 1);
 			Install(new ThreadServiceCtl(conf, "Simias Change Log Service", "Simias", "Simias.Storage.ChangeLog"), 2);
 			Install(new ThreadServiceCtl(conf, "Simias Dredge Service", "Simias", "Simias.Sync.DredgeService"), 3);
 			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "mDnsService.exe"), 4);

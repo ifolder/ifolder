@@ -132,7 +132,6 @@ namespace Simias.Storage.Provider
 		public ProviderConfig()
 		{
 			conf = new Simias.Configuration();
-			Path = conf.StorePath;
 		}
 
 		/// <summary>
@@ -142,7 +141,6 @@ namespace Simias.Storage.Provider
 		public ProviderConfig(string path)
 		{
 			conf = new Simias.Configuration(path);
-			Path = conf.StorePath;
 		}
 
 		/// <summary>
@@ -152,7 +150,6 @@ namespace Simias.Storage.Provider
 		public ProviderConfig(Configuration sConf)
 		{
 			conf = sConf;
-			Path = conf.StorePath;
 		}
 
 		/// <summary>
