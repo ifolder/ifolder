@@ -161,7 +161,7 @@ namespace Simias.Storage
 		/// <param name="nodeName">This is the friendly name that is used by applications to describe the object.</param>
 		/// <param name="nodeID">The globally unique identifier for this object.</param>
 		public Node( string nodeName, string nodeID ) :
-			this ( nodeName, nodeID, "Node" )
+			this ( nodeName, nodeID, NodeTypes.NodeType )
 		{
 		}
 

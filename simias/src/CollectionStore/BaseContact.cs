@@ -168,7 +168,7 @@ namespace Simias.Storage
 		/// <param name="userName">User name of the identity.</param>
 		/// <param name="userGuid">Unique identifier for the user.</param>
 		public BaseContact( string userName, string userGuid ) :
-			base ( userName, userGuid, "BaseContact" )
+			base ( userName, userGuid, NodeTypes.BaseContactType )
 		{
 		}
 
@@ -180,7 +180,7 @@ namespace Simias.Storage
 		public BaseContact( Collection collection, Node node ) :
 			base( node )
 		{
-			if ( !collection.IsType( node, "BaseContact" ) )
+			if ( !collection.IsType( node, NodeTypes.BaseContactType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

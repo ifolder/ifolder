@@ -51,7 +51,7 @@ namespace Simias.Storage
 		/// <param name="fileName">Friendly name of the FileNode object.</param>
 		/// <param name="fileID">Globally unique identifier for the FileNode object.</param>
 		public FileNode( Collection collection, DirNode parentNode, string fileName, string fileID ) :
-			base ( collection, fileName, fileID, "FileNode" )
+			base ( collection, fileName, fileID, NodeTypes.FileNodeType )
 		{
 			// Set the parent attribute.
 			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
@@ -65,7 +65,7 @@ namespace Simias.Storage
 		public FileNode( Collection collection, Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, "FileNode" ) )
+			if ( !collection.IsType( node, NodeTypes.FileNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -79,7 +79,7 @@ namespace Simias.Storage
 		public FileNode( Collection collection, ShallowNode shallowNode ) :
 			base ( collection, shallowNode )
 		{
-			if ( !collection.IsType( this, "FileNode" ) )
+			if ( !collection.IsType( this, NodeTypes.FileNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

@@ -48,7 +48,7 @@ namespace Simias.Storage
 		/// <param name="nodeID">Globally unique identifier for the LinkNode object.</param>
 		/// <param name="relationship">A relationship object set for another Node object.</param>
 		public LinkNode( string name, string nodeID, Relationship relationship ) :
-			base( name, nodeID, "LinkNode" )
+			base( name, nodeID, NodeTypes.LinkNodeType )
 		{
 			properties.AddProperty( Property.LinkReference, relationship );
 		}
@@ -61,7 +61,7 @@ namespace Simias.Storage
 		protected LinkNode( Collection collection, Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, "LinkNode" ) )
+			if ( !collection.IsType( node, NodeTypes.LinkNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

@@ -69,7 +69,7 @@ namespace Simias.Storage
 		internal LocalAddressBook( Store storeObject, Node node ) :
 			base( storeObject, node )
 		{
-			if ( !IsType( node, "LocalAddressBook" ) )
+			if ( !IsType( node, NodeTypes.LocalAddressBookType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

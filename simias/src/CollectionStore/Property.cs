@@ -559,6 +559,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( DirLastWriteTime, null );
 			systemPropertyTable.Add( DomainName, null );
 			systemPropertyTable.Add( DefaultAddressBook, null );
+			systemPropertyTable.Add( Types, null );
 		}
 
 		/// <summary>

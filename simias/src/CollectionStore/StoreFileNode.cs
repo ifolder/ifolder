@@ -51,7 +51,7 @@ namespace Simias.Storage
 		/// <param name="fileID">Globally unique identifier for the StoreFileNode object.</param>
 		/// <param name="stream">A Stream object where the data can be read.</param>
 		public StoreFileNode( Collection collection, string name, string fileID, Stream stream ) :
-			base( collection, name, fileID, "StoreFileNode" )
+			base( collection, name, fileID, NodeTypes.StoreFileNodeType )
 		{
 			// Create the managed file path.
 			string managedFile = Path.Combine( collection.ManagedPath, fileID.ToLower() );
@@ -91,7 +91,7 @@ namespace Simias.Storage
 		protected StoreFileNode( Collection collection, Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, "StoreFileNode" ) )
+			if ( !collection.IsType( node, NodeTypes.StoreFileNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}

@@ -158,7 +158,7 @@ namespace Simias.Storage
 		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
 		/// <param name="domainName">The domain that this object is stored in.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName ) :
-			base( collectionName, collectionID, "Collection" )
+			base( collectionName, collectionID, NodeTypes.CollectionType )
 		{
 			store = storeObject;
 
@@ -206,7 +206,7 @@ namespace Simias.Storage
 		public Collection( Store storeObject, Node node ) :
 			base( node )
 		{
-			if ( type != "Collection" )
+			if ( type != NodeTypes.CollectionType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -222,7 +222,7 @@ namespace Simias.Storage
 		public Collection( Collection collection ) :
 			base( collection )
 		{
-			if ( type != "Collection" )
+			if ( type != NodeTypes.CollectionType )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -319,7 +319,7 @@ namespace Simias.Storage
 		/// <returns>True if the specified Node object is a Collection object. Otherwise false.</returns>
 		private bool IsCollection( Node node )
 		{
-			return ( node.Type == "Collection" ) ? true : false;
+			return ( node.Type == NodeTypes.CollectionType ) ? true : false;
 		}
 
 		/// <summary>
@@ -1026,6 +1026,30 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Removes the specified class type from the Types property.
+		/// </summary>
+		/// <param name="node">Node object to remove type from.</param>
+		/// <param name="type">String object containing class type to remove.</param>
+		public void RemoveType( Node node, string type )
+		{
+			if ( NodeTypes.IsNodeType( type ) )
+			{
+				throw new ApplicationException( "Cannot remove base type." );
+			}
+
+			// Get the multi-valued property and search for the specific value.
+			MultiValuedList mvl = node.Properties.GetProperties( Property.Types );
+			foreach ( Property p in mvl )
+			{
+				if ( p.ToString() == type )
+				{
+					p.DeleteProperty();
+					break;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Removes all access rights on the collection for the specified user.
 		/// </summary>
 		/// <param name="userID">User ID to remove rights for.</param>
@@ -1300,6 +1324,22 @@ namespace Simias.Storage
 			// Since GUIDs are unique, only search for the Node object GUID. Don't take the time to compare
 			// the Collection object GUID.
 			return Search( new Property( propertyName, propertyValue ), SearchOp.Equal );
+		}
+
+		/// <summary>
+		/// Sets the Types property to the specified class type.
+		/// </summary>
+		/// <param name="node">Node object to set type on.</param>
+		/// <param name="type">String object containing class type to set.</param>
+		public void SetType( Node node, string type )
+		{
+			if ( NodeTypes.IsNodeType( type ) )
+			{
+				throw new ApplicationException( "Cannot set a base type." );
+			}
+
+			// Set the new type.
+			node.Properties.AddNodeProperty( Property.Types, type );
 		}
 
 		/// <summary>

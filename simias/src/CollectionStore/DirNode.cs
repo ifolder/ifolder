@@ -138,7 +138,7 @@ namespace Simias.Storage
 		/// <param name="dirName">Name of the directory entry.</param>
 		/// <param name="dirID">Globally unique identifier for the directory entry.</param>
 		public DirNode( Collection collection, DirNode parentNode, string dirName, string dirID ) :
-			base ( dirName, dirID, "DirNode" )
+			base ( dirName, dirID, NodeTypes.DirNodeType )
 		{
 			// Set the parent attribute.
 			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, parentNode.ID ) );
@@ -163,7 +163,7 @@ namespace Simias.Storage
 		/// <param name="dirPath">An absolute path to a directory entry in the external file system.</param>
 		/// <param name="dirID">Globally unique identifier for the directory entry.</param>
 		public DirNode( Collection collection, string dirPath, string dirID ) :
-			base ( Path.GetFileName( dirPath ), dirID, "DirNode" )
+			base ( Path.GetFileName( dirPath ), dirID, NodeTypes.DirNodeType )
 		{
 			// Set the parent attribute.
 			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, RootID ) );
@@ -188,7 +188,7 @@ namespace Simias.Storage
 		public DirNode( Collection collection, ShallowNode shallowNode ) :
 			base ( collection, shallowNode )
 		{
-			if ( !collection.IsType( this, "DirNode" ) )
+			if ( !collection.IsType( this, NodeTypes.DirNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
@@ -202,7 +202,7 @@ namespace Simias.Storage
 		public DirNode( Collection collection, Node node ) :
 			base ( node )
 		{
-			if ( !collection.IsType( node, "DirNode" ) )
+			if ( !collection.IsType( node, NodeTypes.DirNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
