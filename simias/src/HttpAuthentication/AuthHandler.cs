@@ -284,7 +284,7 @@ namespace Simias.Security.Web
 		private string m_authenticationRealm;
 		private readonly string sessionTag = "simias-user";
 		private readonly string[] rolesArray = { "users" };
-		private Store store;
+		//private Store store;
 
 		private	Assembly authAssembly;
 		private Type iAuthService;
@@ -296,7 +296,7 @@ namespace Simias.Security.Web
 
 			log.Debug( "AuthenticationModule Init()");
 
-			this.store = Store.GetStore();
+			//this.store = Store.GetStore();
 
 			app.BeginRequest += new
 				EventHandler( this.OnBeginRequest );
@@ -537,11 +537,12 @@ namespace Simias.Security.Web
 					Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
 				if ( domainID != null && domainID[0] != null && domainID[0] != "" )
 				{
-					domain = store.GetDomain( domainID[0] );
+					domain = Store.GetStore().GetDomain( domainID[0] );
 				}
 				else
 				{
-					domain = store.GetDomain( store.DefaultDomain );
+					Store lStore = Store.GetStore();
+					domain = lStore.GetDomain( lStore.DefaultDomain );
 				}
 
 				context.Response.StatusCode = 401;
@@ -688,7 +689,7 @@ namespace Simias.Security.Web
 				Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
 			if ( domainID != null && domainID[0] != null && domainID[0] != "" )
 			{
-				Simias.Storage.Domain domain = store.GetDomain( domainID[0] );
+				Simias.Storage.Domain domain = Store.GetStore().GetDomain( domainID[0] );
 				if ( domain != null )
 				{
 					Member member = domain.GetMemberByID( authStatus.UserID );
