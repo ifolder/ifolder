@@ -114,6 +114,11 @@
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
+                <Reference
+                    Name = "mDnsResponder"
+                    AssemblyName = "mDnsResponder"
+                    HintPath = "external\mDnsResponder.dll"
+                />
             </References>
         </Build>
         <Files>

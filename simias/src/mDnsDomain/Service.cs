@@ -41,6 +41,7 @@ using Simias.Service;
 using Simias.Storage;
 using Simias.Sync;
 
+using Mono.P2p.mDnsResponder;
 using Mono.P2p.mDnsResponderApi;
 using Novell.Security.ClientPasswordManager;
 
@@ -58,6 +59,7 @@ namespace Simias.mDns
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
+		private static string inCredentialEvent = "true";
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
 		private Simias.Location.mDnsProvider mDnsProvider = null;
@@ -93,12 +95,22 @@ namespace Simias.mDns
 			string myAddress = MyDns.GetHostName();
 			store = Store.GetStore();
 
+			/*
 			if ( Channel.RegisterChannel() == false )
 			{
 				log.Debug( "Failed to register the remoting channel" );
 				log.Debug(  "Rendezvous functionality is disabled!");
 				return;
 			}
+			*/
+
+			//
+			// Startup up the mDnsResponder
+			//
+
+			// TODO: Need to issue a ping call to see if the mDnsResponder
+			// is already running
+			Responder.Startup( config.StorePath );
 
 			//
 			// Make sure the mDnsDomain exists
@@ -120,8 +132,7 @@ namespace Simias.mDns
 				Simias.Authentication.NeedCredentialsEventSubscriber needCreds =
 					new NeedCredentialsEventSubscriber();
 				needCreds.NeedCredentials += 
-					new Simias.Authentication.NeedCredentialsEventHandler(OnCredentialsEventHandler);
-				//needCreds.NeedCredentials = 
+					new Simias.Authentication.NeedCredentialsEventHandler( OnCredentialsEventHandler );
 
 				// Last add some fake credentials for the mDns domain
 				/*
@@ -177,7 +188,9 @@ namespace Simias.mDns
 			}
 
 			Simias.mDns.Sync.StopSyncThread();
-			Channel.UnregisterChannel();
+
+			//Channel.UnregisterChannel();
+			Responder.Shutdown();
 		}
 
 		/// <summary>
@@ -193,12 +206,12 @@ namespace Simias.mDns
 		{
 			if ( args.DomainID == Simias.mDns.Domain.ID )
 			{
-				// Attempt to authenticate
-				Simias.Storage.Collection collection =
-					Store.GetStore().GetCollectionByID( args.CollectionID );
-				if ( collection != null )
+				lock ( Simias.mDns.Service.inCredentialEvent )
 				{
-					if ( collection.Role == SyncRoles.Slave )
+					// Attempt to authenticate
+					Simias.Storage.Collection collection =
+						Store.GetStore().GetCollectionByID( args.CollectionID );
+					if ( collection != null )
 					{
 						Simias.mDns.ClientAuthentication clientAuth =
 							new Simias.mDns.ClientAuthentication();
@@ -207,11 +220,11 @@ namespace Simias.mDns
 						{
 							// Set credentials for this collection
 							new NetCredential( 
-									"iFolder", 
-									args.CollectionID, 
-									true, 
-									collection.GetCurrentMember().UserID,
-									"@PPK@" );
+								"iFolder", 
+								args.CollectionID, 
+								true, 
+								collection.GetCurrentMember().UserID,
+								"@PPK@" );
 
 						}
 					}
