@@ -89,7 +89,7 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
     for path in $HOME_DIRS
     do
-	%{prefix}/bin/setup-autostart $path
+	%{prefix}/lib/setup-autostart $path
     done 2>/dev/null
 
     #
@@ -115,7 +115,7 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     HOME_DIRS=`sed 's;[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\([^:]*\).*;\1;' /etc/passwd`
     for path in $HOME_DIRS
     do
-        %{prefix}/bin/setup-autostart -e $path
+        %{prefix}/lib/setup-autostart -e $path
     done 2>/dev/null
     
     #
