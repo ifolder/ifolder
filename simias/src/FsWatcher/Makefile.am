@@ -16,7 +16,7 @@ FsWatcherTests_FLAGS =
 FsWatcherTests_LIBS = 
 FsWatcherTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
 
-EXTRA_DIST = $(FsWatcher_CSFILES) $(FsWatcherTests_CSFILES)
+EXTRA_DIST = $(FsWatcher_CSFILES) $(FsWatcherTests_CSFILES) App$(ICON_EXT)
 
 CUR_DIR := $(shell pwd)
 
