@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderService.cs $(srcdir)/iFolder.cs $(srcdir)/Member.cs
+iFolderWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderService.cs $(srcdir)/iFolder.cs 
 iFolderWebService_CSFILES := $(subst /,$(SEP),$(iFolderWebService_CSFILES1))
 iFolderWebService_INCLUDES = 
 iFolderWebService_RESOURCES =  
@@ -14,7 +14,7 @@ EXTRA_DIST = iFolder.asmx $(iFolderWebService_CSFILES)
 all: Novell.iFolder.Web.dll
 
 Novell.iFolder.Web.dll: $(iFolderWebService_CSFILES) $(iFolderWebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(IFOLDER_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) /doc:iFolderWebService.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderWebService_FLAGS) $(SIMIAS_LIBS) $(iFolderWebService_LIBS:%=/r:%) $(iFolderWebService_LIBPATH:%=/lib:%) $(iFolderWebService_RESOURCES:%=$(ICON_FLAG)%) $(iFolderWebService_CSFILES) /doc:iFolderWebService.doc.xml
 
 if DEBUG
 if WINDOWS
