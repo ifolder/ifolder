@@ -42,6 +42,14 @@ namespace Simias.Sync
 
 		FileStream	workStream;
 
+		/// <summary>
+		/// Gets the output stream.
+		/// </summary>
+		protected FileStream OutStream
+		{
+			get { return workStream; }
+		}
+
 		#endregion
 		
 		#region Constructor / Finalizer

@@ -773,7 +773,7 @@ namespace Simias.Sync.Client
 					{
 						int buffOffset = 0;
 						int bytesInBuffer = 0;
-						do
+						while (bytesInBuffer < BlockSize)
 						{
 							int bytesRead = 0;
 							bytesRead = inStream.Read(buffer, buffOffset, BlockSize - bytesInBuffer);
@@ -781,7 +781,7 @@ namespace Simias.Sync.Client
 								break;
 							bytesInBuffer += bytesRead;
 							buffOffset += bytesRead;
-						} while (bytesInBuffer != BlockSize);
+						}
 						Write(buffer, 0, bytesInBuffer);
 						sizeRemaining -= bytesInBuffer;
 						if ((i % 16) == 15)
@@ -863,9 +863,11 @@ namespace Simias.Sync.Client
 					OffsetSegment seg = (OffsetSegment)segment;
 					byte[] dataBuffer = new byte[seg.Length];
 					ReadPosition = seg.Offset;
-					int bytesRead = Read(dataBuffer, 0, seg.Length);
-					serverFile.Write(dataBuffer, offset, bytesRead);
-					sizeRemaining -= bytesRead;
+					//int bytesRead = Read(dataBuffer, 0, seg.Length);
+					serverFile.Write(OutStream, offset, seg.Length);
+					sizeRemaining -= seg.Length;
+					//serverFile.Write(dataBuffer, offset, bytesRead);
+					//sizeRemaining -= bytesRead;
 					offset += seg.Length;
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 				}

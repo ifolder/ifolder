@@ -970,10 +970,17 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(Stream inStream, long offset, int count)
 		{
-			byte []buffer = new byte[count];
-			inStream.Read(buffer, 0, count);
+			byte []buffer = new byte[4096];
 			inFile.WritePosition = offset;
-			inFile.Write(buffer, 0, count);
+			int bytesWritten = 0;
+			while(bytesWritten < count)
+			{
+				int bytesRead = inStream.Read(buffer, 0, buffer.Length);
+				if (bytesRead == 0)
+					throw new SimiasException("Missing Data");
+				inFile.Write(buffer, 0, bytesRead);
+				bytesWritten += bytesRead;
+			}
 		}
 
 

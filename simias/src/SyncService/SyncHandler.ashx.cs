@@ -42,36 +42,7 @@ namespace Simias.Sync.Web
 			{
 				string httpMethod = Request.HttpMethod;
 				SyncHttp.Operation op = (SyncHttp.Operation)Enum.Parse(typeof(SyncHttp.Operation), Request.Headers.Get(SyncHttp.SyncOperation), true);
-				if (string.Compare(httpMethod, "Get", true) == 0)
-				{
-					// Determine What work we need to do.
-					Response.ContentType = "application/octet-stream";
-					switch (op)
-					{
-						case SyncHttp.Operation.Read:
-						{
-							long offset;
-							long size;
-							if (GetRange(Request, out offset, out size))
-							{
-								byte[] buffer;
-								service.Read(out buffer, offset, (int)size);
-								Response.BinaryWrite(buffer);
-								Response.End();
-								//Response.WriteFile((service.GetReadHandle(), offset, size);
-							}
-							else
-							{
-								Response.StatusCode = (int)HttpStatusCode.BadRequest;
-							}
-							break;
-						}
-						default:
-							Response.StatusCode = (int)HttpStatusCode.BadRequest;
-							break;
-					}
-				}
-				else if (string.Compare(httpMethod, "Post", true) == 0)
+				if (string.Compare(httpMethod, "POST", true) == 0)
 				{
 					// Determine What work we need to do.
 					switch (op)
