@@ -61,7 +61,8 @@ case $host_os in
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         EMPTY=
         SEP='/'
-        OPT_SUBDIRS=$LINUX_SUBDIRS
+        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+        NON_PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
     ;;
     cygwin)
         AC_CHECK_PROG(CSC, csc, csc)
@@ -115,7 +116,8 @@ case $host_os in
         NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
         EMPTY=
         SEP='$(EMPTY)\\$(EMPTY)'
-        OPT_SUBDIRS=$WINDOWS_SUBDIRS
+        PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
+        NON_PLATFORM_SUBDIRS=$LINUX_SUBDIRS
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -183,7 +185,8 @@ AC_SUBST(NUNIT_LIBPATH)
 AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
-AC_SUBST(OPT_SUBDIRS)
+AC_SUBST(PLATFORM_SUBDIRS)
+AC_SUBST(NON_PLATFORM_SUBDIRS)
 
 AC_OUTPUT([
 Makefile

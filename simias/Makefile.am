@@ -10,6 +10,7 @@ maintainer-clean-local:
 	rm -f install-sh install-sh.lnk INSTALL INSTALL.lnk
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
+	for subdir in $(NON_PLATFORM_SUBDIRS); do rm -rf "src/$$subdir/Makefile" "src/$$subdir/Makefile.in"; done
 	
 uninstall-local:
 	rm -rf $(DESTDIR)$(bindir)/.cstore
