@@ -119,18 +119,10 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ComboBox servers;
 		private System.Windows.Forms.ToolBar toolBar1;
 		private System.Windows.Forms.ToolBarButton toolBarCreate;
-		private System.Windows.Forms.ToolBarButton toolBarOpen;
-		private System.Windows.Forms.ToolBarButton toolBarSeparator1;
 		private System.Windows.Forms.ToolBarButton toolBarSetup;
-		private System.Windows.Forms.ToolBarButton toolBarRevert;
-		private System.Windows.Forms.ToolBarButton toolBarRemove;
-		private System.Windows.Forms.ToolBarButton toolBarSeparator2;
 		private System.Windows.Forms.ToolBarButton toolBarResolve;
 		private System.Windows.Forms.ToolBarButton toolBarSync;
 		private System.Windows.Forms.ToolBarButton toolBarShare;
-		private System.Windows.Forms.ToolBarButton toolBarProperties;
-		private System.Windows.Forms.ToolBarButton toolBarSeparator3;
-		private System.Windows.Forms.ToolBarButton toolBarRefresh;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -235,18 +227,10 @@ namespace Novell.FormsTrayApp
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.toolBar1 = new System.Windows.Forms.ToolBar();
 			this.toolBarCreate = new System.Windows.Forms.ToolBarButton();
-			this.toolBarOpen = new System.Windows.Forms.ToolBarButton();
 			this.toolBarShare = new System.Windows.Forms.ToolBarButton();
-			this.toolBarProperties = new System.Windows.Forms.ToolBarButton();
-			this.toolBarSeparator1 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSetup = new System.Windows.Forms.ToolBarButton();
-			this.toolBarRevert = new System.Windows.Forms.ToolBarButton();
-			this.toolBarRemove = new System.Windows.Forms.ToolBarButton();
-			this.toolBarSeparator2 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarResolve = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSync = new System.Windows.Forms.ToolBarButton();
-			this.toolBarSeparator3 = new System.Windows.Forms.ToolBarButton();
-			this.toolBarRefresh = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
 			// 
 			// servers
@@ -741,18 +725,10 @@ namespace Novell.FormsTrayApp
 			this.toolBar1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("toolBar1.BackgroundImage")));
 			this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
 																						this.toolBarCreate,
-																						this.toolBarOpen,
-																						this.toolBarShare,
-																						this.toolBarProperties,
-																						this.toolBarSeparator1,
 																						this.toolBarSetup,
-																						this.toolBarRevert,
-																						this.toolBarRemove,
-																						this.toolBarSeparator2,
+																						this.toolBarShare,
 																						this.toolBarResolve,
-																						this.toolBarSync,
-																						this.toolBarSeparator3,
-																						this.toolBarRefresh});
+																						this.toolBarSync});
 			this.toolBar1.ButtonSize = ((System.Drawing.Size)(resources.GetObject("toolBar1.ButtonSize")));
 			this.toolBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("toolBar1.Dock")));
 			this.toolBar1.DropDownArrows = ((bool)(resources.GetObject("toolBar1.DropDownArrows")));
@@ -778,14 +754,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarCreate.ToolTipText = resources.GetString("toolBarCreate.ToolTipText");
 			this.toolBarCreate.Visible = ((bool)(resources.GetObject("toolBarCreate.Visible")));
 			// 
-			// toolBarOpen
-			// 
-			this.toolBarOpen.Enabled = ((bool)(resources.GetObject("toolBarOpen.Enabled")));
-			this.toolBarOpen.ImageIndex = ((int)(resources.GetObject("toolBarOpen.ImageIndex")));
-			this.toolBarOpen.Text = resources.GetString("toolBarOpen.Text");
-			this.toolBarOpen.ToolTipText = resources.GetString("toolBarOpen.ToolTipText");
-			this.toolBarOpen.Visible = ((bool)(resources.GetObject("toolBarOpen.Visible")));
-			// 
 			// toolBarShare
 			// 
 			this.toolBarShare.Enabled = ((bool)(resources.GetObject("toolBarShare.Enabled")));
@@ -794,23 +762,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarShare.ToolTipText = resources.GetString("toolBarShare.ToolTipText");
 			this.toolBarShare.Visible = ((bool)(resources.GetObject("toolBarShare.Visible")));
 			// 
-			// toolBarProperties
-			// 
-			this.toolBarProperties.Enabled = ((bool)(resources.GetObject("toolBarProperties.Enabled")));
-			this.toolBarProperties.ImageIndex = ((int)(resources.GetObject("toolBarProperties.ImageIndex")));
-			this.toolBarProperties.Text = resources.GetString("toolBarProperties.Text");
-			this.toolBarProperties.ToolTipText = resources.GetString("toolBarProperties.ToolTipText");
-			this.toolBarProperties.Visible = ((bool)(resources.GetObject("toolBarProperties.Visible")));
-			// 
-			// toolBarSeparator1
-			// 
-			this.toolBarSeparator1.Enabled = ((bool)(resources.GetObject("toolBarSeparator1.Enabled")));
-			this.toolBarSeparator1.ImageIndex = ((int)(resources.GetObject("toolBarSeparator1.ImageIndex")));
-			this.toolBarSeparator1.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-			this.toolBarSeparator1.Text = resources.GetString("toolBarSeparator1.Text");
-			this.toolBarSeparator1.ToolTipText = resources.GetString("toolBarSeparator1.ToolTipText");
-			this.toolBarSeparator1.Visible = ((bool)(resources.GetObject("toolBarSeparator1.Visible")));
-			// 
 			// toolBarSetup
 			// 
 			this.toolBarSetup.Enabled = ((bool)(resources.GetObject("toolBarSetup.Enabled")));
@@ -818,31 +769,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarSetup.Text = resources.GetString("toolBarSetup.Text");
 			this.toolBarSetup.ToolTipText = resources.GetString("toolBarSetup.ToolTipText");
 			this.toolBarSetup.Visible = ((bool)(resources.GetObject("toolBarSetup.Visible")));
-			// 
-			// toolBarRevert
-			// 
-			this.toolBarRevert.Enabled = ((bool)(resources.GetObject("toolBarRevert.Enabled")));
-			this.toolBarRevert.ImageIndex = ((int)(resources.GetObject("toolBarRevert.ImageIndex")));
-			this.toolBarRevert.Text = resources.GetString("toolBarRevert.Text");
-			this.toolBarRevert.ToolTipText = resources.GetString("toolBarRevert.ToolTipText");
-			this.toolBarRevert.Visible = ((bool)(resources.GetObject("toolBarRevert.Visible")));
-			// 
-			// toolBarRemove
-			// 
-			this.toolBarRemove.Enabled = ((bool)(resources.GetObject("toolBarRemove.Enabled")));
-			this.toolBarRemove.ImageIndex = ((int)(resources.GetObject("toolBarRemove.ImageIndex")));
-			this.toolBarRemove.Text = resources.GetString("toolBarRemove.Text");
-			this.toolBarRemove.ToolTipText = resources.GetString("toolBarRemove.ToolTipText");
-			this.toolBarRemove.Visible = ((bool)(resources.GetObject("toolBarRemove.Visible")));
-			// 
-			// toolBarSeparator2
-			// 
-			this.toolBarSeparator2.Enabled = ((bool)(resources.GetObject("toolBarSeparator2.Enabled")));
-			this.toolBarSeparator2.ImageIndex = ((int)(resources.GetObject("toolBarSeparator2.ImageIndex")));
-			this.toolBarSeparator2.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-			this.toolBarSeparator2.Text = resources.GetString("toolBarSeparator2.Text");
-			this.toolBarSeparator2.ToolTipText = resources.GetString("toolBarSeparator2.ToolTipText");
-			this.toolBarSeparator2.Visible = ((bool)(resources.GetObject("toolBarSeparator2.Visible")));
 			// 
 			// toolBarResolve
 			// 
@@ -859,23 +785,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarSync.Text = resources.GetString("toolBarSync.Text");
 			this.toolBarSync.ToolTipText = resources.GetString("toolBarSync.ToolTipText");
 			this.toolBarSync.Visible = ((bool)(resources.GetObject("toolBarSync.Visible")));
-			// 
-			// toolBarSeparator3
-			// 
-			this.toolBarSeparator3.Enabled = ((bool)(resources.GetObject("toolBarSeparator3.Enabled")));
-			this.toolBarSeparator3.ImageIndex = ((int)(resources.GetObject("toolBarSeparator3.ImageIndex")));
-			this.toolBarSeparator3.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-			this.toolBarSeparator3.Text = resources.GetString("toolBarSeparator3.Text");
-			this.toolBarSeparator3.ToolTipText = resources.GetString("toolBarSeparator3.ToolTipText");
-			this.toolBarSeparator3.Visible = ((bool)(resources.GetObject("toolBarSeparator3.Visible")));
-			// 
-			// toolBarRefresh
-			// 
-			this.toolBarRefresh.Enabled = ((bool)(resources.GetObject("toolBarRefresh.Enabled")));
-			this.toolBarRefresh.ImageIndex = ((int)(resources.GetObject("toolBarRefresh.ImageIndex")));
-			this.toolBarRefresh.Text = resources.GetString("toolBarRefresh.Text");
-			this.toolBarRefresh.ToolTipText = resources.GetString("toolBarRefresh.ToolTipText");
-			this.toolBarRefresh.Visible = ((bool)(resources.GetObject("toolBarRefresh.Visible")));
 			// 
 			// GlobalProperties
 			// 
@@ -1657,10 +1566,10 @@ namespace Novell.FormsTrayApp
 		private void iFolderView_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
-				menuProperties.Visible = menuActionProperties.Enabled = toolBarProperties.Enabled =
-				menuRevert.Visible = menuActionRevert.Enabled = toolBarRevert.Enabled =
+				menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
+				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
 				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
-				menuOpen.Visible = menuActionOpen.Enabled = toolBarOpen.Enabled =
+				menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
 				menuSeparator1.Visible = menuSeparator2.Visible = 				
 				(iFolderView.SelectedItems.Count == 1) && !((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;
 
@@ -1677,7 +1586,7 @@ namespace Novell.FormsTrayApp
 				((iFolderWeb)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
 
 			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
-			menuRemove.Visible = menuActionRemove.Visible = toolBarRemove.Enabled =
+			menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
 				menuActionSeparator2.Visible =
 				(iFolderView.SelectedItems.Count == 1) && 
 				(!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription ||
@@ -1687,14 +1596,14 @@ namespace Novell.FormsTrayApp
 			{
 				if (IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID))
 				{
-					menuRemove.Text = menuActionRemove.Text = toolBarRemove.ToolTipText = 
+					menuRemove.Text = menuActionRemove.Text = /*toolBarRemove.ToolTipText =*/
 						resourceManager.GetString("deleteAction");
 				}
 				else
 				{
 					menuRemove.Text = resourceManager.GetString("menuRemove.Text");
 					menuActionRemove.Text = resourceManager.GetString("menuActionRemove.Text");
-					toolBarRemove.ToolTipText = resourceManager.GetString("toolBarRemove.ToolTipText");
+					/*toolBarRemove.ToolTipText = resourceManager.GetString("toolBarRemove.ToolTipText");*/
 				}
 			}
 		}
@@ -1723,17 +1632,23 @@ namespace Novell.FormsTrayApp
 				case 0: // Create
 					menuCreate_Click(this, new EventArgs());
 					break;
-				case 1: // Open
-					menuOpen_Click(this, new EventArgs());
+				case 1: // Setup
+					menuAccept_Click(this, new EventArgs());
 					break;
 				case 2: // Share
 					invokeiFolderProperties(iFolderView.SelectedItems[0], 1);
 					break;
+				case 3: // Resolve
+					menuResolve_Click(this, new EventArgs());
+					break;
+				case 4: // Sync
+					synciFolder(((iFolderWeb)iFolderView.SelectedItems[0].Tag).ID);
+					break;
+/*				case 1: // Open
+					menuOpen_Click(this, new EventArgs());
+					break;
 				case 3: // Properties
 					invokeiFolderProperties(iFolderView.SelectedItems[0], 0);
-					break;
-				case 5: // Setup
-					menuAccept_Click(this, new EventArgs());
 					break;
 				case 6: // Revert
 					menuRevert_Click(this, new EventArgs());
@@ -1741,15 +1656,9 @@ namespace Novell.FormsTrayApp
 				case 7: // Remove
 					menuRemove_Click(this, new EventArgs());
 					break;
-				case 9: // Resolve
-					menuResolve_Click(this, new EventArgs());
-					break;
-				case 10: // Sync
-					synciFolder(((iFolderWeb)iFolderView.SelectedItems[0].Tag).ID);
-					break;
 				case 12: // Refresh
 					refreshiFolders((Domain)servers.SelectedItem);
-					break;
+					break;*/
 			}
 		}
 
