@@ -426,7 +426,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 
 			Collection col = store.GetCollectionByID(iFolderID);
-			if(col != null)
+			if(col == null)
 				throw new Exception("Invalid iFolderID");
 
 			Simias.Storage.Member member = col.GetMemberByID(UserID);
