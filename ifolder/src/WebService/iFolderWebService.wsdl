@@ -195,6 +195,20 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetiFoldersForDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetiFoldersForDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFoldersForDomainResult" type="s0:ArrayOfIFolderWeb" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetiFolders">
         <xs:complexType>
           <xs:sequence>
@@ -777,6 +791,12 @@
   <message name="GetAlliFoldersSoapOut">
     <part name="parameters" element="s0:GetAlliFoldersResponse" />
   </message>
+  <message name="GetiFoldersForDomainSoapIn">
+    <part name="parameters" element="s0:GetiFoldersForDomain" />
+  </message>
+  <message name="GetiFoldersForDomainSoapOut">
+    <part name="parameters" element="s0:GetiFoldersForDomainResponse" />
+  </message>
   <message name="GetiFoldersSoapIn">
     <part name="parameters" element="s0:GetiFolders" />
   </message>
@@ -1041,6 +1061,12 @@
   <message name="GetAlliFoldersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolderWeb" />
   </message>
+  <message name="GetiFoldersForDomainHttpGetIn">
+    <part name="DomainID" type="s:string" />
+  </message>
+  <message name="GetiFoldersForDomainHttpGetOut">
+    <part name="Body" element="s0:ArrayOfIFolderWeb" />
+  </message>
   <message name="GetiFoldersHttpGetIn">
     <part name="UserID" type="s:string" />
   </message>
@@ -1292,6 +1318,12 @@
   </message>
   <message name="GetAlliFoldersHttpPostIn" />
   <message name="GetAlliFoldersHttpPostOut">
+    <part name="Body" element="s0:ArrayOfIFolderWeb" />
+  </message>
+  <message name="GetiFoldersForDomainHttpPostIn">
+    <part name="DomainID" type="s:string" />
+  </message>
+  <message name="GetiFoldersForDomainHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolderWeb" />
   </message>
   <message name="GetiFoldersHttpPostIn">
@@ -1548,6 +1580,11 @@
       <output message="s0:GetAlliFoldersSoapOut" />
       <documentation>Returns all iFolders on the Server</documentation>
     </operation>
+    <operation name="GetiFoldersForDomain">
+      <input message="s0:GetiFoldersForDomainSoapIn" />
+      <output message="s0:GetiFoldersForDomainSoapOut" />
+      <documentation>Returns all iFolders in the specified domain.</documentation>
+    </operation>
     <operation name="GetiFolders">
       <input message="s0:GetiFoldersSoapIn" />
       <output message="s0:GetiFoldersSoapOut" />
@@ -1780,6 +1817,11 @@
       <output message="s0:GetAlliFoldersHttpGetOut" />
       <documentation>Returns all iFolders on the Server</documentation>
     </operation>
+    <operation name="GetiFoldersForDomain">
+      <input message="s0:GetiFoldersForDomainHttpGetIn" />
+      <output message="s0:GetiFoldersForDomainHttpGetOut" />
+      <documentation>Returns all iFolders in the specified domain.</documentation>
+    </operation>
     <operation name="GetiFolders">
       <input message="s0:GetiFoldersHttpGetIn" />
       <output message="s0:GetiFoldersHttpGetOut" />
@@ -2011,6 +2053,11 @@
       <input message="s0:GetAlliFoldersHttpPostIn" />
       <output message="s0:GetAlliFoldersHttpPostOut" />
       <documentation>Returns all iFolders on the Server</documentation>
+    </operation>
+    <operation name="GetiFoldersForDomain">
+      <input message="s0:GetiFoldersForDomainHttpPostIn" />
+      <output message="s0:GetiFoldersForDomainHttpPostOut" />
+      <documentation>Returns all iFolders in the specified domain.</documentation>
     </operation>
     <operation name="GetiFolders">
       <input message="s0:GetiFoldersHttpPostIn" />
@@ -2286,6 +2333,15 @@
     </operation>
     <operation name="GetAlliFolders">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolders" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetiFoldersForDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFoldersForDomain" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2704,6 +2760,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetiFoldersForDomain">
+      <http:operation location="/GetiFoldersForDomain" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolders">
       <http:operation location="/GetiFolders" />
       <input>
@@ -3080,6 +3145,15 @@
     </operation>
     <operation name="GetAlliFolders">
       <http:operation location="/GetAlliFolders" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="GetiFoldersForDomain">
+      <http:operation location="/GetiFoldersForDomain" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>

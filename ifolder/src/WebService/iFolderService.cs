@@ -348,12 +348,96 @@ namespace Novell.iFolder.Web
 			}
 
 
+			LocalDatabase localDB = store.GetDatabaseObject();
+			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
+			foreach (ShallowNode sn in domainList)
+			{
+				// Now we need to get all of Subscriptions
+				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+							sn.ID, 
+							store.GetUserIDFromDomainID(sn.ID));
+	//			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
+	//						store.DefaultDomain, 
+	//						store.GetUserIDFromDomainID(store.DefaultDomain));
+				if(poBox != null)
+				{
+	
+					// Get all of the subscription obects in the POBox
+					ICSList poList = poBox.Search(
+							PropertyTags.Types,
+							typeof(Subscription).Name,
+							SearchOp.Equal);
+	
+					foreach(ShallowNode sNode in poList)
+					{
+						Subscription sub = new Subscription(poBox, sNode);
+	
+						// if the subscription is not for us, we don't
+						// care
+						if(sub.ToIdentity != poBox.Owner.UserID)
+							continue;
+	
+						// Filter out all subscriptions that match
+						// iFolders that are already local on our machine
+						if (store.GetCollectionByID(
+									sub.SubscriptionCollectionID) != null)
+						{
+							continue;
+						}
+						// Add check for declined iFolders
+						// We don't want those to show up either since they
+						// are going to be deleted by the PO Service
+						if(sub.SubscriptionDisposition == 
+									SubscriptionDispositions.Declined)
+						{
+							continue;
+						}
+	
+						list.Add(new iFolderWeb(sub));
+					}
+				}
+			}
+			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that returns all iFolders on the iFolder Server
+		/// </summary>
+		/// <param name="DomainID">The ID of the domain.</param>
+		/// <returns>
+		/// An array of iFolders
+		/// </returns>
+		[WebMethod(Description="Returns all iFolders in the specified domain")]
+		[SoapDocumentMethod]
+		public iFolderWeb[] GetiFoldersForDomain( string DomainID )
+		{
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			ICSList iFolderList = 
+					store.GetCollectionsByDomain(DomainID);
+
+			foreach(ShallowNode sn in iFolderList)
+			{
+				if (sn.Type.Equals(NodeTypes.CollectionType))
+				{
+					Collection col = store.GetCollectionByID(sn.ID);
+					if (col.IsType(col, iFolderWeb.iFolderType))
+					{
+						list.Add(new iFolderWeb(col));
+					}
+				}
+			}
+
+
 			// Now we need to get all of Subscriptions
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						store.DefaultDomain, 
-						store.GetUserIDFromDomainID(store.DefaultDomain));
-	//		POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
-	//												store.DefaultDomain);
+						DomainID, 
+						store.GetUserIDFromDomainID(DomainID));
 			if(poBox != null)
 			{
 
@@ -391,6 +475,7 @@ namespace Novell.iFolder.Web
 					list.Add(new iFolderWeb(sub));
 				}
 			}
+
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
 
