@@ -152,7 +152,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 134431888;
+			PBXPerProjectTemplateStateSaveDate = 134433369;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -329,8 +329,8 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 134431888;
-			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <40b047970756463747275616d618308e481004484848e0e435d457471626c656142727169700484870e435142727169700484880e435f426a656364700584810960068>;
+			PBXWorkspaceStateSaveDate = 134433369;
+			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
 		};
 		perUserProjectItems = {
 			3E09F82B07C048A200381F59 = 3E09F82B07C048A200381F59;
@@ -414,7 +414,6 @@
 			3E3BC77107AB5E0D00D2AE46 = 3E3BC77107AB5E0D00D2AE46;
 			3E3F7F7E07BF014F0096E031 = 3E3F7F7E07BF014F0096E031;
 			3E3F819607DFB581008CA88D = 3E3F819607DFB581008CA88D;
-			3E4BEB940802088100AB90DA = 3E4BEB940802088100AB90DA;
 			3E4BEB9A0802088100AB90DA = 3E4BEB9A0802088100AB90DA;
 			3E4BEBB9080223D600AB90DA = 3E4BEBB9080223D600AB90DA;
 			3E4BEBD50802277700AB90DA = 3E4BEBD50802277700AB90DA;
@@ -441,18 +440,7 @@
 			3E5EB80D07C58CCB0032A886 = 3E5EB80D07C58CCB0032A886;
 			3E5EB84C07C596B20032A886 = 3E5EB84C07C596B20032A886;
 			3E60AD83080344CC00A29935 = 3E60AD83080344CC00A29935;
-			3E60AD84080344CC00A29935 = 3E60AD84080344CC00A29935;
-			3E60AD96080345AE00A29935 = 3E60AD96080345AE00A29935;
-			3E60ADA50803485B00A29935 = 3E60ADA50803485B00A29935;
-			3E60ADA60803485B00A29935 = 3E60ADA60803485B00A29935;
-			3E60ADA70803485B00A29935 = 3E60ADA70803485B00A29935;
-			3E60ADA80803485B00A29935 = 3E60ADA80803485B00A29935;
-			3E60ADA90803485B00A29935 = 3E60ADA90803485B00A29935;
 			3E60ADAC0803494800A29935 = 3E60ADAC0803494800A29935;
-			3E60ADAD0803494800A29935 = 3E60ADAD0803494800A29935;
-			3E60ADAE0803494800A29935 = 3E60ADAE0803494800A29935;
-			3E60ADAF0803494800A29935 = 3E60ADAF0803494800A29935;
-			3E60ADB70803499600A29935 = 3E60ADB70803499600A29935;
 			3E6596BE07BE74520095CEE2 = 3E6596BE07BE74520095CEE2;
 			3E6596E107BE795C0095CEE2 = 3E6596E107BE795C0095CEE2;
 			3E66706207B7D7B90047E683 = 3E66706207B7D7B90047E683;
@@ -536,7 +524,6 @@
 			3EBB52A807CA877D003E8882 = 3EBB52A807CA877D003E8882;
 			3EBE79EF07FC55DD00DC9A8E = 3EBE79EF07FC55DD00DC9A8E;
 			3EBE7A1407FC596900DC9A8E = 3EBE7A1407FC596900DC9A8E;
-			3EBE7A2A07FC5A8400DC9A8E = 3EBE7A2A07FC5A8400DC9A8E;
 			3EBE7A8107FC732000DC9A8E = 3EBE7A8107FC732000DC9A8E;
 			3EBE7AB007FC7AF300DC9A8E = 3EBE7AB007FC7AF300DC9A8E;
 			3EBE7ADE07FC7BC000DC9A8E = 3EBE7ADE07FC7BC000DC9A8E;
@@ -550,6 +537,10 @@
 			3ECE00F2080247D500D78C0C = 3ECE00F2080247D500D78C0C;
 			3ECE9BAB07B0374A001155E6 = 3ECE9BAB07B0374A001155E6;
 			3ECE9BB707B0374A001155E6 = 3ECE9BB707B0374A001155E6;
+			3ECFA36B08034B22000ED54A = 3ECFA36B08034B22000ED54A;
+			3ECFA36C08034B22000ED54A = 3ECFA36C08034B22000ED54A;
+			3ECFA36D08034B22000ED54A = 3ECFA36D08034B22000ED54A;
+			3ECFA37508034B22000ED54A = 3ECFA37508034B22000ED54A;
 			3ED9856507B34D3A0050FE92 = 3ED9856507B34D3A0050FE92;
 			3EDA495907C683A5007CD1E0 = 3EDA495907C683A5007CD1E0;
 			3EDA495D07C683A5007CD1E0 = 3EDA495D07C683A5007CD1E0;
@@ -1506,9 +1497,9 @@
 	};
 	3E3BC75307AB5B7B00D2AE46 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1436, 12333}}";
-			sepNavSelRange = "{15239, 0}";
-			sepNavVisRect = "{{0, 5693}, {684, 747}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1436, 12557}}";
+			sepNavSelRange = "{5899, 388}";
+			sepNavVisRect = "{{0, 2284}, {684, 747}}";
 			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
 	};
@@ -1575,16 +1566,6 @@
 		vrLen = 1536;
 		vrLoc = 0;
 	};
-	3E4BEB940802088100AB90DA = {
-		fRef = 3EDD6AF907AEB3BD008A2A3B;
-		isa = PBXTextBookmark;
-		name = "se\n{\n\ts";
-		rLen = 7;
-		rLoc = 8266;
-		rType = 0;
-		vrLen = 1768;
-		vrLoc = 2518;
-	};
 	3E4BEB9A0802088100AB90DA = {
 		fRef = 3E52896A0774F9FA0064F585;
 		isa = PBXTextBookmark;
@@ -1639,7 +1620,7 @@
 		fRef = 3E81105E076FF18700E96819;
 		isa = PBXTextBookmark;
 		name = "- (IBAction)authenticate:(id)sender\n{\n\tSimiasService *simiasService = nil;\n\n\t[passwordField selectText:self];\n\t\n\tif( ( [authDomainID length] > 0 ) &&\n\t\t( [[passwordField stringValue] length] > 0 ) )\n\t{\n\t\tsimiasService = [[SimiasService alloc] init];\n\n\t\t@try\n\t\t{\n\t\t\tAuthStatus *authStatus = [[simiasService LoginToRemoteDomain:authDomainID \n\t\t\t\t\t\t\t\t\t\tusingPassword:[passwordField stringValue]] retain];\n\n//\t\t\tAuthStatus *authStatus = [[[NSApp delegate] authenticateToDomain:authDomainID \n//\t\t\t\t\t\t\t\t\t\twithPassword:[passwordField stringValue]] retain];\n\t\t\t\t\t\t\t\t\t\t\n\t\t\tunsigned int statusCode = [[authStatus statusCode] unsignedIntValue];\n\t\t\t\n\t\t\tswitch(statusCode)\n\t\t\t{\n\t\t\t\tcase ns1__StatusCodes__Success:\t\t// Success\n\t\t\t\tcase ns1__StatusCodes__SuccessInGrace:\t\t// SuccessInGrace\n\t\t\t\t{\n\t\t\t\t\tif( (authStatus != nil) && ([authStatus remainingGraceLogins] < [authStatus totalGraceLogins]) )\n\t\t\t\t\t{\n\t\t\t\t\t\tNSRunAlertPanel(\n\t\t\t\t\t\t\tNSLocalizedString(@\"Expired Password\", nil), \n\t\t\t\t\t\t\t[NSString stringWithFormat:NSLocalizedString(@\"Your password has expired.  You have %d grace logins remaining.\", nil), \n\t\t\t\t\t\t\t\t[authStatus remainingGraceLogins]],\n\t\t\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil);\n\t\t\t\t\t}\n\t\t\t\t\t[[self window] orderOut:nil];\t\t\t\t\t\t\t\t\t\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tcase ns1__StatusCodes__InvalidCertificate:\n\t\t\t\t{\n\t\t\t\t\t@try\n\t\t\t\t\t{\n\t\t\t\t\t\tSecCertificateRef certRef = [simiasService GetCertificate:[serverField stringValue]];\n\n\t\t\t\t\t\tAcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]\n\t\t\t\t\t\t\t\tinitWithCert:certRef];\n\t\t\t\t\t\t\n\t\t\t\t\t\t[NSApp beginSheet:[certSheet window] modalForWindow:[self window]\n\t\t\t\t\t\t\tmodalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];\n\t\t\t\t\t}\n\t\t\t\t\t@catch(NSException ex)\n\t\t\t\t\t{\n\t\t\t\t\t\tNSLog(@\"Exception getting cert.\");\n\t\t\t\t\t}\t\t\t\t\t\t\n\t\t\t\t\tbreak;\n\t\t\t\t}\t\t\t\t\n\t\t\t\tcase ns1__StatusCodes__UnknownUser:\t\t// UnknownUser\n\t\t\t\tcase ns1__StatusCodes__InvalidCredentials:\t\t// InvalidCredentials\n\t\t\t\tcase ns1__StatusCodes__InvalidPassword:\t\t// InvalidPassword\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"iFolder login failed\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\t[self window], nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"The user name or password is invalid.  Please try again.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tcase ns1__StatusCodes__AccountDisabled:\t\t// AccountDisabled\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"iFolder login failed\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\t[self window], nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"The user account is disabled.  Please contact your network administrator for assistance.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tcase ns1__StatusCodes__AccountLockout:\t\t// AccountLockout\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"iFolder login failed\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\t[self window], nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"The user account has been locked out.  Please contact your network administrator for assistance.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t\tcase ns1__StatusCodes__UnknownDomain:\t\t// UnknownDomain\n\t\t\t\tcase ns1__StatusCodes__InternalException:\t\t// InternalException\n\t\t\t\tcase ns1__StatusCodes__MethodNotSupported:\t// MethodNotSupported\n\t\t\t\tcase ns1__StatusCodes__Timeout:\t// Timeout\n\t\t\t\tcase ns1__StatusCodes__AmbiguousUser:\t\t// AmbiguousUser\n\t\t\t\tcase ns1__StatusCodes__Unknown:\t// Unknown\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"iFolder login failed\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\t[self window], nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t}\n\t\t\t[authStatus release];\n\t\t}\n\t\t@catch (NSException *e)\n\t\t{\n\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"iFolder login failed\", nil), \n\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t[self window], nil, nil, nil, nil, \n\t\t\t\tNSLocalizedString(@\"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.\", nil));\n\t\t}\n\t}\n}\n";
-		rLen = 4265;
+		rLen = 4654;
 		rLoc = 1848;
 		rType = 0;
 		vrLen = 2038;
@@ -1916,82 +1897,12 @@
 		vrLen = 1344;
 		vrLoc = 1068;
 	};
-	3E60AD84080344CC00A29935 = {
-		fRef = 3E256000077235290062AB7A;
-		isa = PBXTextBookmark;
-		name = "iFolderService.m: 27";
-		rLen = 0;
-		rLoc = 1111;
-		rType = 0;
-		vrLen = 1344;
-		vrLoc = 1068;
-	};
 	3E60AD94080345AB00A29935 = {
 		fileReference = 3EDD6AD907AEAECB008A2A3B;
 		functionName = "-ConnectToDomain:usingPassword:andHost:";
 		isa = PBXFileBreakpoint;
 		lineNumber = 182;
 		state = 1;
-	};
-	3E60AD96080345AE00A29935 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 434";
-		rLen = 0;
-		rLoc = 15239;
-		rType = 0;
-		vrLen = 2256;
-		vrLoc = 13451;
-	};
-	3E60ADA50803485B00A29935 = {
-		fRef = 3EDD6AD907AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = "\t\t\t[NSException raise:[NSString stringWithFormat:@\"%s\", soap.fault->faultstring]\n\t\t\t\t\tformat:@\"DomainExistsError\"];\n";
-		rLen = 116;
-		rLoc = 5572;
-		rType = 0;
-		vrLen = 1594;
-		vrLoc = 4786;
-	};
-	3E60ADA60803485B00A29935 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 434";
-		rLen = 0;
-		rLoc = 15238;
-		rType = 0;
-		vrLen = 2137;
-		vrLoc = 13574;
-	};
-	3E60ADA70803485B00A29935 = {
-		fRef = 3EDD6AD907AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = "SimiasService.m: 187";
-		rLen = 0;
-		rLoc = 5599;
-		rType = 0;
-		vrLen = 1594;
-		vrLoc = 4786;
-	};
-	3E60ADA80803485B00A29935 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 434";
-		rLen = 0;
-		rLoc = 15238;
-		rType = 0;
-		vrLen = 2150;
-		vrLoc = 13574;
-	};
-	3E60ADA90803485B00A29935 = {
-		fRef = 3EDD6AD907AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = "SimiasService.m: 187";
-		rLen = 0;
-		rLoc = 5599;
-		rType = 0;
-		vrLen = 1594;
-		vrLoc = 4786;
 	};
 	3E60ADAC0803494800A29935 = {
 		fRef = 3EDD6AD907AEAECB008A2A3B;
@@ -2002,46 +1913,6 @@
 		rType = 0;
 		vrLen = 1594;
 		vrLoc = 4786;
-	};
-	3E60ADAD0803494800A29935 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 434";
-		rLen = 0;
-		rLoc = 14902;
-		rType = 0;
-		vrLen = 2171;
-		vrLoc = 13574;
-	};
-	3E60ADAE0803494800A29935 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 434";
-		rLen = 0;
-		rLoc = 14902;
-		rType = 0;
-		vrLen = 2171;
-		vrLoc = 13574;
-	};
-	3E60ADAF0803494800A29935 = {
-		fRef = 3EDD6AD907AEAECB008A2A3B;
-		isa = PBXTextBookmark;
-		name = DomainExistsError;
-		rLen = 17;
-		rLoc = 5667;
-		rType = 0;
-		vrLen = 1594;
-		vrLoc = 4786;
-	};
-	3E60ADB70803499600A29935 = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 444";
-		rLen = 0;
-		rLoc = 15239;
-		rType = 0;
-		vrLen = 2196;
-		vrLoc = 13574;
 	};
 	3E6596BE07BE74520095CEE2 = {
 		fRef = 3E3405A6078B40EF00630436;
@@ -2466,9 +2337,9 @@
 	};
 	3E81105E076FF18700E96819 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1436, 3079}}";
-			sepNavSelRange = "{1848, 4265}";
-			sepNavVisRect = "{{0, 1906}, {684, 747}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1436, 3191}}";
+			sepNavSelRange = "{4915, 0}";
+			sepNavVisRect = "{{0, 2444}, {684, 747}}";
 			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
 	};
@@ -3217,16 +3088,6 @@
 		vrLen = 1450;
 		vrLoc = 0;
 	};
-	3EBE7A2A07FC5A8400DC9A8E = {
-		fRef = 3E3BC75307AB5B7B00D2AE46;
-		isa = PBXTextBookmark;
-		name = "AccountsController.m: 43";
-		rLen = 0;
-		rLoc = 1558;
-		rType = 0;
-		vrLen = 1235;
-		vrLoc = 4473;
-	};
 	3EBE7A8107FC732000DC9A8E = {
 		fRef = 3E70A40B078DFCD80075681D;
 		isa = PBXTextBookmark;
@@ -3415,6 +3276,46 @@
 		refType = 0;
 		sourceTree = "<absolute>";
 	};
+	3ECFA36B08034B22000ED54A = {
+		fRef = 3EDD6AF907AEB3BD008A2A3B;
+		isa = PBXTextBookmark;
+		name = ns1__StatusCodes__SimiasLoginDisabled;
+		rLen = 37;
+		rLoc = 1673;
+		rType = 0;
+		vrLen = 2332;
+		vrLoc = 475;
+	};
+	3ECFA36C08034B22000ED54A = {
+		fRef = 3E3BC75307AB5B7B00D2AE46;
+		isa = PBXTextBookmark;
+		name = "\t\t\t\tcase ns1__StatusCodes__SimiasLoginDisabled:\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"Unable to Connect to iFolder Server\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\tparentWindow, nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"This user account has been disabled in iFolder.  Please contact your network administrator for assistance.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n";
+		rLen = 388;
+		rLoc = 5899;
+		rType = 0;
+		vrLen = 2410;
+		vrLoc = 4513;
+	};
+	3ECFA36D08034B22000ED54A = {
+		fRef = 3E3BC75307AB5B7B00D2AE46;
+		isa = PBXTextBookmark;
+		name = "\t\t\t\tcase ns1__StatusCodes__SimiasLoginDisabled:\n\t\t\t\t{\n\t\t\t\t\tNSBeginAlertSheet(NSLocalizedString(@\"Unable to Connect to iFolder Server\", nil), \n\t\t\t\t\tNSLocalizedString(@\"OK\", nil), nil, nil, \n\t\t\t\t\tparentWindow, nil, nil, nil, nil, \n\t\t\t\t\tNSLocalizedString(@\"This user account has been disabled in iFolder.  Please contact your network administrator for assistance.\", nil));\n\t\t\t\t\tbreak;\n\t\t\t\t}\n";
+		rLen = 388;
+		rLoc = 5899;
+		rType = 0;
+		vrLen = 2410;
+		vrLoc = 4513;
+	};
+	3ECFA37508034B22000ED54A = {
+		fRef = 3E81105E076FF18700E96819;
+		isa = PBXTextBookmark;
+		name = "LoginWindowController.m: 143";
+		rLen = 0;
+		rLoc = 4915;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 6500;
+	};
 	3ED9856307B34CC10050FE92 = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
@@ -3490,6 +3391,11 @@
 		path = /Users/calvin/code/ifolder/simias/src/libsimias/simiasStub.h;
 		refType = 0;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {3584, 11969}}";
+			sepNavSelRange = "{1673, 37}";
+			sepNavVisRect = "{{2073, 242}, {684, 747}}";
+		};
 	};
 	3EE04CB907EB5A4000FD289A = {
 		fRef = 3E1F31B207EA2AFB005E45BA;
