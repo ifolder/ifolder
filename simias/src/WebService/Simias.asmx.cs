@@ -633,11 +633,12 @@ namespace Simias.Web
 			this.MemberName = cMember.Name;
 
 			Uri uri = Locate.ResolveLocation(domainID);
-			if (uri == null)
-				throw new Exception("Cannot get address for domain.");
 
-			this.RemoteUrl = uri.ToString() + "/DomainService.asmx";
-			this.Host = uri.ToString();
+			this.RemoteUrl = (uri != null) ?
+				uri.ToString() + "/DomainService.asmx" :
+				String.Empty;
+
+			this.Host = (uri != null) ? uri.ToString() : String.Empty;
 			this.IsSlave = cDomain.Role.Equals(Simias.Sync.SyncRoles.Slave);
 			this.IsDefault = domainID.Equals(store.DefaultDomain);
 		}
