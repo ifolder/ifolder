@@ -14,10 +14,10 @@ lib_LTLIBRARIES = libsimias.la
 override CFLAGS =
 
 libsimias_la_SOURCES = \
- 	envC.c simiasClientLib.c stdsoap2.c
+ 	envC.c simiasClientLib.c stdsoap2.c simias.c
 
 pkginclude_HEADERS = \
-	simiasStub.h simias.nsmap stdsoap2.h simiasH.h
+	simiasStub.h simias.nsmap stdsoap2.h simiasH.h simias.h
 
 libsimias_la_CFLAGS = \
 	-DWITH_NONAMESPACES
