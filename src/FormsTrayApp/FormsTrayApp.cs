@@ -374,45 +374,6 @@ namespace Novell.iFolder.FormsTrayApp
 
 			// For some reason the handle isn't really created until it is referenced.
 			IntPtr handle = traceForm.Handle;
-
-			// Sync properties used by SyncManager.
-			SyncProperties properties = new SyncProperties(conf);
-
-			// Don't use secure channel for now.
-			properties.DefaultChannelSinks = 
-				SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
-
-			// Get the logic factory from the config file.
-			string logicFactory = conf.Get("iFolderApp", "SyncLogic", "SynkerA");
-			switch (logicFactory)
-			{
-				case "SynkerA":
-					properties.DefaultLogicFactory = typeof(SynkerA);
-					break;
-				case "SyncLogicFactoryLite":
-					properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
-					break;
-				default:
-					break;
-			}
-
-			try
-			{
-				syncManager = new SyncManager(properties);
-				syncManager.ChangedState += new ChangedSyncStateEventHandler(syncManager_ChangedState);
-
-				// Trace levels.
-				MyTrace.Switch.Level = TraceLevel.Verbose;
-				Log.SetLevel("verbose");
-
-				Console.WriteLine("Starting sync object");
-				syncManager.Start();
-			}
-			catch(Exception exception)
-			{
-				MessageBox.Show("Exception caught in SyncManager:\n\n" + exception.Message);
-				this.Close();
-			}
 		}
 
 		private void syncManager_ChangedState(SyncManagerStates state)

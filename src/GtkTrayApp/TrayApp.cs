@@ -24,8 +24,8 @@
 using System;
 using Novell.AddressBook;
 using System.Collections;
-using Simias.Sync;
 using Simias;
+using Simias.Sync;
 using System.Diagnostics;
 
 using Gtk;
@@ -41,7 +41,6 @@ namespace Novell.iFolder
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(TrayApplication));
 		
-        static SyncManager syncManager = null;
 		static Gtk.Image gAppIcon;
 		static Gdk.PixbufAnimation gSyncAnimation;
 		static Gdk.Pixbuf gNifPixbuf;
@@ -82,39 +81,7 @@ namespace Novell.iFolder
 			mainThreadNotify =
 				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
-			SyncProperties props = new SyncProperties();
-            props.DefaultChannelSinks = 
-					SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
-
-			string logicFactory = conf.Get("iFolderApp", 
-				"SyncLogic", "SynkerA");
-
-			switch (logicFactory)
-			{
-				case "SynkerA":
-					props.DefaultLogicFactory = typeof(SynkerA);
-					break;
-				case "SyncLogicFactoryLite":
-					props.DefaultLogicFactory = 
-							typeof(SyncLogicFactoryLite);
-					break;
-				default:
-					break;
-			}
-
-			syncManager = new SyncManager(props);
-			syncManager.ChangedState += 
-					new ChangedSyncStateEventHandler(syncManager_ChangedState);
-
-			// Trace levels.
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-
 			twin = new GtkTraceWindow();
-
-			Simias.Sync.Log.SetLevel("verbose");
-
-			Console.WriteLine("Starting sync object...");
-			syncManager.Start();
 
 			Console.WriteLine("iFolder is now running.");
 			Application.Run();
