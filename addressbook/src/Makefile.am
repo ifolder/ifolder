@@ -1,12 +1,12 @@
 if LINUX
-SUBDIRS = AddressBook GtkAddrBook
+SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
 endif
 
 if WINDOWS
 SUBDIRS = AddressBook FormsBookLib FormsAddrBook
 endif
 
-DIST_SUBDIRS = AddressBook GtkAddrBook FormsBookLib FormsAddrBook
+DIST_SUBDIRS = AddressBook AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook
 
 EXTRA_DIST = $(srcdir)/addressbook-snakeoil.keys $(srcdir)/install-addressbook-to-gac.in
 

@@ -357,6 +357,8 @@ addressbook.pc
 src/Makefile
 src/install-addressbook-to-gac
 src/AddressBook/Makefile
+src/AddressBookCmd/Makefile
+src/AddressBookCmd/addressbookcmd
 src/AddressBookTests/Makefile
 src/FormsBookLib/Makefile
 src/FormsAddrBook/Makefile
