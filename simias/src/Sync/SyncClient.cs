@@ -555,8 +555,6 @@ namespace Simias.Sync.Client
 					switch (rights)
 					{
 						case Rights.Deny:
-							// We no longer have rights in the collection. Delete it.
-							collection.Commit(collection.Delete());
 							break;
 						case Rights.Admin:
 						case Rights.ReadOnly:
