@@ -265,6 +265,12 @@ namespace Novell.iFolder
 			loginButton.Clicked += new EventHandler(OnLoginAccount);
 			loginButton.CanDefault = true;
 
+
+			AccTreeView.RowActivated += new RowActivatedHandler(
+						OnAccTreeRowActivated);
+
+
+
 			vbox.PackStart(loginBox, false, false, 0);
 
 		}
@@ -476,6 +482,11 @@ namespace Novell.iFolder
 		}
 
 
+		private void OnAccTreeRowActivated(object o, RowActivatedArgs args)
+		{
+			if(!NewAccountMode)
+				OnDetailsClicked(o, args);
+		}
 
 
 		private void OnDetailsClicked(object o, EventArgs args)
@@ -491,7 +502,7 @@ namespace Novell.iFolder
 				DomainWeb dom = 
 						(DomainWeb) tModel.GetValue(iter, 0);
 
-				AccountDialog accDialog = new AccountDialog(dom);
+				AccountDialog accDialog = new AccountDialog(ifws, dom);
 				accDialog.TransientFor = topLevelWindow;
 				accDialog.Run();
 				accDialog.Hide();
@@ -574,7 +585,7 @@ namespace Novell.iFolder
 				// Set the control states
 				AddButton.Sensitive = true;
 				RemoveButton.Sensitive = false;
-				DetailsButton.Sensitive = false;
+				DetailsButton.Sensitive = true;
 
  				detailsFrame.Sensitive = true;
 				serverEntry.Sensitive = true;
