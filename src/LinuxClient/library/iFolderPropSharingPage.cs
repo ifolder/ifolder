@@ -35,6 +35,8 @@ namespace Novell.iFolder
 	/// </summary>
 	public class iFolderPropSharingPage : VBox
 	{
+		#region Class Members
+
 		private iFolderWebService	ifws;
 		private SimiasWebService	simws;
 		private iFolderWeb			ifolder;
@@ -51,6 +53,8 @@ namespace Novell.iFolder
 		private Button				AccessButton;
 		private iFolderUserSelector UserSelector;
 		private Hashtable			curUsers;
+
+		#endregion
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
@@ -518,11 +522,23 @@ namespace Novell.iFolder
 							{
 								try
 								{
-//									simws.AddMemberToDomain(domainID, MemberName, string MemberID, publickey, givenname, familyname);
-									// FIXME: Check to see if the user is already a member of the
-									// domain and add them if they are not.
-								
-								
+									try
+									{
+										// Add the member to the domain.  If the member is
+										// already a member of the domain, the call will do
+										// nothing.  This call will facilitate the local
+										// workstation not adding every possible domain user
+										// to the local workstatin until they've actually
+										// been added as an iFolder member.
+										simws.AddMemberToDomain(ifolder.DomainID,
+																member.Name,
+																member.UserID,
+																null,	// FIXME: Where should I get the PublicKey?
+																member.GivenName,
+																member.FamilyName);
+									}
+									catch {}
+									
     								iFolderUser newUser = ifws.InviteUser(
 															ifolder.ID,
 															member.UserID,
