@@ -41,7 +41,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SyncStore() : this(null)
+		public SyncStore() : this((string)null)
 		{
 		}
 
@@ -65,6 +65,19 @@ namespace Simias.Sync
 			
 			// base store
 			baseStore = Store.Connect(storeUri, null);
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="store">The collection store object</param>
+		public SyncStore(Store store)
+		{
+			// path
+			this.path = store.StorePath.LocalPath;
+			
+			// base store
+			baseStore = store;
 		}
 
 		/// <summary>

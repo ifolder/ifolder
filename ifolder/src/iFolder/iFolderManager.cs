@@ -530,10 +530,7 @@ namespace Novell.iFolder
 
 			invitation.RootPath = path;
 			
-			// give the agent factory the path
-			string storePath = Path.GetDirectoryName(store.StorePath.LocalPath);
-
-			(new AgentFactory(storePath)).GetInviteAgent().Accept(invitation);
+			AgentFactory.GetInviteAgent().Accept(store, invitation);
 		}
 
 

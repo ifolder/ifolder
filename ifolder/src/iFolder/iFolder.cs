@@ -1057,7 +1057,7 @@ namespace Novell.iFolder
 			if (invite)
 			{
 				// inform the notification service that we have shared
-				IInviteAgent agent = (new AgentFactory()).GetInviteAgent();
+				IInviteAgent agent = AgentFactory.GetInviteAgent();
 				Invitation invitation = agent.CreateInvitation(collection, userID);
 
 				// TODO: where should we discover the contact information?

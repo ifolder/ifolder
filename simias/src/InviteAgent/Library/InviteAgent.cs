@@ -39,8 +39,6 @@ namespace Simias.Agent
 	/// </summary>
 	public abstract class InviteAgent : IInviteAgent
 	{
-		private string storePath;
-
 		/// <summary>
 		/// Generate an inviation for a user to a collection
 		/// </summary>
@@ -50,7 +48,7 @@ namespace Simias.Agent
 		public Invitation CreateInvitation(Collection collection, string identity)
 		{
 			// open the store
-			SyncStore syncStore = new SyncStore(storePath);
+			SyncStore syncStore = new SyncStore(collection.LocalStore);
 
 			// open the collection
 			SyncCollection syncCollection = syncStore.OpenCollection(collection.Id);
@@ -68,10 +66,11 @@ namespace Simias.Agent
 		public abstract void Invite(Invitation invitation);
 		
 		/// <summary>
-		/// Accept a collection on this machine
+		/// Accept a collection invitation on the current machine
 		/// </summary>
-		/// <param name="invitation">The invitation</param>
-		public void Accept(Invitation invitation)
+		/// <param name="store">The collection store object</param>
+		/// <param name="invitation">The invitation object</param>
+		public void Accept(Store store, Invitation invitation)
 		{
 			// default local path ?
 			if ((invitation.RootPath == null) || (invitation.RootPath.Length == 0))
@@ -80,48 +79,20 @@ namespace Simias.Agent
 			}
 			
 			// add the invitation information to the store collection
-			SyncStore store = new SyncStore(storePath);
+			SyncStore sstore = new SyncStore(store);
 
 			// add the secret to the current identity chain
-			Identity identity = store.BaseStore.CurrentIdentity;
+			Identity identity = sstore.BaseStore.CurrentIdentity;
 			identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
 			identity.Commit();
 				
 			// create the slave collection with the invitation
-			SyncCollection collection = store.CreateCollection(invitation);
+			SyncCollection collection = sstore.CreateCollection(invitation);
 
 			// save the new collection
 			collection.Commit();
 
-			// TODO: Create a public/private pair and post the public key
-			// to the collection source
-
 			MyTrace.WriteLine("Invitation Accepted: {0}", invitation);
 		}
-
-		#region Properties
-
-		/// <summary>
-		/// The store path
-		/// </summary>
-		public string StorePath
-		{
-			get { return storePath; }
-			
-			set
-			{
-				if (value == null)
-				{
-					// a null store path is considered a default by collection store
-					storePath = null;
-				}
-				else
-				{
-					storePath = Path.GetFullPath(value);
-				}
-			}
-		}
-
-		#endregion
 	}
 }

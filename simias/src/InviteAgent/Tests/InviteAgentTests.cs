@@ -104,8 +104,7 @@ namespace Simias.Agent.Tests
 		public void TestInvite()
 		{
 			// user
-			AgentFactory factory = new AgentFactory(testStorePath);
-			IInviteAgent agent = factory.GetInviteAgent();
+			IInviteAgent agent = AgentFactory.GetInviteAgent();
 			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
 
 			invitation.FromName = "JDoe";
@@ -140,8 +139,7 @@ namespace Simias.Agent.Tests
 			invitation.ToName = "Denali";
 			invitation.ToEmail = "denali@novell.com";
 
-			AgentFactory factory = new AgentFactory(testStorePath);
-			factory.GetInviteAgent().Accept(invitation);
+			AgentFactory.GetInviteAgent().Accept(store, invitation);
 		}
 
 		/// <summary>
@@ -152,8 +150,7 @@ namespace Simias.Agent.Tests
 		public void TestBadInvite1()
 		{
 			// user
-			AgentFactory factory = new AgentFactory(testStorePath);
-			IInviteAgent agent = factory.GetInviteAgent();
+			IInviteAgent agent = AgentFactory.GetInviteAgent();
 			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
 
 			invitation.FromName = "JDoe";
@@ -174,8 +171,7 @@ namespace Simias.Agent.Tests
 		public void TestBadInvite2()
 		{
 			// user
-			AgentFactory factory = new AgentFactory(testStorePath);
-			IInviteAgent agent = factory.GetInviteAgent();
+			IInviteAgent agent = AgentFactory.GetInviteAgent();
 			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
 
 			invitation.FromName = "JDoe";

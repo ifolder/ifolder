@@ -31,36 +31,20 @@ namespace Simias.Agent
 	/// </summary>
 	public sealed class AgentFactory
 	{
-		string storePath;
-		
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public AgentFactory()
-			: this(null)
+		private AgentFactory()
 		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="storePath">The collection store path.</param>
-		public AgentFactory(string storePath)
-		{
-			this.storePath = storePath;
 		}
 
 		/// <summary>
 		/// Get the default invitation agent.
 		/// </summary>
 		/// <returns>An invitation agent.</returns>
-		public IInviteAgent GetInviteAgent()
+		public static IInviteAgent GetInviteAgent()
 		{
-			// default invitation agent
-			IInviteAgent agent = GetInviteAgent("EmailInviteAgent",
-				"Simias.Agent.EmailInviteAgent");
-
-			return agent;
+			return GetInviteAgent("EmailInviteAgent", "Simias.Agent.EmailInviteAgent");
 		}
 
 		/// <summary>
@@ -69,28 +53,13 @@ namespace Simias.Agent
 		/// <param name="assembly">The assembly that contains the invitation agent.</param>
 		/// <param name="type">The class type of the invitation agent.</param>
 		/// <returns>An invitation agent.</returns>
-		private IInviteAgent GetInviteAgent(string assembly, string type)
+		private static IInviteAgent GetInviteAgent(string assembly, string type)
 		{
 			// create an instance of the Invitation Agent
 			IInviteAgent agent = (IInviteAgent)
 				Activator.CreateInstance(assembly, type).Unwrap();
 
-			// initialize the agent
-			agent.StorePath = this.storePath;
-
 			return agent;
 		}
-
-		#region Properties
-		
-		/// <summary>
-		/// The collection store path.
-		/// </summary>
-		public string StorePath
-		{
-			get { return storePath; }
-		}
-
-		#endregion Properties
 	}
 }

@@ -49,16 +49,8 @@ namespace Simias.Agent
 		/// <summary>
 		/// Accept a collection share invitation to the local machine.
 		/// </summary>
+		/// <param name="store">The collection store object.</param>
 		/// <param name="invitation">The invitation object.</param>
-		void Accept(Invitation invitation);
-
-		/// <summary>
-		/// The collection store path.
-		/// </summary>
-		string StorePath
-		{
-			get;
-			set;
-		}
+		void Accept(Store store, Invitation invitation);
 	}
 }
