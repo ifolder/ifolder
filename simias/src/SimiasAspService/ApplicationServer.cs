@@ -277,7 +277,7 @@ namespace Mono.ASPNET
 				// This is throwing an exception when we shutdown
 				try
 				{
-					Socket.Select (wSockets, null, null, (w == 1) ? -1 : 1000 * 1000); // 1s
+					Socket.Select (wSockets, null, null, 1000 * 1000); // 1s
 				}
 				catch(SocketException se)
 				{
