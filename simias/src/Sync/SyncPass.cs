@@ -185,7 +185,12 @@ public class SynkerServiceA: SyncCollectionService
 			Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
 			return ops.PutSmallNodes(nodes);
 		}
-		catch (Exception e) { Log.Uncaught(e); }
+		catch (Exception e)
+		{
+			Log.Uncaught(e);
+			//TODO: handle this. Can't return null here because it is valid return (since empty arrays don't currently work on mono)
+			throw e; 
+		}
 		return null;
 	}
 
@@ -323,7 +328,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		//Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.streamsSize == -1)
 			nonFileToServer.Add(stamp);
@@ -337,7 +342,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		//Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.streamsSize == -1)
 			nonFileFromServer.Add(stamp);
@@ -387,6 +392,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 		NodeStamp[] sstamps = ss.GetNodeStamps();
 		NodeStamp[] cstamps = ops.GetNodeStamps();
+
+		if (sstamps == null)
+		{
+			Log.Error("Server Failure: could not get nodestamps");
+			return;
+		}
 
 		int si = 0, ci = 0;
 		int sCount = sstamps.Length, cCount = cstamps.Length;
@@ -489,10 +500,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		if ((updates = ops.GetSmallNodes(nonFileToServer, smallToServer)) != null)
 		{
 			RejectedNode[] rejects = ss.PutSmallNodes(updates);
-			if (rejects == null)
-				Log.Spew("null rejects list");
-			else
-			{
+			if (rejects != null)
 				foreach (NodeChunk nc in updates)
 				{
 					bool updateIncarn = true;
@@ -514,7 +522,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
 					}
 				}
-			}
 		}
 
 		// push up large files

@@ -333,7 +333,7 @@ internal class SyncIncomingNode
 			if (n == null)
 			{
 				parentPath = null;
-				Log.Spew("cound not get parent {1} of {0}, not here yet?", node.Name, rship.NodeID);
+				Log.Spew("could not get parent {1} of {0}, not here yet?", node.Name, rship.NodeID);
 			}
 			else
 			{
@@ -346,7 +346,7 @@ internal class SyncIncomingNode
 		}
 		else
 			parentPath = collection.ManagedPath;
-		Log.Spew("Starting incoming node {1}, path {0}", parentPath, node.Name);
+		//Log.Spew("Starting incoming node {1}, path {0}", parentPath, node.Name);
 	}
 
 	public void BlowChunks(ForkChunk[] chunks)
@@ -453,8 +453,6 @@ internal class SyncIncomingNode
 			 *  what are the rules for dredger, file change events, applications 
 			 *  and concurrent clients accessing this collection on the server?
 			 */
-			Log.Spew("writing local node {0} with node from server", node.Name);
-
 			for (;;)
 			{
 				collection.ImportNode(node, expectedIncarn);
@@ -556,7 +554,17 @@ internal class SyncOps
 				continue;
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-			stamp.masterIncarn = node.MasterIncarnation;
+
+			//DEBUG start
+			if (node.Properties.GetSingleProperty( PropertyTags.MasterIncarnation ) == null)
+			{
+				Log.Spew("Node {0} has no MasterIncarnation", node.Name);
+				stamp.masterIncarn = node.LocalIncarnation; //just a guess
+			}
+			else
+			//DEBUG end
+				stamp.masterIncarn = node.MasterIncarnation;
+
 			stamp.id = new Nid(node.ID);
 			stamp.name = node.Name;
 
@@ -634,8 +642,9 @@ internal class SyncOps
 				chunk.forkChunks = null;
 		}
 
-		Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}",
-				chunk.node.Name, chunk.expectedIncarn, chunk.totalSize, chunk.forkChunks == null? -1: chunk.forkChunks.Length);
+		//Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}",
+		//		chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
+		//		chunk.forkChunks == null? -1: chunk.forkChunks.Length);
 		return chunk;
 	}
 
@@ -705,7 +714,7 @@ internal class SyncOps
 			if (status != NodeStatus.Complete)
 				rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
 		}
-		return (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
+		return rejects.Count == 0? null: (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
 	}
 
 	/// <summary>
