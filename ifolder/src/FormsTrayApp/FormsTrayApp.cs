@@ -350,14 +350,6 @@ namespace Novell.FormsTrayApp
 			ShutdownTrayApp(null);
 		}
 
-		private void contextMenu1_Popup(object sender, System.EventArgs e)
-		{
-			// Show/hide store browser menu item based on whether or not the file is installed.
-			menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
-			menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
-			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
-		}
-
 		private void shellNotifyIcon_DoubleClick(object sender, EventArgs e)
 		{
 			menuProperties_Click(sender, e);
@@ -636,7 +628,6 @@ namespace Novell.FormsTrayApp
 																						 this.menuItem10,
 																						 this.menuExit});
 			this.contextMenu1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("contextMenu1.RightToLeft")));
-			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
 			// 
 			// menuTools
 			// 

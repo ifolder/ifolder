@@ -1856,7 +1856,7 @@ namespace Novell.FormsTrayApp
 			conflictResolver.iFolder = ((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb;
 			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = Application.StartupPath;
-			conflictResolver.Show();		
+			conflictResolver.Show();
 		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)
