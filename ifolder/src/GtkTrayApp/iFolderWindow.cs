@@ -89,6 +89,7 @@ namespace Novell.iFolder
 			{
 				if(value.HaveEnterprise != ifSettings.HaveEnterprise)
 				{
+					ifSettings = value;
 					if(value.HaveEnterprise = true)
 					{
 						MainNoteBook.AppendPage( CreateEnterprisePage(),
@@ -859,22 +860,32 @@ namespace Novell.iFolder
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
 
 
-			DiskSpace ds;
+			DiskSpace ds = null;
 			try
 			{
 				ds = iFolderWS.GetUserDiskSpace(ifSettings.CurrentUserID);
 			}
 			catch(Exception e)
 			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													null, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
-				ds = null;
+//				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+//													null, e);
+//				ied.Run();
+//				ied.Hide();
+//				ied.Destroy();
+//				ds = null;
 			}
 
-			if(ds != null)
+			if(ds == null)
+			{
+				totalValue.Text = "N/A";
+				totalUnit.Text = "";
+				availValue.Text = "N/A";
+				availUnit.Text = "";
+				usedValue.Text = "N/A";
+				usedUnit.Text = "";
+				diskGraph.Fraction = 0;
+			}
+			else
 			{
 				int tmpValue;
 
@@ -1010,7 +1021,10 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = ifolder.UnManagedPath;
+			if(ifolder.State == "Local")
+				((CellRendererText) cell).Text = ifolder.UnManagedPath;
+			else if(ifolder.State == "Available")
+				((CellRendererText) cell).Text = ifolder.Owner;
 		}
 
 
@@ -1478,10 +1492,14 @@ namespace Novell.iFolder
 				{
 					try
 					{
-    					iFolderWS.RevertiFolder(ifolder.ID);
-						// iFolderTreeStore.Remove(ref iter);
-						// Refresh the view so the Subscription shows up again
-						RefreshiFolderTreeView(o, args);
+    					iFolder newiFolder = 
+								iFolderWS.RevertiFolder(ifolder.ID);
+						curiFolders.Remove(ifolder.ID);
+
+						// Set the value of the returned value for the one
+						// that was there
+						iFolderTreeStore.SetValue(iter, 0, newiFolder);
+						curiFolders.Add(newiFolder.ID, iter);
 					}
 					catch(Exception e)
 					{
@@ -1900,11 +1918,11 @@ namespace Novell.iFolder
 
 		public void iFolderDeleted(string iFolderID)
 		{
-			if(!curiFolders.ContainsKey(iFolderID))
+			if(curiFolders.ContainsKey(iFolderID))
 			{
 				TreeIter iter = (TreeIter)curiFolders[iFolderID];
 				iFolderTreeStore.Remove(ref iter);
-				curiFolders.Remove(iter);
+				curiFolders.Remove(iFolderID);
 			}
 		}
 

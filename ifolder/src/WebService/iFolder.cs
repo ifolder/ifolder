@@ -71,6 +71,7 @@ namespace Novell.iFolder.Web
 			this.Domain = collection.Domain;
 			this.DomainIdentity = collection.Domain;
 			this.ID = collection.ID;
+			this.CollectionID = collection.ID;
 			this.LocalIncarnation = collection.LocalIncarnation;
 			DirNode dirNode = collection.GetRootDirectory();
 			if(dirNode != null)

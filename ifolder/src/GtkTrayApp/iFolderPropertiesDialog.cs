@@ -136,7 +136,7 @@ namespace Novell.iFolder
 			foreach(iFolder ifldr in iFolderArray)
 			{
 				ifList.Add(ifldr.UnManagedPath);
-				ifHash[ifldr.UnManagedPath] = ifldr;
+				ifHash.Add(ifldr.UnManagedPath, ifldr);
 			}
 
 			string[] strList = (string[])ifList.ToArray(typeof(string));
