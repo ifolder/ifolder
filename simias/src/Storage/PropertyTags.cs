@@ -216,6 +216,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( LinkReference, null );
 			systemPropertyTable.Add( LocalAddressBook, null );
+			systemPropertyTable.Add( LocalDatabase, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( ModifyTime, null );
