@@ -40,7 +40,7 @@ namespace Simias.Web
 	/// <summary>
 	/// Class the handles presence as a service
 	/// </summary>
-	public class SimiasWebService : IThreadService
+	public class SimiasAspService : IThreadService
 	{
 		#region Class Members
 		/// <summary>
@@ -60,7 +60,7 @@ namespace Simias.Web
 		/// <summary>
 		/// Initializes a new instance of the object class.
 		/// </summary>
-		public SimiasWebService()
+		public SimiasAspService()
 		{
 		}
 		#endregion
