@@ -54,7 +54,7 @@ namespace Novell.iFolder
 			this.contact = contact;
 		}
 
-		public Contact ABContact 
+		public Contact Contact 
 		{     
 			get { return contact;}      
 		}

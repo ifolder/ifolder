@@ -570,7 +570,7 @@ namespace Novell.iFolder
 		public void ContactCreatedEventHandler(object o,
 				ContactEventArgs args)
 		{
-			Contact contact = args.ABContact;
+			Contact contact = args.Contact;
 
 			curAddrBook.AddContact(contact);
 
@@ -582,7 +582,7 @@ namespace Novell.iFolder
 		public void ContactEditedEventHandler(object o,
 				ContactEventArgs args)
 		{
-			Contact contact = args.ABContact;
+			Contact contact = args.Contact;
 
 			contact.Commit();
 
