@@ -441,7 +441,63 @@ sync_buddy_with_simias_roster(gpointer key, gpointer value, gpointer user_data)
 static void
 buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 {
-	g_print("FIXME: Implement buddylist_cb_simulate_share_ifolder()\n");
+	/* Prompt the user for an iFolder/Collection Name */
+	GtkWidget *dialog;
+	GtkWidget *vbox;
+	GtkWidget *name_label;
+	GtkWidget *name_entry;
+	gint response;
+	const gchar *name;
+	GaimBuddy *buddy;
+	int result;
+
+	if (!GAIM_BLIST_NODE_IS_BUDDY(node)) {
+		return;
+	}
+
+	buddy = (GaimBuddy *)node;
+
+	dialog = gtk_dialog_new_with_buttons("Share an iFolder",
+			NULL,
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_CANCEL,
+			GTK_RESPONSE_CANCEL,
+			NULL);
+
+	vbox = gtk_vbox_new(FALSE, 10);
+	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
+	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
+
+	name_label = gtk_label_new("Enter a name for the iFolder:");
+	gtk_box_pack_start(GTK_BOX(vbox), name_label, FALSE, FALSE, 0);
+
+	name_entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(name_entry), "My iFolder");
+	gtk_editable_select_region(GTK_EDITABLE(name_entry), 0, -1);
+	gtk_widget_grab_focus(name_entry);
+	gtk_box_pack_end(GTK_BOX(vbox), name_entry, FALSE, FALSE, 0);
+
+	response = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (response == GTK_RESPONSE_ACCEPT) {
+		/**
+		 * Check the value of name_entry and if it's not NULL, send an
+		 * invitation.
+		 */
+		name = gtk_entry_get_text(GTK_ENTRY(name_entry));
+		if (name && strlen(name) > 0) {
+			result = send_invitation_request_msg(
+					buddy,
+					"{1234-A-Collection-ID}",
+					"ifolder",
+					(char *)name);
+			g_print("send_invitation_request_msg(): %d\n", result);
+		}
+	}
+
+	gtk_widget_destroy(dialog);
 }
 
 static void
@@ -987,7 +1043,15 @@ static gboolean
 handle_invitation_request(GaimAccount *account, const char *sender, 
 						  const char *buffer)
 {
-	g_print("FIXME: Implement handle_invitation_request()\n");
+/*#define INVITATION_REQUEST_MSG		"[simias:invitation-request:"
+ * [simias:invitation-request:<sender-ip-address>:<collection-id>:<collection-type>:<collection-name>]<Human-readable Invitation String for buddies who don't have the plugin installed/enabled>
+*/
+	/**
+	 * Since this method is called, we already know that the first part of
+	 * the message matches our #define.  So, because of that, we can take
+	 * that portion out of the picture and start tokenizing the different
+	 * parts.
+	 */
 	return FALSE;
 }
 
