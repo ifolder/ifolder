@@ -84,6 +84,11 @@
                     Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
             </References>
         </Build>
         <Files>

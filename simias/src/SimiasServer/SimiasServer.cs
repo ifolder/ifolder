@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.IO;
 using System.Threading;
+using System.Web;
 
 using Simias.Client;
 
@@ -40,7 +41,7 @@ namespace Simias.Server
 		private static readonly string Path = @"simias10";
 		private static readonly string Dir = MyEnvironment.Unix ? @"../web" : @"web";
 		private static readonly int Port = 8086;
-		private static readonly string Page = @"Simias.asmx?WSDL";
+		private static readonly string Page = @"Simias.asmx";
 		private static readonly string Application = @"SimiasApp.exe";
 		private static readonly string Mono = @"mono";
 
@@ -100,11 +101,11 @@ namespace Simias.Server
 
 			try
             {
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ub.Uri);
-				request.CookieContainer = new CookieContainer();
-				request.GetResponse().Close();
+				SimiasWebService svc = new SimiasWebService();
+				svc.Url = ub.Uri.ToString();
+				svc.PingSimias();
             }
-            catch(Exception e)
+            catch(Exception)
             {
 				// ignore
 			}

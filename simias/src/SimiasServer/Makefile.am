@@ -6,7 +6,7 @@ SimiasServer_CSFILES_CSC := $(subst /,$(SEP),$(SimiasServer_CSFILES))
 SimiasServer_INCLUDES =
 SimiasServer_RESOURCES = $(srcdir)/App$(ICON_EXT)
 SimiasServer_FLAGS = $(CSC_EXEFLAG)
-SimiasServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll
+SimiasServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.Services.dll SimiasClient.dll
 SimiasServer_LIBPATH = ../SimiasClient
 
 PROJECT_FILES = $(srcdir)/SimiasServer.csproj
