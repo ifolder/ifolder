@@ -296,10 +296,10 @@ case $IFOLDER_OS in
         #
         # Override Linux-like directory structure
         #
-    	bindir='$(shell cygpath --mixed ${exec_prefix})'
-    	sbindir='$(shell cygpath --mixed ${exec_prefix})'
-    	libexecdir='$(shell cygpath --mixed ${exec_prefix})'
-    	libdir='$(shell cygpath --mixed ${exec_prefix})'
+    	bindir='${exec_prefix}'
+    	sbindir='${exec_prefix}'
+    	libexecdir='${exec_prefix}'
+    	libdir='${exec_prefix}'
     ;;
 esac
 AC_SUBST(CDEF)
