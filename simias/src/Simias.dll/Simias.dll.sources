@@ -50,6 +50,7 @@ AssemblyInfo.cs
 ../Location/EnterpriseLocation.cs
 ../HttpAuthentication/AuthHandler.cs
 ../HttpAuthentication/IAuthService.cs
+../HttpAuthentication/HttpAuth.cs
 ../POBox/Message.cs
 ../POBox/POBox.cs
 ../POBox/POBoxManager.cs
