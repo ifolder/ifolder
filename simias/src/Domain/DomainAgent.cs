@@ -324,7 +324,10 @@ namespace Simias.Domain
 		/// <param name="host">Url of the enterprise server.</param>
 		/// <param name="user">User to provision on the server.</param>
 		/// <param name="password">Password to validate user.</param>
-		public void Attach(string host, string user, string password)
+		/// <returns>
+		/// The Domain ID of the newly attached Domain
+		/// </returns>
+		public string Attach(string host, string user, string password)
 		{
 			// Get a URL to our service.
 			Uri domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType );
@@ -416,6 +419,7 @@ namespace Simias.Domain
 				store.DefaultDomain = previousDomain;
 				throw e;
 			}
+			return domainInfo.ID;
 		}
 
 		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info, Uri host)
