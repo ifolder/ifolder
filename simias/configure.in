@@ -415,32 +415,6 @@ fi
 AC_SUBST(DEVENV_CONFIGURATION)
 
 #
-# Handle --enable-gaim-domain
-#
-AC_ARG_ENABLE(gaim-domain, [
-  --enable-gaim-domain          Enable and build a Gaim Buddy List Workgroup Domain],
-    [case "${enableval}" in
-        yes) enable_gaim_domain=true ;;
-        no)  enable_gaim_domain=false ;;
-        *) AC_MSG_ERROR(bad value ${enableval} for --enable-gaim-domain) ;;
-    esac],[enable_gaim_domain=false])
-AM_CONDITIONAL(BUILD_GAIM_DOMAIN, test x$enable_gaim_domain = xtrue)
-if test "$enable_gaim_domain" = "true"
-then
-  # Add anything needed specifically for when buiding the gaim-domain
-  PC_FILE_LIB_SIMIAS_GAIM="-lsimiasgaim"
-  SIMIAS_CONF_SIMIAS_GAIM="<Service name=\"Gaim Domain Service\" assembly=\"Simias.Gaim.dll\" enabled=\"True\" type=\"Thread\" class=\"Simias.Gaim.GaimService\" />"
-else
-  # Put anything here special for when not building gaim-domain
-  PC_FILE_LIB_SIMIAS_GAIM=
-  SIMIAS_CONF_SIMIAS_GAIM=
-fi
-AC_SUBST(PC_FILE_LIB_SIMIAS_GAIM)
-AC_SUBST(SIMIAS_CONF_SIMIAS_GAIM)
-
-
-
-#
 # Configure PKG_CONFIG
 #
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
