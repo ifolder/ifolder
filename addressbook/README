@@ -24,31 +24,29 @@ Linux
 	get those from the Ximian Red Carpet server or http://www.go-mono.com
 
 	To compile is the traditional:
-		configure
+		./configure
 		make
 		make install
 
 Win32
 ------
 	You will need to have the following installed and working on your machine.
-	(note that cygwin is not used on windows, nor is it tested)
-	- .Net framework compiler and libraries
-	- Perl (to run the configure script)
-	- gnu make
+        - Cygwin
+	- .NET framework compiler and libraries
 
 	To compile is the traditional:
-		configure
+		./configure
 		make
 		make install
 
 OS X
 ------
 	We are working to get AddressBook working on OS X. Right now there are some 
-	issues to large to cover here.  Once you do get mono going on OS X, the
+	issues too large to cover here.  Once you do get mono going on OS X, the
 	Simias project should work much like it does on Linux.
 
 	To compile is the traditional:
-		configure
+		./configure
 		make
 		make install
 
