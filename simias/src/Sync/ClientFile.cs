@@ -501,9 +501,8 @@ namespace Simias.Sync.Client
 			long	sizeRemaining;
 			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
 			sizeRemaining = sizeToSync;
-			//byte[]	dataBuffer = new byte[MaxXFerSize];
+//			byte[]	dataBuffer = new byte[MaxXFerSize];
 			
-//			byte[] buffer = new byte[BlockSize];
 			long offset = 0;
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 			foreach(FileSegment segment in fileMap)
@@ -528,7 +527,9 @@ namespace Simias.Sync.Client
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 				}
 			}
-			return true;
+			if (sizeRemaining == 0)
+				return true;
+			return false;
 		}
 
 		#endregion
