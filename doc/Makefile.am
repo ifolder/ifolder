@@ -23,6 +23,10 @@ else # NOT WINDOWS
 	"$(NDOC_CMD)" "$(bindir)/Novell.iFolder.dll","../src/iFolder/Novell.iFolder.doc.xml" -documenter=MSDN -Title=iFolder -OutputDirectory=ifolder-ndoc
 endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc
+	@test "x" = "x$(DOC_TARBALLS)" || \
+		CMD='cp -f $(DOC_TARBALL) "$(DOC_TARBALLS)"'; \
+		echo $$CMD; \
+		eval $$CMD
 
 else # NDOC
 
