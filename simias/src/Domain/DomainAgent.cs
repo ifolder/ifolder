@@ -30,12 +30,13 @@ using System.Xml;
 using Simias;
 using Simias.Authentication;
 using Simias.Client;
+//using Simias.Client.Authentication;
 using Simias.POBox;
+using Simias.Security.Web.AuthenticationService;
 using Simias.Storage;
 using Simias.Sync;
 
 using Novell.Security.ClientPasswordManager;
-
 using PostOffice = Simias.POBox;
 
 namespace Simias.Domain
@@ -353,6 +354,139 @@ namespace Simias.Domain
 			// commit
 			poBox.Commit( new Node[] { poBox, member } );
 		}
+
+		/// <summary>
+		/// Login to a remote domain using username and password
+		/// Assumes a slave domain has been provisioned locally
+		/// </summary>
+		/// <param name="domainID">ID of the remote domain.</param>
+		/// <param name="user">Member to login as</param>
+		/// <param name="password">Password to validate user.</param>
+		/// <returns>
+		/// The status of the remote authentication
+		/// </returns>
+		private 
+		Simias.Authentication.Status
+		Login(Uri host, ref CookieContainer cookie, NetworkCredential networkCredential)
+		{
+			HttpWebResponse response = null;
+
+			Simias.Authentication.Status status =	
+				new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Unknown );
+
+			Uri loginUri = 
+				new Uri( host, Simias.Security.Web.AuthenticationService.Login.Path.ToLower() );
+			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
+			request.CookieContainer = cookie;
+			request.Credentials = networkCredential;
+			request.PreAuthenticate = true;
+
+			try
+			{
+				response = request.GetResponse() as HttpWebResponse;
+				if ( response != null )
+				{
+					string grace = 
+						response.GetResponseHeader( 
+							Simias.Security.Web.AuthenticationService.Login.GraceTotalHeader );
+					if ( grace != null && grace != "" )
+					{
+						status.statusCode = Simias.Authentication.StatusCodes.SuccessInGrace;
+						status.TotalGraceLogins = Convert.ToInt32( grace );
+
+						grace = 
+							response.GetResponseHeader( 
+								Simias.Security.Web.AuthenticationService.Login.GraceRemainingHeader );
+						if ( grace != null && grace != "" )
+						{
+							status.RemainingGraceLogins = Convert.ToInt32( grace );
+						}
+						else
+						{
+							// fail to worst case
+							status.RemainingGraceLogins = 0;
+						}
+					}
+					else
+					{
+						status.statusCode = Simias.Authentication.StatusCodes.Success;
+					}
+				}
+			}
+			catch(WebException webEx)
+			{
+				response = webEx.Response as HttpWebResponse;
+				if (response != null)
+				{
+					// Look for our special header to give us more
+					// information why the authentication failed
+					string iFolderError = 
+						response.GetResponseHeader( 
+						Simias.Security.Web.AuthenticationService.Login.SimiasErrorHeader );
+
+					if ( iFolderError != null && iFolderError != "" )
+					{
+						if ( iFolderError == StatusCodes.InvalidPassword.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.InvalidPassword;
+						}
+						else
+						if ( iFolderError == StatusCodes.AccountDisabled.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.AccountDisabled;
+						}
+						else
+						if ( iFolderError == StatusCodes.AccountLockout.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.AccountLockout;
+						}
+						else
+						if ( iFolderError == StatusCodes.AmbiguousUser.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.AmbiguousUser;
+						}
+						else
+						if ( iFolderError == StatusCodes.UnknownDomain.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.UnknownDomain;
+						}
+						else
+						if ( iFolderError == StatusCodes.InternalException.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.InternalException;
+						}
+						else
+						if ( iFolderError == StatusCodes.UnknownUser.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.UnknownUser;
+						}
+						else
+						if ( iFolderError == StatusCodes.MethodNotSupported.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.MethodNotSupported;
+						}
+						else
+						if ( iFolderError == StatusCodes.InvalidCredentials.ToString() )
+						{
+							status.statusCode = Simias.Authentication.StatusCodes.InvalidCredentials;
+						}
+					}
+				}
+				else
+				{
+					log.Debug(webEx.Message);
+					log.Debug(webEx.StackTrace);
+				}
+			}
+			catch(Exception ex)
+			{
+				log.Debug(ex.Message);
+				log.Debug(ex.StackTrace);
+			}
+
+			return status;
+		}
+
 		#endregion
 
 		#region Internal Methods
@@ -423,12 +557,29 @@ namespace Simias.Domain
 		/// </returns>
 		public string Attach(string host, string user, string password)
 		{
+			Store store = Store.GetStore();
+
 			// Get a URL to our service.
 			Uri domainServiceUrl = WSInspection.GetServiceUrl( host, DomainServiceType );
 			if ( domainServiceUrl == null )
 			{
 				// There was a failure in obtaining the service url. Try a hard coded one.
 				domainServiceUrl = new Uri( Uri.UriSchemeHttp + Uri.SchemeDelimiter + host + DomainServicePath );
+			}
+
+			NetworkCredential myCred = new NetworkCredential(user, password); 
+			CookieContainer cookie = new CookieContainer();
+
+			Simias.Authentication.Status status = null;
+			status = 
+				this.Login( 
+					new Uri( domainServiceUrl.Scheme + Uri.SchemeDelimiter + host ), 
+					ref cookie, 
+					myCred );
+			if ( status.statusCode != Simias.Authentication.StatusCodes.Success && 
+				status.statusCode != Simias.Authentication.StatusCodes.SuccessInGrace )
+			{	
+				return "";
 			}
 
 			// Get just the path portion of the URL.
@@ -441,11 +592,10 @@ namespace Simias.Domain
 			domainService.Url = domainServiceUrl.ToString();
 
 			// Setup the credentials
-			NetworkCredential myCred = new NetworkCredential(user, password); 
 			CredentialCache myCache = new CredentialCache();
 			myCache.Add(new Uri(domainService.Url), "Basic", myCred);
 			domainService.Credentials = myCache;
-			domainService.CookieContainer = new CookieContainer();
+			domainService.CookieContainer = cookie;
 			domainService.PreAuthenticate = true;
 			domainService.Timeout = 30000;
 			
@@ -463,8 +613,6 @@ namespace Simias.Domain
 			// get domain info
 			DomainInfo domainInfo = domainService.GetDomainInfo(provisionInfo.UserID);
 
-			Store store = Store.GetStore();
-
 			// create domain node
 			Storage.Domain domain = 
 				store.AddDomainIdentity(
@@ -476,40 +624,52 @@ namespace Simias.Domain
 				SyncRoles.Slave);
 
 			// set the default domain
-			string previousDomain = store.DefaultDomain;
-			store.DefaultDomain = domainInfo.ID;
-
-			// authentication was successful - save the credentials
-			new NetCredential("iFolder", domainInfo.ID, true, user, password);
+			//string previousDomain = store.DefaultDomain;
+			//store.DefaultDomain = domainInfo.ID;
 
 			try
 			{
-				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
+				if ( domain != null )
 				{
-					// create PO Box proxy
-					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo, hostUri );
-					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
+					// Mark the domain inactive until we get the POBox and
+					// the Roster created
+					Property p = new Property( this.activePropertyName, false );
+					p.LocalProperty = true;
+					domain.Properties.ModifyProperty( p );
+
+					// Commit the changes to the domain object.
+					store.LocalDb.Commit( domain );
+
+					// create roster if needed
+					if (store.GetCollectionByID( domainInfo.RosterID ) == null)
+					{
+						// create roster proxy
+						CreateRosterProxy( store, domain, provisionInfo.UserID, domainInfo, hostUri );
+						log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
+					}
+
+					if (store.GetCollectionByID( provisionInfo.POBoxID ) == null)
+					{
+						// create PO Box proxy
+						CreatePOBoxProxy( store, domainInfo.ID, provisionInfo, hostUri );
+						log.Debug( "Creating PO Box Proxy: {0}", provisionInfo.POBoxName );
+					}
+
+					// Set the host and port number in the configuration file.
+					DomainConfig domainConfig = new DomainConfig( domainInfo.ID );
+					domainConfig.SetAttributes( domain.Name, domain.Description, hostUri, true );
+
+					// authentication was successful - save the credentials
+					new NetCredential( "iFolder", domainInfo.ID, true, user, password );
+
+					// Domain is ready to sync
+					this.SetDomainActive( domain.ID );
 				}
-
-				// create roster if needed
-				if (store.GetCollectionByID(domainInfo.RosterID) == null)
-				{
-					// create roster proxy
-					CreateRosterProxy(store, domain, provisionInfo.UserID, domainInfo, hostUri );
-					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
-				}
-
-				// Set the host and port number in the configuration file.
-				DomainConfig domainConfig = new DomainConfig(domainInfo.ID);
-				domainConfig.SetAttributes(domain.Name, domain.Description, hostUri, true);
-
-				// Commit the changes to the domain object.
-				store.LocalDb.Commit( domain );
 			}
 			catch(Exception e)
 			{
 				// restore the previous domain
-				store.DefaultDomain = previousDomain;
+				//store.DefaultDomain = previousDomain;
 				throw e;
 			}
 
@@ -542,6 +702,51 @@ namespace Simias.Domain
 			}
 			catch{}
 			return active;
+		}
+
+		/// <summary>
+		/// Login to a remote domain using username and password
+		/// Assumes a slave domain has been provisioned locally
+		/// </summary>
+		/// <param name="domainID">ID of the remote domain.</param>
+		/// <param name="user">Member to login as</param>
+		/// <param name="password">Password to validate user.</param>
+		/// <returns>
+		/// The status of the remote authentication
+		/// </returns>
+		public 
+		Simias.Authentication.Status
+		Login(string domainID, string user, string password)
+		{
+			Simias.Authentication.Status status = null;
+			Simias.Storage.Domain cDomain = store.GetDomain( domainID );
+			if ( cDomain != null )
+			{
+				if ( cDomain.Role == SyncRoles.Slave )
+				{
+					CookieContainer cookie = new CookieContainer();
+					NetworkCredential netCred = new NetworkCredential( user, password );
+					status = this.Login( cDomain.HostAddress, ref cookie, netCred );
+					if ( status.statusCode == Simias.Authentication.StatusCodes.Success ||
+						status.statusCode == Simias.Authentication.StatusCodes.SuccessInGrace )
+					{
+						new NetCredential( "iFolder", domainID, true, user, password );
+					}
+				}
+				else
+				{
+					status = 
+						new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
+				}
+			}
+			else
+			{
+				status = 
+					new Simias.Authentication.Status( Simias.Authentication.StatusCodes.UnknownDomain );
+				//status = new Status( StatusCodes.UnknownDomain );
+			}
+
+			return status;
 		}
 
 		/// <summary>
