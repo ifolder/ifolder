@@ -430,8 +430,6 @@ namespace Novell.iFolder
 		private void on_FileTreeView_row_activated(object obj,
 				RowActivatedArgs args)
 		{
-			Console.WriteLine("Hey, we clicked");
-
 			TreeIter iter;
 
 			if(NodeTreeStore.GetIter(out iter, args.Path))

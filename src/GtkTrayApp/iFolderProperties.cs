@@ -44,8 +44,8 @@ namespace Novell.iFolder
 		[Glade.Widget] private Gtk.Notebook		propNoteBook = null;
 
 		// General Page members
-		[Glade.Widget] private Gtk.CheckButton AutoSyncCheckButton;
-		[Glade.Widget] private Gtk.SpinButton  RefreshSpinButton;
+		[Glade.Widget] private Gtk.CheckButton AutoSyncCheckButton = null;
+		[Glade.Widget] private Gtk.SpinButton  RefreshSpinButton = null;
 
 
 		// Sharing Page members
