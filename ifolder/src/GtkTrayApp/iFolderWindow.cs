@@ -109,7 +109,6 @@ namespace Novell.iFolder
 
 			vbox.PackStart (MainStatusBar, false, false, 0);
 
-			RefreshiFolderTreeView(null, null);
 
 			CreateMenuItem.Sensitive = true;
 			ShareMenuItem.Sensitive = false;
@@ -117,7 +116,12 @@ namespace Novell.iFolder
 			ConflictMenuItem.Sensitive = false;
 			RevertMenuItem.Sensitive = false;
 			PropMenuItem.Sensitive = false;;
+
+			// Setup an event to refresh when the window is
+			// being drawn
+			this.Realized += new EventHandler(OnShowWindow);
 		}
+
 
 
 
@@ -317,6 +321,14 @@ namespace Novell.iFolder
 
 
 
+		private void OnShowWindow(object o, EventArgs args)
+		{
+			RefreshiFolderTreeView(o, args);
+		}
+
+
+
+
 		private void iFolderLocationCellTextDataFunc(
 				Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
@@ -371,9 +383,23 @@ namespace Novell.iFolder
 
 		public void RefreshiFolderTreeView(object o, EventArgs args)
 		{
-			iFolderTreeStore.Clear();
+			iFolder[] iFolderArray;
 
-			iFolder[] iFolderArray = iFolderWS.GetAlliFolders();
+			try
+			{
+				iFolderArray = iFolderWS.GetAlliFolders();
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													this, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
+
+			iFolderTreeStore.Clear();
 
 			foreach(iFolder ifolder in iFolderArray)
 			{

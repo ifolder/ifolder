@@ -59,7 +59,7 @@ public class iFolderExceptionDialog : Dialog
 		v.BorderWidth = 6;
 		v.Spacing = 12;
 		Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-			"An Error occurred in iFolder</span>");
+			exception.Message + "</span>");
 		l.LineWrap = false;
 		l.UseMarkup = true;
 		l.Selectable = true;
@@ -72,7 +72,7 @@ public class iFolderExceptionDialog : Dialog
 		bhbox.PackStart(dButton, false, false, 0);
 		v.PackEnd(bhbox, false, false, 0);
 
-		details = new Label(ex.Message);
+		details = new Label("Click \"Show Details\" below to get the full message returned with this error");
 		details.LineWrap = true;
 		details.Selectable = true;
 		details.Xalign = 0; details.Yalign = 0;
@@ -94,7 +94,7 @@ public class iFolderExceptionDialog : Dialog
 		}
 		else
 		{
-			details.Text = ex.Message;
+			details.Text = "Click \"Show Details\" below to get the full message returned with this error";
 			dButton.Label = "Show Details";
 		}
 	}
