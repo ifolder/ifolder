@@ -60,7 +60,7 @@ namespace Simias.POBox
 			if (subscription.SubscriptionCollectionURL != null && 
 				subscription.SubscriptionCollectionURL != "")
 			{
-				this.poServiceUrl = subscription.SubscriptionCollectionURL + "/simias10/POBoxService.asmx";
+				this.poServiceUrl = subscription.SubscriptionCollectionURL + poServiceLabel;
 			}
 			else
 			{
