@@ -29,13 +29,18 @@ namespace Simias.Sync
 {
 
 //---------------------------------------------------------------------------
-/// <summary>
-/// controlled tracing and debugging output by class categories
-/// </summary>
+/// <summary> controlled tracing and debugging output by class categories </summary>
+//[Obsolete("Use log4net instead.")]
 public class Log
 {
 	static TraceSwitch traceSwitch = new TraceSwitch("SyncTrace", "sync trace switch");
 	static ArrayList categories = null;
+
+	static void Trace(string msg)
+	{
+		Console.WriteLine(msg);
+		//Trace.WriteLine(msg);
+	}
 
 	static bool Categorical
 	{
@@ -47,7 +52,7 @@ public class Log
 			StackFrame sf = (new StackTrace(2, true)).GetFrame(0);
 			Type klass = sf.GetMethod().ReflectedType;
 
-			//Trace.WriteLine(String.Format("  called from {0}.{1}",
+			//Trace(String.Format("  called from {0}.{1}",
 			//	sf.GetMethod().ReflectedType.Name,
 			//	sf.GetMethod().ToString()));
 
@@ -60,20 +65,20 @@ public class Log
 		}
 	}
 
-	public static void Here()
+	internal static void Here()
 	{
 		if (traceSwitch.TraceVerbose)
 		{
 			StackFrame sf = new StackTrace(1, true).GetFrame(0);
-			Trace.WriteLine(String.Format("Here: {0}:{1} {2}",
+			Trace(String.Format("Here: {0}:{1} {2}",
 					sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString()));
 		}
 	}
 
-	public static void Uncaught(Exception e)
+	internal static void Uncaught(Exception e)
 	{
-		Trace.WriteLine("Uncaught exception: " + e.Message);
-		Trace.WriteLine(e.StackTrace);
+		Trace("Uncaught exception: " + e.Message);
+		Trace(e.StackTrace);
 	}
 
 	static void DumpStack()
@@ -82,55 +87,58 @@ public class Log
 		for (int i = 0; i < st.FrameCount; ++i)
 		{
 			StackFrame sf = st.GetFrame(i);
-			Trace.WriteLine(String.Format("  called from {0}, {1}: {2}",
+			Trace(String.Format("  called from {0}, {1}: {2}",
 					sf.GetFileName(), sf.GetFileLineNumber(),
 					sf.GetMethod().ToString()));
 		}
 	}
 
-	public static void Info(string format, params object[] args)
+	internal static void Info(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceInfo)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 		}
 	}
 
-	public static void Warn(string format, params object[] args)
+	internal static void Warn(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceWarning)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 			DumpStack();
 		}
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static void Error(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceError)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 			DumpStack();
 		}
 	}
 
-	public static void Assert(bool assertion)
+	internal static void Assert(bool assertion)
 	{
 		if (!assertion)
 		{
-			Trace.WriteLine("Assertion failed ------------");
+			Trace("Assertion failed ------------");
 			DumpStack();
 		}
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static void Spew(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceVerbose)
 		{
-			Trace.WriteLine(String.Format(format, args));
+			Trace(String.Format(format, args));
 		}
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static bool SetLevel(string level)
 	{
 		switch (level)
@@ -145,6 +153,7 @@ public class Log
 		return true;
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static void SetCategory(string category)
 	{
 		if (category == "all")

@@ -22,7 +22,7 @@
 #######################################################################
 SUBDIRS = $(SIMIAS_OS)
 
-DIST_SUBDIRS = linux windows
+DIST_SUBDIRS = darwin linux windows
 
 .PHONY: package package-clean package-install package-uninstall
 package package-clean package-install package-uninstall:

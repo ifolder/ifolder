@@ -76,14 +76,10 @@ namespace Simias.Sync
 		private void CheckProperties()
 		{
 			// collection port default
-			if ((collection.Port == -1) || (collection.Host == null) ||
-				(collection.Interval == -1))
+			if ((collection.MasterUri == null) || (collection.Interval == -1))
 			{
-				// set the port
-				if (collection.Port == -1) collection.Port = syncManager.Port;
-				
 				// set the host
-				if (collection.Host == null) collection.Host = syncManager.Host;
+				if (collection.MasterUri == null) collection.MasterUri = syncManager.MasterUri;
 				
 				// set the sync interval
 				if (collection.Interval == -1) collection.Interval = syncManager.SyncInterval;
@@ -224,12 +220,26 @@ namespace Simias.Sync
 				// get permission from sync manager
 				syncManager.ReadyToWork();
 
-				MyTrace.WriteLine("Sync Cycle Starting: {0} ({1})", collection.Name, collection.ServiceUrl);
+				MyTrace.WriteLine("Sync Cycle Starting: {0}", collection.Name);
 
 				// TODO: the remoting connection is currently being created with each sync interval,
 				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
+					// Find the url with the location service
+					UriBuilder serviceUri = new UriBuilder(collection.ServiceUrl);
+					Uri locationUri = syncManager.Location.Locate(collection.ID);
+
+					if (locationUri != null)
+					{
+						serviceUri.Host = locationUri.Host;
+						serviceUri.Port = locationUri.Port;
+					}
+
+					string serviceUrl = serviceUri.ToString();
+
+					MyTrace.WriteLine("Sync Store Service URL: {0}", serviceUrl);
+
 					// get a proxy to the store service object
 					MyTrace.WriteLine("Connecting to the Sync Store Service...");
 					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);

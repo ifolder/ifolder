@@ -29,7 +29,6 @@ using System.Net;
 
 using Simias;
 using Simias.Storage;
-using Simias.Agent;
 
 namespace Simias.Sync
 {
@@ -37,7 +36,7 @@ namespace Simias.Sync
 	/// A sync wrapper for collection objects.  The wrapper contains property names (scheme) used
 	/// by syncing and implements serveral common tasks used by syncing on collections.
 	/// </summary>
-	public class SyncCollection : SyncNode, IDisposable
+	public class SyncCollection : Collection
 	{
 		/// <summary>
 		/// A collection property name for the sync role of the collection.
@@ -45,17 +44,9 @@ namespace Simias.Sync
 		public static readonly string RolePropertyName = "Sync Role";
 
 		/// <summary>
-		/// A collection property name for the sync host of the collection.
-		/// The host is the machine with the master collection, which depending on
-		/// the sync role could be the current collection and machine.
+		/// A collection property name for the master URL of the collection.
 		/// </summary>
-		public static readonly string HostPropertyName = "Sync Host";
-		
-		/// <summary>
-		/// A collection property name for the sync port of the collection.
-		/// The port is used with the host to connect to the master.
-		/// </summary>
-		public static readonly string PortPropertyName = "Sync Port";
+		public static readonly string MasterUriPropertyName = "Master Uri";
 		
 		/// <summary>
 		/// A collection property name for the sync interval to be used with the collection.
@@ -69,34 +60,11 @@ namespace Simias.Sync
 		/// </summary>
 		public static readonly string LogicTypePropertyName = "Sync Logic";
 
-		// the collection store object
-		private SyncStore store;
-
-		// the wrappered collection object
-		private Collection baseCollection;
-
 		/// <summary>
-		/// The default constructor.
+		/// Copy Constructor
 		/// </summary>
-		/// <param name="collection">The collection object to be wrappered.</param>
-		public SyncCollection(Collection collection) : base(collection)
+		public SyncCollection(Collection collection) : base	(collection)
 		{
-			this.baseCollection = collection;
-			this.store = new SyncStore(collection.LocalStore);
-
-			// guarentee an existing document root
-			if (!Directory.Exists(collection.DocumentRoot.LocalPath))
-			{
-				Directory.CreateDirectory(collection.DocumentRoot.LocalPath);
-			}
-		}
-
-		/// <summary>
-		/// Commit the changes to the base collection.
-		/// </summary>
-		public override void Commit()
-		{
-			baseCollection.Commit(true);
 		}
 
 		/// <summary>
@@ -106,12 +74,10 @@ namespace Simias.Sync
 		/// <returns>A new invitation object.</returns>
 		public Invitation CreateInvitation(string identity)
 		{
-			// validate the host and port
-			if ((Host == null) || (Port <= 0))
+			// validate the master URL
+			if (MasterUri == null)
 			{
-				throw new ArgumentException("An invitation requires " +
-					"the sync host and port properties on " +
-					"the master collection.");
+				throw new ArgumentException("An invitation requires the master URL for the collection.");
 			}
 
 			// create the invitation
@@ -119,105 +85,79 @@ namespace Simias.Sync
 
 			invitation.CollectionId = ID;
 			invitation.CollectionName = Name;
-			invitation.CollectionType = baseCollection.Type;
-			invitation.Domain = baseCollection.DomainName;
-			invitation.MasterHost = Host;
-			invitation.MasterPort = Port.ToString();
+			invitation.CollectionType = Type;
+			invitation.Domain = Domain;
+			invitation.MasterUri = MasterUri;
 			invitation.Identity = identity;
-			invitation.CollectionRights = baseCollection.GetUserAccess(identity).ToString();
-			invitation.PublicKey = baseCollection.LocalStore.ServerPublicKey.ToXmlString( false );
+			invitation.CollectionRights = GetUserAccess(identity).ToString();
+			invitation.PublicKey = StoreReference.ServerPublicKey.ToXmlString(false);
 
 			return invitation;
 		}
 
 		/// <summary>
-		/// Refresh (or reload) the base collection to ensure that we are up-to-date.
+		/// Get a property value from the base node.
 		/// </summary>
-		public void Refresh()
+		/// <param name="name">The name of the property.</param>
+		/// <returns>The value of the property.</returns>
+		public object GetProperty(string name)
 		{
-			baseCollection.Refresh();
+			return GetProperty(name, null);
 		}
 
 		/// <summary>
-		/// Generate a SyncNodeInfo object array from all the children of the base collection.
+		/// Get a poperty value from the base node.
 		/// </summary>
-		/// <returns>The object array.</returns>
-		public SyncNodeInfo[] GetNodeInfoArray()
+		/// <param name="name">The name of the property.</param>
+		/// <param name="value">A default value to return if the property has no value.</param>
+		/// <returns>The property value, if it exists, or the default value.</returns>
+		public object GetProperty(string name, object value)
 		{
-			ArrayList list = new ArrayList();
+			object result = value;
 
-			foreach(Node node in baseCollection)
+			Property p = Properties.GetSingleProperty(name);
+
+			if (p != null)
 			{
-				list.Add(new SyncNodeInfo(node));
+				result = p.Value;
 			}
 
-			return (SyncNodeInfo[])list.ToArray(typeof(SyncNodeInfo));
+			return result;
 		}
 
 		/// <summary>
-		/// Get a node from the base collection with the given id.
+		/// Set the value of the given property of the base node.
 		/// </summary>
-		/// <param name="id">The id of the node.</param>
-		/// <returns>The node object.</returns>
-		public SyncNode GetNode(string id)
+		/// <param name="name">The property name.</param>
+		/// <param name="value">The new property value.</param>
+		public void SetProperty(string name, object value)
 		{
-			Node node = baseCollection.GetNodeById(id);
-
-			return new SyncNode(node);
+			SetProperty(name, value, false);
 		}
 
 		/// <summary>
-		/// Get the xml representation of a node from the base collection with the given id.
+		/// Set the value of the given property of the base node.
 		/// </summary>
-		/// <param name="id">The id of the node.</param>
-		/// <returns>A string of xml representing the data of the node.</returns>
-		public string GetNodeXml(string id)
+		/// <param name="name">The property name.</param>
+		/// <param name="value">The new property value.</param>
+		/// <param name="local">Is this a local only property? (non-synced)</param>
+		public void SetProperty(string name, object value, bool local)
 		{
-			XmlDocument doc = baseCollection.LocalStore.ExportSingleNodeToXml(baseCollection, id);
+			if (value != null)
+			{
+				Property p = new Property(name, value);
+				p.LocalProperty = local;
 
-			return doc.OuterXml;
+				Properties.ModifyProperty(p);
+			}
+			else
+			{
+				Properties.DeleteSingleProperty(name);
+			}
 		}
-
-		/// <summary>
-		/// Create a node object from a xml data string.
-		/// </summary>
-		/// <param name="xml">The node data in xml format.</param>
-		/// <returns>The node object.</returns>
-		public SyncNode CreateNodeFromXml(string xml)
-		{
-			XmlDocument doc = new XmlDocument();
-			
-			doc.LoadXml(xml);
-
-			Node node = baseCollection.LocalStore.ImportSingleNodeFromXml(baseCollection, doc);
-
-			return new SyncNode(node);
-		}
-
-		#region IDisposable Members
-
-		/// <summary>
-		/// Dispose of this object.
-		/// </summary>
-		public override void Dispose()
-		{
-			base.Dispose();
-
-			baseCollection = null;
-		}
-
-		#endregion
 
 		#region Properties
 		
-		/// <summary>
-		/// The base collection object.
-		/// </summary>
-		public Collection BaseCollection
-		{
-			get { return baseCollection; }
-		}
-
 		/// <summary>
 		/// The syncing role of the base collection.
 		/// </summary>
@@ -232,31 +172,26 @@ namespace Simias.Sync
 				if (role == SyncCollectionRoles.None)
 				{
 					// note: slave collections are always marked by the invitation
-					role = baseCollection.Synchronizable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
+					role = Synchronizable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
 				}
 
 				return role;
 			}
 
-			set { SetProperty(RolePropertyName, value, true); }
+
+			set
+			{
+				SetProperty(RolePropertyName, value, true);
+			}
 		}
 
 		/// <summary>
-		/// The syncing host of the base collection.
+		/// The syncing URL of the master collection.
 		/// </summary>
-		public string Host
+		public Uri MasterUri
 		{
-			get { return (string)GetProperty(HostPropertyName); }
-			set { SetProperty(HostPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The syncing port of the base collection.
-		/// </summary>
-		public int Port
-		{
-			get { return (int)GetProperty(PortPropertyName, -1); }
-			set { SetProperty(PortPropertyName, value, true); }
+			get { return (Uri)GetProperty(MasterUriPropertyName); }
+			set { SetProperty(MasterUriPropertyName, value, true); }
 		}
 
 		/// <summary>
@@ -282,7 +217,14 @@ namespace Simias.Sync
 		/// </summary>
 		public string ServiceUrl
 		{
-			get { return (new UriBuilder("http", Host, Port, SyncStore.GetEndPoint(Port)).ToString()); }
+			get
+			{
+				UriBuilder uri = new UriBuilder(MasterUri);
+				
+				uri.Path = String.Format("SyncStoreService{0}.rem", uri.Port);
+
+				return uri.ToString();
+			}
 		}
 
 		/// <summary>
@@ -290,47 +232,7 @@ namespace Simias.Sync
 		/// </summary>
 		public string StorePath
 		{
-			get { return Path.GetDirectoryName(baseCollection.LocalStore.StorePath.LocalPath); }
-		}
-
-		/// <summary>
-		/// The root path of the base collection.
-		/// </summary>
-		public string RootPath
-		{
-			get { return Path.GetDirectoryName(baseCollection.DocumentRoot.LocalPath); }
-		}
-
-		/// <summary>
-		/// The root path of the file entries of the collection.
-		/// </summary>
-		public string StreamRootPath
-		{
-			get { return baseCollection.DocumentRoot.LocalPath; }
-		}
-
-		/// <summary>
-		/// The authroization domain of the base collection.
-		/// </summary>
-		public string Domain
-		{
-			get { return baseCollection.DomainName; }
-		}
-
-		/// <summary>
-		/// The authroization domain id of the base collection.
-		/// </summary>
-		public string DomainID
-		{
-			get { return Domain.Substring(Domain.IndexOf(":") + 1); }
-		}
-
-		/// <summary>
-		/// The identity for accessing the base collection.
-		/// </summary>
-		public string AccessIdentity
-		{
-			get { return baseCollection.LocalStore.CurrentIdentity.GetDomainUserGuid(Domain); }
+			get { return base.StoreReference.StorePath; }
 		}
 
 		#endregion

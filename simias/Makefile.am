@@ -1,6 +1,15 @@
 SUBDIRS = src package
 
+DIST_SUBDIRS = $(SUBDIRS) doc
+
 EXTRA_DIST = tools external
+
+.PHONY: doc doc-clean
+doc:
+	$(MAKE) -C doc all
+
+doc-clean:
+	$(MAKE) -C doc clean
 
 .PHONY: package package-clean package-install package-uninstall
 package package-clean package-install package-uninstall:
@@ -14,6 +23,8 @@ uninstall-local:
 
 clean-local:
 	rm -rf stage *.suo
+
+dist-clean-local: doc-clean
 
 maintainer-clean-local:
 	rm -f configure Makefile.in simias-*.tar.gz config.cache

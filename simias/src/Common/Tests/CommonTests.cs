@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.IO;
 using System.Diagnostics;
 
 using NUnit.Framework;
@@ -36,6 +37,8 @@ namespace Simias.Tests
 	[TestFixture]
 	public class CommonTests : Assertion
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CommonTests));
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
@@ -44,102 +47,73 @@ namespace Simias.Tests
 		}
 
 		/// <summary>
-		/// Test case setup
+		/// Test fixture setup
 		/// </summary>
-		[SetUp]
-		public void CaseSetup()
+		[TestFixtureSetUp]
+		public void FixtureSetup()
 		{
-			MyTrace.SendToConsole();
-			MyTrace.Switch.Level = TraceLevel.Verbose;
+			string path = Path.GetFullPath("./common1");
+			Directory.CreateDirectory(path);
+			SimiasLogManager.Configure(path);
 		}
 
 		/// <summary>
-		/// My Trace Test 1
+		/// Log Test 1
 		/// </summary>
 		[Test]
-		public void TestMyTrace1()
+		public void TestLog1()
 		{
-			MyTrace.WriteLine("Test 1");
+			log.Debug("Test 1");
 		}
 
 		/// <summary>
-		/// My Trace Test 2
+		/// Log Test 2
 		/// </summary>
 		[Test]
-		public void TestMyTrace2()
+		public void TestTrace2()
 		{
-			MyTrace.WriteLine("Test 2 : {0}", "hello");
+			log.Debug("Test 2 : {0}", "hello");
 		}
 
 		/// <summary>
-		/// My Trace Test 3
+		/// Log Test 3
 		/// </summary>
 		[Test]
-		public void TestMyTrace3()
+		public void TestTrace3()
 		{
-			MyTrace.WriteLine(new Exception());
+			log.Debug(new Exception(), "Test 3");
 		}
 
 		/// <summary>
-		/// My Trace Test 1a
+		/// Dns Test
 		/// </summary>
 		[Test]
-		public void TestMyTrace1a()
+		public void TestDns()
 		{
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			MyTrace.WriteLine("Test 1");
+			log.Debug("Host: {0}", MyDns.GetHostName());
 		}
 
 		/// <summary>
-		/// My Trace Test 2a
+		/// Environment Test
 		/// </summary>
 		[Test]
-		public void TestMyTrace2a()
+		public void TestEnvironment()
 		{
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			MyTrace.WriteLine("Test 2 : {0}", "hello");
+			log.Debug("Platform: {0}", MyEnvironment.Platform);
+			log.Debug("Runtime: {0}", MyEnvironment.Runtime);
 		}
 
 		/// <summary>
-		/// My Trace Test 3a
+		/// Path Test
 		/// </summary>
 		[Test]
-		public void TestMyTrace3a()
-		{
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-			MyTrace.WriteLine(new Exception());
-		}
-
-		/// <summary>
-		/// My Dns Test
-		/// </summary>
-		[Test]
-		public void TestMyDns()
-		{
-			Console.WriteLine("My Host: {0}", MyDns.GetHostName());
-		}
-
-		/// <summary>
-		/// My Environment Test
-		/// </summary>
-		[Test]
-		public void TestMyEnvironment()
-		{
-			Console.WriteLine("My Platform: {0}", MyEnvironment.Platform);
-			Console.WriteLine("My Runtime: {0}", MyEnvironment.Runtime);
-		}
-
-		/// <summary>
-		/// My Path Test
-		/// </summary>
-		[Test]
-		public void TestMyPath()
+		public void TestPath()
 		{
 			string path1 = @"/home/jdoe";
 			string path2 = @"c:\home\jdoe";
 
-			Console.WriteLine("My Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path1), path1);
-			Console.WriteLine("My Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path2), path2);
+			log.Debug("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path1), path1);
+			log.Debug("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path2), path2);
 		}
 	}
 }

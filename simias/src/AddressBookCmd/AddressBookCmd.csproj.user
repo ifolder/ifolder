@@ -11,7 +11,7 @@
                     RemoteDebugEnabled = "false"
                     RemoteDebugMachine = ""
                     StartAction = "Project"
-                    StartArguments = "addproperty -c banderso -p tel=801-861-3130:pref:work"
+                    StartArguments = 'importvcard -f "angie.vcf"'
                     StartPage = ""
                     StartProgram = ""
                     StartURL = ""

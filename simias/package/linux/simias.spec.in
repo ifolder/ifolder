@@ -79,7 +79,5 @@ fi
 #=============================================================================
 %Files
 %defattr(-,root,root)
-%{prefix}/bin/*
-#%{prefix}/lib/*
-#%{prefix}/share/*
+%{prefix}/*
 

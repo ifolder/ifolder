@@ -32,93 +32,14 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Node
 	/// </summary>
-	public class SyncNode : IDisposable
+	public class SyncNode : Node
 	{
-		/// <summary>
-		/// The file node type string.
-		/// </summary>
-		public static readonly string FileNodeType = "File";
-		
-		/// <summary>
-		/// The directory node type string.
-		/// </summary>
-		public static readonly string DirectoryNodeType = "Directory";
-
-		private Node baseNode;
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="node">The base node object.</param>
-		public SyncNode(Node node)
+		public SyncNode(Node node) : base(node)
 		{
 			this.baseNode = node;
-		}
-
-		/// <summary>
-		/// Commit any changes to the base node.
-		/// </summary>
-		public virtual void Commit()
-		{
-			baseNode.Commit();
-		}
-		
-		/// <summary>
-		/// Delete the base node and its file entries.
-		/// </summary>
-		public void Delete()
-		{
-			ulong incarnation = baseNode.MasterIncarnation;
-
-			foreach(FileSystemEntry fse in baseNode.GetFileSystemEntryList())
-			{
-				fse.Delete(true);
-			}
-
-			Node ts = baseNode.Delete();
-
-			// check directory
-			if (IsDirectory)
-			{
-				string dirPath = Path.Combine(Path.GetDirectoryName(baseNode.CollectionNode.DocumentRoot.LocalPath), NodePath);
-
-				if (Directory.Exists(dirPath))
-				{
-					Directory.Delete(dirPath, true);
-				}
-			}
-
-			// remove tombstones of nodes that have not been synced 
-			if (incarnation == 0)
-			{
-				ts.Delete();
-			}
-
-			Dispose();
-		}
-
-		/// <summary>
-		/// Update the incarnation number of the base node.
-		/// </summary>
-		/// <param name="incarnation">The new incarnation number.</param>
-		public void UpdateIncarnation(ulong incarnation)
-		{
-			// sync role
-			baseNode.CollectionNode.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
-
-			baseNode.UpdateIncarnation(incarnation);
-
-			// remove sync role
-			baseNode.CollectionNode.LocalStore.Revert();
-		}
-
-		/// <summary>
-		/// Get the node object data in xml format.
-		/// </summary>
-		/// <returns>An xml data string of the node object.</returns>
-		public string ToXml()
-		{
-			return baseNode.CollectionNode.LocalStore.ExportSingleNodeToXml(baseNode.CollectionNode, ID).OuterXml;
 		}
 
 		/// <summary>
@@ -181,95 +102,5 @@ namespace Simias.Sync
 				baseNode.Properties.DeleteSingleProperty(name);
 			}
 		}
-
-		#region IDisposable Members
-
-		/// <summary>
-		/// Dispose this object.
-		/// </summary>
-		public virtual void Dispose()
-		{
-			this.baseNode = null;
-		}
-
-		#endregion
-
-		#region Properties
-		
-		/// <summary>
-		/// The base node object.
-		/// </summary>
-		public Node BaseNode
-		{
-			get { return baseNode; }
-		}
-
-		/// <summary>
-		/// The node ID.
-		/// </summary>
-		public string ID
-		{
-			get { return baseNode.Id; }
-		}
-
-		/// <summary>
-		/// The node name.
-		/// </summary>
-		public string Name
-		{
-			get { return baseNode.Name; }
-		}
-
-		/// <summary>
-		/// Is the base node a file node?
-		/// </summary>
-		public bool IsFile
-		{
-			get { return baseNode.Type.Equals(FileNodeType); }
-		}
-
-		/// <summary>
-		/// Is the base node a directory node?
-		/// </summary>
-		public bool IsDirectory
-		{
-			get { return baseNode.Type.Equals(DirectoryNodeType); }
-		}
-
-		/// <summary>
-		/// The node path.
-		/// </summary>
-		public string NodePath
-		{
-			get
-			{
-				string path = baseNode.PathName;
-
-				if (path.StartsWith(@"/") || path.StartsWith(@"\\"))
-				{
-					path = "." + path;
-				}
-
-				return path;
-			}
-		}
-
-		/// <summary>
-		/// The master incarnation number of the base node.
-		/// </summary>
-		public ulong MasterIncarnation
-		{
-			get { return baseNode.MasterIncarnation; }
-		}
-
-		/// <summary>
-		/// The local incarantion number of the base node.
-		/// </summary>
-		public ulong LocalIncarnation
-		{
-			get { return baseNode.LocalIncarnation; }
-		}
-
-		#endregion
 	}
 }

@@ -222,6 +222,12 @@ namespace Novell.AddressBook
 		internal static string[] labelTypes = new string[] {"home", "work", "dom", "intl", "postal", "parcel", "other"};
 
 		/// <summary>
+		/// VCard propreties the address book will currently import
+		/// </summary>
+		internal static string[] vCardProperties = new string[] {"ADR", "BDAY", "EMAIL", "LOGO", "N", "NICKNAME", "NOTE", "ORG", "PHOTO", "ROLE", "SOUND", "TEL", "TITLE", "URL", "X-NAB-BLOG", "X-NAB-USERNAME"};
+
+
+		/// <summary>
 		/// Exception header for all application exceptions thrown by the address book
 		/// </summary>
 		internal const string abExceptionHeader = "Novell.AddressBook.Exception - ";

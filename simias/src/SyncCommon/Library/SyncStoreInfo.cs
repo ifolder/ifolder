@@ -23,6 +23,8 @@
 
 using System;
 
+using Simias.Storage;
+
 namespace Simias.Sync
 {
 	/// <summary>
@@ -34,18 +36,17 @@ namespace Simias.Sync
 		private string machine;
 		private string user;
 		private string os;
-		private string storeID;
+		private string id;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="store">The sync store object.</param>
-		public SyncStoreInfo(SyncStore store)
+		public SyncStoreInfo(Store store)
 		{
 			machine = Environment.MachineName;
 			user = Environment.UserName;
 			os = Environment.OSVersion.ToString();
-			storeID = store.ID;
+			id = store.ID;
 		}
 		
 		/// <summary>
@@ -54,7 +55,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return String.Format("Machine: {0}, User: {1}, OS: {2}, Store: {3}", machine, user, os, storeID);
+			return String.Format("Machine: {0}, User: {1}, OS: {2}, Store: {3}", machine, user, os, id);
 		}
 
 		#region Properties
@@ -86,9 +87,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// The store id.
 		/// </summary>
-		public string StoreID
+		public string ID
 		{
-			get { return storeID; }
+			get { return id; }
 		}
 
 		#endregion

@@ -49,12 +49,8 @@ namespace Simias.Sync
 		public SyncCollectionService(SyncCollection collection)
 		{
 			MyTrace.WriteLine("Creating Sync Collection Service: {0}", collection.ID);
-			this.collection = collection;
 			
-			// refresh the connection
-			collection.Refresh();
-
-			MyTrace.WriteLine("Refreshed Sync Collection Service: {0}", collection.ID);
+			this.collection = collection;
 		}
 
 		/// <summary>

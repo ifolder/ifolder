@@ -42,20 +42,14 @@ namespace Simias
 		private const int WM_QUERYENDSESSION = 0x0011;
 
 		private Container components = null;
-
-		private TreeView logTreeView;
 		private ListView logListView;
 		private ContextMenu logContextMenu;
 		private MenuItem scrollLockMenuItem;
 		private MenuItem copyMenuItem;
 		private MenuItem clearMenuItem;
 		private MyTraceFormListener traceListener;
-		private ColumnHeader columnHeader2;
-		private System.Windows.Forms.Splitter splitter;
-		private System.Windows.Forms.Panel logListPanel;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private System.Windows.Forms.MenuItem limitMenuItem;
+		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private bool shutdown = false;
 
 		/// <summary>
@@ -75,11 +69,8 @@ namespace Simias
 			this.Location = start;
 
 			// start listener
-			traceListener = new MyTraceFormListener(logTreeView, logListView);
+			traceListener = new MyTraceFormListener(logListView);
 			Trace.Listeners.Add(traceListener);
-
-			// set log list view column size
-			MyTraceForm_SizeChanged(null, null);
 		}
 
 		/// <summary>
@@ -126,38 +117,18 @@ namespace Simias
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.logTreeView = new System.Windows.Forms.TreeView();
 			this.logListView = new System.Windows.Forms.ListView();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.logContextMenu = new System.Windows.Forms.ContextMenu();
 			this.scrollLockMenuItem = new System.Windows.Forms.MenuItem();
 			this.copyMenuItem = new System.Windows.Forms.MenuItem();
 			this.clearMenuItem = new System.Windows.Forms.MenuItem();
 			this.limitMenuItem = new System.Windows.Forms.MenuItem();
-			this.splitter = new System.Windows.Forms.Splitter();
-			this.logListPanel = new System.Windows.Forms.Panel();
-			this.logListPanel.SuspendLayout();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
-			// 
-			// logTreeView
-			// 
-			this.logTreeView.CheckBoxes = true;
-			this.logTreeView.Dock = System.Windows.Forms.DockStyle.Right;
-			this.logTreeView.ImageIndex = -1;
-			this.logTreeView.Location = new System.Drawing.Point(352, 0);
-			this.logTreeView.Name = "logTreeView";
-			this.logTreeView.SelectedImageIndex = -1;
-			this.logTreeView.Size = new System.Drawing.Size(280, 454);
-			this.logTreeView.TabIndex = 1;
-			this.logTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.logTreeView_AfterCheck);
 			// 
 			// logListView
 			// 
 			this.logListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						  this.columnHeader3,
-																						  this.columnHeader2,
 																						  this.columnHeader1});
 			this.logListView.ContextMenu = this.logContextMenu;
 			this.logListView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -165,22 +136,9 @@ namespace Simias
 			this.logListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.logListView.Location = new System.Drawing.Point(0, 0);
 			this.logListView.Name = "logListView";
-			this.logListView.Size = new System.Drawing.Size(349, 454);
+			this.logListView.Size = new System.Drawing.Size(632, 454);
 			this.logListView.TabIndex = 0;
 			this.logListView.View = System.Windows.Forms.View.Details;
-			// 
-			// columnHeader3
-			// 
-			this.columnHeader3.Text = "Message";
-			this.columnHeader3.Width = 200;
-			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = "Method";
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "Time";
 			// 
 			// logContextMenu
 			// 
@@ -214,39 +172,22 @@ namespace Simias
 			this.limitMenuItem.Text = "Limit Size";
 			this.limitMenuItem.Click += new System.EventHandler(this.limitMenuItem_Click);
 			// 
-			// splitter
+			// columnHeader1
 			// 
-			this.splitter.Dock = System.Windows.Forms.DockStyle.Right;
-			this.splitter.Location = new System.Drawing.Point(349, 0);
-			this.splitter.Name = "splitter";
-			this.splitter.Size = new System.Drawing.Size(3, 454);
-			this.splitter.TabIndex = 2;
-			this.splitter.TabStop = false;
-			// 
-			// logListPanel
-			// 
-			this.logListPanel.Controls.Add(this.logListView);
-			this.logListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.logListPanel.Location = new System.Drawing.Point(0, 0);
-			this.logListPanel.Name = "logListPanel";
-			this.logListPanel.Size = new System.Drawing.Size(349, 454);
-			this.logListPanel.TabIndex = 3;
+			this.columnHeader1.Text = "Message";
+			this.columnHeader1.Width = 600;
 			// 
 			// MyTraceForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(632, 454);
 			this.ControlBox = false;
-			this.Controls.Add(this.logListPanel);
-			this.Controls.Add(this.splitter);
-			this.Controls.Add(this.logTreeView);
+			this.Controls.Add(this.logListView);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.Name = "MyTraceForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "iFolder Trace Window";
-			this.SizeChanged += new System.EventHandler(this.MyTraceForm_SizeChanged);
-			this.logListPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -286,18 +227,6 @@ namespace Simias
 			{
 				traceListener.SizeLimit = limitSize.SizeLimit;
 			}		
-		}
-
-		private void MyTraceForm_SizeChanged(object sender, EventArgs e)
-		{
-			// update the width of the column
-			logListView.Columns[0].Width = (logListView.Size.Width
-				- logListView.Columns[1].Width - logListView.Columns[2].Width
-				- SCROLLBAR_WIDTH - 1);
-		}
-
-		private void logTreeView_AfterCheck(object sender, TreeViewEventArgs e)
-		{
 		}
 
 		#endregion

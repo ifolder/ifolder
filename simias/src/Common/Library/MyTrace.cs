@@ -26,14 +26,17 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 
+using log4net;
+
 namespace Simias
 {
 	/// <summary>
 	/// My Trace
 	/// </summary>
+	[Obsolete("Use log4net instead.")]
 	public sealed class MyTrace
 	{
-		private static bool send = false;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(MyTrace));
 
 		/// <summary>
 		/// Trace Switch
@@ -64,17 +67,6 @@ namespace Simias
 		/// </summary>
 		public static void SendToConsole()
 		{
-			if (send == false)
-			{
-				lock(typeof(MyTrace))
-				{
-					if (send == false)
-					{
-						send = true;
-						Trace.Listeners.Add(new MyTraceListener(Console.Error));
-					}
-				}
-			}
 		}
 
 		/// <summary>
@@ -83,74 +75,9 @@ namespace Simias
 		/// <param name="e">The exception for the message.</param>
 		public static void WriteLine(Exception e)
 		{
-			string message;
-
-			if (Switch.Level == TraceLevel.Verbose)
-			{
-				message = e.ToString();
-			}
-			else
-			{
-				// temp
-				// message = e.Message;
-				message = e.ToString();
-			}
-
-			WriteLine(1, message);
+			log.Debug(e, "");
 		}
 		
-		/// <summary>
-		/// Writes a message to the trace listeners if the trace level is Error or higher.
-		/// </summary>
-		/// <param name="format">The formatting string.</param>
-		/// <param name="arg">An array of object for the formatting string.</param>
-		public static void Error(string format, params object[] arg)
-		{
-			if (Switch.Level >= TraceLevel.Error)
-			{
-				WriteLine(1, format, arg);
-			}
-		}
-
-		/// <summary>
-		/// Writes a message to the trace listeners if the trace level is Warning or higher.
-		/// </summary>
-		/// <param name="format">The formatting string.</param>
-		/// <param name="arg">An array of object for the formatting string.</param>
-		public static void Warning(string format, params object[] arg)
-		{
-			if (Switch.Level >= TraceLevel.Warning)
-			{
-				WriteLine(1, format, arg);
-			}
-		}
-
-		/// <summary>
-		/// Writes a message to the trace listeners if the trace level is Info or higher.
-		/// </summary>
-		/// <param name="format">The formatting string.</param>
-		/// <param name="arg">An array of object for the formatting string.</param>
-		public static void Info(string format, params object[] arg)
-		{
-			if (Switch.Level >= TraceLevel.Info)
-			{
-				WriteLine(1, format, arg);
-			}
-		}
-
-		/// <summary>
-		/// Writes a message to the trace listeners if the trace level is Verbose or higher.
-		/// </summary>
-		/// <param name="format">The formatting string.</param>
-		/// <param name="arg">An array of object for the formatting string.</param>
-		public static void Verbose(string format, params object[] arg)
-		{
-			if (Switch.Level >= TraceLevel.Verbose)
-			{
-				WriteLine(1, format, arg);
-			}
-		}
-
 		/// <summary>
 		/// Writes a message to the trace listeners.
 		/// </summary>
@@ -158,40 +85,7 @@ namespace Simias
 		/// <param name="arg">An array of object for the formatting string.</param>
 		public static void WriteLine(string format, params object[] arg)
 		{
-			WriteLine(1, format, arg);
-		}
-
-		/// <summary>
-		/// Writes a message to the trace listeners.
-		/// </summary>
-		/// <param name="index">A stack frame index.</param>
-		/// <param name="format">The formatting string.</param>
-		/// <param name="arg">An array of object for the formatting string.</param>
-		private static void WriteLine(int index, string format, params object[] arg)
-		{
-			string message = String.Format(format, arg);
-			string category = "?";
-
-			StackTrace trace = new StackTrace(index + 1, true);
-
-			if (trace.FrameCount > 0)
-			{
-				StackFrame frame = trace.GetFrame(0);
-				
-				category = String.Format("{0}.{1}", 
-					frame.GetMethod().DeclaringType.FullName,
-					frame.GetMethod().Name);
-
-				string file = Path.GetFileName(frame.GetFileName());
-				int line = frame.GetFileLineNumber();
-
-				if ((file != null) && (file.Length > 0))
-				{
-					message = String.Format("{0} @{1}:{2}", message, file, line);
-				}
-			}
-
-			Trace.WriteLine(message, category);
+			log.Debug(format, arg);
 		}
 	}
 }

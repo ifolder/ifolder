@@ -27,6 +27,8 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using log4net;
+
 namespace Simias
 {
 	/// <summary>
@@ -52,13 +54,9 @@ namespace Simias
 			IPHostEntry ipHostEntry = Dns.Resolve(host);
 			host = ipHostEntry.HostName;
 
-			MyTrace.WriteLine("Host Name: {0}", host);
-
 			// loop through addresses
 			foreach(IPAddress ipAddress in ipHostEntry.AddressList)
 			{
-				MyTrace.WriteLine("IP Address: {0}", ipAddress);
-			
 				// skip loop-back addresses
 				if (IPAddress.IsLoopback(ipAddress)) continue;
 

@@ -28,9 +28,9 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
-using Simias.Agent;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Invite;
 
 namespace Simias.Tests
 {
@@ -147,8 +147,8 @@ namespace Simias.Tests
 				MyTrace.WriteLine("Created Master Collection 1A: {0}", sc1A);
 
 				// set the host and port on the master collection
-				sc1A.Host = SyncProperties.SuggestedHost;
-				sc1A.Port = SyncProperties.SuggestedPort;
+				UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
+				sc1A.MasterUri = builder.Uri;
 				sc1A.Commit();
 
 				// create an invitation for B and C
@@ -156,12 +156,12 @@ namespace Simias.Tests
 				MyTrace.WriteLine("Created Master Collection Invitation.");
 
 				// accept the invitation on B and C
-				IInviteAgent agent = AgentFactory.GetInviteAgent();
 				invitation1.RootPath = storePathB;
-                agent.Accept(storeB, invitation1);
+                InvitationService.Accept(storeB, invitation1);
 				MyTrace.WriteLine("Accepted Invitation 1 on Store B.");
+				
 				invitation1.RootPath = storePathC;
-				agent.Accept(storeC, invitation1);
+				InvitationService.Accept(storeC, invitation1);
 				MyTrace.WriteLine("Accepted Invitation 1 on Store C.");
 
 				// sleep for the sync interval

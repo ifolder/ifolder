@@ -225,38 +225,17 @@ namespace Novell.AddressBook
 			catch{}
 		}
 
-		internal void BuildVCardAddress(Contact cContact, string addrLine)
+		internal void BuildVCardAddress(Contact cContact, IEnumerator propertyTokens, IEnumerator valueTokens)
 		{
 			Address address = new Address();
+			uint	addrTypes = 0;
+			uint	valuesAdded = 0;
 
-			string  addressLine = "";
-			string	typesLine = "";
-			string  tmpString;
-
-			Regex o = new Regex(@":");
-			IEnumerator enumAddrLine = o.Split(addrLine).GetEnumerator();
-
-			if(enumAddrLine.MoveNext())
+			try
 			{
-				typesLine = (string) enumAddrLine.Current;
-				if (enumAddrLine.MoveNext())
+				while(propertyTokens.MoveNext())
 				{
-					addressLine = (string) enumAddrLine.Current;
-				}
-			}
-
-			if (typesLine != "")
-			{
-				uint	addrTypes = 0;
-
-				// BUGBUG change this to a match
-				Regex p = new Regex(@";|=");
-				IEnumerator enumTypes = p.Split(typesLine).GetEnumerator();
-
-				while(enumTypes.MoveNext())
-				{
-					tmpString = (string) enumTypes.Current;
-					tmpString.ToUpper();
+					string tmpString = ((string) propertyTokens.Current).ToUpper();
 
 					if (tmpString == "PREF")
 					{
@@ -303,68 +282,68 @@ namespace Novell.AddressBook
 				{
 					address.Types = (AddressTypes) addrTypes;
 				}
-			}
-
-			if (addressLine != "")
-			{
-				Regex a = new Regex(@";");
-				IEnumerator enumAddress = a.Split(addressLine).GetEnumerator();
 
 				// PO box
-				if( enumAddress.MoveNext())
-				{
-					if ((string) enumAddress.Current != "")
+				//if ( valueTokens.MoveNext())
+				//{
+					if ((string) valueTokens.Current != "")
 					{
-						address.PostalBox = (string) enumAddress.Current;
+						address.PostalBox = (string) valueTokens.Current;
+						valuesAdded++;
 					}
 
 					// Extended Address
-					if (enumAddress.MoveNext())
+					if (valueTokens.MoveNext())
 					{
-						if ((string) enumAddress.Current != "")
+						if ((string) valueTokens.Current != "")
 						{
-							address.ExtendedAddress = (string) enumAddress.Current;
+							address.ExtendedAddress = (string) valueTokens.Current;
+							valuesAdded++;
 						}
 
 						// Street Address
-						if (enumAddress.MoveNext())
+						if (valueTokens.MoveNext())
 						{
-							if ((string) enumAddress.Current != "")
+							if ((string) valueTokens.Current != "")
 							{
-								address.Street = (string) enumAddress.Current;
+								address.Street = (string) valueTokens.Current;
+								valuesAdded++;
 							}
 
 							// Locality/City
-							if (enumAddress.MoveNext())
+							if (valueTokens.MoveNext())
 							{
-								if ((string) enumAddress.Current != "")
+								if ((string) valueTokens.Current != "")
 								{
-									address.Locality = (string) enumAddress.Current;
+									address.Locality = (string) valueTokens.Current;
+									valuesAdded++;
 								}
 
 								// Region/State/Province
-								if (enumAddress.MoveNext())
+								if (valueTokens.MoveNext())
 								{
-									if ((string) enumAddress.Current != "")
+									if ((string) valueTokens.Current != "")
 									{
-										address.Region = (string) enumAddress.Current;
+										address.Region = (string) valueTokens.Current;
+										valuesAdded++;
 									}
 
 									// Postal code
-									if (enumAddress.MoveNext())
+									if (valueTokens.MoveNext())
 									{
-										if ((string) enumAddress.Current != "")
+										if ((string) valueTokens.Current != "")
 										{
-											address.PostalCode = (string) enumAddress.Current;
-											cContact.AddAddress(address);
+											address.PostalCode = (string) valueTokens.Current;
+											valuesAdded++;
 										}
 
 										// Country
-										if (enumAddress.MoveNext())
+										if (valueTokens.MoveNext())
 										{
-											if ((string) enumAddress.Current != "")
+											if ((string) valueTokens.Current != "")
 											{
-												address.Country = (string) enumAddress.Current;
+												address.Country = (string) valueTokens.Current;
+												valuesAdded++;
 											}
 										}
 									}
@@ -372,8 +351,14 @@ namespace Novell.AddressBook
 							}
 						}
 					}
-				}
+
+					if (valuesAdded != 0)
+					{
+						cContact.AddAddress(address);
+					}
+				//}
 			}
+			catch{}
 		}
 
 		/// <summary>
@@ -597,6 +582,87 @@ namespace Novell.AddressBook
 			}
 		}
 
+		internal bool AddVCardContact(Contact cContact)
+		{
+			int		foundState;
+
+			// Make sure we have a preferred Name and Address
+			try
+			{
+				IABList	names = cContact.GetNames();
+				foundState = 0;
+				foreach(Name name in names)
+				{
+					foundState++;
+					if (name.Preferred == true)
+					{
+						foundState = -1;
+						break;
+					}
+				}
+
+				if (foundState > 0)
+				{
+					// No preferred Name - set the first one preferred
+					foreach(Name name in names)
+					{
+						name.Preferred = true;
+						break;
+					}
+				}
+
+				IABList	addresses = cContact.GetAddresses();
+				foundState = 0;
+				foreach(Address addr in addresses)
+				{
+					foundState++;
+					if (addr.Preferred == true)
+					{
+						foundState = -1;
+						break;
+					}
+				}
+
+				if (foundState > 0)
+				{
+					// No preferred Address - set the first one preferred
+					foreach(Address addr in addresses)
+					{
+						addr.Preferred = true;
+						break;
+					}
+				}
+
+				if (cContact.UserName == "")
+				{
+					try
+					{
+						Email pref = cContact.GetPreferredEmailAddress();
+						cContact.UserName = pref.Address;
+					}
+					catch
+					{
+						// No preferred e-mail so let's use first and last name
+						try
+						{
+							Name name = cContact.GetPreferredName();
+
+							string	firstLast = name.Given;
+							firstLast += name.Family;
+							cContact.UserName = firstLast;
+						}
+						catch{}
+					}
+				}
+
+				this.AddContact(cContact);
+				cContact.Commit();
+				return(true);
+			}
+			catch{}
+			return(false);
+		}
+
 		#region Public Methods
 
 		/// <summary>
@@ -726,399 +792,437 @@ namespace Novell.AddressBook
 		/// <returns>A Contact object associated to this address book.</returns>
 		public Contact ImportVCard(StreamReader vCardStream)
 		{
+			Contact	firstContact = null;
 			try
 			{
-				bool	foundEnd = false;
-				String	line;
+				bool	parsing = true;
+				Contact	cContact = null;
+				int		vCardState = 0;
+				int		version = 0;
+				char [] cChar = new char[1];
+				char [] propertySeps = new char []{';', '.', '='};
+				char [] valueSeps = new char [] {';'};
 
 				// Make sure this is a valid vCard
-				line = vCardStream.ReadLine();
-				line.ToUpper();
-				if (line == "BEGIN:VCARD")
+				while(parsing)
 				{
-					// Now check the version
-					line = vCardStream.ReadLine();
-					line.ToUpper();
+					string	property = "";
+					String	propertyValues = "";
 
-					if (line == "VERSION:2.1" || line == "VERSION:3.0")
+					cChar[0] = '\0';
+					while(vCardStream.Read(cChar, 0, 1) != 0)
 					{
-						Contact cContact = new Contact();
-
-						// Read and display lines from the file until the end of 
-						// the file is reached.
-						while ((line = vCardStream.ReadLine()) != null) 
-						{	
-							if (line == "END:VCARD")
+						//cChar = vCardStream.Read();
+						if (cChar[0] == 13)
+						{
+							if (vCardStream.Peek() == 10)
 							{
-								foundEnd = true;
-								break;
+								vCardStream.Read();
 							}
+							break;
+						}
 
-							Regex o = new Regex(@";|:");
-							IEnumerator enumTokens = o.Split(line).GetEnumerator();
-							while(enumTokens.MoveNext())
+						if (cChar[0] == ':')
+						{
+							// PHOTO, SOUND and LOGO are handled a little bit different in that
+							// the value (base64 encoded data) starts on the next line from the
+							// property tag
+							if (property.StartsWith("PHOTO"))
 							{
-								string token = (string) enumTokens.Current;
-								token.ToUpper();
-
-								if (token == "N")
+								int status;
+								int	nChars = 0;
+								if (vCardStream.Peek() == 13 ||
+									vCardStream.Peek() == 10)
 								{
-									Regex n = new Regex(@":");
-									IEnumerator enumProperties = n.Split(line).GetEnumerator();
+									// swallow the cr/lf
+									vCardStream.ReadLine();
+								}
 
-									// Prime the enumerator and move to the first token
-									if (enumProperties.MoveNext())
+								while (true)
+								{
+									status = vCardStream.Read(cChar, 0, 1);
+									if (status != 0)
 									{
-										// Move past the token(s) before the : and on to the property values
-										if (enumProperties.MoveNext())
+										if (cChar[0] == 13)
 										{
-											Regex nt = new Regex(@";");
-											IEnumerator nameTokens = 
-												nt.Split((string) enumProperties.Current).GetEnumerator();
-											if(nameTokens.MoveNext())
+											if (vCardStream.Peek() == 10)
 											{
-												this.BuildVCardName(cContact, nameTokens);
+												vCardStream.Read();
 											}
+
+											//Console.WriteLine("Photo stream length: {0}", nChars);
+											break;
 										}
+
+										propertyValues += cChar[0];
+										nChars++;
+									}
+									else
+									{
+										break;
 									}
 								}
-								else
-								if (token == "ADR")
-								{
-									if (enumTokens.MoveNext())
-									{
-										this.BuildVCardAddress(cContact, line);
-									}
-								}
-								else
-								if (token == "EMAIL")
-								{
-									bool			nextResults;
-									Email			tmpMail = new Email();
-									//EmailTypes		mailTypes;
-									string			tmpString;
-									uint			mailTypes = 0;
+							}
+							else
+							{
+								cChar[0] = 'Z';
+								propertyValues = vCardStream.ReadLine();
+							}	break;
+						}
+						else
+						{
+							property += cChar[0];
+						}
+					} 
 
-									nextResults = enumTokens.MoveNext();
-									while(nextResults == true)
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											tmpString = (string) enumTokens.Current;
-											nextResults = enumTokens.MoveNext();
-											if(nextResults == false)
-											{
-												tmpMail.Address = tmpString;
+					if (cChar[0] == '\0')
+					{
+						break;
+					}
 
-												// vCard doesn't have work/personal types
-												// attached to an e-mail address so if the
-												// e-mail isn't preferred, we'll default to 
-												// "other"
-												if (tmpMail.Preferred == false)
-												{
-													mailTypes |= (uint) EmailTypes.other;
-												}
+					if (propertyValues == "")
+					{
+						continue;
+					}
 
-												if (mailTypes != 0)
-												{
-													tmpMail.Types = (EmailTypes) mailTypes;
-												}
-
-												cContact.AddEmailAddress(tmpMail);
-											}
-											else
-											{
-												tmpString.ToUpper();
-												if(tmpString == "PREF")
-												{
-													tmpMail.Preferred = true;
-													mailTypes |= (uint) EmailTypes.work;
-												}
-												else
-												if (tmpString == "INTERNET")
-												{
-													mailTypes &= (uint) ~EmailTypes.x400;
-													mailTypes |= (uint) EmailTypes.internet;
-												}
-												else
-												if (tmpString == "X400")
-												{
-													mailTypes &= (uint) ~EmailTypes.internet;
-													mailTypes |= (uint) EmailTypes.x400;
-												}
-											}
-										}
-									}
-								}
-								else
-								if (token == "TEL")
+					// Start of a new vCard
+					if (property == "BEGIN" && propertyValues == "VCARD")
+					{
+						if (vCardState > 3)
+						{
+							// Finish off a previous vCard
+							if (AddVCardContact(cContact) == true)
+							{
+								if (firstContact == null)
 								{
-									bool			nextResults;
-									Telephone		tmpPhone = new Telephone();
-									string			tmpString;
-									uint			phoneTypes = 0;
-
-									nextResults = enumTokens.MoveNext();
-									while(nextResults == true)
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											tmpString = (string) enumTokens.Current;
-											nextResults = enumTokens.MoveNext();
-											if(nextResults == false)
-											{
-												tmpPhone.Number = tmpString;
-
-												// If no types exist in the vCard stay with the
-												// default types
-												if (phoneTypes != 0)
-												{
-													tmpPhone.Types = (PhoneTypes) phoneTypes;
-												}
-
-												cContact.AddTelephoneNumber(tmpPhone);
-											}
-											else
-											{
-												tmpString.ToUpper();
-												if(tmpString == "PREF")
-												{
-													phoneTypes |= (uint) PhoneTypes.preferred;
-												}
-												else
-												if (tmpString == "VOICE")
-												{
-													phoneTypes |= (uint) PhoneTypes.voice;
-												}
-												else
-												if (tmpString == "MSG")
-												{
-													phoneTypes |= (uint) PhoneTypes.msg;
-												}
-												else
-												if (tmpString == "WORK")
-												{
-													phoneTypes |= (uint) PhoneTypes.work;
-												}
-												else
-												if (tmpString == "HOME")
-												{
-													phoneTypes |= (uint) PhoneTypes.home;
-												}
-												else
-												if (tmpString == "CELL")
-												{
-													phoneTypes |= (uint) PhoneTypes.cell;
-												}
-												else
-												if (tmpString == "VOIP")
-												{
-													phoneTypes |= (uint) PhoneTypes.voip;
-												}
-											}
-										}
-									}
-								}
-								else
-								if (token == "NICKNAME")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.Nickname = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								if (token == "TITLE")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.Title = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								if (token == "NOTE")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.Note = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								if (token == "BDAY")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.Birthday = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								if (token == "ORG")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.Organization = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								if (token == "URL")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.Url = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								if (token == "PHOTO")
-								{
-									byte[] binaryData = null;
-
-									try
-									{
-										// BUGBUG need to add the encoding type
-										Regex ph = new Regex(@":");
-										IEnumerator enumTokens1 = ph.Split(line).GetEnumerator();
-
-										// First line (Type and Encoding)
-										enumTokens1.MoveNext();
-
-										// Second line actual base 64 encoded data
-										enumTokens1.MoveNext();
-										binaryData = Convert.FromBase64String((string) enumTokens1.Current);
-
-										MemoryStream tmpPhoto = new MemoryStream();
-										BinaryWriter bWriter = new BinaryWriter(tmpPhoto);
-
-										bWriter.Write(binaryData, 0, binaryData.Length);
-										cContact.ImportPhoto(tmpPhoto);
-									}
-									catch(Exception e)
-									{
-										Console.WriteLine(e.Message);
-										Console.WriteLine(e.StackTrace);
-									}
-									break;
-								}
-								else
-								if (token == "X-NAB-USERNAME")
-								{
-									if (enumTokens.MoveNext())
-									{
-										if ((string) enumTokens.Current != "")
-										{
-											cContact.UserName = (string) enumTokens.Current;
-										}
-									}
-								}
-								else
-								{
-									break;
+									firstContact = cContact;
 								}
 							}
 						}
 
-						// If we found the END:VCARD tag add the contact
-						if (foundEnd == true)
+						version = 0;
+						vCardState = 1;
+					}
+					else
+					if (property == "VERSION")
+					{
+						if (propertyValues == "2.1")
 						{
-							int		foundState;
+							version = 2;
+							if (vCardState == 1)
+							{
+								cContact = new Contact();
+								vCardState++;
+							}
+						}
+						else
+						if (propertyValues == "3.0")
+						{
+							version = 3;
+							if (vCardState == 1)
+							{
+								cContact = new Contact();
+								vCardState++;
+							}
+						}
+					}
+					else
+					if (property == "END" && propertyValues == "VCARD")
+					{
+						if (vCardState > 3)
+						{
+							// Finish off the current card and add
+							// to the address book
 
-							// Make sure we have a preferred Name and Address
+							if (AddVCardContact(cContact) == true)
+							{
+								if (firstContact == null)
+								{
+									firstContact = cContact;
+								}
+							}
+						}
+
+						vCardState = 0;
+					}
+					else
+					if (vCardState >= 2)
+					{
+						string	propertyToken = "";
+
+						// Tokenize the property and property attributes
+						IEnumerator propTokens = property.Split(propertySeps).GetEnumerator();
+
+						// Make sure we have a valid token.  The property itself
+						// might not be the first token in the collection.
+						while(propTokens.MoveNext())
+						{
+							for(int i = 0; i < Common.vCardProperties.Length; i++)
+							{
+								if ((string) propTokens.Current == Common.vCardProperties[i])
+								{
+									propertyToken = Common.vCardProperties[i];
+									break;
+								}
+							}
+
+							if (propertyToken != "")
+							{
+								break;
+							}
+						}
+
+						if (propertyToken == "")
+						{
+							// Continue to the next line
+							continue;
+						}
+
+						propTokens.Reset();
+
+						//
+						// Check if this property is one that does not
+						// need to tokenize the property values
+						//
+						if (propertyToken == "NICKNAME")
+						{
+							cContact.Nickname = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "TITLE")
+						{
+							cContact.Title = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "NOTE")
+						{
+							cContact.Note = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "BDAY")
+						{
+							cContact.Birthday = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "ORG")
+						{
+							cContact.Organization = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "URL")
+						{
+							cContact.Url = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "X-NAB-USERNAME")
+						{
+							cContact.UserName = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "X-NAB-BLOG")
+						{
+							cContact.Blog = propertyValues;
+							vCardState++;
+						}
+						else
+						if (propertyToken == "PHOTO")
+						{
+							byte[] binaryData = null;
+
 							try
 							{
-								IABList	names = cContact.GetNames();
-								foundState = 0;
-								foreach(Name name in names)
-								{
-									foundState++;
-									if (name.Preferred == true)
-									{
-										foundState = -1;
-										break;
-									}
-								}
+								// FIXME need to add the encoding type
+								// First line (Type and Encoding)
+								//propValueTokens.MoveNext();
 
-								if (foundState > 0)
-								{
-									// No preferred Name - set the first one preferred
-									foreach(Name name in names)
-									{
-										name.Preferred = true;
-										break;
-									}
-								}
+								// Second line actual base 64 encoded data
+								//propValueTokens.MoveNext();
+								binaryData = Convert.FromBase64String(propertyValues);
 
-								IABList	addresses = cContact.GetAddresses();
-								foundState = 0;
-								foreach(Address addr in addresses)
-								{
-									foundState++;
-									if (addr.Preferred == true)
-									{
-										foundState = -1;
-										break;
-									}
-								}
+								MemoryStream tmpPhoto = new MemoryStream();
+								BinaryWriter bWriter = new BinaryWriter(tmpPhoto);
 
-								if (foundState > 0)
-								{
-									// No preferred Address - set the first one preferred
-									foreach(Address addr in addresses)
-									{
-										addr.Preferred = true;
-										break;
-									}
-								}
-
-								if (cContact.UserName == "")
-								{
-									try
-									{
-										Email pref = cContact.GetPreferredEmailAddress();
-										cContact.UserName = pref.Address;
-									}
-									catch
-									{
-										// No preferred e-mail so let's use first and last name
-										try
-										{
-											Name name = cContact.GetPreferredName();
-
-											string	firstLast = name.Given;
-											firstLast += name.Family;
-											cContact.UserName = firstLast;
-										}
-										catch{}
-									}
-								}
-
-								this.AddContact(cContact);
-								cContact.Commit();
-								return(cContact);
+								bWriter.Write(binaryData, 0, binaryData.Length);
+								cContact.ImportPhoto(tmpPhoto);
+								vCardState++;
 							}
-							catch{}
+							catch(Exception e)
+							{
+								Console.WriteLine(e.Message);
+								Console.WriteLine(e.StackTrace);
+							}
+						}
+						else
+						{
+							// tokenize the values past the property separator
+							//Regex pv = new Regex(@";");
+							IEnumerator propValueTokens = propertyValues.Split(valueSeps).GetEnumerator();
+							if(propValueTokens.MoveNext())
+							{
+								if (propertyToken == "N")
+								{
+									this.BuildVCardName(cContact, propValueTokens);
+									vCardState++;
+								}
+								else
+								if (propertyToken == "ADR")
+								{
+									this.BuildVCardAddress(cContact, propTokens, propValueTokens);
+								}
+								else
+								if (propertyToken == "EMAIL")
+								{
+									Email			tmpMail = new Email();
+									string			tmpString;
+									uint			mailTypes = 0;
+
+									tmpMail.Address = propertyValues;
+									while(propTokens.MoveNext())
+									{
+										tmpString = ((string) propTokens.Current).ToLower();
+										if(tmpString == "pref")
+										{
+											mailTypes |= (uint) EmailTypes.preferred;
+										}
+										else
+										if (tmpString == "internet")
+										{
+											mailTypes &= (uint) ~EmailTypes.x400;
+											mailTypes |= (uint) EmailTypes.internet;
+										}
+										else
+										if (tmpString == "x400")
+										{
+											mailTypes &= (uint) ~EmailTypes.internet;
+											mailTypes |= (uint) EmailTypes.x400;
+										}
+										else
+										if (tmpString == "work")
+										{
+											mailTypes |= (uint) EmailTypes.work;
+										}
+										else
+										if (tmpString == "home")
+										{
+											mailTypes |= (uint) EmailTypes.personal;
+										}
+										else
+										if (tmpString == "personal")
+										{
+											mailTypes |= (uint) EmailTypes.personal;
+										}
+										else
+										if (tmpString == "other")
+										{
+											mailTypes |= (uint) EmailTypes.other;
+										}
+									}
+
+									// vCard 2.1 doesn't have work/personal types
+									// attached to an e-mail address so we'll default
+									// to type "other"
+									if ((mailTypes & (uint) EmailTypes.work) != (uint) EmailTypes.work &&
+										(mailTypes & (uint) EmailTypes.personal) != (uint) EmailTypes.personal &&
+										(mailTypes & (uint) EmailTypes.other) != (uint) EmailTypes.other)
+									{
+										mailTypes |= (uint) EmailTypes.other;
+									}
+
+									tmpMail.Types = (EmailTypes) mailTypes;
+									cContact.AddEmailAddress(tmpMail);
+									vCardState++;
+								}
+								else
+								if (propertyToken == "TEL")
+								{
+									Telephone		tmpPhone = new Telephone();
+									string			tmpString;
+									uint			phoneTypes = 0;
+
+									tmpPhone.Number = propertyValues;
+									while(propTokens.MoveNext())
+									{
+										tmpString = ((string) propTokens.Current).ToLower();
+										if(tmpString == "pref")
+										{
+											phoneTypes |= (uint) PhoneTypes.preferred;
+										}
+										else
+										if (tmpString == "voice")
+										{
+											phoneTypes |= (uint) PhoneTypes.voice;
+										}
+										else
+										if (tmpString == "msg")
+										{
+											phoneTypes |= (uint) PhoneTypes.msg;
+										}
+										else
+										if (tmpString == "work")
+										{
+											phoneTypes |= (uint) PhoneTypes.work;
+										}
+										else
+										if (tmpString == "home")
+										{
+											phoneTypes |= (uint) PhoneTypes.home;
+										}
+										else
+										if (tmpString == "other")
+										{
+											phoneTypes |= (uint) PhoneTypes.other;
+										}
+										else
+										if (tmpString == "cell")
+										{
+											phoneTypes |= (uint) PhoneTypes.cell;
+										}
+										else
+										if (tmpString == "fax")
+										{
+											phoneTypes |= (uint) PhoneTypes.fax;
+										}
+										else
+										if (tmpString == "voip")
+										{
+											phoneTypes |= (uint) PhoneTypes.voip;
+										}
+										else
+										if (tmpString == "car")
+										{
+											phoneTypes |= (uint) PhoneTypes.car;
+										}
+										else
+										if (tmpString == "pager")
+										{
+											phoneTypes |= (uint) PhoneTypes.pager;
+										}
+									}
+
+									// If no types exist in the vCard stay with the
+									// default types
+									if (phoneTypes != 0)
+									{
+										tmpPhone.Types = (PhoneTypes) phoneTypes;
+									}
+
+									cContact.AddTelephoneNumber(tmpPhone);
+									vCardState++;
+								}
+							}
 						}
 					}
 				}
 			}
 			catch{}
-			return(null);
+			return(firstContact);
 		}
 
 		/// <summary>

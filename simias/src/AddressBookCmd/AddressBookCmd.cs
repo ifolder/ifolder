@@ -117,8 +117,6 @@ namespace AddressBookCmd
 			Console.WriteLine("    addaddressproperty -c <contact name> -p <addressproperty>");
 			Console.WriteLine("    deleteproperty -c <contact name> -p <property>");
 			Console.WriteLine("    exportvcard -f <path> -c <contact name> - b <address book name>");
-			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;pref;home)");
-			Console.WriteLine("   /an <name> - add name property (ex. given=brady;family=anderson)");
 			Console.WriteLine("   -t = time the command");
 			Console.WriteLine("   -v = verbose");
 			return;
@@ -156,6 +154,14 @@ namespace AddressBookCmd
 			Console.WriteLine("   PCODE=<postal code>");
 			Console.WriteLine("   PBOX=<postal box>");
 			Console.WriteLine("   COUNTRY=<country>");
+			Console.WriteLine("   PREF");
+			Console.WriteLine("   WORK");
+			Console.WriteLine("   HOME");
+			Console.WriteLine("   OTHER");
+			Console.WriteLine("   POSTAL");
+			Console.WriteLine("   PARCEL");
+			Console.WriteLine("   DOM - Domestic address");
+			Console.WriteLine("   INTL - International address");
 			Console.WriteLine("\nIf no address book argument is given the default address book is assumed");
 		}
 
@@ -1148,69 +1154,74 @@ namespace AddressBookCmd
 
 				if (cAddress.Street != "")
 				{
-					Console.Write(";Street=" + cAddress.Street);
-				}
-
-				if (cAddress.Region != "")
-				{
-					Console.Write(";Region=" + cAddress.Region);
+					Console.Write(";STREET=" + cAddress.Street);
 				}
 
 				if (cAddress.Locality != "")
 				{
-					Console.Write(";Locality=" + cAddress.Locality);
+					Console.Write(";LOCALITY=" + cAddress.Locality);
+				}
+
+				if (cAddress.Region != "")
+				{
+					Console.Write(";REGION=" + cAddress.Region);
 				}
 
 				if (cAddress.PostalCode != "")
 				{
-					Console.Write(";PostalCode=" + cAddress.PostalCode);
+					Console.Write(";PCODE=" + cAddress.PostalCode);
+				}
+
+				if (cAddress.PostalBox != "")
+				{
+					Console.Write(";PBOX=" + cAddress.PostalBox);
 				}
 
 				if (cAddress.Country != "")
 				{
-					Console.Write(";Country=" + cAddress.Country);
+					Console.Write(";COUNTRY=" + cAddress.Country);
 				}
 
 				if (cAddress.Types != 0)
 				{
 					if ((cAddress.Types & AddressTypes.preferred) == AddressTypes.preferred)
 					{
-						Console.Write(";pref");
+						Console.Write(";PREF");
 					}								  
 		
 					if ((cAddress.Types & AddressTypes.home) == AddressTypes.home)
 					{
-						Console.Write(";home");
+						Console.Write(";HOME");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.work) == AddressTypes.work)
 					{
-						Console.Write(";work");
+						Console.Write(";WORK");
 					}					
 			  
 					if ((cAddress.Types & AddressTypes.other) == AddressTypes.other)
 					{
-						Console.Write(";other");
+						Console.Write(";OTHER");
 					}
 					
 					if ((cAddress.Types & AddressTypes.postal) == AddressTypes.postal)
 					{
-						Console.Write(";postal");
+						Console.Write(";POSTAL");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.parcel) == AddressTypes.parcel)
 					{
-						Console.Write(";parcel");
+						Console.Write(";PARCEL");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.dom) == AddressTypes.dom)
 					{
-						Console.Write(";dom");
+						Console.Write(";DOM");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.intl) == AddressTypes.intl)
 					{
-						Console.Write(";intl");
+						Console.Write(";INTL");
 					}								  
 				}
 

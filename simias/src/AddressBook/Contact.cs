@@ -1602,6 +1602,8 @@ namespace Novell.AddressBook
 			const string	uuidHdr = "UID:";
 			const string	usernameHdr = "X-NAB-USERNAME:";
 			const string	blogHdr = "X-NAB-BLOG:";
+			const string	uidHdr = "X-NAB-UID:";
+			const string	typeHdr = "TYPE=";
 
 			foreach(char c in beginHdr)
 			{
@@ -1646,6 +1648,20 @@ namespace Novell.AddressBook
 				if (this.ID != null && this.ID != "")
 				{
 					foreach(char c in uuidHdr)
+					{
+						vCard.WriteByte(Convert.ToByte(c));
+					}
+					
+					foreach(char c in this.ID)
+					{
+						vCard.WriteByte(Convert.ToByte(c));
+					}
+
+					vCard.WriteByte(0xD);
+					vCard.WriteByte(0xA);
+					
+					// Novell Address Book UID
+					foreach(char c in uidHdr)
 					{
 						vCard.WriteByte(Convert.ToByte(c));
 					}
@@ -1751,8 +1767,6 @@ namespace Novell.AddressBook
 
 				vCard.WriteByte(0xD);
 				vCard.WriteByte(0xA);
-
-
 			}
 
 			// Write out the title
@@ -2005,7 +2019,7 @@ namespace Novell.AddressBook
 			}
 			catch{}
 
-			// Write out the preferred email address
+			// Write out the email addresses
 			try
 			{
 				IABList mailEnum = this.GetEmailAddresses();
@@ -2027,6 +2041,12 @@ namespace Novell.AddressBook
 					if (tmpMail.Preferred == true)
 					{
 						vCard.WriteByte(Convert.ToByte(';'));
+						
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+						
 						foreach(char c in prefHdr)
 						{
 							vCard.WriteByte(Convert.ToByte(c));
@@ -2061,6 +2081,11 @@ namespace Novell.AddressBook
 					{
 						vCard.WriteByte(Convert.ToByte(';'));
 
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+
 						vCard.WriteByte(Convert.ToByte('O'));
 						vCard.WriteByte(Convert.ToByte('T'));
 						vCard.WriteByte(Convert.ToByte('H'));
@@ -2068,10 +2093,15 @@ namespace Novell.AddressBook
 						vCard.WriteByte(Convert.ToByte('R'));
 					}
 
-					/*
+
 					if ((tmpMail.Types & EmailTypes.work) == EmailTypes.work)
 					{
 						vCard.WriteByte(Convert.ToByte(';'));
+
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
 
 						vCard.WriteByte(Convert.ToByte('W'));
 						vCard.WriteByte(Convert.ToByte('O'));
@@ -2083,12 +2113,17 @@ namespace Novell.AddressBook
 					{
 						vCard.WriteByte(Convert.ToByte(';'));
 
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+
 						vCard.WriteByte(Convert.ToByte('H'));
 						vCard.WriteByte(Convert.ToByte('O'));
 						vCard.WriteByte(Convert.ToByte('M'));
 						vCard.WriteByte(Convert.ToByte('E'));
 					}
-					*/
+
 
 					// Now the actual e-mail address
 					vCard.WriteByte(Convert.ToByte(':'));
@@ -2139,213 +2174,161 @@ namespace Novell.AddressBook
 					vCard.WriteByte(Convert.ToByte('E'));
 					vCard.WriteByte(Convert.ToByte('L'));
 
-					if (tmpPhone.Preferred == true || (uint) tmpTypes > 0)
-					{
-						vCard.WriteByte(Convert.ToByte(';'));
-						vCard.WriteByte(Convert.ToByte('T'));
-						vCard.WriteByte(Convert.ToByte('Y'));
-						vCard.WriteByte(Convert.ToByte('P'));
-						vCard.WriteByte(Convert.ToByte('E'));
-						vCard.WriteByte(Convert.ToByte('='));
-					}
-
 					if (tmpPhone.Preferred == true)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+						
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+
 						foreach( char c in prefHdr)
 						{
 							vCard.WriteByte((byte) c);
-						}
-
-						tmpTypes &= ~PhoneTypes.preferred;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
 						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.work) == PhoneTypes.work)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+						
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+						
 						foreach(char c in workHdr)
 						{
 							vCard.WriteByte((byte) c);
-						}
-
-						tmpTypes &= ~PhoneTypes.work;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
 						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.home) == PhoneTypes.home)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+						
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+
 						foreach(char c in homeHdr)
 						{
 							vCard.WriteByte((byte) c);
-						}
-
-						tmpTypes &= ~PhoneTypes.home;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
 						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.voice) == PhoneTypes.voice)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+					
 						vCard.WriteByte((byte) 'V');
 						vCard.WriteByte((byte) 'O');
 						vCard.WriteByte((byte) 'I');
 						vCard.WriteByte((byte) 'C');
 						vCard.WriteByte((byte) 'E');
-
-						tmpTypes &= ~PhoneTypes.voice;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.msg) == PhoneTypes.msg)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+					
 						vCard.WriteByte(Convert.ToByte('M'));
 						vCard.WriteByte(Convert.ToByte('S'));
 						vCard.WriteByte(Convert.ToByte('G'));
-
-						tmpTypes &= ~PhoneTypes.msg;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.cell) == PhoneTypes.cell)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+	
+						foreach(char c in typeHdr)
+						{
+							vCard.WriteByte(Convert.ToByte(c));
+						}
+				
 						vCard.WriteByte(Convert.ToByte('C'));
 						vCard.WriteByte(Convert.ToByte('E'));
 						vCard.WriteByte(Convert.ToByte('L'));
 						vCard.WriteByte(Convert.ToByte('L'));
-
-						tmpTypes &= ~PhoneTypes.cell;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.bbs) == PhoneTypes.bbs)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte(Convert.ToByte('B'));
 						vCard.WriteByte(Convert.ToByte('B'));
 						vCard.WriteByte(Convert.ToByte('S'));
-
-						tmpTypes &= ~PhoneTypes.bbs;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.car) == PhoneTypes.car)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
+					
 						vCard.WriteByte(Convert.ToByte('C'));
 						vCard.WriteByte(Convert.ToByte('A'));
 						vCard.WriteByte(Convert.ToByte('R'));
-
-						tmpTypes &= ~PhoneTypes.car;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.isdn) == PhoneTypes.isdn)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte(Convert.ToByte('I'));
 						vCard.WriteByte(Convert.ToByte('S'));
 						vCard.WriteByte(Convert.ToByte('D'));
 						vCard.WriteByte(Convert.ToByte('N'));
-
-						tmpTypes &= ~PhoneTypes.isdn;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.fax) == PhoneTypes.fax)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte(Convert.ToByte('F'));
 						vCard.WriteByte(Convert.ToByte('A'));
 						vCard.WriteByte(Convert.ToByte('X'));
-
-						tmpTypes &= ~PhoneTypes.fax;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.modem) == PhoneTypes.modem)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte(Convert.ToByte('M'));
 						vCard.WriteByte(Convert.ToByte('O'));
 						vCard.WriteByte(Convert.ToByte('D'));
 						vCard.WriteByte(Convert.ToByte('E'));
 						vCard.WriteByte(Convert.ToByte('M'));
-
-						tmpTypes &= ~PhoneTypes.modem;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.pager) == PhoneTypes.pager)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte(Convert.ToByte('P'));
 						vCard.WriteByte(Convert.ToByte('A'));
 						vCard.WriteByte(Convert.ToByte('G'));
 						vCard.WriteByte(Convert.ToByte('E'));
 						vCard.WriteByte(Convert.ToByte('R'));
-
-						tmpTypes &= ~PhoneTypes.pager;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.video) == PhoneTypes.video)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte(Convert.ToByte('V'));
 						vCard.WriteByte(Convert.ToByte('I'));
 						vCard.WriteByte(Convert.ToByte('D'));
 						vCard.WriteByte(Convert.ToByte('E'));
 						vCard.WriteByte(Convert.ToByte('O'));
-
-						tmpTypes &= ~PhoneTypes.video;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.pcs) == PhoneTypes.pcs)
 					{
+						vCard.WriteByte((byte) ';');
 						vCard.WriteByte((byte) 'P');
 						vCard.WriteByte((byte) 'C');
 						vCard.WriteByte((byte) 'S');
-
-						tmpTypes &= ~PhoneTypes.pcs;
-						if ((uint) tmpTypes > 0)
-						{
-							vCard.WriteByte((byte) ',');
-						}
 					}
 
 					if ((tmpPhone.Types & PhoneTypes.voip) == PhoneTypes.voip)
 					{
+						vCard.WriteByte(Convert.ToByte(';'));
 						vCard.WriteByte((byte) 'V');
 						vCard.WriteByte((byte) 'O');
 						vCard.WriteByte((byte) 'I');
@@ -2367,7 +2350,6 @@ namespace Novell.AddressBook
 			}
 			catch{}
 
-
 			// Write out the PHOTO into the stream
 			try
 			{
@@ -2376,7 +2358,6 @@ namespace Novell.AddressBook
 				if (srcPhoto != null)
 				{
 					binaryData = new byte[srcPhoto.Length];
-
 					
 					long bytesRead = srcPhoto.Read(binaryData, 0,(int) srcPhoto.Length);
 
@@ -2415,6 +2396,9 @@ namespace Novell.AddressBook
 							{
 								vCard.WriteByte(Convert.ToByte(c));
 							}
+
+							vCard.WriteByte(0xD);
+							vCard.WriteByte(0xA);
 
 							for(int i = 0; i < bytesConverted; i++)
 							{

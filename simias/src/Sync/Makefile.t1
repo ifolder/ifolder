@@ -40,7 +40,7 @@ test: $(TARGETS)
 
 clean:
 	@$(RM) $(TARGETS) tmpServerData tmpClientData SqliteWrapper.dll \
-			$(notdir $(SQLITE)) Novell.iFolder.Configuration.dll \
+			$(notdir $(SQLITE)) \
 			*.pdb $(RLIBS:%=%.dll)
 
 libs:

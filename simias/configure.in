@@ -1,4 +1,4 @@
-AC_INIT(src/Configuration/Configuration.cs)
+AC_INIT(src/Common/Library/Configuration.cs)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE(simias, 0.7)
 VERSION=$VERSION.`date +%Y%m%d`
@@ -24,7 +24,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH='$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
+        MONO_PATH='$(LOG4NET_DIR):$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -54,13 +54,12 @@ AC_SUBST(SYSTEM_XML)
 
 SRCDIR='$(top_srcdir)/src'
 TOOLDIR='$(top_srcdir)/tools'
+EXTERNAL_DIR='$(top_srcdir)/external'
 DOCDIR="$SRCDIR/doc"
-APIDOCDIR="$SRCDIR/api-doc"
 
 AC_SUBST(SRCDIR)
 AC_SUBST(TOOLDIR)
 AC_SUBST(DOCDIR)
-AC_SUBST(APIDOCDIR)
 
 EMPTY=
 SPACE='$(EMPTY) $(EMPTY)'
@@ -68,9 +67,10 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent RemotingSniffer SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp InviteAgent MiniShare AcceptanceTests"
+COMMON_SUBDIRS="Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook AddressBookCmd Smtp Invitation MiniShare AcceptanceTests"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
+DARWIN_SUBDIRS=
 
 AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
@@ -83,6 +83,9 @@ case $host_os in
     linux*)
         SIMIAS_OS='linux'
     ;;
+    darwin*)
+        SIMIAS_OS='darwin'
+    ;;
     cygwin*)
         SIMIAS_OS='windows'
     ;;
@@ -93,11 +96,36 @@ esac
 AC_SUBST(SIMIAS_OS)
 AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
+AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 
 #
 # Set platform-specific variables
 #
 case $SIMIAS_OS in
+    #
+    # Darwin-specific configuration
+    #
+    darwin)
+        #
+        # Set variables
+        #
+        COMMON_CLEAN_FILES='.cstore .simias'
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
+        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+		MONO=mint
+        NUNITFLAGS_OPTIMIZE=''
+        PLATFORM_SUBDIRS=$DARWIN_SUBDIRS
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
+        SEP='/'
+        SQLITELIB="libsqlite.so"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
+    ;;
     #
     # Linux-specific configuration
     #
@@ -108,6 +136,7 @@ case $SIMIAS_OS in
         COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -118,7 +147,7 @@ case $SIMIAS_OS in
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
         SQLITELIB="libsqlite.so"
-        SQLITELIB_PATH="../../external/sqlite/linux"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
     ;;
     #
     # Windows-specific configuration
@@ -127,6 +156,7 @@ case $SIMIAS_OS in
         COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
         NUNIT_FLAGS='/nologo'
@@ -137,12 +167,13 @@ case $SIMIAS_OS in
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         SEP='$(EMPTY)\\$(EMPTY)'
         SQLITELIB="sqlite.dll"
-        SQLITELIB_PATH="../../external/sqlite/w32"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
     ;;
 esac
 AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
+AC_SUBST(LOG4NET_DIR)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
@@ -160,6 +191,33 @@ AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
 #AM_PROG_LIBTOOL
+
+#
+# Handle --with-ndoc-path
+#
+AC_ARG_WITH(ndoc-path, [
+  --with-ndoc-path=PATH        path to dir that contains NDocConsole.exe [[NONE]]],
+    [ NDOC_PATH="$withval" ],
+    [ NDOC_PATH=NONE ]
+    )
+if test "$NDOC_PATH" = "NONE"; then
+    NDOC_PATH=''
+else
+    if test `basename "$NDOC_PATH"` = "NDocConsole.exe"; then
+        NDOC_PATH=`dirname "$NDOC_PATH"`
+    fi
+    test -d "$NDOC_PATH" || AC_MSG_ERROR([$NDOC_PATH does not exist])
+    NDOC_PATH=`cd "$NDOC_PATH" && pwd`
+fi
+if test -n "$NDOC_PATH"; then
+    if test -e "$NDOC_PATH/NDocConsole.exe"; then
+        NDOC_CMD="$NDOC_PATH/NDocConsole.exe"
+    fi
+    test -e "$NDOC_CMD" || AC_MSG_ERROR([NDocConsole.exe not found in $NDOC_PATH])
+fi
+echo NDOC_CMD=$NDOC_CMD
+AC_SUBST(NDOC_CMD)
+AM_CONDITIONAL(NDOC, test -n "$NDOC_CMD")
 
 #
 # Handle --enable-debug
@@ -212,7 +270,6 @@ esac
 AC_OUTPUT([
 Makefile
 src/Makefile
-src/Configuration/Makefile
 src/Common/Makefile
 src/CommonGtkWindows/Makefile
 src/CommonFormWindows/Makefile
@@ -224,9 +281,10 @@ src/FsProvider/Makefile
 src/SqliteProvider/Makefile
 src/CollectionStore/Makefile
 src/FsWatcher/Makefile
-src/Agent/Makefile
 src/RemotingSniffer/Makefile
 src/SyncCommon/Makefile
+src/Location/Makefile
+src/Agent/Makefile
 src/StoreWatcher/Makefile
 src/CollectionWatcher/Makefile
 src/SyncManager/Makefile
@@ -236,11 +294,13 @@ src/SyncTools/Makefile
 src/AddressBookCmd/Makefile
 src/AddressBook/Makefile
 src/Smtp/Makefile
-src/InviteAgent/Makefile
+src/Invitation/Makefile
 src/MiniShare/Makefile
 src/AcceptanceTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
+package/darwin/Makefile
 package/linux/simias.spec
+doc/Makefile
 ])

@@ -98,6 +98,7 @@ namespace Simias
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(40, 72);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 2;
@@ -106,6 +107,7 @@ namespace Simias
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(120, 72);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 3;

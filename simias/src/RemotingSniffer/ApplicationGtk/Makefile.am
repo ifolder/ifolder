@@ -1,13 +1,13 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-RemotingMonitorLibrary_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/InviteAgent.cs
+RemotingMonitorLibrary_CSFILES = $(srcdir)/Library/AssemblyInfo.cs
 RemotingMonitorLibrary_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgent_CSFILES))
 RemotingMonitorLibrary_INCLUDES =
 RemotingMonitorLibrary_RESOURCES =
 RemotingMonitorLibrary_FLAGS = $(CSC_LIBFLAG)
-RemotingMonitorLibrary_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
-RemotingMonitorLibrary_LIBPATH = Library ../CollectionStore ../StoreProvider ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../Common ../CollectionEvents
+RemotingMonitorLibrary_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll Common.dll SyncCommon.dll
+RemotingMonitorLibrary_LIBPATH = Library ../CollectionStore ../StoreProvider ../AddressBook ../Common ../SyncCommon ../Common ../CollectionEvents
 
 RemotingMonitorApplication_CSFILES = $(srcdir)/ConsoleApp/AssemblyInfo.cs $(srcdir)/ConsoleApp/MainClass.cs
 RemotingMonitorApplication_CSFILES_CSC := $(subst /,$(SEP),$(RemotingMonitorApplication_CSFILES))

@@ -29,8 +29,28 @@ namespace Simias.Sync
 	/// Sync Collection Info
 	/// </summary>
 	[Serializable]
-	public class SyncCollectionInfo : SyncNodeInfo
+	public class SyncCollectionInfo
 	{
+		/// <summary>
+		/// The id of the node.
+		/// </summary>
+		protected string id;
+
+		/// <summary>
+		/// The name of the node.
+		/// </summary>
+		protected string name;
+
+		/// <summary>
+		/// The master incarnation number of the node.
+		/// </summary>
+		protected ulong masterIncarnation;
+
+		/// <summary>
+		/// The local incarnation number of the node.
+		/// </summary>
+		protected ulong localIncarnation;
+	
 		/// <summary>
 		/// The sync url of the collection.
 		/// </summary>
@@ -49,8 +69,12 @@ namespace Simias.Sync
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SyncCollectionInfo(SyncCollection collection) : base(collection)
+		public SyncCollectionInfo(SyncCollection collection)
 		{
+			this.id = collection.ID;
+			this.name = collection.Name;
+			this.masterIncarnation = collection.MasterIncarnation;
+			this.localIncarnation = collection.LocalIncarnation;
 			this.url = collection.ServiceUrl;
 			this.logicType = collection.LogicType;
 			this.role = collection.Role;
@@ -67,6 +91,38 @@ namespace Simias.Sync
 
 		#region Properties
 
+		
+		/// <summary>
+		/// The id of the node.
+		/// </summary>
+		public string ID
+		{
+			get { return id; }
+		}
+		
+		/// <summary>
+		/// The name of the node.
+		/// </summary>
+		public string Name
+		{
+			get { return name; }
+		}
+		
+		/// <summary>
+		/// The master incarnation number of the node.
+		/// </summary>
+		public ulong MasterIncarnation
+		{
+			get { return masterIncarnation; }
+		}
+		
+		/// <summary>
+		/// The local incarnation number of the node.
+		/// </summary>
+		public ulong LocalIncarnation
+		{
+			get { return localIncarnation; }
+		}
 		/// <summary>
 		/// The sync URL of the collection.
 		/// </summary>

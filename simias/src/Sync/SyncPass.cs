@@ -111,18 +111,18 @@ public class SynkerServiceA: SyncCollectionService
         
         string userId = null;
 
-        // BSK: 
         try
         {
             userId = Thread.CurrentPrincipal.Identity.Name;
+			Log.Spew("Sync session starting for {0}", userId);
         }
-        catch
+        catch (Exception e)
         {
             // kludge
+			Log.Spew("could not get identity in sync start, error {0}", e.Message);
             ignoreRights = true;
         }
         
-        Log.Spew("session started for user '{0}'{1}", userId, ignoreRights? " without access control": "");
         if (ignoreRights || userId == String.Empty)
             userId = Access.SyncOperatorRole;
         collection.LocalStore.ImpersonateUser(userId);
@@ -188,8 +188,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes an array of small nodes. returns rejected nodes
 	/// </summary>
-	// BSK: public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
-	public void PutSmallNodes(NodeChunk[] nodes)
+	public RejectedNode[] PutSmallNodes(NodeChunk[] nodes)
 	{
 		try
 		{
@@ -197,11 +196,10 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
-			// BSK: return ops.PutSmallNodes(nodes);
-			ops.PutSmallNodes(nodes);
+			return ops.PutSmallNodes(nodes);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		// BSK: return new RejectedNodes();
+		return null;
 	}
 
 	/// <summary>
@@ -242,7 +240,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes next chunk of data for a large node, completes node if metadata is given
 	/// </summary>
-	public SyncIncomingNode.Status WriteLargeNode(FseChunk[] fseChunks, string metaData)
+	public NodeStatus WriteLargeNode(FseChunk[] fseChunks, string metaData)
 	{
 		try
 		{
@@ -250,10 +248,10 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			inNode.WriteChunks(fseChunks);
-			return metaData == null? SyncIncomingNode.Status.InProgess: inNode.Complete(metaData);
+			return metaData == null? NodeStatus.InProgess: inNode.Complete(metaData);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return SyncIncomingNode.Status.ServerFailure;
+		return NodeStatus.ServerFailure;
 	}
 
 	/// <summary>
@@ -302,6 +300,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 	SynkerServiceA ss;
 	Collection collection;
 
+	/// <summary>
+	/// public constructor which accepts real or proxy objects specifying master and collection
+	/// </summary>
 	public SynkerWorkerA(SynkerServiceA master, SyncCollection slave): base(master, slave)
 	{
 		ss = master;
@@ -330,7 +331,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	public override void DoSyncWork()
 	{
+	Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
+	try
+	{
 		Access.Rights rights = ss.Start();
+		Log.Spew("-------- started sync pass for collection {0}", collection.Name);
 
 		if (rights == Access.Rights.Deny)
 		{
@@ -338,16 +343,22 @@ public class SynkerWorkerA: SyncCollectionWorker
 			return;
 		}
 
-		//Log.Spew("client connected to server version {0}", ss.Version);
-
+		Log.Spew("-------- starting dredge for collection {0}", collection.Name);
 		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 		new Dredger(collection, false);
+
+		Log.Spew("-------- completed dredge for collection {0}", collection.Name);
+
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
 		SyncOps ops = new SyncOps(collection, false);
 
+
 		NodeStamp[] sstamps = ss.GetNodeStamps();
+		Log.Spew("-------- got local node stamps for collection {0}", collection.Name);
+
 		NodeStamp[] cstamps = ops.GetNodeStamps();
+		Log.Spew("-------- got server node stamps for collection {0}", collection.Name);
 
 		ArrayList largeFromServer = new ArrayList();
 		ArrayList smallFromServer = new ArrayList();
@@ -458,16 +469,31 @@ public class SynkerWorkerA: SyncCollectionWorker
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 		{
-			// BSK: RejectedNodes rejects = ss.PutSmallNodes(updates);
-			ss.PutSmallNodes(updates);
-			foreach (NodeChunk nc in updates)
+			RejectedNode[] rejects = ss.PutSmallNodes(updates);
+			if (rejects == null)
+				Log.Spew("null rejects list");
+			else
 			{
-				// BSK: if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
-				// BSK: && Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
-					ops.UpdateIncarn(nc.stamp);
+				foreach (NodeChunk nc in updates)
+				{
+					bool updateIncarn = true;
+					foreach (RejectedNode reject in rejects)
+					{
+						if (reject.nid == nc.stamp.id)
+						{
+							if (reject.status == NodeStatus.FileSystemEntryCollision)
+								ops.DeleteSpuriousNode(reject.nid);
+							else
+								Log.Spew("skipping update of incarnation for small node {0} due to {1} on server",
+										reject.nid, reject.status);
+							updateIncarn = false;
+							break;
+						}
+					}
+					if (updateIncarn == true)
+						ops.UpdateIncarn(nc.stamp);
+				}
 			}
-			// BSK: foreach (Nid nid in rejects.fileSystemEntryCollisions)
-			// BSK: ops.DeleteSpuriousNode(nid);
 		}
 
 		// get small files from server
@@ -504,19 +530,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 						break;
 					ss.WriteLargeNode(chunks, null);
 				}
-			SyncIncomingNode.Status status = ss.WriteLargeNode(chunks, metaData);
+			NodeStatus status = ss.WriteLargeNode(chunks, metaData);
 			switch (status)
 			{
-				case SyncIncomingNode.Status.Complete: ops.UpdateIncarn(stamp); break;
-				case SyncIncomingNode.Status.UpdateCollision:
-					Log.Spew("skipping update of incarnation for large node {0} due to update collision on server", stamp.name);
-					break;
-				case SyncIncomingNode.Status.FileSystemEntryCollision:
-					ops.DeleteSpuriousNode(nid);
-					break;
-				default:
-					Log.Spew("skipping update of incarnation for large node {0} due to update {1}", stamp.name, status.ToString());
-					break;
+				case NodeStatus.Complete: ops.UpdateIncarn(stamp); break;
+				case NodeStatus.FileSystemEntryCollision: ops.DeleteSpuriousNode(nid); break;
+				default: Log.Spew("skipping update of incarnation for large node {0} due to {1}", stamp.name, status); break;
 			}
 		}
 		largeToServer.Clear();
@@ -535,16 +554,22 @@ public class SynkerWorkerA: SyncCollectionWorker
 				foreach (FseChunk chunk in nc.fseChunks)
 					nc.totalSize += chunk.data.Length;
 			}
-			SyncIncomingNode.Status status = inNode.Complete(nc.metaData);
+			NodeStatus status = inNode.Complete(nc.metaData);
 			switch (status)
 			{
-				case SyncIncomingNode.Status.Complete: break;
-				default:
-					Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid.ToString(), status.ToString());
-					break;
+				case NodeStatus.Complete: break;
+				default: Log.Spew("skipping update of incarnation for large node {0} due to update {1}", nid, status); break;
 			}
 		}
 		largeFromServer.Clear();
+	}
+	catch (Exception e)
+	{
+		Log.Spew("Uncaught exception in DoSyncWork: {0}", e.Message);
+		Log.Spew(e.StackTrace);
+	}
+	catch { Log.Spew("Uncaught foreign exception in DoSyncWork"); }
+	Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
 	}
 }
 
