@@ -95,7 +95,7 @@ internal class Dredger
 		// TODO: perhaps we should move dups to trash or log as error
 		foreach (Node n in collection.GetNodesByName(nodeName))
 		{
-			Property p = n.Properties.GetSingleProperty(Property.ParentID);
+			Property p = n.Properties.GetSingleProperty(PropertyTags.Parent);
 			string parentId = p == null? null: (string)p.Value;
 			if (p != null && parentId == parentNode.Id
 					&& (n.Type == NodeTypeDir || n.Type == NodeTypeFile))
@@ -151,7 +151,7 @@ internal class Dredger
 		Log.Assert(node != null && path != null);
 
 		// remove all nodes from store that no longer exist in the file system
-		foreach (Node kid in collection.Search(Property.ParentID, node.Id, Property.Operator.Equal))
+		foreach (Node kid in collection.Search(PropertyTags.Parent, node.Id, SearchOp.Equal))
 		{
 			if (kid.Type == NodeTypeFile && !File.Exists(FullPath(kid))
 					|| kid.Type == NodeTypeDir && !Directory.Exists(FullPath(kid)))
