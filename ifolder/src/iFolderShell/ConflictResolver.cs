@@ -113,13 +113,13 @@ namespace Novell.iFolderCom
 			this.conflictsView = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.localName = new System.Windows.Forms.Label();
-			this.localDate = new System.Windows.Forms.Label();
-			this.localSize = new System.Windows.Forms.Label();
 			this.saveLocal = new System.Windows.Forms.Button();
+			this.localSize = new System.Windows.Forms.Label();
+			this.localDate = new System.Windows.Forms.Label();
+			this.localName = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.saveServer = new System.Windows.Forms.Button();
 			this.serverSize = new System.Windows.Forms.Label();
@@ -164,7 +164,6 @@ namespace Novell.iFolderCom
 			// 
 			this.ifolderName.Location = new System.Drawing.Point(112, 80);
 			this.ifolderName.Name = "ifolderName";
-			this.ifolderName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.ifolderName.Size = new System.Drawing.Size(312, 16);
 			this.ifolderName.TabIndex = 3;
 			// 
@@ -172,7 +171,6 @@ namespace Novell.iFolderCom
 			// 
 			this.ifolderPath.Location = new System.Drawing.Point(112, 104);
 			this.ifolderPath.Name = "ifolderPath";
-			this.ifolderPath.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.ifolderPath.Size = new System.Drawing.Size(312, 16);
 			this.ifolderPath.TabIndex = 4;
 			// 
@@ -209,51 +207,6 @@ namespace Novell.iFolderCom
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Local version";
 			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(8, 24);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(56, 16);
-			this.label4.TabIndex = 0;
-			this.label4.Text = "Name:";
-			// 
-			// label5
-			// 
-			this.label5.Location = new System.Drawing.Point(8, 48);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(56, 16);
-			this.label5.TabIndex = 1;
-			this.label5.Text = "Date:";
-			// 
-			// label6
-			// 
-			this.label6.Location = new System.Drawing.Point(8, 72);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(56, 16);
-			this.label6.TabIndex = 2;
-			this.label6.Text = "Size:";
-			// 
-			// localName
-			// 
-			this.localName.Location = new System.Drawing.Point(64, 24);
-			this.localName.Name = "localName";
-			this.localName.Size = new System.Drawing.Size(128, 16);
-			this.localName.TabIndex = 3;
-			// 
-			// localDate
-			// 
-			this.localDate.Location = new System.Drawing.Point(64, 48);
-			this.localDate.Name = "localDate";
-			this.localDate.Size = new System.Drawing.Size(128, 16);
-			this.localDate.TabIndex = 4;
-			// 
-			// localSize
-			// 
-			this.localSize.Location = new System.Drawing.Point(64, 72);
-			this.localSize.Name = "localSize";
-			this.localSize.Size = new System.Drawing.Size(128, 16);
-			this.localSize.TabIndex = 5;
-			// 
 			// saveLocal
 			// 
 			this.saveLocal.Enabled = false;
@@ -264,6 +217,51 @@ namespace Novell.iFolderCom
 			this.saveLocal.TabIndex = 6;
 			this.saveLocal.Text = "Save";
 			this.saveLocal.Click += new System.EventHandler(this.saveLocal_Click);
+			// 
+			// localSize
+			// 
+			this.localSize.Location = new System.Drawing.Point(64, 72);
+			this.localSize.Name = "localSize";
+			this.localSize.Size = new System.Drawing.Size(128, 16);
+			this.localSize.TabIndex = 5;
+			// 
+			// localDate
+			// 
+			this.localDate.Location = new System.Drawing.Point(64, 48);
+			this.localDate.Name = "localDate";
+			this.localDate.Size = new System.Drawing.Size(128, 16);
+			this.localDate.TabIndex = 4;
+			// 
+			// localName
+			// 
+			this.localName.Location = new System.Drawing.Point(64, 24);
+			this.localName.Name = "localName";
+			this.localName.Size = new System.Drawing.Size(128, 16);
+			this.localName.TabIndex = 3;
+			// 
+			// label6
+			// 
+			this.label6.Location = new System.Drawing.Point(8, 72);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(56, 16);
+			this.label6.TabIndex = 2;
+			this.label6.Text = "Size:";
+			// 
+			// label5
+			// 
+			this.label5.Location = new System.Drawing.Point(8, 48);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(56, 16);
+			this.label5.TabIndex = 1;
+			this.label5.Text = "Date:";
+			// 
+			// label4
+			// 
+			this.label4.Location = new System.Drawing.Point(8, 24);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(56, 16);
+			this.label4.TabIndex = 0;
+			this.label4.Text = "Name:";
 			// 
 			// groupBox2
 			// 

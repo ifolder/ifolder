@@ -60,6 +60,11 @@ namespace Novell.iFolder.Web
 			if(conflict.IsFileNameConflict)
 			{
 				IsNameConflict = true;
+				ServerName = conflict.NonconflictedPath;
+			}
+			else
+			{
+				IsNameConflict = false;
 				FileNode serverFileNode = new FileNode(node);
 				Node localNode = col.GetNodeFromCollision(node);
 				FileNode localFileNode = new FileNode(localNode);
@@ -71,11 +76,6 @@ namespace Novell.iFolder.Web
 				ServerName = serverFileNode.GetFileName();
 				ServerDate = serverFileNode.LastWriteTime.ToString();
 				ServerSize = "N/A";
-			}
-			else
-			{
-				IsNameConflict = false;
-				LocalName = conflict.NonconflictedPath;
 			}
 		}
 
