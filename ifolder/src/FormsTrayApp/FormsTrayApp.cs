@@ -29,6 +29,7 @@ using System.Text;
 using System.Net;
 using System.Diagnostics;
 using System.IO;
+using System.Globalization;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
@@ -224,17 +225,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuHelp_Click(object sender, System.EventArgs e)
 		{
-			// TODO: i18n - need to use locale-specific path
-			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
-
-			try
-			{
-				Process.Start(helpPath);
-			}
-			catch
-			{
-				MessageBox.Show(resourceManager.GetString("helpFileError") + "\n" + helpPath);
-			}
+			new iFolderComponent().ShowHelp(Application.StartupPath);
 		}
 
 		private void menuExit_Click(object sender, System.EventArgs e)
