@@ -39,7 +39,8 @@ if BUILD_SUBPROJECTS
 all install installcheck: %: sub-%
 	@echo "$@ sub done"
 
-distclean-local: sub-distclean
+#distclean-local: sub-distclean
+distclean: sub-distclean
 	@echo "$@ sub done"
 
 # for all, install subprojects
