@@ -2959,36 +2959,48 @@ namespace Novell.iFolderCom
 
 		private void nodeEventHandler(SimiasEventArgs args)
 		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-
-			lock (eventQueue.SyncRoot)
+			try
 			{
-				// Put the event in the queue
-				eventQueue.Enqueue(eventArgs);
+				NodeEventArgs eventArgs = args as NodeEventArgs;
 
-				// Signal that there are events in the queue.
-				workEvent.Set();
+				lock (eventQueue.SyncRoot)
+				{
+					// Put the event in the queue
+					eventQueue.Enqueue(eventArgs);
+
+					// Signal that there are events in the queue.
+					workEvent.Set();
+				}
 			}
+			catch {}
 		}
 
 		private void collectionSyncHandler(SimiasEventArgs args)
 		{
-			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
-
-			if (currentiFolder.ID.Equals(syncEventArgs.ID))
+			try
 			{
-				BeginInvoke(collectionSyncDelegate, new object[] {syncEventArgs});
+				CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
+
+				if (currentiFolder.ID.Equals(syncEventArgs.ID))
+				{
+					BeginInvoke(collectionSyncDelegate, new object[] {syncEventArgs});
+				}
 			}
+			catch {}
 		}
 
 		private void fileSyncHandler(SimiasEventArgs args)
 		{
-			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
-
-			if (syncEventArgs.CollectionID.Equals(currentiFolder.ID))
+			try
 			{
-				BeginInvoke(fileSyncDelegate, new object[] {syncEventArgs});
+				FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+
+				if (syncEventArgs.CollectionID.Equals(currentiFolder.ID))
+				{
+					BeginInvoke(fileSyncDelegate, new object[] {syncEventArgs});
+				}
 			}
+			catch {}
 		}
 
 		private void setLimit_CheckedChanged(object sender, System.EventArgs e)
