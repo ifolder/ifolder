@@ -835,20 +835,23 @@ slist_invalidate_local_path (gpointer data, gpointer user_data)
 {
 	char *local_path;
 	NautilusFileInfo *file;
-	char file_uri [IFOLDER_BUF_SIZE];
+	char *file_uri;
 	
 	local_path = (char *)data;
 	
-	sprintf (file_uri, "file://%s", local_path);
+	file_uri = gnome_vfs_get_uri_from_local_path (local_path);
+	if (file_uri) {
+		file = nautilus_file_get_existing (file_uri);
+													 
+		if (file) {
+			g_printf ("invalidate_local_path: %s\n", file_uri);
+			/* Let nautilus run this in the main loop */
+			g_idle_add (invalidate_ifolder_extension_info, file);
+		} else {
+	g_print ("nautilus-ifolder: \"%s\" existing not found\n", file_uri);
+		}
 
-	file = nautilus_file_get_existing (file_uri);
-												 
-	if (file) {
-		g_printf ("invalidate_local_path: %s\n", file_uri);
-		/* Let nautilus run this in the main loop */
-		g_idle_add (invalidate_ifolder_extension_info, file);
-	} else {
-g_print ("nautilus-ifolder: \"%s\" existing not found\n", file_uri);
+		free (file_uri);
 	}
 }
 
