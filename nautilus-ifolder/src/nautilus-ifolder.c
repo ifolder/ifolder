@@ -332,6 +332,23 @@ ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
 /**
  * Nautilus Menu Provider Implementation
  */
+static void *
+create_ifolder_thread (gpointer user_data)
+{
+	NautilusFileInfo *file;
+	gint error;
+	
+	file = (NautilusFileInfo *)user_data;
+
+	error = create_local_ifolder (file);
+	if (error) {
+		/* FIXME: Figure out how to let the user know an error happened */
+		g_print ("An error occurred creating an iFolder\n");
+	} else {
+		nautilus_file_info_invalidate_extension_info (file);
+	}
+}
+
 static void
 create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
@@ -339,7 +356,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	GList *files;
 	NautilusFileInfo *file;
-	gint error;
+	pthread_t thread;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = NAUTILUS_FILE_INFO (files->data);
@@ -347,10 +364,24 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (file == NULL)
 		return;
 
-	error = create_local_ifolder (file);
+	pthread_create (&thread, 
+					NULL, 
+					create_ifolder_thread,
+					file);
+}
+
+static void *
+revert_ifolder_thread (gpointer user_data)
+{
+	NautilusFileInfo *file;
+	gint error;
+	
+	file = (NautilusFileInfo *)user_data;
+	
+	error = revert_ifolder (file);
 	if (error) {
 		/* FIXME: Figure out how to let the user know an error happened */
-		g_print ("An error occurred creating an iFolder\n");
+		g_print ("An error occurred reverting an iFolder\n");
 	} else {
 		nautilus_file_info_invalidate_extension_info (file);
 	}
@@ -363,6 +394,7 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	GList *files;
 	NautilusFileInfo *file;
+	pthread_t thread;
 	gint error;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
@@ -371,24 +403,41 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (file == NULL)
 		return;
 
-	error = revert_ifolder (file);
-	if (error) {
-		/* FIXME: Figure out how to let the user know an error happened */
-		g_print ("An error occurred reverting an iFolder\n");
-	} else {
-		nautilus_file_info_invalidate_extension_info (file);
+	pthread_create (&thread, 
+					NULL, 
+					revert_ifolder_thread,
+					file);
+}
+
+static void *
+ifolder_propdialog_thread (gpointer user_data)
+{
+	FILE *output;
+	char *args = (char *)user_data;
+	
+	output = popen (args, "r");
+	if (output == NULL) {
+		/* error calling mono nautilus-ifolder.exe */
+		g_print ("Error calling: ");
+		g_print (args);
+		g_print ("\n");
+		free (args);
+		return;
 	}
+	
+	free (args);
+	pclose (output);
 }
 
 static void
 share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Share with... selected\n");
-	FILE *output;
 	gchar *ifolder_path;
 	gchar *ifolder_id;
 	GList *files;
 	NautilusFileInfo *file;
+	pthread_t thread;
 	char args [1024];
 	memset (args, '\0', sizeof (args));
 	
@@ -415,25 +464,21 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (strlen (args) <= 0)
 		return;
 		
-	output = popen (args, "r");
-	if (output == NULL) {
-		/* error calling mono nautilus-ifolder.exe */
-		g_print ("Error calling 'mono nautilus-ifolder.exe share");
-		return;
-	}
-	
-	pclose (output);
+	pthread_create (&thread, 
+					NULL, 
+					ifolder_propdialog_thread,
+					strdup (args));
 }
 
 static void
 ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Properties selected\n");	
-	FILE *output;
 	gchar *ifolder_path;
 	gchar *ifolder_id;
 	GList *files;
 	NautilusFileInfo *file;
+	pthread_t thread;
 	char args [1024];
 	memset (args, '\0', sizeof (args));
 	
@@ -461,14 +506,10 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 	if (strlen (args) <= 0)
 		return;
 		
-	output = popen (args, "r");
-	if (output == NULL) {
-		/* error calling mono nautilus-ifolder.exe */
-		g_print ("Error calling 'mono nautilus-ifolder.exe properties");
-		return;
-	}
-	
-	pclose (output);
+	pthread_create (&thread, 
+					NULL, 
+					ifolder_propdialog_thread,
+					strdup (args));
 }
 
 static void
