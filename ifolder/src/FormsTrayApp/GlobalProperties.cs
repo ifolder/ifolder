@@ -171,6 +171,7 @@ namespace Novell.FormsTrayApp
 			//
 			InitializeComponent();
 
+			defaultInterval.TextChanged += new EventHandler(defaultInterval_ValueChanged);
 			ShowEnterpriseTab = false;
 			progressBar1.Visible = false;
 
@@ -353,8 +354,6 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.ThousandsSeparator = ((bool)(resources.GetObject("defaultInterval.ThousandsSeparator")));
 			this.defaultInterval.UpDownAlign = ((System.Windows.Forms.LeftRightAlignment)(resources.GetObject("defaultInterval.UpDownAlign")));
 			this.defaultInterval.Visible = ((bool)(resources.GetObject("defaultInterval.Visible")));
-			this.defaultInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.defaultInterval_KeyPress);
-			this.defaultInterval.ValueChanged += new System.EventHandler(this.defaultInterval_ValueChanged);
 			// 
 			// displayConfirmation
 			// 
@@ -2823,15 +2822,8 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
-					if (!autoSync.Checked)
-					{
-						// Save the default sync interval.
-						ifWebService.SetDefaultSyncInterval(System.Threading.Timeout.Infinite);
-					}
-					else
-					{
-						ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
-					}
+					// Save the default sync interval.
+					ifWebService.SetDefaultSyncInterval(autoSync.Checked ? (int)defaultInterval.Value : System.Threading.Timeout.Infinite);
 				}
 				catch (Exception ex)
 				{
@@ -2922,16 +2914,13 @@ namespace Novell.FormsTrayApp
 		{
 			if (defaultInterval.Focused)
 			{
+				if (!defaultInterval.Text.Equals(string.Empty))
+				{
+					defaultInterval.Value = decimal.Parse(defaultInterval.Text);
+				}
+
 				apply.Enabled = cancel.Enabled = true;
 			}
-		}
-
-		private void defaultInterval_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-		{
-/*			if (((char)0x30 <= e.KeyChar) && (e.KeyChar <= (char)0x39))
-			{
-				apply.Enabled = cancel.Enabled = true;
-			}*/
 		}
 
 		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
