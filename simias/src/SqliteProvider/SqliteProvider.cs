@@ -942,31 +942,31 @@ namespace Simias.Storage.Provider.Sqlite
 			}
 			switch (query.Operation)
 			{
-				case Query.Operator.Equal:
+				case SearchOp.Equal:
 					op = string.Format("= '{0}'", safeValue);
 					break;
-				case Query.Operator.Not_Equal:
+				case SearchOp.Not_Equal:
 					op = string.Format("!= '{0}'", safeValue);
 					break;
-				case Query.Operator.Begins:
+				case SearchOp.Begins:
 					op = string.Format("LIKE '{0}%'", safeValue);
 					break;
-				case Query.Operator.Ends:
+				case SearchOp.Ends:
 					op = string.Format("LIKE '%{0}'", safeValue);
 					break;
-				case Query.Operator.Contains:
+				case SearchOp.Contains:
 					op = string.Format("LIKE '%{0}%'", safeValue);
 					break;
-				case Query.Operator.Greater:
+				case SearchOp.Greater:
 					op = string.Format("> '{0}'", safeValue);
 					break;
-				case Query.Operator.Less:
+				case SearchOp.Less:
 					op = string.Format("< '{0}'", safeValue);
 					break;
-				case Query.Operator.Greater_Equal:
+				case SearchOp.Greater_Equal:
 					op = string.Format(">= '{0}'", safeValue);
 					break;
-				case Query.Operator.Less_Equal:
+				case SearchOp.Less_Equal:
 					op = string.Format("<= '{0}'", safeValue);
 					break;
 			}
