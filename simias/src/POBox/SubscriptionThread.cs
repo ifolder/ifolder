@@ -128,7 +128,7 @@ namespace Simias.POBox
 			log.Debug( "SubscriptionThread::DoInvited called" );
 
 			POBoxService poService = new POBoxService();
-			WebState webState = new WebState(subscription.SubscriptionCollectionID);
+			WebState webState = new WebState(subscription.DomainID, subscription.SubscriptionCollectionID);
 			try
 			{
 				webState.InitializeWebClient(poService);

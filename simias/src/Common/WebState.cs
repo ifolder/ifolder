@@ -28,6 +28,8 @@ using System.Web.Services.Protocols;
 
 using Simias.Storage;
 using Simias.Authentication;
+using Simias.Event;
+using Simias.Client.Event;
 
 namespace Simias
 {
@@ -45,21 +47,6 @@ namespace Simias
 		NetworkCredential			credentials;
 		
 		/// <summary>
-		/// Get a WebState object for the specified collection.
-		/// </summary>
-		/// <param name="collectionID">The ID of the Collection.</param>
-		public WebState(string collectionID) :
-			this()
-		{
-			// Get the credentials for this collection.
-			credentials = new Credentials(collectionID).GetCredentials();
-			if (credentials == null)
-			{
-				throw new NeedCredentialsException();
-			}
-		}
-
-		/// <summary>
 		/// Get a WebState object for the specified domain.
 		/// </summary>
 		/// <param name="domainID">The domain ID.</param>
@@ -71,6 +58,7 @@ namespace Simias
 			credentials = new Credentials(domainID, memberID).GetCredentials();
 			if (credentials == null)
 			{
+				new EventPublisher().RaiseEvent(new NeedCredentialsEventArgs(domainID, memberID));
 				throw new NeedCredentialsException();
 			}
 		}

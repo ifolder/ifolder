@@ -284,6 +284,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Credentials\NeedCredentialsEventSubscriber.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Domain\DomainAgent.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -199,6 +199,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NeedCredentialsEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NodeEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
