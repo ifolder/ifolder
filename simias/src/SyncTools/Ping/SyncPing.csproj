@@ -3,22 +3,22 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{C93C8AC4-945E-4080-BEC7-7A54ED198831}"
+        ProjectGuid = "{99CAC662-0DDA-4094-8473-CDFE1ACE7AD6}"
     >
         <Build>
             <Settings
-                ApplicationIcon = ""
+                ApplicationIcon = "App.ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "EmailInviteAgent"
+                AssemblyName = "SyncPing"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Library"
+                OutputType = "Exe"
                 PreBuildEvent = ""
-                PostBuildEvent = "copy $(TargetPath) $(SolutionDir)..\stage"
-                RootNamespace = "Novell.iFolder.Agent"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                RootNamespace = "Novell.iFolder.Sync.Tools"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = "LibraryEmail.xml"
+                    DocumentationFile = "ping.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = "LibraryEmail.xml"
+                    DocumentationFile = "ping.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -67,84 +67,48 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "System.Web"
-                    AssemblyName = "System.Web"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
-                />
-                <Reference
-                    Name = "Agent"
-                    AssemblyName = "Agent"
-                    HintPath = "..\..\Agent\bin\Debug\Agent.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "StoreProvider"
-                    AssemblyName = "StoreProvider"
-                    HintPath = "..\..\StoreProvider\StoreProvider.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\..\Identity\Identity.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\..\AddressBook\AddressBook.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\CollectionStore\CollectionStore.dll"
-                    Private = "True"
-                />
-                <Reference
-                    Name = "InviteAgent"
-                    AssemblyName = "InviteAgent"
-                    HintPath = "..\Library\bin\Debug\InviteAgent.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\Common\Common.dll"
+                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Configuration"
-                    AssemblyName = "Configuration"
-                    HintPath = "..\..\Configuration\Configuration.dll"
+                    Name = "SyncCommon"
+                    Project = "{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Smtp"
-                    AssemblyName = "Smtp"
-                    HintPath = "..\..\Smtp\Smtp.dll"
+                    Name = "SyncManager"
+                    Project = "{7C3A9242-E1EF-43F2-8297-4C1C98892946}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
+                    RelPath = "App.ico"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "EmailInviteAgent.cs"
+                    RelPath = "SyncPinger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -44,6 +44,10 @@ namespace Simias.Sync
 			storeID = store.ID;
 		}
 		
+		/// <summary>
+		/// Generate a string representation of the store information.
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString()
 		{
 			return String.Format("Machine: {0}, User: {1}, OS: {2}, Store: {3}", machine, user, os, storeID);
@@ -51,21 +55,33 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The store machine name.
+		/// </summary>
 		public string Machine
 		{
 			get { return machine; }
 		}
 		
+		/// <summary>
+		/// The store user name.
+		/// </summary>
 		public string User
 		{
 			get { return user; }
 		}
 		
+		/// <summary>
+		/// The store operating system name.
+		/// </summary>
 		public string OS
 		{
 			get { return os; }
 		}
 		
+		/// <summary>
+		/// The store id.
+		/// </summary>
 		public string StoreID
 		{
 			get { return storeID; }

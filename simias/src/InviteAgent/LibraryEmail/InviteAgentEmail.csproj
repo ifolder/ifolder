@@ -3,13 +3,13 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{0BFAB3F8-375F-4D51-B04D-1D455F9C5E1D}"
+        ProjectGuid = "{C93C8AC4-945E-4080-BEC7-7A54ED198831}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "CollectionStoreTests"
+                AssemblyName = "EmailInviteAgent"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "Simias.Storage.Tests"
+                RootNamespace = "Novell.iFolder.Agent"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = ""
+                    DocumentationFile = "email.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = ""
+                    DocumentationFile = "email.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -80,39 +80,59 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
+                    Name = "System.Web"
+                    AssemblyName = "System.Web"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                />
+                <Reference
+                    Name = "Agent"
+                    AssemblyName = "Agent"
+                    HintPath = "..\..\Agent\bin\Debug\Agent.dll"
+                    Private = "True"
+                />
+                <Reference
+                    Name = "StoreProvider"
+                    AssemblyName = "StoreProvider"
+                    HintPath = "..\..\StoreProvider\StoreProvider.dll"
+                    Private = "True"
+                />
+                <Reference
+                    Name = "Identity"
+                    AssemblyName = "Identity"
+                    HintPath = "..\..\Identity\Identity.dll"
+                    Private = "True"
+                />
+                <Reference
+                    Name = "AddressBook"
+                    AssemblyName = "AddressBook"
+                    HintPath = "..\..\AddressBook\AddressBook.dll"
+                    Private = "True"
+                />
+                <Reference
                     Name = "CollectionStore"
-                    Project = "{CB7ACE79-DE8D-4A5C-A8EF-4606199B225D}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    AssemblyName = "CollectionStore"
+                    HintPath = "..\..\CollectionStore\CollectionStore.dll"
+                    Private = "True"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\tools\nunit\bin\nunit.framework.dll"
+                    Name = "InviteAgent"
+                    AssemblyName = "InviteAgent"
+                    HintPath = "..\Library\bin\Debug\InviteAgent.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\Common\Common.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
+                    Name = "Configuration"
+                    AssemblyName = "Configuration"
+                    HintPath = "..\..\Configuration\Configuration.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.Utilities"
-                    AssemblyName = "Novell.Security.SecureSink.Utilities"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.Utilities.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink"
-                    AssemblyName = "Novell.Security.SecureSink"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.dll"
+                    Name = "Smtp"
+                    AssemblyName = "Smtp"
+                    HintPath = "..\..\Smtp\Smtp.dll"
                 />
             </References>
         </Build>
@@ -124,7 +144,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CollectionStoreTests.cs"
+                    RelPath = "EmailInviteAgent.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

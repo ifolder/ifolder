@@ -133,7 +133,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncLogicLiteTests", "src\S
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ping", "src\SyncTools\Ping\Ping.csproj", "{99CAC662-0DDA-4094-8473-CDFE1ACE7AD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncPing", "src\SyncTools\Ping\SyncPing.csproj", "{99CAC662-0DDA-4094-8473-CDFE1ACE7AD6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -170,6 +170,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindowsTests", "
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEventBroker", "src\CollectionEvents\CsEventBroker\CsEventBroker.csproj", "{66557955-5474-4E02-B14E-8DA278BAC6EB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferLibrary", "src\RemotingSniffer\Library\RemotingSnifferLibrary.csproj", "{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferApplication", "src\RemotingSniffer\ApplicationForms\RemotingSnifferApplication.csproj", "{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InviteAgentEmail", "src\InviteAgent\LibraryEmail\InviteAgentEmail.csproj", "{C93C8AC4-945E-4080-BEC7-7A54ED198831}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferTests", "src\RemotingSniffer\Tests\RemotingSnifferTests.csproj", "{DD373AFC-9C3E-497E-A307-EE4362D84940}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -339,6 +355,22 @@ Global
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
+		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Debug.ActiveCfg = Debug|.NET
+		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Debug.Build.0 = Debug|.NET
+		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Release.ActiveCfg = Release|.NET
+		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Release.Build.0 = Release|.NET
+		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Debug.ActiveCfg = Debug|.NET
+		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Debug.Build.0 = Debug|.NET
+		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Release.ActiveCfg = Release|.NET
+		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Release.Build.0 = Release|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Debug.ActiveCfg = Debug|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Debug.Build.0 = Debug|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Release.ActiveCfg = Release|.NET
+		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Release.Build.0 = Release|.NET
+		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Debug.ActiveCfg = Debug|.NET
+		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Debug.Build.0 = Debug|.NET
+		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Release.ActiveCfg = Release|.NET
+		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -70,9 +70,9 @@ namespace Simias.Sync
 		{
 			ulong incarnation = baseNode.MasterIncarnation;
 
-			foreach(NodeStream ns in baseNode.GetStreamList())
+			foreach(FileSystemEntry fse in baseNode.GetFileSystemEntryList())
 			{
-				ns.Delete(true);
+				fse.Delete(true);
 			}
 
 			Node ts = baseNode.Delete();

@@ -3,22 +3,22 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{99CAC662-0DDA-4094-8473-CDFE1ACE7AD6}"
+        ProjectGuid = "{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}"
     >
         <Build>
             <Settings
                 ApplicationIcon = "App.ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "SyncPing"
+                AssemblyName = "RemotingSniffer"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Exe"
+                OutputType = "WinExe"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "Novell.iFolder.Sync.Tools"
+                RootNamespace = "Simias.Sniffer"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = "Ping.xml"
+                    DocumentationFile = "form.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = "Ping.xml"
+                    DocumentationFile = "form.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -75,23 +75,23 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
+                <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
+                    AssemblyName = "System.XML"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Common"
-                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "SyncCommon"
-                    Project = "{0C57D8FE-56E5-4DBE-92F4-F58D205CAA26}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "SyncManager"
-                    Project = "{7C3A9242-E1EF-43F2-8297-4C1C98892946}"
+                    Name = "RemotingSnifferLibrary"
+                    Project = "{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
@@ -108,9 +108,14 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "SyncPinger.cs"
-                    SubType = "Code"
+                    RelPath = "RemotingSnifferForm.cs"
+                    SubType = "Form"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RemotingSnifferForm.resx"
+                    DependentUpon = "RemotingSnifferForm.cs"
+                    BuildAction = "EmbeddedResource"
                 />
             </Include>
         </Files>

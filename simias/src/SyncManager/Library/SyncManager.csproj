@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = ""
+                    DocumentationFile = "library.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = ""
+                    DocumentationFile = "library.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -110,24 +110,29 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
-                />
-                <Reference
                     Name = "Novell.Security.SecureSink"
                     AssemblyName = "Novell.Security.SecureSink"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.dll"
+                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.dll"
                 />
                 <Reference
                     Name = "Novell.Security.SecureSink.SecurityProvider"
                     AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.dll"
+                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
                 />
                 <Reference
                     Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
                     AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
+                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink.Utilities"
+                    AssemblyName = "Novell.Security.SecureSink.Utilities"
+                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.Utilities.dll"
                 />
             </References>
         </Build>

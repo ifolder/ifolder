@@ -30,7 +30,7 @@ SyncManagerTests.dll: $(SyncManagerTests_CSFILES) $(SyncManagerTests_RESOURCES)
 	
 install-exec-local: SyncManager.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SyncManager.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SyncManager.dll remoting.config $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \

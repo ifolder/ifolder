@@ -3,13 +3,13 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{0BFAB3F8-375F-4D51-B04D-1D455F9C5E1D}"
+        ProjectGuid = "{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "CollectionStoreTests"
+                AssemblyName = "RemotingSnifferLibrary"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "Simias.Storage.Tests"
+                RootNamespace = "Simias.Sniffer"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = ""
+                    DocumentationFile = "library.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = ""
+                    DocumentationFile = "library.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -67,52 +67,27 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    AssemblyName = "System.XML"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "CollectionStore"
-                    Project = "{CB7ACE79-DE8D-4A5C-A8EF-4606199B225D}"
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
+                />
+                <Reference
+                    Name = "Common"
+                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\tools\nunit\bin\nunit.framework.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.Utilities"
-                    AssemblyName = "Novell.Security.SecureSink.Utilities"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.Utilities.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink"
-                    AssemblyName = "Novell.Security.SecureSink"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.dll"
                 />
             </References>
         </Build>
@@ -124,7 +99,22 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CollectionStoreTests.cs"
+                    RelPath = "SnifferClientChannelSink.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SnifferClientChannelSinkProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SnifferServerChannelSink.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SnifferServerChannelSinkProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

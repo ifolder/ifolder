@@ -40,7 +40,7 @@
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
-                    WarningLevel = "1"
+                    WarningLevel = "4"
                 />
                 <Config
                     Name = "Release"
@@ -60,7 +60,7 @@
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
-                    WarningLevel = "1"
+                    WarningLevel = "4"
                 />
             </Settings>
             <References>

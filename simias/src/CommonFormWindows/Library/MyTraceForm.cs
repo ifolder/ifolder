@@ -37,54 +37,60 @@ namespace Simias
 	/// </summary>
 	public class MyTraceForm : Form
 	{
-		private ListView listView;
-		private Container components = null;
-		private System.Windows.Forms.ContextMenu lvContextMenu;
-		private System.Windows.Forms.MenuItem pauseMenu;
-		private System.Windows.Forms.MenuItem clearAllMenu;
-		private System.Windows.Forms.MenuItem copyMenu;
-		private MyTraceListener traceListener;
-
+		private const int TASKBAR_HEIGHT = 30;
+		private const int SCROLLBAR_WIDTH = 21;
 		private const int WM_QUERYENDSESSION = 0x0011;
+
+		private Container components = null;
+
+		private ListView logListView;
+		private ContextMenu logContextMenu;
+		private MenuItem scrollLockMenuItem;
+		private MenuItem copyMenuItem;
+		private MenuItem clearMenuItem;
+
+		private MyTraceListener traceListener;
+		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private bool shutdown = false;
 
 		/// <summary>
-		/// Default Constructor
+		/// Constructor
 		/// </summary>
 		public MyTraceForm()
 		{
 			InitializeComponent();
 
-			// put the window in the bottom corner
+			// put the form in the bottom corner of the screen
 			Rectangle screen = SystemInformation.VirtualScreen;
 			Point start = new Point();
 
 			start.X = screen.Width - this.Size.Width - 1;
-			start.Y = screen.Height - this.Size.Height - 30 - 1;
+			start.Y = screen.Height - this.Size.Height - TASKBAR_HEIGHT - 1;
 
 			this.Location = start;
 
-			this.listView.Columns.Add("Messages",  this.listView.Size.Width - 4, HorizontalAlignment.Left);
-
-			// start listeners
-			traceListener = new MyTraceListener(listView);
+			// start listener
+			traceListener = new MyTraceListener(logListView);
 			Trace.Listeners.Add(traceListener);
 
-			// Context menu for list view.
-			pauseMenu = new MenuItem("Pause");
-			pauseMenu.Click += new EventHandler(pauseMenu_Click);
+			// set log list view column size
+			MyTraceForm_SizeChanged(null, null);
+		}
 
-			copyMenu = new MenuItem("Copy");
-			copyMenu.Click += new EventHandler(copyMenu_Click);
+		/// <summary>
+		/// Process window messages.
+		/// </summary>
+		/// <param name="m">The window message.</param>
+		protected override void WndProc(ref Message m)
+		{
+			switch(m.Msg)
+			{
+				case WM_QUERYENDSESSION:
+					shutdown = true;
+					break;
+			}
 
-			clearAllMenu = new MenuItem("Clear all entries");
-			clearAllMenu.Click += new EventHandler(clearAllMenu_Click);
-
-			lvContextMenu = new ContextMenu();
-			lvContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {pauseMenu, copyMenu, clearAllMenu});
-			listView.ContextMenu = lvContextMenu;
-
-			this.SizeChanged += new EventHandler(MyTraceForm_SizeChanged);
+			base.WndProc(ref m);
 		}
 
 		#region IDispose Members
@@ -115,27 +121,69 @@ namespace Simias
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.listView = new System.Windows.Forms.ListView();
+			this.logListView = new System.Windows.Forms.ListView();
+			this.logContextMenu = new System.Windows.Forms.ContextMenu();
+			this.scrollLockMenuItem = new System.Windows.Forms.MenuItem();
+			this.copyMenuItem = new System.Windows.Forms.MenuItem();
+			this.clearMenuItem = new System.Windows.Forms.MenuItem();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
-			// listView
+			// logListView
 			// 
-			this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listView.Location = new System.Drawing.Point(0, 0);
-			this.listView.Name = "listView";
-			this.listView.Size = new System.Drawing.Size(352, 214);
-			this.listView.TabIndex = 0;
-			this.listView.View = System.Windows.Forms.View.Details;
+			this.logListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+																						  this.columnHeader1});
+			this.logListView.ContextMenu = this.logContextMenu;
+			this.logListView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.logListView.FullRowSelect = true;
+			this.logListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.logListView.Location = new System.Drawing.Point(0, 0);
+			this.logListView.Name = "logListView";
+			this.logListView.Size = new System.Drawing.Size(352, 214);
+			this.logListView.TabIndex = 0;
+			this.logListView.View = System.Windows.Forms.View.Details;
+			// 
+			// logContextMenu
+			// 
+			this.logContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						   this.scrollLockMenuItem,
+																						   this.copyMenuItem,
+																						   this.clearMenuItem});
+			// 
+			// scrollLockMenuItem
+			// 
+			this.scrollLockMenuItem.Checked = true;
+			this.scrollLockMenuItem.Index = 0;
+			this.scrollLockMenuItem.Text = "Scroll Lock";
+			this.scrollLockMenuItem.Click += new System.EventHandler(this.scrollLockMenuItem_Click);
+			// 
+			// copyMenuItem
+			// 
+			this.copyMenuItem.Index = 1;
+			this.copyMenuItem.Text = "Copy Log";
+			this.copyMenuItem.Click += new System.EventHandler(this.copyMenuItem_Click);
+			// 
+			// clearMenuItem
+			// 
+			this.clearMenuItem.Index = 2;
+			this.clearMenuItem.Text = "Clear All";
+			this.clearMenuItem.Click += new System.EventHandler(this.clearMenuItem_Click);
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Message";
+			this.columnHeader1.Width = 256;
 			// 
 			// MyTraceForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(352, 214);
-			this.Controls.Add(this.listView);
+			this.Controls.Add(this.logListView);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.Name = "MyTraceForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Denali Trace Window";
+			this.SizeChanged += new System.EventHandler(this.MyTraceForm_SizeChanged);
 			this.ResumeLayout(false);
 
 		}
@@ -143,58 +191,48 @@ namespace Simias
 		#endregion
 
 		#region Event Handlers
-		private void pauseMenu_Click(object sender, EventArgs e)
+		
+		private void scrollLockMenuItem_Click(object sender, EventArgs e)
 		{
-			traceListener.Pause = !pauseMenu.Checked;
-			pauseMenu.Checked = !pauseMenu.Checked;
+			scrollLockMenuItem.Checked = !scrollLockMenuItem.Checked;
+			traceListener.ScrollLock = scrollLockMenuItem.Checked;
 		}
 
-		private void clearAllMenu_Click(object sender, EventArgs e)
+		private void copyMenuItem_Click(object sender, EventArgs e)
 		{
-			listView.Items.Clear();
-		}
-
-		private void copyMenu_Click(object sender, EventArgs e)
-		{
-			StringBuilder sb = new StringBuilder();
-			foreach (ListViewItem lvitem in listView.SelectedItems)
+			StringBuilder buffer = new StringBuilder();
+			
+			foreach (ListViewItem item in logListView.SelectedItems)
 			{
-				sb.AppendFormat("{0}\r\n", lvitem.Text);
+				buffer.AppendFormat("{0}{1}", item.Text, Environment.NewLine);
 			}
 
-			Clipboard.SetDataObject(sb.ToString(), true);
+			Clipboard.SetDataObject(buffer.ToString(), true);
+		}
+
+		private void clearMenuItem_Click(object sender, EventArgs e)
+		{
+			logListView.Items.Clear();
 		}
 
 		private void MyTraceForm_SizeChanged(object sender, EventArgs e)
 		{
-			// When the form size is changed, change the width of the column.
-			this.listView.Columns[0].Width = this.listView.Size.Width - 22;
+			// update the width of the column
+			logListView.Columns[0].Width = (logListView.Size.Width - SCROLLBAR_WIDTH - 1);
 		}
+
 		#endregion
 
 		#region Properties
+		
 		/// <summary>
-		/// Gets a value telling if the form received a shutdown notification from the operating system.
+		/// Has this form received a shutdown message?
 		/// </summary>
 		public bool Shutdown
 		{
-			get
-			{
-				return this.shutdown;
-			}
+			get { return shutdown; }
 		}
+
 		#endregion
-
-		protected override void WndProc(ref Message m)
-		{
-			switch (m.Msg)
-			{
-				case WM_QUERYENDSESSION:
-					this.shutdown = true;
-					break;
-			}
-
-			base.WndProc (ref m);
-		}
 	}
 }

@@ -22,57 +22,48 @@
  ***********************************************************************/
 
 using System;
-using System.IO;
-using System.Windows.Forms;
-using System.Diagnostics;
+using System.Runtime.Remoting.Channels;
 
-namespace Simias
+using Simias;
+
+namespace Simias.Sync
 {
 	/// <summary>
-	/// My Trace Listener
+	/// Sniffer Server Channel Sink Provider
 	/// </summary>
-	public class MyTraceListener : TraceListener
+	public class SnifferServerChannelSinkProvider : IServerChannelSinkProvider
 	{
-		ListView list;
-		bool scrollLock = false;
-
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
-		public MyTraceListener(ListView list)
+		private IServerChannelSinkProvider nextProvider;
+		
+		public SnifferServerChannelSinkProvider()
 		{
-			this.list = list;
 		}
+		
+		#region IServerChannelSinkProvider Members
 
-		/// <summary>
-		/// Write a message to the trace listeners.
-		/// </summary>
-		/// <param name="message">The trace message.</param>
-		public override void Write(string message)
+		public IServerChannelSink CreateSink(IChannelReceiver channel)
 		{
-			WriteLine(message);
-		}
-
-		/// <summary>
-		/// Write a message to the trace listeners.
-		/// </summary>
-		/// <param name="message">The trace message.</param>
-		public override void WriteLine(string message)
-		{
-			ListViewItem item = list.Items.Add(message);
+			IServerChannelSink nextSink = null;
 			
-			if (!scrollLock)
+			if (nextProvider != null)
 			{
-				item.ListView.EnsureVisible(item.Index);
+				nextSink = nextProvider.CreateSink(channel);
 			}
+
+			return new SnifferServerChannelSink(nextSink);
 		}
 
-		/// <summary>
-		/// The state of the scroll lock.
-		/// </summary>
-		public bool ScrollLock
+		public IServerChannelSinkProvider Next
 		{
-			set { scrollLock = value; }
+			get { return nextProvider; }
+
+			set { nextProvider = value; }
 		}
+
+		public void GetChannelData(IChannelDataStore channelData)
+		{
+		}
+
+		#endregion
 	}
 }

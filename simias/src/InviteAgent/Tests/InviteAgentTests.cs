@@ -76,7 +76,7 @@ namespace Simias.Agent.Tests
 			// create collection
 			collection = store.CreateCollection("Agent Collection");
 			collection.Properties.AddProperty(SyncCollection.HostPropertyName, "localhost");
-			collection.Properties.AddProperty(SyncCollection.PortPropertyName, SyncProperties._DefaultPort);
+			collection.Properties.AddProperty(SyncCollection.PortPropertyName, SyncProperties.SuggestedPort);
 			collection.Commit(true);
 		}
 

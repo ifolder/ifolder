@@ -33,11 +33,19 @@ namespace Simias.Sync
 	{
 		private SyncStore store;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="store">The sync store object.</param>
 		public SyncStoreService(SyncStore store)
 		{
 			this.store = store;
 		}
 
+		/// <summary>
+		/// Generate the sync store information.
+		/// </summary>
+		/// <returns></returns>
 		public SyncStoreInfo Ping()
 		{
 			return new SyncStoreInfo(store);

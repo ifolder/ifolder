@@ -50,7 +50,7 @@ namespace Simias.Sync
 		/// <returns>A ping object from the server.</returns>
 		public static SyncStoreInfo PingStore(SyncStore store, string host)
 		{
-			return PingStore(store, host, SyncProperties._DefaultPort);
+			return PingStore(store, host, SyncProperties.SuggestedPort);
 		}
 
 		/// <summary>

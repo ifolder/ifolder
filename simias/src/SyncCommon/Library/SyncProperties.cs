@@ -35,23 +35,46 @@ namespace Simias.Sync
 	[Serializable]
 	public class SyncProperties : ICloneable
 	{
-		public static readonly string _DefaultHost = MyDns.GetHostName();
-		public static readonly string _DefaultStorePath = null;
-		public static readonly int _DefaultPort = 6436;
-		public static readonly Type _DefaultLogicFactory = typeof(SyncLogicFactory);
-		public static readonly int _DefaultSyncInterval = 5;
-		public static readonly SyncChannelFormatters _DefaultChannelFormatter = SyncChannelFormatters.Binary;
-
-		// properties
-		private string host	= _DefaultHost;
-		private string path	= _DefaultStorePath;
-		private int port = _DefaultPort;
-		private Type logicFactory = _DefaultLogicFactory;
-		private int interval = _DefaultSyncInterval;
-		private SyncChannelFormatters formatter = _DefaultChannelFormatter;
+		/// <summary>
+		/// The suggested sync host or ip address for the current machine.
+		/// </summary>
+		public static readonly string SuggestedHost = MyDns.GetHostName();
 
 		/// <summary>
-		/// Default Constructor
+		/// The suggested collection store path for the current machine.
+		/// </summary>
+		public static readonly string SuggestedStorePath = null;
+
+		/// <summary>
+		/// The suggested sync port for the current machine.
+		/// </summary>
+		public static readonly int SuggestedPort = 6436;
+
+		/// <summary>
+		/// The suggested sync logic factory for syncing.
+		/// </summary>
+		public static readonly Type SuggestedLogicFactory = typeof(SyncLogicFactory);
+		
+		/// <summary>
+		/// The suggested sync interval in seconds.
+		/// </summary>
+		public static readonly int SuggestedSyncInterval = 5;
+
+		/// <summary>
+		/// The suggested sync channel formatter.
+		/// </summary>
+		public static readonly SyncChannelFormatters SuggestedChannelFormatter = SyncChannelFormatters.Binary;
+
+		// properties
+		private string host	= SuggestedHost;
+		private string path	= SuggestedStorePath;
+		private int port = SuggestedPort;
+		private Type logicFactory = SuggestedLogicFactory;
+		private int interval = SuggestedSyncInterval;
+		private SyncChannelFormatters formatter = SuggestedChannelFormatter;
+
+		/// <summary>
+		/// Constructor
 		/// </summary>
 		public SyncProperties()
 		{
@@ -59,9 +82,13 @@ namespace Simias.Sync
 
 		#region ICloneable Members
 
+		/// <summary>
+		/// Create a copy of the sync properties object.
+		/// </summary>
+		/// <returns>A copy of the sync properties object.</returns>
 		public object Clone()
 		{
-			// wach carefully!
+			// note: watch carefully!
 			SyncProperties clone = new SyncProperties();
 			
 			clone.host = host;
@@ -78,12 +105,18 @@ namespace Simias.Sync
 
 		#region Properties
 		
+		/// <summary>
+		/// The default sync host.
+		/// </summary>
 		public string DefaultHost
 		{
 			get { return host; }
 			set { host = value; }
 		}
 
+		/// <summary>
+		/// The collection store path.
+		/// </summary>
 		public string StorePath
 		{
 			get { return path; }
@@ -100,24 +133,36 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// The default sync port.
+		/// </summary>
 		public int DefaultPort
 		{
 			get { return port; }
 			set { port = value; }
 		}
 
+		/// <summary>
+		/// The default sync interval in seconds.
+		/// </summary>
 		public int DefaultSyncInterval
 		{
 			get { return interval; }
 			set { interval = value; }
 		}
 
+		/// <summary>
+		/// The default sync logic factory.
+		/// </summary>
 		public Type DefaultLogicFactory
 		{
 			get { return logicFactory; }
 			set { logicFactory = value; }
 		}
 
+		/// <summary>
+		/// The default channel formatter.
+		/// </summary>
 		public SyncChannelFormatters DefaultChannelFormatter
 		{
 			get { return formatter; }

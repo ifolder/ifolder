@@ -36,10 +36,16 @@ namespace Simias.Sync.Tests
 	[TestFixture]
 	public class SyncCommonTests : Assertion
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public SyncCommonTests()
 		{
 		}
 
+		/// <summary>
+		/// Test channel formatters enumeration.
+		/// </summary>
 		[Test]
 		public void TestFormattersEnum()
 		{
@@ -51,6 +57,9 @@ namespace Simias.Sync.Tests
 			}
 		}
 
+		/// <summary>
+		/// Test the sync store class.
+		/// </summary>
 		[Test]
 		public void TestSyncStore()
 		{
@@ -64,6 +73,9 @@ namespace Simias.Sync.Tests
 			store.Delete();
 		}
 
+		/// <summary>
+		/// Test the sync collection class.
+		/// </summary>
 		[Test]
 		public void TestSyncCollection()
 		{
