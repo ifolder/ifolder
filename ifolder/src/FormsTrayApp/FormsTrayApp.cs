@@ -108,9 +108,10 @@ namespace Novell.FormsTrayApp
 		{
 			resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
-			// Check for currently running instance.
-			Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
-			if (iFolderProcess.Length != 1)
+			// Check for currently running instance.  Search for existing window ...
+			string windowName = resourceManager.GetString("$this.Text") + " " + Environment.UserName;
+			Novell.Win32Util.Win32Window window = Novell.Win32Util.Win32Window.FindWindow(null, windowName);
+			if (window != null)
 			{
 				MessageBox.Show(resourceManager.GetString("iFolderRunning"));
 				shutdown = true;
@@ -118,6 +119,9 @@ namespace Novell.FormsTrayApp
 			else
 			{
 				InitializeComponent();
+
+				// Append the username to the window string so we can search for it.
+				this.Text += " " + Environment.UserName;
 
 				this.components = new System.ComponentModel.Container();
 
