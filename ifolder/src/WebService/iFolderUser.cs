@@ -23,6 +23,9 @@
 
 using System;
 
+using Simias;
+using Simias.Storage;
+
 namespace Novell.iFolder.Web
 {
 	/// <summary>
@@ -58,6 +61,19 @@ namespace Novell.iFolder.Web
 		}
 */
 
+		public iFolderUser( Simias.Storage.Member member )
+		{
+			this.Name = member.Name;
+			this.Surname = member.Family;
+			this.FirstName = member.Given;
+			this.FN = member.FN;
+			this.UserID = member.UserID;
+			this.ID = member.ID;
+			this.State = "Member";
+			this.IsOwner = member.IsOwner;
+			this.Rights = member.Rights.ToString();
+		}
+
 		public iFolderUser(Simias.Storage.Member member,
 							Novell.AddressBook.Contact contact)
 		{
@@ -80,6 +96,60 @@ namespace Novell.iFolder.Web
 			this.State = "Member";
 			this.IsOwner = member.IsOwner;
 			this.Rights = member.Rights.ToString();
+		}
+
+		public iFolderUser( Simias.POBox.Subscription sub )
+		{
+			this.Name = sub.ToName;
+			this.UserID = sub.ToIdentity;
+
+			// Need to get the member for first and last name
+			Simias.Storage.Domain domain = Store.GetStore().GetDomain( sub.DomainID );
+			if ( domain != null )
+			{
+				Simias.Storage.Member simMem = domain.GetMemberByID( sub.ToIdentity );
+				if ( simMem != null )
+				{
+					this.Surname = simMem.Family;
+					this.FirstName = simMem.Given;
+					this.FN = simMem.FN;
+				}
+			}
+
+			this.Rights = sub.SubscriptionRights.ToString();
+			this.ID = sub.ID;
+			this.iFolderID = sub.SubscriptionCollectionID;
+			this.State = "Invited";
+			this.IsOwner = false;
+
+			if(sub.SubscriptionState == 
+				Simias.POBox.SubscriptionStates.Invited)
+			{
+				this.State = "WaitSync";
+			}
+			else if(sub.SubscriptionState == 
+				Simias.POBox.SubscriptionStates.Posted)
+			{
+				this.State = "Invited";
+			}
+			else if(sub.SubscriptionState == 
+				Simias.POBox.SubscriptionStates.Pending)
+			{
+				this.State = "AccessRequest";
+			}
+			else if(sub.SubscriptionState == 
+				Simias.POBox.SubscriptionStates.Responded)
+			{
+				if(sub.SubscriptionDisposition ==
+					Simias.POBox.SubscriptionDispositions.Declined)
+					this.State = "Declined";
+				else
+					this.State = "Unknown";
+			}
+			else
+			{
+				this.State = "Unknown";
+			}
 		}
 
 		public iFolderUser(Simias.POBox.Subscription sub,
