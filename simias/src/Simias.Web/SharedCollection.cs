@@ -438,7 +438,11 @@ namespace Simias.Web
 			if(collection == null)
 				throw new Exception("Invalid CollectionID");
 
-			RemoveAllSubscriptions(store, collection);
+			// If this is a WorkGroup Collection, remove all subscriptions
+			// for it.
+			if(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID)
+				RemoveAllSubscriptions(store, collection);
+
 			collection.Delete();
 			collection.Commit();
 		}
