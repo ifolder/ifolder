@@ -208,7 +208,6 @@ namespace Simias.Gaim
 							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
 					rDomain.SetType( rDomain, "GaimDomain" );
-					rDomain.SetType( rDomain, "AB:AddressBook" );
 					rDomain.SetType( rDomain, "Workgroup" );
 
 					// Create the owner member for the domain.

@@ -37,8 +37,6 @@ using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
 
-using Novell.AddressBook;
-
 namespace Simias.Gaim.DomainService
 {
 	/// <summary>

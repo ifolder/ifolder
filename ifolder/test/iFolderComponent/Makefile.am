@@ -18,7 +18,7 @@ CUR_DIR := $(shell pwd)
 all: $(NUNIT_TESTS)
 
 iFolderComponentTests.dll: $(iFolderComponentTests_CSFILES) $(iFolderComponentTests_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolderComponentTests_FLAGS) $(iFolderComponentTests_LIBS:%=/r:%) $(iFolderComponentTests_LIBPATH:%=/lib:%) $(iFolderComponentTests_CSFILES_CSC)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(iFolderComponentTests_FLAGS) $(iFolderComponentTests_LIBS:%=/r:%) $(iFolderComponentTests_LIBPATH:%=/lib:%) $(iFolderComponentTests_CSFILES_CSC)
 
 if DEBUG
 if WINDOWS

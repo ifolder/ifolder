@@ -80,11 +80,6 @@
                     HintPath = "..\..\..\simias\tools\NUnit\net\bin\nunit.core.dll"
                 />
                 <Reference
-                    Name = "Novell.AddressBook"
-                    AssemblyName = "Novell.AddressBook"
-                    HintPath = "..\..\..\..\..\test\Novell.AddressBook.dll"
-                />
-                <Reference
                     Name = "System"
                     AssemblyName = "System"
                     HintPath = "..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"

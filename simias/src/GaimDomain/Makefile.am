@@ -8,8 +8,8 @@ GaimDomain_CSFILES_CSC := $(subst /,$(SEP),$(GaimDomain_CSFILES))
 GaimDomain_INCLUDES =
 GaimDomain_RESOURCES =
 GaimDomain_FLAGS = $(CSC_LIBFLAG)
-GaimDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll Novell.AddressBook.dll Novell.Security.ClientPasswordManager.NetCredential.dll
-GaimDomain_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient ../../src/AddressBook $(DESTDIR)$(webbindir) $(NOVELL_SECURITY_DIR)
+GaimDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll Novell.Security.ClientPasswordManager.NetCredential.dll
+GaimDomain_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir) $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(GaimDomain_CSFILES)
 

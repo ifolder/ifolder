@@ -90,7 +90,6 @@ namespace Novell.iFolder.Web
 				}
 			}
 		}
-
 /*
 		public iFolderUser(Simias.Storage.Member member,
 							Novell.AddressBook.Contact contact)
@@ -169,7 +168,6 @@ namespace Novell.iFolder.Web
 				this.State = "Unknown";
 			}
 		}
-
 /*
 		public iFolderUser(Simias.POBox.Subscription sub,
 							Novell.AddressBook.Contact contact)
@@ -225,6 +223,5 @@ namespace Novell.iFolder.Web
 			}
 		}
 */
-
 	}
 }

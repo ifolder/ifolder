@@ -20,12 +20,10 @@ ndoc-nodeps:
 if WINDOWS
 	"$(NDOC_CMD)" \
 		`cygpath --windows "$(webbindir)/Simias.dll"`,`cygpath --windows "../src/Simias.dll/Simias.doc.xml"` \
-		`cygpath --windows "$(webbindir)/Novell.AddressBook.dll"`,`cygpath --windows "../src/AddressBook/Novell.AddressBook.doc.xml"` \
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 else # NOT WINDOWS
 	"$(NDOC_CMD)" \
 		"$(webbindir)/Simias.dll","../src/Simias.dll/Simias.doc.xml" \
-		"$(webbindir)/Novell.AddressBook.dll","../src/AddressBook/Novell.AddressBook.doc.xml" \
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc

@@ -36,7 +36,6 @@ BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : nautilus-mono >= 0.1.0
 Requires     : simias >= 0.8
-Requires     : addressbook >= 0.8
 Requires     : ifolder >= 0.8
 
 #=============================================================================

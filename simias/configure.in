@@ -336,7 +336,7 @@ AC_SUBST(GSOAP_PATH)
 #
 PKG_CONFIG_REQUIRES=""
 PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/r:Simias.dll /r:Novell.AddressBook.dll"
+PKG_CONFIG_LIBS="/r:Simias.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
 AC_SUBST(PKG_CONFIG_LIBS)
@@ -483,7 +483,6 @@ src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
 src/SimiasServer/Makefile
 src/SimiasServer/simias
-src/AddressBook/Makefile
 src/mDnsService/Makefile
 src/WebService/Makefile
 src/POBoxWS/Makefile
