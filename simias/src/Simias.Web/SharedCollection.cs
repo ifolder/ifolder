@@ -245,7 +245,7 @@ namespace Simias.Web
 			c.Commit(nodeList.ToArray( typeof( Node) ) as Node[] );
 
 			AddSubscription( store, c, member, 
-					member, SubscriptionStates.Ready, Type);
+					newMember, SubscriptionStates.Ready, Type);
 
 			return c;
 		}
