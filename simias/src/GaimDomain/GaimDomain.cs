@@ -111,11 +111,13 @@ namespace Simias.Gaim
 		/// </summary>
 		private GaimDomain( bool init, string username )
 		{
-			hostName = Environment.MachineName;
+			hostName = Environment.MachineName.ToLower();
 			userName = username;
 
 			domainName = "Gaim Buddy List (" + username + "@" + hostName + ")";
 			description = "Workgroup Domain built from " + username + "'s Gaim Buddy List";
+
+			userName = username + " (" + hostName + ")";
 
 			if ( init == true )
 			{
@@ -128,8 +130,8 @@ namespace Simias.Gaim
 		/// </summary>
 		private GaimDomain( bool init, string username, string description ) 
 		{
-			hostName = Environment.MachineName;
-			userName = username;
+			hostName = Environment.MachineName.ToLower();
+			userName = username + " (" + hostName + ")";
 			this.description = description;
 
 			if ( init == true )
@@ -157,7 +159,7 @@ namespace Simias.Gaim
 				{
 					// Create a local member which is the owner of the Gaim Domain
 					ldbMember = new Member( userName, Guid.NewGuid().ToString(), Access.Rights.Admin );
-					ldbMember.IsOwner = true;
+//					ldbMember.IsOwner = true;
 
 					// Save the local database changes.
 					ldb.Commit( new Node[] { ldbMember } );
