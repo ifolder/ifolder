@@ -254,7 +254,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if(user.FN != null)
+			if( (user.FN != null) && (user.FN.Length > 0) )
 				((CellRendererText) cell).Text = user.FN;
 			else
 				((CellRendererText) cell).Text = user.Name;

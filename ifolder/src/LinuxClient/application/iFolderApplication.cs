@@ -57,6 +57,7 @@ namespace Novell.iFolder
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
+		private iFolderData			ifdata;
 		private iFolderWindow 		ifwin;
 		private LogWindow			logwin;
 		private PreferencesWindow	prefswin;
@@ -155,6 +156,9 @@ namespace Novell.iFolder
 
 				try
 				{
+					// Setup to have data ready for events
+					ifdata = iFolderData.GetData();
+
 					EventBroker = new SimiasEventBroker();
 
 					EventBroker.Register();
@@ -399,21 +403,27 @@ namespace Novell.iFolder
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
 		{
-			if(args.iFolder.IsSubscription &&
-				(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true") 
-							== "true"))
+			// don't notify us of our own iFolders
+			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID, false);
+
+			if(!ifdata.IsCurrentUser(ifHolder.iFolder.OwnerID))
 			{
-				NotifyWindow notifyWin = new NotifyWindow(
-						tIcon, 
-						string.Format(Util.GS("New iFolder \"{0}\""), 
-													args.iFolder.Name),
-						string.Format(Util.GS("{0} has invited you to participate in this shared iFolder"), args.iFolder.Owner),
-						Gtk.MessageType.Info, 10000);
-				notifyWin.ShowAll();
+				if(ifHolder.iFolder.IsSubscription &&
+					(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true") 
+						 == "true"))
+				{
+					NotifyWindow notifyWin = new NotifyWindow(
+							tIcon, 
+							string.Format(Util.GS("New iFolder \"{0}\""), 
+								ifHolder.iFolder.Name),
+							string.Format(Util.GS("{0} has invited you to participate in this shared iFolder"), ifHolder.iFolder.Owner),
+							Gtk.MessageType.Info, 10000);
+					notifyWin.ShowAll();
+				}
 			}
 
 			if(ifwin != null)
-				ifwin.iFolderCreated(args.iFolder);
+				ifwin.iFolderCreated(args.iFolderID);
 		}
 
 
@@ -422,10 +432,13 @@ namespace Novell.iFolder
 		private void OniFolderChangedEvent(object o, 
 									iFolderChangedEventArgs args)
 		{
-			if(args.iFolder.IsSubscription)
+			// don't notify us of our own iFolders
+			iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID, false);
+
+			if(ifHolder.iFolder.IsSubscription)
 			{
 				if(ifwin != null)
-					ifwin.iFolderChanged(args.iFolder);
+					ifwin.iFolderChanged(args.iFolderID);
 			}
 			else
 			{
@@ -434,14 +447,13 @@ namespace Novell.iFolder
 				{
 					NotifyWindow notifyWin = new NotifyWindow(
 						tIcon, Util.GS("Action Required"),
-						string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), args.iFolder.Name),
+						string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), ifHolder.iFolder.Name),
 						Gtk.MessageType.Info, 10000);
 					notifyWin.ShowAll();
 				}
 
 				if(ifwin != null)
-					ifwin.iFolderHasConflicts(args.iFolder);
-
+					ifwin.iFolderHasConflicts(args.iFolderID);
 			}
 		}
 
@@ -462,9 +474,19 @@ namespace Novell.iFolder
 			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true") 
 							== "true")
 			{
+				string username;
+				iFolderHolder ifHolder = ifdata.GetiFolder(args.iFolderID, 
+						false);
+
+				if( (args.iFolderUser.FN != null) &&
+					(args.iFolderUser.FN.Length > 0) )
+					username = args.iFolderUser.FN;
+				else
+					username = args.iFolderUser.Name;
+
 				NotifyWindow notifyWin = new NotifyWindow(
 					tIcon, Util.GS("New iFolder User"), 
-					string.Format(Util.GS("{0} has joined an iFolder"), args.iFolderUser.Name),
+					string.Format(Util.GS("{0} has joined the iFolder \"{1}\""), username, ifHolder.iFolder.Name),
 					Gtk.MessageType.Info, 10000);
 
 				notifyWin.ShowAll();

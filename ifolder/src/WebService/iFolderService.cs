@@ -249,26 +249,9 @@ namespace Novell.iFolder.Web
 
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
-			if(col == null)
 			{
-				// TODO: Rework for multi-domain.
-				// if the iFolderID was not an iFolder, check to see if
-				// there is a subscription with that ID
-				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-						store.DefaultDomain, 
-						store.GetUserIDFromDomainID(store.DefaultDomain));
-
-				if(poBox != null)
-				{
-					Node node = poBox.GetNodeByID(iFolderID);
-					if (node != null)
-					{
-						ifolder = new iFolderWeb(new Subscription(node));
-					}
-				}
-			}
-			else
-			{
+				// CRG: Removed the code that checked for a Subscription
+				// USE: GetiFolderInvitation to be safe in multi-domain
 				if(col.IsType(col, iFolderWeb.iFolderType))
 					ifolder = new iFolderWeb(col);
 				else
