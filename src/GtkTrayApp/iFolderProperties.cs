@@ -311,7 +311,11 @@ namespace Novell.iFolder
 				ContactTreeStore.GetValue(iter,0);
 			if(slh.Member != null)
 			{
-				((CellRendererText) cell).Text = slh.Member.Name;
+				Contact con = abMan.GetContact(slh.Member);
+				if(con != null)
+					((CellRendererText) cell).Text = con.FN;
+				else
+					((CellRendererText) cell).Text = slh.Member.Name;
 			}
 			else if(slh.Subscription != null)
 			{
