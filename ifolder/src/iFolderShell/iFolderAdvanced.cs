@@ -210,12 +210,13 @@ namespace Novell.iFolderCom
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.objectCount = new System.Windows.Forms.Label();
-			this.label8 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.syncInterval = new System.Windows.Forms.NumericUpDown();
 			this.label6 = new System.Windows.Forms.Label();
 			this.autoSync = new System.Windows.Forms.CheckBox();
+			this.objectCount = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.gaugeChart = new Novell.iFolderCom.GaugeChart();
 			this.label7 = new System.Windows.Forms.Label();
@@ -253,7 +254,6 @@ namespace Novell.iFolderCom
 			this.ifolderLabel = new System.Windows.Forms.Label();
 			this.open = new System.Windows.Forms.Button();
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -355,59 +355,32 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.groupBox1, resources.GetString("groupBox1.ToolTip"));
 			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
 			// 
-			// objectCount
+			// label2
 			// 
-			this.objectCount.AccessibleDescription = resources.GetString("objectCount.AccessibleDescription");
-			this.objectCount.AccessibleName = resources.GetString("objectCount.AccessibleName");
-			this.objectCount.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("objectCount.Anchor")));
-			this.objectCount.AutoSize = ((bool)(resources.GetObject("objectCount.AutoSize")));
-			this.objectCount.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("objectCount.Dock")));
-			this.objectCount.Enabled = ((bool)(resources.GetObject("objectCount.Enabled")));
-			this.objectCount.Font = ((System.Drawing.Font)(resources.GetObject("objectCount.Font")));
-			this.helpProvider1.SetHelpKeyword(this.objectCount, resources.GetString("objectCount.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.objectCount, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("objectCount.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.objectCount, resources.GetString("objectCount.HelpString"));
-			this.objectCount.Image = ((System.Drawing.Image)(resources.GetObject("objectCount.Image")));
-			this.objectCount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("objectCount.ImageAlign")));
-			this.objectCount.ImageIndex = ((int)(resources.GetObject("objectCount.ImageIndex")));
-			this.objectCount.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("objectCount.ImeMode")));
-			this.objectCount.Location = ((System.Drawing.Point)(resources.GetObject("objectCount.Location")));
-			this.objectCount.Name = "objectCount";
-			this.objectCount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("objectCount.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.objectCount, ((bool)(resources.GetObject("objectCount.ShowHelp"))));
-			this.objectCount.Size = ((System.Drawing.Size)(resources.GetObject("objectCount.Size")));
-			this.objectCount.TabIndex = ((int)(resources.GetObject("objectCount.TabIndex")));
-			this.objectCount.Text = resources.GetString("objectCount.Text");
-			this.objectCount.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("objectCount.TextAlign")));
-			this.toolTip1.SetToolTip(this.objectCount, resources.GetString("objectCount.ToolTip"));
-			this.objectCount.Visible = ((bool)(resources.GetObject("objectCount.Visible")));
-			// 
-			// label8
-			// 
-			this.label8.AccessibleDescription = resources.GetString("label8.AccessibleDescription");
-			this.label8.AccessibleName = resources.GetString("label8.AccessibleName");
-			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label8.Anchor")));
-			this.label8.AutoSize = ((bool)(resources.GetObject("label8.AutoSize")));
-			this.label8.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label8.Dock")));
-			this.label8.Enabled = ((bool)(resources.GetObject("label8.Enabled")));
-			this.label8.Font = ((System.Drawing.Font)(resources.GetObject("label8.Font")));
-			this.helpProvider1.SetHelpKeyword(this.label8, resources.GetString("label8.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.label8, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label8.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.label8, resources.GetString("label8.HelpString"));
-			this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
-			this.label8.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.ImageAlign")));
-			this.label8.ImageIndex = ((int)(resources.GetObject("label8.ImageIndex")));
-			this.label8.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label8.ImeMode")));
-			this.label8.Location = ((System.Drawing.Point)(resources.GetObject("label8.Location")));
-			this.label8.Name = "label8";
-			this.label8.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label8.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.label8, ((bool)(resources.GetObject("label8.ShowHelp"))));
-			this.label8.Size = ((System.Drawing.Size)(resources.GetObject("label8.Size")));
-			this.label8.TabIndex = ((int)(resources.GetObject("label8.TabIndex")));
-			this.label8.Text = resources.GetString("label8.Text");
-			this.label8.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.TextAlign")));
-			this.toolTip1.SetToolTip(this.label8, resources.GetString("label8.ToolTip"));
-			this.label8.Visible = ((bool)(resources.GetObject("label8.Visible")));
+			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
+			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
+			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
+			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
+			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
+			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			this.label2.Name = "label2";
+			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
+			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
+			this.label2.Text = resources.GetString("label2.Text");
+			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
+			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// label5
 			// 
@@ -534,6 +507,60 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.autoSync, resources.GetString("autoSync.ToolTip"));
 			this.autoSync.Visible = ((bool)(resources.GetObject("autoSync.Visible")));
 			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
+			// 
+			// objectCount
+			// 
+			this.objectCount.AccessibleDescription = resources.GetString("objectCount.AccessibleDescription");
+			this.objectCount.AccessibleName = resources.GetString("objectCount.AccessibleName");
+			this.objectCount.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("objectCount.Anchor")));
+			this.objectCount.AutoSize = ((bool)(resources.GetObject("objectCount.AutoSize")));
+			this.objectCount.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("objectCount.Dock")));
+			this.objectCount.Enabled = ((bool)(resources.GetObject("objectCount.Enabled")));
+			this.objectCount.Font = ((System.Drawing.Font)(resources.GetObject("objectCount.Font")));
+			this.helpProvider1.SetHelpKeyword(this.objectCount, resources.GetString("objectCount.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.objectCount, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("objectCount.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.objectCount, resources.GetString("objectCount.HelpString"));
+			this.objectCount.Image = ((System.Drawing.Image)(resources.GetObject("objectCount.Image")));
+			this.objectCount.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("objectCount.ImageAlign")));
+			this.objectCount.ImageIndex = ((int)(resources.GetObject("objectCount.ImageIndex")));
+			this.objectCount.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("objectCount.ImeMode")));
+			this.objectCount.Location = ((System.Drawing.Point)(resources.GetObject("objectCount.Location")));
+			this.objectCount.Name = "objectCount";
+			this.objectCount.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("objectCount.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.objectCount, ((bool)(resources.GetObject("objectCount.ShowHelp"))));
+			this.objectCount.Size = ((System.Drawing.Size)(resources.GetObject("objectCount.Size")));
+			this.objectCount.TabIndex = ((int)(resources.GetObject("objectCount.TabIndex")));
+			this.objectCount.Text = resources.GetString("objectCount.Text");
+			this.objectCount.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("objectCount.TextAlign")));
+			this.toolTip1.SetToolTip(this.objectCount, resources.GetString("objectCount.ToolTip"));
+			this.objectCount.Visible = ((bool)(resources.GetObject("objectCount.Visible")));
+			// 
+			// label8
+			// 
+			this.label8.AccessibleDescription = resources.GetString("label8.AccessibleDescription");
+			this.label8.AccessibleName = resources.GetString("label8.AccessibleName");
+			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label8.Anchor")));
+			this.label8.AutoSize = ((bool)(resources.GetObject("label8.AutoSize")));
+			this.label8.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label8.Dock")));
+			this.label8.Enabled = ((bool)(resources.GetObject("label8.Enabled")));
+			this.label8.Font = ((System.Drawing.Font)(resources.GetObject("label8.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label8, resources.GetString("label8.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label8, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label8.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label8, resources.GetString("label8.HelpString"));
+			this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
+			this.label8.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.ImageAlign")));
+			this.label8.ImageIndex = ((int)(resources.GetObject("label8.ImageIndex")));
+			this.label8.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label8.ImeMode")));
+			this.label8.Location = ((System.Drawing.Point)(resources.GetObject("label8.Location")));
+			this.label8.Name = "label8";
+			this.label8.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label8.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label8, ((bool)(resources.GetObject("label8.ShowHelp"))));
+			this.label8.Size = ((System.Drawing.Size)(resources.GetObject("label8.Size")));
+			this.label8.TabIndex = ((int)(resources.GetObject("label8.TabIndex")));
+			this.label8.Text = resources.GetString("label8.Text");
+			this.label8.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label8.TextAlign")));
+			this.toolTip1.SetToolTip(this.label8, resources.GetString("label8.ToolTip"));
+			this.label8.Visible = ((bool)(resources.GetObject("label8.Visible")));
 			// 
 			// groupBox3
 			// 
@@ -1403,33 +1430,6 @@ namespace Novell.iFolderCom
 			// helpProvider1
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
-			// 
-			// label2
-			// 
-			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
-			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
-			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
-			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
-			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
-			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
-			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
-			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
-			this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
-			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// iFolderAdvanced
 			// 

@@ -589,9 +589,6 @@ namespace Novell.iFolderCom
 
 			// Relocate the added listview.
 			addedLV.Left = add.Right + addedLVOffset;
-
-			// Resize the search box.
-			search.Width = rosterLV.Right - search.Left;
 		}
 
 		private void add_Click(object sender, System.EventArgs e)
