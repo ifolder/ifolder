@@ -26,6 +26,7 @@
 #include "gtkgaim.h"
 
 #include "blist.h"
+#include "gtkblist.h"
 #include "account.h"
 #include <string.h>
 #include <stdio.h>
@@ -107,6 +108,16 @@ typedef enum
 	STATE_ACCEPTED
 } INVITATION_STATE;
 
+enum
+{
+	ACCOUNT_PRTL_COL,
+	BUDDY_NAME_COL,
+	TIME_COL,
+	COLLECTION_NAME_COL,
+	STATE_COL,
+	N_COLS
+};
+
 /****************************************************
  * Data Structures                                  *
  ****************************************************/
@@ -132,6 +143,23 @@ typedef struct
 } Invitation;
 
 /****************************************************
+ * Global Variables                                 *
+ ****************************************************/
+static GtkWidget *invitations_dialog;
+
+static GList *incoming_invitations;
+static GtkWidget *in_inv_tree;
+static GtkTreeStore *in_inv_store;
+static GtkWidget *in_inv_accept_button;
+static GtkWidget *in_inv_reject_button;
+
+static GList *outgoing_invitations;
+static GtkWidget *out_inv_tree;
+static GtkTreeStore *out_inv_store;
+static GtkWidget *out_inv_cancel_button;
+static GtkWidget *out_inv_remove_button;
+
+/****************************************************
  * Forward Declarations                             *
  ****************************************************/
 static int send_msg_to_buddy(GaimBuddy *recipient, char *msg);
@@ -155,6 +183,13 @@ static void sync_buddy_with_simias_roster(gpointer key,
 static void buddylist_cb_simulate_share_ifolder(GaimBlistNode *node,
 												gpointer user_data);
 
+static void invitations_dialog_close_button_cb(GtkWidget *widget,
+					       int response,
+					       gpointer user_data);
+static void in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree);
+static void in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree);
+static void init_invitations_window();
+static void show_invitations_window();
 static void buddylist_cb_show_invitations_window(GaimBlistNode *node,
 												 gpointer user_data);
 
@@ -402,13 +437,195 @@ buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 	g_print("FIXME: Implement buddylist_cb_simulate_share_ifolder()\n");
 }
 
+static void
+invitations_dialog_close_button_cb(GtkWidget *widget, int response,
+				   gpointer user_data)
+{
+	if (response == GTK_RESPONSE_CLOSE) {
+		/* Hide the Invitations Dialog */
+		gtk_widget_hide_all(invitations_dialog);
+	}
+}
+
+static void
+in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
+{
+	g_print("FIXME: Implement in_inv_accept_button_cb()\n");
+}
+
+static void
+in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
+{
+	g_print("FIXME: Implement in_inv_reject_button_cb()\n");
+}
+
+/**
+ * Setup the Simias Invitations Window
+ *
+ * If the Gaim iFolder Plugin is enabled, this window will be created and
+ * initially hidden so that when users open and close the window, it won't
+ * take as long to do.
+ */
+static void
+init_invitations_window()
+{
+	GtkWidget *vbox;
+
+	GtkWidget *in_inv_vbox;
+	GtkWidget *in_inv_label;
+	GtkWidget *in_inv_hbox;
+	GtkWidget *in_inv_buttons_vbox;
+	GtkWidget *in_inv_scrolled_win;
+
+	GtkWidget *out_inv_vbox;
+	GtkWidget *out_inv_label;
+	GtkWidget *out_inv_scrolled_win;
+
+	GtkCellRenderer *renderer;
+
+	invitations_dialog = gtk_dialog_new_with_buttons(
+				_("Simias Collection Invitations"),
+				GTK_WINDOW(GAIM_GTK_BLIST(gaim_get_blist())),
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_STOCK_CLOSE,
+				GTK_RESPONSE_CLOSE,
+				NULL);
+					
+	/* Setup the properties of the window */
+	gtk_dialog_set_has_separator(GTK_DIALOG(invitations_dialog), FALSE);
+	gtk_window_set_resizable(GTK_WINDOW(invitations_dialog), TRUE);
+
+	vbox = gtk_vbox_new(FALSE, 10);
+	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
+	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(invitations_dialog)->vbox),
+			  vbox);
+	
+	/*****************************
+	 * The Incoming Messages VBox
+	 *****************************/
+	in_inv_vbox = gtk_vbox_new(FALSE, 10);
+	gtk_box_pack_start(GTK_BOX(vbox), in_inv_vbox, TRUE, TRUE, 0);
+
+	in_inv_label = gtk_label_new("Incoming Invitations");
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(in_inv_label),
+		_("<span size=\"larger\" weight=\"bold\">_Incoming Invitations</span>"));
+	gtk_misc_set_alignment(GTK_MISC(in_inv_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(in_inv_vbox),
+			   in_inv_label, FALSE, FALSE, 0);
+
+	in_inv_hbox = gtk_hbox_new(FALSE, 10);
+	gtk_box_pack_start(GTK_BOX(in_inv_vbox), in_inv_hbox, TRUE, TRUE, 0);
+
+	in_inv_scrolled_win = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(in_inv_scrolled_win),
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_box_pack_start(GTK_BOX(in_inv_hbox),
+			   in_inv_scrolled_win, TRUE, TRUE, 0);
+
+	/* Tree View Control Here */
+	in_inv_store = gtk_tree_store_new(N_COLS,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING);
+	/* FIXME: Load in data from file */
+	/*populate_in_inv_store_from_file(in_inv_store);*/
+	in_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(in_inv_store));
+	/* The view now holds a reference.  We can get rid of our own
+	 * reference. */
+	g_object_unref(G_OBJECT(in_inv_store));
+
+	/* Create a cell renderer */
+	renderer = gtk_cell_renderer_text_new();
+
+	/* ACCOUNT_PRTL_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(in_inv_tree),
+		-1, _("Protocol"), renderer, "text", ACCOUNT_PRTL_COL, NULL);
+
+	/* BUDDY_NAME_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(in_inv_tree),
+		-1, _("Buddy"), renderer, "text", BUDDY_NAME_COL, NULL);
+
+	/* TIME_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(in_inv_tree),
+		-1, _("Received"), renderer, "text", TIME_COL, NULL);
+
+	/* COLLECTION_NAME_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(in_inv_tree),
+		-1, _("Collection"), renderer, "text", COLLECTION_NAME_COL, NULL);
+
+	/* STATE_COL */
+	gtk_tree_view_insert_column_with_attributes(
+		GTK_TREE_VIEW(in_inv_tree),
+		-1, _("State"), renderer, "text", STATE_COL, NULL);
+
+	gtk_container_add(GTK_CONTAINER(in_inv_scrolled_win), in_inv_tree);
+
+	in_inv_buttons_vbox = gtk_vbox_new(FALSE, 10);
+	gtk_box_pack_end(GTK_BOX(in_inv_hbox),
+			in_inv_buttons_vbox, FALSE, FALSE, 0);
+
+	in_inv_accept_button = gtk_button_new_with_mnemonic(_("_Accept"));
+	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
+			in_inv_accept_button, FALSE, FALSE, 0);
+
+	in_inv_reject_button = gtk_button_new_with_mnemonic(_("_Reject"));
+	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
+			in_inv_reject_button, FALSE, FALSE, 0);
+
+	/*****************************
+	 * The Outgoing Messages VBox
+	 *****************************/
+	out_inv_vbox = gtk_vbox_new(FALSE, 10);
+	gtk_box_pack_end(GTK_BOX(vbox), out_inv_vbox, TRUE, TRUE, 0);
+
+	out_inv_label = gtk_label_new("Outgoing Invitations");
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(out_inv_label),
+		_("<span size=\"larger\" weight=\"bold\">_Outgoing Invitations</span>"));
+	gtk_misc_set_alignment(GTK_MISC(out_inv_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(out_inv_vbox),
+			   out_inv_label, FALSE, FALSE, 0);
+
+	/*******************************
+	 * Signal Callbacks for Buttons
+	 *******************************/
+	g_signal_connect(invitations_dialog, "response",
+		G_CALLBACK(invitations_dialog_close_button_cb),
+		NULL);
+
+	g_signal_connect(G_OBJECT(in_inv_accept_button), "clicked",
+		G_CALLBACK(in_inv_accept_button_cb), in_inv_tree);
+	g_signal_connect(G_OBJECT(in_inv_reject_button), "clicked",
+		G_CALLBACK(in_inv_reject_button_cb), in_inv_tree);
+/*
+	g_signal_connect(G_OBJECT(out_inv_resend_button), "clicked",
+		G_CALLBACK(out_inv_resend_button_cb), NULL);
+	g_signal_connect(G_OBJECT(out_inv_cancel_button), "clicked",
+		G_CALLBACK(out_inv_resend_cancel_cb), NULL);
+*/
+}
+
+/**
+ * Show the Invitations Dialog
+ */
+static void
+show_invitations_window()
+{
+	gtk_widget_show_all(invitations_dialog);
+}
+
 /**
  * Open and show the Simias Invitations Window
  */
 static void
 buddylist_cb_show_invitations_window(GaimBlistNode *node, gpointer user_data)
 {
-	g_print("FIXME: Implement buddylist_cb_show_invitations_window()\n");
+	show_invitations_window();
 }
 
 /**
@@ -772,6 +989,9 @@ plugin_load(GaimPlugin *plugin)
 				GAIM_CALLBACK(buddy_signed_on_cb),
 				NULL);
 				
+	/* Load, but don't show the Invitations Window */
+	init_invitations_window();
+
 	/**
 	 * FIXME: Write and submit a patch to Gaim to emit a buddy-added-to-blist
 	 * event with a very detailed explanation of why it is needed.
@@ -790,6 +1010,32 @@ plugin_load(GaimPlugin *plugin)
 
 	return TRUE;
 }
+
+static GtkWidget *
+get_config_frame(GaimPlugin *plugin)
+{
+	GtkWidget *main_vbox;
+	GtkWidget *show_invitations_button;
+
+	main_vbox = gtk_vbox_new(FALSE, 10);
+	gtk_container_set_border_width(GTK_CONTAINER(main_vbox), 12);
+
+	show_invitations_button =
+		gtk_button_new_with_mnemonic(_("Show _Invitations"));
+	gtk_box_pack_end(GTK_BOX(main_vbox),
+			show_invitations_button, FALSE, FALSE, 0);
+	g_signal_connect(G_OBJECT(show_invitations_button), "clicked",
+		G_CALLBACK(show_invitations_window), NULL);
+
+	gtk_widget_show_all(main_vbox);
+	return main_vbox;
+}
+
+
+static GaimGtkPluginUiInfo ui_info =
+{
+	get_config_frame
+};
 
 static GaimPluginInfo info =
 {
@@ -811,7 +1057,7 @@ static GaimPluginInfo info =
 	plugin_load,
 	NULL,
 	NULL,
-	NULL,
+	&ui_info,
 	NULL,
 	NULL
 };
