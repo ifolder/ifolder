@@ -109,6 +109,7 @@ namespace Simias.Web
 	};
 
 	/// <summary>
+	/// Class that represents a member that has rights to a collection.
 	/// </summary>
 	[ Serializable ]
 	public class MemberInfo
@@ -118,6 +119,7 @@ namespace Simias.Web
 		public string	ObjectID;
 
 		/// <summary>
+		/// The user identitifer for this object.
 		/// </summary>
 		public string 	UserID;
 
@@ -126,24 +128,33 @@ namespace Simias.Web
 		public string	Name;
 
 		/// <summary>
+		/// the member's given (first) name
+		/// or null if the property is not present.
 		/// </summary>
 		public string	GivenName;
 
 		/// <summary>
+		/// The member's family (last) name
+		/// or null if the property is not present.
 		/// </summary>
 		public string	FamilyName;
 
 		/// <summary>
+		/// The member's full name
+		/// or null if the property is not present.
 		/// </summary>
 		public string	FullName;
 
 		/// <summary>
+		/// The members's access rights.
 		/// </summary>
-		public int		AccessRights;
+		public int	AccessRights;
 
 		/// <summary>
+		/// Whether this Member object is the collection owner.
 		/// </summary>
-		public bool		IsOwner;
+		public bool	IsOwner;
+
 
 		/// <summary>
 		/// </summary>
@@ -166,7 +177,7 @@ namespace Simias.Web
 	}
 
 	/// <summary>
-	/// This is the core of the iFolderServce.  All of the methods in the
+	/// This is the core of the SimiasServce.  All of the methods in the
 	/// web service are implemented here.
 	/// </summary>
 	[WebService(
@@ -515,7 +526,7 @@ namespace Simias.Web
 		/// WebMethod to get information about a specified domain 
 		/// </summary>
 		/// <returns>
-		/// 0 success, !0 failed
+		/// DomainInformation object
 		/// </returns>
 		[WebMethod(Description="GetDomainInformation")]
 		[SoapDocumentMethod]
@@ -545,7 +556,7 @@ namespace Simias.Web
 		/// WebMethod to get a list of local domains
 		/// </summary>
 		/// <returns>
-		/// 0 success, !0 failed
+		/// Array of DomainInformation objects
 		/// </returns>
 		[WebMethod(Description="Get a list of local domains")]
 		[SoapDocumentMethod]
