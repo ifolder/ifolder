@@ -45,7 +45,7 @@ namespace Simias.Client
 		private const string CFG_WebServicePath = "WebServicePath";
 		private const string CFG_ShowOutput = "WebServiceOutput";
 		private const string CFG_WebServiceUri = "WebServiceUri";
-		private const string CFG_WebServicePort = "WebServicePort";
+		private const string CFG_WebServicePortRange = "WebServicePortRange";
 
 		static private Process webProcess = null;
 		static private EventHandler appDomainUnloadEvent;
@@ -74,8 +74,8 @@ namespace Simias.Client
 			get
 			{
 				Configuration config = new Configuration();
-				string portString = config.Get( CFG_Section, CFG_WebServicePort );
-				return ( portString != null ) ? Convert.ToInt32( portString ) : -1;
+				string uriString = config.Get( CFG_Section, CFG_WebServiceUri );
+				return ( uriString != null ) ? new Uri( uriString ).Port : -1;
 			}
 		}
 
@@ -129,29 +129,108 @@ namespace Simias.Client
 		}
 
 		/// <summary>
+		/// Checks to see if the specified port is available.
+		/// </summary>
+		/// <param name="port">Port number to check for availability.</param>
+		/// <returns>The port number if it is available. Otherwise a -1 is returned.</returns>
+		static private int AvailablePortCheck( int port )
+		{
+			int boundPort = -1;
+
+			Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+			try
+			{
+				try
+				{
+					s.Bind( new IPEndPoint( IPAddress.Loopback, port ) );
+					boundPort = ( s.LocalEndPoint as IPEndPoint ).Port;
+				}
+				catch( SocketException )
+				{}
+			}
+			finally
+			{
+				s.Close();
+			}
+
+			return boundPort;
+		}
+
+		/// <summary>
+		/// Gets a specified range of ports to use as the local listener.
+		/// </summary>
+		/// <param name="config">Configuration object.</param>
+		/// <returns>An array of integers that represent a range of TCP port numbers.
+		/// A null is returned if no port range was specified.</returns>
+		static private int[] GetPortRange( Configuration config )
+		{
+			int[] portRange = null;
+
+			// See if there is a range specified.
+			string rangeString = config.Get( CFG_Section, CFG_WebServicePortRange );
+			if ( rangeString != null )
+			{
+				// See if there is a range separator.
+				int sep = rangeString.IndexOf( '-' );
+				if ( sep != -1 )
+				{
+					// Get the start and end values.
+					int start = Convert.ToInt32( rangeString.Substring( 0, sep ).Trim() );
+					int end = Convert.ToInt32( rangeString.Substring( sep + 1 ).Trim() );
+
+					// Make sure the range is valid.
+					if ( end >= start )
+					{
+						// Fill the array with the range of port numbers.
+						portRange = new int[ ( end - start ) + 1 ];
+						for ( int i = start; i <= end; ++i )
+						{
+							portRange[ i - start ] = i;
+						}
+					}
+					else
+					{
+						throw new ApplicationException( "An invalid port range was specified." );
+					}
+				}
+				else
+				{
+					// No range was specified, just a single port.
+					portRange = new int[ 1 ] { Convert.ToInt32( rangeString.Trim() ) };
+				}
+			}
+
+			return portRange;
+		}
+
+		/// <summary>
 		/// Gets a port to use to start the web server.
 		/// </summary>
 		static private int GetXspPort( Configuration config )
 		{
-			// See if there is a port already configured to be used.
-			string portString = config.Get( CFG_Section, CFG_WebServicePort );
-			if ( portString != null )
+			// See if there is a port range specified.
+			int[] portRange = GetPortRange( config );
+			if ( portRange == null )
 			{
-				return Convert.ToInt32( portString );
+				// Just use a single dynamic port.
+				portRange = new int[ 1 ] { 0 };
 			}
-			else
+
+			// Loop through looking for an available port.
+			foreach( int port in portRange )
 			{
-				Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
-				try
+				// Make sure that the socket is available.
+				int boundPort = AvailablePortCheck( port );
+				if ( boundPort == -1 )
 				{
-					s.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
-					return ( s.LocalEndPoint as IPEndPoint ).Port;
+					continue;
 				}
-				finally
-				{
-					s.Close();
-				}
+
+				return boundPort;
 			}
+
+			// No available port could be found.
+			throw new ApplicationException( "No ports available" );
 		}
 
 		/// <summary>
@@ -280,7 +359,18 @@ namespace Simias.Client
 					string webUriString = config.Get( CFG_Section, CFG_WebServiceUri );
 					if ( webUriString != null )
 					{
-						uri = new Uri( webUriString );
+						// Make sure that the specified port is available.
+						UriBuilder ub = new UriBuilder( webUriString );
+						if ( AvailablePortCheck( ub.Port ) == -1 )						
+						{
+							// The port is in use by another application. Allocate a new port.
+							ub.Port = GetXspPort( config );
+
+							// Set the uri with the new port back into the config file.
+							SetWebServiceUri( config, ub.Uri );
+						}
+				
+						uri = ub.Uri;
 						virtualRoot = GetVirtualPath( uri );
 					}
 					else
