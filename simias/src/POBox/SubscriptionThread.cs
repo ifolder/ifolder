@@ -48,7 +48,7 @@ namespace Simias.POBox
 		private POBox poBox;
 		private Subscription subscription;
 		private Hashtable threads;
-		private string poServiceUrl;
+		//private string poServiceUrl;
 
 		/// <summary>
 		/// Constructor
@@ -59,6 +59,7 @@ namespace Simias.POBox
 			this.subscription = subscription;
 			this.threads = threads;
 
+			/*
 			if (subscription.SubscriptionCollectionURL != null && 
 				subscription.SubscriptionCollectionURL != "")
 			{
@@ -75,6 +76,7 @@ namespace Simias.POBox
 
 				poServiceUrl = cCollection.MasterUrl.ToString() + poServiceLabel;
 			}
+			*/
 		}
 
 		/// <summary>
@@ -367,7 +369,7 @@ namespace Simias.POBox
 		{
 			bool result = false;
 
-			log.Debug("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
+			//log.Debug("DoDelivered::Connecting to the Post Office Service : {0}", this.poServiceUrl);
 			log.Debug("  calling the PO Box server to get subscription state");
 			log.Debug("  domainID: " + subscription.DomainID);
 			log.Debug("  fromID:   " + subscription.FromIdentity);
