@@ -741,7 +741,7 @@ namespace Simias.Sync
 			{
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(sn.node);
-				Node node = new Node(xNode);
+				Node node = Node.NodeFactory(store, xNode);
 				if (collection.IsBaseType(node, NodeTypes.DirNodeType))
 				{
 					// This is a DirNode we need to make sure the directory exists.

@@ -174,6 +174,7 @@ public class SyncService
 {
 	public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncService));
 	SyncCollection collection;
+	Store			store;
 	Member			member;
 	Access.Rights	rights = Access.Rights.Deny;
 	//SyncOps			ops;
@@ -187,6 +188,7 @@ public class SyncService
 	public SyncService(SyncCollection collection)
 	{
 		this.collection = collection;
+		store = Store.GetStore();
 	}
 
 	
@@ -249,7 +251,7 @@ public class SyncService
 		{
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(sn.node);
-			Node node = new Node(xNode);
+			Node node = Node.NodeFactory(store, xNode);
 			collection.ImportNode(node, true, sn.expectedIncarn);
 			NodeList.Add(node);
 			statusList[i] = new SyncNodeStatus();

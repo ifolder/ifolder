@@ -424,7 +424,7 @@ namespace Simias.Storage
 		/// <param name="store">Store object.</param>
 		/// <param name="document">Xml document to construct new Node from.</param>
 		/// <returns>Downcasts the derived Node object back to a Node that can then be explicitly casted back up.</returns>
-		static internal Node NodeFactory( Store store, XmlDocument document )
+		static public Node NodeFactory( Store store, XmlDocument document )
 		{
 			XmlElement nodeObject = document.DocumentElement[ XmlTags.ObjectTag ];
 			Node rNode = null;
