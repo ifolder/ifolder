@@ -59,7 +59,7 @@ namespace Simias.Policy
 			get
 			{
 				// Set to no limit.
-				long limit = long.MaxValue;
+				long limit = 0;
 
 				// If there is a policy find the most restrictive limit.
 				if ( policy != null )
@@ -67,7 +67,7 @@ namespace Simias.Policy
 					foreach ( Rule rule in policy.Rules )
 					{
 						long ruleLimit = ( long )rule.Operand;
-						if ( ruleLimit < limit )
+						if ( ( limit == 0 ) || ( ruleLimit < limit ) )
 						{
 							limit = ruleLimit;
 						}
@@ -278,7 +278,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
-			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : long.MaxValue;
+			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -290,7 +290,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
-			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : long.MaxValue;
+			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -302,7 +302,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
-			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : long.MaxValue;
+			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
