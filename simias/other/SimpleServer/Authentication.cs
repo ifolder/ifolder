@@ -105,7 +105,7 @@ namespace Simias.SimpleServer
 						Property pwd = member.Properties.GetSingleProperty( "SS:Password" );
 						if (pwd != null)
 						{
-							if (pwd.Value == password)
+							if (password == (string) pwd.Value)
 							{
 								status.status = StatusCode.Success;
 								status.UserID = member.ID;

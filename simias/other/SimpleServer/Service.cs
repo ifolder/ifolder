@@ -130,7 +130,7 @@ namespace Simias.SimpleServer
 		static Thread syncThread = null;
 
 		internal static Simias.SimpleServer.Domain ssDomain = null;
-		internal static DateTime lastSyncTime;
+		//internal static DateTime lastSyncTime;
 
 		internal static int StartSyncThread()
 		{

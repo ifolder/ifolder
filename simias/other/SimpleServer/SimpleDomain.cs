@@ -408,7 +408,7 @@ namespace Simias.SimpleServer
 				XmlElement domainElement = serverDoc.DocumentElement;
 
 				XmlAttribute attr;
-				XmlNode ownerNode = null;
+				//XmlNode ownerNode = null;
 				for (int i = 0; i < domainElement.ChildNodes.Count; i++)
 				{
 					this.firstName = null;
