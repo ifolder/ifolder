@@ -54,6 +54,8 @@
 
 #include "gaim-domain.h"
 #include "event-handler.h"
+#include "simias-messages.h"
+#include "simias-prefs.h"
 
 
 /****************************************************
@@ -61,41 +63,11 @@
  ****************************************************/
 #define IFOLDER_PLUGIN_ID "ifolder"
 
-#define IFOLDER_MSG_IP_ADDR_REQ		"[simias:ip_addr_req:"
-#define IFOLDER_MSG_IP_ADDR_RESP	"[simias:ip_addr_resp:"
-#define IFOLDER_MSG_IP_ADDR_REQ_DENY	"[simias:ip_addr_req_deny]"
-
-#define INVITATION_REQUEST_MSG		"[simias:invitation-request:"
-#define INVITATION_REQUEST_DENY_MSG	"[simias:invitation-request-deny:"
-#define INVITATION_REQUEST_ACCEPT_MSG	"[simias:invitation-request-accept:"
-#define PING_REQUEST_MSG		"[simias:ping-request:"
-#define PING_RESPONSE_MSG		"[simias:ping-response:"
-
 #define TIMESTAMP_FORMAT "%I/%d/%Y %I:%M %p"
 
 #define FILENAME_IN_INVITATIONS "simias-in-invitations.xml"
 #define FILENAME_OUT_INVITATIONS "simias-out-invitations.xml"
 #define FILENAME_TRUSTED_BUDDIES "simias-trusted-buddies.xml"
-
-#define SIMIAS_PREF_PATH "/plugins/gtk/simias"
-
-#define SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS "/plugins/gtk/simias/notify_receive_new_invitations"
-#define SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF TRUE
-
-#define SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS "/plugins/gtk/simias/notify_buddies_accept_invitations"
-#define SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF TRUE
-
-#define SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS "/plugins/gtk/simias/notify_buddies_reject_invitations"
-#define SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF TRUE
-
-#define SIMIAS_PREF_NOTIFY_ERRORS "/plugins/gtk/simias/notify_on_errors"
-#define SIMIAS_PREF_NOTIFY_ERRORS_DEF FALSE
-
-#define SIMIAS_PREF_REDISCOVER_IP_ADDRS "/plugins/gtk/simias/rediscover_ip_addrs"
-#define SIMIAS_PREF_REDISCOVER_IP_ADDRS_DEF TRUE
-
-#define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/gtk/simias/auto_start_simias"
-#define SIMIAS_PREF_SIMIAS_AUTO_START_DEF FALSE
 
 #define COLLECTION_TYPE_IFOLDER "ifolder"
 #define COLLECTION_TYPE_GLYPHMARKS "glyphmarks"
@@ -269,7 +241,6 @@ static char * fill_state_str(char *state_str, INVITATION_STATE state);
 
 static void add_invitation_to_store(GtkListStore *store,
 									Invitation *invitation);
-static void init_default_prefs();
 static gboolean write_invitations_file(FILE *file, GtkListStore *store);
 static void simias_invitations_write(GtkListStore *store);
 static gboolean invitations_read(GtkListStore *store, const char *filename);
@@ -1344,44 +1315,6 @@ g_print("about_to_write 5\n");
 
 	if (invitation_icon)
 		g_object_unref(invitation_icon);
-}
-
-/**
- * If the given preferences don't exist, create them with a default value.
- */
-static void
-init_default_prefs()
-{
-	gaim_prefs_add_none(SIMIAS_PREF_PATH);
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS,
-							SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF);
-	}
-
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS,
-							SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF);
-	}
-
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS,
-							SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF);
-	}
-
-	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ERRORS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ERRORS,
-							SIMIAS_PREF_NOTIFY_ERRORS_DEF);
-	}
-	
-	if (!gaim_prefs_exists(SIMIAS_PREF_REDISCOVER_IP_ADDRS)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_REDISCOVER_IP_ADDRS,
-							SIMIAS_PREF_REDISCOVER_IP_ADDRS_DEF);
-	}
-
-	if (!gaim_prefs_exists(SIMIAS_PREF_SIMIAS_AUTO_START)) {
-		gaim_prefs_add_bool(SIMIAS_PREF_SIMIAS_AUTO_START,
-							SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
-	}
 }
 
 static gboolean
@@ -3390,7 +3323,7 @@ plugin_load(GaimPlugin *plugin)
 	 */
 
 	/* Make sure the preferences are created if they don't exist */
-	init_default_prefs();
+	simias_init_default_prefs();
 
 	/* Load up the GtkListStore's for incoming and outgoing invitations */
 	init_invitation_stores();

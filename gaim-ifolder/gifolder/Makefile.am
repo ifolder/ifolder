@@ -13,7 +13,9 @@ plugin_LTLIBRARIES = gifolder.la
 gifolder_la_SOURCES = \
 	gifolder.c \
 	event-handler.c \
-	gaim-domain.c
+	gaim-domain.c \
+	simias-messages.c \
+	simias-prefs.c
 
 endif
 
