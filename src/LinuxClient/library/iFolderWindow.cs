@@ -41,12 +41,14 @@ namespace Novell.iFolder
 		private bool		syncSuccessful;
 		private string		path;
 		private string		state;
+		private uint		objectsToSync;
 
 		public iFolderHolder(iFolderWeb ifolder)
 		{
 			this.ifolder = ifolder;
 			isSyncing = false;
 			syncSuccessful = true;
+			objectsToSync = 0;
 			UpdateDisplayData();
 		}
 
@@ -66,7 +68,7 @@ namespace Novell.iFolder
 			get{ return isSyncing; }
 			set
 			{ 
-				this.isSyncing = value; 
+				this.isSyncing = value;
 				UpdateDisplayData();
 			}
 		}
@@ -90,6 +92,19 @@ namespace Novell.iFolder
 		{
 			get{ return state; }
 		}
+		
+		public uint ObjectsToSync
+		{
+			get
+			{
+				return objectsToSync;
+			}
+			set
+			{
+				objectsToSync = value;
+				UpdateDisplayData();
+			}
+		}
 
 		private void UpdateDisplayData()
 		{
@@ -107,7 +122,16 @@ namespace Novell.iFolder
 			else
 			{
 				if(IsSyncing)
-					state = Util.GS("Synchronizing");
+				{
+					if (objectsToSync > 0)
+					{
+						state = string.Format(Util.GS("{0} objects to sync"), objectsToSync);
+					}
+					else
+					{
+						state = Util.GS("Synchronizing");
+					}
+				}
 				else if(iFolder.State == "WaitSync")
 					state = Util.GS("Waiting to Sync");
 				else if(iFolder.State == "Local")
@@ -1617,6 +1641,16 @@ namespace Novell.iFolder
 												((double)args.SizeToSync);
 					SyncBar.Fraction = frac;
 				}
+			}
+			
+			// Get the iFolderHolder and set the objectsToSync
+			SyncSize syncSize = ifws.CalculateSyncSize(args.CollectionID);
+			TreeIter iter = (TreeIter)curiFolders[args.CollectionID];
+			iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID, false);
+			if (ifHolder != null)
+			{
+				ifHolder.ObjectsToSync = syncSize.SyncNodeCount;
+				iFolderTreeStore.SetValue(iter, 0, ifHolder);
 			}
 		}
 
