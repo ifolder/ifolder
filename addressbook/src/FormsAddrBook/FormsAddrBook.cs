@@ -654,6 +654,7 @@ namespace Novell.iFolder.FormsAddrBook
 				toolBar1.Buttons[4].Enabled = false;
 			}
 
+			// Cause the detailsView to be repainted.
 			detailsView.Invalidate();
 		}
 
@@ -670,6 +671,10 @@ namespace Novell.iFolder.FormsAddrBook
 
 		private void detailsView_Paint(object sender, PaintEventArgs e)
 		{
+			// Repaint the entire region white.
+			SolidBrush whiteBrush = new SolidBrush(Color.White);
+			e.Graphics.FillRectangle(whiteBrush, e.ClipRectangle);
+
 			if (contact != null)
 			{
 				// Display the photo.
