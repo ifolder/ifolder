@@ -1395,7 +1395,7 @@ namespace Novell.FormsTrayApp
 					defaultServer.Enabled = false;
 				}
 
-				// TODO: save state of checkboxes.
+				updateAccount();
 
 				addAccount.Enabled = true;
 
@@ -1405,18 +1405,22 @@ namespace Novell.FormsTrayApp
 					bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainWeb.ID, userName.Text, password.Text);
 					if (updateStarted)
 					{
-						// TODO: Shut down the tray app.
-					}
-
-					if (!rememberPassword.Checked)
-					{
-						password.Text = string.Empty;
+						if (ShutdownTrayApp != null)
+						{
+							// Shut down the tray app.
+							ShutdownTrayApp(this, new EventArgs());
+						}
 					}
 				}
 				catch (Exception ex)
 				{
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
+				}
+
+				if (!rememberPassword.Checked)
+				{
+					password.Text = string.Empty;
 				}
 			}
 			catch (Exception ex)
@@ -1468,6 +1472,10 @@ namespace Novell.FormsTrayApp
 			if (newAccountLvi != null)
 			{
 				result = connectToEnterprise();
+			}
+			else if (!updateAccount())
+			{
+				result = false;
 			}
 
 			// Check and update auto start setting.
@@ -1533,11 +1541,6 @@ namespace Novell.FormsTrayApp
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
-			}
-
-			if (!updateAccount())
-			{
-				result = false;
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1620,6 +1623,15 @@ namespace Novell.FormsTrayApp
 		/// Occurs when a domain account is removed.
 		/// </summary>
 		public event RemoveDomainDelegate RemoveDomain;
+
+		/// <summary>
+		/// Delegate used to shutdown the tray app when an upgrade is in progress.
+		/// </summary>
+		public delegate void ShutdownTrayAppDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs when an upgrade has been started.
+		/// </summary>
+		public event ShutdownTrayAppDelegate ShutdownTrayApp;
 		#endregion
 
 		#region Event Handlers

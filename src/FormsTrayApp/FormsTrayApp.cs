@@ -64,7 +64,7 @@ namespace Novell.FormsTrayApp
 		private NotifyMessageDelegate notifyMessageDelegate;
 
 		private System.ComponentModel.IContainer components;
-		private System.Resources.ResourceManager resourceManager;
+		static private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private bool shutdown = false;
 
 		private Icon trayIcon;
@@ -133,8 +133,6 @@ namespace Novell.FormsTrayApp
 
 			createChangeEventDelegate = new CreateChangeEventDelegate(createChangeEvent);
 			notifyMessageDelegate = new NotifyMessageDelegate(notifyMessage);
-
-			resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
 			// Check for currently running instance.  Search for existing window ...
 			string windowName = resourceManager.GetString("$this.Text") + " " + Environment.UserName;
@@ -387,6 +385,7 @@ namespace Novell.FormsTrayApp
 					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
 					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
 					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
+					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
@@ -466,6 +465,11 @@ namespace Novell.FormsTrayApp
 		private void preferences_RemoveDomain(object sender, DomainConnectEventArgs e)
 		{
 			globalProperties.RemoveDomainFromList(e.DomainWeb);
+		}
+
+		private void preferences_ShutdownTrayApp(object sender, EventArgs e)
+		{
+			ShutdownTrayApp(null);
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
