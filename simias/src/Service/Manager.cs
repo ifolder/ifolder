@@ -30,6 +30,7 @@ using System.Threading;
 using System.Reflection;
 using Simias;
 using Simias.Event;
+using Simias.Storage;
 using Simias.Client;
 using Simias.Client.Event;
 
@@ -254,9 +255,10 @@ namespace Simias.Service
 		private void Monitor()
 		{
 			// TODO: This can be removed when mono compacts the heap.
+			bool isClient = !Store.GetStore().IsEnterpriseServer;
 			DateTime thresholdTime = DateTime.Now;
 			float initialMemorySize = 0;
-			if ( MyEnvironment.Mono )
+			if ( MyEnvironment.Mono && isClient )
 			{
 				Thread.Sleep( 1000 * 60 );
 				thresholdTime += new TimeSpan(0, thresholdTimeLimit, 0);
@@ -286,7 +288,7 @@ namespace Simias.Service
 
 					// TODO: This can be removed when mono compacts the heap.
 					// Check how much memory is being used by the process.
-					if (MyEnvironment.Mono)
+					if (MyEnvironment.Mono && isClient)
 					{
 						float delta = GetSimiasMemorySize() - initialMemorySize;
 						if ( delta > 0 )

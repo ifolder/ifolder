@@ -208,14 +208,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets whether this instance is an enterprise client.
-		/// </summary>
-		public bool IsEnterpriseClient
-		{
-			get	{ return ( !IsEnterpriseServer && ( CurrentUser.DomainCount > 1 ) ) ? true : false; }
-		}
-
-		/// <summary>
 		/// Gets whether this instance is running on a enterprise server.
 		/// </summary>
 		public bool IsEnterpriseServer
