@@ -196,17 +196,20 @@ plugin_unload(GaimPlugin *plugin)
 
 /**
  * Configuration Settings:
- * 
- * Gaim Domain Member List
- * 
- *   Synchronize every:
- *     [5] minutes
  *
- *   [Synchronize Now Button]
+ * Identification
+ * 
+ *   Machine Name: THE_COMPUTER_NAME
+ *
+ *     The iFolder Plugin for Gaim provides "Workgroup" (Peer to
+ *     peer) file sharing for <b>this</b> computer only.  Logging
+ *     into Gaim from another computer will not affect the iFolders
+ *     configured on this computer.  You will be identified by both
+ *     your <b>screenname</b> and your computer's <b>machine name</b>.
  *
  * Other
  *
- *   [ ] Automatically start iFolder if it's not running
+ *   [ ] Automatically start iFolder (Simias) if it's not running
  */
 static GtkWidget *
 simias_get_config_frame(GaimPlugin *plugin)
@@ -217,40 +220,36 @@ simias_get_config_frame(GaimPlugin *plugin)
 	GtkWidget *label;
 	GtkWidget *sync_now_button;
 	GtkWidget *select;
+	char machine_name_str[256];
+	char hostname[128];
 	ret = gtk_vbox_new(FALSE, 18);
 	gtk_container_set_border_width (GTK_CONTAINER (ret), 12);
 
-	/* SECTION: Gaim Domain Member List */
-	vbox = gaim_gtk_make_frame(ret, _("Gaim Domain Member List"));
-
-	hbox = gtk_hbox_new(FALSE, 0);
-
-	select = gaim_gtk_prefs_labeled_spin_button(hbox,
-			_("Synchronize every:"), SIMIAS_PREF_SYNC_INTERVAL,
-			1, 24 * 60, NULL);
-	label = gtk_label_new(_("minutes"));
-	gtk_box_pack_end(GTK_BOX(hbox), label, TRUE, TRUE, 4);
+	vbox = gaim_gtk_make_frame(ret, _("Identification"));
 	
-	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+	if (gethostname(hostname, 128) < 0)
+		sprintf(hostname, "UNKNOWN");
+	
+	sprintf(machine_name_str, "<b>%s</b>: %s", _("Machine Name"), hostname);
+	
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), machine_name_str);
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 	
 	hbox = gtk_hbox_new(TRUE, 0);
-	sync_now_button =
-		gtk_button_new_with_mnemonic(_("_Synchronize Now"));
-	gtk_box_pack_end(GTK_BOX(hbox),
-			sync_now_button, FALSE, FALSE, 50);
-	gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
-
-	g_signal_connect(G_OBJECT(sync_now_button), "clicked",
-		G_CALLBACK(simias_sync_member_list), NULL);
+	label = gtk_label_new("");
+	gtk_label_set_linewrap(GTK_LABEL(label), TRUE);
+	gtk_label_set_markup(_("The iFolder Plugin for Gaim provides <b>Workgroup</b> (Peer to Peer) file sharing for <b>this</b> computer only.  Logging into Gaim from another computer will not affect the iFolders configured on this computer.  You will be identified by both your <b>screenname</b> and your computer's <b>machine name</b>."));
+	gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
 	/* SECTION: Other */
 	vbox = gaim_gtk_make_frame(ret, _("Other"));
 	
-	gaim_gtk_prefs_checkbox(_("_Automatically start iFolder if it's not running"),
+	gaim_gtk_prefs_checkbox(_("_Automatically start Simias (iFolder Synchronization Engine) if it's not running"),
 	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
 	label = gtk_label_new("(Not implemented yet)");
 	gtk_box_pack_end(GTK_BOX(vbox), label, FALSE, FALSE, 0);
-
 
 	gtk_widget_show_all(ret);
 	return ret;
@@ -274,8 +273,8 @@ static GaimPluginInfo info =
 	IFOLDER_PLUGIN_ID,
 	N_("iFolder"),
 	VERSION,
-	N_("Allows you to share iFolders with your Gaim contacts."),
-	N_("Buddies that are in your contact list will automatically be added as contacts in iFolder that you'll be able to share iFolders with."),
+	N_("Provides iFolder peer to peer filesharing through Gaim."),
+	N_("Allows you to share iFolders with buddies who also have the Gaim iFolder Plugin installed."),
 	"Boyd Timothy <btimothy@novell.com>",
 	"http://www.ifolder.com/",
 	plugin_load,
