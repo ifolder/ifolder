@@ -35,6 +35,7 @@ AssemblyInfo.cs
 ../Common/ISimiasLog.cs
 ../Common/SimiasLog.cs
 ../Common/SimiasLogManager.cs
+../Common/SimGuid.cs
 ../Credentials/Credentials.cs
 ../Domain/DomainAgent.cs
 ../DomainWatcher/Service.cs

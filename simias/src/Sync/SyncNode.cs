@@ -117,7 +117,8 @@ namespace Simias.Sync
 		/// <param name="reader"></param>
 		internal SyncNodeInfo(BinaryReader reader)
 		{
-			this.ID = new Guid(reader.ReadBytes(16)).ToString();
+//			this.ID = new Guid(reader.ReadBytes(16)).ToString();
+			this.ID = Simias.SimGuid.FromByteArray(reader.ReadBytes(16)).ToString();
 			this.LocalIncarnation = reader.ReadUInt64();
 			this.MasterIncarnation = reader.ReadUInt64();
 			this.NodeType = (SyncNodeType)reader.ReadByte();
@@ -177,7 +178,8 @@ namespace Simias.Sync
 		/// <param name="writer">The stream to serialize to.</param>
 		internal void Serialize(BinaryWriter writer)
 		{
-			writer.Write(new Guid(ID).ToByteArray());
+//			writer.Write(new Guid(ID).ToByteArray());
+			writer.Write(Simias.SimGuid.ToByteArray(new Guid(ID)));
 			writer.Write(LocalIncarnation);
 			writer.Write(MasterIncarnation);
 			writer.Write((byte)NodeType);
@@ -385,7 +387,8 @@ namespace Simias.Sync
 		/// <param name="reader">The stream containing the SyncNode.</param>
 		internal SyncNodeStatus(BinaryReader reader)
 		{
-			this.nodeID = new Guid(reader.ReadBytes(16)).ToString();
+//			this.nodeID = new Guid(reader.ReadBytes(16)).ToString();
+			this.nodeID = Simias.SimGuid.FromByteArray(reader.ReadBytes(16)).ToString();
 			this.status = (SyncStatus)reader.ReadByte();
 		}
 
@@ -395,7 +398,8 @@ namespace Simias.Sync
 		/// <param name="writer"></param>
 		internal void Serialize(BinaryWriter writer)
 		{
-			writer.Write(new Guid(nodeID).ToByteArray());
+//			writer.Write(new Guid(nodeID).ToByteArray());
+			writer.Write(Simias.SimGuid.ToByteArray(new Guid(nodeID)));
 			writer.Write((byte)status);
 		}
 	}

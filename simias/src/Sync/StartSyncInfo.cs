@@ -48,7 +48,8 @@ namespace Simias.Sync
 		/// <param name="reader"></param>
 		public StartSyncInfo(BinaryReader reader)
 		{
-			CollectionID = new Guid(reader.ReadBytes(16)).ToString();
+			CollectionID = Simias.SimGuid.FromByteArray(
+									reader.ReadBytes(16)).ToString();
 			Context = reader.ReadString();
 			ChangesOnly = reader.ReadBoolean();
 			ClientHasChanges = reader.ReadBoolean();
@@ -62,7 +63,7 @@ namespace Simias.Sync
 		/// <param name="writer">The stream to serialize to.</param>
 		public void Serialize(BinaryWriter writer)
 		{
-			writer.Write(new Guid(CollectionID).ToByteArray());
+			writer.Write(Simias.SimGuid.ToByteArray(new Guid(CollectionID)) );
 			writer.Write(Context);
 			writer.Write(ChangesOnly);
 			writer.Write(ClientHasChanges);

@@ -370,7 +370,8 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
 			foreach (string nid in nids)
 			{
-				writer.Write(new Guid(nid).ToByteArray());
+//				writer.Write(new Guid(nid).ToByteArray());
+				writer.Write(Simias.SimGuid.ToByteArray(new Guid(nid)) );
 			}
 			writer.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -410,7 +411,8 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
 			foreach (string nodeID in nodeIDs)
 			{
-				writer.Write(new Guid(nodeID).ToByteArray());
+//				writer.Write(new Guid(nodeID).ToByteArray());
+				writer.Write(Simias.SimGuid.ToByteArray(new Guid(nodeID)) );
 			}
 			writer.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -476,7 +478,8 @@ namespace Simias.Sync.Http
 			WebHeaderCollection headers = request.Headers;
 			request.ContentLength = 16;
 			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
-			writer.Write(new Guid(nodeID).ToByteArray());
+//			writer.Write(new Guid(nodeID).ToByteArray());
+			writer.Write(Simias.SimGuid.ToByteArray(new Guid(nodeID)) );
 			writer.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
@@ -813,7 +816,8 @@ namespace Simias.Sync.Http
 			string[] nids = new string[count];
 			for (int i = 0; i < count; ++i)
 			{
-				nids[i] = new Guid(reader.ReadBytes(16)).ToString();
+//				nids[i] = new Guid(reader.ReadBytes(16)).ToString();
+				nids[i] = Simias.SimGuid.FromByteArray(reader.ReadBytes(16)).ToString();
 			}
 			SyncNode[] nodes = service.GetNonFileNodes(nids);
 			// Now write the nodes back to the client.
@@ -889,7 +893,8 @@ namespace Simias.Sync.Http
 			string[] nids = new string[count];
 			for (int i = 0; i < count; ++i)
 			{
-				nids[i] = new Guid(reader.ReadBytes(16)).ToString();
+//				nids[i] = new Guid(reader.ReadBytes(16)).ToString();
+				nids[i] = Simias.SimGuid.FromByteArray(reader.ReadBytes(16)).ToString();
 			}
 			SyncNodeStatus[] statusArray = service.DeleteNodes(nids);
 			// Now write the status back to the client.
@@ -927,7 +932,8 @@ namespace Simias.Sync.Http
 		public void OpenFileGet(HttpRequest request, HttpResponse response)
 		{
 			BinaryReader reader = new BinaryReader(request.InputStream);
-			string nodeID = new Guid(reader.ReadBytes(16)).ToString();
+//			string nodeID = new Guid(reader.ReadBytes(16)).ToString();
+			string nodeID = Simias.SimGuid.FromByteArray(reader.ReadBytes(16)).ToString();
 			SyncNode node = service.GetFileNode(nodeID);
 			response.ContentType = "application/octet-stream";
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
