@@ -32,3 +32,24 @@ diff -r1.23 Makefile.mingw
 > 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw install
 141a145
 > 	$(MAKE) -C $(GAIM_IFOLDER) -f Makefile.mingw clean
+Index: gifolder/gifolder.c
+===================================================================
+RCS file: /cvsroot/gaim/gaim/plugins/gifolder/gifolder.c,v
+retrieving revision 1.18
+diff -r1.18 gifolder.c
+45c45
+< #include "prefix.h"
+---
+> //#include "prefix.h"
+51c51
+< #include "version.h"
+---
+> //#include "version.h"
+288,290c288
+< 	GAIM_PLUGIN_MAGIC,
+< 	GAIM_MAJOR_VERSION,
+< 	GAIM_MINOR_VERSION,
+---
+> 	GAIM_PLUGIN_API_VERSION,
+306a305
+> 	NULL,

@@ -7,6 +7,7 @@ Note for Novell Linux Desktop (NLD)
 
 	Use this revision tag: v0_82
 	Use this directory name: gaim-0.82
+	Use this patch file: gaim-0.82.patches
 
 
 1. Checkout gaim-1.1.4 from CVS
@@ -26,11 +27,11 @@ Note for Novell Linux Desktop (NLD)
 
     cd ~/gaim-1.1.4
 
-    patch -p0 < $GAIM_IFOLDER_PROJECT/gaim-1.1.4.patches
-
     mkdir plugins/gifolder
 
     cp -r $GAIM_IFOLDER_PROJECT/gifolder/* plugins/gifolder
+
+    patch -p0 < $GAIM_IFOLDER_PROJECT/gaim-1.1.4.patches
 
 
 3. Build Gaim
