@@ -208,7 +208,7 @@ public class Dredger
 		// merge files from file system to store
 		foreach (string file in Directory.GetFiles(path))
 		{
-			if (File.GetLastWriteTime(file) > lastDredgeTime)
+			if (File.GetLastWriteTime(file) > lastDredgeTime || lookForDeletes)
 				DoNode(dnode, file, typeof(FileNode).Name);
 		}
 		
