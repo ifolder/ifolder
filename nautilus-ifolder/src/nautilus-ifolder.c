@@ -610,6 +610,22 @@ static void
 ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Help... selected\n");	
+	pthread_t thread;
+	char args [1024];
+	memset (args, '\0', sizeof (args));
+	
+	sprintf (args, "%s help", NAUTILUS_IFOLDER_SH_PATH);
+	g_print ("args: ");
+	g_print (args);
+	g_print ("\n");
+	
+	if (strlen (args) <= 0)
+		return;
+		
+	pthread_create (&thread, 
+					NULL, 
+					ifolder_dialog_thread,
+					strdup (args));
 }
  
 static GList *

@@ -29,16 +29,21 @@ using Simias.Client;
 
 namespace Novell.iFolder.Nautilus
 {
-	public class NautilusiFolder : Gnome.Program
+	public class NautilusiFolder
 	{
 		public static int Main (string[] args)
 		{
 			// Don't do anything if nothing was specified to do
 			if (args.Length == 0)
 				return 0;
-			
-			Application.Init ();
+
+			// Make sure this process is a gnome program
+			Gnome.Program program = 
+				new Program ("Nautilus-Extension-UI", "0.1.0", Modules.UI, args);
 				
+			// Get the localized strings loaded
+			Util.InitCatalog();
+			
 			switch (args [0]) {
 				case "WebServiceURL":
 					return getWebServiceURL (args);
@@ -52,7 +57,13 @@ namespace Novell.iFolder.Nautilus
 					return confirmRevertiFolder (args);
 			}
 			
+			program.Run ();
 			return 0;
+		}
+		
+		public static void on_dialog_closed (object o, EventArgs args)
+		{
+			Application.Quit ();
 		}
 		
 		private static int getWebServiceURL (string[] args)
@@ -100,6 +111,7 @@ namespace Novell.iFolder.Nautilus
 		
 		private static int showHelp (string[] args)
 		{
+			Util.ShowHelp("front.html", null);
 			return 0;
 		}
 		
