@@ -126,7 +126,7 @@ namespace Novell.iFolderCom
 			//
 			InitializeComponent();
 
-			apply.Enabled = remove.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
+			apply.Enabled = remove.Enabled = access.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
 
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
 			okDelta = ok.Top - tabControl1.Bottom;
