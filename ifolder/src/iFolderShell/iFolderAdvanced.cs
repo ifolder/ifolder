@@ -53,6 +53,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
+		private string longName = String.Empty;
 		private Hashtable subscrHT;
 		private IProcEventClient eventClient;
 		private bool existingEventClient = true;
@@ -661,6 +662,7 @@ namespace Novell.iFolderCom
 			// 
 			// ifolders
 			// 
+			this.ifolders.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.ifolders.Location = new System.Drawing.Point(64, 16);
 			this.ifolders.Name = "ifolders";
 			this.ifolders.Size = new System.Drawing.Size(336, 21);
@@ -707,6 +709,7 @@ namespace Novell.iFolderCom
 			this.ShowInTaskbar = false;
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
 			this.Load += new System.EventHandler(this.iFolderAdvanced_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.iFolderAdvanced_Paint);
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
@@ -940,10 +943,8 @@ namespace Novell.iFolderCom
 
 			shareWith.EndUpdate();
 
-			// Enable/disable the buttons.
-			add.Enabled = remove.Enabled = menuFullControl.Enabled = 
-				menuReadWrite.Enabled = menuReadOnly.Enabled = access.Enabled = 
-				/*setLimit.Visible = limitEdit.Visible = */ currentUser != null ? currentUser.Rights.Equals("Admin") : false;
+			// Enable/disable the Add button.
+			add.Enabled = currentUser != null ? currentUser.Rights.Equals("Admin") : false;
 
 			setLimit.Visible = limitEdit.Visible = currentUser != null ? currentUser.UserID.Equals(ifolder.OwnerID) : false;
 			limitLabel.Visible = limit.Visible = !setLimit.Visible;
@@ -1144,16 +1145,8 @@ namespace Novell.iFolderCom
 					connectToWebService();
 					try
 					{
-						if (slMember.iFolderUser.State.Equals("Member"))
-						{
-							// Delete the member.
-							ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
-						}
-						else
-						{
-							// Delete the subscription.
-							ifWebService.RemoveSubscription(ifolder.Domain, slMember.iFolderUser.ID, ifolder.CurrentUserID);
-						}
+						// Delete the member.
+						ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
 					}
 					catch (WebException e)
 					{
@@ -1415,6 +1408,11 @@ namespace Novell.iFolderCom
 					if ((i.Type != null) && i.Type.Equals("iFolder") && 
 						(i.State != null) && i.State.Equals("Local"))
 					{
+						if (longName.Length < i.UnManagedPath.Length)
+						{
+							longName = i.UnManagedPath;
+						}
+
 						iFolderInfo ifolderInfo = new iFolderInfo();
 						ifolderInfo.LocalPath = i.UnManagedPath;
 						ifolderInfo.ID = i.ID;
@@ -1637,9 +1635,11 @@ namespace Novell.iFolderCom
 
 				try
 				{
-					// Don't allow the current user to be removed.
-					if (!currentUser.UserID.Equals(slMember.iFolderUser.UserID) ||
-						!slMember.iFolderUser.State.Equals("Member"))
+					// Don't allow the current user, current owner, or new owner to be removed.
+					if (!((currentUser.UserID.Equals(slMember.iFolderUser.UserID) ||
+						((newOwnerLvi == null) && slMember.iFolderUser.UserID.Equals(ifolder.OwnerID)) ||
+						((newOwnerLvi != null) && lvi.Equals(newOwnerLvi))) &&
+						slMember.iFolderUser.State.Equals("Member")))
 					{
 						// If this item is not newly added, we need to add it to the removedList.
 						if (!slMember.Added)
@@ -2132,6 +2132,14 @@ namespace Novell.iFolderCom
 					// Ignore.
 				}
 			}
+		}
+
+		private void iFolderAdvanced_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			// Change the width of the dropdown list to accommodate long names.
+			SizeF size = e.Graphics.MeasureString(longName, ifolders.Font);
+			int maxWidth = ifolders.Width * 2;
+			ifolders.DropDownWidth = (int)size.Width > maxWidth ? maxWidth : (int)size.Width;
 		}
 		#endregion
 	}

@@ -1646,7 +1646,8 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID, currentUserID);
+				//ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID, currentUserID);
+				ifWebService.DeleteiFolder(ifolder.ID);
 				lvi.Remove();
 			}
 			catch (WebException ex)
@@ -1688,12 +1689,12 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolder ifolder;
-				if (eventArgs.Type == "Collection")
+				iFolder ifolder = null;
+				if (eventArgs.Type.Equals("Collection"))
 				{
 					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 				}
-				else
+				else if (eventArgs.Type.Equals("Node"))
 				{
 					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
 				}
@@ -1727,14 +1728,14 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolder ifolder;
-				if (eventArgs.Type == "Collection")
+				iFolder ifolder = null;
+				if (eventArgs.Type.Equals("Collection"))
 				{
 					// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
 					// need to put some extra code in to handle this.
 					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 				}
-				else
+				else if (eventArgs.Type.Equals("Node"))
 				{
 					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
 				}

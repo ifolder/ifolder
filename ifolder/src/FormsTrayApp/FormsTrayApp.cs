@@ -76,6 +76,7 @@ namespace Novell.FormsTrayApp
 		private Process simiasProc;
 		private iFolderWebService ifWebService;
 		//private EventSubscriber subscriber;
+		private iFolderSettings ifolderSettings = null;
 		private IProcEventClient eventClient;
 		private bool eventError = false;
 		private IntPtr hwnd;
@@ -259,7 +260,7 @@ namespace Novell.FormsTrayApp
 				// If the join menu is already hidden, we don't need to check.
 				if (menuJoin.Visible)
 				{
-					iFolderSettings ifolderSettings = ifWebService.GetSettings();
+					ifolderSettings = ifWebService.GetSettings();
 					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
 				}
 			}
@@ -378,14 +379,14 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				if (eventArgs.Type != "Collection")
+				switch (eventArgs.Type)
 				{
-					iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
-
-					// If the iFolder is available and doesn't exist locally, post a notification.
-					if (ifolder != null)
+					case "Node":
 					{
-						if (ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
+						iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+
+						// If the iFolder is available and doesn't exist locally, post a notification.
+						if ((ifolder != null) && ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
 						{
 							// TODO: check this...
 							//this.Text = "A message needs your attention";
@@ -402,13 +403,19 @@ namespace Novell.FormsTrayApp
 
 							// TODO: Change the icon?
 						}
+						break;
 					}
-					else
+					case "Member":
 					{
-						iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-						if (ifolderUser != null)
+						if (ifolderSettings == null)
 						{
-							ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+							ifolderSettings = ifWebService.GetSettings();
+						}
+
+						iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+						if ((ifolderUser != null) && (!ifolderUser.UserID.Equals(ifolderSettings.CurrentUserID)))
+						{
+							iFolder ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 
 							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
@@ -422,7 +429,10 @@ namespace Novell.FormsTrayApp
 
 							// TODO: Change the icon?
 						}
+						break;
 					}
+					default:
+						break;
 				}
 			}
 			catch
