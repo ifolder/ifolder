@@ -421,6 +421,7 @@ AC_OUTPUT([
 Makefile
 ifolder.pc
 src/Makefile
+src/install-ifolder-to-gac
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
@@ -439,3 +440,6 @@ package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile
 ])
+
+chmod +x src/install-ifolder-to-gac
+
