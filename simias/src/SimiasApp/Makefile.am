@@ -23,7 +23,7 @@ endif
 endif
 
 install-exec-local: SimiasApp.exe $(DATA_FILES)
-	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SimiasApp.exe $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 if LINUX
 	$(INSTALL_PROGRAM) simias $(DESTDIR)$(bindir)

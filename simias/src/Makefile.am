@@ -14,15 +14,13 @@ DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 
-EXTRA_DIST = ifdata simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
+EXTRA_DIST = ifdata simias-snakeoil.keys
 
-install-exec-local: install-simias-to-gac
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
+install-exec-local:
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) ifdata $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) install-simias-to-gac $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f install-simias-to-gac
 	cd $(DESTDIR)$(webbindir); rm -f ifdata
 
 installcheck-summary:

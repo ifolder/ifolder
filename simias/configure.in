@@ -404,9 +404,7 @@ fi
 AC_OUTPUT([
 Makefile
 simias.pc
-simias-ui.pc
 src/Makefile
-src/install-simias-to-gac
 src/Common/SimiasSetup.cs
 src/Common/MyDns.cs
 src/Simias.dll/Makefile
@@ -437,5 +435,4 @@ package/linux/simias.spec
 doc/Makefile
 ])
 
-chmod +x src/install-simias-to-gac
 
