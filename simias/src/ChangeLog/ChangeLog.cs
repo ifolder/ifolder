@@ -998,7 +998,7 @@ namespace Simias.Storage
 					try
 					{
 						// Allocate a buffer to hold the records that are read.
-						byte[] buffer = new byte[ 65536 ];
+						byte[] buffer = new byte[ ChangeLogRecord.RecordSize * 1000 ];
 
 						// Skip over the file header.
 						fs.Position = LogFileHeader.RecordSize;
