@@ -60,6 +60,7 @@
 #include "simias-prefs.h"
 #include "simias-invitation-store.h"
 #include "simias-util.h"
+#include "buddy-profile.h"
 
 
 /****************************************************
@@ -1174,6 +1175,36 @@ plugin_load(GaimPlugin *plugin)
 				plugin,
 				GAIM_CALLBACK(simias_buddy_signed_on_cb),
 				NULL);
+
+	gaim_signal_connect(gaim_accounts_get_handle(),
+				"account-connecting",
+				plugin,
+				GAIM_CALLBACK(simias_account_connecting_cb),
+				NULL);
+
+	gaim_signal_connect(gaim_accounts_get_handle(),
+				"account-setting-info",
+				plugin,
+				GAIM_CALLBACK(simias_account_setting_info_cb),
+				NULL);
+				
+	gaim_signal_connect(gaim_accounts_get_handle(),
+				"account-set-info",
+				plugin,
+				GAIM_CALLBACK(simias_account_set_info_cb),
+				NULL);
+				
+	gaim_signal_connect(gaim_connections_get_handle(),
+				"signing-on",
+				plugin,
+				GAIM_CALLBACK(simias_connection_signing_on_cb),
+				NULL);
+				
+	gaim_signal_connect(gaim_connections_get_handle(),
+				"signed-on",
+				plugin,
+				GAIM_CALLBACK(simias_connection_signed_on_cb),
+				NULL);
 				
 	/**
 	 * FIXME: Write and submit a patch to Gaim to emit a buddy-added-to-blist
@@ -1204,19 +1235,19 @@ plugin_load(GaimPlugin *plugin)
 	init_invitations_window();
 	
 	/* Initialize the Simias Event Client */
-	if (sec_init(&ec, on_sec_state_event, &ec)) {
-		g_print("Error initializing Simias Event Client\n");
-		return FALSE;
-	}
+//	if (sec_init(&ec, on_sec_state_event, &ec)) {
+//		g_print("Error initializing Simias Event Client\n");
+//		return FALSE;
+//	}
 	
-	g_print("Simias Event Client initialized successfully\n");
+//	g_print("Simias Event Client initialized successfully\n");
 		
-	if (sec_register(ec)) {
-		g_print("Error Registering Simias Event Client\n");
-		return FALSE;
-	}
+//	if (sec_register(ec)) {
+//		g_print("Error Registering Simias Event Client\n");
+//		return FALSE;
+//	}
 	
-	g_print("Simias Event Client registered successfully\n");
+//	g_print("Simias Event Client registered successfully\n");
 
 	return TRUE;
 }
@@ -1225,15 +1256,15 @@ static gboolean
 plugin_unload(GaimPlugin *plugin)
 {
 	/* Cleanup/De-register the Simias Event Client */
-	if (sec_deregister(ec)) {
-		g_print("Simias Event Client deregistration failed!\n");
-		return FALSE;
-	}
+//	if (sec_deregister(ec)) {
+//		g_print("Simias Event Client deregistration failed!\n");
+//		return FALSE;
+//	}
 	
-	if (sec_cleanup(&ec)) {
-		g_print("Simias Event Client cleanup failed!\n");
-		return FALSE;
-	}
+//	if (sec_cleanup(&ec)) {
+//		g_print("Simias Event Client cleanup failed!\n");
+//		return FALSE;
+//	}
 	
 	return TRUE; /* Successfully Unloaded */
 }
@@ -1330,6 +1361,12 @@ static void
 init_plugin(GaimPlugin *plugin)
 {
 	/* FIXME: Possibly initialize the prefs in init_plugin() instead of plugin_load() */
+	
+	/* Since we're calling stuff in liboscar, make sure it's loaded before us */
+	info.dependencies = g_list_append(info.dependencies, "prpl-oscar");
+
+	/* Hijack the UI opts so we can read user profiles */
+	gaim_notify_set_ui_ops(simias_notify_get_ui_ops());
 }
 
 GAIM_INIT_PLUGIN(ifolder, init_plugin, info)

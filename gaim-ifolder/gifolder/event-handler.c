@@ -33,6 +33,7 @@
 #include "simias-messages.h"
 #include "simias-util.h"
 #include "simias-prefs.h"
+#include "buddy-profile.h"
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -254,6 +255,34 @@ on_simias_node_deleted(SimiasNodeEvent *event, void *data)
 /**
  * This function is called any time a buddy-sign-on event occurs.  When this
  * happens, we need to do the following:
+ *
+ * 1. Return if the account is not prpl-oscar (AIM-only functionality for now)
+ * 2. Check to see if the buddy has the Gaim iFolder Plugin installed by reading
+ *    their profile.  Do nothing if the buddy doesn't have the plugin installed.
+ * 3. If the buddy DOES have the Gaim iFolder Plugin installed, send Simias
+ *    messages to the buddy to request their POBoxURL.  Create a message handler
+ *    that will store the buddy's POBoxURL into blist.xml.
+ */
+void
+simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
+{
+	const char *prpl_id;
+	char *buddy_profile;
+	char *simias_plugin_installed;
+
+	/* Only do anything if this is an AOL (prpl-oscar) buddy */
+	prpl_id = gaim_account_get_protocol_id(buddy->account);
+	if (!prpl_id || strcmp(prpl_id, "prpl-oscar")) {
+		return;
+	}
+
+	simias_get_buddy_profile(buddy);
+}
+
+
+/**
+ * This function is called any time a buddy-sign-on event occurs.  When this
+ * happens, we need to do the following:
  * 
  * 	1. Send out any invitations that are for this buddy that are in the
  *	   STATE_PENDING state.
@@ -263,7 +292,7 @@ on_simias_node_deleted(SimiasNodeEvent *event, void *data)
  *  3. Send out any pending accept or reject messages for this buddy.
  */
 void
-simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
+simias_buddy_signed_on_cb_old(GaimBuddy *buddy, void *user_data)
 {
 	GtkTreeIter iter;
 	int send_result;

@@ -17,7 +17,8 @@ gifolder_la_SOURCES = \
 	simias-invitation-store.c \
 	simias-messages.c \
 	simias-prefs.c \
-	simias-util.c
+	simias-util.c \
+	buddy-profile.c
 
 endif
 
@@ -27,6 +28,7 @@ AM_CPPFLAGS = \
 	-DDATADIR=\"$(datadir)\" \
 	-DVERSION=\"$(VERSION)\" \
 	-I$(top_srcdir)/src \
+	-I$(top_srcdir)/src/protocols/oscar \
 	$(SIMIAS_CLIENT_CFLAGS) \
 	$(DEBUG_CFLAGS) \
 	$(GTK_CFLAGS)
