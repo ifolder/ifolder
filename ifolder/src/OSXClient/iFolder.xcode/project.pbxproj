@@ -21,6 +21,8 @@
 				3E9B1B01077927E20072994B,
 				3E3405A5078B40EF00630436,
 				3E3405A6078B40EF00630436,
+				3E4F5737078C30DA00313076,
+				3E4F5738078C30DA00313076,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -368,6 +370,36 @@
 		};
 		3E49BC6C0765224B0040812D = {
 			fileRef = 3E49BC6B0765224B0040812D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E4F5737078C30DA00313076 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SyncLogWindowController.h;
+			path = src/SyncLogWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E4F5738078C30DA00313076 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SyncLogWindowController.m;
+			path = src/SyncLogWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E4F5739078C30DA00313076 = {
+			fileRef = 3E4F5737078C30DA00313076;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E4F573A078C30DA00313076 = {
+			fileRef = 3E4F5738078C30DA00313076;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -752,6 +784,7 @@
 				3EC2B460077A903700F736C1,
 				3EC2B462077A903E00F736C1,
 				3E3405A7078B40EF00630436,
+				3E4F5739078C30DA00313076,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -780,6 +813,7 @@
 				3E528C3407754B8E0064F585,
 				3E9B1B03077927E20072994B,
 				3E3405A8078B40EF00630436,
+				3E4F573A078C30DA00313076,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,13 +20,13 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {refreshWindow = id; showLoginWindow = id; }; 
+            ACTIONS = {refreshWindow = id; showLoginWindow = id; showSyncLog = id; }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 domainsController = NSArrayController; 
                 ifoldersController = NSArrayController; 
-                logController = NSArrayController; 
+                syncLogController = SyncLogWindowController; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
@@ -44,6 +44,13 @@
                 pathField = NSTextField; 
                 setupSheet = id; 
             }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {clearLog = id; saveLog = id; }; 
+            CLASS = SyncLogWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {logController = NSArrayController; }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 
