@@ -500,7 +500,7 @@ package/linux/Makefile
 package/linux/ifolder.spec
 doc/Makefile
 help/Makefile
-src/po/Makefile.in
+po/Makefile.in
 ])
 
 
