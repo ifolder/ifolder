@@ -57,6 +57,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_29384441CBFF43FFB98D254AC90BD163"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_322D550A1C4B459383D49F58828C5E96"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -64,12 +70,6 @@
         "Entry"
         {
         "MsmKey" = "8:_466A9CAA56C74C618743F3902430E514"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5037C905660F4574B9B6637CC9A3CE2D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,18 +87,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_64374C823786493585CB0BD62C0DDE7E"
-        "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_64374C823786493585CB0BD62C0DDE7E"
-        "OwnerKey" = "8:_5037C905660F4574B9B6637CC9A3CE2D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_7E6EB9854A2C4186A66DB854FE6185DF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -107,6 +95,18 @@
         {
         "MsmKey" = "8:_83694938015F4993AE711930A005DFC9"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_86658F20DBEB48678EB97CB75214FDC9"
+        "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_86658F20DBEB48678EB97CB75214FDC9"
+        "OwnerKey" = "8:_29384441CBFF43FFB98D254AC90BD163"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -244,7 +244,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1538.23026, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1584.23420, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_0C336FC79B14484D84C6E37B881F55AB"
@@ -351,6 +351,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_29384441CBFF43FFB98D254AC90BD163"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ContactBrowser, Version=1.0.1584.23421, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_29384441CBFF43FFB98D254AC90BD163"
+                    {
+                    "Name" = "8:ContactBrowser.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\src\\FormsAddrBook\\ContactBrowser.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_322D550A1C4B459383D49F58828C5E96"
             {
             "SourcePath" = "8:..\\..\\..\\src\\FormsAddrBook\\address_app.ico"
@@ -377,37 +408,6 @@
             "TargetName" = "8:house.png"
             "Tag" = "8:"
             "Folder" = "8:_E399BA44EF6041E4A7DD991F5F019CA6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_5037C905660F4574B9B6637CC9A3CE2D"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Book, Version=1.0.1538.23026, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_5037C905660F4574B9B6637CC9A3CE2D"
-                    {
-                    "Name" = "8:Book.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\src\\FormsAddrBook\\Book.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -690,7 +690,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_64374C823786493585CB0BD62C0DDE7E"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_86658F20DBEB48678EB97CB75214FDC9"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:TRUE"

@@ -13,27 +13,27 @@ DATA_FILES = address_app.ico
 
 EXTRA_DIST = $(Book_CSFILES) $(DATA_FILES)
 
-all: Book.exe
+all: ContactBrowser.exe
 
-Book.exe: $(Book_CSFILES) $(Book_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.doc.xml
+ContactBrowser.exe: $(Book_CSFILES) $(Book_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:ContactBrowser.doc.xml
 
 if DEBUG
 if WINDOWS
-DEBUG_FILES = Book.pdb
+DEBUG_FILES = ContactBrowser.pdb
 endif
 endif
 
-install-exec-local: Book.exe $(DATA_FILES)
+install-exec-local: ContactBrowser.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Book.exe $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) ContactBrowser.exe $(DATA_FILES) $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Book.exe $(DATA_FILES) $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f ContactBrowser.exe $(DATA_FILES) $(DEBUG_FILES)
     
 installcheck-local: install
 	
-CLEAN_FILES = Book.exe Book.doc.xml
+CLEAN_FILES = ContactBrowser.exe ContactBrowser.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
