@@ -9,7 +9,7 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="MiniFolder"
+COMMON_SUBDIRS="MiniFolder iFolder"
 LINUX_SUBDIRS=
 WINDOWS_SUBDIRS=
 
@@ -208,4 +208,5 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 src/MiniFolder/Makefile
+src/iFolder/Makefile
 ])
