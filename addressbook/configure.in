@@ -296,19 +296,19 @@ PKG_CHECK_MODULES(SIMIAS, simias = $VERSION)
 AC_SUBST(SIMIAS_LIBS)
 
 case $ADDRESSBOOK_OS in
-    linux)
-        PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
-	GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
-	GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
-	test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
-	AC_SUBST(GTK_SHARP_PREFIX)
+	linux)
+		PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
+		GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
+		GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
+#	test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
+		AC_SUBST(GTK_SHARP_PREFIX)
 	
-        PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
-	AC_SUBST(GDK20_CFLAGS)
-	AC_SUBST(GDK20_LIBS)
-        PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
-	AC_SUBST(ATK_CFLAGS)
-	AC_SUBST(ATK_LIBS)
+		PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
+		AC_SUBST(GDK20_CFLAGS)
+		AC_SUBST(GDK20_LIBS)
+		PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
+		AC_SUBST(ATK_CFLAGS)
+		AC_SUBST(ATK_LIBS)
     ;;
 esac
 
