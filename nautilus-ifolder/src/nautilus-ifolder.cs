@@ -36,6 +36,8 @@ namespace Novell.iFolder.Nautilus
 			// Don't do anything if nothing was specified to do
 			if (args.Length == 0)
 				return 0;
+			
+			Application.Init ();
 				
 			switch (args [0]) {
 				case "WebServiceURL":
