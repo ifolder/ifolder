@@ -90,7 +90,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used as separator in string representation.
 		/// </summary>
-		private char valueSeparator = ':';
+		private const char valueSeparator = ':';
 		#endregion
 
 		#region Properties
@@ -159,16 +159,17 @@ namespace Simias.Storage
 
 		#endregion
 
+		#region Public Methods
 		/// <summary>
 		/// Gets a string representation of this context.
-		/// Can be used to store this cookie for latter use.
+		/// Can be used to store this cookie for later use.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A formatted string representing the cookie.</returns>
 		public override string ToString()
 		{
 			return (timeStamp.Ticks.ToString() + valueSeparator + recordID.ToString() + valueSeparator + hint.ToString());
 		}
-
+		#endregion
 	}
 
 	/// <summary>
@@ -286,9 +287,10 @@ namespace Simias.Storage
 		{
 			/// <summary>
 			/// The node exists but no log record has been created.
-			/// Do a brutt force sync.
+			/// Do a brute force sync.
 			/// </summary>
 			Unknown,
+
 			/// <summary>
 			/// Node object was created.
 			/// </summary>
