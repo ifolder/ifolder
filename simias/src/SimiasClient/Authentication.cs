@@ -172,5 +172,54 @@ namespace Simias.Client.Authentication
 
 			return status;
 		}
+
+		/// <summary>
+		/// Logout from a remote Simias server
+		/// </summary>
+		/// <returns>Simias.Client.Authentication.Status object</returns>
+		public Status Logout()
+		{
+			Status status = null;
+
+			try
+			{
+				SimiasWebService simiasSvc = new SimiasWebService();
+				simiasSvc.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+				LocalService.Start( simiasSvc );
+
+				DomainInformation cInfo = simiasSvc.GetDomainInformation( this.domainID );
+				if ( cInfo != null )
+				{
+					// Clear the password from this process.
+					NetCredential netCredential = new NetCredential(
+						this.serviceName, 
+						this.domainID, 
+						true, 
+						cInfo.MemberName, 
+						null);
+
+					netCredential.Remove(new Uri(cInfo.RemoteUrl), "BASIC");
+
+					// Call Simias for a remote domain authentication
+					status =
+						simiasSvc.LogoutFromRemoteDomain( this.domainID );
+				}
+				else
+				{
+					//status = new Status( StatusCodes.UnknownDomain );
+				}
+			}
+			catch(Exception ex)
+			{
+				// DEBUG
+				if (MyEnvironment.Mono)
+					Console.WriteLine( "Authentication - caught exception: {0}", ex.Message );
+
+				//status = new Status( StatusCodes.InternalException );
+				//status.ExceptionMessage = ex.Message;
+			}
+
+			return status;
+		}
 	}
 }

@@ -555,9 +555,10 @@ namespace Simias.DomainServices
 			Member member = domain.GetMemberByID( store.GetUserIDFromDomainID( domainID ) );
 			if ( member != null )
 			{
-				// There currently isn't a way to clear an entry from the cache, so for now just set
-				// the password to a space character.
-				new NetCredential( "iFolder", domainID, true, member.Name, " " );
+				// Clear the entry from the cache.
+				NetCredential netCredential = new NetCredential( "iFolder", domainID, true, member.Name, null );
+				Uri uri = new Uri(DomainProvider.ResolveLocation(domainID), "/DomainService.asmx");
+				netCredential.Remove(uri, "BASIC");
 			}
 
 			return new Simias.Authentication.Status(SCodes.Success);
