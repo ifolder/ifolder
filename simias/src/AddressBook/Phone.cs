@@ -179,10 +179,12 @@ namespace Novell.AddressBook
 					this.phoneTypes &= ~PhoneTypes.preferred;
 				}
 
+				/*
 				if (this.parentContact != null)
 				{
 					this.parentContact.SetDirty(ChangeMap.phone);
 				}
+				*/
 			}
 		}
 

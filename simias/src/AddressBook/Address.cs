@@ -82,17 +82,8 @@ namespace Novell.AddressBook
 	{
 		#region Class Members
 		private Contact			parentContact;
-		private Node			thisNode;
-		private string			locality;
-		private string			region;
-		private string			country;
-		private string			zip;
-		private string			street;
-		private string			poBox;
-		private string			extAddress;
-		private string			mailStop;
 //		private bool			preferred = false;
-		private AddressTypes	addressTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
+		private AddressTypes	defaultTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
 
 		#endregion
 
@@ -126,13 +117,15 @@ namespace Novell.AddressBook
 				{
 					if (value != 0)
 					{
-						this.Properties.ModifyProperty( Common.addressTypesProperty, value );
+						this.Properties.ModifyProperty( 
+							Common.addressTypesProperty, 
+							value );
 					}
 					else
 					{
 						this.Properties.ModifyProperty( 
 							Common.addressTypesProperty, 
-							AddressTypes.work | AddressTypes.parcel | AddressTypes.postal);
+							this.defaultTypes);
 					}
 				}
 				catch{}
@@ -445,10 +438,13 @@ namespace Novell.AddressBook
 			{	
 				try
 				{
-					return(
-						Convert.ToBoolean(
-							this.Properties.GetSingleProperty( 
-								Common.preferredProperty ).ToString()));
+					AddressTypes addrTypes = (AddressTypes)
+						this.Properties.GetSingleProperty(
+							Common.addressTypesProperty).Value;
+					if ((addrTypes & AddressTypes.preferred) == AddressTypes.preferred)
+					{
+						return(true);
+					}
 				}
 				catch{}
 				return(false);
@@ -458,7 +454,20 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					this.Properties.ModifyProperty( Common.preferredProperty, value );
+					AddressTypes addrTypes = (AddressTypes)
+						this.Properties.GetSingleProperty(
+							Common.addressTypesProperty).Value;
+
+					if (value == true)
+					{
+						addrTypes |= AddressTypes.preferred;
+					}
+					else
+					{
+						addrTypes &= ~AddressTypes.preferred;
+					}
+
+					this.Properties.ModifyProperty( Common.addressTypesProperty, addrTypes );
 				}
 				catch{}
 			}	
@@ -473,6 +482,9 @@ namespace Novell.AddressBook
 		/// </summary>
 		public Address() : base("")
 		{
+			this.Properties.ModifyProperty(
+				Common.addressTypesProperty, 
+				this.defaultTypes);
 		}
 
 		/// <summary>
@@ -481,11 +493,17 @@ namespace Novell.AddressBook
 		/// </summary>
 		public Address(string zip) : base(zip)
 		{
+			this.Properties.ModifyProperty(
+				Common.addressTypesProperty, 
+				this.defaultTypes);
 		}
 
 		internal Address(Contact parentContact) : base("")
 		{
 			this.parentContact = parentContact;
+			this.Properties.ModifyProperty( 
+				Common.addressTypesProperty, 
+				this.defaultTypes);
 		}
 
 		internal Address(Contact parentContact, Node cNode) : base(cNode)
@@ -524,7 +542,7 @@ namespace Novell.AddressBook
 			}
 
 			//
-			// Add a relationship for Name node and Contact node.
+			// Add a relationship for Address node to Contact node.
 			//
 
 			// Can't create and add the relationship object if the contact
@@ -534,133 +552,14 @@ namespace Novell.AddressBook
 			{
 				Relationship parentChild = new 
 					Relationship( 
-					parentContact.addressBook.collection.ID, 
-					parentContact.ID );
+						parentContact.addressBook.collection.ID, 
+						parentContact.ID );
 
-				this.Properties.AddProperty( "AddressToContact", parentChild );
+				this.Properties.AddProperty( Common.addressToContact, parentChild );
 			}
 
 			this.parentContact.addressList.Add(this);
 		}
-
-		/// <summary>
-		/// Called by the static method PersistToStore
-		/// </summary>
-		/// <returns>nothing</returns>
-		/*
-		private void Commit()
-		{
-			try
-			{
-				if (this.parentContact != null)
-				{
-					// New object?
-					if (this.ID == "")
-					{
-						Node cNode = null;
-						//Node cNode = parentContact.thisNode.CreateChild(this.zip, Common.addressProperty);
-						//cNode.Properties.AddProperty(Common.preferredProperty, this.preferred);
-						//cNode.Properties.AddProperty(Common.addressTypesProperty, this.addressTypes);
-						//this.thisNode = cNode;
-						//this.id = cNode.Id;
-					}
-
-					if (this.street != null)
-					{
-						if (this.street != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.streetProperty, this.street);
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.streetProperty );
-						}
-					}
-
-					if (this.locality != null)
-					{
-						if (this.locality != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.localityProperty, this.locality);
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.localityProperty );
-						}
-					}
-
-					if (this.region != null)
-					{
-						if (this.region != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.regionProperty, this.region );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.regionProperty );
-						}
-					}
-
-					if (this.poBox != null)
-					{
-						if (this.poBox != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.poBoxProperty, this.poBox );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.poBoxProperty );
-						}
-					}
-
-					if (this.extAddress != null)
-					{
-						if (this.extAddress != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.extendedProperty, this.extAddress );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.extendedProperty );
-						}
-					}
-
-					if (this.mailStop != null)
-					{
-						if (this.mailStop != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.mailStopProperty, this.mailStop );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.mailStopProperty );
-						}
-					}
-
-					if (this.country != null)
-					{
-						if (this.country != "")
-						{
-							this.thisNode.Properties.ModifyProperty( Common.countryProperty, this.country );
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties( Common.countryProperty );
-						}
-					}
-
-					if (this.addressTypes == 0)
-					{
-						this.addressTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
-					}
-
-					this.thisNode.Properties.ModifyProperty( Common.addressTypesProperty, this.addressTypes );
-				}
-			}
-			catch{}
-			// FIXME - log commit errors
-		}
-		*/
 
 		internal static bool PrepareToCommit(Contact contact)
 		{
@@ -688,7 +587,10 @@ namespace Novell.AddressBook
 				// No preferred do we have one typed WORK?
 				foreach(Address tmpAddress in contact.addressList)
 				{
-					if ((tmpAddress.addressTypes & AddressTypes.work) == AddressTypes.work)
+					AddressTypes addrTypes = (AddressTypes)
+						tmpAddress.Properties.GetSingleProperty(Common.addressTypesProperty).Value;
+
+					if ((addrTypes & AddressTypes.work) == AddressTypes.work)
 					{
 						tmpAddress.Preferred = true;
 						break;
@@ -705,15 +607,6 @@ namespace Novell.AddressBook
 					}
 				}
 			}
-
-			/*
-			// To the collection store they go!
-			foreach(Address tmpAddress in contact.addressList)
-			{
-				tmpAddress.Commit();
-			}
-			*/
-
 			return(true);
 		}
 
@@ -812,12 +705,9 @@ namespace Novell.AddressBook
 			if (this.parentContact != null)
 			{
 				this.parentContact.addressList.Remove(this);
-
-				if (this.thisNode != null)
-				{
-					this.Delete();
-				}
 			}
+
+			this.Delete();
 		}
 
 		#endregion

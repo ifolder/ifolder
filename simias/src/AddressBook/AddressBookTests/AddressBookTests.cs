@@ -425,7 +425,7 @@ namespace Novell.AddressBook.Tests
 
 			// Now do a search for the first guy
 
-			IEnumerator e = tstBook.SearchEmail(tstEmailOne, "begins").GetEnumerator();
+			IEnumerator e = tstBook.SearchEmail(tstEmailOne, Novell.AddressBook.SearchOp.equals).GetEnumerator();
 			if (e.MoveNext())
 			{
 				Contact cContact = (Contact) e.Current;
@@ -575,6 +575,280 @@ namespace Novell.AddressBook.Tests
 		}
 
 		[Test]
+		public void BasicAddressTest()
+		{
+			Console.WriteLine("");
+			Console.WriteLine("Starting \"Basic Address Test\"");
+			const string tstUsername = "testuser";
+
+			AddressTypes addrTypes = (AddressTypes.home | AddressTypes.postal);
+			const string street = "295 East 100 North";
+			const string city = "Salina";
+			const string state = "UT";
+			const string zip = "84654";
+			const string country = "USA";
+			const string postOfficeBox = "1411";
+			AddressBook tstBook = null;
+
+			try
+			{
+				tstBook = new 
+					AddressBook(
+						"TestBookForBasicAddressTest",
+						Novell.AddressBook.AddressBookType.Private,
+						Novell.AddressBook.AddressBookRights.ReadWrite,
+						false);
+
+				abManager.AddAddressBook(tstBook);
+
+				// Create a contact in the new book
+				Contact tstContact = new Contact();
+				tstContact.UserName = tstUsername;
+
+				// Create an Address object
+				Address addr = new Address(zip);
+				addr.Street = street;
+				addr.Locality = city;
+				addr.Region = state;
+				addr.Country = country;
+				addr.PostalBox = postOfficeBox;
+				addr.Types = addrTypes;
+
+				// toggle a bit
+				addr.Preferred = true;
+				addr.Preferred = false;
+				addr.Preferred = true;
+
+				Console.WriteLine("Adding new contact");
+				Console.WriteLine("Adding Address object to contact");
+				Console.WriteLine("  Street:  " + addr.Street);
+				Console.WriteLine("  City:    " + addr.Locality);
+				Console.WriteLine("  Zip:     " + addr.PostalCode);
+
+				tstContact.AddAddress(addr);
+				tstBook.AddContact(tstContact);
+				tstContact.Commit();
+
+				// Now read the name back and verify
+				Address cAddr = tstContact.GetAddress(addr.ID);
+				if (cAddr != null)
+				{
+					if (cAddr.Street != street)
+					{
+						throw new ApplicationException( "BasicAddressTest::street does not match" );
+					}
+
+					if (cAddr.Locality != city)
+					{
+						throw new ApplicationException( "BasicAddressTest::city does not match" );
+					}
+
+					if (cAddr.Region != state)
+					{
+						throw new ApplicationException( "BasicAddressTest::state does not match" );
+					}
+
+					if (cAddr.Country != country)
+					{
+						throw new ApplicationException( "BasicAddressTest::country does not match" );
+					}
+
+					if (cAddr.PostalCode != zip)
+					{
+						throw new ApplicationException( "BasicAddressTest::zip does not match" );
+					}
+
+					if (cAddr.PostalBox != postOfficeBox)
+					{
+						throw new ApplicationException( "BasicAddressTest::post office box does not match" );
+					}
+
+					if (cAddr.Preferred == false)
+					{
+						throw new ApplicationException( "BasicAddressTest::address should be preferred" );
+					}
+				}
+
+				// Now get a new contact instance
+				Console.WriteLine("");
+				Console.WriteLine("Getting a new instance of the Contact");
+				Contact cContact = tstBook.GetContact(tstContact.ID);
+				if (cContact != null)
+				{
+					Console.WriteLine("Testing GetPreferredAddress");
+					Address prefAddress = cContact.GetPreferredAddress();
+					if (prefAddress != null)
+					{
+						if (prefAddress.ID != cAddr.ID)
+						{
+							throw new ApplicationException( "BasicAddressTest::wrong preferred address" );
+						}
+					}
+					else
+					{
+						throw new ApplicationException( "BasicAddressTest::failed to get preferred address" );
+					}
+
+					Console.WriteLine("Getting a new instance of Address");
+					Address cAddress = cContact.GetAddress(cAddr.ID);
+					if (cAddress != null)
+					{
+						Console.WriteLine("Street:     " + cAddress.Street);
+						if (cAddress.Street != cAddr.Street)
+						{
+							throw new ApplicationException( "BasicAddressTest::street does not match" );
+						}
+
+						Console.WriteLine("City:       " + cAddress.Locality);
+						if (cAddress.Locality != cAddr.Locality)
+						{
+							throw new ApplicationException( "BasicAddressTest::city does not match" );
+						}
+
+						Console.WriteLine("State:      " + cAddress.Region);
+						if (cAddress.Region != cAddr.Region)
+						{
+							throw new ApplicationException( "BasicAddressTest::state does not match" );
+						}
+
+						Console.WriteLine("Zip:        " + cAddress.PostalCode);
+						if (cAddress.PostalCode != cAddr.PostalCode)
+						{
+							throw new ApplicationException( "BasicAddressTest::zip does not match" );
+						}
+
+						Console.WriteLine("PO Box:     " + cAddress.PostalBox);
+						if (cAddress.PostalBox != cAddr.PostalBox)
+						{
+							throw new ApplicationException( "BasicAddressTest::po box does not match" );
+						}
+
+						Console.WriteLine("Country:    " + cAddress.Country);
+						if (cAddress.Country != cAddr.Country)
+						{
+							throw new ApplicationException( "BasicAddressTest::country does not match" );
+						}
+
+						Console.WriteLine("Preferred:  " + cAddress.Preferred.ToString());
+						if (cAddress.Types != cAddr.Types)
+						{
+							throw new ApplicationException( "BasicAddressTest::address types don't match" );
+						}
+					}
+					else
+					{
+						throw new ApplicationException( "BasicAddressTest::failed to get Address I just saved" );
+					}
+				}
+			}
+			finally
+			{
+				if (tstBook != null)
+				{
+					tstBook.Delete();
+				}
+			}
+
+			Console.WriteLine("Ending \"Basic Address Test\"");
+		}
+
+		[Test]
+		public void SearchLastNameTest()
+		{
+			Console.WriteLine("");
+			Console.WriteLine("Starting \"Search Last Name Test\"");
+			const string userOne = "smele";
+			const string userOneFirst = "Stone";
+			const string userOneLast = "Mele";
+
+			const string userTwo = "sgonzales";
+			const string userTwoFirst = "Samantha";
+			const string userTwoLast = "Gonazales";
+
+			const string userThree = "banderson";
+			const string userThreeFirst = "Braylee";
+			const string userThreeLast = "Anderson";
+
+			const string userFour = "ianderson";
+			const string userFourFirst = "Ian";
+			const string userFourLast = "Anderson";
+
+			AddressBook tstBook = null;
+
+			try
+			{
+				tstBook = new 
+					AddressBook(
+					"TestBookForSearchLastNameTest",
+					Novell.AddressBook.AddressBookType.Private,
+					Novell.AddressBook.AddressBookRights.ReadWrite,
+					false);
+
+				abManager.AddAddressBook(tstBook);
+
+				// Create the contacts in the new book
+				Console.WriteLine("Creating test contacts");
+				Console.WriteLine("   Adding " + userOne);
+				Contact user1 = new Contact();
+				user1.UserName = userOne;
+				Name user1name = new Name(userOneFirst, userOneLast);
+				user1.AddName(user1name);
+				tstBook.AddContact(user1);
+				user1.Commit();
+
+				Console.WriteLine("   Adding " + userTwo);
+				Contact user2 = new Contact();
+				user2.UserName = userTwo;
+				Name user2name = new Name(userTwoFirst, userTwoLast);
+				user2.AddName(user2name);
+				tstBook.AddContact(user2);
+				user2.Commit();
+
+				Console.WriteLine("   Adding " + userThree);
+				Contact user3 = new Contact();
+				user3.UserName = userThree;
+				Name user3name = new Name(userThreeFirst, userThreeLast);
+				user3.AddName(user3name);
+				tstBook.AddContact(user3);
+				user3.Commit();
+
+				Console.WriteLine("   Adding " + userFour);
+				Contact user4 = new Contact();
+				user4.UserName = userFour;
+				Name user4name = new Name(userFourFirst, userFourLast);
+				user4.AddName(user4name);
+				tstBook.AddContact(user4);
+				user4.Commit();
+
+				Console.WriteLine("");
+				Console.WriteLine("Searching for " + userOneLast);
+				Console.WriteLine("Should find one");
+				IABList results = tstBook.SearchLastName(userOneLast, Novell.AddressBook.SearchOp.equals);
+				foreach(Contact cContact in results)
+				{
+					Console.WriteLine("   Found: " + cContact.UserName);
+				}
+
+				Console.WriteLine("Searching for " + userOneLast);
+				Console.WriteLine("Should find two");
+				results = tstBook.SearchLastName(userThreeLast, Novell.AddressBook.SearchOp.equals);
+				foreach(Contact cContact in results)
+				{
+					Console.WriteLine("   Found: " + cContact.UserName);
+				}
+			}
+			finally
+			{
+				if (tstBook != null)
+				{
+					tstBook.Delete();
+				}
+			}
+
+			Console.WriteLine("Ending \"Search Last Name Test\"");
+		}
+
+		[Test]
 		public void EnumContactsTest()
 		{
 			Console.WriteLine("");
@@ -659,14 +933,16 @@ namespace Novell.AddressBook.Tests
 				Iteration0Tests tests = new Iteration0Tests();
 				tests.Init();
 				tests.OpenDefaultBook();
-				tests.EnumerateMyAddressBooks();
-				tests.CreateDeleteAddressBook();
-				tests.BasicContactTests();
-				tests.EmailTests();
-				tests.PhoneTests();
-				tests.SearchEmailTest();
-				tests.BasicNameTests();
-				tests.EnumContactsTest();
+				//tests.EnumerateMyAddressBooks();
+				//tests.CreateDeleteAddressBook();
+				//tests.BasicContactTests();
+				//tests.EmailTests();
+				//tests.PhoneTests();
+				//tests.SearchEmailTest();
+				//tests.BasicNameTests();
+				//tests.EnumContactsTest();
+				tests.BasicAddressTest();
+				tests.SearchLastNameTest();
 			}
 		}
 	}

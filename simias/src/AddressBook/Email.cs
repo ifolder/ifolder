@@ -140,10 +140,12 @@ namespace Novell.AddressBook
 					this.emailTypes &= ~EmailTypes.preferred;
 				}
 
+				/*
 				if (this.parentContact != null)
 				{
 					this.parentContact.SetDirty(ChangeMap.email);
 				}
+				*/
 			}
 		}
 
@@ -172,10 +174,12 @@ namespace Novell.AddressBook
 					this.emailTypes &= ~EmailTypes.x400;
 				}
 
+				/*
 				if (this.parentContact != null)
 				{
 					this.parentContact.SetDirty(ChangeMap.email);
 				}
+				*/
 			}
 		}
 
@@ -208,7 +212,9 @@ namespace Novell.AddressBook
 						}
 					}
 
+					/*
 					this.parentContact.SetDirty(ChangeMap.email);
+					*/
 				}
 			}
 		}

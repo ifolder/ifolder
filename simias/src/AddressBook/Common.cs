@@ -231,12 +231,16 @@ namespace Novell.AddressBook
 		/// </summary>
 		internal static string[] vCardProperties = new string[] {"ADR", "BDAY", "EMAIL", "LOGO", "N", "NICKNAME", "NOTE", "ORG", "PHOTO", "ROLE", "SOUND", "TEL", "TITLE", "URL", "X-NAB-BLOG", "X-NAB-USERNAME"};
 
-
 		/// <summary>
 		/// Exception header for all application exceptions thrown by the address book
 		/// </summary>
 		internal const string abExceptionHeader = "Novell.AddressBook.Exception - ";
 		internal const string addressBookExceptionHeader = "Novell.AddressBook.Exception - ";
+
+		// Relationship property names
+		internal const string contactToAddressBook = "AB:ContactToAddressBook";
+		internal const string nameToContact = "AB:NameToContact";
+		internal const string addressToContact = "AB:AddressToContact";
 
 		#endregion
 

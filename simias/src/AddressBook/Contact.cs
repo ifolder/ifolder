@@ -644,7 +644,7 @@ namespace Novell.AddressBook
 					// Add a relationship that will reference the parent Node.
 					Relationship parentChild = new 
 						Relationship( addressBook.collection.ID, this.ID );
-					this.Properties.AddProperty( "ParentAddressBook", parentChild );
+					this.Properties.AddProperty( Common.contactToAddressBook, parentChild );
 
 					// If any Name objects were added to the contact before it was attached
 					// to an address book, we'll need to create relationships for them as well
@@ -654,7 +654,19 @@ namespace Novell.AddressBook
 						{
 							Relationship nameAndContact = new 
 								Relationship(addressBook.collection.ID, this.ID );
-							cName.Properties.AddProperty( "ParentContact", nameAndContact );
+							cName.Properties.AddProperty( Common.nameToContact, nameAndContact );
+						}
+					}
+
+					// If any Address objects were added to the contact before it was attached
+					// to an address book, we'll need to create relationships for them as well
+					if (this.addressList.Count > 0)
+					{
+						foreach(Address cAddress in this.addressList)
+						{
+							Relationship addressAndContact = new 
+								Relationship(addressBook.collection.ID, this.ID );
+							cAddress.Properties.AddProperty( Common.addressToContact, addressAndContact );
 						}
 					}
 					return;
@@ -662,16 +674,6 @@ namespace Novell.AddressBook
 			}
 			catch{}
 			throw new ApplicationException(Common.addressBookExceptionHeader + "Contact - missing mandatory properties");
-		}
-
-		internal void SetDirty()
-		{
-			//this.propertyChangeMap |= ChangeMap.unknown;
-		}
-
-		internal void SetDirty(ChangeMap dirtyProperty)
-		{
-			//this.propertyChangeMap |= dirtyProperty;
 		}
 
 		private	string GetFullName()
@@ -735,11 +737,12 @@ namespace Novell.AddressBook
 
 			try
 			{
-				// Load up the names
+				// Load up any names
 				this.nameList.Clear();
 				Relationship parentChild = 
 					new Relationship( this.addressBook.collection.ID, this.ID );
-				ICSList results = this.addressBook.collection.Search( "ParentContact", parentChild );
+				ICSList results = 
+					this.addressBook.collection.Search( Common.nameToContact, parentChild );
 				foreach ( ShallowNode cShallow in results )
 				{
 					Node cNode = new Node(this.addressBook.collection, cShallow);
@@ -757,7 +760,8 @@ namespace Novell.AddressBook
 				this.addressList.Clear();
 				Relationship parentChild = 
 					new Relationship( this.addressBook.collection.ID, this.ID );
-				ICSList results = this.addressBook.collection.Search( "AddressToContact", parentChild );
+				ICSList results = 
+					this.addressBook.collection.Search( Common.addressToContact, parentChild );
 				foreach ( ShallowNode cShallow in results )
 				{
 					Node cNode = new Node(this.addressBook.collection, cShallow);
@@ -924,6 +928,7 @@ namespace Novell.AddressBook
 
 				if (this.nameList.Count > 0)
 				{
+					Novell.AddressBook.Name.PrepareToCommit(this);
 					foreach(Name cName in this.nameList)
 					{
 						this.addressBook.collection.SetType(cName, Common.nameProperty);
@@ -933,6 +938,7 @@ namespace Novell.AddressBook
 
 				if (this.addressList.Count > 0)
 				{
+					Novell.AddressBook.Address.PrepareToCommit(this);
 					foreach(Address cAddr in this.addressList)
 					{
 						this.addressBook.collection.SetType(cAddr, Common.addressProperty);
@@ -951,8 +957,27 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				// FIXUP
-				// Delete all children as well
+				// First delete all child nodes
+				if (this.nameList.Count > 0)
+				{
+					foreach(Name cName in this.nameList)
+					{
+						cName.Delete();
+					}
+
+					this.nameList.Clear();
+				}
+
+				if (this.addressList.Count > 0)
+				{
+					foreach(Address cAddress in this.addressList)
+					{
+						cAddress.Delete();
+					}
+
+					this.addressList.Clear();
+				}
+
 				this.Delete();
 			}
 			catch{}
@@ -1053,16 +1078,17 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				foreach(Address addr in this.addressList)
+				foreach(Address cAddress in this.addressList)
 				{
-					if (addr.ID == addressID)
+					if (cAddress.ID == addressID)
 					{
-						return(addr);
+						return(cAddress);
 					}
 				}
 			}
 			catch{}
-			throw new ApplicationException( Common.addressBookExceptionHeader +  "Address " + addressID + " not found" );
+			return(null);
+			//throw new ApplicationException( Common.addressBookExceptionHeader +  "Address " + addressID + " not found" );
 		}
 
 		/// <summary>

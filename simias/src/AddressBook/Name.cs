@@ -293,6 +293,7 @@ namespace Novell.AddressBook
 		/// </summary>
 		public Name() : base ("")
 		{
+			this.Properties.AddProperty( Common.preferredProperty, true );
 		}
 
 		/// <summary>
@@ -301,21 +302,13 @@ namespace Novell.AddressBook
 		public Name(string given, string family) : base (given)
 		{
 			this.Properties.AddProperty( Common.familyProperty, family );
+			this.Properties.AddProperty( Common.preferredProperty, true );
 		}
 
 		internal Name(Contact parentContact, Node cNode) : base (cNode)
 		{
 			this.parentContact = parentContact;
-			//this.ToObject(parentContact, nameID);
 		}
-
-		internal Name(Contact parentContact, string Id) : base ("")
-		{
-
-			this.parentContact = parentContact;
-			//this.ToObject(parentContact, nameID);
-		}
-
 		#endregion
 
 		#region Internal Methods
@@ -382,57 +375,14 @@ namespace Novell.AddressBook
 						parentContact.addressBook.collection.ID, 
 						parentContact.ID );
 
-				this.Properties.AddProperty( "ParentContact", parentChild );
+				this.Properties.AddProperty( Common.nameToContact, parentChild );
 			}
 
 			this.parentContact.nameList.Add(this);
 		}
 
-		/// <summary>
-		/// Called by the static method PersistToStore
-		/// </summary>
-		/// <returns>nothing</returns>
-		/*
-		private void Commit()
+		internal static bool PrepareToCommit(Contact contact)
 		{
-			try
-			{
-				if (this.parentContact != null)
-				{
-					// Any valid members?
-					if (this.given == null &&
-						this.family == null &&
-						this.other == null &&
-						this.prefix == null &&
-						this.suffix == null)
-					{
-						return;
-					}
-
-					// New object?
-					if (this.ID == "")
-					{
-						Node cNode = parentContact.thisNode.CreateChild(this.given, Common.nameProperty);
-						this.thisNode = cNode;
-						this.id = cNode.Id;
-					}
-		
-				}
-			}
-			catch{}
-			// FIXME - log commit errors
-		}
-		*/
-
-		/*
-		internal static bool PersistToStore(Contact contact)
-		{
-			// Anything in the list to persist?
-			if (contact.nameList.Count == 0)
-			{
-				return(false);
-			}
-
 			// assume no preferred is set
 			bool foundPreferred = false;
 
@@ -456,40 +406,7 @@ namespace Novell.AddressBook
 				}
 			}
 
-			// To the collection store they go!
-			foreach(Name cName in contact.nameList)
-			{
-				cName.Commit();
-			}
-
 			return(true);
-		}
-		*/
-
-		internal void ToObject(Contact contact, string objectID)
-		{
-			this.parentContact = contact;
-
-			/*
-			try
-			{
-				this.thisNode = this.parentContact.addressBook.collection.GetNodeById(objectID);
-				this.id = this.thisNode.Id;
-				this.given = this.thisNode.Name;
-
-				try
-				{
-					this.preferred = 
-						Convert.ToBoolean(thisNode.Properties.GetSingleProperty( preferredProperty ).ToString());
-				}
-				catch{}
-
-			}
-			catch
-			{
-				throw new ApplicationException("AddressBook::Name node not found");
-			}
-			*/
 		}
 		#endregion
 
@@ -503,8 +420,9 @@ namespace Novell.AddressBook
 			if (this.parentContact != null)
 			{
 				this.parentContact.nameList.Remove(this);
-				this.Delete();
 			}
+
+			this.Delete();
 		}
 
 		#endregion
