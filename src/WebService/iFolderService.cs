@@ -845,6 +845,81 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that returns a list of all members from the default
+		/// domain of the iFolder Enterprise Server.  This list represents
+		/// the "Roster" of the default domain.
+		/// </summary>
+		/// <returns>
+		/// An array of members
+		/// </returns>
+		[WebMethod(Description="Get the list of All iFolderUsers for the specified domain")]
+		[SoapDocumentMethod]
+		public iFolderUser[] GetAllDomainiFolderUsers( string DomainID)
+		{
+			return GetScopedDomainiFolderUsers(DomainID, -1);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that returns a limited list of iFolderUsers.  If there
+		/// are more users than specified, the list will return none.
+		/// </summary>
+		/// <param name="numUsers">The number of iFolderUsers to return.
+		/// -1 will return all of them.</param>
+		/// <returns>
+		/// An array of members
+		/// </returns>
+		[WebMethod(Description="Get a scoped list of iFolderUsers for the specified domain")]
+		[SoapDocumentMethod]
+		public iFolderUser[] GetScopedDomainiFolderUsers(string DomainID, int numUsers)
+		{
+			int userCount = 0;
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Roster roster = 
+				store.GetDomain(DomainID).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Novell.AddressBook.Manager abMan = 
+						Novell.AddressBook.Manager.Connect();
+
+			ICSList memberlist = roster.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
+			{
+				userCount++;
+				Simias.Storage.Member simMem =
+					new Simias.Storage.Member(roster, sNode);
+
+				Contact c = abMan.GetContact(simMem.UserID);
+
+				iFolderUser user = new iFolderUser(simMem, c);
+
+				list.Add(user);
+				if(numUsers != -1)
+				{
+					if(userCount > numUsers)
+					{
+						// Empty the list and break;
+						list.Clear();
+						break;
+					}
+				}
+			}
+
+			return (iFolderUser[])(list.ToArray(typeof(iFolderUser)));
+		}
+
+
+
+
+
+		/// <summary>
 		/// Web method that returns a list of users whose name's contain
 		/// the specified string.
 		/// </summary>

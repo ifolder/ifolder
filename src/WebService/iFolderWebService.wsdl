@@ -329,6 +329,35 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetAllDomainiFolderUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAllDomainiFolderUsersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetAllDomainiFolderUsersResult" type="s0:ArrayOfIFolderUser" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetScopedDomainiFolderUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
+            <xs:element minOccurs="1" maxOccurs="1" name="numUsers" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetScopedDomainiFolderUsersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetScopedDomainiFolderUsersResult" type="s0:ArrayOfIFolderUser" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="SearchForiFolderUsers">
         <xs:complexType>
           <xs:sequence>
@@ -845,6 +874,18 @@
   <message name="GetScopediFolderUsersSoapOut">
     <part name="parameters" element="s0:GetScopediFolderUsersResponse" />
   </message>
+  <message name="GetAllDomainiFolderUsersSoapIn">
+    <part name="parameters" element="s0:GetAllDomainiFolderUsers" />
+  </message>
+  <message name="GetAllDomainiFolderUsersSoapOut">
+    <part name="parameters" element="s0:GetAllDomainiFolderUsersResponse" />
+  </message>
+  <message name="GetScopedDomainiFolderUsersSoapIn">
+    <part name="parameters" element="s0:GetScopedDomainiFolderUsers" />
+  </message>
+  <message name="GetScopedDomainiFolderUsersSoapOut">
+    <part name="parameters" element="s0:GetScopedDomainiFolderUsersResponse" />
+  </message>
   <message name="SearchForiFolderUsersSoapIn">
     <part name="parameters" element="s0:SearchForiFolderUsers" />
   </message>
@@ -1112,6 +1153,19 @@
   <message name="GetScopediFolderUsersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolderUser" />
   </message>
+  <message name="GetAllDomainiFolderUsersHttpGetIn">
+    <part name="DomainID" type="s:string" />
+  </message>
+  <message name="GetAllDomainiFolderUsersHttpGetOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser" />
+  </message>
+  <message name="GetScopedDomainiFolderUsersHttpGetIn">
+    <part name="DomainID" type="s:string" />
+    <part name="numUsers" type="s:int" />
+  </message>
+  <message name="GetScopedDomainiFolderUsersHttpGetOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser" />
+  </message>
   <message name="SearchForiFolderUsersHttpGetIn">
     <part name="SearchString" type="s:string" />
   </message>
@@ -1371,6 +1425,19 @@
   <message name="GetScopediFolderUsersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolderUser" />
   </message>
+  <message name="GetAllDomainiFolderUsersHttpPostIn">
+    <part name="DomainID" type="s:string" />
+  </message>
+  <message name="GetAllDomainiFolderUsersHttpPostOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser" />
+  </message>
+  <message name="GetScopedDomainiFolderUsersHttpPostIn">
+    <part name="DomainID" type="s:string" />
+    <part name="numUsers" type="s:int" />
+  </message>
+  <message name="GetScopedDomainiFolderUsersHttpPostOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser" />
+  </message>
   <message name="SearchForiFolderUsersHttpPostIn">
     <part name="SearchString" type="s:string" />
   </message>
@@ -1625,6 +1692,16 @@
       <output message="s0:GetScopediFolderUsersSoapOut" />
       <documentation>Get a scoped list of iFolderUsers</documentation>
     </operation>
+    <operation name="GetAllDomainiFolderUsers">
+      <input message="s0:GetAllDomainiFolderUsersSoapIn" />
+      <output message="s0:GetAllDomainiFolderUsersSoapOut" />
+      <documentation>Get the list of All iFolderUsers for the specified domain</documentation>
+    </operation>
+    <operation name="GetScopedDomainiFolderUsers">
+      <input message="s0:GetScopedDomainiFolderUsersSoapIn" />
+      <output message="s0:GetScopedDomainiFolderUsersSoapOut" />
+      <documentation>Get a scoped list of iFolderUsers for the specified domain</documentation>
+    </operation>
     <operation name="SearchForiFolderUsers">
       <input message="s0:SearchForiFolderUsersSoapIn" />
       <output message="s0:SearchForiFolderUsersSoapOut" />
@@ -1862,6 +1939,16 @@
       <output message="s0:GetScopediFolderUsersHttpGetOut" />
       <documentation>Get a scoped list of iFolderUsers</documentation>
     </operation>
+    <operation name="GetAllDomainiFolderUsers">
+      <input message="s0:GetAllDomainiFolderUsersHttpGetIn" />
+      <output message="s0:GetAllDomainiFolderUsersHttpGetOut" />
+      <documentation>Get the list of All iFolderUsers for the specified domain</documentation>
+    </operation>
+    <operation name="GetScopedDomainiFolderUsers">
+      <input message="s0:GetScopedDomainiFolderUsersHttpGetIn" />
+      <output message="s0:GetScopedDomainiFolderUsersHttpGetOut" />
+      <documentation>Get a scoped list of iFolderUsers for the specified domain</documentation>
+    </operation>
     <operation name="SearchForiFolderUsers">
       <input message="s0:SearchForiFolderUsersHttpGetIn" />
       <output message="s0:SearchForiFolderUsersHttpGetOut" />
@@ -2098,6 +2185,16 @@
       <input message="s0:GetScopediFolderUsersHttpPostIn" />
       <output message="s0:GetScopediFolderUsersHttpPostOut" />
       <documentation>Get a scoped list of iFolderUsers</documentation>
+    </operation>
+    <operation name="GetAllDomainiFolderUsers">
+      <input message="s0:GetAllDomainiFolderUsersHttpPostIn" />
+      <output message="s0:GetAllDomainiFolderUsersHttpPostOut" />
+      <documentation>Get the list of All iFolderUsers for the specified domain</documentation>
+    </operation>
+    <operation name="GetScopedDomainiFolderUsers">
+      <input message="s0:GetScopedDomainiFolderUsersHttpPostIn" />
+      <output message="s0:GetScopedDomainiFolderUsersHttpPostOut" />
+      <documentation>Get a scoped list of iFolderUsers for the specified domain</documentation>
     </operation>
     <operation name="SearchForiFolderUsers">
       <input message="s0:SearchForiFolderUsersHttpPostIn" />
@@ -2414,6 +2511,24 @@
     </operation>
     <operation name="GetScopediFolderUsers">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetScopediFolderUsers" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetAllDomainiFolderUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetAllDomainiFolderUsers" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetScopedDomainiFolderUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetScopedDomainiFolderUsers" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2835,6 +2950,24 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetAllDomainiFolderUsers">
+      <http:operation location="/GetAllDomainiFolderUsers" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="GetScopedDomainiFolderUsers">
+      <http:operation location="/GetScopedDomainiFolderUsers" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="SearchForiFolderUsers">
       <http:operation location="/SearchForiFolderUsers" />
       <input>
@@ -3220,6 +3353,24 @@
     </operation>
     <operation name="GetScopediFolderUsers">
       <http:operation location="/GetScopediFolderUsers" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="GetAllDomainiFolderUsers">
+      <http:operation location="/GetAllDomainiFolderUsers" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="GetScopedDomainiFolderUsers">
+      <http:operation location="/GetScopedDomainiFolderUsers" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
