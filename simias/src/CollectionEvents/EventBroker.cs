@@ -112,7 +112,7 @@ namespace Simias.Event
 		/// Delegate used to control services in the system.
 		/// </summary>
 		public event ServiceEventHandler ServiceControl;
-		
+
 		#endregion
 
 		#region Event Signalers
@@ -138,7 +138,7 @@ namespace Simias.Event
 					{
 						// Remove the offending delegate.
 						CollectionRootChanged -= cb;
-						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
@@ -404,8 +404,6 @@ namespace Simias.Event
 			{
 				// The service is not running start it.
 				System.Diagnostics.Process service = new Process();
-				service.StartInfo.RedirectStandardInput = true;
-				service.StartInfo.RedirectStandardInput = true;
 				service.StartInfo.CreateNoWindow = true;
 				service.StartInfo.UseShellExecute = false;
 				if (MyEnvironment.Mono)
