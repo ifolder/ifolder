@@ -25,6 +25,7 @@
                 refreshWindow = id; 
                 showHideToolbar = id; 
                 showLoginWindow = id; 
+                showPrefs = id; 
                 showSyncLog = id; 
             }; 
             CLASS = MainWindowController; 

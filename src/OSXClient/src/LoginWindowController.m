@@ -25,6 +25,7 @@
 
 @implementation LoginWindowController
 
+
 - (IBAction)cancel:(id)sender
 {
 	[[self window] orderOut:nil];

@@ -8,6 +8,9 @@
     IBOutlet NSArrayController *logController;
 }
 
+-(void)awakeFromNib;
+
+
 - (IBAction)clearLog:(id)sender;
 - (IBAction)saveLog:(id)sender;
 
