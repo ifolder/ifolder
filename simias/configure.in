@@ -490,6 +490,7 @@ src/POBoxWS/Makefile
 src/SyncService/Makefile
 src/SqliteProvider/Makefile
 src/libsimias/Makefile
+src/mDnsDomain/Makefile
 test/Makefile
 test/ChangeLog/Makefile
 test/Common/Makefile
