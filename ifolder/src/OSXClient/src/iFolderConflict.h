@@ -47,5 +47,6 @@
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
 
+-(void) mergeNameConflicts:(iFolderConflict *)conflict;
 
 @end

@@ -103,9 +103,9 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])
 	{
-		[notifyContext setObject:[NSString stringWithFormat:@"New iFolder \"%2\"", [ifolder Name]]
+		[notifyContext setObject:[NSString stringWithFormat:@"New iFolder \"%@\"", [ifolder Name]]
 										forKey:@"title"];
-		[notifyContext setObject:[NSString stringWithFormat:@"%2 has invited you to participate in this shared iFolder", [ifolder Name]]
+		[notifyContext setObject:[NSString stringWithFormat:@"%@ has invited you to participate in this shared iFolder", [ifolder OwnerName]]
 										forKey:@"description"];
 		[self performNotification:notifyContext];
 	}
@@ -127,9 +127,9 @@ static iFolderNotificationController *sharedInstance = nil;
 {
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYCOLL])
 	{
-		[notifyContext setObject:[NSString stringWithFormat:@"Error synchronizing \"%2\"", [ifolder Name]]
-									forKey:@"title"];
-		[notifyContext setObject:@"Collisions have been detected and must be resolved" forKey:@"description"];
+		[notifyContext setObject:@"Conflicts detected!" forKey:@"title"];
+		[notifyContext setObject:[NSString stringWithFormat:@"The iFolder \"%@\" has conflicts", [ifolder Name]]
+							forKey:@"description"];
 
 		[self performNotification:notifyContext];
 	}

@@ -1302,6 +1302,8 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss)
 NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 {
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+	bool haveName = NO;
+	bool haveLocation = NO;
 
 	if(conflict->iFolderID != nil)
 		[newProperties setObject:[NSString stringWithCString:conflict->iFolderID] forKey:@"iFolderID"];
@@ -1310,7 +1312,11 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 		[newProperties setObject:[NSString stringWithCString:conflict->ConflictID] forKey:@"ConflictID"];
 
 	if(conflict->LocalName != nil)
+	{
 		[newProperties setObject:[NSString stringWithCString:conflict->LocalName] forKey:@"LocalName"];
+		[newProperties setObject:[NSString stringWithCString:conflict->LocalName] forKey:@"Name"];
+		haveName = YES;
+	}
 
 	if(conflict->LocalDate != nil)
 		[newProperties setObject:[NSString stringWithCString:conflict->LocalDate] forKey:@"LocalDate"];
@@ -1319,10 +1325,18 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 		[newProperties setObject:[NSString stringWithCString:conflict->LocalSize] forKey:@"LocalSize"];
 
 	if(conflict->LocalFullPath != nil)
+	{
 		[newProperties setObject:[NSString stringWithCString:conflict->LocalFullPath] forKey:@"LocalFullPath"];
+		[newProperties setObject:[NSString stringWithCString:conflict->LocalFullPath] forKey:@"Location"];
+		haveLocation = YES;
+	}
 
 	if(conflict->ServerName != nil)
+	{
 		[newProperties setObject:[NSString stringWithCString:conflict->ServerName] forKey:@"ServerName"];
+		if(!haveName)
+			[newProperties setObject:[NSString stringWithCString:conflict->ServerName] forKey:@"Name"];
+	}
 
 	if(conflict->ServerDate != nil)
 		[newProperties setObject:[NSString stringWithCString:conflict->ServerDate] forKey:@"ServerDate"];
@@ -1331,7 +1345,11 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict)
 		[newProperties setObject:[NSString stringWithCString:conflict->ServerSize] forKey:@"ServerSize"];
 
 	if(conflict->ServerFullPath != nil)
+	{
 		[newProperties setObject:[NSString stringWithCString:conflict->ServerFullPath] forKey:@"ServerFullPath"];
+		if(!haveLocation)
+			[newProperties setObject:[NSString stringWithCString:conflict->ServerFullPath] forKey:@"Location"];
+	}
 
 	[newProperties setObject:[NSNumber numberWithBool:conflict->IsNameConflict] forKey:@"IsNameConflict"];
 

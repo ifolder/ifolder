@@ -1,7 +1,7 @@
 {
     IBClasses = (
         {
-            ACTIONS = {saveLocal = id; saveServer = id; }; 
+            ACTIONS = {renameFile = id; saveLocal = id; saveServer = id; }; 
             CLASS = ConflictWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

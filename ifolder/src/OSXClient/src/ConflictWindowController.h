@@ -19,5 +19,8 @@
 
 - (IBAction)saveLocal:(id)sender;
 - (IBAction)saveServer:(id)sender;
+- (IBAction)renameFile:(id)sender;
+-(void)resolveFileConflicts:(BOOL)saveLocal;
+
 
 @end
