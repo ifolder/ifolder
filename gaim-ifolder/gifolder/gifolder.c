@@ -1319,7 +1319,7 @@ static GaimPluginInfo info =
 	"Boyd Timothy <btimothy@novell.com>",
 	"http://www.ifolder.com/",
 	plugin_load,
-	plugin_unload, /* FIXME: Add a plugin-unload function to store information */
+	plugin_unload,
 	NULL,
 	&ui_info,
 	NULL,
