@@ -141,6 +141,15 @@ conf_flags="--config-cache --enable-maintainer-mode --enable-compile-warnings" #
 cd "$ORIGDIR"
 
 if test x$NOCONFIGURE = x; then
+  #
+  # If build paths are provided for Simias or AddressBook, remove the configure script
+  # from that directory. This will trigger configure to run autogen.sh for these projects.
+  #
+  simias_build_path=`echo $@ | sed 's,.*--with-simias-build-path=\([^ ]*\).*,\1,'`
+  test -n "$simias_build_path" && rm -f $simias_build_path/configure
+  addressbook_build_path=`echo $@ | sed 's,.*--with-addressbook-build-path=\([^ ]*\).*,\1,'`
+  test -n "$addressbook_build_path" && rm -f $addressbook_build_path/configure
+
   echo Running $srcdir/configure $conf_flags "$@" ...
   $srcdir/configure $conf_flags "$@" \
   && echo Now type \`make\' to compile $PROJECT  || exit 1
