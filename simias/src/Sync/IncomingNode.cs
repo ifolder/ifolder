@@ -400,7 +400,6 @@ internal class IncomingNode
 
 			try
 			{
-				node.Properties.State = PropertyList.PropertyListState.Internal;
 				collection.Commit(node);
 			}
 			catch (CollisionException c)
@@ -419,6 +418,7 @@ internal class IncomingNode
 					node.Properties.ModifyProperty(TempFileDone, true);
 					try
 					{
+						node.Properties.State = PropertyList.PropertyListState.Internal;
 						collection.Commit(node);
 						return CommitFile(NodeStatus.UpdateConflict);
 					}
