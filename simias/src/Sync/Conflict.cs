@@ -182,7 +182,7 @@ public class Conflict
 	/// <returns>The path for the conflict file.</returns>
 	public static string GetFileConflictPath(Collection collection, BaseFileNode bfn)
 	{
-		Property pPath = collection.Properties.GetSingleProperty(ConflictNameProperty);
+		Property pPath = bfn.Properties.GetSingleProperty(ConflictNameProperty);
 		if (pPath != null)
 		{
 			return pPath.Value.ToString();
