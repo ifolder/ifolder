@@ -1732,15 +1732,6 @@
 	<data name="iFolderRevertError">
 		<value>An error was encountered while reverting the iFolder.</value>
 	</data>
-	<data name="chooseFolder">
-		<value>Choose a folder to convert to an iFolder.</value>
-	</data>
-	<data name="iFolderCreateError">
-		<value>An error was encountered while creating the iFolder.</value>
-	</data>
-	<data name="invalidFolder">
-		<value>An invalid folder was specified.</value>
-	</data>
 	<data name="subscriptionRemoveError">
 		<value>An error was encountered while removing the subscription.</value>
 	</data>
