@@ -211,18 +211,18 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
 
 //----------------------------------------------------------------------------
-// SaveDomainPassword
+// SetDomainPassword
 // Saves the password in the store
 //----------------------------------------------------------------------------
--(void)SaveDomainPassword:(NSString *)domainID password:(NSString *)password
+-(void)SetDomainPassword:(NSString *)domainID password:(NSString *)password
 {
     struct soap soap;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
 
-	struct _ns1__SaveDomainCredentials			saveDomainCredsMessage;
-	struct _ns1__SaveDomainCredentialsResponse	saveDomainCredsResponse;
+	struct _ns1__SetDomainCredentials			saveDomainCredsMessage;
+	struct _ns1__SetDomainCredentialsResponse	saveDomainCredsResponse;
 
 	if(password == nil)
 	{
@@ -239,7 +239,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
     init_simias_gsoap (&soap);
 
-    err_code = soap_call___ns1__SaveDomainCredentials(
+    err_code = soap_call___ns1__SetDomainCredentials(
 			&soap,
             NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
             NULL,
@@ -259,10 +259,10 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
 
 //----------------------------------------------------------------------------
-// GetSavedDomainPassword
+// GetDomainPassword
 // gets the saved password from the store
 //----------------------------------------------------------------------------
--(NSString *)GetSavedDomainPassword:(NSString *)domainID
+-(NSString *)GetDomainPassword:(NSString *)domainID
 {
 	NSString *password = nil;
     struct soap soap;
@@ -270,14 +270,14 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 
 	NSAssert( (domainID != nil), @"domainID was nil");
 
-	struct _ns1__GetSavedDomainCredentials			getDomainCredsMessage;
-	struct _ns1__GetSavedDomainCredentialsResponse	getDomainCredsResponse;
+	struct _ns1__GetDomainCredentials			getDomainCredsMessage;
+	struct _ns1__GetDomainCredentialsResponse	getDomainCredsResponse;
 
 	getDomainCredsMessage.domainID = (char *)[domainID cString];
 
     init_simias_gsoap (&soap);
 
-    err_code = soap_call___ns1__GetSavedDomainCredentials(
+    err_code = soap_call___ns1__GetDomainCredentials(
 			&soap,
             NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
             NULL,
@@ -291,7 +291,7 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 	}
 	else
 	{
-		if(getDomainCredsResponse.GetSavedDomainCredentialsResult == ns1__CredentialType__Basic)
+		if(getDomainCredsResponse.GetDomainCredentialsResult == ns1__CredentialType__Basic)
 		{
 			password = [NSString stringWithCString:getDomainCredsResponse.credentials];
 		}
@@ -411,6 +411,48 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 	}
 
     cleanup_simias_gsoap(&soap);
+}
+
+
+
+
+//----------------------------------------------------------------------------
+// LoginToRemoteDomain
+// Provide the credentials to authenticate to a domain
+//----------------------------------------------------------------------------
+-(void) LoginToRemoteDomain:(NSString *)domainID usingPassword:(NSString *)password
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (domainID != nil), @"domainID was nil");
+	NSAssert( (password != nil), @"password was nil");
+
+	struct _ns1__LoginToRemoteDomain			loginToDomainMessage;
+	struct _ns1__LoginToRemoteDomainResponse	loginToDomainResponse;
+	
+	loginToDomainMessage.domainID = (char *)[domainID cString];
+	loginToDomainMessage.password = (char *)[password cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__LoginToRemoteDomain(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &loginToDomainMessage,
+            &loginToDomainResponse);
+
+ 	if(soap.error)
+	{
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in AuthenticateToDomain"];
+	}
+	else
+	{
+		// add some crap here to deal with the results
+	}
+
+    cleanup_gsoap(&soap);
 }
 
 

@@ -250,7 +250,7 @@
 
 	@try
 	{
-		[simiasService SaveDomainPassword:[selectedDomain ID] password:newPassword];	
+		[simiasService SetDomainPassword:[selectedDomain ID] password:newPassword];	
 		NSLog(@"Saving password succeeded.");
 	}
 	@catch(NSException ex)
@@ -289,7 +289,7 @@
 		
 		@try
 		{
-			savedPassword = [simiasService GetSavedDomainPassword:[selectedDomain ID]];
+			savedPassword = [simiasService GetDomainPassword:[selectedDomain ID]];
 		}
 		@catch(NSException ex)
 		{
