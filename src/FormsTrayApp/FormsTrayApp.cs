@@ -72,7 +72,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private delegate void AnimateDelegate(int index);
 		private AnimateDelegate animateDelegate;
 
-		private	EventPublisher publisher;
+//		private	EventPublisher publisher;
 		private Manager serviceManager;
 //		private SystemManager sysManager;
 		//System.Diagnostics.Process monitor;
@@ -103,6 +103,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			// Initialize menuItemExit
 			this.menuItemExit.Index = 0;
+			this.menuItemExit.Enabled = false;
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 
 			// Initialize menuItemInviteWizard
@@ -116,6 +117,7 @@ namespace Novell.iFolder.FormsTrayApp
 			// Initialize menuItemTracer
 			this.menuItemTracer.Index = 0;
 			this.menuItemTracer.Checked = false;
+			this.menuItemTracer.Enabled = false;
 			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
 
 			// Initialize menuItemBrowser
@@ -221,6 +223,13 @@ namespace Novell.iFolder.FormsTrayApp
 
 			serviceManager.StopServices();
 
+			// Wait for the services to stop.
+			while (!serviceManager.ServicesStopped)
+			{
+				Application.DoEvents();
+				Thread.Sleep(100);
+			}
+
 //			if (sysManager != null)
 //			{
 //				sysManager.StopServices();
@@ -282,6 +291,13 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 
 			serviceManager.StopServices();
+
+			// Wait for the services to stop.
+			while (!serviceManager.ServicesStopped)
+			{
+				Application.DoEvents();
+				Thread.Sleep(100);
+			}
 
 //			if (sysManager != null)
 //			{
@@ -357,8 +373,13 @@ namespace Novell.iFolder.FormsTrayApp
 			
 			serviceManager = new Manager(conf);
 			serviceManager.StartServices();
+			serviceManager.WaitForServicesStarted();
 
-			publisher = new EventPublisher(conf);
+			// Now that the services are started, enable the trace and exit menu items.
+			this.menuItemTracer.Enabled = true;
+			this.menuItemExit.Enabled = true;
+
+//			publisher = new EventPublisher(conf);
 
 			synkEvent = new AutoResetEvent(false);
 
