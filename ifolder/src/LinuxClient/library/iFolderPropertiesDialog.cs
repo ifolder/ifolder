@@ -81,6 +81,7 @@ namespace Novell.iFolder
 			ifHash = new Hashtable();
 
 			InitializeWidgets(ifolders);
+			SetValues();
 		}
 
 
@@ -128,6 +129,7 @@ namespace Novell.iFolder
 			ifHash = new Hashtable();
 
 			InitializeWidgets(ifolders);
+			SetValues();
 		}
 
 
@@ -226,18 +228,6 @@ namespace Novell.iFolder
 			SettingsPage.UpdateiFolder(ifolder);
 			SharingPage.UpdateiFolder(ifolder);
 		}
-
-
-
-
-//		private void OniFolderChanged(object o, EventArgs args)
-//		{
-//			if(iFolderPickCombo.Entry.Text.Length > 0)
-//			{
-//				ifolder = (iFolderWeb)ifHash[iFolderPickCombo.Entry.Text];
-//				SetValues();
-//			}
-//		}
 
 
 

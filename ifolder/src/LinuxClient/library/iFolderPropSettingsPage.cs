@@ -36,6 +36,11 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWeb			ifolder;
 		private DiskSpace			ds;
+		
+		private Table				BasicTable;
+		private Label				NameLabel;
+		private Label				OwnerLabel;
+		private Label				LocationLabel;
 
 		private	Label				LastSuccessfulSync;
 		private Label				FFSyncValue;
@@ -83,6 +88,10 @@ namespace Novell.iFolder
 			LastSuccessfulSync.Text = ifolder.LastSyncTime;
 			FFSyncValue.Text = "0";
 			SyncIntervalValue.Text = ifolder.SyncInterval + " " + Util.GS("minute(s)");
+			
+			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", ifolder.Name);
+			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.Owner);
+			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.UnManagedPath);
 			
 /*			try
 			{
@@ -272,6 +281,60 @@ namespace Novell.iFolder
 		{
 			this.Spacing = 10;
 			this.BorderWidth = Util.DefaultBorderWidth;
+
+			//----------------------------------------
+			// Basic information (Name/Owner/Location)
+			//----------------------------------------
+			HBox basicBox = new HBox();
+			basicBox.Spacing = 10;
+			this.PackStart(basicBox, false, true, 0);
+			
+			// ifolder48.png
+			Gdk.Pixbuf iFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			Image iFolderImage = new Image(iFolderPixbuf);
+			iFolderImage.SetAlignment(0.5F, 0);
+			
+			basicBox.PackStart(iFolderImage, false, false, 0);
+
+			VBox basicLabelsBox = new VBox();
+			basicLabelsBox.Spacing = 5;
+			basicBox.PackStart(basicLabelsBox, false, true, 0);
+
+			NameLabel = new Label("");
+			NameLabel.UseMarkup = true;
+			NameLabel.Xalign = 0;
+			basicLabelsBox.PackStart(NameLabel, false, true, 5);
+
+			// create a table to hold the values
+			BasicTable = new Table(2, 2, false);
+			basicLabelsBox.PackStart(BasicTable, true, true, 0);
+			BasicTable.ColumnSpacing = 5;
+			BasicTable.RowSpacing = 5;
+			
+			Label label = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Owner:")));
+			label.UseMarkup = true;
+			label.Xalign = 0;
+			BasicTable.Attach(label, 0, 1, 0, 1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0, 0, 0);
+			
+			OwnerLabel = new Label("");
+			OwnerLabel.UseMarkup = true;
+			OwnerLabel.Xalign = 0;
+			BasicTable.Attach(OwnerLabel, 1, 2, 0, 1,
+					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
+			
+			label = new Label(string.Format("<span size=\"small\">{0}</span>", Util.GS("Location:")));
+			label.UseMarkup = true;
+			label.Xalign = 0;
+			BasicTable.Attach(label, 0, 1, 1, 2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0, 0, 0);
+			
+			LocationLabel = new Label("");
+			LocationLabel.UseMarkup = true;
+			LocationLabel.Xalign = 0;
+			BasicTable.Attach(LocationLabel, 1, 2, 1, 2,
+					AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
+			
 
 			//------------------------------
 			// Disk Space
