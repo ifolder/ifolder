@@ -110,11 +110,6 @@
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Novell.Security.ClientPasswordManager.PasswordDialog"
                     AssemblyName = "Novell.Security.ClientPasswordManager.PasswordDialog"
                     HintPath = "external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.PasswordDialog.dll"
@@ -123,6 +118,11 @@
                     Name = "Novell.Security.ClientPasswordManager.NetCredential"
                     AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
                     HintPath = "external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "src\SimiasClient\bin\Debug\SimiasClient.dll"
                 />
             </References>
         </Build>
@@ -254,6 +254,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Comment\Comment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Common\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -355,6 +360,16 @@
                 />
                 <File
                     RelPath = "src\FlaimProvider\FlaimServer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\HttpAuthentication\AuthHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\HttpAuthentication\IAuthService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
