@@ -23,6 +23,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.CheckBox dontAsk;
 		private string folderName;
 		private string loadPath;
+		private const int SHOP_FILEPATH = 0x2;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -189,8 +190,7 @@ namespace Novell.iFolder.iFolderCom
 		private void iFolderProperties_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			// Invoke the iFolder properties dialog.
-			bool test = Win32Window.ShObjectProperties(FolderName, "iFolder");
-			int i = Win32Window.GetLastErr();
+			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
 		}
 
 		private void close_Click(object sender, System.EventArgs e)
