@@ -26,6 +26,7 @@ using System.Xml;
 using System.Collections;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Net;
 using Simias.Client.Event;
 using Simias.Storage;
 using Simias.Sync;
@@ -801,7 +802,7 @@ namespace Simias.Sync.Client
 	/// </summary>
 	public class WsServerReadFile : IServerReadFile
 	{
-		SimiasSyncService		service;
+		protected SimiasSyncService		service;
 		
 		/// <summary>
 		/// 
@@ -842,7 +843,7 @@ namespace Simias.Sync.Client
 		/// <param name="count">The number of bytes to read.</param>
 		/// <param name="buffer">The data that was read.</param>
 		/// <returns>The number of bytes read.</returns>
-		public int Read(long offset, int count, out byte[] buffer)
+		public virtual int Read(long offset, int count, out byte[] buffer)
 		{
 			return service.Read(out buffer, offset, count);
 		}
@@ -868,7 +869,7 @@ namespace Simias.Sync.Client
 	/// </summary>
 	public class WsServerWriteFile : IServerWriteFile
 	{
-		SimiasSyncService		service;
+		protected SimiasSyncService		service;
 		Exception				exception;
 		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
 		
@@ -944,7 +945,7 @@ namespace Simias.Sync.Client
 		/// <param name="originalOffset">The offset in the original file.</param>
 		/// <param name="offset">The offset in the new file.</param>
 		/// <param name="count">The number of bytes to copy.</param>
-		public void Copy(long originalOffset, long offset, int count)
+		public virtual void Copy(long originalOffset, long offset, int count)
 		{
 			/*
 			asyncEvent.WaitOne();
@@ -967,7 +968,7 @@ namespace Simias.Sync.Client
 		/// <param name="buffer">The data to write.</param>
 		/// <param name="offset">The offset to write at.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		public void Write(byte[] buffer, long offset, int count)
+		public virtual void Write(byte[] buffer, long offset, int count)
 		{
 			/*
 			asyncEvent.WaitOne();
@@ -993,6 +994,146 @@ namespace Simias.Sync.Client
 		public SyncNodeStatus CloseFileNode(bool commit)
 		{
 			return service.CloseFileNode(commit);
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region HttpServerReadFile
+
+	class HttpServerReadFile : WsServerReadFile
+	{
+		string url;
+		/// <summary>
+		/// Constructs an HttpServerReadFile to sync a file down from the server.
+		/// </summary>
+		/// <param name="webService">The web service to use.</param>
+		internal HttpServerReadFile(SimiasSyncService webService) :
+			base(webService)
+		{
+			url = service.Url;
+			url = url.Substring(0, url.LastIndexOf('/') + 1) + "SyncHandler.ashx";
+		}
+
+		private HttpWebRequest GetRequest()
+		{
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+			request.ContentType = "application/octet-stream";
+			request.Credentials = service.Credentials;
+			request.CookieContainer = service.CookieContainer;
+			return request;
+		}
+
+
+		#region IServerReadFile Members
+
+		/// <summary>
+		/// Read data from the server file.
+		/// </summary>
+		/// <param name="offset">The offset in the file to begin the read.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <param name="buffer">The data that was read.</param>
+		/// <returns>The number of bytes read.</returns>
+		public override int Read(long offset, int count, out byte[] buffer)
+		{
+			HttpWebRequest request = GetRequest();
+			WebHeaderCollection headers = request.Headers;
+			request.Method = "Put";
+			request.ContentLength = 0;
+			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
+			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			if (response.StatusCode == HttpStatusCode.OK)
+			{
+				buffer = new byte[count];
+				response.GetResponseStream().Read(buffer, 0, count);
+				response.Close();
+				return count;
+			}
+
+			throw new SimiasException(response.StatusDescription);
+		}
+		
+		#endregion
+	}
+	
+	#endregion
+
+	#region HttpServerWriteFile
+
+	class HttpServerWriteFile : WsServerWriteFile
+	{
+		string url;
+		/// <summary>
+		/// Construct an HttpServerWriteFile to upload a file to the server.
+		/// </summary>
+		/// <param name="webService">The web service.</param>
+		internal HttpServerWriteFile(SimiasSyncService webService) :
+			base(webService)
+		{
+			url = service.Url;
+			url = url.Substring(0, url.LastIndexOf('/') + 1) + "SyncHandler.ashx";
+		}
+
+		private HttpWebRequest GetRequest()
+		{
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+			request.ContentType = "application/octet-stream";
+			request.Credentials = service.Credentials;
+			request.CookieContainer = service.CookieContainer;
+			return request;
+		}
+
+		#region IServerWriteFile Members
+
+		/// <summary>
+		/// Copy data from the current file to the new file.
+		/// </summary>
+		/// <param name="originalOffset">The offset in the original file.</param>
+		/// <param name="offset">The offset in the new file.</param>
+		/// <param name="count">The number of bytes to copy.</param>
+		public override void Copy(long originalOffset, long offset, int count)
+		{
+			HttpWebRequest request = GetRequest();
+			WebHeaderCollection headers = request.Headers;
+			request.Method = "Post";
+			request.ContentLength = 0;
+			headers.Add(SyncHttp.CopyOffset, originalOffset.ToString());
+			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
+			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Copy.ToString());
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			response.Close();
+			if (response.StatusCode != HttpStatusCode.OK)
+			{
+				throw new SimiasException(response.StatusDescription);
+			}
+		}
+
+		/// <summary>
+		/// Write data to the file.
+		/// </summary>
+		/// <param name="buffer">The data to write.</param>
+		/// <param name="offset">The offset to write at.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public override void Write(byte[] buffer, long offset, int count)
+		{
+			HttpWebRequest request = GetRequest();
+			WebHeaderCollection headers = request.Headers;
+			request.Method = "Post";
+			request.ContentLength = count;
+			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Write.ToString());
+			headers.Add(SyncHttp.SyncRange, offset.ToString() + "-" + ((long)(offset + count)).ToString());
+			Stream outStream = request.GetRequestStream();
+			outStream.Write(buffer, 0, count);
+			outStream.Close();
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			response.Close();
+			if (response.StatusCode != HttpStatusCode.OK)
+			{
+				throw new SimiasException(response.StatusDescription);
+			}
 		}
 
 		#endregion

@@ -177,6 +177,17 @@ namespace Simias.Sync.Client
 			return DateTime.MinValue;
 		}
 
+		/// <summary>
+		/// Stop the 
+		/// </summary>
+		/// <param name="collectionID"></param>
+		public static void Stop(string collectionID)
+		{
+			CollectionSyncClient sc = GetCollectionSyncClient(collectionID);
+			if (sc != null)
+				sc.Stop();
+		}
+
 		#endregion
 
 		#region private methods.
@@ -396,6 +407,7 @@ namespace Simias.Sync.Client
 		Store			store;
 		SyncCollection	collection;
 		bool			queuedChanges;
+		bool			serverAlive;
 		SyncColStatus	serverStatus;
 		Timer			timer;
 		TimerCallback	callback;
@@ -472,6 +484,10 @@ namespace Simias.Sync.Client
 				{
 					seconds = 0;
 				}
+				else if (!serverAlive)
+				{
+					seconds = 10;
+				}
 				else 
 				{
 					int nodesLeft = workArray.Count;
@@ -539,6 +555,7 @@ namespace Simias.Sync.Client
 				stopping = false;
 			}
 			queuedChanges = false;
+			serverAlive = false;
 			serverStatus = SyncColStatus.Success;
 			// Refresh the collection.
 			collection.Refresh();
@@ -574,6 +591,7 @@ namespace Simias.Sync.Client
 			
 			// Start the Sync pass and save the rights.
 			sstamps = service.Start(si, store.GetUserIDFromDomainID(collection.Domain), out si);
+			serverAlive = true;
 
 			eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
 

@@ -89,6 +89,15 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Get the platform file handle.
+		/// </summary>
+		public IntPtr Handle
+		{
+			get {return workStream.Handle;}
+		}
+
+
+		/// <summary>
 		/// Gets or Sets the file position.
 		/// </summary>
 		public long ReadPosition
@@ -276,6 +285,13 @@ namespace Simias.Sync
 			}
 		}
 		
+		/// <summary>
+		/// Get the platform file handle.
+		/// </summary>
+		public IntPtr Handle
+		{
+			get {return workStream.Handle;}
+		}
 
 		/// <summary>
 		/// Gets or Sets the file position.
@@ -546,4 +562,42 @@ namespace Simias.Sync
 	}
 
 	#endregion
+
+	/// <summary>
+	/// Definitions for the http handler.
+	/// </summary>
+	public class SyncHttp
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	CopyOffset = "CopyOffset";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	SyncRange = "SyncRange";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	SyncOperation = "SyncOperation";
+		/// <summary>
+		/// 
+		/// </summary>
+		public enum Operation
+		{
+			/// <summary>
+			/// 
+			/// </summary>
+			Read = 1,
+			/// <summary>
+			/// 
+			/// </summary>
+			Write,
+			/// <summary>
+			/// 
+			/// </summary>
+			Copy,
+		}
+	}
+	
 }

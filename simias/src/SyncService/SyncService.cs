@@ -963,6 +963,21 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Write the included data to the new file.
+		/// </summary>
+		/// <param name="inStream">The input stream to write.</param>
+		/// <param name="offset">The offset in the new file of where to write.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Write(Stream inStream, long offset, int count)
+		{
+			byte []buffer = new byte[count];
+			inStream.Read(buffer, 0, count);
+			inFile.WritePosition = offset;
+			inFile.Write(buffer, 0, count);
+		}
+
+
+		/// <summary>
 		/// Copy data from the old file to the new file.
 		/// </summary>
 		/// <param name="oldOffset">The offset in the old (original file).</param>
@@ -985,6 +1000,15 @@ namespace Simias.Sync
 			outFile.ReadPosition = offset;
 			buffer = new byte[count];
 			return outFile.Read(buffer, 0, count);
+		}
+
+		/// <summary>
+		/// Get the read handle.
+		/// </summary>
+		/// <returns>The platform file handle.</returns>
+		public IntPtr GetReadHandle()
+		{
+			return outFile.Handle;
 		}
 
 		/// <summary>

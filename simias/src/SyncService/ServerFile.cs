@@ -105,9 +105,10 @@ namespace Simias.Sync
 		{
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
-			status.status = SyncNodeStatus.SyncStatus.Success;
+			status.status = SyncNodeStatus.SyncStatus.ClientError;
 			if (commit)
 			{
+				status.status = SyncNodeStatus.SyncStatus.Success;
 				try
 				{
 					collection.Commit(node);
