@@ -90,24 +90,9 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "StoreProvider"
-                    AssemblyName = "StoreProvider"
-                    HintPath = "..\bin\StoreProvider.dll"
-                />
-                <Reference
-                    Name = "Storage"
-                    AssemblyName = "Storage"
-                    HintPath = "..\src\Storage\Storage.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\bin\Common.dll"
-                />
-                <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\..\simias\bin\CollectionStore.dll"
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\src\Simias.dll\Simias.dll"
                 />
             </References>
         </Build>
