@@ -126,9 +126,8 @@ namespace Simias.Sync.Client
 		/// Returns the number of bytes to sync to the server.
 		/// </summary>
 		/// <param name="collectionID"></param>
-		/// <param name="fileCount">Returns the number of files to sync to the server.</param>
-		/// <returns>The size of the files.</returns>
-		public static ulong GetSizeToSync(string collectionID, out uint fileCount)
+		/// <param name="fileCount">Returns the number of nodes to sync to the server.</param>
+		public static void GetCountToSync(string collectionID, out uint fileCount)
 		{
 			CollectionSyncClient sc;
 			lock (collections)
@@ -136,11 +135,10 @@ namespace Simias.Sync.Client
 				sc = (CollectionSyncClient)collections[collectionID];
 			}
 			if (sc != null)
-				return sc.GetSyncSize(out fileCount);
+				sc.GetSyncCount(out fileCount);
 			else
 			{
 				fileCount = 0;
-				return 0;
 			}
 		}
 
@@ -338,6 +336,7 @@ namespace Simias.Sync.Client
 		SimiasSyncService service;
 		Store			store;
 		SyncCollection	collection;
+		bool			queuedChanges;
 		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
@@ -447,37 +446,11 @@ namespace Simias.Sync.Client
 		/// Get the number of bytes to sync.
 		/// </summary>
 		/// <param name="fileCount">Returns the number of files to be synced.</param>
-		/// <returns>The number of bytes to sync.</returns>
-		internal ulong GetSyncSize(out uint fileCount)
+		internal void GetSyncCount(out uint fileCount)
 		{
-			ulong size = 0;
-			fileCount = 0;
-			if (collection.Role != SyncCollectionRoles.Slave)
-			{
-				return size;
-			}
-			lock (this)
-			{
-				NodeStamp[]		cstamps;
-				fileMonitor.CheckForFileChanges();
-				GetChangeLogContext(out serverContext, out clientContext);
-				if (GetChangedNodeStamps(out cstamps, ref clientContext))
-				{
-					foreach (NodeStamp ns in cstamps)
-					{
-						if (ns.type == NodeTypes.BaseFileNodeType)
-						{
-							BaseFileNode bfn = collection.GetNodeByID(ns.id) as BaseFileNode;
-							if (bfn != null)
-							{
-								fileCount++;
-								size += (ulong)(new FileInfo(bfn.GetFullPath(collection)).Length);
-							}
-						}
-					}
-				}
-				return size;
-			}
+			fileCount = (uint)nodesToServer.Count;
+			fileCount += (uint)dirsToServer.Count;
+			fileCount += (uint)filesToServer.Count;
 		}
 
 		/// <summary>
@@ -487,6 +460,7 @@ namespace Simias.Sync.Client
 		{
 			lock (this)
 			{
+				queuedChanges = false;
 				// Refresh the collection.
 				collection.Refresh();
 			
@@ -558,13 +532,17 @@ namespace Simias.Sync.Client
 									cstamps =  GetNodeStamps();
 									ReconcileAllNodeStamps(sstamps, cstamps);
 								}
+								queuedChanges = true;
 								ExecuteSync();
 							}
 							finally
 							{
-								// Save the sync state.
 								bool status = SyncComplete;
-								SetChangeLogContext(serverContext, clientContext, status);
+								if (queuedChanges)
+								{
+									// Save the sync state.
+									SetChangeLogContext(serverContext, clientContext, status);
+								}
 								// End the sync.
 								eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, status));
 								service.Stop();

@@ -438,8 +438,7 @@ namespace Simias.Sync
 
 			maxBytesToSend = 0;
 			nodeCount = 0;
-
-			maxBytesToSend = SyncClient.GetSizeToSync(col.ID, out nodeCount);
+			SyncClient.GetCountToSync(col.ID, out nodeCount);
 		}
 	}
 
