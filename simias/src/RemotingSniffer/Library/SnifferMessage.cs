@@ -26,6 +26,7 @@ using System.IO;
 using System.Collections;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Simias;
 
@@ -36,40 +37,94 @@ namespace Simias.Sync
 	/// </summary>
 	public class SnifferMessage
 	{
-		private string uri;
+		private string type;
+		private string assembly;
 		private string method;
 		private ArrayList args;
+		private ArrayList keys;
+		private string result;
+		private string uri;
 
 		public SnifferMessage(IMessage msg)
 		{
-			IDictionary properties = msg.Properties;
-
-			uri = properties["__Uri"].ToString();
-			method = properties["__MethodName"].ToString();
-
-			object[] oArgs = (object[])properties["__Args"];
-			args = new ArrayList();
-
-			if (oArgs != null)
+			// note: the message properties must be accessed by the enumerator
+			
+			if (msg != null)
 			{
-				foreach(object o in oArgs)
+				keys = new ArrayList();
+
+				foreach(object key in msg.Properties.Keys)
 				{
-					args.Add(o.ToString());
+					string keyString = key.ToString();
+					keys.Add(keyString);
+				
+					object value = msg.Properties[key];
+
+					if (keyString.Equals("__TypeName"))
+					{
+						string typeName = value.ToString();
+
+						string[] data = Regex.Split(typeName, "(, )", RegexOptions.Compiled);
+
+						type = data[0];
+						assembly = data[2];
+					}
+					else if (keyString.Equals("__MethodName"))
+					{
+						method = value.ToString();
+					}
+					else if (keyString.Equals("__Args"))
+					{
+						args = new ArrayList();
+
+						object[] oArray = (object[])value;
+
+						foreach(object o in oArray)
+						{
+							args.Add(o.ToString());
+						}
+					}
+					else if (keyString.Equals("__Return"))
+					{
+						result = value.ToString();
+					}
+					else if (keyString.Equals("__Uri"))
+					{
+						uri = value.ToString();
+					}
 				}
 			}
 		}
 
 		public override string ToString()
 		{
+			string header = "-------------------------------------------------------------------------------";
+			
 			StringBuilder buffer = new StringBuilder();
 
-			buffer.AppendFormat("   Uri: {0}\n", uri);
-			buffer.AppendFormat("Method: {0}\n", method);
+			buffer.AppendFormat("\n{0}\n", header);
 
-			foreach(string arg in args)
+			buffer.AppendFormat("\nREMOTE CALL\n\n");
+
+			if (assembly != null) buffer.AppendFormat("Assembly: {0}\n", assembly);
+
+			if (type != null) buffer.AppendFormat("    Type: {0}\n", type);
+
+			if (method != null) buffer.AppendFormat("  Method: {0}\n", method);
+
+			if (result != null) buffer.AppendFormat("  Result: {0}\n", result);
+
+			if (args != null)
 			{
-				buffer.AppendFormat("   Arg: {0}\n", arg);
+				for(int i=0; i < args.Count; i++)
+				{
+					buffer.AppendFormat("  Arg {0,2}: {1}\n", i, args[i]);
+				}
 			}
+
+			if (uri != null) buffer.AppendFormat("     Uri: {0}\n", uri);
+
+			buffer.AppendFormat("\n{0}\n", header);
 
 			return buffer.ToString();
 		}

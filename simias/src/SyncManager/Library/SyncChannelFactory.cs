@@ -172,7 +172,16 @@ namespace Simias.Sync
 						ISecurityClientFactory[] secClientFactories = new ISecurityClientFactory[1];
 						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
 						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
-						clientProvider.Next = clientSecureProvider;
+						
+						// TODO: Fix / Cleaner Solution
+						if (clientProvider.Next != null)
+						{
+							clientProvider.Next.Next = clientSecureProvider;
+						}
+						else
+						{
+							clientProvider.Next = clientSecureProvider;
+						}
 					}
 
 					// create channel

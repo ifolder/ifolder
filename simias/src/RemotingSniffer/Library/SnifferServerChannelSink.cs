@@ -48,7 +48,7 @@ namespace Simias.Sync
 
 		public ServerProcessing ProcessMessage(IServerChannelSinkStack sinkStack, IMessage requestMsg, ITransportHeaders requestHeaders, Stream requestStream, out IMessage responseMsg, out ITransportHeaders responseHeaders, out Stream responseStream)
 		{
-			MyTrace.WriteLine("Responding to Remote Call:\n{0}", ""); //SnifferMessage.ToString(requestMsg));
+			responseMsg = null;
 
 			ServerProcessing result;
 			
@@ -61,6 +61,10 @@ namespace Simias.Sync
 				MyTrace.WriteLine(e);
 
 				throw e;
+			}
+			finally
+			{
+				MyTrace.WriteLine("Responding to Remote Call:{0}", SnifferMessage.ToString(responseMsg));
 			}
 
 			return result;
