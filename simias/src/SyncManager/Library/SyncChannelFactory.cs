@@ -202,6 +202,7 @@ namespace Simias.Sync
 					// setup security providers
 					if ((sinks & SyncChannelSinks.Security) > 0)
 					{
+						/* TODO: add back
 						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.KeyStore);
 						IServerChannelSinkProvider serverSecurityProvider = (IServerChannelSinkProvider) new SecureServerSinkProvider(securityServerFactory, SecureServerSinkProvider.MsgSecurityLevel.privacy);
 						serverSecurityProvider.Next = serverProvider;
@@ -211,6 +212,7 @@ namespace Simias.Sync
 						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.KeyStore);
 						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
 						
+
 						// TODO: fix with cleaner solution
 						if (clientProvider.Next != null)
 						{
@@ -220,6 +222,7 @@ namespace Simias.Sync
 						{
 							clientProvider.Next = clientSecureProvider;
 						}
+						*/
 					}
 
 					// create channel

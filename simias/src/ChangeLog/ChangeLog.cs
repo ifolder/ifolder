@@ -546,7 +546,7 @@ namespace Simias.Storage
 
 			// Get a store object.
 			Store store = new Store( config );
-			store.Revert();
+			//store.Revert();
 
 			// Get all of the collection objects and set up listeners for them.
 			foreach (ShallowNode sn in store)

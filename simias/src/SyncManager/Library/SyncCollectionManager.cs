@@ -68,9 +68,6 @@ namespace Simias.Sync
 			// note: the store provider requires that we open a new store for each thread
 			store = new Store(syncManager.Config);
 
-            // note: we need to revert any internal impersonations
-			store.Revert();
-
             // open collection			
 			collection = new SyncCollection(store.GetCollectionByID(id));
 			Debug.Assert(collection != null);
@@ -251,7 +248,8 @@ namespace Simias.Sync
 							nodeName = dirNode.Name;
 						}
 
-						string uriString = dService.CreateMaster(collection.ID, collection.Name, collection.Owner,
+						// TODO: fix
+						string uriString = dService.CreateMaster(collection.ID, collection.Name, collection.Owner.ID,
 							nodeID, nodeName);
 
 						if (uriString == null)

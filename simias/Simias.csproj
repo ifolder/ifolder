@@ -29,7 +29,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = "Simias.doc.xml"
+                    DocumentationFile = ""
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -49,7 +49,7 @@
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DocumentationFile = "Simias.doc.xml"
+                    DocumentationFile = ""
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
@@ -129,73 +129,7 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "src\AcceptanceTests\SyncTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Address.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\AddressBook.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Common.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Contact.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Email.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Group.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\InstantMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Manager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Name.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\Phone.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\AddressBook\AddressBookTests\AddressBookTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <Folder RelPath = "src\AddressBook\SimpleTests\" />
-                <File
                     RelPath = "src\ChangeLog\ChangeLog.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\ChangeLog\ChangeLogTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -325,11 +259,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\CollectionEventsTests\CollectionEventsTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Common\Library\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -385,11 +314,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Tests\CommonTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Domain\DomainAgent.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -440,11 +364,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Invitation\Tests\InvitationTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Location\Library\DefaultLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -466,11 +385,6 @@
                 />
                 <File
                     RelPath = "src\Location\Library\mDnsLocationProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Location\Tests\LocationTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -556,11 +470,6 @@
                 />
                 <File
                     RelPath = "src\Service\ThreadServiceCtl.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Service\ServiceTests\ServiceTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -680,11 +589,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SqliteProvider\SqliteProviderTests\SqliteTests1.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SqliteProvider\SqliteWrapper\SqliteCommand.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -765,11 +669,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\StoreProvider\Test\ProviderTests1.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Sync\Conflict.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -830,11 +729,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\TestSync.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SyncCommon\Library\Invitation.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -890,11 +784,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Tests\SyncCommonTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SyncManager\Library\SyncChannel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -931,11 +820,6 @@
                 />
                 <File
                     RelPath = "src\SyncManager\Library\SyncStoreManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\Tests\SyncManagerTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

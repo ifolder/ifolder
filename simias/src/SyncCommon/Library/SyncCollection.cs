@@ -90,16 +90,8 @@ namespace Simias.Sync
 		/// <remarks>The collection is originally created with local ownership.</remarks>
 		public SyncCollection(Store store, Invitation invitation)
 			: base(store, invitation.CollectionName, invitation.CollectionID,
-					store.CurrentUserGuid, store.LocalDomain)
+					invitation.Domain)
 		{
-			// add any secret to the current identity chain
-			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
-			{
-				BaseContact identity = store.CurrentIdentity;
-				identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
-				store.GetLocalAddressBook().Commit(identity);
-			}
-
 			// TODO: fix
 			this.SetType(this, "iFolder");
 			
@@ -131,8 +123,11 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="identity">The identity for the invitation.</param>
 		/// <returns>A new invitation object.</returns>
+		[Obsolete()]
 		public Invitation CreateInvitation(string identity)
 		{
+			return null;
+/*
 			// create the invitation
 			Invitation invitation = new Invitation();
 
@@ -170,6 +165,7 @@ namespace Simias.Sync
 			}
 
 			return invitation;
+*/
 		}
 
 		/// <summary>

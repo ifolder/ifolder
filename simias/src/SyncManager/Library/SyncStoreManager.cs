@@ -58,9 +58,6 @@ namespace Simias.Sync
 			// store
 			store = new Store(syncManager.Config);
 
-			// note: we need to revert any internal impersonations
-			store.Revert();
-
 			// collection managers
 			collectionManagers = new Hashtable();
 
