@@ -287,6 +287,19 @@ namespace Simias.Authentication
 								null );
 
 						realCreds = cCreds.GetCredential( cUri, "BASIC" );
+						if ( realCreds == null && this.collectionID != null )
+						{
+							// Check if creds exist for the user ID and by collection
+							cCreds = 
+								new NetCredential(
+								"iFolder", 
+								this.collectionID, 
+								true, 
+								cMember.UserID,
+								null );
+
+							realCreds = cCreds.GetCredential( cUri, "BASIC" );
+						}
 					}
 				}
 			}

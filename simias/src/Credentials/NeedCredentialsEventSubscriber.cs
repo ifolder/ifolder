@@ -25,7 +25,7 @@ using System;
 using Simias.Event;
 using Simias.Client.Event;
 
-namespace Simias.src.Common
+namespace Simias.Authentication
 {
 	#region Delegate Definitions.
 
