@@ -1,6 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simias", "Simias.csproj", "{7839E703-0177-4162-B083-BCFD4ED1CC1B}"
 	ProjectSection(ProjectDependencies) = postProject
+		{E38BAF80-9B31-4D15-A002-E775B96FAFA6} = {E38BAF80-9B31-4D15-A002-E775B96FAFA6}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsService", "src\mDnsService\mDnsService.csproj", "{CCA97DC4-AA28-4A9B-9C90-1E4F5D98B0CA}"
@@ -28,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeWS", "src\Subscrib
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncService\SyncService.csproj", "{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasClient", "src\SimiasClient\SimiasClient.csproj", "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -69,10 +74,10 @@ Global
 		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.Build.0 = Debug|.NET
 		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.ActiveCfg = Release|.NET
 		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.Build.0 = Release|.NET
-		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Debug.ActiveCfg = Debug|.NET
-		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Debug.Build.0 = Debug|.NET
-		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Release.ActiveCfg = Release|.NET
-		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Release.Build.0 = Release|.NET
+		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Debug.ActiveCfg = Debug|.NET
+		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Debug.Build.0 = Debug|.NET
+		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Release.ActiveCfg = Release|.NET
+		{E38BAF80-9B31-4D15-A002-E775B96FAFA6}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

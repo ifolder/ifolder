@@ -166,7 +166,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets or sets the flags.
 		/// </summary>
-		internal ushort Flags
+		public ushort Flags
 		{
 			get {return (ushort)flags;}
 			set {flags = (EventFlags)value; }

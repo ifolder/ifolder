@@ -3,11 +3,11 @@ export MONO_PATH := $(MONO_PATH)
 
 SyncService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncService.cs $(srcdir)/SyncService.asmx.cs $(srcdir)/ServerFile.cs
 SyncService_CSFILES := $(subst /,$(SEP),$(SyncService_CSFILES1))
-SyncService_INCLUDES = 
-SyncService_RESOURCES =  
+SyncService_INCLUDES =
+SyncService_RESOURCES =
 SyncService_FLAGS = $(CSC_LIBFLAG)
-SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
-SyncService_LIBPATH = ../Simias.dll
+SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
+SyncService_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = SyncService.asmx $(SyncService_CSFILES)
 
@@ -31,14 +31,14 @@ install-exec-local: SyncService.Web.dll $(DATA_FILES)
 uninstall-local:
 	cd $(DESTDIR)$(webdir); rm -f SyncService.asmx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); rm -f SyncService.Web.dll $(DEBUG_FILES)
-    
+
 installcheck-local: install
 	
 CLEAN_FILES = SyncService.Web.dll SyncService.Web.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

@@ -41,7 +41,7 @@ namespace Simias.Event
 	/// <summary>
 	/// Delegate used to indicate an error in the event processing.
 	/// </summary>
-	public delegate void IProcEventError( SimiasException e, object errorContext );
+	public delegate void IProcEventError( ApplicationException e, object errorContext );
 
 	/// <summary>
 	/// Structure used to queue items on the event action queue.
@@ -335,7 +335,7 @@ namespace Simias.Event
 						}
 						catch ( Exception e )
 						{
-							Shutdown( new SimiasException( "Error processing event message from server.", e ) );
+							Shutdown( new ApplicationException( "Error processing event message from server.", e ) );
 						}
 					}
 					else
@@ -355,7 +355,7 @@ namespace Simias.Event
 					}
 					else
 					{
-						Shutdown( new SimiasException( "Socket receive failed", e ) );
+						Shutdown( new ApplicationException( "Socket receive failed", e ) );
 					}
 				}
 			}
@@ -543,7 +543,7 @@ namespace Simias.Event
 			}
 			catch ( SocketException e )
 			{
-				Shutdown( new SimiasException( "Error registering with the event service.", e ) );
+				Shutdown( new ApplicationException( "Error registering with the event service.", e ) );
 			}
 
 			// This thread is going away.
@@ -554,7 +554,7 @@ namespace Simias.Event
 		/// Sends an error message to the error handling delegate if registered.
 		/// </summary>
 		/// <param name="exception">Error to hand to the delegate.</param>
-		private void ReportError( SimiasException exception )
+		private void ReportError( ApplicationException exception )
 		{
 			if ( errorCallback != null )
 			{
@@ -574,7 +574,7 @@ namespace Simias.Event
 			}
 			catch ( SocketException e )
 			{
-				Shutdown( new SimiasException( "Failed to send message to server.", e ) );
+				Shutdown( new ApplicationException( "Failed to send message to server.", e ) );
 			}
 		}
 
@@ -583,7 +583,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="exception">The exception that occurred if there was an error. Otherwise
 		/// this parameter is null.</param>
-		private void Shutdown( SimiasException exception )
+		private void Shutdown( ApplicationException exception )
 		{
 			lock ( this )
 			{
@@ -784,7 +784,7 @@ namespace Simias.Event
 			}
 			else
 			{
-				ReportError( new SimiasException( "The client is in an invalid state for this operation." ) );
+				ReportError( new ApplicationException( "The client is in an invalid state for this operation." ) );
 			}
 		}
 
@@ -821,7 +821,7 @@ namespace Simias.Event
 			}
 			else
 			{
-				ReportError( new SimiasException( "The client is in an invalid state for this operation." ) );
+				ReportError( new ApplicationException( "The client is in an invalid state for this operation." ) );
 			}
 		}
 		#endregion

@@ -407,6 +407,7 @@ simias.pc
 src/Makefile
 src/Common/SimiasSetup.cs
 src/Common/MyDns.cs
+src/SimiasClient/Makefile
 src/Simias.dll/Makefile
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile

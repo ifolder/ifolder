@@ -7,11 +7,11 @@ endif
 
 iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs $(srcdir)/iFolderAppInstallerClass.cs $(srcdir)/ServerInfo.cs $(srcdir)/NotifyIconBalloonTip.cs $(srcdir)/BalloonType.cs $(srcdir)/iFolderMigration.cs $(srcdir)/AcceptInvitation.cs
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
-iFolderApp_INCLUDES = 
+iFolderApp_INCLUDES =
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 iFolderApp_RESOURCES_FILES = FormsTrayApp.resources GlobalProperties.resources ServerInfo.resources AcceptInvitation.resources
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
-iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll Simias.dll
+iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll SimiasClient.dll Simias.dll
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
 DATA_FILES = App.ico ifolder_app.ico
@@ -24,7 +24,7 @@ EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFol
 
 all: iFolderApp.exe
 
-iFolderApp.exe: $(iFolderApp_RESOURCES_FILES) $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES) 
+iFolderApp.exe: $(iFolderApp_RESOURCES_FILES) $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
 	
 %.resources : %.resx
@@ -50,7 +50,7 @@ if DEBUG
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(bindir)
 endif
 endif
-     
+
 uninstall-local:
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
 		$(INSTALLUTIL) /uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.UninstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
@@ -63,13 +63,13 @@ if DEBUG
 	cd $(DESTDIR)$(bindir); rm -f $(PROJECT_FILES:$(srcdir)/%=%)
 endif
 endif
-     
+
 CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml $(iFolderApp_RESOURCES_FILES:%=Novell.FormsTrayApp.%)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
 	rm -f *Log
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

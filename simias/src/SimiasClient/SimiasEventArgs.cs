@@ -38,10 +38,11 @@ namespace Simias.Event
 
 
 		/// <summary>
-		/// 
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
 		/// </summary>
 		/// <param name="time"></param>
-		internal SimiasEventArgs(DateTime time) :
+		public SimiasEventArgs(DateTime time) :
 			this(null, time)
 		{
 		}
@@ -52,16 +53,17 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="eventData">Data of the event.</param>
 		/// <param name="time">The time of this event.</param>
-		internal SimiasEventArgs(string eventData, DateTime time)
+		public SimiasEventArgs(string eventData, DateTime time)
 		{
 			this.eventData = eventData;
 			timeStamp = time;
 		}
 
 		/// <summary>
-		/// 
+		/// Constructs a SimiasEventArgs that will be used by CollectionHandler delegates.
+		/// Descibes the node affected by the event.
 		/// </summary>
-		internal SimiasEventArgs() :
+		public SimiasEventArgs() :
 			this(null, DateTime.Now)
 		{
 		}

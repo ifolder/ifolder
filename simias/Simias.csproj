@@ -109,6 +109,11 @@
                     AssemblyName = "System.Runtime.Remoting"
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
+                <Reference
+                    Name = "SimiasClient"
+                    Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -195,11 +200,6 @@
                 />
                 <File
                     RelPath = "src\CollectionStore\Node.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionStore\NodeEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -304,11 +304,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Domain\DomainService.cs"
-                    SubType = "code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Events\DefaultSubscriber.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -324,42 +319,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Events\IProcEventClient.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\IProcEventData.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\IProcEventListener.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\IProcEventRegistration.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Events\IProcEventServer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\Events\IProcEventSubscriber.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\IProcEventTypes.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\SimiasEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -760,11 +725,6 @@
                 />
                 <File
                     RelPath = "src\Sync\ClientFile.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\CollectionSyncEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

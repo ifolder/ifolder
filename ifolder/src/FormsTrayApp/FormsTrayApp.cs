@@ -335,7 +335,7 @@ namespace Novell.FormsTrayApp
 //			ShutdownTrayApp();
 //		}
 
-		private void errorHandler(SimiasException e, object context)
+		private void errorHandler(ApplicationException e, object context)
 		{
 			eventError = true;
 		}

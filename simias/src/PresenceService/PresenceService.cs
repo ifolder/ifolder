@@ -45,7 +45,7 @@ namespace Simias.Presence
 		/// Used to log messages.
 		/// </summary>
 		private static readonly ISimiasLog log = 
-				SimiasLogManager.GetLogger( typeof( ChangeLog ) );
+				SimiasLogManager.GetLogger( typeof( PresenceService ) );
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
