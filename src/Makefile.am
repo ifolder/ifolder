@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = WebService iFolder ClientUpgrade TrayIcon LinuxClient
+SUBDIRS = WebService libifolder iFolder ClientUpgrade TrayIcon LinuxClient
 endif
 
 if DARWIN
