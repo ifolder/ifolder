@@ -168,7 +168,6 @@ enum
 
 typedef struct
 {
-	/* FIXME: Add an invitation message type so that when an accept/deny message is attempted to be sent but the buddy is not online, we can send it automatically when the buddy signs on */
 	GaimAccount *gaim_account;
 	char buddy_name[128];
 	INVITATION_STATE state;
@@ -716,7 +715,6 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	send_result =
 		send_invitation_request_accept_msg(buddy, invitation->collection_id);
 		
-	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
 	if (send_result <= 0) {
 		/* FIXME: Add this message to the PENDING list of messages to be sent and retry when the buddy signs on again or when we login/startup gaim again */
 		dialog = gtk_message_dialog_new(NULL,
@@ -826,7 +824,6 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 	send_result =
 		send_invitation_request_deny_msg(buddy, invitation->collection_id);
 		
-	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
 	if (send_result <= 0) {
 		dialog = gtk_message_dialog_new(NULL,
 					GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -961,7 +958,6 @@ out_inv_resend_button_cb(GtkWindow *w, GtkTreeView *tree)
 									invitation->collection_type,
 									invitation->collection_name);
 		
-	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
 	if (send_result <= 0) {
 		dialog = gtk_message_dialog_new(NULL,
 					GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -2622,10 +2618,10 @@ plugin_load(GaimPlugin *plugin)
 	/* Make sure the preferences are created if they don't exist */
 	init_default_prefs();
 
-	/* FIXME: Load up the GtkListStore's for incoming and outgoing invitations */
+	/* Load up the GtkListStore's for incoming and outgoing invitations */
 	init_invitation_stores();
 	
-	/* FIXME: Load up the GtkListStore for trusted buddies */
+	/* Load up the GtkListStore for trusted buddies */
 	init_trusted_buddies_store();
 				
 	/* Load, but don't show the Invitations Window */
@@ -2635,7 +2631,7 @@ plugin_load(GaimPlugin *plugin)
 }
 
 /**
- * FIXME: Possible Configuration Settings:
+ * Configuration Settings:
  * 
  * [ ] Notify me when:
  *     [ ] I receive a new invitation
@@ -2718,6 +2714,7 @@ static GaimPluginInfo info =
 static void
 init_plugin(GaimPlugin *plugin)
 {
+	/* FIXME: Possibly move the prefs to this area instead of plugin_load() */
 }
 
 GAIM_INIT_PLUGIN(ifolder, init_plugin, info)
