@@ -82,8 +82,6 @@ namespace Simias.Sync
 
 			store = new Store(config);
 			localDb = store.GetDatabaseObject();
-
-			log.Info("Sync Service Url: {0}", ServiceUrl);
 		}
 
 		#region IDisposable Members
