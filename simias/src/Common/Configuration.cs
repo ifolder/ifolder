@@ -55,7 +55,6 @@ namespace Simias
 		private static Configuration instance = null;
 
 		private string configFilePath;
-		private string storePath;
 		private XmlDocument configDoc;
 		#endregion
 
@@ -65,7 +64,8 @@ namespace Simias
 		/// </summary>
 		public string StorePath
 		{
-			get { return storePath; }
+			get { return fixupPath( Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) ); }
+			set { Set( storeProvider, storeProviderPath, fixupPath( value ) ); }
 		}
 
 		private static string DefaultPath
@@ -84,6 +84,17 @@ namespace Simias
 		#endregion
 		
 		#region Constructor
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="path">A hard path to a configuration file.</param>
+		private Configuration(string path)
+		{
+			// Load the configuration document from the file.
+			configDoc = new XmlDocument();
+			configDoc.Load(path);
+		}
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -120,10 +131,8 @@ namespace Simias
 			// Load the configuration document from the file.
 			configDoc = new XmlDocument();
 			configDoc.Load(configFilePath);
-
-			// Get or set the store path.
-			storePath = fixupPath( Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) );
 		}
+
 		#endregion
 
 		#region Factory Methods
@@ -143,6 +152,15 @@ namespace Simias
 
 				return instance;
 			}
+		}
+
+		/// <summary>
+		/// Gets a instance of the server boot strap configuration object.
+		/// </summary>
+		/// <returns>A reference to the configuration object.</returns>
+		static public Configuration GetServerBootStrapConfiguration()
+		{
+			return new Configuration(Path.Combine( SimiasSetup.sysconfdir, serverBootStrapFileName ));
 		}
 
 		/// <summary>
