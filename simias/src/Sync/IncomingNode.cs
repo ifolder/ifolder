@@ -361,7 +361,7 @@ internal class IncomingNode
 						// Check for a rename.
 						// Get the old node and make sure the name is equal.
 						BaseFileNode oldBfn = (BaseFileNode)oldNode;
-						if (!oldBfn.GetFullPath(collection).Equals(bfn.GetFullPath(collection)))
+						if (oldBfn != null && !oldBfn.GetFullPath(collection).Equals(bfn.GetFullPath(collection)))
 						{
 							// We have a rename.
 							renameOldFile = oldBfn.GetFullPath(collection);
