@@ -536,19 +536,23 @@
 		// Do a whole hell of a lot of work
 
 		// Handle all Node events here
-		if([[ne type] compare:@"Node"] == 0)
+		if([[ne type] compare:@"Subscription"] == 0)
 		{
 			// First check to see if this is a POBox 'cause we
 			// don't care much about it if'n it aint.
 			NSLog(@"processingNodeEvents checking for valid POBox");
 			if([[iFolderData sharedInstance] isPOBox:[ne collectionID]])
 			{
-				[self processNodeNodeEvent:ne];
+				[self processSubscriptionNodeEvent:ne];
 			}
 		}
 		else if([[ne type] compare:@"Collection"] == 0)
 		{
 			[self processCollectionNodeEvent:ne];
+		}
+		else
+		{
+			NSLog(@"***** UNHANDLED NODE EVENT ****  Type: %@", [ne type]);
 		}
 
 		[ne release];
@@ -562,9 +566,9 @@
 // processCollectionNodeEvent
 // method to loop through all node events and process them
 //===================================================================
-- (void)processCollectionNodeEvent:(SMNodeEvent *)nodeNodeEvent
+- (void)processCollectionNodeEvent:(SMNodeEvent *)colNodeEvent
 {
-	switch([nodeNodeEvent action])
+	switch([colNodeEvent action])
 	{
 		case NODE_CREATED:
 		{
@@ -573,7 +577,7 @@
 			// not sure if we should read on every one but I think we
  			// need to in case of a new iFolder
 			[[iFolderData sharedInstance] 
-								readiFolder:[nodeNodeEvent collectionID]];
+								readiFolder:[colNodeEvent collectionID]];
 			break;
 		}
 		case NODE_DELETED:
@@ -581,13 +585,13 @@
 			NSLog(@"processCollectionNodeEvent NODE_DELETED");
 
 			iFolder *ifolder = [[iFolderData sharedInstance]
-									getiFolder:[nodeNodeEvent collectionID]];
+									getiFolder:[colNodeEvent collectionID]];
 			if( (ifolder != nil) &&
 				(![ifolder IsSubscription]) )
 			{
 				// remove it from the list if it's not a subscription
 				[[iFolderData sharedInstance] 
-								_deliFolder:[nodeNodeEvent collectionID]];
+								_deliFolder:[colNodeEvent collectionID]];
 			}
 			break;
 		}
@@ -596,12 +600,12 @@
 			NSLog(@"processCollectionNodeEvent NODE_CHANGED");
 
 			BOOL isiFolder = [[iFolderData sharedInstance] 
-									isiFolder:[nodeNodeEvent collectionID]];
+									isiFolder:[colNodeEvent collectionID]];
 
 			if(isiFolder)
 			{
 				[[iFolderData sharedInstance] 
-								readiFolder:[nodeNodeEvent collectionID]];
+								readiFolder:[colNodeEvent collectionID]];
 			}
 			break;
 		}
@@ -612,30 +616,30 @@
 
 
 //===================================================================
-// processNodeNodeEvent
+// processSubscriptionNodeEvent
 // method to loop through all node events and process them
 //===================================================================
-- (void)processNodeNodeEvent:(SMNodeEvent *)nodeNodeEvent
+- (void)processSubscriptionNodeEvent:(SMNodeEvent *)subNodeEvent
 {
-	switch([nodeNodeEvent action])
+	switch([subNodeEvent action])
 	{
 		case NODE_CREATED:
 		{
-			NSLog(@"processNodeNodeEvent NODE_CREATED");
+			NSLog(@"processSubscriptionNodeEvent NODE_CREATED");
 			iFolder *ifolder = [[iFolderData sharedInstance] 
-									readAvailableiFolder:[nodeNodeEvent nodeID]
-									inCollection:[nodeNodeEvent collectionID]];
+									readAvailableiFolder:[subNodeEvent nodeID]
+									inCollection:[subNodeEvent collectionID]];
 //			if(ifolder != nil) trigger some event
 			break;
 		}
 		case NODE_DELETED:
 		{
-			NSLog(@"processNodeNodeEvent NODE_DELETED");
+			NSLog(@"processSubscriptionNodeEvent NODE_DELETED");
 
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
 			NSString *ifolderID = [[iFolderData sharedInstance]
-										getiFolderID:[nodeNodeEvent nodeID]];
+										getiFolderID:[subNodeEvent nodeID]];
 			if(ifolderID == nil)
 				return;
 				
@@ -648,17 +652,17 @@
 		}
 		case NODE_CHANGED:
 		{
-			NSLog(@"processNodeNodeEvent NODE_CHANGED");
+			NSLog(@"processSubscriptionNodeEvent NODE_CHANGED");
 		
 			// Because we use the iFolder ID to hold subscriptions in the
 			// dictionary, we need to get the iFolderID we used
 			NSString *ifolderID = [[iFolderData sharedInstance]
-										getiFolderID:[nodeNodeEvent nodeID]];
+										getiFolderID:[subNodeEvent nodeID]];
 			if(ifolderID == nil)
 				return;
 			
-			[[iFolderData sharedInstance] readAvailableiFolder:[nodeNodeEvent nodeID]
-												inCollection:[nodeNodeEvent collectionID]];
+			[[iFolderData sharedInstance] readAvailableiFolder:[subNodeEvent nodeID]
+												inCollection:[subNodeEvent collectionID]];
 			break;
 		}
 	}

@@ -215,6 +215,9 @@
 		NSString *location = [properties objectForKey:@"Path"];
 		if(location != nil)
 			[properties setObject:location forKey:@"Location"];
+		else
+			[properties setObject:[properties objectForKey:@"Owner"]
+							forKey:@"Location"];
 			
 		NSImage *image = [NSImage imageNamed:@"ifolder24"];
 		[image setScalesWhenResized:YES];

@@ -108,7 +108,7 @@
 - (void)processCollectionSyncEvents;
 - (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
 - (void)processNodeEvents;
-- (void)processNodeNodeEvent:(SMNodeEvent *)nodeNodeEvent;
+- (void)processSubscriptionNodeEvent:(SMNodeEvent *)nodeNodeEvent;
 - (void)processCollectionNodeEvent:(SMNodeEvent *)nodeNodeEvent;
 
 

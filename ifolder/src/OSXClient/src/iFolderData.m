@@ -410,30 +410,6 @@ static iFolderData *sharedInstance = nil;
 
 
 
-//===================================================================
-// deleteiFolder
-// deletes the specified iFolder
-//===================================================================
--(void)deleteiFolder:(NSString *)ifolderID
-{	
-	[instanceLock lock];
-
-	@try
-	{
-		[ifolderService DeleteiFolder:ifolderID];
-		[self _deliFolder:ifolderID];
-	}
-	@catch(NSException *ex)
-	{
-		[instanceLock unlock];
-		[ex raise];
-	}
-
-	[instanceLock unlock];
-}
-
-
-
 
 //===================================================================
 // acceptiFolderInvitation
@@ -445,8 +421,8 @@ static iFolderData *sharedInstance = nil;
 {
 	[instanceLock lock];
 	
-	NSString *localID = [keyedSubscriptions objectForKey:iFolderID];
-	NSAssert( (localID != nil), @"iFolderID not found for subscription");
+	NSString *collectionID = [keyedSubscriptions objectForKey:iFolderID];
+	NSAssert( (collectionID != nil), @"collectionID not found for subscription");
 	
 	@try
 	{
@@ -460,7 +436,7 @@ static iFolderData *sharedInstance = nil;
 				[keyedSubscriptions setObject:[newiFolder CollectionID] forKey:[newiFolder ID]];
 		}
 
-		iFolder *curiFolder = [keyediFolders objectForKey:localID];
+		iFolder *curiFolder = [keyediFolders objectForKey:collectionID];
 		[curiFolder setProperties:[newiFolder properties]];
 	}
 	@catch (NSException *e)
@@ -470,6 +446,36 @@ static iFolderData *sharedInstance = nil;
 	}
 	[instanceLock unlock];
 }
+
+
+
+
+//===================================================================
+// declineiFolderInvitation
+// decliens an iFolder invitation
+//===================================================================
+-(void)declineiFolderInvitation:(NSString *)iFolderID 
+									fromDomain:(NSString *)domainID
+{
+	[instanceLock lock];
+	
+	// Get the collectionID for this subscription
+	NSString *collectionID = [keyedSubscriptions objectForKey:iFolderID];
+	NSAssert( (collectionID != nil), @"collectionID not found for subscription");
+	
+	@try
+	{
+		[ifolderService DeclineiFolderInvitation:iFolderID fromDomain:domainID];
+		[self _deliFolder:iFolderID];
+	}
+	@catch (NSException *e)
+	{
+		[instanceLock unlock];
+		[e raise];
+	}
+	[instanceLock unlock];
+}
+
 
 
 
@@ -503,6 +509,37 @@ static iFolderData *sharedInstance = nil;
 		[e raise];
 	}
 	[instanceLock unlock];
+}
+
+
+
+
+//===================================================================
+// deleteiFolder
+// reverts an iFolder and then decline's it's invitation
+//===================================================================
+-(void)deleteiFolder:(NSString *)ifolderID
+{
+	[instanceLock lock];
+
+	iFolder *revertediFolder;
+	@try
+	{
+		revertediFolder = [ifolderService RevertiFolder:ifolderID];
+		[self _deliFolder:ifolderID];
+
+		if( (revertediFolder != nil) && ([revertediFolder IsSubscription]) )
+		{
+			[ifolderService DeclineiFolderInvitation:[revertediFolder ID]
+												fromDomain:[revertediFolder DomainID]];
+		}
+	}
+	@catch (NSException *e)
+	{
+		[instanceLock unlock];
+		[e raise];
+	}
+	[instanceLock unlock];	
 }
 
 

@@ -44,8 +44,13 @@
 -(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID;
 -(iFolder *) AcceptiFolderInvitation:(NSString *)iFolderID
 					InDomain:(NSString *)DomainID toPath:(NSString *)localPath;
+
+-(void) DeclineiFolderInvitation:(NSString *)iFolderID fromDomain:(NSString *)DomainID;
 -(iFolder *) RevertiFolder:(NSString *)iFolderID;
--(void) DeleteiFolder:(NSString *)iFolderID;
+
+// You should call RevertiFolder and DeclineiFolderInvitation instead of delete
+//-(void) DeleteiFolder:(NSString *)iFolderID;
+
 -(void) SynciFolderNow:(NSString *)iFolderID;
 
 -(User *) GetiFolderUserFromNodeID:(NSString *)nodeID inCollection:(NSString *)collectionID;
