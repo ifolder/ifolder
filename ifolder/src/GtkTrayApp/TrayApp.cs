@@ -234,13 +234,24 @@ namespace Novell.iFolder
 			int rc = loginDialog.Run();
 			loginDialog.Hide();
 			loginDialog.Destroy();
-/*
 			if(rc == -5)
 			{
-				Console.WriteLine("Connecting to server...");
-				DomainAgent da = new DomainAgent(conf);
-				da.Attach(sid.Address, sid.Name, sid.Password);
-			}*/
+				try
+				{
+					ifws.ConnectToEnterpriseServer(	loginDialog.UserName,
+													loginDialog.Password,
+													loginDialog.Host);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					ied = null;
+				}
+			}
 		}
 
 		static void show_help(object o, EventArgs args)
