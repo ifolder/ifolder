@@ -245,6 +245,15 @@ namespace Novell.iFolder
 					{
 						// DEBUG
 						Console.WriteLine("Domain-Up: Credentials valid.");
+						
+						// Update the domains so that the Accounts Page in the
+						// Preferences window will be up-to-date.
+						ifdata.RefreshDomains();
+						if (prefswin != null)
+						{
+							prefswin.UpdateDomainStatus(args.Message);
+						}
+						
 					}
 					else
 					{
