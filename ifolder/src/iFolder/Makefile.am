@@ -9,7 +9,7 @@ iFolder_FLAGS = $(CSC_LIBFLAG)
 iFolder_LIBS = System.dll System.Web.Services.dll $(SYSTEM_XML)
 iFolder_LIBPATH =
 
-EXTRA_DIST = $(iFolder_CSFILES)
+EXTRA_DIST = $(srcdir)/AssemblyInfo.cs
 
 CUR_DIR := $(shell pwd)
 

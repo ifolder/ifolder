@@ -3,14 +3,14 @@ SUBDIRS = WebService iFolder ClientUpgrade TrayIcon GtkTrayApp
 endif
 
 if DARWIN
-SUBDIRS = WebService
+SUBDIRS = WebService iFolderCocoa
 endif
 
 if WINDOWS
 SUBDIRS = WebService iFolder ClientUpgrade iFolderShell FormsTrayApp
 endif
 
-DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp WebService	ClientUpgrade
+DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp WebService	ClientUpgrade iFolderCocoa
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys
 
