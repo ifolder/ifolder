@@ -25,6 +25,8 @@ CommonTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(Common_CSFILES) $(CommonTests_CSFILES)
 
+CUR_DIR := $(shell pwd)
+
 all: Common.dll
 
 Common.dll: $(Common_CSFILES) $(Common_RESOURCES)
@@ -43,7 +45,7 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	$(NUNIT) $(NUNIT_FLAGS) /xml:CommonTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonTests.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = Common.dll $(NUNIT_TESTS) Common.xml CommonTests.xml
 CLEAN_DIRS = .cstore

@@ -181,4 +181,5 @@ src/Makefile
 src/Configuration/Makefile
 src/StoreProvider/Makefile
 src/Common/Makefile
+src/CommonGtkWindows/Makefile
 ])
