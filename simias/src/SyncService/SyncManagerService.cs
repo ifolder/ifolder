@@ -37,6 +37,7 @@ namespace Simias.Sync
 		
 		private Configuration config;
 		private SyncManager manager;
+		private FileMonitorService fileMonitor;
 
 		/// <summary>
 		/// Constructor
@@ -45,6 +46,7 @@ namespace Simias.Sync
 		{
 			this.config = GetConfiguration();
 			this.manager = new SyncManager(config);
+			this.fileMonitor = new FileMonitorService();
 		}
 
 		static void Main(string[] args)
@@ -63,6 +65,7 @@ namespace Simias.Sync
 			Debug.Assert(manager != null);
 
 			manager.Start();
+			fileMonitor.Start(GetConfiguration());
 		}
 
 		/// <summary>
@@ -73,6 +76,7 @@ namespace Simias.Sync
 			Debug.Assert(manager != null);
 
 			manager.Stop();
+			fileMonitor.Stop();
 		}
 
 		/// <summary>
@@ -83,6 +87,7 @@ namespace Simias.Sync
 			Debug.Assert(manager != null);
 
 			manager.Start();
+			fileMonitor.Resume();
 		}
 
 		/// <summary>
@@ -93,6 +98,7 @@ namespace Simias.Sync
 			Debug.Assert(manager != null);
 
 			manager.Stop();
+			fileMonitor.Pause();
 		}
 
 		/// <summary>

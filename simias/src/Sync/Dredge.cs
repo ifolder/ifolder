@@ -47,11 +47,11 @@ namespace Simias.Sync
 	 * it as a delete and create. Dredger should always be case sensitive.
 	 */
 
-	public class Dredger
+	public class FileWatcher
 	{
-		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Dredger));
+		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(FileWatcher));
 
-		SyncCollection collection = null;
+		public SyncCollection collection = null;
 
 		/* TODO: onServer needs to be removed. It controls how tombstones are handled:
 		 *   they are deleted on the server but left on the client. What it
@@ -62,12 +62,73 @@ namespace Simias.Sync
 		 */
 		bool onServer = false;
 		const string lastDredgeProp = "LastDredgeTime";
-		DateTime dredgeTimeStamp = DateTime.Now;
+		DateTime dredgeTimeStamp;
 		DateTime lastDredgeTime = DateTime.MinValue;
 		bool foundChange;
 		string rootPath;
-	
+
+		bool						disposed;
+		string						collectionId;
+		internal FileSystemWatcher	watcher;
+		Hashtable					changes = new Hashtable();
+
+		internal class fileChangeEntry
+		{
+			internal FileSystemEventArgs	eArgs;
+			internal DateTime				time;
+
+			internal fileChangeEntry(FileSystemEventArgs e)
+			{
+				eArgs = e;
+				time = DateTime.Now;
+			}
 		
+			internal void update(FileSystemEventArgs e)
+			{
+				eArgs = e;
+				time = DateTime.Now;
+			}
+
+			internal void update()
+			{
+				time = DateTime.Now;
+			}
+		}
+
+		/// <summary>
+		/// Creates a dredger for this collection and dredges the system.
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <param name="onServer"></param>
+		public FileWatcher(Collection collection, bool onServer)
+		{
+			// TODO: Syncronize the dredger with the sync engine.
+			this.collection = new SyncCollection(collection);
+			this.onServer = onServer;
+			this.collectionId = collection.ID;
+			
+			if (!MyEnvironment.Mono)
+			{
+				// We are on .Net use events to watch for changes.
+				DirNode rootDir = collection.GetRootDirectory();
+				if (rootDir != null)
+				{
+					string rootPath = collection.GetRootDirectory().GetFullPath(collection);
+					watcher = new FileSystemWatcher(rootPath);
+					log.Debug("New File Watcher at {0}", rootPath);
+					watcher.Changed += new FileSystemEventHandler(OnChanged);
+					watcher.Created += new FileSystemEventHandler(OnCreated);
+					watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+					watcher.Renamed += new RenamedEventHandler(OnRenamed);
+					watcher.IncludeSubdirectories = true;
+					watcher.EnableRaisingEvents = true;
+					// Now dredge to find any files that were changed while we were down.
+					Dredge();
+				}
+			}
+			disposed = false;
+		}
+			
 		/// <summary>
 		/// // Delete the specified node.
 		/// </summary>
@@ -90,10 +151,6 @@ namespace Simias.Sync
 		{
 			FileInfo fi = new FileInfo(path);
 			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
-			fnode.LastWriteTime = fi.LastWriteTime;
-			fnode.LastAccessTime = fi.LastAccessTime;
-			fnode.CreationTime = fi.CreationTime;
-			fnode.Length = fi.Length;
 			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 			collection.Commit(fnode);
 			foundChange = true;
@@ -105,22 +162,22 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="path">The path of the file that has changed.</param>
 		/// <param name="fn">The node to modify.</param>
-		void ModifyFileNode(string path, FileNode fn)
+		void ModifyFileNode(string path, BaseFileNode fn)
 		{
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
-			DateTime lastWrote = fi.LastWriteTime;
+			DateTime fsLastWrite = fi.LastWriteTime;
 			
-			if (fn.LastWriteTime != lastWrote)
+			if (fn.LastWriteTime != fsLastWrite)
 			{
 				// Don't reset the Createion time.
-				fn.LastWriteTime = lastWrote;
+				fn.LastWriteTime = fsLastWrite;
 				fn.LastAccessTime = fi.LastAccessTime;
 				fn.Length = fi.Length;
 				log.Debug("Updating file node for {0} {1}", path, fn.ID);
-				collection.Commit(fn);
-				foundChange = true;
 			}
+			collection.Commit(fn);
+			foundChange = true;
 		}
 
 		/// <summary>
@@ -133,8 +190,6 @@ namespace Simias.Sync
 		{
 			DirectoryInfo di = new DirectoryInfo(path);
 			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
-			dnode.LastWriteTime = di.LastWriteTime;
-			dnode.CreationTime = di.CreationTime;
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 			collection.Commit(dnode);
 			foundChange = true;
@@ -142,16 +197,26 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Modify the DirNode for the modified directory.
+		/// 
 		/// </summary>
-		/// <param name="path">The path to the directory.</param>
-		/// <param name="dnode">The DirNode to modify.</param>
-		void ModifyDirNode(string path, DirNode dnode)
+		/// <param name="oldPath"></param>
+		/// <param name="newPath"></param>
+		/// <returns></returns>
+		bool HasParentChanged(string oldPath, string newPath)
 		{
-			dnode.LastWriteTime = Directory.GetLastWriteTime(path);
-			log.Debug("Updating dir node for {0} {1}", path, dnode.ID);
-			collection.Commit(dnode);
-			foundChange = true;
+			return (!(Path.GetDirectoryName(oldPath).Equals(Path.GetDirectoryName(newPath))));
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		string GetNormalizedRelativePath(string path)
+		{
+			string relPath = path.Replace(rootPath + Path.DirectorySeparatorChar, "");
+			relPath = relPath.Replace('\\', '/');
+			return relPath;
 		}
 
 		/// <summary>
@@ -161,16 +226,50 @@ namespace Simias.Sync
 		/// <returns>The ShallowNode for this file.</returns>
 		ShallowNode GetShallowNodeForFile(string path)
 		{
-			string relPath = path.Replace(rootPath + Path.DirectorySeparatorChar, "");
-			relPath = relPath.Replace('\\', '/');
+			string relPath = GetNormalizedRelativePath(path);
 			
-			foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal))
+			ICSList nodeList;
+			if (MyEnvironment.Windows)
+			{
+				nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal);
+			}
+			else
+			{
+				nodeList = collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.CaseEqual);
+			}
+				
+			foreach (ShallowNode sn in nodeList)
 			{
 				return sn;
-				// There can only be one node with the matching relative path.
 			}
 			return null;
 		}
+
+		/// <summary>
+		/// Return the parent for this path.
+		/// </summary>
+		/// <param name="path">Path to the file whose parent is wanted.</param>
+		/// <returns></returns>
+		DirNode GetParentNode(string path)
+		{
+			ShallowNode sn = GetShallowNodeForFile(Path.GetDirectoryName(path));
+			if (sn != null)
+			{
+				return (DirNode)collection.GetNodeByID(sn.ID);
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Check if the file is an internal sync file.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		private bool isSyncFile(string name)
+		{
+			return name.StartsWith(".simias.");
+		}
+
 
 		//--------------------------------------------------------------------
 		// TODO: what about file permissions and symlinks?
@@ -205,11 +304,7 @@ namespace Simias.Sync
 			{
 				// This is a directory.
 				dn = node as DirNode;
-				if (dn != null)
-				{
-					ModifyDirNode(path, dn);
-				}
-				else
+				if (dn == null)
 				{
 					// This node is the wrong type.
 					DeleteNode(node);
@@ -384,123 +479,488 @@ namespace Simias.Sync
 			}
 		}
 
-	//--------------------------------------------------------------------
-	/// <summary>
-	/// Creates a dredger for this collection and dredges the system.
-	/// </summary>
-	/// <param name="collection"></param>
-	/// <param name="onServer"></param>
-	public Dredger(Collection collection, bool onServer)
-	{
-		// TODO: Syncronize the dredger with the sync engine.
-		this.collection = new SyncCollection(collection);
-		this.onServer = onServer;
-		
-		foundChange = false;
-		
-		try
+		/// <summary>
+		/// Dredge the file sytem to find changes.
+		/// </summary>
+		public void CheckForFileChanges()
 		{
-			lastDredgeTime = (DateTime)(collection.Properties.GetSingleProperty(lastDredgeProp).Value);
-		}
-		catch
-		{
-			// Set found change so the lastDredgeTime will get updated.
-			foundChange = true;
-			log.Debug("Failed to get the last dredge time");
-		}
-		// Make sure that the RootDir still exists. IF it has been deleted on a slave remove the collection
-		// And exit.
-		DirNode dn = collection.GetRootDirectory();
-		if (dn != null)
-		{
-			rootPath = ((Uri)(dn.Properties.GetSingleProperty(PropertyTags.Root).Value)).LocalPath;
-			string path = dn.GetFullPath(collection);
-			if (onServer || Directory.Exists(path))
+			if (watcher == null)
 			{
-				DoSubtree(path, dn, dn.ID, Directory.GetLastWriteTime(path) > lastDredgeTime ? true : false);
+				Dredge();
 			}
 			else
 			{
-				// The directory no loger exits. Delete the collection.
-				collection.Delete();
-				collection.Commit();
-				foundChange = false;
+				bool needToDredge = false;
+				dredgeTimeStamp = DateTime.Now;
+				fileChangeEntry[] fChanges;
+
+				lock (changes)
+				{
+					fChanges = new fileChangeEntry[changes.Count];
+					changes.Values.CopyTo(fChanges, 0);
+				}
+			
+				foreach (fileChangeEntry fc in fChanges)
+				{
+					if (((TimeSpan)(dredgeTimeStamp - fc.time)).TotalSeconds > 5)
+					{
+						string fullName = GetName(fc.eArgs.FullPath);
+						bool isDir = false;
+
+						if (fullName == null)
+						{
+							continue;
+						}
+						FileInfo fi = new FileInfo(fullName);
+						isDir = (fi.Attributes & FileAttributes.Directory) > 0;
+						
+						ShallowNode sn = GetShallowNodeForFile(fullName);
+						Node node = null;
+						DirNode dn = null;
+						BaseFileNode fn = null;
+
+						if (sn != null)
+						{
+							node = collection.GetNodeByID(sn.ID);
+							fn = node as BaseFileNode;
+							dn = node as DirNode;
+							// Make sure the type is still valid.
+							if (fi.Exists && ((isDir && fn != null) || (!isDir && dn != null)))
+							{
+								needToDredge = true;
+								break;
+							}
+							
+							// We have a node update it.
+							switch (fc.eArgs.ChangeType)
+							{
+								case WatcherChangeTypes.Created:
+								case WatcherChangeTypes.Changed:
+									if (!isDir)
+										ModifyFileNode(fullName, fn);
+									break;
+								case WatcherChangeTypes.Deleted:
+									DeleteNode(node);
+									break;
+								case WatcherChangeTypes.Renamed:
+								{
+									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+									
+									// Since we are here we have a node already.
+									// This is a rename back to the original name update it.
+									if (!isDir)
+										ModifyFileNode(fullName, fn);
+									
+									// Make sure that there is not a node for the old name.
+									sn = GetShallowNodeForFile(args.OldFullPath);
+									if (sn != null)
+									{
+										node = collection.GetNodeByID(sn.ID);
+										DeleteNode(node);
+									}
+									break;
+								}
+							}
+						}
+						else
+						{
+							// The node does not exist.
+							switch (fc.eArgs.ChangeType)
+							{
+								case WatcherChangeTypes.Deleted:
+									// The node does not exist just continue.
+									break;
+								case WatcherChangeTypes.Created:
+								case WatcherChangeTypes.Changed:
+									// The node does not exist create it.
+									if (isDir)
+									{
+										CreateDirNode(fullName, GetParentNode(fullName));
+									}
+									else
+									{
+										CreateFileNode(fullName, GetParentNode(fullName));
+									}
+									break;
+
+								case WatcherChangeTypes.Renamed:
+									// Check if there is a node for the old name.
+									// Get the node from the old name.
+									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+									DirNode parent = null;
+									sn = GetShallowNodeForFile(args.OldFullPath);
+									if (sn != null)
+									{
+										node = collection.GetNodeByID(sn.ID);
+									
+										// Make sure the parent has not changed.
+										if (HasParentChanged(args.OldFullPath, fullName))
+										{
+											// We have a new parent find the parent node.
+											parent = GetParentNode(fullName);
+											if (parent != null)
+											{
+												// We have a parent reset the parent node.
+												node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
+											}
+											else
+											{
+												// We do not have a node for the parent.
+												// Do a dredge.
+												needToDredge = true;
+												break;
+											}
+										}
+										node.Name = Path.GetFileName(fullName);
+										node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, GetNormalizedRelativePath(fullName)));
+										if (!isDir)
+										{
+											ModifyFileNode(fullName, node as BaseFileNode);
+										}
+										else
+										{
+											collection.Commit(node);
+										}
+									}
+									else
+									{
+										// The node does not exist create it.
+										if (isDir)
+										{
+											CreateDirNode(fullName, GetParentNode(fullName));
+										}
+										else
+										{
+											CreateFileNode(fullName, GetParentNode(fullName));
+										}
+									}
+									break;
+							}
+						}
+						lock(changes)
+						{
+							changes.Remove(fc.eArgs.FullPath);
+						}
+					}
+
+					if (needToDredge)
+						break;
+				}
+
+				if (needToDredge)
+				{
+					lock (changes)
+					{
+						changes.Clear();
+					}
+					Dredge();
+				}
 			}
 		}
-	
-		DoManagedPath(collection.ManagedPath);
-		
-		if (foundChange)
+
+		/// <summary>
+		/// Find File changes by dredging the file system.
+		/// </summary>
+		public void Dredge()
 		{
-			Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
-			tsp.LocalProperty = true;
-			collection.Properties.ModifyProperty(tsp);
-			collection.Properties.State = PropertyList.PropertyListState.Internal;
-			collection.Commit(collection);
+			collection.Refresh();
+			foundChange = false;
+		
+			try
+			{
+				lastDredgeTime = (DateTime)(collection.Properties.GetSingleProperty(lastDredgeProp).Value);
+			}
+			catch
+			{
+				// Set found change so the lastDredgeTime will get updated.
+				foundChange = true;
+				log.Debug("Failed to get the last dredge time");
+			}
+			// Make sure that the RootDir still exists. IF it has been deleted on a slave remove the collection
+			// And exit.
+			DirNode dn = collection.GetRootDirectory();
+			if (dn != null)
+			{
+				rootPath = ((Uri)(dn.Properties.GetSingleProperty(PropertyTags.Root).Value)).LocalPath;
+				string path = dn.GetFullPath(collection);
+				if (onServer || Directory.Exists(path))
+				{
+					DoSubtree(path, dn, dn.ID, Directory.GetLastWriteTime(path) > lastDredgeTime ? true : false);
+				}
+				else
+				{
+					// The directory no loger exits. Delete the collection.
+					collection.Delete();
+					collection.Commit();
+					foundChange = false;
+				}
+			}
+	
+			DoManagedPath(collection.ManagedPath);
+		
+			if (foundChange)
+			{
+				Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
+				tsp.LocalProperty = true;
+				collection.Properties.ModifyProperty(tsp);
+				collection.Properties.State = PropertyList.PropertyListState.Internal;
+				collection.Commit(collection);
+			}
 		}
+
+		
+
+		~FileWatcher()
+		{
+			Dispose(true);
+		}
+
+		private string GetName(string fullPath)
+		{
+			if (MyEnvironment.Windows)
+			{
+				try
+				{
+					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
+					if (caseSensitivePath.Length == 1)
+					{
+						// We should only have one match.
+						fullPath = caseSensitivePath[0];
+					}
+				}
+				catch {}
+			}
+
+			// If this is a sync generated file return null.
+			if (isSyncFile(Path.GetFileName(fullPath)))
+				return null;
+
+			return fullPath;
+		}
+
+		private void OnChanged(object source, FileSystemEventArgs e)
+		{
+			string fullPath = e.FullPath;
+
+			if (isSyncFile(fullPath))
+				return;
+			
+			lock (changes)
+			{
+				fileChangeEntry entry = (fileChangeEntry)changes[fullPath];
+				if (entry != null)
+				{
+					// This file has already been modified.
+					// Combine the state.
+					switch (entry.eArgs.ChangeType)
+					{
+						case WatcherChangeTypes.Created:
+						case WatcherChangeTypes.Deleted:
+						case WatcherChangeTypes.Changed:
+							entry.update(e);
+							break;
+						case WatcherChangeTypes.Renamed:
+							entry.update();
+							break;
+					}
+				}
+				else
+				{
+					changes[fullPath] = new fileChangeEntry(e);
+				}
+			}
+		}
+
+		private void OnRenamed(object source, RenamedEventArgs e)
+		{
+			string fullPath = e.FullPath;
+
+			if (isSyncFile(fullPath) || isSyncFile(Path.GetFileName(e.OldFullPath)))
+				return;
+			
+			lock (changes)
+			{
+				// Any changes made to the old file need to be removed.
+				changes.Remove(e.OldFullPath);
+				changes[fullPath] = new fileChangeEntry(e);
+			}
+		}
+
+		private void OnDeleted(object source, FileSystemEventArgs e)
+		{
+			string fullPath = e.FullPath;
+
+			if (isSyncFile(fullPath))
+				return;
+						
+			lock (changes)
+			{
+				changes[fullPath] = new fileChangeEntry(e);
+			}
+		}
+
+		private void OnCreated(object source, FileSystemEventArgs e)
+		{
+			string fullPath = e.FullPath;
+
+			if (isSyncFile(fullPath))
+				return;
+						
+			lock (changes)
+			{
+				changes[fullPath] = new fileChangeEntry(e);
+			}
+		}
+
+		private void Dispose(bool inFinalize)
+		{
+			lock (this)
+			{
+				if (!disposed)
+				{
+					if (!inFinalize)
+					{
+						System.GC.SuppressFinalize(this);
+					}
+					if (watcher != null)
+					{
+						watcher.Dispose();
+					}
+					disposed = true;
+				}
+			}
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			Dispose(false);
+		}
+
+		#endregion
 	}
-}
 
 //===========================================================================
 
 	/// <summary>
 	/// Service to control the dredger.
 	/// </summary>
-	public class DredgeService : IThreadService
+	public class FileMonitorService : IThreadService
 	{
 		Store	store = null;
 		Thread  thread = null;
 		bool	shuttingDown;
 		bool	paused;
 		bool	needToDredge = true;
-		EventSubscriber es = null;
+		Hashtable		collectionsTable;
+		EventSubscriber collectionWatcher;
 		
 		private void DoDredge()
 		{
+			collectionsTable = new Hashtable();
+			collectionWatcher = new EventSubscriber();
+			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
+			collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
+			foreach (ShallowNode sn in store)
+			{
+				Collection col = new Collection(store, sn);
+				SyncCollection sCol = new SyncCollection(col);
+				WatchCollection(sCol);
+			}
+
 			while (!shuttingDown)
 			{
 				try
 				{
 					if (!paused  & needToDredge)
 					{
-						foreach (ShallowNode sn in store)
+						FileWatcher[] fwList;
+						lock (collectionsTable)
+						{
+							fwList = new FileWatcher[collectionsTable.Count];
+							collectionsTable.Values.CopyTo(fwList, 0);
+						}
+
+						foreach (FileWatcher fw in fwList)
 						{
 							if (!shuttingDown)
 							{
 								try
 								{
-									Collection col = new Collection(store, sn);
-									SyncCollection sCol = new SyncCollection(col);
-									switch (sCol.Role)
-									{
-										case SyncCollectionRoles.Master:
-											new Dredger(col, true);
-											break;
-										case SyncCollectionRoles.Local:
-											new Dredger(col, false);
-											break;
-										case SyncCollectionRoles.Slave:
-											// This will be dreged from the sync service.
-										default:
-											break;
-									}
+									fw.CheckForFileChanges();
 								}
 								catch (Exception ex)
 								{
-									Dredger.log.Debug(ex, "Failed to dredge {0}", sn.Name);
+									FileWatcher.log.Debug(ex, "Failed to Get File System Changes {0}", fw.collection.Name);
 								}
 							}
+							else
+							{
+								break;
+							}
 						}
-						/*
-							if (!MyEnvironment.Mono)
-								needToDredge = false;
-							*/
 					}
 					Thread.Sleep(1000 * 60);
 				}
 				catch (Exception ex)
 				{
-					Dredger.log.Debug(ex, "Got an error");
+					FileWatcher.log.Debug(ex, "Got an error");
+				}
+			}
+		}
+
+		void WatchCollection(SyncCollection sCol)
+		{
+			lock (collectionsTable)
+			{
+				switch (sCol.Role)
+				{
+					case SyncCollectionRoles.Master:
+						collectionsTable.Add(sCol.ID, new FileWatcher(sCol, true));
+						break;
+					case SyncCollectionRoles.Local:
+						collectionsTable.Add(sCol.ID, new FileWatcher(sCol, false));
+						break;
+					case SyncCollectionRoles.Slave:
+						// This will be added from the slave service.
+					default:
+						break;
+				}
+			}
+		}
+
+		private void OnNewCollection(NodeEventArgs args)
+		{
+			try
+			{
+				if (args.ID == args.Collection)
+				{
+					Collection col = store.GetCollectionByID(args.ID);
+					if (col != null)
+					{
+						SyncCollection sCol = new SyncCollection(col);
+						WatchCollection(sCol);
+					}
+				}
+			}
+			catch
+			{
+			}
+		}
+
+		private void OnDeleteNode(NodeEventArgs args)
+		{
+			if (args.ID == args.Collection)
+			{
+				lock (collectionsTable)
+				{
+					FileWatcher fw = (FileWatcher)collectionsTable[args.ID];
+					if (fw != null)
+					{
+						collectionsTable.Remove(args.ID);
+						fw.Dispose();
+					}
 				}
 			}
 		}
@@ -514,18 +974,12 @@ namespace Simias.Sync
 		public void Start(Simias.Configuration conf)
 		{
 			store = Store.GetStore();
-			paused = shuttingDown = false;
-			/*
-			if (!MyEnvironment.Mono)
-			{
-				// Start listening to file change events.
-				es = new EventSubscriber(conf);
-				es.FileChanged += new FileEventHandler(es_FileChanged);
-				es.FileCreated += new FileEventHandler(es_FileCreated);
-				es.FileDeleted += new FileEventHandler(es_FileDeleted);
-				es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
-			}
-			*/
+            paused = shuttingDown = false;
+			
+			// Don't check for changes on the server.
+			if (store.IsEnterpriseServer)
+				return;
+
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;
@@ -565,309 +1019,11 @@ namespace Simias.Sync
 			shuttingDown = true;
 			if (thread != null)
 				thread.Interrupt();
-			if (es != null)
-				es.Dispose();
+			if (collectionWatcher != null)
+				collectionWatcher.Dispose();
 		}
 
 		#endregion
 
-		private bool isSyncFile(string name)
-		{
-			return name.StartsWith(".simias.");
-		}
-
-		/// <summary>
-		/// Gets the node represented by the file.
-		/// </summary>
-		/// <param name="collection"></param>
-		/// <param name="fullPath"></param>
-		/// <param name="isFile"></param>
-		/// <returns></returns>
-		private Node GetNodeFromFileName(Collection collection, string fullPath, out bool isFile)
-		{
-			isFile = false;
-
-			string name = Path.GetFileName(fullPath);
-			Node node = null;
-				// find if node for this file or dir already exists
-				// delete nodes that are wrong type
-			foreach (ShallowNode sn in collection.GetNodesByName(name))
-			{
-				Node n = Node.NodeFactory(collection, sn);
-				string npath = null;
-				DirNode dn = n as DirNode;
-				BaseFileNode fn = n as BaseFileNode;
-
-				if (dn != null)
-				{
-					npath = dn.GetFullPath(collection);
-				}
-				else if (fn != null)
-				{
-					isFile = true;
-					npath = fn.GetFullPath(collection);
-				}
-				
-				if (npath != null && npath == fullPath)
-				{
-					node = n;
-					break;
-				}
-			}
-			return node;
-		}
-
-		private void es_FileChanged(FileEventArgs args)
-		{
-			if (!isSyncFile(args.Name))
-			{
-				string path = args.FullPath;
-				bool isFile;
-				Collection collection = store.GetCollectionByID(args.Collection);
-				Node n = GetNodeFromFileName(collection, path, out isFile);
-				if (n != null)
-				{
-					if (isFile)
-					{
-						ModifyFileNode(collection, (BaseFileNode)n, args);
-					}
-					else
-					{
-						ModifyDirNode(collection, (DirNode)n, args);
-					}
-				}
-				else
-				{
-					needToDredge = true;
-				}
-			}
-		}
-
-		private void es_FileCreated(FileEventArgs args)
-		{
-			if (!isSyncFile(args.Name))
-			{
-				bool isFile;
-				Collection collection = store.GetCollectionByID(args.Collection);
-				Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
-
-				if (n != null)
-				{
-					// Delete the old node.
-					DeleteNode(collection, n);
-				}
-				FileInfo tmpFi = new FileInfo(args.FullPath);
-				if ((tmpFi.Attributes & FileAttributes.Directory) == 0)
-				{
-					AddFileNode(collection, args);
-				}
-				else
-				{
-					AddDirNode(collection, args);
-				}
-			}
-		}
-
-		private void es_FileDeleted(FileEventArgs args)
-		{
-			if (!isSyncFile(args.Name))
-			{
-				bool isFile;
-				Collection collection = store.GetCollectionByID(args.Collection);
-				Node n = GetNodeFromFileName(collection, args.FullPath, out isFile);
-
-				if (n != null)
-				{
-					// Delete the old node.
-					DeleteNode(collection, n);
-				}
-				else
-				{
-					needToDredge = true;
-				}
-			}
-		}
-
-		private void es_FileRenamed(FileRenameEventArgs args)
-		{
-			if (!isSyncFile(args.Name) && !isSyncFile(args.OldName))
-			{
-				bool isFile;
-				Collection collection = store.GetCollectionByID(args.Collection);
-				Node n = GetNodeFromFileName(collection, args.OldPath, out isFile);
-
-				if (n != null)
-				{
-					if (isFile)
-					{
-						RenameFileNode(collection, (FileNode)n, args);
-					}
-					else
-					{
-						RenameDirNode(collection, (DirNode)n, args);
-					}
-				}
-				else
-				{
-					needToDredge = true;
-				}
-			}
-		}
-
-		void AddFileNode(Collection collection, FileEventArgs args)
-		{
-			// We have a new file create a node for it.
-			string path = args.FullPath;
-			bool isFile;
-			Node n = GetNodeFromFileName(collection, Path.GetDirectoryName(path), out isFile);
-			DirNode parentNode = (DirNode)n;
-			if (parentNode != null)
-			{
-				FileNode fnode = new FileNode(collection, parentNode, args.Name);
-				fnode.LastWriteTime = File.GetLastWriteTime(path);
-				fnode.CreationTime = File.GetCreationTime(path);
-				Log.Spew("Adding file node for {0} {1} from event.", path, fnode.ID);
-				collection.Commit(fnode);
-			}
-			else
-			{
-				needToDredge = true;
-			}
-		}
-
-		void AddDirNode(Collection collection, FileEventArgs args)
-		{
-			// We have a new file create a node for it.
-			string path = args.FullPath;
-			bool isFile;
-			Node n = GetNodeFromFileName(collection, Path.GetDirectoryName(path), out isFile);
-			DirNode parentNode = (DirNode)n;
-			if (parentNode != null)
-			{
-				DirNode dnode = new DirNode(collection, parentNode, args.Name);
-				dnode.LastWriteTime = Directory.GetLastWriteTime(path);
-				dnode.CreationTime = Directory.GetCreationTime(path);
-				Log.Spew("Adding dir node for {0} {1} from event.", path, dnode.ID);
-				collection.Commit(dnode);
-			}
-			else
-			{
-				needToDredge = true;
-			}
-		}
-
-		void DeleteNode(Collection collection, Node node)
-		{
-			Log.Spew("Deleting node {0}, {1} from event.", node.Name, node.ID);
-			collection.Commit(collection.Delete(node, PropertyTags.Parent));
-			
-			SyncCollection sCol = new SyncCollection(collection);
-		}
-
-		void ModifyFileNode(Collection collection, BaseFileNode node, FileEventArgs args)
-		{
-			// here we are just checking for modified files
-			DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
-			if (node.LastWriteTime != lastWrote)
-			{
-				node.LastWriteTime = lastWrote;
-				Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
-				collection.Commit(node);
-			}
-		}
-
-		void ModifyDirNode(Collection collection, DirNode node, FileEventArgs args)
-		{
-			// Don't do anything it could cause a collision.
-		}
-
-		void RenameFileNode(Collection collection, FileNode node, FileRenameEventArgs args)
-		{
-			// Make sure the node is still in the collection.
-			if (!(Path.GetDirectoryName(args.OldPath).Equals(Path.GetDirectoryName(args.FullPath))))
-			{
-				// We have a new parent find the parent node.
-				bool isFile;
-				Node parent = GetNodeFromFileName(collection, Path.GetDirectoryName(args.FullPath), out isFile);
-				if (parent != null && !isFile)
-				{
-					// We have a parent reset the parent node.
-					node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
-				}
-				else
-				{
-					// The node is no longer in the collection.
-					// Delete the node.
-					DeleteNode(collection, node);
-					return;
-				}
-			}
-			// Set the new name.
-			node.Name = args.Name;
-			// Set the last access time.
-			DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
-			if (node.LastWriteTime != lastWrote)
-			{
-				node.LastWriteTime = lastWrote;
-				Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
-			}
-			collection.Commit(node);
-			return;
-		}
-
-		void RenameDirNode(Collection collection, DirNode node, FileRenameEventArgs args)
-		{
-			// Do not change a root node.
-			if (!node.IsRoot)
-			{
-				// Make sure the node is still in the collection.
-				if (!(Path.GetDirectoryName(args.OldPath).Equals(Path.GetDirectoryName(args.FullPath))))
-				{
-					// We have a new parent find the parent node.
-					bool isFile;
-					Node parent = GetNodeFromFileName(collection, Path.GetDirectoryName(args.FullPath), out isFile);
-					if (parent != null && !isFile)
-					{
-						// We have a parent reset the parent node.
-						node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
-					}
-					else
-					{
-						// The node is no longer in the collection.
-						// Delete the node.
-						DeleteNode(collection, node);
-						return;
-					}
-				}
-				// Set the new name.
-				node.Name = args.Name;
-				// Set the last access time.
-				DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
-				if (node.LastWriteTime != lastWrote)
-				{
-					node.LastWriteTime = lastWrote;
-					Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
-				}
-				collection.Commit(node);
-				return;
-			}
-			else
-			{
-				needToDredge = true;
-				// TODO is this the right thing to do on a rootDir rename.
-				// This is a rename of a root node do not sync it back.
-				/*
-				SyncCollection sCol = new SyncCollection(collection);
-				sCol.Synchronizable = false;
-				sCol.Commit(sCol);
-
-				// Make sure the root path has not changed.
-				if (!Path.GetDirectoryName(node.GetFullPath(collection)).Equals(Path.GetDirectoryName(args.OldPath)))
-				{
-
-				}
-				*/
-			}
-		}
 	}
 }

@@ -700,6 +700,7 @@ namespace Simias.Storage.Provider.Sqlite
 					{
 						if (((TimeSpan)(DateTime.Now - startTime)).Seconds > (2 * 60))
 							throw ex;
+						Thread.Sleep(10);
 					}
 				}
 			}
@@ -1218,7 +1219,7 @@ namespace Simias.Storage.Provider.Sqlite
 			switch (query.Operation)
 			{
 				case SearchOp.Equal:
-					op = string.Format("= '{0}'", safeValue);
+					op = string.Format("LIKE '{0}'", safeValue);
 					break;
 				case SearchOp.Not_Equal:
 					op = string.Format("!= '{0}'", safeValue);

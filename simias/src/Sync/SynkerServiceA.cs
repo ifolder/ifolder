@@ -104,7 +104,7 @@ public class SynkerServiceA: SyncCollectionService
 		if (rights != Access.Rights.Deny)
 		{
 			//Log.Spew("dredging server for collection '{0}'", collection.Name);
-			//new Dredger(collection, true);
+			//new Dredger(collection, true).Dredge();
 			//Log.Spew("done dredging server for collection '{0}'", collection.Name);
 			inNode = new IncomingNode(collection, true);
 			outNode = new OutgoingNode(collection);

@@ -29,7 +29,7 @@ using Simias.Storage;
 using Simias.Event;
 using Simias.Service;
 
-namespace Simias.Event
+namespace Simias.Sync
 {
 	internal class CollectionFilesWatcher : IDisposable
 	{
@@ -38,124 +38,171 @@ namespace Simias.Event
 		string						collectionId;
 		internal FileSystemWatcher	watcher;
 		EventPublisher				publish;
+		//Dredger						dredger;
+		Hashtable					changes = new Hashtable();
+
+		internal class fileChangeEntry
+		{
+			internal FileSystemEventArgs	eArgs;
+			internal DateTime				time;
+
+			internal fileChangeEntry(FileSystemEventArgs e)
+			{
+				eArgs = e;
+				time = DateTime.Now;
+			}
+		
+			internal void update(FileSystemEventArgs e)
+			{
+				eArgs = e;
+				time = DateTime.Now;
+			}
+
+			internal void update()
+			{
+				time = DateTime.Now;
+			}
+		}
 		
 
-		internal CollectionFilesWatcher(Collection col)
-		{
-            this.collectionId = col.ID;
-			publish = new EventPublisher(col.StoreReference.Config);
-			DirNode rootDir = col.GetRootDirectory();
-			if (rootDir != null)
+			internal CollectionFilesWatcher(SyncCollection col)
 			{
-				string rootPath = col.GetRootDirectory().GetFullPath(col);
-				watcher = new FileSystemWatcher(rootPath);
-				logger.Debug("New File Watcher at {0}", rootPath);
-				watcher.Changed += new FileSystemEventHandler(OnChanged);
-				watcher.Created += new FileSystemEventHandler(OnCreated);
-				watcher.Deleted += new FileSystemEventHandler(OnDeleted);
-				watcher.Renamed += new RenamedEventHandler(OnRenamed);
-				watcher.IncludeSubdirectories = true;
-				watcher.EnableRaisingEvents = true;
-			}
-			disposed = false;
-		}
-
-		~CollectionFilesWatcher()
-		{
-			Dispose(true);
-		}
-
-		private void OnChanged(object source, FileSystemEventArgs e)
-		{
-			string fullPath = e.FullPath;
-			if (!MyEnvironment.Mono)
-			{
-				try
+				this.collectionId = col.ID;
+			
+				if (!MyEnvironment.Mono)
 				{
-					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), e.Name);
-					if (caseSensitivePath.Length == 1)
+					// We are on .Net use events to watch for changes.
+					publish = new EventPublisher(col.StoreReference.Config);
+					DirNode rootDir = col.GetRootDirectory();
+					if (rootDir != null)
 					{
-						fullPath = caseSensitivePath[0];
+						string rootPath = col.GetRootDirectory().GetFullPath(col);
+						watcher = new FileSystemWatcher(rootPath);
+						logger.Debug("New File Watcher at {0}", rootPath);
+						watcher.Changed += new FileSystemEventHandler(OnChanged);
+						watcher.Created += new FileSystemEventHandler(OnCreated);
+						watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+						watcher.Renamed += new RenamedEventHandler(OnRenamed);
+						watcher.IncludeSubdirectories = true;
+						watcher.EnableRaisingEvents = true;
 					}
 				}
-				catch {}
+				disposed = false;
 			}
-			// Specify what is done when a file is changed, created, or deleted.
-			publish.RaiseEvent(new FileEventArgs(source.ToString(), fullPath, collectionId, EventType.FileChanged, DateTime.Now));
-		}
 
-		private void OnRenamed(object source, RenamedEventArgs e)
-		{
-			string fullPath = e.FullPath;
-			if (!MyEnvironment.Mono)
+			~CollectionFilesWatcher()
 			{
-				try
+				Dispose(true);
+			}
+
+			private string GetName(string fullPath)
+			{
+				if (MyEnvironment.Windows)
 				{
-					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), e.Name);
-					if (caseSensitivePath.Length == 1)
+					try
 					{
-						fullPath = caseSensitivePath[0];
+						string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath));
+						if (caseSensitivePath.Length == 1)
+						{
+							// We should only have one match.
+							fullPath = caseSensitivePath[0];
+						}
+					}
+					catch {}
+				}
+				return fullPath;
+			}
+
+			private void OnChanged(object source, FileSystemEventArgs e)
+			{
+				string fullPath = GetName(e.FullPath);
+			
+				lock (changes)
+				{
+					fileChangeEntry entry = (fileChangeEntry)changes[fullPath];
+					if (entry != null)
+					{
+						// This file has already been modified.
+						// Combine the state.
+						switch (entry.eArgs.ChangeType)
+						{
+							case WatcherChangeTypes.Created:
+							case WatcherChangeTypes.Deleted:
+							case WatcherChangeTypes.Changed:
+								entry.update(e);
+								break;
+							case WatcherChangeTypes.Renamed:
+								entry.update();
+								break;
+						}
+					}
+					else
+					{
+						changes[fullPath] = new fileChangeEntry(e);
 					}
 				}
-				catch {}
 			}
-			// Specify what is done when a file is renamed.
-			publish.RaiseEvent(new FileRenameEventArgs(source.ToString(), fullPath, collectionId, e.OldFullPath, DateTime.Now));
-		}
 
-		private void OnDeleted(object source, FileSystemEventArgs e)
-		{
-			// Specify what is done when a file is changed, created, or deleted.
-			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileDeleted, DateTime.Now));
-		}
-
-		private void OnCreated(object source, FileSystemEventArgs e)
-		{
-			string fullPath = e.FullPath;
-			if (!MyEnvironment.Mono)
+			private void OnRenamed(object source, RenamedEventArgs e)
 			{
-				try
+				string fullPath = GetName(e.FullPath);
+				
+				lock (changes)
 				{
-					string[] caseSensitivePath = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), e.Name);
-					if (caseSensitivePath.Length == 1)
-					{
-						fullPath = caseSensitivePath[0];
-					}
-				}
-				catch {}
-			}
-			// Specify what is done when a file is renamed.
-			publish.RaiseEvent(new FileEventArgs(source.ToString(), fullPath, collectionId, EventType.FileCreated, DateTime.Now));
-		}
-
-		private void Dispose(bool inFinalize)
-		{
-			lock (this)
-			{
-				if (!disposed)
-				{
-					if (!inFinalize)
-					{
-						System.GC.SuppressFinalize(this);
-					}
-					if (watcher != null)
-					{
-						watcher.Dispose();
-					}
-					disposed = true;
+					// Any changes made to the old file need to be removed.
+					changes.Remove(e.OldFullPath);
+					changes[fullPath] = new fileChangeEntry(e);
 				}
 			}
+
+			private void OnDeleted(object source, FileSystemEventArgs e)
+			{
+				string fullPath = GetName(e.FullPath);
+			
+				lock (changes)
+				{
+					changes[fullPath] = new fileChangeEntry(e);
+				}
+			}
+
+			private void OnCreated(object source, FileSystemEventArgs e)
+			{
+				string fullPath = GetName(e.FullPath);
+			
+				lock (changes)
+				{
+					changes[fullPath] = new fileChangeEntry(e);
+				}
+			}
+
+			private void Dispose(bool inFinalize)
+			{
+				lock (this)
+				{
+					if (!disposed)
+					{
+						if (!inFinalize)
+						{
+							System.GC.SuppressFinalize(this);
+						}
+						if (watcher != null)
+						{
+							watcher.Dispose();
+						}
+						disposed = true;
+					}
+				}
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				Dispose(false);
+			}
+
+			#endregion
 		}
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			Dispose(false);
-		}
-
-		#endregion
-	}
 
 	/// <summary>
 	/// Summary description for Class1.
@@ -167,7 +214,7 @@ namespace Simias.Event
 		EventSubscriber				collectionWatcher;
 		Configuration				conf;
 		
-		private void WatchCollection(Collection col)
+		private void WatchCollection(SyncCollection col)
 		{
 			watcherTable.Add(col.ID, new CollectionFilesWatcher(col));
 		}
@@ -181,7 +228,7 @@ namespace Simias.Event
 					Collection col = store.GetCollectionByID(args.ID);
 					if (col != null)
 					{
-						WatchCollection(col);
+						WatchCollection(new SyncCollection(col));
 					}
 				}
 			}
@@ -218,7 +265,7 @@ namespace Simias.Event
 				foreach (ShallowNode sn in store)
 				{
 					Collection col = new Collection(store, sn);
-					WatchCollection(col);
+					WatchCollection(new SyncCollection(col));
 				}
 			}
 		}

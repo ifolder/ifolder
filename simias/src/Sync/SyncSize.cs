@@ -58,7 +58,7 @@ namespace Simias.Sync
 			}
 
 			// TODO: this call can leave tombstones on the server. see note in Dredger
-			new Dredger(collection, false); 
+			new FileWatcher(collection, false).CheckForFileChanges(); 
 
 
 			NodeStamp[] cstamps;

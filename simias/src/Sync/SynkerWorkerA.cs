@@ -41,6 +41,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 {
 	//TODO: why is the base master and slave not protected instead of private?
 	SynkerServiceA ss;
+	FileWatcher	fileWatcher;
 	
 	Hashtable	largeFromServer = new Hashtable();
 	Hashtable	smallFromServer = new Hashtable();
@@ -53,8 +54,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	static int BATCH_SIZE = 10;
 	bool		moreWork;
 	bool		HadErrors;
-			
-	bool stopping;
+	bool		stopping;
 
 	/// <summary>
 	/// public constructor which accepts real or proxy objects specifying master and collection
@@ -62,6 +62,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	public SynkerWorkerA(SyncCollection collection): base(collection)
 	{
 		ops = new SyncOps(collection, false);
+		fileWatcher = new FileWatcher(collection, false);
 	}
 
 	/// <summary>
@@ -77,7 +78,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		collection.Refresh();
 
 		// Run the dredger
-		new Dredger(collection, false);
+		fileWatcher.CheckForFileChanges();
 
 		stopping = false;
 		Log.log.Debug("-------- starting sync pass for collection {0}", collection.Name);

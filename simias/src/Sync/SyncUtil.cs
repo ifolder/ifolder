@@ -167,7 +167,7 @@ public class CmdService: MarshalByRefObject
 			Collection c = store.GetCollectionByID(collectionId);
 
 			//Log.Spew("Start server dredge");
-			new Dredger(c, true);
+			new FileWatcher(c, true).CheckForFileChanges();
 			//Log.Spew("End server dredge");
 			return c == null? null: new SynkerServiceA(new SyncCollection(c));
 		}
@@ -283,7 +283,7 @@ public class CmdClient
 		}
 
 		//Log.Spew("Start client dredge");
-		new Dredger(c, false);
+		new FileWatcher(c, false).CheckForFileChanges();
 		//Log.Spew("End client dredge");
 		SyncCollection csc = new SyncCollection(c);
 		if (serverStoreLocation != null)
@@ -292,7 +292,7 @@ public class CmdClient
 			Collection servCollection = servStore.GetCollectionByID(csc.ID);
 			//Log.Spew("server collection {0}", servCollection == null? "null": servCollection.ID);
 			//Log.Spew("Start internal server dredge");
-			new Dredger(servCollection, true);
+			new FileWatcher(servCollection, true).CheckForFileChanges();
 			//Log.Spew("End internal server dredge");
 			SynkerServiceA ssa = new SynkerServiceA(new SyncCollection(servCollection));
 			new SynkerWorkerA(csc).DoSyncWork(ssa);

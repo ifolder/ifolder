@@ -78,6 +78,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Used to test for existence of a property.
 		/// </summary>
-		Exists
+		Exists,
+
+		/// <summary>
+		/// Used to do a case sensitive compare.
+		/// </summary>
+		CaseEqual
 	};
 }
