@@ -66,7 +66,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
-		private string longName = String.Empty;
+		private string longName = string.Empty;
 		private Hashtable subscrHT;
 		private Hashtable userIDHT;
 		private IProcEventClient eventClient;
@@ -3071,10 +3071,13 @@ namespace Novell.iFolderCom
 
 		private void iFolderAdvanced_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			// Change the width of the dropdown list to accommodate long names.
-			SizeF size = e.Graphics.MeasureString(longName, ifolders.Font);
-			int maxWidth = ifolders.Width * 2;
-			ifolders.DropDownWidth = (int)size.Width > maxWidth ? maxWidth : (int)size.Width;
+			if (!longName.Equals(string.Empty))
+			{
+				// Change the width of the dropdown list to accommodate long names.
+				SizeF size = e.Graphics.MeasureString(longName, ifolders.Font);
+				int maxWidth = ifolders.Width * 2;
+				ifolders.DropDownWidth = (int)size.Width > maxWidth ? maxWidth : (int)size.Width;
+			}
 		}
 		#endregion
 	}
