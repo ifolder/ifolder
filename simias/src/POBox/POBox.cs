@@ -55,7 +55,10 @@ namespace Simias.POBox
 			}
 			set
 			{
-				Properties.ModifyProperty(POServiceUrlProperty, value);
+				Property p = new Property(POServiceUrlProperty, value);
+				p.LocalProperty = true;
+
+				Properties.ModifyProperty(p);
 			}
 		}
 
