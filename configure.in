@@ -119,7 +119,7 @@ AC_SUBST(SPACE)
 
 COMMON_SUBDIRS="iFolder"
 LINUX_SUBDIRS="TrayIcon GtkTrayApp"
-WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard iFolderShell"
+WINDOWS_SUBDIRS="iFolderShell FormsTrayApp FormsInvitationWizard"
 NOBUILD_SUBDIRS="iFolderNautilus"
 
 AC_SUBST(COMMON_SUBDIRS)
