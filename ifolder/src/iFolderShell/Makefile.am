@@ -17,8 +17,8 @@ iFolderComponent_FLAGS = $(CSC_LIBFLAG)
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll
 iFolderComponent_LIBPATH = ../iFolder
 
-iFolderShell_HFILES = $(srcdir)/iFolderShell/CommonUI.h $(srcdir)/iFolderShell/iFolderShell.h $(srcdir)/iFolderShell/Registry.h $(srcdir)/iFolderShell/resource.h
-iFolderShell_SRCFILES = $(iFolderShell_HFILES) $(srcdir)/iFolderShell/ContextMenu.cpp $(srcdir)/iFolderShell/IconOverlay.cpp $(srcdir)/iFolderShell/iFolderShell.cpp $(srcdir)/iFolderShell/PropertySheet.cpp $(srcdir)/iFolderShell/Registry.cpp $(srcdir)/iFolderShell/iFolderShell.rc
+iFolderShell_HFILES = $(srcdir)/iFolderShell/CommonUI.h $(srcdir)/iFolderShell/iFolderShell.h $(srcdir)/iFolderShell/Registry.h $(srcdir)/iFolderShell/resource.h $(srcdir)/iFolderShell/nifver.h $(srcdir)/iFolderShell/version.h
+iFolderShell_SRCFILES = $(iFolderShell_HFILES) $(srcdir)/iFolderShell/ContextMenu.cpp $(srcdir)/iFolderShell/IconOverlay.cpp $(srcdir)/iFolderShell/iFolderShell.cpp $(srcdir)/iFolderShell/PropertySheet.cpp $(srcdir)/iFolderShell/Registry.cpp $(srcdir)/iFolderShell/iFolderShell.rc $(srcdir)/iFolderShell/iFolderShell.rc2
 iFolderShell_OBJFILES = iFolderShell/ContextMenu.obj iFolderShell/IconOverlay.obj iFolderShell/iFolderShell.obj iFolderShell/PropertySheet.obj iFolderShell/Registry.obj iFolderShell/iFolderShell$(RES_EXT)
 iFolderShell_INCLUDES = iFolderShell
 iFolderShell_FLAGS = -D_USRDLL -DIFOLDERSHELL_EXPORTS
@@ -29,8 +29,8 @@ iFolderShell_LIBPATH = iFolderShell
 iFolderShell_LIBFLAGS = $(SHARED_LIB_FLAG)
 iFolderShell_DEF = $(srcdir)/iFolderShell/iFolderShell.Def
 
-iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes.cpp $(srcdir)/iFolderShell/iFolderShell.rc
-iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes.obj iFolderShell/iFolderShell$(RES_EXT)
+iFolderShellRes_SRCFILES = $(srcdir)/iFolderShell/iFolderShellRes/iFolderShellRes.cpp $(srcdir)/iFolderShell/iFolderShellRes/iFolderShell.rc $(srcdir)/iFolderShell/iFolderShellRes/iFolderShell.rc2 $(srcdir)/iFolderShell/iFolderShellRes/version.h $(srcdir)/iFolderShell/nifver.h
+iFolderShellRes_OBJFILES = iFolderShell/iFolderShellRes/iFolderShellRes.obj iFolderShell/iFolderShellRes/iFolderShell$(RES_EXT)
 
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico
 RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/Picker.resx $(srcdir)/UserProperties.resx $(srcdir)/GaugeChart.resx
