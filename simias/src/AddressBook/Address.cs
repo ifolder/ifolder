@@ -81,15 +81,7 @@ namespace Novell.AddressBook
 	public class Address
 	{
 		#region Class Members
-		/// <summary>
-		/// Well known address book types.
-		/// </summary>
-		//public enum AddressType { Personal, Work, Vacation, Other };
-
-//		private Collection		parentCollection;
-//		private Node			parentNode;
 		private Contact			parentContact;
-//        private string			parentNodeID;
 		private Node			thisNode;
 		private string			id;
 		private string			locality;
@@ -100,7 +92,7 @@ namespace Novell.AddressBook
 		private string			poBox;
 		private string			extAddress;
 		private string			mailStop;
-		private bool			preferred = false;
+//		private bool			preferred = false;
 		private AddressTypes	addressTypes = AddressTypes.work | AddressTypes.parcel | AddressTypes.postal;
 
 		#endregion
@@ -385,12 +377,27 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				return(this.preferred);
+				if ((this.addressTypes & AddressTypes.preferred) == AddressTypes.preferred)
+				{
+					return(true);
+				}
+				else
+				{
+					return(false);
+				}
 			}
 
 			set
 			{
-				this.preferred = value;
+				if (value == true)
+				{
+					this.addressTypes |= AddressTypes.preferred;
+				}
+				else
+				{
+					this.addressTypes &= ~AddressTypes.preferred;
+				}
+
 				if (parentContact != null)
 				{
 					parentContact.SetDirty(ChangeMap.address);
@@ -609,16 +616,6 @@ namespace Novell.AddressBook
 				return(false);
 			}
 
-			/*
-			foreach(Node addrNode in this.thisNode)
-			{
-				if (addrNode.Type == Common.addressProperty)
-				{
-					addrNode.Delete();
-				}
-			}
-			*/
-
 			// assume no preferred is set
 			bool foundPreferred = false;
 
@@ -678,14 +675,6 @@ namespace Novell.AddressBook
 				if (this.thisNode != null)
 				{
 					this.id = this.thisNode.Id;
-
-					try
-					{
-						this.preferred = 
-							Convert.ToBoolean(
-							this.thisNode.Properties.GetSingleProperty( Common.preferredProperty ).ToString());
-					}
-					catch{}
 
 					try
 					{
