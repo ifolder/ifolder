@@ -58,12 +58,12 @@ namespace Novell.iFolder
 		private CheckButton	savePasswordButton;
 		private CheckButton	autoLoginButton;
 		private CheckButton	defaultAccButton;
-		private Button		proxyButton;
+//		private Button		proxyButton;
 		private Button		loginButton;
-		private Button		logoutButton;
 
 		private string		curDomainPassword;
-		private string		curDomainID;
+		private DomainWeb	curDomain;
+		private DomainWeb	defaultDomain;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -222,7 +222,7 @@ namespace Novell.iFolder
 
 			autoLoginButton = 
 				new CheckButton(Util.GS(
-					"A_uto login"));
+					"_Enable account"));
 			optBox.PackStart(autoLoginButton, false, false,0);
 			autoLoginButton.Toggled += 
 							new EventHandler(OnAutoLoginToggled);
@@ -238,6 +238,7 @@ namespace Novell.iFolder
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
 
+/*
 			HBox proxyBox = new HBox();
 
 			proxyButton =
@@ -246,6 +247,7 @@ namespace Novell.iFolder
 
 			loginTable.Attach(proxyBox, 1,2,4,5,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+*/
 
 
 			vbox.PackStart(loginTable, true, true, 0);
@@ -255,12 +257,8 @@ namespace Novell.iFolder
 			loginBox.Spacing = 10;
 			loginBox.Layout = ButtonBoxStyle.End;
 
-			logoutButton =
-				new Button(Util.GS("L_ogout"));
-			loginBox.PackStart(logoutButton, false, false, 0);
-
 			loginButton =
-				new Button(Util.GS("_Login"));
+				new Button(Util.GS("_Activate"));
 			loginBox.PackStart(loginButton, false, false, 0);
 			loginButton.Clicked += new EventHandler(OnLoginAccount);
 			loginButton.CanDefault = true;
@@ -285,6 +283,7 @@ namespace Novell.iFolder
 		{
 			// Read all current domains before letting them create
 			// a new ifolder
+			defaultDomain = null;
 			try
 			{
 				DomainWeb[] domains;
@@ -296,6 +295,9 @@ namespace Novell.iFolder
 					// local domains
 					if(dom.ID != "363051d1-8841-4c7b-a1dd-71abbd0f4ada")
 						AccTreeStore.AppendValues(dom);
+
+					if(dom.IsDefault)
+						defaultDomain = dom;
 				}
 			}
 			catch(Exception e)
@@ -319,9 +321,8 @@ namespace Novell.iFolder
 			savePasswordButton.Sensitive = false;
 			autoLoginButton.Sensitive = false;
 			defaultAccButton.Sensitive = false;
-			proxyButton.Sensitive = false;
+//			proxyButton.Sensitive = false;
 			loginButton.Sensitive = false;
-			logoutButton.Sensitive = false;
 
 			RemoveButton.Sensitive = false;
 			DetailsButton.Sensitive = false;
@@ -391,12 +392,9 @@ namespace Novell.iFolder
 			savePasswordButton.Sensitive = true;
 			autoLoginButton.Sensitive = false;
 			defaultAccButton.Sensitive = false;
-//			autoLoginButton.Sensitive = true;
-//			defaultAccButton.Sensitive = true;
 
-			proxyButton.Sensitive = false;
+//			proxyButton.Sensitive = false;
 			loginButton.Sensitive = false; 
-			logoutButton.Sensitive = false;
 
 
 			// set the control values
@@ -416,68 +414,61 @@ namespace Novell.iFolder
 
 		private void OnRemoveAccount(object o, EventArgs args)
 		{
-			TreeModel tModel;
-
 			TreeSelection tSelect = AccTreeView.Selection;
 
 			if(tSelect.CountSelectedRows() == 1)
 			{
-				iFolderMsgDialog dialog = new iFolderMsgDialog(
-					topLevelWindow,
-					iFolderMsgDialog.DialogType.Question,
-					iFolderMsgDialog.ButtonSet.YesNo,
-					Util.GS("iFolder Confirmation"),
-					Util.GS("Remove Selected Account?"),
-					Util.GS("This will remove the selected account from the list and you will no longer be able to sync to it"));
-				int rc = dialog.Run();
-				dialog.Hide();
-				dialog.Destroy();
-				if(rc == -8)
+				RemoveAccountDialog rad = new RemoveAccountDialog();
+				rad.TransientFor = topLevelWindow;
+				int rc = rad.Run();
+				rad.Hide();
+				if(rc == -5)
 				{
-					Queue   iterQueue;
-					Array treePaths = tSelect.GetSelectedRows(out tModel);
+					TreeModel tModel;
+					TreeIter iter;
 
-					iterQueue = new Queue();
-	
-					foreach(TreePath tPath in treePaths)
+					tSelect.GetSelected(out tModel, out iter);
+					DomainWeb dom = 
+						(DomainWeb) tModel.GetValue(iter, 0);
+
+					try
 					{
-						TreeIter iter;
-		
-						if(AccTreeStore.GetIter(out iter, tPath))
-						{
-							iterQueue.Enqueue(iter);
-						}
+						ifws.LeaveDomain(dom.ID, rad.RemoveFromAll);
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog( topLevelWindow, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						return;
 					}
 
-					// Now that we have all of the TreeIters, loop and
-					// remove them all
-//					while(iterQueue.Count > 0)
-//					{
-//						TreeIter iter = (TreeIter) iterQueue.Dequeue();
+					AccTreeStore.Remove(ref iter);
+					curDomain = null;
+					detailsFrame.Sensitive = false;
+					nameEntry.Sensitive = false;
+					nameEntry.Text = "";
+					nameLabel.Sensitive = false;
+					passEntry.Sensitive = false;
+					passEntry.Text = "";
+					passLabel.Sensitive = false;
+					serverEntry.Sensitive = false;
+					serverLabel.Sensitive = false;
+					serverEntry.Text = "";
 
-/*						iFolderUser user = 
-								(iFolderUser) tModel.GetValue(iter, 0);
-		
-						try
-						{
-   			 				ifws.RemoveiFolderUser(ifolder.ID,
-													user.UserID);
-							AccTreeStore.Remove(ref iter);
-							curUsers.Remove(user.UserID);
-						}
-						catch(Exception e)
-						{
-							iFolderExceptionDialog ied = 
-									new iFolderExceptionDialog(
-											topLevelWindow, e);
-							ied.Run();
-							ied.Hide();
-							ied.Destroy();
-							ied = null;
-						}
-*/
-//					}
+					savePasswordButton.Sensitive = false;
+					autoLoginButton.Sensitive = false;
+					defaultAccButton.Sensitive = false;
+		//			proxyButton.Sensitive = false;
+					loginButton.Sensitive = false;
+
+					RemoveButton.Sensitive = false;
+					DetailsButton.Sensitive = false;
 				}
+
+				rad.Destroy();
 			}
 		}
 
@@ -580,11 +571,11 @@ namespace Novell.iFolder
 				DomainWeb dom = 
 						(DomainWeb) tModel.GetValue(iter, 0);
 
-				curDomainID = dom.ID;
+				curDomain = dom;
 
 				// Set the control states
 				AddButton.Sensitive = true;
-				RemoveButton.Sensitive = false;
+				RemoveButton.Sensitive = true;
 				DetailsButton.Sensitive = true;
 
  				detailsFrame.Sensitive = true;
@@ -600,14 +591,10 @@ namespace Novell.iFolder
 				passLabel.Sensitive = true;
 
 				savePasswordButton.Sensitive = true;
-//				autoLoginButton.Sensitive = true;
-//				defaultAccButton.Sensitive = true;
-				autoLoginButton.Sensitive = false;
-				defaultAccButton.Sensitive = false;
+				autoLoginButton.Sensitive = true;
 
-				proxyButton.Sensitive = false;
+//				proxyButton.Sensitive = false;
 				loginButton.Sensitive = false;
-				logoutButton.Sensitive = false;
 
 
 				// set the control values
@@ -636,9 +623,9 @@ namespace Novell.iFolder
 					savePasswordButton.Active = false;
 				}
 
-				autoLoginButton.Active = true;
+				autoLoginButton.Active = dom.IsConnected;
 				defaultAccButton.Active = dom.IsDefault;
-
+				defaultAccButton.Sensitive = !dom.IsDefault;
 
 				if(dom.UserName != null)
 					nameEntry.Text = dom.UserName;
@@ -666,6 +653,13 @@ namespace Novell.iFolder
 					NewAccountMode = false;
 					TreeIter iter = AccTreeStore.AppendValues(dw);
 					TreeSelection sel = AccTreeView.Selection;
+					if(defaultDomain != null)
+						defaultDomain.IsDefault = false;
+					curDomain = dw;
+
+					if(savePasswordButton.Active == true)
+						SavePasswordNow();
+
 					sel.SelectIter(iter);
 				}
 				catch(Exception e)
@@ -757,12 +751,12 @@ namespace Novell.iFolder
 				if( (savePasswordButton.Active == true) &&
 						(passEntry.Text.Length > 0) )
 				{
-					simws.SaveDomainCredentials(curDomainID, 
+					simws.SaveDomainCredentials(curDomain.ID, 
 							passEntry.Text, CredentialType.Basic);
 				}
 				else
 				{
-					simws.SaveDomainCredentials(curDomainID, null,
+					simws.SaveDomainCredentials(curDomain.ID, null,
 							CredentialType.None);
 				}
 				curDomainPassword = passEntry.Text;
@@ -780,7 +774,26 @@ namespace Novell.iFolder
 			// it will be handled at creation time
 			if(!NewAccountMode)
 			{
-
+				if(autoLoginButton.Active != curDomain.IsConnected)
+				{
+					try
+					{
+						if(autoLoginButton.Active)
+						{
+							ifws.SetDomainActive(curDomain.ID);
+							curDomain.IsConnected = true;
+						}
+						else
+						{
+							ifws.SetDomainInactive(curDomain.ID);
+							curDomain.IsConnected = false;
+						}
+					}
+					catch (Exception ex)
+					{
+						// Ignore this error for now 
+					}
+				}
 			}
 		}
 
@@ -790,9 +803,27 @@ namespace Novell.iFolder
 			// it will be handled at creation time
 			if(!NewAccountMode)
 			{
-
+				if( (defaultAccButton.Active != curDomain.IsDefault) &&
+					(defaultAccButton.Active == true ) )
+				{
+					try
+					{
+						ifws.SetDefaultDomain(curDomain.ID);
+						curDomain.IsDefault = true;
+						defaultDomain.IsDefault = false;
+						defaultDomain = curDomain;
+						defaultAccButton.Sensitive = false;
+					}
+					catch (Exception ex)
+					{
+						// Ignore this error for now 
+					}
+				}
 			}
 		}
+
+
+
 
 	}
 }
