@@ -116,6 +116,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string LastLoginTime = "LastLogin";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string LastAccessTime = "Access";
 
 		/// <summary>
@@ -252,6 +257,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( FileSystemPath, null );
 			systemPropertyTable.Add( FullName, null );
 			systemPropertyTable.Add( HostAddress, null );
+			systemPropertyTable.Add( LastLoginTime, null );
 			systemPropertyTable.Add( LastAccessTime, null );
 			systemPropertyTable.Add( LastWriteTime, null );
 			systemPropertyTable.Add( LinkReference, null );

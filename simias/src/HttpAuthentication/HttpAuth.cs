@@ -77,6 +77,19 @@ namespace Simias.Authentication
 		{
 		}
 
+		/// <summary>
+		/// Sets the last login time on the user.
+		/// </summary>
+		/// <param name="domain">The domain the user has authenticated to.</param>
+		/// <param name="member">Member to set last login time for.</param>
+		private static void SetLastLoginTime( Domain domain, Member member )
+		{
+			Property p = new Property( PropertyTags.LastLoginTime, DateTime.Now );
+			p.LocalProperty = true;
+			member.Properties.ModifyNodeProperty( p );
+			domain.Commit( member );
+		}
+
 		private 
 			static 
 			void 
@@ -277,12 +290,14 @@ namespace Simias.Authentication
 						new GenericPrincipal(
 						new GenericIdentity(
 						member.UserID,
-						"Simias Authentication"), 
-						//"Basic authentication"), 
+						"Basic authentication"), 
 						rolesArray);
 
 					ctx.User = simiasSession.User;
 					Thread.CurrentPrincipal = ctx.User;
+
+					// Set the last login time for the user.
+					SetLastLoginTime( domain, member );
 				}
 				else
 				{
