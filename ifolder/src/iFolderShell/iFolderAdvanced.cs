@@ -50,10 +50,10 @@ namespace Novell.iFolderCom
 		// Delegates used to marshal back to the control's creation thread.
 		private delegate void NodeDelegate(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData);
 		private NodeDelegate nodeDelegate;
-		private delegate void SyncSizeDelegate(uint objectCount);
-		private SyncSizeDelegate syncSizeDelegate;
-		private delegate void SyncSizeAndTimeDelegate(uint objectCount, DateTime dateTime);
-		private SyncSizeAndTimeDelegate syncSizeAndTimeDelegate;
+		private delegate void FileSyncDelegate(FileSyncEventArgs fileSyncEventArgs);
+		private FileSyncDelegate fileSyncDelegate;
+		private delegate void CollectionSyncDelegate(CollectionSyncEventArgs collectionSyncEventArgs);
+		private CollectionSyncDelegate collectionSyncDelegate;
 
 		private Queue eventQueue;
 		private Thread worker = null;
@@ -69,6 +69,8 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
+		private uint objectsToSync;
+		private bool startSync;
 		private string longName = string.Empty;
 		private Hashtable subscrHT;
 		private Hashtable userIDHT;
@@ -139,8 +141,8 @@ namespace Novell.iFolderCom
 		public iFolderAdvanced()
 		{
 			nodeDelegate = new NodeDelegate(nodeEvent);
-			syncSizeDelegate = new SyncSizeDelegate(updateSyncSize);
-			syncSizeAndTimeDelegate = new SyncSizeAndTimeDelegate(updateSyncSizeAndTime);
+			fileSyncDelegate = new FileSyncDelegate(fileSync);
+			collectionSyncDelegate = new CollectionSyncDelegate(collectionSync);
 			
 			eventQueue = new Queue();
 			workEvent = new AutoResetEvent(false);
@@ -1714,15 +1716,35 @@ namespace Novell.iFolderCom
 			}
 		}
 
-		private void updateSyncSize(uint syncSize)
+		private void fileSync(FileSyncEventArgs fileSyncEventArgs)
 		{
-			objectCount.Text = syncSize.ToString();
+			if (fileSyncEventArgs.SizeRemaining == fileSyncEventArgs.SizeToSync)
+			{
+				if (startSync || (objectsToSync <= 0))
+				{
+					startSync = false;
+					SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+					objectsToSync = syncSize.SyncNodeCount;				
+				}
+
+				objectCount.Text = objectsToSync.ToString();
+				objectsToSync--;
+			}
 		}
 
-		private void updateSyncSizeAndTime(uint syncSize, DateTime dateTime)
+		private void collectionSync(CollectionSyncEventArgs collectionSyncEventArgs)
 		{
-			updateSyncSize(syncSize);
-			lastSync.Text = dateTime.ToString();
+			SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+			objectCount.Text = syncSize.SyncNodeCount.ToString();
+
+			if (collectionSyncEventArgs.Action.Equals(Action.StartSync))
+			{
+				startSync = true;
+			}
+			else if ((collectionSyncEventArgs.Action == Action.StopSync) && collectionSyncEventArgs.Successful)
+			{
+				lastSync.Text = DateTime.Now.ToString();
+			}
 		}
 
 		private void connectToWebService()
@@ -2952,17 +2974,9 @@ namespace Novell.iFolderCom
 		{
 			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
 
-			if ((syncEventArgs.Action == Action.StopSync) && currentiFolder.ID.Equals(syncEventArgs.ID))
+			if (currentiFolder.ID.Equals(syncEventArgs.ID))
 			{
-				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
-				if (syncEventArgs.Successful)
-				{
-					BeginInvoke(syncSizeAndTimeDelegate, new object[] {syncSize.SyncNodeCount, DateTime.Now});
-				}
-				else
-				{
-					BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});
-				}
+				BeginInvoke(collectionSyncDelegate, new object[] {syncEventArgs});
 			}
 		}
 
@@ -2972,8 +2986,7 @@ namespace Novell.iFolderCom
 
 			if (syncEventArgs.CollectionID.Equals(currentiFolder.ID))
 			{
-				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
-				BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});
+				BeginInvoke(fileSyncDelegate, new object[] {syncEventArgs});
 			}
 		}
 
