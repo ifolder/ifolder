@@ -358,6 +358,7 @@ namespace Novell.iFolder.InvitationWizard
 				// Accept/decline the invitation
 				try
 				{
+//					subscription.Accept(store, acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined);
 					subscription.SubscriptionState = SubscriptionStates.Replied;
 					subscription.SubscriptionDisposition = acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined;
 					Member member = poBox.GetCurrentMember();
@@ -515,7 +516,7 @@ namespace Novell.iFolder.InvitationWizard
 			else
 			{
 				// TODO: what should we name these?
-				subscription = new Subscription("Subscription Name", subscriptionInfo);
+				subscription = new Subscription(subscriptionInfo.SubscriptionCollectionName + " subscription", subscriptionInfo);
 				subscription.SubscriptionState = SubscriptionStates.Received;
 				poBox.AddMessage(subscription);
 				return false;
