@@ -173,7 +173,7 @@ namespace Simias.Sync.Web
 		/// <param name="blockSize">The block size to be hashed.</param>
 		/// <returns>The HashMap.</returns>
 		[WebMethod(EnableSession = true)]
-		public HashEntry[] GetHashMap(int blockSize)
+		public HashData[] GetHashMap(int blockSize)
 		{
 			return null;
 		}
@@ -212,7 +212,7 @@ namespace Simias.Sync.Web
 		/// <param name="count">The number of bytes to read.</param>
 		/// <returns>The number of bytes read.</returns>
 		[WebMethod(EnableSession = true)]
-		public int Read(out byte[] buffer, long offset, int count)
+		public int Read(ref byte[] buffer, long offset, int count)
 		{
 			buffer = null;
 			return 0;

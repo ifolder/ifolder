@@ -24,125 +24,36 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Security.Cryptography;
+using Simias.Storage;
 
 namespace Simias.Sync
 {
-	/// <summary>
-	/// Class used on ther server to determine the changes from the client file.
-	/// </summary>
-	public class ServerFile : SyncFile
-	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="file">The file that is to be synced either up or down.</param>
-		public ServerFile(string file) :
-			base(file)
-		{
-		}
-
-		/// <summary>
-		/// Get a hashed map of the file.  This can then be
-		/// used to create an upload or download filemap.
-		/// </summary>
-		/// <returns></returns>
-		public HashEntry[] GetHashMap()
-		{
-			int				blockCount = (int)(stream.Length / BlockSize) + 1;
-			HashEntry[]		list = new HashEntry[blockCount];
-			byte[]			buffer = new byte[BlockSize];
-			StrongHash		sh = new StrongHash();
-			WeakHash		wh = new WeakHash();
-			int				bytesRead;
-			int				currentBlock = 0;
-		
-			lock (this)
-			{
-				// Compute the hash codes.
-				stream.Position = 0;
-				int i = 0;
-				while ((bytesRead = stream.Read(buffer, 0, BlockSize)) != 0)
-				{
-					HashEntry entry = new HashEntry();
-					entry.WeakHash = wh.ComputeHash(buffer, 0, (UInt16)bytesRead);
-					entry.StrongHash =  sh.ComputeHash(buffer, 0, bytesRead);
-					entry.BlockNumber = currentBlock++;
-					list[i++] = entry;
-				}
-			}
-			return list;
-		}
-
-		/// <summary>
-		/// Read binary data from the file.
-		/// </summary>
-		/// <param name="buffer">The buffer to place the data into.</param>
-		/// <param name="offset">The offset in the file where reading should begin.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <returns></returns>
-		public int Read(byte[] buffer, long offset, int count)
-		{
-			lock (this)
-			{
-				stream.Position = offset;
-				return stream.Read(buffer, 0, count);
-			}
-		}
-
-		/// <summary>
-		/// Write the binary data to the file.
-		/// </summary>
-		/// <param name="buffer">The data to write.</param>
-		/// <param name="offset">The offset in the file where the data is to be written.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public void Write(byte[] buffer, long offset, int count)
-		{
-			lock (this)
-			{
-				outStream.Position = offset;
-				outStream.Write(buffer, 0, count);
-			}
-		}
-
-		/// <summary>
-		/// Copyt the data from the original file into the new file.
-		/// </summary>
-		/// <param name="originalOffset">The offset in the original file to copy from.</param>
-		/// <param name="offset">The offset in the file where the data is to be written.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public void Copy(long originalOffset, long offset, int count)
-		{
-			int bufferSize = count > BlockSize ? BlockSize : count;
-			byte[] buffer = new byte[bufferSize];
-
-			lock (this)
-			{
-				stream.Position = originalOffset;
-				outStream.Position = offset;
-				while (count > 0)
-				{
-					int bytesRead = stream.Read(buffer, 0, bufferSize);
-					outStream.Write(buffer, 0, bytesRead);
-					count -= bytesRead;
-				}
-			}
-		}
-	}
-
-	
 	/// <summary>
 	/// Class used to determine the common data between two files.
 	/// This is done from a copy of the local file and a map of hash code for the server file.
 	/// </summary>
 	public class SyncFile
 	{
+		protected Collection	collection;
+		protected BaseFileNode	node;
+		protected string		nodeID;
 		protected string		file;
-		protected string		tmpFile;
-		protected FileStream	stream;
+		protected string		workFile;
+		private	FileStream		workStream;
+		private FileStream		stream;
+		protected SyncDirection	direction;
 		protected const int		BlockSize = 4096;
 		protected const int		MaxXFerSize = 1024 * 64;
-		protected FileStream	outStream;
-			
+		protected const string ConflictUpdatePrefix = ".simias.cu.";
+		protected const string ConflictFilePrefix = ".simias.cf.";
+		protected const string WorkFilePrefix = ".simias.wf.";
+
+		protected enum SyncDirection
+		{
+			IN,
+			OUT
+		}
+	
 		/*
 		/// <summary>
 		/// The main entry point for the application.
@@ -195,12 +106,14 @@ namespace Simias.Sync
 		*/
 
 		/// <summary>
-		/// Constructor
+		/// 
 		/// </summary>
-		/// <param name="file">The file to be used.</param>
-		public SyncFile(string file)
+		/// <param name="collection">The collection that the node belongs to.</param>
+		/// <param name="direction">The direction of the sync.</param>
+		protected SyncFile(Collection collection, SyncDirection direction)
 		{
-			this.file = file;
+			this.collection = collection;
+			this.direction = direction;
 		}
 
 		/// <summary>
@@ -208,24 +121,148 @@ namespace Simias.Sync
 		/// </summary>
 		~SyncFile()
 		{
-			Close (true);
+			Close (true, false);
+		}
+
+		/// <summary>
+		/// Reads data into the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer to read into.</param>
+		/// <param name="offset">The offset in the buffer to read into.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <returns></returns>
+		public int Read(byte[] buffer, int offset, int count)
+		{
+			if (direction == SyncDirection.OUT)
+			{
+				return workStream.Read(buffer, offset, count);
+			}
+			else
+			{
+				return stream.Read(buffer, offset, count);
+			}
+		}
+
+		/// <summary>
+		/// Writes data from buffer into file.
+		/// </summary>
+		/// <param name="buffer">The buffer containing the data.</param>
+		/// <param name="offset">The offset in the buffer to write from.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Write(byte[] buffer, int offset, int count)
+		{
+			if (direction == SyncDirection.OUT)
+			{
+				throw new SimiasException("Invalid operation");
+			}
+			else
+			{
+				workStream.Write(buffer, offset, count);
+			}
+		}
+
+		/// <summary>
+		/// Copy data from the original file to the workfile.
+		/// </summary>
+		/// <param name="offset">The offset in the original file.</param>
+		/// <param name="count">The nuber of bytes to copy.</param>
+		/// <returns></returns>
+		public void Copy(long offset, int count)
+		{
+			if (direction == SyncDirection.OUT)
+			{
+				throw new SimiasException("Invalid operation");
+			}
+			else
+			{
+				byte[] buffer = new byte[count];
+				stream.Position = offset;
+				count = stream.Read(buffer, 0, count);
+				workStream.Write(buffer, 0, count);
+			}
+		}
+		
+
+		/// <summary>
+		/// Gets or Sets the file position.
+		/// </summary>
+		public long ReadPosition
+		{
+			get 
+			{ 
+				if (direction == SyncDirection.OUT)
+					return workStream.Position; 
+				else
+					return stream.Position;
+			}
+			set 
+			{ 
+				if (direction == SyncDirection.OUT)
+					workStream.Position = value; 
+				else
+					stream.Position = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or Sets the file position.
+		/// </summary>
+		public long WritePosition
+		{
+			get 
+			{ 
+				if (direction == SyncDirection.OUT)
+					throw new SimiasException("Invalid operation");
+				else
+                    return workStream.Position; 
+			}
+			set 
+			{ 
+				if (direction == SyncDirection.OUT)
+					throw new SimiasException("Invalid operation");
+				else
+					workStream.Position = value; 
+			}
+		}
+
+		/// <summary>
+		/// Gets the length of the stream.
+		/// </summary>
+		public long Length
+		{
+			get
+			{
+				if (direction == SyncDirection.OUT)
+					return workStream.Length;
+				else
+					return stream.Length;
+			}
 		}
 
 		/// <summary>
 		/// Called to open the file.
 		/// </summary>
-		/// <param name="tmpFile">The temporary file that is used while the update (upload/download) occures.
-		/// Can be null.</param>
-		public void Open(string tmpFile)
+		/// <param name="node">The node that represents the file.</param>
+		protected void Open(BaseFileNode node)
 		{
-			this.tmpFile = tmpFile;
-			stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-			if (tmpFile != null)
-				outStream = File.Open(tmpFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+			file = node.GetFullPath(collection);
+			workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + Path.GetFileName(file));
+			if (direction == SyncDirection.OUT)
+			{
+				// This file is being pushed make a copy to work from.
+				File.Copy(file, workFile);
+				workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
+			}
+			else
+			{
+				// Open the file so that it cannot be modified.
+				stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
+				workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
+			}
+			File.SetAttributes(workFile, FileAttributes.Hidden);
 		}
 
-		private void Close(bool InFinalizer)
+		private void Close(bool InFinalizer, bool commit)
 		{
 			if (!InFinalizer)
 				GC.SuppressFinalize(this);
@@ -235,67 +272,31 @@ namespace Simias.Sync
 				stream.Close();
 				stream = null;
 			}
-			if (outStream != null)
+			if (workStream != null)
 			{
-				outStream.Close();
-				outStream = null;
+				workStream.Close();
+				workStream = null;
+			}
+			if (commit)
+			{
+				if (direction == SyncDirection.IN)
+				{
+					if (commit)
+					{
+						File.Copy(workFile, file, true);
+					}
+				}
+				// We need to delete the temp file.
+				File.Delete(workFile);
 			}
 		}
 
 		/// <summary>
 		/// Called to close the file and cleanup resources.
 		/// </summary>
-		public void Close()
+		protected void Close(bool commit)
 		{
-			Close (false);
-		}
-	}
-
-	/// <summary>
-	/// Class used to keep track of the file Blocks and hash
-	/// codes assosiated with the block.
-	/// </summary>
-	public class HashEntry
-	{
-		/// <summary>
-		/// The Block number that this hash represents. 0 based.
-		/// </summary>
-		public int		BlockNumber;
-		/// <summary>
-		/// The Weak or quick hash of this block.
-		/// </summary>
-		public UInt32	WeakHash;
-		/// <summary>
-		/// The strong hash of this block.
-		/// </summary>
-		public byte[]	StrongHash;
-
-		/// <summary>
-		/// Override to test for equality of a HashEntry.
-		/// </summary>
-		/// <param name="obj">The object to compare against.</param>
-		/// <returns>True if equal.</returns>
-		public override bool Equals(object obj)
-		{
-			if (this.WeakHash == ((HashEntry)obj).WeakHash)
-			{
-				for (int i = 0; i < StrongHash.Length; ++i)
-				{
-					if (StrongHash[i] != ((HashEntry)obj).StrongHash[i])
-						return false;
-				}
-				return true;
-			}
-			return false;
-		}
-
-		///<summary>
-		/// Overide needed because Equals is overriden. 
-		/// </summary>
-		/// <returns></returns>
-		public override int GetHashCode()
-		{
-			return base.GetHashCode ();
+			Close (false, commit);
 		}
 	}
 }

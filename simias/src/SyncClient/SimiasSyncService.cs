@@ -248,10 +248,10 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetHashMap", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public HashEntry[] GetHashMap(int blockSize) {
+    public HashData[] GetHashMap(int blockSize) {
         object[] results = this.Invoke("GetHashMap", new object[] {
                     blockSize});
-        return ((HashEntry[])(results[0]));
+        return ((HashData[])(results[0]));
     }
     
     /// <remarks/>
@@ -261,9 +261,9 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public HashEntry[] EndGetHashMap(System.IAsyncResult asyncResult) {
+    public HashData[] EndGetHashMap(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
-        return ((HashEntry[])(results[0]));
+        return ((HashData[])(results[0]));
     }
     
     /// <remarks/>
@@ -316,8 +316,9 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/Read", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public int Read(long offset, int count, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] out System.Byte[] buffer) {
+    public int Read([System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] ref System.Byte[] buffer, long offset, int count) {
         object[] results = this.Invoke("Read", new object[] {
+                    buffer,
                     offset,
                     count});
         buffer = ((System.Byte[])(results[1]));
@@ -325,8 +326,9 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginRead(long offset, int count, System.AsyncCallback callback, object asyncState) {
+    public System.IAsyncResult BeginRead(System.Byte[] buffer, long offset, int count, System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("Read", new object[] {
+                    buffer,
                     offset,
                     count}, callback, asyncState);
     }
@@ -416,7 +418,7 @@ public enum Rights {
 
 /// <remarks/>
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
-public class HashEntry {
+public class HashData {
     
     /// <remarks/>
     public int BlockNumber;

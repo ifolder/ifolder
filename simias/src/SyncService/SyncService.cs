@@ -220,7 +220,6 @@ namespace Simias.Sync
 		}
 	}
 
-
 //---------------------------------------------------------------------------
 /// <summary>
 /// server side top level class of SynkerA-style synchronization
@@ -645,12 +644,6 @@ public class SyncService
 		return nodeStatus;
 	}
 
-
-
-
-
-
-
 	/// <summary>
 	/// simple version string, also useful to check remoting
 	/// </summary>
@@ -660,45 +653,6 @@ public class SyncService
 	}
 
 	/*
-
-	/// <summary>
-	/// takes an array of small nodes. returns rejected nodes
-	/// </summary>
-	public RejectedNode[] PutSmallNodes(NodeChunk[] nodes)
-	{
-		try
-		{
-			if (!IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-
-			log.Debug("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
-			return ops.PutSmallNodes(nodes);
-		}
-		catch (Exception e)
-		{
-			Log.Uncaught(e);
-			//TODO: handle this. Can't return null here because it is valid return (since empty arrays don't currently work on mono)
-			throw e; 
-		}
-		//return null;
-	}
-
-	/// <summary>
-	/// gets an array of small nodes
-	/// </summary>
-	public NodeChunk[] GetSmallNodes(string[] nids)
-	{
-		try
-		{
-			if (!IsAccessAllowed(Access.Rights.ReadOnly))
-				throw new UnauthorizedAccessException("Current user cannot read this collection");
-
-			log.Debug("SyncSession.GetSmallNodes() Count {0}", nids.Length);
-			return ops.GetSmallNodes(nids);
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		return null;
-	}
 
 	/// <summary>
 	/// takes metadata and first chunk of data for a large node

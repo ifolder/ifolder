@@ -1115,28 +1115,35 @@ namespace Simias.Sync.Client
 
 			foreach (string nodeID in nodeIDs)
 			{
-				if (stopping)
+				try
 				{
-					SyncComplete = false;
-					return;
+					if (stopping)
+					{
+						SyncComplete = false;
+						return;
+					}
+
+					ClientFile file = new ClientFile(collection, nodeID, service);
+					file.Open();
+					bool success = false;
+					try
+					{
+						success = file.DownLoadFile();
+						if (success)
+						{
+							filesFromServer.Remove(nodeID);
+						}
+						else
+						{
+							SyncComplete = false;
+						}
+					}
+					finally
+					{
+						file.Close(success);
+					}
 				}
-				// Get the node.
-				SyncNode sn = service.GetFileNode(nodeID);
-				XmlDocument xNode = new XmlDocument();
-				xNode.LoadXml(sn.node);
-				Node node = new Node(xNode);
-				Import(node);
-				
-				// Now get the file.
-				string fPath = "temp";
-				long offset = 0;
-				FileStream stream = File.Create(fPath);
-				int bytesRead;
-				while ((bytesRead = service.Read(offset, buffer.Length, out buffer)) != 0)
-				{
-					stream.Write(buffer, 0, bytesRead);
-					offset += bytesRead;
-				}
+				catch {}
 			}
 		}
 
@@ -1322,6 +1329,47 @@ namespace Simias.Sync.Client
 
 		void ProcessFilesToServer()
 		{
+			if (filesToServer.Count == 0)
+				return;
+
+			string[] nodeIDs = new string[filesToServer.Count];
+			filesToServer.Keys.CopyTo(nodeIDs, 0);
+
+			foreach (string nodeID in nodeIDs)
+			{
+				try
+				{
+					if (stopping)
+					{
+						SyncComplete = false;
+						return;
+					}
+
+					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
+					if (node != null)
+					{
+						ClientFile file = new ClientFile(collection, node, service);
+						file.Open();
+						bool success = false;
+						try
+						{
+							success = file.UploadFile();
+							if (success)
+							{
+								filesToServer.Remove(nodeID);
+							}
+							else
+							{
+								SyncComplete = false;
+							}
+						}
+						finally
+						{
+						}
+					}
+				}
+				catch {}
+			}
 		}
 	}
 }

@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SyncService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncService.cs $(srcdir)/SyncService.asmx.cs
+SyncService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncService.cs $(srcdir)/SyncService.asmx.cs $(srcdir)/ServerFile.cs
 SyncService_CSFILES := $(subst /,$(SEP),$(SyncService_CSFILES1))
 SyncService_INCLUDES = 
 SyncService_RESOURCES =  

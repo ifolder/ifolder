@@ -137,7 +137,6 @@ AssemblyInfo.cs
 ../Sync/IncomingNode.cs
 ../Sync/OutgoingNode.cs
 ../Sync/StrongHash.cs
-../Sync/StrongWeakHashtable.cs
 ../Sync/SyncLog.cs
 ../Sync/SyncOps.cs
 ../Sync/SyncSize.cs
