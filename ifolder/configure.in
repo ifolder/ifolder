@@ -431,15 +431,17 @@ fi
 PKG_CHECK_MODULES(SIMIAS, simias >= 1.0)
 AC_SUBST(SIMIAS_LIBS)
 
-PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 1.0)
-AC_SUBST(ADDRESSBOOK_LIBS)
-
-PKG_CHECK_MODULES(ADDRESSBOOK_UI, addressbook-ui >= 1.0)
-AC_SUBST(ADDRESSBOOK_UI_LIBS)
-
 # if using csc, convert /lib paths using cygpath
 case $CSC in
     csc)
+		# CRG: I moved these to only be needed if we
+		# are building on Windows
+		PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 1.0)
+		AC_SUBST(ADDRESSBOOK_LIBS)
+
+		PKG_CHECK_MODULES(ADDRESSBOOK_UI, addressbook-ui >= 1.0)
+		AC_SUBST(ADDRESSBOOK_UI_LIBS)
+
         libdir_pkg=`pkg-config --variable=libdir simias`
         libdir_cyg=`cygpath --windows $libdir_pkg | sed 's,\\\\,/,g'`
         SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
@@ -461,9 +463,9 @@ case $IFOLDER_OS in
         AC_SUBST(GNOME_SHARP_PREFIX)
         AC_SUBST(GNOME_SHARP_LIBS)
     
-        PKG_CHECK_MODULES(GLADE_SHARP, glade-sharp >= $GLADE_SHARP_MINIMUM_VERSION)
-        AC_SUBST(GLADE_SHARP_PREFIX)
-        AC_SUBST(GLADE_SHARP_LIBS)
+#        PKG_CHECK_MODULES(GLADE_SHARP, glade-sharp >= $GLADE_SHARP_MINIMUM_VERSION)
+#        AC_SUBST(GLADE_SHARP_PREFIX)
+#        AC_SUBST(GLADE_SHARP_LIBS)
     
         PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
         AC_SUBST(GDK20_CFLAGS)
