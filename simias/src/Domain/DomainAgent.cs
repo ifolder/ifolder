@@ -116,12 +116,10 @@ namespace Simias.Domain
 			}
 			catch(Exception e)
 			{
-				throw e;
-			}
-			finally
-			{
 				// restore the previous domain
 				store.DefaultDomain = previousDomain;
+
+				throw e;
 			}
 
 			// clean-up
