@@ -97,7 +97,7 @@ namespace Simias.Security.Web
 			HttpContext context = HttpContext.Current;
 
 			// See if this request requires authentication.
-			string webService = Path.GetFileName( context.Request.Path );
+			string webService = Path.GetFileName( context.Request.FilePath );
 			if ( unauthenticatedServices.ContainsKey( webService ) == false )
 			{
 				// See if this request method requires authentication.
