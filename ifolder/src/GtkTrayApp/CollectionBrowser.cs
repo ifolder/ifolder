@@ -267,8 +267,11 @@ namespace Novell.iFolder
 			Node node = GetSelectedItem();
 			if(node != null)
 			{
-				PropertiesDialog pd = new PropertiesDialog(node);
-				pd.ShowAll(1);
+				PropertiesDialog pd = new PropertiesDialog();
+				pd.Node = node;
+				pd.TransientFor = nifWindow; 
+				pd.ActiveTag = 1;
+				pd.Run();
 			}
 		}
 
@@ -298,8 +301,11 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					PropertiesDialog pd = new PropertiesDialog(node);
-					pd.ShowAll(1);
+					PropertiesDialog pd = new PropertiesDialog();
+					pd.Node = node;
+					pd.TransientFor = nifWindow; 
+					pd.ActiveTag = 1;
+					pd.Run();
 				}
 			}
 		}

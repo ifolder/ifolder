@@ -27,6 +27,7 @@ namespace Novell.iFolder
 	using System.IO;
 	using System.Drawing;
 	using Simias.Storage;
+	using Simias;
 
 	using Gtk;
 	using Gdk;
@@ -35,19 +36,11 @@ namespace Novell.iFolder
 	using GtkSharp;
 	using GLib;
 
-	public class PropertiesDialog 
+	public class IntroDialog 
 	{
-		[Glade.Widget] Notebook propNoteBook = null;
+		[Glade.Widget] Gtk.CheckButton ShowCheckButton = null;
 
 		Gtk.Dialog dialog; 
-		iFolderManager ifmgr;
-		SharingPage	spage;
-		NodePropertyPage	nppage;
-		Gtk.Widget swidget;
-		Gtk.Widget npwidget;
-		iFolder ifldr;
-		Node node;
-		int activeTag = 0;
 		string path;
 
 		public Gtk.Window TransientFor
@@ -72,78 +65,40 @@ namespace Novell.iFolder
 			}
 		}
 
-		public Node Node
-		{
-			get
-			{
-				return node;
-			}
-
-			set
-			{
-				node = value;
-			}
-		}
-
-		public int ActiveTag
-		{
-			set
-			{
-				activeTag = value;
-			}
-		}
-
-		public PropertiesDialog() 
+		public IntroDialog() 
 		{
 			InitGlade();
 		}
 
 		public void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("properties-dialog.glade", 
-					"PropertiesDialog", 
+			Glade.XML gxml = new Glade.XML ("ifolder-confirmation.glade", 
+					"ConfirmationDialog", 
 					null);
 			gxml.Autoconnect (this);
 
-			dialog = (Gtk.Dialog) gxml.GetWidget("PropertiesDialog");
+			dialog = (Gtk.Dialog) gxml.GetWidget("ConfirmationDialog");
 		}
-
 
 		public int Run()
 		{
 			int rc = 0;
 			if(dialog != null)
 			{
-				ifmgr = iFolderManager.Connect();
-
-				if(ifmgr.IsiFolder(path))
-				{
-					ifldr = ifmgr.GetiFolderByPath(path);
-
-					spage = new SharingPage(ifldr);
-					swidget = spage.GetWidget();
-					propNoteBook.AppendPage(swidget, 
-							new Label("iFolder Sharing"));
-
-					nppage = new NodePropertyPage(ifldr.CurrentNode);
-					npwidget = nppage.GetWidget();
-					propNoteBook.AppendPage(npwidget, new Label("iFolder"));
-	
-					dialog.Icon = new Pixbuf("ifolderfolder.png");
-				}
-
-				if(node != null)
-				{
-					nppage = new NodePropertyPage(this.node);
-					npwidget = nppage.GetWidget();
-					propNoteBook.AppendPage(npwidget, 
-							new Label("Node Properties"));
-				}
-
-				if(propNoteBook.NPages >= activeTag)
-					propNoteBook.CurrentPage = activeTag;
-
 				rc = dialog.Run();
+
+				if(ShowCheckButton.Active)
+				{
+					Console.WriteLine("Don't show");
+					new Configuration().Set("iFolderTrayApp", 
+							"Show wizard", "false");
+				}
+				else
+				{
+					Console.WriteLine("show");
+					new Configuration().Set("iFolderTrayApp", 
+							"Show wizard", "true");
+				}
 
 				dialog.Hide();
 				dialog.Destroy();
@@ -151,6 +106,28 @@ namespace Novell.iFolder
 			}
 
 			return rc;
+		}
+
+		public void on_ShareButton_clicked(object obj, EventArgs args)
+		{
+			PropertiesDialog pd = new PropertiesDialog();
+			pd.iFolderPath = path;
+			pd.TransientFor = dialog;
+			pd.ActiveTag = 1;
+			pd.Run();
+		}
+
+		static public bool UseDialog()
+		{
+			Configuration config = new Configuration();
+			string showWizard = config.Get("iFolderTrayApp", 
+					"Show wizard", "true");
+
+			if (showWizard == "true")
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

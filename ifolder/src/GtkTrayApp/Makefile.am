@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs
+TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs $(srcdir)/IntroDialog.cs
 TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
@@ -29,7 +29,7 @@ CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_
 
 INSTALL_FILES = $(srcdir)/invitationwizard $(srcdir)/ifolder $(srcdir)/setup-autostart
 
-DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/libegg.so $(srcdir)/egg-sharp.dll
+DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/libegg.so $(srcdir)/egg-sharp.dll
 
 EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_FILES)
 
