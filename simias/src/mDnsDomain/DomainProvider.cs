@@ -217,25 +217,20 @@ namespace Simias
 					mdnsSession.State = 1;
 
 					// Fixme
-					mdnsSession.OneTimePassword = DateTime.Now.ToString();
-					mdnsSession.OneTimePassword = "jared";
-
+					mdnsSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
 					string publicKey = RUsers.GetMembersPublicKey( member.UserID );
 					if ( publicKey != null )
 					{
 						RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
 						credential.FromXmlString( publicKey );
 
-						UTF8Encoding utf8 = new UTF8Encoding();
-						byte[] oneTime = utf8.GetBytes( mdnsSession.OneTimePassword );
-
-						byte[] clearText =
-							credential.Encrypt( oneTime, false );
+						byte[] oneTime = new UTF8Encoding().GetBytes( mdnsSession.OneTimePassword );
+						byte[] encryptedText = credential.Encrypt( oneTime, false );
 
 						// Set the encrypted one time password in the response
 						ctx.Response.AddHeader(
 							"mdns-secret",
-							Convert.ToBase64String( clearText ) );
+							Convert.ToBase64String( encryptedText ) );
 							
 						ctx.Session[ mdnsSessionTag ] = mdnsSession;
 					}
@@ -262,7 +257,7 @@ namespace Simias
 					else
 					{
 						// Fixme
-						mdnsSession.OneTimePassword = "jared";
+						mdnsSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
 						mdnsSession.State = 1;
 
 						string publicKey = RUsers.GetMembersPublicKey( member.UserID );
@@ -272,15 +267,13 @@ namespace Simias
 							{
 								RSACryptoServiceProvider credential = new RSACryptoServiceProvider();
 								credential.FromXmlString( publicKey );
-
-								UTF8Encoding utf8 = new UTF8Encoding();
-								byte[] oneTime = utf8.GetBytes( mdnsSession.OneTimePassword );
-								byte[] clearText = credential.Encrypt( oneTime, false );
+								byte[] oneTime = new UTF8Encoding().GetBytes( mdnsSession.OneTimePassword );
+								byte[] encryptedText = credential.Encrypt( oneTime, false );
 
 								// Set the encrypted one time password in the response
 								ctx.Response.AddHeader(
 									"mdns-secret",
-									Convert.ToBase64String( clearText ) );
+									Convert.ToBase64String( encryptedText ) );
 							}
 							catch( Exception encr )
 							{

@@ -140,8 +140,8 @@ namespace Simias.mDns
 
 								// Decrypt the data with the member's private key
 								byte[] oneTime = Convert.FromBase64String( oneTimeChallenge );
-								byte[] decryptedOneTime = credential.Decrypt( oneTime, false );
-								request2.Headers.Add( "mdns-secret", Convert.ToBase64String( decryptedOneTime) );
+								byte[] decryptedText = credential.Decrypt( oneTime, false );
+								request2.Headers.Add( "mdns-secret", Convert.ToBase64String( decryptedText ) );
 							}
 							catch( Exception enc )
 							{
