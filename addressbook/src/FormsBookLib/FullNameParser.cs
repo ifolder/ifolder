@@ -57,7 +57,7 @@ namespace Novell.iFolder.FormsBookLib
 			if (fullName.Length > 0)
 			{
 				// Get the prefix.
-				Regex prefix = new Regex("mr |mr. |mrs |mrs. |miss |ms |ms. |dr |dr. ", RegexOptions.IgnoreCase);
+				Regex prefix = new Regex(@"mr |mr\. |mrs |mrs\. |miss |ms |ms\. |dr |dr\. ", RegexOptions.IgnoreCase);
 				Match matchPrefix = prefix.Match(fullName);
 				if (matchPrefix.Success)
 				{
@@ -77,7 +77,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 
 				// Get the suffix.
-				Regex suffix = new Regex(" i| ii| iii| jr| jr.| sr| sr.| esq| esq.| md| m.d.", RegexOptions.IgnoreCase);
+				Regex suffix = new Regex(@" i| ii| iii| jr| jr\.| sr| sr\.| esq| esq\.| md| m\.d\.", RegexOptions.IgnoreCase);
 				Match matchSuffix = suffix.Match(fullName);
 				if (matchSuffix.Success)
 				{
@@ -143,6 +143,9 @@ namespace Novell.iFolder.FormsBookLib
 					{
 						// The second name must be the last name.
 						name.Family = s[length - 1];
+
+						// Clear out the middle name.
+						name.Other = "";
 					}
 				}
 			}

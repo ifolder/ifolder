@@ -2190,6 +2190,12 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
+			if (fullName.Focused)
+			{
+				// Process the name.
+				fullName_Leave(this, e);
+			}
+
 			try
 			{
 				if (newContact)
