@@ -54,6 +54,9 @@ namespace Novell.FormsTrayApp
 		private delegate void CreateChangeEventDelegate(iFolderWeb ifolder, iFolderUser ifolderUser, string eventData);
 		private CreateChangeEventDelegate createChangeEventDelegate;
 
+		private delegate void NotifyMessageDelegate(NotifyEventArgs notifyEventArgs);
+		private NotifyMessageDelegate notifyMessageDelegate;
+
 		private System.ComponentModel.IContainer components;
 		private System.Resources.ResourceManager resourceManager;
 		private bool shutdown = false;
@@ -72,6 +75,9 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		protected AutoResetEvent workEvent = null;
 
+		private ServerInfo serverInfo = null;
+		private string domainID = string.Empty;
+		private bool loginCancelled = false;
 		private System.Windows.Forms.MenuItem menuItem10;
 		private System.Windows.Forms.MenuItem menuSeparator1;
 		private System.Windows.Forms.MenuItem menuProperties;
@@ -90,6 +96,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuStoreBrowser;
 		private System.Windows.Forms.MenuItem menuTools;
 		private System.Windows.Forms.Timer syncAnimateTimer;
+		private System.Windows.Forms.MenuItem menuLogin;
 		private int iconID;
 		#endregion
 
@@ -118,6 +125,7 @@ namespace Novell.FormsTrayApp
 			syncFileDelegate = new SyncFileDelegate(syncFile);
 
 			createChangeEventDelegate = new CreateChangeEventDelegate(createChangeEvent);
+			notifyMessageDelegate = new NotifyMessageDelegate(notifyMessage);
 
 			resourceManager = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 
@@ -223,9 +231,25 @@ namespace Novell.FormsTrayApp
 				}
 			}*/
 
-			ServerInfo serverInfo = new ServerInfo(ifWebService);
-			serverInfo.EnterpriseConnect += new Novell.FormsTrayApp.ServerInfo.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
-			serverInfo.Show();
+			// Only display one dialog.
+			if (serverInfo == null)
+			{
+				serverInfo = new ServerInfo(ifWebService, string.Empty);
+				serverInfo.EnterpriseConnect += new Novell.FormsTrayApp.ServerInfo.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
+				serverInfo.Closed += new EventHandler(serverInfo_Closed);
+				serverInfo.Show();
+			}
+		}
+
+		private void menuLogin_Click(object sender, System.EventArgs e)
+		{
+			// Only display one dialog.
+			if (serverInfo == null)
+			{
+				serverInfo = new ServerInfo(ifWebService, domainID);
+				serverInfo.Closed += new EventHandler(serverInfo_Closed);
+				serverInfo.Show();
+			}
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
@@ -274,6 +298,9 @@ namespace Novell.FormsTrayApp
 			{
 				// Ignore.
 			}
+
+			// If we have a domainID and the login was previously cancelled, display the login menu.
+			menuLogin.Visible = !domainID.Equals(string.Empty) && loginCancelled;
 		}
 
 		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
@@ -314,6 +341,7 @@ namespace Novell.FormsTrayApp
 						eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeEventHandler));
 						eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
 						eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(trayApp_fileSyncHandler));
+						eventClient.SetEvent(IProcEventAction.AddNotifyMessage, new IProcEventHandler(trayApp_notifyMessageHandler));
 					}
 
 					// Instantiate the GlobalProperties dialog so we can log sync events.
@@ -375,6 +403,12 @@ namespace Novell.FormsTrayApp
 			BeginInvoke(syncFileDelegate, new object[] {syncEventArgs});
 		}
 
+		private void trayApp_notifyMessageHandler(SimiasEventArgs args)
+		{
+			NotifyEventArgs notifyEventArgs = args as NotifyEventArgs;
+			BeginInvoke(notifyMessageDelegate, new object[] {notifyEventArgs});
+		}
+
 		private void serverInfo_EnterpriseConnect(object sender, EventArgs e)
 		{
 			globalProperties.ShowEnterpriseTab = true;
@@ -399,6 +433,21 @@ namespace Novell.FormsTrayApp
 				index = 0;
 			}
 		}
+
+		private void serverInfo_Closed(object sender, EventArgs e)
+		{
+			if (serverInfo != null)
+			{
+				if (!domainID.Equals(string.Empty))
+				{
+					// If we have a domainID then keep track of the cancelled state.
+					loginCancelled = serverInfo.Cancelled;
+				}
+
+				serverInfo.Dispose();
+				serverInfo = null;
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -418,6 +467,7 @@ namespace Novell.FormsTrayApp
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
+			this.menuLogin = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -433,6 +483,7 @@ namespace Novell.FormsTrayApp
 																						 this.menuTools,
 																						 this.menuSeparator1,
 																						 this.menuProperties,
+																						 this.menuLogin,
 																						 this.menuJoin,
 																						 this.menuHelp,
 																						 this.menuItem10,
@@ -495,7 +546,7 @@ namespace Novell.FormsTrayApp
 			// menuJoin
 			// 
 			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
-			this.menuJoin.Index = 3;
+			this.menuJoin.Index = 4;
 			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
 			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
 			this.menuJoin.Text = resources.GetString("menuJoin.Text");
@@ -505,7 +556,7 @@ namespace Novell.FormsTrayApp
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
-			this.menuHelp.Index = 4;
+			this.menuHelp.Index = 5;
 			this.menuHelp.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuHelp.Shortcut")));
 			this.menuHelp.ShowShortcut = ((bool)(resources.GetObject("menuHelp.ShowShortcut")));
 			this.menuHelp.Text = resources.GetString("menuHelp.Text");
@@ -515,7 +566,7 @@ namespace Novell.FormsTrayApp
 			// menuItem10
 			// 
 			this.menuItem10.Enabled = ((bool)(resources.GetObject("menuItem10.Enabled")));
-			this.menuItem10.Index = 5;
+			this.menuItem10.Index = 6;
 			this.menuItem10.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem10.Shortcut")));
 			this.menuItem10.ShowShortcut = ((bool)(resources.GetObject("menuItem10.ShowShortcut")));
 			this.menuItem10.Text = resources.GetString("menuItem10.Text");
@@ -524,7 +575,7 @@ namespace Novell.FormsTrayApp
 			// menuExit
 			// 
 			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
-			this.menuExit.Index = 6;
+			this.menuExit.Index = 7;
 			this.menuExit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuExit.Shortcut")));
 			this.menuExit.ShowShortcut = ((bool)(resources.GetObject("menuExit.ShowShortcut")));
 			this.menuExit.Text = resources.GetString("menuExit.Text");
@@ -533,8 +584,17 @@ namespace Novell.FormsTrayApp
 			// 
 			// syncAnimateTimer
 			// 
-			this.syncAnimateTimer.Interval = 100;
 			this.syncAnimateTimer.Tick += new System.EventHandler(this.syncAnimateTimer_Tick);
+			// 
+			// menuLogin
+			// 
+			this.menuLogin.Enabled = ((bool)(resources.GetObject("menuLogin.Enabled")));
+			this.menuLogin.Index = 3;
+			this.menuLogin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuLogin.Shortcut")));
+			this.menuLogin.ShowShortcut = ((bool)(resources.GetObject("menuLogin.ShowShortcut")));
+			this.menuLogin.Text = resources.GetString("menuLogin.Text");
+			this.menuLogin.Visible = ((bool)(resources.GetObject("menuLogin.Visible")));
+			this.menuLogin.Click += new System.EventHandler(this.menuLogin_Click);
 			// 
 			// FormsTrayApp
 			// 
@@ -654,6 +714,29 @@ namespace Novell.FormsTrayApp
 				}
 			}
 			catch {}
+		}
+
+		private void notifyMessage(NotifyEventArgs notifyEventArgs)
+		{
+			switch (notifyEventArgs.EventData)
+			{
+				case "Domain-Up":
+				{
+					// Only display the login dialog if it hasn't been previously cancelled.
+					if (!loginCancelled)
+					{
+						// Only display one dialog.
+						if (serverInfo == null)
+						{
+							domainID = notifyEventArgs.Message;
+							serverInfo = new ServerInfo(ifWebService, domainID);
+							serverInfo.Closed += new EventHandler(serverInfo_Closed);
+							serverInfo.Show();
+						}
+					}
+					break;
+				}
+			}
 		}
 
 		private void ShutdownTrayApp(Exception ex)
