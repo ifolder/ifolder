@@ -150,8 +150,14 @@ internal class IncomingNode
 			if ((path = ParentPath(collection, node)) == null)
 			{
 				// This is ok if the node is store managed.
-				if (!collection.IsType(node, typeof(StoreFileNode).Name))
+				if (collection.IsType(node, typeof(StoreFileNode).Name))
+				{
+					path = collection.ManagedPath;
+				}
+				else
+				{
 					throw new SimiasException("could not get parent path of incoming FileNode");
+				}
 			}
 			else
 			{
@@ -159,8 +165,6 @@ internal class IncomingNode
 			}
 			this.node = SyncOps.CastToBaseFileNode(collection, node);
 		}
-		else
-			path = collection.ManagedPath;
 	}
 
 	// accept some chunks of data for this file
