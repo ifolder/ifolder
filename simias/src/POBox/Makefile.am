@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-POService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/POService.cs $(srcdir)/POManager.cs $(srcdir)/POBoxManager.cs $(srcdir)/PostOffice.cs
+POService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/POService.cs $(srcdir)/POManager.cs $(srcdir)/POBoxManager.cs
 POService_CSFILES_CSC := $(subst /,$(SEP),$(POService_CSFILES))
 POService_INCLUDES = 
 POService_RESOURCES =

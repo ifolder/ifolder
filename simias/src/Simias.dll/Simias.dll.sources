@@ -44,9 +44,6 @@ AssemblyInfo.cs
 ../Domain/IDomainService.cs
 ../Domain/DomainAgent.cs
 ../FsWatcher/FsWatcher.cs
-../Invitation/Library/IInvitationProvider.cs
-../Invitation/Library/InvitationService.cs
-../Invitation/SmtpProvider/SmtpInvitationProvider.cs
 ../Location/Library/DefaultLocationProvider.cs
 ../Location/Library/ILocationProvider.cs
 ../Location/Library/LocationProviderList.cs
@@ -55,6 +52,8 @@ AssemblyInfo.cs
 ../POBox/POBox.cs
 ../POBox/Message.cs
 ../POBox/Subscription.cs
+../POBox/SubscriptionInfo.cs
+../POBox/PostOffice.cs
 ../RemotingSniffer/Library/SnifferClientChannelSink.cs
 ../RemotingSniffer/Library/SnifferClientChannelSinkProvider.cs
 ../RemotingSniffer/Library/SnifferMessage.cs
@@ -106,7 +105,6 @@ AssemblyInfo.cs
 ../StoreProvider/Provider.cs
 ../StoreProvider/Query.cs
 ../StoreProvider/Record.cs
-../SyncCommon/Library/Invitation.cs
 ../SyncCommon/Library/SyncChannelSinks.cs
 ../SyncCommon/Library/SyncCollection.cs
 ../SyncCommon/Library/SyncCollectionInfo.cs

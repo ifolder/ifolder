@@ -348,6 +348,8 @@ src/Events/Makefile
 src/POBox/Makefile
 src/mDnsService/Makefile
 src/SyncManager/Makefile
+test/Makefile
+test/POBoxTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

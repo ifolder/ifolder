@@ -78,6 +78,8 @@ public class FileInviter
 		 * of the same docRoot or collectionId are not allowed should be
 		 * done at a lower level
 		 */
+
+		/* TODO: update
 		Invitation invitation = new Invitation(fileName);
 		docRootParent = Path.GetFullPath(docRootParent);
 		invitation.RootPath = docRootParent;
@@ -100,12 +102,14 @@ public class FileInviter
 		}
 
 		// add the invitation information to the store collection
+		
 		SyncCollection sc = new SyncCollection(store, invitation);
 		sc.Commit();
 		sc.Commit(sc);
 
 		DirNode dn = sc.GetRootDirectory();
 		Log.Spew("Created new client collection {0} {1} {2}", sc.Name, sc.ID, dn == null? "<null>": dn.GetFullPath(sc));
+		*/
 
 		return true;
 	}

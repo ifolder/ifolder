@@ -1,4 +1,4 @@
-SUBDIRS = src package
+SUBDIRS = src test package
 
 DIST_SUBDIRS = $(SUBDIRS) doc
 

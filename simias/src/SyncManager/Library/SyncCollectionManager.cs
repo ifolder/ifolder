@@ -219,8 +219,6 @@ namespace Simias.Sync
 
 				log.Info("Starting Sync Cycle: {0}", collection.Name);
 
-				// TODO: the remoting connection is currently being created with each sync interval,
-				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
 					// check master

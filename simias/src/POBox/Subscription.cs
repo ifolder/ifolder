@@ -22,6 +22,8 @@
  ***********************************************************************/
 
 using System;
+using System.IO;
+
 using Simias.Storage;
 
 namespace Simias.POBox
@@ -78,6 +80,13 @@ namespace Simias.POBox
 	public class Subscription : Message
 	{
 		#region Class Members
+		
+		// default root path for collections
+		public static string DefaultRootPath = Path.Combine(
+			Environment.GetFolderPath(
+			Environment.SpecialFolder.Personal),
+			"My Collections");
+
 		/// <summary>
 		/// The name of the property storing the SubscriptionState.
 		/// </summary>
@@ -132,6 +141,7 @@ namespace Simias.POBox
 		/// The name of the property storing the rights requested/granted.
 		/// </summary>
 		public const string SubscriptionRightsProperty = "SubscriptionRights";
+		
 		#endregion
 
 		#region Constructors

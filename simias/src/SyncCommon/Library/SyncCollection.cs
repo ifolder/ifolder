@@ -82,6 +82,7 @@ namespace Simias.Sync
 			props = new SyncProperties(this.StoreReference.Config);
 		}
 
+/* TODO: remove
 		/// <summary>
 		/// Invitation Constructor
 		/// </summary>
@@ -123,11 +124,10 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="identity">The identity for the invitation.</param>
 		/// <returns>A new invitation object.</returns>
-		[Obsolete()]
 		public Invitation CreateInvitation(string identity)
 		{
 			return null;
-/*
+
 			// create the invitation
 			Invitation invitation = new Invitation();
 
@@ -165,8 +165,9 @@ namespace Simias.Sync
 			}
 
 			return invitation;
-*/
+
 		}
+*/
 
 		/// <summary>
 		/// Get a property value from the base node.

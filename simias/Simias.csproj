@@ -349,21 +349,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Invitation\Library\IInvitationProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Invitation\Library\InvitationService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Invitation\SmtpProvider\SmtpInvitationProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Location\Library\DefaultLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -399,7 +384,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\POBox\PostOffice.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\Subscription.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\POBox\SubscriptionInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -725,11 +720,6 @@
                 />
                 <File
                     RelPath = "src\Sync\SynkerWorkerA.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\Library\Invitation.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
