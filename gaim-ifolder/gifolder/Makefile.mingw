@@ -126,7 +126,7 @@ $(GAIM_TOP)/src/gaim.lib:
 ##
 
 $(TARGET).dll: $(OBJECTS) $(GAIM_TOP)/src/gaim.lib
-	$(CC) -shared $(OBJECTS) $(LIB_PATHS) $(LIBS) $(DLL_LD_FLAGS) -o $(TARGET).dll
+	$(CC) -shared $(OBJECTS) $(LIB_PATHS) $(LIBS) $(DLL_LD_FLAGS) -Wl,--export-all-symbols -Wl,--out-implib,$(TARGET).lib -o $(TARGET).dll
 
 ##
 ## CLEAN RULES
