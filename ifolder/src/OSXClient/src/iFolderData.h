@@ -33,7 +33,7 @@
 {
 	iFolderService					*ifolderService;
 	SimiasService					*simiasService;
-	
+
 	NSMutableDictionary				*keyedDomains;
 	NSMutableDictionary				*keyediFolders;		
 	NSMutableDictionary				*keyedSubscriptions;
@@ -65,7 +65,6 @@
 -(BOOL)isiFolder:(NSString *)ifolderID;
 -(BOOL)isPOBox:(NSString *)nodeID;
 
-
 -(iFolder *)getiFolder:(NSString *)ifolderID;
 -(iFolder *)readiFolder:(NSString *)ifolderID;
 
@@ -73,14 +72,13 @@
 -(iFolder *)readAvailableiFolder:(NSString *)ifolderID 
 									inCollection:(NSString *)collectionID;
 
+
 -(iFolderDomain *)getDomain:(NSString *)domainID;
 -(NSArray *)getDomains;
 -(NSArray *)getiFolders;
 -(iFolderDomain *)getDefaultDomain;
 -(int)getDomainCount;
 -(void)selectDefaultDomain;
-
-
 
 -(void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
 -(void)acceptiFolderInvitation:(NSString *)iFolderID 
@@ -91,5 +89,4 @@
 -(void)revertiFolder:(NSString *)iFolderID;
 -(void)deleteiFolder:(NSString *)ifolderID;
 
-
-@end
+ @end

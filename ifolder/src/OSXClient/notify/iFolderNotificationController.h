@@ -41,7 +41,6 @@
 + (void) newUserNotification:(iFolder *)ifolder;
 + (void) collisionNotification:(iFolder *)ifolder;
 
-
 - (void) ifolderNotify:(iFolder *)ifolder;
 - (void) userNotify:(iFolder *)ifolder;
 - (void) colNotify:(iFolder *)ifolder;
