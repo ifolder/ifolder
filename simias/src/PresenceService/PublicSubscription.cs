@@ -198,6 +198,9 @@ namespace Simias.Presence
 
 				UriBuilder hostUrl = new UriBuilder(pobox.POServiceUrl);
 
+				log.Debug("-----the URL of the PO is: {0}", pobox.POServiceUrl);
+				log.Debug("----- which equals {0}", hostUrl.ToString());
+
 				HostAddress ha = null;
 
 				if (query.GetDefaultHost(ref ha) == 0)
