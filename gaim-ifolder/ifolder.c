@@ -1218,6 +1218,7 @@ init_invitations_window()
 	GtkCellRenderer *out_inv_renderer;
 	GtkTreeSelection *out_inv_sel;
 
+	/* FIXME: Figure out how to make the window close action (the one in the title bar) do the same action as the close button.  Right now, it just destroys the window instead of hiding it. */
 	invitations_dialog = gtk_dialog_new_with_buttons(
 				_("Simias Collection Invitations"),
 				GTK_WINDOW(GAIM_GTK_BLIST(gaim_get_blist())),
