@@ -27,10 +27,11 @@ CollectionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll CollectionStore.dll Configuration.dll AddressBook.dll Agent.dll iFolder.dll BookLib.dll
 CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
 
+INSTALL_FILES = $(srcdir)/ifolder $(srcdir)/setup-autostart
 
 DATA_FILES = ifolder.glade folder.png ifolder.png ifolderfolder.png invitewiz.png leafnode.png node.png file.xpm ifolder.gif property.png libegg.so egg-sharp.dll
 
-EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES)
+EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_FILES)
 
 all: iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe
 
@@ -45,10 +46,10 @@ CollectionBrowser.exe: $(CollectionBrowserGtk_CSFILES) $(CollectionBrowserGtk_RE
 
 install-exec-local: iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES) $(INSTALL_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe InvitationWizard.exe CollectionBrowser.exe $(DATA_FILES) $(notdir $(INSTALL_FILES))
     
 installcheck-local: install
 	
@@ -58,6 +59,7 @@ clean-local:
 	rm -rf *.dbg *.exe $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
 distclean-local: clean
+	rm -f ifolder
 
 maintainer-clean-local:
 	rm -f Makefile.in
