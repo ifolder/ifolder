@@ -91,12 +91,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "Identity"
-                    AssemblyName = "Identity"
-                    HintPath = "..\stage\Identity.dll"
-                    Private = "True"
-                />
-                <Reference
                     Name = "CollectionEvents"
                     AssemblyName = "CollectionEvents"
                     HintPath = "..\stage\CollectionEvents.dll"
@@ -107,6 +101,11 @@
             <Include>
                 <File
                     RelPath = "AccessControl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Alias.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -147,6 +146,16 @@
                 />
                 <File
                     RelPath = "ICSEnumerator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Identity.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LocalAddressBook.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

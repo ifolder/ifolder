@@ -33,7 +33,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using Simias;
-using Simias.Identity;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -176,11 +175,12 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the identity object associated with this store.
+		/// Gets or sets the identity object associated with this store.
 		/// </summary>
-		internal StoreIdentity Identity
+		internal StoreIdentity LocalIdentity
 		{
 			get { return identity; }
+			set { identity = value; }
 		}
 
 		/// <summary>
@@ -250,7 +250,7 @@ namespace Simias.Storage
 		/// </summary>
 		private void AuthenticateStore()
 		{
-			identity = StoreIdentity.Authenticate( this );
+			StoreIdentity.Authenticate( this );
 		}
 
 		/// <summary>
@@ -263,9 +263,6 @@ namespace Simias.Storage
 
 			try
 			{
-				// Get an identity that represents the current user.  This user will become the database owner.
-				identity = StoreIdentity.CreateIdentity();
-
 				// Create an object that represents the database.
 				Collection localdb = new Collection( this, "LocalDatabase", DatabaseType );
 				localdb.Synchronizeable = false;
@@ -318,11 +315,8 @@ namespace Simias.Storage
 		/// <returns>True if store was successfully initialized, otherwise false is returned.</returns>
 		private bool InitializeStore()
 		{
-			// TEMPCODE - Remove later.
-			// Create a user to bootstrap the system.
-			IIdentityFactory idFactory = IdentityManager.Connect();
-			idFactory.Create( Environment.UserName, "novell" );
-			// TEMPCODE
+			// Get an identity that represents the current user.  This user will become the database owner.
+			StoreIdentity.CreateIdentity( this );
 
 			// Create an object that represents the database.
 			bool created = CreateDatabaseObject();
@@ -858,6 +852,31 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the local address book that contains the identities for the store's domain.
+		/// </summary>
+		/// <returns>A Collection object that represents the local address book if it exists. 
+		/// Otherwise null is returned.</returns>
+		public LocalAddressBook GetLocalAddressBook()
+		{
+			LocalAddressBook localAb = null;
+
+			// See if the local address book already exists.
+			ICSList abList = GetCollectionsByType( Property.AddressBookType );
+			foreach ( Collection abCollection in abList )
+			{
+				// The address book must have the local property set on it.
+				Property p = abCollection.Properties.GetSingleProperty( Property.LocalAddressBook );
+				if ( ( p != null ) && ( ( bool )p.Value == true ) )
+				{
+					localAb = new LocalAddressBook( this, abCollection );
+					break;
+				}
+			}
+
+			return localAb;
+		}
+
+		/// <summary>
 		/// Gets the first collection that matches the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the collection. This parameter may be
@@ -908,16 +927,26 @@ namespace Simias.Storage
 		/// <summary>
 		/// Allows the current thread to run in the specified user's security context.
 		/// </summary>
-		/// <param name="userId">Identifier for the user.</param>
+		/// <param name="userGuid">Identifier for the user.</param>
 		/// <param name="credential">Credential used to verify the user.</param>
-		public void ImpersonateUser( string userId, object credential )
+		[ Obsolete( "This method is marked for removal. Use other overload instead.", false ) ]
+		public void ImpersonateUser( string userGuid, object credential )
+		{
+			ImpersonateUser( userGuid );
+		}
+
+		/// <summary>
+		/// Allows the current thread to run in the specified user's security context.
+		/// </summary>
+		/// <param name="userGuid">Identifier for the user.</param>
+		public void ImpersonateUser( string userGuid )
 		{
 			if ( disposed )
 			{
 				throw new ObjectDisposedException( this.ToString() );
 			}
 
-			identity.Impersonate( userId.ToLower(), credential );
+			identity.Impersonate( userGuid.ToLower() );
 		}
 
 		/// <summary>
@@ -1113,7 +1142,7 @@ namespace Simias.Storage
 				// If this user does not have owner rights, then get all the identities that he is known as.
 				if ( localStore.CurrentUser != localStore.StoreOwner )
 				{
-					idsEnumerator = localStore.Identity.GetIdentityAndAliases().GetEnumerator();
+					idsEnumerator = localStore.LocalIdentity.GetIdentityAndAliases().GetEnumerator();
 				}
 
 				Reset();

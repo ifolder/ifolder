@@ -174,7 +174,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal string DomainIdentity
 		{
-			get { return LocalStore.Identity.GetDomainUserGuid( DomainName ); }
+			get { return LocalStore.LocalIdentity.GetDomainUserGuid( DomainName ); }
 		}
 		#endregion
 

@@ -24,8 +24,6 @@
 
 using System;
 using System.Collections;
-using System.Xml;
-using Simias.Identity;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -40,24 +38,31 @@ namespace Simias.Storage
 		/// Guid the current impersonating identity is known as.
 		/// </summary>
 		public string userGuid;
-
+		
 		/// <summary>
-		/// The identity object of the impersonating user.  This member will be null if the userGuid is
-		/// a well-known role.
+		/// The identity that describes the user.
 		/// </summary>
-		public IIdentity identity;
+		public Identity identity;
 		#endregion
 
 		#region Constructor
 		/// <summary>
-		/// Constructor for the struct.
+		/// Constructor using a GUID. This constructor is used when impersonating a well-known Id.
 		/// </summary>
 		/// <param name="userGuid">User guid of the impersonating user.</param>
-		/// <param name="identity">Identity that userGuid represents.  This may be null if userGuid is a well
-		/// known role.</param>
-		public ImpersonationInfo( string userGuid, IIdentity identity )
+		public ImpersonationInfo( string userGuid )
 		{
 			this.userGuid = userGuid;
+			this.identity = null;
+		}
+
+		/// <summary>
+		/// Constructor using an identity.  This constructor is used when impersonating a regular user Id.
+		/// </summary>
+		/// <param name="identity">Identity that describes the user.</param>
+		public ImpersonationInfo( Identity identity )
+		{
+			this.userGuid = identity.Id;
 			this.identity = identity;
 		}
 		#endregion
@@ -73,9 +78,14 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Represents the identity of the user that is logged onto to this workstation.
+		/// Name of this domain that the store object belongs in.
 		/// </summary>
-		private IIdentity identity;
+		private string domainName = null;
+
+		/// <summary>
+		/// Represents the identity of the user that instantiated this object.
+		/// </summary>
+		private Identity identity = null;
 
 		/// <summary>
 		/// Container used to keep track of the current identity for this store handle.
@@ -89,23 +99,15 @@ namespace Simias.Storage
 		/// </summary>
 		public string CurrentUserGuid
 		{
-			get { return ( impersonationId.Count == 0 ) ? identity.UserGuid : ( ( ImpersonationInfo )impersonationId.Peek() ).userGuid; }
+			get { return ( impersonationId.Count == 0 ) ? identity.Id : ( ( ImpersonationInfo )impersonationId.Peek() ).userGuid; }
 		}
 
 		/// <summary>
 		/// Gets the current impersonating identity.
 		/// </summary>
-		public IIdentity CurrentIdentity
+		private Identity CurrentIdentity
 		{
 			get { return ( impersonationId.Count == 0 ) ? identity : ( ( ImpersonationInfo )impersonationId.Peek() ).identity; }
-		}
-
-		/// <summary>
-		/// Gets the store owner identity.
-		/// </summary>
-		public string OwnerId
-		{
-			get { return identity.UserGuid; }
 		}
 
 		/// <summary>
@@ -113,7 +115,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string DomainName
 		{
-			get { return identity.DomainName; }
+			get { return domainName; }
 		}
 		#endregion
 
@@ -122,50 +124,17 @@ namespace Simias.Storage
 		/// Constructor of the object.
 		/// </summary>
 		/// <param name="identity">Object that represents the current identity.</param>
-		private StoreIdentity( IIdentity identity )
+		private StoreIdentity( Identity identity )
 		{
 			this.identity = identity;
 		}
-		#endregion
 
-		#region Private Methods
 		/// <summary>
-		/// Gets the database collection.
+		/// Constructor that allows for impersonation of well known Ids.
 		/// </summary>
-		/// <param name="store">Handle to the Collection Store.</param>
-		/// <param name="id">Identifier of owner opening this collection.</param>
-		/// <returns>A Collection object that represents the database collection.</returns>
-		private Collection GetDatabaseCollection( Store store, string id )
+		private StoreIdentity() :
+			this( null )
 		{
-			Persist.IResultSet iterator;
-			char[] results = new char[ 256 ];
-
-			// If the store owner is doing the search, return all collections in his store.
-			Persist.Query query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Equal, Node.CollectionType + Store.DatabaseType, Property.Syntax.String.ToString() );
-			iterator = store.StorageProvider.Search( query );
-			if ( iterator != null )
-			{
-				// Get the first set of results from the query.
-				int length = iterator.GetNext( ref results );
-				iterator.Dispose();
-
-				// Make sure that something was put in the buffer.
-				if ( length > 0 )
-				{
-					XmlDocument list = new XmlDocument();
-					list.LoadXml( new string( results, 0, length ) );
-					XmlNode dbNode = list.DocumentElement.FirstChild;
-					return new Collection( store, dbNode.Attributes[ Property.NameAttr ].Value, dbNode.Attributes[ Property.IDAttr ].Value, dbNode.Attributes[ Property.TypeAttr ].Value, id );
-				}
-				else
-				{
-					throw new ApplicationException( "No database object exists" );
-				}
-			}
-			else
-			{
-				throw new ApplicationException( "No database object exists" );
-			}
 		}
 		#endregion
 
@@ -175,38 +144,81 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="store">Handle to the collection store.</param>
 		/// <returns>A store identity object that represents the database owner.</returns>
-		static public StoreIdentity Authenticate( Store store )
+		static public void Authenticate( Store store )
 		{
-			// Get the user that we are currently running as.
-			IIdentity identity = IdentityManager.Connect().CurrentId;
-			StoreIdentity storeIdentity = new StoreIdentity( identity );
+			// Temporarily create an object that we can use to impersonate well known identities with.
+			store.LocalIdentity = new StoreIdentity();
+
+			// Impersonate the local store admin so that we can bootstrap ourselves.
+			store.ImpersonateUser( Access.StoreAdminRole );
+
+			// Open the local address book.
+			LocalAddressBook localAb = store.GetLocalAddressBook();
+			if ( localAb == null )
+			{
+				throw new ApplicationException( "Local address book does not exist." );
+			}
+
+			// Get the user that we are currently running as and get his identity information.
+			Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
+			if ( identity == null )
+			{
+				throw new ApplicationException( "No such user." );
+			}
+
+			// Create a store identity object that will be used by the store object from here on out.
+			store.LocalIdentity = new StoreIdentity( identity );
 
 			// Get the database object to check if this ID is the same as the owner.
-			Collection db = storeIdentity.GetDatabaseCollection( store, identity.UserGuid );
-			if ( db == null )
+			Collection dbCollection = store.GetDatabaseObject();
+			if ( dbCollection == null )
 			{
 				throw new ApplicationException( "Store database object does not exist" );
 			}
 
 			// Get the owner property and make sure that it is the same as the current user.
-			Property owner = db.Properties.GetSingleProperty( Property.Owner );
-			if ( ( owner == null ) || ( owner.ToString() != storeIdentity.CurrentUserGuid ) )
+			if ( dbCollection.Owner != store.CurrentUser )
 			{
 				throw new UnauthorizedAccessException( "Current user is not store owner." );
 			}
 
-			return storeIdentity;
+			// Set the domain name for this identity.
+			store.LocalIdentity.domainName = dbCollection.DomainName;
 		}
 
 		/// <summary>
 		/// Creates an identity representing the database owner.
 		/// </summary>
 		/// <returns>A store identity object that represents the database owner.</returns>
-		static public StoreIdentity CreateIdentity()
+		static public void CreateIdentity( Store store )
 		{
-			// Store the impersonation id on the current user.
-			IIdentity identity = IdentityManager.Connect().CurrentId;
-			return new StoreIdentity( identity );
+			// Temporarily create an object that we can use to impersonate well known identities with.
+			store.LocalIdentity = new StoreIdentity();
+
+			// Impersonate the local store admin so that we can bootstrap ourselves.
+			store.ImpersonateUser( Access.StoreAdminRole );
+
+			// Create the name for this domain.
+			store.LocalIdentity.domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
+
+			// Create the local address book.
+			LocalAddressBook localAb = new LocalAddressBook( store, store.LocalIdentity.domainName );
+
+			// Add the currently executing user as an identity in the address book.
+			Identity currentUser = new Identity( localAb, Environment.UserName );
+
+			// Add a key pair to this identity to be used as credentials.
+			currentUser.CreateKeyPair();
+
+			// Change the local address book to be owned by the current user.
+			localAb.ChangeOwner( currentUser.Id, Access.Rights.Deny );
+			localAb.Commit( true );
+
+			// Create a new identity object that represents the current user.
+			store.LocalIdentity = new StoreIdentity( currentUser );
+
+			// Set the domain name in the new identity object.
+			store.LocalIdentity.domainName = localAb.Name;
 		}
 
 		/// <summary>
@@ -218,13 +230,14 @@ namespace Simias.Storage
 			ArrayList ids = new ArrayList();
 			ids.Add( CurrentUserGuid );
 
-			IIdentity currentId = CurrentIdentity;
+			Identity currentId = CurrentIdentity;
 			if ( currentId != null )
 			{
-				KeyChainItem[] keyChain = currentId.GetKeyChain();
-				foreach ( KeyChainItem kcItem in keyChain )
+				// Get a list of aliases this user is known by in other domains.
+				ICSList aliasList = currentId.GetAliases();
+				foreach ( Alias alias in aliasList )
 				{
-					ids.Add( kcItem.UserGuid );
+					ids.Add( alias.Id );
 				}
 			}
 
@@ -239,19 +252,30 @@ namespace Simias.Storage
 		/// in the specified domain, the current user guid is returned.</returns>
 		public string GetDomainUserGuid( string domain )
 		{
-			string userGuid = null;
+			string userGuid = CurrentUserGuid;
 
-			// If no domain is speicified, use the current identity.
-			if ( domain != null )
+			// If no domain is speicified or it is the current domain, use the current identity.
+			if ( ( domain != null ) && ( domain != domainName ) )
 			{
-				IIdentity currentId = CurrentIdentity;
+				// This is not the store's domain.  Look through the list of aliases that this
+				// identity is known by in other domains.
+				Identity currentId = CurrentIdentity;
 				if ( currentId != null )
 				{
-					userGuid = currentId.GetUserGuidFromDomain( domain );
+					// Get a list of aliases this user is known by in other domains.
+					ICSList aliasList = currentId.GetAliases();
+					foreach ( Alias alias in aliasList )
+					{
+						if ( alias.Domain == domain )
+						{
+							userGuid = alias.Id;
+							break;
+						}
+					}
 				}
 			}
 
-			return ( userGuid == null ) ? CurrentUserGuid : userGuid;
+			return userGuid;
 		}
 
 		/// <summary>
@@ -259,26 +283,32 @@ namespace Simias.Storage
 		/// TODO: May want to look at limiting who can impersonate.
 		/// </summary>
 		/// <param name="userId">User ID to impersonate.</param>
-		/// <param name="credential">Credential to verify the user ID.</param>
-		public void Impersonate( string userId, object credential )
+		public void Impersonate( string userId )
 		{
 			switch ( userId )
 			{
 				case Access.StoreAdminRole:
-					impersonationId.Push( new ImpersonationInfo( userId, null ) );
+					impersonationId.Push( new ImpersonationInfo( userId ) );
 					break;
 
 				case Access.BackupOperatorRole:
-					impersonationId.Push( new ImpersonationInfo( userId, null ) );
+					impersonationId.Push( new ImpersonationInfo( userId ) );
 					break;
 
 				case Access.SyncOperatorRole:
-					impersonationId.Push( new ImpersonationInfo( userId, null ) );
+					impersonationId.Push( new ImpersonationInfo( userId ) );
 					break;
 
 				default:
-					IIdentity identity = IdentityManager.Connect().Authenticate( userId, credential );
-					impersonationId.Push( new ImpersonationInfo( identity.UserGuid, identity ) );
+					// Look up the specified user in the local address book.
+					Identity impIdentity = ( identity.CollectionNode as LocalAddressBook ).GetIdentityById( userId );
+					if ( impIdentity == null )
+					{
+						throw new ApplicationException( "No such user." );
+					}
+
+					// Push the user onto the impersonation stack.
+					impersonationId.Push( new ImpersonationInfo( impIdentity ) );
 					break;
 			}
 		}
@@ -288,7 +318,7 @@ namespace Simias.Storage
 		/// </summary>
 		public void Revert()
 		{
-			// Don't ever pop off the authenticated identity.
+			// Don't ever pop an empty stack.
 			if ( impersonationId.Count > 0 )
 			{
 				impersonationId.Pop();

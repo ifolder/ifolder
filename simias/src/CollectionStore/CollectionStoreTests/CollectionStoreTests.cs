@@ -25,12 +25,12 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Security.Cryptography;
 using System.Xml;
 using System.Threading;
 using NUnit.Framework;
 using Simias;
 using Simias.Storage;
-using Simias.Identity;
 
 namespace Simias.Storage.Tests
 {
@@ -57,6 +57,11 @@ namespace Simias.Storage.Tests
 		{
 			// Connect to the store.
 			store = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ) );
+
+			// Add another identity to the database.
+			LocalAddressBook localAb = store.GetLocalAddressBook();
+			localAb.AddIdentity( "cameron" );
+			localAb.Commit( true );
 		}
 		#endregion
 
@@ -920,11 +925,17 @@ namespace Simias.Storage.Tests
 				{
 					if ( fse.IsDirectory )
 					{
-						Console.WriteLine( "Found directory {0}", (fse as DirectoryEntry).FileName );
+						if ( fse.Name != "CS_TestDir" )
+						{
+							throw new ApplicationException( "Found unexpected directory." );
+						}
 					}
 					else
 					{
-						Console.WriteLine( "Found directory {0}", (fse as FileEntry).FileName );
+						if ( ( fse as FileEntry ).Name != "CS_TestFile" )
+						{
+							throw new ApplicationException( "Found unexpected file." );
+						}
 					}
 				}
 
@@ -973,16 +984,15 @@ namespace Simias.Storage.Tests
 				collection1.Commit();
 				collection2.Commit();
 
-				// Create a user that can be impersonated.
-				IIdentityFactory idFactory = IdentityManager.Connect();
-				idFactory.Create( "cameron", "novell" );
+				// Get a user that can be impersonated.
+				Identity user = store.GetLocalAddressBook().GetSingleIdentityByName( "cameron" );
 
 				try
 				{
 					try
 					{
 						// Impersonate the user.
-						store.ImpersonateUser( "cameron", "novell" );
+						store.ImpersonateUser( user.Id );
 						store.GetCollectionById( collection1.Id );
 						throw new ApplicationException( "Access control check on impersonation failed" );
 					}
@@ -998,14 +1008,13 @@ namespace Simias.Storage.Tests
 				}
 
 				// Add the user as having read-only access to the collection.
-				IIdentity identity = idFactory.Authenticate( "cameron", "novell" );
-				collection1.SetUserAccess( identity.UserGuid, Access.Rights.ReadOnly );
+				collection1.SetUserAccess( user.Id, Access.Rights.ReadOnly );
 				collection1.Commit();
 
 				try
 				{
 					// Try again to access the collection.
-					store.ImpersonateUser( "cameron", "novell" );
+					store.ImpersonateUser( user.Id );
 					collection3 = store.GetCollectionById( collection1.Id );
 
 					// Try to write to the collection without proper rights.
@@ -1025,13 +1034,13 @@ namespace Simias.Storage.Tests
 				}
 
 				// Set read-write access on the collection.
-				collection1.SetUserAccess( identity.UserGuid, Access.Rights.ReadWrite );
+				collection1.SetUserAccess( user.Id, Access.Rights.ReadWrite );
 				collection1.Commit();
 
 				try
 				{
 					// Try again to access the collection.
-					store.ImpersonateUser( "cameron", "novell" );
+					store.ImpersonateUser( user.Id );
 					collection3 = store.GetCollectionById( collection1.Id );
 					collection3.Properties.AddProperty( "DisplayName", "Access Collection" );
 					collection3.Commit();
@@ -1039,7 +1048,7 @@ namespace Simias.Storage.Tests
 					try
 					{
 						// Try to change the collection ownership.
-						collection3.ChangeOwner( identity.UserGuid, Access.Rights.ReadOnly );
+						collection3.ChangeOwner( user.Id, Access.Rights.ReadOnly );
 						throw new ApplicationException( "Change ownership access control check on impersonation failed" );
 					}
 					catch ( UnauthorizedAccessException )
@@ -1065,11 +1074,11 @@ namespace Simias.Storage.Tests
 				}
 
 				// Change the ownership on the collection.
-				collection3.ChangeOwner( identity.UserGuid, Access.Rights.ReadOnly );
+				collection3.ChangeOwner( user.Id, Access.Rights.ReadOnly );
 				collection3.Commit();
 
 				// Make sure that it changed.
-				if ( collection3.Owner != identity.UserGuid )
+				if ( collection3.Owner != user.Id )
 				{
 					throw new ApplicationException( "Collection ownership did not change" );
 				}
@@ -1077,7 +1086,7 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// Enumerate the collections. Only collection1 one should be returned.
-					store.ImpersonateUser( "cameron", "novell" );
+					store.ImpersonateUser( user.Id );
 					ICSEnumerator e1 = ( ICSEnumerator )store.GetEnumerator();
 					if ( !e1.MoveNext() || e1.MoveNext() )
 					{
@@ -1092,13 +1101,13 @@ namespace Simias.Storage.Tests
 					store.Revert();
 				}
 
-				// Now three collections should show up. The two that the test created and the one that
-				// represents the database collection.
+				// Now four collections should show up. The two that the test created and the one that
+				// represents the database collection and the one that represents the local address book.
 				ICSEnumerator e2 = ( ICSEnumerator )store.GetEnumerator();
 
 				int count = 0;
 				while ( e2.MoveNext() ) ++count;
-				if ( count != 3 )
+				if ( count != 4 )
 				{
 					e2.Dispose();
 					throw new ApplicationException( "Enumeration access control without impersonation failed" );
@@ -1112,7 +1121,7 @@ namespace Simias.Storage.Tests
 
 				try
 				{
-					store.ImpersonateUser( "cameron", "novell" );
+					store.ImpersonateUser( user.Id );
 					collection3 = store.GetCollectionById( collection2.Id );
 				}
 				finally
@@ -1125,7 +1134,7 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// Operate as the store owner in order to delete the collections.
-					store.ImpersonateUser( Access.StoreAdminRole, null );
+					store.ImpersonateUser( Access.StoreAdminRole );
 
 					// Get rid of the root paths.
 					Directory.Delete( collection1.DocumentRoot.LocalPath, true );
@@ -1170,7 +1179,7 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// Have to do all of this as the synchronization operator.
-					store.ImpersonateUser( Access.SyncOperatorRole, null );
+					store.ImpersonateUser( Access.SyncOperatorRole );
 
 					// Get the document root for the collection.
 					Uri documentRoot = new Uri( Directory.GetParent( collection.DocumentRoot.LocalPath ).FullName );
@@ -1184,16 +1193,15 @@ namespace Simias.Storage.Tests
 					collection = store.ImportNodesFromXml( doc, documentRoot );
 
 					// Deserialize the collection as a different identity.
-					// Create a user that can be impersonated.
-					IIdentityFactory idFactory = IdentityManager.Connect();
-					IIdentity identity = idFactory.Create( "cameron", "novell" );
+					// Get a user that can be impersonated.
+					Identity user = store.GetLocalAddressBook().GetSingleIdentityByName( "cameron" );
 
 					try
 					{
 						try
 						{
 							// Impersonate the user.
-							store.ImpersonateUser( "cameron", "novell" );
+							store.ImpersonateUser( user.Id );
 							store.ImportNodesFromXml( doc, documentRoot );
 							throw new ApplicationException( "Expected exception for improper deserialization access" );
 						}
@@ -1209,7 +1217,7 @@ namespace Simias.Storage.Tests
 					}
 
 					// Set an ACE giving the impersonating user read/write rights to the collection.
-					collection.SetUserAccess( identity.UserGuid, Access.Rights.ReadWrite );
+					collection.SetUserAccess( user.Id, Access.Rights.ReadWrite );
 					collection.Commit();
 
 					// Reserialize the collection so it contains the ace added for the impersonating user.
@@ -1218,7 +1226,7 @@ namespace Simias.Storage.Tests
 					try
 					{
 						// Impersonate the user.
-						store.ImpersonateUser( "cameron", "novell" );
+						store.ImpersonateUser( user.Id );
 						store.ImportNodesFromXml( doc, documentRoot );
 					}
 					finally
@@ -1233,7 +1241,7 @@ namespace Simias.Storage.Tests
 					try
 					{
 						// Impersonate the user.
-						store.ImpersonateUser( "cameron", "novell" );
+						store.ImpersonateUser( user.Id );
 						store.ImportNodesFromXml( doc, documentRoot );
 					}
 					finally
@@ -1258,7 +1266,7 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// Delete the collection.  Have to impersonate because we are no longer the owner.
-					store.ImpersonateUser( Access.StoreAdminRole, null );
+					store.ImpersonateUser( Access.StoreAdminRole );
 					collection.Delete( true );
 				}
 				finally
@@ -1638,7 +1646,7 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// This next method requires synchronization access.
-					store.ImpersonateUser( Access.SyncOperatorRole, null );
+					store.ImpersonateUser( Access.SyncOperatorRole );
 
 					// Finally, set the master version of the collection.
 					collection.UpdateIncarnation( 1 );
@@ -1663,6 +1671,40 @@ namespace Simias.Storage.Tests
 				collection.Delete( true );
 			}
 		}
+
+		/// <summary>
+		/// Tests the identity object and adds aliases.
+		/// </summary>
+		[Test]
+		public void IdentityTest()
+		{
+			// Get the local address book.
+			LocalAddressBook localAb = store.GetLocalAddressBook();
+
+			// Add a new identity.
+			Identity identity = new Identity( localAb, "newguy" );
+
+			// Add two aliases to the identity.
+			RSA credential = RSA.Create();
+			identity.CreateAlias( "Mike's Domain", Guid.NewGuid().ToString(), credential.ExportParameters( false ) );
+			identity.CreateAlias( "Russ's Domain", Guid.NewGuid().ToString(), credential.ExportParameters( false ) );
+
+			// Commit the changes.
+			identity.Commit();
+
+			// Get the aliases back.
+			int count = 0;
+			ICSList aliasList = identity.GetAliases();
+			foreach( Alias alias in aliasList )
+			{
+				++count;
+			}
+
+			if ( count != 2 )
+			{
+				throw new ApplicationException( "Cannot find all of the aliases." );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up
@@ -1673,7 +1715,7 @@ namespace Simias.Storage.Tests
 		public void Cleanup()
 		{
 			// Delete the database.  Must be store owner to delete the database.
-			store.ImpersonateUser( Access.StoreAdminRole, null );
+			store.ImpersonateUser( Access.StoreAdminRole );
 			store.Delete();
 			store.Dispose();
 

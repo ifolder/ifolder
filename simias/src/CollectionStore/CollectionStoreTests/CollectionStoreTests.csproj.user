@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\Dev\denali\tools\NUnit\bin\;C:\Dev\denali\src\stage\;C:\ifolder\denali\src\stage\" >
+            <Settings ReferencePath = "C:\Dev\denali\tools\NUnit\bin\;C:\Dev\denali\src\stage\;C:\ifolder\denali\src\stage\;C:\dev\simias\tools\NUnit\bin\;C:\dev\simias\src\stage\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
@@ -13,7 +13,7 @@
                     StartAction = "Program"
                     StartArguments = "..\..\..\..\stage\CollectionStoreTests.dll"
                     StartPage = ""
-                    StartProgram = "C:\Dev\denali\tools\NUnit\bin\nunit-gui.exe"
+                    StartProgram = "C:\dev\simias\tools\NUnit\bin\nunit-gui.exe"
                     StartURL = ""
                     StartWorkingDirectory = ""
                     StartWithIE = "false"

@@ -312,6 +312,31 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known XML attribute.
 		/// </summary>
+		internal const string LocalAddressBook = "AB:Local";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		internal const string AddressBookType = "AB:AddressBook";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		internal const string Alias = "AB:Alias";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		internal const string Credential = "AB:Credential";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		internal const string AliasParameters = "AliasParameters";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
 		internal const string TrueStr = "1";
 
 		/// <summary>
@@ -400,9 +425,14 @@ namespace Simias.Storage
 		public const string FileLength = "FileLength";
 
 		/// <summary>
-		/// Well know XML attribute.
+		/// Well known XML attribute.
 		/// </summary>
 		public const string DomainName = "DomainName";
+
+		/// <summary>
+		/// Well known XML attribute.
+		/// </summary>
+		public const string IdentityType = "AB:Contact";
 		#endregion
 
 		/// <summary>
@@ -608,6 +638,10 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Shareable, null );
 			systemPropertyTable.Add( Syncable, null );
 			systemPropertyTable.Add( NodeFileSystemEntry, null );
+			systemPropertyTable.Add( LocalAddressBook, null );
+			systemPropertyTable.Add( Alias, null );
+			systemPropertyTable.Add( Credential, null );
+			systemPropertyTable.Add( AliasParameters, null );
 
 			systemPropertyTable.Add( CollectionID, null );
 			systemPropertyTable.Add( CreationTime, null );
@@ -625,6 +659,8 @@ namespace Simias.Storage
 			systemPropertyTable.Add( FileLastWriteTime, null );
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( DomainName, null );
+			systemPropertyTable.Add( IdentityType, null );
+			systemPropertyTable.Add( AddressBookType, null );
 		}
 
 		/// <summary>
