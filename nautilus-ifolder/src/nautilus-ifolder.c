@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <libgnomevfs/gnome-vfs-utils.h>
+
 #include <simias/simias-event-client.h>
 
 #include "iFolderClientStub.h"
@@ -137,29 +139,33 @@ invalidate_ifolder_extension_info (void *user_data)
 int
 simias_node_created_cb (SimiasNodeEvent *event, void *data)
 {
-	char file_uri [IFOLDER_BUF_SIZE];
+	char *file_uri;
 	gchar *unmanaged_path;
 	NautilusFile *file;
 	printf ("nautilus-ifolder: simias_node_created_cb () entered\n");
 	
 	unmanaged_path = get_unmanaged_path (event->node);
 	if (unmanaged_path != NULL) {
-		sprintf (file_uri, "file://%s", unmanaged_path);
+		file_uri = gnome_vfs_get_uri_from_local_path (unmanaged_path);
 		free (unmanaged_path);
 
-		/**
-		 * If the extension has ever been asked to provide information about the
-		 * folder, it needs to be invalidated so that nautilus will ask for the
-		 * information again.  This will allow the iFolder emblem to appear when
-		 * a new iFolder is created.
-		 */		
-		/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
-		file = nautilus_file_get_existing (file_uri);
-													 
-		if (file) {
-			g_printf ("Found NautilusFile: %s\n", file_uri);
-			/* Let nautilus run this in the main loop */
-			g_idle_add (invalidate_ifolder_extension_info, file);
+		if (file_uri) {
+			/**
+			 * If the extension has ever been asked to provide information about
+			 * the folder, it needs to be invalidated so that nautilus will ask
+			 * for the information again.  This will allow the iFolder emblem to
+			 * appear when a new iFolder is created.
+			 */		
+			/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
+			file = nautilus_file_get_existing (file_uri);
+														 
+			if (file) {
+				g_printf ("Found NautilusFile: %s\n", file_uri);
+				/* Let nautilus run this in the main loop */
+				g_idle_add (invalidate_ifolder_extension_info, file);
+			}
+
+			free (file_uri);
 		}
 	}
 	
@@ -315,15 +321,15 @@ get_file_path (NautilusFileInfo *file)
 	gchar *file_path, *uri;
 
 	file_path = NULL;
-
-	uri = nautilus_file_info_get_uri (file);
-	if (!strncmp (uri, "file://", 7))
-	{
-		file_path = g_strdup (uri + 7);
+	
+	if (file) {
+		uri = nautilus_file_info_get_uri (file);
+		if (uri) {
+			file_path = gnome_vfs_get_local_path_from_uri (uri);
+			g_free (uri);
+		}
 	}
-	
-	g_free (uri);
-	
+
 	return file_path;
 }
 
