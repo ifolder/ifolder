@@ -215,6 +215,8 @@ namespace Simias.Authentication
 			{
 				if ( ctx.User.Identity.IsAuthenticated == false )
 				{
+					// Temporary hard coded for mDns
+
 					// Temporary
 					status = Simias.Authentication.Http.Authenticate( domain, ctx );
 					if ( status.statusCode != StatusCodes.Success &&
@@ -337,11 +339,13 @@ namespace Simias.Authentication
 					mdnsSession = new MDnsSession();
 					mdnsSession.MemberID = member.UserID;
 					mdnsSession.State = 1;
+
+					// Fixme
 					mdnsSession.OneTimePassword = DateTime.Now.ToString();
 
 					// Set the one time password in the response
 					ctx.Response.AddHeader(
-						"mdns-challenge",
+						"mdns-secret",
 						mdnsSession.OneTimePassword);
 
 					ctx.Session[ mdnsSessionTag ] = mdnsSession;
@@ -352,7 +356,7 @@ namespace Simias.Authentication
 					if ( status.UserID == mdnsSession.MemberID )
 					{
 						// State should be 1
-						string oneTime = ctx.Request.Headers[ "mdns-challenge" ];
+						string oneTime = ctx.Request.Headers[ "mdns-secret" ];
 
 						// decrypt with user's public key
 
