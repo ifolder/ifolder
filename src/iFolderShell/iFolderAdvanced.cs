@@ -65,7 +65,6 @@ namespace Novell.iFolder.iFolderCom
 		private Novell.AddressBook.AddressBook defaultAddressBook;
 		private iFolder ifolder;
 		private ArrayList removedList;
-		private System.Windows.Forms.Button reinvite;
 		private string loadPath;
 //		private Control currentControl;
 		private System.Windows.Forms.ToolTip toolTip1;
@@ -90,6 +89,8 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuAccept;
 		private System.Windows.Forms.MenuItem menuDecline;
+		private System.Windows.Forms.Button accept;
+		private System.Windows.Forms.Button decline;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -106,9 +107,7 @@ namespace Novell.iFolder.iFolderCom
 				abManager = Novell.AddressBook.Manager.Connect();
 			}
 
-			this.apply.Enabled = false;
-			this.remove.Enabled = false;
-			this.reinvite.Enabled = false;
+			apply.Enabled = remove.Enabled = accept.Enabled = decline.Enabled = false;
 
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
 //			currentControl = this;
@@ -154,7 +153,8 @@ namespace Novell.iFolder.iFolderCom
 			this.label8 = new System.Windows.Forms.Label();
 			this.byteCount = new System.Windows.Forms.Label();
 			this.tabSharing = new System.Windows.Forms.TabPage();
-			this.reinvite = new System.Windows.Forms.Button();
+			this.decline = new System.Windows.Forms.Button();
+			this.accept = new System.Windows.Forms.Button();
 			this.accessControlButtons = new System.Windows.Forms.GroupBox();
 			this.accessReadOnly = new System.Windows.Forms.RadioButton();
 			this.accessReadWrite = new System.Windows.Forms.RadioButton();
@@ -165,14 +165,14 @@ namespace Novell.iFolder.iFolderCom
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuAccept = new System.Windows.Forms.MenuItem();
+			this.menuDecline = new System.Windows.Forms.MenuItem();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-			this.menuAccept = new System.Windows.Forms.MenuItem();
-			this.menuDecline = new System.Windows.Forms.MenuItem();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -361,7 +361,8 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// tabSharing
 			// 
-			this.tabSharing.Controls.Add(this.reinvite);
+			this.tabSharing.Controls.Add(this.decline);
+			this.tabSharing.Controls.Add(this.accept);
 			this.tabSharing.Controls.Add(this.accessControlButtons);
 			this.tabSharing.Controls.Add(this.add);
 			this.tabSharing.Controls.Add(this.remove);
@@ -372,16 +373,25 @@ namespace Novell.iFolder.iFolderCom
 			this.tabSharing.TabIndex = 0;
 			this.tabSharing.Text = "Sharing";
 			// 
-			// reinvite
+			// decline
 			// 
-			this.reinvite.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.helpProvider1.SetHelpString(this.reinvite, "Click to send another invitation to the selected contacts.");
-			this.reinvite.Location = new System.Drawing.Point(8, 232);
-			this.reinvite.Name = "reinvite";
-			this.helpProvider1.SetShowHelp(this.reinvite, true);
-			this.reinvite.TabIndex = 1;
-			this.reinvite.Text = "R&e-invite";
-			this.reinvite.Click += new System.EventHandler(this.reinvite_Click);
+			this.decline.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.decline.Location = new System.Drawing.Point(88, 232);
+			this.decline.Name = "decline";
+			this.decline.TabIndex = 5;
+			this.decline.Text = "&Decline";
+			this.decline.Click += new System.EventHandler(this.decline_Click);
+			// 
+			// accept
+			// 
+			this.accept.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.helpProvider1.SetHelpString(this.accept, "Click to send another invitation to the selected contacts.");
+			this.accept.Location = new System.Drawing.Point(8, 232);
+			this.accept.Name = "accept";
+			this.helpProvider1.SetShowHelp(this.accept, true);
+			this.accept.TabIndex = 1;
+			this.accept.Text = "A&ccept";
+			this.accept.Click += new System.EventHandler(this.accept_Click);
 			// 
 			// accessControlButtons
 			// 
@@ -486,6 +496,25 @@ namespace Novell.iFolder.iFolderCom
 			this.columnHeader2.Text = "Access";
 			this.columnHeader2.Width = 70;
 			// 
+			// contextMenu1
+			// 
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuAccept,
+																						 this.menuDecline});
+			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
+			// 
+			// menuAccept
+			// 
+			this.menuAccept.Index = 0;
+			this.menuAccept.Text = "Accept";
+			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
+			// 
+			// menuDecline
+			// 
+			this.menuDecline.Index = 1;
+			this.menuDecline.Text = "Decline";
+			this.menuDecline.Click += new System.EventHandler(this.menuDecline_Click);
+			// 
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -514,25 +543,6 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.TabIndex = 3;
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
-			// 
-			// contextMenu1
-			// 
-			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.menuAccept,
-																						 this.menuDecline});
-			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
-			// 
-			// menuAccept
-			// 
-			this.menuAccept.Index = 0;
-			this.menuAccept.Text = "Accept";
-			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
-			// 
-			// menuDecline
-			// 
-			this.menuDecline.Index = 1;
-			this.menuDecline.Text = "Decline";
-			this.menuDecline.Click += new System.EventHandler(this.menuDecline_Click);
 			// 
 			// iFolderAdvanced
 			// 
@@ -652,48 +662,60 @@ namespace Novell.iFolder.iFolderCom
 					// TODO: change this to use an array and add them all at once.
 					Subscription subscr = poBox.CreateSubscription(ifolder, ifolder.GetCurrentMember());
 
-					// TODO: need to add all of the other properties (ToAddress, FromAddress, etc.)
+					// Add all of the other properties (ToAddress, FromAddress, etc.)
 					subscr.FromAddress = sendersEmail;
 					subscr.SubscriptionRights = slMember.Member.Rights;
 					subscr.ToName = slMember.Member.Name;
 					subscr.SubscriptionCollectionName = ifolder.Name;
+
+					// Take the relationship off the ShareListMember and put it on the Subscription object.  This will
+					// be used to hook up the Member and Contact objects after the subscription has been accepted.
 					Relationship relationship = (Relationship)slMember.Member.Properties.GetSingleProperty("Contact").Value;
 					Property property = new Property("Contact", relationship);
 					property.LocalProperty = true;
 					subscr.Properties.AddProperty(property);
 
+					// Get the contact so that we can get the e-mail address from it.
 					Novell.AddressBook.AddressBook ab = this.abManager.GetAddressBook(relationship.CollectionID);
 					Contact contact = ab.GetContact(relationship.NodeID);
 					subscr.ToAddress = contact.EMail;
 					
+					// Put the subscription in the POBox.
 					poBox.AddMessage(subscr);
 
+					// Update the state.
 					slMember.Added = false;
 				}
 				else if (slMember.Changed)
 				{
+					// TODO: may need to save rights on subscription objects in the future.
+
 					// Get the rights for this contact.
 					slMember.Member.Rights = stringToRights(lvitem.SubItems[2].Text);
+					ifolder.Commit(slMember.Member);
 
 					// Reset the flags.
 					slMember.Changed = false;
 				}
 			}
 
-			// Commit the changes.
-			// TODO: should we do this with a node list?
-			ifolder.Commit();
-
-
 			// process the removedList
-/*			if (this.removedList != null)
+			if (this.removedList != null)
 			{
-				foreach (ShareListContact slContact in this.removedList)
+				foreach (ShareListMember slMember in removedList)
 				{
 					try
 					{
-						// Remove the ACE and don't send an invitation.
-						ifolder.RemoveRights(slContact.CurrentContact);
+						if (slMember.IsMember)
+						{
+							// Delete the member.
+							ifolder.Commit(ifolder.Delete(slMember.Member));
+						}
+						else
+						{
+							// Delete the subscription.
+							poBox.Commit(poBox.Delete(slMember.Subscription));
+						}
 					}
 					catch (SimiasException e)
 					{
@@ -703,7 +725,7 @@ namespace Novell.iFolder.iFolderCom
 					catch (Exception e)
 					{
 						//TODO
-						logger.Debug(e, "Removing ACE");
+						logger.Debug(e, "Removing member");
 						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
 					}
 				}
@@ -711,7 +733,7 @@ namespace Novell.iFolder.iFolderCom
 				// Clear the list.
 				removedList.Clear();
 			}
-*/
+
 			// Update the refresh interval.
 			ifolder.RefreshInterval = (int)syncInterval.Value;
 
@@ -993,26 +1015,22 @@ namespace Novell.iFolder.iFolderCom
 			if (shareWith.SelectedItems.Count == 1)
 			{
 				lvi = shareWith.SelectedItems[0];
+				accept.Enabled = decline.Enabled = lvi.SubItems[1].Text.Equals(SubscriptionStates.Pending.ToString());
 			}
 			else
 			{
 				this.accessReadOnly.Checked = false;
 				this.accessReadWrite.Checked = false;
 				this.accessFullControl.Checked = false;
+				accept.Enabled = decline.Enabled = false;
 			}
 
 			if (ifolder.GetCurrentMember().Rights == Access.Rights.Admin)
 			{
-				if (shareWith.SelectedItems.Count == 0)
-				{
-					this.accessControlButtons.Enabled = false;
-					this.remove.Enabled = false;
-					this.reinvite.Enabled = false;
-				}
-				else
-				{
-					this.accessControlButtons.Enabled = true;
-				}
+				accessControlButtons.Enabled = shareWith.SelectedItems.Count != 0;
+
+				remove.Enabled = true;
+
 			}
 			else
 			{
@@ -1135,27 +1153,28 @@ namespace Novell.iFolder.iFolderCom
 					// Check to see if this contact was originally in the list.
 /*					if (this.removedList != null)
 					{
-						ShareListContact slContactToRemove = null;
+						ShareListMember slMemberToRemove = null;
 
-						foreach (ShareListContact slContact in removedList)
+						foreach (ShareListMember slMember in removedList)
 						{
 							if (c.ID == slContact.CurrentContact.ID)
 							{
 								// The name may be different and we don't know what the rights used to be,
 								// so create a new object to represent this item.
-								shareContact = new ShareListContact();//(c, false, true);
-								shareContact.CurrentContact = c;
-								shareContact.Added = false;
-								shareContact.Changed = true;
-								slContactToRemove = slContact;
+								shareMember = new ShareListContact();//(c, false, true);
+								shareMember.CurrentContact = c;
+								shareMember.IsMember = slMember.IsMember;
+								shareMember.Added = false;
+								shareMember.Changed = true;
+								slMemberToRemove = slMember;
 								break;
 							}
 						}
 
-						if (slContactToRemove != null)
-							removedList.Remove(slContactToRemove);
-					}
-*/
+						if (slMemberToRemove != null)
+							removedList.Remove(slMemberToRemove);
+					}*/
+
 					if (shareMember == null)
 					{
 						// The contact was not in the removed list, so create a new one.
@@ -1179,15 +1198,20 @@ namespace Novell.iFolder.iFolderCom
 
 		private void remove_Click(object sender, System.EventArgs e)
 		{
-/*			foreach (ListViewItem lvitem in this.shareWith.SelectedItems)
+			// TODO: make this a member variable.
+			string currentUser = ifolder.GetCurrentMember().UserID;
+
+			foreach (ListViewItem lvi in shareWith.SelectedItems)
 			{
+				ShareListMember slMember = (ShareListMember)lvi.Tag;
+
 				try
 				{
 					// Don't allow the current user to be removed.
-					if (!((ShareListContact)lvitem.Tag).CurrentContact.IsCurrentUser)
+					if (!currentUser.Equals(slMember.Member.UserID))
 					{
 						// If this item is not newly added, we need to add it to the removedList.
-						if (!((ShareListContact)lvitem.Tag).Added)
+						if (!slMember.Added)
 						{
 							// Make sure the removed list is valid.
 							if (this.removedList == null)
@@ -1195,10 +1219,12 @@ namespace Novell.iFolder.iFolderCom
 								this.removedList = new ArrayList();
 							}
 
-							removedList.Add(lvitem.Tag);
+							// Add this to the removed list.
+							removedList.Add(slMember);
 						}
 
-						lvitem.Remove();
+						// Remove the item from the listview.
+						lvi.Remove();
 
 						// Enable the apply button.
 						this.apply.Enabled = true;
@@ -1209,7 +1235,7 @@ namespace Novell.iFolder.iFolderCom
 					logger.Debug(ex, "Removing contacts");
 				}
 			}
-*/		}
+		}
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
@@ -1217,117 +1243,20 @@ namespace Novell.iFolder.iFolderCom
 			this.Close();
 		}
 
-		private void reinvite_Click(object sender, System.EventArgs e)
+		private void accept_Click(object sender, System.EventArgs e)
 		{
-			if (!IsCurrentUserValid())
-				return;
+			ListViewItem lvi = this.shareWith.SelectedItems[0];
+			ShareListMember slMember = (ShareListMember)lvi.Tag;
+			slMember.Subscription.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
+			poBox.Commit(slMember.Subscription);
+		}
 
-			// Change the pointer to an hourglass.
-			Cursor = Cursors.WaitCursor;
-			
-/*			foreach (ListViewItem lvitem in shareWith.SelectedItems)
-			{
-				ShareListContact slContact = (ShareListContact)lvitem.Tag;
-
-				// Get the rights for this contact.
-				iFolder.Rights rights;
-				switch (lvitem.SubItems[1].Text)
-				{
-					case "Full Control":
-					{
-						rights = iFolder.Rights.Admin;
-						break;
-					}
-					case "Read/Write":
-					{
-						rights = iFolder.Rights.ReadWrite;
-						break;
-					}
-					case "Read Only":
-					{
-						rights = iFolder.Rights.ReadOnly;
-						break;
-					}
-					default:
-					{
-						rights = iFolder.Rights.Deny;
-						break;
-					}
-				}
-
-				if (slContact.Added || slContact.Changed)
-				{
-					// If the share contact is newly added or has been changed,
-					// we need to reset the ACE.
-					bool accessSet = false;
-					try
-					{
-						// Set the ACE.
-						ifolder.SetRights(slContact.CurrentContact, rights);
-						accessSet = true;
-
-						// Reset the listview item since it has been committed.
-						slContact.Added = false;
-						slContact.Changed = false;
-					}
-					catch (SimiasException ex)
-					{
-						ex.LogError();
-						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
-					}
-					catch (Exception ex)
-					{
-						// TODO
-						logger.Debug(ex, "Setting ACE");
-						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
-					}
-
-					if (accessSet)
-					{
-						try
-						{
-							// Send the invitation.
-							ifolder.Invite(slContact.CurrentContact);
-						}
-						catch (SimiasException ex)
-						{
-							ex.LogError();
-							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
-						}
-						catch(Exception ex)
-						{
-							// TODO
-							logger.Debug(ex, "Sending invitation");
-							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
-						}
-					}
-				}
-				else
-				{
-					// Just send the invitation.
-					try
-					{
-						ifolder.Invite(slContact.CurrentContact);
-					}
-					catch (SimiasException ex)
-					{
-						ex.LogError();
-						MessageBox.Show(lvitem.Text + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
-					}
-					catch(Exception ex)
-					{
-						// TODO
-						logger.Debug(ex, "Sending invitation");
-						MessageBox.Show(lvitem.Text + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
-					}
-				}
-			}		
-
-			// Disable the apply button.
-			this.apply.Enabled = false;
-*/
-			// Restore the cursor.
-			Cursor = Cursors.Default;
+		private void decline_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = this.shareWith.SelectedItems[0];
+			ShareListMember slMember = (ShareListMember)lvi.Tag;
+			slMember.Subscription.Decline();
+			poBox.Commit(slMember.Subscription);
 		}
 
 		private void apply_Click(object sender, System.EventArgs e)
@@ -1387,6 +1316,7 @@ namespace Novell.iFolder.iFolderCom
 			conflicts.Visible = pictureBox1.Visible = false;
 		}
 
+		// TODO: remove this
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = this.shareWith.SelectedItems[0];
@@ -1395,6 +1325,7 @@ namespace Novell.iFolder.iFolderCom
 			poBox.Commit(slMember.Subscription);
 		}
 
+		// TODO: remove this
 		private void menuDecline_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = this.shareWith.SelectedItems[0];
