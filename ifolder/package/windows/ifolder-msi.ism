@@ -342,6 +342,7 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
+		<row><td>AllOtherFiles</td><td>{3B6C5DC6-1C33-4CF0-BE3D-E2D5B3459A5C}</td><td>WindowsFolder</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllUsers</td><td>{2C8F8255-076F-4671-B2BF-576D07513763}</td><td>INSTALLDIR</td><td>8</td><td>ALLUSERS</td><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ContactBrowserShortcutComponent</td><td>{C4E1B853-D90D-4B9B-8565-1F08CFA2DC04}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>HelpFiles</td><td>{B12C9353-241E-44A6-B0F5-E76A373F6771}</td><td>HELP</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1302,6 +1303,7 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>Help_Files</td><td>AllOtherFiles</td></row>
 		<row><td>Help_Files</td><td>HelpFiles</td></row>
 		<row><td>iFolder_Files</td><td>AllUsers</td></row>
 		<row><td>iFolder_Files</td><td>ContactBrowserShortcutComponent</td></row>
@@ -1326,6 +1328,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
+		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_FORMSTRAYAPP_FILES&gt;\InstallUtil.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
 		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
@@ -1484,6 +1487,7 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
+		<row><td>AllOtherFiles</td><td/><td/><td>_8FDFED75_131F_4DC4_B2EA_74A1B49E8A85_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AllUsers</td><td/><td/><td>_BFE91B0D_88E8_4258_8665_D293A82A89B1_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ContactBrowserShortcutComponent</td><td/><td/><td>_A2DBA8FA_CC2C_4112_BC7C_955591BB1CB8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>HelpFiles</td><td/><td/><td>_63A2A061_0B72_4C17_AE7E_241C0929276C_FILTER</td><td/><td/><td/><td/></row>
@@ -1712,11 +1716,13 @@
 		<col def="S255">TestValue</col>
 		<col def="i4">Type</col>
 		<row><td>CommonFilesFolder</td><td/><td/><td>1</td></row>
+		<row><td>DotNetSDK</td><td>&lt;WindowsFolder&gt;\Microsoft.NET\Framework\</td><td/><td>2</td></row>
 		<row><td>ISPROJECTDIR</td><td/><td/><td>1</td></row>
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
 		<row><td>PATH_TO_FORMSADDRBOOK_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\..\addressbook\src\FormsAddrBook</td><td/><td>2</td></row>
+		<row><td>PATH_TO_FORMSTRAYAPP_FILES</td><td>C:\cygwin\home\james\builds\ifolder\client\ifolder\src\FormsTrayApp</td><td/><td>2</td></row>
 		<row><td>PATH_TO_IFOLDERSHELL_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\src\iFolderShell</td><td/><td>2</td></row>
 		<row><td>PATH_TO_SOURCE</td><td>&lt;ISProjectFolder&gt;\..\..</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
