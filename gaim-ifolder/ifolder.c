@@ -1837,7 +1837,63 @@ handle_ping_response(GaimAccount *account, const char *sender,
 static void
 buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 {
-	g_print("FIXME: Implement buddy_signed_on_cb()\n");
+	GtkTreeIter iter;
+	int send_result;
+	char time_str[32];
+	char state_str[32];
+
+	Invitation *invitation;
+	gboolean valid;
+	
+	valid = gtk_tree_model_get_iter_first(
+			GTK_TREE_MODEL(out_inv_store), &iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
+					INVITATION_PTR, &invitation,
+					-1);
+							
+		/* Check to see if this invitation is a STATE_PENDING */
+		if (invitation->state == STATE_PENDING) {
+			send_result = send_invitation_request_msg(
+					buddy,
+					invitation->collection_id,
+					invitation->collection_type,
+					invitation->collection_name);
+		
+			/**
+			 * FIXME: This test isn't working.  If a buddy just
+			 * barely signed out, Gaim displays an error message,
+			 * but we get back a 1
+			 */
+			if (send_result > 0) {
+				/* Update the invitation time and resend the invitation */
+				time(&(invitation->time));
+
+				/* Update the invitation state */
+				invitation->state = STATE_SENT;
+	
+				/* Format the time to a string */
+				fill_time_str(time_str, 32, invitation->time);
+
+				/* Format the state string */
+				fill_state_str(state_str, invitation->state);
+
+				/* Update the out_inv_store */
+				gtk_list_store_set(
+					GTK_LIST_STORE(out_inv_store),
+					&iter,
+					TIME_COL, time_str,
+					STATE_COL, state_str,
+					-1);
+			}
+		}
+
+		valid = gtk_tree_model_iter_next(
+				GTK_TREE_MODEL(out_inv_store), &iter);
+	}
+	
+	/* FIXME: Send ping requests for all buddies we have an IP Address */
 }
 
 static gboolean
