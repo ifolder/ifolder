@@ -134,7 +134,7 @@ namespace Simias.Gaim.DomainService
 			SimiasURL = null;
 
 			// Machine Name
-			MachineName = GetMachineName().ToLower();
+			MachineName = GetMachineName();
 
 			// UserID
 			Simias.Storage.Domain domain = GaimDomain.GetDomain();
