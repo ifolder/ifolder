@@ -112,7 +112,10 @@ if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
         cp -f %{prefix}/share/applications/ifolder.desktop /usr/share/applications
     fi
 
-
+	#
+	# Set up a sym link to /usr/bin so iFolder will run
+	#
+	ln -s %{prefix}/bin/ifolder /usr/bin/ifolder
 
     #
     # Set up iFolder file associations for Gnome
@@ -149,6 +152,11 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     if test "%{prefix}" != "/usr"; then
 		rm -f /usr/share/applications/ifolder.desktop
     fi
+
+	#
+	# Remove sym link to ifolder from /usr/bin/ifolder
+	#
+	rm -f /usr/bin/ifolder
 
     #
     # Remove iFolder file associations for Gnome
