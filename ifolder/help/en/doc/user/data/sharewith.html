@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Final//EN">
+
+<head>
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Language" CONTENT="en">
+
+<META Name="Generator" CONTENT="Novell HTML Conversion 10 March 2004">
+<META Name="Generation-Date" CONTENT="Sunday, February 20, 2005 01:13">
+<META Name="Content-Date" CONTENT="Mon, 20 Feb 2005 12:00:00 GMT">
+<META Name="Robots" CONTENT="INDEX, FOLLOW">
+<META Name="Document_Number" CONTENT="zHTML xD.0000.0000.0002.0004.">
+<META Name="Product_Class" CONTENT="">
+<META Name="Product_and_Version" CONTENT="iFolder">
+<META Name="Copyright" CONTENT="Copyright Novell, Inc. 1983-2004">
+
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../../../ui/novdocmain.css">
+
+
+<title>iFolder Help for Novell iFolder 3.0 Beta 2</title>
+<script language="javascript">
+function loadMenu()
+{
+	if ((parent.theMenu) && (parent.theMenu.amBusy == false) && parent.frames[2])
+	{
+	   parent.theMenu.loadScript("../doc/user/data/myifolders.html","../doc/user/data/toc_myifolders.html");
+	}
+	else{ setTimeout("loadMenu()",200);}
+}
+loadMenu();
+</script>
+<script language="javascript" src="../../../ui/jsglobal.js"></script>
+</head>
+
+<BODY ONLOAD="">
+<script language="javascript">
+  var prev_link="createifolder.html";
+  var next_link="setupifolder.html";
+</script>
+
+<script language="javascript" src="../../../ui/topnav.js"></script>
+
+<A name="sharewith"></A>
+
+<BR><H2 CLASS="TOPIC-TITLE">Sharing an iFolder</H2>
+<P CLASS="TOPIC">You can share an iFolder with multiple users. This section discusses the following tasks:</P>
+<UL CLASS="LISTBULLET">
+<LI CLASS="BULLETITEM"><A href="sharewith.html#bv2hnvt">Understanding User Access Rights</A></LI>
+
+<LI CLASS="BULLETITEM"><A href="sharewith.html#bq6lwm0">Adding a User to an iFolder</A></LI>
+
+<LI CLASS="BULLETITEM"><A href="sharewith.html#bq6lwma">Modifying User Access Rights</A></LI>
+
+<LI CLASS="BULLETITEM"><A href="sharewith.html#bq6lwmr">Removing a User from an iFolder</A></LI>
+</UL><P><A name="bv2hnvt"></A>
+
+<BR><H3 CLASS="HEAD-TITLE">Understanding User Access Rights</H3>
+<P CLASS="HEAD">The following table describes the capabilities associated with each level of access for users.</P>
+<TABLE CLASS="TABLENOTITLE" border=0 cellpadding=5 cellspacing=0>
+<TR CLASS=HEADERROW><TH align=left valign=top colspan=1 rowspan=1 scope="col"><A name="bv2h594"></A><EM CLASS=TBLHEAD>Capabilities</EM></TH>
+<TH align=left valign=top colspan=1 rowspan=1 scope="col"><EM CLASS=TBLHEAD>Owner</EM></TH>
+<TH align=left valign=top colspan=1 rowspan=1 scope="col"><EM CLASS=TBLHEAD>Full Control</EM></TH>
+<TH align=left valign=top colspan=1 rowspan=1 scope="col"><EM CLASS=TBLHEAD>Read/Write</EM></TH>
+<TH align=left valign=top colspan=1 rowspan=1 scope="col"><EM CLASS=TBLHEAD>Read Only</EM></TH>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h595"></A><P CLASS="ENTRY">With an enterprise server, the space consumed by the iFolder on the server is charged against the user's quota</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n2"></A><P CLASS="ENTRY">In Workgroup mode, the computer where the iFolder was created serves as the host iFolder </P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n3"></A><P CLASS="ENTRY">Reassign ownership to another user</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hhhd"></A><P CLASS="ENTRY">Set a quota for the iFolder</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n4"></A><P CLASS="ENTRY">Make the iFolder available to other users (sharing)</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n5"></A><P CLASS="ENTRY">Make the iFolder unavailable to other users (stop sharing)</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes, except the owner</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n6"></A><P CLASS="ENTRY">Assign access rights for other users</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes, except the owner</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n7"></A><P CLASS="ENTRY">Read directories and files in the iFolder </P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2h7n8"></A><P CLASS="ENTRY">Add, modify, or delete directories and files in the iFolder</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hhhe"></A><P CLASS="ENTRY">Rename directories and files in an iFolder</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hhhf"></A><P CLASS="ENTRY">Rename the iFolder</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hhhg"></A><P CLASS="ENTRY">Set up an iFolder on multiple computers</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hhhh"></A><P CLASS="ENTRY">Revert an iFolder (do not participate on a local computer)</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes, all but one</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+</TR>
+<TR CLASS=EVENROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hmyj"></A><P CLASS="ENTRY">Delete an available iFolder to decline participating</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+</TR>
+<TR CLASS=ODDROW><TD align=left valign=top colspan=1 rowspan=1 scope="row"><A name="bv2hhhi"></A><P CLASS="ENTRY">Delete the iFolder (make it a normal folder again)</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">Yes</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+<TD align=left valign=top colspan=1 rowspan=1><P CLASS="ENTRY">No</P></TD>
+</TR></TABLE>
+<A name="bq6lwm0"></A>
+
+<BR><H3 CLASS="HEAD-TITLE">Adding a User to an iFolder</H3>
+<BR><H4 CLASS="BRIDGEHEAD">Add a User with a File Manager</H4>
+<OL CLASS=STEPLIST>
+<LI CLASS="STEP"><A name="bv2hql2"></A>
+<P CLASS="STEP">In the file manager, navigate to the iFolder, then select it.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hql3"></A>
+<P CLASS="STEP">Right-click the iFolder, then click iFolder &gt; Properties.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hql4"></A>
+<P CLASS="STEP">Click Share With.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hql5"></A>
+<P CLASS="STEP">From the list of users, select one or more users.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hql6"></A>
+<P CLASS="STEP">Select the access right: Full Control, Read/Write, or Read Only.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hql7"></A>
+<P CLASS="STEP">Click Apply.</P></LI>
+</OL>
+<BR><H4 CLASS="BRIDGEHEAD">Add a User with My iFolders</H4>
+<OL CLASS=STEPLIST>
+<LI CLASS="STEP"><A name="bv2hql9"></A>
+<P CLASS="STEP">In the status bar, right-click the iFolder icon <IMG SRC="../graphics/if_appicon_n.gif" border="0" alt="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hqla"></A>
+<P CLASS="STEP">In the list of iFolders, select the iFolder, then click Share With.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hqlb"></A>
+<P CLASS="STEP">From the list of users, select one or more users.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hqlc"></A>
+<P CLASS="STEP">Select the access right: Full Control, Read/Write, or Read Only.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hqld"></A>
+<P CLASS="STEP">Click Apply.</P></LI>
+</OL><A name="bq6lwma"></A>
+
+<BR><H3 CLASS="HEAD-TITLE">Modifying User Access Rights</H3>
+<P CLASS="HEAD">As the working relationships and status of members of an iFolder workgroup change, you might need to change a user's access right for the iFolder. For example, you might want to give a trusted user the File Control right for the iFolder.</P>
+<BR><H4 CLASS="BRIDGEHEAD">Setting User Rights with a File Manager</H4>
+<OL CLASS=STEPLIST>
+<LI CLASS="STEP"><A name="bv2hhhk"></A>
+<P CLASS="STEP">In the file manager, navigate to the iFolder, then select it.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hhhl"></A>
+<P CLASS="STEP">Right-click the iFolder, then click iFolder &gt; Properties.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hn9w"></A>
+<P CLASS="STEP">Click Share With.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hncw"></A>
+<P CLASS="STEP">From the list of users, select one or more users.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hoj5"></A>
+<P CLASS="STEP">Select the access right: Full Control, Read/Write, or Read Only.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hpae"></A>
+<P CLASS="STEP">Click Apply.</P></LI>
+</OL>
+<BR><H4 CLASS="BRIDGEHEAD">Setting User Rights with My iFolders</H4>
+<OL CLASS=STEPLIST>
+<LI CLASS="STEP"><A name="bv2hhhn"></A>
+<P CLASS="STEP">In the status bar, right-click the iFolder icon <IMG SRC="../graphics/if_appicon_n.gif" border="0" alt="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hhho"></A>
+<P CLASS="STEP">In the list of iFolders, select the iFolder, then click Share With.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hozw"></A>
+<P CLASS="STEP">From the list of users, select one or more users.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hp7d"></A>
+<P CLASS="STEP">Select the access right: Full Control, Read/Write, or Read Only.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hpf9"></A>
+<P CLASS="STEP">Click Apply.</P></LI>
+</OL><A name="bq6lwmr"></A>
+
+<BR><H3 CLASS="HEAD-TITLE">Removing a User from an iFolder</H3>
+<P CLASS="HEAD">To unshare an iFolder, you must remove a user as a member of an iFolder workgroup. The iFolder on the user's workstation becomes a normal folder. A copy of the data remains on the former member's workstation, but the files are no longer synchronized with the workgroup.</P>
+<BR><H4 CLASS="BRIDGEHEAD">Removing Users with a File Manager</H4>
+<OL CLASS=STEPLIST>
+<LI CLASS="STEP"><A name="bv2hufx"></A>
+<P CLASS="STEP">In the file manager, navigate to the iFolder, then select it.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hufy"></A>
+<P CLASS="STEP">Right-click the iFolder, then click iFolder &gt; Properties.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hufz"></A>
+<P CLASS="STEP">Click Share With.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hug0"></A>
+<P CLASS="STEP">From the list of users, select one or more users.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hug1"></A>
+<P CLASS="STEP">Click Remove.</P></LI>
+</OL>
+<BR><H4 CLASS="BRIDGEHEAD">Removing Users with My iFolders</H4>
+<OL CLASS=STEPLIST>
+<LI CLASS="STEP"><A name="bv2hug3"></A>
+<P CLASS="STEP">In the status bar, right-click the iFolder icon <IMG SRC="../graphics/if_appicon_n.gif" border="0" alt="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hug4"></A>
+<P CLASS="STEP">In the list of iFolders, select the iFolder, then click Share With.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hug5"></A>
+<P CLASS="STEP">From the list of users, select one or more users.</P></LI>
+
+<LI CLASS="STEP"><A name="bv2hug6"></A>
+<P CLASS="STEP">Click Remove.</P></LI>
+</OL><BR><BR><script language="javascript" src="../../../ui/bottomnav.js"></script>
+
+</body>
+</html>

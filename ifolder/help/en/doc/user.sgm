@@ -1,0 +1,1245 @@
+
+ <!DOCTYPE Book PUBLIC "-//Novell//DTD NovDoc FM+//EN">
+
+<!--========================================================================
+ "iFolder Help for Novell iFolder 3.0 Beta 2"
+
+ Generated on 2/20/2005 1:13:05 AM by Novell Doc Tools Release 6 October 04
+
+ Copyright © 2003 Novell, Inc. All rights reserved. No part of this publication
+ may be reproduced, photocopied, stored on a retrieval system, or transmitted
+ without the express written consent of the publisher.
+
+ Novell, Inc.
+ 1800 South Novell Place
+ Provo, UT 84606
+ U.S.A.
+ www.novell.com
+
+
+ BASELINE PAGE COUNT 20
+
+
+ WORD COUNT
+
+       Count    Doctype    Title
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        1341    Chapter    Overview of iFolder
+        1681    Chapter    Managing iFolders
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        4004    Book       iFolder Help for Novell iFolder 3.0 Beta 2
+
+
+ GRAPHICS REFERENCED IN BOOK
+
+       Count       Filename
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           1       if_foldericon_a.gif
+           7       if_appicon_n.gif
+           1       if_ifoldericon_a.gif
+
+
+ CROSS-REFERENCES
+
+       Count       Type
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          29       XRefInt
+           0       XRefIntText
+           0       XRefExt
+           0       XRefExtText
+           5       ULink
+
+
+ URLS REFERENCED IN ULINKS
+
+       URL
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       http://www.novell.com/documentation/beta/ifolder3
+       http://forge.novell.com/modules/xfmod/docman/?group_id=1372
+       http://www.novell.com/documentation/beta/ifolder3/
+
+========================================================================-->
+
+
+<?Fm: Book>
+ <Book ContentDate="02/20/05" TocLevels="4" RelLinks="None" Language="en">
+
+
+ <?Fm: Document 00_frontos.fm>
+
+  <OSFront ID="Front"><?FM: MARKER [Hypertext] newlink Front>
+   <Product>iFolder</Product>
+   <Version></Version>
+   <PartNumber>March 4, 2005</PartNumber>
+   <BookName>Help</BookName>
+   <LegalNotices>
+    <Disclaimer>
+     <Para>Novell, Inc. makes no representations or warranties with respect to the contents or use of this documentation, and specifically disclaims any express or implied warranties of merchantability or fitness for any particular purpose. Further, Novell, Inc. reserves the right to revise this publication and to make changes to its content, at any time, without obligation to notify any person or entity of such revisions or changes.</Para>
+     <Para>Further, Novell, Inc. makes no representations or warranties with respect to any software, and specifically disclaims any express or implied warranties of merchantability or fitness for any particular purpose. Further, Novell, Inc. reserves the right to make changes to any and all parts of Novell software, at any time, without any obligation to notify any person or entity of such changes.</Para>
+    </Disclaimer>
+    <ExportNotice>
+     <Para>You may not use, export, or re-export this product in violation of any applicable laws or regulations including, without limitation, U.S. export regulations or the laws of the country in which you reside.</Para>
+    </ExportNotice>
+    <CopyrightNotice>
+     <Para>Copyright &copy; 2004-2005 Novell, Inc. All rights reserved. Permission is granted to copy, distribute, and/or modify this document under the terms of the GNU Free Documentation License (GFDL), Version 1.2 or any later version, published by the Free Software Foundation with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of the GFDL can be found at http://www.fsf.org/licenses/fdl.html.</Para>
+     <Para>THIS DOCUMENT AND MODIFIED VERSIONS OF THIS DOCUMENT ARE PROVIDED UNDER THE TERMS OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER UNDERSTANDING THAT:</Para>
+     <Para>1. THE DOCUMENT IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE, OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND</Para>
+     <Para>2. UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL WRITER, ANY CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER DAMAGES OR LOSSES ARISING OUT OF OR RELATING TO USE OF THE DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES.</Para>
+    </CopyrightNotice>
+    <Patents>
+     <Para>Novell, Inc. has intellectual property rights relating to technology embodied in the product that is described in this document. In particular, and without limitation, these intellectual property rights may include one or more of the U.S. patents listed at http://www.novell.com/company/legal/patents/ and one or more additional patents or pending patent applications in the U.S. and in other countries.</Para>
+    </Patents>
+    <Address>
+     <Line>Novell, Inc.</Line>
+     <Line>404 Wyman Street, Suite 500</Line>
+     <Line>Waltham, MA  02451</Line>
+     <Line>U.S.A.</Line>
+     <URL>www.novell.com</URL>
+    </Address>
+    <BookTitle ID="Bktitle"><?FM: MARKER [Hypertext] newlink Bktitle>iFolder Help for Novell iFolder 3.0 Beta 2</BookTitle>
+    <ReleaseDate>March 4, 2005</ReleaseDate>
+    <OnlineDocRef>
+     <Para>To access the online documentation for this and other Novell products, and to get updates, see www.novell.com/documentation. To access all iFolder open source documentation, or to contribute to the iFolder Documentation Project, see Docs at www.ifolder.com. </Para>
+    </OnlineDocRef>
+    <Trademarks>
+     <Novell>
+      <Para>Mono is a registered trademark of Novell, Inc. in the United States and other countries.</Para>
+      <Para>Novell is a registered trademark of Novell, Inc. in the United States and other countries.</Para>
+      <Para>Novell iFolder is a registered trademark of Novell, Inc. in the United States and other countries.</Para>
+     </Novell>
+     <ThirdParty>
+      <Para>All third-party trademarks are the property of their respective owners.</Para>
+     </ThirdParty>
+    </Trademarks>
+   </LegalNotices>
+  </OSFront>
+
+
+ <?Fm: Document 00_preface.fm>
+
+
+  <Preface ID="Preface"><?FM: MARKER [Hypertext] newlink Preface>
+   <Title>iFolder Help</Title>
+   <Para>iFolder is an open source, file-sharing application for Linux, Windows, and Macintosh clients. With iFolder, your local files automatically follow you everywhere&z-mdash-win;online, offline, all the time&z-mdash-win;across computers. You can share files in multiple iFolders, each with a  different group of users. You control who can participate in an iFolder and their access rights to the files in it. You can also participate in iFolders that others share with you. iFolder is all about sharing!</Para>
+   <Para>This help system describes how to use and manage the iFolder client. It is intended for users and is divided into the following sections:</Para>
+   <ListBullet>
+    <BulletItem>
+     <Para><XRefInt IDREF="bq1qyz2" PIDREF="bq1qyz2" File="01_overview.fm" Element="Chapter" Format="ChapTitleOnPage"></Para>
+    </BulletItem>
+    <BulletItem>
+     <Para><XRefInt IDREF="myifolders" PIDREF="myifolders" File="04_iFolders.fm" Element="Chapter" Format="ChapTitleOnPage"></Para>
+    </BulletItem>
+   </ListBullet>
+   <BridgeHead ID="buzp2ff"><?FM: MARKER [Hypertext] newlink buzp2ff>Additional Documentation</BridgeHead>
+   <Para>For information about installing, configuring, and managing Novell iFolder 3.0 Beta services, see the <ULink URL="http://www.novell.com/documentation/beta/ifolder3" Target="_blank"><ManualTitle>N<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/beta/ifolder3><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/beta/ifolder3>ovell iFolder 3.0 Beta Administration Guide</ManualTitle><?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/beta/ifolder3></ULink>. <CommentInline>TBD: Update to FCS URL.</CommentInline></Para>
+   <Para>For iFolder developer documentation, see the <ULink URL="http://forge.novell.com/modules/xfmod/docman/?group_id=1372" Target="_blank"><ManualTitle>i<?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372><?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372>Folder Software Developers Kit</ManualTitle><?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372></ULink>.</Para>
+   <BridgeHead ID="buzp2fg"><?FM: MARKER [Hypertext] newlink buzp2fg>Documentation Updates</BridgeHead>
+   <Para>The most recent version of the <ManualTitle>iFolder Client User Guide for Novell iFolder 3.0 Beta 1 </ManualTitle>is available at the <ULink URL="http://www.novell.com/documentation/beta/ifolder3/" Target="_blank">No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/beta/ifolder3/>vell iFolder 3.0 documentation Web site</ULink>. <CommentInline>TBD: Update to FCS URL.</CommentInline></Para>
+   <Para>For emerging issues for Novell iFolder 3.0, see the <ManualTitle>Novell iFolder 3.0 Readme</ManualTitle>, available at the <ULink URL="http://www.novell.com/documentation/beta/ifolder3/" Target="_blank">No<?FM: MARKER [Hypertext] message URL http://www.novell.com/documentation/beta/ifolder3/>vell iFolder 3.0 documentation Web site</ULink>. <CommentInline>TBD: Update to FCS URL.</CommentInline></Para>
+   <BridgeHead ID="buzp2fh"><?FM: MARKER [Hypertext] newlink buzp2fh>The iFolder Documentation Project</BridgeHead>
+   <Para>For information about how to join and contribute to the iFolder Documentation Project, see the <ULink URL="http://forge.novell.com/modules/xfmod/docman/?group_id=1372" Target="_blank">iF<?FM: MARKER [Hypertext] message URL http://forge.novell.com/modules/xfmod/docman/?group_id=1372>older Doc Project Information</ULink>.</Para>
+   <BridgeHead ID="buzp2fi"><?FM: MARKER [Hypertext] newlink buzp2fi>Documentation Conventions</BridgeHead>
+   <Para>In this documentation, a greater-than symbol (&gt;) is used to separate actions within a step and items within a cross-reference path.</Para>
+   <Para>A trademark symbol (&reg;, &trade;, etc.) denotes a Novell trademark. An asterisk (*) denotes a third-party trademark.</Para>
+   <Para>When a single pathname can be written with a backslash for some platforms, or a forward slash for other platforms, the pathname is presented with a backslash. Users of platforms that require a forward slash, such as UNIX* and Linux* should use forward slashes, as required by the software.</Para>
+  </Preface>
+
+
+ <?Fm: Document 01_overview.fm>
+
+
+  <Chapter ID="bq1qyz2" TocLevels="4" RelLinks="DOC"><?FM: MARKER [Hypertext] newlink bq1qyz2>
+   <Title>Overview of iFolder</Title>
+   <Para>This section familiarizes you with the various benefits and features of iFolder:</Para>
+   <SubToc>
+    <ListBullet>
+     <BulletItem>
+      <Para><XRefInt IDREF="bv1g15h" PIDREF="bv1g15h" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="bq1r10z" PIDREF="bq1r10z" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="bq1r110" PIDREF="bq1r110" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="bq1r11b" PIDREF="bq1r11b" File="01_overview.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+    </ListBullet>
+   </SubToc>
+
+   <Topic ID="bv1g15h" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bv1g15h>
+    <Title>Workgroup and Enterprise Server Sharing</Title>
+    <Para>The iFolder client supports sharing in two modes: Workgroup and Enterprise Server. Workgroup mode supports peer-to-peer synchronization across multiple computers, while Enterprise Server mode supports synchronization through a central server.</Para>
+    <TableNoTitle>
+     <TGroup Cols="3" TGroupStyle="Narrow3">
+      <ColSpec Colname="1" Colnum="1" Colwidth="1.905in">
+      
+      <ColSpec Colname="2" Colnum="2" Colwidth="1.905in">
+      
+      <ColSpec Colname="3" Colnum="3" Colwidth="1.905in">
+      
+      <THead>
+       <Row ID="buzspwm">
+        <Entry Colname="1">
+         <TblHead><?FM: MARKER [Hypertext] newlink buzspwm>Feature</TblHead>
+        </Entry>
+        <Entry Colname="2">
+         <TblHead>Used in Workgroups</TblHead>
+        </Entry>
+        <Entry Colname="3">
+         <TblHead>Used with an Enterprise Server</TblHead>
+        </Entry>
+       </Row>
+      </THead>
+      <TBody>
+       <Row ID="buzspwn">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buzspwn>Share files across computers</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Yes</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buzsqrk">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buzsqrk>Share files with others</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Yes</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buzsqrl">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buzsqrl>Own multiple iFolders</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Yes</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buzsqrm">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buzsqrm>Participate in multiple iFolders</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Yes</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztfl9">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztfl9>Participate in multiple domains</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>[TBD - ???]</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztn3y">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztn3y>Sync files</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>When the iFolder&apos;s host computer is available on the network</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>At any time and with improved availability, reliability, and performance</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztrzk">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztrzk>Provisioning users</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Manual process</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Autoprovision users from the enterprise LDAP users list</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztrzl">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztrzl>Authenticate users with enterprise LDAP directory services</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>No</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztn3z">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztn3z>Back up local files to a server</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>No</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztn40">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztn40>Back up iFolders to backup media </Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>No</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztn41">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztn41>Restore deleted files from backup media</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>No</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Yes</Para>
+        </Entry>
+       </Row>
+       <Row ID="buztrzm">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink buztrzm>Manage iFolder services for host</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Services for iFolders the user owns or has the Full Control right to</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>All iFolders in the enterprise with the iFolder 3.0 plug-in to iManager </Para>
+        </Entry>
+       </Row>
+      </TBody>
+     </TGroup>
+    </TableNoTitle>
+   </Topic>
+
+   <Topic ID="bq1r10z" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bq1r10z>
+    <Title>Benefits of iFolder</Title>
+    <Para>When working in multiple locations or in collaboration with others, you must conscientiously manage file versions. With iFolder, the most recent version of your files can follow you to any computer where you have installed the iFolder client set up the shared iFolder. iFolder also allows you to share multiple iFolders and their separate content with other authorized users. You decide who participates in each iFolder&apos;s workgroup and their level of access. Similarly, you can participate in shared iFolders that are hosted by others in your collaboration environment.</Para>
+    <Para>The iFolder client synchronizes the most recent version of documents to all authorized users of your shared iFolder. All that you and other iFolder members need is an active network connection and the iFolder client. With an enterprise server, your iFolders are stored centrally for all iFolder members. In a workgroup solution, your workstation acts as a host for other users of your shared iFolder, your computer must also be active for synchronization to occur. </Para>
+    <Para>iFolder provides the following benefits:</Para>
+    <ListBullet>
+     <BulletItem>
+      <Para>Integrates with your native desktop environment, making it easy to create and manage multiple iFolders.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Is highly scalable and flexible, with no practical limit on the number of iFolders per workstation or on the number of members per iFolder workgroup.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Allows you to host iFolders locally and invite members, including yourself, so that your iFolder files are available from any member&apos;s workstation where the iFolder client is installed and where a membership in the shared iFolder is active.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Allows you to easily and selectively share personal and business files with anyone.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Allows you to control the access level of users that share your iFolders.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Guards against local data loss by automatically saving the most recent version of your local files to the shared iFolder on multiple workstations.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Transparently updates your files to the primary iFolder and member iFolders on multiple workstations.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Tracks and logs changes made while you work offline and synchronizes those changes when you go online.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Provides secure RSA authentication of member iFolders to exchange data with the primary iFolder.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Is available for free download to everyone because it is open source software.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>Offers an alternative to exchanging files via e-mail, which avoids the file-size limits on e-mail attachments and reduces your e-mail storage requirements.</Para>
+     </BulletItem>
+    </ListBullet>
+   </Topic>
+
+   <Topic ID="bq1r110" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bq1r110>
+    <Title>Key Features of iFolder</Title>
+    <Para>Before you begin to use iFolder, it is important to understand the following key features:</Para>
+    <SubToc>
+     <ListBullet>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq1r111" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq1r112" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq1r113" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq655zc" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq5xp9r" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq1r118" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq63xvh" PIDREF="bq1r110" File="01_overview.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+     </ListBullet>
+    </SubToc>
+
+    <Head ID="bq1r111"><?FM: MARKER [Hypertext] newlink bq1r111>
+     <Title>The iFolder Client </Title>
+     <Para>The iFolder client integrates with your operating system to provide iFolder services in your native desktop environment. iFolder supports the following operating systems:</Para>
+     <ListBullet>
+      <BulletItem>
+       <Para>Novell Linux Desktop 1.0</Para>
+      </BulletItem>
+      <BulletItem>
+       <Para>Windows 2000/XP</Para>
+      </BulletItem>
+      <BulletItem>
+       <Para>Macintosh</Para>
+      </BulletItem>
+     </ListBullet>
+     <Para>An iFolder session begins when you log in to an iFolder services account and ends when you log out, or when you exit the iFolder client. Your iFolders synchronize files with other active iFolders only when your session is active and you are working online. You can access data in your local iFolders at any time, whether you are logged in to the account, or not.</Para>
+     <Para>The iFolder client allows users to manage their iFolders. For information, see <XRefInt IDREF="myifolders" PIDREF="myifolders" File="04_iFolders.fm" Element="Chapter" Format="HeadingOnPage">.</Para>
+    </Head>
+
+    <Head ID="bq1r112"><?FM: MARKER [Hypertext] newlink bq1r112>
+     <Title>Shared iFolders</Title>
+     <Para>An iFolder is a local directory that selectively shares and synchronizes files with a user-specified workgroup in a peer-to-peer sharing model. The iFolder files are accessible to all workgroup members and can be changed by those with the rights to do so. You can share iFolders across multiple workstations and with others.</Para>
+     <Para>You work with iFolders directly in your file manager. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</Para>
+    </Head>
+
+    <Head ID="bq1r113"><?FM: MARKER [Hypertext] newlink bq1r113>
+     <Title>iFolder Access Rights</Title>
+     <Para>The iFolder client provides an Advanced Properties page <CommentInline>TBD:??? What is it now?</CommentInline>for an iFolder where you can make the iFolder available to other users and to specify access rights for each one. There are multiple levels of access rights for a shared iFolder:</Para>
+     <ListBullet>
+      <BulletItem>
+       <ParaWithTitle ID="bq8voz4"><?FM: MARKER [Hypertext] newlink bq8voz4>
+        <Title>Owner: </Title>
+        <Para>The owner of the primary shared iFolder, with ownership and the Full Control right. The iFolder owner has read/write access to the iFolder, manages membership and access rights for users, and can remove the Full Control right for any member. The owner&apos;s computer is the host for the iFolder workgroup and must be active and online to synchronize files with member iFolders. With an enterprise server, the disk space used by the owner&apos;s iFolders count against the owner&apos;s iFolder disk quota for that account.</Para>
+       </ParaWithTitle>
+       <Para>Only one user serves as the owner. This is typically the user that created the iFolder. The owner can transfer ownership status to another user.</Para>
+      </BulletItem>
+      <BulletItem>
+       <ParaWithTitle ID="bq8voz5"><?FM: MARKER [Hypertext] newlink bq8voz5>
+        <Title>Full Control: </Title>
+        <Para>A member of the iFolder workgroup, with the Full Control access right. The user with the Full Control right has read/write access to the iFolder and manages membership and access rights for all users except the owner.</Para>
+       </ParaWithTitle>
+       <Para>Multiple users can serve as Admin owners. An Admin owner can add and remove Full Control access rights only for other Admin owners, not the Bill owner. </Para>
+      </BulletItem>
+      <BulletItem>
+       <ParaWithTitle ID="bq8voz6"><?FM: MARKER [Hypertext] newlink bq8voz6>
+        <Title>Read/Write: </Title>
+        <Para>A member of the iFolder workgroup, with the Read/Write access right to directories and files in the iFolder.</Para>
+       </ParaWithTitle>
+      </BulletItem>
+      <BulletItem>
+       <ParaWithTitle ID="bq8voz7"><?FM: MARKER [Hypertext] newlink bq8voz7>
+        <Title>Read Only: </Title>
+        <Para>A member of the iFolder workgroup, with the Read Only access right to directories and files in the iFolder.</Para>
+       </ParaWithTitle>
+      </BulletItem>
+     </ListBullet>
+     <Para>With an enterprise server, the server hosts every iFolder. Users create the iFolder and the enterprise server makes it available to the specified list of users you want to share it with.</Para>
+     <Para>Any given workstation can be both a host and a client in the workgroup model. You can host multiple iFolders on your workstation and be a member of iFolder workgroups hosted by others. Your level of membership in each shared iFolder can differ.</Para>
+    </Head>
+
+    <Head ID="bq655zc"><?FM: MARKER [Hypertext] newlink bq655zc>
+     <Title>Account Set Up for Enterprise Servers</Title>
+     <Para>The iFolder client allows you to set up multiple accounts across domains. You specify the server address, username, and password to uniquely identify an account.</Para>
+    </Head>
+
+    <Head ID="bq5xp9r"><?FM: MARKER [Hypertext] newlink bq5xp9r>
+     <Title>Access Authentication</Title>
+     <Para>Whenever an iFolder connects to member iFolders in the workgroup to synchronize files, it authenticates with basic HTML and SSL connections.</Para>
+     <Para>Whenever iFolder connects to an enterprise server to synchronize files, it connects with basic HTML and SSL connections to the server, and the server authenticates the user against the domain&apos;s LDAP directory service. </Para>
+    </Head>
+
+    <Head ID="bq1r118"><?FM: MARKER [Hypertext] newlink bq1r118>
+     <Title>File Synchronization and Data Management</Title>
+     <Para>An iFolder client runs automatically each time you log in to your computer&apos;s desktop environment. The session runs in the background as you work with files in your local iFolders, tracking and logging any changes you make. </Para>
+     <Para>When synchronizing files in workgroup mode, the iFolder client performs the data exchange transparently with the appropriate primary iFolder or with other member iFolders, depending on the status of your workstation as a client or a host, respectively, for any given iFolder.</Para>
+    </Head>
+
+    <Head ID="bq63xvh"><?FM: MARKER [Hypertext] newlink bq63xvh>
+     <Title>Sync Log</Title>
+     <Para>The log displays a log of your iFolder background activity. </Para>
+    </Head>
+   </Topic>
+
+   <Topic ID="bq1r11b" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink bq1r11b>
+    <Title>What&apos;s Next</Title>
+    <Para>For information about using and managing iFolders, see <XRefInt IDREF="myifolders" PIDREF="myifolders" File="04_iFolders.fm" Element="Chapter" Format="HeadingOnPage">.</Para>
+   </Topic>
+  </Chapter>
+
+
+ <?Fm: Document 04_iFolders.fm>
+
+
+  <Chapter ID="myifolders" TocLevels="4" RelLinks="DOC"><?FM: MARKER [Hypertext] newlink myifolders>
+   <Title>Managing iFolders</Title>
+   <Para>An iFolder is a local directory that selectively shares and synchronizes files with user-specified members. The iFolder files are accessible to all members and can be modified and read by those with privileges to do so. </Para>
+   <Para>This section discusses the following tasks for iFolder:</Para>
+   <SubToc>
+    <ListBullet>
+     <BulletItem>
+      <Para><XRefInt IDREF="accounts" PIDREF="accounts" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="preferences" PIDREF="preferences" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="createifolder" PIDREF="createifolder" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="sharewith" PIDREF="sharewith" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="setupifolder" PIDREF="setupifolder" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="properties.html" PIDREF="properties.html" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="sync" PIDREF="sync" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="conflicts" PIDREF="conflicts" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="reverting" PIDREF="reverting" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+     <BulletItem>
+      <Para><XRefInt IDREF="deleting" PIDREF="deleting" File="04_iFolders.fm" Element="Topic" Format="HeadingOnPage"></Para>
+     </BulletItem>
+    </ListBullet>
+   </SubToc>
+
+   <Topic ID="accounts" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink accounts>
+    <Title>Configuring iFolder Accounts</Title>
+    <Para>Coming soon.</Para>
+    <Comment>[TBD:??? This section is under construction.]</Comment>
+   </Topic>
+
+   <Topic ID="preferences" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink preferences>
+    <Title>Configuring iFolder Preferences</Title>
+    <Para>Coming soon.</Para>
+    <Comment>[TBD:??? This section is under construction.]</Comment>
+   </Topic>
+
+   <Topic ID="createifolder" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink createifolder>
+    <Title>Creating an iFolder</Title>
+    <Para>Whenever you create an iFolder, you specify an existing normal folder that you want to be converted to an iFolder. If the normal folder does not exist, one is created as part of the process. </Para>
+    <Para>You can create iFolders directly in your file manager and in the My iFolders browser available in the client application. Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</Para>
+    <BridgeHead ID="bv2gppe"><?FM: MARKER [Hypertext] newlink bv2gppe>Guidelines for Folders to be Converted</BridgeHead>
+    <Para>You can make any local directory an iFolder if it meets certain criteria:</Para>
+    <ListBullet>
+     <BulletItem>
+      <Para>The root directory cannot be an iFolder.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>An iFolder cannot contain another iFolder.</Para>
+     </BulletItem>
+     <BulletItem>
+      <Para>The iFolder open source client and the Novell iFolder&reg; 2.1<VersionVariable>x</VersionVariable> Client can coexist on the same computer, but they are not integrated and their software should not be installed in the same folder. If you also use Novell iFolder 2.1<VersionVariable>x</VersionVariable> on your workstation, you must comply with the following restrictions:</Para>
+      <ListBullet>
+       <BulletItem>
+        <Para>Any local directory where you store your Novell iFolder 2.1<VersionVariable>x</VersionVariable> data should not be converted to an iFolder.</Para>
+       </BulletItem>
+       <BulletItem>
+        <Para>Any directory that contains a local directory where you store your Novell iFolder 2.1<VersionVariable>x</VersionVariable> data should not be converted to an iFolder.</Para>
+       </BulletItem>
+      </ListBullet>
+     </BulletItem>
+    </ListBullet>
+    <BridgeHead ID="bv2gr5l"><?FM: MARKER [Hypertext] newlink bv2gr5l>Creating iFolders in a File Manager</BridgeHead>
+    <Procedure>
+     <StepList>
+      <Step ID="bq6lwlg"><?FM: MARKER [Hypertext] newlink bq6lwlg>
+       <Para>Use the file manager to navigate to the folder you want to convert to an iFolder, then select the folder.</Para>
+      </Step>
+      <Step ID="bq6lwlh"><?FM: MARKER [Hypertext] newlink bq6lwlh>
+       <Para>Use one of the following methods:</Para>
+       <ListBullet>
+        <BulletItem>
+         <Para>Right-click the folder icon, then click Convert to an iFolder.</Para>
+        </BulletItem>
+        <BulletItem>
+         <Para>In the toolbar, click File &gt; Convert to an iFolder.</Para>
+        </BulletItem>
+       </ListBullet>
+       <Para>The folder icon <InlineGraphic Fileref="if_foldericon_a.gif" Height="0.154in" Width="0.171in" Dpi="175" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="Folder Icon"> changes to an iFolder icon <InlineGraphic Fileref="if_ifoldericon_a.gif" Height="0.177in" Width="0.189in" Dpi="175" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Icon"> and iFolder displays a confirmation message. It is okay to dismiss the confirmation message.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+    <BridgeHead ID="bv2gy0d"><?FM: MARKER [Hypertext] newlink bv2gy0d>Creating iFolders in My iFolders</BridgeHead>
+    <Procedure>
+     <StepList>
+      <Step ID="bv2gxbu"><?FM: MARKER [Hypertext] newlink bv2gxbu>
+       <Para>In the status bar, right-click the iFolder icon <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</Para>
+      </Step>
+      <Step ID="bv2gxbv"><?FM: MARKER [Hypertext] newlink bv2gxbv>
+       <Para>Click Create.</Para>
+      </Step>
+      <Step ID="bv2gwvt"><?FM: MARKER [Hypertext] newlink bv2gwvt>
+       <Para>Specify the IP address or DNS name of the enterprise server for the account you want to use for this iFolder.</Para>
+      </Step>
+      <Step ID="bv2guwr"><?FM: MARKER [Hypertext] newlink bv2guwr>
+       <Para>In the browser, navigate to the directory where you want to create an iFolder.</Para>
+      </Step>
+      <Step ID="bv2gv55"><?FM: MARKER [Hypertext] newlink bv2gv55>
+       <Para>Select the normal folder you want to make an iFolder, using one of these methods:</Para>
+       <ListBullet>
+        <BulletItem>
+         <Para>If the normal folder exists, select the folder, then click OK</Para>
+        </BulletItem>
+        <BulletItem>
+         <Para>If the normal folder does not exist, click Create New Folder to create it, select the newly created folder, then click OK.</Para>
+        </BulletItem>
+       </ListBullet>
+       <Para>The iFolder <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon"> appears in the My iFolders list.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+   </Topic>
+
+   <Topic ID="sharewith" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink sharewith>
+    <Title>Sharing an iFolder</Title>
+    <Para>You can share an iFolder with multiple users. This section discusses the following tasks:</Para>
+    <SubToc>
+     <ListBullet>
+      <BulletItem>
+       <Para><XRefInt IDREF="bv2hnvt" PIDREF="sharewith" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq6lwm0" PIDREF="sharewith" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq6lwma" PIDREF="sharewith" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+      <BulletItem>
+       <Para><XRefInt IDREF="bq6lwmr" PIDREF="sharewith" File="04_iFolders.fm" Element="Head" Format="HeadingOnPage"></Para>
+      </BulletItem>
+     </ListBullet>
+    </SubToc>
+
+    <Head ID="bv2hnvt"><?FM: MARKER [Hypertext] newlink bv2hnvt>
+     <Title>Understanding User Access Rights</Title>
+     <Para>The following table describes the capabilities associated with each level of access for users.</Para>
+     <TableNoTitle>
+      <TGroup Cols="5" TGroupStyle="Wide4WithLines">
+       <ColSpec Colname="1" Colnum="1" Colwidth="2.889in">
+       
+       <ColSpec Colname="2" Colnum="2" Colwidth="0.694in">
+       
+       <ColSpec Colname="3" Colnum="3" Colwidth="0.694in">
+       
+       <ColSpec Colname="4" Colnum="4" Colwidth="0.694in">
+       
+       <ColSpec Colname="5" Colnum="5" Colwidth="0.694in">
+       
+       <THead>
+        <Row ID="bv2h594">
+         <Entry Colname="1">
+          <TblHead><?FM: MARKER [Hypertext] newlink bv2h594>Capabilities</TblHead>
+         </Entry>
+         <Entry Colname="2">
+          <TblHead>Owner</TblHead>
+         </Entry>
+         <Entry Colname="3">
+          <TblHead>Full Control</TblHead>
+         </Entry>
+         <Entry Colname="4">
+          <TblHead>Read/Write</TblHead>
+         </Entry>
+         <Entry Colname="5">
+          <TblHead>Read Only</TblHead>
+         </Entry>
+        </Row>
+       </THead>
+       <TBody>
+        <Row ID="bv2h595">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h595>With an enterprise server, the space consumed by the iFolder on the server is charged against the user&apos;s quota</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n2">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n2>In Workgroup mode, the computer where the iFolder was created serves as the host iFolder </Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n3">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n3>Reassign ownership to another user</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hhhd">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hhhd>Set a quota for the iFolder</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n4">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n4>Make the iFolder available to other users (sharing)</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n5">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n5>Make the iFolder unavailable to other users (stop sharing)</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes, except the owner</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n6">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n6>Assign access rights for other users</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes, except the owner</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n7">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n7>Read directories and files in the iFolder </Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>Yes</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2h7n8">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2h7n8>Add, modify, or delete directories and files in the iFolder</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hhhe">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hhhe>Rename directories and files in an iFolder</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>Yes</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hhhf">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hhhf>Rename the iFolder</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hhhg">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hhhg>Set up an iFolder on multiple computers</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>Yes</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hhhh">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hhhh>Revert an iFolder (do not participate on a local computer)</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes, all but one</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>Yes</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hmyj">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hmyj>Delete an available iFolder to decline participating</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>Yes</Para>
+         </Entry>
+        </Row>
+        <Row ID="bv2hhhi">
+         <Entry Colname="1">
+          <Para><?FM: MARKER [Hypertext] newlink bv2hhhi>Delete the iFolder (make it a normal folder again)</Para>
+         </Entry>
+         <Entry Colname="2">
+          <Para>Yes</Para>
+         </Entry>
+         <Entry Colname="3">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="4">
+          <Para>No</Para>
+         </Entry>
+         <Entry Colname="5">
+          <Para>No</Para>
+         </Entry>
+        </Row>
+       </TBody>
+      </TGroup>
+     </TableNoTitle>
+    </Head>
+
+    <Head ID="bq6lwm0"><?FM: MARKER [Hypertext] newlink bq6lwm0>
+     <Title>Adding a User to an iFolder</Title>
+     <BridgeHead ID="bv2hql1"><?FM: MARKER [Hypertext] newlink bv2hql1>Add a User with a File Manager</BridgeHead>
+     <Procedure>
+      <StepList>
+       <Step ID="bv2hql2"><?FM: MARKER [Hypertext] newlink bv2hql2>
+        <Para>In the file manager, navigate to the iFolder, then select it.</Para>
+       </Step>
+       <Step ID="bv2hql3"><?FM: MARKER [Hypertext] newlink bv2hql3>
+        <Para>Right-click the iFolder, then click iFolder &gt; Properties.</Para>
+       </Step>
+       <Step ID="bv2hql4"><?FM: MARKER [Hypertext] newlink bv2hql4>
+        <Para>Click Share With.</Para>
+       </Step>
+       <Step ID="bv2hql5"><?FM: MARKER [Hypertext] newlink bv2hql5>
+        <Para>From the list of users, select one or more users.</Para>
+       </Step>
+       <Step ID="bv2hql6"><?FM: MARKER [Hypertext] newlink bv2hql6>
+        <Para>Select the access right: Full Control, Read/Write, or Read Only.</Para>
+       </Step>
+       <Step ID="bv2hql7"><?FM: MARKER [Hypertext] newlink bv2hql7>
+        <Para>Click Apply.</Para>
+       </Step>
+      </StepList>
+     </Procedure>
+     <BridgeHead ID="bv2hql8"><?FM: MARKER [Hypertext] newlink bv2hql8>Add a User with My iFolders</BridgeHead>
+     <Procedure>
+      <StepList>
+       <Step ID="bv2hql9"><?FM: MARKER [Hypertext] newlink bv2hql9>
+        <Para>In the status bar, right-click the iFolder icon <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</Para>
+       </Step>
+       <Step ID="bv2hqla"><?FM: MARKER [Hypertext] newlink bv2hqla>
+        <Para>In the list of iFolders, select the iFolder, then click Share With.</Para>
+       </Step>
+       <Step ID="bv2hqlb"><?FM: MARKER [Hypertext] newlink bv2hqlb>
+        <Para>From the list of users, select one or more users.</Para>
+       </Step>
+       <Step ID="bv2hqlc"><?FM: MARKER [Hypertext] newlink bv2hqlc>
+        <Para>Select the access right: Full Control, Read/Write, or Read Only.</Para>
+       </Step>
+       <Step ID="bv2hqld"><?FM: MARKER [Hypertext] newlink bv2hqld>
+        <Para>Click Apply.</Para>
+       </Step>
+      </StepList>
+     </Procedure>
+    </Head>
+
+    <Head ID="bq6lwma"><?FM: MARKER [Hypertext] newlink bq6lwma>
+     <Title>Modifying User Access Rights</Title>
+     <Para>As the working relationships and status of members of an iFolder workgroup change, you might need to change a user&apos;s access right for the iFolder. For example, you might want to give a trusted user the File Control right for the iFolder.</Para>
+     <BridgeHead ID="bv2hhhj"><?FM: MARKER [Hypertext] newlink bv2hhhj>Setting User Rights with a File Manager</BridgeHead>
+     <Procedure>
+      <StepList>
+       <Step ID="bv2hhhk"><?FM: MARKER [Hypertext] newlink bv2hhhk>
+        <Para>In the file manager, navigate to the iFolder, then select it.</Para>
+       </Step>
+       <Step ID="bv2hhhl"><?FM: MARKER [Hypertext] newlink bv2hhhl>
+        <Para>Right-click the iFolder, then click iFolder &gt; Properties.</Para>
+       </Step>
+       <Step ID="bv2hn9w"><?FM: MARKER [Hypertext] newlink bv2hn9w>
+        <Para>Click Share With.</Para>
+       </Step>
+       <Step ID="bv2hncw"><?FM: MARKER [Hypertext] newlink bv2hncw>
+        <Para>From the list of users, select one or more users.</Para>
+       </Step>
+       <Step ID="bv2hoj5"><?FM: MARKER [Hypertext] newlink bv2hoj5>
+        <Para>Select the access right: Full Control, Read/Write, or Read Only.</Para>
+       </Step>
+       <Step ID="bv2hpae"><?FM: MARKER [Hypertext] newlink bv2hpae>
+        <Para>Click Apply.</Para>
+       </Step>
+      </StepList>
+     </Procedure>
+     <BridgeHead ID="bv2hhhm"><?FM: MARKER [Hypertext] newlink bv2hhhm>Setting User Rights with My iFolders</BridgeHead>
+     <Procedure>
+      <StepList>
+       <Step ID="bv2hhhn"><?FM: MARKER [Hypertext] newlink bv2hhhn>
+        <Para>In the status bar, right-click the iFolder icon <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</Para>
+       </Step>
+       <Step ID="bv2hhho"><?FM: MARKER [Hypertext] newlink bv2hhho>
+        <Para>In the list of iFolders, select the iFolder, then click Share With.</Para>
+       </Step>
+       <Step ID="bv2hozw"><?FM: MARKER [Hypertext] newlink bv2hozw>
+        <Para>From the list of users, select one or more users.</Para>
+       </Step>
+       <Step ID="bv2hp7d"><?FM: MARKER [Hypertext] newlink bv2hp7d>
+        <Para>Select the access right: Full Control, Read/Write, or Read Only.</Para>
+       </Step>
+       <Step ID="bv2hpf9"><?FM: MARKER [Hypertext] newlink bv2hpf9>
+        <Para>Click Apply.</Para>
+       </Step>
+      </StepList>
+     </Procedure>
+    </Head>
+
+    <Head ID="bq6lwmr"><?FM: MARKER [Hypertext] newlink bq6lwmr>
+     <Title>Removing a User from an iFolder</Title>
+     <Para>To unshare an iFolder, you must remove a user as a member of an iFolder workgroup. The iFolder on the user&apos;s workstation becomes a normal folder. A copy of the data remains on the former member&apos;s workstation, but the files are no longer synchronized with the workgroup.</Para>
+     <BridgeHead ID="bv2hufw"><?FM: MARKER [Hypertext] newlink bv2hufw>Removing Users with a File Manager</BridgeHead>
+     <Procedure>
+      <StepList>
+       <Step ID="bv2hufx"><?FM: MARKER [Hypertext] newlink bv2hufx>
+        <Para>In the file manager, navigate to the iFolder, then select it.</Para>
+       </Step>
+       <Step ID="bv2hufy"><?FM: MARKER [Hypertext] newlink bv2hufy>
+        <Para>Right-click the iFolder, then click iFolder &gt; Properties.</Para>
+       </Step>
+       <Step ID="bv2hufz"><?FM: MARKER [Hypertext] newlink bv2hufz>
+        <Para>Click Share With.</Para>
+       </Step>
+       <Step ID="bv2hug0"><?FM: MARKER [Hypertext] newlink bv2hug0>
+        <Para>From the list of users, select one or more users.</Para>
+       </Step>
+       <Step ID="bv2hug1"><?FM: MARKER [Hypertext] newlink bv2hug1>
+        <Para>Click Remove.</Para>
+       </Step>
+      </StepList>
+     </Procedure>
+     <BridgeHead ID="bv2hug2"><?FM: MARKER [Hypertext] newlink bv2hug2>Removing Users with My iFolders</BridgeHead>
+     <Procedure>
+      <StepList>
+       <Step ID="bv2hug3"><?FM: MARKER [Hypertext] newlink bv2hug3>
+        <Para>In the status bar, right-click the iFolder icon <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</Para>
+       </Step>
+       <Step ID="bv2hug4"><?FM: MARKER [Hypertext] newlink bv2hug4>
+        <Para>In the list of iFolders, select the iFolder, then click Share With.</Para>
+       </Step>
+       <Step ID="bv2hug5"><?FM: MARKER [Hypertext] newlink bv2hug5>
+        <Para>From the list of users, select one or more users.</Para>
+       </Step>
+       <Step ID="bv2hug6"><?FM: MARKER [Hypertext] newlink bv2hug6>
+        <Para>Click Remove.</Para>
+       </Step>
+      </StepList>
+     </Procedure>
+    </Head>
+   </Topic>
+
+   <Topic ID="setupifolder" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink setupifolder>
+    <Title>Setting Up an Available iFolder</Title>
+    <Para>When others share iFolders with you, the iFolders appear with an Available iFolder icon in your My iFolders browser. If you want to participate in the iFolder on your local computer, you must set up the iFolder to make it active on the computer. </Para>
+    <Procedure>
+     <StepList>
+      <Step ID="bv2ht17"><?FM: MARKER [Hypertext] newlink bv2ht17>
+       <Para>In the status bar, right-click the iFolder icon <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</Para>
+      </Step>
+      <Step ID="bv2ht18"><?FM: MARKER [Hypertext] newlink bv2ht18>
+       <Para>In the list of iFolders, select the available iFolder, then click Set Up.</Para>
+      </Step>
+      <Step ID="bv2ht19"><?FM: MARKER [Hypertext] newlink bv2ht19>
+       <Para>Log in to the account in that domain using your username and password.</Para>
+      </Step>
+      <Step ID="bv2ht1a"><?FM: MARKER [Hypertext] newlink bv2ht1a>
+       <Para>Click OK.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+   </Topic>
+
+   <Topic ID="properties.html" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink properties.html>
+    <Title>Viewing Properties of an iFolder</Title>
+    <BridgeHead ID="bv2h016"><?FM: MARKER [Hypertext] newlink bv2h016>Accessing iFolder Properties from a File Manager</BridgeHead>
+    <Procedure>
+     <StepList>
+      <Step ID="bv2h29s"><?FM: MARKER [Hypertext] newlink bv2h29s>
+       <Para>In the file manager, navigate to the iFolder, then select it.</Para>
+      </Step>
+      <Step ID="bv2h2hg"><?FM: MARKER [Hypertext] newlink bv2h2hg>
+       <Para>Right-click the iFolder, then click iFolder &gt; Properties.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+    <BridgeHead ID="bv2h0ey"><?FM: MARKER [Hypertext] newlink bv2h0ey>Accessing iFolder Properties from My iFolders</BridgeHead>
+    <Procedure>
+     <StepList>
+      <Step ID="bv2h017"><?FM: MARKER [Hypertext] newlink bv2h017>
+       <Para>In the status bar, right-click the iFolder icon <InlineGraphic Fileref="if_appicon_n.gif" Height="0.145in" Width="0.145in" Dpi="110" Impby="ref" Xoffset="0.000in" Yoffset="0.000in" Position="inline" Align="acenter" Description="iFolder Application Icon">, then click My iFolders to open the My iFolders browser.</Para>
+      </Step>
+      <Step ID="bv2h0o4"><?FM: MARKER [Hypertext] newlink bv2h0o4>
+       <Para>In the list of iFolders, select the iFolder, then click Properties.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+    <Comment>[TBD: ???List properties and their definitions.]</Comment>
+   </Topic>
+
+   <Topic ID="sync" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink sync>
+    <Title>Synchronizing Files</Title>
+    <Para>Coming soon.</Para>
+    <Comment>[TBD:??? This section is under construction.]</Comment>
+   </Topic>
+
+   <Topic ID="conflicts" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink conflicts>
+    <Title>Resolving File Conflicts</Title>
+    <Comment>[TBD:??? This section is under construction.]</Comment>
+    <Para>When conflicts occur between file versions saved at the same time or when a filename differs by case only (such as File.txt and file.txt on a Linux client) the file is flagged as a Name Collision and is stored in the conflict area and an alert is sent to flag the file through the iFolder client. The conflict can be resolved by renaming the file. </Para>
+   </Topic>
+
+   <Topic ID="reverting" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink reverting>
+    <Title>Reverting an iFolder to a Normal Folder</Title>
+    <Para>As a owner or user with the Full Control right of an iFolder, you can revert the iFolder to a normal folder. Reversion ends the collaborative share relationship among the iFolder members. It does not delete the iFolder and its contents from member workstations.</Para>
+    <Procedure>
+     <StepList>
+      <Step ID="bq6lwn0"><?FM: MARKER [Hypertext] newlink bq6lwn0>
+       <Para>In a file manager or on the desktop, locate the iFolder that you want to revert to a normal folder.</Para>
+      </Step>
+      <Step ID="bq6lwn1"><?FM: MARKER [Hypertext] newlink bq6lwn1>
+       <Para>Use one of the following methods:</Para>
+       <ListBullet>
+        <BulletItem>
+         <Para>Right-click the iFolder, then click iFolder &gt; Revert to a Normal Folder.</Para>
+        </BulletItem>
+        <BulletItem>
+         <Para>Select the iFolder, then in the file manager toolbar, click File &gt; iFolder &gt; Revert to a Normal Folder.</Para>
+        </BulletItem>
+       </ListBullet>
+       <Para>The iFolder icon changes to a normal folder icon. The data remains untouched on all member computers.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+   </Topic>
+
+   <Topic ID="deleting" Type="General" Topic="MainTopic"><?FM: MARKER [Hypertext] newlink deleting>
+    <Title>Deleting an iFolder</Title>
+    <Para>If you delete an iFolder from your collection, it deletes the local copy of the iFolder and its contents. It also can affect the share relationship for the iFolder, depending on the Access right you hold for it. The following table outlines the effect on the share relationship and the member iFolders based on the Access right of the user who deletes the iFolder.</Para>
+    <TableNoTitle>
+     <TGroup Cols="3" TGroupStyle="Wide4WithLines">
+      <ColSpec Colname="1" Colnum="1" Colwidth="1.750in">
+      
+      <ColSpec Colname="2" Colnum="2" Colwidth="1.958in">
+      
+      <ColSpec Colname="3" Colnum="3" Colwidth="1.958in">
+      
+      <THead>
+       <Row ID="brzc2fh">
+        <Entry Colname="1">
+         <TblHead><?FM: MARKER [Hypertext] newlink brzc2fh>Access Right of the User Who Deletes the iFolder</TblHead>
+        </Entry>
+        <Entry Colname="2">
+         <TblHead>Share Relationship</TblHead>
+        </Entry>
+        <Entry Colname="3">
+         <TblHead>Member Copies of the iFolder</TblHead>
+        </Entry>
+       </Row>
+      </THead>
+      <TBody>
+       <Row ID="brzc2fi">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink brzc2fi>Owner</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Ends the share relationship for the iFolder</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Reverts the iFolder to a normal folder for all users </Para>
+        </Entry>
+       </Row>
+       <Row ID="brzc2fj">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink brzc2fj>Full Control User</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Ends the share relationship for the iFolder</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>Reverts the iFolder to a normal folder for all users except the owner</Para>
+        </Entry>
+       </Row>
+       <Row ID="brzc2fk">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink brzc2fk>Read/Write User</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Unsubscribes the user from the share</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>No effect</Para>
+        </Entry>
+       </Row>
+       <Row ID="brzc2fl">
+        <Entry Colname="1">
+         <Para><?FM: MARKER [Hypertext] newlink brzc2fl>Read Only User</Para>
+        </Entry>
+        <Entry Colname="2">
+         <Para>Unsubscribes the user from the share</Para>
+        </Entry>
+        <Entry Colname="3">
+         <Para>No effect</Para>
+        </Entry>
+       </Row>
+      </TBody>
+     </TGroup>
+    </TableNoTitle>
+    <Para>Deleting an iFolder does not uninstall the iFolder client from your workstation.</Para>
+    <Procedure>
+     <StepList>
+      <Step ID="bq8ubrz"><?FM: MARKER [Hypertext] newlink bq8ubrz>
+       <Para>In a file manager or My iFolders browser, locate the iFolder that you want to delete.</Para>
+      </Step>
+      <Step ID="bq8u9b1"><?FM: MARKER [Hypertext] newlink bq8u9b1>
+       <Para>Right-click the iFolder, then click Delete.</Para>
+      </Step>
+     </StepList>
+    </Procedure>
+   </Topic>
+  </Chapter>
+ </Book>

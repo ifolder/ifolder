@@ -1,0 +1,112 @@
+/* setting font size for major headings */
+	H1 {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 18pt; font-weight: bold; text-decoration: none; color: #CC0000;}
+	H2 {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
+	H3 {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 11pt; font-weight: bold; color: #000000;}
+	H4 {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #000000;}
+	H5 {font-family: Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #000000;}
+	H1.TSHOOTENTRY-TITLE {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
+	
+
+/* format body element */	
+BODY {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000; background-color: #FFFFFF; margin: .2in}
+
+/* format link elements 	
+	A:link {color:#666666;}
+	A:active {color:#FF9933;}
+	A:visited {color:#CC0000;} */
+
+/* format paragraph elements */	
+	P {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
+	P.TABLEWITHTITLE {font-weight: bold; color: #000000; font-style: normal}
+	P.MSGTEXT {font-style: italic; font-weight: normal}
+	P.SOURCEREG {font-style: italic; font-weight: normal}
+	P.NOTE {font-style: italic;}
+	P.NOTE-HINT {font-style: italic;}
+	P.NOTE-IMPORTANT {font-style: italic;}
+	P.NOTE-WARNING {font-style: italic;}
+	P.PROBLEM {font-style: normal;}
+	P.POSSCAUSE {font-style: normal;}
+	P.HEAD {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
+	P.Trademark {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 9pt; font-weight: normal; color: #000000;}
+	P.STRING {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; text-decoration: none; color: #000000;}
+	P.BULLETITEM {font-style: normal; margin-top: 4px}
+
+/* format Readme Toc elements */
+	DIV.READMETOC0 {font-style: normal; margin: 0px 10px 6px 0px; margin-top: 14px}
+	DIV.READMETOC1 {font-style: normal; margin: 0px 10px 5px 25px}
+	DIV.READMETOC2 {font-style: normal; margin: 0px 10px 2px 54px}
+	DIV.READMETOC3 {font-style: normal; margin: 0px 10px 2px 89px}
+	DIV.RELEASEDATE {font-style: normal;margin-top: -12px}
+
+/* set weight and style for these elements */	
+	TT.COMMAND {font-weight: bold; font-style: normal}
+	TT.PARAMETER {font-style: italic; font-weight: normal}
+	TT.USERINPUT {font-weight: bold; font-style: normal}
+
+/* apply bold emphasis */	
+	EM.FIGURE {font-weight: bold; font-style: normal}
+	EM.PARAWITHTITLE {font-weight: bold; font-style: normal}
+	EM.REFCLASS {font-weight: bold; font-style: normal}
+	EM.FUNCTION {font-weight: bold; font-style: normal}
+	EM.GLOSSTERM {font-weight: bold; font-style: normal}
+	EM.OPTION {font-weight: bold; font-style: normal}
+	EM.STRING {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 13pt; font-weight: bold; font-style: normal; text-decoration: none; color: #000000;}
+	EM.TSUBHEAD {font-weight: bold; font-style: normal; color: #000000}
+	EM.TBLHEAD {font-size: 10pt; font-weight: font-size: 10pt; bold; font-style: normal; color: #edeeec}
+	EM.PROBLEM {font-weight: bold; font-style: normal}
+	EM.EXPLAIN {font-weight: bold; font-style: normal}
+	EM.ACTION {font-weight: bold; font-style: normal}
+	EM.SOURCE {font-weight: bold; font-style: normal}
+	EM.POSSCAUSE {font-weight: bold; font-style: normal}
+	EM.NOTE {font-weight: bold; font-style: normal}
+	EM.NOTE-HINT {font-weight: bold; font-style: normal}
+	EM.NOTE-IMPORTANT {font-weight: bold; font-style: normal}
+	EM.NOTE-WARNING {font-weight: bold; color: red; font-style: normal}
+	
+/* apply italic emphasis */	
+	EM.DISKNAME {font-style: italic; font-weight: normal}
+	EM.EMPHASIS {font-style: italic; font-weight: normal}
+	EM.MANUALTITLE {font-style: italic; font-weight: normal}
+	EM.VARIABLE {font-style: italic; font-weight: normal}
+	EM.VARNAME {font-style: italic;}
+	EM.VERSIONVARIABLE {font-style: italic; font-weight: normal}
+
+/* apply bold and italic emphasis */	
+	EM.MSGTEXT {font-weight: bold; font-style: italic}
+
+
+/* table formating styles */
+	TABLE {background-color: white; font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
+	TABLE.TABLENOTITLE TR.HEADERROW {background-color: #263329}
+	TABLE.TABLENOTITLE TR.ODDROW {background-color: #edeeec}
+	TABLE.TABLENOTITLE TR.EVENROW {background-color: #babdb6}
+	TABLE.TABLEWITHTITLE TR.HEADERROW {background-color: #263329}
+	TABLE.TABLEWITHTITLE TR.ODDROW {font-size: 10pt; background-color: #edeeec}
+	TABLE.TABLEWITHTITLE TR.EVENROW {font-size: 10pt; background-color: #babdb6}
+	td {font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: normal; color: #000000;}
+
+/* step list formating styles */	
+	OL.LISTNUMBER {list-style-type: decimal}
+	OL.LISTNUMBERT {list-style-type: decimal}
+	OL.STEPLIST {list-style-type: decimal}
+	OL.LISTALPHA {list-style-type: lower-alpha}
+	OL.LISTNUMBERSUB {list-style-type: lower-alpha}
+	OL.LISTNUMBERTSUB {list-style-type: lower-alpha}
+	OL.STEPLISTSUB {list-style-type: lower-alpha}
+	OL.LISTALPHASUB {list-style-type: lower-alpha}
+
+/* bulleted list formatting styles */
+	UL {list-style-type: disc;}
+	UL.LISTBULLET {list-style-type: disc; list-style-image : none;}
+	UL.LISTBULLETT {list-style-type: disc; list-style-image : none;}
+	UL.LISTCHECKBOX {list-style-image : url("images/checkbox.gif"); list-style-type: square;}
+
+/* superscript and subscript formating styles */	
+	SPAN.SUBSCRIPT {font-size: 8pt;}
+	SPAN.SUPERSCRIPT {font-size: 8pt;}
+	
+/* graphic formatting styles */	
+	img {line-height: normal}
+	br.img {line-height: normal}
+	
+	
