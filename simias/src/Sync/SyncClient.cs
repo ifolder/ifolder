@@ -272,6 +272,7 @@ namespace Simias.Sync.Client
 
 			// Start the Sync Thread.
 			syncThread = new Thread(new ThreadStart(StartSync));
+			syncThread.Priority = ThreadPriority.BelowNormal;
 			syncThread.Start();
 		}
 
