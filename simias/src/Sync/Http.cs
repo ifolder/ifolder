@@ -38,6 +38,7 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class SyncHeaders
 	{
+		public static string	SyncVersion = "SSyncVersion";
 		/// <summary>
 		/// 
 		/// </summary>
@@ -78,6 +79,10 @@ namespace Simias.Sync.Http
 		/// 
 		/// </summary>
 		public static string	CollectionID = "SSyncCollectionID";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	SyncContext = "SSyncContext";
 	}
 
 	/// <summary>
@@ -156,6 +161,7 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class HttpSyncProxy
 	{
+		static double				version = 1.0;
 		Collection					collection;
 		string						url;
 		string						userName;
@@ -199,6 +205,7 @@ namespace Simias.Sync.Http
 			request.Method = "POST";
 			request.PreAuthenticate = true;
 			WebHeaderCollection headers = request.Headers;
+			headers.Add(SyncHeaders.SyncVersion, version.ToString());
 			headers.Add(SyncHeaders.Method, method.ToString());
 			headers.Add(SyncHeaders.UserName, userName);
 			headers.Add(SyncHeaders.UserID, userID);
@@ -244,7 +251,7 @@ namespace Simias.Sync.Http
 		/// Returns the next set of NodeInfos.
 		/// </summary>
 		/// <returns></returns>
-		public SyncNodeInfo[] GetNextInfoList()
+		public SyncNodeInfo[] GetNextInfoList(out string context)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.GetNextInfoList);
 			request.ContentLength = 0;
@@ -257,6 +264,8 @@ namespace Simias.Sync.Http
 				{
 					throw new SimiasException(response.StatusDescription);
 				}
+				// Get the context;
+				context = response.Headers.Get(SyncHeaders.SyncContext);
 				// Get the size of the returned array.
 				int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
 				if (count == 0)
@@ -746,8 +755,10 @@ namespace Simias.Sync.Http
 		public void GetNextInfoList(HttpRequest request, HttpResponse response)
 		{
 			int count = 100;
-			SyncNodeInfo[] infoArray = service.NextNodeInfoList(ref count);
+			string context;
+			SyncNodeInfo[] infoArray = service.NextNodeInfoList(ref count, out context);
 			response.ContentType = "application/octet-stream";
+			response.AddHeader(SyncHeaders.SyncContext, context);
 			response.AddHeader(SyncHeaders.ObjectCount, count.ToString());
 			if (count > 0)
 			{

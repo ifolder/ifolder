@@ -123,6 +123,7 @@ namespace Simias.Sync
 		static Hashtable	collections;
 		EventSubscriber		storeEvents;
 		Queue				syncQueue;
+		Queue				priorityQueue;
 		ManualResetEvent	queueEvent;
 		Thread				syncThread;
 		bool				shuttingDown;
@@ -141,7 +142,11 @@ namespace Simias.Sync
 			lock (syncQueue)
 			{
 				// Queue the sync.
-				syncQueue.Enqueue(collectionClient);
+				CollectionSyncClient cc = collectionClient as CollectionSyncClient;
+				if (cc.HighPriority)
+					priorityQueue.Enqueue(cc);
+				else
+					syncQueue.Enqueue(collectionClient);
 				queueEvent.Set();
 			}
 		}
@@ -232,13 +237,20 @@ namespace Simias.Sync
 					CollectionSyncClient cClient;
 					lock (syncQueue)
 					{
-						if (syncQueue.Count == 0)
+						if (priorityQueue.Count != 0)
 						{
-							queueEvent.Reset();
-							break;
+							cClient = priorityQueue.Dequeue() as CollectionSyncClient;
 						}
+						else
+						{
+							if (syncQueue.Count == 0)
+							{
+								queueEvent.Reset();
+								break;
+							}
 
-						cClient = (CollectionSyncClient)syncQueue.Dequeue();
+							cClient = syncQueue.Dequeue() as CollectionSyncClient;
+						}
 					}
 					if (!shuttingDown || !paused)
 					{
@@ -331,6 +343,7 @@ namespace Simias.Sync
 			storeEvents.NodeDeleted +=new NodeEventHandler(storeEvents_NodeDeleted);
 
 			syncQueue = new Queue();
+			priorityQueue = new Queue();
 			queueEvent = new ManualResetEvent(false);
 			collections = new Hashtable();
 
@@ -455,6 +468,11 @@ namespace Simias.Sync
 					return true;
 				return false;
 			}
+		}
+
+		internal bool HighPriority
+		{
+			get { return collection.Priority == 0 ? true : false; }
 		}
 
 		#endregion
@@ -604,8 +622,10 @@ namespace Simias.Sync
 				new Simias.Domain.DomainAgent().CreateMaster(collection);
 			}
 			
-			// Sync the file system with the local store.
-			fileMonitor.CheckForFileChanges();
+			// Only syncronize local changes when we have finished with the 
+			// Server side changes.
+			if (workArray.DownCount == 0)
+				fileMonitor.CheckForFileChanges();
 			if (collection.Role != SyncRoles.Slave)
 				return;
 
@@ -679,7 +699,7 @@ namespace Simias.Sync
 								if (si.ChangesOnly)
 								{
 									// We only need to look at the changed nodes.
-									ProcessChangedNodeStamps(cstamps);
+									ProcessChangedNodeStamps(cstamps, ref tempServerContext);
 								}
 								else
 								{
@@ -921,10 +941,12 @@ namespace Simias.Sync
 		/// Using the change node stamps, determine what sync work needs to be done.
 		/// </summary>
 		/// <param name="cstamps">The client changes.</param>
-		private void ProcessChangedNodeStamps(SyncNodeInfo[] cstamps)
+		/// <param name="context">The sync context.</param>
+		private void ProcessChangedNodeStamps(SyncNodeInfo[] cstamps, ref string context)
 		{
 			SyncNodeInfo[] infoList;
-			while ((infoList = service.GetNextInfoList()) != null)
+			string tempContext;
+			while ((infoList = service.GetNextInfoList(out tempContext)) != null)
 			{
 				foreach(SyncNodeInfo nodeInfo in infoList)
 				{
@@ -936,6 +958,8 @@ namespace Simias.Sync
 			{
 				workArray.AddNodeToServer(cstamps[i]);
 			}
+			if (tempContext != null)
+				context = tempContext;
 		}
 
 		
@@ -954,7 +978,8 @@ namespace Simias.Sync
 
 			// Add all of the server nodes to the hashtable and then we can reconcile them
 			// against the client nodes.
-			while ((sstamps = service.GetNextInfoList()) != null)
+			string context;
+			while ((sstamps = service.GetNextInfoList(out context)) != null)
 			{
 				foreach (SyncNodeInfo sStamp in sstamps)
 				{
@@ -1028,16 +1053,23 @@ namespace Simias.Sync
 		private void ExecuteSync()
 		{
 			nodesToSync = workArray.Count;
-			// Get the updates from the server.
-			ProcessDeleteOnClient();
-			ProcessNodesFromServer();
-			ProcessDirsFromServer();
-			ProcessFilesFromServer();
-			// Push the updates from the client.
-			ProcessDeleteOnServer();
-			ProcessNodesToServer();
-			ProcessDirsToServer();
-			ProcessFilesToServer();
+
+			if (workArray.DownCount != 0)
+			{
+				// Get the updates from the server.
+				ProcessDeleteOnClient();
+				ProcessNodesFromServer();
+				ProcessDirsFromServer();
+				ProcessFilesFromServer();
+			}
+			else
+			{
+				// Push the updates from the client.
+				ProcessDeleteOnServer();
+				ProcessNodesToServer();
+				ProcessDirsToServer();
+				ProcessFilesToServer();
+			}
 		}
 
 		/// <summary>

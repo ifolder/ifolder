@@ -127,6 +127,7 @@ namespace Simias.Sync
 		SyncPolicy		policy;
 		string			sessionID;
 		IEnumerator		nodeContainer;
+		string			syncContext;
 		bool			getAllNodes;
 		const int		MaxBuffSize = 1024 * 64;
         
@@ -182,6 +183,7 @@ namespace Simias.Sync
 			this.sessionID = sessionID;
 			si.Status = StartSyncStatus.Success;
 			rights = si.Access = Access.Rights.Deny;
+			syncContext = si.Context;
 			cLock = null;
 			nodeContainer = null;
 			getAllNodes = false;
@@ -231,7 +233,8 @@ namespace Simias.Sync
 					if (si.ChangesOnly)
 					{
 						// we only need the changes.
-						nodeContainer = this.BeginListChangedNodes(ref si.Context, out si.ChangesOnly);
+						nodeContainer = this.BeginListChangedNodes(out si.ChangesOnly);
+						si.Context = syncContext;
 						// Check if we have any work to do
 						if (si.ChangesOnly && !si.ClientHasChanges && nodeContainer == null)
 						{
@@ -254,8 +257,8 @@ namespace Simias.Sync
 						try
 						{
 							// We need to get all of the nodes.
-							si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
 							nodeContainer = this.BeginListAllNodes();
+							si.Context = syncContext;
 						}
 						finally
 						{
@@ -281,9 +284,11 @@ namespace Simias.Sync
 		/// 
 		/// </summary>
 		/// <param name="count"></param>
+		/// <param name="context"></param>
 		/// <returns></returns>
-		public SyncNodeInfo[] NextNodeInfoList(ref int count)
+		public SyncNodeInfo[] NextNodeInfoList(ref int count, out string context)
 		{
+			context = syncContext;
 			if (nodeContainer == null)
 			{
 				count = 0;
@@ -315,10 +320,14 @@ namespace Simias.Sync
 					infoArray[i++] = new SyncNodeInfo((ChangeLogRecord)nodeContainer.Current);
 					if (!nodeContainer.MoveNext())
 					{
-						nodeContainer = null;
+						bool valid;
+						nodeContainer = BeginListChangedNodes(out valid);
+						if (nodeContainer == null)
+							break;
 						break;
 					}
 				}
+				context = syncContext;
 			}
 			count = i;
 			return infoArray;
@@ -334,6 +343,8 @@ namespace Simias.Sync
 			if (!IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
+			syncContext = new ChangeLogReader(collection).GetEventContext().ToString();
+							
 			IEnumerator enumerator = collection.GetEnumerator();
 			if (!enumerator.MoveNext())
 			{
@@ -347,10 +358,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="context"></param>
 		/// <param name="contextValid"></param>
 		/// <returns></returns>
-		private IEnumerator BeginListChangedNodes(ref string context, out bool contextValid)
+		private IEnumerator BeginListChangedNodes(out bool contextValid)
 		{
 			log.Debug("BeginListChangedNodes Start");
 
@@ -361,10 +371,10 @@ namespace Simias.Sync
 			try
 			{	
 				// Read the cookie from the last sync and then get the changes since then.
-				if (context != null)
+				if (syncContext != null)
 				{
 					ArrayList changeList = null;
-					eventContext = new EventContext(context);
+					eventContext = new EventContext(syncContext);
 					logReader.GetEvents(eventContext, out changeList);
 					enumerator = changeList.GetEnumerator();
 					if (!enumerator.MoveNext())
@@ -372,7 +382,7 @@ namespace Simias.Sync
 						enumerator = null;
 					}
 					log.Debug("BeginListChangedNodes End. Found {0} changed nodes.", changeList.Count);
-					context = eventContext.ToString();
+					syncContext = eventContext.ToString();
 					contextValid = true;
 					getAllNodes = false;
 					return enumerator;
@@ -386,7 +396,7 @@ namespace Simias.Sync
 			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
 			eventContext = logReader.GetEventContext();
 			if (eventContext != null)
-				context = eventContext.ToString();
+				syncContext = eventContext.ToString();
 			log.Debug("BeginListChangedNodes End");
 			contextValid = false;
 			return null;
