@@ -100,8 +100,35 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 - (IBAction)saveLog:(id)sender
 {
-	NSLog(@"Save the log");
+	int result;
+	NSSavePanel *sPanel = [NSSavePanel savePanel];
+	
+	result = [sPanel runModalForDirectory:NSHomeDirectory() file:nil];
+	
+	if (result == NSOKButton)
+	{
+		NSOutputStream *outStream = 
+			[NSOutputStream outputStreamToFileAtPath:[sPanel filename] append:NO];
+		if(outStream != nil)
+		{
+			[outStream open];
+			NSArray *logArray;
+			int logCounter;
+			logArray = [[[NSApp delegate] logArrayController] arrangedObjects];
+			
+			for(logCounter=0; logCounter < [logArray count]; logCounter++)
+			{
+				NSString *logEntry = 
+					[NSString stringWithFormat:@"%@\n", [logArray objectAtIndex:logCounter] ];
+				[outStream write:[logEntry cString] maxLength:[logEntry length]];
+			}
+			[outStream close];
+		}
+		else
+			NSLog(@"Unable to open file for log: %@", [sPanel filename]);
+	}
 }
+
 
 
 
@@ -109,6 +136,7 @@ static SyncLogWindowController *syncLogInstance = nil;
 {
 	[toolbar setVisible:![toolbar isVisible]];
 }
+
 
 
 

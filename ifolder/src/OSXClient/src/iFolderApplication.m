@@ -150,14 +150,22 @@
 
 
 
+
 //===================================================================
 // clearLog
 // clears the log
 //===================================================================
 - (void)clearLog
 {
-	[[logController arrangedObjects] removeAllObjects];
+	if([[logController arrangedObjects] count] > 0)
+	{
+		NSIndexSet *allIndexes = [[NSIndexSet alloc]
+								initWithIndexesInRange:
+								NSMakeRange(0,[[logController arrangedObjects] count])];
+		[logController removeObjectsAtArrangedObjectIndexes:allIndexes];
+	}
 }
+
 
 
 
@@ -170,6 +178,7 @@
 {
 	return logController;
 }
+
 
 
 
