@@ -23,8 +23,10 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 
-.PHONY: package package-sdk package-clean package-install package-uninstall
+.PHONY: package package-clean
 
-package package-sdk package-clean package-install package-uninstall:
-	$(MAKE) -C package $@
+package:
+	$(MAKE) -C package all
 
+package-clean:
+	$(MAKE) -C package clean
