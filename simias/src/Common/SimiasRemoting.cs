@@ -113,7 +113,13 @@ namespace Simias
 
 		public static string Host
 		{
-			get { return Get(HostKey, MyDns.GetHostName()); }
+			get 
+			{ 
+				if(config == null)
+					return MyDns.GetHostName();
+				else
+					return Get(HostKey, MyDns.GetHostName()); 
+			}
 			set { Set(HostKey, value); }
 		}
 
