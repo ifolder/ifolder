@@ -62,6 +62,59 @@ static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
 
 /**
+ * FIXME: Once nautilus-extension provides an API for being able to randomly
+ * get a NautilusFileInfo * by specifying a file URI, this code that saves off
+ * all the NautilusFileInfo * can be removed/replaced.
+ * 
+ * seen_nautilus_file_infos will only be a collection of valid NautilusFileInfo
+ * objects indexed by the file uri.
+ */
+static GHashTable *seen_nautilus_file_infos;
+
+/* This function is called when the GObject (NautilusFileInfo) is finalized. */
+static void
+nautilus_file_info_weak_ref_cb (gpointer user_data, GObject *old_object_loc)
+{
+	/**
+	 * user_data points to the memory address of the file uri which is the
+	 * key into the hash table.
+	 */
+	gchar *uri = (gchar *)user_data;
+	g_hash_table_remove (seen_nautilus_file_infos, uri);
+	
+	/* free the memory used by uri */
+	g_free (uri);
+}
+
+static gboolean
+nautilus_file_info_foreach_remove (gpointer key, 
+								   gpointer value, 
+								   gpointer user_data)
+{
+	g_object_weak_unref (G_OBJECT (value), 
+						 nautilus_file_info_weak_ref_cb, 
+						 user_data);
+						 
+	/**
+	 * key is the file uri and now that we're removing it from the hash table
+	 * its memory needs to be freed
+	 */
+	gchar *uri = (gchar *)key;
+	g_free (uri);
+						 
+	return TRUE;
+}
+
+static void
+nautilus_file_info_invalidate (gpointer key,
+							   gpointer value,
+							   gpointer user_data)
+{
+	NautilusFileInfo *file = (NautilusFileInfo *)value;
+	nautilus_file_info_invalidate_extension_info (file);
+}
+
+/**
  * gSOAP
  */
 char *soapURL = NULL;
@@ -373,6 +426,8 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 {
 	g_print ("--> ifolder_nautilus_update_file_info called\n");
 	
+	gchar *uri;
+	
 	/* Don't do anything if the specified file is not a directory. */
 	if (!nautilus_file_info_is_directory (file))
 		return NAUTILUS_OPERATION_COMPLETE;
@@ -385,6 +440,15 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	} else {
 		g_print ("*** iFolder is NOT running\n");
 	}
+
+	/* FIXME: Temporary fix to keep track of NautilusFileInfo * */
+	uri = nautilus_file_info_get_uri (file);
+	g_object_weak_ref (G_OBJECT (file),
+					   nautilus_file_info_weak_ref_cb,
+					   uri);
+	g_hash_table_insert (seen_nautilus_file_infos,
+					 	 uri,	/* key */
+					 	 file);	/* value */
 
 	return NAUTILUS_OPERATION_COMPLETE;
 }
@@ -677,6 +741,24 @@ ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 					ifolder_dialog_thread,
 					item);
 }
+
+static void
+ifolder_invalidate_fileinfos_callback (NautilusMenuItem *item, gpointer user_data)
+{
+	g_print ("Invalidate NautilusFileInfos selected\n");
+	
+	NautilusFileInfo *file = 
+		(NautilusFileInfo *)g_hash_table_lookup (seen_nautilus_file_infos,
+												 "file:///home/boyd/download");
+												 
+	if (file) {
+		nautilus_file_info_invalidate_extension_info (file);
+	}
+	/* call an invalidate for every item in the hash table */
+//	g_hash_table_foreach (seen_nautilus_file_infos,
+//						  nautilus_file_info_invalidate,
+//						  NULL);
+}
  
 static GList *
 ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
@@ -776,6 +858,17 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 					nautilus_file_info_list_copy (files));
 		g_object_set_data_full (G_OBJECT (item), "parent_window",
 								g_object_ref (window), g_object_unref);
+		items = g_list_append (items, item);
+		
+		/* Debug test: Invalidate NautilusFileInfos */
+		/* Menu item: Help */
+		item = nautilus_menu_item_new ("NautilusiFolder::ifolder_debug",
+					_("Invalidate NautilusFileInfos"),
+					_("Force the emblems to be re-read"),
+					"ifolder-folder");
+		g_signal_connect (item, "activate",
+					G_CALLBACK (ifolder_invalidate_fileinfos_callback),
+					provider);
 		items = g_list_append (items, item);
 	} else {
 		/**
@@ -920,6 +1013,9 @@ nautilus_module_initialize (GTypeModule *module)
 	provider_types[0] = ifolder_nautilus_get_type ();
 	
 	soapURL = getLocalServiceUrl ();
+	
+	/* Initialize the GHashTable */
+	seen_nautilus_file_infos = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 void
@@ -931,6 +1027,12 @@ nautilus_module_shutdown (void)
 	if (soapURL) {
 		free (soapURL);
 	}
+	
+	/* Cleanup the GHashTable */
+	g_hash_table_foreach_remove (seen_nautilus_file_infos,
+								 nautilus_file_info_foreach_remove,
+								 NULL);
+	g_hash_table_destroy (seen_nautilus_file_infos);
 }
 
 void
