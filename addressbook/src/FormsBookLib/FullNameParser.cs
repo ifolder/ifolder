@@ -68,7 +68,7 @@ namespace Novell.iFolder.FormsBookLib
 				}
 
 				// Get the suffix.
-				Regex suffix = new Regex(" i| ii| iii| jr| jr.| sr| sr.", RegexOptions.IgnoreCase);
+				Regex suffix = new Regex(" i| ii| iii| jr| jr.| sr| sr.| esq| esq.| md| m.d.", RegexOptions.IgnoreCase);
 				Match matchSuffix = suffix.Match(fullName);
 				if (matchSuffix.Success)
 				{
