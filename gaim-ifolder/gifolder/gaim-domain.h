@@ -38,6 +38,16 @@ void simias_update_member(const char *account_name, const char *account_prpl_id,
 						  const char *buddy_name, const char *machine_name);
 
 /**
+ * Gets the machineName, userID, and simiasURL for the current Gaim Domain Owner.
+ *
+ * This method returns 0 on success.  If success is returned, the machineName,
+ * userID, and simiasURL parameters will have had new strings allocated to them
+ * and need to be freed.  If there is an error, the output parameters are
+ * invalid and do not need to be freed.
+ */
+int simias_get_user_info(char **machineName, char **userID, char **simiasURL);
+
+/**
  * Gets the user public key that should be used.  This function first checks
  * the custom plugin setting to see if we already have a public/private key
  * stored in the Gaim configuration.  If so, it just returns the public key
@@ -52,13 +62,35 @@ void simias_update_member(const char *account_name, const char *account_prpl_id,
 int simias_get_public_key(char **public_key);
 
 /**
- * Gets the machineName, userID, and simiasURL for the current Gaim Domain Owner.
+ * Gets the user private key that should be used.  This function first checks
+ * the custom plugin setting to see if we already have a public/private key
+ * stored in the Gaim configuration.  If so, it just returns the private key
+ * directly from the configuration.  If the private key is not in the Gaim
+ * configuration, it will call the GaimDomainService WebService to get the key
+ * pair and will store it in the Gaim configuration for future calls.
  *
- * This method returns 0 on success.  If success is returned, the machineName,
- * userID, and simiasURL parameters will have had new strings allocated to them
- * and need to be freed.  If there is an error, the output parameters are
- * invalid and do not need to be freed.
+ * This method returns 0 on success.  If success is returned, the private_key
+ * will have a newly allocated char * that should be freed by the caller.  If
+ * there is an error, private_key will be invalid and does not need to be freed.
  */
-int simias_get_user_info(char **machineName, char **userID, char **simiasURL);
+int simias_get_private_key(char **private_key);
+
+/**
+ * Uses rsaCryptoXml (.NET XML String for a RSACryptoServiceProvider), to
+ * encrypt unencrypted_string.  Returns 0 if successful, in which case
+ * encrypted_string will be valid and needs to be freed.  If there was an
+ * error, the function returns a negative int and the encrypted_string is
+ * invalid and does not need to be freed.
+ */
+int simias_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_string, char **encrypted_string);
+
+/**
+ * Uses rsaCryptoXml (.NET XML String for a RSACryptoServiceProvider), to
+ * decrypt encrypted_string.  Returns 0 if successful, in which case
+ * decrypted_string will be valid and needs to be freed.  If there was an
+ * error, the function returns a negative int and the decrypted_string is
+ * invalid and does not need to be freed.
+ */
+int simias_decrypt_string(const char *rsaCryptoXml, const char *encrypted_string, char **decrypted_string);
 
 #endif

@@ -55,6 +55,13 @@ static char *the_soap_url = NULL;
 static char *simias_get_user_profile_dir_path(char *dest_path);
 static char *parse_local_service_url(FILE *file);
 
+/**
+ * Retrieves the RSACryptoProvider (public and private keys) for the first time
+ * from Simias and stores them as a plugin setting in Gaim.
+ */
+int setup_keypair();
+
+
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
 static char *get_soap_url(gboolean reread_config);
@@ -136,10 +143,7 @@ int
 simias_get_public_key(char **public_key)
 {
 	const char *existing_public_key;
-	char *soap_url;
-	struct soap soap;
-	struct _ns1__GetRSACredential req;
-	struct _ns1__GetRSACredentialResponse resp;
+	int err;
 	
 	if (gaim_prefs_exists(SIMIAS_PREF_PUBLIC_KEY))
 	{
@@ -155,23 +159,93 @@ simias_get_public_key(char **public_key)
 		}
 	}
 
+
+	err = setup_keypair();
+	if (err != 0)
+	{
+		fprintf(stderr, "There was an error retrieving the public/private key pair from Simias.  Is iFolder/Simias running?\n");
+		return -2;
+	}
+	
+	/* Now that we've gotten this far, call this method again to return the key */
+	return simias_get_public_key(public_key);
+}
+
+/**
+ * Gets the user private key that should be used.  This function first checks
+ * the custom plugin setting to see if we already have a public/private key
+ * stored in the Gaim configuration.  If so, it just returns the private key
+ * directly from the configuration.  If the private key is not in the Gaim
+ * configuration, it will call the GaimDomainService WebService to get the key
+ * pair and will store it in the Gaim configuration for future calls.
+ *
+ * This method returns 0 on success.  If success is returned, the private_key
+ * will have a newly allocated char * that should be freed by the caller.  If
+ * there is an error, private_key will be invalid and does not need to be freed.
+ */
+int
+simias_get_private_key(char **private_key)
+{
+	const char *existing_private_key;
+	int err;
+	
+	if (gaim_prefs_exists(SIMIAS_PREF_PRIVATE_KEY))
+	{
+		existing_private_key = gaim_prefs_get_string(SIMIAS_PREF_PUBLIC_KEY);
+		if (existing_private_key)
+		{
+			*private_key = strdup(existing_private_key);
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	err = setup_keypair();
+	if (err != 0)
+	{
+		fprintf(stderr, "There was an error retrieving the public/private key pair from Simias.  Is iFolder/Simias running?\n");
+		return -2;
+	}
+	
+	/* Now that we've gotten this far, call this method again to return the key */
+	return simias_get_private_key(private_key);
+}
+
+/**
+ * Retrieves the RSACryptoProvider (public and private keys) for the first time
+ * from Simias and stores them as a plugin setting in Gaim.
+ */
+int
+setup_keypair()
+{
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__GetRSACredential req;
+	struct _ns1__GetRSACredentialResponse resp;
+
 	/* We need to go get the public/private key from Simias */
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
-		return -2;
+		fprintf(stderr, "get_soap_url() returned NULL inside setup_keypair()\n");
+		return -1;
 	}
 	
 	init_gsoap(&soap);
 	soap_call___ns1__GetRSACredential(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
+		fprintf(stderr, "Error calling soap_call___ns1__GetRSACredential() in setup_keypair()\n");
 		soap_print_fault(&soap, stderr);
 		cleanup_gsoap(&soap);
-		return -3;
+		return -2;
 	}
 
 	if (resp.GetRSACredentialResult != true_)
 	{
-		return -4;
+		fprintf(stderr, "soap_call___ns1__GetRSACredential() returned FALSE\n");
+		return -3;
 	}
 	
 	/**
@@ -180,8 +254,6 @@ simias_get_public_key(char **public_key)
 	 */
 	gaim_prefs_add_string(SIMIAS_PREF_PUBLIC_KEY, resp.PublicCredential);
 	gaim_prefs_add_string(SIMIAS_PREF_PRIVATE_KEY, resp.PrivateCredential);
-	
-	*public_key = strdup(resp.PublicCredential);
 	
 	cleanup_gsoap(&soap);
 
@@ -231,6 +303,91 @@ soap_print_fault(&soap, stderr);
 	return 0;
 }
 
+/**
+ * Uses rsaCryptoXml (.NET XML String for a RSACryptoServiceProvider), to
+ * encrypt unencrypted_string.  Returns 0 if successful, in which case
+ * encrypted_string will be valid and needs to be freed.  If there was an
+ * error, the function returns a negative int and the encrypted_string is
+ * invalid and does not need to be freed.
+ */
+int
+simias_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_string, char **encrypted_string)
+{
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__EncryptString req;
+	struct _ns1__EncryptStringResponse resp;
+	
+	soap_url = get_soap_url(TRUE);
+	if (!soap_url) {
+		return -1;
+	}
+
+	/* Setup the Request */
+	req.RsaCryptoXml = (char *)rsaCryptoXml;
+	req.UnencryptedString = (char *)unencrypted_string;
+	
+	init_gsoap(&soap);
+	soap_call___ns1__EncryptString(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		fprintf(stderr, "Error calling soap_call___ns1__EncryptString() in simias_encrypt_string()\n");
+		soap_print_fault(&soap, stderr);
+		cleanup_gsoap(&soap);
+		return -2;
+	}
+
+	if (resp.EncryptStringResult)
+	{
+		*encrypted_string = strdup(resp.EncryptStringResult);
+	}
+	
+	cleanup_gsoap(&soap);
+
+	return 0;
+}
+
+/**
+ * Uses rsaCryptoXml (.NET XML String for a RSACryptoServiceProvider), to
+ * decrypt encrypted_string.  Returns 0 if successful, in which case
+ * decrypted_string will be valid and needs to be freed.  If there was an
+ * error, the function returns a negative int and the decrypted_string is
+ * invalid and does not need to be freed.
+ */
+int
+simias_decrypt_string(const char *rsaCryptoXml, const char *encrypted_string, char **decrypted_string)
+{
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__DecryptString req;
+	struct _ns1__DecryptStringResponse resp;
+	
+	soap_url = get_soap_url(TRUE);
+	if (!soap_url) {
+		return -1;
+	}
+
+	/* Setup the Request */
+	req.RsaCryptoXml = (char *)rsaCryptoXml;
+	req.EncryptedString = (char *)encrypted_string;
+	
+	init_gsoap(&soap);
+	soap_call___ns1__DecryptString(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		fprintf(stderr, "Error calling soap_call___ns1__DecryptString() in simias_decrypt_string()\n");
+		soap_print_fault(&soap, stderr);
+		cleanup_gsoap(&soap);
+		return -2;
+	}
+
+	if (resp.DecryptStringResult)
+	{
+		*decrypted_string = strdup(resp.DecryptStringResult);
+	}
+	
+	cleanup_gsoap(&soap);
+
+	return 0;
+}
 
 /**
  * Utility functions for gSOAP

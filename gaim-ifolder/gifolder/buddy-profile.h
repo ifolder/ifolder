@@ -34,7 +34,7 @@
 #include "connection.h"
 #include "notify.h"
 
-#define SIMIAS_PLUGIN_INSTALLED_ID "[simias:plugin-installed]"
+#define SIMIAS_PLUGIN_INSTALLED_ID "[simias:plugin-installed:"
 
 void simias_get_buddy_profile(GaimBuddy *buddy);
 void simias_set_buddy_profile(GaimAccount *account, const char *profile_str);

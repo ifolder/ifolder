@@ -28,21 +28,21 @@
 #ifndef _SIMIAS_MESSAGES_H
 #define _SIMIAS_MESSAGES_H 1
 
-#include <glib.h>
-
-#include "account.h"
-#include "blist.h"
-
-#define PING_REQUEST_MSG		"[simias:ping-request:"
-#define PING_RESPONSE_MSG		"[simias:ping-response:"
+#define INVITATION_REQUEST_MSG	"[simias:invitation-request:"
+#define INVITATION_DENY_MSG		"[simias:invitation-deny]"
+#define INVITATION_ACCEPT_MSG	"[simias:invitation-accept:"
+#define INVITATION_COMPLETE_MSG	"[simias:invitation-complete:"
 
 /****************************************************
  * Type Definitions                                 *
  ****************************************************/
 typedef enum
 {
-	PING_REQUEST,
-	PING_RESPONSE
+	UNKNOWN_MSG_TYPE,
+	INVITATION_REQUEST,
+	INVITATION_DENY,
+	INVITATION_ACCEPT,
+	INVITATION_COMPLETE
 } SIMIAS_MSG_TYPE;
 
 /****************************************************
@@ -50,9 +50,33 @@ typedef enum
  ****************************************************/
 int simias_send_msg(GaimBuddy *recipient, char *msg);
 
-int simias_send_ping_req(GaimBuddy *recipient);
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-request:<Base64Encoded Public Key>]
+ */
+int simias_send_invitation_request(GaimBuddy *recipient);
 
-int simias_send_ping_resp(GaimBuddy *recipient);
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-deny]
+ */
+int simias_send_invitation_deny(GaimBuddy *recipient);
+
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded symmetric key encrypted with the recipient's public key>]
+ */
+int simias_send_invitation_accept(GaimBuddy *recipient);
+
+/**
+ * This function sends a message with the following format:
+ *
+ * [simias:invitation-complete:<Base64Encoded symmetric key encrypted with the recipient's public key>]
+ */
+int simias_send_invitation_complete(GaimBuddy *recipient);
 
 gboolean simias_receiving_im_msg_cb(GaimAccount *account, char **sender,
 									char **buffer, int *flags, void *data);
