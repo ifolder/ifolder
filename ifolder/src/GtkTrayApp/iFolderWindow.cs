@@ -2449,11 +2449,11 @@ namespace Novell.iFolder
 					if(args.Delete)
 					{
 						UpdateStatus(string.Format(Util.GS(
-									"Deleting local file {0}"), args.Name));
+									"Deleting file {0}"), args.Name));
 						if(SyncFileName != args.Name)
 						{
 							LogMessage(string.Format(Util.GS(
-									"Deleing local file {0}"), args.Name));
+									"Deleing file {0}"), args.Name));
 							SyncFileName = args.Name;
 						}
 					}
