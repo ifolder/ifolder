@@ -98,7 +98,7 @@ namespace Simias.Web
 		/// Returns a list of collections in the store.
 		/// </summary>
 		/// <returns>An array of BrowserNode objects.</returns>
-		[ WebMethod ]
+		[ WebMethod( true ) ]
 		[ SoapDocumentMethod ]
 		public BrowserNode[] EnumerateCollections()
 		{

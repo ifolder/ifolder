@@ -114,12 +114,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Global.asmx.cs"
-                    DependentUpon = "Global.asax"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Simias.asmx"
                     BuildAction = "Content"
                 />
