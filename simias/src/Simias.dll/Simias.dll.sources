@@ -54,7 +54,7 @@ AssemblyInfo.cs
 ../Location/Library/mDnsLocationProvider.cs
 ../POBox/POBox.cs
 ../POBox/Message.cs
-../POBox/Invitation.cs
+../POBox/Subscription.cs
 ../RemotingSniffer/Library/SnifferClientChannelSink.cs
 ../RemotingSniffer/Library/SnifferClientChannelSinkProvider.cs
 ../RemotingSniffer/Library/SnifferMessage.cs

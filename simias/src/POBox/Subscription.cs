@@ -27,51 +27,51 @@ using Simias.Storage;
 namespace Simias.POBox
 {
 	/// <summary>
-	/// Invitation states.
+	/// Subscription states.
 	/// </summary>
-	public enum InvitationState
+	public enum SubscriptionState
 	{
 		/// <summary>
-		/// The invitation has been created but not sent.
+		/// The Subscription has been created but not sent.
 		/// </summary>
 		Pending,
 
 		/// <summary>
-		/// The invitation has been sent.
+		/// The Subscription has been sent.
 		/// </summary>
 		Invited,
 
 		/// <summary>
-		/// The invitation, a request to join, has been sent.
+		/// The Subscription, a request to join, has been sent.
 		/// </summary>
 		Posted,
 
 		/// <summary>
-		/// The invitation, a request to join, has been rejected.
+		/// The Subscription, a request to join, has been rejected.
 		/// </summary>
 		Rejected,
 
 		/// <summary>
-		/// The invitation has been accepted.
+		/// The Subscription has been accepted.
 		/// </summary>
 		Accepted,
 
 		/// <summary>
-		/// The invitation has been declined.
+		/// The Subscription has been declined.
 		/// </summary>
 		Declined
 	};
 
 	/// <summary>
-	/// An Invitation object is a specialized message used for inviting someone to a team space.
+	/// An Subscription object is a specialized message used for inviting someone to a team space.
 	/// </summary>
-	public class Invitation : Message
+	public class Subscription : Message
 	{
 		#region Class Members
 		/// <summary>
-		/// The name of the property storing the InvitationState.
+		/// The name of the property storing the SubscriptionState.
 		/// </summary>
-		public const string InvitationStateProperty = "InvitationState";
+		public const string SubscriptionStateProperty = "SubscriptionState";
 
 		/// <summary>
 		/// The name of the property storing the recipient's public key.
@@ -86,22 +86,22 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the collection name.
 		/// </summary>
-		public const string InvitationCollectionNameProperty = "InvitationCollectionName";
+		public const string SubscriptionCollectionNameProperty = "SubscriptionCollectionName";
 
 		/// <summary>
 		/// The name of the property storing the collection ID.
 		/// </summary>
-		public const string InvitationCollectionIdProperty = "InvitationCollectionId";
+		public const string SubscriptionCollectionIdProperty = "SubscriptionCollectionId";
 
 		/// <summary>
 		/// The name of the property storing the collection types.
 		/// </summary>
-		public const string InvitationCollectionTypesProperty = "InvitationCollectionTypes";
+		public const string SubscriptionCollectionTypesProperty = "SubscriptionCollectionTypes";
 
 		/// <summary>
 		/// The name of the property storing the collection master URL.
 		/// </summary>
-		public const string InvitationCollectionURLProperty = "InvitationCollectionURL";
+		public const string SubscriptionCollectionURLProperty = "SubscriptionCollectionURL";
 
 		/// <summary>
 		/// The name of the property storing the collection description.
@@ -121,72 +121,72 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the rights requested/granted.
 		/// </summary>
-		public const string InvitationRightsProperty = "InvitationRights";
+		public const string SubscriptionRightsProperty = "SubscriptionRights";
 		#endregion
 
 		#region Constructors
 		/// <summary>
-		/// Constructor for creating a new Invitation object.
+		/// Constructor for creating a new Subscription object.
 		/// </summary>
 		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
 		/// <param name="shallowNode">ShallowNode object to create the Message object from.</param>
-		public Invitation(Collection collection, ShallowNode shallowNode) :
+		public Subscription(Collection collection, ShallowNode shallowNode) :
 			base (collection, shallowNode)
 		{
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Invitation object.
+		/// Constructor for creating a new Subscription object.
 		/// </summary>
-		/// <param name="invitationName">The friendly name of the invitation.</param>
+		/// <param name="SubscriptionName">The friendly name of the Subscription.</param>
 		/// <param name="messageType">The type of the message.</param>
-		public Invitation(string invitationName, string messageType) :
-			base (invitationName, messageType)
+		public Subscription(string subscriptionName, string messageType) :
+			base (subscriptionName, messageType)
 		{
-			InviteState = InvitationState.Pending;
+			InviteState = SubscriptionState.Pending;
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Invitation object.
+		/// Constructor for creating a new Subscription object.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The identity of the recipient.</param>
-		public Invitation(string messageName, string messageType, string toIdentity) :
+		public Subscription(string messageName, string messageType, string toIdentity) :
 			base (messageName, messageType, toIdentity)
 		{
-			InviteState = InvitationState.Pending;
+			InviteState = SubscriptionState.Pending;
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Invitation object.
+		/// Constructor for creating a new Subscription object.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
-		public Invitation(string messageName, string messageType, string toIdentity, string fromIdentity) :
+		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity) :
 			base (messageName, messageType, toIdentity, fromIdentity)
 		{
-			InviteState = InvitationState.Pending;
+			InviteState = SubscriptionState.Pending;
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Invitation object.
+		/// Constructor for creating a new Subscription object.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="toAddress">The recipient's address.</param>
-		public Invitation(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
+		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
 			base (messageName, messageType, toIdentity, fromIdentity, toAddress)
 		{
-			InviteState = InvitationState.Pending;
+			InviteState = SubscriptionState.Pending;
 		}
 
 		/// <summary>
-		/// Constructor for creating a new Invitation object.
+		/// Constructor for creating a new Subscription object.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
@@ -194,26 +194,26 @@ namespace Simias.POBox
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="toAddress">The recipient's address.</param>
 		/// <param name="fromAddress">The sender's address.</param>
-		public Invitation(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
+		public Subscription(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
 			base (messageName, messageType, toIdentity, fromIdentity, toAddress, fromAddress)
 		{
-			InviteState = InvitationState.Pending;
+			InviteState = SubscriptionState.Pending;
 		}
 		#endregion
 
 		#region Properties
 		/// <summary>
-		/// Gets/sets the state of the Invitation object.
+		/// Gets/sets the state of the Subscription object.
 		/// </summary>
-		public InvitationState InviteState
+		public SubscriptionState InviteState
 		{
 			get
 			{
-				return (InvitationState)Properties.GetSingleProperty(InvitationStateProperty).Value;
+				return (SubscriptionState)Properties.GetSingleProperty(SubscriptionStateProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(InvitationStateProperty, value);
+				Properties.ModifyProperty(SubscriptionStateProperty, value);
 			}
 		}
 
@@ -250,60 +250,60 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the name of the collection to share.
 		/// </summary>
-		public string InvitationCollectionName
+		public string SubscriptionCollectionName
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(InvitationCollectionNameProperty).Value;
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionNameProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(InvitationCollectionNameProperty, value);
+				Properties.ModifyProperty(SubscriptionCollectionNameProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the ID of the collection to share.
 		/// </summary>
-		public string InvitationCollectionId
+		public string SubscriptionCollectionId
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(InvitationCollectionIdProperty).Value;
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionIdProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(InvitationCollectionIdProperty, value);
+				Properties.ModifyProperty(SubscriptionCollectionIdProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the types of the collection to share.
 		/// </summary>
-		public string InvitationCollectionTypes
+		public string SubscriptionCollectionTypes
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(InvitationCollectionTypesProperty).Value;
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionTypesProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(InvitationCollectionTypesProperty, value);
+				Properties.ModifyProperty(SubscriptionCollectionTypesProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// Gets/sets the master URL of the collection to share.
 		/// </summary>
-		public string InvitationCollectionURL
+		public string SubscriptionCollectionURL
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(InvitationCollectionURLProperty).Value;
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionURLProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(InvitationCollectionURLProperty, value);
+				Properties.ModifyProperty(SubscriptionCollectionURLProperty, value);
 			}
 		}
 
@@ -355,15 +355,15 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the rights that will be granted on the shared collection.
 		/// </summary>
-		public Access.Rights InvitationRights
+		public Access.Rights SubscriptionRights
 		{
 			get
 			{
-				return (Access.Rights)Properties.GetSingleProperty(InvitationRightsProperty).Value;
+				return (Access.Rights)Properties.GetSingleProperty(SubscriptionRightsProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(InvitationRightsProperty, value);
+				Properties.ModifyProperty(SubscriptionRightsProperty, value);
 			}
 		}
 		#endregion

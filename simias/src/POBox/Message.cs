@@ -68,6 +68,11 @@ namespace Simias.POBox
 		public const string OutboundMessage = "Outbound";
 
 		/// <summary>
+		/// The name of the property storing the message type.
+		/// </summary>
+		public const string MessageTypeProperty = "MessageType";
+
+		/// <summary>
 		/// The name of the property storing the message state.
 		/// </summary>
 		public const string MessageStateProperty = "MessageState";
@@ -119,6 +124,21 @@ namespace Simias.POBox
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the type of the message.
+		/// </summary>
+		public string MessageType
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(MessageTypeProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(MessageTypeProperty, value);
+			}
+		}
+
 		/// <summary>
 		/// Gets/sets the state of the Message object.
 		/// </summary>
@@ -290,7 +310,7 @@ namespace Simias.POBox
 			base (messageName)
 		{
 			State = MessageState.New;
-			this.Properties.AddNodeProperty(PropertyTags.Types, messageType);
+			MessageType = messageType;
 		}
 
 		/// <summary>

@@ -94,9 +94,9 @@ namespace Simias.POBox
 		/// <param name="type">A string containing the type to search for.</param>
 		/// <returns>An ICSList object containing ShallowNode objects that represent the
 		/// Message object(s) that have the specified type.</returns>
-		public ICSList GetMessagesByType(string type)
+		public ICSList GetMessagesByMessageType(string type)
 		{
-			return this.GetNodesByType(type);
+			return this.Search(Message.MessageTypeProperty, type, SearchOp.Equal);
 		}
 		#endregion
 	}
