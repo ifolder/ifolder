@@ -8,7 +8,7 @@ SimiasClient_CSFILES := $(subst /,$(SEP),$(SimiasClient_CSFILES1))
 SimiasClient_INCLUDES =
 SimiasClient_RESOURCES =
 SimiasClient_FLAGS = $(CSC_LIBFLAG)
-SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Novell.Security.ClientPasswordManager.NetCredential.dll Novell.Security.ClientPasswordManager.PasswordDialog.dll
+SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(SimiasClient_CSFILES) $(srcdir)/SimiasSetup.cs.in
@@ -27,11 +27,11 @@ endif
 install-exec-local: SimiasClient.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SimiasClient.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.PasswordDialog.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.NetCredential.dll $(DESTDIR)$(webbindir)
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f SimiasClient.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.ClientPasswordManager.PasswordDialog.dll
+	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.ClientPasswordManager.NetCredential.dll
 	
 installcheck-local: install
 	

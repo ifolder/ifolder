@@ -9,4 +9,8 @@
       <Service name="Simias Domain Watcher" assembly="Simias" enabled="True" type="Thread" class="Simias.DomainWatcher.Service" />
     </setting>
   </section>
+  <section name="StoreProvider">
+    <setting name="Assembly" value="@StoreProviderAssembly@" />
+    <setting name="Type" value="@StoreProviderType@" />
+  </section>
 </configuration>

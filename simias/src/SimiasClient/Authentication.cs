@@ -78,19 +78,21 @@ namespace Simias.Client
 	{
 		private string domainID;
 		private string password;
-		private string dialogTitle;
-		private System.Object owner;
+//		private string dialogTitle;
+//		private System.Object owner;
 
 		/// <summary>
 		/// Static constructor to authenticate using the popup dialog
 		/// </summary>
-		public DomainAuthentication(string domainID, string title, System.Object o)
+		// CRG: took this constructor out because we can't do this
+		// it creates a dependency we can't have
+/*		public DomainAuthentication(string domainID, string title, System.Object o)
 		{
 			this.domainID = domainID;
 			this.dialogTitle = title;
 			this.owner = o;
 		}
-
+*/
 		/// <summary>
 		/// Static constructor to authenticate straight-away
 		/// </summary>
@@ -119,12 +121,14 @@ namespace Simias.Client
 				if (cInfo != null)
 				{
 					// If the user constructed without a password - popup
+					// CRG: This creates a dependency in Simias we can't have
+					// namely, a dependency on a GUI
 					if (this.password == null)
 					{
-						PasswordDialog pwdDlg = 
-							new PasswordDialog(this.dialogTitle, cInfo.Name);
-						pwdDlg.Invoke(this.owner);
-						this.password = pwdDlg.password;
+//						PasswordDialog pwdDlg = 
+//							new PasswordDialog(this.dialogTitle, cInfo.Name);
+//						pwdDlg.Invoke(this.owner);
+//						this.password = pwdDlg.password;
 					}
 
 					// Remote domain

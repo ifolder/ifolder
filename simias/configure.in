@@ -177,6 +177,8 @@ case $SIMIAS_OS in
         SHARED_LIB_FLAG='-shared'
         STORELIB="sqlite"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/darwin"
+		StoreProviderAssembly="SqliteProvider.dll"
+		StoreProviderType="Simias.Storage.Provider.Sqlite.SqliteProvider"
     ;;
     #
     # Linux-specific configuration
@@ -209,6 +211,8 @@ case $SIMIAS_OS in
 		LDOUT='-o'
 		# have to add this check on redhat for some reason
         AC_CHECK_PROG(CXX, g++, g++)
+		StoreProviderAssembly="Simias.dll"
+		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
     ;;
     #
     # Windows-specific configuration
@@ -279,6 +283,8 @@ case $SIMIAS_OS in
     	sbindir="${exec_prefix}"
     	libexecdir="${exec_prefix}"
     	libdir="${exec_prefix}"
+		StoreProviderAssembly="Simias.dll"
+		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
     ;;
 esac
 AC_SUBST(CDEF)
@@ -311,6 +317,8 @@ AC_SUBST(STORELIB)
 AC_SUBST(STORELIB_PATH)
 AC_SUBST(webdir)
 AC_SUBST(webbindir)
+AC_SUBST(StoreProviderAssembly)
+AC_SUBST(StoreProviderType)
 
 #
 # Set pkg-config variables
