@@ -10,8 +10,6 @@ AssemblyInfo.cs
 ../Channels/SimiasChannelFactory.cs
 ../CollectionStore/CollectionRootChangedEventArgs.cs
 ../CollectionStore/EventSubscriber.cs
-../CollectionStore/FileEventArgs.cs
-../CollectionStore/FileRenameEventArgs.cs
 ../CollectionStore/NodeEventArgs.cs
 ../CollectionStore/AccessControl.cs
 ../CollectionStore/BaseFileNode.cs
@@ -50,7 +48,6 @@ AssemblyInfo.cs
 ../Domain/DomainInfo.cs
 ../Domain/IDomainService.cs
 ../Domain/ProvisionInfo.cs
-../FsWatcher/FsWatcher.cs
 ../Location/DefaultLocationProvider.cs
 ../Location/ILocationProvider.cs
 ../Location/LocationProviderList.cs

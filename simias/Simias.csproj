@@ -189,17 +189,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\CollectionStore\FileEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\CollectionStore\FileNode.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionStore\FileRenameEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -380,11 +370,6 @@
                 />
                 <File
                     RelPath = "src\Events\SimiasEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\FsWatcher\FsWatcher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

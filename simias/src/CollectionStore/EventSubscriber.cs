@@ -51,16 +51,6 @@ namespace Simias.Storage
 	public delegate void CollectionRootChangedHandler(CollectionRootChangedEventArgs args);
 	
 	/// <summary>
-	/// Delegate definition for file events.
-	/// </summary>
-	public delegate void FileEventHandler(FileEventArgs args);
-
-	/// <summary>
-	/// Delegate definition for rename events.
-	/// </summary>
-	public delegate void FileRenameEventHandler(FileRenameEventArgs args);
-
-	/// <summary>
 	/// Used to get around a marshalling problem seen with explorer.
 	/// </summary>
 	internal delegate void TemporayEventHandler(EventType type, string args);
@@ -94,22 +84,6 @@ namespace Simias.Storage
 		/// Delegate to handle Collection Root Path changes.
 		/// </summary>
 		public event CollectionRootChangedHandler CollectionRootChanged;
-		/// <summary>
-		/// Delegate to handle File Creations.
-		/// </summary>
-		public event FileEventHandler FileCreated;
-		/// <summary>
-		/// Delegate to handle File Deletions.
-		/// </summary>
-		public event FileEventHandler FileDeleted;
-		/// <summary>
-		/// Delegate to handle Files Changes.
-		/// </summary>
-		public event FileEventHandler FileChanged;
-		/// <summary>
-		/// Delegate to handle File Renames.
-		/// </summary>
-		public event FileRenameEventHandler FileRenamed;
 		
 		#endregion
 
@@ -304,32 +278,6 @@ namespace Simias.Storage
 							}
 						}
 						break;
-					case "Simias.Storage.FileEventArgs":
-					case "Simias.Storage.FileRenameEventArgs":
-						if (applyFileFilter((FileEventArgs)args))
-						{
-							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);
-							switch (changeType)
-							{
-								case EventType.FileChanged:
-									if (FileChanged != null)
-										FileChanged((FileEventArgs)args);
-									break;
-								case EventType.FileCreated:
-									if (FileCreated != null)
-										FileCreated((FileEventArgs)args);
-									break;
-								case EventType.FileDeleted:
-									if (FileDeleted != null)
-										FileDeleted((FileEventArgs)args);
-									break;
-								case EventType.FileRenamed:
-									if (FileRenamed != null)
-										FileRenamed((FileRenameEventArgs)args);
-									break;
-							}
-						}
-						break;
 				}
 			}
 			catch (Exception ex)
@@ -356,29 +304,6 @@ namespace Simias.Storage
 					if (this.nodeIdFilter == null || nodeIdFilter == args.Node)
 					{
 						if (nodeTypeFilter == null || nodeTypeRegex.IsMatch(args.Type))
-						{
-							return true;
-						}
-					}
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Called to apply the subscribers filter.
-		/// </summary>
-		/// <param name="args">The arguments supplied with the event.</param>
-		/// <returns>True If matches the filter. False no match.</returns>
-		private bool applyFileFilter(FileEventArgs args)
-		{
-			if (enabled)
-			{
-				if (collectionId == null || args.Collection == collectionId)
-				{
-					if (fileNameFilter == null || fileNameFilter.IsMatch(args.Name))
-					{
-						if (fileTypeFilter == null || fileTypeFilter.IsMatch(args.Type))
 						{
 							return true;
 						}
