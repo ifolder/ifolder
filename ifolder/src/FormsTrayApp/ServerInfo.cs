@@ -566,7 +566,8 @@ namespace Novell.FormsTrayApp
 
 						try
 						{
-							checkForClientUpdate();
+//							checkForClientUpdate();
+							updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
 						}
 						catch (Exception ex)
 						{
@@ -604,7 +605,8 @@ namespace Novell.FormsTrayApp
 						case AuthenticationStatus.Success:
 							try
 							{
-								checkForClientUpdate();
+//								checkForClientUpdate();
+								updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName2.Text, password.Text);
 							}
 							catch (Exception ex)
 							{
