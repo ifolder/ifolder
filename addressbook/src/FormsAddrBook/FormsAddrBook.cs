@@ -160,6 +160,7 @@ namespace Novell.iFolder.FormsAddrBook
 				| System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
 			this.detailsView.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.detailsView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.detailsView.Location = new System.Drawing.Point(312, 56);
 			this.detailsView.Name = "detailsView";
 			this.detailsView.Size = new System.Drawing.Size(232, 304);
@@ -169,6 +170,7 @@ namespace Novell.iFolder.FormsAddrBook
 			// 
 			this.booksContacts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 				| System.Windows.Forms.AnchorStyles.Left)));
+			this.booksContacts.LoadPath = null;
 			this.booksContacts.Location = new System.Drawing.Point(0, 0);
 			this.booksContacts.Name = "booksContacts";
 			this.booksContacts.Size = new System.Drawing.Size(304, 400);

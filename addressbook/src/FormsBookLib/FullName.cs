@@ -104,6 +104,7 @@ namespace Novell.iFolder.FormsBookLib
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(56, 192);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 5;
@@ -112,6 +113,7 @@ namespace Novell.iFolder.FormsBookLib
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(136, 192);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 6;

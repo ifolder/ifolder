@@ -87,7 +87,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// bookName
 			// 
-			this.bookName.Location = new System.Drawing.Point(72, 48);
+			this.bookName.Location = new System.Drawing.Point(72, 24);
 			this.bookName.Name = "bookName";
 			this.bookName.Size = new System.Drawing.Size(200, 20);
 			this.bookName.TabIndex = 0;
@@ -95,7 +95,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(32, 48);
+			this.label1.Location = new System.Drawing.Point(32, 26);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(40, 16);
 			this.label1.TabIndex = 1;
@@ -104,7 +104,8 @@ namespace Novell.iFolder.FormsBookLib
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Location = new System.Drawing.Point(116, 88);
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.ok.Location = new System.Drawing.Point(116, 64);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 2;
 			this.ok.Text = "OK";
@@ -112,7 +113,8 @@ namespace Novell.iFolder.FormsBookLib
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.Location = new System.Drawing.Point(200, 88);
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.cancel.Location = new System.Drawing.Point(200, 64);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 3;
 			this.cancel.Text = "Cancel";
@@ -122,7 +124,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(292, 126);
+			this.ClientSize = new System.Drawing.Size(292, 104);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.label1);
@@ -134,7 +136,6 @@ namespace Novell.iFolder.FormsBookLib
 			this.ShowInTaskbar = false;
 			this.Text = "Create Address Book";
 			this.ResumeLayout(false);
-
 		}
 		#endregion
 

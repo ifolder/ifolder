@@ -103,6 +103,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// add
 			// 
+			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.add.Location = new System.Drawing.Point(336, 128);
 			this.add.Name = "add";
 			this.add.TabIndex = 2;
@@ -111,6 +112,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// remove
 			// 
+			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.remove.Location = new System.Drawing.Point(336, 160);
 			this.remove.Name = "remove";
 			this.remove.TabIndex = 3;
@@ -129,6 +131,7 @@ namespace Novell.iFolder.FormsBookLib
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(432, 368);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 7;
@@ -138,6 +141,7 @@ namespace Novell.iFolder.FormsBookLib
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(512, 368);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 8;
@@ -145,6 +149,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// edit
 			// 
+			this.edit.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.edit.Location = new System.Drawing.Point(336, 216);
 			this.edit.Name = "edit";
 			this.edit.TabIndex = 9;

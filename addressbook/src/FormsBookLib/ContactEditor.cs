@@ -229,6 +229,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// changePicture
 			// 
+			this.changePicture.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.changePicture.Location = new System.Drawing.Point(8, 88);
 			this.changePicture.Name = "changePicture";
 			this.changePicture.TabIndex = 4;
@@ -237,9 +238,9 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// fullNameButton
 			// 
-			this.fullNameButton.Location = new System.Drawing.Point(92, 12);
+			this.fullNameButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.fullNameButton.Location = new System.Drawing.Point(92, 14);
 			this.fullNameButton.Name = "fullNameButton";
-			this.fullNameButton.Size = new System.Drawing.Size(75, 26);
 			this.fullNameButton.TabIndex = 0;
 			this.fullNameButton.Text = "Full Name...";
 			this.fullNameButton.Click += new System.EventHandler(this.fullNameButton_Click);
@@ -276,6 +277,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// addr
 			// 
+			this.addr.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.addr.Location = new System.Drawing.Point(424, 192);
 			this.addr.Name = "addr";
 			this.addr.Size = new System.Drawing.Size(96, 23);
@@ -327,6 +329,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// mailAddress
 			// 
+			this.mailAddress.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.mailAddress.Location = new System.Drawing.Point(528, 264);
 			this.mailAddress.Name = "mailAddress";
 			this.mailAddress.Size = new System.Drawing.Size(160, 16);
@@ -364,6 +367,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// preferredEmail
 			// 
+			this.preferredEmail.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.preferredEmail.Location = new System.Drawing.Point(176, 184);
 			this.preferredEmail.Name = "preferredEmail";
 			this.preferredEmail.Size = new System.Drawing.Size(168, 16);
@@ -578,6 +582,7 @@ namespace Novell.iFolder.FormsBookLib
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(584, 328);
 			this.ok.Name = "ok";
 			this.ok.TabIndex = 1;
@@ -587,6 +592,7 @@ namespace Novell.iFolder.FormsBookLib
 			// cancel
 			// 
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.cancel.Location = new System.Drawing.Point(664, 328);
 			this.cancel.Name = "cancel";
 			this.cancel.TabIndex = 2;

@@ -143,6 +143,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// createBook
 			// 
+			this.createBook.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.createBook.Location = new System.Drawing.Point(8, 368);
 			this.createBook.Name = "createBook";
 			this.createBook.Size = new System.Drawing.Size(80, 23);
@@ -152,6 +153,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// createContact
 			// 
+			this.createContact.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.createContact.Location = new System.Drawing.Point(128, 368);
 			this.createContact.Name = "createContact";
 			this.createContact.Size = new System.Drawing.Size(88, 23);
@@ -201,6 +203,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// search
 			// 
+			this.search.AutoSize = false;
 			this.search.Location = new System.Drawing.Point(184, 24);
 			this.search.Name = "search";
 			this.search.Size = new System.Drawing.Size(120, 20);
@@ -462,6 +465,9 @@ namespace Novell.iFolder.FormsBookLib
 					this.books.Items.Add(item);
 				}
 			}
+
+			// Change the height of the search box to match the height of the combobox.
+			this.search.Height = queryType.Height;
 		}
 
 		private void books_SelectedIndexChanged(object sender, System.EventArgs e)
