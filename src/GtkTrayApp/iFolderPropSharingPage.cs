@@ -105,14 +105,14 @@ namespace Novell.iFolder
 			UserColumn.PackStart(mcrt, false);
 			UserColumn.SetCellDataFunc(mcrt,
 					new TreeCellDataFunc(UserCellTextDataFunc));
-			UserColumn.Title = "Users";
+			UserColumn.Title = Util.GS("Users");
 			UserTreeView.AppendColumn(UserColumn);
 			UserColumn.Resizable = true;
 
 			CellRendererText statecr = new CellRendererText();
 			statecr.Xpad = 5;
 			TreeViewColumn stateColumn = 
-			UserTreeView.AppendColumn("State",
+			UserTreeView.AppendColumn(Util.GS("State"),
 					statecr,
 					new TreeCellDataFunc(StateCellTextDataFunc));
 			stateColumn.Resizable = true;
@@ -121,7 +121,7 @@ namespace Novell.iFolder
 			CellRendererText accesscr = new CellRendererText();
 			accesscr.Xpad = 5;
 			TreeViewColumn accessColumn = 
-			UserTreeView.AppendColumn("Access",
+			UserTreeView.AppendColumn(Util.GS("Access"),
 					accesscr,
 					new TreeCellDataFunc(AccessCellTextDataFunc));
 			accessColumn.Resizable = true;
@@ -163,7 +163,7 @@ namespace Novell.iFolder
 			rightBox.PackStart(RemoveButton);
 			RemoveButton.Clicked += new EventHandler(OnRemoveUser);
 
-			AccessButton = new Button("Set Access");
+			AccessButton = new Button(Util.GS("Set Access"));
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);
 		}
@@ -225,11 +225,11 @@ namespace Novell.iFolder
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
 			if(ifolder.OwnerID == user.UserID)
-				((CellRendererText) cell).Text = "Owner";
+				((CellRendererText) cell).Text = Util.GS("Owner");
 			else if(user.State != "Member")
-				((CellRendererText) cell).Text = "Invited User";
+				((CellRendererText) cell).Text = Util.GS("Invited User");
 			else
-				((CellRendererText) cell).Text = "iFolder User";
+				((CellRendererText) cell).Text = Util.GS("iFolder User");
 		}
 
 
@@ -270,9 +270,9 @@ namespace Novell.iFolder
 					topLevelWindow,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					"iFolder Confirmation",
-					"Remove Selected Users?",
-					"This will remove the selected users from this iFolder.  They will no longer be able to sync file to this iFolder.");
+					Util.GS("iFolder Confirmation"),
+					Util.GS("Remove Selected Users?"),
+					Util.GS("This will remove the selected users from this iFolder.  They will no longer be able to sync file to this iFolder."));
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -528,13 +528,13 @@ namespace Novell.iFolder
 		private string GetDisplayRights(string rights)
 		{
 			if(rights == "ReadWrite")
-				return "Read Write";
+				return Util.GS("Read Write");
 			else if(rights == "Admin")
-				return "Full Control";
+				return Util.GS("Full Control");
 			else if(rights == "ReadOnly")
-				return "Read Only";
+				return Util.GS("Read Only");
 			else
-				return "Unknown";
+				return Util.GS("Unknown");
 		}
 
 
@@ -601,17 +601,17 @@ namespace Novell.iFolder
 								Menu rightsMenu = new Menu();
 			
 								RadioMenuItem adminItem = 
-									new RadioMenuItem ("Full Control");
+									new RadioMenuItem (Util.GS("Full Control"));
 								rightsMenu.Append(adminItem);
 
 								RadioMenuItem rwItem = 
 									new RadioMenuItem (adminItem.Group, 
-														"Read/Write");
+														Util.GS("Read/Write"));
 								rightsMenu.Append(rwItem);
 
 								RadioMenuItem roItem = 
 									new RadioMenuItem (adminItem.Group, 
-														"Read Only");
+														Util.GS("Read Only"));
 								rightsMenu.Append(roItem);
 
 								if(SelectionHasOwnerOrCurrent())

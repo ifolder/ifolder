@@ -67,7 +67,7 @@ namespace Novell.iFolder
 										iFolderWebService iFolderWS)
 			: base()
 		{
-			this.Title = "iFolder Conflict Resolver";
+			this.Title = Util.GS("iFolder Conflict Resolver");
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
@@ -104,7 +104,7 @@ namespace Novell.iFolder
 			VBox textbox = new VBox();
 			textbox.Spacing = 10;
 
-			Label l = new Label("Select a conflict from the list below.  To resolve the conflict, save the local version or the server version.  The version you save will be synced to this iFolder. ");
+			Label l = new Label(Util.GS("Select a conflict from the list below.  To resolve the conflict, save the local version or the server version.  The version you save will be synced to this iFolder. "));
 			l.LineWrap = true;
 			l.Xalign = 0;
 			textbox.PackStart(l, true, true, 0);
@@ -113,7 +113,7 @@ namespace Novell.iFolder
 			ifTable.ColumnSpacing = 10;
 			ifTable.Homogeneous = false;
 
-			Label nameLabel = new Label("iFolder Name:");
+			Label nameLabel = new Label(Util.GS("iFolder Name:"));
 			nameLabel.Xalign = 0;
 			ifTable.Attach(nameLabel, 0,1,0,1,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -122,7 +122,7 @@ namespace Novell.iFolder
 			nameValue.Xalign = 0;
 			ifTable.Attach(nameValue, 1,2,0,1);
 
-			Label pathLabel = new Label("iFolder Path:");
+			Label pathLabel = new Label(Util.GS("iFolder Path:"));
 			pathLabel.Xalign = 0;
 			ifTable.Attach(pathLabel, 0,1,1,2,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -149,14 +149,14 @@ namespace Novell.iFolder
 			HBox bottombox = new HBox();
 			bottombox.Spacing = 10;
 
-			LocalFrame = new Frame("Local Version");
+			LocalFrame = new Frame(Util.GS("Local Version"));
 			bottombox.PackStart(LocalFrame, true, true, 0);
 
 			Table localTable = new Table(2,4,false);
 			localTable.BorderWidth = 10;
 			localTable.ColumnSpacing = 10;
 
-			LocalNameLabel = new Label("Name:");
+			LocalNameLabel = new Label(Util.GS("Name:"));
 			LocalNameLabel.Xalign = 0;
 			localTable.Attach(LocalNameLabel, 0,1,0,1, 
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -165,7 +165,7 @@ namespace Novell.iFolder
 			LocalNameValue.Xalign = 0;
 			localTable.Attach(LocalNameValue, 1,2,0,1);
 
-			LocalDateLabel = new Label("Date:");
+			LocalDateLabel = new Label(Util.GS("Date:"));
 			LocalDateLabel.Xalign = 0;
 			localTable.Attach(LocalDateLabel, 0,1,1,2,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -174,7 +174,7 @@ namespace Novell.iFolder
 			LocalDateValue.Xalign = 0;
 			localTable.Attach(LocalDateValue, 1,2,1,2);
 
-			LocalSizeLabel = new Label("Size:");
+			LocalSizeLabel = new Label(Util.GS("Size:"));
 			LocalSizeLabel.Xalign = 0;
 			localTable.Attach(LocalSizeLabel, 0,1,2,3,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -191,14 +191,14 @@ namespace Novell.iFolder
 
 
 
-			ServerFrame = new Frame("Server Version");
+			ServerFrame = new Frame(Util.GS("Server Version"));
 			bottombox.PackStart(ServerFrame, true, true, 0);
 
 			Table serverTable = new Table(2,4,false);
 			serverTable.BorderWidth = 10;
 			serverTable.ColumnSpacing = 10;
 
-			ServerNameLabel = new Label("Name:");
+			ServerNameLabel = new Label(Util.GS("Name:"));
 			ServerNameLabel.Xalign = 0;
 			serverTable.Attach(ServerNameLabel, 0,1,0,1, 
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -207,7 +207,7 @@ namespace Novell.iFolder
 			ServerNameValue.Xalign = 0;
 			serverTable.Attach(ServerNameValue, 1,2,0,1);
 
-			ServerDateLabel = new Label("Date:");
+			ServerDateLabel = new Label(Util.GS("Date:"));
 			ServerDateLabel.Xalign = 0;
 			serverTable.Attach(ServerDateLabel, 0,1,1,2,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -216,7 +216,7 @@ namespace Novell.iFolder
 			ServerDateValue.Xalign = 0;
 			serverTable.Attach(ServerDateValue, 1,2,1,2);
 
-			ServerSizeLabel = new Label("Size:");
+			ServerSizeLabel = new Label(Util.GS("Size:"));
 			ServerSizeLabel.Xalign = 0;
 			serverTable.Attach(ServerSizeLabel, 0,1,2,3,
 				Gtk.AttachOptions.Fill, Gtk.AttachOptions.Fill, 0, 0);
@@ -249,7 +249,7 @@ namespace Novell.iFolder
 			memberColumn.PackStart(mcrt, false);
 			memberColumn.SetCellDataFunc(mcrt, new TreeCellDataFunc(
 						ConflictCellTextDataFunc));
-			memberColumn.Title = "iFolder Conflicts";
+			memberColumn.Title = Util.GS("iFolder Conflicts");
 			memberColumn.Resizable = true;
 			ConflictTreeView.AppendColumn(memberColumn);
 			ConflictTreeView.Selection.Mode = SelectionMode.Multiple;

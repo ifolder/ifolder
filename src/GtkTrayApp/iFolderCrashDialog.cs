@@ -31,7 +31,7 @@ namespace Novell.iFolder
 		public iFolderCrashDialog(System.Exception e) : base()
 		{
 			this.SetDefaultSize (600, 400);
-			this.Title = "iFolder Unhandled Exception";
+			this.Title = Util.GS("iFolder Unhandled Exception");
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.Resizable = true;
@@ -47,8 +47,8 @@ namespace Novell.iFolder
 			vbox.Spacing = 10;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						"iFolder crashed because of an unhandled exception" + 
-						"</span>");
+				Util.GS("iFolder crashed because of an unhandled exception") + 
+				"</span>");
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;

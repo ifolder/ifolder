@@ -25,6 +25,7 @@ using System;
 using Gtk;
 using Gdk;
 using Gnome;
+using Mono.Posix;
 
 namespace Novell.iFolder
 {
@@ -36,6 +37,19 @@ namespace Novell.iFolder
 		internal static int SectionSpacing = 20;
 		internal static int SectionTitleSpacing = 5;
 		internal static uint DefaultBorderWidth = 10;
+
+
+		internal static void InitCatalog()
+		{
+			Mono.Posix.Catalog.Init("ifolder-client", "@prefix@/share/locale");
+		}
+
+
+		internal static string GS(string msgid)
+		{
+			return Mono.Posix.Catalog.GetString(msgid);
+		}
+
 
 		internal static string ImagesPath(string imgStr)
 		{

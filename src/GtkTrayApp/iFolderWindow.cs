@@ -93,7 +93,7 @@ namespace Novell.iFolder
 					if(value.HaveEnterprise = true)
 					{
 						MainNoteBook.AppendPage( CreateEnterprisePage(),
-													new Label("Server"));
+											new Label(Util.GS("Server")));
 						MainNoteBook.ShowAll();
 					}
 				}
@@ -237,15 +237,15 @@ namespace Novell.iFolder
 			MainNoteBook = new Notebook();
 //			MainNoteBook.BorderWidth = 10;
 			MainNoteBook.AppendPage(	CreateiFoldersPage(), 
-										new Label("iFolders"));
+										new Label(Util.GS("iFolders")));
 			MainNoteBook.AppendPage( CreatePreferencesPage(),
-										new Label("Preferences"));
+										new Label(Util.GS("Preferences")));
 			MainNoteBook.AppendPage( CreateLogPage(),
-										new Label("Activity Log"));
+										new Label(Util.GS("Activity Log")));
 			if(ifSettings.HaveEnterprise)
 			{
 				MainNoteBook.AppendPage( CreateEnterprisePage(),
-											new Label("Server"));
+											new Label(Util.GS("Server")));
 			}
 			vbox.PackStart(MainNoteBook, true, true, 0);
 			MainNoteBook.SwitchPage += 
@@ -257,7 +257,7 @@ namespace Novell.iFolder
 			// Create Status Bar
 			//-----------------------------
 			MainStatusBar = new Statusbar ();
-			UpdateStatus("Idle...");
+			UpdateStatus(Util.GS("Idle..."));
 
 			vbox.PackStart (MainStatusBar, false, false, 0);
 
@@ -323,7 +323,7 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			CreateMenuItem = new ImageMenuItem ("_Create");
+			CreateMenuItem = new ImageMenuItem (Util.GS("_Create"));
 			CreateMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
 			iFolderMenu.Append(CreateMenuItem);
@@ -337,19 +337,20 @@ namespace Novell.iFolder
 			iFolderMenu.Append(OpenMenuItem);
 			OpenMenuItem.Activated += new EventHandler(OnOpeniFolderMenu);
 
-			ShareMenuItem = new MenuItem ("Share _with...");
+			ShareMenuItem = new MenuItem (Util.GS("Share _with..."));
 			iFolderMenu.Append(ShareMenuItem);
 			ShareMenuItem.Activated += new EventHandler(OnShareProperties);
 
-			ConflictMenuItem = new MenuItem ("Re_solve conflicts");
+			ConflictMenuItem = new MenuItem (Util.GS("Re_solve conflicts"));
 			iFolderMenu.Append(ConflictMenuItem);
 			ConflictMenuItem.Activated += new EventHandler(OnResolveConflicts);
 
-			SyncNowMenuItem = new MenuItem("Sync _now");
+			SyncNowMenuItem = new MenuItem(Util.GS("Sync _now"));
 			iFolderMenu.Append(SyncNowMenuItem);
 			SyncNowMenuItem.Activated += new EventHandler(OnSyncNow);
 
-			RevertMenuItem = new ImageMenuItem ("Re_vert to a normal folder");
+			RevertMenuItem = 
+				new ImageMenuItem (Util.GS("Re_vert to a normal folder"));
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(OnRevertiFolder);
@@ -363,7 +364,7 @@ namespace Novell.iFolder
 			iFolderMenu.Append(CloseMenuItem);
 			CloseMenuItem.Activated += new EventHandler(OnCloseWindow);
 
-			MenuItem iFolderMenuItem = new MenuItem("i_Folder");
+			MenuItem iFolderMenuItem = new MenuItem(Util.GS("i_Folder"));
 			iFolderMenuItem.Submenu = iFolderMenu;
 			menubar.Append (iFolderMenuItem);
 
@@ -379,7 +380,7 @@ namespace Novell.iFolder
 			RefreshMenuItem.Activated += 
 					new EventHandler(RefreshiFolderTreeView);
 
-			MenuItem ViewMenuItem = new MenuItem("_View");
+			MenuItem ViewMenuItem = new MenuItem(Util.GS("_View"));
 			ViewMenuItem.Submenu = ViewMenu;
 			menubar.Append(ViewMenuItem);
 
@@ -394,13 +395,13 @@ namespace Novell.iFolder
 			HelpMenu.Append(HelpMenuItem);
 //			HelpMenuItem.Activated += new EventHandler(On_CreateiFolder);
 
-			AboutMenuItem = new ImageMenuItem("A_bout");
+			AboutMenuItem = new ImageMenuItem(Util.GS("A_bout"));
 			AboutMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
 			HelpMenu.Append(AboutMenuItem);
 //			AboutMenuItem.Activated += new EventHandler(On_CreateiFolder);
 
-			MenuItem MainHelpMenuItem = new MenuItem("_Help");
+			MenuItem MainHelpMenuItem = new MenuItem(Util.GS("_Help"));
 			MainHelpMenuItem.Submenu = HelpMenu;
 			menubar.Append(MainHelpMenuItem);
 
@@ -447,7 +448,7 @@ namespace Novell.iFolder
 			ifolderColumn.PackStart(ifcrt, false);
 			ifolderColumn.SetCellDataFunc(ifcrt, new TreeCellDataFunc(
 						iFolderCellTextDataFunc));
-			ifolderColumn.Title = "Name";
+			ifolderColumn.Title = Util.GS("Name");
 			ifolderColumn.Resizable = true;
 			iFolderTreeView.AppendColumn(ifolderColumn);
 
@@ -459,7 +460,7 @@ namespace Novell.iFolder
 			locColumn.PackStart(locTR, false);
 			locColumn.SetCellDataFunc(locTR, new TreeCellDataFunc(
 						iFolderLocationCellTextDataFunc));
-			locColumn.Title = "Location";
+			locColumn.Title = Util.GS("Location");
 			locColumn.Resizable = true;
 			locColumn.MinWidth = 250;
 			iFolderTreeView.AppendColumn(locColumn);
@@ -472,7 +473,7 @@ namespace Novell.iFolder
 			statusColumn.PackStart(statusTR, false);
 			statusColumn.SetCellDataFunc(statusTR, new TreeCellDataFunc(
 						iFolderStatusCellTextDataFunc));
-			statusColumn.Title = "Status";
+			statusColumn.Title = Util.GS("Status");
 			statusColumn.Resizable = false;
 			iFolderTreeView.AppendColumn(statusColumn);
 
@@ -502,7 +503,7 @@ namespace Novell.iFolder
 			// so they will line up to the right and be the same
 			// widgth
 			HBox leftHBox = new HBox(true, 10);
-			Button create_button = new Button(" _Create ");
+			Button create_button = new Button(Util.GS("_Create"));
 
 			create_button.Clicked += new EventHandler(OnCreateiFolder);
 			
@@ -538,7 +539,7 @@ namespace Novell.iFolder
 			appSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(appSectionBox, false, true, 0);
 			Label appSectionLabel = new Label("<span weight=\"bold\">" +
-												"Application" +
+												Util.GS("Application") +
 												"</span>");
 			appSectionLabel.UseMarkup = true;
 			appSectionLabel.Xalign = 0;
@@ -555,11 +556,11 @@ namespace Novell.iFolder
 			appSpacerBox.PackStart(appWidgetBox, false, true, 0);
 
 			StartAtLoginButton = 
-				new CheckButton("Startup iFolder at Login");
+				new CheckButton(Util.GS("Startup iFolder at Login"));
 			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
-				new CheckButton("Show confirmation dialog when creating iFolders");
+				new CheckButton(Util.GS("Show confirmation dialog when creating iFolders"));
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
@@ -574,7 +575,7 @@ namespace Novell.iFolder
 			syncSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(syncSectionBox, false, true, 0);
 			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
-												"Synchronization" +
+												Util.GS("Synchronization") +
 												"</span>");
 			syncSectionLabel.UseMarkup = true;
 			syncSectionLabel.Xalign = 0;
@@ -592,7 +593,7 @@ namespace Novell.iFolder
 			syncWidgetBox.Spacing = 10;
 
 
-			Label syncHelpLabel = new Label("This will set the default Sync Settings for all iFolders.  You can change the sync setting for an individual iFolder on an iFolder's property pages");
+			Label syncHelpLabel = new Label(Util.GS("This will set the default Sync Settings for all iFolders.  You can change the sync setting for an individual iFolder on an iFolder's property pages"));
 			syncHelpLabel.LineWrap = true;
 			syncHelpLabel.Xalign = 0;
 			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
@@ -601,14 +602,14 @@ namespace Novell.iFolder
 			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
 			AutoSyncCheckButton = 
-					new CheckButton("Sync to host every:");
+					new CheckButton(Util.GS("Sync to host every:"));
 			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
 			SyncSpinButton = new SpinButton(0, 99999, 1);
 			SyncSpinButton.ValueChanged += 
 					new EventHandler(OnSyncIntervalChanged);
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
-			SyncUnitsLabel = new Label("seconds");
+			SyncUnitsLabel = new Label(Util.GS("seconds"));
 			SyncUnitsLabel.Xalign = 0;
 			syncHBox.PackEnd(SyncUnitsLabel, true, true, 0);
 
@@ -622,7 +623,7 @@ namespace Novell.iFolder
 			proxySectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(proxySectionBox, true, true, 0);
 			Label proxySectionLabel = new Label("<span weight=\"bold\">" +
-												"Proxy" +
+												Util.GS("Proxy") +
 												"</span>");
 			proxySectionLabel.UseMarkup = true;
 			proxySectionLabel.Xalign = 0;
@@ -640,7 +641,8 @@ namespace Novell.iFolder
 			proxyWidgetBox.Spacing = 5;
 
 
-			UseProxyButton = new CheckButton("Use a proxy to sync iFolders");
+			UseProxyButton = 
+				new CheckButton(Util.GS("Use a proxy to sync iFolders"));
 			proxyWidgetBox.PackStart(UseProxyButton, false, true, 0);
 			UseProxyButton.Toggled += new EventHandler(OnUseProxyButton);
 
@@ -649,13 +651,13 @@ namespace Novell.iFolder
 			pSettingBox.Spacing = 10;
 			proxyWidgetBox.PackStart(pSettingBox, true, true, 0);
 
-			ProxyHostLabel = new Label("Proxy Host:");
+			ProxyHostLabel = new Label(Util.GS("Proxy Host:"));
 			pSettingBox.PackStart(ProxyHostLabel, false, true, 0);
 			ProxyHostEntry = new Entry();
 			ProxyHostEntry.Changed += new EventHandler(OnProxySettingsChanged);
 
 			pSettingBox.PackStart(ProxyHostEntry, true, true, 0);
-			ProxyPortLabel = new Label("Port:");
+			ProxyPortLabel = new Label(Util.GS("Port:"));
 			pSettingBox.PackStart(ProxyPortLabel, false, true, 0);
 			ProxyPortSpinButton = new SpinButton(0, 99999, 1);
 
@@ -701,7 +703,7 @@ namespace Novell.iFolder
 			srvSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(srvSectionBox, false, true, 0);
 			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
-												"Server Information" +
+												Util.GS("Server Information") +
 												"</span>");
 			srvSectionLabel.UseMarkup = true;
 			srvSectionLabel.Xalign = 0;
@@ -724,7 +726,7 @@ namespace Novell.iFolder
 			srvTable.ColumnSpacing = 20;
 			srvTable.RowSpacing = 5;
 
-			Label usrNameLabel = new Label("User name:");
+			Label usrNameLabel = new Label(Util.GS("User name:"));
 			usrNameLabel.Xalign = 0;
 			srvTable.Attach(usrNameLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -733,7 +735,7 @@ namespace Novell.iFolder
 			srvTable.Attach(usrNameValue, 1,2,0,1);
 
 
-			Label srvNameLabel = new Label("iFolder server:");
+			Label srvNameLabel = new Label(Util.GS("iFolder server:"));
 			srvNameLabel.Xalign = 0;
 			srvTable.Attach(srvNameLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
@@ -742,7 +744,7 @@ namespace Novell.iFolder
 			srvNameValue.Xalign = 0;
 			srvTable.Attach(srvNameValue, 1,2,1,2);
 
-			Label srvDescLabel = new Label("Server description:");
+			Label srvDescLabel = new Label(Util.GS("Server description:"));
 			srvDescLabel.Xalign = 0;
 			srvDescLabel.Yalign = 0;
 			srvTable.Attach(srvDescLabel, 0,1,2,3,
@@ -772,7 +774,7 @@ namespace Novell.iFolder
 			diskSectionBox.Spacing = Util.SectionTitleSpacing;
 			vbox.PackStart(diskSectionBox, false, true, 0);
 			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
-												"Disk Space" +
+												Util.GS("Disk Space") +
 												"</span>");
 			diskSectionLabel.UseMarkup = true;
 			diskSectionLabel.Xalign = 0;
@@ -792,7 +794,7 @@ namespace Novell.iFolder
 			diskTable.ColumnSpacing = 20;
 			diskTable.RowSpacing = 5;
 
-			Label totalLabel = new Label("Free space on server:");
+			Label totalLabel = new Label(Util.GS("Free space on server:"));
 			totalLabel.Xalign = 0;
 			diskTable.Attach(totalLabel, 0,1,0,1,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -800,11 +802,11 @@ namespace Novell.iFolder
 			totalValue.Xalign = 1;
 			diskTable.Attach(totalValue, 1,2,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label totalUnit = new Label("MB");
+			Label totalUnit = new Label(Util.GS("MB"));
 			diskTable.Attach(totalUnit, 2,3,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label usedLabel = new Label("Used space on server:");
+			Label usedLabel = new Label(Util.GS("Used space on server:"));
 			usedLabel.Xalign = 0;
 			diskTable.Attach(usedLabel, 0,1,1,2,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -812,11 +814,11 @@ namespace Novell.iFolder
 			usedValue.Xalign = 1;
 			diskTable.Attach(usedValue, 1,2,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usedUnit = new Label("MB");
+			Label usedUnit = new Label(Util.GS("MB"));
 			diskTable.Attach(usedUnit, 2,3,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
-			Label availLabel = new Label("Total space on server:");
+			Label availLabel = new Label(Util.GS("Total space on server:"));
 			availLabel.Xalign = 0;
 			diskTable.Attach(availLabel, 0,1,2,3,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
@@ -824,7 +826,7 @@ namespace Novell.iFolder
 			availValue.Xalign = 1;
 			diskTable.Attach(availValue, 1,2,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label availUnit = new Label("MB");
+			Label availUnit = new Label(Util.GS("MB"));
 			diskTable.Attach(availUnit, 2,3,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
@@ -849,12 +851,12 @@ namespace Novell.iFolder
 			VBox graphLabelBox = new VBox();
 			graphBox.PackStart(graphLabelBox, false, true, 0);
 
-			Label fullLabel = new Label("full");
+			Label fullLabel = new Label(Util.GS("full"));
 			fullLabel.Xalign = 0;
 			fullLabel.Yalign = 0;
 			graphLabelBox.PackStart(fullLabel, true, true, 0);
 
-			Label emptyLabel = new Label("empty");
+			Label emptyLabel = new Label(Util.GS("empty"));
 			emptyLabel.Xalign = 0;
 			emptyLabel.Yalign = 1;
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
@@ -877,11 +879,11 @@ namespace Novell.iFolder
 
 			if(ds == null)
 			{
-				totalValue.Text = "N/A";
+				totalValue.Text = Util.GS("N/A");
 				totalUnit.Text = "";
-				availValue.Text = "N/A";
+				availValue.Text = Util.GS("N/A");
 				availUnit.Text = "";
-				usedValue.Text = "N/A";
+				usedValue.Text = Util.GS("N/A");
 				usedUnit.Text = "";
 				diskGraph.Fraction = 0;
 			}
@@ -891,38 +893,38 @@ namespace Novell.iFolder
 
 				if(ds.Limit == 0)
 				{
-					totalValue.Text = "N/A";
+					totalValue.Text = Util.GS("N/A");
 					totalUnit.Text = "";
 				}
 				else
 				{
 					tmpValue = (int)(ds.Limit / (1024 * 1024));
 					totalValue.Text = string.Format("{0}", tmpValue);
-					totalUnit.Text = "MB";
+					totalUnit.Text = Util.GS("MB");
 				}
 
 				if(ds.AvailableSpace == 0)
 				{
-					availValue.Text = "N/A";
+					availValue.Text = Util.GS("N/A");
 					availUnit.Text = "";
 				}
 				else
 				{
 					tmpValue = (int)(ds.AvailableSpace / (1024 * 1024));
 					availValue.Text = string.Format("{0}",tmpValue);
-					availUnit.Text = "MB";
+					availUnit.Text = Util.GS("MB");
 				}
 
 				if(ds.UsedSpace == 0)
 				{
-					usedValue.Text = "N/A";
+					usedValue.Text = Util.GS("N/A");
 					usedUnit.Text = "";
 				}
 				else
 				{
 					tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
 					usedValue.Text = string.Format("{0}", tmpValue);
-					usedUnit.Text = "MB";
+					usedUnit.Text = Util.GS("MB");
 				}
 
 				if(ds.Limit == 0)
@@ -959,7 +961,7 @@ namespace Novell.iFolder
 			vbox.Spacing = 10;
 			vbox.BorderWidth = Util.DefaultBorderWidth;
 		
-			Label lbl = new Label("This log shows current ifolder activity");
+			Label lbl = new Label(Util.GS("This log shows current ifolder activity"));
 			vbox.PackStart(lbl, false, true, 0);
 			lbl.Xalign = 0;
 
@@ -976,7 +978,7 @@ namespace Novell.iFolder
 
 			CellRendererText logcr = new CellRendererText();
 			logcr.Xpad = 10;
-			LogTreeView.AppendColumn("Log", logcr, "text", 0);
+			LogTreeView.AppendColumn(Util.GS("Log"), logcr, "text", 0);
 
 
 			// Setup buttons for add/remove/accept/decline
@@ -1039,18 +1041,19 @@ namespace Novell.iFolder
 			if(ifolder.State == "Local")
 			{
 				if(ifolder.HasConflicts)
-					((CellRendererText) cell).Text = "Has File Conflicts";
+					((CellRendererText) cell).Text = 
+									Util.GS("Has File Conflicts");
 				else
-					((CellRendererText) cell).Text = "OK";
+					((CellRendererText) cell).Text = Util.GS("OK");
 			}
 			else if(ifolder.State == "Available")
-				((CellRendererText) cell).Text = "Available";
+				((CellRendererText) cell).Text = Util.GS("Available");
 			else if(ifolder.State == "WaitConnect")
-				((CellRendererText) cell).Text = "Waiting to Connect";
+				((CellRendererText) cell).Text = Util.GS("Waiting to Connect");
 			else if(ifolder.State == "WaitSync")
-				((CellRendererText) cell).Text = "Waiting to Sync";
+				((CellRendererText) cell).Text = Util.GS("Waiting to Sync");
 			else
-				((CellRendererText) cell).Text = "Unknown";
+				((CellRendererText) cell).Text = Util.GS("Unknown");
 		}
 
 
@@ -1228,7 +1231,7 @@ namespace Novell.iFolder
 							if(ifolder.State == "Local")
 							{
 								MenuItem item_open = 
-									new MenuItem ("Open");
+									new MenuItem (Util.GS("Open"));
 								ifMenu.Append (item_open);
 								item_open.Activated += new EventHandler(
 										OnOpeniFolderMenu);
@@ -1236,7 +1239,7 @@ namespace Novell.iFolder
 								ifMenu.Append(new SeparatorMenuItem());
 
 								MenuItem item_share = 
-									new MenuItem ("Share with...");
+									new MenuItem (Util.GS("Share with..."));
 								ifMenu.Append (item_share);
 								item_share.Activated += new EventHandler(
 										OnShareProperties);
@@ -1244,8 +1247,8 @@ namespace Novell.iFolder
 								if(	(ifolder != null) && 
 										(ifolder.HasConflicts) )
 								{
-									MenuItem item_resolve = 
-										new MenuItem ("Resolve conflicts");
+									MenuItem item_resolve = new MenuItem (
+											Util.GS("Resolve conflicts"));
 									ifMenu.Append (item_resolve);
 									item_resolve.Activated += new EventHandler(
 										OnResolveConflicts);
@@ -1254,13 +1257,13 @@ namespace Novell.iFolder
 								}
 
 								MenuItem item_sync =
-									new MenuItem("Sync now");
+									new MenuItem(Util.GS("Sync now"));
 								ifMenu.Append (item_sync);
 								item_sync.Activated += new EventHandler(
 										OnSyncNow);
 
-								MenuItem item_revert = 
-									new MenuItem ("Revert to a normal folder");
+								MenuItem item_revert = new MenuItem (
+										Util.GS("Revert to a normal folder"));
 								ifMenu.Append (item_revert);
 								item_revert.Activated += new EventHandler(
 										OnRevertiFolder);
@@ -1268,7 +1271,7 @@ namespace Novell.iFolder
 								ifMenu.Append(new SeparatorMenuItem());
 	
 								MenuItem item_properties = 
-									new MenuItem ("Properties");
+									new MenuItem (Util.GS("Properties"));
 								ifMenu.Append (item_properties);
 								item_properties.Activated += 
 									new EventHandler( OnShowProperties );
@@ -1276,13 +1279,13 @@ namespace Novell.iFolder
 							else if(ifolder.State == "Available")
 							{
 								MenuItem item_accept = 
-									new MenuItem ("Setup iFolder");
+									new MenuItem (Util.GS("Setup iFolder"));
 								ifMenu.Append (item_accept);
 								item_accept.Activated += new EventHandler(
 										OnSetupiFolder);
 
 								MenuItem item_decline = 
-									new MenuItem ("Remove iFolder");
+									new MenuItem (Util.GS("Remove iFolder"));
 								ifMenu.Append (item_decline);
 								item_decline.Activated += new EventHandler(
 										OnDeclineiFolder);
@@ -1290,11 +1293,11 @@ namespace Novell.iFolder
 							else
 							{
 								MenuItem item_accept = 
-									new MenuItem ("Connect now...");
+									new MenuItem (Util.GS("Connect now..."));
 								ifMenu.Append (item_accept);
 
 								MenuItem item_decline = 
-									new MenuItem ("Remove iFolder");
+									new MenuItem (Util.GS("Remove iFolder"));
 								ifMenu.Append (item_decline);
 							}
 						}
@@ -1302,13 +1305,13 @@ namespace Novell.iFolder
 					else
 					{
 						MenuItem item_create = 
-							new MenuItem ("Create iFolder");
+							new MenuItem (Util.GS("Create iFolder"));
 						ifMenu.Append (item_create);
 						item_create.Activated += 
 							new EventHandler(OnCreateiFolder);
 
 						MenuItem item_refresh = 
-							new MenuItem ("Refresh list");
+							new MenuItem (Util.GS("Refresh list"));
 						ifMenu.Append (item_refresh);
 						item_refresh.Activated += 
 							new EventHandler(RefreshiFolderTreeView);
@@ -1372,9 +1375,9 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Error,
 						iFolderMsgDialog.ButtonSet.Ok,
-						"iFolder Error",
-						"Unable to launch File Browser",
-						"iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them.");
+						Util.GS("iFolder Error"),
+						Util.GS("Unable to launch File Browser"),
+						Util.GS("iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
@@ -1482,9 +1485,9 @@ namespace Novell.iFolder
 					this,
 					iFolderMsgDialog.DialogType.Question,
 					iFolderMsgDialog.ButtonSet.YesNo,
-					"iFolder Confirmation",
-					"Revert this iFolder?",
-					"This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.");
+					Util.GS("iFolder Confirmation"),
+					Util.GS("Revert this iFolder?"),
+					Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync."));
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -1526,7 +1529,7 @@ namespace Novell.iFolder
 			{
 				// Switched out to use the compatible file selector
 				CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-					"Choose a folder...", this, 
+					Util.GS("Choose a folder..."), this, 
 					CompatFileChooserDialog.Action.SelectFolder);
 
 				rc = cfcd.Run();
@@ -1671,9 +1674,9 @@ namespace Novell.iFolder
 						this,
 						iFolderMsgDialog.DialogType.Info,
 						iFolderMsgDialog.ButtonSet.Ok,
-						"Invalid iFolder Path",
-						"Invalid iFolder path selected",
-						"iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder or has an iFolder in it.  Please select an alternate folder.");
+						Util.GS("Invalid iFolder Path"),
+						Util.GS("Invalid iFolder path selected"),
+						Util.GS("iFolders cannot contain other iFolders.  The folder you selected is either inside an iFolder or has an iFolder in it.  Please select an alternate folder."));
 					dg.Run();
 					dg.Hide();
 					dg.Destroy();
@@ -1701,9 +1704,9 @@ namespace Novell.iFolder
 				this,
 				iFolderMsgDialog.DialogType.Question,
 				iFolderMsgDialog.ButtonSet.YesNo,
-				"iFolder Confirmation",
-				"Decline shared iFolder?",
-				"This will remove your invitation and you will not be able to get it back unless the owner of this iFolder re-shares the iFolder with you.");
+				Util.GS("iFolder Confirmation"),
+				Util.GS("Decline shared iFolder?"),
+				Util.GS("This will remove your invitation and you will not be able to get it back unless the owner of this iFolder re-shares the iFolder with you."));
 			int rc = dialog.Run();
 			dialog.Hide();
 			dialog.Destroy();

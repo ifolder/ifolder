@@ -42,7 +42,7 @@ namespace Novell.iFolder
 		public iFolderCreationDialog(iFolder ifolder) : base()
 		{
 //			this.ifolder = ifolder;
-			this.Title = "iFolder Introduction";
+			this.Title = Util.GS("iFolder Introduction");
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.Resizable = false;
@@ -57,7 +57,8 @@ namespace Novell.iFolder
 			vbox.Spacing = 10;
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						"Congratulations! A new iFolder was created</span>");
+						Util.GS("Congratulations! A new iFolder was created") +
+						"</span>");
 
 			l.LineWrap = false;
 			l.UseMarkup = true;
@@ -75,7 +76,7 @@ namespace Novell.iFolder
 			VBox vbox2 = new VBox();
 			vbox2.Spacing = 10;
 
-			l = new Label("The new iFolder has been added to your list of iFolders.");
+			l = new Label(Util.GS("The new iFolder has been added to your list of iFolders."));
 			l.LineWrap = false;
 			l.Xalign = 0;
 			vbox2.PackStart(l, true, true, 0);
@@ -84,7 +85,7 @@ namespace Novell.iFolder
 
 			vbox.PackStart(h);
 
-			l = new Label("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\".");
+			l = new Label(Util.GS("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\"."));
 			l.LineWrap = true;
 			l.Xalign = 0;
 //			l.Ypad = 0;
@@ -94,7 +95,8 @@ namespace Novell.iFolder
 			Alignment cbAlignment = new Alignment(1, 1, 1, 0);
 			vbox.PackStart(cbAlignment, true, true, 0);
 
-			cbutton = new CheckButton("Do not show this message again.");
+			cbutton = 
+				new CheckButton(Util.GS("Do not show this message again."));
 			cbAlignment.Add(cbutton);
 		
 			vbox.ShowAll();

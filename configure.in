@@ -232,6 +232,13 @@ case $IFOLDER_OS in
         PKG_CONFIG_REQUIRES="simias >= 1.0 gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
 		PKG_CONFIG_LIBS="/r:Novell.iFolder.dll /r:Novell.iFolder.UI.gtk.dll /r:TrayIcon.dll"
 		PKG_CONFIG_CONFLICTS=""
+
+		dnl Intl
+#		ALL_LINGUAS="da es fr"
+#		GETTEXT_PACKAGE=ifolderclient
+#		AC_SUBST(GETTEXT_PACKAGE)
+#		AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+		AM_GLIB_GNU_GETTEXT
     ;;
     #
     # Windows-specific configuration
@@ -355,6 +362,7 @@ AM_PROG_CC_STDC
 AC_PROG_INSTALL
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
+#AC_PROG_INTLTOOL([0.25])
 
 #
 # Handle --with-ndoc-path

@@ -40,7 +40,8 @@ namespace Novell.iFolder
 
 		public iFolderAcceptDialog(iFolder ifolder) : base()
 		{
-			this.Title = "Setup iFolder \"" + ifolder.Name + "\"";
+			this.Title = 
+				string.Format(Util.GS("Setup iFolder \"{0}\""), ifolder.Name);
 			this.SetDefaultSize (500, 200);
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
@@ -54,7 +55,7 @@ namespace Novell.iFolder
 
 
 			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						"Setup iFolder: \"" + ifolder.Name + "\"</span>");
+						Util.GS("Setup iFolder: ") + ifolder.Name + "</span>");
 
 			l.LineWrap = false;
 			l.UseMarkup = true;
@@ -66,7 +67,7 @@ namespace Novell.iFolder
 			VBox detailBox = new VBox();
 			dialogBox.PackStart(detailBox, true, true, 0);
 
-			l = new Label("iFolder Details:");
+			l = new Label(Util.GS("iFolder Details:"));
 			l.Xalign = 0;
 			detailBox.PackStart(l, false, false, 0);
 
@@ -76,7 +77,7 @@ namespace Novell.iFolder
 			tv.Editable = false;
 			tv.CursorVisible = false;
 			TextBuffer buffer = tv.Buffer;
-			buffer.Text = string.Format("iFolder name: {0}\niFolder Owner:{1}\n\niFolder Description: {2}", ifolder.Name, ifolder.Owner, ifolder.Description);
+			buffer.Text = string.Format(Util.GS("iFolder name: {0}\niFolder Owner:{1}\n\niFolder Description: {2}"), ifolder.Name, ifolder.Owner, ifolder.Description);
 
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
@@ -84,7 +85,7 @@ namespace Novell.iFolder
 			detailBox.PackStart(sw, true, true, 0);
 
 
-			l = new Label("Choose a location for the iFolder to be created on this computer.");
+			l = new Label(Util.GS("Choose a location for the iFolder to be created on this computer."));
 
 			l.LineWrap = false;
 			l.Xalign = 0; l.Yalign = 0;
@@ -95,7 +96,7 @@ namespace Novell.iFolder
 			VBox locBox = new VBox();
 			dialogBox.PackEnd(locBox, false, true, 0);
 
-			Label pathLabel = new Label("iFolder Location:");
+			Label pathLabel = new Label(Util.GS("iFolder Location:"));
 			pathLabel.Xalign = 0;
 			locBox.PackStart(pathLabel, false, true, 0);
 
@@ -124,7 +125,7 @@ namespace Novell.iFolder
 		{
 			// Switched out to use the compatible file selector
 			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-					"Choose a folder...", this, 
+					Util.GS("Choose a folder..."), this, 
 					CompatFileChooserDialog.Action.SelectFolder);
 
 			int rc = cfcd.Run();

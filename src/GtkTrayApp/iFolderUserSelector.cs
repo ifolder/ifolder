@@ -79,7 +79,7 @@ namespace Novell.iFolder
 										iFolderWebService iFolderWS)
 			: base()
 		{
-			this.Title = "iFolder User Selector";
+			this.Title = Util.GS("iFolder User Selector");
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
@@ -118,7 +118,7 @@ namespace Novell.iFolder
 			//------------------------------
 			HBox searchBox = new HBox();
 			searchBox.Spacing = 10;
-			Label searchLabel = new Label("Search:");
+			Label searchLabel = new Label(Util.GS("Search:"));
 			searchBox.PackStart(searchLabel, false, true, 0);
 
 			SearchEntry = new Gtk.Entry();
@@ -161,7 +161,7 @@ namespace Novell.iFolder
 			memberColumn.PackStart(mcrt, false);
 			memberColumn.SetCellDataFunc(mcrt, new TreeCellDataFunc(
 						UserCellTextDataFunc));
-			memberColumn.Title = "iFolder Users";
+			memberColumn.Title = Util.GS("iFolder Users");
 			memberColumn.Resizable = true;
 			UserTreeView.AppendColumn(memberColumn);
 			UserTreeView.Selection.Mode = SelectionMode.Multiple;
@@ -183,11 +183,11 @@ namespace Novell.iFolder
 			btnBox.Spacing = 10;
 			selBox.PackStart(btnBox, false, true, 0);
 
-			UserAddButton = new Button("Add ->");
+			UserAddButton = new Button(Util.GS("Add ->"));
 			btnBox.PackStart(UserAddButton, false, true, 0);
 			UserAddButton.Clicked += new EventHandler(OnAddButtonClicked);
 
-			UserDelButton = new Button("Remove");
+			UserDelButton = new Button(Util.GS("Remove"));
 			btnBox.PackStart(UserDelButton, false, true, 0);
 			UserDelButton.Clicked += new EventHandler(OnRemoveButtonClicked);
 
@@ -215,7 +215,7 @@ namespace Novell.iFolder
 			selmemberColumn.PackStart(smcrt, false);
 			selmemberColumn.SetCellDataFunc(smcrt, new TreeCellDataFunc(
 						UserCellTextDataFunc));
-			selmemberColumn.Title = "Selected Users";
+			selmemberColumn.Title = Util.GS("Selected Users");
 			selmemberColumn.Resizable = true;
 			SelTreeView.AppendColumn(selmemberColumn);
 			SelTreeView.Selection.Mode = SelectionMode.Multiple;
