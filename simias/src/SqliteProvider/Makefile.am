@@ -6,8 +6,8 @@ SqliteProvider_CSFILES_CSC := $(subst /,$(SEP),$(SqliteProvider_CSFILES))
 SqliteProvider_INCLUDES = 
 SqliteProvider_RESOURCES =
 SqliteProvider_FLAGS = $(CSC_LIBFLAG)
-SqliteProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Storage.dll StoreProvider.dll SqliteWrapper.dll Common.dll
-SqliteProvider_LIBPATH = ../Storage ../StoreProvider ../Common
+SqliteProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll SimiasClient.dll Simias.dll SqliteWrapper.dll
+SqliteProvider_LIBPATH = ../Simias.dll ../SimiasClient
 
 SqliteWrapper_CSFILES := $(srcdir)/SqliteWrapper/AssemblyInfo.cs $(srcdir)/SqliteWrapper/SqliteCommand.cs $(srcdir)/SqliteWrapper/SqliteConnection.cs $(srcdir)/SqliteWrapper/SqliteDataReader.cs $(srcdir)/SqliteWrapper/SqliteParameter.cs $(srcdir)/SqliteWrapper/SqliteParameterCollection.cs $(srcdir)/SqliteWrapper/SqliteTransaction.cs
 SqliteWrapper_CSFILES_CSC := $(subst /,$(SEP),$(SqliteWrapper_CSFILES))
@@ -50,17 +50,12 @@ endif
 endif
 
 install-exec-local: SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(STORELIB_PATH)/$(STORELIB)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) SqliteProvider.dll SqliteWrapper.dll $(srcdir)/$(STORELIB_PATH)/$(STORELIB) $(DEBUG_FILES) $(DESTDIR)$(webbindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(STORELIB) $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f SqliteProvider.dll SqliteWrapper.dll SqliteProviderTests.test.xml $(STORELIB) $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
-installcheck-local: install $(NUNIT_TESTS)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SqliteProviderTests.test.xml $(NUNIT_TESTS)
-	
 CLEAN_FILES = SqliteProvider.dll SqliteWrapper.dll $(NUNIT_TESTS) SqliteProvider.doc.xml SqliteWrapper.doc.xml SqliteProviderTests.test.xml
 
 clean-local:
