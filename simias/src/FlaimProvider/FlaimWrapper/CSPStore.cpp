@@ -166,10 +166,7 @@ void CSPDB::SetupNameTable(HFDB hFlaim)
 {
 	RCODE		rc = FERR_OK;
 	FLMUINT		drn = 1;
-	FlmRecord	*pRec;
-	void		*pvField;
 	FLMUNICODE	name[MAX_PROPERTY_NAME];
-	FLMUINT		buffSize;
 
 	F_NameTable		nameTable;
 	nameTable.setupFromDb(hFlaim);

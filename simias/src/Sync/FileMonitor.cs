@@ -644,13 +644,31 @@ namespace Simias.Sync
 												}
 											}
 											node.Name = Path.GetFileName(fullName);
-											node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, GetNormalizedRelativePath(fullName)));
+											string relativePath = GetNormalizedRelativePath(fullName);
+											node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
 											if (!isDir)
 											{
 												ModifyFileNode(fullName, node as BaseFileNode, true);
 											}
 											else
 											{
+												// We need to rename all of the children nodes.
+												string oldRelativePath = relativePath.Substring(0, relativePath.LastIndexOf('/')) + Path.GetFileName(args.OldName);
+												ICSList nodeList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
+												foreach (ShallowNode csn in nodeList)
+												{
+													Node childNode = collection.GetNodeByID(csn.ID);
+													if (childNode != null)
+													{
+														Property childRP = childNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
+														if (childRP != null)
+														{
+															string newRP = childRP.ValueString;
+															childRP.Value = newRP.Replace(oldRelativePath, relativePath);
+															childNode.Properties.ModifyNodeProperty(childRP);
+														}
+													}
+												}
 												collection.Commit(node);
 											}
 										}
