@@ -484,16 +484,11 @@ esac
 #
 AC_OUTPUT([
 Makefile
-ifolder3.pc
-ifolder3-c.pc
 src/Makefile
 src/iFolder/Makefile
 src/LinuxClient/Makefile
 src/LinuxClient/library/Makefile
-src/LinuxClient/library/Util.cs
 src/LinuxClient/application/Makefile
-src/LinuxClient/application/ifolder
-src/LinuxClient/application/ifolder.desktop
 src/LinuxClient/po/Makefile
 src/LinuxClient/po/POTFILES
 src/FormsTrayApp/Makefile
