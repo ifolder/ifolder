@@ -389,19 +389,19 @@ namespace Simias.Domain
 
 			try
 			{
+				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
+				{
+					// create PO Box proxy
+					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo, hostUri );
+					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
+				}
+
 				// create roster if needed
 				if (store.GetCollectionByID(domainInfo.RosterID) == null)
 				{
 					// create roster proxy
 					CreateRosterProxy(store, domain, provisionInfo.UserID, domainInfo, hostUri );
 					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
-				}
-
-				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
-				{
-					// create PO Box proxy
-					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo, hostUri );
-					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
 				}
 
 				// Set the host and port number in the configuration file.
@@ -433,6 +433,7 @@ namespace Simias.Domain
 			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
 			Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
 			member.Proxy = true;
+			member.IsOwner = true;
 
 			// commit
 			roster.Commit( new Node[] { roster, member } );
@@ -442,6 +443,7 @@ namespace Simias.Domain
 		{
 			// Create a new POBox
 			PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
+			poBox.Priority = 0;
 			poBox.Proxy = true;
 			
 			// sync information
@@ -453,6 +455,7 @@ namespace Simias.Domain
 			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
 			Member member = new Member( info.MemberNodeName, info.MemberNodeID, info.UserID, rights, null );
 			member.Proxy = true;
+			member.IsOwner = true;
 			
 			// commit
 			poBox.Commit( new Node[] { poBox, member } );
