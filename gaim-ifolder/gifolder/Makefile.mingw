@@ -15,8 +15,9 @@ GAIM_TOP :=		../..
 GIFOLDER_ROOT :=		.
 GAIM_INSTALL_DIR :=	$(GAIM_TOP)/win32-install-dir
 DLL_INSTALL_DIR :=	$(GAIM_INSTALL_DIR)/plugins
-SIMIAS_LIB_DIR := ../../../win32-dev/simias
-SIMIAS_INCLUDE := $(SIMIAS_LIB_DIR)/include
+
+SIMIAS_GAIM_DOMAIN_WSDL := GaimDomainService.wsdl
+GSOAP_PATH = gsoap/win32-2.7
 
 ##
 ## VARIABLE DEFINITIONS
@@ -26,7 +27,7 @@ TARGET = gifolder
 
 # Compiler Options
 
-CFLAGS =
+CFLAGS = -DWITH_NONAMESPACES
 
 DEFINES =
 
@@ -52,20 +53,21 @@ INCLUDE_PATHS +=	-I$(GIFOLDER_ROOT) \
 			-I$(GAIM_TOP)/src \
 			-I$(GAIM_TOP)/src/win32 \
 			-I$(GAIM_TOP) \
-			-I$(GAIM_TOP)/src/protocols/oscar \
-			-I$(SIMIAS_INCLUDE)
+			-I$(GAIM_TOP)/src/protocols/oscar
 
 
 LIB_PATHS =		-L$(GTK_TOP)/lib \
-			-L$(GAIM_TOP)/src \
-			-L$(SIMIAS_LIB_DIR)
+			-L$(GAIM_TOP)/src
 
 
 ##
 ##  SOURCES, OBJECTS
 ##
 
-C_SRC =		gifolder.c \
+C_SRC =		envC.c \
+			simiasgaimClientLib.c \
+			stdsoap2.c \
+			gifolder.c \
 			event-handler.c \
 			gaim-domain.c \
 			simias-messages.c \
@@ -88,10 +90,7 @@ LIBS =			-lgtk-win32-2.0 \
 			-lgobject-2.0 \
 			-lws2_32 \
 			-lintl \
-			-lgaim \
-			-lsimias \
-			-lsimias-event \
-			-lsimiasgaim
+			-lgaim
 
 ##
 ## RULES
@@ -120,6 +119,24 @@ install:
 
 $(GAIM_TOP)/src/gaim.lib:
 	$(MAKE) -C $(GAIM_TOP)/src -f Makefile.mingw gaim.lib
+
+##
+## GENERATE GSOAP FILES
+##
+
+envC.c: $(srcdir)/stdsoap2.c
+	> $(srcdir)/env.h
+	$(GSOAP_PATH)/soapcpp2 -c -penv $(srcdir)/env.h
+
+$(srcdir)/stdsoap2.c:
+	cp $(GSOAP_PATH)/stdsoap2.h $(srcdir)
+	cp $(GSOAP_PATH)/stdsoap2.c $(srcdir)
+
+$(srcdir)/libsimiasgaim.h: $(srcdir)/stdsoap2.c $(SIMIAS_GAIM_DOMAIN_WSDL)
+	$(GSOAP_PATH)/wsdl2h -c -o $@ $(SIMIAS_GAIM_DOMAIN_WSDL)
+
+$(srcdir)/simiasgaimClientLib.c: $(srcdir)/libsimiasgaim.h
+	$(GSOAP_PATH)/soapcpp2 -c -n -psimiasgaim $(srcdir)/libsimiasgaim.h
 
 ##
 ## BUILD DLL

@@ -70,7 +70,6 @@
 /****************************************************
  * Global Variables                                 *
  ****************************************************/
-SimiasEventClient ec;
 
 /****************************************************
  * Forward Declarations                             *
@@ -174,21 +173,6 @@ plugin_load(GaimPlugin *plugin)
 	/* Make sure the preferences are created if they don't exist */
 	simias_init_default_prefs();
 
-	/* Initialize the Simias Event Client */
-//	if (sec_init(&ec, on_sec_state_event, &ec)) {
-//		g_print("Error initializing Simias Event Client\n");
-//		return FALSE;
-//	}
-	
-//	g_print("Simias Event Client initialized successfully\n");
-		
-//	if (sec_register(ec)) {
-//		g_print("Error Registering Simias Event Client\n");
-//		return FALSE;
-//	}
-	
-//	g_print("Simias Event Client registered successfully\n");
-
 	/* FIXME: Check to see if an AIM account exists (Since that's the only
 	 * protocol that this will work with.  If there's not one, throw a popup
 	 * in front of the user to let them know this plugin only works with the
@@ -207,17 +191,6 @@ plugin_load(GaimPlugin *plugin)
 static gboolean
 plugin_unload(GaimPlugin *plugin)
 {
-	/* Cleanup/De-register the Simias Event Client */
-//	if (sec_deregister(ec)) {
-//		g_print("Simias Event Client deregistration failed!\n");
-//		return FALSE;
-//	}
-	
-//	if (sec_cleanup(&ec)) {
-//		g_print("Simias Event Client cleanup failed!\n");
-//		return FALSE;
-//	}
-	
 	return TRUE; /* Successfully Unloaded */
 }
 

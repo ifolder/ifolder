@@ -38,8 +38,6 @@
 #include "network.h"
 #include "util.h"
 
-#include <simias.h>
-
 /**
  * Non-public Functions
  */

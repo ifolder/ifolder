@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-16"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:s="http://www.w3.org/2001/XMLSchema"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+      xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+      xmlns:s0="http://novell.com/simias/domain" name="Gaim Domain Service"
+      targetNamespace="http://novell.com/simias/domain"
+      xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/domain"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="GetGaimDomainInfo">
+        <xs:complexType/>
+      </xs:element>
+      <xs:complexType name="GaimDomainInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetGaimDomainInfoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetGaimDomainInfoResult"
+                  type="s0:GaimDomainInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeMemberList">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="SynchronizeMemberListResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="UpdateMember">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="AccountName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="AccountProtocolID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="BuddyName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdateMemberResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GaimDomainInfo" type="s0:GaimDomainInfo"/>
+    </xs:schema>
+  </types>
+  <message name="GetGaimDomainInfoSoapIn">
+    <part name="parameters" element="s0:GetGaimDomainInfo"/>
+  </message>
+  <message name="GetGaimDomainInfoSoapOut">
+    <part name="parameters" element="s0:GetGaimDomainInfoResponse"/>
+  </message>
+  <message name="SynchronizeMemberListSoapIn">
+    <part name="parameters" element="s0:SynchronizeMemberList"/>
+  </message>
+  <message name="SynchronizeMemberListSoapOut">
+    <part name="parameters" element="s0:SynchronizeMemberListResponse"/>
+  </message>
+  <message name="UpdateMemberSoapIn">
+    <part name="parameters" element="s0:UpdateMember"/>
+  </message>
+  <message name="UpdateMemberSoapOut">
+    <part name="parameters" element="s0:UpdateMemberResponse"/>
+  </message>
+  <message name="GetGaimDomainInfoHttpGetIn"/>
+  <message name="GetGaimDomainInfoHttpGetOut">
+    <part name="Body" element="s0:GaimDomainInfo"/>
+  </message>
+  <message name="SynchronizeMemberListHttpGetIn"/>
+  <message name="SynchronizeMemberListHttpGetOut"/>
+  <message name="UpdateMemberHttpGetIn">
+    <part name="AccountName" type="s:string"/>
+    <part name="AccountProtocolID" type="s:string"/>
+    <part name="BuddyName" type="s:string"/>
+  </message>
+  <message name="UpdateMemberHttpGetOut"/>
+  <message name="GetGaimDomainInfoHttpPostIn"/>
+  <message name="GetGaimDomainInfoHttpPostOut">
+    <part name="Body" element="s0:GaimDomainInfo"/>
+  </message>
+  <message name="SynchronizeMemberListHttpPostIn"/>
+  <message name="SynchronizeMemberListHttpPostOut"/>
+  <message name="UpdateMemberHttpPostIn">
+    <part name="AccountName" type="s:string"/>
+    <part name="AccountProtocolID" type="s:string"/>
+    <part name="BuddyName" type="s:string"/>
+  </message>
+  <message name="UpdateMemberHttpPostOut"/>
+  <portType name="Gaim Domain ServiceSoap">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoSoapIn"/>
+      <output message="s0:GetGaimDomainInfoSoapOut"/>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <input message="s0:SynchronizeMemberListSoapIn"/>
+      <output message="s0:SynchronizeMemberListSoapOut"/>
+      <documentation>SynchronizeMemberList</documentation>
+    </operation>
+    <operation name="UpdateMember">
+      <input message="s0:UpdateMemberSoapIn"/>
+      <output message="s0:UpdateMemberSoapOut"/>
+      <documentation>UpdateMember</documentation>
+    </operation>
+  </portType>
+  <portType name="Gaim Domain ServiceHttpGet">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoHttpGetIn"/>
+      <output message="s0:GetGaimDomainInfoHttpGetOut"/>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <input message="s0:SynchronizeMemberListHttpGetIn"/>
+      <output message="s0:SynchronizeMemberListHttpGetOut"/>
+      <documentation>SynchronizeMemberList</documentation>
+    </operation>
+    <operation name="UpdateMember">
+      <input message="s0:UpdateMemberHttpGetIn"/>
+      <output message="s0:UpdateMemberHttpGetOut"/>
+      <documentation>UpdateMember</documentation>
+    </operation>
+  </portType>
+  <portType name="Gaim Domain ServiceHttpPost">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoHttpPostIn"/>
+      <output message="s0:GetGaimDomainInfoHttpPostOut"/>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <input message="s0:SynchronizeMemberListHttpPostIn"/>
+      <output message="s0:SynchronizeMemberListHttpPostOut"/>
+      <documentation>SynchronizeMemberList</documentation>
+    </operation>
+    <operation name="UpdateMember">
+      <input message="s0:UpdateMemberHttpPostIn"/>
+      <output message="s0:UpdateMemberHttpPostOut"/>
+      <documentation>UpdateMember</documentation>
+    </operation>
+  </portType>
+  <binding name="Gaim Domain ServiceSoap" type="s0:Gaim Domain ServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetGaimDomainInfo">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetGaimDomainInfo"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <soap:operation soapAction="http://novell.com/simias/domain/SynchronizeMemberList"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="UpdateMember">
+      <soap:operation soapAction="http://novell.com/simias/domain/UpdateMember"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Gaim Domain ServiceHttpGet" type="s0:Gaim Domain ServiceHttpGet">
+    <http:binding verb="GET"/>
+    <operation name="GetGaimDomainInfo">
+      <http:operation location="/GetGaimDomainInfo"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <http:operation location="/SynchronizeMemberList"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="UpdateMember">
+      <http:operation location="/UpdateMember"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+  </binding>
+  <binding name="Gaim Domain ServiceHttpPost" type="s0:Gaim Domain ServiceHttpPost">
+    <http:binding verb="POST"/>
+    <operation name="GetGaimDomainInfo">
+      <http:operation location="/GetGaimDomainInfo"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="SynchronizeMemberList">
+      <http:operation location="/SynchronizeMemberList"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="UpdateMember">
+      <http:operation location="/UpdateMember"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+  </binding>
+  <service name="Gaim Domain Service">
+    <port name="Gaim Domain ServiceSoap" binding="s0:Gaim Domain ServiceSoap">
+      <soap:address
+           
+           
+           
+           
+           
+            location="http://bht-linux.provo.novell.com:49271/simias10/boyd/GaimDomainService.asmx"/>
+    </port>
+    <port name="Gaim Domain ServiceHttpGet" binding="s0:Gaim Domain ServiceHttpGet">
+      <http:address
+           
+           
+           
+           
+           
+            location="http://bht-linux.provo.novell.com:49271/simias10/boyd/GaimDomainService.asmx"/>
+    </port>
+    <port name="Gaim Domain ServiceHttpPost" binding="s0:Gaim Domain ServiceHttpPost">
+      <http:address
+           
+           
+           
+           
+           
+            location="http://bht-linux.provo.novell.com:49271/simias10/boyd/GaimDomainService.asmx"/>
+    </port>
+    <documentation>Web Service providing access to Gaim Domain Server
+          functionality.</documentation>
+  </service>
+</definitions>

@@ -28,18 +28,8 @@
 #ifndef _EVENT_HANDLER_H
 #define _EVENT_HANDLER_H 1
 
-/* Simias Client Includes */
-#include <simias-event-client.h>
-
 /* Gaim Includes */
 #include "blist.h"
-
-int on_sec_state_event(SEC_STATE_EVENT state_event, const char *message,
-					   void *data);
-					   
-int on_simias_node_created(SimiasNodeEvent *event, void *data);
-int on_simias_node_changed(SimiasNodeEvent *event, void *data);
-int on_simias_node_deleted(SimiasNodeEvent *event, void *data);
 
 void simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data);
 

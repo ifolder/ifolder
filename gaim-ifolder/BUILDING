@@ -4,7 +4,7 @@
 
 Prerequisites
 --------------
-You must have built and installed Simias and iFolder (http://www.ifolder.com)
+You must have installed Simias and iFolder (http://www.ifolder.com)
 
 Make sure you've enabled the Gaim Domain by editing "simias-client-bootstrap.config"
 before you run simias for the first time.  Once you've run it, the file is
@@ -12,17 +12,8 @@ named "Simias.config".  The following line should exist in the file:
 
 <Service name="Gaim Domain" assembly="Simias.Gaim.dll" enabled="True" type="Thread" class="Simias.Gaim.GaimService" />
 
-Also, make sure you have the Simias/iFolder pkgconfig directory in your
-PKG_CONFIG_PATH environment variable.  To find out if you do, type:
 
-    echo $PKG_CONFIG_PATH
-    
-If it is not listed, type the following before building:
-
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/novell/ifolder3/lib/pkgconfig
-
-
-1. Checkout gaim-1.1.2 from CVS
+1. Checkout gaim-1.1.4 from CVS
 ---------------------------------
 
     cd ~    (Your home directory)
@@ -30,29 +21,34 @@ If it is not listed, type the following before building:
     cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim login
     (Just hit enter for the password)
 
-    cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim checkout -r v1_1_2 -d gaim-1.1.2 gaim
-    (This will checkout Gaim Version 1.1.2 into a new directory ~/gaim-1.1.2)
+    cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim checkout -r v1_1_4 -d gaim-1.1.4 gaim
+    (This will checkout Gaim Version 1.1.4 into a new directory ~/gaim-1.1.4)
 
 
-2. Patch gaim-1.1.2 so it's ready to build gifolder
+2. Patch gaim-1.1.4 so it's ready to build gifolder
 ----------------------------------------------------
 
-    cd ~/gaim-1.1.2
+    cd ~/gaim-1.1.4
 
-    patch -p0 < $GAIM_IFOLDER_PROJECT/gaim-1.1.2.patches
+    patch -p0 < $GAIM_IFOLDER_PROJECT/gaim-1.1.4.patches
 
-    mkdir ~/gaim/plugins/gifolder
+    mkdir plugins/gifolder
 
-    cp -r $GAIM_IFOLDER_PROJECT/gifolder/* ~/gaim/plugins/gifolder
+    cp -r $GAIM_IFOLDER_PROJECT/gifolder/* plugins/gifolder
 
 
 3. Build Gaim
 ---------------
 
-    cd ~/gaim-1.1.2
-    ./autogen.sh
+    cd ~/gaim-1.1.4
+    
+    Linux:
+    ./autogen.sh	(or ./configure if you downloaded the source.tar.gz)
     make
     make install
+    
+    Win32:
+    make -f Makefile.mingw install
 
 ===============================================================================
 

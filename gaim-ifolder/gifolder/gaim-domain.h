@@ -31,6 +31,8 @@
 /* GLib/Gtk Includes */
 #include <glib.h>
 
+int simias_get_local_service_url(char **url);
+
 void simias_sync_member_list();
 void simias_update_member(const char *account_name, const char *account_prpl_id,
 						  const char *buddy_name);

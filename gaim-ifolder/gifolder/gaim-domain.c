@@ -26,18 +26,31 @@
  ***********************************************************************/
 
 #include "gaim-domain.h"
-#include <simias.h>
 
 /* Gaim Includes */
 #include "account.h"
 #include "blist.h"
 
-#include <simiasgaimStub.h>
-#include <simiasgaim.nsmap>
+#include "simiasgaimStub.h"
+#include "simiasgaim.nsmap"
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#if defined(WIN32)
+#define DIR_SEP "\\"
+#else
+#define DIR_SEP "/"
+#endif
+
+/* Global Variables */
 static char *the_soap_url = NULL;
 
 /* Forward Declarations of Static Functions */
+static char *simias_get_user_profile_dir_path(char *dest_path);
+static char *parse_local_service_url(FILE *file);
+
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
 static char *get_soap_url(gboolean reread_config);
@@ -102,7 +115,9 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	cleanup_gsoap(&soap);
 }
 
-/* Utility functions for gSOAP */
+/**
+ * Utility functions for gSOAP
+ */
 static char *
 get_soap_url(gboolean reread_config)
 {
@@ -115,7 +130,7 @@ get_soap_url(gboolean reread_config)
 	}
 
 	err = simias_get_local_service_url(&url);
-	if (err == SIMIAS_SUCCESS) {
+	if (!err) {
 		sprintf(gaim_domain_url, "%s/GaimDomainService.asmx", url);
 		free(url);
 		the_soap_url = strdup(gaim_domain_url);
@@ -125,9 +140,126 @@ get_soap_url(gboolean reread_config)
 	return NULL;
 }
 
+static char *
+simias_get_user_profile_dir_path(char *dest_path)
+{
+#if defined(WIN32)
+	char *user_profile;
+	/* Build the configuration file path. */
+	user_profile = getenv("USERPROFILE");
+	if (user_profile == NULL || strlen(user_profile) <= 0) {
+		return NULL;
+	}
+
+	sprintf (dest_path, user_profile);
+#else
+	char *home_dir;
+	char dot_local_share_simias_path[1024];
+	
+	home_dir = getenv ("HOME");
+	if (home_dir == NULL || strlen(home_dir) <= 0) {
+		return NULL;
+	}
+	
+	sprintf (dot_local_share_simias_path, "%s%s", home_dir, "/.local/share/simias");
+	sprintf (dest_path, dot_local_share_simias_path);
+#endif
+
+	return dest_path;
+}
+
 /**
- * gSOAP
+ * Parse through the file looking for the following line:
+ * 
+ * 	<setting name="WebServiceUri" value="http://127.0.0.1:12345/simias10/username"/>
+ * 
+ * Return a strdup of the URL inside "value" (the caller must free the char *
+ * when finished with it).
  */
+static char *
+parse_local_service_url(FILE *file)
+{
+	long file_size;
+	char *buffer;
+	char *setting_idx;
+	char *value_idx;
+	char *start_quote_idx;
+	char *uri = NULL;
+	int b_uri_found;
+	
+	b_uri_found = 0;
+	
+	/* Determine the file size */
+	fseek(file, 0, SEEK_END);
+	file_size = ftell(file);
+	rewind(file);
+	
+	/* Allocate memory to suck in the whole file into the buffer */
+	buffer = (char *) malloc(file_size);
+	if (!buffer) {
+		return NULL;
+	}
+	
+	/* Read the contents of the file into the buffer */
+	fread(buffer, 1, file_size, file);
+	
+	/* Now parse for the URL */
+	/* Look for "WebServiceUri" */
+	setting_idx = strstr(buffer, "WebServiceUri");
+	if (setting_idx) {
+		value_idx = strstr(setting_idx, "value");
+		if (value_idx) {
+			start_quote_idx = strstr(value_idx, "\"");
+			if (start_quote_idx) {
+				uri = strtok(start_quote_idx + 1, "\"");
+				if (uri) {
+					b_uri_found = 1;
+				}
+			}
+		}
+	}
+	
+	/* Free up buffer memory */
+	free(buffer);
+	
+	if (!b_uri_found) {
+		return NULL;
+	}
+
+	return strdup(uri);
+}
+
+int
+simias_get_local_service_url(char **url)
+{
+	char user_profile_dir[1024];
+	char simias_config_file_path[1024];
+	FILE *simias_conf_file;
+	
+	if (!simias_get_user_profile_dir_path(user_profile_dir)) {
+		return -1;
+	}
+
+	sprintf(simias_config_file_path, "%s%sSimias.config",
+			user_profile_dir, DIR_SEP);
+	
+	/* Attempt to open the file */
+	simias_conf_file = fopen(simias_config_file_path, "r");
+	if (!simias_conf_file) {
+		return -2;
+	}
+
+	*url = parse_local_service_url(simias_conf_file);
+
+	fclose(simias_conf_file);
+	
+	if (!(*url)) {
+		return -3;
+	}
+	
+	return 0;
+}
+
 static void
 init_gsoap (struct soap *p_soap)
 {
