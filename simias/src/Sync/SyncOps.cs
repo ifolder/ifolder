@@ -471,7 +471,8 @@ internal class SyncOps
 			else
 			{
 				eventCookie = new EventContext(cookie);
-				while (more && (eventCookie.TimeStamp < collection.NodeStamp))
+				DateTime collectionTimeStamp = collection.NodeStamp;
+				while (more && (collectionTimeStamp == DateTime.MinValue || eventCookie.TimeStamp < collection.NodeStamp))
 				{
 					more = logReader.GetEvents(eventCookie, out changeList);
 					foreach( ChangeLogRecord rec in changeList )
