@@ -168,7 +168,7 @@ namespace Simias.Web
 		/// <returns>
 		/// Collection object that was created
 		/// </returns>
-		private static Collection CreateSharedCollection(
+		public static Collection CreateSharedCollection(
 				string Name, string UserID, string Type, 
 				bool UnmanagedFiles, string CollectionPath)
 		{
