@@ -13,23 +13,6 @@ namespace Simias.Storage
 	{
 		#region Properties
 		/// <summary>
-		/// Gets the strong name for this system policy.
-		/// </summary>
-		public string StrongName
-		{
-			get { return properties.GetSingleProperty( PropertyTags.PolicyID ).Value as string; }
-		}
-
-		/// <summary>
-		/// Gets or sets the title for the system policy.
-		/// </summary>
-		public string Title
-		{
-			get { return Name; }
-			set { Name = value; }
-		}
-
-		/// <summary>
 		/// Gets or sets the detailed description for this system policy.
 		/// </summary>
 		public string Description
@@ -41,6 +24,39 @@ namespace Simias.Storage
 			}
 
 			set { properties.ModifyNodeProperty( PropertyTags.Description, value ); }
+		}
+
+		/// <summary>
+		/// Returns the list of Rule objects for this policy.
+		/// </summary>
+		public ICSList Rules
+		{
+			get { return new ICSList(); }
+		}
+
+		/// <summary>
+		/// Gets the strong name for this system policy.
+		/// </summary>
+		public string StrongName
+		{
+			get { return properties.GetSingleProperty( PropertyTags.PolicyID ).Value as string; }
+		}
+
+		/// <summary>
+		/// Returns the list of TimeCondition objects for this policy.
+		/// </summary>
+		public ICSList TimeConditions
+		{
+			get { return new ICSList(); }
+		}
+
+		/// <summary>
+		/// Gets or sets the title for the system policy.
+		/// </summary>
+		public string Title
+		{
+			get { return Name; }
+			set { Name = value; }
 		}
 		#endregion
 
@@ -99,11 +115,17 @@ namespace Simias.Storage
 
 		#region Public Methods
 		/// <summary>
+		/// Adds a time condition to the rule to indicate when the rule is effective.
+		/// </summary>
+		public void AddTimeCondition( TimeCondition time )
+		{
+		}
+
+		/// <summary>
 		/// Adds a rule to the policy.
 		/// </summary>
-		/// <param name="rule">Object that is used to match against in the policy.</param>
-		/// <param name="compareResult">Result to return when rule is applied successfully.</param>
-		public virtual void AddRule( object rule, Policy.Policy.RuleResult compareResult )
+		/// <param name="rule">Object that is used to match against the input in the policy.</param>
+		public void AddRule( Rule rule )
 		{
 		}
 
@@ -112,11 +134,25 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="input">Object that is used to match against the policy rules. The type of object must be
 		/// one of the Simias.Syntax types.</param>
-		/// <param name="operation">Operation to perform on rule.</param>
 		/// <returns>True if the policy allows the operation, otherwise false is returned.</returns>
-		public virtual bool Apply( object input, Policy.Policy.RuleOperation operation )
+		public Policy.Policy.RuleResult Apply( object input )
 		{
-			return true;
+			return Policy.Policy.RuleResult.Allow;
+		}
+
+		/// <summary>
+		/// Removes the time condition for the policy.
+		/// </summary>
+		public void DeleteTimeCondition( TimeCondition time )
+		{
+		}
+
+		/// <summary>
+		/// Removes the specified rule from the policy.
+		/// </summary>
+		/// <param name="rule">Rule that is used to match against the input in the policy.</param>
+		public void DeleteRule( Rule rule )
+		{
 		}
 		#endregion
 	}
