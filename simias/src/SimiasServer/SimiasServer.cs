@@ -37,8 +37,8 @@ namespace Simias.Server
 	/// </summary>
 	public class SimiasServer
 	{
-		private static readonly string Path = @"/simias10";
-		private static readonly string Dir = @"web";
+		private static readonly string Path = @"simias10";
+		private static readonly string Dir = SimiasSetup.webdir;
 		private static readonly int Port = 8086;
 		private static readonly string Page = @"Simias.asmx?WSDL";
 		private static readonly string Application = @"SimiasApp.exe";
@@ -49,61 +49,62 @@ namespace Simias.Server
 		/// </summary>
 		static void Main(string[] args)
 		{
-			try
-			{
-				Console.WriteLine();
-				Console.WriteLine("SIMIAS");
-				Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("SIMIAS");
+            Console.WriteLine();
 
-				// application 
-				string application = System.IO.Path.Combine(
-					System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
-					Application);
+            // application 
+            string application = System.IO.Path.Combine(
+                System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                Application);
 
-				// arguments
-				string arguments = String.Format("--applications {0}:{1} --port {2}",
-					Path, Dir, Port);
+            // arguments
+            string arguments = String.Format("--applications /{0}:{1} --port {2}",
+                Path, Dir, Port);
 
-				// adjust for mono
-				if (MyEnvironment.Mono)
-				{
-					arguments = String.Format("{0} {1}", application, arguments);
-					application = Mono;
-				}
+            // adjust for mono
+            if (MyEnvironment.Mono)
+            {
+                arguments = String.Format("{0} {1}", application, arguments);
+                application = Mono;
+            }
 
-				// start
-				Process p = new Process();
-				p.StartInfo.FileName = application;
-				p.StartInfo.Arguments = arguments;
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.RedirectStandardInput = true;
-				p.StartInfo.CreateNoWindow = false;
-				p.EnableRaisingEvents = true;
-				p.Start();
-				
-				Thread.Sleep(TimeSpan.FromSeconds(1));
+            // start
+            Process p = new Process();
+            p.StartInfo.FileName = application;
+            p.StartInfo.Arguments = arguments;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardInput = true;
+            p.StartInfo.CreateNoWindow = false;
+            p.EnableRaisingEvents = true;
+            p.Start();
+            
+            Thread.Sleep(TimeSpan.FromSeconds(1));
 
-				// ping
-				UriBuilder ub = new UriBuilder("http://localhost");
-				ub.Port = Port;
-				ub.Path = String.Format("{0}/{1}", Path, Page);
+            // ping
+            UriBuilder ub = new UriBuilder("http://localhost");
+            ub.Port = Port;
+            ub.Path = String.Format("{0}/{1}", Path, Page);
 
-				Console.WriteLine("Pinging: {0}", ub);
-				WebRequest request = WebRequest.Create(ub.Uri);
-				WebResponse response = request.GetResponse();
-			
-				// wait
-				Console.ReadLine();
+            Console.WriteLine("Pinging: {0}", ub);
+            try
+            {
+                WebRequest request = WebRequest.Create(ub.Uri);
+                WebResponse response = request.GetResponse();
+                response.Close();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine(e.StackTrace);
+            }
 
-				// stop
-				p.StandardInput.WriteLine();
-				p.WaitForExit();
-			}
-			catch(Exception e)
-			{
-				Console.WriteLine(e);
-				Console.WriteLine(e.StackTrace);
-			}
+            // wait
+            Console.ReadLine();
+
+            // stop
+            p.StandardInput.WriteLine();
+            p.WaitForExit();
 		}
 	}
 }
