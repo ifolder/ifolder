@@ -59,6 +59,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
     TCHAR szCreateiFolderMenu[]= TEXT("Convert to an iFolder");
     TCHAR szDeleteiFolderMenu[]= TEXT("Revert to a Normal Folder");
 	TCHAR sziFolderMenu[]= TEXT("iFolder");
+	TCHAR sziFolderConflictMenu[] = TEXT("Resolve conflicts...");
 	TCHAR sziFolderPropMenu[]= TEXT("Properties...");
 	TCHAR sziFolderShareMenu[]= TEXT("Share with...");
 	TCHAR sziFolderHelpMenu[] = TEXT("Help...");
@@ -99,6 +100,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			}
 
 			BOOL biFolder= FALSE;
+			VARIANT_BOOL hasConflicts;
 
 			try
 			{
@@ -110,7 +112,6 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 				if (m_spiFolder)
 				{
-					VARIANT_BOOL hasConflicts;
 					biFolder= m_spiFolder->IsiFolder(m_szFileUserClickedOn, &hasConflicts);
 				}
 			}
@@ -143,11 +144,20 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
 
 				idCmd++;
-				mii.fMask= MIIM_ID | MIIM_TYPE;
+
+				if (hasConflicts)
+				{
+					// Add the menu item for resolving conflicts.
+					mii.wID= idCmd;
+					mii.dwTypeData= sziFolderConflictMenu;
+					mii.cch= lstrlen(sziFolderConflictMenu);
+					InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
+				}
+
+				idCmd++;
 
 				// Add the menu item for sharing an iFolder.
 				mii.wID= idCmd;
-				mii.fType= MFT_STRING;
 				mii.dwTypeData= sziFolderShareMenu;
 				mii.cch= lstrlen(sziFolderShareMenu);
 				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
@@ -156,7 +166,6 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 				// Add the menu item for iFolder properties.
 				mii.wID= idCmd;
-				mii.fType= MFT_STRING;
 				mii.dwTypeData= sziFolderPropMenu;
 				mii.cch= lstrlen(sziFolderPropMenu);
 				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
@@ -165,7 +174,6 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 				// Add the menu item for iFolder help.
 				mii.wID = idCmd;
-				mii.fType = MFT_STRING;
 				mii.dwTypeData = sziFolderHelpMenu;
 				mii.cch = lstrlen(sziFolderHelpMenu);
 				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
@@ -354,7 +362,18 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
                 break;
 
-            case 2:
+			case 2:
+				try
+				{
+					// Invoke the conflict resolver.
+					m_spiFolder->InvokeConflictResolverDlg(m_szShellPath, m_szFileUserClickedOn);
+				}
+				catch (...)
+				{
+				}
+				break;
+
+            case 3:
 				hr= NOERROR;
 				try
 				{
@@ -367,7 +386,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
                 break;
 
-            case 3:
+            case 4:
 				// Invoke the properties dialog for this folder with the iFolder tab active.
 //				SHObjectProperties(lpcmi->hwnd, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
 				try
@@ -381,7 +400,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				}
 				hr= NOERROR;
                 break;
-			case 4:
+			case 5:
 				// Display the help.
 				m_spiFolder->ShowHelp(m_szShellPath);
 				hr = NOERROR;
