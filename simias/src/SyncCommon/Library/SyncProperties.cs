@@ -26,6 +26,7 @@ using System.IO;
 
 using Simias;
 using Simias.Storage;
+using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -57,15 +58,15 @@ namespace Simias.Sync
 		private static readonly string IntervalPropertyName = "Sync Interval";
 
 		/// <summary>
-		/// The suggested sync channel sinks.
+		/// The suggested channel sinks.
 		/// </summary>
-		private static readonly SyncChannelSinks DefaultChannelSinks =
+		private static readonly SimiasChannelSinks DefaultChannelSinks =
 #if DEBUG
-			SyncChannelSinks.Binary | SyncChannelSinks.Monitor; // | SyncChannelSinks.Security;
+			SimiasChannelSinks.Binary | SimiasChannelSinks.Monitor; // | SimiasChannelSinks.Security;
 #else
-			SyncChannelSinks.Binary; // | SyncChannelSinks.Security;
+			SimiasChannelSinks.Binary; // |SimiasChannelSinks.Security;
 #endif
-		private static readonly string ChannelSinksPropertyName = "Sync Channel Sinks";
+		private static readonly string ChannelSinksPropertyName = "Simias Channel Sinks";
 
 		// fields
 		private Configuration config;
@@ -213,9 +214,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// The sync channel sinks.
 		/// </summary>
-		public SyncChannelSinks ChannelSinks
+		public SimiasChannelSinks ChannelSinks
 		{
-			get { return (SyncChannelSinks)GetProperty(ChannelSinksPropertyName, DefaultChannelSinks); }
+			get { return (SimiasChannelSinks)GetProperty(ChannelSinksPropertyName, DefaultChannelSinks); }
 			set { SetProperty(ChannelSinksPropertyName, value, true); }
 		}
 

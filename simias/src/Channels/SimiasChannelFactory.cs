@@ -39,22 +39,23 @@ using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 using Simias;
 using Simias.Storage;
+using Simias.Sniffer;
 
-namespace Simias.Sync
+namespace Simias.Channels
 {
 	/// <summary>
-	/// Sync Channel Factory
+	/// Simias Channel Factory
 	/// </summary>
-	public class SyncChannelFactory
+	public class SimiasChannelFactory
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncChannelFactory));
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasChannelFactory));
 
-		private static SyncChannelFactory singleton;
+		private static SimiasChannelFactory singleton;
 
 		private ArrayList channels;
 		private int index;
 
-		static SyncChannelFactory()
+		static SimiasChannelFactory()
 		{
 #if DEBUG && !MONO
 			// send the errors back on debug
@@ -76,18 +77,18 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The singleton instance of the SyncChannelFactory.
+		/// The singleton instance of the SimiasChannelFactory.
 		/// </summary>
 		/// <returns></returns>
-		public static SyncChannelFactory GetInstance()
+		public static SimiasChannelFactory GetInstance()
 		{
 			if (singleton == null)
 			{
-				lock(typeof(SyncChannelFactory))
+				lock(typeof(SimiasChannelFactory))
 				{
 					if (singleton == null)
 					{
-						singleton = new SyncChannelFactory();
+						singleton = new SimiasChannelFactory();
 					}
 				}
 			}
@@ -95,41 +96,41 @@ namespace Simias.Sync
 			return singleton;
 		}
 
-		private SyncChannelFactory()
+		private SimiasChannelFactory()
 		{
 			channels = new ArrayList();
 			index = 0;
 		}
 		
 		/// <summary>
-		/// Get a sync channel
+		/// Get a Simias channel
 		/// </summary>
 		/// <param name="store"></param>
 		/// <param name="scheme"></param>
 		/// <param name="sinks"></param>
 		/// <returns></returns>
-		public SyncChannel GetChannel(Store store, string scheme, SyncChannelSinks sinks)
+		public SimiasChannel GetChannel(Store store, string scheme, SimiasChannelSinks sinks)
 		{
 			return GetChannel(store, scheme, sinks, 0);
 		}
 			
 		/// <summary>
-		/// Get a sync channel
+		/// Get a Simias channel
 		/// </summary>
 		/// <param name="store"></param>
 		/// <param name="scheme"></param>
 		/// <param name="sinks"></param>
 		/// <param name="port"></param>
 		/// <returns></returns>
-		public SyncChannel GetChannel(Store store, string scheme, SyncChannelSinks sinks, int port)
+		public SimiasChannel GetChannel(Store store, string scheme, SimiasChannelSinks sinks, int port)
 		{
-			SyncChannel result = null;
+			SimiasChannel result = null;
 
 			lock(this)
 			{
 				if (port != 0)
 				{
-					foreach(SyncChannel sc in channels)
+					foreach(SimiasChannel sc in channels)
 					{
 						if (sc.Port == port)
 						{
@@ -152,7 +153,7 @@ namespace Simias.Sync
 				if (result == null)
 				{
 					// name
-					string name = String.Format("Sync Channel (port: {0}, index: {1})", port, ++index);
+					string name = String.Format("Simias Channel (port: {0}, index: {1})", port, ++index);
 
 					// setup channel properties
 					ListDictionary props = new ListDictionary();
@@ -167,7 +168,7 @@ namespace Simias.Sync
 					IClientChannelSinkProvider clientProvider = null;
 					IServerChannelSinkProvider serverProvider = null;
 
-					if ((sinks & SyncChannelSinks.Soap) > 0)
+					if ((sinks & SimiasChannelSinks.Soap) > 0)
 					{
 						// soap
 						clientProvider = new SoapClientFormatterSinkProvider();
@@ -189,7 +190,7 @@ namespace Simias.Sync
 					}
 
 					// setup monitor providers
-					if ((sinks & SyncChannelSinks.Monitor) > 0)
+					if ((sinks & SimiasChannelSinks.Monitor) > 0)
 					{
 						IServerChannelSinkProvider serverMonitorProvider = new SnifferServerChannelSinkProvider();
 						serverMonitorProvider.Next = serverProvider;
@@ -200,7 +201,7 @@ namespace Simias.Sync
 					}
 
 					// setup security providers
-					if ((sinks & SyncChannelSinks.Security) > 0)
+					if ((sinks & SimiasChannelSinks.Security) > 0)
 					{
 						/* TODO: add back
 						ISecurityServerFactory securityServerFactory = (ISecurityServerFactory) new RsaSecurityServerFactory(store.KeyStore);
@@ -242,7 +243,7 @@ namespace Simias.Sync
 					// register channel
 					ChannelServices.RegisterChannel(channel);
 
-					result = (new SyncChannel(this, channel, name, port, sinks)).Open();
+					result = (new SimiasChannel(this, channel, name, port, sinks)).Open();
 
 					// add channel
 					channels.Add(result);
@@ -254,7 +255,7 @@ namespace Simias.Sync
 			return result;
 		}
 		
-		internal void ReleaseChannel(SyncChannel channel)
+		internal void ReleaseChannel(SimiasChannel channel)
 		{
 			lock(this)
 			{

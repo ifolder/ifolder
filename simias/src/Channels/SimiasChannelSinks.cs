@@ -23,13 +23,13 @@
 
 using System;
 
-namespace Simias.Sync
+namespace Simias.Channels
 {
 	/// <summary>
-	/// Sync Channel Sinks
+	/// Simias Channel Sinks
 	/// </summary>
 	[Flags]
-	public enum SyncChannelSinks
+	public enum SimiasChannelSinks
 	{
 		/// <summary>
 		/// Specifies a soap style formatter sink.

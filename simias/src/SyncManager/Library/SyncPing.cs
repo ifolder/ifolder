@@ -28,6 +28,7 @@ using System.Net;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -57,7 +58,7 @@ namespace Simias.Sync
 			SyncProperties properties = new SyncProperties(store.Config);
 
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store,
+			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(store,
 				url.Scheme, properties.ChannelSinks);
 
 			try

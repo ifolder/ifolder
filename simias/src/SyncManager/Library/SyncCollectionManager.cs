@@ -32,6 +32,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Location;
 using Simias.Domain;
+using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -46,7 +47,7 @@ namespace Simias.Sync
 		private SyncStoreManager storeManager;
 		private Store store;
 		private SyncCollection collection;
-		private SyncChannel channel;
+		private SimiasChannel channel;
 		private SyncStoreService storeService;
 		private SyncCollectionService service;
 		private SyncCollectionWorker worker;
@@ -229,7 +230,7 @@ namespace Simias.Sync
 						log.Debug("Connecting to Domain Service: {0}", dAgent.ServiceUrl);
 
 						// create channel
-						SyncChannel domainChannel = syncManager.ChannelFactory.GetChannel(store,
+						SimiasChannel domainChannel = syncManager.ChannelFactory.GetChannel(store,
 							dAgent.ServiceUrl.Scheme, syncManager.ChannelSinks);
 
 						// connect

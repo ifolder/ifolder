@@ -30,7 +30,7 @@ using System.Text;
 
 using Simias;
 
-namespace Simias.Sync
+namespace Simias.Sniffer
 {
 	/// <summary>
 	/// Sniffer Client Channel Sink

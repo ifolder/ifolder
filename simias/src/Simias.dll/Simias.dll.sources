@@ -5,6 +5,9 @@ AssemblyInfo.cs
 ../Events/EventPublisher.cs
 ../Events/EventService/EventService.cs
 ../ChangeLog/ChangeLog.cs
+../Channels/SimiasChannelSinks.cs
+../Channels/SimiasChannel.cs
+../Channels/SimiasChannelFactory.cs
 ../CollectionStore/CollectionRootChangedEventArgs.cs
 ../CollectionStore/EventSubscriber.cs
 ../CollectionStore/FileEventArgs.cs
@@ -105,7 +108,6 @@ AssemblyInfo.cs
 ../StoreProvider/Provider.cs
 ../StoreProvider/Query.cs
 ../StoreProvider/Record.cs
-../SyncCommon/Library/SyncChannelSinks.cs
 ../SyncCommon/Library/SyncCollection.cs
 ../SyncCommon/Library/SyncCollectionInfo.cs
 ../SyncCommon/Library/SyncCollectionRoles.cs
@@ -115,8 +117,6 @@ AssemblyInfo.cs
 ../SyncCommon/Library/SyncProperties.cs
 ../SyncCommon/Library/SyncStoreInfo.cs
 ../SyncCommon/Library/SyncStoreService.cs
-../SyncManager/Library/SyncChannel.cs
-../SyncManager/Library/SyncChannelFactory.cs
 ../SyncManager/Library/SyncCollectionManager.cs
 ../SyncManager/Library/SyncCredentialCache.cs
 ../SyncManager/Library/SyncManager.cs

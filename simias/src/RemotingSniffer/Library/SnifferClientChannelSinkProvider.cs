@@ -26,7 +26,7 @@ using System.Runtime.Remoting.Channels;
 
 using Simias;
 
-namespace Simias.Sync
+namespace Simias.Sniffer
 {
 	/// <summary>
 	/// Sniffer Client Channel Sink Provider

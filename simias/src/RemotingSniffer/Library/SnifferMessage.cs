@@ -30,7 +30,7 @@ using System.Text.RegularExpressions;
 
 using Simias;
 
-namespace Simias.Sync
+namespace Simias.Sniffer
 {
 	/// <summary>
 	/// Sniffer Message

@@ -25,22 +25,22 @@ using System;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 
-namespace Simias.Sync
+namespace Simias.Channels
 {
 	/// <summary>
-	/// Sync Channel
+	/// Simias Channel
 	/// </summary>
-	public class SyncChannel : IDisposable
+	public class SimiasChannel : IDisposable
 	{
-		private SyncChannelFactory factory;
+		private SimiasChannelFactory factory;
 		private IChannel channel;
 		private string name;
 		private int port;
-		private SyncChannelSinks sinks;
+		private SimiasChannelSinks sinks;
 		private int count;
 
-		internal SyncChannel(SyncChannelFactory factory, IChannel channel,
-			string name, int port, SyncChannelSinks sinks)
+		internal SimiasChannel(SimiasChannelFactory factory, IChannel channel,
+			string name, int port, SimiasChannelSinks sinks)
 		{
 			this.factory = factory;
 			this.channel = channel;
@@ -50,7 +50,7 @@ namespace Simias.Sync
 			this.count = 0;
 		}
 
-		internal SyncChannel Open()
+		internal SimiasChannel Open()
 		{
 			lock(this)
 			{
@@ -71,7 +71,7 @@ namespace Simias.Sync
 		#region IDisposable Members
 
 		/// <summary>
-		/// Dispose the sync channel
+		/// Dispose the channel
 		/// </summary>
 		public void Dispose()
 		{
@@ -120,7 +120,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// An enumeration of sinks to include
 		/// </summary>
-		public SyncChannelSinks Sinks
+		public SimiasChannelSinks Sinks
 		{
 			get { return sinks; }
 		}

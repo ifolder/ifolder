@@ -29,6 +29,7 @@ using System.Threading;
 
 using Simias;
 using Simias.Location;
+using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -83,7 +84,7 @@ namespace Simias.Sync
 		};
 
 		private SyncProperties properties;
-		private SyncChannelFactory channelFactory;
+		private SimiasChannelFactory channelFactory;
 		private SyncStoreManager storeManager;
 		private SyncLogicFactory logicFactory;
 		private LocationService locationService;
@@ -107,7 +108,7 @@ namespace Simias.Sync
 			logicFactory = (SyncLogicFactory)Activator.CreateInstance(properties.LogicFactory);
 
 			// channel factory
-			channelFactory = SyncChannelFactory.GetInstance();
+			channelFactory = SimiasChannelFactory.GetInstance();
 
 			// store
 			storeManager = new SyncStoreManager(this);
@@ -239,7 +240,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// The channel factory singleton object.
 		/// </summary>
-		public SyncChannelFactory ChannelFactory
+		public SimiasChannelFactory ChannelFactory
 		{
 			get { return channelFactory; }
 		}
@@ -247,7 +248,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// An enumeration of the sinks to include.
 		/// </summary>
-		public SyncChannelSinks ChannelSinks
+		public SimiasChannelSinks ChannelSinks
 		{
 			get { return properties.ChannelSinks; }
 		}

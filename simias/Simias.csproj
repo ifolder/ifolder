@@ -134,6 +134,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Channels\SimiasChannel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Channels\SimiasChannelFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Channels\SimiasChannelSinks.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\CollectionStore\AccessControl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -724,11 +739,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncChannelSinks.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\SyncCommon\Library\SyncCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -770,16 +780,6 @@
                 />
                 <File
                     RelPath = "src\SyncCommon\Library\SyncStoreService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\Library\SyncChannel.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\Library\SyncChannelFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

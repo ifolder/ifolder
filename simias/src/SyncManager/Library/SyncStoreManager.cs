@@ -29,6 +29,7 @@ using System.Runtime.Remoting;
 using Simias;
 using Simias.Event;
 using Simias.Storage;
+using Simias.Channels;
 
 namespace Simias.Sync
 {
@@ -42,7 +43,7 @@ namespace Simias.Sync
 		private Store store;
 		private SyncStoreService service;
 		private SyncManager syncManager;
-		private SyncChannel channel;
+		private SimiasChannel channel;
 		private Hashtable collectionManagers;
 		private EventSubscriber subscriber;
 
