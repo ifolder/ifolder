@@ -87,7 +87,31 @@ namespace Novell.iFolder
 
 			LastSuccessfulSync.Text = ifolder.LastSyncTime;
 			FFSyncValue.Text = "0";
-			SyncIntervalValue.Text = ifolder.SyncInterval + " " + Util.GS("minute(s)");
+			
+			int syncInterval = 0;
+			if (ifolder.SyncInterval <= 0)
+			{
+				try
+				{
+					syncInterval = ifws.GetDefaultSyncInterval();
+				}
+				catch(Exception e)
+				{
+					// Intentionally blank
+				}
+			}
+			else
+			{
+				syncInterval = ifolder.SyncInterval;
+			}
+			
+			// Make sure it's shown in minutes
+			if (syncInterval > 0)
+			{
+				syncInterval = syncInterval / 60;
+			}
+
+			SyncIntervalValue.Text = syncInterval + " " + Util.GS("minute(s)");
 			
 			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", ifolder.Name);
 			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", ifolder.Owner);
