@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasWebService", "src\Web
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POBoxWS", "src\POBoxWS\POBoxWS.csproj", "{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -45,6 +49,10 @@ Global
 		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Debug.Build.0 = Debug|.NET
 		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Release.ActiveCfg = Release|.NET
 		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Release.Build.0 = Release|.NET
+		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Debug.ActiveCfg = Debug|.NET
+		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Debug.Build.0 = Debug|.NET
+		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Release.ActiveCfg = Release|.NET
+		{3275A0B3-4BE7-4FB4-83F9-601FA09C0C86}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

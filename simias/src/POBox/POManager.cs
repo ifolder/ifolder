@@ -44,7 +44,7 @@ namespace Simias.POBox
 		private Configuration config;
 		private Hashtable boxManagers;
 		private EventSubscriber subscriber;
-		private PostOffice service;
+//		private PostOffice service;
 		private Uri serviceUrl = null;
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace Simias.POBox
 				lock(this)
 				{
 					// create service
-					service = new PostOffice(config);
+					//service = new PostOffice(config);
 
 					// create channel
 					string name = String.Format("PO Service [{0}]", store.ID);
@@ -89,7 +89,7 @@ namespace Simias.POBox
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 
 					// marshal service
-					RemotingServices.Marshal(service, PostOffice.EndPoint);
+					//RemotingServices.Marshal(service, PostOffice.EndPoint);
 				
 					// check for the server
 					Storage.Domain domain = store.GetDomain(store.DefaultDomain);
@@ -126,10 +126,12 @@ namespace Simias.POBox
 			{
 				lock(this)
 				{
+					/*
 					if (service != null)
 					{
 						log.Debug("Stopping PO Service: {0}", ServiceUrl);
 					}
+					*/
 
 					// stop collection managers
 					subscriber.Enabled = false;
@@ -138,12 +140,14 @@ namespace Simias.POBox
 						RemovePOBoxManager(id);
 					}
 
+					/*
 					// release service
 					if (service != null)
 					{
 						RemotingServices.Disconnect(service);
 						service = null;
 					}
+					*/
 				}
 			}
 			catch(Exception e)
