@@ -45,21 +45,12 @@
 #include "blist.h"
 #include "util.h"
 
-/* Externs */
-extern GtkListStore *in_inv_store;
-extern GtkListStore *out_inv_store;
-extern GtkListStore *trusted_buddies_store;
-
-static char *po_box_id = NULL;
-
 int
 on_sec_state_event(SEC_STATE_EVENT state_event, const char *message, void *data)
 {
 	SimiasEventClient *ec = (SimiasEventClient *)data;
 	SIMIAS_NODE_TYPE node_type;
 	SimiasEventFilter event_filter;
-	GaimBuddyList *blist;
-		
 	
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
@@ -73,32 +64,11 @@ on_sec_state_event(SEC_STATE_EVENT state_event, const char *message, void *data)
 			sec_set_event (*ec, ACTION_NODE_DELETED, true,
 						   (SimiasEventFunc)on_simias_node_deleted, ec);
 			
-			/**
-			 * Get the Gaim POBox ID so we'll know whether we should pay
-			 * attention to incoming events or not.
-			 */
-			po_box_id = gaim_domain_get_po_box_id();
-			if (!po_box_id) {
-				g_print("gaim_domain_get_po_box_id() returned NULL!\n");
-			} else {
-				g_print("POBox ID: %s\n", po_box_id);
-			}
-			
 			/* Specify that we're only interested in changes in subscriptions */
 			node_type = NODE_TYPE_NODE;
 			event_filter.type = EVENT_FILTER_NODE_TYPE;
 			event_filter.data = &node_type;
 			sec_set_filter (*ec, &event_filter);
-
-			/* Sync Gaim Buddies */
-			blist = gaim_get_blist();
-			if (blist) {
-				g_hash_table_foreach(blist->buddies, 
-									 sync_buddy_with_simias_roster,
-									 NULL);
-			} else {
-				g_print("gaim_get_blist() returned NULL\n");
-			}
 
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
@@ -136,88 +106,11 @@ static void print_event(SimiasNodeEvent *event)
 	g_print("\tFile Size: %s\n", event->file_size);
 }
 
-gboolean
-is_gaim_subscription(SimiasNodeEvent *event)
-{
-	/* Check to see if this is an invitation/subscription node for Gaim */
-	if (!po_box_id) {
-		/* Can't do the check */
-		return FALSE;
-	}
-	if (strcmp(po_box_id, event->collection)) {
-		/* This is not a subscription in the Gaim POBox */
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
 int
 on_simias_node_created(SimiasNodeEvent *event, void *data)
 {
-	char *service_url;
-	int err;
-	char *ip_addr = NULL;
-	char ip_port[16];
-	
-	char *ret_host = NULL;
-	int   ret_port = 0;
-	char *ret_path = NULL;
-	char *ret_user = NULL;
-	char *ret_passwd = NULL;
-	
 	g_print("on_simias_node_created() entered\n");
 	print_event(event);
-
-	if (!is_gaim_subscription(event)) {
-		return 0; /* Ignore this event */
-	}
-	
-	/* Send out an invitation for the collection */
-	err = simias_get_local_service_url(&service_url);
-	if (err == SIMIAS_SUCCESS) {
-		g_print("Service URL: %s\n", service_url);
-		/* Parse off the IP Address & Port */
-		gaim_url_parse(service_url, &ret_host, &ret_port,
-					   &ret_path, &ret_user, &ret_passwd);
-		if (ret_host) {
-			g_print("ret_host: %s\n", ret_host);
-			ip_addr = ret_host;
-		} else {
-			ip_addr = strdup("Unknown");
-		}
-		
-		g_print("ret port: %d\n", ret_port);
-		sprintf(ip_port, "%d", ret_port);
-		
-		if (ret_path) {
-			g_print("ret_path: %s\n", ret_path);
-			g_free(ret_path);
-		}
-		
-		if (ret_user) {
-			g_print("ret_user: %s\n", ret_user);
-			g_free(ret_user);
-		}
-		
-		if (ret_passwd) {
-			g_print("ret_passwd: %s\n", ret_passwd);
-			g_free(ret_passwd);
-		}
-		
-		/* FIXME: Create and send a new invitation */
-		g_print("FIXME: Send a new invitation to the buddy\n");
-		if (ip_addr) {
-			g_print("\tFrom IP: %s\n", ip_addr);
-			g_free(ip_addr);
-		}
-		
-		if (ip_port) {
-			g_print("\tFrom IP Port: %s\n", ip_port);
-		}
-		
-		g_free(service_url);
-	}
 	
 	return 0;
 }
@@ -227,10 +120,6 @@ on_simias_node_changed(SimiasNodeEvent *event, void *data)
 {
 	g_print("on_simias_node_changed() entered\n");
 	print_event(event);
-	
-	if (!is_gaim_subscription(event)) {
-		return 0; /* Ignore this event */
-	}
 	
 	/* FIXME: Figure out if we need to do anything with a changed subscription */
 	
@@ -242,10 +131,6 @@ on_simias_node_deleted(SimiasNodeEvent *event, void *data)
 {
 	g_print("on_simias_node_deleted() entered\n");
 	print_event(event);
-	
-	if (!is_gaim_subscription(event)) {
-		return 0; /* Ignore this event */
-	}
 	
 	/* FIXME: Check to see if this is a member/subscription to a collection */
 	
