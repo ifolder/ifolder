@@ -88,6 +88,31 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.ComboBox emailSelect;
 		private System.Windows.Forms.CheckBox preferredEmail;
 		private System.Windows.Forms.ListBox addressView;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.TextBox department;
+		private System.Windows.Forms.TextBox office;
+		private System.Windows.Forms.TextBox profession;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.TextBox manager;
+		private System.Windows.Forms.TextBox assistant;
+		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.TextBox nickname;
+		private System.Windows.Forms.TextBox spouse;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.DateTimePicker birthdayPicker;
+		private System.Windows.Forms.TextBox birthday;
+		private System.Windows.Forms.DateTimePicker anniversaryPicker;
+		private System.Windows.Forms.TextBox anniversary;
+		private System.Windows.Forms.GroupBox groupBox5;
+		private System.Windows.Forms.TextBox notes;
+		private System.Windows.Forms.Label label15;
 
 		/// <summary>
 		/// Required designer variable.
@@ -107,6 +132,8 @@ namespace Novell.iFolder.FormsBookLib
 			homeAddrEntry = new AddressEntry();
 			workAddrEntry = new AddressEntry();
 			preferredEmail.Enabled = false;
+			birthdayPicker.Format = DateTimePickerFormat.Short;
+			anniversaryPicker.Format = DateTimePickerFormat.Short;
 		}
 
 		/// <summary>
@@ -169,15 +196,42 @@ namespace Novell.iFolder.FormsBookLib
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.fullName = new System.Windows.Forms.TextBox();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.anniversary = new System.Windows.Forms.TextBox();
+			this.anniversaryPicker = new System.Windows.Forms.DateTimePicker();
+			this.birthday = new System.Windows.Forms.TextBox();
+			this.birthdayPicker = new System.Windows.Forms.DateTimePicker();
+			this.label14 = new System.Windows.Forms.Label();
+			this.label13 = new System.Windows.Forms.Label();
+			this.spouse = new System.Windows.Forms.TextBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.nickname = new System.Windows.Forms.TextBox();
+			this.label11 = new System.Windows.Forms.Label();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.assistant = new System.Windows.Forms.TextBox();
+			this.manager = new System.Windows.Forms.TextBox();
+			this.label10 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.profession = new System.Windows.Forms.TextBox();
+			this.office = new System.Windows.Forms.TextBox();
+			this.department = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.notes = new System.Windows.Forms.TextBox();
+			this.label15 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Location = new System.Drawing.Point(8, 8);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -582,6 +636,208 @@ namespace Novell.iFolder.FormsBookLib
 			this.fullName.Text = "";
 			this.fullName.Leave += new System.EventHandler(this.fullName_Leave);
 			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.label15);
+			this.tabPage2.Controls.Add(this.notes);
+			this.tabPage2.Controls.Add(this.groupBox5);
+			this.tabPage2.Controls.Add(this.anniversary);
+			this.tabPage2.Controls.Add(this.anniversaryPicker);
+			this.tabPage2.Controls.Add(this.birthday);
+			this.tabPage2.Controls.Add(this.birthdayPicker);
+			this.tabPage2.Controls.Add(this.label14);
+			this.tabPage2.Controls.Add(this.label13);
+			this.tabPage2.Controls.Add(this.spouse);
+			this.tabPage2.Controls.Add(this.label12);
+			this.tabPage2.Controls.Add(this.nickname);
+			this.tabPage2.Controls.Add(this.label11);
+			this.tabPage2.Controls.Add(this.groupBox3);
+			this.tabPage2.Controls.Add(this.assistant);
+			this.tabPage2.Controls.Add(this.manager);
+			this.tabPage2.Controls.Add(this.label10);
+			this.tabPage2.Controls.Add(this.label9);
+			this.tabPage2.Controls.Add(this.profession);
+			this.tabPage2.Controls.Add(this.office);
+			this.tabPage2.Controls.Add(this.department);
+			this.tabPage2.Controls.Add(this.label8);
+			this.tabPage2.Controls.Add(this.label6);
+			this.tabPage2.Controls.Add(this.label1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Size = new System.Drawing.Size(728, 286);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Details";
+			// 
+			// anniversary
+			// 
+			this.anniversary.Location = new System.Drawing.Point(424, 136);
+			this.anniversary.Name = "anniversary";
+			this.anniversary.Size = new System.Drawing.Size(180, 20);
+			this.anniversary.TabIndex = 9;
+			this.anniversary.Text = "";
+			this.anniversary.Leave += new System.EventHandler(this.anniversary_Leave);
+			// 
+			// anniversaryPicker
+			// 
+			this.anniversaryPicker.Location = new System.Drawing.Point(456, 136);
+			this.anniversaryPicker.Name = "anniversaryPicker";
+			this.anniversaryPicker.Size = new System.Drawing.Size(168, 20);
+			this.anniversaryPicker.TabIndex = 10;
+			this.anniversaryPicker.ValueChanged += new System.EventHandler(this.anniversaryPicker_ValueChanged);
+			// 
+			// birthday
+			// 
+			this.birthday.Location = new System.Drawing.Point(424, 112);
+			this.birthday.Name = "birthday";
+			this.birthday.Size = new System.Drawing.Size(180, 20);
+			this.birthday.TabIndex = 7;
+			this.birthday.Text = "";
+			this.birthday.Leave += new System.EventHandler(this.birthday_Leave);
+			// 
+			// birthdayPicker
+			// 
+			this.birthdayPicker.Location = new System.Drawing.Point(456, 112);
+			this.birthdayPicker.Name = "birthdayPicker";
+			this.birthdayPicker.Size = new System.Drawing.Size(168, 20);
+			this.birthdayPicker.TabIndex = 8;
+			this.birthdayPicker.ValueChanged += new System.EventHandler(this.birthdayPicker_ValueChanged);
+			// 
+			// label14
+			// 
+			this.label14.Location = new System.Drawing.Point(336, 136);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(100, 16);
+			this.label14.TabIndex = 19;
+			this.label14.Text = "Anniversary:";
+			// 
+			// label13
+			// 
+			this.label13.Location = new System.Drawing.Point(336, 112);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(100, 16);
+			this.label13.TabIndex = 18;
+			this.label13.Text = "Birthday:";
+			// 
+			// spouse
+			// 
+			this.spouse.Location = new System.Drawing.Point(72, 136);
+			this.spouse.Name = "spouse";
+			this.spouse.Size = new System.Drawing.Size(240, 20);
+			this.spouse.TabIndex = 6;
+			this.spouse.Text = "";
+			// 
+			// label12
+			// 
+			this.label12.Location = new System.Drawing.Point(8, 136);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(100, 16);
+			this.label12.TabIndex = 15;
+			this.label12.Text = "Spouse:";
+			// 
+			// nickname
+			// 
+			this.nickname.Location = new System.Drawing.Point(72, 112);
+			this.nickname.Name = "nickname";
+			this.nickname.Size = new System.Drawing.Size(240, 20);
+			this.nickname.TabIndex = 5;
+			this.nickname.Text = "";
+			// 
+			// label11
+			// 
+			this.label11.Location = new System.Drawing.Point(8, 112);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(100, 16);
+			this.label11.TabIndex = 14;
+			this.label11.Text = "Nickname:";
+			// 
+			// groupBox3
+			// 
+			this.groupBox3.Location = new System.Drawing.Point(8, 96);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(712, 4);
+			this.groupBox3.TabIndex = 20;
+			this.groupBox3.TabStop = false;
+			// 
+			// assistant
+			// 
+			this.assistant.Location = new System.Drawing.Point(424, 40);
+			this.assistant.Name = "assistant";
+			this.assistant.Size = new System.Drawing.Size(296, 20);
+			this.assistant.TabIndex = 4;
+			this.assistant.Text = "";
+			// 
+			// manager
+			// 
+			this.manager.Location = new System.Drawing.Point(424, 16);
+			this.manager.Name = "manager";
+			this.manager.Size = new System.Drawing.Size(296, 20);
+			this.manager.TabIndex = 3;
+			this.manager.Text = "";
+			// 
+			// label10
+			// 
+			this.label10.Location = new System.Drawing.Point(336, 40);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(100, 16);
+			this.label10.TabIndex = 17;
+			this.label10.Text = "Assistant\'s name:";
+			// 
+			// label9
+			// 
+			this.label9.Location = new System.Drawing.Point(336, 16);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(100, 16);
+			this.label9.TabIndex = 16;
+			this.label9.Text = "Manager\'s name:";
+			// 
+			// profession
+			// 
+			this.profession.Location = new System.Drawing.Point(72, 64);
+			this.profession.Name = "profession";
+			this.profession.Size = new System.Drawing.Size(240, 20);
+			this.profession.TabIndex = 2;
+			this.profession.Text = "";
+			// 
+			// office
+			// 
+			this.office.Location = new System.Drawing.Point(72, 40);
+			this.office.Name = "office";
+			this.office.Size = new System.Drawing.Size(240, 20);
+			this.office.TabIndex = 1;
+			this.office.Text = "";
+			// 
+			// department
+			// 
+			this.department.Location = new System.Drawing.Point(72, 16);
+			this.department.Name = "department";
+			this.department.Size = new System.Drawing.Size(240, 20);
+			this.department.TabIndex = 0;
+			this.department.Text = "";
+			// 
+			// label8
+			// 
+			this.label8.Location = new System.Drawing.Point(8, 64);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(100, 16);
+			this.label8.TabIndex = 13;
+			this.label8.Text = "Profession:";
+			// 
+			// label6
+			// 
+			this.label6.Location = new System.Drawing.Point(8, 40);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(100, 16);
+			this.label6.TabIndex = 12;
+			this.label6.Text = "Office:";
+			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(8, 16);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(100, 16);
+			this.label1.TabIndex = 11;
+			this.label1.Text = "Department:";
+			// 
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -601,6 +857,31 @@ namespace Novell.iFolder.FormsBookLib
 			this.cancel.TabIndex = 2;
 			this.cancel.Text = "Cancel";
 			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			// 
+			// groupBox5
+			// 
+			this.groupBox5.Location = new System.Drawing.Point(8, 168);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(712, 4);
+			this.groupBox5.TabIndex = 21;
+			this.groupBox5.TabStop = false;
+			// 
+			// notes
+			// 
+			this.notes.Location = new System.Drawing.Point(8, 200);
+			this.notes.Multiline = true;
+			this.notes.Name = "notes";
+			this.notes.Size = new System.Drawing.Size(712, 80);
+			this.notes.TabIndex = 22;
+			this.notes.Text = "";
+			// 
+			// label15
+			// 
+			this.label15.Location = new System.Drawing.Point(8, 184);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(100, 16);
+			this.label15.TabIndex = 23;
+			this.label15.Text = "Notes:";
 			// 
 			// ContactEditor
 			// 
@@ -622,6 +903,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.Activated += new System.EventHandler(this.ContactEditor_Activated);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
+			this.tabPage2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -868,6 +1150,12 @@ namespace Novell.iFolder.FormsBookLib
 					addressView.Items.Add(addr.Country);
 			}
 		}
+
+		private string ConvertDateToString(DateTime dt)
+		{
+			string date = dt.ToString("s");
+			return date.Substring(0, date.IndexOf("T"));
+		}
 		#endregion
 
 		#region Event Handlers
@@ -907,6 +1195,8 @@ namespace Novell.iFolder.FormsBookLib
 				organization.Text = contact.Organization;
 				webAddress.Text = contact.Url;
 				blogAddress.Text = contact.Blog;
+				nickname.Text = contact.Nickname;
+				birthday.Text = contact.Birthday;
 
 				try
 				{
@@ -982,6 +1272,8 @@ namespace Novell.iFolder.FormsBookLib
 					contact.Title = jobTitle.Text.Trim();
 					contact.Url = webAddress.Text.Trim();
 					contact.Blog = blogAddress.Text.Trim();
+					contact.Nickname = nickname.Text.Trim();
+					contact.Birthday = birthday.Text.Trim();
 
 					// Update addresses.
 					if (homeAddrEntry.Add)
@@ -1054,6 +1346,8 @@ namespace Novell.iFolder.FormsBookLib
 					contact.Organization = organization.Text.Trim();
 					contact.Url = webAddress.Text.Trim();
 					contact.Blog = blogAddress.Text.Trim();
+					contact.Nickname = nickname.Text.Trim();
+					contact.Birthday = birthday.Text.Trim();
 
 					// Update addresses.
 					if (homeAddrEntry.Add)
@@ -1621,6 +1915,32 @@ namespace Novell.iFolder.FormsBookLib
 		private void pictureContact_DoubleClick(object sender, System.EventArgs e)
 		{
 			changePicture_Click(sender, e);
+		}
+
+		private void birthdayPicker_ValueChanged(object sender, System.EventArgs e)
+		{
+            birthday.Text = ConvertDateToString(birthdayPicker.Value);
+		}
+
+		private void birthday_Leave(object sender, System.EventArgs e)
+		{
+//			if (birthday.Text.Trim() == String.Empty)
+//			{
+//				birthday.Text = "None";
+//			}		
+		}
+
+		private void anniversaryPicker_ValueChanged(object sender, System.EventArgs e)
+		{
+			anniversary.Text = ConvertDateToString(anniversaryPicker.Value);
+		}
+
+		private void anniversary_Leave(object sender, System.EventArgs e)
+		{
+//			if (anniversary.Text == String.Empty)
+//			{
+//				anniversary.Text = "None";
+//			}
 		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
