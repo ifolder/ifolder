@@ -531,8 +531,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		private void Init()
 		{
-			sqliteDb.BusyTimeout = 1000 * 120;
 			command = sqliteDb.CreateCommand();
+			command.CommandTimeout = 1000 * 120;
 
 			// Turn of synchronous access.
 			command.CommandText = "PRAGMA cache_size = " + conf.Get("CacheSize", "10000");
@@ -688,7 +688,20 @@ namespace Simias.Storage.Provider.Sqlite
 			}
 			if (newConnection && opened)
 			{
-				instance.OpenStore(DbPath);
+				DateTime startTime = DateTime.Now;
+				while (true)
+				{
+					try
+					{
+						instance.OpenStore(DbPath);
+						break;
+					}
+					catch (Exception ex)
+					{
+						if (((TimeSpan)(DateTime.Now - startTime)).Seconds > (2 * 60))
+							throw ex;
+					}
+				}
 			}
 			return instance;
 		}

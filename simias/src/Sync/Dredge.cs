@@ -34,234 +34,355 @@ using Simias.Event;
 namespace Simias.Sync
 {
 
-//---------------------------------------------------------------------------
-/// <summary>
-/// class to sync a portion of the file system with a collection
-/// applying iFolder specific behavior
-/// </summary>
+	//---------------------------------------------------------------------------
+	/// <summary>
+	/// class to sync a portion of the file system with a collection
+	/// applying iFolder specific behavior
+	/// </summary>
 
-/* TODO: need to handle if we are on a case-insensitive file system and file name
- * changes only by case? Actually this would be a rather rare optimization and
- * probably not worth it for the dredger (except perhaps for a directory rename).
- * If the event system is up, we catch it as a rename. If not, the dredger treats
- * it as a delete and create. Dredger should always be case sensitive.
- */
-
-public class Dredger
-{
-	internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Dredger));
-
-	SyncCollection collection = null;
-
-	/* TODO: onServer needs to be removed. It controls how tombstones are handled:
-	 *   they are deleted on the server but left on the client. What it
-	 *   really needs to be is deleted if there is no upstream server. Perhaps
-	 *   the best way to handle it would be for this code to always leave a
-	 *   tombstone, but the sync code would just remove them if there was no
-	 *   upstream server.
+	/* TODO: need to handle if we are on a case-insensitive file system and file name
+	 * changes only by case? Actually this would be a rather rare optimization and
+	 * probably not worth it for the dredger (except perhaps for a directory rename).
+	 * If the event system is up, we catch it as a rename. If not, the dredger treats
+	 * it as a delete and create. Dredger should always be case sensitive.
 	 */
-	bool onServer = false;
-	const string lastDredgeProp = "LastDredgeTime";
-	DateTime dredgeTimeStamp = DateTime.Now;
-	DateTime lastDredgeTime = DateTime.MinValue;
-	bool foundChange;
+
+	public class Dredger
+	{
+		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Dredger));
+
+		SyncCollection collection = null;
+
+		/* TODO: onServer needs to be removed. It controls how tombstones are handled:
+		 *   they are deleted on the server but left on the client. What it
+		 *   really needs to be is deleted if there is no upstream server. Perhaps
+		 *   the best way to handle it would be for this code to always leave a
+		 *   tombstone, but the sync code would just remove them if there was no
+		 *   upstream server.
+		 */
+		bool onServer = false;
+		const string lastDredgeProp = "LastDredgeTime";
+		DateTime dredgeTimeStamp = DateTime.Now;
+		DateTime lastDredgeTime = DateTime.MinValue;
+		bool foundChange;
+		string rootPath;
 	
-	//--------------------------------------------------------------------
-	// only returns true if file exists and name matches case exactly
-	bool FileThere(string path, string name)
-	{
-		FileInfo fi = new FileInfo(Path.Combine(path, name));
-		return fi.Exists && name == fi.Name;
-	}
-
-	//--------------------------------------------------------------------
-	// only returns true if directory exists and name matches case exactly
-	bool DirThere(string path, string name)
-	{
-		DirectoryInfo di = new DirectoryInfo(Path.Combine(path, name));
-		return di.Exists && name == di.Name;
-	}
-
-	//--------------------------------------------------------------------
-	void DeleteNode(Node node)
-	{
-		Log.Spew("Dredger deleting orphaned node {0}, {1}", node.Name, node.ID);
-		Node[] deleted = collection.Delete(node, PropertyTags.Parent);
-		collection.Commit(deleted);
-	}
-
-	//--------------------------------------------------------------------
-	// TODO: what about file permissions and symlinks?
-
-	void DoNode(DirNode parentNode, string path, bool isDir, bool subTreeHasChanged)
-	{
-		Node node = null;
-		DirNode dn = null;
-		FileNode fn = null;
-		string name = Path.GetFileName(path);
-
-		// log.Debug("Processing node of path {0}", path);
-
-		// don't let temp files from sync into the collection as regular nodes
-		if (name.StartsWith(".simias.") && !isDir)
-			return;
-
-		// find if node for this file or dir already exists
-		// delete nodes that are wrong type
-		foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, parentNode.GetRelativePath() + "/" + name, SearchOp.Equal))
+		
+		/// <summary>
+		/// // Delete the specified node.
+		/// </summary>
+		/// <param name="node">The node to delete.</param>
+		void DeleteNode(Node node)
 		{
-			node = Node.NodeFactory(collection, sn);
-			dn = node as DirNode;
-			fn = node as FileNode;
-			if (fn != null && isDir)
-			{
-				DeleteNode(node);
-				node = null;
-			}
-			else if (dn != null)
-			{
-				if (isDir)
-				{
-					DoSubtree(dn, subTreeHasChanged);
-				}
-				else
-				{
-					DeleteNode(dn);
-					node = null;
-				}
-			}
-			// There can only be one node with the matching relative path.
-			break;
+			Log.Spew("Dredger deleting orphaned node {0}, {1}", node.Name, node.ID);
+			Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+			collection.Commit(deleted);
+			foundChange = true;
 		}
 
-		if (node == null)
+		/// <summary>
+		/// Create a FileNode for the specified file.
+		/// </summary>
+		/// <param name="path">The path to the node to create.</param>
+		/// <param name="parentNode">The parent of the node to create.</param>
+		/// <returns>The new FileNode.</returns>
+		FileNode CreateFileNode(string path, DirNode parentNode)
 		{
-			// it's a new node
-			if (!isDir)
-			{
-				FileInfo fi = new FileInfo(path);
-				FileNode fnode = new FileNode(collection, parentNode, name);
-				fnode.LastWriteTime = fi.LastWriteTime;
-				fnode.LastAccessTime = fi.LastAccessTime;
-				fnode.CreationTime = fi.CreationTime;
-				fnode.Length = fi.Length;
-				log.Debug("Adding file node for {0} {1}", path, fnode.ID);
-				collection.Commit(fnode);
-				foundChange = true;
-			}
-			else
-			{
-				if (Directory.GetLastWriteTime(path).CompareTo(lastDredgeTime) < 0)
-					Directory.SetLastWriteTime(path, dredgeTimeStamp);
-				DirNode dnode = new DirNode(collection, parentNode, name);
-				dnode.LastWriteTime = Directory.GetLastWriteTime(path);
-				dnode.CreationTime = Directory.GetCreationTime(path);
-				log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
-				collection.Commit(dnode);
-				foundChange = true;
-				DoSubtree(dnode, true);
-			}
+			FileInfo fi = new FileInfo(path);
+			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
+			fnode.LastWriteTime = fi.LastWriteTime;
+			fnode.LastAccessTime = fi.LastAccessTime;
+			fnode.CreationTime = fi.CreationTime;
+			fnode.Length = fi.Length;
+			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
+			collection.Commit(fnode);
+			foundChange = true;
+			return fnode;
 		}
-		else if (fn != null)
+
+		/// <summary>
+		/// Modify the FileNode for the changed file.
+		/// </summary>
+		/// <param name="path">The path of the file that has changed.</param>
+		/// <param name="fn">The node to modify.</param>
+		void ModifyFileNode(string path, FileNode fn)
 		{
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
-			FileNode unode = new FileNode(node);
 			DateTime lastWrote = fi.LastWriteTime;
 			
-			if (unode.LastWriteTime != lastWrote)
+			if (fn.LastWriteTime != lastWrote)
 			{
 				// Don't reset the Createion time.
-				unode.LastWriteTime = lastWrote;
-				unode.LastAccessTime = fi.LastAccessTime;
-				unode.Length = fi.Length;
-				log.Debug("Updating file node for {0} {1}", path, node.ID);
-				collection.Commit(unode);
+				fn.LastWriteTime = lastWrote;
+				fn.LastAccessTime = fi.LastAccessTime;
+				fn.Length = fi.Length;
+				log.Debug("Updating file node for {0} {1}", path, fn.ID);
+				collection.Commit(fn);
 				foundChange = true;
 			}
 		}
-	}
 
-	//--------------------------------------------------------------------
-	void DoSubtree(DirNode dnode, bool subTreeHasChanged)
-	{
-		if (dnode == null)
+		/// <summary>
+		/// Create a DirNode for the specified directory.
+		/// </summary>
+		/// <param name="path">The path to the directory.</param>
+		/// <param name="parentNode">The parent DirNode.</param>
+		/// <returns>The new DirNode.</returns>
+		DirNode CreateDirNode(string path, DirNode parentNode)
 		{
-			//Log.Spew("Dredger skipping empty subtree");
-			return;
+			DirectoryInfo di = new DirectoryInfo(path);
+			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
+			dnode.LastWriteTime = di.LastWriteTime;
+			dnode.CreationTime = di.CreationTime;
+			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
+			collection.Commit(dnode);
+			foundChange = true;
+			return dnode;
 		}
 
-		
-		string path = dnode.GetFullPath(collection);
-		//Log.Spew("Dredger processing subtree of path {0}", path);
-
-		DirectoryInfo tmpDi = new DirectoryInfo(path);
-		
-		if (tmpDi.LastWriteTime > lastDredgeTime)
+		/// <summary>
+		/// Modify the DirNode for the modified directory.
+		/// </summary>
+		/// <param name="path">The path to the directory.</param>
+		/// <param name="dnode">The DirNode to modify.</param>
+		void ModifyDirNode(string path, DirNode dnode)
 		{
-			subTreeHasChanged = true;
+			dnode.LastWriteTime = Directory.GetLastWriteTime(path);
+			log.Debug("Updating dir node for {0} {1}", path, dnode.ID);
+			collection.Commit(dnode);
+			foundChange = true;
 		}
-		
-		if (subTreeHasChanged)
+
+		/// <summary>
+		/// Get a ShallowNode for the named file or directory.
+		/// </summary>
+		/// <param name="path">Path to the file.</param>
+		/// <returns>The ShallowNode for this file.</returns>
+		ShallowNode GetShallowNodeForFile(string path)
 		{
-			// remove all nodes from store that no longer exist in the file system
-			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
+			string relPath = path.Replace(rootPath + Path.DirectorySeparatorChar, "");
+			relPath = relPath.Replace('\\', '/');
+			
+			foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, relPath, SearchOp.Equal))
 			{
-				if (collection.IsBaseType(sn, typeof(DirNode).Name) && !DirThere(path, sn.Name)
-					|| collection.IsBaseType(sn, typeof(FileNode).Name) && !FileThere(path, sn.Name))
+				return sn;
+				// There can only be one node with the matching relative path.
+			}
+			return null;
+		}
+
+		//--------------------------------------------------------------------
+		// TODO: what about file permissions and symlinks?
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <param name="sn"></param>
+		/// <param name="path"></param>
+		/// <param name="isDir"></param>
+		void DoShallowNode(DirNode parent, ShallowNode sn, string path, bool isDir)
+		{
+			Node node = null;
+			DirNode dn = null;
+			FileNode fn = null;
+			string name = Path.GetFileName(path);
+		
+			// don't let temp files from sync into the collection as regular nodes
+			if (name.StartsWith(".simias.") && !isDir)
+				return;
+
+			// If the lastwritetime has not changed the node is up to date.
+			if (sn != null && File.GetLastWriteTime(path) <= lastDredgeTime)
+			{
+				if (isDir)
+					DoSubtree(path, null, sn.ID, false);
+				return;
+			}
+
+			node = Node.NodeFactory(collection, sn);
+			if (isDir)
+			{
+				// This is a directory.
+				dn = node as DirNode;
+				if (dn != null)
 				{
-					DeleteNode(new Node(collection, sn));
-					foundChange = true;
+					ModifyDirNode(path, dn);
 				}
-				// else Log.Spew("Dredger leaving node {0}", kid.Name);
+				else
+				{
+					// This node is the wrong type.
+					DeleteNode(node);
+					dn = CreateDirNode(path, parent);
+				}
+				DoSubtree(path, dn, dn.ID, true);
+			}
+			else
+			{
+				fn = node as FileNode;
+				if (fn != null)
+				{
+					ModifyFileNode(path, fn);
+				}
+				else
+				{
+					DeleteNode(node);
+					fn = CreateFileNode(path, parent);
+				}
 			}
 		}
 
-		// merge files from file system to store
-		foreach (string file in Directory.GetFiles(path))
+	
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="parentNode"></param>
+		/// <param name="path"></param>
+		/// <param name="isDir"></param>
+		void DoNode(DirNode parentNode, string path, bool isDir)
 		{
-			if (File.GetLastWriteTime(file) > lastDredgeTime || subTreeHasChanged)
-				DoNode(dnode, file, false, subTreeHasChanged);
-		}
+			string name = Path.GetFileName(path);
 		
-		// merge subdirs and recurse.
-		foreach (string dir in Directory.GetDirectories(path))
-		{
-			DoNode(dnode, dir, true, subTreeHasChanged);
-		}
-	}
-
-	/// <summary>
-	/// Dredge the Managed path.
-	/// </summary>
-	/// <param name="path"></param>
-	void DoManagedPath(string path)
-	{
-		DirectoryInfo tmpDi = new DirectoryInfo(path);
-		
-		// merge files from file system to store
-		foreach (string file in Directory.GetFiles(path))
-		{
-			if (File.GetLastWriteTime(file) > lastDredgeTime)
+			// find if node for this file or dir already exists
+			// delete nodes that are wrong type
+			foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, parentNode.GetRelativePath() + "/" + name, SearchOp.Equal))
 			{
-				// here we are just checking for modified files
-				BaseFileNode unode = (BaseFileNode)collection.GetNodeByID(Path.GetFileName(file));
-				if (unode != null)
+				DoShallowNode(parentNode, sn, path, isDir);
+				// There can only be one node with the matching relative path.
+				break;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="dnode"></param>
+		/// <param name="nodeID"></param>
+		/// <param name="subTreeHasChanged"></param>
+		void DoSubtree(string path, DirNode dnode, string nodeID, bool subTreeHasChanged)
+		{
+			//string path = dnode.GetFullPath(collection);
+			//Log.Spew("Dredger processing subtree of path {0}", path);
+
+			if (subTreeHasChanged)
+			{
+				// A file or directory has been added or deleted from this directory. We need to find it.
+				Hashtable existingNodes = new Hashtable();
+				// Put all the existing nodes in a hashtable to match against the file system.
+				foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 				{
-					DateTime lastWrote = File.GetLastWriteTime(file);
-					DateTime created = File.GetCreationTime(file);
-					if (unode.LastWriteTime != lastWrote)
+					existingNodes.Add(sn.Name, sn);
+				}
+
+				// Look for new and modified files.
+				foreach (string file in Directory.GetFiles(path))
+				{
+					ShallowNode sn = (ShallowNode)existingNodes[Path.GetFileName(file)];
+					if (sn != null)
 					{
-						unode.LastWriteTime = lastWrote;
-						unode.CreationTime = created;
-						log.Debug("Updating store file node for {0} {1}", path, file);
-						collection.Commit(unode);
-						foundChange = true;
+						DoShallowNode(dnode, sn, file, false);
+						existingNodes.Remove(sn.Name);
+					}
+					else
+					{
+						// The file is new create a new file node.
+						CreateFileNode(file, dnode);
+					}
+				}
+
+				// look for new directories
+				foreach (string dir in Directory.GetDirectories(path))
+				{
+					ShallowNode sn = (ShallowNode)existingNodes[Path.GetFileName(dir)];
+					if (sn != null)
+					{
+						DoShallowNode(dnode, sn, dir, true);
+						existingNodes.Remove(sn.Name);
+					}
+					else
+					{
+						// The directory is new create a new directory node.
+						DirNode newDir = CreateDirNode(dir, dnode);
+						DoSubtree(dir, newDir, newDir.ID, true);
+					}
+				}
+			
+				// look for deleted files.
+				// All remaining nodes need to be deleted.
+				foreach (ShallowNode sn in existingNodes.Values)
+				{
+					DeleteNode(new Node(collection, sn));
+				}
+			}
+			else
+			{
+				// Just look for modified files.
+				foreach (string file in Directory.GetFiles(path))
+				{
+					if (File.GetLastWriteTime(file) > lastDredgeTime)
+					{
+						if (dnode == null)
+							dnode = collection.GetNodeByID(nodeID) as DirNode;
+						DoNode(dnode, file, false);
+					}
+				}
+			
+				foreach (string dir in Directory.GetDirectories(path))
+				{
+					if (Directory.GetLastWriteTime(dir) > lastDredgeTime)
+					{
+						if (dnode == null)
+							dnode = collection.GetNodeByID(nodeID) as DirNode;
+						DoNode(dnode, dir, true);
+					}
+					else 
+					{
+						ShallowNode sn = GetShallowNodeForFile(dir);
+						if (sn != null)
+							DoSubtree(dir, null, sn.ID, false);
+						else
+						{
+							// This should never happen but if it does recall with the modified true.
+							DoSubtree(path, dnode, nodeID, true);
+							break;
+						}
 					}
 				}
 			}
 		}
-	}
+
+		/// <summary>
+		/// Dredge the Managed path.
+		/// </summary>
+		/// <param name="path"></param>
+		void DoManagedPath(string path)
+		{
+			DirectoryInfo tmpDi = new DirectoryInfo(path);
+		
+			// merge files from file system to store
+			foreach (string file in Directory.GetFiles(path))
+			{
+				if (File.GetLastWriteTime(file) > lastDredgeTime)
+				{
+					// here we are just checking for modified files
+					BaseFileNode unode = (BaseFileNode)collection.GetNodeByID(Path.GetFileName(file));
+					if (unode != null)
+					{
+						DateTime lastWrote = File.GetLastWriteTime(file);
+						DateTime created = File.GetCreationTime(file);
+						if (unode.LastWriteTime != lastWrote)
+						{
+							unode.LastWriteTime = lastWrote;
+							unode.CreationTime = created;
+							log.Debug("Updating store file node for {0} {1}", path, file);
+							collection.Commit(unode);
+							foundChange = true;
+						}
+					}
+				}
+			}
+		}
 
 	//--------------------------------------------------------------------
 	/// <summary>
@@ -292,9 +413,11 @@ public class Dredger
 		DirNode dn = collection.GetRootDirectory();
 		if (dn != null)
 		{
-			if (onServer || Directory.Exists(dn.GetFullPath(collection)))
+			rootPath = ((Uri)(dn.Properties.GetSingleProperty(PropertyTags.Root).Value)).LocalPath;
+			string path = dn.GetFullPath(collection);
+			if (onServer || Directory.Exists(path))
 			{
-				DoSubtree(dn, false);
+				DoSubtree(path, dn, dn.ID, Directory.GetLastWriteTime(path) > lastDredgeTime ? true : false);
 			}
 			else
 			{

@@ -22,8 +22,7 @@ namespace Simias.Storage.Provider.Sqlite
 		string db_file;
 		int db_mode;
 		IntPtr sqlite_handle;
-		int timeout = 0;
-
+		
 		ConnectionState state;
 
 		/// <summary>
@@ -134,19 +133,6 @@ namespace Simias.Storage.Provider.Sqlite
 			get 
 			{
 				return 0;
-			}
-		}
-
-		public int BusyTimeout
-		{
-			get 
-			{
-				return timeout;
-			}
-			set 
-			{
-				timeout = value;
-				sqlite_busy_timeout(sqlite_handle, timeout);
 			}
 		}
 
@@ -294,8 +280,5 @@ namespace Simias.Storage.Provider.Sqlite
 
 		[DllImport("sqlite")]
 		static extern int sqlite_last_insert_rowid (IntPtr sqlite_handle);
-
-		[DllImport("sqlite")]
-		static extern void sqlite_busy_timeout(IntPtr sqlite_handle, int timeout);
 	}
 }
