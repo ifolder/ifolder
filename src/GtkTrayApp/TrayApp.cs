@@ -39,7 +39,9 @@ namespace Novell.iFolder
 {
 	public class TrayApplication 
 	{
-		static SyncManager syncManager = null;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(TrayApplication));
+		
+        static SyncManager syncManager = null;
 		static Gtk.Image gAppIcon;
 		static Gdk.PixbufAnimation gSyncAnimation;
 		static Gdk.Pixbuf gNifPixbuf;
@@ -53,7 +55,11 @@ namespace Novell.iFolder
 		{
 			Application.Init();
 
-			tIcon = new TrayIcon("iFolder");
+			Configuration conf = new Configuration();
+
+            SimiasLogManager.Configure(conf);
+            
+            tIcon = new TrayIcon("iFolder");
 
 			eBox = new EventBox();
 
@@ -80,7 +86,7 @@ namespace Novell.iFolder
             props.DefaultChannelSinks = 
 					SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
-			string logicFactory = new Configuration().Get("iFolderApp", 
+			string logicFactory = conf.Get("iFolderApp", 
 				"SyncLogic", "SynkerA");
 
 			switch (logicFactory)
