@@ -27,7 +27,6 @@
 // Handle to this DLL.
 extern HINSTANCE g_hmodThisDll;
 
-
 //
 //  FUNCTION: CiFolderShell::QueryContextMenu(HMENU, UINT, UINT, UINT, UINT)
 //
@@ -58,13 +57,20 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 	TCHAR sziFolderMenu[]= TEXT("iFolder");
 
 	// TODO: Localize
-    TCHAR szCreateiFolderMenu[]= TEXT("Convert to an iFolder");
-    TCHAR szDeleteiFolderMenu[]= TEXT("Revert to a Normal Folder");
-	TCHAR sziFolderConflictMenu[] = TEXT("Resolve conflicts");
-	TCHAR sziFolderPropMenu[]= TEXT("Properties");
-	TCHAR sziFolderShareMenu[]= TEXT("Share with...");
-	TCHAR sziFolderHelpMenu[] = TEXT("Help...");
+    TCHAR szCreateiFolderMenu[MAX_MENU_LENGTH];
+    TCHAR szDeleteiFolderMenu[MAX_MENU_LENGTH];
+	TCHAR sziFolderConflictMenu[MAX_MENU_LENGTH];
+	TCHAR sziFolderPropMenu[MAX_MENU_LENGTH];
+	TCHAR sziFolderShareMenu[MAX_MENU_LENGTH];
+	TCHAR sziFolderHelpMenu[MAX_MENU_LENGTH];
     BOOL bAppendItems= FALSE;
+
+	LoadString(g_hmodThisDll, IDS_CONVERT, szCreateiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodThisDll, IDS_REVERT, szDeleteiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodThisDll, IDS_RESOLVE, sziFolderConflictMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodThisDll, IDS_PROPERTIES, sziFolderPropMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodThisDll, IDS_SHARE, sziFolderShareMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
+	LoadString(g_hmodThisDll, IDS_HELP, sziFolderHelpMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
 
 	STGMEDIUM medium;
 	// TODO - should we use pidl's instead?
@@ -447,7 +453,7 @@ STDMETHODIMP CiFolderShell::GetCommandString(UINT_PTR idCmd,
 {
     //OutputDebugString(TEXT("CiFolderShell::GetCommandString()\n"));
 
-	// TODO - Do xA and xW work ... and display the correct strings.  Also, retrieve strings from resource file.
+	// TODO - Do xA and xW work ... and display the correct strings.  Also, localize.
     switch (idCmd)
     {
         case 0:
