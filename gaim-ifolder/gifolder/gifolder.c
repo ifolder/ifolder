@@ -189,6 +189,12 @@ plugin_load(GaimPlugin *plugin)
 	
 //	g_print("Simias Event Client registered successfully\n");
 
+	/* FIXME: Check to see if an AIM account exists (Since that's the only
+	 * protocol that this will work with.  If there's not one, throw a popup
+	 * in front of the user to let them know this plugin only works with the
+	 * AIM protocol for now.
+	 */
+
 	return TRUE;
 }
 
