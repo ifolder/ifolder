@@ -128,6 +128,11 @@ namespace Simias.Event
 
 		#region Event Signalers
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="eventType"></param>
+		/// <param name="args"></param>
 		public void RaiseEvent(CollectionEventArgs.EventType eventType, CollectionEventArgs args)
 		{
 			MyTrace.WriteLine("Recieved Event {0}", eventType.ToString());
@@ -368,12 +373,12 @@ namespace Simias.Event
 		/// <summary>
 		/// Method to register a client channel.
 		/// </summary>
-		public static void RegisterClientChannel(Configuration conf, string domain)
+		public static void RegisterClientChannel(Configuration conf)
 		{
 			// Check if we should run in process.
 			if (!RunInProcess())
 			{
-				startService(conf, domain);
+				startService(conf);
 				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
 				bool registered = false;
 
@@ -414,9 +419,9 @@ namespace Simias.Event
 		/// <summary>
 		/// Method to register the server channel.
 		/// </summary>
-		public static void RegisterService(Configuration conf, string domain)
+		public static void RegisterService(Configuration conf)
 		{
-			string serviceString = CFG_Uri + "_" + domain;
+			string serviceString = CFG_Uri + "_" + conf.BasePath.GetHashCode().ToString();
 			Uri serviceUri = new Uri (serviceString);
 			
 			Hashtable props = new Hashtable();
@@ -445,10 +450,10 @@ namespace Simias.Event
 			}
 		}
 
-		private static void startService(Configuration conf, string domain)
+		private static void startService(Configuration conf)
 		{
 			bool createdMutex;
-			string mutexName = "___" + domain + "___EventBrokerMutex___";
+			string mutexName = "EventBrokerMutex___" + conf.BasePath.GetHashCode().ToString();
 			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
 			
 			if (createdMutex)
@@ -471,7 +476,7 @@ namespace Simias.Event
 					service.StartInfo.FileName = serviceName;
 					service.StartInfo.Arguments = null;
 				}
-				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + domain + " " + mutexName;
+				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + mutexName;
 				service.Start();
 				mutex.ReleaseMutex();
 				System.Threading.Thread.Sleep(500);

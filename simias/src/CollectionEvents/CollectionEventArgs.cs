@@ -36,7 +36,6 @@ namespace Simias.Event
 		string					source;
 		string					id;
 		string					collection;
-		string					domainName;
 		string					type;
 		int						eventId;
 		internal char			seperatorChar = '\0';
@@ -77,17 +76,15 @@ namespace Simias.Event
 		/// <param name="source">The source of the event.</param>
 		/// <param name="id">The object of the event.</param>
 		/// <param name="collection">The Collection that the node belongs to.</param>
-		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="type">The Type of the Node.</param>
 		/// <param name="changeType">The type of change that occured.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
-		internal CollectionEventArgs(string source, string id, string collection, string domainName, string type, EventType changeType, int eventId)
+		internal CollectionEventArgs(string source, string id, string collection, string type, EventType changeType, int eventId)
 		{
 			this.changeType = changeType;
 			this.source = source;
 			this.id = id;
 			this.collection = collection;
-			this.domainName = domainName;
 			this.type = type;
 			this.eventId = eventId;
 		}
@@ -99,7 +96,6 @@ namespace Simias.Event
 			sb.Append(source + seperatorChar);
 			sb.Append(id + seperatorChar);
 			sb.Append(collection + seperatorChar);
-			sb.Append(domainName + seperatorChar);
 			sb.Append(type + seperatorChar);
 			sb.Append(eventId + seperatorChar);
 			return sb.ToString();
@@ -113,7 +109,6 @@ namespace Simias.Event
 			source = sArg[i++];
 			id = sArg[i++];
 			collection = sArg[i++];
-			domainName = sArg[i++];
 			type = sArg[i++];
 			eventId = int.Parse(sArg[i++]);
 		}
@@ -142,14 +137,6 @@ namespace Simias.Event
 		public string Collection
 		{
 			get {return collection;}
-		}
-
-		/// <summary>
-		/// Gets the DomainName for the event.
-		/// </summary>
-		public string DomainName
-		{
-			get {return domainName;}
 		}
 
 		/// <summary>

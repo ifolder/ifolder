@@ -442,7 +442,7 @@ namespace Simias.Storage
 					Directory.Move( newRoot.LocalPath, sourcePathString );
 
 					// Generate event that document root was changed.
-					localStore.Publisher.RaiseCollectionRootChangedEvent( new CollectionRootChangedEventArgs( localStore.ComponentId, Id, DomainName, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
+					localStore.Publisher.RaiseCollectionRootChangedEvent( new CollectionRootChangedEventArgs( localStore.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
 				}
 				catch
 				{
@@ -620,13 +620,13 @@ namespace Simias.Storage
 							committedNode.mergedCachedNode = null;
 
 							// Fire an event to notify that this node has been changed.
-							localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, localStore.Instance ) );
+							localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Changed, localStore.Instance ) );
 						}
 					}
 					else
 					{
 						// Fire an event to notify that this node has been created.
-						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, DomainName, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, localStore.Instance ) );
+						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, committedNode.Id, Id, committedNode.NameSpaceType, NodeEventArgs.EventType.Created, localStore.Instance ) );
 
 						// Mark the node as persisted.
 						committedNode.IsPersisted = true;

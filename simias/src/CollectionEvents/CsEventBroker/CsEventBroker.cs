@@ -41,17 +41,15 @@ namespace Simias.Event
 		static void Main(string[] args)
 		{
 			string mutexName;
-			string domain;
 			string confPath;
-			if (args.Length != 3)
+			if (args.Length != 2)
 			{
 				return;
 			}
 			else
 			{
 				confPath = args[0];
-				domain = args[1];
-				mutexName = args[2];
+				mutexName = args[1];
 			}
 
 			bool createdMutex;
@@ -61,7 +59,7 @@ namespace Simias.Event
 				mutex.WaitOne();
 			}
 
-			EventBroker.RegisterService(new Configuration(args[0]), domain);
+			EventBroker.RegisterService(new Configuration(args[0]));
 			// Wait (forever) until we are killed.
 			new System.Threading.ManualResetEvent(false).WaitOne();
 		}

@@ -27,14 +27,14 @@ namespace Simias.Event
 		/// <summary>
 		/// Creates a Subscriber to listen for service events.
 		/// </summary>
-		/// <param name="domain">The domain for this publisher obtained from the CollectionStore.</param>
-		public ServiceEventSubscriber(Configuration conf, string domain)
+		/// <param name="conf">Configuration Object.</param>
+		public ServiceEventSubscriber(Configuration conf)
 		{
 			userName = System.Environment.UserName;
 			enabled = true;
 			alreadyDisposed = false;
 			
-			EventBroker.RegisterClientChannel(conf, domain);
+			EventBroker.RegisterClientChannel(conf);
 			broker = new EventBroker();
 			broker.ServiceControl += new ServiceEventHandler(OnServiceControl);
 		}

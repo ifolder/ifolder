@@ -42,22 +42,21 @@ namespace Simias.Event
 		/// <param name="source">The source of the event.</param>
 		/// <param name="fullPath">The full path of the modified file.</param>
 		/// <param name="collectionId">The collection that this file belongs to.</param>
-		/// <param name="domainName">The domainName from the store that the collection belongs to.</param>
 		/// <param name="oldPath">The full path to the old name.</param>
-		public FileRenameEventArgs(string source, string fullPath, string collectionId, string domainName, string oldPath):
-			base(source, fullPath, collectionId, domainName, FileEventArgs.EventType.Renamed)
+		public FileRenameEventArgs(string source, string fullPath, string collectionId, string oldPath):
+			base(source, fullPath, collectionId, FileEventArgs.EventType.Renamed)
 		{
 			this.oldPath = oldPath;
 		}
 
-		internal virtual string MarshallToString()
+		internal override string MarshallToString()
 		{
 			StringBuilder sb = new StringBuilder(base.MarshallToString());
 			sb.Append(oldPath + seperatorChar);
 			return sb.ToString();
 		}
 
-		internal virtual void MarshallFromString(string sArgs)
+		internal override void MarshallFromString(string sArgs)
 		{
 			int i = 0;
 			string [] sArg = sArgs.Split(seperatorChar);

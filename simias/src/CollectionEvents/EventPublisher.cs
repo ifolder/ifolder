@@ -35,7 +35,6 @@ namespace Simias.Event
 	public class EventPublisher
 	{
 		EventBroker broker;
-		string			domain;
 		Configuration	conf;
 			
 		#region Constructor
@@ -43,12 +42,11 @@ namespace Simias.Event
 		/// <summary>
 		/// Creates an Event Publisher.
 		/// </summary>
-		/// <param name="domain">The domain for this publisher obtained from the CollectionStore.</param>
-		public EventPublisher(Configuration conf, string domain)
+		/// <param name="conf">Configuration object.</param>
+		public EventPublisher(Configuration conf)
 		{
 			this.conf = conf;
-			this.domain = domain;
-			EventBroker.RegisterClientChannel(conf, domain);
+			EventBroker.RegisterClientChannel(conf);
 			broker = new EventBroker();
 		}
 

@@ -42,7 +42,6 @@ namespace Simias.Event
 	{
 		Queue eventQueue;
 		ManualResetEvent queued;
-		string domain;
 		#region Events
 
 		/// <summary>
@@ -86,7 +85,6 @@ namespace Simias.Event
 		#region Private Fields
 
 		EventBroker broker;
-		string		domainName;
 		bool		enabled;
 		Regex		fileNameFilter;
 		Regex		fileTypeFilter;
@@ -104,15 +102,14 @@ namespace Simias.Event
 		/// <summary>
 		/// Creates a Subscriber to watch the specified Collection.
 		/// </summary>
-		/// <param name="domainName">The domainName from the store that will be watched.</param>
+		/// <param name="conf">Configuration Object.</param>
 		/// <param name="collectionId">The collection to watch for events.</param>
 		/// <param name="rootPath">The Root Path for the collection.</param>
-		public EventSubscriber(Configuration conf, string domainName, string collectionId, string rootPath)
+		public EventSubscriber(Configuration conf, string collectionId, string rootPath)
 		{
 			eventQueue = new Queue();
 			queued = new ManualResetEvent(false);
 
-			this.domainName = domainName;
 			enabled = true;
 			fileNameFilter = null;
 			fileTypeFilter = null;
@@ -123,7 +120,7 @@ namespace Simias.Event
 			this.rootPath = rootPath;
 			alreadyDisposed = false;
 			
-			EventBroker.RegisterClientChannel(conf, domainName);
+			EventBroker.RegisterClientChannel(conf);
 			
 			broker = new EventBroker();
 			broker.NodeChanged += new NodeEventHandler(OnNodeChanged);
@@ -141,9 +138,9 @@ namespace Simias.Event
 		/// <summary>
 		/// Create a Subscriber to monitor changes in the complete Collection Store.
 		/// </summary>
-		/// <param name="domainName">The domainName from the store that will be watched.</param>
-		public EventSubscriber(Configuration conf, string domainName) :
-			this(conf, domainName, (string)null, (string)null)
+		/// <param name="conf">Configuration object.</param>
+		public EventSubscriber(Configuration conf) :
+			this(conf, (string)null, (string)null)
 		{
 		}
 
@@ -435,7 +432,7 @@ namespace Simias.Event
 		/// <returns>True If matches the filter. False no match.</returns>
 		private bool applyNodeFilter(NodeEventArgs args)
 		{
-			if (enabled && domainName == args.DomainName)
+			if (enabled)
 			{
 				if (collectionId == null || args.Collection == collectionId)
 				{
@@ -458,7 +455,7 @@ namespace Simias.Event
 		/// <returns>True If matches the filter. False no match.</returns>
 		private bool applyFileFilter(FileEventArgs args)
 		{
-			if (enabled && domainName == args.DomainName)
+			if (enabled)
 			{
 				if (collectionId == null || args.Collection == collectionId)
 				{

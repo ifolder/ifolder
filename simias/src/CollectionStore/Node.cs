@@ -890,12 +890,12 @@ namespace Simias.Storage
 					cNode.Copy( commitNode.cNode );
 
 					// Fire an event to notify that this node has been changed.
-					store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Changed, store.Instance ) );
+					store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, NodeEventArgs.EventType.Changed, store.Instance ) );
 				}
 				else
 				{
 					// Fire an event to notify that this node has been created.
-					store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Created, store.Instance ) );
+					store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, NodeEventArgs.EventType.Created, store.Instance ) );
 
 					// This node has been successfully committed to the database.
 					IsPersisted = true;
@@ -973,7 +973,7 @@ namespace Simias.Storage
 					if ( IsCollection )
 					{
 						// Generate a delete event.
-						store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
+						store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 						// Just delete the collection, the store provider will remove all of the nodes.
 						ChangeToTombstone( false );
@@ -990,7 +990,7 @@ namespace Simias.Storage
 							foreach ( Node delNode in idList )
 							{
 								// Generate a delete event.
-								store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, delNode.Id, CollectionNode.Id, store.DomainName, delNode.NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
+								store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, delNode.Id, CollectionNode.Id, delNode.NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 								// Change the current this object into a tombstone rather than using the
 								// enumerated object.  That way the tombstone will be passed back to the caller.
@@ -1026,7 +1026,7 @@ namespace Simias.Storage
 						if ( IsCollection )
 						{
 							// Generate a delete event.
-							store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
+							store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 							// Find the node object and delete it from the persistent store.
 							ChangeToTombstone( false );
@@ -1035,7 +1035,7 @@ namespace Simias.Storage
 						else
 						{
 							// Generate a delete event.
-							store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, store.DomainName, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
+							store.Publisher.RaiseNodeEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, NodeEventArgs.EventType.Deleted, store.Instance ) );
 
 							// Convert this node to a tombstone and immediately commit it.
 							ChangeToTombstone( true );

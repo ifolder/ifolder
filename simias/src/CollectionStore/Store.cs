@@ -293,6 +293,9 @@ namespace Simias.Storage
 				// Set the path to the store.
 				storeManagedPath = new Uri( Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName ) );
 
+				// Allocate a publisher.
+				publisher = new EventPublisher(new Configuration(StorePath.LocalPath));
+
 				// Either create the store or authenticate to it.
 				if ( created )
 				{
@@ -307,13 +310,12 @@ namespace Simias.Storage
 				else
 				{
 					AuthenticateStore();
-					publisher = new EventPublisher(new Configuration(StorePath.LocalPath), identityManager.DomainName);
 				}
 			}
 
 			// Setup to watch for node changes on the store, so the cached node table can be kept
 			// up to date.
-			subscriber = new EventSubscriber( new Configuration(StorePath.LocalPath), identityManager.DomainName );
+			subscriber = new EventSubscriber( new Configuration(StorePath.LocalPath));
 			subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
 		}
 		#endregion
@@ -422,9 +424,6 @@ namespace Simias.Storage
 		{
 			// Create a domain name for this domain.
 			string domainName = Environment.UserDomainName + ":" + Guid.NewGuid().ToString().ToLower();
-
-			// Create a Publisher to publish events.
-			publisher = new EventPublisher(new Configuration(StorePath.LocalPath), domainName);
 
 			// Create a new guid for this local identity.
 			string ownerGuid = Guid.NewGuid().ToString().ToLower();

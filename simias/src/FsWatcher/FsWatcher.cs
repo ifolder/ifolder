@@ -32,7 +32,6 @@ namespace Simias.Event
 	internal class CollectionFilesWatcher
 	{
 		string						collectionId;
-		string						domainName;
 		FileSystemWatcher			watcher;
 		static EventPublisher		publish;
 		
@@ -40,8 +39,7 @@ namespace Simias.Event
 		internal CollectionFilesWatcher(Collection col)
 		{
 			this.collectionId = col.Id;
-			domainName = col.LocalStore.DomainName;
-			publish = new EventPublisher(new Configuration(col.LocalStore.StorePath.LocalPath), domainName);
+			publish = new EventPublisher(new Configuration(col.LocalStore.StorePath.LocalPath));
 			Uri pathUri = (Uri)col.Properties.GetSingleProperty(Property.DocumentRoot).Value;
 			string rootPath = pathUri.LocalPath;
 			watcher = new FileSystemWatcher(rootPath);
@@ -57,27 +55,27 @@ namespace Simias.Event
 		{
 			// Specify what is done when a file is changed, created, or deleted.
 			System.Diagnostics.Debug.WriteLine("Changed File: " +  e.FullPath + " " + e.ChangeType);
-			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, domainName, FileEventArgs.EventType.Changed));
+			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Changed));
 		}
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
-			publish.RaiseFileEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, domainName, e.OldFullPath));
+			publish.RaiseFileEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
 			System.Diagnostics.Debug.WriteLine(string.Format("Renamed File: {0} renamed to {1}", e.OldFullPath, e.FullPath));
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is changed, created, or deleted.
-			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, domainName, FileEventArgs.EventType.Deleted));
+			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Deleted));
 			System.Diagnostics.Debug.WriteLine("Deleted File: " +  e.FullPath + " " + e.ChangeType);
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
-			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, domainName, FileEventArgs.EventType.Created));
+			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Created));
 			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
 		}
 	}
@@ -90,7 +88,6 @@ namespace Simias.Event
 		static Store				store;
 		static Hashtable			watcherTable;
 		EventSubscriber				collectionWatcher;
-		static string				domain;
 		static Configuration		conf;
 		
 		/// <summary>
@@ -100,7 +97,7 @@ namespace Simias.Event
 		static void Main(string[] args)
 		{
 			FsWatcher fsw = new FsWatcher(args);
-			fsw.Run(conf, domain);
+			fsw.Run(conf);
 		}
 
 		public FsWatcher(string[] args)
@@ -115,9 +112,8 @@ namespace Simias.Event
 			{
 				store = Store.Connect(this.GetType().FullName);
 			}
-			domain = store.DomainName;
 			conf = new Configuration(store.StorePath.LocalPath);
-			collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath), domain);
+			collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath));
 			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 			collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
 			foreach (Collection col in store)
