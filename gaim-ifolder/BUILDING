@@ -10,7 +10,7 @@ Note for Novell Linux Desktop (NLD)
 	Use this patch file: gaim-0.82.patches
 
 
-1. Checkout gaim-1.1.4 from CVS
+1. Checkout gaim-1.2.0 from CVS
 ---------------------------------
 
     cd ~    (Your home directory)
@@ -18,26 +18,26 @@ Note for Novell Linux Desktop (NLD)
     cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim login
     (Just hit enter for the password)
 
-    cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim checkout -r v1_1_4 -d gaim-1.1.4 gaim
-    (This will checkout Gaim Version 1.1.4 into a new directory ~/gaim-1.1.4)
+    cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gaim checkout -r v1_2_0 -d gaim-1.2.0 gaim
+    (This will checkout Gaim Version 1.2.0 into a new directory ~/gaim-1.2.0)
 
 
-2. Patch gaim-1.1.4 so it's ready to build gifolder
+2. Patch gaim-1.2.0 so it's ready to build gifolder
 ----------------------------------------------------
 
-    cd ~/gaim-1.1.4
+    cd ~/gaim-1.2.0
 
     mkdir plugins/gifolder
 
     cp -r $GAIM_IFOLDER_PROJECT/gifolder/* plugins/gifolder
 
-    patch -p0 < $GAIM_IFOLDER_PROJECT/gaim-1.1.4.patches
+    patch -p0 < $GAIM_IFOLDER_PROJECT/gaim-1.2.0.patches
 
 
 3. Build Gaim
 ---------------
 
-    cd ~/gaim-1.1.4
+    cd ~/gaim-1.2.0
     
     Linux:
     ./autogen.sh
