@@ -27,62 +27,26 @@ using System.Collections;
 using Simias.Storage;
 using Simias.Event;
 
-namespace Simias
+namespace Simias.Event
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	class FsWatcher : UserService
+	internal class CollectionFilesWatcher
 	{
-		Store				store;
-		Hashtable			watcherTable;
-		EventPublisher		publish;
-		EventSubscriber		collectionWatcher;
-		string				collectionId = "1";
-		
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main(string[] args)
-		{
-			FsWatcher fsw = new FsWatcher();
-			fsw.Run();
-		}
+		string						collectionId;
+		FileSystemWatcher			watcher;
+		static EventPublisher		publish = new EventPublisher();
 
-		public FsWatcher()
+		internal CollectionFilesWatcher(Collection col)
 		{
-			// Create a hash table to store the watchers in.
-			watcherTable = new Hashtable();
-			store = Store.Connect();
-			publish = new EventPublisher();
-			collectionWatcher = new EventSubscriber();
-			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
-			foreach (Collection col in store)
-			{
-				WatchCollection(col);
-			}
-		}
-
-		protected override void OnShutdown()
-		{
-			collectionWatcher.Dispose();
-		}
-
-
-		private void WatchCollection(Collection col)
-		{
+			this.collectionId = col.Id;
 			Uri pathUri = (Uri)col.Properties.GetSingleProperty(Property.DocumentRoot).Value;
 			string rootPath = pathUri.LocalPath;
-			FileSystemWatcher w = new FileSystemWatcher(rootPath);
-			watcherTable.Add(rootPath, w);
-			w.Changed += new FileSystemEventHandler(OnChanged);
-			w.Created += new FileSystemEventHandler(OnCreated);
-			w.Deleted += new FileSystemEventHandler(OnDeleted);
-			w.Renamed += new RenamedEventHandler(OnRenamed);
-			//w.NotifyFilter = NotifyFilters.LastWrite;
-			w.IncludeSubdirectories = true;
-			w.EnableRaisingEvents = true;
+			watcher = new FileSystemWatcher(rootPath);
+			watcher.Changed += new FileSystemEventHandler(OnChanged);
+			watcher.Created += new FileSystemEventHandler(OnCreated);
+			watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+			watcher.Renamed += new RenamedEventHandler(OnRenamed);
+			watcher.IncludeSubdirectories = true;
+			watcher.EnableRaisingEvents = true;
 		}
 
 		private void OnChanged(object source, FileSystemEventArgs e)
@@ -112,6 +76,51 @@ namespace Simias
 			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Created));
 			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
 		}
+
+	}
+
+	/// <summary>
+	/// Summary description for Class1.
+	/// </summary>
+	class FsWatcher : UserService
+	{
+		static Store				store;
+		static Hashtable			watcherTable;
+		EventSubscriber				collectionWatcher;
+		
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main(string[] args)
+		{
+			FsWatcher fsw = new FsWatcher();
+			fsw.Run();
+		}
+
+		public FsWatcher()
+		{
+			// Create a hash table to store the watchers in.
+			watcherTable = new Hashtable();
+			store = Store.Connect();
+			collectionWatcher = new EventSubscriber();
+			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
+			foreach (Collection col in store)
+			{
+				WatchCollection(col);
+			}
+		}
+
+		protected override void OnShutdown()
+		{
+			collectionWatcher.Dispose();
+		}
+
+		private void WatchCollection(Collection col)
+		{
+			watcherTable.Add(col.Id, new CollectionFilesWatcher(col));
+		}
+
 
 		private void OnNewCollection(NodeEventArgs args)
 		{
