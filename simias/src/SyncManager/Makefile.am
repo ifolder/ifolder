@@ -6,8 +6,8 @@ SyncManager_CSFILES_CSC := $(subst /,$(SEP),$(SyncManager_CSFILES))
 SyncManager_INCLUDES =
 SyncManager_RESOURCES =
 SyncManager_FLAGS = $(CSC_LIBFLAG)
-SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionEvents.dll CollectionStore.dll SyncCommon.dll Location.dll System.Runtime.Remoting.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll RemotingSnifferLibrary.dll mDnsResponderApi.dll
-SyncManager_LIBPATH = Library ../Common ../SyncCommon ../Location ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../RemotingSniffer $(MDNSRESPONDER_DIR)
+SyncManager_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionEvents.dll CollectionStore.dll SyncCommon.dll Location.dll System.Runtime.Remoting.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll RemotingSnifferLibrary.dll
+SyncManager_LIBPATH = Library ../Common ../SyncCommon ../Location ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../RemotingSniffer
 
 NUNIT_TESTS := SyncManagerTests.dll
 

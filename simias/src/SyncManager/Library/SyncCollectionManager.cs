@@ -29,6 +29,7 @@ using System.Diagnostics;
 
 using Simias;
 using Simias.Storage;
+using Simias.Location;
 
 namespace Simias.Sync
 {
@@ -88,7 +89,8 @@ namespace Simias.Sync
 				switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// ?
+						// publish with the location service
+						(new LocationService(syncManager.Config)).Publish(collection.ID);
 						break;
 
 					case SyncCollectionRoles.Slave:

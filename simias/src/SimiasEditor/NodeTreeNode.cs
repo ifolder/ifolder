@@ -71,13 +71,13 @@ namespace Simias.Editor
 
 				ListViewItem lvi = new ListViewItem(new string[] { name, value });
 				
-				if (property.IsSystemProperty())
-				{
-					lvi.ForeColor = Color.DarkGray;
-				}
-				else if (property.LocalProperty)
+				if (property.LocalProperty)
 				{
 					lvi.ForeColor = Color.DarkGreen;
+				}
+				else if (property.IsSystemProperty())
+				{
+					lvi.ForeColor = Color.DarkGray;
 				}
 				
 				lvi.Tag = this;

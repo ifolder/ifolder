@@ -28,6 +28,9 @@ using System.Runtime.Remoting.Channels.Tcp;
 
 using Mono.P2p.mDnsResponderApi;
 
+using Simias.Storage;
+using Simias.Sync;
+
 namespace Simias.Location
 {
 	/// <summary>
@@ -36,6 +39,22 @@ namespace Simias.Location
 	public class MDnsLocationProvider : ILocationProvider
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(MDnsLocationProvider));
+
+		private static readonly string SUFFIX = "_collection._tcp._local";
+
+		private Configuration configuration;
+
+		private IRemoteFactory factory;
+
+		/// <summary>
+		/// Static Constructor
+		/// </summary>
+		static MDnsLocationProvider()
+		{
+			// channel
+			TcpChannel channel = new TcpChannel();
+			ChannelServices.RegisterChannel(channel);
+		}
 
 		/// <summary>
 		/// Default Constructor
@@ -52,6 +71,13 @@ namespace Simias.Location
 		/// <param name="configuration">The Simias configuration object.</param>
 		public void Configure(Configuration configuration)
 		{
+			this.configuration = configuration;
+
+			// factory
+			factory = 
+				(IRemoteFactory) Activator.GetObject(
+				typeof(IRemoteFactory),
+				"tcp://localhost:8091/mDnsRemoteFactory.tcp");
 		}
 
 		/// <summary>
@@ -61,22 +87,12 @@ namespace Simias.Location
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
 		public Uri Locate(string collection)
 		{
-			// channel
-			TcpChannel channel = new TcpChannel();
-			ChannelServices.RegisterChannel(channel);
-			
-			// factory
-			IRemoteFactory factory = 
-				(IRemoteFactory) Activator.GetObject(
-				typeof(IRemoteFactory),
-				"tcp://localhost:8091/mDnsRemoteFactory.tcp");
-
 			// query
 			IResourceQuery query = factory.GetQueryInstance();
 
 			RPtr[] ptrs = null;
 
-			if (query.GetPtrResourcesByName("_collection._tcp._local", out ptrs) == 0)
+			if (query.GetPtrResourcesByName(SUFFIX, out ptrs) == 0)
 			{
 				foreach(RPtr ptr in ptrs)
 				{
@@ -84,6 +100,56 @@ namespace Simias.Location
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Publish a master collection.
+		/// </summary>
+		/// <param name="collection">The collection ID.</param>
+		public void Publish(string collection)
+		{
+			// publish
+			IResourceRegistration publish = factory.GetRegistrationInstance();
+
+			// host
+			IResourceQuery query = factory.GetQueryInstance();
+
+			RHostAddress ha = null;
+			string host = null;
+
+			if (query.GetDefaultHost(ref ha) == 0)
+			{
+				host = ha.Name;
+			}
+			else
+			{
+				// TODO: should rely on default host
+				host = MyDns.GetHostName() + ".local";
+
+				publish.RegisterHost(host, MyDns.GetHostName());
+			}
+
+			Store store = new Store(configuration);
+
+			Collection c = store.GetCollectionByID(collection);
+
+			if (collection != null)
+			{
+				SyncCollection sc = new SyncCollection(c);
+			
+				// service
+				string service = String.Format("{0}.{1}", sc.ID, SUFFIX);
+				int port = sc.MasterUri.Port;
+
+				if (publish.RegisterServiceLocation(host, service, port, 0, 0) == 0)
+				{
+					log.Debug("Published {0} with Reunion.", service);
+				}
+				else
+				{
+					log.Debug("Failed to publish {0} with Reunion.", service);
+				}
+			}
 		}
 
 		#endregion

@@ -57,7 +57,7 @@ namespace Simias.Location
 		/// <summary>
 		/// Locate the collection master.
 		/// </summary>
-		/// <param name="collection">The collection id.</param>
+		/// <param name="collection">The collection ID</param>
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
 		public Uri Locate(string collection)
 		{
@@ -75,6 +75,15 @@ namespace Simias.Location
 			}
 
 			return result;
+		}
+		
+		/// <summary>
+		/// Publish a master collection.
+		/// </summary>
+		/// <param name="collection">The collection ID.</param>
+		public void Publish(string collection)
+		{
+			// do nothing
 		}
 
 		#endregion

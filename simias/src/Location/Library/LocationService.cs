@@ -72,13 +72,40 @@ namespace Simias.Location
 				}
 				catch(Exception e)
 				{
-					log.Debug(e, "The {0} location provider failed.");
+					log.Debug(e, "Locate with the {0} location provider failed.", type);
 				}
 
 				if (result != null) break;
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Publish a master collection.
+		/// </summary>
+		/// <param name="collection">The collection id.</param>
+		public void Publish(string collection)
+		{
+			LocationProviderList providers = new LocationProviderList(configuration);
+
+			foreach(Type type in providers)
+			{
+				try
+				{
+					log.Debug("Publishing to the {0} location provider.", type);
+
+					ILocationProvider provider = (ILocationProvider)Activator.CreateInstance(type);
+
+					provider.Configure(configuration);
+
+					provider.Publish(collection);
+				}
+				catch(Exception e)
+				{
+					log.Debug(e, "Publish with the {0} location provider failed.", type);
+				}
+			}
 		}
 	}
 }

@@ -39,8 +39,14 @@ namespace Simias.Location
 		/// <summary>
 		/// Locate the collection master.
 		/// </summary>
-		/// <param name="collection">The collection id.</param>
+		/// <param name="collection">The collection ID.</param>
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
 		Uri Locate(string collection);
+		
+		/// <summary>
+		/// Publish a master collection.
+		/// </summary>
+		/// <param name="collection">The collection ID.</param>
+		void Publish(string collection);
 	}
 }

@@ -29,6 +29,7 @@ using System.Collections.Specialized;
 using NUnit.Framework;
 
 using Simias;
+using Simias.Storage;
 using Simias.Sync;
 
 namespace Simias.Sync.Tests
@@ -54,6 +55,35 @@ namespace Simias.Sync.Tests
 		{
 			Configuration config = new Configuration("./manager1");
 
+			SyncProperties properties = new SyncProperties(config);
+
+			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+
+			SyncManager manager = new SyncManager(properties);
+			
+			manager.Start();
+
+			Thread.Sleep(TimeSpan.FromSeconds(5));
+
+			manager.Stop();
+
+			manager.Dispose();
+		}
+
+		/// <summary>
+		/// A new collection with the sync manager.
+		/// </summary>
+		[Test]
+		public void TestSyncManager2()
+		{
+			Configuration config = new Configuration("./manager2");
+
+			// new collection
+			Store store = new Store(config);
+			Collection collection = new Collection(store, "Test Collection");
+			collection.Commit();
+
+			// sync
 			SyncProperties properties = new SyncProperties(config);
 
 			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;

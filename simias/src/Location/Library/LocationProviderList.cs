@@ -58,11 +58,12 @@ namespace Simias.Location
 
 			if (node == null)
 			{
-				// create node
+				// create default node
 				node = new Node(LocationServiceNodeName);
 				collection.Commit(node);
 
 				Add(typeof(DefaultLocationProvider));
+				Add(typeof(MDnsLocationProvider));
 			}
 		}
 

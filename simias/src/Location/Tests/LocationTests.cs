@@ -83,5 +83,37 @@ namespace Simias.Location.Tests
 
 			Console.WriteLine("Location: {0}", location);
 		}
+		
+		/// <summary>
+		/// Test the Reunion locate functionality
+		/// </summary>
+		[Test]
+		public void TestLocateReunion()
+		{
+			// remove store
+			string path = Path.GetFullPath("./location2");
+
+			if (Directory.Exists(path))
+			{
+				Directory.Delete(path, true);
+			}
+			
+			// configuration
+			Configuration configuration = new Configuration(path);
+
+			// create collection
+			Store store = new Store(configuration);
+			Collection collection = new Collection(store, "Location 2");
+			collection.Commit();
+
+			// locate collection
+			LocationService service = new LocationService(configuration);
+
+			Uri location = service.Locate(collection.ID);
+
+			Assert("Location Not Found!", location != null);
+
+			Console.WriteLine("Location: {0}", location);
+		}
 	}
 }
