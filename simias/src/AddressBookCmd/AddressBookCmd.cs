@@ -43,7 +43,7 @@ namespace AddressBookCmd
 		public  bool			listContacts = false;
 		public	bool			listProperties = false;
 		public	bool			updateContact = false;
-		public	bool			verbose = true;
+		public	bool			verbose = false;
 		public	string			newAddressBook = null;
 		public	string			listContactsBy = null;
 		public	string			contactName = null;
@@ -253,7 +253,7 @@ namespace AddressBookCmd
 			Console.WriteLine("   /b <address book> - book to run commands against"); 
 			Console.WriteLine("   /c <contact> - contact to execute commands against");
 			Console.WriteLine("   /av <vcard file> - add or import vcard file");
-			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;country=usa)");
+			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;pref;home)");
 			Console.WriteLine("   /an <name> - add name property (ex. given=brady;family=anderson)");
 			Console.WriteLine("   /ab <address book> - add/create a new address book");
 			Console.WriteLine("   /ac <username> - add/create a new contact");
@@ -342,20 +342,30 @@ namespace AddressBookCmd
 			IABList mList = cContact.GetEmailAddresses();
 			foreach(Email tMail in mList)
 			{
-				Console.Write("   Email:         " + tMail.Address);
+				Console.Write("EMAIL=" + tMail.Address);
+				if (tMail.Preferred == true)
+				{
+					Console.Write(";PREF");
+				}
+
 				if ((tMail.Types & EmailTypes.work) == EmailTypes.work)
 				{
-					Console.Write(" WORK");
+					Console.Write(";WORK");
 				}
 
 				if ((tMail.Types & EmailTypes.personal) == EmailTypes.personal)
 				{
-					Console.Write(" PERSONAL");
+					Console.Write(";PERSONAL");
 				}
 
-				if (tMail.Preferred == true)
+				if ((tMail.Types & EmailTypes.internet) == EmailTypes.internet)
 				{
-					Console.Write(" PREFERRED");
+					Console.Write(";INTERNET");
+				}
+
+				if ((tMail.Types & EmailTypes.x400) == EmailTypes.x400)
+				{
+					Console.Write(";X.400");
 				}
 
 				Console.WriteLine("");
@@ -364,146 +374,159 @@ namespace AddressBookCmd
 			IABList tList = cContact.GetTelephoneNumbers();
 			foreach(Telephone tPhone in tList)
 			{
-				Console.Write("   Telephone:     " + tPhone.Number);
+				Console.Write("TEL=" + tPhone.Number);
+
+				if (tPhone.Preferred == true)
+				{
+					Console.Write(";PREF");
+				}
+
 				if ((tPhone.Types & PhoneTypes.home) == PhoneTypes.home)
 				{
-					Console.Write(" HOME");
+					Console.Write(";HOME");
 				}
 
 				if ((tPhone.Types & PhoneTypes.work) == PhoneTypes.work)
 				{
-					Console.Write(" WORK");
+					Console.Write(";WORK");
 				}
 
 				if ((tPhone.Types & PhoneTypes.other) == PhoneTypes.other)
 				{
-					Console.Write(" OTHER");
+					Console.Write(";OTHER");
 				}
 
 				if ((tPhone.Types & PhoneTypes.cell) == PhoneTypes.cell)
 				{
-					Console.Write(" CELL");
+					Console.Write(";CELL");
 				}
 
 				if ((tPhone.Types & PhoneTypes.voice) == PhoneTypes.voice)
 				{
-					Console.Write(" VOICE");
+					Console.Write(";VOICE");
 				}
 
-				if (tPhone.Preferred == true)
+				if ((tPhone.Types & PhoneTypes.fax) == PhoneTypes.fax)
 				{
-					Console.Write(" PREFERRED");
+					Console.Write(";FAX");
 				}
 
+				if ((tPhone.Types & PhoneTypes.msg) == PhoneTypes.msg)
+				{
+					Console.Write(";MSG");
+				}
 				Console.WriteLine("");
 			}
 
 			if (cContact.Organization != "")
 			{
-				Console.WriteLine("   Organization:  " + cContact.Organization);
+				Console.WriteLine("ORG=" + cContact.Organization);
 			}
 
 			if (cContact.WorkForceID != "")
 			{
-				Console.WriteLine("   Work Force ID: " + cContact.WorkForceID);
+				Console.WriteLine("WorkForceID=" + cContact.WorkForceID);
 			}
 
 			if (cContact.ManagerID != "")
 			{
-				Console.WriteLine("   Manager ID:    " + cContact.ManagerID);
+				Console.WriteLine("ManagerID=" + cContact.ManagerID);
 			}
 
 			if (cContact.Birthday != "")
 			{
-				Console.WriteLine("   Birthday:      " + cContact.Birthday);
+				Console.WriteLine("BDAY=" + cContact.Birthday);
 			}
 
 			if (cContact.Blog != "")
 			{
-				Console.WriteLine("   Blog Address:  " + cContact.Blog);
+				Console.WriteLine("BLOG=" + cContact.Blog);
 			}
 
 			if (cContact.Url != "")
 			{
-				Console.WriteLine("   Url Address:   " + cContact.Url);
+				Console.WriteLine("URL=" + cContact.Url);
 			}
 
 			IABList aList = cContact.GetAddresses();
 			foreach(Address cAddress in aList)
 			{
-				Console.WriteLine("   Address");
+				Console.Write("ADR=(");
 
 				if (cAddress.ID != "")
 				{
-					Console.WriteLine("     ID:       " + cAddress.ID);
+					Console.Write("ID=" + cAddress.ID);
 				}
 
 				if (cAddress.Street != "")
 				{
-					Console.WriteLine("     Street:   " + cAddress.Street);
+					Console.Write(";Street=" + cAddress.Street);
 				}
 
 				if (cAddress.Region != "")
 				{
-					Console.WriteLine("     Region:   " + cAddress.Region);
+					Console.Write(";Region=" + cAddress.Region);
 				}
 
 				if (cAddress.Locality != "")
 				{
-					Console.WriteLine("     Locality: " + cAddress.Locality);
+					Console.Write(";Locality=" + cAddress.Locality);
 				}
 
 				if (cAddress.PostalCode != "")
 				{
-					Console.WriteLine("     Zip:      " + cAddress.PostalCode);
+					Console.Write(";PostalCode=" + cAddress.PostalCode);
 				}
 
 				if (cAddress.Country != "")
 				{
-					Console.WriteLine("     Country:  " + cAddress.Country);
+					Console.Write(";Country=" + cAddress.Country);
 				}
 
 				if (cAddress.Types != 0)
 				{
-					Console.Write("     Types:    ");
-
 					if ((cAddress.Types & AddressTypes.preferred) == AddressTypes.preferred)
 					{
-						Console.Write("PREFERRED ");
+						Console.Write(";PREF");
 					}								  
 		
 					if ((cAddress.Types & AddressTypes.home) == AddressTypes.home)
 					{
-						Console.Write("HOME ");
+						Console.Write(";HOME");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.work) == AddressTypes.work)
 					{
-						Console.Write("WORK ");
+						Console.Write(";WORK");
 					}					
 			  
+					if ((cAddress.Types & AddressTypes.other) == AddressTypes.other)
+					{
+						Console.Write(";OTHER");
+					}
+					
 					if ((cAddress.Types & AddressTypes.postal) == AddressTypes.postal)
 					{
-						Console.Write("POSTAL ");
+						Console.Write(";POSTAL");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.parcel) == AddressTypes.parcel)
 					{
-						Console.Write("PARCEL ");
+						Console.Write(";PARCEL");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.dom) == AddressTypes.dom)
 					{
-						Console.Write("DOMESTIC ");
+						Console.Write(";DOMESTIC");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.intl) == AddressTypes.intl)
 					{
-						Console.Write("INTL ");
+						Console.Write(";INTL");
 					}								  
-
-					Console.WriteLine("");
 				}
+
+				Console.WriteLine(")");
 			}
 
 
@@ -748,7 +771,8 @@ namespace AddressBookCmd
 			// Adding addresses to a contact?
 			if (this.addAddressList != null && cContact != null)
 			{
-				bool	cUpdated = false;
+				bool			cUpdated = false;
+				AddressTypes	addrTypes = 0;
 				Address	cAddress = new Address();
 				foreach(string addressString in this.addAddressList)
 				{
@@ -782,7 +806,7 @@ namespace AddressBookCmd
 								cUpdated = true;
 							}
 							else
-								if (member == "postalcode")
+							if (member == "postalcode")
 							{
 								cAddress.PostalCode = memberValue;
 								cUpdated = true;
@@ -818,49 +842,52 @@ namespace AddressBookCmd
 								cUpdated = true;
 							}
 							else
-							if (member == "types")
+							if (member == "preferred" || member == "pref")
 							{
-								cAddress.Types = 0;
-
-								Regex y = new Regex(@":");
-								IEnumerator addrTypes = y.Split(memberValue).GetEnumerator();
-								while(addrTypes.MoveNext())
-								{
-									switch((string) addrTypes.Current)
-									{
-										case "preferred":
-											cAddress.Preferred = true;
-											break;
-
-										case "work":
-											cAddress.Types |= AddressTypes.work;
-											break;
-
-										case "home":
-											cAddress.Types |= AddressTypes.home;
-											break;
-
-										case "other":
-											cAddress.Types |= AddressTypes.other;
-											break;
-		
-										case "dom":
-											cAddress.Types |= AddressTypes.dom;
-											break;
-
-										case "intl":
-											cAddress.Types |= AddressTypes.intl;
-											break;
-
-										case "postal":
-											cAddress.Types |= AddressTypes.postal;
-											break;
-
-										case "parcel":
-											cAddress.Types |= AddressTypes.parcel;
-											break;
-									}
-								}	
+								addrTypes |= AddressTypes.preferred;
+								cUpdated = true;
+							}
+							else
+							if (member == "work")
+							{
+								addrTypes |= AddressTypes.work;
+								cUpdated = true;
+							}
+							else
+							if (member == "home")
+							{
+								addrTypes |= AddressTypes.home; 
+								cUpdated = true;
+							}
+							else
+							if (member == "other")
+							{
+								addrTypes |= AddressTypes.other;
+								cUpdated = true;
+							}
+							else
+							if (member == "dom")
+							{
+								addrTypes |= AddressTypes.dom;
+								cUpdated = true;
+							}
+							else
+							if (member == "intl")
+							{
+								addrTypes |= AddressTypes.intl;
+								cUpdated = true;
+							}
+							else
+							if (member == "parcel")
+							{
+								addrTypes |= AddressTypes.parcel;
+								cUpdated = true;
+							}
+							else
+							if (member == "postal")
+							{
+								addrTypes |= AddressTypes.postal;
+								cUpdated = true;
 							}
 						}
 					}
@@ -872,6 +899,17 @@ namespace AddressBookCmd
 					{
 						Console.WriteLine("Adding new Address to Contact: " + cContact.UserName);
 					}
+
+					if (addrTypes != 0)
+					{
+						cAddress.Types = addrTypes;
+
+						if (verbose == true)
+						{
+							Console.WriteLine("   Types=" + cAddress.Types);
+						}
+					}
+
 					cContact.AddAddress(cAddress);
 					cContact.Commit();
 				}
