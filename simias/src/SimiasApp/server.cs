@@ -369,7 +369,25 @@ namespace Mono.ASPNET
 				if (server.Start (!nonstop) == false)
 					return 2;
 
-				if (!nonstop) {
+				//
+				// Temp kludge for FCS so we can run workgroup
+				// this needs to be re-evaluated when Simias can
+				// stand on its own.
+				//
+
+#if !MODMONO_SERVER
+				//char[] sep = new char[':'];
+				string sep = ":";
+				string[] virtAndPath = apps.Split( sep.ToCharArray() );
+				if ( virtAndPath[0] != null )
+				{
+					Uri uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), port, virtAndPath[0] ).ToString() );
+					Simias.Client.Manager.SetWebServiceUri( new Simias.Client.Configuration(), uri );
+				}
+#endif
+
+				if (!nonstop) 
+				{
 					Console.WriteLine ("Hit Return to stop the server.");
 					Console.ReadLine ();
 					server.Stop ();
