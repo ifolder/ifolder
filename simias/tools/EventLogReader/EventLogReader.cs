@@ -82,11 +82,12 @@ namespace EventLogReaderII
 					ChangeLogRecord record = new ChangeLogRecord( buffer, index );
 
 					StringBuilder recStr = new StringBuilder( 
-						String.Format( "\tRecord {0} - {1}: Operation = {2}, Node ID = {3}, Flags = {4}, MasterRev = {5}, SlaveRev = {6}, FileLength = {7}", 
+						String.Format( "\tRecord {0} - {1}: Operation = {2}, Node ID = {3}, Node Type = {4}, Flags = {5}, MasterRev = {6}, SlaveRev = {7}, FileLength = {8}", 
 							record.RecordID, 
 							record.Epoch.ToString(), 
 							Enum.GetName( typeof( ChangeLogRecord.ChangeLogOp ), record.Operation ), 
 							record.EventID,
+							Enum.GetName( typeof( NodeTypes.NodeTypeEnum ), record.Type ),
 							record.Flags,
 							record.MasterRev,
 							record.SlaveRev,

@@ -32,6 +32,82 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Base types for a node object.
+		/// </summary>
+		public enum NodeTypeEnum
+		{
+			/// <summary>
+			/// BaseFileNode
+			/// </summary>
+			BaseFileNode,
+
+			/// <summary>
+			/// Collection
+			/// </summary>
+			Collection,
+
+			/// <summary>
+			/// DirNode
+			/// </summary>
+			DirNode,
+
+			/// <summary>
+			/// Domain
+			/// </summary>
+			Domain,
+
+			/// <summary>
+			/// FileNode
+			/// </summary>
+			FileNode,
+
+			/// <summary>
+			/// Identity
+			/// </summary>
+			Identity,
+
+			/// <summary>
+			/// LinkNode
+			/// </summary>
+			LinkNode,
+
+			/// <summary>
+			/// LocalDatabase
+			/// </summary>
+			LocalDatabase,
+
+			/// <summary>
+			/// Member
+			/// </summary>
+			Member,
+
+			/// <summary>
+			/// Node
+			/// </summary>
+			Node,
+
+			/// <summary>
+			/// Policy
+			/// </summary>
+			Policy,
+
+			/// <summary>
+			/// Roster
+			/// </summary>
+			Roster,
+
+			/// <summary>
+			/// StoreFileNode
+			/// </summary>
+			StoreFileNode,
+
+			/// <summary>
+			/// Tombstone
+			/// </summary>
+			Tombstone
+		};
+
+		/// <summary>
 		/// Arrray of strings used to hold the names of classes used as Node object types.
 		/// </summary>
 		static private string[] classNames;

@@ -572,6 +572,7 @@ namespace Simias.Storage
 		private const int masterRevSize = 8;
 		private const int slaveRevSize = 8;
 		private const int fileLengthSize = 8;
+		private const int typeSize = 4;
 
 		/// <summary>
 		/// This is the total encoded record size.
@@ -583,7 +584,8 @@ namespace Simias.Storage
 											  flagSize +
 											  masterRevSize +
 											  slaveRevSize +
-											  fileLengthSize;
+											  fileLengthSize +
+											  typeSize;
 
 		/// <summary>
 		/// Record identitifer for this entry.
@@ -624,6 +626,11 @@ namespace Simias.Storage
 		/// Length of the file represented by the node if the node is a BaseFileTypeNode.
 		/// </summary>
 		private long fileLength;
+
+		/// <summary>
+		/// Base type of node.
+		/// </summary>
+		private NodeTypes.NodeTypeEnum type;
 		#endregion
 
 		#region Properties
@@ -708,6 +715,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the base node type.
+		/// </summary>
+		public NodeTypes.NodeTypeEnum Type
+		{
+			get { return type; }
+			set { type = value; }
+		}
+
+		/// <summary>
 		/// Returns the size of the ChangeLogRecord.
 		/// </summary>
 		static public int RecordSize
@@ -732,6 +748,7 @@ namespace Simias.Storage
 			this.masterRev = args.MasterRev;
 			this.slaveRev = args.SlaveRev;
 			this.fileLength = args.FileSize;
+			this.type = ( NodeTypes.NodeTypeEnum )Enum.Parse( typeof( NodeTypes.NodeTypeEnum ), args.Type );
 		}
 
 		/// <summary>
@@ -776,6 +793,9 @@ namespace Simias.Storage
 
 			fileLength = BitConverter.ToInt64( encodedRecord, index );
 			index += fileLengthSize;
+
+			type = ( NodeTypes.NodeTypeEnum )Enum.ToObject( typeof( NodeTypes.NodeTypeEnum ), BitConverter.ToInt32( encodedRecord, index ) );
+			index += typeSize;
 		}
 		#endregion
 
@@ -799,6 +819,7 @@ namespace Simias.Storage
 			byte[] mr = BitConverter.GetBytes( masterRev );
 			byte[] sr = BitConverter.GetBytes( slaveRev );
 			byte[] fil = BitConverter.GetBytes( fileLength );
+			byte[] tp = BitConverter.GetBytes( ( int )type );
 
 			// Copy the converted byte arrays to the resulting array.
 			Array.Copy( rid, 0, result, index, rid.Length );
@@ -824,6 +845,9 @@ namespace Simias.Storage
 
 			Array.Copy( fil, 0, result, index, fil.Length );
 			index += fil.Length;
+
+			Array.Copy( tp, 0, result, index, tp.Length );
+			index += tp.Length;
 
 			return result;
 		}
