@@ -12,6 +12,15 @@ FILE=src/iFolder/iFolder.cs
 
 DIE=0
 
+# cleanup configure stuff because this failes on Mac
+rm -f aclocal.m4
+rm -f config.cache
+rm -rf autom4te.cache
+rm -f config.guess
+rm -f config.status
+rm -rf config.sub
+rm -f config.log
+
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
 	echo
 	echo "You must have autoconf installed to compile $PROJECT."
