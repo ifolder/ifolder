@@ -746,7 +746,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// Accept the subscription on the master side
 		/// </summary>
-		public void Accept(Store store, Access.Rights rights)
+		public Member Accept(Store store, Access.Rights rights)
 		{
 			Collection c = store.GetCollectionByID(this.SubscriptionCollectionID);
 
@@ -763,6 +763,8 @@ namespace Simias.POBox
 			// state update
 			this.SubscriptionState = SubscriptionStates.Responded;
 			this.SubscriptionDisposition = SubscriptionDispositions.Accepted;
+
+			return member;
 		}
 
 		/// <summary>
