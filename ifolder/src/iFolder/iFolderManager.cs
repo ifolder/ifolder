@@ -39,15 +39,19 @@ namespace Novell.iFolder
 	public class iFolderManager : IEnumerable
 	{
 		#region Class Members
-		internal Store						store;
+		
+        internal Store						store;
 		internal Novell.AddressBook.Manager	abMan;
-		#endregion
+        private Configuration config;
+
+        #endregion
 
 		#region Constructors
-		internal iFolderManager( Store store, Novell.AddressBook.Manager manager )
+		internal iFolderManager( Configuration config )
 		{
-			this.store = store;
-			this.abMan = manager;
+			this.config = config;
+            this.store = new Store( config );
+			Novell.AddressBook.Manager abMan = Novell.AddressBook.Manager.Connect( config );
 		}
 		#endregion
 
@@ -73,9 +77,7 @@ namespace Novell.iFolder
 			//
 
 			Configuration config = ( location == null ) ? new Configuration() : new Configuration( location.LocalPath );
-			Store store = new Store( config );
-			Novell.AddressBook.Manager abMan = Novell.AddressBook.Manager.Connect( new Uri( store.StorePath ) );
-			return new iFolderManager( store, abMan );
+			return new iFolderManager( config );
 		}
 
 		/// <summary>
@@ -136,7 +138,7 @@ namespace Novell.iFolder
 					throw new ApplicationException("The path specified is either a parent or a child of an existing iFolder");
 				}
 
-				iFolder newiFolder = new iFolder( store, abMan );
+				iFolder newiFolder = new iFolder( config, store, abMan );
 				newiFolder.Create( path );
 				return newiFolder;
 			}
@@ -166,7 +168,7 @@ namespace Novell.iFolder
 		{
 			try
 			{
-				iFolder newiFolder = new iFolder( store, abMan );
+				iFolder newiFolder = new iFolder( config, store, abMan );
 				newiFolder.Create( name, path );
 				return newiFolder;
 			}
@@ -213,7 +215,7 @@ namespace Novell.iFolder
 		/// </param>
 		public void DeleteiFolderById( string id )
 		{
-			iFolder ifolder = GetiFolderbyId( id );
+			iFolder ifolder = GetiFolderById( id );
 			if ( ifolder != null )
 			{
 				ifolder.Delete();
@@ -265,7 +267,7 @@ namespace Novell.iFolder
 
 			try
 			{
-				ifolder = new iFolder( store, abMan );
+				ifolder = new iFolder( config, store, abMan );
 				ifolder.Load( store, id );
 			}
 			catch
