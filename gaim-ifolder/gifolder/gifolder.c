@@ -264,7 +264,7 @@ simias_get_config_frame(GaimPlugin *plugin)
 		_("iFolder-enabled buddies"), SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED,
 		NULL);
 
-	gaim_gtk_prefs_checkbox(_("Remove members from domain if removed from buddy list"),
+	gaim_gtk_prefs_checkbox(_("Prune old members"),
 							SIMIAS_PREF_SYNC_PRUNE_MEMBERS, vbox);
 
 	hbox = gtk_hbox_new(FALSE, 0);
