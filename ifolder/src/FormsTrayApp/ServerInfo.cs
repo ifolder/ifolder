@@ -45,7 +45,6 @@ namespace Novell.FormsTrayApp
 		string domainID;
 		bool cancelled = false;
 		bool updateStarted = false;
-		iFolderSettings ifolderSettings;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox serverIP;
@@ -522,14 +521,6 @@ namespace Novell.FormsTrayApp
 		{
 			get { return updateStarted; }
 		}
-
-		/// <summary>
-		/// Gets the iFolderSettings for the default domain.
-		/// </summary>
-		public iFolderSettings ifSettings
-		{
-			get { return ifolderSettings; }
-		}
 		#endregion
 
 		#region Events
@@ -560,13 +551,11 @@ namespace Novell.FormsTrayApp
 				{
 					if (ifWebService != null)
 					{
-//						ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
 						DomainWeb domain = ifWebService.ConnectToDomain(userName.Text, password.Text, serverIP.Text);
 
 						try
 						{
-							//ifolderSettings = ifWebService.GetSettings();
-							domainID = domain.ID;//ifolderSettings.DefaultDomainID;
+							domainID = domain.ID;
 						}
 						catch {}
 

@@ -806,16 +806,11 @@ namespace Novell.FormsTrayApp
 					{
 						case "NodeChanged":
 						{
-							if (ifolderSettings == null)
-							{
-								ifolderSettings = ifWebService.GetSettings();
-							}
-
 							if (eventArgs.Type == "Collection")
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Node") && globalProperties.IsPOBox(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
+							else if (eventArgs.Type.Equals("Node") && globalProperties.IsPOBox(eventArgs.Collection))
 							{
 								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
@@ -832,12 +827,7 @@ namespace Novell.FormsTrayApp
 								}
 								case "Node":
 								{
-									if (ifolderSettings == null)
-									{
-										ifolderSettings = ifWebService.GetSettings();
-									}
-
-									if (globalProperties.IsPOBox(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
+									if (globalProperties.IsPOBox(eventArgs.Collection))
 									{
 										ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
@@ -851,18 +841,13 @@ namespace Novell.FormsTrayApp
 								}
 								case "Member":
 								{
-									if (ifolderSettings == null)
-									{
-										ifolderSettings = ifWebService.GetSettings();
-									}
-
 									// TODO: This currently displays a notification for each member added to an iFolder ...
 									// so when an iFolder is accepted and synced down the first time, a notification occurs for each
 									// member of the iFolder.  A couple of ways to solve this:
 									// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
 									// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
 									ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
-									if ((ifolderUser != null) && (!ifolderUser.UserID.Equals(ifolderSettings.CurrentUserID)))
+									if ((ifolderUser != null) && !globalProperties.IsCurrentUser(ifolderUser.UserID))
 									{
 										ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 									}

@@ -81,8 +81,6 @@ namespace Novell.FormsTrayApp
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
-		private string currentUserID;
-//		private string currentPOBoxID;
 		private bool initialConnect = false;
 		private int initialBannerWidth;
 		private bool shutdown = false;
@@ -2342,6 +2340,27 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
+		/// Check the specified ID to see if it is the current user.
+		/// </summary>
+		/// <param name="userID">The ID of the user to check.</param>
+		/// <returns><b>True</b> if the specified user ID is the current user; otherwise, <b>False</b>.</returns>
+		public bool IsCurrentUser(string userID)
+		{
+			bool result = false;
+
+			foreach (Domain d in servers.Items)
+			{
+				if (d.DomainWeb.UserID.Equals(userID))
+				{
+					result = true;
+					break;
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Check the specified ID to see if it is a POBox that is registered with the client.
 		/// </summary>
 		/// <param name="poBoxID">The ID of the POBox to check.</param>
@@ -2705,11 +2724,8 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void updateEnterpriseData(iFolderSettings ifSettings)
+		private void updateEnterpriseData()
 		{
-			currentUserID = ifSettings.CurrentUserID;
-//			currentPOBoxID = ifSettings.DefaultPOBoxID;
-
 			servers.Items.Clear();
 			DomainWeb[] domains;
 			try
@@ -2725,63 +2741,10 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-			catch{}
-
-/*			try
-			{
-				iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
-				userName.Text = ifolderUser.Name;
-			}
-			catch (Exception e)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readUserError"), string.Empty, e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-				mmb.ShowDialog();
-			}
-
-			enterpriseName.Text = ifSettings.EnterpriseName;
-			enterpriseDescription.Text = ifSettings.EnterpriseDescription;
-
-			try
-			{
-				// Get the disk space.
-				DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
-				if (diskSpace.Limit != 0)
-				{
-					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text = 
-						resourceManager.GetString("freeSpaceUnits.Text");
-					totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
-
-					double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-					usedSpace.Text = used.ToString();
-					freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
-
-					// Set up the gauge chart.
-					gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
-					gaugeChart1.Used = used;
-					gaugeChart1.BarColor = SystemColors.ActiveCaption;
-				}
-				else
-				{
-					usedSpaceUnits.Text = freeSpaceUnits.Text = totalSpaceUnits.Text =
-						resourceManager.GetString("notApplicable");
-					usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
-					gaugeChart1.Used = 0;
-				}
-			}
 			catch
 			{
-//				if (retryCount-- > 0)
-//				{
-//					updateEnterpriseTimer.Start();
-//				}
-//				else
-				{
-					usedSpace.Text = freeSpace.Text = totalSpace.Text = resourceManager.GetString("statusUnknown");
-				}
+				// TODO: Message?
 			}
-
-			// Cause the gauge chart to be redrawn.
-			gaugeChart1.Invalidate(true);*/
 		}
 		#endregion
 
@@ -2852,20 +2815,6 @@ namespace Novell.FormsTrayApp
 				// Update the display confirmation setting.
 				displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
 
-				iFolderSettings ifSettings = null;
-
-				try
-				{
-					ifSettings = ifWebService.GetSettings();
-					currentUserID = ifSettings.CurrentUserID;
-//					currentPOBoxID = ifSettings.DefaultPOBoxID;
-				}
-				catch (Exception ex)
-				{
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readiFolderSettingsError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-				}
-
 				try
 				{
 					// Update the default sync interval setting.
@@ -2878,12 +2827,11 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 
+				iFolderSettings ifSettings = null;
+
 				try
 				{
-					if (ifSettings == null)
-					{
-						ifSettings = ifWebService.GetSettings();
-					}
+					ifSettings = ifWebService.GetSettings();
 
 					// Update the proxy settings.
 					useProxy.Checked = ifSettings.UseProxy;
@@ -2896,9 +2844,9 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 
-				updateEnterpriseData(ifSettings);
+				updateEnterpriseData();
 
-				if (ifSettings.HaveEnterprise)
+				if ((ifSettings != null) && ifSettings.HaveEnterprise)
 				{
 					ShowEnterpriseTab = true;
 				}
@@ -2920,8 +2868,7 @@ namespace Novell.FormsTrayApp
 		private void updateEnterpriseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
 			updateEnterpriseTimer.Stop();
-			iFolderSettings ifSettings = ifWebService.GetSettings();
-			updateEnterpriseData(ifSettings);
+			updateEnterpriseData();
 		}
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
@@ -3008,7 +2955,7 @@ namespace Novell.FormsTrayApp
 			
 			if (menuRemove.Visible)
 			{
-				menuRemove.Text = ((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID.Equals(currentUserID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
+				menuRemove.Text = IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
 			}
 		}
 
@@ -3134,7 +3081,7 @@ namespace Novell.FormsTrayApp
 			{
 				string message, caption;
 
-				if (ifolder.OwnerID.Equals(currentUserID))
+				if (IsCurrentUser(ifolder.OwnerID))
 				{
 					message = resourceManager.GetString("deleteiFolder") + "\n\n" + 
 						resourceManager.GetString("removePrompt");
@@ -3469,7 +3416,6 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 			}
 
-//			enterpriseName.Text = ifSettings.EnterpriseName;
 			enterpriseDescription.Text = selectedDomain.DomainWeb.Description;
 
 			defaultServer.Checked = selectedDomain.DomainWeb.IsDefault;

@@ -198,7 +198,6 @@ namespace Novell.iFolderCom
 				connectToWebService();
 				if (ifWebService != null)
 				{
-					//ifolder = manager.GetiFolderByPath(path);
 					ifolder = ifWebService.GetiFolderByLocalPath(path);
 					if (ifolder != null)
 					{
