@@ -227,7 +227,7 @@ public class SyncService
 	public void Stop()
 	{
 		collection.Revert();
-		log.Info("Finished Sync of {0} for {1}.", collection, member.Name);
+		log.Info("Finished Sync of {0} for {1}.", collection, member != null ? member.Name : null);
 		this.collection = null;
 	}
 
