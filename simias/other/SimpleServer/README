@@ -17,10 +17,14 @@ To install the SimpleServer module modify the following lines
 to your Simias.config file located at $(HOME)/.local/share/simias for Linux or
 %HOMEDRIVE%%HOMEPATH%\Local Settings\Application Data\simias for Windows.
 
-Modify the ServiceManager section of the Simias.config file. It sould look
-like this when done:
+Modify the ServiceManager section of the Simias.config file and add the domain
+tag. It sould look like this when done:
 
 <configuration>
+  <section name="Domain">
+    <setting name="SimpleServerName" value="Simias SimpleServer" />
+  </section>
+
   <section name="ServiceManager">
     <setting name="Services">
       <Service name="Simias Change Log Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Storage.ChangeLog" />

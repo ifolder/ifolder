@@ -282,6 +282,13 @@ namespace Simias
 			return foundKey;
 		}
 
+		private bool SectionExists(string section)
+		{
+			string str = string.Format("//{0}[@{1}='{2}']", SectionTag, NameAttr, section);
+			XmlElement sectionElement = (XmlElement)configDoc.DocumentElement.SelectSingleNode(str);
+			return (sectionElement != null) ? true : false;
+		}
+
 		private void UpdateConfigFile()
 		{
 			XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.UTF8);
@@ -453,13 +460,14 @@ namespace Simias
 		/// Checks for existence of a specified section and key.
 		/// </summary>
 		/// <param name="section">The section for the tuple</param>
-		/// <param name="key">The key to set.</param>
+		/// <param name="key">The key to set. If this parameter is null, then only the section
+		/// is checked for existence.</param>
 		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
 		public bool Exists(string section, string key)
 		{
 			lock(typeof(Configuration))
 			{
-				return KeyExists(section, key);
+				return ( ( key != null ) && ( key != String.Empty ) ) ? KeyExists(section, key) : SectionExists(section);
 			}
 		}
 

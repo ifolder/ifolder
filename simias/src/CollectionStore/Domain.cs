@@ -59,22 +59,8 @@ namespace Simias.Storage
 		/// <summary>
 		/// Configuration section name where enterprise key value pairs are stored.
 		/// </summary>
-		static internal string SectionName = "Domain";
-
-		/// <summary>
-		/// Configuration key name for an enterprise domain.
-		/// </summary>
-		static internal string EnterpriseName = "EnterpriseName";
-
-		/// <summary>
-		/// Configuration key name for an enterprise domain ID.
-		/// </summary>
-		static internal string EnterpriseID = "EnterpriseID";
-
-		/// <summary>
-		/// Configuration key name for an enterprise description.
-		/// </summary>
-		static internal string EnterpriseDescription = "EnterpriseDescription";
+		static public string SectionName = "Domain";
+		static public string AdminDNTag = "AdminDN";
 		#endregion
 
 		#region Properties

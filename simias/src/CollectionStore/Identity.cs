@@ -54,9 +54,30 @@ namespace Simias.Storage
 		static private readonly string UserTag = "User";
 		static private readonly string CredentialTag = "Credential";
 		static private readonly string TypeTag = "Type";
+
+		/// <summary>
+		/// Handle to the store.
+		/// </summary>
+		private Store store = null;
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets the store handle.
+		/// </summary>
+		private Store StoreReference
+		{
+			get
+			{
+				if ( store == null )
+				{
+					store = Store.GetStore();
+				}
+
+				return store;
+			}
+		}
+
 		/// <summary>
 		/// Gets the public/private key values for the local identity.
 		/// </summary>
@@ -67,7 +88,7 @@ namespace Simias.Storage
 				RSACryptoServiceProvider credential = null;
 
 				// Lookup the credential property on the identity.
-				XmlDocument mapDoc = GetDocumentByDomain( Store.GetStore().LocalDomain );
+				XmlDocument mapDoc = GetDocumentByDomain( StoreReference.LocalDomain );
 				if ( mapDoc != null )
 				{
 					credential = new RSACryptoServiceProvider( Identity.DummyCsp );
@@ -126,11 +147,13 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for creating a new Identity object.
 		/// </summary>
+		/// <param name="store">A handle to the store.</param>
 		/// <param name="userName">User name of the identity.</param>
 		/// <param name="userGuid">Unique identifier for the user.</param>
-		internal Identity( string userName, string userGuid ) :
+		internal Identity( Store store, string userName, string userGuid ) :
 			base ( userName, userGuid, NodeTypes.IdentityType )
 		{
+			this.store = store;	
 		}
 
 		/// <summary>
@@ -365,7 +388,7 @@ namespace Simias.Storage
 		internal Identity DeleteDomainIdentity( string domainID )
 		{
 			// Do not allow the local domain to be deleted.
-			if ( domainID == Store.GetStore().LocalDomain )
+			if ( domainID == StoreReference.LocalDomain )
 			{
 				throw new CollectionStoreException( "Cannot remove the local domain." );
 			}
@@ -477,7 +500,7 @@ namespace Simias.Storage
 			XmlDocument mapDoc = p.Value as XmlDocument;
 			if ( type == CredentialType.None )
 			{
-				if ( domainID == Store.GetStore().LocalDomain )
+				if ( domainID == StoreReference.LocalDomain )
 				{
 					throw new CollectionStoreException( "Cannot remove the local domain credentials." );
 				}
