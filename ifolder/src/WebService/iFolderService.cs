@@ -794,7 +794,7 @@ namespace Novell.iFolder.Web
 				Simias.Storage.Member simMem =
 					roster.GetMemberByID(c.UserID);
 				iFolderUser user = new iFolderUser(simMem, c);
-				idHash.Add(c.ID, c);
+				idHash.Add(c.UserID, c);
 				list.Add(user);
 			}
 
@@ -809,7 +809,7 @@ namespace Novell.iFolder.Web
 					Simias.Storage.Member simMem =
 						roster.GetMemberByID(c.UserID);
 					iFolderUser user = new iFolderUser(simMem, c);
-					idHash.Add(c.ID, c);
+					idHash.Add(c.UserID, c);
 					list.Add(user);
 				}
 			}
@@ -828,9 +828,9 @@ namespace Novell.iFolder.Web
 
 					Contact c = abMan.GetContact(simMem.UserID);
 
-					if(!idHash.Contains(c.ID))
+					if(!idHash.Contains(simMem.UserID) )
 					{
-						idHash.Add(c.ID, c);
+						idHash.Add(simMem.UserID, simMem);
 						iFolderUser user = new iFolderUser(simMem, c);
 						list.Add(user);
 					}
