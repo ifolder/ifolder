@@ -42,9 +42,6 @@ usage: $NAME [OPTION] <home_path>
   -h, --help    display this help, then exit
   
   <home_path>   full path to a user's home directory (e.g., /home/<user>)
-  
-  Note: Should be invoked from install location using full path
-        (dirname is used to get install location).
 HERE
 }
 
@@ -108,7 +105,6 @@ then
 fi
 
 # Variables for configuring startup
-setvar_v TOP_INSTALL_BIN `dirname $0`
 setvar_v GNOME_HOME $1/.gnome2
 setvar_v GNOME_USER `basename $1`
 setvar_v STARTUP_FILE $GNOME_HOME/session-manual
@@ -116,7 +112,7 @@ setvar_v TEMP_STARTUP_FILE $GNOME_HOME/session-manual.tmp
 setvar_v SED_FILE $GNOME_HOME/session-manual.sed
 setvar_v RESTART_STYLE_HINT 3
 setvar_v PRIORITY 50
-setvar_v RESTART_COMMAND "$TOP_INSTALL_BIN/ifolder"
+setvar_v RESTART_COMMAND "@prefix@/bin/ifolder"
 
 echo_v "ERASE = $ERASE"
 if test -n "$ERASE"
