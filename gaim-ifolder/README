@@ -1,0 +1,58 @@
+====================
+Gaim iFolder Plugin
+====================
+The iFolder Project website can be found at:
+http://forge.novell.com/modules/xfmod/project/?ifolder
+
+The Gaim iFolder Plugin allows you to share iFolders with people in your Gaim
+Buddy List.  The Gaim iFolder Plugin is free software, licensed under the
+GNU GENERAL PUBLIC LICENSE (see the COPYING file).
+
+Copyright (C) 2004 Novell, Inc.
+
+---------------------------------
+Building the Gaim iFolder Plugin
+---------------------------------
+
+First, you must build Gaim.  Follow the instructions available from
+http://gaim.sourceforge.net/ for your particular platform and come back to
+these instructions.
+
+Copy "ifolder.c" to the "gaim/plugins" directory (or create a symbolic link that
+points to "ifolder.c" in this directory.  From the "gaim/plugins" directory
+type the following to build the plugin:
+
+Linux
+------
+
+	make ifolder.so
+
+Win32
+------
+
+	make -f Makefile.mingw ifolder.dll
+
+-----------------------------------
+Installing the Gaim iFolder Plugin
+-----------------------------------
+
+Once you've got a library (.so/.dll), copy (or create a symbolic link) the
+library file to the following directory:
+
+	<your gaim prefix>/lib/gaim/
+
+Now start Gaim and the iFolder Plugin will be available from the "Preferences"
+window under "Plugins".
+
+
+---------------------
+Discussion & Support
+---------------------
+
+    A mailing list for Simias and iFolder discussion is available.
+
+    You can subscribe to the mailing list by visiting:
+
+        http://forge.novell.com/mailman/listinfo/ifolder-dev
+
+

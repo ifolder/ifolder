@@ -1,0 +1,48 @@
+<VisualStudioProject>
+    <CSHARP LastOpenVersion = "7.10.3077" >
+        <Build>
+            <Settings ReferencePath = "C:\code\denali\src\AddressBook\bin\Debug\;C:\code\denali\src\stage\;C:\code\denali\src\FlaimProvider\bin\Debug\;C:\code\denali\src\FsProvider\;C:\code\denali\src\WorkGroupIdentity\bin\Debug\;C:\code\denali\src\CollectionStore\bin\Debug\;C:\code\denali\src\StoreProvider\;C:\wa\ifolder\denali\src\AddressBook\;C:\wa\ifolder\denali\src\CollectionStore\;C:\wa\ifolder\denali\src\FsProvider\;C:\wa\ifolder\denali\src\Identity\;C:\wa\ifolder\denali\src\WorkGroupIdentity\;C:\wa\ifolder\denali\src\StoreProvider\;C:\code\AB20040120\denali\src\WorkGroupIdentity\;C:\code\AB20040120\denali\src\stage\" >
+                <Config
+                    Name = "Debug"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "false"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "true"
+                />
+                <Config
+                    Name = "Release"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "false"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "true"
+                />
+            </Settings>
+        </Build>
+        <OtherProjectSettings
+            CopyProjectDestinationFolder = ""
+            CopyProjectUncPath = ""
+            CopyProjectOption = "0"
+            ProjectView = "ProjectFiles"
+            ProjectTrust = "0"
+        />
+    </CSHARP>
+</VisualStudioProject>
+
