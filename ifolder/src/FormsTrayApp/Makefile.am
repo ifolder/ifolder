@@ -10,7 +10,7 @@ iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
 iFolderApp_INCLUDES = 
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
-iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll
+iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll Simias.dll
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
 DATA_FILES = App.ico ifolder_app.ico
@@ -19,7 +19,7 @@ RESX_FILES = FormsTrayApp.resx GlobalProperties.resx
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest $(PROJECT_FILES)
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config $(PROJECT_FILES)
 
 all: iFolderApp.exe
 
@@ -35,7 +35,7 @@ endif
 install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)/res
-	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(RES_FILES) $(DESTDIR)$(bindir)/res
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
@@ -51,7 +51,7 @@ uninstall-local:
 	if test -f "$(DESTDIR)$(bindir)/iFolderApp.exe"; then \
 		$(INSTALLUTIL) /uninstall /LogToConsole=false /ShowCallStack /LogFile=iFolderApp.UninstallLog `cygpath --windows "$(DESTDIR)$(bindir)/iFolderApp.exe"`; \
 	fi
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest iFolderApp.exe.config $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
 	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png
 if WINDOWS

@@ -320,13 +320,17 @@ namespace Novell.iFolderCom
 			}
 			catch (WebException ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the member list.");
+				mmb.Message = "An error was encountered while reading the member list.";
+				mmb.ShowDialog();
 			}
 			catch (Exception ex)
 			{
+				MyMessageBox mmb = new MyMessageBox();
 				// TODO: Localize
-				MessageBox.Show("An error was encountered while reading the member list.");
+				mmb.Message = "An error was encountered while reading the member list.";
+				mmb.ShowDialog();
 			}
 
 			rosterLV.EndUpdate();

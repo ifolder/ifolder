@@ -154,7 +154,7 @@ namespace Novell.iFolderCom
 			this.dontAsk.Name = "dontAsk";
 			this.dontAsk.Size = new System.Drawing.Size(304, 16);
 			this.dontAsk.TabIndex = 6;
-			this.dontAsk.Text = "Do not show this message again.";
+			this.dontAsk.Text = "Do not show this message again";
 			// 
 			// iFolderHelp
 			// 
@@ -253,8 +253,10 @@ namespace Novell.iFolderCom
 				}
 				catch
 				{
+					MyMessageBox mmb = new MyMessageBox();
 					// TODO: Localize
-					MessageBox.Show("An error was encountered while saving configuration.");
+					mmb.Message = "An error was encountered while saving configuration.";
+					mmb.ShowDialog();
 				}
 			}
 

@@ -303,6 +303,7 @@ namespace Novell.iFolderCom
 		/// <param name="modal">Set to <b>true</b> to display the dialog modal.</param>
 		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, int tabPage, bool modal)
 		{
+			// TODO: Localize
 			string windowName = "iFolder Properties for " + Path.GetFileName(path);
 
 			// Search for existing window and bring it to foreground ...

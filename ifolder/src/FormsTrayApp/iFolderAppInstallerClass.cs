@@ -26,6 +26,9 @@ using System.Diagnostics;
 using System.Collections;
 using System.ComponentModel;
 using System.Configuration.Install;
+using System.Xml;
+using System.IO;
+using System.Text;
 //using Simias;
 //using Simias.Event;
 
@@ -38,6 +41,8 @@ namespace Novell.FormsTrayApp
 	[RunInstaller(true)]
 	public class iFolderAppInstallerClass: Installer
 	{
+		private XmlDocument configDoc;
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -77,8 +82,17 @@ namespace Novell.FormsTrayApp
 		/// <param name="savedState"></param>
 		public override void Install(IDictionary savedState)
 		{
-            Console.WriteLine("iFolderApp Install");
 			base.Install(savedState);
+			Console.WriteLine("iFolderApp Install");
+
+			// Get the directory where the assembly is running.
+			string installDir = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+
+			// Get the Windows directory.
+			string windowsDir = Environment.GetEnvironmentVariable("windir");
+
+			//fixConfigFile(ifolderAppPath);
+			fixConfigFile(Path.Combine(windowsDir, "explorer.exe.config"), installDir);
 		}
 		/// <summary>
 		/// Override the 'Commit' method.
@@ -136,6 +150,70 @@ namespace Novell.FormsTrayApp
 					process.Close();
 				}
 			}
+		}
+
+		private bool fixConfigFile(string configFilePath, string installDir)
+		{
+			try
+			{
+				// Load the config file.
+				configDoc = new XmlDocument();
+				configDoc.Load(configFilePath);
+
+				// Parse the config file.
+				XmlNode runtimeNode = configDoc.DocumentElement.SelectSingleNode("/configuration/runtime");
+				if (runtimeNode != null)
+				{
+					// Get the simias element.
+					XmlNode simiasNode = runtimeNode.FirstChild.FirstChild;
+
+					// Get the log4net element.
+					XmlNode log4netNode = simiasNode.NextSibling;
+
+					// Replace the codeBase element.
+					replaceCodeBase(simiasNode, installDir);
+					replaceCodeBase(log4netNode, installDir);
+				}
+
+
+				// Save the config file.
+				XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.ASCII);
+				try
+				{
+					xtw.Formatting = Formatting.Indented;
+
+					configDoc.WriteTo(xtw);
+				}
+				finally
+				{
+					xtw.Close();
+				}
+			}
+			catch
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		private void replaceCodeBase(XmlNode node, string path)
+		{
+			XmlNode identity = node.FirstChild;
+			XmlNode codebase = identity.NextSibling;
+
+			// Build the path to the assembly
+			Uri fileURI = new Uri(Path.Combine(path, Path.Combine(@"web\bin", ((XmlElement)identity).GetAttribute("name") + ".dll")));
+
+			// Get the namespace from the node.
+			string ns = codebase.GetNamespaceOfPrefix(String.Empty);
+
+			// Create a new element with the correct path.
+			XmlElement element = configDoc.CreateElement(String.Empty, "codeBase", ns);
+			element.SetAttribute("href", fileURI.AbsoluteUri);
+
+			// Replace the element.
+			node.ReplaceChild(element, codebase);
 		}
 
 		private void StopShell()
