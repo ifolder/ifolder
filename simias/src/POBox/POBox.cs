@@ -95,6 +95,19 @@ namespace Simias.POBox
 			Sealed = true;
 		}
 
+		/// <summary>
+		/// Constructor to create a POBox object.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox will belong to.</param>
+		/// <param name="collectionName">The name of the POBox.</param>
+		/// <param name="collectionID">The identifier of the POBox.</param>
+		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
+		internal POBox(Store storeObject, string collectionName, string collectionID, string domainName) :
+			base( storeObject, collectionName, collectionID, domainName )
+		{
+			SetType(this, typeof(POBox).Name);
+			Sealed = true;
+		}
 		#endregion
 
 		#region Private Methods

@@ -399,7 +399,8 @@ namespace Simias.Storage
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <param name="domainDescription">String that describes the specified domain.</param>
-		public void AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription )
+		/// <returns>The created Domain object.</returns>
+		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription )
 		{
 			if ( disposed )
 			{
@@ -409,11 +410,13 @@ namespace Simias.Storage
 			Node[] nodeList = new Node[ 2 ];
 
 			// Create the domain object.
-			nodeList[ 0 ] = new Domain( domainName, domainID.ToLower(), domainDescription );
+			Domain domain = new Domain( domainName, domainID.ToLower(), domainDescription );
+			nodeList[ 0 ] = domain;
 			nodeList[ 1 ] = identity.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
 			
 			// Commit the changes.
 			localDb.Commit( nodeList );
+			return domain;
 		}
 
 		/// <summary>

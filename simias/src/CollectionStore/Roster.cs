@@ -43,7 +43,18 @@ namespace Simias.Storage
 		/// <param name="storeObject">Store object.</param>
 		/// <param name="domain">Domain object that this object will be associated with.</param>
 		public Roster( Store storeObject, Domain domain ) :
-			base ( storeObject, domain.Name + " Roster", Guid.NewGuid().ToString(), NodeTypes.RosterType, domain.ID )
+			this ( storeObject, Guid.NewGuid().ToString(), domain )
+		{
+		}
+
+		/// <summary>
+		/// Constructor for this object that creates the Roster object.
+		/// </summary>
+		/// <param name="storeObject">Store object.</param>
+		/// <param name="rosterID">Identifier for the roster.</param>
+		/// <param name="domain">Domain object that this object will be associated with.</param>
+		public Roster( Store storeObject, string rosterID, Domain domain ) :
+			base ( storeObject, domain.Name + " Roster", rosterID, NodeTypes.RosterType, domain.ID )
 		{
 			Sealed = true;
 		}
