@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using Novell.iFolder;
 using Novell.AddressBook;
+using Simias;
 using Simias.Storage;
 using Novell.iFolder.FormsBookLib;
 
@@ -42,6 +43,7 @@ namespace Novell.iFolder.iFolderCom
 	public class iFolderAdvanced : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(iFolderAdvanced));
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
@@ -427,9 +429,15 @@ namespace Novell.iFolder.iFolderCom
 						slContact.Added = false;
 						slContact.Changed = false;
 					}
+					catch (SimiasException e)
+					{
+						e.LogError();
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Rights Failure");
+					}
 					catch (Exception e)
 					{
 						// TODO
+						logger.Debug(e, "Adding ACE");
 						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Rights Failure");
 					}
 
@@ -440,9 +448,15 @@ namespace Novell.iFolder.iFolderCom
 							// Send the invitation.
 							ifolder.Invite(slContact.CurrentContact);
 						}
+						catch (SimiasException e)
+						{
+							e.LogError();
+							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + e.Message, "Send Invitation Failure");
+						}
 						catch(Exception e)
 						{
 							// TODO
+							logger.Debug(e, "Sending invitation");
 							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + e.Message, "Send Invitation Failure");
 						}
 					}
@@ -459,9 +473,15 @@ namespace Novell.iFolder.iFolderCom
 						// Remove the ACE and don't send an invitation.
 						ifolder.RemoveRights(slContact.CurrentContact);
 					}
+					catch (SimiasException e)
+					{
+						e.LogError();
+						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
+					}
 					catch (Exception e)
 					{
 						//TODO
+						logger.Debug(e, "Removing ACE");
 						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
 					}
 				}
@@ -588,7 +608,10 @@ namespace Novell.iFolder.iFolderCom
 				//Assign the ImageList objects to the books ListView.
 				shareWith.SmallImageList = contactsImageList;
 			}
-			catch{}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading images");
+			}
 
 			defaultAddressBook = abManager.OpenDefaultAddressBook();
 
@@ -616,8 +639,9 @@ namespace Novell.iFolder.iFolderCom
 						items[0] = ace.Contact.UserName;
 					}
 				}
-				catch
+				catch (Exception ex)
 				{
+                    logger.Debug(ex, "Unknown user");
 					items[0] = "Unknown User";
 				}
 
@@ -890,7 +914,10 @@ namespace Novell.iFolder.iFolderCom
 						this.apply.Enabled = true;
 					}
 				}
-				catch{}
+				catch (Exception ex)
+				{
+					logger.Debug(ex, "Removing contacts");
+				}
 			}		
 		}
 
@@ -953,9 +980,15 @@ namespace Novell.iFolder.iFolderCom
 						slContact.Added = false;
 						slContact.Changed = false;
 					}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
+					}
 					catch (Exception ex)
 					{
 						// TODO
+						logger.Debug(ex, "Setting ACE");
 						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
 					}
 
@@ -966,9 +999,15 @@ namespace Novell.iFolder.iFolderCom
 							// Send the invitation.
 							ifolder.Invite(slContact.CurrentContact);
 						}
+						catch (SimiasException ex)
+						{
+							ex.LogError();
+							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
+						}
 						catch(Exception ex)
 						{
 							// TODO
+							logger.Debug(ex, "Sending invitation");
 							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
 						}
 					}
@@ -980,9 +1019,15 @@ namespace Novell.iFolder.iFolderCom
 					{
 						ifolder.Invite(slContact.CurrentContact);
 					}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+						MessageBox.Show(lvitem.Text + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
+					}
 					catch(Exception ex)
 					{
 						// TODO
+						logger.Debug(ex, "Sending invitation");
 						MessageBox.Show(lvitem.Text + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
 					}
 				}
