@@ -32,6 +32,7 @@ using Simias;
 using Simias.Client;
 using Simias.Client.Event;
 using Simias.Event;
+using Simias.POBox;
 using Simias.Policy;
 using Simias.Sync;
 using Persist = Simias.Storage.Provider;
@@ -314,7 +315,20 @@ namespace Simias.Storage
 		/// </summary>
 		public int Interval
 		{
-			get { return SyncInterval.Get( GetCurrentMember(), this ).Interval; }
+			get 
+			{ 
+				int interval = Store.DefaultMachineSyncInterval;
+
+				// POBox objects have a different sync interval than regular collections.
+				if ( IsType( this, typeof( POBox.POBox ).Name ) )
+				{
+					return InviteInterval.Get( GetCurrentMember(), this ).Interval; 
+				}
+				else
+				{
+					return SyncInterval.Get( GetCurrentMember(), this ).Interval; 
+				}
+			}
 		}
 
 		/// <summary>

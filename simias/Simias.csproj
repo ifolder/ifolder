@@ -429,6 +429,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Policy\InviteInterval.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Policy\SyncInterval.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -58,6 +58,7 @@ AssemblyInfo.cs
 ../Policy/DiskSpaceQuota.cs
 ../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs
+../Policy/InviteInterval.cs
 ../Policy/SyncInterval.cs
 ../Service/BaseProcessService.cs
 ../Service/IThreadService.cs
