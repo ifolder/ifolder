@@ -48,8 +48,6 @@
 #define WEB_SERVICE_TRUE_STRING		"True"
 #define WEB_SERVICE_FALSE_STRING	"False"
 
-#define MAX_PENDING_LISTENS			5
-
 /**
  * Structures to represent 1-level-deep XML
  */
@@ -71,12 +69,6 @@ static char * sec_server_config_elements [] = {
 /* Tags used to get the host and port number in the IProcConfig.cfg file. */
 #define HOST_TAG "Host"
 #define PORT_TAG "Port"
-
-/**
- * Error returned when the Registration thread terminates with a receive
- * outstanding.
- */
-#define OWNER_THREAD_TERMINATED 995
 
 /* File name of the IProcEvent configuration file */
 #define CONFIG_FILE_NAME "IProcEvent.cfg"
