@@ -63,6 +63,7 @@ namespace Novell.iFolder.iFolderCom
 	]
 	public class iFolderComponent : IiFolderComponent
 	{
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(iFolderComponent));
 		static private iFolderManager manager = null;//= Manager.Connect();
 		private iFolderNode ifoldernode;
 		private ICSEnumerator propEnumerator;
@@ -103,10 +104,13 @@ namespace Novell.iFolder.iFolderCom
 					addressBook = abManager.OpenDefaultAddressBook();
 				}
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
+				logger.Debug(e, "Initialization");
 			}
 		}
 
@@ -129,10 +133,13 @@ namespace Novell.iFolder.iFolderCom
 			{
 				return manager.CanBeiFolder(path);
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
+				logger.Debug(e, "CanBeiFolder");
 			}
 
 			return false;
@@ -152,10 +159,13 @@ namespace Novell.iFolder.iFolderCom
 					return manager.GetiFolderByPath(path).IsShareable();
 				}
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
+				logger.Debug(e, "GetiFolderByPath");
 			}
 
 			return false;
@@ -168,10 +178,13 @@ namespace Novell.iFolder.iFolderCom
 			{
 				ifolder = manager.CreateiFolder(path);
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
+				logger.Debug(e, "CreateiFolder");
 			}
 
 			return (ifolder != null);
@@ -183,10 +196,13 @@ namespace Novell.iFolder.iFolderCom
 			{
 				manager.DeleteiFolderByPath(path);
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
+				logger.Debug(e, "DeleteiFolderByPath");
 			}
 		}
 
@@ -211,10 +227,13 @@ namespace Novell.iFolder.iFolderCom
 					}
 				}
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+			}
 			catch (Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e.Message);
-				System.Diagnostics.Debug.WriteLine(e.StackTrace);
+				logger.Debug(e, "GetiFolderNode");
 			}
 
 			System.Diagnostics.Debug.WriteLine("GetiFolderNode() returning false");
@@ -307,8 +326,9 @@ namespace Novell.iFolder.iFolderCom
 			{
 				Process.Start(helpPath);
 			}
-			catch
+			catch (Exception e)
 			{
+				logger.Debug(e, "Opening help");
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
 		}
