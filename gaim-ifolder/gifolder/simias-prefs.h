@@ -35,16 +35,7 @@
 
 #define SIMIAS_PREF_PATH "/plugins/simias"
 
-#define SIMIAS_PREF_SYNC_METHOD "/plugins/simias/sync_method"
-#define SIMIAS_PREF_SYNC_METHOD_ALL "all"
-#define SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED "plugin-enabled"
-#define SIMIAS_PREF_SYNC_METHOD_DEF SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED
-
-#define SIMIAS_PREF_SYNC_INTERVAL "/plugins/simias/sync_interval"
-#define SIMIAS_PREF_SYNC_INTERVAL_DEF 1 /* minute */
-
-#define SIMIAS_PREF_SYNC_PRUNE_MEMBERS "/plugins/simias/prune_members"
-#define SIMIAS_PREF_SYNC_PRUNE_MEMBERS_DEF FALSE
+#define SIMIAS_PREF_MACHINE_NAME "/plugins/simias/machine_name"
 
 #define SIMIAS_PREF_PING_REPLY_TYPE "/plugins/simias/ping_reply_type"
 #define SIMIAS_PREF_PING_REPLY_TYPE_BLIST "buddy-list"

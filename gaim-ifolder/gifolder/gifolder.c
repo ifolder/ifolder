@@ -220,17 +220,14 @@ simias_get_config_frame(GaimPlugin *plugin)
 	GtkWidget *label;
 	GtkWidget *sync_now_button;
 	GtkWidget *select;
-	char machine_name_str[256];
-	char hostname[128];
 	ret = gtk_vbox_new(FALSE, 18);
 	gtk_container_set_border_width (GTK_CONTAINER (ret), 12);
 
 	vbox = gaim_gtk_make_frame(ret, _("Identification"));
 	
-	if (gethostname(hostname, 128) < 0)
-		sprintf(hostname, "UNKNOWN");
-	
-	sprintf(machine_name_str, "<b>%s</b>: %s", _("Machine Name"), hostname);
+	sprintf(machine_name_str, "<b>%s</b>: %s",
+			_("Machine Name"),
+			gaim_prefs_get_string(SIMIAS_PREF_MACHINE_NAME));
 	
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), machine_name_str);
