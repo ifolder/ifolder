@@ -1,8 +1,11 @@
 .PHONY: addressbook-install ndoc ndoc-nodeps ndoc-clean
 
-all: ndoc
+all clean-local:
+	@echo There are currently no APIs to document for Address Book
 
-clean-local: ndoc-clean
+#all: ndoc
+
+#clean-local: ndoc-clean
 
 addressbook-install:
 	$(MAKE) -C .. install
