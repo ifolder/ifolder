@@ -36,38 +36,94 @@ namespace Novell.iFolder.Web
 	[Serializable]
 	public class iFolderWeb
 	{
+		/// <summary>
+		/// </summary>
 		public static readonly string FilesDirName = "SimiasFiles";
+		/// <summary>
+		/// </summary>
 		public static readonly string iFolderType = "iFolder";
 
+		/// <summary>
+		/// </summary>
 		public string DomainID;
+		/// <summary>
+		/// </summary>
 		public string ID;
+		/// <summary>
+		/// </summary>
 		public ulong LocalIncarnation;
+		/// <summary>
+		/// </summary>
 		public string ManagedPath;
+		/// <summary>
+		/// </summary>
 		public string UnManagedPath;
+		/// <summary>
+		/// </summary>
 		public ulong MasterIncarnation;
+		/// <summary>
+		/// </summary>
         public string Name;
+		/// <summary>
+		/// </summary>
 		public string Owner;
+		/// <summary>
+		/// </summary>
 		public string OwnerID;
+		/// <summary>
+		/// </summary>
 		public int EffectiveSyncInterval;
+		/// <summary>
+		/// </summary>
 		public int SyncInterval;
+		/// <summary>
+		/// </summary>
 		public bool Synchronizable;
+		/// <summary>
+		/// </summary>
 		public string Type;
+		/// <summary>
+		/// </summary>
 		public string Description;
+		/// <summary>
+		/// </summary>
 		public string State;
+		/// <summary>
+		/// </summary>
 		public bool IsSubscription;
+		/// <summary>
+		/// </summary>
 		public int EnumeratedState;
+		/// <summary>
+		/// </summary>
 		public bool IsWorkgroup;
+		/// <summary>
+		/// </summary>
 		public bool HasConflicts;
+		/// <summary>
+		/// </summary>
 		public string CurrentUserID;
+		/// <summary>
+		/// </summary>
 		public string CurrentUserRights;
+		/// <summary>
+		/// </summary>
 		public string CollectionID;
+		/// <summary>
+		/// </summary>
 		public string LastSyncTime;
+		/// <summary>
+		/// </summary>
 		public string Role;
 
+		/// <summary>
+		/// </summary>
 		public iFolderWeb()
 		{
 		}
 
+		/// <summary>
+		/// </summary>
 		public iFolderWeb(Collection collection)
 		{
 			this.DomainID = collection.Domain;
@@ -133,6 +189,8 @@ namespace Novell.iFolder.Web
 		}
 
 
+		/// <summary>
+		/// </summary>
 		public iFolderWeb(Subscription subscription)
 		{
 			this.DomainID = subscription.DomainID;

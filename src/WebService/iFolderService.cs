@@ -106,14 +106,14 @@ namespace Novell.iFolder.Web
 
 
 
-
+/*
 		/// <summary>
 		/// WebMethod that gets general iFolder Settings
 		/// </summary>
 		/// <returns>
 		/// Settings
 		/// </returns>
-/*		[WebMethod(Description="Gets the current iFolder Settings")]
+		[WebMethod(Description="Gets the current iFolder Settings")]
 		[SoapDocumentMethod]
 		public iFolderSettings GetSettings()
 		{
@@ -136,8 +136,8 @@ namespace Novell.iFolder.Web
 		public void SetDisplayConfirmation(bool DisplayConfirmation)
 		{
 			iFolderSettings.SetDisplayConfirmation(DisplayConfirmation);
-		}*/
-
+		}
+*/
 
 
 
@@ -293,6 +293,7 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that gets an iFolder based on an iFolderID
 		/// </summary>
+		/// <param name = "POBoxID"></param>
 		/// <param name = "iFolderID">
 		/// The ID of the collection representing this iFolder to get
 		/// </param>
@@ -716,10 +717,10 @@ namespace Novell.iFolder.Web
 		/// The ID of the collection representing the iFolder to which
 		/// the member is to be added
 		/// </param>
-		/// <param name = "UserID">
+		/// <param name = "NewOwnerUserID">
 		/// The ID of the member to be added
 		/// </param>
-		/// <param name = "Rights">
+		/// <param name = "OldOwnerRights">
 		/// The Rights to be given to the newly added member
 		/// </param>
 		/// <returns>
@@ -843,6 +844,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that returns a limited list of iFolderUsers.  If there
 		/// are more users than specified, the list will return none.
 		/// </summary>
+		/// <param name="DomainID"></param>
 		/// <param name="numUsers">The number of iFolderUsers to return.
 		/// -1 will return all of them.</param>
 		/// <returns>
@@ -894,6 +896,7 @@ namespace Novell.iFolder.Web
 		/// Web method that returns a list of users whose name's contain
 		/// the specified string.
 		/// </summary>
+		/// <param name="DomainID"></param>
 		/// <param name="SearchString">The string to search for.</param>
 		/// <returns>An array of users.</returns>
 		[WebMethod(Description="Search for a Member of a specified name in the specified domain.")]
@@ -1105,6 +1108,7 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// Accepts an Enterprise Subscription
 		/// </summary>
+		/// <param name="DomainID"></param>
 		/// <param name = "iFolderID">
 		/// The ID of the iFolder to accept the invitation for
 		/// </param>
@@ -1333,14 +1337,9 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that will authenticate a domain
 		/// </summary>
-		/// <param name = "UserName">
-		/// The username to use to connect to the Domain
-		/// </param>
+		/// <param name = "DomainID"></param>
 		/// <param name = "Password">
 		/// The password to use to connect to the Domain
-		/// </param>
-		/// <param name = "Host">
-		/// The host of the enterprise server
 		/// </param>
 		/// <returns>
 		/// The Domain object associated with this Server
@@ -1450,7 +1449,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "conflictID">
 		/// The node ID that represents a conflict to resolve
 		/// </param>
-		/// <param name = "iFolderID">
+		/// <param name = "localChangesWin">
 		/// A bool that determines if the local or server copies win
 		/// </param>
 		[WebMethod(Description="Resolves a file conflict in an iFolder.")]
@@ -1483,9 +1482,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "conflictID">
 		/// The node ID that represents a conflict to resolve
 		/// </param>
-		/// <param name = "iFolderID">
-		/// A bool that determines if the local or server copies win
-		/// </param>
+		/// <param name = "newLocalName"></param>
 		[WebMethod(Description="Resolves a name conflict")]
 		[SoapDocumentMethod]
 		public void ResolveNameConflict(string iFolderID, string conflictID,
@@ -1543,7 +1540,6 @@ namespace Novell.iFolder.Web
 		/// WebMethod to calculate the number of nodes and bytes that need sync'd.
 		/// </summary>
 		/// <param name="iFolderID">The collection ID of the iFolder to calculate the sync size of.</param>
-		/// <param name="SyncByteCount">On return, holds the number of bytes that need to be sync'd.</param>
 		/// <returns>The number of nodes that need to be sync'd.</returns>
 		[WebMethod(Description="Calculates the number of nodes and bytes that need to be sync'd.")]
 		[SoapDocumentMethod]

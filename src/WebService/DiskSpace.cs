@@ -33,14 +33,24 @@ namespace Novell.iFolder.Web
 	[Serializable]
 	public class DiskSpace 
 	{
+		/// <summary>
+		/// </summary>
 		public long AvailableSpace;
+		/// <summary>
+		/// </summary>
 		public long Limit;
+		/// <summary>
+		/// </summary>
 		public long UsedSpace;
 
+		/// <summary>
+		/// </summary>
 		public DiskSpace()
 		{
 		}
 
+		/// <summary>
+		/// </summary>
 		public DiskSpace(Simias.Policy.DiskSpaceQuota quota)
 		{
 			this.AvailableSpace = quota.AvailableSpace;
@@ -120,6 +130,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "UserID">
 		/// The ID of the member to set the disk space limit
 		/// </param>
+		/// <param name = "limit"></param>
 		public static void SetUserDiskSpaceLimit( string UserID, long limit )
 		{
 			Store store = Store.GetStore();
@@ -144,6 +155,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "iFolderID">
 		/// The ID of the iFolder to set the disk space limit
 		/// </param>
+		/// <param name = "limit"></param>
 		public static void SetiFolderDiskSpaceLimit( string iFolderID, 
 													long limit )
 		{
