@@ -1,4 +1,4 @@
-AC_INIT(src/iFolder/iFolder.cs)
+AC_INIT(src/iFolder/iFolderWebService.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
