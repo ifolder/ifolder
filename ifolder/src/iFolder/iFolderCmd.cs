@@ -24,7 +24,6 @@
 using System;
 
 using Simias.Storage;
-using Simias.Invite;
 using Simias.Sync;
 using Novell.iFolder;
 

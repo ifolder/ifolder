@@ -28,7 +28,6 @@ using System.IO;
 using Simias;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Invite;
 
 namespace Novell.iFolder
 {
@@ -356,7 +355,7 @@ namespace Novell.iFolder
 		/// <exception cref="ApplicationException">
 		/// <paramref name="path"/> is within an existing iFolder."
 		/// </exception>
-		public void AcceptInvitation( Invitation invitation, string path )
+/*		public void AcceptInvitation( Invitation invitation, string path )
 		{
 			// Check the path to see if it is inside an existing iFolder
 			if( IsPathIniFolder( path ) )
@@ -366,7 +365,7 @@ namespace Novell.iFolder
 
 			invitation.RootPath = path;
 			InvitationService.Accept( store, invitation );
-		}
+		}*/
 		#endregion
 
 		#region IEnumerable
