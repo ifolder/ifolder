@@ -236,17 +236,17 @@ namespace Novell.iFolder
 					Status status =
 						domainAuth.Authenticate();
 
-					if( (status.statusCode != StatusCodes.Success) ||
-						(status.statusCode != StatusCodes.SuccessInGrace))
+					if( (status.statusCode == StatusCodes.Success) ||
+						(status.statusCode == StatusCodes.SuccessInGrace))
 					{
 						// DEBUG
-						Console.WriteLine("Domain-Up: Need credentials.");
-						ReLogin(args.Message);
+						Console.WriteLine("Domain-Up: Credentials valid.");
 					}
 					else
 					{
 						// DEBUG
-						Console.WriteLine("Domain-Up: Credentials valid.");
+						Console.WriteLine("Domain-Up: Need credentials.");
+						ReLogin(args.Message);
 					}
 
 					break;
@@ -307,8 +307,8 @@ namespace Novell.iFolder
 						Status status = 
 							domainAuth.Authenticate();
 
-						if( (status.statusCode != StatusCodes.Success) ||
-							(status.statusCode != StatusCodes.SuccessInGrace))
+						if( (status.statusCode == StatusCodes.Success) ||
+							(status.statusCode == StatusCodes.SuccessInGrace))
 						{
 							authenticated = true;
 						}
@@ -339,8 +339,14 @@ namespace Novell.iFolder
 							LoginDialog.Domain, 
 							LoginDialog.Password);
 					status = cAuth.Authenticate();
-					if( (status.statusCode != StatusCodes.Success) ||
-						(status.statusCode != StatusCodes.SuccessInGrace))
+					if( (status.statusCode == StatusCodes.Success) ||
+						(status.statusCode == StatusCodes.SuccessInGrace))
+					{
+						LoginDialog.Hide();
+						LoginDialog.Destroy();
+						LoginDialog = null;
+					}
+					else
 					{
 						iFolderMsgDialog mDialog = new iFolderMsgDialog(
 							LoginDialog, //tIcon, 
@@ -353,12 +359,6 @@ namespace Novell.iFolder
 						mDialog.Hide();
 						mDialog.Destroy();
 						mDialog = null;
-					}
-					else
-					{
-						LoginDialog.Hide();
-						LoginDialog.Destroy();
-						LoginDialog = null;
 					}
 					break;
 				}
