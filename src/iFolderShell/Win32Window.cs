@@ -139,6 +139,14 @@ namespace Novell.iFolder.Win32Util
 			return SHGetFileInfo(path, attr, out fi, cbfi, flags);
 		}
 
+		public const int SHCNE_UPDATEITEM = 0x00002000;
+		public const int SHCNF_PATHW = 0x0005;
+
+		public static void ShChangeNotify(int wEventId, int flags, string dwItem1, IntPtr dwItem2)
+		{
+			SHChangeNotify(wEventId, flags, dwItem1, dwItem2);
+		}
+
 		public static IntPtr LoadImageFromFile(int hInst, string name, int type, int cx, int cy, int load)
 		{
 			return LoadImage(hInst, name, type, cx, cy, load);
@@ -169,6 +177,9 @@ namespace Novell.iFolder.Win32Util
 
 		[DllImport("shell32.dll")]
 		static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPWStr)] string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags);
+
+		[DllImport("shell32.dll")]
+		static extern void SHChangeNotify(int wEventId, int uFlags, [MarshalAs(UnmanagedType.LPWStr)] string dwItem1, IntPtr dwItem2);
 	}
 }
 
