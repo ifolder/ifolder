@@ -56,14 +56,18 @@ namespace Simias.SimpleServer
 		private string description = "Simple Server domain";
 		private string ownerMember;
 
+		private string firstName;
+		private string lastName;
+		private string emailAddress;
+		private string im;
+
 		/// <summary>
 		/// Used to log messages.
 		/// </summary>
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-
-		private string		serverDocumentPath = "SimpleServer.xml";
+		private string serverDocumentPath = "SimpleServer.xml";
 		private XmlDocument serverDoc;
 
 		#endregion
@@ -172,7 +176,7 @@ namespace Simias.SimpleServer
 					}
 				}
 
-				if ( ownerMember == null || ownerMember == "")
+				if ( ownerMember == null || ownerMember == "" )
 				{
 					throw new Exception("No member with owner status specified");
 				}
@@ -241,6 +245,10 @@ namespace Simias.SimpleServer
 						this.id, 
 						this.description,
 						localUri);
+
+					rDomain = store.GetDomain( this.id );
+					//Node cNode = new Node( this.id, (Simias.Storage.Node) rDomain );
+					//cNode.SetType( cNode, "SimpleServer" );
 				}
 
 				//
@@ -256,7 +264,7 @@ namespace Simias.SimpleServer
 					ssRoster = rDomain.GetRoster( store );
 				}
 				catch{}
-				if (ssRoster == null)
+				if ( ssRoster == null )
 				{
 					ssRoster = new Roster( store, store.GetDomain( this.id ));
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
@@ -333,12 +341,7 @@ namespace Simias.SimpleServer
 		public void SynchronizeMembers()
 		{
 			string	member;
-			string	firstName;
-			string	lastName;
-			string	im;
-			string	email;
-
-			//Thread.Sleep(20000);
+			log.Debug( "SynchronizeMembers - called" );
 
 			//
 			// Create a sync iteration guid which will be stamped
@@ -410,10 +413,10 @@ namespace Simias.SimpleServer
 				XmlNode ownerNode = null;
 				for (int i = 0; i < domainElement.ChildNodes.Count; i++)
 				{
-					firstName = "";
-					lastName = "";
-					im = "";
-					email = "";
+					this.firstName = null;
+					this.lastName = null;
+					this.im = null;
+					this.emailAddress = null;
 
 					attr = domainElement.ChildNodes[i].Attributes["Name"];
 					if (attr != null)
@@ -421,7 +424,36 @@ namespace Simias.SimpleServer
 						XmlNode cNode = domainElement.ChildNodes[i];
 						member = cNode.Attributes["Name"].Value;
 
-						// Get the rest of the contact information
+						//
+						// Retrieve the contact properties from SimpleServer.xml
+						//
+
+						XmlNode memberNode = domainElement.ChildNodes[i];
+						for ( int x = 0; x < memberNode.ChildNodes.Count; x++ )
+						{
+							if ( memberNode.ChildNodes[x].Name == "First" )
+							{
+								this.firstName = memberNode.ChildNodes[x].InnerText;
+							}
+							else
+							if ( memberNode.ChildNodes[x].Name == "Last" )
+							{
+								this.lastName = memberNode.ChildNodes[x].InnerText;
+							}
+							else
+							if ( memberNode.ChildNodes[x].Name == "Email" )
+							{
+								this.emailAddress = memberNode.ChildNodes[x].InnerText;
+							}
+							else
+							if ( memberNode.ChildNodes[x].Name == "IM" )
+							{
+								this.im = memberNode.ChildNodes[x].InnerText;
+								//attr = domainElement.ChildNodes[i].Attributes["Name"];
+							}
+						}
+
+						memberNode = null;
 
 						//
 						// Check if this member already exists
@@ -430,7 +462,7 @@ namespace Simias.SimpleServer
 						Simias.Storage.Member ssMember = null;
 						try
 						{	
-							ssMember = ssRoster.GetMemberByName(member);
+							ssMember = ssRoster.GetMemberByName( member );
 						}
 						catch{}
 
@@ -449,32 +481,38 @@ namespace Simias.SimpleServer
 								// This member does not have an associated contact
 
 								// FIXME::Dictionary
-								if (firstName == null &&
-									lastName == null &&
-									email == null &&
-									im == null)
+								if (firstName != "" ||
+									lastName != "" ||
+									emailAddress != "" ||
+									im != "")
 								{
-									continue;
+									ssContact = new Contact();
+									ssContact.UserID = ssMember.UserID;
+
+									if (firstName != null && lastName != null)
+									{
+										ssContact.UserName = firstName + " " + lastName;
+									}
+									else
+									{
+										ssContact.UserName = member;
+									}
+
+									//
+									// Setup a relationship from the contact to the member
+									// The relationship must be setup this way because normal users
+									// will always have read-only access to the system book members
+									// and contacts.  For contact self-service a personal contact will
+									// be related back to the member and any changes to the personal
+									// contact will be reflected back to LDAP in an out-of-band
+									// communication.  
+									//
+
+									Relationship cRelationship = new Relationship( ssRoster.ID, ssMember.ID );
+									ssContact.Properties.ModifyProperty( "Member", cRelationship );
+									systemBook.AddContact( ssContact );
+									//ssContact.Commit();
 								}
-
-								ssContact = new Contact();
-								ssContact.UserID = ssMember.UserID;
-								ssContact.UserName = member;
-
-								//
-								// Setup a relationship from the contact to the member
-								// The relationship must be setup this way because normal users
-								// will always have read-only access to the system book members
-								// and contacts.  For contact self-service a personal contact will
-								// be related back to the member and any changes to the personal
-								// contact will be reflected back to LDAP in an out-of-band
-								// communication.  
-								//
-
-								Relationship cRelationship = new Relationship( ssRoster.ID, ssMember.ID );
-								ssContact.Properties.ModifyProperty( "Member", cRelationship );
-								systemBook.AddContact( ssContact );
-								ssContact.Commit();
 							}
 							else
 							{
@@ -482,21 +520,12 @@ namespace Simias.SimpleServer
 								ssContact = systemBook.GetContact( cShallow.ID );
 							}
 						
-							//
-							// check if the ldap object's time stamp has changed
-							//
-
 							try
 							{
 								if (ssContact != null)
 								{
-									/*  FIXME
-									if( LdapSync.UpdateContactProperties(cEntry, cContact) == true)
-									{
-										log.Info("Updating: " + cEntry.DN);
-										cContact.Commit();
-									}
-									*/
+									this.UpdateContactProperties(ssContact);
+									ssContact.Commit();
 								}
 							}
 							catch{}
@@ -521,25 +550,33 @@ namespace Simias.SimpleServer
 
 								// Set the local property sync guid
 								ssMember.Properties.ModifyProperty(syncP);
+								ssRoster.Commit(ssMember);
 							}
 							catch
 							{
 								continue;
 							}
 
-							// If no Contact properties exist don't create the
-							// contact
+							// If no Contact properties exist don't create the contact
 							if (firstName == null &&
 								lastName == null &&
 								im == null &&
-								email == null)
+								emailAddress == null)
 							{
 								continue;
 							}
 
 							Contact ssContact = new Contact();
 							ssContact.UserID = ssMember.UserID;
-							ssContact.UserName = member;
+
+							if ( firstName != null && lastName != null )
+							{
+								ssContact.UserName = firstName + " " + lastName;
+							}
+							else
+							{
+								ssContact.UserName = member;
+							}
 
 							//
 							// Setup a relationship from the contact to the member
@@ -555,8 +592,8 @@ namespace Simias.SimpleServer
 							ssContact.Properties.ModifyProperty( "Member", cRelationship );
 
 							// Update the contact properties
-							//LdapSync.UpdateContactProperties(cEntry, cContact);
-							ssRoster.Commit(ssMember);
+							this.UpdateContactProperties(ssContact);
+							//ssContact.Commit();
 							systemBook.AddContact(ssContact);
 							ssContact.Commit();
 						}	
@@ -576,10 +613,11 @@ namespace Simias.SimpleServer
 			if (errorDuringSync == false)
 			{
 				log.Debug("Checking for deleted SimpleServer.xml members");
-				ICSList	deleteList = ssRoster.Search("SyncGuid", syncP.Value, SearchOp.Not_Equal);
+				ICSList	deleteList = 
+					ssRoster.Search( "SyncGuid", syncP.Value, SearchOp.Not_Equal );
 				try
 				{
-					foreach(ShallowNode cShallow in deleteList)
+					foreach( ShallowNode cShallow in deleteList )
 					{
 						Node cNode = new Node( ssRoster, cShallow );
 						if ( ssRoster.IsType( cNode, "Member" ) == true )
@@ -593,8 +631,8 @@ namespace Simias.SimpleServer
 										(Simias.Storage.Relationship) p.Value;
 
 									Contact cContact =
-										systemBook.GetContact(cRelationship.NodeID);
-									if (cContact != null)
+										systemBook.GetContact( cRelationship.NodeID );
+									if ( cContact != null )
 									{
 										cContact.Delete();
 									}
@@ -604,8 +642,7 @@ namespace Simias.SimpleServer
 
 							// Delete this sucker...
 							log.Debug("deleting: " + cNode.Name);
-							ssRoster.Delete(cNode);
-							ssRoster.Commit(cNode);
+							ssRoster.Commit( ssRoster.Delete( cNode ) );
 						}
 					}
 				}
@@ -613,8 +650,76 @@ namespace Simias.SimpleServer
 				log.Debug("Finished checking for deleted SimpleServer.xml members");
 			}
 
+			log.Debug( "SynchronizeMembers - finished" );
 			return;
 		}
+
+		internal void UpdateContactProperties(Contact cContact)
+		{
+			try
+			{
+				if ( this.firstName != null && this.lastName != null )
+				{
+					// System address book only ever has one name so we can just
+					// get the preferred name for checking
+
+					Name prefName = cContact.GetPreferredName();
+					if (prefName != null)
+					{
+						if (prefName.Given != this.firstName ||
+							prefName.Family != this.lastName)
+						{
+							prefName.Delete();
+
+							Name cName = new Name(this.firstName, this.lastName);
+							cContact.AddName(cName);
+						}
+					}
+					else
+					{
+						Name cName = new Name(this.firstName, this.lastName);
+						cContact.AddName(cName);
+					}
+				}
+			}
+			catch{}
+
+			try
+			{
+				if (this.emailAddress != null)
+				{
+					//
+					// For now the system address book only has one e-mail address
+					// an employees work address
+					//
+
+					Email prefMail = cContact.GetPreferredEmailAddress();
+					if (prefMail != null)
+					{
+						if (this.emailAddress != prefMail.Address)
+						{
+							prefMail.Delete();
+
+							Email cMail = 
+								new Email(
+								EmailTypes.internet | EmailTypes.work | EmailTypes.preferred,
+								this.emailAddress);
+							cContact.AddEmailAddress(cMail);
+						}
+					}
+					else
+					{
+						Email cMail = new  
+							Email(
+								EmailTypes.internet | EmailTypes.work | EmailTypes.preferred, 
+								this.emailAddress);
+						cContact.AddEmailAddress(cMail);
+					}
+				}
+			}
+			catch{}
+		}
+
 
 		/// <summary>
 		/// Obtains the string representation of this instance.

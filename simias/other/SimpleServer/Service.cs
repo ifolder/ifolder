@@ -78,17 +78,7 @@ namespace Simias.SimpleServer
 			log.Debug("Start called");
 			this.config = config;
 
-			//
-			// Initialize/Verify the Simple Server domain
-			//
-
-			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain(true);
-
-			//
-			// Synchronize the Domain XML file to the store at startup
-			//
-
-			ssDomain.SynchronizeMembers();
+			Simias.SimpleServer.Sync.StartSyncThread();
 		}
 
 		/// <summary>
@@ -120,9 +110,98 @@ namespace Simias.SimpleServer
 		public void Stop()
 		{
 			log.Debug("Stop called");
-
-			// Signal the sync thread
+			Simias.SimpleServer.Sync.StopSyncThread();
 		}
 		#endregion
+	}
+
+	/// <summary>
+	/// Class for controlling the synchronization thread
+	/// </summary>
+	public class Sync
+	{
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		static AutoResetEvent syncEvent = null;
+		static bool exiting;
+		static bool syncOnStart = true;
+		static int syncInterval = 60 * 1000;
+		static Thread syncThread = null;
+
+		internal static Simias.SimpleServer.Domain ssDomain = null;
+		internal static DateTime lastSyncTime;
+
+		internal static int StartSyncThread()
+		{
+			log.Debug("StartSyncThread called");
+
+			try
+			{
+				ssDomain = new Simias.SimpleServer.Domain(true);
+			}
+			catch{}
+
+			if ( ssDomain != null )
+			{
+				exiting = false;
+				syncEvent = new AutoResetEvent(false);
+				syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
+				syncThread.IsBackground = true;
+				syncThread.Start();
+			}
+			else
+			{
+				log.Debug("Failed to initialize the SimpleServer domain");
+			}
+
+			log.Debug("StartSyncThread finished");
+			return(0);
+		}
+
+		internal static int StopSyncThread()
+		{
+			log.Debug("StopSyncThread called");
+			exiting = true;
+			try
+			{
+				syncEvent.Set();
+				Thread.Sleep(32);
+				syncEvent.Close();
+				Thread.Sleep(0);
+				ssDomain = null;
+				log.Debug("StopSyncThread finished");
+				return(0);
+			}
+			catch(Exception e)
+			{
+				log.Debug("StopSyncThread failed with an exception");
+				log.Debug(e.Message);
+			}
+			return(-1);
+		}
+
+		public static int SyncNow(string data)
+		{
+			log.Debug("SyncNow called");
+			syncEvent.Set();
+			log.Debug("SyncNow finished");
+			return(0);
+		}
+
+		internal static void SyncThread()
+		{
+			while (!exiting)
+			{
+				if (syncOnStart == false)
+				{
+					syncEvent.WaitOne(syncInterval, false);
+				}
+
+				// Always wait after the first iteration
+				syncOnStart = false;
+				ssDomain.SynchronizeMembers();
+			}
+		}
 	}
 }
