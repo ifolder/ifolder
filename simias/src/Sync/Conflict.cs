@@ -150,12 +150,18 @@ public class Conflict
 	/// </summary>
 	public void Resolve(bool localChangesWin)
 	{
+		if (conflictNode == null)
+			return;
+
 		if (localChangesWin)
 		{
-			File.Delete(UpdateConflictPath);
+			string ucp = UpdateConflictPath;
+			if (ucp != null)
+				File.Delete(ucp);
 			node = collection.DeleteCollision(node);
 			node.SetIncarnationValues(conflictNode.MasterIncarnation, conflictNode.LocalIncarnation);
 			collection.Commit(node);
+			Log.Spew("Local changes win in conflict for node {0}", node.Name);
 			return;
 		}
 
@@ -172,6 +178,7 @@ public class Conflict
 			node = collection.CreateCollision(conflictNode);
 		conflictNode = null;
 		collection.Commit(node);
+		Log.Spew("Master update wins in conflict for node {0}", node.Name);
 	}
 
 	//---------------------------------------------------------------------------
@@ -184,6 +191,21 @@ public class Conflict
 		File.Move(FileNameConflictPath, Path.Combine(IncomingNode.ParentPath(collection, node), newNodeName));
 		node.Name = newNodeName;
 		collection.Commit(node);
+	}
+
+	
+	//---------------------------------------------------------------------------
+	/// <summary>
+	/// Automatically resolve all update conflicts in a collection. This method
+	/// does not resolve file name conflicts.
+	/// </summary>
+	public static void Resolve(Collection collection, bool localChangesWin)
+	{
+		foreach (ShallowNode sn in collection.GetCollisions())
+		{
+			Conflict cf = new Conflict(collection, new Node(collection, sn));
+			cf.Resolve(localChangesWin);
+		}
 	}
 }
 

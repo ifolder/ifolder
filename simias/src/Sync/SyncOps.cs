@@ -220,7 +220,15 @@ internal class SyncOps
 			stamp.name = node.Name;
 
 			//TODO: another place to handle multiple forks
-			stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+			try
+			{
+				stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+			}
+			catch (Exception e)
+			{
+				Log.Spew("Could not get file size of {0}: {1}", path, e);
+				stamp.streamsSize = 0;
+			}
 			stampList.Add(stamp);
 		}
 

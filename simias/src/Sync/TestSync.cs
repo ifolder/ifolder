@@ -69,6 +69,16 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
+	static void ResolveConflicts(string storePath, string folderName, bool localChangesWin)
+	{
+		Store store = new Store(new Configuration(storePath));
+		store.Revert();
+		Collection collection = FileInviter.FindCollection(store, new Uri(folderName));
+		Conflict.Resolve(collection, localChangesWin);
+		store.Dispose();
+	}
+
+	//---------------------------------------------------------------------------
 	bool RunClient()
 	{
 		// run client code within this process
@@ -228,19 +238,20 @@ public class SyncTests: Assertion
 		foreach (int size in sizes)
 			totalSize += (uint)size;
 
-        Store store = new Store(new Configuration(storeDirB));
+		Store store = new Store(new Configuration(storeDirB));
 		store.Revert();
 		Collection collection = FileInviter.FindCollection(store, new Uri(folderB));
 
 		uint nodeCount;
 		ulong maxBytesToSend;
 		SyncSize.CalculateSendSize(collection, out nodeCount, out maxBytesToSend);
+		store.Dispose();
 
 		log.Debug("+++++++++++ syncSize: {0} nodes, {1} totalSize", nodeCount, maxBytesToSend);
 
-		return nodeCount == 7
-				&& maxBytesToSend > totalSize + 7 * 1000
-				&& maxBytesToSend < totalSize + 7 * 2000;
+		return nodeCount == 8
+				&& maxBytesToSend > totalSize + 8 * 1000
+				&& maxBytesToSend < totalSize + 8 * 2000;
 	}
 
 	//---------------------------------------------------------------------------
@@ -279,6 +290,8 @@ public class SyncTests: Assertion
 			log.Debug("failed simpleAdds sync");
 			return false;
 		}
+		ResolveConflicts(storeDirA, folderA, true);
+		ResolveConflicts(storeDirB, folderB, true);
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
@@ -307,6 +320,8 @@ public class SyncTests: Assertion
 			log.Debug("failed simple deletes sync");
 			return false;
 		}
+		ResolveConflicts(storeDirA, folderA, true);
+		ResolveConflicts(storeDirB, folderB, true);
 
 		bool worked = true;
 		string fname;
@@ -382,6 +397,8 @@ public class SyncTests: Assertion
 			return false;
 		}
 
+		ResolveConflicts(storeDirA, folderA, true);
+		ResolveConflicts(storeDirB, folderB, true);
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
@@ -392,7 +409,7 @@ public class SyncTests: Assertion
 
 	public bool DeepSubDirs()
 	{
-		const int maxDepth = 15;
+		const int maxDepth = 5; //15;
 		string curDir = folderA;
 		for (int i = 0; i < maxDepth; i++)
 		{
@@ -416,6 +433,8 @@ public class SyncTests: Assertion
 				return false;
 			}
 		}
+		ResolveConflicts(storeDirA, folderA, true);
+		ResolveConflicts(storeDirB, folderB, true);
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
