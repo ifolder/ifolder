@@ -1548,6 +1548,8 @@ namespace Novell.iFolder
 					{
    		 				iFolder newiFolder = 
 							iFolderWS.CreateLocaliFolder(selectedFolder);
+						if(newiFolder == null)
+							throw new Exception("Simias returned null");
 
 						TreeIter iter = 
 							iFolderTreeStore.AppendValues(newiFolder);

@@ -435,12 +435,16 @@ fi
 PKG_CHECK_MODULES(SIMIAS, simias >= 1.0)
 AC_SUBST(SIMIAS_LIBS)
 
+PKG_CHECK_MODULES(SIMIAS_CLIENT, simias-client >= 1.0)
+AC_SUBST(SIMIAS_CLIENT_LIBS)
+
 # if using csc, convert /lib paths using cygpath
 case $CSC in
     csc)
         libdir_pkg=`pkg-config --variable=libdir simias`
         libdir_cyg=`cygpath --windows $libdir_pkg | sed 's,\\\\,/,g'`
         SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
+        SIMIAS_CLIENT_LIBS=`echo $SIMIAS_CLIENT_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
     ;;
 esac
 
