@@ -35,6 +35,41 @@ using System.Threading;
 //[assembly:PermissionSetAttribute(SecurityAction.RequestMinimum, Name = "FullTrust")]
 namespace Simias.Event
 {
+	#region Delegate Definitions.
+
+	/// <summary>
+	/// Delegate definition for handling collection events.
+	/// </summary>
+	public delegate void NodeEventHandler(NodeEventArgs args);
+
+	/// <summary>
+	/// Delegate definition for handling Collection root change events.
+	/// </summary>
+	public delegate void CollectionRootChangedHandler(CollectionRootChangedEventArgs args);
+	
+	/// <summary>
+	/// Delegate definition for file events.
+	/// </summary>
+	public delegate void FileEventHandler(FileEventArgs args);
+
+	/// <summary>
+	/// Delegate definition for rename events.
+	/// </summary>
+	public delegate void FileRenameEventHandler(FileRenameEventArgs args);
+
+	/// <summary>
+	/// Delegate definition for hanling service control events.
+	/// </summary>
+	public delegate void ServiceEventHandler(ServiceEventArgs args);
+
+	/// <summary>
+	/// Used to get around a marshalling problem seen with explorer.
+	/// </summary>
+	internal delegate void TemporayEventHandler(EventType type, string args);
+
+	
+	#endregion
+	
 	/// <summary>
 	/// Class to Subscibe to collection events.
 	/// </summary>
@@ -82,9 +117,7 @@ namespace Simias.Event
 
 		#region Private Fields
 
-		Queue eventQueue;
-		ManualResetEvent queued;
-		EventBroker broker;
+		InProcessEventBroker	broker = null;
 		bool		enabled;
 		Regex		fileNameFilter;
 		Regex		fileTypeFilter;
@@ -92,7 +125,6 @@ namespace Simias.Event
 		string		nodeTypeFilter;
 		Regex		nodeTypeRegex;
 		string		collectionId;
-		string		rootPath;
 		bool		alreadyDisposed;
 		
 		#endregion
@@ -104,12 +136,8 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="conf">Configuration Object.</param>
 		/// <param name="collectionId">The collection to watch for events.</param>
-		/// <param name="rootPath">The Root Path for the collection.</param>
-		public EventSubscriber(Configuration conf, string collectionId, string rootPath)
+		public EventSubscriber(Configuration conf, string collectionId)
 		{
-			eventQueue = new Queue();
-			queued = new ManualResetEvent(false);
-
 			enabled = true;
 			fileNameFilter = null;
 			fileTypeFilter = null;
@@ -117,12 +145,9 @@ namespace Simias.Event
 			nodeTypeFilter = null;
 			nodeTypeRegex = null;
 			this.collectionId = collectionId;
-			this.rootPath = rootPath;
 			alreadyDisposed = false;
 			
-			EventBroker.RegisterClientChannel(conf);
-			
-			broker = new EventBroker();
+			broker = InProcessEventBroker.GetSubscriberBroker(conf);
 			broker.NodeChanged += new NodeEventHandler(OnNodeChanged);
 			broker.NodeCreated += new NodeEventHandler(OnNodeCreated);
 			broker.NodeDeleted += new NodeEventHandler(OnNodeDeleted);
@@ -131,9 +156,6 @@ namespace Simias.Event
 			broker.FileCreated += new FileEventHandler(OnFileCreated);
 			broker.FileDeleted += new FileEventHandler(OnFileDeleted);
 			broker.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
-			//broker.InternalEvent += new InternalEventHandler(broker_InternalEvent);
-			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-			t.Start();
 		}
 
 		/// <summary>
@@ -141,7 +163,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="conf">Configuration object.</param>
 		public EventSubscriber(Configuration conf) :
-			this(conf, (string)null, (string)null)
+			this(conf, (string)null)
 		{
 		}
 
@@ -268,8 +290,7 @@ namespace Simias.Event
 		public void OnNodeChanged(NodeEventArgs args)
 		{
 			if (applyNodeFilter(args))
-				queueEvent(args);
-			//callNodeDelegate(NodeChanged, args);
+				NodeChanged(args);
 		}
 
 		/// <summary>
@@ -280,8 +301,7 @@ namespace Simias.Event
 		public void OnNodeCreated(NodeEventArgs args)
 		{
 			if (applyNodeFilter(args))
-				queueEvent(args);
-			//callNodeDelegate(NodeCreated, args);
+				NodeCreated(args);
 		}
 
 		/// <summary>
@@ -292,8 +312,7 @@ namespace Simias.Event
 		public void OnNodeDeleted(NodeEventArgs args)
 		{
 			if (applyNodeFilter(args))
-				queueEvent(args);
-			//callNodeDelegate(NodeDeleted, args);
+				NodeDeleted(args);
 		}
 
 		/// <summary>
@@ -304,7 +323,7 @@ namespace Simias.Event
 		public void OnCollectionRootChanged(CollectionRootChangedEventArgs args)
 		{
 			if (applyNodeFilter(args))
-				queueEvent(args);
+				CollectionRootChanged(args);
 		}
 
 		/// <summary>
@@ -315,7 +334,7 @@ namespace Simias.Event
 		public void OnFileChanged(FileEventArgs args)
 		{
 			if (applyFileFilter(args))
-				queueEvent(args);
+				FileChanged(args);
 		}
 
 		/// <summary>
@@ -326,7 +345,7 @@ namespace Simias.Event
 		public void OnFileCreated(FileEventArgs args)
 		{
 			if (applyFileFilter(args))
-				queueEvent(args);
+				FileCreated(args);
 		}
 
 		/// <summary>
@@ -337,7 +356,7 @@ namespace Simias.Event
 		public void OnFileDeleted(FileEventArgs args)
 		{
 			if (applyFileFilter(args))
-				queueEvent(args);
+				FileDeleted(args);
 		}
 
 		/// <summary>
@@ -348,22 +367,13 @@ namespace Simias.Event
 		public void OnFileRenamed(FileRenameEventArgs args)
 		{
 			if (applyFileFilter(args))
-				queueEvent(args);
+				FileRenamed(args);
 		}
 
 		#endregion
 
 		#region Private Methods
 
-		private void queueEvent(CollectionEventArgs args)
-		{
-			lock (eventQueue)
-			{
-				eventQueue.Enqueue(args);
-				queued.Set();
-			}
-		}
-		
 		/// <summary>
 		/// Called to apply the subscribers filter.
 		/// </summary>
@@ -417,9 +427,7 @@ namespace Simias.Event
 				if (!alreadyDisposed)
 				{
 					alreadyDisposed = true;
-					// Signal thread so it can exit.
-					queued.Set();
-
+					
 					// Deregister delegates.
 					broker.NodeChanged -= new NodeEventHandler(OnNodeChanged);
 					broker.NodeCreated -= new NodeEventHandler(OnNodeCreated);
@@ -429,6 +437,7 @@ namespace Simias.Event
 					broker.FileCreated -= new FileEventHandler(OnFileCreated);
 					broker.FileDeleted -= new FileEventHandler(OnFileDeleted);
 					broker.FileRenamed -= new FileRenameEventHandler(OnFileRenamed);
+					broker.Dispose();
 					if (!inFinalize)
 					{
 						GC.SuppressFinalize(this);
@@ -436,57 +445,6 @@ namespace Simias.Event
 				}
 			}
 			catch {};
-		}
-
-		private void EventThread()
-		{
-			while (!alreadyDisposed)
-			{
-				try
-				{
-					queued.WaitOne();
-					lock (eventQueue)
-					{
-						if (eventQueue.Count > 0)
-						{
-							CollectionEventArgs args = (CollectionEventArgs)eventQueue.Dequeue();
-
-							switch (args.ChangeType)
-							{
-								case EventType.NodeCreated:
-									NodeCreated((NodeEventArgs)args);
-									break;
-								case EventType.NodeDeleted:
-									NodeDeleted((NodeEventArgs)args);
-									break;
-								case EventType.NodeChanged:
-									NodeChanged((NodeEventArgs)args);
-									break;
-								case EventType.CollectionRootChanged:
-									CollectionRootChanged((CollectionRootChangedEventArgs)args);
-									break;
-								case EventType.FileCreated:
-									FileCreated((FileEventArgs)args);
-									break;
-								case EventType.FileDeleted:
-									FileDeleted((FileEventArgs)args);
-									break;
-								case EventType.FileChanged:
-									FileChanged((FileEventArgs)args);
-									break;
-								case EventType.FileRenamed:
-									FileRenamed((FileRenameEventArgs)args);
-									break;
-							}
-						}
-						else
-						{
-							queued.Reset();
-						}
-					}
-				}
-				catch {}
-			}
 		}
 
 		#endregion

@@ -59,9 +59,10 @@ namespace Simias.Event
 				mutex.WaitOne();
 			}
 
-			EventBroker.RegisterService(new Configuration(args[0]));
+			ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+			EventBroker.RegisterService(shutdownEvent, new Configuration(args[0]));
 			// Wait (forever) until we are killed.
-			new System.Threading.ManualResetEvent(false).WaitOne();
+			shutdownEvent.WaitOne();
 		}
 	}
 }

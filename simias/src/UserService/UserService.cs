@@ -81,12 +81,12 @@ namespace Simias
 		{
 			if (args.Target == this.processId || args.Target == ServiceEventArgs.TargetAll)
 			{
-				switch (args.EventType)
+				switch (args.ControlEvent)
 				{
-					case ServiceEvent.Shutdown:
+					case ServiceControl.Shutdown:
 						shutdownEvent.Set();
 						break;
-					case ServiceEvent.Reconfigure:
+					case ServiceControl.Reconfigure:
 						OnReconfigure();
 						break;
 				}

@@ -5,7 +5,7 @@ namespace Simias.Event
 	/// <summary>
 	/// Service Events.
 	/// </summary>
-	public enum ServiceEvent
+	public enum ServiceControl
 	{
 		/// <summary>
 		/// The service should shutdown.
@@ -28,19 +28,19 @@ namespace Simias.Event
 		/// </summary>
 		public static int	TargetAll = 0;
 		int					target;
-		ServiceEvent		eventType;
+		ServiceControl		controlEvent;
 		string				userName;
 		
 		/// <summary>
 		/// Constructs a ServiceEventArgs to describe the event.
 		/// </summary>
 		/// <param name="target">The Process ID of the service to signal.</param>
-		/// <param name="eventType">The event to execute.</param>
-		public ServiceEventArgs(int target, ServiceEvent eventType) :
-			base(Simias.Event.EventType.ServiceEvent)
+		/// <param name="controlEvent">The event to execute.</param>
+		public ServiceEventArgs(int target, ServiceControl controlEvent) :
+			base(EventType.ServiceControl)
 		{
 			this.target = target;
-			this.eventType = eventType;
+			this.controlEvent = controlEvent;
 			this.userName = System.Environment.UserName;
 		}
 
@@ -55,9 +55,9 @@ namespace Simias.Event
 		/// <summary>
 		/// Gets the event type.
 		/// </summary>
-		public ServiceEvent EventType
+		public ServiceControl ControlEvent
 		{
-			get {return eventType;}
+			get {return controlEvent;}
 		}
 	}
 }

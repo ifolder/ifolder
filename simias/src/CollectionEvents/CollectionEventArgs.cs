@@ -29,6 +29,7 @@ namespace Simias.Event
 	/// <summary>
 	/// The Event types supported.
 	/// </summary>
+	[Flags]
 	public enum EventType : short
 	{
 		/// <summary>
@@ -38,35 +39,35 @@ namespace Simias.Event
 		/// <summary>
 		/// The event is for a node delete.
 		/// </summary>
-		NodeDeleted,
+		NodeDeleted = 2,
 		/// <summary>
 		/// The event is for a node change.
 		/// </summary>
-		NodeChanged,
+		NodeChanged = 4,
 		/// <summary>
 		/// The event is for a collection root path change.
 		/// </summary>
-		CollectionRootChanged,
+		CollectionRootChanged = 8,
 		/// <summary>
 		/// The event is for a file create.
 		/// </summary>
-		FileCreated,
+		FileCreated = 16,
 		/// <summary>
 		/// The event is for a file delete.
 		/// </summary>
-		FileDeleted,
+		FileDeleted = 32,
 		/// <summary>
 		/// The event is for a file change.
 		/// </summary>
-		FileChanged,
+		FileChanged = 64,
 		/// <summary>
 		/// The event is for a file rename.
 		/// </summary>
-		FileRenamed,
+		FileRenamed = 128,
 		/// <summary>
 		/// A service event.
 		/// </summary>
-		ServiceEvent
+		ServiceControl = 256
 	};
 
 	/// <summary>

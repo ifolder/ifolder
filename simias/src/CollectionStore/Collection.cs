@@ -1060,7 +1060,7 @@ namespace Simias.Storage
 		public void NodeEventsSubscribe( NodeChangeHandler handler, string[] nodeIdFilter )
 		{
 			// Setup to watch for node changes on this collection.
-			subscriber = new EventSubscriber( new Configuration( localStore.StorePath.LocalPath ), Id, DocumentRoot.LocalPath );
+			subscriber = new EventSubscriber( new Configuration( localStore.StorePath.LocalPath ), Id);
 			subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
 			subscriber.NodeCreated += new NodeEventHandler( OnNodeChanged );
 			subscriber.NodeDeleted += new NodeEventHandler( OnNodeChanged );

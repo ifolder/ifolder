@@ -15,7 +15,7 @@ namespace Simias.Event
 		#endregion
 
 		#region Private Fields
-		EventBroker broker;
+		InProcessEventBroker broker;
 		string		userName;
 		bool		enabled;
 		bool		alreadyDisposed;
@@ -33,9 +33,7 @@ namespace Simias.Event
 			userName = System.Environment.UserName;
 			enabled = true;
 			alreadyDisposed = false;
-			
-			EventBroker.RegisterClientChannel(conf);
-			broker = new EventBroker();
+			broker = InProcessEventBroker.GetServiceBroker(conf);
 			broker.ServiceControl += new ServiceEventHandler(OnServiceControl);
 		}
 
@@ -86,21 +84,7 @@ namespace Simias.Event
 		public void OnServiceControl(ServiceEventArgs args)
 		{
 			if (ServiceControl != null)
-			{
-				Delegate[] cbList = ServiceControl.GetInvocationList();
-				foreach (ServiceEventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						ServiceControl -= cb;
-					}
-				}
-			}
+				ServiceControl(args);
 		}
 
 		#endregion
@@ -115,6 +99,7 @@ namespace Simias.Event
 				{
 					alreadyDisposed = true;
 					broker.ServiceControl -= new ServiceEventHandler(OnServiceControl);
+					broker.Dispose();
 					if (!inFinalize)
 					{
 						GC.SuppressFinalize(this);

@@ -41,37 +41,6 @@ namespace Simias.Event
 	/// Delegate definition for handling collection events.
 	/// </summary>
 	public delegate void CollectionEventHandler(CollectionEventArgs args);
-
-	/// <summary>
-	/// Delegate definition for handling collection events.
-	/// </summary>
-	public delegate void NodeEventHandler(NodeEventArgs args);
-
-	/// <summary>
-	/// Delegate definition for handling Collection root change events.
-	/// </summary>
-	public delegate void CollectionRootChangedHandler(CollectionRootChangedEventArgs args);
-	
-	/// <summary>
-	/// Delegate definition for file events.
-	/// </summary>
-	public delegate void FileEventHandler(FileEventArgs args);
-
-	/// <summary>
-	/// Delegate definition for rename events.
-	/// </summary>
-	public delegate void FileRenameEventHandler(FileRenameEventArgs args);
-
-	/// <summary>
-	/// Delegate definition for hanling service control events.
-	/// </summary>
-	public delegate void ServiceEventHandler(ServiceEventArgs args);
-
-	/// <summary>
-	/// Used to get around a marshalling problem seen with explorer.
-	/// </summary>
-	public delegate void InternalEventHandler(EventType type, string args);
-
 	
 	#endregion
 
@@ -82,9 +51,294 @@ namespace Simias.Event
 	/// </summary>
 	public class EventBroker : MarshalByRefObject
 	{
+		#region Fields
+
 		bool shuttingDown = false;
 		Queue eventQueue;
 		ManualResetEvent queued;
+		static ManualResetEvent shutdown;
+
+		#endregion
+
+		#region Events
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public event CollectionEventHandler CollectionEvent;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public event ServiceEventHandler	ServiceEvent;
+	
+		#endregion
+
+		#region Constructor
+
+		public EventBroker()
+		{
+			// Start a thread to handle events.
+			eventQueue = new Queue();
+			queued = new ManualResetEvent(false);
+			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+			t.Start();
+		}
+
+		#endregion
+
+		#region EventThread
+
+		private void EventThread()
+		{
+			while (!shuttingDown)
+			{
+				try
+				{
+					queued.WaitOne();
+					lock (eventQueue)
+					{
+						if (eventQueue.Count > 0)
+						{
+							CollectionEventArgs args = (CollectionEventArgs)eventQueue.Dequeue();
+
+							if (CollectionEvent != null && args.ChangeType != EventType.ServiceControl)
+							{
+								Delegate[] cbList = CollectionEvent.GetInvocationList();
+								foreach (CollectionEventHandler cb in cbList)
+								{
+									try 
+									{ 
+										cb(args);
+									}
+									catch 
+									{
+										// Remove the offending delegate.
+										CollectionEvent -= cb;
+										MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+									}
+								}
+							}
+							else
+							{
+								Delegate[] cbList = ServiceEvent.GetInvocationList();
+								foreach (ServiceEventHandler cb in cbList)
+								{
+									try 
+									{ 
+										cb((ServiceEventArgs)args);
+									}
+									catch 
+									{
+										// Remove the offending delegate.
+										ServiceEvent -= cb;
+										MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+									}
+								}
+								if (((ServiceEventArgs)args).ControlEvent == ServiceControl.Shutdown)
+								{
+									shuttingDown = true;
+								}
+							}
+						}
+						else
+						{
+							queued.Reset();
+						}
+					}
+				}
+				catch {}
+			}
+			shutdown.Set();
+		}
+
+		#endregion
+
+		#region Event Signalers
+
+		/// <summary>
+		/// Called to raise an event.
+		/// </summary>
+		/// <param name="args">The arguments for the event.</param>
+		public void RaiseEvent(CollectionEventArgs args)
+		{
+			lock (eventQueue)
+			{
+				eventQueue.Enqueue(args);
+				queued.Set();
+			}
+			//			MyTrace.WriteLine("Recieved Event {0}", args.ChangeType.ToString());
+		}
+
+		#endregion
+
+		#region statics
+
+		private const string CFG_Section = "EventService";
+		private const string CFG_AssemblyKey = "Assembly";
+		private const string CFG_Assembly = "CsEventBroker";
+		private const string CFG_UriKey = "Uri";
+		private const string CFG_Uri = "tcp://localhost/EventBroker";
+
+		public static bool overrideConfig = false;
+
+		static bool RunInProcess()
+		{
+			if (overrideConfig == true)
+				return false;
+			else
+                return true;
+		}
+		
+		/// <summary>
+		/// Method to register a client channel.
+		/// </summary>
+		public static void RegisterClientChannel(Configuration conf)
+		{
+			// Check if we should run in process.
+			if (!RunInProcess())
+			{
+				startService(conf);
+				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+				bool registered = false;
+
+				WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
+				foreach (WellKnownClientTypeEntry ct in cta)
+				{
+					Type t = typeof(EventBroker);
+					Type t1 = ct.ObjectType;
+					if (Type.Equals(t, t1))
+					{
+						registered = true;
+						break;
+					}
+				}
+				if (!registered)
+				{
+					Hashtable props = new Hashtable();
+					props["port"] = 0;
+
+					BinaryServerFormatterSinkProvider
+						serverProvider = new BinaryServerFormatterSinkProvider();
+					BinaryClientFormatterSinkProvider
+						clientProvider = new BinaryClientFormatterSinkProvider();
+#if !MONO
+					serverProvider.TypeFilterLevel =
+						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+					TcpChannel chan = new
+						TcpChannel(props,clientProvider,serverProvider);
+					ChannelServices.RegisterChannel(chan);
+
+					//ChannelServices.RegisterChannel(new TcpChannel());
+					RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Method to register the server channel.
+		/// </summary>
+		public static void RegisterService(ManualResetEvent shutdownEvent, Configuration conf)
+		{
+			shutdown = shutdownEvent;
+			string serviceString = CFG_Uri + "_" + conf.BasePath.GetHashCode().ToString();
+			Uri serviceUri = new Uri (serviceString);
+			
+			Hashtable props = new Hashtable();
+			props["port"] = 0; //serviceUri.Port;
+			props["rejectRemoteRequests"] = true;
+
+			BinaryServerFormatterSinkProvider
+				serverProvider = new BinaryServerFormatterSinkProvider();
+			BinaryClientFormatterSinkProvider
+				clientProvider = new BinaryClientFormatterSinkProvider();
+#if !MONO
+			serverProvider.TypeFilterLevel =
+				System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+			TcpChannel chan = new
+				TcpChannel(props,clientProvider,serverProvider);
+			ChannelServices.RegisterChannel(chan);
+
+			RemotingConfiguration.RegisterWellKnownServiceType(
+				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
+
+			string [] s = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
+			if (s.Length == 1)
+			{
+				conf.Set(CFG_Section, CFG_UriKey, s[0]);
+			}
+		}
+
+		private static void startService(Configuration conf)
+		{
+			bool createdMutex;
+			string mutexName = "EventBrokerMutex___" + conf.BasePath.GetHashCode().ToString();
+			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
+			if (createdMutex)
+			{
+				Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
+				string serviceName = conf.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly) + ".exe";
+				serviceName = Path.Combine(assemblyPath.LocalPath, serviceName);
+			
+				// The service is not running start it.
+				System.Diagnostics.Process service = new Process();
+				service.StartInfo.CreateNoWindow = true;
+				service.StartInfo.UseShellExecute = false;
+				if (MyEnvironment.Mono)
+				{
+					service.StartInfo.FileName = "mono";
+					service.StartInfo.Arguments = serviceName + " ";
+				}
+				else
+				{
+					service.StartInfo.FileName = serviceName;
+					service.StartInfo.Arguments = null;
+				}
+				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + mutexName;
+				service.Start();
+				mutex.ReleaseMutex();
+				System.Threading.Thread.Sleep(500);
+			}
+		}
+
+		#endregion
+		
+		#region MarshallByRef Overrides
+
+		/// <summary>
+		/// This will be used as a singleton do not expire the object.
+		/// </summary>
+		/// <returns>null (Do not expire object).</returns>
+		public override Object InitializeLifetimeService()
+		{
+			return null;
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region InProcessEventBroker class
+
+	internal class InProcessEventBroker : MarshalByRefObject, IDisposable
+	{
+		#region fields
+
+		// This is a singleton per Store.
+		static Hashtable	instanceTable = new Hashtable();
+		int					count;
+		bool				threadStarted;
+		bool				serviceRegistered;
+		Configuration		conf;
+		Queue				eventQueue;
+		ManualResetEvent	queued;
+		EventBroker			broker;
+		bool				alreadyDisposed;
+
+		#endregion
 
 		#region Events
 
@@ -130,24 +384,147 @@ namespace Simias.Event
 
 		#endregion
 
-		#region Constructor
+		#region Factory Methods
 
-		public EventBroker()
+		internal static InProcessEventBroker GetSubscriberBroker(Configuration conf)
 		{
-			// Start a thread to handle events.
-			eventQueue = new Queue();
-			queued = new ManualResetEvent(false);
-			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-			t.Start();
+			InProcessEventBroker instance;
+			lock (typeof(InProcessEventBroker))
+			{
+				if (!instanceTable.Contains(conf.BasePath))
+				{
+					instance = new InProcessEventBroker(conf);
+					instanceTable.Add(conf.BasePath, instance);
+				}
+				else
+				{
+					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
+				}
+				if (!instance.threadStarted)
+				{
+					instance.broker.CollectionEvent += new CollectionEventHandler(instance.OnCollectionEvent);
+					// Start a thread to handle events.
+					instance.eventQueue = new Queue();
+					instance.queued = new ManualResetEvent(false);
+					System.Threading.Thread t = new Thread(new ThreadStart(instance.EventThread));
+					t.Start();
+					instance.threadStarted = true;
+				}
+				++instance.count;
+			}
+			return instance;
+		}
+
+		internal static InProcessEventBroker GetPublishBroker(Configuration conf)
+		{
+			InProcessEventBroker instance;
+			lock (typeof(InProcessEventBroker))
+			{
+				if (!instanceTable.Contains(conf.BasePath))
+				{
+					instance = new InProcessEventBroker(conf);
+					instanceTable.Add(conf.BasePath, instance);
+				}
+				else
+				{
+					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
+				}
+				++instance.count;
+			}
+			return instance;
+		}
+
+		internal static InProcessEventBroker GetServiceBroker(Configuration conf)
+		{
+			InProcessEventBroker instance;
+			lock (typeof(InProcessEventBroker))
+			{
+				if (!instanceTable.Contains(conf.BasePath))
+				{
+					instance = new InProcessEventBroker(conf);
+					instanceTable.Add(conf.BasePath, instance);
+				}
+				else
+				{
+					instance = (InProcessEventBroker)instanceTable[conf.BasePath];
+				}
+				if (!instance.serviceRegistered)
+				{
+					instance.broker.ServiceEvent += new ServiceEventHandler(instance.OnServiceEvent);
+				}
+				++instance.count;
+			}
+			return instance;
 		}
 
 		#endregion
 
-		#region EventThread
+		#region Constructor / Finalizer
+
+		InProcessEventBroker(Configuration conf)
+		{
+			alreadyDisposed = false;
+			this.conf = conf;
+			count = 0;
+			threadStarted = false;
+			serviceRegistered = false;
+			EventBroker.RegisterClientChannel(conf);
+			broker = new EventBroker();
+		}
+
+		~InProcessEventBroker()
+		{
+			Dispose(true);
+		}
+
+		#endregion
+
+		#region Publish Call.
+
+		/// <summary>
+		/// Called to publish a collection event.
+		/// </summary>
+		/// <param name="args"></param>
+		internal void RaiseEvent(CollectionEventArgs args)
+		{
+			if (broker != null)
+				broker.RaiseEvent(args);
+		}
+
+		#endregion
+
+		#region Callbacks
+
+		/// <summary>
+		/// Callback used by the EventBroker for Collection events.
+		/// </summary>
+		/// <param name="args">Arguments for the event.</param>
+		public void OnCollectionEvent(CollectionEventArgs args)
+		{
+			queueEvent(args);
+		}
+
+		public void OnServiceEvent(ServiceEventArgs args)
+		{
+			this.callSvcDelegate(args);
+		}
+
+		#endregion
+
+		#region Queue and Thread Methods.
+
+		private void queueEvent(CollectionEventArgs args)
+		{
+			lock (eventQueue)
+			{
+				eventQueue.Enqueue(args);
+				queued.Set();
+			}
+		}
 
 		private void EventThread()
 		{
-			while (!shuttingDown)
+			while (!alreadyDisposed)
 			{
 				try
 				{
@@ -184,9 +561,6 @@ namespace Simias.Event
 								case EventType.FileRenamed:
 									callFileRenDelegate((FileRenameEventArgs)args);
 									break;
-								case EventType.ServiceEvent:
-									callSvcDelegate((ServiceEventArgs)args);
-									break;
 							}
 						}
 						else
@@ -200,6 +574,8 @@ namespace Simias.Event
 		}
 
 		#endregion
+
+		#region Delegate Invokers
 
 		void callNodeDelegate(NodeEventHandler eHandler, NodeEventArgs args)
 		{
@@ -326,173 +702,47 @@ namespace Simias.Event
 					}
 				}
 			}
-			if (args.EventType == ServiceEvent.Shutdown)
-			{
-				System.Diagnostics.Process.GetCurrentProcess().Kill();
-			}
-		}
-
-
-		#region Event Signalers
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="args"></param>
-		public void RaiseEvent(CollectionEventArgs args)
-		{
-			lock (eventQueue)
-			{
-				eventQueue.Enqueue(args);
-				queued.Set();
-			}
-			MyTrace.WriteLine("Recieved Event {0}", args.ChangeType.ToString());
 		}
 
 		#endregion
 
-		#region statics
+		#region private Dispose
 
-		private const string CFG_Section = "EventService";
-		private const string CFG_AssemblyKey = "Assembly";
-		private const string CFG_Assembly = "CsEventBroker";
-		private const string CFG_UriKey = "Uri";
-		private const string CFG_Uri = "tcp://localhost/EventBroker";
-
-		public static bool overrideConfig = false;
-
-		static bool RunInProcess()
+		private void Dispose(bool inFinalize)
 		{
-			if (overrideConfig == true)
-				return false;
-			else
-                return true;
-		}
-		
-		/// <summary>
-		/// Method to register a client channel.
-		/// </summary>
-		public static void RegisterClientChannel(Configuration conf)
-		{
-			// Check if we should run in process.
-			if (!RunInProcess())
+			try 
 			{
-				startService(conf);
-				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-				bool registered = false;
-
-				WellKnownClientTypeEntry [] cta = RemotingConfiguration.GetRegisteredWellKnownClientTypes();
-				foreach (WellKnownClientTypeEntry ct in cta)
+				if (!alreadyDisposed)
 				{
-					Type t = typeof(EventBroker);
-					Type t1 = ct.ObjectType;
-					if (Type.Equals(t, t1))
+					lock (typeof(InProcessEventBroker))
 					{
-						registered = true;
-						break;
+						--count;
+						if (count == 0)
+						{
+							instanceTable.Remove(conf);
+							alreadyDisposed = true;
+							broker.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
+
+							// Signal thread so it can exit.
+							queued.Set();
+							if (!inFinalize)
+							{
+								GC.SuppressFinalize(this);
+							}
+						}
 					}
 				}
-				if (!registered)
-				{
-					Hashtable props = new Hashtable();
-					props["port"] = 0;
-
-					BinaryServerFormatterSinkProvider
-						serverProvider = new BinaryServerFormatterSinkProvider();
-					BinaryClientFormatterSinkProvider
-						clientProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-					serverProvider.TypeFilterLevel =
-						System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-					TcpChannel chan = new
-						TcpChannel(props,clientProvider,serverProvider);
-					ChannelServices.RegisterChannel(chan);
-
-					//ChannelServices.RegisterChannel(new TcpChannel());
-					RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
-				}
 			}
-		}
-
-		/// <summary>
-		/// Method to register the server channel.
-		/// </summary>
-		public static void RegisterService(Configuration conf)
-		{
-			string serviceString = CFG_Uri + "_" + conf.BasePath.GetHashCode().ToString();
-			Uri serviceUri = new Uri (serviceString);
-			
-			Hashtable props = new Hashtable();
-			props["port"] = 0; //serviceUri.Port;
-			props["rejectRemoteRequests"] = true;
-
-			BinaryServerFormatterSinkProvider
-				serverProvider = new BinaryServerFormatterSinkProvider();
-			BinaryClientFormatterSinkProvider
-				clientProvider = new BinaryClientFormatterSinkProvider();
-#if !MONO
-			serverProvider.TypeFilterLevel =
-				System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-#endif
-			TcpChannel chan = new
-				TcpChannel(props,clientProvider,serverProvider);
-			ChannelServices.RegisterChannel(chan);
-
-			RemotingConfiguration.RegisterWellKnownServiceType(
-				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
-
-			string [] s = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
-			if (s.Length == 1)
-			{
-				conf.Set(CFG_Section, CFG_UriKey, s[0]);
-			}
-		}
-
-		private static void startService(Configuration conf)
-		{
-			bool createdMutex;
-			string mutexName = "EventBrokerMutex___" + conf.BasePath.GetHashCode().ToString();
-			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
-			
-			if (createdMutex)
-			{
-				Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
-				string serviceName = conf.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly) + ".exe";
-				serviceName = Path.Combine(assemblyPath.LocalPath, serviceName);
-			
-				// The service is not running start it.
-				System.Diagnostics.Process service = new Process();
-				service.StartInfo.CreateNoWindow = true;
-				service.StartInfo.UseShellExecute = false;
-				if (MyEnvironment.Mono)
-				{
-					service.StartInfo.FileName = "mono";
-					service.StartInfo.Arguments = serviceName + " ";
-				}
-				else
-				{
-					service.StartInfo.FileName = serviceName;
-					service.StartInfo.Arguments = null;
-				}
-				service.StartInfo.Arguments += Path.GetDirectoryName(conf.BasePath) + " " + mutexName;
-				service.Start();
-				mutex.ReleaseMutex();
-				System.Threading.Thread.Sleep(500);
-			}
+			catch {};
 		}
 
 		#endregion
-		
-		#region MarshallByRef Overrides
 
-		/// <summary>
-		/// This will be used as a singleton do not expire the object.
-		/// </summary>
-		/// <returns>null (Do not expire object).</returns>
-		public override Object InitializeLifetimeService()
+		#region IDisposable Members
+
+		public void Dispose()
 		{
-			return null;
+			Dispose(false);
 		}
 
 		#endregion

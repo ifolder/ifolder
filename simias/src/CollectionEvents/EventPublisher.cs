@@ -36,7 +36,7 @@ namespace Simias.Event
 	{
 		#region Fields
 
-		EventBroker broker;
+		InProcessEventBroker broker;
 		Configuration	conf;
 
 		#endregion
@@ -50,8 +50,7 @@ namespace Simias.Event
 		public EventPublisher(Configuration conf)
 		{
 			this.conf = conf;
-			EventBroker.RegisterClientChannel(conf);
-			broker = new EventBroker();
+			broker = InProcessEventBroker.GetPublishBroker(conf);
 		}
 
 		#endregion

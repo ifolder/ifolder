@@ -1848,7 +1848,7 @@ namespace Simias.Storage.Tests
 			}
 
 			// Tell the event broker to shutdown.
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEvent.Shutdown));
+			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
 		}
 		#endregion
 	}

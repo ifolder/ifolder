@@ -36,13 +36,17 @@ namespace Simias.Event
 	public class EventsTests
 	{
 		#region Fields
-		EventSubscriber		subscriber;
-		EventPublisher		publisher;
-		ServiceEventSubscriber serviceSubscriber;
+		EventSubscriber		subscriber = null;
+		EventPublisher		publisher = null;
+		ServiceEventSubscriber serviceSubscriber = null;
 		EventArgs			args;
 		ManualResetEvent	mre = new ManualResetEvent(false);
 		ManualResetEvent    shutdownEvent = new ManualResetEvent(false);
 		string				collection = "Collection123";
+		DateTime			firstEvent = DateTime.MinValue;
+		DateTime			lastEvent = DateTime.MinValue;
+		int					eventCount = 0;
+		bool				performanceTest = false;
 		Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
 
 		#endregion
@@ -56,13 +60,17 @@ namespace Simias.Event
 		public void Init()
 		{
 			EventBroker.overrideConfig = true;
-			PublishSubscribe();
+			publish();
+			subscribe();
 		}
 
-		public void PublishSubscribe()
+		public void publish()
 		{
-			
 			publisher = new EventPublisher(conf);
+		}
+
+		private void subscribe()
+		{
 			subscriber = new EventSubscriber(conf);
 			subscriber.NodeChanged += new NodeEventHandler(OnNodeChange);
 			subscriber.NodeCreated += new NodeEventHandler(OnNodeCreate);
@@ -72,7 +80,6 @@ namespace Simias.Event
 			subscriber.FileCreated += new FileEventHandler(OnFileCreate);
 			subscriber.FileDeleted += new FileEventHandler(OnFileDelete);
 			subscriber.FileRenamed += new FileRenameEventHandler(OnFileRenamed);
-
 			serviceSubscriber = new ServiceEventSubscriber(conf);
 			serviceSubscriber.ServiceControl += new ServiceEventHandler(ServiceCtlHandler);
 		}
@@ -83,9 +90,15 @@ namespace Simias.Event
 		[TestFixtureTearDown]
 		public void Cleanup()
 		{
-			subscriber.Dispose();
-			serviceSubscriber.Dispose();
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEvent.Shutdown));
+			if (subscriber != null)
+				subscriber.Dispose();
+			if (serviceSubscriber != null)
+				serviceSubscriber.Dispose();
+			if (publisher != null)
+			{
+				publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
+				//publisher.Dipose();
+			}
 		}
 
 		#endregion
@@ -103,7 +116,14 @@ namespace Simias.Event
 		{
 			mre.Set();
 			this.args = args;
-			Console.WriteLine("Create: {0} {1} {2}", args.Node, args.Collection, args.Type);
+			if (!performanceTest)
+				Console.WriteLine("Create: {0} {1} {2}", args.Node, args.Collection, args.Type);
+			else
+			{
+				if (firstEvent == DateTime.MinValue)
+					firstEvent = DateTime.Now;
+				++eventCount;
+			}
 		}
 
 		void OnNodeDelete(NodeEventArgs args)
@@ -151,9 +171,17 @@ namespace Simias.Event
 		void ServiceCtlHandler(ServiceEventArgs args)
 		{
 			mre.Set();
-			Console.WriteLine("Service Control Event = {0}", args.EventType); 
-			if (args.EventType == ServiceEvent.Shutdown)
+			Console.WriteLine("Service Control Event = {0}", args.ControlEvent); 
+			if (args.ControlEvent == ServiceControl.Shutdown)
+			{
 				shutdownEvent.Set();
+			}
+			if (args.ControlEvent == ServiceControl.Reconfigure && performanceTest)
+			{
+				Console.WriteLine("Recieved {0} events in {1} seconds.", eventCount, ((TimeSpan)(DateTime.Now - firstEvent)).TotalSeconds);
+				firstEvent = DateTime.MinValue;
+				eventCount = 0;
+			}
 		}
 
 		#endregion
@@ -413,8 +441,8 @@ namespace Simias.Event
 		[Test]
 		public void ServiceControlTest()
 		{
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEvent.Reconfigure));
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEvent.Shutdown));
+			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Reconfigure));
+			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
 		}
 
 		#endregion
@@ -434,9 +462,8 @@ namespace Simias.Event
 		static void usage()
 		{
 			Console.WriteLine("Usage: CollectionEventsTest.exe (mode) [event count]");
-			Console.WriteLine("      where mode = P (Publish)");
-			Console.WriteLine("      or    mode = S (Subscribe)");
-			Console.WriteLine("      where event count = number of events to publish");
+			Console.WriteLine("      where mode = P(ublish) [event count]");
+			Console.WriteLine("      or    mode = S(ubscribe) (P(erformance))");
 		}
 
 		#endregion
@@ -469,18 +496,21 @@ namespace Simias.Event
 						{
 							t.publisher.RaiseEvent(new NodeEventArgs("nifp", i.ToString(), t.collection, "Node", EventType.NodeCreated));
 						}
+						t.publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Reconfigure));
 					}
 					break;
 
 				case "PS":
 					t.publisher = new EventPublisher(t.conf);
-					t.publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEvent.Shutdown));
+					t.publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
 					break;
 
 				case "S":
-					t.PublishSubscribe();
+					if (args.Length == 2 && args[1].StartsWith("P"))
+						t.performanceTest = true;
+					t.subscribe();
 					t.shutdownEvent.WaitOne();
-					t.subscriber.Dispose();
+					t.Cleanup();
 					break;
 
 				default:
