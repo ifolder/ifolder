@@ -114,6 +114,15 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SyncHandler.ashx"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "SyncHandler.ashx.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SyncService.asmx"
                     BuildAction = "Content"
                 />
@@ -122,6 +131,11 @@
                     DependentUpon = "SyncService.asmx"
                     SubType = "Component"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SyncService.asmx.resx"
+                    DependentUpon = "SyncService.asmx.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "SyncService.cs"

@@ -31,6 +31,7 @@ using System.Threading;
 using Simias.Storage;
 using Simias;
 using Simias.Client.Event;
+using Simias.Policy;
 
 namespace Simias.Sync
 {
@@ -83,6 +84,10 @@ namespace Simias.Sync
 		/// Someone is sync-ing now come back latter.
 		/// </summary>
 		Busy,
+		/// <summary>
+		/// The user is not authenticated.
+		/// </summary>
+		AccessDenied,
 	};
 	
 	/// <summary>
@@ -216,14 +221,6 @@ namespace Simias.Sync
 			}
 		}
 
-		internal SyncNodeStamp(string id, ulong incarnation, string baseType, SyncOperation operation)
-		{
-			ID = id;
-			LocalIncarnation = incarnation;
-			BaseType = baseType;
-			Operation = operation;
-		}
-
 		/// <summary> implement some convenient operator overloads </summary>
 		public int CompareTo(object obj)
 		{
@@ -277,6 +274,18 @@ namespace Simias.Sync
 			/// The Server is busy.
 			/// </summary>
 			Busy,
+			/// <summary>
+			/// The client passed invalid data.
+			/// </summary>
+			ClientError,
+			/// <summary>
+			/// The policy doesnot allow this file.
+			/// </summary>
+			Policy,
+			/// <summary>
+			/// Insuficient rights for the operation.
+			/// </summary>
+			Access,
 		}
 	}
 
@@ -348,116 +357,6 @@ namespace Simias.Sync
 		}
 	}
 
-	/*
-	/// <summary>
-	/// Class used to syncronize access to a collection.
-	/// </summary>
-	internal class CollectionLock
-	{
-		static Hashtable CollectionLocks = new Hashtable();
-		string		CollectionID;
-		DateTime	LastAccess;
-		bool		requestLocked;
-		const	int timeOut = 5;
-
-		private CollectionLock(string collectionID)
-		{
-			CollectionID = collectionID;
-			LastAccess = DateTime.Now;
-			requestLocked = true;
-		}
-
-		/// <summary>
-		/// Called to get a lock for the specified collection.
-		/// The request will be locked and must be released.
-		/// The lock will expire if the client does not call for 5 seconds.
-		/// </summary>
-		/// <param name="collectionID">The ID of the collection to lock.</param>
-		/// <returns>true if locked.</returns>
-		internal static CollectionLock GetLock(string collectionID)
-		{
-			CollectionLock cl = null;
-			lock (CollectionLocks)
-			{
-				cl = (CollectionLock)CollectionLocks[collectionID];
-				if (cl == null)
-				{
-					// There is no lock held on the collection.
-					cl = new CollectionLock(collectionID);
-					CollectionLocks.Add(collectionID, cl);
-				}
-				else
-				{
-					lock (cl)
-					{
-						// Check to see if the lock should be timed out.
-						if (!cl.requestLocked)
-						{
-							TimeSpan ts = DateTime.Now - cl.LastAccess;
-							if (ts.Seconds >= timeOut)
-							{
-								cl.Release();
-								cl = new CollectionLock(collectionID);
-								CollectionLocks.Add(collectionID, cl);
-							}
-						}
-					}
-				}
-			}
-			return cl;
-		}
-
-		/// <summary>
-		/// Obtaines the lock for the current request.
-		/// The lock was acquired from GetLock.
-		/// </summary>
-		/// <returns>true if valid.</returns>
-		internal bool LockRequest()
-		{
-			bool lockValid;
-			lock (this)
-			{
-				if (LastAccess == DateTime.MinValue)
-					lockValid = false;
-				else
-				{
-					lockValid = true;
-					this.requestLocked = true;
-				}
-			}
-			return lockValid;
-		}
-
-		/// <summary>
-		/// Releases the lock for the current request.
-		/// The lock can be timed out.
-		/// </summary>
-		internal void ReleaseRequest()
-		{
-			lock (this)
-			{
-				this.requestLocked = false;
-				LastAccess = DateTime.Now;
-			}
-		}
-	
-		/// <summary>
-		/// Release the collection lock.
-		/// Must be called when a sync cycle has finished.
-		/// </summary>
-		internal void Release()
-		{
-			lock (CollectionLocks)
-			{
-				lock (this)
-				{
-					CollectionLocks.Remove(CollectionID);
-					LastAccess = DateTime.MinValue;
-				}
-			}
-		}
-	}
-	*/
 	
 //---------------------------------------------------------------------------
 /// <summary>
@@ -474,7 +373,9 @@ namespace Simias.Sync
 		ArrayList		NodeList = new ArrayList();
 		ServerInFile	inFile;
 		ServerOutFile	outFile;
-
+		SyncPolicy		policy;
+		string			sessionID;
+        
 		~SyncService()
 		{
 			Dispose(true);		
@@ -495,97 +396,118 @@ namespace Simias.Sync
 				}
 			}
 		}
+
+		/// <summary>
+		/// Get they sync policy for this collection.
+		/// </summary>
+		private SyncPolicy Policy
+		{
+			get
+			{
+				if (policy == null)
+					policy = new SyncPolicy(collection);
+				return policy;
+			}
+		}
 	
 		/// <summary>
 		/// start sync of this collection -- perform basic role checks and dredge server file system
 		/// </summary>
 		/// <param name="si">The start info to initialize the sync.</param>
 		/// <param name="user">This is temporary.</param>
-		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
+		/// <param name="sessionID">The unique sessionID.</param>
+		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user, string sessionID)
 		{
+			this.sessionID = sessionID;
 			si.Status = SyncColStatus.Success;
-			si.Access = Access.Rights.Deny;
-			SyncNodeStamp[] nodes = null;
+			rights = si.Access = Access.Rights.Deny;
+			SyncNodeStamp[] nodes = new SyncNodeStamp[0];
 			cLock = null;
 		
 			Collection col = store.GetCollectionByID(si.CollectionID);
 			if (col == null)
 			{
 				si.Status = SyncColStatus.NotFound;
-				return null;
+				return nodes;
 			}
 		
 			collection = new SyncCollection(col);
 
-			cLock = CollectionLock.GetLock(collection.ID);
-			if (cLock == null)
+			// Check our rights.
+			string userID = Thread.CurrentPrincipal.Identity.Name;
+			if (userID != null)
 			{
-				si.Status = SyncColStatus.Busy;
-				return null;
-			}
-
-			cLock.LockRequest();
-			try
-			{
-				// BUGBUG SyncAccess access = SyncAccess.Busy;
-
-				// Check our rights.
-				string userID = Thread.CurrentPrincipal.Identity.Name;
-				//		if ((userID == null) || (userID.Length == 0))
-			{
-				// Kludge: for now trust the client.  this need to be removed before shipping.
-				userID = user;
-			}
-				member = collection.GetMemberByID(userID);
+				// BUGBUG
+				if (userID.Length == 0)
+					userID = user;
+				// End BUGBUG
+				if (userID.Length != 0)
+					member = collection.GetMemberByID(userID);
 				if (member != null)
 				{
 					collection.Impersonate(member);
 					rights = member.Rights;
 					si.Access = rights;
-					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
+					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
 				}
+			}
+			else
+			{
+				si.Status = SyncColStatus.AccessDenied;
+				return nodes;
+			}
 
-				switch (rights)
-				{
-					case Access.Rights.Admin:
-					case Access.Rights.ReadOnly:
-					case Access.Rights.ReadWrite:
-						// See if there is any work to do before we try to get the lock.
-						if (si.ChangesOnly)
+			switch (rights)
+			{
+				case Access.Rights.Admin:
+				case Access.Rights.ReadOnly:
+				case Access.Rights.ReadWrite:
+					// See if there is any work to do before we try to get the lock.
+					if (si.ChangesOnly)
+					{
+						// we only need the changes.
+						si.ChangesOnly = GetChangedNodeStamps(out nodes, ref si.Context);
+						// Check if we have any work to do
+						if (si.ChangesOnly && !si.ClientHasChanges && nodes.Length == 0)
 						{
-							// we only need the changes.
-							si.ChangesOnly = GetChangedNodeStamps(out nodes, ref si.Context);
-							// Check if we have any work to do
-							if (si.ChangesOnly && !si.ClientHasChanges && nodes.Length == 0)
-							{
-								si.Status = SyncColStatus.NoWork;
-								nodes = null;
-								break;
-							}
+							si.Status = SyncColStatus.NoWork;
+							break;
 						}
+					}
 
-						// See if we need to return all of the nodes.
-						if (!si.ChangesOnly)
+					cLock = CollectionLock.GetLock(collection.ID);
+					if (cLock == null)
+					{
+						si.Status = SyncColStatus.Busy;
+						return new SyncNodeStamp[0];
+					}
+					// See if we need to return all of the nodes.
+					if (!si.ChangesOnly)
+					{
+						cLock.LockRequest();
+						try
 						{
 							// We need to get all of the nodes.
 							si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
 							nodes = GetNodeStamps();
-							if (nodes.Length == 0)
-							{
-								rights = Access.Rights.Deny;
-								si.Access = rights;
-							}
 						}
-						break;
-					case Access.Rights.Deny:
-						nodes = null;
-						si.Status = SyncColStatus.NotFound;
-						break;
-				}
-			}
-			finally
-			{
-				cLock.ReleaseRequest();
+						finally
+						{
+							cLock.ReleaseRequest();
+						}
+						if (nodes.Length == 0)
+						{
+							Dispose(false);
+							rights = Access.Rights.Deny;
+							si.Access = rights;
+						}
+					}
+					break;
+				case Access.Rights.Deny:
+					nodes = null;
+					si.Status = SyncColStatus.NotFound;
+					break;
+				
 			}
 			return nodes;
 		}
@@ -619,7 +541,7 @@ namespace Simias.Sync
 
 		public SyncNodeStatus[] PutNonFileNodes(SyncNode [] nodes)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 			{
 				return null;
 			}
@@ -704,7 +626,7 @@ namespace Simias.Sync
 
 		public SyncNodeStatus[] PutDirs(SyncNode [] nodes)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 				return null;
 
 			SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
@@ -773,7 +695,7 @@ namespace Simias.Sync
 
 		public SyncNode[] GetNonFileNodes(string[] nodeIDs)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadOnly))
 				return null;
 
 			SyncNode[] nodes = new SyncNode[nodeIDs.Length];
@@ -890,10 +812,10 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 				return null;
 
-			SyncNodeStatus[] nodeStatus = new SyncNodeStatus[nodeIDs.Length];
+			SyncNodeStatus[] statusArray = new SyncNodeStatus[nodeIDs.Length];
 		
 			cLock.LockRequest();
 			try
@@ -901,15 +823,16 @@ namespace Simias.Sync
 				int i = 0;
 				foreach (string id in nodeIDs)
 				{
+					SyncNodeStatus nStatus = new SyncNodeStatus();
 					try
 					{
-						nodeStatus[i] = new SyncNodeStatus();
-						nodeStatus[i].nodeID = id;
+						statusArray[i++] = nStatus;
+						nStatus.nodeID = id;
 						Node node = collection.GetNodeByID(id);
 						if (node == null)
 						{
 							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-							nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
+							nStatus.status = SyncNodeStatus.SyncStatus.Success;
 							continue;
 						}
 
@@ -934,20 +857,19 @@ namespace Simias.Sync
 							collection.Commit(node);
 						}
 
-						nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
+						nStatus.status = SyncNodeStatus.SyncStatus.Success;
 					}
 					catch
 					{
-						nodeStatus[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
+						nStatus.status = SyncNodeStatus.SyncStatus.ServerFailure;
 					}
-					i++;
 				}
 			}
 			finally
 			{
 				cLock.ReleaseRequest();
 			}
-			return nodeStatus;
+			return statusArray;
 		}
 
 		/// <summary>
@@ -956,17 +878,23 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="node">The node to put to ther server.</param>
 		/// <returns>True if successful.</returns>
-		public bool PutFileNode(SyncNode node)
+		public SyncNodeStatus.SyncStatus PutFileNode(SyncNode node)
 		{
-			if (cLock == null)
-				return false;
+			if (!IsAccessAllowed(Access.Rights.ReadWrite))
+			{
+				return SyncNodeStatus.SyncStatus.Access;
+			}
+			if (cLock == null) 
+			{
+				return SyncNodeStatus.SyncStatus.ClientError;
+			}
+
 			cLock.LockRequest();
 			try
 			{
-				inFile = new ServerInFile(collection, node);
-				inFile.Open();
+				inFile = new ServerInFile(collection, node, Policy);
 				outFile = null;
-				return true;
+				return inFile.Open();
 			}
 			finally
 			{
@@ -982,7 +910,7 @@ namespace Simias.Sync
 		/// <returns>The SyncNode.</returns>
 		public SyncNode GetFileNode(string nodeID)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadOnly))
 				return null;
 
 			cLock.LockRequest();
@@ -994,7 +922,7 @@ namespace Simias.Sync
 				if (node != null)
 				{
 					outFile = new ServerOutFile(collection, node);
-					outFile.Open();
+					outFile.Open(sessionID);
 					SyncNode snode = new SyncNode();
 					snode.nodeID = node.ID;
 					snode.node = node.Properties.ToString(true);
@@ -1035,6 +963,28 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Write the included data to the new file.
+		/// </summary>
+		/// <param name="inStream">The input stream to write.</param>
+		/// <param name="offset">The offset in the new file of where to write.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Write(Stream inStream, long offset, int count)
+		{
+			byte []buffer = new byte[4096];
+			inFile.WritePosition = offset;
+			int bytesWritten = 0;
+			while(bytesWritten < count)
+			{
+				int bytesRead = inStream.Read(buffer, 0, buffer.Length);
+				if (bytesRead == 0)
+					throw new SimiasException("Missing Data");
+				inFile.Write(buffer, 0, bytesRead);
+				bytesWritten += bytesRead;
+			}
+		}
+
+
+		/// <summary>
 		/// Copy data from the old file to the new file.
 		/// </summary>
 		/// <param name="oldOffset">The offset in the old (original file).</param>
@@ -1057,6 +1007,15 @@ namespace Simias.Sync
 			outFile.ReadPosition = offset;
 			buffer = new byte[count];
 			return outFile.Read(buffer, 0, count);
+		}
+
+		/// <summary>
+		/// Get the read handle.
+		/// </summary>
+		/// <returns>The platform file handle.</returns>
+		public IntPtr GetReadHandle()
+		{
+			return outFile.Handle;
 		}
 
 		/// <summary>
