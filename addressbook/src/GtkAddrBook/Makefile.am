@@ -18,7 +18,7 @@ EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESO
 
 all: Book.exe BookLib.dll
 
-Book.exe: $(Book_CSFILES) $(Book_RESOURCES)
+Book.exe: $(Book_CSFILES) $(Book_RESOURCES) BookLib.dll
 	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.xml
 
 BookLib.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
