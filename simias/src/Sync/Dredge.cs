@@ -602,14 +602,13 @@ public class Dredger
 		void DeleteNode(Collection collection, Node node)
 		{
 			Log.Spew("Deleting node {0}, {1} from event.", node.Name, node.ID);
-			Node[] deleted = collection.Delete(node, PropertyTags.Parent);
-			collection.Commit(deleted);
-
+			collection.Commit(collection.Delete(node, PropertyTags.Parent));
+			
 			SyncCollection sCol = new SyncCollection(collection);
 			if (sCol.Role == SyncCollectionRoles.Master)
 			{
 				// if we are the master do not leave the tombstone.
-				collection.Commit(deleted);
+				collection.Commit(collection.Delete(node));
 			}
 		}
 

@@ -205,7 +205,6 @@ internal class SyncOps
 	public NodeStamp[] GetNodeStamps()
 	{
 		ArrayList stampList = new ArrayList();
-		bool foundTombstone = false;
 		foreach (ShallowNode sn in collection)
 		{
 			Node node;
@@ -225,8 +224,7 @@ internal class SyncOps
 			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 			if (onServer && tombstone)
 			{
-				collection.Delete(node);
-				foundTombstone = true;
+				collection.Commit(collection.Delete(node));
 				continue;
 			}
 			NodeStamp stamp = new NodeStamp();
@@ -246,11 +244,6 @@ internal class SyncOps
 				stamp.streamsSize = 0;
 			}
 			stampList.Add(stamp);
-		}
-
-		if (foundTombstone)
-		{
-			collection.Commit();
 		}
 
 		stampList.Sort();
