@@ -6,7 +6,7 @@ abgui_CSFILES_CSC := $(subst /,$(SEP),$(abgui_CSFILES))
 abgui_INCLUDES = 
 abgui_RESOURCES = $(srcdir)/App$(ICON_EXT)
 abgui_FLAGS = $(CSC_WINEXEFLAG)
-abgui_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+abgui_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
 abgui_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 EXTRA_DIST = $(abgui_CSFILES)

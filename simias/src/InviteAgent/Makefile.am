@@ -6,8 +6,8 @@ InviteAgent_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgent_CSFILES))
 InviteAgent_INCLUDES =
 InviteAgent_RESOURCES =
 InviteAgent_FLAGS = $(CSC_LIBFLAG)
-InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
-InviteAgent_LIBPATH = Library ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../Agent ../AddressBook ../Common ../SyncCommon ../Configuration ../Common ../CollectionEvents
+InviteAgent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll AddressBook.dll Common.dll SyncCommon.dll
+InviteAgent_LIBPATH = Library ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../Agent ../AddressBook ../Common ../SyncCommon ../Common ../CollectionEvents
 
 EmailInviteAgent_CSFILES = $(srcdir)/LibraryEmail/AssemblyInfo.cs $(srcdir)/LibraryEmail/EmailInviteAgent.cs
 EmailInviteAgent_CSFILES_CSC := $(subst /,$(SEP),$(EmailInviteAgent_CSFILES))

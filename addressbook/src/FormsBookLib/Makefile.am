@@ -6,7 +6,7 @@ FormsBookLib_CSFILES_CSC := $(subst /,$(SEP),$(FormsBookLib_CSFILES))
 FormsBookLib_INCLUDES = 
 FormsBookLib_RESOURCES =
 FormsBookLib_FLAGS = $(CSC_LIBFLAG)
-FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
 FormsBookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 DATA_FILES = ifolder_add_bk.ico ifolder_contact_card.ico ifolder_me_card.ico

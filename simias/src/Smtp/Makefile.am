@@ -6,8 +6,8 @@ Smtp_CSFILES_CSC := $(subst /,$(SEP),$(Smtp_CSFILES))
 Smtp_INCLUDES = 
 Smtp_RESOURCES = 
 Smtp_FLAGS = $(CSC_LIBFLAG)
-Smtp_LIBS = System.dll $(SYSTEM_XML) Configuration.dll
-Smtp_LIBPATH = ../Configuration
+Smtp_LIBS = System.dll $(SYSTEM_XML) Common.dll
+Smtp_LIBPATH = ../Common
 
 NUNIT_TESTS := SmtpTests.exe
 
@@ -16,8 +16,8 @@ SmtpTests_CSFILES_CSC := $(subst /,$(SEP),$(SmtpTests_CSFILES))
 SmtpTests_INCLUDES = 
 SmtpTests_RESOURCES = $(srcdir)/smtptst1.gif $(srcdir)/smtptst2.gif
 SmtpTests_FLAGS = $(CSC_EXEFLAG)
-SmtpTests_LIBS = System.dll System.Data.dll Configuration.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Smtp.dll
-SmtpTests_LIBPATH = ../Configuration $(srcdir)/../../tools/NUnit/bin
+SmtpTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll Smtp.dll
+SmtpTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common
 
 EXTRA_DIST = $(Smtp_CSFILES) $(SmtpTests_CSFILES) $(SmtpTests_RESOURCES)
 

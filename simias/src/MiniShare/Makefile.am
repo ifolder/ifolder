@@ -7,7 +7,7 @@ MiniShare_INCLUDES =
 MiniShare_RESOURCES =
 MiniShare_FLAGS = $(CSC_EXEFLAG)
 MiniShare_LIBS = System.dll $(SYSTEM_XML) Agent.dll Common.dll CollectionStore.dll StoreProvider.dll SyncManager.dll CollectionWatcher.dll SyncCommon.dll SyncLogicLite.dll Sync.dll
-MiniShare_LIBPATH = ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../StoreWatcher ../CollectionWatcher ../Agent ../AddressBook ../Common ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../Configuration ../Common ../CollectionEvents
+MiniShare_LIBPATH = ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../StoreWatcher ../CollectionWatcher ../Agent ../AddressBook ../Common ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../Common ../CollectionEvents
 
 NUNIT_TESTS :=
 
