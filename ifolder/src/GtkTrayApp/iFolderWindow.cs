@@ -1107,7 +1107,7 @@ namespace Novell.iFolder
 			{
 				if(ifHolder.IsSyncing)
 					((CellRendererText) cell).Text = 
-									Util.GS("Syncing");
+									Util.GS("Synchronizing");
 				else if(ifHolder.iFolder.HasConflicts)
 					((CellRendererText) cell).Text = 
 									Util.GS("Has File Conflicts");
