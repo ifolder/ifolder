@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-CollectionEvents_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/EventBroker.cs $(srcdir)/EventPublisher.cs $(srcdir)/EventSubscriber.cs $(srcdir)/CollectionEventArgs.cs $(srcdir)/FileEventArgs.cs $(srcdir)/CollectionRootChangedEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/FileRenameEventArgs.cs
+CollectionEvents_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/EventBroker.cs $(srcdir)/EventPublisher.cs $(srcdir)/DefaultSubscriber.cs $(srcdir)/EventSubscriber.cs $(srcdir)/CollectionEventArgs.cs $(srcdir)/FileEventArgs.cs $(srcdir)/CollectionRootChangedEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/FileRenameEventArgs.cs
 CollectionEvents_CSFILES_CSC := $(subst /,$(SEP),$(CollectionEvents_CSFILES))
 CollectionEvents_INCLUDES = 
 CollectionEvents_RESOURCES =

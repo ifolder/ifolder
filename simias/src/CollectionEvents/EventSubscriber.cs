@@ -113,7 +113,7 @@ namespace Simias.Event
 
 		#region Private Fields
 
-		InProcessEventBroker	broker = null;
+		DefaultSubscriber	subscriber = null;
 		bool		enabled;
 		Regex		fileNameFilter;
 		Regex		fileTypeFilter;
@@ -143,8 +143,8 @@ namespace Simias.Event
 			this.collectionId = collectionId;
 			alreadyDisposed = false;
 			
-			broker = InProcessEventBroker.GetSubscriberBroker(conf);
-			broker.CollectionEvent += new CollectionEventHandler(OnCollectionEvent);
+			subscriber = DefaultSubscriber.GetDefaultSubscriber(conf);
+			subscriber.CollectionEvent += new CollectionEventHandler(OnCollectionEvent);
 		}
 
 		/// <summary>
@@ -381,8 +381,8 @@ namespace Simias.Event
 					alreadyDisposed = true;
 					
 					// Deregister delegates.
-					broker.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
-					broker.Dispose();
+					subscriber.CollectionEvent -= new CollectionEventHandler(OnCollectionEvent);
+					subscriber.Dispose();
 					if (!inFinalize)
 					{
 						GC.SuppressFinalize(this);
