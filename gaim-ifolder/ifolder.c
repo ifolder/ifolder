@@ -86,6 +86,9 @@
 #define SIMIAS_PREF_NOTIFY_ERRORS "/plugins/gtk/simias/notify_on_errors"
 #define SIMIAS_PREF_NOTIFY_ERRORS_DEF FALSE
 
+#define SIMIAS_PREF_REDISCOVER_IP_ADDRS "/plugins/gtk/simias/rediscover_ip_addrs"
+#define SIMIAS_PREF_REDISCOVER_IP_ADDRS_DEF TRUE
+
 #define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/gtk/simias/auto_start_simias"
 #define SIMIAS_PREF_SIMIAS_AUTO_START_DEF FALSE
 
@@ -1283,6 +1286,11 @@ init_default_prefs()
 	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_ERRORS)) {
 		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ERRORS,
 							SIMIAS_PREF_NOTIFY_ERRORS_DEF);
+	}
+	
+	if (!gaim_prefs_exists(SIMIAS_PREF_REDISCOVER_IP_ADDRS)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_REDISCOVER_IP_ADDRS,
+							SIMIAS_PREF_REDISCOVER_IP_ADDRS_DEF);
 	}
 
 	if (!gaim_prefs_exists(SIMIAS_PREF_SIMIAS_AUTO_START)) {
@@ -3163,12 +3171,14 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 
 		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(out_inv_store), &iter);
 	}
-	
-	if (lookup_trusted_buddy(trusted_buddies_store, buddy, &iter)) {
-		/* Send a ping-request message */
-		send_result = send_ping_request_msg(buddy);
-		if (send_result <= 0) {
-			g_print("buddy_signed_on_cb() couldn't send a ping reqest: %d\n", send_result);
+
+	if (gaim_prefs_get_bool(SIMIAS_PREF_REDISCOVER_IP_ADDRS)) {
+		if (lookup_trusted_buddy(trusted_buddies_store, buddy, &iter)) {
+			/* Send a ping-request message */
+			send_result = send_ping_request_msg(buddy);
+			if (send_result <= 0) {
+				g_print("buddy_signed_on_cb() couldn't send a ping reqest: %d\n", send_result);
+			}
 		}
 	}
 
@@ -3326,6 +3336,7 @@ get_config_frame(GaimPlugin *plugin)
 	ret = gtk_vbox_new(FALSE, 18);
 	gtk_container_set_border_width (GTK_CONTAINER (ret), 12);
 
+	/* SECTION: Notify me when */
 	vbox = gaim_gtk_make_frame(ret, _("Notify me when:"));
 	gaim_gtk_prefs_checkbox(_("I receive a new invitation"),
 	                SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS, vbox);
@@ -3338,7 +3349,13 @@ get_config_frame(GaimPlugin *plugin)
 	label = gtk_label_new("(Not implemented yet)");
 	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 	
-	vbox = gaim_gtk_make_frame (ret, _("Simias"));
+	/* SECTION: Buddy Location */
+	vbox = gaim_gtk_make_frame(ret, _("Buddy Location"));
+	gaim_gtk_prefs_checkbox(_("Automatically rediscover buddy IP Addresses"),
+							SIMIAS_PREF_REDISCOVER_IP_ADDRS, vbox);
+	
+	/* SECTION: Simias */
+	vbox = gaim_gtk_make_frame(ret, _("Simias"));
 	gaim_gtk_prefs_checkbox(_("_Automatically start Simias if needed"),
 	                SIMIAS_PREF_SIMIAS_AUTO_START, vbox);
 	label = gtk_label_new("(Not implemented yet)");
