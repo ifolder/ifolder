@@ -131,7 +131,7 @@ bool CSPObjectIterator::SetIndex(IndexOrigin origin, int offset)
 		break;
 	}
 
-	if (newOffset < m_Count && newOffset >= 0)
+	if (newOffset <= m_Count && newOffset >= 0)
 	{
 			m_Index = newOffset;
 			return true;
