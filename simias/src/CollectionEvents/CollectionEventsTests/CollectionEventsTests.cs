@@ -119,7 +119,6 @@ namespace Simias.Event
 			mre.Set();
 			this.args = args;
 			Console.WriteLine("Create: {0} {1} {2}", args.Node, args.Collection, args.Type);
-			System.Threading.Thread.Sleep(10000);
 		}
 
 		void OnNodeDelete(NodeEventArgs args)
