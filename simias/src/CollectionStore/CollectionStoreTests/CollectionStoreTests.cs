@@ -1074,7 +1074,7 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 
 				// Reset the stream before deserializing.
-				ms.Seek( 0, SeekOrigin.Begin );
+				ms.Position = 0;
 
 				// Restore the collection.
 				collection = new Collection( store, ( Node )bf.Deserialize( ms ) );
@@ -1483,6 +1483,41 @@ namespace Simias.Storage.Tests
 
 				// Release the merge store handle.
 				mergeStore.Dispose();
+			}
+		}
+
+		/// <summary>
+		///  Tests the StoreFileNode object.
+		/// </summary>
+		[Test]
+		public void StoreFileNodeTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection" );
+			try
+			{
+				// Create a file in the file system.
+				string filePath = Path.Combine( Directory.GetCurrentDirectory(), "Test.txt" );
+				FileStream fs = new FileStream( filePath, FileMode.Create, FileAccess.Write, FileShare.None );
+				StreamWriter sw = new StreamWriter( fs );
+				sw.WriteLine( "This is a test" );
+				sw.Close();
+
+				// Create the store managed file.
+				fs = new FileStream( filePath, FileMode.Open, FileAccess.Read, FileShare.None );
+				StoreFileNode sfn = new StoreFileNode( collection, "CS_TestFile", fs );
+
+				// Make sure the file got copied.
+				FileInfo fInfo = new FileInfo( sfn.GetFullPath( collection ) );
+				if ( !fInfo.Exists || ( fInfo.Length != fs.Length ) )
+				{
+					fs.Close();
+					throw new ApplicationException( "Store managed file did not get created." );
+				}
+
+				fs.Close();
+			}
+			finally
+			{
 			}
 		}
 		#endregion

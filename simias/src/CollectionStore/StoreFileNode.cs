@@ -36,9 +36,10 @@ namespace Simias.Storage
 		/// Constructor used to create a new StoreFileNode object.
 		/// </summary>
 		/// <param name="collection">Collection that this StoreFileNode object will be associated with.</param>
-		/// <param name="filePath">Absolute path to the file entry in the external file system.</param>
-		public StoreFileNode( Collection collection, string filePath ) :
-			this ( collection, filePath, Guid.NewGuid().ToString() )
+		/// <param name="name">Name of this StoreFileNode object.</param>
+		/// <param name="stream">A Stream object where the data can be read.</param>
+		public StoreFileNode( Collection collection, string name, Stream stream ) :
+			this ( collection, name, Guid.NewGuid().ToString(), stream )
 		{
 		}
 
@@ -46,22 +47,39 @@ namespace Simias.Storage
 		/// Constructor used to create a new StoreFileNode object with a specified ID.
 		/// </summary>
 		/// <param name="collection">Collection that this StoreFileNode object will be associated with.</param>
-		/// <param name="filePath">Absolute path to the file entry in the external file system.</param>
+		/// <param name="name">Name of this StoreFileNode object.</param>
 		/// <param name="fileID">Globally unique identifier for the StoreFileNode object.</param>
-		public StoreFileNode( Collection collection, string filePath, string fileID ) :
-			base( collection, Path.GetFileName( filePath ), fileID, "StoreFileNode" )
+		/// <param name="stream">A Stream object where the data can be read.</param>
+		public StoreFileNode( Collection collection, string name, string fileID, Stream stream ) :
+			base( collection, name, fileID, "StoreFileNode" )
 		{
+			// Create the managed file path.
+			string managedFile = Path.Combine( collection.ManagedPath, fileID.ToLower() );
+
+			// Create a file in the managed directory and copy the stream into it.
+			FileStream fs = File.Open( managedFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
+
+			// Copy the stream data.
+			byte[] buffer = new byte[ 4096 ];
+			int bytesRead = stream.Read( buffer, 0, buffer.Length );
+
+			while ( bytesRead > 0 )
+			{
+				fs.Write( buffer, 0, bytesRead );
+				bytesRead = stream.Read( buffer, 0, buffer.Length );
+			}
+
+			// Close the file.
+			fs.Close();
+
 			// Update the file properties. Make sure that the file exists.
-			FileInfo fInfo = new FileInfo( filePath );
+			FileInfo fInfo = new FileInfo( managedFile );
 			if ( fInfo.Exists )
 			{
 				properties.AddNodeProperty( Property.FileCreationTime, fInfo.CreationTime );
 				properties.AddNodeProperty( Property.FileLastAccessTime, fInfo.LastAccessTime );
 				properties.AddNodeProperty( Property.FileLastWriteTime, fInfo.LastWriteTime );
 				properties.AddNodeProperty( Property.FileLength, fInfo.Length );
-
-				// Copy the specified file to the store managed area.
-				File.Copy( filePath, Path.Combine( collection.ManagedPath, fileID.ToLower() ), true );
 			}
 		}
 
