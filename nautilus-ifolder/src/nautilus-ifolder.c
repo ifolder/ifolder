@@ -150,6 +150,8 @@ static char * get_ifolder_config_file_path (char *dest_path);
 static int ifolder_get_config_setting (char *xml_file_path,
 									   char *setting_xpath,
 									   char *setting_value_return);
+									   
+static void ifolder_help_callback (NautilusMenuItem *item, gpointer user_data);
 
 /**
  * This function is intended to be called using g_idle_add by the event system
@@ -1068,18 +1070,48 @@ show_ifolder_error_message (void *user_data)
 	return FALSE;
 }
 
+static void
+creation_dialog_button_callback (GtkDialog *dialog,
+								 gint response_type,
+								 gpointer data)
+{
+	switch (response_type) {
+		case GTK_RESPONSE_HELP:
+			/* Launch the iFolder Help. */
+			g_object_set_data_full (G_OBJECT (dialog), "parent_window",
+									g_object_ref (dialog), g_object_unref);
+			/**
+			 * To use the function that's already available, we have to pass in
+			 * the dialog as a NautilusMenuItem * and have the parent_window set.
+			 */
+			ifolder_help_callback ((NautilusMenuItem *)dialog, NULL);
+			break;
+		case GTK_RESPONSE_CLOSE:
+			if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data))) {
+				/* FIXME: Save off the setting to NOT show this dialog again */
+				g_printf ("Check button is checked\n");
+			}
+			
+			gtk_widget_destroy (GTK_WIDGET (dialog));
+			break;
+		default:
+			/* Do nothing since the dialog was cancelled */
+			break;
+	}
+}
+
 gboolean
 show_ifolder_creation_dialog (void *user_data)
 {
 	DEBUG_IFOLDER (("*** show_ifolder_creation_dialog () called\n"));
-	GtkWidget *dialog, *label, *check_button, *vbox, *vbox2, *hbox,
+	GtkWidget *creation_dialog, *label, *check_button, *vbox, *vbox2, *hbox,
 			  *cb_alignment, *folder_image;
 	GtkWindow *parent_window;
 	gint response;
 	char label_str [1024];
 	parent_window = GTK_WINDOW (user_data);
 
-	dialog = gtk_dialog_new_with_buttons (
+	creation_dialog = gtk_dialog_new_with_buttons (
 						_("iFolder Introduction"),
 						parent_window,
 						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1089,10 +1121,10 @@ show_ifolder_creation_dialog (void *user_data)
 						GTK_RESPONSE_HELP,
 						NULL);
 						
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	gtk_dialog_set_has_separator (GTK_DIALOG (creation_dialog), FALSE);
+	gtk_window_set_resizable (GTK_WINDOW (creation_dialog), FALSE);
 	
-	gtk_window_set_icon_from_file (GTK_WINDOW (dialog),
+	gtk_window_set_icon_from_file (GTK_WINDOW (creation_dialog),
 								   IFOLDER_IMAGE_IFOLDER,
 								   NULL);
 	folder_image = gtk_image_new_from_file (IFOLDER_IMAGE_BIG_IFOLDER);
@@ -1136,13 +1168,16 @@ show_ifolder_creation_dialog (void *user_data)
 	gtk_container_add (GTK_CONTAINER (cb_alignment), check_button);
 	gtk_box_pack_start (GTK_BOX (vbox), cb_alignment, TRUE, TRUE, 0);
 
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox),
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (creation_dialog)->vbox),
 					   vbox);
+					   
+	/* Hook up the signal callbacks for the buttons */
+	g_signal_connect (creation_dialog,
+					  "response",
+					  G_CALLBACK (creation_dialog_button_callback),
+					  check_button);
 			   
-	gtk_widget_show_all (dialog);
-	response = gtk_dialog_run (GTK_DIALOG (dialog));
-	
-	gtk_widget_destroy (dialog);
+	gtk_widget_show_all (creation_dialog);
 	
 	return FALSE;
 }
