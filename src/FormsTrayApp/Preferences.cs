@@ -109,6 +109,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button activate;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.ComboBox timeUnit;
+		private System.Windows.Forms.Button login;
+		private System.Windows.Forms.Button logout;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -192,6 +194,8 @@ namespace Novell.FormsTrayApp
 			this.ok = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.login = new System.Windows.Forms.Button();
+			this.logout = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -710,6 +714,8 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.AccessibleName = resources.GetString("groupBox2.AccessibleName");
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox2.Anchor")));
 			this.groupBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox2.BackgroundImage")));
+			this.groupBox2.Controls.Add(this.logout);
+			this.groupBox2.Controls.Add(this.login);
 			this.groupBox2.Controls.Add(this.activate);
 			this.groupBox2.Controls.Add(this.password);
 			this.groupBox2.Controls.Add(this.server);
@@ -1204,6 +1210,62 @@ namespace Novell.FormsTrayApp
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
+			// login
+			// 
+			this.login.AccessibleDescription = resources.GetString("login.AccessibleDescription");
+			this.login.AccessibleName = resources.GetString("login.AccessibleName");
+			this.login.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("login.Anchor")));
+			this.login.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("login.BackgroundImage")));
+			this.login.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("login.Dock")));
+			this.login.Enabled = ((bool)(resources.GetObject("login.Enabled")));
+			this.login.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("login.FlatStyle")));
+			this.login.Font = ((System.Drawing.Font)(resources.GetObject("login.Font")));
+			this.helpProvider1.SetHelpKeyword(this.login, resources.GetString("login.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.login, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("login.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.login, resources.GetString("login.HelpString"));
+			this.login.Image = ((System.Drawing.Image)(resources.GetObject("login.Image")));
+			this.login.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.ImageAlign")));
+			this.login.ImageIndex = ((int)(resources.GetObject("login.ImageIndex")));
+			this.login.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("login.ImeMode")));
+			this.login.Location = ((System.Drawing.Point)(resources.GetObject("login.Location")));
+			this.login.Name = "login";
+			this.login.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("login.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.login, ((bool)(resources.GetObject("login.ShowHelp"))));
+			this.login.Size = ((System.Drawing.Size)(resources.GetObject("login.Size")));
+			this.login.TabIndex = ((int)(resources.GetObject("login.TabIndex")));
+			this.login.Text = resources.GetString("login.Text");
+			this.login.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.TextAlign")));
+			this.login.Visible = ((bool)(resources.GetObject("login.Visible")));
+			this.login.Click += new System.EventHandler(this.login_Click);
+			// 
+			// logout
+			// 
+			this.logout.AccessibleDescription = resources.GetString("logout.AccessibleDescription");
+			this.logout.AccessibleName = resources.GetString("logout.AccessibleName");
+			this.logout.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("logout.Anchor")));
+			this.logout.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("logout.BackgroundImage")));
+			this.logout.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("logout.Dock")));
+			this.logout.Enabled = ((bool)(resources.GetObject("logout.Enabled")));
+			this.logout.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("logout.FlatStyle")));
+			this.logout.Font = ((System.Drawing.Font)(resources.GetObject("logout.Font")));
+			this.helpProvider1.SetHelpKeyword(this.logout, resources.GetString("logout.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.logout, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("logout.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.logout, resources.GetString("logout.HelpString"));
+			this.logout.Image = ((System.Drawing.Image)(resources.GetObject("logout.Image")));
+			this.logout.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.ImageAlign")));
+			this.logout.ImageIndex = ((int)(resources.GetObject("logout.ImageIndex")));
+			this.logout.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("logout.ImeMode")));
+			this.logout.Location = ((System.Drawing.Point)(resources.GetObject("logout.Location")));
+			this.logout.Name = "logout";
+			this.logout.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("logout.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.logout, ((bool)(resources.GetObject("logout.ShowHelp"))));
+			this.logout.Size = ((System.Drawing.Size)(resources.GetObject("logout.Size")));
+			this.logout.TabIndex = ((int)(resources.GetObject("logout.TabIndex")));
+			this.logout.Text = resources.GetString("logout.Text");
+			this.logout.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.TextAlign")));
+			this.logout.Visible = ((bool)(resources.GetObject("logout.Visible")));
+			this.logout.Click += new System.EventHandler(this.logout_Click);
+			// 
 			// Preferences
 			// 
 			this.AcceptButton = this.ok;
@@ -1460,7 +1522,8 @@ namespace Novell.FormsTrayApp
 					new string[] {domain.Name,
 									 domainInfo.MemberName,
 									 domainInfo.Active ? 
-									 resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled")});
+									 (domainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
+									 : resourceManager.GetString("statusDisabled")});
 				lvi.Tag = domain;
 				lvi.Selected = domainInfo.IsDefault;
 				accounts.Items.Add(lvi);
@@ -1592,7 +1655,7 @@ namespace Novell.FormsTrayApp
 								// Associate the new domain with the listview item.
 								newAccountLvi.SubItems[0].Text = domainInfo.Name;
 
-								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
+								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
 								newAccountLvi.Tag = domain;
 								server.Text = domainInfo.Name;
 								newAccountLvi = null;
@@ -1609,7 +1672,8 @@ namespace Novell.FormsTrayApp
 
 								addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
 
-								activate.Enabled = false;
+								activate.Enabled = activate.Visible = false;
+								logout.Visible = true;
 
 								// Don't burn a grace login looking for an update.
 								if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
@@ -1617,8 +1681,7 @@ namespace Novell.FormsTrayApp
 									try
 									{
 										// Check for an update.
-										bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
-										if (updateStarted)
+										if (FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text))
 										{
 											if (ShutdownTrayApp != null)
 											{
@@ -1684,6 +1747,7 @@ namespace Novell.FormsTrayApp
 								break;
 							case StatusCodes.InvalidCredentials:
 							case StatusCodes.InvalidPassword:
+							case StatusCodes.UnknownUser:
 								mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
 								break;
@@ -1940,12 +2004,12 @@ namespace Novell.FormsTrayApp
 						if (enableAccount.Checked)
 						{
 							simiasWebService.SetDomainActive(domain.ID);
-							domain.DomainInfo.Active = true;
+							domain.DomainInfo.Active = login.Enabled = logout.Enabled = true;
 						}
 						else
 						{
 							simiasWebService.SetDomainInactive(domain.ID);
-							domain.DomainInfo.Active = false;
+							domain.DomainInfo.Active = login.Enabled = logout.Enabled = false;
 						}
 
 						updateDomainStatus(domain);
@@ -1966,7 +2030,7 @@ namespace Novell.FormsTrayApp
 				if (d.ID.Equals(domain.ID))
 				{
 					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
-						resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled");
+						(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut")) : resourceManager.GetString("statusDisabled");
 					break;
 				}
 			}
@@ -2127,6 +2191,9 @@ namespace Novell.FormsTrayApp
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
 					removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+
+				activate.Visible = true;
+				login.Visible = logout.Visible = false;
 
 				updatePassword = updateEnabled = false;
 
@@ -2551,6 +2618,8 @@ namespace Novell.FormsTrayApp
 							userName.ReadOnly = server.ReadOnly = false;
 							details.Enabled = activate.Enabled = enableAccount.Enabled = false;
 							enableAccount.Checked = true;
+							activate.Visible = true;
+							login.Visible = logout.Visible = false;
 
 							defaultServer.Enabled = (accounts.Items.Count > 1);
 							defaultServer.Checked = (accounts.Items.Count == 1);
@@ -2585,7 +2654,10 @@ namespace Novell.FormsTrayApp
 							}
 
 							enableAccount.Enabled = true;
-							enableAccount.Checked = selectedDomain.DomainInfo.Active;
+							login.Enabled = logout.Enabled = enableAccount.Checked = 
+								selectedDomain.DomainInfo.Active;
+							login.Visible = !selectedDomain.DomainInfo.Authenticated;
+							logout.Visible = selectedDomain.DomainInfo.Authenticated;
 						}
 					}
 				}
@@ -2602,6 +2674,8 @@ namespace Novell.FormsTrayApp
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
 					removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+
+				login.Visible = logout.Visible = false;
 			}
 		}
 
@@ -2626,6 +2700,103 @@ namespace Novell.FormsTrayApp
 			Cursor.Current = Cursors.WaitCursor;
 			connectToEnterprise();
 			Cursor.Current = Cursors.Default;
+		}
+
+		private void login_Click(object sender, System.EventArgs e)
+		{
+			if (accounts.SelectedItems.Count == 1)
+			{
+				ListViewItem lvi = accounts.SelectedItems[0];
+				Domain domain = (Domain)lvi.Tag;
+				if (domain != null)
+				{
+					Cursor.Current = Cursors.WaitCursor;
+					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domain.ID, password.Text);
+					Status authStatus = domainAuth.Authenticate();
+					Cursor.Current = Cursors.Default;
+					MyMessageBox mmb;
+					switch (authStatus.statusCode)
+					{
+						case StatusCodes.Success:
+						case StatusCodes.SuccessInGrace:
+							login.Visible = false;
+							logout.Visible = true;
+
+							lvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
+							domain.DomainInfo.Authenticated = true;
+
+							if (authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+							{
+								mmb = new MyMessageBox(
+									string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+									resourceManager.GetString("graceLoginTitle"),
+									string.Empty,
+									MyMessageBoxButtons.OK,
+									MyMessageBoxIcon.Information);
+								mmb.ShowDialog();
+							}
+						
+							// Don't burn a grace login looking for an update.
+							if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+							{
+								try
+								{
+									Cursor.Current = Cursors.WaitCursor;
+									bool update = FormsTrayApp.CheckForClientUpdate(domain.ID, userName.Text, password.Text);
+									Cursor.Current = Cursors.Default;
+									if (update)
+									{
+										if (ShutdownTrayApp != null)
+										{
+											// Shut down the tray app.
+											ShutdownTrayApp(this, new EventArgs());
+										}
+									}
+								}
+								catch // Ignore
+								{
+								}
+							}
+							break;
+						case StatusCodes.InvalidCredentials:
+						case StatusCodes.InvalidPassword:
+						case StatusCodes.UnknownUser:
+							mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+							break;
+						case StatusCodes.AccountDisabled:
+							mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+							break;
+						case StatusCodes.AccountLockout:
+							mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+							break;
+						default:
+							mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+							break;
+					}
+				}
+			}
+		}
+
+		private void logout_Click(object sender, System.EventArgs e)
+		{
+			if (accounts.SelectedItems.Count == 1)
+			{
+				ListViewItem lvi = accounts.SelectedItems[0];
+				Domain domain = (Domain)lvi.Tag;
+				if (domain != null)
+				{
+					simiasWebService.LogoutFromRemoteDomain(domain.ID);
+					domain.DomainInfo.Authenticated = false;
+					login.Visible = true;
+					logout.Visible = false;
+					domain.DomainInfo.Authenticated = false;
+					lvi.SubItems[2].Text = resourceManager.GetString("statusLoggedOut");
+				}
+			}
 		}
 		#endregion
 
