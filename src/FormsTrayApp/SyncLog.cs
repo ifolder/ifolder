@@ -46,11 +46,9 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ToolBar toolBar1;
 		private System.Windows.Forms.ToolBarButton toolBarSave;
 		private System.Windows.Forms.ToolBarButton toolBarClear;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
 		#endregion
+		private System.Windows.Forms.ImageList imageList1;
+		private System.ComponentModel.IContainer components;
 
 		/// <summary>
 		/// Constructs a SyncLog object.
@@ -85,11 +83,13 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SyncLog));
 			this.log = new System.Windows.Forms.ListBox();
 			this.toolBar1 = new System.Windows.Forms.ToolBar();
 			this.toolBarSave = new System.Windows.Forms.ToolBarButton();
 			this.toolBarClear = new System.Windows.Forms.ToolBarButton();
+			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.SuspendLayout();
 			// 
 			// log
@@ -131,6 +131,7 @@ namespace Novell.FormsTrayApp
 			this.toolBar1.DropDownArrows = ((bool)(resources.GetObject("toolBar1.DropDownArrows")));
 			this.toolBar1.Enabled = ((bool)(resources.GetObject("toolBar1.Enabled")));
 			this.toolBar1.Font = ((System.Drawing.Font)(resources.GetObject("toolBar1.Font")));
+			this.toolBar1.ImageList = this.imageList1;
 			this.toolBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("toolBar1.ImeMode")));
 			this.toolBar1.Location = ((System.Drawing.Point)(resources.GetObject("toolBar1.Location")));
 			this.toolBar1.Name = "toolBar1";
@@ -158,6 +159,12 @@ namespace Novell.FormsTrayApp
 			this.toolBarClear.Text = resources.GetString("toolBarClear.Text");
 			this.toolBarClear.ToolTipText = resources.GetString("toolBarClear.ToolTipText");
 			this.toolBarClear.Visible = ((bool)(resources.GetObject("toolBarClear.Visible")));
+			// 
+			// imageList1
+			// 
+			this.imageList1.ImageSize = ((System.Drawing.Size)(resources.GetObject("imageList1.ImageSize")));
+			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// SyncLog
 			// 
@@ -237,7 +244,6 @@ namespace Novell.FormsTrayApp
 		#region Event Handlers
 		private void SyncLog_Load(object sender, System.EventArgs e)
 		{
-			// TODO: add toolbar icons.
 			// Load the application icon.
 			try
 			{
