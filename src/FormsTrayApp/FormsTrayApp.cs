@@ -98,16 +98,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuItemBrowser = new MenuItem("Store Browser");
 
 			// Initialize contextMenu1
-			if (File.Exists(Path.Combine(Environment.CurrentDirectory, "StoreBrowser.exe")))
-			{
-				this.contextMenu1.MenuItems.AddRange(
-					new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer, this.menuItemBrowser});
-			}
-			else
-			{
-				this.contextMenu1.MenuItems.AddRange(
-					new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
-			}
+			this.contextMenu1.MenuItems.AddRange(
+				new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
 
 			// Initialize menuItemExit
 			this.menuItemExit.Index = 0;
@@ -129,6 +121,8 @@ namespace Novell.iFolder.FormsTrayApp
 			// Initialize menuItemBrowser
 			this.menuItemBrowser.Index = 0;
 			this.menuItemBrowser.Click += new EventHandler(menuItemBrowser_Click);
+
+			this.contextMenu1.Popup += new EventHandler(contextMenu1_Popup);
 
 			// Set up how the form should be displayed.
 			this.ClientSize = new System.Drawing.Size(292, 266);
@@ -210,6 +204,9 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			// Close the form, which closes the application.
 			//this.Close();
+
+			// Disable the exit menu item.
+			this.menuItemExit.Enabled = false;
 
 			Cursor.Current = Cursors.WaitCursor;
 			if ((workerThread != null) && workerThread.IsAlive)
@@ -397,6 +394,21 @@ namespace Novell.iFolder.FormsTrayApp
 			if (state == SyncManagerStates.Active)
 			{
 				synkEvent.Set();
+			}
+		}
+
+		private void contextMenu1_Popup(object sender, EventArgs e)
+		{
+			// Dynamically add/remove store browser menu item based on whether or not the file is installed.
+			if (File.Exists(Path.Combine(Environment.CurrentDirectory, "StoreBrowser.exe")))
+			{
+				if (this.contextMenu1.MenuItems.Contains(this.menuItemBrowser) == false)
+					this.contextMenu1.MenuItems.Add(0, this.menuItemBrowser);
+			}
+			else
+			{
+				if (this.contextMenu1.MenuItems.Contains(this.menuItemBrowser) == true)
+					this.contextMenu1.MenuItems.Remove(this.menuItemBrowser);
 			}
 		}
 		#endregion
