@@ -434,7 +434,9 @@ namespace Simias.POBoxService.Web
 			colUrl +=
 				this.Context.Request.Url.Host +
 				":" +
-				this.Context.Request.Url.Port.ToString();
+				this.Context.Request.Url.Port.ToString() +
+				versionEndpoint;
+
 
 			SubscriptionInformation subInfo = new SubscriptionInformation(colUrl);
 			subInfo.GenerateFromSubscription(cSub);
