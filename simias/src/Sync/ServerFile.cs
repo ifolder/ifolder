@@ -74,6 +74,11 @@ namespace Simias.Sync
 			collection.ImportNode(node, true, snode.MasterIncarnation);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
+			if (NameConflict)
+			{
+				Close(false);
+				return SyncStatus.FileNameConflict;
+			}
 			return SyncStatus.Success;
 		}
 

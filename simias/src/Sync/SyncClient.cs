@@ -1636,7 +1636,6 @@ namespace Simias.Sync
 									case SyncStatus.ServerFailure:
 										log.Info("Failed Uploading File {0} : reason {1}", file.Name, syncStatus.status.ToString());
 										break;
-									case SyncStatus.FileNameConflict:
 									case SyncStatus.UpdateConflict:
 										// Since we had a conflict we need to get the conflict node down.
 										workArray.RemoveNodeToServer(nodeID);
@@ -1648,11 +1647,21 @@ namespace Simias.Sync
 								}
 							}
 						}
+						else if (status == SyncStatus.FileNameConflict)
+						{
+							// Since we had a conflict we need to set the conflict.
+							BaseFileNode conflictNode = collection.CreateCollision(node, true) as BaseFileNode;
+							Conflict.SetFileConflictPath(conflictNode, conflictNode.GetFullPath(collection));
+							collection.Commit(conflictNode);
+							workArray.RemoveNodeToServer(nodeID);
+							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
+							break;
+						}
 						else
 						{
 							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
 							if (status == SyncStatus.Locked)
-								break;
+								return;
 						}
 					}
 				}

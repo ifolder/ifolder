@@ -22,6 +22,7 @@
  ***********************************************************************/
 using System;
 using System.IO;
+using System.Text;
 using Simias.Storage;
 using Simias;
 
@@ -48,6 +49,7 @@ public class Conflict
 
 	static string			ConflictBinDir = "Conflicts";
 	static string			conflictBin;
+	static string			ConflictNameProperty = "ConflictName";
 
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -180,10 +182,20 @@ public class Conflict
 	/// <returns>The path for the conflict file.</returns>
 	public static string GetFileConflictPath(Collection collection, BaseFileNode bfn)
 	{
+		Property pPath = collection.Properties.GetSingleProperty(ConflictNameProperty);
+		if (pPath != null)
+		{
+			return pPath.Value.ToString();
+		}
 		return (Path.Combine(ConflictBin, ConflictFilePrefix + bfn.ID));
 	}
 
-	
+	public static void SetFileConflictPath(BaseFileNode bfn, string path)
+	{
+		Property pPath = new Property(ConflictNameProperty, path);
+		pPath.LocalProperty = true;
+		bfn.Properties.ModifyProperty(pPath);
+	}
 
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -263,7 +275,9 @@ public class Conflict
 		//TODO: what if move succeeds but node rename or commit fails?
 		File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
 		node.Name = newNodeName;
-		collection.Commit(collection.DeleteCollision(node));
+		Node newNode = collection.DeleteCollision(node);
+		newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
+		collection.Commit(newNode);
 	}
 
 	

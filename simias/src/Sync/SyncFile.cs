@@ -28,6 +28,7 @@ using System.Security.Cryptography;
 using Simias.Storage;
 using Simias.Event;
 using Simias.Sync.Delta;
+using Simias.Client;
 
 namespace Simias.Sync
 {
@@ -201,7 +202,6 @@ namespace Simias.Sync
 		string			partialFile;
 		/// <summary>The Old Node if it exists.</summary>
 		protected BaseFileNode	oldNode;
-		//ManualResetEvent		asyncEvent = new ManualResetEvent(true);
 				
 		#endregion
 		
@@ -322,12 +322,19 @@ namespace Simias.Sync
 		protected void Open(BaseFileNode node)
 		{
 			SetupFileNames(node, "");
+			CheckForNameConflict();
 			Log.log.Debug("Opening File {0}", file);
 			// Open the file so that it cannot be modified.
 			oldNode = collection.GetNodeByID(node.ID) as BaseFileNode;
 			try
 			{
-				stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
+				if (!NameConflict)
+					stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.None);
+				else
+				{
+					file = Conflict.GetFileConflictPath(collection, node);
+					Conflict.SetFileConflictPath(node, file);
+				}
 			}
 			catch (FileNotFoundException)
 			{
@@ -443,6 +450,7 @@ namespace Simias.Sync
 	{
 		#region fields
 
+		bool					nameConflict = false;
 		/// <summary>The Collection the file belongs to.</summary>
 		protected Collection	collection;
 		/// <summary> The node that represents the file.</summary>
@@ -502,6 +510,47 @@ namespace Simias.Sync
 		protected string GetMapFileName()
 		{
 			return Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
+		}
+
+		/// <summary>
+		/// Checks for a name conflict.
+		/// </summary>
+		protected void CheckForNameConflict()
+		{
+			if (!NameConflict)
+			{
+				string path = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).Value.ToString();
+				ICSList nodeList;
+				if (MyEnvironment.Windows)
+				{
+					nodeList = collection.Search(PropertyTags.FileSystemPath, path, SearchOp.Equal);
+				}
+				else
+				{
+					nodeList = collection.Search(PropertyTags.FileSystemPath, path, SearchOp.CaseEqual);
+				}
+				
+				foreach (ShallowNode sn in nodeList)
+				{
+					if (sn.ID != node.ID)
+						nameConflict = true;
+				}
+				// Now make sure we don't have any illegal characters.
+				if (path.IndexOfAny(Path.InvalidPathChars) != -1)
+					nameConflict = true;
+
+				if (nameConflict)
+					node = collection.CreateCollision(node, true) as BaseFileNode;
+			}
+		}
+		
+		/// <summary>
+		/// Gets or Sets a NameConflict.
+		/// </summary>
+		protected bool NameConflict
+		{
+			get {return nameConflict;}
+			set {nameConflict = value;}
 		}
 
 		#endregion

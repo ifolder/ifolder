@@ -352,37 +352,27 @@ namespace Simias.Sync
 					commit = false;
 				}
 			}
-			try
+		
+			// Make sure the file is not read only.
+			FileInfo fi = new FileInfo(file);
+			FileAttributes fa;
+			if (fi.Exists)
 			{
-				// Make sure the file is not read only.
-				FileInfo fi = new FileInfo(file);
-				FileAttributes fa;
-				if (fi.Exists)
-				{
-					fa = fi.Attributes;
-					fi.Attributes = fa & ~FileAttributes.ReadOnly;
-				}
-				else
-				{
-					fa = FileAttributes.Normal;
-				}
-				base.Close(commit);
-				if (readOnly)
-				{
-					// BUGBUG this is commented out until we decide what to do with readonly collections.
-					//fa |= FileAttributes.ReadOnly;
-				}
-				if (fi.Exists)
-					fi.Attributes = fa;
+				fa = fi.Attributes;
+				fi.Attributes = fa & ~FileAttributes.ReadOnly;
 			}
-			catch (Exception ex)
+			else
 			{
-				Log.log.Debug(ex, "Failed Close");
-				string collisionName = Conflict.GetFileConflictPath(collection, node);
-				File.Delete(collisionName);
-				File.Move(workFile, collisionName);
-				collection.Commit(collection.CreateCollision(node, true));
+				fa = FileAttributes.Normal;
 			}
+			base.Close(commit);
+			if (readOnly)
+			{
+				// BUGBUG this is commented out until we decide what to do with readonly collections.
+				//fa |= FileAttributes.ReadOnly;
+			}
+			if (fi.Exists)
+				fi.Attributes = fa;
 			return bStatus;
 		}
 
@@ -649,6 +639,7 @@ namespace Simias.Sync
 					throw ex;
 				}
 			}
+			
 			return status;
 		}
 
