@@ -365,9 +365,9 @@ namespace Novell.iFolder
 					iFolderUser user = 
 							(iFolderUser) UserTreeStore.GetValue(iter,0);
 
-					if(!selectedUsers.ContainsKey(user.ID))
+					if(!selectedUsers.ContainsKey(user.UserID))
 					{
-						selectedUsers.Add(user.ID, user);
+						selectedUsers.Add(user.UserID, user);
 						SelTreeStore.AppendValues(user);
 					}
 				}
@@ -407,7 +407,7 @@ namespace Novell.iFolder
 				TreeIter iter = (TreeIter) iterQueue.Dequeue();
 				iFolderUser user = 
 						(iFolderUser) SelTreeStore.GetValue(iter,0);
-				selectedUsers.Remove(user.ID);
+				selectedUsers.Remove(user.UserID);
 				SelTreeStore.Remove(ref iter);
 			}
 		}

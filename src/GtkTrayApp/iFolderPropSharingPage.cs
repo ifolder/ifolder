@@ -38,6 +38,7 @@ namespace Novell.iFolder
 		private Gtk.TreeView		UserTreeView;
 		private ListStore			UserTreeStore;
 		private Gdk.Pixbuf			UserPixBuf;
+		private Gdk.Pixbuf			CurrentUserPixBuf;
 		private Gdk.Pixbuf			InvitedPixBuf;
 		private Gtk.Window			topLevelWindow;
 
@@ -134,10 +135,8 @@ namespace Novell.iFolder
 					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
 			InvitedPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("inviteduser.png"));
-
-//			CurContactPixBuf = 
-//					new Gdk.Pixbuf(Util.ImagesPath("contact_me.png"));
-
+			CurrentUserPixBuf = 
+					new Gdk.Pixbuf(Util.ImagesPath("currentuser.png"));
 
 			// Setup buttons for add/remove/accept/decline
 			HBox buttonBox = new HBox();
@@ -200,7 +199,9 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if(user.State != "Member")
+			if(user.UserID == ifolder.CurrentUserID)
+				((CellRendererPixbuf) cell).Pixbuf = CurrentUserPixBuf;
+			else if(user.State != "Member")
 				((CellRendererPixbuf) cell).Pixbuf = InvitedPixBuf;
 			else
 				((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
@@ -214,7 +215,9 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if(user.State != "Member")
+			if(ifolder.OwnerID == user.UserID)
+				((CellRendererText) cell).Text = "Owner";
+			else if(user.State != "Member")
 				((CellRendererText) cell).Text = "Invited User";
 			else
 				((CellRendererText) cell).Text = "iFolder User";
@@ -228,7 +231,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = user.Rights;
+			((CellRendererText) cell).Text = GetDisplayRights(user.Rights);
 		}
 
 
@@ -302,5 +305,23 @@ namespace Novell.iFolder
 				UserSelector = null;
 			}
 		}
+
+
+
+
+		private string GetDisplayRights(string rights)
+		{
+			if(rights == "ReadWrite")
+				return "Read Write";
+			else if(rights == "Admin")
+				return "Full Control";
+			else if(rights == "ReadOnly")
+				return "Read Only";
+			else
+				return "Unknown";
+		}
+
+
+
 	}
 }

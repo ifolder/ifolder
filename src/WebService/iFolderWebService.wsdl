@@ -102,6 +102,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="MasterIncarnation" type="xs:unsignedLong" />
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="Owner" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OwnerID" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="SyncInterval" type="xs:int" />
           <xs:element minOccurs="1" maxOccurs="1" name="Synchronizable" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="Type" type="xs:string" />
@@ -112,6 +113,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="IsWorkgroup" type="xs:boolean" />
           <xs:element minOccurs="1" maxOccurs="1" name="HasConflicts" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserRights" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="CreateLocaliFolderResponse">
@@ -577,6 +579,7 @@
       <xs:element name="DiskSpace" type="s0:DiskSpace" />
       <xs:element name="int" type="xs:int" />
       <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict" />
+      <xs:element name="SyncSize" type="s0:SyncSize" />
     </xs:schema>
   </types>
   <message name="PingSoapIn">
@@ -912,7 +915,7 @@
   <message name="GetAlliFolderUsersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolderUser" />
   </message>
-  <message name="SearchForiFolderUsersHttpGetIn" >
+  <message name="SearchForiFolderUsersHttpGetIn">
     <part name="SearchString" type="s:string" />
   </message>
   <message name="SearchForiFolderUsersHttpGetOut">
@@ -1015,7 +1018,7 @@
   <message name="RemoveProxyHttpGetIn" />
   <message name="RemoveProxyHttpGetOut" />
   <message name="CalculateSyncSizeHttpGetIn">
-    <part name="iFolderIDHost" type="s:string" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="CalculateSyncSizeHttpGetOut">
     <part name="Body" element="s0:SyncSize" />
@@ -1123,7 +1126,7 @@
   <message name="GetAlliFolderUsersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolderUser" />
   </message>
-  <message name="SearchForiFolderUsersHttpPostIn" >
+  <message name="SearchForiFolderUsersHttpPostIn">
     <part name="SearchString" type="s:string" />
   </message>
   <message name="SearchForiFolderUsersHttpPostOut">
@@ -1226,7 +1229,7 @@
   <message name="RemoveProxyHttpPostIn" />
   <message name="RemoveProxyHttpPostOut" />
   <message name="CalculateSyncSizeHttpPostIn">
-    <part name="iFolderIDHost" type="s:string" />
+    <part name="iFolderID" type="s:string" />
   </message>
   <message name="CalculateSyncSizeHttpPostOut">
     <part name="Body" element="s0:SyncSize" />
@@ -1424,7 +1427,7 @@
     <operation name="CalculateSyncSize">
       <input message="s0:CalculateSyncSizeSoapIn" />
       <output message="s0:CalculateSyncSizeSoapOut" />
-      <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
+      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
     </operation>
     <operation name="SynciFolderNow">
       <input message="s0:SynciFolderNowSoapIn" />
@@ -1621,7 +1624,7 @@
     <operation name="CalculateSyncSize">
       <input message="s0:CalculateSyncSizeHttpGetIn" />
       <output message="s0:CalculateSyncSizeHttpGetOut" />
-      <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
+      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
     </operation>
     <operation name="SynciFolderNow">
       <input message="s0:SynciFolderNowHttpGetIn" />
@@ -1818,7 +1821,7 @@
     <operation name="CalculateSyncSize">
       <input message="s0:CalculateSyncSizeHttpPostIn" />
       <output message="s0:CalculateSyncSizeHttpPostOut" />
-      <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
+      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
     </operation>
     <operation name="SynciFolderNow">
       <input message="s0:SynciFolderNowHttpPostIn" />
@@ -2490,7 +2493,9 @@
       <input>
         <http:urlEncoded />
       </input>
-      <output />
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
     </operation>
     <operation name="SynciFolderNow">
       <http:operation location="/SynciFolderNow" />
@@ -2810,7 +2815,9 @@
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>
-      <output />
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
     </operation>
     <operation name="SynciFolderNow">
       <http:operation location="/SynciFolderNow" />
