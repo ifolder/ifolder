@@ -38,8 +38,8 @@ namespace Simias.Storage
 		/// However they are cumulative, meaning that if a user has the ReadWrite right, they
 		/// also have the ReadOnly right.
 		/// </summary>
-		public enum Rights 
-		{ 
+		public enum Rights
+		{
 			/// <summary>
 			/// User has no rights to the collection.
 			/// </summary>
@@ -48,19 +48,20 @@ namespace Simias.Storage
 			/// <summary>
 			/// User can view information in a collection.
 			/// </summary>
-			ReadOnly, 
+			ReadOnly,
 
 			/// <summary>
 			/// User can view and modify information in a collection.
 			/// </summary>
-			ReadWrite, 
+			ReadWrite,
 
 			/// <summary>
 			/// User can view, modify and change rights in a collection.
 			/// </summary>
-			Admin 
+			Admin
 		};
 
+		/// <summary>
 		/// Well know identity role for world access.
 		/// </summary>
 		public const string World = "1edcfe93-45e8-11d8-a9c7-444553544200";
@@ -105,7 +106,7 @@ namespace Simias.Storage
 		/// Advances the enumerator to the next element of the collection.
 		/// </summary>
 		/// <returns>
-		/// true if the enumerator was successfully advanced to the next element; 
+		/// true if the enumerator was successfully advanced to the next element;
 		/// false if the enumerator has passed the end of the collection.
 		/// </returns>
 		public bool MoveNext()
@@ -235,7 +236,7 @@ namespace Simias.Storage
 		/// <param name="desiredRights">Rights to set on the object.</param>
 		internal void SetRights( Access.Rights desiredRights )
 		{
-			rights = desiredRights; 
+			rights = desiredRights;
 			aceProperty.SetPropertyValue( id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
 		}
 		#endregion
@@ -503,7 +504,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Removes all access rights on the collection for the specified user.
 		/// </summary>
-		/// <param name="userId">User ID to remove rights for.</param>
+		/// <param name="userID">User ID to remove rights for.</param>
 		public void RemoveUserRights( string userID )
 		{
 			if ( !IsAccessAllowed( Access.Rights.Admin ) )

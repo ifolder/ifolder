@@ -28,8 +28,8 @@ using System.Xml;
 namespace Simias.Storage
 {
 	/// <summary>
-	/// Class that represents the local address book that contains identity objects which 
-	/// represent users of the collection store. 
+	/// Class that represents the local address book that contains identity objects which
+	/// represent users of the collection store.
 	/// </summary>
 	public class LocalAddressBook : Collection
 	{
@@ -90,7 +90,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the specified contact by ID.
 		/// </summary>
-		/// <param name="name">Identifier of the contact.</param>
+		/// <param name="ID">Identifier of the contact.</param>
 		/// <returns>A BaseContact object that matches the specified ID.</returns>
 		public BaseContact GetContactByID( string ID )
 		{

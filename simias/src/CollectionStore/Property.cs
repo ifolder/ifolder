@@ -345,8 +345,8 @@ namespace Simias.Storage
 		private string ValueString
 		{
 			get { return ( Type == Syntax.XmlDocument ) ? xmlProperty.InnerXml : xmlProperty.InnerText; }
-			set 
-			{ 
+			set
+			{
 				if ( Type == Syntax.XmlDocument )
 				{
 					xmlProperty.InnerXml = value;
@@ -367,7 +367,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Allows the corresponding XML element to be set into the object when this property 
+		/// Allows the corresponding XML element to be set into the object when this property
 		/// has been added to the property list.
 		/// </summary>
 		internal XmlElement XmlProperty
@@ -377,7 +377,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Allows the property list to be set into the object when this property has been 
+		/// Allows the property list to be set into the object when this property has been
 		/// added to the property list.
 		/// </summary>
 		internal PropertyList XmlPropertyList
@@ -393,7 +393,7 @@ namespace Simias.Storage
 		{
 			get { return ( PropertyFlags & Hidden ) == Hidden ? true : false; }
 
-			set 
+			set
 			{
 				if ( value )
 				{
@@ -411,7 +411,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal uint PropertyFlags
 		{
-			get 
+			get
 			{
 				// Check to see if this property contains any flags.
 				uint propertyFlags = 0;
@@ -423,10 +423,10 @@ namespace Simias.Storage
 				return propertyFlags;
 			}
 
-			set 
+			set
 			{
 				// Save the current flags value.
-				uint currentFlags = PropertyFlags; 
+				uint currentFlags = PropertyFlags;
 				xmlProperty.SetAttribute( XmlTags.FlagsAttr, value.ToString() );
 				SaveMergeInformation( propertyList, Operation.Modify, null, true, currentFlags );
 			}
@@ -475,15 +475,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets and sets the transient status of a property.  If this flag is false, this property will 
-		/// synchronize to other stores.  If it is true, it is a property local to this store only.  This 
+		/// Gets and sets the transient status of a property.  If this flag is false, this property will
+		/// synchronize to other stores.  If it is true, it is a property local to this store only.  This
 		/// flag is set to false by default.
 		/// </summary>
 		public bool LocalProperty
 		{
 			get { return ( PropertyFlags & Local ) == Local ? true : false; }
 
-			set 
+			set
 			{
 				if ( value )
 				{
@@ -503,7 +503,7 @@ namespace Simias.Storage
 		{
 			get { return ( PropertyFlags & MultiValued ) == MultiValued ? true : false; }
 
-			set 
+			set
 			{
 				if ( value )
 				{
@@ -564,7 +564,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor used by the PropertyList.IEnumerable interface to create property objects.
 		/// </summary>
-		/// <param name="storeObject">Store object that is associated with this property.</param>
 		/// <param name="propertyList">The property list where this property is stored.</param>
 		/// <param name="xmlProperty">An XML element object that contains the name and value for this property.</param>
 		internal Property( PropertyList propertyList, XmlElement xmlProperty )
@@ -1005,9 +1004,9 @@ namespace Simias.Storage
 		/// <returns>True if valid state, otherwise false.</returns>
 		private bool ValidSaveMergeInfoState( PropertyList.PropertyListState state )
 		{
-			return ( ( state != PropertyList.PropertyListState.Add ) && 
+			return ( ( state != PropertyList.PropertyListState.Add ) &&
 					 ( state != PropertyList.PropertyListState.Abort ) &&
-					 ( state != PropertyList.PropertyListState.Import)  && 
+					 ( state != PropertyList.PropertyListState.Import)  &&
 					 ( state != PropertyList.PropertyListState.Disposed ) ) ? true : false;
 		}
 		#endregion
@@ -1019,7 +1018,7 @@ namespace Simias.Storage
 		/// <param name="propertyList">PropertyList object that this property is associated with.</param>
 		internal void AbortMergeInformation( PropertyList propertyList )
 		{
-			// If there is no PropertyList object associated with this property or it is a new object, 
+			// If there is no PropertyList object associated with this property or it is a new object,
 			// we don't need to track it.
 			if ( IsAssociatedProperty && ( propertyList.State == PropertyList.PropertyListState.Abort ) )
 			{
@@ -1292,7 +1291,7 @@ namespace Simias.Storage
 						// that the new state is modify.
 						//
 						// Delete: Set the current state to delete.  Set the current value to oldValue, if not
-						// null.  Set current flags to oldFlags, if they have been modified.  Set oldValue 
+						// null.  Set current flags to oldFlags, if they have been modified.  Set oldValue
 						// to null.  Set modifiedFlags to false.
 						// Leave in the mergeList.
 						//
@@ -1342,10 +1341,10 @@ namespace Simias.Storage
 						//
 						// Add: Set the current state to add and add the new property to the mergeList.
 						//
-						// Delete: Set the current state to delete and add the deleted property to the 
+						// Delete: Set the current state to delete and add the deleted property to the
 						// mergeList.
 						//
-						// Modify: Set the current state to modify. Save the oldValue if not null. Save 
+						// Modify: Set the current state to modify. Save the oldValue if not null. Save
 						// the old flags if modified. Add the modified property to the mergeList.
 					case Operation.None:
 						// This is a normal node property.
@@ -2160,7 +2159,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		///	Converts the property value of this instance to its equivalent string using the specified 
+		///	Converts the property value of this instance to its equivalent string using the specified
 		///	culture-specific format information.
 		/// </summary>
 		/// <param name="ifProvider">An IFormatProvider that supplies culture-specific formatting information.</param>
@@ -2289,7 +2288,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Converts the numeric value of this instance to its equivalent string using the specified 
+		/// Converts the numeric value of this instance to its equivalent string using the specified
 		/// format and culture-specific format information.
 		/// </summary>
 		/// <param name="format">A string that specifies the return format.</param>

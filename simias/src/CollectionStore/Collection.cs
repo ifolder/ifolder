@@ -84,13 +84,13 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Gets or sets whether this collection can be shared.  By default, a collection is always shareable.
-		/// The Collection Store cannot prevent an application from sharing a collection even though this 
-		/// property is set non-shareable.  This property is only meant as a common means to indicate 
+		/// The Collection Store cannot prevent an application from sharing a collection even though this
+		/// property is set non-shareable.  This property is only meant as a common means to indicate
 		/// shareability and must be enforced at a higher layer.
 		/// </summary>
 		public bool Shareable
 		{
-			get 
+			get
 			{
 				Property p = properties.FindSingleValue( Property.Shareable );
 				bool shareable = ( p != null ) ? ( bool )p.Value : true;
@@ -109,14 +109,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always 
-		/// synchronizeable. The Collection Store cannot prevent an application from synchronizing a 
-		/// collection even though this property is set not synchronizable.  This property is only meant 
+		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always
+		/// synchronizeable. The Collection Store cannot prevent an application from synchronizing a
+		/// collection even though this property is set not synchronizable.  This property is only meant
 		/// as a common means to indicate synchronizability and must be enforced at a higher layer.
 		/// </summary>
 		public bool Synchronizable
 		{
-			get 
+			get
 			{
 				Property p = properties.FindSingleValue( Property.Syncable );
 				return ( p != null ) ? ( bool )p.Value : true;
@@ -132,7 +132,7 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
-		public Collection( Store storeObject, string collectionName ) : 
+		public Collection( Store storeObject, string collectionName ) :
 			this ( storeObject, collectionName, Guid.NewGuid().ToString() )
 		{
 		}
@@ -143,7 +143,7 @@ namespace Simias.Storage
 		/// <param name="storeObject">Store object that this collection belongs to.</param>
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
 		/// <param name="collectionID">The globally unique identifier for this Collection object.</param>
-		public Collection( Store storeObject, string collectionName, string collectionID ) : 
+		public Collection( Store storeObject, string collectionName, string collectionID ) :
 			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.DomainName )
 		{
 		}
@@ -157,7 +157,6 @@ namespace Simias.Storage
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="ownerGuid">The identifier for the owner of this object.</param>
 		/// <param name="domainName">The domain that this object is stored in.</param>
-		/// and directories belonging to the collection are rooted.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID, string ownerGuid, string domainName ) :
 			base( collectionName, collectionID, "Collection" )
 		{
@@ -255,7 +254,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Increments the local incarnation property.
-		/// 
+		///
 		/// NOTE: The database must be locked before making this call and must continue to be held until
 		/// this node has been committed to disk.
 		/// </summary>
@@ -312,7 +311,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Merges all property changes on the current node with the current object in the database.
-		/// 
+		///
 		/// Note: The database lock must be acquired before making this call.
 		/// </summary>
 		/// <param name="node">Existing node that may or may not contain changed properties.</param>
@@ -324,7 +323,7 @@ namespace Simias.Storage
 			Node mergedNode = GetNodeByID( node.ID );
 			if ( mergedNode != null )
 			{
-				// If this node is not a tombstone and the merged node is, then the node has been deleted 
+				// If this node is not a tombstone and the merged node is, then the node has been deleted
 				// and delete wins.
 				if ( !IsTombstone( node ) && IsTombstone( mergedNode ) )
 				{
@@ -332,7 +331,7 @@ namespace Simias.Storage
 				}
 				else if ( IsTombstone( node ) && !IsTombstone( mergedNode ) )
 				{
-					// If this node is a tombstone and the merged node is not, then delete wins again and 
+					// If this node is a tombstone and the merged node is not, then delete wins again and
 					// the merged node will be turned into a tombstone.
 					mergedNode = node;
 				}
@@ -355,7 +354,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Commits all of the changes made to the Collection object to persistent storage.
-		/// After a node has been committed, it will be updated to reflect any new changes that 
+		/// After a node has been committed, it will be updated to reflect any new changes that
 		/// have occurred if it had to be merged with the current Collection object in the database.
 		/// </summary>
 		/// <param name="nodeList">Array of Node objects to commit to the database.</param>
@@ -549,7 +548,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Changes the owner of the collection and assigns the specified right to the old owner.
-		/// Only the current owner can set new ownership on the collection. 
+		/// Only the current owner can set new ownership on the collection.
 		/// </summary>
 		/// <param name="newOwnerId">User identifier of the new owner.</param>
 		/// <param name="oldOwnerRights">Rights to give the old owner of the collection.</param>
@@ -560,7 +559,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Commits all of the changes made to the Collection object to persistent storage.
-		/// After a Node object has been committed, it will be updated to reflect any new changes that 
+		/// After a Node object has been committed, it will be updated to reflect any new changes that
 		/// have occurred if it had to be merged with the current Node object in the database.
 		/// </summary>
 		public void Commit()
@@ -570,7 +569,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Commits all of the changes made to the Collection object to persistent storage.
-		/// After a node has been committed, it will be updated to reflect any new changes that 
+		/// After a node has been committed, it will be updated to reflect any new changes that
 		/// have occurred if it had to be merged with the current Collection object in the database.
 		/// </summary>
 		/// <param name="node">Node object to commit to the database.</param>
@@ -582,7 +581,7 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Commits all of the changes made to the Collection object to persistent storage.
-		/// After a node has been committed, it will be updated to reflect any new changes that 
+		/// After a node has been committed, it will be updated to reflect any new changes that
 		/// have occurred if it had to be merged with the current Collection object in the database.
 		/// </summary>
 		/// <param name="nodeList">An array of Node objects to commit to the database.</param>
@@ -693,11 +692,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Deletes the specified collection from the persistent store.  There is no access check on delete of a
 		/// collection.
-		/// 
+		///
 		/// Note: DirNode objects cannot be deleted with this method because they have special containment
 		/// rules which must be followed.  Use DirNode.Delete() instead.
 		/// </summary>
-		/// <param name="deep">Indicates whether to all children nodes of this node are deleted also.</param>
+		/// <param name="node">Node object to delete.</param>
 		/// <returns>The Node object that has been deleted.</returns>
 		public Node Delete( Node node )
 		{
@@ -706,14 +705,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Deletes the specified collection from the persistent store.  There is no access check on delete 
+		/// Deletes the specified collection from the persistent store.  There is no access check on delete
 		/// of a collection.
-		/// 
+		///
 		/// Note: DirNode objects cannot be deleted with this method because they have special containment
 		/// rules which must be followed.  Use DirNode.Delete() instead.
 		/// </summary>
 		/// <param name="node">Node to delete.</param>
-		/// <param name="relationshipName">If not null, indicates to delete all Node objects that have a 
+		/// <param name="relationshipName">If not null, indicates to delete all Node objects that have a
 		/// relationship to the specified Node object.</param>
 		/// <returns>An array of Nodes that have been deleted.</returns>
 		public Node[] Delete( Node node, string relationshipName )
@@ -797,7 +796,7 @@ namespace Simias.Storage
 		/// Get all Node objects that have the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the Node object(s).</param>
-		/// <returns>An ICSList object containing ShallowNode objects that represent the Node object(s) 
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Node object(s)
 		/// that that have the specified name.</returns>
 		public ICSList GetNodesByName( string name )
 		{
@@ -838,7 +837,7 @@ namespace Simias.Storage
 		/// Gets the first Node object that matches the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name for the Node object.</param>
-		/// <returns>The first Node object that matches the specified name.  A null is returned if no 
+		/// <returns>The first Node object that matches the specified name.  A null is returned if no
 		/// matching Node object is found.</returns>
 		public Node GetSingleNodeByName( string name )
 		{
@@ -857,7 +856,7 @@ namespace Simias.Storage
 		///  Gets the first Node object that corresponds to the specified type.
 		/// </summary>
 		/// <param name="typeString">String that contains the type of the node.</param>
-		/// <returns>The first Node object that corresponds to the specified node path name.  A null 
+		/// <returns>The first Node object that corresponds to the specified node path name.  A null
 		/// is returned if no matching Node object is found.</returns>
 		public Node GetSingleNodeByType( string typeString )
 		{
@@ -896,7 +895,7 @@ namespace Simias.Storage
 				// Instantiate the Collection object to be imported.
 				Collection importCollection = new Collection( store, node );
 
-				// See if the user has the right to update the access control list.  If he doesn't, 
+				// See if the user has the right to update the access control list.  If he doesn't,
 				// use the ACL in the current collection.
 				if ( !IsAccessAllowed( Access.Rights.Admin ) )
 				{
@@ -934,7 +933,7 @@ namespace Simias.Storage
 			}
 
 			// Get the local properties from the old node, if it exists, and add them to the new node.
-			Node oldNode = GetNodeByID( node.ID ); 
+			Node oldNode = GetNodeByID( node.ID );
 			if ( oldNode != null )
 			{
 				// Get the local properties.
@@ -1446,7 +1445,7 @@ namespace Simias.Storage
 			/// Advances the enumerator to the next element of the collection.
 			/// </summary>
 			/// <returns>
-			/// true if the enumerator was successfully advanced to the next element; 
+			/// true if the enumerator was successfully advanced to the next element;
 			/// false if the enumerator has passed the end of the collection.
 			/// </returns>
 			public bool MoveNext()
@@ -1535,8 +1534,8 @@ namespace Simias.Storage
 			/// If disposing equals true, the method has been called directly
 			/// or indirectly by a user's code. Managed and unmanaged resources
 			/// can be disposed.
-			/// If disposing equals false, the method has been called by the 
-			/// runtime from inside the finalizer and you should not reference 
+			/// If disposing equals false, the method has been called by the
+			/// runtime from inside the finalizer and you should not reference
 			/// other objects. Only unmanaged resources can be disposed.
 			/// </summary>
 			/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
@@ -1566,7 +1565,7 @@ namespace Simias.Storage
 			/// It gives your base class the opportunity to finalize.
 			/// Do not provide destructors in types derived from this class.
 			/// </summary>
-			~NodeEnumerator()      
+			~NodeEnumerator()
 			{
 				Dispose( false );
 			}
