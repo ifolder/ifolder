@@ -104,6 +104,11 @@
                     Project = "{695672D2-F178-4442-8283-0CB243FB140A}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "SyncLogicLite"
+                    Project = "{B070EE49-1EFB-442C-BBDD-EDB78FF28683}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

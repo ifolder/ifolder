@@ -26,6 +26,7 @@ using System.Threading;
 using System.Net;
 
 using Simias;
+using Simias.Storage;
 using Simias.Sync;
 
 namespace Simias.Sync.Tools
@@ -104,7 +105,7 @@ namespace Simias.Sync.Tools
 
 					start = Environment.TickCount;
 
-					info = SyncPing.PingStore(new SyncStore(), host);
+					info = SyncPing.PingStore(new Store(new Configuration()), host);
 				}
 				catch(Exception e)
 				{

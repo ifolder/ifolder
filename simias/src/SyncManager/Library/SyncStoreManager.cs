@@ -52,15 +52,15 @@ namespace Simias.Sync
 			// store
 			store = new Store(syncManager.Config);
 
+			// collection managers
+			collectionManagers = new Hashtable();
+
 			// events
 			subscriber = new EventSubscriber(syncManager.Config);
 			subscriber.Enabled = false;
 			subscriber.NodeTypeFilter = "Collection";
 			subscriber.NodeCreated += new NodeEventHandler(OnCollectionCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnCollectionDeleted);
-
-			// collection managers
-			collectionManagers = new Hashtable();
 		}
 
 		public void Start()
@@ -113,11 +113,14 @@ namespace Simias.Sync
 				{
 					int port = syncManager.MasterUri.Port;
 
-					MyTrace.WriteLine("Stopping Store Service: {0}", service.ServiceUrl);
+					if (service != null)
+                    {
+                        MyTrace.WriteLine("Stopping Store Service: {0}", service.ServiceUrl);
+                    }
 
 					// stop collection managers
 					subscriber.Enabled = false;
-					foreach(string id in collectionManagers.Keys)
+					foreach(string id in new ArrayList(collectionManagers.Keys))
 					{
 						RemoveCollectionManager(id);
 					}
@@ -170,7 +173,7 @@ namespace Simias.Sync
 		{
 			SyncCollectionManager manager;
 			
-			lock(this)
+			lock(collectionManagers.SyncRoot)
 			{
 				if (!collectionManagers.Contains(id))
 				{
@@ -196,9 +199,9 @@ namespace Simias.Sync
 		{
 			SyncCollectionManager manager;
 			
-			lock(this)
+			lock(collectionManagers.SyncRoot)
 			{
-				if (!collectionManagers.Contains(id))
+				if (collectionManagers.Contains(id))
 				{
 					MyTrace.WriteLine("Removing Collection Manager: {0}", id);
 

@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SyncLogicLite_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncCollectionServiceLite.cs $(srcdir)/Library/SyncCollectionWorkerLite.cs $(srcdir)/Library/SyncLogicFactoryLite.cs $(srcdir)/Library/SyncPacket.cs $(srcdir)/Library/SyncPacketData.cs $(srcdir)/Library/SyncPacketHeader.cs
+SyncLogicLite_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncCollectionServiceLite.cs $(srcdir)/Library/SyncCollectionWorkerLite.cs $(srcdir)/Library/SyncLogicFactoryLite.cs $(srcdir)/Library/SyncPacket.cs $(srcdir)/Library/SyncNodeInfo.cs
 SyncLogicLite_CSFILES_CSC := $(subst /,$(SEP),$(SyncLogicLite_CSFILES))
 SyncLogicLite_INCLUDES =
 SyncLogicLite_RESOURCES =

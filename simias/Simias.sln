@@ -184,6 +184,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent", "src\Agent\Library\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncLogicLite", "src\SyncLogicLite\Library\SyncLogicLite.csproj", "{B070EE49-1EFB-442C-BBDD-EDB78FF28683}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncLogicLiteTests", "src\SyncLogicLite\Tests\SyncLogicLiteTests.csproj", "{B09EB2F9-1809-4777-8E7E-17E74FBDA908}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -358,6 +366,14 @@ Global
 		{668BC5DC-F41F-4F02-A54F-278B14CDF775}.Debug.Build.0 = Debug|.NET
 		{668BC5DC-F41F-4F02-A54F-278B14CDF775}.Release.ActiveCfg = Release|.NET
 		{668BC5DC-F41F-4F02-A54F-278B14CDF775}.Release.Build.0 = Release|.NET
+		{B070EE49-1EFB-442C-BBDD-EDB78FF28683}.Debug.ActiveCfg = Debug|.NET
+		{B070EE49-1EFB-442C-BBDD-EDB78FF28683}.Debug.Build.0 = Debug|.NET
+		{B070EE49-1EFB-442C-BBDD-EDB78FF28683}.Release.ActiveCfg = Release|.NET
+		{B070EE49-1EFB-442C-BBDD-EDB78FF28683}.Release.Build.0 = Release|.NET
+		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Debug.ActiveCfg = Debug|.NET
+		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Debug.Build.0 = Debug|.NET
+		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Release.ActiveCfg = Release|.NET
+		{B09EB2F9-1809-4777-8E7E-17E74FBDA908}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

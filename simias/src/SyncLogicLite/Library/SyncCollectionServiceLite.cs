@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Collections;
 
 using Simias.Storage;
 
@@ -42,9 +43,18 @@ namespace Simias.Sync
 			this.collection = collection;
 		}
 
-		public SyncNodeInfo[] GetNodeInfoArray()
+		public SyncNodeInfo[] GetNodes()
 		{
-			return collection.GetNodeInfoArray();
+			ArrayList list = new ArrayList();
+
+			foreach(ShallowNode sn in collection)
+			{
+				Node n = new Node(collection, sn);
+
+				list.Add(new SyncNodeInfo(n));
+			}
+
+			return (SyncNodeInfo[])list.ToArray(typeof(SyncNodeInfo));
 		}
 
 		public SyncPacket GetSyncPacket(string id)
@@ -53,7 +63,7 @@ namespace Simias.Sync
 
 			try
 			{
-				SyncNode node = collection.GetNode(id);
+				Node node = collection.GetNodeByID(id);
 
 				packet = new SyncPacket(node);
 			}
@@ -66,18 +76,117 @@ namespace Simias.Sync
 			return packet;
 		}
 
-		public ulong CommitSyncPacket(SyncPacket packet)
+		public ulong Commit(SyncPacket packet)
 		{
-			return CommitSyncPacket(packet, 0);
+			return Commit(packet, 0);
 		}
 
-		public ulong CommitSyncPacket(SyncPacket packet, ulong masterIncarnation)
+		public ulong Commit(SyncPacket packet, ulong incarnation)
 		{
 			ulong result = 0;
 
 			try
 			{
-				result = SyncPacket.Commit(packet, collection, masterIncarnation);
+				result = Commit(packet, collection, incarnation);
+			}
+			catch(Exception e)
+			{
+				// ignore ?
+				MyTrace.WriteLine(e);
+			}
+
+			return result;
+		}
+
+		private ulong Commit(SyncPacket packet, SyncCollection collection, ulong incarnation)
+		{
+			Node node = packet.SyncNode;
+			string path = packet.SyncPath;
+			FileStream stream = packet.SyncStream;
+			
+			byte[] buffer = new byte[1024 * 32];
+			ulong result = 0;
+
+			try
+			{
+				MyTrace.WriteLine("Node Download: {0}", node.Name);
+
+				int start = Environment.TickCount;
+
+				collection.ImportNode(node);
+
+				// directory node
+				if (node.GetType().IsSubclassOf(typeof(DirNode)) && path != null)
+				{
+					string fullPath = Path.Combine(collection.RootPath, path);
+
+					if (!Directory.Exists(fullPath))
+					{
+						Directory.CreateDirectory(fullPath);
+					}
+				}
+				
+				// file node
+				else if ((node.GetType().IsSubclassOf(typeof(BaseFileNode)))
+					&& path != null && stream != null)
+				{
+					string fullPath = Path.Combine(collection.RootPath, path);
+
+					string tempFileName = Path.GetTempFileName();
+					
+					// validate that the temp directory exists
+					if (!Directory.Exists(Path.GetDirectoryName(tempFileName)))
+					{
+						Directory.CreateDirectory(Path.GetDirectoryName(tempFileName));
+					}
+
+					FileStream localStream = File.OpenWrite(tempFileName);
+
+					int length = 0;
+					
+					MyTrace.WriteLine("Starting File Download: {0}", path);
+					
+					int streamStart = Environment.TickCount;
+
+					while((length = stream.Read(buffer, 0, buffer.Length)) > 0)
+					{
+						localStream.Write(buffer, 0, length);	
+					}
+
+					stream.Close();
+					localStream.Close();
+
+					int streamStop = Environment.TickCount;
+
+					MyTrace.WriteLine("Completed File Download: {0} ({1} ms)", path, (streamStop - streamStart));
+					
+					// validate that the full path directory exists
+					if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+					{
+						Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+					}
+
+					// TODO: needs to be atomic?
+					if (File.Exists(fullPath)) File.Delete(fullPath);
+
+					File.Move(tempFileName, fullPath);
+				}
+
+				// update incarnation
+				if (incarnation != 0)
+				{
+					node.IncarnationUpdate = incarnation;
+				}
+
+				// commit node
+				collection.Commit();
+
+				int stop = Environment.TickCount;
+
+				MyTrace.WriteLine("Completed Node Download: {0} ({1}.{2}) [{3} ms]", path,
+					node.MasterIncarnation, node.LocalIncarnation, (stop-start));
+
+				result = node.LocalIncarnation;
 			}
 			catch(Exception e)
 			{
@@ -90,11 +199,11 @@ namespace Simias.Sync
 
 		public void DeleteNode(string id)
 		{
-			SyncNode node = collection.GetNode(id);
+			Node node = collection.GetNodeByID(id);
 
-			MyTrace.WriteLine("Deleting Node: {0} ({1}.{2})", node.NodePath, node.MasterIncarnation, node.LocalIncarnation);
+			MyTrace.WriteLine("Deleting Node: {0}", node.Name);
 
-			node.Delete();
+			collection.Delete(node);
 		}
 	}
 }

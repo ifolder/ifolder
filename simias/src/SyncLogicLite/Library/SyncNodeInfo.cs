@@ -28,42 +28,46 @@ using Simias.Storage;
 namespace Simias.Sync
 {
 	/// <summary>
-	/// Sync Packet Header
+	/// Sync Node Info
 	/// </summary>
 	[Serializable]
-	public class SyncPacketHeader
+	public class SyncNodeInfo
 	{
-		string nodeID;
-		string nodePath;
-		string nodeXml;
-		SyncNodeStreamInfo[] streams;
+		private string id;
+		private string name;
+		private ulong masterIncarnation;
+		private ulong localIncarnation;
 
-		public SyncPacketHeader(string nodeID, string nodePath, string nodeXml, SyncNodeStreamInfo[] streams)
+		public SyncNodeInfo(Node node)
 		{
-			this.nodeID = nodeID;
-			this.nodePath = nodePath;
-			this.nodeXml = nodeXml;
-			this.streams = streams;
+			id = node.ID;
+			name = node.Name;
+			localIncarnation = node.LocalIncarnation;
+			masterIncarnation = node.MasterIncarnation;
 		}
 
-		public string NodeID
+		#region Properties
+		
+		public string ID
 		{
-			get { return nodeID; }
+			get { return id; }
+		}
+
+		public string Name
+		{
+			get { return name; }
+		}
+
+		public ulong LocalIncarnation
+		{
+			get { return localIncarnation; }
+		}
+
+		public ulong MasterIncarnation
+		{
+			get { return masterIncarnation; }
 		}
 		
-		public string NodePath
-		{
-			get { return nodePath; }
-		}
-		
-		public string NodeXml
-		{
-			get { return nodeXml; }
-		}
-		
-		public SyncNodeStreamInfo[] Streams
-		{
-			get { return streams; }
-		}
+		#endregion
 	}
 }

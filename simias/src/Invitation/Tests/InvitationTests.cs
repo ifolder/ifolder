@@ -147,7 +147,7 @@ namespace Simias.Invite.Tests
 		{
 			// user
 			Invitation invitation = InvitationService.CreateInvitation(collection,
-				collection.LocalStore.CurrentUser);
+				collection.StoreReference.CurrentUserGuid);
 
 			invitation.FromName = "JDoe";
 			// BAD: invitation.FromEmail = "denali@novell.com";
