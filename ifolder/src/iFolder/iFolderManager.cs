@@ -51,12 +51,18 @@ namespace Novell.iFolder
 		private	IEnumerator	storeEnum = null;
 #endregion
 
+
+
+
 #region Constructors
 		internal iFolderManager(Store store)
 		{
 			this.store = store;
 		}
 #endregion
+
+
+
 
 #region Private Methods
 		private static Store GetStore()
@@ -66,20 +72,27 @@ namespace Novell.iFolder
 			return(store);
 		}
 
+
+
 		private static Store GetStore(Uri location)
 		{
 			return Store.Connect(location);
 		}
 #endregion
 
+
+
+
 #region Static Methods
 		/// <summary>
 		/// Authenticates the current user to a persistent store at a specified
-		/// location and returns an <see cref="iFolderManager"/> that can be used
+		/// location and returns an <see cref="iFolderManager"/> that can be 
+		/// used
 		/// to manipulate iFolders in that store.
 		/// </summary>
 		///	<param name="location">
-		///	<see cref="Uri"/> specifying the location of the persistent store server.
+		///	<see cref="Uri"/> specifying the location of the persistent store 
+		/// server.
 		///	</param>
 		///	<returns>
 		///	An <see cref="iFolderManager"/> that can be used
@@ -100,12 +113,15 @@ namespace Novell.iFolder
 				manager = new iFolderManager(store);
 				if(manager != null)
 				{
-//					iFolderManager.storeUserName = userName;
+					//	iFolderManager.storeUserName = userName;
 				}
 			}
 
 			return(manager);
 		}
+
+
+
 
 		/// <summary>
 		/// Authenticates the current user to the default local store and
@@ -124,7 +140,7 @@ namespace Novell.iFolder
 
 			iFolderManager	manager = null;
 			Store	store;
-//			string	userName = "test";
+			//			string	userName = "test";
 
 			store = iFolderManager.GetStore();
 			if(store != null)
@@ -132,13 +148,16 @@ namespace Novell.iFolder
 				manager = new iFolderManager(store);
 				if(manager != null)
 				{
-//					iFolderManager.storeUserName = userName;
+					//	iFolderManager.storeUserName = userName;
 				}
 			}
 
 			return(manager);
 		}
 #endregion
+
+
+
 
 #region Public Methods
 		/// <summary>
@@ -162,16 +181,20 @@ namespace Novell.iFolder
 			{
 				if(!CanBeiFolder(path))
 					throw new ApplicationException("The path specified is either a parent or a child of an existing iFolder");
-				
+
 				iFolder newiFolder= new iFolder(store);
 				newiFolder.Create(path);
 				return (newiFolder);
 			}
 			catch(Exception e)
 			{
-				throw new ApplicationException("iFolder not created for " + path + " - Reason: " + e.ToString());
+				throw new ApplicationException("iFolder not created for " + 
+						path + " - Reason: " + e.ToString());
 			}
 		}
+
+
+
 
 		/// <summary>
 		/// OBSOLETE: Create an iFolder with a specific friendly name.
@@ -189,26 +212,31 @@ namespace Novell.iFolder
 		/// This overload of CreateiFolder is obsolete. Please do not use it.
 		/// </remarks>
 		[ Obsolete( "This overloaded method is marked for removal. There is no replacement.", false ) ]
-		public iFolder CreateiFolder(string name, string path)
-		{
-			try
+			public iFolder CreateiFolder(string name, string path)
 			{
-				iFolder newiFolder = new iFolder(store);
-				newiFolder.Create(name, path);
-				return(newiFolder);
+				try
+				{
+					iFolder newiFolder = new iFolder(store);
+					newiFolder.Create(name, path);
+					return(newiFolder);
+				}
+				catch(Exception e)
+				{
+					throw new ApplicationException("iFolder " + name +
+							"not created - Reason: " + e.ToString());
+				}
 			}
-			catch(Exception e)
-			{
-				throw new ApplicationException("iFolder " + name + "not created - Reason: " + e.ToString());
-			}
-		}
+
+
+
 
 		/// <summary>
 		/// OBSOLETE: Deletes an iFolder by rooted path name or by ID.
 		/// </summary>
 		/// <param name="iFolderName">
 		/// The root path of the iFolder or the iFolder ID.
-		/// The iFolder ID can be queried from the object representing the iFolder.
+		/// The iFolder ID can be queried from the object representing the
+		/// iFolder.
 		/// </param>
 		/// <param name="byID">
 		/// Specify <b>true</b> if <paramref name="name"/> is the iFolder ID,
@@ -218,43 +246,49 @@ namespace Novell.iFolder
 		/// This overload of DeleteiFolder is obsolete. Please do not use it.
 		/// </remarks>
 		[ Obsolete( "Please use DeleteiFolderByPath or DeleteiFolderById instead.", false ) ]
-		public void DeleteiFolder(string iFolderName, bool byID)
-		{
-			//Property.Syntax propertyType;
-
-			if (byID)
+			public void DeleteiFolder(string iFolderName, bool byID)
 			{
-				Collection tmpCollection = store.GetCollectionById(iFolderName);
+				//Property.Syntax propertyType;
 
-				if (tmpCollection.Type == iFolder.iFolderType)
+				if (byID)
 				{
-					tmpCollection.Delete(true);
-					return;
-				}
-			}
-			else
-			{
-				//string name= Path.GetFileName(iFolderName);
-				Path.GetFileName(iFolderName);
-				foreach (iFolder ifolder in this)
-				{
-					if (ifolder.LocalPath.CompareTo(iFolderName) == 0)
+					Collection tmpCollection = 
+							store.GetCollectionById(iFolderName);
+
+					if (tmpCollection.Type == iFolder.iFolderType)
 					{
-						ifolder.Delete();
+						tmpCollection.Delete(true);
 						return;
 					}
 				}
+				else
+				{
+					//string name= Path.GetFileName(iFolderName);
+					Path.GetFileName(iFolderName);
+					foreach (iFolder ifolder in this)
+					{
+						if (ifolder.LocalPath.CompareTo(iFolderName) == 0)
+						{
+							ifolder.Delete();
+							return;
+						}
+					}
+				}
+
+				throw new ApplicationException( "iFolder " + iFolderName + 
+						" not found" );
 			}
 
-			throw new ApplicationException( "iFolder " + iFolderName + " not found" );
-		}
+
+
 
 		/// <summary>
 		/// Deletes an iFolder by its ID.
 		/// </summary>
 		/// <param name="id">
 		/// The ID of the iFolder.
-		/// The iFolder ID can be queried from the <see cref="iFolder"/>.</param>
+		/// The iFolder ID can be queried from the <see cref="iFolder"/>.
+		/// </param>
 		public void DeleteiFolderById(string id)
 		{
 			Collection tmpCollection = store.GetCollectionById(id);
@@ -266,8 +300,12 @@ namespace Novell.iFolder
 				return;
 			}
 
-			throw new ApplicationException( "iFolder with ID=" + id + " not found" );
+			throw new ApplicationException( "iFolder with ID=" + id + 
+					" not found" );
 		}
+
+
+
 
 		/// <summary>
 		/// Deletes an iFolder by its local path.
@@ -280,15 +318,20 @@ namespace Novell.iFolder
 			foreach (iFolder ifolder in this)
 			{
 				if (ifolder.LocalPath.Equals(
-					path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar)))
+							path.Replace(Path.AltDirectorySeparatorChar, 
+							Path.DirectorySeparatorChar)))
 				{
 					ifolder.Delete();
 					return;
 				}
 			}
 
-			throw new ApplicationException( "iFolder with LocalPath=" + path + " not found" );
+			throw new ApplicationException( "iFolder with LocalPath=" + 
+					path + " not found" );
 		}
+
+
+
 
 		/// <summary>
 		/// Checks whether a given directory is an iFolder.
@@ -330,6 +373,9 @@ namespace Novell.iFolder
 			return false;
 		}
 
+
+
+
 		/// <summary>
 		/// Get an <see cref="iFolder"/> by ID.
 		/// </summary>
@@ -353,6 +399,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		/// <summary>
 		/// Get an <see cref="iFolder"/> by its local path.
 		/// </summary>
@@ -373,8 +422,8 @@ namespace Novell.iFolder
 				{
 					Uri documentRoot= (Uri)c.Properties.GetSingleProperty(Property.DocumentRoot).Value;
 					if (((Path.DirectorySeparatorChar == Convert.ToChar("\\")) &&
-						(String.Compare(path, documentRoot.LocalPath, true) == 0)) ||
-                        path.Equals(documentRoot.LocalPath))
+								(String.Compare(path, documentRoot.LocalPath, true) == 0)) ||
+							path.Equals(documentRoot.LocalPath))
 					{
 						iFolder ifolder = new iFolder(store);
 						ifolder.Load(store, (string)c.Properties.GetSingleProperty(Property.CollectionID).Value);
@@ -386,6 +435,9 @@ namespace Novell.iFolder
 			throw new ApplicationException("Path is not an iFolder: " + path);
 		}
 
+
+
+
 		/// <summary>
 		/// Dredges the file system starting at the root of the iFolder and
 		/// adds missing directories and files to the iFolder.
@@ -396,8 +448,11 @@ namespace Novell.iFolder
 		public void UpdateiFolder(string id)
 		{
 			iFolder ifolder = GetiFolderById(id);
-			ifolder.AddiFolderFileNodes(ifolder.LocalPath);
+			ifolder.Update();
 		}
+
+
+
 
 		/// <summary>
 		/// Checks whether it is valid to make a given directory an iFolder.
@@ -418,7 +473,8 @@ namespace Novell.iFolder
 			try
 			{
 				// Replace slash/backslash with backslash/slash as needed
-				path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+				path = path.Replace(Path.AltDirectorySeparatorChar, 
+						Path.DirectorySeparatorChar);
 
 				foreach(iFolder ifolder in this)
 				{
@@ -431,9 +487,11 @@ namespace Novell.iFolder
 					// /home/calvin/files
 					// Adding a slash on the end of each will test this
 					// correctly
-					string rootPath = ifolder.LocalPath + Path.DirectorySeparatorChar.ToString();
-					string testPath = path + Path.DirectorySeparatorChar.ToString();
-					
+					string rootPath = ifolder.LocalPath + 
+							Path.DirectorySeparatorChar.ToString();
+					string testPath = path + 
+							Path.DirectorySeparatorChar.ToString();
+
 					// Check if path is within the iFolder
 					if (testPath.StartsWith(rootPath))
 						return false;
@@ -453,6 +511,9 @@ namespace Novell.iFolder
 			return true;
 		}
 
+
+
+
 		/// <summary>
 		/// Checks whether a given path is within an existing iFolder.
 		/// </summary>
@@ -468,7 +529,8 @@ namespace Novell.iFolder
 			try
 			{
 				// Replace slash/backslash with backslash/slash as needed
-				path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+				path = path.Replace(Path.AltDirectorySeparatorChar,
+						Path.DirectorySeparatorChar);
 
 				foreach(iFolder ifolder in this)
 				{
@@ -481,22 +543,13 @@ namespace Novell.iFolder
 					// /home/calvin/files
 					// Adding a slash on the end of each will test this
 					// correctly.
-					string rootPath = ifolder.LocalPath + Path.DirectorySeparatorChar.ToString();
-					string testPath = path + Path.DirectorySeparatorChar.ToString();
+					string rootPath = ifolder.LocalPath +
+							Path.DirectorySeparatorChar.ToString();
+					string testPath = path + 
+							Path.DirectorySeparatorChar.ToString();
 					if (testPath.StartsWith(rootPath))
 					{
 						return true;
-/*						
-						iFolderFile ifolderfile = 
-								ifolder.GetiFolderFileByName(path);
-
-						if (ifolderfile != null)
-						{
-							return true;
-						}
-						break;
-*/
-
 					}
 				}
 			}
@@ -507,6 +560,9 @@ namespace Novell.iFolder
 			}
 			return false;
 		}
+
+
+
 
 		/// <summary>
 		/// Accepts an invitation to share an iFolder.
@@ -530,7 +586,7 @@ namespace Novell.iFolder
 			}
 
 			invitation.RootPath = path;
-			
+
 			AgentFactory.GetInviteAgent().Accept(store, invitation);
 		}
 
@@ -539,10 +595,12 @@ namespace Novell.iFolder
 
 #region IEnumerable
 		/// <summary>
-		/// Returns an <see cref="IEnumerator"/> that iterates over all iFolders in the store.
+		/// Returns an <see cref="IEnumerator"/> that iterates over all
+		/// iFolders in the store.
 		/// </summary>
 		/// <returns>
-		/// An <see cref="IEnumerator"/> that iterates over all iFolders in the store.
+		/// An <see cref="IEnumerator"/> that iterates over all iFolders
+		/// in the store.
 		/// </returns>
 		public IEnumerator GetEnumerator()
 		{
@@ -551,11 +609,16 @@ namespace Novell.iFolder
 			return(this);
 		}
 
+
+
+
 		/// <summary>
 		/// Advances the enumerator to the next iFolder in the store.
 		/// </summary>
 		/// <returns>
-		/// <b>true</b> if the enumerator was successfully advanced to the next iFolder; <b>false</b> if the enumerator has passed the end of the store.
+		/// <b>true</b> if the enumerator was successfully advanced to the
+		/// next iFolder; <b>false</b> if the enumerator has passed the end
+		/// of the store.
 		/// </returns>
 		public bool MoveNext()
 		{
@@ -570,12 +633,13 @@ namespace Novell.iFolder
 				{
 					return (true);
 				}
-
-				//Console.WriteLine("Manager:: Collection {0} is not an address book", tmpCollection.Name);
 			}
 
 			return(false);
 		}
+
+
+
 
 		/// <summary>
 		/// Gets the current iFolder in the store.
@@ -594,15 +658,20 @@ namespace Novell.iFolder
 				Collection currentCollection = (Collection) storeEnum.Current;
 
 				iFolder ifolder =
-					this.GetiFolderById(
-							(string) currentCollection.Properties.GetSingleProperty( Property.CollectionID ).Value );
+					this.GetiFolderById( (string) currentCollection.
+						Properties.GetSingleProperty( Property.CollectionID ).
+						Value );
 				//Console.WriteLine("   Name: {0}", addrBook.Name);
 				return(ifolder);
 			}
 		}
 
+
+
+
 		/// <summary>
-		/// Sets the enumerator to its initial position, which is before the first iFolder in the store.
+		/// Sets the enumerator to its initial position, which is before the
+		/// first iFolder in the store.
 		/// </summary>
 		public void Reset()
 		{

@@ -322,27 +322,27 @@ namespace Novell.iFolder.iFolderCom
 				if (slContact.Added || slContact.Changed)
 				{
 					// Get the rights for this contact.
-					Access.Rights rights;
+					iFolder.Rights rights;
 					switch (lvitem.SubItems[1].Text)
 					{
 						case "Full Control":
 						{
-							rights = Access.Rights.Admin;
+							rights = iFolder.Rights.Admin;
 							break;
 						}
 						case "Read/Write":
 						{
-							rights = Access.Rights.ReadWrite;
+							rights = iFolder.Rights.ReadWrite;
 							break;
 						}
 						case "Read Only":
 						{
-							rights = Access.Rights.ReadOnly;
+							rights = iFolder.Rights.ReadOnly;
 							break;
 						}
 						default:
 						{
-							rights = Access.Rights.Deny;
+							rights = iFolder.Rights.Deny;
 							break;
 						}
 					}
@@ -351,7 +351,7 @@ namespace Novell.iFolder.iFolderCom
 					try
 					{
 						// Set the ACE.
-						ifolder.SetShareAccess(slContact.CurrentContact.ID, rights);
+						ifolder.SetRights(slContact.CurrentContact, rights);
 						accessSet = true;
 
 						// Reset the flags.
@@ -361,7 +361,7 @@ namespace Novell.iFolder.iFolderCom
 					catch (Exception e)
 					{
 						// TODO
-						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Access Rights Failure");
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + e.Message, "Set Rights Failure");
 					}
 
 					if (accessSet)
@@ -369,7 +369,7 @@ namespace Novell.iFolder.iFolderCom
 						try
 						{
 							// Send the invitation.
-							ifolder.SendInvitation(slContact.CurrentContact.ID);
+							ifolder.Invite(slContact.CurrentContact);
 						}
 						catch(Exception e)
 						{
@@ -388,8 +388,7 @@ namespace Novell.iFolder.iFolderCom
 					try
 					{
 						// Remove the ACE and don't send an invitation.
-//						ifolder.Share(slContact.CurrentContact.ID, Access.Rights.Deny, false);
-						ifolder.RemoveUserAccess(slContact.CurrentContact.ID);
+						ifolder.RemoveRights(slContact.CurrentContact);
 
 						// Remove this entry from the list.
 						removedList.Remove(slContact);
@@ -797,27 +796,27 @@ namespace Novell.iFolder.iFolderCom
 				ShareListContact slContact = (ShareListContact)lvitem.Tag;
 
 				// Get the rights for this contact.
-				Access.Rights rights;
+				iFolder.Rights rights;
 				switch (lvitem.SubItems[1].Text)
 				{
 					case "Full Control":
 					{
-						rights = Access.Rights.Admin;
+						rights = iFolder.Rights.Admin;
 						break;
 					}
 					case "Read/Write":
 					{
-						rights = Access.Rights.ReadWrite;
+						rights = iFolder.Rights.ReadWrite;
 						break;
 					}
 					case "Read Only":
 					{
-						rights = Access.Rights.ReadOnly;
+						rights = iFolder.Rights.ReadOnly;
 						break;
 					}
 					default:
 					{
-						rights = Access.Rights.Deny;
+						rights = iFolder.Rights.Deny;
 						break;
 					}
 				}
@@ -830,7 +829,7 @@ namespace Novell.iFolder.iFolderCom
 					try
 					{
 						// Set the ACE.
-						ifolder.SetShareAccess(slContact.CurrentContact.ID, rights);
+						ifolder.SetRights(slContact.CurrentContact, rights);
 						accessSet = true;
 
 						// Reset the listview item since it has been committed.
@@ -840,7 +839,7 @@ namespace Novell.iFolder.iFolderCom
 					catch (Exception ex)
 					{
 						// TODO
-						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Rights Failure");
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
 					}
 
 					if (accessSet)
@@ -848,7 +847,7 @@ namespace Novell.iFolder.iFolderCom
 						try
 						{
 							// Send the invitation.
-							ifolder.SendInvitation(slContact.CurrentContact.ID);
+							ifolder.Invite(slContact.CurrentContact);
 						}
 						catch(Exception ex)
 						{
@@ -862,7 +861,7 @@ namespace Novell.iFolder.iFolderCom
 					// Just send the invitation.
 					try
 					{
-						ifolder.SendInvitation(slContact.CurrentContact.ID);
+						ifolder.Invite(slContact.CurrentContact);
 					}
 					catch(Exception ex)
 					{

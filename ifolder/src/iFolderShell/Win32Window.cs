@@ -58,15 +58,11 @@ namespace Win32Util
 			return win32Window;
 		}
 
-		public static bool ShObjectProperties(string objectName, string pageName)
+		public static bool ShObjectProperties(IntPtr window, int type, string objectName, string pageName)
 		{
-			return SHObjectProperties(IntPtr.Zero, 0x2, objectName, pageName);
+			return SHObjectProperties(window, type, objectName, pageName);
 		}
 
-		public static int GetLastErr()
-		{
-			return GetLastError();
-		}
 
 		[DllImport("user32.dll")]
 		static extern bool BringWindowToTop(IntPtr window);
@@ -75,9 +71,6 @@ namespace Win32Util
 		static extern IntPtr FindWindowWin32(string className, string windowName);
 
 		[DllImport("shell32.dll")]
-		static extern bool SHObjectProperties(IntPtr window, int type, string lpObject, string lpPage);
-
-		[DllImport("kernel32.dll")]
-		static extern int GetLastError();
+		static extern bool SHObjectProperties(IntPtr window, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
 	}
 }
