@@ -48,6 +48,7 @@ namespace Novell.iFolder
 		private Gtk.CheckButton			NotifyUsersButton; 
 		private Gtk.CheckButton			NotifyCollisionsButton; 
 		private Gtk.CheckButton			NotifyiFoldersButton; 
+		private int						lastSyncInterval;
 
 
 		/// <summary>
@@ -197,11 +198,8 @@ namespace Novell.iFolder
 			syncHBox.Spacing = 10;
 			AutoSyncCheckButton = 
 					new CheckButton(Util.GS("Sync to host _every:"));
-			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
 			SyncSpinButton = new SpinButton(0, 99999, 5);
-			SyncSpinButton.ValueChanged += 
-					new EventHandler(OnSyncIntervalChanged);
 
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
 			SyncUnitsLabel = new Label(Util.GS("seconds"));
@@ -244,9 +242,19 @@ namespace Novell.iFolder
 			else
 				NotifyiFoldersButton.Active = false;
 
-
-//			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
-			SyncSpinButton.Value = 0;
+			try
+			{
+				lastSyncInterval = ifws.GetDefaultSyncInterval();
+				if(lastSyncInterval == -1)
+					SyncSpinButton.Value = 0;
+				else
+					SyncSpinButton.Value = lastSyncInterval;
+			}
+			catch(Exception e)
+			{
+				lastSyncInterval = -1;
+				SyncSpinButton.Value = 0;
+			}
 
 			if(SyncSpinButton.Value == 0)
 			{
@@ -261,17 +269,9 @@ namespace Novell.iFolder
 				SyncUnitsLabel.Sensitive = true;
 			}
 
-			if(AutoSyncCheckButton.Active == true)
-			{
-				SyncSpinButton.Sensitive = true;
-				SyncUnitsLabel.Sensitive = true;
-			}
-			else
-			{
-				SyncSpinButton.Sensitive = false;
-				SyncUnitsLabel.Sensitive = false;
-			}
-
+			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
+			SyncSpinButton.ValueChanged += 
+					new EventHandler(OnSyncIntervalChanged);
 		}
 
 
@@ -327,29 +327,13 @@ namespace Novell.iFolder
 			{
 				SyncSpinButton.Sensitive = true;
 				SyncUnitsLabel.Sensitive = true;
+				SyncSpinButton.Value = 60;
 			}
 			else
 			{
 				SyncSpinButton.Sensitive = false;
 				SyncUnitsLabel.Sensitive = false;
 				SyncSpinButton.Value = 0;
-
-/*				try
-				{
-					ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
-					ifws.SetDefaultSyncInterval(
-									ifSettings.DefaultSyncInterval);
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													this, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					return;
-				}
-*/
 			}
 		}
 
@@ -358,27 +342,27 @@ namespace Novell.iFolder
 
 		private void OnSyncIntervalChanged(object o, EventArgs args)
 		{
-/*			if(SyncSpinButton.Value != ifSettings.DefaultSyncInterval)
+			if(SyncSpinButton.Value != lastSyncInterval)
 			{
 				try
 				{
-					ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
-					ifws.SetDefaultSyncInterval(
-										ifSettings.DefaultSyncInterval);
+					lastSyncInterval = (int)SyncSpinButton.Value;
+					if(lastSyncInterval == 0)
+						ifws.SetDefaultSyncInterval(-1);
+					else
+						ifws.SetDefaultSyncInterval(lastSyncInterval);
 				}
 				catch(Exception e)
 				{
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														this, e);
+														topLevelWindow, e);
 					ied.Run();
 					ied.Hide();
 					ied.Destroy();
 					return;
 				}
 			}
-*/
+
 		}
-
-
 	}
 }
