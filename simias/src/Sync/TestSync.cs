@@ -43,12 +43,17 @@ public class SyncTests: Assertion
 	const int serverPort = 1100;
 	const string folderName = "testFolder";
 	const string invitationFile = "SyncTestInvitation.ifi";
-	const string scpCmd = "/usr/bin/scp";
-	const string sshCmd = "/usr/bin/ssh";
+	const string scpCmd = "scp.exe";
+	const string sshCmd = "ssh.exe";
 	const string monoCmd = "/usr/bin/mono";
-	const bool useTCP = true;
+	const string monoSyncCmd = "--debug SyncCmd.exe";
+	const bool useTCP = false;
+	const string relClientDir = "SyncTestClientData";
+	const string remoteBinDir = "$IFOLDER_BIN";
+	//const string remoteBinDir = "ifolder/bin";
+	//const string localBinDir = "/cygdrive/c/ifbin/bin";
 	static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
-	static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
+	static readonly string clientDir = Path.GetFullPath(relClientDir);
 	static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	static readonly string serverFolder = Path.Combine(serverDir, folderName);
 
@@ -72,7 +77,8 @@ public class SyncTests: Assertion
 	bool RemoteRun(string cmdLine)
 	{
 		Assert(clientAddress != null);
-		int err = Run(sshCmd, String.Format("{0} {1}", clientAddress, cmdLine));
+		int err = Run(sshCmd, String.Format("{0} 'cd {1}; {2}'",
+				clientAddress, remoteBinDir, cmdLine));
 		if (err != 0)
 			Console.WriteLine("remote command execution failed, error {0}", err);
 		return err == 0;
@@ -89,11 +95,28 @@ public class SyncTests: Assertion
 	bool RemoteCopy(string path, string target, bool toRemoteHost)
 	{
 		Assert(clientAddress != null);
-		int err = Run(scpCmd, String.Format(toRemoteHost?
-				"-p -r {1}/{2} {0}:{1}": "-p -r {0}:{1}/{2} {1}",
-				clientAddress, SSHPath(path), SSHPath(target)));
+
+		//Console.WriteLine("run pwd start");
+		//Run("pwd", "");
+		//Console.WriteLine("run pwd end");
+
+		//Console.WriteLine("run ls " + path + " start");
+		//Run("ls", path);
+		//Console.WriteLine("run ls end");
+
+		//Console.WriteLine("run cmd start");
+		//Run("cmd", "");
+		//Console.WriteLine("run cmd end");
+
+		//Console.WriteLine("run bash start");
+		//Run("bash", "");
+		//Console.WriteLine("run bash end");
+		
+		string opts = String.Format(toRemoteHost? "-p -r {1}/{2} {0}:{3}/{1}": "-p -r {0}:{3}/{1}/{2} {1}",
+				clientAddress, SSHPath(path), SSHPath(target), remoteBinDir);
+		int err = Run(scpCmd, opts);
 		if (err != 0)
-			Console.WriteLine("remote file copy failed, error {0}", err);
+			Console.WriteLine("'{0} {1}' failed, error {2}", scpCmd, opts, err);
 		return err == 0;
 	}
 
@@ -106,17 +129,17 @@ public class SyncTests: Assertion
 
 		// bring up a server object within this process
 		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
-		string syncCmdLine = String.Format("-s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
 		bool ok = false;
 
 		if (clientAddress == null)
 		{
 			// run client code as local child process
 			int err;
+			string syncCmdLine = String.Format("-s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
 
 			//TODO: very gross check to determine if we are on mono, but what to do?
 			if (Path.DirectorySeparatorChar == '/')
-				err = Run(monoCmd, "--debug SyncCmd.exe " + syncCmdLine);
+				err = Run(monoCmd, monoSyncCmd + syncCmdLine);
 			else
 				err = Run("SyncCmd.exe", syncCmdLine);
 			if (err != 0)
@@ -130,12 +153,15 @@ public class SyncTests: Assertion
 			 * Since SSH servers don't run on windows, assume the remote client
 			 * will be on mono.
 			 */
-			ok = RemoteCopy(clientDir, folderName, true)
-					&& RemoteRun(String.Format("{0} --debug SyncCmd.exe {1}", monoCmd, syncCmdLine))
-					&& RemoteCopy(clientDir, folderName, false);
+			ok = RemoteCopy(relClientDir, folderName, true)
+					&& RemoteRun(String.Format("{0} {4} -s {1} {2} sync {1}/{3}",
+							monoCmd, relClientDir, useTCP? "": "-h", folderName, monoSyncCmd))
+					&& RemoteCopy(relClientDir, folderName, false);
 		}
 
 		cmdServer.Stop();
+		cmdServer = null;
+		GC.Collect();
 		return ok;
 	}
 
@@ -144,7 +170,6 @@ public class SyncTests: Assertion
 	{
 		Directory.Delete(serverDir, true);
 		Directory.Delete(clientDir, true);
-		File.Delete(invitationFile);
 	}
 
 	//---------------------------------------------------------------------------
@@ -167,8 +192,8 @@ public class SyncTests: Assertion
 				DeleteFileData();
 			}
 
-			Directory.CreateDirectory(clientDir);
 			Directory.CreateDirectory(serverFolder);
+			Directory.CreateDirectory(clientFolder);
 			Log.Spew("Init: created store, folders and files");
 		}
 		catch (System.Exception e)
@@ -190,7 +215,7 @@ public class SyncTests: Assertion
 	{
 		Log.Spew("Creating collection and invitation");
 		FileInviter fi = new FileInviter(new Uri(serverDir));
-		return fi.Invite(null, new Uri(serverFolder), host, serverPort, invitationFile);
+		return fi.Invite(null, new Uri(serverFolder), host, serverPort, Path.Combine(clientDir, invitationFile));
 	}
 
 	//---------------------------------------------------------------------------
@@ -202,7 +227,7 @@ public class SyncTests: Assertion
 		if (clientAddress == null)
 		{
 			FileInviter fi = new FileInviter(new Uri(clientDir));
-			return fi.Accept(clientDir, invitationFile);
+			return fi.Accept(clientDir, Path.Combine(clientDir, invitationFile));
 		}
 
 		/* run client code on remote machine. requires ssh client here and
@@ -210,19 +235,22 @@ public class SyncTests: Assertion
 		 * Since SSH servers don't run on windows, assume the remote client
 		 * will be on mono.
 		 */
-		if (!RemoteCopy(clientDir, invitationFile, true))
+		RemoteRun(String.Format("rm -rf {0}", relClientDir));
+		RemoteRun(String.Format("mkdir {0}", relClientDir));
+
+		if (!RemoteCopy(relClientDir, invitationFile, true))
 			return false;
 
-		string cmdLine = String.Format("{0} --debug SyncCmd.exe -s {1} {2} accept {1}/{3} {1}",
-				monoCmd, clientDir, useTCP? "": "-h", clientDir, invitationFile);
+		string cmdLine = String.Format("{0} {4} -s {1} {2} accept {1}/{3} {1}",
+				monoCmd, relClientDir, useTCP? "": "-h", invitationFile, monoSyncCmd);
 
 		return RemoteRun(cmdLine);
 	}
 
 	//---------------------------------------------------------------------------
-	[Test] public void NUFirstLocalSync() { Assert(FirstLocalSync()); }
+	[Test] public void NUFirstSync() { Assert(FirstSync()); }
 
-	public bool FirstLocalSync()
+	public bool FirstSync()
 	{
 		string dir1 = Path.Combine(serverFolder, "subdir1");
 		string dir2 = Path.Combine(serverFolder, "sub dir with spaces");
@@ -370,7 +398,7 @@ public class SyncTests: Assertion
 		Init();
 		Console.WriteLine("invite: {0}", Invite());
 		Console.WriteLine("accept: {0}", Accept());
-		Console.WriteLine("firstLocalSync: {0}", FirstLocalSync());
+		Console.WriteLine("firstSync: {0}", FirstSync());
 		Console.WriteLine("simpleAdds: {0}", SimpleAdds());
 		Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
 		Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());

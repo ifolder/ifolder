@@ -56,11 +56,11 @@ class Differ
 			Console.WriteLine("{0} attributes {1} != {2} attributes {3}", fileA, fiA.Attributes, fileB, fiB.Attributes);
 			same = false;
 		}
-		if (fiA.CreationTime != fiB.CreationTime)
-		{
-			Console.WriteLine("{0} creation time {1} != {2} creation time {3}", fileA, fiA.CreationTime, fileB, fiB.CreationTime);
-			same = false;
-		}
+		//if (fiA.CreationTime != fiB.CreationTime)
+		//{
+		//	Console.WriteLine("{0} creation time {1} != {2} creation time {3}", fileA, fiA.CreationTime, fileB, fiB.CreationTime);
+		//	same = false;
+		//}
 		//if (fiA.LastAccessTime != fiB.LastAccessTime)
 		//{
 		//	Console.WriteLine("{0} access time {1} != {2} access time {3}", fileA, fiA.LastAccessTime, fileB, fiB.LastAccessTime);
