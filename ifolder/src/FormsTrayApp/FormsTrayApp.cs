@@ -945,8 +945,10 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				// Only show iFolder sync events.
-				if (ifWebService.GetiFolder(syncEventArgs.ID) != null)
+				// Only show iFolder sync events.  Or, if the timer is running and it is a StopSync
+				// event ... let it go through (this will happen if the user is removed from the iFolder).
+				if ((ifWebService.GetiFolder(syncEventArgs.ID) != null) ||
+					(syncAnimateTimer.Enabled && syncEventArgs.Action.Equals(Action.StopSync)))
 				{
 					string message = null;
 					switch (syncEventArgs.Action)
