@@ -1,0 +1,16 @@
+<Combine fileversion="1.0" name="mDnsResponderApi" description="">
+  <StartMode startupentry="mDnsResponderApi" single="True">
+    <Execute entry="mDnsResponderApi" type="None" />
+  </StartMode>
+  <Entries>
+    <Entry filename="./mDnsResponderApi.prjx" />
+  </Entries>
+  <Configurations active="Debug">
+    <Configuration name="Release">
+      <Entry name="mDnsResponderApi" configurationname="Debug" build="False" />
+    </Configuration>
+    <Configuration name="Debug">
+      <Entry name="mDnsResponderApi" configurationname="Debug" build="False" />
+    </Configuration>
+  </Configurations>
+</Combine>
