@@ -546,7 +546,7 @@ namespace Simias.POBoxService.Web
 			string				domainID, 
 			string				identityID, 
 			string				messageID,
-			Simias.POBox.SubscriptionStates	state)
+			int					state)
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
@@ -581,7 +581,7 @@ namespace Simias.POBoxService.Web
 
 			// get the subscription object
 			Subscription cSub = new Subscription(poBox, sn);
-			cSub.SubscriptionState = state;
+			cSub.SubscriptionState = (Simias.POBox.SubscriptionStates) state;
 			poBox.Commit(cSub);
 
 			// TODO: remove the subscription object?
