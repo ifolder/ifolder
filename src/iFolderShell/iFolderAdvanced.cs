@@ -60,6 +60,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.RadioButton accessReadWrite;
 		private System.Windows.Forms.RadioButton accessReadOnly;
 
+		private POBox poBox;
 		private Novell.AddressBook.Manager abManager;
 		private Novell.AddressBook.AddressBook defaultAddressBook;
 		private iFolder ifolder;
@@ -86,6 +87,9 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.TabPage tabSharing;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private System.Windows.Forms.ContextMenu contextMenu1;
+		private System.Windows.Forms.MenuItem menuAccept;
+		private System.Windows.Forms.MenuItem menuDecline;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -159,13 +163,16 @@ namespace Novell.iFolder.iFolderCom
 			this.remove = new System.Windows.Forms.Button();
 			this.shareWith = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuAccept = new System.Windows.Forms.MenuItem();
+			this.menuDecline = new System.Windows.Forms.MenuItem();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -453,6 +460,7 @@ namespace Novell.iFolder.iFolderCom
 																						this.columnHeader1,
 																						this.columnHeader3,
 																						this.columnHeader2});
+			this.shareWith.ContextMenu = this.contextMenu1;
 			this.helpProvider1.SetHelpString(this.shareWith, "Lists the contacts that this iFolder is currently being shared with.");
 			this.shareWith.HideSelection = false;
 			this.shareWith.Location = new System.Drawing.Point(8, 8);
@@ -467,6 +475,11 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			this.columnHeader1.Text = "Share with";
 			this.columnHeader1.Width = 75;
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Status";
+			this.columnHeader3.Width = 171;
 			// 
 			// columnHeader2
 			// 
@@ -502,10 +515,24 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
-			// columnHeader3
+			// contextMenu1
 			// 
-			this.columnHeader3.Text = "Status";
-			this.columnHeader3.Width = 171;
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						 this.menuAccept,
+																						 this.menuDecline});
+			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
+			// 
+			// menuAccept
+			// 
+			this.menuAccept.Index = 0;
+			this.menuAccept.Text = "Accept";
+			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
+			// 
+			// menuDecline
+			// 
+			this.menuDecline.Index = 1;
+			this.menuDecline.Text = "Decline";
+			this.menuDecline.Click += new System.EventHandler(this.menuDecline_Click);
 			// 
 			// iFolderAdvanced
 			// 
@@ -603,7 +630,7 @@ namespace Novell.iFolder.iFolderCom
 			string sendersEmail = null;
 
 			// Get the poBox for the current user.
-			POBox poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
+			poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
 
 			foreach (ListViewItem lvitem in this.shareWith.Items)
 			{
@@ -866,7 +893,7 @@ namespace Novell.iFolder.iFolderCom
 
 			try
 			{
-				POBox poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
+				poBox = POBox.GetPOBox(ifolder.StoreReference, ifolder.StoreReference.DefaultDomain);
 				ICSList memberList = ifolder.GetMemberList();
 
 				foreach (ShallowNode shallowNode in memberList)
@@ -930,6 +957,7 @@ namespace Novell.iFolder.iFolderCom
 					Subscription sub = new Subscription(poBox, shallowNode);
 					ShareListMember shareMember = new ShareListMember();
 					shareMember.Member = new Member(sub.ToName, Guid.NewGuid().ToString(), sub.SubscriptionRights);
+					shareMember.Subscription = sub;
 
 					string[] items = new string[3];
 					items[0] = sub.ToName;
@@ -1362,6 +1390,27 @@ namespace Novell.iFolder.iFolderCom
 		{
 			conflicts.Visible = pictureBox1.Visible = false;
 		}
+
+		private void menuAccept_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = this.shareWith.SelectedItems[0];
+			Subscription subs = (Subscription)lvi.Tag;
+			subs.Accept(ifolder.StoreReference, this.stringToRights(lvi.SubItems[2].Text));
+			poBox.Commit(subs);
+		}
+
+		private void menuDecline_Click(object sender, System.EventArgs e)
+		{
+			ListViewItem lvi = this.shareWith.SelectedItems[0];
+			Subscription subs = (Subscription)lvi.Tag;
+			subs.Decline();
+			poBox.Commit(subs);
+		}
+
+		private void contextMenu1_Popup(object sender, System.EventArgs e)
+		{
+
+		}
 		#endregion
 
 		private void tabControl1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -1379,6 +1428,7 @@ namespace Novell.iFolder.iFolderCom
 	[ComVisible(false)]
 	public class ShareListMember
 	{
+		private Subscription subscription;
 		private Member member;
 		private bool added = false;
 		private bool changed = false;
@@ -1422,6 +1472,12 @@ namespace Novell.iFolder.iFolderCom
 		{
 			get { return isMember; }
 			set { isMember = value; }
+		}
+
+		public Subscription Subscription
+		{
+			get { return subscription; }
+			set { subscription = value; }
 		}
 		#endregion
 	}
