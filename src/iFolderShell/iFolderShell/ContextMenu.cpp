@@ -96,7 +96,10 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			lstrcpyn(lpszRoot, m_szFileUserClickedOn, MAX_ROOT_PATH + 1);
 
 /* This is now handled in the call to CanBeiFolder
-			if ((attrs == INVALID_FILE_ATTRIBUTES) || (GetDriveType(lpszRoot) & DRIVE_REMOTE))
+			UINT type = GetDriveType(lpszRoot);
+			if ((attrs == INVALID_FILE_ATTRIBUTES) || 
+				((type != DRIVE_FIXED) &&
+				(type != DRIVE_REMOVABLE)))
 			{
 				// Error.
 				return 0;
