@@ -366,7 +366,7 @@ public class SyncService
 		foreach (SyncNode sn in nodes)
 		{
 			statusList[i] = new SyncNodeStatus();
-			statusList[i++].status = SyncNodeStatus.SyncStatus.ServerFailure;
+			statusList[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
 				
 			if (sn != null)
 			{
