@@ -37,7 +37,7 @@ namespace Novell.iFolder
 {
 	public class NodePropertyPage
 	{
-		[Glade.Widget] TreeView	PropertyTreeView;
+		[Glade.Widget] TreeView	PropertyTreeView = null;
 
 		Gtk.VBox PropertyVBox;
 		ListStore PropertyTreeStore;
@@ -72,7 +72,7 @@ namespace Novell.iFolder
 					new TreeCellDataFunc(ValueCellTextDataFunc));
 
 			PropertyPixBuf = new Pixbuf("property.png");
-			foreach(Simias.Storage.Property prop in node.Properties)
+			foreach(Simias.Storage.Property prop in this.node.Properties)
 			{
 				PropertyTreeStore.AppendValues(prop);
 			}

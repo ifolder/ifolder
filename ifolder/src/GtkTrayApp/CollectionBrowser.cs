@@ -40,9 +40,8 @@ namespace Novell.iFolder
 
 	public class CollectionBrowser
 	{
-		[Glade.Widget] IconList BrowserIconList;
+		[Glade.Widget] IconList		BrowserIconList = null;
 		//[Glade.Widget] TreeView	BrowserTreeView;
-		[Glade.Widget] Gtk.Entry	PathEntry;
 
 		Gtk.Window nifWindow; 
 		Pixbuf	NodePixBuf;
