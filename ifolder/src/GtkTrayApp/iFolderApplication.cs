@@ -115,8 +115,6 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			RunningPixbuf;
 		private Gdk.Pixbuf			StartingPixbuf;
 		private Gdk.Pixbuf			StoppingPixbuf;
-//		private Gdk.Pixbuf			EventPixbuf;
-//		private Gdk.Pixbuf			SyncingPixbuf;
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
@@ -316,60 +314,144 @@ namespace Novell.iFolder
 				{
 					case iFolderEventTypes.Exception:
 					{
-						NotifyWindow notifyWin = new NotifyWindow(tIcon,
-							"iFolder Event Error!",
-							"Something very baaaad happened", 
-							Gtk.MessageType.Error,
-							10000);
-						notifyWin.ShowAll();
+						// TODO: Not sure what to do here
 						break;
 					}
 
 					case iFolderEventTypes.NodeCreated:
 					{
-						if(iEvent.LocalOnly)
-						{
-							NotifyWindow notifyWin = new NotifyWindow(tIcon,
-								"(Local) Node was created!",
-								string.Format("A node with the id {0} was created.", iEvent.NodeID), 
-								Gtk.MessageType.Info, 5000);
-							notifyWin.ShowAll();
-						}
-						else
-						{
-							NotifyWindow notifyWin = new NotifyWindow(tIcon,
-								"(Global) Node was created!",
-								string.Format("A node with the id {0} was created.", iEvent.NodeID), 
-								Gtk.MessageType.Info, 5000);
-							notifyWin.ShowAll();
-						}
-
+						HandleNodeCreatedEvent(iEvent);
 						break;
 					}
 
 					case iFolderEventTypes.NodeChanged:
 					{
-						NotifyWindow notifyWin = new NotifyWindow(tIcon,
-							"Node was Changed!",
-							string.Format("A node with the id {0} was changed.", iEvent.NodeID),
-							Gtk.MessageType.Info, 5000);
-						notifyWin.ShowAll();
+						HandleNodeChangedEvent(iEvent);
 						break;
 					}
 
 					case iFolderEventTypes.NodeDeleted:
 					{
-						NotifyWindow notifyWin = new NotifyWindow(tIcon,
-							"Node was Deleted!",
-							string.Format("A node with the id {0} was deleted.", iEvent.NodeID),
-							Gtk.MessageType.Info, 5000);
-						notifyWin.ShowAll();
+						// TODO: Handle this if needed later
+						// Would we get this if we delete an iFolder?
 						break;
 					}
 				}
 			}
 		}
 
+
+
+
+		private void HandleNodeChangedEvent(iFolderEvent iEvent)
+		{
+			switch(iEvent.NodeType)
+			{
+				case "Collection":
+				{
+					try
+					{
+						iFolder ifolder = 
+								ifws.GetiFolder(iEvent.CollectionID);
+						if( (ifolder != null) && (ifolder.HasConflicts) )
+						{
+							NotifyWindow notifyWin = new NotifyWindow(
+									tIcon, "Action Required",
+									string.Format("A collision has been detected in iFolder \"{0}\"", ifolder.Name),
+									Gtk.MessageType.Info, 5000);
+							notifyWin.ShowAll();
+
+							// TODO: notify the iFolderWindow that
+							// this new iFolder needs to be 
+							// displayed
+						}
+					}
+					catch(Exception e)
+					{
+						// do nada
+					}
+
+					break;
+				}
+			}
+		}
+
+
+
+
+		private void HandleNodeCreatedEvent(iFolderEvent iEvent)
+		{
+			switch(iEvent.NodeType)
+			{
+				case "Node":
+				{
+					// Check to see if the node is the same as the
+					// collection (ie- a collection was created)
+					if(iEvent.CollectionID == iEvent.NodeID)
+					{
+						try
+						{
+							iFolder ifolder = 
+									ifws.GetiFolder(iEvent.CollectionID);
+							if(	(ifolder != null) &&
+								(ifolder.State == "Available") )
+							{
+								// show a popup letting everyone know
+								// a new iFolder was added
+								NotifyWindow notifyWin = new NotifyWindow(
+										tIcon, 
+										string.Format("New iFolder \"{0}\"", 
+															ifolder.Name),
+										string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
+										Gtk.MessageType.Info, 5000);
+								notifyWin.ShowAll();
+
+								// TODO: notify the iFolderWindow that
+								// this new iFolder needs to be 
+								// displayed
+							}
+						}
+						catch(Exception e)
+						{
+							// do nada
+						}
+					}
+					break;
+				}
+
+				case "Member":
+				{
+					try
+					{
+						iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
+							iEvent.CollectionID, iEvent.NodeID);
+						if( (newuser != null) &&
+							(newuser.UserID != ifSettings.CurrentUserID) )
+						{
+							iFolder ifolder = 
+									ifws.GetiFolder(iEvent.CollectionID);
+						
+							NotifyWindow notifyWin = new NotifyWindow(
+									tIcon, "New iFolder User", 
+									string.Format("{0} has just joined iFolder {1}", newuser.Name, ifolder.Name),
+									Gtk.MessageType.Info, 5000);
+
+							notifyWin.ShowAll();
+							
+							// TODO:  Notify the iFolderWindow that
+							// this new user needs to be added
+							// to the users if displayed
+						}
+					}
+					catch(Exception e)
+					{
+						// do nada
+					}
+					break;
+				}
+						
+			}
+		}
 
 
 
