@@ -1,7 +1,0 @@
-application/x-ifi
-	default_application_id=invitationwizard
-        description=iFolder Invitation
-        icon_filename=ifolder
-        default_action_type=application
-        short_list_application_ids_for_novice_user_level=invitationwizard
-        category=Information
