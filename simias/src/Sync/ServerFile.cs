@@ -116,7 +116,7 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public HashData[] GetHashMap()
 		{
-			return HashMap.GetHashMap(inStream);
+			return HashMap.GetHashMap(ReadStream);
 		}
 
 		/// <summary>

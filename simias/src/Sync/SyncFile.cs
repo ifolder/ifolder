@@ -301,6 +301,15 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
+		/// Gets the original stream.
+		/// </summary>
+		public FileStream ReadStream
+		{
+			get {return stream;}
+		}
+
+
+		/// <summary>
 		/// Gets or Sets the file position.
 		/// </summary>
 		public long ReadPosition
@@ -325,7 +334,7 @@ namespace Simias.Sync
 		{
 			get { return stream == null ? 0 : stream.Length; }
 		}
-
+		
 		#endregion
 
 		#region protected methods.
