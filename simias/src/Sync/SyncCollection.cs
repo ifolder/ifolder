@@ -191,12 +191,20 @@ namespace Simias.Sync
 
 				if (result == null)
 				{
-					// There will only ever be one listener in workgroup. Therefore URL is
-					// the same as the one that gets used by the local web service except
-					// the host name is not loopback.
-					UriBuilder ub = new UriBuilder( Simias.Client.Manager.LocalServiceUrl );
-					ub.Host = MyDns.GetHostName();
-					result = ub.Uri;
+					result = Simias.Client.Manager.LocalServiceUrl;
+					if ( result != null )
+					{
+						// There will only ever be one listener in workgroup. Therefore URL is
+						// the same as the one that gets used by the local web service except
+						// the host name is not loopback.
+						UriBuilder ub = new UriBuilder( Simias.Client.Manager.LocalServiceUrl );
+						ub.Host = MyDns.GetHostName();
+						result = ub.Uri;
+					}
+					else
+					{
+						result = new UriBuilder( "http", MyDns.GetHostName() ).Uri;
+					}
 				}
 
 				return result;
