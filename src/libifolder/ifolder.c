@@ -25,13 +25,19 @@
 #include <unistd.h>
 #include <time.h>
 
+#include <simias.h>
+
 #include "iFolderStub.h"
 #include "iFolder.nsmap"
 
 #include "ifolder.h"
 
+/* Global Variables */
+static char *the_soap_url = NULL;
+
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
+static char *get_soap_url(bool reread_config);
 
 /**         
  * gSOAP
@@ -58,13 +64,19 @@ bool is_ifolder_running ()
 	struct soap soap;
 	bool isRunning = false;
 	int err_code;
+	char *soap_url;
 
 	struct _ns1__Ping ns1__Ping;
 	struct _ns1__PingResponse ns1__PingResponse;
+	
+	soap_url = get_soap_url(true);
+	if (!soap_url) {
+		return false;
+	}
 
 	init_gsoap (&soap);
 	err_code = soap_call___ns1__Ping (&soap,
-			NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+			soap_url, //http://<host>:<port>/simias10[/<username>]/iFolder.asmx
 			NULL,
 			&ns1__Ping,
 			&ns1__PingResponse);
@@ -79,5 +91,28 @@ bool is_ifolder_running ()
 	return isRunning;
 }
 
+static char *
+get_soap_url(bool reread_config)
+{
+	char *url;
+	char ifolder_domain_url[512];
+	int err;
+	
+	if (!reread_config && the_soap_url) {
+		return the_soap_url;
+	}
 
-
+	err = simias_get_local_service_url(&url);
+	if (err == SIMIAS_SUCCESS) {
+		sprintf(ifolder_domain_url, "%s/iFolder.asmx", url);
+		free(url);
+		if (the_soap_url)
+			free(the_soap_url);
+		the_soap_url = strdup(ifolder_domain_url);
+		/* FIXME: Figure out who and when this should ever be freed */
+	} else {
+		printf("simias_get_local_service_url() returned: %d\n", err);
+	}
+	
+	return the_soap_url;
+}

@@ -17,13 +17,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *  Author(s): Calvin Gaisford <cgaisford@novell.com>
+ *             Boyd Timothy <btimothy@novell.com>
  * 
 ***********************************************************************/
+#ifndef _IFOLDER_H
+#define _IFOLDER_H 1
 
 #include <unistd.h>
 #include <stdbool.h>
 
 bool is_ifolder_running ();
 
-
+#endif
