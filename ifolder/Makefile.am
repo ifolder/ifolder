@@ -9,6 +9,11 @@ install-exec-local:
 	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(datadir)/ifolder
 	$(INSTALL_PROGRAM) $(srcdir)/ifolder.pc $(DESTDIR)$(libdir)/pkgconfig
 
+register unregister:
+if WINDOWS
+	$(MAKE) -C src $@
+endif
+
 installcheck-summary:
 	$(MAKE) -C src $@
 

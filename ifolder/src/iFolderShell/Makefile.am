@@ -1,6 +1,6 @@
 WINDIR_UNIX = $(shell cygpath --unix $$WINDIR)
 REGSVR32 = $(shell cygpath --unix $$WINDIR\\system32\\Regsvr32.exe)
-REGASM = $(shell cygpath --unix $$FRAMEWORKDIR\\*\\RegAsm.exe)
+REGASM = $(shell cygpath --unix $$FRAMEWORKDIR\\v1.1*\\RegAsm.exe)
 REGEDIT = regedit
 
 # handle Mono secondary dependencies
@@ -79,17 +79,8 @@ install-exec-local: iFolderComponent.dll iFolderShell.dll $(DATA_FILES)
 	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(srcdir)/iFolderShell.reg $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(WINDOWS_FILES) $(DESTDIR)$(WINDIR_UNIX)
-	$(REGEDIT) /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.reg`
-	$(REGSVR32) /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
-	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /codebase
 
 uninstall-local:
-	if test -f $(DESTDIR)$(libdir)/iFolderShell.dll; then \
-		$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`; \
-	fi
-	if test -f $(DESTDIR)$(libdir)/iFolderComponent.dll; then \
-		$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister; \
-	fi
 	cd $(DESTDIR)$(libdir); rm -f iFolderComponent.dll iFolderShell.dll iFolderShell.reg iFolderComponentTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
@@ -99,6 +90,15 @@ installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
 	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderComponentTests.test.xml $(NUNIT_TESTS)
+
+register:
+	$(REGEDIT) /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.reg`
+	$(REGSVR32) /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
+	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /codebase
+
+unregister:
+	-$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
+	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
 
 CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(NUNIT_TESTS) iFolderComponent.doc.xml iFolderComponentTests.test.xml iFolderShell.exp iFolderShell.lib
 

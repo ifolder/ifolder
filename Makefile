@@ -20,6 +20,14 @@ all %:
 	$(MAKE) -C simias $@
 	$(MAKE) -C addressbook $@
 	$(MAKE) -C ifolder $@
+	
+#
+# Support register/unregister targets for iFolder on Windows
+#
+register unregister:
+	@-if `uname -o | grep -iq cygwin`; then \
+		$(MAKE) -C ifolder $@; \
+	fi
 
 #
 # Run autogen.sh for all projects, with or without --enable-debug.
