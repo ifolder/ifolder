@@ -57,7 +57,7 @@
 #define WEB_SERVICE_TRUE_STRING		"True"
 #define WEB_SERVICE_FALSE_STRING	"False"
 
-
+#ifndef DARWIN
 #if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
 /* union semun is defined by including <sys/sem.h> */
 #else
@@ -69,6 +69,7 @@ union semun {
 		struct seminfo *__buf;
 };
 #endif
+#endif /* DARWIN */
 
 /**
  * Structures to represent 1-level-deep XML

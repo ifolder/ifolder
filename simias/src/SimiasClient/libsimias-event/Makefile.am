@@ -9,8 +9,13 @@ libsimias_event_la_SOURCES = \
 pkginclude_HEADERS = \
 	simias-event-client.h
 
+if DARWIN
+libsimias_event_la_CFLAGS = \
+	$(XML2_CFLAGS) -DDARWIN
+else
 libsimias_event_la_CFLAGS = \
 	$(XML2_CFLAGS)
+endif
 
 libsimias_event_la_LDFLAGS = \
 	$(XML2_LIBS)
