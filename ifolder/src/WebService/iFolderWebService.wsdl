@@ -614,10 +614,12 @@
           <xs:element minOccurs="0" maxOccurs="1" name="LocalName" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="LocalDate" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="LocalSize" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="LocalFullPath" type="xs:string"/>
           <xs:element minOccurs="1" maxOccurs="1" name="IsNameConflict" type="xs:boolean"/>
           <xs:element minOccurs="0" maxOccurs="1" name="ServerName" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="ServerDate" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="ServerSize" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ServerFullPath" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetiFolderConflictsResponse">

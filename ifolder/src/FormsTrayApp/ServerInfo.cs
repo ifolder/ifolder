@@ -48,7 +48,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox password;
 		private System.Windows.Forms.PictureBox banner;
-		private iFolderWebService ifWebService;
 		private SimiasWebService simiasWebService;
 		private System.Windows.Forms.Label serverLabel2;
 		private System.Windows.Forms.Label userLabel2;
@@ -64,9 +63,8 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Constructs a ServerInfo object.
 		/// </summary>
-		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
 		/// <param name="domainID">The ID of the domain.</param>
-		public ServerInfo(iFolderWebService ifolderWebService, string domainID)
+		public ServerInfo(string domainID)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -74,7 +72,6 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			this.domainID = domainID;
-			ifWebService = ifolderWebService;
 		}
 
 		/// <summary>

@@ -44,6 +44,7 @@ namespace Novell.iFolderCom
 		private iFolderWeb ifolder;
 		private string loadPath;
 		private bool fixPath = true;
+		private Conflict conflict = null;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -66,7 +67,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Button close;
 		private System.Windows.Forms.ListView conflictsView;
-		#endregion
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.GroupBox localVersion;
 		private System.Windows.Forms.GroupBox serverVersion;
@@ -75,6 +75,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Panel serverPanel;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.ComponentModel.IContainer components;
+		#endregion
 
 		/// <summary>
 		/// Instantiates a ConflictResolver object.
@@ -462,6 +463,7 @@ namespace Novell.iFolderCom
 			this.localName.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("localName.TextAlign")));
 			this.toolTip1.SetToolTip(this.localName, resources.GetString("localName.ToolTip"));
 			this.localName.Visible = ((bool)(resources.GetObject("localName.Visible")));
+			this.localName.DoubleClick += new System.EventHandler(this.localName_DoubleClick);
 			// 
 			// label6
 			// 
@@ -685,6 +687,7 @@ namespace Novell.iFolderCom
 			this.serverName.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverName.TextAlign")));
 			this.toolTip1.SetToolTip(this.serverName, resources.GetString("serverName.ToolTip"));
 			this.serverName.Visible = ((bool)(resources.GetObject("serverName.Visible")));
+			this.serverName.DoubleClick += new System.EventHandler(this.serverName_DoubleClick);
 			// 
 			// label10
 			// 
@@ -1060,7 +1063,7 @@ namespace Novell.iFolderCom
 
 			if (conflictsView.SelectedItems.Count == 1)
 			{
-				Conflict conflict = (Conflict)conflictsView.SelectedItems[0].Tag;
+				conflict = (Conflict)conflictsView.SelectedItems[0].Tag;
 
 				// Fill in the server data.
 				serverName.Text = conflict.ServerName;
@@ -1082,6 +1085,8 @@ namespace Novell.iFolderCom
 			}
 			else
 			{
+				conflict = null;
+
 				// Clear the data fields.
 				localName.Text = serverName.Text =
 					localDate.Text = serverDate.Text =
@@ -1099,9 +1104,20 @@ namespace Novell.iFolderCom
 			resolveConflicts(false);
 		}
 
-		private void help_Click(object sender, System.EventArgs e)
+		private void localName_DoubleClick(object sender, System.EventArgs e)
 		{
-			new iFolderComponent().ShowHelp(loadPath, string.Empty);
+			if (conflict != null)
+			{
+				System.Diagnostics.Process.Start(conflict.LocalFullPath);
+			}
+		}
+
+		private void serverName_DoubleClick(object sender, System.EventArgs e)
+		{
+			if (conflict != null)
+			{
+				System.Diagnostics.Process.Start(conflict.ServerFullPath);
+			}
 		}
 
 		private void ifolderPath_Paint(object sender, System.Windows.Forms.PaintEventArgs e)

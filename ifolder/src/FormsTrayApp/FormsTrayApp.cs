@@ -877,7 +877,7 @@ namespace Novell.FormsTrayApp
 										}
 									}
 
-									serverInfo = new ServerInfo(ifWebService, domainID);
+									serverInfo = new ServerInfo(domainID);
 									serverInfo.Closed += new EventHandler(serverInfo_Closed);
 									serverInfo.Show();
 								}
