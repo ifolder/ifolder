@@ -49,6 +49,8 @@ namespace Simias.Sync
 
 public class Dredger
 {
+	internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Dredger));
+
 	SyncCollection collection = null;
 
 	/* TODO: onServer needs to be removed. It controls how tombstones are handled:
@@ -103,7 +105,7 @@ public class Dredger
 		Node node = null;
 		string name = Path.GetFileName(path);
 
-		//Log.Spew("Dredger processing node of path {0}", path);
+		// log.Debug("Processing node of path {0}", path);
 
 		// don't let temp files from sync into the collection as regular nodes
 		if (name.StartsWith(".simias.") && type == typeof(FileNode).Name)
@@ -146,7 +148,7 @@ public class Dredger
 				FileNode fnode = new FileNode(collection, parentNode, name);
 				fnode.LastWriteTime = File.GetLastWriteTime(path);
 				fnode.CreationTime = File.GetCreationTime(path);
-				Log.Spew("Dredger adding file node for {0} {1}", path, fnode.ID);
+				log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 				collection.Commit(fnode);
 				foundChange = true;
 			}
@@ -157,7 +159,7 @@ public class Dredger
 				DirNode dnode = new DirNode(collection, parentNode, name);
 				dnode.LastWriteTime = Directory.GetLastWriteTime(path);
 				dnode.CreationTime = Directory.GetCreationTime(path);
-				Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
+				log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 				collection.Commit(dnode);
 				foundChange = true;
 				DoSubtree(dnode, true);
@@ -173,7 +175,7 @@ public class Dredger
 			{
 				unode.LastWriteTime = lastWrote;
 				unode.CreationTime = created;
-				Log.Spew("Dredger updating file node for {0} {1}", path, node.ID);
+				log.Debug("Updating file node for {0} {1}", path, node.ID);
 				collection.Commit(unode);
 				foundChange = true;
 			}
@@ -255,7 +257,7 @@ public class Dredger
 					{
 						unode.LastWriteTime = lastWrote;
 						unode.CreationTime = created;
-						Log.Spew("Dredger updating store file node for {0} {1}", path, file);
+						log.Debug("Updating store file node for {0} {1}", path, file);
 						collection.Commit(unode);
 						foundChange = true;
 					}
@@ -278,12 +280,14 @@ public class Dredger
 		// TODO: Syncronize the dredger with the sync engine.
 		this.collection = new SyncCollection(collection);
 		this.onServer = onServer;
+
 		try
 		{
 			lastDredgeTime = (DateTime)(collection.Properties.GetSingleProperty(lastDredgeProp).Value);
 		}
 		catch
 		{
+			log.Debug("Failed to get the last dredge time");
 		}
 		foundChange = false;
 		// Make sure that the RootDir still exists. IF it has been deleted on a slave remove the collection
@@ -335,9 +339,9 @@ public class Dredger
 		
 		private void DoDredge()
 		{
-			try
+			while (!shuttingDown)
 			{
-				while (!shuttingDown)
+				try
 				{
 					if (!paused  & needToDredge)
 					{
@@ -345,31 +349,41 @@ public class Dredger
 						{
 							if (!shuttingDown)
 							{
-								Collection col = new Collection(store, sn);
-								SyncCollection sCol = new SyncCollection(col);
-								switch (sCol.Role)
+								try
 								{
-									case SyncCollectionRoles.Master:
-										new Dredger(col, true);
-										break;
-									case SyncCollectionRoles.Local:
-									case SyncCollectionRoles.Slave:
-									default:
-										new Dredger(col, false);
-										break;
+									Collection col = new Collection(store, sn);
+									SyncCollection sCol = new SyncCollection(col);
+									switch (sCol.Role)
+									{
+										case SyncCollectionRoles.Master:
+											new Dredger(col, true);
+											break;
+										case SyncCollectionRoles.Local:
+										case SyncCollectionRoles.Slave:
+										default:
+											new Dredger(col, false);
+											break;
+									}
+								}
+								catch (Exception ex)
+								{
+									Dredger.log.Debug(ex, "Failed to dredge {0}", sn.Name);
 								}
 							}
 						}
 						/*
-						if (!MyEnvironment.Mono)
-							needToDredge = false;
-						*/
+							if (!MyEnvironment.Mono)
+								needToDredge = false;
+							*/
 					}
+					Dredger.log.Debug("Sleeping----------------");
 					Thread.Sleep(1000 * 60);
+					Dredger.log.Debug("Waking up---------------");
 				}
-			}
-			catch
-			{
+				catch (Exception ex)
+				{
+					Dredger.log.Debug(ex, "Got an error");
+				}
 			}
 		}
 
