@@ -15,7 +15,7 @@ AssemblyInfo.cs
 ../Events/DefaultSubscriber.cs
 ../Events/EventBroker.cs
 ../Events/EventPublisher.cs
-../CollectionEvents/EventService/EventService.cs
+../Events/EventService/EventService.cs
 ../CollectionStore/CollectionEventsTests/CollectionEventsTests.cs
 ../CollectionStore/CollectionRootChangedEventArgs.cs
 ../CollectionStore/EventSubscriber.cs
