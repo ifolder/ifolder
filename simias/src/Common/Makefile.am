@@ -6,8 +6,8 @@ Common_CSFILES_CSC := $(subst /,$(SEP),$(Common_CSFILES))
 Common_INCLUDES = 
 Common_RESOURCES =
 Common_FLAGS = $(CSC_LIBFLAG)
-Common_LIBS = System.dll System.Data.dll $(SYSTEM_XML)
-Common_LIBPATH = /opt/gnome2/lib /usr/lib
+Common_LIBS = System.dll System.Data.dll $(SYSTEM_XML) log4net.dll
+Common_LIBPATH = /opt/gnome2/lib /usr/lib $(LOG4NET_DIR)
 
 NUNIT_TESTS := CommonTests.dll
 
@@ -40,11 +40,13 @@ endif
 
 install-exec-local: Common.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Common.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
-    
+	$(INSTALL_PROGRAM) Common.dll $(DEBUG_FILES) $(LOG4NET_DIR)/log4net.dll $(DESTDIR)$(bindir)
+	cp $(LOG4NET_DIR)/../../../../LICENSE.TXT $(DESTDIR)$(prefix)/log4net.LICENSE.TXT
+        
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
-    
+	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) log4net.dll $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(prefix); rm -f log4net.LICENSE.TXT
+	
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)

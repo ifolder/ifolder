@@ -54,6 +54,7 @@ AC_SUBST(SYSTEM_XML)
 
 SRCDIR='$(top_srcdir)/src'
 TOOLDIR='$(top_srcdir)/tools'
+EXTERNAL_DIR='$(top_srcdir)/external'
 DOCDIR="$SRCDIR/doc"
 
 AC_SUBST(SRCDIR)
@@ -111,6 +112,7 @@ case $SIMIAS_OS in
         COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
         NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
@@ -123,7 +125,7 @@ case $SIMIAS_OS in
         REPORT_EXE='mint $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
         SQLITELIB="libsqlite.so"
-        SQLITELIB_PATH="../../external/sqlite/linux"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
     ;;
     #
     # Linux-specific configuration
@@ -135,6 +137,7 @@ case $SIMIAS_OS in
         COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
         NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
@@ -146,7 +149,7 @@ case $SIMIAS_OS in
         REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
         SQLITELIB="libsqlite.so"
-        SQLITELIB_PATH="../../external/sqlite/linux"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
     ;;
     #
     # Windows-specific configuration
@@ -155,6 +158,7 @@ case $SIMIAS_OS in
         COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
+        LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
         NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
@@ -166,12 +170,13 @@ case $SIMIAS_OS in
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         SEP='$(EMPTY)\\$(EMPTY)'
         SQLITELIB="sqlite.dll"
-        SQLITELIB_PATH="../../external/sqlite/w32"
+        SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
     ;;
 esac
 AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
+AC_SUBST(LOG4NET_DIR)
 AC_SUBST(NDOC)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)

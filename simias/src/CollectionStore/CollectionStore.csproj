@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\&#xd;&#xa;copy $(SolutionDir)\external\SecureChannelSinks\*.dll $(SolutionDir)\stage\"
                 RootNamespace = "Simias.Storage"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""

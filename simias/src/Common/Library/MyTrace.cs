@@ -26,6 +26,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 
+using log4net;
+
 namespace Simias
 {
 	/// <summary>
