@@ -103,7 +103,7 @@ namespace Simias.Sync
 			// TODO: fix
 			this.SetType(this, "iFolder");
 			
-			this.MasterUrl = invitation.MasterUri;
+			this.MasterUrl = invitation.MasterUrl;
 			this.Role = SyncCollectionRoles.Slave;
 			
 			// commit
@@ -140,7 +140,7 @@ namespace Simias.Sync
 			invitation.CollectionName = Name;
 			invitation.Owner = Owner;
 			invitation.Domain = Domain;
-			invitation.MasterUri = MasterUrl;
+			invitation.MasterUrl = MasterUrl;
 			invitation.Identity = identity;
 			switch (GetUserAccess(identity).ToString())
 			{
@@ -349,21 +349,6 @@ namespace Simias.Sync
 			}
 
 			set { SetProperty(IntervalPropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The syncing URL for the collection store service.
-		/// </summary>
-		public string ServiceUrl
-		{
-			get
-			{
-				UriBuilder uri = new UriBuilder(MasterUrl);
-				
-				uri.Path = String.Format("SyncStoreService{0}.rem", uri.Port);
-
-				return uri.ToString();
-			}
 		}
 
 		/// <summary>

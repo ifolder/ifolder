@@ -187,10 +187,10 @@ namespace Simias.Sync
 		/// <summary>
 		/// The master URL
 		/// </summary>
-		public Uri MasterUri
+		public Uri MasterUrl
 		{
-			get { return new Uri(fields["MasterUri"]); }
-			set { fields["MasterUri"] = value.ToString(); }
+			get { return new Uri(fields["MasterUrl"]); }
+			set { fields["MasterUrl"] = value.ToString(); }
 		}
 
 		/// <summary>
