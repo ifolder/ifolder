@@ -50,7 +50,7 @@ namespace Simias.Tests
 		public void CaseSetup()
 		{
 			MyTrace.SendToConsole();
-			MyTrace.Switch.Level = TraceLevel.Info;
+			MyTrace.Switch.Level = TraceLevel.Verbose;
 		}
 
 		/// <summary>

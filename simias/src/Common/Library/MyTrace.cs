@@ -91,7 +91,9 @@ namespace Simias
 			}
 			else
 			{
-				message = e.Message;
+				// temp
+				// message = e.Message;
+				message = e.ToString();
 			}
 
 			WriteLine(1, message);
@@ -179,6 +181,14 @@ namespace Simias
 				category = String.Format("{0}.{1}", 
 					frame.GetMethod().DeclaringType.FullName,
 					frame.GetMethod().Name);
+
+				string file = Path.GetFileName(frame.GetFileName());
+				int line = frame.GetFileLineNumber();
+
+				if ((file != null) && (file.Length > 0))
+				{
+					message = String.Format("{0} @{1}:{2}", message, file, line);
+				}
 			}
 
 			Trace.WriteLine(message, category);

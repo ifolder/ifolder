@@ -79,6 +79,7 @@ namespace Simias.Sync
 						{
 							method = value.ToString();
 						}
+						/* TODO: ?
 						else if (keyString.Equals("__Args"))
 						{
 							args = new ArrayList();
@@ -97,6 +98,7 @@ namespace Simias.Sync
 						{
 							result = value.ToString();
 						}
+						*/
 						else if (keyString.Equals("__Uri"))
 						{
 							uri = value.ToString();
