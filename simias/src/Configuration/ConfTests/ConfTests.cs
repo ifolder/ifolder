@@ -82,8 +82,6 @@ namespace Simias.Tests
 		[Test]
 		public void MassiveSetThenGetTest()
 		{
-			String str1;
-
 			Console.WriteLine("=== Running MassiveSetThenGetTest ===");
 
 			for(int x=0; x < 50; x++)
@@ -140,6 +138,36 @@ namespace Simias.Tests
 				throw new Exception("MultipleSetThenGet didn't return matching values");
 		}
 
+		[Test]
+		public void SetThenGetSectionsWithSameChildren()
+		{
+			Console.WriteLine("=== Running SetThenGetSectionsWithSameChildren ===");
+			string sectionAstuff = "SectionA's stuff";
+			string sectionBstuff = "SectionB's stuff";
+			string sectionCstuff = "SectionC's stuff";
+			string keyName = "stuff";
+
+			config.Set("SectionA", keyName, sectionAstuff);
+			config.Set("SectionB", keyName, sectionBstuff);
+			config.Set("SectionC", keyName, sectionCstuff);
+			string testString = config.Get("SectionA", keyName, "This value shouldn't matter");
+			if (testString != sectionAstuff)
+			{
+				throw new Exception("SetThenGetSectionsWithSameChildren didn't return the correct value");
+			}
+
+			testString = config.Get("SectionB", keyName, "This value shouldn't matter");
+			if (testString != sectionBstuff)
+			{
+				throw new Exception("SetThenGetSectionsWithSameChildren didn't return the correct value");
+			}
+
+			testString = config.Get("SectionC", keyName, "This value shouldn't matter");
+			if (testString != sectionCstuff)
+			{
+				throw new Exception("SetThenGetSectionsWithSameChildren didn't return the correct value");
+			}
+		}
 
 		[TestFixtureTearDown]
 		public void Cleanup()

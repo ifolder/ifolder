@@ -93,7 +93,7 @@ namespace Simias
 			{
 				mutex.WaitOne();
 				XmlElement sectionElement = GetSection(section);
-				string xpath = string.Format("//{0}[@{1}='{2}']", SettingTag, NameAttr, key);
+				string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
 				XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
 				if (keyElement == null)
 				{				
@@ -129,7 +129,7 @@ namespace Simias
 			{
 				mutex.WaitOne();
 				XmlElement sectionElement = GetSection(section);
-				string xpath = string.Format("//{0}[@{1}='{2}']", SettingTag, NameAttr, key);
+				string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
 				XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
 				if (keyElement == null)
 				{				
