@@ -634,7 +634,6 @@ namespace Novell.iFolder
 			{
 				case Gtk.ResponseType.Ok:
 				{
-					LoginDialog.Hide();
 					try
 					{
 						iFolderSettings tmpSettings;
@@ -650,18 +649,36 @@ namespace Novell.iFolder
 						{
 							ifwin.GlobalSettings = ifSettings;
 						}
+						LoginDialog.Hide();
+						LoginDialog.Destroy();
+						LoginDialog = null;
 					}
 					catch(Exception e)
 					{
-						iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														null, e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-						ied = null;
+						if(e.Message.IndexOf("HTTP status 401") != -1)
+						{
+							iFolderMsgDialog mDialog = new iFolderMsgDialog(
+								LoginDialog, 
+								iFolderMsgDialog.DialogType.Error,
+								iFolderMsgDialog.ButtonSet.Ok,
+								Util.GS("iFolder Connect Error"),
+								Util.GS("Unable to Authenticate"),
+								Util.GS("The user name or password is invalid.  Please try again."));
+							mDialog.Run();
+							mDialog.Hide();
+							mDialog.Destroy();
+							mDialog = null;
+						}
+						else
+						{
+							iFolderExceptionDialog ied = 
+									new iFolderExceptionDialog(LoginDialog, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
+						}
 					}
-					LoginDialog.Destroy();
-					LoginDialog = null;
 					break;
 				}
 				default:
