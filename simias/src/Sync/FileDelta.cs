@@ -25,18 +25,27 @@ using System.IO;
 using System.Collections;
 using System.Security.Cryptography;
 
-namespace FileDelta
+namespace Simias.Sync
 {
 	/// <summary>
-	/// The types of FileSegments that are defined.
+	/// The types of Segment descriptors.
 	/// </summary>
 	[Serializable]
-	public enum FileSegmentType
+	public enum SegmentType
 	{
+		/// <summary>
+		/// Block Segment descriptor.
+		/// </summary>
 		Block,
-		Data
+		/// <summary>
+		/// Offset Segment descriptor
+		/// </summary>
+		Offset
 	}
 
+	/// <summary>
+	/// The base class for an upload file segment.
+	/// </summary>
 	[Serializable]
 	public class FileSegment
 	{
@@ -44,13 +53,13 @@ namespace FileDelta
 		/// This is the type of Segment this instance describes.
 		/// It can either be Block or Data.
 		/// </summary>
-		public FileSegmentType Type;
+		public SegmentType Type;
 	}
 
 
 	/// <summary>
-	/// Class to describe Either a Range of Blocks that match the file on the server.
-	/// or a block of data to be added to the file.  An ArrayList
+	/// Describes a file segment using a block from the remote file. Can be a
+	/// Range of block.
 	/// </summary>
 	[Serializable]
 	class BlockSegment : FileSegment
@@ -65,15 +74,31 @@ namespace FileDelta
 		public int				EndBlock;
 	}
 
+	/// <summary>
+	/// Descibes a file segment using the offset and the length from the local file.
+	/// </summary>
 	[Serializable]
-	class DataSegment : FileSegment
+	class OffsetSegment : FileSegment
 	{
-		public int		length;
-		public long		offset;
+		/// <summary>
+		/// The length of the segment.
+		/// </summary>
+		public int		Length;
+		/// <summary>
+		/// The offset in the local file of the segment.
+		/// </summary>
+		public long		Offset;
 	}
 
+	/// <summary>
+	/// Class used on ther server to determine the changes from the client file.
+	/// </summary>
 	public class ServerFile : FileDelta
 	{
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="file">The file that is to be synced either up or down.</param>
 		public ServerFile(string file) :
 			base(file)
 		{
@@ -143,12 +168,12 @@ namespace FileDelta
 		}
 
 		/// <summary>
-		/// Write the data from the original file into the new file.
+		/// Copyt the data from the original file into the new file.
 		/// </summary>
 		/// <param name="originalOffset">The offset in the original file to copy from.</param>
 		/// <param name="offset">The offset in the file where the data is to be written.</param>
 		/// <param name="count">The number of bytes to write.</param>
-		public void WriteFromOriginal(long originalOffset, long offset, int count)
+		public void Copy(long originalOffset, long offset, int count)
 		{
 			int bufferSize = count > BlockSize ? BlockSize : count;
 			byte[] buffer = new byte[bufferSize];
@@ -167,11 +192,21 @@ namespace FileDelta
 		}
 	}
 
+	/// <summary>
+	/// Used to find the deltas between
+	/// the local file and the server file.
+	/// </summary>
 	public class ClientFile : FileDelta
 	{
 		StrongWeakHashtable		table = new StrongWeakHashtable();
 		HashEntry[]				serverHashMap;
 		
+		/// <summary>
+		/// Contructs a ClientFile object that can be used to find the deltas between
+		/// the local file and the server file.
+		/// </summary>
+		/// <param name="clientFile">The local file.</param>
+		/// <param name="serverHashMap">The hash map of ther server file.</param>
 		public ClientFile(string clientFile, HashEntry[] serverHashMap) :
 			base(clientFile)
 		{
@@ -234,11 +269,11 @@ namespace FileDelta
 								// We found a match save the data that does not match;
 								if (endOfLastMatch != startByte)
 								{
-									DataSegment ds = new DataSegment();
-									ds.Type = FileSegmentType.Data;
-									ds.length = startByte - endOfLastMatch;
-									ds.offset = stream.Position - bytesRead + endOfLastMatch;
-									fileMap.Add(ds);
+									OffsetSegment seg = new OffsetSegment();
+									seg.Type = SegmentType.Offset;
+									seg.Length = startByte - endOfLastMatch;
+									seg.Offset = stream.Position - bytesRead + endOfLastMatch;
+									fileMap.Add(seg);
 								}
 								startByte = endByte + 1;
 								endByte = startByte + BlockSize - 1;
@@ -253,7 +288,7 @@ namespace FileDelta
 								{
 									// Save the matched block.
 									lastBS = new BlockSegment();
-									lastBS.Type = FileSegmentType.Block;
+									lastBS.Type = SegmentType.Block;
 									lastBS.StartBlock = match.BlockNumber;
 									lastBS.EndBlock = match.BlockNumber;
 									fileMap.Add(lastBS);
@@ -271,11 +306,11 @@ namespace FileDelta
 					{
 						// We don't want to send to large of a buffer. Create a DiffRecord
 						// for the data in the buffer.
-						DataSegment ds = new DataSegment();
-						ds.Type = FileSegmentType.Data;
-						ds.length = startByte - endOfLastMatch;
-						ds.offset = stream.Position - bytesRead + endOfLastMatch;
-						fileMap.Add(ds);
+						OffsetSegment seg = new OffsetSegment();
+						seg.Type = SegmentType.Offset;
+						seg.Length = startByte - endOfLastMatch;
+						seg.Offset = stream.Position - bytesRead + endOfLastMatch;
+						fileMap.Add(seg);
 						endOfLastMatch = startByte;
 					}
 					readOffset = bytesRead - endOfLastMatch;
@@ -294,16 +329,22 @@ namespace FileDelta
 			// Get the remaining changes.
 			if (endOfLastMatch != endByte)//== 0 && endByte != 0)
 			{
-				DataSegment ds = new DataSegment();
-				ds.Type = FileSegmentType.Data;
-				ds.length = endByte - endOfLastMatch + 1;
-				ds.offset = stream.Position - ds.length;
-				fileMap.Add(ds);
+				OffsetSegment seg = new OffsetSegment();
+				seg.Type = SegmentType.Offset;
+				seg.Length = endByte - endOfLastMatch + 1;
+				seg.Offset = stream.Position - seg.Length;
+				fileMap.Add(seg);
 			}
 
 			return fileMap;
 		}
 
+		/// <summary>
+		/// Compute the Blocks that need to be downloaded from the server. This builds
+		/// an array of offsets where the blocks need to be placed in the local file.
+		/// The block is represented by the index of the array.
+		/// </summary>
+		/// <returns>The file map.</returns>
 		public long[] GetDownloadFileMap()
 		{
 			// Since we are doing the diffing on the client we will download all blocks that
@@ -359,11 +400,6 @@ namespace FileDelta
 								HashEntry match = (HashEntry)entryList[eIndex];
 								// We found a match save the match;
 								fileMap[match.BlockNumber] = stream.Position - bytesRead + startByte;
-
-								startByte = endByte + 1;
-								endByte = startByte + BlockSize - 1;
-								recomputeWeakHash = true;
-								continue;
 							}
 						}
 						dropByte = buffer[startByte];
@@ -442,16 +478,28 @@ namespace FileDelta
 			cFile.Close();
 		}
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="file">The file to be used.</param>
 		public FileDelta(string file)
 		{
 			this.file = file;
 		}
 
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
 		~FileDelta()
 		{
 			Close (true);
 		}
 
+		/// <summary>
+		/// Called to open the file.
+		/// </summary>
+		/// <param name="tmpFile">The temporary file that is used while the update (upload/download) occures.
+		/// Can be null.</param>
 		public void Open(string tmpFile)
 		{
 			this.tmpFile = tmpFile;
@@ -478,6 +526,9 @@ namespace FileDelta
 			}
 		}
 
+		/// <summary>
+		/// Called to close the file and cleanup resources.
+		/// </summary>
 		public void Close()
 		{
 			Close (false);
@@ -545,7 +596,8 @@ namespace FileDelta
 		/// <summary>
 		/// Writes the new file based on The fileMap array.
 		/// </summary>
-		/// <param name="changes"></param>
+		/// <param name="fileMap">An array of FileSegments That describes how the server file relates to 
+		/// the local file.</param>
 		public void UploadFile(ArrayList fileMap, ServerFile sFile)
 		{
 			byte[] buffer = new byte[BlockSize];
@@ -554,22 +606,22 @@ namespace FileDelta
 			{
 				switch (segment.Type)
 				{
-					case FileSegmentType.Block:
+					case SegmentType.Block:
 						BlockSegment bs = (BlockSegment)segment;
 						stream.Position = bs.StartBlock * BlockSize;
 						int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
-						sFile.WriteFromOriginal(bs.StartBlock * BlockSize, offset, bytesToWrite);
+						sFile.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
 						offset += bytesToWrite;
 						break;
-					case FileSegmentType.Data:
+					case SegmentType.Offset:
 						// Write the bytes to the output stream.
-						DataSegment ds = (DataSegment)segment;
-						byte[] dataBuffer = new byte[ds.length];
-						stream.Position = ds.offset;
-						int bytesRead = stream.Read(dataBuffer, 0, ds.length);
-						sFile.Write(dataBuffer, offset, ds.length);
+						OffsetSegment seg = (OffsetSegment)segment;
+						byte[] dataBuffer = new byte[seg.Length];
+						stream.Position = seg.Offset;
+						int bytesRead = stream.Read(dataBuffer, 0, seg.Length);
+						sFile.Write(dataBuffer, offset, seg.Length);
 						//outStream.Write(ds.Data, 0, ds.length);
-						offset += ds.length;
+						offset += seg.Length;
 						break;
 				}
 			}
@@ -582,13 +634,13 @@ namespace FileDelta
 			{
 				switch (segment.Type)
 				{
-					case FileSegmentType.Block:
+					case SegmentType.Block:
 						BlockSegment bs = (BlockSegment)segment;
 						Console.WriteLine("Found Match Block {0} to Block {1}", bs.StartBlock, bs.EndBlock);
 						break;
-					case FileSegmentType.Data:
-						DataSegment ds = (DataSegment)segment;
-						Console.WriteLine("Found change size = {0}", ds.length);
+					case SegmentType.Offset:
+						OffsetSegment seg = (OffsetSegment)segment;
+						Console.WriteLine("Found change size = {0}", seg.Length);
 						break;
 				}
 			}
@@ -629,8 +681,17 @@ namespace FileDelta
 	/// </summary>
 	public class HashEntry
 	{
+		/// <summary>
+		/// The Block number that this hash represents. 0 based.
+		/// </summary>
 		public int		BlockNumber;
+		/// <summary>
+		/// The Weak or quick hash of this block.
+		/// </summary>
 		public UInt32	WeakHash;
+		/// <summary>
+		/// The strong hash of this block.
+		/// </summary>
 		public byte[]	StrongHash;
 
 		/// <summary>

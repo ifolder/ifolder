@@ -799,7 +799,6 @@ namespace Simias.Storage.Provider.Flaim
 		/// 
 		/// </summary>
 		/// <param name="error"></param>
-		/// <param name="e"></param>
 		/// <returns></returns>
 		internal static SimiasException GetException(Error error)
 		{

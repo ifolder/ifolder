@@ -59,6 +59,9 @@ namespace Simias.Storage.Provider.Flaim
 			Flaim = FlaimServer.GetServer();
 		}
 
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
 		~FlaimProvider()
 		{
 			Dispose(true);

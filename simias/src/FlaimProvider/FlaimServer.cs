@@ -217,7 +217,7 @@ namespace Simias.Storage.Provider.Flaim
 		/// 
 		/// </summary>
 		/// <param name="ipStore"></param>
-		/// <param name="path"></param>
+		/// <param name="Id"></param>
 		/// <param name="length"></param>
 		/// <param name="buffer"></param>
 		/// <returns></returns>
