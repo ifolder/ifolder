@@ -189,7 +189,6 @@ parse_local_service_url(FILE *file)
 static char *
 parse_web_service_password(FILE *file)
 {
-	long file_size;
 	char line[1024];
 	int i;
 
