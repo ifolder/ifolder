@@ -57,7 +57,7 @@ namespace Novell.iFolder.Tests
 		{
 			rootPath = Directory.GetCurrentDirectory();
 
-			simiasPath = Path.Combine(rootPath, ".simias");
+			simiasPath = Path.Combine(rootPath, "simias");
 
 			// Create directory to perform tests in.
 			path = Path.Combine(rootPath, "iFolderTest");

@@ -122,7 +122,7 @@ namespace Simias.Storage.Provider
 		private const string CFG_Assembly = "Assembly";
 		private const string CFG_TypeName = "Type";
 		private const string CFG_Version = "Version";
-		private const string StoreName = ".simias";
+		private const string StoreName = "simias";
 		private string path = null;
 		private string version = null;
 		private string assembly = null;

@@ -102,7 +102,7 @@ namespace Simias
 				path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 			}
 
-			path = Path.Combine(path, ".simias");
+			path = Path.Combine(path, "simias");
 			path = Path.Combine(path, "mutex");
 
 			if (!Directory.Exists(path))

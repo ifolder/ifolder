@@ -494,11 +494,11 @@ namespace Simias
 
 		private static string fixupPath(string path)
 		{
-			if ((path.EndsWith(".simias") == false) &&
-				(path.EndsWith(".simias/") == false) &&
-				(path.EndsWith(@".simias\") == false))
+			if ((path.EndsWith("simias") == false) &&
+				(path.EndsWith("simias/") == false) &&
+				(path.EndsWith(@"simias\") == false))
 			{
-				path = Path.Combine(path, ".simias");
+				path = Path.Combine(path, "simias");
 			}
 
 			if (!Directory.Exists(path))
