@@ -51,7 +51,7 @@ installcheck-local: install $(NUNIT_TESTS)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SqliteProviderTests.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = SqliteProvider.dll SqliteWrapper.dll $(NUNIT_TESTS) SqliteProvider.xml SqliteProviderTests.xml
+CLEAN_FILES = SqliteProvider.dll SqliteWrapper.dll $(NUNIT_TESTS) SqliteProvider.xml SqliteWrapper.xml SqliteProviderTests.xml
 CLEAN_DIRS = .cstore
 
 clean-local:
