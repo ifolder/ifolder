@@ -216,6 +216,14 @@ namespace Simias.Sync
 		#region Properties
 		
 		/// <summary>
+		/// The remoting end point for the sync store service.
+		/// </summary>
+		public static string EndPoint
+		{
+			get { return "SyncStoreService.rem"; }
+		}
+
+		/// <summary>
 		/// The base store object.
 		/// </summary>
 		public Store BaseStore
@@ -229,14 +237,6 @@ namespace Simias.Sync
 		public string ID
 		{
 			get { return baseStore.GetDatabaseObject().Id; }
-		}
-
-		/// <summary>
-		/// The remoting end point of the store.
-		/// </summary>
-		public string EndPoint
-		{
-			get { return "store.rem"; }
 		}
 
 		/// <summary>

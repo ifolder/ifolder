@@ -67,17 +67,17 @@ namespace Simias.Sync
 			// create channel
 			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(syncStore, SyncProperties.SuggestedChannelSinks);
 
-			// server uri
-			string serverUrl = new UriBuilder("http", host, port, syncStore.EndPoint).ToString();
+			// service URL
+			string serviceUrl = new UriBuilder("http", host, port, SyncStore.EndPoint).ToString();
 
 			try
 			{
 				// get a proxy to the sync store service object
-				SyncStoreService store = (SyncStoreService)Activator.GetObject(
-				typeof(SyncStoreService), serverUrl);
+				SyncStoreService service = (SyncStoreService)Activator.GetObject(
+					typeof(SyncStoreService), serviceUrl);
 
 				// ping
-				info = store.Ping();
+				info = service.Ping();
 			}
 			catch(Exception e)
 			{

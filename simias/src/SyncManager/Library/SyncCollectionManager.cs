@@ -40,12 +40,12 @@ namespace Simias.Sync
 		private SyncStoreManager storeManager;
 		private SyncStore store;
 		private SyncCollection collection;
-		private SyncCollectionService service;
 		private CollectionWatcher watcher;
 		private bool watching;
 		private SyncChannel channel;
+		private SyncStoreService storeService;
+		private SyncCollectionService service;
 		private SyncCollectionWorker worker;
-
 		private Thread syncWorkerThread;
 		private bool working;
 
@@ -170,24 +170,13 @@ namespace Simias.Sync
 				// create channel
 				channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks);
 				
-				// get a proxy to the remote store object
-				SyncStoreService remoteStore = (SyncStoreService)Activator.GetObject(
-					typeof(SyncStoreService), collection.StoreUrl);
-
-				service = remoteStore.GetCollectionService(collection.ID);
-				Debug.Assert(service != null);
-
-				// get the collection worker
-				worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
-				Debug.Assert(worker != null);
-
 				// create worker thread
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));
 				working = true;
 				syncWorkerThread.Start();
 			}
 
-			MyTrace.WriteLine("{0} Url: {1}", collection.Name, collection.StoreUrl);
+			MyTrace.WriteLine("{0} Url: {1}", collection.Name, collection.ServiceUrl);
 		}
 
 		private void StopSlave()
@@ -203,7 +192,16 @@ namespace Simias.Sync
 				
 				// stop worker
 				working = false;
-				if (worker != null) worker.StopSyncWork();
+				
+				// send a stop message
+				try
+				{
+					worker.StopSyncWork();
+				}
+				catch
+				{
+					// ignore
+				}
 
 				try
 				{
@@ -223,20 +221,42 @@ namespace Simias.Sync
 				// get permission from sync manager
 				syncManager.ReadyToWork();
 
-				MyTrace.WriteLine("Sync Work Starting: {0} ({1})", collection.Name, collection.StoreUrl);
+				MyTrace.WriteLine("Sync Cycle Starting: {0} ({1})", collection.Name, collection.ServiceUrl);
 
+				// TODO: the remoting connection is currently being created with each sync interval,
+				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
-					MyTrace.WriteLine("Sync Collection Ping: {0}", service.Ping());
+					// get a proxy to the store service object
+					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
+					Debug.Assert(storeService != null);
 
+					// debug
+					MyTrace.WriteLine("Sync Store Service Ping: {0}", service.Ping());
+
+					// get a proxy to the collection service object
+					service = storeService.GetCollectionService(collection.ID);
+					Debug.Assert(service != null);
+
+					// get the collection worker
+					worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
+					Debug.Assert(worker != null);
+
+					// do the work
 					worker.DoSyncWork();
 				}
 				catch(Exception e)
 				{
 					MyTrace.WriteLine(e);
 				}
+				finally
+				{
+					storeService = null;
+					service = null;
+					worker = null;
+				}
 
-				MyTrace.WriteLine("Sync Work Finished: {0}", collection.Name);
+				MyTrace.WriteLine("Sync Cycle Finished: {0}", collection.Name);
 
 				// finish with sync manager
 				syncManager.DoneWithWork();

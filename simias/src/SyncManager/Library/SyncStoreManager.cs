@@ -84,14 +84,14 @@ namespace Simias.Sync
 					string name = String.Format("Store Service [{0}]", store.ID);
 					channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks, port);
 				
-					MyTrace.WriteLine("Starting Store Service: http://0.0.0.0:{0}/{1}", port, store.EndPoint);
+					MyTrace.WriteLine("Starting Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.EndPoint);
 
 					// create service
 					service = new SyncStoreService(this);
 
 					// marshal service
-					RemotingServices.Marshal(service, store.EndPoint);
-
+					RemotingServices.Marshal(service, SyncStore.EndPoint);
+				
 					// start collection managers
 					foreach(SyncCollectionManager manager in collectionManagers.Values)
 					{
@@ -118,7 +118,7 @@ namespace Simias.Sync
 				{
 					int port = syncManager.Port;
 
-					MyTrace.WriteLine("Stopping Store Service: http://0.0.0.0:{0}/{1}", port, store.EndPoint);
+					MyTrace.WriteLine("Stopping Store Service: http://0.0.0.0:{0}/{1}", port, SyncStore.EndPoint);
 
 					// stop watcher
 					watcher.Stop();

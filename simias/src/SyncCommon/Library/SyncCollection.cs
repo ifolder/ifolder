@@ -280,9 +280,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// The syncing URL for the collection store service.
 		/// </summary>
-		public string StoreUrl
+		public string ServiceUrl
 		{
-			get { return (new UriBuilder("http", Host, Port, "store.rem").ToString()); }
+			get { return (new UriBuilder("http", Host, Port, SyncStore.EndPoint).ToString()); }
 		}
 
 		/// <summary>
