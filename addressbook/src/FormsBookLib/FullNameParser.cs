@@ -57,43 +57,70 @@ namespace Novell.iFolder.FormsBookLib
 			if (fullName.Length > 0)
 			{
 				// Get the prefix.
-				Regex prefix = new Regex(@"mr |mr\. |mrs |mrs\. |miss |ms |ms\. |dr |dr\. ", RegexOptions.IgnoreCase);
-				Match matchPrefix = prefix.Match(fullName);
-				if (matchPrefix.Success)
+				int index;
+				if (name.Prefix != String.Empty &&
+					(index = fullName.IndexOf(name.Prefix + " ")) != -1)
 				{
-					// TODO - need to fixup prefix ... i.e. change mr to Mr.
+					// The prefix is already known, remove it from the name.
+					fullName = fullName.Remove(index, name.Prefix.Length + 1);
+				}
+				else
+				{
+					// Clear any previous prefix.
+					name.Prefix = String.Empty;
 
-					if (matchPrefix.Index != 0)
+					// Setup regular expression to find prefixes.
+					Regex prefix = new Regex(@"mr |mr\. |mrs |mrs\. |miss |ms |ms\. |dr |dr\. ", RegexOptions.IgnoreCase);
+					Match matchPrefix = prefix.Match(fullName);
+					if (matchPrefix.Success)
 					{
-						// If the prefix is not at the beginning, then we don't know how to handle the name.
-						validName = false;
+						// TODO - need to fixup prefix ... i.e. change mr to Mr.
+
+						if (matchPrefix.Index != 0)
+						{
+							// If the prefix is not at the beginning, then we don't know how to handle the name.
+							validName = false;
+						}
+
+						// Save the prefix.
+						name.Prefix = fullName.Substring(0, matchPrefix.Index + matchPrefix.Length - 1);
+
+						// Remove the prefix from the name.
+						fullName = fullName.Substring(matchPrefix.Index + matchPrefix.Length).Trim();
 					}
-
-					// Save the prefix.
-					name.Prefix = fullName.Substring(0, matchPrefix.Index + matchPrefix.Length - 1);
-
-					// Remove the prefix from the name.
-					fullName = fullName.Substring(matchPrefix.Index + matchPrefix.Length).Trim();
 				}
 
 				// Get the suffix.
-				Regex suffix = new Regex(@" i| ii| iii| jr| jr\.| sr| sr\.| esq| esq\.| md| m\.d\.", RegexOptions.IgnoreCase);
-				Match matchSuffix = suffix.Match(fullName);
-				if (matchSuffix.Success)
+				if (name.Suffix != String.Empty &&
+					(index = fullName.IndexOf(" " + name.Suffix)) != -1)
 				{
-					// TODO - need to fixup suffix ... i.e. change jr to Jr.
+					// The suffix is already known, remove it from the name.
+					fullName = fullName.Remove(index, name.Suffix.Length + 1);
+				}
+				else
+				{
+					// Clear any previous suffix.
+					name.Suffix = String.Empty;
 
-					if (fullName.IndexOf(" ", matchSuffix.Index + 1) != -1)
+					// Setup regular expression to find suffixes.
+					Regex suffix = new Regex(@" i| ii| iii| jr| jr\.| sr| sr\.| esq| esq\.| md| m\.d\.", RegexOptions.IgnoreCase);
+					Match matchSuffix = suffix.Match(fullName);
+					if (matchSuffix.Success)
 					{
-						// If the suffix is not at the end, then we don't know how to handle the name.
-						validName = false;
+						// TODO - need to fixup suffix ... i.e. change jr to Jr.
+
+						if (fullName.IndexOf(" ", matchSuffix.Index + 1) != -1)
+						{
+							// If the suffix is not at the end, then we don't know how to handle the name.
+							validName = false;
+						}
+
+						// Save the suffix.
+						name.Suffix = fullName.Substring(matchSuffix.Index + 1);
+
+						// Remove the suffix from the name.
+						fullName = fullName.Substring(0, matchSuffix.Index).Trim();
 					}
-
-					// Save the suffix.
-					name.Suffix = fullName.Substring(matchSuffix.Index + 1);
-
-					// Remove the suffix from the name.
-					fullName = fullName.Substring(0, matchSuffix.Index).Trim();
 				}
 
 				// Process the rest of the name.
@@ -145,7 +172,7 @@ namespace Novell.iFolder.FormsBookLib
 						name.Family = s[length - 1];
 
 						// Clear out the middle name.
-						name.Other = "";
+						name.Other = String.Empty;
 					}
 				}
 			}
