@@ -154,7 +154,9 @@ namespace Simias.Security.Web
 
 			// Verify that we are on a secure connection, if not redirect to https
 			HttpContext context = HttpContext.Current;
-			if ( ( context.Request.IsSecureConnection == false ) && ( sslRequired == true ) ) 
+			if ( ( context.Request.Url.IsLoopback == false ) && 
+				 ( context.Request.IsSecureConnection == false ) && 
+				 ( sslRequired == true ) ) 
 			{
 				// Redirect over https
 				UriBuilder redirectedUri = new UriBuilder( context.Request.Url.ToString() );
