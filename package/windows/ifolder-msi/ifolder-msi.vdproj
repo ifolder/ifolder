@@ -15,67 +15,31 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_04C769FF83794005AF15F576FA85BE7F"
+        "MsmKey" = "8:_02DE044ADDD94E52A297F7C5C2F915D4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_13880C0A68F54FDC81B574628DDEDAA1"
+        "MsmKey" = "8:_08EBA713ABD446C1BE883846135EC756"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_15CABB556EF54AD484F977BB5DDAE178"
+        "MsmKey" = "8:_2F8233C054284694B305CE45E1BE309E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1BB964CC7E2849E7841CABAD9E13F166"
+        "MsmKey" = "8:_46C7EA13D1E8484EB8F3B0E8A7E503A0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_210A6F0E0DE14BAF9313A7933B453082"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_239F7EE62E2C4685BE1314FF948EF4A5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C5A56E0839E4706A897BA74F973A1F5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3D7AC5CA719443A99A7A66FB8017DD01"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_411D9C6E3EB34D40B5F1D6C92ACB7EFF"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_486DC2FBEBB04EB9ADA13ED7B3C0BF1B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4F9165AEF8A64C65856613EBCD21A345"
+        "MsmKey" = "8:_4974A20530CE41E2976BAC6F180DE667"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,20 +51,50 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_548EF5DCDB504F0A92B377CEA544065C"
+        "MsmKey" = "8:_50F3B04DDF3644EFA2D2480EDB8B3CFC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_581948764D31494C8211493160A054F0"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_4FAA01583F8744AA8A010586A2F1B00E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_58A6112F9E41410DBB492CE6C8E7F2D9"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_DAAFD90EAEF94FF1BF93C3C711D9B605"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_E4F67E2FF7C34926AAAD6CACD23DC789"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_2F8233C054284694B305CE45E1BE309E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_08EBA713ABD446C1BE883846135EC756"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_564417AA30CB4224BB9AD0401F227737"
+        "OwnerKey" = "8:_911E90E00B5941CD9B2AA03D14E9C6DC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -111,97 +105,67 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5DC3EC69CA30461AA1EA0662936973F2"
+        "MsmKey" = "8:_740B6908099141FE8B6198470B3F1B45"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_78B65BB6AAF04D8AA789837413059843"
+        "MsmKey" = "8:_8168A7DFA45C4B50995B46D463EC55DC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7BBE68D69E78433EB1D9767E9048C0F3"
+        "MsmKey" = "8:_911E90E00B5941CD9B2AA03D14E9C6DC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7D15D56B3A714E968AA995BCC57DB593"
+        "MsmKey" = "8:_91826761950C429FB19F9FC022ACA3E4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7F4A6F172EA24FA39C7C05E02955E8DC"
+        "MsmKey" = "8:_92C7221732AB406EACF6853A9EE95664"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7F4B45B4091D4ED7B1B889D538DA09AC"
+        "MsmKey" = "8:_9C1C5A3CD7874FB1ADDE33C2DDE01C0D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_04C769FF83794005AF15F576FA85BE7F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_D73702C86FD04771BC4DB70CA5F85312"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_7F4B45B4091D4ED7B1B889D538DA09AC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_7BBE68D69E78433EB1D9767E9048C0F3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_548EF5DCDB504F0A92B377CEA544065C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_4FAA01583F8744AA8A010586A2F1B00E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853BA42D124D46E6B70B2BC93E7641E8"
-        "OwnerKey" = "8:_4F9165AEF8A64C65856613EBCD21A345"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8961EFAD1EAB4115907E0059051BB2F6"
+        "MsmKey" = "8:_9F4ECF31752C4B6AA4A9F017534D6859"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9CF206FD179E4756853B0031949FEDC8"
+        "MsmKey" = "8:_AD002903ADD0467B80456997091F6DDB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_B12199926B67467CBCE28E0B0953A127"
+        "MsmKey" = "8:_BA91BFD9EC0F4A48932C736E130AC570"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BB808D9135594680BDFA0CFEA90F9571"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CF75144F7E954D61A4BB705E11534172"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -213,31 +177,43 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D73702C86FD04771BC4DB70CA5F85312"
+        "MsmKey" = "8:_D641F45EE85E44D0BB8B19D4225D8924"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E553411FBC204591AED753BB9C7A325B"
+        "MsmKey" = "8:_DAAFD90EAEF94FF1BF93C3C711D9B605"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F3DA8D2B2E494493B670C8B1262773A7"
+        "MsmKey" = "8:_E38FF5B39B1244CDB4699B4B9DE2A7D4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F5528E2C78ED426AB6C7996C11045F4B"
+        "MsmKey" = "8:_E4F67E2FF7C34926AAAD6CACD23DC789"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F9B81AC9C05D4214A14F5292C5642BDB"
+        "MsmKey" = "8:_EB831B442FE04E4A8F6629402DED3B66"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FCF583D728764703A04E00A45F6912E7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -320,10 +296,10 @@
         }
         "File"
         {
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_13880C0A68F54FDC81B574628DDEDAA1"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_02DE044ADDD94E52A297F7C5C2F915D4"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\addressbook\\src\\FormsAddrBook\\address_app.ico"
-            "TargetName" = "8:address_app.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync3.ico"
+            "TargetName" = "8:ifolder_sync3.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -340,130 +316,21 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_15CABB556EF54AD484F977BB5DDAE178"
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_08EBA713ABD446C1BE883846135EC756"
             {
-            "SourcePath" = "8:..\\..\\..\\iFolderShell\\iFolderShell.dll"
-            "TargetName" = "8:iFolderShell.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:4"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_1BB964CC7E2849E7841CABAD9E13F166"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync2.ico"
-            "TargetName" = "8:ifolder_sync2.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_210A6F0E0DE14BAF9313A7933B453082"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync7.ico"
-            "TargetName" = "8:ifolder_sync7.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_239F7EE62E2C4685BE1314FF948EF4A5"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_loaded.ico"
-            "TargetName" = "8:ifolder_loaded.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_3C5A56E0839E4706A897BA74F973A1F5"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync10.ico"
-            "TargetName" = "8:ifolder_sync10.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_3D7AC5CA719443A99A7A66FB8017DD01"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_message.ico"
-            "TargetName" = "8:ifolder_message.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_411D9C6E3EB34D40B5F1D6C92ACB7EFF"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsInvitationWizard\\invitewiz.png"
-            "TargetName" = "8:invitewiz.png"
+            "AssemblyRegister" = "3:2"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:iFolderComponent, Version=1.0.1524.38185, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_08EBA713ABD446C1BE883846135EC756"
+                    {
+                    "Name" = "8:iFolderComponent.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\src\\iFolderShell\\iFolderComponent.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
             "Condition" = "8:"
@@ -480,10 +347,61 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_486DC2FBEBB04EB9ADA13ED7B3C0BF1B"
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_2F8233C054284694B305CE45E1BE309E"
             {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync1.ico"
-            "TargetName" = "8:ifolder_sync1.ico"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:InvitationWizard, Version=1.0.1523.34175, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_2F8233C054284694B305CE45E1BE309E"
+                    {
+                    "Name" = "8:InvitationWizard.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\src\\FormsInvitationWizard\\InvitationWizard.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_46C7EA13D1E8484EB8F3B0E8A7E503A0"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\ifolder_app.ico"
+            "TargetName" = "8:ifolder_app.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_4974A20530CE41E2976BAC6F180DE667"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync8.ico"
+            "TargetName" = "8:ifolder_sync8.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -504,7 +422,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ShutdowniFolder, Version=1.0.1522.27214, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:ShutdowniFolder, Version=1.0.1524.39174, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_4FAA01583F8744AA8A010586A2F1B00E"
@@ -531,40 +449,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_548EF5DCDB504F0A92B377CEA544065C"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_50F3B04DDF3644EFA2D2480EDB8B3CFC"
             {
-            "AssemblyRegister" = "3:2"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderComponent, Version=1.0.1522.27136, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_548EF5DCDB504F0A92B377CEA544065C"
-                    {
-                    "Name" = "8:iFolderComponent.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\iFolderShell\\iFolderComponent.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_581948764D31494C8211493160A054F0"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_disconnect.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_disconnect.ico"
             "TargetName" = "8:ifolder_disconnect.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
@@ -582,30 +469,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_58A6112F9E41410DBB492CE6C8E7F2D9"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_740B6908099141FE8B6198470B3F1B45"
             {
-            "SourcePath" = "8:..\\..\\..\\FormsInvitationWizard\\Invitation.ico"
-            "TargetName" = "8:Invitation.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_5DC3EC69CA30461AA1EA0662936973F2"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync6.ico"
-            "TargetName" = "8:ifolder_sync6.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_message.ico"
+            "TargetName" = "8:ifolder_message.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -622,10 +489,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_78B65BB6AAF04D8AA789837413059843"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_8168A7DFA45C4B50995B46D463EC55DC"
             {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync9.ico"
-            "TargetName" = "8:ifolder_sync9.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync7.ico"
+            "TargetName" = "8:ifolder_sync7.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -642,91 +509,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_7BBE68D69E78433EB1D9767E9048C0F3"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:InvitationWizard, Version=1.0.1522.27134, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_7BBE68D69E78433EB1D9767E9048C0F3"
-                    {
-                    "Name" = "8:InvitationWizard.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\FormsInvitationWizard\\InvitationWizard.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_7D15D56B3A714E968AA995BCC57DB593"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\ifolder_app.ico"
-            "TargetName" = "8:ifolder_app.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_7F4A6F172EA24FA39C7C05E02955E8DC"
-            {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync5.ico"
-            "TargetName" = "8:ifolder_sync5.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_7F4B45B4091D4ED7B1B889D538DA09AC"
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_911E90E00B5941CD9B2AA03D14E9C6DC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:iFolder, Version=0.0.0.0, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_7F4B45B4091D4ED7B1B889D538DA09AC"
+                    "_911E90E00B5941CD9B2AA03D14E9C6DC"
                     {
                     "Name" = "8:iFolder.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\..\\..\\iFolder\\iFolder.dll"
+            "SourcePath" = "8:..\\..\\..\\src\\iFolder\\iFolder.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
@@ -744,10 +540,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_8961EFAD1EAB4115907E0059051BB2F6"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_91826761950C429FB19F9FC022ACA3E4"
             {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync3.ico"
-            "TargetName" = "8:ifolder_sync3.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync10.ico"
+            "TargetName" = "8:ifolder_sync10.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -764,10 +560,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_9CF206FD179E4756853B0031949FEDC8"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_92C7221732AB406EACF6853A9EE95664"
             {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync8.ico"
-            "TargetName" = "8:ifolder_sync8.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_loaded.ico"
+            "TargetName" = "8:ifolder_loaded.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -784,100 +580,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_B12199926B67467CBCE28E0B0953A127"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_9C1C5A3CD7874FB1ADDE33C2DDE01C0D"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\addressbook\\src\\FormsBookLib\\ifolder_contact_card.ico"
-            "TargetName" = "8:ifolder_contact_card.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_D73702C86FD04771BC4DB70CA5F85312"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1522.27132, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_D73702C86FD04771BC4DB70CA5F85312"
-                    {
-                    "Name" = "8:iFolderApp.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\iFolderApp.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_E553411FBC204591AED753BB9C7A325B"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\addressbook\\src\\FormsBookLib\\ifolder_add_bk.ico"
-            "TargetName" = "8:ifolder_add_bk.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_F3DA8D2B2E494493B670C8B1262773A7"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\addressbook\\src\\FormsBookLib\\ifolder_me_card.ico"
-            "TargetName" = "8:ifolder_me_card.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_F5528E2C78ED426AB6C7996C11045F4B"
-            {
-            "SourcePath" = "8:..\\..\\..\\iFolderShell\\iFolderShell\\ifolder_emblem.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\iFolderShell\\iFolderShell\\ifolder_emblem.ico"
             "TargetName" = "8:ifolder_emblem.ico"
             "Tag" = "8:"
             "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
@@ -895,10 +600,201 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_F9B81AC9C05D4214A14F5292C5642BDB"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_9F4ECF31752C4B6AA4A9F017534D6859"
             {
-            "SourcePath" = "8:..\\..\\..\\FormsTrayApp\\res\\ifolder_sync4.ico"
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync5.ico"
+            "TargetName" = "8:ifolder_sync5.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_AD002903ADD0467B80456997091F6DDB"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync1.ico"
+            "TargetName" = "8:ifolder_sync1.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_BA91BFD9EC0F4A48932C736E130AC570"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsInvitationWizard\\Invitation.ico"
+            "TargetName" = "8:Invitation.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_BB808D9135594680BDFA0CFEA90F9571"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync6.ico"
+            "TargetName" = "8:ifolder_sync6.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_CF75144F7E954D61A4BB705E11534172"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync2.ico"
+            "TargetName" = "8:ifolder_sync2.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_D641F45EE85E44D0BB8B19D4225D8924"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync4.ico"
             "TargetName" = "8:ifolder_sync4.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_E38FF5B39B1244CDB4699B4B9DE2A7D4"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\iFolderShell\\iFolderShell.dll"
+            "TargetName" = "8:iFolderShell.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:4"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_EB831B442FE04E4A8F6629402DED3B66"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsInvitationWizard\\invitewiz.png"
+            "TargetName" = "8:invitewiz.png"
+            "Tag" = "8:"
+            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1523.34175, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+                    {
+                    "Name" = "8:iFolderApp.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\iFolderApp.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_FCF583D728764703A04E00A45F6912E7"
+            {
+            "SourcePath" = "8:..\\..\\..\\src\\FormsTrayApp\\res\\ifolder_sync9.ico"
+            "TargetName" = "8:ifolder_sync9.ico"
             "Tag" = "8:"
             "Folder" = "8:_07C1CD118FF447A093E96E8FE92ECC01"
             "Condition" = "8:"
@@ -924,11 +820,11 @@
             "Description" = "8:iFolder Invitation"
             "Extensions" = "8:.ifi"
             "MIME" = "8:"
-            "Icon" = "8:_58A6112F9E41410DBB492CE6C8E7F2D9"
+            "Icon" = "8:_BA91BFD9EC0F4A48932C736E130AC570"
             "IconIndex" = "3:0"
                 "Command"
                 {
-                "Command" = "8:_7BBE68D69E78433EB1D9767E9048C0F3"
+                "Command" = "8:_2F8233C054284694B305CE45E1BE309E"
                 }
                 "Verbs"
                 {
@@ -1422,7 +1318,7 @@
         }
         "Shortcut"
         {
-            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_6731E961109B4003ABDF1DD4F9ECEF67"
+            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_823E7237637B41A48AC600DF00A89326"
             {
             "Name" = "8:iFolder 3"
             "Arguments" = "8:"
@@ -1430,10 +1326,10 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_D73702C86FD04771BC4DB70CA5F85312"
+            "Target" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
             "Folder" = "8:_C538D6AD927140D5A44F1C04EF8F7A92"
             "WorkingFolder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Icon" = "8:_7D15D56B3A714E968AA995BCC57DB593"
+            "Icon" = "8:_46C7EA13D1E8484EB8F3B0E8A7E503A0"
             "Feature" = "8:"
             }
         }
@@ -1819,11 +1715,53 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_04C769FF83794005AF15F576FA85BE7F"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_564417AA30CB4224BB9AD0401F227737"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:dotnetfxredist_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:1033"
+            "Exclude" = "11:TRUE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_5DA01D01C24F4B59A1CCFA9B4C2C6769"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:..\\..\\..\\..\\..\\addressbook\\src\\package\\windows\\addressbook.msm"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\VC_User_CRT71_RTL_X86_---.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_D1FE76C955DB421AA20956239145CFF7"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\VC_User_STL71_RTL_X86_---.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_DAAFD90EAEF94FF1BF93C3C711D9B605"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:..\\..\\..\\..\\addressbook\\package\\windows\\addressbook.msm"
                 "Properties"
                 {
                     "_61EA369DFAA0A65F464B31E7BD4814BA.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -1872,11 +1810,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_4F9165AEF8A64C65856613EBCD21A345"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_E4F67E2FF7C34926AAAD6CACD23DC789"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:..\\..\\..\\..\\..\\simias\\src\\package\\windows\\simias.msm"
+            "SourcePath" = "8:..\\..\\..\\..\\simias\\package\\windows\\simias.msm"
                 "Properties"
                 {
                     "_0D3E406FB0BCFFA5448EB53CF4BC0E44.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -1949,6 +1887,20 @@
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
+                    "_324BD5095B485BEEFD1C0BC9F5956544.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    {
+                    "Name" = "8:_324BD5095B485BEEFD1C0BC9F5956544.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DisplayName" = "8:"
+                    "Description" = "8:"
+                    "Type" = "3:2"
+                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_787A3AC825AC8E1F07F937D430F58CE2.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Attributes" = "3:0"
+                    "Setting" = "3:2"
+                    "Value" = "8:_787A3AC825AC8E1F07F937D430F58CE2.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DefaultValue" = "8:_787A3AC825AC8E1F07F937D430F58CE2.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "UsePlugInResources" = "11:FALSE"
+                    }
                     "_4E3ADD81111CFF93C224AD046F7ABB4B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
                     "Name" = "8:_4E3ADD81111CFF93C224AD046F7ABB4B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -1960,34 +1912,6 @@
                     "Setting" = "3:2"
                     "Value" = "8:_75BAD9BF7B2F4424A5A3F7A005778553.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "DefaultValue" = "8:_75BAD9BF7B2F4424A5A3F7A005778553.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
-                    "_514D45ED42C5E94A1A0585D31F5EEF3F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_514D45ED42C5E94A1A0585D31F5EEF3F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_AD13D919357F4315B5B0A4A116B7A8A1.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_AD13D919357F4315B5B0A4A116B7A8A1.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_AD13D919357F4315B5B0A4A116B7A8A1.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
-                    "_578203193EF89AD15CAC553B219CD8F2.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_578203193EF89AD15CAC553B219CD8F2.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_E0FC9743998F4AA5B0B2CC5D1C83535F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_E0FC9743998F4AA5B0B2CC5D1C83535F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_E0FC9743998F4AA5B0B2CC5D1C83535F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
@@ -2075,17 +1999,17 @@
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
-                    "_932D7D35C6C878F2F06AE38BE9DCBDC5.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "_90E1FF2FFEA0DDAB2D70E77DB8187B83.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
-                    "Name" = "8:_932D7D35C6C878F2F06AE38BE9DCBDC5.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Name" = "8:_90E1FF2FFEA0DDAB2D70E77DB8187B83.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "DisplayName" = "8:"
                     "Description" = "8:"
                     "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_EC0F4EF1BB562F66E4FE444491B7DC8D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_C86AC4CC38B75BDB52D7CA4F0B532C6B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "Attributes" = "3:0"
                     "Setting" = "3:2"
-                    "Value" = "8:_EC0F4EF1BB562F66E4FE444491B7DC8D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_EC0F4EF1BB562F66E4FE444491B7DC8D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Value" = "8:_C86AC4CC38B75BDB52D7CA4F0B532C6B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DefaultValue" = "8:_C86AC4CC38B75BDB52D7CA4F0B532C6B.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
@@ -2142,20 +2066,6 @@
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
-                    "_A09B6C3795CA44EBE77A923D1742F136.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_A09B6C3795CA44EBE77A923D1742F136.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_30EFCB17826245AEB607402AEA4A861D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_30EFCB17826245AEB607402AEA4A861D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_30EFCB17826245AEB607402AEA4A861D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
                     "_A69B5615AC2DC4F573C447597FE5CE3D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
                     "Name" = "8:_A69B5615AC2DC4F573C447597FE5CE3D.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -2170,20 +2080,6 @@
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
-                    "_A7EAE5E7251D9BBA66E1702B2958E3E4.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_A7EAE5E7251D9BBA66E1702B2958E3E4.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_75C560F44A7E40DD5CF4E7B2DA52C768.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_75C560F44A7E40DD5CF4E7B2DA52C768.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_75C560F44A7E40DD5CF4E7B2DA52C768.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
                     "_AC63DFE74F1FD2AE328F0BFFD8C05D75.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
                     "Name" = "8:_AC63DFE74F1FD2AE328F0BFFD8C05D75.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -2195,20 +2091,6 @@
                     "Setting" = "3:2"
                     "Value" = "8:_C8FEDED056344D7ABF5AFD001DDAC515.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "DefaultValue" = "8:_C8FEDED056344D7ABF5AFD001DDAC515.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
-                    "_C47C71697F199F5D04E4484B52ADCB4C.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_C47C71697F199F5D04E4484B52ADCB4C.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_2A3834B0AA57899B0DB8177B64AC4EEF.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_2A3834B0AA57899B0DB8177B64AC4EEF.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_2A3834B0AA57899B0DB8177B64AC4EEF.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
@@ -2254,50 +2136,22 @@
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
+                    "_FE9D87D54C71E211CEE9B18A13413DA7.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    {
+                    "Name" = "8:_FE9D87D54C71E211CEE9B18A13413DA7.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DisplayName" = "8:"
+                    "Description" = "8:"
+                    "Type" = "3:2"
+                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_23D6D9C6C956F7F75FFFBC13888C6DAB.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Attributes" = "3:0"
+                    "Setting" = "3:2"
+                    "Value" = "8:_23D6D9C6C956F7F75FFFBC13888C6DAB.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DefaultValue" = "8:_23D6D9C6C956F7F75FFFBC13888C6DAB.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "UsePlugInResources" = "11:FALSE"
+                    }
                 }
             "LanguageId" = "3:1033"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_5DA01D01C24F4B59A1CCFA9B4C2C6769"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\VC_User_CRT71_RTL_X86_---.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_853BA42D124D46E6B70B2BC93E7641E8"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:dotnetfxredist_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:TRUE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_D1FE76C955DB421AA20956239145CFF7"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\VC_User_STL71_RTL_X86_---.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
             "Exclude" = "11:FALSE"
             "Folder" = "8:"
             "Feature" = "8:"
