@@ -603,8 +603,13 @@ namespace Simias.Sync.Client
 			si.ChangesOnly = gotClientChanges | !workArray.Complete;
 			si.ClientHasChanges = si.ChangesOnly;
 			
+			// BUGBUG
+			int oldTimeout = service.Timeout;
+			service.Timeout = 5 * 1000;
 			// Start the Sync pass and save the rights.
 			sstamps = service.Start(si, store.GetUserIDFromDomainID(collection.Domain), out si);
+			// BUGBUG
+			service.Timeout = oldTimeout;
 			serverAlive = true;
 
 			eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
@@ -1313,7 +1318,7 @@ namespace Simias.Sync.Client
 						return;
 					}
 
-					WsClientInFile file = new WsClientInFile(collection, nodeID, service);
+					HttpClientInFile file = new HttpClientInFile(collection, nodeID, service);
 					if (file.Open(rights == Rights.ReadOnly ? true : false))
 					{
 						bool success = false;
@@ -1576,7 +1581,7 @@ namespace Simias.Sync.Client
 					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 					if (node != null)
 					{
-						WsClientOutFile file = new WsClientOutFile(collection, node, service);
+						HttpClientOutFile file = new HttpClientOutFile(collection, node, service);
 						SyncStatus status = file.Open();
 						if (status == SyncStatus.Success)
 						{
