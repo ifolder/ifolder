@@ -486,6 +486,7 @@ internal class SyncOps
 							stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
 							stamp.masterIncarn = node.MasterIncarnation;
 							stamp.id = new Nid(node.ID);
+							stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
 							stamp.name = node.Name;
 							stamp.changeType = rec.operation;
 
