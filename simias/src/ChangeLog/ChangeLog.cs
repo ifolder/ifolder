@@ -226,6 +226,86 @@ namespace Simias.Storage
 	}
 
 	/// <summary>
+	/// Class used to queue change log events.
+	/// </summary>
+	internal class ChangeLogEvent
+	{
+		#region Class Members
+		/// <summary>
+		/// Type of change events that are watched for.
+		/// </summary>
+		public enum ChangeEventType
+		{
+			/// <summary>
+			/// Collection was created. Create a ChangeLogWriter.
+			/// </summary>
+			CollectionCreate,
+
+			/// <summary>
+			/// Collection was deleted. Delete the ChangeLogWriter.
+			/// </summary>
+			CollectionDelete,
+
+			/// <summary>
+			/// Node was created in a collection.
+			/// </summary>
+			NodeCreate,
+
+			/// <summary>
+			/// Node was changed in a collection.
+			/// </summary>
+			NodeChange,
+
+			/// <summary>
+			/// Node was deleted in a collection.
+			/// </summary>
+			NodeDelete
+		}
+
+		/// <summary>
+		/// Type of event.
+		/// </summary>
+		private ChangeEventType type;
+
+		/// <summary>
+		/// Context for the event.
+		/// </summary>
+		private NodeEventArgs args;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the change event type.
+		/// </summary>
+		public ChangeEventType Type
+		{
+			get { return type; }
+		}
+
+		/// <summary>
+		/// Gets the event context.
+		/// </summary>
+		public NodeEventArgs Args
+		{
+			get { return args; }
+		}
+		#endregion
+
+		#region Constructor
+		/// <summary>
+		/// Initializes a new instance of the object.
+		/// </summary>
+		/// <param name="type">Type of change long event.</param>
+		/// <param name="args">Context for the event.</param>
+		public ChangeLogEvent( ChangeEventType type, NodeEventArgs args )
+		{
+			this.type = type;
+			this.args = args;
+		}
+		#endregion
+	}
+
+	/// <summary>
 	/// Exception that indicates that the event context cookie has expired and that
 	/// sync must dredge for changes.
 	/// </summary>
@@ -852,6 +932,16 @@ namespace Simias.Storage
 		/// Subscribes to Collection Store events.
 		/// </summary>
 		private EventSubscriber subscriber;
+
+		/// <summary>
+		/// Queue used to make sure that we don't block any threads that deliver events.
+		/// </summary>
+		private Queue eventQueue = new Queue();
+
+		/// <summary>
+		/// Flag that indicates that a thread is scheduled to process work on the queue.
+		/// </summary>
+		private bool threadScheduled = false;
 		#endregion
 
 		#region Constructor
@@ -873,13 +963,17 @@ namespace Simias.Storage
 			// If the Node ID matches the Collection ID then this is a collection event.
 			if ( args.Collection == args.Node )
 			{
-				lock ( logWriterTable )
+				// Queue the event and schedule to come back later to process.
+				lock ( eventQueue )
 				{
-					if ( !logWriterTable.ContainsKey( args.Collection ) )
+					// Add the event to the queue.
+					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.CollectionCreate, args ) );
+					
+					// See if a thread has already been scheduled to take care of this event.
+					if ( threadScheduled == false )
 					{
-						// Allocate a ChangeLogWriter object for this collection and store it in the table.
-						logWriterTable.Add( args.Collection, new ChangeLogWriter( config, args.Collection ) );
-						log.Debug( "Added ChangeLogWriter for collection {0}", args.Collection );
+						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
+						threadScheduled = true;
 					}
 				}
 			}
@@ -894,16 +988,78 @@ namespace Simias.Storage
 			// If the Node ID matches the Collection ID then this is a collection event.
 			if ( args.Collection == args.Node )
 			{
-				lock ( logWriterTable )
+				// Queue the event and schedule to come back later to process.
+				lock ( eventQueue )
 				{
-					// Make sure the writer is in the table.
-					if ( logWriterTable.ContainsKey( args.Collection ) )
+					// Add the event to the queue.
+					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.CollectionDelete, args ) );
+					
+					// See if a thread has already been scheduled to take care of this event.
+					if ( threadScheduled == false )
 					{
-						// Remove the ChangeLogWriter object from the table and dispose it.
-						ChangeLogWriter logWriter = logWriterTable[ args.Collection ] as ChangeLogWriter;
-						logWriterTable.Remove( args.Collection );
-						logWriter.Dispose();
-						log.Debug( "Deleted ChangeLogWriter for collection {0}", args.Collection );
+						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
+						threadScheduled = true;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Processes collection created and deleted events and creates or deletes the respective
+		/// ChangeLogWriter objects.
+		/// </summary>
+		/// <param name="state">Not used.</param>
+		private void ProcessChangeLogEvent( object state )
+		{
+			while ( true )
+			{
+				ChangeLogEvent work = null;
+
+				// Lock the queue before accessing it to get the work to do.
+				lock ( eventQueue )
+				{
+					if ( eventQueue.Count > 0 )
+					{
+						work = eventQueue.Dequeue() as ChangeLogEvent;
+					}
+					else
+					{
+						threadScheduled = false;
+						break;
+					}
+				}
+
+				switch ( work.Type )
+				{
+					case ChangeLogEvent.ChangeEventType.CollectionCreate:
+					{
+						lock ( logWriterTable )
+						{
+							if ( !logWriterTable.ContainsKey( work.Args.Collection ) )
+							{
+								// Allocate a ChangeLogWriter object for this collection and store it in the table.
+								logWriterTable.Add( work.Args.Collection, new ChangeLogWriter( config, work.Args.Collection ) );
+								log.Debug( "Added ChangeLogWriter for collection {0}", work.Args.Collection );
+							}
+						}
+						break;
+					}
+
+					case ChangeLogEvent.ChangeEventType.CollectionDelete:
+					{
+						lock ( logWriterTable )
+						{
+							// Make sure the writer is in the table.
+							if ( logWriterTable.ContainsKey( work.Args.Collection ) )
+							{
+								// Remove the ChangeLogWriter object from the table and dispose it.
+								ChangeLogWriter logWriter = logWriterTable[ work.Args.Collection ] as ChangeLogWriter;
+								logWriterTable.Remove( work.Args.Collection );
+								logWriter.Dispose();
+								log.Debug( "Deleted ChangeLogWriter for collection {0}", work.Args.Collection );
+							}
+						}
+						break;
 					}
 				}
 			}
@@ -1049,6 +1205,16 @@ namespace Simias.Storage
 		/// Contains the last write position boundary.
 		/// </summary>
 		private long maxWritePosition = ( defaultMaxPersistedRecords * ChangeLogRecord.RecordSize ) + LogFileHeader.RecordSize;
+
+		/// <summary>
+		/// Queue used to process change events so the event thread does not have to block.
+		/// </summary>
+		private Queue eventQueue = new Queue();
+
+		/// <summary>
+		/// Flag that indicates if a thread is processing work on the queue.
+		/// </summary>
+		private bool threadScheduled = false;
 		#endregion
 
 		#region Constructor
@@ -1211,8 +1377,19 @@ namespace Simias.Storage
 			// Don't indicate local events.
 			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 			{
-				ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Changed, args );
-				WriteLog( record );
+				// Queue the event and schedule to come back later to process.
+				lock ( eventQueue )
+				{
+					// Add the event to the queue.
+					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.NodeChange, args ) );
+					
+					// See if a thread has already been scheduled to take care of this event.
+					if ( threadScheduled == false )
+					{
+						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
+						threadScheduled = true;
+					}
+				}
 			}
 		}
 
@@ -1225,8 +1402,19 @@ namespace Simias.Storage
 			// Don't indicate local events.
 			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 			{
-				ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Created, args );
-				WriteLog( record );
+				// Queue the event and schedule to come back later to process.
+				lock ( eventQueue )
+				{
+					// Add the event to the queue.
+					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.NodeCreate, args ) );
+					
+					// See if a thread has already been scheduled to take care of this event.
+					if ( threadScheduled == false )
+					{
+						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
+						threadScheduled = true;
+					}
+				}
 			}
 		}
 
@@ -1239,8 +1427,69 @@ namespace Simias.Storage
 			// Don't indicate local events.
 			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 			{
-				ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Deleted, args );
-				WriteLog( record );
+				// Queue the event and schedule to come back later to process.
+				lock ( eventQueue )
+				{
+					// Add the event to the queue.
+					eventQueue.Enqueue( new ChangeLogEvent( ChangeLogEvent.ChangeEventType.NodeDelete, args ) );
+					
+					// See if a thread has already been scheduled to take care of this event.
+					if ( threadScheduled == false )
+					{
+						ThreadPool.QueueUserWorkItem( new WaitCallback( ProcessChangeLogEvent ) );
+						threadScheduled = true;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Processes node created, changed and deleted events.
+		/// </summary>
+		/// <param name="state">Not used.</param>
+		private void ProcessChangeLogEvent( object state )
+		{
+			while ( true )
+			{
+				ChangeLogEvent work = null;
+
+				// Lock the queue before accessing it to get the work to do.
+				lock ( eventQueue )
+				{
+					if ( eventQueue.Count > 0 )
+					{
+						work = eventQueue.Dequeue() as ChangeLogEvent;
+					}
+					else
+					{
+						threadScheduled = false;
+						break;
+					}
+				}
+
+				switch ( work.Type )
+				{
+					case ChangeLogEvent.ChangeEventType.NodeChange:
+					{
+						ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Changed, work.Args );
+						WriteLog( record );
+						break;
+					}
+
+					case ChangeLogEvent.ChangeEventType.NodeCreate:
+					{
+						ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Created, work.Args );
+						WriteLog( record );
+						break;
+					}
+					
+					case ChangeLogEvent.ChangeEventType.NodeDelete:
+					{
+						ChangeLogRecord record = new ChangeLogRecord( ChangeLogRecord.ChangeLogOp.Deleted, work.Args );
+						WriteLog( record );
+						break;
+					}
+				}
 			}
 		}
 
