@@ -267,6 +267,81 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
+		/// Deletes a system wide file filter policy.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="domainID">Domain that the filter will be associated with.</param>
+		static public void Delete( Store store, string domainID )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, domainID );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
+		}
+
+		/// <summary>
+		/// Deletes a file type filter policy for the specified member.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="member">Member that the filter will be associated with.</param>
+		static public void Delete( Store store, Member member )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, member );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
+		}
+
+		/// <summary>
+		/// Deletes a file type filter policy for the specified collection.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="collection">Collection that the filter will be associated with.</param>
+		static public void Delete( Store store, Collection collection )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, collection );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
+		}
+
+		/// <summary>
+		/// Deletes a file type filter policy for the current user on the current machine.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		static public void Delete( Store store )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
+		}
+
+		/// <summary>
 		/// Gets the file type filter patterns associated with the specified domain.
 		/// </summary>
 		/// <param name="store">Handle to the collection store.</param>

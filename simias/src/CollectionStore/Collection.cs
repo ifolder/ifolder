@@ -772,6 +772,16 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Internal:
 						{
+							// If this node state is a collision being resolved, publish an event so that sync
+							// will pick up the resolved node and push it to the server.
+							if ( node.MergeCollisions == false )
+							{
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
+								args.LocalOnly = false;
+								store.EventPublisher.RaiseEvent( args );
+							}
+
+							// Set the new state of the node.
 							node.Properties.State = PropertyList.PropertyListState.Update;
 
 							// If this is a member Node, update the access control entry.

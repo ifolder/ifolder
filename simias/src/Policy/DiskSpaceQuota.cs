@@ -93,7 +93,11 @@ namespace Simias.Policy
 		/// </summary>
 		public long UsedSpace
 		{
-			get { return GetUsedDiskSpace( member ); }
+			get 
+			{ 
+				usedDiskSpace = GetUsedDiskSpace( member ); 
+				return usedDiskSpace;
+			}
 		}
 		#endregion
 
@@ -201,6 +205,63 @@ namespace Simias.Policy
 			// Add the new rule and save the policy.
 			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
 			pm.CommitPolicy( policy, collection );
+		}
+
+		/// <summary>
+		/// Deletes a system wide disk space quota policy.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="domainID">Domain that the limit will be associated with.</param>
+		static public void Delete( Store store, string domainID )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
+		}
+
+		/// <summary>
+		/// Deletes a disk space quota policy for the specified member.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="member">Member that the limit will be associated with.</param>
+		static public void Delete( Store store, Member member )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
+		}
+
+		/// <summary>
+		/// Deletes a disk space quota policy for the specified collection.
+		/// </summary>
+		/// <param name="store">Handle to the collection store.</param>
+		/// <param name="collection">Collection that the limit will be associated with.</param>
+		static public void Delete( Store store, Collection collection )
+		{
+			// Need a policy manager.
+			PolicyManager pm = new PolicyManager( store );
+			
+			// See if the policy already exists.
+			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
+			if ( policy != null )
+			{
+				// Delete the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
