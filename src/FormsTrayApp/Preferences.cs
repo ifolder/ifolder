@@ -1399,9 +1399,6 @@ namespace Novell.FormsTrayApp
 
 				if (domainWeb.IsDefault)
 				{
-					// Don't allow the new default to be removed.
-					removeAccount.Enabled = false;
-
 					// Remove any new default.
 					if (newDefaultDomain != null)
 					{
@@ -1583,13 +1580,6 @@ namespace Novell.FormsTrayApp
 					{
 						ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainWeb));
 					}
-
-					// If the currently selected account is not the default, enable the remove button.
-					if ((accounts.SelectedItems.Count == 1) && 
-						!((Domain)accounts.SelectedItems[0].Tag).ID.Equals(currentDefaultDomain.ID))
-					{
-						removeAccount.Enabled = true;
-					}
 				}
 				catch (Exception ex)
 				{
@@ -1665,7 +1655,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Delegate used when a domain account is removed.
 		/// </summary>
-		public delegate void RemoveDomainDelegate(object sender, DomainConnectEventArgs e);
+		public delegate void RemoveDomainDelegate(object sender, DomainRemoveEventArgs e);
 		/// <summary>
 		/// Occurs when a domain account is removed.
 		/// </summary>
@@ -1712,7 +1702,10 @@ namespace Novell.FormsTrayApp
 					domains = ifWebService.GetDomains();
 					foreach (DomainWeb dw in domains)
 					{
-						AddDomainToList(dw);
+						if (dw.IsSlave)
+						{
+							AddDomainToList(dw);
+						}
 					}
 				}
 				catch (Exception ex)
@@ -1877,7 +1870,7 @@ namespace Novell.FormsTrayApp
 
 					// Disable the checkbox so that it cannot be unchecked and don't allow 
 					// the new default to be removed.
-					defaultServer.Enabled = removeAccount.Enabled = false;
+					defaultServer.Enabled = /*removeAccount.Enabled =*/ false;
 
 					apply.Enabled = true;
 				}
@@ -1965,24 +1958,54 @@ namespace Novell.FormsTrayApp
 						ifWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
 						lvi.Remove();
 
+						string defaultDomainID = null;
+
+						if (domain.Equals(newDefaultDomain))
+						{
+							// Set the current default domain back to the default.
+							currentDefaultDomain.DomainWeb.IsDefault = true;
+							newDefaultDomain = null;
+						}
+						else if (domain.Equals(currentDefaultDomain))
+						{
+							// The default domain was removed, get the new default.
+							defaultDomainID = ifWebService.GetDefaultDomain();
+						}
+
 						if (RemoveDomain != null)
 						{
 							// Call delegate to remove the domain from the server dropdown list.
-							RemoveDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+							RemoveDomain(this, new DomainRemoveEventArgs(domain.DomainWeb, defaultDomainID));
+						}
+
+						if (defaultDomainID != null)
+						{
+							// Set the new default domain.
+							foreach (ListViewItem item in accounts.Items)
+							{
+								Domain d = (Domain)item.Tag;
+								if (d.ID.Equals(defaultDomainID))
+								{
+									currentDefaultDomain = d;
+									if (newDefaultDomain == null)
+									{
+										d.DomainWeb.IsDefault = true;
+									}
+									break;
+								}
+							}
 						}
 
 						updatePassword = false;
 					}
-					catch
-					{
-					}
+					catch {}
 				}
 			}
 		}
 
 		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
 		{
-			if (rememberPassword.Focused && (newAccountLvi == null))
+			if (rememberPassword.Focused && (newAccountLvi == null) && (accounts.SelectedItems.Count == 1))
 			{
 				apply.Enabled = true;
 				updatePassword = true;
@@ -2074,7 +2097,7 @@ namespace Novell.FormsTrayApp
 					if ((newAccountLvi == null) || (lvi == newAccountLvi))
 					{
 						userName.Enabled = server.Enabled = 
-							rememberPassword.Enabled = password.Enabled = true;
+							rememberPassword.Enabled = password.Enabled = removeAccount.Enabled = true;
 
 						userName.Text = lvi.SubItems[1].Text;
 						password.Text = string.Empty;
@@ -2087,7 +2110,6 @@ namespace Novell.FormsTrayApp
 							server.Text = lvi.SubItems[0].Text;
 							newAccountLvi = lvi;
 							userName.ReadOnly = server.ReadOnly = false;
-							removeAccount.Enabled = true;
 							details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
 							server.Focus();
 						}
@@ -2099,22 +2121,6 @@ namespace Novell.FormsTrayApp
 
 							defaultServer.Checked = selectedDomain.DomainWeb.IsDefault;
 							defaultServer.Enabled = !defaultServer.Checked;
-
-							// Don't allow the current or new default account to be removed.
-							try
-							{
-								removeAccount.Enabled = !currentDefaultDomain.ID.Equals(selectedDomain.ID) && !defaultServer.Checked;
-							}
-							catch {}
-
-							if (selectedDomain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
-							{
-								// Don't allow the workgroup account to be modified or removed.
-								rememberPassword.Enabled = autoLogin.Enabled = 
-									password.Enabled = removeAccount.Enabled = false;
-
-								rememberPassword.Checked = true;
-							}
 
 							// Check for a saved password.
 							try

@@ -875,7 +875,7 @@ namespace Novell.FormsTrayApp
 		/// Remove the specified domain from the dropdown list.
 		/// </summary>
 		/// <param name="domainWeb">The domainWeb object representing the domain to remove.</param>
-		public void RemoveDomainFromList(DomainWeb domainWeb)
+		public void RemoveDomainFromList(DomainWeb domainWeb, string defaultDomainID)
 		{
 			Domain domain = null;
 			Domain showAllDomain = null;
@@ -892,9 +892,10 @@ namespace Novell.FormsTrayApp
 					showAllDomain = d;
 				}
 
-				if ((showAllDomain != null) && (domain != null))
+				// Reset the default domain.
+				if ((defaultDomainID != null) && d.ID.Equals(defaultDomainID))
 				{
-					break;
+					d.DomainWeb.IsDefault = true;                    
 				}
 			}
 
@@ -907,9 +908,17 @@ namespace Novell.FormsTrayApp
 				}
 
 				servers.Items.Remove(domain);
-
-				// TODO: Do we need to reset the default?
 			}
+		}
+
+		public void InitializeServerList()
+		{
+			servers.Items.Clear();
+
+			// Add the wild-card domain.
+			Domain domain = new Domain(resourceManager.GetString("showAll"));
+			servers.Items.Add(domain);
+			servers.SelectedItem = domain;
 		}
 
 		/// <summary>
@@ -1321,12 +1330,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (this.Visible)
 			{
-				servers.Items.Clear();
-
-				// Add the wild-card domain.
-				Domain domain = new Domain(resourceManager.GetString("showAll"));
-				servers.Items.Add(domain);
-				servers.SelectedItem = domain;
+				InitializeServerList();
 
 				DomainWeb[] domains;
 				try
