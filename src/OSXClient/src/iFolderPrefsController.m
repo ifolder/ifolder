@@ -9,10 +9,11 @@
 	
 	[[self window] setContentSize:[generalView frame].size];
 	[[self window] setContentView: generalView];
-	[[self window] setTitle:@"iFolder General Preferences"];
+	[[self window] setTitle:@"iFolder Preferences: General"];
 	
 	[self setupToolbar];
 
+	[toolbar setSelectedItemIdentifier:@"General"];
 
 	// Setup the controls
 }
@@ -56,6 +57,15 @@
 
 
 
+- (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
+{
+	return toolbarItemArray;
+}
+
+
+
+
+
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
 	return toolbarItemArray;
@@ -72,7 +82,7 @@
 		[[self window] setContentView: blankView];
 		[self updateSize:[generalView frame].size];
 		[[self window] setContentView: generalView];
-		[[self window] setTitle:@"iFolder General Preferences"];	
+		[[self window] setTitle:@"iFolder Preferences: General"];	
 	}
 }
 
@@ -87,7 +97,7 @@
 		[[self window] setContentView: blankView];
 		[self updateSize:[accountsView frame].size];
 		[[self window] setContentView: accountsView];
-		[[self window] setTitle:@"iFolder Accounts Preferences"];	
+		[[self window] setTitle:@"iFolder Preferences: Accounts"];	
 	}
 }
 

@@ -80,8 +80,6 @@
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
 - (int)count;
 
-- (void)toolbarWillAddItem:(NSNotification *)notification;
-- (void)toolbarDidRemoveItem:(NSNotification *)notification;
 
 // user actions
 - (void)toolbaritemclicked:(NSToolbarItem *)item;
