@@ -671,7 +671,7 @@ namespace Novell.iFolder
 						new EventHandler(OnNotifyUsersButton);
 
 			
-			Label strtlabel = new Label("<span style=\"italic\">To startup iFolder at login, leave iFolder running when you log out and save your current setup.</span>");
+			Label strtlabel = new Label("<span style=\"italic\">" + Util.GS("To startup iFolder at login, leave iFolder running when you log out and save your current setup.") + "</span>");
 			strtlabel.UseMarkup = true;
 			strtlabel.LineWrap = true;
 			appWidgetBox.PackStart(strtlabel, false, true, 0);
