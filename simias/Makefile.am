@@ -11,5 +11,5 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 	
-
-
+uninstall-local:
+	rm -rf $(DESTDIR)$(bindir)/.cstore
