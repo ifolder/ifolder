@@ -612,7 +612,7 @@ namespace Novell.iFolder
 					new EventHandler(showiFolderWindow);
 
 			MenuItem logview_item = 
-					new MenuItem (Util.GS("Show Synchronization Log"));
+					new MenuItem (Util.GS("Synchronization Log"));
 			trayMenu.Append (logview_item);
 			logview_item.Activated += 
 					new EventHandler(showLogWindow);

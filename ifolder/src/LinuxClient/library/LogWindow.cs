@@ -50,7 +50,7 @@ namespace Novell.iFolder
 		/// Default constructor for LogWindow
 		/// </summary>
 		public LogWindow()
-			: base ("iFolder Synchronization Log")
+			: base (Util.GS("iFolder Synchronization Log"))
 		{
 			CreateWidgets();
 		}

@@ -15,5 +15,6 @@ src/LinuxClient/library/iFolderPropSharingPage.cs
 src/LinuxClient/library/iFolderTreeView.cs
 src/LinuxClient/library/iFolderUserSelector.cs
 src/LinuxClient/library/iFolderWindow.cs
+src/LinuxClient/library/LogWindow.cs
 src/LinuxClient/library/NotifyWindow.cs
 src/LinuxClient/library/Util.cs

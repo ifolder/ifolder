@@ -191,7 +191,7 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderWindow
 		/// </summary>
 		public iFolderWindow(iFolderWebService webService)
-			: base ("iFolder")
+			: base (Util.GS("iFolders"))
 		{
 			if(webService == null)
 				throw new ApplicationException("iFolderWebServices was null");
