@@ -57,6 +57,7 @@ static void remove_buddy_from_store(GaimConnection *gc, const char *sn);
 static gboolean buddy_has_ifolder_plugin(const char *info_text);
 /* Returned char * must be freed */
 static char * get_buddy_munge(GaimConnection *gc, const char *sn);
+static gboolean set_buddy_profile_on_timeout(gpointer data);
 
 /* Returned string must be freed */
 void
@@ -108,11 +109,35 @@ simias_get_buddy_profile(GaimBuddy *buddy)
 }
 
 void
+simias_set_account_profile_foreach(gpointer data, gpointer user_data)
+{
+	GaimAccount *account = (GaimAccount*)data;
+	if (account)
+	{
+		simias_set_buddy_profile(account, SIMIAS_PLUGIN_INSTALLED_ID);
+	}
+}
+
+static gboolean
+set_buddy_profile_on_timeout(gpointer data)
+{
+	GaimAccount *account = (GaimAccount *)data;
+	if (account)
+	{
+		simias_set_buddy_profile(account, SIMIAS_PLUGIN_INSTALLED_ID);
+	}
+	
+	/* Tell g_timeout_add() to not call us again repeatedly */
+	return FALSE;
+}
+
+void
 simias_set_buddy_profile(GaimAccount *account, const char *profile_str)
 {
+	GaimConnection *gc;
+	GaimConnectionState conn_state;
 	GaimPlugin *oscar_plugin;
 	GaimPluginProtocolInfo *prpl_info;
-	GaimConnection *gc;
 	const char *prpl_id;
 
 	g_print("simias_set_buddy_profile() entered\n");
@@ -121,6 +146,34 @@ simias_set_buddy_profile(GaimAccount *account, const char *profile_str)
 	prpl_id = gaim_account_get_protocol_id(account);
 	if (!prpl_id || strcmp(prpl_id, "prpl-oscar")) {
 		g_print("returning because prpl_id = %s\n", prpl_id);
+		return;
+	}
+
+	gc = gaim_account_get_connection(account);
+	if (!gc) {
+		g_print("gaim_account_get_connection(account) returned NULL\n");
+		return;
+	}
+	
+	/* Make sure we're connected */	
+	conn_state = gaim_connection_get_state(gc);
+	if (conn_state == GAIM_DISCONNECTED)
+	{
+		/* This account is offline, so don't do anything. */
+		g_print("This account is offline, so the profile cannot be set.\n");
+		return;
+	}
+	else if (conn_state == GAIM_CONNECTING)
+	{
+		/**
+		 * Use g_timeout_add() to try setting the profile in a couple seconds
+		 * when hopefully the connection is now connected.
+		 */
+		g_timeout_add(2000, set_buddy_profile_on_timeout, account);
+	}
+	else if (conn_state != GAIM_CONNECTED)
+	{
+		g_print("A connection for the account is in an unknown state, so we can't set the profile.\n");
 		return;
 	}
 	
@@ -139,12 +192,6 @@ simias_set_buddy_profile(GaimAccount *account, const char *profile_str)
 	}
 
 	g_print("got prpl_info.\n");
-	
-	gc = gaim_account_get_connection(account);
-	if (!gc) {
-		g_print("gaim_account_get_connection(account) returned NULL\n");
-		return;
-	}
 	
 	g_print("About to call prpl_info->set_info()...\n");
 

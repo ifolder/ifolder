@@ -38,6 +38,7 @@
 
 void simias_get_buddy_profile(GaimBuddy *buddy);
 void simias_set_buddy_profile(GaimAccount *account, const char *profile_str);
+void simias_set_account_profile_foreach(gpointer data, gpointer user_data);
 
 void simias_account_connecting_cb(GaimAccount *account);
 void simias_account_setting_info_cb(GaimAccount *account, const char *new_info);

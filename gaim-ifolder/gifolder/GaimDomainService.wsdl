@@ -61,6 +61,19 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="GetRSACredential">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetRSACredentialResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="GetRSACredentialResult"
+                  type="xs:boolean"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="PublicCredential" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="PrivateCredential" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GaimDomainInfo" type="s0:GaimDomainInfo"/>
     </xs:schema>
   </types>
@@ -87,6 +100,12 @@
   </message>
   <message name="GetUserInfoSoapOut">
     <part name="parameters" element="s0:GetUserInfoResponse"/>
+  </message>
+  <message name="GetRSACredentialSoapIn">
+    <part name="parameters" element="s0:GetRSACredential"/>
+  </message>
+  <message name="GetRSACredentialSoapOut">
+    <part name="parameters" element="s0:GetRSACredentialResponse"/>
   </message>
   <message name="GetGaimDomainInfoHttpGetIn"/>
   <message name="GetGaimDomainInfoHttpGetOut">
@@ -133,6 +152,11 @@
       <input message="s0:GetUserInfoSoapIn"/>
       <output message="s0:GetUserInfoSoapOut"/>
       <documentation>GetUserInfo</documentation>
+    </operation>
+    <operation name="GetRSACredential">
+      <input message="s0:GetRSACredentialSoapIn"/>
+      <output message="s0:GetRSACredentialSoapOut"/>
+      <documentation>GetRSACredential</documentation>
     </operation>
   </portType>
   <portType name="Gaim Domain ServiceHttpGet">
@@ -201,6 +225,16 @@
     </operation>
     <operation name="GetUserInfo">
       <soap:operation soapAction="http://novell.com/simias/domain/GetUserInfo"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetRSACredential">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetRSACredential"
             style="document"/>
       <input>
         <soap:body use="literal"/>
