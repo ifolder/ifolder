@@ -597,6 +597,12 @@ namespace Simias.Storage
 			// Normalize the domain ID.
 			domainID = domainID.ToLower();
 
+			// Check to see if the domain already exists.
+			if ( GetDomain( domainID ) != null )
+			{
+				throw new AlreadyExistsException( "The specified domain already exists." );
+			}
+
 			// Create the domain object.
 			Domain domain = new Domain( domainName, domainID, domainDescription );
 			nodeList[ 0 ] = domain;

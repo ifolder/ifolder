@@ -451,7 +451,9 @@ namespace Simias.Domain
 			// provision user
 			ProvisionInfo provisionInfo = domainService.ProvisionUser(user, password);
 			if (provisionInfo == null)
+			{
 				throw new ApplicationException("User does not exist on server.");
+			}
 				
 			log.Debug("the user has been provisioned on the remote domain");
 

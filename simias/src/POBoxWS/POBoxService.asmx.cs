@@ -868,7 +868,7 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Port,
 						appPath);
 
-				cSub.POServiceURL = new Uri(poUri.ToString());
+				cSub.POServiceURL = poUri.Uri;
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
@@ -884,7 +884,7 @@ namespace Simias.POBoxService.Web
 						this.Context.Request.Url.Port,
 						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
-				cSub.SubscriptionCollectionURL = coUri.ToString();
+				cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
 				log.Debug("  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
  
 				DirNode dirNode = sharedCollection.GetRootDirectory();
