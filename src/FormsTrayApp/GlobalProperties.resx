@@ -4984,4 +4984,10 @@
 	<data name="deleteUnknown">
 		<value>Deleting {0} on server</value>
 	</data>
+	<data name="revertTitle">
+		<value>Revert this iFolder?</value>
+	</data>
+	<data name="revertPrompt">
+		<value>Are you sure you want to revert this iFolder to a normal folder?</value>
+	</data>
 </root>

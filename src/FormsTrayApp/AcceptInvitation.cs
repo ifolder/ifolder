@@ -29,6 +29,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net;
 
+using Novell.iFolderCom;
+
 namespace Novell.FormsTrayApp
 {
 	/// <summary>
@@ -421,9 +423,7 @@ namespace Novell.FormsTrayApp
 						}
 						catch (Exception ex)
 						{
-							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
-							mmb.Message = resourceManager.GetString("createDirectoryError");
-							mmb.Details = ex.Message;
+							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("createDirectoryError"), string.Empty, ex.Message);
 							mmb.ShowDialog();
 							iFolderLocation.Focus();
 							successful = false;
@@ -450,11 +450,7 @@ namespace Novell.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
-						Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
-						mmb.Message = resourceManager.GetString("pathValidationError");
-						mmb.MessageIcon = SystemIcons.Error;
-						mmb.Caption = resourceManager.GetString("pathValidationErrorTitle");
-						mmb.Details = ex.Message;
+						Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathValidationError"), resourceManager.GetString("pathValidationErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 
@@ -478,19 +474,15 @@ namespace Novell.FormsTrayApp
 						}
 						catch (Exception ex)
 						{
-							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
 							if (ex.Message.IndexOf("Path specified cannot be an iFolder", 0) != -1)
 							{
-								mmb.Message = resourceManager.GetString("pathInvalidError");
-								mmb.Caption = resourceManager.GetString("pathInvalidErrorTitle");
-								mmb.MessageIcon = SystemIcons.Information;
+								Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 								mmb.ShowDialog();
 								iFolderLocation.Focus();
 							}
 							else
 							{
-								mmb.Message = resourceManager.GetString("acceptError");
-								mmb.Details = ex.Message;
+								Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("acceptError"), string.Empty, ex.Message);
 								mmb.ShowDialog();
 							}
 
