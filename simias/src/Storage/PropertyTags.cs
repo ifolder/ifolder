@@ -81,6 +81,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string DomainType = "DomainType";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string FileLength = "Length";
 
 		/// <summary>
@@ -222,6 +227,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( DefaultDomain, null );
 			systemPropertyTable.Add( Domain, null );
 			systemPropertyTable.Add( DomainID, null );
+			systemPropertyTable.Add( DomainType, null );
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( FileSystemPath, null );
 			systemPropertyTable.Add( HostAddress, null );

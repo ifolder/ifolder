@@ -36,6 +36,27 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Defines the different types of synchronization configurations.
+		/// </summary>
+		public enum ConfigurationType
+		{
+			/// <summary>
+			/// Doesn't sychronize.
+			/// </summary>
+			None,
+
+			/// <summary>
+			/// Workgroup (e.g. Rendevous, Gaim, etc)
+			/// </summary>
+			Workgroup,
+
+			/// <summary>
+			/// Client/Server (e.g. Enterprise, SimpleServer, etc)
+			/// </summary>
+			ClientServer
+		}
+
+		/// <summary>
 		/// Configuration section name where enterprise key value pairs are stored.
 		/// </summary>
 		static internal string SectionName = "Domain";
@@ -58,6 +79,18 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
+		/// Gets the domain configuration type.
+		/// </summary>
+		public ConfigurationType ConfigType
+		{
+			get 
+			{ 
+				Property p = properties.FindSingleValue( PropertyTags.DomainType );
+				return ( p != null ) ? ( ConfigurationType )p.Value : ConfigurationType.None;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the domain description.
 		/// </summary>
 		public string Description
@@ -70,44 +103,6 @@ namespace Simias.Storage
 
 			set { properties.ModifyNodeProperty( PropertyTags.Description, value ); }
 		}
-
-		/// <summary>
-		/// Gets or sets the host address for the domain.
-		/// </summary>
-		public Uri HostAddress
-		{
-			get
-			{
-				Property p = properties.GetSingleProperty( PropertyTags.HostAddress );
-				return ( p != null ) ? p.Value as Uri : null;
-			}
-
-			set 
-			{ 
-				Property p = new Property( PropertyTags.HostAddress, value );
-				p.LocalProperty = true;
-				properties.ModifyNodeProperty( p ); 
-			}
-		}
-
-		/// <summary>
-		/// The syncing role of the domain.
-		/// </summary>
-		new public SyncRoles Role
-		{
-			get 
-			{ 
-				Property p = properties.FindSingleValue( PropertyTags.SyncRole );
-				return ( p != null ) ? ( SyncRoles )p.Value : SyncRoles.None;
-			}
-
-			set	
-			{ 
-				Property p = new Property( PropertyTags.SyncRole, value );
-				p.LocalProperty = true;
-				properties.ModifyNodeProperty( p );
-			}
-		}
 		#endregion
 
 		#region Constructors
@@ -115,19 +110,9 @@ namespace Simias.Storage
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
 		/// <param name="description">String that describes this domain.</param>
-		/// <param name="role">The synchronization role for this domain.</param>
-		public Domain( Store store, string domainName, string domainID, string description, SyncRoles role ) :
-			this ( store, domainName, domainID, description, role, null )
-		{
-		}
-
-		/// <param name="store">Store object.</param>
-		/// <param name="domainName">Name of the domain.</param>
-		/// <param name="domainID">Well known unique identifier for the domain.</param>
-		/// <param name="description">String that describes this domain.</param>
-		/// <param name="role">The synchronization role for this domain.</param>
-		/// <param name="locationAddress">The network address of the domain's location service.</param>
-		public Domain( Store store, string domainName, string domainID, string description, SyncRoles role, Uri locationAddress ) :
+		/// <param name="role">The type of synchronization role this domain has.</param>
+		/// <param name="configType">The synchronization configuration type for this domain.</param>
+		public Domain( Store store, string domainName, string domainID, string description, SyncRoles role, ConfigurationType configType ) :
 			base ( store, domainName, domainID, NodeTypes.DomainType, domainID )
 		{
 			// Add the description attribute.
@@ -136,14 +121,15 @@ namespace Simias.Storage
 				properties.AddNodeProperty( PropertyTags.Description, description );
 			}
 
-			// Add the location address.
-			if ( locationAddress != null )
-			{
-				HostAddress = locationAddress;
-			}
+			// Add the sync role for this collection.
+			Property p = new Property( PropertyTags.SyncRole, role );
+			p.LocalProperty = true;
+			properties.AddNodeProperty( p );
 
-			// Add the role attribute.
-			Role = role;
+			// Add the configuration type.
+			p = new Property( PropertyTags.DomainType, configType );
+			p.LocalProperty = true;
+			properties.AddNodeProperty( p );
 		}
 
 		/// <summary>

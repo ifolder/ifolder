@@ -64,6 +64,15 @@ namespace Simias.Location
 
 		/// <summary>
 		/// Returns the network location for the the specified
+		/// domain.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>A Uri object that contains the network location.
+		/// </returns>
+		Uri ResolveLocation( string domainID );
+
+		/// <summary>
+		/// Returns the network location for the the specified
 		/// collection.
 		/// </summary>
 		/// <param name="domainID">Identifier for the domain that the

@@ -39,6 +39,7 @@ using Novell.Security.ClientPasswordManager;
 using Simias;
 using Simias.Client;
 using Simias.DomainServices;
+using Simias.Location;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Security.Web.AuthenticationService;
@@ -630,9 +631,13 @@ namespace Simias.Web
 			this.Description = cDomain.Description;
 			this.MemberUserID = cMember.UserID;
 			this.MemberName = cMember.Name;
-			this.RemoteUrl = 
-				cDomain.HostAddress.ToString() + "/DomainService.asmx";
-			this.Host = cDomain.HostAddress.ToString();
+
+			Uri uri = Locate.ResolveLocation(domainID);
+			if (uri == null)
+				throw new Exception("Cannot get address for domain.");
+
+			this.RemoteUrl = uri.ToString() + "/DomainService.asmx";
+			this.Host = uri.ToString();
 			this.IsSlave = cDomain.Role.Equals(Simias.Sync.SyncRoles.Slave);
 			this.IsDefault = domainID.Equals(store.DefaultDomain);
 		}

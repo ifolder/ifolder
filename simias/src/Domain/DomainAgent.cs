@@ -335,14 +335,18 @@ namespace Simias.DomainServices
 				log.Debug("Creating Domain Proxy: {0}", info.Name);
 
 				// Create a new domain
-				Domain domain = new Domain(store, info.Name, info.ID, info.Description, SyncRoles.Slave, hostAddress);
+				Domain domain = new Domain(store, info.Name, info.ID, info.Description, SyncRoles.Slave, Domain.ConfigurationType.ClientServer);
 				domain.Proxy = true;
 				domain.SetType( domain, "Enterprise" );
 			
 				// Mark the domain inactive until we get the POBox created
 				Property p = new Property( activePropertyName, false );
 				p.LocalProperty = true;
-				domain.Properties.ModifyNodeProperty( p );
+				domain.Properties.AddNodeProperty( p );
+
+				p = new Property( PropertyTags.HostAddress, hostAddress );
+				p.LocalProperty = true;
+				domain.Properties.AddNodeProperty( p );
 
 				// Create domain member.
 				Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
@@ -715,7 +719,7 @@ namespace Simias.DomainServices
 				{
 					CookieContainer cookie = new CookieContainer();
 					NetworkCredential netCred = new NetworkCredential( user, password );
-					status = this.Login( cDomain.HostAddress, domainID, ref cookie, netCred );
+					status = this.Login( Locate.ResolveLocation(domainID), domainID, ref cookie, netCred );
 					if ( status.statusCode == SCodes.Success ||
 						status.statusCode == SCodes.SuccessInGrace )
 					{
@@ -817,7 +821,13 @@ namespace Simias.DomainServices
 			if ( !localOnly )
 			{
 				// Set the address to the server.
-				domainService.Url = domain.HostAddress.ToString() + "/DomainService.asmx";
+				Uri uri = Locate.ResolveLocation(domainID);
+				if (uri == null)
+				{
+					throw new SimiasException(String.Format("Cannot get location for domain {0}.", domain.Name));
+				}
+
+				domainService.Url = uri.ToString() + "/DomainService.asmx";
 
 				// Get the credentials for this user.
 				Credentials cSimiasCreds = new Credentials(domainID, userID);

@@ -26,6 +26,7 @@ using System.Net;
 using Simias;
 using Simias.DomainServices;
 using Simias.Event;
+using Simias.Location;
 using Simias.Storage;
 using Simias.Sync;
 using Novell.Security.ClientPasswordManager;
@@ -266,7 +267,7 @@ namespace Simias.Authentication
 							cMember.Name, 
 							null);
 
-					Uri cUri = new Uri(cDomain.HostAddress.ToString());
+					Uri cUri = Locate.ResolveLocation(cDomain.ID);
 					realCreds = cCreds.GetCredential(cUri, "BASIC");
 					//if (realCreds == null)
 					//{

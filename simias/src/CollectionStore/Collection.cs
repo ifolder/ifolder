@@ -249,8 +249,8 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Domain domain = store.GetDomain( Domain );
-				return ( domain != null ) ? domain.Role : SyncRoles.None;
+				Property p = properties.FindSingleValue( PropertyTags.SyncRole );
+				return ( p != null ) ? ( SyncRoles )p.Value : SyncRoles.None;
 			}
 		}
 
@@ -634,15 +634,13 @@ namespace Simias.Storage
 							// Set the update time of the node.
 							node.UpdateTime = commitTime;
 
-							// If the sync role for this domain is a slave, then set the attribute that the master
-							// needs to be created on the enterprise server.
+							// Check so that sync roles can be set on the collection.
 							if ( IsType( node, NodeTypes.CollectionType ) )
 							{
-								if ( Role == SyncRoles.Slave )
+								// Check if there is a role already set on the collection.
+								if ( !node.Properties.HasProperty( PropertyTags.SyncRole ) )
 								{
-									Property p = new Property( PropertyTags.CreateMaster, true );
-									p.LocalProperty = true;
-									node.Properties.ModifyNodeProperty( p );
+									SetSyncRole( node, node.Properties.State );
 								}
 							}
 							else if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
@@ -812,6 +810,13 @@ namespace Simias.Storage
 						{
 							// Validate this Collection object.
 							ValidateNodeForCommit( node );
+
+							// Check for the type of sync role that needs to be set if this
+							// is a collection.
+							if ( IsType( node, NodeTypes.CollectionType ) && ( !node.Properties.HasProperty( PropertyTags.SyncRole ) ) )
+							{
+								SetSyncRole( node, node.Properties.State );
+							}
 
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -1151,6 +1156,61 @@ namespace Simias.Storage
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Sets the sync role on the collection node object.
+		/// </summary>
+		/// <param name="node">Node object that represents a collection.</param>
+		/// <param name="state">State of the node.</param>
+		private void SetSyncRole( Node node, PropertyList.PropertyListState state )
+		{
+			// Get the domain so that the domain type can be used to set the role for
+			// this collection.
+			Storage.Domain domain = store.GetDomain( Domain );
+			SyncRoles role = SyncRoles.Local;
+			if ( domain != null )
+			{
+				Storage.Domain.ConfigurationType configType = domain.ConfigType;
+				if ( configType == Storage.Domain.ConfigurationType.Workgroup )
+				{
+					if ( state == PropertyList.PropertyListState.Add )
+					{
+						role = SyncRoles.Master;
+					}
+					else if ( state == PropertyList.PropertyListState.Proxy )
+					{
+						role = SyncRoles.Slave;
+					}
+				}
+				else if ( configType == Storage.Domain.ConfigurationType.ClientServer )
+				{
+					if ( state == PropertyList.PropertyListState.Add )
+					{
+						if ( store.IsEnterpriseServer )
+						{
+							role = SyncRoles.Master;
+						}
+						else
+						{
+							role = SyncRoles.Slave;
+
+							// Set the attribute that the master needs to be created on the enterprise server.
+							Property masterProperty = new Property( PropertyTags.CreateMaster, true );
+							masterProperty.LocalProperty = true;
+							node.Properties.ModifyNodeProperty( masterProperty );
+						}
+					}
+					else if ( state == PropertyList.PropertyListState.Proxy )
+					{
+						role = store.IsEnterpriseServer ? SyncRoles.Master : SyncRoles.Slave;
+					}
+				}
+			}
+
+			Property roleProperty = new Property( PropertyTags.SyncRole, role );
+			roleProperty.LocalProperty = true;
+			node.Properties.ModifyNodeProperty( roleProperty );
 		}
 
 		/// <summary>

@@ -143,7 +143,6 @@ namespace Simias.Location
 			lock ( typeof( Locate) )
 			{
 				// See if there is a provider mapping for this domain.
-				// See if there is a provider mapping for this domain.
 				string ilpName = locationProviderTable[ collection.Domain ]as string;
 				ilp = ( ilpName != null ) ? registeredProviders[ ilpName ] as ILocationProvider : GetDomainProvider( collection.Domain );
 			}
@@ -162,6 +161,38 @@ namespace Simias.Location
 			}
 
 			log.Debug( "Location for collection {0} is {1}.", collection.Name, ( networkLocation != null ) ? networkLocation.ToString() : "not found" );
+			return networkLocation;
+		}
+
+		/// <summary>
+		/// Returns the network location for the the specified
+		/// domain.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>A Uri object that contains the network location.
+		/// </returns>
+		static public Uri ResolveLocation( string domainID )
+		{
+			ILocationProvider ilp = null;
+			Uri networkLocation = null;
+
+			log.Debug( "Resolving location for domain {0}.", domainID );
+
+			lock ( typeof( Locate) )
+			{
+				// See if there is a provider mapping for this domain.
+				string ilpName = locationProviderTable[ domainID ]as string;
+				ilp = ( ilpName != null ) ? registeredProviders[ ilpName ] as ILocationProvider : GetDomainProvider( domainID );
+			}
+
+			// Is there a provider for this domain?
+			if ( ilp != null )
+			{
+				// See if the provider already knows about this collection.
+				networkLocation = ilp.ResolveLocation( domainID );
+			}
+
+			log.Debug( "Location for domain {0} is {1}.", domainID, ( networkLocation != null ) ? networkLocation.ToString() : "not found" );
 			return networkLocation;
 		}
 

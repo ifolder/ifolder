@@ -48,6 +48,31 @@ namespace Simias.Location
 		static private Store store = Store.GetStore();
 		#endregion
 
+		#region Private Methods
+		/// <summary>
+		/// Gets the host address property from the domain object.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>A Uri object containing the host address for the
+		/// domain if successful. Otherwise returns a null.</returns>
+		private Uri GetDomainHostAddress( string domainID )
+		{
+			Uri hostAddress = null;
+
+			Domain domain = store.GetDomain( domainID );
+			if ( domain != null )
+			{
+				Property p = domain.Properties.FindSingleValue( PropertyTags.HostAddress );
+				if ( p != null )
+				{
+					hostAddress = p.Value as Uri;
+				}
+			}
+
+			return hostAddress;
+		}
+		#endregion
+
 		#region ILocationProvider Members
 
 		/// <summary>
@@ -93,6 +118,18 @@ namespace Simias.Location
 
 		/// <summary>
 		/// Returns the network location for the the specified
+		/// domain.
+		/// </summary>
+		/// <param name="domainID">Identifier for the domain.</param>
+		/// <returns>A Uri object that contains the network location.
+		/// </returns>
+		public Uri ResolveLocation( string domainID )
+		{
+			return OwnsDomain( domainID ) ? GetDomainHostAddress( domainID ) : null;
+		}
+
+		/// <summary>
+		/// Returns the network location for the the specified
 		/// collection.
 		/// </summary>
 		/// <param name="domainID">Identifier for the domain that the
@@ -103,8 +140,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolveLocation( string domainID, string collectionID )
 		{
-			Domain domain = store.GetDomain( domainID );
-			return ( OwnsDomain( domainID ) && ( domain != null ) ) ? domain.HostAddress : null;
+			return OwnsDomain( domainID ) ? GetDomainHostAddress( domainID ) : null;
 		}
 
 		/// <summary>
@@ -120,8 +156,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolveLocation( string domainID, string userID, string collectionID )
 		{
-			Domain domain = store.GetDomain( domainID );
-			return ( OwnsDomain( domainID ) && ( domain != null ) ) ? domain.HostAddress : null;
+			return OwnsDomain( domainID ) ? GetDomainHostAddress( domainID ) : null;
 		}
 
 		/// <summary>
@@ -134,8 +169,7 @@ namespace Simias.Location
 		/// </returns>
 		public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
-			Domain domain = store.GetDomain( domainID );
-			return ( OwnsDomain( domainID ) && ( domain != null ) ) ? domain.HostAddress : null;
+			return OwnsDomain( domainID ) ? GetDomainHostAddress( domainID ) : null;
 		}
 		#endregion
 

@@ -32,6 +32,7 @@ using System.Web;
 using Simias;
 using Simias.Client;
 using Simias.DomainServices;
+using Simias.Location;
 
 //using Simias.Client.Event;
 using Simias.Event;
@@ -197,7 +198,7 @@ namespace Simias.DomainWatcher
 									cMember.Name, 
 									credentials);
 
-							Uri cUri = new Uri( cDomain.HostAddress.ToString() );
+							Uri cUri = Locate.ResolveLocation( cDomain.ID );
 							NetworkCredential netCreds = cCreds.GetCredential( cUri, "BASIC" );
 							if ( ( netCreds == null ) || firstTime )
 							{

@@ -26,6 +26,7 @@ using System.IO;
 using System.Xml;
 
 using Simias.Client;
+using Simias.Sync;
 
 namespace Simias.Storage
 {
@@ -70,6 +71,10 @@ namespace Simias.Storage
 		internal LocalDatabase( Store storeObject, string domainID ) :
 			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, domainID )
 		{
+			// Set a sync role on this collection.
+			Property p = new Property( PropertyTags.SyncRole, SyncRoles.Local );
+			p.LocalProperty = true;
+			properties.ModifyNodeProperty( p );
 		}
 
 		/// <summary>

@@ -271,39 +271,15 @@ namespace Simias.Storage
 				{
 					// Default the user name to the machine user name.
 					string userName = Environment.UserName;
-					Uri localUri = null;
 
 					// Does the configuration indicate that this is an enterprise server?
 					if ( enterpriseServer )
 					{
-						// Set the local uri address for the domains. This will have to change
-						// when we support upstream servers.
-						localUri = new UriBuilder( Uri.UriSchemeHttp, MyDns.GetHostName(), 80, "simias10" ).Uri;
-
 						// Get the name of the user to create as the identity.
 						string proxyName = config.Get( LdapAuthenticationTag, ProxyDNTag, null );
 						if ( proxyName != null )
 						{
 							userName = ParseUserName( proxyName );
-						}
-					}
-					else
-					{
-						// Set the local uri address from the config file since this is a workgroup machine.
-						Uri tempUri = Manager.LocalServiceUrl;
-						if ( tempUri != null )
-						{
-							// If the host address is loopback, convert it to the endpoint address.
-							string hostAddress = IPAddress.IsLoopback( IPAddress.Parse( tempUri.Host ) ) ? 
-								MyDns.GetHostName() : tempUri.Host;
-
-							localUri = new UriBuilder( tempUri.Scheme, hostAddress, tempUri.Port, tempUri.PathAndQuery ).Uri;
-						}
-						else
-						{
-							// This is used for when running Simias without calling Manager.Start(). This is intended
-							// for debug mode only.
-							localUri = new UriBuilder( Uri.UriSchemeHttp, MyDns.GetHostName(), 8086, "simias10/" + Environment.UserName ).Uri;
 						}
 					}
 
@@ -329,7 +305,7 @@ namespace Simias.Storage
 					ldb.Commit( new Node[] { ldb, member, owner } );
 
 					// Create the local domain.
-					Domain localDomain = new Domain( this, "Local", localDomainID, "Local Machine Domain", SyncRoles.Local, localUri );
+					Domain localDomain = new Domain( this, "Local", localDomainID, "Local Machine Domain", SyncRoles.Local, Domain.ConfigurationType.None );
 					Member localDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 					localDomainOwner.IsOwner = true;
 					localDomain.Commit( new Node[] { localDomain, localDomainOwner } );
@@ -354,7 +330,7 @@ namespace Simias.Storage
 						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
 
 						// Create the enterprise domain.
-						Domain enterpriseDomain = new Domain( this, enterpriseName, enterpriseID, description, SyncRoles.Master, localUri );
+						Domain enterpriseDomain = new Domain( this, enterpriseName, enterpriseID, description, SyncRoles.Master, Domain.ConfigurationType.ClientServer );
 						enterpriseDomain.SetType( enterpriseDomain, "Enterprise" );
 						Member enterpriseDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 						enterpriseDomainOwner.IsOwner = true;
