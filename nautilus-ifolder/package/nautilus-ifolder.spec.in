@@ -22,7 +22,7 @@
 #
 #######################################################################
 
-%define prefix @prefix@
+%define prefix /opt/novell/ifolder3
 %define gnome_root @gnome_root@
 
 Summary      : nautilus-ifolder
