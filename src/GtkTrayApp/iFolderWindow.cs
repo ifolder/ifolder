@@ -1524,20 +1524,19 @@ namespace Novell.iFolder
 
 			do
 			{
-				// create a file selection dialog and turn off all of the
-				// file operations and controlls
-				FileSelection fs = new FileSelection ("Choose a folder...");
-				fs.FileList.Parent.Hide();
-				fs.SelectionEntry.Hide();
-				fs.FileopDelFile.Hide();
-				fs.FileopRenFile.Hide();
-				fs.TransientFor = this;
+				// Switched out to use the compatible file selector
+				CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
+					"Choose a folder...", this, 
+					CompatFileChooserDialog.Action.SelectFolder);
 
-				rc = fs.Run ();
-				fs.Hide();
+				rc = cfcd.Run();
+				cfcd.Hide();
+
+				string selectedFolder = cfcd.Selections[0];
+
 				if(rc == -5)
 				{
-					if(ShowBadiFolderPath(fs.Filename, false))
+					if(ShowBadiFolderPath(selectedFolder, false))
 						continue;
 
 					// break loop
@@ -1545,7 +1544,7 @@ namespace Novell.iFolder
 					try
 					{
    		 				iFolder newiFolder = 
-							iFolderWS.CreateLocaliFolder(fs.Filename);
+							iFolderWS.CreateLocaliFolder(selectedFolder);
 
 						TreeIter iter = 
 							iFolderTreeStore.AppendValues(newiFolder);

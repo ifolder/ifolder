@@ -122,20 +122,17 @@ namespace Novell.iFolder
 
 		private void OnChoosePath(object o, EventArgs args)
 		{
-			// create a file selection dialog and turn off all of the
-			// file operations and controlls
-			FileSelection fs = new FileSelection ("Choose a folder...");
-			fs.FileList.Parent.Hide();
-			fs.SelectionEntry.Hide();
-			fs.FileopDelFile.Hide();
-			fs.FileopRenFile.Hide();
-			fs.TransientFor = this;
+			// Switched out to use the compatible file selector
+			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
+					"Choose a folder...", this, 
+					CompatFileChooserDialog.Action.SelectFolder);
 
-			int rc = fs.Run ();
-			fs.Hide();
+			int rc = cfcd.Run();
+			cfcd.Hide();
+
 			if(rc == -5)
 			{
-				pathEntry.Text = fs.Filename;
+				pathEntry.Text = cfcd.Selections[0];
 			}
 		}
 
