@@ -38,19 +38,16 @@ namespace Novell.iFolder
 {
 	public class SharingListHolder
 	{
-		private Access.Rights	rights;
-		private string			identity;
+		private iFolder.Rights	rights;
 		private Contact			contact;
 
-		public SharingListHolder( Access.Rights rights,
-				string identity, Contact contact)
+		public SharingListHolder( iFolder.Rights rights, Contact contact)
 		{
 			this.rights = rights;
-			this.identity = identity;
 			this.contact = contact;
 		}
 
-		public Access.Rights Rights
+		public iFolder.Rights Rights
 		{
 			get
 			{
@@ -63,15 +60,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		public string Identity
-		{
-			get
-			{
-				return(identity);
-			}
-		}
-
-		public Contact ABContact
+		public Contact Contact
 		{
 			get
 			{
@@ -158,15 +147,16 @@ namespace Novell.iFolder
 					try
 					{
 						Contact con = dAddrBook.GetContact(ace.Id);
+
 						SharingListHolder slh = new SharingListHolder(
-								ace.Rights, ace.Id, con);
+								(iFolder.Rights)ace.Rights, con);
 						ContactTreeStore.AppendValues(slh);
 						guidList.Add(ace.Id);
 					}
 					catch(Exception e)
 					{
 						SharingListHolder slh = new SharingListHolder(
-								ace.Rights, ace.Id, null);
+								(iFolder.Rights)ace.Rights, null);
 						ContactTreeStore.AppendValues(slh);
 					}
 				}
@@ -196,15 +186,15 @@ namespace Novell.iFolder
 		{
 			SharingListHolder slh = (SharingListHolder)
 				ContactTreeStore.GetValue(iter,0);
-			if(slh.ABContact != null)
+			if(slh.Contact != null)
 			{
-				string userName = slh.ABContact.FN;
+				string userName = slh.Contact.FN;
 				if(userName == null)
-					userName = slh.ABContact.UserName;
+					userName = slh.Contact.UserName;
 				((CellRendererText) cell).Text = userName;
 			}
 			else
-				((CellRendererText) cell).Text = slh.Identity;
+				((CellRendererText) cell).Text = "null user";
 		}
 
 		private void ContactCellPixbufDataFunc(Gtk.TreeViewColumn tree_column,
@@ -212,7 +202,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			SharingListHolder slh = (SharingListHolder) ContactTreeStore.GetValue(iter,0);
-			if( (slh != null) && (slh.ABContact != null) && slh.ABContact.IsCurrentUser)
+			if( (slh != null) && (slh.Contact != null) && slh.Contact.IsCurrentUser)
 				((CellRendererPixbuf) cell).Pixbuf = CurContactPixBuf;
 			else
 				((CellRendererPixbuf) cell).Pixbuf = ContactPixBuf;
@@ -226,16 +216,16 @@ namespace Novell.iFolder
 				ContactTreeStore.GetValue(iter,0);
 			switch(slh.Rights)
 			{
-				case Access.Rights.Deny:
+				case iFolder.Rights.Deny:
 					((CellRendererText) cell).Text = "No Access";
 					break;
-				case Access.Rights.ReadOnly:
+				case iFolder.Rights.ReadOnly:
 					((CellRendererText) cell).Text = "Read Only";
 					break;
-				case Access.Rights.ReadWrite:
+				case iFolder.Rights.ReadWrite:
 					((CellRendererText) cell).Text = "Read / Write";
 					break;
-				case Access.Rights.Admin:
+				case iFolder.Rights.Admin:
 					((CellRendererText) cell).Text = "Full Control";
 					break;
 			}
@@ -258,7 +248,7 @@ namespace Novell.iFolder
 				// Check the identity here
 				// If it is the owner, dont' let them deny themselves
 				if( (!ifldr.IsShareable()) ||
-					(slh.Identity == ifldr.OwnerIdentity) )
+					(slh.Contact.ID == ifldr.OwnerIdentity) )
 				{
 					removeSharingButton.Sensitive = false;
 					FullControlRB.Sensitive = false;
@@ -275,15 +265,15 @@ namespace Novell.iFolder
 
 				switch(slh.Rights)
 				{
-					case Access.Rights.Deny:
+					case iFolder.Rights.Deny:
 						break;
-					case Access.Rights.ReadOnly:
+					case iFolder.Rights.ReadOnly:
 						ReadOnlyRB.Active = true;
 						break;
-					case Access.Rights.ReadWrite:
+					case iFolder.Rights.ReadWrite:
 						ReadWriteRB.Active = true;
 						break;
-					case Access.Rights.Admin:
+					case iFolder.Rights.Admin:
 						FullControlRB.Active = true;
 						break;
 				}
@@ -359,29 +349,40 @@ namespace Novell.iFolder
 		public void ContactEditedHandler(object o,
 				ContactEventArgs args)
 		{
-			Contact contact = args.ABContact;
+			Contact contact = args.Contact;
 			contact.Commit();
 		}
 
 		public void onContactsPicked(object o, ContactsPickedEventArgs args)
 		{
-			Contact c = args.contact;
+			Contact c = args.Contact;
 
 			if(!guidList.Contains(c.ID))
 			{
 				try
 				{
-					ifldr.Share(c.ID, Access.Rights.ReadWrite, true);
-
-					SharingListHolder slh = new SharingListHolder(
-							Access.Rights.ReadWrite, c.ID, c);
-					ContactTreeStore.AppendValues(slh);
+					ifldr.SetRights(c, iFolder.Rights.ReadWrite);
 					guidList.Add(c.ID);
+					SharingListHolder slh = new SharingListHolder(
+							iFolder.Rights.ReadWrite, c);
+					ContactTreeStore.AppendValues(slh);
 				}
 				catch(Exception e)
 				{
 					Console.WriteLine(e);
-					Console.WriteLine("Didn't share with contact: " + c.UserName);
+					Console.WriteLine("Error in SetRights on : " + c.UserName);
+					return;
+				}
+				
+				try
+				{
+					ifldr.Invite(c);
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e);
+					Console.WriteLine("Error in Inviting : " + c.UserName);
+					return;
 				}
 			}
 			else
@@ -390,7 +391,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		private void SetCurrentAccessRights(Access.Rights rights)
+		private void SetCurrentAccessRights(iFolder.Rights rights)
 		{
 			TreeSelection tSelect = ContactTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -402,7 +403,7 @@ namespace Novell.iFolder
 				SharingListHolder slh = (SharingListHolder)
 						ContactTreeStore.GetValue(iter,0);
 
-				ifldr.SetShareAccess(slh.Identity, rights);
+				ifldr.SetRights(slh.Contact, rights);
 				slh.Rights = rights;
 				tModel.SetValue(iter, 0, slh);
 			}
@@ -422,9 +423,9 @@ namespace Novell.iFolder
 				SharingListHolder slh = (SharingListHolder)
 						ContactTreeStore.GetValue(iter,0);
 
-				ifldr.RemoveUserAccess(slh.Identity);
+				ifldr.RemoveRights(slh.Contact);
 				ContactTreeStore.Remove(out iter);
-				guidList.Remove(slh.Identity);
+				guidList.Remove(slh.Contact.ID);
 				removeSharingButton.Sensitive = false;
 				FullControlRB.Sensitive = false;
 				ReadWriteRB.Sensitive = false;
@@ -434,17 +435,17 @@ namespace Novell.iFolder
 
 		private void on_readwrite_clicked(object o, EventArgs args)
 		{
-			SetCurrentAccessRights(Access.Rights.ReadWrite);
+			SetCurrentAccessRights(iFolder.Rights.ReadWrite);
 		}
 
 		private void on_readonly_clicked(object o, EventArgs args)
 		{
-			SetCurrentAccessRights(Access.Rights.ReadOnly);
+			SetCurrentAccessRights(iFolder.Rights.ReadOnly);
 		}
 
 		private void on_fullcontrol_clicked(object o, EventArgs args)
 		{
-			SetCurrentAccessRights(Access.Rights.Admin);
+			SetCurrentAccessRights(iFolder.Rights.Admin);
 		}
 
 		private void on_unrealize(object o, EventArgs args) 

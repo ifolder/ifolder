@@ -44,7 +44,9 @@ namespace Novell.iFolder.Tests
 		private iFolderManager manager;
 		private string path;
 
-		private iFolder CreateiFolder(string name)
+
+
+/*		private iFolder CreateiFolder(string name)
 		{
 			// Create a private (not shared) iFolder
 			string iFolderPath = Path.Combine(path, name);
@@ -54,13 +56,16 @@ namespace Novell.iFolder.Tests
 			Console.WriteLine("  LocalPath={0}", newiFolder.LocalPath);
 			return newiFolder;
 		}
-
+*/
 		private iFolder CreateSharediFolder(string name)
 		{
 			// Create a Collection.
-			iFolder sharediFolder = manager.CreateiFolder(Path.Combine(path, name));
+			iFolder sharediFolder = 
+					manager.CreateiFolder(Path.Combine(path, name));
 				
 			// Create a user that can be impersonated.
+
+			
 			IIdentityFactory idFactory = IdentityManager.Connect();
 			idFactory.Create( "testuser", "novell" );
 			IIdentity identity = idFactory.Authenticate( "testuser", "novell" );
