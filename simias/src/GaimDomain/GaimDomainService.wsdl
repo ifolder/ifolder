@@ -19,8 +19,6 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="RosterID" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="RosterName" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetGaimDomainInfoResponse">
