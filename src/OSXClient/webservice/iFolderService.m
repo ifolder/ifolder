@@ -321,30 +321,34 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
 
 
 
--(void)DeleteiFolder:(NSString *)iFolderID
+-(void) DeclineiFolderInvitation:(NSString *)iFolderID fromDomain:(NSString *)DomainID
 {
     struct soap soap;
     int err_code;
 
+	NSAssert( (DomainID != nil), @"DomainID was nil");
 	NSAssert( (iFolderID != nil), @"iFolderID was nil");
 
-	struct _ns1__DeleteiFolder deleteiFolderMessage;
-	struct _ns1__DeleteiFolderResponse deleteiFolderResponse;
+	struct _ns1__DeclineiFolderInvitation			declineiFolderMessage;
+	struct _ns1__DeclineiFolderInvitationResponse	declineiFolderResponse;
 	
-	deleteiFolderMessage.iFolderID = (char *)[iFolderID cString];
+	declineiFolderMessage.iFolderID = (char *)[iFolderID cString];
+	declineiFolderMessage.DomainID = (char *)[DomainID cString];
 
     init_gsoap (&soap);
-    err_code = soap_call___ns1__DeleteiFolder(
+    err_code = soap_call___ns1__DeclineiFolderInvitation(
 			&soap,
             NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
             NULL,
-            &deleteiFolderMessage,
-            &deleteiFolderResponse);
+            &declineiFolderMessage,
+            &declineiFolderResponse);
 
 	if(soap.error)
 	{
+		cleanup_gsoap(&soap);
+
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in DeleteiFolder"];
+					format:@"Error in DeclineiFolderInvitation:fromDomain"];
 	}
 
     cleanup_gsoap(&soap);

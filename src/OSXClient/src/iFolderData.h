@@ -83,10 +83,13 @@
 
 
 -(void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
--(void)deleteiFolder:(NSString *)ifolderID;
 -(void)acceptiFolderInvitation:(NSString *)iFolderID 
 									InDomain:(NSString *)domainID 
 									toPath:(NSString *)localPath;
-- (void)revertiFolder:(NSString *)iFolderID;
+-(void)declineiFolderInvitation:(NSString *)iFolderID 
+									fromDomain:(NSString *)domainID;
+-(void)revertiFolder:(NSString *)iFolderID;
+-(void)deleteiFolder:(NSString *)ifolderID;
+
 
 @end
