@@ -3,7 +3,7 @@ Sync_CSFILES_CSC := $(subst /,$(SEP),$(Sync_CSFILES))
 Sync_INCLUDES = 
 Sync_RESOURCES =
 Sync_FLAGS = $(CSC_LIBFLAG)
-Sync_LIBS = Common.dll CollectionEvents.dll CollectionStore.dll Identity.dll Configuration.dll SyncCommon.dll Agent.dll System.dll System.Data.dll System.Runtime.Remoting.dll
+Sync_LIBS = Common.dll Configuration.dll CollectionEvents.dll StoreProvider.dll Identity.dll CollectionStore.dll Agent.dll SyncCommon.dll System.dll System.Data.dll System.Runtime.Remoting.dll
 Sync_LIBPATH = ../Common ../SyncCommon ../Agent ../CollectionEvents ../CollectionStore ../StoreProvider ../Identity ../FsProvider ../WorkGroupIdentity ../Configuration ../SqliteProvider ../../external/sqlite/linux
 
 SyncCmd_CSFILES = $(srcdir)/SyncCmd.cs
@@ -11,7 +11,7 @@ SyncCmd_CSFILES_CSC := $(subst /,$(SEP),$(SyncCmd_CSFILES))
 SyncCmd_INCLUDES = 
 SyncCmd_RESOURCES =
 SyncCmd_FLAGS = $(CSC_EXEFLAG)
-SyncCmd_LIBS = Sync.dll $(Sync_LIBS)
+SyncCmd_LIBS = $(Sync_LIBS) Sync.dll
 SyncCmd_LIBPATH = $(Sync_LIBPATH)
 
 NUNIT_TESTS := TestSync.exe
