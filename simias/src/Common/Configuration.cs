@@ -93,7 +93,19 @@ namespace Simias
 					}
 					else
 					{
-						File.Create(ConfigFilePath).Close();
+						fs = File.Create(ConfigFilePath);
+                        try
+                        {
+                            doc = new XmlDocument();
+                            doc.AppendChild(doc.CreateElement(RootElementTag));
+                            doc.Save(fs);
+                        }
+                        finally
+                        {
+                            fs.Close();
+                            fs = null;
+                            doc = null;
+                        }
 					}
 				}
 			}
@@ -341,21 +353,11 @@ namespace Simias
 
 		private void GetDocElement()
 		{
-			try
-			{
-				OpenConfigFile();
-				modified = false;
-				doc = new XmlDocument();
-				doc.Load(fs);
-			}
-			catch
-			{
-				doc = new XmlDocument();
-				doc.AppendChild(doc.CreateElement(RootElementTag));
-				modified = true;
-			}
-
-			docElement = doc.DocumentElement;
+            OpenConfigFile();
+            modified = false;
+            doc = new XmlDocument();
+            doc.Load(fs);
+            docElement = doc.DocumentElement;
 		}
 
 		/// <summary>
@@ -391,13 +393,13 @@ namespace Simias
 		{
 			if (modified)
 			{
-				fs.Position = fs.Seek(0, SeekOrigin.Begin);
+				fs.Position = 0;
 				doc.Save(fs);
+                fs.SetLength(fs.Position);
 				modified = false;
 			}
 
-			fs.SetLength(fs.Position);
-			fs.Close();
+            fs.Close();
 			doc = null;
 			docElement = null;
 		}
