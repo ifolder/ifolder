@@ -47,6 +47,7 @@ namespace Novell.iFolder
 		private Button				RemoveButton;
 		private Button				AccessButton;
 		private iFolderUserSelector UserSelector;
+		private Hashtable			curUsers;
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
@@ -57,6 +58,7 @@ namespace Novell.iFolder
 		{
 			this.ifws = iFolderWS;
 			this.topLevelWindow = topWindow;
+			curUsers = new Hashtable();
 			InitializeWidgets();
 		}
 
@@ -173,12 +175,14 @@ namespace Novell.iFolder
 
 		private void RefreshUserList()
 		{
+			curUsers.Clear();
 			UserTreeStore.Clear();
 
     		iFolderUser[] userlist =  ifws.GetiFolderUsers(ifolder.ID);
 			foreach(iFolderUser user in userlist)
 			{
-				UserTreeStore.AppendValues(user);
+				TreeIter iter = UserTreeStore.AppendValues(user);
+				curUsers.Add(user.UserID, iter);
 			}
 		}
 		
@@ -306,6 +310,7 @@ namespace Novell.iFolder
    			 				ifws.RemoveiFolderUser(ifolder.ID,
 													user.UserID);
 							UserTreeStore.Remove(ref iter);
+							curUsers.Remove(user.UserID);
 						}
 						catch(Exception e)
 						{
@@ -493,25 +498,32 @@ namespace Novell.iFolder
 				{
 					foreach(iFolderUser user in UserSelector.SelectedUsers)
 					{
-						try
+						if(!curUsers.ContainsKey(user.UserID))
 						{
-    						iFolderUser newUser = ifws.InviteUser(
-													ifolder.ID,
-													user.UserID,
-													"ReadWrite");
+							try
+							{
+    							iFolderUser newUser = ifws.InviteUser(
+														ifolder.ID,
+														user.UserID,
+														"ReadWrite");
 
-							UserTreeStore.AppendValues(newUser);
-						}
-						catch(Exception e)
-						{
-							iFolderExceptionDialog ied = 
-									new iFolderExceptionDialog(
-											topLevelWindow, e);
-							ied.Run();
-							ied.Hide();
-							ied.Destroy();
-							ied = null;
-							break;
+								TreeIter iter = 
+									UserTreeStore.AppendValues(newUser);
+
+								curUsers.Add(newUser.UserID, iter);
+
+							}
+							catch(Exception e)
+							{
+								iFolderExceptionDialog ied = 
+										new iFolderExceptionDialog(
+												topLevelWindow, e);
+								ied.Run();
+								ied.Hide();
+								ied.Destroy();
+								ied = null;
+								break;
+							}
 						}
 					}
 				}
