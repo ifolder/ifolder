@@ -29,15 +29,8 @@ using System.Text;
 using System.Net;
 using System.Diagnostics;
 using System.IO;
-using Simias.Sync;
-//using Novell.iFolder;
 using Novell.iFolderCom;
 using Novell.Win32Util;
-using Simias;
-using Simias.Event;
-using Simias.Service;
-using Simias.Storage;
-using Simias.POBox;
 using CustomUIControls;
 
 namespace Novell.FormsTrayApp
@@ -48,7 +41,6 @@ namespace Novell.FormsTrayApp
 	public class FormsTrayApp : Form
 	{
         #region Class Members
-//		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
 		private System.ComponentModel.IContainer components;
 
 		private Thread workerThread = null;
@@ -57,7 +49,6 @@ namespace Novell.FormsTrayApp
         private const int numberOfIcons = 2;//10;
 		private Icon[] uploadIcons = new Icon[numberOfIcons];
 
-//		private SyncManagerStates syncState = SyncManagerStates.Idle;
 		private bool animateIcon = false;
 
 		/// <summary>
@@ -82,10 +73,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuConflictResolver;
-
-//		private Simias.Service.Manager serviceManager;
-		private System.Windows.Forms.MenuItem menuPOBox;
-//		private iFolderManager ifManager;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		//private Configuration config;
 		private iFolderWebService ifWebService;
@@ -161,11 +148,8 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception e)
 			{
-				//logger.Debug(e, "Loading icons");
 //				noTray = true;
 			}		
-
-//			ifManager = iFolderManager.Connect();
 
 			Type t = notifyIcon1.GetType();
 			hwnd = ((NativeWindow)t.GetField("window",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(notifyIcon1)).Handle;
@@ -280,7 +264,6 @@ namespace Novell.FormsTrayApp
 		{
 			GlobalProperties globalProperties = new GlobalProperties(ifWebService);
 //			globalProperties.ServiceManager = this.serviceManager;
-//			globalProperties.IFManager = this.ifManager;
 			globalProperties.ShowDialog();
 		}
 
@@ -295,7 +278,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				//logger.Debug(ex, "Opening help");
+				// TODO: Localize
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
 		}
@@ -327,31 +310,15 @@ namespace Novell.FormsTrayApp
 			menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
 			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
 
-			// Check for collisions.
-/*			bool collisions = false;
-			foreach (iFolder ifolder in ifManager)
-			{
-				if (ifolder.HasCollisions())
-				{
-					collisions = true;
-					break;
-				}
-			}
-
-			menuConflictResolver.Enabled = collisions;*/
-
 			// Check to see if we have already connected to an enterprise server.
-			Store store = Store.GetStore();
-			LocalDatabase localDB = store.GetDatabaseObject();
-			menuJoin.Visible = true;
-			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
-			foreach (ShallowNode sn in domainList)
+			try
 			{
-				if (!sn.Name.Equals(Domain.WorkGroupDomainName))
-				{
-					menuJoin.Visible = false;
-					break;
-				}
+				iFolderSettings ifolderSettings = ifWebService.GetSettings();
+				menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+			}
+			catch (WebException ex)
+			{
+				// TODO: Post a message.
 			}
 		}
 
@@ -382,29 +349,8 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				//config = Configuration.GetConfiguration();
 				ifWebService = new iFolderWebService();
 				//iFolderManager.CreateDefaultExclusions(config);
-
-//				SimiasLogManager.Configure(config);
-			
-//				SyncProperties props = new SyncProperties(config);
-//				props.LogicFactory = typeof(SynkerA);
-			
-//				serviceManager = new Simias.Service.Manager(config);
-//				serviceManager.StartServices();
-
-				// Wait for the services to start.
-//				while (!serviceManager.ServiceStarted)
-//				{
-//					Application.DoEvents();
-//					Thread.Sleep(100);
-//				}
-
-//				serviceManager.Shutdown += new ShutdownEventHandler(serviceManager_Shutdown);
-
-				// Now that the services are started, enable the exit menu item.
-				menuExit.Enabled = true;
 
 				synkEvent = new AutoResetEvent(false);
 
@@ -438,27 +384,15 @@ namespace Novell.FormsTrayApp
 				// Enable the tracer menu item.
 				this.menuItemTracer.Enabled = true;
 */			}
-			catch (SimiasException ex)
+			catch (WebException ex)
 			{
-				ex.LogFatal();
 				CleanupTrayApp();
 			}
 			catch (Exception ex)
 			{
-				//logger.Fatal(ex, "Initializing tray app");
 				CleanupTrayApp();
 			}
 		}
-
-//		private void syncManager_ChangedState(SyncManagerStates state)
-//		{
-//			syncState = state;
-
-//			if (state == SyncManagerStates.Active)
-//			{
-//				synkEvent.Set();
-//			}
-//		}
 
 //		private void serviceManager_Shutdown(ShutdownEventArgs args)
 //		{
@@ -570,10 +504,11 @@ namespace Novell.FormsTrayApp
 			this.components = new System.ComponentModel.Container();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+			this.menuTools = new System.Windows.Forms.MenuItem();
+			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			this.menuEventLogReader = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuJoin = new System.Windows.Forms.MenuItem();
-			this.menuPOBox = new System.Windows.Forms.MenuItem();
 			this.menuInvitationWizard = new System.Windows.Forms.MenuItem();
 			this.menuConflictResolver = new System.Windows.Forms.MenuItem();
 			this.menuTraceWindow = new System.Windows.Forms.MenuItem();
@@ -582,8 +517,6 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
-			this.menuTools = new System.Windows.Forms.MenuItem();
-			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -598,7 +531,6 @@ namespace Novell.FormsTrayApp
 																						 this.menuTools,
 																						 this.menuSeparator1,
 																						 this.menuJoin,
-																						 this.menuPOBox,
 																						 this.menuInvitationWizard,
 																						 this.menuConflictResolver,
 																						 this.menuTraceWindow,
@@ -608,6 +540,22 @@ namespace Novell.FormsTrayApp
 																						 this.menuItem10,
 																						 this.menuExit});
 			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
+			// 
+			// menuTools
+			// 
+			this.menuTools.Index = 0;
+			this.menuTools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					  this.menuStoreBrowser,
+																					  this.menuEventLogReader});
+			this.menuTools.Text = "Tools";
+			this.menuTools.Visible = false;
+			// 
+			// menuStoreBrowser
+			// 
+			this.menuStoreBrowser.Index = 0;
+			this.menuStoreBrowser.Text = "Store Browser";
+			this.menuStoreBrowser.Visible = false;
+			this.menuStoreBrowser.Click += new System.EventHandler(this.menuStoreBrowser_Click);
 			// 
 			// menuEventLogReader
 			// 
@@ -628,76 +576,53 @@ namespace Novell.FormsTrayApp
 			this.menuJoin.Text = "Join Enterprise...";
 			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
 			// 
-			// menuPOBox
-			// 
-			this.menuPOBox.Index = 3;
-			this.menuPOBox.Text = "Subscriptions...";
-			this.menuPOBox.Click += new System.EventHandler(this.menuPOBox_Click);
-			// 
 			// menuInvitationWizard
 			// 
-			this.menuInvitationWizard.Index = 4;
+			this.menuInvitationWizard.Index = 3;
 			this.menuInvitationWizard.Text = "Invitation Wizard...";
 			this.menuInvitationWizard.Click += new System.EventHandler(this.menuInvitationWizard_Click);
 			// 
 			// menuConflictResolver
 			// 
-			this.menuConflictResolver.Index = 5;
+			this.menuConflictResolver.Index = 4;
 			this.menuConflictResolver.Text = "Conflict Resolver...";
 			this.menuConflictResolver.Click += new System.EventHandler(this.menuConflictResolver_Click);
 			// 
 			// menuTraceWindow
 			// 
-			this.menuTraceWindow.Index = 6;
+			this.menuTraceWindow.Index = 5;
 			this.menuTraceWindow.Text = "Trace Window";
 			this.menuTraceWindow.Visible = false;
 			this.menuTraceWindow.Click += new System.EventHandler(this.menuTraceWindow_Click);
 			// 
 			// menuItem7
 			// 
-			this.menuItem7.Index = 7;
+			this.menuItem7.Index = 6;
 			this.menuItem7.Text = "-";
 			// 
 			// menuProperties
 			// 
 			this.menuProperties.DefaultItem = true;
-			this.menuProperties.Index = 8;
+			this.menuProperties.Index = 7;
 			this.menuProperties.Text = "My iFolders...";
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuHelp
 			// 
-			this.menuHelp.Index = 9;
+			this.menuHelp.Index = 8;
 			this.menuHelp.Text = "Help...";
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
 			// 
 			// menuItem10
 			// 
-			this.menuItem10.Index = 10;
+			this.menuItem10.Index = 9;
 			this.menuItem10.Text = "-";
 			// 
 			// menuExit
 			// 
-			this.menuExit.Enabled = false;
-			this.menuExit.Index = 11;
+			this.menuExit.Index = 10;
 			this.menuExit.Text = "Exit";
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
-			// 
-			// menuTools
-			// 
-			this.menuTools.Index = 0;
-			this.menuTools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.menuStoreBrowser,
-																					  this.menuEventLogReader});
-			this.menuTools.Text = "Tools";
-			this.menuTools.Visible = false;
-			// 
-			// menuStoreBrowser
-			// 
-			this.menuStoreBrowser.Index = 0;
-			this.menuStoreBrowser.Text = "Store Browser";
-			this.menuStoreBrowser.Visible = false;
-			this.menuStoreBrowser.Click += new System.EventHandler(this.menuStoreBrowser_Click);
 			// 
 			// FormsTrayApp
 			// 
@@ -717,24 +642,10 @@ namespace Novell.FormsTrayApp
 				{
 					workerThread.Abort();
 				}
-
-				// Stop the services.
-//				serviceManager.StopServices();
-
-				// Wait for the services to stop.
-//				while (!serviceManager.ServicesStopped)
-//				{
-//					Application.DoEvents();
-//					Thread.Sleep(100);
-//				}
 			}
-			catch (SimiasException e)
+			catch
 			{
-				e.LogError();
-			}
-			catch (Exception e)
-			{
-				//logger.Debug(e, "Shutting down");
+				// Ignore.
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -744,16 +655,8 @@ namespace Novell.FormsTrayApp
 
 		private void CleanupTrayApp()
 		{
+			// TODO: Localize.
 			MessageBox.Show("A fatal error was encountered during iFolder initialization.  Please see the log file for additional information", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-//			if (serviceManager != null)
-//			{
-//				serviceManager.StopServices();
-//				while (!serviceManager.ServicesStopped)
-//				{
-//					Application.DoEvents();
-//					Thread.Sleep(100);
-//				}
-//			}
 
 			Application.Exit();
 		}

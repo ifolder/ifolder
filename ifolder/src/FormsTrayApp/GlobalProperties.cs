@@ -49,7 +49,9 @@ namespace Novell.FormsTrayApp
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
 		// TODO: Localize
-		private static readonly string conflictsExist = "Conflicts exist";
+		private const string statusConflicts = "Conflicts exist";
+		private const string statusOK = "OK";
+
 		#region Class Members
 		//private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(GlobalProperties));
 		private const string iFolderRun = "iFolder";
@@ -1363,25 +1365,62 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
-		private void AddiFolderToListView(iFolder ifolder)
+		private void addiFolderToListView(iFolder ifolder)
 		{
-/*			lock (ht)
+			//lock (ht)
 			{
 				// Add only if it isn't already in the list.
-				if (ht[ifolder.ID] == null)
+				//if (ht[ifolder.ID] == null)
 				{
-					string status = ifolder.HasCollisions() ? conflictsExist : "OK";
-					ListViewItem lvi = new ListViewItem(new string[] {ifolder.Name, ifolder.LocalPath, status}, 0);
-					lvi.Tag = ifolder.ID;
+					string[] items = new string[3];
+					int imageIndex;
+
+					items[0] = ifolder.Name;
+					if (ifolder.IsSubscription)
+					{
+						items[1] = "";
+						items[2] = stateToString(ifolder.State);
+						imageIndex = 1;
+					}
+					else
+					{
+						items[1] = ifolder.State.Equals("Local") ? ifolder.UnManagedPath : "";
+
+						if (ifolder.HasConflicts)
+						{
+							items[2] = statusConflicts;
+							// TODO: use conflict icon when it becomes available.
+							imageIndex = 0;
+						}
+						else
+						{
+							items[2] =  statusOK;
+							imageIndex = 0;
+						}
+					}
+
+					ListViewItem lvi = new ListViewItem(items, imageIndex);
+					lvi.Tag = ifolder;
 					iFolderView.Items.Add(lvi);
 
 					// Add the listviewitem to the hashtable.
-					ht.Add(ifolder.ID, lvi);
+					//ht.Add(ifolder.ID, lvi);
 				}
-			}*/
+			}
 		}
 
-		private bool IsRunEnabled()
+		private string stateToString(string state)
+		{
+			// TODO: add other states and localize.
+			switch (state)
+			{
+				default:
+					return state;
+					break;
+			}
+		}
+
+		private bool isRunEnabled()
 		{
 			string run = null;
 
@@ -1412,10 +1451,18 @@ namespace Novell.FormsTrayApp
 
 			iFolderView.BeginUpdate();
 
-/*			foreach (iFolder ifolder in manager)
+			try
 			{
-				AddiFolderToListView(ifolder);
-			}*/
+				iFolder[] ifolderArray = ifWebService.GetAlliFolders();
+				foreach (iFolder ifolder in ifolderArray)
+				{
+					addiFolderToListView(ifolder);
+				}
+			}
+			catch
+			{
+				// TODO: display message
+			}
 
 			iFolderView.EndUpdate();
 			Cursor.Current = Cursors.Default;
@@ -1423,7 +1470,7 @@ namespace Novell.FormsTrayApp
 
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
-//			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
+			new iFolderComponent().InvokeAdvancedDlg(Application.StartupPath, lvi.SubItems[1].Text, activeTab, true);
 		}
 
 		private void synciFolder(string id)
@@ -1452,8 +1499,15 @@ namespace Novell.FormsTrayApp
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
 				this.banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
+
+				// TODO: need icons for the different states.
+				//	- iFolder with conflicts.
+				//	- iFolder that is available.
+				//	- iFolder that has been requested.
+				//	- iFolder that has been invited. (Invitation.ico?)
 				this.iFolderView.SmallImageList = new ImageList();
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, "Invitation.ico")));
 			}
 			catch {} // Non-fatal ... just missing some graphics.
 
@@ -1511,6 +1565,7 @@ namespace Novell.FormsTrayApp
 				string showWizard = config.Get("iFolderShell", "Show wizard", "true");
 				displayConfirmation.Checked = showWizard == "true";*/
 
+				// TODO: first-time connect takes a while ... display some sort of status message.
 				iFolderSettings ifSettings = ifWebService.GetSettings();
 				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
 				if (ifSettings.HaveEnterprise)
@@ -1520,7 +1575,10 @@ namespace Novell.FormsTrayApp
 					enterpriseDescription.Text = ifSettings.EnterpriseDescription;
 				}
 
-				autoStart.Checked = IsRunEnabled();
+				// Display the default sync interval.
+				defaultInterval.Value = (decimal)ifWebService.GetDefaultSyncInterval();
+
+				autoStart.Checked = isRunEnabled();
 
 				refreshiFolders();
 
@@ -1555,12 +1613,14 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				// Save the default sync interval.
-				//manager.DefaultRefreshInterval = (int)defaultInterval.Value;
+				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
 
 				// Save the auto start value.
 				SetRunValue(autoStart.Checked);
 
+				// Save the display confirmation setting.
 				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
+
 /*				if (displayConfirmation.Checked)
 				{
 					config.Set("iFolderShell", "Show wizard", "true");
@@ -1578,12 +1638,13 @@ namespace Novell.FormsTrayApp
 			}
 			catch (WebException ex)
 			{
+				// TODO: change message displayed
 				MessageBox.Show(ex.Message);
 			}
 			catch (Exception ex)
 			{
+				// TODO: change message displayed
 				MessageBox.Show(ex.Message);
-				//logger.Debug(ex, "Saving settings");
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1605,14 +1666,14 @@ namespace Novell.FormsTrayApp
 				menuActionSync.Visible = menuActionRevert.Visible = menuActionResolve.Visible =
 				tabControl1.SelectedTab.Equals(tabPage1);
 
-			this.menuActionSeparator1.Visible = (tabControl1.SelectedTab.Equals(tabPage1) || tabControl1.SelectedTab.Equals(tabPage4));
+			menuActionSeparator1.Visible = (tabControl1.SelectedTab.Equals(tabPage1) || tabControl1.SelectedTab.Equals(tabPage4));
 
 			menuActionShare.Enabled = menuActionProperties.Enabled = menuActionRevert.Enabled = 
-				menuActionSync.Enabled = menuActionOpen.Enabled = iFolderView.SelectedItems.Count == 1;
+				menuActionSync.Enabled = menuActionOpen.Enabled = 
+				(iFolderView.SelectedItems.Count == 1) && !((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
 
-			// TODO: May want to change this to check the iFolder instead of doing the string compare ...
-			// the iFolder could then be passed to an overloaded method of iFolderComponent.
-			menuActionResolve.Enabled = ((iFolderView.SelectedItems.Count == 1) && (iFolderView.SelectedItems[0].SubItems[2].Text.Equals(conflictsExist)));
+			// Enable/disable resolve menu item.
+			menuActionResolve.Enabled = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 
 			SetupServicesMenu();
 		}
@@ -1664,32 +1725,26 @@ namespace Novell.FormsTrayApp
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
-			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = 
-				menuSeparator1.Visible = menuSeparator2.Visible = menuSyncNow.Visible =
-				menuOpen.Visible = iFolderView.SelectedItems.Count == 1;
-			// TODO: May want to change this to check the iFolder instead of doing the string compare ...
-			// the iFolder could then be passed to an overloaded method of iFolderComponent.
-			menuResolve.Visible = ((iFolderView.SelectedItems.Count == 1) && (iFolderView.SelectedItems[0].SubItems[2].Text.Equals(conflictsExist)));
+			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = menuSeparator1.Visible = 
+				menuSeparator2.Visible = menuSyncNow.Visible = menuOpen.Visible = 
+				(iFolderView.SelectedItems.Count == 1) && !((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+
+			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolder ifolder = null;
+			iFolder ifolder = (iFolder)lvi.Tag;
 
 			try
 			{
-				//ifolder = manager.GetiFolderById((string)lvi.Tag);
-				//Process.Start(ifolder.LocalPath);
-			}
-			catch (SimiasException ex)
-			{
-				ex.LogError();
+				Process.Start(ifolder.UnManagedPath);
 			}
 			catch (Exception ex)
 			{
-				//logger.Debug(ex, "Opening iFolder");
+				// TODO: this needs to be updated.
 				if (ifolder == null)
 				{
 					MessageBox.Show("The selected iFolder is no longer valid and will be removed from the list.");
@@ -1706,29 +1761,28 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				/*iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
-				string path = ifolder.LocalPath;
+				iFolder ifolder = (iFolder)lvi.Tag;
 
 				// Delete the iFolder.
-				manager.DeleteiFolderById((string)lvi.Tag);
+				ifWebService.DeleteiFolder(ifolder.ID);
 
 				// Notify the shell.
-				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, path, IntPtr.Zero);
+				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-				lock (ht)
+/*				lock (ht)
 				{
 					ht.Remove((string)lvi.Tag);
-				}
-*/
+				}*/
+
 				lvi.Remove();
 			}
-			catch (SimiasException ex)
+			catch (WebException ex)
 			{
-				ex.LogError();
+				// TODO: Display message.
 			}
 			catch (Exception ex)
 			{
-				//logger.Debug(ex, "Reverting");
+				// TODO: Display message.
 			}
 
 			Cursor.Current = Cursors.Default;
@@ -1764,17 +1818,17 @@ namespace Novell.FormsTrayApp
 				{
 					try
 					{
-/*						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath) && 
+						if (ifWebService.CanBeiFolder(folderBrowserDialog.SelectedPath) && 
 							((GlobalProperties.GetDriveType(Path.GetPathRoot(folderBrowserDialog.SelectedPath)) & DRIVE_REMOTE) != DRIVE_REMOTE))
 						{
 							// Create the iFolder.
-							iFolder ifolder = manager.CreateiFolder(folderBrowserDialog.SelectedPath);
+							iFolder ifolder = ifWebService.CreateLocaliFolder(folderBrowserDialog.SelectedPath);
 
 							// Notify the shell.
 							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, folderBrowserDialog.SelectedPath, IntPtr.Zero);
 
 							// Add the iFolder to the listview.
-							AddiFolderToListView(ifolder);
+							addiFolderToListView(ifolder);
 
 							// Display the new iFolder intro dialog.
 							new iFolderComponent().NewiFolderWizard(Application.StartupPath, folderBrowserDialog.SelectedPath);
@@ -1783,15 +1837,15 @@ namespace Novell.FormsTrayApp
 						else
 						{
 							MessageBox.Show("An invalid folder was specified");
-						}*/
+						}
 					}
-					catch (SimiasException ex)
+					catch (WebException ex)
 					{
-						ex.LogError();
+						// TODO: Display message.
 					}
 					catch (Exception ex)
 					{
-						//logger.Debug(ex, "Creating iFolder");
+						// TODO: Display message.
 					}
 				}
 				else
@@ -1935,7 +1989,7 @@ namespace Novell.FormsTrayApp
 				iFolder ifolder = manager.GetiFolderById(args.ID);
 				if (ifolder != null)
 				{
-					AddiFolderToListView(ifolder);
+					addiFolderToListView(ifolder);
 				}
 			}
 			catch (SimiasException ex)
