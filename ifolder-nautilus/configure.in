@@ -135,6 +135,17 @@ AC_SUBST(NAUTILUS_MONO_LIBS)
 PKG_CHECK_MODULES(IFOLDER, ifolder >= 0)
 AC_SUBST(IFOLDER_LIBS)
 
+# if using csc, convert /lib paths using cygpath
+case $CSC in
+    csc)
+        libdir=`pkg-config --variable=libdir simias`
+        libdir_cyg=`cygpath --windows $libdir | sed 's,\\\\,/,g'`
+        SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir,$libdir_cyg,g"`
+        NAUTILUS_MONO_LIBS=`echo $NAUTILUS_MONO_LIBS | sed "s,$libdir,$libdir_cyg,g"`
+        IFOLDER_LIBS=`echo $IFOLDER_LIBS | sed "s,$libdir,$libdir_cyg,g"`
+    ;;
+esac
+
 
 #
 # Configure files

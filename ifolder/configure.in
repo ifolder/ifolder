@@ -396,6 +396,16 @@ AC_SUBST(SIMIAS_LIBS)
 PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 0)
 AC_SUBST(ADDRESSBOOK_LIBS)
 
+# if using csc, convert /lib paths using cygpath
+case $CSC in
+    csc)
+        libdir=`pkg-config --variable=libdir simias`
+        libdir_cyg=`cygpath --windows $libdir | sed 's,\\\\,/,g'`
+        SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir,$libdir_cyg,g"`
+        ADDRESSBOOK_LIBS=`echo $ADDRESSBOOK_LIBS | sed "s,$libdir,$libdir_cyg,g"`
+    ;;
+esac
+
 case $IFOLDER_OS in
     linux)
 	PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
