@@ -504,8 +504,12 @@ namespace Novell.iFolderCom
 				height += (size.Height * newlineCount) + 2;
 
 				message.Size = new Size((int)Math.Ceiling(width), (int)Math.Ceiling(height));
-				this.Width = message.Width + message.Left + 4 + (details.Visible ? details.Width : 0);
 
+				// Calculate the size of the message box.
+				int msgWidth = message.Width + message.Left + 4;
+				this.Width = Math.Max(msgWidth, details.Visible ? 2 * (details.Width + 14) + ok.Width : 0);
+
+				// Place the buttons.
 				ok.Left = (ClientRectangle.Width - ok.Width) / 2;
 				ok.Top = message.Bottom + 12;
 

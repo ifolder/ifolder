@@ -3317,10 +3317,10 @@
 		<value>The user name or password is invalid.  Please try again.</value>
 	</data>
 	<data name="serverConnectErrorTitle">
-		<value>iFolder Connect Error</value>
+		<value>Unable to Connect to iFolder Server</value>
 	</data>
 	<data name="serverConnectError">
-		<value>A fatal error was encountered while connecting to the server.</value>
+		<value>A error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.</value>
 	</data>
 	<data name="saveSyncError">
 		<value>An error was encountered while saving the default sync interval.</value>

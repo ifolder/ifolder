@@ -556,11 +556,11 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.enterpriseDescription);
 			this.Controls.Add(this.servers);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.label9);
-			this.Controls.Add(this.enterpriseDescription);
 			this.Controls.Add(this.groupBox6);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));

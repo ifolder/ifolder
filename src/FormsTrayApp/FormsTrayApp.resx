@@ -560,7 +560,7 @@
 		<value>A fatal error was encountered during iFolder initialization.</value>
 	</data>
 	<data name="fatalErrorTitle">
-		<value>Fatal Error</value>
+		<value>Unable to Start iFolder Services</value>
 	</data>
 	<data name="iFolderRunning">
 		<value>There is already an instance of iFolder running.</value>
