@@ -58,11 +58,11 @@ AssemblyInfo.cs
 ../POBox/Subscription.cs
 ../POBox/SubscriptionInfo.cs
 ../POBox/PostOffice.cs
-../RemotingSniffer/Library/SnifferClientChannelSink.cs
-../RemotingSniffer/Library/SnifferClientChannelSinkProvider.cs
-../RemotingSniffer/Library/SnifferMessage.cs
-../RemotingSniffer/Library/SnifferServerChannelSink.cs
-../RemotingSniffer/Library/SnifferServerChannelSinkProvider.cs
+../Sniffer/SnifferClientChannelSink.cs
+../Sniffer/SnifferClientChannelSinkProvider.cs
+../Sniffer/SnifferMessage.cs
+../Sniffer/SnifferServerChannelSink.cs
+../Sniffer/SnifferServerChannelSinkProvider.cs
 ../Service/BaseProcessService.cs
 ../Service/IThreadService.cs
 ../Service/Manager.cs

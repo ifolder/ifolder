@@ -7,15 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsService", "src\mDnsServ
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncManager\SyncService.csproj", "{B73D723A-44A5-4844-82CD-C6BB126A75AD}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POService", "src\POBox\POService.csproj", "{B73D723A-44A5-4844-82CD-C6BB126A75AD}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventService", "src\Events\EventService\EventService.csproj", "{66557955-5474-4E02-B14E-8DA278BAC6EB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncService\SyncService.csproj", "{B73D723A-44A5-4844-82CD-C6BB126A75AD}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -37,14 +37,14 @@ Global
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.Build.0 = Debug|.NET
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.ActiveCfg = Release|.NET
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
-		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.ActiveCfg = Debug|.NET
-		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.Build.0 = Debug|.NET
-		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.ActiveCfg = Release|.NET
-		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.ActiveCfg = Debug|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.ActiveCfg = Debug|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.Build.0 = Debug|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.ActiveCfg = Release|.NET
+		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

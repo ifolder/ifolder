@@ -347,11 +347,12 @@ src/Simias.dll/Makefile
 src/Events/Makefile
 src/POBox/Makefile
 src/mDnsService/Makefile
-src/SyncManager/Makefile
+src/SyncService/Makefile
 test/Makefile
 test/Common/Makefile
 test/Configuration/Makefile
 test/CollectionStore/Makefile
+test/Smtp/Makefile
 test/POBox/Makefile
 package/Makefile
 package/windows/Makefile

@@ -414,31 +414,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\RemotingSniffer\Library\SnifferClientChannelSink.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\RemotingSniffer\Library\SnifferClientChannelSinkProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\RemotingSniffer\Library\SnifferMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\RemotingSniffer\Library\SnifferServerChannelSink.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\RemotingSniffer\Library\SnifferServerChannelSinkProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Service\BaseProcessService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -580,6 +555,31 @@
                 />
                 <File
                     RelPath = "src\Smtp\UUAttachmentEncoder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sniffer\SnifferClientChannelSink.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sniffer\SnifferClientChannelSinkProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sniffer\SnifferMessage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sniffer\SnifferServerChannelSink.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sniffer\SnifferServerChannelSinkProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

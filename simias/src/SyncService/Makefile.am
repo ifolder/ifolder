@@ -11,8 +11,6 @@ SyncService_LIBPATH = ../Simias.dll
 
 EXTRA_DIST = $(SyncService_CSFILES)
 
-CUR_DIR := $(shell pwd)
-
 all: SyncService.exe
 
 SyncService.exe: $(SyncService_CSFILES) $(SyncService_RESOURCES)
