@@ -29,6 +29,7 @@
 @class iFolderData;
 @class SMFileSyncEvent;
 @class SMCollectionSyncEvent;
+@class SMNodeEvent;
 
 
 @interface iFolderApplication : NSObject
@@ -88,9 +89,8 @@
 - (void)handleFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
 - (void)processCollectionSyncEvents;
 - (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
-
-
-
+- (void)processNodeEvents;
+- (void)handleNodeEvent:(SMNodeEvent *)nodeEvent;
 
 
 @end

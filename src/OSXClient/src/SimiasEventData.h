@@ -26,10 +26,12 @@
 @class SMNotifyEvent;
 @class SMFileSyncEvent;
 @class SMCollectionSyncEvent;
+@class SMNodeEvent;
 @class SMQueue;
 
 @interface SimiasEventData : NSObject
 {
+	SMQueue			*nodeEventQueue;
 	SMQueue			*colSyncEventQueue;
 	SMQueue			*fileSyncEventQueue;
 	SMQueue			*notifyEventQueue;
@@ -52,6 +54,10 @@
 - (void) pushCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
 - (SMCollectionSyncEvent *) popCollectionSyncEvent;
 - (BOOL) hasCollectionSyncEvents;
+
+- (void) pushNodeEvent:(SMNodeEvent *)nodeEvent;
+- (SMNodeEvent *) popNodeEvent;
+- (BOOL) hasNodeEvents;
 
 @end
 

@@ -33,6 +33,10 @@
 #define SYNC_ACTION_START		1
 #define SYNC_ACTION_STOP		2
 
+#define NODE_CREATED			1
+#define NODE_DELETED			2
+#define NODE_CHANGED			3
+
 
 @interface SMEvent : NSObject
 {
@@ -111,3 +115,39 @@ typedef struct
 -(BOOL)isDone;
 -(int)syncAction;
 @end
+
+
+
+@interface SMNodeEvent : SMEvent
+{
+/*
+typedef struct
+{
+	char *event_type;
+	char *action;
+	char *time;
+	char *source;
+	char *collection;
+	char *type;
+	char *event_id;
+	char *node;
+	char *flags;
+	char *master_rev;
+	char *slave_rev;
+	char *file_size;
+} SimiasNodeEvent;
+*/
+}
+-(NSString *)action;
+-(NSString *)time;
+-(NSString *)source;
+-(NSString *)collectionID;
+-(int)type;
+-(NSString *)event_id;
+-(NSString *)nodeID;
+-(NSString *)flags;
+-(NSString *)master_rev;
+-(NSString *)slave_rev;
+-(NSString *)file_size;
+@end
+

@@ -46,6 +46,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 
 - (id)init 
 {
+	nodeEventQueue = [[SMQueue alloc] init];
 	colSyncEventQueue = [[SMQueue alloc] init];
 	fileSyncEventQueue = [[SMQueue alloc] init];
 	notifyEventQueue = [[SMQueue alloc] init];
@@ -176,7 +177,43 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 
 
 
-
+//===================================================================
+// pushNodeEvent
+// pushes an SMNodeEvent on the queue
+//===================================================================
+- (void) pushNodeEvent:(SMNodeEvent *)nodeEvent
+{
+	[simiasEventDataLock lock];
+	[nodeEventQueue push:nodeEvent];
+	NSLog(@"SMNodeEvent pushed... count:%d", [nodeEventQueue count]);
+	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
+	[simiasEventDataLock unlock];
+}
+//===================================================================
+// popNodeEvent
+// pops an SMNodeEvent from the queue
+//===================================================================
+- (SMNodeEvent *) popNodeEvent
+{
+	SMNodeEvent *ne;
+	[simiasEventDataLock lock];
+	ne = [[nodeEventQueue pop] retain];
+	NSLog(@"SMNodeEvent popped... count:%d", [nodeEventQueue count]);
+	[simiasEventDataLock unlock];
+	return [ne autorelease];
+}
+//===================================================================
+// hasNodeEvents
+// determines if there are Node Events
+//===================================================================
+- (BOOL) hasNodeEvents
+{
+	BOOL hasEvents = false;
+	[simiasEventDataLock lock];
+	hasEvents = ![nodeEventQueue isEmpty];
+	[simiasEventDataLock unlock];
+	return hasEvents;
+}
 
 
 

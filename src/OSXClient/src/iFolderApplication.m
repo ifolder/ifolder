@@ -347,6 +347,7 @@
 		
 		[self processNotifyEvents];
 		[self processCollectionSyncEvents];
+		[self processNodeEvents];
 		[self processFileSyncEvents];
 
 	}
@@ -383,8 +384,50 @@
 
 
 //===================================================================
+// processNodeEvents
+// method to loop through all node events and process them
+//===================================================================
+- (void)processNodeEvents
+{
+	SimiasEventData *sed = [SimiasEventData sharedInstance];
+
+	// Take care of Collection Sync
+	while([sed hasNodeEvents])
+	{
+		SMNodeEvent *ne = [[sed popNodeEvent] retain];
+		// Do a whole hell of a lot of work
+		
+		
+		
+		
+		
+		[self performSelectorOnMainThread:@selector(handleNodeEvent:) 
+				withObject:ne waitUntilDone:YES ];				
+
+		[ne release];
+	}
+}
+
+
+
+
+//===================================================================
+// handleNodeEvent
+// this method does the work of updating status for the node
+// event and MUST run on the main thread
+//===================================================================
+- (void)handleNodeEvent:(SMNodeEvent *)nodeEvent
+{
+	NSLog(@"iFolderApplication:handleNodeEvent called");
+
+}
+
+
+
+
+//===================================================================
 // processCollectionSyncEvents
-// method to loop through all file sync events and process them
+// method to loop through all collection sync events and process them
 //===================================================================
 - (void)processCollectionSyncEvents
 {
@@ -404,30 +447,6 @@
 
 
 //===================================================================
-// processFileSyncEvents
-// method to loop through all file sync events and process them
-//===================================================================
-- (void)processFileSyncEvents
-{
-	SimiasEventData *sed = [SimiasEventData sharedInstance];
-
-	// Take care of File Sync
-	while([sed hasFileSyncEvents])
-	{
-		SMFileSyncEvent *fse = [[sed popFileSyncEvent] retain];
-		if([fse objectType] != FILE_SYNC_UNKNOWN)
-		{
-			[self performSelectorOnMainThread:@selector(handleFileSyncEvent:) 
-					withObject:fse waitUntilDone:YES ];				
-		}
-		[fse release];
-	}
-}
-
-
-
-
-//===================================================================
 // handleCollectionSyncEvent
 // this method does the work of updating status for the collection sync
 // event and MUST run on the main thread
@@ -435,6 +454,34 @@
 - (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent
 {
 	SMCollectionSyncEvent *cse = [colSyncEvent retain];
+
+	if([ [iFolderData sharedInstance] isiFolder:[cse ID] ])
+	{
+		BOOL updateData = NO;
+		
+		iFolder *ifolder = [[[iFolderData sharedInstance] 
+								getiFolder:[cse ID] updateData:NO] retain];
+
+		if([cse syncAction] == SYNC_ACTION_START)
+			[ifolder setIsSynchronizing:YES];
+		else
+		{
+			[ifolder setIsSynchronizing:NO];
+			if( [ [ifolder State] isEqualToString:@"WaitSync"])
+				updateData = YES;
+		}
+
+		if( [ifolder Path] == nil )
+			updateData = YES;
+			
+		if(updateData)
+		{
+			[[iFolderData sharedInstance] 
+						getiFolder:[cse ID] updateData:YES];
+		}
+
+		[ifolder release];
+	}
 
 	switch([cse syncAction])
 	{
@@ -468,6 +515,31 @@
 		}
 	}
 }
+
+
+
+
+//===================================================================
+// processFileSyncEvents
+// method to loop through all file sync events and process them
+//===================================================================
+- (void)processFileSyncEvents
+{
+	SimiasEventData *sed = [SimiasEventData sharedInstance];
+
+	// Take care of File Sync
+	while([sed hasFileSyncEvents])
+	{
+		SMFileSyncEvent *fse = [[sed popFileSyncEvent] retain];
+		if([fse objectType] != FILE_SYNC_UNKNOWN)
+		{
+			[self performSelectorOnMainThread:@selector(handleFileSyncEvent:) 
+					withObject:fse waitUntilDone:YES ];				
+		}
+		[fse release];
+	}
+}
+
 
 
 

@@ -36,10 +36,7 @@ extern SimiasEventClient simiasEventClient;
 void SimiasEventInitialize(void);
 void SimiasEventDisconnect(void);
 int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, void *data);
-int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data);
-
+int SimiasEventNode(SimiasNodeEvent *nodeEvent, void *data);
 int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data);
 int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data);
 int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data);
@@ -47,3 +44,4 @@ int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data);
 NSDictionary *getNotifyEventProperties(SimiasNotifyEvent *notifyEvent);
 NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent);
 NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collectionEvent);
+NSDictionary *getNodeEventProperties(SimiasNodeEvent *nodeEvent);
