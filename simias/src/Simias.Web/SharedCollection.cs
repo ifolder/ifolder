@@ -1071,19 +1071,6 @@ namespace Simias.Web
 
 
 		/// <summary>
-		/// WebMethod to set the default domain.
-		/// </summary>
-		/// <param name="domainID">The ID of the domain to set as the default.</param>
-		public static void SetDefaultDomain( string domainID )
-		{
-			Store store = Store.GetStore();
-			store.DefaultDomain = domainID;
-		}
-
-
-
-
-		/// <summary>
 		/// Utility method that should be moved into the POBox class.
 		/// This will create a subscription and place it in the POBox
 		/// of the invited user.

@@ -335,11 +335,55 @@ namespace Simias.Web
 												 string Host)
 		{
 			DomainInformation domainInfo = null;
-			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
+			DomainAgent da = new DomainAgent();
 			string domainID = da.Attach(Host, UserName, Password);
 			domainInfo = new DomainInformation(domainID);
 			domainInfo.MemberName = UserName;
 			return domainInfo;
+		}
+		
+		/// <summary>
+		/// WebMethod that removes a domain account from the workstation.
+		/// </summary>
+		/// <param name = "DomainID">
+		/// The ID of the domain that the account belongs to.
+		/// </param>
+		/// <param name = "LocalOnly">
+		/// If true then the account is only removed from this workstation.
+		/// If false, then the account will be deleted from every workstation 
+		/// that the user owns.
+		/// </param>
+		[WebMethod(Description="Removes a domain account from the workstation")]
+		[SoapDocumentMethod]
+		public void LeaveDomain(string DomainID,
+								bool LocalOnly)
+		{
+			DomainAgent da = new DomainAgent();
+			da.Unattach(DomainID, LocalOnly);
+		}
+		
+		/// <summary>
+		/// WebMethod that changes the default domain.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to set as the default.</param>
+		[WebMethod(Description="Change the default domain to the specified domain ID")]
+		[SoapDocumentMethod]
+		public void SetDefaultDomain(string domainID)
+		{
+			Store store = Store.GetStore();
+			store.DefaultDomain = domainID;
+		}
+
+		/// <summary>
+		/// WebMethod that gets the ID of the default domain.
+		/// </summary>
+		/// <returns>The ID of the default domain.</returns>
+		[WebMethod(Description="Get the ID of the default domain")]
+		[SoapDocumentMethod]
+		public string GetDefaultDomainID()
+		{
+			Store store = Store.GetStore();
+			return store.DefaultDomain;
 		}
 	}
 

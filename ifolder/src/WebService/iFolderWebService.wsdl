@@ -638,17 +638,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LeaveDomain">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="LocalOnly" type="xs:boolean"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="LeaveDomainResponse">
-        <xs:complexType/>
-      </xs:element>
       <xs:element name="GetiFolderConflicts">
         <xs:complexType>
           <xs:sequence>
@@ -755,27 +744,6 @@
       <xs:element name="SynciFolderNowResponse">
         <xs:complexType/>
       </xs:element>
-      <xs:element name="SetDefaultDomain">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetDefaultDomainResponse">
-        <xs:complexType/>
-      </xs:element>
-      <xs:element name="GetDefaultDomainID">
-        <xs:complexType/>
-      </xs:element>
-      <xs:element name="GetDefaultDomainIDResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetDefaultDomainIDResult"
-                  type="xs:string"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
       <xs:element name="DeleteiFolderFileSizeLimit">
         <xs:complexType>
           <xs:sequence>
@@ -838,7 +806,6 @@
       <xs:element name="DiskSpace" type="s0:DiskSpace"/>
       <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict"/>
       <xs:element name="SyncSize" type="s0:SyncSize"/>
-      <xs:element name="string" type="xs:string"/>
       <xs:element name="long" type="xs:long"/>
     </xs:schema>
   </types>
@@ -1082,12 +1049,6 @@
   <message name="AuthenticateToDomainSoapOut">
     <part name="parameters" element="s0:AuthenticateToDomainResponse"/>
   </message>
-  <message name="LeaveDomainSoapIn">
-    <part name="parameters" element="s0:LeaveDomain"/>
-  </message>
-  <message name="LeaveDomainSoapOut">
-    <part name="parameters" element="s0:LeaveDomainResponse"/>
-  </message>
   <message name="GetiFolderConflictsSoapIn">
     <part name="parameters" element="s0:GetiFolderConflicts"/>
   </message>
@@ -1129,18 +1090,6 @@
   </message>
   <message name="SynciFolderNowSoapOut">
     <part name="parameters" element="s0:SynciFolderNowResponse"/>
-  </message>
-  <message name="SetDefaultDomainSoapIn">
-    <part name="parameters" element="s0:SetDefaultDomain"/>
-  </message>
-  <message name="SetDefaultDomainSoapOut">
-    <part name="parameters" element="s0:SetDefaultDomainResponse"/>
-  </message>
-  <message name="GetDefaultDomainIDSoapIn">
-    <part name="parameters" element="s0:GetDefaultDomainID"/>
-  </message>
-  <message name="GetDefaultDomainIDSoapOut">
-    <part name="parameters" element="s0:GetDefaultDomainIDResponse"/>
   </message>
   <message name="DeleteiFolderFileSizeLimitSoapIn">
     <part name="parameters" element="s0:DeleteiFolderFileSizeLimit"/>
@@ -1397,11 +1346,6 @@
   <message name="AuthenticateToDomainHttpGetOut">
     <part name="Body" element="s0:int"/>
   </message>
-  <message name="LeaveDomainHttpGetIn">
-    <part name="DomainID" type="s:string"/>
-    <part name="LocalOnly" type="s:boolean"/>
-  </message>
-  <message name="LeaveDomainHttpGetOut"/>
   <message name="GetiFolderConflictsHttpGetIn">
     <part name="iFolderID" type="s:string"/>
   </message>
@@ -1437,14 +1381,6 @@
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="SynciFolderNowHttpGetOut"/>
-  <message name="SetDefaultDomainHttpGetIn">
-    <part name="domainID" type="s:string"/>
-  </message>
-  <message name="SetDefaultDomainHttpGetOut"/>
-  <message name="GetDefaultDomainIDHttpGetIn"/>
-  <message name="GetDefaultDomainIDHttpGetOut">
-    <part name="Body" element="s0:string"/>
-  </message>
   <message name="DeleteiFolderFileSizeLimitHttpGetIn">
     <part name="iFolderID" type="s:string"/>
   </message>
@@ -1698,11 +1634,6 @@
   <message name="AuthenticateToDomainHttpPostOut">
     <part name="Body" element="s0:int"/>
   </message>
-  <message name="LeaveDomainHttpPostIn">
-    <part name="DomainID" type="s:string"/>
-    <part name="LocalOnly" type="s:boolean"/>
-  </message>
-  <message name="LeaveDomainHttpPostOut"/>
   <message name="GetiFolderConflictsHttpPostIn">
     <part name="iFolderID" type="s:string"/>
   </message>
@@ -1738,14 +1669,6 @@
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="SynciFolderNowHttpPostOut"/>
-  <message name="SetDefaultDomainHttpPostIn">
-    <part name="domainID" type="s:string"/>
-  </message>
-  <message name="SetDefaultDomainHttpPostOut"/>
-  <message name="GetDefaultDomainIDHttpPostIn"/>
-  <message name="GetDefaultDomainIDHttpPostOut">
-    <part name="Body" element="s0:string"/>
-  </message>
   <message name="DeleteiFolderFileSizeLimitHttpPostIn">
     <part name="iFolderID" type="s:string"/>
   </message>
@@ -1978,11 +1901,6 @@
       <output message="s0:AuthenticateToDomainSoapOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
-    <operation name="LeaveDomain">
-      <input message="s0:LeaveDomainSoapIn"/>
-      <output message="s0:LeaveDomainSoapOut"/>
-      <documentation>Removes a domain account from the workstation</documentation>
-    </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsSoapIn"/>
       <output message="s0:GetiFolderConflictsSoapOut"/>
@@ -2019,16 +1937,6 @@
       <output message="s0:SynciFolderNowSoapOut"/>
       <documentation>Sends a command to the sync engine to sync the iFolder of the specified
             ID.</documentation>
-    </operation>
-    <operation name="SetDefaultDomain">
-      <input message="s0:SetDefaultDomainSoapIn"/>
-      <output message="s0:SetDefaultDomainSoapOut"/>
-      <documentation>Change the default domain to the specified domain ID</documentation>
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <input message="s0:GetDefaultDomainIDSoapIn"/>
-      <output message="s0:GetDefaultDomainIDSoapOut"/>
-      <documentation>Get the ID of the default domain</documentation>
     </operation>
     <operation name="DeleteiFolderFileSizeLimit">
       <input message="s0:DeleteiFolderFileSizeLimitSoapIn"/>
@@ -2261,11 +2169,6 @@
       <output message="s0:AuthenticateToDomainHttpGetOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
-    <operation name="LeaveDomain">
-      <input message="s0:LeaveDomainHttpGetIn"/>
-      <output message="s0:LeaveDomainHttpGetOut"/>
-      <documentation>Removes a domain account from the workstation</documentation>
-    </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsHttpGetIn"/>
       <output message="s0:GetiFolderConflictsHttpGetOut"/>
@@ -2302,16 +2205,6 @@
       <output message="s0:SynciFolderNowHttpGetOut"/>
       <documentation>Sends a command to the sync engine to sync the iFolder of the specified
             ID.</documentation>
-    </operation>
-    <operation name="SetDefaultDomain">
-      <input message="s0:SetDefaultDomainHttpGetIn"/>
-      <output message="s0:SetDefaultDomainHttpGetOut"/>
-      <documentation>Change the default domain to the specified domain ID</documentation>
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <input message="s0:GetDefaultDomainIDHttpGetIn"/>
-      <output message="s0:GetDefaultDomainIDHttpGetOut"/>
-      <documentation>Get the ID of the default domain</documentation>
     </operation>
     <operation name="DeleteiFolderFileSizeLimit">
       <input message="s0:DeleteiFolderFileSizeLimitHttpGetIn"/>
@@ -2544,11 +2437,6 @@
       <output message="s0:AuthenticateToDomainHttpPostOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
-    <operation name="LeaveDomain">
-      <input message="s0:LeaveDomainHttpPostIn"/>
-      <output message="s0:LeaveDomainHttpPostOut"/>
-      <documentation>Removes a domain account from the workstation</documentation>
-    </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsHttpPostIn"/>
       <output message="s0:GetiFolderConflictsHttpPostOut"/>
@@ -2585,16 +2473,6 @@
       <output message="s0:SynciFolderNowHttpPostOut"/>
       <documentation>Sends a command to the sync engine to sync the iFolder of the specified
             ID.</documentation>
-    </operation>
-    <operation name="SetDefaultDomain">
-      <input message="s0:SetDefaultDomainHttpPostIn"/>
-      <output message="s0:SetDefaultDomainHttpPostOut"/>
-      <documentation>Change the default domain to the specified domain ID</documentation>
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <input message="s0:GetDefaultDomainIDHttpPostIn"/>
-      <output message="s0:GetDefaultDomainIDHttpPostOut"/>
-      <documentation>Get the ID of the default domain</documentation>
     </operation>
     <operation name="DeleteiFolderFileSizeLimit">
       <input message="s0:DeleteiFolderFileSizeLimitHttpPostIn"/>
@@ -3010,15 +2888,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="LeaveDomain">
-      <soap:operation soapAction="http://novell.com/ifolder/web/LeaveDomain" style="document"/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
     <operation name="GetiFolderConflicts">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderConflicts"
             style="document"/>
@@ -3079,26 +2948,6 @@
     </operation>
     <operation name="SynciFolderNow">
       <soap:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow"
-            style="document"/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="SetDefaultDomain">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetDefaultDomain"
-            style="document"/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetDefaultDomainID"
             style="document"/>
       <input>
         <soap:body use="literal"/>
@@ -3488,13 +3337,6 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
-    <operation name="LeaveDomain">
-      <http:operation location="/LeaveDomain"/>
-      <input>
-        <http:urlEncoded/>
-      </input>
-      <output/>
-    </operation>
     <operation name="GetiFolderConflicts">
       <http:operation location="/GetiFolderConflicts"/>
       <input>
@@ -3547,22 +3389,6 @@
         <http:urlEncoded/>
       </input>
       <output/>
-    </operation>
-    <operation name="SetDefaultDomain">
-      <http:operation location="/SetDefaultDomain"/>
-      <input>
-        <http:urlEncoded/>
-      </input>
-      <output/>
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <http:operation location="/GetDefaultDomainID"/>
-      <input>
-        <http:urlEncoded/>
-      </input>
-      <output>
-        <mime:mimeXml part="Body"/>
-      </output>
     </operation>
     <operation name="DeleteiFolderFileSizeLimit">
       <http:operation location="/DeleteiFolderFileSizeLimit"/>
@@ -3937,13 +3763,6 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
-    <operation name="LeaveDomain">
-      <http:operation location="/LeaveDomain"/>
-      <input>
-        <mime:content type="application/x-www-form-urlencoded"/>
-      </input>
-      <output/>
-    </operation>
     <operation name="GetiFolderConflicts">
       <http:operation location="/GetiFolderConflicts"/>
       <input>
@@ -3996,22 +3815,6 @@
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
       <output/>
-    </operation>
-    <operation name="SetDefaultDomain">
-      <http:operation location="/SetDefaultDomain"/>
-      <input>
-        <mime:content type="application/x-www-form-urlencoded"/>
-      </input>
-      <output/>
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <http:operation location="/GetDefaultDomainID"/>
-      <input>
-        <mime:content type="application/x-www-form-urlencoded"/>
-      </input>
-      <output>
-        <mime:mimeXml part="Body"/>
-      </output>
     </operation>
     <operation name="DeleteiFolderFileSizeLimit">
       <http:operation location="/DeleteiFolderFileSizeLimit"/>

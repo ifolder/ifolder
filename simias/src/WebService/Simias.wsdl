@@ -197,6 +197,38 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="LeaveDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="LocalOnly" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LeaveDomainResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="SetDefaultDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDefaultDomainResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDefaultDomainID">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetDefaultDomainIDResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDefaultDomainIDResult"
+                  type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="string" type="xs:string"/>
       <xs:element name="DomainInformation" type="s0:DomainInformation"/>
       <xs:element name="ArrayOfDomainInformation" type="s0:ArrayOfDomainInformation"/>
@@ -264,6 +296,24 @@
   <message name="ConnectToDomainSoapOut">
     <part name="parameters" element="s0:ConnectToDomainResponse"/>
   </message>
+  <message name="LeaveDomainSoapIn">
+    <part name="parameters" element="s0:LeaveDomain"/>
+  </message>
+  <message name="LeaveDomainSoapOut">
+    <part name="parameters" element="s0:LeaveDomainResponse"/>
+  </message>
+  <message name="SetDefaultDomainSoapIn">
+    <part name="parameters" element="s0:SetDefaultDomain"/>
+  </message>
+  <message name="SetDefaultDomainSoapOut">
+    <part name="parameters" element="s0:SetDefaultDomainResponse"/>
+  </message>
+  <message name="GetDefaultDomainIDSoapIn">
+    <part name="parameters" element="s0:GetDefaultDomainID"/>
+  </message>
+  <message name="GetDefaultDomainIDSoapOut">
+    <part name="parameters" element="s0:GetDefaultDomainIDResponse"/>
+  </message>
   <message name="GetSimiasInformationHttpGetIn"/>
   <message name="GetSimiasInformationHttpGetOut">
     <part name="Body" element="s0:string"/>
@@ -314,6 +364,19 @@
   </message>
   <message name="ConnectToDomainHttpGetOut">
     <part name="Body" element="s0:DomainInformation"/>
+  </message>
+  <message name="LeaveDomainHttpGetIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="LocalOnly" type="s:boolean"/>
+  </message>
+  <message name="LeaveDomainHttpGetOut"/>
+  <message name="SetDefaultDomainHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDefaultDomainHttpGetOut"/>
+  <message name="GetDefaultDomainIDHttpGetIn"/>
+  <message name="GetDefaultDomainIDHttpGetOut">
+    <part name="Body" element="s0:string"/>
   </message>
   <message name="GetSimiasInformationHttpPostIn"/>
   <message name="GetSimiasInformationHttpPostOut">
@@ -366,6 +429,19 @@
   <message name="ConnectToDomainHttpPostOut">
     <part name="Body" element="s0:DomainInformation"/>
   </message>
+  <message name="LeaveDomainHttpPostIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="LocalOnly" type="s:boolean"/>
+  </message>
+  <message name="LeaveDomainHttpPostOut"/>
+  <message name="SetDefaultDomainHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDefaultDomainHttpPostOut"/>
+  <message name="GetDefaultDomainIDHttpPostIn"/>
+  <message name="GetDefaultDomainIDHttpPostOut">
+    <part name="Body" element="s0:string"/>
+  </message>
   <portType name="Simias Web ServiceSoap">
     <operation name="GetSimiasInformation">
       <input message="s0:GetSimiasInformationSoapIn"/>
@@ -380,7 +456,7 @@
     <operation name="GetDomains">
       <input message="s0:GetDomainsSoapIn"/>
       <output message="s0:GetDomainsSoapOut"/>
-      <documentation>GetDomainList</documentation>
+      <documentation>Get a list of local domains</documentation>
     </operation>
     <operation name="SetDomainCredentials">
       <input message="s0:SetDomainCredentialsSoapIn"/>
@@ -416,7 +492,22 @@
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainSoapIn"/>
       <output message="s0:ConnectToDomainSoapOut"/>
-      <documentation>Connects to an iFolder Domain</documentation>
+      <documentation>Connects to a Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainSoapIn"/>
+      <output message="s0:LeaveDomainSoapOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainSoapIn"/>
+      <output message="s0:SetDefaultDomainSoapOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDSoapIn"/>
+      <output message="s0:GetDefaultDomainIDSoapOut"/>
+      <documentation>Get the ID of the default domain</documentation>
     </operation>
   </portType>
   <portType name="Simias Web ServiceHttpGet">
@@ -433,7 +524,7 @@
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpGetIn"/>
       <output message="s0:GetDomainsHttpGetOut"/>
-      <documentation>GetDomainList</documentation>
+      <documentation>Get a list of local domains</documentation>
     </operation>
     <operation name="SetDomainCredentials">
       <input message="s0:SetDomainCredentialsHttpGetIn"/>
@@ -459,7 +550,22 @@
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainHttpGetIn"/>
       <output message="s0:ConnectToDomainHttpGetOut"/>
-      <documentation>Connects to an iFolder Domain</documentation>
+      <documentation>Connects to a Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainHttpGetIn"/>
+      <output message="s0:LeaveDomainHttpGetOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainHttpGetIn"/>
+      <output message="s0:SetDefaultDomainHttpGetOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDHttpGetIn"/>
+      <output message="s0:GetDefaultDomainIDHttpGetOut"/>
+      <documentation>Get the ID of the default domain</documentation>
     </operation>
   </portType>
   <portType name="Simias Web ServiceHttpPost">
@@ -476,7 +582,7 @@
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpPostIn"/>
       <output message="s0:GetDomainsHttpPostOut"/>
-      <documentation>GetDomainList</documentation>
+      <documentation>Get a list of local domains</documentation>
     </operation>
     <operation name="SetDomainCredentials">
       <input message="s0:SetDomainCredentialsHttpPostIn"/>
@@ -502,7 +608,22 @@
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainHttpPostIn"/>
       <output message="s0:ConnectToDomainHttpPostOut"/>
-      <documentation>Connects to an iFolder Domain</documentation>
+      <documentation>Connects to a Domain</documentation>
+    </operation>
+    <operation name="LeaveDomain">
+      <input message="s0:LeaveDomainHttpPostIn"/>
+      <output message="s0:LeaveDomainHttpPostOut"/>
+      <documentation>Removes a domain account from the workstation</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainHttpPostIn"/>
+      <output message="s0:SetDefaultDomainHttpPostOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <input message="s0:GetDefaultDomainIDHttpPostIn"/>
+      <output message="s0:GetDefaultDomainIDHttpPostOut"/>
+      <documentation>Get the ID of the default domain</documentation>
     </operation>
   </portType>
   <binding name="Simias Web ServiceSoap" type="s0:Simias Web ServiceSoap">
@@ -606,6 +727,35 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="LeaveDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/LeaveDomain" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <soap:operation soapAction="http://novell.com/simias/web/SetDefaultDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <soap:operation soapAction="http://novell.com/simias/web/GetDefaultDomainID"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
   </binding>
   <binding name="Simias Web ServiceHttpGet" type="s0:Simias Web ServiceHttpGet">
     <http:binding verb="GET"/>
@@ -681,6 +831,29 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="LeaveDomain">
+      <http:operation location="/LeaveDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <http:operation location="/SetDefaultDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <http:operation location="/GetDefaultDomainID"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
   </binding>
   <binding name="Simias Web ServiceHttpPost" type="s0:Simias Web ServiceHttpPost">
     <http:binding verb="POST"/>
@@ -749,6 +922,29 @@
     </operation>
     <operation name="ConnectToDomain">
       <http:operation location="/ConnectToDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="LeaveDomain">
+      <http:operation location="/LeaveDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <http:operation location="/SetDefaultDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetDefaultDomainID">
+      <http:operation location="/GetDefaultDomainID"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
