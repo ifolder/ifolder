@@ -193,7 +193,7 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				string assembly = "SqliteProvider.dll";
+				string assembly = "Simias.dll";
 				return (conf.Get(CFG_Section, CFG_Assembly, assembly));
 			}
 			set

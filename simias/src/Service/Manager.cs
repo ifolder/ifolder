@@ -130,7 +130,7 @@ namespace Simias.Service
 					switch (msg.MajorMessage)
 					{
 						case MessageCode.Start:
-							if (svcCtl.State == State.Stopped && svcCtl.Enabled)
+							if ( (svcCtl.State == Simias.Service.State.Stopped) && svcCtl.Enabled)
 							{
 								svcCtl.Start();
 								svcCtl.state = State.Running;
@@ -192,9 +192,9 @@ namespace Simias.Service
 		/// </summary>
 		private void installDefaultServices()
 		{
-			Install(new ThreadServiceCtl(conf, "Simias Event Service", "EventService", "Simias.Event.EventService"));
-			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "SyncManager", "Simias.Sync.SyncManagerService"));
-			Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "FsWatcher", "Simias.Event.FsWatcher"));
+			Install(new ThreadServiceCtl(conf, "Simias Event Service", "Simias", "Simias.Event.EventService"));
+			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
+			Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "Simias", "Simias.Event.FsWatcher"));
 			//Install(new ThreadServiceCtl(conf, "multi-cast DNS Service", "mDnsService", "Simias.Service.mDnsService"));
 			Install(new ProcessServiceCtl(conf, "multi-cast DNS Service", "Simias.Service.mDnsService.exe"));
 		}

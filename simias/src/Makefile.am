@@ -1,6 +1,6 @@
-SUBDIRS = $(COMMON_SUBDIRS) $(PLATFORM_SUBDIRS)
+SUBDIRS = Simias.dll mDnsService
 
-DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS)
+DIST_SUBDIRS = Simias.dll mDnsService
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
