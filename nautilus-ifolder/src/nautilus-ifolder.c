@@ -32,6 +32,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 
 #include <libgnomevfs/gnome-vfs-utils.h>
 
@@ -59,6 +60,8 @@
 #define IFOLDER_FIFO_NAME ".nautilus-ifolder-fifo"
 #define IFOLDER_BUF_SIZE 1024
 
+#define REREAD_SOAP_URL_TIMEOUT 2 /* seconds */
+
 typedef struct {
 	GObject parent_slot;
 } iFolderNautilus;
@@ -75,6 +78,9 @@ typedef struct {
 } iFolderErrorMessage;
 
 static GType provider_types[1];
+
+char *soapURL = NULL;
+time_t last_read_of_soap_url = 0;
 
 static void ifolder_extension_register_type (GTypeModule *module);
 static void ifolder_nautilus_instance_init (iFolderNautilus *ifn);
@@ -106,6 +112,8 @@ extern NautilusFile * nautilus_file_get (const char *uri);
 /**
  * Private function forward declarations
  */
+static char * getLocalServiceUrl ();
+static void reread_local_service_url ();
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
 gchar * get_file_path (NautilusFileInfo *file);
@@ -233,6 +241,9 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
 			DEBUG_IFOLDER (("Connected event received by SEC\n"));
+			
+			/* Allow gSOAP to reconnect */
+			last_read_of_soap_url = 0;
 
 			/* Register our event handler */
 			sec_set_event (*ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
@@ -253,8 +264,14 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 			 * be added to folders that are iFolders.
 			 */
 			ifolder_paths = get_all_ifolder_paths ();
-			if (!ifolder_paths)
-				break;
+			if (!ifolder_paths) {
+				sleep (REREAD_SOAP_URL_TIMEOUT + 1); /* Wait for reconnect of gSOAP and try again */
+
+				ifolder_paths = get_all_ifolder_paths ();
+				if (!ifolder_paths) {
+					break;	/* Something must be wrong */
+				}
+			}
 			 	
 			g_slist_foreach (ifolder_paths, slist_invalidate_local_path, NULL);
 			g_slist_foreach (ifolder_paths, slist_free_local_path_str, NULL);
@@ -314,8 +331,6 @@ start_simias_event_client ()
 /**
  * gSOAP
  */
-char *soapURL = NULL;
-
 static void
 init_gsoap (struct soap *p_soap)
 {
@@ -378,6 +393,11 @@ is_ifolder_running ()
 						   				
 	if (err_code != SOAP_OK || soap.error) {
 		b_is_ifolder_running = FALSE;
+		DEBUG_IFOLDER (("err_code: %d gSOAP error: %d\n", err_code, soap.error));
+		soap_print_fault (&soap, stderr);
+		if (soap.error == SOAP_TCP_ERROR) {
+			reread_local_service_url ();
+		}
 	}
 	
 	cleanup_gsoap (&soap);
@@ -407,6 +427,9 @@ is_ifolder (NautilusFileInfo *file)
 		if (soap.error) {
 			DEBUG_IFOLDER (("****error calling IsiFolder***\n"));
 			soap_print_fault (&soap, stderr);
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
 		} else {
 			DEBUG_IFOLDER (("***calling IsiFolder succeeded***\n"));
 			if (ns1__IsiFolderResponse.IsiFolderResult)
@@ -445,6 +468,9 @@ can_be_ifolder (NautilusFileInfo *file)
 		if (soap.error) {
 			DEBUG_IFOLDER (("****error calling CanBeiFolder***\n"));
 			soap_print_fault (&soap, stderr);
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
 		} else {
 			DEBUG_IFOLDER (("***calling CanBeiFolder succeeded***\n"));
 			if (!ns1__CanBeiFolderResponse.CanBeiFolderResult)
@@ -480,6 +506,9 @@ create_local_ifolder (NautilusFileInfo *file)
 		if (soap.error) {
 			DEBUG_IFOLDER (("****error calling CreateLocaliFolder***\n"));
 			soap_print_fault (&soap, stderr);
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
 			cleanup_gsoap (&soap);
 			return -1;
 		} else {
@@ -525,6 +554,9 @@ get_ifolder_id_by_local_path (gchar *path)
 										&ns1__GetiFolderByLocalPathResponse);
 		if (soap.error) {
 			DEBUG_IFOLDER (("****error calling GetiFolderByLocalPath***\n"));
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
 			soap_print_fault (&soap, stderr);
 			cleanup_gsoap (&soap);
 			return NULL;
@@ -574,6 +606,9 @@ revert_ifolder (NautilusFileInfo *file)
 			if (soap.error) {
 				DEBUG_IFOLDER (("****error calling RevertiFolder***\n"));
 				soap_print_fault (&soap, stderr);
+				if (soap.error == SOAP_TCP_ERROR) {
+					reread_local_service_url ();
+				}
 				cleanup_gsoap (&soap);
 				return -1;
 			} else {
@@ -620,6 +655,9 @@ get_unmanaged_path (gchar *ifolder_id)
 		if (soap.error) {
 			DEBUG_IFOLDER (("****error calling GetiFolder***\n"));
 			soap_print_fault (&soap, stderr);
+			if (soap.error == SOAP_TCP_ERROR) {
+				reread_local_service_url ();
+			}
 			cleanup_gsoap (&soap);
 			return NULL;
 		} else {
@@ -672,6 +710,9 @@ get_all_ifolder_paths ()
 	if (soap.error) {
 		DEBUG_IFOLDER (("****error calling GetAlliFolders***\n"));
 		soap_print_fault (&soap, stderr);
+		if (soap.error == SOAP_TCP_ERROR) {
+			reread_local_service_url ();
+		}
 		cleanup_gsoap (&soap);
 		return NULL;
 	} else {
@@ -1327,15 +1368,17 @@ ifolder_extension_register_type (GTypeModule *module)
 	/* Nautilus Column Provider Interface (we probably won't need this one) */
 }
 
-static gchar *
+static char *
 getLocalServiceUrl ()
 {
 	char readBuffer [1024];
 	char tmpUrl [1024];
 	gchar *localServiceUrl = NULL;
 	char args [1024];
+
+	DEBUG_IFOLDER (("getLocalServiceUrl () attempting to determine soapURL\n"));
+
 	memset (args, '\0', sizeof (args));
-	
 	memset (readBuffer, '\0', sizeof (readBuffer));
 	memset (tmpUrl, '\0', sizeof (tmpUrl));
 
@@ -1360,6 +1403,26 @@ getLocalServiceUrl ()
 	pclose (output);	
 	
 	return localServiceUrl;
+}
+
+static void
+reread_local_service_url ()
+{
+	time_t current_time;
+
+	/**
+	 * If iFolder has never been run, the file that contains the Local Service
+	 * URL will not exist.  This method will be called any time a TCP connection
+	 * error occurs.  Prevent rapid calling of this method (less than
+	 * REREAD_SOAP_URL_TIMEOUT seconds).
+	 */
+	if (time (&current_time) < 
+			(last_read_of_soap_url + REREAD_SOAP_URL_TIMEOUT)) {
+		return NULL;
+	}
+	last_read_of_soap_url = current_time;
+	
+	soapURL = getLocalServiceUrl ();
 }
 
 void
