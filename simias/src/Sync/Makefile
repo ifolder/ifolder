@@ -4,7 +4,7 @@ include ../../config.mk
 #=============================================================================
 # Sync variables
 #=============================================================================
-Sync_SOURCES := Synker.cs SyncPoint.cs SyncServ.cs SyncPass.cs SyncOps.cs Dredge.cs SyncLog.cs
+Sync_SOURCES := SyncPass.cs SyncOps.cs Dredge.cs SyncLog.cs
 Sync_INCLUDES := 
 Sync_FLAGS := /t:library
 Sync_LIBS := Common.dll CollectionEvents.dll CollectionStore.dll Identity.dll Configuration.dll SyncCommon.dll Agent.dll System.dll System.Data.dll System.Runtime.Remoting.dll

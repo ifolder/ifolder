@@ -24,43 +24,207 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Http;
+using System.Runtime.Remoting.Channels.Tcp;
 
-//using Simias;
 using Simias.Storage;
-//using Simias.InviteAgent;
+using Simias.Identity;
+using Simias.Agent;
 
 namespace Simias.Sync
 {
 
 //---------------------------------------------------------------------------
 /// <summary>
-/// command line execution of sync operations
+/// class to handle invitation generation and acceptance via files
 /// </summary>
-
-/*
-public class FileInviteAgent: InviteAgent
+internal class FileInviter
 {
-	private string fileName;
+	Store store;
+	SyncStore syncStore;
 
-	/// <summary>
-	/// public constructor must specify fileName and path to local collection store
-	/// </summary>
-	public FileInviteAgent(string fileName, string storePath)
+	public FileInviter(Uri storeLocation)
 	{
-		this.fileName = fileName;
-		base.StorePath = storePath;
+		syncStore = new SyncStore(storeLocation.LocalPath);
+		store = syncStore.BaseStore;
+	}
+
+	// TODO: is the following path comparison correct? should it be case insensitive?
+	public static Collection FindCollection(Store store, Uri docRoot)
+	{
+		foreach (Collection c in store.GetCollectionsByType(Dredger.NodeTypeDir))
+			if (c.DocumentRoot != null && c.DocumentRoot.LocalPath == docRoot.LocalPath)
+				return c;
+		return null;
+	}
+
+	/* TODO: this method uses store.CreateCollection rather than via SyncStore
+	 * so that we can pass in a type. Should we enforce that these Collections
+	 * are of some distinguishable 'ifolder' type and ensure that multiple
+	 * collections of the same docRoot are not allowed?
+	 */
+	public void InitMaster(string host, int port, Uri docRoot)
+	{
+		DirectoryInfo di = new DirectoryInfo(docRoot.LocalPath);
+		di.Create();
+		Collection c = store.CreateCollection(di.Name, Dredger.NodeTypeDir, docRoot);
+		SyncCollection scoll = new SyncCollection(c);
+		scoll.Port = port;
+		scoll.Host = host;
+		scoll.Commit();
+		Log.Assert(c.Id == c.CollectionNode.Id && c.Id == scoll.ID);
+		Log.Spew("Created new master collection for {0}, id {1}", docRoot.LocalPath, c.Id);
+	}
+
+	/* TODO: the checks in this method ensure that multiple collections
+	 * of the same docRoot or collectionIdare not allowed should be
+	 * done at a lower level
+	 */
+	public bool Accept(string docRootParent, string fileName)
+	{
+		Invitation invitation = new Invitation(fileName);
+		invitation.RootPath = docRootParent;
+
+		Uri docRoot = new Uri(Path.Combine(Path.GetFullPath(docRootParent), invitation.CollectionName));
+		Collection c = FindCollection(store, docRoot);
+		if (c != null)
+		{
+			if ((Nid)c.Id == (Nid)invitation.CollectionId)
+				Log.Info("ignoring duplicate invitation for folder {0}", docRoot.LocalPath);
+			else
+				Log.Error("ignoring invitation, folder {0} already linked to a different collection", docRoot.LocalPath);
+			return false;
+		}
+
+		if ((c = store.GetCollectionById(invitation.CollectionId)) != null)
+		{
+			Log.Warn("Collection already exists rooted in different local folder", c.DocumentRoot.LocalPath);
+			return false;
+		}
+
+		// add the secret to the current identity chain
+		IIdentity identity = IdentityManager.Connect().CurrentId;
+		identity.SetKeyChainItem(invitation.Domain, invitation.Identity, "novell");
+
+		// add the invitation information to the store collection
+		SyncCollection sc = syncStore.CreateCollection(invitation);
+		sc.Commit();
+		Log.Spew("Created new client collection for {0}, id {1}", docRoot.LocalPath, sc.ID);
+		return true;
 	}
 
 	/// <summary>
-	/// Invite a user to a collection via a file
+	/// Create an invitation file for user to a collection
 	/// </summary>
-	/// <param name="invitation">The invitation to save into filename</param>
-	public override void Invite(Invitation invitation)
+	public bool Create(Uri docRoot, string fileName)
 	{
+		Collection c = FindCollection(store, docRoot);
+		if (c == null)
+			return false;
+		SyncCollection sc = new SyncCollection(c);
+		IIdentity ident = IdentityManager.Connect().CurrentId;
+		Invitation invitation = sc.CreateInvitation(ident.UserGuid);
+		invitation.Domain = ident.DomainName;
 		invitation.Save(fileName);
+		return true;
 	}
 }
-*/
+
+//---------------------------------------------------------------------------
+public class Service: MarshalByRefObject
+{
+	private Uri storeLocation;
+
+	public Service(Uri storeLocation)
+	{
+		this.storeLocation = storeLocation;
+	}
+
+	public SynkerServiceA StartSession(string collectionId)
+	{
+		try
+		{
+			SyncStore store = new SyncStore(storeLocation.LocalPath);
+			SyncCollection c = store.OpenCollection(collectionId);
+			return c == null? null: new SynkerServiceA(c);
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return null;
+	}
+}
+
+//---------------------------------------------------------------------------
+public class Server
+{
+	Service obj = null;
+	IChannel channel = null;
+	ObjRef objRef = null;
+	string uri;
+
+	const string serviceTag = "sync.rem";
+	const string channelName = "SyncCmdServer";
+
+	public static string MakeUri(string host, int port, bool useTCP)
+	{
+		return String.Format("{0}://{1}:{2}/{3}",
+				(useTCP? "tcp": "http"), host, port, serviceTag);
+	}
+
+	public Server(string host, int port, Uri storeLocation, bool useTCP)
+	{
+		uri = MakeUri(host, port, useTCP);
+		obj = new Service(storeLocation);
+		channel = useTCP? (IChannel)new TcpServerChannel(channelName, port):
+				(IChannel)new HttpServerChannel(channelName, port);
+		ChannelServices.RegisterChannel(channel);
+		objRef = RemotingServices.Marshal(obj, serviceTag);
+		Log.Info("Server {0} is up and running from store '{1}'", uri, storeLocation);
+	}
+
+	public void Stop()
+	{
+		Log.Spew("Server {0} stopping {1}", uri, objRef);
+		if (obj != null)
+			RemotingServices.Disconnect(obj);
+		if (channel != null)
+			ChannelServices.UnregisterChannel(channel);
+	}
+}
+
+//---------------------------------------------------------------------------
+public class Client
+{
+	Service service = null;
+	IChannel channel = null;
+	public SynkerServiceA session = null;
+
+	const string channelName = "SyncCmdClient";
+
+	public Client(string host, int port, string collectionId, bool useTCP)
+	{
+		channel = useTCP? (IChannel)new TcpClientChannel(channelName, null):
+				(IChannel)new HttpClientChannel(channelName, null);
+		ChannelServices.RegisterChannel(channel);
+		string serverURL = Server.MakeUri(host, port, useTCP);
+		service = (Service)Activator.GetObject(typeof(Service), serverURL);
+		session = service.StartSession(collectionId);
+		Log.Spew("connected to server at {0}", serverURL);
+	}
+
+	public void Stop()
+	{
+		//session.Done();
+		session = null;
+		service = null;
+		if (channel != null)
+		{
+			ChannelServices.UnregisterChannel(channel);
+			channel = null;
+		}
+	}
+}
 
 //---------------------------------------------------------------------------
 /// <summary>
@@ -69,7 +233,6 @@ public class FileInviteAgent: InviteAgent
 public class SyncCmd
 {
 	Uri storeLocation = null;
-	string userName = null, credential = "novell";
 	int port = 8088;
 	bool useTCP = true;
 	string host = MyDns.GetHostName();
@@ -77,46 +240,37 @@ public class SyncCmd
 	int RunSync(Uri docRoot, string serverStoreLocation)
 	{
 		Store store = Store.Connect(storeLocation);
-		Client client = null;
-		string userId = "sam", credential = "password", collectionName, collectionId;
-		Uri masterUri;
-
-		if (!SyncPoint.FindCollection(store, docRoot, out masterUri, out collectionName, out collectionId))
+		Collection c = FileInviter.FindCollection(store, docRoot); 
+		if (c == null)
 		{
 			Log.Error("Could not find collection {0}", docRoot);
 			return 2;
 		}
-		store.Dispose();
-		store = null;
-		UriBuilder ub = new UriBuilder(masterUri);
-		string serverCollectionId = ub.Path.Trim('/');
 
-		SyncSession session;
+		SyncCollection csc = new SyncCollection(c);
 		if (serverStoreLocation != null)
 		{
-			//TODO: check other parts of ub -- scheme, host, etc.
-			session = (SyncSession)SyncSession.SessionFactory(
-					new Uri(Path.GetFullPath(serverStoreLocation)),
-					userId, credential, serverCollectionId, null);
+			SyncStore servStore = new SyncStore(serverStoreLocation);
+			SynkerServiceA ssa = new SynkerServiceA(servStore.OpenCollection(csc.ID));
+			new SynkerWorkerA(ssa, csc).DoSyncWork();
 		}
 		else
 		{
-			client = new Client(ub.Host, ub.Port, userId, credential, serverCollectionId, useTCP);
-			session = (SyncSession)client.session;
+			Client client = new Client(csc.Host, csc.Port, csc.ID, useTCP);
+			new SynkerWorkerA(client.session, csc).DoSyncWork();
+			client.Stop();
 		}
-
-		SyncPass.Run(storeLocation, collectionId, session);
 		return 0;
 	}
 
-	//TODO: rights? userToInvite is ignored -- just use collection owner
+	//TODO: doesn't specify user -- just use collection owner
 	int Invite(Uri docRoot, string invitationFile)
 	{
-		Store store = Store.Connect(storeLocation);
-		if (!SyncPoint.Invite(store, docRoot, invitationFile))
+		FileInviter fi = new FileInviter(storeLocation);
+		if (!fi.Create(docRoot, invitationFile))
 		{
-			SyncPoint.InitMaster(store, host, port, docRoot);
-			if (!SyncPoint.Invite(store, docRoot, invitationFile))
+			fi.InitMaster(host, port, docRoot);
+			if (!fi.Create(docRoot, invitationFile))
 			{
 				Log.Error("could not make invitation");
 				return 3;
@@ -127,17 +281,16 @@ public class SyncCmd
 
 	int Accept(string invitationFile, string docRootParent)
 	{
-		Store store = Store.Connect(storeLocation);
-		SyncPoint.Accept(store, docRootParent, invitationFile);
-		return 0;
+		FileInviter fi = new FileInviter(storeLocation);
+		return fi.Accept(docRootParent, invitationFile)? 0: 4;
 	}
 
 	int RunServer()
 	{
-		Server server = new Server(host, port, storeLocation, new SessionFactory(SyncSession.SessionFactory), useTCP);
-		server.Start();
+		Server server = new Server(host, port, storeLocation, useTCP);
 		Console.WriteLine("server {0} started, press enter to exit", port);
 		Console.ReadLine();
+		server.Stop();
 		return 0;
 	}
 
@@ -203,10 +356,10 @@ public class SyncCmd
 					return Usage("incomplete option");
 				if (s == "-s")
 					storeLocation = new Uri(Path.GetFullPath(args[i++]));
-				else if (s == "-u")
-					userName = args[i++];
-				else if (s == "-w")
-					credential = args[i++];
+				//else if (s == "-u")
+				//	userName = args[i++];
+				//else if (s == "-w")
+				//	credential = args[i++];
 				else if (s == "-p")
 				{
 					port = Int32.Parse(args[i++]);

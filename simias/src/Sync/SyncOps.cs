@@ -35,7 +35,7 @@ namespace Simias.Sync
 
 //---------------------------------------------------------------------------
 [Serializable]
-public class Nid
+public struct Nid
 {
 	private string g;
 
@@ -46,7 +46,7 @@ public class Nid
 		catch (FormatException) { Log.Spew("'{0}' is not a valid guid", s); throw; }
 	}
 
-	//public static implicit operator Nid(string s) { return new Nid(s); }
+	public static explicit operator Nid(string s) { return new Nid(s); }
 	//public static void Clear(out Nid id) { id.g = String.Empty; }
 	public override bool Equals(object o) { return CompareTo(o) == 0; }
 	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }

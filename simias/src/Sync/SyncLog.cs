@@ -70,6 +70,12 @@ public class Log
 		}
 	}
 
+	public static void Uncaught(Exception e)
+	{
+		Trace.WriteLine("Uncaught exception: " + e.Message);
+		Trace.WriteLine(e.StackTrace);
+	}
+
 	static void DumpStack()
 	{
 		StackTrace st = new StackTrace(2, true);

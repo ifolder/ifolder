@@ -39,14 +39,12 @@ namespace Simias.Sync
 /// </summary>
 public class SynkerA: SyncLogicFactory
 {
-	public override SyncCollectionService GetCollectionService(
-		SyncCollection collection)
+	public override SyncCollectionService GetCollectionService(SyncCollection collection)
 	{
 		return new SynkerServiceA(collection);
 	}
 
-	public override SyncCollectionWorker GetCollectionWorker(
-		SyncCollectionService master, SyncCollection slave)
+	public override SyncCollectionWorker GetCollectionWorker(SyncCollectionService master, SyncCollection slave)
 	{
 		return new SynkerWorkerA((SynkerServiceA)master, slave);
 	}
@@ -57,83 +55,30 @@ public class SynkerA: SyncLogicFactory
 	}
 }
 
+//---------------------------------------------------------------------------
 /// <summary>
 /// server side top level class of SynkerA-style synchronization
 /// </summary>
 public class SynkerServiceA: SyncCollectionService
-{
-	//TODO: why is the baseCollection not protected instead of private?
-	Collection collection;
-	Uri storePath;
-
-	public SynkerServiceA(SyncCollection collection): base(collection)
-	{
-		this.collection = collection.BaseCollection;
-		this.storePath = new Uri(collection.StorePath);
-	}
-
-	public SyncSession CreateSession()
-	{
-		// TODO: fix identity and credential
-		// 
-		return new SyncSession(storePath,
-			collection.Owner, "novell", collection.Id, null);
-	}
-}
-
-/// <summary>
-/// client side top level class for SynkerA style sychronization
-/// </summary>
-internal class SynkerWorkerA: SyncCollectionWorker
-{
-	//TODO: why is the base master and slave not protected instead of private?
-	SynkerServiceA master;
-	Uri storeLocation;
-	string collectionId;
-
-	public SynkerWorkerA(SynkerServiceA master, SyncCollection slave): base(master, slave)
-	{
-		this.master = master;
-		storeLocation = new Uri(slave.StorePath);
-		collectionId = slave.ID;
-	}
-
-	public override void DoSyncWork()
-	{
-		SyncPass.Run(storeLocation, collectionId, master.CreateSession());
-	}
-}
-
-//---------------------------------------------------------------------------
-public class SyncSession: Session
 {
 	Collection collection;
 	SyncOps ops;
 	SyncIncomingNode inNode;
 	SyncOutgoingNode outNode;
 
-	public static Session SessionFactory(Uri storeLocation, string userId,
-			string credential, string collectionId, ServStatusUpdate updater)
+	public SynkerServiceA(SyncCollection collection): base(collection)
 	{
-		return new SyncSession(storeLocation, userId, credential, collectionId, updater);
+		this.collection = collection.BaseCollection;
 	}
 
-	public SyncSession(Uri storeLocation, string userId, string credential,
-			string collectionId, ServStatusUpdate updater):
-		base(userId, collectionId, updater)
+	// TODO: fix identity and credential
+	public void Start()
 	{
-		// connect to the store
-		Store store = Store.Connect(storeLocation);
-		store.ImpersonateUser(Access.SyncOperatorRole, null);
+		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
 		
-		collection = store.GetCollectionById(collectionId);
-
-		if (collection == null)
-			throw new ApplicationException("No such collection");
-
-		Log.Spew("dredging server at store {0}, docRoot '{1}'", storeLocation, collection.DocumentRoot.LocalPath);
+		Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
 		new Dredger(collection, true);
-		Log.Spew("done dredging server at store {0}, docRoot '{1}'", storeLocation, collection.DocumentRoot.LocalPath);
+		Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
 		inNode = new SyncIncomingNode(collection, true);
 		outNode = new SyncOutgoingNode(collection);
 		ops = new SyncOps(collection, true);
@@ -145,7 +90,7 @@ public class SyncSession: Session
 		if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
 			throw new UnauthorizedAccessException("Current user cannot read this collection");
 
-		Log.Spew("session created");
+		Log.Spew("session started");
 	}
 
 	public NodeStamp[] GetNodeStamps()
@@ -155,7 +100,7 @@ public class SyncSession: Session
 		return ops.GetNodeStamps();
 	}
 
-	public override string Version
+	public string Version
 	{
 		get { return "0.0.0"; }
 	}
@@ -227,10 +172,19 @@ public class SyncSession: Session
 
 //---------------------------------------------------------------------------
 /// <summary>
-/// used to perform one synchronization pass on one collection
+/// client side top level class for SynkerA style sychronization
 /// </summary>
-public class SyncPass
+public class SynkerWorkerA: SyncCollectionWorker
 {
+	//TODO: why is the base master and slave not protected instead of private?
+	SynkerServiceA ss;
+	Collection collection;
+
+	public SynkerWorkerA(SynkerServiceA master, SyncCollection slave): base(master, slave)
+	{
+		ss = master;
+		collection = slave.BaseCollection;
+	}
 
 	static void AddToUpdateList(NodeStamp stamp, ArrayList small, ArrayList large)
 	{
@@ -249,17 +203,16 @@ public class SyncPass
 		return ids;
 	}
 
-	public static void Run(Uri storeLocation, string collectionId, SyncSession ss)
+	/// <summary>
+	/// used to perform one synchronization pass on one collection
+	/// </summary>
+	public override void DoSyncWork()
 	{
+		ss.Start();
+
 		Log.Spew("client connected to server version {0}", ss.Version);
 
-		// connect to the store
-		Store store = Store.Connect(storeLocation);
-		store.ImpersonateUser(Access.SyncOperatorRole, null);
-		
-		Collection collection = store.GetCollectionById(collectionId);
-		if (collection == null)
-			throw new ArgumentException("unknown collection");
+		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
 
 		new Dredger(collection, false);
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);

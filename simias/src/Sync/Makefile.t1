@@ -33,7 +33,7 @@ all: $(TARGETS)
 SyncCmd.exe: libs Sync.dll SyncCmd.cs 
 	$(CCS) /t:exe $(OPTS) $(LIBOPTS) /out:$@ $(filter %.cs,$^)
 
-Sync.dll: libs SyncPoint.cs SyncOps.cs SyncPass.cs SyncServ.cs Dredge.cs SyncLog.cs
+Sync.dll: libs SyncOps.cs SyncPass.cs Dredge.cs SyncLog.cs
 	$(CCS) /t:library $(OPTS) $(LIBOPTS) /out:$@ $(filter %.cs,$^)
 
 test: $(TARGETS)
