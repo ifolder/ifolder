@@ -149,7 +149,10 @@ namespace Novell.FormsTrayApp
 					catch {}
 					process.Close();
 				}
-				// Get store path
+				// Get store path from Simias.config then delete the store path
+                //Give the processes time to die (3 seconds worked on my box--giving extra time for slow box).
+				//Without this command the delete fails.
+				System.Threading.Thread.Sleep(5000); 
 				Simias.Client.Configuration configuration = new Simias.Client.Configuration();
 				Directory.Delete(configuration.StorePath, true);
 				string configPath = configuration.ConfigPath;
