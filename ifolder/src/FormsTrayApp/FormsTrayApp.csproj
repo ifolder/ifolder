@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = 'copy ifolderapp.exe "c:\program files\ifolder\ifolder"&#xd;&#xa;copy ifolderapp.pdb "c:\program files\ifolder\ifolder"'
                 RootNamespace = "TrayApp"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -123,6 +123,11 @@
                     Name = "SyncManager"
                     AssemblyName = "SyncManager"
                     HintPath = "..\..\..\simias\src\SyncManager\SyncManager.dll"
+                />
+                <Reference
+                    Name = "Simias.Service"
+                    AssemblyName = "Simias.Service"
+                    HintPath = "..\..\..\simias\src\Service\Simias.Service.dll"
                 />
             </References>
         </Build>

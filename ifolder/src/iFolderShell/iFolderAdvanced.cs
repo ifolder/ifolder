@@ -86,6 +86,7 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Enabled = false;
 			this.remove.Enabled = false;
 			this.reinvite.Enabled = false;
+//			this.interval.DataBindings.Add("Text", ifolder, "RefreshInterval");
 //			currentControl = this;
 		}
 
@@ -463,32 +464,39 @@ namespace Novell.iFolder.iFolderCom
 			// TODO - may need to actually check the current user.
 			if (this.shareWith.Items.Count == 1)
 			{
-				Contact currentContact = ((ShareListContact)this.shareWith.Items[0].Tag).CurrentContact;
-				if (currentContact.FN == null ||
-					currentContact.FN == String.Empty ||
-					currentContact.EMail == null ||
-					currentContact.EMail == String.Empty)
+				try
 				{
-					MyMessageBox mmb = new MyMessageBox();
-					mmb.Text = "Incomplete Address Book Entry";
-					mmb.Message = "Before you can share, you must add some data to your address book entry.  Do you want to add this information now?";
-					DialogResult result = mmb.ShowDialog();
-//MessageBox.Show(this, , , MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-					if (result == DialogResult.Yes)
+					Contact currentContact = ((ShareListContact)this.shareWith.Items[0].Tag).CurrentContact;
+					if (currentContact.FN == null ||
+						currentContact.FN == String.Empty ||
+						currentContact.EMail == null ||
+						currentContact.EMail == String.Empty)
 					{
-						ContactEditor editor = new ContactEditor();
-						editor.LoadPath = LoadPath;
-						editor.CurrentContact = currentContact;
-						editor.CurrentAddressBook = defaultAddressBook;
-						if (editor.ShowDialog() != DialogResult.OK)
+						MyMessageBox mmb = new MyMessageBox();
+						mmb.Text = "Incomplete Address Book Entry";
+						mmb.Message = "Before you can share, you must add some data to your address book entry.  Do you want to add this information now?";
+						DialogResult result = mmb.ShowDialog();
+						//MessageBox.Show(this, , , MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+						if (result == DialogResult.Yes)
+						{
+							ContactEditor editor = new ContactEditor();
+							editor.LoadPath = LoadPath;
+							editor.CurrentContact = currentContact;
+							editor.CurrentAddressBook = defaultAddressBook;
+							if (editor.ShowDialog() != DialogResult.OK)
+							{
+								return false;
+							}
+						}
+						else
 						{
 							return false;
 						}
 					}
-					else
-					{
-						return false;
-					}
+				}
+				catch
+				{
+					return false;
 				}
 			}
 
@@ -576,13 +584,20 @@ namespace Novell.iFolder.iFolderCom
 			foreach (IFAccessControlEntry ace in aclList)
 			{
 				string[] items = new string[2];
-				if (ace.Contact.FN != null && ace.Contact.FN != String.Empty)
+				try
 				{
-					items[0] = ace.Contact.FN;
+					if (ace.Contact.FN != null && ace.Contact.FN != String.Empty)
+					{
+						items[0] = ace.Contact.FN;
+					}
+					else
+					{
+						items[0] = ace.Contact.UserName;
+					}
 				}
-				else
+				catch
 				{
-					items[0] = ace.Contact.UserName;
+					items[0] = "Unknown User";
 				}
 
 				int imageIndex;
@@ -614,10 +629,14 @@ namespace Novell.iFolder.iFolderCom
 					}
 				}
 
-				if (ace.Contact.IsCurrentUser)
+				try
 				{
-					imageIndex = 0;
+					if (ace.Contact.IsCurrentUser)
+					{
+						imageIndex = 0;
+					}
 				}
+				catch{}
 
 				ListViewItem lvitem = new ListViewItem(items, imageIndex);
 				ShareListContact shareContact = new ShareListContact();
@@ -656,12 +675,21 @@ namespace Novell.iFolder.iFolderCom
 
 				if (ifolder.IsShareable())
 				{
-					// If the current user has sufficient rights, enable the Remove button when
-					// a different user is selected in the list.
-					this.remove.Enabled = !((ShareListContact)item.Tag).CurrentContact.IsCurrentUser;
+					try
+					{
+						// If the current user has sufficient rights, enable the Remove button when
+						// a different user is selected in the list.
+						this.remove.Enabled = !((ShareListContact)item.Tag).CurrentContact.IsCurrentUser;
 
-					// Enable the rights if the current user is not selected.
-					this.accessControlButtons.Enabled = !((ShareListContact)item.Tag).CurrentContact.IsCurrentUser;
+						// Enable the rights if the current user is not selected.
+						this.accessControlButtons.Enabled = !((ShareListContact)item.Tag).CurrentContact.IsCurrentUser;
+					}
+					catch
+					{
+						remove.Enabled = false;
+						accessControlButtons.Enabled = false;
+						reinvite.Enabled = false;
+					}
 				}
 				else
 				{
@@ -719,22 +747,26 @@ namespace Novell.iFolder.iFolderCom
 
 			foreach (ListViewItem item in this.shareWith.SelectedItems)
 			{
-				if (((ShareListContact)item.Tag).CurrentContact.IsCurrentUser)
+				try
 				{
-					// Don't allow current user to be modified.
-				}
-				else if (item.SubItems[1].Text != access)
-				{
-					// Change the subitem text.
-					item.SubItems[1].Text = access;
-					item.ImageIndex = imageIndex;
+					if (((ShareListContact)item.Tag).CurrentContact.IsCurrentUser)
+					{
+						// Don't allow current user to be modified.
+					}
+					else if (item.SubItems[1].Text != access)
+					{
+						// Change the subitem text.
+						item.SubItems[1].Text = access;
+						item.ImageIndex = imageIndex;
 
-					// Mark this item as changed.
-					((ShareListContact)item.Tag).Changed = true;
+						// Mark this item as changed.
+						((ShareListContact)item.Tag).Changed = true;
 
-					// Enable the apply button.
-					this.apply.Enabled = true;
+						// Enable the apply button.
+						this.apply.Enabled = true;
+					}
 				}
+				catch{}
 			}
 		}
 
@@ -814,26 +846,30 @@ namespace Novell.iFolder.iFolderCom
 		{
 			foreach (ListViewItem lvitem in this.shareWith.SelectedItems)
 			{
-				// Don't allow the current user to be removed.
-				if (!((ShareListContact)lvitem.Tag).CurrentContact.IsCurrentUser)
+				try
 				{
-					// If this item is not newly added, we need to add it to the removedList.
-					if (!((ShareListContact)lvitem.Tag).Added)
+					// Don't allow the current user to be removed.
+					if (!((ShareListContact)lvitem.Tag).CurrentContact.IsCurrentUser)
 					{
-						// Make sure the removed list is valid.
-						if (this.removedList == null)
+						// If this item is not newly added, we need to add it to the removedList.
+						if (!((ShareListContact)lvitem.Tag).Added)
 						{
-							this.removedList = new ArrayList();
+							// Make sure the removed list is valid.
+							if (this.removedList == null)
+							{
+								this.removedList = new ArrayList();
+							}
+
+							removedList.Add(lvitem.Tag);
 						}
 
-						removedList.Add(lvitem.Tag);
+						lvitem.Remove();
+
+						// Enable the apply button.
+						this.apply.Enabled = true;
 					}
-
-					lvitem.Remove();
-
-					// Enable the apply button.
-					this.apply.Enabled = true;
 				}
+				catch{}
 			}		
 		}
 
@@ -851,79 +887,62 @@ namespace Novell.iFolder.iFolderCom
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 			
-			foreach (ListViewItem lvitem in this.shareWith.Items)
+			foreach (ListViewItem lvitem in shareWith.SelectedItems)
 			{
-				// Only process the selected items.
-				if (lvitem.Selected)
+				ShareListContact slContact = (ShareListContact)lvitem.Tag;
+
+				// Get the rights for this contact.
+				iFolder.Rights rights;
+				switch (lvitem.SubItems[1].Text)
 				{
-					ShareListContact slContact = (ShareListContact)lvitem.Tag;
-
-					// Get the rights for this contact.
-					iFolder.Rights rights;
-					switch (lvitem.SubItems[1].Text)
+					case "Full Control":
 					{
-						case "Full Control":
-						{
-							rights = iFolder.Rights.Admin;
-							break;
-						}
-						case "Read/Write":
-						{
-							rights = iFolder.Rights.ReadWrite;
-							break;
-						}
-						case "Read Only":
-						{
-							rights = iFolder.Rights.ReadOnly;
-							break;
-						}
-						default:
-						{
-							rights = iFolder.Rights.Deny;
-							break;
-						}
+						rights = iFolder.Rights.Admin;
+						break;
+					}
+					case "Read/Write":
+					{
+						rights = iFolder.Rights.ReadWrite;
+						break;
+					}
+					case "Read Only":
+					{
+						rights = iFolder.Rights.ReadOnly;
+						break;
+					}
+					default:
+					{
+						rights = iFolder.Rights.Deny;
+						break;
+					}
+				}
+
+				if (slContact.Added || slContact.Changed)
+				{
+					// If the share contact is newly added or has been changed,
+					// we need to reset the ACE.
+					bool accessSet = false;
+					try
+					{
+						// Set the ACE.
+						ifolder.SetRights(slContact.CurrentContact, rights);
+						accessSet = true;
+
+						// Reset the listview item since it has been committed.
+						slContact.Added = false;
+						slContact.Changed = false;
+					}
+					catch (Exception ex)
+					{
+						// TODO
+						MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
 					}
 
-					if (slContact.Added || slContact.Changed)
+					if (accessSet)
 					{
-						// If the share contact is newly added or has been changed,
-						// we need to reset the ACE.
-						bool accessSet = false;
 						try
 						{
-							// Set the ACE.
-							ifolder.SetRights(slContact.CurrentContact, rights);
-							accessSet = true;
-
-							// Reset the listview item since it has been committed.
-							slContact.Added = false;
-							slContact.Changed = false;
-						}
-						catch (Exception ex)
-						{
-							// TODO
-							MessageBox.Show(slContact.CurrentContact.FN + "\nSetting access rights failed with the following exception: \n\n" + ex.Message, "Set Access Failure");
-						}
-
-						if (accessSet)
-						{
-							try
-							{
-								// Send the invitation.
-								ifolder.Invite(slContact.CurrentContact);
-							}
-							catch(Exception ex)
-							{
-								// TODO
-								MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
-							}
-						}
-					}
-					else
-					{
-						// Just send the invitation.
-						try
-						{
+							// Send the invitation.
 							ifolder.Invite(slContact.CurrentContact);
 						}
 						catch(Exception ex)
@@ -931,6 +950,19 @@ namespace Novell.iFolder.iFolderCom
 							// TODO
 							MessageBox.Show(slContact.CurrentContact.FN + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
 						}
+					}
+				}
+				else
+				{
+					// Just send the invitation.
+					try
+					{
+						ifolder.Invite(slContact.CurrentContact);
+					}
+					catch(Exception ex)
+					{
+						// TODO
+						MessageBox.Show(lvitem.Text + "\nSending invitation failed with the following exception: \n\n" + ex.Message, "Send Invitation Failure");
 					}
 				}
 			}		

@@ -34,6 +34,7 @@ using Novell.iFolder;
 using Novell.iFolder.Win32Util;
 using Simias;
 using Simias.Event;
+using Simias.Service;
 
 
 namespace Novell.iFolder.FormsTrayApp
@@ -73,6 +74,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private AnimateDelegate animateDelegate;
 
 		private	EventPublisher publisher;
+		private Manager serviceManager;
 //		private SystemManager sysManager;
 		//System.Diagnostics.Process monitor;
 		//private const int waitTime = 3000;
@@ -221,6 +223,8 @@ namespace Novell.iFolder.FormsTrayApp
 				syncManager.Stop();
 			}
 
+			serviceManager.StopServices();
+
 //			if (sysManager != null)
 //			{
 //				sysManager.StopServices();
@@ -280,6 +284,8 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				syncManager.Stop();
 			}
+
+			serviceManager.StopServices();
 
 //			if (sysManager != null)
 //			{
@@ -349,6 +355,8 @@ namespace Novell.iFolder.FormsTrayApp
 //			sysManager.StartServices();
 
             SimiasLogManager.Configure(conf);
+			serviceManager = new Manager(conf);
+			serviceManager.StartServices();
 
 			publisher = new EventPublisher(conf);
 
