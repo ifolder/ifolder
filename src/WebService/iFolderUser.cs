@@ -39,11 +39,14 @@ namespace Novell.iFolder.Web
 		public string State;
 		public string iFolderID;
 		public bool IsOwner;
+		public string FirstName;
+		public string Surname;
+		public string FN;
 
 		public iFolderUser()
 		{
 		}
-
+/*
 		public iFolderUser(Simias.Storage.Member member)
 		{
 			this.Name = member.Name;
@@ -53,10 +56,48 @@ namespace Novell.iFolder.Web
 			this.State = "Member";
 			this.IsOwner = member.IsOwner;
 		}
+*/
 
-
-		public iFolderUser(Simias.POBox.Subscription sub)
+		public iFolderUser(Simias.Storage.Member member,
+							Novell.AddressBook.Contact contact)
 		{
+			if(contact != null)
+			{
+				Novell.AddressBook.Name name;
+			
+				name = contact.GetPreferredName();
+				if(name != null)
+				{
+					this.Surname = name.Family;
+					this.FirstName = name.Given;
+				}
+				this.FN = contact.FN;
+			}
+
+			this.Name = member.Name;
+			this.UserID = member.UserID;
+			this.ID = member.ID;
+			this.State = "Member";
+			this.IsOwner = member.IsOwner;
+			this.Rights = member.Rights.ToString();
+		}
+
+		public iFolderUser(Simias.POBox.Subscription sub,
+							Novell.AddressBook.Contact contact)
+		{
+			if(contact != null)
+			{
+				Novell.AddressBook.Name name;
+			
+				name = contact.GetPreferredName();
+				if(name != null)
+				{
+					this.Surname = name.Family;
+					this.FirstName = name.Given;
+				}
+				this.FN = contact.FN;
+			}
+
 			this.Name = sub.ToName;
 			this.UserID = sub.ToIdentity;
 			this.Rights = sub.SubscriptionRights.ToString();
