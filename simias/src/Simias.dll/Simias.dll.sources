@@ -64,6 +64,8 @@ AssemblyInfo.cs
 ../POBox/SubscriptionDetails.cs
 ../POBox/SubscriptionStatus.cs
 ../POBox/PostOffice.cs
+../PresenceService/PresenceService.cs
+../PresenceService/PublicSubscription.cs
 ../Policy/DiskSpaceQuota.cs
 ../Sniffer/SnifferClientChannelSink.cs
 ../Sniffer/SnifferClientChannelSinkProvider.cs

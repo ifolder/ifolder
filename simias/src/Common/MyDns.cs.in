@@ -26,6 +26,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 using log4net;
 
@@ -49,22 +50,56 @@ namespace Simias
 		/// <returns>The DNS host name of the local computer.</returns>
 		public static string GetHostName()
 		{
-			// machine host name
-			string host = Dns.GetHostName();
-			IPHostEntry ipHostEntry = Dns.Resolve(host);
-			host = ipHostEntry.HostName;
+			string host;
 
-			// loop through addresses
-			foreach(IPAddress ipAddress in ipHostEntry.AddressList)
+			if(MyEnvironment.Mono)
 			{
-				// skip loop-back addresses
-				if (IPAddress.IsLoopback(ipAddress)) continue;
+				// on linux and mac this is going to call
+				// this shell script to get the IP Address
+				
+				// this is because of a known bug in mono
+				// where it will not return all of the
+				// IP Addresses
+				System.Diagnostics.Process process = null;
+				System.IO.StreamReader reader;
+				process = new Process();
+				process.StartInfo.RedirectStandardOutput = true;
+				process.StartInfo.CreateNoWindow = true;
+				process.StartInfo.UseShellExecute = false;
+				process.StartInfo.FileName = "@prefix@/bin/ifdata";
+				process.Start();
+				reader = process.StandardOutput;
+				process.WaitForExit(2000);
+				while( (host = reader.ReadLine()) != null)
+				{
+					IPAddress ipa = IPAddress.Parse(host);
+					if(!IPAddress.IsLoopback(ipa))
+						continue;
 
-				// use the address
-				host = ipAddress.ToString();
+					// take the first address that is not
+					// a loopback
+					break;
+				}
+			}
+			else
+			{
+				// machine host name
+				host = Dns.GetHostName();
+				IPHostEntry ipHostEntry = Dns.Resolve(host);
+				host = ipHostEntry.HostName;
 
-				// take the first one
-				break;
+				// loop through addresses
+				foreach(IPAddress ipAddress in ipHostEntry.AddressList)
+				{
+					// skip loop-back addresses
+					if (IPAddress.IsLoopback(ipAddress)) continue;
+
+					// use the address
+					host = ipAddress.ToString();
+
+					// take the first one
+					break;
+				}
 			}
 
 			return host;

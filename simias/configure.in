@@ -326,6 +326,7 @@ simias.pc
 src/Makefile
 src/install-simias-to-gac
 src/Common/SimiasSetup.cs
+src/Common/MyDns.cs
 src/Simias.dll/Makefile
 src/SimiasApp/Makefile
 src/SimiasApp/simias
