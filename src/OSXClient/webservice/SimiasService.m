@@ -27,11 +27,6 @@
 #import "Simias.h"
 #import "AuthStatus.h"
 
-typedef struct gsoap_creds
-{
-	char *username;
-	char *password;
-} GSOAP_CREDS;
 
 @implementation SimiasService
 
