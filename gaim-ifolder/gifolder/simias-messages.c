@@ -98,7 +98,7 @@ static char *
 convert_url_to_public(const char *start_url, GaimConnection *gc)
 {
 	char new_url[1024];
-	const char *public_ip;
+	const char *public_ip = NULL;
 	char *proto = NULL;
 	char *host = NULL;
 	char *port = NULL;
@@ -106,6 +106,9 @@ convert_url_to_public(const char *start_url, GaimConnection *gc)
 	void **od_pointer; /* Oscar Data Struct isn't in aim.h */
 	void *od_struct;
 	aim_conn_t *aim_conn;
+	char localhost[129];
+	struct hostent *myhost;
+	char **addr_list;
 
 	if (simias_url_parse(start_url, &proto, &host, &port, &path)) {
 	
@@ -118,6 +121,20 @@ convert_url_to_public(const char *start_url, GaimConnection *gc)
 		
 		public_ip = gaim_network_get_my_ip(aim_conn ? aim_conn->fd : -1);
 		
+		if (gethostname(localhost, 128) < 0)
+			sprintf(localhost, "localhost");
+
+		myhost = gethostbyname(localhost);
+		if (myhost)
+		{
+			addr_list = myhost->h_addr_list;
+			while (*addr_list)
+			{
+				fprintf(stderr, "Addr: %s\n", *addr_list);
+				addr_list++;
+			}
+		}
+
 		if (path) {
 			sprintf(new_url, "%s://%s:%s/%s", proto, public_ip, port, path);
 		}
