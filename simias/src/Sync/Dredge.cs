@@ -45,7 +45,7 @@ public class Dredger
 	public const string NodeTypeFile = "IfolderFile";
 	public const string NodeTypeDir = "IfolderDirectory";
 	
-	//TODO need to get StringBuilder to work for this
+	//TODO: need to get StringBuilder to work for this
 	string FullPath(Node node)
 	{
 		Log.Assert(node != null);
@@ -65,6 +65,16 @@ public class Dredger
 		return Path.Combine(docRoot, fp);
 	}
 
+	/* takes a local file system path and converts it to a string for use
+	 * in a relative path property, which always uses a path seperator of
+	 * '/'.
+	 */
+	string NodeRelPath(string relPath)
+	{
+		relPath = relPath.Replace(Path.DirectorySeparatorChar, '/');
+		return relPath.Replace(Path.AltDirectorySeparatorChar, '/');
+	}
+
 	void DeleteNode(Node node)
 	{
 		Log.Spew("Dredger deleting orphaned node {0}, {1}", FullPath(node), node.Id);
@@ -78,7 +88,7 @@ public class Dredger
 		Log.Assert(docRoot.Length > 0 && path.StartsWith(docRoot));
 
 		string nodeName = Path.GetFileName(path);
-		string nodePath = path.Substring(docRoot.Length + 1);
+		string nodeRelPath = NodeRelPath(path.Substring(docRoot.Length + 1));
 		Node node = null;
 
 		// delete nodes that are wrong type or dups
@@ -104,12 +114,12 @@ public class Dredger
 			Log.Spew("Dredger adding node for {0} {1}", FullPath(node), node.Id);
 			if (type == NodeTypeFile)
 			{	//TODO: handle multiple streams per file system file (e.g. resource forks)
-				FileEntry fe = node.AddFileEntry(null, nodePath);
+				FileEntry fe = node.AddFileEntry(null, nodeRelPath);
 				fe.LastWriteTime = File.GetLastWriteTime(path);
 			}
 			else if (type == NodeTypeDir)
 			{
-				DirectoryEntry de = node.AddDirectoryEntry(null, nodePath);
+				DirectoryEntry de = node.AddDirectoryEntry(null, nodeRelPath);
 				de.LastWriteTime = Directory.GetLastWriteTime(path);
 			}
 			node.Commit();
@@ -124,7 +134,7 @@ public class Dredger
 		DateTime fsCreation = File.GetCreationTime(path);
 		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
 		{
-			Log.Assert(fse.IsFile && fse.RelativePath == nodePath);
+			Log.Assert(fse.IsFile && fse.RelativePath == nodeRelPath);
 			if (fse.LastWriteTime != fsLastWrite || fse.CreationTime != fsCreation)
 			{
 				fse.LastWriteTime = fsLastWrite;

@@ -471,6 +471,7 @@ public class SyncOps
 	{
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
 		ArrayList rejects = new ArrayList();
+		Log.Spew("PutSmallNodes() {0}", nodeChunks.Length);
 		foreach (NodeChunk nc in nodeChunks)
 		{
 			if (!onServer && nc.fseChunks == null && nc.totalSize >= NodeChunk.MaxSize)
@@ -482,7 +483,7 @@ public class SyncOps
 			inNode.WriteChunks(nc.fseChunks);
 			NodeStatus status = inNode.Complete(nc.metaData);
 			if (status != NodeStatus.Complete)
-				rejects.Add(new RejectedNode(nc.stamp.id, status)); break;
+				rejects.Add(new RejectedNode(nc.stamp.id, status));
 		}
 		return (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
 	}

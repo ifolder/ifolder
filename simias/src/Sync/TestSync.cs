@@ -49,7 +49,7 @@ public class SyncTests: Assertion
 	private static readonly string clientDir = Path.GetFullPath("SyncTestClientData");
 	private static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	private static readonly string serverFolder = Path.Combine(serverDir, folderName);
-	private bool runChildProcess = false;
+	private bool runChildProcess = true;
 
 	//---------------------------------------------------------------------------
 	public static int Run(string program, string args)
@@ -209,7 +209,6 @@ public class SyncTests: Assertion
 		string dirC = Path.Combine(clientFolder, "simpleTestDir");
 		int[] delNums = { 8, 12, 14, 16, 22, 28 };
 
-
 		for (int i = 0; i < delNums.Length - 2; ++i)
 			File.Delete(Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt"));
 
@@ -239,6 +238,47 @@ public class SyncTests: Assertion
 		return Differ.CompareDirectories(serverFolder, clientFolder);
 	}
    
+	//---------------------------------------------------------------------------
+	// test file creation collisions: create duplicate and non-dup files in multiple
+	//     level directory structure
+	// sync and make sure everything got sorted out
+	[Test] public void NUFileCreationCollision() { Assert(FileCreationCollision()); }
+
+	public bool FileCreationCollision()
+	{
+		string dirS = Path.Combine(serverFolder, "simpleTestDir");
+		string dirC = Path.Combine(clientFolder, "simpleTestDir");
+		string subdirS1 = Path.Combine(dirS, "collisionDir1");
+		string subdirS2 = Path.Combine(dirS, "collisionDir2");
+		string subdirC1 = Path.Combine(dirC, "collisionDir1");
+		string subdirC2 = Path.Combine(dirC, "collisionDir2");
+
+		Directory.CreateDirectory(subdirS1);
+		Directory.CreateDirectory(subdirS2);
+		Directory.CreateDirectory(subdirC1);
+		Directory.CreateDirectory(subdirC2);
+
+		Differ.CreateFile(Path.Combine(subdirS1, "collision-file-1.txt"), "server collision file contents 1\n");
+		Differ.CreateFile(Path.Combine(subdirS2, "collision-file-2.txt"), "server collision file contents 2\n");
+		Differ.CreateFile(Path.Combine(subdirC1, "collision-file-1.txt"), "client collision file contents 1\n");
+		Differ.CreateFile(Path.Combine(subdirC2, "collision-file-2.txt"), "client collision file contents 2\n");
+
+		Differ.CreateFile(Path.Combine(subdirS1, "non-collision-file-1.txt"), "server non-collision file contents 1\n");
+		Differ.CreateFile(Path.Combine(subdirS2, "non-collision-file-2.txt"), "server non-collision file contents 2\n");
+		Differ.CreateFile(Path.Combine(subdirC1, "non-collision-file-3.txt"), "client non-collision file contents 3\n");
+		Differ.CreateFile(Path.Combine(subdirC2, "non-collision-file-4.txt"), "client non-collision file contents 4\n");
+		
+		if (!RunClient())
+		{
+			Log.Spew("failed sync after FileCreationCollision");
+			return false;
+		}
+
+		return Differ.CompareDirectories(serverFolder, clientFolder);
+	}
+
+
+
 //   #---------------------------------------------------------------------------
 //   # test duplicate adds: add different files of the same name both sides
 //   # sync and make sure everything got sorted out
@@ -285,6 +325,7 @@ public class SyncTests: Assertion
 		Console.WriteLine("firstLocalSync: {0}", FirstLocalSync());
 		Console.WriteLine("simpleAdds: {0}", SimpleAdds());
 		Console.WriteLine("simpleDeletes: {0}", SimpleDeletes());
+		Console.WriteLine("FileCreationCollision: {0}", FileCreationCollision());
 		Cleanup();
 	}
 
