@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-16"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:s="http://www.w3.org/2001/XMLSchema"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+      xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+      xmlns:s0="http://novell.com/simias/domain" name="Gaim Domain Service"
+      targetNamespace="http://novell.com/simias/domain"
+      xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/domain"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="GetGaimDomainInfo">
+        <xs:complexType/>
+      </xs:element>
+      <xs:complexType name="GaimDomainInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="RosterID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="RosterName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetGaimDomainInfoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetGaimDomainInfoResult"
+                  type="s0:GaimDomainInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddGaimBuddy">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="accountName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="accountProto" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="buddyName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="alias" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="ipAddr" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="ipPort" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddGaimBuddyResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="RemoveGaimBuddy">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="accountName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="accountProto" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="buddyName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveGaimBuddyResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="UpdateGaimBuddy">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="accountName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="accountProto" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="buddyName" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="alias" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="ipAddr" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="ipPort" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdateGaimBuddyResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetAllBuddies">
+        <xs:complexType/>
+      </xs:element>
+      <xs:complexType name="ArrayOfGaimBuddy">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="GaimBuddy" nillable="true"
+                type="s0:GaimBuddy"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GaimBuddy">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Rights" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="IsOwner" type="xs:boolean"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="GaimAccountName" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="GaimAccountProto" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="GaimAlias" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="IPAddress" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="IPPort" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetAllBuddiesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetAllBuddiesResult"
+                  type="s0:ArrayOfGaimBuddy"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GaimDomainInfo" type="s0:GaimDomainInfo"/>
+      <xs:element name="ArrayOfGaimBuddy" type="s0:ArrayOfGaimBuddy"/>
+    </xs:schema>
+  </types>
+  <message name="GetGaimDomainInfoSoapIn">
+    <part name="parameters" element="s0:GetGaimDomainInfo"/>
+  </message>
+  <message name="GetGaimDomainInfoSoapOut">
+    <part name="parameters" element="s0:GetGaimDomainInfoResponse"/>
+  </message>
+  <message name="AddGaimBuddySoapIn">
+    <part name="parameters" element="s0:AddGaimBuddy"/>
+  </message>
+  <message name="AddGaimBuddySoapOut">
+    <part name="parameters" element="s0:AddGaimBuddyResponse"/>
+  </message>
+  <message name="RemoveGaimBuddySoapIn">
+    <part name="parameters" element="s0:RemoveGaimBuddy"/>
+  </message>
+  <message name="RemoveGaimBuddySoapOut">
+    <part name="parameters" element="s0:RemoveGaimBuddyResponse"/>
+  </message>
+  <message name="UpdateGaimBuddySoapIn">
+    <part name="parameters" element="s0:UpdateGaimBuddy"/>
+  </message>
+  <message name="UpdateGaimBuddySoapOut">
+    <part name="parameters" element="s0:UpdateGaimBuddyResponse"/>
+  </message>
+  <message name="GetAllBuddiesSoapIn">
+    <part name="parameters" element="s0:GetAllBuddies"/>
+  </message>
+  <message name="GetAllBuddiesSoapOut">
+    <part name="parameters" element="s0:GetAllBuddiesResponse"/>
+  </message>
+  <message name="GetGaimDomainInfoHttpGetIn"/>
+  <message name="GetGaimDomainInfoHttpGetOut">
+    <part name="Body" element="s0:GaimDomainInfo"/>
+  </message>
+  <message name="AddGaimBuddyHttpGetIn">
+    <part name="accountName" type="s:string"/>
+    <part name="accountProto" type="s:string"/>
+    <part name="buddyName" type="s:string"/>
+    <part name="alias" type="s:string"/>
+    <part name="ipAddr" type="s:string"/>
+    <part name="ipPort" type="s:string"/>
+  </message>
+  <message name="AddGaimBuddyHttpGetOut"/>
+  <message name="RemoveGaimBuddyHttpGetIn">
+    <part name="accountName" type="s:string"/>
+    <part name="accountProto" type="s:string"/>
+    <part name="buddyName" type="s:string"/>
+  </message>
+  <message name="RemoveGaimBuddyHttpGetOut"/>
+  <message name="UpdateGaimBuddyHttpGetIn">
+    <part name="accountName" type="s:string"/>
+    <part name="accountProto" type="s:string"/>
+    <part name="buddyName" type="s:string"/>
+    <part name="alias" type="s:string"/>
+    <part name="ipAddr" type="s:string"/>
+    <part name="ipPort" type="s:string"/>
+  </message>
+  <message name="UpdateGaimBuddyHttpGetOut"/>
+  <message name="GetAllBuddiesHttpGetIn"/>
+  <message name="GetAllBuddiesHttpGetOut">
+    <part name="Body" element="s0:ArrayOfGaimBuddy"/>
+  </message>
+  <message name="GetGaimDomainInfoHttpPostIn"/>
+  <message name="GetGaimDomainInfoHttpPostOut">
+    <part name="Body" element="s0:GaimDomainInfo"/>
+  </message>
+  <message name="AddGaimBuddyHttpPostIn">
+    <part name="accountName" type="s:string"/>
+    <part name="accountProto" type="s:string"/>
+    <part name="buddyName" type="s:string"/>
+    <part name="alias" type="s:string"/>
+    <part name="ipAddr" type="s:string"/>
+    <part name="ipPort" type="s:string"/>
+  </message>
+  <message name="AddGaimBuddyHttpPostOut"/>
+  <message name="RemoveGaimBuddyHttpPostIn">
+    <part name="accountName" type="s:string"/>
+    <part name="accountProto" type="s:string"/>
+    <part name="buddyName" type="s:string"/>
+  </message>
+  <message name="RemoveGaimBuddyHttpPostOut"/>
+  <message name="UpdateGaimBuddyHttpPostIn">
+    <part name="accountName" type="s:string"/>
+    <part name="accountProto" type="s:string"/>
+    <part name="buddyName" type="s:string"/>
+    <part name="alias" type="s:string"/>
+    <part name="ipAddr" type="s:string"/>
+    <part name="ipPort" type="s:string"/>
+  </message>
+  <message name="UpdateGaimBuddyHttpPostOut"/>
+  <message name="GetAllBuddiesHttpPostIn"/>
+  <message name="GetAllBuddiesHttpPostOut">
+    <part name="Body" element="s0:ArrayOfGaimBuddy"/>
+  </message>
+  <portType name="Gaim Domain ServiceSoap">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoSoapIn"/>
+      <output message="s0:GetGaimDomainInfoSoapOut"/>
+    </operation>
+    <operation name="AddGaimBuddy">
+      <input message="s0:AddGaimBuddySoapIn"/>
+      <output message="s0:AddGaimBuddySoapOut"/>
+      <documentation>AddGaimBuddy</documentation>
+    </operation>
+    <operation name="RemoveGaimBuddy">
+      <input message="s0:RemoveGaimBuddySoapIn"/>
+      <output message="s0:RemoveGaimBuddySoapOut"/>
+      <documentation>RemoveGaimBuddy</documentation>
+    </operation>
+    <operation name="UpdateGaimBuddy">
+      <input message="s0:UpdateGaimBuddySoapIn"/>
+      <output message="s0:UpdateGaimBuddySoapOut"/>
+      <documentation>UpdateGaimBuddy</documentation>
+    </operation>
+    <operation name="GetAllBuddies">
+      <input message="s0:GetAllBuddiesSoapIn"/>
+      <output message="s0:GetAllBuddiesSoapOut"/>
+      <documentation>GetAllBuddies</documentation>
+    </operation>
+  </portType>
+  <portType name="Gaim Domain ServiceHttpGet">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoHttpGetIn"/>
+      <output message="s0:GetGaimDomainInfoHttpGetOut"/>
+    </operation>
+    <operation name="AddGaimBuddy">
+      <input message="s0:AddGaimBuddyHttpGetIn"/>
+      <output message="s0:AddGaimBuddyHttpGetOut"/>
+      <documentation>AddGaimBuddy</documentation>
+    </operation>
+    <operation name="RemoveGaimBuddy">
+      <input message="s0:RemoveGaimBuddyHttpGetIn"/>
+      <output message="s0:RemoveGaimBuddyHttpGetOut"/>
+      <documentation>RemoveGaimBuddy</documentation>
+    </operation>
+    <operation name="UpdateGaimBuddy">
+      <input message="s0:UpdateGaimBuddyHttpGetIn"/>
+      <output message="s0:UpdateGaimBuddyHttpGetOut"/>
+      <documentation>UpdateGaimBuddy</documentation>
+    </operation>
+    <operation name="GetAllBuddies">
+      <input message="s0:GetAllBuddiesHttpGetIn"/>
+      <output message="s0:GetAllBuddiesHttpGetOut"/>
+      <documentation>GetAllBuddies</documentation>
+    </operation>
+  </portType>
+  <portType name="Gaim Domain ServiceHttpPost">
+    <operation name="GetGaimDomainInfo">
+      <input message="s0:GetGaimDomainInfoHttpPostIn"/>
+      <output message="s0:GetGaimDomainInfoHttpPostOut"/>
+    </operation>
+    <operation name="AddGaimBuddy">
+      <input message="s0:AddGaimBuddyHttpPostIn"/>
+      <output message="s0:AddGaimBuddyHttpPostOut"/>
+      <documentation>AddGaimBuddy</documentation>
+    </operation>
+    <operation name="RemoveGaimBuddy">
+      <input message="s0:RemoveGaimBuddyHttpPostIn"/>
+      <output message="s0:RemoveGaimBuddyHttpPostOut"/>
+      <documentation>RemoveGaimBuddy</documentation>
+    </operation>
+    <operation name="UpdateGaimBuddy">
+      <input message="s0:UpdateGaimBuddyHttpPostIn"/>
+      <output message="s0:UpdateGaimBuddyHttpPostOut"/>
+      <documentation>UpdateGaimBuddy</documentation>
+    </operation>
+    <operation name="GetAllBuddies">
+      <input message="s0:GetAllBuddiesHttpPostIn"/>
+      <output message="s0:GetAllBuddiesHttpPostOut"/>
+      <documentation>GetAllBuddies</documentation>
+    </operation>
+  </portType>
+  <binding name="Gaim Domain ServiceSoap" type="s0:Gaim Domain ServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetGaimDomainInfo">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetGaimDomainInfo"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="AddGaimBuddy">
+      <soap:operation soapAction="http://novell.com/simias/domain/AddGaimBuddy"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RemoveGaimBuddy">
+      <soap:operation soapAction="http://novell.com/simias/domain/RemoveGaimBuddy"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="UpdateGaimBuddy">
+      <soap:operation soapAction="http://novell.com/simias/domain/UpdateGaimBuddy"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetAllBuddies">
+      <soap:operation soapAction="http://novell.com/simias/domain/GetAllBuddies"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Gaim Domain ServiceHttpGet" type="s0:Gaim Domain ServiceHttpGet">
+    <http:binding verb="GET"/>
+    <operation name="GetGaimDomainInfo">
+      <http:operation location="/GetGaimDomainInfo"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="AddGaimBuddy">
+      <http:operation location="/AddGaimBuddy"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="RemoveGaimBuddy">
+      <http:operation location="/RemoveGaimBuddy"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="UpdateGaimBuddy">
+      <http:operation location="/UpdateGaimBuddy"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetAllBuddies">
+      <http:operation location="/GetAllBuddies"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="Gaim Domain ServiceHttpPost" type="s0:Gaim Domain ServiceHttpPost">
+    <http:binding verb="POST"/>
+    <operation name="GetGaimDomainInfo">
+      <http:operation location="/GetGaimDomainInfo"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="AddGaimBuddy">
+      <http:operation location="/AddGaimBuddy"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="RemoveGaimBuddy">
+      <http:operation location="/RemoveGaimBuddy"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="UpdateGaimBuddy">
+      <http:operation location="/UpdateGaimBuddy"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="GetAllBuddies">
+      <http:operation location="/GetAllBuddies"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="Gaim Domain Service">
+    <port name="Gaim Domain ServiceSoap" binding="s0:Gaim Domain ServiceSoap">
+      <soap:address
+           
+           
+           
+           
+           
+            location="http://localhost/simias10/GaimDomainService.asmx"/>
+    </port>
+    <port name="Gaim Domain ServiceHttpGet" binding="s0:Gaim Domain ServiceHttpGet">
+      <http:address
+           
+           
+           
+           
+           
+            location="http://localhost/simias10/GaimDomainService.asmx"/>
+    </port>
+    <port name="Gaim Domain ServiceHttpPost" binding="s0:Gaim Domain ServiceHttpPost">
+      <http:address
+           
+           
+           
+           
+           
+            location="http://localhost/simias10/GaimDomainService.asmx"/>
+    </port>
+    <documentation>Web Service providing access to Gaim Domain Server
+          functionality.</documentation>
+  </service>
+</definitions>
