@@ -308,10 +308,9 @@ namespace Simias.Storage
 		private void ChangeToTombstone( Node node )
 		{
 			string oldType = node.Type;
-			node.Name = "Tombstone:" + node.Name;
-			node.BaseType = "Tombstone";
+			node.BaseType = NodeTypes.TombstoneType;
 			node.InternalList = new PropertyList( node.Name, node.ID, node.Type );
-			node.Properties.AddNodeProperty( PropertyTags.Types, "Tombstone" );
+			node.Properties.AddNodeProperty( PropertyTags.Types, NodeTypes.TombstoneType );
 			node.Properties.AddNodeProperty( PropertyTags.TombstoneType, oldType );
 			node.IncarnationUpdate = 0;
 		}
@@ -411,7 +410,7 @@ namespace Simias.Storage
 		/// <returns>True if the specified Node object is a deleted Node object. Otherwise false.</returns>
 		private bool IsTombstone( Node node )
 		{
-			return ( node.Type == "Tombstone" ) ? true : false;
+			return ( node.Type == NodeTypes.TombstoneType ) ? true : false;
 		}
 
 		/// <summary>
