@@ -57,6 +57,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3906ED8723464E8DADE1E2CABF2051E6"
+        "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3906ED8723464E8DADE1E2CABF2051E6"
+        "OwnerKey" = "8:_5037C905660F4574B9B6637CC9A3CE2D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_466A9CAA56C74C618743F3902430E514"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -101,18 +113,6 @@
         {
         "MsmKey" = "8:_91D5978AF0D544DDBEB6E636B7F596ED"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A60CE0D1712444A0BCCFF81C760DD567"
-        "OwnerKey" = "8:_0C336FC79B14484D84C6E37B881F55AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A60CE0D1712444A0BCCFF81C760DD567"
-        "OwnerKey" = "8:_5037C905660F4574B9B6637CC9A3CE2D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -226,7 +226,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1524.34836, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:FormsBookLib, Version=1.0.1536.35276, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_0C336FC79B14484D84C6E37B881F55AB"
@@ -357,7 +357,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Book, Version=1.0.1524.34836, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:Book, Version=1.0.1536.35276, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_5037C905660F4574B9B6637CC9A3CE2D"
@@ -612,7 +612,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_A60CE0D1712444A0BCCFF81C760DD567"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_3906ED8723464E8DADE1E2CABF2051E6"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:TRUE"
@@ -630,7 +630,7 @@
         "Version" = "8:1.0.0.0"
         "Title" = "8:Address Book Merge Module"
         "Subject" = "8:"
-        "Author" = "8:Novell, Inc."
+        "Author" = "8:"
         "Keywords" = "8:"
         "Comments" = "8:Address Book Merge Module"
         "SearchPath" = "8:"
