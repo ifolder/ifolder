@@ -40,6 +40,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Cached access control entry that is used when validating access check operations.
 		/// </summary>
+		[ NonSerialized() ]
 		private AccessControlEntry ace;
 		#endregion
 
