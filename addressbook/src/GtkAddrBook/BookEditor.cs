@@ -130,7 +130,7 @@ namespace Novell.iFolder
 
 		public void onKeyPressed(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 9:
 					on_cancel(o, args);

@@ -120,7 +120,7 @@ namespace Novell.iFolder
 			tl.Append(ceLastName.Handle);
 			tl.Append(ceEmail.Handle);
 
-			ceGeneralTabTable.SetFocusChain(tl);
+			//ceGeneralTabTable.SetFocusChain(tl);
 		
 			Pixbuf pb = GetScaledPhoto(contact, 64);
 			if(pb != null)
@@ -214,7 +214,7 @@ namespace Novell.iFolder
 
 		public void onKeyPressed(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 9:
 					onCancel(o, args);

@@ -413,7 +413,7 @@ namespace Novell.iFolder
 
 		public void on_book_key_press(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 22:
 				case 107:
@@ -541,7 +541,7 @@ namespace Novell.iFolder
 
 		public void on_contact_key_press(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 22:
 				case 107:
@@ -724,12 +724,12 @@ namespace Novell.iFolder
 			int begin, end;
 
 			begin = ContactTextBuffer.CharCount;
-			ContactTextBuffer.GetIterAtMark(out insertIter,
+			insertIter = ContactTextBuffer.GetIterAtMark(
 					ContactTextBuffer.InsertMark);
 			ContactTextBuffer.Insert (insertIter, insertText);
 			end = ContactTextBuffer.CharCount;
-			ContactTextBuffer.GetIterAtOffset (out endIter, end);
-			ContactTextBuffer.GetIterAtOffset (out beginIter, begin);
+			endIter = ContactTextBuffer.GetIterAtOffset(end);
+			beginIter = ContactTextBuffer.GetIterAtOffset(begin);
 			ContactTextBuffer.ApplyTag (tagName, beginIter, endIter);
 		}
 
@@ -737,7 +737,7 @@ namespace Novell.iFolder
 		{
 			TextIter insertIter;
 
-			ContactTextBuffer.GetIterAtMark(out insertIter,
+			insertIter = ContactTextBuffer.GetIterAtMark(
 					ContactTextBuffer.InsertMark);
 			ContactTextBuffer.Insert (insertIter, insertText);
 		}
@@ -746,7 +746,7 @@ namespace Novell.iFolder
 		{
 			TextIter insertIter;
 
-			ContactTextBuffer.GetIterAtMark(out insertIter, 
+			insertIter = ContactTextBuffer.GetIterAtMark( 
 					ContactTextBuffer.InsertMark);
 			ContactTextBuffer.InsertPixbuf (insertIter, pixbuf);
 		}
@@ -788,7 +788,7 @@ namespace Novell.iFolder
 
 		public void on_search_key_press(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 36: // Enter key
 					SearchAddrBook();

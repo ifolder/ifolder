@@ -425,7 +425,7 @@ namespace Novell.iFolder
 
 		public void onKeyPressed(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 9:
 					onCancel(o, args);
@@ -538,7 +538,7 @@ namespace Novell.iFolder
 
 		public void on_contact_key_press(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 22:
 				case 107:
@@ -614,7 +614,7 @@ namespace Novell.iFolder
 
 		public void on_book_key_press(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 22:
 				case 107:
@@ -720,7 +720,7 @@ namespace Novell.iFolder
 
 		public void on_search_key_press(object o, KeyPressEventArgs args)
 		{
-			switch(args.Event.hardware_keycode)
+			switch(args.Event.HardwareKeycode)
 			{
 				case 36: // Enter key
 					SearchAddrBook();
