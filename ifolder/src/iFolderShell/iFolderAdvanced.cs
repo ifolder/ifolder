@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Net;
-using Simias;
+using Simias.Client;
 using Simias.Event;
 using Simias.Storage;
 using Simias.Service;
@@ -1524,8 +1524,12 @@ namespace Novell.iFolderCom
 		{
 			if (ifWebService == null)
 			{
-				ifWebService = new iFolderWebService();
-				ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+				Uri uri = Simias.Client.Manager.LocalServiceUrl;
+				if (uri != null)
+				{
+					ifWebService = new iFolderWebService();
+					ifWebService.Url = uri.ToString() + "/iFolder.asmx";
+				}
 			}
 		}
 
@@ -1904,9 +1908,10 @@ namespace Novell.iFolderCom
 			{
 				foreach (ShareListMember slMember in removedList)
 				{
-					connectToWebService();
 					try
 					{
+						connectToWebService();
+
 						// Delete the member.
 						ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
 					}

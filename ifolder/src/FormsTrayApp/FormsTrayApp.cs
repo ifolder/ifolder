@@ -30,11 +30,10 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using System.Globalization;
-using Simias.Service;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using CustomUIControls;
-using Simias;
+using Simias.Client;
 using Simias.Event;
 using Simias.Storage;
 using Simias.Sync;
@@ -286,10 +285,10 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
-					Manager.Start();
+					Simias.Service.Manager.Start();
 
 					ifWebService = new iFolderWebService();
-					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+					ifWebService.Url = Simias.Service.Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 					ifWebService.Ping();
 					//iFolderManager.CreateDefaultExclusions(config);
 
@@ -638,8 +637,9 @@ namespace Novell.FormsTrayApp
 				{
 					eventClient.Deregister();
 				}
+
 				// Shut down the web server.
-				Manager.Stop();
+				Simias.Service.Manager.Stop();
 
 				if ((workerThread != null) && workerThread.IsAlive)
 				{

@@ -90,16 +90,6 @@
                     HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "Novell.iFolder"
-                    AssemblyName = "Novell.iFolder"
-                    HintPath = "..\iFolder\Novell.iFolder.dll"
-                />
-                <Reference
-                    Name = "iFolderComponent"
-                    AssemblyName = "iFolderComponent"
-                    HintPath = "..\iFolderShell\iFolderComponent.dll"
-                />
-                <Reference
                     Name = "System.Configuration.Install"
                     AssemblyName = "System.Configuration.Install"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
@@ -118,6 +108,16 @@
                     Name = "SimiasClient"
                     AssemblyName = "SimiasClient"
                     HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
+                />
+                <Reference
+                    Name = "Novell.iFolder"
+                    AssemblyName = "Novell.iFolder"
+                    HintPath = "..\..\..\final\Novell.iFolder.dll"
+                />
+                <Reference
+                    Name = "iFolderComponent"
+                    AssemblyName = "iFolderComponent"
+                    HintPath = "..\..\..\final\iFolderComponent.dll"
                 />
             </References>
         </Build>
