@@ -1737,6 +1737,7 @@ namespace Novell.FormsTrayApp
 //			createiFolder.Servers = servers.Items;
 //			Domain selectedDomain = (Domain)servers.SelectedItem;
 //			createiFolder.SelectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
+			createiFolder.LoadPath = Application.StartupPath;
 			createiFolder.iFolderWebService = ifWebService;
 
 			if ((DialogResult.OK == createiFolder.ShowDialog()) && iFolderComponent.DisplayConfirmationEnabled)
