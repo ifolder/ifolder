@@ -3,6 +3,7 @@ AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE(simias, 1.0)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
+AC_PROG_CC
 
 #
 # Check for a valid operating system and C# compiler
@@ -134,7 +135,7 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_CLEAN_FILES='*.dbg *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
 COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
 AC_SUBST(COMMON_CLEAN_FILES)
@@ -206,20 +207,44 @@ case $SIMIAS_OS in
     # Windows-specific configuration
     #
     windows)
-		CXX='cl -c'
-		CDEF='-D'
-		CINC='-I'
-		COUT='-Fo'
-		LD='link'
-		LDINC='-libpath:'
-		LDOUT='-out:'
-		LIB_PRE =''
-		
+        #
+        # Check for valid compilers
+        #
+        AC_CHECK_PROG(CC, cl, cl)
+        test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
+        AC_CHECK_PROG(CXX, cl, cl)
+        test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
+        AC_CHECK_PROG(LD, link, link)
+        test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
+        #
+        # Set variables
+        #
+        CC='cl -c'
+        CXX='cl -c'
+        CDEF='-D'
+        CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
+        CFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        CFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
+        CINC='-I'
+        COUT='-Fo'
         CSCFLAGS="/d:WINDOWS $CSCFLAGS"
+        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
+        CXXFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        CXXFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
+        DEF='-def:'
+        EMPTY=
         EXE_EXT='.exe'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         INSTALL_EXE_OPTS=''
+        LDFLAGS='-nologo -machine:X86'
+        LDFLAGS_DEBUG="-DEBUG"
+        LDINC='-libpath:'
+        LDOUT='-out:'
+        LIB_EXT='.lib'
+        LIB_PRE=''
+        LIBFLAG=''
+        LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
         MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/net/bin"
         NUNIT="nunit-console.exe"
@@ -228,13 +253,17 @@ case $SIMIAS_OS in
         NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
         OBJ_EXT='.obj'
+        RC='rc'
+        RC_FLAGS='-r'
         REPORT_DIR='$(shell cygpath --windows $(DESTDIR)$(bindir) | sed ''s,\\\\,/,g'')'
         REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
+        RES_EXT='.res'
         SEP='$(EMPTY)\\$(EMPTY)'
         SHARED_LIB_EXT='.dll'
         SHARED_LIB_FLAG='-dll'
         SQLITELIB="sqlite.dll"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
+        SYSTEM_XML='System.XML.dll'
         #
     	# Override Linux-like directory structure
         #
@@ -244,18 +273,20 @@ case $SIMIAS_OS in
     	libdir="${exec_prefix}"
     ;;
 esac
-AC_SUBST(CXX)
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
 AC_SUBST(COUT)
-AC_SUBST(LD)
+AC_SUBST(CXX)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(DEF)
+AC_SUBST(ICON_EXT)
+AC_SUBST(ICON_FLAG)
+AC_SUBST(INSTALL_EXE_OPTS)
+AC_SUBST(LDFLAGS)
 AC_SUBST(LDINC)
 AC_SUBST(LDOUT)
 AC_SUBST(LIB_PRE)
 AC_SUBST(LIBS)
-AC_SUBST(ICON_EXT)
-AC_SUBST(ICON_FLAG)
-AC_SUBST(INSTALL_EXE_OPTS)
 AC_SUBST(LOG4NET_DIR)
 AC_SUBST(MDNSRESPONDER_DIR)
 AC_SUBST(NUNIT)
@@ -290,10 +321,10 @@ AC_SUBST(UI_PKG_CONFIG_LIBS)
 #
 # Run standard macros
 #
-#AM_PROG_CC_STDC
-#AC_PROG_INSTALL
-#AC_HEADER_STDC
-#AM_PROG_LIBTOOL
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+AC_HEADER_STDC
+AM_PROG_LIBTOOL
 
 #
 # Handle --with-ndoc-path
