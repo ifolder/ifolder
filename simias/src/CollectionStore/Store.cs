@@ -30,6 +30,7 @@ using System.Security.Cryptography;
 using System.Xml;
 
 using Simias;
+using Simias.Event;
 using Persist = Simias.Storage.Provider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
@@ -86,9 +87,27 @@ namespace Simias.Storage
 		/// Cross-process database lock function.
 		/// </summary>
 		private Mutex storeMutex;
+
+		/// <summary>
+		/// String that identifies the publisher of events for this object instance.
+		/// </summary>
+		private string publisher = "Unspecified";
+
+		/// <summary>
+		/// Used to publish collection store events.
+		/// </summary>
+		private EventPublisher eventPublisher;
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets the event publisher object.
+		/// </summary>
+		internal EventPublisher EventPublisher
+		{
+			get { return eventPublisher; }
+		}
+
 		/// <summary>
 		/// Gets whether the current executing user is being impersonated.
 		/// </summary>
@@ -194,6 +213,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the publisher event source identifier.
+		/// </summary>
+		public string Publisher
+		{
+			get { return publisher; }
+			set { publisher = value; }
+		}
+
+		/// <summary>
 		/// Gets the public key for the server.
 		/// </summary>
 		public RSACryptoServiceProvider ServerPublicKey
@@ -240,6 +268,9 @@ namespace Simias.Storage
 
 				// Store the configuration that opened this instance.
 				this.config = config;
+
+				// Setup the event publisher object.
+				eventPublisher = new EventPublisher( config );
 
 				// Create or open the underlying database.
 				storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig( config ), out created );

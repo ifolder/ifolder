@@ -27,6 +27,7 @@ using System.IO;
 using System.Xml;
 
 using Simias;
+using Simias.Event;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -538,13 +539,27 @@ namespace Simias.Storage
 			foreach( Node node in commitList )
 			{
 				// Set the new state for the Node object.
-				if ( node.Properties.State == PropertyList.PropertyListState.Delete )
+				switch ( node.Properties.State )
 				{
-					node.Properties.State = PropertyList.PropertyListState.Disposed;
-				}
-				else if ( node.Properties.State != PropertyList.PropertyListState.Disposed )
-				{
-					node.Properties.State = PropertyList.PropertyListState.Update;
+					case PropertyList.PropertyListState.Add:
+						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
+						node.Properties.State = PropertyList.PropertyListState.Update;
+						break;
+
+					case PropertyList.PropertyListState.Delete:
+						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
+						node.Properties.State = PropertyList.PropertyListState.Disposed;
+						break;
+
+					case PropertyList.PropertyListState.Import:
+						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+						node.Properties.State = PropertyList.PropertyListState.Update;
+						break;
+
+					case PropertyList.PropertyListState.Update:
+						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+						break;
+
 				}
 			}
 		}
@@ -607,6 +622,13 @@ namespace Simias.Storage
 				{
 					node.Properties.AddNodeProperty( p );
 				}
+			}
+			else
+			{
+				// If there is no existing Node object, this imported Node object needs a MasterIncarnation value.
+				Property mvProp = new Property( PropertyTags.MasterIncarnation, ( ulong )0 );
+				mvProp.LocalProperty = true;
+				node.Properties.AddNodeProperty( mvProp );
 			}
 		}
 
