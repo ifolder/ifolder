@@ -502,6 +502,7 @@ src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
 src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
+src/WebService/Makefile
 test/Makefile
 test/iFolder/Makefile
 test/iFolderComponent/Makefile

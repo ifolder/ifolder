@@ -10,7 +10,7 @@ if WINDOWS
 SUBDIRS = iFolder iFolderShell FormsTrayApp FormsInvitationWizard
 endif
 
-DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp FormsInvitationWizard iFolderGtkUI iFolderGtkApp
+DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp FormsInvitationWizard iFolderGtkUI iFolderGtkApp WebService
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys $(srcdir)/install-ifolder-to-gac.in
 
