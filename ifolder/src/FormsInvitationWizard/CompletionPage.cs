@@ -29,12 +29,18 @@ using System.Windows.Forms;
 
 namespace Novell.iFolder.InvitationWizard
 {
+	/// <summary>
+	/// Class for the completion wizard page.
+	/// </summary>
 	public class CompletionPage : Novell.iFolder.InvitationWizard.WelcomePageTemplate
 	{
 		#region Class Members
 		private System.ComponentModel.IContainer components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs a CompletionPage object.
+		/// </summary>
 		public CompletionPage()
 		{
 			// This call is required by the Windows Form Designer.

@@ -44,9 +44,24 @@ namespace Novell.iFolder.InvitationWizard
 	[Flags]
 	public enum WizardButtons
 	{
+		/// <summary>
+		/// None of the buttons are enabled.
+		/// </summary>
 		None = 0,
+
+		/// <summary>
+		/// The Back button is enabled.
+		/// </summary>
 		Back = 1,
+
+		/// <summary>
+		/// The Next button is enabled.
+		/// </summary>
 		Next = 2,
+
+		/// <summary>
+		/// The Cancel button is enabled.
+		/// </summary>
 		Cancel = 4,
 	}
 
@@ -69,7 +84,6 @@ namespace Novell.iFolder.InvitationWizard
 		private BaseWizardPage[] pages;
 		internal const int maxPages = 5;
 		private int currentIndex = 0;
-		private SubscriptionInfo subInfo;
 		private Subscription subscription = null;
 		private string invitationFile = "";
 		private string domainID;
@@ -84,6 +98,10 @@ namespace Novell.iFolder.InvitationWizard
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs an InvitationWizard object.
+		/// </summary>
+		/// <param name="args">The command-line arguments.</param>
 		public InvitationWizard(string[] args)
 		{
 			//
@@ -179,6 +197,11 @@ namespace Novell.iFolder.InvitationWizard
 				Image image = Image.FromFile(Path.Combine(Application.StartupPath, "invitewiz.png"));
 				this.welcomePage.Watermark = image;
 				this.completionPage.Watermark = image;
+
+				image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder_invite_32.png"));
+				this.selectInvitationPage.Thumbnail = image;
+				this.selectiFolderLocationPage.Thumbnail = image;
+				this.acceptDeclinePage.Thumbnail = image;
 			}
 			catch (Exception e)
 			{
@@ -339,14 +362,14 @@ namespace Novell.iFolder.InvitationWizard
 				catch (SimiasException ex)
 				{
 					ex.LogError();
-					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					MessageBox.Show("An invalid Collection Subscription Information file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					this.invitationFile = "";
 				}
 				catch (Exception ex)
 				{
 					// TODO - resource strings.
 					logger.Debug(ex, "Invalid file");
-					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					MessageBox.Show("An invalid Collection Subscription Information file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					this.invitationFile = "";
 				}
 			}
@@ -456,6 +479,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the subscription.
+		/// </summary>
 		public Subscription Subscription
 		{
 			get
@@ -469,6 +495,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets the maximum pages in the wizard.
+		/// </summary>
 		public int MaxPages
 		{
 			get
@@ -477,6 +506,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets the invitation file.
+		/// </summary>
 		public string InvitationFile
 		{
 			get
@@ -485,6 +517,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets the summary text.
+		/// </summary>
 		public string SummaryText
 		{
 			get
@@ -506,6 +541,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets the Store object.
+		/// </summary>
 		public Store Store
 		{
 			get { return store; }

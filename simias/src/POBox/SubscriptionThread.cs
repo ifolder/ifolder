@@ -147,9 +147,9 @@ namespace Simias.POBox
 
 				buffer.Append("You can participate from one or more computers with the iFolder client. For information or download, see the iFolder Web site at http://www.ifolder.com. \n\n");
 
-				buffer.Append("To accept and set up the shared iFolder on this computer, open the attached iFolder Invitation (IFI) file. Repeat this process on each computer where you want to set up the shared iFolder.\n\n");
+				buffer.Append("To accept and set up the shared iFolder on this computer, open the attached Collection Subscription Information (CSI) file. Repeat this process on each computer where you want to set up the shared iFolder.\n\n");
 
-				buffer.Append("If you do not accept within 7 days, the invitation  automatically expires. To decline immediately, open the IFI file and select Decline.");
+				buffer.Append("If you do not accept within 7 days, the invitation  automatically expires. To decline immediately, open the CSI file and select Decline.");
 
 				message.Body = buffer.ToString();
 

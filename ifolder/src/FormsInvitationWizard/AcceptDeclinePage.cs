@@ -29,6 +29,9 @@ using System.Windows.Forms;
 
 namespace Novell.iFolder.InvitationWizard
 {
+	/// <summary>
+	/// Class for the wizard page where the invitation is accepted or declined.
+	/// </summary>
 	public class AcceptDeclinePage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
@@ -41,6 +44,9 @@ namespace Novell.iFolder.InvitationWizard
 		private System.ComponentModel.IContainer components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs an AcceptDeclinePage object.
+		/// </summary>
 		public AcceptDeclinePage()
 		{
 			// This call is required by the Windows Form Designer.
