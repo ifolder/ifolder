@@ -115,6 +115,7 @@ enum
 	TIME_COL,
 	COLLECTION_NAME_COL,
 	STATE_COL,
+	INVITATION_PTR,
 	N_COLS
 };
 
@@ -139,7 +140,7 @@ typedef struct
 	char collection_id[64];
 	char collection_type[32];
 	char collection_name[128];
-	char buddy_ip_addr[16];
+	char ip_addr[16];
 } Invitation;
 
 /****************************************************
@@ -511,6 +512,8 @@ init_invitations_window()
 	GtkCellRenderer *out_inv_renderer;
 	GtkTreeIter out_inv_iter;
 
+	Invitation *test_invitation;
+
 	invitations_dialog = gtk_dialog_new_with_buttons(
 				_("Simias Collection Invitations"),
 				GTK_WINDOW(GAIM_GTK_BLIST(gaim_get_blist())),
@@ -559,9 +562,20 @@ init_invitations_window()
 					G_TYPE_STRING,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
-					G_TYPE_STRING);
+					G_TYPE_STRING,
+					G_TYPE_POINTER);
 	/* FIXME: Load in data from file */
 	/*populate_in_inv_store_from_file(in_inv_store);*/
+
+	test_invitation = malloc(sizeof(Invitation));
+	sprintf(test_invitation->account_protocol_id, "oscar");
+	sprintf(test_invitation->account_username, "myscreenname");
+	sprintf(test_invitation->buddy_name, "afrienda4gpa4");
+	test_invitation->state = STATE_PENDING;
+	sprintf(test_invitation->collection_id, "{1fds-fjklsfjkl-jfkdlsjdf}");
+	sprintf(test_invitation->collection_type, "ifolder");
+	sprintf(test_invitation->collection_name, "My School Projects");
+	sprintf(test_invitation->ip_addr, "123.123.123.123");
 
 	/* Aquire an iterator */
 	gtk_list_store_append(in_inv_store, &in_inv_iter);
@@ -573,6 +587,7 @@ init_invitations_window()
 		TIME_COL, "02/03/2005 15:24",
 		COLLECTION_NAME_COL, "My School Projects",
 		STATE_COL, "New",
+		INVITATION_PTR, test_invitation,
 		-1);
 
 	in_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(in_inv_store));
@@ -602,11 +617,6 @@ init_invitations_window()
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
 		-1, _("Collection"), in_inv_renderer, "text", COLLECTION_NAME_COL, NULL);
-
-	/* STATE_COL */
-	gtk_tree_view_insert_column_with_attributes(
-		GTK_TREE_VIEW(in_inv_tree),
-		-1, _("State"), in_inv_renderer, "text", STATE_COL, NULL);
 
 	gtk_container_add(GTK_CONTAINER(in_inv_scrolled_win), in_inv_tree);
 
