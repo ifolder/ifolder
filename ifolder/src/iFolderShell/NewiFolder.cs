@@ -369,9 +369,7 @@ namespace Novell.iFolderCom
 				catch (Exception ex)
 				{
 					System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(NewiFolder));
-					MyMessageBox mmb = new MyMessageBox();
-					mmb.Message = resourceManager.GetString("saveConfigError");
-					mmb.Details = ex.Message;
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveConfigError"), string.Empty, ex.Message);
 					mmb.ShowDialog();
 				}
 			}

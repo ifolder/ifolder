@@ -389,20 +389,9 @@ namespace Novell.FormsTrayApp
 					Close();
 				}
 			}
-			catch (WebException ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
-				mmb.Message = resourceManager.GetString("serverConnectError");
-				mmb.Caption = resourceManager.GetString("serverConnectErrorTitle");
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
-			}
 			catch (Exception ex)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
-				mmb.Message = resourceManager.GetString("serverConnectError");
-				mmb.Caption = resourceManager.GetString("serverConnectErrorTitle");
-				mmb.Details = ex.Message;
+				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message);
 				mmb.ShowDialog();
 			}
 

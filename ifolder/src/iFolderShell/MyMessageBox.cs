@@ -31,6 +31,64 @@ using System.Runtime.InteropServices;
 namespace Novell.iFolderCom
 {
 	/// <summary>
+	/// Buttons that can be displayed on MyMessageBox.
+	/// </summary>
+	public enum MyMessageBoxButtons
+	{
+		/// <summary>
+		/// The OK button.
+		/// </summary>
+		OK,
+
+		/// <summary>
+		/// The Yes and No buttons.
+		/// </summary>
+		YesNo
+	}
+
+	/// <summary>
+	/// Which button to make the default button.
+	/// </summary>
+	public enum MyMessageBoxDefaultButton
+	{
+		/// <summary>
+		/// The first button is the default button.
+		/// </summary>
+		Button1,
+
+		/// <summary>
+		/// The second button is the default button.
+		/// </summary>
+		Button2
+	}
+
+	/// <summary>
+	/// Icons to display on MyMessageBox.
+	/// </summary>
+	public enum MyMessageBoxIcon
+	{
+		/// <summary>
+		/// No icon.
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// The information icon.
+		/// </summary>
+		Information,
+
+		/// <summary>
+		/// The question icon.
+		/// </summary>
+		Question,
+
+		/// <summary>
+		/// The error icon.
+		/// </summary>
+		Error
+	}
+
+	/// <summary>
 	/// Summary description for MyMessageBox.
 	/// </summary>
 	[ComVisible(false)]
@@ -47,6 +105,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button details;
 		private bool showDetails = false;
 		private bool first = true;
+		private MyMessageBoxDefaultButton defaultButton;
 		private System.Windows.Forms.TextBox detailsBox;
 		/// <summary>
 		/// Required designer variable.
@@ -57,7 +116,7 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Constructs a MyMessageBox object.
 		/// </summary>
-		public MyMessageBox()
+		private MyMessageBox()
 		{
 			//
 			// Required for Windows Form Designer support
@@ -65,6 +124,106 @@ namespace Novell.iFolderCom
 			InitializeComponent();
 
 			this.StartPosition = FormStartPosition.CenterParent;
+		}
+
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		public MyMessageBox(string message) :
+			this (message, string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.None, MyMessageBoxDefaultButton.Button1)
+		{
+		}
+
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="caption">The string displayed in the title bar.</param>
+		public MyMessageBox(string message, string caption) :
+			this (message, caption, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.None, MyMessageBoxDefaultButton.Button1)
+		{
+		}
+
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="caption">The string displayed in the title bar.</param>
+		/// <param name="details">The string displayed in the details view.</param>
+		public MyMessageBox(string message, string caption, string details) :
+			this (message, caption, details, MyMessageBoxButtons.OK, MyMessageBoxIcon.None, MyMessageBoxDefaultButton.Button1)
+		{
+		}
+
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="caption">The string displayed in the title bar.</param>
+		/// <param name="details">The string displayed in the details view.</param>
+		/// <param name="buttons">The buttons to display on the dialog.</param>
+		public MyMessageBox(string message, string caption, string details, MyMessageBoxButtons buttons) :
+			this (message, caption, details, buttons, MyMessageBoxIcon.None, MyMessageBoxDefaultButton.Button1)
+		{
+		}
+
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="caption">The string displayed in the title bar.</param>
+		/// <param name="details">The string displayed in the details view.</param>
+		/// <param name="buttons">The buttons to display on the dialog.</param>
+		/// <param name="icon">The icon to display on the dialog.</param>
+		public MyMessageBox(string message, string caption, string details, MyMessageBoxButtons buttons, MyMessageBoxIcon icon) :
+			this (message, caption, details, buttons, icon, MyMessageBoxDefaultButton.Button1)
+		{
+		}
+
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="caption">The string displayed in the title bar.</param>
+		/// <param name="details">The string displayed in the details view.</param>
+		/// <param name="buttons">The buttons to display on the dialog.</param>
+		/// <param name="icon">The icon to display on the dialog.</param>
+		/// <param name="defaultButton">The default button.</param>
+		public MyMessageBox(string message, string caption, string details, MyMessageBoxButtons buttons, MyMessageBoxIcon icon, MyMessageBoxDefaultButton defaultButton) :
+			this ()
+		{
+			this.message.Text = message;
+
+			this.Text = caption;
+
+			detailsBox.Text = details;
+			this.details.Visible = !details.Equals(string.Empty);
+
+			switch (buttons)
+			{
+				case MyMessageBoxButtons.OK:
+					ok.Visible = true;
+					break;
+				case MyMessageBoxButtons.YesNo:
+					yes.Visible = no.Visible = true;
+					break;
+			}
+
+			switch (icon)
+			{
+				case MyMessageBoxIcon.Information:
+					messageIcon.Image = SystemIcons.Information.ToBitmap();
+					break;
+				case MyMessageBoxIcon.Question:
+					messageIcon.Image = SystemIcons.Question.ToBitmap();
+					break;
+				case MyMessageBoxIcon.Error:
+					messageIcon.Image = SystemIcons.Error.ToBitmap();
+					break;
+			}
+
+			this.defaultButton = defaultButton;
 		}
 
 		/// <summary>
@@ -265,7 +424,6 @@ namespace Novell.iFolderCom
 			// 
 			// MyMessageBox
 			// 
-			this.AcceptButton = this.yes;
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
 			this.AccessibleName = resources.GetString("$this.AccessibleName");
 			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
@@ -273,7 +431,6 @@ namespace Novell.iFolderCom
 			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-			this.CancelButton = this.no;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.detailsBox);
 			this.Controls.Add(this.details);
@@ -297,6 +454,8 @@ namespace Novell.iFolderCom
 			this.ShowInTaskbar = false;
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.Load += new System.EventHandler(this.MyMessageBox_Load);
+			this.Activated += new System.EventHandler(this.MyMessageBox_Activated);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.MyMessageBox_Paint);
 			this.ResumeLayout(false);
 
@@ -346,65 +505,51 @@ namespace Novell.iFolderCom
 			details.Text = showDetails ? resourceManager.GetString("hideDetails") : resourceManager.GetString("details.Text");
 			this.Invalidate(true);
 		}
+
+		private void MyMessageBox_Load(object sender, System.EventArgs e)
+		{
+			if (yes.Visible)
+			{
+				IntPtr hMenu = GetSystemMenu(this.Handle, false);
+				EnableMenuItem(hMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
+			}
+		}
+
+		private void MyMessageBox_Activated(object sender, System.EventArgs e)
+		{
+			switch (defaultButton)
+			{
+				case MyMessageBoxDefaultButton.Button1:
+					if (ok.Visible)
+					{
+						this.AcceptButton = ok;
+						ok.Focus();
+					}
+					else
+					{
+						this.AcceptButton = yes;
+						yes.Focus();
+					}
+					break;
+				case MyMessageBoxDefaultButton.Button2:
+					this.AcceptButton = no;
+					no.Focus();
+					break;
+			}
+		}
 		#endregion
 
-		#region Properties
-		/// <summary>
-		/// Sets the string to display in the details box.
-		/// </summary>
-		public string Details
-		{
-			set
-			{
-				this.detailsBox.Text = value;
-				this.details.Visible = true;
-			}
-		}
+		#region Win32 API
+		private const uint SC_CLOSE = 0xF060;
 
-		/// <summary>
-		/// Sets the string to display in the message box.
-		/// </summary>
-		public string Message
-		{
-			set
-			{
-				this.message.Text = value;
-			}
-		}
+		private const uint MF_BYCOMMAND = 0;
+		private const uint MF_GRAYED = 1;
 
-		/// <summary>
-		/// Sets the string to display in the title bar.
-		/// </summary>
-		public string Caption
-		{
-			set
-			{
-				this.Text = value;
-			}
-		}
+		[DllImport("user32.dll")]
+		static extern bool EnableMenuItem(IntPtr hMenu,	uint uIDEnableItem,	uint uEnable);
 
-		/// <summary>
-		/// Sets the icon to display in the message box.
-		/// </summary>
-		public Icon MessageIcon
-		{
-			set
-			{
-				this.messageIcon.Image = (Image)value.ToBitmap();
-			}
-		}
-
-		/// <summary>
-		/// Set to display Yes/No buttons instead of OK button.
-		/// </summary>
-		public bool YesNo
-		{
-			set
-			{
-				yes.Visible = no.Visible = value;
-				ok.Visible = !value;
-			}
-		}
+		[DllImport("user32.dll")]
+		static extern IntPtr GetSystemMenu(IntPtr hWnd,	bool bRevert);
 		#endregion
 	}
 }

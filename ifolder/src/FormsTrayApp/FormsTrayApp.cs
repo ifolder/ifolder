@@ -649,11 +649,7 @@ namespace Novell.FormsTrayApp
 
 			if (ex != null)
 			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("fatalErrorMessage");
-				mmb.Caption = resourceManager.GetString("fatalErrorTitle");
-				mmb.Details = ex.Message;
-				mmb.MessageIcon = SystemIcons.Error;
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fatalErrorMessage"), resourceManager.GetString("fatalErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
