@@ -65,48 +65,12 @@ static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
 
 /**
- * FIXME: Once nautilus-extension provides an API for being able to randomly
- * get a NautilusFileInfo * by specifying a file URI, this code that saves off
- * all the NautilusFileInfo * can be removed/replaced.
- * 
- * seen_nautilus_file_infos will only be a collection of valid NautilusFileInfo
- * objects indexed by the file uri.
+ * FIXME: Once nautilus-extension provides nautilus_file_info_get_existing () we
+ * can change our implementation to use the functions defined in the internal
+ * nautilus API.
  */
-static GHashTable *seen_nautilus_file_infos;
-
-/* This function is called when the GObject (NautilusFileInfo) is finalized. */
-static void
-nautilus_file_info_weak_ref_cb (gpointer user_data, GObject *old_object_loc)
-{
-	/**
-	 * user_data points to the memory address of the file uri which is the
-	 * key into the hash table.
-	 */
-	gchar *uri = (gchar *)user_data;
-	g_hash_table_remove (seen_nautilus_file_infos, uri);
-	
-	/* free the memory used by uri */
-	g_free (uri);
-}
-
-static gboolean
-nautilus_file_info_foreach_remove (gpointer key, 
-								   gpointer value, 
-								   gpointer user_data)
-{
-	g_object_weak_unref (G_OBJECT (value), 
-						 nautilus_file_info_weak_ref_cb, 
-						 user_data);
-						 
-	/**
-	 * key is the file uri and now that we're removing it from the hash table
-	 * its memory needs to be freed
-	 */
-	gchar *uri = (gchar *)key;
-	g_free (uri);
-						 
-	return TRUE;
-}
+extern NautilusFile *
+nautilus_file_get_existing (const char *uri);
 
 /**
  * This function is intended to be called using g_idle_add by the event system
@@ -116,10 +80,14 @@ nautilus_file_info_foreach_remove (gpointer key,
 gboolean
 invalidate_ifolder_extension_info (void *user_data)
 {
-	NautilusFileInfo *file = (NautilusFileInfo *)user_data;
+ 	NautilusFileInfo *file = (NautilusFileInfo *)user_data;
 	if (file) {
 		nautilus_file_info_invalidate_extension_info (file);
+		
+		g_object_unref (G_OBJECT(file));
 	}
+	
+	return FALSE;
 }
 
 /**
@@ -132,9 +100,9 @@ invalidate_ifolder_extension_info (void *user_data)
  
 /**
  * The purpose of this thread/function is to listen/read folder paths sent by
- * the Mono/Gtk iFolder client.  When they are received, they will be looked up
- * in the seen_nautilus_file_infos hash table and if found, the extension info
- * will be invalidated so that the emblem is added or removed accordingly.
+ * the Mono/Gtk iFolder client.  When they are received, the code will lookup
+ * a corresponding NautilusFileInfo and invalidate the nautilus-ifolder
+ * extension information so the emblem is added/removed accordingly.
  */
 static pthread_t named_pipe_thread;
 
@@ -143,7 +111,7 @@ named_pipe_listener_thread (gpointer user_data)
 {
 	char fifo_path [IFOLDER_BUF_SIZE];
 	char s [IFOLDER_BUF_SIZE];
-	char file_path [IFOLDER_BUF_SIZE];
+	char file_uri [IFOLDER_BUF_SIZE];
 	int num, fd, err;
 	
 	sprintf (fifo_path, "%s/%s", g_get_home_dir (), IFOLDER_FIFO_NAME);
@@ -172,14 +140,13 @@ named_pipe_listener_thread (gpointer user_data)
 			} else {
 				s [num] = '\0';
 				g_printf ("iFolder Client changed folder: %s\n", s);
-				sprintf (file_path, "file://%s", s);
+				sprintf (file_uri, "file://%s", s);
 
-				NautilusFileInfo *file = 
-					(NautilusFileInfo *)g_hash_table_lookup (
-						seen_nautilus_file_infos,
-						file_path);
+				/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
+				NautilusFile *file = nautilus_file_get_existing (file_uri);
 															 
 				if (file) {
+					g_printf ("Found NautilusFile: %s\n", file_uri);
 					/* Let nautilus run this in the main loop */
 					g_idle_add (invalidate_ifolder_extension_info, file);
 				}
@@ -505,8 +472,6 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 {
 	g_print ("--> ifolder_nautilus_update_file_info called\n");
 	
-	gchar *uri;
-	
 	/* Don't do anything if the specified file is not a directory. */
 	if (!nautilus_file_info_is_directory (file))
 		return NAUTILUS_OPERATION_COMPLETE;
@@ -519,15 +484,6 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	} else {
 		g_print ("*** iFolder is NOT running\n");
 	}
-
-	/* FIXME: Temporary fix to keep track of NautilusFileInfo * */
-	uri = nautilus_file_info_get_uri (file);
-	g_object_weak_ref (G_OBJECT (file),
-					   nautilus_file_info_weak_ref_cb,
-					   uri);
-	g_hash_table_insert (seen_nautilus_file_infos,
-					 	 uri,	/* key */
-					 	 file);	/* value */
 
 	return NAUTILUS_OPERATION_COMPLETE;
 }
@@ -1064,9 +1020,6 @@ nautilus_module_initialize (GTypeModule *module)
 	
 	soapURL = getLocalServiceUrl ();
 	
-	/* Initialize the GHashTable */
-	seen_nautilus_file_infos = g_hash_table_new (g_str_hash, g_str_equal);
-	
 	/* Start the named pipe listener thread */
 	pthread_create (&named_pipe_thread, 
 					NULL, 
@@ -1083,12 +1036,6 @@ nautilus_module_shutdown (void)
 	if (soapURL) {
 		free (soapURL);
 	}
-	
-	/* Cleanup the GHashTable */
-	g_hash_table_foreach_remove (seen_nautilus_file_infos,
-								 nautilus_file_info_foreach_remove,
-								 NULL);
-	g_hash_table_destroy (seen_nautilus_file_infos);
 }
 
 void
