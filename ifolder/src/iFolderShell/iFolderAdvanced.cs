@@ -352,7 +352,7 @@ namespace Novell.iFolder.iFolderCom
 					try
 					{
 						// Set the ACE and send an invitation.
-						ifolder.Share(((ShareListContact)lvitem.Tag).CurrentContact.Identity, rights, true);
+						ifolder.Share(((ShareListContact)lvitem.Tag).CurrentContact.ID, rights, true);
 					}
 					catch (Exception e)
 					{
@@ -370,7 +370,7 @@ namespace Novell.iFolder.iFolderCom
 					try
 					{
 						// Remove the ACE and don't send an invitation.
-						ifolder.Share(slContact.CurrentContact.Identity, Access.Rights.Deny, false);
+						ifolder.Share(slContact.CurrentContact.ID, Access.Rights.Deny, false);
 
 						// Remove this entry from the list.
 						removedList.Remove(slContact);
@@ -492,7 +492,7 @@ namespace Novell.iFolder.iFolderCom
 				{
 					try
 					{
-						contact = defaultAddressBook.GetContactByIdentity(ace.Id);
+						contact = defaultAddressBook.GetContact(ace.Id);
 					}
 					catch{}
 
@@ -803,7 +803,7 @@ namespace Novell.iFolder.iFolderCom
 				try
 				{
 					// Set the ACE and send an invitation.
-					ifolder.Share(((ShareListContact)lvitem.Tag).CurrentContact.Identity, rights, true);
+					ifolder.Share(((ShareListContact)lvitem.Tag).CurrentContact.ID, rights, true);
 				}
 				catch
 				{
