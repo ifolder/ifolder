@@ -219,16 +219,16 @@ namespace Simias.Sync
 				return null;
 			}
 
-			int				blockCount = (int)((Length + BlockSize -1)/ BlockSize);
-			HashData[]		list = new HashData[blockCount];
-			byte[]			buffer = new byte[BlockSize];
-			StrongHash		sh = new StrongHash();
-			WeakHash		wh = new WeakHash();
-			int				bytesRead;
-			int				currentBlock = 0;
-		
 			lock (this)
 			{
+				int				blockCount = (int)((Length + BlockSize -1)/ BlockSize);
+				HashData[]		list = new HashData[blockCount];
+				byte[]			buffer = new byte[BlockSize];
+				StrongHash		sh = new StrongHash();
+				WeakHash		wh = new WeakHash();
+				int				bytesRead;
+				int				currentBlock = 0;
+		
 				// Compute the hash codes.
 				ReadPosition = 0;
 				int i = 0;
@@ -240,8 +240,8 @@ namespace Simias.Sync
 					entry.BlockNumber = currentBlock++;
 					list[i++] = entry;
 				}
+				return list;
 			}
-			return list;
 		}
 	}
 }

@@ -421,14 +421,14 @@ namespace Simias.Sync
 			this.sessionID = sessionID;
 			si.Status = SyncColStatus.Success;
 			rights = si.Access = Access.Rights.Deny;
-			SyncNodeStamp[] nodes = null;
+			SyncNodeStamp[] nodes = new SyncNodeStamp[0];
 			cLock = null;
 		
 			Collection col = store.GetCollectionByID(si.CollectionID);
 			if (col == null)
 			{
 				si.Status = SyncColStatus.NotFound;
-				return null;
+				return nodes;
 			}
 		
 			collection = new SyncCollection(col);
@@ -454,7 +454,7 @@ namespace Simias.Sync
 			else
 			{
 				si.Status = SyncColStatus.AccessDenied;
-				return null;
+				return nodes;
 			}
 
 			switch (rights)
@@ -471,7 +471,6 @@ namespace Simias.Sync
 						if (si.ChangesOnly && !si.ClientHasChanges && nodes.Length == 0)
 						{
 							si.Status = SyncColStatus.NoWork;
-							nodes = null;
 							break;
 						}
 					}
@@ -480,7 +479,7 @@ namespace Simias.Sync
 					if (cLock == null)
 					{
 						si.Status = SyncColStatus.Busy;
-						return null;
+						return new SyncNodeStamp[0];
 					}
 					// See if we need to return all of the nodes.
 					if (!si.ChangesOnly)

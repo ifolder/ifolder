@@ -118,9 +118,19 @@ namespace Simias.Sync
 		{
 			SetupFileNames(node, sessionID);
 			Log.log.Debug("Opening File {0}", file);
-			// This file is being pushed make a copy to work from.
-			File.Copy(file, workFile, true);
-			workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
+			/*
+			if (Store.GetStore().IsEnterpriseServer)
+			{
+				workStream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+				workFile = null;
+			}
+			else
+			*/
+			{
+				// This file is being pushed make a copy to work from.
+				File.Copy(file, workFile, true);
+				workStream = File.Open(workFile, FileMode.Open, FileAccess.Read);
+			}
 		}
 
 		/// <summary>
@@ -226,10 +236,10 @@ namespace Simias.Sync
 		public void Write(byte[] buffer, int offset, int count)
 		{
 			asyncEvent.WaitOne();
-			asyncEvent.Reset();
 			if (exception == null)
 			{
 				Log.log.Debug("Writing File {0} : offset = {1}", file, WritePosition);
+				asyncEvent.Reset();
 				workStream.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
 			}
 			else
@@ -337,12 +347,12 @@ namespace Simias.Sync
 			try
 			{
 				workStream.EndWrite(result);
-				asyncEvent.Set();
 			}
 			catch (Exception ex)
 			{
 				exception = ex;
 			}
+			asyncEvent.Set();
 		}
 
 

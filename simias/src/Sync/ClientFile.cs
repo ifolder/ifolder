@@ -887,12 +887,12 @@ namespace Simias.Sync.Client
 			try
 			{
 				service.EndWrite(result);
-				asyncEvent.Set();
 			}
 			catch (Exception ex)
 			{
 				exception = ex;
 			}
+			asyncEvent.Set();
 		}
 
 		/// <summary>
@@ -904,12 +904,12 @@ namespace Simias.Sync.Client
 			try
 			{
 				service.EndCopy(result);
-				asyncEvent.Set();
 			}
 			catch (Exception ex)
 			{
 				exception = ex;
 			}
+			asyncEvent.Set();
 		}
 
 		#region IServerWriteFile Members
@@ -942,17 +942,19 @@ namespace Simias.Sync.Client
 		/// <param name="count">The number of bytes to copy.</param>
 		public void Copy(long originalOffset, long offset, int count)
 		{
+			/*
 			asyncEvent.WaitOne();
-			asyncEvent.Reset();
 			if (exception == null)
 			{
+				asyncEvent.Reset();
 				service.BeginCopy(originalOffset, offset, count, new AsyncCallback(CopyCallback), null);
 			}
 			else
 			{
 				throw(exception);
 			}
-			//service.Copy(originalOffset, offset, count);
+			*/
+			service.Copy(originalOffset, offset, count);
 		}
 
 		/// <summary>
@@ -963,17 +965,19 @@ namespace Simias.Sync.Client
 		/// <param name="count">The number of bytes to write.</param>
 		public void Write(byte[] buffer, long offset, int count)
 		{
+			/*
 			asyncEvent.WaitOne();
-			asyncEvent.Reset();
 			if (exception == null)
 			{
+				asyncEvent.Reset();
 				service.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
 			}
 			else
 			{
 				throw(exception);
 			}
-			//service.Write(buffer, offset, count);
+			*/
+			service.Write(buffer, offset, count);
 		}
 
 		/// <summary>
