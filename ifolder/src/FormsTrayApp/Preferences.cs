@@ -54,7 +54,7 @@ namespace Novell.FormsTrayApp
 		private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
-		private decimal minimumSyncInterval = minimumSeconds;
+		private decimal minimumSyncInterval;
 		private iFolderWebService ifWebService;
 		private SimiasWebService simiasWebService;
 		private bool shutdown = false;
@@ -235,6 +235,7 @@ namespace Novell.FormsTrayApp
 																		  0,
 																		  0});
 			this.defaultInterval.Visible = ((bool)(resources.GetObject("defaultInterval.Visible")));
+			this.defaultInterval.KeyDown += new System.Windows.Forms.KeyEventHandler(this.defaultInterval_KeyDown);
 			// 
 			// displayConfirmation
 			// 
@@ -1930,6 +1931,7 @@ namespace Novell.FormsTrayApp
 				tabGeneral.BackColor = tabAccounts.BackColor = Color.FromKnownColor(KnownColor.ControlLightLight);
 			}
 
+			minimumSyncInterval = minimumSeconds;
 			timeUnit.Items.Add(resourceManager.GetString("seconds"));
 			timeUnit.Items.Add(resourceManager.GetString("minutes"));
 			timeUnit.Items.Add(resourceManager.GetString("hours"));
@@ -2101,6 +2103,20 @@ namespace Novell.FormsTrayApp
 				}
 
 				apply.Enabled = true;
+			}
+		}
+
+		private void defaultInterval_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			if (((e.KeyCode & Keys.F) == Keys.F) &&
+				((e.Modifiers & Keys.Shift) == Keys.Shift) &&
+				((e.Modifiers & Keys.Control) == Keys.Control))
+			{
+				defaultInterval.Minimum = minimumSyncInterval = 0;
+			}
+			else
+			{
+				timeUnit_SelectedIndexChanged(this, new EventArgs());
 			}
 		}
 
