@@ -103,6 +103,7 @@ namespace Simias.Domain
 			// Get a POBox object from its created stub.
 			PostOffice.POBox poBox = new PostOffice.POBox(store, cStub);
 			poBox.POServiceUrl = domainInfo.POServiceUrl;
+			poBox.Commit();
 
 			// set the default domain
 			store.DefaultDomain = domainInfo.ID;
