@@ -149,6 +149,11 @@ namespace Simias.Gaim
 					simiasUserID = node.Value;
 				}
 				
+				if (simiasUserID == null)
+				{
+					simiasUserID = Guid.NewGuid().ToString();
+				}
+				
 				return simiasUserID;
 			}
 		}
