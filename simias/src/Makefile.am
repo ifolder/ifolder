@@ -1,6 +1,6 @@
-SUBDIRS = Simias.dll mDnsService SimiasTests.dll
+SUBDIRS = Simias.dll mDnsService
 
-DIST_SUBDIRS = Simias.dll mDnsService SimiasTests.dll
+DIST_SUBDIRS = Simias.dll mDnsService
 
 EXTRA_DIST = simias-snakeoil.keys
 
