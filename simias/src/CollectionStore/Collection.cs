@@ -331,9 +331,10 @@ namespace Simias.Storage
 				if ( node.ExpectedIncarnation == 0 )
 				{
 					// No collision if:
-					//	1. Node object does not exist locally.
-					//	2. Master incarnation value is zero (first time sync).
-					if ( ( checkNode != null ) && ( checkNode.MasterIncarnation != 0 ) )
+					//	1. Specifically told to ignore check.
+					//	2. Node object does not exist locally.
+					//	3. Master incarnation value is zero (first time sync).
+					if ( !node.SkipCollisionCheck && ( checkNode != null ) && ( checkNode.MasterIncarnation != 0 ) )
 					{
 						// Need to check for a collision here. A collision is defined as an update to the client
 						// Node object that the server doesn't know about.
@@ -346,6 +347,9 @@ namespace Simias.Storage
 
 					// Update the master and local incarnation value to the specified value.
 					node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );
+
+					// Reset the skip collision check value.
+					node.SkipCollisionCheck = false;
 				}
 				else
 				{
@@ -671,7 +675,11 @@ namespace Simias.Storage
 				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
 				foreach ( Property p in localProps )
 				{
-					node.Properties.AddNodeProperty( p );
+					// Don't copy over a collision property.
+					if ( p.Name != PropertyTags.Collision )
+					{
+						node.Properties.AddNodeProperty( p );
+					}
 				}
 			}
 			else
@@ -1104,11 +1112,6 @@ namespace Simias.Storage
 						XmlDocument document = new XmlDocument();
 						document.LoadXml( c.ContextData );
 						collisionNode = Node.NodeFactory( StoreReference, document );
-
-						// The incarnation values need to be set right so that the Node object will not
-						// collide again and will be in sync.
-						collisionNode.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, collisionNode.LocalIncarnation );
-						collisionNode.IncarnationUpdate = collisionNode.LocalIncarnation;
 					}
 				}
 
@@ -1325,6 +1328,38 @@ namespace Simias.Storage
 		public void RemoveUserAccess( string userID )
 		{
 			accessControl.RemoveUserRights( userID );
+		}
+
+		/// <summary>
+		/// Resolves a collision on the specified Node object.
+		/// </summary>
+		/// <param name="node">Node object that contains a collision.</param>
+		/// <param name="incarnationValue">Remote local incarnation value.</param>
+		/// <param name="resolveLocal">If true, the local Node becomes authoritative. Otherwise the 
+		/// remote Node object becomes authoritative.</param>
+		/// <returns>Returns the authoritative Node object.</returns>
+		public Node ResolveCollision( Node node, ulong incarnationValue, bool resolveLocal )
+		{
+			Node resNode;
+			
+			if ( resolveLocal )
+			{
+				resNode = node;
+				resNode.Properties.State = PropertyList.PropertyListState.Internal;
+				resNode.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );
+				resNode.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, incarnationValue + 1 );
+				DeleteCollision( resNode );
+			}
+			else
+			{
+				resNode = GetNodeFromCollision( node );
+				resNode.Properties.State = PropertyList.PropertyListState.Import;
+				resNode.SkipCollisionCheck = true;
+				resNode.IncarnationUpdate = incarnationValue;
+				resNode.ExpectedIncarnation = 0;
+			}
+
+			return resNode;
 		}
 
 		/// <summary>

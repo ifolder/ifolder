@@ -67,6 +67,12 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected ulong expectedIncarnation = 0;
+
+		/// <summary>
+		/// Allows the Node object to skip collision detection when resolving a collision.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool skipCollisionCheck = false;
 		#endregion
 
 		#region Properties
@@ -94,6 +100,15 @@ namespace Simias.Storage
 		{
 			get { return type; }
 			set { type = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets whether to allow the Node object to skip collision checking at commit time.
+		/// </summary>
+		internal bool SkipCollisionCheck
+		{
+			get { return skipCollisionCheck; }
+			set { skipCollisionCheck = value; }
 		}
 
 		/// <summary>
