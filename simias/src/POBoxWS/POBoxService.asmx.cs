@@ -376,8 +376,7 @@ namespace Simias.POBoxService.Web
 			colUrl +=
 				this.Context.Request.Url.Host +
 				":" +
-				this.Context.Request.Url.Port.ToString() +
-				"/SyncService.asmx";
+				this.Context.Request.Url.Port.ToString();
 
 			SubscriptionInformation subInfo = new SubscriptionInformation(colUrl);
 			subInfo.GenerateFromSubscription(cSub);
