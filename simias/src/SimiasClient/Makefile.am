@@ -36,7 +36,7 @@ if DARWIN
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 
-SimiasClient.dll: $(srcdir)/SimiasSetup.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
+SimiasClient.dll: $(srcdir)/SimiasSetup.cs $(SimiasClient_CSFILES1) $(SimiasClient_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(subst /,$(SEP),$(srcdir)/SimiasSetup.cs) $(DOC_FILE_CMD)
 
 if DEBUG
