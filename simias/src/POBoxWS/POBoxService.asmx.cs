@@ -248,7 +248,9 @@ namespace Simias.POBoxService.Web
 		/// <param name="messageID"></param>
 		[WebMethod]
 		[SoapDocumentMethod]
-		public void AckSubscription(string domainID, string identityID, string messageID)
+		public
+		void
+		AckSubscription(string domainID, string identityID, string messageID)
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
@@ -524,6 +526,7 @@ namespace Simias.POBoxService.Web
 				cSub.DomainID = domainID;
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
+				cSub.MessageType = "Outbound";  // ????
 
 				SyncCollection sc = new SyncCollection(sharedCollection);
 				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
@@ -593,11 +596,7 @@ namespace Simias.POBoxService.Web
 			Subscription cSub = new Subscription(poBox, sn);
 			cSub.SubscriptionState = (Simias.POBox.SubscriptionStates) state;
 			poBox.Commit(cSub);
-
-			// TODO: remove the subscription object?
-			//poBox.Commit(poBox.Delete(cSub));
 		}
-
 
 		/// <summary>
 		/// Subscribe to a shared collection
@@ -620,7 +619,6 @@ namespace Simias.POBoxService.Web
 			string			collectionID,
 			string			subscriptionName)
 		{
-			bool			workgroup;
 			Simias.POBox.POBox	poBox = null;
 			Store			store = Store.GetStore();
 			Subscription	cSub = null;
@@ -662,26 +660,13 @@ namespace Simias.POBoxService.Web
 
 			try
 			{
-				workgroup = (domainID == Simias.Storage.Domain.WorkGroupDomainID);
-				if (workgroup)
-				{
-					poBox = POBox.POBox.GetPOBox(store, domainID);
-				}
-				else
-				{
-					poBox = POBox.POBox.GetPOBox(store, domainID, fromUserID);
-				}
+				poBox = 
+					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
+					? POBox.POBox.GetPOBox(store, domainID)
+					: POBox.POBox.GetPOBox(store, domainID, toUserID);
 
-				string serverUrl = "";
-				int slashes = 0;
-				for( int i = 0; i < this.Context.Request.RawUrl.Length; i++)
-				{
-					serverUrl += this.Context.Request.RawUrl[i];
-					if (this.Context.Request.RawUrl[i] == '/' && ++slashes >= 3)
-					{
-						break;
-					}
-				}
+				char[] seps = {':'};
+				string[] hostAndPort = this.Context.Request.Url.Authority.Split(seps);
 
 				cSub = new Subscription(subscriptionName, "Subscription", fromUserID);
 				cSub.SubscriptionState = SubscriptionStates.Pending;
@@ -689,16 +674,16 @@ namespace Simias.POBoxService.Web
 				cSub.ToIdentity = fromUserID;
 				cSub.FromName = toUserName;
 				cSub.FromIdentity = toUserID;
-				cSub.POServiceURL = new Uri(serverUrl + "PostOffice.rem");
+				cSub.POServiceURL = new Uri("http://" + hostAndPort[0] + ":6436/PostOffice.rem");
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = "iFolder";
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
-				cSub.SubscriptionCollectionURL = serverUrl + "SyncService.rem";
+				cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
 				cSub.DomainID = domainID;
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 
-				if (workgroup)
+				if(domainID == Simias.Storage.Domain.WorkGroupDomainID)
 				{
 					//cSub.FromPublicKey = fromUserPubKey;
 				}
