@@ -63,6 +63,7 @@ namespace Simias.Event
 		Queue eventQueue;
 		ManualResetEvent queued;
 		static ManualResetEvent shutdown;
+		static bool serviceRegistered = false;
 
 		#endregion
 
@@ -87,8 +88,13 @@ namespace Simias.Event
 			// Start a thread to handle events.
 			eventQueue = new Queue();
 			queued = new ManualResetEvent(false);
-			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-			t.Start();
+
+			if (serviceRegistered)
+			{
+				System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+				t.IsBackground = true;
+				t.Start();
+			}
 		}
 
 		#endregion
@@ -287,6 +293,7 @@ namespace Simias.Event
 			{
 				conf.Set(CFG_Section, CFG_UriKey, s[0]);
 			}
+			serviceRegistered = true;
 		}
 	
 		private static void startService(Configuration conf)
