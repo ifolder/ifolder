@@ -751,6 +751,12 @@ namespace Simias.Sync
 		/// </summary>
 		public void Dredge()
 		{
+			// Clear the event changes since we are going to dredge.
+			lock (changes)
+			{
+				changes.Clear();
+			}
+				
 			collection.Refresh();
 			foundChange = false;
 		
