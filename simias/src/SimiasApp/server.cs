@@ -382,6 +382,7 @@ namespace Mono.ASPNET
 				if ( virtAndPath[0] != null )
 				{
 					Uri uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), port, virtAndPath[0] ).ToString() );
+					Simias.Client.SimiasSetup.prefix = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../..");
 					Simias.Client.Manager.SetWebServiceUri( new Simias.Client.Configuration(), uri );
 				}
 #endif
