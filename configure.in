@@ -506,6 +506,8 @@ src/iFolder/iFolderCmd
 src/iFolderGtkUI/Makefile
 src/iFolderGtkUI/Util.cs
 src/iFolderGtkUI/collectionbrowser
+src/iFolderGtkApp/Makefile
+src/iFolderGtkApp/ifolder
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolder.desktop
