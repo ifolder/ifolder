@@ -134,7 +134,7 @@ namespace Simias.POBoxService.Web
 		/// </summary>
 		/// <param name="sleepFor"></param>
 		/// <returns>0</returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public int Ping(int sleepFor)
 		{
 			Thread.Sleep(sleepFor * 1000);
@@ -147,7 +147,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="domainID"></param>
 		/// <param name="identityID"></param>
 		/// <param name="subscriptionID"></param>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
 		POBoxStatus
@@ -223,7 +223,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="domainID"></param>
 		/// <param name="identityID"></param>
 		/// <param name="subscriptionID"></param>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
 		POBoxStatus
@@ -431,7 +431,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="domainID"></param>
 		/// <param name="identityID"></param>
 		/// <param name="messageID"></param>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
 		POBoxStatus
@@ -510,7 +510,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="identityID"></param>
 		/// <param name="messageID"></param>
 		/// <returns>success:subinfo  failure:null</returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
 		SubscriptionInformation 
@@ -585,7 +585,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="identityID"></param>
 		/// <param name="messageID"></param>
 		/// <returns>success:subinfo  failure:null</returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
 		POBoxStatus
@@ -630,7 +630,7 @@ namespace Simias.POBoxService.Web
 		/// <param name="sharedCollectionID"></param>
 		/// <param name="sharedCollectionType"></param>
 		/// <returns>success subscription ID - failure empty string</returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
 		string 
@@ -768,7 +768,7 @@ namespace Simias.POBoxService.Web
 		/// </summary>
 		/// <param name="dummy">Dummy parameter so stub generators won't produce empty structures</param>
 		/// <returns>default domain</returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public string GetDefaultDomain(int dummy)
 		{
 			return(Store.GetStore().DefaultDomain);
