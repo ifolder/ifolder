@@ -1,0 +1,7 @@
+SUBDIRS = $(COMMON_SUBDIRS) $(PLATFORM_SUBDIRS)
+
+DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS)
+
+maintainer-clean-local:
+	rm -f Makefile.in
+

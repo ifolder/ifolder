@@ -25,7 +25,6 @@ using System;
 
 using Gtk;
 using Gdk;
-using Glade;
 using GtkSharp;
 using System.Threading;
 using NUnit.Framework;
