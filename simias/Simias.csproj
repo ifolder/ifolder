@@ -190,37 +190,12 @@
                 />
                 <Folder RelPath = "src\AddressBook\SimpleTests\" />
                 <File
-                    RelPath = "src\Events\DefaultSubscriber.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\EventBroker.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\EventPublisher.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Events\SimiasEventArgs.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\ChangeLog\ChangeLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\ChangeLog\ChangeLogTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\CollectionStore\CollectionEventsTests\CollectionEventsTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -365,6 +340,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\CollectionStore\CollectionEventsTests\CollectionEventsTests.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Common\Library\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -415,6 +395,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Common\Library\SimiasSetup.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Common\Tests\CommonTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -426,6 +411,26 @@
                 />
                 <File
                     RelPath = "src\Domain\IDomainService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Events\DefaultSubscriber.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Events\EventBroker.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Events\EventPublisher.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Events\SimiasEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

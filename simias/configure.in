@@ -45,15 +45,32 @@ AM_CONDITIONAL(DOTNET, test "$CSC" = "csc")
 # The default value of $prefix is not set until later in the script.
 # We set the default here, if needed.
 #
-#echo prefix=${prefix}
-CONFIGURED_PREFIX="${prefix}"
-test -z "$CONFIGURED_PREFIX" -o "$CONFIGURED_PREFIX" = "NONE" && CONFIGURED_PREFIX=$ac_default_prefix
-echo CONFIGURED_PREFIX=$CONFIGURED_PREFIX
-#echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
+
+#
+# Installation directory options.
+#
+# These are normally left unexpanded so users can "make install exec_prefix=/foo".
+# However, we want them expanded.
+#
+bindir="${exec_prefix}/bin"
+sbindir="${exec_prefix}/sbin"
+libexecdir="${exec_prefix}/libexec"
+datadir="${prefix}/share"
+sysconfdir="${prefix}/etc"
+sharedstatedir="${prefix}/com"
+localstatedir="${prefix}/var"
+libdir="${exec_prefix}/lib"
+includedir="${prefix}/include"
+oldincludedir="/usr/include"
+infodir="${prefix}/info"
+mandir="${prefix}/man"
+
 if test -z "$PKG_CONFIG_PATH"; then
-    export PKG_CONFIG_PATH="$CONFIGURED_PREFIX/$PKG_CONFIG_DIR/pkgconfig"
+    export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig"
 else
-    export PKG_CONFIG_PATH="$CONFIGURED_PREFIX/$PKG_CONFIG_DIR/pkgconfig:$PKG_CONFIG_PATH"
+    export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig:$PKG_CONFIG_PATH"
 fi
 echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
 AC_SUBST(PKG_CONFIG_PATH)
@@ -228,10 +245,10 @@ case $SIMIAS_OS in
         PKG_CONFIG_LIBS="$COMMON_LIBS"
 
 	# override Linux-like directory structure
-	bindir='${exec_prefix}'
-	sbindir='${exec_prefix}'
-	libexecdir='${exec_prefix}'
-	libdir='${exec_prefix}'
+	bindir="${exec_prefix}"
+	sbindir="${exec_prefix}"
+	libexecdir="${exec_prefix}"
+	libdir="${exec_prefix}"
     ;;
 esac
 AC_SUBST(ICON_EXT)
@@ -350,6 +367,7 @@ Makefile
 simias.pc
 src/Makefile
 src/install-simias-to-gac
+src/Common/Library/SimiasSetup.cs
 src/Simias.dll/Makefile
 src/Events/Makefile
 src/mDnsService/Makefile
