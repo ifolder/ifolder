@@ -2614,6 +2614,16 @@ namespace Simias.Storage
 			}
 			#endregion
 
+			#region Properties
+			/// <summary>
+			/// Gets the total number of objects contained in the search.
+			/// </summary>
+			public int Count
+			{
+				get { return chunkIterator.Count; }
+			}
+			#endregion
+
 			#region Private Methods
 			/// <summary>
 			/// Determines if the specified ID already has been returned to the user during enumeration.

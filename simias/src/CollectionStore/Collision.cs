@@ -275,6 +275,11 @@ namespace Simias.Storage
 			/// Enumerator for the document.
 			/// </summary>
 			private IEnumerator documentEnumerator;
+
+			/// <summary>
+			/// The number of items in the collision list.
+			/// </summary>
+			private int count;
 			#endregion
 
 			#region Constructor
@@ -285,6 +290,17 @@ namespace Simias.Storage
 			public CollisionEnumerator( XmlDocument document )
 			{
 				documentEnumerator = document.DocumentElement.GetEnumerator();
+				count = document.DocumentElement.ChildNodes.Count;
+			}
+			#endregion
+
+			#region Properties
+			/// <summary>
+			/// Gets the total number of objects contained in the search.
+			/// </summary>
+			public int Count
+			{
+				get { return count; }
 			}
 			#endregion
 

@@ -1218,6 +1218,16 @@ namespace Simias.Storage
 			}
 			#endregion
 
+			#region Properties
+			/// <summary>
+			/// Gets the total number of objects contained in the search.
+			/// </summary>
+			public int Count
+			{
+				get { return chunkIterator.Count; }
+			}
+			#endregion
+
 			#region IEnumerator Members
 			/// <summary>
 			/// Sets the enumerator to its initial position, which is before the first element in the

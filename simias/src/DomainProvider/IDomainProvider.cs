@@ -82,9 +82,10 @@ namespace Simias
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, int count );
+		bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count );
 
 		/// <summary>
 		/// Starts a search for a specific set of domain members.
@@ -95,9 +96,10 @@ namespace Simias
 		/// <param name="operation">Type of search operation to perform.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, int count );
+		bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count );
 
 		/// <summary>
 		/// Continues the search for all domain members started by calling the FindFirstDomainMembers method.

@@ -178,6 +178,11 @@ namespace Simias.Storage
 			/// The property list where this multivalued property is stored.
 			/// </summary>
 			private PropertyList propertyList;
+
+			/// <summary>
+			/// The total number of objects contained in the search.
+			/// </summary>
+			private int count;
 			#endregion
 
 			#region Constructor
@@ -189,7 +194,18 @@ namespace Simias.Storage
 			internal MultiValuedEnumerator( PropertyList propertyList, ArrayList valueList )
 			{
 				this.propertyList = propertyList;
+				this.count = valueList.Count;
 				multiValuedEnumerator = valueList.GetEnumerator();
+			}
+			#endregion
+
+			#region Properties
+			/// <summary>
+			/// Gets the total number of objects contained in the search.
+			/// </summary>
+			public int Count
+			{
+				get { return count; }
 			}
 			#endregion
 

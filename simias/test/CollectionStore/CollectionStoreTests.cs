@@ -27,6 +27,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Xml;
 using NUnit.Framework;
 
@@ -34,6 +35,7 @@ using Simias;
 using Simias.Client;
 using Simias.Policy;
 using Simias.POBox;
+using Simias.Service;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -52,6 +54,7 @@ namespace Simias.Storage.Tests
 
 		// Object used to access the store.
 		private Store store = null;
+		private Service.Manager manager = null;
 		#endregion
 
 		#region Test Setup
@@ -63,6 +66,9 @@ namespace Simias.Storage.Tests
 		{
 			// Connect to the store.
 			store = Store.GetStore();
+			manager = new Simias.Service.Manager( Configuration.GetConfiguration() );
+			manager.StartServices();
+			manager.WaitForServicesStarted();
 		}
 		#endregion
 
@@ -1625,7 +1631,11 @@ namespace Simias.Storage.Tests
 			string domainID = Guid.NewGuid().ToString();
 
 			// Create a new domain.
-			store.AddDomainIdentity( userID, "Oklahoma", domainID, "Test domain", new Uri( "http://localhost"), SyncRoles.Master ); 
+			Domain domain = new Domain( store, "Okalhoma", domainID, "Test domain", SyncRoles.Master, Domain.ConfigurationType.ClientServer );
+			Member domainOwner = new Member( "wally", userID, Access.Rights.Admin );
+			domainOwner.IsOwner = true;
+			domain.Commit( new Node[] { domain, domainOwner } );
+			store.AddDomainIdentity( domainID, userID ); 
 
 			// Create a whole bunch of collections.
 			Collection[] c = new Collection[ 10 ];
@@ -1658,9 +1668,7 @@ namespace Simias.Storage.Tests
 
 				// Search for all collections in the default domain.
 				list = store.GetCollectionsByDomain( domainID );
-				int count = 0;
-				foreach ( ShallowNode sn in list ) ++count;
-				if ( count != 10 )
+				if ( list.Count != 11 )
 				{
 					throw new ApplicationException( "GetCollectionsByDomain() did not return all of the collections." );
 				}
@@ -1674,9 +1682,7 @@ namespace Simias.Storage.Tests
 
 				// Search by type.
 				list = store.GetCollectionsByType( "TestType" );
-				count = 0;
-				foreach ( ShallowNode sn in list ) ++count;
-				if ( count != 5 )
+				if ( list.Count != 5 )
 				{
 					throw new ApplicationException( "GetCollectionsByType() did not return all of the collections." );
 				}
@@ -2071,6 +2077,11 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Member filter failed." );
 				}
+
+				// Remove all policies.
+				FileTypeFilter.Delete( store.LocalDomain );
+				FileTypeFilter.Delete( member );
+				FileTypeFilter.Delete();
 			}
 			finally
 			{
@@ -2089,6 +2100,8 @@ namespace Simias.Storage.Tests
 
 			try
 			{
+				// Clean all policies off 
+
 				Member member = collection.GetCurrentMember();
 				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".bmp$", true ), 
 															 new FileTypeEntry( ".jpg$", true ) };
@@ -2116,6 +2129,8 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Member filter failed." );
 				}
+
+				FileTypeFilter.Delete( store.LocalDomain );
 			}
 			finally
 			{
@@ -2492,13 +2507,13 @@ namespace Simias.Storage.Tests
 				collection2.Unlock();
 
 				list = store.GetLockedCollections();
-				foreach( ShallowNode sn in list )
+				if ( list.Count > 0 )
 				{
 					throw new ApplicationException( "Found locked collections." );
 				}
 
 				list = store.GetLockedCollections( Collection.LockType.Backup );
-				foreach( ShallowNode sn in list )
+				if ( list.Count > 0 )
 				{
 					throw new ApplicationException( "Found locked collection." );
 				}
@@ -2574,6 +2589,85 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 			}
 		}
+
+		/// <summary>
+		/// Tests the DomainProvider interface.
+		/// </summary>
+		[Test]
+		public void DomainProviderTest()
+		{
+			// Create an enterprise domain.
+			Domain enterpriseDomain = new Domain( store, "Wyoming", Guid.NewGuid().ToString(), "Test domain", SyncRoles.Master, Domain.ConfigurationType.ClientServer );
+			enterpriseDomain.SetType( enterpriseDomain, "Enterprise" );
+			Member enterpriseDomainOwner = new Member( "Wally", Guid.NewGuid().ToString(), Access.Rights.Admin );
+			enterpriseDomainOwner.IsOwner = true;
+			enterpriseDomain.Commit( new Node[] { enterpriseDomain, enterpriseDomainOwner } );
+
+			// Create the identity mapping.
+			store.AddDomainIdentity( enterpriseDomain.ID, enterpriseDomainOwner.UserID );
+
+			// Add a bunch of members to the domain.
+			Node[] nodeList = new Node[ 10 ];
+			nodeList[ 0 ] = new Member( "ndynamite", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Napolean", "Dynamite" );
+			nodeList[ 1 ] = new Member( "pedro", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Pedro", "Gonzales" );
+			nodeList[ 2 ] = new Member( "kdynamite", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Kip", "Dynamite" );
+			nodeList[ 3 ] = new Member( "ldynamite", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Lafawnduh", "Dynamite" );
+			nodeList[ 4 ] = new Member( "tdynamite", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Tina", "Dynamite" );
+			nodeList[ 5 ] = new Member( "frandall", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Fred", "Randall" );
+			nodeList[ 6 ] = new Member( "jford", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Julie", "Ford" );
+			nodeList[ 7 ] = new Member( "boverbeck", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Bill", "Overbeck" );
+			nodeList[ 8 ] = new Member( "bnesbitt", Guid.NewGuid().ToString(), Access.Rights.ReadWrite, "Bud", "Nesbitt" );
+			nodeList[ 9 ] = new Member( "pwick", Guid.NewGuid().ToString(), Access.Rights.ReadOnly, "Paul", "Wick" );
+			enterpriseDomain.Commit( nodeList );
+
+			// Get all of the members in the domain.
+			Object searchContext;
+			Member[] memberList;
+			int total;
+			int count = 0;
+
+			bool moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, out searchContext, out memberList, out total, 3 );
+			while ( memberList != null )
+			{
+				foreach( Member member in memberList )
+				{
+					Console.WriteLine( "Found member: {0}", member.Name );
+					++count;
+				}
+
+				moreEntries = DomainProvider.FindNextDomainMembers( enterpriseDomain.ID, ref searchContext, out memberList, 3 );
+			}
+
+			DomainProvider.FindCloseDomainMembers( enterpriseDomain.ID, searchContext );
+
+			// Check the results.
+			if ( count != 11 )
+			{
+				throw new ApplicationException( "Didn't get all of the members." );
+			}
+
+			// Only get the members from the Dynamite family.
+			count = 0;
+			moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, PropertyTags.Family, "Dyn", SearchOp.Begins, out searchContext, out memberList, out total, 10 );
+			while ( memberList != null )
+			{
+				foreach( Member member in memberList )
+				{
+					Console.WriteLine( "Found member: {0}", member.Name );
+					++count;
+				}
+
+				moreEntries = DomainProvider.FindNextDomainMembers( enterpriseDomain.ID, ref searchContext, out memberList, 3 );
+			}
+
+			DomainProvider.FindCloseDomainMembers( enterpriseDomain.ID, searchContext );
+	
+			// Check the results.
+			if ( count != 4 )
+			{
+				throw new ApplicationException( "Didn't get all of the members." );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up
@@ -2583,6 +2677,10 @@ namespace Simias.Storage.Tests
 		[TestFixtureTearDown]
 		public void Cleanup()
 		{
+			// Stop the services.
+			manager.StopServices();
+			manager.WaitForServicesStopped();
+
 			// Delete the database.  Must be store owner to delete the database.
 			store.Delete();
 

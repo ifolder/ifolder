@@ -35,6 +35,10 @@ namespace Simias.Storage
 	/// </remarks>
 	public interface ICSEnumerator : IEnumerator, IDisposable
 	{
+		/// <summary>
+		/// Gets the total number of objects contained in the search.
+		/// </summary>
+		int Count { get; }
 	}
 
 	/// <summary>
@@ -51,7 +55,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Enumerator used to enumerate list items.
 		/// </summary>
-		private IEnumerator iEnumerator;
+		private ICSEnumerator iEnumerator;
 		#endregion
 
 		#region Constructor
@@ -72,6 +76,16 @@ namespace Simias.Storage
 		{
 			this.valueList = null;
 			this.iEnumerator = icsEnumerator;
+		}
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets the total number of objects contained in the list.
+		/// </summary>
+		public int Count
+		{
+			get { return ( valueList != null ) ? valueList.Count : iEnumerator.Count; }
 		}
 		#endregion
 
@@ -102,7 +116,7 @@ namespace Simias.Storage
 		{
 			if ( valueList != null )
 			{
-				return new ICSListEnumerator( valueList.GetEnumerator() );
+				return new ICSListEnumerator( valueList.GetEnumerator(), valueList.Count );
 			}
 			else
 			{
@@ -121,6 +135,11 @@ namespace Simias.Storage
 			/// Enumerator used to enumerate list items.
 			/// </summary>
 			private IEnumerator iEnumerator;
+
+			/// <summary>
+			/// Number of objects contained in the enumerator.
+			/// </summary>
+			private int count;
 			#endregion
 
 			#region Constructor
@@ -128,9 +147,21 @@ namespace Simias.Storage
 			/// Constructs the object.
 			/// </summary>
 			/// <param name="iEnumerator">Enumerator from the ICSList object.</param>
-			public ICSListEnumerator( IEnumerator iEnumerator )
+			/// <param name="count">Number of objects contained in the enumerator.</param>
+			public ICSListEnumerator( IEnumerator iEnumerator, int count )
 			{
 				this.iEnumerator = iEnumerator;
+				this.count = count;
+			}
+			#endregion
+
+			#region Properties
+			/// <summary>
+			/// Gets the total number of objects contained in the search.
+			/// </summary>
+			public int Count
+			{
+				get { return count; }
 			}
 			#endregion
 

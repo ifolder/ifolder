@@ -263,6 +263,9 @@ namespace Simias.Storage
 			{
 				properties.ModifyNodeProperty( PropertyTags.PublicKey, publicKey.ToXmlString( false ) );
 			}
+
+			// TODO: Since no full name was specified, use the userName as the full name for now.
+			FN = userName;
 		}
 
 		/// <summary>

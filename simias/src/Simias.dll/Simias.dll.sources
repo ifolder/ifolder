@@ -38,6 +38,9 @@ AssemblyInfo.cs
 ../Credentials/Credentials.cs
 ../Credentials/NeedCredentialsEventSubscriber.cs
 ../Domain/DomainAgent.cs
+../DomainProvider/DomainProvider.cs
+../DomainProvider/EnterpriseProvider.cs
+../DomainProvider/IDomainProvider.cs
 ../DomainWatcher/Service.cs
 ../DomainWatcher/DomainWatcher.cs
 ../FlaimProvider/FlaimError.cs

@@ -1354,18 +1354,34 @@ namespace Simias.Storage
 			/// The property list where the enumeration is being performed.
 			/// </summary>
 			private PropertyList propertyList;
+
+			/// <summary>
+			/// The total number of objects contained in the search.
+			/// </summary>
+			private int count;
 			#endregion
 
 			#region Constructor
 			/// <summary>
-			/// Constructor used to instaniate this object by means of an enumerator.
+			/// Constructor used to instantiate this object by means of an enumerator.
 			/// </summary>
 			/// <param name="propertyList">The property list object where the enumeration is being performed.</param>
 			/// <param name="xmlProperties">XML element that contains the properties for a Collection Store object.</param>
 			public PropertyEnumerator( PropertyList propertyList, XmlElement xmlProperties )
 			{
 				this.propertyList = propertyList;
+				this.count = xmlProperties.ChildNodes.Count;
 				propertyEnumerator = xmlProperties.GetEnumerator();
+			}
+			#endregion
+
+			#region Properties
+			/// <summary>
+			/// Gets the total number of objects contained in the search.
+			/// </summary>
+			public int Count
+			{
+				get { return count; }
 			}
 			#endregion
 
