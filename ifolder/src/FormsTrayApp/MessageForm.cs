@@ -251,11 +251,14 @@ namespace Novell.iFolder.FormsTrayApp
 				foreach (ShallowNode sn in msgList)
 				{
 					Subscription sub = new Subscription(poBox, sn);
-					string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
-					ListViewItem lvi = new ListViewItem(items, 0);
-					lvi.Tag = sub;
-					messages.Items.Add(lvi);
-					ht.Add(sub.ID, lvi);
+					if (store.GetCollectionByID(sub.SubscriptionCollectionID) == null)
+					{
+						string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
+						ListViewItem lvi = new ListViewItem(items, 0);
+						lvi.Tag = sub;
+						messages.Items.Add(lvi);
+						ht.Add(sub.ID, lvi);
+					}
 				}
 			}
 			catch (SimiasException ex)
