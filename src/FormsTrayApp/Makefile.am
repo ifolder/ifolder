@@ -18,14 +18,20 @@ all: iFolderApp.exe
 iFolderApp.exe: $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
 
+if DEBUG
+if WINDOWS
+DEBUG_FILES = iFolderApp.pdb
+endif
+endif
+
 install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)/res
-	$(INSTALL_PROGRAM) iFolderApp.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderApp.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(DESTDIR)$(bindir)/res
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe $(DATA_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe $(DATA_FILES) $(DEBUG_FILES)
     
 installcheck-local: install
 	
