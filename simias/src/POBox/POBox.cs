@@ -94,12 +94,15 @@ namespace Simias.POBox
 			SetType(this, typeof(POBox).Name);
 			Sealed = true;
 		}
+
 		#endregion
 
 		#region Private Methods
+		
 		#endregion
 
 		#region Public Methods
+		
 		/// <summary>
 		/// POBox factory method that constructs a POBox object for the specified domain ID.
 		/// </summary>
@@ -240,6 +243,7 @@ namespace Simias.POBox
 
 			return subscription;
 		}
+
 		#endregion
 	}
 }
