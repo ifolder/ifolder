@@ -42,6 +42,7 @@
 #include "gtkutils.h"
 #include "notify.h"
 #include "xmlnode.h"
+#include "prefix.h"
 
 #include "debug.h"
 #include "prefs.h"
@@ -569,7 +570,7 @@ g_print("buddylist_cb_simulate_share_collection() entered\n");
 	type_store = gtk_list_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
 
 	/* FIXME: Install the icon and load it from the correct place */
-	icon_path = g_build_filename(gaim_user_dir(), "ifolder48.png", NULL);
+	icon_path = g_build_filename(DATADIR, "..", "share", "pixmaps", "gaim", "icons", "ifolder48.png", NULL);
 	gaim_debug(GAIM_DEBUG_INFO, "simias", "icon path: %s\n", icon_path);
 	icon = gdk_pixbuf_new_from_file(icon_path, NULL);
 	g_free(icon_path);
@@ -591,7 +592,7 @@ g_print("buddylist_cb_simulate_share_collection() entered\n");
 	}
 	
 	/* FIXME: Install the icon and load it from the correct place */
-	icon_path = g_build_filename(gaim_user_dir(), "glyphmarks48.png", NULL);
+	icon_path = g_build_filename(DATADIR, "..", "share", "pixmaps", "gaim", "icons", "glyphmarks48.png", NULL);
 	gaim_debug(GAIM_DEBUG_INFO, "simias", "icon path: %s\n", icon_path);
 	icon = gdk_pixbuf_new_from_file(icon_path, NULL);
 	g_free(icon_path);
@@ -1283,12 +1284,13 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 
 g_print("add_invitation_to_store() entered\n");
 	if (!strcmp(invitation->collection_type, COLLECTION_TYPE_IFOLDER)) {
-		icon_path = g_build_filename(gaim_user_dir(), "ifolder48.png", NULL);
+		icon_path = g_build_filename(DATADIR, "..", "share", "pixmaps", "gaim", "icons", "ifolder48.png", NULL);
 	} else if (!strcmp(invitation->collection_type, COLLECTION_TYPE_GLYPHMARKS)) {
-		icon_path = g_build_filename(gaim_user_dir(), "glyphmarks48.png", NULL);
+		icon_path = g_build_filename(DATADIR, "..", "share", "pixmaps", "gaim", "icons", "glyphmarks48.png", NULL);
 	}
 
 	if (icon_path) {
+		g_print("Icon Path: %s\n", icon_path);
 		invitation_icon = gdk_pixbuf_new_from_file(icon_path, NULL);
 		g_free(icon_path);
 	}
