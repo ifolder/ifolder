@@ -38,12 +38,29 @@ namespace Simias.Policy
 		private Policy policy;
 
 		/// <summary>
+		/// Member that is associated with this policy.
+		/// </summary>
+		private Member member;
+
+		/// <summary>
 		/// A snapshot of the amount of spaced used by the member.
 		/// </summary>
 		private long usedDiskSpace = 0;
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Returns the available disk space for the associated member.
+		/// </summary>
+		public long AvailableSpace
+		{
+			get 
+			{ 
+				long sa = Limit - UsedSpace;
+				return ( sa > 0 ) ? sa : 0;
+			}
+		}
+
 		/// <summary>
 		/// Gets the disk space quota limit.
 		/// </summary>
@@ -70,6 +87,14 @@ namespace Simias.Policy
 				return limit;
 			}
 		}
+
+		/// <summary>
+		/// Gets the amount of disk space in use for the associated member.
+		/// </summary>
+		public long UsedSpace
+		{
+			get { return GetUsedDiskSpace( member ); }
+		}
 		#endregion
 
 		#region Constructor
@@ -85,11 +110,8 @@ namespace Simias.Policy
 			this.store = store;
 			this.manager = manager;
 			this.policy = policy;
-
-			if ( policy != null )
-			{
-				this.usedDiskSpace = GetUsedDiskSpace( member );
-			}
+			this.member = member;
+			this.usedDiskSpace = GetUsedDiskSpace( member );
 		}
 		#endregion
 

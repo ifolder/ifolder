@@ -1800,6 +1800,10 @@ namespace Simias.Storage.Tests
 			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			collection.Commit();
 
+			// Create a dir entry.
+			DirNode dn = new DirNode( collection, Directory.GetCurrentDirectory() );
+			collection.Commit( dn );
+
 			try
 			{
 				Member member = collection.GetCurrentMember();
@@ -1911,10 +1915,27 @@ namespace Simias.Storage.Tests
 					throw new ApplicationException( "Aggregate member disk quota not set." );
 				}
 
+				// Check the available space.
+				if ( dsq.AvailableSpace != 128 )
+				{
+					throw new ApplicationException( "Invalid available space." );
+				}
+
 				// Now apply the quota so that it will pass.
 				if ( dsq.HasAvailableDiskSpace( 128 ) == false )
 				{
 					throw new ApplicationException( "Member disk quota failed." );
+				}
+
+				// Add a 128 byte file entry with out a file, just so it will be counted against the quota.
+				FileNode fn = new FileNode( collection, dn, "TempFile" );
+				fn.Length = 128;
+				collection.Commit( fn );
+
+				// Now check available space.
+				if ( dsq.AvailableSpace != 0 )
+				{
+					throw new ApplicationException( "Invalid available space." );
 				}
 
 				// Now apply the quota so that it will fail.
