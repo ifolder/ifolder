@@ -33,7 +33,7 @@ namespace Simias.Domain
 	public class DomainAgent
 	{
 		private static readonly string SectionName = "Domain";
-		private static readonly string UrlKeyName = "ServiceUrl";
+		private static readonly string UrlKeyName = "Service Url";
 
 		private Configuration config;
 

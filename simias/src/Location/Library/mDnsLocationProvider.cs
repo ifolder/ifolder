@@ -26,6 +26,7 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 using Mono.P2p.mDnsResponderApi;
 
@@ -37,9 +38,9 @@ namespace Simias.Location
 	/// <summary>
 	/// Multi-Cast DNS Location Provider
 	/// </summary>
-	public class MDnsLocationProvider : ILocationProvider
+	public class mDnsLocationProvider : ILocationProvider
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(MDnsLocationProvider));
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(mDnsLocationProvider));
 
 		public static readonly string SUFFIX = "_collection._tcp._local";
 
@@ -52,10 +53,10 @@ namespace Simias.Location
 		/// <summary>
 		/// Static Constructor
 		/// </summary>
-		static MDnsLocationProvider()
+		static mDnsLocationProvider()
 		{
 			// channel
-			TcpClientChannel channel = new TcpClientChannel("MDnsClient",
+			TcpClientChannel channel = new TcpClientChannel("mDnsClient",
 				new BinaryClientFormatterSinkProvider());
 			ChannelServices.RegisterChannel(channel);
 		}
@@ -63,7 +64,7 @@ namespace Simias.Location
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public MDnsLocationProvider()
+		public mDnsLocationProvider()
 		{
 		}
 		
@@ -110,11 +111,31 @@ namespace Simias.Location
 
 				if (query.GetHostByName(sl.Target, ref ha) == 0)
 				{
-					UriBuilder ub = new UriBuilder("http", ha.PrefAddress.ToString(), port);
+					TextStrings ts = null;
 
-					result = ub.Uri;
+					if (query.GetTextStringsByName(sl.Target, ref ts) == 0)
+					{
+						// text strings
+						ArrayList list = ts.GetTextStrings();
+						string scheme = "http";
 
-					log.Debug("Reunion URI for {0}: {1}", service, result);
+						foreach(string item in list)
+						{
+							string[] pair = Regex.Split(item, "(=)");
+
+							if (pair[0] == "scheme")
+							{
+								scheme = pair[2];
+							}
+						}
+
+						UriBuilder ub = new UriBuilder(scheme, ha.PrefAddress.ToString(), port,
+							SyncStoreService.EndPoint);
+
+						result = ub.Uri;
+
+						log.Debug("Reunion URI for {0}: {1}", service, result);
+					}
 				}
 			}
 			
@@ -157,13 +178,13 @@ namespace Simias.Location
 			
 				// service
 				string service = String.Format("{0}.{1}", sc.ID, SUFFIX);
-				int port = sc.MasterUrl.Port;
 
 				// ptr
 				register.RegisterPointer(SUFFIX, service);
 				
 				// service location
-				if (register.RegisterServiceLocation(host, service, port, 0, 0) == 0)
+				if (register.RegisterServiceLocation(host,
+					service, sc.MasterUrl.Port, 0, 0) == 0)
 				{
 					log.Debug("Registered {0} with Reunion.", service);
 
@@ -172,6 +193,7 @@ namespace Simias.Location
 					list.Add(String.Format("name={0}", sc.Name));
 					list.Add(String.Format("domain={0}", sc.Domain));
 					list.Add(String.Format("type={0}", sc.Type));
+					list.Add(String.Format("scheme={0}", sc.MasterUrl.Scheme));
 
 					register.RegisterTextStrings(service, (string[]) list.ToArray(typeof(string)));
 				}

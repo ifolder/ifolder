@@ -465,7 +465,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\Library\MDnsLocationProvider.cs"
+                    RelPath = "src\Location\Library\mDnsLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

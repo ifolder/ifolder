@@ -63,7 +63,7 @@ namespace Simias.Location
 				collection.Commit(node);
 
 				Add(typeof(DefaultLocationProvider));
-				Add(typeof(MDnsLocationProvider));
+				Add(typeof(mDnsLocationProvider));
 			}
 		}
 
