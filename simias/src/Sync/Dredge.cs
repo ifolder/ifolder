@@ -275,6 +275,7 @@ public class Dredger
 	/// <param name="onServer"></param>
 	public Dredger(Collection collection, bool onServer)
 	{
+		// TODO: Syncronize the dredger with the sync engine.
 		this.collection = new SyncCollection(collection);
 		this.onServer = onServer;
 		try
@@ -285,8 +286,28 @@ public class Dredger
 		{
 		}
 		foundChange = false;
-		DoSubtree(collection.GetRootDirectory(), false);
-		DoManagedPath(collection.ManagedPath);
+		// Make sure that the RootDir still exists. IF it has been deleted on a slave remove the collection
+		// And exit.
+		DirNode dn = collection.GetRootDirectory();
+		if (dn != null)
+		{
+			if (onServer || Directory.Exists(dn.GetFullPath(collection)))
+			{
+				DoSubtree(collection.GetRootDirectory(), false);
+				DoManagedPath(collection.ManagedPath);
+			}
+			else
+			{
+				// The directory no loger exits. Delete the collection.
+				collection.Delete();
+				collection.Commit();
+				foundChange = false;
+			}
+		}
+		else
+		{
+			DoManagedPath(collection.ManagedPath);
+		}
 		if (foundChange)
 		{
 			Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
