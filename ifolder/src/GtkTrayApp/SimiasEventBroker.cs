@@ -225,6 +225,9 @@ namespace Novell.iFolder
 	public delegate void FileSyncEventHandler(object sender,
 							FileSyncEventArgs args);
 
+	public delegate void NotifyEventHandler(object sender,
+							NotifyEventArgs args);
+
 	public class SimiasEventBroker
 	{
 		private iFolderWebService	ifws;
@@ -234,10 +237,12 @@ namespace Novell.iFolder
 		private Gtk.ThreadNotify	SimiasEventFired;
 		private Gtk.ThreadNotify	SyncEventFired;
 		private Gtk.ThreadNotify	FileEventFired;
+		private Gtk.ThreadNotify	GenericEventFired;
 		private Queue				NodeEventQueue;
 		private Queue				SyncEventQueue;
 		private Queue				FileEventQueue;
 		private Queue				SimiasEventQueue;
+		private Queue				NotifyEventQueue;
 		private bool				runEventThread;
 		private Thread				SEThread;
 		private ManualResetEvent	SEEvent;
@@ -252,6 +257,7 @@ namespace Novell.iFolder
 
 		public event CollectionSyncEventHandler CollectionSyncEventFired;
 		public event FileSyncEventHandler FileSyncEventFired;
+		public event NotifyEventHandler NotifyEventFired;
 
 		public SimiasEventBroker()
 		{
@@ -259,6 +265,7 @@ namespace Novell.iFolder
 			SyncEventQueue = new Queue();
 			FileEventQueue = new Queue();
 			SimiasEventQueue = new Queue();
+			NotifyEventQueue = new Queue();
 
 			SimiasEventFired = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OnSimiasEventFired) );
@@ -266,6 +273,8 @@ namespace Novell.iFolder
 							new Gtk.ReadyEvent(OnSyncEventFired) );
 			FileEventFired = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OnFileEventFired) );
+			GenericEventFired = new Gtk.ThreadNotify(
+							new Gtk.ReadyEvent(OnGenericEventFired) );
 
 			SEThread = new Thread(new ThreadStart(SimiasEventThread));
 			SEThread.IsBackground = true;
@@ -336,6 +345,9 @@ namespace Novell.iFolder
 
 			simiasEventClient.SetEvent( IProcEventAction.AddFileSync,
 				new IProcEventHandler( SimiasEventSyncFileHandler) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNotifyMessage,
+				new IProcEventHandler( SimiasEventNotifyHandler) );
 
 			runEventThread = true;
 			SEThread.Start();
@@ -425,6 +437,16 @@ namespace Novell.iFolder
 */
 		}
 
+
+		private void SimiasEventNotifyHandler(SimiasEventArgs args)
+		{
+			NotifyEventArgs notifyEventArgs = args as NotifyEventArgs;
+			lock(NotifyEventQueue)
+			{
+				NotifyEventQueue.Enqueue(notifyEventArgs);
+				GenericEventFired.WakeupMain();
+			}
+		}
 
 
 		private void SimiasEventSyncFileHandler(SimiasEventArgs args)
@@ -743,6 +765,34 @@ namespace Novell.iFolder
 			}
 		}
 
+
+		private void OnGenericEventFired()
+		{
+			bool hasmore = false;
+
+			lock(NotifyEventQueue)
+			{
+				hasmore = (NotifyEventQueue.Count > 0);
+			}
+
+			while(hasmore)
+			{
+				NotifyEventArgs args;
+
+				lock(NotifyEventQueue)
+				{
+					args = (NotifyEventArgs)NotifyEventQueue.Dequeue();
+				}
+
+				if(NotifyEventFired != null)
+					NotifyEventFired(this, args);
+
+				lock(NotifyEventQueue)
+				{
+					hasmore = (NotifyEventQueue.Count > 0);
+				}
+			}
+		}
 
 
 		private void OnFileEventFired()
