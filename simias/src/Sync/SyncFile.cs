@@ -580,6 +580,26 @@ namespace Simias.Sync
 		#region public methods.
 
 		/// <summary>
+		/// Delete ther file and map file.
+		/// </summary>
+		/// <param name="collection">The collection that the node belongs to.</param>
+		/// <param name="node">The node that represents the file.</param>
+		public static void DeleteFile(Collection collection, BaseFileNode node)
+		{
+			string path = node.GetFullPath(collection);
+			if (File.Exists(path))
+				File.Delete(path);
+			try
+			{
+				// Now delete the map file.
+				path = Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
+				if (File.Exists(path))
+					File.Delete(path);
+			}
+			catch {}
+		}
+
+		/// <summary>
 		/// Get the file name.
 		/// </summary>
 		public string Name

@@ -696,9 +696,7 @@ namespace Simias.Sync
 							BaseFileNode bfn = node as BaseFileNode;
 							if (bfn != null)
 							{
-								string path = bfn.GetFullPath(collection);
-								if (File.Exists(path))
-									File.Delete(bfn.GetFullPath(collection));
+								SyncFile.DeleteFile(collection, bfn);
 							}
 							collection.Delete(node);
 							collection.Commit(node);
