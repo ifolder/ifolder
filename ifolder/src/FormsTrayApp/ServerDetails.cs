@@ -63,6 +63,12 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs a ServerDetails object.
+		/// </summary>
+		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
+		/// <param name="servers">A collection of servers to put in the dropdown list.</param>
+		/// <param name="selectedDomain">The server to select in the dropdown list.</param>
 		public ServerDetails(iFolderWebService ifolderWebService, ListView.ListViewItemCollection servers, Domain selectedDomain)
 		{
 			//

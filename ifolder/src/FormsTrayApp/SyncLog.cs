@@ -380,6 +380,10 @@ namespace Novell.FormsTrayApp
 
 		private const int WM_QUERYENDSESSION = 0x0011;
 
+		/// <summary>
+		/// Override of WndProc method.
+		/// </summary>
+		/// <param name="m">The message to process.</param>
 		protected override void WndProc(ref Message m)
 		{
 			// Keep track if we receive a shutdown message.

@@ -927,7 +927,7 @@ namespace Novell.FormsTrayApp
 
 		#region Public Methods
 		/// <summary>
-		/// Adds the specified domain to the dropdown lists.
+		/// Adds the specified domain to the dropdown list.
 		/// </summary>
 		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
 		public void AddDomainToList(DomainWeb domainWeb)
@@ -959,6 +959,47 @@ namespace Novell.FormsTrayApp
 
 				// Keep track of the default domain.
 				defaultDomain = domain;
+			}
+		}
+
+		/// <summary>
+		/// Remove the specified domain from the dropdown list.
+		/// </summary>
+		/// <param name="domainWeb">The domainWeb object representing the domain to remove.</param>
+		public void RemoveDomainFromList(DomainWeb domainWeb)
+		{
+			Domain domain = null;
+			Domain showAllDomain = null;
+			
+			foreach (Domain d in servers.Items)
+			{
+				if (d.ID.Equals(domainWeb.ID))
+				{
+					domain = d;
+				}
+
+				if (d.ShowAll)
+				{
+					showAllDomain = d;
+				}
+
+				if ((showAllDomain != null) && (domain != null))
+				{
+					break;
+				}
+			}
+
+			if (domain != null)
+			{
+				// If this was the selected domain, select the "show all" domain.
+				if (servers.SelectedItem.Equals(domain))
+				{
+					servers.SelectedItem = showAllDomain;
+				}
+
+				servers.Items.Remove(domain);
+
+				// TODO: Do we need to reset the default?
 			}
 		}
 
@@ -1738,6 +1779,10 @@ namespace Novell.FormsTrayApp
 
 		private const int WM_QUERYENDSESSION = 0x0011;
 
+		/// <summary>
+		/// Override of WndProc method.
+		/// </summary>
+		/// <param name="m">The message to process.</param>
 		protected override void WndProc(ref Message m)
 		{
 			// Keep track if we receive a shutdown message.

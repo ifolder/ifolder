@@ -1580,6 +1580,15 @@ namespace Novell.FormsTrayApp
 		/// Occurs when the default domain is changed.
 		/// </summary>
 		public event ChangeDefaultDomainDelegate ChangeDefaultDomain;
+
+		/// <summary>
+		/// Delegate used when a domain account is removed.
+		/// </summary>
+		public delegate void RemoveDomainDelegate(object sender, DomainConnectEventArgs e);
+		/// <summary>
+		/// Occurs when a domain account is removed.
+		/// </summary>
+		public event RemoveDomainDelegate RemoveDomain;
 		#endregion
 
 		#region Event Handlers
@@ -1845,7 +1854,12 @@ namespace Novell.FormsTrayApp
 				{
 					ifWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
 					lvi.Remove();
-					// TODO: delegate to remove the domain from the server dropdown list.
+
+					if (RemoveDomain != null)
+					{
+						// Call delegate to remove the domain from the server dropdown list.
+						RemoveDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+					}
 				}
 			}
 		}
@@ -1976,6 +1990,10 @@ namespace Novell.FormsTrayApp
 
 		private const int WM_QUERYENDSESSION = 0x0011;
 
+		/// <summary>
+		/// Override of WndProc method.
+		/// </summary>
+		/// <param name="m">The message to process.</param>
 		protected override void WndProc(ref Message m)
 		{
 			// Keep track if we receive a shutdown message.

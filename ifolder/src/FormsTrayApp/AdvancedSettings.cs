@@ -48,6 +48,9 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs an AdvancedSettings object.
+		/// </summary>
 		public AdvancedSettings()
 		{
 			//

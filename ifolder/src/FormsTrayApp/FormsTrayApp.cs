@@ -206,6 +206,13 @@ namespace Novell.FormsTrayApp
 			base.Dispose( disposing );
 		}
 
+		/// <summary>
+		/// Method used to check for a client update on the server.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain.</param>
+		/// <param name="userName">The name of the user.</param>
+		/// <param name="password">The user's password.</param>
+		/// <returns><b>True</b> if an update exists and has been started; otherwise, <b>False</b>.</returns>
 		static public bool CheckForClientUpdate(string domainID, string userName, string password)
 		{
 			bool updateStarted = false;
@@ -415,6 +422,7 @@ namespace Novell.FormsTrayApp
 					preferences = new Preferences(ifWebService);
 					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
 					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
+					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
@@ -495,6 +503,11 @@ namespace Novell.FormsTrayApp
 		private void preferences_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
 			globalProperties.AddDomainToList(e.DomainWeb);
+		}
+
+		private void preferences_RemoveDomain(object sender, DomainConnectEventArgs e)
+		{
+			globalProperties.RemoveDomainFromList(e.DomainWeb);
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
