@@ -327,6 +327,8 @@ src/Makefile
 src/install-simias-to-gac
 src/Common/SimiasSetup.cs
 src/Simias.dll/Makefile
+src/SimiasApp/Makefile
+src/SimiasApp/simias
 src/AddressBook/Makefile
 src/Events/Makefile
 src/POBox/Makefile

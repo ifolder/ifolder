@@ -1,3 +1,12 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  Author: Rob
+ *
+ ***********************************************************************/
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 

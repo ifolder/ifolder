@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncServ
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasApp", "src\SimiasApp\SimiasApp.csproj", "{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -45,6 +49,10 @@ Global
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Debug.Build.0 = Debug|.NET
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.ActiveCfg = Release|.NET
 		{B73D723A-44A5-4844-82CD-C6BB126A75AD}.Release.Build.0 = Release|.NET
+		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Debug.ActiveCfg = Debug|.NET
+		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Debug.Build.0 = Debug|.NET
+		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Release.ActiveCfg = Release|.NET
+		{FBC32721-2AEE-48D5-8353-FAACC2AF16B2}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
