@@ -6,8 +6,8 @@ EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/addressbook
-	$(INSTALL_PROGRAM) COPYING $(DESTDIR)$(datadir)/addressbook
-	$(INSTALL_PROGRAM) $(srcdir)/addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/addressbook
+	$(INSTALL_PROGRAM) addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
 
 installcheck-summary:
 	$(MAKE) -C src $@
