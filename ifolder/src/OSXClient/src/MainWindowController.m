@@ -63,7 +63,9 @@
 	[super setShouldCascadeWindows:NO];
 	[super setWindowFrameAutosaveName:@"iFolderWindow"];
 
-	webService = [[iFolderService alloc] init];
+	ifolderService = [[iFolderService alloc] init];
+	simiasService = [[SimiasService alloc] init];
+
 	keyedDomains = [[NSMutableDictionary alloc] init];
 	keyediFolders = [[NSMutableDictionary alloc] init];
 	
@@ -77,7 +79,7 @@
 	@try
 	{
 		int domainCount;
-		NSArray *newDomains = [webService GetDomains];
+		NSArray *newDomains = [simiasService GetDomains];
 
 		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
 		{
@@ -90,7 +92,7 @@
 		}
 //		[domainsController addObjects:newDomains];
 		
-		NSArray *newiFolders = [webService GetiFolders];
+		NSArray *newiFolders = [ifolderService GetiFolders];
 		if(newiFolders != nil)
 		{
 			[ifoldersController addObjects:newiFolders];
@@ -118,7 +120,7 @@
 
 	@try
 	{
-		NSArray *newiFolders = [webService GetiFolders];
+		NSArray *newiFolders = [ifolderService GetiFolders];
 		if(newiFolders != nil)
 		{
 			[ifoldersController setContent:newiFolders];
@@ -237,7 +239,7 @@
 
 			@try
 			{
-				[webService DeleteiFolder:[ifolder ID]];
+				[ifolderService DeleteiFolder:[ifolder ID]];
 				[ifoldersController removeObjectAtArrangedObjectIndex:(int)contextInfo];
 			}
 			@catch (NSException *e)
@@ -318,7 +320,7 @@
 {
 	@try
 	{
-		[webService AuthenticateToDomain:domainID usingPassword:password];
+		[ifolderService AuthenticateToDomain:domainID usingPassword:password];
 		return YES;
 	}
 	@catch (NSException *e)
@@ -336,7 +338,7 @@
 {
 	@try
 	{
-		iFolder *newiFolder = [webService CreateiFolder:path InDomain:domainID];
+		iFolder *newiFolder = [ifolderService CreateiFolder:path InDomain:domainID];
 		[ifoldersController addObject:newiFolder];
 	}
 	@catch (NSException *e)
@@ -353,7 +355,7 @@
 {
 	@try
 	{
-		iFolder *newiFolder = [webService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
+		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
 		[ifoldersController addObject:newiFolder];
 	}
 	@catch (NSException *e)

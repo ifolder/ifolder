@@ -217,6 +217,7 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				3E67778607AEACEF0027130D,
 				3ECCEE29078B050C0011719F,
 				3E34A2810772BF1A009AC400,
 				3EAEF5050769104900B98AF6,
@@ -397,6 +398,10 @@
 		};
 		3E255FFC077235290062AB7A = {
 			children = (
+				3EC02EDC07AED3C4001FF59D,
+				3EC02D7907AED395001FF59D,
+				3EDD6AD807AEAECB008A2A3B,
+				3EDD6AD907AEAECB008A2A3B,
 				3E255FFF077235290062AB7A,
 				3E256000077235290062AB7A,
 			);
@@ -639,6 +644,19 @@
 			settings = {
 			};
 		};
+		3E67778607AEACEF0027130D = {
+			isa = PBXFileReference;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			path = libsimias.0.dylib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E67778707AEACEF0027130D = {
+			fileRef = 3E67778607AEACEF0027130D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E70A407078DFB8A0075681D = {
 			children = (
 				3E70A408078DFB8A0075681D,
@@ -877,6 +895,34 @@
 			settings = {
 			};
 		};
+		3EC02D7907AED395001FF59D = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = libifolder;
+			path = ../libifolder;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3EC02E2107AED395001FF59D = {
+			fileRef = 3EC02D7907AED395001FF59D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EC02EDC07AED3C4001FF59D = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = libsimias;
+			path = ../../../simias/src/libsimias;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3EC02F2107AED3C4001FF59D = {
+			fileRef = 3EC02EDC07AED3C4001FF59D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3ECCEE29078B050C0011719F = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.dylib";
@@ -886,6 +932,34 @@
 		};
 		3ECCEE2A078B050C0011719F = {
 			fileRef = 3ECCEE29078B050C0011719F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDD6AD807AEAECB008A2A3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SimiasService.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDD6AD907AEAECB008A2A3B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SimiasService.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDD6ADA07AEAECB008A2A3B = {
+			fileRef = 3EDD6AD807AEAECB008A2A3B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDD6ADB07AEAECB008A2A3B = {
+			fileRef = 3EDD6AD907AEAECB008A2A3B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -986,8 +1060,8 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = "../libifolder ../../../simias/src/SimiasClient/libsimias-event";
-				LIBRARY_SEARCH_PATHS = "../libifolder/.libs ../../../simias/src/SimiasClient/libsimias-event/.libs";
+				HEADER_SEARCH_PATHS = "../libifolder ../../../simias/src/SimiasClient/libsimias-event ../../../simias/src/libsimias";
+				LIBRARY_SEARCH_PATHS = "../libifolder/.libs ../../../simias/src/SimiasClient/libsimias-event/.libs ../../../simias/src/libsimias/.libs";
 				PREBINDING = YES;
 				ZERO_LINK = NO;
 			};
@@ -999,8 +1073,8 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				HEADER_SEARCH_PATHS = "../libifolder ../../../simias/src/SimiasClient/libsimias-event";
-				LIBRARY_SEARCH_PATHS = "../libifolder/.libs ../../../simias/src/SimiasClient/libsimias-event/.libs";
+				HEADER_SEARCH_PATHS = "../libifolder ../../../simias/src/SimiasClient/libsimias-event ../../../simias/src/libsimias";
+				LIBRARY_SEARCH_PATHS = "../libifolder/.libs ../../../simias/src/SimiasClient/libsimias-event/.libs ../../../simias/src/libsimias/.libs";
 				OTHER_LDFLAGS = "-flat_namespace";
 				ZERO_LINK = NO;
 			};
@@ -1080,6 +1154,9 @@
 				3E19255107A7E1FF00F9E44D,
 				3E19255307A7E20700F9E44D,
 				3E3BC75607AB5B7B00D2AE46,
+				3EDD6ADA07AEAECB008A2A3B,
+				3EC02E2107AED395001FF59D,
+				3EC02F2107AED3C4001FF59D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1112,6 +1189,7 @@
 				3E70A40D078DFCD80075681D,
 				3EB8C512079393B60082AA86,
 				3E3BC75507AB5B7B00D2AE46,
+				3EDD6ADB07AEAECB008A2A3B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1133,6 +1211,7 @@
 				3EAEF5060769104900B98AF6,
 				3E34A2820772BF1A009AC400,
 				3ECCEE2A078B050C0011719F,
+				3E67778707AEACEF0027130D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

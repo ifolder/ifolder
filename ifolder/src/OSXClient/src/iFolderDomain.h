@@ -22,23 +22,23 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#include "iFolderStub.h"
-
-#define WORKGROUP_DOMAIN @"363051d1-8841-4c7b-a1dd-71abbd0f4ada"
-
+#include "simiasStub.h"
 
 /*
-	char *ID;
+	enum ns1__DomainType Type;
+	enum xsd__boolean Active;
+	char *Name;	
+	char *Description;	
+	char *ID;	
+	char *RosterID;	
+	char *RosterName;	
+	char *MemberID;
+	char *MemberName;	
+	char *RemoteUrl;	
 	char *POBoxID;
-	char *Name;
-	char *Description;
-	char *Host;
-	char *UserID;
-	char *UserName;
-	enum xsd__boolean IsDefault;
-	enum xsd__boolean IsSlave;
-	enum xsd__boolean IsEnabled;
-	enum xsd__boolean IsConnected;
+	char *Host;	
+	enum xsd__boolean IsSlave;	
+	enum xsd__boolean IsDefault;	
 */
 
 @interface iFolderDomain : NSObject
@@ -50,7 +50,6 @@
 - (NSMutableDictionary *) properties;
 - (void) setProperties: (NSDictionary *)newProperties;
 
--(void) setgSOAPProperties:(struct ns1__DomainWeb *)domainWeb;
 
 -(NSString *)ID;
 -(NSString *)name;

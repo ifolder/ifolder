@@ -3,7 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class iFolderDomain;
-@class iFolderService;
+@class SimiasService;
 
 @interface AccountsController : NSObject
 {
@@ -21,7 +21,7 @@
     IBOutlet NSView *view;
 	IBOutlet NSWindow	*parentWindow;
 
-	iFolderService		*webService;	
+	SimiasService		*simiasService;	
 	NSMutableArray		*domains;
 	iFolderDomain		*selectedDomain;
 

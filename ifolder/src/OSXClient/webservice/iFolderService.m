@@ -30,6 +30,8 @@
 void init_gsoap(struct soap *pSoap);
 void cleanup_gsoap(struct soap *pSoap);
 
+NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder);
+
 
 -(bool) Ping
 {
@@ -56,103 +58,6 @@ void cleanup_gsoap(struct soap *pSoap);
 
     return isRunning;
 }
-
-
-
--(NSArray *) GetDomains
-{
-	NSMutableArray *domains = nil;
-	
-    struct soap soap;
-    int err_code;
-
-	struct _ns1__GetDomains getDomainsMessage;
-	struct _ns1__GetDomainsResponse getDomainsResponse;
-
-    init_gsoap (&soap);
-    err_code = soap_call___ns1__GetDomains(
-			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
-            NULL,
-            &getDomainsMessage,
-            &getDomainsResponse);
-
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"iFolderService.GetDomains"];
-	}
-	else
-	{
-		domains = [[NSMutableArray alloc]
-				initWithCapacity:getDomainsResponse.GetDomainsResult->__sizeDomainWeb];
-		int counter;
-		for(counter=0;counter<getDomainsResponse.GetDomainsResult->__sizeDomainWeb;counter++)
-		{
-			struct ns1__DomainWeb *curDomain;
-			
-			curDomain = getDomainsResponse.GetDomainsResult->DomainWeb[counter];
-			iFolderDomain *newDomain = [[iFolderDomain alloc] init];
-			
-			[newDomain setgSOAPProperties:curDomain];
-			
-			[domains addObject:newDomain];
-		}
-    }
-
-    cleanup_gsoap(&soap);
-
-	return domains;
-}
-
-
-
-
--(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host
-{
-	iFolderDomain *domain = nil;
-    struct soap soap;
-    int err_code;
-
-	NSAssert( (UserName != nil), @"UserName was nil");
-	NSAssert( (Password != nil), @"Password was nil");
-	NSAssert( (Host != nil), @"Host was nil");
-
-	struct _ns1__ConnectToDomain connectToDomainMessage;
-	struct _ns1__ConnectToDomainResponse connectToDomainResponse;
-	
-	connectToDomainMessage.UserName = (char *)[UserName cString];
-	connectToDomainMessage.Password = (char *)[Password cString];
-	connectToDomainMessage.Host = (char *)[Host cString];
-
-    init_gsoap (&soap);
-
-    err_code = soap_call___ns1__ConnectToDomain(
-			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
-            NULL,
-            &connectToDomainMessage,
-            &connectToDomainResponse);
- 	if(soap.error)
-	{
-		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in ConnectToDomain"];
-	}
-	else
-	{
-		domain = [ [iFolderDomain alloc] init];
-		
-		struct ns1__DomainWeb *curDomain;
-			
-		curDomain = connectToDomainResponse.ConnectToDomainResult;
-		[domain setgSOAPProperties:curDomain];
-    }
-
-    cleanup_gsoap(&soap);
-
-	return domain;
-}
-
 
 
 
@@ -227,8 +132,8 @@ void cleanup_gsoap(struct soap *pSoap);
 			
 				curiFolder = getiFoldersResponse.GetAlliFoldersResult->iFolderWeb[counter];
 				iFolder *newiFolder = [[iFolder alloc] init];
-			
-				[newiFolder setgSOAPProperties:curiFolder];
+
+				[newiFolder setProperties:getiFolderProperties(curiFolder)];
 				
 				[ifolders addObject:newiFolder];
 			}
@@ -278,7 +183,8 @@ void cleanup_gsoap(struct soap *pSoap);
 		struct ns1__iFolderWeb *curiFolder;
 			
 		curiFolder = createiFolderResponse.CreateiFolderInDomainResult;
-		[ifolder setgSOAPProperties:curiFolder];
+
+		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }
 
     cleanup_gsoap(&soap);
@@ -327,7 +233,7 @@ void cleanup_gsoap(struct soap *pSoap);
 		struct ns1__iFolderWeb *curiFolder;
 			
 		curiFolder = acceptiFolderResponse.AcceptiFolderInvitationResult;
-		[ifolder setgSOAPProperties:curiFolder];
+		[ifolder setProperties:getiFolderProperties(curiFolder)];
     }
 
     cleanup_gsoap(&soap);
@@ -371,7 +277,6 @@ void cleanup_gsoap(struct soap *pSoap);
 
 
 
-
 void init_gsoap(struct soap *pSoap)
 {
 	soap_init(pSoap);
@@ -384,6 +289,66 @@ void init_gsoap(struct soap *pSoap)
 void cleanup_gsoap(struct soap *pSoap)
 {
 	soap_end(pSoap);
+}
+
+
+NSDictionary *getiFolderProperties(struct ns1__iFolderWeb *ifolder)
+{
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
+
+	if(ifolder->DomainID != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->DomainID] forKey:@"DomainID"];
+
+	if(ifolder->ID != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->ID] forKey:@"ID"];
+
+	if(ifolder->ManagedPath != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->ManagedPath] forKey:@"ManagedPath"];
+
+	if(ifolder->UnManagedPath != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->UnManagedPath] forKey:@"Path"];
+
+	if(ifolder->Name != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->Name] forKey:@"Name"];
+
+	if(ifolder->Owner != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->Owner] forKey:@"Owner"];
+
+	if(ifolder->OwnerID != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->OwnerID] forKey:@"OwnerID"];
+
+	if(ifolder->Type != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->Type] forKey:@"Type"];
+
+	if(ifolder->Description != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->Description] forKey:@"Description"];
+
+	if(ifolder->State != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->State] forKey:@"State"];
+
+	if(ifolder->CurrentUserID != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->CurrentUserID] forKey:@"CurrentUserID"];
+
+	if(ifolder->CurrentUserRights != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->CurrentUserRights] forKey:@"CurrentUserRights"];
+
+	if(ifolder->CollectionID != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->CollectionID] forKey:@"CollectionID"];
+
+	if(ifolder->LastSyncTime != nil)
+		[newProperties setObject:[NSString stringWithCString:ifolder->LastSyncTime] forKey:@"LastSyncTime"];
+
+	[newProperties setObject:[NSNumber numberWithInt:ifolder->EffectiveSyncInterval] forKey:@"EffectiveSyncInterval"];
+
+	[newProperties setObject:[NSNumber numberWithInt:ifolder->SyncInterval] forKey:@"SyncInterval"];
+
+	[newProperties setObject:[NSNumber numberWithBool:ifolder->IsSubscription] forKey:@"IsSubscription"];
+
+	[newProperties setObject:[NSNumber numberWithBool:ifolder->IsWorkgroup] forKey:@"IsWorkgroup"];
+
+	[newProperties setObject:[NSNumber numberWithBool:ifolder->HasConflicts] forKey:@"HasConflicts"];
+	
+	return newProperties;
 }
 
 

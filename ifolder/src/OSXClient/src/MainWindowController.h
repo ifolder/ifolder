@@ -23,6 +23,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <iFolderService.h>
+#import <SimiasService.h>
 
 #ifndef __MAIN_WINDOW_CONTROLLER
 #define __MAIN_WINDOW_CONTROLLER
@@ -41,7 +42,8 @@
 	LoginWindowController					*loginController;
 	iFolderPrefsController					*prefsController;
 	PropertiesWindowController				*propertiesController;
-	iFolderService							*webService;
+	iFolderService							*ifolderService;
+	SimiasService							*simiasService;
 	NSMutableArray							*domains;
 	NSMutableArray							*ifolders;
     IBOutlet NSArrayController				*ifoldersController;

@@ -76,35 +76,6 @@
 
 
 
--(void) setgSOAPProperties:(struct ns1__DomainWeb *)domainWeb
-{
-	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
-	
-	// Setup properties from the domainWeb object
-	if(domainWeb->ID != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->ID] forKey:@"ID"];
-	if(domainWeb->POBoxID != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->POBoxID] forKey:@"poboxID"];
-	if(domainWeb->Name != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->Name] forKey:@"name"];
-	if(domainWeb->Description != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->Description] forKey:@"description"];
-	if(domainWeb->Host != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->Host] forKey:@"host"];
-	if(domainWeb->UserID != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->UserID] forKey:@"userID"];
-	if(domainWeb->UserName != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->UserName] forKey:@"userName"];
-	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsDefault] forKey:@"isDefault"];
-	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsSlave] forKey:@"isSlave"];
-	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsEnabled] forKey:@"isEnabled"];
-
-	[self setProperties:newProperties];
-}
-
-
-
-
 -(NSString *)ID
 {
 	return [properties objectForKey:@"ID"];
