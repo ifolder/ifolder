@@ -316,6 +316,7 @@ namespace Mono.ASPNET
 				}
 			} catch (Exception e) {
 				Console.WriteLine ("Error: {0}", e.Message);
+				Console.WriteLine ("Stack: {0}", e.StackTrace);
 				return 1;
 			}
 

@@ -29,6 +29,7 @@ using System.Xml;
 
 using Simias;
 using Simias.Event;
+using Simias.Policy;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -55,6 +56,11 @@ namespace Simias.Storage
 		/// </summary>
 		static private string LdapAuthenticationTag = "LdapAuthentication";
 		static private string ProxyDNTag = "ProxyDN";
+
+		/// <summary>
+		/// Default sync interval for the enterprise roster. Only synchronizes once a day.
+		/// </summary>
+		static private int DefaultRosterSyncInterval = 86400;
 
 		/// <summary>
 		/// Handle to the local store provider.
@@ -308,6 +314,9 @@ namespace Simias.Storage
 						Member entRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 						entRosterOwner.IsOwner = true;
 						entRoster.Commit( new Node[] { entRoster, entRosterOwner } );
+
+						// Create a default sync interval policy for this roster.
+						SyncInterval.Create( entRoster, DefaultRosterSyncInterval );
 					}
 
 					// Save the local database changes.
