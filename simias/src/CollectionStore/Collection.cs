@@ -1657,6 +1657,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Returns whether specified Node object is the specified base type.
+		/// </summary>
+		/// <param name="node">Node object to check type.</param>
+		/// <param name="typeString">Type of Node object.</param>
+		/// <returns>True if Node object is the specified type, otherwise false is returned.</returns>
+		public bool IsBaseType( ShallowNode node, string typeString )
+		{
+			return ( node.Type == typeString ? true : false );
+		}
+
+
+		/// <summary>
 		/// Gets a new copy of the Collection object data from the database. All changed Collection object data
 		/// will be lost.
 		/// </summary>

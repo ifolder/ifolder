@@ -93,50 +93,51 @@ public class Dredger
 	//--------------------------------------------------------------------
 	// TODO: what about file permissions and symlinks?
 
-	void DoNode(DirNode parentNode, string path, string type, bool subTreeHasChanged)
+	void DoNode(DirNode parentNode, string path, bool isDir, bool subTreeHasChanged)
 	{
 		Node node = null;
+		DirNode dn = null;
+		FileNode fn = null;
 		string name = Path.GetFileName(path);
 
 		// log.Debug("Processing node of path {0}", path);
 
 		// don't let temp files from sync into the collection as regular nodes
-		if (name.StartsWith(".simias.") && type == typeof(FileNode).Name)
+		if (name.StartsWith(".simias.") && !isDir)
 			return;
 
 		// find if node for this file or dir already exists
 		// delete nodes that are wrong type
-		foreach (ShallowNode sn in collection.GetNodesByName(name))
+		foreach (ShallowNode sn in collection.Search(PropertyTags.FileSystemPath, parentNode.GetRelativePath() + "/" + name, SearchOp.Equal))
 		{
-			Node n = Node.NodeFactory(collection, sn);
-			DirNode dn = n as DirNode;
-			FileNode fn = n as FileNode;
-			string npath = null;
-			if (dn != null)
-				npath = dn.GetFullPath(collection);
-			else if (fn != null)
-				npath = fn.GetFullPath(collection);
-			if (npath != null && npath == path)
+			node = Node.NodeFactory(collection, sn);
+			dn = node as DirNode;
+			fn = node as FileNode;
+			if (fn != null && isDir)
 			{
-				if (!collection.IsType(n, type) || node != null && dn == null)
+				DeleteNode(node);
+				node = null;
+			}
+			else if (dn != null)
+			{
+				if (isDir)
 				{
-					DeleteNode(n); // remove node if wrong type or duplicate file
-					foundChange = true;
+					DoSubtree(dn, subTreeHasChanged);
 				}
 				else
 				{
-					if (dn != null)
-						DoSubtree(dn, subTreeHasChanged);
-			
-					node = n;
+					DeleteNode(dn);
+					node = null;
 				}
 			}
+			// There can only be one node with the matching relative path.
+			break;
 		}
 
 		if (node == null)
 		{
 			// it's a new node
-			if (type == typeof(FileNode).Name)
+			if (!isDir)
 			{
 				FileInfo fi = new FileInfo(path);
 				FileNode fnode = new FileNode(collection, parentNode, name);
@@ -161,7 +162,7 @@ public class Dredger
 				DoSubtree(dnode, true);
 			}
 		}
-		else if (type == typeof(FileNode).Name)
+		else if (fn != null)
 		{
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
@@ -206,11 +207,10 @@ public class Dredger
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 			{
-				Node kid = Node.NodeFactory(collection, sn);
-				if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
-					|| collection.IsType(kid, typeof(FileNode).Name) && !FileThere(path, kid.Name))
+				if (collection.IsBaseType(sn, typeof(DirNode).Name) && !DirThere(path, sn.Name)
+					|| collection.IsBaseType(sn, typeof(FileNode).Name) && !FileThere(path, sn.Name))
 				{
-					DeleteNode(kid);
+					DeleteNode(new Node(collection, sn));
 					foundChange = true;
 				}
 				// else Log.Spew("Dredger leaving node {0}", kid.Name);
@@ -221,15 +221,13 @@ public class Dredger
 		foreach (string file in Directory.GetFiles(path))
 		{
 			if (File.GetLastWriteTime(file) > lastDredgeTime || subTreeHasChanged)
-				DoNode(dnode, file, typeof(FileNode).Name, subTreeHasChanged);
+				DoNode(dnode, file, false, subTreeHasChanged);
 		}
 		
-		
-
 		// merge subdirs and recurse.
 		foreach (string dir in Directory.GetDirectories(path))
 		{
-			DoNode(dnode, dir, typeof(DirNode).Name, subTreeHasChanged);
+			DoNode(dnode, dir, true, subTreeHasChanged);
 		}
 	}
 
