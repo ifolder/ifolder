@@ -26,7 +26,10 @@ using System.IO;
 using System.Drawing;
 using System.Collections;
 using Simias.Storage;
+using Simias.POBox;
+using Simias.Presence;
 using Simias;
+using Novell.AddressBook.UI.gtk;
 
 using Gtk;
 using Gdk;
@@ -61,7 +64,7 @@ namespace Novell.iFolder
 			gxml.Autoconnect (this);
 
 			// Setup the Collection TreeView
-			ReunionTreeStore = new ListStore(typeof(string));
+			ReunionTreeStore = new ListStore(typeof(SubscriptionInfo));
 			ReunionTreeView.Model = ReunionTreeStore;
 			CellRendererPixbuf reunioncrp = new CellRendererPixbuf();
 			TreeViewColumn reuniontvc = new TreeViewColumn();
@@ -86,8 +89,8 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			string cellstr = (string) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = cellstr;
+			SubscriptionInfo subInfo = (SubscriptionInfo) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = subInfo.SubscriptionCollectionName;
 		}
 
 
@@ -101,6 +104,11 @@ namespace Novell.iFolder
 		private void RefreshView()
 		{
 			ReunionTreeStore.Clear();
+			SubscriptionInfo[] slist = PublicSubscription.GetSubscriptions();
+			foreach(SubscriptionInfo si in slist)
+			{
+				ReunionTreeStore.AppendValues(si);
+			}
 		}
 
 		public void ShowAll()
@@ -116,6 +124,30 @@ namespace Novell.iFolder
 		public void on_properties(object o, EventArgs args) 
 		{
 			Console.WriteLine("Show Properties");
+		}
+
+		public void on_row_activated(object o, EventArgs args)
+		{
+			TreeSelection tSelect = ReunionTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				SubscriptionInfo si = 
+						(SubscriptionInfo) tModel.GetValue(iter, 0);
+				if(si != null)
+				{
+					Subscription sub = 
+						new Subscription("Rendezvous", si);
+					
+					InvitationAssistant ia = 
+						new InvitationAssistant(sub);
+
+					ia.ShowAll();	
+				}
+			}
 		}
 
 		public void on_refresh(object o, EventArgs args) 
