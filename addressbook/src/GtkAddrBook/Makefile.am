@@ -26,10 +26,10 @@ BookLib.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
 
 install-exec-local: Book.exe BookLib.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) Book.exe BookLib.dll $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Book.exe BookLib.dll $(BookLib_RESOURCES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Book.exe BookLib.dll
+	cd $(DESTDIR)$(bindir); rm -f Book.exe BookLib.dll $(BookLib_RESOURCES)
     
 installcheck-local: install
 	
