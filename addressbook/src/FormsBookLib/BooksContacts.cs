@@ -350,6 +350,14 @@ namespace Novell.iFolder.FormsBookLib
 				this.loadPath = value;
 			}
 		}
+
+		public ImageList ContactImageList
+		{
+			get
+			{
+				return contacts.SmallImageList;
+			}
+		}
 		#endregion
 
 		#region Public Methods

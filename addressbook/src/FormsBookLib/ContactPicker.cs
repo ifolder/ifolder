@@ -153,6 +153,7 @@ namespace Novell.iFolder.FormsBookLib
 			// 
 			// booksContacts1
 			// 
+			this.booksContacts1.LoadPath = null;
 			this.booksContacts1.Location = new System.Drawing.Point(8, 0);
 			this.booksContacts1.Name = "booksContacts1";
 			this.booksContacts1.Size = new System.Drawing.Size(304, 400);
@@ -177,6 +178,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.Name = "ContactPicker";
 			this.ShowInTaskbar = false;
 			this.Text = "Contact Picker";
+			this.Load += new System.EventHandler(this.ContactPicker_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -222,6 +224,7 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				ListViewItem item = (ListViewItem)contactEnumerator.Current;
 				ListViewItem addedItem = new ListViewItem(item.Text);
+				addedItem.ImageIndex = item.ImageIndex;
 				addedItem.Tag = item;
 				addedContacts.Items.Add(addedItem);
 				item.ForeColor = Color.Gray;
@@ -306,6 +309,11 @@ namespace Novell.iFolder.FormsBookLib
 		private void addedContacts_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			this.remove.Enabled = addedContacts.SelectedItems.Count > 0;
+		}
+
+		private void ContactPicker_Load(object sender, System.EventArgs e)
+		{
+			this.addedContacts.SmallImageList = this.booksContacts1.ContactImageList;		
 		}
 		#endregion
 	}
