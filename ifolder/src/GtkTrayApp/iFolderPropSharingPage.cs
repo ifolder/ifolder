@@ -95,14 +95,27 @@ namespace Novell.iFolder
 					new TreeCellDataFunc(UserCellTextDataFunc));
 			UserColumn.Title = "Users";
 			UserTreeView.AppendColumn(UserColumn);
+			UserColumn.Resizable = true;
 
+			CellRendererText statecr = new CellRendererText();
+//			statecr.Xalign = 1;
+			statecr.Xpad = 10;
+			TreeViewColumn stateColumn = 
 			UserTreeView.AppendColumn("State",
-					new CellRendererText(),
+					statecr,
 					new TreeCellDataFunc(StateCellTextDataFunc));
+//			stateColumn.Alignment = 1;
+			stateColumn.Resizable = true;
 
+			CellRendererText accesscr = new CellRendererText();
+//			accesscr.Xalign = 1;
+			accesscr.Xpad = 10;
+			TreeViewColumn accessColumn = 
 			UserTreeView.AppendColumn("Access",
-					new CellRendererText(),
+					accesscr,
 					new TreeCellDataFunc(AccessCellTextDataFunc));
+//			accessColumn.Alignment = 1;
+			accessColumn.Resizable = true;
 
 //			UserTreeView.Selection.Changed +=
 //				new EventHandler(OnUserSelectionChanged);

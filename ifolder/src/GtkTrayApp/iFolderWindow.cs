@@ -160,7 +160,7 @@ namespace Novell.iFolder
 
 			ShareMenuItem = new MenuItem ("Share _with...");
 			iFolderMenu.Append(ShareMenuItem);
-//			ShareMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			ShareMenuItem.Activated += new EventHandler(OnShareProperties);
 
 			ConflictMenuItem = new MenuItem ("Re_solve Conflicts");
 			iFolderMenu.Append(ConflictMenuItem);
@@ -544,7 +544,7 @@ namespace Novell.iFolder
 									new MenuItem ("Share with...");
 								ifMenu.Append (item_share);
 								item_share.Activated += new EventHandler(
-										on_shareifolder_context_menu);
+										OnShareProperties);
 
 								MenuItem item_revert = 
 									new MenuItem ("Revert to a Normal Folder");
@@ -674,37 +674,23 @@ namespace Novell.iFolder
 
 
 
-		public void on_shareifolder_context_menu(object o, EventArgs args)
+		public void OnShareProperties(object o, EventArgs args)
 		{
-			TreeSelection tSelect = iFolderTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
-			{
-				TreeModel tModel;
-				TreeIter iter;
-
-				tSelect.GetSelected(out tModel, out iter);
-				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
-/*
-				CollectionProperties colProp = new CollectionProperties();
-				colProp.TransientFor = this;
-				colProp.Collection = ifolder;
-				colProp.ActiveTag = 1;
-				colProp.Run();
-*/
-
-/*				iFolderProperties ifProp = new iFolderProperties();
-				ifProp.TransientFor = this;
-				ifProp.CurrentiFolder = ifolder;
-				ifProp.ActiveTag = 1;
-				ifProp.Run();
-*/
-			}
+			ShowProperties(1);
 		}
 
 
 
 
 		public void OnShowProperties(object o, EventArgs args)
+		{
+			ShowProperties(0);
+		}
+
+
+
+
+		private void ShowProperties(int currentPage)
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -721,6 +707,7 @@ namespace Novell.iFolder
 						new iFolderPropertiesDialog(this, ifolder, iFolderWS);
 					PropertiesDialog.Response += 
 							new ResponseHandler(OnPropertiesDialogResponse);
+					PropertiesDialog.CurrentPage = currentPage;
 					PropertiesDialog.ShowAll();
 				}
 				catch(Exception e)
