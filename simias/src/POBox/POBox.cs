@@ -104,7 +104,7 @@ namespace Simias.POBox
 		/// <param name="storeObject">The Store object that the POBox will belong to.</param>
 		/// <param name="collectionName">The name of the POBox.</param>
 		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
-		internal POBox(Store storeObject, string collectionName, string domainName) :
+		public POBox(Store storeObject, string collectionName, string domainName) :
 			base (storeObject, collectionName, domainName)
 		{
 			SetType(this, typeof(POBox).Name);
@@ -118,7 +118,7 @@ namespace Simias.POBox
 		/// <param name="collectionName">The name of the POBox.</param>
 		/// <param name="collectionID">The identifier of the POBox.</param>
 		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
-		internal POBox(Store storeObject, string collectionName, string collectionID, string domainName) :
+		public POBox(Store storeObject, string collectionName, string collectionID, string domainName) :
 			base( storeObject, collectionName, collectionID, domainName )
 		{
 			SetType(this, typeof(POBox).Name);
@@ -197,7 +197,7 @@ namespace Simias.POBox
 				string name = "POBox:" + domainId + ":" + userId;
 				poBox = new POBox(storeObject, name, domainId);
 				
-				Roster roster = storeObject.GetRoster( storeObject.DefaultDomain );
+				Roster roster = storeObject.GetRoster( domainId );
 				Member current = roster.GetMemberByID(userId);
 
 				Member member = new Member(current.Name, current.UserID, Access.Rights.ReadWrite);
