@@ -62,7 +62,6 @@ public class SynkerA: SyncLogicFactory
 /// </summary>
 public class SynkerServiceA: SyncCollectionService
 {
-	SyncCollection collection;
 	Access.Rights	rights = Access.Rights.Deny;
 	SyncOps ops;
 	IncomingNode inNode;
@@ -73,7 +72,6 @@ public class SynkerServiceA: SyncCollectionService
 	/// </summary>
 	public SynkerServiceA(SyncCollection collection) : base(collection)
 	{
-		this.collection = collection;
 	}
 
 	
@@ -120,6 +118,10 @@ public class SynkerServiceA: SyncCollectionService
 	public void Stop()
 	{
 		collection.Revert();
+		this.ops = null;
+		this.inNode = null;
+		this.outNode = null;
+		this.collection = null;
 		System.Runtime.Remoting.RemotingServices.Disconnect(this);
 	}
 
