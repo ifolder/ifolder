@@ -947,7 +947,7 @@ namespace Novell.iFolder.Web
 			catch (Exception e)
 			{
 				DateTime lastRosterSyncTime = SyncClient.GetLastSyncTime(roster.ID);
-				if (lastRosterSyncTime.Equals(DateTime.MinValue))
+				if (roster.Role.Equals(SyncRoles.Slave) && lastRosterSyncTime.Equals(DateTime.MinValue))
 				{
 					// The roster is still syncing.
 					throw new Exception("The initial synchronization of the roster has not completed.");
