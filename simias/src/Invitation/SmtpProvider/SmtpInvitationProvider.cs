@@ -61,8 +61,8 @@ namespace Simias.Invite
 			// body
 			StringBuilder buffer = new StringBuilder();
 			
-			buffer.AppendFormat("{0} is sharing the \"{1}\" {2} with you.\n\n",
-				invitation.FromName, invitation.CollectionName, invitation.CollectionType);
+			buffer.AppendFormat("{0} is sharing the \"{1}\" with you.\n\n",
+				invitation.FromName, invitation.CollectionName);
 
 			if (invitation.Message != null)
 			{
@@ -72,11 +72,9 @@ namespace Simias.Invite
 			buffer.AppendFormat("You have been given {0} rights.\n\n",
 				invitation.CollectionRights);
 
-			buffer.AppendFormat("To add the {0} to this client, open the attached file.\n\n",
-				invitation.CollectionType);
+			buffer.AppendFormat("To add the collection to this client, open the attached file.\n\n");
 
-			buffer.AppendFormat("Before accepting this {0} you must install the Simias client.\n\n",
-				invitation.CollectionType);
+			buffer.AppendFormat("Before accepting this collection you must install the Simias client.\n\n");
 
 			buffer.AppendFormat("For details, go to http://www.novell.com/ifolder .\n\n");
 

@@ -66,9 +66,11 @@ namespace Simias.Sync.Tests
 				Directory.Delete(path, true);
 			}
 
-			store = Store.Connect(new Uri(path), null);
+			Configuration config = new Configuration(path);
+			
+			store = new Store(config);
 
-			watcher = new StoreWatcher(path);
+			watcher = new StoreWatcher(config);
 
 			watcher.Created +=new CreatedCollectionEventHandler(this.OnCreated);
 			watcher.Deleted +=new DeletedCollectionEventHandler(this.OnDeleted);
@@ -87,11 +89,7 @@ namespace Simias.Sync.Tests
 			watcher.Stop();
 			watcher.Dispose();
 
-			// kludge for the store provider
-			GC.Collect();
-
 			// remove store
-			store.ImpersonateUser(Access.StoreAdminRole);
 			store.Delete();
 			store = null;
 		}
@@ -121,8 +119,8 @@ namespace Simias.Sync.Tests
 		{
 			Assert(count == 2);
 
-			Collection c = store.CreateCollection("Test Collection 1");
-			c.Commit(true);
+			Collection c = new Collection(store, "Test Collection 1");
+			c.Commit();
 
 			Thread.Sleep(TimeSpan.FromSeconds(watcher.Interval + 1));
 

@@ -94,6 +94,11 @@
                     Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "StoreWatcher"
+                    Project = "{6A5EF608-400F-4E03-B80C-CEA54C8ABE21}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

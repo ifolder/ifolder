@@ -55,6 +55,11 @@ namespace Simias.Sync
 		public static readonly string IntervalPropertyName = "Sync Interval";
 		
 		/// <summary>
+		/// A root path property name in a collection.
+		/// </summary>
+		public static readonly string RootPathPropertyName = "Root Path";
+		
+		/// <summary>
 		/// A collection property name of the sync logic class and assembly of the collection.
 		/// Only collection using the same sync logic can communicate.
 		/// </summary>
@@ -68,21 +73,19 @@ namespace Simias.Sync
 		}
 
 		public SyncCollection(Store store, Invitation invitation)
-			: base(store, invitation.CollectionName, invitation.CollectionId, )
+			: base(store, invitation.CollectionName, invitation.CollectionId,
+					invitation.Owner, invitation.Domain)
 		{
-			this.Type = invitation.CollectionType;
-			this.Domain = invitation.Domain;
 			this.MasterUri = invitation.MasterUri;
 			this.Role = SyncCollectionRoles.Slave;
+			this.RootPath = invitation.RootPath;
 			
-			// TODO:
-			//Path.Combine(invitation.RootPath, invitation.CollectionName)
-
 			// add any secret to the current identity chain
 			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
 			{
 				BaseContact identity = store.CurrentIdentity;
 				identity.CreateAlias(invitation.Domain, invitation.Identity, invitation.PublicKey);
+				store.GetLocalAddressBook().Commit(identity);
 			}
 		}
 
@@ -104,7 +107,7 @@ namespace Simias.Sync
 
 			invitation.CollectionId = ID;
 			invitation.CollectionName = Name;
-			invitation.CollectionType = Type;
+			invitation.Owner = Owner;
 			invitation.Domain = Domain;
 			invitation.MasterUri = MasterUri;
 			invitation.Identity = identity;
@@ -214,12 +217,21 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The syncing interval of the base collection.
+		/// The syncing interval of the collection.
 		/// </summary>
 		public int Interval
 		{
 			get { return (int)GetProperty(IntervalPropertyName, -1); }
 			set { SetProperty(IntervalPropertyName, value, true); }
+		}
+
+		/// <summary>
+		/// The root path of the collection.
+		/// </summary>
+		public string RootPath
+		{
+			get { return (string)GetProperty(RootPathPropertyName); }
+			set { SetProperty(RootPathPropertyName, value, true); }
 		}
 
 		/// <summary>

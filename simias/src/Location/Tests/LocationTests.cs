@@ -78,7 +78,7 @@ namespace Simias.Location.Tests
 			// locate collection
 			LocationService service = new LocationService(configuration);
 
-			Uri location = service.Locate(collection.Id);
+			Uri location = service.Locate(collection.ID);
 
 			Assert("Location Not Found!", location != null);
 

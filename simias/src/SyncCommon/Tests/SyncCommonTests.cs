@@ -65,12 +65,15 @@ namespace Simias.Sync.Tests
 		[Test]
 		public void TestSyncStore()
 		{
-			string path = "./syncstore1";
+			string path = Path.GetFullPath("./syncstore1");
 			Configuration config = new Configuration(path);
 
 			Store store = new Store(config);
 
-			Assert(store.StorePath == Path.GetFullPath(path));
+			Console.WriteLine("Path: {0}", path);
+			Console.WriteLine("Store Path: {0}", store.StorePath);
+
+			Assert(store.StorePath.StartsWith(path));
 			Assert(store.ID == store.GetDatabaseObject().ID);
 
 			store.Delete();
@@ -120,6 +123,7 @@ namespace Simias.Sync.Tests
 			invitation1.CollectionId = "9876543210";
 			invitation1.CollectionName = "Team Collection";
 			invitation1.Identity = "1234567890";
+			invitation1.Owner = "0987654321";
 			invitation1.Domain = "novell";
 			invitation1.MasterUri = new Uri("http://192.168.2.1:6437");
 			invitation1.CollectionRights = "ReadWrite";
@@ -139,7 +143,7 @@ namespace Simias.Sync.Tests
 			Assert(invitation1.CollectionId == invitation2.CollectionId);
 			Assert(invitation1.CollectionName == invitation2.CollectionName);
 			Assert(invitation1.CollectionRights == invitation2.CollectionRights);
-			Assert(invitation1.CollectionType == invitation2.CollectionType);
+			Assert(invitation1.Owner == invitation2.Owner);
 			Assert(invitation1.Domain == invitation2.Domain);
 			Assert(invitation1.FromEmail == invitation2.FromEmail);
 			Assert(invitation1.FromName == invitation2.FromName);

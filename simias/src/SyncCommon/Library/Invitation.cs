@@ -149,12 +149,12 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The type of the Collection
+		/// The owner of the Collection
 		/// </summary>
-		public string CollectionType
+		public string Owner
 		{
-			get { return fields["CollectionType"]; }
-			set { fields["CollectionType"] = value; }
+			get { return fields["Owner"]; }
+			set { fields["Owner"] = value; }
 		}
 
 		/// <summary>

@@ -55,11 +55,8 @@ namespace Simias.Invite
 		/// <returns>The generated invitation object</returns>
 		public static Invitation CreateInvitation(Collection collection, string identity)
 		{
-			// open the store
-			SyncStore syncStore = new SyncStore(collection.LocalStore);
-
-			// open the collection
-			SyncCollection syncCollection = syncStore.OpenCollection(collection.Id);
+			// get the collection
+			SyncCollection syncCollection = new SyncCollection(collection);
 
 			// generate the invitation
 			Invitation invitation = syncCollection.CreateInvitation(identity);
@@ -94,11 +91,8 @@ namespace Simias.Invite
 				invitation.RootPath = Invitation.DefaultRootPath;
 			}
 			
-			// add the invitation information to the store collection
-			SyncStore sstore = new SyncStore(store);
-
 			// create the slave collection with the invitation
-			SyncCollection collection = sstore.CreateCollection(invitation);
+			SyncCollection collection = new SyncCollection(store, invitation);
 
 			// save the new collection
 			collection.Commit();
