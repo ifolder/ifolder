@@ -40,6 +40,7 @@ install-exec-local:
 	$(INSTALL_PROGRAM) stdsoap2.h $(DESTDIR)$(includedir)/simias
 	$(INSTALL_PROGRAM) simiasH.h $(DESTDIR)$(includedir)/simias
 	$(INSTALL_PROGRAM) simias.h $(DESTDIR)$(includedir)/simias
+	$(INSTALL_PROGRAM) simiasweb.h $(DESTDIR)$(includedir)/simias
 
 uninstall-local:
 	rm -f $(DESTDIR)$(includedir)/simias/simiasStub.h
@@ -47,6 +48,7 @@ uninstall-local:
 	rm -f $(DESTDIR)$(includedir)/simias/stdsoap2.h
 	rm -f $(DESTDIR)$(includedir)/simias/simiasH.h
 	rm -f $(DESTDIR)$(includedir)/simias/simias.h
+	rm -f $(DESTDIR)$(includedir)/simias/simiasweb.h
 
 clean-local:
 	rm -f stdsoap2.* *.xml simias.nsmap simiasC* simiasH* simiasS* env* soap*

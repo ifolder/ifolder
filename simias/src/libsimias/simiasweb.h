@@ -25,6 +25,7 @@
 
 #include <stdbool.h>
 
+#include "simias.h"
 
 #ifndef _SIMIAS_DOMAIN_TYPE
 #define _SIMIAS_DOMAIN_TYPE
