@@ -431,9 +431,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
+
+				Contact cnt = (Contact) tModel.GetValue(iter,0);
 
 				if(cnt != null)
 				{
@@ -465,9 +464,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				AddressBook ab = (AddressBook) BookTreeStore.GetValue(iter,0);
+
+				AddressBook ab = (AddressBook) tModel.GetValue(iter,0);
 				if(ab.Default)
 				{
 					MessageDialog med = new MessageDialog(cbWindow,
@@ -481,7 +479,7 @@ namespace Novell.iFolder
 					return;
 				}
 
-				BookTreeStore.Remove(out iter);
+				BookTreeStore.Remove(ref iter);
 
 				try
 				{
@@ -548,10 +546,8 @@ namespace Novell.iFolder
 				ExportButton.Sensitive = true;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				Contact c = (Contact) 
-					ContactTreeStore.GetValue(iter,0);
+
+				Contact c = (Contact) tModel.GetValue(iter,0);
 
 				DisplayContactDetails(c);
 			}
@@ -571,9 +567,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				curAddrBook = (AddressBook) BookTreeStore.GetValue(iter,0);
+
+				curAddrBook = (AddressBook) tModel.GetValue(iter,0);
 
 				CreateContactButton.Sensitive = true;
 				ContactTreeStore.Clear();
@@ -669,9 +664,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
+
+				Contact cnt = (Contact) tModel.GetValue(iter,0);
 				if(cnt.IsCurrentUser)
 				{
 					MessageDialog med = new MessageDialog(cbWindow,
@@ -685,7 +679,7 @@ namespace Novell.iFolder
 					return;
 				}
 
-				ContactTreeStore.Remove(out iter);
+				ContactTreeStore.Remove(ref iter);
 
 				try
 				{
@@ -725,11 +719,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
 
-				Contact c = (Contact) 
-					ContactTreeStore.GetValue(iter,0);
+				Contact c = (Contact) tModel.GetValue(iter,0);
 
 				ContactEditor ce = new ContactEditor();
 				ce.TransientFor = cbWindow;

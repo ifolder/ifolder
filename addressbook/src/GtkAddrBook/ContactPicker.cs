@@ -353,7 +353,7 @@ namespace Novell.iFolder
 				TreeIter iter = (TreeIter) iterQueue.Dequeue();
 				Contact c = (Contact) SelectedTreeStore.GetValue(iter,0);
 				selectedContacts.Remove(c.ID);
-				SelectedTreeStore.Remove(out iter);
+				SelectedTreeStore.Remove(ref iter);
 			}
 		}
 
@@ -581,7 +581,7 @@ namespace Novell.iFolder
 				}
 				else
 				{
-					ContactTreeStore.Remove(out iter);
+					ContactTreeStore.Remove(ref iter);
 
 					try
 					{
@@ -660,7 +660,7 @@ namespace Novell.iFolder
 					return;
 				}
 
-				BookTreeStore.Remove(out iter);
+				BookTreeStore.Remove(ref iter);
 
 				try
 				{
