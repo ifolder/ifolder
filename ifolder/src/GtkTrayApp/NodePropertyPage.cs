@@ -73,7 +73,7 @@ namespace Novell.iFolder
 					new CellRendererText(), 
 					new TreeCellDataFunc(ValueCellTextDataFunc));
 
-			PropertyPixBuf = new Pixbuf("property.xpm");
+			PropertyPixBuf = new Pixbuf("property.png");
 			foreach(Simias.Storage.Property prop in node.Properties)
 			{
 				PropertyTreeStore.AppendValues(prop);

@@ -209,7 +209,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			SharingListHolder slh = (SharingListHolder) ContactTreeStore.GetValue(iter,0);
-			if(slh.ABContact.IsCurrentUser)
+			if( (slh != null) && (slh.ABContact != null) && slh.ABContact.IsCurrentUser)
 				((CellRendererPixbuf) cell).Pixbuf = CurContactPixBuf;
 			else
 				((CellRendererPixbuf) cell).Pixbuf = ContactPixBuf;
