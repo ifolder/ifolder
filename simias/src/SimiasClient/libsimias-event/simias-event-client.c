@@ -116,6 +116,14 @@ static char * sec_server_config_elements [] = {
 
 typedef enum
 {
+	CLIENT_STATE_INITIALIZING,	/* Used also if client is reconnecting */
+	CLIENT_STATE_REGISTERING,
+	CLIENT_STATE_RUNNING,
+	CLIENT_STATE_SHUTDOWN
+} CLIENT_STATE;
+
+typedef enum
+{
 	REG_THREAD_STATE_INITIALIZING,
 	REG_THREAD_STATE_RUNNING,
 	REG_THREAD_STATE_TERMINATED,
@@ -543,14 +551,6 @@ sec_set_event (SimiasEventClient sec,
 	}
 	
 	return 0;
-}
-
-CLIENT_STATE
-sec_get_state (SimiasEventClient sec)
-{
-	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
-	
-	return ec->state;
 }
 /* #endregion */
 
