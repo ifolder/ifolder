@@ -299,7 +299,7 @@ namespace Simias.Domain
 		{
 			if (store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
 			{
-				throw new SimiasException("The WorkGroup domain cannot be used.");
+//				throw new SimiasException("The WorkGroup domain cannot be used.");
 			}
 
 			domainConfiguration = new DomainConfig(store.DefaultDomain);
@@ -322,7 +322,7 @@ namespace Simias.Domain
 		{
 			if (domainID == Simias.Storage.Domain.WorkGroupDomainID)
 			{
-				throw new SimiasException("The WorkGroup domain cannot be used.");
+//				throw new SimiasException("The WorkGroup domain cannot be used.");
 			}
 
 			domainConfiguration = new DomainConfig(domainID);
