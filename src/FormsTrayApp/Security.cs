@@ -158,194 +158,206 @@ namespace Novell.FormsTrayApp
 		/// <returns><b>True</b> if the ACE was successfully set; otherwise, <b>False</b>.</returns>
 		public bool SetAccess(string Path, int AceFlags, uint AccessMask)
 		{
+			bool retValue = false;
 			IntPtr pSid = IntPtr.Zero;
 			IntPtr fileSD = IntPtr.Zero;
 			IntPtr pNewAcl = IntPtr.Zero;
 			try
 			{
-				// Create the SID for the Users group.
-				SID_IDENTIFIER_AUTHORITY ntAuthority;
-				ntAuthority.Value0 = ntAuthority.Value1 = ntAuthority.Value2 = ntAuthority.Value3 = ntAuthority.Value4 = 0;
-				ntAuthority.Value5 = 5;
-				if (!AllocateAndInitializeSid(
-					ref ntAuthority,
-					2,
-					SECURITY_BUILTIN_DOMAIN_RID,
-					DOMAIN_ALIAS_RID_USERS,
-					0, 0, 0, 0, 0, 0,
-					ref pSid))
+				try
 				{
-					return false;
-				}
-
-				// Get the size of the security descriptor for the directory.
-				int sdLength = 0;
-				if (!GetFileSecurity(Path, DACL_SECURITY_INFORMATION, fileSD, 0, out sdLength))
-				{
-					if (Marshal.GetLastWin32Error() != ERROR_INSUFFICIENT_BUFFER)
+					// Create the SID for the Users group.
+					SID_IDENTIFIER_AUTHORITY ntAuthority;
+					ntAuthority.Value0 = ntAuthority.Value1 = ntAuthority.Value2 = ntAuthority.Value3 = ntAuthority.Value4 = 0;
+					ntAuthority.Value5 = 5;
+					if (!AllocateAndInitializeSid(
+						ref ntAuthority,
+						2,
+						SECURITY_BUILTIN_DOMAIN_RID,
+						DOMAIN_ALIAS_RID_USERS,
+						0, 0, 0, 0, 0, 0,
+						ref pSid))
 					{
 						return false;
 					}
 
-					// Allocate the security descriptor
-					fileSD = Marshal.AllocHGlobal(sdLength);
-
-					// Get the security descriptor for the directory.
-					if (!GetFileSecurity(Path, DACL_SECURITY_INFORMATION, fileSD, sdLength, out sdLength))
+					// Get the size of the security descriptor for the directory.
+					int sdLength = 0;
+					if (!GetFileSecurity(Path, DACL_SECURITY_INFORMATION, fileSD, 0, out sdLength))
 					{
-						return false;
-					}
-
-					// Get DACL from the old SD.
-					bool bDaclPresent;
-					bool bDaclDefaulted;
-					IntPtr aclPtr = IntPtr.Zero;
-					if (!GetSecurityDescriptorDacl(fileSD, out bDaclPresent, ref aclPtr, out bDaclDefaulted))
-					{
-						return false;
-					}
-
-					// Put the data in an ACL structure.
-					MemoryMarshaler mm = new MemoryMarshaler(aclPtr);
-					ACL acl = (ACL)mm.ParseStruct(typeof(ACL));
-					
-					// Compute size needed for the new ACL.
-					ACCESS_ALLOWED_ACE accessAllowedAce = new ACCESS_ALLOWED_ACE();
-					int n1 = Marshal.SizeOf(accessAllowedAce);
-					int n2 = Marshal.SizeOf(n1);
-					int cbNewAcl = acl.AclSize + 12 /*sizeof(ACCESS_ALLOWED_ACE)*/ + GetLengthSid(pSid) - 4 /*sizeof(int)*/;
-		
-					// Allocate memory for new ACL.
-					pNewAcl = Marshal.AllocHGlobal(cbNewAcl);
-		
-					// Initialize the new ACL.
-					if (!InitializeAcl(pNewAcl, cbNewAcl, ACL_REVISION))
-					{
-						return false;
-					}
-		
-					// If DACL is present, copy all the ACEs from the old DACL
-					// to the new DACL.
-					uint newAceIndex = 0;
-					IntPtr acePtr = IntPtr.Zero;
-					int CurrentAceIndex = 0;
-					if (bDaclPresent && (acl.AceCount > 0))
-					{
-						for (CurrentAceIndex = 0; CurrentAceIndex < acl.AceCount; CurrentAceIndex++)
-						{
-							// Get the ACE.
-							if (!GetAce(aclPtr, CurrentAceIndex, ref acePtr))
-							{
-								return false;
-							}
-
-							// Put the data in an ACCESS_ALLOWED_ACE structure.
-							mm.Ptr = acePtr;
-							accessAllowedAce = (ACCESS_ALLOWED_ACE)mm.ParseStruct(typeof(ACCESS_ALLOWED_ACE));
-
-							// Check if it is a non-inherited ACE.
-							if ((accessAllowedAce.Header.AceFlags & INHERITED_ACE) == INHERITED_ACE)
-								break;
-
-							// Get the memory that holds the SID.
-							mm.Ptr = acePtr;
-							mm.Advance(8);
-
-							// If the SID matches, don't add the ACE.
-							if (EqualSid(pSid, mm.Ptr))
-								continue;
-
-							// Add the ACE to the new ACL.
-							if (!AddAce(pNewAcl, ACL_REVISION, MAXDWORD, acePtr, accessAllowedAce.Header.AceSize))
-							{
-								return false;
-							}
-
-							newAceIndex++;
-						}
-					}
-		
-					// Add the access-allowed ACE to the new DACL.
-					if (!AddAccessAllowedAceEx(pNewAcl, ACL_REVISION, AceFlags, AccessMask, pSid))
-					{
-						return false;
-					}
-
-					// Copy the rest of inherited ACEs from the old DACL to the new DACL.
-					if (bDaclPresent && (acl.AceCount > 0))
-					{
-						for (; CurrentAceIndex < acl.AceCount; CurrentAceIndex++)
-						{
-							// Get the ACE.
-							if (!GetAce(aclPtr, CurrentAceIndex, ref acePtr))
-							{
-								return false;
-							}
-
-							// Put the data in an ACCESS_ALLOWED_ACE structure.
-							mm.Ptr = acePtr;
-							accessAllowedAce = (ACCESS_ALLOWED_ACE)mm.ParseStruct(typeof(ACCESS_ALLOWED_ACE));
-
-							// Add the ACE to the new ACL.
-							if (!AddAce(pNewAcl, ACL_REVISION, MAXDWORD, acePtr, accessAllowedAce.Header.AceSize))
-							{
-								return false;
-							}
-						}
-					}
-
-					// Create a new security descriptor to set on the directory.
-					SECURITY_DESCRIPTOR newSD;
-					newSD.Revision = (byte)SECURITY_DESCRIPTOR_REVISION;
-					newSD.Sbz1 = 0;
-					newSD.Control = 0;
-					newSD.Owner = IntPtr.Zero;
-					newSD.Group = IntPtr.Zero;
-					newSD.Sacl = IntPtr.Zero;
-					newSD.Dacl = IntPtr.Zero;
-
-					// Set the new DACL to the new SD.
-					if (!SetSecurityDescriptorDacl(ref newSD, true, pNewAcl, false))
-					{
-						return false;
-					}
-		
-					// Copy the old security descriptor control flags 
-					short controlBitsOfInterest = 0;
-					short controlBitsToSet = 0;
-					short oldControlBits = 0;
-					int revision = 0;
-		
-					if (!GetSecurityDescriptorControl(fileSD, out oldControlBits, out revision))
-					{
-						return false;
-					}
-		
-					if ((oldControlBits & SE_DACL_AUTO_INHERITED) == SE_DACL_AUTO_INHERITED)
-					{
-						controlBitsOfInterest = (short)(SE_DACL_AUTO_INHERIT_REQ | SE_DACL_AUTO_INHERITED);
-						controlBitsToSet = controlBitsOfInterest;
-					}
-					else if ((oldControlBits & SE_DACL_PROTECTED) == SE_DACL_PROTECTED)
-					{
-						controlBitsOfInterest = (short)SE_DACL_PROTECTED;
-						controlBitsToSet = controlBitsOfInterest;
-					}
-		
-					if (controlBitsOfInterest > 0)
-					{
-						if (!SetSecurityDescriptorControl(ref newSD, controlBitsOfInterest, controlBitsToSet))
+						if (Marshal.GetLastWin32Error() != ERROR_INSUFFICIENT_BUFFER)
 						{
 							return false;
 						}
-					}
+
+						// Allocate the security descriptor
+						fileSD = Marshal.AllocHGlobal(sdLength);
+
+						// Get the security descriptor for the directory.
+						if (!GetFileSecurity(Path, DACL_SECURITY_INFORMATION, fileSD, sdLength, out sdLength))
+						{
+							return false;
+						}
+
+						// Get DACL from the old SD.
+						bool bDaclPresent;
+						bool bDaclDefaulted;
+						IntPtr aclPtr = IntPtr.Zero;
+						if (!GetSecurityDescriptorDacl(fileSD, out bDaclPresent, ref aclPtr, out bDaclDefaulted))
+						{
+							return false;
+						}
+
+						if (aclPtr.Equals(IntPtr.Zero))
+						{
+							return false;
+						}
+
+						// Put the data in an ACL structure.
+						MemoryMarshaler mm = new MemoryMarshaler(aclPtr);
+						ACL acl = (ACL)mm.ParseStruct(typeof(ACL));
+					
+						// Compute size needed for the new ACL.
+						ACCESS_ALLOWED_ACE accessAllowedAce = new ACCESS_ALLOWED_ACE();
+						int n1 = Marshal.SizeOf(accessAllowedAce);
+						int n2 = Marshal.SizeOf(n1);
+						int cbNewAcl = acl.AclSize + 12 /*sizeof(ACCESS_ALLOWED_ACE)*/ + GetLengthSid(pSid) - 4 /*sizeof(int)*/;
 		
-					// Set the new SD to the File.
-					if (!SetFileSecurity(Path, DACL_SECURITY_INFORMATION, ref newSD))
-					{
-						return false;
+						// Allocate memory for new ACL.
+						pNewAcl = Marshal.AllocHGlobal(cbNewAcl);
+		
+						// Initialize the new ACL.
+						if (!InitializeAcl(pNewAcl, cbNewAcl, ACL_REVISION))
+						{
+							return false;
+						}
+		
+						// If DACL is present, copy all the ACEs from the old DACL
+						// to the new DACL.
+						uint newAceIndex = 0;
+						IntPtr acePtr = IntPtr.Zero;
+						int CurrentAceIndex = 0;
+						if (bDaclPresent && (acl.AceCount > 0))
+						{
+							for (CurrentAceIndex = 0; CurrentAceIndex < acl.AceCount; CurrentAceIndex++)
+							{
+								// Get the ACE.
+								if (!GetAce(aclPtr, CurrentAceIndex, ref acePtr))
+								{
+									return false;
+								}
+
+								// Put the data in an ACCESS_ALLOWED_ACE structure.
+								mm.Ptr = acePtr;
+								accessAllowedAce = (ACCESS_ALLOWED_ACE)mm.ParseStruct(typeof(ACCESS_ALLOWED_ACE));
+
+								// Check if it is a non-inherited ACE.
+								if ((accessAllowedAce.Header.AceFlags & INHERITED_ACE) == INHERITED_ACE)
+									break;
+
+								// Get the memory that holds the SID.
+								mm.Ptr = acePtr;
+								mm.Advance(8);
+
+								// If the SID matches, don't add the ACE.
+								if (EqualSid(pSid, mm.Ptr))
+									continue;
+
+								// Add the ACE to the new ACL.
+								if (!AddAce(pNewAcl, ACL_REVISION, MAXDWORD, acePtr, accessAllowedAce.Header.AceSize))
+								{
+									return false;
+								}
+
+								newAceIndex++;
+							}
+						}
+		
+						// Add the access-allowed ACE to the new DACL.
+						if (!AddAccessAllowedAceEx(pNewAcl, ACL_REVISION, AceFlags, AccessMask, pSid))
+						{
+							return false;
+						}
+
+						// Copy the rest of inherited ACEs from the old DACL to the new DACL.
+						if (bDaclPresent && (acl.AceCount > 0))
+						{
+							for (; CurrentAceIndex < acl.AceCount; CurrentAceIndex++)
+							{
+								// Get the ACE.
+								if (!GetAce(aclPtr, CurrentAceIndex, ref acePtr))
+								{
+									return false;
+								}
+
+								// Put the data in an ACCESS_ALLOWED_ACE structure.
+								mm.Ptr = acePtr;
+								accessAllowedAce = (ACCESS_ALLOWED_ACE)mm.ParseStruct(typeof(ACCESS_ALLOWED_ACE));
+
+								// Add the ACE to the new ACL.
+								if (!AddAce(pNewAcl, ACL_REVISION, MAXDWORD, acePtr, accessAllowedAce.Header.AceSize))
+								{
+									return false;
+								}
+							}
+						}
+
+						// Create a new security descriptor to set on the directory.
+						SECURITY_DESCRIPTOR newSD;
+						newSD.Revision = (byte)SECURITY_DESCRIPTOR_REVISION;
+						newSD.Sbz1 = 0;
+						newSD.Control = 0;
+						newSD.Owner = IntPtr.Zero;
+						newSD.Group = IntPtr.Zero;
+						newSD.Sacl = IntPtr.Zero;
+						newSD.Dacl = IntPtr.Zero;
+
+						// Set the new DACL to the new SD.
+						if (!SetSecurityDescriptorDacl(ref newSD, true, pNewAcl, false))
+						{
+							return false;
+						}
+		
+						// Copy the old security descriptor control flags 
+						short controlBitsOfInterest = 0;
+						short controlBitsToSet = 0;
+						short oldControlBits = 0;
+						int revision = 0;
+		
+						if (!GetSecurityDescriptorControl(fileSD, out oldControlBits, out revision))
+						{
+							return false;
+						}
+		
+						if ((oldControlBits & SE_DACL_AUTO_INHERITED) == SE_DACL_AUTO_INHERITED)
+						{
+							controlBitsOfInterest = (short)(SE_DACL_AUTO_INHERIT_REQ | SE_DACL_AUTO_INHERITED);
+							controlBitsToSet = controlBitsOfInterest;
+						}
+						else if ((oldControlBits & SE_DACL_PROTECTED) == SE_DACL_PROTECTED)
+						{
+							controlBitsOfInterest = (short)SE_DACL_PROTECTED;
+							controlBitsToSet = controlBitsOfInterest;
+						}
+		
+						if (controlBitsOfInterest > 0)
+						{
+							if (!SetSecurityDescriptorControl(ref newSD, controlBitsOfInterest, controlBitsToSet))
+							{
+								return false;
+							}
+						}
+		
+						// Set the new SD to the File.
+						if (!SetFileSecurity(Path, DACL_SECURITY_INFORMATION, ref newSD))
+						{
+							return false;
+						}
+
+						retValue = true;
 					}
 				}
+				catch {}
 			}
 			finally
 			{
@@ -366,7 +378,7 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-			return true;
+			return retValue;
 		}
 	}
 
