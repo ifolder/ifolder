@@ -203,7 +203,7 @@ namespace Simias.Web
 		/// <param name="PublicKey">The public key for the member.</param>
 		/// <param name="GivenName">The given name for the member.</param>
 		/// <param name="FamilyName">The family name for the member.</param>
-		[WebMethod(Description="Add a member to the domain.")]
+		[WebMethod(EnableSession=true, Description="Add a member to the domain.")]
 		[SoapDocumentMethod]
 		public void AddMemberToDomain(string DomainID, string MemberName, string MemberID, string PublicKey, string GivenName, string FamilyName)
 		{
@@ -251,7 +251,7 @@ namespace Simias.Web
 		/// </summary>
 		/// <param name="DomainID">The ID of the domain to remove the member from.</param>
 		/// <param name="MemberID">The ID of the member to remove.</param>
-		[WebMethod(Description="Remove a member from the domain.")]
+		[WebMethod(EnableSession=true, Description="Remove a member from the domain.")]
 		[SoapDocumentMethod]
 		public void RemoveMemberFromDomain(string DomainID, string MemberID)
 		{
@@ -271,7 +271,7 @@ namespace Simias.Web
 		/// <param name="domainID">The identifier of the domain.</param>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers
 		/// or FindFirstSpecificMembers methods.</param>
-		[WebMethod(Description="End the search for domain members.")]
+		[WebMethod(EnableSession=true, Description="End the search for domain members.")]
 		[SoapDocumentMethod]
 		public void FindCloseMembers( string domainID, string searchContext )
 		{
@@ -289,7 +289,7 @@ namespace Simias.Web
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Starts a search for all domain members.")]
+		[WebMethod(EnableSession=true, Description="Starts a search for all domain members.")]
 		[SoapDocumentMethod]
 		public bool FindFirstMembers( 
 			string domainID, 
@@ -338,7 +338,7 @@ namespace Simias.Web
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Starts a search for a specific set of domain members.")]
+		[WebMethod(EnableSession=true, Description="Starts a search for a specific set of domain members.")]
 		[SoapDocumentMethod]
 		public bool FindFirstSpecificMembers(
 			string domainID, 
@@ -390,7 +390,7 @@ namespace Simias.Web
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Continues the search for domain members from the current record location.")]
+		[WebMethod(EnableSession=true, Description="Continues the search for domain members from the current record location.")]
 		[SoapDocumentMethod]
 		public bool FindNextMembers( 
 			string domainID, 
@@ -429,7 +429,7 @@ namespace Simias.Web
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Continues the search for domain members previous to the current record location.")]
+		[WebMethod(EnableSession=true, Description="Continues the search for domain members previous to the current record location.")]
 		[SoapDocumentMethod]
 		public bool FindPreviousMembers( 
 			string domainID, 
@@ -470,7 +470,7 @@ namespace Simias.Web
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Continues the search for domain members from the specified record location.")]
+		[WebMethod(EnableSession=true, Description="Continues the search for domain members from the specified record location.")]
 		[SoapDocumentMethod]
 		public bool FindSeekMembers( 
 			string domainID, 
@@ -512,7 +512,7 @@ namespace Simias.Web
 		/// <returns>
 		/// string with Simias information
 		/// </returns>
-		[WebMethod(Description="GetSimiasInformation")]
+		[WebMethod(EnableSession=true, Description="GetSimiasInformation")]
 		[SoapDocumentMethod]
 		public string GetSimiasInformation()
 		{
@@ -527,7 +527,7 @@ namespace Simias.Web
 		/// <returns>
 		/// DomainInformation object
 		/// </returns>
-		[WebMethod(Description="GetDomainInformation")]
+		[WebMethod(EnableSession=true, Description="GetDomainInformation")]
 		[SoapDocumentMethod]
 		public
 		DomainInformation
@@ -557,7 +557,7 @@ namespace Simias.Web
 		/// <returns>
 		/// Array of DomainInformation objects
 		/// </returns>
-		[WebMethod(Description="Get a list of local domains")]
+		[WebMethod(EnableSession=true, Description="Get a list of local domains")]
 		[SoapDocumentMethod]
 		public
 		DomainInformation[]
@@ -608,7 +608,7 @@ namespace Simias.Web
 		/// <returns>
 		/// Simias.Client.Authentication.Status status
 		/// </returns>
-		[WebMethod(Description="Login or authenticate to a remote domain")]
+		[WebMethod(EnableSession=true, Description="Login or authenticate to a remote domain")]
 		[SoapDocumentMethod]
 		public
 		Simias.Authentication.Status
@@ -641,7 +641,7 @@ namespace Simias.Web
 		/// <returns>
 		/// Simias.Client.Authentication.Status status
 		/// </returns>
-		[WebMethod(Description="Logout from a remote domain")]
+		[WebMethod(EnableSession=true, Description="Logout from a remote domain")]
 		[SoapDocumentMethod]
 		public
 		Simias.Authentication.Status
@@ -656,7 +656,7 @@ namespace Simias.Web
 		/// WebMethod to disable automatic authentication to a domain.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to disable automatic authentication to.</param>
-		[WebMethod(Description="Disable automatic authentication to the specified domain")]
+		[WebMethod(EnableSession=true, Description="Disable automatic authentication to the specified domain")]
 		[SoapDocumentMethod]
 		public void	DisableDomainAutoLogin(string domainID)
 		{
@@ -675,7 +675,7 @@ namespace Simias.Web
 		/// <returns>
 		/// 0 success, !0 failed
 		/// </returns>
-		[WebMethod(Description="WebMethod to check if a domain is active")]
+		[WebMethod(EnableSession=true, Description="WebMethod to check if a domain is active")]
 		[SoapDocumentMethod]
 		public bool IsDomainActive(string domainID)
 		{
@@ -692,7 +692,7 @@ namespace Simias.Web
 		/// <returns>
 		/// 0 success, !0 failed
 		/// </returns>
-		[WebMethod(Description="SetDomainActive - enables synchronization to the remote server")]
+		[WebMethod(EnableSession=true, Description="SetDomainActive - enables synchronization to the remote server")]
 		[SoapDocumentMethod]
 		public int SetDomainActive(string domainID)
 		{
@@ -712,7 +712,7 @@ namespace Simias.Web
 		/// <returns>
 		/// 0 success, !0 failed
 		/// </returns>
-		[WebMethod(Description="SetDomainInactive - disables remote synchronization")]
+		[WebMethod(EnableSession=true, Description="SetDomainInactive - disables remote synchronization")]
 		[SoapDocumentMethod]
 		public int SetDomainInactive(string domainID)
 		{
@@ -731,7 +731,7 @@ namespace Simias.Web
 		/// <returns>
 		/// true - valid credentials for member on the domain, false
 		/// </returns>
-		[WebMethod(Description="ValidCredentials")]
+		[WebMethod(EnableSession=true, Description="ValidCredentials")]
 		[SoapDocumentMethod]
 		public
 		bool ValidCredentials(string domainID, string memberID)
@@ -782,7 +782,7 @@ namespace Simias.Web
 		/// on.</param>
 		/// <param name="credentials">Credentials to set.</param>
 		/// <param name="type">Type of credentials.</param>
-		[WebMethod(Description="Sets domain credentials in the local store")]
+		[WebMethod(EnableSession=true, Description="Sets domain credentials in the local store")]
 		[SoapDocumentMethod]
 		public void SetDomainCredentials(	string domainID, 
 											string credentials, 
@@ -802,7 +802,7 @@ namespace Simias.Web
 		/// <param name="userID">Gets the ID of the user.</param>
 		/// <param name="credentials">Gets the credentials for the domain.</param>
 		/// <returns>The type of credentials.</returns>
-		[WebMethod(Description="Get the saved credentials from a domain")]
+		[WebMethod(EnableSession=true, Description="Get the saved credentials from a domain")]
 		[SoapDocumentMethod]
 		public CredentialType GetDomainCredentials(string domainID, out string userID, out string credentials)
 		{
@@ -828,7 +828,7 @@ namespace Simias.Web
 		/// <returns>
 		/// The Domain object associated with this Server
 		/// </returns>
-		[WebMethod(Description="Connects to a Domain")]
+		[WebMethod(EnableSession=true, Description="Connects to a Domain")]
 		[SoapDocumentMethod]
 		public DomainInformation ConnectToDomain(string UserName,
 												 string Password,
@@ -867,7 +867,7 @@ namespace Simias.Web
 		/// If false, then the account will be deleted from every workstation 
 		/// that the user owns.
 		/// </param>
-		[WebMethod(Description="Removes a domain account from the workstation")]
+		[WebMethod(EnableSession=true, Description="Removes a domain account from the workstation")]
 		[SoapDocumentMethod]
 		public void LeaveDomain(string DomainID,
 								bool LocalOnly)
@@ -883,7 +883,7 @@ namespace Simias.Web
 		/// WebMethod that changes the default domain.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain to set as the default.</param>
-		[WebMethod(Description="Change the default domain to the specified domain ID")]
+		[WebMethod(EnableSession=true, Description="Change the default domain to the specified domain ID")]
 		[SoapDocumentMethod]
 		public void SetDefaultDomain(string domainID)
 		{
@@ -898,7 +898,7 @@ namespace Simias.Web
 		/// WebMethod that gets the ID of the default domain.
 		/// </summary>
 		/// <returns>The ID of the default domain.</returns>
-		[WebMethod(Description="Get the ID of the default domain")]
+		[WebMethod(EnableSession=true, Description="Get the ID of the default domain")]
 		[SoapDocumentMethod]
 		public string GetDefaultDomainID()
 		{
@@ -911,7 +911,7 @@ namespace Simias.Web
 		/// </summary>
 		/// <param name="host"></param>
 		/// <returns></returns>
-		[WebMethod(Description="Get the certificate of the specified host.")]
+		[WebMethod(EnableSession=true, Description="Get the certificate of the specified host.")]
 		[SoapDocumentMethod]
 		public byte[] GetCertificate(string host)
 		{
@@ -923,7 +923,7 @@ namespace Simias.Web
 		/// </summary>
 		/// <param name="certificate">The certificate to store.</param>
 		/// <param name="host">The host the certificate belongs to.</param>
-		[WebMethod(Description="Store the certificate for the specified host.")]
+		[WebMethod(EnableSession=true, Description="Store the certificate for the specified host.")]
 		[SoapDocumentMethod]
 		public void StoreCertificate(byte[] certificate, string host)
 		{

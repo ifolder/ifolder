@@ -43,83 +43,73 @@ namespace Simias.Sync.Web
 			// Set no cache-ing.
 			Response.Cache.SetCacheability(HttpCacheability.NoCache);
 
-			// Get the Domain ID.
-			string domainId = Request.Headers.Get(Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
-			// Set the current principal on this thread.
-			if ( Simias.Authentication.Http.GetMember( domainId, context ) != null )
+			string httpMethod = Request.HttpMethod;
+			SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);
+			if (string.Compare(httpMethod, "POST", true) == 0)
 			{
-				string httpMethod = Request.HttpMethod;
-				SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);
-				if (string.Compare(httpMethod, "POST", true) == 0)
+				// Determine What work we need to do.
+				switch (method)
 				{
-					// Determine What work we need to do.
-					switch (method)
-					{
-						case SyncMethod.StartSync:
-							Session.Timeout = 6;
-							Service = new HttpService();
-							Session[ServiceString] = Service;
-							Service.StartSync(Request, Response, Session);
-							break;
-						case SyncMethod.GetNextInfoList:
-							Service.GetNextInfoList(Request, Response);
-							break;
-						case SyncMethod.PutNodes:
-							Service.PutNodes(Request, Response);
-							break;
-						case SyncMethod.GetNodes:
-							Service.GetNodes(Request, Response);
-							break;
-						case SyncMethod.PutDirs:
-							Service.PutDirs(Request, Response);
-							break;
-						case SyncMethod.GetDirs:
-							Service.GetDirs(Request, Response);
-							break;
-						case SyncMethod.DeleteNodes:
-							Service.DeleteNodes(Request, Response);
-							break;
-						case SyncMethod.OpenFilePut:
-							Service.OpenFilePut(Request, Response);
-							break;
-						case SyncMethod.OpenFileGet:
-							Service.OpenFileGet(Request, Response);
-							break;
-						case SyncMethod.GetHashMap:
-							Service.GetHashMap(Request, Response);
-							break;
-						case SyncMethod.PutHashMap:
-							Service.PutHashMap(Request, Response);
-							break;
-						case SyncMethod.ReadFile:
-							Service.ReadFile(Request, Response);
-							break;
-						case SyncMethod.WriteFile:
-							Service.WriteFile(Request, Response);
-							break;
-						case SyncMethod.CopyFile:
-							Service.CopyFile(Request, Response);
-							break;
-						case SyncMethod.CloseFile:
-							Service.CloseFile(Request, Response);
-							break;
-						case SyncMethod.EndSync:
-							Service.EndSync(Request, Response);
-							Session.Remove(ServiceString);
-							break;
-						default:
-							Response.StatusCode = (int)HttpStatusCode.BadRequest;
-							break;
-					}
-				}
-				else
-				{
-					Response.StatusCode = (int)HttpStatusCode.BadRequest;
+					case SyncMethod.StartSync:
+						Session.Timeout = 6;
+						Service = new HttpService();
+						Session[ServiceString] = Service;
+						Service.StartSync(Request, Response, Session);
+						break;
+					case SyncMethod.GetNextInfoList:
+						Service.GetNextInfoList(Request, Response);
+						break;
+					case SyncMethod.PutNodes:
+						Service.PutNodes(Request, Response);
+						break;
+					case SyncMethod.GetNodes:
+						Service.GetNodes(Request, Response);
+						break;
+					case SyncMethod.PutDirs:
+						Service.PutDirs(Request, Response);
+						break;
+					case SyncMethod.GetDirs:
+						Service.GetDirs(Request, Response);
+						break;
+					case SyncMethod.DeleteNodes:
+						Service.DeleteNodes(Request, Response);
+						break;
+					case SyncMethod.OpenFilePut:
+						Service.OpenFilePut(Request, Response);
+						break;
+					case SyncMethod.OpenFileGet:
+						Service.OpenFileGet(Request, Response);
+						break;
+					case SyncMethod.GetHashMap:
+						Service.GetHashMap(Request, Response);
+						break;
+					case SyncMethod.PutHashMap:
+						Service.PutHashMap(Request, Response);
+						break;
+					case SyncMethod.ReadFile:
+						Service.ReadFile(Request, Response);
+						break;
+					case SyncMethod.WriteFile:
+						Service.WriteFile(Request, Response);
+						break;
+					case SyncMethod.CopyFile:
+						Service.CopyFile(Request, Response);
+						break;
+					case SyncMethod.CloseFile:
+						Service.CloseFile(Request, Response);
+						break;
+					case SyncMethod.EndSync:
+						Service.EndSync(Request, Response);
+						Session.Remove(ServiceString);
+						break;
+					default:
+						Response.StatusCode = (int)HttpStatusCode.BadRequest;
+						break;
 				}
 			}
 			else
 			{
-				Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+				Response.StatusCode = (int)HttpStatusCode.BadRequest;
 			}
 
 			Response.End();

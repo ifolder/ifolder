@@ -190,17 +190,6 @@ namespace Simias.Authentication
 		}
 
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="ctx"></param>
-		/// <returns></returns>
-		static public Simias.Storage.Member GetMember( HttpContext ctx )
-		{
-			return GetMember( null, ctx );
-		}
-		
-
-		/// <summary>
 		/// Summary description for Http
 		/// </summary>
 		/// <param name="domainID"></param>
@@ -209,7 +198,7 @@ namespace Simias.Authentication
 		{
 			Simias.Authentication.Session simiasSession;
 			Simias.Authentication.Status status;
-			Simias.Storage.Domain domain;
+			Simias.Storage.Domain domain = null;
 			Simias.Storage.Member member = null;
 			Store store = Store.GetStore();
 
@@ -220,13 +209,9 @@ namespace Simias.Authentication
 			// header doesn't exist use the default domain
 			//
 
-			if ( domainID != null && domainID != "" )
+			if ( ( domainID != null ) && ( domainID != String.Empty ) )
 			{
 				domain = store.GetDomain( domainID );
-			}
-			else
-			{
-				domain = store.GetDomain( store.DefaultDomain );
 			}
 
 			if ( domain == null )
@@ -309,6 +294,53 @@ namespace Simias.Authentication
 			else
 			{
 				// No session exists so "authenticate" every request
+				status = DomainProvider.Authenticate( domain, ctx );
+				if ( status.statusCode != StatusCodes.Success &&
+					status.statusCode != StatusCodes.SuccessInGrace )
+				{
+					Simias.Authentication.Http.SetResponseHeaders( ctx, status );
+					if ( ctx.Response.StatusCode == 401 )
+					{
+						ctx.Response.AddHeader( 
+							"WWW-Authenticate", 
+							String.Concat("Basic realm=\"", domain.Name, "\""));
+					}
+
+					ctx.ApplicationInstance.CompleteRequest();
+					return null;
+				}
+
+				// Authentication modules are required to set the member's
+				// userID on successful authentication - let's make sure
+				if ( status.UserID == null || status.UserID == "")
+				{
+					ctx.Response.StatusCode = 500;
+					ctx.Response.StatusDescription = "Unknown";
+					ctx.ApplicationInstance.CompleteRequest();
+					return null;
+				}
+
+				member = domain.GetMemberByID( status.UserID );
+				if ( member == null )
+				{
+					ctx.Response.StatusCode = 500;
+					ctx.Response.StatusDescription = "Unknown";
+					ctx.ApplicationInstance.CompleteRequest();
+					return null;
+				}
+
+				// Setup a principal
+				ctx.User = 
+					new GenericPrincipal(
+					new GenericIdentity(
+					member.UserID,
+					"Basic authentication"), 
+					rolesArray);
+
+				Thread.CurrentPrincipal = ctx.User;
+
+				// Set the last login time for the user.
+				SetLastLoginTime( domain, member );
 			}
 
 			return member;

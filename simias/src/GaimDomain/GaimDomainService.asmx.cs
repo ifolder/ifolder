@@ -92,7 +92,7 @@ namespace Simias.Gaim.DomainService
 		/// <summary>
 		/// Pokes the Synchronization Thread to run/update
 		/// </summary>
-		[WebMethod(Description="SynchronizeMemberList")]
+		[WebMethod(Description="SynchronizeMemberList", EnableSession=true)]
 		[SoapDocumentMethod]
 		public void SynchronizeMemberList()
 		{
@@ -110,7 +110,7 @@ namespace Simias.Gaim.DomainService
 		/// to directly update the SimiasURL from the WebService so that
 		/// any random program can't just muck with the data.
 		/// </summary>
-		[WebMethod(Description="UpdateMember")]
+		[WebMethod(Description="UpdateMember", EnableSession=true)]
 		[SoapDocumentMethod]
 		public void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName, string MachineName)
 		{
@@ -127,7 +127,7 @@ namespace Simias.Gaim.DomainService
 		/// function returns false, which signals there was an error and the out parameters
 		/// are incomplete.
 		/// </returns>
-		[WebMethod(Description="GetUserInfo")]
+		[WebMethod(Description="GetUserInfo", EnableSession=true)]
 		[SoapDocumentMethod]
 		public bool GetUserInfo(out string MachineName, out string UserID, out string SimiasURL)
 		{
@@ -162,7 +162,7 @@ namespace Simias.Gaim.DomainService
 		/// <returns>
 		/// Returns the MachineName of the computer we're running on.
 		/// </returns>
-		[WebMethod(Description="GetMachineName returns the machine name of the computer we're running on.")]
+		[WebMethod(Description="GetMachineName returns the machine name of the computer we're running on.", EnableSession=true)]
 		[SoapDocumentMethod]
 		public string GetMachineName()
 		{
@@ -190,7 +190,7 @@ namespace Simias.Gaim.DomainService
 		/// function returns false, which signals there was an error and the out parameters
 		/// are incomplete.
 		/// </returns>
-		[WebMethod(Description="GetRSACredential")]
+		[WebMethod(Description="GetRSACredential", EnableSession=true)]
 		[SoapDocumentMethod]
 		public bool GetRSACredential(out string PublicCredential, out string PrivateCredential)
 		{
@@ -219,7 +219,7 @@ namespace Simias.Gaim.DomainService
 		/// <returns>
 		/// Returns a string encrypted with the RSACryptoServiceProvider and Base64 Encoded.
 		/// </returns>
-		[WebMethod(Description="RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a public key) to encrypt UnencryptedString.")]
+		[WebMethod(Description="RSAEncryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a public key) to encrypt UnencryptedString.", EnableSession=true)]
 		[SoapDocumentMethod]
 		public string RSAEncryptString(string RsaCryptoXml, string UnencryptedString)
 		{
@@ -241,7 +241,7 @@ namespace Simias.Gaim.DomainService
 		/// <returns>
 		/// Returns a string decrypted with the RSACryptoServiceProvider
 		/// </returns>
-		[WebMethod(Description="RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a private key) to decrypt EncryptedString.")]
+		[WebMethod(Description="RSADecryptString() uses RsaCryptoXml (A .NET RSACryptoServiceProvider in XML format representing a private key) to decrypt EncryptedString.", EnableSession=true)]
 		[SoapDocumentMethod]
 		public string RSADecryptString(string RsaCryptoXml, string EncryptedString)
 		{
@@ -261,7 +261,7 @@ namespace Simias.Gaim.DomainService
 		/// <returns>
 		/// Returns a Base64 Encoded DES Symmetric Key
 		/// </returns>
-		[WebMethod(Description="Generates a Base64 Encoded DES Symmetric Key")]
+		[WebMethod(Description="Generates a Base64 Encoded DES Symmetric Key", EnableSession=true)]
 		[SoapDocumentMethod]
 		public string GenerateDESKey()
 		{
@@ -278,7 +278,7 @@ namespace Simias.Gaim.DomainService
 		/// <returns>
 		/// Returns a string encrypted with the DES key and Base64 encoded.
 		/// </returns>
-		[WebMethod(Description="DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt UnencryptedString.")]
+		[WebMethod(Description="DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt UnencryptedString.", EnableSession=true)]
 		[SoapDocumentMethod]
 		public string DESEncryptString(string DESKey, string UnencryptedString)
 		{
@@ -294,7 +294,7 @@ namespace Simias.Gaim.DomainService
 		/// <returns>
 		/// Returns a string decrypted with the DES key
 		/// </returns>
-		[WebMethod(Description="DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt EncryptedString.")]
+		[WebMethod(Description="DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt EncryptedString.", EnableSession=true)]
 		[SoapDocumentMethod]
 		public string DESDecryptString(string DESKey, string EncryptedString)
 		{

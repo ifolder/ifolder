@@ -32,6 +32,7 @@ using System.Web;
 
 using Simias;
 using Simias.Authentication;
+using Simias.Service;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
@@ -44,7 +45,7 @@ namespace Simias
 	/// <summary>
 	/// Implementation of the DomainProvider Interface for the local domain.
 	/// </summary>
-	public class LocalProvider : IDomainProvider
+	public class LocalProvider : IDomainProvider, IThreadService
 	{
 		#region Class Members
 

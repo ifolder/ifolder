@@ -157,7 +157,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that allows a client to ping the service to see
 		/// if it is up and running
 		/// </summary>
-		[WebMethod(Description="Allows a client to ping to make sure the Web Service is up and running")]
+		[WebMethod(EnableSession=true, Description="Allows a client to ping to make sure the Web Service is up and running")]
 		[SoapDocumentMethod]
 		public void Ping()
 		{
@@ -173,7 +173,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// Settings
 		/// </returns>
-		[WebMethod(Description="Gets the current iFolder Settings")]
+		[WebMethod(EnableSession=true, Description="Gets the current iFolder Settings")]
 		[SoapDocumentMethod]
 		public iFolderSettings GetSettings()
 		{
@@ -191,7 +191,7 @@ namespace Novell.iFolder.Web
 		/// Set to <b>true</b> to enable the iFolder creation confirmation 
 		/// dialog.
 		/// </param>
-		[WebMethod(Description="Sets the display iFolder confirmation setting")]
+		[WebMethod(EnableSession=true, Description="Sets the display iFolder confirmation setting")]
 		[SoapDocumentMethod]
 		public void SetDisplayConfirmation(bool DisplayConfirmation)
 		{
@@ -210,7 +210,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// true if it is an iFolder, false if it isn't
 		/// </returns>
-		[WebMethod(Description="Checks a LocalPath to see if it's an iFolder")]
+		[WebMethod(EnableSession=true, Description="Checks a LocalPath to see if it's an iFolder")]
 		[SoapDocumentMethod]
 		public bool IsiFolder(string LocalPath)
 		{
@@ -235,7 +235,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// true if it can be an iFolder, otherwise false
 		/// </returns>
-		[WebMethod(Description="Checks LocalPath to see if can be an iFolder")]
+		[WebMethod(EnableSession=true, Description="Checks LocalPath to see if can be an iFolder")]
 		[SoapDocumentMethod]
 		public bool CanBeiFolder(string LocalPath)
 		{
@@ -254,7 +254,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		///  true if it is in an iFolder, otherwise false
 		/// </returns>
-		[WebMethod(Description="Checks LocalPath to see if is in an iFolder")]
+		[WebMethod(EnableSession=true, Description="Checks LocalPath to see if is in an iFolder")]
 		[SoapDocumentMethod]
 		public bool IsPathIniFolder(string LocalPath)
 		{
@@ -273,7 +273,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// iFolder object representing the iFolder created
 		/// </returns>
-		[WebMethod(Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
+		[WebMethod(EnableSession=true, Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
 		public iFolderWeb CreateLocaliFolder(string Path)
 		{
@@ -297,7 +297,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// iFolder object representing the iFolder created
 		/// </returns>
-		[WebMethod(Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
+		[WebMethod(EnableSession=true, Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
 		public iFolderWeb CreateiFolderInDomain(string Path, string DomainID)
 		{
@@ -326,7 +326,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// the ifolder this ID represents
 		/// </returns>
-		[WebMethod(Description="Get An iFolder")]
+		[WebMethod(EnableSession=true, Description="Get An iFolder")]
 		[SoapDocumentMethod]
 		public iFolderWeb GetiFolder(string iFolderID)
 		{
@@ -360,7 +360,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// the ifolder this ID represents
 		/// </returns>
-		[WebMethod(Description="Get An iFolder")]
+		[WebMethod(EnableSession=true, Description="Get An iFolder")]
 		[SoapDocumentMethod]
 		public iFolderWeb GetiFolderInvitation(string POBoxID, string iFolderID)
 		{
@@ -392,7 +392,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// the ifolder this ID represents
 		/// </returns>
-		[WebMethod(Description="Get An iFolder using a LocalPath")]
+		[WebMethod(EnableSession=true, Description="Get An iFolder using a LocalPath")]
 		[SoapDocumentMethod]
 		public iFolderWeb GetiFolderByLocalPath(string LocalPath)
 		{
@@ -420,7 +420,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// true if the iFolder was successfully removed
 		/// </returns>
-		[WebMethod(Description="Delete An iFolder")]
+		[WebMethod(EnableSession=true, Description="Delete An iFolder")]
 		[SoapDocumentMethod]
 		public void DeleteiFolder(string iFolderID)
 		{
@@ -441,7 +441,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An iFolder object representing the subscription for the reverted iFolder.
 		/// </returns>
-		[WebMethod(Description="Revert an iFolder on the local computer but remain a member")]
+		[WebMethod(EnableSession=true, Description="Revert an iFolder on the local computer but remain a member")]
 		[SoapDocumentMethod]
 		public iFolderWeb RevertiFolder(string iFolderID)
 		{
@@ -464,7 +464,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An array of iFolders
 		/// </returns>
-		[WebMethod(Description="Returns all iFolders on the Server")]
+		[WebMethod(EnableSession=true, Description="Returns all iFolders on the Server")]
 		[SoapDocumentMethod]
 		public iFolderWeb[] GetAlliFolders()
 		{
@@ -544,7 +544,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An array of iFolders
 		/// </returns>
-		[WebMethod(Description="Returns all iFolders in the specified domain")]
+		[WebMethod(EnableSession=true, Description="Returns all iFolders in the specified domain")]
 		[SoapDocumentMethod]
 		public iFolderWeb[] GetiFoldersForDomain( string DomainID )
 		{
@@ -630,7 +630,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An array of iFolders
 		/// </returns>
-		[WebMethod(Description="Returns iFolders for the specified UserID")]
+		[WebMethod(EnableSession=true, Description="Returns iFolders for the specified UserID")]
 		[SoapDocumentMethod]
 		public iFolderWeb[] GetiFolders(string UserID)
 		{
@@ -670,7 +670,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully added
 		/// </returns>
-		[WebMethod(Description="Set the Rights of a member of an iFolder.  The Rights can be \"Admin\", \"ReadOnly\", or \"ReadWrite\".")]
+		[WebMethod(EnableSession=true, Description="Set the Rights of a member of an iFolder.  The Rights can be \"Admin\", \"ReadOnly\", or \"ReadWrite\".")]
 		[SoapDocumentMethod]
 		public void SetUserRights(	string iFolderID, 
 									string UserID,
@@ -751,7 +751,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// Member that is the owner of the iFolder
 		/// </returns>
-		[WebMethod(Description="Get the Owner of an iFolder")]
+		[WebMethod(EnableSession=true, Description="Get the Owner of an iFolder")]
 		[SoapDocumentMethod]
 		public iFolderUser GetOwner( string iFolderID )
 		{
@@ -786,7 +786,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully added
 		/// </returns>
-		[WebMethod(Description="Changes the owner of an iFolder and sets the rights of the previous owner to the rights specified.")]
+		[WebMethod(EnableSession=true, Description="Changes the owner of an iFolder and sets the rights of the previous owner to the rights specified.")]
 		[SoapDocumentMethod]
 		public void ChangeOwner(	string iFolderID, 
 									string NewOwnerUserID,
@@ -813,7 +813,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully removed
 		/// </returns>
-		[WebMethod(Description="Remove a single member from an iFolder")]
+		[WebMethod(EnableSession=true, Description="Remove a single member from an iFolder")]
 		[SoapDocumentMethod]
 		public void RemoveiFolderUser(	string iFolderID, 
 										string UserID)
@@ -833,7 +833,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An array of Members
 		/// </returns>
-		[WebMethod(Description="Get the list of iFolder Members")]
+		[WebMethod(EnableSession=true, Description="Get the list of iFolder Members")]
 		[SoapDocumentMethod]
 		public iFolderUser[] GetiFolderUsers(string iFolderID)
 		{
@@ -910,7 +910,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An array of members
 		/// </returns>
-		[WebMethod(Description="Get a scoped list of iFolderUsers for the specified domain")]
+		[WebMethod(EnableSession=true, Description="Get a scoped list of iFolderUsers for the specified domain")]
 		[SoapDocumentMethod]
 		public iFolderUser[] GetDomainUsers(string DomainID, int numUsers)
 		{
@@ -959,7 +959,7 @@ namespace Novell.iFolder.Web
 		/// <param name="DomainID"></param>
 		/// <param name="SearchString">The string to search for.</param>
 		/// <returns>An array of users.</returns>
-		[WebMethod(Description="Search for a Member of a specified name in the specified domain.")]
+		[WebMethod(EnableSession=true, Description="Search for a Member of a specified name in the specified domain.")]
 		[SoapDocumentMethod]
 		public iFolderUser[] SearchForDomainUsers(string DomainID, string SearchString)
 		{
@@ -1027,7 +1027,7 @@ namespace Novell.iFolder.Web
 		/// <param name="domainID">The identifier of the domain.</param>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers
 		/// or FindFirstSpecificMembers methods.</param>
-		[WebMethod(Description="End the search for domain members.")]
+		[WebMethod(EnableSession=true, Description="End the search for domain members.")]
 		[SoapDocumentMethod]
 		public void FindCloseiFolderMembers( string domainID, string searchContext )
 		{
@@ -1045,7 +1045,7 @@ namespace Novell.iFolder.Web
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Starts a search for all domain members.")]
+		[WebMethod(EnableSession=true, Description="Starts a search for all domain members.")]
 		[SoapDocumentMethod]
 		public bool FindFirstiFolderMembers( 
 			string domainID, 
@@ -1096,7 +1096,7 @@ namespace Novell.iFolder.Web
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Starts a search for a specific set of domain members.")]
+		[WebMethod(EnableSession=true, Description="Starts a search for a specific set of domain members.")]
 		[SoapDocumentMethod]
 		public bool FindFirstSpecificiFolderMembers(
 			string domainID, 
@@ -1150,7 +1150,7 @@ namespace Novell.iFolder.Web
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Continues the search for domain members from the current record location.")]
+		[WebMethod(EnableSession=true, Description="Continues the search for domain members from the current record location.")]
 		[SoapDocumentMethod]
 		public bool FindNextiFolderMembers( 
 			string domainID, 
@@ -1191,7 +1191,7 @@ namespace Novell.iFolder.Web
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Continues the search for domain members previous to the current record location.")]
+		[WebMethod(EnableSession=true, Description="Continues the search for domain members previous to the current record location.")]
 		[SoapDocumentMethod]
 		public bool FindPreviousiFolderMembers( 
 			string domainID, 
@@ -1233,7 +1233,7 @@ namespace Novell.iFolder.Web
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		[WebMethod(Description="Continues the search for domain members from the specified record location.")]
+		[WebMethod(EnableSession=true, Description="Continues the search for domain members from the specified record location.")]
 		[SoapDocumentMethod]
 		public bool FindSeekiFolderMembers( 
 			string domainID, 
@@ -1280,7 +1280,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// Member that matches the UserID
 		/// </returns>
-		[WebMethod(Description="Lookup a single member to a collection")]
+		[WebMethod(EnableSession=true, Description="Lookup a single member to a collection")]
 		[SoapDocumentMethod]
 		public iFolderUser GetiFolderUser( string UserID )
 		{
@@ -1312,7 +1312,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// A user object.
 		/// </returns>
-		[WebMethod(Description="Lookup a user in a collection based on node ID.")]
+		[WebMethod(EnableSession=true, Description="Lookup a user in a collection based on node ID.")]
 		[SoapDocumentMethod]
 		public iFolderUser GetiFolderUserFromNodeID(string CollectionID,
 													string NodeID)
@@ -1357,7 +1357,7 @@ namespace Novell.iFolder.Web
 		/// <param name="PublicKey">The users public key.</param>
 		/// <param name = "Rights">The Rights to be given to the newly invited member</param>
 		/// <returns>iFolderUser that was invited</returns>
-		[WebMethod(Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
+		[WebMethod(EnableSession=true, Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
 		[SoapDocumentMethod]
 		public iFolderUser AddAndInviteUser(string iFolderID,
 											string MemberName,
@@ -1460,7 +1460,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// iFolderUser that was invited
 		/// </returns>
-		[WebMethod(Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
+		[WebMethod(EnableSession=true, Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
 		[SoapDocumentMethod]
 		public iFolderUser InviteUser(	string iFolderID,
 										string UserID,
@@ -1523,7 +1523,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "LocalPath">
 		/// The LocalPath to to store the iFolder
 		/// </param>
-		[WebMethod(Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
+		[WebMethod(EnableSession=true, Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
 		[SoapDocumentMethod]
 		public iFolderWeb AcceptiFolderInvitation( string DomainID,
 												   string iFolderID, 
@@ -1575,7 +1575,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "iFolderID">
 		/// The ID of the iFolder to decline the invitation for
 		/// </param>
-		[WebMethod(Description="Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object")]
+		[WebMethod(EnableSession=true, Description="Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object")]
 		[SoapDocumentMethod]
 		public void DeclineiFolderInvitation( string DomainID, string iFolderID )
 		{
@@ -1610,7 +1610,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// DiskSpaceQuota for the specified member
 		/// </returns>
-		[WebMethod(Description="Gets the DiskSpaceQuota for a member")]
+		[WebMethod(EnableSession=true, Description="Gets the DiskSpaceQuota for a member")]
 		[SoapDocumentMethod]
 		public DiskSpace GetUserDiskSpace( string UserID )
 		{
@@ -1636,7 +1636,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// DiskSpaceQuota for the specified iFolder
 		/// </returns>
-		[WebMethod(Description="Gets the DiskSpaceQuota for an iFolder")]
+		[WebMethod(EnableSession=true, Description="Gets the DiskSpaceQuota for an iFolder")]
 		[SoapDocumentMethod]
 		public DiskSpace GetiFolderDiskSpace( string iFolderID )
 		{
@@ -1655,7 +1655,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "Limit">
 		/// The size to set in MegaBytes
 		/// </param>
-		[WebMethod(Description="Sets the Disk Space Limit for a user")]
+		[WebMethod(EnableSession=true, Description="Sets the Disk Space Limit for a user")]
 		[SoapDocumentMethod]
 		public void SetUserDiskSpaceLimit( string UserID, long Limit )
 		{
@@ -1674,7 +1674,7 @@ namespace Novell.iFolder.Web
 		/// <param name="Limit">
 		/// The size to set in megabytes.
 		/// </param>
-		[WebMethod(Description="Sets the Disk Space Limit for an iFolder")]
+		[WebMethod(EnableSession=true, Description="Sets the Disk Space Limit for an iFolder")]
 		[SoapDocumentMethod]
 		public void SetiFolderDiskSpaceLimit( string iFolderID, long Limit )
 		{
@@ -1694,7 +1694,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "Interval">
 		/// The interval to set in seconds
 		/// </param>
-		[WebMethod(Description="Sets the Sync Interval for an iFolder")]
+		[WebMethod(EnableSession=true, Description="Sets the Sync Interval for an iFolder")]
 		[SoapDocumentMethod]
 		public void SetiFolderSyncInterval( string iFolderID, int Interval )
 		{
@@ -1716,7 +1716,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "Interval">
 		/// The interval to set in seconds
 		/// </param>
-		[WebMethod(Description="Sets the Default Sync Interval")]
+		[WebMethod(EnableSession=true, Description="Sets the Default Sync Interval")]
 		[SoapDocumentMethod]
 		public void SetDefaultSyncInterval( int Interval )
 		{
@@ -1732,7 +1732,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// The default sync interval
 		/// </returns>
-		[WebMethod(Description="Gets the Default Sync Interval")]
+		[WebMethod(EnableSession=true, Description="Gets the Default Sync Interval")]
 		[SoapDocumentMethod]
 		public int GetDefaultSyncInterval()
 		{
@@ -1752,7 +1752,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// The Domain object associated with this Server
 		/// </returns>
-		[WebMethod(Description="Connects to an iFolder Domain")]
+		[WebMethod(EnableSession=true, Description="Connects to an iFolder Domain")]
 		[SoapDocumentMethod]
 		public int AuthenticateToDomain(	string DomainID,
 											string Password)
@@ -1821,7 +1821,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// An Array of conflicts
 		/// </returns>
-		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
+		[WebMethod(EnableSession=true, Description="Connects to an iFolder Enterprise Server")]
 		[SoapDocumentMethod]
 		public Conflict[] GetiFolderConflicts(	string iFolderID )
 		{
@@ -1860,7 +1860,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "localChangesWin">
 		/// A bool that determines if the local or server copies win
 		/// </param>
-		[WebMethod(Description="Resolves a file conflict in an iFolder.")]
+		[WebMethod(EnableSession=true, Description="Resolves a file conflict in an iFolder.")]
 		[SoapDocumentMethod]
 		public void ResolveFileConflict(string iFolderID, string conflictID,
 										bool localChangesWin)
@@ -1891,7 +1891,7 @@ namespace Novell.iFolder.Web
 		/// The node ID that represents a conflict to resolve
 		/// </param>
 		/// <param name = "newLocalName"></param>
-		[WebMethod(Description="Resolves a name conflict")]
+		[WebMethod(EnableSession=true, Description="Resolves a name conflict")]
 		[SoapDocumentMethod]
 		public void ResolveNameConflict(string iFolderID, string conflictID,
 										string newLocalName)
@@ -1919,7 +1919,7 @@ namespace Novell.iFolder.Web
 		/// <param name="iFolderID">The ID of the iFolder containing the conflict.</param>
 		/// <param name="conflictID">The ID of the conflict.</param>
 		/// <param name="newFileName">The new name of the conflicting file.</param>
-		[WebMethod(Description="Renames a file and resolves a name conflict")]
+		[WebMethod(EnableSession=true, Description="Renames a file and resolves a name conflict")]
 		[SoapDocumentMethod]
 		public void RenameAndResolveConflict(string iFolderID, string conflictID, string newFileName)
 		{
@@ -1946,7 +1946,7 @@ namespace Novell.iFolder.Web
 		/// <param name = "Port">
 		/// The Port on the host to use
 		/// </param>
-		[WebMethod(Description="Sets up a proxy for iFolder to use")]
+		[WebMethod(EnableSession=true, Description="Sets up a proxy for iFolder to use")]
 		[SoapDocumentMethod]
 		public void SetupProxy(string Host, int Port)
 		{
@@ -1959,7 +1959,7 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that will setup the Proxy
 		/// </summary>
-		[WebMethod(Description="Removes proxy settings")]
+		[WebMethod(EnableSession=true, Description="Removes proxy settings")]
 		[SoapDocumentMethod]
 		public void RemoveProxy()
 		{
@@ -1974,7 +1974,7 @@ namespace Novell.iFolder.Web
 		/// </summary>
 		/// <param name="iFolderID">The collection ID of the iFolder to calculate the sync size of.</param>
 		/// <returns>The number of nodes that need to be sync'd.</returns>
-		[WebMethod(Description="Calculates the number of nodes and bytes that need to be sync'd.")]
+		[WebMethod(EnableSession=true, Description="Calculates the number of nodes and bytes that need to be sync'd.")]
 		[SoapDocumentMethod]
 		public SyncSize CalculateSyncSize(string iFolderID)
 		{
@@ -1998,7 +1998,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that sends a command to the sync engine to sync the iFolder of the specified ID.
 		/// </summary>
 		/// <param name="iFolderID">The collection ID of the iFolder to sync.</param>
-		[WebMethod(Description="Sends a command to the sync engine to sync the iFolder of the specified ID.")]
+		[WebMethod(EnableSession=true, Description="Sends a command to the sync engine to sync the iFolder of the specified ID.")]
 		[SoapDocumentMethod]
 		public void SynciFolderNow(string iFolderID)
 		{
@@ -2012,7 +2012,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that deletes a File Size Limit policy from an iFolder.
 		/// </summary>
 		/// <param name="iFolderID">The ID of the iFolder to delete the policy from.</param>
-		[WebMethod(Description="Delete a file size limit policy from an iFolder")]
+		[WebMethod(EnableSession=true, Description="Delete a file size limit policy from an iFolder")]
 		[SoapDocumentMethod]
 		public void DeleteiFolderFileSizeLimit(string iFolderID)
 		{
@@ -2034,7 +2034,7 @@ namespace Novell.iFolder.Web
 		/// <param name="UserID">The ID of the user.</param>
 		/// <param name="iFolderID">The ID of the iFolder.</param>
 		/// <returns>The file size limit in bytes.</returns>
-		[WebMethod(Description="Get a users file size limit on an iFolder")]
+		[WebMethod(EnableSession=true, Description="Get a users file size limit on an iFolder")]
 		[SoapDocumentMethod]
 		public long GetMemberiFolderFileSizeLimit(string UserID, string iFolderID)
 		{
@@ -2067,7 +2067,7 @@ namespace Novell.iFolder.Web
 		/// </summary>
 		/// <param name="iFolderID">The ID of the iFolder.</param>
 		/// <returns>The file size limit in bytes.</returns>
-		[WebMethod(Description="Get the file size limit of an iFolder")]
+		[WebMethod(EnableSession=true, Description="Get the file size limit of an iFolder")]
 		[SoapDocumentMethod]
 		public long GetiFolderFileSizeLimit(string iFolderID)
 		{
@@ -2086,7 +2086,7 @@ namespace Novell.iFolder.Web
 		/// </summary>
 		/// <param name="iFolderID">The ID of the iFolder.</param>
 		/// <param name="Limit">The file size limit (in bytes) to set.</param>
-		[WebMethod(Description="Set the file size limit of an iFolder")]
+		[WebMethod(EnableSession=true, Description="Set the file size limit of an iFolder")]
 		[SoapDocumentMethod]
 		public void SetiFolderFileSizeLimit(string iFolderID, long Limit)
 		{

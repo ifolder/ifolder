@@ -9,7 +9,7 @@ SimpleServer_FLAGS = $(CSC_LIBFLAG)
 SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll
 SimpleServer_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
 
-EXTRA_DIST = DomainService.asmx $(SimpleServer_CSFILES)
+EXTRA_DIST = win.web.config mono.web.config DomainService.asmx $(SimpleServer_CSFILES)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml
@@ -35,11 +35,16 @@ install-exec-local: all
 	$(INSTALL_PROGRAM) SimpleServer.xml $(DESTDIR)$(sysconfdir)
 	$(INSTALL_PROGRAM) DomainService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(webbindir)
+if WINDOWS
+	$(INSTALL_PROGRAM) win.web.config $(DESTDIR)$(webdir)/web.config
+else
+	$(INSTALL_PROGRAM) mono.web.config $(DESTDIR)$(webdir)/web.config
+endif	
 	
 
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); $(NUNIT) $(NUNIT_FLAGS) /xml:SimiasTests.test.xml $(NUNIT_TESTS)
-	cd $(DESTDIR)$(webdir); rm -f  DomainService.asmx
+	cd $(DESTDIR)$(webdir); rm -f  web.config DomainService.asmx
 
 installcheck-local: install
 		
