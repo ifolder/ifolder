@@ -127,19 +127,11 @@ namespace Simias.Storage
 		internal protected BaseFileNode( Collection collection, string parentPath, string fileName, string fileID, string fileType ) :
 			this ( fileName, fileID, fileType )
 		{
-			// Add the length of the file if it exists.
-			string fullPath = Path.Combine( parentPath, fileName );
-			if ( File.Exists( fullPath ) )
+			// Add the disk file attributes if the file exists.
+			if ( UpdateFileInfo( collection, Path.Combine( parentPath, fileName ) ) )
 			{
-				// Get the file information for this file and set it as properties in the object.
-				FileInfo fi = new FileInfo( fullPath );
-				Length = fi.Length;
-				CreationTime = fi.CreationTime;
-				LastAccessTime = fi.LastAccessTime;
-				LastWriteTime = fi.LastWriteTime;
-
 				// If there are metadata collectors registered for this file type, add the extra metadata.
-				AddFileMetadata( collection, fullPath );
+				AddFileMetadata( collection, GetFullPath( collection ) );
 			}
 		}
 
@@ -274,6 +266,45 @@ namespace Simias.Storage
 		/// <param name="collection">Collection that this file entry is associated with.</param>
 		/// <returns>The absolute path to the file.</returns>
 		public abstract string GetFullPath( Collection collection );
+
+		/// <summary>
+		/// Updates the file node with file information from the disk file.
+		/// </summary>
+		/// <param name="collection">Collection that this file entry is associated with.</param>
+		/// <returns>True if the file information has changed, otherwise false is returned.</returns>
+		public bool UpdateFileInfo( Collection collection )
+		{
+			return UpdateFileInfo( collection, GetFullPath( collection ) );
+		}
+
+		/// <summary>
+		/// Updates the file node with file information from the disk file.
+		/// </summary>
+		/// <param name="collection">Collection that this file entry is associated with.</param>
+		/// <param name="fullPath">Absolute path to the disk file.</param>
+		/// <returns>True if the file information has changed, otherwise false is returned.</returns>
+		public bool UpdateFileInfo( Collection collection, string fullPath )
+		{
+			bool infoChanged = false;
+			if ( File.Exists( fullPath ) )
+			{
+				// Get the file information for this file and set it as properties in the object.
+				FileInfo fi = new FileInfo( fullPath );
+				Length = fi.Length;
+
+				// Don't update the creation time if it already exists.
+				if ( CreationTime == DateTime.MinValue )
+				{
+					CreationTime = fi.CreationTime;
+				}
+
+				LastAccessTime = fi.LastAccessTime;
+				LastWriteTime = fi.LastWriteTime;
+				infoChanged = true;
+			}
+
+			return infoChanged;
+		}
 		#endregion
 	}
 }

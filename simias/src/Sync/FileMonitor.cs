@@ -178,16 +178,10 @@ namespace Simias.Sync
 		{
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
-			DateTime fsLastWrite = fi.LastWriteTime;
-			TimeSpan ts = fsLastWrite - fn.LastWriteTime;
-			uint seconds = (uint)ts.TotalSeconds;
+			TimeSpan ts = fi.LastWriteTime - fn.LastWriteTime;
 			
-			if (seconds != 0)
+			if (((uint)ts.TotalSeconds != 0) && (fn.UpdateFileInfo(collection, path)))
 			{
-				// Don't reset the Creation time.
-				fn.LastWriteTime = fsLastWrite;
-				fn.LastAccessTime = fi.LastAccessTime;
-				fn.Length = fi.Length;
 				hasChanges = true;
 				log.Debug("Updating file node for {0} {1}", path, fn.ID);
 			}
