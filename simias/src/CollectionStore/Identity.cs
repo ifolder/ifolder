@@ -343,7 +343,14 @@ namespace Simias.Storage
 
 			if ( ( credentials != null ) && ( type != CredentialType.None ) )
 			{
-				mapDoc.DocumentElement.SetAttribute( CredentialTag, EncryptCredential( credentials ) );
+				if ( type == CredentialType.Basic )
+				{
+					mapDoc.DocumentElement.SetAttribute( CredentialTag, EncryptCredential( credentials ) );
+				}
+				else
+				{
+					mapDoc.DocumentElement.SetAttribute( CredentialTag, credentials );
+				}
 			}
 
 			p.SetPropertyValue( mapDoc );
@@ -421,12 +428,28 @@ namespace Simias.Storage
 				throw new CollectionStoreException( "The specified domain does not exist." );
 			}
 
+			// Return the User ID.
 			userID = document.DocumentElement.GetAttribute( UserTag );
-			string encryptedCredentials = document.DocumentElement.GetAttribute( CredentialTag );
-			credentials = ( encryptedCredentials != String.Empty ) ? DecryptCredential( encryptedCredentials ) : null;
 
-			string credType = document.DocumentElement.GetAttribute( TypeTag );
-			return ( CredentialType )Enum.Parse( typeof( CredentialType ), credType, true );
+			// Get the credential type.
+			string credTypeString = document.DocumentElement.GetAttribute( TypeTag );
+			CredentialType credType = ( CredentialType )Enum.Parse( typeof( CredentialType ), credTypeString, true );
+
+			// Return the credentials.
+			credentials = document.DocumentElement.GetAttribute( CredentialTag );
+			if ( credentials != String.Empty )
+			{
+				if ( credType == CredentialType.Basic )
+				{
+					credentials = DecryptCredential( credentials );
+				}
+			}
+			else
+			{
+				credentials = null;
+			}
+
+			return credType;
 		}
 
 		/// <summary>
@@ -452,7 +475,14 @@ namespace Simias.Storage
 			}
 			else
 			{
-				mapDoc.DocumentElement.SetAttribute( CredentialTag, EncryptCredential( credentials ) );
+				if ( type == CredentialType.Basic )
+				{
+					mapDoc.DocumentElement.SetAttribute( CredentialTag, EncryptCredential( credentials ) );
+				}
+				else
+				{
+					mapDoc.DocumentElement.SetAttribute( CredentialTag, credentials );
+				}
 			}
 
 			mapDoc.DocumentElement.SetAttribute( TypeTag, type.ToString() );
