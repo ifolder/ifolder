@@ -503,82 +503,63 @@ namespace Novell.iFolder.iFolderCom
 			this.add.Enabled = ifolder.IsShareable();
 
 			// Get the access control list for the collection.
-			ICSList aclList = ifolder.GetShareAccess();
+			IFAccessControlList aclList = ifolder.GetAccessControlList();
 			Contact contact = null;
 
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 
-			foreach (AccessControlEntry ace in aclList)
+			foreach (IFAccessControlEntry ace in aclList)
 			{
-				if (!ace.WellKnown)
+				string[] items = new string[2];
+				if (ace.Contact.FN != null)
 				{
-					try
+					items[0] = ace.Contact.FN;
+				}
+				else
+				{
+					items[0] = ace.Contact.UserName;
+				}
+
+				int imageIndex;
+				switch (ace.Rights)
+				{
+					case iFolder.Rights.Admin:
 					{
-						contact = defaultAddressBook.GetContact(ace.Id);
+						items[1] = "Full Control";
+						imageIndex = 3;
+						break;
 					}
-					catch{}
-
-					if (contact == null)
+					case iFolder.Rights.ReadWrite:
 					{
-						// TODO - Search the other address books for this Id.
-
-						
+						items[1] = "Read/Write";
+						imageIndex = 2;
+						break;
 					}
-
-					if (contact != null)
+					case iFolder.Rights.ReadOnly:
 					{
-						string[] items = new string[2];
-						if (contact.FN != null)
-						{
-							items[0] = contact.FN;
-						}
-						else
-						{
-							items[0] = contact.UserName;
-						}
-
-						int imageIndex;
-						switch (ace.Rights)
-						{
-							case Access.Rights.Admin:
-							{
-								items[1] = "Full Control";
-								imageIndex = 3;
-								break;
-							}
-							case Access.Rights.ReadWrite:
-							{
-								items[1] = "Read/Write";
-								imageIndex = 2;
-								break;
-							}
-							case Access.Rights.ReadOnly:
-							{
-								items[1] = "Read Only";
-								imageIndex = 1;
-								break;
-							}
-							default:
-							{
-								items[1] = "Unknown";
-								imageIndex = 4;
-								break;
-							}
-						}
-
-						if (contact.IsCurrentUser)
-						{
-							imageIndex = 0;
-						}
-
-						ListViewItem lvitem = new ListViewItem(items, imageIndex);
-						ShareListContact shareContact = new ShareListContact();
-						shareContact.CurrentContact = contact;
-						lvitem.Tag = shareContact;
-						shareWith.Items.Add(lvitem);
+						items[1] = "Read Only";
+						imageIndex = 1;
+						break;
+					}
+					default:
+					{
+						items[1] = "Unknown";
+						imageIndex = 4;
+						break;
 					}
 				}
+
+				if (ace.Contact.IsCurrentUser)
+				{
+					imageIndex = 0;
+				}
+
+				ListViewItem lvitem = new ListViewItem(items, imageIndex);
+				ShareListContact shareContact = new ShareListContact();
+				shareContact.CurrentContact = ace.Contact;
+				lvitem.Tag = shareContact;
+				shareWith.Items.Add(lvitem);
 			}
 
 			// Restore the cursor.
