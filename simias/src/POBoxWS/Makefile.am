@@ -9,7 +9,7 @@ POBoxWS_FLAGS = $(CSC_LIBFLAG)
 POBoxWS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
 POBoxWS_LIBPATH = ../SimiasClient ../Simias.dll
 
-EXTRA_DIST = POBoxService.asmx $(POBoxWS_CSFILES)
+EXTRA_DIST = POService.asmx $(POBoxWS_CSFILES)
 
 all: Simias.POBox.Web.dll
 
@@ -25,11 +25,11 @@ endif
 install-exec-local: Simias.POBox.Web.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) POBoxService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
+	$(INSTALL_PROGRAM) POService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) Simias.POBox.Web.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	
 uninstall-local:
-	cd $(DESTDIR)$(webdir); rm -f  POBoxService.asmx $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir); rm -f  POService.asmx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); rm -f Simias.POBox.Web.dll $(DEBUG_FILES)
 
 installcheck-local: install
