@@ -42,7 +42,7 @@ namespace Novell.iFolder
 		public iFolderCreationDialog(iFolderWeb ifolder) : base()
 		{
 //			this.ifolder = ifolder;
-			this.Title = Util.GS("iFolder Introduction");
+			this.Title = Util.GS("iFolder Created");
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.Resizable = false;
@@ -56,16 +56,6 @@ namespace Novell.iFolder
 			vbox.BorderWidth = 10;
 			vbox.Spacing = 10;
 
-			Label l = new Label("<span weight=\"bold\" size=\"larger\">" +
-						Util.GS("Congratulations! A new iFolder was created") +
-						"</span>");
-
-			l.LineWrap = false;
-			l.UseMarkup = true;
-			l.Selectable = false;
-			l.Xalign = 0; l.Yalign = 0;
-			vbox.PackStart(l, false, false, 0);
-
 			HBox h = new HBox();
 //			h.BorderWidth = 10;
 			h.Spacing = 12;
@@ -76,21 +66,14 @@ namespace Novell.iFolder
 			VBox vbox2 = new VBox();
 			vbox2.Spacing = 10;
 
-			l = new Label(Util.GS("The new iFolder has been added to your list of iFolders."));
-			l.LineWrap = false;
+			Label l = new Label(Util.GS("The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."));
+			l.LineWrap = true;
 			l.Xalign = 0;
 			vbox2.PackStart(l, true, true, 0);
 
 			h.PackEnd(vbox2, true, true, 0);
 
 			vbox.PackStart(h);
-
-			l = new Label(Util.GS("To share your iFolder and it's contents with others, right-click the iFolder and select \"Share with...\"."));
-			l.LineWrap = true;
-			l.Xalign = 0;
-//			l.Ypad = 0;
-//			l.Justify = Gtk.Justification.Fill;
-			vbox.PackStart(l, false, true, 0);
 
 			Alignment cbAlignment = new Alignment(1, 1, 1, 0);
 			vbox.PackStart(cbAlignment, true, true, 0);
