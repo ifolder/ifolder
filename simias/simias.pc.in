@@ -1,12 +1,12 @@
 # pkg-config metadata file for simias
 Name: Simias
-Description: Simias
+Description: Simias components
 Version: @VERSION@
 Requires: @PKG_CONFIG_REQUIRES@
 Conflicts: @PKG_CONFIG_CONFLICTS@
 
 prefix=@prefix@
-libdir=${prefix}/lib  # todo: move files to lib (or gac)
+libdir=${prefix}/lib
 
 Libs:/lib:${libdir} @PKG_CONFIG_LIBS@
 

@@ -37,8 +37,8 @@ doc:
 doc-clean:
 	$(MAKE) -C doc clean
 
-.PHONY: package package-sdk package-clean package-install package-uninstall
+.PHONY: package package-sdk package-clean
 
-package package-sdk package-clean package-install package-uninstall:
+package package-sdk package-clean:
 	$(MAKE) -C package $@
 

@@ -70,7 +70,6 @@ case $CSC in
         MONO=mono
         MONO_DEBUG='mono --debug'
         MONO_PATH="\$(LOG4NET_DIR):\$(MDNSRESPONDER_DIR):\$(top_srcdir)/external/SecureChannelSinks"
-#		:\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS)))"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -190,9 +189,6 @@ case $SIMIAS_OS in
         #
         # Set pkg-config variables
         #
-        MONO_MINIMUM_VERSION=0.91
-        AC_SUBST(MONO_MINIMUM_VERSION)
-        
         PKG_CONFIG_REQUIRES=""
         PKG_CONFIG_CONFLICTS=""
         PKG_CONFIG_LIBS="$COMMON_LIBS"
@@ -244,9 +240,9 @@ AC_SUBST(SQLITELIB_PATH)
 #
 # Run standard macros
 #
-AM_PROG_CC_STDC
-AC_PROG_INSTALL
-AC_HEADER_STDC
+#AM_PROG_CC_STDC
+#AC_PROG_INSTALL
+#AC_HEADER_STDC
 #AM_PROG_LIBTOOL
 
 #
