@@ -431,7 +431,7 @@ namespace Novell.iFolder
 			AboutMenuItem.Image = new Image(Gnome.Stock.About, 
 							Gtk.IconSize.Menu);
 //			AboutMenuItem.Image = new Image(
-//					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
+//					new Gdk.Pixbuf(Util.ImagesPath("ifolder24.png")));
 			HelpMenu.Append(AboutMenuItem);
 			AboutMenuItem.Activated += new EventHandler(OnAbout);
 

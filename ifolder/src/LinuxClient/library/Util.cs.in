@@ -116,7 +116,7 @@ namespace Novell.iFolder
 			try
 			{
 				// Replace this with the logo graphic when we get it
-				//Pixbuf logo = new Pixbuf(ImagesPath("ifolder.png"));
+				//Pixbuf logo = new Pixbuf(ImagesPath("ifolder24.png"));
 				string[] authors = new string[]
 				{
 					"Jared Allen <jpallen@novell.com>",
