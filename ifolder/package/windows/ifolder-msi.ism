@@ -1085,7 +1085,7 @@
 		<col key="yes" def="S72">Parent</col>
 		<col key="yes" def="S255">Path</col>
 		<col def="I2">Depth</col>
-		<row><td>regasm_sig</td><td></td><td>[WindowsFolder]</td><td>4</td></row>
+		<row><td>regasm_sig</td><td></td><td>[WindowsFolder]\Microsoft.NET\Framework\v1.1.4322</td><td>2</td></row>
 	</table>
 
 	<table name="DuplicateFile">
@@ -1268,6 +1268,7 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
+		<row><td>ifi</td><td>InvitationWizard.exe</td><td>iFolder.Invitation</td><td/><td>iFolder_Files</td></row>
 	</table>
 
 	<table name="Feature">
@@ -1623,8 +1624,8 @@
 		<col def="s255">Name</col>
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td><td>VC User CRT71 RTL X86 ---</td><td>[INSTALLDIR]</td><td/></row>
-		<row><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td><td>VC User STL71 RTL X86 ---</td><td>[INSTALLDIR]</td><td/></row>
+		<row><td>VC_User_CRT71.07D8793C_DC93_47EF_8FDA_3517BC941A0F</td><td>0</td><td>VC User CRT71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
+		<row><td>VC_User_STL71.09528776_2EA8_4A65_AA88_693146381D7D</td><td>0</td><td>VC User STL71 RTL X86 ---</td><td>[SystemFolder]</td><td/></row>
 		<row><td>addressbook.CD20E5DC_350F_4241_9157_EABC54F99B40</td><td>0</td><td>AddressBook Merge Module</td><td>[INSTALLDIR]</td><td/></row>
 		<row><td>addressbook_sdk.CB5C64A6_8316_4DB6_96CF_C1C6BAC2DA64</td><td>0</td><td>AddressBook SDK Merge Module</td><td/><td/></row>
 		<row><td>ifolder.2E790EF8_369B_4D99_AC96_9EB4734B247E</td><td>0</td><td>iFolder Merge Module</td><td>[INSTALLDIR]</td><td/></row>
@@ -1837,7 +1838,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>Novell, Inc.</td><td>0</td><td/><td>1394123376</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>Novell, Inc.</td><td>0</td><td/><td>-1424454832</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td>	</td><td>479664453</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1033</td><td>[ProductName] requires that your computer is running Windows 2000 or Windows XP</td><td>0</td><td/><td>1394090640</td></row>
@@ -2374,7 +2375,7 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>479664453</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.ifolder.com</td><td>0</td><td/><td>1394137712</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>http://www.ifolder.com</td><td>0</td><td/><td>-1424454832</td></row>
 		<row><td>ID_STRING10</td><td>1033</td><td>iFolder Invitation</td><td>0</td><td/><td>1394129970</td></row>
 		<row><td>ID_STRING11</td><td>1033</td><td>INVITA~1|Invitation Wizard</td><td>0</td><td/><td>1394111922</td></row>
 		<row><td>ID_STRING12</td><td>1033</td><td>STARTI~1|Start iFolder</td><td>0</td><td/><td>1394136754</td></row>
@@ -2413,6 +2414,9 @@
 		<row><td>ID_STRING42</td><td>1033</td><td>INVITA~1|Invitation Wizard</td><td>0</td><td/><td>-2095558415</td></row>
 		<row><td>ID_STRING43</td><td>1033</td><td>CONTAC~1|Contact Browser</td><td>0</td><td/><td>-2095523535</td></row>
 		<row><td>ID_STRING44</td><td>1033</td><td>iFolder</td><td>0</td><td/><td>-2095535695</td></row>
+		<row><td>ID_STRING45</td><td>1033</td><td>"%1"</td><td>0</td><td/><td>-1424467601</td></row>
+		<row><td>ID_STRING46</td><td>1033</td><td>&amp;Open</td><td>0</td><td/><td>-1424483697</td></row>
+		<row><td>ID_STRING47</td><td>1033</td><td>iFolder Invitation</td><td>0</td><td/><td>-1424475697</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>Browse contacts</td><td>0</td><td/><td>1394103984</td></row>
 		<row><td>ID_STRING6</td><td>1033</td><td>iFolder Help Files</td><td>0</td><td/><td>1394101553</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>iFolder</td><td>0</td><td/><td>1394091410</td></row>
@@ -2472,6 +2476,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
 		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\setupicon.ico</td><td>0</td></row>
+		<row><td>_F9355A3D_3436_44B7_943B_54CF7AC9AA88</td><td/><td>&lt;ISProjectFolder&gt;\msi\install\InvitationWizard.exe</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -2790,6 +2795,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="S72">Icon_</col>
 		<col def="I2">IconIndex</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>iFolder.Invitation</td><td/><td/><td>##ID_STRING47##</td><td>_F9355A3D_3436_44B7_943B_54CF7AC9AA88</td><td>1</td><td/></row>
 	</table>
 
 	<table name="Property">
@@ -3114,6 +3120,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
+		<row><td>ifi</td><td>Open</td><td/><td>##ID_STRING46##</td><td>##ID_STRING45##</td></row>
 	</table>
 
 	<table name="_Validation">
