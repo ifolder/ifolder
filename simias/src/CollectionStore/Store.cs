@@ -569,7 +569,7 @@ namespace Simias.Storage
 		/// <summary>
 		///  Gets all collections that have the specified type.
 		/// </summary>
-		/// <param name="type">String that contains the type of the collection(s) to search for.
+		/// <param name="type">String that contains the type of the collection(s) to search for.</param>
 		/// <returns>An ICSList object containing the ShallowNode objects that match the specified 
 		/// type.</returns>
 		public ICSList GetCollectionsByType( string type )

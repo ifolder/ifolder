@@ -142,6 +142,10 @@ namespace Simias.Storage
 				fs.Close();
 				nodeStream.Close();
 				nodeStream = null;
+
+				// Set the creation and last write time on the node.
+				CreationTime = File.GetCreationTime( managedFile );
+				LastWriteTime = File.GetLastWriteTime( managedFile );
 			}
 		}
 		#endregion
