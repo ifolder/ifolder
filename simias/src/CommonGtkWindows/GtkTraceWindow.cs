@@ -81,7 +81,7 @@ namespace Simias
 
 		public override void WriteLine(string message)
 		{
-			Console.WriteLine(message);
+			//Console.WriteLine(message);
 
 			TreeIter ti = store.AppendValues(message);
 

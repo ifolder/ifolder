@@ -109,7 +109,7 @@ namespace Simias.Agent.Tests
 			
 			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
 
-			Contact owner = ab.GetContactByIdentity(collection.Owner);
+			Contact owner = ab.GetContact(collection.Owner);
 			owner.UserName = "JDoe";
 			Name oName = new Name("John", "Doe");
 			oName.Preferred = true;
@@ -173,7 +173,7 @@ namespace Simias.Agent.Tests
 			
 			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
 
-			Contact owner = ab.GetContactByIdentity(collection.Owner);
+			Contact owner = ab.GetContact(collection.Owner);
 			owner.UserName = "JDoe";
 			Name oName = new Name("John", "Doe");
 			oName.Preferred = true;
@@ -212,7 +212,7 @@ namespace Simias.Agent.Tests
 			
 			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
 
-			Contact owner = ab.GetContactByIdentity(collection.Owner);
+			Contact owner = ab.GetContact(collection.Owner);
 			owner.UserName = "JDoe";
 			Name oName = new Name("John", "Doe");
 			oName.Preferred = true;

@@ -82,12 +82,12 @@ namespace Simias.Agent
 			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
 
 			// from
-			Contact from = ab.GetContactByIdentity(collection.Owner);
+			Contact from = ab.GetContact(collection.Owner);
 			invitation.FromName = from.FN;
 			invitation.FromEmail = from.EMail;
 
 			// to
-			Contact to = ab.GetContactByIdentity(identity);
+			Contact to = ab.GetContact(identity);
 			invitation.ToName = to.FN;
 			invitation.ToEmail = to.EMail;
 

@@ -99,7 +99,7 @@ namespace Novell.iFolder
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 
 			twin = new GtkTraceWindow();
-			twin.ShowAll();
+			//twin.ShowAll();
 
 			//MyTrace.SendTraceToStandardOutput();
 

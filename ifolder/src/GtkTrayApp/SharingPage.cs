@@ -363,12 +363,12 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					ifldr.Share(c.Identity, Access.Rights.ReadWrite, true);
+					ifldr.Share(c.ID, Access.Rights.ReadWrite, true);
 
 					SharingListHolder slh = new SharingListHolder(
-							Access.Rights.ReadWrite, c.Identity, c);
+							Access.Rights.ReadWrite, c.ID, c);
 					ContactTreeStore.AppendValues(slh);
-					guidList.Add(c.Identity);
+					guidList.Add(c.ID);
 				}
 				catch(Exception e)
 				{
