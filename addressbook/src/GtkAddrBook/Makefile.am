@@ -9,7 +9,7 @@ Book_FLAGS = $(CSC_EXEFLAG)
 Book_LIBS = $(BookLib_LIBS) BookLib.dll
 Book_LIBPATH = $(BookLib_LIBPATH)
 
-BookLib_CSFILES = $(srcdir)/AddrBookWindow.cs $(srcdir)/ContactEditor.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs
+BookLib_CSFILES = $(srcdir)/AddrBookWindow.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs
 BookLib_CSFILES_CSC := $(subst /,$(SEP),$(BookLib_CSFILES))
 BookLib_INCLUDES = 
 BookLib_RESOURCES = $(srcdir)/addressbook.glade contact-editor.glade

@@ -68,29 +68,39 @@ namespace Novell.iFolder
 
 		[Glade.Widget] internal Gtk.Entry			phoneOneEntry;
 		[Glade.Widget] internal Gtk.Entry			phoneTwoEntry;
+		[Glade.Widget] internal Gtk.Entry			phoneThreeEntry;
 		[Glade.Widget] internal Gtk.Entry			phoneFourEntry;
-		[Glade.Widget] internal Gtk.Label			phoneOneLabel;
-		[Glade.Widget] internal Gtk.Label			phoneTwoLabel;
-		[Glade.Widget] internal Gtk.Label			phoneThreeLabel;
-		[Glade.Widget] internal Gtk.Label			phoneFourLabel;
+		
+		[Glade.Widget] internal Gtk.Alignment		phoneOneAlignment;
+		[Glade.Widget] internal Gtk.Alignment		phoneTwoAlignment;
+		[Glade.Widget] internal Gtk.Alignment		phoneThreeAlignment;
+		[Glade.Widget] internal Gtk.Alignment		phoneFourAlignment;
 
 		[Glade.Widget] internal Gtk.Entry			emailEntry;
-		[Glade.Widget] internal Gtk.Label			emailLabel;
-		[Glade.Widget] internal Gtk.Button			emailButton;
+		[Glade.Widget] internal Gtk.Alignment		emailAlignment;
 		[Glade.Widget] internal Gtk.CheckButton		emailPreferredButton;
 
 		[Glade.Widget] internal Gtk.Entry			webURLEntry;
 		[Glade.Widget] internal Gtk.Entry			blogURLEntry;
 
-		[Glade.Widget] internal Gtk.Label			addrLabel;
 		[Glade.Widget] internal Gtk.TextView		addrTextView;
 		[Glade.Widget] internal Gtk.Button			addrChangeButton;
-		[Glade.Widget] internal Gtk.CheckButton	addrMailingButton;
+		[Glade.Widget] internal Gtk.CheckButton		addrMailingButton;
+		[Glade.Widget] internal Gtk.Alignment		addrAlignment;
 
 		[Glade.Widget] internal Gtk.Button			cancelButton;
 		[Glade.Widget] internal Gtk.Button			okButton; 
 
 		[Glade.Widget] internal Gtk.Table			generalTabTable;
+
+
+		internal OptionButton	emailOButton;
+		internal OptionButton	addrOButton;
+
+		internal OptionButton	phoneOneOButton;
+		internal OptionButton	phoneTwoOButton;
+		internal OptionButton	phoneThreeOButton;
+		internal OptionButton	phoneFourOButton;
 
 
 		private Gtk.Dialog 		contactEditorDialog;
@@ -154,6 +164,58 @@ namespace Novell.iFolder
 
 			generalTabTable.FocusChain = (tl);
 */		
+			phoneOneOButton = new OptionButton("Work Phone:");
+			phoneOneOButton.AddOption("Work Phone:");
+			phoneOneOButton.AddOption("Mobile Phone:");
+			phoneOneOButton.AddOption("Home Phone:");
+			phoneOneOButton.AddOption("Pager:");
+			phoneOneOButton.AddOption("Fax:");
+			phoneOneOButton.ShowAll();
+			phoneOneAlignment.Add(phoneOneOButton);
+
+			phoneTwoOButton = new OptionButton("Mobile Phone:");
+			phoneTwoOButton.AddOption("Work Phone:");
+			phoneTwoOButton.AddOption("Mobile Phone:");
+			phoneTwoOButton.AddOption("Home Phone:");
+			phoneTwoOButton.AddOption("Pager:");
+			phoneTwoOButton.AddOption("Fax:");
+			phoneTwoOButton.ShowAll();
+			phoneTwoAlignment.Add(phoneTwoOButton);
+
+			phoneThreeOButton = new OptionButton("Pager:");
+			phoneThreeOButton.AddOption("Work Phone:");
+			phoneThreeOButton.AddOption("Mobile Phone:");
+			phoneThreeOButton.AddOption("Home Phone:");
+			phoneThreeOButton.AddOption("Pager:");
+			phoneThreeOButton.AddOption("Fax:");
+			phoneThreeOButton.ShowAll();
+			phoneThreeAlignment.Add(phoneThreeOButton);
+
+			phoneFourOButton = new OptionButton("Fax:");
+			phoneFourOButton.AddOption("Work Phone:");
+			phoneFourOButton.AddOption("Mobile Phone:");
+			phoneFourOButton.AddOption("Home Phone:");
+			phoneFourOButton.AddOption("Pager:");
+			phoneFourOButton.AddOption("Fax:");
+			phoneFourOButton.ShowAll();
+			phoneFourAlignment.Add(phoneFourOButton);
+
+			emailOButton = new OptionButton("Work Email:");
+			emailOButton.AddOption("Work Email:");
+			emailOButton.AddOption("Home Email:");
+			emailOButton.AddOption("Other Email:");
+			emailOButton.ShowAll();
+			emailAlignment.Add(emailOButton);
+			emailOButton.OptionChanged += 
+					new OptionChangedEventHandler(handle_email_options);
+
+			addrOButton = new OptionButton("Work:");
+			addrOButton.AddOption("Work:");
+			addrOButton.AddOption("Home:");
+			addrOButton.AddOption("Other:");
+			addrOButton.ShowAll();
+			addrAlignment.Add(addrOButton);
+
 			try
 			{
 				preferredName = currentContact.GetPreferredName();
@@ -229,12 +291,12 @@ namespace Novell.iFolder
 			}
 
 			if( (currentEmailType & EmailTypes.work) == EmailTypes.work)
-				emailLabel.Text = "Work email:";
+				emailOButton.Label = "Work email:";
 			else if( (currentEmailType & EmailTypes.personal) == 
 					EmailTypes.personal)
-				emailLabel.Text = "Home email:";
+				emailOButton.Label = "Home email:";
 			else
-				emailLabel.Text = "Other email:";
+				emailOButton.Label = "Other email:";
 
 			if( (currentEmailType & EmailTypes.preferred) == 
 					EmailTypes.preferred)
@@ -274,15 +336,14 @@ namespace Novell.iFolder
 
 
 
-
-
-
 		public void ShowAll()
 		{
 			if(contactEditorDialog != null)
-				contactEditorDialog.ShowAll();
+			{
+				contactEditorDialog.Visible = true;
+				contactEditorDialog.Present();
+			}
 		}
-
 
 
 
@@ -295,7 +356,6 @@ namespace Novell.iFolder
 			else if(ContactEdited != null)
 				ContactEdited(this, cArgs);
 		}
-
 
 
 
@@ -334,60 +394,6 @@ namespace Novell.iFolder
 			SaveCurrentEmail();
 		}
 
-
-
-		/*
-		   private Novell.AddressBook.Name ParseFullNameEntry(string name)
-		   {
-		   Novell.AddressBook.Name ABName = null;
-
-		   if(name.Length > 0)
-		   {
-		   string curString;
-		   int curIndex;
-		   string lastName = null;
-
-		   ArrayList nameList = new ArrayList();
-
-		   curString = name;
-
-		   curIndex = curString.IndexOf(',');
-		   if(curIndex != -1)
-		   {
-		   lastName = curString.Substring(0, curIndex);
-		   curString = curString.Substring(curIndex + 1).Trim();
-		   }
-
-		   curIndex = 0;
-
-		   while(curIndex != -1)
-		   {
-		   string nameString;
-
-		   curIndex = curString.IndexOf(' ');
-		   if(curIndex != -1)
-		   {
-		   nameString = curString.Substring(0, curIndex);
-		   curString = curString.Substring(curIndex + 1).Trim();
-		   }
-		   else
-		   nameString = curString;
-
-		   if(nameString.Length > 0)
-		   nameList.Add(nameString);
-		   }
-		   if(lastName != null)
-		   nameList.Add(lastName);
-
-		   foreach(string s in nameList)
-		   {
-		   Console.WriteLine(s);
-		   }
-
-		   }
-		   return ABName;
-		   }
-		 */
 
 
 
@@ -469,7 +475,7 @@ namespace Novell.iFolder
 
 
 
-		private void on_emailButton_clicked(object o, EventArgs args) 
+/*		private void on_emailButton_clicked(object o, EventArgs args) 
 		{
 			Menu mailMenu = new Menu();
 
@@ -503,32 +509,28 @@ namespace Novell.iFolder
 
 			push_in = false;
 		}
-
-		private void handle_work_email(object o, EventArgs args)
+*/
+		private void handle_email_options(object o, OptionChangedEventArgs args)
 		{
 			SaveCurrentEmail();
-			currentEmailType = EmailTypes.work;
-			currentEmail = GetEmailType(currentEmailType);
+			switch(args.OptionIndex)
+			{
+				case 0: // Work email
+					currentEmailType = EmailTypes.work;
+					currentEmail = GetEmailType(currentEmailType);
+					break;
+				case 1: // Home email
+					currentEmailType = EmailTypes.personal;
+					currentEmail = GetEmailType(currentEmailType);
+					break;
+				case 2: // Other email
+					currentEmailType = EmailTypes.other;
+					currentEmail = GetEmailType(currentEmailType);
+					break;
+			}
+
 			PopulateCurrentEmail();
 		}
-
-		private void handle_home_email(object o, EventArgs args)
-		{
-			SaveCurrentEmail();
-			currentEmailType = EmailTypes.personal;
-			currentEmail = GetEmailType(currentEmailType);
-			PopulateCurrentEmail();
-		}
-
-		private void handle_other_email(object o, EventArgs args)
-		{
-			SaveCurrentEmail();
-			currentEmailType = EmailTypes.other;
-			currentEmail = GetEmailType(currentEmailType);
-			PopulateCurrentEmail();
-		}
-
-
 
 
 		private Pixbuf GetScaledPhoto(Contact c, int height)

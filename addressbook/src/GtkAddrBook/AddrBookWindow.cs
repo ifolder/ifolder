@@ -749,6 +749,7 @@ namespace Novell.iFolder
 				ce.ContactEdited +=
 					new ContactEditedEventHandler(
 							ContactEditedEventHandler);
+				ce.ShowAll();
 			}
 		}
 
