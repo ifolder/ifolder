@@ -114,6 +114,7 @@ namespace Novell.iFolderCom
 		{
 			this.components = new System.ComponentModel.Container();
 			this.rosterLV = new System.Windows.Forms.ListView();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.addedLV = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.add = new System.Windows.Forms.Button();
@@ -124,7 +125,6 @@ namespace Novell.iFolderCom
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.searchTimer = new System.Windows.Forms.Timer(this.components);
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
 			// rosterLV
@@ -136,9 +136,14 @@ namespace Novell.iFolderCom
 			this.rosterLV.Location = new System.Drawing.Point(8, 48);
 			this.rosterLV.Name = "rosterLV";
 			this.rosterLV.Size = new System.Drawing.Size(200, 288);
-			this.rosterLV.TabIndex = 0;
+			this.rosterLV.TabIndex = 2;
 			this.rosterLV.View = System.Windows.Forms.View.Details;
 			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Name";
+			this.columnHeader1.Width = 196;
 			// 
 			// addedLV
 			// 
@@ -150,7 +155,7 @@ namespace Novell.iFolderCom
 			this.addedLV.Location = new System.Drawing.Point(295, 48);
 			this.addedLV.Name = "addedLV";
 			this.addedLV.Size = new System.Drawing.Size(200, 288);
-			this.addedLV.TabIndex = 1;
+			this.addedLV.TabIndex = 5;
 			this.addedLV.View = System.Windows.Forms.View.Details;
 			// 
 			// columnHeader2
@@ -163,7 +168,7 @@ namespace Novell.iFolderCom
 			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.add.Location = new System.Drawing.Point(214, 64);
 			this.add.Name = "add";
-			this.add.TabIndex = 2;
+			this.add.TabIndex = 3;
 			this.add.Text = "Add ->";
 			this.add.Click += new System.EventHandler(this.add_Click);
 			// 
@@ -172,7 +177,7 @@ namespace Novell.iFolderCom
 			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.remove.Location = new System.Drawing.Point(214, 96);
 			this.remove.Name = "remove";
-			this.remove.TabIndex = 3;
+			this.remove.TabIndex = 4;
 			this.remove.Text = "Remove";
 			this.remove.Click += new System.EventHandler(this.remove_Click);
 			// 
@@ -181,7 +186,7 @@ namespace Novell.iFolderCom
 			this.search.Location = new System.Drawing.Point(56, 16);
 			this.search.Name = "search";
 			this.search.Size = new System.Drawing.Size(152, 20);
-			this.search.TabIndex = 4;
+			this.search.TabIndex = 1;
 			this.search.Text = "";
 			this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
 			// 
@@ -190,7 +195,7 @@ namespace Novell.iFolderCom
 			this.label1.Location = new System.Drawing.Point(8, 18);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
-			this.label1.TabIndex = 5;
+			this.label1.TabIndex = 0;
 			this.label1.Text = "Search:";
 			// 
 			// groupBox1
@@ -227,11 +232,6 @@ namespace Novell.iFolderCom
 			// 
 			this.searchTimer.Interval = 500;
 			this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "Name";
-			this.columnHeader1.Width = 196;
 			// 
 			// Picker
 			// 
