@@ -38,19 +38,14 @@
 	@try
 	{
 		int x;
-		NSArray *newDomains = [simiasService GetDomains];
+		NSArray *newDomains = [simiasService GetDomains:YES];
 		// add all domains that are not workgroup
 		for(x=0; x < [newDomains count]; x++)
 		{
 			iFolderDomain *dom = [newDomains objectAtIndex:x];
 
-			if( [ [dom isSlave] boolValue] )
-			{
-				NSLog(@"Adding domain %@", [dom name]);
-				[domains addObject:dom];
-			}
-			else
-				NSLog(@"Not adding domain %@", [dom name]);
+			NSLog(@"Adding domain %@", [dom name]);
+			[domains addObject:dom];
 		}
 	}
 	@catch(NSException ex)
@@ -138,7 +133,31 @@
 
 - (IBAction)toggleSavePassword:(id)sender
 {
-	NSLog(@"Toggle Save Password Clicked");
+	NSString *newPassword = nil;
+
+	if([rememberPassword state] != NO)
+	{
+		if([[password stringValue] length] > 0)
+		{
+			NSLog(@"Saving password...");
+			newPassword = [password stringValue];
+		}
+		else
+			NSLog(@"Saved password was nil, removing saved password...");
+	}
+	else
+	{
+		NSLog(@"Removing saved password...");
+	}
+
+	@try
+	{
+		[simiasService SaveDomainPassword:[selectedDomain ID] password:newPassword];	
+		NSLog(@"Saving password succeeded.");
+	}
+	@catch(NSException ex)
+	{
+	}
 }
 
 
@@ -168,7 +187,26 @@
 			[password setStringValue:[selectedDomain password]];
 		[password setEnabled:YES];
 
-		[rememberPassword setState:0];
+		NSString *savedPassword = nil;
+		
+		@try
+		{
+			savedPassword = [simiasService GetSavedDomainPassword:[selectedDomain ID]];
+		}
+		@catch(NSException ex)
+		{
+		}
+
+		if(savedPassword == nil)
+		{
+			[rememberPassword setState:0];
+		}
+		else
+		{
+			[rememberPassword setState:1];
+			[password setStringValue:savedPassword];
+		}
+
 		[rememberPassword setEnabled:YES];
 		[enableAccount setState:[[selectedDomain isEnabled] boolValue]];
 		[enableAccount setEnabled:YES];

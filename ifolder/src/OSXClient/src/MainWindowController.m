@@ -79,7 +79,7 @@
 	@try
 	{
 		int domainCount;
-		NSArray *newDomains = [simiasService GetDomains];
+		NSArray *newDomains = [simiasService GetDomains:NO];
 
 		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
 		{
