@@ -256,16 +256,20 @@ namespace Novell.iFolder
 			Uri normalizedPath = new Uri( path );
 			iFolder ifolder = null;
 
-			foreach ( iFolder tempif in this )
+			ICSList collectionList = store.GetCollectionsByName(Path.GetFileName(path));
+			foreach (ShallowNode sn in collectionList)
 			{
-				Uri ifolderPath = new Uri( tempif.LocalPath );
-
-				bool ignoreCase = MyEnvironment.Unix ? false : true;
-				if ( String.Compare( normalizedPath.LocalPath, ifolderPath.LocalPath, ignoreCase ) == 0 )
+				iFolder tempif = GetiFolderById(sn.ID);
+				if (tempif != null)
 				{
-					ifolder = tempif;
-					break;
-				}
+					Uri ifolderPath = new Uri( tempif.LocalPath );
+
+					if ( String.Compare( normalizedPath.LocalPath, ifolderPath.LocalPath, !MyEnvironment.Unix ) == 0 )
+					{
+						ifolder = tempif;
+						break;
+					}
+				}					
 			}
 
 			return ifolder;
