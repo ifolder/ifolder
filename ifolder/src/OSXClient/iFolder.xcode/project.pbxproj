@@ -608,6 +608,36 @@
 			settings = {
 			};
 		};
+		3E1F31B107EA2AFB005E45BA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AuthStatus.h;
+			path = src/AuthStatus.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E1F31B207EA2AFB005E45BA = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AuthStatus.m;
+			path = src/AuthStatus.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E1F31B307EA2AFB005E45BA = {
+			fileRef = 3E1F31B107EA2AFB005E45BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E1F31B407EA2AFB005E45BA = {
+			fileRef = 3E1F31B207EA2AFB005E45BA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E215A4C07E73C310082EACE = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -2029,6 +2059,8 @@
 		};
 		3EEA9A6507B1DBCC0015FCF4 = {
 			children = (
+				3E1F31B107EA2AFB005E45BA,
+				3E1F31B207EA2AFB005E45BA,
 				3E0E6CBC07C7D41B0057D505,
 				3E0E6CBD07C7D41B0057D505,
 				3EE278EC07C46CD500A645A0,
@@ -2275,6 +2307,7 @@
 				3E0E6D0107C7E7290057D505,
 				3EF97A7D07DF77E100BA8880,
 				3E215A4E07E73C310082EACE,
+				3E1F31B307EA2AFB005E45BA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2331,6 +2364,7 @@
 				3E0E6CBF07C7D41B0057D505,
 				3E0E6D0007C7E7290057D505,
 				3E215A4F07E73C310082EACE,
+				3E1F31B407EA2AFB005E45BA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

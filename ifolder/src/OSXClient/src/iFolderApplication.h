@@ -43,6 +43,7 @@
 @class SMFileSyncEvent;
 @class SMCollectionSyncEvent;
 @class SMNodeEvent;
+@class AuthStatus;
 
 
 
@@ -73,7 +74,7 @@
 - (void)showLoginWindow:(NSString *)domainID;
 - (void)addLog:(NSString *)entry;
 - (void)initializeSimiasEvents;
-- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
+- (AuthStatus *)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
 - (NSArrayController *)logArrayController;
 - (BOOL)simiasIsRunning;
 - (void)clearLog;

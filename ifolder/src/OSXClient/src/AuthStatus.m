@@ -21,21 +21,21 @@
  * 
  ***********************************************************************/
 
-#import "iFolderDomain.h"
-#import "iFolder.h"
+#import "AuthStatus.h"
 
-@implementation iFolderDomain
+
+@implementation AuthStatus
+
+
 
 -(id) init
 {
 	if(self = [super init])
 	{
 		NSArray *keys	= [NSArray arrayWithObjects:	@"name", 
-														@"password",
 														nil];
 
-		NSArray *values = [NSArray arrayWithObjects:	@"New Domain",
-														@"",
+		NSArray *values = [NSArray arrayWithObjects:	@"",
 														nil];
 
 		properties = [[NSMutableDictionary alloc]
@@ -76,81 +76,34 @@
 
 
 
--(NSString *)ID
+-(NSNumber *)statusCode
 {
-	return [properties objectForKey:@"ID"];
+	return [self valueForKeyPath:@"properties.statusCode"]; 
 }
 
 
--(NSString *)name
+
+
+-(int)totalGraceLogins
 {
-	return [self valueForKeyPath:@"properties.name"]; 
-}
-
-
--(NSString *)userName
-{
-	return [self valueForKeyPath:@"properties.userName"]; 
-}
-
--(NSString *)userID
-{
-	return [self valueForKeyPath:@"properties.userID"]; 
-}
-
--(NSString *)host
-{
-	return [self valueForKeyPath:@"properties.host"]; 
-}
-
-
--(NSString *)poBoxID
-{
-	return [self valueForKeyPath:@"properties.poboxID"]; 
-}
-
-
--(NSString *)password
-{
-	return [self valueForKeyPath:@"properties.password"]; 
-}
-
--(NSString *)description
-{
-	return [self valueForKeyPath:@"properties.description"]; 
-}
-
-
--(NSNumber *)isDefault
-{
-	return [self valueForKeyPath:@"properties.isDefault"]; 
-}
-
-
--(NSNumber *)isSlave
-{
-	return [self valueForKeyPath:@"properties.isSlave"]; 
-}
-
-
--(NSNumber *)isEnabled
-{
-	return [self valueForKeyPath:@"properties.isEnabled"]; 
-}
-
--(BOOL)authenticated
-{
-	NSNumber *num = [self valueForKeyPath:@"properties.authenticated"];
+	NSNumber *num = [self valueForKeyPath:@"properties.totalGraceLogins"];
 	if(num != nil)
-		return [num boolValue];
+		return [num intValue];
 	else
 		return NO;
 }
 
 
--(NSNumber *)statusCode
+
+
+-(int)remainingGraceLogins
 {
-	return [self valueForKeyPath:@"properties.statusCode"]; 
+	NSNumber *num = [self valueForKeyPath:@"properties.remainingGraceLogins"];
+	if(num != nil)
+		return [num intValue];
+	else
+		return NO;
 }
+
 
 @end
