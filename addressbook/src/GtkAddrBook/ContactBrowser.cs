@@ -457,6 +457,14 @@ namespace Novell.AddressBook.UI.gtk
 		
 		public void on_HelpButton_clicked(object o, EventArgs args)
 		{
+			try
+			{
+				Gnome.Url.Show(Util.HelpURL("index.html"));
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+			}
 		}
 
 		public void on_DeleteButton_clicked(object o, EventArgs args)

@@ -24,6 +24,7 @@
 using System;
 
 using Gtk;
+using Gnome;
 using Gdk;
 using GtkSharp;
 using Novell.AddressBook.UI.gtk;
@@ -34,11 +35,15 @@ namespace ContactBrowser
 	{
 		public static void Main (string[] args)
 		{
-			Application.Init();
+			Gnome.Program program =
+				new Program("ContactBrowser", "0.0.1", Modules.UI, args);
+
+//			Application.Init();
 			ContactBrowser cb = new ContactBrowser();
 			cb.AddrBookClosed += new EventHandler(on_cb_closed);
 			cb.ShowAll();
-			Application.Run();
+			program.Run();
+//			Application.Run();
 		}
 
 		public static void on_cb_closed(object o, EventArgs args) 

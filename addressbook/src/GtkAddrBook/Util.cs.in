@@ -29,6 +29,7 @@ namespace Novell.AddressBook.UI.gtk
 		internal static string prefix = "@prefix@";
 		internal static string gladedir = "@prefix@/share/ifolder/glade";
 		internal static string imagesdir = "@prefix@/share/ifolder/images";
+		internal static string helpdir = "@prefix@/help";
 
 		internal static string GladePath(string gladeStr)
 		{
@@ -38,6 +39,11 @@ namespace Novell.AddressBook.UI.gtk
 		internal static string ImagesPath(string imgStr)
 		{
 			return string.Format("{0}/{1}", imagesdir, imgStr);
+		}
+
+		internal static string HelpURL(string helpFile)
+		{
+			return string.Format("file:///{0}/en/doc/{1}", helpdir, helpFile);
 		}
 	}
 }
