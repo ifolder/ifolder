@@ -1,0 +1,12 @@
+LIBRARY	ifolder-rendezvous
+EXPORTS
+    RegisterLocalMember
+    DeregisterLocalMember
+    GetMemberInfo
+    BrowseMembersInit
+    BrowseMembers
+    BrowseMembersShutdown
+    
+    
+    
+

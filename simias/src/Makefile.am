@@ -1,4 +1,4 @@
-DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias GaimDomain
+DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias GaimDomain libsimdezvous
 
 if DARWIN
 SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService WebService SyncService POBoxWS SimiasApp SimiasServer libsimias GaimDomain
