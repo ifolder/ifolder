@@ -23,7 +23,6 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-//using System.Data;
 using System.Diagnostics;
 using System.Threading;
 using System.Web;
@@ -347,7 +346,6 @@ namespace Simias.POBoxService.Web
 				// Remove the subscription from the "toIdentity" PO box
 				toPOBox.Delete(cSub);
 				toPOBox.Commit(cSub);
-
 			}
 			else
 			if (toMember.IsOwner == true)
@@ -680,7 +678,15 @@ namespace Simias.POBoxService.Web
 				throw new ApplicationException("Specified \"fromUserID\" does not exist in the Domain Roster");
 			}
 
-			// FIXME:  Verify the fromMember is the caller
+			// Verify the fromMember is the caller
+			log.Info("Current Principal: " + Thread.CurrentPrincipal);
+
+			/*
+			if (fromUserID != Thread.CurrentPrincipal)
+			{
+				throw new ApplicationException("Specified \"fromUserID\" is not the caller");
+			}
+			*/
 
 			sharedCollection = store.GetCollectionByID(sharedCollectionID); 
 			if (sharedCollection == null)
