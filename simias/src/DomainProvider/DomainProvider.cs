@@ -211,7 +211,7 @@ namespace Simias
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindNextDomainMembers( string domainID, ref object searchContext, out Member[] memberList, int count )
+		static public bool FindNextDomainMembers( string domainID, ref object searchContext, out Member[] memberList, int count )
 		{
 			bool moreEntries = false;
 
