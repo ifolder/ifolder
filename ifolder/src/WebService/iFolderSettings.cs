@@ -36,13 +36,61 @@ namespace Novell.iFolder.Web
 	{
 		public string DefaultDomainID;
 		public bool HaveEnterprise;
+		public bool DisplayConfirmation;
+		public string EnterpriseName;
+		public string EnterpriseDescription;
+		public int DefaultSyncInterval;
+		public bool UseProxy;
+		public string ProxyHost;
+		public int ProxyPort;
+		public string CurrentUserID;
 
 		public iFolderSettings()
 		{
 			Store store = Store.GetStore();
 			DefaultDomainID = store.DefaultDomain;
-			HaveEnterprise = (DefaultDomainID != 
-				Simias.Storage.Domain.WorkGroupDomainID);
+			
+			HaveEnterprise = false;
+			Domain enterpriseDomain = null;
+			LocalDatabase localDB = store.GetDatabaseObject();
+			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
+			foreach (ShallowNode sn in domainList)
+			{
+				if (!sn.Name.Equals(Domain.WorkGroupDomainName))
+				{
+					HaveEnterprise = true;
+					enterpriseDomain = store.GetDomain(sn.ID);
+					break;
+				}
+			}
+
+			if (enterpriseDomain != null)
+			{
+				EnterpriseName = enterpriseDomain.Name;
+				EnterpriseDescription = enterpriseDomain.Description;
+			}
+			
+			Configuration config = Configuration.GetConfiguration();
+			bool defaultValue = true;
+			DisplayConfirmation = config.Get("iFolderUI", "Display Confirmation", defaultValue.ToString()) == defaultValue.ToString();
+
+			DefaultSyncInterval = 
+				Simias.Policy.SyncInterval.GetInterval();
+
+			// I don't know how to do this but I know we'll need it
+			UseProxy = false;
+
+			Member currentMember = store.GetRoster(DefaultDomainID).GetCurrentMember();
+			if (currentMember != null)
+			{
+				CurrentUserID = currentMember.UserID;
+			}
+		}
+
+		public static void SetDisplayConfirmation(bool displayConfirmation)
+		{
+			Configuration config = Configuration.GetConfiguration();
+			config.Set("iFolderUI", "Display Confirmation", displayConfirmation.ToString());
 		}
 	}
 }
