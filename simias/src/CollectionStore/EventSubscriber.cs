@@ -279,10 +279,11 @@ namespace Simias.Storage
 		{
 			try
 			{
-				switch (args.GetType().ToString())
+				string typeString = args.GetType().ToString();
+				switch (typeString)
 				{
-					case "Simias.Event.NodeEventArgs":
-					case "Simias.Event.CollectionRootChangedEventArgs":
+					case "Simias.Storage.NodeEventArgs":
+					case "Simias.Storage.CollectionRootChangedEventArgs":
 						if (applyNodeFilter((NodeEventArgs)args))
 						{
 							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);
@@ -307,8 +308,8 @@ namespace Simias.Storage
 							}
 						}
 						break;
-					case "Simias.Event.FileEventArgs":
-					case "Simias.Event.FileRenameEventArgs":
+					case "Simias.Storage.FileEventArgs":
+					case "Simias.Storage.FileRenameEventArgs":
 						if (applyFileFilter((FileEventArgs)args))
 						{
 							EventType changeType = (EventType)Enum.Parse(typeof(EventType), (string)args.EventData, false);

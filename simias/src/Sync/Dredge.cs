@@ -59,6 +59,9 @@ public class Dredger
 	 *   upstream server.
 	 */
 	bool onServer = false;
+	const string lastDredgeProp = "LastDredgeTime";
+	DateTime dredgeTimeStamp = DateTime.Now;
+	DateTime lastDredgeTime = DateTime.MinValue;
 
 	//--------------------------------------------------------------------
 	// only returns true if file exists and name matches case exactly
@@ -182,21 +185,14 @@ public class Dredger
 		//Log.Spew("Dredger processing subtree of path {0}", path);
 
 		DirectoryInfo tmpDi = new DirectoryInfo(path);
-		bool timesMatch = false;
-		try
+		bool lookForDeletes = false;
+		
+		if (tmpDi.LastWriteTime > lastDredgeTime)
 		{
-			if (dnode.LastWriteTime == tmpDi.LastWriteTime)
-			{
-				timesMatch = true;
-			}
+			lookForDeletes = true;
 		}
-		catch
-		{
-			//dnode.LastAccessTime = tmpDi.LastAccessTime;
-			//dnode.LastWriteTime = tmpDi.LastWriteTime;
-			//collection.Commit(dnode);
-		}
-		//if (!timesMatch)
+		
+		if (lookForDeletes)
 		{
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
@@ -207,14 +203,16 @@ public class Dredger
 					DeleteNode(kid);
 				// else Log.Spew("Dredger leaving node {0}", kid.Name);
 			}
-
-			// merge files from file system to store
-			foreach (string file in Directory.GetFiles(path))
-				DoNode(dnode, file, typeof(FileNode).Name);
-
-			//dnode.LastWriteTime = tmpDi.LastWriteTime;
-            //collection.Commit(dnode);
 		}
+
+		// merge files from file system to store
+		foreach (string file in Directory.GetFiles(path))
+		{
+			if (File.GetLastWriteTime(file) > lastDredgeTime)
+				DoNode(dnode, file, typeof(FileNode).Name);
+		}
+		
+		
 
 		// merge subdirs and recurse.
 		foreach (string dir in Directory.GetDirectories(path))
@@ -223,12 +221,63 @@ public class Dredger
 		}
 	}
 
+	/// <summary>
+	/// Dredge the Managed path.
+	/// </summary>
+	/// <param name="path"></param>
+	void DoManagedPath(string path)
+	{
+		DirectoryInfo tmpDi = new DirectoryInfo(path);
+		
+		// merge files from file system to store
+		foreach (string file in Directory.GetFiles(path))
+		{
+			if (File.GetLastWriteTime(file) > lastDredgeTime)
+			{
+				// here we are just checking for modified files
+				BaseFileNode unode = (BaseFileNode)collection.GetNodeByID(Path.GetFileName(file));
+				if (unode != null)
+				{
+					DateTime lastWrote = File.GetLastWriteTime(file);
+					DateTime created = File.GetCreationTime(file);
+					if (unode.LastWriteTime != lastWrote)
+					{
+						unode.LastWriteTime = lastWrote;
+						unode.CreationTime = created;
+						Log.Spew("Dredger updating store file node for {0} {1}", path, file);
+						collection.Commit(unode);
+					}
+				}
+			}
+		}
+			
+		//dnode.LastWriteTime = tmpDi.LastWriteTime;
+		//collection.Commit(dnode);
+	}
+
 	//--------------------------------------------------------------------
+	/// <summary>
+	/// Creates a dredger for this collection and dredges the system.
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="onServer"></param>
 	public Dredger(Collection collection, bool onServer)
 	{
 		this.collection = collection;
 		this.onServer = onServer;
+		try
+		{
+			lastDredgeTime = (DateTime)(collection.Properties.GetSingleProperty(lastDredgeProp).Value);
+		}
+		catch
+		{
+		}
 		DoSubtree(collection.GetRootDirectory());
+		DoManagedPath(collection.ManagedPath);
+		Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
+		tsp.LocalProperty = true;
+		collection.Properties.ModifyProperty(tsp);
+		collection.Commit(collection);
 	}
 }
 
@@ -251,7 +300,7 @@ public class Dredger
 			{
 				try
 				{
-					if (!paused ) //& needToDredge)
+					if (!paused  & needToDredge)
 					{
 						foreach (ShallowNode sn in store)
 						{
@@ -272,7 +321,8 @@ public class Dredger
 								}
 							}
 						}
-						needToDredge = false;
+						if (!MyEnvironment.Mono)
+							needToDredge = false;
 					}
 				}
 				catch
@@ -284,36 +334,54 @@ public class Dredger
 
 		#region IThreadService Members
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="conf"></param>
 		public void Start(Simias.Configuration conf)
 		{
 			store = new Store(conf);
 			paused = shuttingDown = false;
 			// Start listening to file change events.
 			EventSubscriber es = new EventSubscriber(conf);
-			//es.FileChanged += new FileEventHandler(es_FileChanged);
-			//es.FileCreated += new FileEventHandler(es_FileCreated);
-			//es.FileDeleted += new FileEventHandler(es_FileDeleted);
-			//es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
+			es.FileChanged += new FileEventHandler(es_FileChanged);
+			es.FileCreated += new FileEventHandler(es_FileCreated);
+			es.FileDeleted += new FileEventHandler(es_FileDeleted);
+			es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;
 			thread.Start();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Resume()
 		{
 			paused = false;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Pause()
 		{
 			paused = true;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="data"></param>
 		public void Custom(int message, string data)
 		{
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Stop()
 		{
 			shuttingDown = true;
@@ -331,7 +399,9 @@ public class Dredger
 		/// <summary>
 		/// Gets the node represented by the file.
 		/// </summary>
-		/// <param name="args"></param>
+		/// <param name="collection"></param>
+		/// <param name="fullPath"></param>
+		/// <param name="isFile"></param>
 		/// <returns></returns>
 		private Node GetNodeFromFileName(Collection collection, string fullPath, out bool isFile)
 		{
@@ -536,14 +606,7 @@ public class Dredger
 
 		void ModifyDirNode(Collection collection, DirNode node, FileEventArgs args)
 		{
-			// here we are just checking for modified files
-			DateTime lastWrote = Directory.GetLastWriteTime(args.FullPath);
-			if (node.LastWriteTime != lastWrote)
-			{
-				node.LastWriteTime = lastWrote;
-				Log.Spew("Updating Dir node for {0} {1} from event.", args.FullPath, node.ID);
-				collection.Commit(node);
-			}
+			// Don't do anything it could cause a collision.
 		}
 
 		void RenameFileNode(Collection collection, FileNode node, FileRenameEventArgs args)
@@ -582,37 +645,40 @@ public class Dredger
 
 		void RenameDirNode(Collection collection, DirNode node, FileRenameEventArgs args)
 		{
-			// Make sure the node is still in the collection.
-			if (!(Path.GetDirectoryName(args.OldPath).Equals(Path.GetDirectoryName(args.FullPath))))
+			// Do not change a root node.
+			if (!node.IsRoot)
 			{
-				// We have a new parent find the parent node.
-				bool isFile;
-				Node parent = GetNodeFromFileName(collection, Path.GetDirectoryName(args.FullPath), out isFile);
-				if (parent != null && !isFile)
+				// Make sure the node is still in the collection.
+				if (!(Path.GetDirectoryName(args.OldPath).Equals(Path.GetDirectoryName(args.FullPath))))
 				{
-					// We have a parent reset the parent node.
-					node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
+					// We have a new parent find the parent node.
+					bool isFile;
+					Node parent = GetNodeFromFileName(collection, Path.GetDirectoryName(args.FullPath), out isFile);
+					if (parent != null && !isFile)
+					{
+						// We have a parent reset the parent node.
+						node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
+					}
+					else
+					{
+						// The node is no longer in the collection.
+						// Delete the node.
+						DeleteNode(collection, node);
+						return;
+					}
 				}
-				else
+				// Set the new name.
+				node.Name = args.Name;
+				// Set the last access time.
+				DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
+				if (node.LastWriteTime != lastWrote)
 				{
-					// The node is no longer in the collection.
-					// Delete the node.
-					DeleteNode(collection, node);
-					return;
+					node.LastWriteTime = lastWrote;
+					Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
 				}
+				collection.Commit(node);
+				return;
 			}
-			// Set the new name.
-			node.Name = args.Name;
-			// Set the last access time.
-			DateTime lastWrote = File.GetLastWriteTime(args.FullPath);
-			if (node.LastWriteTime != lastWrote)
-			{
-				node.LastWriteTime = lastWrote;
-				Log.Spew("Updating file node for {0} {1} from event.", args.FullPath, node.ID);
-			}
-			collection.Commit(node);
-			return;
 		}
-
 	}
 }
