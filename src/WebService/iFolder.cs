@@ -130,6 +130,7 @@ namespace Novell.iFolder.Web
 			this.IsSubscription = true;
 			this.EnumeratedState = (int) subscription.SubscriptionState;
 			this.Owner = subscription.FromName;
+			this.OwnerID = subscription.FromIdentity;
 			this.CurrentUserRights = subscription.SubscriptionRights.ToString();
 
 			if(	(subscription.SubscriptionState == 

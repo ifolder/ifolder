@@ -186,7 +186,11 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="RevertiFolderResponse">
-        <xs:complexType />
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="RevertiFolderResult" type="s0:iFolder" />
+          </xs:sequence>
+        </xs:complexType>
       </xs:element>
       <xs:element name="GetAlliFolders">
         <xs:complexType />
@@ -344,18 +348,18 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="GetiFolderUserFromiFolder">
+      <xs:element name="GetiFolderUserFromNodeID">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
-            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CollectionID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="NodeID" type="xs:string" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="GetiFolderUserFromiFolderResponse">
+      <xs:element name="GetiFolderUserFromNodeIDResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderUserFromiFolderResult" type="s0:iFolderUser" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GetiFolderUserFromNodeIDResult" type="s0:iFolderUser" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -747,11 +751,11 @@
   <message name="GetiFolderUserSoapOut">
     <part name="parameters" element="s0:GetiFolderUserResponse" />
   </message>
-  <message name="GetiFolderUserFromiFolderSoapIn">
-    <part name="parameters" element="s0:GetiFolderUserFromiFolder" />
+  <message name="GetiFolderUserFromNodeIDSoapIn">
+    <part name="parameters" element="s0:GetiFolderUserFromNodeID" />
   </message>
-  <message name="GetiFolderUserFromiFolderSoapOut">
-    <part name="parameters" element="s0:GetiFolderUserFromiFolderResponse" />
+  <message name="GetiFolderUserFromNodeIDSoapOut">
+    <part name="parameters" element="s0:GetiFolderUserFromNodeIDResponse" />
   </message>
   <message name="InviteUserSoapIn">
     <part name="parameters" element="s0:InviteUser" />
@@ -915,7 +919,9 @@
   <message name="RevertiFolderHttpGetIn">
     <part name="iFolderID" type="s:string" />
   </message>
-  <message name="RevertiFolderHttpGetOut" />
+  <message name="RevertiFolderHttpGetOut" >
+    <part name="Body" element="s0:iFolder" />
+  </message>
   <message name="GetAlliFoldersHttpGetIn" />
   <message name="GetAlliFoldersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolder" />
@@ -977,11 +983,11 @@
   <message name="GetiFolderUserHttpGetOut">
     <part name="Body" element="s0:iFolderUser" />
   </message>
-  <message name="GetiFolderUserFromiFolderHttpGetIn">
-    <part name="UserID" type="s:string" />
-    <part name="iFolderID" type="s:string" />
+  <message name="GetiFolderUserFromNodeIDHttpGetIn">
+    <part name="CollectionID" type="s:string" />
+    <part name="NodeID" type="s:string" />
   </message>
-  <message name="GetiFolderUserFromiFolderHttpGetOut">
+  <message name="GetiFolderUserFromNodeIDHttpGetOut">
     <part name="Body" element="s0:iFolderUser" />
   </message>
   <message name="InviteUserHttpGetIn">
@@ -1137,7 +1143,9 @@
   <message name="RevertiFolderHttpPostIn">
     <part name="iFolderID" type="s:string" />
   </message>
-  <message name="RevertiFolderHttpPostOut" />
+  <message name="RevertiFolderHttpPostOut" >
+    <part name="Body" element="s0:iFolder" />
+  </message>
   <message name="GetAlliFoldersHttpPostIn" />
   <message name="GetAlliFoldersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolder" />
@@ -1199,11 +1207,11 @@
   <message name="GetiFolderUserHttpPostOut">
     <part name="Body" element="s0:iFolderUser" />
   </message>
-  <message name="GetiFolderUserFromiFolderHttpPostIn">
-    <part name="UserID" type="s:string" />
-    <part name="iFolderID" type="s:string" />
+  <message name="GetiFolderUserFromNodeIDHttpPostIn">
+    <part name="CollectionID" type="s:string" />
+    <part name="NodeID" type="s:string" />
   </message>
-  <message name="GetiFolderUserFromiFolderHttpPostOut">
+  <message name="GetiFolderUserFromNodeIDHttpPostOut">
     <part name="Body" element="s0:iFolderUser" />
   </message>
   <message name="InviteUserHttpPostIn">
@@ -1415,10 +1423,10 @@
       <output message="s0:GetiFolderUserSoapOut" />
       <documentation>Lookup a single member to a collection</documentation>
     </operation>
-    <operation name="GetiFolderUserFromiFolder">
-      <input message="s0:GetiFolderUserFromiFolderSoapIn" />
-      <output message="s0:GetiFolderUserFromiFolderSoapOut" />
-      <documentation>Lookup a single member to a collection</documentation>
+    <operation name="GetiFolderUserFromNodeID">
+      <input message="s0:GetiFolderUserFromNodeIDSoapIn" />
+      <output message="s0:GetiFolderUserFromNodeIDSoapOut" />
+      <documentation>Lookup a user in a collection based on node ID.</documentation>
     </operation>
     <operation name="InviteUser">
       <input message="s0:InviteUserSoapIn" />
@@ -1622,10 +1630,10 @@
       <output message="s0:GetiFolderUserHttpGetOut" />
       <documentation>Lookup a single member to a collection</documentation>
     </operation>
-    <operation name="GetiFolderUserFromiFolder">
-      <input message="s0:GetiFolderUserFromiFolderHttpGetIn" />
-      <output message="s0:GetiFolderUserFromiFolderHttpGetOut" />
-      <documentation>Lookup a single member to a collection</documentation>
+    <operation name="GetiFolderUserFromNodeID">
+      <input message="s0:GetiFolderUserFromNodeIDHttpGetIn" />
+      <output message="s0:GetiFolderUserFromNodeIDHttpGetOut" />
+      <documentation>Lookup a user in a collection based on node ID.</documentation>
     </operation>
     <operation name="InviteUser">
       <input message="s0:InviteUserHttpGetIn" />
@@ -1829,10 +1837,10 @@
       <output message="s0:GetiFolderUserHttpPostOut" />
       <documentation>Lookup a single member to a collection</documentation>
     </operation>
-    <operation name="GetiFolderUserFromiFolder">
-      <input message="s0:GetiFolderUserFromiFolderHttpPostIn" />
-      <output message="s0:GetiFolderUserFromiFolderHttpPostOut" />
-      <documentation>Lookup a single member to a collection</documentation>
+    <operation name="GetiFolderUserFromNodeID">
+      <input message="s0:GetiFolderUserFromNodeIDHttpPostIn" />
+      <output message="s0:GetiFolderUserFromNodeIDHttpPostOut" />
+      <documentation>Lookup a user in a collection based on node ID.</documentation>
     </operation>
     <operation name="InviteUser">
       <input message="s0:InviteUserHttpPostIn" />
@@ -2129,8 +2137,8 @@
         <soap:body use="literal" />
       </output>
     </operation>
-    <operation name="GetiFolderUserFromiFolder">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromiFolder" style="document" />
+    <operation name="GetiFolderUserFromNodeID">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUserFromNodeID" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2485,8 +2493,8 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
-    <operation name="GetiFolderUserFromiFolder">
-      <http:operation location="/GetiFolderUserFromiFolder" />
+    <operation name="GetiFolderUserFromNodeID">
+      <http:operation location="/GetiFolderUserFromNodeID" />
       <input>
         <http:urlEncoded />
       </input>
@@ -2823,8 +2831,8 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
-    <operation name="GetiFolderUserFromiFolder">
-      <http:operation location="/GetiFolderUserFromiFolder" />
+    <operation name="GetiFolderUserFromNodeID">
+      <http:operation location="/GetiFolderUserFromNodeID" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

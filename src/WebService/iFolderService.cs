@@ -217,7 +217,7 @@ namespace Novell.iFolder.Web
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
 			if(col == null)
-				throw new Exception("Invalid iFolderID");
+				return null;
 
 			return new iFolder(col);
 		}
@@ -308,13 +308,20 @@ namespace Novell.iFolder.Web
 		/// The ID of the collection representing this iFolder
 		/// </param>
 		/// <returns>
-		/// true if the iFolder was successfully removed
+		/// An iFolder object representing the subscription for the reverted iFolder.
 		/// </returns>
 		[WebMethod(Description="Revert an iFolder on the local computer but remain a member")]
 		[SoapDocumentMethod]
-		public void RevertiFolder(string iFolderID)
+		public iFolder RevertiFolder(string iFolderID)
 		{
-			SharedCollection.RevertSharedCollection(iFolderID);
+			iFolder ifolder = null;
+			Subscription sub = SharedCollection.RevertSharedCollection(iFolderID);
+			if (sub != null)
+			{
+				ifolder = new iFolder(sub);
+			}
+
+			return ifolder;
 		}
 
 
@@ -794,41 +801,44 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that gets a member from the specified collection
 		/// </summary>
-		/// <param name = "UserID">
-		/// The ID of the member to get
+		/// <param name = "CollectionID">
+		/// The ID of the collection to search.
+		/// </param>
+		/// <param name = "NodeID">
+		/// The ID of the node.
 		/// </param>
 		/// <returns>
-		/// Member that matches the UserID
+		/// A user object.
 		/// </returns>
-		[WebMethod(Description="Lookup a single member to a collection")]
+		[WebMethod(Description="Lookup a user in a collection based on node ID.")]
 		[SoapDocumentMethod]
-		public iFolderUser GetiFolderUserFromiFolder(	string UserID, 
-														string iFolderID )
+		public iFolderUser GetiFolderUserFromNodeID(string CollectionID,
+													string NodeID)
 		{
 			Store store = Store.GetStore();
 
-			Collection col = store.GetCollectionByID(iFolderID);
+			Collection col = store.GetCollectionByID(CollectionID);
 			if(col == null)
-				throw new Exception("Invalid iFolderID");
+				throw new Exception("Invalid CollectionID");
 
-			Simias.Storage.Member simMem = col.GetMemberByID(UserID);
-			if(simMem != null)
+			Node node = col.GetNodeByID(NodeID);
+			if(node != null)
 			{
-				return new iFolderUser(simMem);
+				return new iFolderUser(new Member(node));
 			}
 			else
 			{
-				Node node = col.GetNodeByID(UserID);
-				if (node != null)
+				POBox poBox = POBox.GetPOBoxByID(store, CollectionID);
+				if (poBox != null)
 				{
-					Subscription sub = new Subscription(node);
-					if (sub != null)
+					node = poBox.GetNodeByID(NodeID);
+					if (node != null)
 					{
-						return new iFolderUser(sub);
+						return new iFolderUser(new Subscription(node));
 					}
 				}
-					
-				throw new Exception("Invalid UserID");
+
+				throw new Exception("Invalid NodeID");
 			}
 		}
 
