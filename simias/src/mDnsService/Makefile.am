@@ -7,7 +7,7 @@ mDnsService_INCLUDES =
 mDnsService_RESOURCES =
 mDnsService_FLAGS = $(CSC_EXEFLAG)
 mDnsService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll mDnsResponder.dll
-mDnsService_LIBPATH = ../Simias.dll $(MDNSRESPONDER_DIR)
+mDnsService_LIBPATH = ../SimiasClient ../Simias.dll $(MDNSRESPONDER_DIR)
 
 PROJECT_FILES = $(srcdir)/mDnsService.csproj
 
