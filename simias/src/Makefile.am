@@ -1,6 +1,20 @@
-SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
+if DARWIN
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer libsimias
 
 DIST_SUBDIRS = $(SUBDIRS)
+endif
+
+if LINUX
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
+
+DIST_SUBDIRS = $(SUBDIRS) libsimias
+endif
+
+if WINDOWS
+SUBDIRS = SimiasClient Simias.dll FlaimProvider mDnsService AddressBook WebService SyncService POBoxWS SimiasApp SimiasServer
+
+DIST_SUBDIRS = $(SUBDIRS) libsimias
+endif
 
 EXTRA_DIST = ifdata simias-snakeoil.keys SqliteProvider
 

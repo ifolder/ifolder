@@ -183,6 +183,7 @@ case $SIMIAS_OS in
 		LD='$(CXX) -dynamiclib '
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
+		GSOAP_PATH="$TOOLDIR/gsoap/macosx-2.7"
 		#StoreProviderAssembly="SqliteProvider.dll"
 		#StoreProviderType="Simias.Storage.Provider.Sqlite.SqliteProvider"
     ;;
@@ -220,6 +221,7 @@ case $SIMIAS_OS in
         AC_CHECK_PROG(CXX, g++, g++)
 		StoreProviderAssembly="Simias.dll"
 		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
+		GSOAP_PATH="$TOOLDIR/gsoap/linux-2.7"
     ;;
     #
     # Windows-specific configuration
@@ -283,6 +285,7 @@ case $SIMIAS_OS in
         STORELIB="sqlite.dll"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
         SYSTEM_XML='System.XML.dll'
+		GSOAP_PATH="$TOOLDIR/gsoap/WIN32-2.7"
         #
     	# Override Linux-like directory structure
         #
@@ -326,6 +329,7 @@ AC_SUBST(webdir)
 AC_SUBST(webbindir)
 AC_SUBST(StoreProviderAssembly)
 AC_SUBST(StoreProviderType)
+AC_SUBST(GSOAP_PATH)
 
 #
 # Set pkg-config variables
@@ -457,6 +461,7 @@ src/WebService/Makefile
 src/POBoxWS/Makefile
 src/SyncService/Makefile
 src/SqliteProvider/Makefile
+src/libsimias/Makefile
 test/Makefile
 test/ChangeLog/Makefile
 test/Common/Makefile
