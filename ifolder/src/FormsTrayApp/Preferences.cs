@@ -176,6 +176,8 @@ namespace Novell.FormsTrayApp
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.details = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.logout = new System.Windows.Forms.Button();
+			this.login = new System.Windows.Forms.Button();
 			this.activate = new System.Windows.Forms.Button();
 			this.password = new System.Windows.Forms.TextBox();
 			this.server = new System.Windows.Forms.TextBox();
@@ -194,8 +196,6 @@ namespace Novell.FormsTrayApp
 			this.ok = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-			this.login = new System.Windows.Forms.Button();
-			this.logout = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
@@ -745,6 +745,62 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.Text = resources.GetString("groupBox2.Text");
 			this.groupBox2.Visible = ((bool)(resources.GetObject("groupBox2.Visible")));
 			// 
+			// logout
+			// 
+			this.logout.AccessibleDescription = resources.GetString("logout.AccessibleDescription");
+			this.logout.AccessibleName = resources.GetString("logout.AccessibleName");
+			this.logout.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("logout.Anchor")));
+			this.logout.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("logout.BackgroundImage")));
+			this.logout.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("logout.Dock")));
+			this.logout.Enabled = ((bool)(resources.GetObject("logout.Enabled")));
+			this.logout.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("logout.FlatStyle")));
+			this.logout.Font = ((System.Drawing.Font)(resources.GetObject("logout.Font")));
+			this.helpProvider1.SetHelpKeyword(this.logout, resources.GetString("logout.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.logout, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("logout.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.logout, resources.GetString("logout.HelpString"));
+			this.logout.Image = ((System.Drawing.Image)(resources.GetObject("logout.Image")));
+			this.logout.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.ImageAlign")));
+			this.logout.ImageIndex = ((int)(resources.GetObject("logout.ImageIndex")));
+			this.logout.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("logout.ImeMode")));
+			this.logout.Location = ((System.Drawing.Point)(resources.GetObject("logout.Location")));
+			this.logout.Name = "logout";
+			this.logout.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("logout.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.logout, ((bool)(resources.GetObject("logout.ShowHelp"))));
+			this.logout.Size = ((System.Drawing.Size)(resources.GetObject("logout.Size")));
+			this.logout.TabIndex = ((int)(resources.GetObject("logout.TabIndex")));
+			this.logout.Text = resources.GetString("logout.Text");
+			this.logout.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.TextAlign")));
+			this.logout.Visible = ((bool)(resources.GetObject("logout.Visible")));
+			this.logout.Click += new System.EventHandler(this.logout_Click);
+			// 
+			// login
+			// 
+			this.login.AccessibleDescription = resources.GetString("login.AccessibleDescription");
+			this.login.AccessibleName = resources.GetString("login.AccessibleName");
+			this.login.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("login.Anchor")));
+			this.login.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("login.BackgroundImage")));
+			this.login.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("login.Dock")));
+			this.login.Enabled = ((bool)(resources.GetObject("login.Enabled")));
+			this.login.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("login.FlatStyle")));
+			this.login.Font = ((System.Drawing.Font)(resources.GetObject("login.Font")));
+			this.helpProvider1.SetHelpKeyword(this.login, resources.GetString("login.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.login, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("login.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.login, resources.GetString("login.HelpString"));
+			this.login.Image = ((System.Drawing.Image)(resources.GetObject("login.Image")));
+			this.login.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.ImageAlign")));
+			this.login.ImageIndex = ((int)(resources.GetObject("login.ImageIndex")));
+			this.login.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("login.ImeMode")));
+			this.login.Location = ((System.Drawing.Point)(resources.GetObject("login.Location")));
+			this.login.Name = "login";
+			this.login.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("login.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.login, ((bool)(resources.GetObject("login.ShowHelp"))));
+			this.login.Size = ((System.Drawing.Size)(resources.GetObject("login.Size")));
+			this.login.TabIndex = ((int)(resources.GetObject("login.TabIndex")));
+			this.login.Text = resources.GetString("login.Text");
+			this.login.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.TextAlign")));
+			this.login.Visible = ((bool)(resources.GetObject("login.Visible")));
+			this.login.Click += new System.EventHandler(this.login_Click);
+			// 
 			// activate
 			// 
 			this.activate.AccessibleDescription = resources.GetString("activate.AccessibleDescription");
@@ -1210,62 +1266,6 @@ namespace Novell.FormsTrayApp
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
-			// login
-			// 
-			this.login.AccessibleDescription = resources.GetString("login.AccessibleDescription");
-			this.login.AccessibleName = resources.GetString("login.AccessibleName");
-			this.login.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("login.Anchor")));
-			this.login.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("login.BackgroundImage")));
-			this.login.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("login.Dock")));
-			this.login.Enabled = ((bool)(resources.GetObject("login.Enabled")));
-			this.login.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("login.FlatStyle")));
-			this.login.Font = ((System.Drawing.Font)(resources.GetObject("login.Font")));
-			this.helpProvider1.SetHelpKeyword(this.login, resources.GetString("login.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.login, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("login.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.login, resources.GetString("login.HelpString"));
-			this.login.Image = ((System.Drawing.Image)(resources.GetObject("login.Image")));
-			this.login.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.ImageAlign")));
-			this.login.ImageIndex = ((int)(resources.GetObject("login.ImageIndex")));
-			this.login.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("login.ImeMode")));
-			this.login.Location = ((System.Drawing.Point)(resources.GetObject("login.Location")));
-			this.login.Name = "login";
-			this.login.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("login.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.login, ((bool)(resources.GetObject("login.ShowHelp"))));
-			this.login.Size = ((System.Drawing.Size)(resources.GetObject("login.Size")));
-			this.login.TabIndex = ((int)(resources.GetObject("login.TabIndex")));
-			this.login.Text = resources.GetString("login.Text");
-			this.login.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.TextAlign")));
-			this.login.Visible = ((bool)(resources.GetObject("login.Visible")));
-			this.login.Click += new System.EventHandler(this.login_Click);
-			// 
-			// logout
-			// 
-			this.logout.AccessibleDescription = resources.GetString("logout.AccessibleDescription");
-			this.logout.AccessibleName = resources.GetString("logout.AccessibleName");
-			this.logout.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("logout.Anchor")));
-			this.logout.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("logout.BackgroundImage")));
-			this.logout.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("logout.Dock")));
-			this.logout.Enabled = ((bool)(resources.GetObject("logout.Enabled")));
-			this.logout.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("logout.FlatStyle")));
-			this.logout.Font = ((System.Drawing.Font)(resources.GetObject("logout.Font")));
-			this.helpProvider1.SetHelpKeyword(this.logout, resources.GetString("logout.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.logout, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("logout.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.logout, resources.GetString("logout.HelpString"));
-			this.logout.Image = ((System.Drawing.Image)(resources.GetObject("logout.Image")));
-			this.logout.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.ImageAlign")));
-			this.logout.ImageIndex = ((int)(resources.GetObject("logout.ImageIndex")));
-			this.logout.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("logout.ImeMode")));
-			this.logout.Location = ((System.Drawing.Point)(resources.GetObject("logout.Location")));
-			this.logout.Name = "logout";
-			this.logout.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("logout.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.logout, ((bool)(resources.GetObject("logout.ShowHelp"))));
-			this.logout.Size = ((System.Drawing.Size)(resources.GetObject("logout.Size")));
-			this.logout.TabIndex = ((int)(resources.GetObject("logout.TabIndex")));
-			this.logout.Text = resources.GetString("logout.Text");
-			this.logout.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.TextAlign")));
-			this.logout.Visible = ((bool)(resources.GetObject("logout.Visible")));
-			this.logout.Click += new System.EventHandler(this.logout_Click);
-			// 
 			// Preferences
 			// 
 			this.AcceptButton = this.ok;
@@ -1578,7 +1578,7 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
-		/// Removes the specified domain to the dropdown lists.
+		/// Removes the specified domain from the dropdown lists.
 		/// </summary>
 		/// <param name="domainInfo">The DomainInformation object to remove from the list.</param>
 		/// <param name="defaultDomainID">The ID of the new default domain.</param>
@@ -1586,42 +1586,47 @@ namespace Novell.FormsTrayApp
 		{
 			ListViewItem lvitem = null;
 			Domain defaultDomain = null;
-			foreach (ListViewItem lvi in accounts.Items)
-			{
-				Domain d = (Domain)lvi.Tag;
 
-				if (d.ID.Equals(domainInfo.ID))
+			try
+			{
+				foreach (ListViewItem lvi in accounts.Items)
 				{
-					// The domain is in the list.
-					lvitem = lvi;
+					Domain d = (Domain)lvi.Tag;
+
+					if (d.ID.Equals(domainInfo.ID))
+					{
+						// The domain is in the list.
+						lvitem = lvi;
+					}
+					else if ((defaultDomainID != null) && d.ID.Equals(defaultDomainID))
+					{
+						defaultDomain = d;
+					}
 				}
-				else if ((defaultDomainID != null) && d.ID.Equals(defaultDomainID))
+
+				if (lvitem != null)
 				{
-					defaultDomain = d;
+					lvitem.Remove();
+				}
+
+				if (defaultDomain != null)
+				{
+					// Reset the current default domain.
+					if ((currentDefaultDomain != null) && !currentDefaultDomain.ID.Equals(defaultDomainID))
+					{
+						currentDefaultDomain.DomainInfo.IsDefault = false;
+					}
+
+					currentDefaultDomain = defaultDomain;
+
+					if (newDefaultDomain != null)
+					{
+						newDefaultDomain.DomainInfo.IsDefault = false;
+						newDefaultDomain = null;
+					}
 				}
 			}
-
-			if (lvitem != null)
-			{
-				lvitem.Remove();
-			}
-
-			if (defaultDomain != null)
-			{
-				// Reset the current default domain.
-				if ((currentDefaultDomain != null) && !currentDefaultDomain.ID.Equals(defaultDomainID))
-				{
-					currentDefaultDomain.DomainInfo.IsDefault = false;
-				}
-
-				currentDefaultDomain = defaultDomain;
-
-				if (newDefaultDomain != null)
-				{
-					newDefaultDomain.DomainInfo.IsDefault = false;
-					newDefaultDomain = null;
-				}
-			}
+			catch {}
 		}
 		#endregion
 
@@ -1658,7 +1663,7 @@ namespace Novell.FormsTrayApp
 
 								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled"); //TODO: Enable for RC1-resourceManager.GetString("statusLoggedIn");
 								newAccountLvi.Tag = domain;
-								server.Text = domainInfo.Name;
+								server.Text = domainInfo.Host;
 								newAccountLvi = null;
 
 								// Successfully joined ... don't allow the fields to be changed.
@@ -2542,143 +2547,151 @@ namespace Novell.FormsTrayApp
 
 		private void accounts_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			if (processing)
-				return;
-
-			if (!processing && (newAccountLvi != null))
+			Point point = new Point(MousePosition.X, MousePosition.Y);
+			point = accounts.PointToClient(point);
+			ListViewItem curItem = accounts.GetItemAt(point.X, point.Y);
+			if ((curItem == null) ||
+				((curItem  != null) && !curItem.Equals(newAccountLvi)))
 			{
-				if (MessageBox.Show(resourceManager.GetString("saveAccountPrompt"), resourceManager.GetString("saveAccountTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-				{
-					if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
-					{
-						processing = true;
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-						mmb.ShowDialog();
-						timer1.Start();
+				if (processing)
+					return;
 
-						if (server.Text.Equals(string.Empty))
+				if (!processing && (newAccountLvi != null))
+				{
+					if (MessageBox.Show(resourceManager.GetString("saveAccountPrompt"), resourceManager.GetString("saveAccountTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+					{
+						if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
 						{
-							server.Focus();
+							processing = true;
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("requiredFieldsMissing"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+							timer1.Start();
+
+							if (server.Text.Equals(string.Empty))
+							{
+								server.Focus();
+							}
+							else if (userName.Text.Equals(string.Empty))
+							{
+								userName.Focus();
+							}
 						}
-						else if (userName.Text.Equals(string.Empty))
+						else
 						{
-							userName.Focus();
+							processing = true;
+							if (!connectToEnterprise())
+							{
+								timer1.Start();
+								return;
+							}
 						}
 					}
 					else
 					{
-						processing = true;
-						if (!connectToEnterprise())
-						{
-							timer1.Start();
-							return;
-						}
+						addAccount.Enabled = true;
+						newAccountLvi.Remove();
+						newAccountLvi = null;
 					}
 				}
-				else
-				{
-					addAccount.Enabled = true;
-					newAccountLvi.Remove();
-					newAccountLvi = null;
-				}
-			}
 
-			if (updatePassword || updateEnabled)
-			{
-				if (MessageBox.Show(resourceManager.GetString("updatePrompt"), resourceManager.GetString("updateTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				if (updatePassword || updateEnabled)
 				{
-					updateAccount(selectedDomain);
-				}
-				else
-				{
-					updatePassword = false;
-					updateEnabled = false;
-				}
-			}
-
-			if (accounts.SelectedItems.Count == 1)
-			{
-				ListViewItem lvi = accounts.SelectedItems[0];
-				if (lvi != null)
-				{
-					proxy.Enabled = true;
-
-					if ((newAccountLvi == null) || (lvi == newAccountLvi))
+					if (MessageBox.Show(resourceManager.GetString("updatePrompt"), resourceManager.GetString("updateTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
-						userName.Enabled = server.Enabled = 
-							rememberPassword.Enabled = password.Enabled = removeAccount.Enabled = true;
+						updateAccount(selectedDomain);
+					}
+					else
+					{
+						updatePassword = false;
+						updateEnabled = false;
+					}
+				}
 
-						userName.Text = lvi.SubItems[1].Text;
-						password.Text = string.Empty;
+				if ((accounts.SelectedItems.Count == 1) &&
+					(accounts.Items.Count > 0))
+				{
+					ListViewItem lvi = accounts.SelectedItems[0];
+					if (lvi != null)
+					{
+						proxy.Enabled = true;
 
-						selectedDomain = (Domain)lvi.Tag;
-
-						if (selectedDomain == null)
+						if ((newAccountLvi == null) || (lvi == newAccountLvi))
 						{
-							// This is a new account.
-							server.Text = lvi.SubItems[0].Text;
-							newAccountLvi = lvi;
-							userName.ReadOnly = server.ReadOnly = false;
-							details.Enabled = activate.Enabled = enableAccount.Enabled = false;
-							enableAccount.Checked = true;
-							activate.Visible = true;
-							login.Visible = logout.Visible = false;
+							userName.Enabled = server.Enabled = 
+								rememberPassword.Enabled = password.Enabled = removeAccount.Enabled = true;
 
-							defaultServer.Enabled = (accounts.Items.Count > 1);
-							defaultServer.Checked = (accounts.Items.Count == 1);
-							server.Focus();
-						}
-						else
-						{
-							server.Text = selectedDomain.DomainInfo.Name;
-							details.Enabled = true;
-							userName.ReadOnly = server.ReadOnly = true;
+							userName.Text = lvi.SubItems[1].Text;
+							password.Text = string.Empty;
 
-							defaultServer.Checked = selectedDomain.DomainInfo.IsDefault;
-							defaultServer.Enabled = !defaultServer.Checked;
+							selectedDomain = (Domain)lvi.Tag;
 
-							// Check for a saved password.
-							try
+							if (selectedDomain == null)
 							{
-								string userID;
-								string credentials;
-								CredentialType credType = simiasWebService.GetDomainCredentials(selectedDomain.ID, out userID, out credentials);
-								if ((credType == CredentialType.Basic) && (credentials != null))
+								// This is a new account.
+								server.Text = lvi.SubItems[0].Text;
+								newAccountLvi = lvi;
+								userName.ReadOnly = server.ReadOnly = false;
+								details.Enabled = activate.Enabled = enableAccount.Enabled = false;
+								enableAccount.Checked = true;
+								activate.Visible = true;
+								login.Visible = logout.Visible = false;
+
+								defaultServer.Enabled = (accounts.Items.Count > 1);
+								defaultServer.Checked = (accounts.Items.Count == 1);
+								server.Focus();
+							}
+							else
+							{
+								server.Text = selectedDomain.DomainInfo.Host;
+								details.Enabled = true;
+								userName.ReadOnly = server.ReadOnly = true;
+
+								defaultServer.Checked = selectedDomain.DomainInfo.IsDefault;
+								defaultServer.Enabled = !defaultServer.Checked;
+
+								// Check for a saved password.
+								try
 								{
-									// There are credentials that were saved on the domain.
-									rememberPassword.Checked = true;
-									password.Text = credentials;
+									string userID;
+									string credentials;
+									CredentialType credType = simiasWebService.GetDomainCredentials(selectedDomain.ID, out userID, out credentials);
+									if ((credType == CredentialType.Basic) && (credentials != null))
+									{
+										// There are credentials that were saved on the domain.
+										rememberPassword.Checked = true;
+										password.Text = credentials;
+									}
 								}
-							}
-							catch (Exception ex)
-							{
-								// TODO: message
-								MessageBox.Show(ex.Message);
-							}
+								catch (Exception ex)
+								{
+									// TODO: message
+									MessageBox.Show(ex.Message);
+								}
 
-							enableAccount.Enabled = true;
-							login.Enabled = logout.Enabled = enableAccount.Checked = 
-								selectedDomain.DomainInfo.Active;
-							// TODO: Enable for RC1-login.Visible = !selectedDomain.DomainInfo.Authenticated;
-							// TODO: Enable for RC1-logout.Visible = selectedDomain.DomainInfo.Authenticated;
+								enableAccount.Enabled = true;
+								login.Enabled = logout.Enabled = enableAccount.Checked = 
+									selectedDomain.DomainInfo.Active;
+								// TODO: Enable for RC1-login.Visible = !selectedDomain.DomainInfo.Authenticated;
+								// TODO: Enable for RC1-logout.Visible = selectedDomain.DomainInfo.Authenticated;
+							}
 						}
 					}
 				}
-			}
-			else if (!processing)
-			{
-				selectedDomain = null;
+				else if (!processing)
+				{
+					selectedDomain = null;
 
-				// Reset the controls.
-				userName.Text = server.Text = password.Text = string.Empty;
-				rememberPassword.Checked = enableAccount.Checked = defaultServer.Checked = false;
+					// Reset the controls.
+					userName.Text = server.Text = password.Text = string.Empty;
+					rememberPassword.Checked = enableAccount.Checked = defaultServer.Checked = false;
 
-				// Disable the controls.
-				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
-					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
-					removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+					// Disable the controls.
+					userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
+						enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
+						removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
 
-				login.Visible = logout.Visible = false;
+					login.Visible = logout.Visible = false;
+				}
 			}
 		}
 

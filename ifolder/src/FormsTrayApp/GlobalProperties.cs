@@ -176,6 +176,39 @@ namespace Novell.FormsTrayApp
 			progressBar1.Minimum = 0;
 
 			this.StartPosition = FormStartPosition.CenterScreen;
+
+			// Load the application icon
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+
+				// TODO: need icons for the different states.
+				//	- iFolder with conflicts.
+				//	- iFolder that is available.
+				//	- iFolder that has been requested.
+				//	- iFolder that has been invited. (Invitation.ico?)
+				this.iFolderView.SmallImageList = new ImageList();
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
+				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));//TODO: conflict.ico")));
+
+				// Add icons for toolbar buttons.
+				toolBar1.ImageList = new ImageList();
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\setup.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\share.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\conflict_resolution.ico")));
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\sync.ico")));
+
+				toolBarCreate.ImageIndex = 0;
+				toolBarSetup.ImageIndex = 1;
+				toolBarShare.ImageIndex = 2;
+				toolBarResolve.ImageIndex = 3;
+				toolBarSync.ImageIndex = 4;
+			}
+			catch {} // Non-fatal ... just missing some graphics.
+
+			this.MinimumSize = this.Size;
 		}
 
 		/// <summary>
@@ -835,7 +868,6 @@ namespace Novell.FormsTrayApp
 			this.Text = resources.GetString("$this.Text");
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
-			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			this.Move += new System.EventHandler(this.GlobalProperties_Move);
 			this.VisibleChanged += new System.EventHandler(this.GlobalProperties_VisibleChanged);
 			this.ResumeLayout(false);
@@ -1514,6 +1546,35 @@ namespace Novell.FormsTrayApp
 			return status;
 		}
 
+		private void refreshAll(Domain domain)
+		{
+			refreshiFolders(domain);
+
+			// Call to sync the POBoxes.
+			if (domain.ShowAll)
+			{
+				foreach (Domain d in servers.Items)
+				{
+					if (!d.ShowAll)
+					{
+						try
+						{
+							ifWebService.SynciFolderNow(d.DomainInfo.POBoxID);
+						}
+						catch {}
+					}
+				}
+			}
+			else
+			{
+				try
+				{
+					ifWebService.SynciFolderNow(domain.DomainInfo.POBoxID);
+				}
+				catch {}
+			}
+		}
+
 		private void refreshiFolders(Domain domain)
 		{
 			Cursor.Current = Cursors.WaitCursor;
@@ -1727,42 +1788,6 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void GlobalProperties_Load(object sender, System.EventArgs e)
-		{
-			// Load the application icon
-			try
-			{
-				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
-
-				// TODO: need icons for the different states.
-				//	- iFolder with conflicts.
-				//	- iFolder that is available.
-				//	- iFolder that has been requested.
-				//	- iFolder that has been invited. (Invitation.ico?)
-				this.iFolderView.SmallImageList = new ImageList();
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
-				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));//TODO: conflict.ico")));
-
-				// Add icons for toolbar buttons.
-				toolBar1.ImageList = new ImageList();
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\setup.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\share.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\conflict_resolution.ico")));
-				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\sync.ico")));
-
-				toolBarCreate.ImageIndex = 0;
-				toolBarSetup.ImageIndex = 1;
-				toolBarShare.ImageIndex = 2;
-				toolBarResolve.ImageIndex = 3;
-				toolBarSync.ImageIndex = 4;
-			}
-			catch {} // Non-fatal ... just missing some graphics.
-
-			this.MinimumSize = this.Size;
-		}
-
 		private void GlobalProperties_VisibleChanged(object sender, System.EventArgs e)
 		{
 			if (this.Visible)
@@ -1821,7 +1846,7 @@ namespace Novell.FormsTrayApp
 			// Pressing the F5 key will cause a refresh to occur.
 			if (e.KeyCode == Keys.F5)
 			{
-				refreshiFolders((Domain)servers.SelectedItem);
+				refreshAll((Domain)servers.SelectedItem);
 			}
 		}
 
@@ -1954,7 +1979,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuRefresh_Click(object sender, System.EventArgs e)
 		{
-			refreshiFolders((Domain)servers.SelectedItem);
+			refreshAll((Domain)servers.SelectedItem);
 		}
 
 		private void menuAccept_Click(object sender, System.EventArgs e)

@@ -92,7 +92,7 @@ namespace Novell.CustomUIControls
 		/// </summary>
 		/// <param name="hwnd">The handle of the window to activate.</param>
 		[DllImport("user32.dll")]
-		public static extern int SetForegroundWindow(IntPtr hwnd);
+		public static extern bool SetForegroundWindow(IntPtr hwnd);
 
 		[DllImport("user32.dll")]
 		private static extern uint RegisterWindowMessage(string lpString);
