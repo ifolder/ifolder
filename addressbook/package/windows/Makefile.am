@@ -23,9 +23,8 @@
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/addressbook-install.sln $(srcdir)/addressbook-msi/addressbook-msi.vdproj $(srcdir)/addressbook-msm/addressbook-msm.vdproj
 
 RELEASE = 1
-CURDATE = $(shell date '+%Y%m%d')
-MSI_FILE = $(PACKAGE)-$(VERSION).$(CURDATE)-$(RELEASE).msi
-MSM_FILE = $(PACKAGE)-$(VERSION).$(CURDATE)-$(RELEASE).msm
+MSI_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msi
+MSM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 MSI_LOG_FILE = devenv-addressbook-msi.log
 MSM_LOG_FILE = devenv-addressbook-msm.log
 
