@@ -179,7 +179,7 @@ namespace Simias.IProcEvent
 		/// Event that gets used to signal the registration service when the configuration file
 		/// changes.
 		/// </summary>
-		private ManualResetEvent regServiceEvent;
+		private ManualResetEvent regServiceEvent = new ManualResetEvent( false );
 		#endregion
 
 		#region Properties
@@ -248,7 +248,7 @@ namespace Simias.IProcEvent
 					catch 
 					{
 						// Wait and then try again if the service has not been shutdown.
-						Thread.Sleep( 1000 );
+						WaitForConfigFileChange();
 						if ( state == ClientState.Shutdown )
 						{
 							break;
@@ -258,7 +258,7 @@ namespace Simias.IProcEvent
 				else
 				{
 					// Wait and then try again if the service has not been shutdown.
-					Thread.Sleep( 1000 );
+					WaitForConfigFileChange();
 					if ( state == ClientState.Shutdown )
 					{
 						break;
@@ -490,17 +490,37 @@ namespace Simias.IProcEvent
 		{
 			try
 			{
-				// Connect to the event service and send an initialization message.
-				IPEndPoint host = GetHostAddress();
-				if ( state != ClientState.Shutdown )
+				// Sit here until we connect.
+				while ( !eventSocket.Connected && ( state != ClientState.Shutdown ) )
 				{
-					// Sit here until we connect.
-					while ( !eventSocket.Connected )
+					// Connect to the event service and send an initialization message.
+					IPEndPoint host = GetHostAddress();
+
+					// Make sure that the thread was not told to shutdown.
+					if ( state != ClientState.Shutdown )
 					{
 						try
 						{
 							// Connect to the server.
 							eventSocket.Connect( host );
+
+							// Get the local end point information
+							localEndPoint = eventSocket.LocalEndPoint as IPEndPoint;
+
+							// Post the received before the registration message is sent.
+							eventSocket.BeginReceive( receiveBuffer, 0, receiveBuffer.Length, SocketFlags.None, new AsyncCallback( MessageHandler ), null );
+
+							// Register our client.
+							SendMessage( new IProcEventRegistration( localEndPoint, true ).ToBuffer() );
+
+							// Set the state as running.
+							state = ClientState.Running;
+
+							// Check to see if any set filter items have been queue.
+							ProcessEventFilterQueue();
+
+							// Check to see if any set event actions have been queued.
+							ProcessEventActionQueue();
 						}
 						catch ( SocketException e )
 						{
@@ -510,29 +530,8 @@ namespace Simias.IProcEvent
 							// connected.
 							if ( e.ErrorCode == WSAECONNREFUSED )
 							{
-								// Create an event that we can wait on.
-								regServiceEvent = new ManualResetEvent( false );
-
-								// Set a watcher on the file to monitor it when it changes.
-								FileSystemWatcher fsw = new FileSystemWatcher( Path.GetDirectoryName( configFileName ) );
-								fsw.Filter = Path.GetFileName( configFileName );
-								fsw.NotifyFilter = NotifyFilters.LastWrite;
-								fsw.Changed += new FileSystemEventHandler( ConfigFileChanged );
-								fsw.EnableRaisingEvents = true;
-
-								// Wait for the change to occur.
-								regServiceEvent.WaitOne();
-
-								// Turn off the file monitoring.
-								fsw.EnableRaisingEvents = false;
-
-								// Get the new information from the configuration file.
-								host = GetHostAddress();
-								if ( state == ClientState.Shutdown )
-								{
-									// We were told to shutdown, just bail from here.
-									return;
-								}
+								// Wait for the configuration file to change before continuing.
+								WaitForConfigFileChange();
 							}
 							else
 							{
@@ -540,24 +539,6 @@ namespace Simias.IProcEvent
 							}
 						}
 					}
-
-					// Get the local end point information
-					localEndPoint = eventSocket.LocalEndPoint as IPEndPoint;
-
-					// Post the received before the registration message is sent.
-					eventSocket.BeginReceive( receiveBuffer, 0, receiveBuffer.Length, SocketFlags.None, new AsyncCallback( MessageHandler ), null );
-
-					// Register our client.
-					SendMessage( new IProcEventRegistration( localEndPoint, true ).ToBuffer() );
-
-					// Set the state as running.
-					state = ClientState.Running;
-
-					// Check to see if any set filter items have been queue.
-					ProcessEventFilterQueue();
-
-					// Check to see if any set event actions have been queued.
-					ProcessEventActionQueue();
 				}
 			}
 			catch ( SocketException e )
@@ -611,6 +592,13 @@ namespace Simias.IProcEvent
 					state = ClientState.Shutdown;
 					try
 					{
+						// Signal the registration thread to shutdown.
+						if ( regThreadState == RegThreadState.Initializing )
+						{
+							regServiceEvent.Set();
+						}
+
+						// Take care of the socket if it is connected.
 						if ( eventSocket.Connected )
 						{
 							try
@@ -632,6 +620,29 @@ namespace Simias.IProcEvent
 			{
 				ReportError( exception );
 			}
+		}
+
+		/// <summary>
+		/// Waits for a change in the configuration file before continuing.
+		/// </summary>
+		private void WaitForConfigFileChange()
+		{
+			// Set the event to not signaled.
+			regServiceEvent.Reset();
+
+			// Set a watcher on the file to monitor it when it changes.
+			FileSystemWatcher fsw = new FileSystemWatcher( Path.GetDirectoryName( configFileName ) );
+			fsw.Filter = Path.GetFileName( configFileName );
+			fsw.NotifyFilter = NotifyFilters.LastWrite;
+			fsw.Created += new FileSystemEventHandler( ConfigFileChanged );
+			fsw.Changed += new FileSystemEventHandler( ConfigFileChanged );
+			fsw.EnableRaisingEvents = true;
+
+			// Wait for the change to occur.
+			regServiceEvent.WaitOne();
+
+			// Turn off the file monitoring.
+			fsw.EnableRaisingEvents = false;
 		}
 		#endregion
 
