@@ -64,47 +64,90 @@ namespace Novell.iFolder
 
 
 		// Glade "autoconnected" members
-		[Glade.Widget] internal Gtk.Image			userImage;
-		[Glade.Widget] internal Gtk.Entry			firstNameEntry;
-		[Glade.Widget] internal Gtk.Entry			lastNameEntry;
-		[Glade.Widget] internal Gtk.Entry			userIDEntry;
+		// Name Controls
+		[Glade.Widget] internal Gtk.Image			UserImage;
+		[Glade.Widget] internal Gtk.Entry			FullNameEntry;
+		[Glade.Widget] internal Gtk.Entry			NickNameEntry;
 
-		[Glade.Widget] internal Gtk.Entry			workPhoneEntry;
-		[Glade.Widget] internal Gtk.Entry			mobilePhoneEntry;
-		[Glade.Widget] internal Gtk.Entry			homePhoneEntry;
+		// Email Controls
+		[Glade.Widget] internal Gtk.Entry			MOneEntry;
+		[Glade.Widget] internal Gtk.Entry			MTwoEntry;
+		[Glade.Widget] internal Gtk.Entry			MThreeEntry;
+		[Glade.Widget] internal Gtk.Entry			MFourEntry;
+		[Glade.Widget] internal Gtk.OptionMenu		MOneOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		MTwoOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		MThreeOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		MFourOptionMenu;
 
-		[Glade.Widget] internal Gtk.Button			phoneButton;
+		// Telephone Controls
+		[Glade.Widget] internal Gtk.Entry			PhoneOneEntry;
+		[Glade.Widget] internal Gtk.Entry			PhoneTwoEntry;
+		[Glade.Widget] internal Gtk.Entry			PhoneThreeEntry;
+		[Glade.Widget] internal Gtk.Entry			PhoneFourEntry;
+		[Glade.Widget] internal Gtk.OptionMenu		POneOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		PTwoOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		PThreeOptionMenu;
+		[Glade.Widget] internal Gtk.OptionMenu		PFourOptionMenu;
 
-		[Glade.Widget] internal Gtk.Entry			workEmailEntry;
-		[Glade.Widget] internal Gtk.Entry			personalEmailEntry;
-		[Glade.Widget] internal Gtk.Button			emailButton;
+		// Instant Message Controls
+		[Glade.Widget] internal Gtk.Entry			IMOneEntry;
+		[Glade.Widget] internal Gtk.Entry			IMTwoEntry;
+		[Glade.Widget] internal Gtk.Entry			IMThreeEntry;
 
-		[Glade.Widget] internal Gtk.Entry			webURLEntry;
-		[Glade.Widget] internal Gtk.Entry			blogURLEntry;
+		// Web Addresses Controls
+		[Glade.Widget] internal Gtk.Entry			WebHomeEntry;
+		[Glade.Widget] internal Gtk.Entry			WebBlogEntry;
+		[Glade.Widget] internal Gtk.Entry			WebCalEntry;
+		[Glade.Widget] internal Gtk.Entry			WebCamEntry;
 
-		[Glade.Widget] internal Gtk.Entry			streetEntry;
-		[Glade.Widget] internal Gtk.Entry			cityEntry;
-		[Glade.Widget] internal Gtk.Entry			stateEntry;
-		[Glade.Widget] internal Gtk.Entry			zipEntry;
-		[Glade.Widget] internal Gtk.Entry			countryEntry;
-		[Glade.Widget] internal Gtk.Button			addrButton;
+		// Job Controls
+		[Glade.Widget] internal Gtk.Entry			RoleEntry;
+		[Glade.Widget] internal Gtk.Entry			OrgEntry;
+		[Glade.Widget] internal Gtk.Entry			ManagerEntry;
+		[Glade.Widget] internal Gtk.Entry			TitleEntry;
+		[Glade.Widget] internal Gtk.Entry			WorkForceEntry;
 
-		[Glade.Widget] internal Gtk.Button			cancelButton;
-		[Glade.Widget] internal Gtk.Button			okButton; 
+		// Misc Controls
+		[Glade.Widget] internal Gtk.Entry			BirthdayEntry;
+		[Glade.Widget] internal Gtk.TextView		NoteTextView;
 
-		[Glade.Widget] internal Gtk.Table			generalTabTable;
+		// Work Address Controls
+		[Glade.Widget] internal Gtk.Entry			WorkAddrEntry;
+		[Glade.Widget] internal Gtk.Entry			WorkAddr2Entry;
+		[Glade.Widget] internal Gtk.Entry			WorkCityEntry;
+		[Glade.Widget] internal Gtk.Entry			WorkZipEntry;
+		[Glade.Widget] internal Gtk.Entry			WorkStateEntry;
+		[Glade.Widget] internal Gtk.Entry			WorkCountryEntry;
+
+		// Home Address Controls
+		[Glade.Widget] internal Gtk.Entry			HomeAddrEntry;
+		[Glade.Widget] internal Gtk.Entry			HomeAddr2Entry;
+		[Glade.Widget] internal Gtk.Entry			HomeCityEntry;
+		[Glade.Widget] internal Gtk.Entry			HomeZipEntry;
+		[Glade.Widget] internal Gtk.Entry			HomeStateEntry;
+		[Glade.Widget] internal Gtk.Entry			HomeCountryEntry;
+
+		// Other Address Controls
+		[Glade.Widget] internal Gtk.Entry			OtherAddrEntry;
+		[Glade.Widget] internal Gtk.Entry			OtherAddr2Entry;
+		[Glade.Widget] internal Gtk.Entry			OtherCityEntry;
+		[Glade.Widget] internal Gtk.Entry			OtherZipEntry;
+		[Glade.Widget] internal Gtk.Entry			OtherStateEntry;
+		[Glade.Widget] internal Gtk.Entry			OtherCountryEntry;
 
 
 		internal Gtk.Dialog		contactEditorDialog;
 		internal Contact		currentContact;
-		internal bool			isNewContact;
 
 		internal Name			preferredName;
-		internal Email			workEmail;
-		internal Email			personalEmail;
-		internal Telephone		workPhone;
-		internal Telephone		mobilePhone;
-		internal Telephone		homePhone;
+		internal Email			emailOne = null;
+		internal Email			emailTwo = null;
+		internal Email			emailThree = null;
+		internal Email			emailFour = null;
+		internal Telephone		phoneOne = null;
+		internal Telephone		phoneTwo = null;
+		internal Telephone		phoneThree = null;
+		internal Telephone		phoneFour = null;
 		internal Address		preferredAddress;
 
 
@@ -124,39 +167,37 @@ namespace Novell.iFolder
 		private void InitGlade()
 		{
 			Glade.XML gxml = new Glade.XML ("contact-editor.glade", 
-					"contactEditor", null);
+					"ContactEditor", null);
 
 			gxml.Autoconnect (this);
 
-			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("contactEditor");
+			contactEditorDialog = (Gtk.Dialog) gxml.GetWidget("ContactEditor");
 
 			//------------------------------
 			// This will setup the tab stops
 			//------------------------------
-			Widget[] widArray = new Widget[15];
+/*			Widget[] widArray = new Widget[13];
 
-			widArray[0] = firstNameEntry;
-			widArray[1] = lastNameEntry;
-			widArray[2] = userIDEntry;
+			widArray[0] = FullNameEntry;
+			widArray[1] = NickNameEntry;
 
-			widArray[3] = workEmailEntry;
-			widArray[4] = personalEmailEntry;
-			widArray[5] = webURLEntry;
-			widArray[6] = blogURLEntry;
+			widArray[2] = MOneEntry;
+			widArray[3] = MTwoEntry;
+			widArray[4] = MThreeEntry;
+			widArray[5] = MFourEntry;
 
-			widArray[7] = workPhoneEntry;
-			widArray[8] = mobilePhoneEntry;
-			widArray[9] = homePhoneEntry;
+			widArray[6] = PhoneOneEntry;
+			widArray[7] = PhoneTwoEntry;
+			widArray[8] = PhoneThreeEntry;
+			widArray[9] = PhoneFourEntry;
 
-			widArray[10] = streetEntry;
-			widArray[11] = cityEntry;
-			widArray[12] = stateEntry;
-			widArray[13] = zipEntry;
-			widArray[14] = countryEntry;
+			widArray[10] = IMOneEntry;
+			widArray[11] = IMTwoEntry;
+			widArray[12] = IMThreeEntry;
 
 			generalTabTable.FocusChain = widArray;
-
-			firstNameEntry.HasFocus = true;
+*/
+			FullNameEntry.HasFocus = true;
 		}
 	
 
@@ -192,17 +233,46 @@ namespace Novell.iFolder
 		/// </summary>
 		private void PopulateWidgets()
 		{
+			Pixbuf pb = GetScaledPhoto(currentContact, 64);
+			if(pb != null)
+				UserImage.FromPixbuf = pb;
+
+
 			try
 			{
 				preferredName = currentContact.GetPreferredName();
 			}
 			catch(Exception e)
 			{
+				Console.WriteLine("We blew because there was not a preferred name, adding one...");
 				preferredName = new Name("", "");
 				preferredName.Preferred = true;
 				currentContact.AddName(preferredName);
 			}
 
+			FullNameEntry.Text = currentContact.FN;
+
+			NickNameEntry.Text = currentContact.Nickname;
+
+
+			PopulateEmails();
+			PopulatePhoneNumbers();
+
+
+			WebHomeEntry.Text = currentContact.Url;
+			WebBlogEntry.Text = currentContact.Blog;
+			//WebCalEntry.Text = ;
+			//WebCamEntry.Text = ;
+
+			RoleEntry.Text = currentContact.Role;
+			OrgEntry.Text = currentContact.Organization;
+			ManagerEntry.Text = currentContact.ManagerID;
+			TitleEntry.Text = currentContact.Title;
+			WorkForceEntry.Text = currentContact.WorkForceID;
+
+			BirthdayEntry.Text = currentContact.Birthday;
+			NoteTextView.Buffer.Text = currentContact.Note;
+/*
 			try
 			{
 				preferredAddress = currentContact.GetPreferredAddress();
@@ -211,28 +281,9 @@ namespace Novell.iFolder
 			{
 				preferredAddress = null;
 			}
+*/
 
-
-
-			firstNameEntry.Text = preferredName.Given;
-			lastNameEntry.Text = preferredName.Family;
-
-			Pixbuf pb = GetScaledPhoto(currentContact, 64);
-			if(pb != null)
-				userImage.FromPixbuf = pb;
-
-			if(currentContact.UserName.Length > 0)
-				userIDEntry.Text = currentContact.UserName;
-
-			if(currentContact.Url.Length > 0)
-				webURLEntry.Text = currentContact.Url;
-			if(currentContact.Blog.Length > 0)
-				blogURLEntry.Text = currentContact.Blog;
-
-			PopulateEmails();
-			PopulatePhoneNumbers();
-
-			if(preferredAddress != null)
+/*			if(preferredAddress != null)
 			{
 				if(preferredAddress.Street.Length > 0)
 					streetEntry.Text = preferredAddress.Street;
@@ -245,6 +296,7 @@ namespace Novell.iFolder
 				if(preferredAddress.Country.Length > 0)
 					countryEntry.Text = preferredAddress.Country;
 			}
+*/
 		}
 
 
@@ -273,73 +325,89 @@ namespace Novell.iFolder
 		/// </summary>
 		internal void PopulatePhoneNumbers()
 		{
-			workPhone = null;
-			mobilePhone = null;
-			homePhone = null;
+			PopulatePhoneType(PhoneTypes.preferred);
+			PopulatePhoneType(PhoneTypes.work);
+			PopulatePhoneType(PhoneTypes.home);
+			PopulatePhoneType(PhoneTypes.other);
+		}
 
-			workPhone = GetPhoneType(PhoneTypes.preferred);
-			if(workPhone != null)
+
+
+
+		/// <summary>
+		/// Method used to populate the phone controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
+		internal void PopulatePhoneType(PhoneTypes types)
+		{
+			foreach(Telephone phone in currentContact.GetTelephoneNumbers())
 			{
-				// Check to see if the default is work 
-				if( (workPhone.Types & PhoneTypes.work) == PhoneTypes.work)
+				// if the type being asked for is not
+				// preferred, filter out all preferred
+				if( types != PhoneTypes.preferred )
 				{
-					workPhoneEntry.Text = workPhone.Number;
+					if( (phone.Types & PhoneTypes.preferred) ==
+							PhoneTypes.preferred)
+					{
+						continue;
+					}
 				}
-				// Check to see if the default is mobile
-				else if( (workPhone.Types & PhoneTypes.cell) == 
-						PhoneTypes.cell)
+
+				if( (phone.Types & types) != types)
 				{
-					mobilePhone = workPhone;
-					workPhone = null;
-					mobilePhoneEntry.Text = mobilePhone.Number;
+					continue;
 				}
-				// Check to see if the default is home
-				else if( (homePhone.Types & PhoneTypes.home) == 
-						PhoneTypes.home)
+
+				if(phoneOne == null)
 				{
-					homePhone = workPhone;
-					workPhone = null;
-					homePhoneEntry.Text = homePhone.Number;
+					phoneOne = phone;
+					PhoneOneEntry.Text = phone.Number;
+					SetPhoneOptionMenu(POneOptionMenu, phone.Types);
 				}
-				// The default ie niether work, mobile or home, reset
-				else
+				else if(phoneTwo == null)
 				{
-					workPhone = null;
+					phoneTwo = phone;
+					PhoneTwoEntry.Text = phone.Number;
+					SetPhoneOptionMenu(PTwoOptionMenu, phone.Types);
+				}
+				else if(phoneThree == null)
+				{
+					phoneThree = phone;
+					PhoneThreeEntry.Text = phone.Number;
+					SetPhoneOptionMenu(PThreeOptionMenu, phone.Types);
+				}
+				else if(phoneFour == null)
+				{
+					phoneFour = phone;
+					PhoneFourEntry.Text = phone.Number;
+					SetPhoneOptionMenu(PFourOptionMenu, phone.Types);
 				}
 			}
+		}
 
-			// if it turns out that the default above was not work
-			// read it now
-			if(workPhone == null)
+
+
+
+		/// <summary>
+		/// Method used to retrieve a specific type of email from
+		/// the current contact
+		/// </summary>
+		internal void SetPhoneOptionMenu(Gtk.OptionMenu optMenu, 
+				PhoneTypes type)
+		{
+			if(	(type & PhoneTypes.work) == PhoneTypes.work)
 			{
-				workPhone = GetPhoneType(PhoneTypes.work);
-				if(workPhone != null)
-					workPhoneEntry.Text = workPhone.Number;
-				else
-					workPhoneEntry.Text = "";
+				optMenu.SetHistory(0);
+				return;
 			}
 
-			// if it turns out that the default above was not mobile 
-			// read it now
-			if(mobilePhone == null)
+			if(	(type & PhoneTypes.home) == PhoneTypes.home)
 			{
-				mobilePhone = GetPhoneType(PhoneTypes.cell);
-				if(mobilePhone != null)
-					mobilePhoneEntry.Text = mobilePhone.Number;
-				else
-					mobilePhoneEntry.Text = "";
+				optMenu.SetHistory(1);
+				return;
 			}
 
-			// if it turns out that the default above was not home
-			// read it now
-			if(homePhone == null)
-			{
-				homePhone = GetPhoneType(PhoneTypes.home);
-				if(homePhone != null)
-					homePhoneEntry.Text = homePhone.Number;
-				else
-					homePhoneEntry.Text = "";
-			}
+			optMenu.SetHistory(2);
 		}
 
 
@@ -351,82 +419,122 @@ namespace Novell.iFolder
 		/// </summary>
 		internal void SavePhoneNumbers()
 		{
-			// --------------------------------
-			// Work Phone
-			// --------------------------------
-			if(workPhoneEntry.Text.Length > 0)
+			// Phone One
+			if(PhoneOneEntry.Text.Length > 0)
 			{
-				if(workPhone == null)
+				PhoneTypes selType = GetPhoneType(POneOptionMenu);
+				if(phoneOne == null)
 				{
-					workPhone = new Telephone(workPhoneEntry.Text,
-							PhoneTypes.work);
-					currentContact.AddTelephoneNumber(workPhone);
+					phoneOne = new Telephone( 
+						PhoneOneEntry.Text,
+						(selType | PhoneTypes.preferred)); 
+
+					currentContact.AddTelephoneNumber(phoneOne);
 				}
 				else
 				{
-					workPhone.Number = workPhoneEntry.Text;
+					phoneOne.Types = (selType | PhoneTypes.preferred);
+					phoneOne.Number = PhoneOneEntry.Text;
 				}
 			}
-			// If there is no text, check to see if we need to delete
 			else
 			{
-				if(workPhone != null)
+				if(phoneOne != null)
 				{
-					workPhone.Delete();
+					phoneOne.Delete();
 				}
 			}
 
-
-			// --------------------------------
-			// Mobile Phone
-			// --------------------------------
-			if(mobilePhoneEntry.Text.Length > 0)
+			// Phone Two
+			if(PhoneTwoEntry.Text.Length > 0)
 			{
-				if(mobilePhone == null)
+				PhoneTypes selType = GetPhoneType(PTwoOptionMenu);
+				if(phoneTwo == null)
 				{
-					mobilePhone = new Telephone(mobilePhoneEntry.Text,
-							PhoneTypes.cell);
-					currentContact.AddTelephoneNumber(mobilePhone);
+					phoneTwo = new Telephone(PhoneTwoEntry.Text, selType);
+					currentContact.AddTelephoneNumber(phoneTwo);
 				}
 				else
 				{
-					mobilePhone.Number = mobilePhoneEntry.Text;
+					phoneTwo.Types = selType;
+					phoneTwo.Number = PhoneTwoEntry.Text;
 				}
 			}
-			// If there is no text, check to see if we need to delete
 			else
 			{
-				if(mobilePhone != null)
+				if(phoneTwo != null)
 				{
-					mobilePhone.Delete();
+					phoneTwo.Delete();
 				}
 			}
 
-
-			// --------------------------------
-			// Home Phone
-			// --------------------------------
-			if(homePhoneEntry.Text.Length > 0)
+			// Phone Three 
+			if(PhoneThreeEntry.Text.Length > 0)
 			{
-				if(homePhone == null)
+				PhoneTypes selType = GetPhoneType(PThreeOptionMenu);
+				if(phoneThree == null)
 				{
-					homePhone = new Telephone(homePhoneEntry.Text,
-							PhoneTypes.home);
-					currentContact.AddTelephoneNumber(homePhone);
+					phoneThree = new Telephone(PhoneThreeEntry.Text, selType); 
+					currentContact.AddTelephoneNumber(phoneThree);
 				}
 				else
 				{
-					homePhone.Number = homePhoneEntry.Text;
+					phoneThree.Types = selType;
+					phoneThree.Number = PhoneThreeEntry.Text;
 				}
 			}
-			// If there is no text, check to see if we need to delete
 			else
 			{
-				if(homePhone != null)
+				if(phoneThree != null)
 				{
-					homePhone.Delete();
+					phoneThree.Delete();
 				}
 			}
+
+			// Phone Four 
+			if(PhoneFourEntry.Text.Length > 0)
+			{
+				PhoneTypes selType = GetPhoneType(PFourOptionMenu);
+				if(phoneFour == null)
+				{
+					phoneFour = new Telephone(PhoneFourEntry.Text, selType); 
+					currentContact.AddTelephoneNumber(phoneFour);
+				}
+				else
+				{
+					phoneFour.Types = selType;
+					phoneFour.Number = PhoneFourEntry.Text;
+				}
+			}
+			else
+			{
+				if(phoneFour != null)
+				{
+					phoneFour.Delete();
+				}
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Method used to retrieve a specific type of email from
+		/// the current contact
+		/// </summary>
+		internal PhoneTypes GetPhoneType(Gtk.OptionMenu optMenu)
+		{
+			switch(optMenu.History)
+			{
+				case 0:
+					return PhoneTypes.work;
+				case 1:
+					return PhoneTypes.home;
+				case 2:
+					return PhoneTypes.other;
+			}
+
+			return PhoneTypes.other;
 		}
 
 
@@ -438,53 +546,91 @@ namespace Novell.iFolder
 		/// </summary>
 		internal void PopulateEmails()
 		{
-			workEmail = null;
-			personalEmail = null;
+			// Because there is no order preserved with emails
+			// we have to populate them by picking out the
+			// specific types we want
+			PopulateEmailType(EmailTypes.preferred);
+			PopulateEmailType(EmailTypes.work);
+			PopulateEmailType(EmailTypes.personal);
+			PopulateEmailType(EmailTypes.other);
+		}
 
-			workEmail = GetEmailType(EmailTypes.preferred);
-			if(workEmail != null)
+
+
+
+		/// <summary>
+		/// Method used to populate the email controls in the dialog
+		/// with the data from the currentContact
+		/// </summary>
+		internal void PopulateEmailType(EmailTypes types)
+		{
+			foreach(Email e in currentContact.GetEmailAddresses())
 			{
-				// Check to see if the default is work 
-				if( (workEmail.Types & EmailTypes.work) == EmailTypes.work)
+				// if the type being asked for is not
+				// preferred, filter out all preferred
+				if( types != EmailTypes.preferred )
 				{
-					workEmailEntry.Text = workEmail.Address;
+					if( (e.Types & EmailTypes.preferred)==EmailTypes.preferred)
+					{
+						continue;
+					}
 				}
-				// Check to see if the default is personal
-				else if( (workEmail.Types & EmailTypes.personal) == 
-						EmailTypes.personal)
+
+				if( (e.Types & types) != types)
 				{
-					personalEmail = workEmail;
-					workEmail = null;
-					personalEmailEntry.Text = personalEmail.Address;
+					continue;
 				}
-				// The default ie niether work nor personal, reset workEmail
-				else
+
+				if(emailOne == null)
 				{
-					workEmail = null;
+					emailOne = e;
+					MOneEntry.Text = emailOne.Address;
+					SetMailOptionMenu(MOneOptionMenu, emailOne.Types);
+				}
+				else if(emailTwo == null)
+				{
+					emailTwo = e;
+					MTwoEntry.Text = e.Address;
+					SetMailOptionMenu(MTwoOptionMenu, emailTwo.Types);
+				}
+				else if(emailThree == null)
+				{
+					emailThree = e;
+					MThreeEntry.Text = e.Address;
+					SetMailOptionMenu(MThreeOptionMenu, emailThree.Types);
+				}
+				else if(emailFour == null)
+				{
+					emailFour = e;
+					MFourEntry.Text = e.Address;
+					SetMailOptionMenu(MFourOptionMenu, emailFour.Types);
 				}
 			}
+		}
 
-			// if it turns out that the default above was not work
-			// read it now
-			if(workEmail == null)
+
+
+
+
+		/// <summary>
+		/// Method used to retrieve a specific type of email from
+		/// the current contact
+		/// </summary>
+		internal void SetMailOptionMenu(Gtk.OptionMenu optMenu, EmailTypes type)
+		{
+			if(	(type & EmailTypes.work) == EmailTypes.work)
 			{
-				workEmail = GetEmailType(EmailTypes.work);
-				if(workEmail != null)
-					workEmailEntry.Text = workEmail.Address;
-				else
-					workEmailEntry.Text = "";
+				optMenu.SetHistory(0);
+				return;
 			}
 
-			// if it turns out that the default above was not personal 
-			// read it now
-			if(personalEmail == null)
+			if(	(type & EmailTypes.personal) == EmailTypes.personal)
 			{
-				personalEmail = GetEmailType(EmailTypes.personal);
-				if(personalEmail != null)
-					personalEmailEntry.Text = personalEmail.Address;
-				else
-					personalEmailEntry.Text = "";
+				optMenu.SetHistory(1);
+				return;
 			}
+
+			optMenu.SetHistory(2);
 		}
 
 
@@ -494,14 +640,19 @@ namespace Novell.iFolder
 		/// Method used to retrieve a specific type of email from
 		/// the current contact
 		/// </summary>
-		internal Email GetEmailType(EmailTypes type)
+		internal EmailTypes GetMailType(Gtk.OptionMenu optMenu)
 		{
-			foreach(Email e in currentContact.GetEmailAddresses())
+			switch(optMenu.History)
 			{
-				if( (e.Types & type) == type)
-					return e;
+				case 0:
+					return EmailTypes.work;
+				case 1:
+					return EmailTypes.personal;
+				case 2:
+					return EmailTypes.other;
 			}
-			return null;
+
+			return EmailTypes.other;
 		}
 
 
@@ -514,53 +665,106 @@ namespace Novell.iFolder
 		/// </summary>
 		internal void SaveCurrentEmails()
 		{
-			// --------------------------------
-			// Work Email
-			// --------------------------------
-			if(workEmailEntry.Text.Length > 0)
+			// Email One
+			if(MOneEntry.Text.Length > 0)
 			{
-				if(workEmail == null)
+				EmailTypes selType = GetMailType(MOneOptionMenu);
+				if(emailOne == null)
 				{
-					workEmail = new Email(EmailTypes.work,
-							workEmailEntry.Text);
-					currentContact.AddEmailAddress(workEmail);
+					emailOne = new Email( 
+						(selType | EmailTypes.preferred), 
+						MOneEntry.Text);
+					currentContact.AddEmailAddress(emailOne);
 				}
 				else
 				{
-					workEmail.Address = workEmailEntry.Text;
+					emailOne.Types = (selType | EmailTypes.preferred);
+					emailOne.Address = MOneEntry.Text;
 				}
 			}
-			// If there is no text, check to see if we need to delete
 			else
 			{
-				if(workEmail != null)
+				if(emailOne != null)
 				{
-					workEmail.Delete();
+					emailOne.Delete();
 				}
 			}
 
-			// --------------------------------
-			// Personal Email
-			// --------------------------------
-			if(personalEmailEntry.Text.Length > 0)
+			// These are being saved in this order to preserve the
+			// the order of the widgets
+
+			// Email Two
+			if(MTwoEntry.Text.Length > 0)
 			{
-				if(personalEmail == null)
+				EmailTypes selType = GetMailType(MTwoOptionMenu);
+				if(emailTwo == null)
 				{
-					personalEmail = new Email(EmailTypes.personal,
-							personalEmailEntry.Text);
-					currentContact.AddEmailAddress(personalEmail);
+					emailTwo = new Email( 
+						selType, 
+						MTwoEntry.Text);
+					currentContact.AddEmailAddress(emailTwo);
 				}
 				else
 				{
-					personalEmail.Address = personalEmailEntry.Text;
+					emailTwo.Types = selType;
+					emailTwo.Address = MTwoEntry.Text;
 				}
 			}
-			// If there is no text, check to see if we need to delete
 			else
 			{
-				if(personalEmail != null)
+				if(emailTwo != null)
 				{
-					personalEmail.Delete();
+					emailTwo.Delete();
+				}
+			}
+
+			// Email Three 
+			if(MThreeEntry.Text.Length > 0)
+			{
+				EmailTypes selType = GetMailType(MThreeOptionMenu);
+				if(emailThree == null)
+				{
+					emailThree = new Email( 
+						selType, 
+						MThreeEntry.Text);
+					currentContact.AddEmailAddress(emailThree);
+				}
+				else
+				{
+					emailThree.Types = selType;
+					emailThree.Address = MThreeEntry.Text;
+				}
+			}
+			else
+			{
+				if(emailThree != null)
+				{
+					emailThree.Delete();
+				}
+			}
+
+			// Email Four 
+			if(MFourEntry.Text.Length > 0)
+			{
+				EmailTypes selType = GetMailType(MFourOptionMenu);
+				if(emailFour == null)
+				{
+					emailFour = new Email( 
+						selType, 
+						MFourEntry.Text);
+					currentContact.AddEmailAddress(emailFour);
+				}
+				else
+				{
+					emailFour.Types = selType;
+					emailFour.Address = MFourEntry.Text;
+				}
+			}
+			else
+			{
+				if(emailFour != null)
+				{
+					emailFour.Delete();
 				}
 			}
 		}
@@ -574,6 +778,12 @@ namespace Novell.iFolder
 		/// </summary>
 		private void SaveContact()
 		{
+			if(NickNameEntry.Text.Length > 0)
+				currentContact.Nickname = NickNameEntry.Text;
+			else
+				currentContact.Nickname = null;
+
+/*
 			// First Name 
 			if(firstNameEntry.Text.Length > 0)
 				preferredName.Given = firstNameEntry.Text;
@@ -584,25 +794,57 @@ namespace Novell.iFolder
 				preferredName.Family = lastNameEntry.Text;
 			else
 				preferredName.Family = null;
-			// UserID
-			if(userIDEntry.Text.Length > 0)
-				currentContact.UserName = userIDEntry.Text;
-			else
-				currentContact.UserName = null;
-			// Web URL
-			if(webURLEntry.Text.Length > 0)
-				currentContact.Url = webURLEntry.Text;
-			else
-				currentContact.Url = null;
-			// Blog URL
-			if(blogURLEntry.Text.Length > 0)
-				currentContact.Blog = blogURLEntry.Text;
-			else
-				currentContact.Blog = null;
-			// Email
+*/
+
 			SaveCurrentEmails();
 			SavePhoneNumbers();
 
+
+			if(WebHomeEntry.Text.Length > 0)
+				currentContact.Url = WebHomeEntry.Text;
+			else
+				currentContact.Url = null;
+
+			if(WebBlogEntry.Text.Length > 0)
+				currentContact.Blog = WebBlogEntry.Text;
+			else
+				currentContact.Blog = null;
+
+			if(RoleEntry.Text.Length > 0)
+				currentContact.Role = RoleEntry.Text;
+			else
+				currentContact.Role = null;
+
+			if(OrgEntry.Text.Length > 0)
+				currentContact.Organization = OrgEntry.Text;
+			else
+				currentContact.Organization = null;
+
+			if(ManagerEntry.Text.Length > 0)
+				currentContact.ManagerID = ManagerEntry.Text;
+			else
+				currentContact.ManagerID = null;
+
+			if(TitleEntry.Text.Length > 0)
+				currentContact.Title = TitleEntry.Text;
+			else
+				currentContact.Title = null;
+
+			if(WorkForceEntry.Text.Length > 0)
+				currentContact.WorkForceID = WorkForceEntry.Text;
+			else
+				currentContact.WorkForceID = null;
+
+			if(BirthdayEntry.Text.Length > 0)
+				currentContact.Birthday = BirthdayEntry.Text;
+			else
+				currentContact.Birthday = null;
+
+			if(NoteTextView.Buffer.Text.Length > 0)
+				currentContact.Note = NoteTextView.Buffer.Text;
+			else
+				currentContact.Note = null;
+/*
 			if( (streetEntry.Text.Length == 0) &&
 					(cityEntry.Text.Length == 0) &&
 					(stateEntry.Text.Length == 0) &&
@@ -628,6 +870,7 @@ namespace Novell.iFolder
 				preferredAddress.Country = countryEntry.Text;
 
 			}
+*/
 		}
 
 
@@ -666,19 +909,21 @@ namespace Novell.iFolder
 		/// </summary>
 		private void on_nameButton_clicked(object o, EventArgs args) 
 		{
+/*
 			NameEditor ne = new NameEditor(contactEditorDialog, preferredName);
 			if(ne.Run() == -5)
 			{
 				firstNameEntry.Text = preferredName.Given;
 				lastNameEntry.Text = preferredName.Family;
 			}
+*/
 		}
 
 		/// <summary>
 		/// Glade autoconnected method that is called when the photo
 		/// button on the dialog is pressed.
 		/// </summary>
-		private void on_photoButton_clicked(object o, EventArgs args) 
+		private void on_UserImageButton_clicked(object o, EventArgs args) 
 		{
 			FileSelection fs = new FileSelection("Choose a new Image");
 
@@ -698,7 +943,7 @@ namespace Novell.iFolder
 				{
 					Pixbuf pb = GetScaledPhoto(currentContact, 64);
 					if(pb != null)
-						userImage.FromPixbuf = pb;
+						UserImage.FromPixbuf = pb;
 				}
 			}
 		}
