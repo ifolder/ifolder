@@ -93,7 +93,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.NumericUpDown syncInterval;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.CheckBox autoSync;
-		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.Label objectCount;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.LinkLabel conflicts;
@@ -125,6 +124,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label limitLabel;
 		private System.Windows.Forms.Label limit;
 		private Novell.iFolderCom.GaugeChart gaugeChart;
+		private System.Windows.Forms.Label label2;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -210,7 +210,6 @@ namespace Novell.iFolderCom
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.objectCount = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
@@ -254,10 +253,10 @@ namespace Novell.iFolderCom
 			this.ifolderLabel = new System.Windows.Forms.Label();
 			this.open = new System.Windows.Forms.Button();
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
-			this.groupBox4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).BeginInit();
 			this.groupBox3.SuspendLayout();
 			this.tabSharing.SuspendLayout();
@@ -330,11 +329,13 @@ namespace Novell.iFolderCom
 			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
 			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
-			this.groupBox1.Controls.Add(this.groupBox4);
+			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.syncInterval);
 			this.groupBox1.Controls.Add(this.label6);
 			this.groupBox1.Controls.Add(this.autoSync);
+			this.groupBox1.Controls.Add(this.objectCount);
+			this.groupBox1.Controls.Add(this.label8);
 			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
 			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
 			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -353,33 +354,6 @@ namespace Novell.iFolderCom
 			this.groupBox1.Text = resources.GetString("groupBox1.Text");
 			this.toolTip1.SetToolTip(this.groupBox1, resources.GetString("groupBox1.ToolTip"));
 			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
-			// 
-			// groupBox4
-			// 
-			this.groupBox4.AccessibleDescription = resources.GetString("groupBox4.AccessibleDescription");
-			this.groupBox4.AccessibleName = resources.GetString("groupBox4.AccessibleName");
-			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox4.Anchor")));
-			this.groupBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox4.BackgroundImage")));
-			this.groupBox4.Controls.Add(this.objectCount);
-			this.groupBox4.Controls.Add(this.label8);
-			this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
-			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
-			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Font = ((System.Drawing.Font)(resources.GetObject("groupBox4.Font")));
-			this.helpProvider1.SetHelpKeyword(this.groupBox4, resources.GetString("groupBox4.HelpKeyword"));
-			this.helpProvider1.SetHelpNavigator(this.groupBox4, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("groupBox4.HelpNavigator"))));
-			this.helpProvider1.SetHelpString(this.groupBox4, resources.GetString("groupBox4.HelpString"));
-			this.groupBox4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox4.ImeMode")));
-			this.groupBox4.Location = ((System.Drawing.Point)(resources.GetObject("groupBox4.Location")));
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox4.RightToLeft")));
-			this.helpProvider1.SetShowHelp(this.groupBox4, ((bool)(resources.GetObject("groupBox4.ShowHelp"))));
-			this.groupBox4.Size = ((System.Drawing.Size)(resources.GetObject("groupBox4.Size")));
-			this.groupBox4.TabIndex = ((int)(resources.GetObject("groupBox4.TabIndex")));
-			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = resources.GetString("groupBox4.Text");
-			this.toolTip1.SetToolTip(this.groupBox4, resources.GetString("groupBox4.ToolTip"));
-			this.groupBox4.Visible = ((bool)(resources.GetObject("groupBox4.Visible")));
 			// 
 			// objectCount
 			// 
@@ -1430,6 +1404,33 @@ namespace Novell.iFolderCom
 			// 
 			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
+			// label2
+			// 
+			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
+			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
+			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
+			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
+			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
+			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			this.label2.Name = "label2";
+			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
+			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
+			this.label2.Text = resources.GetString("label2.Text");
+			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
+			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
+			// 
 			// iFolderAdvanced
 			// 
 			this.AcceptButton = this.ok;
@@ -1479,7 +1480,6 @@ namespace Novell.iFolderCom
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
-			this.groupBox4.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).EndInit();
 			this.groupBox3.ResumeLayout(false);
 			this.tabSharing.ResumeLayout(false);
