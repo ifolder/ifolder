@@ -316,7 +316,8 @@ namespace Simias.Event
 		/// </summary>
 		public static void RegisterClientChannel()
 		{
-			startService("CsEventBroker.exe");
+			Uri assemblyPath = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase));
+			startService(Path.Combine(assemblyPath.LocalPath, "CsEventBroker.exe"));
 			string service = new Simias.Configuration().Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly);
 			Process [] process = Process.GetProcessesByName(service);
 			if (process.Length >= 1)
@@ -387,7 +388,7 @@ namespace Simias.Event
 		private static void startService(string serviceName)
 		{
 			bool createdMutex;
-			string mutexName = "___" + serviceName + "___Service___";
+			string mutexName = "___" + Path.GetFileNameWithoutExtension(serviceName) + "___Service___";
 			mutexName += System.Environment.UserName;
 			Mutex mutex = new Mutex(true, mutexName, out createdMutex);
 			
