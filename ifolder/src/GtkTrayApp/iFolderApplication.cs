@@ -259,7 +259,6 @@ namespace Novell.iFolder
 
 		private void OnReLoginDialogResponse(object o, ResponseArgs args)
 		{
-			LoginDialog.Hide();
 			switch(args.ResponseId)
 			{
 				case Gtk.ResponseType.Ok:
@@ -271,17 +270,19 @@ namespace Novell.iFolder
 					if(status != AuthenticationStatus.Success)
 					{
 						iFolderMsgDialog mDialog = new iFolderMsgDialog(
-							tIcon, 
+							LoginDialog, //tIcon, 
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
 							Util.GS("iFolder Connect Error"),
 							Util.GS("Unable to Authenticate"),
-							string.Format(Util.GS("The authentication returned the error {0}"), status));
+							Util.GS("The password is invalid.  Please try again."));
 						mDialog.Run();
 						mDialog.Hide();
 						mDialog.Destroy();
 						mDialog = null;
 					}
+					else
+						ShowReLoginWindow = false;
 
 					break;
 				}
@@ -291,8 +292,13 @@ namespace Novell.iFolder
 					break;
 				}
 			}
-			LoginDialog.Destroy();
-			LoginDialog = null;
+
+			if(!ShowReLoginWindow)
+			{
+				LoginDialog.Hide();
+				LoginDialog.Destroy();
+				LoginDialog = null;
+			}
 		}
 
 

@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-20 15:34-0700\n"
+"POT-Creation-Date: 2004-12-22 15:01-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../iFolderAcceptDialog.cs:44 src/GtkTrayApp/iFolderAcceptDialog.cs:44
@@ -72,12 +72,15 @@ msgstr ""
 #: src/GtkTrayApp/iFolderAccessDialog.cs:111
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:563
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:634
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:566
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:637
 msgid "Full Control"
 msgstr ""
 
 #: ../iFolderAccessDialog.cs:114 ../iFolderPropSharingPage.cs:609
 #: ../iFolderPropSharingPage.cs:531 src/GtkTrayApp/iFolderAccessDialog.cs:114
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:639
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:642
 msgid "Read/Write"
 msgstr ""
 
@@ -86,6 +89,8 @@ msgstr ""
 #: src/GtkTrayApp/iFolderAccessDialog.cs:117
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:565
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:644
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:568
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:647
 msgid "Read Only"
 msgstr ""
 
@@ -99,10 +104,12 @@ msgid "iFolder"
 msgstr ""
 
 #: ../iFolderApplication.cs:401 src/GtkTrayApp/iFolderApplication.cs:364
+#: src/GtkTrayApp/iFolderApplication.cs:370
 msgid "Action Required"
 msgstr ""
 
 #: ../iFolderApplication.cs:402 src/GtkTrayApp/iFolderApplication.cs:365
+#: src/GtkTrayApp/iFolderApplication.cs:371
 #, csharp-format
 msgid "A collision has been detected in iFolder \"{0}\""
 msgstr ""
@@ -115,6 +122,7 @@ msgid "Available"
 msgstr ""
 
 #: ../iFolderApplication.cs:484 src/GtkTrayApp/iFolderApplication.cs:336
+#: src/GtkTrayApp/iFolderApplication.cs:342
 #, csharp-format
 msgid "New iFolder \"{0}\""
 msgstr ""
@@ -125,6 +133,7 @@ msgid "This iFolder is owned by {0} and is available to sync on this computer"
 msgstr ""
 
 #: ../iFolderApplication.cs:510 src/GtkTrayApp/iFolderApplication.cs:394
+#: src/GtkTrayApp/iFolderApplication.cs:400
 msgid "New iFolder User"
 msgstr ""
 
@@ -136,24 +145,31 @@ msgstr ""
 #: ../iFolderApplication.cs:654 src/GtkTrayApp/iFolderApplication.cs:277
 #: src/GtkTrayApp/iFolderApplication.cs:491
 #: src/GtkTrayApp/iFolderApplication.cs:664
+#: src/GtkTrayApp/iFolderApplication.cs:276
+#: src/GtkTrayApp/iFolderApplication.cs:497
+#: src/GtkTrayApp/iFolderApplication.cs:670
 msgid "iFolder Connect Error"
 msgstr ""
 
 #: ../iFolderApplication.cs:655 src/GtkTrayApp/iFolderApplication.cs:492
+#: src/GtkTrayApp/iFolderApplication.cs:498
 msgid "Unable to locate Simias Process"
 msgstr ""
 
 #: ../iFolderApplication.cs:656 src/GtkTrayApp/iFolderApplication.cs:493
+#: src/GtkTrayApp/iFolderApplication.cs:499
 msgid ""
 "The Simias process must be running in order for iFolder to run.  Start the "
 "Simias process and try again"
 msgstr ""
 
 #: ../iFolderApplication.cs:711 src/GtkTrayApp/iFolderApplication.cs:558
+#: src/GtkTrayApp/iFolderApplication.cs:564
 msgid "My iFolders..."
 msgstr ""
 
 #: ../iFolderApplication.cs:719 src/GtkTrayApp/iFolderApplication.cs:567
+#: src/GtkTrayApp/iFolderApplication.cs:573
 msgid "Join Enterprise Server"
 msgstr ""
 
@@ -457,32 +473,38 @@ msgstr ""
 
 #: ../iFolderPropSharingPage.cs:228
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:235
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:238
 msgid "Owner"
 msgstr ""
 
 #: ../iFolderPropSharingPage.cs:230
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:237
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:240
 msgid "Invited User"
 msgstr ""
 
 #: ../iFolderPropSharingPage.cs:232
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:239
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:242
 msgid "iFolder User"
 msgstr ""
 
 #: ../iFolderPropSharingPage.cs:273 ../iFolderWindow.cs:1488
 #: ../iFolderWindow.cs:1707 src/GtkTrayApp/iFolderPropSharingPage.cs:280
 #: src/GtkTrayApp/iFolderWindow.cs:1762 src/GtkTrayApp/iFolderWindow.cs:1810
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:283
 msgid "iFolder Confirmation"
 msgstr ""
 
 #: ../iFolderPropSharingPage.cs:274
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:281
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:284
 msgid "Remove Selected Users?"
 msgstr ""
 
 #: ../iFolderPropSharingPage.cs:275
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:282
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:285
 msgid ""
 "This will remove the selected users from this iFolder.  They will no longer "
 "be able to sync file to this iFolder."
@@ -493,6 +515,7 @@ msgstr ""
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:567
 #: src/GtkTrayApp/iFolderWindow.cs:1205 src/GtkTrayApp/iFolderWindow.cs:105
 #: src/GtkTrayApp/iFolderWindow.cs:123
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:570
 msgid "Unknown"
 msgstr ""
 
@@ -811,11 +834,14 @@ msgstr ""
 
 #: src/GtkTrayApp/iFolderAcceptDialog.cs:159
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:561
+#: src/GtkTrayApp/iFolderPropSharingPage.cs:564
 msgid "Read Write"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderApplication.cs:278
 #: src/GtkTrayApp/iFolderApplication.cs:665
+#: src/GtkTrayApp/iFolderApplication.cs:277
+#: src/GtkTrayApp/iFolderApplication.cs:671
 msgid "Unable to Authenticate"
 msgstr ""
 
@@ -825,16 +851,19 @@ msgid "The authentication returned the error {0}"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderApplication.cs:338
+#: src/GtkTrayApp/iFolderApplication.cs:344
 #, csharp-format
 msgid "{0} has invited you to participate in this shared iFolder"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderApplication.cs:395
+#: src/GtkTrayApp/iFolderApplication.cs:401
 #, csharp-format
 msgid "{0} has joined an iFolder"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderApplication.cs:575
+#: src/GtkTrayApp/iFolderApplication.cs:581
 msgid "Login to iFolder Server"
 msgstr ""
 
@@ -1063,5 +1092,10 @@ msgid ""
 msgstr ""
 
 #: src/GtkTrayApp/iFolderApplication.cs:666
+#: src/GtkTrayApp/iFolderApplication.cs:672
 msgid "The user name or password is invalid.  Please try again."
+msgstr ""
+
+#: src/GtkTrayApp/iFolderApplication.cs:278
+msgid "The password is invalid.  Please try again."
 msgstr ""
