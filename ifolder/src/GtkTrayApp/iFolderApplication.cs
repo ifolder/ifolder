@@ -65,9 +65,9 @@ namespace Novell.iFolder
 		private iFolderEventTypes	eventType;
 		private string				exceptionMessage;
 	
-		public iFolderEvent(SimiasEventArgs args, iFolderEventTypes type)
+		public iFolderEvent(NodeEventArgs args, iFolderEventTypes type)
 		{
-			this.eventArgs = args as NodeEventArgs;
+			this.eventArgs = args;
 			this.eventType = type;
 		}
 
@@ -196,9 +196,10 @@ namespace Novell.iFolder
 
 		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
 		{
+			NodeEventArgs nargs = args as NodeEventArgs;
 			lock(EventQueue)
 			{
-				EventQueue.Enqueue(new iFolderEvent(args, 
+				EventQueue.Enqueue(new iFolderEvent(nargs, 
 						iFolderEventTypes.NodeCreated));
 				SimiasEventFired.WakeupMain();
 			}
@@ -206,9 +207,10 @@ namespace Novell.iFolder
 
 		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
 		{
+			NodeEventArgs nargs = args as NodeEventArgs;
 			lock(EventQueue)
 			{
-				EventQueue.Enqueue(new iFolderEvent(args, 
+				EventQueue.Enqueue(new iFolderEvent(nargs, 
 						iFolderEventTypes.NodeChanged));
 				SimiasEventFired.WakeupMain();
 			}
@@ -216,9 +218,10 @@ namespace Novell.iFolder
 
 		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
 		{
+			NodeEventArgs nargs = args as NodeEventArgs;
 			lock(EventQueue)
 			{
-				EventQueue.Enqueue(new iFolderEvent(args, 
+				EventQueue.Enqueue(new iFolderEvent(nargs, 
 						iFolderEventTypes.NodeDeleted));
 				SimiasEventFired.WakeupMain();
 			}
@@ -361,14 +364,18 @@ namespace Novell.iFolder
 									Gtk.MessageType.Info, 5000);
 							notifyWin.ShowAll();
 
-							// TODO: notify the iFolderWindow that
-							// this new iFolder needs to be 
-							// displayed
+							if(ifwin != null)
+								ifwin.iFolderHasConflicts(ifolder);
 						}
 					}
 					catch(Exception e)
 					{
-						// do nada
+						iFolderExceptionDialog ied = 
+								new iFolderExceptionDialog(null, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
 					}
 
 					break;
@@ -383,38 +390,40 @@ namespace Novell.iFolder
 		{
 			switch(iEvent.NodeType)
 			{
+				// TODO:  This is going to kill performance
+				// We need to verify that the collectionID is
+				// the POBox or something
 				case "Node":
 				{
-					// Check to see if the node is the same as the
-					// collection (ie- a collection was created)
-					if(iEvent.CollectionID == iEvent.NodeID)
+					try
 					{
-						try
+						iFolder ifolder = 
+								ifws.GetiFolder(iEvent.NodeID);
+						if(	(ifolder != null) &&
+							(ifolder.State == "Available") )
 						{
-							iFolder ifolder = 
-									ifws.GetiFolder(iEvent.CollectionID);
-							if(	(ifolder != null) &&
-								(ifolder.State == "Available") )
-							{
-								// show a popup letting everyone know
-								// a new iFolder was added
-								NotifyWindow notifyWin = new NotifyWindow(
-										tIcon, 
-										string.Format("New iFolder \"{0}\"", 
-															ifolder.Name),
-										string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
-										Gtk.MessageType.Info, 5000);
-								notifyWin.ShowAll();
+							// show a popup letting everyone know
+							// a new iFolder was added
+							NotifyWindow notifyWin = new NotifyWindow(
+									tIcon, 
+									string.Format("New iFolder \"{0}\"", 
+														ifolder.Name),
+									string.Format("This iFolder is owned by {0} and is available to sync on this computer", ifolder.Owner),
+									Gtk.MessageType.Info, 5000);
+							notifyWin.ShowAll();
 
-								// TODO: notify the iFolderWindow that
-								// this new iFolder needs to be 
-								// displayed
-							}
+							if(ifwin != null)
+								ifwin.NewiFolderAvailable(ifolder);
 						}
-						catch(Exception e)
-						{
-							// do nada
-						}
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog(null, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
 					}
 					break;
 				}
@@ -438,14 +447,18 @@ namespace Novell.iFolder
 
 							notifyWin.ShowAll();
 							
-							// TODO:  Notify the iFolderWindow that
-							// this new user needs to be added
-							// to the users if displayed
+							if(ifwin != null)
+								ifwin.NewiFolderMember(ifolder, newuser);
 						}
 					}
 					catch(Exception e)
 					{
-						// do nada
+						iFolderExceptionDialog ied = 
+								new iFolderExceptionDialog(null, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
 					}
 					break;
 				}
@@ -508,9 +521,7 @@ namespace Novell.iFolder
 				{
 					ifws = new iFolderWebService();
 	
-					// TODO: change this to some kind of init code
 					ifSettings = ifws.GetSettings();
-					//ifws.Ping();
 				}
 				catch(System.Net.WebException we)
 				{
