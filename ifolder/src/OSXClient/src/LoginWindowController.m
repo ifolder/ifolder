@@ -24,8 +24,12 @@
 #import "LoginWindowController.h"
 #import "iFolderDomain.h"
 #import "iFolderApplication.h"
+#import "SimiasService.h"
 #import "AuthStatus.h"
 #include "simiasStub.h"
+#include "Security/Security.h"
+#import "AcceptCertSheetController.h"
+#include "SecurityInterface/SFCertificatePanel.h"
 
 
 @implementation LoginWindowController
@@ -69,9 +73,24 @@
 				}
 				case ns1__StatusCodes__InvalidCertificate:
 				{
-					NSLog(@"Invalid Certificate was found on the server");
+					@try
+					{
+						SimiasService *simiasService = [[SimiasService alloc] init];
+						
+						SecCertificateRef certRef = [simiasService GetCertificate:[serverField stringValue]];
+
+						AcceptCertSheetController *certSheet = [[AcceptCertSheetController alloc]
+								initWithCert:certRef];
+						
+						[NSApp beginSheet:[certSheet window] modalForWindow:[self window]
+							modalDelegate:self didEndSelector:@selector(certSheetDidEnd:returnCode:contextInfo:) contextInfo:certRef];
+					}
+					@catch(NSException ex)
+					{
+						NSLog(@"Exception getting cert.");
+					}						
 					break;
-				}
+				}				
 				case ns1__StatusCodes__UnknownUser:		// UnknownUser
 				case ns1__StatusCodes__InvalidCredentials:		// InvalidCredentials
 				case ns1__StatusCodes__InvalidPassword:		// InvalidPassword
@@ -141,6 +160,36 @@
 	[NSApp requestUserAttention:NSCriticalRequest];
 }
 
+
+
+- (void)certSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	SecCertificateRef certRef = (SecCertificateRef)contextInfo;
+	
+	if(returnCode)
+	{
+		@try
+		{
+			SimiasService *simiasService = [[SimiasService alloc] init];
+			[simiasService StoreCertificate:certRef forHost:[serverField stringValue]];
+			[self authenticate:self];
+		}
+		@catch(NSException ex)
+		{
+			NSLog(@"Exception storing certificate.");
+		}						
+	}
+	else
+	{
+		NSLog(@"User did not accept certificate, do not store or authenticate");
+	}
+	
+	if(certRef != NULL)
+	{
+		NSLog(@"Releasing the Certificate");
+		CFRelease(certRef);
+	}
+}
 
 
 
