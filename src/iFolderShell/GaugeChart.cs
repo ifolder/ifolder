@@ -39,8 +39,7 @@ namespace Novell.iFolder.Forms.Controls
 		private System.Windows.Forms.Label gauge;
 		private double maxValue;
 		private double resolution;
-		private double currentLevel;
-		private int fillLevel;
+		private double used;
 		private Color barColor = Color.Red;
 
 		/// <summary> 
@@ -108,9 +107,10 @@ namespace Novell.iFolder.Forms.Controls
 			e.Graphics.Clear(Label.DefaultBackColor);
 			Pen pen = new Pen(Color.Black);
 			e.Graphics.DrawRectangle(pen, gauge.ClientRectangle);
-
-//			if (resolution != 0)
+			if (maxValue != 0)
 			{
+				int fillLevel = (int)((used/maxValue) * gauge.Size.Height);
+
 				SolidBrush brush = new SolidBrush(barColor);
 				Rectangle rect = new Rectangle(0, gauge.ClientSize.Height - fillLevel, gauge.ClientSize.Width, fillLevel);
 				rect.Intersect(e.ClipRectangle);
@@ -125,16 +125,13 @@ namespace Novell.iFolder.Forms.Controls
 
 		#region Properties
 		/// <summary>
-		/// Gets/sets the maximum value of the gauge.
+		/// Sets the maximum value.
 		/// </summary>
 		public double MaxValue
 		{
-			get { return maxValue; }
 			set 
 			{ 
 				maxValue = value;
-
-				resolution = Math.Round(maxValue / gauge.Size.Height, 2);
 			}
 		}
 
@@ -147,16 +144,13 @@ namespace Novell.iFolder.Forms.Controls
 		}
 
 		/// <summary>
-		/// Gets/sets the current level of the gauge.
+		/// Sets the amount used.
 		/// </summary>
-		public double CurrentLevel
+		public double Used
 		{
-			get { return currentLevel; }
 			set 
 			{
-				currentLevel = value;
-
-				fillLevel = resolution != 0 ? (int)(currentLevel/resolution) : 0;
+				used = value;
 			}
 		}
 		#endregion

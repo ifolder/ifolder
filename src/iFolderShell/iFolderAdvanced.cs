@@ -408,7 +408,7 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// gaugeChart
 			// 
-			this.gaugeChart.CurrentLevel = 0;
+			this.gaugeChart.Used = 0;
 			this.gaugeChart.Location = new System.Drawing.Point(312, 32);
 			this.gaugeChart.MaxValue = 0;
 			this.gaugeChart.Name = "gaugeChart";
@@ -755,11 +755,12 @@ namespace Novell.iFolder.iFolderCom
 
 				double usedSpace = (double)ifolder.StorageSize;
 				double availableSpace = dsq.Limit - usedSpace;
+
 				usedSpace = Math.Round(usedSpace/megaByte, 2);
 				availableSpace = Math.Round(availableSpace/megaByte, 2);
 
 				gaugeChart.MaxValue = dsq.Limit / megaByte;
-				gaugeChart.CurrentLevel = usedSpace;
+				gaugeChart.Used = usedSpace;
 				gaugeChart.BarColor = SystemColors.ActiveCaption;
 
 				used.Text = usedSpace.ToString();
@@ -769,7 +770,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				setLimit.Checked = false;
 				used.Text = available.Text = limit.Text = "";
-				gaugeChart.CurrentLevel = 0;
+				gaugeChart.Used = 0;
 			}
 
 			gaugeChart.Invalidate(true);
