@@ -83,6 +83,7 @@ namespace Novell.FormsTrayApp
 
 		private Icon trayIcon;
 		private Icon startupIcon;
+		private Icon shutdownIcon;
         private const int numberOfSyncIcons = 10;
 		private Icon[] syncIcons = new Icon[numberOfSyncIcons];
 		private int index = 0;
@@ -180,7 +181,8 @@ namespace Novell.FormsTrayApp
 					this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
 
 					trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
-					startupIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));//TODO: "ifolder-startup.ico"));
+					startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
+					shutdownIcon = new Icon(Path.Combine(basePath, "ifolder-shutdown.ico"));
 					syncIcons[0] = new Icon(trayIcon, trayIcon.Size);
 					for (int i = 0; i < numberOfSyncIcons; i++)
 					{
@@ -1073,8 +1075,7 @@ namespace Novell.FormsTrayApp
 			Cursor.Current = Cursors.WaitCursor;
 
 			shellNotifyIcon.Text = resourceManager.GetString("iFolderServicesStopping");
-			// TODO: uncomment this when the shutdown icon is added.
-			//shellNotifyIcon.Icon = shutdownIcon;
+			shellNotifyIcon.Icon = shutdownIcon;
 
 			if (ex != null)
 			{
@@ -1103,13 +1104,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			Cursor.Current = Cursors.Default;
-
-			// TODO: Remove this when the shutdown icon is added.
-			if (shellNotifyIcon != null)
-			{
-				shellNotifyIcon.Visible = false;
-			}
-
 			Application.Exit();
 		}
 
