@@ -144,18 +144,31 @@ namespace Simias.POBox
 			bool result = true;
 			log.Debug("SubscriptionThread::DoInvited called");
 			POBoxService poService = new POBoxService();
-			poService.Url = this.poServiceUrl;
 			poService.PreAuthenticate = true;
 			poService.CookieContainer = new CookieContainer();
-			Credentials cSimiasCreds = 
-				new Credentials(subscription.SubscriptionCollectionID);
-			poService.Credentials = cSimiasCreds.GetCredentials();
-			if (poService.Credentials == null)
+
+			// Resolve the PO Box location for the invitee
+			Uri poUri = 
+				Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.ToIdentity );
+			if ( poUri != null )
 			{
-				log.Debug("  no credentials - back to sleep");
-				return (false);
+				poService.Url = poUri.ToString() + poServiceLabel;
 			}
-			
+			else
+			{
+				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
+				return false;
+			}
+
+			Credentials cSimiasCreds = 
+				new Credentials( subscription.SubscriptionCollectionID );
+
+			poService.Credentials = cSimiasCreds.GetCredentials();
+			if ( poService.Credentials == null )
+			{
+				log.Debug( "  no credentials - back to sleep" );
+				return false;
+			}
 
 			//
 			// Make sure the shared collection has sync'd to the server before inviting
@@ -193,33 +206,6 @@ namespace Simias.POBox
 				return (false);
 			}
 		
-			/*
-			POBoxStatus wsStatus;
-			try
-			{
-				wsStatus = POBoxStatus.UnknownError;
-				wsStatus =
-					poService.VerifyCollection(
-						subscription.DomainID,
-						subscription.SubscriptionCollectionID);
-			}
-			catch(Exception e)
-			{
-				log.Debug("failed verifying remote collection");
-				log.Debug(e.Message);
-				log.Debug(e.StackTrace);
-			}
-
-			if (wsStatus != POBoxStatus.Success)
-			{
-				log.Debug(
-					"Failed POBoxService::Invite - collection: {0} hasn't sync'd to the server yet",
-					subscription.SubscriptionCollectionID);
-				log.Debug("POBoxStatus: " + wsStatus.ToString());
-				return (false);
-			}
-			*/
-
 			// This is an enterprise pobox contact the POService.
 			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 
@@ -274,8 +260,20 @@ namespace Simias.POBox
 			POBoxService poService = new POBoxService();
 			poService.CookieContainer = new CookieContainer();
 			poService.PreAuthenticate = true;
-			poService.Url = this.poServiceUrl;
 			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
+
+			// Resolve the PO Box location for the inviter
+			Uri poUri = 
+				Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
+			if ( poUri != null )
+			{
+				poService.Url = poUri.ToString() + poServiceLabel;
+			}
+			else
+			{
+				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
+				return false;
+			}
 
 			// Get credentials for the request
 			Credentials cSimiasCreds = 
@@ -376,9 +374,21 @@ namespace Simias.POBox
 			log.Debug("  SubID:    " + subscription.MessageID);
 
 			POBoxService poService = new POBoxService();
-			poService.Url = this.poServiceUrl;
 			poService.PreAuthenticate = true;
 			poService.CookieContainer = new CookieContainer();
+
+			// Resolve the PO Box location for the inviter
+			Uri poUri = 
+				Location.Locate.ResolvePOBoxLocation( subscription.DomainID, subscription.FromIdentity );
+			if ( poUri != null )
+			{
+				poService.Url = poUri.ToString() + poServiceLabel;
+			}
+			else
+			{
+				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
+				return false;
+			}
 
 			Credentials cSimiasCreds = 
 				new Credentials(subscription.DomainID, subscription.ToIdentity);
