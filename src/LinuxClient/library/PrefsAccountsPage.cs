@@ -651,6 +651,28 @@ namespace Novell.iFolder
 					DomainInformation domainInfo = simws.ConnectToDomain(nameEntry.Text, passEntry.Text, serverEntry.Text);
 					switch (domainInfo.StatusCode)
 					{
+						case StatusCodes.InvalidCertificate:
+						{
+							byte[] byteArray = simws.GetCertificate(serverEntry.Text);
+							System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+
+							iFolderMsgDialog dialog = new iFolderMsgDialog(
+								topLevelWindow,
+								iFolderMsgDialog.DialogType.Question,
+								iFolderMsgDialog.ButtonSet.YesNo,
+								Util.GS("Unable to Verify Identity"),
+								string.Format(Util.GS("Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the details of the certificate.  Do you want to accept this certificate?"), serverEntry.Text),
+								cert.ToString(true));
+							int rc = dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							if(rc == -8) // User clicked the Yes button
+							{
+								simws.StoreCertificate(byteArray, serverEntry.Text);
+								OnLoginAccount(o, args);
+							}
+							break;
+						}
 						case StatusCodes.Success:
 						case StatusCodes.SuccessInGrace:
 							// Set the credentials in the current process.
