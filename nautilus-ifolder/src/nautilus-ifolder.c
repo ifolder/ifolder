@@ -21,11 +21,11 @@
  * 
  ***********************************************************************/
 #include <libnautilus-extension/nautilus-extension-types.h>
-#include <libnautilus-extension/nautilus-column-provider.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-info-provider.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
-#include <libnautilus-extension/nautilus-property-page-provider.h>
+
+#include <eel/eel-stock-dialogs.h>
 
 #include <gtk/gtk.h>
 #include <glib/gi18n-lib.h>
@@ -45,6 +45,13 @@ typedef struct {
 typedef struct {
 	GObjectClass parent_slot;
 } iFolderNautilusClass;
+
+typedef struct {
+	GtkWidget	*window;
+	gchar		*title;
+	gchar		*message;
+	gchar		*detail;
+} iFolderErrorMessage;
 
 static GType provider_types[1];
 
@@ -81,7 +88,7 @@ cleanup_gsoap (struct soap *p_soap)
 /**
  * g_free () must be called on the returned string
  */
-static gchar *
+gchar *
 get_file_path (NautilusFileInfo *file)
 {
 	gchar *file_path, *uri;
@@ -102,16 +109,39 @@ get_file_path (NautilusFileInfo *file)
 /**
  * Calls to iFolder via GSoap
  */
-static gboolean
+gboolean
+is_ifolder_running ()
+{
+	struct soap soap;
+	gboolean b_is_ifolder_running = TRUE;
+	int err_code;
+
+	struct _ns1__Ping ns1__Ping;
+	struct _ns1__PingResponse ns1__PingResponse;
+
+	init_gsoap (&soap);
+	err_code = soap_call___ns1__Ping (&soap,
+										soapURL,
+						   				NULL,
+						   				&ns1__Ping,
+						   				&ns1__PingResponse);
+						   				
+	if (err_code != SOAP_OK || soap.error) {
+		b_is_ifolder_running = FALSE;
+	}
+	
+	cleanup_gsoap (&soap);
+	
+	return b_is_ifolder_running;
+}
+ 
+gboolean
 is_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
 	gboolean b_is_ifolder = FALSE;
 	gchar *folder_path;
 	
-	if (!nautilus_file_info_is_directory (file))
-		return FALSE;
-
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
 		g_print ("****About to call IsiFolder (");
@@ -142,7 +172,7 @@ is_ifolder (NautilusFileInfo *file)
 	return b_is_ifolder;
 }
 
-static gboolean
+gboolean
 can_be_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
@@ -182,7 +212,7 @@ can_be_ifolder (NautilusFileInfo *file)
 	return b_can_be_ifolder;
 }
 
-static gint
+gint
 create_local_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
@@ -232,7 +262,7 @@ create_local_ifolder (NautilusFileInfo *file)
 	return 0;
 }
 
-static gchar *
+gchar *
 get_ifolder_id_by_local_path (gchar *path)
 {
 	struct soap soap;
@@ -257,7 +287,7 @@ get_ifolder_id_by_local_path (gchar *path)
 			g_print ("****error calling GetiFolderByLocalPath***\n");
 			soap_print_fault (&soap, stderr);
 			cleanup_gsoap (&soap);
-			return -1;
+			return NULL;
 		} else {
 			g_print ("***calling GetiFolderByLocalPath succeeded***\n");
 			struct ns1__iFolderWeb *ifolder = 
@@ -265,7 +295,7 @@ get_ifolder_id_by_local_path (gchar *path)
 			if (ifolder == NULL) {
 				g_print ("***GetiFolderByLocalPath returned NULL\n");
 				cleanup_gsoap (&soap);
-				return -1;
+				return NULL;
 			} else {
 				g_print ("***The iFolder's ID is: ");
 				g_print (ifolder->ID);
@@ -280,7 +310,7 @@ get_ifolder_id_by_local_path (gchar *path)
 	return ifolder_id;
 }
 
-static gint
+gint
 revert_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
@@ -344,19 +374,44 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	g_print ("--> ifolder_nautilus_update_file_info called\n");
 	gchar *ifolder_type = NULL;
 	
-	if (is_ifolder (file))
-	{
-		nautilus_file_info_add_emblem (file, "ifolder");
-		ifolder_type = _("iFolder");
-	}
-	else
-	{
-		ifolder_type = _("not an iFolder");
-	}
+	/* Don't do anything if the specified file is not a directory. */
+	if (!nautilus_file_info_is_directory (file))
+		return NAUTILUS_OPERATION_COMPLETE;
 	
-	nautilus_file_info_add_string_attribute (file,
-											 "NautilusiFolder::ifolder_type",
-											 ifolder_type);
+	if (is_ifolder_running ()) {
+		if (is_ifolder (file))
+		{
+			nautilus_file_info_add_emblem (file, "ifolder");
+			ifolder_type = _("yes");
+		}
+		else
+		{
+			ifolder_type = _("no");
+		}
+		
+		nautilus_file_info_add_string_attribute (
+			file,
+			"NautilusiFolder::is_ifolder",
+			ifolder_type);
+	} else {
+		g_print ("*** iFolder is NOT running\n");
+		/**
+		 * If iFolder is not currently running on the machine, check
+		 * the "NautilusiFolder::ifolder_type" attribute to determine
+		 * whether the folder has been marked as an iFolder.
+		 */
+		ifolder_type = nautilus_file_info_get_string_attribute (
+			file,
+			"NautilusiFolder::is_ifolder");
+			 
+		if (ifolder_type) {
+			g_print (ifolder_type);
+		}
+			
+		if (ifolder_type && (!strcmp (ifolder_type, "yes"))) {
+			nautilus_file_info_add_emblem (file, "ifolder");
+		}
+	}
 											 
 	return NAUTILUS_OPERATION_COMPLETE;
 }
@@ -370,6 +425,24 @@ ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
 /**
  * Nautilus Menu Provider Implementation
  */
+
+gboolean
+show_ifolder_error_message (void *user_data)
+{
+	g_print ("*** show_ifolder_error_message () called\n");
+	iFolderErrorMessage *errMsg = (iFolderErrorMessage *)user_data;
+	GtkDialog *message_dialog;
+
+	message_dialog = eel_show_error_dialog (
+						errMsg->message,
+						errMsg->detail,
+						errMsg->title,
+						GTK_WINDOW (errMsg->window));
+	gtk_dialog_run (message_dialog);
+	gtk_object_destroy (GTK_OBJECT (message_dialog));
+	
+	free (errMsg);
+}
 
 /**
  * If this function returns NON-NULL, it contains a char * from the process
@@ -450,52 +523,24 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 static void *
 revert_ifolder_thread (gpointer user_data)
 {
+	NautilusMenuItem *item;
+	GList *files;
 	NautilusFileInfo *file;
 	gint error;
-	gchar *ifolder_path;
-	gchar *ifolder_id;
-	char *output;
-	char args [1024];
-	memset (args, '\0', sizeof (args));
-	
-	file = (NautilusFileInfo *)user_data;
-	
-	ifolder_path = get_file_path (file);
-	if (ifolder_path != NULL) {
-		ifolder_id = get_ifolder_id_by_local_path (ifolder_path);
-		if (ifolder_id != NULL) {
-			sprintf (args, "%s confirm-revert %s", NAUTILUS_IFOLDER_SH_PATH, ifolder_id);
-			g_print ("args: ");
-			g_print (args);
-			g_print ("\n");
-			
-			g_free (ifolder_id);
-		}
-		
-		g_free (ifolder_path);
-	}
-	
-	if (strlen (args) <= 0)
-		return;
-		
-	output = ifolder_dialog_thread (strdup(args));
-	if (output == NULL) {
-		g_print ("*** No output from nautilus-ifolder so we cannot revert iFolder\n");
-		return;
-	}
-	
-	if (!strcmp (output, "no")) {
-		g_print ("*** The user must have selected 'no' so we cannot revert iFolder\n");
-		free (output);
-		return;
-	}
-	
-	free (output);
+
+	item = (NautilusMenuItem *)user_data;
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
 	
 	error = revert_ifolder (file);
 	if (error) {
-		/* FIXME: Figure out how to let the user know an error happened */
 		g_print ("An error occurred reverting an iFolder\n");
+		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
+		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
+		errMsg->title	= _("iFolder Error");
+		errMsg->message	= _("The iFolder could not be reverted.");
+		errMsg->detail	= _("Sorry, unable to revert the specified iFolder to a normal folder.");
+		g_idle_add (show_ifolder_error_message, errMsg);
 	} else {
 		nautilus_file_info_invalidate_extension_info (file);
 	}
@@ -505,22 +550,31 @@ static void
 revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Revert to a Normal Folder selected\n");
-
-	GList *files;
-	NautilusFileInfo *file;
+	GtkDialog *message_dialog;
+	GtkWidget *window;
+	int response;
 	pthread_t thread;
-	gint error;
 
-	files = g_object_get_data (G_OBJECT (item), "files");
-	file = NAUTILUS_FILE_INFO (files->data);
-//	g_object_unref (G_OBJECT (files->data));
-	if (file == NULL)
-		return;
+	window = g_object_get_data (G_OBJECT (item), "parent_window");
 
-	pthread_create (&thread, 
-					NULL, 
-					revert_ifolder_thread,
-					file);
+	message_dialog = eel_show_yes_no_dialog (
+						_("Revert this iFolder?"), 
+	                    _("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync."),
+						_("iFolder Confirmation"), 
+						GTK_STOCK_YES,
+						GTK_STOCK_NO,
+						GTK_WINDOW (window));
+	/* FIXME: Figure out why the next call doesn't set the default button to "NO" */
+	gtk_dialog_set_default_response (message_dialog, GTK_RESPONSE_CANCEL);
+	response = gtk_dialog_run (message_dialog);
+	gtk_object_destroy (GTK_OBJECT (message_dialog));
+	
+	if (response == GTK_RESPONSE_YES) {
+		pthread_create (&thread, 
+						NULL, 
+						revert_ifolder_thread,
+						item);
+	}
 }
 
 static void
@@ -659,7 +713,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		return NULL;
 		
 	items = NULL;
-
+	
 	if (is_ifolder (file)) {
 		/* Menu item: Revert to a Normal Folder */
 		item = nautilus_menu_item_new ("NautilusiFolder::revert_ifolder",
@@ -672,6 +726,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		g_object_set_data (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files));
+		g_object_set_data_full (G_OBJECT (item), "parent_window",
+								g_object_ref (window), g_object_unref);
 		items = g_list_append (items, item);
 		
 		/* Menu item: Share with... */
@@ -685,6 +741,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		g_object_set_data (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files));
+		g_object_set_data_full (G_OBJECT (item), "parent_window",
+								g_object_ref (window), g_object_unref);
 		items = g_list_append (items, item);
 		
 		/* Menu item: Properties */
@@ -698,6 +756,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		g_object_set_data (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files));
+		g_object_set_data_full (G_OBJECT (item), "parent_window",
+								g_object_ref (window), g_object_unref);
 		items = g_list_append (items, item);
 		
 		/* Menu item: Help */
@@ -711,6 +771,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		g_object_set_data (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files));
+		g_object_set_data_full (G_OBJECT (item), "parent_window",
+								g_object_ref (window), g_object_unref);
 		items = g_list_append (items, item);
 	} else {
 		/**
@@ -731,6 +793,8 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		g_object_set_data (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files));
+		g_object_set_data_full (G_OBJECT (item), "parent_window",
+								g_object_ref (window), g_object_unref);
 		items = g_list_append (items, item);
 	}
 
