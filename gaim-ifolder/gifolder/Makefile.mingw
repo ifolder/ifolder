@@ -52,7 +52,7 @@ INCLUDE_PATHS +=	-I$(GIFOLDER_ROOT) \
 			-I$(GAIM_TOP)/src \
 			-I$(GAIM_TOP)/src/win32 \
 			-I$(GAIM_TOP) \
-			$(SIMIAS_INCLUDE)
+			-I$(SIMIAS_INCLUDE)
 
 
 LIB_PATHS =		-L$(GTK_TOP)/lib \
