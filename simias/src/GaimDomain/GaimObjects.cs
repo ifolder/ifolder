@@ -212,7 +212,7 @@ namespace Simias.Gaim
 						simiasURL = simiasURLSetting.Value;
 						
 						XmlNode base64KeySetting =
-							xmlBuddyNode.SelectSingleNode(string.Format("setting[@name='simias-public-key:{0}]/text()", machineName));
+							xmlBuddyNode.SelectSingleNode(string.Format("setting[@name='simias-public-key:{0}']/text()", machineName));
 						if (base64KeySetting != null)
 						{
 							string base64Key = base64KeySetting.Value;
