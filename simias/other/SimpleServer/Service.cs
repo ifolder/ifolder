@@ -75,9 +75,8 @@ namespace Simias.SimpleServer
 		/// </param>
 		public void Start( Configuration config )
 		{
-			log.Debug("Start called");
+			log.Debug( "Start called" );
 			this.config = config;
-
 			Simias.SimpleServer.Sync.StartSyncThread();
 		}
 
@@ -109,7 +108,7 @@ namespace Simias.SimpleServer
 		/// </summary>
 		public void Stop()
 		{
-			log.Debug("Stop called");
+			log.Debug( "Stop called" );
 			Simias.SimpleServer.Sync.StopSyncThread();
 		}
 		#endregion
@@ -124,7 +123,7 @@ namespace Simias.SimpleServer
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		static AutoResetEvent syncEvent = null;
-		static bool exiting;
+		static bool quit;
 		static bool syncOnStart = true;
 		static int syncInterval = 60 * 1000;
 		static Thread syncThread = null;
@@ -138,64 +137,69 @@ namespace Simias.SimpleServer
 
 			try
 			{
-				ssDomain = new Simias.SimpleServer.Domain(true);
+				ssDomain = new Simias.SimpleServer.Domain( true );
 			}
 			catch{}
 
 			if ( ssDomain != null )
 			{
-				exiting = false;
-				syncEvent = new AutoResetEvent(false);
+				quit = false;
+				syncEvent = new AutoResetEvent( false );
 				syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
 				syncThread.IsBackground = true;
 				syncThread.Start();
 			}
 			else
 			{
-				log.Debug("Failed to initialize the SimpleServer domain");
+				log.Debug( "Failed to initialize the SimpleServer domain" );
 			}
 
-			log.Debug("StartSyncThread finished");
-			return(0);
+			log.Debug( "StartSyncThread finished" );
+			return 0;
 		}
 
 		internal static int StopSyncThread()
 		{
-			log.Debug("StopSyncThread called");
-			exiting = true;
+			log.Debug( "StopSyncThread called" );
+			quit = true;
 			try
 			{
 				syncEvent.Set();
-				Thread.Sleep(32);
+				Thread.Sleep( 32 );
 				syncEvent.Close();
-				Thread.Sleep(0);
+				Thread.Sleep( 0 );
 				ssDomain = null;
-				log.Debug("StopSyncThread finished");
-				return(0);
+				log.Debug( "StopSyncThread finished" );
+				return 0;
 			}
 			catch(Exception e)
 			{
-				log.Debug("StopSyncThread failed with an exception");
-				log.Debug(e.Message);
+				log.Debug( "StopSyncThread failed with an exception" );
+				log.Debug( e.Message );
+				log.Debug( e.StackTrace );
 			}
-			return(-1);
+			return -1;
 		}
 
-		public static int SyncNow(string data)
+		public static int SyncNow( string data )
 		{
-			log.Debug("SyncNow called");
+			log.Debug( "SyncNow called" );
 			syncEvent.Set();
-			log.Debug("SyncNow finished");
-			return(0);
+			log.Debug( "SyncNow finished" );
+			return 0;
 		}
 
 		internal static void SyncThread()
 		{
-			while (!exiting)
+			while ( quit == false )
 			{
-				if (syncOnStart == false)
+				if ( syncOnStart == false )
 				{
-					syncEvent.WaitOne(syncInterval, false);
+					syncEvent.WaitOne( syncInterval, false );
+					if ( quit == true )
+					{
+						return;
+					}
 				}
 
 				// Always wait after the first iteration

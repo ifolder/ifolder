@@ -85,14 +85,9 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "Novell.AddressBook"
-                    AssemblyName = "Novell.AddressBook"
-                    HintPath = "..\..\src\AddressBook\Novell.AddressBook.dll"
-                />
-                <Reference
                     Name = "Simias"
                     AssemblyName = "Simias"
-                    HintPath = "..\..\..\..\final\web\bin\Simias.dll"
+                    HintPath = "..\..\stage\web\bin\Simias.dll"
                 />
             </References>
         </Build>
