@@ -27,6 +27,7 @@ dist-hook:
 	rm -rf `find $(distdir) |grep iFolderClientClientLib.c`
 	rm -rf `find $(distdir) |grep envC.c`
 	rm -rf `find $(distdir) |grep nautilus-ifolder.exe`
+	rm -rf `find $(distdir) |grep nautilus-ifolder.h$$`
 
 # FIXME: get this from the .pc file
 nautilus_extensiondir=$(INSTALL_EXTENSION_PATH)
