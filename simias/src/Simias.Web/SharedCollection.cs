@@ -271,7 +271,6 @@ namespace Simias.Web
 		public static bool CanBeCollection( string path )
 		{
 			bool canBeCollection = true;
-			Store store = Store.GetStore();
 
 			// Make sure the paths end with a separator.
 			// Create a normalized path that can be compared on any platform.
@@ -280,6 +279,32 @@ namespace Simias.Web
 			// CRG: There was some code in here to check for allowed types of
 			// paths but it was Linux specific so I didn't include it from
 			// the source in iFolderManager
+
+			if (MyEnvironment.Windows)
+			{
+				// Don't allow the system drive to become an iFolder.
+				string excludeDirectory = Environment.GetEnvironmentVariable("SystemDrive");
+				if (ExcludeDirectory(nPath, excludeDirectory, false))
+				{
+					return false;
+				}
+
+				// Don't allow the Windows directory or subdirectories become an iFolder.
+				excludeDirectory = Environment.GetEnvironmentVariable("windir");
+				if (ExcludeDirectory(nPath, excludeDirectory, true))
+				{
+					return false;
+				}
+
+				// Don't allow the Program Files directory or subdirectories become an iFolder.
+				excludeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+				if (ExcludeDirectory(nPath, excludeDirectory, true))
+				{
+					return false;
+				}
+			}
+
+			Store store = Store.GetStore();
 
 			// TODO: Change this into a search
 			foreach(ShallowNode sn in store)
@@ -951,6 +976,21 @@ namespace Simias.Web
 					poBox.Commit(sub);
 				}
 			}
+		}
+
+		private static bool ExcludeDirectory(Uri path, string excludeDirectory, bool deep)
+		{
+			Uri excludePath = new Uri(excludeDirectory.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+								excludeDirectory :
+								excludeDirectory + Path.DirectorySeparatorChar.ToString());
+
+			if (!(path.LocalPath.Length < excludePath.LocalPath.Length) &&
+				(String.Compare(deep ? path.LocalPath.Substring(0, excludePath.LocalPath.Length) : path.LocalPath, excludePath.LocalPath, true) == 0))
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
