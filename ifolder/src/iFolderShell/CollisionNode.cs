@@ -13,16 +13,23 @@ namespace Novell.iFolder.iFolderCom
 	{
 		#region Class Members
 		private FileNode localNode;
-		private ShallowNode conflictNode;
+		private Node conflictNode;
 		private string conflictPath;
 		private bool check = false;
+		private bool nameValidated = false;
 		#endregion
 
+		/// <summary>
+		/// Instantiates a CollisionNode object.
+		/// </summary>
 		public CollisionNode()
 		{
 		}
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the FileNode representing the local file.
+		/// </summary>
 		public FileNode LocalNode
 		{
 			get
@@ -36,7 +43,10 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
-		public ShallowNode ConflictNode
+		/// <summary>
+		/// Gets/sets the node representing the conflict.
+		/// </summary>
+		public Node ConflictNode
 		{
 			get
 			{
@@ -49,6 +59,9 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the path of the conflict files.
+		/// </summary>
 		public string ConflictPath
 		{
 			get
@@ -62,6 +75,9 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets a value indicating whether to use the local file when resolving an update conflict.
+		/// </summary>
 		public bool Checked
 		{
 			get
@@ -72,6 +88,22 @@ namespace Novell.iFolder.iFolderCom
 			set
 			{
 				check = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets a value indicating whether a valid name has been entered for a name conflict.
+		/// </summary>
+		public bool NameValidated
+		{
+			get
+			{
+				return nameValidated;
+			}
+
+			set
+			{
+				nameValidated = value;
 			}
 		}
 		#endregion

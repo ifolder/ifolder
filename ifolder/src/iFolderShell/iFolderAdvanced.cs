@@ -1171,14 +1171,14 @@ namespace Novell.iFolder.iFolderCom
 
 				try
 				{
+					conflicts.Visible = pictureBox1.Visible = ifolder.HasCollisions();
+
 					// Get the sync node and byte counts.
 					uint nodeCount;
 					ulong bytesToSend;
 					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
 					objectCount.Text = nodeCount.ToString();
 					byteCount.Text = bytesToSend.ToString();
-
-					conflicts.Visible = pictureBox1.Visible = ifolder.HasCollisions();
 				}
 				catch (SimiasException ex)
 				{
