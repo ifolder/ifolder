@@ -51,6 +51,11 @@ namespace Simias.Storage
 		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Store ) );
 
 		/// <summary>
+		/// Used to keep track of changes to the layout of the store database.
+		/// </summary>
+		static private string storeVersion = "1.0.0";
+
+		/// <summary>
 		/// Directory where store-managed files are kept.
 		/// </summary>
 		static private string storeManagedDirectoryName = "CollectionFiles";
@@ -230,6 +235,18 @@ namespace Simias.Storage
 		{
 			get { return Config.StorePath; }
 		}
+
+		/// <summary>
+		/// Gets the version of the database.
+		/// </summary>
+		public string Version
+		{
+			get
+			{
+				Property p = LocalDb.Properties.FindSingleValue( PropertyTags.StoreVersion );
+				return ( p != null ) ? p.ToString() : "Unknown version";
+			}
+		}
 		#endregion
 
 		#region Constructor
@@ -286,6 +303,7 @@ namespace Simias.Storage
 					// Create an object that represents the database collection.
 					string localDomainID = Guid.NewGuid().ToString();
 					LocalDatabase ldb = new LocalDatabase( this, localDomainID );
+					ldb.Properties.AddNodeProperty( PropertyTags.StoreVersion, storeVersion );
 					localDb = ldb.ID;
 
 					// Create an identity that represents the current user.  This user will become the 
@@ -370,6 +388,12 @@ namespace Simias.Storage
 				if ( ldb == null )
 				{
 					throw new DoesNotExistException( "Local database object does not exist." );
+				}
+
+				// Compare the store version to make sure that it is correct.
+				if ( storeVersion != Version )
+				{
+					throw new SimiasException( String.Format( "Incompatible database version. Expected version {0} - Found version {1}.", storeVersion, Version ) );
 				}
 
 				// Get the identity object that represents this logged on user.

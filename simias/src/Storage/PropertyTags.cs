@@ -181,6 +181,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string StoreVersion = "Version";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string SyncRole = "Sync Role";
 
 		/// <summary>
@@ -247,6 +252,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
 			systemPropertyTable.Add( StorageSize, null );
+			systemPropertyTable.Add( StoreVersion, null );
 			systemPropertyTable.Add( SyncRole, null );
 			systemPropertyTable.Add( SystemPolicy, null );
 			systemPropertyTable.Add( TombstoneType, null );
