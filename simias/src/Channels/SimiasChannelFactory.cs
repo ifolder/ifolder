@@ -161,7 +161,9 @@ namespace Simias.Channels
 					ListDictionary props = new ListDictionary();
 					props.Add("name", name);
 					props.Add("port", port);
-					props.Add("timeout", TIMEOUT);
+					
+					// TODO: why doesn't this work?
+					//props.Add("timeout", TIMEOUT);
 
 					// provider notes
 					// server providers: security sink -> monitor sink -> formatter sink
