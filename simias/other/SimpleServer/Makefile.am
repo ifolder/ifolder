@@ -7,7 +7,7 @@ SimpleServer_INCLUDES =
 SimpleServer_RESOURCES =
 SimpleServer_FLAGS = $(CSC_LIBFLAG)
 SimpleServer_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll Novell.Security.Web.IAuthenticationService.dll Novell.AddressBook.dll
-SimpleServer_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient ../../src/AddressBook
+SimpleServer_LIBPATH = ./ ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
 
 EXTRA_DIST = $(SimpleServer_CSFILES)
 
