@@ -37,7 +37,7 @@ install-exec-local: SyncManager.dll
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f SyncManager.dll SyncManagerTests.test.xml $(NUNIT_TESTS); \
+		rm -f SyncManager.dll remoting.config SyncManagerTests.test.xml $(NUNIT_TESTS); \
 		rm -rf manager1
 
 installcheck-local: install $(NUNIT_TESTS)
