@@ -77,7 +77,7 @@ namespace Novell.iFolder
 			tv.Editable = false;
 			tv.CursorVisible = false;
 			TextBuffer buffer = tv.Buffer;
-			buffer.Text = string.Format(Util.GS("iFolder name: {0}\niFolder Owner:{1}\n\niFolder Description: {2}"), ifolder.Name, ifolder.Owner, ifolder.Description);
+			buffer.Text = string.Format(Util.GS("iFolder name: {0}\niFolder Owner: {1}\nRights: {2}"), ifolder.Name, ifolder.Owner, GetDisplayRights(ifolder.CurrentUserRights));
 
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
@@ -151,6 +151,19 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+		private string GetDisplayRights(string rights)
+		{
+			if(rights == "ReadWrite")
+				return Util.GS("Read Write");
+			else if(rights == "Admin")
+				return Util.GS("Full Control");
+			else if(rights == "ReadOnly")
+				return Util.GS("Read Only");
+			else
+				return Util.GS("Unknown");
+		}
 
 	}
 }
