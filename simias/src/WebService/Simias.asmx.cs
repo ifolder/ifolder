@@ -47,18 +47,36 @@ using Simias.Security.Web.AuthenticationService;
 
 namespace Simias.Web
 {
+	/// <summary>
+	/// </summary>
 	[ Serializable ]
 	public class MemberInfo
 	{
+		/// <summary>
+		/// </summary>
 		public string	ID;
+		/// <summary>
+		/// </summary>
 		public string	Name;
+		/// <summary>
+		/// </summary>
 		public string	GivenName;
+		/// <summary>
+		/// </summary>
 		public string	FamilyName;
+		/// <summary>
+		/// </summary>
 		public string	FullName;
 
+		/// <summary>
+		/// </summary>
 		public int		AccessRights;
+		/// <summary>
+		/// </summary>
 		public bool		IsOwner;
 
+		/// <summary>
+		/// </summary>
 		public MemberInfo()
 		{
 		}
@@ -128,6 +146,8 @@ namespace Simias.Web
 		/// <param name="MemberName">The name of the member.</param>
 		/// <param name="MemberID">The ID of the member.</param>
 		/// <param name="PublicKey">The public key for the member.</param>
+		/// <param name="GivenName">The given name for the member.</param>
+		/// <param name="FamilyName">The family name for the member.</param>
 		[WebMethod(Description="Add a member to the domain.")]
 		[SoapDocumentMethod]
 		public void AddMemberToDomain(string DomainID, string MemberName, string MemberID, string PublicKey, string GivenName, string FamilyName)

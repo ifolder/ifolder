@@ -165,12 +165,13 @@ namespace Simias.POBoxService.Web
 	/// Summary description for POBoxService
 	/// </summary>
 	/// 
-	
 	[WebService(Namespace="http://novell.com/simias/pobox/")]
 	public class POBoxService : System.Web.Services.WebService
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POBoxService));
 
+		/// <summary>
+		/// </summary>
 		public POBoxService()
 		{
 			//CODEGEN: This call is required by the ASP.NET Web Services Designer
@@ -221,9 +222,7 @@ namespace Simias.POBoxService.Web
 		/// <summary>
 		/// Accept subscription
 		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="identityID"></param>
-		/// <param name="subscriptionID"></param>
+		/// <param name="subMsg"></param>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public POBoxStatus AcceptedSubscription( SubscriptionMsg subMsg )
@@ -339,9 +338,7 @@ namespace Simias.POBoxService.Web
 		/// <summary>
 		/// Decline subscription
 		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="identityID"></param>
-		/// <param name="subscriptionID"></param>
+		/// <param name="subMsg"></param>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public POBoxStatus DeclinedSubscription( SubscriptionMsg subMsg )
@@ -575,9 +572,7 @@ namespace Simias.POBoxService.Web
 		/// <summary>
 		/// Acknowledge the subscription.
 		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="identityID"></param>
-		/// <param name="messageID"></param>
+		/// <param name="subMsg"></param>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
@@ -749,8 +744,7 @@ namespace Simias.POBoxService.Web
 		/// Verify that a collection exists
 		/// </summary>
 		/// <param name="domainID"></param>
-		/// <param name="identityID"></param>
-		/// <param name="messageID"></param>
+		/// <param name="collectionID"></param>
 		/// <returns>success:subinfo  failure:null</returns>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
@@ -791,13 +785,7 @@ namespace Simias.POBoxService.Web
 		/// <summary>
 		/// Invite a user to a shared collection
 		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="fromUserID"></param>
-		/// <param name="toUserID"></param>
-		/// <param name="sharedCollectionID"></param>
-		/// <param name="sharedCollectionType"></param>
-		/// <param name="rights"></param>
-		/// <param name="messageID"></param>
+		/// <param name="subMsg"></param>
 		/// <returns>True if successful. False if not.</returns>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
@@ -986,37 +974,79 @@ namespace Simias.POBoxService.Web
 		}
 	}
 
+	/// <summary>
+	/// </summary>
 	[Serializable]
 	public class SubscriptionInformation
 	{
+		/// <summary>
+		/// </summary>
 		public string   Name;
+		/// <summary>
+		/// </summary>
 		public string	MsgID;
+		/// <summary>
+		/// </summary>
 		public string	FromID;
+		/// <summary>
+		/// </summary>
 		public string	FromName;
+		/// <summary>
+		/// </summary>
 		public string	ToID;
+		/// <summary>
+		/// </summary>
 		public string	ToNodeID;
+		/// <summary>
+		/// </summary>
 		public string	ToName;
+		/// <summary>
+		/// </summary>
 		public int		AccessRights;
 
+		/// <summary>
+		/// </summary>
 		public string	CollectionID;
+		/// <summary>
+		/// </summary>
 		public string	CollectionName;
+		/// <summary>
+		/// </summary>
 		public string	CollectionType;
+		/// <summary>
+		/// </summary>
 		public string	CollectionUrl;
 
+		/// <summary>
+		/// </summary>
 		public string	DirNodeID;
+		/// <summary>
+		/// </summary>
 		public string	DirNodeName;
 
+		/// <summary>
+		/// </summary>
 		public string	DomainID;
+		/// <summary>
+		/// </summary>
 		public string	DomainName;
 
+		/// <summary>
+		/// </summary>
 		public int		State;
+		/// <summary>
+		/// </summary>
 		public int		Disposition;
 
+		/// <summary>
+		/// </summary>
 		public SubscriptionInformation()
 		{
 
 		}
 
+		/// <summary>
+		/// </summary>
 		public SubscriptionInformation(string collectionUrl)
 		{
 			this.CollectionUrl = collectionUrl;

@@ -19,7 +19,8 @@ ndoc-nodeps:
 	rm -rf $(PACKAGE)-ndoc
 if WINDOWS
 	"$(NDOC_CMD)" \
-		`cygpath --windows "$(webbindir)/Simias.dll"`,`cygpath --windows "../src/Simias.dll/Simias.doc.xml"` \
+		`cygpath --windows "$(webbindir)/Simias.Web.dll"`,`cygpath --windows "../src/WebService/Simias.Web.doc.xml"` \
+		`cygpath --windows "$(webbindir)/Simias.POBox.Web.dll"`,`cygpath --windows "../src/POBoxWS/Simias.POBox.Web.doc.xml"` \
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 else # NOT WINDOWS
 	"$(NDOC_CMD)" \

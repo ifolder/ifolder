@@ -35,17 +35,39 @@ namespace Novell.iFolder.Web
 	[Serializable]
 	public class iFolderUser
 	{
+		/// <summary>
+		/// </summary>
 		public string Name;
+		/// <summary>
+		/// </summary>
 		public string UserID;
+		/// <summary>
+		/// </summary>
 		public string Rights;
+		/// <summary>
+		/// </summary>
 		public string ID;
+		/// <summary>
+		/// </summary>
 		public string State;
+		/// <summary>
+		/// </summary>
 		public string iFolderID;
+		/// <summary>
+		/// </summary>
 		public bool IsOwner;
+		/// <summary>
+		/// </summary>
 		public string FirstName;
+		/// <summary>
+		/// </summary>
 		public string Surname;
+		/// <summary>
+		/// </summary>
 		public string FN;
 
+		/// <summary>
+		/// </summary>
 		public iFolderUser()
 		{
 		}
@@ -61,6 +83,10 @@ namespace Novell.iFolder.Web
 		}
 */
 
+		/// <summary>
+		/// </summary>
+		/// <param name="domain"></param>
+		/// <param name="member"></param>
 		public iFolderUser( Simias.Storage.Domain domain, Simias.Storage.Member member )
 		{
 			this.Name = member.Name;
@@ -115,6 +141,9 @@ namespace Novell.iFolder.Web
 			this.Rights = member.Rights.ToString();
 		}
 */
+		/// <summary>
+		/// </summary>
+		/// <param name="sub"></param>
 		public iFolderUser( Simias.POBox.Subscription sub )
 		{
 			this.Name = sub.ToName;

@@ -18,9 +18,13 @@ ndoc: $(PACKAGE)-install ndoc-nodeps
 ndoc-nodeps:
 	rm -rf $(PACKAGE)-ndoc
 if WINDOWS
-	"$(NDOC_CMD)" `cygpath --windows "$(bindir)/Novell.iFolder.dll"`,`cygpath --windows "../src/iFolder/Novell.iFolder.doc.xml"` -documenter=MSDN -Title=iFolder -OutputDirectory=$(PACKAGE)-ndoc
+	"$(NDOC_CMD)" \
+		`cygpath --windows "$(webbindir)/Novell.iFolder.Web.dll"`,`cygpath --windows "../src/WebService/Novell.iFolder.Web.doc.xml"` \
+		-documenter=MSDN -Title=iFolder -OutputDirectory=$(PACKAGE)-ndoc
 else # NOT WINDOWS
-	"$(NDOC_CMD)" "$(bindir)/Novell.iFolder.dll","../src/iFolder/Novell.iFolder.doc.xml" -documenter=MSDN -Title=iFolder -OutputDirectory=$(PACKAGE)-ndoc
+	"$(NDOC_CMD)" \
+		"$(bindir)/Novell.iFolder.dll","../src/iFolder/Novell.iFolder.doc.xml" \
+		-documenter=MSDN -Title=iFolder -OutputDirectory=$(PACKAGE)-ndoc
 endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc
 	@test "x" = "x$(DOC_TARBALLS)" || \
