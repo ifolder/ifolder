@@ -88,6 +88,8 @@ namespace Novell.iFolderCom
 
 			// Calculate the offset of the divider.
 			dividerOffset = ok.Top - groupBox1.Top;
+
+			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>
@@ -133,6 +135,7 @@ namespace Novell.iFolderCom
 				| System.Windows.Forms.AnchorStyles.Left)));
 			this.rosterLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																					   this.columnHeader1});
+			this.rosterLV.HideSelection = false;
 			this.rosterLV.Location = new System.Drawing.Point(8, 48);
 			this.rosterLV.Name = "rosterLV";
 			this.rosterLV.Size = new System.Drawing.Size(200, 288);
@@ -212,6 +215,7 @@ namespace Novell.iFolderCom
 			// 
 			this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.Enabled = false;
 			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.ok.Location = new System.Drawing.Point(336, 360);
 			this.ok.Name = "ok";
@@ -387,6 +391,8 @@ namespace Novell.iFolderCom
 					lvi.ForeColor = Color.Gray;
 				}
 			}
+
+			ok.Enabled = addedLV.Items.Count > 0;
 		}
 
 		private void remove_Click(object sender, System.EventArgs e)
@@ -396,6 +402,8 @@ namespace Novell.iFolderCom
 				((ListViewItem)lvi.Tag).ForeColor = Color.Black;
 				lvi.Remove();
 			}
+
+			ok.Enabled = addedLV.Items.Count > 0;
 		}
 
 		private void searchTimer_Tick(object sender, System.EventArgs e)
