@@ -190,34 +190,7 @@ namespace Novell.iFolder.InvitationWizard
 			// Activate the first wizard page.
 			pages[0].ActivatePage(0);
 
-			store = new Store(new Configuration());
-
 			this.invitationFile = invitationFile;
-
-			if (this.invitationFile != "")
-			{
-				try
-				{
-					subInfo = new SubscriptionInfo(invitationFile);
-
-					subscription = ConvertSubscriptionInfo(subInfo);
-
-					// TODO: check the state of the subscription.  If it is ready, proceed; otherwise, quit.
-				}
-				catch (SimiasException e)
-				{
-					e.LogError();
-					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					this.invitationFile = "";
-				}
-				catch (Exception e)
-				{
-					// TODO - resource strings.
-					logger.Debug(e, "Invalid file");
-					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					this.invitationFile = "";
-				}
-			}
 
 //			this.selectInvitationPage.Hide();
 //			this.selectiFolderLocationPage.Hide();
@@ -308,6 +281,7 @@ namespace Novell.iFolder.InvitationWizard
 			this.MinimizeBox = false;
 			this.Name = "InvitationWizard";
 			this.Text = "iFolder Invitation Wizard";
+			this.Load += new System.EventHandler(this.InvitationWizard_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -330,34 +304,76 @@ namespace Novell.iFolder.InvitationWizard
 		}
 
 		#region Event Handlers
+		private void InvitationWizard_Load(object sender, System.EventArgs e)
+		{
+			store = new Store(new Configuration());
+
+			if (this.invitationFile != "")
+			{
+				try
+				{
+					subInfo = new SubscriptionInfo(invitationFile);
+
+					if (!ConvertSubscriptionInfo(subInfo, out subscription))
+					{
+						// The Subscription object was just created ... we're done for now.
+						// TODO: change the message text ... and maybe we should go to a finished page?
+						MessageBox.Show("The invitation has been successfully added to your message box.  Once the invitation has synchronized you will be able to accept or decline it.", "Invitation Added");
+						Application.Exit();
+					}
+					else
+					{
+						// Check the state of the subscription.  If it is ready, proceed; otherwise, quit.
+						if (subscription.SubscribeState != SubscriptionState.Received)
+						{
+							// TODO: change the message text  ... and maybe we should go to a finished page?
+							MessageBox.Show("The invitation is not ready yet.  Please check back later.", "Invitation Not Ready");
+							Application.Exit();
+						}
+					}
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					this.invitationFile = "";
+				}
+				catch (Exception ex)
+				{
+					// TODO - resource strings.
+					logger.Debug(ex, "Invalid file");
+					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					this.invitationFile = "";
+				}
+			}
+		}
+
 		private void next_Click(object sender, System.EventArgs e)
 		{
 			// Check if we're on the completion page.
 			if (currentIndex == (maxPages - 1))
 			{
-				if (this.acceptDeclinePage.Accept)
+				Cursor.Current = Cursors.WaitCursor;
+
+				// Accept/decline the invitation
+				try
 				{
-					Cursor.Current = Cursors.WaitCursor;
-
-					// Accept the invitation
-					try
-					{
-// TODO:						iFolderManager manager = iFolderManager.Connect();
-//						manager.AcceptInvitation(invitation, invitation.RootPath);
-					}
-					catch (SimiasException ex)
-					{
-						ex.LogFatal();
-						MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-					}
-					catch (Exception ex)
-					{
-						logger.Fatal(ex, "Accepting invitation");
-						MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-					}
-
-					Cursor.Current = Cursors.Default;
+					subscription.SubscribeState = SubscriptionState.Replied;
+					subscription.SubscriptionDisposition = acceptDeclinePage.Accept ? Disposition.Accepted : Disposition.Declined;
+					poBox.Commit(subscription);
 				}
+				catch (SimiasException ex)
+				{
+					ex.LogFatal();
+					MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				}
+				catch (Exception ex)
+				{
+					logger.Fatal(ex, "Accepting invitation");
+					MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				}
+
+				Cursor.Current = Cursors.Default;
 
 				// Exit
 				Application.Exit();
@@ -476,25 +492,30 @@ namespace Novell.iFolder.InvitationWizard
 		#endregion
 
 		#region Public Methods
-		public Subscription ConvertSubscriptionInfo(SubscriptionInfo subscriptionInfo)
+		/// <summary>
+		/// Creates a Subscription object from a SubscriptionInfo object or gets the Subscription object from
+		/// the POBox, if one exists.
+		/// </summary>
+		/// <param name="subscriptionInfo">The SubscriptionInfo object used to create/find the Subscription object.</param>
+		/// <param name="subscription">A new or existing Subscription object based on the SubscriptionInfo object.</param>
+		/// <returns>True if an existing Subscription object was found.  False if a new Subscription object was created.</returns>
+		public bool ConvertSubscriptionInfo(SubscriptionInfo subscriptionInfo, out Subscription subscription)
 		{
-			Subscription subscription;
-
 			// Check for existing Subscription object in the POBox.
 			poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
 			Node node = poBox.GetNodeByID(subscriptionInfo.SubscriptionID);
 			if (node != null)
 			{
 				subscription = new Subscription(node);
+				return true;
 			}
 			else
 			{
 				// TODO: what should we name these?
 				subscription = new Subscription("Subscription Name", subscriptionInfo);
 				poBox.AddMessage(subscription);
+				return false;
 			}
-
-			return subscription;
 		}
 		#endregion
 	}

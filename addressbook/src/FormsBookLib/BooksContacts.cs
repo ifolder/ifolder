@@ -709,6 +709,7 @@ namespace Novell.iFolder.FormsBookLib
 					addrBook.Commit();
 					ListViewItem item = new ListViewItem(addrBook.Name, 0);
 					item.Tag = addrBook;
+					item.Selected = true;
 					this.books.Items.Add(item);
 				}
 				catch (SimiasException ex)
@@ -781,7 +782,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			if (this.contacts.SelectedItems.Count == 0)
 			{
-				this.createContactMenu.Enabled = true;
+				this.createContactMenu.Enabled = books.SelectedItems.Count > 0;
 				this.editContactMenu.Enabled = false;
 				this.deleteContactMenu.Enabled = false;
 			}
