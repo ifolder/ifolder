@@ -863,12 +863,6 @@ namespace Simias.Gaim
 			}
 		}
 		
-		internal static void RemoveMember(Simias.Storage.Domain domain, Member member)
-		{
-			domain.Delete(member);
-			domain.Commit();
-		}
-		
 		#endregion
 	}
 }
