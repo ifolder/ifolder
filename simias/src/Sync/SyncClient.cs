@@ -1041,21 +1041,18 @@ namespace Simias.Sync.Client
 								File.Delete(conflictPath);
 						}
 						
-						BaseFileNode bfn = node as BaseFileNode;
-						if (bfn != null)
-						{
-							File.Delete(bfn.GetFullPath(collection));
-							collection.Delete(node);
-							collection.Commit(node);
-							collection.Commit(node);
-						}
 						DirNode dn = node as DirNode;
 						if (dn != null)
 						{
-							Directory.Delete(dn.GetFullPath(collection), true);
 							Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 							collection.Commit(deleted);
 							collection.Commit(deleted);
+						}
+						else
+						{
+							collection.Delete(node);
+							collection.Commit(node);
+							collection.Commit(node);
 						}
 						DeleteOnClient.Remove(id);
 					}
