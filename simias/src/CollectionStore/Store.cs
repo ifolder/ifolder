@@ -229,7 +229,7 @@ namespace Simias.Storage
 				this.config = config;
 
 				// Create or open the underlying database.
-				storageProvider = Persist.Provider.Connect( config.BasePath, out created );
+				storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig( config ), out created );
 
 				// Set the path to the store.
 				storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
@@ -393,11 +393,9 @@ namespace Simias.Storage
 
 			// Get the specified object from the persistent store.
 			string normalizedID = collectionID.ToLower();
-			string xmlString = storageProvider.GetRecord( normalizedID, normalizedID );
-			if ( xmlString != null )
+			XmlDocument document = storageProvider.GetRecord( normalizedID, normalizedID );
+			if ( document != null )
 			{
-				XmlDocument document = new XmlDocument();
-				document.LoadXml( xmlString );
 				collection = new Collection( this, document );
 				
 				// Make sure that access is allowed to the Collection object.

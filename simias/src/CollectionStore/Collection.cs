@@ -451,25 +451,11 @@ namespace Simias.Storage
 				}
 			}
 
-			// Call the store provider to update the records.
-			if ( commitDocument.DocumentElement.HasChildNodes )
-			{
-				store.StorageProvider.CreateRecord( commitDocument.OuterXml, id );
-			}
-
-			// Call the store provider to delete the records, even if they have just been created.
-			// Delete always wins.
-			if ( deleteDocument.DocumentElement.HasChildNodes )
-			{
-				store.StorageProvider.DeleteRecords( deleteDocument.OuterXml, id );
-			}
-
-			// See if the whole Collection is to be deleted. Do this last so that a delete of a
-			// Collection always wins, nothing can be added back.
+			// See if the whole Collection is to be deleted.
 			if ( deleteCollection )
 			{
 				// Delete the collection from the database.
-				store.StorageProvider.DeleteCollection( id );
+				store.StorageProvider.DeleteContainer( id );
 
 				// If there are store managed files, delete them also.
 				if ( Directory.Exists( ManagedPath ) )
@@ -479,6 +465,9 @@ namespace Simias.Storage
 			}
 			else
 			{
+				// Call the store provider to update the records.
+				store.StorageProvider.CommitRecords( id, commitDocument, deleteDocument );
+
 				// Update the access control information.
 				accessControl.GetAccessInfo();
 			}
@@ -784,13 +773,9 @@ namespace Simias.Storage
 			Node node = null;
 
 			// Call the provider to get an XML string that represents this node.
-			string xmlString = store.StorageProvider.GetRecord( nodeID.ToLower(), id );
-			if ( xmlString != null )
+			XmlDocument document = store.StorageProvider.GetRecord( nodeID.ToLower(), id );
+			if ( document != null )
 			{
-				// Covert the XML string into a DOM that we can then parse.
-				XmlDocument document = new XmlDocument();
-				document.LoadXml( xmlString );
-
 				// Construct a temporary Node object from the DOM.
 				node = new Node( document );
 			}
