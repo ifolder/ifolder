@@ -71,7 +71,10 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// save service
 		ss = (SynkerServiceA)service;
-		HadErrors = false;
+        HadErrors = false;
+
+		// Get a fresh copy of the collection.
+		collection.Refresh();
 
 		// Run the dredger
 		new Dredger(collection, false);

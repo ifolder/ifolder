@@ -471,7 +471,7 @@ internal class SyncOps
 			else
 			{
 				eventCookie = new EventContext(cookie);
-				while (more)
+				while (more && (eventCookie.TimeStamp < collection.NodeStamp))
 				{
 					more = logReader.GetEvents(eventCookie, out changeList);
 					foreach( ChangeLogRecord rec in changeList )
@@ -562,6 +562,14 @@ internal class SyncOps
 
 	internal void GetChangeLogCookies(out string serverCookie, out string clientCookie)
 	{
+		if (this.serverCookie == null)
+		{
+			this.serverCookie = collection.Properties.GetSingleProperty(ServerChangeLogCookieProp).Value.ToString();
+		}
+		if (this.clientCookie == null)
+		{
+			this.clientCookie = collection.Properties.GetSingleProperty(ClientChangeLogCookieProp).Value.ToString();
+		}
 		serverCookie = this.serverCookie;
 		clientCookie = this.clientCookie;
 	}

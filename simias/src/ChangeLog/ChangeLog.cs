@@ -933,8 +933,11 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeChange( NodeEventArgs args )
 		{
-			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Changed, ( ushort )args.Flags );
-			WriteLog( record );
+			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+			{
+				ChangeLogRecord record = new ChangeLogRecord( args.TimeStamp, args.ID, ChangeLogRecord.ChangeLogOp.Changed, ( ushort )args.Flags );
+				WriteLog( record );
+			}
 		}
 
 		/// <summary>
@@ -943,8 +946,11 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeCreate( NodeEventArgs args )
 		{
-			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Created, ( ushort )args.Flags );
-			WriteLog( record );
+			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+			{
+				ChangeLogRecord record = new ChangeLogRecord( args.TimeStamp, args.ID, ChangeLogRecord.ChangeLogOp.Created, ( ushort )args.Flags );
+				WriteLog( record );
+			}
 		}
 
 		/// <summary>
@@ -953,8 +959,11 @@ namespace Simias.Storage
 		/// <param name="args">Event arguments.</param>
 		private void OnNodeDelete( NodeEventArgs args )
 		{
-			ChangeLogRecord record = new ChangeLogRecord( DateTime.Now, args.ID, ChangeLogRecord.ChangeLogOp.Deleted, ( ushort )args.Flags );
-			WriteLog( record );
+			if (((NodeEventArgs.EventFlags)args.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+			{
+				ChangeLogRecord record = new ChangeLogRecord( args.TimeStamp, args.ID, ChangeLogRecord.ChangeLogOp.Deleted, ( ushort )args.Flags );
+				WriteLog( record );
+			}
 		}
 
 		/// <summary>
