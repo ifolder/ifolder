@@ -25,6 +25,7 @@ using System.Net;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections;
+using Simias.Client;
 
 namespace Simias.Client
 {
