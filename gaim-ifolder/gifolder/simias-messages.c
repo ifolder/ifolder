@@ -125,6 +125,7 @@ send_ping(GaimBuddy *recipient, const char *ping_type)
 {
 	char msg[4096];
 	char *publicKey;
+	char *base64Key;
 	char *machineName;
 	char *userID;
 	char *simias_service_url;
@@ -143,6 +144,8 @@ send_ping(GaimBuddy *recipient, const char *ping_type)
 fprintf(stderr, "simias_get_public_key() returned: %d\n", err);
 		return -12312;
 	}
+	
+	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
 
 	/* Get the Gaim Domain User Info */
 	err = simias_get_user_info(&machineName, &userID, &simias_service_url); 
@@ -158,7 +161,7 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 
 	public_url = convert_url_to_public(escaped_url);
 	if (public_url) {
-		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, publicKey, machineName, userID, public_url);
+		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, base64Key, machineName, userID, public_url);
 		free(public_url);
 	} else {
 		free(machineName);
@@ -168,6 +171,7 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 		return -1234;
 	}
 	
+	free(base64Key);
 	free(publicKey);
 	free(machineName);
 	free(userID);
@@ -488,6 +492,13 @@ fprintf(stderr, "couldn't parse simias_info!\n");
 	gaim_blist_node_set_string(&(buddy->node), public_key_setting, public_key);
 	gaim_blist_node_set_string(&(buddy->node), user_id_setting, user_id);
 	gaim_blist_node_set_string(&(buddy->node), simias_url_setting, simias_url);
+	
+	const char *test = gaim_blist_node_get_string(&(buddy->node), public_key_setting);
+	char *decode = NULL;
+	int decode_len;
+	gaim_base64_decode(test, &decode, &decode_len);
+	fprintf(stderr, "Decoded string: %s\n", decode);
+	g_free(decode);
 
 	/**
 	 * Tell the Gaim Domain Sync Thread to go re-read the updated
