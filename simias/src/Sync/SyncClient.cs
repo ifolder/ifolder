@@ -1063,16 +1063,19 @@ namespace Simias.Sync
 				// Get the updates from the server.
 				ProcessDeleteOnClient();
 				ProcessNodesFromServer();
-				ProcessDirsFromServer();
-				ProcessFilesFromServer();
+				// Make sure that we have all subdirs down before we 
+				// start on files.
+				if (ProcessDirsFromServer())
+					ProcessFilesFromServer();
 			}
 			else
 			{
 				// Push the updates from the client.
 				ProcessDeleteOnServer();
 				ProcessNodesToServer();
-				ProcessDirsToServer();
-				ProcessFilesToServer();
+				// Make sure that we put the subdirs up before the files.
+				if (ProcessDirsToServer())
+					ProcessFilesToServer();
 			}
 		}
 
@@ -1265,15 +1268,16 @@ namespace Simias.Sync
 		/// <summary>
 		/// Get the directory nodes from the server.
 		/// </summary>
-		private void ProcessDirsFromServer()
+		/// <returns>true if successful.</returns>
+		private bool ProcessDirsFromServer()
 		{
-			
+			bool status = true;
 			SyncNode[] updates = null;
 
 			// get small nodes and files from server
 			string[] nodeIDs = workArray.DirsFromServer();
 			if (nodeIDs.Length == 0)
-				return;
+				return true;
 			log.Info("Downloading {0} Directories from server", nodeIDs.Length);
 				
 			// Now get the nodes in groups of BATCH_SIZE.
@@ -1282,7 +1286,7 @@ namespace Simias.Sync
 			{
 				if (Yield)
 				{
-					return;
+					return false;
 				}
 
 				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
@@ -1295,7 +1299,8 @@ namespace Simias.Sync
 
 					foreach (SyncNode snode in updates)
 					{
-						StoreDir(snode);
+						if (!StoreDir(snode))
+							status = false;
 					}
 				}
 				catch
@@ -1303,6 +1308,7 @@ namespace Simias.Sync
 				}
 				offset += batchCount;
 			}
+			return status;
 		}
 	
 		/// <summary>
@@ -1319,7 +1325,8 @@ namespace Simias.Sync
 		/// Store the directory node in the local store also create the directory.
 		/// </summary>
 		/// <param name="snode">The node to store.</param>
-		private void StoreDir(SyncNode snode)
+		/// <returns>ture if successful.</returns>
+		private bool StoreDir(SyncNode snode)
 		{
 			try
 			{
@@ -1360,9 +1367,11 @@ namespace Simias.Sync
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.Directory, false, node.Name, 0, 0, 0, Direction.Downloading));
 				}
 				workArray.RemoveNodeFromServer(snode.ID);
+				return true;
 			}
 			catch 
 			{
+				return false;
 			}
 		}
 
@@ -1417,6 +1426,11 @@ namespace Simias.Sync
 						// There is no file to pull down.
 						workArray.RemoveNodeFromServer(nodeID);
 					}
+				}
+				catch (DirectoryNotFoundException ex)
+				{
+					// The directory has been deleted.
+					workArray.RemoveNodeFromServer(nodeID);
 				}
 				catch (Exception ex)
 				{
@@ -1558,12 +1572,17 @@ namespace Simias.Sync
 			}
 		}
 
-		private void ProcessDirsToServer()
+		/// <summary>
+		/// Copy subdirs to the server.
+		/// </summary>
+		/// <returns>true if successful.</returns>
+		private bool ProcessDirsToServer()
 		{
+			bool bStatus = true;
 			// get small nodes and files from server
 			string[] nodeIDs = workArray.DirsToServer();
 			if (nodeIDs.Length == 0)
-				return;
+				return true;
 			log.Info("Uploading {0} Directories To server", nodeIDs.Length);
 				
 			// Now get the nodes in groups of BATCH_SIZE.
@@ -1572,7 +1591,7 @@ namespace Simias.Sync
 			{
 				if (Yield)
 				{
-					return;
+					return false;
 				}
 
 				int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
@@ -1591,6 +1610,7 @@ namespace Simias.Sync
 						}
 						else
 						{
+							// The node no longer exists.
 							workArray.RemoveNodeToServer(nodeIDs[i]);
 						}
 					}
@@ -1623,19 +1643,23 @@ namespace Simias.Sync
 							case SyncStatus.Locked:
 								// The collection is locked.
 								i = nodes.Length;
+								bStatus = false;
 								break;
 							default:
 								log.Debug("Failed update of node {0} due to {1} on server",
 									status.nodeID, status.status);
+								bStatus = false;
 								break;
 						}
 					}
 				}
 				catch
 				{
+					bStatus = false;
 				}
 				offset += batchCount;
 			}
+			return bStatus;
 		}
 
 		private void ProcessFilesToServer()
