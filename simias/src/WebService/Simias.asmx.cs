@@ -589,7 +589,7 @@ namespace Simias.Web
 			Member cMember = cRoster.GetCurrentMember();
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.FindPOBox(store, domainID, cMember.UserID);
-
+			this.POBoxID = ( poBox != null ) ? poBox.ID : "";
 			this.Active = new DomainAgent().IsDomainActive(cDomain.ID);
 			this.Type = GetDomainTypeFromRole(cDomain.Role);
 			this.ID = domainID;
@@ -604,7 +604,6 @@ namespace Simias.Web
 				cDomain.HostAddress.ToString() + "/DomainService.asmx";
 			this.Host = cDomain.HostAddress.ToString();
 			this.IsSlave = cRoster.Role.Equals(Simias.Sync.SyncRoles.Slave);
-			this.POBoxID = poBox.ID;
 			this.IsDefault = domainID.Equals(store.DefaultDomain);
 		}
 
