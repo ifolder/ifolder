@@ -23,36 +23,44 @@
 using System;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.IO;
 using Simias.Storage;
 using Novell.AddressBook;
 
 
 namespace AddressBookCmd
 {
-	/// <summary>
+	public enum Commands : uint
+	{
+		listbooks = 1,
+		createbook,
+		deletebook,
+		importvcard,
+		exportvcard,
+		listcontacts,
+		createcontact,
+		deletecontact,
+		listproperties,
+		addproperty,
+		deleteproperty
+	}
+
+	///
 	/// Summary description for ABC
 	/// </summary>
 	public class Abc
 	{
+		private	AddressBook		cAddressBook = null;
+		private	Manager			abManager = null;
+		public 	Commands		cmd;
 		public	bool			timeIt = false;
-		public  bool			deleteProperty = false;
-		public  bool			deleteContact = false;
-		public	bool			exportVCard = false;
-		public	bool			listBooks = false;
-		public  bool			listContacts = false;
-		public	bool			listProperties = false;
-		public	bool			updateContact = false;
+		public	bool			displayCommandHelp;
 		public	bool			verbose = false;
-		public  bool			importVCard = false;
-		public	string			newAddressBook = null;
-		public	string			listContactsBy = null;
 		public	string			contactName = null;
-		public	string			currentContactName = null;
 		public	string			addressBookName = null;
-		public	string			vCardFile = null;
-		private ArrayList		addContactList = null;
+		private	ArrayList		bookList = null;
+		private ArrayList		contactList = null;
 		private	ArrayList		propertyList = null;
-		private ArrayList       deletePropertyList = null;
 		private ArrayList		addAddressList = null;
 		private ArrayList		addNameList = null;
 		private ArrayList		fileList = null;
@@ -81,8 +89,48 @@ namespace AddressBookCmd
 			// Which command
 			switch(args[0])
 			{
+				case "createbook":
+					cAbc.cmd = Commands.createbook;
+					break;
+					
+				case "deletebook":
+					cAbc.cmd = Commands.deletebook;
+					break;
+					
 				case "importvcard":
-					cAbc.importVCard = true;
+					cAbc.cmd = Commands.importvcard;
+					break;
+					
+				case "listbooks":
+					cAbc.cmd = Commands.listbooks;
+					break;
+					
+				case "exportvcard":
+					cAbc.cmd = Commands.exportvcard;
+					break;
+				
+				case "listcontacts":
+					cAbc.cmd = Commands.listcontacts;
+					break;
+					
+				case "createcontact":
+					cAbc.cmd = Commands.createcontact;
+					break;
+					
+				case "deletecontact":
+					cAbc.cmd = Commands.deletecontact;
+					break;
+					
+				case "listproperties":
+					cAbc.cmd = Commands.listproperties;
+					break;	
+					
+				case "addproperty":
+					cAbc.cmd = Commands.addproperty;
+					break;
+					
+				case "deleteproperty":
+					cAbc.cmd = Commands.deleteproperty;
 					break;
 			}
 
@@ -92,19 +140,7 @@ namespace AddressBookCmd
 
 				if (args[i].Length == 2)
 				{
-					if (args[i] == "/?")
-					{
-						DisplayUsage();
-						return;
-					}
-					else
-					if (args[i] == "--help")
-					{
-						DisplayUsage();
-						return;
-					}
-					else
-					if (args[i][0] == '-' && args[i][1] == 'f')
+					if (args[i] == "-f")
 					{
 						// Get the filename used for the command
 						if (i + 1 <= args.Length)
@@ -116,39 +152,45 @@ namespace AddressBookCmd
 						}
 					}
 					else
-					if (args[i] == "/b")
+					if (args[i] == "-b")
 					{
 						if (i + 1 <= args.Length)
 						{
 							if (args[++i] != null)
 							{
-								cAbc.addressBookName = args[i];
+								cAbc.AddBook(args[i]);
 							}
 						}
 					}
 					else
-					if (args[i] == "/c")
+					if (args[i] == "-c")
 					{
 						if (i + 1 <= args.Length)
 						{
 							if (args[++i] != null)
 							{
-								cAbc.currentContactName = args[i];
+								cAbc.AddContact(args[i]);
 							}
 						}
 					}
 					else
-					if (args[i] == "/l")
+					if (args[i] == "-p")
 					{
-						cAbc.listBooks = true;
+						if (i + 1 <= args.Length)
+						{
+							if (args[++i] != null)
+							{
+								cAbc.AddProperty(args[i]);
+							}
+						}
 					}
 					else
-						if (args[i] == "/t")
+					if (args[i] == "-t")
 					{	
 						cAbc.timeIt = true;
 					}
 					else
-						if (args[i] == "/v")
+					if (args[i] == "-v")
 					{
 						cAbc.verbose = true;
 					}
@@ -156,55 +198,8 @@ namespace AddressBookCmd
 				else
 				if (args[i].Length >= 3)
 				{
-					if (args[i][0] == '/' && args[i][1] == 'l')
-					{
-						// list address books
-						if (args[i][2] == 'b')
-						{
-							cAbc.listBooks = true;
-						}
-						else
-							if (args[i][2] == 'c')
-						{
-							cAbc.listContacts = true;
-						}
-						else
-							if (args[i][2] == 'p')
-						{
-							cAbc.listProperties = true;
-						}
-					}
-					else
 					if (args[i][0] == '/' && args[i][1] == 'a')
 					{
-						// adding something to the selected address book
-						if (args[i][2] == 'v')
-						{
-							// Add vcard(s)
-							if (i + 1 <= args.Length)
-							{
-								cAbc.vCardFile = args[++i];
-							}
-						}
-						else
-						if (args[i][2] == 'b')
-						{
-							// Add/Create new address book
-							if (i + 1 <= args.Length)
-							{
-								cAbc.newAddressBook = args[++i];
-							}
-						}
-						else
-						if (args[i][2] == 'c')
-						{
-							// Add to the contact list
-							if (i + 1 <= args.Length)
-							{
-								cAbc.AddContact(args[++i]);
-							}
-						}
-						else
 						if (args[i][2] == 'a')
 						{
 							// Add address property
@@ -223,84 +218,334 @@ namespace AddressBookCmd
 							}
 						}
 					}
-					else
-					if (args[i][0] == '/' && args[i][1] == 'd')
-					{
-						// delete a contact
-						if (args[i][2] == 'c')
-						{
-							// delete a contact
-							if (i + 1 <= args.Length)
-							{
-								cAbc.contactName = args[++i];
-								cAbc.deleteContact = true;
-							}
-						}
-						else
-						// delete a property
-						if (args[i][2] == 'p')
-						{
-							if (i + 1 <= args.Length)
-							{
-								cAbc.AddDeleteProperty(args[++i]);
-								cAbc.deleteProperty = true;
-							}
-						}
-					}
-					else
-					if (args[i][0] == '/' && args[i][1] == 'e')
-					{
-						// delete a contact
-						if (args[i][2] == 'v')
-						{
-							cAbc.exportVCard = true;
-						}
-					}
-					else
-					if (args[i][0] == '/' && args[i][1] == 'u')
-					{
-						// update a contact
-						if (args[i][2] == 'c')
-						{
-							// add/update a contact
-							if (i + 1 <= args.Length)
-							{
-								cAbc.AddProperty(args[++i]);
-								cAbc.updateContact = true;
-							}
-						}
-					}
 				}
 			}
 
 			cAbc.ProcessCommands();
-			Environment.Exit(0);
+//			Environment.Exit(0);
 		}
 
 		static void DisplayUsage()
 		{
-			Console.WriteLine("AddressBookCmd [command] /b <AddressBook> /l<list> /a<add> /d<delete> /e<export> /t /v");
-			Console.WriteLine("    importvcard -f <vcard file> -b <AddressBook>");
-			Console.WriteLine("   /b <address book> - book to run commands against"); 
-			Console.WriteLine("   /c <contact> - contact to execute commands against");
-			Console.WriteLine("   /av <vcard file> - add or import vcard file");
+			Console.WriteLine("AddressBookCmd [command] <parameters> -t -v");
+			Console.WriteLine("    listbooks - list address books");
+			Console.WriteLine("    createbook -b <address book name>");
+			Console.WriteLine("    deletebook -b <address book name>");
+			Console.WriteLine("    importvcard -f <vcard file> -b <address book name>");
+			Console.WriteLine("    listcontacts -b <address book name>");
+			Console.WriteLine("    createcontact -c <contact name> -b <address book name>");
+			Console.WriteLine("    deletecontact -c <contact name> -b <address book name>");
+			Console.WriteLine("    listproperties -c <contact name> -b <address book name>");
+			Console.WriteLine("    addproperty -c <contact name> -p <property=value>");
+			Console.WriteLine("    deleteproperty -c <contact name> -p <property>");
+			Console.WriteLine("    exportvcard -f <path> -c <contact name> - b <address book name>");
 			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;pref;home)");
 			Console.WriteLine("   /an <name> - add name property (ex. given=brady;family=anderson)");
-			Console.WriteLine("   /ab <address book> - add/create a new address book");
-			Console.WriteLine("   /ac <username> - add/create a new contact");
-			Console.WriteLine("   /db <address book> - delete an address book");
-			Console.WriteLine("   /dc <contact> - delete a contact from selected address book");
-			Console.WriteLine("   /dp <property name> - delete the property");
-			Console.WriteLine("   /ev <vcard file> - export a vCard");
-			Console.WriteLine("   /lb = list address books");
-			Console.WriteLine("   /lc = list contacts");
-			Console.WriteLine("   /lp = list properties");
-			Console.WriteLine("   /t = time it!");
-			Console.WriteLine("   /uc <property=value> - update a property in a contact");
-			Console.WriteLine("   /v = verbose");
+			Console.WriteLine("   -t = time the command");
+			Console.WriteLine("   -v = verbose");
 			return;
 		}
 
+		private bool OpenAddressBook()
+		{
+			this.cAddressBook = null;
+			if (this.bookList != null && this.bookList.Count != 0)
+			{
+				string	bookName = null;
+				
+				try
+				{
+					IEnumerator cEnum = bookList.GetEnumerator();
+					if (cEnum.MoveNext())
+					{
+						bookName = (string) cEnum.Current;
+						
+						if (verbose == true)
+						{
+							Console.WriteLine("Opening address book: " + bookName);
+						}
+						
+						this.cAddressBook = abManager.GetAddressBookByName(bookName);
+					}
+				}
+				catch
+				{
+					if (verbose == true)
+					{
+						Console.WriteLine("OpenAddressBook failed");
+						if (bookName != null)
+						{
+							Console.WriteLine("Address Book: {0} does not exist.", bookName);
+						}
+					}
+				}
+			}
+			else
+			{
+				if (verbose == true)
+				{
+					Console.WriteLine("Opening default address book");
+				}
+				
+				this.cAddressBook = abManager.OpenDefaultAddressBook();
+			}
+			
+			if (this.cAddressBook == null)
+			{
+				return(false);
+			}
+			
+			return(true);
+		}
+		
+		//
+		// Each property value in the propertyList may have multiple property values pairs in the
+		// form of: blog=http://..;note=Hi;title=SE
+		//
+		private void AddProperties(Contact cContact)
+		{
+			foreach(string propertyString in this.propertyList)
+			{
+				Regex p = new Regex(@";");
+				IEnumerator propertyTokens = p.Split(propertyString).GetEnumerator();
+				while(propertyTokens.MoveNext())
+				{
+					Regex o = new Regex(@"=");
+					IEnumerator propValueTokens = o.Split((string) propertyTokens.Current).GetEnumerator();
+					while(propValueTokens.MoveNext())
+					{
+						string token = (string) propValueTokens.Current;
+						token.ToLower();
+
+						if (token == "organization")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Organization = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "blog")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								if (verbose == true)
+								{
+									Console.WriteLine("Updating the blog attribute to: " + (string) propValueTokens.Current);
+								}
+								
+								cContact.Blog = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "url")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Url = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "title")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Title = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "role")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Role = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "workforceid")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.WorkForceID = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "birthday")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Birthday = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "email")
+						{
+							// email property line ex: email=banderso@novell.com:home:preferred
+							if (propValueTokens.MoveNext())
+							{
+								Regex x = new Regex(@":");
+
+								IEnumerator enumTokens1 = x.Split((string) propValueTokens.Current).GetEnumerator();
+
+								if (enumTokens1.MoveNext())
+								{
+									EmailTypes	eTypes = 0;
+									Email cMail = new Email();
+									cMail.Address = (string) enumTokens1.Current;
+
+									if (verbose == true)
+									{
+										Console.WriteLine("Adding email address: " + cMail.Address);
+									}
+
+									while(enumTokens1.MoveNext())
+									{
+										string typeToken = (string) enumTokens1.Current;
+										typeToken.ToLower();
+
+										if (typeToken == "preferred")
+										{
+											if (verbose == true)
+											{
+												Console.WriteLine("   Preferred");
+											}
+											cMail.Preferred = true;
+										}
+										else
+										if (typeToken == "work")
+										{
+											if (verbose == true)
+											{
+												Console.WriteLine("   Work");
+											}
+											eTypes |= EmailTypes.work;
+										}
+										else
+										if (typeToken == "personal")
+										{
+											if (verbose == true)
+											{
+												Console.WriteLine("   Personal");
+											}
+											eTypes |= EmailTypes.personal;
+										}
+										else
+										if (typeToken == "other")
+										{
+											eTypes |= EmailTypes.other;
+										}
+									}
+
+									if (eTypes != 0)
+									{
+										cMail.Types = eTypes;
+									}
+
+									cContact.AddEmailAddress(cMail);
+								}
+							}
+						}
+						else
+						if (token == "tel")
+						{
+							// tel property line ex: tel=801-861-5900:work:preferred
+							if (propValueTokens.MoveNext())
+							{
+								Regex x = new Regex(@":");
+
+								IEnumerator enumTokens1 = x.Split((string) propValueTokens.Current).GetEnumerator();
+
+								if (enumTokens1.MoveNext())
+								{
+									PhoneTypes	pTypes = 0;
+									Telephone cPhone = new Telephone();
+									cPhone.Number = (string) enumTokens1.Current;
+
+									if (verbose == true)
+									{
+										Console.WriteLine("Adding telephone number: " + cPhone.Number);
+									}
+
+									while(enumTokens1.MoveNext())
+									{
+										string typeToken = (string) enumTokens1.Current;
+										typeToken.ToLower();
+
+										if (typeToken.StartsWith("pref"))
+										{
+											if (verbose == true)
+											{
+												Console.WriteLine("Preferred");
+											}
+											cPhone.Preferred = true;
+										}
+										else
+										if (typeToken == "work")
+										{
+											if (verbose == true)
+											{
+												Console.WriteLine("Work");
+											}
+											pTypes |= PhoneTypes.work;
+										}
+										else
+										if (typeToken == "home")
+										{
+											if (verbose == true)
+											{
+												Console.WriteLine("Home");
+											}
+											pTypes |= PhoneTypes.home;
+										}
+										else
+										if (typeToken == "other")
+										{
+											pTypes |= PhoneTypes.other;
+										}
+									}
+
+									if (pTypes != 0)
+									{
+										cPhone.Types = pTypes;
+									}
+
+									cContact.AddTelephoneNumber(cPhone);
+								}
+							}
+						}
+						else
+						if (token == "managerid")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.ManagerID = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "note")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Note = (string) propValueTokens.Current;
+							}
+						}
+						else
+						if (token == "nickname")
+						{
+							if (propValueTokens.MoveNext())
+							{
+								cContact.Nickname = (string) propValueTokens.Current;
+							}
+						}
+					}
+				}
+				
+			}
+			
+			// AddressBook wrapper won't actually go to disk if nothing changes
+			cContact.Commit();
+		}
+		
 		private void ListProperties(Contact	cContact)
 		{
 			Console.WriteLine("ID=" + cContact.ID);
@@ -560,21 +805,30 @@ namespace AddressBookCmd
 				Console.WriteLine(")");
 			}
 
-
 			if (cContact.Note != "")
 			{
-				Console.WriteLine("   Note:          " + cContact.Note);
+				Console.WriteLine("NOTE=" + cContact.Note);
 			}
+		}
+
+		public void	AddBook(string bookName)
+		{
+			if (this.bookList == null)
+			{
+				this.bookList = new ArrayList();
+			}
+
+			this.bookList.Add(bookName);
 		}
 
 		public void	AddContact(string name)
 		{
-			if (this.addContactList == null)
+			if (this.contactList == null)
 			{
-				this.addContactList = new ArrayList();
+				this.contactList = new ArrayList();
 			}
 
-			this.addContactList.Add(name);
+			this.contactList.Add(name);
 		}
 
 		// Property value string in the following format: property=value
@@ -621,87 +875,22 @@ namespace AddressBookCmd
 			this.fileList.Add(fileName);
 		}
 
-		// Property value string in the following format: property=value
-		public void	AddDeleteProperty(string propertyValue)
-		{
-			if (this.deletePropertyList == null)
-			{
-				this.deletePropertyList = new ArrayList();
-			}
-
-			this.deletePropertyList.Add(propertyValue);
-		}
-
 		public void	ProcessCommands()
 		{
-			AddressBook	cAddressBook = null;
+			//AddressBook	cAddressBook = null;
 			Contact		cContact = null;
-			Manager		abManager;
+			//Manager		abManager;
 			DateTime	start = DateTime.Now;
 
-			//
-			// For every command we'll instantiate an address book even
-			// though some commands may not need one (ex. enumerating current books)
-			//
-			abManager = Manager.Connect( );
-			if (addressBookName == null)
+			this.abManager = Manager.Connect( );
+
+			if (this.cmd == Commands.listbooks)
 			{
-				cAddressBook = abManager.OpenDefaultAddressBook();
-			}
-			else
-			{
-				try
+				if (verbose == true)
 				{
-					cAddressBook = abManager.GetAddressBookByName(addressBookName);
+					Console.WriteLine("Command::listbooks");
 				}
-				catch
-				{
-					if (verbose == true)
-					{
-						Console.WriteLine("Address Book: {0} does not exist.", addressBookName);
-					}
-				}
-			}
-
-			if (cAddressBook == null)
-			{
-				return;
-			}
-
-			if (importVCard == true)
-			{
-				if (this.fileList != null && this.fileList.Count > 0)
-				{
-					foreach(String filename in this.fileList)
-					{
-						if (verbose == true)
-						{
-							Console.WriteLine("   Importing vCards(s) from file: " + filename);
-						}
-
-						cAddressBook.ImportVCard(filename);
-					}
-				}
-				else
-				{
-					Console.WriteLine("invalid parameters");
-				}
-			}
-
-			// Instantiate the current contact object
-			if (currentContactName != null)
-			{
-				IABList cList = cAddressBook.SearchUsername(currentContactName, Property.Operator.Equal);
-
-				IEnumerator	iEnum = cList.GetEnumerator();
-				if(iEnum.MoveNext())
-				{
-					cContact = (Contact) iEnum.Current;
-				}
-			}
-
-			if (listBooks == true)
-			{
+				
 				foreach(AddressBook tmpBook in abManager)
 				{
 					Console.Write(tmpBook.Name);
@@ -713,126 +902,397 @@ namespace AddressBookCmd
 					Console.WriteLine("");
 				}
 			}
-
-			if (this.addContactList != null)
+			else
+			if (this.cmd == Commands.createbook)
 			{
-				foreach(String username in this.addContactList)
+				if (verbose == true)
+				{
+					Console.WriteLine("Command::createbook");
+				}
+				
+				bool atLeastOne = false;
+				foreach(string bookName in this.bookList)
 				{
 					if (verbose == true)
 					{
-						Console.WriteLine("   Adding contact: " + username);
+						Console.WriteLine("Creating Address Book: " + bookName);
 					}
 
-					Contact	tmpContact = new Contact();
-					tmpContact.UserName = username;
-					cAddressBook.AddContact(tmpContact);
-					tmpContact.Commit();
+					AddressBook cBook = 
+						new AddressBook(
+								bookName, 
+								AddressBookType.Private, 
+								AddressBookRights.ReadWrite, 
+								false);
+
+					abManager.AddAddressBook(cBook);
+					atLeastOne = true;
+				}		
+				
+				if (atLeastOne == false)
+				{
+					Console.WriteLine("invalid parameters");
+				}	
+			}
+			else
+			if (this.cmd == Commands.deletebook)
+			{
+				if (displayCommandHelp == true)
+				{
+				}
+				else
+				{
+					bool atLeastOne = false;
+					foreach(string bookName in this.bookList)
+					{
+						if (verbose == true)
+						{
+							Console.WriteLine("Deleting Address Book: " + bookName);
+						}
+
+						try
+						{
+							AddressBook cBook = abManager.GetAddressBookByName(bookName);
+							cBook.Delete();
+							atLeastOne = true;
+						}
+						catch{}
+						
+					}
+					
+					if (atLeastOne == false)
+					{
+						Console.WriteLine("invalid parameters");
+					}	
+				}		
+			}
+			else
+			if (this.cmd == Commands.importvcard)
+			{
+				if (OpenAddressBook())
+				{
+					if (this.fileList != null && this.fileList.Count > 0)
+					{
+						foreach(String filename in this.fileList)
+						{
+							if (verbose == true)
+							{
+								Console.WriteLine("Importing vCards(s) from file: " + filename);
+							}
+
+							cAddressBook.ImportVCard(filename);
+						}
+					}
+					else
+					{
+						Console.WriteLine("invalid parameters");
+					}
 				}
 			}
-
-			if (deleteProperty == true && cContact != null)
+			else
+			if (this.cmd == Commands.listcontacts)
 			{
-				bool	cUpdated = false;
-				foreach(string propertyString in this.deletePropertyList)
+				if (verbose == true)
 				{
-					Regex o = new Regex(@"=");
-					IEnumerator enumTokens = o.Split(propertyString).GetEnumerator();
-					while(enumTokens.MoveNext())
+					Console.WriteLine("Command::listcontacts");
+				}
+				
+				if (OpenAddressBook())
+				{
+					foreach(Contact lContact in cAddressBook)
 					{
-						string token = (string) enumTokens.Current;
-						token.ToLower();
+						Console.WriteLine(lContact.UserName);
+					}
+				}			
+			}
+			else
+			if (this.cmd == Commands.createcontact)
+			{
+				if (OpenAddressBook())
+				{
+					foreach(string contactName in this.contactList)
+					{
+						if (verbose == true)
+						{
+							Console.WriteLine("Adding contact: " + contactName);
+						}
 
-						if (token == "organization")
+						Contact	tmpContact = new Contact();
+						tmpContact.UserName = contactName;
+						cAddressBook.AddContact(tmpContact);
+						tmpContact.Commit();
+					}
+				}
+			}
+			else
+			if (this.cmd == Commands.deletecontact)
+			{
+				if (OpenAddressBook())
+				{
+					foreach(string contactName in this.contactList)
+					{
+						if (verbose == true)
 						{
-							cContact.Organization = null;
-							cUpdated = true;
+							Console.WriteLine("Deleting contact: " + contactName);
 						}
-						else
-						if (token == "blog")
+						
+						IABList cList = cAddressBook.SearchUsername(contactName, Property.Operator.Equal);
+						foreach(Contact tmpContact in cList)
 						{
-							cContact.Blog = null;
-							cUpdated = true;
+							tmpContact.Delete();
 						}
-						else
-						if (token == "url")
+					}
+				}
+			}
+			else
+			if (this.cmd == Commands.listproperties)
+			{
+				if (OpenAddressBook())
+				{
+					if (this.contactList != null)
+					{
+						IEnumerator cEnum = this.contactList.GetEnumerator();
+						if (cEnum.MoveNext())
 						{
-							cContact.Url = null;
-							cUpdated = true;
-						}
-						else
-						if (token == "title")
-						{
-							cContact.Title = null;
-							cUpdated = true;
-						}
-						else
-						if (token == "role")
-						{
-							cContact.Role = null;
-							cUpdated = true;
-						}
-						else
-						if (token == "workforceid")
-						{
-							cContact.WorkForceID = null;
-							cUpdated = true;
-						}
-						else
-						if (token == "birthday")
-						{
-							cContact.Birthday = null;
-							cUpdated = true;
-						}
-						else
-						if (token == "email")
-						{
-							// email property line ex: email=banderso@novell.com
-							if (enumTokens.MoveNext())
+							IABList cList = cAddressBook.SearchUsername((string) cEnum.Current, Property.Operator.Equal);
+							foreach(Contact tmpContact in cList)
 							{
-								IABList eAddresses = cContact.GetEmailAddresses();
-								foreach (Email tmpMail in eAddresses)
-								{
-									if (tmpMail.Address == (string) enumTokens.Current)
-									{
-										if (verbose == true)
-										{
-											Console.WriteLine("   Deleting e-mail address: " + tmpMail.Address);
-										}
-										tmpMail.Delete();
-										cUpdated = true;
-										break;
-									}
-								}
+								this.ListProperties(tmpContact);
+								break;
 							}
 						}
-						else
-						if (token == "managerid")
-						{
-							cContact.ManagerID = null;
-							cUpdated = true;
-							
-						}
-						else
-						if (token == "note")
-						{
-							cContact.Note = null;
-							cUpdated = true;
-						}
-						else
-						if (token == "nickname")
-						{
-							cContact.Nickname = null;
-							cUpdated = true;
-						}
-					}
-				}
-
-				if (cUpdated == true)
-				{
-					cContact.Commit();
+					}		
 				}
 			}
+			else
+			if (this.cmd == Commands.deleteproperty)
+			{
+				if (verbose == true)
+				{
+					Console.WriteLine("Command::deleteproperty");
+				}
+				
+				if (OpenAddressBook())
+				{
+					if (this.contactList != null)
+					{
+						IEnumerator cEnum = this.contactList.GetEnumerator();
+						if (cEnum.MoveNext())
+						{
+							IABList cList = cAddressBook.SearchUsername((string) cEnum.Current, Property.Operator.Equal);
+							foreach(Contact tmpContact in cList)
+							{
+								if (verbose == true)
+								{
+									Console.WriteLine("Contact: " + tmpContact.UserName);
+								}
+								
+								bool	cUpdated = false;
+								foreach(string propertyString in this.propertyList)
+								{
+									Regex o = new Regex(@"=");
+									IEnumerator enumTokens = o.Split(propertyString).GetEnumerator();
+									while(enumTokens.MoveNext())
+									{
+										string token = (string) enumTokens.Current;
+										token.ToLower();
+										
+										if (verbose == true)
+										{
+											Console.WriteLine("Deleting property: " + token);
+										}
 
+										if (token == "organization")
+										{
+											tmpContact.Organization = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "blog")
+										{
+											tmpContact.Blog = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "url")
+										{
+											tmpContact.Url = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "title")
+										{
+											tmpContact.Title = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "role")
+										{
+											tmpContact.Role = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "workforceid")
+										{
+											tmpContact.WorkForceID = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "birthday")
+										{
+											tmpContact.Birthday = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "email")
+										{
+											// email property line ex: email=banderso@novell.com
+											if (enumTokens.MoveNext())
+											{
+												IABList eAddresses = cContact.GetEmailAddresses();
+												foreach (Email tmpMail in eAddresses)
+												{
+													if (tmpMail.Address == (string) enumTokens.Current)
+													{
+														if (verbose == true)
+														{
+															Console.WriteLine("   Deleting e-mail address: " + tmpMail.Address);
+														}
+														tmpMail.Delete();
+														cUpdated = true;
+														break;
+													}
+												}
+											}
+										}
+										else
+										if (token == "managerid")
+										{
+											tmpContact.ManagerID = null;
+											cUpdated = true;
+							
+										}
+										else
+										if (token == "note")
+										{
+											tmpContact.Note = null;
+											cUpdated = true;
+										}
+										else
+										if (token == "nickname")
+										{
+											tmpContact.Nickname = null;
+											cUpdated = true;
+										}
+									}		
+								}
+
+								if (cUpdated == true)
+								{
+									tmpContact.Commit();
+								}
+								break;
+							}
+						}
+					}		
+				}
+			}
+			
+			else
+			if (this.cmd == Commands.addproperty)
+			{
+				if (verbose == true)
+				{
+					Console.WriteLine("Command::addproperty");
+				}
+				
+				if (OpenAddressBook())
+				{
+					if (this.contactList != null)
+					{
+						IEnumerator cEnum = this.contactList.GetEnumerator();
+						if (cEnum.MoveNext())
+						{
+							IABList cList = cAddressBook.SearchUsername((string) cEnum.Current, Property.Operator.Equal);
+							foreach(Contact tmpContact in cList)
+							{
+								if (verbose == true)
+								{
+									Console.WriteLine("Contact: " + tmpContact.UserName);
+								}
+								
+								this.AddProperties(tmpContact);
+								break;
+							}
+						}
+					}		
+				}
+			}
+			else
+			if (this.cmd == Commands.exportvcard)
+			{
+				if (verbose == true)
+				{
+					Console.WriteLine("Command::exportvcard");
+				}
+				
+				if (OpenAddressBook())
+				{
+					if (this.contactList != null)
+					{
+						string path = "";
+						
+						if (this.fileList != null)
+						{
+							IEnumerator	pathEnum = this.fileList.GetEnumerator();
+							if (pathEnum.MoveNext())
+							{
+								path = (string) pathEnum.Current;
+								
+								if (path[path.Length - 1] != Path.DirectorySeparatorChar)
+								{
+									path += Path.DirectorySeparatorChar;
+								}
+								
+								if (verbose == true)
+								{
+									Console.WriteLine("Creating vCards at: " + path);
+								}
+							}	
+							
+							/*
+							path = this.fileList.RemoveAt(0).ToString();
+							*/
+						}
+						
+						foreach(string contactName in this.contactList)
+						{
+							IABList cList = cAddressBook.SearchUsername(contactName, Property.Operator.Equal);
+							foreach(Contact tmpContact in cList)
+							{
+								string  vCardFileName = path;
+								if (tmpContact.FN != "")
+								{
+									vCardFileName += tmpContact.FN;
+									vCardFileName += ".vcf";
+								}
+								else
+								{
+									vCardFileName = tmpContact.ID + ".vcf";
+								}
+
+								if (verbose == true)
+								{
+									Console.WriteLine("Exporting vCard: " + vCardFileName);
+								}
+								
+								tmpContact.ExportVCard(vCardFileName);
+								break;
+							}
+						}
+					}		
+				}
+			}
 
 			// Adding addresses to a contact?
 			if (this.addAddressList != null && cContact != null)
@@ -1064,266 +1524,6 @@ namespace AddressBookCmd
 						cContact.AddName(cName);
 						cContact.Commit();
 					}
-				}
-			}
-
-			if (listProperties == true && cContact != null)
-			{
-				ListProperties(cContact);
-			}
-
-			if (vCardFile != null)
-			{
-				if (verbose == true)
-				{
-					Console.WriteLine("Importing vCard(s) from file: " + vCardFile);
-				}
-
-				cAddressBook.ImportVCard(vCardFile);
-			}
-
-			if (newAddressBook != null)
-			{
-				if (verbose == true)
-				{
-					Console.WriteLine("Creating Address Book: " + newAddressBook);
-				}
-
-				AddressBook nBook = 
-					new AddressBook(newAddressBook, AddressBookType.Private, AddressBookRights.ReadWrite, false);
-
-				abManager.AddAddressBook(nBook);
-			}
-
-			if (listContacts == true)
-			{
-				Console.WriteLine("{0} address book contacts:", cAddressBook.Name);
-				foreach(Contact tmpContact in cAddressBook)
-				{
-					Console.WriteLine("   " + tmpContact.UserName);
-				}
-			}
-
-			if (updateContact == true && cContact != null)
-			{
-				bool	cUpdated = false;
-				foreach(string propertyString in this.propertyList)
-				{
-
-					Regex o = new Regex(@"=");
-					IEnumerator enumTokens = o.Split(propertyString).GetEnumerator();
-					while(enumTokens.MoveNext())
-					{
-						string token = (string) enumTokens.Current;
-						token.ToLower();
-
-						if (token == "organization")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Organization = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "blog")
-						{
-							if (enumTokens.MoveNext())
-							{
-								if (verbose == true)
-								{
-									Console.WriteLine("Updating the blog attribute to: " + (string) enumTokens.Current);
-								}
-								cContact.Blog = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "url")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Url = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "title")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Title = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "role")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Role = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "workforceid")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.WorkForceID = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "birthday")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Birthday = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "email")
-						{
-							// email property line ex: email=banderso@novell.com;home;preferred
-							if (enumTokens.MoveNext())
-							{
-								Regex x = new Regex(@";");
-
-								IEnumerator enumTokens1 = x.Split((string) enumTokens.Current).GetEnumerator();
-
-								if (enumTokens1.MoveNext())
-								{
-									EmailTypes	eTypes = 0;
-									Email cMail = new Email();
-									cMail.Address = (string) enumTokens1.Current;
-									cUpdated = true;
-
-									if (verbose == true)
-									{
-										Console.WriteLine("Adding email address: " + cMail.Address);
-									}
-
-									while(enumTokens1.MoveNext())
-									{
-										string typeToken = (string) enumTokens1.Current;
-										typeToken.ToLower();
-
-										if (typeToken == "preferred")
-										{
-											if (verbose == true)
-											{
-												Console.WriteLine("   Preferred");
-											}
-											cMail.Preferred = true;
-										}
-										else
-										if (typeToken == "work")
-										{
-											if (verbose == true)
-											{
-												Console.WriteLine("   Work");
-											}
-											eTypes |= EmailTypes.work;
-										}
-										else
-										if (typeToken == "personal")
-										{
-											if (verbose == true)
-											{
-												Console.WriteLine("   Personal");
-											}
-											eTypes |= EmailTypes.personal;
-										}
-										else
-										if (typeToken == "other")
-										{
-											eTypes |= EmailTypes.other;
-										}
-									}
-
-									if (eTypes != 0)
-									{
-										cMail.Types = eTypes;
-									}
-
-									cContact.AddEmailAddress(cMail);
-								}
-							}
-						}
-						else
-						if (token == "managerid")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.ManagerID = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "note")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Note = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-						else
-						if (token == "nickname")
-						{
-							if (enumTokens.MoveNext())
-							{
-								cContact.Nickname = (string) enumTokens.Current;
-								cUpdated = true;
-							}
-						}
-					}
-				}
-
-				if (cUpdated == true)
-				{
-					cContact.Commit();
-				}
-			}
-
-			if (deleteContact == true)
-			{
-				IABList	cList;
-
-				if (verbose == true)
-				{
-					Console.WriteLine("deleting contact: " + contactName);
-				}
-
-				cList = cAddressBook.SearchUsername(contactName, Property.Operator.Equal);
-				foreach(Contact tmpContact in cList)
-				{
-					tmpContact.Delete();
-				}
-			}
-
-			if (exportVCard == true)
-			{
-				if (cContact != null)
-				{
-					string  vCardFileName = "";
-					if (cContact.FN != "")
-					{
-						vCardFileName += cContact.FN;
-						vCardFileName += ".vcf";
-					}
-					else
-					{
-						vCardFileName = cContact.ID + ".vcf";
-					}
-
-					if (verbose == true)
-					{
-						Console.WriteLine("Exporting vCard: " + vCardFileName);
-					}
-					cContact.ExportVCard(vCardFileName);
 				}
 			}
 
