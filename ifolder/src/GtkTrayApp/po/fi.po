@@ -741,9 +741,9 @@ msgid ""
 "inside an iFolder or has an iFolder in it.  Please select an alternate "
 "folder."
 msgstr ""
-"iFolderit eivat voi sisältää muita iFolderia.  Valittu kansio joko "
-"toisen iFolderin sisällä tai sisältä toinen iFolder.  Ole hyvä ja valita "
-"toisen kansion."
+"iFolderit eivat voi sisältää muita iFolderia.  Valittu kansio joko toisen "
+"iFolderin sisällä tai sisältä toinen iFolder.  Ole hyvä ja valita toisen "
+"kansion."
 
 #: ../iFolderWindow.cs:1708
 msgid "Decline shared iFolder?"
@@ -791,7 +791,6 @@ msgstr "{0} on kutsunut sinua osallistua tässä jaettu iFolder:ssa"
 #, csharp-format
 msgid "{0} has joined an iFolder"
 msgstr "{0} littyi iFolder"
-
 
 #: src/GtkTrayApp/iFolderApplication.cs:575
 msgid "Login to iFolder Server"
@@ -923,8 +922,8 @@ msgid ""
 "Please select an alternate folder."
 msgstr ""
 "Valittu polku ei voi olla iFolder.  iFolderit eivat voi sisältää muita "
-"iFolderia.  Valittu kansio joko toisen iFolderin sisällä tai sisältä "
-"toinen iFolder.  Ole hyvä ja valita toisen kansion."
+"iFolderia.  Valittu kansio joko toisen iFolderin sisällä tai sisältä toinen "
+"iFolder.  Ole hyvä ja valita toisen kansion."
 
 #: src/GtkTrayApp/iFolderWindow.cs:2087 src/GtkTrayApp/iFolderWindow.cs:2101
 msgid "Remove iFolder Confirmation"
@@ -944,10 +943,9 @@ msgid ""
 "local hard drive."
 msgstr ""
 "Tämä toiminto poista valittu iFolder tietokoneestasi.  Koska olet sen "
-"omistaja, iFolder poistetaan iFolder-palvelimelta ja kaiket käyttäjät "
-"joiden kanssa olet jaennut tämän iFolder.  Et voi saada takaisin tämän "
-"iFolder toisella tietokoneella.  Tiedostot eivät poisteta sinun "
-"tietokonen levystä."
+"omistaja, iFolder poistetaan iFolder-palvelimelta ja kaiket käyttäjät joiden "
+"kanssa olet jaennut tämän iFolder.  Et voi saada takaisin tämän iFolder "
+"toisella tietokoneella.  Tiedostot eivät poisteta sinun tietokonen levystä."
 
 #: src/GtkTrayApp/iFolderWindow.cs:2104
 msgid ""
@@ -955,9 +953,9 @@ msgid ""
 "access this iFolder unless the owner re-invites you to this iFolder.  The "
 "files will not be deleted from your local hard drive."
 msgstr ""
-"Tämä toiminto poista sinua tämän iFolderin jäsenluettelosta.  Et voi "
-"käyttää tämä iFolder ellet saataisit kutsumuksen liittyä tähän iFoleriin "
-"uudestaan.  Tiedostot eivät poisteta sinun tietokonen levystä."
+"Tämä toiminto poista sinua tämän iFolderin jäsenluettelosta.  Et voi käyttää "
+"tämä iFolder ellet saataisit kutsumuksen liittyä tähän iFoleriin uudestaan.  "
+"Tiedostot eivät poisteta sinun tietokonen levystä."
 
 #: src/GtkTrayApp/iFolderWindow.cs:2380
 #, csharp-format
@@ -1020,5 +1018,13 @@ msgid ""
 "The file you have selected exists.  Selecting yes will overwrite the "
 "contents of this file.  Do you want to overwrite this file?"
 msgstr ""
-"Valittu tiedosto on jo olemassa.  Napsauttamalla kyllä "
-"ylikirjoita tiedoston.  Haluatko ylikirjoittaa tiedoston?"
+"Valittu tiedosto on jo olemassa.  Napsauttamalla kyllä ylikirjoita "
+"tiedoston.  Haluatko ylikirjoittaa tiedoston?"
+
+#: src/GtkTrayApp/iFolderWindow.cs:674
+msgid ""
+"To startup iFolder at login, leave iFolder running when you log out and save "
+"your current setup."
+msgstr ""
+"Aloitaeksi iFolder sisään kirjautumisella, jätä käynissäoleva iFolder kun "
+"kirjaudut ulos ja talenna nykyinen tila."
