@@ -207,6 +207,8 @@ namespace Simias.POBox
 
 		private bool DoDelivered()
 		{
+			bool result = true;
+
 			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
 				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
 				subscription.POServiceURL.Port);
@@ -245,12 +247,15 @@ namespace Simias.POBox
 
 				// done with the subscription
 				poBox.Commit(poBox.Delete(subscription));
+
+				// done
+				result = true;
 			}
 			
 			// remove channel
 			channel.Dispose();
 
-			return true;
+			return result;
 		}
 	}
 }
