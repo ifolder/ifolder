@@ -302,7 +302,8 @@ namespace Simias.POBoxService.Web
 			poBox.Commit(cSub);
 
 			// TODO: remove the subscription object?
-			poBox.Commit(poBox.Delete(cSub));
+			//poBox.Commit(poBox.Delete(cSub));
+			Console.WriteLine("POBoxService::AcceptSubscription - exit");
 		}
 
 		/// <summary>
@@ -423,102 +424,6 @@ namespace Simias.POBoxService.Web
 		}
 
 		/// <summary>
-		/// Get the subscription status
-		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="identityID"></param>
-		/// <param name="messageID"></param>
-		/// <returns></returns>
-		[WebMethod]
-		[SoapDocumentMethod]
-		public
-		Simias.POBox.SubscriptionStatus 
-		GetSubscriptionStatus(string domainID, string identityID, string messageID)
-		{
-			Simias.POBox.POBox	poBox;
-			Store store = Store.GetStore();
-
-			// FIXME:  Temp remove
-			Console.WriteLine("POBoxService::GetSubscriptionStatus - called");
-
-			// open the post office box
-			poBox =
-				(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-					? Simias.POBox.POBox.GetPOBox(store, domainID)
-					: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
-			
-			// check the post office box
-			if (poBox == null)
-			{
-				throw new ApplicationException("PO Box not found.");
-			}
-
-			// check that the message has already not been posted
-			IEnumerator e = 
-				poBox.Search(Message.MessageIDProperty, messageID, SearchOp.Equal).GetEnumerator();
-			
-			ShallowNode sn = null;
-
-			if (e.MoveNext())
-			{
-				sn = (ShallowNode) e.Current;
-			}
-
-			if (sn == null)
-			{
-				throw new ApplicationException("Subscription does not exists.");
-			}
-
-			// get the status object
-			Subscription cSub = new Subscription(poBox, sn);
-			Simias.POBox.SubscriptionStatus subStatus = cSub.GenerateStatus();
-			return subStatus;
-		}
-
-		/// <summary>
-		/// Get the subscription details.
-		/// </summary>
-		/// <param name="domain"></param>
-		/// <param name="identity"></param>
-		/// <param name="collection"></param>
-		/// <returns></returns>
-		[WebMethod]
-		[SoapDocumentMethod]
-		public 
-		Simias.POBox.SubscriptionDetails 
-		GetSubscriptionDetails(
-			string			domainID, 
-			string			identityID, 
-			string			collectionID)
-		{
-			Store	store = Store.GetStore();
-			Simias.POBox.SubscriptionDetails details = 
-				new Simias.POBox.SubscriptionDetails();
-
-			// FIXME:  Temp remove
-			Console.WriteLine("POBoxService::GetSubscriptionDetails - called");
-
-			// open the collection
-			Collection c = store.GetCollectionByID(collectionID);
-
-			// check the collection
-			if (c == null)
-			{
-				throw new ApplicationException("Collection not found.");
-			}
-
-			SyncCollection sc = new SyncCollection(c);
-
-			// details
-			DirNode dn = sc.GetRootDirectory();
-			details.DirNodeID = ( dn != null ) ? dn.ID : null;
-			details.DirNodeName = ( dn != null ) ? dn.Name : null;
-			details.CollectionUrl = sc.MasterUrl.ToString();
-
-			return details;
-		}
-
-		/// <summary>
 		/// Get the subscription information
 		/// </summary>
 		/// <param name="domainID"></param>
@@ -533,6 +438,9 @@ namespace Simias.POBoxService.Web
 		{
 			Simias.POBox.POBox	poBox;
 			Store store = Store.GetStore();
+
+			// FIXME: temp
+			Console.WriteLine("POBoxService::GetSubscriptionInfo - called");
 
 			// open the post office box
 			poBox =
@@ -564,8 +472,26 @@ namespace Simias.POBoxService.Web
 
 			// generate the subscription info object and return it
 			Subscription cSub = new Subscription(poBox, sn);
+
+			// Validate the shared collection
+			Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
+			if (cSharedCollection == null)
+			{
+				throw new ApplicationException("Collection not found.");
+			}
+
+			if (cSub.SubscriptionCollectionURL == null)
+			{
+				SyncCollection sc = new SyncCollection(cSharedCollection);
+				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+				poBox.Commit(cSub);
+			}
+
 			SubscriptionInformation subInfo = new SubscriptionInformation();
 			subInfo.GenerateFromSubscription(cSub);
+
+			// FIXME: temp
+			Console.WriteLine("POBoxService::GetSubscriptionInfo - exit");
 			return subInfo;
 		}
 
