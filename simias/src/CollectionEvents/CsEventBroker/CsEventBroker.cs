@@ -40,7 +40,6 @@ namespace Simias.Event
 		/// </summary>
 		static void Main(string[] args)
 		{
-			MyTrace.WriteLine("Starting");			
 			string mutexName;
 			if (args.Length != 1)
 			{
@@ -60,7 +59,6 @@ namespace Simias.Event
 
 			EventBroker.RegisterService();
 			// Wait (forever) until we are killed.
-			MyTrace.WriteLine("Initialized");
 			new System.Threading.ManualResetEvent(false).WaitOne();
 		}
 	}
