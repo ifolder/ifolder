@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/POBoxService.asmx.cs 
+POBoxWS_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/POBoxService.asmx.cs
 POBoxWS_CSFILES := $(subst /,$(SEP),$(POBoxWS_CSFILES1))
 POBoxWS_INCLUDES =
 POBoxWS_RESOURCES =
@@ -11,10 +11,16 @@ POBoxWS_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = POService.asmx $(POBoxWS_CSFILES)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: Simias.POBox.Web.dll
 
 Simias.POBox.Web.dll: $(POBoxWS_CSFILES) $(POBoxWS_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(POBoxWS_FLAGS) $(SIMIAS_LIBS) $(POBoxWS_LIBS:%=/r:%) $(POBoxWS_LIBPATH:%=/lib:%) $(POBoxWS_RESOURCES:%=$(ICON_FLAG)%) $(POBoxWS_CSFILES) /doc:Simias.POBox.Web.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(POBoxWS_FLAGS) $(SIMIAS_LIBS) $(POBoxWS_LIBS:%=/r:%) $(POBoxWS_LIBPATH:%=/lib:%) $(POBoxWS_RESOURCES:%=$(ICON_FLAG)%) $(POBoxWS_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -34,7 +40,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = Simias.POBox.Web.dll Simias.POBox.Web.doc.xml
+CLEAN_FILES = Simias.POBox.Web.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -15,10 +15,16 @@ EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.c
 
 CUR_DIR := $(shell pwd)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: SimiasServer.exe
 
 SimiasServer.exe: $(SimiasServer_CSFILES) $(SimiasServer_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasServer_FLAGS) $(SimiasServer_LIBS:%=/r:%) $(SimiasServer_LIBPATH:%=/lib:%) $(SimiasServer_CSFILES_CSC) /doc:SimiasServer.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasServer_FLAGS) $(SimiasServer_LIBS:%=/r:%) $(SimiasServer_LIBPATH:%=/lib:%) $(SimiasServer_CSFILES_CSC) $(DOC_FILE_CMD)
 	
 if DEBUG
 if WINDOWS
@@ -54,7 +60,7 @@ if DEBUG
 endif
 endif
 	
-CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES)
+CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES) $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

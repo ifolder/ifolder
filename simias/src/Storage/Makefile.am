@@ -14,10 +14,16 @@ EXTRA_DIST = $(Storage_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: Storage.dll
 
 Storage.dll: $(Storage_CSFILES) $(Storage_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Storage_FLAGS) $(Storage_LIBS:%=/r:%) $(Storage_LIBPATH:%=/lib:%) $(Storage_CSFILES_CSC) /doc:Storage.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Storage_FLAGS) $(Storage_LIBS:%=/r:%) $(Storage_LIBPATH:%=/lib:%) $(Storage_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -34,11 +40,11 @@ uninstall-local:
 
 installcheck-local: install $(NUNIT_TESTS)
 	
-CLEAN_FILES = Storage.dll $(NUNIT_TESTS) Storage.doc.xml
+CLEAN_FILES = Storage.dll $(NUNIT_TESTS) $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

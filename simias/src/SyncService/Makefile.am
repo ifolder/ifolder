@@ -11,10 +11,16 @@ SyncService_LIBPATH = ../SimiasClient ../Simias.dll
 
 EXTRA_DIST = SyncService.asmx SyncHandler.ashx $(SyncService_CSFILES)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: SyncService.Web.dll
 
 SyncService.Web.dll: $(SyncService_CSFILES) $(SyncService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncService_FLAGS) $(SIMIAS_LIBS) $(SyncService_LIBS:%=/r:%) $(SyncService_LIBPATH:%=/lib:%) $(SyncService_RESOURCES:%=$(ICON_FLAG)%) $(SyncService_CSFILES) /doc:SyncService.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncService_FLAGS) $(SIMIAS_LIBS) $(SyncService_LIBS:%=/r:%) $(SyncService_LIBPATH:%=/lib:%) $(SyncService_RESOURCES:%=$(ICON_FLAG)%) $(SyncService_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -34,7 +40,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = SyncService.Web.dll SyncService.Web.doc.xml
+CLEAN_FILES = SyncService.Web.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

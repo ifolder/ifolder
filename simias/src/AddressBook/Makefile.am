@@ -13,10 +13,16 @@ EXTRA_DIST = $(AddressBook_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: Novell.AddressBook.dll
 
 Novell.AddressBook.dll: $(AddressBook_CSFILES) $(AddressBook_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(AddressBook_FLAGS) $(AddressBook_LIBS:%=/r:%) $(AddressBook_LIBPATH:%=/lib:%) $(AddressBook_CSFILES_CSC) /doc:AddressBook.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(AddressBook_FLAGS) $(AddressBook_LIBS:%=/r:%) $(AddressBook_LIBPATH:%=/lib:%) $(AddressBook_CSFILES_CSC) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -31,11 +37,11 @@ install-exec-local: Novell.AddressBook.dll
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Novell.AddressBook.dll $(DEBUG_FILES)
 
-CLEAN_FILES = Novell.AddressBook.dll AddressBook.doc.xml
+CLEAN_FILES = Novell.AddressBook.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

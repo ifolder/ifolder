@@ -11,10 +11,16 @@ SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../SimiasClient ../Simias.dl
 
 EXTRA_DIST = App.ico $(SimiasApp_CSFILES)
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: SimiasApp.exe
 
 SimiasApp.exe: $(SimiasApp_CSFILES) $(SimiasApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasApp_FLAGS) $(SIMIAS_LIBS) $(SimiasApp_LIBS:%=/r:%) $(SimiasApp_LIBPATH:%=/lib:%) $(SimiasApp_RESOURCES:%=$(ICON_FLAG)%) $(SimiasApp_CSFILES) /doc:SimiasApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasApp_FLAGS) $(SIMIAS_LIBS) $(SimiasApp_LIBS:%=/r:%) $(SimiasApp_LIBPATH:%=/lib:%) $(SimiasApp_RESOURCES:%=$(ICON_FLAG)%) $(SimiasApp_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
@@ -32,7 +38,7 @@ uninstall-local:
 
 installcheck-local: install
 	
-CLEAN_FILES = SimiasApp.exe SimiasApp.doc.xml
+CLEAN_FILES = SimiasApp.exe $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
