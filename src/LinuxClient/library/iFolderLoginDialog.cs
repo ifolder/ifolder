@@ -87,7 +87,11 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return savePasswordButton.Active;
+				if (savePasswordButton != null)
+					return savePasswordButton.Active;
+				else
+					return false;
+					
 			}
 		}
 
@@ -137,7 +141,7 @@ namespace Novell.iFolder
 	
 			Table loginTable;
 
-			loginTable = new Table(3,2,false);
+			loginTable = new Table(4,2,false);
 
 			loginTable.BorderWidth = 10;
 			loginTable.RowSpacing = 10;
@@ -179,6 +183,12 @@ namespace Novell.iFolder
 				serverEntry.ActivatesDefault = true;
 				loginTable.Attach(serverEntry, 1,2,2,3,
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+				savePasswordButton = 
+					new CheckButton(Util.GS(
+						"_Remember password"));
+				loginTable.Attach(savePasswordButton, 1,2,3,4,
+						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			}
 			else
 			{
@@ -217,16 +227,16 @@ namespace Novell.iFolder
 				passEntry.Visibility = false;
 				loginTable.Attach(passEntry, 1,2,2,3,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+				savePasswordButton = 
+					new CheckButton(Util.GS(
+						"_Remember password"));
+				loginTable.Attach(savePasswordButton, 1,2,3,4,
+						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			}
 
 	
 			this.VBox.PackStart(loginTable, false, false, 0);
-			
-			savePasswordButton = 
-				new CheckButton(Util.GS(
-					"_Remember password"));
-			this.VBox.PackStart(savePasswordButton, false, false,0);
-			
 			this.VBox.ShowAll();
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
