@@ -9,7 +9,8 @@ Book_FLAGS = $(CSC_EXEFLAG)
 Book_LIBS = $(BookLib_LIBS) Novell.AddressBook.UI.gtk.dll
 Book_LIBPATH = $(BookLib_LIBPATH)
 
-BookLib_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/ContactBrowser.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/../FormsBookLib/FullNameParser.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs
+BookLib_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Util.cs $(srcdir)/ContactBrowser.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/../FormsBookLib/FullNameParser.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs $(srcdir)/CollectionGeneralPage.cs $(srcdir)/ContactCollectionSharingPage.cs $(srcdir)/CollectionPropertiesPage.cs $(srcdir)/CollectionProperties.cs
+
 BookLib_CSFILES_CSC := $(subst /,$(SEP),$(BookLib_CSFILES))
 BookLib_INCLUDES = 
 BookLib_RESOURCES = $(srcdir)/contact-browser.glade contact-picker.glade name-editor.glade contact-editor.glade
@@ -17,9 +18,9 @@ BookLib_FLAGS = $(CSC_LIBFLAG)
 BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.AddressBook.dll
 BookLib_LIBPATH = ../AddressBook
 
-GLADE_FILES = vcardimport.png vcardexport.png book.png contact.png blankhead.png contact-browser.glade contact-picker.glade name-editor.glade contact-editor.glade
+GLADE_FILES = collection-properties.glade vcardimport.png vcardexport.png book.png contact.png blankhead.png contact-browser.glade contact-picker.glade name-editor.glade contact-editor.glade
 
-IMAGE_FILES = vcardimport.png vcardexport.png book.png contact.png contact_me.png blankhead.png
+IMAGE_FILES = property.png invited-contact.png vcardimport.png vcardexport.png book.png contact.png contact_me.png blankhead.png
 
 EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES)
 
@@ -29,7 +30,7 @@ ContactBrowser.exe: $(Book_CSFILES) $(Book_RESOURCES) Novell.AddressBook.UI.gtk.
 	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS)  $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:ContactBrowser.doc.xml
 
 Novell.AddressBook.UI.gtk.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) Util.cs /doc:Novell.AddressBook.UI.gtk.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:Novell.AddressBook.UI.gtk.doc.xml
 
 install-exec-local: ContactBrowser.exe Novell.AddressBook.UI.gtk.dll contactbrowser $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images
