@@ -82,6 +82,8 @@ namespace Simias.Service
 				Assembly pAssembly = AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(Assembly));
 				service = (IThreadService)pAssembly.CreateInstance(classType);
 				service.Start(conf);
+				state = Service.State.Running;
+				Manager.logger.Info("\"{0}\" service started.", Name);
 			}
 		}
 
@@ -94,6 +96,8 @@ namespace Simias.Service
 			{
 				service.Stop();
 				service = null;
+				state = Service.State.Stopped;
+				Manager.logger.Info("\"{0}\" service stopped.", Name);
 			}
 		}
 
@@ -106,6 +110,8 @@ namespace Simias.Service
 			{
 				service.Stop();
 				service = null;
+				state = Service.State.Stopped;
+				Manager.logger.Info("\"{0}\" service killed.", Name);
 			}
 		}
 
@@ -117,6 +123,8 @@ namespace Simias.Service
 			lock (this)
 			{
 				service.Pause();
+				state = Service.State.Paused;
+				Manager.logger.Info("\"{0}\" service paused.", Name);
 			}
 		}
 
@@ -128,6 +136,8 @@ namespace Simias.Service
 			lock (this)
 			{
 				service.Resume();
+				state = Service.State.Running;
+				Manager.logger.Info("\"{0}\" service resumed.", Name);
 			}
 		}
 
@@ -139,6 +149,7 @@ namespace Simias.Service
 		public override void Custom(int message, string data)
 		{
 			service.Custom(message, data);
+			Manager.logger.Info("\"{0}\" service message {1}.", Name, message);
 		}
 
 

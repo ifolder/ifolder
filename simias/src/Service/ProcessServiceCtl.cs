@@ -117,6 +117,8 @@ namespace Simias.Service
 					reader = process.StandardOutput;
 					writer = process.StandardInput;
 					postMessage(new StartMessage(this));
+					state = Service.State.Running;
+					Manager.logger.Info("\"{0}\" service started.", Name);
 				}
 			}
 		}
@@ -136,6 +138,8 @@ namespace Simias.Service
 						process = null;
 						reader = null;
 						writer = null;
+						state = Service.State.Stopped;
+						Manager.logger.Info("\"{0}\" service stopped.", Name);
 					}
 				}
 			}
@@ -154,6 +158,8 @@ namespace Simias.Service
 					if (process.WaitForExit(20000))
 					{
 						process = null;
+						state = Service.State.Stopped;
+						Manager.logger.Info("\"{0}\" service killes.", Name);
 					}
 				}
 			}
@@ -169,6 +175,8 @@ namespace Simias.Service
 				if (state == State.Running)
 				{
 					postMessage(new PauseMessage(this));
+					state = Service.State.Paused;
+					Manager.logger.Info("\"{0}\" service paused.", Name);
 				}
 			}
 		}
@@ -183,6 +191,8 @@ namespace Simias.Service
 				if (state == State.Paused)
 				{
 					postMessage(new ResumeMessage(this));
+					state = Service.State.Running;
+					Manager.logger.Info("\"{0}\" service resumed.", Name);
 				}
 			}
 
@@ -198,6 +208,7 @@ namespace Simias.Service
 			lock (this)
 			{
 				postMessage(new CustomMessage(this, message, data));
+				Manager.logger.Info("\"{0}\" service message {1}.", Name, message);
 			}
 		}
 

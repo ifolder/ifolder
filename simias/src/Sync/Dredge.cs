@@ -322,8 +322,10 @@ public class Dredger
 								}
 							}
 						}
+						/*
 						if (!MyEnvironment.Mono)
 							needToDredge = false;
+						*/
 					}
 				}
 				catch
@@ -343,6 +345,7 @@ public class Dredger
 		{
 			store = new Store(conf);
 			paused = shuttingDown = false;
+			/*
 			if (!MyEnvironment.Mono)
 			{
 				// Start listening to file change events.
@@ -352,6 +355,7 @@ public class Dredger
 				es.FileDeleted += new FileEventHandler(es_FileDeleted);
 				es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
 			}
+			*/
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;

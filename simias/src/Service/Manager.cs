@@ -40,7 +40,10 @@ namespace Simias.Service
 	{
 		#region fields
 
-		static private ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
+		/// <summary>
+		/// Used to log service events.
+		/// </summary>
+		static public ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
 		Thread startThread = null;
 		Thread stopThread = null;
@@ -172,32 +175,24 @@ namespace Simias.Service
 							if ( (svcCtl.State == Simias.Service.State.Stopped) && svcCtl.Enabled)
 							{
 								svcCtl.Start();
-								svcCtl.state = State.Running;
-								logger.Info("\"{0}\" service started.", svcCtl.Name);
 							}
 							break;
 						case MessageCode.Stop:
 							if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
 							{
 								svcCtl.Stop();
-								svcCtl.state = State.Stopped;
-								logger.Info("\"{0}\" service stopped.", svcCtl.Name);
 							}
 							break;
 						case MessageCode.Pause:
 							if (svcCtl.state == State.Running)
 							{
 								svcCtl.Pause();
-								svcCtl.state = State.Paused;
-								logger.Info("\"{0}\" service Paused.", svcCtl.Name);
 							}
 							break;
 						case MessageCode.Resume:
 							if (svcCtl.state == State.Paused)
 							{
 								svcCtl.Resume();
-								svcCtl.state = State.Running;
-								logger.Info("\"{0}\" service resumed.", svcCtl.Name);
 							}
 							break;
 						case MessageCode.Custom:
