@@ -837,6 +837,25 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that sets the disk space limit for an iFolder.
+		/// </summary>
+		/// <param name="iFolderID">
+		/// The ID of the iFolder to set the disk space limit on.
+		/// </param>
+		/// <param name="Limit">
+		/// The size to set in megabytes.
+		/// </param>
+		[WebMethod(Description="Sets the Disk Space Limit for an iFolder")]
+		[SoapDocumentMethod]
+		public void SetiFolderDiskSpaceLimit( string iFolderID, long Limit )
+		{
+			DiskSpace.SetiFolderDiskSpaceLimit(iFolderID, Limit);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that sets an iFolders SyncInterval
 		/// </summary>
 		/// <param name = "iFolderID">

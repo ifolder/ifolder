@@ -363,6 +363,17 @@
       <xs:element name="SetUserDiskSpaceLimitResponse">
         <xs:complexType />
       </xs:element>
+      <xs:element name="SetiFolderDiskSpaceLimit">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+            <xs:element minOccurs="1" maxOccurs="1" name="Limit" type="xs:long" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetiFolderDiskSpaceLimitResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="SetiFolderSyncInterval">
         <xs:complexType>
           <xs:sequence>
@@ -564,6 +575,12 @@
   <message name="SetUserDiskSpaceLimitSoapOut">
     <part name="parameters" element="s0:SetUserDiskSpaceLimitResponse" />
   </message>
+  <message name="SetiFolderDiskSpaceLimitSoapIn">
+    <part name="parameters" element="s0:SetiFolderDiskSpaceLimit" />
+  </message>
+  <message name="SetiFolderDiskSpaceLimitSoapOut">
+    <part name="parameters" element="s0:SetiFolderDiskSpaceLimitResponse" />
+  </message>
   <message name="SetiFolderSyncIntervalSoapIn">
     <part name="parameters" element="s0:SetiFolderSyncInterval" />
   </message>
@@ -722,6 +739,11 @@
     <part name="Limit" type="s:long" />
   </message>
   <message name="SetUserDiskSpaceLimitHttpGetOut" />
+  <message name="SetiFolderDiskSpaceLimitHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="Limit" type="s:long" />
+  </message>
+  <message name="SetiFolderDiskSpaceLimitHttpGetOut" />
   <message name="SetiFolderSyncIntervalHttpGetIn">
     <part name="iFolderID" type="s:string" />
     <part name="Interval" type="s:int" />
@@ -877,6 +899,11 @@
     <part name="Limit" type="s:long" />
   </message>
   <message name="SetUserDiskSpaceLimitHttpPostOut" />
+  <message name="SetiFolderDiskSpaceLimitHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="Limit" type="s:long" />
+  </message>
+  <message name="SetiFolderDiskSpaceLimitHttpPostOut" />
   <message name="SetiFolderSyncIntervalHttpPostIn">
     <part name="iFolderID" type="s:string" />
     <part name="Interval" type="s:int" />
@@ -1018,6 +1045,11 @@
       <input message="s0:SetUserDiskSpaceLimitSoapIn" />
       <output message="s0:SetUserDiskSpaceLimitSoapOut" />
       <documentation>Sets the Disk Space Limit for a user</documentation>
+    </operation>
+    <operation name="SetiFolderDiskSpaceLimit">
+      <input message="s0:SetiFolderDiskSpaceLimitSoapIn" />
+      <output message="s0:SetiFolderDiskSpaceLimitSoapOut" />
+      <documentation>Sets the Disk Space Limit for an iFolder</documentation>
     </operation>
     <operation name="SetiFolderSyncInterval">
       <input message="s0:SetiFolderSyncIntervalSoapIn" />
@@ -1161,6 +1193,11 @@
       <output message="s0:SetUserDiskSpaceLimitHttpGetOut" />
       <documentation>Sets the Disk Space Limit for a user</documentation>
     </operation>
+    <operation name="SetiFolderDiskSpaceLimit">
+      <input message="s0:SetiFolderDiskSpaceLimitHttpGetIn" />
+      <output message="s0:SetiFolderDiskSpaceLimitHttpGetOut" />
+      <documentation>Sets the Disk Space Limit for an iFolder</documentation>
+    </operation>
     <operation name="SetiFolderSyncInterval">
       <input message="s0:SetiFolderSyncIntervalHttpGetIn" />
       <output message="s0:SetiFolderSyncIntervalHttpGetOut" />
@@ -1302,6 +1339,11 @@
       <input message="s0:SetUserDiskSpaceLimitHttpPostIn" />
       <output message="s0:SetUserDiskSpaceLimitHttpPostOut" />
       <documentation>Sets the Disk Space Limit for a user</documentation>
+    </operation>
+    <operation name="SetiFolderDiskSpaceLimit">
+      <input message="s0:SetiFolderDiskSpaceLimitHttpPostIn" />
+      <output message="s0:SetiFolderDiskSpaceLimitHttpPostOut" />
+      <documentation>Sets the Disk Space Limit for an iFolder</documentation>
     </operation>
     <operation name="SetiFolderSyncInterval">
       <input message="s0:SetiFolderSyncIntervalHttpPostIn" />
@@ -1535,6 +1577,15 @@
     </operation>
     <operation name="SetUserDiskSpaceLimit">
       <soap:operation soapAction="http://novell.com/ifolder/web/SetUserDiskSpaceLimit" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="SetiFolderDiskSpaceLimit">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetiFolderDiskSpaceLimit" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -1785,6 +1836,13 @@
       </input>
       <output />
     </operation>
+    <operation name="SetiFolderDiskSpaceLimit">
+      <http:operation location="/SetiFolderDiskSpaceLimit" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
     <operation name="SetiFolderSyncInterval">
       <http:operation location="/SetiFolderSyncInterval" />
       <input>
@@ -2019,6 +2077,13 @@
     </operation>
     <operation name="SetUserDiskSpaceLimit">
       <http:operation location="/SetUserDiskSpaceLimit" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="SetiFolderDiskSpaceLimit">
+      <http:operation location="/SetiFolderDiskSpaceLimit" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

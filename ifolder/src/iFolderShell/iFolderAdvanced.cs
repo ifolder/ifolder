@@ -29,7 +29,6 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Net;
-using Novell.FormsBookLib;
 
 namespace Novell.iFolderCom
 {
@@ -56,8 +55,8 @@ namespace Novell.iFolderCom
 		private Hashtable subscrHT;
 		//private EventSubscriber subscriber;
 		//private POBox poBox;
-		private Novell.AddressBook.Manager abManager;
-		private Novell.AddressBook.AddressBook defaultAddressBook;
+		//private Novell.AddressBook.Manager abManager;
+		//private Novell.AddressBook.AddressBook defaultAddressBook;
 		private iFolder ifolder;
 		private iFolderUser currentUser;
 		private ListViewItem ownerLvi;
@@ -739,35 +738,36 @@ namespace Novell.iFolderCom
 		#region Private Methods
 		private void updateDiskQuotaDisplay()
 		{
-/*			DiskSpaceQuota dsq = DiskSpaceQuota.Get(currentMember, ifolder);
-
-			if (dsq.Limit != 0)
+			try
 			{
-				limit.Text = ((double)Math.Round(dsq.Limit/megaByte, 2)).ToString();
-				setLimit.Checked = true;
+				connectToWebService();
+				DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(ifolder.ID);
+				if (diskSpace.Limit != 0)
+				{
+					limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+					setLimit.Checked = true;
 
-				double usedSpace = (double)ifolder.StorageSize;
-				double availableSpace = dsq.Limit - usedSpace;
+					double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+					used.Text = usedSpace.ToString();
+					available.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
 
-				usedSpace = Math.Round(usedSpace/megaByte, 2);
-				availableSpace = Math.Round(availableSpace/megaByte, 2);
-
-				gaugeChart.MaxValue = dsq.Limit / megaByte;
-				gaugeChart.Used = usedSpace;
-				gaugeChart.BarColor = SystemColors.ActiveCaption;
-
-				used.Text = usedSpace.ToString();
-				available.Text = availableSpace.ToString();
+					gaugeChart.MaxValue = diskSpace.Limit / megaByte;
+					gaugeChart.Used = usedSpace;
+					gaugeChart.BarColor = SystemColors.ActiveCaption;
+				}
+				else
+				{
+					setLimit.Checked = false;
+					used.Text = available.Text = limit.Text = "";
+					gaugeChart.Used = 0;
+				}
 			}
-			else
+			catch (WebException e)
 			{
-				setLimit.Checked = false;
-				used.Text = available.Text = limit.Text = "";
-				gaugeChart.Used = 0;
 			}
 
 			gaugeChart.Invalidate(true);
-*/		}
+		}
 
 		private void refreshData()
 		{
@@ -1023,21 +1023,26 @@ namespace Novell.iFolderCom
 		private void processChanges()
 		{
 			// Change the pointer to an hourglass.
-/*			Cursor = Cursors.WaitCursor;
+			Cursor = Cursors.WaitCursor;
 
 			// Change the owner.
 			if (newOwnerLvi != null)
 			{
 				try
 				{
+					connectToWebService();
 					ShareListMember oldOwner = (ShareListMember)ownerLvi.Tag;
 					ShareListMember newOwner = (ShareListMember)newOwnerLvi.Tag;
-					ifolder.Commit(ifolder.ChangeOwner(newOwner.Member, oldOwner.Rights));
+					ifWebService.ChangeOwner(ifolder.ID, newOwner.iFolderUser.UserID, oldOwner.iFolderUser.Rights);
 					oldOwner.Changed = newOwner.Changed = false;
 				}
-				catch (SimiasException e)
+				catch (WebException e)
 				{
-					e.LogError();
+					// TODO: may need to post a message to the user.
+					if (e.Status == WebExceptionStatus.ConnectFailure)
+					{
+						ifWebService = null;
+					}
 				}
 				catch (Exception e)
 				{
@@ -1045,19 +1050,20 @@ namespace Novell.iFolderCom
 				}
 			}
 
-			string sendersEmail = null;
+			//string sendersEmail = null;
 
-			foreach (ListViewItem lvitem in this.shareWith.Items)
+			foreach (ListViewItem lvitem in shareWith.Items)
 			{
 				try
 				{
+					connectToWebService();
 					ShareListMember slMember = (ShareListMember)lvitem.Tag;
 
 					// Process added and changed members.
 					if (slMember.Added)
 					{
 						// TODO: we'll get the email a different way in the future.
-						if (ifolder.Domain.Equals(Domain.WorkGroupDomainID) &&
+/*						if (ifolder.Domain.Equals(Domain.WorkGroupDomainID) &&
 							(sendersEmail == null))
 						{
 							// TODO: check for an existing contact for the current user.
@@ -1075,38 +1081,35 @@ namespace Novell.iFolderCom
 						lock (subscrHT)
 						{
 							subscrHT.Add(slMember.Subscription.ID, lvitem);
-						}
+						}*/
 
-						// TODO: change this to use an array and add them all at once.
-						// Put the subscription in the POBox.
-						poBox.AddMessage(slMember.Subscription);
+						// Send the invitation.
+						ifWebService.InviteUser(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 
-						lvitem.SubItems[1].Text = slMember.Subscription.SubscriptionState.ToString();
+						// TODO: Localize
+						lvitem.SubItems[1].Text = "Invited";
 
 						// Update the state.
 						slMember.Added = false;
 					}
 					else if (slMember.Changed)
 					{
-						if (slMember.Member != null)
+						if (slMember.iFolderUser.State.Equals("Member"))
 						{
-							// Commit the rights for this member.
-							ifolder.Commit(slMember.Member);
-						}
-						else
-						{
-							// Commit the rights on the subscription.
-							poBox.Commit(slMember.Subscription);
+							ifWebService.SetUserRights(ifolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 						}
 
 						// Reset the flags.
 						slMember.Changed = false;
 					}
 				}
-				catch (SimiasException e)
+				catch (WebException e)
 				{
-					e.LogError();
 					// TODO: display message.
+					if (e.Status == WebExceptionStatus.ConnectFailure)
+					{
+						ifWebService = null;
+					}
 				}
 				catch (Exception e)
 				{
@@ -1120,28 +1123,32 @@ namespace Novell.iFolderCom
 			{
 				foreach (ShareListMember slMember in removedList)
 				{
+					connectToWebService();
 					try
 					{
-						if (slMember.Member != null)
+						if (slMember.iFolderUser.State.Equals("Member"))
 						{
 							// Delete the member.
-							ifolder.Commit(ifolder.Delete(slMember.Member));
+							ifWebService.RemoveiFolderUser(ifolder.ID, slMember.iFolderUser.UserID);
 						}
 						else
 						{
-							// Delete the subscription.
-							poBox.Commit(poBox.Delete(slMember.Subscription));
+							// TODO: Delete the subscription.
+							//poBox.Commit(poBox.Delete(slMember.Subscription));
 						}
 					}
-					catch (SimiasException e)
+					catch (WebException e)
 					{
-						e.LogError();
+						// TODO: Localize
 						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
+						if (e.Status == WebExceptionStatus.ConnectFailure)
+						{
+							ifWebService = null;
+						}
 					}
 					catch (Exception e)
 					{
-						//TODO
-						//logger.Debug(e, "Removing member");
+						//TODO: Localize
 						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
 					}
 				}
@@ -1152,25 +1159,31 @@ namespace Novell.iFolderCom
 
 			try
 			{
+				connectToWebService();
+
 				// Update the refresh interval.
-				if (ifolder.RefreshInterval != (int)syncInterval.Value)
-					ifolder.RefreshInterval = (int)syncInterval.Value;
+				if (ifolder.SyncInterval != (int)syncInterval.Value)
+					ifolder.SyncInterval = (int)syncInterval.Value;
 
 				// Update the disk quota policy.
 				if (setLimit.Checked)
 				{
-					Simias.Policy.DiskSpaceQuota.Set(ifolder, (long)(long.Parse(limit.Text) * megaByte));
+					ifWebService.SetiFolderDiskSpaceLimit(ifolder.ID, (long)(long.Parse(limit.Text) * megaByte));
 				}
 				else
 				{
-					Simias.Policy.DiskSpaceQuota.Delete(ifolder);
+					ifWebService.SetiFolderDiskSpaceLimit(ifolder.ID, 0);
 				}
 
 				updateDiskQuotaDisplay();
 			}
-			catch (SimiasException e)
+			catch (WebException e)
 			{
-				e.LogError();
+				// TODO: Post a message.
+				if (e.Status == WebExceptionStatus.ConnectFailure)
+				{
+					ifWebService = null;
+				}
 			}
 			catch (Exception e)
 			{
@@ -1182,7 +1195,7 @@ namespace Novell.iFolderCom
 
 			// Restore the cursor.
 			Cursor = Cursors.Default;
-*/		}
+		}
 
 		private bool IsCurrentUserValid()
 		{
@@ -1641,8 +1654,8 @@ namespace Novell.iFolderCom
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
-			this.processChanges();
-			this.Close();
+			processChanges();
+			Close();
 		}
 
 		private void accept_Click(object sender, System.EventArgs e)
@@ -1879,6 +1892,7 @@ namespace Novell.iFolderCom
 			if (apply.Enabled)
 			{
 				MyMessageBox mmb = new MyMessageBox();
+				// TODO: Localize
 				mmb.Message = "Do you want to save the changes you have made to this iFolder?";
 				mmb.Caption = "Save Changes";
 				mmb.MessageIcon = SystemIcons.Question;
@@ -1903,6 +1917,7 @@ namespace Novell.iFolderCom
 				connectToWebService();
 				ifolder = ifWebService.GetiFolder(((iFolderInfo)ifolders.SelectedItem).ID);
 //				currentMember = ifolder.GetCurrentMember();
+				//TODO: Localize
 				this.Text = "iFolder Properties for " + Path.GetFileName(ifolder.UnManagedPath);
 				refreshData();
 			}
@@ -1958,6 +1973,7 @@ namespace Novell.iFolderCom
 					if (userProperties.IsOwner)
 					{
 						ListViewItem lvi = shareWith.SelectedItems[0];
+						// TODO: Localize
 						lvi.SubItems[1].Text = "Owner";
 
 						if (newOwnerLvi != null)
