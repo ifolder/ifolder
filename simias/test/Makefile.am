@@ -1,16 +1,11 @@
 SUBDIRS = \
-	ChangeLog \
 	Common \
+	ChangeLog \
 	Configuration \
 	CollectionStore \
 	Smtp \
-	Location \
 	SimiasTestsWS \
-	SimiasTestsCmd \
-	SyncCommon \
-	SyncManager \
-	SyncEndToEnd \
-	POBox
+	SimiasTestsCmd
 	
 DIST_SUBDIRS = $(SUBDIRS)
 

@@ -6,8 +6,8 @@ CommonTests_CSFILES_CSC := $(subst /,$(SEP),$(CommonTests_CSFILES))
 CommonTests_INCLUDES =
 CommonTests_RESOURCES =
 CommonTests_FLAGS = $(CSC_LIBFLAG)
-CommonTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll nunit.framework.dll
-CommonTests_LIBPATH = ../../src/Simias.dll $(srcdir)/../../external/SecureChannelSinks $(NUNIT_LIBPATH)
+CommonTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) SimiasClient.dll Simias.dll nunit.framework.dll
+CommonTests_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(CommonTests_CSFILES)
 

@@ -27,7 +27,7 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
-using Simias;
+using Simias.Client;
 
 namespace Simias.Tests
 {
