@@ -123,17 +123,8 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				// Add the menu item for "Revert" action.
 				mii.wID= idCmd;
 
-				// If the user doesn't have sufficient rights, disable this item.
-				if (m_spiFolder->IsShareable(m_szFileUserClickedOn))
-				{
-					mii.fMask= MIIM_ID | MIIM_TYPE;
-				}
-				else
-				{
-					mii.fMask= MIIM_ID | MIIM_TYPE | MIIM_STATE;
-					mii.fState = MFS_DISABLED;
-				}
-				
+				// Always allow a user to revert to normal folder.
+				mii.fMask= MIIM_ID | MIIM_TYPE;
 				mii.fType= MFT_STRING;
 				mii.dwTypeData= szDeleteiFolderMenu;
 				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
