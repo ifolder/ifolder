@@ -322,7 +322,10 @@ namespace Simias.Sync.Client
 				return fileMap;
 			}
 			
-			sizeToSync = (BlockSize * (serverHashMap.Length - 1)) + node.Length % BlockSize;
+			sizeToSync = BlockSize * serverHashMap.Length;
+			long remainingBytes = node.Length % BlockSize;
+			if (remainingBytes != 0)
+				sizeToSync = sizeToSync - BlockSize + remainingBytes;
 			table.Add(serverHashMap);
 			fileMap = new long[serverHashMap.Length];
 
