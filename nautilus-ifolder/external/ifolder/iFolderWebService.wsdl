@@ -120,6 +120,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="Owner" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="OwnerID" type="xs:string"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="EffectiveSyncInterval" type="xs:int"/>
           <xs:element minOccurs="1" maxOccurs="1" name="SyncInterval" type="xs:int"/>
           <xs:element minOccurs="1" maxOccurs="1" name="Synchronizable" type="xs:boolean"/>
           <xs:element minOccurs="0" maxOccurs="1" name="Type" type="xs:string"/>
@@ -132,6 +133,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserRights" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="CollectionID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="LastSyncTime" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="CreateLocaliFolderResponse">
@@ -257,6 +259,9 @@
           <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string"/>
           <xs:element minOccurs="1" maxOccurs="1" name="IsOwner" type="xs:boolean"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Surname" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="FN" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetOwnerResponse">
@@ -318,6 +323,21 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="GetAlliFolderUsersResult"
+                  type="s0:ArrayOfIFolderUser"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetScopediFolderUsers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="numUsers" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetScopediFolderUsersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetScopediFolderUsersResult"
                   type="s0:ArrayOfIFolderUser"/>
           </xs:sequence>
         </xs:complexType>
@@ -751,6 +771,12 @@
   <message name="GetAlliFolderUsersSoapOut">
     <part name="parameters" element="s0:GetAlliFolderUsersResponse"/>
   </message>
+  <message name="GetScopediFolderUsersSoapIn">
+    <part name="parameters" element="s0:GetScopediFolderUsers"/>
+  </message>
+  <message name="GetScopediFolderUsersSoapOut">
+    <part name="parameters" element="s0:GetScopediFolderUsersResponse"/>
+  </message>
   <message name="SearchForiFolderUsersSoapIn">
     <part name="parameters" element="s0:SearchForiFolderUsers"/>
   </message>
@@ -976,6 +1002,12 @@
   <message name="GetAlliFolderUsersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolderUser"/>
   </message>
+  <message name="GetScopediFolderUsersHttpGetIn">
+    <part name="numUsers" type="s:int"/>
+  </message>
+  <message name="GetScopediFolderUsersHttpGetOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser"/>
+  </message>
   <message name="SearchForiFolderUsersHttpGetIn">
     <part name="SearchString" type="s:string"/>
   </message>
@@ -1189,6 +1221,12 @@
   </message>
   <message name="GetAlliFolderUsersHttpPostIn"/>
   <message name="GetAlliFolderUsersHttpPostOut">
+    <part name="Body" element="s0:ArrayOfIFolderUser"/>
+  </message>
+  <message name="GetScopediFolderUsersHttpPostIn">
+    <part name="numUsers" type="s:int"/>
+  </message>
+  <message name="GetScopediFolderUsersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolderUser"/>
   </message>
   <message name="SearchForiFolderUsersHttpPostIn">
@@ -1405,7 +1443,12 @@
     <operation name="GetAlliFolderUsers">
       <input message="s0:GetAlliFolderUsersSoapIn"/>
       <output message="s0:GetAlliFolderUsersSoapOut"/>
-      <documentation>Get the list of All Members</documentation>
+      <documentation>Get the list of All iFolderUsers</documentation>
+    </operation>
+    <operation name="GetScopediFolderUsers">
+      <input message="s0:GetScopediFolderUsersSoapIn"/>
+      <output message="s0:GetScopediFolderUsersSoapOut"/>
+      <documentation>Get a scoped list of iFolderUsers</documentation>
     </operation>
     <operation name="SearchForiFolderUsers">
       <input message="s0:SearchForiFolderUsersSoapIn"/>
@@ -1616,7 +1659,12 @@
     <operation name="GetAlliFolderUsers">
       <input message="s0:GetAlliFolderUsersHttpGetIn"/>
       <output message="s0:GetAlliFolderUsersHttpGetOut"/>
-      <documentation>Get the list of All Members</documentation>
+      <documentation>Get the list of All iFolderUsers</documentation>
+    </operation>
+    <operation name="GetScopediFolderUsers">
+      <input message="s0:GetScopediFolderUsersHttpGetIn"/>
+      <output message="s0:GetScopediFolderUsersHttpGetOut"/>
+      <documentation>Get a scoped list of iFolderUsers</documentation>
     </operation>
     <operation name="SearchForiFolderUsers">
       <input message="s0:SearchForiFolderUsersHttpGetIn"/>
@@ -1827,7 +1875,12 @@
     <operation name="GetAlliFolderUsers">
       <input message="s0:GetAlliFolderUsersHttpPostIn"/>
       <output message="s0:GetAlliFolderUsersHttpPostOut"/>
-      <documentation>Get the list of All Members</documentation>
+      <documentation>Get the list of All iFolderUsers</documentation>
+    </operation>
+    <operation name="GetScopediFolderUsers">
+      <input message="s0:GetScopediFolderUsersHttpPostIn"/>
+      <output message="s0:GetScopediFolderUsersHttpPostOut"/>
+      <documentation>Get a scoped list of iFolderUsers</documentation>
     </operation>
     <operation name="SearchForiFolderUsers">
       <input message="s0:SearchForiFolderUsersHttpPostIn"/>
@@ -2116,6 +2169,16 @@
     </operation>
     <operation name="GetAlliFolderUsers">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetAlliFolderUsers"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="GetScopediFolderUsers">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetScopediFolderUsers"
             style="document"/>
       <input>
         <soap:body use="literal"/>
@@ -2493,6 +2556,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="GetScopediFolderUsers">
+      <http:operation location="/GetScopediFolderUsers"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="SearchForiFolderUsers">
       <http:operation location="/SearchForiFolderUsers"/>
       <input>
@@ -2817,6 +2889,15 @@
     </operation>
     <operation name="GetAlliFolderUsers">
       <http:operation location="/GetAlliFolderUsers"/>
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="GetScopediFolderUsers">
+      <http:operation location="/GetScopediFolderUsers"/>
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded"/>
       </input>
