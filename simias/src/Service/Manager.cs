@@ -461,6 +461,7 @@ namespace Simias.Service
 	/// <summary>
 	/// Event class for shutdown requests.
 	/// </summary>
+	[Serializable]
 	public class ShutdownEventArgs : SimiasEventArgs
 	{
 	}
