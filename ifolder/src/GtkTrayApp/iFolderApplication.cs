@@ -72,7 +72,7 @@ namespace Novell.iFolder
 		private bool				winShown;
 
 		public iFolderApplication(string[] args)
-			: base("iFolder", "1.0", Modules.UI, args)
+			: base("ifolder", "1.0", Modules.UI, args)
 		{
 
 			Util.InitCatalog();
