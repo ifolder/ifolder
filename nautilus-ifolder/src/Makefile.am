@@ -2,10 +2,10 @@ GSOAP = ../external/gsoap-linux-2.7
 IFOLDER_CLIENT_WSDL = ../external/ifolder/iFolderWebService.wsdl
 GSOAP_INCLUDES = -I.
 NONAMESPACE_CFLAGS = -DWITH_NONAMESPACES
-INSTALL_EXTENSION_PATH = $(gnome_root)/lib/nautilus/extensions-1.0
-INSTALL_EMBLEM_PATH = $(gnome_root)/share/icons/gnome/48x48/emblems
-INSTALL_ICONS_PATH = $(gnome_root)/share/icons/gnome/24x24/apps
-INSTALL_EXE_PATH = $(libdir)
+INSTALL_EXTENSION_PATH = $(libdir)/nautilus/extensions-1.0
+INSTALL_EMBLEM_PATH = $(DESTDIR)$(datadir)/icons/gnome/48x48/emblems
+INSTALL_ICONS_PATH = $(DESTDIR)$(datadir)/icons/gnome/24x24/apps
+INSTALL_EXE_PATH = $(DESTDIR)$(libdir)
 
 INCLUDES =						\
 	-DG_LOG_DOMAIN=\"Nautilus-iFolder\"		        \
@@ -25,6 +25,7 @@ EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-f
 dist-hook:
 	rm -rf `find $(distdir) |grep iFolderClientClientLib.c`
 	rm -rf `find $(distdir) |grep envC.c`
+	rm -rf `find $(distdir) |grep nautilus-ifolder.exe`
 
 # FIXME: get this from the .pc file
 nautilus_extensiondir=$(INSTALL_EXTENSION_PATH)
@@ -37,7 +38,8 @@ libnautilus_ifolder_la_SOURCES =     \
 libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version
 libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
 
-iFolderClient.h:	$(IFOLDER_CLIENT_WSDL)
+# FIXME: Figure out a better way to force nautilus-ifolder.exe to be built
+iFolderClient.h:	$(IFOLDER_CLIENT_WSDL) nautilus-ifolder.exe
 	$(GSOAP)/wsdl2h -c -o $@ $(IFOLDER_CLIENT_WSDL)
 	
 envC.c:
@@ -47,8 +49,6 @@ envC.c:
 iFolderClientClientLib.c:	iFolderClient.h
 	$(GSOAP)/soapcpp2 -c -n -piFolderClient iFolderClient.h
 	
-bin_PROGRAMS = nautilus-ifolder.exe
-
 nautilus-ifolder.exe: nautilus-ifolder.cs
 	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs
 
