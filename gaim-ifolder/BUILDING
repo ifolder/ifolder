@@ -6,10 +6,12 @@ Prerequisites
 --------------
 You must have built and installed Simias and iFolder (http://www.ifolder.com)
 
-When running simias/autogen.sh, you must specify the following option:
+Make sure you've enabled the Gaim Domain by editing "simias-client-bootstrap.config"
+before you run simias for the first time.  Once you've run it, the file is
+named "Simias.config".  The following line should exist in the file:
 
-    ./autogen.sh --prefix=/opt/novell/ifolder3 --enable-gaim-domain
-    
+<Service name="Gaim Domain" assembly="Simias.Gaim.dll" enabled="True" type="Thread" class="Simias.Gaim.GaimService" />
+
 Also, make sure you have the Simias/iFolder pkgconfig directory in your
 PKG_CONFIG_PATH environment variable.  To find out if you do, type:
 
