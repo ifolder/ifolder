@@ -131,7 +131,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string Parent = "Parent";
+		static public string Parent = "ParentNode";
 
 		/// <summary>
 		/// Well known property name.

@@ -1588,6 +1588,12 @@ namespace Simias.Sync.Client
 				if (nodesFromServer.Contains(stamp.ID))
 				{
 					// This node has changed on the server we have a collision that we need to get.
+					// Unless this is a delete.
+					if (stamp.Operation == SyncOperation.Delete)
+					{
+						RemoveNodeFromServer(stamp.ID);
+						nodesToServer[stamp.ID] = WorkType.Delete;
+					}
 				}
 				else if (rights == Rights.ReadOnly)
 				{

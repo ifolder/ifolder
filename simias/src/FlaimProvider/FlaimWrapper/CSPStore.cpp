@@ -169,21 +169,21 @@ RCODE CSPDB::initializeDB(HFDB hFlaim, FLMBOOL created)
 		
 	if (!m_flaimInitialized)
 	{
-		if (created)
+		rc = m_NameTable.setupFromDb(hFlaim);
+		if (RC_OK(rc))
 		{
-			// Register the well know properties
-			rc = registerFieldArray(hFlaim, propertyArray, sizeof(propertyArray) / sizeof(CS_FIELD_DEF));
-			if (RC_OK(rc))
+			if (created)
 			{
-				// Add the indexes
-				rc = registerIndexArray(hFlaim, propertyArray, sizeof(propertyArray) / sizeof(CS_FIELD_DEF));
+				// Register the well know properties
+				rc = registerFieldArray(hFlaim, propertyArray, sizeof(propertyArray) / sizeof(CS_FIELD_DEF));
+				if (RC_OK(rc))
+				{
+					// Add the indexes
+					rc = registerIndexArray(hFlaim, propertyArray, sizeof(propertyArray) / sizeof(CS_FIELD_DEF));
+				}
 			}
+			m_flaimInitialized = true;
 		}
-		else
-		{
-			rc = m_NameTable.setupFromDb(hFlaim);
-		}
-		m_flaimInitialized = true;
 	}
 
 	return (rc);
