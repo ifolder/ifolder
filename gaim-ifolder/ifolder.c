@@ -1010,9 +1010,15 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 	GtkTreeIter iter;
 	char time_str[32];
 	char state_str[32];
-	GdkPixbuf *account_icon;
+	GdkPixbuf *invitation_icon;
 
-	account_icon = create_prpl_icon(invitation->gaim_account);
+	/**
+	 * FIXME: Change this icon to be based off of the type of Simias Collection
+	 * that is being shared and possibly the state of the invitation too.
+	 * Perhaps the invitation state could just be shown as an emblem overlay
+	 * of the invitation icon similar to how emblems are overlaid in Nautilus.
+	 */
+	invitation_icon = create_prpl_icon(invitation->gaim_account);
 	
 	/* Format the time to a string */
 	fill_time_str(time_str, 32, invitation->time);
@@ -1028,7 +1034,7 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 
 	/* Set the new row information with the invitation */
 	gtk_list_store_set(store, &iter,
-		ACCOUNT_PRTL_ICON_COL,	account_icon,
+		ACCOUNT_PRTL_ICON_COL,	invitation_icon,
 		BUDDY_NAME_COL,			invitation->buddy_name,
 		TIME_COL,				time_str,
 		COLLECTION_NAME_COL,	invitation->collection_name,
@@ -1036,8 +1042,8 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 		INVITATION_PTR,			invitation,
 		-1);
 		
-	if (account_icon)
-		g_object_unref(account_icon);
+	if (invitation_icon)
+		g_object_unref(invitation_icon);
 }
 
 /**
