@@ -170,6 +170,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		if (rights == Access.Rights.Deny)
 		{
 			Log.Error("Sync with collection {0} denied", collection.Name);
+			moreWork = false;
 			return;
 		}
 
