@@ -34,23 +34,23 @@ namespace Simias.Service
 		/// <summary>
 		/// 
 		/// </summary>
-		protected string		name;
+		internal string		name;
 		/// <summary>
 		/// 
 		/// </summary>
-		protected string		assembly;
+		internal string		assembly;
 		/// <summary>
 		/// 
 		/// </summary>
-		protected Configuration	conf;
+		internal Configuration	conf;
 		/// <summary>
 		/// 
 		/// </summary>
-		protected bool			enabled = true;
+		internal bool			enabled = true;
 		/// <summary>
 		/// 
 		/// </summary>
-		protected State			state = State.Stopped;
+		internal State			state = State.Stopped;
 		
 		/// <summary>
 		/// 

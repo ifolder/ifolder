@@ -28,15 +28,18 @@ namespace Simias.Service
 	/// <summary>
 	/// Message object used to communicate to a ProcessService.
 	/// </summary>
-	public class Message
+	internal class Message
 	{
 		#region fields.
 
-		char [] seperator = {';'};
+		internal ServiceCtl		service;
+		internal static char [] seperator = {';'};
 		internal MessageCode	majorMessage = 0;
 		internal int			customMessage;
 		internal string			data;
-
+		internal bool			status;
+		internal static string  messageSignature = typeof(Message).ToString();
+		
 		#endregion
 
 		#region Constructor
@@ -44,11 +47,13 @@ namespace Simias.Service
 		/// <summary>
 		/// Construct a Message from a string.
 		/// </summary>
+		/// <param name="service">The servie the command is for.</param>
 		/// <param name="message">The string to parse.</param>
-		public Message(string message)
+		internal Message(ServiceCtl service, string message)
 		{
+			this.service = service;
 			string[] args = message.Split(seperator, 4);
-			if (args.Length < 3 || !args[0].Equals(this.GetType().ToString()))
+			if (args.Length < 3 || !args[0].Equals(messageSignature))
 			{
 				throw new InvalidMessageException();
 			}
@@ -65,11 +70,13 @@ namespace Simias.Service
 		/// <summary>
 		/// Construct a message from the values.
 		/// </summary>
+		/// <param name="service">The servie the command is for.</param>
 		/// <param name="majorMessage">The MessageCode for this message.</param>
 		/// <param name="customMessage">The custom message code.</param>
 		/// <param name="data">A string for extra data.</param>
-		public Message(MessageCode majorMessage, int customMessage, string data)
+		internal Message(ServiceCtl service, MessageCode majorMessage, int customMessage, string data)
 		{
+			this.service = service;
 			this.majorMessage = majorMessage;
 			this.customMessage = customMessage;
 			this.data = data;
@@ -83,7 +90,7 @@ namespace Simias.Service
 		/// <returns>A string representation of the message.</returns>
 		public override string ToString()
 		{
-			return String.Format("{0};{1};{2};{3}", this.GetType().ToString(), majorMessage, customMessage, data);
+			return String.Format("{0};{1};{2};{3}", messageSignature, majorMessage, customMessage, data);
 		}
 
 		#region Properties.
@@ -115,12 +122,89 @@ namespace Simias.Service
 		#endregion
 	}
 
+	/// <summary>
+	/// Used to start a service.
+	/// </summary>
+	internal class StartMessage : Message
+	{
+		internal StartMessage(ServiceCtl service) :
+			base(service, MessageCode.Start, 0, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Used to stop a service.
+	/// </summary>
+	internal class StopMessage : Message
+	{
+		internal StopMessage(ServiceCtl service) :
+			base(service, MessageCode.Stop, 0, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Used to pause a service.
+	/// </summary>
+	internal class PauseMessage : Message
+	{
+		internal PauseMessage(ServiceCtl service) :
+			base(service, MessageCode.Pause, 0, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Used to resume a service.
+	/// </summary>
+	internal class ResumeMessage : Message
+	{
+		internal ResumeMessage(ServiceCtl service) :
+			base(service, MessageCode.Resume, 0, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Used to send a custom message.
+	/// </summary>
+	internal class CustomMessage : Message
+	{
+		internal CustomMessage(ServiceCtl service, int message, string data) :
+			base(service, MessageCode.Custom, message, data)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Used to signale that all services have been started.
+	/// </summary>
+	internal class StartComplete : Message
+	{
+		internal StartComplete() :
+			base(null, MessageCode.StartComplete, 0, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Used to signal that all services have been stoped.
+	/// </summary>
+	internal class StopComplete : Message
+	{
+		internal StopComplete() :
+			base(null, MessageCode.StopComplete, 0, null)
+		{
+		}
+	}
+
 	#region MessageCode enum
 
 	/// <summary>
 	/// Defines the valid messages for a Service.
 	/// </summary>
-	public enum MessageCode
+	internal enum MessageCode
 	{	
 		/// <summary>
 		/// 
@@ -145,7 +229,15 @@ namespace Simias.Service
 		/// <summary>
 		/// Used for custom messages.
 		/// </summary>
-		Custom
+		Custom,
+		/// <summary>
+		/// Used to signal that all services have been started.
+		/// </summary>
+		StartComplete,
+		/// <summary>
+		/// Used to signal that all services have been stoped.
+		/// </summary>
+		StopComplete
 	};
 
 	#endregion
@@ -155,7 +247,7 @@ namespace Simias.Service
 	/// <summary>
 	/// Exception for an invalid message.
 	/// </summary>
-	public class InvalidMessageException : System.Exception
+	public class InvalidMessageException : SimiasException
 	{
 		/// <summary>
 		/// Constructs an InvalidMessageException.

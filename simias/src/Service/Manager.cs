@@ -42,6 +42,9 @@ namespace Simias.Service
 		static private ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
 		private Configuration conf;
+		static Thread			messageThread = null;
+		static Queue			messageQueue = new Queue();
+		static ManualResetEvent	queueEvent = new ManualResetEvent(false);
 		XmlElement servicesElement;
 		ArrayList serviceList = new ArrayList();
 		Mutex serviceMutex = null;
@@ -53,7 +56,9 @@ namespace Simias.Service
 		internal static string XmlEnabledAttr = "enabled";
 		internal static string XmlNameAttr = "name";
 		const string mutexBaseName = "ServiceManagerMutex___";
-
+		ManualResetEvent servicesStarted = new ManualResetEvent(false);
+		ManualResetEvent servicesStopped = new ManualResetEvent(true);
+		
 		#endregion
 		
 		#region Constructor
@@ -72,6 +77,12 @@ namespace Simias.Service
 				{
 					serviceMutex = mutex;
 					this.conf = conf;
+
+					// Start the MessageThread
+					messageThread = new Thread(new ThreadStart(messageDispatcher));
+					messageThread.IsBackground = true;
+					messageThread.Start();
+					
 					// Get the XmlElement for the Services.
 					servicesElement = conf.GetElement(CFG_Section, CFG_Services);
 
@@ -99,6 +110,97 @@ namespace Simias.Service
 					mutex.Close();
 					serviceList.Clear();
 					throw new ApplicationException("Services Already running");
+				}
+			}
+		}
+
+		#endregion
+
+		#region Message handling
+
+		private void postMessage(Message msg)
+		{
+			lock (messageQueue)
+			{
+				messageQueue.Enqueue(msg);
+			}
+			queueEvent.Set();
+		}
+
+		private void messageDispatcher()
+		{
+			Message		msg;
+			ServiceCtl	svcCtl;
+			while (true)
+			{	
+				queueEvent.WaitOne();
+				try
+				{
+					lock (messageQueue)
+					{
+						if (messageQueue.Count != 0)
+						{
+							msg = (Message)messageQueue.Dequeue();
+							svcCtl = msg.service;
+						}
+						else
+						{
+							queueEvent.Reset();
+							continue;
+						}
+					}
+					switch (msg.MajorMessage)
+					{
+						case MessageCode.Start:
+							if (svcCtl.State == State.Stopped && svcCtl.Enabled)
+							{
+								svcCtl.Start();
+								svcCtl.state = State.Running;
+								logger.Info("\"{0}\" service started.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Stop:
+							if (svcCtl.state == State.Running || svcCtl.state == State.Paused)
+							{
+								svcCtl.Stop();
+								svcCtl.state = State.Stopped;
+								logger.Info("\"{0}\" service stopped.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Pause:
+							if (svcCtl.state == State.Running)
+							{
+								svcCtl.Pause();
+								svcCtl.state = State.Paused;
+								logger.Info("\"{0}\" service Paused.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Resume:
+							if (svcCtl.state == State.Paused)
+							{
+								svcCtl.Resume();
+								svcCtl.state = State.Running;
+								logger.Info("\"{0}\" service resumed.", svcCtl.Name);
+							}
+							break;
+						case MessageCode.Custom:
+							svcCtl.Custom(msg.CustomMessage, msg.Data);
+							break;
+						case MessageCode.StartComplete:
+							servicesStarted.Set();
+							servicesStopped.Reset();
+							logger.Info("Services started.");
+							break;
+						case MessageCode.StopComplete:
+							servicesStopped.Set();
+                            servicesStarted.Reset();
+							logger.Info("Services stopped.");
+							break;
+					}
+				}
+				catch (Exception ex)
+				{
+					logger.Error(ex, ex.Message);
 				}
 			}
 		}
@@ -201,6 +303,7 @@ namespace Simias.Service
 
 		/// <summary>
 		/// Start the installed services.
+		/// This call is asynchronous. Use ServicesStarted to now when this call has finished.
 		/// </summary>
 		public void StartServices()
 		{
@@ -208,25 +311,18 @@ namespace Simias.Service
 			{
 				foreach (ServiceCtl svc in this)
 				{
-					try
+					if (svc.State == State.Stopped)
 					{
-						if (svc.State == State.Stopped)
-						{
-							svc.Start();
-							logger.Info("{0} service started", svc.Name);
-						}
-					}
-					catch 
-					{
-						logger.Error("{0} service failed to start", svc.Name);
-						//log4net.LogManager.
+						postMessage(new StartMessage(svc));
 					}
 				}
+				postMessage(new StartComplete());
 			}
 		}
 
 		/// <summary>
 		/// Stop the installed services.
+		/// This call is asynchronous. Use ServicesStarted to now when this call has finished.
 		/// </summary>
 		public void StopServices()
 		{
@@ -234,17 +330,26 @@ namespace Simias.Service
 			{
 				foreach (ServiceCtl svc in this)
 				{
-					try
-					{
-						svc.Stop();
-						logger.Info("{0} service stopped", svc.Name);
-					}
-					catch
-					{
-						logger.Error("{0} service failed to stop", svc.Name);
-					}
+					postMessage(new StopMessage(svc));
 				}
+				postMessage(new StopComplete());
 			}
+		}
+
+		/// <summary>
+		/// Block until services are started.
+		/// </summary>
+		public void WaitForServicesStarted()
+		{
+			servicesStarted.WaitOne();
+		}
+
+		/// <summary>
+		/// Block until services are stoped.
+		/// </summary>
+		public void WaitForServicesStopped()
+		{
+			servicesStopped.WaitOne();
 		}
 
 		/// <summary>
@@ -275,6 +380,22 @@ namespace Simias.Service
 		public Configuration Config
 		{
 			get { return conf; }
+		}
+
+		/// <summary>
+		/// Gets the started state of the services.
+		/// </summary>
+		public bool ServiceStarted
+		{
+			get { return servicesStarted.WaitOne(0, false); }
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ServicesStopped
+		{
+			get { return servicesStopped.WaitOne(0, false); }
 		}
 
 		#endregion

@@ -67,6 +67,7 @@ namespace Simias.Service
 				if (serviceManager != null)
 				{
 					serviceManager.StopServices();
+					serviceManager.WaitForServicesStopped();
 					serviceManager.Uninstall(threadServiceName);
 					serviceManager.Uninstall(processServiceName);
 					serviceManager = null;
@@ -86,7 +87,7 @@ namespace Simias.Service
 		public void StartServices()
 		{
 			serviceManager.StartServices();
-			Thread.Sleep(1000);
+			serviceManager.WaitForServicesStarted();
 		}
 
 		/// <summary>
@@ -96,6 +97,7 @@ namespace Simias.Service
 		public void StopServices()
 		{
 			serviceManager.StopServices();
+			serviceManager.WaitForServicesStopped();
 		}
 
 		#endregion

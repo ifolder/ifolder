@@ -40,6 +40,7 @@ namespace Simias.Event
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventPublisher));
 		EventBroker broker = null;
 		Configuration	conf;
+		bool loggedError = false;
 
 		#endregion
 			
@@ -70,6 +71,7 @@ namespace Simias.Event
 				{
 					broker = EventBroker.GetBroker(conf);
 					broker.RaiseEvent(args);
+					loggedError = false;
 				}
 				else
 				{
@@ -80,7 +82,11 @@ namespace Simias.Event
 			{
 				// Release the broker to try to connect latter.
 				broker = null;
-				logger.Debug("Broker Not available");				
+				if (!loggedError)
+				{
+					logger.Debug("Broker Not available");				
+					loggedError = true;
+				}
 			}
 		}
 

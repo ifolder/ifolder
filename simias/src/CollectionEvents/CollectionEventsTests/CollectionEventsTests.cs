@@ -63,6 +63,7 @@ namespace Simias.Event
 		{
 			serviceManager = new Manager(conf);
 			serviceManager.StartServices();
+			serviceManager.WaitForServicesStarted();
 			publish();
 			subscribe();
 		}
@@ -96,6 +97,7 @@ namespace Simias.Event
 			if (serviceManager != null)
 			{
 				serviceManager.StopServices();
+				serviceManager.WaitForServicesStopped();
 			}
 		}
 

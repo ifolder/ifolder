@@ -90,13 +90,14 @@ namespace Simias.Service
 		/// </summary>
 		private void MessageDispatcher()
 		{
+			Message msg = null;
 			while (true)
 			{	
 				try
 				{
 					string line;
 					line = Console.ReadLine();
-					Message msg = new Message(line);
+					msg = new Message(null, line);
 					switch (msg.MajorMessage)
 					{
 						case MessageCode.Start:
@@ -121,7 +122,11 @@ namespace Simias.Service
 							break;
 					}
 				}
-				catch {}
+				catch 
+				{
+					if (msg != null)
+						sendError(msg);
+				}
 			}
 		}
 
@@ -131,7 +136,16 @@ namespace Simias.Service
 		/// <param name="msg"></param>
 		private void sendComplete(Message msg)
 		{
-			Console.WriteLine(msg.GetType().ToString());
+			Console.WriteLine(Message.messageSignature);
+		}
+
+		/// <summary>
+		/// Called to signal that the messag has been consumed with an error.
+		/// </summary>
+		/// <param name="msg"></param>
+		private void sendError(Message msg)
+		{
+			Console.WriteLine("{0};{1}", Message.messageSignature, ProcessServiceCtl.Error);
 		}
 
 		/// <summary>

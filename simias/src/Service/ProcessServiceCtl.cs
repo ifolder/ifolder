@@ -36,6 +36,7 @@ namespace Simias.Service
 		System.Diagnostics.Process process = null;
 		StreamWriter writer;
 		StreamReader reader;
+		static internal string Error = "ERROR";
 		
 		#region Constructor
 
@@ -70,8 +71,13 @@ namespace Simias.Service
 				line = reader.ReadLine();
 				if (line != null)
 				{
-					if (line.Equals(msg.GetType().ToString()))
+					string [] results = line.Split(Message.seperator, 2);
+                    if (results[0].Equals(Message.messageSignature))
 					{
+						if (results.Length == 2 && results[1].Equals(Error))
+						{
+							throw new SimiasException(string.Format("\"{0}\" service failed {1} request", msg.service.name, msg.MajorMessage.ToString()));
+						}
 						break;
 					}
 				}
@@ -110,8 +116,7 @@ namespace Simias.Service
 					process.Start();
 					reader = process.StandardOutput;
 					writer = process.StandardInput;
-					postMessage(new Message(MessageCode.Start, 0, ""));
-					state = State.Running;
+					postMessage(new StartMessage(this));
 				}
 			}
 		}
@@ -125,13 +130,12 @@ namespace Simias.Service
 			{
 				if (state == State.Running || state == State.Paused)
 				{
-					postMessage(new Message(MessageCode.Stop, 0, ""));
+					postMessage(new StopMessage(this));
 					if (process.WaitForExit(20000))
 					{
 						process = null;
 						reader = null;
 						writer = null;
-						state = State.Stopped;
 					}
 				}
 			}
@@ -150,7 +154,6 @@ namespace Simias.Service
 					if (process.WaitForExit(20000))
 					{
 						process = null;
-						state = State.Stopped;
 					}
 				}
 			}
@@ -165,8 +168,7 @@ namespace Simias.Service
 			{
 				if (state == State.Running)
 				{
-					postMessage(new Message(MessageCode.Pause, 0, ""));
-					state = State.Paused;
+					postMessage(new PauseMessage(this));
 				}
 			}
 		}
@@ -180,8 +182,7 @@ namespace Simias.Service
 			{
 				if (state == State.Paused)
 				{
-					postMessage(new Message(MessageCode.Resume, 0, ""));
-					state = State.Running;
+					postMessage(new ResumeMessage(this));
 				}
 			}
 
@@ -196,7 +197,7 @@ namespace Simias.Service
 		{
 			lock (this)
 			{
-				postMessage(new Message(MessageCode.Custom, message, data));
+				postMessage(new CustomMessage(this, message, data));
 			}
 		}
 
