@@ -99,6 +99,11 @@
                     AssemblyName = "CollectionStore"
                     HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
                 />
+                <Reference
+                    Name = "Storage"
+                    AssemblyName = "Storage"
+                    HintPath = "..\..\..\simias\src\Storage\Storage.dll"
+                />
             </References>
         </Build>
         <Files>

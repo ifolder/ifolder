@@ -347,16 +347,13 @@ namespace Novell.iFolder.FormsBookLib
 			contacts.BeginUpdate();
 			if (Filter != null && Filter != String.Empty)
 			{
-				// Set the type of query to perform.
-				Property.Operator queryType = Property.Operator.Contains;
-
 				// Hashtable used to store search results in.
 				Hashtable results = new Hashtable();
 
 				try
 				{
 					// Search the first name.
-					IABList searchResults = addressBook.SearchFirstName(Filter, queryType);
+					IABList searchResults = addressBook.SearchFirstName(Filter, SearchOp.Contains);
 					foreach(Contact c in searchResults)
 					{
 						// Put the contacts returned by the search in the hashtable.
@@ -364,7 +361,7 @@ namespace Novell.iFolder.FormsBookLib
 					}
 
 					// Search the last name.
-					searchResults = addressBook.SearchLastName(Filter, queryType);
+					searchResults = addressBook.SearchLastName(Filter, SearchOp.Contains);
 					foreach(Contact c in searchResults)
 					{
 						// Add the contact to the hashtable if it already isn't there.
@@ -373,7 +370,7 @@ namespace Novell.iFolder.FormsBookLib
 					}
 
 					// Search the user name.
-					searchResults = addressBook.SearchUsername(Filter, queryType);
+					searchResults = addressBook.SearchUsername(Filter, SearchOp.Contains);
 					foreach(Contact c in searchResults)
 					{
 						// Add the contact to the hashtable if it already isn't there.
@@ -382,7 +379,7 @@ namespace Novell.iFolder.FormsBookLib
 					}
 
 					// Search eMail.
-					searchResults = addressBook.SearchEmail(Filter, queryType);
+					searchResults = addressBook.SearchEmail(Filter, SearchOp.Contains);
 					foreach(Contact c in searchResults)
 					{
 						// Add the contact to the hashtable if it already isn't there.
@@ -490,7 +487,7 @@ namespace Novell.iFolder.FormsBookLib
 			if (manager != null)
 			{
 				// Put all the address books in the books listview.
-				IEnumerator addrBooks= manager.GetAddressBooks();
+				IEnumerator addrBooks= manager.GetAddressBooks().GetEnumerator();
 				while (addrBooks.MoveNext())
 				{
 					AddressBook.AddressBook book = (AddressBook.AddressBook)addrBooks.Current;
