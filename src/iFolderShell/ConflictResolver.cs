@@ -65,7 +65,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Button close;
-		private System.Windows.Forms.Button help;
 		private System.Windows.Forms.ListView conflictsView;
 		#endregion
 		private System.Windows.Forms.ToolTip toolTip1;
@@ -74,6 +73,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Panel versionsPanel;
 		private System.Windows.Forms.Panel localPanel;
 		private System.Windows.Forms.Panel serverPanel;
+		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.ComponentModel.IContainer components;
 
 		/// <summary>
@@ -138,11 +138,11 @@ namespace Novell.iFolderCom
 			this.label11 = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
 			this.close = new System.Windows.Forms.Button();
-			this.help = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.versionsPanel = new System.Windows.Forms.Panel();
 			this.serverPanel = new System.Windows.Forms.Panel();
 			this.localPanel = new System.Windows.Forms.Panel();
+			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
 			this.localVersion.SuspendLayout();
 			this.serverVersion.SuspendLayout();
 			this.versionsPanel.SuspendLayout();
@@ -159,6 +159,9 @@ namespace Novell.iFolderCom
 			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
 			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
 			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label1, resources.GetString("label1.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label1, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label1.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label1, resources.GetString("label1.HelpString"));
 			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
 			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
 			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
@@ -166,6 +169,7 @@ namespace Novell.iFolderCom
 			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
 			this.label1.Name = "label1";
 			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label1, ((bool)(resources.GetObject("label1.ShowHelp"))));
 			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
 			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
 			this.label1.Text = resources.GetString("label1.Text");
@@ -182,6 +186,9 @@ namespace Novell.iFolderCom
 			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
 			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
 			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label2, resources.GetString("label2.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label2, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label2.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label2, resources.GetString("label2.HelpString"));
 			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
 			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
 			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
@@ -189,6 +196,7 @@ namespace Novell.iFolderCom
 			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
 			this.label2.Name = "label2";
 			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label2, ((bool)(resources.GetObject("label2.ShowHelp"))));
 			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
 			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
 			this.label2.Text = resources.GetString("label2.Text");
@@ -205,6 +213,9 @@ namespace Novell.iFolderCom
 			this.label3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label3.Dock")));
 			this.label3.Enabled = ((bool)(resources.GetObject("label3.Enabled")));
 			this.label3.Font = ((System.Drawing.Font)(resources.GetObject("label3.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label3, resources.GetString("label3.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label3, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label3.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label3, resources.GetString("label3.HelpString"));
 			this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
 			this.label3.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.ImageAlign")));
 			this.label3.ImageIndex = ((int)(resources.GetObject("label3.ImageIndex")));
@@ -212,6 +223,7 @@ namespace Novell.iFolderCom
 			this.label3.Location = ((System.Drawing.Point)(resources.GetObject("label3.Location")));
 			this.label3.Name = "label3";
 			this.label3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label3.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label3, ((bool)(resources.GetObject("label3.ShowHelp"))));
 			this.label3.Size = ((System.Drawing.Size)(resources.GetObject("label3.Size")));
 			this.label3.TabIndex = ((int)(resources.GetObject("label3.TabIndex")));
 			this.label3.Text = resources.GetString("label3.Text");
@@ -228,6 +240,9 @@ namespace Novell.iFolderCom
 			this.ifolderName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ifolderName.Dock")));
 			this.ifolderName.Enabled = ((bool)(resources.GetObject("ifolderName.Enabled")));
 			this.ifolderName.Font = ((System.Drawing.Font)(resources.GetObject("ifolderName.Font")));
+			this.helpProvider1.SetHelpKeyword(this.ifolderName, resources.GetString("ifolderName.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.ifolderName, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("ifolderName.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.ifolderName, resources.GetString("ifolderName.HelpString"));
 			this.ifolderName.Image = ((System.Drawing.Image)(resources.GetObject("ifolderName.Image")));
 			this.ifolderName.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ifolderName.ImageAlign")));
 			this.ifolderName.ImageIndex = ((int)(resources.GetObject("ifolderName.ImageIndex")));
@@ -235,6 +250,7 @@ namespace Novell.iFolderCom
 			this.ifolderName.Location = ((System.Drawing.Point)(resources.GetObject("ifolderName.Location")));
 			this.ifolderName.Name = "ifolderName";
 			this.ifolderName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ifolderName.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.ifolderName, ((bool)(resources.GetObject("ifolderName.ShowHelp"))));
 			this.ifolderName.Size = ((System.Drawing.Size)(resources.GetObject("ifolderName.Size")));
 			this.ifolderName.TabIndex = ((int)(resources.GetObject("ifolderName.TabIndex")));
 			this.ifolderName.Text = resources.GetString("ifolderName.Text");
@@ -251,6 +267,9 @@ namespace Novell.iFolderCom
 			this.ifolderPath.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ifolderPath.Dock")));
 			this.ifolderPath.Enabled = ((bool)(resources.GetObject("ifolderPath.Enabled")));
 			this.ifolderPath.Font = ((System.Drawing.Font)(resources.GetObject("ifolderPath.Font")));
+			this.helpProvider1.SetHelpKeyword(this.ifolderPath, resources.GetString("ifolderPath.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.ifolderPath, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("ifolderPath.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.ifolderPath, resources.GetString("ifolderPath.HelpString"));
 			this.ifolderPath.Image = ((System.Drawing.Image)(resources.GetObject("ifolderPath.Image")));
 			this.ifolderPath.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ifolderPath.ImageAlign")));
 			this.ifolderPath.ImageIndex = ((int)(resources.GetObject("ifolderPath.ImageIndex")));
@@ -258,6 +277,7 @@ namespace Novell.iFolderCom
 			this.ifolderPath.Location = ((System.Drawing.Point)(resources.GetObject("ifolderPath.Location")));
 			this.ifolderPath.Name = "ifolderPath";
 			this.ifolderPath.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ifolderPath.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.ifolderPath, ((bool)(resources.GetObject("ifolderPath.ShowHelp"))));
 			this.ifolderPath.Size = ((System.Drawing.Size)(resources.GetObject("ifolderPath.Size")));
 			this.ifolderPath.TabIndex = ((int)(resources.GetObject("ifolderPath.TabIndex")));
 			this.ifolderPath.Text = resources.GetString("ifolderPath.Text");
@@ -278,11 +298,15 @@ namespace Novell.iFolderCom
 			this.conflictsView.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("conflictsView.Dock")));
 			this.conflictsView.Enabled = ((bool)(resources.GetObject("conflictsView.Enabled")));
 			this.conflictsView.Font = ((System.Drawing.Font)(resources.GetObject("conflictsView.Font")));
+			this.helpProvider1.SetHelpKeyword(this.conflictsView, resources.GetString("conflictsView.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.conflictsView, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("conflictsView.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.conflictsView, resources.GetString("conflictsView.HelpString"));
 			this.conflictsView.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("conflictsView.ImeMode")));
 			this.conflictsView.LabelWrap = ((bool)(resources.GetObject("conflictsView.LabelWrap")));
 			this.conflictsView.Location = ((System.Drawing.Point)(resources.GetObject("conflictsView.Location")));
 			this.conflictsView.Name = "conflictsView";
 			this.conflictsView.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("conflictsView.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.conflictsView, ((bool)(resources.GetObject("conflictsView.ShowHelp"))));
 			this.conflictsView.Size = ((System.Drawing.Size)(resources.GetObject("conflictsView.Size")));
 			this.conflictsView.TabIndex = ((int)(resources.GetObject("conflictsView.TabIndex")));
 			this.conflictsView.Text = resources.GetString("conflictsView.Text");
@@ -314,10 +338,14 @@ namespace Novell.iFolderCom
 			this.localVersion.Enabled = ((bool)(resources.GetObject("localVersion.Enabled")));
 			this.localVersion.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.localVersion.Font = ((System.Drawing.Font)(resources.GetObject("localVersion.Font")));
+			this.helpProvider1.SetHelpKeyword(this.localVersion, resources.GetString("localVersion.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.localVersion, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("localVersion.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.localVersion, resources.GetString("localVersion.HelpString"));
 			this.localVersion.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("localVersion.ImeMode")));
 			this.localVersion.Location = ((System.Drawing.Point)(resources.GetObject("localVersion.Location")));
 			this.localVersion.Name = "localVersion";
 			this.localVersion.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localVersion.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.localVersion, ((bool)(resources.GetObject("localVersion.ShowHelp"))));
 			this.localVersion.Size = ((System.Drawing.Size)(resources.GetObject("localVersion.Size")));
 			this.localVersion.TabIndex = ((int)(resources.GetObject("localVersion.TabIndex")));
 			this.localVersion.TabStop = false;
@@ -335,6 +363,9 @@ namespace Novell.iFolderCom
 			this.saveLocal.Enabled = ((bool)(resources.GetObject("saveLocal.Enabled")));
 			this.saveLocal.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("saveLocal.FlatStyle")));
 			this.saveLocal.Font = ((System.Drawing.Font)(resources.GetObject("saveLocal.Font")));
+			this.helpProvider1.SetHelpKeyword(this.saveLocal, resources.GetString("saveLocal.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.saveLocal, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("saveLocal.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.saveLocal, resources.GetString("saveLocal.HelpString"));
 			this.saveLocal.Image = ((System.Drawing.Image)(resources.GetObject("saveLocal.Image")));
 			this.saveLocal.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("saveLocal.ImageAlign")));
 			this.saveLocal.ImageIndex = ((int)(resources.GetObject("saveLocal.ImageIndex")));
@@ -342,6 +373,7 @@ namespace Novell.iFolderCom
 			this.saveLocal.Location = ((System.Drawing.Point)(resources.GetObject("saveLocal.Location")));
 			this.saveLocal.Name = "saveLocal";
 			this.saveLocal.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("saveLocal.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.saveLocal, ((bool)(resources.GetObject("saveLocal.ShowHelp"))));
 			this.saveLocal.Size = ((System.Drawing.Size)(resources.GetObject("saveLocal.Size")));
 			this.saveLocal.TabIndex = ((int)(resources.GetObject("saveLocal.TabIndex")));
 			this.saveLocal.Text = resources.GetString("saveLocal.Text");
@@ -359,6 +391,9 @@ namespace Novell.iFolderCom
 			this.localSize.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localSize.Dock")));
 			this.localSize.Enabled = ((bool)(resources.GetObject("localSize.Enabled")));
 			this.localSize.Font = ((System.Drawing.Font)(resources.GetObject("localSize.Font")));
+			this.helpProvider1.SetHelpKeyword(this.localSize, resources.GetString("localSize.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.localSize, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("localSize.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.localSize, resources.GetString("localSize.HelpString"));
 			this.localSize.Image = ((System.Drawing.Image)(resources.GetObject("localSize.Image")));
 			this.localSize.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("localSize.ImageAlign")));
 			this.localSize.ImageIndex = ((int)(resources.GetObject("localSize.ImageIndex")));
@@ -366,6 +401,7 @@ namespace Novell.iFolderCom
 			this.localSize.Location = ((System.Drawing.Point)(resources.GetObject("localSize.Location")));
 			this.localSize.Name = "localSize";
 			this.localSize.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localSize.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.localSize, ((bool)(resources.GetObject("localSize.ShowHelp"))));
 			this.localSize.Size = ((System.Drawing.Size)(resources.GetObject("localSize.Size")));
 			this.localSize.TabIndex = ((int)(resources.GetObject("localSize.TabIndex")));
 			this.localSize.Text = resources.GetString("localSize.Text");
@@ -382,6 +418,9 @@ namespace Novell.iFolderCom
 			this.localDate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localDate.Dock")));
 			this.localDate.Enabled = ((bool)(resources.GetObject("localDate.Enabled")));
 			this.localDate.Font = ((System.Drawing.Font)(resources.GetObject("localDate.Font")));
+			this.helpProvider1.SetHelpKeyword(this.localDate, resources.GetString("localDate.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.localDate, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("localDate.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.localDate, resources.GetString("localDate.HelpString"));
 			this.localDate.Image = ((System.Drawing.Image)(resources.GetObject("localDate.Image")));
 			this.localDate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("localDate.ImageAlign")));
 			this.localDate.ImageIndex = ((int)(resources.GetObject("localDate.ImageIndex")));
@@ -389,6 +428,7 @@ namespace Novell.iFolderCom
 			this.localDate.Location = ((System.Drawing.Point)(resources.GetObject("localDate.Location")));
 			this.localDate.Name = "localDate";
 			this.localDate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localDate.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.localDate, ((bool)(resources.GetObject("localDate.ShowHelp"))));
 			this.localDate.Size = ((System.Drawing.Size)(resources.GetObject("localDate.Size")));
 			this.localDate.TabIndex = ((int)(resources.GetObject("localDate.TabIndex")));
 			this.localDate.Text = resources.GetString("localDate.Text");
@@ -405,6 +445,9 @@ namespace Novell.iFolderCom
 			this.localName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localName.Dock")));
 			this.localName.Enabled = ((bool)(resources.GetObject("localName.Enabled")));
 			this.localName.Font = ((System.Drawing.Font)(resources.GetObject("localName.Font")));
+			this.helpProvider1.SetHelpKeyword(this.localName, resources.GetString("localName.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.localName, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("localName.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.localName, resources.GetString("localName.HelpString"));
 			this.localName.Image = ((System.Drawing.Image)(resources.GetObject("localName.Image")));
 			this.localName.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("localName.ImageAlign")));
 			this.localName.ImageIndex = ((int)(resources.GetObject("localName.ImageIndex")));
@@ -412,6 +455,7 @@ namespace Novell.iFolderCom
 			this.localName.Location = ((System.Drawing.Point)(resources.GetObject("localName.Location")));
 			this.localName.Name = "localName";
 			this.localName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localName.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.localName, ((bool)(resources.GetObject("localName.ShowHelp"))));
 			this.localName.Size = ((System.Drawing.Size)(resources.GetObject("localName.Size")));
 			this.localName.TabIndex = ((int)(resources.GetObject("localName.TabIndex")));
 			this.localName.Text = resources.GetString("localName.Text");
@@ -428,6 +472,9 @@ namespace Novell.iFolderCom
 			this.label6.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label6.Dock")));
 			this.label6.Enabled = ((bool)(resources.GetObject("label6.Enabled")));
 			this.label6.Font = ((System.Drawing.Font)(resources.GetObject("label6.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label6, resources.GetString("label6.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label6, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label6.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label6, resources.GetString("label6.HelpString"));
 			this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
 			this.label6.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label6.ImageAlign")));
 			this.label6.ImageIndex = ((int)(resources.GetObject("label6.ImageIndex")));
@@ -435,6 +482,7 @@ namespace Novell.iFolderCom
 			this.label6.Location = ((System.Drawing.Point)(resources.GetObject("label6.Location")));
 			this.label6.Name = "label6";
 			this.label6.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label6.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label6, ((bool)(resources.GetObject("label6.ShowHelp"))));
 			this.label6.Size = ((System.Drawing.Size)(resources.GetObject("label6.Size")));
 			this.label6.TabIndex = ((int)(resources.GetObject("label6.TabIndex")));
 			this.label6.Text = resources.GetString("label6.Text");
@@ -451,6 +499,9 @@ namespace Novell.iFolderCom
 			this.label5.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label5.Dock")));
 			this.label5.Enabled = ((bool)(resources.GetObject("label5.Enabled")));
 			this.label5.Font = ((System.Drawing.Font)(resources.GetObject("label5.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label5, resources.GetString("label5.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label5, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label5.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label5, resources.GetString("label5.HelpString"));
 			this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
 			this.label5.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label5.ImageAlign")));
 			this.label5.ImageIndex = ((int)(resources.GetObject("label5.ImageIndex")));
@@ -458,6 +509,7 @@ namespace Novell.iFolderCom
 			this.label5.Location = ((System.Drawing.Point)(resources.GetObject("label5.Location")));
 			this.label5.Name = "label5";
 			this.label5.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label5.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label5, ((bool)(resources.GetObject("label5.ShowHelp"))));
 			this.label5.Size = ((System.Drawing.Size)(resources.GetObject("label5.Size")));
 			this.label5.TabIndex = ((int)(resources.GetObject("label5.TabIndex")));
 			this.label5.Text = resources.GetString("label5.Text");
@@ -474,6 +526,9 @@ namespace Novell.iFolderCom
 			this.label4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label4.Dock")));
 			this.label4.Enabled = ((bool)(resources.GetObject("label4.Enabled")));
 			this.label4.Font = ((System.Drawing.Font)(resources.GetObject("label4.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label4, resources.GetString("label4.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label4, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label4.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label4, resources.GetString("label4.HelpString"));
 			this.label4.Image = ((System.Drawing.Image)(resources.GetObject("label4.Image")));
 			this.label4.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label4.ImageAlign")));
 			this.label4.ImageIndex = ((int)(resources.GetObject("label4.ImageIndex")));
@@ -481,6 +536,7 @@ namespace Novell.iFolderCom
 			this.label4.Location = ((System.Drawing.Point)(resources.GetObject("label4.Location")));
 			this.label4.Name = "label4";
 			this.label4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label4.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label4, ((bool)(resources.GetObject("label4.ShowHelp"))));
 			this.label4.Size = ((System.Drawing.Size)(resources.GetObject("label4.Size")));
 			this.label4.TabIndex = ((int)(resources.GetObject("label4.TabIndex")));
 			this.label4.Text = resources.GetString("label4.Text");
@@ -505,10 +561,14 @@ namespace Novell.iFolderCom
 			this.serverVersion.Enabled = ((bool)(resources.GetObject("serverVersion.Enabled")));
 			this.serverVersion.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.serverVersion.Font = ((System.Drawing.Font)(resources.GetObject("serverVersion.Font")));
+			this.helpProvider1.SetHelpKeyword(this.serverVersion, resources.GetString("serverVersion.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.serverVersion, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("serverVersion.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.serverVersion, resources.GetString("serverVersion.HelpString"));
 			this.serverVersion.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("serverVersion.ImeMode")));
 			this.serverVersion.Location = ((System.Drawing.Point)(resources.GetObject("serverVersion.Location")));
 			this.serverVersion.Name = "serverVersion";
 			this.serverVersion.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverVersion.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.serverVersion, ((bool)(resources.GetObject("serverVersion.ShowHelp"))));
 			this.serverVersion.Size = ((System.Drawing.Size)(resources.GetObject("serverVersion.Size")));
 			this.serverVersion.TabIndex = ((int)(resources.GetObject("serverVersion.TabIndex")));
 			this.serverVersion.TabStop = false;
@@ -526,6 +586,9 @@ namespace Novell.iFolderCom
 			this.saveServer.Enabled = ((bool)(resources.GetObject("saveServer.Enabled")));
 			this.saveServer.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("saveServer.FlatStyle")));
 			this.saveServer.Font = ((System.Drawing.Font)(resources.GetObject("saveServer.Font")));
+			this.helpProvider1.SetHelpKeyword(this.saveServer, resources.GetString("saveServer.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.saveServer, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("saveServer.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.saveServer, resources.GetString("saveServer.HelpString"));
 			this.saveServer.Image = ((System.Drawing.Image)(resources.GetObject("saveServer.Image")));
 			this.saveServer.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("saveServer.ImageAlign")));
 			this.saveServer.ImageIndex = ((int)(resources.GetObject("saveServer.ImageIndex")));
@@ -533,6 +596,7 @@ namespace Novell.iFolderCom
 			this.saveServer.Location = ((System.Drawing.Point)(resources.GetObject("saveServer.Location")));
 			this.saveServer.Name = "saveServer";
 			this.saveServer.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("saveServer.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.saveServer, ((bool)(resources.GetObject("saveServer.ShowHelp"))));
 			this.saveServer.Size = ((System.Drawing.Size)(resources.GetObject("saveServer.Size")));
 			this.saveServer.TabIndex = ((int)(resources.GetObject("saveServer.TabIndex")));
 			this.saveServer.Text = resources.GetString("saveServer.Text");
@@ -550,6 +614,9 @@ namespace Novell.iFolderCom
 			this.serverSize.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverSize.Dock")));
 			this.serverSize.Enabled = ((bool)(resources.GetObject("serverSize.Enabled")));
 			this.serverSize.Font = ((System.Drawing.Font)(resources.GetObject("serverSize.Font")));
+			this.helpProvider1.SetHelpKeyword(this.serverSize, resources.GetString("serverSize.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.serverSize, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("serverSize.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.serverSize, resources.GetString("serverSize.HelpString"));
 			this.serverSize.Image = ((System.Drawing.Image)(resources.GetObject("serverSize.Image")));
 			this.serverSize.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverSize.ImageAlign")));
 			this.serverSize.ImageIndex = ((int)(resources.GetObject("serverSize.ImageIndex")));
@@ -557,6 +624,7 @@ namespace Novell.iFolderCom
 			this.serverSize.Location = ((System.Drawing.Point)(resources.GetObject("serverSize.Location")));
 			this.serverSize.Name = "serverSize";
 			this.serverSize.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverSize.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.serverSize, ((bool)(resources.GetObject("serverSize.ShowHelp"))));
 			this.serverSize.Size = ((System.Drawing.Size)(resources.GetObject("serverSize.Size")));
 			this.serverSize.TabIndex = ((int)(resources.GetObject("serverSize.TabIndex")));
 			this.serverSize.Text = resources.GetString("serverSize.Text");
@@ -573,6 +641,9 @@ namespace Novell.iFolderCom
 			this.serverDate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverDate.Dock")));
 			this.serverDate.Enabled = ((bool)(resources.GetObject("serverDate.Enabled")));
 			this.serverDate.Font = ((System.Drawing.Font)(resources.GetObject("serverDate.Font")));
+			this.helpProvider1.SetHelpKeyword(this.serverDate, resources.GetString("serverDate.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.serverDate, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("serverDate.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.serverDate, resources.GetString("serverDate.HelpString"));
 			this.serverDate.Image = ((System.Drawing.Image)(resources.GetObject("serverDate.Image")));
 			this.serverDate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverDate.ImageAlign")));
 			this.serverDate.ImageIndex = ((int)(resources.GetObject("serverDate.ImageIndex")));
@@ -580,6 +651,7 @@ namespace Novell.iFolderCom
 			this.serverDate.Location = ((System.Drawing.Point)(resources.GetObject("serverDate.Location")));
 			this.serverDate.Name = "serverDate";
 			this.serverDate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverDate.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.serverDate, ((bool)(resources.GetObject("serverDate.ShowHelp"))));
 			this.serverDate.Size = ((System.Drawing.Size)(resources.GetObject("serverDate.Size")));
 			this.serverDate.TabIndex = ((int)(resources.GetObject("serverDate.TabIndex")));
 			this.serverDate.Text = resources.GetString("serverDate.Text");
@@ -596,6 +668,9 @@ namespace Novell.iFolderCom
 			this.serverName.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverName.Dock")));
 			this.serverName.Enabled = ((bool)(resources.GetObject("serverName.Enabled")));
 			this.serverName.Font = ((System.Drawing.Font)(resources.GetObject("serverName.Font")));
+			this.helpProvider1.SetHelpKeyword(this.serverName, resources.GetString("serverName.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.serverName, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("serverName.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.serverName, resources.GetString("serverName.HelpString"));
 			this.serverName.Image = ((System.Drawing.Image)(resources.GetObject("serverName.Image")));
 			this.serverName.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("serverName.ImageAlign")));
 			this.serverName.ImageIndex = ((int)(resources.GetObject("serverName.ImageIndex")));
@@ -603,6 +678,7 @@ namespace Novell.iFolderCom
 			this.serverName.Location = ((System.Drawing.Point)(resources.GetObject("serverName.Location")));
 			this.serverName.Name = "serverName";
 			this.serverName.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverName.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.serverName, ((bool)(resources.GetObject("serverName.ShowHelp"))));
 			this.serverName.Size = ((System.Drawing.Size)(resources.GetObject("serverName.Size")));
 			this.serverName.TabIndex = ((int)(resources.GetObject("serverName.TabIndex")));
 			this.serverName.Text = resources.GetString("serverName.Text");
@@ -619,6 +695,9 @@ namespace Novell.iFolderCom
 			this.label10.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label10.Dock")));
 			this.label10.Enabled = ((bool)(resources.GetObject("label10.Enabled")));
 			this.label10.Font = ((System.Drawing.Font)(resources.GetObject("label10.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label10, resources.GetString("label10.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label10, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label10.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label10, resources.GetString("label10.HelpString"));
 			this.label10.Image = ((System.Drawing.Image)(resources.GetObject("label10.Image")));
 			this.label10.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label10.ImageAlign")));
 			this.label10.ImageIndex = ((int)(resources.GetObject("label10.ImageIndex")));
@@ -626,6 +705,7 @@ namespace Novell.iFolderCom
 			this.label10.Location = ((System.Drawing.Point)(resources.GetObject("label10.Location")));
 			this.label10.Name = "label10";
 			this.label10.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label10.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label10, ((bool)(resources.GetObject("label10.ShowHelp"))));
 			this.label10.Size = ((System.Drawing.Size)(resources.GetObject("label10.Size")));
 			this.label10.TabIndex = ((int)(resources.GetObject("label10.TabIndex")));
 			this.label10.Text = resources.GetString("label10.Text");
@@ -642,6 +722,9 @@ namespace Novell.iFolderCom
 			this.label11.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label11.Dock")));
 			this.label11.Enabled = ((bool)(resources.GetObject("label11.Enabled")));
 			this.label11.Font = ((System.Drawing.Font)(resources.GetObject("label11.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label11, resources.GetString("label11.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label11, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label11.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label11, resources.GetString("label11.HelpString"));
 			this.label11.Image = ((System.Drawing.Image)(resources.GetObject("label11.Image")));
 			this.label11.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label11.ImageAlign")));
 			this.label11.ImageIndex = ((int)(resources.GetObject("label11.ImageIndex")));
@@ -649,6 +732,7 @@ namespace Novell.iFolderCom
 			this.label11.Location = ((System.Drawing.Point)(resources.GetObject("label11.Location")));
 			this.label11.Name = "label11";
 			this.label11.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label11.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label11, ((bool)(resources.GetObject("label11.ShowHelp"))));
 			this.label11.Size = ((System.Drawing.Size)(resources.GetObject("label11.Size")));
 			this.label11.TabIndex = ((int)(resources.GetObject("label11.TabIndex")));
 			this.label11.Text = resources.GetString("label11.Text");
@@ -665,6 +749,9 @@ namespace Novell.iFolderCom
 			this.label12.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label12.Dock")));
 			this.label12.Enabled = ((bool)(resources.GetObject("label12.Enabled")));
 			this.label12.Font = ((System.Drawing.Font)(resources.GetObject("label12.Font")));
+			this.helpProvider1.SetHelpKeyword(this.label12, resources.GetString("label12.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.label12, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("label12.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.label12, resources.GetString("label12.HelpString"));
 			this.label12.Image = ((System.Drawing.Image)(resources.GetObject("label12.Image")));
 			this.label12.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label12.ImageAlign")));
 			this.label12.ImageIndex = ((int)(resources.GetObject("label12.ImageIndex")));
@@ -672,6 +759,7 @@ namespace Novell.iFolderCom
 			this.label12.Location = ((System.Drawing.Point)(resources.GetObject("label12.Location")));
 			this.label12.Name = "label12";
 			this.label12.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label12.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.label12, ((bool)(resources.GetObject("label12.ShowHelp"))));
 			this.label12.Size = ((System.Drawing.Size)(resources.GetObject("label12.Size")));
 			this.label12.TabIndex = ((int)(resources.GetObject("label12.TabIndex")));
 			this.label12.Text = resources.GetString("label12.Text");
@@ -689,6 +777,9 @@ namespace Novell.iFolderCom
 			this.close.Enabled = ((bool)(resources.GetObject("close.Enabled")));
 			this.close.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("close.FlatStyle")));
 			this.close.Font = ((System.Drawing.Font)(resources.GetObject("close.Font")));
+			this.helpProvider1.SetHelpKeyword(this.close, resources.GetString("close.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.close, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("close.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.close, resources.GetString("close.HelpString"));
 			this.close.Image = ((System.Drawing.Image)(resources.GetObject("close.Image")));
 			this.close.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("close.ImageAlign")));
 			this.close.ImageIndex = ((int)(resources.GetObject("close.ImageIndex")));
@@ -696,6 +787,7 @@ namespace Novell.iFolderCom
 			this.close.Location = ((System.Drawing.Point)(resources.GetObject("close.Location")));
 			this.close.Name = "close";
 			this.close.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("close.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.close, ((bool)(resources.GetObject("close.ShowHelp"))));
 			this.close.Size = ((System.Drawing.Size)(resources.GetObject("close.Size")));
 			this.close.TabIndex = ((int)(resources.GetObject("close.TabIndex")));
 			this.close.Text = resources.GetString("close.Text");
@@ -703,31 +795,6 @@ namespace Novell.iFolderCom
 			this.toolTip1.SetToolTip(this.close, resources.GetString("close.ToolTip"));
 			this.close.Visible = ((bool)(resources.GetObject("close.Visible")));
 			this.close.Click += new System.EventHandler(this.close_Click);
-			// 
-			// help
-			// 
-			this.help.AccessibleDescription = resources.GetString("help.AccessibleDescription");
-			this.help.AccessibleName = resources.GetString("help.AccessibleName");
-			this.help.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("help.Anchor")));
-			this.help.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("help.BackgroundImage")));
-			this.help.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("help.Dock")));
-			this.help.Enabled = ((bool)(resources.GetObject("help.Enabled")));
-			this.help.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("help.FlatStyle")));
-			this.help.Font = ((System.Drawing.Font)(resources.GetObject("help.Font")));
-			this.help.Image = ((System.Drawing.Image)(resources.GetObject("help.Image")));
-			this.help.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("help.ImageAlign")));
-			this.help.ImageIndex = ((int)(resources.GetObject("help.ImageIndex")));
-			this.help.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("help.ImeMode")));
-			this.help.Location = ((System.Drawing.Point)(resources.GetObject("help.Location")));
-			this.help.Name = "help";
-			this.help.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("help.RightToLeft")));
-			this.help.Size = ((System.Drawing.Size)(resources.GetObject("help.Size")));
-			this.help.TabIndex = ((int)(resources.GetObject("help.TabIndex")));
-			this.help.Text = resources.GetString("help.Text");
-			this.help.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("help.TextAlign")));
-			this.toolTip1.SetToolTip(this.help, resources.GetString("help.ToolTip"));
-			this.help.Visible = ((bool)(resources.GetObject("help.Visible")));
-			this.help.Click += new System.EventHandler(this.help_Click);
 			// 
 			// versionsPanel
 			// 
@@ -743,10 +810,14 @@ namespace Novell.iFolderCom
 			this.versionsPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("versionsPanel.Dock")));
 			this.versionsPanel.Enabled = ((bool)(resources.GetObject("versionsPanel.Enabled")));
 			this.versionsPanel.Font = ((System.Drawing.Font)(resources.GetObject("versionsPanel.Font")));
+			this.helpProvider1.SetHelpKeyword(this.versionsPanel, resources.GetString("versionsPanel.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.versionsPanel, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("versionsPanel.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.versionsPanel, resources.GetString("versionsPanel.HelpString"));
 			this.versionsPanel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("versionsPanel.ImeMode")));
 			this.versionsPanel.Location = ((System.Drawing.Point)(resources.GetObject("versionsPanel.Location")));
 			this.versionsPanel.Name = "versionsPanel";
 			this.versionsPanel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("versionsPanel.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.versionsPanel, ((bool)(resources.GetObject("versionsPanel.ShowHelp"))));
 			this.versionsPanel.Size = ((System.Drawing.Size)(resources.GetObject("versionsPanel.Size")));
 			this.versionsPanel.TabIndex = ((int)(resources.GetObject("versionsPanel.TabIndex")));
 			this.versionsPanel.Text = resources.GetString("versionsPanel.Text");
@@ -766,10 +837,14 @@ namespace Novell.iFolderCom
 			this.serverPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("serverPanel.Dock")));
 			this.serverPanel.Enabled = ((bool)(resources.GetObject("serverPanel.Enabled")));
 			this.serverPanel.Font = ((System.Drawing.Font)(resources.GetObject("serverPanel.Font")));
+			this.helpProvider1.SetHelpKeyword(this.serverPanel, resources.GetString("serverPanel.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.serverPanel, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("serverPanel.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.serverPanel, resources.GetString("serverPanel.HelpString"));
 			this.serverPanel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("serverPanel.ImeMode")));
 			this.serverPanel.Location = ((System.Drawing.Point)(resources.GetObject("serverPanel.Location")));
 			this.serverPanel.Name = "serverPanel";
 			this.serverPanel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("serverPanel.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.serverPanel, ((bool)(resources.GetObject("serverPanel.ShowHelp"))));
 			this.serverPanel.Size = ((System.Drawing.Size)(resources.GetObject("serverPanel.Size")));
 			this.serverPanel.TabIndex = ((int)(resources.GetObject("serverPanel.TabIndex")));
 			this.serverPanel.Text = resources.GetString("serverPanel.Text");
@@ -789,15 +864,23 @@ namespace Novell.iFolderCom
 			this.localPanel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("localPanel.Dock")));
 			this.localPanel.Enabled = ((bool)(resources.GetObject("localPanel.Enabled")));
 			this.localPanel.Font = ((System.Drawing.Font)(resources.GetObject("localPanel.Font")));
+			this.helpProvider1.SetHelpKeyword(this.localPanel, resources.GetString("localPanel.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this.localPanel, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("localPanel.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this.localPanel, resources.GetString("localPanel.HelpString"));
 			this.localPanel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("localPanel.ImeMode")));
 			this.localPanel.Location = ((System.Drawing.Point)(resources.GetObject("localPanel.Location")));
 			this.localPanel.Name = "localPanel";
 			this.localPanel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("localPanel.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this.localPanel, ((bool)(resources.GetObject("localPanel.ShowHelp"))));
 			this.localPanel.Size = ((System.Drawing.Size)(resources.GetObject("localPanel.Size")));
 			this.localPanel.TabIndex = ((int)(resources.GetObject("localPanel.TabIndex")));
 			this.localPanel.Text = resources.GetString("localPanel.Text");
 			this.toolTip1.SetToolTip(this.localPanel, resources.GetString("localPanel.ToolTip"));
 			this.localPanel.Visible = ((bool)(resources.GetObject("localPanel.Visible")));
+			// 
+			// helpProvider1
+			// 
+			this.helpProvider1.HelpNamespace = resources.GetString("helpProvider1.HelpNamespace");
 			// 
 			// ConflictResolver
 			// 
@@ -810,7 +893,6 @@ namespace Novell.iFolderCom
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.versionsPanel);
-			this.Controls.Add(this.help);
 			this.Controls.Add(this.close);
 			this.Controls.Add(this.conflictsView);
 			this.Controls.Add(this.ifolderPath);
@@ -820,6 +902,10 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.label1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.HelpButton = true;
+			this.helpProvider1.SetHelpKeyword(this, resources.GetString("$this.HelpKeyword"));
+			this.helpProvider1.SetHelpNavigator(this, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("$this.HelpNavigator"))));
+			this.helpProvider1.SetHelpString(this, resources.GetString("$this.HelpString"));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
 			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
@@ -829,6 +915,7 @@ namespace Novell.iFolderCom
 			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "ConflictResolver";
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.helpProvider1.SetShowHelp(this, ((bool)(resources.GetObject("$this.ShowHelp"))));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.toolTip1.SetToolTip(this, resources.GetString("$this.ToolTip"));
@@ -930,6 +1017,10 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void ConflictResolver_Load(object sender, System.EventArgs e)
 		{
+			// TODO: Load the correct page when it becomes available.
+			// Reference the help using locale-specific path.
+			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(loadPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\front.html");
+
 			try
 			{
 				string basePath = loadPath != null ? Path.Combine(loadPath, "res") : Path.Combine(Application.StartupPath, "res");

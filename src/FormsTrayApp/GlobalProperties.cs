@@ -1246,7 +1246,7 @@ namespace Novell.FormsTrayApp
 				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
 				menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
 				menuSeparator1.Visible = menuSeparator2.Visible =
-				menuResolve.Visible = menuActionResolve.Visible = 
+				menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
 				menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
 				menuActionSeparator2.Visible =
 				menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
@@ -1642,7 +1642,7 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-			menuResolve.Visible = menuActionResolve.Visible = 
+			menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
 				(ifolderWeb != null) && ifolderWeb.HasConflicts;
 
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
