@@ -183,7 +183,14 @@ namespace Simias.Storage
 		/// </summary>
 		public enum LogState
 		{
+			/// <summary>
+			/// The log file has been closed.
+			/// </summary>
 			Closed,
+
+			/// <summary>
+			/// The log file is open.
+			/// </summary>
 			Opened
 		};
 

@@ -59,7 +59,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets or sets the file creation time in the metadata.
 		/// </summary>
-		public DateTime CreationTime
+		new public DateTime CreationTime
 		{
 			get 
 			{ 

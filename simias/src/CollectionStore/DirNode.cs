@@ -47,7 +47,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the directory creation time.
 		/// </summary>
-		public DateTime CreationTime
+		new public DateTime CreationTime
 		{
 			get 
 			{ 

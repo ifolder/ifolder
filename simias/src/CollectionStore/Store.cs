@@ -50,11 +50,6 @@ namespace Simias.Storage
 		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Store ) );
 
 		/// <summary>
-		/// Cross process member used to control access to the constructor.
-		/// </summary>
-		static private string ctorLock = "";
-
-		/// <summary>
 		/// Directory where store-managed files are kept.
 		/// </summary>
 		static private string storeManagedDirectoryName = "CollectionFiles";
@@ -225,156 +220,148 @@ namespace Simias.Storage
 		/// or open the database.</param>
 		private Store( Configuration config )
 		{
-			lock( ctorLock )
+			bool created;
+
+			// Store the configuration that opened this instance.
+			this.config = config;
+
+			// Setup the event publisher object.
+			eventPublisher = new EventPublisher( config );
+
+			// Create or open the underlying database.
+			storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );
+
+			// Set the path to the store.
+			storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
+
+			// Either create the store or authenticate to it.
+			if ( created )
 			{
-				bool created;
-
-				// Store the configuration that opened this instance.
-				this.config = config;
-
-				// Setup the event publisher object.
-				eventPublisher = new EventPublisher( config );
-
-				// Create or open the underlying database.
-				storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );
-
-				// Set the path to the store.
-				storeManagedPath = Path.Combine( storageProvider.StoreDirectory.LocalPath, storeManagedDirectoryName );
-
-				// Either create the store or authenticate to it.
-				if ( created )
+				try
 				{
-					try
-					{
-						ArrayList nodeList = new ArrayList();
+					ArrayList nodeList = new ArrayList();
 
-						// Create an object that represents the database collection.
-						localDb = new LocalDatabase( this );
-						nodeList.Add( localDb );
-
-						// Create the database lock.
-						storeMutex = new SimiasMutex( ID );
-
-						// Create an identity that represents the current user.  This user will become the 
-						// database owner. Add the domain mapping to the identity.
-						identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
-						nodeList.Add( identity );
-
-						// Create the default workgroup domain.
-						Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
-						nodeList.Add( wgDomain );
-
-						// Create an identity mapping for the workgroup.
-						identity.AddDomainIdentity( identity.ID, wgDomain.ID );
-
-						// Create an empty roster for the workgroup domain.
-						Roster wgRoster = new Roster( this, wgDomain );
-						wgRoster.Commit();
-
-						// See if there is a configuration parameter for an enterprise domain.
-						if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
-						{
-							// Get the name of the enterprise domain.
-							string enterpriseName = config.Get( Domain.SectionName, Domain.EnterpriseName, String.Empty );
-							if ( enterpriseName == String.Empty )
-							{
-								throw new CollectionStoreException( "Enterprise name is empty." );
-							}
-
-							// Check if an enterprise ID was specified or if it needs to be generated.
-							string enterpriseID = config.Get( Domain.SectionName, Domain.EnterpriseID, Guid.NewGuid().ToString().ToLower() );
-
-							// Check if there is a description for this enterprise domain.
-							string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
-
-							// Create the new domain object.
-							Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
-							nodeList.Add( eDomain );
-
-							// Add the domain identity mapping.
-							identity.AddDomainIdentity( identity.ID, eDomain.ID );
-
-							// Add the enterprise domain as the default domain.
-							localDb.DefaultDomain = eDomain.ID;
-
-							// Create a domain roster that will contain the member of the domain.
-							Roster roster = new Roster( this, eDomain );
-							roster.Commit();
-						}
-
-						// Save the local database changes.
-						localDb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
-					}
-					catch ( Exception e )
-					{
-						// Log this error.
-						log.Fatal( e, "Could not initialize Collection Store." );
-
-						// The store didn't initialize delete it and rethrow the exception.
-						if ( storageProvider != null )
-						{
-							storageProvider.DeleteStore();
-							storageProvider.Dispose();
-						}
-
-						// Rethrow the exception.
-						throw;
-					}
-				}
-				else
-				{
-					// Get the local database object.
-					if ( GetDatabaseObject() == null )
-					{
-						throw new DoesNotExistException( "Local database object does not exist." );
-					}
-
-					// Get the identity object that represents this logged on user.
-					ICSList list = localDb.Search( BaseSchema.ObjectType, NodeTypes.IdentityType, SearchOp.Equal );
-					foreach ( ShallowNode sn in list )
-					{
-						if ( sn.Name == Environment.UserName )
-						{
-							identity = new Identity( localDb, sn );
-							break;
-						}
-					}
-
-					// Make sure that the identity was found.
-					if ( identity == null )
-					{
-						throw new DoesNotExistException( String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
-					}
+					// Create an object that represents the database collection.
+					localDb = new LocalDatabase( this );
+					nodeList.Add( localDb );
 
 					// Create the database lock.
 					storeMutex = new SimiasMutex( ID );
+
+					// Create an identity that represents the current user.  This user will become the 
+					// database owner. Add the domain mapping to the identity.
+					identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
+					nodeList.Add( identity );
+
+					// Create the default workgroup domain.
+					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
+					nodeList.Add( wgDomain );
+
+					// Create an identity mapping for the workgroup.
+					identity.AddDomainIdentity( identity.ID, wgDomain.ID );
+
+					// Create an empty roster for the workgroup domain.
+					Roster wgRoster = new Roster( this, wgDomain );
+					wgRoster.Commit();
+
+					// See if there is a configuration parameter for an enterprise domain.
+					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
+					{
+						// Get the name of the enterprise domain.
+						string enterpriseName = config.Get( Domain.SectionName, Domain.EnterpriseName, String.Empty );
+						if ( enterpriseName == String.Empty )
+						{
+							throw new CollectionStoreException( "Enterprise name is empty." );
+						}
+
+						// Check if an enterprise ID was specified or if it needs to be generated.
+						string enterpriseID = config.Get( Domain.SectionName, Domain.EnterpriseID, Guid.NewGuid().ToString().ToLower() );
+
+						// Check if there is a description for this enterprise domain.
+						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
+
+						// Create the new domain object.
+						Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
+						nodeList.Add( eDomain );
+
+						// Add the domain identity mapping.
+						identity.AddDomainIdentity( identity.ID, eDomain.ID );
+
+						// Add the enterprise domain as the default domain.
+						localDb.DefaultDomain = eDomain.ID;
+
+						// Create a domain roster that will contain the member of the domain.
+						Roster roster = new Roster( this, eDomain );
+						roster.Commit();
+					}
+
+					// Save the local database changes.
+					localDb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
 				}
+				catch ( Exception e )
+				{
+					// Log this error.
+					log.Fatal( e, "Could not initialize Collection Store." );
+
+					// The store didn't initialize delete it and rethrow the exception.
+					if ( storageProvider != null )
+					{
+						storageProvider.DeleteStore();
+						storageProvider.Dispose();
+					}
+
+					// Rethrow the exception.
+					throw;
+				}
+			}
+			else
+			{
+				// Get the local database object.
+				if ( GetDatabaseObject() == null )
+				{
+					throw new DoesNotExistException( "Local database object does not exist." );
+				}
+
+				// Get the identity object that represents this logged on user.
+				ICSList list = localDb.Search( BaseSchema.ObjectType, NodeTypes.IdentityType, SearchOp.Equal );
+				foreach ( ShallowNode sn in list )
+				{
+					if ( sn.Name == Environment.UserName )
+					{
+						identity = new Identity( localDb, sn );
+						break;
+					}
+				}
+
+				// Make sure that the identity was found.
+				if ( identity == null )
+				{
+					throw new DoesNotExistException( String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
+				}
+
+				// Create the database lock.
+				storeMutex = new SimiasMutex( ID );
 			}
 		}
 		#endregion
 
 		#region Factory  Methods
-
+		/// <summary>
+		/// Gets a handle to the Collection store.
+		/// </summary>
+		/// <returns>A reference to a Store object.</returns>
 		static public Store GetStore()
 		{
-			lock (typeof(Store))
+			lock ( typeof( Store ) )
 			{
-				if (instance == null)
-					CreateDefaultStore();
+				if ( instance == null )
+				{
+					instance = new Store( Configuration.GetConfiguration() );
+				}
+
 				return instance;
 			}
 		}
-
-		static private Store CreateDefaultStore()
-		{
-			if (instance != null)
-			{
-				throw(new SimiasException("Default store already exists"));
-			}
-			instance = new Store(Configuration.GetConfiguration());
-			return instance;
-		}
-
 		#endregion
 
 		#region Internal Methods

@@ -173,6 +173,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the creation time for this object.
+		/// </summary>
+		public DateTime CreationTime
+		{
+			get { return ( DateTime )properties.GetSingleProperty( PropertyTags.NodeCreationTime ).Value; }
+		}
+
+		/// <summary>
 		/// Gets the globally unique identifier for this object.
 		/// </summary>
 		public string ID

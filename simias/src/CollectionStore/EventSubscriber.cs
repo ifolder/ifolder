@@ -132,7 +132,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Creates a Subscriber to watch the specified Collection.
 		/// </summary>
-		/// <param name="conf">Configuration Object.</param>
 		/// <param name="collectionId">The collection to watch for events.</param>
 		public EventSubscriber(string collectionId)
 		{
@@ -152,7 +151,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Create a Subscriber to monitor changes in the complete Collection Store.
 		/// </summary>
-		/// <param name="conf">Configuration object.</param>
 		public EventSubscriber() :
 			this((string)null)
 		{

@@ -194,12 +194,12 @@ namespace Simias.Storage
 			state = PropertyListState.Add;
 
 			// Set the default properties for this object.
+			AddNodeProperty( PropertyTags.NodeCreationTime, DateTime.Now );
+			AddNodeProperty( PropertyTags.LocalIncarnation, ( ulong )0 );
+
 			Property mvProp = new Property( PropertyTags.MasterIncarnation, ( ulong )0 );
 			mvProp.LocalProperty = true;
 			AddNodeProperty( mvProp );
-
-			Property lvProp = new Property( PropertyTags.LocalIncarnation, ( ulong )0 );
-			AddNodeProperty( lvProp );
 		}
 
 		/// <summary>
