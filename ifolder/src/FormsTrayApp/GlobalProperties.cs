@@ -2477,20 +2477,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuHelpHelp_Click(object sender, System.EventArgs e)
 		{
-			// TODO: i18n - need to use locale-specific path
-			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
-
-			try
-			{
-				Process.Start(helpPath);
-			}
-			catch (Exception ex)
-			{
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
-				mmb.Message = resourceManager.GetString("helpFileError") + "\n" + helpPath;
-				mmb.Details = ex.Message;
-				mmb.ShowDialog();
-			}
+			new iFolderComponent().ShowHelp(Application.StartupPath);
 		}
 
 		private void menuHelpAbout_Click(object sender, System.EventArgs e)

@@ -4903,9 +4903,6 @@
 	<data name="saveProxyError">
 		<value>An error was encountered while saving the proxy settings.</value>
 	</data>
-	<data name="helpFileError">
-		<value>An error was encountered while opening the help file.</value>
-	</data>
 	<data name="iFolderOpenError">
 		<value>Unable to open iFolder {0}.</value>
 	</data>

@@ -425,12 +425,24 @@ namespace Novell.iFolderCom
 		{
 			string languageDirectory;
 
-			// TODO: i18n - add other languages
 			switch (CultureInfo.CurrentCulture.Name)
 			{
+				case "pt-BR":
+				case "fr-FR":
+				case "de":
+				case "it-IT":
+				case "ja-JP":
+				case "ru-RU":
+				case "es":
+				{
+					languageDirectory = CultureInfo.CurrentCulture.Name;
+					break;
+				}
 				default:
+				{
 					languageDirectory = "en";
 					break;
+				}
 			}
 
 			return languageDirectory;
