@@ -55,6 +55,24 @@ namespace Simias.Client
 		static private IProcEventClient eventClient = null;
 		#endregion
 
+		#region Constructor
+		// TODO: Remove this when the mono heap doesn't grow forever.
+		/// <summary>
+		/// Static constructor for the Manager class.
+		/// </summary>
+		static Manager()
+		{
+			// Setup an event listener waiting for a restart event.
+			if ( MyEnvironment.Mono )
+			{
+				eventClient = new IProcEventClient( new IProcEventError( ErrorHandler ), null );
+				eventClient.SetEvent( IProcEventAction.AddNotifyMessage, new IProcEventHandler( EventHandler ) );
+				eventClient.Register();
+			}
+		}
+		// TODO: End
+		#endregion
+
 		#region Properties
 		/// <summary>
 		/// Gets the path to the web service directory. Returns a null if the web service path
@@ -273,15 +291,25 @@ namespace Simias.Client
 
 			// Stay in the ping loop until the service comes up successfully.
 			bool serviceStarted = false;
+			int count = 0;
 			while ( !serviceStarted )
 			{
 				try
 				{
 					service.GetSimiasInformation();
 					serviceStarted = true;
+					// TODO: DEBUG
+					Console.WriteLine( "Services restarted." );
+					// TODO: END DEBUG
 				}
 				catch
 				{
+					// TODO: DEBUG
+					if ( ( count++ % 100 ) == 0 )
+					{
+						Console.WriteLine( "Waiting for services to restart." );
+					}
+					// TODO: END DEBUG
 					Thread.Sleep( 100 );
 				}
 			}
@@ -377,16 +405,6 @@ namespace Simias.Client
 					appDomainUnloadEvent = new EventHandler( XspProcessExited );
 					webProcess.Exited += appDomainUnloadEvent;
 
-					// TODO: Remove this when the mono heap doesn't grow forever.
-					// Setup an event listener waiting for a restart event.
-					if ( MyEnvironment.Mono )
-					{
-						eventClient = new IProcEventClient( new IProcEventError( ErrorHandler ), null );
-						eventClient.SetEvent( IProcEventAction.AddNotifyMessage, new IProcEventHandler( EventHandler ) );
-						eventClient.Register();
-					}
-					// TODO: End
-
 					// Get the web service path from the configuration file.
 					Configuration config = new Configuration();
 					string webPath = config.Get( CFG_Section, CFG_WebServicePath );
@@ -462,15 +480,6 @@ namespace Simias.Client
 			{
 				if ( webProcess != null )
 				{
-					// TODO: Remove this when mono compacts the heap.
-					// Unregister the event listener.
-					if ( MyEnvironment.Mono && ( eventClient != null ) )
-					{
-						eventClient.Deregister();
-						eventClient = null;
-					}
-					// TODO: End
-
 					// Remove the exit event handler before shutting down the process.
 					webProcess.Exited -= appDomainUnloadEvent;
 

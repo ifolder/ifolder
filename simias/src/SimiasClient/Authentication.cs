@@ -163,6 +163,10 @@ namespace Simias.Client
 					// been set on this process previously.
 					if (this.password == null)
 					{
+						// DEBUG
+						if (MyEnvironment.Mono)
+							Console.WriteLine("Password is null.");
+
 						NetCredential netCredential = new NetCredential(
 							this.serviceName, 
 							this.domainID, 
@@ -177,10 +181,17 @@ namespace Simias.Client
 
 						if (credentials != null)
 						{
+							// DEBUG
+							if (MyEnvironment.Mono)
+								Console.WriteLine("Retrieved credentials.");
+
 							this.password = credentials.Password;
 						}
 						else
 						{
+							if (MyEnvironment.Mono)
+								Console.WriteLine("Failed to get credentials.");
+
 //							PasswordDialog pwdDlg = 
 //								new PasswordDialog(this.dialogTitle, cInfo.Name);
 //							pwdDlg.Invoke(this.owner);
@@ -208,12 +219,26 @@ namespace Simias.Client
 						if (webEx.Status == System.Net.WebExceptionStatus.ProtocolError ||
 							webEx.Status == System.Net.WebExceptionStatus.TrustFailure)
 						{
+							// DEBUg
+							if (MyEnvironment.Mono)
+								Console.WriteLine("Invalid credentials");
+
 							status = AuthenticationStatus.InvalidCredentials;
 						}
 						else
-						if (webEx.Status == System.Net.WebExceptionStatus.ConnectFailure)
+							if (webEx.Status == System.Net.WebExceptionStatus.ConnectFailure)
 						{
+							// DEBUG
+							if (MyEnvironment.Mono)
+								Console.WriteLine("ConnectDomainFailure");
+
 							status = AuthenticationStatus.ConnectDomainFailure;
+						}
+						// DEBUG
+						else
+						{
+							if (MyEnvironment.Mono)
+								Console.WriteLine("Caught web exception: {0}", webEx.Message);
 						}
 					}
 
@@ -245,7 +270,13 @@ namespace Simias.Client
 					status = AuthenticationStatus.InvalidDomain;
 				}
 			}
-			catch{}
+			catch(Exception ex)
+			{
+				// DEBUG
+				if (MyEnvironment.Mono)
+					Console.WriteLine("Authentication - caught exception: {0}", ex.Message);
+			}
+
 			return(status);
 		}
 	}

@@ -228,12 +228,17 @@ namespace Novell.iFolder
 
 				case "Simias-Restart":
 				{
+					// DEBUG
+					Console.WriteLine("Received the Simias-Restart event.");
 					simiasRestarted = true;
 					break;
 				}
 
 				case "EventService-Up":
 				{
+					// DEBUG
+					Console.WriteLine("Received the EventService-Up event.");
+
 					// See if simias was restarted and credentials need
 					// to be reset.
 					if (simiasRestarted)
@@ -248,6 +253,9 @@ namespace Novell.iFolder
 
 						AuthenticationStatus authStatus =
 							domainAuth.Authenticate();
+
+						// DEBUG
+						Console.WriteLine("Authentication status = {0}", authStatus.ToString());
 
 						if (authStatus != AuthenticationStatus.Success)
 							ReLogin(redomainID);
