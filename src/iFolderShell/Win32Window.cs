@@ -11,6 +11,7 @@ namespace Win32Util
 	/// Encapsulates window functions that aren't in the framework.
 	/// NOTE: This class is not thread-safe. 
 	/// </summary>
+	[ComVisible(false)]
 	public class Win32Window
 	{
 		IntPtr window;
@@ -97,6 +98,7 @@ namespace Win32Util
 }
 
 [StructLayout(LayoutKind.Sequential)]
+[ComVisible(false)]
 public struct IFSHFILEINFO
 {
 	public IntPtr hIcon;

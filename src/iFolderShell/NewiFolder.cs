@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 using System.IO;
 using Simias;
 using Win32Util;
@@ -12,6 +13,7 @@ namespace Novell.iFolder.iFolderCom
 	/// <summary>
 	/// Summary description for NewiFolder.
 	/// </summary>
+	[ComVisible(false)]
 	public class NewiFolder : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.Button close;

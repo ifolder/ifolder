@@ -389,9 +389,6 @@ namespace Novell.iFolder.iFolderCom
 					{
 						// Remove the ACE and don't send an invitation.
 						ifolder.RemoveRights(slContact.CurrentContact);
-
-						// Remove this entry from the list.
-						removedList.Remove(slContact);
 					}
 					catch (Exception e)
 					{
@@ -399,6 +396,9 @@ namespace Novell.iFolder.iFolderCom
 						MessageBox.Show("Remove failed with the following exception: \n\n" + e.Message, "Remove Failure");
 					}
 				}
+
+				// Clear the list.
+				removedList.Clear();
 			}
 
 			// Restore the cursor.
@@ -709,6 +709,8 @@ namespace Novell.iFolder.iFolderCom
 					// Check to see if this contact was originally in the list.
 					if (this.removedList != null)
 					{
+						ShareListContact slContactToRemove = null;
+
 						foreach (ShareListContact slContact in removedList)
 						{
 							if (c.ID == slContact.CurrentContact.ID)
@@ -719,10 +721,13 @@ namespace Novell.iFolder.iFolderCom
 								shareContact.CurrentContact = c;
 								shareContact.Added = false;
 								shareContact.Changed = true;
-								removedList.Remove(slContact);
+								slContactToRemove = slContact;
 								break;
 							}
 						}
+
+						if (slContactToRemove != null)
+							removedList.Remove(slContactToRemove);
 					}
 
 					if (shareContact == null)
@@ -886,6 +891,7 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 	}
 
+	[ComVisible(false)]
 	public class ShareListContact
 	{
 		private Contact contact;
