@@ -233,6 +233,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Rights" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetOwnerResponse">

@@ -37,6 +37,7 @@ namespace Novell.iFolder.Web
 		public string Rights;
 		public string ID;
 		public string State;
+		public string iFolderID;
 
 		public iFolderUser()
 		{
@@ -58,6 +59,7 @@ namespace Novell.iFolder.Web
 			this.UserID = sub.ToIdentity;
 			this.Rights = sub.SubscriptionRights.ToString();
 			this.ID = sub.ID;
+			this.iFolderID = sub.SubscriptionCollectionID;
 			this.State = "Invited";
 
 			if(sub.SubscriptionState == 
