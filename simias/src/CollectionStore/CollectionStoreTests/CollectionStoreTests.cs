@@ -1485,41 +1485,6 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
-		///  Tests the StoreFileNode object.
-		/// </summary>
-		[Test]
-		public void StoreFileNodeTest()
-		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
-			try
-			{
-				// Create a file in the file system.
-				string filePath = Path.Combine( Directory.GetCurrentDirectory(), "Test.txt" );
-				FileStream fs = new FileStream( filePath, FileMode.Create, FileAccess.Write, FileShare.None );
-				StreamWriter sw = new StreamWriter( fs );
-				sw.WriteLine( "This is a test" );
-				sw.Close();
-
-				// Create the store managed file.
-				fs = new FileStream( filePath, FileMode.Open, FileAccess.Read, FileShare.None );
-				StoreFileNode sfn = new StoreFileNode( collection, "CS_TestFile", fs );
-
-				// Make sure the file got copied.
-				FileInfo fInfo = new FileInfo( sfn.GetFullPath( collection ) );
-				if ( !fInfo.Exists || ( fInfo.Length != fs.Length ) )
-				{
-					fs.Close();
-					throw new ApplicationException( "Store managed file did not get created." );
-				}
-
-				fs.Close();
-			}
-			finally
-			{
-			}
-		}
-
-		/// <summary>
 		///  Tests the Enumeration of nodes in a collection.
 		/// </summary>
 		[Test]
@@ -1557,6 +1522,66 @@ namespace Simias.Storage.Tests
 				if ( count != 10 )
 				{
 					throw new ApplicationException( "Enumeration failed." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
+		///  Tests the StoreFileNode objects.
+		/// </summary>
+		[Test]
+		public void StoreFileNodeTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection" );
+			try
+			{
+				// Create a file in the file system.
+				string filePath = Path.Combine( Directory.GetCurrentDirectory(), "StoreFileNodeTest.txt" );
+				FileStream fs = new FileStream( filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
+				StreamWriter sw = new StreamWriter( fs );
+				sw.WriteLine( "This is a test" );
+				sw.Flush();
+
+				// Position the stream back to the beginning.
+				fs.Position = 0;
+
+				// Create the Node object.
+				StoreFileNode sfn = new StoreFileNode( collection, "MyFile", fs );
+
+				// The file should not exist yet.
+				if ( File.Exists( sfn.GetFullPath( collection ) ) )
+				{
+					throw new ApplicationException( "Store managed file should not exist yet." );
+				}
+
+				collection.Commit( sfn );
+
+				// Now the file should exist.
+				if ( !File.Exists( sfn.GetFullPath( collection ) ) )
+				{
+					throw new ApplicationException( "Store managed file should exist." );
+				}
+
+				// Delete the node object and the file should still exist.
+				collection.Delete( sfn );
+
+				// The file should still exist.
+				if ( !File.Exists( sfn.GetFullPath( collection ) ) )
+				{
+					throw new ApplicationException( "Store managed file should exist after delete." );
+				}
+
+				// Commit the change.
+				collection.Commit( sfn );
+
+				// The file should not exist.
+				if ( File.Exists( sfn.GetFullPath( collection ) ) )
+				{
+					throw new ApplicationException( "Store managed file should not exist after delete and commit." );
 				}
 			}
 			finally

@@ -31,9 +31,19 @@ namespace Simias.Storage
 	/// </summary>
 	public class StoreFileNode : BaseFileNode
 	{
+		#region Class Members
+		/// <summary>
+		/// Memory stream object used to buffer the StoreFileNode data until it is committed.
+		/// </summary>
+		private Stream nodeStream = null;
+		#endregion
+
 		#region Constructor
 		/// <summary>
 		/// Constructor used to create a new StoreFileNode object.
+		/// 
+		/// Note: The Stream object parameter that is passed to this constructor becomes owned by the
+		/// StoreFileNode object and should not be manipulated or closed by the caller.
 		/// </summary>
 		/// <param name="collection">Collection that this StoreFileNode object will be associated with.</param>
 		/// <param name="name">Name of this StoreFileNode object.</param>
@@ -45,6 +55,9 @@ namespace Simias.Storage
 
 		/// <summary>
 		/// Constructor used to create a new StoreFileNode object with a specified ID.
+		/// 
+		/// Note: The Stream object parameter that is passed to this constructor becomes owned by the
+		/// StoreFileNode object and should not be manipulated or closed by the caller.
 		/// </summary>
 		/// <param name="collection">Collection that this StoreFileNode object will be associated with.</param>
 		/// <param name="name">Name of this StoreFileNode object.</param>
@@ -53,34 +66,8 @@ namespace Simias.Storage
 		public StoreFileNode( Collection collection, string name, string fileID, Stream stream ) :
 			base( collection, name, fileID, NodeTypes.StoreFileNodeType )
 		{
-			// Create the managed file path.
-			string managedFile = Path.Combine( collection.ManagedPath, fileID.ToLower() );
-
-			// Create a file in the managed directory and copy the stream into it.
-			FileStream fs = File.Open( managedFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
-
-			// Copy the stream data.
-			byte[] buffer = new byte[ 4096 ];
-			int bytesRead = stream.Read( buffer, 0, buffer.Length );
-
-			while ( bytesRead > 0 )
-			{
-				fs.Write( buffer, 0, bytesRead );
-				bytesRead = stream.Read( buffer, 0, buffer.Length );
-			}
-
-			// Close the file.
-			fs.Close();
-
-			// Update the file properties. Make sure that the file exists.
-			FileInfo fInfo = new FileInfo( managedFile );
-			if ( fInfo.Exists )
-			{
-				properties.AddNodeProperty( PropertyTags.FileCreationTime, fInfo.CreationTime );
-				properties.AddNodeProperty( PropertyTags.FileLastAccessTime, fInfo.LastAccessTime );
-				properties.AddNodeProperty( PropertyTags.FileLastWriteTime, fInfo.LastWriteTime );
-				properties.AddNodeProperty( PropertyTags.FileLength, fInfo.Length );
-			}
+			// Hold the stream object until the object is committed.
+			nodeStream = stream;
 		}
 
 		/// <summary>
@@ -88,12 +75,44 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="collection">Collection that the Node object belongs to.</param>
 		/// <param name="node">Node object to create StoreFileNode object from.</param>
-		protected StoreFileNode( Collection collection, Node node ) :
+		public StoreFileNode( Collection collection, Node node ) :
 			base ( node )
 		{
 			if ( !collection.IsType( node, NodeTypes.StoreFileNodeType ) )
 			{
 				throw new ApplicationException( "Cannot construct object from specified type." );
+			}
+		}
+		#endregion
+
+		#region Internal Methods
+		/// <summary>
+		/// If any stream data is buffer on the object, it is flushed to disk.
+		/// </summary>
+		/// <param name="collection">Collection that this Node object belongs to.</param>
+		internal void FlushStreamData( Collection collection )
+		{
+			if ( nodeStream != null )
+			{
+				// Create the managed file path.
+				string managedFile = Path.Combine( collection.ManagedPath, id );
+
+				// Create the store managed file.
+				FileStream fs = File.Open( managedFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None );
+
+				// Copy the data.
+				byte[] buffer = new byte[ 64 * 1024 ];
+				int bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
+				while ( bytesRead > 0 )
+				{
+					fs.Write( buffer, 0, bytesRead );
+					bytesRead = nodeStream.Read( buffer, 0, buffer.Length );
+				}
+
+				// Close the all of the streams.
+				fs.Close();
+				nodeStream.Close();
+				nodeStream = null;
 			}
 		}
 		#endregion

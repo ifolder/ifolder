@@ -418,6 +418,12 @@ namespace Simias.Storage
 						// Increment the local incarnation number for the object.
 						IncrementLocalIncarnation( node );
 
+						// If this is a StoreFileNode, commit the buffered stream to disk.
+						if ( IsType( node, NodeTypes.StoreFileNodeType ) )
+						{
+							( node as StoreFileNode ).FlushStreamData( this );
+						}
+
 						// Copy the XML node over to the modify document.
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
@@ -439,6 +445,17 @@ namespace Simias.Storage
 							}
 							else
 							{
+								// If this is a StoreFileNode object, delete the store managed file.
+								if ( IsType( node, NodeTypes.StoreFileNodeType ) )
+								{
+									try
+									{
+										// Delete the file.
+										File.Delete( ( node as StoreFileNode ).GetFullPath( this ) );
+									}
+									catch {}
+								}
+
 								// Convert this Node object to a Tombstone.
 								ChangeToTombstone( node );
 
