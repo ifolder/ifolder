@@ -173,6 +173,7 @@ namespace Novell.iFolderCom
 			this.ifolderPath.Name = "ifolderPath";
 			this.ifolderPath.Size = new System.Drawing.Size(312, 16);
 			this.ifolderPath.TabIndex = 4;
+			this.ifolderPath.Paint += new System.Windows.Forms.PaintEventHandler(this.ifolderPath_Paint);
 			// 
 			// conflictsView
 			// 
@@ -467,9 +468,10 @@ namespace Novell.iFolderCom
 		#region Event Handlers
 		private void ConflictResolver_Load(object sender, System.EventArgs e)
 		{
-			// TODO: Load the icons
 			try
 			{
+				string basePath = loadPath != null ? Path.Combine(loadPath, "res") : Path.Combine(Application.StartupPath, "res");
+				this.Icon = new Icon(Path.Combine(basePath, "ifolderconflict.ico"));
 			}
 			catch
 			{
@@ -480,6 +482,7 @@ namespace Novell.iFolderCom
 			{
 				// Display the iFolder info.
 				ifolderName.Text = ifolder.Name;
+				// TODO: this string may get clipped ... provide a tooltip popup for displaying the complete string.
 				ifolderPath.Text = ifolder.UnManagedPath;
 
 				// Put the conflicts in the listview.
@@ -558,5 +561,10 @@ namespace Novell.iFolderCom
 			this.Close();
 		}
 		#endregion
+
+		private void ifolderPath_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			SizeF stringSize = e.Graphics.MeasureString(ifolderPath.Text, ifolderPath.Font);
+		}
 	}
 }

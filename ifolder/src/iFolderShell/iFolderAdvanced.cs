@@ -736,23 +736,33 @@ namespace Novell.iFolderCom
 
 		private void updateDiskQuotaDisplay()
 		{
-			connectToWebService();
-			DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(ifolder.ID);
-			if (diskSpace.Limit != 0)
+			try
 			{
-				total.Text = limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
-				setLimit.Checked = true;
+				connectToWebService();
+				DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(ifolder.ID);
+				if (diskSpace.Limit != 0)
+				{
+					total.Text = limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+					setLimit.Checked = true;
 
-				double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
-				used.Text = usedSpace.ToString();
-				available.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
+					double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+					used.Text = usedSpace.ToString();
+					available.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
 
-				gaugeChart.MaxValue = diskSpace.Limit / megaByte;
-				gaugeChart.Used = usedSpace;
-				gaugeChart.BarColor = SystemColors.ActiveCaption;
+					gaugeChart.MaxValue = diskSpace.Limit / megaByte;
+					gaugeChart.Used = usedSpace;
+					gaugeChart.BarColor = SystemColors.ActiveCaption;
+				}
+				else
+				{
+					setLimit.Checked = false;
+					total.Text = used.Text = available.Text = limit.Text = "";
+					gaugeChart.Used = 0;
+				}
 			}
-			else
+			catch
 			{
+				// TODO: Message?
 				setLimit.Checked = false;
 				total.Text = used.Text = available.Text = limit.Text = "";
 				gaugeChart.Used = 0;
@@ -769,16 +779,16 @@ namespace Novell.iFolderCom
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 
+			updateDiskQuotaDisplay();
+
+			// Get the refresh interval.
+			syncInterval.Value = (decimal)ifolder.SyncInterval;
+
+			// Show/hide the collision message.
+			showConflictMessage(ifolder.HasConflicts);
+
 			try
 			{
-				updateDiskQuotaDisplay();
-
-				// Get the refresh interval.
-				syncInterval.Value = (decimal)ifolder.SyncInterval;
-
-				// Show/hide the collision message.
-				showConflictMessage(ifolder.HasConflicts);
-
 				// Get the sync node and byte counts.
 				SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
@@ -1251,7 +1261,7 @@ namespace Novell.iFolderCom
 				shareWith.SmallImageList = contactsImageList;
 
 //				pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-				pictureBox1.Image = (Image)SystemIcons.Information.ToBitmap();
+				pictureBox1.Image = new Icon(new Icon(Path.Combine(basePath, "ifolderconflict.ico")), 32, 32).ToBitmap();
 
 				Bitmap bitmap = new Bitmap(Path.Combine(basePath, "OpenFolder.bmp"));
 				bitmap.MakeTransparent(bitmap.GetPixel(0,0));
