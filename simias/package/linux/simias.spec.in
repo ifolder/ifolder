@@ -21,19 +21,19 @@
 # 
 #========================================================================
 
-%define prefix /opt/novell/ifolder3
+%define prefix /opt/ifolder
 
 Summary      : Simias
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
 Copyright    : GPL
-Group        : Desktop/Applications
+Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
 #Distribution : 
-Vendor       : Novell, Inc.
-Packager     : Novell, Inc.
+Vendor       : <unknown>
+Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : mono >= 0.30
@@ -42,7 +42,9 @@ Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
 %Description
-Description of Simias
+Simias is a technology that allows various types of data to be stored and
+related in what is known as a collection.  Initially, Simias is the underlying
+data store for the iFolder project, although it has potiential to do much more.
 
 #=============================================================================
 %ChangeLog
