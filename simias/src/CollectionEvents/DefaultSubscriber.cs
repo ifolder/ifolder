@@ -103,7 +103,8 @@ namespace Simias.Event
 		void setupBroker()
 		{
 			broker = EventBroker.GetBroker(conf);
-			broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
+			if (broker != null)
+				broker.CollectionEvent += new CollectionEventHandlerS(OnCollectionEventS);
 		}
 
 		#endregion
