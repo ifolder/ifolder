@@ -45,6 +45,9 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs a MyMessageBox object.
+		/// </summary>
 		public MyMessageBox()
 		{
 			//
@@ -138,6 +141,9 @@ namespace Novell.iFolder.iFolderCom
 		}
 		#endregion
 
+		/// <summary>
+		/// Sets the string to display in the message box.
+		/// </summary>
 		public string Message
 		{
 			set
@@ -146,12 +152,25 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
-		public Bitmap MessageIcon
+		/// <summary>
+		/// Sets the string to display in the title bar.
+		/// </summary>
+		public string Caption
 		{
 			set
 			{
-				this.messageIcon.SizeMode = PictureBoxSizeMode.StretchImage;
-				this.messageIcon.Image = (Image)value;
+				this.Text = value;
+			}
+		}
+
+		/// <summary>
+		/// Sets the icon to display in the message box.
+		/// </summary>
+		public Icon MessageIcon
+		{
+			set
+			{
+				this.messageIcon.Image = (Image)value.ToBitmap();
 			}
 		}
 	}

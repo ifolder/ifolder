@@ -39,20 +39,41 @@ namespace Novell.iFolder.Win32Util
 	{
 		IntPtr window;
 
+		/// <summary>
+		/// Load the image from a file.
+		/// </summary>
 		public const int LR_LOADFROMFILE = 0x10;
+
+		/// <summary>
+		/// The image is an icon.
+		/// </summary>
 		public const int IMAGE_ICON = 1;
+
+		/// <summary>
+		/// The file object is a directory.
+		/// </summary>
 		public const int FILE_ATTRIBUTE_DIRECTORY = 0x10;
+
+		/// <summary>
+		/// Get icon.
+		/// </summary>
 		public const int SHGFI_ICON = 0x100;
+
+		/// <summary>
+		/// Use passed file attributes.
+		/// </summary>
 		public const int SHGFI_USEFILEATTRIBUTES = 0x10;
 
 		/// <summary>
 		/// Create a Win32Window
 		/// </summary>
-		/// <param name="window">The window handle</param>
 		public Win32Window()
 		{
 		}
 
+		/// <summary>
+		/// Set the window handle.
+		/// </summary>
 		public IntPtr Window
 		{
 			set
@@ -82,20 +103,22 @@ namespace Novell.iFolder.Win32Util
 			return SetWindowLong(window, index, value);
 		}
 
-		/// <summary>
-		/// Turn this window into a tool window, so it doesn't show up in the Alt-tab list...
-		/// </summary>
-		/// 
 		const int GWL_EXSTYLE = -20;
 		const int WS_EX_TOOLWINDOW = 0x00000080;
 		const int WS_EX_APPWINDOW = 0x00040000;
 
+		/// <summary>
+		/// Turn this window into a tool window, so it doesn't show up in the Alt-tab list...
+		/// </summary>
 		public void MakeToolWindow()
 		{
 			int windowStyle = GetWindowLong(GWL_EXSTYLE);
 			SetWindowLong(GWL_EXSTYLE, windowStyle | WS_EX_TOOLWINDOW);
 		}
 
+		/// <summary>
+		/// Make this a normal window.
+		/// </summary>
 		public void MakeNormalWindow()
 		{
 			int windowStyle = GetWindowLong(GWL_EXSTYLE);
@@ -129,24 +152,65 @@ namespace Novell.iFolder.Win32Util
 			return win32Window;
 		}
 
+		/// <summary>
+		/// Display the properties dialog for an object.
+		/// </summary>
+		/// <param name="window"></param>
+		/// <param name="type"></param>
+		/// <param name="objectName"></param>
+		/// <param name="pageName"></param>
+		/// <returns></returns>
 		public static bool ShObjectProperties(IntPtr window, int type, string objectName, string pageName)
 		{
 			return SHObjectProperties(window, type, objectName, pageName);
 		}
 
+		/// <summary>
+		/// Get fileinfo for a file.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="attr"></param>
+		/// <param name="fi"></param>
+		/// <param name="cbfi"></param>
+		/// <param name="flags"></param>
+		/// <returns></returns>
 		public static IntPtr ShGetFileInfo(string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags)
 		{
 			return SHGetFileInfo(path, attr, out fi, cbfi, flags);
 		}
 
+		/// <summary>
+		/// An item has changed.
+		/// </summary>
 		public const int SHCNE_UPDATEITEM = 0x00002000;
+
+		/// <summary>
+		/// Path name
+		/// </summary>
 		public const int SHCNF_PATHW = 0x0005;
 
+		/// <summary>
+		/// Notify the shell that something has changed.
+		/// </summary>
+		/// <param name="wEventId"></param>
+		/// <param name="flags"></param>
+		/// <param name="dwItem1"></param>
+		/// <param name="dwItem2"></param>
 		public static void ShChangeNotify(int wEventId, int flags, string dwItem1, IntPtr dwItem2)
 		{
 			SHChangeNotify(wEventId, flags, dwItem1, dwItem2);
 		}
 
+		/// <summary>
+		/// Loads an image from a file.
+		/// </summary>
+		/// <param name="hInst"></param>
+		/// <param name="name"></param>
+		/// <param name="type"></param>
+		/// <param name="cx"></param>
+		/// <param name="cy"></param>
+		/// <param name="load"></param>
+		/// <returns></returns>
 		public static IntPtr LoadImageFromFile(int hInst, string name, int type, int cx, int cy, int load)
 		{
 			return LoadImage(hInst, name, type, cx, cy, load);
@@ -183,15 +247,37 @@ namespace Novell.iFolder.Win32Util
 	}
 }
 
+/// <summary>
+/// File info structure.
+/// </summary>
 [StructLayout(LayoutKind.Sequential)]
 [ComVisible(false)]
 public struct IFSHFILEINFO
 {
+	/// <summary>
+	/// Handle to an icon.
+	/// </summary>
 	public IntPtr hIcon;
+
+	/// <summary>
+	/// Icon index.
+	/// </summary>
 	public int iIcon;
+
+	/// <summary>
+	/// Flags
+	/// </summary>
 	public int attributes;
+
+	/// <summary>
+	/// Display name or path.
+	/// </summary>
 	[MarshalAs(UnmanagedType.LPWStr, SizeConst=256)]
 	public String displayName;
+
+	/// <summary>
+	/// Type name.
+	/// </summary>
 	[MarshalAs(UnmanagedType.LPWStr, SizeConst=80)]
 	public String typeName;
 }

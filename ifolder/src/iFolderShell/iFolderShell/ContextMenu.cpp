@@ -24,6 +24,8 @@
 #include "CommonUI.h"
 #include "iFolderShell.h"
 
+// Handle to this DLL.
+extern HINSTANCE g_hmodThisDll;
 
 
 //
@@ -57,7 +59,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
     TCHAR szCreateiFolderMenu[]= TEXT("Convert to an iFolder");
     TCHAR szDeleteiFolderMenu[]= TEXT("Revert to a Normal Folder");
 	TCHAR sziFolderMenu[]= TEXT("iFolder");
-	TCHAR sziFolderPropMenu[]= TEXT("iFolder Properties...");
+	TCHAR sziFolderPropMenu[]= TEXT("Properties...");
 	TCHAR sziFolderShareMenu[]= TEXT("Share with...");
 	TCHAR sziFolderHelpMenu[] = TEXT("Help...");
     BOOL bAppendItems= FALSE;
@@ -88,6 +90,12 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			{
 				// Error.
 				return 0;
+			}
+
+			if (m_hBmpMenu)
+			{
+				DeleteObject(m_hBmpMenu);
+				m_hBmpMenu = NULL;
 			}
 
 			BOOL biFolder= FALSE;
@@ -174,6 +182,21 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				mii.hSubMenu= subMenu;
 				mii.dwTypeData= sziFolderMenu;
 				mii.cch= lstrlen(sziFolderMenu);
+
+				// Get bitmap
+				HBITMAP hBmp = GetBitmap();
+				if (hBmp == NULL)
+				{
+					OutputDebugString(TEXT("Failed to load icon"));
+				}
+				else
+				{
+					mii.fMask |= MIIM_CHECKMARKS | MIIM_STATE;
+					mii.fState = MFS_UNCHECKED;
+					mii.hbmpChecked = 0;
+					mii.hbmpUnchecked = hBmp;
+				}
+
 				InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
 
 				idCmd++;
@@ -233,6 +256,21 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 		mii.wID= idCmd;
 		mii.fType= MFT_STRING;
 		mii.dwTypeData= szCreateiFolderMenu;
+
+		// Get bitmap
+		HBITMAP hBmp = GetBitmap();
+		if (hBmp == NULL)
+		{
+			OutputDebugString(TEXT("Failed to load icon"));
+		}
+		else
+		{
+			mii.fMask |= MIIM_CHECKMARKS | MIIM_STATE;
+			mii.fState = MFS_UNCHECKED;
+			mii.hbmpChecked = 0;
+			mii.hbmpUnchecked = hBmp;
+		}
+
 		InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
 
 		// TODO - need to work this out ... for now we leave space for two
@@ -321,7 +359,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				try
 				{
 					// Invoke the iFolder Advanced properties dialog.
-					m_spiFolder->InvokeAdvancedDlg(m_szShellPath, m_szFileUserClickedOn, TEXT("share"), false);
+					m_spiFolder->InvokeAdvancedDlg(m_szShellPath, m_szFileUserClickedOn, 1, false);
 				}
 				catch (...)
 				{
@@ -331,7 +369,16 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 
             case 3:
 				// Invoke the properties dialog for this folder with the iFolder tab active.
-				SHObjectProperties(lpcmi->hwnd, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
+//				SHObjectProperties(lpcmi->hwnd, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
+				try
+				{
+					// Invoke the iFolder Advanced properties dialog.
+					m_spiFolder->InvokeAdvancedDlg(m_szShellPath, m_szFileUserClickedOn, 0, false);
+				}
+				catch (...)
+				{
+					//OutputDebugString(TEXT("Exception caught in CiFolderShell::InvokeCommand()\n"));
+				}
 				hr= NOERROR;
                 break;
 			case 4:
@@ -404,3 +451,71 @@ STDMETHODIMP CiFolderShell::GetCommandString(UINT_PTR idCmd,
 
 }	/*-- GetCommandString() --*/
 
+HBITMAP CiFolderShell::GetBitmap()
+{
+	HDC hScreenDC = NULL;
+	HDC hDC = NULL;
+	HBRUSH hBrush = NULL;
+	HICON hIcon = NULL;
+
+	if (m_hBmpMenu)
+		return m_hBmpMenu;
+	
+	// Get the device context.
+	hScreenDC = CreateDC(TEXT("DISPLAY"), NULL, NULL, NULL);
+	hDC = CreateCompatibleDC(hScreenDC);
+	if (!hDC)
+		goto Cleanup;
+	
+	// Get the dimensions of the bitmap.
+	int x = GetSystemMetrics(SM_CXMENUCHECK);
+	int y = GetSystemMetrics(SM_CYMENUCHECK);
+
+	// Create the bitmap.
+	HBITMAP hBmp = CreateCompatibleBitmap(hScreenDC, x, y);
+	if (!hBmp)
+		goto Cleanup;
+	
+	// Select the bitmap into the device context ... save the old one to replace later.
+	HBITMAP hBmpOld = (HBITMAP)SelectObject(hDC, hBmp);
+
+	// Draw the bitmap background
+	RECT rect;
+	rect.left = 0;
+	rect.right = x;
+	rect.top = 0;
+	rect.bottom = y;
+	hBrush = CreateSolidBrush(RGB(255, 255, 255));
+	FillRect(hDC, &rect, hBrush);
+
+	// Build the path name to the icon.
+	TCHAR szIconName[MAX_PATH];
+	lstrcpy(szIconName, m_szShellPath);
+	lstrcat(szIconName, TEXT("res\\ifolder_loaded.ico"));
+
+	// Load the icon
+	hIcon = (HICON)LoadImage(g_hmodThisDll, szIconName, IMAGE_ICON, x, y, LR_LOADFROMFILE);
+	if (!hIcon)
+		goto Cleanup;
+
+	// Draw the icon.
+	DrawIconEx(hDC, (x - y) / 2, 0, hIcon, y, y, 0, NULL, DI_NORMAL);
+
+	// Restore the object to the device context.
+	SelectObject(hDC, hBmpOld);
+
+	// Save the bitmap so that we can delete it later.
+	m_hBmpMenu = hBmp;
+   
+Cleanup:
+	if (hScreenDC)
+		DeleteDC(hScreenDC);
+	if (hBrush)
+		DeleteObject(hBrush);
+	if (hDC)
+		DeleteDC(hDC);
+	if (hIcon)
+		DestroyIcon(hIcon);
+	
+	return hBmp;
+}

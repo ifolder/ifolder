@@ -261,10 +261,10 @@ STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
 {
     //OutputDebugString(TEXT("CiFolderShell::AddPages()\n"));
 
-	// TODO - set up call back function to display the iFolder property page(s).
+	return E_NOTIMPL;
 
 	// TODO - should we use pidl's instead?
-	STGMEDIUM medium;
+/*	STGMEDIUM medium;
 	FORMATETC fe= {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	HRESULT hr= m_pDataObj->GetData(&fe, &medium);
 	if (SUCCEEDED(hr))
@@ -333,29 +333,29 @@ STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
 					}
 				}
 
-/*				if (bDispSharePage)
-				{
-					psp.pszTemplate = MAKEINTRESOURCE(IDD_IFOLDERSHARINGPROP);
+//				if (bDispSharePage)
+//				{
+//					psp.pszTemplate = MAKEINTRESOURCE(IDD_IFOLDERSHARINGPROP);
 					// TODO - Get this from the resource file.
-					psp.pszTitle = TEXT("iFolder Sharing");
-					psp.pfnDlgProc = iFolderPermissionsPageDlgProc;
+//					psp.pszTitle = TEXT("iFolder Sharing");
+//					psp.pfnDlgProc = iFolderPermissionsPageDlgProc;
 
-					HPROPSHEETPAGE hPage2 = CreatePropertySheetPage(&psp);
+//					HPROPSHEETPAGE hPage2 = CreatePropertySheetPage(&psp);
 
-					if (hPage2)
-					{
-						if (!lpfnAddPage(hPage2, lParam))
-						{
-							DestroyPropertySheetPage(hPage2);
-						}
-					}
-				}*/
+//					if (hPage2)
+//					{
+//						if (!lpfnAddPage(hPage2, lParam))
+//						{
+//							DestroyPropertySheetPage(hPage2);
+//						}
+//					}
+//				}
 			}
 		}
 	}
 
 	return NOERROR;
-
+*/
 }	/*-- AddPages() --*/
 	
 //

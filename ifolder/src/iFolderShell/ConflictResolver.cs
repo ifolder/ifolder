@@ -84,6 +84,9 @@ namespace Novell.iFolder.iFolderCom
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs a ConflictResolver object.
+		/// </summary>
 		public ConflictResolver()
 		{
 			//

@@ -19,6 +19,9 @@ namespace Novell.iFolder.iFolderCom
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs an EmailPrompt object.
+		/// </summary>
 		public EmailPrompt()
 		{
 			//
@@ -101,6 +104,9 @@ namespace Novell.iFolder.iFolderCom
 		}
 		#endregion
 
+		/// <summary>
+		/// Gets/sets the email address.
+		/// </summary>
 		public string Email
 		{
 			get { return email.Text; }

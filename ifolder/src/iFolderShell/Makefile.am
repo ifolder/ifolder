@@ -8,7 +8,7 @@ endif
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CollisionNode.cs $(srcdir)/EmailPrompt.cs
+iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CollisionNode.cs $(srcdir)/EmailPrompt.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES = 
 iFolderComponent_RESOURCES =
@@ -29,7 +29,7 @@ iFolderShell_LIBFLAGS = $(SHARED_LIB_FLAG)
 iFolderShell_DEF = $(srcdir)/iFolderShell/iFolderShell.Def
 
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico $(srcdir)/iFolderShell/images.bmp
-RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx
+RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/UserProperties.resx
 WINDOWS_FILES = $(srcdir)/explorer.exe.manifest
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
