@@ -91,8 +91,13 @@ namespace Simias.Sync.Tests
 			// configuration
 			Configuration config = new Configuration(path);
 
-			// new collection
+			// store
 			Store store = new Store(config);
+			
+			// note: we need to revert any internal impersonations
+			store.Revert();
+
+			// new collection
 			Collection collection = new Collection(store, "Test Collection");
 			collection.Commit();
 

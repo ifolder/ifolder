@@ -59,7 +59,13 @@ namespace Simias.Sync
 			// open store and collection
 			// note: the store provider requires that we open a new store for each thread
 			store = new Store(syncManager.Config);
+			
+			// note: we need to revert any internal impersonations
+			store.Revert();
+
+
 			collection = new SyncCollection(store.GetCollectionByID(id));
+
 			Debug.Assert(collection != null);
 
 			// check sync properties

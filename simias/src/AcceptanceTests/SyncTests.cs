@@ -112,6 +112,11 @@ namespace Simias.Tests
 				storeB = new Store(configB);
 				storeC = new Store(configC);
 
+				// note: we need to revert any internal impersonations
+				storeA.Revert();
+				storeB.Revert();
+				storeC.Revert();
+
 				// start the sync manager for store A
 				SyncProperties syncPropsA = new SyncProperties(configA);
 				syncPropsA.DefaultLogicFactory = syncLogicType;

@@ -93,9 +93,12 @@ namespace Simias.Sync
 
 			// check for a dir node
 			if (((invitation.DirNodeID != null) && (invitation.DirNodeID.Length > 0))
+				&& (invitation.DirNodeName != null) && (invitation.DirNodeName.Length > 0)
 				&& (invitation.RootPath != null) && (invitation.RootPath.Length > 0))
 			{
-				DirNode dn = new DirNode(this, invitation.RootPath, invitation.DirNodeID);
+				DirNode dn = new DirNode(this,
+					Path.Combine(invitation.RootPath, invitation.DirNodeName),
+					invitation.DirNodeID);
 
 				Commit(dn);
 			}
@@ -131,9 +134,8 @@ namespace Simias.Sync
 
 			if (dn != null)
 			{
-				// TODO: ?
-				// invitation.RootPath = dn.GetFullPath(this);
 				invitation.DirNodeID = dn.ID;
+				invitation.DirNodeName = dn.Name;
 			}
 
 			return invitation;

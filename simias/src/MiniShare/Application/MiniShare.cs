@@ -92,6 +92,9 @@ namespace Simias.Mini
 				// create store
 				Store store = new Store(config);
 
+				// note: we need to revert any internal impersonations
+				store.Revert();
+
 				// create the master collection
 				SyncCollection collection = new SyncCollection(new Collection(store, collectionName));
 				UriBuilder builder = new UriBuilder("http", properties.DefaultHost, 7464);
@@ -120,6 +123,9 @@ namespace Simias.Mini
 
 				// create store
 				Store store = new Store(config);
+
+				// note: we need to revert any internal impersonations
+				store.Revert();
 
 				// import invitation
 				Invitation invitation = new Invitation(args[0]);

@@ -131,21 +131,21 @@ namespace Simias.Sync
 		#region Properties
 
 		/// <summary>
-		/// The name of the Collection
-		/// </summary>
-		public string CollectionName
-		{
-			get { return fields["CollectionName"]; }
-			set { fields["CollectionName"] = value; }
-		}
-
-		/// <summary>
 		/// The id of the Collection
 		/// </summary>
 		public string CollectionID
 		{
 			get { return fields["CollectionID"]; }
 			set { fields["CollectionID"] = value; }
+		}
+
+		/// <summary>
+		/// The name of the Collection
+		/// </summary>
+		public string CollectionName
+		{
+			get { return fields["CollectionName"]; }
+			set { fields["CollectionName"] = value; }
 		}
 
 		/// <summary>
@@ -212,12 +212,21 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// An optional DirNode id.
+		/// An optional DirNode id
 		/// </summary>
 		public string DirNodeID
 		{
 			get { return fields["DirNodeID"]; }
 			set { fields["DirNodeID"] = value; }
+		}
+
+		/// <summary>
+		/// An optional DirNode name
+		/// </summary>
+		public string DirNodeName
+		{
+			get { return fields["DirNodeName"]; }
+			set { fields["DirNodeName"] = value; }
 		}
 
 		/// <summary>
