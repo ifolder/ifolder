@@ -26,6 +26,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.IO;
 using Novell.iFolder.FormsBookLib;
 using Novell.AddressBook;
 
@@ -81,6 +82,13 @@ namespace Novell.iFolder.FormsAddrBook
 			//
 			manager = Manager.Connect();
 			this.booksContacts.CurrentManager = manager;
+
+			// Load the application icon.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\address_app.ico"));
+			}
+			catch{}
 		}
 
 		/// <summary>

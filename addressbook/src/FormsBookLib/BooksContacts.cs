@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
+using System.IO;
 using Novell.AddressBook;
 using Simias.Storage;
 
@@ -72,6 +73,31 @@ namespace Novell.iFolder.FormsBookLib
 
 			// TODO: Add any initialization after the InitializeComponent call
 			this.createContact.Enabled = false;
+
+			// Image lists...
+			try
+			{
+				// Create the books ImageList object.
+				ImageList booksImageList = new ImageList();
+
+				// Initialize the ImageList objects with icons.
+				string basePath = Path.Combine(Application.StartupPath, "res");
+				booksImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_add_bk.ico")));
+
+				//Assign the ImageList objects to the books ListView.
+				books.SmallImageList = booksImageList;
+
+				// Create the contacts ImageList object.
+				ImageList contactsImageList = new ImageList();
+
+				// Initialize the ImageList objects with icons.
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
+				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
+
+				//Assign the ImageList objects to the books ListView.
+				contacts.SmallImageList = contactsImageList;
+			}
+			catch{}
 
 			// Context menu for contacts list view.
 			editContactMenu = new MenuItem("Edit...");
@@ -399,7 +425,7 @@ namespace Novell.iFolder.FormsBookLib
 					AddressBook.AddressBook book = (AddressBook.AddressBook)addrBooks.Current;
 
 					// If the address book is the default book then label it as such.
-					ListViewItem item = new ListViewItem(book.Default ? "Default" : book.Name);
+					ListViewItem item = new ListViewItem(book.Default ? "Default" : book.Name, 0);
 					if (book.Default)
 					{
 						// Select the default address book.
@@ -435,16 +461,17 @@ namespace Novell.iFolder.FormsBookLib
 				foreach(Contact c in this.addressBook)
 				{
 					ListViewItem item;
+					int imageIndex = c.IsCurrentUser ? 0 : 1;
 					
 					if (c.FN != null)
 					{
 						// Display full name if it is available...
-						item = new ListViewItem(c.FN);
+						item = new ListViewItem(c.FN, imageIndex);
 					}
 					else
 					{
 						// ... otherwise, display the user name.
-						item = new ListViewItem(c.UserName);
+						item = new ListViewItem(c.UserName, imageIndex);
 					}
 
 					// Save the contact object in the listview item.
@@ -547,11 +574,11 @@ namespace Novell.iFolder.FormsBookLib
 				ListViewItem item;
 				if (editor.CurrentContact.FN != null)
 				{
-					item = new ListViewItem(editor.CurrentContact.FN);
+					item = new ListViewItem(editor.CurrentContact.FN, 1);
 				}
 				else
 				{
-					item = new ListViewItem(editor.CurrentContact.UserName);
+					item = new ListViewItem(editor.CurrentContact.UserName, 1);
 				}
 
 				item.Tag = editor.CurrentContact;
@@ -569,7 +596,7 @@ namespace Novell.iFolder.FormsBookLib
 				// Create address book and add it to the books listview.
 				Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(addBook.Name);
 				this.manager.AddAddressBook(addrBook);
-				ListViewItem item = new ListViewItem(addrBook.Name);
+				ListViewItem item = new ListViewItem(addrBook.Name, 0);
 				item.Tag = addrBook;
 				this.books.Items.Add(item);
 			}
@@ -669,14 +696,15 @@ namespace Novell.iFolder.FormsBookLib
 					foreach(Contact c in searchResults)
 					{
 						ListViewItem item;
-				
+						int imageIndex = c.IsCurrentUser ? 0 : 1;
+
 						if (c.FN != null)
 						{
-							item = new ListViewItem(c.FN);
+							item = new ListViewItem(c.FN, imageIndex);
 						}
 						else
 						{
-							item = new ListViewItem(c.UserName);
+							item = new ListViewItem(c.UserName, imageIndex);
 						}
 
 						item.Tag = c;
@@ -691,14 +719,15 @@ namespace Novell.iFolder.FormsBookLib
 				foreach (Contact c in addressBook)
 				{
 					ListViewItem item;
-						
+					int imageIndex = c.IsCurrentUser ? 0 : 1;
+
 					if (c.FN != null)
 					{
-						item = new ListViewItem(c.FN);
+						item = new ListViewItem(c.FN, imageIndex);
 					}
 					else
 					{
-						item = new ListViewItem(c.UserName);
+						item = new ListViewItem(c.UserName, imageIndex);
 					}
 
 					item.Tag = c;
