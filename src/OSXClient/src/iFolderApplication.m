@@ -1,9 +1,33 @@
+/***********************************************************************
+ *  $RCSfile$
+ * 
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Author: Calvin Gaisford <cgaisford@novell.com>
+ * 
+ ***********************************************************************/
+ 
 #import "iFolderApplication.h"
 #import "iFolderWindowController.h"
 #import "SyncLogWindowController.h"
 #import "LoginWindowController.h"
 #import "iFolderPrefsController.h"
 #import "AboutBoxController.h"
+#import "iFolderData.h"
 #import "Simias.h"
 
 
@@ -88,16 +112,17 @@
 //===================================================================
 - (void)showLoginWindow:(NSString *)domainID
 {
-	NSLog(@"Show the Login Window Here");
-//	if(loginController == nil)
-//	{
-//		loginController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
-//	}
+	iFolderDomain *dom = [ifolderdata getDomain:domainID];
+	if(dom != nil)
+	{
+		if(loginWindowController == nil)
+		{
+			loginWindowController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
+		}
 
-//	iFolderDomain *dom = [keyedDomains objectForKey:domainID];
-	
-//	[[loginController window] center];
-//	[loginController showLoginWindow:self withHost:[dom host] withDomain:domainID];
+		[[loginWindowController window] center];
+		[loginWindowController showLoginWindow:self withDomain:dom];
+	}
 }
 
 
@@ -141,6 +166,7 @@
     [NSThread detachNewThreadSelector:@selector(startSimiasThread:)
         toTarget:self withObject:nil];
 
+	ifolderdata = [[iFolderData alloc] init];
 }
 
 
@@ -230,50 +256,38 @@
 //===================================================================
 - (void)simiasDidFinishStarting:(id)arg
 {
+	NSLog(@"Creating and loading iFolderData");
+	[ifolderdata refresh];
+
 	[self addLog:@"initializing Simias Events"];
 	NSLog(@"initializing Simias Events");
 	[self initializeSimiasEvents];
 
-/*
-	[self addLog:@"iFolder reading all domains"];
-	@try
-	{
-		int domainCount;
-		NSArray *newDomains = [simiasService GetDomains:NO];
-
-		for(domainCount = 0; domainCount < [newDomains count]; domainCount++)
-		{
-			iFolderDomain *newDomain = [newDomains objectAtIndex:domainCount];
-			
-			if( [[newDomain isDefault] boolValue] )
-				defaultDomain = newDomain;
-
-			[self addDomain:newDomain];
-		}
-		
-		NSArray *newiFolders = [ifolderService GetiFolders];
-		if(newiFolders != nil)
-		{
-			[ifoldersController addObjects:newiFolders];
-		}
-	}
-	@catch (NSException *e)
-	{
-		[self addLog:@"Reading domains failed with exception"];
-	}
-*/
-	
-	// Setup the double click black magic
-//	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
-	
-	// TODO: Show all of the windows that were open when quit last
-//	[self showWindow:self];
 }
 
 
 
 
+//===================================================================
+// authenticateToDomain
+// This will authenticate using the specified password and domainID
+//===================================================================
+- (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password
+{
+	SimiasService *simiasService;
+	simiasService = [[SimiasService alloc] init];		
 
+	@try
+	{
+		[simiasService LoginToRemoteDomain:domainID usingPassword:password];
+		return YES;
+	}
+	@catch (NSException *e)
+	{
+		NSLog(@"failed to authenticate");
+	}
+	return NO;
+}
 
 
 

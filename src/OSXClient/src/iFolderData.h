@@ -21,36 +21,36 @@
  * 
  ***********************************************************************/
 
-#ifndef __iFolderService__
-#define __iFolderService__
-
 #import <Cocoa/Cocoa.h>
-#include <Carbon/Carbon.h>
-#import "iFolder.h"
-#import "User.h"
 
+@class iFolder;
+@class iFolderDomain;
+@class User;
+@class iFolderService;
+@class SimiasService;
 
-@interface iFolderService : NSObject
+@interface iFolderData : NSObject 
 {
+	iFolderService					*ifolderService;
+	SimiasService					*simiasService;
+	
+	NSMutableDictionary				*keyedDomains;
+	NSMutableDictionary				*keyediFolders;		
+
+	NSRecursiveLock					*instanceLock;
+	iFolderDomain					*defaultDomain;
 }
 
--(BOOL) Ping;
--(NSArray *) GetiFolders;
--(iFolder *) CreateiFolder:(NSString *)Path InDomain:(NSString *)DomainID;
--(iFolder *) AcceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)DomainID toPath:(NSString *)localPath;
--(iFolder *) RevertiFolder:(NSString *)iFolderID;
--(void) DeleteiFolder:(NSString *)iFolderID;
--(void) SynciFolderNow:(NSString *)iFolderID;
++ (iFolderData *)sharedInstance;
 
--(NSArray *) GetiFolderUsers:(NSString *)ifolderID;
--(NSArray *) GetDomainUsers:(NSString *)domainID withLimit:(int)numUsers;
--(NSArray *) SearchDomainUsers:(NSString *)domainID withString:(NSString *)searchString;
+- (void)refresh;
 
--(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights;
--(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;
-
-
+-(BOOL)isDomain:(NSString *)domainID;
+-(BOOL)isiFolder:(NSString *)ifolderID;
+-(BOOL)isPOBox:(NSString *)nodeID;
+-(iFolderDomain *)getDomain:(NSString *)domainID;
+-(NSArray *)getDomains;
+-(NSArray *)getiFolders;
+-(iFolderDomain *)getDefaultDomain;
 
 @end
-
-#endif // __iFolderService__

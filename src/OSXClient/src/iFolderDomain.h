@@ -56,6 +56,7 @@
 -(NSString *)userName;
 -(NSString *)host;
 -(NSString *)password;
+-(NSString *)poBoxID;
 -(NSNumber *)isDefault;
 -(NSNumber *)isSlave;
 -(NSNumber *)isEnabled;
