@@ -70,13 +70,19 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="message">A message object</param>
 		/// <returns>true if the message was posted</returns>
-		public bool Post(Message message)
+		public bool Post(string userID, Message message)
 		{
 			bool result = false;
-			
-			// open the post office box
-			// TODO: POBox box = POBox.GetPOBox(store, message.DomainID, message.ToIdentity);
-			POBox box = POBox.GetPOBox(store, message.DomainID);
+			POBox box;
+			if (message.DomainID == Simias.Storage.Domain.WorkGroupDomainID)
+			{
+				box = POBox.GetPOBox(store, message.DomainID);
+			}
+			else
+			{
+				// open the post office box
+				box = POBox.GetPOBox(store, message.DomainID, userID);
+			}
 
 			// check the post office box
 			if (box == null)
@@ -88,10 +94,6 @@ namespace Simias.POBox
 				// temporary, in memory only, subscription object
 				Subscription temp = new Subscription(message);
 				
-				// does the collection exist
-				if (store.GetCollectionByID(temp.SubscriptionCollectionID) == null)
-					throw new ApplicationException("The subscription collection does not exist.");
-
 				// new subscription
 				Subscription subscription = null;
 
@@ -99,7 +101,7 @@ namespace Simias.POBox
 
 				if (node == null)
 				{
-					subscription = new Subscription(temp.Name, temp.ID);
+					subscription = new Subscription(message.Name, message.ID);
 				}
 				else
 				{
@@ -107,11 +109,13 @@ namespace Simias.POBox
 				}
 
 				// create a new subscription object with some of the information from temp
-				subscription.SubscriptionState =  SubscriptionStates.Pending;
+				subscription.SubscriptionState =  temp.SubscriptionState;
 				subscription.FromPublicKey = temp.FromPublicKey;
 				subscription.FromName = temp.FromName;
 				subscription.FromAddress = temp.FromAddress;
 				subscription.FromIdentity = temp.FromIdentity;
+				subscription.ToName = temp.ToName;
+				subscription.ToIdentity = temp.ToIdentity;
 				subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
 				
 				// commit

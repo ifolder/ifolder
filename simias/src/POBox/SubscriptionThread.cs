@@ -113,67 +113,98 @@ namespace Simias.POBox
 
 		private bool DoInvited()
 		{
-			// TODO: Localize
-			
-			MailMessage message = new MailMessage();
-
-			message.BodyFormat = MailFormat.Text;
-
-			message.From = subscription.FromAddress;
-			message.To = subscription.ToAddress;
-
-			message.Subject =
-				String.Format("Shared iFolder Invitation - {0}", subscription.SubscriptionCollectionName);
-			
-			// body
-			StringBuilder buffer = new StringBuilder();
-			
-			buffer.AppendFormat("{0} invites you to participate in the shared iFolder named \"{1}\".\n",
-				subscription.FromName, subscription.SubscriptionCollectionName);
-
-			// TODO: Owner currently cannot be resolved to a friendly name.  Also need to add "Novell iFolder server" for enterprise.
-			// buffer.AppendFormat("This iFolder is hosted by {0} on a personal computer.\n\n", invitation.Owner);
-			buffer.Append("\n");
-
-			if (subscription.CollectionDescription != null)
+			if (poBox.Domain == Simias.Storage.Domain.WorkGroupDomainID)
 			{
-				buffer.AppendFormat("{0}\n\n", subscription.CollectionDescription);
-			}
-
-			buffer.AppendFormat("{0} assigned you {1} rights to this shared iFolder.\n\n",
-				subscription.FromName, subscription.SubscriptionRights);
-
-			buffer.Append("You can participate from one or more computers with the iFolder client. For information or download, see the iFolder Web site at http://www.ifolder.com. \n\n");
-
-			buffer.Append("To accept and set up the shared iFolder on this computer, open the attached iFolder Invitation (IFI) file. Repeat this process on each computer where you want to set up the shared iFolder.\n\n");
-
-			buffer.Append("If you do not accept within 7 days, the invitation  automatically expires. To decline immediately, open the IFI file and select Decline.");
-
-			message.Body = buffer.ToString();
-
-			// invitation attachment
-			string filename = Path.Combine(Path.GetTempPath(),
-				Path.GetFileNameWithoutExtension(Path.GetTempFileName())
-				+ SubscriptionInfo.Extension);
-
-			SubscriptionInfo info = subscription.GenerateInfo(poBox.StoreReference);
-			info.Save(filename);
-
-			MailAttachment attachment = new MailAttachment(filename);
+				// TODO: Localize
 			
-			message.Attachments.Add(attachment);
+				MailMessage message = new MailMessage();
 
-			// send
-			SmtpMail.Send(message);
+				message.BodyFormat = MailFormat.Text;
 
-			// delete invitation file
-			File.Delete(filename);
+				message.From = subscription.FromAddress;
+				message.To = subscription.ToAddress;
 
-			log.Info("Invitation Sent: {0}", info);
+				message.Subject =
+					String.Format("Shared iFolder Invitation - {0}", subscription.SubscriptionCollectionName);
+			
+				// body
+				StringBuilder buffer = new StringBuilder();
+			
+				buffer.AppendFormat("{0} invites you to participate in the shared iFolder named \"{1}\".\n",
+					subscription.FromName, subscription.SubscriptionCollectionName);
 
-			// update subscription
-			subscription.SubscriptionState = SubscriptionStates.Posted;
-			poBox.Commit(subscription);
+				// TODO: Owner currently cannot be resolved to a friendly name.  Also need to add "Novell iFolder server" for enterprise.
+				// buffer.AppendFormat("This iFolder is hosted by {0} on a personal computer.\n\n", invitation.Owner);
+				buffer.Append("\n");
+
+				if (subscription.CollectionDescription != null)
+				{
+					buffer.AppendFormat("{0}\n\n", subscription.CollectionDescription);
+				}
+
+				buffer.AppendFormat("{0} assigned you {1} rights to this shared iFolder.\n\n",
+					subscription.FromName, subscription.SubscriptionRights);
+
+				buffer.Append("You can participate from one or more computers with the iFolder client. For information or download, see the iFolder Web site at http://www.ifolder.com. \n\n");
+
+				buffer.Append("To accept and set up the shared iFolder on this computer, open the attached iFolder Invitation (IFI) file. Repeat this process on each computer where you want to set up the shared iFolder.\n\n");
+
+				buffer.Append("If you do not accept within 7 days, the invitation  automatically expires. To decline immediately, open the IFI file and select Decline.");
+
+				message.Body = buffer.ToString();
+
+				// invitation attachment
+				string filename = Path.Combine(Path.GetTempPath(),
+					Path.GetFileNameWithoutExtension(Path.GetTempFileName())
+					+ SubscriptionInfo.Extension);
+
+				SubscriptionInfo info = subscription.GenerateInfo(poBox.StoreReference);
+				info.Save(filename);
+
+				MailAttachment attachment = new MailAttachment(filename);
+			
+				message.Attachments.Add(attachment);
+
+				// send
+				SmtpMail.Send(message);
+
+				// delete invitation file
+				File.Delete(filename);
+
+				log.Info("Invitation Sent: {0}", info);
+
+				// update subscription
+				subscription.SubscriptionState = SubscriptionStates.Posted;
+				poBox.Commit(subscription);
+			}
+			else
+			{
+				// This is an enterprise pobox contact the POService.
+				SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
+					subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
+					subscription.POServiceURL.Port);
+
+				log.Debug("Connecting to the Post Office Service...");
+				PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
+					subscription.POServiceURL.ToString());
+			
+				if (po == null)
+					throw new ApplicationException("No Post-Office Service");
+
+				// Set the remote state to received.
+				// And post the subscription to the server.
+				Simias.Storage.Member me = poBox.GetCurrentMember();
+				subscription.FromIdentity = me.UserID;
+				subscription.FromName = me.Name;
+				subscription.SubscriptionState = SubscriptionStates.Received;
+				po.Post(subscription.ToIdentity, subscription);
+
+				subscription.SubscriptionState = SubscriptionStates.Posted;
+				poBox.Commit(subscription);
+
+				// remove channel
+				channel.Dispose();
+			}
 
 			return true;
 		}
@@ -192,7 +223,8 @@ namespace Simias.POBox
 				throw new ApplicationException("No Post-Office Service");
 
 			// post subscription
-			po.Post(subscription);
+			subscription.SubscriptionState = SubscriptionStates.Pending;
+			po.Post(subscription.FromIdentity, subscription);
 
 			// update subscription
 			subscription.SubscriptionState = SubscriptionStates.Delivered;

@@ -739,8 +739,10 @@ namespace Simias.POBox
 			SubscriptionState = SubscriptionStates.Replied;
 			SubscriptionDisposition = disposition;
 			Member member = c.GetCurrentMember();
-			FromName = member.Name;
-			FromIdentity = member.UserID;
+			ToName = member.Name;
+			ToIdentity = member.UserID;
+			//FromName = member.Name;
+			//FromIdentity = member.UserID;
 		}
 
 		/// <summary>
@@ -755,7 +757,7 @@ namespace Simias.POBox
 				throw new ApplicationException("Collection does not exist.");
 
 			// member
-			Member member = new Member(this.FromName, this.FromIdentity, rights);
+			Member member = new Member(this.ToName, this.ToIdentity, rights);
 
 			// commit
 			c.Commit(member);

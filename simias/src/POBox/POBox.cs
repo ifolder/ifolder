@@ -198,6 +198,7 @@ namespace Simias.POBox
 			Subscription subscription = new Subscription(collection.Name + " subscription", Message.OutboundMessage, fromMember.UserID);
 
 			subscription.FromName = fromMember.Name;
+			subscription.FromIdentity = fromMember.UserID;
 			subscription.SubscriptionCollectionID = collection.ID;
 			subscription.DomainID = collection.Domain;
 			subscription.DomainName = collection.StoreReference.GetDomain(collection.Domain).Name;
