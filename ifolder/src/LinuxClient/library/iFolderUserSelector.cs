@@ -117,18 +117,31 @@ namespace Novell.iFolder
 
 
 			//------------------------------
-			// Search Entry
+			// Find Entry
 			//------------------------------
-			HBox searchBox = new HBox();
-			searchBox.Spacing = 10;
-			Label searchLabel = new Label(Util.GS("Search:"));
-			searchBox.PackStart(searchLabel, false, true, 0);
+			Table findTable = new Table(2, 2, false);
+			dialogBox.PackStart(findTable, false, false, 0);
+			findTable.ColumnSpacing = 20;
+			findTable.RowSpacing = 5;
 
-			SearchEntry = new Gtk.Entry();
-			searchBox.PackStart(SearchEntry, true, true, 0);
+			Label findLabel = new Label(Util.GS("Find:"));
+			findLabel.Xalign = 0;
+			findTable.Attach(findLabel, 0, 1, 0, 1,
+				AttachOptions.Shrink, 0, 0, 0);
+
+			SearchEntry = new Gtk.Entry(Util.GS("<Enter text to find a user>"));
+			SearchEntry.SelectRegion(0, -1);
+			SearchEntry.CanFocus = true;
+			SearchEntry.GrabFocus();
 			SearchEntry.Changed += new EventHandler(OnSearchEntryChanged);
-
-			dialogBox.PackStart(searchBox, false, true, 0);
+			findTable.Attach(SearchEntry, 1, 2, 0, 1,
+				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
+				
+			Label findHelpTextLabel = new Label(Util.GS("(i.e. Full or partial name, or user ID)"));
+			findHelpTextLabel.Xalign = 0;
+			findTable.Attach(findHelpTextLabel, 1,2,1,2,
+				AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
+			
 
 
 			//------------------------------
@@ -336,7 +349,7 @@ namespace Novell.iFolder
 		{
 			UserTreeStore.Clear();
 
-			if(SearchEntry.Text.Length > 0)
+			if(SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
 			{
 				iFolderUser[] userlist = 
 						ifws.SearchForDomainUsers(domainID, SearchEntry.Text);
@@ -463,6 +476,6 @@ namespace Novell.iFolder
 		private void TreeDestroyFunc()
 		{
 		}
-
+		
 	}
 }
