@@ -1472,7 +1472,7 @@ namespace Novell.FormsTrayApp
 			{
 				Domain d = (Domain)lvi.Tag;
 
-				if (d.DomainWeb.MemberID.Equals(userID))
+				if (d.DomainWeb.MemberUserID.Equals(userID))
 				{
 					result = true;
 					break;
@@ -1823,12 +1823,12 @@ namespace Novell.FormsTrayApp
 						// Update the enabled setting.
 						if (enableAccount.Checked)
 						{
-							ifWebService.SetDomainActive(domain.ID);
+							simiasWebService.SetDomainActive(domain.ID);
 							domain.DomainWeb.Active = true;
 						}
 						else
 						{
-							ifWebService.SetDomainInactive(domain.ID);
+							simiasWebService.SetDomainInactive(domain.ID);
 							domain.DomainWeb.Active = false;
 						}
 

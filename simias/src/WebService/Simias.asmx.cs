@@ -486,13 +486,24 @@ namespace Simias.Web
 		/// </summary>
 		public string RemoteUrl;
 
+		/// <summary>
+		/// POBox ID
+		/// </summary>
+        public string POBoxID;
 
-		public string POBoxID;
-
+		/// <summary>
+		/// The host for this domain.
+		/// </summary>
 		public string Host;
 
+		/// <summary>
+		/// <b>True</b> if the local domain is a slave (client).
+		/// </summary>
 		public bool IsSlave;
 
+		/// <summary>
+		/// <b>True</b> if the local domain is the default domain.
+		/// </summary>
 		public bool IsDefault;
 
 		/// <summary>
@@ -502,6 +513,10 @@ namespace Simias.Web
 		{
 		}
 
+		/// <summary>
+		/// Constructs a DomainInformation object.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to base this object on.</param>
 		public DomainInformation(string domainID)
 		{
 			Store store = Store.GetStore();
