@@ -70,7 +70,13 @@ namespace Simias.Storage
 			/// <summary>
 			/// Update the PropertyList object in the data store.
 			/// </summary>
-			Update
+			Update,
+
+			/// <summary>
+			/// Update the PropertyList object changes in the data store, but
+			/// do not change the local incarnation value.
+			/// </summary>
+			Internal
 	};
 
 		/// <summary>

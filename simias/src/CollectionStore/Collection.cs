@@ -315,35 +315,58 @@ namespace Simias.Storage
 		/// <param name="node">Node object that contains the local incarnation value.</param>
 		private void IncrementLocalIncarnation( Node node )
 		{
+			ulong incarnationValue;
+
 			// The master incarnation value only needs to be set during import of a Node object.
 			if ( node.Properties.State == PropertyList.PropertyListState.Import )
 			{
+				// Going to use the passed in value for the incarnation number.
+				incarnationValue = node.IncarnationUpdate;
+
 				// Make sure that the expected incarnation value matches the current value.
 				Node checkNode = GetNodeByID( node.ID );
-				if ( ( checkNode == null ) || ( checkNode.LocalIncarnation == node.ExpectedIncarnation ) )
+				
+				// If the expected incarnation value is zero, then the client is running. Otherwise the
+				// server is running.
+				if ( node.ExpectedIncarnation == 0 )
 				{
-					if ( node.IncarnationUpdate != 0 )
+					// No collision if:
+					//	1. Node object does not exist locally.
+					//	2. Master incarnation value is zero (first time sync).
+					if ( ( checkNode != null ) && ( checkNode.MasterIncarnation != 0 ) )
 					{
-						// Update the master incarnation value to the specified value.
-						node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, node.IncarnationUpdate );
-						node.IncarnationUpdate = 0;
+						// Need to check for a collision here. A collision is defined as an update to the client
+						// Node object that the server doesn't know about.
+						if ( checkNode.LocalIncarnation != checkNode.MasterIncarnation )
+						{
+							// There was a collision.
+							throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
+						}
 					}
 
-					// Reset the expected incarnation value.
-					node.ExpectedIncarnation = 0;
+					// Update the master and local incarnation value to the specified value.
+					node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );
 				}
 				else
 				{
-					// There was a collision.
-					throw new CollisionException( node.ID, checkNode.LocalIncarnation );
+					// The server is running.
+					// No collision if:
+					//	1. Node object does not exist locally.
+					//	2. Expected incarnation value is equal to the local incarnation value.
+					if ( ( checkNode != null ) && ( node.ExpectedIncarnation != checkNode.LocalIncarnation ) )
+					{
+						// There was a collision.
+						throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
+					}
 				}
 			}
 			else
 			{
-				// Increment the property value.
-				ulong incarnationValue = node.LocalIncarnation;
-				node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
+				incarnationValue = node.LocalIncarnation + 1;
 			}
+
+			// Update the local incarnation value to the specified value.
+			node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, incarnationValue );
 		}
 
 		/// <summary>
@@ -524,6 +547,18 @@ namespace Simias.Storage
 						xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
 						break;
+
+					case PropertyList.PropertyListState.Internal:
+						// Merge any changes made to the object on the database before this object's
+						// changes are committed.
+						mergeNode = MergeNodeProperties( node );
+						if ( mergeNode != null )
+						{
+							// Copy the XML node over to the modify document.
+							xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
+							commitDocument.DocumentElement.AppendChild( xmlNode );
+						}
+						break;
 				}
 			}
 
@@ -573,6 +608,9 @@ namespace Simias.Storage
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						break;
 
+					case PropertyList.PropertyListState.Internal:
+						node.Properties.State = PropertyList.PropertyListState.Update;
+						break;
 				}
 			}
 		}
@@ -775,35 +813,21 @@ namespace Simias.Storage
 			// Make sure that something is in the list.
 			if ( nodeList.Length > 0 )
 			{
-				bool onlyTombstones = true;
-				bool onlyImports = true;
 				Node deleteNode = null;
 				Node createNode = null;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
 				{
-					if ( !IsTombstone( node ) )
+					if ( IsType( node, NodeTypes.CollectionType ) )
 					{
-						onlyTombstones = false;
-
-						if ( IsType( node, NodeTypes.CollectionType ) )
+						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
 						{
-							if ( node.Properties.State == PropertyList.PropertyListState.Delete )
-							{
-								deleteNode = node;
-							}
-							else if ( node.Properties.State == PropertyList.PropertyListState.Add )
-							{
-								createNode = node;
-							}
+							deleteNode = node;
 						}
-
-						// If only imported nodes are in the list, the collection object does not
-						// need to be included.
-						if ( node.Properties.State != PropertyList.PropertyListState.Import )
+						else if ( node.Properties.State == PropertyList.PropertyListState.Add )
 						{
-							onlyImports = false;
+							createNode = node;
 						}
 					}
 				}
@@ -861,43 +885,38 @@ namespace Simias.Storage
 		/// Creates a property on a Node object that represents the collision of the specified Node object 
 		/// with another instance.
 		/// </summary>
-		/// <param name="localNode">The Node object where the collision will be stored.</param>
 		/// <param name="collisionNode">Node object that has collided with another instance.</param>
+		/// <param name="isFileCollision">True if the collision was caused by a file.</param>
 		/// <returns>The Node object that the collision was stored on.</returns>
-		public Node CreateCollision( Node localNode, Node collisionNode )
+		public Node CreateCollision( Node collisionNode, bool isFileCollision )
 		{
-			// See if a collision property already exists.
-			Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
-			CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+			// Look up the Node where the collision occurred.
+			Node localNode = GetNodeByID( collisionNode.ID );
+			if ( localNode != null )
+			{
+				// Set the state to update internally.
+				localNode.Properties.State = PropertyList.PropertyListState.Internal;
 
-			// Add the new collision to the collision list.
-			cList.Add( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+				// See if a collision property already exists.
+				Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
+				CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
 
-			// Modify or add the collision list.
-			p = new Property( PropertyTags.Collision, cList.Document );
-			p.LocalProperty = true;
-			localNode.Properties.ModifyNodeProperty( p );
-			return localNode;
-		}
+				// Add the new collision to the collision list.
+				if ( isFileCollision )
+				{
+					cList.Add( new Collision( Collision.CollisionType.File, String.Empty ) );
+				}
+				else
+				{
+					cList.Add( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+				}
 
-		/// <summary>
-		/// Creates a property on a Node object that represents a file conflict.
-		/// </summary>
-		/// <param name="localNode">The Node object where the collision will be stored.</param>
-		/// <returns>The Node object that the collision was stored on.</returns>
-		public Node CreateCollision( Node localNode )
-		{
-			// See if a collision property already exists.
-			Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
-			CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+				// Modify or add the collision list.
+				p = new Property( PropertyTags.Collision, cList.Document );
+				p.LocalProperty = true;
+				localNode.Properties.ModifyNodeProperty( p );
+			}
 
-			// Add the new collision to the collision list.
-			cList.Add( new Collision( Collision.CollisionType.File, String.Empty ) );
-
-			// Modify or add the collision list.
-			p = new Property( PropertyTags.Collision, cList.Document );
-			p.LocalProperty = true;
-			localNode.Properties.ModifyNodeProperty( p );
 			return localNode;
 		}
 

@@ -318,14 +318,13 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Sets the master and local incarnation values on a Node object.
+		/// Sets the master incarnation values on a Node object.
 		/// </summary>
-		/// <param name="master">The master incarnation value to set.</param>
-		/// <param name="local">The local incarnation value to set.</param>
-		internal void SetIncarnationValues( ulong master, ulong local )
+		/// <param name="incarnationValue">The master incarnation value to set.</param>
+		internal void SetMasterIncarnation( ulong incarnationValue )
 		{
-			properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, master );
-			properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, local );
+			properties.State = PropertyList.PropertyListState.Internal;
+			properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );
 		}
 		#endregion
 
