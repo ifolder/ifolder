@@ -113,6 +113,7 @@ namespace Simias.Service
 			Install(new ThreadServiceCtl(conf, "Simias Service", "EventService", "Simias.Event.EventService"));
 			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "SyncManager", "Simias.Sync.SyncManagerService"));
 			Install(new ThreadServiceCtl(conf, "File Watcher Service", "FsWatcher", "Simias.Event.FsWatcher"));
+			Install(new ThreadServiceCtl(conf, "multi-cast DNS Service", "mDnsService", "Simias.Service.mDnsService"));
 		}
 
 		/// <summary>
