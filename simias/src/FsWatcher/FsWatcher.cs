@@ -41,10 +41,9 @@ namespace Simias.Event
 
 		internal CollectionFilesWatcher(Collection col)
 		{
-            this.collectionId = col.Id;
-			publish = new EventPublisher(new Configuration(col.LocalStore.StorePath.LocalPath));
-			Uri pathUri = (Uri)col.Properties.GetSingleProperty(Property.DocumentRoot).Value;
-			string rootPath = pathUri.LocalPath;
+            this.collectionId = col.ID;
+			publish = new EventPublisher(col.StoreReference.Config);
+			string rootPath = col.GetRootDirectory().GetFullPath(col);
 			watcher = new FileSystemWatcher(rootPath);
 			watcher.Changed += new FileSystemEventHandler(OnChanged);
 			watcher.Created += new FileSystemEventHandler(OnCreated);
@@ -126,7 +125,7 @@ namespace Simias.Event
 		
 		private void WatchCollection(Collection col)
 		{
-			watcherTable.Add(col.Id, new CollectionFilesWatcher(col));
+			watcherTable.Add(col.ID, new CollectionFilesWatcher(col));
 		}
 
 		private void OnNewCollection(NodeEventArgs args)
@@ -135,7 +134,7 @@ namespace Simias.Event
 			{
 				if (args.ID == args.Collection)
 				{
-					Collection col = store.GetCollectionById(args.ID);
+					Collection col = store.GetCollectionByID(args.ID);
 					if (col != null)
 					{
 						WatchCollection(col);
@@ -164,8 +163,8 @@ namespace Simias.Event
 				// Create a hash table to store the watchers in.
 				this.conf = conf;
 				watcherTable = new Hashtable();
-				store = Store.Connect(conf);
-				collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath));
+				store = new Store(conf);
+				collectionWatcher = new EventSubscriber(conf);
 				collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 				collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
 				foreach (Collection col in store)
