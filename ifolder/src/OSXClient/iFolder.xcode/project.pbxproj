@@ -25,10 +25,12 @@
 				3E4F5738078C30DA00313076,
 				3E70A40A078DFCD80075681D,
 				3E70A40B078DFCD80075681D,
-				3EB8C510079393B60082AA86,
 				3EB8C511079393B60082AA86,
-				3E3BC75307AB5B7B00D2AE46,
+				3EB8C510079393B60082AA86,
 				3E3BC75407AB5B7B00D2AE46,
+				3E3BC75307AB5B7B00D2AE46,
+				3E6D783307B098E2001DA76A,
+				3E6D783207B098E2001DA76A,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -657,6 +659,36 @@
 			settings = {
 			};
 		};
+		3E6D783207B098E2001DA76A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = LeaveDomainSheetController.m;
+			path = src/LeaveDomainSheetController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E6D783307B098E2001DA76A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = LeaveDomainSheetController.h;
+			path = src/LeaveDomainSheetController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E6D783407B098E2001DA76A = {
+			fileRef = 3E6D783207B098E2001DA76A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E6D783507B098E2001DA76A = {
+			fileRef = 3E6D783307B098E2001DA76A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E70A407078DFB8A0075681D = {
 			children = (
 				3E70A408078DFB8A0075681D,
@@ -1157,6 +1189,7 @@
 				3EDD6ADA07AEAECB008A2A3B,
 				3EC02E2107AED395001FF59D,
 				3EC02F2107AED3C4001FF59D,
+				3E6D783507B098E2001DA76A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1190,6 +1223,7 @@
 				3EB8C512079393B60082AA86,
 				3E3BC75507AB5B7B00D2AE46,
 				3EDD6ADB07AEAECB008A2A3B,
+				3E6D783407B098E2001DA76A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
