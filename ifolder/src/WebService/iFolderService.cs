@@ -1017,6 +1017,41 @@ namespace Novell.iFolder.Web
 
 
 
+		/// <summary>
+		/// Decline an Enterprise subscription
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the iFolder to decline the invitation for
+		/// </param>
+		[WebMethod(Description="Decline an invitation to an iFolder.  The iFolder ID represents a Subscription object")]
+		[SoapDocumentMethod]
+		public void DeclineiFolderInvitation( string iFolderID )
+		{
+			Store store = Store.GetStore();
+
+			// Check to be sure we are not in Workgroup Mode
+			if(store.DefaultDomain == Simias.Storage.Domain.WorkGroupDomainID)
+				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
+
+			Simias.POBox.POBox poBox = 
+				Simias.POBox.POBox.GetPOBox( store, store.DefaultDomain );
+
+			// iFolders returned in the Web service are also
+			// Subscriptions and it ID will be the subscription ID
+			Node node = poBox.GetNodeByID(iFolderID);
+			if(node == null)
+				throw new Exception("Invalid iFolderID");
+
+			Subscription sub = new Subscription(node);
+
+			// Change the local subscription
+			sub.SubscriptionState = SubscriptionStates.Replied;
+			sub.SubscriptionDisposition = SubscriptionDispositions.Declined;
+
+			poBox.Commit(sub);
+		}
+
+
 
 		/// <summary>
 		/// WebMethod that gets the DiskSpaceQuota for a given member
