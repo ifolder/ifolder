@@ -2174,6 +2174,10 @@ namespace Novell.iFolderCom
 							else if (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType))
 							{
 								ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+								if ((ifolderUser.iFolderID != null) && (!ifolderUser.iFolderID.Equals(currentiFolder.ID)))
+								{
+									ifolderUser = null;
+								}
 							}
 
 							break;
