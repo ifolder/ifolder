@@ -132,6 +132,41 @@ namespace Mono.P2p.mDnsResponder
 			Resources.RemovePtr(ptr); 
 			return(0);
 		}
+
+		public int	RegisterTextStrings(string serviceName, string[] txtStrings)
+		{
+			Console.WriteLine("ResourceRegistration::RegisterTextStrings called");
+			TextStrings ts = new
+				TextStrings(
+					serviceName,
+					Defaults.timeToLive,
+					mDnsType.textStrings,
+					mDnsClass.iNet,
+					true);
+
+			foreach(string ss in txtStrings)
+			{
+				ts.AddTextString(ss);
+			}
+					
+			Resources.AddTextStrings(ts);
+			return(0);
+		}
+		
+		public int	DeregisterTextStrings(string serviceName)
+		{
+			TextStrings ts = new
+				TextStrings(
+					serviceName,
+					Defaults.timeToLive,
+					mDnsType.textStrings,
+					mDnsClass.iNet,
+					true);
+			// FIXME - add a a remove text string to Resources
+			// Resources.RemoveTextStrings(ts);
+			return(0);
+		}
+
 		#endregion
 	}
 
@@ -185,7 +220,7 @@ namespace Mono.P2p.mDnsResponder
 			return(status);	
 		}
 
-		public int LookupHost(string host, out RHostAddress ha)
+		public int LookupHost(string host, ref RHostAddress ha)
 		{
 			Console.WriteLine("LookupHost called");
 			int status = 0;
@@ -207,6 +242,40 @@ namespace Mono.P2p.mDnsResponder
 	
 		#endregion
 	}
+
+	/// <summary>
+	/// Summary description for ResourceQuery
+	/// </summary>'
+	public class mDnsLog : MarshalByRefObject, ImDnsLog
+	{
+		#region Constructors
+		public mDnsLog()
+		{
+		}
+		#endregion
+
+		#region Public Methods
+
+		public int DumpResourceRecords()
+		{
+			Question cQuestion = new Question();
+			Resources.DumpYourGuts(cQuestion);
+			return(0);
+		}
+
+		public int DumpLocalRecords()
+		{
+			Resources.DumpLocalRecords();
+			return(0);
+		}
+
+		public int DumpStatistics()
+		{
+			//Resources.DumpYourGuts();
+			return(0);
+		}
+		#endregion
+	}
 	
 	public class mDnsRemoteFactory: MarshalByRefObject, IRemoteFactory
 	{
@@ -218,6 +287,11 @@ namespace Mono.P2p.mDnsResponder
 		public IResourceQuery GetQueryInstance()
 		{
 			return(new ResourceQuery());
+		}
+
+		public ImDnsLog GetLogInstance()
+		{
+			return(new mDnsLog());
 		}
 	}
 	

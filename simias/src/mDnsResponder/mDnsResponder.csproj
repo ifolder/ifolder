@@ -84,10 +84,25 @@
                     AssemblyName = "log4net"
                     HintPath = "..\..\external\log4net\bin\net\1.1\release\log4net.dll"
                 />
+                <Reference
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
+                />
+                <Reference
+                    Name = "mDnsResponderApi"
+                    AssemblyName = "mDnsResponderApi"
+                    HintPath = "mDnsResponderApi\bin\Debug\mDnsResponderApi.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "Api.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
@@ -120,11 +135,6 @@
                 />
                 <File
                     RelPath = "Responder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Service.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

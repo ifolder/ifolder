@@ -99,6 +99,64 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 			log.Info("DumpYourGuts exit");
 		}
+
+		static public void DumpLocalRecords()
+		{
+			log.Info("DumpLocalResources called");
+			
+			Resources.resourceMtx.WaitOne();
+			
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Owner == true)
+				{
+					log.Info("");
+					log.Info("  RESOURCE");
+					log.Info("  Name:      " + cResource.Name);
+					log.Info("  Type:      " + cResource.Type);
+					log.Info("  TTL:       " + cResource.Ttl.ToString());
+				
+					if (cResource.Type == mDnsType.hostAddress)
+					{
+						HostAddress	hostAddr = (HostAddress) cResource;
+					
+						try
+						{
+							log.Info("  IP:        " + hostAddr.PrefAddress.ToString());
+						}
+						catch{}
+					}
+					else
+					if (cResource.Type == mDnsType.serviceLocation)
+					{
+						ServiceLocation svcLoc = (ServiceLocation) cResource;
+					
+						log.Info("  Priority:  " + svcLoc.Priority.ToString());
+						log.Info("  Weight:    " + svcLoc.Weight.ToString());
+						log.Info("  Port:      " + svcLoc.Port.ToString());
+						log.Info("  Target:    " + svcLoc.Target);
+					}
+					else
+					if (cResource.Type == mDnsType.ptr)
+					{
+						Ptr ptr = (Ptr) cResource;
+						log.Info("  Target:    " + ptr.Target);
+					}
+					else
+					if (cResource.Type == mDnsType.textStrings)
+					{
+						TextStrings txt = (TextStrings) cResource;
+						foreach(string txtString in txt.GetTextStrings())
+						{
+							log.Info("  " + txtString);
+						}
+					}
+					log.Info("");
+				}
+				Resources.resourceMtx.ReleaseMutex();
+				log.Info("DumpLocalResources exit");
+			}
+		}
 		
 		static public void AddHostAddress(HostAddress hostAddr)
 		{
@@ -642,7 +700,7 @@ namespace Mono.P2p.mDnsResponder
 			// Setup an endpoint to multi-cast datagrams
 			UdpClient server = new UdpClient("224.0.0.251", 5353);
 
-			while(maintenanceEvent.WaitOne((Defaults.maintenanceNapTime * 1000), true))
+			while(maintenanceEvent.WaitOne((Defaults.maintenanceNapTime), false))
 			{
 				//Thread.Sleep(Defaults.maintenanceNapTime * 1000);
 				log.Info("Maintenance thread awake");

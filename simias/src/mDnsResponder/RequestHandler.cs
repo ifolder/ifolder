@@ -77,7 +77,7 @@ namespace Mono.P2p.mDnsResponder
 					return;
 				}
 
-				Console.WriteLine("RequestHandler alive!");
+				//Console.WriteLine("RequestHandler alive!");
 				
 				// Need an event to kick us alive
 				dnsRequest = null;

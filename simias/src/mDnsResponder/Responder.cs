@@ -42,9 +42,11 @@ namespace Mono.P2p.mDnsResponder
 			/*
 				FIXME - temporarily load some records
 			*/	
-			localHost = "BRADY-T21.local";
+
+			/*
+			localHost = "DELL2BALL.local";
 			HostAddress addrHost = new HostAddress(localHost, 300, mDnsType.hostAddress, mDnsClass.iNet, true);
-			addrHost.AddIPAddress(IPAddress.Parse("151.155.8.1"));
+			addrHost.AddIPAddress(IPAddress.Parse("137.65.58.216"));
 			Resources.AddHostAddress(addrHost);
 
 			string slName = "jacko@";
@@ -73,6 +75,7 @@ namespace Mono.P2p.mDnsResponder
 			txtStrs.AddTextString("port.p2pj=5298");
 			txtStrs.AddTextString("last=Jackson");
 			Resources.AddTextStrings(txtStrs);
+			*/
 			
 			Registration.Startup();
 			RequestHandler.StartRequestHandler();

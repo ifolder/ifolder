@@ -230,10 +230,12 @@ namespace Mono.P2p.mDnsResponder
 			{
 				dnsReceiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
+				/*
 				dnsReceiveSocket.SetSocketOption(
 					SocketOptionLevel.Socket,
 					SocketOptionName.ReuseAddress,
 					true);
+				*/
 					
 				dnsReceiveSocket.Bind(iep);
 				dnsReceiveSocket.SetSocketOption(
@@ -257,13 +259,19 @@ namespace Mono.P2p.mDnsResponder
 
 		internal static int	StopDnsReceive()
 		{
-			log.Info("StopDnsReceive called");
-			mDnsStopping = true;
-			dnsReceiveSocket.Close();
-			Thread.Sleep(0);
-			dnsReceiveThread.Abort();
-			receivingDnsRequests = false;
-			log.Info("StopDnsReceive finished");
+			try
+			{
+				log.Info("StopDnsReceive called");
+				mDnsStopping = true;
+				dnsReceiveSocket.Close();
+				Thread.Sleep(0);
+				dnsReceiveThread.Abort();
+				receivingDnsRequests = false;
+				log.Info("StopDnsReceive finished");
+				return(0);
+			}
+			catch{}
+			log.Debug("StopDnsReceive finished with an exception");
 			return(0);
 		}
 
@@ -416,34 +424,41 @@ namespace Mono.P2p.mDnsResponder
 
 								if(rType == mDnsType.hostAddress)
 								{
-									HostAddress	hostAddress = new 
-										HostAddress(tmpDomain, timeToLive, rType, rClass, false);
+									try
+									{
+										HostAddress	hostAddress = new 
+											HostAddress(tmpDomain, timeToLive, rType, rClass, false);
 
-									long ipAddress = 
-										IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
-									//int		ipAddress = BitConverter.ToInt32(receiveData[offset], 0);
+										long ipAddress = 
+											IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
+										//int		ipAddress = BitConverter.ToInt32(receiveData[offset], 0);
 									
-									byte[] bAddr = new byte[4];
-									bAddr[0] = (byte) receiveData[offset];
-									bAddr[1] = (byte) receiveData[offset + 1];
-									bAddr[2] = (byte) receiveData[offset + 2];
-									bAddr[3] = (byte) receiveData[offset + 3];
+										byte[] bAddr = new byte[4];
+										bAddr[0] = (byte) receiveData[offset];
+										bAddr[1] = (byte) receiveData[offset + 1];
+										bAddr[2] = (byte) receiveData[offset + 2];
+										bAddr[3] = (byte) receiveData[offset + 3];
 									
-									log.Info("Constructing IPAddress");
-									IPAddress addr = new IPAddress(ipAddress);
-									log.Info("Done constructing");
-									hostAddress.AddIPAddress(addr);
+										log.Info("Constructing IPAddress");
+										IPAddress addr = new IPAddress(ipAddress);
+										log.Info("Done constructing");
+										hostAddress.AddIPAddress(addr);
 
-									Console.WriteLine(
-										"   IP Address:  {0}.{1}.{2}.{3}",
-										receiveData[offset],
-										receiveData[offset + 1],
-										receiveData[offset + 2],
-										receiveData[offset + 3]);
+										Console.WriteLine(
+											"   IP Address:  {0}.{1}.{2}.{3}",
+											receiveData[offset],
+											receiveData[offset + 1],
+											receiveData[offset + 2],
+											receiveData[offset + 3]);
+
+										dnsRequest.answerList.Add(hostAddress);
+									}
+									catch(Exception e)
+									{
+										log.Error("Failed setting up a HostAddress", e);
+									}
 
 									offset += 4;
-									
-									dnsRequest.answerList.Add(hostAddress);
 								}
 								else
 								if(rType == mDnsType.ipv6)

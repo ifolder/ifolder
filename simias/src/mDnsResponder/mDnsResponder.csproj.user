@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\code\simias\external\log4net\bin\net\1.1\release\;C:\code\log4net-1.2.0-beta8\bin\net\1.1\debug\" >
+            <Settings ReferencePath = "C:\code\simias\external\log4net\bin\net\1.1\release\;C:\code\log4net-1.2.0-beta8\bin\net\1.1\debug\;C:\code\simias\src\mDnsResponder\mDnsResponderApi\bin\Debug\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

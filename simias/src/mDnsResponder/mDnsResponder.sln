@@ -1,10 +1,21 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsResponder", "mDnsResponder.csproj", "{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}"
 	ProjectSection(ProjectDependencies) = postProject
+		{7B22CE7B-0978-42E4-B662-51BFFAC876C6} = {7B22CE7B-0978-42E4-B662-51BFFAC876C6}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsClient", "mDnsClient\mDnsClient.csproj", "{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}"
 	ProjectSection(ProjectDependencies) = postProject
+		{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB} = {7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsResponderApi", "mDnsResponderApi\mDnsResponderApi.csproj", "{7B22CE7B-0978-42E4-B662-51BFFAC876C6}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsResponderCmd", "mDnsResponderCmd\mDnsResponderCmd.csproj", "{97739B07-6A2E-4C63-9BE9-9537C879E70D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7B22CE7B-0978-42E4-B662-51BFFAC876C6} = {7B22CE7B-0978-42E4-B662-51BFFAC876C6}
 	EndProjectSection
 EndProject
 Global
@@ -21,6 +32,14 @@ Global
 		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Debug.Build.0 = Debug|.NET
 		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Release.ActiveCfg = Release|.NET
 		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Release.Build.0 = Release|.NET
+		{7B22CE7B-0978-42E4-B662-51BFFAC876C6}.Debug.ActiveCfg = Debug|.NET
+		{7B22CE7B-0978-42E4-B662-51BFFAC876C6}.Debug.Build.0 = Debug|.NET
+		{7B22CE7B-0978-42E4-B662-51BFFAC876C6}.Release.ActiveCfg = Release|.NET
+		{7B22CE7B-0978-42E4-B662-51BFFAC876C6}.Release.Build.0 = Release|.NET
+		{97739B07-6A2E-4C63-9BE9-9537C879E70D}.Debug.ActiveCfg = Debug|.NET
+		{97739B07-6A2E-4C63-9BE9-9537C879E70D}.Debug.Build.0 = Debug|.NET
+		{97739B07-6A2E-4C63-9BE9-9537C879E70D}.Release.ActiveCfg = Release|.NET
+		{97739B07-6A2E-4C63-9BE9-9537C879E70D}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
