@@ -186,12 +186,12 @@ namespace Novell.AddressBook.UI.gtk
 						BookTreeStore.AppendValues(ab);
 					}
 
-					curAddrBook = abMan.OpenDefaultAddressBook();
+//					curAddrBook = abMan.OpenDefaultAddressBook();
 
-					foreach(Contact c in curAddrBook)
-					{
-						ContactTreeStore.AppendValues(c);
-					}
+//					foreach(Contact c in curAddrBook)
+//					{
+//						ContactTreeStore.AppendValues(c);
+//					}
 			}
 			else
 			{
@@ -207,10 +207,7 @@ namespace Novell.AddressBook.UI.gtk
 				Gtk.TreeIter iter)
 		{
 			AddressBook book = (AddressBook) BookTreeStore.GetValue(iter,0);
-			if(book.Default)
-				((CellRendererText) cell).Text = "Default";
-			else
-				((CellRendererText) cell).Text = book.Name;
+			((CellRendererText) cell).Text = book.Name;
 		}
 
 
@@ -375,10 +372,9 @@ namespace Novell.AddressBook.UI.gtk
 
 			if((rc == -5) && (abMan != null))
 			{
-				AddressBook ab = new AddressBook(be.Name);
-
-				abMan.AddAddressBook(ab);
+				AddressBook ab = abMan.CreateAddressBook(be.Name);
 				ab.Commit();
+
 				BookTreeStore.AppendValues(ab);
 			}
 		}
@@ -637,32 +633,19 @@ namespace Novell.AddressBook.UI.gtk
 				if(tModel != null)
 					tModel = null;
 				AddressBook ab = (AddressBook) BookTreeStore.GetValue(iter,0);
-				if(ab.Default)
-				{
-					MessageDialog med = new MessageDialog(cpDialog,
-							DialogFlags.DestroyWithParent | DialogFlags.Modal,
-							MessageType.Error,
-							ButtonsType.Close,
-							"Deleting the default address book ain't right and we ain't gonna let you do it.");
-					med.Title = "This ain't right";
-					med.Run();
-					med.Hide();
-					med.Destroy();
-					return;
-				}
-
-				BookTreeStore.Remove(ref iter);
 
 				try
 				{
 					ab.Delete();
+					ab.Commit();
+					BookTreeStore.Remove(ref iter);
+					ContactTreeStore.Clear();
 				}
 				catch(ApplicationException e)
 				{
 					Console.WriteLine(e);
 				}
 
-				ContactTreeStore.Clear();
 			}
 		}
 
