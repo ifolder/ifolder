@@ -1,37 +1,43 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-WebService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/ApplicationServer.cs $(srcdir)/IApplicationHost.cs $(srcdir)/IWebSource.cs $(srcdir)/Tracing.cs $(srcdir)/XSPApplicationHost.cs $(srcdir)/BaseApplicationHost.cs $(srcdir)/BaseRequestBroker.cs $(srcdir)/MonoWorkerRequest.cs $(srcdir)/XSPWorkerRequest.cs $(srcdir)/LingeringNetworkStream.cs $(srcdir)/InitialWorkerRequest.cs $(srcdir)/SimiasWebService.cs
-WebService_CSFILES_CSC := $(subst /,$(SEP),$(WebService_CSFILES))
-WebService_INCLUDES = 
-WebService_RESOURCES =
-WebService_FLAGS = $(CSC_LIBFLAG)
-WebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll System.Web.dll
-WebService_LIBPATH = ../Simias.dll
+SimiasWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/Global.cs $(srcdir)/SimiasService.cs 
+SimiasWebService_CSFILES := $(subst /,$(SEP),$(SimiasWebService_CSFILES1))
+SimiasWebService_INCLUDES = 
+SimiasWebService_RESOURCES =  
+SimiasWebService_FLAGS = $(CSC_LIBFLAG)
+SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
+SimiasWebService_LIBPATH =
 
-EXTRA_DIST = $(WebService_CSFILES)
+EXTRA_DIST = web.config Global.asax Simias.asmx $(SimiasWebService_CSFILES)
 
-CUR_DIR := $(shell pwd)
+all: Simias.Web.dll
 
-all: SimiasWebService.dll
+Simias.Web.dll: $(SimiasWebService_CSFILES) $(SimiasWebService_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasWebService_FLAGS) $(SIMIAS_LIBS) $(SimiasWebService_LIBS:%=/r:%) $(SimiasWebService_LIBPATH:%=/lib:%) $(SimiasWebService_RESOURCES:%=$(ICON_FLAG)%) $(SimiasWebService_CSFILES) /doc:SimiasWebService.doc.xml
 
-SimiasWebService.dll: $(WebService_CSFILES) $(WebService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(WebService_FLAGS) $(WebService_LIBS:%=/r:%) $(WebService_LIBPATH:%=/lib:%) $(WebService_CSFILES_CSC) /doc:SimiasWebService.doc.xml
-	
 if DEBUG
 if WINDOWS
-DEBUG_FILES = SimiasWebService.pdb
+DEBUG_FILES = Simias.Web.pdb
 endif
 endif
 
-install-exec-local: SimiasWebService.dll
+install-exec-local: Simias.Web.dll $(DATA_FILES)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) SimiasWebService.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
-    
-uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f SimiasWebService.dll $(DEBUG_FILES)
+#	$(mkinstalldirs) $(DESTDIR)$(localstatedir)
+#	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/bin
+	$(mkinstalldirs) $(DESTDIR)$(bindir)/bin
+	$(INSTALL_PROGRAM) web.config Global.asax Simias.asmx $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Simias.Web.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)/bin
 	
-CLEAN_FILES = SimiasWebService.dll $(DEBUG_FILES) 
+uninstall-local:
+	cd $(DESTDIR)$(bindir); rm -f web.config Global.asax Simias.asmx $(DEBUG_FILES)
+	cd $(DESTDIR)$(bindir)/bin; rm -f Simias.Web.dll $(DEBUG_FILES)
+    
+installcheck-local: install
+	
+CLEAN_FILES = Simias.Web.dll Simias.Web.doc.xml
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
