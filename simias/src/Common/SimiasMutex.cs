@@ -69,7 +69,7 @@ namespace Simias
 		private int threadID;
 
 		[DllImport ("libc")]
-        static extern int open(string name, int flags);
+	static extern int open(string name, int flags);
 
 		[DllImport ("libc")]
         static extern int close(int fd);
@@ -213,8 +213,7 @@ namespace Simias
 					}
 
 					// This thread does not own the mutex. Exception.
-					throw new ApplicationException("Failed To release mutex.");
-				}
+					throw new ApplicationException("Failed To release mutex.");				}
 			}
 #else
 			mux.ReleaseMutex();
@@ -250,3 +249,4 @@ namespace Simias
 		#endregion
 	}
 }
+
