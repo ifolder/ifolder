@@ -27,6 +27,8 @@ else # NDOC
 
 ndoc:
 	@echo NDOC is not configured
+	mkdir -p addressbook-ndoc
+	touch addressbook-ndoc/sdk_doc_was_not_built
 
 endif # NDOC
 

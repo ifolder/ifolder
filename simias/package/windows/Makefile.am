@@ -50,20 +50,7 @@ MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
 MSM_DISK1     = $(MSM)/$(DISK1)/simias.msm
 SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/simias_sdk.msm
 
-.PHONY: package package-clean
-
-package: $(MSI_FILE)
-
-issabld:
-	@if test -z "$(ISSABLD)"; then \
-		echo ""; \
-		echo "ERROR: environment variable ISSABLD is not set"; \
-		echo ""; \
-		echo "NOTE:  InstallShield is used to build MSI/MSM packages."; \
-		echo "       Set ISSABLD to location of IsSABld.exe."; \
-		echo ""; \
-		exit 1; \
-	fi
+all: $(MSI_FILE)
 
 $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
@@ -115,6 +102,17 @@ $(SDK_MSM_FILE): issabld simias-doc $(SDK_MSM).ism
 
 .PHONY: simias-install simias simias-configure simias-dist simias-doc
 
+issabld:
+	@if test -z "$(ISSABLD)"; then \
+		echo ""; \
+		echo "ERROR: environment variable ISSABLD is not set"; \
+		echo ""; \
+		echo "NOTE:  InstallShield is used to build MSI/MSM packages."; \
+		echo "       Set ISSABLD to location of IsSABld.exe."; \
+		echo ""; \
+		exit 1; \
+	fi
+
 simias-install: simias
 	$(MAKE) -C MSI/BUILD/$(PACKAGE)-$(VERSION) install
 	
@@ -135,14 +133,9 @@ simias-dist:
 	$(MAKE) -C $(top_srcdir) dist
 
 simias-doc: simias
-	@if test -x "$(NDOC_CMD)"; then \
-		$(MAKE) -C $(top_srcdir)/doc all; \
-	else \
-		mkdir -p ../../doc/ndoc; \
-		touch ../../doc/ndoc/sdk_doc_was_not_built; \
-	fi
-
-package-clean clean-local:
+	$(MAKE) -C $(top_srcdir)/doc all
+	
+clean:
 	rm -rf $(COMMON_CLEAN_FILES)
 	rm -rf *-setup.exe *.msi *.msm *.log
 	rm -rf MSI
@@ -150,7 +143,7 @@ package-clean clean-local:
 	rm -rf $(MSM)/$(ISSABLD_CONFIG)
 	rm -rf $(SDK_MSM)/$(ISSABLD_CONFIG)
 
-distclean-local: package-clean
+distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES) simias.spec simias-sdk.spec
 
 maintainer-clean-local:

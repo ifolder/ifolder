@@ -1,6 +1,6 @@
-SUBDIRS = src package
+SUBDIRS = src
 
-DIST_SUBDIRS = $(SUBDIRS) doc
+DIST_SUBDIRS = $(SUBDIRS) package doc
 
 EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
 
@@ -41,8 +41,14 @@ doc-clean:
 
 .PHONY: package package-sdk package-clean
 
-package package-sdk package-clean:
-	$(MAKE) -C package $@
+package:
+	$(MAKE) -C package all
+
+package-sdk:
+	$(MAKE) -C package sdk
+
+package-clean:
+	$(MAKE) -C package clean
 
 if WINDOWS
 #

@@ -26,11 +26,11 @@ RELEASE = 1
 RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
 SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
-.PHONY: package package-clean package-install package-uninstall ifolder simias-dist
+.PHONY: simias-dist
 
 all clean:
 
-package: simias.spec simias-dist
+all: simias.spec simias-dist
 	rm -rf RPM
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
@@ -52,16 +52,16 @@ package: simias.spec simias-dist
 simias-dist:
 	cd $(top_srcdir); make dist
 
-package-install: package
-	su -c "rpm -Uvh $(RPM_FILE)"
+install: $(RPM_FILE)
+	sudo "rpm -Uvh $(RPM_FILE)"
 	
-package-uninstall:
-	su -c "rpm -e $(PACKAGE)"
+uninstall:
+	sudo "rpm -e $(PACKAGE)"
 
-package-clean clean-local:
+clean:
 	rm -rf *.rpm RPM
 
-distclean-local: package-clean
+distclean-local:
 	rm -f simias.spec
 
 maintainer-clean-local:

@@ -20,25 +20,7 @@
 #  Author: Paul Thomas <pthomas@novell.com>
 #
 #######################################################################
-EXTRA_DIST = $(srcdir)/Makefile.am
-
-RELEASE = 1
-RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
-SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
-
-.PHONY: package package-clean package-install package-uninstall ifolder
-
-all clean:
-
-package:
-
-package-install:
-	
-package-uninstall:
-
-package-clean clean-local:
-
-distclean-local:
+all sdk clean:
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)

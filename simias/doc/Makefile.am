@@ -5,7 +5,7 @@ all: ndoc
 clean-local: ndoc-clean
 
 simias-install:
-#	$(MAKE) -C .. install
+	$(MAKE) -C .. install
 
 if NDOC
 
@@ -24,6 +24,8 @@ else # NDOC
 
 ndoc:
 	@echo NDOC is not configured
+	mkdir -p simias-ndoc
+	touch simias-ndoc/sdk_doc_was_not_built
 
 endif # NDOC
 
