@@ -69,17 +69,6 @@ static char *get_my_profile_string(GaimAccount *account);
 
 static gboolean parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName, char **userID, char **simiasURL);
 
-/**
- * Returns a public key for the specified buddy for the specified machineName
- * or the temporary public key received by an "accept invitation" message if
- * we don't already have a public key stored for the buddy + machine name.
- *
- * If a public key is found, the returned char * should be freed.  In the case
- * of a failure, the return will be NULL.
- */
-static char * get_buddy_public_key(GaimBuddy *buddy, char *machineName);
-
-
 /* Returned string must be freed */
 void
 simias_get_buddy_profile(GaimBuddy *buddy)
@@ -208,7 +197,7 @@ simias_set_buddy_profile(GaimAccount *account, const char *profile_str)
 	{
 		/**
 		 * Use g_timeout_add() to try setting the profile in a couple seconds
-		 * when hopefully the connection is now connected.
+		 * when hopefully the connection will be connected.
 		 */
 		g_timeout_add(2000, set_buddy_profile_on_timeout, account);
 	}
@@ -341,7 +330,7 @@ simias_notify_userinfo(GaimConnection *gc, const char *who, const char *title,
 	char *machineName;
 	char *userID;
 	char *simiasURL;
-	char settingName[2048];
+	char settingName[1024];
 	
 	/**
 	 * If we're expecting this function to be called on a particular buddy,
@@ -545,7 +534,7 @@ convert_url_to_public(const char *start_url)
  * This should add the following string to the end of the existing user
  * profile:
  *
- * [simias:plugin-installed:<Base64 encoded machine name>:<Simias UserID and URL encoded with private key>]
+ * [simias:plugin-installed:<Base64 encoded machine name>:<Simias UserID and URL encoded with DES key>]
  */
 static char *
 get_my_profile_string(GaimAccount *account)
@@ -557,7 +546,7 @@ get_my_profile_string(GaimAccount *account)
 	char *escapedURL;
 	char *publicURL;
 	char *base64MachineName;
-	char *privateKey;
+	char *desKey;
 	char unencryptedString[2048];
 	char *encryptedString;
 	int err;
@@ -566,20 +555,11 @@ get_my_profile_string(GaimAccount *account)
 	 * FIXME: Figure out how to read the existing profile instead of just replacing the entire thing.
 	 */
 
-	err = simias_get_private_key(&privateKey);
-	if (err != 0)
-	{
-		/* Couldn't get the private key */
-		fprintf(stderr, "simias_get_private_key() returned an error (%d).  Is iFolder/Simias running?\n", err);
-		return NULL;
-	}
-	
 	err = simias_get_user_info(&machineName, &userID, &simiasURL);
 	if (err != 0)
 	{
 		/* None of the returns are valid */
-		free(privateKey);
-		fprintf(stderr, "simias_get_user_info() returned an error (%d).  Is iFolder/Simias running?\n", err);
+		fprintf(stderr, "simias_get_user_info() returned an error (%d) in get_my_profile_string().  Is iFolder/Simias running?\n", err);
 		return NULL;
 	}
 
@@ -592,23 +572,31 @@ get_my_profile_string(GaimAccount *account)
 	free(escapedURL);
 	if (!publicURL)
 	{
-		free(privateKey);
 		free(machineName);
 		free(userID);
 		fprintf(stderr, "convert_url_to_public() returned NULL in get_my_profile_string()\n");
+		return NULL;
+	}
+
+	err = simias_get_des_key(&desKey);
+	if (err != 0)
+	{
+		free(machineName);
+		free(userID);
+		free(publicURL);
+		fprintf(stderr, "simias_get_des_key() returned an error (%d) in get_my_profile_string().  Is iFolder/Simias running?\n", err);
 		return NULL;
 	}
 	
 	sprintf(unencryptedString, "%s:%s", userID, publicURL);
 	free(userID);
 	free(publicURL);
-	err = simias_encrypt_string(privateKey, unencryptedString, &encryptedString);
-	free(privateKey);
+	err = simias_des_encrypt_string(desKey, unencryptedString, &encryptedString);
+	free(desKey);
 	if (err != 0)
 	{
-		/* Error encrypting the string */
 		free(machineName);
-		fprintf(stderr, "simias_encrypt_string() return an error (%d).  Is iFolder/Simias running?\n", err);
+		fprintf(stderr, "simias_des_encrypt_string() return an error (%d) in get_my_profile_string().  Is iFolder/Simias running?\n", err);
 		return NULL;
 	}
 	
@@ -629,7 +617,7 @@ get_my_profile_string(GaimAccount *account)
 /**
  * The profile string should be in this format:
  *
- * [simias:<Base64Encoded Machine Name>:<String Encoded with User's Private Key>]
+ * [simias:<Base64Encoded Machine Name>:<String Encoded with DES Key>]
  */
 static gboolean
 parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName, char **userID, char **simiasURL)
@@ -641,12 +629,21 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	int machineNameLength;
 	char *encryptedString;
 	char *decryptedString;
+	char settingName[1024];
+	char *desKey;
 	int err;
-	char *publicKey;
 	
 	tmp = strstr(profile, SIMIAS_PLUGIN_INSTALLED_ID);
 	if (!tmp) {
 		fprintf(stderr, "parse_encoded_profile() called on a profile that doesn't contain \"%s\"\n", SIMIAS_PLUGIN_INSTALLED_ID);
+		
+		/**
+		 * If this buddy is signing on from a new machine or disabled their
+		 * iFolder plugin, remove the setting we've stored in our own blist.xml
+		 * about this fact.
+		 */
+		gaim_blist_node_remove_setting(&(buddy->node), "simias-plugin-enabled");
+		
 		return FALSE;
 	}
 	
@@ -671,8 +668,21 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	gaim_base64_decode(base64MachineName, machineName, &machineNameLength);
 	free(base64MachineName);
 
-	/**
-	 * Look for a public key for the buddy + machine name.  If it's there
+	/* Use the machine name to mark this buddy with "simias-plugin-enabled" */
+	gaim_blist_node_set_string(&(buddy->node), "simias-plugin-enabled", machineName);
+
+	sprintf(settingName, "simias-des-key:%s", *machineName);
+	desKey = gaim_blist_node_get_string(&(buddy->node), settingName);
+	if (!desKey)
+	{
+		/**
+		 * We don't have the buddy's DES key so we cannot decode their
+		 * encoded profile.
+		 */
+		free(*machineName);
+		fprintf(stderr, "Do not have %s's DES key to decrypt their profile in parse_encoded_profile()\n", buddy->name);
+		return FALSE;
+	}
 	
 	/* Advance the parse position past the colon */
 	tmp = tmp + colonPos + 1;
@@ -688,22 +698,12 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	memset(encryptedString, '\0', closeBracketPos + 1);
 	strncpy(encryptedString, tmp, closeBracketPos);
 	
-	publicKey = get_buddy_public_key(buddy, *machineName);
-	if (!publicKey)
-	{
-		free(*machineName);
-		free(encryptedString);
-		fprintf(stderr, "simias_get_public_key() returned an error (%d) inside parse_encoded_profile()\n", err);
-		return FALSE;
-	}
-
-	err = simias_decrypt_string(publicKey, encryptedString, &decryptedString);
+	err = simias_des_decrypt_string(desKey, encryptedString, &decryptedString);
+	free(encryptedString);
 	if (err != 0)
 	{
 		free(*machineName);
-		free(encryptedString);
-		free(publicKey);
-		fprintf(stderr, "simias_decrypt_string() returned an error (%d) inside parse_encoded_profile()\n", err);
+		fprintf(stderr, "simias_des_decrypt_string() returned an error (%d) inside parse_encoded_profile()\n", err);
 		return FALSE;
 	}
 	
@@ -713,8 +713,6 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	if (colonPos <= 0)
 	{
 		free(*machineName);
-		free(encryptedString);
-		free(publicKey);
 		free(decryptedString);
 		fprintf(stderr, "parse_encoded_profile() couldn't parse the Simias UserID\n");
 		return FALSE;
@@ -729,56 +727,8 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	*simiasURL = malloc(sizeof(char) * (strlen(tmp) - colonPos));
 	memset(*simiasURL, '\0', (strlen(tmp) - colonPos));
 	strncpy(*simiasURL, tmp, (strlen(tmp) - colonPos - 1));
+
+	free(decryptedString);
 	
 	return TRUE;
-}
-
-/**
- * Returns a public key for the specified buddy for the specified machineName
- * or the temporary public key received by an "accept invitation" message if
- * we don't already have a public key stored for the buddy + machine name.
- *
- * If a public key is found, the returned char * should be freed.  In the case
- * of a failure, the return will be NULL.
- */
-static char *
-get_buddy_public_key(GaimBuddy *buddy, char *machineName)
-{
-	char settingName[4096];
-	const char *public_key;
-	char *decoded_key;
-	int len;
-	char *base64Key;
-	
-	sprintf(settingName, "simias-public-key:%s", machineName);
-	public_key = gaim_blist_node_get_string(&(buddy->node), settingName);
-	if (public_key)
-	{
-		/* Unencode the key from base64 encoding */
-		gaim_base64_decode(public_key, &decoded_key, &len);
-		return decoded_key;
-	}
-
-	if (!public_key)
-	{
-		/* Check for the temporary public key received by an invitation request */
-		public_key = gaim_blist_node_get_string(&(buddy->node), "simias-temp-public-key");
-		
-		if (public_key)
-		{
-			/* Now that we've retrieved it, remove the temporary setting */
-			gaim_blist_node_remove_setting(&(buddy->node), "simias-temp-public-key");
-			
-			base64Key = gaim_base64_encode(public_key, strlen(public_key));
-
-			/* Save the public key Base64-encoded into blist.xml with the machine name */
-			sprintf(settingName, "simias-public-key:%s", machineName);
-			gaim_blist_node_set_string(&(buddy->node), settingName, base64Key);
-			g_free(base64Key);
-			
-			return strdup(public_key);
-		}
-	}
-	
-	return NULL;
 }
