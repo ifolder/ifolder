@@ -279,6 +279,8 @@ namespace Novell.iFolder
 		{
 			Toolbar tb = new Toolbar();
 
+//			NewButton.Sensitive = false;
+//			SetupButton.Sensitive = false;
 			NewButton = tb.AppendItem(Util.GS("New"), 
 				Util.GS("Create a New iFolder"), "Toolbar/New iFolder",
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
@@ -318,44 +320,12 @@ namespace Novell.iFolder
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("prefs24.png"))),
 				new SignalFunc(CreateNewiFolder));
 
-/*
-
-			tb.AppendItem ("Horizontal", "Horizontal layout", 
-				"Toolbar/Horizontal",
-				new Image (Stock.GoForward, IconSize.LargeToolbar),
-				new SignalFunc (set_horizontal));
-
-			tb.AppendItem ("Vertical", "Vertical layout", 
-				"Toolbar/Vertical",
-				new Image (Stock.GoUp, IconSize.LargeToolbar),
-				new SignalFunc (set_vertical));
-
 			tb.AppendSpace ();
 
-			tb.AppendItem ("Icons", "Only show icons", 
-				"Toolbar/IconsOnly",
-				new Image (Stock.Home, IconSize.LargeToolbar),
-				new SignalFunc (set_icon_only));
-
-			tb.AppendItem ("Text", "Only show Text", "Toolbar/TextOnly",
-				new Image (Stock.JustifyFill, IconSize.LargeToolbar),
-				new SignalFunc (set_text_only));
-
-			tb.AppendItem ("Both", "Show both Icon & Text", 
-				"Toolbar/Both",
-				new Image (Stock.Index, IconSize.LargeToolbar),
-				new SignalFunc (set_both));
-
-			tb.AppendItem ("Both (Horizontal)",
-				"Show Icon & Text horizontally", "Toolbar/BothHoriz",
-				new Image (Stock.Index, IconSize.LargeToolbar),
-				new SignalFunc (set_both_horiz));
-*/
-			tb.AppendSpace ();
-
-			tb.InsertStock (Stock.Close, "Stock icon: Close",
-				"Toolbar/Close",
-				new SignalFunc (Close_Button), IntPtr.Zero, -1);
+			tb.AppendItem(Util.GS("Close"),
+				Util.GS("Close Window"), "Toolbar/Close",
+				new Image(Stock.Close, IconSize.LargeToolbar),
+				new SignalFunc(CloseWindow));
 
 			return tb;
 		}
@@ -436,7 +406,7 @@ namespace Novell.iFolder
 			iFolderMenu.Append(new SeparatorMenuItem());
 			CloseMenuItem = new ImageMenuItem (Stock.Close, agrp);
 			iFolderMenu.Append(CloseMenuItem);
-			CloseMenuItem.Activated += new EventHandler(OnCloseWindow);
+			CloseMenuItem.Activated += new EventHandler(CloseEventHandler);
 
 			MenuItem iFolderMenuItem = new MenuItem(Util.GS("i_Folder"));
 			iFolderMenuItem.Submenu = iFolderMenu;
@@ -676,12 +646,18 @@ namespace Novell.iFolder
 
 
 
-		private void OnCloseWindow(object o, EventArgs args)
+		private void CloseEventHandler(object o, EventArgs args)
+		{
+			CloseWindow();
+		}
+
+
+
+		private void CloseWindow()
 		{
 			this.Hide();
 			this.Destroy();
 		}
-
 
 
 
@@ -1799,6 +1775,9 @@ namespace Novell.iFolder
 			*/
 		}
 
+/*
+		// These methods are to manipulate the toolbar
+
 		private void set_large_icon ()
 		{
 			toolbar.IconSize = IconSize.LargeToolbar;
@@ -1844,22 +1823,7 @@ namespace Novell.iFolder
 			toolbar.Tooltips = showTooltips;
 			Console.WriteLine ("Show tooltips: " + showTooltips);
 		}
-
-		private void Close_Button ()
-		{
-			Console.WriteLine("Do not close dude");
-		}
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 	}
