@@ -503,6 +503,33 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="ConnectToDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="DomainWeb">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="POBoxID" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ConnectToDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="ConnectToDomainResult" type="s0:DomainWeb" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetiFolderConflicts">
         <xs:complexType>
           <xs:sequence>
@@ -614,6 +641,7 @@
       <xs:element name="ArrayOfIFolderUser" type="s0:ArrayOfIFolderUser" />
       <xs:element name="DiskSpace" type="s0:DiskSpace" />
       <xs:element name="int" type="xs:int" />
+      <xs:element name="DomainWeb" type="s0:DomainWeb" />
       <xs:element name="ArrayOfConflict" type="s0:ArrayOfConflict" />
       <xs:element name="SyncSize" type="s0:SyncSize" />
     </xs:schema>
@@ -821,6 +849,12 @@
   </message>
   <message name="ConnectToEnterpriseServerSoapOut">
     <part name="parameters" element="s0:ConnectToEnterpriseServerResponse" />
+  </message>
+  <message name="ConnectToDomainSoapIn">
+    <part name="parameters" element="s0:ConnectToDomain" />
+  </message>
+  <message name="ConnectToDomainSoapOut">
+    <part name="parameters" element="s0:ConnectToDomainResponse" />
   </message>
   <message name="GetiFolderConflictsSoapIn">
     <part name="parameters" element="s0:GetiFolderConflicts" />
@@ -1050,6 +1084,14 @@
   <message name="ConnectToEnterpriseServerHttpGetOut">
     <part name="Body" element="s0:iFolderSettings" />
   </message>
+  <message name="ConnectToDomainHttpGetIn">
+    <part name="UserName" type="s:string" />
+    <part name="Password" type="s:string" />
+    <part name="Host" type="s:string" />
+  </message>
+  <message name="ConnectToDomainHttpGetOut">
+    <part name="Body" element="s0:DomainWeb" />
+  </message>
   <message name="GetiFolderConflictsHttpGetIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -1271,6 +1313,14 @@
   <message name="ConnectToEnterpriseServerHttpPostOut">
     <part name="Body" element="s0:iFolderSettings" />
   </message>
+  <message name="ConnectToDomainHttpPostIn">
+    <part name="UserName" type="s:string" />
+    <part name="Password" type="s:string" />
+    <part name="Host" type="s:string" />
+  </message>
+  <message name="ConnectToDomainHttpPostOut">
+    <part name="Body" element="s0:DomainWeb" />
+  </message>
   <message name="GetiFolderConflictsHttpPostIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -1476,6 +1526,11 @@
       <input message="s0:ConnectToEnterpriseServerSoapIn" />
       <output message="s0:ConnectToEnterpriseServerSoapOut" />
       <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="ConnectToDomain">
+      <input message="s0:ConnectToDomainSoapIn" />
+      <output message="s0:ConnectToDomainSoapOut" />
+      <documentation>Connects to an iFolder Domain</documentation>
     </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsSoapIn" />
@@ -1684,6 +1739,11 @@
       <output message="s0:ConnectToEnterpriseServerHttpGetOut" />
       <documentation>Connects to an iFolder Enterprise Server</documentation>
     </operation>
+    <operation name="ConnectToDomain">
+      <input message="s0:ConnectToDomainHttpGetIn" />
+      <output message="s0:ConnectToDomainHttpGetOut" />
+      <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsHttpGetIn" />
       <output message="s0:GetiFolderConflictsHttpGetOut" />
@@ -1890,6 +1950,11 @@
       <input message="s0:ConnectToEnterpriseServerHttpPostIn" />
       <output message="s0:ConnectToEnterpriseServerHttpPostOut" />
       <documentation>Connects to an iFolder Enterprise Server</documentation>
+    </operation>
+    <operation name="ConnectToDomain">
+      <input message="s0:ConnectToDomainHttpPostIn" />
+      <output message="s0:ConnectToDomainHttpPostOut" />
+      <documentation>Connects to an iFolder Domain</documentation>
     </operation>
     <operation name="GetiFolderConflicts">
       <input message="s0:GetiFolderConflictsHttpPostIn" />
@@ -2228,6 +2293,15 @@
     </operation>
     <operation name="ConnectToEnterpriseServer">
       <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToEnterpriseServer" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="ConnectToDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToDomain" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2585,6 +2659,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="ConnectToDomain">
+      <http:operation location="/ConnectToDomain" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderConflicts">
       <http:operation location="/GetiFolderConflicts" />
       <input>
@@ -2918,6 +3001,15 @@
     </operation>
     <operation name="ConnectToEnterpriseServer">
       <http:operation location="/ConnectToEnterpriseServer" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="ConnectToDomain">
+      <http:operation location="/ConnectToDomain" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>
