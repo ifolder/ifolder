@@ -54,9 +54,7 @@
 #undef _
 #endif 
 
-#ifndef _
 #define _(STRING) dgettext(GETTEXT_PACKAGE, STRING)
-#endif
 
 #define IFOLDER_FIFO_NAME ".nautilus-ifolder-fifo"
 #define IFOLDER_BUF_SIZE 1024
