@@ -84,7 +84,16 @@ namespace Novell.iFolder.FormsTrayApp
 		[STAThread]
 		static void Main(string[] args)
 		{
-			Application.Run(new FormsTrayApp());
+			// Check for currently running instance.
+			Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
+			if (iFolderProcess.Length == 1)
+			{
+				Application.Run(new FormsTrayApp());
+			}
+			else
+			{
+				MessageBox.Show("There is already an instance of iFolder running.");
+			}
 		}
 
 		public FormsTrayApp()
