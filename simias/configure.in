@@ -125,7 +125,7 @@ AC_SUBST(WINDOWS_SUBDIRS)
 
 COMMON_LIBS="/r:Simias.dll"
 
-COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_CLEAN_FILES='*.dbg *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
 COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
 AC_SUBST(COMMON_CLEAN_FILES)
