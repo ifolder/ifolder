@@ -38,6 +38,9 @@
 
 #include "nautilus-ifolder.h"
 
+#define IFOLDER_FIFO_NAME ".nautilus-ifolder-fifo"
+#define IFOLDER_BUF_SIZE 1024
+
 typedef struct {
 	GObject parent_slot;
 } iFolderNautilus;
@@ -105,13 +108,89 @@ nautilus_file_info_foreach_remove (gpointer key,
 	return TRUE;
 }
 
-static void
-nautilus_file_info_invalidate (gpointer key,
-							   gpointer value,
-							   gpointer user_data)
+/**
+ * This function is intended to be called using g_idle_add by the event system
+ * to let Nautilus invalidate the extension info for the given 
+ * NautilusFileInfo *.
+ */
+gboolean
+invalidate_ifolder_extension_info (void *user_data)
 {
-	NautilusFileInfo *file = (NautilusFileInfo *)value;
-	nautilus_file_info_invalidate_extension_info (file);
+	NautilusFileInfo *file = (NautilusFileInfo *)user_data;
+	if (file) {
+		nautilus_file_info_invalidate_extension_info (file);
+	}
+}
+
+/**
+ * Named Pipe event implementation
+ * 
+ * Until a C library for the iFolder event system is provided, this named pipe
+ * event implementation will allow us to receive events from the Mono/Gtk
+ * iFolder client when a new iFolder is created or when an iFolder is reverted.
+ */
+ 
+/**
+ * The purpose of this thread/function is to listen/read folder paths sent by
+ * the Mono/Gtk iFolder client.  When they are received, they will be looked up
+ * in the seen_nautilus_file_infos hash table and if found, the extension info
+ * will be invalidated so that the emblem is added or removed accordingly.
+ */
+static pthread_t named_pipe_thread;
+
+static void *
+named_pipe_listener_thread (gpointer user_data)
+{
+	char fifo_path [IFOLDER_BUF_SIZE];
+	char s [IFOLDER_BUF_SIZE];
+	char file_path [IFOLDER_BUF_SIZE];
+	int num, fd, err;
+	
+	sprintf (fifo_path, "%s/%s", g_get_home_dir (), IFOLDER_FIFO_NAME);
+	err = mknod (fifo_path, S_IFIFO | 0600, 0);
+	if (err == -1 && errno != EEXIST) {
+		g_print ("Couldn't make the event FIFO\n");
+		perror ("mknode");
+		return;
+	}
+	
+	/* As long as this extension is running, wait for events */
+	for (;;) {
+		g_print ("Waiting for an event from iFolder...\n");
+		fd = open (fifo_path, O_RDONLY);
+		if (fd == -1) {
+			perror ("open");
+			continue;
+		}
+		
+		g_print ("iFolder Client connected\n");
+		
+		do {
+			if ((num = read (fd, s, IFOLDER_BUF_SIZE)) == -1) {
+				perror ("read");
+				break;
+			} else {
+				s [num] = '\0';
+				g_printf ("iFolder Client changed folder: %s\n", s);
+				sprintf (file_path, "file://%s", s);
+
+				NautilusFileInfo *file = 
+					(NautilusFileInfo *)g_hash_table_lookup (
+						seen_nautilus_file_infos,
+						file_path);
+															 
+				if (file) {
+					/* Let nautilus run this in the main loop */
+					g_idle_add (invalidate_ifolder_extension_info, file);
+				}
+			}
+		} while (num > 0);
+		
+		err = close (fd);
+		if (err == -1) {
+			perror ("close");
+		}
+	}
 }
 
 /**
@@ -742,24 +821,6 @@ ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 					item);
 }
 
-static void
-ifolder_invalidate_fileinfos_callback (NautilusMenuItem *item, gpointer user_data)
-{
-	g_print ("Invalidate NautilusFileInfos selected\n");
-	
-	NautilusFileInfo *file = 
-		(NautilusFileInfo *)g_hash_table_lookup (seen_nautilus_file_infos,
-												 "file:///home/boyd/download");
-												 
-	if (file) {
-		nautilus_file_info_invalidate_extension_info (file);
-	}
-	/* call an invalidate for every item in the hash table */
-//	g_hash_table_foreach (seen_nautilus_file_infos,
-//						  nautilus_file_info_invalidate,
-//						  NULL);
-}
- 
 static GList *
 ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 								 GtkWidget *window,
@@ -858,17 +919,6 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 					nautilus_file_info_list_copy (files));
 		g_object_set_data_full (G_OBJECT (item), "parent_window",
 								g_object_ref (window), g_object_unref);
-		items = g_list_append (items, item);
-		
-		/* Debug test: Invalidate NautilusFileInfos */
-		/* Menu item: Help */
-		item = nautilus_menu_item_new ("NautilusiFolder::ifolder_debug",
-					_("Invalidate NautilusFileInfos"),
-					_("Force the emblems to be re-read"),
-					"ifolder-folder");
-		g_signal_connect (item, "activate",
-					G_CALLBACK (ifolder_invalidate_fileinfos_callback),
-					provider);
 		items = g_list_append (items, item);
 	} else {
 		/**
@@ -1016,6 +1066,12 @@ nautilus_module_initialize (GTypeModule *module)
 	
 	/* Initialize the GHashTable */
 	seen_nautilus_file_infos = g_hash_table_new (g_str_hash, g_str_equal);
+	
+	/* Start the named pipe listener thread */
+	pthread_create (&named_pipe_thread, 
+					NULL, 
+					named_pipe_listener_thread,
+					NULL);
 }
 
 void
