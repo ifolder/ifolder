@@ -193,8 +193,8 @@ namespace Simias.Presence
 				// ptr
 				register.RegisterPointer(NAME, service);
 
-				POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
-										store.DefaultDomain);
+				Simias.POBox.POBox pobox = 
+					Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain);
 
 				UriBuilder hostUrl = new UriBuilder(pobox.POServiceUrl);
 

@@ -50,7 +50,7 @@ namespace Simias.Sync
 		private SyncCollection collection;
 		private SimiasChannel channel;
 		private SyncStoreService storeService;
-		private SyncCollectionService service;
+		private SyncCollectionService collectionService;
 		private SyncCollectionWorker worker;
 		private Thread syncWorkerThread;
 		private bool working;
@@ -284,10 +284,10 @@ namespace Simias.Sync
 
 							// get a proxy to the collection service object
 							log.Debug("Connecting to the Sync Collection Service...");
-							service = storeService.GetCollectionService(collection.ID);
+							collectionService = storeService.GetCollectionService(collection.ID);
 						
 							// removed collection?
-							if (service == null)
+							if (collectionService == null)
 							{
 								log.Debug("The collection is no longer on the server.");
 								log.Debug("Removing collection from the client.");
@@ -301,7 +301,7 @@ namespace Simias.Sync
 							}
 
 							// ping the collection
-//							log.Debug("Collection Service Ping: {0}", service.Ping());
+//							log.Debug("Collection Service Ping: {0}", collectionService.Ping());
 
 							// get the collection worker
 							log.Debug("Creating a Sync Worker Object...");
@@ -315,7 +315,7 @@ namespace Simias.Sync
 
 							// do the work
 							log.Debug("Sync Work {0} - Worker Start", collection.Name);
-							worker.DoSyncWork(service);
+							worker.DoSyncWork(collectionService);
 							log.Debug("Sync Work {0} - Worker Done", collection.Name);
 						}
 					}
@@ -363,11 +363,11 @@ namespace Simias.Sync
 					{
 						storeService = null;
 						
-						if (service != null)
+						if (collectionService != null)
 						{
 							// release the service for Mono
-							try { service.Release(); } catch { /* ignore */ }
-							service = null;
+							try { collectionService.Release(); } catch { /* ignore */ }
+							collectionService = null;
 						}
 					}
 
