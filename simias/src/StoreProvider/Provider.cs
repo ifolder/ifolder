@@ -146,23 +146,7 @@ namespace Simias.Storage.Provider
 		{
 			get
 			{
-				lock (this)
-				{
-					if (path == null)
-					{
-						path = conf.StorePath;
-						path = conf.Get(CFG_Section, CFG_Path, path);
-					}
-				}
-				return path;
-			}
-			set
-			{
-				lock (this)
-				{
-					path = value;
-					conf.Set(CFG_Section, CFG_Path, value);
-				}
+				return conf.StorePath;
 			}
 		}
 
