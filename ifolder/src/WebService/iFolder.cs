@@ -55,6 +55,8 @@ namespace Novell.iFolder.Web
 		public string State;
 		public bool IsSubscription;
 		public int EnumeratedState;
+		public bool IsWorkgroup;
+		public bool HasCollisions;
 
 		public iFolder()
 		{
@@ -74,7 +76,11 @@ namespace Novell.iFolder.Web
 			this.ManagedPath = collection.ManagedPath;
 			this.MasterIncarnation = collection.MasterIncarnation;
 			this.Name = collection.Name;
-			this.Owner = collection.Owner.Name;
+			if(collection.Owner != null)
+				this.Owner = collection.Owner.Name;
+			else
+				this.Owner = "Not available";
+
 			this.SyncInterval = 
 				Simias.Policy.SyncInterval.GetInterval(collection);
 			this.Synchronizable = collection.Synchronizable;
@@ -83,6 +89,9 @@ namespace Novell.iFolder.Web
 			this.State = "Local";
 			this.IsSubscription = false;
 			this.EnumeratedState = -1;
+			this.IsWorkgroup = 
+				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
+			this.HasCollisions = collection.HasCollisions();
 		}
 
 

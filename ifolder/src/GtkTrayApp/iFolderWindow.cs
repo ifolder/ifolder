@@ -170,7 +170,7 @@ namespace Novell.iFolder
 			RevertMenuItem = new ImageMenuItem ("Re_vert");
 			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
 			iFolderMenu.Append(RevertMenuItem);
-			RevertMenuItem.Activated += new EventHandler(OnDeleteiFolder);
+			RevertMenuItem.Activated += new EventHandler(OnRevertiFolder);
 
 			PropMenuItem = new ImageMenuItem (Stock.Properties, agrp);
 			iFolderMenu.Append(PropMenuItem);
@@ -267,19 +267,9 @@ namespace Novell.iFolder
 			iFolderTreeView.AppendColumn(ifolderColumn);
 
 
-			// Setup Text Rendering for "Location" column
-			CellRendererText locTR = new CellRendererText();
-			TreeViewColumn locColumn = new TreeViewColumn();
-			locColumn.PackStart(locTR, false);
-			locColumn.SetCellDataFunc(locTR, new TreeCellDataFunc(
-						iFolderLocationCellTextDataFunc));
-			locColumn.Title = "Location";
-			locColumn.Resizable = true;
-			iFolderTreeView.AppendColumn(locColumn);
-
-
 			// Setup Text Rendering for "Status" column
 			CellRendererText statusTR = new CellRendererText();
+			statusTR.Xpad = 10;
 			TreeViewColumn statusColumn = new TreeViewColumn();
 			statusColumn.PackStart(statusTR, false);
 			statusColumn.SetCellDataFunc(statusTR, new TreeCellDataFunc(
@@ -287,6 +277,18 @@ namespace Novell.iFolder
 			statusColumn.Title = "Status";
 			statusColumn.Resizable = true;
 			iFolderTreeView.AppendColumn(statusColumn);
+
+
+			// Setup Text Rendering for "Location" column
+			CellRendererText locTR = new CellRendererText();
+			locTR.Xpad = 10;
+			TreeViewColumn locColumn = new TreeViewColumn();
+			locColumn.PackStart(locTR, false);
+			locColumn.SetCellDataFunc(locTR, new TreeCellDataFunc(
+						iFolderLocationCellTextDataFunc));
+			locColumn.Title = "Location";
+			locColumn.Resizable = true;
+			iFolderTreeView.AppendColumn(locColumn);
 
 
 			iFolderTreeView.Selection.Changed += new EventHandler(
@@ -559,7 +561,7 @@ namespace Novell.iFolder
 									new MenuItem ("Revert to a Normal Folder");
 								ifMenu.Append (item_revert);
 								item_revert.Activated += new EventHandler(
-										OnDeleteiFolder);
+										OnRevertiFolder);
 
 								ifMenu.Append(new SeparatorMenuItem());
 
@@ -755,7 +757,7 @@ namespace Novell.iFolder
 		}
 
 
-		public void OnDeleteiFolder(object o, EventArgs args)
+		public void OnRevertiFolder(object o, EventArgs args)
 		{
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
@@ -772,7 +774,7 @@ namespace Novell.iFolder
 					iFolderMsgDialog.ButtonSet.YesNo,
 					"iFolder Confirmation",
 					"Revert this iFolder?",
-					"This will revert this iFolder back to a normal iFolder and leave the files intact.  The iFolder will also be reverted for anyone you have shared it with.");
+					"This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.");
 				int rc = dialog.Run();
 				dialog.Hide();
 				dialog.Destroy();
@@ -781,9 +783,9 @@ namespace Novell.iFolder
 					try
 					{
     					iFolderWS.DeleteiFolder(ifolder.ID);
-						//ifolder.Delete();
-						//ifolder.Commit();
-						iFolderTreeStore.Remove(ref iter);
+						// iFolderTreeStore.Remove(ref iter);
+						// Refresh the view so the Subscription shows up again
+						RefreshiFolderTreeView(o, args);
 					}
 					catch(Exception e)
 					{
