@@ -316,7 +316,7 @@ namespace Simias.Storage
 						entRoster.Commit( new Node[] { entRoster, entRosterOwner } );
 
 						// Create a default sync interval policy for this roster.
-						SyncInterval.Create( entRoster, DefaultRosterSyncInterval );
+//						SyncInterval.Create( entRoster, DefaultRosterSyncInterval );
 					}
 
 					// Save the local database changes.
