@@ -635,9 +635,9 @@ namespace Simias.Storage
 
 			Collection collection = null;
 			ICSList collectionList = GetCollectionsByName( name );
-			foreach ( Collection tempCollection in collectionList )
+			foreach ( ShallowNode sn in collectionList )
 			{
-				collection = tempCollection;
+				collection = new Collection( this, sn );
 				break;
 			}
 
@@ -660,9 +660,9 @@ namespace Simias.Storage
 
 			Collection collection = null;
 			ICSList collectionList = GetCollectionsByType( type );
-			foreach ( Collection tempCollection in collectionList )
+			foreach ( ShallowNode sn in collectionList )
 			{
-				collection = tempCollection;
+				collection = new Collection( this, sn );
 				break;
 			}
 

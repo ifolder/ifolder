@@ -380,7 +380,7 @@ namespace Simias.Storage
 			Property p = FindAliasProperty( domain, userGuid );
 			if ( p != null )
 			{
-				p.Delete();
+				p.DeleteProperty();
 			}
 		}
 
