@@ -30,6 +30,7 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 //using System.Runtime.Remoting.Channels.Tcp;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using System.IO;
 using System.Data;
 
@@ -395,6 +396,30 @@ namespace Simias.Storage.Provider.Sqlite
 	};
 	#endregion
 
+	/// <summary>
+	/// Class used to keep a connection per thread.
+	/// </summary>
+	internal class InternalConnection
+	{
+		internal SqliteConnection		sqliteDb;
+		internal IDbCommand				command;
+
+		/// <summary>
+		/// Called to initialize the DataBase.
+		/// </summary>
+		internal InternalConnection()
+		{
+			sqliteDb = new SqliteConnection();
+		}
+
+		internal void Dispose()
+		{
+			command.Dispose();
+			sqliteDb.Close();
+		}
+	}
+
+	#region SqliteProvider class
 
 	/// <summary>
 	/// Class that implements the Simias.Storage.Provider.IProvider interface 
@@ -416,7 +441,9 @@ namespace Simias.Storage.Provider.Sqlite
 	public class SqliteProvider : MarshalByRefObject, IProvider
 	{
 		#region Varibles
-        
+
+		Hashtable				connectionTable = new Hashtable();
+
 		Configuration			conf;
 
 		/// <summary>
@@ -433,25 +460,53 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		
 		bool					AlreadyDisposed;
-		SqliteConnection		sqliteDb;
-		IDbCommand				command;
 		string					DbPath;
 		const string			Name = "ColSqlite.db";
 		const string 			version = "0.1";
 		string					storePath;
+		bool					opened = false;
 		#endregion
+
+		InternalConnection sqliteConn
+		{
+			get
+			{
+				InternalConnection instance;
+				bool newConnection = false;
+				object threadId = Thread.CurrentThread.GetHashCode();
+				lock (connectionTable)
+				{
+					if (connectionTable.Contains(threadId))
+					{
+						instance = (InternalConnection)connectionTable[threadId];	
+					}
+					else
+					{
+						instance = new InternalConnection();
+						connectionTable.Add(threadId, instance);
+						newConnection = true;
+					}
+				}
+				if (newConnection && opened)
+				{
+					OpenStore();
+				}
+
+				return instance;
+			}
+		}
 
 		#region Constructor/Finalizer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="path">The path where the DataBase exists or will be created.</param>
+		/// <param name="conf">The Configuration object used for this instance.</param>
 		public SqliteProvider(Configuration conf)
 		{
 			this.conf = conf;
 			storePath = Path.GetFullPath(conf.Path);
 			DbPath = System.IO.Path.Combine(storePath, Name);
-			sqliteDb = new SqliteConnection();
+			//sqliteDb = new SqliteConnection();
 		}
 
 		/// <summary>
@@ -474,14 +529,15 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="table">Table to create the record in.</param>
 		/// <param name="collectionId">The collection that this node belongs to.</param>
 		/// <param name="recordXml">Xml that represents the record.</param>
-		private void CreateRecord(string table, string collectionId, XmlElement recordXml)
+		/// <param name="command">Command object used to control database.</param>
+		private void CreateRecord(string table, string collectionId, XmlElement recordXml, IDbCommand command)
 		{
 			Record record = new Record(recordXml);
 			
 			// Delete the old record first.
 			try 
 			{
-				InternalDeleteRecord(record.Id, collectionId);
+				InternalDeleteRecord(record.Id, collectionId, command);
 			}
 			catch {}
 
@@ -506,8 +562,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// be held when calling.
 		/// </summary>
 		/// <param name="collectionId">The collection Id to remove.</param>
-		private void RemoveCollection(
-			string collectionId)
+		/// <param name="command">Command object used to control database.</param>
+		private void RemoveCollection(string collectionId, IDbCommand command)
 		{
 			// MultiTableTable
 			//// Remove the collection table.
@@ -526,7 +582,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		/// <param name="doc">XML document that describes the records</param>
 		/// <param name="collectionId">The collection to create the records in.</param>
-		private void CreateRecords(XmlDocument doc, string collectionId)
+		/// <param name="command">Command object used to control database.</param>
+		private void CreateRecords(XmlDocument doc, string collectionId, IDbCommand command)
 		{
 			string table = TablePrefix + collectionId;
 			XmlElement root = doc.DocumentElement;
@@ -534,7 +591,7 @@ namespace Simias.Storage.Provider.Sqlite
 
 			foreach (XmlElement recordEl in recordList)
 			{
-				CreateRecord(table, collectionId, recordEl);
+				CreateRecord(table, collectionId, recordEl, command);
 			}
 		}
 
@@ -543,7 +600,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		/// <param name="recordId">string that contains the ID of the Object to delete</param>
 		/// <param name="collectionId">The id of the collection that contains this object</param>
-		public void InternalDeleteRecord(string recordId, string collectionId)
+		/// <param name="command">Command object used to control database.</param>
+		public void InternalDeleteRecord(string recordId, string collectionId, IDbCommand command)
 		{
 			// Delete from the record table.
 			RecordTable.Delete(recordId, command);
@@ -564,9 +622,19 @@ namespace Simias.Storage.Provider.Sqlite
 				{
 					GC.SuppressFinalize(this);
 				}
-				if (command != null)
-					command.Dispose();
-				sqliteDb.Close();
+
+				lock (connectionTable)
+				{
+					if (connectionTable.Count > 0)
+					{
+						foreach (DictionaryEntry entry in connectionTable)
+						{
+							InternalConnection conn = (InternalConnection)entry.Value;
+							conn.Dispose();
+						}
+						connectionTable.Clear();
+					}
+				}
 				AlreadyDisposed = true;
 			}
 		}
@@ -574,9 +642,10 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <summary>
 		/// Called to initialize the DataBase.
 		/// </summary>
-		private void Init()
+		private void Init(InternalConnection conn)
 		{
-			command = sqliteDb.CreateCommand();
+			IDbCommand command = conn.command = conn.sqliteDb.CreateCommand();
+			
 			// Turn of synchronous access.
 			command.CommandText = "PRAGMA cache_size = 10000";
 			command.ExecuteNonQuery();
@@ -596,6 +665,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void CreateStore()
 		{
+			InternalConnection conn = sqliteConn;
+			SqliteConnection sqliteDb = conn.sqliteDb;
 			lock (sqliteDb)
 			{
 				// Make sure the Data Base does not exist.
@@ -604,6 +675,7 @@ namespace Simias.Storage.Provider.Sqlite
 					// Create the store
 					sqliteDb.ConnectionString = "URI=file:" + DbPath;
 					sqliteDb.Open();
+					opened = true;
 
 					// Set the version.
 					conf.Version = version;
@@ -612,7 +684,8 @@ namespace Simias.Storage.Provider.Sqlite
 					try
 					{
 						// Create the Record Table.
-						Init();
+						Init(conn);
+						IDbCommand command = conn.command;
 						RecordTable.Create(command);
 						SchemaTable.Create(command);
 						ValueTable.Create(CollectionTable, command);
@@ -649,6 +722,8 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void OpenStore()
 		{
+			InternalConnection conn = sqliteConn;
+			SqliteConnection sqliteDb = conn.sqliteDb;
 			if (File.Exists(DbPath))
 			{
 				// Make sure the version is correct.
@@ -658,7 +733,8 @@ namespace Simias.Storage.Provider.Sqlite
 				}
 				sqliteDb.ConnectionString = "URI=file:" + DbPath;
 				sqliteDb.Open();
-				Init();
+				opened = true;
+				Init(conn);
 				AlreadyDisposed = false;
 			}
 			else
@@ -678,8 +754,7 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="collectionId">The Id of the collection to create.</param>
 		public void CreateCollection(string collectionId)
 		{
-			// MultiTableTable
-			//ValueTable.Create(TablePrefix + collectionId, command);
+			// Nothing to do.
 		}
 
 		/// <summary>
@@ -688,10 +763,11 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="collectionId">The ID of the collection to delete.</param>
 		public void DeleteCollection(string collectionId)
 		{
-			IDbTransaction trans = sqliteDb.BeginTransaction();
+			InternalConnection conn = sqliteConn;
+			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
-				RemoveCollection(collectionId);
+				RemoveCollection(collectionId, conn.command);
 			}
 			catch 
 			{
@@ -712,14 +788,15 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="collectionId">The id of the collection containing these objects.</param>
 		public void CreateRecord(string recordXml, string collectionId)	
 		{
-			IDbTransaction trans = sqliteDb.BeginTransaction();
+			InternalConnection conn = sqliteConn;
+			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
 				if (recordXml != null)
 				{
 					XmlDocument createXml = new XmlDocument();
 					createXml.LoadXml(recordXml);
-					CreateRecords(createXml, collectionId);
+					CreateRecords(createXml, collectionId, conn.command);
 				}
 			}
 			catch 
@@ -737,10 +814,11 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="collectionId">The id of the collection that contains this object</param>
 		public void DeleteRecord(string recordId, string collectionId)
 		{
-			IDbTransaction trans = sqliteDb.BeginTransaction();
+			InternalConnection conn = sqliteConn;
+			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
-				InternalDeleteRecord(recordId, collectionId);
+				InternalDeleteRecord(recordId, collectionId, conn.command);
 			}
 			catch //(System.Exception ex)
 			{
@@ -763,7 +841,8 @@ namespace Simias.Storage.Provider.Sqlite
 			XmlElement root = doc.DocumentElement;
 			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
 			
-			IDbTransaction trans = sqliteDb.BeginTransaction();
+			InternalConnection conn = sqliteConn;
+			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
 				foreach (XmlElement recordEl in objectList)
@@ -772,7 +851,7 @@ namespace Simias.Storage.Provider.Sqlite
 					string id = recordEl.GetAttribute(XmlTags.IdAttr);
 					if (id != null)
 					{
-						InternalDeleteRecord(id, collectionId);
+						InternalDeleteRecord(id, collectionId, conn.command);
 					}
 				}
 			}
@@ -798,6 +877,8 @@ namespace Simias.Storage.Provider.Sqlite
 			
 			string Name;
 			string Type;
+			SqliteConnection sqliteDb = sqliteConn.sqliteDb;
+			IDbCommand command = sqliteConn.command;
 			if (RecordTable.Select(recordId, command, out Name, out Type))
 			{
 				XmlElement node, root;
@@ -953,6 +1034,7 @@ namespace Simias.Storage.Provider.Sqlite
 							op);
 					}
 				}
+				IDbCommand command = sqliteConn.command;
 				command.CommandText = selectNodes;
 				IDataReader reader = command.ExecuteReader();
 				resultSet = new SqliteResultSet(reader);
@@ -976,7 +1058,6 @@ namespace Simias.Storage.Provider.Sqlite
 		#endregion
 
 		#endregion
-	
 		
 		#region IDisposable Members
 
@@ -990,4 +1071,6 @@ namespace Simias.Storage.Provider.Sqlite
 
 		#endregion
 	}
+
+	#endregion
 }

@@ -1723,7 +1723,7 @@ namespace Simias.Storage.Tests
 			{
 				// Get the local address book.
 				LocalAddressBook localAb = mergeStore.GetLocalAddressBook();
-				Identity identity = localAb.GetSingleIdentityByName( "mlasky" );
+				Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
 				identity.Properties.AddProperty( "CS_TestProperty", "This is a test" );
 				identity.Commit();
 
