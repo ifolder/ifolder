@@ -428,6 +428,7 @@ src/SimiasClient/SimiasSetup.cs
 src/Common/MyDns.cs
 src/Common/simias-client-bootstrap.config
 src/SimiasClient/Makefile
+src/SimiasClient/libsimias-event/Makefile
 src/Simias.dll/Makefile
 src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
