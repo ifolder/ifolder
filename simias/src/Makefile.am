@@ -1,6 +1,6 @@
-SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook WebService
+SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook
 
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = $(SUBDIRS) WebService
 
 EXTRA_DIST = ifdata simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
 
