@@ -405,6 +405,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Domain\DomainAgent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Domain\IDomainService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\FsWatcher\FsWatcher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

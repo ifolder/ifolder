@@ -57,6 +57,8 @@ AssemblyInfo.cs
 ../Common/Library/SimiasLogManager.cs
 ../Common/Tests/CommonTests.cs
 ../Common/Tests/ConfigurationTests.cs
+../Domain/IDomainService.cs
+../Domain/DomainAgent.cs
 ../FsProvider/FsProviderTests/FsTests1.cs
 ../FsWatcher/FsWatcher.cs
 ../Invitation/Library/IInvitationProvider.cs
