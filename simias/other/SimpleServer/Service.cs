@@ -54,6 +54,8 @@ namespace Simias.SimpleServer
 		/// Configuration object for the Collection Store.
 		/// </summary>
 		private Configuration config;
+
+		private Simias.SimpleServer.Authentication authProvider = null;
 		#endregion
 
 		#region Constructor
@@ -77,6 +79,10 @@ namespace Simias.SimpleServer
 		{
 			log.Debug( "Start called" );
 			this.config = config;
+
+			// Register with the domain provider service.
+			this.authProvider = new Simias.SimpleServer.Authentication();
+			DomainProvider.RegisterProvider( this.authProvider );
 			Simias.SimpleServer.Sync.StartSyncThread();
 		}
 
@@ -110,6 +116,7 @@ namespace Simias.SimpleServer
 		{
 			log.Debug( "Stop called" );
 			Simias.SimpleServer.Sync.StopSyncThread();
+			DomainProvider.Unregister( this.authProvider );
 		}
 		#endregion
 	}

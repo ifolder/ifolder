@@ -151,11 +151,10 @@ namespace Simias.SimpleServer
 		#endregion
 	}
 
-
 	/// <summary>
 	/// Implementation of the IDomainProvider Service for SimpleServer.
 	/// </summary>
-	public class Authentication : IDomainProvider, IThreadService
+	public class Authentication : IDomainProvider
 	{
 		#region Class Members
 		/// <summary>
@@ -508,51 +507,6 @@ namespace Simias.SimpleServer
 		public Uri ResolvePOBoxLocation( string domainID, string userID )
 		{
 			return null;
-		}
-		#endregion
-
-		#region IThreadService Members
-
-		/// <summary>
-		/// Starts the thread service.
-		/// </summary>
-		/// <param name="config">Configuration file object that indicates which Collection Store to use.</param>
-		public void Start( Configuration conf )
-		{
-			// Register with the domain provider service.
-			DomainProvider.RegisterProvider( this );
-		}
-
-		/// <summary>
-		/// Stops the service from executing.
-		/// </summary>
-		public void Stop()
-		{
-			// Unregister with the domain provider service.
-			DomainProvider.Unregister( this );
-		}
-
-		/// <summary>
-		/// Pauses a service's execution.
-		/// </summary>
-		public void Pause()
-		{
-		}
-
-		/// <summary>
-		/// Resumes a paused service. 
-		/// </summary>
-		public void Resume()
-		{
-		}
-
-		/// <summary>
-		/// Custom.
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="data"></param>
-		public void Custom( int message, string data )
-		{
 		}
 		#endregion
 	}
