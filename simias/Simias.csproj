@@ -409,7 +409,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\POBox\SubscriptionDetails.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\SubscriptionInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\POBox\SubscriptionStatus.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

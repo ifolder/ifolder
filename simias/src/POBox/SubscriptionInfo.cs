@@ -138,8 +138,8 @@ namespace Simias.POBox
 		/// </summary>
 		public string DomainID
 		{
-			get { return fields[Subscription.SubscriptionCollectionDomainIdProperty]; }
-			set { fields[Subscription.SubscriptionCollectionDomainIdProperty] = value; }
+			get { return fields[Message.DomainIDProperty]; }
+			set { fields[Message.DomainIDProperty] = value; }
 		}
 
 		/// <summary>
@@ -147,8 +147,8 @@ namespace Simias.POBox
 		/// </summary>
 		public string DomainName
 		{
-			get { return fields[Subscription.SubscriptionCollectionDomainNameProperty]; }
-			set { fields[Subscription.SubscriptionCollectionDomainNameProperty] = value; }
+			get { return fields[Message.DomainNameProperty]; }
+			set { fields[Message.DomainNameProperty] = value; }
 		}
 
 		/// <summary>
@@ -156,8 +156,8 @@ namespace Simias.POBox
 		/// </summary>
 		public string SubscriptionCollectionID
 		{
-			get { return fields[Subscription.SubscriptionCollectionIdProperty]; }
-			set { fields[Subscription.SubscriptionCollectionIdProperty] = value; }
+			get { return fields[Subscription.SubscriptionCollectionIDProperty]; }
+			set { fields[Subscription.SubscriptionCollectionIDProperty] = value; }
 		}
 
 		/// <summary>

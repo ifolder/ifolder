@@ -31,7 +31,7 @@ namespace Simias.POBox
 	/// <summary>
 	/// Subscription states.
 	/// </summary>
-	public enum SubscriptionState
+	public enum SubscriptionStates
 	{
 		/// <summary>
 		/// The Subscription has been created but not sent.
@@ -77,7 +77,7 @@ namespace Simias.POBox
 	/// <summary>
 	/// The disposition of a subscription
 	/// </summary>
-	public enum Disposition
+	public enum SubscriptionDispositions
 	{
 		/// <summary>
 		/// The subscription was accepted.
@@ -102,7 +102,9 @@ namespace Simias.POBox
 	{
 		#region Class Members
 		
-		// default root path for collections
+		/// <summary>
+		/// default root path for collections
+		/// </summary>
 		public static string DefaultRootPath = Path.Combine(
 			Environment.GetFolderPath(
 			Environment.SpecialFolder.Personal),
@@ -131,17 +133,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the collection ID.
 		/// </summary>
-		public static readonly string SubscriptionCollectionIdProperty = "SbColID";
-
-		/// <summary>
-		/// The name of the property storing the collection domain name.
-		/// </summary>
-		public static readonly string SubscriptionCollectionDomainNameProperty = "SbColDomName";
-
-		/// <summary>
-		/// The name of the property storing the collection domain ID.
-		/// </summary>
-		public static readonly string SubscriptionCollectionDomainIdProperty = "SbColDomID";
+		public static readonly string SubscriptionCollectionIDProperty = "SbColID";
 
 		/// <summary>
 		/// The name of the property storing the collection types.
@@ -171,7 +163,7 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the DirNode ID.
 		/// </summary>
-		public const string DirNodeIdProperty = "DirNodeID";
+		public const string DirNodeIDProperty = "DirNodeID";
 
 		/// <summary>
 		/// The name of the property storing the DirNode name.
@@ -191,6 +183,7 @@ namespace Simias.POBox
 		#endregion
 
 		#region Constructors
+		
 		/// <summary>
 		/// Constructor for creating a Subscription object from a Node object.
 		/// </summary>
@@ -208,9 +201,9 @@ namespace Simias.POBox
 		public Subscription(string subscriptionName, SubscriptionInfo subscriptionInfo) :
 			base (subscriptionName, subscriptionInfo.SubscriptionID)
 		{
-			SubscriptionCollectionDomainId = subscriptionInfo.DomainID;
-			SubscriptionCollectionDomainName = subscriptionInfo.DomainName;
-			SubscriptionCollectionId = subscriptionInfo.SubscriptionCollectionID;
+			DomainID = subscriptionInfo.DomainID;
+			DomainName = subscriptionInfo.DomainName;
+			SubscriptionCollectionID = subscriptionInfo.SubscriptionCollectionID;
 			POServiceURL = subscriptionInfo.POServiceUrl;
 		}
 
@@ -225,6 +218,16 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Constructor for creating a new Subscription object with a specific ID.
+		/// </summary>
+		/// <param name="messageName">The friendly name of the Subscription object.</param>
+		/// <param name="messageID">The ID of the Subscription object.</param>
+		public Subscription(string messageName, string messageID) :
+			base (messageName, messageID)
+		{
+		}
+	
+		/// <summary>
 		/// Constructor for creating a new Subscription object.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the message.</param>
@@ -233,7 +236,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string fromIdentity) :
 			base (messageName, messageType, fromIdentity)
 		{
-			SubscribeState = SubscriptionState.Invited;
+			SubscriptionState = SubscriptionStates.Invited;
 		}
 
 		/// <summary>
@@ -246,7 +249,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress) :
 			base (messageName, messageType, fromIdentity, fromAddress)
 		{
-			SubscribeState = SubscriptionState.Invited;
+			SubscriptionState = SubscriptionStates.Invited;
 		}
 
 		/// <summary>
@@ -260,7 +263,7 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress) :
 			base (messageName, messageType, fromIdentity, fromAddress, toAddress)
 		{
-			SubscribeState = SubscriptionState.Invited;
+			SubscriptionState = SubscriptionStates.Invited;
 		}
 
 		/// <summary>
@@ -275,19 +278,21 @@ namespace Simias.POBox
 		public Subscription(string messageName, string messageType, string fromIdentity, string fromAddress, string toAddress, string toIdentity) :
 			base (messageName, messageType, fromIdentity, fromAddress, toAddress, toIdentity)
 		{
-			SubscribeState = SubscriptionState.Invited;
+			SubscriptionState = SubscriptionStates.Invited;
 		}
+
 		#endregion
 
 		#region Properties
+		
 		/// <summary>
 		/// Gets/sets the state of the Subscription object.
 		/// </summary>
-		public SubscriptionState SubscribeState
+		public SubscriptionStates SubscriptionState
 		{
 			get
 			{
-				return (SubscriptionState)Properties.GetSingleProperty(SubscriptionStateProperty).Value;
+				return (SubscriptionStates)Properties.GetSingleProperty(SubscriptionStateProperty).Value;
 			}
 			set
 			{
@@ -343,45 +348,15 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the ID of the collection to share.
 		/// </summary>
-		public string SubscriptionCollectionId
+		public string SubscriptionCollectionID
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionIdProperty).Value;
+				return (string)Properties.GetSingleProperty(SubscriptionCollectionIDProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(SubscriptionCollectionIdProperty, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets/sets the domain name of the collection to share.
-		/// </summary>
-		public string SubscriptionCollectionDomainName
-		{
-			get
-			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionDomainNameProperty).Value;
-			}
-			set
-			{
-				Properties.ModifyProperty(SubscriptionCollectionDomainNameProperty, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets/sets the domain ID of the collection to share.
-		/// </summary>
-		public string SubscriptionCollectionDomainId
-		{
-			get
-			{
-				return (string)Properties.GetSingleProperty(SubscriptionCollectionDomainIdProperty).Value;
-			}
-			set
-			{
-				Properties.ModifyProperty(SubscriptionCollectionDomainIdProperty, value);
+				Properties.ModifyProperty(SubscriptionCollectionIDProperty, value);
 			}
 		}
 
@@ -468,15 +443,15 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the ID of the collection's root DirNode.
 		/// </summary>
-		public string DirNodeId
+		public string DirNodeID
 		{
 			get
 			{
-				return (string)Properties.GetSingleProperty(DirNodeIdProperty).Value;
+				return (string)Properties.GetSingleProperty(DirNodeIDProperty).Value;
 			}
 			set
 			{
-				Properties.ModifyProperty(DirNodeIdProperty, value);
+				Properties.ModifyProperty(DirNodeIDProperty, value);
 			}
 		}
 
@@ -513,36 +488,53 @@ namespace Simias.POBox
 		/// <summary>
 		/// Gets/sets the disposition of the subscription.
 		/// </summary>
-		public Disposition SubscriptionDisposition
+		public SubscriptionDispositions SubscriptionDisposition
 		{
 			get
 			{
-				return (Disposition)Properties.GetSingleProperty(SubscriptionDispositionProperty).Value;
+				return (SubscriptionDispositions)Properties.GetSingleProperty(SubscriptionDispositionProperty).Value;
 			}
 			set
 			{
 				Properties.ModifyProperty(SubscriptionDispositionProperty, value);
 			}
 		}
+
 		#endregion
 
 		#region Public Methods
+		
 		/// <summary>
-		/// Generates a SubscriptionInfo object from the Subscription.
+		/// Generates a SubscriptionInfo object from the Subscription object
 		/// </summary>
-		/// <returns>A SubscriptionInfo object.</returns>
-		public SubscriptionInfo GenerateSubscriptionInfo()
+		/// <returns>A SubscriptionInfo object</returns>
+		public SubscriptionInfo GenerateInfo()
 		{
 			SubscriptionInfo si = new SubscriptionInfo();
 
-			si.DomainID = SubscriptionCollectionDomainId;
-			si.DomainName = SubscriptionCollectionDomainName;
+			si.DomainID = DomainID;
+			si.DomainName = DomainName;
 			si.POServiceUrl = POServiceURL;
-			si.SubscriptionCollectionID = SubscriptionCollectionId;
+			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionID = ID;
 
 			return si;
 		}
+		
+		/// <summary>
+		/// Generates a SubscriptionStatus object from the Subscription object
+		/// </summary>
+		/// <returns>A SubscriptionStatus object</returns>
+		public SubscriptionStatus GenerateStatus()
+		{
+			SubscriptionStatus status = new SubscriptionStatus();
+
+			status.State = this.SubscriptionState;
+			status.Disposition = this.SubscriptionDisposition;
+
+			return status;
+		}
+
 		#endregion
 	}
 }

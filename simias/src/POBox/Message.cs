@@ -120,10 +120,22 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the master URL.
 		/// </summary>
-		public const string MasterURLProperty = "Master Url";
+		public const string MasterURLProperty = "MasterUrl";
+		
+		/// <summary>
+		/// The name of the property storing the domain id.
+		/// </summary>
+		public const string DomainIDProperty = "DomainID";
+		
+		/// <summary>
+		/// The name of the property storing the domain name.
+		/// </summary>
+		public const string DomainNameProperty = "DomainName";
+		
 		#endregion
 
 		#region Properties
+		
 		/// <summary>
 		/// Gets/sets the type of the message.
 		/// </summary>
@@ -288,9 +300,41 @@ namespace Simias.POBox
 				Properties.ModifyProperty(MasterURLProperty, value);
 			}
 		}
+		
+		/// <summary>
+		/// Gets/sets the identity domain id.
+		/// </summary>
+		public string DomainID
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(DomainIDProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(DomainIDProperty, value);
+			}
+		}
+		
+		/// <summary>
+		/// Gets/sets the identity domain name.
+		/// </summary>
+		public string DomainName
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(DomainIDProperty).Value;
+			}
+			set
+			{
+				Properties.ModifyProperty(DomainIDProperty, value);
+			}
+		}
+
 		#endregion
 
 		#region Constructors
+		
 		/// <summary>
 		/// Constructor for creating a Message object from a Node object.
 		/// </summary>
@@ -304,9 +348,9 @@ namespace Simias.POBox
 		/// Constructor for creating a new Message object with a specific ID.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the Message object.</param>
-		/// <param name="messageId">The ID of the Message object.</param>
-		public Message(string messageName, string messageId) :
-			base (messageName, messageId)
+		/// <param name="messageID">The ID of the Message object.</param>
+		public Message(string messageName, string messageID) :
+			base (messageName, messageID)
 		{
 			Properties.AddProperty(PropertyTags.Types, typeof(Message).Name);
 		}
@@ -376,9 +420,11 @@ namespace Simias.POBox
 		{
 			ToIdentity = toIdentity;
 		}
+
 		#endregion
 
 		#region Public Methods
+		
 		#endregion
 	}
 }

@@ -115,14 +115,14 @@ namespace Simias.POBox
 		{
 			Subscription subscription = new Subscription(node);
 
-			switch(subscription.SubscribeState)
+			switch(subscription.SubscriptionState)
 			{
 				// invited (master)
-				case SubscriptionState.Invited:
+				case SubscriptionStates.Invited:
 				// replied (slave)
-				case SubscriptionState.Replied:
+				case SubscriptionStates.Replied:
 				// delivered (slave)
-				case SubscriptionState.Delivered:
+				case SubscriptionStates.Delivered:
 					
 					lock(threads.SyncRoot)
 					{
@@ -130,7 +130,7 @@ namespace Simias.POBox
 						if (threads.Contains(subscription.ID))
 						{
 							// subscription thread
-							SubscriptionThread st = new SubscriptionThread(subscription, threads);
+							SubscriptionThread st = new SubscriptionThread(poBox, subscription, threads);
 							Thread thread = new Thread(new ThreadStart(st.Run));
 							thread.IsBackground = true;
 							thread.Priority = ThreadPriority.BelowNormal;
@@ -145,10 +145,6 @@ namespace Simias.POBox
 				default:
 					break;
 			}
-		}
-
-		private void InvitedWork()
-		{
 		}
 
 		#region IDisposable Members

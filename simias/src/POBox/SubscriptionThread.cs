@@ -26,7 +26,11 @@ using System.Collections;
 using System.Threading;
 using System.Text;
 using System.IO;
+using System.Runtime.Remoting;
+
+using Simias;
 using Simias.Mail;
+using Simias.Channels;
 
 namespace Simias.POBox
 {
@@ -37,14 +41,16 @@ namespace Simias.POBox
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SubscriptionThread));
 		
+		private POBox poBox;
 		private Subscription subscription;
 		private Hashtable threads;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SubscriptionThread(Subscription subscription, Hashtable threads)
+		public SubscriptionThread(POBox poBox, Subscription subscription, Hashtable threads)
 		{
+			this.poBox = poBox;
 			this.subscription = subscription;
 			this.threads = threads;
 		}
@@ -59,20 +65,20 @@ namespace Simias.POBox
 				{
 					try
 					{
-						switch(subscription.SubscribeState)
+						switch(subscription.SubscriptionState)
 						{
 								// invited (master)
-							case SubscriptionState.Invited:
+							case SubscriptionStates.Invited:
 								done = DoInvited();
 								break;
 
 								// replied (slave)
-							case SubscriptionState.Replied:
+							case SubscriptionStates.Replied:
 								done = DoReplied();
 								break;
 
 								// delivered (slave)
-							case SubscriptionState.Delivered:
+							case SubscriptionStates.Delivered:
 								done = DoDelivered();
 								break;
 
@@ -150,7 +156,7 @@ namespace Simias.POBox
 				Path.GetFileNameWithoutExtension(Path.GetTempFileName())
 				+ SubscriptionInfo.Extension);
 
-			SubscriptionInfo info = subscription.GenerateSubscriptionInfo();
+			SubscriptionInfo info = subscription.GenerateInfo();
 			info.Save(filename);
 
 			MailAttachment attachment = new MailAttachment(filename);
@@ -170,11 +176,75 @@ namespace Simias.POBox
 
 		private bool DoReplied()
 		{
+			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
+				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
+				subscription.POServiceURL.Port);
+
+			log.Debug("Connecting to the Post Office Service...");
+			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
+				subscription.POServiceURL.ToString());
+			
+			if (po == null)
+				throw new ApplicationException("No Post-Office Service");
+
+			// post subscription
+			po.Post(subscription);
+			
+			// disconnect
+			RemotingServices.Disconnect(po);
+
+			// remove channel
+			channel.Dispose();
+
+			// update subscription
+			subscription.SubscriptionState = SubscriptionStates.Delivered;
+			poBox.Commit(subscription);
+
 			return true;
 		}
 
 		private bool DoDelivered()
 		{
+			SimiasChannel channel = SimiasChannelFactory.GetInstance().GetChannel(poBox.StoreReference,
+				subscription.POServiceURL.Scheme, SimiasChannelSinks.Binary,
+				subscription.POServiceURL.Port);
+
+			log.Debug("Connecting to the Post Office Service...");
+			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
+				subscription.POServiceURL.ToString());
+			
+			if (po == null)
+				throw new ApplicationException("No Post-Office Service");
+
+			// post subscription
+			SubscriptionStatus status = po.GetSubscriptionStatus(subscription.DomainID,
+				subscription.FromIdentity, subscription.ID);
+			
+			// disconnect
+			RemotingServices.Disconnect(po);
+
+			// remove channel
+			channel.Dispose();
+
+			// update subscription
+			if (status.State == SubscriptionStates.Responded)
+			{
+				// create stub
+				if (status.Disposition == SubscriptionDispositions.Accepted)
+				{
+					log.Debug("Creating collection...");
+
+					//TODO: ? subscription.CreateSlaveCollection();
+				}
+
+				// done with the subscription
+				poBox.Delete(subscription);
+
+				// acknowledge the message
+				po.AckSubscription(subscription.DomainID,
+					subscription.FromIdentity, subscription.ID);
+			}
+
 			return true;
 		}
 	}
