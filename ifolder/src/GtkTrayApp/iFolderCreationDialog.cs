@@ -103,6 +103,7 @@ namespace Novell.iFolder
 			this.VBox.Add(vbox);
 
 			this.AddButton(Stock.Close, ResponseType.Ok);
+			this.AddButton(Stock.Help, ResponseType.Help);
 		}
 	}
 }

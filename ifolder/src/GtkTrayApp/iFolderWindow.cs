@@ -1694,6 +1694,7 @@ namespace Novell.iFolder
 			switch(args.ResponseId)
 			{
 				case Gtk.ResponseType.Help:
+					Util.ShowHelp("front.html", this);
 					break;
 				default:
 				{
@@ -1837,7 +1838,16 @@ namespace Novell.iFolder
 							iFolderCreationDialog dlg = 
 								new iFolderCreationDialog(newiFolder);
 							dlg.TransientFor = this;
-							dlg.Run();
+							int createRC;
+							do
+							{
+								createRC = dlg.Run();
+								if(createRC == (int)Gtk.ResponseType.Help)
+								{
+									Util.ShowHelp("front.html", this);
+								}
+							}while(createRC != (int)Gtk.ResponseType.Ok);
+
 							dlg.Hide();
 
 							if(dlg.HideDialog)
