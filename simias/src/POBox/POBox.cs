@@ -127,6 +127,26 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// POBox factory method that constructs a POBox object from it's id.
+		/// </summary>
+		/// <param name="storeObject">The Store object that the POBox belongs to.</param>
+		/// <param name="domainId">The ID of the domain that the POBox belongs to.</param>
+		/// <param name="userId">The ID of the user that the POBox belongs to.</param>
+		/// <returns></returns>
+		public static POBox GetPOBoxByID(Store store, string id)
+		{
+			POBox poBox = null;
+			Collection collection = store.GetCollectionByID(id);
+	
+			if (collection != null)
+			{
+				poBox = new POBox(store, collection);
+			}
+
+			return poBox;
+		}
+		
+		/// <summary>
 		/// Adds a message to the POBox object.
 		/// </summary>
 		/// <param name="message">The message to add to the collection.</param>

@@ -60,6 +60,8 @@ namespace Simias.Sync
 		/// </summary>
 		protected override void Start()
 		{
+			Debug.Assert(manager != null);
+
 			manager.Start();
 		}
 

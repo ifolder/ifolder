@@ -22,21 +22,248 @@
  ***********************************************************************/
 
 using System;
+using System.Threading;
+using System.Collections;
+using System.Runtime.Remoting;
+using System.Diagnostics;
 
 using Simias;
+using Simias.Storage;
+using Simias.Channels;
 
 namespace Simias.POBox
 {
 	/// <summary>
 	/// PO Manager
 	/// </summary>
-	public class POManager
+	public class POManager : IDisposable
 	{
-		private Configuration config;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POManager));
 
+		private static readonly string endPoint = "PostOffice.rem";
+
+		/// <summary>
+		/// The suggested service url for the current machine.
+		/// </summary>
+		private static readonly Uri DefaultServiceUrl = (new UriBuilder("http",
+			MyDns.GetHostName(), 6446, EndPoint)).Uri;
+
+		private Store store;
+		private Configuration config;
+		private Hashtable boxManagers;
+		private EventSubscriber subscriber;
+		private PostOffice service;
+		private SimiasChannelFactory channelFactory;
+		private SimiasChannel channel;
+		private Uri serviceUrl = DefaultServiceUrl ;
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="config">Simias configuration</param>
 		public POManager(Configuration config)
 		{
 			this.config = config;
+			
+			// store
+			store = new Store(config);
+
+			// channels
+			channelFactory = SimiasChannelFactory.GetInstance();
+
+			// box managers
+			boxManagers = new Hashtable();
+
+			// events
+			subscriber = new EventSubscriber(config);
+			subscriber.Enabled = false;
+			subscriber.NodeTypeFilter = typeof(POBox).Name;
+			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
+			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
+
+			// validate a default "Workgroup" PO Box
+			Debug.Assert(POBox.GetPOBox(store, Storage.Domain.WorkGroupDomainID) != null);
 		}
+		/// <summary>
+		/// Start the PO Box manager.
+		/// </summary>
+		public void Start()
+		{
+			try
+			{
+				lock(this)
+				{
+					// create service
+					service = new PostOffice(config);
+
+					// create channel
+					string name = String.Format("PO Service [{0}]", store.ID);
+
+					channel = channelFactory.GetChannel(store,
+						ServiceUrl.Scheme, SimiasChannelSinks.Binary,
+						ServiceUrl.Port);
+				
+					log.Debug("Starting PO Service: {0}", ServiceUrl);
+
+					// marshal service
+					RemotingServices.Marshal(service, EndPoint);
+				
+					// start collection managers
+					subscriber.Enabled = true;
+					foreach(ShallowNode n in store)
+					{
+						AddPOBoxManager(n.ID);
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.Error(e, "Unable to start PO manager.");
+
+				throw e;
+			}
+		}
+
+		/// <summary>
+		/// Stop the PO Box manager.
+		/// </summary>
+		public void Stop()
+		{
+			try
+			{
+				lock(this)
+				{
+					if (service != null)
+					{
+						log.Debug("Stopping PO Service: {0}", ServiceUrl);
+					}
+
+					// stop collection managers
+					subscriber.Enabled = false;
+					foreach(string id in new ArrayList(boxManagers.Keys))
+					{
+						RemovePOBoxManager(id);
+					}
+
+					// release service
+					if (service != null)
+					{
+						RemotingServices.Disconnect(service);
+						service = null;
+					}
+
+					// release channel
+					if (channel != null)
+					{
+						channel.Dispose();
+						channel = null;
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				log.Error(e, "Unable to stop store manager.");
+
+				throw e;
+			}
+		}
+
+		private void AddPOBoxManager(string id)
+		{
+			POBoxManager manager;
+			
+			lock(boxManagers.SyncRoot)
+			{
+				if (!boxManagers.Contains(id))
+				{
+					log.Debug("Adding PO Box Manager: {0}", id);
+
+					try
+					{
+						manager = new POBoxManager(this, id);
+			
+						manager.Start();
+
+						boxManagers.Add(id, manager);
+					}
+					catch(Exception e)
+					{
+						log.Debug(e, "Ignored");
+					}
+				}
+			}
+		}
+
+		private void RemovePOBoxManager(string id)
+		{
+			POBoxManager manager;
+			
+			lock(boxManagers.SyncRoot)
+			{
+				if (boxManagers.Contains(id))
+				{
+					log.Debug("Removing PO Box Manager: {0}", id);
+
+					try
+					{
+						manager = (POBoxManager)boxManagers[id];
+			
+						manager.Stop();
+
+						manager.Dispose();
+
+						boxManagers.Remove(id);
+					}
+					catch(Exception e)
+					{
+						log.Debug(e, "Ignored");
+					}
+				}
+			}
+		}
+
+		private void OnPOBoxCreated(NodeEventArgs args)
+		{
+			AddPOBoxManager(args.ID);
+		}
+
+		private void OnPOBoxDeleted(NodeEventArgs args)
+		{
+			RemovePOBoxManager(args.ID);
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			Stop();
+
+			if (store != null)
+			{
+				store.Dispose();
+			}
+		}
+
+		#endregion
+
+		#region Properties
+		
+		public static string EndPoint
+		{
+			get { return endPoint; }
+		}
+
+		public Uri ServiceUrl
+		{
+			get { return serviceUrl; }
+			set { serviceUrl = value; }
+		}
+
+		public Configuration Config
+		{
+			get { return config; }
+		}
+
+		#endregion
 	}
 }

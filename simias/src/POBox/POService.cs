@@ -60,6 +60,9 @@ namespace Simias.POBox
 		/// </summary>
 		protected override void Start()
 		{
+			Debug.Assert(manager != null);
+
+			manager.Start();
 		}
 
 		/// <summary>
@@ -67,6 +70,9 @@ namespace Simias.POBox
 		/// </summary>
 		protected override void Stop()
 		{
+			Debug.Assert(manager != null);
+
+			manager.Stop();
 		}
 
 		/// <summary>
@@ -74,6 +80,9 @@ namespace Simias.POBox
 		/// </summary>
 		protected override void Resume()
 		{
+			Debug.Assert(manager != null);
+
+			manager.Start();
 		}
 
 		/// <summary>
@@ -81,6 +90,9 @@ namespace Simias.POBox
 		/// </summary>
 		protected override void Pause()
 		{
+			Debug.Assert(manager != null);
+
+			manager.Stop();
 		}
 
 		/// <summary>

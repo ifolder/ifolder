@@ -22,16 +22,145 @@
  ***********************************************************************/
 
 using System;
+using System.Collections;
+using System.Threading;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Diagnostics;
+
+using Simias;
+using Simias.Storage;
+using Simias.Channels;
 
 namespace Simias.POBox
 {
 	/// <summary>
 	/// POBox Manager
 	/// </summary>
-	public class POBoxManager
+	public class POBoxManager : IDisposable
 	{
-		public POBoxManager()
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POBoxManager));
+
+		private POManager poManager;
+		private Configuration config;
+		private POBox poBox;
+		private Store store;
+		private EventSubscriber subscriber;
+		private Hashtable threads;
+
+		public POBoxManager(POManager poManager, string id)
+		{
+			this.poManager = poManager;
+			this.config = poManager.Config;
+
+			// new store
+			store = new Store(config);
+
+			// open POBox
+			poBox = POBox.GetPOBoxByID(store, id);
+
+			// threads
+			threads = new Hashtable();
+
+			// events
+			subscriber = new EventSubscriber(config);
+			subscriber.Enabled = false;
+			subscriber.NodeTypeFilter = typeof(Message).Name;
+			subscriber.NodeCreated += new NodeEventHandler(OnMessageChanged);
+			subscriber.NodeChanged +=new NodeEventHandler(OnMessageChanged);
+		}
+
+		/// <summary>
+		/// Start the PO Box manager.
+		/// </summary>
+		public void Start()
+		{
+			subscriber.Enabled = true;
+			
+			foreach(ShallowNode n in poBox)
+			{
+				UpdateMessage(n.ID);
+			}
+		}
+
+		/// <summary>
+		/// Stop the PO Box manager.
+		/// </summary>
+		public void Stop()
+		{
+			subscriber.Enabled = false;
+		}
+
+		private void OnMessageChanged(NodeEventArgs args)
+		{
+			UpdateMessage(args.ID);
+		}
+
+		private void UpdateMessage(string id)
+		{
+			Node node = poBox.GetNodeByID(id);
+
+			if (node != null)
+			{
+				string type = node.GetType().Name;
+
+				if (type == typeof(Subscription).Name)
+				{
+					UpdateSubscription(node);
+				}
+			}
+		}
+
+		private void UpdateSubscription(Node node)
+		{
+			Subscription subscription = new Subscription(node);
+
+			switch(subscription.SubscribeState)
+			{
+				// invited (master)
+				case SubscriptionState.Invited:
+				// replied (slave)
+				case SubscriptionState.Replied:
+				// delivered (slave)
+				case SubscriptionState.Delivered:
+					
+					lock(threads.SyncRoot)
+					{
+						// start threads only on new subscription updates
+						if (threads.Contains(subscription.ID))
+						{
+							// subscription thread
+							SubscriptionThread st = new SubscriptionThread(subscription, threads);
+							Thread thread = new Thread(new ThreadStart(st.Run));
+							thread.IsBackground = true;
+							thread.Priority = ThreadPriority.BelowNormal;
+							thread.Start();
+
+							// save thread
+							threads.Add(subscription.ID, thread);
+						}
+					}
+					break;
+
+				default:
+					break;
+			}
+		}
+
+		private void InvitedWork()
 		{
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (store != null)
+			{
+				store.Dispose();
+			}
+		}
+
+		#endregion
 	}
 }
