@@ -224,33 +224,33 @@ namespace Simias.Authentication
 
 			try
 			{
-				Store	store = Store.GetStore();
-				if (this.collectionID != null)
+				Store store = Store.GetStore();
+				if ( this.collectionID != null )
 				{
 					// Validate the shared collection
-					Collection cCol = store.GetCollectionByID(collectionID);
-					if (cCol != null)
+					Collection cCol = store.GetCollectionByID( collectionID );
+					if ( cCol != null )
 					{
 						cMember = cCol.GetCurrentMember();
-						if (cMember != null)
+						if ( cMember != null )
 						{
-							cDomain = store.GetDomain(cCol.Domain);
+							cDomain = store.GetDomain( cCol.Domain );
 						}
 						else
 						{
-							log.Debug("Credentials::GetCredentials - current member not found");
+							log.Debug( "Credentials::GetCredentials - current member not found" );
 						}
 
 					}
 					else
 					{
-						log.Debug("Credentials::GetCredentials - collection not found");
+						log.Debug( "Credentials::GetCredentials - collection not found" );
 					}
 				}
 				else
 				{
-					cDomain = this.store.GetDomain(this.domainID);
-					cMember = cDomain.GetMemberByID(this.memberID);
+					cDomain = this.store.GetDomain( this.domainID );
+					cMember = cDomain.GetMemberByID( this.memberID );
 				}
 
 				//
@@ -265,14 +265,23 @@ namespace Simias.Authentication
 							cDomain.ID, 
 							true, 
 							cMember.Name, 
-							null);
+							null );
 
-					Uri cUri = Locate.ResolveLocation(cDomain.ID);
-					realCreds = cCreds.GetCredential(cUri, "BASIC");
-					//if (realCreds == null)
-					//{
-					//	log.Debug("Credentials::GetCredentials - credentials not found");
-					//}
+					Uri cUri = Locate.ResolveLocation( cDomain.ID );
+					realCreds = cCreds.GetCredential( cUri, "BASIC" );
+					if ( realCreds == null )
+					{
+						// Check if creds exist for the user ID
+						cCreds = 
+							new NetCredential(
+								"iFolder", 
+								cDomain.ID, 
+								true, 
+								cMember.UserID,
+								null );
+
+						realCreds = cCreds.GetCredential( cUri, "BASIC" );
+					}
 				}
 			}
 			catch{}
