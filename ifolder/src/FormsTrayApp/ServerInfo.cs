@@ -43,6 +43,7 @@ namespace Novell.FormsTrayApp
 	{
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ServerInfo));
 		string domainID;
+		bool first = true;
 		bool cancelled = false;
 		bool updateStarted = false;
 		private System.Windows.Forms.Button ok;
@@ -363,8 +364,8 @@ namespace Novell.FormsTrayApp
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.serverName);
 			this.Controls.Add(this.userName);
-			this.Controls.Add(this.rememberPassword);
 			this.Controls.Add(this.password);
+			this.Controls.Add(this.rememberPassword);
 			this.Controls.Add(this.passwordLabel2);
 			this.Controls.Add(this.userLabel2);
 			this.Controls.Add(this.serverLabel2);
@@ -535,7 +536,10 @@ namespace Novell.FormsTrayApp
 
 		private void ServerInfo_Activated(object sender, System.EventArgs e)
 		{
-			password.Focus();
+			if (first)
+			{
+				first = !password.Focus();
+			}
 		}
 		#endregion
 	}
