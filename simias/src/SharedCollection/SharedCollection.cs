@@ -1,0 +1,825 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright © Unpublished Work of Novell, Inc. All Rights Reserved.
+ *
+ *  THIS WORK IS AN UNPUBLISHED WORK AND CONTAINS CONFIDENTIAL,
+ *  PROPRIETARY AND TRADE SECRET INFORMATION OF NOVELL, INC. ACCESS TO 
+ *  THIS WORK IS RESTRICTED TO (I) NOVELL, INC. EMPLOYEES WHO HAVE A 
+ *  NEED TO KNOW HOW TO PERFORM TASKS WITHIN THE SCOPE OF THEIR 
+ *  ASSIGNMENTS AND (II) ENTITIES OTHER THAN NOVELL, INC. WHO HAVE 
+ *  ENTERED INTO APPROPRIATE LICENSE AGREEMENTS. NO PART OF THIS WORK 
+ *  MAY BE USED, PRACTICED, PERFORMED, COPIED, DISTRIBUTED, REVISED, 
+ *  MODIFIED, TRANSLATED, ABRIDGED, CONDENSED, EXPANDED, COLLECTED, 
+ *  COMPILED, LINKED, RECAST, TRANSFORMED OR ADAPTED WITHOUT THE PRIOR 
+ *  WRITTEN CONSENT OF NOVELL, INC. ANY USE OR EXPLOITATION OF THIS 
+ *  WORK WITHOUT AUTHORIZATION COULD SUBJECT THE PERPETRATOR TO 
+ *  CRIMINAL AND CIVIL LIABILITY.  
+ *
+ *  Author: Calvin Gaisford <cgaisford@novell.com>
+ *
+ ***********************************************************************/
+
+using System;
+using System.Collections;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using Simias;
+using Simias.Storage;
+using Simias.Sync;
+using Simias.POBox;
+
+namespace Simias.Web
+{
+	/// <summary>
+	/// SharedCollection implements all of the APIs needed to use a Shared
+	/// Collection in Simias.  The APIs are designed to be wrapped by a
+	/// WebService
+	/// </summary>
+	public class SharedCollection
+	{
+		public static readonly string FilesDirName = "SimiasFiles";
+
+
+		/// <summary>
+		/// Creates a new collection of the type specified
+		/// </summary>
+		/// <param name = "Name">
+		/// The name of the Collection to be created
+		/// </param>
+		/// <param name = "UserID">
+		/// The UserID to be made the owner of this Collection.
+		/// A subsciption will be placed in this UserID's POBox.
+		/// </param>
+		/// <param name = "Type">
+		/// A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type
+		/// will be added.
+		/// </param>
+		/// <returns>
+		/// Collection that was created
+		/// </returns>
+		public static Collection CreateSharedCollection(
+				string Name, string UserID, string Type)
+		{
+			return CreateSharedCollection(Name, UserID, Type, false, null);
+		}
+
+
+
+
+		/// <summary>
+		/// Creates a new collection of the type specified.  It gets the
+		/// current member and makes them the owner
+		/// </summary>
+		/// <param name = "Name">
+		/// The name of the Collection to be created
+		/// </param>
+		/// <param name = "Type">
+		/// A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type
+		/// will be added.
+		/// </param>
+		/// <returns>
+		/// Collection that was created
+		/// </returns>
+		public static Collection CreateSharedCollection(
+				string Name, string Type)
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(store.DefaultDomain).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to obtain default Roster");
+
+			Simias.Storage.Member member = roster.GetCurrentMember();
+			if(member == null)
+				throw new Exception("Unable to obtain current member");
+
+			return CreateSharedCollection(Name, member.UserID, 
+						Type, false, null);
+		}
+
+
+
+
+		/// <summary>
+		/// Creates a new collection of the type specified.  It gets the
+		/// current member and makes them the owner
+		/// </summary>
+		/// <param name = "LocalPath">
+		/// The name of the Collection to be created
+		/// </param>
+		/// <param name = "Type">
+		/// A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type
+		/// will be added.
+		/// </param>
+		/// <returns>
+		/// Collection that was created
+		/// </returns>
+		public static Collection CreateLocalSharedCollection(
+				string LocalPath, string Type)
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(store.DefaultDomain).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to obtain default Roster");
+
+			Simias.Storage.Member member = roster.GetCurrentMember();
+			if(member == null)
+				throw new Exception("Unable to obtain current member");
+
+
+			String name = Path.GetFileName(LocalPath);
+
+			return CreateSharedCollection(name, member.UserID, 
+						Type, true, LocalPath);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that creates and SharedCollection
+		/// </summary>
+		/// <param name = "Name">
+		/// The name of the SharedCollection to create.  If a Path is
+		/// Specified, it must match the name of the last folder in the path
+		/// </param>
+		/// <param name = "UserID">
+		/// The UserID to be made the owner of this SharedCollection. 
+		/// A subsciption will be placed in this UserID's POBox.
+		/// </param>
+		/// <param name = "Type">
+		/// A Type value to add to the collection type.  Examples would be
+		/// iFolder, AB:AddressBook, etc. Leave this blank and no type
+		/// will be added.
+		/// </param>
+		/// <param name = "CollectionPath">
+		/// The full path to this SharedCollection.  If Path is null or "",
+		/// it will be ignored. The last folder name in the path should
+		/// match the name of this SharedCollection
+		/// </param>
+		/// <returns>
+		/// Collection object that was created
+		/// </returns>
+		private static Collection CreateSharedCollection(
+				string Name, string UserID, string Type, 
+				bool UnmanagedFiles, string CollectionPath)
+		{
+			ArrayList nodeList = new ArrayList();
+
+			Configuration config = Configuration.GetConfiguration();
+			Store store = Store.GetStore();
+
+			// Create the Collection and set it as an iFolder
+			Collection c = 
+					new Collection(store, Name, store.DefaultDomain);
+
+			if( (Type != null) && (Type.Length > 0) )
+				c.SetType(c, Type);
+
+			nodeList.Add(c);
+
+			// Create the member and add it as the owner
+			Roster roster = 
+					store.GetDomain(store.DefaultDomain).GetRoster(store);
+			if(roster == null)
+				throw new Exception("Unable to obtain default Roster");
+
+			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("UserID is invalid");
+				
+			Simias.Storage.Member newMember = 
+					new Simias.Storage.Member(	member.Name,
+												member.UserID,
+												Access.Rights.Admin);
+			newMember.IsOwner = true;
+			nodeList.Add(newMember);
+
+			if(UnmanagedFiles)
+			{
+				string dirNodePath;
+
+				if( (CollectionPath == null) || (CollectionPath.Length == 0) )
+				{
+					// create a root dir node for this iFolder in the
+					// ~/.local/shared/simias/SimiasFiles/<guid>/name
+					// directory
+					dirNodePath = Path.Combine(config.StorePath, FilesDirName);
+					dirNodePath = Path.Combine(dirNodePath, c.ID);
+					dirNodePath = Path.Combine(dirNodePath, Name);
+
+					if(!Directory.Exists(dirNodePath) )
+						Directory.CreateDirectory(dirNodePath);
+				}
+				else
+					dirNodePath = CollectionPath;
+
+				if(!Directory.Exists(dirNodePath) )
+					throw new Exception("Path did not exist");
+
+				// create root directory node
+				DirNode dn = new DirNode(c, dirNodePath);
+				nodeList.Add(dn);
+			}
+
+			// Commit the new collection and the fileNode at the root
+			c.Commit(nodeList.ToArray( typeof( Node) ) as Node[] );
+
+			AddSubscription( store, c, member, 
+					member, SubscriptionStates.Ready);
+
+			return c;
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that deletes a SharedCollection and removes all
+		/// subscriptions from all members.  Any files that were in place
+		/// if there was a DirNode will remain there
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing this iFolder to delete
+		/// </param>
+		/// <returns>
+		/// true if the iFolder was successfully removed
+		/// </returns>
+		public static void DeleteSharedCollection(string CollectionID)
+		{
+			Store store = Store.GetStore();
+			Collection collection = store.GetCollectionByID(CollectionID);
+			if(collection == null)
+				throw new Exception("Invalid CollectionID");
+
+			RemoveAllSubscriptions(store, collection);
+			collection.Delete();
+			collection.Commit();
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that to set the Rights of a user on a Collection
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the Collection to which
+		/// the member is to be added
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly added member
+		/// Rights can be "Admin", "ReadOnly", or "ReadWrite"
+		/// </param>
+		/// <returns>
+		/// True if the member was successfully added
+		/// </returns>
+		public static void SetMemberRights(	string CollectionID, 
+											string UserID,
+											string Rights)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col != null)
+				throw new Exception("Invalid CollectionID");
+
+			Simias.Storage.Member member = col.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("Invalid UserID");
+
+			if(Rights == "Admin")
+				member.Rights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				member.Rights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				member.Rights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+			col.Commit(member);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets the owner of a Collection
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the iFolder to which
+		/// the member is to be added
+		/// </param>
+		/// <returns>
+		/// Member that is the owner of the iFolder
+		/// </returns>
+		public static Simias.Web.Member GetOwner( string CollectionID )
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Simias.Web.Member member = new Simias.Web.Member(col.Owner);
+			return member;
+		}
+
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the owner of a Collection
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the iFolder to which
+		/// the member is to be added
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly added member
+		/// Rights can be "Admin", "ReadOnly", or "ReadWrite"
+		/// </param>
+		/// <returns>
+		/// True if the member was successfully added
+		/// </returns>
+		public static void ChangeOwner(	string CollectionID, 
+										string NewOwnerUserID,
+										string OldOwnerRights)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Simias.Storage.Member member = 
+					col.GetMemberByID(NewOwnerUserID);
+
+			if(member == null)
+				throw new Exception("UserID is not a Collection Member");
+
+			Access.Rights rights;
+
+			if(OldOwnerRights == "Admin")
+				rights = Access.Rights.Admin;
+			else if(OldOwnerRights == "ReadOnly")
+				rights = Access.Rights.ReadOnly;
+			else if(OldOwnerRights == "ReadWrite")
+				rights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+			Node[] nodes = col.ChangeOwner(member, rights);
+
+			col.Commit(nodes);
+		}
+
+
+
+
+
+		/// <summary>
+		/// WebMethod that adds a member to a Collection granting the Rights
+		/// specified.  Note:  This is not inviting a member, rather it is
+		/// adding them and placing a subscription in the "ready" state in
+		/// their POBox.
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the Collection to which
+		/// the member is to be added
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <param name = "Rights">
+		/// The Rights to be given to the newly added member
+		/// </param>
+		public static void AddMember(	string CollectionID, 
+										string UserID,
+										string Rights)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid CollectionID");
+
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member member = roster.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("Invalid UserID");
+
+			Access.Rights newRights;
+
+			if(Rights == "Admin")
+				newRights = Access.Rights.Admin;
+			else if(Rights == "ReadOnly")
+				newRights = Access.Rights.ReadOnly;
+			else if(Rights == "ReadWrite")
+				newRights = Access.Rights.ReadWrite;
+			else
+				throw new Exception("Invalid Rights Specified");
+
+			Simias.Storage.Member newMember = 
+				new Simias.Storage.Member(	member.Name,
+											member.UserID,
+											newRights);
+			col.Commit(newMember);
+
+			AddSubscription( store, col, 
+					newMember, newMember, SubscriptionStates.Ready);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that removes a member from a Collection. The subscription
+		/// is also removed from the member's POBox.
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection representing the iFolder from which
+		/// the member is to be removed
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to be removed
+		/// </param>
+		/// <returns>
+		/// True if the member was successfully removed
+		/// </returns>
+		public static void RemoveMember(	string CollectionID, 
+											string UserID)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid CollectionID");
+
+			Simias.Storage.Member member = col.GetMemberByID(UserID);
+			if(member == null)
+				throw new Exception("UserID is not a member of iFolder");
+
+			if(member.IsOwner)
+				throw new Exception("UserID is the iFolder owner");
+
+			col.Delete(member);
+			col.Commit(member);
+
+				// even if the member is null, try to clean up the subscription
+			RemoveMemberSubscription(	store, 
+										col,
+										UserID);
+		}
+	
+
+
+
+		/// <summary>
+		/// WebMethod that Lists all members of a Collection
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the Collection representing the iFolder 
+		/// </param>
+		/// <returns>
+		/// An array of Members
+		/// </returns>
+		public static Simias.Web.Member[] GetMembers(string CollectionID)
+		{
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid CollectionID");
+
+			ICSList memberlist = col.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
+			{
+				Simias.Storage.Member simMem =
+					new Simias.Storage.Member(col, sNode);
+
+				Simias.Web.Member member = new Simias.Web.Member(simMem);
+				list.Add(member);
+			}
+			return (Simias.Web.Member[])
+						(list.ToArray(typeof(Simias.Web.Member)));
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that returns a list of all members from the default
+		/// domain of the iFolder Enterprise Server.  This list represents
+		/// the "Roster" of the default domain.
+		/// </summary>
+		/// <returns>
+		/// An array of members
+		/// </returns>
+		public static Simias.Web.Member[] GetAllMembers()
+		{
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+
+			ICSList memberlist = roster.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
+			{
+				Simias.Storage.Member simMem =
+					new Simias.Storage.Member(roster, sNode);
+
+				Simias.Web.Member member = 
+						new Simias.Web.Member(simMem);
+				list.Add(member);
+			}
+
+			return (Member[])(list.ToArray(typeof(Member)));
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets a member from the default Roster
+		/// </summary>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <returns>
+		/// Member that matches the UserID
+		/// </returns>
+		public static Simias.Web.Member GetMember( string UserID )
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(store.DefaultDomain).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			return new Simias.Web.Member(simMem);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets a member from the specified collection
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the collection to get the member
+		/// </param>
+		/// <param name = "UserID">
+		/// The ID of the member to get
+		/// </param>
+		/// <returns>
+		/// Member that matches the UserID
+		/// </returns>
+		public static Simias.Web.Member GetCollectionMember( string CollectionID,
+						string UserID)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(CollectionID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Simias.Storage.Member simMem = col.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			return new Simias.Web.Member(simMem);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets the DiskSpaceQuota for a given member
+		/// </summary>
+		/// <param name = "UserID">
+		/// The ID of the member to get the DiskSpaceQuota
+		/// </param>
+		/// <returns>
+		/// DiskSpaceQuota for the specified member
+		/// </returns>
+		public static Simias.Web.DiskSpaceQuota GetMemberDiskQuota( 
+											string UserID )
+		{
+			return DiskSpaceQuota.GetMemberQuota( UserID );
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets the DiskSpaceQuota for a given CollectionId 
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the iFolder to get the DiskSpaceQuota
+		/// </param>
+		/// <returns>
+		/// DiskSpaceQuota for the specified iFolder
+		/// </returns>
+		public static Simias.Web.DiskSpaceQuota 
+					GetCollectionDiskQuota( string CollectionID )
+		{
+			return Simias.Web.DiskSpaceQuota.GetiFolderQuota( CollectionID );
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for a member
+		/// </summary>
+		/// <param name = "UserID">
+		/// The ID of the member to set the disk space limit
+		/// </param>
+		/// <param name = "Limit">
+		/// The size to set in MegaBytes
+		/// </param>
+		public static void SetMemberSpaceLimit( string UserID, long Limit )
+		{
+			Simias.Web.DiskSpaceQuota.SetMemberSpaceLimit(UserID, Limit);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for an iFolder 
+		/// </summary>
+		/// <param name = "CollectionID">
+		/// The ID of the Collection to set the disk space limit
+		/// </param>
+		/// <param name = "Limit">
+		/// The size to set in MegaBytes
+		/// </param>
+		public static void SetCollectionSpaceLimit( 
+								string CollectionID, long Limit )
+		{
+			Simias.Web.DiskSpaceQuota.SetiFolderSpaceLimit(CollectionID, Limit);
+		}
+
+
+
+
+
+		/// <summary>
+		/// Utility method that should be moved into the POBox class.
+		/// This will create a subscription and place it in the POBox
+		/// of the invited user.
+		/// </summary>
+		/// <param name = "store">
+		/// The store where the POBox and collection for this subscription
+		/// is to be found.
+		/// </param>
+		/// <param name = "collection">
+		/// The Collection for which the subscription is being created
+		/// </param>
+		/// <param name = "inviteMember">
+		/// The Member from which the subscription is being created
+		/// </param>
+		/// <param name = "newMember">
+		/// The Member being invited
+		/// </param>
+		/// <param name = "state">
+		/// The initial state of the subscription when placed in the POBox
+		/// of the invited Member
+		/// </param>
+		private static void AddSubscription(	Store store, 
+											Collection collection, 
+											Simias.Storage.Member inviteMember,
+											Simias.Storage.Member newMember,
+											SubscriptionStates state )
+		{
+			Simias.POBox.POBox poBox = 
+				Simias.POBox.POBox.GetPOBox(store, store.DefaultDomain, 
+												newMember.UserID );
+
+			Subscription sub = poBox.CreateSubscription(collection,
+														inviteMember,
+														"Collection");
+			sub.ToName = newMember.Name;
+			sub.ToIdentity = newMember.UserID;
+			sub.ToPublicKey = newMember.PublicKey;
+			sub.SubscriptionRights = newMember.Rights;
+			sub.SubscriptionState = state;
+
+			// copied from the iFolder code, this may need to change
+			// in the future
+			Roster roster = 
+				store.GetDomain(store.DefaultDomain).GetRoster(store);
+			SyncCollection sc = new SyncCollection(roster);
+			sub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+
+			DirNode dirNode = collection.GetRootDirectory();
+			if(dirNode != null)
+			{
+				sub.DirNodeID = dirNode.ID;
+				sub.DirNodeName = dirNode.Name;
+			}
+
+			poBox.Commit(sub);
+		}
+
+
+
+
+		/// <summary>
+		/// Utility method that will find all members of a collection
+		/// and remove the subscription to this collection from their
+		/// POBox
+		/// </summary>
+		/// <param name = "store">
+		/// The store where the POBox and collection for this subscription
+		/// is to be found.
+		/// </param>
+		/// <param name = "collection">
+		/// The Collection for which the subscription is being removed
+		/// </param>
+		private static void RemoveAllSubscriptions(Store store, Collection col)
+		{
+			ICSList memberlist = col.GetMemberList();
+			foreach(ShallowNode sNode in memberlist)
+			{
+				// Get the member from the list
+				Simias.Storage.Member member =
+					new Simias.Storage.Member(col, sNode);
+
+				RemoveMemberSubscription(store, col, member.UserID);
+			}
+		}
+
+
+
+
+		/// <summary>
+		/// Utility method that removes a subscription for the specified
+		/// collection from the specified UserID
+		/// </summary>
+		/// <param name = "store">
+		/// The store where the POBox and collection for this subscription
+		/// is to be found.
+		/// </param>
+		/// <param name = "collection">
+		/// The Collection for which the subscription is being removed
+		/// </param>
+		/// <param name = "UserID">
+		/// The UserID from which to remove the subscription
+		/// </param>
+		private static void RemoveMemberSubscription(	Store store, 
+														Collection col,
+														string UserID)
+		{
+			// Get the member's POBox
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
+												store.DefaultDomain, 
+								UserID );
+
+			// Search for the matching subscription
+			Subscription sub = poBox.GetSubscriptionByCollectionID(col.ID);
+			if(sub != null)
+			{
+				poBox.Delete(sub);
+				poBox.Commit(sub);
+			}
+		}
+
+	}
+}

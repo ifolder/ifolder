@@ -80,6 +80,9 @@ AssemblyInfo.cs
 ../Service/ServiceType.cs
 ../Service/State.cs
 ../Service/ThreadServiceCtl.cs
+../SharedCollection/SharedCollection.cs
+../SharedCollection/Member.cs
+../SharedCollection/DiskSpaceQuota.cs
 ../Smtp/Base64AttachmentEncoder.cs
 ../Smtp/IAttachmentEncoder.cs
 ../Smtp/MailAddressCollection.cs
