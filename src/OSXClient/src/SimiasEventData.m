@@ -64,7 +64,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 {
 	[simiasEventDataLock lock];
 	[notifyEventQueue push:notifyEvent];
-	NSLog(@"SMNotifyEvent Pushed... count:%d", [notifyEventQueue count]);
+//	NSLog(@"SMNotifyEvent Pushed... count:%d", [notifyEventQueue count]);
 	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
 	[simiasEventDataLock unlock];
 }
@@ -78,7 +78,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 	SMNotifyEvent *ne;
 	[simiasEventDataLock lock];
 	ne = [[notifyEventQueue pop] retain];
-	NSLog(@"SMNotifyEvent Popped... count:%d", [notifyEventQueue count]);
+//	NSLog(@"SMNotifyEvent Popped... count:%d", [notifyEventQueue count]);
 	[simiasEventDataLock unlock];
 	return [ne autorelease];
 }
@@ -103,7 +103,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 {
 	[simiasEventDataLock lock];
 	[fileSyncEventQueue push:fileSyncEvent];
-	NSLog(@"SMFileSyncEvent pushed... count:%d", [fileSyncEventQueue count]);
+//	NSLog(@"SMFileSyncEvent pushed... count:%d", [fileSyncEventQueue count]);
 	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
 	[simiasEventDataLock unlock];
 }
@@ -116,7 +116,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 	SMFileSyncEvent *fse;
 	[simiasEventDataLock lock];
 	fse = [[fileSyncEventQueue pop] retain];
-	NSLog(@"SMFileSyncEvent popped... count:%d", [fileSyncEventQueue count]);
+//	NSLog(@"SMFileSyncEvent popped... count:%d", [fileSyncEventQueue count]);
 	[simiasEventDataLock unlock];
 	return [fse autorelease];
 }
@@ -144,7 +144,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 {
 	[simiasEventDataLock lock];
 	[colSyncEventQueue push:colSyncEvent];
-	NSLog(@"SMCollectionSyncEvent pushed... count:%d", [colSyncEventQueue count]);
+//	NSLog(@"SMCollectionSyncEvent pushed... count:%d", [colSyncEventQueue count]);
 	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
 	[simiasEventDataLock unlock];
 }
@@ -157,7 +157,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 	SMCollectionSyncEvent *cse;
 	[simiasEventDataLock lock];
 	cse = [[colSyncEventQueue pop] retain];
-	NSLog(@"SMCollectionSyncEvent popped... count:%d", [colSyncEventQueue count]);
+//	NSLog(@"SMCollectionSyncEvent popped... count:%d", [colSyncEventQueue count]);
 	[simiasEventDataLock unlock];
 	return [cse autorelease];
 }
@@ -185,7 +185,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 {
 	[simiasEventDataLock lock];
 	[nodeEventQueue push:nodeEvent];
-	NSLog(@"SMNodeEvent pushed... count:%d", [nodeEventQueue count]);
+//	NSLog(@"SMNodeEvent pushed... count:%d", [nodeEventQueue count]);
 	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
 	[simiasEventDataLock unlock];
 }
@@ -198,7 +198,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 	SMNodeEvent *ne;
 	[simiasEventDataLock lock];
 	ne = [[nodeEventQueue pop] retain];
-	NSLog(@"SMNodeEvent popped... count:%d", [nodeEventQueue count]);
+//	NSLog(@"SMNodeEvent popped... count:%d", [nodeEventQueue count]);
 	[simiasEventDataLock unlock];
 	return [ne autorelease];
 }
