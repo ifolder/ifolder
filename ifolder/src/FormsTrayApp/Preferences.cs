@@ -2538,7 +2538,7 @@ namespace Novell.FormsTrayApp
 			Domain domain = (Domain)accounts.SelectedItems[0].Tag;
 			if (domain != null)
 			{
-				ServerDetails serverDetails = new ServerDetails(this.ifWebService, accounts.Items, domain);
+				ServerDetails serverDetails = new ServerDetails(this.ifWebService, domain);
 				serverDetails.ShowDialog();
 			}
 		}
