@@ -87,7 +87,7 @@ int simias_get_local_service_url(char **url);
  * param: password (char[] that will be filled using sprintf)
  *
  * returns: Returns SIMIAS_SUCCESS (0) if successful or one of the errors
- *          listed above it there's an error.
+ *          listed above if there's an error.
  */
 int simias_get_web_service_credential(char *username, char *password);
 
