@@ -288,9 +288,6 @@ namespace Novell.iFolder
 
 			Move(posX, posY);
 
-			Console.WriteLine("Icon Placement = {0},{1} x {2},{3}",
-								parentX, parentY, parentWidth, parentHeight);
-
 			ArrayList list = new ArrayList();
 
 			if(drawRight)
