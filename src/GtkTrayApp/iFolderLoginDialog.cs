@@ -119,6 +119,7 @@ namespace Novell.iFolder
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Util.GS("_Login"), ResponseType.Ok);
 			this.SetResponseSensitive(ResponseType.Ok, false);
+			this.DefaultResponse = ResponseType.Ok;
 		}
 
 

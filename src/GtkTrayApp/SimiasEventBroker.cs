@@ -1,0 +1,544 @@
+/***********************************************************************
+ *  $RCSfile$
+ * 
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Author: Calvin Gaisford <cgaisford@novell.com>
+ * 
+ ***********************************************************************/
+
+using System;
+using System.Collections;
+using System.Diagnostics;
+using System.Threading;
+
+using Gtk;
+using Gdk;
+using Gnome;
+//using Glade;
+using GtkSharp;
+using GLib;
+using Simias.Event;
+using Simias;
+using Simias.Storage;
+
+
+
+namespace Novell.iFolder
+{
+
+	internal enum SimiasEventType : uint
+	{
+		NewUser			= 0x0001,
+		NewiFolder		= 0x0002,
+		ChangedUser		= 0x0003,
+		ChangediFolder	= 0x0004,
+		DelUser			= 0x0005,
+		DeliFolder		= 0x0006
+	}
+
+
+	internal class SimiasEvent
+	{
+		private iFolder				ifolder;
+		private iFolderUser			ifUser;
+		private string				ifolderID;
+		private SimiasEventType		type;
+	
+		public SimiasEvent(iFolder ifldr, iFolderUser ifldrUser, 
+					string ifldrID, SimiasEventType type)
+		{
+			this.ifolder = ifldr;
+			this.ifUser = ifldrUser;
+			this.ifolderID = ifldrID;
+			this.type = type;
+		}
+
+		public iFolder iFolder
+		{
+			get{ return this.ifolder; }
+		}
+
+		public iFolderUser iFolderUser
+		{
+			get{ return this.ifUser; }
+		}
+
+		public string iFolderID
+		{
+			get{return this.ifolderID;}
+		}
+
+		public SimiasEventType EventType
+		{
+			get{return this.type;}
+		}
+	}
+
+
+	public class iFolderAddedEventArgs : EventArgs
+	{
+		private iFolder	ifolder;
+
+		public iFolderAddedEventArgs(iFolder ifldr)
+		{
+			this.ifolder = ifldr;
+		}
+
+		public iFolder iFolder
+		{
+			get{ return this.ifolder; }
+		}
+	}
+	public delegate void iFolderAddedEventHandler(object sender,
+							iFolderAddedEventArgs args);
+	
+
+	public class iFolderChangedEventArgs : EventArgs
+	{
+		private iFolder	ifolder;
+
+		public iFolderChangedEventArgs(iFolder ifldr)
+		{
+			this.ifolder = ifldr;
+		}
+
+		public iFolder iFolder
+		{
+			get{ return this.ifolder; }
+		}
+	}
+	public delegate void iFolderChangedEventHandler(object sender,
+							iFolderChangedEventArgs args);
+
+
+	public class iFolderDeletedEventArgs : EventArgs
+	{
+		private string ifolderID;
+
+		public iFolderDeletedEventArgs(string ifldID)
+		{
+			this.ifolderID = ifldID;
+		}
+
+		public string iFolderID
+		{
+			get{ return this.ifolderID; }
+		}
+	}
+	public delegate void iFolderDeletedEventHandler(object sender,
+							iFolderDeletedEventArgs args);
+
+
+	public class SimiasEventBroker
+	{
+		private iFolderWebService	ifws;
+		private iFolderSettings		ifSettings;
+		private IProcEventClient	simiasEventClient;
+
+		private Gtk.ThreadNotify	SimiasEventFired;
+		private Queue				EventQueue;
+
+		public event iFolderAddedEventHandler iFolderAdded;
+		public event iFolderChangedEventHandler iFolderChanged;
+		public event iFolderDeletedEventHandler iFolderDeleted;
+
+		public SimiasEventBroker()
+		{
+			EventQueue = new Queue();
+
+			SimiasEventFired = new Gtk.ThreadNotify(
+							new Gtk.ReadyEvent(OnSimiasEventFired) );
+		}
+
+
+		public void RefreshSettings()
+		{
+			// the SimiasEventBroker needs it's own connection to
+			// the web service so it can verify data independent
+			// of the main GUI
+			lock(ifws)
+			{
+				try
+				{
+					ifSettings = ifws.GetSettings();
+				}
+				catch(Exception e)
+				{
+					ifSettings = null;
+				}
+			}
+		}
+
+
+
+		public void Register()
+		{
+			// the SimiasEventBroker needs it's own connection to
+			// the web service so it can verify data independent
+			// of the main GUI
+			if(ifws == null)
+			{
+				try
+				{
+					ifws = new iFolderWebService();
+//					ifws.Url = 
+//						Simias.ServiceManager.LocalServiceUrl.ToString() +
+//							"/iFolder.asmx";
+					ifws.Ping();
+	
+					ifSettings = ifws.GetSettings();
+				}
+				catch(Exception e)
+				{
+					ifws = null;
+					ifSettings = null;
+				}
+			}
+
+			simiasEventClient = new IProcEventClient( 
+					new IProcEventError( ErrorHandler), null);
+
+			simiasEventClient.Register();
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNodeCreated,
+				new IProcEventHandler( SimiasEventNodeCreatedHandler ) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNodeChanged,
+				new IProcEventHandler( SimiasEventNodeChangedHandler ) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddNodeDeleted,
+				new IProcEventHandler( SimiasEventNodeDeletedHandler ) );
+		}
+
+
+
+
+		public void Deregister()
+		{
+			try
+			{
+				simiasEventClient.Deregister();
+			}
+			catch(Exception e)
+			{
+				// ignore
+				Console.WriteLine(e);
+			}
+		}
+
+
+
+
+		private void ErrorHandler( ApplicationException e, object context )
+		{
+/*
+			lock(EventQueue)
+			{
+				EventQueue.Enqueue(new iFolderEvent(e.Message));
+				SimiasEventFired.WakeupMain();
+			}
+*/
+		}
+
+
+
+
+		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs nargs = args as NodeEventArgs;
+
+			switch(nargs.Type)
+			{
+				case "Node":
+				{
+					lock(ifws)
+					{
+						// Check to see if the Node that changed is part of
+						// the POBox
+						if(	(ifSettings != null) && 
+							(nargs.Collection == ifSettings.DefaultPOBoxID) )
+						{
+							iFolder ifolder;
+
+							try
+							{
+								ifolder = ifws.GetiFolder(nargs.ID);
+							}
+							catch(Exception e)
+							{
+								ifolder = null;
+							}
+
+							if(	(ifolder != null) &&
+								(ifolder.State == "Available") )
+							{
+								// At this point we know it's a new subscription
+								// that's available, now check to make sure
+								// the corresponding iFolder isn't on the
+								// machine already (it was created here)
+								iFolder localiFolder;
+
+								try
+								{
+									localiFolder = ifws.GetiFolder(
+												ifolder.CollectionID);
+								}
+								catch(Exception e)
+								{
+									localiFolder = null;
+								}
+
+								if(localiFolder != null)
+									return;
+								
+								lock(EventQueue)
+								{
+									EventQueue.Enqueue(new SimiasEvent(
+										ifolder, null, ifolder.ID,
+										SimiasEventType.NewiFolder));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+					}
+					break;
+				}					
+
+				case "Member":
+				{
+					lock(ifws)
+					{
+						try
+						{
+							iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
+								nargs.Collection, nargs.ID);
+
+							if( (newuser != null) &&
+								(newuser.UserID != 
+										ifSettings.CurrentUserID) )
+							{
+/*
+								// Turned off iFolderUser events until
+								// we are ready to handle them
+								iFolder ifolder = 
+									ifws.GetiFolder(nargs.Collection);
+								
+								EventQueue.Enqueue(new SimiasEvent(
+									ifolder, newuser, ifolder.ID,
+									SimiasEventType.NewUser));
+								SimiasEventFired.WakeupMain();
+*/
+							}
+						}
+						catch(Exception e)
+						{
+						}
+					}
+					break;
+				}
+
+				case "Collection":
+				{
+					lock(ifws)
+					{
+						try
+						{
+							iFolder ifolder = 
+									ifws.GetiFolder(nargs.Collection);
+							if(ifolder != null)
+							{
+								lock(EventQueue)
+								{
+									EventQueue.Enqueue(new SimiasEvent(
+										ifolder, null, ifolder.ID,
+										SimiasEventType.NewiFolder));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						catch(Exception e)
+						{
+						}
+					}
+					break;
+				}
+			}
+		}
+
+
+
+
+		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs nargs = args as NodeEventArgs;
+
+			switch(nargs.Type)
+			{
+				case "Collection":
+				{
+					lock(ifws)
+					{
+						try
+						{
+							iFolder ifolder = 
+									ifws.GetiFolder(nargs.Collection);
+							if( (ifolder != null) && (ifolder.HasConflicts) )
+							{
+								lock(EventQueue)
+								{
+									EventQueue.Enqueue(new SimiasEvent(
+										ifolder, null, ifolder.ID,
+										SimiasEventType.ChangediFolder));
+									SimiasEventFired.WakeupMain();
+								}
+							}
+						}
+						catch(Exception e)
+						{
+						}
+					}
+					break;
+				}
+
+				case "Node":
+				{
+					lock(ifws)
+					{
+						// Check to see if the Node that changed is part of
+						// the POBox
+						if(nargs.Collection == ifSettings.DefaultPOBoxID)
+						{
+							try
+							{
+								iFolder ifolder = 
+									ifws.GetiFolder(nargs.ID);
+
+								if(ifolder != null)
+								{
+									lock(EventQueue)
+									{
+										EventQueue.Enqueue(new SimiasEvent(
+											ifolder, null, ifolder.ID,
+											SimiasEventType.ChangediFolder));
+										SimiasEventFired.WakeupMain();
+									}
+								}
+							}
+							catch(Exception e)
+							{
+							}
+						}
+					}
+					break;
+				}					
+			}
+		}
+
+
+
+		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
+		{
+			NodeEventArgs nargs = args as NodeEventArgs;
+
+			switch(nargs.Type)
+			{
+				case "Node":
+				{
+					lock(ifws)
+					{
+						if( (ifSettings != null) && 
+							(nargs.Collection == ifSettings.DefaultPOBoxID) )
+						{
+							lock(EventQueue)
+							{
+								EventQueue.Enqueue(new SimiasEvent(
+									null, null, nargs.ID,
+									SimiasEventType.DeliFolder));
+								SimiasEventFired.WakeupMain();
+							}
+						}
+					}
+					break;
+				}
+				case "Collection":
+				{	
+					lock(EventQueue)
+					{
+						EventQueue.Enqueue(new SimiasEvent(
+							null, null, nargs.Collection,
+							SimiasEventType.DeliFolder));
+						SimiasEventFired.WakeupMain();
+					}
+					break;
+				}
+			}
+		}
+
+
+		private void OnSimiasEventFired()
+		{
+			bool hasmore = false;
+			// at this point, we are running in the same thread
+			// so we can safely show events
+			lock(EventQueue)
+			{
+				hasmore = (EventQueue.Count > 0);
+			}
+
+			while(hasmore)
+			{
+				SimiasEvent sEvent;
+
+				lock(EventQueue)
+				{
+					sEvent = (SimiasEvent)EventQueue.Dequeue();
+				}
+				
+				switch(sEvent.EventType)
+				{
+					case SimiasEventType.NewUser:
+						break;
+					case SimiasEventType.NewiFolder:
+						if(iFolderAdded != null)
+							iFolderAdded(this,
+								new iFolderAddedEventArgs(sEvent.iFolder));
+						break;
+					case SimiasEventType.ChangedUser:
+						break;
+					case SimiasEventType.ChangediFolder:
+						if(iFolderChanged != null)
+							iFolderChanged(this,
+								new iFolderChangedEventArgs(sEvent.iFolder));
+						break;
+					case SimiasEventType.DelUser:
+						break;
+					case SimiasEventType.DeliFolder:
+						if(iFolderDeleted != null)
+							iFolderDeleted(this,
+								new iFolderDeletedEventArgs(sEvent.iFolderID));
+						break;
+				}
+
+				lock(EventQueue)
+				{
+					hasmore = (EventQueue.Count > 0);
+				}
+			}
+		}
+	}
+}

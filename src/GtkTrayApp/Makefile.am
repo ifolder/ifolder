@@ -10,7 +10,7 @@ UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll Mo
 UILIB_LIBPATH = $(srcdir)/../iFolder
 
 
-TrayAppGtk_CSFILES = $(srcdir)/iFolderApplication.cs
+TrayAppGtk_CSFILES = $(srcdir)/iFolderApplication.cs $(srcdir)/SimiasEventBroker.cs
 TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
