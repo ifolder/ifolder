@@ -42,6 +42,13 @@
 
 #include "nautilus-ifolder.h"
 
+/* Turn this on to see debug messages */
+#if 0
+#define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
+#else
+#define DEBUG_IFOLDER
+#endif
+
 #define IFOLDER_FIFO_NAME ".nautilus-ifolder-fifo"
 #define IFOLDER_BUF_SIZE 1024
 
@@ -142,7 +149,7 @@ simias_node_created_cb (SimiasNodeEvent *event, void *data)
 	char *file_uri;
 	gchar *unmanaged_path;
 	NautilusFile *file;
-	printf ("nautilus-ifolder: simias_node_created_cb () entered\n");
+	DEBUG_IFOLDER (("simias_node_created_cb () entered\n"));
 	
 	unmanaged_path = get_unmanaged_path (event->node);
 	if (unmanaged_path != NULL) {
@@ -160,7 +167,7 @@ simias_node_created_cb (SimiasNodeEvent *event, void *data)
 			file = nautilus_file_get_existing (file_uri);
 														 
 			if (file) {
-				g_printf ("Found NautilusFile: %s\n", file_uri);
+				DEBUG_IFOLDER (("Found NautilusFile: %s\n", file_uri));
 				/* Let nautilus run this in the main loop */
 				g_idle_add (invalidate_ifolder_extension_info, file);
 			}
@@ -178,7 +185,7 @@ simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 	gchar *file_uri;
 	NautilusFile *file;
 	
-	printf ("nautilus-ifolder: simias_node_deleted_cb () entered\n");
+	DEBUG_IFOLDER (("simias_node_deleted_cb () entered\n"));
 	
 	/**
 	 * Look in the seen_ifolders_ht (GHashTable) to see if we've ever added an
@@ -216,12 +223,12 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 	
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
-			g_print ("nautilus-ifolder: Connected event received by SEC\n");
+			DEBUG_IFOLDER (("Connected event received by SEC\n"));
 
 			/* Register our event handler */
 			sec_set_event (*ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
 			sec_set_event (*ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_cb, NULL);
-			g_printf ("nautilus-ifolder: finished registering for simias events\n");
+			DEBUG_IFOLDER (("finished registering for simias events\n"));
 			
 			/**
 			 * Get a list of all the local paths that are iFolders.  For each of
@@ -239,7 +246,7 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
-			g_print ("nautilus-ifolder: Disconnected event received by SEC\n");
+			DEBUG_IFOLDER (("Disconnected event received by SEC\n"));
 
 			/**
 			 * Iterate through seen_ifolders_ht and invalidate the extension
@@ -258,13 +265,13 @@ ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 			break;
 		case SEC_STATE_EVENT_ERROR:
 			if (message) {
-				g_print ("Error in Simias Event Client: %s\n", message);
+				DEBUG_IFOLDER (("Error in Simias Event Client: %s\n", message));
 			} else {
-				g_print ("An unknown error occurred in Simias Event Client\n");
+				DEBUG_IFOLDER (("An unknown error occurred in Simias Event Client\n"));
 			}
 			break;
 		default:
-			fprintf (stderr, "An unknown Simias Event Client State Event occurred\n");
+			DEBUG_IFOLDER (("An unknown Simias Event Client State Event occurred\n"));
 	}
 	
 	return 0;
@@ -274,16 +281,16 @@ static int
 start_simias_event_client ()
 {
 	if (sec_init (&ec, ec_state_event_cb, &ec) != 0) {
-		g_printf ("sec_init failed\n");
+		DEBUG_IFOLDER (("sec_init failed\n"));
 		return -1;
 	}
 	
 	if (sec_register (ec) != 0) {
-		g_printf ("sec_register failed\n");
+		DEBUG_IFOLDER (("sec_register failed\n"));
 		return -1;
 	}
 	
-	printf ("sec registration complete\n");
+	DEBUG_IFOLDER (("sec registration complete\n"));
 
 	return 0;
 }
@@ -371,9 +378,7 @@ is_ifolder (NautilusFileInfo *file)
 	
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		g_print ("****About to call IsiFolder (");
-		g_print (folder_path);
-		g_print (")...\n");
+		DEBUG_IFOLDER (("****About to call IsiFolder (\"%s\")...\n", folder_path));
 		struct _ns1__IsiFolder ns1__IsiFolder;
 		struct _ns1__IsiFolderResponse ns1__IsiFolderResponse;
 		ns1__IsiFolder.LocalPath = folder_path;
@@ -384,10 +389,10 @@ is_ifolder (NautilusFileInfo *file)
 									&ns1__IsiFolder, 
 									&ns1__IsiFolderResponse);		
 		if (soap.error) {
-			g_print ("****error calling IsiFolder***\n");
+			DEBUG_IFOLDER (("****error calling IsiFolder***\n"));
 			soap_print_fault (&soap, stderr);
 		} else {
-			g_print ("***calling IsiFolder succeeded***\n");
+			DEBUG_IFOLDER (("***calling IsiFolder succeeded***\n"));
 			if (ns1__IsiFolderResponse.IsiFolderResult)
 				b_is_ifolder = TRUE;
 		}
@@ -411,9 +416,7 @@ can_be_ifolder (NautilusFileInfo *file)
 		
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		g_print ("****About to call CanBeiFolder (");
-		g_print (folder_path);
-		g_print (")...\n");
+		DEBUG_IFOLDER (("****About to call CanBeiFolder (\"%s\")...\n", folder_path));
 		struct _ns1__CanBeiFolder ns1__CanBeiFolder;
 		struct _ns1__CanBeiFolderResponse ns1__CanBeiFolderResponse;
 		ns1__CanBeiFolder.LocalPath = folder_path;
@@ -424,10 +427,10 @@ can_be_ifolder (NautilusFileInfo *file)
 									   &ns1__CanBeiFolder, 
 									   &ns1__CanBeiFolderResponse);
 		if (soap.error) {
-			g_print ("****error calling CanBeiFolder***\n");
+			DEBUG_IFOLDER (("****error calling CanBeiFolder***\n"));
 			soap_print_fault (&soap, stderr);
 		} else {
-			g_print ("***calling CanBeiFolder succeeded***\n");
+			DEBUG_IFOLDER (("***calling CanBeiFolder succeeded***\n"));
 			if (!ns1__CanBeiFolderResponse.CanBeiFolderResult)
 				b_can_be_ifolder = FALSE;
 		}
@@ -447,9 +450,7 @@ create_local_ifolder (NautilusFileInfo *file)
 	
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		g_print ("****About to call CreateLocaliFolder (");
-		g_print (folder_path);
-		g_print (")...\n");
+		DEBUG_IFOLDER (("****About to call CreateLocaliFolder (\"%s\")...\n", folder_path));
 		struct _ns1__CreateLocaliFolder ns1__CreateLocaliFolder;
 		struct _ns1__CreateLocaliFolderResponse ns1__CreateLocaliFolderResponse;
 		ns1__CreateLocaliFolder.Path = folder_path;
@@ -461,22 +462,20 @@ create_local_ifolder (NautilusFileInfo *file)
 											 &ns1__CreateLocaliFolderResponse);
 		g_free (folder_path);
 		if (soap.error) {
-			g_print ("****error calling CreateLocaliFolder***\n");
+			DEBUG_IFOLDER (("****error calling CreateLocaliFolder***\n"));
 			soap_print_fault (&soap, stderr);
 			cleanup_gsoap (&soap);
 			return -1;
 		} else {
-			g_print ("***calling CreateLocaliFolder succeeded***\n");
+			DEBUG_IFOLDER (("***calling CreateLocaliFolder succeeded***\n"));
 			struct ns1__iFolderWeb *ifolder = 
 				ns1__CreateLocaliFolderResponse.CreateLocaliFolderResult;
 			if (ifolder == NULL) {
-				g_print ("***The created iFolder is NULL\n");
+				DEBUG_IFOLDER (("***The created iFolder is NULL\n"));
 				cleanup_gsoap (&soap);
 				return -1;
 			} else {
-				g_print ("***The created iFolder's ID is: ");
-				g_print (ifolder->ID);
-				g_print ("\n");
+				DEBUG_IFOLDER (("***The created iFolder's ID is: %s\n", ifolder->ID));
 			}
 		}
 
@@ -498,9 +497,7 @@ get_ifolder_id_by_local_path (gchar *path)
 	ifolder_id = NULL;
 
 	if (path != NULL) {
-		g_print ("****About to call GetiFolderByLocalPath (");
-		g_print (path);
-		g_print (")...\n");
+		DEBUG_IFOLDER (("****About to call GetiFolderByLocalPath (\"%s\")...\n", path));
 		struct _ns1__GetiFolderByLocalPath ns1__GetiFolderByLocalPath;
 		struct _ns1__GetiFolderByLocalPathResponse ns1__GetiFolderByLocalPathResponse;
 		ns1__GetiFolderByLocalPath.LocalPath = path;
@@ -511,22 +508,20 @@ get_ifolder_id_by_local_path (gchar *path)
 										&ns1__GetiFolderByLocalPath, 
 										&ns1__GetiFolderByLocalPathResponse);
 		if (soap.error) {
-			g_print ("****error calling GetiFolderByLocalPath***\n");
+			DEBUG_IFOLDER (("****error calling GetiFolderByLocalPath***\n"));
 			soap_print_fault (&soap, stderr);
 			cleanup_gsoap (&soap);
 			return NULL;
 		} else {
-			g_print ("***calling GetiFolderByLocalPath succeeded***\n");
+			DEBUG_IFOLDER (("***calling GetiFolderByLocalPath succeeded***\n"));
 			struct ns1__iFolderWeb *ifolder = 
 				ns1__GetiFolderByLocalPathResponse.GetiFolderByLocalPathResult;
 			if (ifolder == NULL) {
-				g_print ("***GetiFolderByLocalPath returned NULL\n");
+				DEBUG_IFOLDER (("***GetiFolderByLocalPath returned NULL\n"));
 				cleanup_gsoap (&soap);
 				return NULL;
 			} else {
-				g_print ("***The iFolder's ID is: ");
-				g_print (ifolder->ID);
-				g_print ("\n");
+				DEBUG_IFOLDER (("***The iFolder's ID is: %s\n", ifolder->ID));
 				ifolder_id = strdup (ifolder->ID);
 			}
 		}
@@ -549,7 +544,7 @@ revert_ifolder (NautilusFileInfo *file)
 		ifolder_id = get_ifolder_id_by_local_path (folder_path);
 		g_free (folder_path);
 		if (ifolder_id != NULL) {
-			g_print ("****About to call RevertiFolder ()\n");
+			DEBUG_IFOLDER (("****About to call RevertiFolder ()\n"));
 			struct _ns1__RevertiFolder ns1__RevertiFolder;
 			struct _ns1__RevertiFolderResponse ns1__RevertiFolderResponse;
 			ns1__RevertiFolder.iFolderID = ifolder_id;
@@ -561,21 +556,19 @@ revert_ifolder (NautilusFileInfo *file)
 												 &ns1__RevertiFolderResponse);
 			g_free (ifolder_id);
 			if (soap.error) {
-				g_print ("****error calling RevertiFolder***\n");
+				DEBUG_IFOLDER (("****error calling RevertiFolder***\n"));
 				soap_print_fault (&soap, stderr);
 				cleanup_gsoap (&soap);
 				return -1;
 			} else {
-				g_print ("***calling RevertiFolder succeeded***\n");
+				DEBUG_IFOLDER (("***calling RevertiFolder succeeded***\n"));
 				struct ns1__iFolderWeb *ifolder = 
 					ns1__RevertiFolderResponse.RevertiFolderResult;
 				if (ifolder == NULL) {
-					g_print ("***The reverted iFolder is NULL\n");
+					DEBUG_IFOLDER (("***The reverted iFolder is NULL\n"));
 					return -1;
 				} else {
-					g_print ("***The reverted iFolder's ID was: ");
-					g_print (ifolder->ID);
-					g_print ("\n");
+					DEBUG_IFOLDER (("***The reverted iFolder's ID was: %s\n", ifolder->ID));
 				}
 			}
 
@@ -598,9 +591,7 @@ get_unmanaged_path (gchar *ifolder_id)
 	unmanaged_path = NULL;
 
 	if (ifolder_id != NULL) {
-		g_print ("****About to call GetiFolder (");
-		g_print (ifolder_id);
-		g_print (")...\n");
+		DEBUG_IFOLDER (("****About to call GetiFolder (\"%s\")...\n", ifolder_id));
 		struct _ns1__GetiFolder ns1__GetiFolder;
 		struct _ns1__GetiFolderResponse ns1__GetiFolderResponse;
 		ns1__GetiFolder.iFolderID = ifolder_id;
@@ -611,23 +602,21 @@ get_unmanaged_path (gchar *ifolder_id)
 									 &ns1__GetiFolder,
 									 &ns1__GetiFolderResponse);
 		if (soap.error) {
-			g_print ("****error calling GetiFolder***\n");
+			DEBUG_IFOLDER (("****error calling GetiFolder***\n"));
 			soap_print_fault (&soap, stderr);
 			cleanup_gsoap (&soap);
 			return NULL;
 		} else {
-			g_print ("***calling GetiFolder succeeded***\n");
+			DEBUG_IFOLDER (("***calling GetiFolder succeeded***\n"));
 			struct ns1__iFolderWeb *ifolder = 
 				ns1__GetiFolderResponse.GetiFolderResult;
 			if (ifolder == NULL) {
-				g_print ("***GetiFolder returned NULL\n");
+				DEBUG_IFOLDER (("***GetiFolder returned NULL\n"));
 				cleanup_gsoap (&soap);
 				return NULL;
 			} else {
 				if (ifolder->UnManagedPath != NULL) {
-					g_print ("***The iFolder's Unmanaged Path is: ");
-					g_print (ifolder->UnManagedPath);
-					g_print ("\n");
+					DEBUG_IFOLDER (("***The iFolder's Unmanaged Path is: %s\n", ifolder->UnManagedPath));
 					unmanaged_path = strdup (ifolder->UnManagedPath);
 				}
 			}
@@ -656,7 +645,7 @@ get_all_ifolder_paths ()
 	
 	ifolder_local_paths = NULL;
 	
-	g_print ("****About to call GetiFolders ()\n");
+	DEBUG_IFOLDER (("****About to call GetiFolders ()\n"));
 
 	init_gsoap (&soap);
 	soap_call___ns1__GetAlliFolders (&soap,
@@ -665,16 +654,16 @@ get_all_ifolder_paths ()
 									 &ns1__GetAlliFolders,
 									 &ns1__GetAlliFoldersResponse);
 	if (soap.error) {
-		g_print ("****error calling GetAlliFolders***\n");
+		DEBUG_IFOLDER (("****error calling GetAlliFolders***\n"));
 		soap_print_fault (&soap, stderr);
 		cleanup_gsoap (&soap);
 		return NULL;
 	} else {
-		g_print ("***calling GetAlliFolders succeeded***\n");
+		DEBUG_IFOLDER (("***calling GetAlliFolders succeeded***\n"));
 		struct ns1__ArrayOfIFolderWeb *array_of_ifolders =
 			ns1__GetAlliFoldersResponse.GetAlliFoldersResult;
 		if (array_of_ifolders == NULL) {
-			g_print ("***GetAlliFolders returned NULL\n");
+			DEBUG_IFOLDER (("***GetAlliFolders returned NULL\n"));
 			cleanup_gsoap (&soap);
 			return NULL;
 		} else {
@@ -714,7 +703,7 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	gchar *ifolder_id;
 	gchar *file_uri;
 	gchar *file_path;
-	g_print ("--> ifolder_nautilus_update_file_info called\n");
+	DEBUG_IFOLDER (("ifolder_nautilus_update_file_info called\n"));
 	
 	/* Don't do anything if the specified file is not a directory. */
 	if (!nautilus_file_info_is_directory (file))
@@ -739,7 +728,7 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 					 * invalidate our information so that the iFolder emblem
 					 * will be removed.
 					 */
-					g_printf ("Adding iFolder to Hashtable: %s = %s\n", ifolder_id, file_uri);
+					DEBUG_IFOLDER (("Adding iFolder to Hashtable: %s = %s\n", ifolder_id, file_uri));
 					
 					/**
 					 * g_hash_table_insert () does not cleanup memory if a hash
@@ -761,7 +750,7 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 			}
 		}
 	} else {
-		g_print ("*** iFolder is NOT running\n");
+		DEBUG_IFOLDER (("*** iFolder is NOT running\n"));
 	}
 
 	return NAUTILUS_OPERATION_COMPLETE;
@@ -810,7 +799,7 @@ ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data)
 	file = nautilus_file_get_existing (file_uri);
 
 	if (file) {
-		g_printf ("ht_invalidate_ifolder: %s\n", file_uri);
+		DEBUG_IFOLDER (("ht_invalidate_ifolder: %s\n", file_uri));
 		/* Let nautilus run this in the main loop */
 		g_idle_add (invalidate_ifolder_extension_info, file);
 	}
@@ -844,11 +833,11 @@ slist_invalidate_local_path (gpointer data, gpointer user_data)
 		file = nautilus_file_get_existing (file_uri);
 													 
 		if (file) {
-			g_printf ("invalidate_local_path: %s\n", file_uri);
+			DEBUG_IFOLDER (("invalidate_local_path: %s\n", file_uri));
 			/* Let nautilus run this in the main loop */
 			g_idle_add (invalidate_ifolder_extension_info, file);
 		} else {
-	g_print ("nautilus-ifolder: \"%s\" existing not found\n", file_uri);
+			DEBUG_IFOLDER (("\"%s\" existing not found\n", file_uri));
 		}
 
 		free (file_uri);
@@ -870,7 +859,7 @@ slist_free_local_path_str (gpointer data, gpointer user_data)
 gboolean
 show_ifolder_error_message (void *user_data)
 {
-	g_print ("*** show_ifolder_error_message () called\n");
+	DEBUG_IFOLDER (("*** show_ifolder_error_message () called\n"));
 	iFolderErrorMessage *errMsg = (iFolderErrorMessage *)user_data;
 	GtkDialog *message_dialog;
 
@@ -909,9 +898,7 @@ ifolder_dialog_thread (gpointer user_data)
 	output = popen (args, "r");
 	if (output == NULL) {
 		/* error calling mono nautilus-ifolder.exe */
-		g_print ("Error calling: ");
-		g_print (args);
-		g_print ("\n");
+		DEBUG_IFOLDER (("Error calling: %s\n", args));
 		free (args);
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
 		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
@@ -924,9 +911,7 @@ ifolder_dialog_thread (gpointer user_data)
 	
 	if (fgets (readBuffer, 1024, output) != NULL) {
 		return_str = strdup (readBuffer);
-		g_print ("*** 1st line of STDOUT from popen: ");
-		g_print (return_str);
-		g_print ("\n");
+		DEBUG_IFOLDER (("*** 1st line of STDOUT from popen: %s\n", return_str));
 	}
 
 	free (args);
@@ -949,7 +934,7 @@ create_ifolder_thread (gpointer user_data)
 
 	error = create_local_ifolder (file);
 	if (error) {
-		g_print ("An error occurred creating an iFolder\n");
+		DEBUG_IFOLDER (("An error occurred creating an iFolder\n"));
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
 		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
 		errMsg->title	= _("iFolder Error");
@@ -962,8 +947,6 @@ create_ifolder_thread (gpointer user_data)
 static void
 create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Convert to iFolder selected\n");
-
 	pthread_t thread;
 
 	pthread_create (&thread, 
@@ -986,7 +969,7 @@ revert_ifolder_thread (gpointer user_data)
 	
 	error = revert_ifolder (file);
 	if (error) {
-		g_print ("An error occurred reverting an iFolder\n");
+		DEBUG_IFOLDER (("An error occurred reverting an iFolder\n"));
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
 		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
 		errMsg->title	= _("iFolder Error");
@@ -999,7 +982,6 @@ revert_ifolder_thread (gpointer user_data)
 static void
 revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Revert to a Normal Folder selected\n");
 	GtkDialog *message_dialog;
 	GtkWidget *window;
 	int response;
@@ -1030,7 +1012,6 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 static void
 share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Share with... selected\n");
 	gchar *ifolder_path;
 	gchar *ifolder_id;
 	GList *files;
@@ -1049,9 +1030,6 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		ifolder_id = get_ifolder_id_by_local_path (ifolder_path);
 		if (ifolder_id != NULL) {
 			sprintf (args, "%s share %s", NAUTILUS_IFOLDER_SH_PATH, ifolder_id);
-			g_print ("args: ");
-			g_print (args);
-			g_print ("\n");
 			
 			g_free (ifolder_id);
 		}
@@ -1075,7 +1053,6 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 static void
 ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Properties selected\n");	
 	gchar *ifolder_path;
 	gchar *ifolder_id;
 	GList *files;
@@ -1095,9 +1072,6 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 		if (ifolder_id != NULL) {
 			sprintf (args, "%s properties %s", 
 					 NAUTILUS_IFOLDER_SH_PATH, ifolder_id);
-			g_print ("args: ");
-			g_print (args);
-			g_print ("\n");
 			
 			g_free (ifolder_id);
 		}
@@ -1121,15 +1095,11 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 static void
 ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Help... selected\n");	
 	pthread_t thread;
 	char args [1024];
 	memset (args, '\0', sizeof (args));
 	
 	sprintf (args, "%s help", NAUTILUS_IFOLDER_SH_PATH);
-	g_print ("args: ");
-	g_print (args);
-	g_print ("\n");
 	
 	if (strlen (args) <= 0)
 		return;
@@ -1149,7 +1119,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 								 GtkWidget *window,
 								 GList *files)
 {
-	g_print ("--> ifolder_nautilus_get_file_items called\n");
+	DEBUG_IFOLDER (("ifolder_nautilus_get_file_items called\n"));
 	NautilusMenuItem *item;
 	NautilusFileInfo *file;
 	GList *items;
@@ -1360,7 +1330,7 @@ getLocalServiceUrl ()
 	output = popen (args, "r");
 	if (output == NULL) {
 		/* error calling mono nautilus-ifolder.exe */
-		g_print ("Error calling 'mono nautilus-ifolder.exe WebServiceURL");
+		DEBUG_IFOLDER (("Error calling 'mono nautilus-ifolder.exe WebServiceURL\n"));
 		return NULL;
 	}
 	
@@ -1368,9 +1338,7 @@ getLocalServiceUrl ()
 		strcpy (tmpUrl, readBuffer);
 		strcat (tmpUrl, "/iFolder.asmx");
 		localServiceUrl = strdup (tmpUrl);
-		g_print ("*** Web Service URL: ");
-		g_print (localServiceUrl);
-		g_print ("\n");
+		DEBUG_IFOLDER (("*** Web Service URL: %s\n", localServiceUrl));
 	}
 
 	pclose (output);	
@@ -1381,7 +1349,7 @@ getLocalServiceUrl ()
 void
 nautilus_module_initialize (GTypeModule *module)
 {
-	g_print ("Initializing nautilus-ifolder extension\n");
+	DEBUG_IFOLDER (("Initializing nautilus-ifolder extension\n"));
 	ifolder_extension_register_type (module);
 	provider_types[0] = ifolder_nautilus_get_type ();
 	
@@ -1402,7 +1370,7 @@ nautilus_module_initialize (GTypeModule *module)
 void
 nautilus_module_shutdown (void)
 {
-	g_print ("Shutting down nautilus-ifolder extension\n");
+	DEBUG_IFOLDER (("Shutting down nautilus-ifolder extension\n"));
 
 	b_nautilus_ifolder_running = FALSE;
 
@@ -1414,7 +1382,7 @@ nautilus_module_shutdown (void)
 	/* Cleanup the Simias Event Client */	
 	if (sec_get_state (ec) == CLIENT_STATE_RUNNING) {
 		if (sec_deregister (ec) != 0) {
-			fprintf (stderr, "sec_deregister failed\n");
+			DEBUG_IFOLDER (("sec_deregister failed\n"));
 			return;
 		}
 	}
@@ -1424,7 +1392,7 @@ nautilus_module_shutdown (void)
 	 * client is running or not.
 	 */
 	if (sec_cleanup (&ec) != 0) {
-		fprintf (stderr, "sec_cleanup failed\n");
+		DEBUG_IFOLDER (("sec_cleanup failed\n"));
 		return;
 	}
 	

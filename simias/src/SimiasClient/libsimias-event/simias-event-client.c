@@ -45,6 +45,13 @@
 
 #include "simias-event-client.h"
 
+/* Turn this on to see debug messages */
+#if 0
+#define DEBUG_SEC(args) (printf("sec: "), printf args)
+#else
+#define DEBUG_SEC
+#endif
+
 #define WEB_SERVICE_TRUE_STRING		"True"
 #define WEB_SERVICE_FALSE_STRING	"False"
 
@@ -257,7 +264,7 @@ int sec_init (SimiasEventClient *sec,
 			  SECStateEventFunc state_event_func,
 			  void *state_event_data)
 {
-printf ("SEC: sec_init () called\n");
+	DEBUG_SEC (("sec_init () called\n"));
 	int i;
 	RealSimiasEventClient *ec = malloc (sizeof (RealSimiasEventClient));
 	memset (ec, '\0', sizeof (RealSimiasEventClient));
@@ -280,7 +287,7 @@ printf ("SEC: sec_init () called\n");
 		return -1;
 	}
 	
-	printf ("SEC: ec->event_socket: %d\n", ec->event_socket);
+	DEBUG_SEC (("ec->event_socket: %d\n", ec->event_socket));
 	
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
@@ -313,7 +320,7 @@ sec_cleanup (SimiasEventClient *sec)
 	 */
 	for (i = 0; i < NUM_OF_ACTION_TYPES; i++) {
 		if (sec_remove_all_event_handlers (ec, i) != 0) {
-			fprintf (stderr, "SEC: sec_cleanup: Error calling sec_remove_all_event_handlers (%d)\n", i);
+			DEBUG_SEC (("sec_cleanup: Error calling sec_remove_all_event_handlers (%d)\n", i));
 		}
 	}
 	
@@ -328,7 +335,7 @@ sec_cleanup (SimiasEventClient *sec)
 int
 sec_register (SimiasEventClient sec)
 {
-printf ("SEC: sec_register () called\n");	
+	DEBUG_SEC (("sec_register () called\n"));
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
 	/* Don't let registeration happen multiple times */
 	if (ec->state == CLIENT_STATE_INITIALIZING) {
@@ -450,13 +457,13 @@ sec_set_event (SimiasEventClient sec,
 		if (subscribe) {
 			/* Store the event handler function */
 			if (sec_add_event_handler (ec, action, function, data) != 0) {
-				fprintf (stderr, "Couldn't add event handler function\n");
+				DEBUG_SEC (("Couldn't add event handler function\n"));
 				return -1;
 			}
 		} else {
 			/* Remove the event handler function(s) */
 			if (sec_remove_event_handler (ec, action, function) != 0) {
-				fprintf (stderr, "Couldn't remove event handler function(s)\n");
+				DEBUG_SEC (("Couldn't remove event handler function(s)\n"));
 				return -1;
 			}
 		}
@@ -490,14 +497,14 @@ sec_thread (void *user_data)
 	int bytes_to_process;
 	int buffer_index;
 	
-printf ("SEC: sec_thread () called\n");	
+	DEBUG_SEC (("sec_thread () called\n"));
 	
 	/* Wait until the register thread marks us as registered before continuing */
 	while (ec->state != CLIENT_STATE_RUNNING) {
 		if (ec->state == CLIENT_STATE_SHUTDOWN) {
 			return NULL;
 		}
-		printf ("SEC: sec_thread () waiting for register thread to complete\n");
+		DEBUG_SEC (("sec_thread () waiting for register thread to complete\n"));
 		sleep (2);
 	}
 	
@@ -515,10 +522,10 @@ printf ("SEC: sec_thread () called\n");
 //printf ("\n=====SEC: recv(): Dump complete=====\n\n");
 
 		if (buffer == NULL) {
-printf ("SEC: recv (): Creating new buffer of %d bytes\n", bytes_received);
+			DEBUG_SEC (("recv (): Creating new buffer of %d bytes\n", bytes_received));
 			buffer = malloc (bytes_received);
 			if (!buffer) {
-				fprintf (stderr, "Out of memory!\n");
+				DEBUG_SEC (("Out of memory!\n"));
 				break;
 			}
 			
@@ -531,10 +538,10 @@ printf ("SEC: recv (): Creating new buffer of %d bytes\n", bytes_received);
 //}
 //printf ("\n-----SEC: recv(): Dump complete-----\n\n");
 		} else {
-printf ("SEC: recv (): Adding %d bytes to existing buffer of %d bytes\n", bytes_received, buffer_length);
+			DEBUG_SEC (("recv (): Adding %d bytes to existing buffer of %d bytes\n", bytes_received, buffer_length));
 			temp_buffer = malloc (bytes_received + buffer_length);
 			if (!temp_buffer) {
-				fprintf (stderr, "Out of memory!\n");
+				DEBUG_SEC (("Out of memory!\n"));
 				break;
 			}
 			
@@ -560,12 +567,12 @@ printf ("SEC: recv (): Adding %d bytes to existing buffer of %d bytes\n", bytes_
 				/* Get the length of the message.  Add in the prepended length. */
 				stated_message_length = *((int *)(buffer + buffer_index));
 
-if (stated_message_length == 0) {
-	printf ("SEC: recv (): Stated message length cannot be 0!\n");
-	break;
-} else {
-	printf ("SEC: recv (): Stated message length = %d\n", stated_message_length);				
-}
+//if (stated_message_length == 0) {
+//	printf ("SEC: recv (): Stated message length cannot be 0!\n");
+//	break;
+//} else {
+//	printf ("SEC: recv (): Stated message length = %d\n", stated_message_length);				
+//}
 				
 				message_length = stated_message_length + 4;
 
@@ -603,13 +610,13 @@ if (stated_message_length == 0) {
 		
 		/* Update the buffer to only contain data that still needs processing */
 		if (bytes_to_process == 0) {
-printf ("SEC: recv (): All bytes in buffer processed.\n");
+			DEBUG_SEC (("recv (): All bytes in buffer processed.\n"));
 			/* The buffer is empty and should be freed and nulled */
 			free (buffer);
 			buffer = NULL;
 			buffer_length = 0;
 		} else {
-printf ("SEC: recv (): %d bytes in buffer remain.\n", bytes_to_process);
+			DEBUG_SEC (("recv (): %d bytes in buffer remain.\n", bytes_to_process));
 			/* A new buffer needs to be setup to store the remaining bytes */
 			temp_buffer = malloc (bytes_to_process);
 			memcpy (temp_buffer, buffer + buffer_index, bytes_to_process);
@@ -627,7 +634,7 @@ printf ("SEC: recv (): %d bytes in buffer remain.\n", bytes_to_process);
 	 * that the client can reconnect with the server when it becomes
 	 * available again.
 	 */
-	printf ("\n\n*=*=*=*=*=*= RECONNECT REQUIRED: recv () error =*=*=*=*=*=*\n\n");
+	DEBUG_SEC (("*=*=*=*=*=*= RECONNECT REQUIRED: recv () error =*=*=*=*=*=*\n"));
 	if (sec_reconnect (ec) != 0) {
 		sec_shutdown (ec, "Could not reconnect the Simias Event Client");
 	}
@@ -647,7 +654,7 @@ sec_reg_thread (void *user_data)
 	char port_str [32];
 	char config_file_path [1024];
 	
-printf ("SEC: sec_reg_thread () called\n");	
+	DEBUG_SEC (("sec_reg_thread () called\n"));
 
 	/* Stay in this loop until we connect */
 	while (!b_connected && (ec->state != CLIENT_STATE_SHUTDOWN)) {
@@ -674,7 +681,7 @@ printf ("SEC: sec_reg_thread () called\n");
 			
 			sprintf (addr_str, "%s", inet_ntoa (my_sin.sin_addr));
 			sprintf (port_str, "%d", my_sin.sin_port);
-			fprintf (stderr, "Client listening on %s:%s\n", addr_str, port_str);
+			DEBUG_SEC (("Client listening on %s:%s\n", addr_str, port_str));
 
 			/* Format the XML for registration message */
 			sprintf (reg_msg, 
@@ -731,7 +738,7 @@ printf ("SEC: sec_reg_thread () called\n");
 int
 sec_reconnect (RealSimiasEventClient *ec)
 {
-	printf ("SEC: sec_reconnect () called\n");
+	DEBUG_SEC (("sec_reconnect () called\n"));
 	/**
 	 * Prevent this from executing more than once if the recv () and the send ()
 	 * happen to try to start this up at the same time.
@@ -829,7 +836,7 @@ sec_report_error (RealSimiasEventClient *ec, const char *err_msg)
 	if (ec->state_event_func != NULL) {
 		if (ec->state_event_func (SEC_STATE_EVENT_ERROR, err_msg,
 								ec->state_event_data) != 0) {
-			fprintf (stderr, "Error calling state_event_func\n");
+			DEBUG_SEC (("Error calling state_event_func\n"));
 		}
 						
 	}
@@ -847,7 +854,7 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 	
 	real_message = (void *)malloc ((sizeof (char) * len) + 5);
 	if (!real_message) {
-		fprintf (stderr, "Out of memory\n");
+		DEBUG_SEC (("Out of memory\n"));
 		return 0;
 	}
 
@@ -855,11 +862,11 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 	
 	*((int *)real_message) = len;
 	sprintf (real_message + 4, "%s", message);
-	printf ("Sending (socket: %d): %s\n", ec->event_socket, real_message + 4);
+	DEBUG_SEC (("Sending (socket: %d): %s\n", ec->event_socket, real_message + 4));
 	
 	sent_length = send (ec->event_socket, real_message, len + 4, 0);
 
-	printf ("Socket after send (): %d\n", ec->event_socket);
+	DEBUG_SEC (("Socket after send (): %d\n", ec->event_socket));
 	
 	free (real_message);
 	
@@ -872,12 +879,12 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 		 * Something must be bad with the socket so we need to reconnect to the
 		 * Simias Event Server.
 		 */
-		printf ("\n\n*=*=*=*=*=*= RECONNECT REQUIRED: send () error =*=*=*=*=*=*\n\n");
+		DEBUG_SEC (("*=*=*=*=*=*= RECONNECT REQUIRED: send () error =*=*=*=*=*=*\n"));
 		if (sec_reconnect (ec) != 0) {
 			sec_shutdown (ec, "Could not reconnect the Simias Event Client");
 		}
 	} else {
-		printf ("Just sent %d bytes to the server\n", sent_length);
+		DEBUG_SEC (("Just sent %d bytes to the server\n", sent_length));
 	}
 	
 	return sent_length;
@@ -995,7 +1002,7 @@ sec_get_config_file_path (char *dest_path)
 	/* Build the configuration file path. */
 	user_profile = getenv("USERPROFILE");
 	if (user_profile == NULL || strlen (user_profile) <= 0) {
-		fprintf (stderr, "Could not get the USERPROFILE directory\n");
+		DEBUG_SEC (("Could not get the USERPROFILE directory\n"));
 		return NULL;
 	}
 
@@ -1009,7 +1016,7 @@ sec_get_config_file_path (char *dest_path)
 	
 	home_dir = getenv ("HOME");
 	if (home_dir == NULL || strlen (home_dir) <= 0) {
-		fprintf (stderr, "Could not get the HOME directory\n");
+		DEBUG_SEC (("Could not get the HOME directory\n"));
 		return NULL;
 	}
 	
@@ -1046,7 +1053,7 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 	if (doc != NULL) {
 		message_struct = sec_parse_struct_from_doc (doc);
 		if (message_struct == NULL) {
-			fprintf (stderr, "SEC: Struct couldn't be parsed from message\n");
+			DEBUG_SEC (("Struct couldn't be parsed from message\n"));
 			return -1;
 		}
 		
@@ -1055,7 +1062,7 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 		/* Call the right handler based on the type of message received */
 		if (strcmp ("NodeEventArgs", struct_ptr [0]) == 0) {
 			SimiasNodeEvent *event = (SimiasNodeEvent *)message_struct;
-			printf ("NodeEventArgs received\n");
+			DEBUG_SEC (("NodeEventArgs received\n"));
 
 			if (strcmp ("NodeCreated", event->action) == 0) {
 				err = sec_notify_event_handlers (ec, ACTION_NODE_CREATED, event);
@@ -1067,15 +1074,15 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 		} else if (strcmp ("CollectionSyncEventArgs", struct_ptr [0]) == 0) {
 			SimiasCollectionSyncEvent *event = (SimiasCollectionSyncEvent *)
 												message_struct;
-			printf ("CollectionSyncEventArgs message received\n");
+			DEBUG_SEC (("CollectionSyncEventArgs message received\n"));
 			err = sec_notify_event_handlers (ec, ACTION_COLLECTION_SYNC, event);
 		} else if (strcmp ("FileSyncEventArgs", struct_ptr [0]) == 0) {
 			SimiasFileSyncEvent *event = (SimiasFileSyncEvent *)message_struct;
-			printf ("FileSyncEventArgs message received\n");
+			DEBUG_SEC (("FileSyncEventArgs message received\n"));
 			err = sec_notify_event_handlers (ec, ACTION_FILE_SYNC, event);
 		} else if (strcmp ("NotifyEventArgs", struct_ptr [0]) == 0) {
 			SimiasNotifyEvent *event = (SimiasNotifyEvent *)message_struct;
-			printf ("NotifyEventArgs message received\n");
+			DEBUG_SEC (("NotifyEventArgs message received\n"));
 			err = sec_notify_event_handlers (ec, ACTION_NOTIFY_MESSAGE, event);
 		}
 		
@@ -1083,11 +1090,11 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 		xmlFreeDoc (doc);
 		
 		if (err) {
-			fprintf (stderr, "Error occurred in sec_notify_event_handlers\n");
+			DEBUG_SEC (("Error occurred in sec_notify_event_handlers\n"));
 			return -1;
 		}
 	} else {
-		fprintf (stderr, "SEC: Invalid XML received from event server\n");
+		DEBUG_SEC (("Invalid XML received from event server\n"));
 		return -1;
 	}
 	
@@ -1105,7 +1112,7 @@ sec_parse_struct_from_doc (xmlDoc *doc)
 	/* Create xpath evaluation context */
 	xpath_ctx = xmlXPathNewContext (doc);
 	if (xpath_ctx == NULL) {
-		fprintf (stderr, "Unable to create a new XPath context\n");
+		DEBUG_SEC (("Unable to create a new XPath context\n"));
 		return NULL;
 	}
 
@@ -1153,13 +1160,13 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		node_set = xpath_obj->nodesetval;
 		num_of_nodes = (node_set) ? node_set->nodeNr : 0;
 		if (num_of_nodes != 1) {
-			fprintf (stderr, "Number of attributes on Event/@type nodes is not one (1): %d\n", num_of_nodes);
+			DEBUG_SEC (("Number of attributes on Event/@type nodes is not one (1): %d\n", num_of_nodes));
 			xmlFree (xpath_obj);
 			return NULL;
 		}
 		cur_node = node_set->nodeTab [0];
 		if (cur_node->type != XML_ATTRIBUTE_NODE) {
-			fprintf (stderr, "XPath of \"%s\" did not return an XML_ATTRIBUTE_NODE\n", SEC_EVENT_TYPE_XPATH);
+			DEBUG_SEC (("XPath of \"%s\" did not return an XML_ATTRIBUTE_NODE\n", SEC_EVENT_TYPE_XPATH));
 			xmlFree (xpath_obj);
 			return NULL;
 		}
@@ -1167,12 +1174,12 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		/* Get the event type attribute value */
 		event_type = xmlNodeGetContent (cur_node);
 		if (event_type == NULL) {
-			fprintf (stderr, "Could not get the value of Event/@type\n");
+			DEBUG_SEC (("Could not get the value of Event/@type\n"));
 			xmlFree (xpath_obj);
 			return NULL;
 		}
 		
-		fprintf (stdout, "Parsing event from XML: %s\n", event_type);
+		DEBUG_SEC (("Parsing event from XML: %s\n", event_type));
 		if (!strcmp ("NodeEventArgs", event_type)) {
 			data_struct = (SimiasNodeEvent *)
 							malloc (sizeof (SimiasNodeEvent));
@@ -1214,7 +1221,7 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		/* Evaluate the expression */
 		xpath_obj = xmlXPathEvalExpression (xpath_expr, xpath_ctx);
 		if (xpath_obj == NULL) {
-			fprintf (stderr, "Unable to evaluate XPath expression: \"%s\"\n", xpath_expr);
+			DEBUG_SEC (("Unable to evaluate XPath expression: \"%s\"\n", xpath_expr));
 			return NULL;
 		}
 		
@@ -1222,10 +1229,9 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		num_of_nodes = (node_set) ? node_set->nodeNr : 0;
 		
 		if (num_of_nodes != 1) {
-			fprintf (stderr, 
-					 "Number of nodes found with XPath expression \"%s\" (expected only 1): %d\n",
+			DEBUG_SEC (("Number of nodes found with XPath expression \"%s\" (expected only 1): %d\n",
 					 xpath_expr,
-					 num_of_nodes);
+					 num_of_nodes));
 			xmlFree (xpath_obj);
 			return NULL;
 		}
@@ -1234,14 +1240,14 @@ sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx)
 		cur_node = node_set->nodeTab [0];
 		
 		if (cur_node->type != XML_ELEMENT_NODE) {
-			fprintf (stderr, "Not XML_ELEMENT_NODE: %s\n", cur_node->name);
+			DEBUG_SEC (("Not XML_ELEMENT_NODE: %s\n", cur_node->name));
 			xmlFree (xpath_obj);
 			return NULL;
 		}
 
 		cur_node_val = xmlNodeGetContent (cur_node);
 		if (cur_node_val == NULL) {
-			fprintf (stderr, "Element contained no data: %s\n", cur_node->name);
+			DEBUG_SEC (("Element contained no data: %s\n", cur_node->name));
 			xmlFree (xpath_obj);
 			return NULL;
 		}
@@ -1271,19 +1277,19 @@ sec_free_event_struct (void *event_struct)
 
 	/* Determine the type of struct we're dealing with */
 	if (!strcmp ("NodeEventArgs", struct_ptr [0])) {
-printf ("SEC: Freeing NodeEventArgs\n");
+		DEBUG_SEC (("Freeing NodeEventArgs\n"));
 		element_names = sec_node_event_elements;
 	} else if (!strcmp ("CollectionSyncEventArgs", struct_ptr [0])) {
-printf ("SEC: Freeing CollectionSyncEventArgs\n");
+		DEBUG_SEC (("Freeing CollectionSyncEventArgs\n"));
 		element_names = sec_collection_sync_event_elements;
 	} else if (!strcmp ("FileSyncEventArgs", struct_ptr [0])) {
-printf ("SEC: Freeing FileSyncEventArgs\n");
+		DEBUG_SEC (("Freeing FileSyncEventArgs\n"));
 		element_names = sec_file_sync_event_elements;
 	} else if (!strcmp ("NotifyEventArgs", struct_ptr [0])) {
-printf ("SEC: Freeing NotifyEventArgs\n");
+		DEBUG_SEC (("Freeing NotifyEventArgs\n"));
 		element_names = sec_notify_event_elements;
 	} else {
-printf ("SEC: Freeing unknown event type (memory leak possible)\n");
+		DEBUG_SEC (("Freeing unknown event type (memory leak possible)\n"));
 		free (event_struct);
 		return;
 	}
@@ -1320,7 +1326,7 @@ sec_add_event_handler (RealSimiasEventClient *ec,
 	
 	func_info = malloc (sizeof (SimiasEventFuncInfo));
 	if (!func_info) {
-		fprintf (stderr, "SEC: sec_add_event_handler: Out of memory\n");
+		DEBUG_SEC (("sec_add_event_handler: Out of memory\n"));
 		return -1;
 	}
 	
@@ -1386,7 +1392,7 @@ sec_notify_event_handlers (RealSimiasEventClient *ec,
 {
 	SimiasEventFuncInfo *curr_func;
 	bool b_error_occurred = false;
-printf ("SEC: sec_notify_event_handlers () called\n");
+	DEBUG_SEC (("sec_notify_event_handlers () called\n"));
 	/**
 	 * Iterate through all the event handlers for the specified action and call
 	 * them with the event and user-specified data.
@@ -1430,7 +1436,7 @@ sec_remove_all_event_handlers (RealSimiasEventClient *ec,
 int
 simias_node_event_callback (SimiasNodeEvent *event, void *data)
 {
-	printf ("SimiasNodeEvent:\n");
+	printf ("sec-test: SimiasNodeEvent:\n");
 	printf ("\t%s: %s\n", "action", event->action);
 	printf ("\t%s: %s\n", "time", event->time);
 	printf ("\t%s: %s\n", "source", event->source);
@@ -1449,7 +1455,7 @@ simias_node_event_callback (SimiasNodeEvent *event, void *data)
 int
 simias_collection_sync_event_callback (SimiasCollectionSyncEvent *event, void *data)
 {
-	printf ("SimiasCollectionSyncEvent:\n");
+	printf ("sec-test: SimiasCollectionSyncEvent:\n");
 	printf ("\t%s: %s\n", "event_type", event->event_type);
 	printf ("\t%s: %s\n", "name", event->name);
 	printf ("\t%s: %s\n", "id", event->id);
@@ -1462,7 +1468,7 @@ simias_collection_sync_event_callback (SimiasCollectionSyncEvent *event, void *d
 int
 simias_file_sync_event_callback (SimiasFileSyncEvent *event, void *data)
 {
-	printf ("SimiasCollectionSyncEvent:\n");
+	printf ("sec-test: SimiasCollectionSyncEvent:\n");
 	printf ("\t%s: %s\n", "event_type", event->event_type);
 	printf ("\t%s: %s\n", "collection_id", event->collection_id);
 	printf ("\t%s: %s\n", "object_type", event->object_type);
@@ -1479,7 +1485,7 @@ simias_file_sync_event_callback (SimiasFileSyncEvent *event, void *data)
 int
 simias_notify_event_callback (SimiasNotifyEvent *event, void *data)
 {
-	printf ("SimiasCollectionSyncEvent:\n");
+	printf ("sec-test: SimiasCollectionSyncEvent:\n");
 	printf ("\t%s: %s\n", "event_type", event->event_type);
 	printf ("\t%s: %s\n", "message", event->message);
 	printf ("\t%s: %s\n", "time", event->time);
@@ -1495,7 +1501,7 @@ sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void
 	
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
-			fprintf (stderr, "SEC: Connected Event\n");
+			printf ("sec-test: Connected Event\n");
 
 			/* Ask to listen to some events by calling sec_set_event () */
 			sec_set_event (*ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
@@ -1507,18 +1513,18 @@ sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void
 
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
-			fprintf (stderr, "SEC: Disconnected Event\n");
+			printf ("sec-test: Disconnected Event\n");
 
 			break;
 		case SEC_STATE_EVENT_ERROR:
 			if (message) {
-				fprintf (stderr, "Error in Simias Event Client: %s\n", message);
+				printf ("sec-test: Error in Simias Event Client: %s\n", message);
 			} else {
-				fprintf (stderr, "An unknown error occurred in Simias Event Client\n");
+				printf ("sec-test: An unknown error occurred in Simias Event Client\n");
 			}
 			break;
 		default:
-			fprintf (stderr, "An unknown Simias Event Client State Event occurred\n");
+			printf ("sec-test: An unknown Simias Event Client State Event occurred\n");
 	}
 	return 0;
 }
@@ -1531,29 +1537,31 @@ main (int argc, char *argv[])
 	char buf [256];
 	
 	if (sec_init (&ec, sec_state_event_callback, &ec) != 0) {
-		fprintf (stderr, "sec_init failed\n");
+		printf ("sec-test: sec_init failed\n");
 		return -1;
 	}
 	
 	if (sec_register (ec) != 0) {
-		fprintf (stderr, "sec_register failed\n");
+		printf ("sec-test: sec_register failed\n");
 		return -1;
 	}
 	
-	printf ("Registration complete\n");
+	printf ("sec-test: Registration complete\n");
 	
-	fprintf (stdout, "Press <Enter> to stop the client...");
+	printf ("sec-test: Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
 	
 	if (sec_deregister (ec) != 0) {
-		fprintf (stderr, "sec_deregister failed\n");
+		printf ("sec-test: sec_deregister failed\n");
 		return -1;
 	}
 
 	if (sec_cleanup (&ec) != 0) {
-		fprintf (stderr, "sec_cleanup failed\n");
+		printf ("sec-test: sec_cleanup failed\n");
 		return -1;
 	}
 	
 	return 0;
 }
+
+/* #endregion */
