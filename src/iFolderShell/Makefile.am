@@ -14,7 +14,7 @@ iFolderComponent_INCLUDES =
 iFolderComponent_RESOURCES =
 iFolderComponent_RESOURCES_FILES = ConflictResolver.resources iFolderAdvanced.resources MyMessageBox.resources NewiFolder.resources Picker.resources UserProperties.resources GaugeChart.resources
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
-iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll SimiasClient.dll
+iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll
 iFolderComponent_LIBPATH = ../iFolder
 
 iFolderShell_HFILES = $(srcdir)/iFolderShell/CommonUI.h $(srcdir)/iFolderShell/iFolderShell.h $(srcdir)/iFolderShell/Registry.h $(srcdir)/iFolderShell/resource.h
@@ -57,13 +57,13 @@ iFolderShell.dll: iFolderShellRes.dll iFolderComponent.tlb $(iFolderShell_OBJFIL
 	$(CXX) $(COUT)$@ $(iFolderShell_FLAGS) $(iFolderShell_INCLUDES:%=$(CINC)%) $(iFolderShell_CXXFLAGS) $<
 
 %$(RES_EXT) : %.rc
-	$(RC) $(RCFLAGS) $(iFolderShell_CHARFLAGS) $(COUT)$@ $<
+	$(RC) $(RCFLAGS) $(COUT)$@ $<
 
 iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
 iFolderComponent.dll: $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:Novell.iFolderCom.%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_CLIENT_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:Novell.iFolderCom.%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
 	
 %.resources : %.resx
 	$(RESG) $< Novell.iFolderCom.$@
