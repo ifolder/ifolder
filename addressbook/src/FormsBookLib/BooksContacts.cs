@@ -495,17 +495,25 @@ namespace Novell.iFolder.FormsBookLib
 			if (manager != null)
 			{
 				// Put all the address books in the books listview.
+				AddressBook.AddressBook defaultBook = manager.OpenDefaultAddressBook();
 				IEnumerator addrBooks= manager.GetAddressBooks().GetEnumerator();
+
 				while (addrBooks.MoveNext())
 				{
 					AddressBook.AddressBook book = (AddressBook.AddressBook)addrBooks.Current;
 
 					// If the address book is the default book then label it as such.
-					ListViewItem item = new ListViewItem(book.Default ? "Default" : book.Name, 0);
-					if (book.Default)
+					ListViewItem item;
+					if (book.ID == defaultBook.ID)
 					{
+						item = new ListViewItem("Default", 0);
+
 						// Select the default address book.
 						item.Selected = true;
+					}
+					else
+					{
+						item = new ListViewItem(book.Name, 0);
 					}
 
 					item.Tag = book;
