@@ -146,5 +146,29 @@ namespace Simias.Storage
 			}
 		}
 		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Gets the domain roster for this domain.
+		/// </summary>
+		/// <param name="store">Store object.</param>
+		/// <returns>The Roster object associated with this domain. Null is returned if the call fails.</returns>
+		public Roster GetRoster( Store store )
+		{
+			Roster roster = null;
+			ICSList list = store.GetCollectionsByType( NodeTypes.RosterType );
+			foreach( ShallowNode sn in list )
+			{
+				Roster r = new Roster( store, sn );
+				if ( r.Domain == id )
+				{
+					roster = r;
+					break;
+				}
+			}
+
+			return roster;
+		}
+		#endregion
 	}
 }
