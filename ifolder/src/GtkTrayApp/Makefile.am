@@ -74,7 +74,7 @@ CollectionBrowser.exe: $(CollectionBrowserGtk_CSFILES) $(CollectionBrowserGtk_RE
 	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(CollectionBrowserGtk_LIBS:%=/r:%) $(CollectionBrowserGtk_LIBPATH:%=/lib:%) $(CollectionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(CollectionBrowserGtk_CSFILES_CSC) Util.cs /doc:CollectionBrowser.doc.xml
 
 ReunionBrowser.exe: $(ReunionBrowserGtk_CSFILES) $(ReunionBrowserGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(ReunionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(ReunionBrowserGtk_LIBS:%=/r:%) $(ReunionBrowserGtk_LIBPATH:%=/lib:%) $(ReunionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(ReunionBrowserGtk_CSFILES_CSC) Util.cs /doc:ReunionBrowser.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(ReunionBrowserGtk_FLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(ReunionBrowserGtk_LIBS:%=/r:%) $(ReunionBrowserGtk_LIBPATH:%=/lib:%) $(ReunionBrowserGtk_RESOURCES:%=$(ICON_FLAG)%) $(ReunionBrowserGtk_CSFILES_CSC) Util.cs /doc:ReunionBrowser.doc.xml
 
 install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images $(DESTDIR)$(datadir)/applications $(DESTDIR)$(datadir)/pixmaps $(DESTDIR)$(datadir)/mime-info $(DESTDIR)$(datadir)/application-registry
