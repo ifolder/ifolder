@@ -19,7 +19,6 @@
  *
  *  Author(s): 
  *      Boyd Timothy <btimothy@novell.com>
- *      Brady Anderson <banderso@novell.com>
  *
  ***********************************************************************/
 
@@ -45,7 +44,7 @@ namespace Simias.Location
 	{
 		#region Class Members
 		private string providerName = "Gaim Domain Provider";
-		private string description = "Simias Location provider which uses the user's Gaim Buddy List to resolve objects";
+		private string description = "Simias Workgroup Domain Provider built from a user's Gaim Buddy List";
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -85,23 +84,6 @@ namespace Simias.Location
 		}
 
 		#endregion
-
-		private Uri MemberToUri(Simias.Storage.Domain domain, Member member)
-		{
-			Uri locationUri = null;
-			
-			if (domain == null || member == null) return null;			
-
-			// Since we store the Buddy's SimiasURL right in the Simias Store,
-			// we can just retrieve the information from the database.
-			Simias.Storage.PropertyList pList = member.Properties;
-			Simias.Storage.Property p = pList.GetSingleProperty("Gaim:SimiasURL");
-			if (p == null) return null;
-			
-			locationUri = new Uri((string) p.Value);
-
-			return locationUri;
-		}
 
 		#region IDomainProvider Implementation
 		/// <summary>
@@ -149,18 +131,22 @@ namespace Simias.Location
 		}
 
 		/// <summary>
-		/// Starts a search for all domain members.
+		/// Starts a search for a specific set of domain members.
 		/// </summary>
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="attributeName">Attribute name to search.</param>
+		/// <param name="searchString">String that contains a pattern to search for.</param>
+		/// <param name="operation">Type of search operation to perform.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, int count )
+		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
 			// FIXME: Implement FindFirstDomainMembers()
 			searchContext = null;
 			memberList = null;
+			total = 0;
 			return false;
 		}
 
@@ -173,13 +159,15 @@ namespace Simias.Location
 		/// <param name="operation">Type of search operation to perform.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, int count )
+		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
 			// FIXME: Implement FindFirstDomainMembers()
 			searchContext = null;
 			memberList = null;
+			total = 0;
 			return false;
 		}
 
@@ -198,6 +186,20 @@ namespace Simias.Location
 		}
 
 		/// <summary>
+		/// Continues the search for domain members from a previous cursor.
+		/// </summary>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		public bool FindPreviousDomainMembers( ref Object searchContext, out Member[] memberList, int count )
+		{
+			// FIXME: Implement FindPreviousDomainMembers()
+			memberList = null;
+			return false;
+		}
+
+		/// <summary>
 		/// Determines if the provider claims ownership for the 
 		/// specified domain.
 		/// </summary>
@@ -208,6 +210,17 @@ namespace Simias.Location
 		{
 			log.Debug( "OwnsDomain called" );
 			return ( domainID.ToLower() == Simias.Gaim.GaimDomain.ID ) ? true : false;
+		}
+
+		/// <summary>
+		/// Informs the domain provider that the specified member object is about to be
+		/// committed to the domain's member list. This allows an opportunity for the 
+		/// domain provider to add any domain specific attributes to the member object.
+		/// </summary>
+		/// <param name="domainID">Identifier of a domain.</param>
+		/// <param name="member">Member object that is about to be committed to the domain's member list.</param>
+		public void PreCommit( string domainID, Member member )
+		{
 		}
 
 		/// <summary>
@@ -353,5 +366,22 @@ namespace Simias.Location
 		}
 
 		#endregion
+
+		private Uri MemberToUri(Simias.Storage.Domain domain, Member member)
+		{
+			Uri locationUri = null;
+			
+			if (domain == null || member == null) return null;			
+
+			// Since we store the Buddy's SimiasURL right in the Simias Store,
+			// we can just retrieve the information from the database.
+			Simias.Storage.PropertyList pList = member.Properties;
+			Simias.Storage.Property p = pList.GetSingleProperty("Gaim:SimiasURL");
+			if (p == null) return null;
+			
+			locationUri = new Uri((string) p.Value);
+
+			return locationUri;
+		}
 	}
 }

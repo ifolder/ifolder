@@ -135,7 +135,8 @@ namespace Simias.Gaim
 			hostName = Environment.MachineName;
 			userName = username;
 
-			description = username + "'s Gaim Buddy List Domain";
+			domainName = "Gaim Buddy List (" + username + ")";
+			description = "Workgroup Domain built from " + username + "'s Gaim Buddy List";
 
 			if ( init == true )
 			{
