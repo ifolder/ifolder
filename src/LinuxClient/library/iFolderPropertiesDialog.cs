@@ -182,9 +182,6 @@ namespace Novell.iFolder
 
 		private void SetValues()
 		{
-			string name = ifolder.Name;
-			this.Title = string.Format(Util.GS("iFolder Properties for \"{0}\""),name);
-
 			if(!ifolder.HasConflicts)
 			{
 				if(ConflictBox != null)
