@@ -23,6 +23,7 @@
 using System;
 using Novell.AddressBook;
 using System.Collections;
+using System.IO;
 
 using Gtk;
 using Gdk;
@@ -62,7 +63,10 @@ namespace Novell.iFolder
 		[Glade.Widget] Button CreateContactButton;
 		[Glade.Widget] Button ExportButton;
 		[Glade.Widget] Entry SearchEntry;
-		[Glade.Widget] Gtk.TextView ContactTextView;
+		[Glade.Widget] Gtk.TextView PictureTextView;
+		[Glade.Widget] Gtk.TextView LabelTextView;
+		[Glade.Widget] Gtk.TextView ValueTextView;
+		[Glade.Widget] Gtk.TextView TitleTextView;
 
 		Manager abMan;
 		AddressBook	curAddrBook;
@@ -74,7 +78,6 @@ namespace Novell.iFolder
 		Pixbuf	BookPixBuf;
 		Pixbuf	BlankHeadPixBuf;
 		ContactPicker cp;
-		TextBuffer ContactTextBuffer;
 		Hashtable	listHash;
 
 		public event EventHandler AddrBookClosed;
@@ -171,8 +174,8 @@ namespace Novell.iFolder
 			BookPixBuf = new Pixbuf("book.png");
 			BlankHeadPixBuf = new Pixbuf("blankhead.png");
 
-			ContactTextBuffer = ContactTextView.Buffer;
-			CreateTags(ContactTextBuffer);
+			AddLabelTags();
+			AddTitleTags();
 		}
 
 
@@ -352,12 +355,53 @@ namespace Novell.iFolder
 			fs.Hide ();
 			if(rc == -5)
 			{
-				Contact c = curAddrBook.ImportVCard(fs.Filename);
-				if(c != null)
+				Contact			newContact = null;
+				StreamReader	reader = null;
+				bool hasmore = true;
+
+				try
 				{
-					//c.Commit();
-					ContactTreeStore.AppendValues(c);
-			//		curAddrBook.AddContact(c);
+					reader = new StreamReader(fs.Filename);
+					if (reader != null)
+					{
+						Console.WriteLine("Got a good reader");
+						while(hasmore)
+						{
+							Console.WriteLine("importing contact");
+							newContact = curAddrBook.ImportVCard(reader);
+							if(newContact != null)
+							{
+								Console.WriteLine("Adding contact...");
+								ContactTreeStore.AppendValues(newContact);
+							}
+							else
+							{
+								Console.WriteLine("Contact was null");
+							}
+							try
+							{
+								String newline = reader.ReadLine();
+								if(newline == null)
+									hasmore = false;
+							}
+							catch(Exception e)
+							{
+								// we blew reading, let's quit
+								hasmore = false;
+							}
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e);
+				}
+				finally
+				{
+					if (reader != null)
+					{
+						reader.Close();
+					}
 				}
 			}
 		}
@@ -486,30 +530,11 @@ namespace Novell.iFolder
 				Contact c = (Contact) 
 					ContactTreeStore.GetValue(iter,0);
 
-				ClearBuffer();
-				Insert("\n");
-				Pixbuf cPhoto = GetScaledPhoto(c, 64);
-				if(cPhoto != null)
-					InsertPixbuf(cPhoto);
-				else
-					InsertPixbuf(BlankHeadPixBuf);
-
-				Insert("\n\n");
-				if(c.FN != null)
-				{
-					InsertWithTag(c.FN, "heading");
-				}
-				else
-				{
-					InsertWithTag(c.UserName, "heading");
-				}
-				Insert("\n");
-				if(c.EMail != null)
-					Insert(c.EMail);
+				DisplayContactDetails(c);
 			}
 			else
 			{
-				ClearBuffer();
+				ClearContactDetails();
 				ExportButton.Sensitive = false;
 			}
 		}
@@ -750,15 +775,14 @@ namespace Novell.iFolder
 			cp.ShowAll();
 		}
 
-
-
 		// This is code to setup the HTML Text view thingy
-		private void CreateTags(TextBuffer buffer)
+		private void AddTitleTags()
 		{
-			TextTag tag  = new TextTag("heading");
+			TextTag tag  = new TextTag("title");
 			tag.Weight = Pango.Weight.Bold;
-			tag.Size = (int) Pango.Scale.PangoScale * 15;
-			buffer.TagTable.Add(tag);
+			tag.Size = (int) Pango.Scale.PangoScale * 12;
+			TitleTextView.Buffer.TagTable.Add(tag);
+/*
 
 			tag  = new TextTag("bold");
 			tag.Weight = Pango.Weight.Bold;
@@ -767,44 +791,115 @@ namespace Novell.iFolder
 			tag  = new TextTag("big");
 			tag.Size = (int) Pango.Scale.PangoScale * 20;
 			buffer.TagTable.Add(tag);
+
+			tag  = new TextTag("grey");
+			tag.Foreground = "grey";
+			buffer.TagTable.Add(tag);
+*/
 		}
 
-		private void InsertWithTag(string insertText, string tagName)
+		private void AddTitles(string title1, string title2, string title3)
 		{
 			TextIter insertIter, beginIter, endIter;
 			int begin, end;
 
-			begin = ContactTextBuffer.CharCount;
-			insertIter = ContactTextBuffer.GetIterAtMark(
-					ContactTextBuffer.InsertMark);
-			ContactTextBuffer.Insert (insertIter, insertText);
-			end = ContactTextBuffer.CharCount;
-			endIter = ContactTextBuffer.GetIterAtOffset(end);
-			beginIter = ContactTextBuffer.GetIterAtOffset(begin);
-			ContactTextBuffer.ApplyTag (tagName, beginIter, endIter);
+			insertIter = TitleTextView.Buffer.GetIterAtMark(
+					TitleTextView.Buffer.InsertMark);
+			TitleTextView.Buffer.Insert (insertIter, "\n");
+
+			if(title1 != null)
+			{
+				begin = TitleTextView.Buffer.CharCount;
+				insertIter = TitleTextView.Buffer.GetIterAtMark(
+						TitleTextView.Buffer.InsertMark);
+				TitleTextView.Buffer.Insert (insertIter, title1+"\n");
+				end = TitleTextView.Buffer.CharCount;
+				endIter = TitleTextView.Buffer.GetIterAtOffset(end);
+				beginIter = TitleTextView.Buffer.GetIterAtOffset(begin);
+				TitleTextView.Buffer.ApplyTag ("title", beginIter, endIter);
+			}
+			if(title2 != null)
+			{
+				insertIter = TitleTextView.Buffer.GetIterAtMark(
+						TitleTextView.Buffer.InsertMark);
+				TitleTextView.Buffer.Insert (insertIter, title2+"\n");
+			}
+			if(title3 != null)
+			{
+				insertIter = TitleTextView.Buffer.GetIterAtMark(
+						TitleTextView.Buffer.InsertMark);
+				TitleTextView.Buffer.Insert (insertIter, title3+"\n");
+			}
 		}
 
-		private void Insert(string insertText)
+		// This is code to setup the HTML Text view thingy
+		private void AddLabelTags()
+		{
+			TextTag tag = new TextTag("label");
+			tag.Foreground = "grey";
+			tag.Justification = Justification.Right;
+			LabelTextView.Buffer.TagTable.Add(tag);
+		}
+
+		private void AddLabeledValue(string label, string value)
+		{
+			AddLabel(label);
+			AddValue(value);
+		}
+
+		private void AddLabel(string label)
+		{
+			TextIter insertIter, beginIter, endIter;
+			int begin, end;
+
+			if(label == null)
+			{
+				insertIter = LabelTextView.Buffer.GetIterAtMark(
+					LabelTextView.Buffer.InsertMark);
+				LabelTextView.Buffer.Insert (insertIter, "\n");
+			}
+			else
+			{
+				begin = LabelTextView.Buffer.CharCount;
+				insertIter = LabelTextView.Buffer.GetIterAtMark(
+						LabelTextView.Buffer.InsertMark);
+				LabelTextView.Buffer.Insert (insertIter, label+"\n");
+				end = LabelTextView.Buffer.CharCount;
+				endIter = LabelTextView.Buffer.GetIterAtOffset(end);
+				beginIter = LabelTextView.Buffer.GetIterAtOffset(begin);
+				LabelTextView.Buffer.ApplyTag ("label", beginIter, endIter);
+			}
+		}
+
+		private void AddValue(string value)
+		{
+			TextIter insertIter;
+			if(value == null)
+			{
+				insertIter = ValueTextView.Buffer.GetIterAtMark(
+						ValueTextView.Buffer.InsertMark);
+				ValueTextView.Buffer.Insert (insertIter, "\n");
+			}
+			else
+			{
+
+				insertIter = ValueTextView.Buffer.GetIterAtMark(
+						ValueTextView.Buffer.InsertMark);
+				ValueTextView.Buffer.Insert (insertIter, value + "\n");
+			}
+		}
+
+		private void AddPicture(Pixbuf pixbuf)
 		{
 			TextIter insertIter;
 
-			insertIter = ContactTextBuffer.GetIterAtMark(
-					ContactTextBuffer.InsertMark);
-			ContactTextBuffer.Insert (insertIter, insertText);
-		}
+			insertIter = PictureTextView.Buffer.GetIterAtMark(
+					PictureTextView.Buffer.InsertMark);
+			PictureTextView.Buffer.Insert (insertIter, "\n");
 
-		private void InsertPixbuf(Pixbuf pixbuf)
-		{
-			TextIter insertIter;
-
-			insertIter = ContactTextBuffer.GetIterAtMark( 
-					ContactTextBuffer.InsertMark);
-			ContactTextBuffer.InsertPixbuf (insertIter, pixbuf);
-		}
-
-		private void ClearBuffer()
-		{
-			ContactTextBuffer.Text = "";
+			insertIter = PictureTextView.Buffer.GetIterAtMark( 
+					PictureTextView.Buffer.InsertMark);
+			PictureTextView.Buffer.InsertPixbuf (insertIter, pixbuf);
 		}
 
 		private Pixbuf GetScaledPhoto(Contact c, int height)
@@ -850,6 +945,183 @@ namespace Novell.iFolder
 		public void on_search_button_clicked(object o, EventArgs args)
 		{
 			SearchAddrBook();
+		}
+
+		public void ClearContactDetails()
+		{
+			PictureTextView.Buffer.Clear();
+			LabelTextView.Buffer.Clear();
+			ValueTextView.Buffer.Clear();
+			TitleTextView.Buffer.Clear();
+		}
+
+		// This should probably be broken out into it's own class
+		// This method is going to get very large
+		public void DisplayContactDetails(Contact c)
+		{
+			bool addBlank = false;
+			ClearContactDetails();
+			if(c != null)
+			{
+
+				//------------------------
+				// Display the photo
+				//------------------------
+				Pixbuf cPhoto = GetScaledPhoto(c, 64);
+				if(cPhoto != null)
+					AddPicture(cPhoto);
+				else
+					AddPicture(BlankHeadPixBuf);
+
+				//------------------------
+				// Display the title 
+				//------------------------
+				if(c.FN != null)
+				{
+					AddTitles(c.FN, c.Title, null);
+				}
+				else
+				{
+					AddTitles(c.UserName, c.Title, null);
+				}
+
+				//------------------------
+				// Add Telephone numbers
+				//------------------------
+				foreach(Telephone phone in c.GetTelephoneNumbers())
+				{
+					addBlank = true;
+					if((phone.Types & PhoneTypes.home) == PhoneTypes.home)
+					{
+						AddLabeledValue("home", phone.Number);
+					}
+					if((phone.Types & PhoneTypes.work) == PhoneTypes.work)
+					{
+						AddLabeledValue("work", phone.Number);
+					}
+					if((phone.Types & PhoneTypes.other) == PhoneTypes.other)
+					{
+						AddLabeledValue("other", phone.Number);
+					}
+					if((phone.Types & PhoneTypes.cell) == PhoneTypes.cell)
+					{
+						AddLabeledValue("cell", phone.Number);
+					}
+					if((phone.Types & PhoneTypes.pager) == PhoneTypes.pager)
+					{
+						AddLabeledValue("pager", phone.Number);
+					}
+					if((phone.Types & PhoneTypes.fax) == PhoneTypes.fax)
+					{
+						AddLabeledValue("fax", phone.Number);
+					}
+				}
+
+				//------------------------
+				// Add blank separator line
+				//------------------------
+				if(addBlank)
+				{
+					AddLabeledValue(null, null);
+					addBlank = false;
+				}
+
+				//------------------------
+				// Add email addresses
+				//------------------------
+				foreach(Email e in c.GetEmailAddresses())
+				{
+					addBlank = true;
+					if((e.Types & EmailTypes.personal) == EmailTypes.personal)
+					{
+						AddLabeledValue("home", e.Address);
+					}
+					if((e.Types & EmailTypes.work) == EmailTypes.work)
+					{
+						AddLabeledValue("work", e.Address);
+					}
+					if((e.Types & EmailTypes.other) == EmailTypes.other)
+					{
+						AddLabeledValue("other", e.Address);
+					}
+				}
+
+				//------------------------
+				// Add blank separator line
+				//------------------------
+				if(addBlank)
+				{
+					AddLabeledValue(null, null);
+					addBlank = false;
+				}
+
+				//------------------------
+				// Add Addresses
+				//------------------------
+				foreach(Address addr in c.GetAddresses())
+				{
+					string addressLine = "";
+					if((addr.Types & AddressTypes.home) == AddressTypes.home)
+					{
+						if(addr.Street != null)
+							AddLabeledValue("home", addr.Street);
+						if((addr.MailStop != null) && (addr.MailStop.Length > 0))
+							AddLabeledValue(null, "MS: " + addr.MailStop);
+						if(addr.Locality != null)
+							addressLine = addr.Locality + " ";
+						if(addr.Region != null)
+							addressLine += addr.Region + " ";
+						if(addr.PostalCode != null)
+							addressLine += addr.PostalCode + " ";
+						if(addressLine.Length > 0)
+							AddLabeledValue(null, addressLine);
+						if(addr.Country != null)
+							AddLabeledValue(null, addr.Country);
+
+						AddLabeledValue(null, null);
+					}
+					addressLine = "";
+					if((addr.Types & AddressTypes.work) == AddressTypes.work)
+					{
+						if(addr.Street != null)
+							AddLabeledValue("work", addr.Street);
+						if((addr.MailStop != null) && (addr.MailStop.Length > 0))
+							AddLabeledValue(null, "MS: " + addr.MailStop);
+						if(addr.Locality != null)
+							addressLine = addr.Locality + " ";
+						if(addr.Region != null)
+							addressLine += addr.Region + " ";
+						if(addr.PostalCode != null)
+							addressLine += addr.PostalCode + " ";
+						if(addressLine.Length > 0)
+							AddLabeledValue(null, addressLine);
+						if(addr.Country != null)
+							AddLabeledValue(null, addr.Country);
+
+						AddLabeledValue(null, null);
+					}
+					addressLine = "";
+					if((addr.Types & AddressTypes.other) == AddressTypes.other)
+					{
+						if(addr.Street != null)
+							AddLabeledValue("other", addr.Street);
+						if((addr.MailStop != null) && (addr.MailStop.Length > 0))
+							AddLabeledValue(null, "MS: " + addr.MailStop);
+						if(addr.Locality != null)
+							addressLine = addr.Locality + " ";
+						if(addr.Region != null)
+							addressLine += addr.Region + " ";
+						if(addr.PostalCode != null)
+							addressLine += addr.PostalCode + " ";
+						if(addressLine.Length > 0)
+							AddLabeledValue(null, addressLine);
+						if(addr.Country != null)
+							AddLabeledValue(null, addr.Country);
+
+						AddLabeledValue(null, null);
+					}
+				}
+			}
 		}
 	}
 }
