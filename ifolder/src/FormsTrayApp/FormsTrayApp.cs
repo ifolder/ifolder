@@ -75,6 +75,7 @@ namespace Novell.FormsTrayApp
 		//private Configuration config;
 		private Process simiasProc;
 		private iFolderWebService ifWebService;
+		private iFolderSettings ifolderSettings = null;
 		//private EventSubscriber subscriber;
 		private IProcEventClient eventClient;
 		private bool eventError = false;
@@ -256,8 +257,12 @@ namespace Novell.FormsTrayApp
 			// Check to see if we have already connected to an enterprise server.
 			try
 			{
-				iFolderSettings ifolderSettings = ifWebService.GetSettings();
-				menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+				// If the join menu is already hidden, we don't need to check.
+				if (menuJoin.Visible)
+				{
+					ifolderSettings = ifWebService.GetSettings();
+					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
+				}
 			}
 			catch
 			{
@@ -343,20 +348,77 @@ namespace Novell.FormsTrayApp
 
 		private void trayApp_nodeChangeHandler(SimiasEventArgs args)
 		{
-			NodeEventArgs nea = args as NodeEventArgs;
-			bool bOOM = true;
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			if (eventArgs.Type == "Collection")
+			{
+				iFolder ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+				if (ifolder != null)
+				{
+					if (ifolder.HasConflicts)
+					{
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+						// TODO: Localize
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							"Action Required",
+							"A collision has been detected in iFolder:\n" + ifolder.Name);
+
+						// TODO: Change the icon?
+					}
+				}
+			}
 		}
 
 		private void trayApp_nodeCreateHandler(SimiasEventArgs args)
 		{
-			NodeEventArgs nea = args as NodeEventArgs;
-			bool bOOM = true;
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			try
+			{
+				if (eventArgs.Type != "Collection")
+				{
+					if (ifolderSettings == null)
+					{
+						ifolderSettings = ifWebService.GetSettings();
+					}
+
+					iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+
+					if ((ifolder != null) &&
+						!ifolder.OwnerID.Equals(ifolderSettings.CurrentUserID))// || ifolder.State.Equals("Available")))
+					{
+						// TODO: check this...
+						//this.Text = "A message needs your attention";
+
+						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+						// TODO: Localize
+						balloonTip.ShowBalloon(
+							hwnd,
+							iconID,
+							BalloonType.Info,
+							"Action Required",
+							"A subscription has just been received from " + ifolder.Owner);
+
+						// TODO: Change the icon?
+					}
+				}
+			}
+			catch
+			{
+				// Ignore.
+			}
 		}
 
 		private void trayApp_nodeDeleteHandler(SimiasEventArgs args)
 		{
-			NodeEventArgs nea = args as NodeEventArgs;
-			bool bOOM = true;
+			NodeEventArgs eventArgs = args as NodeEventArgs;
+
+			// TODO: implement if needed.
 		}
 
 /*		private void subscriber_NodeCreated(NodeEventArgs args)
@@ -659,7 +721,7 @@ namespace Novell.FormsTrayApp
 		/// Process messages in the Windows message loop.
 		/// </summary>
 		/// <param name="m"></param>
-		[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
+		/*[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
 		protected override void WndProc(ref System.Windows.Forms.Message m) 
 		{
 //			Debug.WriteLine("Message = " + m.Msg.ToString());
@@ -671,6 +733,6 @@ namespace Novell.FormsTrayApp
 					break;                
 			}
 			base.WndProc(ref m);
-		}
+		}*/
 	}
 }

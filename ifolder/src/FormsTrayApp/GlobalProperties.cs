@@ -1708,6 +1708,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch
 			{
+				// Ignore.
 			}
 		}
 
@@ -1737,6 +1738,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch
 			{
+				// Ignore.
 			}
 		}
 
