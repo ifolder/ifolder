@@ -484,7 +484,6 @@ src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolder.desktop
 src/GtkTrayApp/setup-autostart
 src/FormsTrayApp/Makefile
-src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
 src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
