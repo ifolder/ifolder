@@ -480,7 +480,7 @@ namespace Novell.iFolder.FormsBookLib
 					ListViewItem item;
 					int imageIndex = c.IsCurrentUser ? 0 : 1;
 					
-					if (c.FN != null)
+					if (c.FN != null && c.FN != String.Empty)
 					{
 						// Display full name if it is available...
 						item = new ListViewItem(c.FN, imageIndex);
@@ -587,7 +587,7 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				// Add the new contact to the contacts listview.
 				ListViewItem item;
-				if (editor.CurrentContact.FN != null)
+				if (editor.CurrentContact.FN != null && editor.CurrentContact.FN != String.Empty)
 				{
 					item = new ListViewItem(editor.CurrentContact.FN, 1);
 				}
@@ -713,7 +713,7 @@ namespace Novell.iFolder.FormsBookLib
 						ListViewItem item;
 						int imageIndex = c.IsCurrentUser ? 0 : 1;
 
-						if (c.FN != null)
+						if (c.FN != null && c.FN != String.Empty)
 						{
 							item = new ListViewItem(c.FN, imageIndex);
 						}
@@ -736,7 +736,7 @@ namespace Novell.iFolder.FormsBookLib
 					ListViewItem item;
 					int imageIndex = c.IsCurrentUser ? 0 : 1;
 
-					if (c.FN != null)
+					if (c.FN != null && c.FN != String.Empty)
 					{
 						item = new ListViewItem(c.FN, imageIndex);
 					}
