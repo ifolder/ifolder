@@ -176,7 +176,7 @@ namespace Simias.Sync
 			DateTime fsLastWrite = fi.LastWriteTime;
 			TimeSpan ts = fsLastWrite - fn.LastWriteTime;
 			
-			if (ts.TotalSeconds > 1)
+			if (ts.TotalSeconds != 0)
 			{
 				// Don't reset the Createion time.
 				fn.LastWriteTime = fsLastWrite;
