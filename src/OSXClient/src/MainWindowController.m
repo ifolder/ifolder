@@ -28,6 +28,7 @@
 #import "CreateiFolderSheetController.h"
 #import "SetupiFolderSheetController.h"
 #import "PropertiesWindowController.h"
+#import "AboutBoxController.h"
 
 #include "SimiasEventHandlers.h"
 
@@ -312,6 +313,15 @@
 	
 	[propertiesController showWindow:self];
 }
+
+
+
+
+- (IBAction)showAboutBox:(id)sender
+{
+	[[AboutBoxController sharedInstance] showPanel:sender];
+}
+
 
 
 

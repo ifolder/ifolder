@@ -79,6 +79,7 @@
 - (IBAction)showGeneralProperties:(id)sender;
 - (IBAction)showSharingProperties:(id)sender;
 - (IBAction)synciFolder:(id)sender;
+- (IBAction)showAboutBox:(id)sender;
 
 
 - (void)doubleClickedTable:(id)sender;

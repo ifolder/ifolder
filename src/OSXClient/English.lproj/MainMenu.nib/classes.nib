@@ -34,6 +34,7 @@
                 refreshWindow = id; 
                 revertiFolder = id; 
                 setupiFolder = id; 
+                showAboutBox = id; 
                 showGeneralProperties = id; 
                 showHideToolbar = id; 
                 showPrefs = id; 
