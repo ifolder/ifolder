@@ -22,6 +22,11 @@ installcheck-summary:
 	$(MAKE) -i installcheck
 	$(REPORT_EXE) $(REPORT_DIR)
 
+register unregister:
+if WINDOWS
+	$(MAKE) -C iFolderShell $@
+endif
+
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
     
