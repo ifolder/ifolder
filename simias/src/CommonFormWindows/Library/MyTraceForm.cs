@@ -127,15 +127,15 @@ namespace Simias
 		{
 			this.logTreeView = new System.Windows.Forms.TreeView();
 			this.logListView = new System.Windows.Forms.ListView();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.logContextMenu = new System.Windows.Forms.ContextMenu();
 			this.scrollLockMenuItem = new System.Windows.Forms.MenuItem();
 			this.copyMenuItem = new System.Windows.Forms.MenuItem();
 			this.clearMenuItem = new System.Windows.Forms.MenuItem();
 			this.splitter = new System.Windows.Forms.Splitter();
 			this.logListPanel = new System.Windows.Forms.Panel();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.logListPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -167,9 +167,18 @@ namespace Simias
 			this.logListView.TabIndex = 0;
 			this.logListView.View = System.Windows.Forms.View.Details;
 			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Message";
+			this.columnHeader3.Width = 200;
+			// 
 			// columnHeader2
 			// 
 			this.columnHeader2.Text = "Method";
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Time";
 			// 
 			// logContextMenu
 			// 
@@ -209,20 +218,11 @@ namespace Simias
 			// logListPanel
 			// 
 			this.logListPanel.Controls.Add(this.logListView);
-			this.logListPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.logListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.logListPanel.Location = new System.Drawing.Point(0, 0);
 			this.logListPanel.Name = "logListPanel";
 			this.logListPanel.Size = new System.Drawing.Size(349, 454);
 			this.logListPanel.TabIndex = 3;
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "Time";
-			// 
-			// columnHeader3
-			// 
-			this.columnHeader3.Text = "Message";
-			this.columnHeader3.Width = 200;
 			// 
 			// MyTraceForm
 			// 
