@@ -62,6 +62,69 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that gets a LocalPath to see if it's an iFolder
+		/// </summary>
+		/// <param name = "LocalPath">
+		/// The LocalPath to check for an iFolder
+		/// </param>
+		/// <returns>
+		/// true if it is an iFolder, false if it isn't
+		/// </returns>
+		[WebMethod(Description="Checks a LocalPath to see if it's an iFolder")]
+		[SoapRpcMethod]
+		public bool IsiFolder(string LocalPath)
+		{
+			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
+			if(col != null)
+			{
+				if(col.IsType(col, iFolder.iFolderType))
+					return true;
+			}
+			return false;
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that checks a LocalPath to see if it can be an iFolder
+		/// </summary>
+		/// <param name = "LocalPath">
+		/// The LocalPath to check
+		/// </param>
+		/// <returns>
+		/// true if it can be an iFolder, otherwise false
+		/// </returns>
+		[WebMethod(Description="Checks LocalPath to see if can be an iFolder")]
+		[SoapRpcMethod]
+		public bool CanBeiFolder(string LocalPath)
+		{
+			return SharedCollection.CanBeCollection(LocalPath);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that checks a LocalPath to see if is in an Collection
+		/// </summary>
+		/// <param name = "LocalPath">
+		/// The LocalPath to check
+		/// </param>
+		/// <returns>
+		///  true if it is in an iFolder, otherwise false
+		/// </returns>
+		[WebMethod(Description="Checks LocalPath to see if is in an iFolder")]
+		[SoapRpcMethod]
+		public bool IsPathInCollection(string LocalPath)
+		{
+			return SharedCollection.IsPathInCollection(LocalPath);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that creates and iFolder collection.
 		/// </summary>
 		/// <param name = "Path">
@@ -74,7 +137,6 @@ namespace Novell.iFolder.Web
 		[SoapRpcMethod]
 		public iFolder CreateLocaliFolder(string Path)
 		{
-
 			// TODO: Figure out who we are running as so we
 			// can create the ifolder as the correct user
 			Collection col = SharedCollection.CreateLocalSharedCollection(
@@ -102,6 +164,29 @@ namespace Novell.iFolder.Web
 			Collection col = store.GetCollectionByID(iFolderID);
 			if(col == null)
 				throw new Exception("Invalid iFolderID");
+
+			return new iFolder(col);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets an iFolder based on a LocalPath
+		/// </summary>
+		/// <param name = "LocalPath">
+		/// The path of the iFolder to get
+		/// </param>
+		/// <returns>
+		/// the ifolder this ID represents
+		/// </returns>
+		[WebMethod(Description="Get An iFolder using a LocalPath")]
+		[SoapRpcMethod]
+		public iFolder GetiFolderByLocalPath(string LocalPath)
+		{
+			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
+			if(col == null)
+				throw new Exception("Path not an iFolder");
 
 			return new iFolder(col);
 		}
