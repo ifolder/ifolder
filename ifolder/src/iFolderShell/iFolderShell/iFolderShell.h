@@ -32,6 +32,8 @@ DEFINE_GUID(CLSID_iFolderShell0, 0xaa81d830L, 0x3b41, 0x497c, 0xb5, 0x08, 0xe9, 
 // {AA81D831-3B41-497c-B508-E9D02F8DF421}
 DEFINE_GUID(CLSID_iFolderShell1, 0xaa81d831L, 0x3b41, 0x497c, 0xb5, 0x08, 0xe9, 0xd0, 0x2f, 0x8d, 0xf4, 0x21);
 
+#define MAX_ROOT_PATH 3 // the length of a root path i.e. c:\
+
 enum iFolderClass
 {
 	IFOLDER_INVALID,

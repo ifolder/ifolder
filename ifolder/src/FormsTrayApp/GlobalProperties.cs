@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using System.Xml;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Simias;
 using Simias.Sync;
@@ -1060,7 +1061,8 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					try
 					{
-						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath))
+						if (manager.CanBeiFolder(folderBrowserDialog.SelectedPath) && 
+							((GlobalProperties.GetDriveType(Path.GetPathRoot(folderBrowserDialog.SelectedPath)) & DRIVE_REMOTE) != DRIVE_REMOTE))
 						{
 							// Create the iFolder.
 							iFolder ifolder = manager.CreateiFolder(folderBrowserDialog.SelectedPath);
@@ -1223,6 +1225,11 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 		#endregion
+
+		private const uint DRIVE_REMOTE = 4;
+
+		[DllImport("kernel32.dll")]
+		static extern uint GetDriveType(string rootPathName);
 	}
 
 	internal class ServiceWithState
