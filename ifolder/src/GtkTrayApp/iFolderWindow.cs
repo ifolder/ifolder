@@ -2632,22 +2632,9 @@ namespace Novell.iFolder
 
 		public void OnClearLog(object o, EventArgs args)
 		{
-			iFolderMsgDialog dialog = new iFolderMsgDialog(
-				this,
-				iFolderMsgDialog.DialogType.Question,
-				iFolderMsgDialog.ButtonSet.YesNo,
-				Util.GS("Clear iFolder Log"),
-				Util.GS("Clear iFolder Log?"),
-				Util.GS("This will clear all log entries.  Are you sure you want to clear the iFolder Log?"));
-			int rc = dialog.Run();
-			dialog.Hide();
-			dialog.Destroy();
-			if(rc == -8)
-			{
-				LogTreeStore.Clear();
-				SaveButton.Sensitive = false;
-				ClearButton.Sensitive = false;
-			}
+			LogTreeStore.Clear();
+			SaveButton.Sensitive = false;
+			ClearButton.Sensitive = false;
 		}
 
 	}
