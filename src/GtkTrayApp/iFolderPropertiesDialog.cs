@@ -135,8 +135,11 @@ namespace Novell.iFolder
 			ArrayList ifList = new ArrayList();
 			foreach(iFolder ifldr in iFolderArray)
 			{
-				ifList.Add(ifldr.UnManagedPath);
-				ifHash.Add(ifldr.UnManagedPath, ifldr);
+				if(!ifldr.IsSubscription)
+				{
+					ifList.Add(ifldr.UnManagedPath);
+					ifHash.Add(ifldr.UnManagedPath, ifldr);
+				}
 			}
 
 			string[] strList = (string[])ifList.ToArray(typeof(string));

@@ -262,32 +262,17 @@ namespace Novell.iFolder
 			CurrentState = iFolderState.Starting;
 			iFolderStateChanged.WakeupMain();
 
-/*			Process[] processes = 
-				System.Diagnostics.Process.GetProcessesByName("SimiasApp");
-
-			if(processes.Length > 1)
-			{
-				Console.WriteLine("Simias is already running!");
-				return;
-			}
-			else
-			//if(SimiasProcess == null)
-			{
-				SimiasProcess = new Process();
-				SimiasProcess.StartInfo.RedirectStandardOutput = false;
-				SimiasProcess.StartInfo.CreateNoWindow = true;
-				SimiasProcess.StartInfo.UseShellExecute = false;
-				SimiasProcess.StartInfo.FileName = 
-					"/home/calvin/test/bin/simias";
-				SimiasProcess.Start();
-			}
-*/
-
 			if(ifws == null)
 			{
 				try
 				{
+//					Simias.Service.Manager.Start();
+
 					ifws = new iFolderWebService();
+//					ifws.Url = 
+//						Simias.ServiceManager.LocalServiceUrl.ToString() +
+//							"/iFolder.asmx";
+					ifws.Ping();
 	
 					ifSettings = ifws.GetSettings();
 				}
@@ -310,21 +295,18 @@ namespace Novell.iFolder
 			CurrentState = iFolderState.Stopping;
 			iFolderStateChanged.WakeupMain();
 
-			simiasEventClient.Deregister();
-
-/*			if(SimiasProcess != null)
+			try
 			{
-				SimiasProcess.CloseMainWindow();
-				if(!SimiasProcess.WaitForExit(10000))
-				{
-					SimiasProcess.Kill();
-					if(!SimiasProcess.WaitForExit(100))
-					{
-						Console.WriteLine("The process won't die");
-					}
-				}
+				simiasEventClient.Deregister();
+
+//				Simias.Service.Manager.Stop();
+
 			}
-*/
+			catch(Exception e)
+			{
+				// ignore
+				Console.WriteLine(e);
+			}
 
 			CurrentState = iFolderState.Stopped;
 			iFolderStateChanged.WakeupMain();
