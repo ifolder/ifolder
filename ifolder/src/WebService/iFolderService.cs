@@ -72,7 +72,7 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapRpcMethod]
-		public iFolder CreateiFolder(string Path)
+		public iFolder CreateLocaliFolder(string Path)
 		{
 
 			// TODO: Figure out who we are running as so we
