@@ -17,89 +17,24 @@ namespace Simias.Policy
 	{
 		#region Class Members
 		/// <summary>
-		/// Property names to store rules and times on the policy Node.
+		/// Property names to store rules and time condition on the policy Node.
 		/// </summary>
-		static private string AllowRule = "AllowRule";
-		static private string DenyRule = "DenyRule";
+		static private string RuleList = "RuleList";
 		static private string TimeCondition = "TimeCondition";
-
-		/// <summary>
-		/// Order in which an aggregate Policy is evaluated.
-		/// </summary>
-		private enum AggregatePolicyOrder
-		{
-			/// <summary>
-			/// This Policy is either contained on the Roster or the POBox for the Member.
-			/// </summary>
-			User,
-
-			/// <summary>
-			/// This Policy is contained on the LocalDatabase.
-			/// </summary>
-			Local,
-
-			/// <summary>
-			/// This Policy is contained on the Collection.
-			/// </summary>
-			Collection
-		};
 
 		/// <summary>
 		/// Used to hold all Policies associated with a Member.
 		/// </summary>
-		private Policy[] aggregatePolicy = null;
+		private ArrayList aggregatePolicy = new ArrayList();
 		#endregion
 
 		#region Properties
 		/// <summary>
-		/// Gets or set an aggregate collection policy.
+		/// Gets whether this policy is a stand-alone or aggregate policy.
 		/// </summary>
-		internal Policy CollectionPolicy
+		private bool IsAggregate
 		{
-			get { return (aggregatePolicy != null ) ? aggregatePolicy[ ( int )AggregatePolicyOrder.Collection ] : null; }
-			set 
-			{ 
-				if ( aggregatePolicy == null )
-				{
-					aggregatePolicy = new Policy[ Enum.GetValues( typeof( AggregatePolicyOrder ) ).Length ];
-				}
-
-				aggregatePolicy[ ( int )AggregatePolicyOrder.Collection ] = value; 
-			}
-		}
-
-		/// <summary>
-		/// Gets or set an aggregate local policy.
-		/// </summary>
-		internal Policy LocalPolicy
-		{
-			get { return ( aggregatePolicy != null ) ? aggregatePolicy[ ( int )AggregatePolicyOrder.Local ] : null; }
-			set 
-			{ 
-				if ( aggregatePolicy == null )
-				{
-					aggregatePolicy = new Policy[ Enum.GetValues( typeof( AggregatePolicyOrder ) ).Length ];
-				}
-
-				aggregatePolicy[ ( int )AggregatePolicyOrder.Local ] = value; 
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets an aggregate user policy.
-		/// </summary>
-		internal Policy UserPolicy
-		{
-			get { return ( aggregatePolicy != null ) ? aggregatePolicy[ ( int )AggregatePolicyOrder.User ] : null; }
-			set 
-			{ 
-				if ( aggregatePolicy == null )
-				{
-					aggregatePolicy = new Policy[ Enum.GetValues( typeof( AggregatePolicyOrder ) ).Length ];
-				}
-
-				aggregatePolicy[ ( int )AggregatePolicyOrder.User ] = value; 
-			}
+			get { return ( aggregatePolicy.Count > 0 ) ? true : false; }
 		}
 
 		/// <summary>
@@ -118,29 +53,14 @@ namespace Simias.Policy
 
 		/// <summary>
 		/// Returns the PolicyTime object for this policy. If there is no time condition,
-		/// null is returned. If this is an aggregated Policy, all rules from the aggregated 
-		/// Policies are returned.
+		/// null is returned. 
 		/// </summary>
-		public ICSList PolicyTimes
+		public PolicyTime PolicyTime
 		{
 			get 
-			{ 
-				ICSList timeList = new ICSList();
-				Policy[] policyArray = ( aggregatePolicy != null ) ? aggregatePolicy : new Policy[] { this };
-
-				foreach( Policy policy in policyArray )
-				{
-					if ( policy != null )
-					{
-						Property p = policy.properties.GetSingleProperty( TimeCondition );
-						if ( p != null )
-						{
-							timeList.Add( new PolicyTime( p.Value as string ) );
-						}
-					}
-				}
-
-				return timeList;
+			{
+				Property p = properties.GetSingleProperty( TimeCondition );
+				return ( p != null ) ? new PolicyTime( p.Value as string ) : null;
 			}
 		}
 
@@ -153,25 +73,15 @@ namespace Simias.Policy
 			get 
 			{ 
 				ICSList ruleList = new ICSList();
-				Policy[] policyArray = ( aggregatePolicy != null ) ? aggregatePolicy : new Policy[] { this };
+				Policy[] policyArray = IsAggregate ? aggregatePolicy.ToArray( typeof( Policy ) ) as Policy[] : new Policy[] { this };
 
 				foreach( Policy policy in policyArray )
 				{
-					if ( policy != null )
+					// Get the rule list.
+					MultiValuedList mvl = policy.properties.GetProperties( RuleList );
+					foreach( Property p in mvl )
 					{
-						// Get the deny rule list.
-						MultiValuedList mvl = policy.properties.GetProperties( DenyRule );
-						foreach( Property p in mvl )
-						{
-							ruleList.Add( new Rule( p.Value ) );
-						}
-
-						// Get the allow rule list.
-						mvl = policy.properties.GetProperties( AllowRule );
-						foreach( Property p in mvl )
-						{
-							ruleList.Add( new Rule( p.Value ) );
-						}
+						ruleList.Add( new Rule( p.Value ) );
 					}
 				}
 
@@ -250,7 +160,40 @@ namespace Simias.Policy
 		}
 		#endregion
 
+		#region Private Methods
+		/// <summary>
+		/// Finds the property object that represents the specified rule.
+		/// </summary>
+		/// <param name="rule">Rule to find in the policy.</param>
+		/// <returns>The property object that represents the rule or null if the rule does not exist.</returns>
+		private Property FindRule( Rule rule )
+		{
+			Property property = null;
+
+			// See if the rule already exists so we don't add duplicate rules.
+			MultiValuedList mvl = properties.GetProperties( RuleList );
+			foreach( Property p in mvl )
+			{
+				if ( rule == new Rule( p.Value ) )
+				{
+					property = p;
+					break;
+				}
+			}
+
+			return property;
+		}
+		#endregion
+
 		#region Internal Methods
+		/// <summary>
+		///  Adds a policy to the aggregate list.
+		/// </summary>
+		/// <param name="policy">Policy that gets added to the aggregate list.</param>
+		internal void AddAggregatePolicy( Policy policy )
+		{
+			aggregatePolicy.Add( policy );
+		}
 		#endregion
 
 		#region Public Methods
@@ -260,7 +203,12 @@ namespace Simias.Policy
 		/// <param name="rule">Object that is used to match against the input in the policy.</param>
 		public void AddRule( Rule rule )
 		{
-			properties.AddNodeProperty( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule, rule.ToXml() );
+			// Make sure the rule doesn't already exist.
+			if ( FindRule( rule ) == null )
+			{
+				// Add the new rule.
+				properties.AddNodeProperty( RuleList, rule.ToXml() );
+			}
 		}
 
 		/// <summary>
@@ -282,68 +230,25 @@ namespace Simias.Policy
 		{
 			Rule.Result result = Rule.Result.Allow;
 
-			// Walk through the aggregate policy list in order if it is enabled. Otherwise just use the
-			// current policy.
-			Policy[] policyArray = ( aggregatePolicy != null ) ? aggregatePolicy : new Policy[] { this };
+			// Walk through the aggregate policy list in order if it is enabled. 
+			// Otherwise just use the current policy.
+			Policy[] policyArray = IsAggregate ? aggregatePolicy.ToArray( typeof( Policy ) ) as Policy[] : new Policy[] { this };
 
 			try
 			{
 				// Check the deny rules first.
 				foreach ( Policy policy in policyArray )
 				{
-					// Could be holes.
-					if ( policy != null )
+					// See if there is a time condition as to when this policy is effective.
+					Property p = policy.Properties.GetSingleProperty( TimeCondition );
+					if ( ( p == null ) || ( new PolicyTime( p.Value as string ).Apply() == Rule.Result.Allow ) )
 					{
 						// Get all of the deny rules for this policy.
-						MultiValuedList mvl = policy.Properties.GetProperties( DenyRule );
-						foreach ( Property p in mvl )
+						MultiValuedList mvl = policy.Properties.GetProperties( RuleList );
+						foreach ( Property rp in mvl )
 						{
 							// Apply the rule to see if it passes.
-							Rule rule = new Rule( p.Value );
-							result = rule.Apply( input );
-							if ( result == Rule.Result.Deny )
-							{
-								throw new PolicyException();
-							}
-						}
-					}
-				}
-
-				// Check the allow rules next.
-				foreach ( Policy policy in policyArray )
-				{
-					// Could be holes.
-					if ( policy != null )
-					{
-						// Get all of the allow rules for this policy.
-						MultiValuedList mvl = policy.Properties.GetProperties( AllowRule );
-						foreach( Property p in mvl )
-						{
-							// Apply the rule to see if it passes.
-							Rule rule = new Rule( p.Value );
-							result = rule.Apply( input );
-							if ( result == Rule.Result.Deny )
-							{
-								throw new PolicyException();
-							}
-						}
-					}
-				}
-
-				// Apply the time condition for this policy.
-				foreach ( Policy policy in policyArray )
-				{
-					// Could be holes.
-					if ( policy != null )
-					{
-						// Get the time rule if it exists.
-						Property p = policy.Properties.GetSingleProperty( TimeCondition );
-						if ( p != null )
-						{
-							// Apply the time rule to see if it passes.
-							PolicyTime time = new PolicyTime( p.Value as string );
-							result = time.Apply();
-							if ( result == Rule.Result.Deny )
+							if ( new Rule( rp.Value ).Apply( input ) == Rule.Result.Deny )
 							{
 								throw new PolicyException();
 							}
@@ -352,7 +257,9 @@ namespace Simias.Policy
 				}
 			}
 			catch ( PolicyException )
-			{}
+			{
+				result = Rule.Result.Deny;
+			}
 
 			return result;
 		}
@@ -363,15 +270,11 @@ namespace Simias.Policy
 		/// <param name="rule">Rule that is used to match against the input in the policy.</param>
 		public void DeleteRule( Rule rule )
 		{
-			MultiValuedList mvl = properties.GetProperties( ( rule.RuleResult == Rule.Result.Allow ) ? AllowRule : DenyRule );
-			foreach( Property p in mvl )
+			// Find the rule in the policy.
+			Property p = FindRule( rule );
+			if ( p != null )
 			{
-				Rule r = new Rule( p.Value );
-				if ( r == rule )
-				{
-					p.Delete();
-					break;
-				}
+				p.Delete();
 			}
 		}
 
@@ -550,7 +453,7 @@ namespace Simias.Policy
 			// Set the aggregation.
 			if ( policy != null )
 			{
-				policy.UserPolicy = policy;
+				policy.AddAggregatePolicy( policy );
 			}
 
 			// Check for a local policy.
@@ -564,7 +467,7 @@ namespace Simias.Policy
 				}
 
 				// Set the aggregation.
-				policy.LocalPolicy = localPolicy;
+				policy.AddAggregatePolicy( localPolicy );
 			}
 
 			return policy;
@@ -599,7 +502,7 @@ namespace Simias.Policy
 				}
 
 				// Set the aggregation.
-				policy.CollectionPolicy = collectionPolicy;
+				policy.AddAggregatePolicy( collectionPolicy );
 			}
 
 			return policy;
@@ -1385,10 +1288,18 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the object class.
+		/// </summary>
+		public PolicyTime( PolicyTime time )
+		{
+			table = new BitArray( time.table );
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the object class with the specified time array.
 		/// </summary>
 		/// <param name="timeArray">Array of bytes that represent time values in a 7 day week, 24 hour period.</param>
-		public PolicyTime( byte[] timeArray )
+		internal PolicyTime( byte[] timeArray )
 		{
 			table = new BitArray( timeArray );
 		}
@@ -1397,7 +1308,7 @@ namespace Simias.Policy
 		/// Initializes a new instance of the object class with the specified time string.
 		/// </summary>
 		/// <param name="timeString">String that represent time values in a 7 day week, 24 hour period.</param>
-		public PolicyTime( string timeString ) :
+		internal PolicyTime( string timeString ) :
 			this( new ASCIIEncoding().GetBytes( timeString ) )
 		{
 		}
@@ -1455,7 +1366,7 @@ namespace Simias.Policy
 		/// Otherwise Rule.Result.Deny is returned.</returns>
 		public Rule.Result Apply( DateTime time )
 		{
-			return ( IsSet( time.DayOfWeek, time.Hour ) ) ? Rule.Result.Allow : Rule.Result.Deny;
+			return IsSet( time.DayOfWeek, time.Hour ) ? Rule.Result.Allow : Rule.Result.Deny;
 		}
 
 		/// <summary>

@@ -509,19 +509,7 @@ namespace Simias.Policy
 		/// <returns>True if the file is allowed to pass through the filter. Otherwise false is returned.</returns>
 		public bool Allowed( string fileName )
 		{
-			bool isAllowed = true;
-
-			if ( policy != null )
-			{
-				// Apply the rule to see if the file is allowed to pass through the filter.
-				Rule.Result result = policy.Apply( Path.GetExtension( fileName ) );
-				if ( result == Rule.Result.Deny )
-				{
-					isAllowed = false;
-				}
-			}
-
-			return isAllowed;
+			return ( ( policy == null ) || ( policy.Apply( Path.GetExtension( fileName ) ) == Rule.Result.Allow ) ) ? true : false;
 		}
 		#endregion
 	}
