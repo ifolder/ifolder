@@ -54,6 +54,9 @@ namespace Simias
 		/// </summary>
 		static SimiasSetup()
 		{
+			// note: with DotNet with the entry assembly directory as the prefix
+			if (MyEnvironment.DotNet)
+			{
 				string relprefix = null;
 				
 				try
@@ -72,6 +75,7 @@ namespace Simias
 				}
 
 				_sysconfdir = _sysconfdir.Replace(_prefix, relprefix);
+			}
 		}
 
 		/// <summary>
