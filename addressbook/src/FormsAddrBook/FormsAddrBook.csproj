@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = 'copy book.exe "c:\program files\ifolder\ifolder"&#xd;&#xa;copy book.pdb "c:\program files\ifolder\ifolder"'
+                PostBuildEvent = 'copy ContactBrowser.exe "c:\program files\ifolder\ifolder"&#xd;&#xa;copy ContactBrowser.pdb "c:\program files\ifolder\ifolder"'
                 RootNamespace = "FormsAddrBook"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -97,7 +97,12 @@
                 <Reference
                     Name = "FormsBookLib"
                     AssemblyName = "FormsBookLib"
-                    HintPath = "..\FormsBookLib\bin\Debug\FormsBookLib.dll"
+                    HintPath = "..\FormsBookLib\FormsBookLib.dll"
+                />
+                <Reference
+                    Name = "CollectionStore"
+                    AssemblyName = "CollectionStore"
+                    HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
                 />
             </References>
         </Build>

@@ -294,6 +294,34 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Public Methods
+		public void AddContactToListView(Contact contact, int imageIndex, bool selected)
+		{
+			if (imageIndex == -1)
+			{
+				imageIndex = contact.IsCurrentUser ? 0 : 1;
+			}
+
+			ListViewItem item;
+
+			if (contact.FN != null && contact.FN != String.Empty)
+			{
+				item = new ListViewItem(contact.FN, imageIndex);
+			}
+			else
+			{
+				item = new ListViewItem(contact.UserName, imageIndex);
+			}
+
+			item.Tag = contact;
+			contacts.Items.Add(item);
+
+			if (selected)
+			{
+				contacts.SelectedItems.Clear();
+				item.Selected = true;
+			}
+		}
+
 		/// <summary>
 		/// Invokes the AddBook dialog.
 		/// </summary>
@@ -392,20 +420,8 @@ namespace Novell.iFolder.FormsBookLib
 					while (enumerator.MoveNext())
 					{
 						Contact c = (Contact) enumerator.Value;
-						ListViewItem item;
-						int imageIndex = c.IsCurrentUser ? 0 : 1;
 
-						if (c.FN != null && c.FN != String.Empty)
-						{
-							item = new ListViewItem(c.FN, imageIndex);
-						}
-						else
-						{
-							item = new ListViewItem(c.UserName, imageIndex);
-						}
-
-						item.Tag = c;
-						contacts.Items.Add(item);
+						AddContactToListView(c, -1, false);
 					}
 				}
 				catch{}
@@ -415,20 +431,7 @@ namespace Novell.iFolder.FormsBookLib
 				// No text was entered in the search edit box, so put all contacts in the listview.
 				foreach (Contact c in addressBook)
 				{
-					ListViewItem item;
-					int imageIndex = c.IsCurrentUser ? 0 : 1;
-
-					if (c.FN != null && c.FN != String.Empty)
-					{
-						item = new ListViewItem(c.FN, imageIndex);
-					}
-					else
-					{
-						item = new ListViewItem(c.UserName, imageIndex);
-					}
-
-					item.Tag = c;
-					contacts.Items.Add(item);
+					AddContactToListView(c, -1, false);
 				}
 			}
 
@@ -447,6 +450,9 @@ namespace Novell.iFolder.FormsBookLib
 
 		public delegate void ContactDoubleClickedDelegate(object sender, ContactDoubleClickedEventArgs e);
 		public event ContactDoubleClickedDelegate ContactDoubleClicked;
+
+		public delegate void BookSelectedDelegate(object sender, EventArgs e);
+		public event BookSelectedDelegate BookSelected;
 
 		#region Event Handlers
 		private void BooksContacts_Load(object sender, EventArgs e)
@@ -471,6 +477,8 @@ namespace Novell.iFolder.FormsBookLib
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_card.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_add_bk.ico")));
+				contactsImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "vcardimport.png")));
+				contactsImageList.Images.Add(Image.FromFile(Path.Combine(basePath, "vcardexport.png")));
 
 				//Assign the ImageList objects to the books ListView.
 				contacts.SmallImageList = contactsImageList;
@@ -517,6 +525,13 @@ namespace Novell.iFolder.FormsBookLib
 
 				// Populate the contact list view.
 				FilterList(null);
+			}
+
+			// Fire the BookSelected event.
+			EventArgs args = new EventArgs();
+			if (BookSelected != null)
+			{
+				BookSelected(this, args);
 			}
 		}
 
@@ -588,18 +603,7 @@ namespace Novell.iFolder.FormsBookLib
 			if (result == DialogResult.OK)
 			{
 				// Add the new contact to the contacts listview.
-				ListViewItem item;
-				if (editor.CurrentContact.FN != null && editor.CurrentContact.FN != String.Empty)
-				{
-					item = new ListViewItem(editor.CurrentContact.FN, 1);
-				}
-				else
-				{
-					item = new ListViewItem(editor.CurrentContact.UserName, 1);
-				}
-
-				item.Tag = editor.CurrentContact;
-				this.contacts.Items.Add(item);
+				AddContactToListView(editor.CurrentContact, 1, true);
 			}
 		}
 

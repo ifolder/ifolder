@@ -101,7 +101,12 @@ namespace Novell.iFolder.FormsAddrBook
 			catch{}
 
 			this.booksContacts.ContactSelected += new Novell.iFolder.FormsBookLib.BooksContacts.ContactSelectedDelegate(booksContacts_ContactSelected);
+			this.booksContacts.BookSelected += new Novell.iFolder.FormsBookLib.BooksContacts.BookSelectedDelegate(booksContacts_BookSelected);
 			this.detailsView.Paint += new PaintEventHandler(detailsView_Paint);
+
+			// Disable the vCard import and export buttons.
+			toolBar1.Buttons[3].Enabled = false;
+			toolBar1.Buttons[4].Enabled = false;
 		}
 
 		/// <summary>
@@ -145,6 +150,7 @@ namespace Novell.iFolder.FormsAddrBook
 			this.menuToolsImportVCard = new System.Windows.Forms.MenuItem();
 			this.menuToolsExportVCard = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
+			this.menuHelpContents = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
 			this.detailsView = new System.Windows.Forms.Panel();
 			this.splitter1 = new System.Windows.Forms.Splitter();
@@ -159,7 +165,6 @@ namespace Novell.iFolder.FormsAddrBook
 			this.toolBarButton4 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarButton5 = new System.Windows.Forms.ToolBarButton();
 			this.editSearchTimer = new System.Windows.Forms.Timer(this.components);
-			this.menuHelpContents = new System.Windows.Forms.MenuItem();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -263,16 +268,19 @@ namespace Novell.iFolder.FormsAddrBook
 																					  this.menuToolsImportVCard,
 																					  this.menuToolsExportVCard});
 			this.menuTools.Text = "&Tools";
+			this.menuTools.Popup += new System.EventHandler(this.menuTools_Popup);
 			// 
 			// menuToolsImportVCard
 			// 
 			this.menuToolsImportVCard.Index = 0;
 			this.menuToolsImportVCard.Text = "&Import vCard";
+			this.menuToolsImportVCard.Select += new System.EventHandler(this.menuToolsImportVCard_Select);
 			// 
 			// menuToolsExportVCard
 			// 
 			this.menuToolsExportVCard.Index = 1;
 			this.menuToolsExportVCard.Text = "E&xport vCard";
+			this.menuToolsExportVCard.Select += new System.EventHandler(this.menuToolsExportVCard_Select);
 			// 
 			// menuHelp
 			// 
@@ -281,6 +289,12 @@ namespace Novell.iFolder.FormsAddrBook
 																					 this.menuHelpContents,
 																					 this.menuHelpAbout});
 			this.menuHelp.Text = "&Help";
+			// 
+			// menuHelpContents
+			// 
+			this.menuHelpContents.Index = 0;
+			this.menuHelpContents.Text = "&Contents";
+			this.menuHelpContents.Click += new System.EventHandler(this.menuHelpContents_Click);
 			// 
 			// menuHelpAbout
 			// 
@@ -391,12 +405,6 @@ namespace Novell.iFolder.FormsAddrBook
 			this.editSearchTimer.Interval = 500;
 			this.editSearchTimer.Tick += new System.EventHandler(this.editSearchTimer_Tick);
 			// 
-			// menuHelpContents
-			// 
-			this.menuHelpContents.Index = 0;
-			this.menuHelpContents.Text = "&Contents";
-			this.menuHelpContents.Click += new System.EventHandler(this.menuHelpContents_Click);
-			// 
 			// FormsAddrBook
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -421,6 +429,47 @@ namespace Novell.iFolder.FormsAddrBook
 		{
 			Application.Run(new FormsAddrBook());
 		}
+
+		#region Private Methods
+		private void importVCard()
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+
+			openFileDialog.Filter = "vcf files (*.vcf)|*.vcf";
+			openFileDialog.RestoreDirectory = true ;
+
+			if(openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				try
+				{
+					Cursor.Current = Cursors.WaitCursor;
+					Contact contact = selectedBook.ImportVCard(openFileDialog.FileName);
+					Cursor.Current = Cursors.Default;
+					booksContacts.AddContactToListView(contact, 1, true);
+				}
+				catch{}
+			}
+		}
+
+		private void exportVCard()
+		{
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+			saveFileDialog.Filter = "vcf files (*.vcf)|*.vcf";
+			saveFileDialog.RestoreDirectory = true;
+
+			if (saveFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				try
+				{
+					Cursor.Current = Cursors.WaitCursor;
+					contact.ExportVCard(saveFileDialog.FileName);
+					Cursor.Current = Cursors.Default;
+				}
+				catch{}
+			}
+		}
+		#endregion
 
 		#region Event Handlers
 		private void booksContacts_ContactDoubleClicked(object sender, ContactDoubleClickedEventArgs e)
@@ -459,7 +508,6 @@ namespace Novell.iFolder.FormsAddrBook
 			}
 			else
 			{
-				selectedBook = this.booksContacts.SelectedAddressBook;
 				this.menuEditDelete.Enabled = selectedBook != null;
 			}
 		}
@@ -506,13 +554,25 @@ namespace Novell.iFolder.FormsAddrBook
 			if (e.singleSelected)
 			{
 				contact = (Contact)((ListViewItem)booksContacts.SelectedContacts[0]).Tag;
+
+				// Enable the vCard export button.
+				toolBar1.Buttons[4].Enabled = true;
 			}
 			else
 			{
 				contact = null;
+
+				// Disable the vCard export button.
+				toolBar1.Buttons[4].Enabled = false;
 			}
 
 			detailsView.Invalidate();
+		}
+
+		private void booksContacts_BookSelected(object sender, EventArgs e)
+		{
+			selectedBook = booksContacts.SelectedAddressBook;
+			toolBar1.Buttons[3].Enabled = selectedBook != null;
 		}
 
 		private void detailsView_Paint(object sender, PaintEventArgs e)
@@ -757,8 +817,10 @@ namespace Novell.iFolder.FormsAddrBook
 					booksContacts.CreateContact();
 					break;
 				case "Import vCard":
+					importVCard();
 					break;
 				case "Export vCard":
+					exportVCard();
 					break;
 				default:
 					break;
@@ -771,6 +833,26 @@ namespace Novell.iFolder.FormsAddrBook
 			toolBar1.Buttons[0].ImageIndex = 2;
 			toolBar1.Buttons[1].ImageIndex = 1;
 			toolBar1.Buttons[2].ImageIndex = 1;
+			toolBar1.Buttons[3].ImageIndex = 3;
+			toolBar1.Buttons[4].ImageIndex = 4;
+		}
+
+		private void menuTools_Popup(object sender, System.EventArgs e)
+		{
+			selectedContacts = booksContacts.SelectedContacts;
+			menuToolsExportVCard.Enabled = selectedContacts.Count == 1;
+
+			menuToolsImportVCard.Enabled = selectedBook != null;
+		}
+
+		private void menuToolsImportVCard_Select(object sender, System.EventArgs e)
+		{
+			importVCard();
+		}
+
+		private void menuToolsExportVCard_Select(object sender, System.EventArgs e)
+		{
+			exportVCard();
 		}
 		#endregion
 	}
