@@ -47,6 +47,7 @@ static char *the_soap_url = NULL;
 /* Foward Declarations */
 static char *simias_get_user_profile_dir_path(char *dest_path);
 static char *parse_local_service_url(FILE *file);
+static char *parse_web_service_password(FILE *file);
 
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
@@ -185,6 +186,95 @@ parse_local_service_url(FILE *file)
 	return strdup(uri);
 }
 
+static char *
+parse_web_service_password(FILE *file)
+{
+	long file_size;
+	char line[1024];
+	int i;
+
+	if (!fgets(line, sizeof(line), file))
+	{
+		SIMIAS_DEBUG((stderr, "Password file empty or corrupt\n"));
+		return NULL;
+	}
+	
+	/* Remove any newline chars */
+	for (i = strlen(line) - 1; i > 0; i--)
+	{
+		if (line[i] == '\n' || line[i] == '\r')
+			line[i] = '\0';
+		else
+			break;
+	}
+
+	return strdup(line);
+}
+
+/**
+ * This function gets the username and password needed to invoke calls to the
+ * local Simias and iFolder WebServices.
+ *
+ * param: username (char[] that will be filled using sprintf)
+ * param: password (char[] that will be filled using sprintf)
+ *
+ * returns: Returns SIMIAS_SUCCESS (0) if successful or one of the errors
+ *          listed above it there's an error.
+ */
+int
+simias_get_web_service_credential(char *username, char *password)
+{
+	char user_profile_dir[1024];
+	char *user;
+	char *pw;
+	
+	user = getenv("USER");
+	
+	if (!user)
+		return -1;
+
+
+	char simias_password_file_path[1024];
+	FILE *simias_password_file;
+	
+	if (!simias_get_user_profile_dir_path(user_profile_dir)) {
+		return SIMIAS_ERROR_NO_USER_PROFILE;
+	}
+
+	SIMIAS_DEBUG((stderr, "User Profile Dir: %s\n", user_profile_dir));
+
+	sprintf(simias_password_file_path, "%s%s.local.if",
+			user_profile_dir, DIR_SEP);
+	
+	SIMIAS_DEBUG((stderr, "Simias Password File: %s\n", simias_password_file_path));
+
+	/* Attempt to open the file */
+	simias_password_file = fopen(simias_password_file_path, "r");
+	if (!simias_password_file) {
+		SIMIAS_DEBUG((stderr, "Error opening \"%s\"\n", simias_password_file_path));
+		return SIMIAS_ERROR_OPENING_PASSWORD_FILE;
+	}
+
+	pw = parse_web_service_password(simias_password_file);
+
+	fclose(simias_password_file);
+	
+	if (!(password)) {
+		SIMIAS_DEBUG((stderr, "Couldn't find the web service password in \"%s\"\n",
+					 simias_password_file_path));
+		return SIMIAS_ERROR_UNKNOWN;
+	}
+	
+	sprintf(password, "%s", pw);
+	free(pw);
+	
+	sprintf(username, "%s", user);
+	
+	fprintf(stderr, "libsimias: Returning %s, %s\n", username, password);
+	
+	return SIMIAS_SUCCESS;
+}
+
 /******************************************************************************
  * gSOAP Wrappers for WebService Calls                                        *
  ******************************************************************************/
@@ -202,6 +292,8 @@ simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 	int i = 0;
 	struct ns1__ArrayOfDomainInformation *array_of_domain_infos;
 	struct ns1__DomainInformation **domainsA;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(true);
 	if (!soap_url) {
@@ -212,6 +304,10 @@ simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 	req.onlySlaves = only_slaves ? true_ : false_;
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == SIMIAS_SUCCESS) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__GetDomains(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		cleanup_gsoap(&soap);

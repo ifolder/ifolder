@@ -32,6 +32,8 @@
 #define SIMIAS_ERROR_OPENING_CONFIG_FILE	-103
 #define SIMIAS_ERROR_IN_SOAP_CALL			-104
 #define SIMIAS_ERROR_OUT_OF_MEMORY			-105
+#define SIMIAS_ERROR_NO_PASSWORD_FILE		-106
+#define SIMIAS_ERROR_OPENING_PASSWORD_FILE	-107
 
 #ifndef _SIMIAS_DOMAIN_TYPE
 #define _SIMIAS_DOMAIN_TYPE
@@ -76,6 +78,18 @@ struct _SimiasDomainInfo {
  *          url must be freed.
  */
 int simias_get_local_service_url(char **url);
+
+/**
+ * This function gets the username and password needed to invoke calls to the
+ * local Simias and iFolder WebServices.
+ *
+ * param: username (char[] that will be filled using sprintf)
+ * param: password (char[] that will be filled using sprintf)
+ *
+ * returns: Returns SIMIAS_SUCCESS (0) if successful or one of the errors
+ *          listed above it there's an error.
+ */
+int simias_get_web_service_credential(char *username, char *password);
 
 /**
  * The following methods wrapper the gSOAP calls (WebService).  Get any
