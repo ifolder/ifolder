@@ -94,7 +94,7 @@ public class SynkerServiceA: SyncCollectionService
 	
 		string userID = Thread.CurrentPrincipal.Identity.Name;
 			
-		if (userID != null)
+		if ((userID != null) && (userID.Length > 0))
 		{
 			member = collection.GetMember(userID);
 			collection.Impersonate(member);
