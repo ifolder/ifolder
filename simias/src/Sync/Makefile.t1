@@ -1,7 +1,7 @@
 TARGETS := Sync.dll SyncCmd.exe
 
-OPTS := /warn:4 /debug+ /d:TRACE /d:DEBUG
-#OPTS := /debug+ /d:TRACE /d:DEBUG
+#OPTS := /warn:4 /debug+ /d:TRACE /d:DEBUG
+OPTS := /debug+ /d:TRACE /d:DEBUG
 SIMIAS_ROOT := ../..
 
 ifeq ($(OS),Windows_NT)
@@ -18,7 +18,8 @@ RM := rm -rf
 SQLITE := linux/libsqlite.so
 endif
 
-RLIBS := CollectionStore StoreProvider SqliteProvider Common Configuration CollectionEvents SyncCommon Agent
+RLIBS := Storage CollectionStore StoreProvider SqliteProvider Common \
+		Configuration CollectionEvents SyncCommon Agent
 
 SLIBS := System.Runtime.Remoting System.Data System
 
@@ -43,9 +44,15 @@ clean:
 			*.pdb $(RLIBS:%=%.dll)
 
 libs:
-	@$(UPD) $(foreach LIB, $(RLIBS), $(SIMIAS_ROOT)/src/$(LIB)/$(LIB).dll) \
+	$(UPD) $(foreach LIB, $(RLIBS), $(SIMIAS_ROOT)/src/$(LIB)/$(LIB).dll) \
 			$(SIMIAS_ROOT)/external/sqlite/$(SQLITE) \
-			$(SIMIAS_ROOT)/src/SqliteProvider/SqliteWrapper.dll .
+			$(SIMIAS_ROOT)/src/SqliteProvider/SqliteWrapper.dll \
+			$(SIMIAS_ROOT)/external/SecureChannelSinks/Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll \
+			$(SIMIAS_ROOT)/external/SecureChannelSinks/Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll \
+			$(SIMIAS_ROOT)/external/SecureChannelSinks/Novell.Security.SecureSink.SecurityProvider.dll \
+			$(SIMIAS_ROOT)/external/SecureChannelSinks/Novell.Security.SecureSink.Utilities.dll \
+			$(SIMIAS_ROOT)/external/SecureChannelSinks/Novell.Security.SecureSink.dll \
+			.
 
 pdbs:
 	@$(UPD) $(foreach LIB, $(RLIBS), $(SIMIAS_ROOT)/src/$(LIB)/$(LIB).pdb) \

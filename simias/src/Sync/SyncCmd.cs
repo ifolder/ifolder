@@ -250,7 +250,8 @@ public class SyncCmd
 
 	int RunSync(Uri docRoot, string serverStoreLocation)
 	{
-		Store store = Store.Connect(storeLocation, "SyncCmd");
+		Store store = Store.Connect(new Configuration(
+				storeLocation == null? null: storeLocation.LocalPath));
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
 		{
