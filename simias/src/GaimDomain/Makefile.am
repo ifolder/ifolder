@@ -6,18 +6,18 @@ GaimDomain_CSFILES_CSC := $(subst /,$(SEP),$(GaimDomain_CSFILES))
 GaimDomain_INCLUDES =
 GaimDomain_RESOURCES =
 GaimDomain_FLAGS = $(CSC_LIBFLAG)
-GaimDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll
-GaimDomain_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient $(DESTDIR)$(webbindir)
+GaimDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll Novell.AddressBook.dll
+GaimDomain_LIBPATH = ../../src/Simias.dll ../../src/SimiasClient ../../src/AddressBook $(DESTDIR)$(webbindir)
 
 #EXTRA_DIST = $(GaimDomain_CSFILES)
 
-NUNIT_TESTS := Simias.GaimDomain.dll
+NUNIT_TESTS := Simias.Gaim.dll
 
 CUR_DIR := $(shell pwd)
 
 all: $(NUNIT_TESTS)
 
-Simias.GaimDomain.dll: $(GaimDomain_CSFILES) $(GaimDomain_RESOURCES)
+Simias.Gaim.dll: $(GaimDomain_CSFILES) $(GaimDomain_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(GaimDomain_FLAGS) $(GaimDomain_LIBS:%=/r:%) $(GaimDomain_LIBPATH:%=/lib:%) $(GaimDomain_CSFILES_CSC)
 	
 if DEBUG

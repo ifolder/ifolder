@@ -37,6 +37,8 @@ using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
 
+using Novell.AddressBook;
+
 namespace Simias.Gaim.DomainService
 {
 	/// <summary>
@@ -84,6 +86,37 @@ namespace Simias.Gaim.DomainService
 			return info;
 		}
 
+		internal Member FindBuddyInRoster(Simias.Storage.Roster roster,
+										  string accountName, string accountProto, string buddyName)
+		{
+			// Check to see if the buddy already exists
+			Member member = null;
+			ICSList rosterMembers = roster.GetMemberList();
+			foreach (ShallowNode sNode in rosterMembers)
+			{
+				Simias.Storage.Member aMember =	
+					new Simias.Storage.Member(roster, sNode);
+
+				if (buddyName == aMember.Name)
+				{
+					// Make sure the accountName and accountProtocol match
+					Simias.Storage.PropertyList pList = aMember.Properties;
+					Simias.Storage.Property prop = pList.GetSingleProperty("Gaim:AccountName");
+					if (prop != null && ((string) prop.Value) == accountName)
+					{
+						prop = pList.GetSingleProperty("Gaim:AccountProto");
+						if (prop != null && ((string) prop.Value) == accountProto)
+						{
+							member = aMember;
+							break;
+						}
+					}
+				}
+			}
+
+			return member;			
+		}
+
 		/// <summary>
 		/// Adds a new Buddy to the Gaim Domain Roster.  If the buddy already
 		/// exists, any modified information will be updated in the roster.
@@ -94,20 +127,74 @@ namespace Simias.Gaim.DomainService
 		/// <param name="alias">The buddy's alias</param>
 		/// <param name="ipAddr">IP Address of the Simias WebService running on the buddy's computer.</param>
 		/// <param name="ipPort">IP Port of the Simias WebService running on the buddy's computer. </param>
-		[WebMethod(EnableSession=true)]
+		[WebMethod(Description="AddGaimBuddy")]
 		[SoapDocumentMethod]
 		public void AddGaimBuddy(string accountName, string accountProto, string buddyName,
 								 string alias, string ipAddr, string ipPort)
 		{
 			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain(false);
-			Simias.Storage.Domain domain = gaimDomain.GetGaimDomain(false, "");
-			if (domain == null)
+			if (gaimDomain == null)
 			{
-				throw new SimiasException("Gaim domain does not exist");
+				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			// If user already exists, call UpdateGaimBuddy(accountName, accountProto,
-			//												buddyName, alias, ipAddr, ipPort);
+			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
+			if (gaimRoster == null)
+			{
+				throw new SimiasException("Gaim Roster does not exist!");
+			}
+
+			// Check to see if the buddy already exists
+			Member member = FindBuddyInRoster(gaimRoster, accountName, accountProto, buddyName);
+			if (member != null)
+			{
+				UpdateGaimBuddy(member, gaimRoster, alias, ipAddr, ipPort);
+				return;
+			}
+
+			//
+			// Create a new member and add on the properties
+			//
+			
+			// Create the member
+			member = new Member(buddyName, Guid.NewGuid().ToString(), Access.Rights.ReadWrite);
+
+			// Gaim Account Name
+			Simias.Storage.Property p = new Property("Gaim:AccountName", accountName);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			// Gaim Account Protocol
+			p = new Property("Gaim:AccountProto", accountProto);
+			p.LocalProperty = true;
+			member.Properties.AddProperty(p);
+			
+			// Buddy Alias
+			if (alias != null && alias.Length > 0)
+			{
+				p = new Property("Gaim:Alias", alias);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+			
+			// Buddy IP Address
+			if (ipAddr != null && ipAddr.Length > 0)
+			{
+				p = new Property("Gaim:IPAddress", ipAddr);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+			
+			// Buddy IP Port
+			if (ipPort != null && ipPort.Length > 0)
+			{
+				p = new Property("Gaim:IPPort", ipPort);
+				p.LocalProperty = true;
+				member.Properties.AddProperty(p);
+			}
+			
+			// Commit the changes
+			gaimRoster.Commit(member);
 		}
 
 		/// <summary>
@@ -117,20 +204,87 @@ namespace Simias.Gaim.DomainService
 		/// <param name="acountName">The Gaim account name (local user's screenname).</param>
 		/// <param name="accountProto">The Gaim account protocol (i.e., prpl-oscar).</param>
 		/// <param name="buddyName">The buddy's screenname</param>
-		[WebMethod(EnableSession=true)]
+		[WebMethod(Description="RemoveGaimBuddy")]
 		[SoapDocumentMethod]
 		public void RemoveGaimBuddy(string accountName, string accountProto, string buddyName)
 		{
 			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain(false);
-			Simias.Storage.Domain domain = gaimDomain.GetGaimDomain(false, "");
-			if (domain == null)
+			if (gaimDomain == null)
 			{
-				throw new SimiasException("Gaim domain does not exist");
+				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			// FIXME: Search through the Gaim Domain Roster looking for the buddy
-			// and when/if the buddy is found, remove all memberships from collections
-			// and from the Gaim Domain Roster.
+			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
+			if (gaimRoster == null)
+			{
+				throw new SimiasException("Gaim Roster does not exist!");
+			}
+
+			// Check to see if the buddy already exists
+			Member member = FindBuddyInRoster(gaimRoster, accountName, accountProto, buddyName);
+			if (member != null)
+			{
+				gaimRoster.Delete(member);
+				gaimRoster.Commit();
+			}
+			else
+			{
+				throw new SimiasException("Did not find buddy");
+			}
+		}
+		
+		internal void UpdateGaimBuddy(Member member, Roster roster, string alias, string ipAddr, string ipPort)
+		{
+			Simias.Storage.PropertyList pList = member.Properties;
+			Simias.Storage.Property p;
+			
+			// Buddy Alias
+			if (alias != null && alias.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:Alias"))
+				{
+					pList.ModifyProperty("Gaim:Alias", alias);
+				}
+				else
+				{
+					p = new Property("Gaim:Alias", alias);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
+			}
+			
+			// Buddy IP Address
+			if (ipAddr != null && ipAddr.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:IPAddress"))
+				{
+					pList.ModifyProperty("Gaim:IPAddress", alias);
+				}
+				else
+				{
+					p = new Property("Gaim:IPAddress", ipAddr);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
+			}
+			
+			// Buddy IP Port
+			if (ipPort != null && ipPort.Length > 0)
+			{
+				if (pList.HasProperty("Gaim:IPPort"))
+				{
+					pList.ModifyProperty("Gaim:IPPort", alias);
+				}
+				else
+				{
+					p = new Property("Gaim:IPPort", ipPort);
+					p.LocalProperty = true;
+					member.Properties.AddProperty(p);
+				}
+			}
+			
+			// Commit the changes
+			roster.Commit(member);
 		}
 		
 		/// <summary>
@@ -142,19 +296,131 @@ namespace Simias.Gaim.DomainService
 		/// <param name="alias">The buddy's alias</param>
 		/// <param name="ipAddr">IP Address of the Simias WebService running on the buddy's computer.</param>
 		/// <param name="ipPort">IP Port of the Simias WebService running on the buddy's computer. </param>
-		[WebMethod(EnableSession=true)]
+		[WebMethod(Description="UpdateGaimBuddy")]
 		[SoapDocumentMethod]
 		public void UpdateGaimBuddy(string accountName, string accountProto, string buddyName,
 									string alias, string ipAddr, string ipPort)
 		{
 			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain(false);
-			Simias.Storage.Domain domain = gaimDomain.GetGaimDomain(false, "");
-			if (domain == null)
+			if (gaimDomain == null)
 			{
-				throw new SimiasException("Gaim domain does not exist");
+				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			// FIXME: Implement UpdateGaimBuddy()
+			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
+			if (gaimRoster == null)
+			{
+				throw new SimiasException("Gaim Roster does not exist!");
+			}
+
+			Member member = FindBuddyInRoster(gaimRoster, accountName, accountProto, buddyName);
+			if (member != null)
+			{
+				UpdateGaimBuddy(member, gaimRoster, alias, ipAddr, ipPort);
+				return;
+			}
+			else
+			{
+				throw new SimiasException("Did not find buddy");
+			}
+		}
+		
+		/// <summary>
+		/// Get all the users in the Gaim Domain Roster
+		/// </summary>
+		[WebMethod(Description="GetAllBuddies")]
+		[SoapDocumentMethod]
+		public GaimBuddy[] GetAllBuddies()
+		{
+			ArrayList buddies = new ArrayList();
+			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain(false);
+			if (gaimDomain == null)
+			{
+				throw new SimiasException("Gaim Domain does not exist!");
+			}
+			
+			Simias.Storage.Roster gaimRoster = gaimDomain.GetGaimRoster();
+			if (gaimRoster == null)
+			{
+				throw new SimiasException("Gaim Roster does not exist!");
+			}
+
+			ICSList rosterMembers = gaimRoster.GetMemberList();
+			foreach (ShallowNode sNode in rosterMembers)
+			{
+				Simias.Storage.Member member =	
+					new Simias.Storage.Member(gaimRoster, sNode);
+
+				GaimBuddy buddy = new GaimBuddy(member);
+				buddies.Add(buddy);
+			}
+
+			return (GaimBuddy[]) buddies.ToArray(typeof(GaimBuddy));
+		}
+		
+	}
+
+	/// <summary>
+	/// This class exists only to represent a Member and should only be
+	/// used in association with the GaimDomainService class.
+	/// </summary>
+	[Serializable]
+	public class GaimBuddy
+	{
+		public string Name;
+		public string UserID;
+		public string Rights;
+		public string ID;
+		public bool IsOwner;
+
+		public string GaimAccountName;
+		public string GaimAccountProto;
+		public string GaimAlias;
+		public string IPAddress;
+		public string IPPort;
+
+		public GaimBuddy()
+		{
+		}
+
+		public GaimBuddy(Simias.Storage.Member member)
+		{
+			this.Name = member.Name;
+			this.UserID = member.UserID;
+			this.Rights = member.Rights.ToString();
+			this.ID = member.ID;
+			this.IsOwner = member.IsOwner;
+
+			Simias.Storage.PropertyList pList = member.Properties;
+			Simias.Storage.Property prop = pList.GetSingleProperty("Gaim:AccountName");
+			if (prop != null)
+				this.GaimAccountName = (string) prop.Value;
+			else
+				this.GaimAccountName = "";
+				
+			prop = pList.GetSingleProperty("Gaim:AccountProto");
+			if (prop != null)
+				this.GaimAccountProto = (string) prop.Value;
+			else
+				this.GaimAccountProto = "";
+				
+			prop = pList.GetSingleProperty("Gaim:Alias");
+			if (prop != null)
+				this.GaimAlias = (string) prop.Value;
+			else
+				this.GaimAlias = "";
+				
+			prop = pList.GetSingleProperty("Gaim:IPAddress");
+			if (prop != null)
+				this.IPAddress = (string) prop.Value;
+			else
+				this.IPAddress = "";
+				
+			prop = pList.GetSingleProperty("Gaim:IPPort");
+			if (prop != null)
+				this.IPPort = (string) prop.Value;
+			else
+				this.IPPort = "";
 		}
 	}
 }

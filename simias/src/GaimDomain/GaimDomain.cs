@@ -116,7 +116,7 @@ namespace Simias.Gaim
 		/// <summary>
 		/// Constructor for creating a new GaimDomain object.
 		/// </summary>
-		internal GaimDomain( bool init )
+		public GaimDomain( bool init )
 		{
 			if ( init == true )
 			{
@@ -287,12 +287,17 @@ namespace Simias.Gaim
 			}			
 		}
 
+
+		#region Public Methods
+
+
+
 		/// <summary>
 		/// Method to get the Gaim Domain
 		/// If the the domain does not exist and the create flag is true
 		/// the domain will be created.  If create == false, ownerID is ignored
 		/// </summary>
-		internal Simias.Storage.Domain GetGaimDomain( bool create, string ownerID )
+		public Simias.Storage.Domain GetGaimDomain( bool create, string ownerID )
 		{
 			//
 			//  Check if the Gaim Domain exists in the store
@@ -349,7 +354,31 @@ namespace Simias.Gaim
 			return gaimDomain;
 		}
 
-		#region Public Methods
+
+
+		/// <summary>
+		/// Method to get the Gaim Domain Roster
+		/// </summary>
+		public Simias.Storage.Roster GetGaimRoster()
+		{
+
+			Simias.Storage.Domain gaimDomain = GetGaimDomain( false, "" );
+			
+			if (gaimDomain == null)
+			{
+				log.Error("GetGaimRoster(): The Gaim Domain does not exist");
+				return null;
+			}
+
+			Simias.Storage.Roster gaimDomainRoster = null;
+			try
+			{
+				gaimDomainRoster = gaimDomain.Roster;
+			}
+			catch{}
+			
+			return gaimDomainRoster;
+		}
 
 		/// <summary>
 		/// Synchronize the Gaim Domain members to the Simias member list
