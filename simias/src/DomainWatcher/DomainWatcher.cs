@@ -225,16 +225,7 @@ namespace Simias.DomainWatcher
 								}
 								else
 								{
-									authStatus = 
-										domainAgent.Login( 
-											cDomain.ID, 
-											netCreds.UserName,
-											netCreds.Password );
-
-									if ( authStatus.statusCode == SCodes.InvalidPassword )
-									{
-										raiseEvent = true;
-									}
+									raiseEvent = true;
 								}
 
 								if ( raiseEvent == true )

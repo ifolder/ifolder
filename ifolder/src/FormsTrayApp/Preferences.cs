@@ -2622,6 +2622,7 @@ namespace Novell.FormsTrayApp
 
 							userName.Text = lvi.SubItems[1].Text;
 							password.Text = string.Empty;
+							rememberPassword.Checked = false;
 
 							selectedDomain = (Domain)lvi.Tag;
 
