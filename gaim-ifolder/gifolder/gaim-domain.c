@@ -40,6 +40,7 @@
 #include <string.h>
 
 #include "simias-util.h"
+#include "simias-prefs.h"
 
 #if defined(WIN32)
 #define DIR_SEP "\\"
@@ -117,6 +118,74 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	}
 	
 	cleanup_gsoap(&soap);
+}
+
+/**
+ * Gets the user public key that should be used.  This function first checks
+ * the custom plugin setting to see if we already have a public/private key
+ * stored in the Gaim configuration.  If so, it just returns the public key
+ * directly from the configuration.  If the public key is not in the Gaim
+ * configuration, it will call the GaimDomainService WebService to get the key
+ * and will store it in the Gaim configuration for future calls.
+ *
+ * This method returns 0 on success.  If success is returned, the public_key
+ * will have a newly allocated char * that should be freed by the caller.  If
+ * there is an error, public_key will be invalid and does not need to be freed.
+ */
+int
+simias_get_public_key(char **public_key)
+{
+	const char *existing_public_key;
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__GetRSACredential req;
+	struct _ns1__GetRSACredentialResponse resp;
+	
+	if (gaim_prefs_exists(SIMIAS_PREF_PUBLIC_KEY))
+	{
+		existing_public_key = gaim_prefs_get_string(SIMIAS_PREF_PUBLIC_KEY);
+		if (existing_public_key)
+		{
+			*public_key = strdup(existing_public_key);
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	/* We need to go get the public/private key from Simias */
+	soap_url = get_soap_url(TRUE);
+	if (!soap_url) {
+		return -2;
+	}
+	
+	init_gsoap(&soap);
+	soap_call___ns1__GetRSACredential(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		soap_print_fault(&soap, stderr);
+		cleanup_gsoap(&soap);
+		return -3;
+	}
+
+	if (resp.GetRSACredentialResult != true_)
+	{
+		return -4;
+	}
+	
+	/**
+	 * This is the first time we've ever retrieved the PPK from Simias so
+	 * store it in the Gaim Plugin Configuration area for future use.
+	 */
+	gaim_prefs_add_string(SIMIAS_PREF_PUBLIC_KEY, resp.PublicCredential);
+	gaim_prefs_add_string(SIMIAS_PREF_PRIVATE_KEY, resp.PrivateCredential);
+	
+	*public_key = strdup(resp.PublicCredential);
+	
+	cleanup_gsoap(&soap);
+
+	return 0;
 }
 
 /**

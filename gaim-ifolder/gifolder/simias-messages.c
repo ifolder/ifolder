@@ -42,7 +42,7 @@
  * Non-public Functions
  */
 static int send_ping(GaimBuddy *recipient, const char *ping_type);
-static gboolean parse_simias_info(char *buffer, char **machineName, char **userID, char **simiasURL);
+static gboolean parse_simias_info(const char *buffer, char **publicKey, char **machineName, char **userID, char **simiasURL);
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
 
 static gboolean handle_ping_request(GaimAccount *account,
@@ -123,13 +123,26 @@ convert_url_to_public(const char *start_url)
 static int
 send_ping(GaimBuddy *recipient, const char *ping_type)
 {
-	char msg[2048];
+	char msg[4096];
+	char *publicKey;
 	char *machineName;
 	char *userID;
 	char *simias_service_url;
 	char *escaped_url;
 	char *public_url;
 	int err;
+
+	/* Get the PublicKey for the user */
+	err = simias_get_public_key(&publicKey);
+	if (err != 0)
+	{
+		/**
+		 * There was an error an none of the returns are valid.  The most
+		 * likely cause is that Simias was not running.
+		 */
+fprintf(stderr, "simias_get_public_key() returned: %d\n", err);
+		return -12312;
+	}
 
 	/* Get the Gaim Domain User Info */
 	err = simias_get_user_info(&machineName, &userID, &simias_service_url); 
@@ -145,7 +158,7 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 
 	public_url = convert_url_to_public(escaped_url);
 	if (public_url) {
-		sprintf(msg, "%s%s:%s:%s]", ping_type, machineName, userID, public_url);
+		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, publicKey, machineName, userID, public_url);
 		free(public_url);
 	} else {
 		free(machineName);
@@ -155,6 +168,7 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 		return -1234;
 	}
 	
+	free(publicKey);
 	free(machineName);
 	free(userID);
 	free(escaped_url);
@@ -165,7 +179,7 @@ fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-request:<sender-machine-name>:<sender-user-id>:<simias-url>]
+ * [simias:ping-request:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
  */
 int
 simias_send_ping_req(GaimBuddy *recipient)
@@ -176,7 +190,7 @@ simias_send_ping_req(GaimBuddy *recipient)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-response:<sender-machine-name>:<sender-user-id>:<simias-url>]
+ * [simias:ping-response:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
  */
 int
 simias_send_ping_resp(GaimBuddy *recipient)
@@ -274,22 +288,37 @@ get_possible_simias_msg_type(const char *buffer)
  * The buffer should contain the part of the simias message
  * AFTER the ping type, as shown here:
  *
- *     [simias:<ping-type>:<sender-machine-name>:<sender-user-id>:<simias-url>]
+ *     [simias:<ping-type>:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
  *                         ^
  *
  * Returns TRUE if all the fields could be parsed correctly, otherwise FALSE
  * is returned.
  */
 static gboolean
-parse_simias_info(char *buffer, char **machineName, char **userID, char **simiasURL)
+parse_simias_info(const char *buffer, char **publicKey, char **machineName, char **userID, char **simiasURL)
 {
 	int colonPos;
 	char *tmp;
 
-	tmp = buffer;
+	tmp = (char *)buffer;
 	colonPos = simias_str_index_of(tmp, ':');
 	if (colonPos <= 0)
 	{
+		fprintf(stderr, "parse_simias_info() couldn't parse the public key\n");
+		return FALSE;
+	}
+	else
+	{
+		*publicKey = malloc(sizeof(char) * (colonPos + 1));
+		memset(*publicKey, '\0', colonPos + 1);
+		strncpy(*publicKey, tmp, colonPos);
+	}
+
+	tmp = tmp + colonPos + 1;
+	colonPos = simias_str_index_of(tmp, ':');	
+	if (colonPos <= 0)
+	{
+		free(*publicKey);
 		fprintf(stderr, "parse_simias_info() couldn't parse the machine name\n");
 		return FALSE;
 	}
@@ -304,6 +333,7 @@ parse_simias_info(char *buffer, char **machineName, char **userID, char **simias
 	colonPos = simias_str_index_of(tmp, ':');
 	if (colonPos <= 0)
 	{
+		free(*publicKey);
 		free(*machineName);
 		fprintf(stderr, "parse_simias_info() couldn't parse the user id\n");
 		return FALSE;
@@ -319,6 +349,7 @@ parse_simias_info(char *buffer, char **machineName, char **userID, char **simias
 	colonPos = simias_str_index_of(tmp, ']');
 	if (colonPos <= 0)
 	{
+		free(*publicKey);
 		free(*machineName);
 		free(*userID);
 		fprintf(stderr, "parse_simias_info() couldn't parse the simias url\n");
@@ -344,6 +375,7 @@ handle_ping_request(GaimAccount *account, const char *sender,
 					const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *public_key;
 	char *machine_name;
 	char *user_id;
 	char *simias_url;
@@ -363,14 +395,19 @@ fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-request:<sender-machine-name>:<sender-user-id>:<simias-url>]
+	 * 	[simias:ping-request:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
 	 *                       ^
 	 */
-	if (!parse_simias_info((char *) buffer + strlen(PING_REQUEST_MSG),
-						  &machine_name, &user_id, &simias_url))
+	if (!parse_simias_info(buffer + strlen(PING_REQUEST_MSG),
+						  &public_key, &machine_name, &user_id, &simias_url))
 	{
 		return FALSE;
 	}
+	
+	free(public_key);
+	free(machine_name);
+	free(user_id);
+	free(simias_url);
 	
 	ping_reply_type = gaim_prefs_get_string(SIMIAS_PREF_PING_REPLY_TYPE);
 	if (ping_reply_type) {
@@ -410,10 +447,12 @@ handle_ping_response(GaimAccount *account, const char *sender,
 					 const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *public_key;
 	char *machine_name;
 	char *user_id;
 	char *simias_url;
 	
+	char public_key_setting[2048];
 	char user_id_setting[512];
 	char simias_url_setting[512];
 	
@@ -431,11 +470,11 @@ fprintf(stderr, "Message: %s\n", buffer);
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-response:<sender-machine-name>:<sender-user-id>:<simias-url>]
+	 * 	[simias:ping-response:<sender-public-key>:<sender-machine-name>:<sender-user-id>:<simias-url>]
 	 *                        ^
 	 */
-	if (!parse_simias_info((char *) buffer + strlen(PING_RESPONSE_MSG),
-						  &machine_name, &user_id, &simias_url))
+	if (!parse_simias_info(buffer + strlen(PING_RESPONSE_MSG),
+						  &public_key, &machine_name, &user_id, &simias_url))
 	{
 fprintf(stderr, "couldn't parse simias_info!\n");
 		return FALSE;
@@ -443,8 +482,10 @@ fprintf(stderr, "couldn't parse simias_info!\n");
 	
 	/* Update the buddy's simias-url in blist.xml */
 	buddy = gaim_find_buddy(account, sender);
+	sprintf(public_key_setting, "simias-public-key:%s", machine_name);
 	sprintf(user_id_setting, "simias-user-id:%s", machine_name);
 	sprintf(simias_url_setting, "simias-url:%s", machine_name);
+	gaim_blist_node_set_string(&(buddy->node), public_key_setting, public_key);
 	gaim_blist_node_set_string(&(buddy->node), user_id_setting, user_id);
 	gaim_blist_node_set_string(&(buddy->node), simias_url_setting, simias_url);
 
@@ -455,6 +496,11 @@ fprintf(stderr, "couldn't parse simias_info!\n");
 	simias_update_member(gaim_account_get_username(account),
 						 gaim_account_get_protocol_id(account),
 						 sender, machine_name);
+
+	free(public_key);
+	free(machine_name);
+	free(user_id);
+	free(simias_url);
 
 	return TRUE;
 }

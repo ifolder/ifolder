@@ -51,6 +51,9 @@
 #define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/simias/auto_start_simias"
 #define SIMIAS_PREF_SIMIAS_AUTO_START_DEF FALSE
 
+#define SIMIAS_PREF_PUBLIC_KEY "/plugins/simias/public_key"
+#define SIMIAS_PREF_PRIVATE_KEY "/plugins/simias/private_key"
+
 /* Function Declarations */
 void simias_init_default_prefs();
 
