@@ -27,12 +27,15 @@
 @class LoginWindowController;
 @class iFolder;
 @class iFolderData;
+@class SMFileSyncEvent;
+@class SMCollectionSyncEvent;
 
 
 @interface iFolderApplication : NSObject
 {
 	LoginWindowController	*loginWindowController;
 	iFolderData				*ifolderdata;
+	BOOL					runThreads;
 }
 
 //==========================================
@@ -73,7 +76,19 @@
 // Simias startup and shutdown methods
 //==========================================
 - (void)startSimiasThread:(id)arg;
-- (void)simiasDidFinishStarting:(id)arg;
+
+
+//==========================================
+// Simias Event thread methods
+//==========================================
+- (void)enableThreads:(id)arg;
+- (void)simiasEventThread:(id)arg;
+- (void)processNotifyEvents;
+- (void)processFileSyncEvents;
+- (void)handleFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
+- (void)processCollectionSyncEvents;
+- (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
+
 
 
 

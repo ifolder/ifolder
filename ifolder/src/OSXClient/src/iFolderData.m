@@ -29,11 +29,9 @@
 #import "SimiasService.h"
 
 
+static iFolderData *sharedInstance = nil;
 
 @implementation iFolderData
-
-
-static iFolderData *sharedInstance = nil;
 
 //===================================================================
 // init
@@ -41,23 +39,25 @@ static iFolderData *sharedInstance = nil;
 //===================================================================
 - (id)init 
 {
-    if (sharedInstance) 
+	@synchronized(self)
 	{
-        [self dealloc];
-    } 
-	else
-	{
-		instanceLock = [[NSRecursiveLock alloc] init];
-        sharedInstance = [super init];
-	
-		ifolderService = [[iFolderService alloc] init];
-		simiasService = [[SimiasService alloc] init];	
+		if (sharedInstance) 
+		{
+			[self dealloc];
+		} 
+		else
+		{
+			instanceLock = [[NSRecursiveLock alloc] init];
+			sharedInstance = [super init];
 		
-		keyedDomains = [[NSMutableDictionary alloc] init];
-		keyediFolders = [[NSMutableDictionary alloc] init];
-    }
-    
-    return sharedInstance;
+			ifolderService = [[iFolderService alloc] init];
+			simiasService = [[SimiasService alloc] init];	
+			
+			keyedDomains = [[NSMutableDictionary alloc] init];
+			keyediFolders = [[NSMutableDictionary alloc] init];
+		}
+		return sharedInstance;
+	}
 }
 
 

@@ -29,10 +29,44 @@
 #import "AboutBoxController.h"
 #import "iFolderData.h"
 #import "Simias.h"
+#import "SimiasEventData.h"
+#import "SMEvents.h"
 
 
 
 @implementation iFolderApplication
+
+
+//===================================================================
+// awakeFromNib
+// When this class is loaded from the nib, startup simias and wait
+// since our app isn't useful without simias
+//===================================================================
+-(void)awakeFromNib
+{
+	// this baby will get cocoa objects ready for mutlitple threads
+    [NSThread detachNewThreadSelector:@selector(enableThreads:)
+        toTarget:self withObject:nil];
+
+	// wait until cocoa is safely in multithreaded mode
+	while(![NSThread isMultiThreaded])
+	{
+		// wait until it is
+		NSLog(@"Waiting for app to enable multithreading");
+		[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:.5] ];
+	}
+
+	NSLog(@"initializing Simias Events");
+	[self initializeSimiasEvents];
+	
+	NSLog(@"Starting Simias Process");
+	[self startSimiasThread:self];
+
+	ifolderdata = [[iFolderData alloc] init];
+}
+
+
+
 
 //===================================================================
 // showSyncLog
@@ -117,7 +151,8 @@
 	{
 		if(loginWindowController == nil)
 		{
-			loginWindowController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
+			loginWindowController = 
+				[[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
 		}
 
 		[[loginWindowController window] center];
@@ -161,12 +196,18 @@
 //===================================================================
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
-	[self addLog:@"Starting Simias Process"];
-	NSLog(@"Starting Simias Process");
-    [NSThread detachNewThreadSelector:@selector(startSimiasThread:)
+	runThreads = YES;
+
+	NSLog(@"Creating and loading iFolderData");
+	[ifolderdata refresh];
+		
+	// Startup the event processing thread
+    [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
         toTarget:self withObject:nil];
 
-	ifolderdata = [[iFolderData alloc] init];
+	[self showiFolderWindow:self];
+
+	[iFolderWindowController updateStatusTS:@"Idle..."];
 }
 
 
@@ -179,6 +220,7 @@
 //===================================================================
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	runThreads = NO;
 	[self addLog:@"Unregistering events..."];
 	SimiasEventDisconnect();
 	[self addLog:@"Shutting down Simias..."];
@@ -197,9 +239,6 @@
 //===================================================================
 - (void)startSimiasThread:(id)arg
 {
-	NSLog(@"In Starting Simias Thread");
-    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-
 	BOOL simiasRunning = NO;
 /*
 	@try
@@ -218,6 +257,7 @@
 
 	if(!simiasRunning)
 	{
+		NSLog(@"Simias is not running, starting....");
 		iFolderService *threadWebService;
 		
 		threadWebService = [[iFolderService alloc] init];		
@@ -230,39 +270,23 @@
 		{
 			@try
 			{
+				NSLog(@"Pinging simias to check for startup...");
 				simiasRunning = [threadWebService Ping];
 			}
-			@catch (NSException *e)
+			@catch(NSException *e)
 			{
 				simiasRunning = NO;
-				[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:.5]];
+			}
+			// I tried doing this in the catch above but sometimes we fail
+			// and don't throw and exception so I moved it here to avoid a 
+			// tight loop
+			if(!simiasRunning)
+			{
+				NSLog(@"Simias is not running, sleeping.");
+				[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
 			}
 		}
 	}
-
-	[self performSelectorOnMainThread:@selector(simiasDidFinishStarting:) 
-					withObject:nil waitUntilDone:YES ];
-
-    [pool release];
-}
-
-
-
-
-//===================================================================
-// simiasDidFinishStarting
-// This method is called on the MainThread when the simias process
-// is up and running.
-//===================================================================
-- (void)simiasDidFinishStarting:(id)arg
-{
-	NSLog(@"Creating and loading iFolderData");
-	[ifolderdata refresh];
-
-	[self addLog:@"initializing Simias Events"];
-	NSLog(@"initializing Simias Events");
-	[self initializeSimiasEvents];
-
 }
 
 
@@ -288,6 +312,324 @@
 	}
 	return NO;
 }
+
+
+
+
+//===================================================================
+// enableThreads
+// This method does nothing but is used to set app into
+// multi-threaded mode
+//===================================================================
+- (void)enableThreads:(id)arg
+{
+	NSLog(@"Enabling multithreaded processing");
+}
+
+
+
+//===================================================================
+// simiasEventThread
+// This method contains the code to deal with all simias events
+//===================================================================
+- (void)simiasEventThread:(id)arg
+{
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+
+	while(runThreads)
+	{
+		SimiasEventData *sed = [SimiasEventData sharedInstance];
+		NSLog(@"simiasEventThread about to block");
+//		[iFolderWindowController updateStatusTS:@"Idle..."];
+//		[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+		[sed blockUntilEvents];
+		NSLog(@"simias EventThread woke up to process events");
+		
+		[self processNotifyEvents];
+		[self processCollectionSyncEvents];
+		[self processFileSyncEvents];
+
+	}
+    [pool release];	
+}
+
+
+
+
+//===================================================================
+// processNotifyEvents
+// method to loop through all notify events and process them
+//===================================================================
+- (void)processNotifyEvents
+{
+	SimiasEventData *sed = [SimiasEventData sharedInstance];
+
+	// Take care of Notify Events
+	while([sed hasNotifyEvents])
+	{
+		SMNotifyEvent *smne = [[sed popNotifyEvent] retain];
+
+		NSLog(@"Got Notify Message %@", [smne message]);
+		
+		if([[smne type] compare:@"Domain-Up"] == 0)
+		{
+			[self showLoginWindowTS:[smne message]];
+		}
+		[smne release];
+	}
+}
+
+
+
+
+//===================================================================
+// processCollectionSyncEvents
+// method to loop through all file sync events and process them
+//===================================================================
+- (void)processCollectionSyncEvents
+{
+	SimiasEventData *sed = [SimiasEventData sharedInstance];
+
+	// Take care of Collection Sync
+	while([sed hasCollectionSyncEvents])
+	{
+		SMCollectionSyncEvent *cse = [[sed popCollectionSyncEvent] retain];
+		[self performSelectorOnMainThread:@selector(handleCollectionSyncEvent:) 
+				withObject:cse waitUntilDone:YES ];				
+		[cse release];
+	}
+}
+
+
+
+
+//===================================================================
+// processFileSyncEvents
+// method to loop through all file sync events and process them
+//===================================================================
+- (void)processFileSyncEvents
+{
+	SimiasEventData *sed = [SimiasEventData sharedInstance];
+
+	// Take care of File Sync
+	while([sed hasFileSyncEvents])
+	{
+		SMFileSyncEvent *fse = [[sed popFileSyncEvent] retain];
+		if([fse objectType] != FILE_SYNC_UNKNOWN)
+		{
+			[self performSelectorOnMainThread:@selector(handleFileSyncEvent:) 
+					withObject:fse waitUntilDone:YES ];				
+		}
+		[fse release];
+	}
+}
+
+
+
+
+//===================================================================
+// handleCollectionSyncEvent
+// this method does the work of updating status for the collection sync
+// event and MUST run on the main thread
+//===================================================================
+- (void)handleCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent
+{
+	SMCollectionSyncEvent *cse = [colSyncEvent retain];
+
+	switch([cse syncAction])
+	{
+		case SYNC_ACTION_START:
+		{
+			NSString *syncMessage = [NSString
+							stringWithFormat:@"Synchronizing: %@", 
+							[cse name]];
+			[iFolderWindowController updateStatusTS:syncMessage];
+			[self addLogTS:syncMessage];
+			break;
+		}
+		case SYNC_ACTION_STOP:
+		{
+			NSString *syncMessage;
+			if([cse isDone])
+				syncMessage = [NSString
+							stringWithFormat:@"Done synchronizing: %@", 
+							[cse name]];
+			else
+				syncMessage = [NSString
+							stringWithFormat:@"Paused synchronizing: %@", 
+							[cse name]];
+
+			[iFolderWindowController updateStatusTS:@"Idle..."];
+			[self addLogTS:syncMessage];
+
+			// sending current value of -1 hides the control
+			[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];			
+			break;
+		}
+	}
+}
+
+
+
+//===================================================================
+// handleFileSyncEvent
+// this method does the work of updating status for the files sync
+// event and MUST run on the main thread
+//===================================================================
+- (void)handleFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent
+{
+	SMFileSyncEvent *fse = [fileSyncEvent retain];
+
+	static NSString *fileSyncName = nil;
+	NSString *syncMessage = nil;
+
+	if([fse objectType] != FILE_SYNC_UNKNOWN)
+	{
+		BOOL updateLog = NO;
+
+		if(fileSyncName == nil)
+		{
+			fileSyncName = [[NSString stringWithString:[fse name]] retain];
+			updateLog = YES;
+		}
+
+		if([fileSyncName compare:[fse name]] != 0)
+		{
+			[fileSyncName release];
+			fileSyncName = [[NSString stringWithString:[fse name]] retain];
+			updateLog = YES;
+		}
+	
+		switch([fse direction])
+		{
+			case FILE_SYNC_UPLOADING:
+			{
+				if([fse isDelete])
+				{
+					if([fse objectType] == FILE_SYNC_FILE)
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Removing file from server: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}
+					else
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Removing directory from server: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}	
+				}
+				else
+				{
+					if([fse objectType]  == FILE_SYNC_FILE)
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Uploading file: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}
+					else
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Creating directory on server: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}
+				}
+				break;
+			}
+			case FILE_SYNC_DOWNLOADING:
+			{
+				if([fse isDelete])
+				{
+					if([fse objectType] == FILE_SYNC_FILE)
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Deleting file: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}
+					else
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Removing directory: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}	
+				}
+				else
+				{
+					if([fse objectType] == FILE_SYNC_FILE)
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Downloading file: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}
+					else
+					{
+						syncMessage = [NSString
+							stringWithFormat:@"Creating directory: %@", 
+							[fse name]];
+						[iFolderWindowController updateStatusTS:syncMessage];
+						if(updateLog)
+							[self addLogTS:syncMessage];
+					}
+				}
+				break;
+			}
+		}
+		
+		if([fse sizeRemaining] == [fse sizeToSync])
+		{
+			if([fse sizeToSync] > 0)
+			{
+				[iFolderWindowController updateProgress:0
+										withMin:0
+										withMax:[fse sizeToSync]];
+			}
+			else
+			{
+				// sending current value of -1 hides the control
+				[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
+			}
+		}
+		else
+		{
+			if([fse sizeToSync] == 0)
+			{
+				[iFolderWindowController updateProgress:100
+										withMin:0
+										withMax:100];
+			}
+			else
+			{
+				[iFolderWindowController updateProgress:([fse sizeToSync] - [fse sizeRemaining])
+										withMin:0
+										withMax:[fse sizeToSync]];
+			}
+		}
+
+	}
+	[fse release];
+}
+
 
 
 

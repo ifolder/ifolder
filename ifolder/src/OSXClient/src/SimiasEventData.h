@@ -22,28 +22,36 @@
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import <iFolderService.h>
 
-#include <Carbon/Carbon.h>
-#include "simias-event-client.h"
+@class SMNotifyEvent;
+@class SMFileSyncEvent;
+@class SMCollectionSyncEvent;
+@class SMQueue;
 
+@interface SimiasEventData : NSObject
+{
+	SMQueue			*colSyncEventQueue;
+	SMQueue			*fileSyncEventQueue;
+	SMQueue			*notifyEventQueue;
+	NSLock			*simiasEventDataLock;
+	NSConditionLock	*simiasHasDataLock;
+}
 
-// Globals
-extern SimiasEventClient simiasEventClient;
++ (SimiasEventData *)sharedInstance;
 
+-(void)blockUntilEvents;
 
-// Functions
-void SimiasEventInitialize(void);
-void SimiasEventDisconnect(void);
-int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, void *data);
-int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data);
-int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data);
+- (void) pushNotifyEvent:(SMNotifyEvent *)notifyEvent;
+- (SMNotifyEvent *) popNotifyEvent;
+- (BOOL) hasNotifyEvents;
 
-int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *data);
-int SimiasEventSyncFile(SimiasFileSyncEvent *fileEvent, void *data);
-int SimiasEventNotifyMessage(SimiasNotifyEvent *notifyEvent, void *data);
+- (void) pushFileSyncEvent:(SMFileSyncEvent *)fileSyncEvent;
+- (SMFileSyncEvent *) popFileSyncEvent;
+- (BOOL) hasFileSyncEvents;
 
-NSDictionary *getNotifyEventProperties(SimiasNotifyEvent *notifyEvent);
-NSDictionary *getFileSyncEventProperties(SimiasFileSyncEvent *fileEvent);
-NSDictionary *getCollectionSyncEventProperties(SimiasCollectionSyncEvent *collectionEvent);
+- (void) pushCollectionSyncEvent:(SMCollectionSyncEvent *)colSyncEvent;
+- (SMCollectionSyncEvent *) popCollectionSyncEvent;
+- (BOOL) hasCollectionSyncEvents;
+
+@end
+

@@ -40,6 +40,8 @@
     IBOutlet NSArrayController *domainsController;
     IBOutlet NSArrayController *ifoldersController;
     IBOutlet NSTableView *iFolderTable;
+	IBOutlet NSTextField			*statusText;
+	IBOutlet NSProgressIndicator	*statusProgress;
 	
 	PropertiesWindowController				*propertiesController;
 	iFolderService							*ifolderService;
@@ -53,6 +55,7 @@
 	NSMutableDictionary		*keyedDomains;
 	NSMutableDictionary		*keyediFolders;
 }
+
 + (iFolderWindowController *)sharedInstance;
 - (void)windowWillClose:(NSNotification *)aNotification;
 
@@ -68,9 +71,13 @@
 - (IBAction)shareiFolder:(id)sender;
 - (IBAction)synciFolder:(id)sender;
 
++(void)updateStatusTS:(NSString *)message;
+-(void)updateStatus:(NSString *)message;
+
++(void)updateProgress:(double)curVal withMin:(double)minVal withMax:(double)maxVal;
+-(void)updateProgress:(double)curVal withMin:(double)minVal withMax:(double)maxVal;
 
 //- (IBAction)showHideToolbar:(id)sender;
-
 
 - (void)revertiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)deleteiFolderResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
