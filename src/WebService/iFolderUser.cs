@@ -38,6 +38,7 @@ namespace Novell.iFolder.Web
 		public string ID;
 		public string State;
 		public string iFolderID;
+		public bool IsOwner;
 
 		public iFolderUser()
 		{
@@ -50,6 +51,7 @@ namespace Novell.iFolder.Web
 			this.Rights = member.Rights.ToString();
 			this.ID = member.ID;
 			this.State = "Member";
+			this.IsOwner = member.IsOwner;
 		}
 
 
@@ -61,6 +63,7 @@ namespace Novell.iFolder.Web
 			this.ID = sub.ID;
 			this.iFolderID = sub.SubscriptionCollectionID;
 			this.State = "Invited";
+			this.IsOwner = false;
 
 			if(sub.SubscriptionState == 
 							Simias.POBox.SubscriptionStates.Invited)
