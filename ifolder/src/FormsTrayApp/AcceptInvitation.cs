@@ -482,6 +482,7 @@ namespace Novell.FormsTrayApp
 							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
 							mmb.Message = resourceManager.GetString("acceptError");
 							mmb.Details = ex.Message;
+							mmb.ShowDialog();
 							successful = false;
 						}
 					}
