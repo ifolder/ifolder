@@ -22,14 +22,21 @@
  ***********************************************************************/
 
 using System;
+using System.IO;
 
 using NUnit.Framework;
+
+using Simias;
+using Simias.Storage;
+using Simias.Sync;
+using Simias.Location;
 
 namespace Simias.Location.Tests
 {
 	/// <summary>
 	/// Location Tests
 	/// </summary>
+	[TestFixture]
 	public class LocationTests : Assertion
 	{
 		/// <summary>
@@ -37,6 +44,45 @@ namespace Simias.Location.Tests
 		/// </summary>
 		public LocationTests()
 		{
+			MyTrace.SendToConsole();
+		}
+
+		/// <summary>
+		/// Test the default locate functionality
+		/// </summary>
+		[Test]
+		public void TestLocate()
+		{
+			// remove store
+			string path = Path.GetFullPath("./location1");
+
+			if (Directory.Exists(path))
+			{
+				Directory.Delete(path, true);
+			}
+			
+			// configuration
+			Configuration configuration = new Configuration(path);
+
+			// create collection
+			Store store = Store.Connect(configuration);
+			Collection collection = store.CreateCollection("Location 1");
+			collection.Commit(true);
+
+			// sync properties
+			SyncCollection sc = new SyncCollection(collection);
+			sc.Host = SyncProperties.SuggestedHost;
+			sc.Port = SyncProperties.SuggestedPort;
+			sc.Commit();
+
+			// locate collection
+			LocationService service = new LocationService(configuration);
+
+			Uri location = service.Locate(collection.Id);
+
+			Assert("Location Not Found!", location != null);
+
+			MyTrace.WriteLine("Location: {0}", location);
 		}
 	}
 }

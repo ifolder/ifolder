@@ -264,7 +264,17 @@ namespace Simias.Sync
 		/// </summary>
 		public Uri MasterUri
 		{
-			get { return (new UriBuilder("http", Host, Port)).Uri; }
+			get
+			{
+				Uri result = null;
+
+				if ((Host != null) && (Port >= 0))
+				{
+					result = (new UriBuilder("http", Host, Port)).Uri;
+				}
+				
+				return  result;
+			}
 		}
 
 		/// <summary>

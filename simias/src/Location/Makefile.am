@@ -1,12 +1,12 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Location_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/LocationService.cs $(srcdir)/Library/ILocationProvider.cs $(srcdir)/Library/DefaultLocationProvider.cs
+Location_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/LocationService.cs $(srcdir)/Library/ILocationProvider.cs $(srcdir)/Library/LocationProviderList.cs $(srcdir)/Library/DefaultLocationProvider.cs $(srcdir)/Library/MultiCastLocationProvider.cs
 Location_CSFILES_CSC := $(subst /,$(SEP),$(Location_CSFILES))
 Location_INCLUDES = 
 Location_RESOURCES =
 Location_FLAGS = $(CSC_LIBFLAG)
-Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll SyncCommon.dll CollectionStore.dll
+Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll
 Location_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionStore ../SyncCommon
 
 NUNIT_TESTS := LocationTests.dll
@@ -16,8 +16,8 @@ LocationTests_CSFILES_CSC := $(subst /,$(SEP),$(LocationTests_CSFILES))
 LocationTests_INCLUDES = 
 LocationTests_RESOURCES =
 LocationTests_FLAGS = $(CSC_LIBFLAG)
-LocationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Location.dll
-LocationTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
+LocationTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll Location.dll nunit.util.dll nunit.framework.dll
+LocationTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common ../CollectionStore ../SyncCommon
 
 EXTRA_DIST = $(Location_CSFILES) $(LocationTests_CSFILES)
 

@@ -139,6 +139,11 @@
                     Project = "{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Location"
+                    Project = "{A3BE2C80-E2B0-4549-A64F-1C506772EE97}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

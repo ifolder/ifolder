@@ -23,28 +23,28 @@
 
 using System;
 
-using Simias;
-using Simias.Storage;
-
 namespace Simias.Location
 {
 	/// <summary>
-	/// Location Service
+	/// Multi-Cast Location Provider
 	/// </summary>
-	public class LocationService
+	public class MultiCastLocationProvider : ILocationProvider
 	{
-		private static readonly string section = "Location";
-		private static readonly string key = "Providers";
-
-		private Configuration configuration;
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		public MultiCastLocationProvider()
+		{
+		}
+		
+		#region ILocationProvider Members
 
 		/// <summary>
-		/// Constructor
+		/// Configure the location provider.
 		/// </summary>
-		/// <param name="configuration">The simias configuration file.</param>
-		public LocationService(Configuration configuration)
+		/// <param name="configuration">The Simias configuration object.</param>
+		public void Configure(Configuration configuration)
 		{
-			this.configuration = configuration;
 		}
 
 		/// <summary>
@@ -54,31 +54,9 @@ namespace Simias.Location
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
 		public Uri Locate(string collection)
 		{
-			Uri result = null;
-
-			LocationProviderList providers = new LocationProviderList(configuration);
-
-			foreach(Type type in providers)
-			{
-				try
-				{
-					MyTrace.WriteLine("Type: {0}", type);
-
-					ILocationProvider provider = (ILocationProvider)Activator.CreateInstance(type);
-
-					provider.Configure(configuration);
-
-					result = provider.Locate(collection);
-				}
-				catch(Exception e)
-				{
-					MyTrace.WriteLine(e);
-				}
-
-				if (result != null) break;
-			}
-
-			return result;
+			return null;
 		}
+
+		#endregion
 	}
 }

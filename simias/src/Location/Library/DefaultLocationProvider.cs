@@ -41,7 +41,7 @@ namespace Simias.Location
 		{
 		}
 
-		#region ILocationProvider
+		#region ILocationProvider Members
 		
 		/// <summary>
 		/// Configure the location provider.

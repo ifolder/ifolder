@@ -114,7 +114,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "LocationProviderList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "LocationService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MultiCastLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
