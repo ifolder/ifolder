@@ -49,9 +49,6 @@
  * 1. Return if the account is not prpl-oscar (AIM-only functionality for now)
  * 2. Check to see if the buddy has the Gaim iFolder Plugin installed by reading
  *    their profile.  Do nothing if the buddy doesn't have the plugin installed.
- * 3. If the buddy DOES have the Gaim iFolder Plugin installed, send Simias
- *    messages to the buddy to request their POBoxURL.  Create a message handler
- *    that will store the buddy's POBoxURL into blist.xml.
  */
 void
 simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
@@ -65,4 +62,20 @@ simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 	}
 
 	simias_get_buddy_profile(buddy);
+}
+
+/**
+ * This function is called any time a buddy-sign-off event occurs.  When this
+ * happens, we need to do the following:
+ *
+ * 1. Remove the "simias-plugin-enabled" setting to let the Gaim Domain know
+ *    that this buddy is no longer online.
+ */
+void
+simias_buddy_signed_off_cb(GaimBuddy *buddy, void *user_data)
+{
+	const char *pluginEnabled;
+
+	if (gaim_blist_node_get_string(&(buddy->node), "simias-plugin-enabled"))
+		gaim_blist_node_remove_setting(&(buddy->node), "simias-plugin-enabled");
 }

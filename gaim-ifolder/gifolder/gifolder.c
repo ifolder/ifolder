@@ -77,6 +77,8 @@
  
 /* Start: UI Functions */
 static void blist_add_context_menu_items_cb(GaimBlistNode *node, GList **menu);
+static void buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data);
+static void buddylist_cb_disable_ifolder_sharing(GaimBlistNode *node, gpointer user_data);
 /* End: UI Functions */
 
 /****************************************************
@@ -90,17 +92,151 @@ static void blist_add_context_menu_items_cb(GaimBlistNode *node, GList **menu);
 static void
 blist_add_context_menu_items_cb(GaimBlistNode *node, GList **menu)
 {
-//	GaimBlistNodeAction *act;
-//	GaimBuddy *buddy;
+	char settingName[1024];
+	const char *pluginEnabled;
+	const char *machineName;
+	const char *desKey;
+	
+	GaimBlistNodeAction *act;
+	GaimBuddy *buddy;
 
-//	if (!GAIM_BLIST_NODE_IS_BUDDY(node))
-//		return;
+	if (!GAIM_BLIST_NODE_IS_BUDDY(node))
+		return;
 
-//	buddy = (GaimBuddy *)node;
+	buddy = (GaimBuddy *)node;
 
-//	act = gaim_blist_node_action_new(_("Simulate Add Member"),
-//		buddylist_cb_simulate_share_collection, NULL);
-//	*menu = g_list_append(*menu, act);
+	/**
+	 * Only add on the menu if the buddy is online and they also have the
+	 * iFolder plugin enabled.
+	 */
+	if (GAIM_BUDDY_IS_ONLINE(buddy))
+	{
+		pluginEnabled =
+			gaim_blist_node_get_string(&(buddy->node), "simias-plugin-enabled");
+		
+		if (pluginEnabled)
+		{
+			/**
+			 * If the "simias-plugin-enabled" setting exists its value will be
+			 * the buddy's machine name that they are currently online with.
+			 */
+			machineName = pluginEnabled;
+			sprintf(settingName, "simias-des-key:%s", machineName);
+			desKey = gaim_blist_node_get_string(&(buddy->node), settingName);
+			if (desKey)
+			{
+				/* iFolder Sharing with this buddy is enabled */
+				act = gaim_blist_node_action_new(_("Disable iFolder Sharing"),
+					buddylist_cb_disable_ifolder_sharing, NULL);
+			}
+			else
+			{
+				/* The buddy has the iFolder plugin, but they aren't "enabled" */
+				act = gaim_blist_node_action_new(_("Enable iFolder Sharing"),
+					buddylist_cb_enable_ifolder_sharing, NULL);
+			}
+
+			*menu = g_list_append(*menu, act);
+		}
+	}
+}
+
+static void
+buddylist_cb_enable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
+{
+	GaimBuddy *buddy;
+	GtkWidget *dialog;
+	const char *buddy_alias = NULL;
+	int err;
+	
+	buddy = (GaimBuddy *)node;
+	
+	err = simias_send_invitation_request(buddy);
+	if (err <= 0)
+	{
+		buddy_alias = gaim_buddy_get_alias(buddy);
+		dialog =
+			gtk_message_dialog_new(NULL,
+									GTK_DIALOG_DESTROY_WITH_PARENT,
+									GTK_MESSAGE_ERROR,
+									GTK_BUTTONS_OK,
+									_("There was an error enabling iFolder Sharing with %s.  Perhaps %s is not online or you do not have iFolder/Simias running?"),
+									buddy_alias ? buddy_alias : buddy->name,
+									buddy_alias ? buddy_alias : buddy->name);
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+	}
+	else
+	{
+		/* FIXME: If a conversation window is open with this buddy, add a little string saying that we just sent an invitation */
+		fprintf(stderr, "invitation message sent to %s\n", buddy->name);
+	}
+}
+
+static void
+buddylist_cb_disable_ifolder_sharing(GaimBlistNode *node, gpointer user_data)
+{
+	GaimBuddy *buddy;
+	GtkWidget *dialog;
+	gint response;
+	char settingName[1024];
+	const char *pluginEnabled;
+	const char *machineName;
+	const char *buddy_alias = NULL;
+
+	buddy = (GaimBuddy *)node;
+	buddy_alias = gaim_buddy_get_alias(buddy);
+
+	pluginEnabled =
+		gaim_blist_node_get_string(&(buddy->node), "simias-plugin-enabled");
+		
+	if (pluginEnabled)
+	{
+		machineName = pluginEnabled;
+
+		dialog =
+			gtk_message_dialog_new(NULL,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
+								GTK_MESSAGE_QUESTION,
+								GTK_BUTTONS_YES_NO,
+								_("Disabling iFolder Sharing will prevent iFolder from synchronizing any iFolders that you may have shared with %s (%s).  You will have to re-enable iFolder Sharing before iFolder will synchronize with %s (%s)."),
+								buddy_alias ? buddy_alias : buddy->name,
+								machineName,
+								buddy_alias ? buddy_alias : buddy->name,
+								machineName);
+		response = gtk_dialog_run(GTK_DIALOG(dialog));
+
+		gtk_widget_destroy(dialog);
+
+		if (response == GTK_RESPONSE_YES)
+		{
+			/* Remove all the simias settings for this user's current machine name */
+
+			/* simias-des-key */
+			sprintf(settingName, "simias-des-key:%s", machineName);
+			if (gaim_blist_node_get_string(&(buddy->node), settingName))
+				gaim_blist_node_remove_setting(&(buddy->node), settingName);
+
+			/* simias-user-id */
+			sprintf(settingName, "simias-user-id:%s", machineName);
+			if (gaim_blist_node_get_string(&(buddy->node), settingName))
+				gaim_blist_node_remove_setting(&(buddy->node), settingName);
+
+			/* simias-url */
+			sprintf(settingName, "simias-url:%s", machineName);
+			if (gaim_blist_node_get_string(&(buddy->node), settingName))
+				gaim_blist_node_remove_setting(&(buddy->node), settingName);
+
+			/* simias-public-key */
+			sprintf(settingName, "simias-public-key:%s", machineName);
+			if (gaim_blist_node_get_string(&(buddy->node), settingName))
+				gaim_blist_node_remove_setting(&(buddy->node), settingName);
+		}
+	}
+	else
+	{
+		fprintf(stderr, "The buddy is not online anymore!\n");
+	}
 }
 
 static gboolean
@@ -122,6 +258,12 @@ plugin_load(GaimPlugin *plugin)
 				"buddy-signed-on",
 				plugin,
 				GAIM_CALLBACK(simias_buddy_signed_on_cb),
+				NULL);
+
+	gaim_signal_connect(gaim_blist_get_handle(),
+				"buddy-signed-off",
+				plugin,
+				GAIM_CALLBACK(simias_buddy_signed_off_cb),
 				NULL);
 
 	gaim_signal_connect(gaim_accounts_get_handle(),
