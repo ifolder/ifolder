@@ -347,6 +347,11 @@ namespace Novell.iFolder
 
 		private void SearchiFolderUsers()
 		{
+			if (this.GdkWindow != null)
+			{
+				this.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+			}
+
 			UserTreeStore.Clear();
 
 			if(SearchEntry.Text.Length > 0 && SearchEntry.Text != Util.GS("<Enter text to find a user>"))
@@ -374,6 +379,11 @@ namespace Novell.iFolder
 
 			UserAddButton.Sensitive = false;
 			UserDelButton.Sensitive = false;
+
+			if (this.GdkWindow != null)
+			{
+				this.GdkWindow.Cursor = null; // reset to parent's cursor (default)
+			}
 		}
 
 
