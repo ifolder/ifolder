@@ -623,6 +623,8 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 								pBuffer += len;
 								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlColIdString, nChars)) != 0)
 								{
+									nChars -= len;
+									pBuffer += len;
 									CSPString* colId = (CSPString*)GetProperty(CS_Name_CollectionId);
 									len = colId->ToString(pBuffer, nChars);
 								}

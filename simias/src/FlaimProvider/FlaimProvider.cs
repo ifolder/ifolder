@@ -182,10 +182,7 @@ namespace Simias.Storage.Provider.Flaim
 			if (record != null)
 			{
 				doc = new XmlDocument();
-				XmlElement root;
-				root = doc.CreateElement(XmlTags.ObjectListTag);
-				doc.AppendChild(root);
-				root.InnerXml = record;
+				doc.LoadXml(record);
 			}
 			return (doc);
 		}
