@@ -22,12 +22,14 @@
  ***********************************************************************/
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for iFolderInfo.
 	/// </summary>
+	[ComVisible(false)]
 	public class iFolderInfo
 	{
 		#region Class Members

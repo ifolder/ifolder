@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for EmailPrompt.
 	/// </summary>
+	[ComVisible(false)]
 	public class EmailPrompt : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.Label label1;
