@@ -1501,7 +1501,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
-//			new iFolderComponent().InvokeConflictResolverDlg(Application.StartupPath, iFolderView.SelectedItems[0].SubItems[1].Text);
+			new iFolderComponent().InvokeConflictResolverDlg(Application.StartupPath, iFolderView.SelectedItems[0].SubItems[1].Text);
 		}
 
 		private void menuShare_Click(object sender, System.EventArgs e)

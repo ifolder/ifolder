@@ -1621,7 +1621,7 @@ namespace Novell.iFolderCom
 			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = loadPath;
 			conflictResolver.ConflictsResolved += new Novell.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
-			conflictResolver.Show();		
+			conflictResolver.ShowDialog();		
 		}
 
 		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
