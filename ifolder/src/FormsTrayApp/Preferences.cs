@@ -1762,7 +1762,7 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
-					ifWebService.SetDefaultDomain(newDefaultDomain.DomainWeb.ID);
+					simiasWebService.SetDefaultDomain(newDefaultDomain.DomainWeb.ID);
 
 					currentDefaultDomain = newDefaultDomain;
 					newDefaultDomain = null;
@@ -2282,7 +2282,7 @@ namespace Novell.FormsTrayApp
 						else if (domain.Equals(currentDefaultDomain))
 						{
 							// The default domain was removed, get the new default.
-							defaultDomainID = ifWebService.GetDefaultDomainID();
+							defaultDomainID = simiasWebService.GetDefaultDomainID();
 						}
 
 						if (RemoveDomain != null)
