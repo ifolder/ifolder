@@ -526,7 +526,6 @@ namespace Novell.FormsTrayApp
 						{
 							try
 							{
-								simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
 								simiasWebService.SetDomainCredentials(domainInfo.ID, password.Text, CredentialType.Basic);
 							}
 							catch (Exception ex)
@@ -614,6 +613,7 @@ namespace Novell.FormsTrayApp
 			{
 				simiasWebService = new SimiasWebService();
 				simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+				LocalService.Start(simiasWebService);
 
 				if (domainInfo != null)
 				{

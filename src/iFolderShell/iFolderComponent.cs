@@ -417,6 +417,7 @@ namespace Novell.iFolderCom
 					{
 						ifWebService = new iFolderWebService();
 						ifWebService.Url = uri.ToString() + "/iFolder.asmx";
+						LocalService.Start(ifWebService);
 					}
 				}
 			}
