@@ -1,12 +1,12 @@
 EXTRA_DIST = en
 
 install-exec-local: 
-	$(mkinstalldirs) $(DESTDIR)$(helpdir)
-	cp -r en $(DESTDIR)$(helpdir)
-	find $(DESTDIR)$(helpdir) -name "CVS" | xargs rm -rf
+	$(mkinstalldirs) $(DESTDIR)$(datadir)/ifolder/help
+	cp -r en $(DESTDIR)$(datadir)/ifolder/help
+	find $(DESTDIR)$(datadir)/ifolder/help -name "CVS" | xargs rm -rf
 
 uninstall-local:
-	cd $(DESTDIR)$(helpdir); rm -rf en
+	cd $(DESTDIR)$(datadir)/ifolder/help; rm -rf en
 
 installcheck-summary:
 
