@@ -19,6 +19,13 @@ INCLUDES =						\
 	$(NONAMESPACE_CFLAGS)					\
 	$(GSOAP_INCLUDES)
 
+EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png stdsoap2.h
+
+# Make sure the following files are not included in the dist
+dist-hook:
+	rm -rf `find $(distdir) |grep iFolderClientClientLib.c`
+	rm -rf `find $(distdir) |grep envC.c`
+
 # FIXME: get this from the .pc file
 nautilus_extensiondir=$(INSTALL_EXTENSION_PATH)
 
