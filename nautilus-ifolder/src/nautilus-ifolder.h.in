@@ -1,1 +1,1 @@
-#define NAUTILUS_IFOLDER_SH_PATH "@libdir@/nautilus-ifolder"
+#define NAUTILUS_IFOLDER_SH_PATH "@prefix@/lib/nautilus-ifolder"
