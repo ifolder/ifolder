@@ -63,8 +63,7 @@ namespace Novell.AddressBook
 	{
 		#region Class Members
 		internal	Node			thisNode = null;
-		internal	Collection		collection = null;
-		private		AddressBook		addressBook = null;
+		internal	AddressBook		addressBook = null;
 		private		IEnumerator		thisEnum = null;
 		private		string			userName = "";
 		private		string			id;
@@ -89,7 +88,7 @@ namespace Novell.AddressBook
 		private		Stream			photoStream = null;
 
 		// Map for keeping track of what properties actually changed
-		private ChangeMap		propertyChangeMap = 0;
+		private		ChangeMap		propertyChangeMap = 0;
 
 		#endregion
 
@@ -497,24 +496,24 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				return(Environment.UserName == UserName);
+				if (this.addressBook != null)
+				{
+					if (this.addressBook.store.CurrentUser == this.id)
+					{
+						return(true);
+					}
+				}
+
+				return(false);
 			}
 		}
 		#endregion
 
 		#region Constructors
-		internal Contact(Collection collection)
-		{
-			this.collection = collection;
-			this.addressList = new ArrayList();
-			this.nameList = new ArrayList();
-			this.emailList = new ArrayList();
-			this.phoneList = new ArrayList();
-		}
 
-		internal Contact(Collection collection, string type)
+		internal Contact(AddressBook addressBook)
 		{
-			this.collection = collection;
+			this.addressBook = addressBook;
 			this.addressList = new ArrayList();
 			this.nameList = new ArrayList();
 			this.emailList = new ArrayList();
@@ -526,7 +525,7 @@ namespace Novell.AddressBook
 		/// </summary>
 		public Contact()
 		{
-			this.collection = null;
+			//this.collection = null;
 			this.addressList = new ArrayList();
 			this.nameList = new ArrayList();
 			this.emailList = new ArrayList();
@@ -537,18 +536,18 @@ namespace Novell.AddressBook
 
 		#region Private Methods
 
-		internal void Add(Collection collection, AddressBook addressBook)
+		internal void Add(AddressBook addressBook)
 		{
 			try
 			{
-				this.collection = collection;
+				//this.collection = collection;
 				this.addressBook = addressBook;
 				
 				if (userName != null && userName != "")
 				{
-					this.thisNode = new Node(this.collection, userName, Guid.NewGuid().ToString(), Common.contactType);
+					this.thisNode = new Node(this.addressBook.collection, userName, Guid.NewGuid().ToString(), Common.contactType);
 					//this.thisNode = new Node(this.collection, userName, userGuid, Common.contactType);
-					this.thisNode.SetParent(this.collection);
+					this.thisNode.SetParent(this.addressBook.collection);
 					this.id = this.thisNode.Id;
 
 					// Add the product ID property
@@ -556,46 +555,6 @@ namespace Novell.AddressBook
 					{
 						this.productID = "Novell.AddressBook";
 					}
-
-					// Store the guid of the identity in the contact
-					//this.thisNode.Properties.ModifyProperty( Common.identityProperty, userGuid );
-					//this.identity = userGuid;
-
-					//
-					// Check if any dirty data exists in the node
-					//
-
-					/*
-					foreach(Address address in this.addressList)
-					{
-						this.AddAddress(address);
-					}
-					this.addressList.Clear();
-					*/
-
-					/*
-					foreach(Name name in this.nameList)
-					{
-						this.AddName(name);
-					}
-					this.nameList.Clear();
-					*/
-
-					/*
-					foreach(Email mail in this.emailList)
-					{
-						this.AddEmailAddress(mail);
-					}
-					this.emailList.Clear();
-					*/
-
-					/*
-					foreach(Telephone phone in this.phoneList)
-					{
-						this.AddTelephoneNumber(phone);
-					}
-					this.phoneList.Clear();
-					*/
 
 					if (this.photoStream != null)
 					{
@@ -658,13 +617,13 @@ namespace Novell.AddressBook
 		/// specified ID
 		/// </remarks>
 		/// <returns>None</returns>
-		internal void ToObject(Collection parentCollection, string contactID)
+		internal void ToObject(AddressBook parentBook, string contactID)
 		{
-			this.collection = parentCollection;
+			this.addressBook = parentBook;
 
 			try
 			{
-				Node cNode = this.collection.GetNodeById(contactID);
+				Node cNode = this.addressBook.collection.GetNodeById(contactID);
 				if ( cNode != null )
 				{
 					if (cNode.Type == Common.contactType)
@@ -1109,7 +1068,7 @@ namespace Novell.AddressBook
 						Name.PersistToStore(this);
 					}
 
-					this.collection.Commit(true);
+					this.addressBook.collection.Commit(true);
 					propertyChangeMap = 0;
 				}
 				catch
@@ -1505,7 +1464,7 @@ namespace Novell.AddressBook
 					{
 						//photoStream.Save();
 						//this.thisNode.Save();
-						this.collection.Commit(true);
+						this.addressBook.collection.Commit(true);
 					}
 				}
 			}

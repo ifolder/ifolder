@@ -671,7 +671,7 @@ namespace Novell.AddressBook
 
 			try
 			{
-				this.thisNode = this.parentContact.collection.GetNodeById(addressID);
+				this.thisNode = this.parentContact.addressBook.collection.GetNodeById(addressID);
 				if (this.thisNode != null)
 				{
 					this.id = this.thisNode.Id;

@@ -24,7 +24,9 @@
 using System;
 using System.Collections;
 using System.IO;
+using Simias;
 using Simias.Storage;
+
 //using Simias.Identity;
 
 namespace Novell.AddressBook
@@ -94,8 +96,27 @@ namespace Novell.AddressBook
 		public static Manager Connect( )
 		{
 			Manager	addressManager = null;
+			Store store = Store.Connect(new Configuration(null));
+			if(store != null)
+			{
+				addressManager = new Manager(store);
+				if(addressManager != null)
+				{
+					addressManager.storeUserName = Environment.UserName;
+				}
+			}
 
-			Store store = Store.Connect();
+			return(addressManager);
+		}
+
+		/// <summary>
+		/// Connects to the collection store with a caller defined config object. 
+		/// </summary>
+		///	<returns>An object that represents a connection to the address manager.</returns>
+		public static Manager Connect(Configuration callerConfig)
+		{
+			Manager	addressManager = null;
+			Store store = Store.Connect(callerConfig);
 			if(store != null)
 			{
 				addressManager = new Manager(store);

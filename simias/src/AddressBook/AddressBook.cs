@@ -79,16 +79,16 @@ namespace Novell.AddressBook
 	public class AddressBook : IEnumerable, IEnumerator
 	{
 		#region Class Members
-		private bool				deleted;
-		private	bool				changed;
-		private	Collection			collection;
-		private	IEnumerator			contactEnum = null;
-		private Store				store;
-		private AddressBookType		addressBookType;
-		private AddressBookRights	addressBookRights;
-		private	bool				defaultBook;
-		private	string				friendlyName;
-		private string				domain;
+		internal	Store				store;
+		internal	Collection			collection;
+		private		bool				deleted;
+		private		bool				changed;
+		private		IEnumerator			contactEnum = null;
+		private		AddressBookType		addressBookType;
+		private		AddressBookRights	addressBookRights;
+		private		bool				defaultBook;
+		private		string				friendlyName;
+		private		string				domain;
 
 		#endregion
 
@@ -590,7 +590,7 @@ namespace Novell.AddressBook
 				//
 
 				//contact.Add(this.collection, this, identityId);
-				contact.Add(this.collection, this);
+				contact.Add(this);
 			}
 			else
 			{
@@ -615,7 +615,7 @@ namespace Novell.AddressBook
 				// is not complete
 				//
 
-				contact.Add(this.collection, this);
+				contact.Add(this);
 			}
 			else
 			{
@@ -673,7 +673,7 @@ namespace Novell.AddressBook
 
 				// ToObject will throw a not found exception if a contact
 				// can't be found with the specified id
-				contact.ToObject(this.collection, id);
+				contact.ToObject(this, id);
 				return(contact);
 			}
 			else

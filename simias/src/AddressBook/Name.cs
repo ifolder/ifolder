@@ -507,7 +507,7 @@ namespace Novell.AddressBook
 
 			try
 			{
-				this.thisNode = this.parentContact.collection.GetNodeById(objectID);
+				this.thisNode = this.parentContact.addressBook.collection.GetNodeById(objectID);
 				this.id = this.thisNode.Id;
 				this.given = this.thisNode.Name;
 
