@@ -501,8 +501,7 @@ namespace Simias.POBoxService.Web
 				cSub.SubscriptionCollectionURL +=
 					this.Context.Request.Url.Host +
 					":" +
-					this.Context.Request.Url.Port.ToString() +
-					"/SyncService.asmx";
+					this.Context.Request.Url.Port.ToString();
 
 				log.Debug("SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL);
 				log.Debug("  getting the dir node"); 
