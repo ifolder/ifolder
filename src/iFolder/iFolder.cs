@@ -42,7 +42,7 @@ namespace Novell.iFolder
 	{
 		#region Class Members
 		
-        private Configuration                   config;
+        //private Configuration                   config;
         private Store							store;
 		private	Collection						collection = null;
 		private	Novell.AddressBook.AddressBook	ab = null;
@@ -96,7 +96,9 @@ namespace Novell.iFolder
 		
         internal iFolder(Configuration config, Store store, Novell.AddressBook.Manager manager)
 		{
-			this.config = config;
+			// CRG: commented this out because it's never used
+
+//			this.config = config;
             this.store = store;
 			this.abMan = manager;
 		}

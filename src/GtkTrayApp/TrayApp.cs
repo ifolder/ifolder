@@ -23,6 +23,7 @@
 
 using System;
 using Novell.AddressBook;
+using Novell.AddressBook.UI.gtk;
 using System.Collections;
 using Simias;
 using Simias.Sync;
@@ -39,14 +40,14 @@ namespace Novell.iFolder
 {
 	public class TrayApplication 
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(TrayApplication));
+		//private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(TrayApplication));
 		
 		static Gtk.Image gAppIcon;
-		static Gdk.PixbufAnimation gSyncAnimation;
+		//static Gdk.PixbufAnimation gSyncAnimation;
 		static Gdk.Pixbuf gNifPixbuf;
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
-		static GtkTraceWindow twin;
+//		static GtkTraceWindow twin;
 		static Simias.Service.Manager sManager = null;
 //		static Gtk.ThreadNotify mainThreadNotify;
 //		static SyncManagerStates syncState;
@@ -77,7 +78,7 @@ namespace Novell.iFolder
 
 			gAppIcon = new Gtk.Image(gNifPixbuf);
 
-			gSyncAnimation = new Gdk.PixbufAnimation("ifolder.gif");
+			//gSyncAnimation = new Gdk.PixbufAnimation("ifolder.gif");
 
 			eBox.Add(gAppIcon);
 
@@ -93,7 +94,7 @@ namespace Novell.iFolder
 			//			mainThreadNotify =
 			//				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
-			twin = new GtkTraceWindow();
+//			twin = new GtkTraceWindow();
 
 			Console.WriteLine("iFolder is now running.");
 			Application.Run();
@@ -222,7 +223,7 @@ namespace Novell.iFolder
 
 		static void show_tracewin(object o, EventArgs args)
 		{
-			twin.ShowAll();
+//			twin.ShowAll();
 		}
 
 		static void quit_ifolder(object o, EventArgs args)
