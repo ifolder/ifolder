@@ -15,8 +15,8 @@ IA_CSFILES_CSC := $(subst /,$(SEP),$(IA_CSFILES))
 IA_INCLUDES = 
 IA_RESOURCES =
 IA_FLAGS = $(CSC_EXEFLAG)
-IA_LIBS = Novell.AddressBook.UI.gtk.dll
-IA_LIBPATH = 
+IA_LIBS = Novell.AddressBook.dll Novell.AddressBook.UI.gtk.dll
+IA_LIBPATH = ../AddressBook
 
 BookLib_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/Util.cs $(srcdir)/ContactBrowser.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/../FormsBookLib/FullNameParser.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs $(srcdir)/CollectionGeneralPage.cs $(srcdir)/ContactCollectionSharingPage.cs $(srcdir)/CollectionPropertiesPage.cs $(srcdir)/CollectionProperties.cs $(srcdir)/InvitationAssistant.cs
 
