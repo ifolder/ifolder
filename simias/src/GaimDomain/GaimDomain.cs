@@ -203,7 +203,7 @@ namespace Simias.Gaim
 							Simias.Gaim.GaimDomain.ID,
 							this.description, 
 							Simias.Sync.SyncRoles.Master, 
-							localUri );
+							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
 					rDomain.SetType( rDomain, "GaimDomain" );
 					rDomain.SetType( rDomain, "AB:AddressBook" );
