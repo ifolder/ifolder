@@ -236,6 +236,8 @@ namespace Novell.FormsTrayApp
 			this.toolBar1 = new System.Windows.Forms.ToolBar();
 			this.toolBarCreate = new System.Windows.Forms.ToolBarButton();
 			this.toolBarOpen = new System.Windows.Forms.ToolBarButton();
+			this.toolBarShare = new System.Windows.Forms.ToolBarButton();
+			this.toolBarProperties = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSeparator1 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSetup = new System.Windows.Forms.ToolBarButton();
 			this.toolBarRevert = new System.Windows.Forms.ToolBarButton();
@@ -243,8 +245,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarSeparator2 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarResolve = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSync = new System.Windows.Forms.ToolBarButton();
-			this.toolBarShare = new System.Windows.Forms.ToolBarButton();
-			this.toolBarProperties = new System.Windows.Forms.ToolBarButton();
 			this.toolBarSeparator3 = new System.Windows.Forms.ToolBarButton();
 			this.toolBarRefresh = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
@@ -359,7 +359,6 @@ namespace Novell.FormsTrayApp
 																						 this.menuSeparator2,
 																						 this.menuProperties});
 			this.contextMenu1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("contextMenu1.RightToLeft")));
-			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
 			// 
 			// menuOpen
 			// 
@@ -511,7 +510,6 @@ namespace Novell.FormsTrayApp
 			this.menuAction.ShowShortcut = ((bool)(resources.GetObject("menuAction.ShowShortcut")));
 			this.menuAction.Text = resources.GetString("menuAction.Text");
 			this.menuAction.Visible = ((bool)(resources.GetObject("menuAction.Visible")));
-			this.menuAction.Popup += new System.EventHandler(this.menuAction_Popup);
 			// 
 			// menuActionCreate
 			// 
@@ -650,7 +648,6 @@ namespace Novell.FormsTrayApp
 			this.menuView.ShowShortcut = ((bool)(resources.GetObject("menuView.ShowShortcut")));
 			this.menuView.Text = resources.GetString("menuView.Text");
 			this.menuView.Visible = ((bool)(resources.GetObject("menuView.Visible")));
-			this.menuView.Popup += new System.EventHandler(this.menuView_Popup);
 			// 
 			// menuViewRefresh
 			// 
@@ -789,6 +786,22 @@ namespace Novell.FormsTrayApp
 			this.toolBarOpen.ToolTipText = resources.GetString("toolBarOpen.ToolTipText");
 			this.toolBarOpen.Visible = ((bool)(resources.GetObject("toolBarOpen.Visible")));
 			// 
+			// toolBarShare
+			// 
+			this.toolBarShare.Enabled = ((bool)(resources.GetObject("toolBarShare.Enabled")));
+			this.toolBarShare.ImageIndex = ((int)(resources.GetObject("toolBarShare.ImageIndex")));
+			this.toolBarShare.Text = resources.GetString("toolBarShare.Text");
+			this.toolBarShare.ToolTipText = resources.GetString("toolBarShare.ToolTipText");
+			this.toolBarShare.Visible = ((bool)(resources.GetObject("toolBarShare.Visible")));
+			// 
+			// toolBarProperties
+			// 
+			this.toolBarProperties.Enabled = ((bool)(resources.GetObject("toolBarProperties.Enabled")));
+			this.toolBarProperties.ImageIndex = ((int)(resources.GetObject("toolBarProperties.ImageIndex")));
+			this.toolBarProperties.Text = resources.GetString("toolBarProperties.Text");
+			this.toolBarProperties.ToolTipText = resources.GetString("toolBarProperties.ToolTipText");
+			this.toolBarProperties.Visible = ((bool)(resources.GetObject("toolBarProperties.Visible")));
+			// 
 			// toolBarSeparator1
 			// 
 			this.toolBarSeparator1.Enabled = ((bool)(resources.GetObject("toolBarSeparator1.Enabled")));
@@ -846,22 +859,6 @@ namespace Novell.FormsTrayApp
 			this.toolBarSync.Text = resources.GetString("toolBarSync.Text");
 			this.toolBarSync.ToolTipText = resources.GetString("toolBarSync.ToolTipText");
 			this.toolBarSync.Visible = ((bool)(resources.GetObject("toolBarSync.Visible")));
-			// 
-			// toolBarShare
-			// 
-			this.toolBarShare.Enabled = ((bool)(resources.GetObject("toolBarShare.Enabled")));
-			this.toolBarShare.ImageIndex = ((int)(resources.GetObject("toolBarShare.ImageIndex")));
-			this.toolBarShare.Text = resources.GetString("toolBarShare.Text");
-			this.toolBarShare.ToolTipText = resources.GetString("toolBarShare.ToolTipText");
-			this.toolBarShare.Visible = ((bool)(resources.GetObject("toolBarShare.Visible")));
-			// 
-			// toolBarProperties
-			// 
-			this.toolBarProperties.Enabled = ((bool)(resources.GetObject("toolBarProperties.Enabled")));
-			this.toolBarProperties.ImageIndex = ((int)(resources.GetObject("toolBarProperties.ImageIndex")));
-			this.toolBarProperties.Text = resources.GetString("toolBarProperties.Text");
-			this.toolBarProperties.ToolTipText = resources.GetString("toolBarProperties.ToolTipText");
-			this.toolBarProperties.Visible = ((bool)(resources.GetObject("toolBarProperties.Visible")));
 			// 
 			// toolBarSeparator3
 			// 
@@ -1345,6 +1342,9 @@ namespace Novell.FormsTrayApp
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolder.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
+
+				// TODO: add icons for toolbar buttons.
+				toolBar1.ImageList = new ImageList();
 			}
 			catch {} // Non-fatal ... just missing some graphics.
 
@@ -1398,26 +1398,6 @@ namespace Novell.FormsTrayApp
 			this.Close();
 		}
 
-		private void menuAction_Popup(object sender, System.EventArgs e)
-		{
-//			menuActionOpen.Enabled = menuActionShare.Enabled = menuActionSync.Enabled = 
-//				menuActionRevert.Enabled = menuActionProperties.Enabled = 
-//				(iFolderView.SelectedItems.Count == 1) && !((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;
-
-//			menuActionCreate.Enabled = true;
-
-			// Enable/disable resolve menu item.
-//			menuActionResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolderWeb)iFolderView.SelectedItems[0].Tag).HasConflicts;
-
-			/*menuActionAccept.Visible = menuActionRemove.Visible = menuActionSeparator2.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && ((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;*/
-		}
-
-		private void menuView_Popup(object sender, System.EventArgs e)
-		{
-			menuViewRefresh.Enabled = true;
-		}
-
 		private void menuHelpHelp_Click(object sender, System.EventArgs e)
 		{
 			new iFolderComponent().ShowHelp(Application.StartupPath, string.Empty);
@@ -1441,33 +1421,6 @@ namespace Novell.FormsTrayApp
 		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			refreshiFolders((Domain)servers.SelectedItem);
-		}
-
-		private void contextMenu1_Popup(object sender, System.EventArgs e)
-		{
-/*			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = menuSeparator1.Visible = 
-				menuSeparator2.Visible = menuSyncNow.Visible = menuOpen.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && !((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;
-
-			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolderWeb)iFolderView.SelectedItems[0].Tag).HasConflicts;
-			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
-
-			// Display the accept menu item if the selected item is a subscription with state "Available"
-			menuAccept.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && 
-				((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription &&
-				((iFolderWeb)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
-
-			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
-			menuRemove.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && 
-				(!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription ||
-				((iFolderWeb)iFolderView.SelectedItems[0].Tag).State.Equals("Available"));
-			
-			if (menuRemove.Visible)
-			{
-				menuRemove.Text = IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
-			}*/
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)

@@ -583,6 +583,7 @@ namespace Novell.FormsTrayApp
 			this.advanced.Text = resources.GetString("advanced.Text");
 			this.advanced.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("advanced.TextAlign")));
 			this.advanced.Visible = ((bool)(resources.GetObject("advanced.Visible")));
+			this.advanced.Click += new System.EventHandler(this.advanced_Click);
 			// 
 			// autoLogin
 			// 
@@ -1946,6 +1947,12 @@ namespace Novell.FormsTrayApp
 				ServerDetails serverDetails = new ServerDetails(this.ifWebService, accounts.Items, domain);
 				serverDetails.ShowDialog();
 			}
+		}
+
+		private void advanced_Click(object sender, System.EventArgs e)
+		{
+			AdvancedSettings advancedSettings = new AdvancedSettings();
+			advancedSettings.ShowDialog();
 		}
 
 		private void connect_Click(object sender, System.EventArgs e)
