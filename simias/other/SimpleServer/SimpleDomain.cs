@@ -627,7 +627,8 @@ namespace Simias.SimpleServer
 			}
 			catch(Exception e)
 			{
-				log.Error("Error:" + e.Message);
+				log.Error( "Error:" + e.Message );
+				log.Error( e.StackTrace );
 				errorDuringSync = true;
 				//syncException = e;
 			}
