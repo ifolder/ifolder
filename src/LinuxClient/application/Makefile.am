@@ -11,11 +11,13 @@ iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdi
 
 EXTRA_DIST = $(iFolderClient_CSFILES)
 
-ifolder: ifolder.in
+all: ifolder ifolder.desktop
+
+ifolder: $(srcdir)/ifolder.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' $< > $@
 	chmod +x $@
 
-ifolder.desktop: ifolder.desktop.in
+ifolder.desktop: $(srcdir)/ifolder.desktop.in
 	sed -e 's,@_bindir_@,@bindir@,g' -e 's,@_datadir_@,@datadir@,g' $< > $@
 	chmod +x $@
 
@@ -40,7 +42,7 @@ uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f iFolderClient.exe ifolder
 	cd $(DESTDIR)$(datadir)/applications; rm -f ifolder.desktop
 
-CLEAN_FILES = iFolderClient.exe $(DOC_FILE_CLEAN)
+CLEAN_FILES = iFolderClient.exe $(DOC_FILE_CLEAN) ifolder ifolder.desktop
 
 clean-local:
 	rm -rf *.dbg *.exe $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
