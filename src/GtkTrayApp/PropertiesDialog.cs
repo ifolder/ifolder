@@ -37,8 +37,7 @@ namespace Novell.iFolder
 
 	public class PropertiesDialog 
 	{
-		[Glade.Widget] Notebook propNotebook;
-		[Glade.Widget] Button addSharingButton;
+		[Glade.Widget] Notebook propNotebook = null;
 
 		Gtk.Window win; 
 		iFolderManager ifmgr;
@@ -99,7 +98,7 @@ namespace Novell.iFolder
 			iFolderPixBuf = new Pixbuf("ifolderfolder.png");
 */
 
-			nppage = new NodePropertyPage(node);
+			nppage = new NodePropertyPage(this.node);
 			npwidget = nppage.GetWidget();
 			propNotebook.AppendPage(npwidget, new Label("Node Properties"));
 		}

@@ -37,9 +37,9 @@ namespace Novell.iFolder
 {
 	public class FileBrowser
 	{
-		[Glade.Widget] IconList BrowserIconList;
+		[Glade.Widget] IconList BrowserIconList = null;
 		//[Glade.Widget] TreeView	BrowserTreeView;
-		[Glade.Widget] Gtk.Entry	PathEntry;
+		[Glade.Widget] Gtk.Entry	PathEntry = null;
 
 		Gtk.Window nifWindow; 
 		//ListStore BrowserTreeStore;
@@ -309,8 +309,9 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					int count;
-					iFolder ifldr = ifmgr.CreateiFolder(de.FullName);
+					//int count;
+					//iFolder ifldr = ifmgr.CreateiFolder(de.FullName);
+					ifmgr.CreateiFolder(de.FullName);
 					set_item_pixBuf(curIndex, iFolderPixBuf);
 				}
 				catch(Exception e)

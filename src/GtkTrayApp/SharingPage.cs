@@ -84,12 +84,12 @@ namespace Novell.iFolder
 
 	public class SharingPage
 	{
-		[Glade.Widget] TreeView		ContactTreeView;
-		[Glade.Widget] Button		addSharingButton;
-		[Glade.Widget] Button		removeSharingButton;
-		[Glade.Widget] RadioButton	FullControlRB;
-		[Glade.Widget] RadioButton	ReadWriteRB;
-		[Glade.Widget] RadioButton	ReadOnlyRB;
+		[Glade.Widget] TreeView		ContactTreeView = null;
+		[Glade.Widget] Button		addSharingButton = null;
+		[Glade.Widget] Button		removeSharingButton = null;
+		[Glade.Widget] RadioButton	FullControlRB = null;
+		[Glade.Widget] RadioButton	ReadWriteRB = null;
+		[Glade.Widget] RadioButton	ReadOnlyRB = null;
 
 		Gtk.VBox SharingVBox;
 		iFolder  ifldr;
@@ -105,6 +105,11 @@ namespace Novell.iFolder
 		{
 			ifldr = ifolder;
 
+			Init();
+		}
+
+		private void Init()
+		{
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
 					"SharingPropertyPage", null);
 			gxml.Autoconnect (this);
@@ -245,7 +250,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				tModel = null;
+				if(tModel != null)
+					tModel = null;
 				SharingListHolder slh = (SharingListHolder) 
 						ContactTreeStore.GetValue(iter,0);
 
@@ -411,7 +417,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				tModel = null;
+				if(tModel != null)
+					tModel = null;
 				SharingListHolder slh = (SharingListHolder)
 						ContactTreeStore.GetValue(iter,0);
 
