@@ -1,5 +1,7 @@
 SUBDIRS = src
 
+EXTRA_DIST = tools external
+
 maintainer-clean-local:
 	rm -f configure Makefile.in simias-*.tar.gz
 	rm -f aclocal.m4

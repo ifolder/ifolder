@@ -4,6 +4,11 @@ AM_INIT_AUTOMAKE(simias, 0.1)
 AM_MAINTAINER_MODE
 AC_PROG_CC
 
+SRCDIR='$(top_srcdir)/src'
+TOOLDIR='$(top_srcdir)/tools'
+DOCDIR="$SRCDIR/doc"
+APIDOCDIR="$SRCDIR/api-doc"
+
 case $host_os in
     linux)
         AC_CHECK_PROG(CSC, mcs, mcs)
@@ -20,7 +25,7 @@ case $host_os in
         COUT='-o'
         CINC='-I'
         LIBS=''
-        CSCFLAGS='/warn:4 /d:TRACE'
+        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
         DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
         OPTIMIZE_CSCFLAGS="/optimize+"
         CFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@"
@@ -34,7 +39,8 @@ case $host_os in
         OPTIMIZE_LDFLAGS=""
         LDOUT='-o '
         LDINC='-L'
-        CSC_LIBFLAG=-target:library
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
         LIBFLAG='-l'
         LIB_EXT=''
         EXE_EXT=''
@@ -42,6 +48,14 @@ case $host_os in
         SHARED_LIB_EXT='.so'
         LIB_PRE='lib'
         SHARED_LIB_FLAG='-shared'
+        SYSTEM_XML='System.Xml.dll'
+        NUNIT="mono $TOOLDIR/NUnit/bin/nunit-console.exe"
+        NUNIT_FLAGS='/nologo'
+        DEBUG_NUNIT_FLAGS='--debug'
+        OPTIMIZE_NUNIT_FLAGS=''
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        EMPTY=
+        SEP='/'
     ;;
     cygwin)
         AC_CHECK_PROG(CSC, csc, csc)
@@ -58,7 +72,7 @@ case $host_os in
         COUT='-Fo'
         CINC='-I'
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
-        CSCFLAGS='/warn:4 /d:TRACE'
+        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
         DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
         OPTIMIZE_CSCFLAGS="/optimize+"
         CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
@@ -71,7 +85,8 @@ case $host_os in
         DEBUG_LDFLAGS="-DEBUG"
         LDOUT='-out:'
         LDINC='-libpath:'
-        CSC_LIBFLAG=-target:library
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
         LIBFLAG=''
         LIB_EXT='.lib'
         EXE_EXT='.exe'
@@ -85,6 +100,14 @@ case $host_os in
         RC='rc'
         RC_FLAGS='-r'
         DEF='-def:'
+        SYSTEM_XML='System.XML.dll'
+        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
+        NUNIT_FLAGS='/nologo'
+        DEBUG_NUNIT_FLAGS=''
+        OPTIMIZE_NUNIT_FLAGS=''
+        NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
+        EMPTY=
+        SEP='$(EMPTY)\\$(EMPTY)'
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -113,11 +136,13 @@ then
   CSCFLAGS="$DEBUG_CSCFLAGS $CSCFLAGS"
   CFLAGS="$DEBUG_CFLAGS $CFLAGS"
   CXXFLAGS="$DEBUG_CXXFLAGS $CXXFLAGS"
+  NUNIT_FLAGS="$DEBUG_NUNITFLAGS $NUNIT_FLAGS"
 else
   # Build optimized version.
   CSCFLAGS="$OPTIMIZE_CSCFLAGS $CSCFLAGS"
   CFLAGS="$OPTIMIZE_CFLAGS $CFLAGS"
   CXXFLAGS="$OPTIMIZE_CXXFLAGS $CXXFLAGS"
+  NUNIT_FLAGS="$OPTIMIZE_NUNITFLAGS $NUNIT_FLAGS"
 fi
 
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -131,10 +156,21 @@ case $host_os in
     ;;
 esac
 
+AC_SUBST(EMPTY)
+AC_SUBST(SEP)
+AC_SUBST(ROOTDIR)
+AC_SUBST(SRCDIR)
+AC_SUBST(TOOLDIR)
+AC_SUBST(DOCDIR)
+AC_SUBST(APIDOCDIR)
 AC_SUBST(CSC)
 AC_SUBST(CSCFLAGS)
+AC_SUBST(CSC_EXEFLAG)
 AC_SUBST(CSC_LIBFLAG)
-
+AC_SUBST(SYSTEM_XML)
+AC_SUBST(NUNIT)
+AC_SUBST(NUNIT_FLAGS)
+AC_SUBST(NUNIT_LIBPATH)
 
 AC_OUTPUT([
 Makefile
