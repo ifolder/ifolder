@@ -121,6 +121,18 @@
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar;
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
 
+//==========================================
+// NSApplication Delegates
+//==========================================
+- (void)applicationDidFinishLaunching:(NSNotification*)notification;
+- (void)applicationWillTerminate:(NSNotification *)notification;
+
+
+//==========================================
+// Simias startup and shutdown methods
+//==========================================
+- (void)startSimiasThread:(id)arg;
+- (void)postSimiasLoadSetup:(id)arg;
 
 @end
 

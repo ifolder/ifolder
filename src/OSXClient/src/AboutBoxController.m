@@ -25,6 +25,8 @@ static AboutBoxController *sharedInstance = nil;
     return sharedInstance ? sharedInstance : [[self alloc] init];
 }
 
+
+
 - (IBAction)showPanel:(id)sender
 {
     if (!appNameField)
@@ -121,10 +123,14 @@ static AboutBoxController *sharedInstance = nil;
                            repeats:YES];
 }
 
+
+
 - (void)windowDidResignKey:(NSNotification *)notification
 {
     [scrollTimer invalidate];
 }
+
+
 
 - (void)scrollCredits:(NSTimer *)timer
 {

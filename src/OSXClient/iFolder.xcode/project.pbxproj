@@ -138,6 +138,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				3E66704F07B7D3A90047E683,
 				3E255FFC077235290062AB7A,
 				3EEA9A6507B1DBCC0015FCF4,
 				080E96DDFE201D6D7F000001,
@@ -650,6 +651,47 @@
 			settings = {
 			};
 		};
+		3E66704F07B7D3A90047E683 = {
+			children = (
+				3EA94F5F07B823CA0088FD0F,
+				3E66705207B7D3CC0047E683,
+				3E66705307B7D3CC0047E683,
+			);
+			isa = PBXGroup;
+			name = Classes;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E66705207B7D3CC0047E683 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Simias.h;
+			path = src/Simias.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E66705307B7D3CC0047E683 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = Simias.m;
+			path = src/Simias.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E66705407B7D3CC0047E683 = {
+			fileRef = 3E66705207B7D3CC0047E683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E66705507B7D3CC0047E683 = {
+			fileRef = 3E66705307B7D3CC0047E683;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E67778607AEACEF0027130D = {
 			isa = PBXFileReference;
 			lastKnownFileType = "compiled.mach-o.dylib";
@@ -937,6 +979,21 @@
 		};
 		3E9B1B04077927E20072994B = {
 			fileRef = 3E9B1B02077927E20072994B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EA94F5F07B823CA0088FD0F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = config.h.in;
+			path = src/config.h.in;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EA94F6007B823CA0088FD0F = {
+			fileRef = 3EA94F5F07B823CA0088FD0F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1366,6 +1423,8 @@
 				3E6F7ACB07B3E4DB00F46F36,
 				3E6F7ACF07B3E55A00F46F36,
 				3E6F7B0F07B3EC5000F46F36,
+				3E66705407B7D3CC0047E683,
+				3EA94F6007B823CA0088FD0F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1403,6 +1462,7 @@
 				3EEA9A4B07B1D9C30015FCF4,
 				3EEA9A6B07B1DC4F0015FCF4,
 				3E6F7AD007B3E55A00F46F36,
+				3E66705507B7D3CC0047E683,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

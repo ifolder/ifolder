@@ -29,6 +29,7 @@
 #import "SetupiFolderSheetController.h"
 #import "PropertiesWindowController.h"
 #import "AboutBoxController.h"
+#import "Simias.h"
 
 #include "SimiasEventHandlers.h"
 
@@ -67,14 +68,79 @@
 
 	keyedDomains = [[NSMutableDictionary alloc] init];
 	keyediFolders = [[NSMutableDictionary alloc] init];
-	
+}
 
+
+
+
+- (void)applicationDidFinishLaunching:(NSNotification*)notification
+{
 	[self addLog:@"initializing Simias Events"];
-
 	[self initializeSimiasEvents];
 
-	[self addLog:@"iFolder reading all domains"];
+	[self addLog:@"Starting Simias Process"];
+    [NSThread detachNewThreadSelector:@selector(startSimiasThread:)
+        toTarget:self withObject:nil];
 
+}
+
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+	[self addLog:@"Unregistering events..."];
+	SimiasEventDisconnect();
+	[self addLog:@"Shutting down Simias..."];
+	[ [Simias getInstance] stop];
+	[self addLog:@"Simias is shut down"];
+}
+
+
+- (void)startSimiasThread:(id)arg
+{
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+
+	BOOL simiasRunning = NO;
+
+	@try
+	{
+		simiasRunning = [ifolderService Ping];
+	}
+	@catch (NSException *e)
+	{
+		simiasRunning = NO;
+	}
+
+
+	if(!simiasRunning)
+	{
+		// Startup simias Process
+		[ [Simias getInstance] start];	
+
+		
+		while(!simiasRunning)
+		{
+			@try
+			{
+				simiasRunning = [ifolderService Ping];
+			}
+			@catch (NSException *e)
+			{
+				simiasRunning = NO;
+				[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:.5]];
+			}
+		}
+	}
+
+	[self performSelectorOnMainThread:@selector(postSimiasLoadSetup:) 
+					withObject:nil waitUntilDone:YES ];
+
+    [pool release];
+}
+
+
+- (void)postSimiasLoadSetup:(id)arg
+{
+	[self addLog:@"iFolder reading all domains"];
 	@try
 	{
 		int domainCount;
@@ -89,7 +155,6 @@
 
 			[self addDomain:newDomain];
 		}
-//		[domainsController addObjects:newDomains];
 		
 		NSArray *newiFolders = [ifolderService GetiFolders];
 		if(newiFolders != nil)
@@ -105,11 +170,9 @@
 	// Setup the double click black magic
 	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
 	
-
 	// TODO: Show all of the windows that were open when quit last
 	[self showWindow:self];
 }
-
 
 
 
