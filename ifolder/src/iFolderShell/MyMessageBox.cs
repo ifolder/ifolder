@@ -200,7 +200,7 @@ namespace Novell.iFolderCom
 
 			this.Text = caption;
 
-			detailsBox.Text = details;
+			detailsBox.Text = details.Replace("\n", "\r\n");
 			this.details.Visible = !details.Equals(string.Empty);
 
 			switch (buttons)
