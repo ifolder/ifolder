@@ -274,8 +274,6 @@ send_invitation_request_msg(GaimBuddy *recipient, char *collection_id,
 	
 	public_ip = gaim_network_get_my_ip(-1);
 
-	/* FIXME: Escape any colons (:) in the Collection name before sending the message */
-	
 	sprintf(msg, "%s%s:%s:%s:%s] %s",
 			INVITATION_REQUEST_MSG,
 			public_ip,
@@ -1776,6 +1774,11 @@ handle_invitation_request_deny(GaimAccount *account,
 		STATE_COL,				state_str,
 		-1);
 
+	/* Make sure the buttons are in the correct state */
+	out_inv_sel_changed_cb(
+		gtk_tree_view_get_selection(GTK_TREE_VIEW(out_inv_tree)),
+		GTK_TREE_VIEW(out_inv_tree));
+	
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
@@ -1821,10 +1824,11 @@ handle_invitation_request_accept(GaimAccount *account,
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:invitation-request-deny:<collection-id>]
-	 *                                  ^
+	 * 	[simias:invitation-request-accept:<collection-id>:<ip-address>]
+	 *                                    ^
 	 */
-	collection_id = strtok((char *) buffer + strlen(INVITATION_REQUEST_DENY_MSG), ":");
+	collection_id = strtok(
+				(char *) buffer + strlen(INVITATION_REQUEST_ACCEPT_MSG), ":");
 	if (!collection_id) {
 		g_print("handle_invitation_request_accept() couldn't parse the collection-id\n");
 		return FALSE;
@@ -1887,6 +1891,11 @@ handle_invitation_request_accept(GaimAccount *account,
 		STATE_COL,				state_str,
 		-1);
 
+	/* Make sure the buttons are in the correct state */
+	out_inv_sel_changed_cb(
+		gtk_tree_view_get_selection(GTK_TREE_VIEW(out_inv_tree)),
+		GTK_TREE_VIEW(out_inv_tree));
+	
 	/* FIXME: Add more interaction with Simias as described in the notes of the function */
 
 	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
