@@ -6,7 +6,7 @@ mDnsDomain_CSFILES := $(subst /,$(SEP),$(mDnsDomain_CSFILES1))
 mDnsDomain_INCLUDES =
 mDnsDomain_RESOURCES =
 mDnsDomain_FLAGS = $(CSC_LIBFLAG)
-mDnsDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll mDnsResponderApi.dll log4net.dll
+mDnsDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll mDnsResponderApi.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
 mDnsDomain_LIBPATH = ../SimiasClient ../Simias.dll $(MDNSRESPONDER_DIR)
 
 EXTRA_DIST = $(mDnsDomain_CSFILES)
