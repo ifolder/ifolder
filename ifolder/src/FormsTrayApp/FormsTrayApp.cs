@@ -815,9 +815,9 @@ namespace Novell.FormsTrayApp
 							{
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
+							else if (eventArgs.Type.Equals("Node") && globalProperties.IsSelected(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
 							{
-								ifolder = ifWebService.GetiFolder(eventArgs.Node);
+								ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 							}
 							break;
 						}
@@ -837,9 +837,9 @@ namespace Novell.FormsTrayApp
 										ifolderSettings = ifWebService.GetSettings();
 									}
 
-									if (eventArgs.Collection.Equals(ifolderSettings.DefaultPOBoxID))
+									if (globalProperties.IsSelected(eventArgs.Collection))//.Equals(ifolderSettings.DefaultPOBoxID))
 									{
-										ifolder = ifWebService.GetiFolder(eventArgs.Node);
+										ifolder = ifWebService.GetiFolderInvitation(eventArgs.Collection, eventArgs.Node);
 
 										// If the iFolder is not Available or it exists locally, we don't need to process the event.
 										if (!ifolder.State.Equals("Available") || (ifWebService.GetiFolder(ifolder.CollectionID) != null))

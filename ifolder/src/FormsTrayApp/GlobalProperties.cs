@@ -2273,6 +2273,11 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+
+		public Domain SelectedDomain
+		{
+			get { return (Domain)servers.SelectedItem; }
+		}
 		#endregion
 
 		#region Public Methods
@@ -2302,21 +2307,62 @@ namespace Novell.FormsTrayApp
 
 		public void AddDomainToList(DomainWeb domainWeb)
 		{
-			// Reset the current default domain ... the new domain will be the default now.
+			Domain defaultDomain = null;
+			bool domainInList = false;
+
 			foreach (Domain d in servers.Items)
 			{
 				if (d.DomainWeb.IsDefault)
 				{
-					d.DomainWeb.IsDefault = false;
+					// The current default domain.
+					defaultDomain = d;
+				}
+
+				if (d.ID.Equals(domainWeb.ID))
+				{
+					// The domain is already in the list.
+					domainInList = true;
 				}
 			}
 
-			Domain domain = new Domain(domainWeb);
-			servers.Items.Add(domain);
-			servers.SelectedItem = domain;
+			if (!domainInList)
+			{
+				// Reset the current default domain ... the new domain will be the default now.
+				if (defaultDomain != null)
+				{
+					defaultDomain.DomainWeb.IsDefault = false;
+				}
 
-			servers2.Items.Add(domain);
-			servers2.SelectedItem = domain;
+				Domain domain = new Domain(domainWeb);
+				servers.Items.Add(domain);
+				servers.SelectedItem = domain;
+
+				servers2.Items.Add(domain);
+				servers2.SelectedItem = domain;
+			}
+		}
+
+		public bool IsSelected(string poBoxID)
+		{
+			bool result = false;
+			Domain domain = (Domain)servers.SelectedItem;
+			if ((domain.Name != null) && domain.Name.Equals("Show All"))
+			{
+				foreach (Domain d in servers.Items)
+				{
+					if ((d.DomainWeb != null) && d.DomainWeb.POBoxID.Equals(poBoxID))
+					{
+						result = true;
+						break;
+					}
+				}
+			}
+			else if (domain.DomainWeb.POBoxID.Equals(poBoxID))
+			{
+				result = true;
+			}
+
+			return result;
 		}
 		#endregion
 
