@@ -429,7 +429,14 @@ namespace Novell.iFolder.FormsTrayApp
 					if (node != null)
 					{
 						Subscription sub = new Subscription(node);
-						lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+						if (store.GetCollectionByID(sub.SubscriptionCollectionID) == null)
+						{
+							lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
+						}
+						else
+						{
+							lvi.Remove();
+						}
 					}
 				}
 				catch (SimiasException ex)
