@@ -305,7 +305,7 @@ namespace Novell.iFolder.FormsAddrBook
 			this.Controls.Add(this.panel1);
 			this.Menu = this.mainMenu1;
 			this.Name = "FormsAddrBook";
-			this.Text = "Denali Address Book";
+			this.Text = "iFolder Address Book";
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

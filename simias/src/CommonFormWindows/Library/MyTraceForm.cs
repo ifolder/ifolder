@@ -244,7 +244,7 @@ namespace Simias
 			this.Name = "MyTraceForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "Denali Trace Window";
+			this.Text = "iFolder Trace Window";
 			this.SizeChanged += new System.EventHandler(this.MyTraceForm_SizeChanged);
 			this.logListPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
