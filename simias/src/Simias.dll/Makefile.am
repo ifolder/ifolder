@@ -10,7 +10,7 @@ SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
 SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll nunit.framework.dll nunit.util.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
 SIMIAS_LIBPATH = $(NUNIT_LIBPATH) $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES)
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Library/SimiasSetup.cs.in
 
 CUR_DIR := $(shell pwd)
 
