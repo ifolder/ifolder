@@ -179,10 +179,28 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public
 		Simias.Authentication.Status
-		LoginToRemoteDomain(string domainID, string username, string password)
-		{
+		LoginToRemoteDomain(string domainID, string password)
+		{ 
+			Store store = Store.GetStore();
+			Simias.Storage.Domain domain = store.GetDomain(domainID);
+			if(domain == null)
+				return  new Simias.Authentication.Status( 
+					Simias.Authentication.StatusCodes.UnknownDomain );
+
+			Roster roster = domain.Roster;
+			// There is no authentication error for this but UnknownUser
+			// is good because without the roster, no users are known
+			if(domain == null)
+				return  new Simias.Authentication.Status( 
+					Simias.Authentication.StatusCodes.UnknownUser );
+	
+			Member member = roster.GetCurrentMember();
+			if(member == null)
+				return  new Simias.Authentication.Status( 
+					Simias.Authentication.StatusCodes.UnknownUser );
+
 			DomainAgent domainAgent = new DomainAgent();
-			return	domainAgent.Login( domainID, username, password );
+			return	domainAgent.Login( domainID, member.Name, password );
 		}
 
 
@@ -200,7 +218,7 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public
 		Simias.Authentication.Status
-		LogoutFromRemoteDomain(string domainID, string username)
+		LogoutFromRemoteDomain(string domainID)
 		{
 			return new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Success );
 		}

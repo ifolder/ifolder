@@ -142,7 +142,6 @@ namespace Simias.Client.Authentication
 					status =
 						simiasSvc.LoginToRemoteDomain( 
 							this.domainID, 
-							cInfo.MemberName, 
 							this.password );
 
 					if (status.statusCode == StatusCodes.Success ||

@@ -85,7 +85,6 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
-            <xs:element minOccurs="0" maxOccurs="1" name="username" type="xs:string"/>
             <xs:element minOccurs="0" maxOccurs="1" name="password" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
@@ -130,7 +129,6 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
-            <xs:element minOccurs="0" maxOccurs="1" name="username" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -404,7 +402,6 @@
   </message>
   <message name="LoginToRemoteDomainHttpGetIn">
     <part name="domainID" type="s:string"/>
-    <part name="username" type="s:string"/>
     <part name="password" type="s:string"/>
   </message>
   <message name="LoginToRemoteDomainHttpGetOut">
@@ -412,7 +409,6 @@
   </message>
   <message name="LogoutFromRemoteDomainHttpGetIn">
     <part name="domainID" type="s:string"/>
-    <part name="username" type="s:string"/>
   </message>
   <message name="LogoutFromRemoteDomainHttpGetOut">
     <part name="Body" element="s0:Status"/>
@@ -481,7 +477,6 @@
   </message>
   <message name="LoginToRemoteDomainHttpPostIn">
     <part name="domainID" type="s:string"/>
-    <part name="username" type="s:string"/>
     <part name="password" type="s:string"/>
   </message>
   <message name="LoginToRemoteDomainHttpPostOut">
@@ -489,7 +484,6 @@
   </message>
   <message name="LogoutFromRemoteDomainHttpPostIn">
     <part name="domainID" type="s:string"/>
-    <part name="username" type="s:string"/>
   </message>
   <message name="LogoutFromRemoteDomainHttpPostOut">
     <part name="Body" element="s0:Status"/>
