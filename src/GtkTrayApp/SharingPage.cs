@@ -199,7 +199,7 @@ namespace Novell.iFolder
 			if(slh.Contact != null)
 			{
 				string userName = slh.Contact.FN;
-				if(userName == null)
+				if( (userName == null) || (userName.Length == 0) )
 					userName = slh.Contact.UserName;
 				((CellRendererText) cell).Text = userName;
 			}
@@ -391,7 +391,6 @@ namespace Novell.iFolder
 				catch(Exception e)
 				{
 					Console.WriteLine(e);
-					Console.WriteLine("Error in Inviting : " + c.UserName);
 					return;
 				}
 			}
