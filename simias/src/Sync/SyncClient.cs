@@ -578,10 +578,16 @@ namespace Simias.Sync.Client
 			service = new SimiasSyncService();
 			service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
 			service.CookieContainer = new CookieContainer();
+			service.PreAuthenticate = true;
 
 			// credentials
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			service.Credentials = cSimiasCreds.GetCredentials();
+			if (service.Credentials == null)
+			{
+				log.Debug("credentials don't exist - back to the sync queue");
+				return;
+			}
 
 			SyncNodeStamp[] sstamps;
 			NodeStamp[]		cstamps;
