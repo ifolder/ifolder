@@ -42,23 +42,27 @@ namespace Simias.Web
 
 		public Global()
 		{
-			Configuration config;
-
-			config = Configuration.GetConfiguration();
-			serviceManager = new Simias.Service.Manager(config);
 		}	
 		
 		protected void Application_Start(Object sender, EventArgs e)
 		{
-			// CRG: This is a total hack for now
-			string newdir = Directory.GetCurrentDirectory() +
-								System.IO.Path.DirectorySeparatorChar + "bin";
+            // update the prefix of the installed directory
+            SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
+            
+            // CRG: This is a total hack for now
+			//string newdir = Directory.GetCurrentDirectory() +
+			//					System.IO.Path.DirectorySeparatorChar + "bin";
 
-			Console.WriteLine(newdir);
+            string newdir = SimiasSetup.webbindir;
 
 			Environment.CurrentDirectory = newdir;
 
-			Console.WriteLine("Starting Simias Process");
+			Console.WriteLine("Application Start Path: {0}", newdir);
+
+			Configuration config = Configuration.GetConfiguration();
+			serviceManager = new Simias.Service.Manager(config);
+			
+            Console.WriteLine("Starting Simias Process");
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
 			Console.WriteLine("Simias Process Running");

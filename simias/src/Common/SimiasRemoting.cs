@@ -75,8 +75,8 @@ namespace Simias
 					}
 					catch
 					{
-						// note: this is only known to happen inside of NUnit
-						name = "UnknownProcess";
+						// default
+						name = "Simias";
 					}
 
 					// config file
