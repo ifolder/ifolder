@@ -11,7 +11,7 @@ iFolderApp_INCLUDES =
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 iFolderApp_RESOURCES_FILES = FormsTrayApp.resources GlobalProperties.resources ServerInfo.resources AcceptInvitation.resources
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
-iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll SimiasClient.dll
+iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll SimiasClient.dll ClientUpgrade.dll
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
 DATA_FILES = App.ico ifolder_app.ico

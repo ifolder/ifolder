@@ -30,6 +30,7 @@ using System.IO;
 using System.Net;
 
 using Novell.iFolderCom;
+using Novell.iFolder.Install;
 using Simias.Client;
 
 namespace Novell.FormsTrayApp
@@ -43,6 +44,8 @@ namespace Novell.FormsTrayApp
 		bool initialLogin = true;
 		string domainID;
 		bool cancelled = false;
+		bool updateStarted = false;
+		iFolderSettings ifolderSettings;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox serverIP;
@@ -511,6 +514,22 @@ namespace Novell.FormsTrayApp
 		{
 			get { return cancelled; }
 		}
+
+		/// <summary>
+		/// Gets a value that indicates if a client update has started.
+		/// </summary>
+		public bool UpdateStarted
+		{
+			get { return updateStarted; }
+		}
+
+		/// <summary>
+		/// Gets the iFolderSettings for the default domain.
+		/// </summary>
+		public iFolderSettings ifSettings
+		{
+			get { return ifolderSettings; }
+		}
 		#endregion
 
 		#region Events
@@ -543,11 +562,19 @@ namespace Novell.FormsTrayApp
 					{
 						ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
 
+						try
+						{
+							ifolderSettings = ifWebService.GetSettings();
+							domainID = ifolderSettings.DefaultDomainID;
+						}
+						catch {}
+
 						if (EnterpriseConnect != null)
 						{
 							EnterpriseConnect(this, new EventArgs());
 						}
 
+						checkForClientUpdate();
 						password.Clear();
 						Close();
 					}
@@ -574,6 +601,7 @@ namespace Novell.FormsTrayApp
 				switch (authStatus)
 				{
 					case AuthenticationStatus.Success:
+						checkForClientUpdate();
 						password.Clear();
 						Close();
 						break;
@@ -582,7 +610,7 @@ namespace Novell.FormsTrayApp
 						mmb.ShowDialog();
 						break;
 					default:
-						mmb = new Novell.iFolderCom.MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb = new MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 						break;
 				}
@@ -638,6 +666,29 @@ namespace Novell.FormsTrayApp
 		private void serverIP_TextChanged(object sender, System.EventArgs e)
 		{
 			ok.Enabled = !userName.Text.Equals(string.Empty) && !serverIP.Text.Equals(string.Empty);
+		}
+		#endregion
+
+		#region Private Methods
+		private void checkForClientUpdate()
+		{
+			ClientUpgrade cUpgrade = new ClientUpgrade(domainID, userName.Text.Equals(string.Empty) ? userName2.Text : userName.Text, password.Text);
+			string version = cUpgrade.CheckForUpdate();
+			if ( version != null )
+			{
+				// Pop up a dialog here and ask if the user wants to update the client.
+				MyMessageBox mmb = new MyMessageBox(string.Format(resourceManager.GetString("clientUpgradePrompt"), version), resourceManager.GetString("clientUpgradeTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
+				DialogResult result = mmb.ShowDialog();
+				if ( result == DialogResult.Yes )
+				{
+					updateStarted = cUpgrade.RunUpdate();
+					if ( updateStarted == false )
+					{
+						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("clientUpgradeTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+					}
+				}
+			}
 		}
 		#endregion
 	}

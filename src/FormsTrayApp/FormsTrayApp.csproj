@@ -114,6 +114,11 @@
                     AssemblyName = "Novell.iFolder"
                     HintPath = "..\iFolder\Novell.iFolder.dll"
                 />
+                <Reference
+                    Name = "ClientUpgrade"
+                    AssemblyName = "ClientUpgrade"
+                    HintPath = "..\..\..\final\web\bin\ClientUpgrade.dll"
+                />
             </References>
         </Build>
         <Files>
