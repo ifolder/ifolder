@@ -62,34 +62,6 @@ namespace Simias.Web
 		/// </summary>
 		public SimiasWebService()
 		{
-			IPAddress ipaddr = null;
-			ushort port;
-
-			port = Convert.ToUInt16 (8080);
-
-			ipaddr = IPAddress.Parse ("0.0.0.0");
-
-			IWebSource webSource;
-
-			webSource = new XSPWebSource (ipaddr, port);
-			server = new ApplicationServer (webSource);
-
-			server.Verbose = false;
-
-/*			if (apps != null)
-				server.AddApplicationsFromCommandLine (apps);
-
-			if (appConfigFile != null)
-				server.AddApplicationsFromConfigFile (appConfigFile);
-*/
-			server.AddApplicationsFromCommandLine("/:.");
-/*
-			if (apps == null && appConfigDir == null && appConfigFile == null)
-				server.AddApplicationsFromCommandLine ("/:.");
-			{
-			}
-*/			
-
 		}
 		#endregion
 
@@ -105,7 +77,22 @@ namespace Simias.Web
 		{
 			try 
 			{
-				if (server.Start (true) == false)
+				IPAddress ipaddr = null;
+				ushort port;
+
+				port = Convert.ToUInt16 (8086);
+				ipaddr = IPAddress.Parse ("0.0.0.0");
+
+				IWebSource webSource = new XSPWebSource (ipaddr, port);
+				server = new ApplicationServer (webSource);
+
+				server.Verbose = false;
+
+				// not sure what this does
+				// but it startup up asmx file and xsp did it
+				server.AddApplicationsFromCommandLine("/:.");
+
+				if (server.Start (false) == false)
 				{
 					log.Error("The Web Service failed to start");
 				}
@@ -116,7 +103,8 @@ namespace Simias.Web
 			}
 			catch (Exception e) 
 			{
-				log.Error("There was a problem with the web server: {0}", e.Message);
+				log.Error("There was a problem with the web server: {0}", 
+						e.Message);
 			}
 		}
 
@@ -150,12 +138,20 @@ namespace Simias.Web
 		{
 			try 
 			{
-				server.Stop();
-				log.Error("The Web Service stopped");
+				if(server != null)
+				{
+					server.Stop();
+					log.Debug("The Web Service stopped");
+				}
+				else
+				{
+					log.Error("Stop was called when the Web Server object was null");
+				}
 			}
 			catch (Exception e) 
 			{
-				log.Error("Stopping the Web Service resulted in: {0}", e.Message);
+				log.Error("Stopping the Web Service resulted in: {0}", 
+						e.Message);
 			}
 		}
 		#endregion
