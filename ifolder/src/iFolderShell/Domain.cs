@@ -45,12 +45,12 @@ namespace Novell.iFolderCom
 		}
 
 		/// <summary>
-		/// Constructs a Domain object representing a wild card "Show All Domains".
+		/// Constructs a Domain object representing a wild card "Show All" Domain.
 		/// </summary>
-		public Domain()
+		/// <param name="name">The name of the Domain.</param>
+		public Domain(string name)
 		{
-			// TODO: Localize
-			this.name = "Show All";
+			this.name = name;
 			this.showAll = true;
 		}
 

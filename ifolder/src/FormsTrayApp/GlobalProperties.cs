@@ -2817,7 +2817,7 @@ namespace Novell.FormsTrayApp
 				servers2.Items.Clear();
 
 				// Add the wild-card domain.
-				Domain domain = new Domain();
+				Domain domain = new Domain(resourceManager.GetString("showAll"));
 				servers2.Items.Add(domain);
 				servers2.SelectedItem = domain;
 
