@@ -900,12 +900,20 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 	GtkTreeIter iter;
 	char time_str[32];
 	char state_str[32];
+	GdkPixbuf *status_icon;
+	GaimBuddy *buddy;
 
 if (store) {
 	g_print("store is NOT NULL\n");
 } else {
 	g_print("store is NULL!\n");
 }
+
+	buddy = gaim_find_buddy(invitation->gaim_account,
+				invitation->buddy_name);
+	status_icon =
+		gaim_gtk_blist_get_status_icon((GaimBlistNode*)buddy,
+			GAIM_STATUS_ICON_SMALL);
 
 	/* Format the time to a string */
 	fill_time_str(time_str, 32, invitation->time);
@@ -922,7 +930,7 @@ if (store) {
 	/* Set the new row information with the invitation */
 	gtk_list_store_set(store, &iter,
 		/* FIXME: Figure out how to add the correct protocol icon as the first column */
-		ACCOUNT_PRTL_ICON_COL,	NULL,
+		ACCOUNT_PRTL_ICON_COL,	status_icon,
 		BUDDY_NAME_COL,			invitation->buddy_name,
 		TIME_COL,				time_str,
 		COLLECTION_NAME_COL,	invitation->collection_name,
@@ -930,6 +938,8 @@ if (store) {
 		INVITATION_PTR,			invitation,
 		-1);
 		
+	if (status_icon)
+		g_object_unref(status_icon);
 	/* FIXME: Determine if we need to poke the tree view control */
 }
 
