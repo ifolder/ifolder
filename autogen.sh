@@ -8,7 +8,7 @@ ORIGDIR=`pwd`
 cd $srcdir
 PROJECT=iFolder
 TEST_TYPE=-f
-FILE=src/iFolder/iFolderWebService.cs
+FILE=src/WebService/iFolder.cs
 
 DIE=0
 
