@@ -2,14 +2,14 @@ SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-EXTRA_DIST = ipdata simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
+EXTRA_DIST = ifdata simias-snakeoil.keys $(srcdir)/install-simias-to-gac.in
 
 install-exec-local: install-simias-to-gac
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) ipdata install-simias-to-gac $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) ifdata install-simias-to-gac $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f ipdata install-simias-to-gac
+	cd $(DESTDIR)$(bindir); rm -f ifdata install-simias-to-gac
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
