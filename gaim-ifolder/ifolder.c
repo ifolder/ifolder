@@ -92,6 +92,8 @@
 #define SIMIAS_PREF_SIMIAS_AUTO_START "/plugins/gtk/simias/auto_start_simias"
 #define SIMIAS_PREF_SIMIAS_AUTO_START_DEF FALSE
 
+#define COLLECTION_TYPE_IFOLDER "ifolder"
+#define COLLECTION_TYPE_GLYPHMARKS "glyphmarks"
 
 /****************************************************
  * Type Definitions                                 *
@@ -242,7 +244,7 @@ static void sync_buddy_with_simias_roster(gpointer key,
 										  gpointer value,
 										  gpointer user_data);
 
-static void buddylist_cb_simulate_share_ifolder(GaimBlistNode *node,
+static void buddylist_cb_simulate_share_collection(GaimBlistNode *node,
 												gpointer user_data);
 
 static void invitations_dialog_close_button_cb(GtkWidget *widget,
@@ -537,29 +539,39 @@ sync_buddy_with_simias_roster(gpointer key, gpointer value, gpointer user_data)
  * buddy.
  */
 static void
-buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
+buddylist_cb_simulate_share_collection(GaimBlistNode *node, gpointer user_data)
 {
 	/* Prompt the user for an iFolder/Collection Name */
 	GtkWidget *dialog;
 	GtkWidget *vbox;
 	GtkWidget *name_label;
 	GtkWidget *name_entry;
+	GtkWidget *type_label;
+	GtkWidget *type_menu;
 	gint response;
 	const gchar *name;
 	GaimBuddy *buddy;
 	int result;
-	char *collection_type = "ifolder";	/* FIXME: This is hardcoded.  When other Simias Collection types are supported, this shouuld be fixed. */
+	char collection_type[32];
 	Invitation *invitation;
 	char guid[128];
+	
+	GtkListStore *type_store;
+	GtkTreeIter iter;
+	GtkCellRenderer *renderer;
 
-g_print("buddylist_cb_simulate_share_ifolder() entered\n");
+	GdkPixbuf *icon, *scale;
+	int scalesize = 15;
+	char *icon_path;
+
+g_print("buddylist_cb_simulate_share_collection() entered\n");
 	if (!GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		return;
 	}
 
 	buddy = (GaimBuddy *)node;
 
-	dialog = gtk_dialog_new_with_buttons("Share an iFolder",
+	dialog = gtk_dialog_new_with_buttons("Simulate Adding Member to a Collection",
 			NULL,
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_OK,
@@ -575,17 +587,89 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
 	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
 
-	name_label = gtk_label_new("Enter a name for the iFolder:");
+	/* Collection Name */
+	name_label = gtk_label_new(NULL);
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(name_label), _("<b>_Name</b>"));
+	gtk_misc_set_alignment(GTK_MISC(name_label), 0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), name_label, FALSE, FALSE, 0);
 
 	name_entry = gtk_entry_new();
+	gtk_label_set_mnemonic_widget(GTK_LABEL(name_label), name_entry);
 	gtk_entry_set_text(GTK_ENTRY(name_entry), "My iFolder");
 	gtk_entry_set_activates_default(GTK_ENTRY(name_entry), TRUE);
 	gtk_editable_select_region(GTK_EDITABLE(name_entry), 0, -1);
 	gtk_widget_grab_focus(name_entry);
-	gtk_box_pack_end(GTK_BOX(vbox), name_entry, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), name_entry, FALSE, FALSE, 0);
 	
-	/* FIXME: Add a drop-down control that lists the collection types: ifolder & glyphmarks */
+	/* Collection Type */
+	type_label = gtk_label_new(NULL);
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(type_label), _("<b>_Type</b>"));
+	gtk_misc_set_alignment(GTK_MISC(type_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(vbox), type_label, FALSE, FALSE, 0);
+	
+	type_store = gtk_list_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+
+	/* FIXME: Install the icon and load it from the correct place */
+	icon_path = g_build_filename(gaim_user_dir(), "ifolder48.png", NULL);
+	gaim_debug(GAIM_DEBUG_INFO, "simias", "icon path: %s\n", icon_path);
+	icon = gdk_pixbuf_new_from_file(icon_path, NULL);
+	g_free(icon_path);
+	if (icon) {
+		scale = gdk_pixbuf_scale_simple(icon, scalesize, scalesize,
+										GDK_INTERP_BILINEAR);
+		g_object_unref(icon);
+		icon = scale;
+	} else {
+		gaim_debug(GAIM_DEBUG_ERROR, "simias", "Failed to load the ifolder48.png icon!\n");
+	}
+	gtk_list_store_append(type_store, &iter);
+	gtk_list_store_set(type_store, &iter,
+					   0, icon,
+					   1, _("iFolder"),
+					   -1);
+	if (icon) {
+		g_object_unref(G_OBJECT(icon));
+	}
+	
+	/* FIXME: Install the icon and load it from the correct place */
+	icon_path = g_build_filename(gaim_user_dir(), "glyphmarks48.png", NULL);
+	gaim_debug(GAIM_DEBUG_INFO, "simias", "icon path: %s\n", icon_path);
+	icon = gdk_pixbuf_new_from_file(icon_path, NULL);
+	g_free(icon_path);
+	if (icon) {
+		scale = gdk_pixbuf_scale_simple(icon, scalesize, scalesize,
+										GDK_INTERP_BILINEAR);
+		g_object_unref(icon);
+		icon = scale;
+	} else {
+		gaim_debug(GAIM_DEBUG_ERROR, "simias", "Failed to load the glyphmarks48.png icon!\n");
+	}
+	gtk_list_store_append(type_store, &iter);
+	gtk_list_store_set(type_store, &iter,
+					   0, icon,
+					   1, _("Glyphmarks"),
+					   -1);
+	if (icon) {
+		g_object_unref(G_OBJECT(icon));
+	}
+	
+	type_menu = gtk_combo_box_new_with_model(GTK_TREE_MODEL(type_store));
+	gtk_label_set_mnemonic_widget(GTK_LABEL(type_label), type_menu);
+	
+	renderer = gtk_cell_renderer_pixbuf_new();
+	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(type_menu), renderer, FALSE);
+	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(type_menu), renderer,
+								   "pixbuf", 0, NULL);
+
+	renderer = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(type_menu), renderer, TRUE);
+	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(type_menu), renderer,
+								   "text", 1, NULL);
+
+	/* Select iFolder as the default */
+	gtk_combo_box_set_active(GTK_COMBO_BOX(type_menu), 0);
+	
+	gtk_box_pack_start(GTK_BOX(vbox), type_menu, FALSE, FALSE, 0);
 	
 	gtk_widget_show_all(vbox);
 
@@ -597,6 +681,19 @@ g_print("buddylist_cb_simulate_share_ifolder() entered\n");
 		 * invitation.
 		 */
 		name = gtk_entry_get_text(GTK_ENTRY(name_entry));
+		
+		/* Get the Collection Type */
+		switch(gtk_combo_box_get_active(GTK_COMBO_BOX(type_menu))) {
+			case 1:
+				/* Default to use an iFolder */
+				sprintf(collection_type, COLLECTION_TYPE_GLYPHMARKS);
+				break;
+			case 0:
+			default:
+				/* Default to use an iFolder */
+				sprintf(collection_type, COLLECTION_TYPE_IFOLDER);
+		}
+		
 		if (name && strlen(name) > 0) {
 
 			/* FIXME: Fix this spoofing of a Simias ID to a real Simias ID */
@@ -1218,18 +1315,34 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 	GtkTreeIter iter;
 	char time_str[32];
 	char state_str[32];
-	GdkPixbuf *invitation_icon;
+	GdkPixbuf *invitation_icon = NULL;
+	GdkPixbuf *scale;
+	int scalesize = 15;
+	char *icon_path = NULL;
 
 g_print("add_invitation_to_store() entered\n");
-	/**
-	 * FIXME: Change this icon to be based off of the type of Simias Collection
-	 * that is being shared and possibly the state of the invitation too.
-	 * Perhaps the invitation state could just be shown as an emblem overlay
-	 * of the invitation icon similar to how emblems are overlaid in Nautilus.
-	 * 
-	 * Change this to be either an iFolder icon or a Glyphmarks icon.
-	 */
-	invitation_icon = create_prpl_icon(invitation->gaim_account);
+	if (!strcmp(invitation->collection_type, COLLECTION_TYPE_IFOLDER)) {
+		icon_path = g_build_filename(gaim_user_dir(), "ifolder48.png", NULL);
+	} else if (!strcmp(invitation->collection_type, COLLECTION_TYPE_GLYPHMARKS)) {
+		icon_path = g_build_filename(gaim_user_dir(), "glyphmarks48.png", NULL);
+	}
+
+	if (icon_path) {
+		invitation_icon = gdk_pixbuf_new_from_file(icon_path, NULL);
+		g_free(icon_path);
+	}
+	
+	if (!invitation_icon) {
+		/* Just use a Gaim icon */
+		invitation_icon = create_prpl_icon(invitation->gaim_account);
+	}
+
+	if (invitation_icon) {
+		scale = gdk_pixbuf_scale_simple(invitation_icon, scalesize, scalesize,
+										GDK_INTERP_BILINEAR);
+		g_object_unref(invitation_icon);
+		invitation_icon = scale;
+	}	
 	
 	/* Format the time to a string */
 	fill_time_str(time_str, 32, invitation->time);
@@ -2029,7 +2142,7 @@ init_invitations_window()
 	in_inv_vbox = gtk_vbox_new(FALSE, 10);
 	gtk_box_pack_start(GTK_BOX(vbox), in_inv_vbox, TRUE, TRUE, 0);
 
-	in_inv_label = gtk_label_new("Incoming Invitations");
+	in_inv_label = gtk_label_new(NULL);
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(in_inv_label),
 		_("<span size=\"larger\" weight=\"bold\">_Incoming Invitations</span>"));
 	gtk_misc_set_alignment(GTK_MISC(in_inv_label), 0, 0.5);
@@ -2049,6 +2162,8 @@ init_invitations_window()
 
 	/* Tree View Control Here */
 	in_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(in_inv_store));
+	gtk_label_set_mnemonic_widget(GTK_LABEL(in_inv_label), in_inv_tree);
+	
 	
 	/**
 	 * Now that the tree view holds a reference, we can get rid of our own
@@ -2062,7 +2177,7 @@ init_invitations_window()
 	/* INVITATION_TYPE_ICON_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(in_inv_tree),
-		-1, NULL, in_inv_renderer, "pixbuf", INVITATION_TYPE_ICON_COL, NULL);
+		-1, _("Type"), in_inv_renderer, "pixbuf", INVITATION_TYPE_ICON_COL, NULL);
 
 	/* Create a cell renderer for text */
 	in_inv_renderer = gtk_cell_renderer_text_new();
@@ -2113,7 +2228,7 @@ init_invitations_window()
 	out_inv_vbox = gtk_vbox_new(FALSE, 10);
 	gtk_box_pack_end(GTK_BOX(vbox), out_inv_vbox, TRUE, TRUE, 0);
 
-	out_inv_label = gtk_label_new("Outgoing Invitations");
+	out_inv_label = gtk_label_new(NULL);
 	gtk_label_set_markup_with_mnemonic(GTK_LABEL(out_inv_label),
 		_("<span size=\"larger\" weight=\"bold\">_Outgoing Invitations</span>"));
 	gtk_misc_set_alignment(GTK_MISC(out_inv_label), 0, 0.5);
@@ -2133,6 +2248,7 @@ init_invitations_window()
 
 	/* Tree View Control Here */
 	out_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(out_inv_store));
+	gtk_label_set_mnemonic_widget(GTK_LABEL(out_inv_label), out_inv_tree);
 
 	
 	/**
@@ -2147,7 +2263,7 @@ init_invitations_window()
 	/* INVITATION_TYPE_ICON_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(out_inv_tree),
-		-1, NULL, out_inv_renderer, "pixbuf", INVITATION_TYPE_ICON_COL, NULL);
+		-1, _("Type"), out_inv_renderer, "pixbuf", INVITATION_TYPE_ICON_COL, NULL);
 
 	/* Create a cell renderer for text */
 	out_inv_renderer = gtk_cell_renderer_text_new();
@@ -2263,7 +2379,7 @@ blist_add_context_menu_items_cb(GaimBlistNode *node, GList **menu)
 	buddy = (GaimBuddy *)node;
 
 	act = gaim_blist_node_action_new(_("Simulate Add Member"),
-		buddylist_cb_simulate_share_ifolder, NULL);
+		buddylist_cb_simulate_share_collection, NULL);
 	*menu = g_list_append(*menu, act);
 	
 	act = gaim_blist_node_action_new(_("Simias Invitations"),
