@@ -123,7 +123,7 @@ namespace Simias.POBox
 			POBox poBox = null;
 
 			// Build the name of the POBox.
-			string name = domainId + ":" + userId;
+			string name = "POBox:" + domainId + ":" + userId;
 
 			// Search for the POBox.
 			ICSEnumerator listEnum = storeObject.GetCollectionsByName(name).GetEnumerator() as ICSEnumerator;
@@ -145,7 +145,14 @@ namespace Simias.POBox
 			if (poBox == null)
 			{
 				poBox = new POBox(storeObject, name, domainId);
-				poBox.Commit();
+				
+				Roster roster = storeObject.GetDomain(storeObject.DefaultDomain).GetRoster(storeObject);
+				
+				Member current = roster.GetMemberByID(userId);
+
+				Member member = new Member(current);
+				
+				poBox.Commit(new Node[] { poBox, member });
 			}
 
 			return poBox;
