@@ -68,7 +68,6 @@ namespace Novell.iFolder
 			}
 		}
 
-
 		public string Domain
 		{
 			get
@@ -79,7 +78,6 @@ namespace Novell.iFolder
 					return DomainID;
 			}
 		}
-
 
 		public iFolderLoginDialog(string domain, string domainName,
 					string userName) : base()
