@@ -33,7 +33,7 @@ install-exec-local: Smtp.dll
 	$(INSTALL_PROGRAM) Smtp.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Smtp.dll SmtpTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Smtp.dll SmtpTests.xml $(NUNIT_TESTS) smtptst1.gif smtptst2.gif
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
