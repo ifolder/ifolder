@@ -24,6 +24,7 @@
 #import "iFolderService.h"
 #include "iFolderStub.h"
 #include "ifolder.nsmap"
+#import "Simias.h"
 
 @implementation iFolderService
 
@@ -37,6 +38,21 @@ NSDictionary *getSyncSizeProperties(struct ns1__SyncSize *ss);
 NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
+- (id)init 
+{
+	[super init];
+	simiasURL = [[NSString stringWithFormat:@"%@/simias10/iFolder.asmx", [[Simias getInstance] simiasURL]] retain];
+	NSLog(@"Initialized iFolderService on URL: %@", simiasURL);
+    return self;
+}
+-(void)dealloc
+{
+	[simiasURL release];
+    [super dealloc];
+}
+
+
+
 -(BOOL) Ping
 {
     struct soap soap;
@@ -48,7 +64,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     init_gsoap (&soap);
     err_code = soap_call___ns1__Ping (&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &ns1__Ping,
             &ns1__PingResponse);
@@ -87,7 +103,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetAlliFolders(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getiFoldersMessage,
             &getiFoldersResponse);
@@ -143,7 +159,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetiFolder(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getiFolderMessage,
             &getiFolderResponse);
@@ -197,7 +213,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetiFolderInvitation(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getiFolderMessage,
             &getiFolderResponse);
@@ -244,7 +260,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__CreateiFolderInDomain(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &createiFolderMessage,
             &createiFolderResponse);
@@ -293,7 +309,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__AcceptiFolderInvitation(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &acceptiFolderMessage,
             &acceptiFolderResponse);
@@ -339,7 +355,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__DeclineiFolderInvitation(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &declineiFolderMessage,
             &declineiFolderResponse);
@@ -374,7 +390,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__RevertiFolder(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &revertiFolderMessage,
             &revertiFolderResponse);
@@ -418,7 +434,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__SynciFolderNow(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &syncNowMessage,
             &syncNowResponse);
@@ -452,7 +468,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     err_code = soap_call___ns1__GetiFolderUser(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUserMessage,
             &getUserResponse);
@@ -504,7 +520,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     err_code = soap_call___ns1__GetiFolderUserFromNodeID(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUserMessage,
             &getUserResponse);
@@ -553,7 +569,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetiFolderUsers(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUsersMessage,
             &getUsersResponse);
@@ -611,7 +627,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetDomainUsers(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getUsersMessage,
             &getUsersResponse);
@@ -669,7 +685,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__SearchForDomainUsers(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &searchUsersMessage,
             &searchUsersResponse);
@@ -728,7 +744,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__InviteUser(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &inviteUserMessage,
             &inviteUserResponse);
@@ -771,7 +787,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__RemoveiFolderUser(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &removeUserMessage,
             &removeUserResponse);
@@ -804,7 +820,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     err_code = soap_call___ns1__GetiFolderDiskSpace(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getDSMessage,
             &getDSResponse);
@@ -854,7 +870,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     err_code = soap_call___ns1__GetUserDiskSpace(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getDSMessage,
             &getDSResponse);
@@ -904,7 +920,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     err_code = soap_call___ns1__SetiFolderDiskSpaceLimit(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setDSMessage,
             &setDSResponse);
@@ -937,7 +953,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
     err_code = soap_call___ns1__CalculateSyncSize(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getSSMessage,
             &getSSResponse);
@@ -979,7 +995,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetDefaultSyncInterval(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getIntervalMessage,
             &getIntervalResponse);
@@ -1014,7 +1030,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__SetDefaultSyncInterval(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setIntervalMessage,
             &setIntervalResponse);
@@ -1049,7 +1065,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__GetiFolderConflicts(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &getConflictsMessage,
             &getConflictsResponse);
@@ -1107,7 +1123,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__ResolveFileConflict(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &resolveMessage,
             &resolveResponse);
@@ -1144,7 +1160,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__ResolveNameConflict(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &resolveMessage,
             &resolveResponse);
@@ -1181,7 +1197,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__SetUserRights(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &setRightsMessage,
             &setRightsResponse);
@@ -1218,7 +1234,7 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
     init_gsoap (&soap);
     err_code = soap_call___ns1__ChangeOwner(
 			&soap,
-            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
             &changeOwnerMessage,
             &changeOwnerResponse);

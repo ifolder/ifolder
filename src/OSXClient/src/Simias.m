@@ -24,6 +24,10 @@
 #import "Simias.h"
 #import "config.h"
 
+#import <netinet/in.h>
+#include <arpa/inet.h>
+
+
 @implementation Simias
 
 static Simias *sharedInstance = nil;
@@ -50,12 +54,33 @@ static Simias *sharedInstance = nil;
 }
 
 
+
+-(NSString *)simiasURL
+{
+	return simiasurl;
+}
+
+
+
 //Starts the simias process
--(void)start
+-(BOOL)start
 {
 	if(simiasTask == nil)
 	{
-		NSArray *parameters = [NSArray arrayWithObjects:nil];
+		NSArray *parameters = nil;
+		
+		// Detect if the std port is available
+		NSSocketPort *tmpPort = [[NSSocketPort alloc] initWithTCPPort:0];
+		if(tmpPort == nil)
+			return NO;
+			
+		struct sockaddr_in addrIn = *(struct sockaddr_in*)[[tmpPort address] bytes];
+		NSString *port = [NSString stringWithFormat:@"%d", addrIn.sin_port];
+		[tmpPort release];
+		tmpPort = nil;
+		parameters = [NSArray arrayWithObjects:port, nil];
+
+		simiasurl = [[NSString stringWithFormat:@"http://127.0.0.1:%@", port] retain];
 
 		simiasTask = [[NSTask alloc] init];
 		stdInPipe = [[NSPipe alloc] init];
@@ -68,12 +93,14 @@ static Simias *sharedInstance = nil;
 
 	if(![simiasTask isRunning])
 		[simiasTask launch];
+
+	return YES;
 }
 
 
 
 //Stops the simias process
--(void)stop
+-(BOOL)stop
 {
 	if(simiasTask != nil)
 	{
@@ -119,6 +146,7 @@ static Simias *sharedInstance = nil;
 //			[simiasTask waitUntilExit];
 		}	
 	}
+	return YES;
 }
 
 

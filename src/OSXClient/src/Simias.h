@@ -29,11 +29,14 @@
 	NSTask			*simiasTask;
 	NSPipe			*stdInPipe;
     NSFileHandle	*stdInHandle;
+	
+	NSString		*simiasurl;
 }
 
 + (Simias *)getInstance;
--(void)start;
--(void)stop;
+-(BOOL)start;
+-(BOOL)stop;
+-(NSString *)simiasURL;
 
 @end
 
