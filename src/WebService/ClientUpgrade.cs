@@ -78,7 +78,7 @@ namespace Novell.iFolder.Install
 			// Setup the url to the server.
 			service = new ClientUpdate();
 			service.Url = hostAddress + "/ClientUpdate.asmx";
-			ws.InitializeWebClient(service);
+			ws.InitializeWebClient(service, domainID);
 		}
 		#endregion
 
