@@ -1572,138 +1572,152 @@ namespace Novell.FormsTrayApp
 			{
 				DomainInformation domainInfo = simiasWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
-				if (domainInfo != null)
+				switch (domainInfo.StatusCode)
 				{
-					// Set the credentials in the current process.
-					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-					Status authStatus = domainAuth.Authenticate();
+					case StatusCodes.Success:
+					case StatusCodes.SuccessInGrace:
+						// Set the credentials in the current process.
+						DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
+						Status authStatus = domainAuth.Authenticate();
 
-					MyMessageBox mmb;
-					switch (authStatus.statusCode)
-					{
-						case StatusCodes.Success:
-						case StatusCodes.SuccessInGrace:
-							Domain domain = new Domain(domainInfo);
+						MyMessageBox mmb;
+						switch (authStatus.statusCode)
+						{
+							case StatusCodes.Success:
+							case StatusCodes.SuccessInGrace:
+								Domain domain = new Domain(domainInfo);
 
-							updateAccount(domain);
+								updateAccount(domain);
 
-							// Associate the new domain with the listview item.
-							newAccountLvi.SubItems[0].Text = domainInfo.Name;
+								// Associate the new domain with the listview item.
+								newAccountLvi.SubItems[0].Text = domainInfo.Name;
 
-							newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
-							newAccountLvi.Tag = domain;
-							server.Text = domainInfo.Name;
-							newAccountLvi = null;
+								newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
+								newAccountLvi.Tag = domain;
+								server.Text = domainInfo.Name;
+								newAccountLvi = null;
 
-							// Successfully joined ... don't allow the fields to be changed.
-							userName.ReadOnly = server.ReadOnly = true;
-							processing = false;
+								// Successfully joined ... don't allow the fields to be changed.
+								userName.ReadOnly = server.ReadOnly = true;
+								processing = false;
 
-							if (EnterpriseConnect != null)
-							{
-								// Fire the event telling that a new domain has been added.
-								EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
-							}
-
-							addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
-
-							activate.Enabled = false;
-
-							// Don't burn a grace login looking for an update.
-							if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
-							{
-								try
+								if (EnterpriseConnect != null)
 								{
-									// Check for an update.
-									bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
-									if (updateStarted)
+									// Fire the event telling that a new domain has been added.
+									EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
+								}
+
+								addAccount.Enabled = details.Enabled = enableAccount.Enabled = true;
+
+								activate.Enabled = false;
+
+								// Don't burn a grace login looking for an update.
+								if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+								{
+									try
 									{
-										if (ShutdownTrayApp != null)
+										// Check for an update.
+										bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
+										if (updateStarted)
 										{
-											// Shut down the tray app.
-											ShutdownTrayApp(this, new EventArgs());
+											if (ShutdownTrayApp != null)
+											{
+												// Shut down the tray app.
+												ShutdownTrayApp(this, new EventArgs());
+											}
 										}
 									}
-								}
-								catch // Ignore
-								{
-								}
-							}
-
-							if (!rememberPassword.Checked)
-							{
-								password.Text = string.Empty;
-							}
-
-							if (defaultServer.Checked)
-							{
-								try
-								{
-									simiasWebService.SetDefaultDomain(domain.DomainInfo.ID);
-
-									domain.DomainInfo.IsDefault = true;
-									newDefaultDomain = null;
-									defaultServer.Enabled = false;
-
-									// Reset the current default.
-									if (currentDefaultDomain != null)
+									catch // Ignore
 									{
-										currentDefaultDomain.DomainInfo.IsDefault = false;
-									}
-
-									// Save the new default.
-									currentDefaultDomain = domain;
-
-									// Fire the event telling that the default domain has changed.
-									if (ChangeDefaultDomain != null)
-									{
-										ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
 									}
 								}
-								catch (Exception ex)
+
+								if (!rememberPassword.Checked)
 								{
-									mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+									password.Text = string.Empty;
+								}
+
+								if (defaultServer.Checked)
+								{
+									try
+									{
+										simiasWebService.SetDefaultDomain(domain.DomainInfo.ID);
+
+										domain.DomainInfo.IsDefault = true;
+										newDefaultDomain = null;
+										defaultServer.Enabled = false;
+
+										// Reset the current default.
+										if (currentDefaultDomain != null)
+										{
+											currentDefaultDomain.DomainInfo.IsDefault = false;
+										}
+
+										// Save the new default.
+										currentDefaultDomain = domain;
+
+										// Fire the event telling that the default domain has changed.
+										if (ChangeDefaultDomain != null)
+										{
+											ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
+										}
+									}
+									catch (Exception ex)
+									{
+										mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+										mmb.ShowDialog();
+									}
+								}
+
+								if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
+								{
+									mmb = new MyMessageBox(
+										string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+										resourceManager.GetString("graceLoginTitle"),
+										string.Empty,
+										MyMessageBoxButtons.OK,
+										MyMessageBoxIcon.Information);
 									mmb.ShowDialog();
 								}
-							}
-
-							if (authStatus.RemainingGraceLogins < authStatus.TotalGraceLogins)
-							{
-								mmb = new MyMessageBox(
-									string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
-									resourceManager.GetString("graceLoginTitle"),
-									string.Empty,
-									MyMessageBoxButtons.OK,
-									MyMessageBoxIcon.Information);
+								
+								result = true;
+								break;
+							case StatusCodes.InvalidCredentials:
+							case StatusCodes.InvalidPassword:
+								mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 								mmb.ShowDialog();
-							}
-						
-							result = true;
-							break;
-						case StatusCodes.InvalidCredentials:
-						case StatusCodes.InvalidPassword:
-							mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-							break;
-						case StatusCodes.AccountDisabled:
-							mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
-							break;
-						case StatusCodes.AccountLockout:
-							mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
-							break;
-						default:
-							mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-							break;
-					}
-				}
-				else
-				{
-					Cursor.Current = Cursors.Default;
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
+								break;
+							case StatusCodes.AccountDisabled:
+								mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+								mmb.ShowDialog();
+								break;
+							case StatusCodes.AccountLockout:
+								mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+								mmb.ShowDialog();
+								break;
+							default:
+								mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+								break;
+						}
+						break;
+					case StatusCodes.InvalidCredentials:
+					case StatusCodes.InvalidPassword:
+						mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						break;
+					case StatusCodes.AccountDisabled:
+						mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+						break;
+					case StatusCodes.AccountLockout:
+						mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+						break;
+					default:
+						mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb.ShowDialog();
+						break;
 				}
 			}
 			catch (Exception ex)
