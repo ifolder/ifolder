@@ -386,7 +386,7 @@ namespace Simias.Sync
 		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
 		{
 			si.Status = SyncColStatus.Success;
-			si.Access = Access.Rights.Deny;
+			rights = si.Access = Access.Rights.Deny;
 			SyncNodeStamp[] nodes = null;
 			cLock = null;
 		
@@ -502,7 +502,7 @@ namespace Simias.Sync
 
 		public SyncNodeStatus[] PutNonFileNodes(SyncNode [] nodes)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 			{
 				return null;
 			}
@@ -587,7 +587,7 @@ namespace Simias.Sync
 
 		public SyncNodeStatus[] PutDirs(SyncNode [] nodes)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 				return null;
 
 			SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
@@ -656,7 +656,7 @@ namespace Simias.Sync
 
 		public SyncNode[] GetNonFileNodes(string[] nodeIDs)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadOnly))
 				return null;
 
 			SyncNode[] nodes = new SyncNode[nodeIDs.Length];
@@ -773,10 +773,10 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 				return null;
 
-			SyncNodeStatus[] nodeStatus = new SyncNodeStatus[nodeIDs.Length];
+			SyncNodeStatus[] statusArray = new SyncNodeStatus[nodeIDs.Length];
 		
 			cLock.LockRequest();
 			try
@@ -784,16 +784,16 @@ namespace Simias.Sync
 				int i = 0;
 				foreach (string id in nodeIDs)
 				{
+					SyncNodeStatus nStatus = new SyncNodeStatus();
 					try
 					{
-						nodeStatus[i] = new SyncNodeStatus();
-						nodeStatus[i].nodeID = id;
+						statusArray[i++] = nStatus;
+						nStatus.nodeID = id;
 						Node node = collection.GetNodeByID(id);
 						if (node == null)
 						{
 							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-							nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
-							i++;
+							nStatus.status = SyncNodeStatus.SyncStatus.Success;
 							continue;
 						}
 
@@ -818,20 +818,19 @@ namespace Simias.Sync
 							collection.Commit(node);
 						}
 
-						nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
+						nStatus.status = SyncNodeStatus.SyncStatus.Success;
 					}
 					catch
 					{
-						nodeStatus[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
+						nStatus.status = SyncNodeStatus.SyncStatus.ServerFailure;
 					}
-					i++;
 				}
 			}
 			finally
 			{
 				cLock.ReleaseRequest();
 			}
-			return nodeStatus;
+			return statusArray;
 		}
 
 		/// <summary>
@@ -842,7 +841,7 @@ namespace Simias.Sync
 		/// <returns>True if successful.</returns>
 		public bool PutFileNode(SyncNode node)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
 				return false;
 			cLock.LockRequest();
 			try
@@ -866,7 +865,7 @@ namespace Simias.Sync
 		/// <returns>The SyncNode.</returns>
 		public SyncNode GetFileNode(string nodeID)
 		{
-			if (cLock == null)
+			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadOnly))
 				return null;
 
 			cLock.LockRequest();

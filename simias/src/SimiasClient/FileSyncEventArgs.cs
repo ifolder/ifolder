@@ -54,7 +54,11 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// A directory is being synced.
 		/// </summary>
-		Directory = 2
+		Directory = 2,
+		/// <summary>
+		/// The type is unknown.
+		/// </summary>
+		Unknown = 3,
 	};
 
 	/// <summary>

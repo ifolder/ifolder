@@ -143,6 +143,9 @@ namespace Simias.Sync.Client
 
 		#region publics
 
+		/// <summary>
+		/// Open the file.
+		/// </summary>
 		public void Open()
 		{
 			SyncNode snode = serverFile.GetFileNode(nodeID);
@@ -162,8 +165,9 @@ namespace Simias.Sync.Client
 		/// Called to close the file.
 		/// </summary>
 		/// <param name="commit">True if changes should be commited.</param>
+		/// <param name="readOnly">True if the file should be marked readonly.</param>
 		/// <returns>true if successful.</returns>
-		public new bool Close(bool commit)
+		public new bool Close(bool commit, bool readOnly)
 		{
 			bool bStatus = commit;
 			// Close the file on the server.
@@ -194,6 +198,11 @@ namespace Simias.Sync.Client
 			try
 			{
 				base.Close(commit);
+				if (readOnly)
+				{
+					FileInfo fi = new FileInfo(file);
+					fi.Attributes = fi.Attributes | FileAttributes.ReadOnly;
+				}
 			}
 			catch
 			{
@@ -217,7 +226,7 @@ namespace Simias.Sync.Client
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;
 				
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 			for (int i = 0; i < fileMap.Length; ++i)
 			{
 				if (fileMap[i] != -1)
@@ -255,7 +264,7 @@ namespace Simias.Sync.Client
 					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
 					sizeRemaining -= bytesRead;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 				}
 			}
 			return true;
@@ -476,7 +485,7 @@ namespace Simias.Sync.Client
 
 //			byte[] buffer = new byte[BlockSize];
 			long offset = 0;
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 			foreach(FileSegment segment in fileMap)
 			{
 				if (segment is BlockSegment)
@@ -496,7 +505,7 @@ namespace Simias.Sync.Client
 					serverFile.Write(dataBuffer, offset, bytesRead);
 					sizeRemaining -= bytesRead;
 					offset += seg.Length;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 				}
 			}
 			return true;
@@ -674,6 +683,9 @@ namespace Simias.Sync.Client
 
 	#region IServerReadFile
 
+	/// <summary>
+	/// Interface to Read the file on the server.
+	/// </summary>
 	public interface IServerReadFile
 	{
 		/// <summary>
