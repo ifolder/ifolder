@@ -491,7 +491,7 @@ namespace Novell.FormsTrayApp
 					case StatusCodes.InvalidCertificate:
 						byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-						mmb = new MyMessageBox(resourceManager.GetString("verifyCert"), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), domainInfo.Host), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 						if (mmb.ShowDialog() == DialogResult.Yes)
 						{
 							simiasWebService.StoreCertificate(byteArray, domainInfo.Host);

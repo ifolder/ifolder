@@ -1648,7 +1648,7 @@ namespace Novell.FormsTrayApp
 					{
 						byte[] byteArray = simiasWebService.GetCertificate(server.Text);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
-						mmb = new MyMessageBox(resourceManager.GetString("verifyCert"), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), server.Text), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
 						if (mmb.ShowDialog() == DialogResult.Yes)
 						{
 							simiasWebService.StoreCertificate(byteArray, server.Text);
