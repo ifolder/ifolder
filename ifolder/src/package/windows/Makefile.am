@@ -4,11 +4,14 @@ EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder-install.sln $(srcdir)/ifold
 
 all: ifolder.msi
 
-ifolder.msi: ifolder-install.sln ifolder-msi/ifolder-msi.vdproj ShutdowniFolder/ShutdowniFolder.exe
-	make -C ../../.. all
+ifolder.msi: ifolder ifolder-install.sln ifolder-msi/ifolder-msi.vdproj ShutdowniFolder/ShutdowniFolder.exe
 	"$(VSINSTALLDIR)/devenv.exe" ifolder-install.sln /build $(DEVENV_CONFIGURATION) /project ifolder-msi /out devenv-ifolder-msi.log
 	mv ifolder-msi/$(DEVENV_CONFIGURATION)/ifolder.msi $@
 
+.PHONY: ifolder
+ifolder:
+	make -C ../../.. all
+	
 ShutdowniFolder/ShutdowniFolder.exe: ShutdowniFolder/ShutdowniFolder.csproj $(ShutdowniFolder_CSFILES)
 	"$(VSINSTALLDIR)/devenv.exe" ifolder-install.sln /build $(DEVENV_CONFIGURATION) /project ShutdowniFolder /out devenv-shutdown-msi.log
 
