@@ -77,11 +77,11 @@ namespace Simias.mDns
 		}
 
 		/// <summary>
-		/// Gets the mDnsDomain's friendly ID
+		/// Gets the mDnsDomain's friendly name
 		/// </summary>
 		public string Name
 		{
-			get { return( this.mDnsUserID ); }
+			get { return( this.mDnsUserName ); }
 		}
 		#endregion
 
@@ -145,7 +145,6 @@ namespace Simias.mDns
 		}
 
 		#endregion
-
 
 		#region Internal Methods
 

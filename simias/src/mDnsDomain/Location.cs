@@ -116,44 +116,6 @@ namespace Simias.Location
 
 		#endregion
 
-		private Uri MemberToUri( string memberName )
-		{
-			//Mono.P2p.mDnsResponderApi.ServiceLocation sl = null;
-			//Mono.P2p.mDnsResponderApi.HostAddress ha = null;
-			Uri locationUri = null;
-
-			Mono.P2p.mDnsResponderApi.ServiceLocation[] sls = null;
-			if ( mDnsQuery.GetServiceLocationResources( out sls ) == 0 )
-			{
-				foreach(ServiceLocation sl in sls)
-				{
-					if ( sl.Name == memberName )
-					{
-						Mono.P2p.mDnsResponderApi.HostAddress[] has = null;
-						if ( mDnsQuery.GetHostAddressResources( out has ) == 0 )
-						{
-							foreach( HostAddress ha in has )
-							{
-								if ( ha.Name == sl.Target )
-								{
-									ArrayList ipAddrs = ha.GetIPAddresses();
-									if ( ipAddrs.Count > 0 )
-									{
-										locationUri = 
-											new Uri( "http://" + ipAddrs[0].ToString() + ":" + sl.Port.ToString() );
-									}
-									break;
-								}
-							}
-						}
-						break;
-					}
-				}
-			}
-
-			return locationUri;
-		}
-
 		private Uri MemberIDToUri( string memberID )
 		{
 			//Mono.P2p.mDnsResponderApi.ServiceLocation sl = null;
@@ -204,12 +166,15 @@ namespace Simias.Location
 										ArrayList ipAddrs = ha.GetIPAddresses();
 										if ( ipAddrs.Count > 0 )
 										{
-											locationUri = 
-												new Uri(	"http://" + 
-															ipAddrs[0].ToString() + 
-															":" + 
-															sl.Port.ToString() +
-															webServicePath );
+											string fullPath = 
+													"http://" + 
+													ipAddrs[0].ToString() + 
+													":" + 
+													System.Convert.ToString( (ushort) sl.Port ) +
+													webServicePath;
+
+											log.Debug( "fullPath: " + fullPath );
+											locationUri = new Uri( fullPath );
 										}
 										break;
 									}

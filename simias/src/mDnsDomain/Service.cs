@@ -39,7 +39,7 @@ using Simias.Service;
 using Simias.Storage;
 
 using Mono.P2p.mDnsResponderApi;
-
+using Novell.Security.ClientPasswordManager;
 
 namespace Simias.mDns
 {
@@ -112,6 +112,9 @@ namespace Simias.mDns
 				// Register with the location service.
 				this.mDnsProvider = new Simias.Location.mDnsProvider();
 				Simias.Location.Locate.RegisterProvider( this.mDnsProvider );
+
+				// Last add some fake credentials for the mDns domain
+				new NetCredential( "iFolder", Simias.mDns.Domain.ID, true, mDnsUser.Name, "blah" );
 			}
 			catch(Exception e)
 			{
