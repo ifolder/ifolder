@@ -1291,4 +1291,7 @@
 	<data name="clientUpgradeFailure">
 		<value>The iFolder client upgrade has failed.</value>
 	</data>
+	<data name="checkUpdateError">
+		<value>An error was encountered while checking for an iFolder client upgrade.</value>
+	</data>
 </root>
