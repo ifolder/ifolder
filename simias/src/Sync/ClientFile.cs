@@ -1286,7 +1286,7 @@ namespace Simias.Sync.Client
 			long bytesSent = 0;
 			while (bytesSent < count)
 			{
-				int bytesRead = inStream.Read(buffer, 0, buffer.Length);
+				int bytesRead = inStream.Read(buffer, 0, Math.Min(buffer.Length, (int)(count - bytesSent)));
 				if (bytesRead == 0)
 					break;
 				outStream.Write(buffer, 0, bytesRead);
