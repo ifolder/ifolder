@@ -728,9 +728,16 @@ namespace Novell.iFolder.iFolderCom
 					switch (value)
 					{
 						case "share":
-							this.tabControl1.SelectedTab = this.tabSharing;
+							tabControl1.SelectedTab = tabSharing;
+							break;
+						default:
+							tabControl1.SelectedTab = tabGeneral;
 							break;
 					}
+				}
+				else
+				{
+					tabControl1.SelectedTab = tabGeneral;
 				}
 			}
 		}
@@ -747,6 +754,9 @@ namespace Novell.iFolder.iFolderCom
 				// Get the refresh interval.
 				syncInterval.Value = (decimal)ifolder.RefreshInterval;
 				Cursor.Current = Cursors.WaitCursor;
+
+				// Show/hide the collision message.
+				conflicts.Visible = pictureBox1.Visible = ifolder.HasCollisions();
 
 				// Get the sync node and byte counts.
 				uint nodeCount;
@@ -773,7 +783,7 @@ namespace Novell.iFolder.iFolderCom
 				ImageList contactsImageList = new ImageList();
 
 				// Initialize the ImageList objects with icons.
-				string basePath = Path.Combine(loadPath, "res");
+				string basePath = loadPath != null ? Path.Combine(loadPath, "res") : Path.Combine(Application.StartupPath, "res");
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_me_card.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read.ico")));
 				contactsImageList.Images.Add(new Icon(Path.Combine(basePath, "ifolder_contact_read_write.ico")));
@@ -1254,7 +1264,7 @@ namespace Novell.iFolder.iFolderCom
 				}
 				catch (Exception ex)
 				{
-					logger.Debug(ex, "SyncSize.CalculateSendSize");
+					logger.Debug(ex, "HasCollisions");
 				}
 
 				Cursor.Current = Cursors.Default;
