@@ -76,8 +76,6 @@ namespace Novell.iFolder
 			mainThreadNotify =
 				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
-			Console.WriteLine("Creating sync object...");
-
 			SyncProperties props = new SyncProperties();
             props.DefaultChannelSinks = 
 					SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
@@ -106,15 +104,13 @@ namespace Novell.iFolder
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 
 			twin = new GtkTraceWindow();
-//			twin.ShowAll();
-
-			//MyTrace.SendTraceToStandardOutput();
 
 			Simias.Sync.Log.SetLevel("verbose");
 
 			Console.WriteLine("Starting sync object...");
 			syncManager.Start();
 
+			Console.WriteLine("iFolder is now running.");
 			Application.Run();
 		}
 
@@ -125,15 +121,26 @@ namespace Novell.iFolder
 		{
 			lock(syncManager)
 			{
-				if(syncState == SyncManagerStates.Active)
+				switch(syncState)
 				{
-					gAppIcon.FromAnimation = gSyncAnimation;
-					Console.WriteLine("The Synker is running");
-				}
-				else
-				{
-					gAppIcon.Pixbuf = gNifPixbuf;
-					Console.WriteLine("The Synker is stopping");
+					case SyncManagerStates.Active:
+					{		
+						gAppIcon.FromAnimation = gSyncAnimation;
+						Console.WriteLine("SyncManager is Active");
+						break;
+					}
+					case SyncManagerStates.Syncing:
+					{
+						gAppIcon.FromAnimation = gSyncAnimation;
+						Console.WriteLine("SyncManager is Syncing");
+						break;
+					}
+					default:
+					{
+						gAppIcon.Pixbuf = gNifPixbuf;
+						Console.WriteLine("SyncManager is Idle");
+						break;
+					}
 				}
 			}
 		}

@@ -26,6 +26,7 @@ using System.IO;
 using System.Drawing;
 using System.Collections;
 using Simias.Storage;
+using Simias;
 
 using Gtk;
 using Gdk;
@@ -54,7 +55,26 @@ namespace Novell.iFolder
 
 		public event EventHandler BrowserClosed;
 
+		public CollectionBrowser(Store store) 
+		{
+			Init();
+
+			this.store = store;
+
+			SetCurrentNode(null);
+		}
+
 		public CollectionBrowser() 
+		{
+			Init();
+
+			Configuration config = new Configuration();
+			store = Store.Connect(config);
+
+			SetCurrentNode(null);
+		}
+
+		private void Init()
 		{
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
 					"BrowserWindow", 
@@ -71,12 +91,10 @@ namespace Novell.iFolder
 			nifWindow.Icon = NodePixBuf;
 			nifWindow.Title = "Denali Collection Browser";
 
-			store = Store.Connect();
-
 			curIndex = -1;
 			enableDblClick = false;
-			SetCurrentNode(null);
 		}
+
 
 		private void SetCurrentNode(Simias.Storage.Node nifNode)
 		{
