@@ -1556,8 +1556,7 @@ namespace Novell.iFolder.Web
 															string Password,
 															string Host)
 		{
-			Simias.Configuration conf = Simias.Configuration.GetConfiguration();
-			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
+			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
 			da.Attach(Host, UserName, Password);
 			iFolderSettings ifSettings = new iFolderSettings();
 			ifSettings.CurrentUserName = UserName;
@@ -1589,8 +1588,7 @@ namespace Novell.iFolder.Web
 											string Host)
 		{
 			DomainWeb domain = null;
-			Simias.Configuration conf = Simias.Configuration.GetConfiguration();
-			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent(conf);
+			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
 			string domainID = da.Attach(Host, UserName, Password);
 			domain = new DomainWeb(domainID);
 			domain.UserName = UserName;
@@ -1671,6 +1669,30 @@ namespace Novell.iFolder.Web
 			}
 
 			return 0;
+		}
+
+
+
+
+
+		/// <summary>
+		/// WebMethod that removes a domain account from the workstation.
+		/// </summary>
+		/// <param name = "DomainID">
+		/// The ID of the domain that the account belongs to.
+		/// </param>
+		/// <param name = "LocalOnly">
+		/// If true then the account is only removed from this workstation.
+		/// If false, then the account will be deleted from every workstation 
+		/// that the user owns.
+		/// </param>
+		[WebMethod(Description="Removes a domain account from the workstation")]
+		[SoapDocumentMethod]
+		public void LeaveDomain(	string DomainID,
+									bool LocalOnly)
+		{
+			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
+			da.Unattach(DomainID, LocalOnly);
 		}
 
 
