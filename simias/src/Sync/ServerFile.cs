@@ -25,29 +25,10 @@ using System.IO;
 using System.Collections;
 using System.Xml;
 using Simias.Storage;
+using Simias.Sync.Delta;
 
 namespace Simias.Sync
 {
-	/// <summary>
-	/// Class used to keep track of the file Blocks and hash
-	/// codes assosiated with the block.
-	/// </summary>
-	public class HashData
-	{
-		/// <summary>
-		/// The Block number that this hash represents. 0 based.
-		/// </summary>
-		public int		BlockNumber;
-		/// <summary>
-		/// The Weak or quick hash of this block.
-		/// </summary>
-		public UInt32	WeakHash;
-		/// <summary>
-		/// The strong hash of this block.
-		/// </summary>
-		public byte[]	StrongHash;
-	}
-
 	/// <summary>
 	/// Class used on ther server to determine the changes from the client file.
 	/// </summary>
@@ -77,23 +58,23 @@ namespace Simias.Sync
 		/// Open the server file and validate access.
 		/// </summary>
 		/// <returns>Status of the open.</returns>
-		public SyncNodeStatus.SyncStatus Open()
+		public SyncStatus Open()
 		{
 			if (snode == null)
 			{
-				return SyncNodeStatus.SyncStatus.ClientError;
+				return SyncStatus.ClientError;
 			}
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(snode.node);
 			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
 			if (!policy.Allowed(node))
 			{
-				return SyncNodeStatus.SyncStatus.Policy;
+				return SyncStatus.Policy;
 			}
-			collection.ImportNode(node, true, snode.expectedIncarn);
+			collection.ImportNode(node, true, snode.MasterIncarnation);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
-			return SyncNodeStatus.SyncStatus.Success;
+			return SyncStatus.Success;
 		}
 
 		/// <summary>
@@ -105,10 +86,10 @@ namespace Simias.Sync
 		{
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
-			status.status = SyncNodeStatus.SyncStatus.ClientError;
+			status.status = SyncStatus.ClientError;
 			if (commit)
 			{
-				status.status = SyncNodeStatus.SyncStatus.Success;
+				status.status = SyncStatus.Success;
 				try
 				{
 					collection.Commit(node);
@@ -116,12 +97,12 @@ namespace Simias.Sync
 				catch (CollisionException)
 				{
 					commit = false;
-					status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+					status.status = SyncStatus.UpdateConflict;
 				}
 				catch
 				{
 					commit = false;
-					status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+					status.status = SyncStatus.ServerFailure;
 				}
 			}
 			base.Close(commit);
@@ -132,37 +113,22 @@ namespace Simias.Sync
 		/// Get a hashed map of the file.  This can then be
 		/// used to create an upload or download filemap.
 		/// </summary>
-		/// <returns></returns>
-		public HashData[] GetHashMap()
+		public string GetHashMapFile()
 		{
-			if (Length <= BlockSize)
+			string mapFile = GetMapFileName();
+			FileInfo mapFi = new FileInfo(mapFile);
+			FileInfo fi = new FileInfo(file);
+			if (mapFi.Exists)
 			{
-				return null;
+				if (mapFi.LastWriteTime == fi.LastWriteTime)
+					return mapFile;
 			}
-
-			int				blockCount = (int)(Length / BlockSize) + 1;
-			HashData[]		list = new HashData[blockCount];
-			byte[]			buffer = new byte[BlockSize];
-			StrongHash		sh = new StrongHash();
-			WeakHash		wh = new WeakHash();
-			int				bytesRead;
-			int				currentBlock = 0;
-		
-			lock (this)
+			else
 			{
-				// Compute the hash codes.
-				ReadPosition = 0;
-				int i = 0;
-				while ((bytesRead = Read(buffer, (int)0, BlockSize)) != 0)
-				{
-					HashData entry = new HashData();
-					entry.WeakHash = wh.ComputeHash(buffer, 0, (UInt16)bytesRead);
-					entry.StrongHash =  sh.ComputeHash(buffer, 0, bytesRead);
-					entry.BlockNumber = currentBlock++;
-					list[i++] = entry;
-				}
+				try { mapFi.Delete(); }
+				catch {}
 			}
-			return list;
+			return null;
 		}
 	}
 
@@ -203,7 +169,7 @@ namespace Simias.Sync
 		{
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
-			status.status = SyncNodeStatus.SyncStatus.Success;
+			status.status = SyncStatus.Success;
 			base.Close();
 			return status;
 		}
@@ -212,37 +178,22 @@ namespace Simias.Sync
 		/// Get a hashed map of the file.  This can then be
 		/// used to create an upload or download filemap.
 		/// </summary>
-		/// <returns></returns>
-		public HashData[] GetHashMap()
+		public string GetHashMapFile()
 		{
-			if (Length <= BlockSize)
+			string mapFile = GetMapFileName();
+			FileInfo mapFi = new FileInfo(mapFile);
+			FileInfo fi = new FileInfo(file);
+			if (mapFi.Exists)
 			{
-				return null;
+				if (mapFi.LastWriteTime == fi.LastWriteTime)
+					return mapFile;
 			}
-
-			lock (this)
+			else
 			{
-				int				blockCount = (int)((Length + BlockSize -1)/ BlockSize);
-				HashData[]		list = new HashData[blockCount];
-				byte[]			buffer = new byte[BlockSize];
-				StrongHash		sh = new StrongHash();
-				WeakHash		wh = new WeakHash();
-				int				bytesRead;
-				int				currentBlock = 0;
-		
-				// Compute the hash codes.
-				ReadPosition = 0;
-				int i = 0;
-				while ((bytesRead = Read(buffer, 0, BlockSize)) != 0)
-				{
-					HashData entry = new HashData();
-					entry.WeakHash = wh.ComputeHash(buffer, 0, (UInt16)bytesRead);
-					entry.StrongHash =  sh.ComputeHash(buffer, 0, bytesRead);
-					entry.BlockNumber = currentBlock++;
-					list[i++] = entry;
-				}
-				return list;
+				try { mapFi.Delete(); }
+				catch {}
 			}
+			return null;
 		}
 	}
 }

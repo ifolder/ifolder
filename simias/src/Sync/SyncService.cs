@@ -17,8 +17,8 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author: Dale Olds <olds@novell.com>
  *  Author: Russ Young
+ *  Author: Dale Olds <olds@novell.com>
  * 
  ***********************************************************************/
 using System;
@@ -30,265 +30,14 @@ using System.Threading;
 
 using Simias.Storage;
 using Simias;
+using Simias.Client;
 using Simias.Client.Event;
 using Simias.Policy;
+using Simias.Sync.Delta;
 
 namespace Simias.Sync
 {
-	/// <summary>
-	/// Class used to set up the state for a sync pass.
-	/// </summary>
-	public class SyncStartInfo
-	{
-		/// <summary>
-		/// The collection to sync.
-		/// </summary>
-		public string			CollectionID;
-		/// <summary>
-		/// The sync context.
-		/// </summary>
-		public string			Context;
-		/// <summary>
-		/// True if only changes since last sync are wanted.
-		/// </summary>
-		public bool				ChangesOnly;
-		/// <summary>
-		/// True if the client has changes. Used to Determine if there is work.
-		/// </summary>
-		public bool				ClientHasChanges;
-		/// <summary>
-		/// The Status of this sync.
-		/// </summary>
-		public SyncColStatus	Status;
-		/// <summary>
-		/// The access allowed to the collection.
-		/// </summary>
-		public Access.Rights	Access;
-	}
-
-	public enum SyncColStatus
-	{
-		/// <summary>
-		/// We need to sync.
-		/// </summary>
-		Success,
-		/// <summary>
-		/// There is nothing to do.
-		/// </summary>
-		NoWork,
-		/// <summary>
-		/// The collection was not found.
-		/// </summary>
-		NotFound,
-		/// <summary>
-		/// Someone is sync-ing now come back latter.
-		/// </summary>
-		Busy,
-		/// <summary>
-		/// The user is not authenticated.
-		/// </summary>
-		AccessDenied,
-	};
 	
-	/// <summary>
-	/// The node represented as the XML string.
-	/// </summary>
-	[Serializable]
-	public class SyncNode
-	{
-		/// <summary>
-		/// The ID of the node.
-		/// </summary>
-		public string		nodeID;
-		/// <summary>
-		/// The node as an XML string.
-		/// </summary>
-		public string node;
-		/// <summary>
-		/// The Master incarnation that this node is derived from.
-		/// </summary>
-		public ulong expectedIncarn;
-		/// <summary>
-		/// The operation that was that needs to be synced.
-		/// </summary>
-		public SyncOperation operation;
-	}
-
-	public enum SyncOperation
-	{
-		/// <summary>
-		/// The node exists but no log record has been created.
-		/// Do a brute force sync.
-		/// </summary>
-		Unknown,
-		/// <summary>
-		/// Node object was created.
-		/// </summary>
-		Create,
-		/// <summary>
-		/// Node object was deleted.
-		/// </summary>
-		Delete,
-		/// <summary>
-		/// Node object was changed.
-		/// </summary>
-		Change,
-		/// <summary>
-		/// Node object was renamed.
-		/// </summary>
-		Rename
-	};
-
-	/// <summary>
-	/// class to represent the minimal information that the sync code needs
-	/// to know about a node to determine if it needs to be synced.
-	/// </summary>
-	[Serializable]
-	public class SyncNodeStamp: IComparable
-	{
-		/// <summary>
-		/// The Node ID.
-		/// </summary>
-		public string ID;
-
-		/// <summary>
-		/// The Master incarnation for the node.
-		/// </summary>
-		public ulong MasterIncarnation;
-
-		/// <summary>
-		/// The local incarnation for the node.
-		/// </summary>
-		public ulong LocalIncarnation;
-
-		/// <summary>
-		///	The base type of this node. 
-		/// </summary>
-		public string BaseType;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public SyncOperation Operation;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public SyncNodeStamp()
-		{
-		}
-
-		/// <summary>
-		/// Construct a SyncNodeStamp from a Node.
-		/// </summary>
-		/// <param name="node">the node to use.</param>
-		internal SyncNodeStamp(Node node)
-		{
-			this.ID = node.ID;
-			this.LocalIncarnation = node.LocalIncarnation;
-			this.MasterIncarnation = node.MasterIncarnation;
-			this.BaseType = node.Type;
-			this.Operation = SyncOperation.Unknown;
-		}
-
-		/// <summary>
-		/// Consturct a SyncNodeStamp from a ChangeLogRecord.
-		/// </summary>
-		/// <param name="record">The record to use.</param>
-		internal SyncNodeStamp(ChangeLogRecord record)
-		{
-			this.ID = record.EventID;
-			this.LocalIncarnation = record.SlaveRev;
-			this.MasterIncarnation = record.MasterRev;
-			this.BaseType = record.Type.ToString();
-			switch (record.Operation)
-			{
-				case ChangeLogRecord.ChangeLogOp.Changed:
-					this.Operation = SyncOperation.Change;
-					break;
-				case ChangeLogRecord.ChangeLogOp.Created:
-					this.Operation = SyncOperation.Create;
-					break;
-				case ChangeLogRecord.ChangeLogOp.Deleted:
-					this.Operation = SyncOperation.Delete;
-					break;
-				case ChangeLogRecord.ChangeLogOp.Renamed:
-					this.Operation = SyncOperation.Rename;
-					break;
-				default:
-					this.Operation = SyncOperation.Unknown;
-					break;
-			}
-		}
-
-		/// <summary> implement some convenient operator overloads </summary>
-		public int CompareTo(object obj)
-		{
-			return ID.CompareTo(((SyncNodeStamp)obj).ID);
-		}
-	}
-
-
-	/// <summary>
-	/// Used to report the status of a sync.
-	/// </summary>
-	[Serializable]
-	public class SyncNodeStatus
-	{
-		/// <summary>
-		/// The ID of the node.
-		/// </summary>
-		public string		nodeID;
-		/// <summary>
-		/// The status of the sync.
-		/// </summary>
-		public SyncStatus	status;
-	
-		public enum SyncStatus
-		{
-			/// <summary>
-			/// The operation was successful.
-			/// </summary>
-			Success,
-			/// <summary> 
-			/// node update was aborted due to update from other client 
-			/// </summary>
-			UpdateConflict,
-			/// <summary> 
-			/// node update was completed, but temporary file could not be moved into place
-			/// </summary>
-			FileNameConflict,
-			/// <summary> 
-			/// node update was probably unsuccessful, unhandled exception on the server 
-			/// </summary>
-			ServerFailure,
-			/// <summary> 
-			/// node update is in progress 
-			/// </summary>
-			InProgess,
-			/// <summary>
-			/// The File is in use.
-			/// </summary>
-			InUse,
-			/// <summary>
-			/// The Server is busy.
-			/// </summary>
-			Busy,
-			/// <summary>
-			/// The client passed invalid data.
-			/// </summary>
-			ClientError,
-			/// <summary>
-			/// The policy doesnot allow this file.
-			/// </summary>
-			Policy,
-			/// <summary>
-			/// Insuficient rights for the operation.
-			/// </summary>
-			Access,
-		}
-	}
-
 	/// <summary>
 	/// Class to synchronize access to a collection.
 	/// </summary>
@@ -358,13 +107,15 @@ namespace Simias.Sync
 	}
 
 	
-//---------------------------------------------------------------------------
-/// <summary>
-/// server side top level class of SynkerA-style synchronization
-/// </summary>
+	/// <summary>
+	/// server side top level class of SynkerA-style synchronization
+	/// </summary>
 	public class SyncService
 	{
 		static Store store = Store.GetStore();
+		/// <summary>
+		/// Used to log to the log file.
+		/// </summary>
 		public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncService));
 		SyncCollection collection;
 		CollectionLock	cLock;
@@ -375,12 +126,21 @@ namespace Simias.Sync
 		ServerOutFile	outFile;
 		SyncPolicy		policy;
 		string			sessionID;
+		IEnumerator		nodeContainer;
+		bool			getAllNodes;
         
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
 		~SyncService()
 		{
 			Dispose(true);		
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="inFinalize"></param>
 		private void Dispose(bool inFinalize)
 		{
 			lock (this)
@@ -416,19 +176,20 @@ namespace Simias.Sync
 		/// <param name="si">The start info to initialize the sync.</param>
 		/// <param name="user">This is temporary.</param>
 		/// <param name="sessionID">The unique sessionID.</param>
-		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user, string sessionID)
+		public void Start(ref StartSyncInfo si, string user, string sessionID)
 		{
 			this.sessionID = sessionID;
-			si.Status = SyncColStatus.Success;
+			si.Status = StartSyncStatus.Success;
 			rights = si.Access = Access.Rights.Deny;
-			SyncNodeStamp[] nodes = new SyncNodeStamp[0];
 			cLock = null;
-		
+			nodeContainer = null;
+			getAllNodes = false;
+
 			Collection col = store.GetCollectionByID(si.CollectionID);
 			if (col == null)
 			{
-				si.Status = SyncColStatus.NotFound;
-				return nodes;
+				si.Status = StartSyncStatus.NotFound;
+				return;
 			}
 		
 			collection = new SyncCollection(col);
@@ -453,8 +214,8 @@ namespace Simias.Sync
 			}
 			else
 			{
-				si.Status = SyncColStatus.AccessDenied;
-				return nodes;
+				si.Status = StartSyncStatus.AccessDenied;
+				return;
 			}
 
 			switch (rights)
@@ -466,11 +227,11 @@ namespace Simias.Sync
 					if (si.ChangesOnly)
 					{
 						// we only need the changes.
-						si.ChangesOnly = GetChangedNodeStamps(out nodes, ref si.Context);
+						nodeContainer = this.BeginListChangedNodes(ref si.Context, out si.ChangesOnly);
 						// Check if we have any work to do
-						if (si.ChangesOnly && !si.ClientHasChanges && nodes.Length == 0)
+						if (si.ChangesOnly && !si.ClientHasChanges && nodeContainer == null)
 						{
-							si.Status = SyncColStatus.NoWork;
+							si.Status = StartSyncStatus.NoWork;
 							break;
 						}
 					}
@@ -478,8 +239,8 @@ namespace Simias.Sync
 					cLock = CollectionLock.GetLock(collection.ID);
 					if (cLock == null)
 					{
-						si.Status = SyncColStatus.Busy;
-						return new SyncNodeStamp[0];
+						si.Status = StartSyncStatus.Busy;
+						return;
 					}
 					// See if we need to return all of the nodes.
 					if (!si.ChangesOnly)
@@ -489,13 +250,13 @@ namespace Simias.Sync
 						{
 							// We need to get all of the nodes.
 							si.Context = new ChangeLogReader(collection).GetEventContext().ToString();
-							nodes = GetNodeStamps();
+							nodeContainer = this.BeginListAllNodes();
 						}
 						finally
 						{
 							cLock.ReleaseRequest();
 						}
-						if (nodes.Length == 0)
+						if (nodeContainer == null)
 						{
 							Dispose(false);
 							rights = Access.Rights.Deny;
@@ -504,12 +265,126 @@ namespace Simias.Sync
 					}
 					break;
 				case Access.Rights.Deny:
-					nodes = null;
-					si.Status = SyncColStatus.NotFound;
+					si.Status = StartSyncStatus.NotFound;
 					break;
 				
 			}
-			return nodes;
+			return;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="count"></param>
+		/// <returns></returns>
+		public SyncNodeInfo[] NextNodeInfoList(ref int count)
+		{
+			if (nodeContainer == null)
+			{
+				count = 0;
+				return new SyncNodeInfo[0];
+			}
+
+			SyncNodeInfo[] infoArray = new SyncNodeInfo[count];
+            int i = 0;
+			if (getAllNodes)
+			{
+				for (i = 0; i < count;)
+				{
+					Node node = Node.NodeFactory(collection, (ShallowNode)nodeContainer.Current);
+					if (node != null)
+					{
+						infoArray[i++] = new SyncNodeInfo(node);
+					}
+					if (!nodeContainer.MoveNext())
+					{
+						nodeContainer = null;
+						break;
+					}
+				}
+			}
+			else
+			{
+				for (i = 0; i < count; ++i)
+				{
+					infoArray[i] = new SyncNodeInfo((ChangeLogRecord)nodeContainer.Current);
+					if (!nodeContainer.MoveNext())
+					{
+						nodeContainer = null;
+						break;
+					}
+				}
+			}
+			count = i;
+			return infoArray;
+		}
+
+		/// <summary>
+		/// Gets an enumerator that can be used to list a SyncNodeInfo for all objects in the store.
+		/// </summary>
+		/// <returns>The enumerator or null.</returns>
+		private IEnumerator BeginListAllNodes()
+		{
+			log.Debug("BeginListAllNodes start");
+			if (!IsAccessAllowed(Access.Rights.ReadOnly))
+				throw new UnauthorizedAccessException("Current user cannot read this collection");
+
+			IEnumerator enumerator = collection.GetEnumerator();
+			if (!enumerator.MoveNext())
+			{
+				enumerator = null;
+			}
+			getAllNodes = true;
+			log.Debug("BeginListAllNodes End{0}", enumerator == null ? " Error No Nodes" : "");
+			return enumerator;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="contextValid"></param>
+		/// <returns></returns>
+		private IEnumerator BeginListChangedNodes(ref string context, out bool contextValid)
+		{
+			log.Debug("BeginListChangedNodes Start");
+
+			IEnumerator enumerator = null;
+			EventContext eventContext;
+			// Create a change log reader.
+			ChangeLogReader logReader = new ChangeLogReader( collection );
+			try
+			{	
+				// Read the cookie from the last sync and then get the changes since then.
+				if (context != null)
+				{
+					ArrayList changeList = null;
+					eventContext = new EventContext(context);
+					logReader.GetEvents(eventContext, out changeList);
+					enumerator = changeList.GetEnumerator();
+					if (!enumerator.MoveNext())
+					{
+						enumerator = null;
+					}
+					log.Debug("BeginListChangedNodes End. Found {0} changed nodes.", changeList.Count);
+					context = eventContext.ToString();
+					contextValid = true;
+					getAllNodes = false;
+					return enumerator;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.Debug(ex, "BeginListChangedNodes");
+			}
+
+			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
+			eventContext = logReader.GetEventContext();
+			if (eventContext != null)
+				context = eventContext.ToString();
+			log.Debug("BeginListChangedNodes End");
+			contextValid = false;
+			return null;
 		}
 
 		/// <summary>
@@ -539,6 +414,11 @@ namespace Simias.Sync
 			node.IncarnationUpdate = node.LocalIncarnation;
 		}
 
+		/// <summary>
+		/// Store the supplied nodes in the store.
+		/// </summary>
+		/// <param name="nodes">The array of nodes to store.</param>
+		/// <returns>The status of the operation.</returns>
 		public SyncNodeStatus[] PutNonFileNodes(SyncNode [] nodes)
 		{
 			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
@@ -556,17 +436,17 @@ namespace Simias.Sync
 				foreach (SyncNode sn in nodes)
 				{
 					statusList[i] = new SyncNodeStatus();
-					statusList[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
+					statusList[i].status = SyncStatus.ServerFailure;
 				
 					if (sn != null)
 					{
-						statusList[i].nodeID = sn.nodeID;
+						statusList[i].nodeID = sn.ID;
 						XmlDocument xNode = new XmlDocument();
 						xNode.LoadXml(sn.node);
 						Node node = Node.NodeFactory(store, xNode);
-						Import(node, sn.expectedIncarn);
+						Import(node, sn.MasterIncarnation);
 						NodeList.Add(node);
-						statusList[i++].status = SyncNodeStatus.SyncStatus.Success;
+						statusList[i++].status = SyncStatus.Success;
 					}
 					else
 					{
@@ -588,12 +468,12 @@ namespace Simias.Sync
 						catch (CollisionException)
 						{
 							// The current node failed because of a collision.
-							statusList[i++].status = SyncNodeStatus.SyncStatus.UpdateConflict;
+							statusList[i++].status = SyncStatus.UpdateConflict;
 						}
 						catch
 						{
 							// Handle any other errors.
-							statusList[i++].status = SyncNodeStatus.SyncStatus.ServerFailure;
+							statusList[i++].status = SyncStatus.ServerFailure;
 						}
 						i++;
 					}
@@ -607,6 +487,10 @@ namespace Simias.Sync
 			return (statusList);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		private bool CommitNonFileNodes()
 		{
 			try
@@ -624,6 +508,11 @@ namespace Simias.Sync
 			return true;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="nodes"></param>
+		/// <returns></returns>
 		public SyncNodeStatus[] PutDirs(SyncNode [] nodes)
 		{
 			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
@@ -639,7 +528,7 @@ namespace Simias.Sync
 				{
 					SyncNodeStatus status = new SyncNodeStatus();
 					statusList[i++] = status;
-					status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+					status.status = SyncStatus.ServerFailure;
 					try
 					{
 						XmlDocument xNode = new XmlDocument();
@@ -648,7 +537,7 @@ namespace Simias.Sync
 						log.Debug("Updating {0} {1} from client", node.Name, node.Type);
 
 						status.nodeID = node.ID;
-						Import(node, snode.expectedIncarn);
+						Import(node, snode.MasterIncarnation);
 			
 						// Get the old node to see if the node was renamed.
 						DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
@@ -676,12 +565,12 @@ namespace Simias.Sync
 							Directory.CreateDirectory(path);
 						}
 						collection.Commit(node);
-						status.status = SyncNodeStatus.SyncStatus.Success;
+						status.status = SyncStatus.Success;
 					}
 					catch (CollisionException)
 					{
 						// The current node failed because of a collision.
-						status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+						status.status = SyncStatus.UpdateConflict;
 					}
 					catch {}
 				}
@@ -693,6 +582,11 @@ namespace Simias.Sync
 			return statusList;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="nodeIDs"></param>
+		/// <returns></returns>
 		public SyncNode[] GetNonFileNodes(string[] nodeIDs)
 		{
 			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadOnly))
@@ -705,14 +599,10 @@ namespace Simias.Sync
 			{
 				for (int i = 0; i < nodeIDs.Length; ++i)
 				{
-					SyncNode snode = new SyncNode();
 					try
 					{
-						nodes[i] = snode;
-						snode.nodeID = nodeIDs[i];
 						Node node = collection.GetNodeByID(nodeIDs[i]);
-						snode.node = node.Properties.ToString(true);
-						snode.expectedIncarn = node.MasterIncarnation;
+						nodes[i] = new SyncNode(node);
 					}
 					catch
 					{
@@ -724,85 +614,6 @@ namespace Simias.Sync
 				cLock.ReleaseRequest();
 			}
 			return nodes;
-		}
-
-		private SyncNodeStamp[] GetNodeStamps()
-		{
-			log.Debug("GetNodeStamps start");
-			if (!IsAccessAllowed(Access.Rights.ReadOnly))
-				throw new UnauthorizedAccessException("Current user cannot read this collection");
-
-			ArrayList stampList = new ArrayList();
-			foreach (ShallowNode sn in collection)
-			{
-				Node node;
-				try
-				{
-					node = new Node(collection, sn);
-					SyncNodeStamp stamp = new SyncNodeStamp(node);
-					stampList.Add(stamp);
-				}
-				catch (Storage.DoesNotExistException)
-				{
-					log.Debug("Node: Name:{0} ID:{1} Type:{2} no longer exists.", sn.Name, sn.ID, sn.Type);
-					continue;
-				}
-			}
-			log.Debug("Returning {0} SyncNodeStamps", stampList.Count);
-			return (SyncNodeStamp[])stampList.ToArray(typeof(SyncNodeStamp));
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="nodes"></param>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		private bool GetChangedNodeStamps(out SyncNodeStamp[] nodes, ref string context)
-		{
-			log.Debug("GetChangedNodeStamps Start");
-
-			EventContext eventContext;
-			// Create a change log reader.
-			ChangeLogReader logReader = new ChangeLogReader( collection );
-			nodes = null;
-			bool more = true;
-			try
-			{	
-				// Read the cookie from the last sync and then get the changes since then.
-				if (context != null)
-				{
-					ArrayList changeList = null;
-					ArrayList stampList = new ArrayList();
-
-					eventContext = new EventContext(context);
-					while(more)
-					{
-						more = logReader.GetEvents(eventContext, out changeList);
-						foreach( ChangeLogRecord rec in changeList )
-						{
-							SyncNodeStamp stamp = new SyncNodeStamp(rec);
-							stampList.Add(stamp);
-						}
-					}
-			
-					log.Debug("Found {0} changed nodes.", stampList.Count);
-					nodes = (SyncNodeStamp[])stampList.ToArray(typeof(SyncNodeStamp));
-					context = eventContext.ToString();
-					return true;
-				}
-			}
-			catch
-			{
-			}
-
-			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
-			eventContext = logReader.GetEventContext();
-			if (eventContext != null)
-				context = eventContext.ToString();
-			return false;
 		}
 
 		/// <summary>
@@ -832,7 +643,7 @@ namespace Simias.Sync
 						if (node == null)
 						{
 							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-							nStatus.status = SyncNodeStatus.SyncStatus.Success;
+							nStatus.status = SyncStatus.Success;
 							continue;
 						}
 
@@ -857,11 +668,11 @@ namespace Simias.Sync
 							collection.Commit(node);
 						}
 
-						nStatus.status = SyncNodeStatus.SyncStatus.Success;
+						nStatus.status = SyncStatus.Success;
 					}
 					catch
 					{
-						nStatus.status = SyncNodeStatus.SyncStatus.ServerFailure;
+						nStatus.status = SyncStatus.ServerFailure;
 					}
 				}
 			}
@@ -878,15 +689,15 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="node">The node to put to ther server.</param>
 		/// <returns>True if successful.</returns>
-		public SyncNodeStatus.SyncStatus PutFileNode(SyncNode node)
+		public SyncStatus PutFileNode(SyncNode node)
 		{
 			if (!IsAccessAllowed(Access.Rights.ReadWrite))
 			{
-				return SyncNodeStatus.SyncStatus.Access;
+				return SyncStatus.Access;
 			}
 			if (cLock == null) 
 			{
-				return SyncNodeStatus.SyncStatus.ClientError;
+				return SyncStatus.ClientError;
 			}
 
 			cLock.LockRequest();
@@ -923,11 +734,7 @@ namespace Simias.Sync
 				{
 					outFile = new ServerOutFile(collection, node);
 					outFile.Open(sessionID);
-					SyncNode snode = new SyncNode();
-					snode.nodeID = node.ID;
-					snode.node = node.Properties.ToString(true);
-					snode.expectedIncarn = node.MasterIncarnation;
-					return snode;
+					return new SyncNode(node);
 				}
 				return null;
 			}
@@ -944,10 +751,14 @@ namespace Simias.Sync
 		/// <returns>The HashMap.</returns>
 		public HashData[] GetHashMap(int blockSize)
 		{
+			return null;
+			// BUGBUG
+			/*
 			if (inFile != null)
-				return inFile.GetHashMap();
+				// BUGBUG return inFile.GetHashMap();
 			else
-				return outFile.GetHashMap();
+				// BUGBUG return outFile.GetHashMap();
+				*/
 		}
 
 		/// <summary>
@@ -1010,12 +821,21 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Get the read handle.
+		/// Gets the read stream.
 		/// </summary>
-		/// <returns>The platform file handle.</returns>
-		public IntPtr GetReadHandle()
+		/// <returns>The file stream.</returns>
+		public FileStream GetReadStream()
 		{
-			return outFile.Handle;
+			return outFile.outStream;
+		}
+
+		/// <summary>
+		/// Get the WriteStream.
+		/// </summary>
+		/// <returns>The file stream.</returns>
+		public FileStream GetWriteStream()
+		{
+			return inFile.inStream;
 		}
 
 		/// <summary>

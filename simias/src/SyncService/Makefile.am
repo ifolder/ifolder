@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SyncService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncService.cs $(srcdir)/SyncService.asmx.cs $(srcdir)/ServerFile.cs $(srcdir)/SyncHandler.ashx.cs
+SyncService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SyncHandler.ashx.cs
 SyncService_CSFILES := $(subst /,$(SEP),$(SyncService_CSFILES1))
 SyncService_INCLUDES =
 SyncService_RESOURCES =
@@ -9,7 +9,7 @@ SyncService_FLAGS = $(CSC_LIBFLAG)
 SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll SimiasClient.dll Simias.dll
 SyncService_LIBPATH = ../SimiasClient ../Simias.dll
 
-EXTRA_DIST = SyncService.asmx SyncHandler.ashx $(SyncService_CSFILES)
+EXTRA_DIST = SyncHandler.ashx $(SyncService_CSFILES)
 
 all: SyncService.Web.dll
 
@@ -25,11 +25,11 @@ endif
 install-exec-local: SyncService.Web.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) SyncService.asmx SyncHandler.ashx $(DEBUG_FILES) $(DESTDIR)$(webdir)
+	$(INSTALL_PROGRAM) SyncHandler.ashx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) SyncService.Web.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	
 uninstall-local:
-	cd $(DESTDIR)$(webdir); rm -f SyncService.asmx SyncHandler.ashx $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir); rm -f SyncHandler.ashx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); rm -f SyncService.Web.dll $(DEBUG_FILES)
 
 installcheck-local: install

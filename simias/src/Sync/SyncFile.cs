@@ -26,8 +26,8 @@ using System.Threading;
 using System.Collections;
 using System.Security.Cryptography;
 using Simias.Storage;
-using Simias.Sync.Client;
 using Simias.Event;
+using Simias.Sync.Delta;
 
 namespace Simias.Sync
 {
@@ -99,9 +99,9 @@ namespace Simias.Sync
 		/// <summary>
 		/// Get the platform file handle.
 		/// </summary>
-		public IntPtr Handle
+		public FileStream outStream
 		{
-			get {return workStream.Handle;}
+			get {return workStream;}
 		}
 
 
@@ -275,7 +275,7 @@ namespace Simias.Sync
 		/// <param name="count">The number of bytes to write.</param>
 		public void Copy(long originalOffset, long offset, int count)
 		{
-			int bufferSize = count > BlockSize ? BlockSize : count;
+			int bufferSize = count > HashData.BlockSize ? HashData.BlockSize : count;
 			byte[] buffer = new byte[bufferSize];
 
 			lock (this)
@@ -294,11 +294,11 @@ namespace Simias.Sync
 		}
 		
 		/// <summary>
-		/// Get the platform file handle.
+		/// Get the stream.
 		/// </summary>
-		public IntPtr Handle
+		public FileStream inStream
 		{
-			get {return workStream.Handle;}
+			get {return workStream;}
 		}
 
 		/// <summary>
@@ -486,8 +486,6 @@ namespace Simias.Sync
 		protected BaseFileNode	node;
 		/// <summary>The ID of the node.</summary>
 		protected string		nodeID;
-		/// <summary>The size of the Blocks that are hashed.</summary>
-		protected const int		BlockSize = 4096;
 		/// <summary>The maximun size of a transfer.</summary>
 		protected const int		MaxXFerSize = 1024 * 64;
 		/// <summary>The name of the actual file.</summary>
@@ -496,6 +494,7 @@ namespace Simias.Sync
 		protected string		workFile;
 		/// <summary>The Prefix of the working file.</summary>
 		const string			WorkFilePrefix = ".simias.wf.";
+		const string			MapFilePrefix = ".simias.map.";
 		static string			workBinDir = "WorkArea";
 		static string			workBin;
 		/// <summary>Used to publish Sync events.</summary>
@@ -531,6 +530,15 @@ namespace Simias.Sync
 					Directory.CreateDirectory(workBin);
 			}
 			this.workFile = Path.Combine(workBin, WorkFilePrefix + node.ID + sessionID);
+		}
+
+		/// <summary>
+		/// Retuns the name of the HashMap for this file.
+		/// </summary>
+		/// <returns></returns>
+		protected string GetMapFileName()
+		{
+			return Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
 		}
 
 		#endregion
@@ -578,50 +586,4 @@ namespace Simias.Sync
 	}
 
 	#endregion
-
-	/// <summary>
-	/// Definitions for the http handler.
-	/// </summary>
-	public class SyncHttp
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public static string	CopyOffset = "CopyOffset";
-		/// <summary>
-		/// 
-		/// </summary>
-		public static string	SyncRange = "SyncRange";
-		/// <summary>
-		/// 
-		/// </summary>
-		public static string	SyncOperation = "SyncOperation";
-		/// <summary>
-		/// 
-		/// </summary>
-		public static string	SyncBlocks = "SyncBlocks";
-		/// <summary>
-		/// 
-		/// </summary>
-		public static string	BlockSize = "SyncBlockSize";
-		/// <summary>
-		/// 
-		/// </summary>
-		public enum Operation
-		{
-			/// <summary>
-			/// 
-			/// </summary>
-			Read = 1,
-			/// <summary>
-			/// 
-			/// </summary>
-			Write,
-			/// <summary>
-			/// 
-			/// </summary>
-			Copy,
-		}
-	}
-	
 }

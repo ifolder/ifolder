@@ -21,113 +21,99 @@
  * 
  ***********************************************************************/
 using System;
+using System.IO;
 using System.Net;
 using System.Web;
 using System.Web.SessionState;
 using Simias.Storage;
+using Simias.Sync.Http;
 
 namespace Simias.Sync.Web
 {
 	public class SyncHandler : IHttpHandler, IRequiresSessionState
 	{
+		const string ServiceString = "SyncService";
 		
 		public void ProcessRequest(HttpContext context)
 		{
 			HttpRequest Request = context.Request;
 			HttpResponse Response = context.Response;
+			HttpSessionState Session = context.Session;
+			HttpService Service = (HttpService)Session[ServiceString];
 			// Set no cache-ing.
 			Response.Cache.SetCacheability(HttpCacheability.NoCache);
-			SyncService service = (SyncService)context.Session["SyncService"];
-			if (service != null)
+			string httpMethod = Request.HttpMethod;
+			SyncMethod method = (SyncMethod)Enum.Parse(typeof(SyncMethod), Request.Headers.Get(SyncHeaders.Method), true);
+			if (string.Compare(httpMethod, "POST", true) == 0)
 			{
-				string httpMethod = Request.HttpMethod;
-				SyncHttp.Operation op = (SyncHttp.Operation)Enum.Parse(typeof(SyncHttp.Operation), Request.Headers.Get(SyncHttp.SyncOperation), true);
-				if (string.Compare(httpMethod, "POST", true) == 0)
+				if (Service == null && method == SyncMethod.StartSync)
+				{
+					Session.Timeout = 5;
+					Service = new HttpService();
+					Session[ServiceString] = Service;
+					Service.StartSync(Request, Response, Session);
+				}
+				else
 				{
 					// Determine What work we need to do.
-					switch (op)
+					switch (method)
 					{
-						case SyncHttp.Operation.Write:
-						{
-							long offset, size;
-							if (GetRange(Request, out offset, out size))
-							{
-								service.Write(Request.InputStream, offset, (int)size);
-								Response.StatusCode = (int)HttpStatusCode.OK;
-							}
+						case SyncMethod.GetNextInfoList:
+							Service.GetNextInfoList(Request, Response);
 							break;
-						}
-						case SyncHttp.Operation.Copy:
-						{
-							long oldOffset, offset, size;
-							if (GetRange(Request, out oldOffset, out offset, out size))
-							{
-								service.Copy(oldOffset, offset, (int)size);
-								Response.StatusCode = (int)HttpStatusCode.OK;
-							}
+						case SyncMethod.PutNodes:
+							Service.PutNodes(Request, Response);
 							break;
-						}
-						case SyncHttp.Operation.Read:
-						{
-							string sBlockCount = Request.Headers.Get(SyncHttp.SyncBlocks);
-							string sBlockSize = Request.Headers.Get(SyncHttp.BlockSize);
-							if (sBlockCount != null && sBlockSize != null)
-							{
-								int blockCount = int.Parse(sBlockCount);
-								int blockSize = int.Parse(sBlockSize);
-								long[] fileMap = new long[blockCount];
-								byte[] input = new byte[Request.ContentLength];
-								Request.InputStream.Read(input, 0, Request.ContentLength);
-								int readOffset = 0;
-								for (int i = 0; i < blockCount; ++i)
-								{
-									fileMap[i] = BitConverter.ToInt64(input,readOffset);
-									readOffset += 8;
-								}
-
-								// Now send the data back;
-								byte[] outBuffer = new byte[blockSize];
-								long offset = 0;
-								for (int i = 0; i < blockCount; ++i)
-								{
-									if (fileMap[i] == -1)
-									{
-										int bytesRead = service.Read(out outBuffer, offset, blockSize);
-										if (bytesRead != blockSize && bytesRead != 0)
-										{
-											byte[] tempArray = new byte[bytesRead];
-											Array.Copy(outBuffer, tempArray, bytesRead);
-											Response.BinaryWrite(tempArray);
-										}
-										else if (bytesRead != 0)
-										{
-											Response.BinaryWrite(outBuffer);
-										}
-									}
-									offset += blockSize;
-								}
-							}
-							else
-							{
-								Response.StatusCode = (int)HttpStatusCode.BadRequest;
-							}
+						case SyncMethod.GetNodes:
+							Service.GetNodes(Request, Response);
 							break;
-						}
+						case SyncMethod.PutDirs:
+							Service.PutDirs(Request, Response);
+							break;
+						case SyncMethod.GetDirs:
+							Service.GetDirs(Request, Response);
+							break;
+						case SyncMethod.DeleteNodes:
+							Service.DeleteNodes(Request, Response);
+							break;
+						case SyncMethod.OpenFilePut:
+							Service.OpenFilePut(Request, Response);
+							break;
+						case SyncMethod.OpenFileGet:
+							Service.OpenFileGet(Request, Response);
+							break;
+						case SyncMethod.GetHashMap:
+							Service.GetHashMap(Request, Response);
+							break;
+						case SyncMethod.PutHashMap:
+							Service.PutHashMap(Request, Response);
+							break;
+						case SyncMethod.ReadFile:
+							Service.ReadFile(Request, Response);
+							break;
+						case SyncMethod.WriteFile:
+							Service.WriteFile(Request, Response);
+							break;
+						case SyncMethod.CopyFile:
+							Service.CopyFile(Request, Response);
+							break;
+						case SyncMethod.CloseFile:
+							Service.CloseFile(Request, Response);
+							break;
+						case SyncMethod.EndSync:
+							Service.EndSync(Request, Response);
+							Session.Clear();
+							break;
 						default:
 							Response.StatusCode = (int)HttpStatusCode.BadRequest;
 							break;
 					}
-				}
-				else
-				{
-					Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				}
 			}
 			else
 			{
 				Response.StatusCode = (int)HttpStatusCode.BadRequest;
 			}
-			//Response.WriteFile("Web.Config");
 		}
 
 		public bool IsReusable
@@ -135,54 +121,6 @@ namespace Simias.Sync.Web
 			// To enable pooling, return true here.
 			// This keeps the handler in memory.
 			get { return true; }
-		}
-
-		/// <summary>
-		/// Return the file offset and size to read or write.
-		/// </summary>
-		/// <param name="Request">The request.</param>
-		/// <param name="offset">The file offset.</param>
-		/// <param name="size">The size.</param>
-		/// <returns>True if range found.</returns>
-		private bool GetRange(HttpRequest Request, out long offset, out long size)
-		{
-			string range = Request.Headers.Get(SyncHttp.SyncRange);
-			if (range != null)
-			{
-				string[] values = range.Split('-');
-				if (values.Length == 2)
-				{
-					offset = long.Parse(values[0]);
-					size = long.Parse(values[1]) - offset;
-					return true;
-				}
-			}
-			
-			offset = size = 0;
-			return false;
-		}
-
-		/// <summary>
-		/// Return the file offset and size to copy.
-		/// </summary>
-		/// <param name="Request">The request.</param>
-		/// <param name="oldOffset">The original file offset.</param>
-		/// <param name="offset">The file offset.</param>
-		/// <param name="size">The size.</param>
-		/// <returns>True if range found.</returns>
-		private bool GetRange(HttpRequest Request, out long oldOffset, out long offset, out long size)
-		{
-			if (GetRange(Request, out offset, out size))
-			{
-				string cOffset = Request.Headers.Get(SyncHttp.CopyOffset);
-				if (cOffset != null)
-				{
-					oldOffset = long.Parse(cOffset);
-					return true;
-				}
-			}
-			oldOffset = size = 0;
-			return false;
 		}
 	}
 }
