@@ -192,21 +192,12 @@ internal class IncomingNode
 	// everything else is done, just make sure we clear the TempFileDone flag
 	void ClearTemp()
 	{
-		for (Node n = oldNode == null? node: oldNode;;)
-		{
-			n = collection.GetNodeByID(n.ID);
-			collection.ImportNode(n, n.LocalIncarnation);
-			n.Properties.DeleteSingleProperty(TempFileDone);
-			try
-			{
-				collection.Commit(n);
-				return;
-			}
-			catch (CollisionException ce)
-			{
-				Log.Spew("Node {0} could not commit while completing an update, retrying ...", n.Name);
-			}
-		}
+		// TODO is the get by id needed.
+		Node n = collection.GetNodeByID(node.ID);
+		n.Properties.State = PropertyList.PropertyListState.Internal;
+		n.Properties.DeleteSingleProperty(TempFileDone);
+		collection.Commit(n);
+		return;
 	}
 
 	// try to move the temp file into position
