@@ -85,9 +85,10 @@ namespace Novell.FormsTrayApp
 			base.Install(savedState);
 			Console.WriteLine("iFolderApp Install");
 
-			string installDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+			string installDir = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
 
 			string windowsDir = Environment.GetEnvironmentVariable("windir");
+
 			//fixConfigFile(ifolderAppPath);
 			fixConfigFile(Path.Combine(windowsDir, "explorer.exe.config"), installDir);
 		}
@@ -171,6 +172,7 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					xtw.Formatting = Formatting.Indented;
+
 					configDoc.WriteTo(xtw);
 				}
 				finally
@@ -191,7 +193,7 @@ namespace Novell.FormsTrayApp
 			XmlNode identity = node.FirstChild;
 			XmlNode codebase = identity.NextSibling;
 
-			Uri fileURI = new Uri("file:///" + Path.Combine(path, ((XmlElement)identity).GetAttribute("name") + ".dll"));
+			Uri fileURI = new Uri(Path.Combine(path, Path.Combine(@"web\bin", ((XmlElement)identity).GetAttribute("name") + ".dll")));
 			string ns = codebase.GetNamespaceOfPrefix(String.Empty);
 			XmlElement element = configDoc.CreateElement(String.Empty, "codeBase", ns);
 			element.SetAttribute("href", fileURI.AbsoluteUri);
