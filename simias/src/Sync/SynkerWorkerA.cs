@@ -300,7 +300,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 					ss.WriteLargeNode(chunks, 0, false);
 				}
 			NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
-			if (status == NodeStatus.Complete)
+			if (status == NodeStatus.Complete || status == NodeStatus.FileNameConflict)
 				ops.UpdateIncarn((Nid)node.ID, node.LocalIncarnation);
 			else
 				Log.Spew("skipping update of incarnation for large node {0} due to {1}", node.Name, status);

@@ -23,8 +23,6 @@
 using System;
 using System.Collections;
 using System.IO;
-//using System.Xml;
-//using System.Diagnostics;
 
 using Simias.Storage;
 using Simias;
@@ -210,7 +208,7 @@ internal class IncomingNode
 	}
 
 	// try to move the temp file into position
-	NodeStatus CommitFile()
+	NodeStatus CommitFile(NodeStatus status)
 	{
 		if (collection.IsType(node, typeof(DirNode).Name))
 		{
@@ -227,7 +225,7 @@ internal class IncomingNode
 			}
 			Directory.CreateDirectory(p);
 			ClearTemp();
-			return NodeStatus.Complete;
+			return status;
 		}
 
 		BaseFileNode bfn = SyncOps.CastToBaseFileNode(collection, node);
@@ -236,7 +234,7 @@ internal class IncomingNode
 			Log.Spew("commiting nonFile, nonDir {0}", node.Name);
 			Log.Assert(forkList == null);
 			ClearTemp();
-			return NodeStatus.Complete;
+			return status;
 		}
 		
 		Log.Assert(forkList != null);
@@ -245,9 +243,11 @@ internal class IncomingNode
 			fork.stream.Close();
 			fork.stream = null;
 		}
-		
-		path = bfn.GetFullPath(collection);
-		NodeStatus status = NodeStatus.Complete;
+
+		path = status == NodeStatus.UpdateConflict?
+				Path.Combine(path, ConflictUpdatePrefix + node.ID + Path.GetExtension(node.Name)):
+				Path.Combine(path, node.Name);
+
 		Log.Spew("placing file {0}", path);
 
 		/* TODO: there is still a window when moving the temp file into position. It
@@ -264,6 +264,7 @@ internal class IncomingNode
 		catch (Exception e)
 		{
 			Log.Spew("Could not move tmp file to {0}: {1}", path, e.Message);
+			Log.Assert(status != NodeStatus.UpdateConflict); // should not happen if renaming to an update conflict file
 
 			path = Path.Combine(ParentPath(collection, node), ConflictFilePrefix + node.ID);
 			try
@@ -277,6 +278,7 @@ internal class IncomingNode
 				return NodeStatus.ServerFailure;
 			}
 			status = NodeStatus.FileNameConflict;
+			node = collection.CreateCollision(node.id);
 		}
 		try
 		{
@@ -338,7 +340,7 @@ internal class IncomingNode
 					try
 					{
 						collection.Commit(oldNode);
-						return NodeStatus.Complete;
+						return CommitFile(NodeStatus.UpdateConflict);
 					}
 					catch (CollisionException ce)
 					{
@@ -348,7 +350,7 @@ internal class IncomingNode
 				}
 			}
 		}
-		return CommitFile();
+		return CommitFile(NodeStatus.Complete);
 	}
 }
 

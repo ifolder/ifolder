@@ -36,6 +36,7 @@ public class Conflict
 {
 	Collection collection;
 	Node node;
+	Node conflictNode;
 
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -45,6 +46,7 @@ public class Conflict
 	{
 		this.collection = collection;
 		this.node = node;
+		conflictNode = collection.GetNodeFromCollision(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -55,7 +57,7 @@ public class Conflict
 	{
 		get
 		{
-			return collection.HasCollisions(node);
+			return conflictNode != null;
 		}
 	}
 
@@ -110,10 +112,11 @@ public class Conflict
 	{
 		get
 		{
-			if (!collection.IsType(node, typeof(BaseFileNode).Name))
+			if (!collection.IsType(node, typeof(BaseFileNode).Name) || conflictNode == null)
 				return null;
 			string path = IncomingNode.ParentPath(collection, node);
-			return path == null? null: Path.Combine(path, IncomingNode.ConflictUpdatePrefix + node.ID);
+			return path == null? null: Path.Combine(path,
+					IncomingNode.ConflictUpdatePrefix + node.ID + Path.GetExtension(conflictNode.Name));
 		}
 	}
 
@@ -125,7 +128,7 @@ public class Conflict
 	{
 		get
 		{
-			return collection.GetNodeFromCollision(node);
+			return conflictNode;
 		}
 	}
 
@@ -135,29 +138,28 @@ public class Conflict
 	/// </summary>
 	public void Resolve(bool localChangesWin)
 	{
-		Node cn = UpdateConflictNode;
 		if (localChangesWin)
 		{
 			File.Delete(UpdateConflictPath);
 			node = collection.DeleteCollision(node);
-
-			//TODO: need a method to set node.LocalIncarnation to cn.LocalIncarnation + 1
+			//node.SetIncarnations(conflictNode.LocalIncarnation, conflictNode.MasterIncarnation);
+			node.IncarnationUpdate = conflictNode.MasterIncarnation;
 			collection.Commit(node);
-			while (node.LocalIncarnation < cn.LocalIncarnation + 1)
-				collection.Commit(node);
 			return;
 		}
 
-		// collision node wins
+		// conflict node wins
 		// we may be resolving an update conflict on a node that has a naming conflict
-		string path = FileNameConflictPath;
-		if (path == null)
-			path = NonconflictedPath;
+		string fncpath = FileNameConflictPath;
+		string path = fncpath == null? NonconflictedPath: fncpath;
 		File.Delete(path);
 		File.Move(UpdateConflictPath, path);
-		collection.ImportNode(cn, node.LocalIncarnation);
-		cn = collection.DeleteCollision(cn);
-		collection.Commit(cn);
+		collection.ImportNode(conflictNode, node.LocalIncarnation);
+		if (fncpath == null)
+			conflictNode = collection.DeleteCollision(conflictNode);
+		//else
+		//	conflictNode = collection.CreateCollision(conflictNode.ID);
+		collection.Commit(conflictNode);
 	}
 
 	//---------------------------------------------------------------------------

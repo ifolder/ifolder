@@ -315,9 +315,9 @@ internal class SyncOps
 				chunk.forkChunks = null;
 		}
 
-		Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}, relPath {4}",
-				chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
-				chunk.forkChunks == null? -1: chunk.forkChunks.Length, chunk.relativePath);
+		//Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}, relPath {4}",
+		//		chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
+		//		chunk.forkChunks == null? -1: chunk.forkChunks.Length, chunk.relativePath);
 		return chunk;
 	}
 
@@ -385,7 +385,7 @@ internal class SyncOps
 			inNode.Start(nc.node, nc.relativePath);
 			inNode.BlowChunks(nc.forkChunks);
 			NodeStatus status = inNode.Complete(nc.expectedIncarn);
-			if (status != NodeStatus.Complete)
+			if (status != NodeStatus.Complete && status != NodeStatus.FileNameConflict)
 				rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
 		}
 		return rejects.Count == 0? null: (RejectedNode[])rejects.ToArray(typeof(RejectedNode));
