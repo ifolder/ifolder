@@ -31,18 +31,19 @@ Release      : 1
 Copyright    : GPL
 Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
-Vendor       : Novell, Inc.
-Packager     : Boyd Timothy <btimothy@novell.com>
+URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
+Vendor       : <unknown>
+Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : nautilus >= 2.5
 Requires     : simias >= 1.0
 Requires     : ifolder3 >= 3.0
+Obsoletes    : %{name} < %{version}
 
 #=============================================================================
 %Description
-nautilus-ifolder Provides the iFolder plugin interface to the Nautilus File 
-Manager
+Provides the iFolder plugin interface to the Nautilus File Manager
 
 #=============================================================================
 %ChangeLog
@@ -78,5 +79,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 %Files
 %defattr(-,root,root)
-%{prefix}/*
-
+/opt/gnome/lib/nautilus-ifolder*
+/opt/gnome/lib/nautilus/extensions-1.0/libnautilus-ifolder*
+/opt/gnome/share/icons/gnome/48x48/emblems/emblem-ifolder.png
+/opt/gnome/share/icons/gnome/24x24/apps/ifolder-folder.png
