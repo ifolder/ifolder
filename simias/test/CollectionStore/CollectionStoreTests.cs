@@ -969,6 +969,7 @@ namespace Simias.Storage.Tests
 					catch ( AccessException )
 					{
 						// This is expected.
+						member.IsOwner = false;
 					}
 
 					// test the access search
@@ -2212,6 +2213,9 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void SyncIntervalTest()
 		{
+			// Remove the default workstation sync policy.
+			SyncInterval.Delete();
+
 			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
 			collection.Commit();
 
@@ -2462,6 +2466,67 @@ namespace Simias.Storage.Tests
 			{
 				collection1.Commit( collection1.Delete() );
 				collection2.Commit( collection2.Delete() );
+			}
+		}
+
+		/// <summary>
+		/// Tests the collection owner.
+		/// </summary>
+		[Test]
+		public void CollectionOwnerTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+
+			try
+			{
+				Member member1 = new Member( "Member1", Guid.NewGuid().ToString(), Access.Rights.Admin );
+				Member member2 = new Member( "Member2", Guid.NewGuid().ToString(), Access.Rights.Admin );
+				member1.IsOwner = true;
+				member2.IsOwner = true;
+
+				// Collection with multiple owners.
+				try
+				{
+					collection.Commit( new Node[] { collection, member1, member2 } );
+				}
+				catch ( AlreadyExistsException )
+				{
+					// This is expected.
+				}
+
+				// Commit the collection properly.
+				collection.Commit( new Node[] { collection, member1 } );
+
+				// Collection with two owners.
+				try
+				{
+					collection.Commit( member2 );
+				}
+				catch ( CollectionStoreException )
+				{
+					// This is expected.
+				}
+
+				// Collection with no owner.
+				member1.IsOwner = false;
+				try
+				{
+					collection.Commit( member1 );
+				}
+				catch ( CollectionStoreException )
+				{
+					// This is expected.
+					member1.IsOwner = true;
+					member2.IsOwner = false;
+				}
+
+				// Really change the owner.
+				collection.ChangeOwner( member2, Access.Rights.ReadOnly );
+				collection.Commit();
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
 			}
 		}
 		#endregion

@@ -1363,7 +1363,9 @@ namespace Simias.Storage
 				bool doAdminCheck = false;
 				bool hasCollection = false;
 				bool hasFileNode = false;
+				bool hasCurrentOwner = false;
 				Member collectionOwner = null;
+				Member currentOwner = Owner;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
@@ -1387,6 +1389,12 @@ namespace Simias.Storage
 						{
 							// Administrative access needs to be checked because collection membership has changed.
 							doAdminCheck = true;
+
+							// Remember if the current collection owner is in the list.
+							if ( ( currentOwner != null ) && ( currentOwner.ID == node.ID ) )
+							{
+								hasCurrentOwner = true;
+							}
 
 							// Keep track of any ownership changes.
 							if ( node.Properties.HasProperty( PropertyTags.Owner ) )
@@ -1455,6 +1463,13 @@ namespace Simias.Storage
 					}
 					else
 					{
+						// Make sure that ownership of the collection is right.
+						if ( ( hasCurrentOwner && ( collectionOwner == null ) ) ||
+							 ( !hasCurrentOwner && ( collectionOwner != null ) ) )
+						{
+							throw new CollectionStoreException( "Collection owner is in an invalid state." );
+						}
+
 						// If there is no user being impersonated on this collection, there is no need to do any
 						// rights checking. Access rights are only checked for impersonated users.
 						if ( accessControl.IsImpersonating )
@@ -1480,9 +1495,6 @@ namespace Simias.Storage
 								// If ownership rights are changing, make sure the current user has sufficient rights.
 								if ( collectionOwner != null )
 								{
-									// Get the current owner of the collection.
-									Member currentOwner = Owner;
-
 									// See if ownership is changing and if it is, then the current user has to be
 									// the current owner.
 									if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )

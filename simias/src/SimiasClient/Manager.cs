@@ -291,7 +291,6 @@ namespace Simias.Client
 
 			// Stay in the ping loop until the service comes up successfully.
 			bool serviceStarted = false;
-			int count = 0;
 			while ( !serviceStarted )
 			{
 				try
