@@ -61,7 +61,7 @@ case $SIMIAS_OS in
         CSC_WINEXEFLAG=/target:winexe
         CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
         CXX='c++ -c'
-        CXXFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=@PACKAGE@ -DVERSION=@VERSION@";
+        CXXFLAGS="-pipe -Wall -W -DLINUX -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
         DEBUG_CFLAGS="-g -DDEBUG"
         DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
         DEBUG_CXXFLAGS="-g -DDEBUG"
@@ -125,7 +125,7 @@ case $SIMIAS_OS in
         CSC_LIBFLAG=/target:library
         CSC_WINEXEFLAG=/target:winexe
         CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
-        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=@PACKAGE@ -DVERSION=@VERSION@";
+        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
         DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
         DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
         DEBUG_CXXFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
