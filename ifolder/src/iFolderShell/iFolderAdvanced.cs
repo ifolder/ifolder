@@ -136,16 +136,16 @@ namespace Novell.iFolder.iFolderCom
 			this.interval = new System.Windows.Forms.NumericUpDown();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.byteCount = new System.Windows.Forms.TextBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.objectCount = new System.Windows.Forms.TextBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.objectCount = new System.Windows.Forms.TextBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.byteCount = new System.Windows.Forms.TextBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.accessControlButtons.SuspendLayout();
@@ -165,6 +165,7 @@ namespace Novell.iFolder.iFolderCom
 			this.tabControl1.Size = new System.Drawing.Size(344, 400);
 			this.tabControl1.TabIndex = 0;
 			this.tabControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
+			this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
 			// tabPage1
 			// 
@@ -336,6 +337,50 @@ namespace Novell.iFolder.iFolderCom
 			this.label1.TabIndex = 0;
 			this.label1.Text = "iFolder refresh interval:";
 			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.byteCount);
+			this.tabPage3.Controls.Add(this.label4);
+			this.tabPage3.Controls.Add(this.label3);
+			this.tabPage3.Controls.Add(this.objectCount);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(336, 374);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Sync";
+			// 
+			// byteCount
+			// 
+			this.byteCount.Location = new System.Drawing.Point(192, 48);
+			this.byteCount.Name = "byteCount";
+			this.byteCount.ReadOnly = true;
+			this.byteCount.TabIndex = 3;
+			this.byteCount.Text = "";
+			// 
+			// label4
+			// 
+			this.label4.Location = new System.Drawing.Point(8, 48);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(176, 16);
+			this.label4.TabIndex = 2;
+			this.label4.Text = "Bytes to upload:";
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(8, 16);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(176, 16);
+			this.label3.TabIndex = 1;
+			this.label3.Text = "Files/Folders to synchronize:";
+			// 
+			// objectCount
+			// 
+			this.objectCount.Location = new System.Drawing.Point(192, 16);
+			this.objectCount.Name = "objectCount";
+			this.objectCount.ReadOnly = true;
+			this.objectCount.TabIndex = 0;
+			this.objectCount.Text = "";
+			// 
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -364,50 +409,6 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.TabIndex = 3;
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.Controls.Add(this.byteCount);
-			this.tabPage3.Controls.Add(this.label4);
-			this.tabPage3.Controls.Add(this.label3);
-			this.tabPage3.Controls.Add(this.objectCount);
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(336, 374);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Sync";
-			// 
-			// objectCount
-			// 
-			this.objectCount.Location = new System.Drawing.Point(192, 16);
-			this.objectCount.Name = "objectCount";
-			this.objectCount.ReadOnly = true;
-			this.objectCount.TabIndex = 0;
-			this.objectCount.Text = "";
-			// 
-			// label3
-			// 
-			this.label3.Location = new System.Drawing.Point(8, 16);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(176, 16);
-			this.label3.TabIndex = 1;
-			this.label3.Text = "Files/Folders to synchronize:";
-			// 
-			// label4
-			// 
-			this.label4.Location = new System.Drawing.Point(8, 48);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(176, 16);
-			this.label4.TabIndex = 2;
-			this.label4.Text = "Bytes to upload:";
-			// 
-			// byteCount
-			// 
-			this.byteCount.Location = new System.Drawing.Point(192, 48);
-			this.byteCount.Name = "byteCount";
-			this.byteCount.ReadOnly = true;
-			this.byteCount.TabIndex = 3;
-			this.byteCount.Text = "";
 			// 
 			// iFolderAdvanced
 			// 
@@ -646,15 +647,19 @@ namespace Novell.iFolder.iFolderCom
 			// TODO - use locale-specific path.
 //			helpProvider1.HelpNamespace = Path.Combine(loadPath, @"help\en\doc\user\data\front.html");
 
-			// Get the refresh interval.
-			interval.Value = (decimal)ifolder.RefreshInterval;
-
-			// Get the sync node and byte counts.
-			uint nodeCount;
-			ulong bytesToSend;
-			SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
-			objectCount.Text = nodeCount.ToString();
-			byteCount.Text = bytesToSend.ToString();
+			try
+			{
+				// Get the refresh interval.
+				interval.Value = (decimal)ifolder.RefreshInterval;
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "SyncSize.CalculateSendSize");
+			}
 
 			// Image list...
 			try
@@ -1122,6 +1127,34 @@ namespace Novell.iFolder.iFolderCom
 		{
 			// Enable the apply button.
 			apply.Enabled = true;		
+		}
+
+		private void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if (tabControl1.SelectedIndex == 2)
+			{
+				Cursor.Current = Cursors.WaitCursor;
+
+				try
+				{
+					// Get the sync node and byte counts.
+					uint nodeCount;
+					ulong bytesToSend;
+					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
+					objectCount.Text = nodeCount.ToString();
+					byteCount.Text = bytesToSend.ToString();
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug(ex, "SyncSize.CalculateSendSize");
+				}
+
+				Cursor.Current = Cursors.Default;
+			}
 		}
 		#endregion
 
