@@ -36,6 +36,7 @@ AssemblyInfo.cs
 ../CollectionStore/IdentityManager.cs
 ../CollectionStore/LinkNode.cs
 ../CollectionStore/LocalAddressBook.cs
+../CollectionStore/LocalDatabase.cs
 ../CollectionStore/MultiValuedList.cs
 ../CollectionStore/Node.cs
 ../CollectionStore/NodeTypes.cs
@@ -44,6 +45,7 @@ AssemblyInfo.cs
 ../CollectionStore/ShallowNode.cs
 ../CollectionStore/Store.cs
 ../CollectionStore/StoreFileNode.cs
+../CollectionStore/WorkGroup.cs
 ../Common/Library/Configuration.cs
 ../Common/Library/Exception.cs
 ../Common/Library/ISimiasLog.cs
