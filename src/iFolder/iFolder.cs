@@ -28,6 +28,7 @@ using System.Net;
 
 using Simias;
 using Simias.Storage;
+using Simias.Sync;
 using Simias.Invite;
 using Novell.AddressBook;
 
@@ -40,7 +41,9 @@ namespace Novell.iFolder
 	public class iFolder
 	{
 		#region Class Members
-		private Store							store;
+		
+        private Configuration                   config;
+        private Store							store;
 		private	Collection						collection = null;
 		private	Novell.AddressBook.AddressBook	ab = null;
 		private Novell.AddressBook.Manager 		abMan;
@@ -90,12 +93,15 @@ namespace Novell.iFolder
 		#endregion
 
 		#region Constructors
-		internal iFolder(Store store, Novell.AddressBook.Manager manager)
+		
+        internal iFolder(Configuration config, Store store, Novell.AddressBook.Manager manager)
 		{
-			this.store = store;
+			this.config = config;
+            this.store = store;
 			this.abMan = manager;
 		}
-		#endregion
+		
+        #endregion
 
 		#region Private methods
 		/// <summary>
