@@ -115,6 +115,9 @@ namespace Simias.Client.Event
 		/// <summary>
 		/// Xml tags used to describe a FileSyncEventArgs object.
 		/// </summary>
+		private const string FEA_CollectionIDTag = "CollectionID";
+		private const string FEA_ObjectTypeTag = "ObjectType";
+		private const string FEA_DeleteTag = "Delete";
 		private const string FEA_NameTag = "Name";
 		private const string FEA_SizeTag = "Size";
 		private const string FEA_SizeToSyncTag = "SizeToSync";
@@ -225,6 +228,9 @@ namespace Simias.Client.Event
 		/// <param name="args">FileSyncEventArgs containing Sync event information.</param>
 		private void FromFileSyncEventArgs( FileSyncEventArgs args )
 		{
+			AddData( new IProcEventNameValue( FEA_CollectionIDTag, args.CollectionID ) );
+			AddData( new IProcEventNameValue( FEA_ObjectTypeTag, args.ObjectType.ToString() ) );
+			AddData( new IProcEventNameValue( FEA_DeleteTag, args.Delete.ToString() ) );
 			AddData( new IProcEventNameValue( FEA_NameTag, args.Name ) );
 			AddData( new IProcEventNameValue( FEA_SizeTag, args.Size.ToString() ) );
 			AddData( new IProcEventNameValue( FEA_SizeToSyncTag, args.SizeToSync.ToString() ) );
@@ -324,6 +330,9 @@ namespace Simias.Client.Event
 		public FileSyncEventArgs ToFileSyncEventArgs()
 		{
 			// Preinitialize all of the node event arguments.
+			string collectionID = string.Empty;
+			ObjectType objectType = ObjectType.File;
+			bool delete = false;
 			string name = string.Empty;
 			long size = 0;
 			long sizeToSync = 0;
@@ -335,6 +344,21 @@ namespace Simias.Client.Event
 			{
 				switch ( xn.Name )
 				{
+					case FEA_CollectionIDTag:
+					{
+						collectionID = xn.InnerText;
+						break;
+					}
+					case FEA_ObjectTypeTag:
+					{
+						objectType = ( ObjectType )Enum.Parse( typeof( ObjectType ), xn.InnerText, false );
+						break;
+					}
+					case FEA_DeleteTag:
+					{
+						delete = Boolean.Parse( xn.InnerText );
+						break;
+					}
 					case FEA_NameTag:
 					{
 						name = xn.InnerText;

@@ -42,6 +42,22 @@ namespace Simias.Client.Event
 	};
 
 	/// <summary>
+	/// The type of object being synced.
+	/// </summary>
+	[Flags]
+	public enum ObjectType : short
+	{
+		/// <summary>
+		/// A file is being synced.
+		/// </summary>
+		File = 1,
+		/// <summary>
+		/// A directory is being synced.
+		/// </summary>
+		Directory = 2
+	};
+
+	/// <summary>
 	/// The arguments for a file sync event.
 	/// </summary>
 	[Serializable]
@@ -49,11 +65,14 @@ namespace Simias.Client.Event
 	{
 		#region Fields
 
+		private bool delete;
+		private Direction direction;
+		private string collectionID;
 		private string name;
+		private ObjectType objectType;
 		private long size;
 		private long sizeToSync;
 		private long sizeRemaining;
-		private Direction direction;
 
 		#endregion
 
@@ -77,9 +96,57 @@ namespace Simias.Client.Event
 			this.direction = direction;
 		}
 
+		/// <summary>
+		/// Constructs a FileSyncEventArgs that will be used by FileSyncHandler delegates.
+		/// </summary>
+		/// <param name="collectionID">The ID of the collection that the sync event belongs to.</param>
+		/// <param name="objectType">The type of object being synced.</param>
+		/// <param name="delete">Set to <b>true</b> if the synced object is being deleted.</param>
+		/// <param name="name">The name of the file that the event belongs to.</param>
+		/// <param name="size">The size of the file that the event belongs to.</param>
+		/// <param name="sizeToSync">The total amount of data to be synced.</param>
+		/// <param name="sizeRemaining">The amount of data that still needs to be synced.</param>
+		/// <param name="direction">The direction of the sync.</param>
+		public FileSyncEventArgs(string collectionID, ObjectType objectType, bool delete, string name, long size, long sizeToSync, long sizeRemaining, Direction direction) :
+			base()
+		{
+			this.collectionID = collectionID;
+			this.objectType = objectType;
+			this.delete = delete;
+			this.name = name;
+			this.size = size;
+			this.sizeToSync = sizeToSync;
+			this.sizeRemaining = sizeRemaining;
+			this.direction = direction;
+		}
+
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Gets the ID of the collection that the sync event belongs to.
+		/// </summary>
+		public string CollectionID
+		{
+			get { return collectionID; }
+		}
+
+		/// <summary>
+		/// Gets the type of object being synced.
+		/// </summary>
+		public ObjectType ObjectType
+		{
+			get { return objectType; }
+		}
+
+		/// <summary>
+		/// Gets a value that indicates if the sync operation is a delete.
+		/// </summary>
+		public bool Delete
+		{
+			get { return delete; }
+		}
 
 		/// <summary>
 		/// Gets the name of the file that the event belongs to.
