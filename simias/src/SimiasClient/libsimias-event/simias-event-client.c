@@ -477,22 +477,19 @@ static int
 sec_send_message (SimiasEventClient *ec, int s, char * message, int len)
 {
 	int sent_length;
-	int msg_length;
 	char err_msg [2048];
 	char *real_message;
 	
-	msg_length = strlen (message);
-	
-	real_message = malloc ((sizeof (char) * msg_length + 1));
+	real_message = malloc ((sizeof (char) * len + 1));
 	if (!real_message) {
 		fprintf (stderr, "Out of memory\n");
 		return 0;
 	}
 	
-	real_message [0] = msg_length;
+	real_message [0] = len + 1;
 	sprintf (real_message + 1, "%s", message);
 	
-	sent_length = send (s, real_message, len, 0);
+	sent_length = send (s, real_message, len + 1, 0);
 	
 	free (real_message);
 	
