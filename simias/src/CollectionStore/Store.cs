@@ -311,15 +311,20 @@ namespace Simias.Storage
 				{
 					// Default the user name to the machine user name.
 					string userName = Environment.UserName;
+					string adminDNName = null;
 
 					// Does the configuration indicate that this is an enterprise server?
 					if ( enterpriseServer )
 					{
 						// Get the name of the user to create as the identity.
-						string proxyName = config.Get( DomainTag, AdminDNTag, null );
-						if ( proxyName != null )
+						adminDNName = config.Get( DomainTag, AdminDNTag, null );
+						if ( adminDNName != null )
 						{
-							userName = ParseUserName( proxyName );
+							userName = ParseUserName( adminDNName );
+						}
+						else
+						{
+							throw new SimiasException( "Cannot get ldap DN name for simias admin." );
 						}
 					}
 
@@ -374,6 +379,10 @@ namespace Simias.Storage
 						Domain enterpriseDomain = new Domain( this, enterpriseName, enterpriseID, description, SyncRoles.Master, Domain.ConfigurationType.ClientServer );
 						enterpriseDomain.SetType( enterpriseDomain, "Enterprise" );
 						Member enterpriseDomainOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+						if ( adminDNName != null )
+						{
+							enterpriseDomainOwner.Properties.AddNodeProperty( "DN", adminDNName );
+						}
 						enterpriseDomainOwner.IsOwner = true;
 						enterpriseDomain.Commit( new Node[] { enterpriseDomain, enterpriseDomainOwner } );
 
