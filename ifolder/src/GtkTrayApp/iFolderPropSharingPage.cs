@@ -494,43 +494,58 @@ namespace Novell.iFolder
 		{
 			if(UserSelector != null)
 			{
-				if(args.ResponseId == Gtk.ResponseType.Ok)
+				switch(args.ResponseId)
 				{
-					foreach(iFolderUser user in UserSelector.SelectedUsers)
+					case Gtk.ResponseType.Ok:
 					{
-						if(!curUsers.ContainsKey(user.UserID))
+						foreach(iFolderUser user in UserSelector.SelectedUsers)
 						{
-							try
+							if(!curUsers.ContainsKey(user.UserID))
 							{
-    							iFolderUser newUser = ifws.InviteUser(
-														ifolder.ID,
-														user.UserID,
-														"ReadWrite");
-
-								TreeIter iter = 
-									UserTreeStore.AppendValues(newUser);
-
-								curUsers.Add(newUser.UserID, iter);
-
-							}
-							catch(Exception e)
-							{
-								iFolderExceptionDialog ied = 
-										new iFolderExceptionDialog(
-												topLevelWindow, e);
-								ied.Run();
-								ied.Hide();
-								ied.Destroy();
-								ied = null;
-								break;
+								try
+								{
+    								iFolderUser newUser = ifws.InviteUser(
+															ifolder.ID,
+															user.UserID,
+															"ReadWrite");
+	
+									TreeIter iter = 
+										UserTreeStore.AppendValues(newUser);
+	
+									curUsers.Add(newUser.UserID, iter);
+	
+								}
+								catch(Exception e)
+								{
+									iFolderExceptionDialog ied = 
+											new iFolderExceptionDialog(
+													topLevelWindow, e);
+									ied.Run();
+									ied.Hide();
+									ied.Destroy();
+									ied = null;
+									break;
+								}
 							}
 						}
+						UserSelector.Hide();
+						UserSelector.Destroy();
+						UserSelector = null;
+						break;
+					}
+					case Gtk.ResponseType.Help:
+					{
+						Util.ShowHelp("front.html", topLevelWindow);
+						break;
+					}
+					case Gtk.ResponseType.Cancel:
+					{
+						UserSelector.Hide();
+						UserSelector.Destroy();
+						UserSelector = null;
+						break;
 					}
 				}
-
-				UserSelector.Hide();
-				UserSelector.Destroy();
-				UserSelector = null;
 			}
 		}
 
