@@ -48,38 +48,45 @@ STDMETHODIMP CiFolderShell::IsMemberOf(LPCWSTR pwszPath,
 									   DWORD dwAttrib)
 {
     //OutputDebugString(TEXT("CiFolderShell::IsMemberOf()\n"));
+	wchar_t lpszRoot[4];
 
-	try
+	lstrcpyn(lpszRoot, pwszPath, 3);
+    
+	if ((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) && !(GetDriveType(lpszRoot) & DRIVE_REMOTE))
 	{
-		if (m_spiFolder == NULL)
+		VARIANT_BOOL hasConflicts;
+		try
 		{
-			// Instantiate the iFolder smart pointer.
-			m_spiFolder.CreateInstance(__uuidof(iFolderComponent));
-		}
-
-		if (m_spiFolder)
-		{
-			BOOL isiFolder = m_spiFolder->IsiFolder((LPWSTR)pwszPath);
-			switch (m_iFolderClass)
+			if (m_spiFolder == NULL)
 			{
-			case IFOLDER_ISIFOLDER:
-				// Call into iFolder lib to see if this item is or is a member of an iFolder.
-				if (isiFolder && !m_spiFolder->HasConflicts((LPWSTR)pwszPath))
+				// Instantiate the iFolder smart pointer.
+				m_spiFolder.CreateInstance(__uuidof(iFolderComponent));
+			}
+
+			if (m_spiFolder)
+			{
+				// Call into iFolder lib to see if this item is an iFolder.
+				BOOL isiFolder = m_spiFolder->IsiFolder((LPWSTR)pwszPath, &hasConflicts);
+				switch (m_iFolderClass)
 				{
-					return S_OK;
-				}
-				break;
-			case IFOLDER_CONFLICT:
-				if (isiFolder && m_spiFolder->HasConflicts((LPWSTR)pwszPath))
-				{
-					return S_OK;
+				case IFOLDER_ISIFOLDER:
+					if (isiFolder && !hasConflicts)
+					{
+						return S_OK;
+					}
+					break;
+				case IFOLDER_CONFLICT:
+					if (isiFolder && hasConflicts)
+					{
+						return S_OK;
+					}
 				}
 			}
 		}
-	}
-	catch (...)
-	{
-		//OutputDebugString(TEXT("Exception caught in CiFolderShell::IsMemberOf()\n"));
+		catch (...)
+		{
+			//OutputDebugString(TEXT("Exception caught in CiFolderShell::IsMemberOf()\n"));
+		}
 	}
 
 	return S_FALSE;
