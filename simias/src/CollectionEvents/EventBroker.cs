@@ -199,7 +199,11 @@ namespace Simias.Event
 		private const string CFG_AssemblyKey = "Assembly";
 		private const string CFG_Assembly = "CsEventBroker";
 		private const string CFG_UriKey = "Uri";
+#if DynamicPort
 		private const string CFG_Uri = "tcp://localhost/EventBroker";
+#else
+		private const string CFG_Uri = "tcp://localhost:7782/EventBroker";
+#endif
 
 		public static bool overrideConfig = false;
 
@@ -270,7 +274,11 @@ namespace Simias.Event
 			Uri serviceUri = new Uri (serviceString);
 			
 			Hashtable props = new Hashtable();
+#if DynamicPort
 			props["port"] = 0; //serviceUri.Port;
+#else		
+			props["port"] = serviceUri.Port;
+#endif
 			props["rejectRemoteRequests"] = true;
 
 			BinaryServerFormatterSinkProvider
@@ -288,11 +296,17 @@ namespace Simias.Event
 			RemotingConfiguration.RegisterWellKnownServiceType(
 				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
 
-			string [] s = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
+			string [] s;
+#if DynamicPort
+			s = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
 			if (s.Length == 1)
 			{
 				conf.Set(CFG_Section, CFG_UriKey, s[0]);
 			}
+#else
+			conf.Set(CFG_Section, CFG_UriKey, serviceUri.ToString());
+			Console.WriteLine(serviceUri.AbsolutePath);
+#endif
 			serviceRegistered = true;
 		}
 	
