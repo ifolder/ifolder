@@ -314,6 +314,8 @@ namespace Novell.FormsTrayApp
 			{
 				preferences.Show();
 			}
+
+			preferences.SelectGeneral();
 		}
 
 		private void menuSyncLog_Click(object sender, System.EventArgs e)

@@ -74,7 +74,10 @@ namespace Novell.FormsTrayApp
 
 			foreach (ListViewItem lvi in servers)
 			{
-				this.servers.Items.Add((Domain)lvi.Tag);
+				if (lvi.Tag != null)
+				{
+					this.servers.Items.Add((Domain)lvi.Tag);
+				}
 			}
 
 			this.servers.SelectedItem = selectedDomain;
