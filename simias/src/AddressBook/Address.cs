@@ -570,7 +570,7 @@ namespace Novell.AddressBook
 		/// Adds a structured address property to a Group.
 		/// If the method fails an exception is raised
 		/// </summary>
-		/// <param name="parentContact"></param>
+		/// <param name="parent"></param>
 		/// <remarks>
 		/// The address is not commited to the store until a commit on the 
 		/// Group is called.

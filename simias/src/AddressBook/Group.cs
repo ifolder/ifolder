@@ -91,6 +91,7 @@ namespace Novell.AddressBook
 			}
 		}
 
+		/// <summary>
 		/// Url: Specifies the a url to the Group's web page
 		///
 		/// Type Value: Single text value
@@ -317,14 +318,12 @@ namespace Novell.AddressBook
 		/// <summary>
 		/// Retrieves a group from the collection store and deserializes
 		/// to the properties in the Group object.
-		/// </summary>
-		/// <param name="parentCollection">Parent collection for this contact</param>
-		/// <param name="contactID">The node ID of contact to retrieve</param>
 		/// <remarks>
 		/// An exception is thrown if the contact can't be find by the
 		/// specified ID
 		/// </remarks>
 		/// <returns>None</returns>
+		/// </summary>
 		internal void ToObject()
 		{
 			try

@@ -413,6 +413,9 @@ namespace Novell.AddressBook
 		#endregion
 	}
 
+	/// <summary>
+	/// Summary description for the ABManager class.
+	/// </summary>
 	public class ABManager : Manager
 	{
 		#region Constructors

@@ -44,10 +44,6 @@ namespace Novell.AddressBook
 //		private		bool				defaultBook;
 //		private		string				friendlyName;
 //		private		string				domain;
-
-		/// <summary>
-		/// Type of collection that represents an AddressBook.
-		/// </summary>
 		#endregion
 
 		#region Constructors
@@ -469,6 +465,13 @@ namespace Novell.AddressBook
 			return(cGroup);
 		}
 
+		/// <summary>
+		/// Retrieve a list of groups related to the address book
+		/// </summary>
+		/// <remarks>
+		/// If no groups exist return an empty IABList
+		/// </remarks>
+		/// <returns>Returns the groups in an IABList.</returns>
 		public IABList GetGroups()
 		{
 			IABList cList = new IABList();
@@ -977,7 +980,7 @@ namespace Novell.AddressBook
 		/// Find a user(s) by Username
 		/// </summary>
 		/// <param name="searchString"></param>
-		/// <param name="queryOperator">how to query (begin, contains, ends)</param>
+		/// <param name="searchOperator">how to query (begin, contains, ends)</param>
 		/// <remarks>
 		/// !FINISH API DOC!
 		/// </remarks>
@@ -1018,7 +1021,7 @@ namespace Novell.AddressBook
 		/// Find a user(s) by e-mail address
 		/// </summary>
 		/// <param name="searchString"></param>
-		/// <param name="queryOperator"></param>
+		/// <param name="searchOperator"></param>
 		/// <remarks>
 		/// !FINISH API DOC!
 		/// </remarks>
