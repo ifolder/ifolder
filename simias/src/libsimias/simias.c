@@ -263,30 +263,54 @@ simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 				} else {
 					domain->active = false;
 				}
-				
+
 				/* Name */
-				domain->name = strdup(domainsA[i]->Name);
+				if (domainsA[i]->Name)
+					domain->name = strdup(domainsA[i]->Name);
+				else
+					domain->name = strdup("");
 				
 				/* Description */
-				domain->description = strdup(domainsA[i]->Description);
+				if (domainsA[i]->Description)
+					domain->description = strdup(domainsA[i]->Description);
+				else
+					domain->description = strdup("");
 
 				/* ID */
-				domain->id = strdup(domainsA[i]->ID);
+				if (domainsA[i]->ID)
+					domain->id = strdup(domainsA[i]->ID);
+				else
+					domain->id = strdup("");
 
 				/* MemberUserID */
-				domain->member_user_id = strdup(domainsA[i]->MemberUserID);
+				if (domainsA[i]->MemberUserID)
+					domain->member_user_id = strdup(domainsA[i]->MemberUserID);
+				else
+					domain->member_user_id = strdup("");
 
 				/* MemberName */
-				domain->member_name = strdup(domainsA[i]->MemberName);
+				if (domainsA[i]->MemberName)
+					domain->member_name = strdup(domainsA[i]->MemberName);
+				else
+					domain->member_name = strdup("");
 
 				/* RemoteUrl */
-				domain->remote_url = strdup(domainsA[i]->RemoteUrl);
+				if (domainsA[i]->RemoteUrl)
+					domain->remote_url = strdup(domainsA[i]->RemoteUrl);
+				else
+					domain->remote_url = strdup("");
 
 				/* POBoxID */
-				domain->po_box_id = strdup(domainsA[i]->POBoxID);
+				if (domainsA[i]->POBoxID)
+					domain->po_box_id = strdup(domainsA[i]->POBoxID);
+				else
+					domain->po_box_id = strdup("");
 
 				/* Host */
-				domain->host = strdup(domainsA[i]->Host);
+				if (domainsA[i]->Host)
+					domain->host = strdup(domainsA[i]->Host);
+				else
+					domain->host = strdup("");
 				
 				/* IsSlave */
 				if (domainsA[i]->IsSlave == true_) {
