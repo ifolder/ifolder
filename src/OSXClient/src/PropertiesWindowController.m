@@ -23,6 +23,10 @@
 
 #import "PropertiesWindowController.h"
 #import "MainWindowController.h"
+#import "PropGeneralController.h"
+#import "PropSharingController.h"
+#import "iFolderWindowController.h"
+#import "iFolder.h"
 
 @implementation PropertiesWindowController
 
@@ -43,6 +47,15 @@ static PropertiesWindowController *sharedInstance = nil;
 
 
 
+-(void)awakeFromNib
+{
+	[tabView selectTabViewItemAtIndex:initalTab];
+	
+}
+
+
+
+
 - (void)windowWillClose:(NSNotification *)aNotification
 {
 	if(sharedInstance != nil)
@@ -52,12 +65,6 @@ static PropertiesWindowController *sharedInstance = nil;
 	}
 }
 
-
-
--(void)awakeFromNib
-{
-	[tabView selectTabViewItemAtIndex:initalTab];
-}
 
 
 

@@ -21,30 +21,13 @@
  * 
  ***********************************************************************/
 
-
 #import <Cocoa/Cocoa.h>
 
-@class PropSharingController;
-@class PropGeneralController;
-
-@interface PropertiesWindowController : NSWindowController
+@interface TimeSpan : NSObject
 {
-	IBOutlet PropSharingController	*sharingController;
-	IBOutlet PropGeneralController	*generalController;
-	IBOutlet NSDrawer				*searchDrawer;
-	IBOutlet NSTabView				*tabView;
-	IBOutlet NSTabViewItem			*generalItem;
-	IBOutlet NSTabViewItem			*sharingItem;
-
-	int		initalTab;
 }
-+ (PropertiesWindowController *)sharedInstance;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)awakeFromNib;
 
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)setSharingTab;
-- (void)setGeneralTab;
++(long)getTimeSpanValue:(long)seconds;
++(NSString *)getTimeSpanUnits:(long)seconds;
 
 @end

@@ -1278,6 +1278,126 @@
 			settings = {
 			};
 		};
+		3EE276DF07C40C2400A645A0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = PropGeneralController.h;
+			path = src/PropGeneralController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE276E007C40C2400A645A0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = PropGeneralController.m;
+			path = src/PropGeneralController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE276E107C40C2400A645A0 = {
+			fileRef = 3EE276DF07C40C2400A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE276E207C40C2400A645A0 = {
+			fileRef = 3EE276E007C40C2400A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE2781D07C44B7400A645A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = DiskSpace.h;
+			path = src/DiskSpace.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE2781E07C44B7400A645A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = DiskSpace.m;
+			path = src/DiskSpace.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE2781F07C44B7400A645A0 = {
+			fileRef = 3EE2781D07C44B7400A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE2782007C44B7400A645A0 = {
+			fileRef = 3EE2781E07C44B7400A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE2787B07C45E2100A645A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = TimeSpan.h;
+			path = src/TimeSpan.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE2787C07C45E2100A645A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = TimeSpan.m;
+			path = src/TimeSpan.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE2787D07C45E2100A645A0 = {
+			fileRef = 3EE2787B07C45E2100A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE2787E07C45E2100A645A0 = {
+			fileRef = 3EE2787C07C45E2100A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE278EC07C46CD500A645A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SyncSize.h;
+			path = src/SyncSize.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE278ED07C46CD500A645A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SyncSize.m;
+			path = src/SyncSize.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EE278EE07C46CD500A645A0 = {
+			fileRef = 3EE278EC07C46CD500A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EE278EF07C46CD500A645A0 = {
+			fileRef = 3EE278ED07C46CD500A645A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3EE449E107A7DEDB00B93B2F = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -1388,8 +1508,12 @@
 		};
 		3EE887F507B95C1400484B9F = {
 			children = (
+				3EE2787B07C45E2100A645A0,
+				3EE2787C07C45E2100A645A0,
 				3EB8C511079393B60082AA86,
 				3EB8C510079393B60082AA86,
+				3EE276DF07C40C2400A645A0,
+				3EE276E007C40C2400A645A0,
 				3EEA9A4A07B1D9C30015FCF4,
 				3EEA9A4907B1D9C30015FCF4,
 				3E6D783307B098E2001DA76A,
@@ -1500,6 +1624,10 @@
 		};
 		3EEA9A6507B1DBCC0015FCF4 = {
 			children = (
+				3EE278EC07C46CD500A645A0,
+				3EE278ED07C46CD500A645A0,
+				3EE2781D07C44B7400A645A0,
+				3EE2781E07C44B7400A645A0,
 				3E5289680774F9FA0064F585,
 				3E5289690774F9FA0064F585,
 				3E52896A0774F9FA0064F585,
@@ -1698,6 +1826,10 @@
 				3EE238E007C108EB00772501,
 				3EE238E107C108EB00772501,
 				3EE238E207C108EB00772501,
+				3EE276E107C40C2400A645A0,
+				3EE2781F07C44B7400A645A0,
+				3EE2787D07C45E2100A645A0,
+				3EE278EE07C46CD500A645A0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1741,6 +1873,10 @@
 				3E19989707BAC5BD00AAC29A,
 				3E1998B007BAC93600AAC29A,
 				3E19994B07BAE47700AAC29A,
+				3EE276E207C40C2400A645A0,
+				3EE2782007C44B7400A645A0,
+				3EE2787E07C45E2100A645A0,
+				3EE278EF07C46CD500A645A0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

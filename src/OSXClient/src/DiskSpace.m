@@ -21,30 +21,75 @@
  * 
  ***********************************************************************/
 
+#import "DiskSpace.h"
 
-#import <Cocoa/Cocoa.h>
 
-@class PropSharingController;
-@class PropGeneralController;
+@implementation DiskSpace
 
-@interface PropertiesWindowController : NSWindowController
+
+
+-(id) init
 {
-	IBOutlet PropSharingController	*sharingController;
-	IBOutlet PropGeneralController	*generalController;
-	IBOutlet NSDrawer				*searchDrawer;
-	IBOutlet NSTabView				*tabView;
-	IBOutlet NSTabViewItem			*generalItem;
-	IBOutlet NSTabViewItem			*sharingItem;
+	if(self = [super init])
+	{
+		NSArray *keys	= [NSArray arrayWithObjects:	@"name", 
+														nil];
 
-	int		initalTab;
+		NSArray *values = [NSArray arrayWithObjects:	@"",
+														nil];
+
+		properties = [[NSMutableDictionary alloc]
+			initWithObjects:values forKeys:keys];
+	}
+	
+	return self;
 }
-+ (PropertiesWindowController *)sharedInstance;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)awakeFromNib;
 
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)setSharingTab;
-- (void)setGeneralTab;
+
+
+-(void) dealloc
+{
+	[properties release];
+	
+	[super dealloc];
+}
+
+
+
+- (NSMutableDictionary *) properties
+{
+	return properties;
+}
+
+
+
+
+-(void) setProperties: (NSDictionary *)newProperties
+{
+	if(properties != newProperties)
+	{
+		[properties autorelease];
+		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
+	}
+}
+
+
+
+-(long long) AvailableSpace
+{
+	return [ [properties objectForKey:@"AvailableSpace"] longLongValue];
+}
+
+-(long long) Limit
+{
+	return [ [properties objectForKey:@"Limit"] longLongValue];
+}
+
+-(long long) UsedSpace
+{
+	return [ [properties objectForKey:@"UsedSpace"] longLongValue];
+}
+
+
 
 @end

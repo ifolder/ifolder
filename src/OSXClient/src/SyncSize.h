@@ -24,27 +24,23 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class PropSharingController;
-@class PropGeneralController;
-
-@interface PropertiesWindowController : NSWindowController
+/*
+struct ns1__SyncSize
 {
-	IBOutlet PropSharingController	*sharingController;
-	IBOutlet PropGeneralController	*generalController;
-	IBOutlet NSDrawer				*searchDrawer;
-	IBOutlet NSTabView				*tabView;
-	IBOutlet NSTabViewItem			*generalItem;
-	IBOutlet NSTabViewItem			*sharingItem;
+	unsigned long SyncNodeCount;
+	ULONG64 SyncByteCount;
+};
+*/
 
-	int		initalTab;
+@interface SyncSize : NSObject
+{
+	NSMutableDictionary * properties;
 }
-+ (PropertiesWindowController *)sharedInstance;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)awakeFromNib;
 
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)windowWillClose:(NSNotification *)aNotification;
-- (void)setSharingTab;
-- (void)setGeneralTab;
+-(NSMutableDictionary *) properties;
+-(void) setProperties: (NSDictionary *)newProperties;
+
+-(unsigned long)SyncNodeCount;
+-(unsigned long long) SyncByteCount;
 
 @end
