@@ -59,6 +59,26 @@ namespace Simias.Storage
 		/// Domain that this collection belongs to.
 		/// </summary>
 		private string domainName = null;
+
+		/// <summary>
+		/// Subscriber event used to keep the cached node table up to date.
+		/// </summary>
+		private EventSubscriber subscriber = null;
+
+		/// <summary>
+		/// Array of node Ids to filter events with.
+		/// </summary>
+		private string[] nodeFilter = null;
+
+		/// <summary>
+		/// Event handler for node change delegates.
+		/// </summary>
+		private event NodeChangeHandler nEventHandler = null;
+
+		/// <summary>
+		/// Delegate to capture node change events for this collection.
+		/// </summary>
+		public delegate void NodeChangeHandler( NodeEventArgs args );
 		#endregion
 
 		#region Properties
@@ -423,6 +443,40 @@ namespace Simias.Storage
 
 		#region Private Methods
 		/// <summary>
+		/// Checks to see if this event should be filtered out.
+		/// </summary>
+		/// <param name="args">Event context received from callback node changed event.</param>
+		/// <returns>True if event is to be published, otherwise false is returned.</returns>
+		private bool ApplyNodeFilter( NodeEventArgs args )
+		{
+			bool publish = false;
+
+			// Don't publish events that came from this store handle.
+			if ( args.EventId != localStore.Instance )
+			{
+				// If no filter specified, then publish all events.
+				if ( nodeFilter == null )
+				{
+					publish = true;
+				}
+				else
+				{
+					// Walk the filter list looking for a matching node id.
+					foreach ( string nodeId in nodeFilter )
+					{
+						if ( nodeId == args.Node )
+						{
+							publish = true;
+							break;
+						}
+					}
+				}
+			}
+
+			return publish;
+		}
+
+		/// <summary>
 		/// Moves where the files in the collection are rooted in the filesystem.  This change will automatically commit
 		/// the collection node and cannot be rolled back.
 		/// </summary>
@@ -464,6 +518,29 @@ namespace Simias.Storage
 				}
 
 				throw e;
+			}
+		}
+
+		/// <summary>
+		/// Callback that handles node events from the event broker.
+		/// </summary>
+		/// <param name="args">Arguments that give context for the call.</param>
+		private void OnNodeChanged( NodeEventArgs args )
+		{
+			try
+			{
+				// See if there is any delegates registered.
+				if ( nEventHandler != null )
+				{
+					if ( ApplyNodeFilter( args ) )
+					{
+						nEventHandler( args ); 
+					}
+				}
+			}
+			catch ( Exception e )
+			{
+				MyTrace.WriteLine( e );
 			}
 		}
 		#endregion
@@ -568,7 +645,7 @@ namespace Simias.Storage
 						if ( tempNode.IsPersisted )
 						{
 							// Merge this node with the current node in the database.
-							tempNode = tempNode.MergeNodeProperties();
+							tempNode = tempNode.MergeNodeProperties( true );
 							if ( tempNode == null )
 							{
 								// The node has been deleted in the database, move to the next one.
@@ -972,6 +1049,43 @@ namespace Simias.Storage
 			}
 
 			cNode.accessControl.SetUserRights( userId.ToLower(), desiredRights );
+		}
+
+		/// <summary>
+		/// Subscribes to node change events.
+		/// </summary>
+		/// <param name="handler">Delegate which defines handler signature.</param>
+		/// <param name="nodeIdFilter">Specifies a list of nodes to watch for changes.  If null, then all
+		/// node changes in the collection will be indicated.</param>
+		public void NodeEventsSubscribe( NodeChangeHandler handler, string[] nodeIdFilter )
+		{
+			// Setup to watch for node changes on this collection.
+			subscriber = new EventSubscriber( new Configuration( localStore.StorePath.LocalPath ), Id, DocumentRoot.LocalPath );
+			subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
+			subscriber.NodeCreated += new NodeEventHandler( OnNodeChanged );
+			subscriber.NodeDeleted += new NodeEventHandler( OnNodeChanged );
+
+			// Register the delegate with the event handler.
+			nEventHandler += handler;
+			nodeFilter = nodeIdFilter;
+		}
+
+		/// <summary>
+		/// Unsubscribes from node change events.
+		/// </summary>
+		/// <param name="handler">Delegate passed to NodeEventsSubscribe.</param>
+		public void NodeEventsUnsubscribe( NodeChangeHandler handler )
+		{
+			// Deregister from the event broker.
+			subscriber = new EventSubscriber( new Configuration( localStore.StorePath.LocalPath ) );
+			subscriber.NodeChanged -= new NodeEventHandler( OnNodeChanged );
+			subscriber.NodeCreated -= new NodeEventHandler( OnNodeChanged );
+			subscriber.NodeDeleted -= new NodeEventHandler( OnNodeChanged );
+			subscriber.Dispose();
+
+			// Deregister the delegate with the event handler.
+			nEventHandler -= handler;
+			nodeFilter = null;
 		}
 		#endregion
 

@@ -29,7 +29,9 @@ using System.Security.Cryptography;
 using System.Xml;
 using System.Threading;
 using NUnit.Framework;
+
 using Simias;
+using Simias.Event;
 using Simias.Storage;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
@@ -48,6 +50,12 @@ namespace Simias.Storage.Tests
 
 		// Object used to access the store.
 		private Store store = null;
+
+		// Path to store.
+		private Uri basePath = new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) );
+
+		// Event object used to shutdown broker.
+		private EventPublisher publisher;
 		#endregion
 
 		#region Test Setup
@@ -57,8 +65,12 @@ namespace Simias.Storage.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{
+			// Make the event broker run as a singleton.
+			EventBroker.overrideConfig = true;
+			publisher = new EventPublisher( new Configuration( basePath.LocalPath + Path.DirectorySeparatorChar + ".simias" ) );
+
 			// Connect to the store.
-			store = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ) );
+			store = Store.Connect( basePath );
 
 			// Add another identity to the database.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
@@ -1702,13 +1714,19 @@ namespace Simias.Storage.Tests
 		public void MergeNodeTest()
 		{
 			// Get a second handle to the current store.
-			Store mergeStore = Store.Connect( new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) ) );
+			Store mergeStore = Store.Connect( basePath );
 
 			// Create a collection using the primary store handle.
 			Collection collection = store.CreateCollection( "CS_TestCollection" );
 
 			try
 			{
+				// Get the local address book.
+				LocalAddressBook localAb = mergeStore.GetLocalAddressBook();
+				Identity identity = localAb.GetSingleIdentityByName( "mlasky" );
+				identity.Properties.AddProperty( "CS_TestProperty", "This is a test" );
+				identity.Commit();
+
 				// Commit the collection.
 				collection.Commit();
 
@@ -1828,6 +1846,9 @@ namespace Simias.Storage.Tests
 			{
 				Directory.Delete( dirPath, true );
 			}
+
+			// Tell the event broker to shutdown.
+			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceEvent.Shutdown));
 		}
 		#endregion
 	}

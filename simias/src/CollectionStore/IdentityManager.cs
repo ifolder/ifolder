@@ -25,6 +25,9 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+
+using Simias;
+using Simias.Event;
 using Persist = Simias.Storage.Provider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
@@ -111,6 +114,23 @@ namespace Simias.Storage
 			this.domainName = identity.AddressBook.DomainName;
 			this.publicKey = new RSACryptoServiceProvider();
 			this.publicKey.ImportParameters( identity.ServerCredential.ExportParameters( false ) );
+
+			// Set up a delegate to update the identity object if it changes.
+			string[] identityFilter = new string[ 1 ];
+			identityFilter[ 0 ] = identity.Id;
+			localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedIdentity ), identityFilter );
+		}
+		#endregion
+
+		#region Private Methods
+		/// <summary>
+		/// This method is informed of a change to the identity object and will automatically refresh it.
+		/// </summary>
+		/// <param name="args">Event context arguments.</param>
+		private void OnChangedIdentity( NodeEventArgs args )
+		{
+			Console.WriteLine( "OnChangedIdentity called" );			
+//			identity.Refresh();
 		}
 		#endregion
 

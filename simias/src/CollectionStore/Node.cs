@@ -632,9 +632,10 @@ namespace Simias.Storage
 		/// 
 		/// Note: The database lock must be acquired before making this call.
 		/// </summary>
+		/// <param name="clearMergeList">If true then the node's merge list will be cleared.</param>
 		/// <returns>A node that contains the current object from the database with all of the property
 		/// changes of the current node.</returns>
-		internal Node MergeNodeProperties()
+		internal Node MergeNodeProperties( bool clearMergeList )
 		{
 			// Get this node from the database.
 			Node mergedNode = GetNodeFromDatabase( Id );
@@ -663,8 +664,12 @@ namespace Simias.Storage
 				}
 			}
 
-			// Clear the mergeList.
-			cNode.mergeList.Clear();
+			if ( clearMergeList )
+			{
+				// Clear the mergeList.
+				cNode.mergeList.Clear();
+			}
+
 			return mergedNode;
 		}
 
@@ -871,7 +876,7 @@ namespace Simias.Storage
 				store.LockStore();
 
 				// If this node has not been persisted, no need to do a merge.
-				commitNode = IsPersisted ? MergeNodeProperties() : this;
+				commitNode = IsPersisted ? MergeNodeProperties( true ) : this;
 				if ( commitNode != null )
 				{
 					// Set the modify time for this node.
@@ -1483,6 +1488,18 @@ namespace Simias.Storage
 			{
 				Properties.AddNodeProperty( Property.ParentID, newParent.Id );
 				Properties.AddNodeProperty( Property.IDPath, newParent.IDPath + "/" + Id );
+			}
+		}
+
+		/// <summary>
+		/// Refreshes this node from the disk and merges all pending changes to this node.
+		/// </summary>
+		public void Refresh()
+		{
+			Node node = MergeNodeProperties( false );
+			if ( node != null )
+			{
+				cNode.Copy( node.cNode );
 			}
 		}
 
