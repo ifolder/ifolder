@@ -589,7 +589,7 @@ namespace Simias.Storage
 					case PropertyList.PropertyListState.Update:
 					{
 						// Make sure that there are changes to the Node object.
-						if ( node.Properties.ChangeList.Count != 0 )
+						if ( IsType( node, NodeTypes.CollectionType ) || node.Properties.ChangeList.Count != 0 )
 						{
 							// Merge any changes made to the object on the database before this object's
 							// changes are committed.
@@ -609,6 +609,10 @@ namespace Simias.Storage
 								{
 									// Increment the local incarnation number for the object.
 									IncrementLocalIncarnation( mergeNode, nodeStamp );
+								}
+								else
+								{
+									node.NodeStamp = nodeStamp;
 								}
 
 								// Copy the XML node over to the modify document.
