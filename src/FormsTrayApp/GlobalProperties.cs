@@ -1359,6 +1359,7 @@ namespace Novell.FormsTrayApp
 			switch (args.Type)
 			{
 				case "Collection":
+				case "Subscription":
 					lock (ht)
 					{
 						ListViewItem lvi = (ListViewItem)ht[args.Node];
