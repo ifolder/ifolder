@@ -274,7 +274,21 @@ namespace Mono.ASPNET
 			int w;
 			while (!stop){
 				w = wSockets.Count;
-				Socket.Select (wSockets, null, null, (w == 1) ? -1 : 1000 * 1000); // 1s
+				// This is throwing an exception when we shutdown
+				try
+				{
+					Socket.Select (wSockets, null, null, (w == 1) ? -1 : 1000 * 1000); // 1s
+				}
+				catch(SocketException se)
+				{
+					// CRG
+					// if we are shutting down, don't throw this exception
+					if(stop)
+						return;
+					else
+						throw se;
+				}
+
 				w = wSockets.Count;
 				for (int i = 0; i < w; i++) {
 					Socket s = (Socket) wSockets [i];
