@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-mDnsDomain_CSFILES1 = $(srcdir)/Service.cs 
+mDnsDomain_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs 
 mDnsDomain_CSFILES := $(subst /,$(SEP),$(mDnsDomain_CSFILES1))
 mDnsDomain_INCLUDES =
 mDnsDomain_RESOURCES =
@@ -17,28 +17,28 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-all: Simias.Domain.mDns.dll
+all: Simias.mDns.dll
 
-Simias.Domain.mDns.dll: $(mDnsDomain_CSFILES) $(mDnsDomain_RESOURCES)
+Simias.mDns.dll: $(mDnsDomain_CSFILES) $(mDnsDomain_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(mDnsDomain_FLAGS) $(SIMIAS_LIBS) $(mDnsDomain_LIBS:%=/r:%) $(mDnsDomain_LIBPATH:%=/lib:%) $(mDnsDomain_RESOURCES:%=$(ICON_FLAG)%) $(mDnsDomain_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
-DEBUG_FILES = Simias.Domain.mDns.pdb
+DEBUG_FILES = Simias.mDns.pdb
 endif
 endif
 
-install-exec-local: Simias.Domain.mDns.dll $(DATA_FILES)
+install-exec-local: Simias.mDns.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) Simias.Domain.mDns.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) Simias.mDns.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	
 uninstall-local:
-	cd $(DESTDIR)$(webbindir); rm -f Simias.Domain.mDns.dll $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f Simias.mDns.dll $(DEBUG_FILES)
 
 installcheck-local: install
 	
-CLEAN_FILES = Simias.Domain.mDns.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = Simias.mDns.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -34,13 +34,14 @@ using System.Threading;
 
 using Simias;
 using Simias.Event;
+using Simias.POBox;
 using Simias.Service;
 using Simias.Storage;
 
 using Mono.P2p.mDnsResponderApi;
 
 
-namespace Simias.Domain.mDns
+namespace Simias.mDns
 {
 	/// <summary>
 	/// Class the handles presence as a service
@@ -54,10 +55,13 @@ namespace Simias.Domain.mDns
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		private	Store store = null;
+		private Simias.mDns.User mDnsUser = null;
+
 		/// <summary>
 		/// Configuration object for the Collection Store.
 		/// </summary>
-		private Configuration config;
+		internal Configuration config;
 		#endregion
 
 		#region Constructor
@@ -80,56 +84,27 @@ namespace Simias.Domain.mDns
 		public void Start( Configuration config )
 		{
 			log.Debug("Start called");
-			
-			bool registered = false;
 			this.config = config;
-			Store store = Store.GetStore();
 
+			string myAddress = MyDns.GetHostName();
+			store = Store.GetStore();
+
+			//
+			// Make sure the mDnsDomain exists
+			//
+
+			Simias.mDns.Domain mdnsDomain = null;
 			try
 			{
-				TcpChannel chnl = new TcpChannel();
-				ChannelServices.RegisterChannel(chnl);
-			
-				IRemoteFactory factory = 
-					(IRemoteFactory) Activator.GetObject(
-						typeof(IRemoteFactory),
-						"tcp://localhost:8091/mDnsRemoteFactory.tcp");
-						
-				// Get my IP address
-//				IPHostEntry me = Dns.GetHostByName(Dns.GetHostName());
-				IPHostEntry me = Dns.GetHostByName(Environment.MachineName);
-				string myAddress = "";
-				foreach(IPAddress ipAddr in me.AddressList)
-				{
-					myAddress = ipAddr.ToString();
-					if (myAddress.StartsWith("127.") == false)
-					{
-						break;
-					}
-				}
-
-				IResourceRegistration rr = factory.GetRegistrationInstance();
-				rr.RegisterHost((string) Environment.MachineName, myAddress);
-				
-				// Register member as a service location
-				rr.RegisterServiceLocation(
-					Environment.MachineName,
-					Environment.UserName + "@" + Environment.MachineName,
-					(int) 8086, 
-					0, 
-					0);
-					
-				rr.RegisterPointer(
-					"_ifolder_member._tcp.local",
-					Environment.UserName + "@" + Environment.MachineName);
-
-				registered = true;
+				mdnsDomain = new Simias.mDns.Domain( true );
+				this.mDnsUser = new Simias.mDns.User();
+				this.mDnsUser.BroadcastUp();
 			}
-			catch(Exception e1)
+			catch(Exception e)
 			{
-				log.Error(e1.Message);
-				log.Error(e1.StackTrace);
-			}			
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+			}
 		}
 
 		/// <summary>
@@ -161,38 +136,16 @@ namespace Simias.Domain.mDns
 		public void Stop()
 		{
 			log.Debug("Stop called");
-			try
-			{
-				IRemoteFactory factory = 
-					(IRemoteFactory) Activator.GetObject(
-						typeof(IRemoteFactory),
-						"tcp://localhost:8091/mDnsRemoteFactory.tcp");
-						
-				// Get my IP address
-				IPHostEntry me = Dns.GetHostByName(Dns.GetHostName());
-				string myAddress = "";
-				foreach(IPAddress ipAddr in me.AddressList)
-				{
-					myAddress = ipAddr.ToString();
-					break;
-				}
 
-				IResourceRegistration rr = factory.GetRegistrationInstance();
-				rr.DeregisterPointer(
-					"_ifolder_member._tcp.local",
-					Environment.UserName + "@" + Environment.MachineName);
-				rr.DeregisterHost(Environment.MachineName);
-				rr.DeregisterServiceLocation(
-					Environment.MachineName,
-					Environment.UserName + "@" + Environment.MachineName);
-			}
-			catch(Exception e1)
+			if ( this.mDnsUser != null )
 			{
-				log.Error(e1.Message);
-				log.Error(e1.StackTrace);
-			}			
-		
+				this.mDnsUser.BroadcastDown();
+			}
 		}
+
+		#endregion
+
+		#region Private Methods
 		#endregion
 	}
 }
