@@ -1364,6 +1364,10 @@ namespace Novell.FormsTrayApp
 			{
 				DomainWeb domainWeb = ifWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
+				// Set the credentials in the current process.
+				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainWeb.ID, password.Text);
+				AuthenticationStatus authStatus = domainAuth.Authenticate();
+
 				Domain domain = new Domain(domainWeb);
 
 				updateAccount(domain);
@@ -1655,6 +1659,11 @@ namespace Novell.FormsTrayApp
 					break;
 				}
 			}
+
+			if (UpdateDomain != null)
+			{
+				UpdateDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+			}
 		}
 		#endregion
 
@@ -1694,6 +1703,15 @@ namespace Novell.FormsTrayApp
 		/// Occurs when an upgrade has been started.
 		/// </summary>
 		public event ShutdownTrayAppDelegate ShutdownTrayApp;
+
+		/// <summary>
+		/// Delegate used to update a domain.
+		/// </summary>
+		public delegate void UpdateDomainDelegate(object sender, DomainConnectEventArgs e);
+		/// <summary>
+		/// Occurs when a domain has changed.
+		/// </summary>
+		public event UpdateDomainDelegate UpdateDomain;
 		#endregion
 
 		#region Event Handlers

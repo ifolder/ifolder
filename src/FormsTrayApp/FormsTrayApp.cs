@@ -392,6 +392,7 @@ namespace Novell.FormsTrayApp
 					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
 					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
 					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
+					preferences.UpdateDomain += new Novell.FormsTrayApp.Preferences.UpdateDomainDelegate(preferences_UpdateDomain);
 					preferences.CreateControl();
 					handle = preferences.Handle;
 
@@ -492,6 +493,11 @@ namespace Novell.FormsTrayApp
 		private void preferences_ShutdownTrayApp(object sender, EventArgs e)
 		{
 			ShutdownTrayApp(null);
+		}
+
+		private void preferences_UpdateDomain(object sender, DomainConnectEventArgs e)
+		{
+			globalProperties.UpdateDomain(e.DomainWeb);
 		}
 
 		private void syncAnimateTimer_Tick(object sender, System.EventArgs e)
