@@ -61,17 +61,34 @@ namespace Novell.iFolder.Web
 		}
 */
 
-		public iFolderUser( Simias.Storage.Member member )
+		public iFolderUser( Simias.Storage.Domain domain, Simias.Storage.Member member )
 		{
 			this.Name = member.Name;
-			this.Surname = member.Family;
-			this.FirstName = member.Given;
-			this.FN = member.FN;
 			this.UserID = member.UserID;
 			this.ID = member.ID;
 			this.State = "Member";
 			this.IsOwner = member.IsOwner;
 			this.Rights = member.Rights.ToString();
+
+			if ( member.Given != null )
+			{
+				this.Surname = member.Family;
+				this.FirstName = member.Given;
+				this.FN = member.FN;
+			}
+			else
+			{
+				if ( domain != null )
+				{
+					Simias.Storage.Member dMember = domain.GetMemberByID( member.UserID );
+					if ( dMember != null )
+					{
+						this.Surname = dMember.Family;
+						this.FirstName = dMember.Given;
+						this.FN = dMember.FN;
+					}
+				}
+			}
 		}
 
 		public iFolderUser(Simias.Storage.Member member,
