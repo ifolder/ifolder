@@ -341,8 +341,6 @@ namespace Simias.Gaim
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindSeekDomainMembers( ref string searchContext, int offset, int count, out Member[] memberList )
 		{
-			bool bMoreEntries = false;
-			ArrayList members = new ArrayList();
 			memberList = null;
 
 			if (searchContext == null)
