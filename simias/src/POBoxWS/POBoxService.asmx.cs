@@ -23,7 +23,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Data;
+//using System.Data;
 using System.Diagnostics;
 using System.Threading;
 using System.Web;
@@ -96,150 +96,6 @@ namespace Simias.POBoxService.Web
 			return 0;
 		}
 
-		/*
-		/// <summary>
-		/// Post a message
-		/// </summary>
-		/// <param name="user"></param>
-		/// <param name="message">A message object</param>
-		/// <returns>true if the message was posted</returns>
-		[WebMethod]
-		[SoapDocumentMethod]
-		public bool Post(string user, Message message)
-		{
-			bool	result = false;
-			Store	store = Store.GetStore();
-			bool	workgroup = (message.DomainID == Simias.Storage.Domain.WorkGroupDomainID);
-			string	userID = System.Threading.Thread.CurrentPrincipal.Identity.Name;
-			
-			if ((userID == null) || (userID.Length == 0))
-			{
-				// Kludge: for now trust the client.  this need to be removed before shipping.
-				userID = user;
-			}
-
-			Simias.POBox.POBox box = null;
-			
-			// temporary, in memory only, subscription object
-			Subscription temp = new Subscription(message);
-				
-			// new subscription
-			Subscription subscription = null;
-
-			// create a new subscription object with some of the information from temp
-			switch (temp.SubscriptionState)
-			{
-				case SubscriptionStates.Received:
-					// Make sure the from field matches the authenticated userid.
-					if (!workgroup && userID == temp.FromIdentity)
-					{
-						box = Simias.POBox.POBox.GetPOBox(store, message.DomainID, temp.ToIdentity);
-						if (box != null)
-						{
-							subscription = new Subscription(Guid.NewGuid().ToString(), message);
-							subscription.SubscriptionState =  SubscriptionStates.Received;
-							result = true;
-						}
-					}
-					break;
-				
-				case SubscriptionStates.Pending:
-					if (workgroup)
-					{
-						box = Simias.POBox.POBox.GetPOBox(store, message.DomainID);
-					}
-					else
-					{
-						box = Simias.POBox.POBox.GetPOBox(store, message.DomainID, temp.FromIdentity);
-					}
-					if (box != null)
-					{
-						ICSList list = box.Search(Message.MessageIDProperty, message.MessageID, SearchOp.Equal);
-			
-						ICSEnumerator e = (ICSEnumerator)list.GetEnumerator();
-						ShallowNode sn = null;
-
-						if (e.MoveNext())
-						{
-							sn = (ShallowNode) e.Current;
-						}
-
-						if (sn != null)
-						{
-							subscription = new Subscription(box, sn);
-							string ToID;
-							if (workgroup)
-							{
-								ToID = temp.ToIdentity;
-							}
-							else
-							{
-								ToID = subscription.ToIdentity;
-							}
-					
-							// Make sure the to field matches the authenticated user.
-							if (userID == ToID 
-							{
-								subscription.SubscriptionState =  SubscriptionStates.Pending;
-								subscription.ToName = temp.ToName;
-								subscription.ToIdentity = temp.ToIdentity;
-								if (workgroup)
-								{
-									subscription.ToPublicKey = temp.ToPublicKey;
-								}
-								
-								result = true;
-
-								// auto-accept if we have a key, it is not workgroup, and we have rights
-								if ((subscription.SubscriptionKey != null)
-									&& !workgroup && (subscription.SubscriptionRights != Access.Rights.Deny))
-								{
-									// accept
-									subscription.Accept(store, subscription.SubscriptionRights);
-								}
-							}
-						}
-						else
-						{
-							subscription = new Subscription(
-								Guid.NewGuid().ToString(), message);
-
-							subscription.SubscriptionState = 
-								SubscriptionStates.Pending;
-
-							subscription.ToName = temp.ToName;
-							subscription.ToIdentity = temp.ToIdentity;
-							if (workgroup)
-							{
-								subscription.ToPublicKey = temp.ToPublicKey;
-							}
-								
-							result = true;
-
-							// auto-accept if we have a key, it is not workgroup, and we have rights
-							if ((subscription.SubscriptionKey != null)
-								&& !workgroup && (subscription.SubscriptionRights != Access.Rights.Deny))
-							{
-								// accept
-								subscription.Accept(store, subscription.SubscriptionRights);
-							}
-
-							result = true;
-						}
-					}
-					break;
-			}
-				
-			// commit
-			if (result && box != null)
-			{
-				box.Commit(subscription);
-			}
-			
-			return result;
-		}
-		*/
-
 		/// <summary>
 		/// Accept subscription
 		/// </summary>
@@ -250,19 +106,19 @@ namespace Simias.POBoxService.Web
 		[SoapDocumentMethod]
 		public
 		void
-		AcceptSubscription(string domainID, string identityID, string subscriptionID)
+		AcceptedSubscription(
+			string				domainID, 
+			string				fromIdentity, 
+			string				toIdentity, 
+			string				subscriptionID)
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
-			// FIXME:  Temp remove
-			Console.WriteLine("POBoxService::AcceptSubscription - called");
-			Console.WriteLine("  Subscription ID: " + subscriptionID);
-
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
-				: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
+				: Simias.POBox.POBox.GetPOBox(store, domainID, fromIdentity);
 
 			// check the post office box
 			if (poBox == null)
@@ -273,9 +129,9 @@ namespace Simias.POBoxService.Web
 			// check that the message has already not been posted
 			IEnumerator e = 
 				poBox.Search(
-				Message.MessageIDProperty, 
-				subscriptionID, 
-				SearchOp.Equal).GetEnumerator();
+					Message.MessageIDProperty, 
+					subscriptionID, 
+					SearchOp.Equal).GetEnumerator();
 			ShallowNode sn = null;
 			if (e.MoveNext())
 			{
@@ -290,20 +146,21 @@ namespace Simias.POBoxService.Web
 			// get the subscription object
 			Subscription cSub = new Subscription(poBox, sn);
 
-			// The identity better match the ToID
-			/*
-			if (identityID != cSub.FromIdentity)
+			// Identities need to match up
+			if (fromIdentity != cSub.FromIdentity)
 			{
-				throw new ApplicationException("Caller does not own the subscription.");
+				throw new ApplicationException("Identity does not match.");
 			}
-			*/
+
+			if (toIdentity != cSub.ToIdentity)
+			{
+				throw new ApplicationException("Identity does not match.");
+			}
+
+			// FIXME: need to match the caller's ID against the toIdentity
 
 			cSub.Accept(store, cSub.SubscriptionRights);
 			poBox.Commit(cSub);
-
-			// TODO: remove the subscription object?
-			//poBox.Commit(poBox.Delete(cSub));
-			Console.WriteLine("POBoxService::AcceptSubscription - exit");
 		}
 
 		/// <summary>
@@ -316,19 +173,23 @@ namespace Simias.POBoxService.Web
 		[SoapDocumentMethod]
 		public
 		void
-		DeclineSubscription(string domainID, string identityID, string subscriptionID)
+		DeclinedSubscription(
+			string			domainID, 
+			string			fromIdentity, 
+			string			toIdentity, 
+			string			subscriptionID)
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
 			
 			// FIXME:  Temp remove
-			Console.WriteLine("POBoxService::DeclineSubscription - called");
+			Console.WriteLine("POBoxService::DeclinedSubscription - called");
 			Console.WriteLine("  Subscription ID: " + subscriptionID);
 
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
-				: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
+				: Simias.POBox.POBox.GetPOBox(store, domainID, fromIdentity);
 
 			// check the post office box
 			if (poBox == null)
@@ -356,13 +217,16 @@ namespace Simias.POBoxService.Web
 			// get the subscription object
 			Subscription cSub = new Subscription(poBox, sn);
 
-			// The identity better match the ToID
-			/*
-			if (identityID != cSub.FromIdentity)
+			// Identities need to match up
+			if (fromIdentity != cSub.FromIdentity)
 			{
-				throw new ApplicationException("Caller does not own the subscription.");
+				throw new ApplicationException("Identity does not match.");
 			}
-			*/
+
+			if (toIdentity != cSub.ToIdentity)
+			{
+				throw new ApplicationException("Identity does not match.");
+			}
 
 			cSub.Decline();
 			poBox.Commit(cSub);
@@ -378,7 +242,11 @@ namespace Simias.POBoxService.Web
 		[SoapDocumentMethod]
 		public
 		void
-		AckSubscription(string domainID, string identityID, string messageID)
+		AckSubscription(
+			string			domainID, 
+			string			fromIdentity, 
+			string			toIdentity, 
+			string			messageID)
 		{
 			Simias.POBox.POBox	poBox;
 			Store				store = Store.GetStore();
@@ -389,7 +257,7 @@ namespace Simias.POBoxService.Web
 			// open the post office box
 			poBox = (domainID == Simias.Storage.Domain.WorkGroupDomainID) 
 				? Simias.POBox.POBox.GetPOBox(store, domainID)
-				: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
+				: Simias.POBox.POBox.GetPOBox(store, domainID, fromIdentity);
 
 			// check the post office box
 			if (poBox == null)
@@ -416,10 +284,22 @@ namespace Simias.POBoxService.Web
 
 			// get the subscription object
 			Subscription cSub = new Subscription(poBox, sn);
+
+			// Identities need to match up
+			if (fromIdentity != cSub.FromIdentity)
+			{
+				throw new ApplicationException("Identity does not match.");
+			}
+
+			if (toIdentity != cSub.ToIdentity)
+			{
+				throw new ApplicationException("Identity does not match.");
+			}
+
+			// FIXME: need to match the caller's ID against the toIdentity
+
 			cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Acknowledged;
 			poBox.Commit(cSub);
-
-			// TODO: remove the subscription object?
 			poBox.Commit(poBox.Delete(cSub));
 		}
 
@@ -438,9 +318,6 @@ namespace Simias.POBoxService.Web
 		{
 			Simias.POBox.POBox	poBox;
 			Store store = Store.GetStore();
-
-			// FIXME: temp
-			Console.WriteLine("POBoxService::GetSubscriptionInfo - called");
 
 			// open the post office box
 			poBox =
@@ -490,8 +367,6 @@ namespace Simias.POBoxService.Web
 			SubscriptionInformation subInfo = new SubscriptionInformation();
 			subInfo.GenerateFromSubscription(cSub);
 
-			// FIXME: temp
-			Console.WriteLine("POBoxService::GetSubscriptionInfo - exit");
 			return subInfo;
 		}
 
@@ -517,13 +392,6 @@ namespace Simias.POBoxService.Web
 			Simias.POBox.POBox	poBox = null;
 			Store				store = Store.GetStore();
 			Subscription		cSub = null;
-
-			// FIXME:  remove!
-			Console.WriteLine("POBoxService::Invite called");
-			Console.WriteLine("  DomainID:   " + domainID);
-			Console.WriteLine("  fromUserID: " + fromUserID);
-			Console.WriteLine("  toUserID:   " + toUserID);
-			Console.WriteLine("  colID:      " + sharedCollectionID);
 
 			if (domainID == null || domainID == "")
 			{
@@ -571,17 +439,22 @@ namespace Simias.POBoxService.Web
 						? POBox.POBox.GetPOBox(store, domainID)
 						: POBox.POBox.GetPOBox(store, domainID, toUserID);
 
-				string[] hostAndPort;
-				char[] seps = {':'};
-				hostAndPort = this.Context.Request.Url.Authority.Split(seps);
-
 				cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID);
 				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
 				cSub.ToName = toMember.Name;
 				cSub.ToIdentity = toUserID;
 				cSub.FromName = fromMember.Name;
 				cSub.FromIdentity = fromUserID;
-				cSub.POServiceURL = new Uri("http://" + hostAndPort[0] + ":6436/PostOffice.rem");
+
+				// FIXME:
+				string serviceUrl = 
+						"http://" + 
+						this.Context.Request.Url.Host +
+						":" +
+						this.Context.Request.Url.Port.ToString() +
+						"/POBoxService.asmx";
+
+				cSub.POServiceURL = new Uri(serviceUrl);
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
@@ -603,103 +476,6 @@ namespace Simias.POBoxService.Web
 
 				poBox.Commit(cSub);
 				return(cSub.MessageID);
-			}
-			catch{}
-			return("");
-		}
-
-		/// <summary>
-		/// Subscribe to a shared collection
-		/// </summary>
-		/// <param name="domainID"></param>
-		/// <param name="poBoxID"></param>
-		/// <param name="ToUserID"></param>
-		/// <param name="SubscriptionName"></param>
-		/// <returns>true subscription ID - false empty string</returns>
-		[WebMethod]
-		public
-		string 
-		Subscribe(
-			string			domainID, 
-			string			fromUserID,
-			string			fromUserAlias,
-			string			fromUserPubKey,
-			string			toUserName,
-			string			toUserID,
-			string			collectionID,
-			string			subscriptionName)
-		{
-			Simias.POBox.POBox	poBox = null;
-			Store			store = Store.GetStore();
-			Subscription	cSub = null;
-			Collection		sharedCollection;
-
-			if (domainID == null || domainID == "")
-			{
-				domainID = store.DefaultDomain;
-			}
-			
-			Simias.Storage.Domain	cDomain = store.GetDomain(domainID);
-			if (cDomain == null)
-			{
-				throw new ApplicationException("Invalid Domain ID");
-			}
-
-			sharedCollection = store.GetCollectionByID(collectionID);
-			if (sharedCollection == null)
-			{
-				throw new ApplicationException("Invalid shared collection ID");
-			}
-
-			// Verify the user
-			if (fromUserID == null)
-			{
-				fromUserID = Guid.NewGuid().ToString();
-				fromUserPubKey = Guid.NewGuid().ToString();
-			}
-
-			/*
-			fromUserID = System.Threading.Thread.CurrentPrincipal.Identity.Name;
-			if ((fromUserID == null) || (fromUserID.Length == 0))
-			{
-				//throw new ApplicationException("Invalid current user.");
-
-				// Temp
-			}
-			*/
-
-			try
-			{
-				poBox = 
-					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-					? POBox.POBox.GetPOBox(store, domainID)
-					: POBox.POBox.GetPOBox(store, domainID, toUserID);
-
-				char[] seps = {':'};
-				string[] hostAndPort = this.Context.Request.Url.Authority.Split(seps);
-
-				cSub = new Subscription(subscriptionName, "Subscription", fromUserID);
-				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Pending;
-				cSub.ToName = fromUserAlias;
-				cSub.ToIdentity = fromUserID;
-				cSub.FromName = toUserName;
-				cSub.FromIdentity = toUserID;
-				cSub.POServiceURL = new Uri("http://" + hostAndPort[0] + ":6436/PostOffice.rem");
-				cSub.SubscriptionCollectionID = sharedCollection.ID;
-				cSub.SubscriptionCollectionType = "iFolder";
-				cSub.SubscriptionCollectionName = sharedCollection.Name;
-				cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
-				cSub.DomainID = domainID;
-				cSub.DomainName = cDomain.Name;
-				cSub.SubscriptionKey = Guid.NewGuid().ToString();
-
-				if(domainID == Simias.Storage.Domain.WorkGroupDomainID)
-				{
-					//cSub.FromPublicKey = fromUserPubKey;
-				}
-								
-				poBox.Commit(cSub);
-				return(cSub.ID);
 			}
 			catch{}
 			return("");

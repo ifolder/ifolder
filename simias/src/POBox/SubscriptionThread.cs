@@ -39,10 +39,12 @@ namespace Simias.POBox
 	public class SubscriptionThread
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SubscriptionThread));
+		private static readonly string	poServiceLabel = ":8086/POBoxService.asmx";
 		
 		private POBox poBox;
 		private Subscription subscription;
 		private Hashtable threads;
+		private string poServiceUrl;
 
 		/// <summary>
 		/// Constructor
@@ -52,6 +54,10 @@ namespace Simias.POBox
 			this.poBox = poBox;
 			this.subscription = subscription;
 			this.threads = threads;
+
+			char[] seps = {':'};
+			string[] authority = subscription.POServiceURL.Authority.Split(seps);
+			poServiceUrl = "http://" + authority[0] + poServiceLabel;
 		}
 
 		/// <summary>
@@ -75,7 +81,7 @@ namespace Simias.POBox
 								break;
 
 							// TODO: fix and cleanup states
-							case SubscriptionStates.Pending:
+							//case SubscriptionStates.Pending:
 
 							// replied (slave)
 							case SubscriptionStates.Replied:
@@ -118,6 +124,7 @@ namespace Simias.POBox
 
 		private bool DoInvited()
 		{
+			bool returnStatus = true;
 			if (poBox.Domain == Simias.Storage.Domain.WorkGroupDomainID)
 			{
 				// TODO: Localize
@@ -200,43 +207,85 @@ namespace Simias.POBox
 			{
 				// This is an enterprise pobox contact the POService.
 				log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
-				PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
-					subscription.POServiceURL.ToString());
-			
-				if (po == null)
-					throw new ApplicationException("No Post-Office Service");
+				POBoxService poService = new POBoxService();
 
-				// Set the remote state to received.
-				// And post the subscription to the server.
-				Simias.Storage.Member me = poBox.GetCurrentMember();
-				subscription.FromIdentity = me.UserID;
-				subscription.FromName = me.Name;
-				subscription.SubscriptionState = SubscriptionStates.Received;
-				po.Post(subscription.FromIdentity, subscription);
+				try
+				{
+					poService.Url = this.poServiceUrl;
 
-				subscription.SubscriptionState = SubscriptionStates.Posted;
-				poBox.Commit(subscription);
+					// Set the remote state to received.
+					// And post the subscription to the server.
+					Simias.Storage.Member me = poBox.GetCurrentMember();
+					subscription.FromIdentity = me.UserID;
+					subscription.FromName = me.Name;
+
+					string subID =
+						poService.Invite(
+							subscription.DomainID,
+							subscription.FromIdentity,
+							subscription.ToIdentity,
+							subscription.SubscriptionCollectionID,
+							subscription.SubscriptionCollectionType);
+					if (subID != null && subID != "")
+					{
+						subscription.SubscriptionState = SubscriptionStates.Posted;
+						subscription.MessageID = subID;
+						poBox.Commit(subscription);
+					}
+					else
+					{
+						returnStatus = false;
+					}
+				}
+				catch
+				{
+					log.Debug("Failed POBoxService::Invite - target: " + poService.Url);
+					returnStatus = false;
+				}
 			}
 
-			return true;
+			return returnStatus;
 		}
 
 		private bool DoReplied()
 		{
-			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
-			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
-				subscription.POServiceURL.ToString());
-			
-			if (po == null)
-				throw new ApplicationException("No Post-Office Service");
+			log.Info("DoReplied - Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+			POBoxService poService = new POBoxService();
+			poService.Url = this.poServiceUrl;
 
-			// post subscription
-			subscription.SubscriptionState = SubscriptionStates.Pending;
-			po.Post(subscription.ToIdentity, subscription);
+			try
+			{
+				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
+				{
+					log.Info("  subscription accepted!");
+					poService.AcceptedSubscription(
+						subscription.DomainID,
+						subscription.FromIdentity,
+						subscription.ToIdentity,
+						subscription.MessageID);
+				}
+				else
+				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Declined)
+				{
+					log.Info("  subscription declined");
+					poService.DeclinedSubscription(
+						subscription.DomainID,
+						subscription.FromIdentity,
+						subscription.ToIdentity,
+						subscription.MessageID);
+				}
 
-			// update subscription
-			subscription.SubscriptionState = SubscriptionStates.Delivered;
-			poBox.Commit(subscription);
+				// update local subscription
+				subscription.SubscriptionState = SubscriptionStates.Delivered;
+				poBox.Commit(subscription);
+			}
+			catch(Exception e)
+			{
+				log.Debug("DoReplied failed updating originator's PO box");
+				log.Debug(e.Message);
+				log.Debug(e.StackTrace);
+			}
+			poService = null;
 
 			// always return false to drop to the next state
 			return false;
@@ -246,50 +295,68 @@ namespace Simias.POBox
 		{
 			bool result = false;
 
-			log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
-			PostOffice po = (PostOffice)Activator.GetObject(typeof(PostOffice),
-				subscription.POServiceURL.ToString());
-			
-			if (po == null)
-				throw new ApplicationException("No Post-Office Service");
+			log.Info("DoDelivered::Connecting to the Post Office Service : {0}", subscription.POServiceURL);
 
-			// post subscription
-			SubscriptionStatus status = po.GetSubscriptionStatus(subscription.DomainID,
-				subscription.FromIdentity, subscription.MessageID);
+			POBoxService poService = new POBoxService();
+			poService.Url = this.poServiceUrl;
 
-			// update subscription
-			if (status.State == SubscriptionStates.Responded)
+			try
 			{
-				// create proxy
-				if (status.Disposition == SubscriptionDispositions.Accepted)
+				SubscriptionInformation subInfo =
+					poService.GetSubscriptionInfo(
+						subscription.DomainID,
+						subscription.FromIdentity,
+						subscription.MessageID);
+
+				// update subscription
+				if (subInfo.State == (int) SubscriptionStates.Responded)
 				{
-					log.Debug("Creating collection...");
-
-					// do not re-create the proxy
-					if (poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID) == null)
+					// create proxy
+					if (subInfo.Disposition == (int) SubscriptionDispositions.Accepted)
 					{
-						// get and save details
-						subscription.AddDetails(po.GetSubscriptionDetails(subscription.DomainID,
-							subscription.FromIdentity, subscription.SubscriptionCollectionID));
-						poBox.Commit(subscription);
+						log.Debug("Creating collection...");
+
+						// do not re-create the proxy
+						if (poBox.StoreReference.GetCollectionByID(subscription.SubscriptionCollectionID) == null)
+						{
+							SubscriptionDetails details = new SubscriptionDetails();
+							details.DirNodeID = subInfo.DirNodeID;
+							details.DirNodeName = subInfo.DirNodeName;
+							details.CollectionUrl = subInfo.CollectionUrl;
+
+							log.Debug("Collection URL: " + subInfo.CollectionUrl);
+
+							// save details
+							subscription.AddDetails(details);
+							poBox.Commit(subscription);
 					
-						// create slave stub
-						subscription.CreateSlave(poBox.StoreReference);
+							// create slave stub
+							subscription.CreateSlave(poBox.StoreReference);
+						}
+
+						// acknowledge the message
+						// which removes the originator's 
+						poService.AckSubscription(
+							subscription.DomainID,
+							subscription.FromIdentity, 
+							subscription.ToIdentity,
+							subscription.MessageID);
+
+						// done with the subscription - move to local subscription to the ready state
+						subscription.SubscriptionState = SubscriptionStates.Ready;
+						poBox.Commit(subscription);
 					}
+					else
+					{
+						// Remove the subscription from the local PO box
+						poBox.Commit(poBox.Delete(subscription));
+					}
+
+					// done
+					result = true;
 				}
-
-				// acknowledge the message
-				po.AckSubscription(subscription.DomainID,
-					subscription.FromIdentity, subscription.MessageID);
-
-				// done with the subscription - move to ready state
-				subscription.SubscriptionState = SubscriptionStates.Ready;
-				poBox.Commit(subscription);
-
-				// done
-				result = true;
 			}
-			
+			catch{}
 			return result;
 		}
 	}
