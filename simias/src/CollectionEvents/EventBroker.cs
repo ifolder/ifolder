@@ -64,6 +64,7 @@ namespace Simias.Event
 		ManualResetEvent queued;
 		static bool serviceRegistered = false;
 		static bool clientRegistered = false;
+		static EventBroker instance = null;
 
 		#endregion
 
@@ -83,13 +84,9 @@ namespace Simias.Event
 			// Start a thread to handle events.
 			eventQueue = new Queue();
 			queued = new ManualResetEvent(false);
-
-			if (serviceRegistered)
-			{
-				System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
-				t.IsBackground = true;
-				t.Start();
-			}
+			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+			t.IsBackground = true;
+			t.Start();
 		}
 
 		#endregion
@@ -170,14 +167,20 @@ namespace Simias.Event
 
 		public static EventBroker GetBroker(Configuration conf)
 		{
-			string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
-			if (new Uri(serviceUri).Port == -1)
+			if (instance != null)
 			{
-				return null;
+				return instance;
 			}
-			EventBroker.RegisterClientChannel(conf);
-				
-			return (EventBroker)Activator.GetObject(typeof(EventBroker), serviceUri);
+			else
+			{
+				string serviceUri = conf.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+				if (new Uri(serviceUri).Port == -1)
+				{
+					return null;
+				}
+				EventBroker.RegisterClientChannel(conf);
+				return (EventBroker)Activator.GetObject(typeof(EventBroker), serviceUri);
+			}
 		}
 
 		/// <summary>
@@ -235,9 +238,10 @@ namespace Simias.Event
 				TcpChannel(props,clientProvider,serverProvider);
 			ChannelServices.RegisterChannel(chan);
 
-			RemotingConfiguration.RegisterWellKnownServiceType(
-				typeof(EventBroker), serviceUri.AbsolutePath.TrimStart('/'), WellKnownObjectMode.Singleton);
-
+			
+			instance = new EventBroker();
+			ObjRef brokerRef = RemotingServices.Marshal(instance, serviceUri.AbsolutePath.TrimStart('/'));
+			
 			string [] uriList = chan.GetUrlsForUri(serviceUri.AbsolutePath.TrimStart('/'));
 			if (uriList.Length == 1)
 			{
@@ -258,6 +262,11 @@ namespace Simias.Event
 		/// </summary>
 		public static void DeRegisterService(Configuration conf)
 		{
+			if (instance != null)
+			{
+				RemotingServices.Disconnect(instance);
+				instance = null;
+			}
 			ChannelServices.UnregisterChannel(ChannelServices.GetChannel(channelName + conf.StorePath.GetHashCode().ToString()));
 			serviceRegistered = false;
 		}

@@ -49,7 +49,7 @@ namespace Simias.Event
 		DateTime			lastEvent = DateTime.MinValue;
 		int					eventCount = 0;
 		bool				performanceTest = false;
-		Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+		static Configuration conf = new Configuration(Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath));
 
 		#endregion
 
@@ -443,6 +443,7 @@ namespace Simias.Event
 			Console.WriteLine("Usage: CollectionEventsTest.exe (mode) [event count]");
 			Console.WriteLine("      where mode = P(ublish) [event count]");
 			Console.WriteLine("      or    mode = S(ubscribe) (P(erformance))");
+			Console.WriteLine("      or    mode = L(Load service)");
 		}
 
 		#endregion
@@ -468,7 +469,7 @@ namespace Simias.Event
 			
 					if (args.Length > 1)
 					{
-						t.publisher = new EventPublisher(t.conf);
+						t.publisher = new EventPublisher(conf);
 						int count = Int32.Parse(args[1]);
 						for (int i = 0; i < count; ++i)
 						{
@@ -478,7 +479,14 @@ namespace Simias.Event
 					break;
 
 				case "PS":
-					t.publisher = new EventPublisher(t.conf);
+					t.subscribe();
+					t.publisher = new EventPublisher(conf);
+					for (int i = 0; i < 1000; ++i)
+					{
+						t.publisher.RaiseEvent(new NodeEventArgs("nifp", i.ToString(), t.collection, "Node", EventType.NodeCreated));
+					}
+					Console.ReadLine();
+					t.Cleanup();
 					break;
 
 				case "S":
@@ -487,6 +495,14 @@ namespace Simias.Event
 					t.subscribe();
 					t.shutdownEvent.WaitOne();
 					t.Cleanup();
+					break;
+
+				case "L":
+					Manager manager = new Manager(conf);
+					manager.StartServices();
+					Console.WriteLine("Press Enter to exit");
+					Console.ReadLine();
+					manager.StopServices();
 					break;
 
 				default:
