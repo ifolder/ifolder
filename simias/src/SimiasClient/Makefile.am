@@ -13,10 +13,16 @@ SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(SimiasClient_CSFILES) $(srcdir)/SimiasSetup.cs.in
 
+if MAKE_DOC_FILE
+DOC_FILE = $(basename $@).doc.xml
+DOC_FILE_CMD = /doc:$(DOC_FILE)
+DOC_FILE_CLEAN = *.doc.xml
+endif
+
 all: SimiasClient.dll
 
 SimiasClient.dll: $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES) $(srcdir)/SimiasSetup.cs
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) /doc:SimiasClient.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(DOC_FILE_CMD) 
 
 if DEBUG
 if WINDOWS
@@ -35,7 +41,7 @@ uninstall-local:
 	
 installcheck-local: install
 	
-CLEAN_FILES = SimiasClient.dll SimiasClient.doc.xml
+CLEAN_FILES = SimiasClient.dll $(DOC_FILE_CLEAN)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
