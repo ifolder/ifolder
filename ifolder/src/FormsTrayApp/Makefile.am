@@ -20,7 +20,7 @@ RESX_FILES = FormsTrayApp.resx GlobalProperties.resx ServerInfo.resx AcceptInvit
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
-EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config $(PROJECT_FILES)
+EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest iFolderApp.exe.config InstallUtil.exe.config $(PROJECT_FILES)
 
 if MAKE_DOC_FILE
 DOC_FILE = $(basename $@).doc.xml

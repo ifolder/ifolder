@@ -343,6 +343,9 @@
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>AllOtherFiles</td><td>{3B6C5DC6-1C33-4CF0-BE3D-E2D5B3459A5C}</td><td>WindowsFolder</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>AllOtherFiles1</td><td>{31083ADB-E7FF-4411-949D-83F925AF4BD0}</td><td>MICROSOFT.NET</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>AllOtherFiles2</td><td>{860B4627-638C-4BBC-93AF-C93ED105E166}</td><td>FRAMEWORK</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>AllOtherFiles3</td><td>{6DFFEBF0-60AC-4CE2-BDFE-4D557940576B}</td><td>V1.1.4322</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AllUsers</td><td>{2C8F8255-076F-4671-B2BF-576D07513763}</td><td>INSTALLDIR</td><td>8</td><td>ALLUSERS</td><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ContactBrowserShortcutComponent</td><td>{C4E1B853-D90D-4B9B-8565-1F08CFA2DC04}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>HelpFiles</td><td>{B12C9353-241E-44A6-B0F5-E76A373F6771}</td><td>HELP</td><td>0</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -967,10 +970,13 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>FRAMEWORK</td><td>AllOtherFiles2</td></row>
 		<row><td>INSTALLDIR</td><td>AllUsers</td></row>
 		<row><td>INSTALLDIR</td><td>ContactBrowserShortcutComponent</td></row>
 		<row><td>INSTALLDIR</td><td>ISRegistryComponent</td></row>
 		<row><td>INSTALLDIR</td><td>OnlyCurrentUser</td></row>
+		<row><td>MICROSOFT.NET</td><td>AllOtherFiles1</td></row>
+		<row><td>WindowsFolder</td><td>AllOtherFiles</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1055,6 +1061,7 @@
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
+		<row><td>FRAMEWORK</td><td>MICROSOFT.NET</td><td>FRAMEW~1|Framework</td><td/><td>0</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
@@ -1066,6 +1073,7 @@
 		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>ISUpdateServiceFolder</td><td>ISCommonFilesFolder</td><td>UPDATE~1|UpdateService</td><td/><td>0</td><td/></row>
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
+		<row><td>MICROSOFT.NET</td><td>WindowsFolder</td><td>MICROS~1|Microsoft.NET</td><td/><td>0</td><td/></row>
 		<row><td>MY_PRODUCT_NAME</td><td>NOVELL__INC.</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>NOVELL__INC.</td><td>ProgramFilesFolder</td><td>NOVELL~1|Novell, Inc.</td><td/><td>0</td><td/></row>
@@ -1086,6 +1094,7 @@
 		<row><td>TempFolder</td><td>TARGETDIR</td><td>.:Temp</td><td/><td>0</td><td/></row>
 		<row><td>TemplateFolder</td><td>TARGETDIR</td><td>.:ShellNew</td><td/><td>0</td><td/></row>
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
+		<row><td>V1.1.4322</td><td>FRAMEWORK</td><td>V1_1_4~1|v1.1.4322</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
 		<row><td>iFolder</td><td>ProgramMenuFolder</td><td>##ID_STRING3##</td><td/><td>1</td><td/></row>
@@ -1304,6 +1313,9 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>Help_Files</td><td>AllOtherFiles</td></row>
+		<row><td>Help_Files</td><td>AllOtherFiles1</td></row>
+		<row><td>Help_Files</td><td>AllOtherFiles2</td></row>
+		<row><td>Help_Files</td><td>AllOtherFiles3</td></row>
 		<row><td>Help_Files</td><td>HelpFiles</td></row>
 		<row><td>iFolder_Files</td><td>AllUsers</td></row>
 		<row><td>iFolder_Files</td><td>ContactBrowserShortcutComponent</td></row>
@@ -1328,7 +1340,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_FORMSTRAYAPP_FILES&gt;\InstallUtil.exe.config</td><td>1</td><td/></row>
+		<row><td>InstallUtil.exe.config</td><td>AllOtherFiles3</td><td>INSTAL~1.CON|InstallUtil.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\FormsTrayApp\InstallUtil.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.config</td><td>WindowsFolderFiles</td><td>EXPLOR~1.CON|explorer.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.config</td><td>1</td><td/></row>
 		<row><td>explorer.exe.manifest</td><td>WindowsFolderFiles</td><td>EXPLOR~1.MAN|explorer.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SOURCE&gt;\src\ifoldershell\explorer.exe.manifest</td><td>1</td><td/></row>
 		<row><td>iFolderApp.exe</td><td>iFolderApp.exe</td><td>IFOLDE~2.EXE|iFolderApp.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;ISProjectFolder&gt;\msi\install\iFolderApp.exe</td><td>1</td><td/></row>
@@ -1488,6 +1500,9 @@
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
 		<row><td>AllOtherFiles</td><td/><td/><td>_8FDFED75_131F_4DC4_B2EA_74A1B49E8A85_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>AllOtherFiles1</td><td/><td/><td>_0FDCC006_051D_4072_B95F_497F4CBA407F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>AllOtherFiles2</td><td/><td/><td>_9BBE0E64_188F_4858_8849_DED3A778BDE8_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>AllOtherFiles3</td><td/><td/><td>_EBE09C9A_8DC4_4E55_94D1_FB3689DD8088_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AllUsers</td><td/><td/><td>_BFE91B0D_88E8_4258_8665_D293A82A89B1_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ContactBrowserShortcutComponent</td><td/><td/><td>_A2DBA8FA_CC2C_4112_BC7C_955591BB1CB8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>HelpFiles</td><td/><td/><td>_63A2A061_0B72_4C17_AE7E_241C0929276C_FILTER</td><td/><td/><td/><td/></row>
@@ -1722,7 +1737,6 @@
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
 		<row><td>PATH_TO_FORMSADDRBOOK_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\..\addressbook\src\FormsAddrBook</td><td/><td>2</td></row>
-		<row><td>PATH_TO_FORMSTRAYAPP_FILES</td><td>C:\cygwin\home\james\builds\ifolder\client\ifolder\src\FormsTrayApp</td><td/><td>2</td></row>
 		<row><td>PATH_TO_IFOLDERSHELL_FILES</td><td>&lt;ISProjectFolder&gt;\..\..\src\iFolderShell</td><td/><td>2</td></row>
 		<row><td>PATH_TO_SOURCE</td><td>&lt;ISProjectFolder&gt;\..\..</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
