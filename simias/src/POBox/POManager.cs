@@ -47,7 +47,7 @@ namespace Simias.POBox
 		private Configuration config;
 		private Hashtable boxManagers;
 		private EventSubscriber subscriber;
-//		private PostOffice service;
+		private EventSubscriber invitationSubscriber;
 		private Uri serviceUrl = null;
 
 		/// <summary>
@@ -70,6 +70,11 @@ namespace Simias.POBox
 			subscriber.NodeTypeFilter = NodeTypes.POBoxType;
 			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
+
+			// Removes invitations from POBoxes.
+			invitationSubscriber = new EventSubscriber();
+			invitationSubscriber.Enabled = true;
+			invitationSubscriber.NoAccess += new NodeEventHandler(OnCollectionNoAccess);
 		}
 		/// <summary>
 		/// Start the PO Box manager.
@@ -114,34 +119,22 @@ namespace Simias.POBox
 			{
 				lock(this)
 				{
-					/*
-					if (service != null)
-					{
-						log.Debug("Stopping PO Service: {0}", ServiceUrl);
-					}
-					*/
-
 					// stop collection managers
 					subscriber.Enabled = false;
+					invitationSubscriber.Enabled = false;
+
 					foreach(string id in new ArrayList(boxManagers.Keys))
 					{
 						RemovePOBoxManager(id);
 					}
 
-					/*
-					// release service
-					if (service != null)
-					{
-						RemotingServices.Disconnect(service);
-						service = null;
-					}
-					*/
+					subscriber.Dispose();
+					invitationSubscriber.Dispose();
 				}
 			}
 			catch(Exception e)
 			{
 				log.Error(e, "Unable to stop store manager.");
-
 				throw e;
 			}
 		}
@@ -219,6 +212,37 @@ namespace Simias.POBox
 					DomainAgent agent = new DomainAgent();
 					agent.RemoveDomainInformation((boxManagers[args.ID] as POBoxManager).Domain);
 					RemovePOBoxManager(args.ID);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Removes all subscriptions for the collection that is contained in the event.
+		/// </summary>
+		/// <param name="args">Node event arguments.</param>
+		private void OnCollectionNoAccess(NodeEventArgs args)
+		{
+			// Make sure that this is an event for a collection.
+			if (args.Collection == args.ID)
+			{
+				// Search the POBox collections for a subscription for this collection.
+				Property p = new Property(Subscription.SubscriptionCollectionIDProperty, args.ID);
+
+				// Find all of the subscriptions for this POBox.
+				ICSList list = store.GetNodesByProperty(p, SearchOp.Equal);
+				foreach (ShallowNode sn in list)
+				{
+					// Make sure that this node is a subscription.
+					if (sn.Type == NodeTypes.SubscriptionType)
+					{
+						// Get the collection (POBox) for this subscription.
+						POBox poBox = POBox.GetPOBoxByID(store, sn.CollectionID);
+						if ( poBox != null )
+						{
+							// Delete this subscription from the POBox.
+							poBox.Commit(poBox.Delete(new Subscription(poBox, sn)));
+						}
+					}
 				}
 			}
 		}
