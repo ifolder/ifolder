@@ -50,4 +50,14 @@ char *simias_escape_spaces(char *str_with_space);
  * should be freed.
  */
 gboolean simias_url_parse(const char *url, char **proto, char **host, char **port, char **path);
+
+/**
+ * This calls /sbin/ifconfig and returns the first address
+ * that is NOT 127.0.0.*.  The returned string is statically
+ * allocated, so if it is needed elsewhere, you should create
+ * a copy of it before calling simias_get_public_ip again.  If
+ * no public IP address can be determined, NULL will be returned.
+ */
+const char * simias_get_public_ip();
+
 #endif
