@@ -182,6 +182,39 @@ static iFolderData *sharedInstance = nil;
 
 
 //===================================================================
+// getiFolder
+// returns the iFolder for the specified iFolderID
+//===================================================================
+-(iFolder *)getiFolder:(NSString *)iFolderID updateData:(BOOL)shouldUpdate
+{
+	iFolder *ifolder = nil;
+	[instanceLock lock];
+
+	ifolder = [[keyediFolders objectForKey:iFolderID] retain];
+	if( (ifolder != nil) && (shouldUpdate) )
+	{
+		@try
+		{
+			iFolder *newiFolder = [[ifolderService GetiFolder:[ifolder ID]] retain];
+			[ifolder setProperties:[newiFolder properties]];
+			[newiFolder release];
+		}
+		@catch (NSException *e)
+		{
+			NSLog(@"*********Exception getting iFolder");
+			NSLog(@"%@ :: %@", [e name], [e reason]);
+		}
+	}
+
+	[instanceLock unlock];
+
+	return [ifolder autorelease];
+}
+
+
+
+
+//===================================================================
 // isPOBox
 // Checks if the passed nodeIDs is one of the current POBoxes
 //===================================================================

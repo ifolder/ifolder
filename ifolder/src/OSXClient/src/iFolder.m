@@ -39,6 +39,8 @@
 		properties = [[NSMutableDictionary alloc]
 			initWithObjects:values forKeys: keys];
 	}
+
+	synchronizing = NO;
 	return self;
 }
 
@@ -71,22 +73,21 @@
 
 
 
+-(BOOL) isSynchronizing
+{
+	return synchronizing;
+}
+
+-(void) setIsSynchronizing:(BOOL)isSynchronizing
+{
+	synchronizing = isSynchronizing;
+	[self updateDisplayInformation];
+}
 
 
 -(id)Image
 {
 	return icon;
-}
-
-
--(NSString *)Location
-{
-	return location;
-}
-
--(NSString *)Status
-{
-	return state;
 }
 
 -(NSString *)Name
@@ -128,6 +129,12 @@
 	return [properties objectForKey:@"CurrentUserRights"];
 }
 
+-(NSString *)State
+{
+	return [properties objectForKey:@"State"];
+}
+
+
 
 
 
@@ -136,17 +143,18 @@
 	if([ [self IsSubscription] boolValue])
 	{
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
-			state = @"Available";
+			[properties setObject:@"Available" forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitConnect"])
-			state = @"Waiting to Connect";
+			[properties setObject:@"Waiting to Connect" forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-			state = @"Waiting to Sync";
+			[properties setObject:@"Waiting to Sync" forKey:@"Status"];
 		else
-			state = @"Unknown";
+			[properties setObject:@"Unknown" forKey:@"Status"];
 
 		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
 		{
-			location = [properties objectForKey:@"Owner"];
+			[properties setObject:[properties objectForKey:@"Owner"]
+								forKey:@"Location"];
 		}
 
 		if(icon != nil)
@@ -158,24 +166,28 @@
 	}
 	else
 	{
-		if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
-			state = @"Waiting to Sync";
+		if(synchronizing)
+			[properties setObject:@"Syncrhonizing" forKey:@"Status"];
+		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
+			[properties setObject:@"Waiting to Sync" forKey:@"Status"];
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"Local"])
 		{
 			if([ [properties objectForKey:@"HasConflicts"] boolValue])
-				state = @"Has File Conflicts";
+				[properties setObject:@"Has File Conflicts" forKey:@"Status"];
 			else
-				state = @"OK";
+				[properties setObject:@"OK" forKey:@"Status"];
 		}
 
-		location = [properties objectForKey:@"Path"];
-
+		// update the location
+		NSString *location = [properties objectForKey:@"Path"];
+		if(location != nil)
+			[properties setObject:location forKey:@"Location"];
+			
 		if(icon != nil)
 			[icon release];
 
 		icon = [NSImage imageNamed:@"ifolder24"];
 		[icon setScalesWhenResized:YES];
-
 	}
 }
 

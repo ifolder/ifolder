@@ -51,18 +51,16 @@
 {
 	NSMutableDictionary * properties;
 	NSImage				* icon;
-	NSString			* location;
-	NSString			* state;
+	BOOL				synchronizing;
 }
 
 -(NSMutableDictionary *) properties;
 -(void) setProperties: (NSDictionary *)newProperties;
 
-
+-(BOOL) isSynchronizing;
+-(void) setIsSynchronizing:(BOOL)isSynchronizing;
 
 -(NSImage *)Image;
--(NSString *)Location;
--(NSString *)Status;
 -(NSNumber *)IsSubscription;
 -(NSString *)Name;
 -(NSString *)ID;
@@ -71,6 +69,7 @@
 -(NSString *)OwnerUserID;
 -(NSString *)CurrentUserID;
 -(NSString *)CurrentUserRights;
+-(NSString *)State;
 
 -(void) updateDisplayInformation;
 

@@ -53,5 +53,6 @@
 -(NSArray *)getiFolders;
 -(iFolderDomain *)getDefaultDomain;
 -(int)getDomainCount;
+-(iFolder *)getiFolder:(NSString *)iFolderID updateData:(BOOL)shouldUpdate;
 
 @end

@@ -83,11 +83,11 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 	{
 		case SEC_STATE_EVENT_CONNECTED:
 			[[NSApp delegate] addLogTS:@"Simias Event Client Event Connected... Registering for events"];
-			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNodeCreated, nil);
+			sec_set_event(*sec, ACTION_NODE_CREATED, true, (SimiasEventFunc)SimiasEventNode, nil);
 			[[NSApp delegate] addLogTS:@"Registered for Node Created Events"];
-			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNodeDeleted, nil);
+			sec_set_event(*sec, ACTION_NODE_DELETED, true, (SimiasEventFunc)SimiasEventNode, nil);
 			[[NSApp delegate] addLogTS:@"Registered for Node Deleted Events"];
-			sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNodeChanged, nil);
+			sec_set_event(*sec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)SimiasEventNode, nil);
 			[[NSApp delegate] addLogTS:@"Registered for Node Changed Events"];
 
 			sec_set_event(*sec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)SimiasEventSyncCollection, nil);
@@ -110,29 +110,51 @@ int SimiasEventStateCallBack(SEC_STATE_EVENT state_event, const char *message, v
 }
 
 
-int SimiasEventNodeCreated(SimiasNodeEvent *nodeEvent, void *data)
+int SimiasEventNode(SimiasNodeEvent *nodeEvent, void *data)
 {
-//    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasEventNodeCreated fired: %s", nodeEvent->node);
-//    [pool release];	
+    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
+	NSLog(@"SimiasNodeEvent fired: %s", nodeEvent->node);
+
+	NSDictionary *neProps = [getNodeEventProperties(nodeEvent) retain];
+	SMNodeEvent *ne = [[SMNodeEvent alloc] init];
+	[ne setProperties:neProps];
+	[[SimiasEventData sharedInstance] pushNodeEvent:ne];
+
+	[neProps release];
+	[ne release];
+    [pool release];	
     return 0;
 }
-
-int SimiasEventNodeDeleted(SimiasNodeEvent *nodeEvent, void *data)
+NSDictionary *getNodeEventProperties(SimiasNodeEvent *nodeEvent)
 {
-//    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasEventNodeDeleted fired: %s", nodeEvent->node);
-//    [pool release];	
-    return 0;
-}
+	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 
-int SimiasEventNodeChanged(SimiasNodeEvent *nodeEvent, void *data)
-{
-//    NSAutoreleasePool *pool=[[NSAutoreleasePool alloc] init];
-//	NSLog(@"SimiasEventNodeChanged fired: %s", nodeEvent->node);
+	if(nodeEvent->event_type != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->event_type] forKey:@"eventType"];
+	if(nodeEvent->action != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->action] forKey:@"action"];
+	if(nodeEvent->time != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->time] forKey:@"time"];
+	if(nodeEvent->source != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->source] forKey:@"source"];
+	if(nodeEvent->collection != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->collection] forKey:@"collectionID"];
+	if(nodeEvent->type != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->type] forKey:@"type"];
+	if(nodeEvent->event_id != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->event_id] forKey:@"event_id"];
+	if(nodeEvent->node != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->node] forKey:@"nodeID"];
+	if(nodeEvent->flags != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->flags] forKey:@"flags"];
+	if(nodeEvent->master_rev != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->master_rev] forKey:@"master_rev"];
+	if(nodeEvent->slave_rev != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->slave_rev] forKey:@"slave_rev"];
+	if(nodeEvent->file_size != nil)
+		[newProperties setObject:[NSString stringWithCString:nodeEvent->file_size] forKey:@"file_size"];
 
-//    [pool release];	
-    return 0;
+	return [newProperties autorelease];
 }
 
 
@@ -152,6 +174,7 @@ int SimiasEventSyncCollection(SimiasCollectionSyncEvent *collectionEvent, void *
 	[[SimiasEventData sharedInstance] pushCollectionSyncEvent:cse];
 
 
+	
 	[cseProps release];
 	[cse release];
     [pool release];	

@@ -155,3 +155,59 @@
 		return SYNC_ACTION_STOP;
 }
 @end
+
+
+
+@implementation SMNodeEvent
+-(NSString *)action
+{
+	return [properties objectForKey:@"action"];
+}
+-(NSString *)time
+{
+	return [properties objectForKey:@"time"];
+}
+-(NSString *)source
+{
+	return [properties objectForKey:@"source"];
+}
+-(NSString *)collectionID
+{
+	return [properties objectForKey:@"collectionID"];
+}
+-(int)type
+{
+	NSString *actStr = [properties objectForKey:@"type"];
+	if([actStr compare:@"NodeCreated"] == 0)
+		return NODE_CREATED;
+	else if([actStr compare:@"NodeDeleted"] == 0)
+		return NODE_DELETED;
+	else
+		return NODE_CHANGED;
+}
+-(NSString *)event_id
+{
+	return [properties objectForKey:@"event_id"];
+}
+-(NSString *)nodeID
+{
+	return [properties objectForKey:@"nodeID"];
+}
+-(NSString *)flags
+{
+	return [properties objectForKey:@"flags"];
+}
+-(NSString *)master_rev
+{
+	return [properties objectForKey:@"master_rev"];
+}
+-(NSString *)slave_rev
+{
+	return [properties objectForKey:@"slave_rev"];
+}
+-(NSString *)file_size
+{
+	return [properties objectForKey:@"file_size"];
+}
+@end
+
