@@ -351,8 +351,18 @@ internal class SyncIncomingNode
 				DirNode pn = NodeStamp.CastToDirNode(collection, n);
 				if (pn == null)
 					throw new ApplicationException("parent is not DirNode");
-				parentPath = pn.GetFullPath(collection);
-				Directory.CreateDirectory(parentPath); //TODO: deal with dir sync order properly
+
+				parentPath = null;
+				try
+				{
+					parentPath = pn.GetFullPath(collection);
+					Directory.CreateDirectory(parentPath);
+				}
+				catch (DoesNotExistException)
+				{
+					Log.Spew("could not get parent path of {0}, not here yet?", pn.Name);
+					parentPath = "<no parent>";
+				}
 			}
 		}
 		else
@@ -402,9 +412,18 @@ internal class SyncIncomingNode
 		if (collection.IsType(node, typeof(DirNode).Name))
 		{
 			DirNode pn = new DirNode(node);
-			string path = pn.GetFullPath(collection);
+			string path = "<bad>";
+			try
+			{
+				path = pn.GetFullPath(collection);
+				Directory.CreateDirectory(path);
+			}
+			catch (DoesNotExistException)
+			{
+				path = "<no parent>";
+			}
+
 			Log.Spew("Create directory {0}", path);
-			Directory.CreateDirectory(path);
 		}
 		//TODO: verify this can be a check for collection.IsType(node, typeof(BaseFileNode).Name)
 		else if (!collection.IsType(node, typeof(FileNode).Name) && !collection.IsType(node, typeof(StoreFileNode).Name))

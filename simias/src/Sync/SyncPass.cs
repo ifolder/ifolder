@@ -97,7 +97,7 @@ public class SynkerServiceA: SyncCollectionService
 		try
 		{
 			userID = Thread.CurrentPrincipal.Identity.Name;
-			Log.Spew("Sync session starting for {0}", userID);
+			Log.Info("Sync session starting for {0}", userID);
 		}
 		catch (Exception e)
 		{
@@ -128,6 +128,7 @@ public class SynkerServiceA: SyncCollectionService
 			}
 		}
 		
+		Log.Spew("server start of collection {0} returning {1}", collection.Name, rights);
 		return rights;
 	}
 
@@ -136,13 +137,17 @@ public class SynkerServiceA: SyncCollectionService
 	/// </summary>
 	public NodeStamp[] GetNodeStamps()
 	{
+		Log.Spew("server start of GetNodeStamps");
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
-			return ops.GetNodeStamps();
+			NodeStamp[] nss = ops.GetNodeStamps();
+			Log.Spew("server got of {0} NodeStamps", nss.Length);
+			return nss;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
+		Log.Spew("server no NodeStamps, returning null");
 		return null;
 	}
 

@@ -55,6 +55,8 @@ public class SyncTests: Assertion
 	bool useTCP = true;
 	bool useRemoteServer = false;
 
+	static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncTests));
+
 	//---------------------------------------------------------------------------
 	static int Run(string program, string args)
 	{
@@ -113,7 +115,6 @@ public class SyncTests: Assertion
 		try
 		{
 			Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
-			Log.SetLevel("verbose");
 
 			// set up server store and collections, and some ifolder file data
 			if (Directory.Exists(storeDirA) || Directory.Exists(storeDirB)
@@ -125,7 +126,7 @@ public class SyncTests: Assertion
 
 			Directory.CreateDirectory(folderA);
 			Directory.CreateDirectory(folderB);
-			Log.Spew("Init: created store, folders and files");
+			log.Debug("Init: created store, folders and files");
 		}
 		catch (System.Exception e)
 		{
@@ -146,10 +147,10 @@ public class SyncTests: Assertion
 	{
 		if (useRemoteServer)
 		{
-			Log.Info("Skipping creation of local invitation, must come from remote server");
+			log.Info("Skipping creation of local invitation, must come from remote server");
 			return true;
 		}
-		Log.Spew("Creating collection and invitation");
+		log.Debug("Creating collection and invitation");
 		FileInviter fi = new FileInviter(new Uri(storeDirA));
 		return fi.Invite(null, new Uri(folderA), host, serverPort, invitationFile);
 	}
@@ -159,7 +160,7 @@ public class SyncTests: Assertion
 
 	public bool Accept()
 	{
-		Log.Spew("accepting collection and invitation");
+		log.Debug("accepting collection and invitation");
 		if (!useRemoteServer)
 		{
 			FileInviter fi = new FileInviter(new Uri(storeDirB));
@@ -184,20 +185,20 @@ public class SyncTests: Assertion
 		Directory.CreateDirectory(dir2);
 		Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
 
-		Log.Spew("+++++++++++ creating large file");
+		log.Debug("+++++++++++ creating large file");
 		Directory.CreateDirectory(dir3);
 		Differ.CreateFile(Path.Combine(dir3, "file3"), 800*1024);
 
-		Log.Spew("+++++++++++ first run of client for FirstSync");
+		log.Debug("+++++++++++ first run of client for FirstSync");
 		if (!RunClient())
 		{
-			Log.Spew("failed first sync");
+			log.Debug("failed first sync");
 			return false;
 		}
-		Log.Spew("+++++++++++ second run of client for FirstSync");
+		log.Debug("+++++++++++ second run of client for FirstSync");
 		if (!RunClient())
 		{
-			Log.Spew("failed first sync");
+			log.Debug("failed first sync");
 			return false;
 		}
 		return Differ.CompareDirectories(folderA, folderB);
@@ -236,7 +237,7 @@ public class SyncTests: Assertion
 
 		if (!RunClient())
 		{
-			Log.Spew("failed simpleAdds sync");
+			log.Debug("failed simpleAdds sync");
 			return false;
 		}
 		return Differ.CompareDirectories(folderA, folderB);
@@ -264,7 +265,7 @@ public class SyncTests: Assertion
 
 		if (!RunClient())
 		{
-			Log.Spew("failed simple deletes sync");
+			log.Debug("failed simple deletes sync");
 			return false;
 		}
 
@@ -273,14 +274,14 @@ public class SyncTests: Assertion
 		for (int i = 0; i < delNums.Length; ++i)
 			if (File.Exists(fname = Path.Combine(dirS, "simple-file-" + delNums[i] + ".txt")))
 			{
-				Log.Spew("deleted file still exists on server after simple deletes: {0}", fname);
+				log.Debug("deleted file still exists on server after simple deletes: {0}", fname);
 				worked = false;
 			}
 
 		for (int i = 0; i < delNums.Length; ++i)
 			if (File.Exists(fname = Path.Combine(dirC, "simple-file-" + delNums[i] + ".txt")))
 			{
-				Log.Spew("deleted file still exists on client after simple deletes: {0}", fname);
+				log.Debug("deleted file still exists on client after simple deletes: {0}", fname);
 				worked = false;
 			}
 
@@ -317,31 +318,65 @@ public class SyncTests: Assertion
 		Differ.CreateFile(Path.Combine(subdirC1, "non-collision-file-3.txt"), "client non-collision file contents 3\n");
 		Differ.CreateFile(Path.Combine(subdirC2, "non-collision-file-4.txt"), "client non-collision file contents 4\n");
 		
-		Log.Spew("+++++++++++ first run of client for FileCreationCollision");
+		log.Debug("+++++++++++ first run of client for FileCreationCollision");
 		if (!RunClient())
 		{
-			Log.Spew("failed sync after FileCreationCollision");
+			log.Debug("failed sync after FileCreationCollision");
 			return false;
 		}
-		Log.Spew("+++++++++++ second run of client for FileCreationCollision");
+		log.Debug("+++++++++++ second run of client for FileCreationCollision");
 		if (!RunClient())
 		{
-			Log.Spew("failed sync after FileCreationCollision");
+			log.Debug("failed sync after FileCreationCollision");
 			return false;
 		}
-		Log.Spew("+++++++++++ third run of client for FileCreationCollision");
+		log.Debug("+++++++++++ third run of client for FileCreationCollision");
 		if (!RunClient())
 		{
-			Log.Spew("failed sync after FileCreationCollision");
+			log.Debug("failed sync after FileCreationCollision");
 			return false;
 		}
-		Log.Spew("+++++++++++ fourth run of client for FileCreationCollision");
+		log.Debug("+++++++++++ fourth run of client for FileCreationCollision");
 		if (!RunClient())
 		{
-			Log.Spew("failed sync after FileCreationCollision");
+			log.Debug("failed sync after FileCreationCollision");
 			return false;
 		}
 
+		return Differ.CompareDirectories(folderA, folderB);
+	}
+
+	//---------------------------------------------------------------------------
+	// create many files in deep subdirs, sync and make sure everything got sorted out
+
+	[Test] public void NUDeepSubDirs() { Assert(DeepSubDirs()); }
+
+	public bool DeepSubDirs()
+	{
+		const int maxDepth = 15;
+		string curDir = folderA;
+		for (int i = 0; i < maxDepth; i++)
+		{
+			log.Debug("creating DeepSubDirs, depth {0}", i);
+			curDir = Path.Combine(curDir, String.Format("subDepth{0}", i));
+			Directory.CreateDirectory(curDir);
+			Differ.CreateFile(Path.Combine(curDir, String.Format("depth{0}-file-1.txt", i)), "small depth file contents 1\n");
+			Differ.CreateFile(Path.Combine(curDir, String.Format("depth{0}-file-2.txt", i)), 199*1024);
+			Differ.CreateFile(Path.Combine(curDir, String.Format("depth{0}-file-3.txt", i)), 35*1024);
+			Differ.CreateFile(Path.Combine(curDir, String.Format("depth{0}-file-4.txt", i)), "very small depth file contents 4\n");
+			for (int j = 1; j <= 50; j++)
+				Differ.CreateFile(Path.Combine(curDir, String.Format("depth{0}-blast{1}.txt", i, j)), j);
+		}
+
+		for (int i = 0; i < 5; ++i)
+		{
+			log.Debug("+++++++++++ run {0} of client for DeepSubDirs", i);
+			if (!RunClient())
+			{
+				log.Debug("failed sync {0} of DeepSubDirs", i);
+				return false;
+			}
+		}
 		return Differ.CompareDirectories(folderA, folderB);
 	}
 
@@ -374,6 +409,7 @@ public class SyncTests: Assertion
 		AccountTest("simpleAdds", SimpleAdds());
 		AccountTest("simpleDeletes", SimpleDeletes());
 		AccountTest("FileCreationCollision", FileCreationCollision());
+		AccountTest("DeepSubDirs", DeepSubDirs());
 		Cleanup();
 		Console.WriteLine("{0} tests succeeded, {1} failed", successCount, failedCount);
 	}

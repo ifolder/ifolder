@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 
-namespace Simias.Sync
+namespace Simias.Sync.Cmd
 {
 
 //---------------------------------------------------------------------------
@@ -45,7 +45,7 @@ public class SyncCmd
 		FileInviter fi = new FileInviter(storeLocation);
 		if (!fi.Invite(user, docRoot, host, port, invitationFile))
 		{
-			Log.Error("could not make invitation");
+			Console.WriteLine("could not make invitation");
 			return 20;
 		}
 		return 0;
@@ -117,8 +117,6 @@ public class SyncCmd
 		if (args.Length == 0)
 			return Usage(null);
 
-		Log.SetLevel("verbose");
-
 		for (int i = 0; i < args.Length;)
 		{
 			string s = args[i++];
@@ -136,11 +134,15 @@ public class SyncCmd
 				}
 				else if (s == "-l")
 				{
-					if (!Log.SetLevel(args[i++]))
-						return Usage("Unknown trace level");
+					//if (!Log.SetLevel(args[i++]))
+					//	return Usage("Unknown trace level");
+					Console.WriteLine("trace level option '-l' not supported"); 
 				}
 				else if (s == "-c")
-					Log.SetCategory(args[i++]);
+				{
+					//Log.SetCategory(args[i++]);
+					Console.WriteLine("category option '-c' not supported"); 
+				}
 				else if (s == "-h")
 					useTCP = false;
 				else if (s == "-n")

@@ -29,142 +29,50 @@ namespace Simias.Sync
 {
 
 //---------------------------------------------------------------------------
-/// <summary> controlled tracing and debugging output by class categories </summary>
-//[Obsolete("Use log4net instead.")]
+/// <summary> catch-all log for misc sync classes</summary>
 public class Log
 {
-	static TraceSwitch traceSwitch = new TraceSwitch("SyncTrace", "sync trace switch");
-	static ArrayList categories = null;
+	static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Log));
 
-	static void Trace(string msg)
-	{
-		Console.WriteLine(msg);
-		//Trace.WriteLine(msg);
-	}
-
-	static bool Categorical
-	{
-		get
-		{
-			if (categories == null)
-				return true;
-
-			StackFrame sf = (new StackTrace(2, true)).GetFrame(0);
-			Type klass = sf.GetMethod().ReflectedType;
-
-			//Trace(String.Format("  called from {0}.{1}",
-			//	sf.GetMethod().ReflectedType.Name,
-			//	sf.GetMethod().ToString()));
-
-			foreach (string s in categories)
-			{
-				if (s == klass.Name)
-					return true;
-			}
-			return false;
-		}
-	}
-
-	internal static void Here()
-	{
-		if (traceSwitch.TraceVerbose)
-		{
-			StackFrame sf = new StackTrace(1, true).GetFrame(0);
-			Trace(String.Format("Here: {0}:{1} {2}",
-					sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString()));
-		}
-	}
-
-	internal static void Uncaught(Exception e)
-	{
-		Trace("Uncaught exception: " + e.Message);
-		Trace(e.StackTrace);
-	}
-
+	// don't always get line numbers from stack dumps, so force it here
 	static void DumpStack()
 	{
 		StackTrace st = new StackTrace(2, true);
 		for (int i = 0; i < st.FrameCount; ++i)
 		{
 			StackFrame sf = st.GetFrame(i);
-			Trace(String.Format("  called from {0}, {1}: {2}",
+			log.Debug(String.Format("  called from {0}, {1}: {2}",
 					sf.GetFileName(), sf.GetFileLineNumber(),
 					sf.GetMethod().ToString()));
 		}
 	}
 
-	public static void Info(string format, params object[] args)
-	{
-		if (Categorical && traceSwitch.TraceInfo)
-		{
-			Trace(String.Format(format, args));
-		}
-	}
-
-	internal static void Warn(string format, params object[] args)
-	{
-		if (Categorical && traceSwitch.TraceWarning)
-		{
-			Trace(String.Format(format, args));
-			DumpStack();
-		}
-	}
-
 	/// <summary> controlled tracing and debugging output by class categories </summary>
-	public static void Error(string format, params object[] args)
+	internal static void Spew(string format, params object[] args) { log.Debug(format, args); }
+	internal static void Info(string format, params object[] args) { log.Info(format, args); }
+	internal static void Warn(string format, params object[] args) { log.Warn(format, args); }
+	internal static void Error(string format, params object[] args) { log.Error(format, args); DumpStack(); }
+
+	internal static void Here()
 	{
-		if (Categorical && traceSwitch.TraceError)
-		{
-			Trace(String.Format(format, args));
-			DumpStack();
-		}
+		StackFrame sf = new StackTrace(1, true).GetFrame(0);
+		log.Debug("Here: {0}:{1} {2}", sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString());
+	}
+
+	internal static void Uncaught(Exception e)
+	{
+		log.Debug(String.Format("Uncaught exception: {0}\n{1}", e.Message, e.StackTrace));
 	}
 
 	internal static void Assert(bool assertion)
 	{
 		if (!assertion)
 		{
-			Trace("Assertion failed ------------");
+			log.Error("Assertion failed ------------");
 			DumpStack();
 		}
 	}
 
-	/// <summary> controlled tracing and debugging output by class categories </summary>
-	public static void Spew(string format, params object[] args)
-	{
-		if (Categorical && traceSwitch.TraceVerbose)
-		{
-			Trace(String.Format(format, args));
-		}
-	}
-
-	/// <summary> controlled tracing and debugging output by class categories </summary>
-	public static bool SetLevel(string level)
-	{
-		switch (level)
-		{
-			case "off": traceSwitch.Level = TraceLevel.Off; break;
-			case "error": traceSwitch.Level = TraceLevel.Error; break;
-			case "warning": traceSwitch.Level = TraceLevel.Warning; break;
-			case "info": traceSwitch.Level = TraceLevel.Info; break;
-			case "verbose": traceSwitch.Level = TraceLevel.Verbose; break;
-			default: return false;
-		}
-		return true;
-	}
-
-	/// <summary> controlled tracing and debugging output by class categories </summary>
-	public static void SetCategory(string category)
-	{
-		if (category == "all")
-			categories = null;
-		else
-		{
-			if (categories == null)
-				categories = new ArrayList();
-			categories.Add(category);
-		}
-	}
 }
 
 //===========================================================================
