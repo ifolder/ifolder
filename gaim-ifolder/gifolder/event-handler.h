@@ -32,5 +32,5 @@
 #include "blist.h"
 
 void simias_buddy_signed_on_cb(GaimBuddy *buddy, void *user_data);
-
+void simias_buddy_signed_off_cb(GaimBuddy *buddy, void *user_data);
 #endif

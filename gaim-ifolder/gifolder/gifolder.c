@@ -260,6 +260,12 @@ plugin_load(GaimPlugin *plugin)
 				GAIM_CALLBACK(simias_buddy_signed_on_cb),
 				NULL);
 
+	gaim_signal_connect(gaim_blist_get_handle(),
+				"buddy-signed-off",
+				plugin,
+				GAIM_CALLBACK(simias_buddy_signed_off_cb),
+				NULL);
+
 	gaim_signal_connect(gaim_accounts_get_handle(),
 				"account-connecting",
 				plugin,
