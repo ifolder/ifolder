@@ -278,7 +278,7 @@ internal class IncomingNode
 				return NodeStatus.ServerFailure;
 			}
 			status = NodeStatus.FileNameConflict;
-			node = collection.CreateCollision(node.id);
+			//FNCONFLICT PROP: node = collection.CreateCollision(node.ID);
 		}
 		try
 		{

@@ -142,7 +142,7 @@ public class Conflict
 		{
 			File.Delete(UpdateConflictPath);
 			node = collection.DeleteCollision(node);
-			//node.SetIncarnations(conflictNode.LocalIncarnation, conflictNode.MasterIncarnation);
+			//FNCONFLICT PROP: node.SetIncarnations(conflictNode.LocalIncarnation, conflictNode.MasterIncarnation);
 			node.IncarnationUpdate = conflictNode.MasterIncarnation;
 			collection.Commit(node);
 			return;
@@ -157,8 +157,8 @@ public class Conflict
 		collection.ImportNode(conflictNode, node.LocalIncarnation);
 		if (fncpath == null)
 			conflictNode = collection.DeleteCollision(conflictNode);
-		//else
-		//	conflictNode = collection.CreateCollision(conflictNode.ID);
+		//FNCONFLICT PROP: else
+		//FNCONFLICT PROP: 	conflictNode = collection.CreateCollision(conflictNode.ID);
 		collection.Commit(conflictNode);
 	}
 
