@@ -619,10 +619,7 @@ namespace Simias.Storage
 
 			set 
 			{ 
-				lock ( lockObject )
-				{
-					SetValue( value ); 
-				}
+				SetValue( value ); 
 			}
 		}
 

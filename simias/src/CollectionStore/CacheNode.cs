@@ -141,7 +141,7 @@ namespace Simias.Storage
 		public void Dispose()
 		{
 			// Remove this object from the store cache table.
-			store.RemoveCacheNode( id, false );
+			store.RemoveCacheNode( this, false );
 		}
 		#endregion
 	}

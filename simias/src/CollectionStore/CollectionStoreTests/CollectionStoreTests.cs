@@ -1873,7 +1873,6 @@ namespace Simias.Storage.Tests
 			// Delete the database.  Must be store owner to delete the database.
 			store.ImpersonateUser( Access.StoreAdminRole );
 			store.Delete();
-			store.Dispose();
 
 			// Remove the created directory.
 			string dirPath = Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" );

@@ -449,7 +449,7 @@ namespace Simias.Storage
 					tempCacheNode.Copy( cNode );
 
 					// GetCacheNode() incremented the reference count.  Need to decrement it.
-					store.RemoveCacheNode( Id, false );
+					store.RemoveCacheNode( tempCacheNode, false );
 				}
 
 				// Add this node to the cache table.

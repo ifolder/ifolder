@@ -494,7 +494,7 @@ namespace Simias.Storage
 					tempCacheNode.Copy( cNode );
 
 					// GetCacheNode() incremented the reference count.  Need to decrement it.
-					store.RemoveCacheNode( Id, false );
+					store.RemoveCacheNode( tempCacheNode, false );
 				}
 
 				// Add the node to the cache table.
@@ -590,7 +590,7 @@ namespace Simias.Storage
 			}
 
 			// Remove this tombstone out of the cache table.
-			store.RemoveCacheNode( Id, true );
+			store.RemoveCacheNode( cNode, true );
 		}
 
 		/// <summary>

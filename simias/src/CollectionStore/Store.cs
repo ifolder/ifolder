@@ -809,18 +809,22 @@ namespace Simias.Storage
 		/// <summary>
 		/// Removes the specified entry from the hashtable.
 		/// </summary>
-		/// <param name="key">Unique identifier for the cache node object.</param>
+		/// <param name="cNode">Node to remove from the cache table.</param>
 		/// <param name="force">If true, object is removed from table regardless of the reference count.</param>
-		internal void RemoveCacheNode( string key, bool force )
+		internal void RemoveCacheNode( CacheNode cNode, bool force )
 		{
 			if ( !disposed )
 			{
 				lock ( this )
 				{
-					CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
-					if ( ( cTempNode != null ) && ( force || ( --cTempNode.referenceCount == 0 ) ) )
+					// Make sure that the node is in the table and that it is the same object.
+					CacheNode cTempNode = ( CacheNode )cacheNodeTable[ cNode.id ];
+					if ( ( cTempNode != null ) && cTempNode.Equals( cNode ) )
 					{
-						cacheNodeTable.Remove( key );
+						if ( force || ( --cTempNode.referenceCount == 0 ) )
+						{
+							cacheNodeTable.Remove( cTempNode.id );
+						}
 					}
 				}
 			}
@@ -988,7 +992,7 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Deletes the persistent store database.
+		/// Deletes the persistent store database and disposes this object.
 		/// </summary>
 		public void Delete()
 		{
@@ -1011,8 +1015,35 @@ namespace Simias.Storage
 					Directory.Delete( storeManagedPath.LocalPath, true );
 				}
 
+				// Let go of the address book and collection database references.
+				if ( localAb != null )
+				{
+					localAb.Dispose();
+					localAb = null;
+				}
+
+				if ( localDb != null )
+				{
+					localDb.Dispose();
+					localDb = null;
+				}
+
+				// Clean out the cache node table.
+				cacheNodeTable.Clear();
+
+				// Let go of the event publisher.
+				publisher = null;
+
+				// Let go of the identity manager.
+				if ( identityManager != null )
+				{
+					identityManager.Dispose();
+					identityManager = null;
+				}
+
 				// Say bye-bye to the store.
 				storageProvider.DeleteStore();
+				Dispose();
 			}
 		}
 
