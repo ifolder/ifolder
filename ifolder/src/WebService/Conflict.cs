@@ -137,9 +137,9 @@ namespace Novell.iFolder.Web
 			else
 			{
 				IsNameConflict = false;
-				FileNode serverFileNode = new FileNode(node);
-				Node localNode = col.GetNodeFromCollision(node);
-				FileNode localFileNode = new FileNode(localNode);
+				FileNode localFileNode = new FileNode(node);
+				Node serverNode = col.GetNodeFromCollision(node);
+				FileNode serverFileNode = new FileNode(serverNode);
 				
 				LocalName = localFileNode.GetFileName();
 				LocalDate = localFileNode.LastWriteTime.ToString();

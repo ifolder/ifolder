@@ -715,6 +715,7 @@ namespace Simias.Sync
 									{
 										// We only need to look at the changed nodes.
 										ProcessChangedNodeStamps(cstamps, ref tempServerContext);
+										cstamps = null;
 									}
 									else
 									{
@@ -975,12 +976,17 @@ namespace Simias.Sync
 				}
 			}
 
-			for (int i = 0; i < cstamps.Length; ++i)
+			if (cstamps != null)
 			{
-				workArray.AddNodeToServer(cstamps[i]);
+				for (int i = 0; i < cstamps.Length; ++i)
+				{
+					workArray.AddNodeToServer(cstamps[i]);
+				}
 			}
+		
 			if (tempContext != null)
 				context = tempContext;
+			
 		}
 
 		
