@@ -1,0 +1,11 @@
+#!/bin/bash
+
+rm -rf tmpRemote
+mkdir tmpRemote
+
+scp mud.provo.novell.com:simias/src/Sync/tmpClientData/invitation tmpRemote
+
+mono --debug SyncCmd.exe -s tmpRemote accept tmpRemote/invitation tmpRemote
+
+mono --debug SyncCmd.exe -s tmpRemote sync tmpRemote/testFolder
+
