@@ -44,8 +44,15 @@ namespace Simias.POBox
 		/// <param name="storeObject">Store object that this POBox belongs to.</param>
 		/// <param name="node">Node object to construct POBox object from.</param>
 		public POBox(Store storeObject, Node node) :
-			base(storeObject, node)
+			base (storeObject, node)
 		{
+			SetType(this, typeof(POBox).Name);
+		}
+
+		public POBox(Store storeObject, string name) :
+			base (storeObject, name)
+		{
+			SetType(this, typeof(POBox).Name);
 		}
 		#endregion
 
@@ -53,6 +60,45 @@ namespace Simias.POBox
 		#endregion
 
 		#region Public Methods
+		/// <summary>
+		/// Adds a message to the POBox object.
+		/// </summary>
+		/// <param name="message">The message to add to the collection.</param>
+		public void AddMessage(Message message)
+		{
+			Commit(message);
+		}
+
+		/// <summary>
+		/// Adds an array of Message objects to the POBox object.
+		/// </summary>
+		/// <param name="messageList">An array of Message objects to add to the POBox object.</param>
+		public void AddMessage(Message[] messageList)
+		{
+			Commit(messageList);
+		}
+
+		/// <summary>
+		/// Get all the Message objects that have the specified name.
+		/// </summary>
+		/// <param name="name">A string containing the name to search for.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the
+		/// Message object(s) that have the specified name.</returns>
+		public ICSList GetMessagesByName(string name)
+		{
+			return this.GetNodesByName(name);		
+		}
+
+		/// <summary>
+		/// Get all the Message objects that have the specified type.
+		/// </summary>
+		/// <param name="type">A string containing the type to search for.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the
+		/// Message object(s) that have the specified type.</returns>
+		public ICSList GetMessagesByType(string type)
+		{
+			return this.GetNodesByType(type);
+		}
 		#endregion
 	}
 }
