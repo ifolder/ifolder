@@ -211,7 +211,8 @@ namespace Simias.Gaim
 					// Create the name mapping.
 					store.AddDomainIdentity( rDomain.ID, member.UserID );
 
-					GaimService.RegisterLocationProvider();
+//					GaimService.RegisterLocationProvider();
+					GaimService.RegisterDomainProvider();
 				}
 
 				//

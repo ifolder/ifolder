@@ -55,7 +55,7 @@ namespace Simias.Gaim
 
 		private static string inCredentialEvent = "true";
 		private Store store = null;
-		private static Simias.Location.GaimProvider gaimProvider = null;
+//		private static Simias.Location.GaimProvider gaimProvider = null;
 		private static Simias.Gaim.GaimDomainProvider gaimDomainProvider = null;
 
 		/// <summary>
@@ -74,17 +74,17 @@ namespace Simias.Gaim
 		#endregion
 
 		#region Internal Methods
-		internal static void RegisterLocationProvider()
-		{
-			log.Debug("RegisterLocationProvider called");
-			
-			gaimProvider = new Simias.Location.GaimProvider();
-			
-			Simias.Location.Locate.RegisterProvider(gaimProvider);
-			
-			// Fake some credentials for the domain
-			new NetCredential("iFolder", Simias.Gaim.GaimDomain.ID, true, "gaim-user", "joulupukki");
-		}
+//		internal static void RegisterLocationProvider()
+//		{
+//			log.Debug("RegisterLocationProvider called");
+//			
+//			gaimProvider = new Simias.Location.GaimProvider();
+//			
+//			Simias.Location.Locate.RegisterProvider(gaimProvider);
+//			
+//			// Fake some credentials for the domain
+//			new NetCredential("iFolder", Simias.Gaim.GaimDomain.ID, true, "gaim-user", "joulupukki");
+//		}
 
 		internal static void RegisterDomainProvider()
 		{
@@ -123,7 +123,7 @@ namespace Simias.Gaim
 				Simias.Storage.Domain domain = GaimDomain.GetDomain();
 				if (domain != null)
 				{
-					RegisterLocationProvider();
+//					RegisterLocationProvider();
 					RegisterDomainProvider();
 				}
 				
@@ -171,9 +171,9 @@ namespace Simias.Gaim
 		public void Stop()
 		{
 			log.Debug("Stop called");
-			if (gaimProvider != null)
+			if (gaimDomainProvider != null)
 			{
-				Simias.Location.Locate.Unregister(gaimProvider);
+//				Simias.Location.Locate.Unregister(gaimProvider);
 				Simias.DomainProvider.Unregister(gaimDomainProvider);
 			}
 			Simias.Gaim.Sync.StopSyncThread();
