@@ -24,7 +24,9 @@ using System;
 using System.Collections;
 using System.IO;
 using Simias;
+using Simias.POBox;
 using Simias.Storage;
+using Simias.Sync;
 
 //using Simias.Identity;
 
@@ -60,6 +62,40 @@ namespace Novell.AddressBook
 		#endregion
 
 		#region Private Methods
+		/// <summary>
+		/// Creates a personal subscription for an iFolder that can be used by this user on another
+		/// machine to sync down this iFolder.
+		/// </summary>
+		/// <param name="ab">AddressBook object that was created.</param>
+		private void CreatePersonalSubscription( AddressBook ab )
+		{
+			// Get the current member for this iFolder.
+			Member member = ab.GetCurrentMember();
+
+			// Get or create a POBox for the user.
+			POBox poBox = POBox.GetPOBox( store, ab.Domain, member.UserID );
+
+			// Create a subscription for this iFolder in the POBox.
+			Subscription subscription = poBox.CreateSubscription( ab, member, typeof( AddressBook ).Name );
+
+			// Set the 'To:' field in the subscription the the current user, so that this subscription cannot
+			// be used by any other person.
+			subscription.ToName = member.Name;
+			subscription.ToIdentity = member.UserID;
+			subscription.ToPublicKey = member.PublicKey;
+			subscription.SubscriptionRights = member.Rights;
+			subscription.SubscriptionState = SubscriptionStates.Ready;
+
+			// TODO: This may not be right in the future.
+			// Get the master URL from the Roster for this domain.
+			Roster roster = store.GetDomain( ab.Domain ).GetRoster( store );
+			SyncCollection sc = new SyncCollection( roster );
+			subscription.SubscriptionCollectionURL = sc.MasterUrl.ToString();
+
+			// Commit the subscription to the POBox.
+			poBox.Commit( subscription );
+		}
+
 		/*
 		private static Store GetStore(string userName, string password)
 		{
@@ -86,7 +122,7 @@ namespace Novell.AddressBook
 
 		#region Static Methods
 		/// <summary>
-		/// Authenticates the current user to the collection store and returns an object 
+		/// Authenticates the current user to the collection store and returns an object
 		/// used to manipulate address books.
 		/// </summary>
 		///	<returns>An object that represents a connection to the address manager.</returns>
@@ -104,7 +140,7 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
-		/// Connects to the collection store with a caller defined config object. 
+		/// Connects to the collection store with a caller defined config object.
 		/// </summary>
 		///	<returns>An object that represents a connection to the address manager.</returns>
 		public static Manager Connect(Configuration cConfig)
@@ -157,11 +193,11 @@ namespace Novell.AddressBook
 
 			try
 			{
-				AddressBook addrBook = 
+				AddressBook addrBook =
 					new AddressBook(
 							idFactory.CurrentId.DomainName + ":" + Environment.UserName,
-							AddressBookType.Private, 
-							AddressBookRights.ReadWrite, 
+							AddressBookType.Private,
+							AddressBookRights.ReadWrite,
 							true);
 
 				addrBook.Domain = idFactory.CurrentId.DomainName;
@@ -195,6 +231,8 @@ namespace Novell.AddressBook
 			try
 			{
 				abook = new AddressBook(store, name);
+				abook.Commit();
+				CreatePersonalSubscription( abook );
 				return (abook);
 			}
 			catch
@@ -277,8 +315,8 @@ namespace Novell.AddressBook
 			{
 				AddressBook cBook = GetAddressBook(sNode.ID);
 				
-				ICSList results = cBook.Search(	Common.userIDProperty, 
-												member.UserID, 
+				ICSList results = cBook.Search(	Common.userIDProperty,
+												member.UserID,
 												SearchOp.Equal );
 
 				// Instead of looping trough the results, we are just
@@ -307,7 +345,7 @@ namespace Novell.AddressBook
         }
 
         /*
-            Implementation of the iEnumerator members        
+            Implementation of the iEnumerator members
         */
 
 		/// <summary>

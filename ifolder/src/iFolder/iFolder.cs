@@ -96,7 +96,7 @@ namespace Novell.iFolder
 			this.Commit( nodeList );
 
 			// Create an invitation in the POBox of the current user for this iFolder.
-			CreatePersonalInvitation( store, domainName, dirNode );
+			CreatePersonalSubscription( store, domainName, dirNode );
 		}
 
 		/// <summary>
@@ -212,13 +212,13 @@ namespace Novell.iFolder
 		}
 
 		/// <summary>
-		/// Creates a personal invitation for an iFolder that can be used by this user on another
+		/// Creates a personal subscription for an iFolder that can be used by this user on another
 		/// machine to sync down this iFolder.
 		/// </summary>
 		/// <param name="store">Store where iFolder was created.</param>
 		/// <param name="domain">Domain that the iFolder belongs to.</param>
 		/// <param name="dirNode">The root DirNode object that belongs to the collection.</param>
-		private void CreatePersonalInvitation( Store store, string domain, DirNode dirNode )
+		private void CreatePersonalSubscription( Store store, string domain, DirNode dirNode )
 		{
 			// Get the current member for this iFolder.
 			Member member = GetCurrentMember();

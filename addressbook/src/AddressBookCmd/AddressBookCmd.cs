@@ -1334,8 +1334,6 @@ namespace AddressBookCmd
 					}
 
 					AddressBook cBook = abManager.CreateAddressBook(bookName);
-					cBook.Commit();
-
 					atLeastOne = true;
 				}		
 				

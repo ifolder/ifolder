@@ -341,7 +341,6 @@ namespace Novell.AddressBook.UI.gtk
 			if((rc == -5) && (abMan != null))
 			{
 				AddressBook ab = abMan.CreateAddressBook(be.Name);
-				ab.Commit();
 				BookTreeStore.AppendValues(ab);
 			}
 		}

@@ -90,7 +90,6 @@ namespace Novell.AddressBook.Tests
 			AddressBook tstBook;
 
 			tstBook = abManager.CreateAddressBook("TestBook1");
-			tstBook.Commit();
 
 			// Create a contact in the new book
 
@@ -166,7 +165,6 @@ namespace Novell.AddressBook.Tests
 			AddressBook tstBook;
 
 			tstBook = abManager.CreateAddressBook("TestBookForEmailTests");
-			tstBook.Commit();
 
 			// Create a contact in the new book
 
@@ -242,7 +240,6 @@ namespace Novell.AddressBook.Tests
 			AddressBook tstBook;
 
 			tstBook = abManager.CreateAddressBook("TestBookForPhoneTests");
-			tstBook.Commit();
 
 			// Create a contact in the new book
 
@@ -312,7 +309,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				book1 = abManager.CreateAddressBook("Book1");
-				book1.Commit();
 
 //				book3 = abManager.GetAddressBook(book1.ID);
 //				book4 = abManager.GetAddressBookByName("Book1");
@@ -383,7 +379,6 @@ namespace Novell.AddressBook.Tests
 			AddressBook tstBook;
 
 			tstBook = abManager.CreateAddressBook("TestBookForSearchEmailTest");
-			tstBook.Commit();
 
 			// Create two contacts in the new book
 
@@ -441,7 +436,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForBasicName");
-				tstBook.Commit();
 
 				// Create a contact in the new book
 				Contact tstContact = new Contact();
@@ -569,7 +563,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForAddress");
-				tstBook.Commit();
 
 				// Create a contact in the new book
 				Contact tstContact = new Contact();
@@ -751,7 +744,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForLastNameSearch");
-				tstBook.Commit();
 
 				// Create the contacts in the new book
 				Console.WriteLine("Creating test contacts");
@@ -886,7 +878,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForEnumContacts");
-				tstBook.Commit();
 
 				Console.WriteLine("Adding");
 				for(int i = 0; i < contactNames.Length; i++)
@@ -956,7 +947,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForImportPhoto");
-				tstBook.Commit();
 
 				// Create the contacts in the new book
 				Console.WriteLine("Creating contact");
@@ -1022,7 +1012,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForIMTest");
-				tstBook.Commit();
 
 				// Create a contact in the new book
 
@@ -1109,7 +1098,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForCleanup");
-				tstBook.Commit();
 
 				// Create a contact in the new book
 
@@ -1184,7 +1172,6 @@ namespace Novell.AddressBook.Tests
 			try
 			{
 				tstBook = abManager.CreateAddressBook("TestBookForGroups");
-				tstBook.Commit();
 
 				// Create the contacts in the new book
 				Console.WriteLine("Creating test contacts");
