@@ -117,6 +117,7 @@ namespace Novell.iFolderCom
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Picker));
 			this.rosterLV = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.addedLV = new System.Windows.Forms.ListView();
@@ -133,106 +134,226 @@ namespace Novell.iFolderCom
 			// 
 			// rosterLV
 			// 
-			this.rosterLV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left)));
+			this.rosterLV.AccessibleDescription = resources.GetString("rosterLV.AccessibleDescription");
+			this.rosterLV.AccessibleName = resources.GetString("rosterLV.AccessibleName");
+			this.rosterLV.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("rosterLV.Alignment")));
+			this.rosterLV.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("rosterLV.Anchor")));
+			this.rosterLV.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rosterLV.BackgroundImage")));
 			this.rosterLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																					   this.columnHeader1});
+			this.rosterLV.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("rosterLV.Dock")));
+			this.rosterLV.Enabled = ((bool)(resources.GetObject("rosterLV.Enabled")));
+			this.rosterLV.Font = ((System.Drawing.Font)(resources.GetObject("rosterLV.Font")));
 			this.rosterLV.HideSelection = false;
-			this.rosterLV.Location = new System.Drawing.Point(8, 48);
+			this.rosterLV.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("rosterLV.ImeMode")));
+			this.rosterLV.LabelWrap = ((bool)(resources.GetObject("rosterLV.LabelWrap")));
+			this.rosterLV.Location = ((System.Drawing.Point)(resources.GetObject("rosterLV.Location")));
 			this.rosterLV.Name = "rosterLV";
-			this.rosterLV.Size = new System.Drawing.Size(200, 288);
-			this.rosterLV.TabIndex = 2;
+			this.rosterLV.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("rosterLV.RightToLeft")));
+			this.rosterLV.Size = ((System.Drawing.Size)(resources.GetObject("rosterLV.Size")));
+			this.rosterLV.TabIndex = ((int)(resources.GetObject("rosterLV.TabIndex")));
+			this.rosterLV.Text = resources.GetString("rosterLV.Text");
 			this.rosterLV.View = System.Windows.Forms.View.Details;
+			this.rosterLV.Visible = ((bool)(resources.GetObject("rosterLV.Visible")));
 			this.rosterLV.DoubleClick += new System.EventHandler(this.add_Click);
 			// 
 			// columnHeader1
 			// 
-			this.columnHeader1.Text = "Name";
-			this.columnHeader1.Width = 196;
+			this.columnHeader1.Text = resources.GetString("columnHeader1.Text");
+			this.columnHeader1.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader1.TextAlign")));
+			this.columnHeader1.Width = ((int)(resources.GetObject("columnHeader1.Width")));
 			// 
 			// addedLV
 			// 
-			this.addedLV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
+			this.addedLV.AccessibleDescription = resources.GetString("addedLV.AccessibleDescription");
+			this.addedLV.AccessibleName = resources.GetString("addedLV.AccessibleName");
+			this.addedLV.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("addedLV.Alignment")));
+			this.addedLV.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("addedLV.Anchor")));
+			this.addedLV.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("addedLV.BackgroundImage")));
 			this.addedLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																					  this.columnHeader2});
-			this.addedLV.Location = new System.Drawing.Point(295, 48);
+			this.addedLV.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("addedLV.Dock")));
+			this.addedLV.Enabled = ((bool)(resources.GetObject("addedLV.Enabled")));
+			this.addedLV.Font = ((System.Drawing.Font)(resources.GetObject("addedLV.Font")));
+			this.addedLV.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("addedLV.ImeMode")));
+			this.addedLV.LabelWrap = ((bool)(resources.GetObject("addedLV.LabelWrap")));
+			this.addedLV.Location = ((System.Drawing.Point)(resources.GetObject("addedLV.Location")));
 			this.addedLV.Name = "addedLV";
-			this.addedLV.Size = new System.Drawing.Size(200, 288);
-			this.addedLV.TabIndex = 5;
+			this.addedLV.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("addedLV.RightToLeft")));
+			this.addedLV.Size = ((System.Drawing.Size)(resources.GetObject("addedLV.Size")));
+			this.addedLV.TabIndex = ((int)(resources.GetObject("addedLV.TabIndex")));
+			this.addedLV.Text = resources.GetString("addedLV.Text");
 			this.addedLV.View = System.Windows.Forms.View.Details;
+			this.addedLV.Visible = ((bool)(resources.GetObject("addedLV.Visible")));
 			// 
 			// columnHeader2
 			// 
-			this.columnHeader2.Text = "Name";
-			this.columnHeader2.Width = 196;
+			this.columnHeader2.Text = resources.GetString("columnHeader2.Text");
+			this.columnHeader2.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader2.TextAlign")));
+			this.columnHeader2.Width = ((int)(resources.GetObject("columnHeader2.Width")));
 			// 
 			// add
 			// 
-			this.add.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.add.Location = new System.Drawing.Point(214, 64);
+			this.add.AccessibleDescription = resources.GetString("add.AccessibleDescription");
+			this.add.AccessibleName = resources.GetString("add.AccessibleName");
+			this.add.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("add.Anchor")));
+			this.add.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("add.BackgroundImage")));
+			this.add.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("add.Dock")));
+			this.add.Enabled = ((bool)(resources.GetObject("add.Enabled")));
+			this.add.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("add.FlatStyle")));
+			this.add.Font = ((System.Drawing.Font)(resources.GetObject("add.Font")));
+			this.add.Image = ((System.Drawing.Image)(resources.GetObject("add.Image")));
+			this.add.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("add.ImageAlign")));
+			this.add.ImageIndex = ((int)(resources.GetObject("add.ImageIndex")));
+			this.add.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("add.ImeMode")));
+			this.add.Location = ((System.Drawing.Point)(resources.GetObject("add.Location")));
 			this.add.Name = "add";
-			this.add.TabIndex = 3;
-			this.add.Text = "Add ->";
+			this.add.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("add.RightToLeft")));
+			this.add.Size = ((System.Drawing.Size)(resources.GetObject("add.Size")));
+			this.add.TabIndex = ((int)(resources.GetObject("add.TabIndex")));
+			this.add.Text = resources.GetString("add.Text");
+			this.add.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("add.TextAlign")));
+			this.add.Visible = ((bool)(resources.GetObject("add.Visible")));
 			this.add.Click += new System.EventHandler(this.add_Click);
 			// 
 			// remove
 			// 
-			this.remove.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.remove.Location = new System.Drawing.Point(214, 96);
+			this.remove.AccessibleDescription = resources.GetString("remove.AccessibleDescription");
+			this.remove.AccessibleName = resources.GetString("remove.AccessibleName");
+			this.remove.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("remove.Anchor")));
+			this.remove.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("remove.BackgroundImage")));
+			this.remove.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("remove.Dock")));
+			this.remove.Enabled = ((bool)(resources.GetObject("remove.Enabled")));
+			this.remove.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("remove.FlatStyle")));
+			this.remove.Font = ((System.Drawing.Font)(resources.GetObject("remove.Font")));
+			this.remove.Image = ((System.Drawing.Image)(resources.GetObject("remove.Image")));
+			this.remove.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.ImageAlign")));
+			this.remove.ImageIndex = ((int)(resources.GetObject("remove.ImageIndex")));
+			this.remove.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("remove.ImeMode")));
+			this.remove.Location = ((System.Drawing.Point)(resources.GetObject("remove.Location")));
 			this.remove.Name = "remove";
-			this.remove.TabIndex = 4;
-			this.remove.Text = "Remove";
+			this.remove.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("remove.RightToLeft")));
+			this.remove.Size = ((System.Drawing.Size)(resources.GetObject("remove.Size")));
+			this.remove.TabIndex = ((int)(resources.GetObject("remove.TabIndex")));
+			this.remove.Text = resources.GetString("remove.Text");
+			this.remove.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("remove.TextAlign")));
+			this.remove.Visible = ((bool)(resources.GetObject("remove.Visible")));
 			this.remove.Click += new System.EventHandler(this.remove_Click);
 			// 
 			// search
 			// 
-			this.search.Location = new System.Drawing.Point(56, 16);
+			this.search.AccessibleDescription = resources.GetString("search.AccessibleDescription");
+			this.search.AccessibleName = resources.GetString("search.AccessibleName");
+			this.search.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("search.Anchor")));
+			this.search.AutoSize = ((bool)(resources.GetObject("search.AutoSize")));
+			this.search.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("search.BackgroundImage")));
+			this.search.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("search.Dock")));
+			this.search.Enabled = ((bool)(resources.GetObject("search.Enabled")));
+			this.search.Font = ((System.Drawing.Font)(resources.GetObject("search.Font")));
+			this.search.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("search.ImeMode")));
+			this.search.Location = ((System.Drawing.Point)(resources.GetObject("search.Location")));
+			this.search.MaxLength = ((int)(resources.GetObject("search.MaxLength")));
+			this.search.Multiline = ((bool)(resources.GetObject("search.Multiline")));
 			this.search.Name = "search";
-			this.search.Size = new System.Drawing.Size(152, 20);
-			this.search.TabIndex = 1;
-			this.search.Text = "";
+			this.search.PasswordChar = ((char)(resources.GetObject("search.PasswordChar")));
+			this.search.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("search.RightToLeft")));
+			this.search.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("search.ScrollBars")));
+			this.search.Size = ((System.Drawing.Size)(resources.GetObject("search.Size")));
+			this.search.TabIndex = ((int)(resources.GetObject("search.TabIndex")));
+			this.search.Text = resources.GetString("search.Text");
+			this.search.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("search.TextAlign")));
+			this.search.Visible = ((bool)(resources.GetObject("search.Visible")));
+			this.search.WordWrap = ((bool)(resources.GetObject("search.WordWrap")));
 			this.search.TextChanged += new System.EventHandler(this.search_TextChanged);
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(8, 18);
+			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
+			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
+			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(100, 16);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Search:";
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
+			this.label1.Text = resources.GetString("label1.Text");
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.Location = new System.Drawing.Point(8, 344);
+			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
+			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
+			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
+			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
+			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
+			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
+			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(488, 4);
-			this.groupBox1.TabIndex = 6;
+			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
+			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
+			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
 			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = resources.GetString("groupBox1.Text");
+			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
 			// 
 			// ok
 			// 
-			this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.ok.AccessibleDescription = resources.GetString("ok.AccessibleDescription");
+			this.ok.AccessibleName = resources.GetString("ok.AccessibleName");
+			this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("ok.Anchor")));
+			this.ok.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ok.BackgroundImage")));
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Enabled = false;
-			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(336, 360);
+			this.ok.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ok.Dock")));
+			this.ok.Enabled = ((bool)(resources.GetObject("ok.Enabled")));
+			this.ok.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("ok.FlatStyle")));
+			this.ok.Font = ((System.Drawing.Font)(resources.GetObject("ok.Font")));
+			this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
+			this.ok.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.ImageAlign")));
+			this.ok.ImageIndex = ((int)(resources.GetObject("ok.ImageIndex")));
+			this.ok.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("ok.ImeMode")));
+			this.ok.Location = ((System.Drawing.Point)(resources.GetObject("ok.Location")));
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 7;
-			this.ok.Text = "OK";
+			this.ok.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ok.RightToLeft")));
+			this.ok.Size = ((System.Drawing.Size)(resources.GetObject("ok.Size")));
+			this.ok.TabIndex = ((int)(resources.GetObject("ok.TabIndex")));
+			this.ok.Text = resources.GetString("ok.Text");
+			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
+			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
 			// 
 			// cancel
 			// 
-			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(420, 360);
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 8;
-			this.cancel.Text = "Cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
 			// 
 			// searchTimer
 			// 
@@ -242,9 +363,15 @@ namespace Novell.iFolderCom
 			// Picker
 			// 
 			this.AcceptButton = this.ok;
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(504, 390);
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox1);
@@ -254,9 +381,17 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.add);
 			this.Controls.Add(this.addedLV);
 			this.Controls.Add(this.rosterLV);
-			this.MinimumSize = new System.Drawing.Size(512, 424);
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "Picker";
-			this.Text = "iFolder User Selector";
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.Text = resources.GetString("$this.Text");
 			this.SizeChanged += new System.EventHandler(this.Picker_SizeChanged);
 			this.Load += new System.EventHandler(this.Picker_Load);
 			this.ResumeLayout(false);
@@ -318,18 +453,11 @@ namespace Novell.iFolderCom
 					rosterLV.Items.Add(lvi);
 				}
 			}
-			catch (WebException ex)
+			catch
 			{
+				System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
 				MyMessageBox mmb = new MyMessageBox();
-				// TODO: Localize
-				mmb.Message = "An error was encountered while reading the member list.";
-				mmb.ShowDialog();
-			}
-			catch (Exception ex)
-			{
-				MyMessageBox mmb = new MyMessageBox();
-				// TODO: Localize
-				mmb.Message = "An error was encountered while reading the member list.";
+				mmb.Message = resourceManager.GetString("memberReadError");
 				mmb.ShowDialog();
 			}
 
