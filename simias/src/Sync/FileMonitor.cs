@@ -280,7 +280,8 @@ namespace Simias.Sync
 		/// <returns></returns>
 		private bool isSyncFile(string name)
 		{
-			return name.StartsWith(".simias.");
+			string fname = Path.GetFileName(name);
+			return fname.StartsWith(".simias.");
 		}
 
 
@@ -474,7 +475,7 @@ namespace Simias.Sync
 			// merge files from file system to store
 			foreach (string file in Directory.GetFiles(path))
 			{
-				if (File.GetLastWriteTime(file) > lastDredgeTime && !isSyncFile(Path.GetFileName(file)))
+				if (File.GetLastWriteTime(file) > lastDredgeTime && !isSyncFile(file))
 				{
 					// here we are just checking for modified files
 					BaseFileNode unode = (BaseFileNode)collection.GetNodeByID(Path.GetFileName(file));
@@ -770,7 +771,7 @@ namespace Simias.Sync
 			}
 
 			// If this is a sync generated file return null.
-			if (isSyncFile(Path.GetFileName(fullPath)))
+			if (isSyncFile(fullPath))
 				return null;
 
 			return fullPath;
@@ -813,7 +814,7 @@ namespace Simias.Sync
 		{
 			string fullPath = e.FullPath;
 
-			if (isSyncFile(e.Name) || isSyncFile(Path.GetFileName(e.OldName)))
+			if (isSyncFile(e.Name) || isSyncFile(e.OldName))
 				return;
 			
 			lock (changes)
