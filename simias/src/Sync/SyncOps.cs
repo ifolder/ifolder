@@ -44,13 +44,25 @@ namespace Simias.Sync
 [Serializable]
 public struct NodeStamp: IComparable
 {
+	/// <summary>
+	/// The Node ID.
+	/// </summary>
 	public string id;
 
-	// if localIncarn == UInt64.MaxValue, node is a tombstone
-	public ulong localIncarn, masterIncarn;
+	/// <summary>
+	/// The locale incartion of the node.
+	/// if localIncarn == UInt64.MaxValue, node is a tombstone
+	/// </summary>
+	public ulong localIncarn;
 
-	// total size of all streams, expected to be used for sync progress meter
-	// if -1, this node is not derived from BaseFileNode.
+	/// <summary>
+	/// The Master incarnation for the node.
+	/// </summary>
+	public ulong masterIncarn;
+
+	/// <summary>
+	/// The size of the stream associated with this node.
+	/// </summary>
 	public long streamsSize;
 
 	/// <summary>
@@ -80,11 +92,26 @@ public struct NodeStamp: IComparable
 public struct NodeChunk
 {
 	internal Node node;
-	public const int MaxSize = 128 * 1024;
+	internal const int MaxSize = 128 * 1024;
+	/// <summary>
+	/// The string representation of the node.
+	/// </summary>
 	public string nodeString;
+	/// <summary>
+	/// The Master incarnation that this node is derived from.
+	/// </summary>
 	public ulong expectedIncarn;
+	/// <summary>
+	/// The total Size of the stream data.
+	/// </summary>
 	public int totalSize;
+	/// <summary>
+	/// The collection based relative path.
+	/// </summary>
 	public string relativePath;
+	/// <summary>
+	/// The initial stream data.
+	/// </summary>
 	public byte[] data;
 }
 
@@ -95,7 +122,13 @@ public struct NodeChunk
 [Serializable]
 public struct RejectedNode
 {
+	/// <summary>
+	/// The node ID of the rejected node.
+	/// </summary>
 	public string nid;
+	/// <summary>
+	/// The status of why the node failed.
+	/// </summary>
 	public NodeStatus status;
 	internal RejectedNode(string nid, NodeStatus status)
 	{
