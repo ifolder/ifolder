@@ -163,6 +163,8 @@ namespace Simias.Sync
 		FileStream	stream;
 		/// <summary>The Old Node if it exists.</summary>
 		BaseFileNode	oldNode;
+		/// <summary>True if the node should be marked readOnly.</summary>
+		protected bool	readOnly = false;
 
 		#endregion
 		
@@ -322,11 +324,27 @@ namespace Simias.Sync
 			}
 			if (commit)
 			{
-				File.Copy(workFile, file, true);
+				FileAttributes fa;
 				FileInfo fi = new FileInfo(file);
-				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
-				fi.LastWriteTime = node.LastWriteTime;
-				fi.CreationTime = node.CreationTime;
+				if (fi.Exists)
+				{
+					fa = fi.Attributes;
+					if (readOnly)
+					{
+						fi.Attributes = fi.Attributes & ~FileAttributes.ReadOnly;
+						fa |= FileAttributes.ReadOnly;
+					}
+				}
+				else
+				{
+					if (readOnly) fa = FileAttributes.ReadOnly;
+					else fa = FileAttributes.Normal;
+				}
+				File.Copy(workFile, file, true);
+				FileInfo tfi = new FileInfo(file);
+				tfi.Attributes = fa;
+				tfi.LastWriteTime = node.LastWriteTime;
+				tfi.CreationTime = node.CreationTime;
 				if (oldNode != null)
 				{
 					// Check if this was a rename.

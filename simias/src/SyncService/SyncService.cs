@@ -399,23 +399,21 @@ namespace Simias.Sync
 		
 			collection = new SyncCollection(col);
 
-				// BUGBUG SyncAccess access = SyncAccess.Busy;
-
-				// Check our rights.
-				string userID = Thread.CurrentPrincipal.Identity.Name;
-				//		if ((userID == null) || (userID.Length == 0))
+			// Check our rights.
+			string userID = Thread.CurrentPrincipal.Identity.Name;
+			//		if ((userID == null) || (userID.Length == 0))
 			{
-				// Kludge: for now trust the client.  this need to be removed before shipping.
+				// BUGBUG: for now trust the client.  this need to be removed before shipping.
 				userID = user;
 			}
-				member = collection.GetMemberByID(userID);
-				if (member != null)
-				{
-					collection.Impersonate(member);
-					rights = member.Rights;
-					si.Access = rights;
-					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
-				}
+			member = collection.GetMemberByID(userID);
+			if (member != null)
+			{
+				collection.Impersonate(member);
+				rights = member.Rights;
+				si.Access = rights;
+				log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
+			}
 
 			switch (rights)
 			{

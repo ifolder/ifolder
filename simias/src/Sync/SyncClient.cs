@@ -1206,7 +1206,7 @@ namespace Simias.Sync.Client
 					}
 
 					ClientInFile file = new ClientInFile(collection, nodeID, new WsServerReadFile(service));
-					file.Open();
+					file.Open(rights == Rights.ReadOnly ? true : false);
 					bool success = false;
 					try
 					{
@@ -1215,7 +1215,7 @@ namespace Simias.Sync.Client
 					}
 					finally
 					{
-						success = file.Close(success, rights == Rights.ReadOnly ? true : false);
+						success = file.Close(success);
 						if (success)
 						{
 							workArray.RemoveNodeFromServer(nodeID);

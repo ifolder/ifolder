@@ -146,8 +146,10 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Open the file.
 		/// </summary>
-		public void Open()
+		/// <param name="readOnly">True if the file should be marked readonly.</param>
+		public void Open(bool readOnly)
 		{
+			this.readOnly = readOnly;
 			SyncNode snode = serverFile.GetFileNode(nodeID);
 			if (snode == null)
 			{
@@ -165,9 +167,8 @@ namespace Simias.Sync.Client
 		/// Called to close the file.
 		/// </summary>
 		/// <param name="commit">True if changes should be commited.</param>
-		/// <param name="readOnly">True if the file should be marked readonly.</param>
 		/// <returns>true if successful.</returns>
-		public new bool Close(bool commit, bool readOnly)
+		public new bool Close(bool commit)
 		{
 			bool bStatus = commit;
 			// Close the file on the server.
@@ -197,12 +198,6 @@ namespace Simias.Sync.Client
 			try
 			{
 				base.Close(commit);
-				if (readOnly)
-				{
-					FileInfo fi = new FileInfo(file);
-					//BUGBUG
-					//fi.Attributes = fi.Attributes | FileAttributes.ReadOnly;
-				}
 			}
 			catch
 			{
