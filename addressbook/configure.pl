@@ -32,7 +32,7 @@ use POSIX qw(strftime);
 my $MAKEFILE = 'config.mk';         # configure makefile
 
 # product information
-my $product_name = 'denali';        # default product name
+my $product_name = 'addressbook';   # default product name
 my $major_version = '0';            # default major version
 my $minor_version = '5';            # default minor version (iteration)
 my $patch_level = '0';              # default patch level
@@ -95,7 +95,7 @@ USAGE: configure.pl [options]
     PRODUCT INFORMATION
 
     --product-name [value]      Specify the product name
-                                    i.e. 'denali'
+                                    i.e. 'addressbook'
     --major-version [value]     Specify the major version
                                     i.e. '3'
     --minor-version [value]     Specify the minor version
@@ -772,6 +772,9 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
+# Revision 1.2  2004/02/24 00:03:46  pthomas707
+# Rename product name from denali to addressbook
+#
 # Revision 1.1  2004/02/22 00:47:28  cgaisford
 # Modified project so there is a toplevel makefile and configure is run from the top level direcctory
 #
