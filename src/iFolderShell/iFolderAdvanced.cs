@@ -68,8 +68,8 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox interval;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.NumericUpDown interval;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -86,7 +86,6 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Enabled = false;
 			this.remove.Enabled = false;
 			this.reinvite.Enabled = false;
-//			this.interval.DataBindings.Add("Text", ifolder, "RefreshInterval");
 //			currentControl = this;
 		}
 
@@ -125,19 +124,20 @@ namespace Novell.iFolder.iFolderCom
 			this.shareWith = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.interval = new System.Windows.Forms.NumericUpDown();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.label1 = new System.Windows.Forms.Label();
-			this.interval = new System.Windows.Forms.TextBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.accessControlButtons.SuspendLayout();
 			this.tabPage2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.interval)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -271,6 +271,56 @@ namespace Novell.iFolder.iFolderCom
 			this.columnHeader2.Text = "Access";
 			this.columnHeader2.Width = 144;
 			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.interval);
+			this.tabPage2.Controls.Add(this.label2);
+			this.tabPage2.Controls.Add(this.label1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Size = new System.Drawing.Size(336, 374);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Settings";
+			// 
+			// interval
+			// 
+			this.interval.Increment = new System.Decimal(new int[] {
+																	   5,
+																	   0,
+																	   0,
+																	   0});
+			this.interval.Location = new System.Drawing.Point(184, 16);
+			this.interval.Maximum = new System.Decimal(new int[] {
+																	 86400,
+																	 0,
+																	 0,
+																	 0});
+			this.interval.Minimum = new System.Decimal(new int[] {
+																	 1,
+																	 0,
+																	 0,
+																	 -2147483648});
+			this.interval.Name = "interval";
+			this.interval.Size = new System.Drawing.Size(88, 20);
+			this.interval.TabIndex = 3;
+			this.interval.ValueChanged += new System.EventHandler(this.interval_ValueChanged);
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(280, 16);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(48, 16);
+			this.label2.TabIndex = 2;
+			this.label2.Text = "seconds";
+			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(8, 16);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(128, 16);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "iFolder refresh interval:";
+			// 
 			// ok
 			// 
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -300,42 +350,6 @@ namespace Novell.iFolder.iFolderCom
 			this.apply.Text = "&Apply";
 			this.apply.Click += new System.EventHandler(this.apply_Click);
 			// 
-			// tabPage2
-			// 
-			this.tabPage2.Controls.Add(this.label2);
-			this.tabPage2.Controls.Add(this.interval);
-			this.tabPage2.Controls.Add(this.label1);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Size = new System.Drawing.Size(336, 374);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Settings";
-			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(8, 16);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(128, 16);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "iFolder refresh interval:";
-			// 
-			// interval
-			// 
-			this.helpProvider1.SetHelpString(this.interval, "Specifies the number of seconds between updates for this iFolder.");
-			this.interval.Location = new System.Drawing.Point(176, 16);
-			this.interval.Name = "interval";
-			this.helpProvider1.SetShowHelp(this.interval, true);
-			this.interval.TabIndex = 1;
-			this.interval.Text = "";
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(280, 16);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(48, 16);
-			this.label2.TabIndex = 2;
-			this.label2.Text = "seconds";
-			// 
 			// iFolderAdvanced
 			// 
 			this.AcceptButton = this.ok;
@@ -357,6 +371,7 @@ namespace Novell.iFolder.iFolderCom
 			this.tabPage1.ResumeLayout(false);
 			this.accessControlButtons.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.interval)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -455,6 +470,9 @@ namespace Novell.iFolder.iFolderCom
 				removedList.Clear();
 			}
 
+			// Update the refresh interval.
+			ifolder.RefreshInterval = (int)interval.Value;
+
 			// Restore the cursor.
 			Cursor = Cursors.Default;
 		}
@@ -549,6 +567,9 @@ namespace Novell.iFolder.iFolderCom
 		{
 			// TODO - use locale-specific path.
 //			helpProvider1.HelpNamespace = Path.Combine(loadPath, @"help\en\doc\user\data\front.html");
+
+			// Get the refresh interval.
+			interval.Value = (decimal)ifolder.RefreshInterval;
 
 			// Image list...
 			try
@@ -985,6 +1006,12 @@ namespace Novell.iFolder.iFolderCom
 		private void cancel_Click(object sender, System.EventArgs e)
 		{
 			this.Close();	
+		}
+
+		private void interval_ValueChanged(object sender, System.EventArgs e)
+		{
+			// Enable the apply button.
+			apply.Enabled = true;		
 		}
 		#endregion
 
