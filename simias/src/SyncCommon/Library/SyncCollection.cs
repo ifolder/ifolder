@@ -198,6 +198,8 @@ namespace Simias.Sync
 			{
 				Properties.DeleteSingleProperty(name);
 			}
+
+			Commit();
 		}
 
 		#region Properties

@@ -25,6 +25,7 @@ using System;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Collections;
 
 using Mono.P2p.mDnsResponderApi;
 
@@ -41,6 +42,8 @@ namespace Simias.Location
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(MDnsLocationProvider));
 
 		private static readonly string SUFFIX = "_collection._tcp._local";
+
+		private string host;
 
 		private Configuration configuration;
 
@@ -87,35 +90,49 @@ namespace Simias.Location
 		/// <returns>A URI object containing the location of the collection master, or null.</returns>
 		public Uri Locate(string collection)
 		{
+			Uri result = null;
+
 			// query
 			IResourceQuery query = factory.GetQueryInstance();
 
-			RPtr[] ptrs = null;
+			RServiceLocation sl = null;
+		
+			string service = String.Format("{0}.{1}", collection, SUFFIX);
 
-			if (query.GetPtrResourcesByName(SUFFIX, out ptrs) == 0)
+			if (query.GetServiceByName(service, ref sl) == 0)
 			{
-				foreach(RPtr ptr in ptrs)
+				log.Debug("Located {0} with Reunion.", service);
+
+				int port = sl.Port;
+
+				RHostAddress ha = null;
+
+				if (query.GetHostByName(sl.Target, ref ha) == 0)
 				{
+					UriBuilder ub = new UriBuilder("http", ha.PrefAddress.ToString(), port);
+
+					result = ub.Uri;
+
+					log.Debug("Reunion URI for {0}: {1}", service, result);
 				}
 			}
-
-			return null;
+			
+			return result;
 		}
 
 		/// <summary>
-		/// Publish a master collection.
+		/// Register a master collection.
 		/// </summary>
 		/// <param name="collection">The collection ID.</param>
-		public void Publish(string collection)
+		public void Register(string collection)
 		{
-			// publish
-			IResourceRegistration publish = factory.GetRegistrationInstance();
+			// register
+			IResourceRegistration register = factory.GetRegistrationInstance();
 
 			// host
 			IResourceQuery query = factory.GetQueryInstance();
 
 			RHostAddress ha = null;
-			string host = null;
 
 			if (query.GetDefaultHost(ref ha) == 0)
 			{
@@ -126,7 +143,7 @@ namespace Simias.Location
 				// TODO: should rely on default host
 				host = MyDns.GetHostName() + ".local";
 
-				publish.RegisterHost(host, MyDns.GetHostName());
+				register.RegisterHost(host, MyDns.GetHostName());
 			}
 
 			Store store = new Store(configuration);
@@ -141,15 +158,39 @@ namespace Simias.Location
 				string service = String.Format("{0}.{1}", sc.ID, SUFFIX);
 				int port = sc.MasterUri.Port;
 
-				if (publish.RegisterServiceLocation(host, service, port, 0, 0) == 0)
+				if (register.RegisterServiceLocation(host, service, port, 0, 0) == 0)
 				{
-					log.Debug("Published {0} with Reunion.", service);
+					log.Debug("Registered {0} with Reunion.", service);
+
+					ArrayList list = new ArrayList();
+
+					list.Add(String.Format("name={0}", sc.Name));
+					list.Add(String.Format("domain={0}", sc.Domain));
+					list.Add(String.Format("type={0}", sc.Type));
+
+					register.RegisterTextStrings(service, (string[]) list.ToArray(typeof(string)));
 				}
 				else
 				{
-					log.Debug("Failed to publish {0} with Reunion.", service);
+					log.Debug("Failed to register {0} with Reunion.", service);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Unregister a master collection.
+		/// </summary>
+		/// <param name="collection">The collection ID.</param>
+		public void Unregister(string collection)
+		{
+			IResourceRegistration register = factory.GetRegistrationInstance();
+
+			string service = String.Format("{0}.{1}", collection, SUFFIX);
+
+			register.DeregisterTextStrings(service);
+			register.DeregisterServiceLocation(host, service);
+
+			log.Debug("Unregistered {0} with Reunion.", service);
 		}
 
 		#endregion

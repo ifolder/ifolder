@@ -95,14 +95,14 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "mDnsResponderApi"
-                    AssemblyName = "mDnsResponderApi"
-                    HintPath = "..\..\..\external\mDnsResponder\net\mDnsResponderApi.dll"
-                />
-                <Reference
                     Name = "System.Runtime.Remoting"
                     AssemblyName = "System.Runtime.Remoting"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
+                />
+                <Reference
+                    Name = "mDnsResponderApi"
+                    AssemblyName = "mDnsResponderApi"
+                    HintPath = "..\..\..\external\mDnsResponder\net\bin\mDnsResponderApi.dll"
                 />
             </References>
         </Build>

@@ -28,6 +28,7 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
+using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Invite;
@@ -45,10 +46,10 @@ namespace Simias.Tests
 		private static string storePathB = Path.GetFullPath("./storeB");
 		private static string storePathC = Path.GetFullPath("./storeC");
 		
-		// store URIs
-		private static Uri storeUriA = new Uri(storePathA);
-		private static Uri storeUriB = new Uri(storePathB);
-		private static Uri storeUriC = new Uri(storePathC);
+		// configs
+		private Configuration configA;
+		private Configuration configB;
+		private Configuration configC;
 
 		// collection names
 		private static string collectionName1 = "SharedFolder1";
@@ -57,11 +58,6 @@ namespace Simias.Tests
 		private static string collectionPath1A = Path.Combine(storePathA, collectionName1);
 		private static string collectionPath1B = Path.Combine(storePathB, collectionName1);
 		private static string collectionPath1C = Path.Combine(storePathC, collectionName1);
-
-		// collection URIs
-		private static Uri collectionUri1A = new Uri(collectionPath1A);
-		private static Uri collectionUri1B = new Uri(collectionPath1B);
-		private static Uri collectionUri1C = new Uri(collectionPath1C);
 
 		// sync logic
 		private static Type syncLogicType = typeof(Simias.Sync.SynkerA);
@@ -106,41 +102,44 @@ namespace Simias.Tests
 				DeleteDirectory(storePathB);
 				DeleteDirectory(storePathC);
 
+				// configs
+				configA = new Configuration(storePathA);
+				configB = new Configuration(storePathB);
+				configC = new Configuration(storePathC);
+
 				// create stores
-				storeA = Store.Connect(storeUriA);
-				storeB = Store.Connect(storeUriB);
-				storeC = Store.Connect(storeUriC);
+				storeA = new Store(configA);
+				storeB = new Store(configB);
+				storeC = new Store(configC);
 
 				// start the sync manager for store A
-				SyncProperties syncPropsA = new SyncProperties();
+				SyncProperties syncPropsA = new SyncProperties(configA);
 				syncPropsA.DefaultLogicFactory = syncLogicType;
-				syncPropsA.StorePath = storePathA;
 				syncPropsA.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				syncManagerA = new SyncManager(syncPropsA);
 				syncManagerA.Start();
 
 				// start the sync manager for store B
-				SyncProperties syncPropsB = new SyncProperties();
+				SyncProperties syncPropsB = new SyncProperties(configB);
 				syncPropsB.DefaultLogicFactory = syncLogicType;
-				syncPropsB.StorePath = storePathB;
 				syncPropsB.DefaultPort = SyncProperties.SuggestedPort + 1;
 				syncPropsB.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				syncManagerB = new SyncManager(syncPropsB);
 				syncManagerB.Start();
 
 				// start the sync manager for store C
-				SyncProperties syncPropsC = new SyncProperties();
+				SyncProperties syncPropsC = new SyncProperties(configC);
 				syncPropsC.DefaultLogicFactory = syncLogicType;
-				syncPropsC.StorePath = storePathC;
 				syncPropsC.DefaultPort = SyncProperties.SuggestedPort + 2;
 				syncPropsC.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				syncManagerC = new SyncManager(syncPropsC);
 				syncManagerC.Start();
 
 				// create a master collection on A
-				collection1A = storeA.CreateCollection(collectionName1, collectionUri1A);
+				collection1A = new Collection(storeA, collectionName1);
 				sc1A = new SyncCollection(collection1A);
-				MyTrace.WriteLine("Created Master Collection 1A: {0}", sc1A);
+				DirNode dn = new DirNode(sc1A, collectionPath1A);
+				Console.WriteLine("Created Master Collection 1A: {0}", sc1A);
 
 				// set the host and port on the master collection
 				UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
@@ -148,38 +147,38 @@ namespace Simias.Tests
 				sc1A.Commit();
 
 				// create an invitation for B and C
-				Invitation invitation1 = sc1A.CreateInvitation(storeA.CurrentUser);
-				MyTrace.WriteLine("Created Master Collection Invitation.");
+				Invitation invitation1 = sc1A.CreateInvitation(storeA.CurrentUserGuid);
+				Console.WriteLine("Created Master Collection Invitation.");
 
 				// accept the invitation on B and C
 				invitation1.RootPath = storePathB;
                 InvitationService.Accept(storeB, invitation1);
-				MyTrace.WriteLine("Accepted Invitation 1 on Store B.");
+				Console.WriteLine("Accepted Invitation 1 on Store B.");
 				
 				invitation1.RootPath = storePathC;
 				InvitationService.Accept(storeC, invitation1);
-				MyTrace.WriteLine("Accepted Invitation 1 on Store C.");
+				Console.WriteLine("Accepted Invitation 1 on Store C.");
 
 				// sleep for the sync interval
 				Thread.Sleep(TimeSpan.FromSeconds(SyncProperties.SuggestedSyncInterval + 1));
 
 				// get slave collection on B
-				collection1B = storeB.GetCollectionById(collection1A.Id);
+				collection1B = storeB.GetCollectionByID(collection1A.ID);
 				Assert("Sync collection not found on store B.", collection1B != null);
                 Assert("Sync collection directory not found in store B.", Directory.Exists(collectionPath1B));
 				sc1B = new SyncCollection(collection1B);
-				MyTrace.WriteLine("Found Slave Collection 1B: {0}", sc1B);
+				Console.WriteLine("Found Slave Collection 1B: {0}", sc1B);
 
 				// get slave collection on C
-				collection1C = storeC.GetCollectionById(collection1A.Id);
+				collection1C = storeC.GetCollectionByID(collection1A.ID);
 				Assert("Sync collection not found on store C.", collection1C != null);
                 Assert("Sync collection directory not found in store C.", Directory.Exists(collectionPath1C));
 				sc1C = new SyncCollection(collection1C);
-				MyTrace.WriteLine("Found Slave Collection 1C: {0}", sc1C);
+				Console.WriteLine("Found Slave Collection 1C: {0}", sc1C);
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine(e);
+				Console.WriteLine(e);
 
 				throw e;
 			}
@@ -216,7 +215,6 @@ namespace Simias.Tests
 		{
 			if (store != null)
 			{
-				store.ImpersonateUser(Access.StoreAdminRole);
 				store.Delete();
 				store = null;
 			}

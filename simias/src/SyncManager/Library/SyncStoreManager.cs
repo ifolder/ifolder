@@ -71,11 +71,8 @@ namespace Simias.Sync
 			{
 				lock(this)
 				{
-					// check marshal end point
-					if (RemotingServices.GetServerTypeForUri(SyncStoreService.EndPoint) != null)
-					{
-						throw new ApplicationException("A store service already exists in this process.");
-					}
+					// create service
+					service = new SyncStoreService(this);
 
 					// create channel
 					string name = String.Format("Store Service [{0}]", store.ID);
@@ -83,13 +80,10 @@ namespace Simias.Sync
 					channel = syncManager.ChannelFactory.GetChannel(store, syncManager.ChannelSinks,
 						syncManager.MasterUri.Port);
 				
-					// create service
-					service = new SyncStoreService(this);
-
 					log.Debug("Starting Store Service: {0}", service.ServiceUrl);
 
 					// marshal service
-					RemotingServices.Marshal(service, SyncStoreService.EndPoint);
+					RemotingServices.Marshal(service, service.EndPoint);
 				
 					// start collection managers
 					subscriber.Enabled = true;

@@ -71,11 +71,16 @@ namespace Simias.Sync
 			return manager.GetCollectionService(id);
 		}
 
+		public static string GetEndPoint(int port)
+		{
+			return String.Format("SyncStoreService{0}.rem", port);
+		}
+
 		#region Properties
 		
-		public static string EndPoint
+		public string EndPoint
 		{
-			get { return "SyncStoreService.rem"; }
+			get { return GetEndPoint(manager.Manager.MasterUri.Port); }
 		}
 
 		public Uri ServiceUrl

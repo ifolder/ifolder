@@ -89,8 +89,8 @@ namespace Simias.Sync
 				switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// publish with the location service
-						(new LocationService(syncManager.Config)).Publish(collection.ID);
+						// register with the location service
+						syncManager.Location.Register(collection.ID);
 						break;
 
 					case SyncCollectionRoles.Slave:
@@ -119,7 +119,8 @@ namespace Simias.Sync
 				switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// ?
+						// unregister with the location service
+						syncManager.Location.Unregister(collection.ID);
 						break;
 
 					case SyncCollectionRoles.Slave:
@@ -214,17 +215,14 @@ namespace Simias.Sync
 				// once we have more confidence in remoting the connection should be created less often
 				try
 				{
-					// Find the url with the location service
-					UriBuilder serviceUri = new UriBuilder(collection.ServiceUrl);
+					// find the URL with the location service
 					Uri locationUri = syncManager.Location.Locate(collection.ID);
 
-					if (locationUri != null)
-					{
-						serviceUri.Host = locationUri.Host;
-						serviceUri.Port = locationUri.Port;
-					}
+					// update the URL
+					if (locationUri != null) collection.MasterUri = locationUri;
 
-					string serviceUrl = serviceUri.ToString();
+					// get the service URL
+					string serviceUrl = collection.ServiceUrl;
 
 					log.Debug("Sync Store Service URL: {0}", serviceUrl);
 

@@ -82,10 +82,10 @@ namespace Simias.Location
 		}
 
 		/// <summary>
-		/// Publish a master collection.
+		/// Register a master collection.
 		/// </summary>
 		/// <param name="collection">The collection id.</param>
-		public void Publish(string collection)
+		public void Register(string collection)
 		{
 			LocationProviderList providers = new LocationProviderList(configuration);
 
@@ -93,17 +93,44 @@ namespace Simias.Location
 			{
 				try
 				{
-					log.Debug("Publishing to the {0} location provider.", type);
-
 					ILocationProvider provider = (ILocationProvider)Activator.CreateInstance(type);
 
 					provider.Configure(configuration);
 
-					provider.Publish(collection);
+					provider.Register(collection);
+
+					log.Debug("Registered with the {0} location provider.", type);
 				}
 				catch(Exception e)
 				{
-					log.Debug(e, "Publish with the {0} location provider failed.", type);
+					log.Debug(e, "Registration with the {0} location provider failed.", type);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Unregister a master collection.
+		/// </summary>
+		/// <param name="collection">The collection id.</param>
+		public void Unregister(string collection)
+		{
+			LocationProviderList providers = new LocationProviderList(configuration);
+
+			foreach(Type type in providers)
+			{
+				try
+				{
+					ILocationProvider provider = (ILocationProvider)Activator.CreateInstance(type);
+
+					provider.Configure(configuration);
+
+					provider.Register(collection);
+
+					log.Debug("Unregistered with the {0} location provider.", type);
+				}
+				catch(Exception e)
+				{
+					log.Debug(e, "Unregistration with the {0} location provider failed.", type);
 				}
 			}
 		}

@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 
 using NUnit.Framework;
 
@@ -68,7 +69,7 @@ namespace Simias.Location.Tests
 
 			// sync properties
 			SyncCollection sc = new SyncCollection(collection);
-			UriBuilder builder = new UriBuilder("http:", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
+			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
 			sc.MasterUri = builder.Uri;
 			sc.Commit();
 
@@ -102,14 +103,24 @@ namespace Simias.Location.Tests
 			Collection collection = new Collection(store, "Location 2");
 			collection.Commit();
 
+			// sync properties
+			SyncCollection sc = new SyncCollection(collection);
+			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
+			sc.MasterUri = builder.Uri;
+			sc.Commit();
+
 			// locate collection
 			LocationService service = new LocationService(config);
+
+			service.Register(collection.ID);
 
 			Uri location = service.Locate(collection.ID);
 
 			Assert("Location Not Found!", location != null);
 
 			Console.WriteLine("Location: {0}", location);
+
+			service.Unregister(collection.ID);
 		}
 	}
 }

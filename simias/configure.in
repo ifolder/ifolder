@@ -49,7 +49,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH='$(MDNSRESPONDER_DIR):$(LOG4NET_DIR):$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
+        MONO_PATH='$(LOG4NET_DIR):$(MDNSRESPONDER_DIR):$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -92,7 +92,7 @@ SPACE='$(EMPTY) $(EMPTY)'
 AC_SUBST(EMPTY)
 AC_SUBST(SPACE)
 
-COMMON_SUBDIRS="Common Service CollectionEvents Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent SyncManager SyncLogicLite SyncTools Sync AddressBook AddressBookCmd Smtp Invitation MiniShare"
+COMMON_SUBDIRS="Common Service CollectionEvents Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher RemotingSniffer SyncCommon Location Agent SyncManager SyncLogicLite SyncTools Sync AddressBook AddressBookCmd Smtp Invitation MiniShare AcceptanceTests"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 DARWIN_SUBDIRS=
@@ -138,7 +138,7 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
-        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono"
+        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono/bin"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -163,7 +163,7 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
-        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono"
+        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/mono/bin"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -184,7 +184,7 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
-        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/net"
+        MDNSRESPONDER_DIR="$EXTERNAL_DIR/mDnsResponder/net/bin"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
         NUNIT_FLAGS='/nologo'
@@ -323,6 +323,7 @@ src/AddressBookCmd/Makefile
 src/Smtp/Makefile
 src/Invitation/Makefile
 src/MiniShare/Makefile
+src/AcceptanceTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

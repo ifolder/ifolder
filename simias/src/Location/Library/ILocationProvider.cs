@@ -44,9 +44,15 @@ namespace Simias.Location
 		Uri Locate(string collection);
 		
 		/// <summary>
-		/// Publish a master collection.
+		/// Register a master collection.
 		/// </summary>
 		/// <param name="collection">The collection ID.</param>
-		void Publish(string collection);
+		void Register(string collection);
+		
+		/// <summary>
+		/// Unregister a master collection.
+		/// </summary>
+		/// <param name="collection">The collection ID.</param>
+		void Unregister(string collection);
 	}
 }

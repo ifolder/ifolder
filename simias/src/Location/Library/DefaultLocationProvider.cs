@@ -78,10 +78,19 @@ namespace Simias.Location
 		}
 		
 		/// <summary>
-		/// Publish a master collection.
+		/// Register a master collection.
 		/// </summary>
 		/// <param name="collection">The collection ID.</param>
-		public void Publish(string collection)
+		public void Register(string collection)
+		{
+			// do nothing
+		}
+		
+		/// <summary>
+		/// Unregister a master collection.
+		/// </summary>
+		/// <param name="collection">The collection ID.</param>
+		public void Unregister(string collection)
 		{
 			// do nothing
 		}

@@ -200,6 +200,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventService", "src\Collect
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcceptanceTests", "src\AcceptanceTests\AcceptanceTests.csproj", "{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -390,6 +394,10 @@ Global
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Debug.ActiveCfg = Debug|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Debug.Build.0 = Debug|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Release.ActiveCfg = Release|.NET
+		{7B6A4971-F7AE-4ED6-8925-564AA9E0270E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
