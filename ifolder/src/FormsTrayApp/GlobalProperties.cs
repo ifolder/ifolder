@@ -237,12 +237,12 @@ namespace Novell.FormsTrayApp
 			this.menuCreate = new System.Windows.Forms.MenuItem();
 			this.menuRefresh = new System.Windows.Forms.MenuItem();
 			this.menuAccept = new System.Windows.Forms.MenuItem();
-			this.menuRemove = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuShare = new System.Windows.Forms.MenuItem();
 			this.menuResolve = new System.Windows.Forms.MenuItem();
 			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			this.menuRevert = new System.Windows.Forms.MenuItem();
+			this.menuRemove = new System.Windows.Forms.MenuItem();
 			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -353,6 +353,7 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.ThousandsSeparator = ((bool)(resources.GetObject("defaultInterval.ThousandsSeparator")));
 			this.defaultInterval.UpDownAlign = ((System.Windows.Forms.LeftRightAlignment)(resources.GetObject("defaultInterval.UpDownAlign")));
 			this.defaultInterval.Visible = ((bool)(resources.GetObject("defaultInterval.Visible")));
+			this.defaultInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.defaultInterval_KeyPress);
 			this.defaultInterval.ValueChanged += new System.EventHandler(this.defaultInterval_ValueChanged);
 			// 
 			// displayConfirmation
@@ -586,16 +587,6 @@ namespace Novell.FormsTrayApp
 			this.menuAccept.Visible = ((bool)(resources.GetObject("menuAccept.Visible")));
 			this.menuAccept.Click += new System.EventHandler(this.menuAccept_Click);
 			// 
-			// menuRemove
-			// 
-			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
-			this.menuRemove.Index = 9;
-			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
-			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
-			this.menuRemove.Text = resources.GetString("menuRemove.Text");
-			this.menuRemove.Visible = ((bool)(resources.GetObject("menuRemove.Visible")));
-			this.menuRemove.Click += new System.EventHandler(this.menuRemove_Click);
-			// 
 			// menuSeparator1
 			// 
 			this.menuSeparator1.Enabled = ((bool)(resources.GetObject("menuSeparator1.Enabled")));
@@ -644,6 +635,16 @@ namespace Novell.FormsTrayApp
 			this.menuRevert.Text = resources.GetString("menuRevert.Text");
 			this.menuRevert.Visible = ((bool)(resources.GetObject("menuRevert.Visible")));
 			this.menuRevert.Click += new System.EventHandler(this.menuRevert_Click);
+			// 
+			// menuRemove
+			// 
+			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
+			this.menuRemove.Index = 9;
+			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
+			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
+			this.menuRemove.Text = resources.GetString("menuRemove.Text");
+			this.menuRemove.Visible = ((bool)(resources.GetObject("menuRemove.Visible")));
+			this.menuRemove.Click += new System.EventHandler(this.menuRemove_Click);
 			// 
 			// menuSeparator2
 			// 
@@ -2675,31 +2676,64 @@ namespace Novell.FormsTrayApp
 			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 			try
 			{
-				if (ifolder.IsSubscription)
+				string message, caption;
+
+				if (ifolder.OwnerID.Equals(currentUserID))
 				{
-					ifWebService.DeclineiFolderInvitation(ifolder.ID);
+					message = resourceManager.GetString("deletePrompt");
+					caption = resourceManager.GetString("deleteTitle");
 				}
 				else
 				{
-					// Revert the iFolder.
-					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
+					message = resourceManager.GetString("removePrompt");
+					caption = resourceManager.GetString("removeTitle");
+				}
 
-					// Notify the shell.
-					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-
-					// Update the listview item.
-					lvi.Tag = newiFolder;
-
-					lock (ht)
+				if (ifolder.IsSubscription)
+				{
+					MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
+						message,
+						caption,
+						string.Empty,
+						MyMessageBoxButtons.YesNo,
+						MyMessageBoxIcon.Question,
+						MyMessageBoxDefaultButton.Button2);
+					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
-						ht.Remove(ifolder.ID);
-						ht.Add(newiFolder.ID, lvi);
+						ifWebService.DeclineiFolderInvitation(ifolder.ID);
 					}
+				}
+				else
+				{
+					MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
+						message,
+						caption,
+						string.Empty,
+						MyMessageBoxButtons.YesNo,
+						MyMessageBoxIcon.Question,
+						MyMessageBoxDefaultButton.Button2);
+					if (mmb.ShowDialog() == DialogResult.Yes)
+					{
+						// Revert the iFolder.
+						iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 
-					updateListViewItem(lvi);
+						// Notify the shell.
+						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-					// Decline the invitation.
-					ifWebService.DeclineiFolderInvitation(newiFolder.ID);
+						// Update the listview item.
+						lvi.Tag = newiFolder;
+
+						lock (ht)
+						{
+							ht.Remove(ifolder.ID);
+							ht.Add(newiFolder.ID, lvi);
+						}
+
+						updateListViewItem(lvi);
+
+						// Decline the invitation.
+						ifWebService.DeclineiFolderInvitation(newiFolder.ID);
+					}
 				}
 			}
 			catch (Exception ex)
@@ -2890,6 +2924,14 @@ namespace Novell.FormsTrayApp
 			{
 				apply.Enabled = cancel.Enabled = true;
 			}
+		}
+
+		private void defaultInterval_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+		{
+/*			if (((char)0x30 <= e.KeyChar) && (e.KeyChar <= (char)0x39))
+			{
+				apply.Enabled = cancel.Enabled = true;
+			}*/
 		}
 
 		private void useProxy_CheckedChanged(object sender, System.EventArgs e)

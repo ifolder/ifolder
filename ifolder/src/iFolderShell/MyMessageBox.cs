@@ -23,6 +23,7 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -122,8 +123,6 @@ namespace Novell.iFolderCom
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			this.StartPosition = FormStartPosition.CenterParent;
 		}
 
 		/// <summary>
@@ -213,13 +212,13 @@ namespace Novell.iFolderCom
 			switch (icon)
 			{
 				case MyMessageBoxIcon.Information:
-					messageIcon.Image = SystemIcons.Information.ToBitmap();
+					messageIcon.Image = IconToAlphaBitmap(SystemIcons.Information);
 					break;
 				case MyMessageBoxIcon.Question:
-					messageIcon.Image = SystemIcons.Question.ToBitmap();
+					messageIcon.Image = IconToAlphaBitmap(SystemIcons.Question);
 					break;
 				case MyMessageBoxIcon.Error:
-					messageIcon.Image = SystemIcons.Error.ToBitmap();
+					messageIcon.Image = IconToAlphaBitmap(SystemIcons.Error);
 					break;
 			}
 
@@ -539,7 +538,72 @@ namespace Novell.iFolderCom
 		}
 		#endregion
 
+		#region Private Methods
+
+		/// <summary>
+		/// Gets rid of the shadow on an icon.  Thanks to Mick Doherty (http://dotnetrix.co.uk)
+		/// </summary>
+		/// <param name="ico"></param>
+		/// <returns></returns>
+		private Bitmap IconToAlphaBitmap(Icon ico)
+		{
+			ICONINFO ii = new ICONINFO();
+			GetIconInfo(ico.Handle, out ii);
+			Bitmap bmp = Bitmap.FromHbitmap(ii.hbmColor);
+			DestroyIcon(ii.hbmColor);
+			DestroyIcon(ii.hbmMask);
+
+			if (Bitmap.GetPixelFormatSize(bmp.PixelFormat) < 32)
+				return ico.ToBitmap();
+
+			BitmapData bmData;
+			Rectangle bmBounds = new Rectangle(0,0,bmp.Width,bmp.Height);
+
+			bmData = bmp.LockBits(bmBounds,ImageLockMode.ReadOnly, bmp.PixelFormat);
+
+			Bitmap dstBitmap=new Bitmap(bmData.Width, bmData.Height, bmData.Stride, PixelFormat.Format32bppArgb, bmData.Scan0);
+
+			bool IsAlphaBitmap = false;
+
+			for (int y=0; y <= bmData.Height-1; y++)
+			{
+				for (int x=0; x <= bmData.Width-1; x++)
+				{
+					Color PixelColor = Color.FromArgb(Marshal.ReadInt32(bmData.Scan0, (bmData.Stride * y) + (4 * x)));
+					if (PixelColor.A > 0 & PixelColor.A < 255)
+					{
+						IsAlphaBitmap = true;
+						break;
+					}
+				}
+				if (IsAlphaBitmap) break;
+			}
+
+			bmp.UnlockBits(bmData);
+
+			if (IsAlphaBitmap==true)
+				return new Bitmap(dstBitmap);
+			else
+				return new Bitmap(ico.ToBitmap());
+		}
+		#endregion
+
 		#region Win32 API
+		[DllImport("user32.dll", SetLastError=true)]
+		static extern int DestroyIcon(IntPtr hIcon);
+
+		[DllImport("user32.dll")]
+		static extern bool GetIconInfo(IntPtr hIcon, out ICONINFO piconinfo);
+
+		public struct ICONINFO
+		{
+			public bool fIcon;
+			public int xHotspot;
+			public int yHotspot;
+			public IntPtr hbmMask;
+			public IntPtr hbmColor;
+		}
+
 		private const uint SC_CLOSE = 0xF060;
 
 		private const uint MF_BYCOMMAND = 0;
