@@ -43,7 +43,7 @@
 #include <libxml/xpathInternals.h>
 
 #include <simias-event-client.h>
-#include <simias.h>
+#include <simiasweb.h>
 
 #include <ifolder.h>
 #include <iFolderStub.h>
