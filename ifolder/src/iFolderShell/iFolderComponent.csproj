@@ -90,24 +90,9 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
-                />
-                <Reference
                     Name = "Novell.iFolder"
                     AssemblyName = "Novell.iFolder"
                     HintPath = "..\iFolder\Novell.iFolder.dll"
-                />
-                <Reference
-                    Name = "FormsBookLib"
-                    AssemblyName = "FormsBookLib"
-                    HintPath = "..\..\..\addressbook\src\FormsBookLib\FormsBookLib.dll"
-                />
-                <Reference
-                    Name = "Novell.AddressBook"
-                    AssemblyName = "Novell.AddressBook"
-                    HintPath = "..\..\..\simias\src\AddressBook\Novell.AddressBook.dll"
                 />
             </References>
         </Build>
@@ -191,6 +176,16 @@
                 <File
                     RelPath = "NewiFolder.resx"
                     DependentUpon = "NewiFolder.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Picker.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Picker.resx"
+                    DependentUpon = "Picker.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -22,54 +22,39 @@
  ***********************************************************************/
 
 using System;
-using Novell.AddressBook;
-using Novell.AddressBook.UI.gtk;
 using System.Collections;
-using Simias;
-using Simias.Sync;
-using Simias.Domain;
+//using Simias;
+//using Simias.Sync;
+//using Simias.Domain;
 using System.Diagnostics;
 using System.Threading;
 
 using Gtk;
 using Gdk;
 using Gnome;
-using Glade;
+//using Glade;
 using GtkSharp;
 using GLib;
 using Egg;
 
 namespace Novell.iFolder
 {
-	public enum ServiceStates : uint
-	{
-		stopped = 0x0001,
-		started = 0x0002,
-		starting = 0x0003,
-		stopping = 0x0004
-	}
-
 
 	public class TrayApplication 
 	{
 		//private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(TrayApplication));
 		
-		static Gtk.Image gAppIcon;
-		//static Gdk.PixbufAnimation gSyncAnimation;
-		static Gdk.Pixbuf ifNormalPixbuf;
-		static Gdk.Pixbuf ifStartingPixbuf;
-		static Gdk.Pixbuf ifStoppingPixbuf;
-		static Gtk.EventBox eBox;
-		static TrayIcon tIcon;
-		static Configuration conf;
-		static Simias.Service.Manager sManager = null;
-		static Gtk.ThreadNotify ServicesStateNotify;
-		static ServiceStates serviceState;
-//		static Mutex TrayMutex;
+		static Gtk.Image			gAppIcon;
+		static Gdk.Pixbuf			ifNormalPixbuf;
+		static Gtk.EventBox			eBox;
+		static TrayIcon				tIcon;
+		static Gtk.ThreadNotify		iFolderStateNotify;
+		static iFolderWebService	ifws;
+		static iFolderWindow 		ifwin;
+		static iFolderSettings		ifSettings;
 
 		public static void Main (string[] args)
 		{
-			conf = Configuration.GetConfiguration();
 			Process[] processes = 
 				System.Diagnostics.Process.GetProcessesByName("iFolderGtkApp");
 
@@ -82,126 +67,105 @@ namespace Novell.iFolder
 			Gnome.Program program =
 				new Program("iFolder", "0.10.0", Modules.UI, args);
 			
-//			Application.Init();
-
-			serviceState = ServiceStates.stopped;
-//			TrayMutex = new Mutex();
-
 			// This is my huge try catch block to catch any exceptions
 			// that are not caught
 			try
 			{
-
 				tIcon = new TrayIcon("iFolder");
 
 				eBox = new EventBox();
-
 				eBox.ButtonPressEvent += 
 					new ButtonPressEventHandler(trayapp_clicked);
 
 				ifNormalPixbuf = new Pixbuf(Util.ImagesPath("ifolder.png"));
-				ifStartingPixbuf = 
-					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
-				ifStoppingPixbuf = 
-					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
 
-				gAppIcon = new Gtk.Image(ifStartingPixbuf);
-	
+				gAppIcon = new Gtk.Image(ifNormalPixbuf);
 				//gSyncAnimation = new Gdk.PixbufAnimation("ifolder.gif");
-
 				eBox.Add(gAppIcon);
-
 				tIcon.Add(eBox);
-
 				tIcon.ShowAll();	
 
-				iFolderManager.CreateDefaultExclusions(conf);
-				sManager = new Simias.Service.Manager(conf);
+				iFolderStateNotify = new Gtk.ThreadNotify(
+								new Gtk.ReadyEvent(iFolderStateChange));
 
-				ServicesStateNotify = 
-				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ServiceStateChange));
-
-				System.Threading.Thread servicesThread =
-					new System.Threading.Thread(new ThreadStart(StartServices));
-
-				servicesThread.Start();
+				CheckWebService();
 
 				program.Run();
-//				Application.Run();
 			}
 			catch(Exception bigException)
 			{
-				if(sManager != null)
-					sManager.StopServices();
-
-				CrashReport cr = new CrashReport();
-				cr.CrashText = bigException.ToString();
-				cr.Run();
-				sManager.WaitForServicesStopped();
+				iFolderCrashDialog cd = new iFolderCrashDialog(bigException);
+				cd.Run();
+				cd.Hide();
+				cd.Destroy();
+				cd = null;
 				Application.Quit();
 			}
 		}
 
-		static private void SetServiceState(ServiceStates state)
+
+		static private bool CheckWebService()
 		{
-//			lock(TrayMutex)
-//			{
-				serviceState = state;
-//			}
-		}
-
-		static private ServiceStates GetServiceState()
-		{
-//			lock(TrayMutex)
-//			{
-				return serviceState;
-//			}
-		}
-
-		static private void StartServices()
-		{
-			SetServiceState(ServiceStates.starting);
-
-			sManager.StartServices();
-			sManager.WaitForServicesStarted();
-
-			SetServiceState(ServiceStates.started);
-			ServicesStateNotify.WakeupMain();
-		}
-
-		static private void StopServices()
-		{
-			sManager.WaitForServicesStarted();
-
-			SetServiceState(ServiceStates.stopping);
-
-			sManager.StopServices();
-			sManager.WaitForServicesStopped();
-
-			SetServiceState(ServiceStates.stopped);
-			ServicesStateNotify.WakeupMain();
-		}
-
-		static void ServiceStateChange()
-		{
-			ServiceStates curState = GetServiceState();
-			switch(curState)
+			if(ifws == null)
 			{
-				case ServiceStates.starting:
-					gAppIcon.Pixbuf = ifStartingPixbuf;
-					break;
-				default:
-				case ServiceStates.started:
-					gAppIcon.Pixbuf = ifNormalPixbuf;
-					break;
-				case ServiceStates.stopping:
-					gAppIcon.Pixbuf = ifStoppingPixbuf;
-					break;
-				case ServiceStates.stopped:
-					Application.Quit();
-					break;
+				try
+				{
+					ifws = new iFolderWebService();
+	
+					// TODO: change this to some kind of init code
+					ifSettings = ifws.GetSettings();
+					//ifws.Ping();
+				}
+				catch(System.Net.WebException we)
+				{
+					ifSettings = null;
+					ifws = null;
+
+					if(we.Message == "Error: ConnectFailure")
+					{
+						iFolderMsgDialog mDialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							"iFolder Connect Error",
+							"Unable to locate Simias Process",
+							"The Simias process must be running in order for iFolder to run.  Start the Simias process and try again");
+						mDialog.Run();
+						mDialog.Hide();
+						mDialog.Destroy();
+						mDialog = null;
+					}
+					else
+						throw we;
+				}
+				catch(Exception e)
+				{
+					ifSettings = null;
+					ifws = null;
+
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					ied = null;
+				}
 			}
+			return(ifws != null);
 		}
+
+
+
+		// Call this method to activate this method
+		// iFolderStateNotify.WakeupMain();
+		static void iFolderStateChange()
+		{
+			// This will be done when we get the
+			// event system
+		}
+
+
+
 
 		static void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
@@ -226,79 +190,30 @@ namespace Novell.iFolder
 
 		static void show_tray_menu()
 		{
+			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
-//			MenuItem ifolder_browser_item = 
-//					new MenuItem ("iFolder Browser");
-//			trayMenu.Append (ifolder_browser_item);
-//			ifolder_browser_item.Activated += 
-//					new EventHandler(show_ifolder_browser);
-
-			MenuItem connect_item = new MenuItem ("iFolder Server Connect...");
-			trayMenu.Append (connect_item);
-			connect_item.Activated += new EventHandler(show_server_info);
-
-			trayMenu.Append(new SeparatorMenuItem());
-			
-			MenuItem iFolders_item = new MenuItem ("iFolders");
+			MenuItem iFolders_item = new MenuItem ("My iFolders...");
 			trayMenu.Append (iFolders_item);
 			iFolders_item.Activated += 
 					new EventHandler(show_properties);
 			
-			MenuItem messages_item = 
-					new MenuItem ("Subscriptions");
-			trayMenu.Append (messages_item);
-			messages_item.Activated +=
-					new EventHandler(show_messages);
+			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
+			{
+				MenuItem connect_item = new MenuItem ("Join Enterprise Server");
+				trayMenu.Append (connect_item);
+				connect_item.Activated += new EventHandler(OnJoinEnterprise);
+			}
 
-			MenuItem InvWizard_item = new MenuItem ("Invitation Assistant");
-			trayMenu.Append (InvWizard_item);
-			InvWizard_item.Activated += new EventHandler(show_invwizard);
-
-			MenuItem AddrBook_item = new MenuItem ("Address Book");
-			trayMenu.Append (AddrBook_item);
-			AddrBook_item.Activated += new EventHandler(show_AddrBook);
-
-//			MenuItem tracewin_item = new MenuItem ("Show Trace Window");
-//			trayMenu.Append (tracewin_item);
-//			tracewin_item.Activated += new EventHandler(show_tracewin);
-
-			trayMenu.Append(new SeparatorMenuItem());
-
-			MenuItem about_item = new MenuItem ("About...");
-			trayMenu.Append (about_item);
-			about_item.Activated += 
-					new EventHandler(show_about);
-			MenuItem help_item = new MenuItem ("Help");
+			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
 			trayMenu.Append (help_item);
 			help_item.Activated += 
 					new EventHandler(show_help);
 
 			trayMenu.Append(new SeparatorMenuItem());
-			
-			
-#if DEBUG
-			MenuItem colBrowser_item = 
-					new MenuItem ("Collection Browser");
-			trayMenu.Append (colBrowser_item);
-			colBrowser_item.Activated += 
-					new EventHandler(show_colbrowser);
-			MenuItem rbBrowser_item = new MenuItem ("Reunion Browser");
-			trayMenu.Append (rbBrowser_item);
-			rbBrowser_item.Activated += new EventHandler(show_rbbrowser);
 
-			trayMenu.Append(new SeparatorMenuItem());
-#endif			
-			
 
-			MenuItem properties_item = new MenuItem ("Properties");
-			trayMenu.Append (properties_item);
-			properties_item.Activated += 
-					new EventHandler(show_properties);
-
-			trayMenu.Append(new SeparatorMenuItem());
-
-			MenuItem quit_item = new MenuItem ("Exit");
+			ImageMenuItem quit_item = new ImageMenuItem (Gtk.Stock.Quit, agrp);
 			quit_item.Activated += new EventHandler(quit_ifolder);
 			trayMenu.Append (quit_item);
 
@@ -315,32 +230,36 @@ namespace Novell.iFolder
 
 		static void quit_ifolder(object o, EventArgs args)
 		{
-			ServiceStates curState = GetServiceState();
-			if(curState == ServiceStates.stopping)
-			{
-				System.Environment.Exit(1);
-			}
-			else
-			{
-				SetServiceState(ServiceStates.stopping);
-				ServiceStateChange();
-
-				System.Threading.Thread stopThread =
-					new System.Threading.Thread(new ThreadStart(StopServices));
-
-				stopThread.Start();
-			}
+			Application.Quit();
 		}
 
-		static void show_server_info(object o, EventArgs args)
+		static void OnJoinEnterprise(object o, EventArgs args)
 		{
-			ServerInfoDialog sid = new ServerInfoDialog();
-			int rc = sid.Run();
+			iFolderLoginDialog loginDialog = new iFolderLoginDialog();
+
+			int rc = loginDialog.Run();
+			loginDialog.Hide();
+			loginDialog.Destroy();
 			if(rc == -5)
 			{
-				Console.WriteLine("Connecting to server...");
-				DomainAgent da = new DomainAgent(conf);
-				da.Attach(sid.Address, sid.Name, sid.Password);
+				try
+				{
+					iFolderSettings tmpSettings;
+					tmpSettings = ifws.ConnectToEnterpriseServer(
+													loginDialog.UserName,
+													loginDialog.Password,
+													loginDialog.Host);
+					ifSettings = tmpSettings;
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													null, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					ied = null;
+				}
 			}
 		}
 
@@ -356,48 +275,29 @@ namespace Novell.iFolder
 
 		static void show_properties(object o, EventArgs args)
 		{
+			if(CheckWebService())
+			{
+				if(ifwin == null)
+				{
+					ifwin = new iFolderWindow(ifws, ifSettings);
+					ifwin.ShowAll();
+				}
+				else
+				{
+					// this will raise the window to the front
+					ifwin.Present();
+				}
+//				iFolderWindow win;
+
+//				win = new iFolderWindow(ifws);
+//				win.ShowAll();
+			}
+/*
 			ApplicationProperties propDialog;
 
 			propDialog = new ApplicationProperties();
 			propDialog.Run();
-		}
-
-		static void show_rbbrowser(object o, EventArgs args)
-		{
-			ReunionBrowser browser;
-
-			browser = new ReunionBrowser();
-			browser.ShowAll();
-		}
-		
-		static void show_messages(object o, EventArgs args)
-		{
-			POBoxViewer boxViewer;
-			
-			boxViewer = new POBoxViewer();
-			boxViewer.ShowAll();
-		}
-
-		static void show_colbrowser(object o, EventArgs args)
-		{
-			CollectionBrowser browser;
-
-			browser = new CollectionBrowser();
-			browser.ShowAll();
-		}
-
-		static void show_AddrBook(object o, EventArgs args)
-		{
-			ContactBrowser cb = new ContactBrowser();
-			cb.ShowAll();
-		}
-
-		static void show_invwizard(object o, EventArgs args)
-		{
-			InvitationAssistant iAss;
-
-			iAss = new InvitationAssistant();
-			iAss.ShowAll();
+*/
 		}
 	}
 }

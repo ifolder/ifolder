@@ -105,7 +105,7 @@
             <Include>
                 <File
                     RelPath = "AcceptDeclinePage.cs"
-                    SubType = "UserControl"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -134,7 +134,7 @@
                 />
                 <File
                     RelPath = "CompletionPage.cs"
-                    SubType = "UserControl"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -184,7 +184,7 @@
                 />
                 <File
                     RelPath = "WelcomePage.cs"
-                    SubType = "UserControl"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -31,12 +31,12 @@ using Simias;
 using Simias.Sync;
 using Simias.POBox;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 	/// <summary>
 	/// Class for the wizard page where the invitation file is selected.
 	/// </summary>
-	public class SelectInvitationPage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
+	public class SelectInvitationPage : Novell.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectInvitationPage));

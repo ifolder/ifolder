@@ -29,7 +29,7 @@ using System.Configuration.Install;
 using Simias;
 using Simias.Event;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Provides custom installation for iFolderApp.exe.
@@ -118,9 +118,9 @@ namespace Novell.iFolder.FormsTrayApp
 				Configuration config = Configuration.GetConfiguration();
 				foreach (Process process in ifolderProcesses)
 				{
-					Simias.Event.EventPublisher publisher = new EventPublisher();
-					publisher.RaiseEvent(new Simias.Service.ShutdownEventArgs());
-					process.WaitForExit (10000); // wait 10 seconds
+					//Simias.Event.EventPublisher publisher = new EventPublisher(config);
+					//publisher.RaiseEvent(new Simias.Service.ShutdownEventArgs());
+					//process.WaitForExit (10000); // wait 10 seconds
 					try
 					{
 						process.Kill(); // This will throw if the process is no longer running

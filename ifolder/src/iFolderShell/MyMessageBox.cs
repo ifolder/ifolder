@@ -28,7 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for MyMessageBox.

@@ -6,8 +6,8 @@ iFolderTests_CSFILES_CSC := $(subst /,$(SEP),$(iFolderTests_CSFILES))
 iFolderTests_INCLUDES =
 iFolderTests_RESOURCES =
 iFolderTests_FLAGS = $(CSC_EXEFLAG)
-iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Novell.iFolder.dll Novell.AddressBook.dll
-iFolderTests_LIBPATH = $(NUNIT_LIBPATH)
+iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Novell.iFolder.dll
+iFolderTests_LIBPATH = ../../src/iFolder
 
 EXTRA_DIST = $(iFolderTests_CSFILES) $(iFolderTests_RESOURCES)
 
@@ -18,7 +18,7 @@ CUR_DIR := $(shell pwd)
 all: $(NUNIT_TESTS)
 
 iFolderTests.exe: $(iFolderTests_CSFILES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolderTests_FLAGS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
+	$(CSC) /out:$@ $(CSCFLAGS) $(IFOLDER_LIBS) $(iFolderTests_FLAGS) $(iFolderTests_LIBS:%=/r:%) $(iFolderTests_LIBPATH:%=/lib:%) $(iFolderTests_CSFILES_CSC)
 	
 if DEBUG
 if WINDOWS

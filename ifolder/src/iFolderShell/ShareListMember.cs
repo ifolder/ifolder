@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 using Simias.Storage;
 using Simias.POBox;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Class to hold objects displayed in the shareWith listview.
@@ -34,8 +34,7 @@ namespace Novell.iFolder.iFolderCom
 	[ComVisible(false)]
 	public class ShareListMember
 	{
-		private Subscription subscription;
-		private Member member;
+		private iFolderUser ifolderUser;
 		private bool added = false;
 		private bool changed = false;
 
@@ -50,7 +49,7 @@ namespace Novell.iFolder.iFolderCom
 
 		#region Properties
 		/// <summary>
-		/// Gets and Sets the Added flag.
+		/// Gets/sets the added flag.
 		/// </summary>
 		public bool Added
 		{
@@ -59,7 +58,7 @@ namespace Novell.iFolder.iFolderCom
 		}
 
 		/// <summary>
-		/// Gets and Sets the Changed flag.
+		/// Gets/sets the changed flag.
 		/// </summary>
 		public bool Changed
 		{
@@ -68,51 +67,12 @@ namespace Novell.iFolder.iFolderCom
 		}
 
 		/// <summary>
-		/// Gets and Sets the current contact.
+		/// Gets/sets the iFolder user.
 		/// </summary>
-		public Member Member
+		public iFolderUser iFolderUser
 		{
-			get { return member; }
-			set { member = value; }
-		}
-
-		/// <summary>
-		/// Gets/sets the Subscription object.
-		/// </summary>
-		public Subscription Subscription
-		{
-			get { return subscription; }
-			set { subscription = value; }
-		}
-
-		/// <summary>
-		/// Gets/sets the Rights.
-		/// </summary>
-		public Access.Rights Rights
-		{
-			get
-			{
-				if (Member != null)
-				{
-					return Member.Rights;
-				}
-				else
-				{
-					return Subscription.SubscriptionRights;
-				}
-			}
-
-			set
-			{
-				if (Member != null)
-				{
-					Member.Rights = value;
-				}
-				else
-				{
-					Subscription.SubscriptionRights = value;
-				}
-			}
+			get { return ifolderUser; }
+			set { ifolderUser = value; }
 		}
 		#endregion
 	}

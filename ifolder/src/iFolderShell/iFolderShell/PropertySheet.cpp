@@ -76,7 +76,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 		// in the DWLP_USER of the dialog box window.
 		//
 	case WM_INITDIALOG:
-		SetWindowLongPtr(hDlg, DWLP_USER, lParam);
+/*		SetWindowLongPtr(hDlg, DWLP_USER, lParam);
 		psp = (LPPROPSHEETPAGE)lParam;
 		lpciFolderShell = (LPCIFOLDERSHELL)psp->lParam;
 
@@ -153,7 +153,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 		}
 		catch (...)
 		{
-		}
+		}*/
 		break;
 	case WM_DESTROY:
 		break;
@@ -172,7 +172,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 		case BN_CLICKED:
 			if (resourceId == IDC_ADVANCED)
 			{
-				lpciFolderShell= (LPCIFOLDERSHELL)psp->lParam;
+/*				lpciFolderShell= (LPCIFOLDERSHELL)psp->lParam;
 				try
 				{
 					if (lpciFolderShell->m_spiFolder == NULL)
@@ -189,7 +189,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 				catch (...)
 				{
 					// TODO - Generate an error message.
-				}
+				}*/
 			}
 			break;
 		}
@@ -204,7 +204,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 			//User has clicked the OK or Apply button ...
 			try
 			{
-				int length;
+/*				int length;
 				length= SendMessage(GetDlgItem(hDlg, IDC_DESCRIPTION), (UINT)WM_GETTEXTLENGTH, 0, 0); 
 				LPTSTR lpszDesc= (LPTSTR)LocalAlloc(LPTR, (length + 1) * sizeof(TCHAR));
 				SendMessage(GetDlgItem(hDlg, IDC_DESCRIPTION), (UINT)WM_GETTEXT, (WPARAM)(length + 1), (LPARAM)lpszDesc);
@@ -215,7 +215,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 				lpciFolderShell->m_spiFolder->put_Description(strDesc);
 
 				SysFreeString(strDesc);
-				LocalFree(lpszDesc);
+				LocalFree(lpszDesc);*/
 			}
 			catch (...)
 			{
