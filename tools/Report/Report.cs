@@ -174,7 +174,7 @@ public class Report
 		writer.WriteLine("  Total: {0}", totalCases);
 		writer.WriteLine("    Ran: {0}", totalRuns);
 		writer.WriteLine(" Passed: {0} [ {1:p1} ]", totalPasses,
-			(double)(totalRuns > 0 ? (double)totalPasses/(double)totalRuns : 0));
+			(totalRuns > 0 ? (double)totalPasses/(double)totalRuns : 0));
 		writer.WriteLine();
 		writer.WriteLine("   Time: {0} seconds", totalTime);
 		
