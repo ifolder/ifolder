@@ -1012,4 +1012,7 @@ public class iFolder {
     
     /// <remarks/>
     public string CurrentUserRights;
+    
+    /// <remarks/>
+    public string CollectionID;
 }

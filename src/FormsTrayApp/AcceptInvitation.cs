@@ -53,6 +53,11 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		/// <summary>
+		/// Constructs an AcceptInvitation object.
+		/// </summary>
+		/// <param name="ifolderWebService">The web service to use when processing the invitation.</param>
+		/// <param name="ifolder">The iFolder to accept.</param>
 		public AcceptInvitation(iFolderWebService ifolderWebService, iFolder ifolder)
 		{
 			//
@@ -204,6 +209,40 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
+		#region Private Methods
+		private string rightsToString(string rights)
+		{
+			string rightsString;
+
+			// TODO: Localize
+			switch (rights)
+			{
+				case "Admin":
+				{
+					rightsString = "Full Control";
+					break;
+				}
+				case "ReadWrite":
+				{
+					rightsString = "Read/Write";
+					break;
+				}
+				case "ReadOnly":
+				{
+					rightsString = "Read Only";
+					break;
+				}
+				default:
+				{
+					rightsString = "Unknown";
+					break;
+				}
+			}
+
+			return rightsString;
+		}
+		#endregion
+
 		#region Event Handlers
 		private void ok_Click(object sender, System.EventArgs e)
 		{
@@ -350,19 +389,15 @@ namespace Novell.FormsTrayApp
 		{
 			this.Text = this.Text.Replace("<name>", ifolder.Name);
 			// Add the iFolder details to the list box.
-			string blank = "";
 			// TODO: Localize
 			string name = "iFolder name: " + ifolder.Name;
 			iFolderDetails.Items.Add(name);
-			iFolderDetails.Items.Add(blank);
 
-/*			string sharedBy = "Shared by: " + subscription.FromName;
+			string sharedBy = "Shared by: " + ifolder.Owner;
 			iFolderDetails.Items.Add(sharedBy);
-			iFolderDetails.Items.Add(blank);
-*/
-//			string rights = "Rights: " + ((InvitationWizard)(this.Parent)).Subscription.SubscriptionRights;
-//			iFolderDetails.Items.Add(rights);
-//			iFolderDetails.Items.Add(blank);
+
+			string rights = "Rights: " + rightsToString(ifolder.CurrentUserRights);
+			iFolderDetails.Items.Add(rights);
 		}
 
 		private void AcceptInvitation_Closing(object sender, System.ComponentModel.CancelEventArgs e)
