@@ -1,5 +1,5 @@
 /***********************************************************************
- *  GtkTraceWindowTests.cs - Gtk-Sharp Invitation Wizard Application for Denali
+ *  GtkTraceWindowTests.cs - Gtk-Sharp Invitation Wizard Application
  * 
  *  Copyright (C) 2004 Novell, Inc.
  *
