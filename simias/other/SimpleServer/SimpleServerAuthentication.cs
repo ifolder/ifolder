@@ -268,6 +268,8 @@ namespace Simias.SimpleServer
 		{
 			Simias.Authentication.Status authStatus;
 
+			log.Debug( "Authenticate called" );
+
 			try
 			{
 				// Check for an authorization header.
@@ -438,8 +440,22 @@ namespace Simias.SimpleServer
 		/// specified domain. Otherwise, False is returned.</returns>
 		public bool OwnsDomain( string domainID )
 		{
+			log.Debug( "OwnsDomain called" );
+
+			Simias.SimpleServer.Domain thisDomain = new Simias.SimpleServer.Domain( false );
+			if ( thisDomain.ID == domainID )
+			{
+				log.Debug( "  returning true" );
+				return true;
+			}
+
+			log.Debug( "Returning false" );
+			return false;
+
+			/*
 			Simias.Storage.Domain domain = store.GetDomain( domainID );
 			return ( ( domain != null ) && domain.IsType( domain, "Enterprise" ) ) ? true : false;
+			*/
 		}
 
 		/// <summary>
