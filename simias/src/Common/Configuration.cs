@@ -79,6 +79,15 @@ namespace Simias
 		}
 
 		/// <summary>
+		/// Called to get the path where simias is installed (a clean un-fixed version).
+		/// </summary>
+		public string CleanStorePath
+		{
+			get { return Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) ; }
+			set { Set( storeProvider, storeProviderPath, value ); }
+		}
+
+		/// <summary>
 		/// Called to get the file path of the default Simias.config file
 		/// </summary>
 		public static string DefaultFilePath
