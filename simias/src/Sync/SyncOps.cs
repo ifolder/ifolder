@@ -472,7 +472,7 @@ internal class SyncOps
 					more = logReader.GetEvents(eventCookie, out changeList);
 					foreach( ChangeLogRecord rec in changeList )
 					{
-						Node node = collection.GetNodeByID(rec.nodeID);
+						Node node = collection.GetNodeByID(rec.EventID);
 						if (node != null)
 						{
 							string path = OutgoingNode.GetOutNode(collection, ref node);
@@ -487,7 +487,7 @@ internal class SyncOps
 							stamp.id = new Nid(node.ID);
 							stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
 							stamp.name = node.Name;
-							stamp.changeType = rec.operation;
+							stamp.changeType = rec.Operation;
 
 							//TODO: another place to handle multiple forks
 							try
@@ -501,14 +501,14 @@ internal class SyncOps
 							}
 							stampList.Add(stamp);
 						}
-						else if (rec.operation != ChangeLogRecord.ChangeLogOp.Deleted)
+						else if (rec.Operation != ChangeLogRecord.ChangeLogOp.Deleted)
 						{
 							NodeStamp stamp = new NodeStamp();
 							stamp.localIncarn = UInt64.MaxValue;
 							stamp.masterIncarn = 0;
-							stamp.id = new Nid(rec.nodeID);
+							stamp.id = new Nid(rec.EventID);
 							stamp.name = "";
-							stamp.changeType = rec.operation;
+							stamp.changeType = rec.Operation;
 						}
 					}
 				}

@@ -195,11 +195,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\ChangeLog\ChangeLogTests.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\CollectionStore\AccessControl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
