@@ -33,6 +33,7 @@ using Simias;
 using Simias.Client;
 using Simias.Event;
 using Simias.Policy;
+using Simias.Sync;
 using Persist = Simias.Storage.Provider;
 
 namespace Simias.Storage
@@ -307,7 +308,7 @@ namespace Simias.Storage
 					}
 
 					// Create an object that represents the database collection.
-					LocalDatabase ldb = new LocalDatabase( this, localUri );
+					LocalDatabase ldb = new LocalDatabase( this, Domain.WorkGroupDomainID );
 					localDb = ldb.ID;
 
 					// Create an identity that represents the current user.  This user will become the 
@@ -320,7 +321,7 @@ namespace Simias.Storage
 					member.IsOwner = true;
 
 					// Create the default workgroup domain and add an identity mapping.
-					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
+					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID, SyncRoles.Master );
 					wgDomain.HostAddress = localUri;
 
 					// Create a credential to use with workgroup domains.
@@ -356,7 +357,7 @@ namespace Simias.Storage
 						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
 
 						// Create the new domain object and add the identity mapping.
-						Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
+						Domain eDomain = new Domain( enterpriseName, enterpriseID, description, SyncRoles.Master );
 						eDomain.HostAddress = localUri;
 						owner.AddDomainIdentity( owner.ID, eDomain.ID );
 
@@ -573,10 +574,11 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <param name="domainDescription">String that describes the specified domain.</param>
 		/// <param name="domainHost">The URI of where the domain is hosted.</param>
+		/// <param name="role">The type of sync role for this domain.</param>
 		/// <returns>The created Domain object.</returns>
-		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost )
+		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost, SyncRoles role )
 		{
-			return AddDomainIdentity( userID, null, CredentialType.None, domainName, domainID, domainDescription, domainHost );
+			return AddDomainIdentity( userID, null, CredentialType.None, domainName, domainID, domainDescription, domainHost, role );
 		}
 
 		/// <summary>
@@ -589,8 +591,9 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <param name="domainDescription">String that describes the specified domain.</param>
 		/// <param name="domainHost">The URI of where the domain is hosted.</param>
+		/// <param name="role">The type of sync role for this domain.</param>
 		/// <returns>The created Domain object.</returns>
-		public Domain AddDomainIdentity( string userID, string credentials, CredentialType credType, string domainName, string domainID, string domainDescription, Uri domainHost )
+		public Domain AddDomainIdentity( string userID, string credentials, CredentialType credType, string domainName, string domainID, string domainDescription, Uri domainHost, SyncRoles role )
 		{
 			Node[] nodeList = new Node[ 2 ];
 
@@ -604,7 +607,7 @@ namespace Simias.Storage
 			}
 
 			// Create the domain object.
-			Domain domain = new Domain( domainName, domainID, domainDescription );
+			Domain domain = new Domain( domainName, domainID, domainDescription, role );
 			nodeList[ 0 ] = domain;
 			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID, credentials, credType );
 

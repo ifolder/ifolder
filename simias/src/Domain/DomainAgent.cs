@@ -472,7 +472,8 @@ namespace Simias.Domain
 				domainInfo.Name, 
 				domainInfo.ID, 
 				domainInfo.Description,
-				hostUri);
+				hostUri,
+				SyncRoles.Slave);
 
 			// set the default domain
 			string previousDomain = store.DefaultDomain;

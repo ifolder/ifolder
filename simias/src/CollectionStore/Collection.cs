@@ -145,8 +145,8 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				Property p = properties.GetSingleProperty( PropertyTags.MasterUrl );
-				return ( p != null ) ? p.Value as Uri : null;
+				Domain domain = store.GetDomain( Domain );
+				return ( domain != null ) ? domain.HostAddress : null;
 			}
 		}
 
@@ -172,25 +172,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets the sealed state of a collection.
-		/// </summary>
-		public bool Sealed
-		{
-			get { return properties.HasProperty( PropertyTags.Sealed ); }
-			set 
-			{
-				if ( value )
-				{
-					properties.ModifyNodeProperty( PropertyTags.Sealed, true ); 
-				}
-				else
-				{
-					properties.DeleteSingleNodeProperty( PropertyTags.Sealed );
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets the amount of data in bytes that is stored in this collection.
 		/// </summary>
 		public long StorageSize
@@ -211,24 +192,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets whether this collection can be synchronized.  By default, a collection is always
-		/// synchronizeable. The Collection Store cannot prevent an application from synchronizing a
-		/// collection even though this property is set not synchronizable.  This property is only meant
-		/// as a common means to indicate synchronizability and must be enforced at a higher layer.
+		/// Gets whether this collection can be synchronized.
 		/// </summary>
 		public bool Synchronizable
 		{
-			get	{ return properties.HasProperty( PropertyTags.Syncable ) ? false : true; }
-			set 
+			get	
 			{ 
-				if ( value )
-				{
-					properties.DeleteSingleNodeProperty( PropertyTags.Syncable );
-				}
-				else
-				{
-					properties.ModifyNodeProperty( PropertyTags.Syncable, false ); 
-				}
+				Domain domain = store.GetDomain( Domain );
+				return ( ( domain != null ) && ( domain.Role == SyncRoles.Local ) ) ? false : true;
 			}
 		}
 
@@ -272,15 +243,8 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( PropertyTags.SyncRole );
-				return ( p != null ) ? ( SyncRoles )p.Value : SyncRoles.None;
-			}
-
-			set	
-			{ 
-				Property p = new Property( PropertyTags.SyncRole, value );
-				p.LocalProperty = true;
-				properties.ModifyNodeProperty( p );
+				Domain domain = store.GetDomain( Domain );
+				return ( domain != null ) ? domain.Role : SyncRoles.None;
 			}
 		}
 
@@ -354,7 +318,7 @@ namespace Simias.Storage
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="domainID">The domain that this object is stored in.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID, string domainID ) :
-			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainID, storeObject.GetDomain( domainID ).HostAddress )
+			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainID )
 		{
 		}
 
@@ -406,8 +370,7 @@ namespace Simias.Storage
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="collectionType">Base type of collection object.</param>
 		/// <param name="domainID">The domain that this object is stored in.</param>
-		/// <param name="domainHost">The address of where the domain is hosted.</param>
-		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainID, Uri domainHost ) :
+		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainID ) :
 			base( collectionName, collectionID, collectionType )
 		{
 			store = storeObject;
@@ -432,11 +395,6 @@ namespace Simias.Storage
 
 			// Add the domain ID as a property.
 			properties.AddNodeProperty( PropertyTags.DomainID, domainID );
-
-			// Add the Url where this collection is hosted.
-			Property p = new Property( PropertyTags.MasterUrl, domainHost );
-			p.LocalProperty = true;
-			properties.AddNodeProperty( p );
 
 			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );
@@ -670,39 +628,16 @@ namespace Simias.Storage
 							// Set the update time of the node.
 							node.UpdateTime = commitTime;
 
-							// If this is a collection object being created, the sync role needs
-							// to be set to tell the sync process what to do with this collection.
+							// If the sync role for this domain is a slave, then set the attribute that the master
+							// needs to be created on the enterprise server.
 							if ( IsType( node, NodeTypes.CollectionType ) )
 							{
-								SyncRoles role;
-								Collection collection = new Collection( store, node );
-								if ( collection.Synchronizable )
+								if ( Role == SyncRoles.Slave )
 								{
-									// If this collection's domain is the workgroup domain, this collection
-									// will always be the master.
-									if ( store.IsEnterpriseServer || ( collection.Domain == Simias.Storage.Domain.WorkGroupDomainID ) )
-									{
-										role = SyncRoles.Master;
-									}
-									else
-									{
-										role = SyncRoles.Slave;
-
-										// Inform sync process that this collection needs to be pushed to the server.
-										Property m = new Property( PropertyTags.CreateMaster, true );
-										m.LocalProperty = true;
-										node.Properties.ModifyNodeProperty( m );
-									}
+									Property p = new Property( PropertyTags.CreateMaster, true );
+									p.LocalProperty = true;
+									node.Properties.ModifyNodeProperty( p );
 								}
-								else
-								{
-									role = SyncRoles.Local;
-								}
-
-								// Set the role.
-								Property p = new Property( PropertyTags.SyncRole, role );
-								p.LocalProperty = true;
-								node.Properties.ModifyNodeProperty( p );
 							}
 							else if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
 							{
@@ -871,16 +806,6 @@ namespace Simias.Storage
 						{
 							// Validate this Collection object.
 							ValidateNodeForCommit( node );
-
-							// If this is a collection object being created as a proxy, the sync role needs
-							// to be set to tell the sync process what to do with this collection.
-							if ( IsType( node, NodeTypes.CollectionType ) )
-							{
-								// Set the role.
-								Property p = new Property( PropertyTags.SyncRole, ( store.IsEnterpriseServer ) ? SyncRoles.Master : SyncRoles.Slave );
-								p.LocalProperty = true;
-								node.Properties.ModifyNodeProperty( p );
-							}
 
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );

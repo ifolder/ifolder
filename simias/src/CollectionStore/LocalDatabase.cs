@@ -51,13 +51,11 @@ namespace Simias.Storage
 		/// Constructor for this object that creates the local database object.
 		/// </summary>
 		/// <param name="storeObject">Store object.</param>
-		/// <param name="domainHost">Uri to where this collection is hosted.</param>
-		internal LocalDatabase( Store storeObject, Uri domainHost ) :
-			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, Storage.Domain.WorkGroupDomainID, domainHost )
+		/// <param name="domainID">Domain to which this collection belongs.</param>
+		internal LocalDatabase( Store storeObject, string domainID ) :
+			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, domainID )
 		{
 			properties.AddNodeProperty( PropertyTags.DefaultDomain, Storage.Domain.WorkGroupDomainID );
-			Synchronizable = false;
-			Sealed = true;
 		}
 
 		/// <summary>

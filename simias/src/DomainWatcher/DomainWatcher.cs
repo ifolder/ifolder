@@ -176,13 +176,7 @@ namespace Simias.DomainWatcher
 							if ( credType != CredentialType.Basic )
 							{
 								cMember = cRoster.GetCurrentMember();
-
-								// TODO: DomainCredentials need to support an empty string.
-								// Change "Not Needed" to empty when fixed.
-								if ( ( credType == CredentialType.None ) || ( credType == CredentialType.NotRequired ) )
-								{
-									credentials = "Not Needed";
-								}
+								credentials = null;
 							}
 							else
 							{

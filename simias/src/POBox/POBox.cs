@@ -107,7 +107,6 @@ namespace Simias.POBox
 			base (storeObject, collectionName, domainName)
 		{
 			SetType(this, typeof(POBox).Name);
-			Sealed = true;
 		}
 
 		/// <summary>
@@ -121,7 +120,6 @@ namespace Simias.POBox
 			base( storeObject, collectionName, collectionID, domainName )
 		{
 			SetType(this, typeof(POBox).Name);
-			Sealed = true;
 		}
 
 		#endregion

@@ -96,14 +96,21 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the synchronization role for this domain.
+		/// The syncing role of the domain.
 		/// </summary>
 		public SyncRoles Role
 		{
-			get
-			{
-				Roster roster = Roster;
-				return ( roster != null ) ? roster.Role : SyncRoles.None;
+			get 
+			{ 
+				Property p = properties.FindSingleValue( PropertyTags.SyncRole );
+				return ( p != null ) ? ( SyncRoles )p.Value : SyncRoles.None;
+			}
+
+			set	
+			{ 
+				Property p = new Property( PropertyTags.SyncRole, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p );
 			}
 		}
 
@@ -122,8 +129,9 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
-		internal Domain( string domainName, string domainID ) :
-			this ( domainName, domainID, null )
+		/// <param name="role">The synchronization role for this domain.</param>
+		internal Domain( string domainName, string domainID, SyncRoles role ) :
+			this ( domainName, domainID, null, role )
 		{
 		}
 
@@ -133,7 +141,8 @@ namespace Simias.Storage
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
 		/// <param name="description">String that describes this domain.</param>
-		internal Domain( string domainName, string domainID, string description ) :
+		/// <param name="role">The synchronization role for this domain.</param>
+		internal Domain( string domainName, string domainID, string description, SyncRoles role ) :
 			base ( domainName, domainID, NodeTypes.DomainType )
 		{
 			// Add the description attribute.
@@ -141,6 +150,9 @@ namespace Simias.Storage
 			{
 				properties.AddNodeProperty( PropertyTags.Description, description );
 			}
+
+			// Add the role attribute.
+			Role = role;
 		}
 
 		/// <summary>

@@ -56,10 +56,8 @@ namespace Simias.Storage
 		/// <param name="rosterID">Identifier for the roster.</param>
 		/// <param name="domain">Domain object that this object will be associated with.</param>
 		public Roster( Store storeObject, string rosterID, Domain domain ) :
-			base ( storeObject, domain.Name + " Roster", rosterID, NodeTypes.CollectionType, domain.ID, domain.HostAddress )
+			base ( storeObject, domain.Name + " Roster", rosterID, NodeTypes.RosterType, domain.ID )
 		{
-			properties.AddNodeProperty( PropertyTags.Types, NodeTypes.RosterType );
-			Sealed = true;
 		}
 
 		/// <summary>
