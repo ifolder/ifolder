@@ -31,7 +31,7 @@ using System.Windows.Forms;
 namespace Novell.iFolder.InvitationWizard
 {
 	/// <summary>
-	/// Summary description for InteriorPageTemplate.
+	/// A class that is a template for interior pages of a wizard.
 	/// </summary>
 	public class InteriorPageTemplate : Novell.iFolder.InvitationWizard.BaseWizardPage
 	{
@@ -47,6 +47,9 @@ namespace Novell.iFolder.InvitationWizard
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs an InteriorPageTemplate object.
+		/// </summary>
 		public InteriorPageTemplate()
 		{
 			// This call is required by the Windows.Forms Form Designer.
@@ -99,10 +102,9 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBox1.Location = new System.Drawing.Point(448, 8);
+			this.pictureBox1.Location = new System.Drawing.Point(452, 12);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(40, 40);
+			this.pictureBox1.Size = new System.Drawing.Size(32, 32);
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
 			// 
@@ -145,30 +147,31 @@ namespace Novell.iFolder.InvitationWizard
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the text of the header title.
+		/// </summary>
 		public string HeaderTitle
 		{
-			get
-			{
-				return headerTitle.Text;
-			}
-
-			set
-			{
-				headerTitle.Text = value;
-			}
+			get	{ return headerTitle.Text; }
+			set	{ headerTitle.Text = value;	}
 		}
 
+		/// <summary>
+		/// Gets/sets the text of the header subtitle.
+		/// </summary>
 		public string HeaderSubTitle
 		{
-			get
-			{
-				return headerSubTitle.Text;
-			}
+			get { return headerSubTitle.Text; }
+			set	{ headerSubTitle.Text = value; }
+		}
 
-			set
-			{
-				headerSubTitle.Text = value;
-			}
+		/// <summary>
+		/// Gets/sets the image used for the thumbnail
+		/// </summary>
+		public Image Thumbnail
+		{
+			get { return pictureBox1.Image;	}
+			set	{ pictureBox1.Image = value; }
 		}
 		#endregion
 	}

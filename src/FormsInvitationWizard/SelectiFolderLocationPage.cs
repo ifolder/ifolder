@@ -33,6 +33,10 @@ using Simias.POBox;
 
 namespace Novell.iFolder.InvitationWizard
 {
+
+	/// <summary>
+	/// Class for the wizard page where the iFolder location is selected.
+	/// </summary>
 	public class SelectiFolderLocationPage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
@@ -48,6 +52,9 @@ namespace Novell.iFolder.InvitationWizard
 
 		// TODO: this page is only needed for an iFolder collection.
 
+		/// <summary>
+		/// Constructs a SelectiFolderLocationPage object.
+		/// </summary>
 		public SelectiFolderLocationPage()
 		{
 			init = true;

@@ -31,7 +31,7 @@ using System.Windows.Forms;
 namespace Novell.iFolder.InvitationWizard
 {
 	/// <summary>
-	/// Summary description for WelcomePageTemplate.
+	/// A class that is used as a template for exterior wizard pages.
 	/// </summary>
 	public class WelcomePageTemplate : Novell.iFolder.InvitationWizard.BaseWizardPage
 	{
@@ -47,6 +47,9 @@ namespace Novell.iFolder.InvitationWizard
 		private System.ComponentModel.Container components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs a WelcomePageTemplate object.
+		/// </summary>
 		public WelcomePageTemplate()
 		{
 			// This call is required by the Windows.Forms Form Designer.
@@ -142,6 +145,9 @@ namespace Novell.iFolder.InvitationWizard
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Gets/sets the action text.
+		/// </summary>
 		public string ActionText
 		{
 			get
@@ -155,6 +161,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the welcome title.
+		/// </summary>
 		public string WelcomeTitle
 		{
 			get
@@ -168,6 +177,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the description text.
+		/// </summary>
 		public string DescriptionText
 		{
 			get
@@ -181,6 +193,9 @@ namespace Novell.iFolder.InvitationWizard
 			}
 		}
 
+		/// <summary>
+		/// Gets/sets the watermark image.
+		/// </summary>
 		public Image Watermark
 		{
 			get

@@ -33,6 +33,9 @@ using Simias.POBox;
 
 namespace Novell.iFolder.InvitationWizard
 {
+	/// <summary>
+	/// Class for the wizard page where the invitation file is selected.
+	/// </summary>
 	public class SelectInvitationPage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
@@ -45,6 +48,9 @@ namespace Novell.iFolder.InvitationWizard
 		private System.ComponentModel.IContainer components = null;
 		#endregion
 
+		/// <summary>
+		/// Constructs a SelectInvitationPage object.
+		/// </summary>
 		public SelectInvitationPage()
 		{
 			// This call is required by the Windows Form Designer.
@@ -110,12 +116,12 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(40, 104);
+			this.label2.Location = new System.Drawing.Point(40, 96);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(392, 32);
+			this.label2.Size = new System.Drawing.Size(392, 40);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "Type the path, including the filename, where you saved the iFolder Invitation (IF" +
-				"I) file on this computer, or click Browse and select the file.";
+			this.label2.Text = "Type the path, including the filename, where you saved the Collection Subscriptio" +
+				"n Information (CSI) file on this computer, or click Browse and select the file.";
 			// 
 			// label3
 			// 
@@ -201,7 +207,7 @@ namespace Novell.iFolder.InvitationWizard
 				catch (SimiasException e)
 				{
 					e.LogError();
-					MessageBox.Show("The file specified is not a valid iFolder invitation file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("The file specified is not a valid Collection Subscription Information file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					invitationFile.Focus();
 
 					return currentIndex;
@@ -210,7 +216,7 @@ namespace Novell.iFolder.InvitationWizard
 				{
 					// TODO - resource strings.
 					logger.Debug(e, "Invalid file");
-					MessageBox.Show("The file specified is not a valid iFolder invitation file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("The file specified is not a valid Collection Subscription Information file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					invitationFile.Focus();
 
 					return currentIndex;

@@ -31,7 +31,7 @@ using System.Windows.Forms;
 namespace Novell.iFolder.InvitationWizard
 {
 	/// <summary>
-	/// Summary description for BaseWizardPage.
+	/// The base class for a wizard page.
 	/// </summary>
 	public class BaseWizardPage : System.Windows.Forms.UserControl
 	{
@@ -39,8 +39,15 @@ namespace Novell.iFolder.InvitationWizard
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+
+		/// <summary>
+		/// The index of the previous wizard page.
+		/// </summary>
 		protected int previousIndex = 0;
 
+		/// <summary>
+		/// Constructs a BaseWizardPage object.
+		/// </summary>
 		public BaseWizardPage()
 		{
 			// This call is required by the Windows.Forms Form Designer.
@@ -82,11 +89,20 @@ namespace Novell.iFolder.InvitationWizard
 		#endregion
 
 		#region Virtual Methods
+		/// <summary>
+		/// This method is called when a user clicks the next button.
+		/// </summary>
+		/// <param name="currentIndex">The index of the current page.</param>
+		/// <returns>The index of the next page.</returns>
 		internal virtual int ValidatePage(int currentIndex)
 		{
 			return ++currentIndex;
 		}
 
+		/// <summary>
+		/// This method is called when a wizard page is activated.
+		/// </summary>
+		/// <param name="previousIndex">The index of the previous wizard page.</param>
 		internal virtual void ActivatePage(int previousIndex)
 		{
 			if (previousIndex > 0)
@@ -94,6 +110,10 @@ namespace Novell.iFolder.InvitationWizard
 			this.Show();
 		}
 
+		/// <summary>
+		/// This method is called when a wizard page is deactivated.
+		/// </summary>
+		/// <returns>The index of the previous wizard page.</returns>
 		internal virtual int DeactivatePage()
 		{
 			this.Hide();
