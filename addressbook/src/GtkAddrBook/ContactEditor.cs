@@ -135,6 +135,8 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.Entry			OtherStateEntry;
 		[Glade.Widget] internal Gtk.Entry			OtherCountryEntry;
 
+		// Dialog Widgets
+		[Glade.Widget] internal Gtk.Button			OKButton;
 
 		internal Gtk.Dialog		contactEditorDialog;
 		internal Contact		currentContact;
@@ -239,23 +241,17 @@ namespace Novell.iFolder
 			if(pb != null)
 				UserImage.FromPixbuf = pb;
 
-
 			try
 			{
 				preferredName = currentContact.GetPreferredName();
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine("We blew because there was not a preferred name, adding one...");
-				preferredName = new Name("", "");
-				preferredName.Preferred = true;
-				currentContact.AddName(preferredName);
 			}
 
 			FullNameEntry.Text = currentContact.FN;
 
 			NickNameEntry.Text = currentContact.Nickname;
-
 
 			PopulateEmails();
 			PopulatePhoneNumbers();
@@ -917,22 +913,38 @@ namespace Novell.iFolder
 			else
 				currentContact.Nickname = null;
 
-/*
-			// First Name 
-			if(firstNameEntry.Text.Length > 0)
-				preferredName.Given = firstNameEntry.Text;
+			if(FullNameEntry.Text.Length > 0)
+			{
+				if(preferredName != null)
+					preferredName.Delete();
+				
+				preferredName = new Name();
+				preferredName.Preferred = true;
+				currentContact.AddName(preferredName);
+
+				Novell.iFolder.FormsBookLib.FullNameParser.Parse(
+						FullNameEntry.Text, 
+						ref preferredName);
+			}
 			else
-				preferredName.Given = null;
-			// Last Name 
-			if(lastNameEntry.Text.Length > 0)
-				preferredName.Family = lastNameEntry.Text;
-			else
-				preferredName.Family = null;
-*/
+			{
+				if(preferredName != null)
+					preferredName.Delete();
+			}
+
+			if(	(currentContact.UserName == null) ||
+				(currentContact.UserName.Length == 0) )
+			{
+				if(MOneEntry.Text.Length > 0)
+					currentContact.UserName = MOneEntry.Text;
+				else if(MTwoEntry.Text.Length > 0)
+					currentContact.UserName = MTwoEntry.Text;
+				else if(FullNameEntry.Text.Length > 0)
+					currentContact.UserName = FullNameEntry.Text;
+			}
 
 			SaveCurrentEmails();
 			SavePhoneNumbers();
-
 
 			if(WebHomeEntry.Text.Length > 0)
 				currentContact.Url = WebHomeEntry.Text;
@@ -986,47 +998,74 @@ namespace Novell.iFolder
 
 
 		/// <summary>
-		/// Glade autoconnected method that is called when the email
-		/// button on the dialog is pressed.
-		/// </summary>
-		private void on_emailButton_clicked(object o, EventArgs args) 
-		{
-			Console.WriteLine("Edit Email here");
-		}
-
-		/// <summary>
-		/// Glade autoconnected method that is called when the phone
-		/// button on the dialog is pressed.
-		/// </summary>
-		private void on_phoneButton_clicked(object o, EventArgs args) 
-		{
-			Console.WriteLine("Edit Phone here");
-		}
-
-		/// <summary>
-		/// Glade autoconnected method that is called when the address
-		/// button on the dialog is pressed.
-		/// </summary>
-		private void on_addrChangeButton_clicked(object o, EventArgs args) 
-		{
-			Console.WriteLine("Edit Address here");
-		}
-
-		/// <summary>
 		/// Glade autoconnected method that is called when the name 
 		/// button on the dialog is pressed.
 		/// </summary>
-		private void on_nameButton_clicked(object o, EventArgs args) 
+		private void on_FullNameButton_clicked(object o, EventArgs args) 
 		{
-/*
-			NameEditor ne = new NameEditor(contactEditorDialog, preferredName);
+
+			if(preferredName != null)
+				preferredName.Delete();
+				
+			preferredName = new Name();
+			preferredName.Preferred = true;
+			currentContact.AddName(preferredName);
+
+			Novell.iFolder.FormsBookLib.FullNameParser.Parse(
+					FullNameEntry.Text, 
+					ref preferredName);
+
+			NameEditor ne = new NameEditor();
+			ne.TransientFor = contactEditorDialog;
+			ne.Name = preferredName;
 			if(ne.Run() == -5)
 			{
-				firstNameEntry.Text = preferredName.Given;
-				lastNameEntry.Text = preferredName.Family;
+				FullNameEntry.Text = preferredName.FN;
 			}
-*/
 		}
+
+
+
+
+
+		/// <summary>
+		/// Glade autoconnected method that is called when the  
+		/// text in a field changes
+		/// </summary>
+		private void on_NickNameEntry_changed(object o, EventArgs args) 
+		{
+			// Don't use nickname for this
+			//OKButton.Sensitive = CheckForIDText();
+		}
+		/// <summary>
+		/// Glade autoconnected method that is called when the  
+		/// text in a field changes
+		/// </summary>
+		private void on_FullNameEntry_changed(object o, EventArgs args) 
+		{
+			OKButton.Sensitive = CheckForIDText();
+		}
+		/// <summary>
+		/// Glade autoconnected method that is called when the  
+		/// text in a field changes
+		/// </summary>
+		private void on_MOneEntry_changed(object o, EventArgs args) 
+		{
+			OKButton.Sensitive = CheckForIDText();
+		}
+
+
+		private bool CheckForIDText()
+		{
+			if(	(FullNameEntry.Text.Length > 0) ||
+				(NickNameEntry.Text.Length > 0) ||
+				(MOneEntry.Text.Length > 0) )
+				return true;
+
+			return false;
+		}
+
+
 
 		/// <summary>
 		/// Glade autoconnected method that is called when the photo

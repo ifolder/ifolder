@@ -50,9 +50,11 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkButton" id="button143">
+	    <widget class="GtkButton" id="OKButton">
 	      <property name="visible">True</property>
+	      <property name="sensitive">False</property>
 	      <property name="can_default">True</property>
+	      <property name="has_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
@@ -180,7 +182,8 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
+			  <signal name="changed" handler="on_FullNameEntry_changed" last_modification_time="Wed, 28 Apr 2004 16:51:18 GMT"/>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -198,6 +201,7 @@
 			  <property name="label" translatable="yes">Full _Name...</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <signal name="clicked" handler="on_FullNameButton_clicked" last_modification_time="Wed, 28 Apr 2004 19:43:07 GMT"/>
 			</widget>
 			<packing>
 			  <property name="left_attach">0</property>
@@ -244,7 +248,8 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
+			  <signal name="changed" handler="on_NickNameEntry_changed" last_modification_time="Wed, 28 Apr 2004 16:51:24 GMT"/>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -403,7 +408,8 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
+			      <signal name="changed" handler="on_MOneEntry_changed" last_modification_time="Wed, 28 Apr 2004 16:51:29 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">1</property>
@@ -424,7 +430,7 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">3</property>
@@ -466,7 +472,7 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">3</property>
@@ -577,7 +583,7 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">1</property>
@@ -657,7 +663,7 @@
 				      <property name="text" translatable="yes"></property>
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
-				      <property name="activates_default">False</property>
+				      <property name="activates_default">True</property>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">1</property>
@@ -678,7 +684,7 @@
 				      <property name="text" translatable="yes"></property>
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
-				      <property name="activates_default">False</property>
+				      <property name="activates_default">True</property>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">3</property>
@@ -789,7 +795,7 @@
 				      <property name="text" translatable="yes"></property>
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
-				      <property name="activates_default">False</property>
+				      <property name="activates_default">True</property>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">3</property>
@@ -900,7 +906,7 @@
 				      <property name="text" translatable="yes"></property>
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
-				      <property name="activates_default">False</property>
+				      <property name="activates_default">True</property>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">1</property>
@@ -1039,7 +1045,7 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">1</property>
@@ -1129,7 +1135,7 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">1</property>
@@ -1219,7 +1225,7 @@
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
 			      <property name="invisible_char" translatable="yes">*</property>
-			      <property name="activates_default">False</property>
+			      <property name="activates_default">True</property>
 			    </widget>
 			    <packing>
 			      <property name="left_attach">1</property>
@@ -1627,7 +1633,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -1648,7 +1654,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -1669,7 +1675,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -1690,7 +1696,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -1780,7 +1786,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -1825,7 +1831,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -1870,7 +1876,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -1915,7 +1921,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -1960,7 +1966,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2109,7 +2115,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2231,7 +2237,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2276,7 +2282,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2345,7 +2351,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2390,7 +2396,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -2411,7 +2417,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2456,7 +2462,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -2546,7 +2552,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2591,7 +2597,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2660,7 +2666,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2705,7 +2711,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -2726,7 +2732,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2771,7 +2777,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -2861,7 +2867,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2906,7 +2912,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -2975,7 +2981,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -3020,7 +3026,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>
@@ -3041,7 +3047,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
@@ -3086,7 +3092,7 @@
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
+			  <property name="activates_default">True</property>
 			</widget>
 			<packing>
 			  <property name="left_attach">3</property>

@@ -36,6 +36,27 @@ namespace Novell.iFolder
 {
 	public class NameEditor
 	{
+		public Novell.AddressBook.Name Name
+		{
+			get
+			{
+				return this.name;
+			}
+
+			set
+			{
+				this.name = value;
+			}
+		}
+
+		public Gtk.Window TransientFor
+		{
+			set
+			{
+				nameEditorDialog.TransientFor = value;
+			}
+		}
+
 		[Glade.Widget] private Gtk.Entry titleEntry = null;
 		[Glade.Widget] private Gtk.Entry firstEntry = null;
 		[Glade.Widget] private Gtk.Entry middleEntry = null;
@@ -45,21 +66,21 @@ namespace Novell.iFolder
 		private Gtk.Dialog	nameEditorDialog;
 		private Novell.AddressBook.Name name;
 
-		public NameEditor(Gtk.Window parentwin, Novell.AddressBook.Name name) 
+		public NameEditor()
 		{
-			this.name = name;
-			Init();
-
-			nameEditorDialog.TransientFor = parentwin;
+			InitGlade();
 		}
 
-		private void Init()
+		private void InitGlade()
 		{
-			Glade.XML gxml = new Glade.XML ("contact-editor.glade",
-					"nameEditor", null);
+			Glade.XML gxml = new Glade.XML ("name-editor.glade",
+					"NameEditorDialog", null);
 			gxml.Autoconnect (this);
-			nameEditorDialog = (Gtk.Dialog) gxml.GetWidget("nameEditor");
+			nameEditorDialog = (Gtk.Dialog) gxml.GetWidget("NameEditorDialog");
+		}
 
+		private void PopulateWidgets()
+		{
 			if(name.Prefix != null)
 				titleEntry.Text = name.Prefix;
 
@@ -81,6 +102,10 @@ namespace Novell.iFolder
 			if(nameEditorDialog != null)
 			{
 				int rc;
+				if(name == null)
+					name = new Name();
+
+				PopulateWidgets();
 
 				nameEditorDialog.ShowAll();
 				rc = nameEditorDialog.Run();
