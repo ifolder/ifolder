@@ -9,7 +9,9 @@ POService_FLAGS = $(CSC_EXEFLAG)
 POService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll
 POService_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = $(POService_CSFILES)
+PROJECT_FILES = $(srcdir)/POService.csproj
+
+EXTRA_DIST = $(POService_CSFILES) $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 

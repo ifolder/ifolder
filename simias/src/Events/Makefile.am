@@ -9,7 +9,9 @@ EventService_FLAGS = $(CSC_EXEFLAG)
 EventService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll
 EventService_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = $(EventService_CSFILES)
+PROJECT_FILES = $(srcdir)/EventService/EventService.csproj
+
+EXTRA_DIST = $(EventService_CSFILES) $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 

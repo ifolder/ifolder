@@ -9,7 +9,9 @@ SyncService_FLAGS = $(CSC_EXEFLAG)
 SyncService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Simias.dll
 SyncService_LIBPATH = ../Simias.dll
 
-EXTRA_DIST = $(SyncService_CSFILES) $(srcdir)/remoting.config
+PROJECT_FILES = $(srcdir)/SyncService.csproj
+
+EXTRA_DIST = $(SyncService_CSFILES) $(srcdir)/remoting.config $(PROJECT_FILES)
 
 all: SyncService.exe
 

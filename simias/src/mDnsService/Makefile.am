@@ -9,7 +9,9 @@ mDnsService_FLAGS = $(CSC_EXEFLAG)
 mDnsService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll mDnsResponder.dll
 mDnsService_LIBPATH = ../Simias.dll $(MDNSRESPONDER_DIR)
 
-EXTRA_DIST = $(mDnsService_CSFILES)
+PROJECT_FILES = $(srcdir)/mDnsService.csproj
+
+EXTRA_DIST = $(mDnsService_CSFILES) $(PROJECT_FILES)
 
 CUR_DIR := $(shell pwd)
 
