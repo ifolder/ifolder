@@ -788,6 +788,19 @@
             The expected message
             </summary>
         </member>
+        <member name="T:NUnit.Framework.ExplicitAttribute">
+            <summary>
+            ExplicitAttribute marks a test or test fixture so that it will
+            only be run if explicitly executed from the gui or command line
+            or if it is included by use of a filter. The test will not be
+            run simply because an enclosing suite is run.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.ExplicitAttribute.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="T:NUnit.Framework.IgnoreAttribute">
             <summary>
             IgnoreAttribute.
@@ -819,11 +832,6 @@
         <member name="M:NUnit.Framework.TestCase.TearDown">
             <summary>
             TearDown method
-            </summary>
-        </member>
-        <member name="T:NUnit.Framework.PlatformAttribute">
-            <summary>
-            Summary description for PlatformAttribute.
             </summary>
         </member>
         <member name="T:NUnit.Framework.SetUpAttribute">
