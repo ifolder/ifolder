@@ -142,7 +142,9 @@ namespace Simias.Web
 					{
 						// Get the information about this domain.
 						DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
-						if ( ( onlySlaves == false ) || ( domainInfo.Type == DomainType.Slave ) )
+						if ( ( ( onlySlaves == false ) &&
+							( domainInfo.Type.Equals( DomainType.Master ) || domainInfo.Type.Equals( DomainType.Slave ) ) ) ||
+							( domainInfo.Type.Equals( DomainType.Slave ) ) )
 						{
 							domains.Add(domainInfo);
 						}
