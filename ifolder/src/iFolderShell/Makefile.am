@@ -6,8 +6,8 @@ iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES = 
 iFolderComponent_RESOURCES =
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
-iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) iFolder.dll CollectionStore.dll System.Drawing.dll System.Windows.Forms.dll AddressBook.dll FormsBookLib.dll Common.dll
-iFolderComponent_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
+iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll FormsBookLib.dll Simias.dll
+iFolderComponent_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_PATH)/lib ../iFolder
 
 NUNIT_TESTS := iFolderComponentTests.dll
 
@@ -54,7 +54,7 @@ iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
 iFolderComponent.dll: $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
 
 iFolderComponentTests.dll: $(iFolderComponentTests_CSFILES) $(iFolderComponentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponentTests_FLAGS) $(iFolderComponentTests_LIBS:%=/r:%) $(iFolderComponentTests_LIBPATH:%=/lib:%) $(iFolderComponentTests_CSFILES_CSC)
@@ -67,16 +67,16 @@ endif
 endif
 
 install-exec-local: iFolderComponent.dll iFolderShell.dll
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderComponent.dll iFolderShell.dll iFolderComponentTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(libdir); rm -f iFolderComponent.dll iFolderShell.dll iFolderComponentTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderComponentTests.test.xml $(NUNIT_TESTS)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
+	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderComponentTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(NUNIT_TESTS) iFolderComponent.doc.xml iFolderComponentTests.test.xml iFolderShell.exp iFolderShell.lib
 

@@ -90,29 +90,19 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
                 <Reference
-                    Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\..\..\simias\src\AddressBook\AddressBook.dll"
-                />
-                <Reference
-                    Name = "CollectionStore"
-                    AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\bin\CollectionStore.dll"
-                />
-                <Reference
-                    Name = "Common"
-                    AssemblyName = "Common"
-                    HintPath = "..\..\..\bin\Common.dll"
-                />
-                <Reference
                     Name = "FormsBookLib"
                     AssemblyName = "FormsBookLib"
                     HintPath = "..\..\..\bin\FormsBookLib.dll"
                 />
                 <Reference
-                    Name = "iFolder"
-                    AssemblyName = "iFolder"
-                    HintPath = "..\iFolder\iFolder.dll"
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
+                />
+                <Reference
+                    Name = "Novell.iFolder"
+                    AssemblyName = "Novell.iFolder"
+                    HintPath = "..\iFolder\Novell.iFolder.dll"
                 />
             </References>
         </Build>
