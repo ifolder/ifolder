@@ -109,9 +109,24 @@ namespace Novell.iFolder
 				SyncSpinButton.Value = ifolder.SyncInterval;
 			}
 
-			SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
-			UploadValue.Text = string.Format("{0}", ss.SyncByteCount);
-			FFSyncValue.Text = string.Format("{0}", ss.SyncNodeCount);
+			try
+			{
+				SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
+				UploadValue.Text = string.Format("{0}", ss.SyncByteCount);
+				FFSyncValue.Text = string.Format("{0}", ss.SyncNodeCount);
+			}
+			catch(Exception e)
+			{
+				UploadValue.Text = "N/A";
+				FFSyncValue.Text = "N/A";
+
+//				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+//													topLevelWindow, e);
+//				ied.Run();
+//				ied.Hide();
+//				ied.Destroy();
+			}
+
 
 
 			try
@@ -124,11 +139,11 @@ namespace Novell.iFolder
 			{
 				ifolderUser = null;
 				ds = null;
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													topLevelWindow, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
+//				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+//													topLevelWindow, e);
+//				ied.Run();
+//				ied.Hide();
+//				ied.Destroy();
 			}
 
 			// check for Admin rights
@@ -262,8 +277,15 @@ namespace Novell.iFolder
 				SetGraph(ds.UsedSpace, ds.Limit);
 
 				// Add one because there is no iFolder that is zero
-				tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
-				UsedValue.Text = string.Format("{0}", tmpValue);
+				if(ds.UsedSpace == 0)
+				{
+					UsedValue.Text = "0";
+				}
+				else
+				{
+					tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
+					UsedValue.Text = string.Format("{0}", tmpValue);
+				}
 			}
 
 		}

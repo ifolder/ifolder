@@ -260,14 +260,75 @@ namespace Novell.iFolder
 
 		private void OnAccessClicked(object o, EventArgs args)
 		{
-			iFolderAccessDialog accDialog = new iFolderAccessDialog( 
-						topLevelWindow, "fred", "ReadWrite", false, false);
+			TreeModel tModel;
+			iFolderAccessDialog accDialog = null;
+			string defaultRights = "ReadWrite";
+			string userName = null;
+			bool allowOwner = false;
+
+			TreeSelection tSelect = UserTreeView.Selection;
+
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				Array treePaths = tSelect.GetSelectedRows(out tModel);
+
+				foreach(TreePath tPath in treePaths)
+				{
+					TreeIter iter;
+
+					if(UserTreeStore.GetIter(out iter, tPath))
+					{
+						iFolderUser user = 
+								(iFolderUser) tModel.GetValue(iter, 0);
+						userName = user.Name;
+						defaultRights = user.Rights;
+						if(user.State == "Member")
+							allowOwner = true;
+					}
+					break;
+				}
+			}
+
+			accDialog = new iFolderAccessDialog( 
+				topLevelWindow, userName, defaultRights, allowOwner);
 
 			int rc = accDialog.Run();
 			accDialog.Hide();
 			if(rc == -5)
 			{
-				// Do something here	
+				string newrights = accDialog.Rights;
+
+				Array treePaths = tSelect.GetSelectedRows(out tModel);
+
+				foreach(TreePath tPath in treePaths)
+				{
+					TreeIter iter;
+
+					if(UserTreeStore.GetIter(out iter, tPath))
+					{
+						iFolderUser user = 
+								(iFolderUser) tModel.GetValue(iter,0);
+
+						try
+						{
+    						ifws.SetUserRights( ifolder.ID,
+												user.UserID,
+												newrights);
+							user.Rights = newrights;
+							tModel.SetValue(iter, 0, user);
+						}
+						catch(Exception e)
+						{
+							iFolderExceptionDialog ied = 
+									new iFolderExceptionDialog(
+											topLevelWindow, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
+						}
+					}
+				}
 			}
 			accDialog.Destroy();
 			accDialog = null;
