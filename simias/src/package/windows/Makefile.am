@@ -2,7 +2,7 @@ EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias-install.sln $(srcdir)/simias
 
 all: simias.msi
 
-simias.msi: simias simias.msm simias-install.sln simias-msi/simias-msi.vdproj
+simias.msi: simias.msm simias-install.sln simias-msi/simias-msi.vdproj
 	"$(VSINSTALLDIR)/devenv.exe" simias-install.sln /build $(DEVENV_CONFIGURATION) /project simias-msi /out devenv-simias-msi.log
 	mv simias-msi/$(DEVENV_CONFIGURATION)/simias.msi $@
 
