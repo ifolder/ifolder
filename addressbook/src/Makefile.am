@@ -14,7 +14,7 @@ SUBDIRS = FormsBookLib FormsAddrBook
 endif
 
 #DIST_SUBDIRS = AddressBook AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook AddressBookTests
-DIST_SUBDIRS = AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook AddressBookTests
+DIST_SUBDIRS = AddressBookCmd GtkAddrBook FormsBookLib FormsAddrBook AddressBookTests WebService
 
 EXTRA_DIST = $(srcdir)/addressbook-snakeoil.keys $(srcdir)/install-addressbook-to-gac.in
 

@@ -380,6 +380,7 @@ src/GtkAddrBook/contactbrowser
 src/GtkAddrBook/invitationassistant
 src/GtkAddrBook/poboxviewer
 src/GtkAddrBook/Util.cs
+src/WebService/Makefile
 test/Makefile
 test/AddressBook/Makefile
 package/Makefile
