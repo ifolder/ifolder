@@ -52,8 +52,6 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public SyncCollectionInfo Ping()
 		{
-			log.Debug("About to new up a SyncCollectionInfo dude...");
-
 			SyncCollectionInfo info = new SyncCollectionInfo(collection);
 
 			log.Debug("Preparing Ping Response: {0}", info);

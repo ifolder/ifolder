@@ -71,6 +71,16 @@ namespace Simias.Sync
 			return manager.GetCollectionService(id);
 		}
 
+		/// <summary>
+		/// Does the collection exist.
+		/// </summary>
+		/// <param name="id">The collection id.</param>
+		/// <returns>true if the collection exists.</returns>
+		public bool DoesCollectionExist(string id)
+		{
+			return manager.DoesCollectionExist(id);
+		}
+
 		#region Properties
 		
         /// <summary>

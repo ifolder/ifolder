@@ -157,27 +157,28 @@ namespace Simias.Sync
 		{
 			SyncCollectionService service = null;
 
-			if (collectionManagers.Contains(id))
+			lock(collectionManagers.SyncRoot)
 			{
-				SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
-
-				service = scm.GetService();
-
-				log.Debug("Created collection service: {0}", service.Ping().ToString());
-			}
-			else
-			{
-				log.Debug("No collection service for collection: {0}", id);
-	
-				if (store.GetCollectionByID(id) != null)
+				if (collectionManagers.Contains(id))
 				{
-					// we are in a bad state with now collection manager / service
-					throw new ApplicationException(
-						String.Format("No service found for an existing collection: {0}", id));
+					SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
+
+					service = scm.GetService();
+
+					log.Debug("Serving collection service: {0}", id);
+				}
+				else
+				{
+					log.Debug("No collection service found for collection: {0}", id);
 				}
 			}
 
 			return service;
+		}
+
+		internal bool DoesCollectionExist(string id)
+		{
+			return (store.GetCollectionByID(id) != null);
 		}
 
 		private void AddCollectionManager(string id)

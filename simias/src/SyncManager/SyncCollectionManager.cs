@@ -255,6 +255,8 @@ namespace Simias.Sync
 				// monitor try/catch
 				try
 				{
+					log.Debug("Sync Work {0} - Waiting", collection.Name);
+
 					// monitor enter
 					Monitor.Enter(typeof(SyncCollectionManager));
 
@@ -302,14 +304,24 @@ namespace Simias.Sync
 							// removed collection?
 							if (collectionService == null)
 							{
-								log.Debug("The collection ({0}) is no longer on the server.", collection.Name);
-								log.Debug("Removing collection ({0}) from the client.", collection.Name);
+								log.Debug("No {0} collection service found.", collection.Name);
+								
+								if (storeService.DoesCollectionExist(collection.ID))
+								{
+									log.Debug("{0} collection found on server.", collection.Name);
+								}
+								else
+								{
+									log.Debug("{0} collection not found on server.", collection.Name);
+									log.Debug("Reverting {0} collection on the client.", collection.Name);
 							
-								// delete the colection
-								collection.Commit(collection.Delete());
+									// delete the colection
+									collection.Commit(collection.Delete());
 							
-								// stop the slave
-								working = false;
+									// stop the slave
+									working = false;
+								}
+
 								continue;
 							}
 
