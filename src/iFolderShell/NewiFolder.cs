@@ -139,8 +139,8 @@ namespace Novell.iFolder.iFolderCom
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(368, 32);
 			this.label2.TabIndex = 4;
-			this.label2.Text = "iFolders are identified by the Novell iFolder emblem being placed on the folder a" +
-				"s shown.";
+			this.label2.Text = "iFolders are identified by the iFolder emblem being placed on the folder as shown" +
+				".";
 			// 
 			// label3
 			// 
