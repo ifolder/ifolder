@@ -33,6 +33,17 @@
 
 int simias_get_local_service_url(char **url);
 
+/**
+ * This function gets the username and password needed to invoke calls to the
+ * local Simias and iFolder WebServices.
+ *
+ * param: username (char[] that will be filled using sprintf)
+ * param: password (char[] that will be filled using sprintf)
+ *
+ * returns: Returns 0 if successful or -1 if there's an error.
+ */
+int simias_get_web_service_credential(char *username, char *password);
+
 void simias_sync_member_list();
 void simias_update_member(const char *account_name, const char *account_prpl_id,
 						  const char *buddy_name, const char *machine_name);

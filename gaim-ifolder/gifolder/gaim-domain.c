@@ -54,6 +54,7 @@ static char *the_soap_url = NULL;
 /* Forward Declarations of Static Functions */
 static char *simias_get_user_profile_dir_path(char *dest_path);
 static char *parse_local_service_url(FILE *file);
+static char *parse_web_service_password(FILE *file);
 
 /**
  * Retrieves the RSACryptoProvider (public and private keys) for the first time
@@ -86,6 +87,8 @@ simias_sync_member_list()
 	struct soap soap;
 	struct _ns1__SynchronizeMemberList req;
 	struct _ns1__SynchronizeMemberListResponse resp;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
@@ -93,6 +96,10 @@ simias_sync_member_list()
 	}
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__SynchronizeMemberList(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		cleanup_gsoap(&soap);
@@ -110,6 +117,8 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	struct soap soap;
 	struct _ns1__UpdateMember req;
 	struct _ns1__UpdateMemberResponse resp;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
@@ -123,6 +132,10 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	req.MachineName = (char *)machine_name;
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__UpdateMember(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		cleanup_gsoap(&soap);
@@ -230,6 +243,8 @@ setup_keypair()
 	struct soap soap;
 	struct _ns1__GetRSACredential req;
 	struct _ns1__GetRSACredentialResponse resp;
+	char username[512];
+	char password[1024];
 
 	/* We need to go get the public/private key from Simias */
 	soap_url = get_soap_url(TRUE);
@@ -239,6 +254,10 @@ setup_keypair()
 	}
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__GetRSACredential(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		fprintf(stderr, "Error calling soap_call___ns1__GetRSACredential() in setup_keypair()\n");
@@ -281,6 +300,8 @@ simias_rsa_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_stri
 	struct soap soap;
 	struct _ns1__RSAEncryptString req;
 	struct _ns1__RSAEncryptStringResponse resp;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
@@ -292,6 +313,10 @@ simias_rsa_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_stri
 	req.UnencryptedString = (char *)unencrypted_string;
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__RSAEncryptString(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		fprintf(stderr, "Error calling soap_call___ns1__RSAEncryptString() in simias_encrypt_string()\n");
@@ -324,6 +349,8 @@ simias_rsa_decrypt_string(const char *rsaCryptoXml, const char *encrypted_string
 	struct soap soap;
 	struct _ns1__RSADecryptString req;
 	struct _ns1__RSADecryptStringResponse resp;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
@@ -335,6 +362,10 @@ simias_rsa_decrypt_string(const char *rsaCryptoXml, const char *encrypted_string
 	req.EncryptedString = (char *)encrypted_string;
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__RSADecryptString(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		fprintf(stderr, "Error calling soap_call___ns1__RSADecryptString() in simias_decrypt_string()\n");
@@ -404,6 +435,8 @@ setup_des_key()
 	struct soap soap;
 	struct _ns1__GenerateDESKey req;
 	struct _ns1__GenerateDESKeyResponse resp;
+	char username[512];
+	char password[1024];
 
 	/* We need to go get the public/private key from Simias */
 	soap_url = get_soap_url(TRUE);
@@ -413,6 +446,10 @@ setup_des_key()
 	}
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__GenerateDESKey(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		fprintf(stderr, "Error calling soap_call___ns1__GetRSACredential() in setup_keypair()\n");
@@ -454,6 +491,8 @@ simias_des_encrypt_string(const char *desKey, const char *unencrypted_string, ch
 	struct soap soap;
 	struct _ns1__DESEncryptString req;
 	struct _ns1__DESEncryptStringResponse resp;
+	char username[512];
+	char password[1024];
 
 	/* We need to go get the public/private key from Simias */
 	soap_url = get_soap_url(TRUE);
@@ -467,6 +506,10 @@ simias_des_encrypt_string(const char *desKey, const char *unencrypted_string, ch
 	req.UnencryptedString = (char *)unencrypted_string;
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__DESEncryptString(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		fprintf(stderr, "Error calling soap_call___ns1__DESEncryptString() in simias_des_encrypt_string()\n");
@@ -502,6 +545,8 @@ simias_des_decrypt_string(const char *desKey, const char *encrypted_string, char
 	struct soap soap;
 	struct _ns1__DESDecryptString req;
 	struct _ns1__DESDecryptStringResponse resp;
+	char username[512];
+	char password[1024];
 
 	/* We need to go get the public/private key from Simias */
 	soap_url = get_soap_url(TRUE);
@@ -515,6 +560,10 @@ simias_des_decrypt_string(const char *desKey, const char *encrypted_string, char
 	req.EncryptedString = (char *)encrypted_string;
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__DESDecryptString(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 		fprintf(stderr, "Error calling soap_call___ns1__DESDecryptString() in simias_des_decrypt_string()\n");
@@ -551,6 +600,8 @@ simias_get_user_info(char **machineName, char **userID, char **simiasURL)
 	struct soap soap;
 	struct _ns1__GetUserInfo req;
 	struct _ns1__GetUserInfoResponse resp;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
@@ -558,6 +609,10 @@ simias_get_user_info(char **machineName, char **userID, char **simiasURL)
 	}
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__GetUserInfo(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 soap_print_fault(&soap, stderr);
@@ -594,6 +649,8 @@ simias_get_machine_name(char **machineName)
 	struct soap soap;
 	struct _ns1__GetMachineName req;
 	struct _ns1__GetMachineNameResponse resp;
+	char username[512];
+	char password[1024];
 	
 	soap_url = get_soap_url(TRUE);
 	if (!soap_url) {
@@ -601,6 +658,10 @@ simias_get_machine_name(char **machineName)
 	}
 	
 	init_gsoap(&soap);
+	if (simias_get_web_service_credential(username, password) == 0) {
+		soap.userid = username;
+		soap.passwd = password;
+	}
 	soap_call___ns1__GetMachineName(&soap, soap_url, NULL, &req, &resp);
 	if (soap.error) {
 soap_print_fault(&soap, stderr);
@@ -796,6 +857,87 @@ simias_get_local_service_url(char **url)
 	if (!(*url)) {
 		return -3;
 	}
+	
+	return 0;
+}
+
+static char *
+parse_web_service_password(FILE *file)
+{
+	char line[1024];
+	int i;
+
+	if (!fgets(line, sizeof(line), file))
+	{
+		fprintf(stderr, "Password file empty or corrupt\n");
+		return NULL;
+	}
+	
+	/* Remove any newline chars */
+	for (i = strlen(line) - 1; i > 0; i--)
+	{
+		if (line[i] == '\n' || line[i] == '\r')
+			line[i] = '\0';
+		else
+			break;
+	}
+
+	return strdup(line);
+}
+
+/**
+ * This function gets the username and password needed to invoke calls to the
+ * local Simias and iFolder WebServices.
+ *
+ * param: username (char[] that will be filled using sprintf)
+ * param: password (char[] that will be filled using sprintf)
+ *
+ * returns: Returns 0 if successful or -1 if there's an error.
+ */
+int
+simias_get_web_service_credential(char *username, char *password)
+{
+	char user_profile_dir[1024];
+	char *user;
+	char *pw;
+	
+	user = getenv("USER");
+	
+	if (!user)
+		return -1;
+
+
+	char simias_password_file_path[1024];
+	FILE *simias_password_file;
+	
+	if (!simias_get_user_profile_dir_path(user_profile_dir)) {
+		return -1;
+	}
+
+	sprintf(simias_password_file_path, "%s%s.local.if",
+			user_profile_dir, DIR_SEP);
+	
+	/* Attempt to open the file */
+	simias_password_file = fopen(simias_password_file_path, "r");
+	if (!simias_password_file) {
+		fprintf(stderr, "Error opening \"%s\"\n", simias_password_file_path);
+		return -1;
+	}
+
+	pw = parse_web_service_password(simias_password_file);
+
+	fclose(simias_password_file);
+	
+	if (!(password)) {
+		fprintf(stderr, "Couldn't find the web service password in \"%s\"\n",
+					 simias_password_file_path);
+		return -1;
+	}
+	
+	sprintf(password, "%s", pw);
+	free(pw);
+	
+	sprintf(username, "%s", user);
 	
 	return 0;
 }
