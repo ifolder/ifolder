@@ -362,11 +362,20 @@ namespace Novell.iFolder.InvitationWizard
 				// Accept/decline the invitation
 				try
 				{
-					subscription.Accept(store, acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined);
-					if (poBox == null)
+					switch (subscription.SubscriptionState)
 					{
-						poBox = POBox.GetPOBox(store, subscription.DomainID);
+						case SubscriptionStates.Received:
+							subscription.Accept(store, acceptDeclinePage.Accept ? SubscriptionDispositions.Accepted : SubscriptionDispositions.Declined);
+							if (poBox == null)
+							{
+								poBox = POBox.GetPOBox(store, subscription.DomainID);
+							}
+							break;
+						case SubscriptionStates.Ready:
+							subscription.CreateSlave(store);
+							break;
 					}
+
 					poBox.Commit(subscription);
 				}
 				catch (SimiasException ex)
