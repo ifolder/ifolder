@@ -1,0 +1,183 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this program; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Author: Mike Lasky <mlasky@novell.com>
+ *
+ ***********************************************************************/
+
+using System;
+using System.Collections;
+using System.Security.Cryptography;
+using System.Xml;
+
+using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
+
+namespace Simias.Storage
+{
+	/// <summary>
+	/// Class that represents a member that has rights to a collection.
+	/// </summary>
+	[ Serializable ]
+	public class Member : Node
+	{
+		#region Properties
+		/// <summary>
+		/// Gets the access control entry stored on this object.
+		/// </summary>
+		internal AccessControlEntry Ace
+		{
+			get
+			{
+				// Get the user ID from the ace.
+				Property p = properties.FindSingleValue( PropertyTags.Ace );
+				if ( p == null )
+				{
+					throw new DoesNotExistException( String.Format( "Member object {0} - ID: {1} does not contain {2} property.", name, id, PropertyTags.Ace ) );
+				}
+
+				return new AccessControlEntry( p );
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets whether this Member object is the collection owner.
+		/// </summary>
+		internal bool IsOwner
+		{
+			get { return properties.HasProperty( PropertyTags.Owner ); }
+			set 
+			{ 
+				if ( value == true )
+				{
+					properties.ModifyNodeProperty( PropertyTags.Owner, true ); 
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.Owner );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the public key stored on this Member object. May return null if no public key is set on the object.
+		/// </summary>
+		internal RSACryptoServiceProvider PublicKey
+		{
+			get
+			{
+				RSACryptoServiceProvider pk = null;
+
+				Property p = properties.GetSingleProperty( PropertyTags.PublicKey );
+				if ( p != null )
+				{
+					pk = new RSACryptoServiceProvider( Identity.dummyCsp );
+					pk.FromXmlString( p.ToString() );
+				}
+
+				return pk;
+			}
+		}
+
+		/// <summary>
+		/// Gets the user identitifer for this object.
+		/// </summary>
+		public string UserID
+		{
+			get { return Ace.ID; }
+		}
+		#endregion
+
+		#region Constructors
+		/// <summary>
+		/// Constructor for creating a new Member object.
+		/// </summary>
+		/// <param name="userName">User name of the member.</param>
+		/// <param name="userGuid">Unique identifier for the user.</param>
+		/// <param name="rights">Collection access rights granted to the user.</param>
+		public Member( string userName, string userGuid, Access.Rights rights ) :
+			base ( userName, Guid.NewGuid().ToString(), NodeTypes.MemberType )
+		{
+			// Create an access control entry and store it on the object.
+			AccessControlEntry ace = new AccessControlEntry( userGuid, rights );
+			ace.Set( this );
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Member object.
+		/// </summary>
+		/// <param name="userName">User name of the member.</param>
+		/// <param name="userGuid">Unique identifier for the user.</param>
+		/// <param name="rights">Collection access rights granted to the user.</param>
+		/// <param name="publicKey">Public key that will be used to authenticate the user.</param>
+		public Member( string userName, string userGuid, Access.Rights rights, RSACryptoServiceProvider publicKey ) :
+			base ( userName, Guid.NewGuid().ToString(), NodeTypes.MemberType )
+		{
+			// Create an access control entry and store it on the object.
+			AccessControlEntry ace = new AccessControlEntry( userGuid, rights );
+			ace.Set( this );
+
+			// Add the public key as a property of the object.
+			if ( publicKey != null )
+			{
+				properties.ModifyNodeProperty( PropertyTags.PublicKey, publicKey.ToXmlString( false ) );
+			}
+		}
+
+		/// <summary>
+		/// Constructor that creates a Member object from a Node object.
+		/// </summary>
+		/// <param name="node">Node object to create the Member object from.</param>
+		public Member( Node node ) :
+			base( node )
+		{
+			if ( type != NodeTypes.MemberType )
+			{
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.MemberType, type ) );
+			}
+		}
+
+		/// <summary>
+		/// Constructor that creates a Member object from a ShallowNode object.
+		/// </summary>
+		/// <param name="collection">Collection that the specified Node object belongs to.</param>
+		/// <param name="shallowNode">ShallowNode object to create the Member object from.</param>
+		public Member( Collection collection, ShallowNode shallowNode ) :
+			base( collection, shallowNode )
+		{
+			if ( type != NodeTypes.MemberType )
+			{
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.MemberType, type ) );
+			}
+		}
+
+		/// <summary>
+		/// Constructor that creates a Member object from an Xml document object.
+		/// </summary>
+		/// <param name="document">Xml document object to create the Member object from.</param>
+		internal Member( XmlDocument document ) :
+			base( document )
+		{
+			if ( type != NodeTypes.MemberType )
+			{
+				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.MemberType, type ) );
+			}
+		}
+		#endregion
+	}
+}

@@ -145,7 +145,7 @@ namespace Simias.Storage
 		{
 			this.collection = collection;
 			this.desiredRights = desiredRights;
-			this.currentUserGuid = collection.DomainIdentity;
+			this.currentUserGuid = collection.CurrentUserID;
 			this.ownerAccess = false;
 		}
 
@@ -159,7 +159,7 @@ namespace Simias.Storage
 		{
 			this.collection = collection;
 			this.desiredRights = Access.Rights.Admin;
-			this.currentUserGuid = collection.DomainIdentity;
+			this.currentUserGuid = collection.CurrentUserID;
 			this.ownerAccess = true;
 		}
 		#endregion

@@ -457,6 +457,35 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Deletes the all occurances of the specified property from the property list.
+		/// </summary>
+		/// <param name="name">Name of property to delete.</param>
+		public void DeleteNodeProperties( string name )
+		{
+			// Find all of the existing values.
+			MultiValuedList mvp = FindValues( name );
+			foreach ( Property p in mvp )
+			{
+				p.DeleteProperty();
+			}
+		}
+
+		/// <summary>
+		/// Deletes the first occurance of the specified property from the property list.
+		/// </summary>
+		/// <param name="name">Name of property to delete.</param>
+		internal void DeleteSingleNodeProperty( string name )
+		{
+			// Find the first existing value.
+			Property existingProperty = FindSingleValue( name );
+			if ( existingProperty != null )
+			{
+				// Remove this property from the node.
+				existingProperty.DeleteProperty();
+			}
+		}
+
+		/// <summary>
 		/// Searches for a specified property name.
 		/// </summary>
 		/// <param name="name">Name of the property.</param>
@@ -1014,6 +1043,16 @@ namespace Simias.Storage
 			{
 				return null;
 			}
+		}
+
+		/// <summary>
+		/// Checks for the existence of the specified property.
+		/// </summary>
+		/// <param name="name">Name of the property to check for existence.</param>
+		/// <returns>True if the property exists, otherwise false is returned.</returns>
+		public bool HasProperty( string name )
+		{
+			return ( GetSingleProperty( name ) != null ) ? true : false;
 		}
 
 		/// <summary>

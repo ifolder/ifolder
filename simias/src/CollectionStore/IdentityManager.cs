@@ -141,14 +141,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for the IdentityManager object.
 		/// </summary>
-		/// <param name="domainName">Name of the local Collection Store domain.</param>
-		/// <param name="localAb">Object reference to the LocalAddressBook object.</param>
+		/// <param name="localDb">Object reference to the LocalDatabase object.</param>
 		/// <param name="identity">Object that represents the current identity.</param>
-		public IdentityManager( string domainName, LocalAddressBook localAb, BaseContact identity )
+		public IdentityManager( LocalDatabase localDb, Identity identity )
 		{
-			this.domainName = domainName;
+			this.domainName = localDb.DefaultDomain;
 			this.identity = identity;
-			this.localAb = localAb;
 			publicKey = new RSACryptoServiceProvider( dummyCsp );
 			publicKey.ImportParameters( identity.ServerCredential.ExportParameters( false ) );
 		}

@@ -47,6 +47,9 @@ namespace Simias.Storage.Tests
 		// Enumerated type to use for property test.
 		private enum TestType { TestType1, TestType2 };
 
+		// Domain to use to test with.
+		private string domainName = "CSTestDomain";
+
 		// Object used to access the store.
 		private Store store = null;
 
@@ -64,14 +67,11 @@ namespace Simias.Storage.Tests
 			// Connect to the store.
 			store = new Store( new Configuration( basePath ) );
 
-			// Add another identity to the database.
-			LocalAddressBook localAb = store.GetLocalAddressBook();
-
-			// Check to see if the identity already exist.
-			if ( localAb.GetSingleNodeByName( "cameron" ) == null )
-			{
-				localAb.Commit( new BaseContact( "cameron" ) );
-			}
+			// Add a new domain to the identity object.
+			LocalDatabase localDb = store.GetDatabaseObject();
+			Identity identity = store.CurrentUser;
+			identity.AddDomainIdentity( Guid.NewGuid().ToString(), domainName );
+			localDb.Commit( identity );
 		}
 		#endregion
 
@@ -83,7 +83,7 @@ namespace Simias.Storage.Tests
 		public void CreateCollectionTest()
 		{
 			// Create a new collection and remember its ID.
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 
 			// Remember the id for later.
 			string ID = collection.ID;
@@ -118,7 +118,7 @@ namespace Simias.Storage.Tests
 		public void CreateChildNodeTest()
 		{
 			// Create the collection.
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Create a node subordinate to this collection.
@@ -174,7 +174,7 @@ namespace Simias.Storage.Tests
 		public void SearchTest()
 		{
 			// Create the collection.
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				string s1 = "The quick red fox jumps over the lazy brown dog.";
@@ -498,7 +498,7 @@ namespace Simias.Storage.Tests
 		{
 
 			// Create a collection to add properties to.
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				string ID = collection.ID;
@@ -777,7 +777,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void PropertyMethodsTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// First property to add.
@@ -871,7 +871,7 @@ namespace Simias.Storage.Tests
 		[ExpectedException( typeof( InvalidOperationException ) )]
 		public void AddSystemPropertyTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Shouldn't allow this.
@@ -892,7 +892,7 @@ namespace Simias.Storage.Tests
 			string fileData = "How much wood can a woodchuck chuck if a woodchuck could chuck wood?";
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Create a node to represent the collection root directory.
@@ -939,8 +939,8 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AccessControlTest()
 		{
-			Collection collection1 = new Collection( store, "CS_TestCollection1" );
-			Collection collection2 = new Collection( store, "CS_TestCollection2" );
+			Collection collection1 = new Collection( store, "CS_TestCollection1", domainName );
+			Collection collection2 = new Collection( store, "CS_TestCollection2", domainName );
 			Collection collection3;
 
 			try
@@ -950,23 +950,22 @@ namespace Simias.Storage.Tests
 				collection2.Commit();
 
 				// Get a user that can be impersonated.
-				LocalAddressBook localAb = store.GetLocalAddressBook();
-				BaseContact user = localAb.GetContactByName( "cameron" );
-				collection1.SetUserAccess( user.ID, Access.Rights.ReadWrite );
+				string userID = Guid.NewGuid().ToString();
+				collection1.SetUserAccess( "cameron", userID, Access.Rights.ReadWrite );
 				collection1.Commit();
+
+				collection3 = store.GetCollectionByID( collection1.ID );
 
 				try
 				{
-					// Try again to access the collection.
-					store.ImpersonateUser( user.ID );
-					collection3 = store.GetCollectionByID( collection1.ID );
+					collection3.Impersonate( userID );
 					collection3.Properties.AddProperty( "DisplayName", "Access Collection" );
 					collection3.Commit();
 
 					try
 					{
 						// Try to change the collection ownership.
-						collection3.ChangeOwner( user.ID, Access.Rights.ReadOnly );
+						collection3.ChangeOwner( userID, Access.Rights.ReadOnly );
 						throw new ApplicationException( "Change ownership access control check on impersonation failed" );
 					}
 					catch ( AccessException )
@@ -976,14 +975,14 @@ namespace Simias.Storage.Tests
 				}
 				finally
 				{
-					store.Revert();
+					collection3.Revert();
 				}
 
 
 				try
 				{
 					// Try and down-grade the owner's rights.
-					collection1.SetUserAccess( collection1.Owner, Access.Rights.ReadWrite );
+					collection1.ModifyUserAccess( collection1.Owner, Access.Rights.ReadWrite );
 					throw new ApplicationException( "Block owner rights change failed" );
 				}
 				catch ( AccessException )
@@ -992,49 +991,17 @@ namespace Simias.Storage.Tests
 				}
 
 				// Change the ownership on the collection.
-				collection3.ChangeOwner( user.ID, Access.Rights.ReadOnly );
+				collection3.ChangeOwner( userID, Access.Rights.ReadOnly );
 				collection3.Commit();
 
 				// Make sure that it changed.
-				if ( collection3.Owner != user.ID )
+				if ( collection3.Owner != userID )
 				{
 					throw new ApplicationException( "Collection ownership did not change" );
 				}
 
-				try
-				{
-					// Enumerate the collections. Only collection1 one should be returned.
-					store.ImpersonateUser( user.ID );
-					ICSEnumerator e1 = ( ICSEnumerator )store.GetEnumerator();
-					if ( !e1.MoveNext() || e1.MoveNext() )
-					{
-						e1.Dispose();
-						throw new ApplicationException( "Enumeration access control on impersonation failed" );
-					}
-
-					e1.Dispose();
-				}
-				finally
-				{
-					store.Revert();
-				}
-
-				// Now four collections should show up. The two that the test created and the one that
-				// represents the database collection and the one that represents the local address book.
-				ICSEnumerator e2 = ( ICSEnumerator )store.GetEnumerator();
-
-				int count = 0;
-				while ( e2.MoveNext() ) ++count;
-				if ( count != 5 )
-				{
-					e2.Dispose();
-					throw new ApplicationException( "Enumeration access control without impersonation failed" );
-				}
-
-				e2.Dispose();
-
 				// Set world rights on collection2.
-				collection2.SetUserAccess( Access.World, Access.Rights.ReadWrite );
+				collection2.SetUserAccess( "World", Access.World, Access.Rights.ReadWrite );
 				collection2.Commit();
 			}
 			finally
@@ -1050,7 +1017,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void SerializeTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Commit the collection.
@@ -1085,7 +1052,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void GetByNameTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Commit the collection.
@@ -1143,7 +1110,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void AbortTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Commit the collection.
@@ -1175,7 +1142,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void TombstoneTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Create a node.
@@ -1216,7 +1183,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void TestIncarnationValues()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Create a node.
@@ -1300,47 +1267,6 @@ namespace Simias.Storage.Tests
 		}
 
 		/// <summary>
-		/// Tests the identity object and adds aliases.
-		/// </summary>
-		[Test]
-		public void IdentityTest()
-		{
-			// Get the local address book.
-			LocalAddressBook localAb = store.GetLocalAddressBook();
-
-			// Add a new identity.
-			BaseContact identity = new BaseContact( "newguy" );
-
-			RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
-
-			// Add aliases to the identity.
-			for ( int i = 0; i < 10; ++i )
-			{
-				identity.CreateAlias( "Mike's Domain " + i, Guid.NewGuid().ToString(), credential.ToXmlString( false ) );
-			}
-
-			// Commit the changes.
-			localAb.Commit( identity );
-
-			// Get the aliases back.
-			int count = 0;
-			ICSList aliasList = identity.GetAliasList();
-			foreach( Alias alias in aliasList )
-			{
-				// This check is make only to remove unused variable compiler warning.
-				if ( alias != null )
-				{
-					++count;
-				}
-			}
-
-			if ( count != 10 )
-			{
-				throw new ApplicationException( "Cannot find all of the aliases." );
-			}
-		}
-
-		/// <summary>
 		///  Tests the finding all nodes asssociated with a file.
 		/// </summary>
 		[Test]
@@ -1348,7 +1274,7 @@ namespace Simias.Storage.Tests
 		{
 			string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
 
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 
 			try
 			{
@@ -1394,7 +1320,7 @@ namespace Simias.Storage.Tests
 			Store mergeStore = new Store( new Configuration( basePath ) );
 
 			// Create a collection using the primary store handle.
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 
 			try
 			{
@@ -1520,7 +1446,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void EnumerateNodesTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				Node[] commitList = { collection,
@@ -1566,7 +1492,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void StoreFileNodeTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Create a file in the file system.
@@ -1627,7 +1553,7 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CollisionTest()
 		{
-			Collection collection = new Collection( store, "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection", domainName );
 			try
 			{
 				// Commit the collection.
