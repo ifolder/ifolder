@@ -495,6 +495,11 @@ namespace Simias.SimpleServer
 								ssMember.Given = lastName;
 							}
 
+							if ( ssMember.FN == null )
+							{
+								ssMember.FN = ssMember.Given + " " + ssMember.Family;
+							}
+
 							ssMember.Properties.ModifyProperty( syncP );
 							ssDomain.Commit( ssMember );
 						}
