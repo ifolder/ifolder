@@ -17,6 +17,10 @@ namespace Mono.P2p.mDnsResponder
 		static internal int			maintenanceNapTime = 30;
 
 		static internal int			sendBufferSize = 32768;
+
+		static internal int			mDnsPort = 5353;
+		static internal string		multiCastAddress = "224.0.0.251";
+
 		#endregion
 
 		#region Properties

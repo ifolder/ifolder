@@ -4,8 +4,9 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
+using System.Runtime.Remoting.Channels.Http;
 using Mono.P2p.mDnsResponderApi;
 using log4net;
 using log4net.Config;
@@ -418,6 +419,7 @@ class mDnsCmd
 		//Manager		abManager;
 		DateTime	start = DateTime.Now;
 
+		/*
 		HttpChannel chnl = new HttpChannel();
 		ChannelServices.RegisterChannel(chnl);
 			
@@ -425,6 +427,15 @@ class mDnsCmd
 			(IRemoteFactory) Activator.GetObject(
 			typeof(IRemoteFactory),
 			"http://localhost:8091/mDnsRemoteFactory.soap");
+		*/
+
+		TcpChannel chnl = new TcpChannel();
+		ChannelServices.RegisterChannel(chnl);
+			
+		IRemoteFactory factory = 
+			(IRemoteFactory) Activator.GetObject(
+			typeof(IRemoteFactory),
+			"tcp://localhost:8091/mDnsRemoteFactory.tcp");
 
 		if (this.cmd == Commands.registerptr)
 		{

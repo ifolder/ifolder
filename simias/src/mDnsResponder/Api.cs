@@ -753,6 +753,7 @@ namespace Mono.P2p.mDnsResponder
 			Hashtable props = new Hashtable();
 			props["port"] = 8091;
 
+			/*
 			SoapServerFormatterSinkProvider
 				serverProvider = new SoapServerFormatterSinkProvider();
 
@@ -770,7 +771,27 @@ namespace Mono.P2p.mDnsResponder
 				typeof(mDnsRemoteFactory),
 				"mDnsRemoteFactory.soap",
 				WellKnownObjectMode.Singleton);
+			*/
 
+			BinaryServerFormatterSinkProvider
+				serverProvider = new BinaryServerFormatterSinkProvider();
+
+			BinaryClientFormatterSinkProvider
+				clientProvider = new BinaryClientFormatterSinkProvider();
+#if !MONO
+			serverProvider.TypeFilterLevel =
+				System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+			TcpChannel chnl = new TcpChannel(props, clientProvider, serverProvider);
+
+			ChannelServices.RegisterChannel(chnl);
+			
+			RemotingConfiguration.RegisterWellKnownServiceType(
+				typeof(mDnsRemoteFactory),
+				"mDnsRemoteFactory.tcp",
+				WellKnownObjectMode.Singleton);
+
+			/*
 			Hashtable propsTcp = new Hashtable();
 			propsTcp["port"] = 8092;
 			propsTcp["rejectRemoteRequests"] = true;
@@ -786,6 +807,7 @@ namespace Mono.P2p.mDnsResponder
 #endif
 			TcpChannel tcpChnl = new TcpChannel(propsTcp, clientBinaryProvider, serverBinaryProvider);
 			ChannelServices.RegisterChannel(tcpChnl);
+			*/
 			
 			RemotingConfiguration.RegisterWellKnownServiceType(
 				typeof(MDnsEvent),

@@ -27,8 +27,8 @@ namespace Mono.P2p.mDnsResponder
 		static Thread reqHandlerThread = null;
 		static AutoResetEvent reqHandlerEvent = null;
 		
-		static internal Queue		requestsQueue = new Queue();
-		static internal Mutex		requestsMtx = new Mutex(false);
+		static internal Queue requestsQueue = new Queue();
+		static internal Mutex requestsMtx = new Mutex(false);
 		
 		internal static void QueueRequest(DnsRequest dnsRequest)
 		{
@@ -70,12 +70,16 @@ namespace Mono.P2p.mDnsResponder
 			return(0);
 		}
 		
+		//
+		// TODO need to add any answer resources that come in with a question to
+		// the internal resource lists
+		//
 		internal static void RequestHandlerThread()
 		{
 			DnsRequest		dnsRequest;
 
 			// Setup an endpoint to multi-cast datagrams
-			UdpClient server = new UdpClient("224.0.0.251", 5353);
+			UdpClient server = new UdpClient(Defaults.multiCastAddress, Defaults.mDnsPort);
 
 			while(reqHandlerEvent.WaitOne(120000, false))
 			{
@@ -223,11 +227,59 @@ namespace Mono.P2p.mDnsResponder
 						}
 						else
 						{
-							// FIXME - need to add additional and authority to the DNS 
-							// request record
-							//
 							// Handle any responses
 							foreach(BaseResource cResource in dnsRequest.AnswerList)
+							{
+								if (cResource.Type == mDnsType.hostAddress)
+								{
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddHostAddress((HostAddress) cResource);
+									}
+									else
+									{
+										Resources.RemoveHostAddress(cResource.Name);
+									}
+								}
+								else
+								if (cResource.Type == mDnsType.serviceLocation)
+								{
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddServiceLocation((ServiceLocation) cResource);
+									}
+									else
+									{
+										Resources.RemoveServiceLocation((ServiceLocation) cResource);
+									}
+								}
+								else
+								if (cResource.Type == mDnsType.ptr)
+								{
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddPtr((Ptr) cResource);
+									}
+									else
+									{
+										Resources.RemovePtr((Ptr) cResource);
+									}
+								}
+								else
+								if (cResource.Type == mDnsType.textStrings)
+								{
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddTextStrings((TextStrings) cResource);
+									}
+									else
+									{
+										Resources.RemoveTextStrings((TextStrings) cResource);
+									}
+								}
+							}
+
+							foreach(BaseResource cResource in dnsRequest.AdditionalList)
 							{
 								if (cResource.Type == mDnsType.hostAddress)
 								{
@@ -303,6 +355,14 @@ namespace Mono.P2p.mDnsResponder
 			{
 				log.Info("   Answers:        " + req.AnswerList.Count.ToString());
 			}
+			if (req.AuthorityList.Count >= 1)
+			{
+				log.Info("   Authorities:    " + req.AuthorityList.Count.ToString());
+			}
+			if (req.AdditionalList.Count >= 1)
+			{
+				log.Info("   Additional:     " + req.AdditionalList.Count.ToString());
+			}
 
 			foreach(Question cQuestion in req.QuestionList)
 			{
@@ -315,45 +375,62 @@ namespace Mono.P2p.mDnsResponder
 			foreach(BaseResource cResource in req.AnswerList)
 			{
 				log.Info("   ANSWER");
-				if (cResource.Type == mDnsType.ptr)
-				{
-					log.Info("      Source:  " + cResource.Name);
-				}
-				else
-				{
-					log.Info("      Domain:  " + cResource.Name);
-				}
-				log.Info(String.Format("      Type:    {0}", cResource.Type));
-				log.Info(String.Format("      Class:   {0}", cResource.Class));
-				log.Info(String.Format("      TTL:     {0}", cResource.Ttl));
+				RequestHandler.LogResourceRecord(cResource);
+			}
 
-				if (cResource.Type == mDnsType.hostAddress)
+			foreach(BaseResource cResource in req.AuthorityList)
+			{
+				log.Info("   AUTHORITY");
+				RequestHandler.LogResourceRecord(cResource);
+			}
+
+			foreach(BaseResource cResource in req.AdditionalList)
+			{
+				log.Info("   ADDITIONAL");
+				RequestHandler.LogResourceRecord(cResource);
+			}
+
+			log.Info("");
+		}
+
+		internal static void LogResourceRecord(BaseResource cResource)
+		{
+			if (cResource.Type == mDnsType.ptr)
+			{
+				log.Info("      Source:  " + cResource.Name);
+			}
+			else
+			{
+				log.Info("      Domain:  " + cResource.Name);
+			}
+			log.Info(String.Format("      Type:    {0}", cResource.Type));
+			log.Info(String.Format("      Class:   {0}", cResource.Class));
+			log.Info(String.Format("      TTL:     {0}", cResource.Ttl));
+			if (cResource.Type == mDnsType.hostAddress)
+			{
+				log.Info(String.Format("      Address: {0}", ((HostAddress) cResource).PrefAddress));
+			}
+			else
+			if (cResource.Type == mDnsType.ptr)
+			{
+				log.Info(String.Format("      Target:  {0}", ((Ptr) cResource).Target));
+			}
+			else
+			if (cResource.Type == mDnsType.serviceLocation)
+			{
+				log.Info(String.Format("      Host:    {0}", ((ServiceLocation) cResource).Target));
+				log.Info(String.Format("      Port:    {0}", ((ServiceLocation) cResource).Port));
+				log.Info(String.Format("      Priority:{0}", ((ServiceLocation) cResource).Priority));
+				log.Info(String.Format("      Weight:  {0}", ((ServiceLocation) cResource).Weight));
+			}
+			else
+			if (cResource.Type == mDnsType.textStrings)
+			{
+				foreach(string s in ((TextStrings) cResource).GetTextStrings())
 				{
-					log.Info(String.Format("      Address: {0}", ((HostAddress) cResource).PrefAddress));
-				}
-				else
-				if (cResource.Type == mDnsType.ptr)
-				{
-					log.Info(String.Format("      Target:  {0}", ((Ptr) cResource).Target));
-				}
-				else
-				if (cResource.Type == mDnsType.serviceLocation)
-				{
-					log.Info(String.Format("      Host:    {0}", ((ServiceLocation) cResource).Target));
-					log.Info(String.Format("      Port:    {0}", ((ServiceLocation) cResource).Port));
-					log.Info(String.Format("      Priority:{0}", ((ServiceLocation) cResource).Priority));
-					log.Info(String.Format("      Weight:  {0}", ((ServiceLocation) cResource).Weight));
-				}
-				else
-				if (cResource.Type == mDnsType.textStrings)
-				{
-					foreach(string s in ((TextStrings) cResource).GetTextStrings())
-					{
-						log.Info("      TXT:     " + s);
-					}
+					log.Info("      TXT:     " + s);
 				}
 			}
-			log.Info("");
 		}
 	}
 }
