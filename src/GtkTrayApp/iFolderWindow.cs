@@ -434,7 +434,7 @@ namespace Novell.iFolder
 			HelpMenuItem = 
 				new ImageMenuItem(Stock.Help, agrp);
 			HelpMenu.Append(HelpMenuItem);
-//			HelpMenuItem.Activated += new EventHandler(On_CreateiFolder);
+			HelpMenuItem.Activated += new EventHandler(OnHelpMenuItem);
 
 			AboutMenuItem = new ImageMenuItem(Util.GS("A_bout"));
 			AboutMenuItem.Image = new Image(
@@ -2167,6 +2167,11 @@ namespace Novell.iFolder
 			}
 		}
 
+
+		public void OnHelpMenuItem(object o, EventArgs args)
+		{
+			Util.ShowHelp("front.html", this);
+		}
 
 	}
 }
