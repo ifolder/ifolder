@@ -54,11 +54,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 //
 
-#if MONO
-[assembly: AssemblyVersion("1.0.0.0")]
-#else
 [assembly: AssemblyVersion("1.0.*")]
-#endif
 
 [assembly: SatelliteContractVersion("1.0.0.0")]
 [assembly: ComCompatibleVersion(1, 0, 0, 0)]
@@ -77,8 +73,7 @@ using System.Runtime.InteropServices;
 // Use the attributes below to control which key is used for signing. 
 //
 
-#if MONO
-[assembly: AssemblyDelaySign(true)]
-[assembly: AssemblyKeyFile("../simias-snakeoil.keys")]
-[assembly: AssemblyKeyName("")]
-#endif 
+//[assembly: AssemblyDelaySign(true)]
+//[assembly: AssemblyKeyFile("../simias-snakeoil.keys")]
+//[assembly: AssemblyKeyName("")]
+ 
