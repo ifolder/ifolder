@@ -41,6 +41,9 @@ namespace Novell.iFolder
 		private HBox				ConflictBox;
 		private HBox				ConflictHolder;
 		private iFolderConflictDialog ConflictDialog;
+		private iFolderPropSharingPage SharingPage;
+		private iFolderPropSettingsPage SettingsPage; 
+
 
 		private Gtk.Combo			iFolderPickCombo;
 		private Gtk.Button			iFolderPickButton;
@@ -97,7 +100,7 @@ namespace Novell.iFolder
 			dialogBox.BorderWidth = 10;
 			dialogBox.Spacing = 10;
 
-			this.SetDefaultSize (100, 400);
+			this.SetDefaultSize (100, 480);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 
 			//-----------------------------
@@ -161,15 +164,13 @@ namespace Novell.iFolder
 			//-----------------------------
 			propNoteBook = new Gtk.Notebook();
 
-			iFolderPropSettingsPage settingsPage = 
-				new iFolderPropSettingsPage(ifolder, ifws);
+			SettingsPage = new iFolderPropSettingsPage(ifws);
 
-			propNoteBook.AppendPage(settingsPage, new Label("General"));
+			propNoteBook.AppendPage(SettingsPage, new Label("General"));
 
-			iFolderPropSharingPage sharingPage = 
-				new iFolderPropSharingPage(this, ifolder, ifws);
+			SharingPage = new iFolderPropSharingPage(this, ifws);
 
-			propNoteBook.AppendPage(sharingPage, new Label("Sharing"));
+			propNoteBook.AppendPage(SharingPage, new Label("Sharing"));
 
 			dialogBox.PackStart(propNoteBook);
 
@@ -226,6 +227,9 @@ namespace Novell.iFolder
 				else
 					ConflictBox.Visible = true;
 			}
+
+			SettingsPage.UpdateiFolder(ifolder);
+			SharingPage.UpdateiFolder(ifolder);
 		}
 
 

@@ -33,6 +33,9 @@ namespace Novell.iFolder
 		internal static string prefix = "@prefix@";
 		internal static string imagesdir = "@prefix@/share/ifolder3/images";
 		internal static string helpdir = "@prefix@/share/ifolder3/help";
+		internal static int SectionSpacing = 20;
+		internal static int SectionTitleSpacing = 5;
+		internal static uint DefaultBorderWidth = 10;
 
 		internal static string ImagesPath(string imgStr)
 		{
