@@ -31,12 +31,12 @@ EXTRA_DIST = $(CollectionEvents_CSFILES) $(EventService_CSFILES) $(CollectionEve
 
 CUR_DIR := $(shell pwd)
 
-all: CollectionEvents.dll EventService.exe
+all: CollectionEvents.dll EventService.dll
 
 CollectionEvents.dll: $(CollectionEvents_CSFILES) $(CollectionEvents_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionEvents_FLAGS) $(CollectionEvents_LIBS:%=/r:%) $(CollectionEvents_LIBPATH:%=/lib:%) $(CollectionEvents_CSFILES_CSC) /doc:CollectionEvents.doc.xml
 
-EventService.exe: $(EventService_CSFILES) $(EventService_RESOURCES)
+EventService.dll: $(EventService_CSFILES) $(EventService_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(EventService_FLAGS) $(EventService_LIBS:%=/r:%) $(EventService_LIBPATH:%=/lib:%) $(EventService_CSFILES_CSC) /doc:EventService.doc.xml
 
 CollectionEventTests.exe: $(CollectionEventTests_CSFILES) $(CollectionEventTests_RESOURCES)
@@ -49,19 +49,19 @@ DEBUG_CHECK_FILES = CollectionEventTests.pdb
 endif
 endif
 
-install-exec-local: CollectionEvents.dll EventService.exe
+install-exec-local: CollectionEvents.dll EventService.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) CollectionEvents.dll EventService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) CollectionEvents.dll EventService.dll $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CollectionEvents.dll EventService.exe CollectionEventTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f CollectionEvents.dll EventService.dll CollectionEventTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(bindir)
 	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionEventTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = CollectionEvents.dll EventService.exe $(NUNIT_TESTS) CollectionEvents.doc.xml EventService.doc.xml
+CLEAN_FILES = CollectionEvents.dll EventService.dll $(NUNIT_TESTS) CollectionEvents.doc.xml EventService.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
