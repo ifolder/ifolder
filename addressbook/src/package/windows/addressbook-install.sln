@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "addressbook-msm", "addressbook-msm\addressbook-msm.vdproj", "{AC05F6E2-7FA7-4993-AC67-1CF6B6810378}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "addressbook-msi", "addressbook-msi\addressbook-msi.vdproj", "{DC3C3BF4-6C25-4E44-9301-510956CEB13C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{AC05F6E2-7FA7-4993-AC67-1CF6B6810378}.Debug.ActiveCfg = Debug
+		{AC05F6E2-7FA7-4993-AC67-1CF6B6810378}.Debug.Build.0 = Debug
+		{AC05F6E2-7FA7-4993-AC67-1CF6B6810378}.Release.ActiveCfg = Release
+		{AC05F6E2-7FA7-4993-AC67-1CF6B6810378}.Release.Build.0 = Release
+		{DC3C3BF4-6C25-4E44-9301-510956CEB13C}.Debug.ActiveCfg = Debug
+		{DC3C3BF4-6C25-4E44-9301-510956CEB13C}.Debug.Build.0 = Debug
+		{DC3C3BF4-6C25-4E44-9301-510956CEB13C}.Release.ActiveCfg = Release
+		{DC3C3BF4-6C25-4E44-9301-510956CEB13C}.Release.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
