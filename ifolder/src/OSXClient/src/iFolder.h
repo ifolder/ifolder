@@ -36,6 +36,9 @@
 @interface iFolder : NSObject
 {
 	NSMutableDictionary * properties;
+	NSImage				* icon;
+	NSString			* location;
+	NSString			* state;
 }
 
 -(NSMutableDictionary *) properties;
@@ -43,6 +46,12 @@
 
 -(void) setgSOAPProperties:(struct ns1__iFolderWeb *)ifolder;
 
+-(NSImage *)Image;
+-(NSString *)Location;
+-(NSString *)Status;
+-(NSNumber *)IsSubscription;
+
+-(void) updateDisplayInformation;
 
 
 @end

@@ -30,6 +30,7 @@
 -(void) dealloc
 {
 	[properties release];
+	[icon release];
 	
 	[super dealloc];
 }
@@ -40,6 +41,9 @@
 	return properties;
 }
 
+
+
+
 -(void) setProperties: (NSDictionary *)newProperties
 {
 	if(properties != newProperties)
@@ -48,6 +52,9 @@
 		properties = [[NSMutableDictionary alloc] initWithDictionary:newProperties];
 	}
 }
+
+
+
 
 
 -(void) setgSOAPProperties:(struct ns1__iFolderWeb *)ifolder
@@ -106,7 +113,80 @@
 
 	[newProperties setObject:[NSNumber numberWithBool:ifolder->HasConflicts] forKey:@"HasConflicts"];
 	
-	[self setProperties:newProperties];	
+	[self setProperties:newProperties];
+	
+	[self updateDisplayInformation];
 }
+
+-(id)Image
+{
+	return icon;
+}
+
+
+-(NSString *)Location
+{
+	return location;
+}
+
+-(NSString *)Status
+{
+	return state;
+}
+
+-(NSNumber *)IsSubscription
+{
+	return [properties objectForKey:@"IsSubscription"];
+}
+
+
+-(void) updateDisplayInformation
+{
+	if([ [self IsSubscription] boolValue])
+	{
+		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
+			state = @"Available";
+		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitConnect"])
+			state = @"Waiting to Connect";
+		else if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
+			state = @"Waiting to Sync";
+		else
+			state = @"Unknown";
+
+		if([ [properties objectForKey:@"State"] isEqualToString:@"Available"])
+		{
+			location = [properties objectForKey:@"Owner"];
+		}
+
+		if(icon != nil)
+		{
+			[icon release];
+		}
+		icon = [NSImage imageNamed:@"ifolderonserver24"];
+		[icon setScalesWhenResized:YES];
+	}
+	else
+	{
+		if([ [properties objectForKey:@"State"] isEqualToString:@"WaitSync"])
+			state = @"Waiting to Sync";
+		else if([ [properties objectForKey:@"State"] isEqualToString:@"Local"])
+		{
+			if([ [properties objectForKey:@"HasConflicts"] boolValue])
+				state = @"Has File Conflicts";
+			else
+				state = @"OK";
+		}
+
+		location = [properties objectForKey:@"Path"];
+
+		if(icon != nil)
+			[icon release];
+
+		icon = [NSImage imageNamed:@"ifolder24"];
+		[icon setScalesWhenResized:YES];
+
+	}
+}
+
 
 @end

@@ -20,12 +20,28 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {showLoginWindow = id; }; 
+            ACTIONS = {refreshWindow = id; showLoginWindow = id; }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 domainsController = NSArrayController; 
                 ifoldersController = NSArrayController; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {browseForPath = id; cancelSetup = id; setupiFolder = id; showWindow = id; }; 
+            CLASS = SetupiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                Rights = NSTextField; 
+                SharedBy = NSTextField; 
+                domainID = NSTextField; 
+                iFolderID = NSTextField; 
+                iFolderName = NSTextField; 
+                mainWindow = id; 
+                pathField = NSTextField; 
+                setupSheet = id; 
             }; 
             SUPERCLASS = NSWindowController; 
         }
