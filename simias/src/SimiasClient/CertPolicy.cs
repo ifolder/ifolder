@@ -163,7 +163,7 @@ namespace Simias.Client
 		/// <returns>True if the certificate is to be honored. Otherwise, false is returned.</returns>
 		public bool CheckValidationResult( ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem )
 		{
-			bool honorCert = false;
+			bool honorCert = true;
 
 			if ((certificateProblem == 0) || (CertificateProblem.CertEXPIRED.Equals(certificateProblem)))
 			{
