@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using Simias;
-using Win32Util;
+using Novell.iFolder.Win32Util;
 
 namespace Novell.iFolder.iFolderCom
 {

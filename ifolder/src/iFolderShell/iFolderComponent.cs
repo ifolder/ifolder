@@ -32,6 +32,7 @@ using Novell.iFolder;
 using Simias.Storage;
 using Novell.AddressBook;
 using Novell.iFolder.FormsBookLib;
+using Novell.iFolder.Win32Util;
 using Simias;
 
 namespace Novell.iFolder.iFolderCom
@@ -259,7 +260,7 @@ namespace Novell.iFolder.iFolderCom
 			string windowName = "Advanced iFolder Properties for " + Path.GetFileName(path);
 
 			// Search for existing window and bring it to foreground ...
-			Win32Util.Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
+			Win32Window win32Window = Win32Util.Win32Window.FindWindow(null, windowName);
 			if (win32Window != null)
 			{
 				win32Window.BringWindowToTop();
