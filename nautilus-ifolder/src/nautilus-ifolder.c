@@ -1418,7 +1418,7 @@ reread_local_service_url ()
 	 */
 	if (time (&current_time) < 
 			(last_read_of_soap_url + REREAD_SOAP_URL_TIMEOUT)) {
-		return NULL;
+		return;
 	}
 	last_read_of_soap_url = current_time;
 	
