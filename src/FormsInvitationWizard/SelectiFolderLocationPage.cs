@@ -210,9 +210,23 @@ namespace Novell.iFolder.InvitationWizard
 				// Display wait cursor.
 				Cursor = Cursors.WaitCursor;
 
+				bool isPathInvalid = true;
+
 				// Call into iFolder to make sure the directory specified is valid...
-				iFolderManager manager = iFolderManager.Connect();
-				bool isPathInvalid = manager.IsPathIniFolder(iFolderLocation.Text);
+				try
+				{
+					iFolderManager manager = iFolderManager.Connect();
+					isPathInvalid = manager.IsPathIniFolder(iFolderLocation.Text);
+				}
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("An exception occurred while validating the path.  Please view the log file for additional information.", "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				catch (Exception e)
+				{
+					MessageBox.Show("An exception occurred while validating the path.\n" + e.Message + "\n" + e.StackTrace, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
 
 				// Restore the cursor.
 				Cursor = Cursors.Default;

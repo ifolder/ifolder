@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using Simias;
 using Simias.Sync;
 using Simias.Invite;
 
@@ -181,6 +182,14 @@ namespace Novell.iFolder.InvitationWizard
 				{
 					invitation.Load(invitationFile.Text);
 					((InvitationWizard)(this.Parent)).Invitation = invitation;
+				}
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("The file specified is not a valid iFolder invitation file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					invitationFile.Focus();
+
+					return currentIndex;
 				}
 				catch (Exception e)
 				{

@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.IO;
 using System.Reflection;
-
+using Simias;
 using Simias.Sync;
 using Simias.Invite;
 using Novell.iFolder;
@@ -187,10 +187,16 @@ namespace Novell.iFolder.InvitationWizard
 				{
 					invitation.Load(this.invitationFile);
 				}
-				catch (Exception)
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.  Please see the log file for additional information.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					this.invitationFile = "";
+				}
+				catch (Exception e)
 				{
 					// TODO - resource strings.
-					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBox.Show("An invalid iFolder invitation file was specified on the command-line.\n\n" + this.invitationFile, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					this.invitationFile = "";
 				}
 			}
@@ -314,8 +320,20 @@ namespace Novell.iFolder.InvitationWizard
 				if (this.acceptDeclinePage.Accept)
 				{
 					// Accept the invitation
-					iFolderManager manager = iFolderManager.Connect();
-					manager.AcceptInvitation(invitation, invitation.RootPath);
+					try
+					{
+						iFolderManager manager = iFolderManager.Connect();
+						manager.AcceptInvitation(invitation, invitation.RootPath);
+					}
+					catch (SimiasException ex)
+					{
+						ex.LogFatal();
+						MessageBox.Show("An exception occurred while accepting the iFolder invitation.  Please view the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show("An exception occurred while accepting the iFolder invitation.\n" + ex.Message + "\n" + ex.StackTrace, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+					}
 				}
 
 				// Exit

@@ -104,6 +104,11 @@
                     AssemblyName = "Invitation"
                     HintPath = "..\..\..\bin\Invitation.dll"
                 />
+                <Reference
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\..\simias\src\Common\Common.dll"
+                />
             </References>
         </Build>
         <Files>
