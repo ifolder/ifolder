@@ -596,7 +596,7 @@ namespace Novell.iFolder
 			appSpacerBox.PackStart(appWidgetBox, false, true, 0);
 
 			StartAtLoginButton = 
-				new CheckButton(Util.GS("Startup iFolder when logging into the desktop"));
+				new CheckButton(Util.GS("Start iFolder when logging in to the desktop"));
 			appWidgetBox.PackStart(StartAtLoginButton, false, true, 0);
 
 			ShowConfirmationButton = 
@@ -633,7 +633,7 @@ namespace Novell.iFolder
 			syncWidgetBox.Spacing = 10;
 
 
-			Label syncHelpLabel = new Label(Util.GS("Specify the default Sync interval for synchronizing your iFolders with the host.  To specify a different Sync interval for an individual iFolder, use the iFolder's properties dialog."));
+			Label syncHelpLabel = new Label(Util.GS("Specify the default Sync interval for synchronizing your iFolders with the host.  To specify a different Sync interval for an individual iFolder, use the iFolder's Properties dialog."));
 			syncHelpLabel.LineWrap = true;
 			syncHelpLabel.Xalign = 0;
 			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
@@ -691,7 +691,7 @@ namespace Novell.iFolder
 			pSettingBox.Spacing = 10;
 			proxyWidgetBox.PackStart(pSettingBox, true, true, 0);
 
-			ProxyHostLabel = new Label(Util.GS("Proxy Host:"));
+			ProxyHostLabel = new Label(Util.GS("Proxy host:"));
 			pSettingBox.PackStart(ProxyHostLabel, false, true, 0);
 			ProxyHostEntry = new Entry();
 			ProxyHostEntry.Changed += new EventHandler(OnProxySettingsChanged);
