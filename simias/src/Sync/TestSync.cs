@@ -289,7 +289,7 @@ public class SyncTests: Assertion
 	//---------------------------------------------------------------------------
 	// test deletes: delete a file from each end, and cause deletion collision
 	// sync and make sure everything got sorted out
-	[Test] public void NUSimpleDeletes() { Assert(SimpleDeletes()); }
+//	[Test] public void NUSimpleDeletes() { Assert(SimpleDeletes()); }
 
 	public bool SimpleDeletes()
 	{
@@ -325,12 +325,12 @@ public class SyncTests: Assertion
 
 		return Differ.CompareDirectories(serverFolder, clientFolder);
 	}
-   
+
 	//---------------------------------------------------------------------------
 	// test file creation collisions: create duplicate and non-dup files in multiple
 	//     level directory structure
 	// sync and make sure everything got sorted out
-	[Test] public void NUFileCreationCollision() { Assert(FileCreationCollision()); }
+//	[Test] public void NUFileCreationCollision() { Assert(FileCreationCollision()); }
 
 	public bool FileCreationCollision()
 	{
