@@ -173,7 +173,9 @@ namespace Novell.iFolder
 				Node node= CurrentNode;
 
 				// Create the iFolderFile of type Directory.
-				iFolderFile ifile= CreateiFolderFile(dir, true, iFolderDirectoryType, false);
+				iFolderFile ifile= CreateiFolderFile(dir, true, 
+						iFolderDirectoryType, false);
+
 				count++;
 
 				// Set the current node to this directory node.
@@ -450,7 +452,8 @@ namespace Novell.iFolder
 			if (topmostPathToAdd != null)
 			{
 				file = CreateiFolderFile(topmostPathToAdd);
-				int count = AddiFolderFileNodes(topmostPathToAdd);
+				//int count = AddiFolderFileNodes(topmostPathToAdd);
+				AddiFolderFileNodes(topmostPathToAdd);
 			}
 
 			return dirInfo;

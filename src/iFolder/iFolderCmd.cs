@@ -44,7 +44,8 @@ public class iFolderCmd
 		try
 		{
 			iFolderManager manager = iFolderManager.Connect();
-			iFolder newiFolder = manager.CreateiFolder(args[1]);
+			//iFolder newiFolder = manager.CreateiFolder(args[1]);
+			manager.CreateiFolder(args[1]);
 		}
 		catch(Exception e)
 		{

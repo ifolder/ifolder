@@ -234,7 +234,8 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				string name= Path.GetFileName(iFolderName);
+				//string name= Path.GetFileName(iFolderName);
+				Path.GetFileName(iFolderName);
 				foreach (iFolder ifolder in this)
 				{
 					if (ifolder.LocalPath.CompareTo(iFolderName) == 0)
