@@ -19,9 +19,6 @@
  *
  *  Author(s):
  *		Boyd Timothy <btimothy@novell.com>
- *		Brady Anderson <banderso@novell.com>
- *		(this code is a mostly copy-n-paste from SimpleServer code, which
- *		 Brady wrote)
  *
  ***********************************************************************/
 
@@ -34,6 +31,7 @@ using System.Text;
 using System.Threading;
 
 using Simias;
+using Simias.Authentication;
 using Simias.Event;
 using Simias.POBox;
 using Simias.Service;
@@ -55,6 +53,7 @@ namespace Simias.Gaim
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		private static string inCredentialEvent = "true";
 		private Store store = null;
 		private static Simias.Location.GaimProvider gaimProvider = null;
 		private static Simias.Gaim.GaimDomainProvider gaimDomainProvider = null;
@@ -116,24 +115,6 @@ namespace Simias.Gaim
 
 			store = Store.GetStore();
 
-//			//
-//			// Make sure the Gaim Domain exists
-//			//
-//			Simias.Gaim.GaimDomain gaimDomain = null;
-//			try
-//			{
-//				gaimDomain = new Simias.Gaim.GaimDomain(true);
-//				Simias.Gaim.Sync.StartSyncThread();
-//
-//				// Register with the location service
-//				this.gaimProvider = new Simias.Location.GaimProvider();
-//
-//				Simias.Location.Locate.RegisterProvider(this.gaimProvider);
-//
-//				// Lastly, add some fake credentials for the Gaim Domain
-//				new NetCredential("iFolder", Simias.Gaim.GaimDomain.ID, true, "gaim-user", "blah");
-//			}
-
 			//
 			// Start the SyncThread
 			//
@@ -147,6 +128,12 @@ namespace Simias.Gaim
 				}
 				
 				Simias.Gaim.Sync.StartSyncThread();
+				
+				// Register for authentication events
+				Simias.Authentication.NeedCredentialsEventSubscriber needCreds =
+					new NeedCredentialsEventSubscriber();
+				needCreds.NeedCredentials +=
+					new Simias.Authentication.NeedCredentialsEventHandler(OnCredentialsEventHandler);
 			}
 			catch(Exception e)
 			{
@@ -191,6 +178,34 @@ namespace Simias.Gaim
 			}
 			Simias.Gaim.Sync.StopSyncThread();
 		}
+		
+		/// <summary>
+		/// Handler that's called for all NeedCredential events.
+		/// If the collection is a slave, authenticate
+		/// to the remote server.
+		/// </summary>
+		public static void OnCredentialsEventHandler( 
+			Simias.Client.Event.NeedCredentialsEventArgs args)
+		{
+			if ( args.DomainID == Simias.Gaim.GaimDomain.ID )
+			{
+				lock (inCredentialEvent)
+				{
+					// FIXME: Implement the "out-of-band" authentication
+					// that will verify the user on the remote box
+					string userID = Store.GetStore().GetUserIDFromDomainID(args.DomainID);
+
+					// Set credentials for this collection
+					new NetCredential( 
+						"iFolder", 
+						args.CollectionID, 
+						true, 
+						userID,
+						"@GaimDomainPPK@" );
+				}
+			}
+		}
+
 		#endregion
 	}
 
