@@ -660,14 +660,20 @@ namespace Simias.Sync
 		public virtual SyncNodeStatus Close(bool commit)
 		{
 			// Close the file on the server.
-			SyncNodeStatus status = syncService.CloseFile(commit);
-			if (commit && status.status == SyncStatus.Success)
+			try
 			{
-				node.SetMasterIncarnation(node.LocalIncarnation);
-				collection.Commit(node);
+				SyncNodeStatus status = syncService.CloseFile(commit);
+				if (commit && status.status == SyncStatus.Success)
+				{
+					node.SetMasterIncarnation(node.LocalIncarnation);
+					collection.Commit(node);
+				}
+				return status;
 			}
-			base.Close();
-			return status;
+			finally
+			{
+				base.Close();
+			}
 		}
 		
 		/// <summary>
