@@ -154,11 +154,21 @@ namespace Novell.iFolder
 
 		private Statusbar			MainStatusBar;
 		private ProgressBar			SyncBar;
+		private Toolbar				toolbar;
+		private bool				showTooltips = true;
 		private Gtk.TreeView		iFolderTreeView;
 		private Gtk.ListStore		iFolderTreeStore;
 
+		private Gtk.Widget			NewButton;
+		private Gtk.Widget			SetupButton;
+		private Gtk.Widget			SyncButton;
+		private Gtk.Widget			ShareButton;
+		private Gtk.Widget			ConflictButton;
+		private Gtk.Widget			RefreshButton;
+		private Gtk.Widget			PrefsButton;
 
-		private ImageMenuItem		CreateMenuItem;
+
+		private ImageMenuItem		NewMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
 		private ImageMenuItem		OpenMenuItem;
 		private Gtk.MenuItem		ConflictMenuItem;
@@ -212,11 +222,14 @@ namespace Novell.iFolder
 			//-----------------------------
 			// Create the menubar
 			//-----------------------------
-			AccelGroup accelGroup = new AccelGroup ();
-			this.AddAccelGroup (accelGroup);
-			
 			MenuBar menubar = CreateMenu ();
 			vbox.PackStart (menubar, false, false, 0);
+
+			//-----------------------------
+			// Create the Toolbar
+			//-----------------------------
+			toolbar = CreateToolbar();
+			vbox.PackStart (toolbar, false, false, 0);
 
 
 			//-----------------------------
@@ -236,7 +249,7 @@ namespace Novell.iFolder
 			//-----------------------------
 			// Set Menu Status
 			//-----------------------------
-			CreateMenuItem.Sensitive = true;
+			NewMenuItem.Sensitive = true;
 			SetupMenuItem.Sensitive = false;
 			DeleteMenuItem.Sensitive = false;
 			RemoveMenuItem.Sensitive = false;
@@ -251,6 +264,100 @@ namespace Novell.iFolder
 			// Setup an event to refresh when the window is
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
+		}
+
+
+
+
+		/// <summary>
+		/// Creates the Toolbar for the iFolder Window
+		/// </summary>
+		/// <returns>
+		/// Toolbar for the window
+		/// </returns>
+		private Toolbar CreateToolbar()
+		{
+			Toolbar tb = new Toolbar();
+
+			NewButton = tb.AppendItem(Util.GS("New"), 
+				Util.GS("Create a New iFolder"), "Toolbar/New iFolder",
+				new Image(new Gdk.Pixbuf(Util.ImagesPath("newifolder24.png"))),
+				new SignalFunc(CreateNewiFolder));
+
+			SetupButton = tb.AppendItem(Util.GS("Setup"),
+				Util.GS("Setup an Existing iFolder"), "Toolbar/Setup iFolder",
+				new Image(new Gdk.Pixbuf(Util.ImagesPath("setup24.png"))),
+				new SignalFunc(CreateNewiFolder));
+
+			tb.AppendSpace ();
+
+			SyncButton = tb.AppendItem(Util.GS("Sync"),
+				Util.GS("Synchronize an iFolder"), "Toolbar/Sync iFolder",
+				new Image(new Gdk.Pixbuf(Util.ImagesPath("sync24.png"))),
+				new SignalFunc(CreateNewiFolder));
+
+			ShareButton = tb.AppendItem(Util.GS("Share"),
+				Util.GS("Share an iFolder"), "Toolbar/Share iFolder",
+				new Image(new Gdk.Pixbuf(Util.ImagesPath("share24.png"))),
+				new SignalFunc(CreateNewiFolder));
+
+			ConflictButton = tb.AppendItem(Util.GS("Resolve"),
+				Util.GS("Resolve File Conflicts"), "Toolbar/Resolve iFolder",
+				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
+				new SignalFunc(CreateNewiFolder));
+
+			tb.AppendSpace ();
+
+			RefreshButton = tb.AppendItem(Util.GS("Refresh"),
+				Util.GS("Refresh View"), "Toolbar/Refresh iFolder",
+				new Image(Stock.Refresh, IconSize.LargeToolbar),
+				new SignalFunc(CreateNewiFolder));
+
+			PrefsButton = tb.AppendItem(Util.GS("Preferences"),
+				Util.GS("iFolder Preferences"), "Toolbar/Prefs iFolder",
+				new Image(new Gdk.Pixbuf(Util.ImagesPath("prefs24.png"))),
+				new SignalFunc(CreateNewiFolder));
+
+/*
+
+			tb.AppendItem ("Horizontal", "Horizontal layout", 
+				"Toolbar/Horizontal",
+				new Image (Stock.GoForward, IconSize.LargeToolbar),
+				new SignalFunc (set_horizontal));
+
+			tb.AppendItem ("Vertical", "Vertical layout", 
+				"Toolbar/Vertical",
+				new Image (Stock.GoUp, IconSize.LargeToolbar),
+				new SignalFunc (set_vertical));
+
+			tb.AppendSpace ();
+
+			tb.AppendItem ("Icons", "Only show icons", 
+				"Toolbar/IconsOnly",
+				new Image (Stock.Home, IconSize.LargeToolbar),
+				new SignalFunc (set_icon_only));
+
+			tb.AppendItem ("Text", "Only show Text", "Toolbar/TextOnly",
+				new Image (Stock.JustifyFill, IconSize.LargeToolbar),
+				new SignalFunc (set_text_only));
+
+			tb.AppendItem ("Both", "Show both Icon & Text", 
+				"Toolbar/Both",
+				new Image (Stock.Index, IconSize.LargeToolbar),
+				new SignalFunc (set_both));
+
+			tb.AppendItem ("Both (Horizontal)",
+				"Show Icon & Text horizontally", "Toolbar/BothHoriz",
+				new Image (Stock.Index, IconSize.LargeToolbar),
+				new SignalFunc (set_both_horiz));
+*/
+			tb.AppendSpace ();
+
+			tb.InsertStock (Stock.Close, "Stock icon: Close",
+				"Toolbar/Close",
+				new SignalFunc (Close_Button), IntPtr.Zero, -1);
+
+			return tb;
 		}
 
 
@@ -273,14 +380,14 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			CreateMenuItem = new ImageMenuItem (Util.GS("C_reate"));
-			CreateMenuItem.Image = new Image(
+			NewMenuItem = new ImageMenuItem (Util.GS("C_reate"));
+			NewMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
-			iFolderMenu.Append(CreateMenuItem);
-			CreateMenuItem.AddAccelerator("activate", agrp,
+			iFolderMenu.Append(NewMenuItem);
+			NewMenuItem.AddAccelerator("activate", agrp,
 				new AccelKey(Gdk.Key.N, Gdk.ModifierType.ControlMask,
 								AccelFlags.Visible));
-			CreateMenuItem.Activated += new EventHandler(OnCreateiFolder);
+			NewMenuItem.Activated += new EventHandler(NewiFolderHandler);
 
 			SetupMenuItem =
 				new MenuItem (Util.GS("_Setup iFolder"));
@@ -389,8 +496,8 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 10;
-			vbox.BorderWidth = Util.DefaultBorderWidth;
+//			vbox.Spacing = 10;
+//			vbox.BorderWidth = Util.DefaultBorderWidth;
 			
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
@@ -462,21 +569,6 @@ namespace Novell.iFolder
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			ConflictPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
-
-
-			// Create an HBox that is not homogeneous and spacing of 10 
-			HBox hbox = new HBox(false, 10);
-			// Create another HBox (in case we add more buttons)
-			// so they will line up to the right and be the same
-			// widgth
-			HBox leftHBox = new HBox(true, 10);
-			Button create_button = new Button(Util.GS("_Create"));
-
-			create_button.Clicked += new EventHandler(OnCreateiFolder);
-			
-			leftHBox.PackEnd(create_button);
-			hbox.PackEnd(leftHBox, false, false, 0);
-			vbox.PackStart(hbox, false, false, 0);
 		
 			return vbox;
 		}
@@ -819,7 +911,7 @@ namespace Novell.iFolder
 							new MenuItem (Util.GS("Create iFolder"));
 						ifMenu.Append (item_create);
 						item_create.Activated += 
-							new EventHandler(OnCreateiFolder);
+							new EventHandler(NewiFolderHandler);
 
 						MenuItem item_refresh = 
 							new MenuItem (Util.GS("Refresh list"));
@@ -1088,83 +1180,9 @@ namespace Novell.iFolder
 
 
 
-		public void OnCreateiFolder(object o, EventArgs args)
+		public void NewiFolderHandler(object o, EventArgs args)
 		{
-			int rc = 0;
-
-			do
-			{
-				// Switched out to use the compatible file selector
-				CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
-					Util.GS("Choose a folder..."), this, 
-					CompatFileChooserDialog.Action.SelectFolder);
-
-				rc = cfcd.Run();
-				cfcd.Hide();
-
-				if(rc == -5)
-				{
-					string selectedFolder = cfcd.Selections[0];
-
-					if(ShowBadiFolderPath(selectedFolder, null))
-						continue;
-
-					// break loop
-					rc = 0;
-					try
-					{
-   		 				iFolderWeb newiFolder = 
-							iFolderWS.CreateLocaliFolder(selectedFolder);
-						if(newiFolder == null)
-							throw new Exception("Simias returned null");
-
-						TreeIter iter = 
-							iFolderTreeStore.AppendValues(
-								new iFolderHolder(newiFolder));
-						curiFolders.Add(newiFolder.ID, iter);
-
-
-						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
-										"true") == "true")
-						{
-							iFolderCreationDialog dlg = 
-								new iFolderCreationDialog(newiFolder);
-							dlg.TransientFor = this;
-							int createRC;
-							do
-							{
-								createRC = dlg.Run();
-								if(createRC == (int)Gtk.ResponseType.Help)
-								{
-									Util.ShowHelp("front.html", this);
-								}
-							}while(createRC != (int)Gtk.ResponseType.Ok);
-
-							dlg.Hide();
-
-							if(dlg.HideDialog)
-							{
-								ClientConfig.Set(
-									ClientConfig.KEY_SHOW_CREATION, "false");
-							}
-
-							dlg.Destroy();
-							dlg = null;
-						}
-					}
-					catch(Exception e)
-					{
-						iFolderExceptionDialog ied = 
-							new iFolderExceptionDialog(
-								this,
-								e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-					}
-				}
-			}
-			while(rc == -5);
+			CreateNewiFolder();
 		}
 
 
@@ -1685,6 +1703,164 @@ namespace Novell.iFolder
 		{
 			Util.ShowAbout();
 		}
+
+
+
+
+		private void CreateNewiFolder()
+		{
+			iFolderMsgDialog dg = new iFolderMsgDialog(
+				this,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("New iFolder"),
+				Util.GS("Create a new iFolder"),
+				Util.GS("This is a placeholder until I write the code to actually create a new iFolder"));
+			dg.Run();
+			dg.Hide();
+			dg.Destroy();
+			/*
+			// This is what we used to do, fix it to ask for the domain
+			int rc = 0;
+
+			do
+			{
+				// Switched out to use the compatible file selector
+				CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
+					Util.GS("Choose a folder..."), this, 
+					CompatFileChooserDialog.Action.SelectFolder);
+
+				rc = cfcd.Run();
+				cfcd.Hide();
+
+				if(rc == -5)
+				{
+					string selectedFolder = cfcd.Selections[0];
+
+					if(ShowBadiFolderPath(selectedFolder, null))
+						continue;
+
+					// break loop
+					rc = 0;
+					try
+					{
+   		 				iFolderWeb newiFolder = 
+							iFolderWS.CreateLocaliFolder(selectedFolder);
+						if(newiFolder == null)
+							throw new Exception("Simias returned null");
+
+						TreeIter iter = 
+							iFolderTreeStore.AppendValues(
+								new iFolderHolder(newiFolder));
+						curiFolders.Add(newiFolder.ID, iter);
+
+
+						if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+										"true") == "true")
+						{
+							iFolderCreationDialog dlg = 
+								new iFolderCreationDialog(newiFolder);
+							dlg.TransientFor = this;
+							int createRC;
+							do
+							{
+								createRC = dlg.Run();
+								if(createRC == (int)Gtk.ResponseType.Help)
+								{
+									Util.ShowHelp("front.html", this);
+								}
+							}while(createRC != (int)Gtk.ResponseType.Ok);
+
+							dlg.Hide();
+
+							if(dlg.HideDialog)
+							{
+								ClientConfig.Set(
+									ClientConfig.KEY_SHOW_CREATION, "false");
+							}
+
+							dlg.Destroy();
+							dlg = null;
+						}
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = 
+							new iFolderExceptionDialog(
+								this,
+								e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+					}
+				}
+			}
+			while(rc == -5);
+			*/
+		}
+
+		private void set_large_icon ()
+		{
+			toolbar.IconSize = IconSize.LargeToolbar;
+		}
+
+		private void set_icon_only ()
+		{
+			toolbar.ToolbarStyle = ToolbarStyle.Icons;
+		}
+
+		private void set_text_only ()
+		{
+			toolbar.ToolbarStyle = ToolbarStyle.Text;
+		}
+
+		private void set_horizontal ()
+		{
+			toolbar.Orientation = Orientation.Horizontal;
+		}
+
+		private void set_vertical ()
+		{
+			toolbar.Orientation = Orientation.Vertical;
+		}
+		
+		private void set_both ()
+		{
+			toolbar.ToolbarStyle = ToolbarStyle.Both;
+		}
+
+		private void set_both_horiz ()
+		{
+			toolbar.ToolbarStyle = ToolbarStyle.BothHoriz;
+		}
+
+		private void toggle_tooltips ()
+		{
+			if (showTooltips == true)
+				showTooltips = false;
+			else
+				showTooltips = true;
+
+			toolbar.Tooltips = showTooltips;
+			Console.WriteLine ("Show tooltips: " + showTooltips);
+		}
+
+		private void Close_Button ()
+		{
+			Console.WriteLine("Do not close dude");
+		}
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 }
