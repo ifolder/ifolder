@@ -58,13 +58,16 @@ namespace Novell.iFolder
 			Configuration conf = new Configuration();
 
             SimiasLogManager.Configure(conf);
-            
-            tIcon = new TrayIcon("iFolder");
+
+			SyncProperties props = new SyncProperties(conf);
+			props.LogicFactory = typeof(SynkerA);
+
+			tIcon = new TrayIcon("iFolder");
 
 			eBox = new EventBox();
 
 			eBox.ButtonPressEvent += 
-					new ButtonPressEventHandler(trayapp_clicked);
+				new ButtonPressEventHandler(trayapp_clicked);
 			gNifPixbuf = new Pixbuf("ifolder.png");
 
 			gAppIcon = new Gtk.Image(gNifPixbuf);
@@ -80,10 +83,10 @@ namespace Novell.iFolder
 			sManager = new Simias.Service.Manager(conf);
 			sManager.StartServices();
 
-//			syncState = SyncManagerStates.Idle;
+			//			syncState = SyncManagerStates.Idle;
 
-//			mainThreadNotify =
-//				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
+			//			mainThreadNotify =
+			//				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
 			twin = new GtkTraceWindow();
 
@@ -94,47 +97,47 @@ namespace Novell.iFolder
 
 
 
-/*
-		static void ChangeState()
-		{
-			lock(syncManager)
-			{
-				switch(syncState)
-				{
-					case SyncManagerStates.Active:
-					{		
-						gAppIcon.FromAnimation = gSyncAnimation;
-						Console.WriteLine("SyncManager is Active");
-						break;
-					}
-					case SyncManagerStates.Syncing:
-					{
-						gAppIcon.FromAnimation = gSyncAnimation;
-						Console.WriteLine("SyncManager is Syncing");
-						break;
-					}
-					default:
-					{
-						gAppIcon.Pixbuf = gNifPixbuf;
-						Console.WriteLine("SyncManager is Idle");
-						break;
-					}
-				}
-			}
-		}
+		/*
+		   static void ChangeState()
+		   {
+		   lock(syncManager)
+		   {
+		   switch(syncState)
+		   {
+		   case SyncManagerStates.Active:
+		   {		
+		   gAppIcon.FromAnimation = gSyncAnimation;
+		   Console.WriteLine("SyncManager is Active");
+		   break;
+		   }
+		   case SyncManagerStates.Syncing:
+		   {
+		   gAppIcon.FromAnimation = gSyncAnimation;
+		   Console.WriteLine("SyncManager is Syncing");
+		   break;
+		   }
+		   default:
+		   {
+		   gAppIcon.Pixbuf = gNifPixbuf;
+		   Console.WriteLine("SyncManager is Idle");
+		   break;
+		   }
+		   }
+		   }
+		   }
 
 
 
 
-		private static void syncManager_ChangedState(SyncManagerStates state)
-		{
-			lock(syncManager)
-			{
-				syncState = state;	
-				mainThreadNotify.WakeupMain();
-			}
-		}
-*/
+		   private static void syncManager_ChangedState(SyncManagerStates state)
+		   {
+		   lock(syncManager)
+		   {
+		   syncState = state;	
+		   mainThreadNotify.WakeupMain();
+		   }
+		   }
+		 */
 
 
 
@@ -207,7 +210,7 @@ namespace Novell.iFolder
 		static void quit_ifolder(object o, EventArgs args)
 		{
 			sManager.StopServices();
-//			syncManager.Stop();
+			//			syncManager.Stop();
 			Application.Quit();
 		}
 
