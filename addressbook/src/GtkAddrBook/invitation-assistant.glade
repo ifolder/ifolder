@@ -19,6 +19,7 @@
       <property name="border_width">4</property>
       <property name="visible">True</property>
       <property name="show_help">True</property>
+      <signal name="cancel" handler="on_druid_cancel" last_modification_time="Wed, 07 Jul 2004 08:19:34 GMT"/>
 
       <child>
 	<widget class="GnomeDruidPageEdge" id="druidpagestart1">

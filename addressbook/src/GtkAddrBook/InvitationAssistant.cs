@@ -337,6 +337,11 @@ namespace Novell.AddressBook.UI.gtk
 			on_close(o, args);
 		}
 
+		private void on_druid_cancel(object o, EventArgs args)
+		{
+			on_close(o, args);
+		}
+
 		/*
 		/// <summary>
 		/// Standard Event handler to respond to a click on the Wizard's
