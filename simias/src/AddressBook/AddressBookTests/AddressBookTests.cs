@@ -47,7 +47,8 @@ namespace Novell.AddressBook.Tests
 
 			Console.WriteLine("Connecting to the AddressBook manager");
 			abManager = ABManager.Connect( new Configuration( basePath ) );
-//			abManager = ABManager.Connect();
+			//abManager = ABManager.Connect( new Configuration ("C:\\"));
+			//abManager = ABManager.Connect();
 
 			Console.WriteLine("Init exit");
 		}
@@ -1131,6 +1132,73 @@ namespace Novell.AddressBook.Tests
 			Console.WriteLine("Ending \"Instant Message Tests\"");
 		}
 
+		[Test]
+		public void CleanupTest()
+		{
+			Console.WriteLine("Starting \"Cleanup Test\"");
+			const string tstUsername = "cleanupuser";
+
+			const string im1Address = "banderso";
+			const string im1Provider = "GroupWise";
+			IMTypes im1Types = (IMTypes.work);
+
+			AddressBook tstBook = null;
+
+			try
+			{
+				tstBook = new 
+					AddressBook(
+					"TestBookForCleanupTest",
+					Novell.AddressBook.AddressBookType.Private,
+					Novell.AddressBook.AddressBookRights.ReadWrite,
+					false);
+
+				abManager.AddAddressBook(tstBook);
+
+				// Create a contact in the new book
+
+				Contact tstContact = new Contact();
+				tstContact.UserName = tstUsername;
+
+				// create the IM objects
+				IM imOne = new IM(im1Address, im1Provider, im1Types);
+				tstContact.AddInstantMessage(imOne);
+
+				// create a name
+				Name cName = new Name("Brady", "Anderson");
+				tstContact.AddName(cName);
+				string nameID = cName.ID;
+
+				// create an address
+				Address cAddress = new Address("84606");
+				cAddress.Street = "1800 South Novell Place";
+				tstContact.AddAddress(cAddress);
+				string addressID = cAddress.ID;
+
+				tstBook.AddContact(tstContact);
+				tstContact.Commit();
+				string contactID = tstContact.ID;
+
+				// Now delete the contact and try and get the objects from the 
+				// collection store
+				tstContact.Delete();
+
+				// Muck with a deleted node
+				if (cAddress.Street != "")
+				{
+					throw new ApplicationException( "CleanupTest::Street should have been an empty string" );
+				}
+			}
+			finally
+			{
+				if (tstBook != null)
+				{
+					tstBook.Delete();
+				}
+			}
+			Console.WriteLine("Ending \"Cleanup Test\"");
+		}
+
 		public class Tests
 		{
 			static void Main()
@@ -1150,8 +1218,10 @@ namespace Novell.AddressBook.Tests
 				tests.BasicAddressTest();
 				tests.SearchNameTest();
 				tests.ImportPhotoTest();
-				*/
 				tests.InstantMessageTests();
+				*/
+
+				tests.CleanupTest();
 			}
 		}
 	}

@@ -422,6 +422,11 @@ namespace Novell.AddressBook
 				if (this.parentContact != null)
 				{
 					this.parentContact.nameList.Remove(this);
+					if (this.parentContact.addressBook.collection != null)
+					{
+						this.parentContact.addressBook.collection.Commit(
+							this.parentContact.addressBook.collection.Delete(this));
+					}
 				}
 			}
 			catch{}

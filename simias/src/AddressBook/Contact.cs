@@ -32,7 +32,8 @@ namespace Novell.AddressBook
 	/// Summary description for contact.
 	/// A contact is equivalent to a Node in the collection store.
 	/// </summary>
-	public class Contact : Node, IEnumerable, IEnumerator
+//	public class Contact : Node, IEnumerable, IEnumerator
+	public class Contact : Node
 	{
 		#region Class Members
 		internal	AddressBook		addressBook = null;
@@ -1068,44 +1069,70 @@ namespace Novell.AddressBook
 		/// <summary>
 		/// Deletes the current Contact object.
 		/// </summary>
-		public void Delete()
+		public Node[] Delete(bool commit)
 		{
+			Node[] nodeList = new Node[1 + this.nameList.Count + this.addressList.Count];
+			int	idx = 0;
+
+			foreach(Name cName in this.nameList)
+			{
+				nodeList[idx++] = cName;
+			}
+			this.nameList.Clear();
+
+			foreach(Address cAddress in this.addressList)
+			{
+				nodeList[idx++] = cAddress;
+			}
+			this.addressList.Clear();
+
+			/*
 			try
 			{
-				// First delete all child nodes
-				if (this.nameList.Count > 0)
+				abList = this.GetInstantMessageAccounts();
+				foreach(IM cIM in abList)
 				{
-					foreach(Name cName in this.nameList)
-					{
-						cName.Delete();
-					}
-
-					this.nameList.Clear();
+					cIM.Delete();
 				}
-
-				if (this.addressList.Count > 0)
-				{
-					foreach(Address cAddress in this.addressList)
-					{
-						cAddress.Delete();
-					}
-
-					this.addressList.Clear();
-				}
-
-				if (this.imList.Count > 0)
-				{
-					foreach(IM cIM in this.imList)
-					{
-						cIM.Delete();
-					}
-
-					this.imList.Clear();
-				}
-
-				this.Delete();
+				this.imList.Clear();
 			}
 			catch{}
+			*/
+
+			this.imList.Clear();
+			this.phoneList.Clear();
+			this.emailList.Clear();
+			
+			try
+			{
+				if (this.addressBook != null &&
+					this.addressBook.collection != null)
+				{
+					nodeList[idx++] = this;
+
+					if (commit == true)
+					{
+						this.addressBook.collection.Commit(
+							this.addressBook.collection.Delete(nodeList));
+					}
+					else
+					{
+						this.addressBook.collection.Delete(nodeList);
+					}
+				}
+			}
+			catch{}
+
+			// Return the list of nodes that were deleted
+			return(nodeList);
+		}
+
+		/// <summary>
+		/// Deletes the current Contact object.
+		/// </summary>
+		public void Delete()
+		{
+			this.Delete(true);
 		}
 
 		/// <summary>
@@ -2423,7 +2450,9 @@ namespace Novell.AddressBook
 
 		#endregion
 
+		/*
 		#region IEnumerable
+
 
 		/// <summary>
 		/// Gets an enumerator object
@@ -2436,9 +2465,7 @@ namespace Novell.AddressBook
 			return(this);
 		}
 
-		/*
-			Implementation of the iEnumerator members
-		*/
+		//	Implementation of the iEnumerator members
 
 		/// <summary>
 		/// Move to the next object
@@ -2471,5 +2498,6 @@ namespace Novell.AddressBook
 		}
 
 		#endregion
+		*/
 	}
 }

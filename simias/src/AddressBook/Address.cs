@@ -705,9 +705,12 @@ namespace Novell.AddressBook
 			if (this.parentContact != null)
 			{
 				this.parentContact.addressList.Remove(this);
+				if (this.parentContact.addressBook.collection != null)
+				{
+					this.parentContact.addressBook.collection.Commit(
+						this.parentContact.addressBook.collection.Delete(this));
+				}
 			}
-
-			this.Delete();
 		}
 
 		#endregion
