@@ -53,30 +53,35 @@ namespace Simias.DomainService.Web
 		[SoapDocumentMethod]
 		public DomainInfo GetDomainInfo( string userID )
 		{
-			// domain
-			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
-			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
-			if ( domain == null )
-			{
-				throw new SimiasException( "SimpleServer domain does not exist" );
-			}
+			DomainInfo info = null;
 
-			DomainInfo info = new DomainInfo();
-			info.ID = domain.ID;
-			info.Name = domain.Name;
-			info.Description = domain.Description;
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			{
+				// domain
+				Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+				Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
+				if ( domain == null )
+				{
+					throw new SimiasException( "SimpleServer domain does not exist" );
+				}
+
+				info = new DomainInfo();
+				info.ID = domain.ID;
+				info.Name = domain.Name;
+				info.Description = domain.Description;
 			
-			// member info
-			Member member = domain.GetMemberByID( userID );
-			if ( member != null )
-			{
-				info.MemberNodeName = member.Name;
-				info.MemberNodeID = member.ID;
-				info.MemberRights = member.Rights.ToString();
-			}
-			else
-			{
-				throw new SimiasException( "User: " + userID + " does not exist" );
+				// member info
+				Member member = domain.GetMemberByID( userID );
+				if ( member != null )
+				{
+					info.MemberNodeName = member.Name;
+					info.MemberNodeID = member.ID;
+					info.MemberRights = member.Rights.ToString();
+				}
+				else
+				{
+					throw new SimiasException( "User: " + userID + " does not exist" );
+				}
 			}
 
 			return info;
@@ -95,35 +100,38 @@ namespace Simias.DomainService.Web
 		{
 			ProvisionInfo info = null;
 
-			// store
-			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
-			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
-			if ( domain == null )
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				throw new SimiasException( "SimpleServer domain does not exist" );
-			}
+				// store
+				Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+				Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
+				if ( domain == null )
+				{
+					throw new SimiasException( "SimpleServer domain does not exist" );
+				}
 
-			// find user
-			Member member = domain.GetMemberByName( user );
-			if (member != null)
-			{
-				info = new ProvisionInfo();
-				info.UserID = member.UserID;
+				// find user
+				Member member = domain.GetMemberByName( user );
+				if (member != null)
+				{
+					info = new ProvisionInfo();
+					info.UserID = member.UserID;
 
-				// post-office box
-				POBox.POBox poBox = POBox.POBox.GetPOBox( Store.GetStore(), domain.ID, info.UserID );
+					// post-office box
+					POBox.POBox poBox = POBox.POBox.GetPOBox( Store.GetStore(), domain.ID, info.UserID );
 
-				info.POBoxID = poBox.ID;
-				info.POBoxName = poBox.Name;
+					info.POBoxID = poBox.ID;
+					info.POBoxName = poBox.Name;
 
-				Member poMember = poBox.GetMemberByID( member.UserID );
-				info.MemberNodeName = poMember.Name;
-				info.MemberNodeID = poMember.ID;
-				info.MemberRights = poMember.Rights.ToString();
-			}
-			else
-			{
-				throw new SimiasException( "User: " + user + " does not exist" );
+					Member poMember = poBox.GetMemberByID( member.UserID );
+					info.MemberNodeName = poMember.Name;
+					info.MemberNodeID = poMember.ID;
+					info.MemberRights = poMember.Rights.ToString();
+				}
+				else
+				{
+					throw new SimiasException( "User: " + user + " does not exist" );
+				}
 			}
 
 			return info;
@@ -145,75 +153,76 @@ namespace Simias.DomainService.Web
 		[SoapDocumentMethod]
 		public string CreateMaster(string collectionID, string collectionName, string rootDirID, string rootDirName, string userID, string memberName, string memberID, string memberRights)
 		{
-			ArrayList nodeList = new ArrayList();
-
-			// store
-			Store store = Store.GetStore();
-
-			Simias.Storage.Domain domain = 
-				new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
-			if ( domain == null )
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				throw new SimiasException( "SimpleServer domain does not exist." );
-			}
+				ArrayList nodeList = new ArrayList();
 
-			Collection c = new Collection( store, collectionName, collectionID, domain.ID );
-			c.Proxy = true;
-			nodeList.Add(c);
+				// store
+				Store store = Store.GetStore();
+
+				Simias.Storage.Domain domain = 
+					new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
+				if ( domain == null )
+				{
+					throw new SimiasException( "SimpleServer domain does not exist." );
+				}
+
+				Collection c = new Collection( store, collectionName, collectionID, domain.ID );
+				c.Proxy = true;
+				nodeList.Add(c);
 			
-			string existingUserID = Thread.CurrentPrincipal.Identity.Name;
-			// BUGBUG!! - Take this out
-			if (existingUserID.Length == 0)
-			{
-				existingUserID = userID;
-			}
-			// BUGBUG!!
-			Member existingMember = domain.GetMemberByID(existingUserID);
-			if (existingMember == null)
-			{
-				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
-			}
+				string existingUserID = Thread.CurrentPrincipal.Identity.Name;
+				Member existingMember = domain.GetMemberByID(existingUserID);
+				if (existingMember == null)
+				{
+					throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
+				}
 
-			// Make sure the creator and the owner are the same ID.
-			if (existingUserID != userID)
-			{
-				throw new SimiasException(String.Format("Creator ID {0} is not the same as the caller ID {1}.", existingUserID, userID));
-			}
+				// Make sure the creator and the owner are the same ID.
+				if (existingUserID != userID)
+				{
+					throw new SimiasException(String.Format("Creator ID {0} is not the same as the caller ID {1}.", existingUserID, userID));
+				}
 
-			// member node.
-			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), memberRights );
-			Member member = new Member( memberName, memberID, userID, rights, null );
-			member.IsOwner = true;
-			member.Proxy = true;
-			nodeList.Add( member );
+				// member node.
+				Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), memberRights );
+				Member member = new Member( memberName, memberID, userID, rights, null );
+				member.IsOwner = true;
+				member.Proxy = true;
+				nodeList.Add( member );
 			
-			// check for a root dir node
-			if (((rootDirID != null) && (rootDirID.Length > 0))
-				&& (rootDirName != null) && (rootDirName.Length > 0))
-			{
-				// files path
-				Configuration config = Configuration.GetConfiguration();
-                string path = Path.Combine(config.StorePath, FilesDirectory);
-				path = Path.Combine(path, collectionID);
-				path = Path.Combine(path, rootDirName);
+				// check for a root dir node
+				if (((rootDirID != null) && (rootDirID.Length > 0))
+					&& (rootDirName != null) && (rootDirName.Length > 0))
+				{
+					// files path
+					Configuration config = Configuration.GetConfiguration();
+					string path = Path.Combine(config.StorePath, FilesDirectory);
+					path = Path.Combine(path, collectionID);
+					path = Path.Combine(path, rootDirName);
 
-				// create root directory node
-				DirNode dn = new DirNode(c, path, rootDirID);
+					// create root directory node
+					DirNode dn = new DirNode(c, path, rootDirID);
 
-				if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
+					if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
 
-				dn.Proxy = true;
-				nodeList.Add(dn);
+					dn.Proxy = true;
+					nodeList.Add(dn);
+				}
+
+				// Create the collection.
+				c.Commit( nodeList.ToArray( typeof(Node) ) as Node[] );
+
+				// get the collection master url
+				Uri request = Context.Request.Url;
+				UriBuilder uri = 
+					new UriBuilder(request.Scheme, request.Host, request.Port, Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ) );
+				return uri.ToString();
 			}
-
-			// Create the collection.
-			c.Commit( nodeList.ToArray( typeof(Node) ) as Node[] );
-
-			// get the collection master url
-			Uri request = Context.Request.Url;
-			UriBuilder uri = 
-				new UriBuilder(request.Scheme, request.Host, request.Port, Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ) );
-			return uri.ToString();
+			else
+			{
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -226,61 +235,58 @@ namespace Simias.DomainService.Web
 		[SoapDocumentMethod]
 		public void RemoveServerCollections(string domainID, string userID)
 		{
-			// This method can only target the simple server
-			Simias.Storage.Domain domain = 
-				new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
-			if ( domain == null )
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				throw new SimiasException( "SimpleServer domain does not exist." );
-			}
-
-			if ( domainID != domain.ID )
-			{
-				throw new SimiasException("Only the SimpleServer domain can be used.");
-			}
-
-			// Make sure that the caller is the current owner.
-			Store store = Store.GetStore();
-			string existingUserID = Thread.CurrentPrincipal.Identity.Name;
-			// BUGBUG!! - Take this out
-			if (existingUserID.Length == 0)
-			{
-				existingUserID = userID;
-			}
-			// BUGBUG!!
-			Member existingMember = domain.GetMemberByID(existingUserID);
-			if (existingMember == null)
-			{
-				throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
-			}
-
-			// Make sure the creator and the owner are the same ID.
-			if (existingUserID != userID)
-			{
-				throw new SimiasException(String.Format("Creator ID {0} is not the same as the caller ID {1}.", existingUserID, userID));
-			}
-
-			// Get all of the collections that this user is member of.
-			ICSList cList = store.GetCollectionsByUser(userID);
-			foreach (ShallowNode sn in cList)
-			{
-				// Don't remove the membership from the domain collection.
-				if (sn.ID != domainID)
+				// This method can only target the simple server
+				Simias.Storage.Domain domain = 
+					new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
+				if ( domain == null )
 				{
-					// Remove the user as a member of this collection.
-					Collection c = new Collection(store, sn);
-					Member member = c.GetMemberByID(userID);
-					if (member != null)
+					throw new SimiasException( "SimpleServer domain does not exist." );
+				}
+
+				if ( domainID != domain.ID )
+				{
+					throw new SimiasException("Only the SimpleServer domain can be used.");
+				}
+
+				// Make sure that the caller is the current owner.
+				Store store = Store.GetStore();
+				string existingUserID = Thread.CurrentPrincipal.Identity.Name;
+				Member existingMember = domain.GetMemberByID(existingUserID);
+				if (existingMember == null)
+				{
+					throw new SimiasException(String.Format("Impersonating user: {0} is not a member of the domain.", Thread.CurrentPrincipal.Identity.Name));
+				}
+
+				// Make sure the creator and the owner are the same ID.
+				if (existingUserID != userID)
+				{
+					throw new SimiasException(String.Format("Creator ID {0} is not the same as the caller ID {1}.", existingUserID, userID));
+				}
+
+				// Get all of the collections that this user is member of.
+				ICSList cList = store.GetCollectionsByUser(userID);
+				foreach (ShallowNode sn in cList)
+				{
+					// Don't remove the membership from the domain collection.
+					if (sn.ID != domainID)
 					{
-						if ( member.IsOwner )
+						// Remove the user as a member of this collection.
+						Collection c = new Collection(store, sn);
+						Member member = c.GetMemberByID(userID);
+						if (member != null)
 						{
-							// The user is the owner, delete this collection.
-							c.Commit(c.Delete());
-						}
-						else
-						{
-							// Not the owner, just remove the membership.
-							c.Commit(c.Delete(member));
+							if ( member.IsOwner )
+							{
+								// The user is the owner, delete this collection.
+								c.Commit(c.Delete());
+							}
+							else
+							{
+								// Not the owner, just remove the membership.
+								c.Commit(c.Delete(member));
+							}
 						}
 					}
 				}

@@ -13,33 +13,28 @@ Simple Server synchronizes the SimpleServer.xml members to the Simple Server
 roster contained in the Simias store.  Once Simple Server is up and
 running you can add/delete members in the xml file.
 
-To install the SimpleServer module add the following line
-to your Simias.config file located at $(HOME)/.local/share/simias
+To install the SimpleServer module modify the following lines
+to your Simias.config file located at $(HOME)/.local/share/simias for Linux or
+%HOMEDRIVE%%HOMEPATH%\Local Settings\Application Data\simias for Windows.
 
-The line should be added to the Services section of the Simias.config file
+Modify the ServiceManager section of the Simias.config file. It sould look
+like this when done:
+
 <configuration>
   <section name="ServiceManager">
     <setting name="Services">
+      <Service name="Simias Change Log Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Storage.ChangeLog" />
+      <Service name="Simias Simple Server Domain Provider" assembly="Simias.SimpleServer.dll" enabled="True" type="Thread" class="Simias.SimpleServer.Authentication" />
       <Service name="Simias Simple Server" assembly="Simias.SimpleServer.dll" enabled="True" type="Thread" class="Simias.SimpleServer.Service" />
     </setting>
   </section>
 </configuration>
 
-You must also remove three services that will already be present in the configuration
-file.  They are: 
-      <Service name="Simias Domain Watcher" assembly="Simias" enabled="True" type="Thread" class="Simias.DomainWatcher.Service" />
-      <Service name="Simias PO Service" assembly="Simias" enabled="True" type="Thread" class="Simias.POBox.POService" />
-      <Service name="Simias Sync Client" assembly="Simias" enabled="True" type="Thread" class="Simias.Sync.SyncClient" />
-
-Also located in this directory are two .config files.  If you are running the server
-on a Windows machine copy "web.config" to (simias-target-directory)/web directory.
-If you are running Linux, copy "web.config.linux" to to your web directory and rename
-the file to "web.config".
-
 You can "tail" the log file to check if Simple Server is synchronizing the xml member
 list to the Simias roster.  The log file is located at: $(HOME)/.local/share/simias/Simias.log
+for Linux or %HOMEDRIVE%%HOMEPATH%\Local Settings\Application Data\simias\Simias.log for Windows.
 
-When an iFolder client joins the Simple Server domain all logins (username & password) are 
+When an iFolder client joins the Simple Server domain all logins (username & password) are
 validated against the Member in the XML file.  The iFolder client may join or attach to multiple
 Simple Servers.
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?> 
+<?xml version="1.0" encoding="utf-8" ?>
 <Domain Name="SimpleServer" Description="Brady's Simple Server">
 	<Member Name="banderso" Password="novell">
 		<First>Brady</First>
@@ -15,5 +15,9 @@
 	<Member Name="jpallen" Password="novell">
 		<First>Jared</First>
 		<Last>Allen</Last>
+	</Member>
+	<Member Name="mlasky" Password="novell">
+		<First>Mike</First>
+		<Last>Lasky</Last>
 	</Member>
 </Domain>

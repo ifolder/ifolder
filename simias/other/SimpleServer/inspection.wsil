@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<inspection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.xmlsoap.org/ws/2001/10/inspection/">
-  <service>
-    <abstract>Service used to provision iFolder users and iFolder collections on an iFolder Enterprise server.</abstract>
-    <name>Domain Service</name>
-    <description referencedNamespace="http://schemas.xmlsoap.org/ws/2001/10/inspection/" location="/simias10/DomainService.asmx" />
-  </service>
-</inspection>

@@ -94,11 +94,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "Authentication.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DomainInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -125,6 +120,11 @@
                 />
                 <File
                     RelPath = "SimpleDomain.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SimpleServerAuthentication.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
