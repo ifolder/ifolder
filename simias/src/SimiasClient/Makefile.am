@@ -3,7 +3,7 @@ SUBDIRS = libsimias-event
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasClient_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/CertPolicy.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NeedCredentialsEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/SimiasSetup.cs $(srcdir)/WSInspection.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs
+SimiasClient_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/CertPolicy.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NeedCredentialsEventArgs.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/WSInspection.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs
 SimiasClient_CSFILES := $(subst /,$(SEP),$(SimiasClient_CSFILES1))
 SimiasClient_INCLUDES =
 SimiasClient_RESOURCES =
@@ -36,8 +36,8 @@ if DARWIN
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 
-SimiasClient.dll: SimiasSetup.cs $(srcdir)/SimiasService.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(DOC_FILE_CMD)
+SimiasClient.dll: $(srcdir)/SimiasSetup.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(subst /,$(SEP),$(srcdir)/SimiasSetup.cs) $(DOC_FILE_CMD)
 
 if DEBUG
 if WINDOWS
