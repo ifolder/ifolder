@@ -53,7 +53,7 @@ INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
 GLADE_FILES = conflict-resolver.glade application-properties.glade ifolder-banner.png ifolder.glade collection-browser.glade reunion-browser.glade collection.png folder.png ifolder-collision.png ifolder.png invitewiz.png
 
-IMAGE_FILES = collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png ifolder-crash.png
+IMAGE_FILES = serverifolder.png collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png ifolder-crash.png
 
 MIME_FILES = $(srcdir)/ifolder.mime $(srcdir)/ifolder.keys
 APPLICATIONS_FILES = $(srcdir)/ifolder.applications

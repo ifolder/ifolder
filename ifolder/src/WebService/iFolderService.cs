@@ -268,6 +268,37 @@ namespace Novell.iFolder.Web
 				list.Add(new iFolder(col));
 			}
 
+
+			// Now we need to get all of Subscriptions
+			POBox pobox = Simias.POBox.POBox.GetPOBox(store, 
+													store.DefaultDomain);
+			if(pobox != null)
+			{
+
+				ICSList poList = pobox.Search(
+						PropertyTags.Types,
+						typeof(Subscription).Name,
+						SearchOp.Equal);
+			
+				foreach(ShallowNode sNode in poList)
+				{
+					Subscription sub = new Subscription(pobox, sNode);
+
+					// Filter out subscription that are in the Ready
+					// state AND are already on our box
+					if (sub.SubscriptionState == SubscriptionStates.Ready)
+					{
+						if (store.GetCollectionByID(
+								sub.SubscriptionCollectionID) != null)
+						{
+							continue;
+						}
+					}
+					list.Add(new iFolder(sub));
+				}
+			}
+
+
 			return (iFolder[])list.ToArray(typeof(iFolder));
 		}
 

@@ -39,6 +39,7 @@ namespace Novell.iFolder
 
 		private iFolderWebService	iFolderWS;
 		private Gdk.Pixbuf			iFolderPixBuf;
+		private Gdk.Pixbuf			ServeriFolderPixBuf;
 		private Gdk.Pixbuf			CollisionPixBuf;
 
 		private Statusbar			MainStatusBar;
@@ -297,6 +298,8 @@ namespace Novell.iFolder
 						OniFolderRowActivated);
 
 
+			ServeriFolderPixBuf = 
+				new Gdk.Pixbuf(Util.ImagesPath("serverifolder.png"));
 			iFolderPixBuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			CollisionPixBuf = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
@@ -348,11 +351,16 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
+			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
 //			if(ifolder.HasCollisions())
 //				((CellRendererText) cell).Text = "Has File Conflicts";
 //			else
+			if(ifolder.IsLocal)
 				((CellRendererText) cell).Text = "OK";
+			else if(ifolder.IsAccepted)
+				((CellRendererText) cell).Text = "On Server";
+			else
+				((CellRendererText) cell).Text = "Not Accepted";
 		}
 
 
@@ -373,11 +381,14 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-//			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
+			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
 //			if(ifolder.HasCollisions())
 //				((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
 //			else
+			if(ifolder.IsLocal)
 				((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
+			else
+				((CellRendererPixbuf) cell).Pixbuf = ServeriFolderPixBuf;
 		}
 
 
@@ -520,46 +531,70 @@ namespace Novell.iFolder
 
 							tSelect.GetSelected(out tModel, out iter);
 							ifolder = (iFolder) tModel.GetValue(iter, 0);
-						}
 
-						MenuItem item_open = 
-							new MenuItem ("Open");
-						ifMenu.Append (item_open);
-						item_open.Activated += new EventHandler(
-								OnOpeniFolderMenu);
+							if(ifolder.IsLocal)
+							{
+								MenuItem item_open = 
+									new MenuItem ("Open");
+								ifMenu.Append (item_open);
+								item_open.Activated += new EventHandler(
+										OnOpeniFolderMenu);
 
-						MenuItem item_share = 
-							new MenuItem ("Share with...");
-						ifMenu.Append (item_share);
-						item_share.Activated += new EventHandler(
-								on_shareifolder_context_menu);
+								MenuItem item_share = 
+									new MenuItem ("Share with...");
+								ifMenu.Append (item_share);
+								item_share.Activated += new EventHandler(
+										on_shareifolder_context_menu);
 
-						MenuItem item_revert = 
-								new MenuItem ("Revert to a Normal Folder");
-						ifMenu.Append (item_revert);
-						item_revert.Activated += new EventHandler(
-								OnDeleteiFolder);
+								MenuItem item_revert = 
+									new MenuItem ("Revert to a Normal Folder");
+								ifMenu.Append (item_revert);
+								item_revert.Activated += new EventHandler(
+										OnDeleteiFolder);
 
-						ifMenu.Append(new SeparatorMenuItem());
+								ifMenu.Append(new SeparatorMenuItem());
 
 /*
-						if(	(ifolder != null) && (ifolder.HasCollisions()) )
-						{
-							MenuItem item_resolve = 
-								new MenuItem ("Resolve Conflicts");
-							ifMenu.Append (item_resolve);
-							item_resolve.Activated += new EventHandler(
-								on_show_conflict_resolver);
-						
-							ifMenu.Append(new SeparatorMenuItem());
-						}
+								if(	(ifolder != null) && 
+										(ifolder.HasCollisions()) )
+								{
+									MenuItem item_resolve = 
+										new MenuItem ("Resolve Conflicts");
+									ifMenu.Append (item_resolve);
+									item_resolve.Activated += new EventHandler(
+										on_show_conflict_resolver);
+							
+									ifMenu.Append(new SeparatorMenuItem());
+								}
 */
+	
+								MenuItem item_properties = 
+									new MenuItem ("Properties");
+								ifMenu.Append (item_properties);
+								item_properties.Activated += 
+									new EventHandler( OnShowProperties );
+							}
+							else if(ifolder.IsAccepted)
+							{
+								MenuItem item_accept = 
+									new MenuItem ("Sync on this computer");
+								ifMenu.Append (item_accept);
 
-						MenuItem item_properties = 
-							new MenuItem ("Properties");
-						ifMenu.Append (item_properties);
-						item_properties.Activated += 
-							new EventHandler( OnShowProperties );
+								MenuItem item_remove = 
+									new MenuItem ("Delete from Server");
+								ifMenu.Append (item_remove);
+							}
+							else
+							{
+								MenuItem item_accept = 
+									new MenuItem ("Accept on this computer");
+								ifMenu.Append (item_accept);
+
+								MenuItem item_decline = 
+									new MenuItem ("Decline iFolder");
+								ifMenu.Append (item_decline);
+							}
+						}
 					}
 					else
 					{

@@ -22,6 +22,7 @@
 
 using System;
 using Simias.Storage;
+using Simias.POBox;
 using Simias.Sync;
 using System.Xml;
 using System.Xml.Serialization;
@@ -51,6 +52,8 @@ namespace Novell.iFolder.Web
 		public bool Synchronizable;
 		public string Type;
 		public string Description;
+		public bool IsLocal;
+		public bool IsAccepted;
 
 		public iFolder()
 		{
@@ -76,6 +79,21 @@ namespace Novell.iFolder.Web
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = iFolderType;
 			this.Description = "";
+			this.IsLocal = true;
+			this.IsAccepted = true;
+		}
+
+
+		public iFolder(Subscription subscription)
+		{
+			this.Name = subscription.SubscriptionCollectionName;
+			this.ID = subscription.SubscriptionCollectionID;
+			this.Description = subscription.CollectionDescription;
+			this.IsLocal = false;
+			if (subscription.SubscriptionState == SubscriptionStates.Ready)
+				this.IsAccepted = true;
+			else
+				this.IsAccepted = false;
 		}
 	}
 }

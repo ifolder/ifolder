@@ -590,6 +590,12 @@ public class iFolder {
 
     /// <remarks/>
     public string Description;
+
+    /// <remarks/>
+    public bool IsLocal;
+
+    /// <remarks/>
+    public bool IsAccepted;
 }
 
 /// <remarks/>
