@@ -548,13 +548,19 @@ namespace Simias.Sync.Client
 				serverStatus = si.Status;
 				switch (si.Status)
 				{
+					case SyncColStatus.AccessDenied:
+						log.Info("Failed authentication");
+						break;
 					case SyncColStatus.Busy:
+						log.Info("The server is busy");
 						break;
 					case SyncColStatus.NotFound:
+						log.Info("The collection no longer exists");
 						// The collection does not exist or we do not have rights.
 						collection.Commit(collection.Delete());
 						break;
 					case SyncColStatus.NoWork:
+						log.Debug("No work to do");
 						break;
 					case SyncColStatus.Success:
 					switch (rights)
@@ -1467,36 +1473,43 @@ namespace Simias.Sync.Client
 					if (node != null)
 					{
 						ClientOutFile file = new ClientOutFile(collection, node, new WsServerWriteFile(service));
-						file.Open();
-						bool success = false;
-						try
+						SyncStatus status = file.Open();
+						if (status == SyncStatus.Success)
 						{
-							log.Info("Uploading File {0} to server", file.Name);
-							success = file.UploadFile();
-						}
-						finally
-						{
-							SyncNodeStatus syncStatus = file.Close(success);
-							switch (syncStatus.status)
+							bool success = false;
+							try
 							{
-								case SyncStatus.Success:
-									workArray.RemoveNodeToServer(nodeID);
-									break;
-								case SyncStatus.InProgess:
-								case SyncStatus.InUse:
-								case SyncStatus.ServerFailure:
-									log.Info("Failed Uploading File {0}", file.Name);
-									break;
-								case SyncStatus.FileNameConflict:
-								case SyncStatus.UpdateConflict:
-									// Since we had a conflict we need to get the conflict node down.
-									workArray.RemoveNodeToServer(nodeID);
-									NodeStamp ns = new NodeStamp(node);
-									ns.MasterIncarnation++;
-									workArray.AddNodeFromServer(ns);
-									log.Info("Failed Uploading File {0}", file.Name);
-									break;
+								log.Info("Uploading File {0} to server", file.Name);
+								success = file.UploadFile();
 							}
+							finally
+							{
+								SyncNodeStatus syncStatus = file.Close(success);
+								switch (syncStatus.status)
+								{
+									case SyncStatus.Success:
+										workArray.RemoveNodeToServer(nodeID);
+										break;
+									case SyncStatus.InProgess:
+									case SyncStatus.InUse:
+									case SyncStatus.ServerFailure:
+										log.Info("Failed Uploading File {0} : reason {1}", file.Name, syncStatus.status.ToString());
+										break;
+									case SyncStatus.FileNameConflict:
+									case SyncStatus.UpdateConflict:
+										// Since we had a conflict we need to get the conflict node down.
+										workArray.RemoveNodeToServer(nodeID);
+										NodeStamp ns = new NodeStamp(node);
+										ns.MasterIncarnation++;
+										workArray.AddNodeFromServer(ns);
+										log.Info("Failed Uploading File {0} : reason {1}", file.Name, syncStatus.status.ToString());
+										break;
+								}
+							}
+						}
+						else
+						{
+							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
 						}
 					}
 				}

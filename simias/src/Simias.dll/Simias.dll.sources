@@ -111,5 +111,6 @@ AssemblyInfo.cs
 ../Sync/SyncEventSubscriber.cs
 ../Sync/SyncFile.cs
 ../Sync/SyncLog.cs
+../Sync/SyncPolicy.cs
 ../Sync/WeakHash.cs
 

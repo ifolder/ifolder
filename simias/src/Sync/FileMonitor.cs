@@ -176,10 +176,11 @@ namespace Simias.Sync
 			FileInfo fi = new FileInfo(path);
 			DateTime fsLastWrite = fi.LastWriteTime;
 			TimeSpan ts = fsLastWrite - fn.LastWriteTime;
+			uint seconds = (uint)ts.TotalSeconds;
 			
-			if (ts.TotalSeconds != 0)
+			if (seconds != 0)
 			{
-				// Don't reset the Createion time.
+				// Don't reset the Creation time.
 				fn.LastWriteTime = fsLastWrite;
 				fn.LastAccessTime = fi.LastAccessTime;
 				fn.Length = fi.Length;

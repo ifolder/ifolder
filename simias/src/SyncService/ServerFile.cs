@@ -53,34 +53,47 @@ namespace Simias.Sync
 	/// </summary>
 	public class ServerInFile : InFile
 	{
-		SyncNode snode;
+		SyncNode	snode;
+		SyncPolicy	policy;
+
 		#region Constructors
 
 		/// <summary>
 		/// Contructs a ServerFile object that is used to sync a file from the client.
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
-		/// <param name="node">The node to sync.</param>
-		public ServerInFile(Collection collection, SyncNode snode) :
+		/// <param name="snode">The node to sync.</param>
+		/// <param name="policy">The policy to check the file against.</param>
+		public ServerInFile(Collection collection, SyncNode snode, SyncPolicy policy) :
 			base(collection)
 		{
 			this.snode = snode;
+			this.policy = policy;
 		}
 
 		#endregion
 
-		public void Open()
+		/// <summary>
+		/// Open the server file and validate access.
+		/// </summary>
+		/// <returns>Status of the open.</returns>
+		public SyncNodeStatus.SyncStatus Open()
 		{
 			if (snode == null)
 			{
-				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
+				return SyncNodeStatus.SyncStatus.ClientError;
 			}
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(snode.node);
 			node = (BaseFileNode)Node.NodeFactory(collection.StoreReference, xNode);
+			if (!policy.Allowed(node))
+			{
+				return SyncNodeStatus.SyncStatus.Policy;
+			}
 			collection.ImportNode(node, true, snode.expectedIncarn);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
+			return SyncNodeStatus.SyncStatus.Success;
 		}
 
 		/// <summary>
@@ -172,6 +185,9 @@ namespace Simias.Sync
 
 		#endregion
 
+		/// <summary>
+		/// Open the file for download access.
+		/// </summary>
 		public void Open()
 		{
 			base.Open(node);

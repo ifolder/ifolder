@@ -540,6 +540,7 @@ RCODE CSPStore::OpenStore( char *pStorePath)
 			NULL,
 			NULL,			//default pRflDir
 			FO_SHARE,
+			NULL,
 			&m_hFlaim);
 
 		if (RC_OK(rc))

@@ -66,6 +66,11 @@ namespace Simias.Sync.Client
 			}
 		}
 
+		/// <summary>
+		/// Checks if the table contains the weak hash.
+		/// </summary>
+		/// <param name="weakHash">The hash to compare.</param>
+		/// <returns>True if in the table.</returns>
 		public bool Contains(UInt32 weakHash)
 		{
 			return table.Contains(weakHash);

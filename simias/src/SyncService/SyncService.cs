@@ -31,6 +31,7 @@ using System.Threading;
 using Simias.Storage;
 using Simias;
 using Simias.Client.Event;
+using Simias.Policy;
 
 namespace Simias.Sync
 {
@@ -83,6 +84,10 @@ namespace Simias.Sync
 		/// Someone is sync-ing now come back latter.
 		/// </summary>
 		Busy,
+		/// <summary>
+		/// The user is not authenticated.
+		/// </summary>
+		AccessDenied,
 	};
 	
 	/// <summary>
@@ -269,6 +274,18 @@ namespace Simias.Sync
 			/// The Server is busy.
 			/// </summary>
 			Busy,
+			/// <summary>
+			/// The client passed invalid data.
+			/// </summary>
+			ClientError,
+			/// <summary>
+			/// The policy doesnot allow this file.
+			/// </summary>
+			Policy,
+			/// <summary>
+			/// Insuficient rights for the operation.
+			/// </summary>
+			Access,
 		}
 	}
 
@@ -356,6 +373,7 @@ namespace Simias.Sync
 		ArrayList		NodeList = new ArrayList();
 		ServerInFile	inFile;
 		ServerOutFile	outFile;
+		SyncPolicy		policy;
 
 		~SyncService()
 		{
@@ -375,6 +393,19 @@ namespace Simias.Sync
 					cLock.ReleaseLock();
 					cLock = null;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Get they sync policy for this collection.
+		/// </summary>
+		private SyncPolicy Policy
+		{
+			get
+			{
+				if (policy == null)
+					policy = new SyncPolicy(collection);
+				return policy;
 			}
 		}
 	
@@ -401,18 +432,26 @@ namespace Simias.Sync
 
 			// Check our rights.
 			string userID = Thread.CurrentPrincipal.Identity.Name;
-			//		if ((userID == null) || (userID.Length == 0))
+			if (userID != null)
 			{
-				// BUGBUG: for now trust the client.  this need to be removed before shipping.
-				userID = user;
+				// BUGBUG
+				if (userID.Length == 0)
+					userID = user;
+				// End BUGBUG
+				if (userID.Length != 0)
+					member = collection.GetMemberByID(userID);
+				if (member != null)
+				{
+					collection.Impersonate(member);
+					rights = member.Rights;
+					si.Access = rights;
+					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
+				}
 			}
-			member = collection.GetMemberByID(userID);
-			if (member != null)
+			else
 			{
-				collection.Impersonate(member);
-				rights = member.Rights;
-				si.Access = rights;
-				log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
+				si.Status = SyncColStatus.AccessDenied;
+				return null;
 			}
 
 			switch (rights)
@@ -837,17 +876,23 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="node">The node to put to ther server.</param>
 		/// <returns>True if successful.</returns>
-		public bool PutFileNode(SyncNode node)
+		public SyncNodeStatus.SyncStatus PutFileNode(SyncNode node)
 		{
-			if (cLock == null || !IsAccessAllowed(Access.Rights.ReadWrite))
-				return false;
+			if (!IsAccessAllowed(Access.Rights.ReadWrite))
+			{
+				return SyncNodeStatus.SyncStatus.Access;
+			}
+			if (cLock == null) 
+			{
+				return SyncNodeStatus.SyncStatus.ClientError;
+			}
+
 			cLock.LockRequest();
 			try
 			{
-				inFile = new ServerInFile(collection, node);
-				inFile.Open();
+				inFile = new ServerInFile(collection, node, Policy);
 				outFile = null;
-				return true;
+				return inFile.Open();
 			}
 			finally
 			{

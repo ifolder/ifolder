@@ -453,18 +453,19 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Open the file.
 		/// </summary>
-		public void Open()
+		/// <returns>The status of the open.</returns>
+		public SyncStatus Open()
 		{
 			SyncNode snode = new SyncNode();
 			snode.nodeID = node.ID;
 			snode.node = node.Properties.ToString(true);
 			snode.expectedIncarn = node.MasterIncarnation;
-						
-			if (!serverFile.PutFileNode(snode))
+			SyncStatus status = serverFile.PutFileNode(snode);
+			if (status == SyncStatus.Success)
 			{
-				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
+				base.Open(node);
 			}
-			base.Open(node);
+			return status;
 		}
 
 		/// <summary>
@@ -746,8 +747,8 @@ namespace Simias.Sync.Client
 		/// Put the node that represents the file to the server.
 		/// </summary>
 		/// <param name="snode">The node to put.</param>
-		/// <returns>true if successful.</returns>
-		bool PutFileNode(SyncNode snode);
+		/// <returns>The status of the put.</returns>
+		SyncStatus PutFileNode(SyncNode snode);
 
 		/// <summary>
 		/// Get the hash map of the file. This can be used to do a delta sync.
@@ -833,7 +834,7 @@ namespace Simias.Sync.Client
 		/// <returns>The number of bytes read.</returns>
 		public int Read(long offset, int count, out byte[] buffer)
 		{
-			return service.Read(offset, count, out buffer);
+			return service.Read(out buffer, offset, count);
 		}
 
 		/// <summary>
@@ -874,8 +875,8 @@ namespace Simias.Sync.Client
 		/// Put the node that represents the file to the server.
 		/// </summary>
 		/// <param name="snode">The node to put.</param>
-		/// <returns>true if successful.</returns>
-		public bool PutFileNode(SyncNode snode)
+		/// <returns>The status of the put.</returns>
+		public SyncStatus PutFileNode(SyncNode snode)
 		{
 			return service.PutFileNode(snode);
 		}

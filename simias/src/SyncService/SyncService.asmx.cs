@@ -150,10 +150,10 @@ namespace Simias.Sync.Web
 		/// an upload of a file.  Close must be called to cleanup resources.
 		/// </summary>
 		/// <param name="node">The node to put to ther server.</param>
-		/// <returns>True if successful.</returns>
+		/// <returns>Status of the open.</returns>
 		[WebMethod(EnableSession = true)]
         [SoapRpcMethod]
-		public bool PutFileNode(SyncNode node)
+		public SyncNodeStatus.SyncStatus PutFileNode(SyncNode node)
 		{
 			return Service.PutFileNode(node);
 		}
