@@ -176,46 +176,57 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		string userID = collection.StoreReference.GetUserIDFromDomainID(collection.Domain);
 		Access.Rights rights = ss.Start(userID);
-		if (rights == Access.Rights.Deny)
+		try
 		{
-			Log.log.Error("Sync with collection {0} denied", collection.Name);
-			moreWork = false;
-			return;
-		}
-
-		NodeStamp[] sstamps;
-		NodeStamp[] cstamps;
-		
-		string clientCookie, serverCookie;
-		bool gotServerChanges, gotClientChanges;
-		ops.GetChangeLogCookies(out serverCookie, out clientCookie);
-		gotServerChanges = ss.GetChangedNodeStamps(out sstamps, ref serverCookie);
-		gotClientChanges = ops.GetChangedNodeStamps(out cstamps, ref clientCookie);
-		
-		if (gotServerChanges && gotClientChanges)
-		{
-			if (sstamps.Length != 0 || cstamps.Length != 0)
-				moreWork = true;
-			else
-				moreWork = false;
-
-			ProcessChangedNodeStamps(rights, sstamps, cstamps);
-			ExecuteSync();
-			ops.SetChangeLogCookies(serverCookie, clientCookie, !HadErrors);
-		}
-		else
-		{
-			sstamps =  ss.GetNodeStamps();
-			if (sstamps == null)
+			if (rights == Access.Rights.Deny)
 			{
-				Log.log.Error("Server Failure: could not get nodestamps");
+				Log.log.Error("Sync with collection {0} denied", collection.Name);
+				moreWork = false;
 				return;
 			}
-			cstamps =  ops.GetNodeStamps();
-			BruteForceSync(rights, sstamps, cstamps);
-			ExecuteSync();
-			ops.SetChangeLogCookies(serverCookie, clientCookie, !HadErrors);
-			moreWork = false;
+
+			moreWork = true;
+			while (moreWork && ! stopping)
+			{
+				NodeStamp[] sstamps;
+				NodeStamp[] cstamps;
+		
+				string clientCookie, serverCookie;
+				bool gotServerChanges, gotClientChanges;
+				ops.GetChangeLogCookies(out serverCookie, out clientCookie);
+				gotServerChanges = ss.GetChangedNodeStamps(out sstamps, ref serverCookie);
+				gotClientChanges = ops.GetChangedNodeStamps(out cstamps, ref clientCookie);
+		
+				if (gotServerChanges && gotClientChanges)
+				{
+					if (sstamps.Length != 0 || cstamps.Length != 0)
+						moreWork = true;
+					else
+						moreWork = false;
+
+					ProcessChangedNodeStamps(rights, sstamps, cstamps);
+					ExecuteSync();
+					ops.SetChangeLogCookies(serverCookie, clientCookie, !HadErrors);
+				}
+				else
+				{
+					sstamps =  ss.GetNodeStamps();
+					if (sstamps == null)
+					{
+						Log.log.Error("Server Failure: could not get nodestamps");
+						return;
+					}
+					cstamps =  ops.GetNodeStamps();
+					BruteForceSync(rights, sstamps, cstamps);
+					ExecuteSync();
+					ops.SetChangeLogCookies(serverCookie, clientCookie, !HadErrors);
+					moreWork = false;
+				}
+			}
+		}
+		finally
+		{
+			ss.Stop();
 		}
 	}
 		

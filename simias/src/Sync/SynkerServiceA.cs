@@ -117,6 +117,12 @@ public class SynkerServiceA: SyncCollectionService
 		return rights;
 	}
 
+	public void Stop()
+	{
+		collection.Revert();
+		System.Runtime.Remoting.RemotingServices.Disconnect(this);
+	}
+
 	private bool IsAccessAllowed(Access.Rights desiredRights)
 	{
 		return (rights >= desiredRights) ? true : false;
