@@ -29,7 +29,7 @@ static AboutBoxController *sharedInstance = nil;
 
 - (IBAction)showPanel:(id)sender
 {
-    if (!appNameField)
+    if (!versionField)
     {
         NSWindow *theWindow;
         NSString *creditsPath;
@@ -52,7 +52,7 @@ static AboutBoxController *sharedInstance = nil;
             return;
         }
 
-        theWindow = [appNameField window];
+        theWindow = [versionField window];
         
         // Get the info dictionary (Info.plist)
         infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -64,7 +64,6 @@ static AboutBoxController *sharedInstance = nil;
 
        // Setup the app name field
         appName = [localInfoDict objectForKey:@"CFBundleName"];
-        [appNameField setStringValue:appName];
         
         // Set the about box window title
         [theWindow setTitle:[NSString stringWithFormat:@"About %@", appName]];
@@ -100,7 +99,7 @@ static AboutBoxController *sharedInstance = nil;
         [theWindow center];
     }
  
-	   if (![[appNameField window] isVisible])
+	   if (![[versionField window] isVisible])
     {
         currentPosition = 0;
         restartAtTop = NO;
@@ -109,7 +108,7 @@ static AboutBoxController *sharedInstance = nil;
     }
     
     // Show the window
-    [[appNameField window] makeKeyAndOrderFront:nil];
+    [[versionField window] makeKeyAndOrderFront:nil];
 }
 
 
