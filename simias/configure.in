@@ -9,6 +9,10 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
+COMMON_SUBDIRS="Configuration Common CollectionEvents StoreProvider"
+LINUX_SUBDIRS="CommonGtkWindows"
+WINDOWS_SUBDIRS=""
+
 case $host_os in
     linux)
         AC_CHECK_PROG(CSC, mcs, mcs)
@@ -57,6 +61,7 @@ case $host_os in
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         EMPTY=
         SEP='/'
+        OPT_SUBDIRS=$LINUX_SUBDIRS
     ;;
     cygwin)
         AC_CHECK_PROG(CSC, csc, csc)
@@ -110,6 +115,7 @@ case $host_os in
         NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
         EMPTY=
         SEP='$(EMPTY)\\$(EMPTY)'
+        OPT_SUBDIRS=$WINDOWS_SUBDIRS
     ;;
     *)
         AC_MSG_ERROR([Unknown host_os: $host_os])
@@ -158,9 +164,6 @@ case $host_os in
     ;;
 esac
 
-LINUX_SUBDIRS="CommonGtkWindows"
-WINDOWS_SUBDIRS=""
-
 AC_SUBST(EMPTY)
 AC_SUBST(SEP)
 AC_SUBST(ROOTDIR)
@@ -177,8 +180,10 @@ AC_SUBST(MONO)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
+AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
+AC_SUBST(OPT_SUBDIRS)
 
 AC_OUTPUT([
 Makefile
