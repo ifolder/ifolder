@@ -848,6 +848,9 @@ namespace Novell.iFolder.FormsBookLib
 					fullName.Text = "";
 				}
 
+				jobTitle.Text = contact.Title;
+				organization.Text = contact.Organization;
+
 				bool results = LoadAddresses();
 			}
 		}
@@ -910,6 +913,9 @@ namespace Novell.iFolder.FormsBookLib
 						}
 					}
 
+					contact.Organization = organization.Text.Trim();
+					contact.Title = jobTitle.Text.Trim();
+
 					addressBook.AddContact(contact);
 					contact.Commit();
 				}
@@ -956,6 +962,9 @@ namespace Novell.iFolder.FormsBookLib
 					{
 						contact.UserName = username;
 					}
+
+					contact.Title = jobTitle.Text.Trim();
+					contact.Organization = organization.Text.Trim();
 
 					contact.Commit();
 				}
