@@ -100,15 +100,18 @@ namespace Simias.Sync.Delta
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="file"></param>
+		/// <param name="file">The file containing the hash data.</param>
+		/// <param name="entryCount">The number of hash entries.</param>
 		/// <returns></returns>
-		public static HashData[] DeSerializeHashMap(string file)
+		public static byte[] GetHashMapFile(string file, out int entryCount)
 		{
 			Stream stream = File.OpenRead(file);
 			try
 			{
-				BinaryReader reader = new BinaryReader(stream);
-				return DeSerializeHashMap(reader, (int)(stream.Length / HashData.InstanceSize));
+				entryCount = (int)(stream.Length / HashData.InstanceSize);
+				byte[] hashData = new byte[stream.Length];
+				stream.Read(hashData, 0, hashData.Length);
+				return hashData;
 			}
 			finally
 			{
@@ -146,31 +149,37 @@ namespace Simias.Sync.Delta
 		/// Serialized the Hash Created from the input stream to the writer stream.
 		/// </summary>
 		/// <param name="inStream">The stream of raw data to create the HashMap from.</param>
-		public static HashData[] GetHashMap(Stream inStream)
+		/// <param name="entryCount">The number of hash entries.</param>
+		public static byte[] GetHashMap(Stream inStream, out int entryCount)
 		{
 			if (inStream == null || inStream.Length <= HashData.BlockSize)
 			{
+				entryCount = 0;
 				return null;
 			}
 			int				blockCount = GetBlockCount(inStream.Length);
-			HashData[]		list = new HashData[blockCount];
+			byte[]			hashData = new byte[blockCount * HashData.InstanceSize];
+			BinaryWriter	writer = new BinaryWriter( new MemoryStream(hashData));
 			byte[]			buffer = new byte[HashData.BlockSize];
 			StrongHash		sh = new StrongHash();
 			WeakHash		wh = new WeakHash();
 			int				bytesRead;
 			int				currentBlock = 0;
-		
+			
 			// Compute the hash codes.
 			inStream.Position = 0;
 			while ((bytesRead = inStream.Read(buffer, 0, HashData.BlockSize)) != 0)
 			{
-				list[currentBlock] = new HashData(
+				HashData entry = new HashData(
 					currentBlock,
 					wh.ComputeHash(buffer, 0, (UInt16)bytesRead),
 					sh.ComputeHash(buffer, 0, bytesRead));
+				entry.Serialize(writer);
 				currentBlock++;
 			}
-			return list;
+			writer.Close();
+			entryCount = blockCount;
+			return hashData;
 		}
 
 

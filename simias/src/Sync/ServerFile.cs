@@ -119,16 +119,17 @@ namespace Simias.Sync
 		/// Get a hashed map of the file.  This can then be
 		/// used to create an upload or download filemap.
 		/// </summary>
+		/// <param name="entryCount">The number of hash entries.</param>
 		/// <returns></returns>
-		public HashData[] GetHashMap()
+		public byte[] GetHashMap(out int entryCount)
 		{
 			string mapFile = GetHashMapFile();
 			if (mapFile != null)
 			{
-				return HashMap.DeSerializeHashMap(mapFile);
+				return HashMap.GetHashMapFile(mapFile, out entryCount);
 			}
 			else
-				return HashMap.GetHashMap(ReadStream);
+				return HashMap.GetHashMap(ReadStream, out entryCount);
 		}
 
 		/// <summary>
@@ -237,16 +238,17 @@ namespace Simias.Sync
 		/// Get a hashed map of the file.  This can then be
 		/// used to create an upload or download filemap.
 		/// </summary>
+		/// <param name="entryCount">The number of hash entries.</param>
 		/// <returns></returns>
-		public HashData[] GetHashMap()
+		public byte[] GetHashMap(out int entryCount)
 		{
-			string mapFile = GetHashMapFile();
+			string mapFile = GetHashMapFileName();
 			if (mapFile != null)
 			{
-				return HashMap.DeSerializeHashMap(mapFile);
+				return HashMap.GetHashMapFile(mapFile, out entryCount);
 			}
 			else
-				return HashMap.GetHashMap(this.outStream);
+				return HashMap.GetHashMap(this.outStream, out entryCount);
 		}
 
 
@@ -254,7 +256,7 @@ namespace Simias.Sync
 		/// Get a hashed map of the file.  This can then be
 		/// used to create an upload or download filemap.
 		/// </summary>
-		public string GetHashMapFile()
+		public string GetHashMapFileName()
 		{
 			string mapFile = GetMapFileName();
 			FileInfo mapFi = new FileInfo(mapFile);

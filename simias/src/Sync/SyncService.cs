@@ -785,13 +785,14 @@ namespace Simias.Sync
 		/// <summary>
 		/// Get a HashMap of the file.
 		/// </summary>
+		/// <param name="entryCount">The number of hash entries.</param>
 		/// <returns>The HashMap.</returns>
-		public HashData[] GetHashMap()
+		public byte[] GetHashMap(out int entryCount)
 		{
 			if (inFile != null)
-				return inFile.GetHashMap();
+				return inFile.GetHashMap(out entryCount);
 			else
-				return outFile.GetHashMap();
+				return outFile.GetHashMap(out entryCount);
 		}
 
 		/// <summary>

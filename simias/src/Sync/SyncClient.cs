@@ -441,7 +441,7 @@ namespace Simias.Sync
 		Store			store;
 		Collection		collection;
 		bool			queuedChanges;
-		bool			serverAlive;
+		bool			serverAlive = true;
 		StartSyncStatus	serverStatus;
 		Timer			timer;
 		TimerCallback	callback;
@@ -477,7 +477,13 @@ namespace Simias.Sync
 
 		internal bool HighPriority
 		{
-			get { return collection.Priority == 0 ? true : false; }
+			get 
+			{ 
+				// If the server is not responding make sure that we are not high priority.
+				if (serverAlive)
+					return collection.Priority == 0 ? true : false; 
+				else return false;
+			}
 		}
 
 		#endregion
@@ -536,11 +542,6 @@ namespace Simias.Sync
 		/// <param name="SyncNow">If true schedule now.</param>
 		internal void Reschedule(bool SyncNow)
 		{
-			if (collection.Role != SyncRoles.Slave)
-			{
-				timer.Change(Timeout.Infinite, Timeout.Infinite);
-				return;
-			}
 			if (!stopping)
 			{
                 int seconds;

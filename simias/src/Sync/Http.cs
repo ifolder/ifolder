@@ -667,12 +667,20 @@ namespace Simias.Sync.Http
 			headers.Add(SyncHeaders.ObjectCount, copyArray.Count.ToString());
 			headers.Add(SyncHeaders.BlockSize, HashData.BlockSize.ToString());
 			request.ContentLength = copyArray.Count * BlockSegment.InstanceSize;
-			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
+			// TODO: This is a kluge to work around a Apache/mod_ssl memory problem.
+			byte[] copyData = new byte[request.ContentLength];
+			BinaryWriter writer = new BinaryWriter(new MemoryStream(copyData));
+			//BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
 			foreach (BlockSegment seg in copyArray)
 			{
 				seg.Serialize(writer);
 			}
 			writer.Close();
+			Stream rStream = request.GetRequestStream();
+			rStream.Write(copyData, 0, copyData.Length);
+			rStream.Close();
+			// TODO: End.
+
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
@@ -985,14 +993,14 @@ namespace Simias.Sync.Http
 		public void GetHashMap(HttpRequest request, HttpResponse response)
 		{
 			response.ContentType = "application/octet-stream";
-			HashData[] hashMap = service.GetHashMap();
+			int entryCount;
+			byte[] hashMap = service.GetHashMap(out entryCount);
 			if (hashMap != null)
 			{
-				response.AddHeader(SyncHeaders.ObjectCount, hashMap.Length.ToString());
+				response.AddHeader(SyncHeaders.ObjectCount, entryCount.ToString());
 				response.StatusCode = (int)HttpStatusCode.OK;
-				BinaryWriter writer = new BinaryWriter(response.OutputStream);
-				HashMap.SerializeHashMap(hashMap, writer);
-				writer.Close();
+				response.OutputStream.Write(hashMap, 0, hashMap.Length);
+				response.OutputStream.Close();
 				return;
 			}
 			response.AddHeader(SyncHeaders.ObjectCount, "0");
