@@ -119,7 +119,7 @@ namespace Simias.Channels
 				props.Add("port", uri.Port);
 				props.Add("useIpAddress", true);
 				
-				// props.Add("bindTo", "0.0.0.0");
+				props.Add("bindTo", uri.Host);
 			}
 			
 			// client properties
@@ -136,6 +136,9 @@ namespace Simias.Channels
 				//props.Add("timeout", TimeSpan.FromSeconds(30).Milliseconds);
 
 			}
+
+			// common properties
+			props.Add("machineName", uri.Host);
 
 			// provider notes
 			// server providers: security sink -> monitor sink -> formatter sink
