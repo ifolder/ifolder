@@ -43,14 +43,14 @@ namespace Novell.iFolder
 		static Gtk.Image gAppIcon;
 		static Gdk.PixbufAnimation gSyncAnimation;
 		static Gdk.Pixbuf gNifPixbuf;
-		static bool gIsSyncing;
+//		static bool gIsSyncing;
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
 
 		public static void Main (string[] args)
 		{
-			gIsSyncing = false;
+//			gIsSyncing = false;
 
 			Application.Init();
 
@@ -193,7 +193,7 @@ namespace Novell.iFolder
 			{
 				gAppIcon.FromAnimation = gSyncAnimation;
 			}
-			gIsSyncing = true;
+//			gIsSyncing = true;
 		}
 
 		static void stop_sync(object o, EventArgs args)
@@ -202,7 +202,7 @@ namespace Novell.iFolder
 			{
 				gAppIcon.Pixbuf = gNifPixbuf;
 			}
-			gIsSyncing = false;
+//			gIsSyncing = false;
 		}
 
 		static void quit_ifolder(object o, EventArgs args)
