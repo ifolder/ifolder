@@ -1100,16 +1100,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the access control list for this collection object.
-		/// </summary>
-		/// <returns>An ICSEnumerator object that will enumerate the access control list. The ICSList object
-		/// will contain Access objects.</returns>
-		public ICSList GetAccessControlList()
-		{
-			return new ICSList( new Access( this ) );
-		}
-
-		/// <summary>
 		/// Gets a list of ShallowNode objects that represent Node objects that contain collisions in the current
 		/// collection.
 		/// </summary>
@@ -1138,6 +1128,16 @@ namespace Simias.Storage
 		public Member GetMember( string userID )
 		{
 			return accessControl.GetMember( userID.ToLower() );
+		}
+
+		/// <summary>
+		/// Gets the list of Member objects for this collection object.
+		/// </summary>
+		/// <returns>An ICSEnumerator object that will enumerate the member list. The ICSList object
+		/// will contain ShallowNode objects that represent Member objects.</returns>
+		public ICSList GetMemberList()
+		{
+			return Search( BaseSchema.ObjectType, NodeTypes.MemberType, SearchOp.Equal );
 		}
 
 		/// <summary>

@@ -246,7 +246,7 @@ namespace Simias.Storage
 						identity = new Identity( Environment.UserName, Guid.NewGuid().ToString() );
 
 						// Create an object that represents the database collection.
-						localDb = new LocalDatabase( this, Identity.workGroupDomain );
+						localDb = new LocalDatabase( this );
 
 						// Create the database lock.
 						storeMutex = new Mutex( false, ID );

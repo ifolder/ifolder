@@ -31,7 +31,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Class that defines the type of access control rights available on a Collection Store.
 	/// </summary>
-	public class Access : ICSEnumerator
+	public class Access
 	{
 		#region Class Members
 		/// <summary>
@@ -66,85 +66,6 @@ namespace Simias.Storage
 		/// Well know identity role for world access.
 		/// </summary>
 		public const string World = "1edcfe93-45e8-11d8-a9c7-444553544200";
-
-		/// <summary>
-		/// Access control list enumerator.
-		/// </summary>
-		private ICSEnumerator enumerator;
-
-		/// <summary>
-		/// Collection that access control is being enumerated on.
-		/// </summary>
-		private Collection collection;
-		#endregion
-
-		#region Constructor
-		/// <summary>
-		/// Constructor for Access object.
-		/// </summary>
-		/// <param name="collection">Collection to enumerator rights on.</param>
-		internal Access( Collection collection )
-		{
-			this.collection = collection;
-
-			// Get a list of all Member objects that belong to the collection.
-			ICSList memberList = collection.Search( BaseSchema.ObjectType, NodeTypes.MemberType, SearchOp.Equal );
-			enumerator = memberList.GetEnumerator() as ICSEnumerator;
-		}
-		#endregion
-
-		#region IEnumerator Members
-		/// <summary>
-		/// Sets the enumerator to its initial position, which is before
-		/// the first element in the collection.
-		/// </summary>
-		public void Reset()
-		{
-			enumerator.Reset();
-		}
-
-		/// <summary>
-		/// Gets the current element in the collection.
-		/// </summary>
-		public object Current
-		{
-			get 
-			{ 
-				// Convert the ShallowNode object to a Member object.
-				Member member = new Member( collection, enumerator.Current as ShallowNode );
-
-				// Get the ace property from this Member object.
-				Property p = member.Properties.FindSingleValue( PropertyTags.Ace );
-				if ( p == null )
-				{
-					throw new DoesNotExistException( String.Format( "The {0} property does not exist for Member object: {1} - ID: {2}.", PropertyTags.Ace, member.Name, member.ID ) );
-				}
-
-				return new AccessControlEntry( p ); 
-			}
-		}
-
-		/// <summary>
-		/// Advances the enumerator to the next element of the collection.
-		/// </summary>
-		/// <returns>
-		/// true if the enumerator was successfully advanced to the next element;
-		/// false if the enumerator has passed the end of the collection.
-		/// </returns>
-		public bool MoveNext()
-		{
-			return enumerator.MoveNext();
-		}
-		#endregion
-
-		#region IDisposable Members
-		/// <summary>
-		/// This is declared here to satisfy the interface requirements, but the MultiValuedEnumerator
-		/// does not use any unmanaged resources that it needs to dispose of.
-		/// </summary>
-		public void Dispose()
-		{
-		}
 		#endregion
 	}
 
