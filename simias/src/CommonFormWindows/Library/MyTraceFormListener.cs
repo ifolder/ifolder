@@ -40,7 +40,7 @@ namespace Simias
 		private ListView list;
 		private TreeView tree;
 		private bool scrollLock = false;
-		private decimal sizeLimit = -1;
+		private decimal sizeLimit = 100;
 
 		public delegate void WriteDelegate(string message, string category);
 
@@ -108,10 +108,14 @@ namespace Simias
 
 			if ((sizeLimit != -1) && (list.Items.Count > sizeLimit))
 			{
+				list.BeginUpdate();
+
 				while (list.Items.Count > sizeLimit)
 				{
 					list.Items.RemoveAt(0);
 				}
+
+				list.EndUpdate();
 			}
 			
 			// associate category and message
