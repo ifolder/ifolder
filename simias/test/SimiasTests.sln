@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLogTest", "ChangeLog\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasTestsWS", "SimiasTestsWS\SimiasTestsWS.csproj", "{76E8BD10-648C-4DA9-8140-81FA7627DCD0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -21,6 +25,10 @@ Global
 		{333DC349-12FB-4D75-A5DB-02676E096508}.Debug.Build.0 = Debug|.NET
 		{333DC349-12FB-4D75-A5DB-02676E096508}.Release.ActiveCfg = Release|.NET
 		{333DC349-12FB-4D75-A5DB-02676E096508}.Release.Build.0 = Release|.NET
+		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Debug.ActiveCfg = Debug|.NET
+		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Debug.Build.0 = Debug|.NET
+		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Release.ActiveCfg = Release|.NET
+		{76E8BD10-648C-4DA9-8140-81FA7627DCD0}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
