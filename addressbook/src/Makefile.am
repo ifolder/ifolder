@@ -10,10 +10,6 @@ installcheck-summary:
 clean-local:
 	rm -rf stage *.suo
 
-distclean-local:
-	for subdir in $(NON_PLATFORM_SUBDIRS); do rm -rf "$$subdir/Makefile"; done
-
 maintainer-clean-local:
-	for subdir in $(NON_PLATFORM_SUBDIRS); do rm -rf "$$subdir/Makefile.in"; done
 	rm -f Makefile.in
 
