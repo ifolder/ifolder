@@ -31,10 +31,11 @@ using System.Web;
 
 using Simias;
 using Simias.Client;
-//using Simias.Client.Event;
+using Simias.Client.Event;
 using Simias.Event;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Web;
 
 namespace Simias.FileMonitor.INotifyWatcher
 {
@@ -46,12 +47,61 @@ namespace Simias.FileMonitor.INotifyWatcher
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(typeof(Simias.FileMonitor.INotifyWatcher.Manager));
 			
+		private AutoResetEvent	stopEvent;
 		private bool			started = false;
 		private	bool			stop = false;
 		private Configuration	config;
+		private EventSubscriber subscriber;
 		private Thread			watcherThread = null;
-		private AutoResetEvent	stopEvent;
 		private Store			store;
+
+		private void OnCreated(NodeEventArgs args)
+		{
+			log.Info(args.ID);
+
+			try
+			{
+				Collection newCollection = store.GetCollectionByID(args.ID);
+				DirNode dirNode = newCollection.GetRootDirectory();
+				if(dirNode != null)
+				{
+					Uri colPath = 
+						Simias.Web.SharedCollection.GetUriPath(dirNode.GetFullPath(newCollection));
+					log.Info("Watching collection: " + colPath.ToString());
+								
+					// Add this puppy
+				}
+			}
+			catch(Exception e)
+			{
+				log.Info(e.Message);
+				log.Info(e.StackTrace);
+			}
+		}
+
+		private void OnDeleted(NodeEventArgs args)
+		{
+			log.Info(args.ID);
+
+			try
+			{
+				Collection cCollection = store.GetCollectionByID(args.ID);
+				DirNode dirNode = cCollection.GetRootDirectory();
+				if(dirNode != null)
+				{
+					Uri colPath = 
+						Simias.Web.SharedCollection.GetUriPath(dirNode.GetFullPath(cCollection));
+					log.Info("Removing watched collection: " + colPath.ToString());
+								
+					// remove this puppy
+				}
+			}
+			catch(Exception e)
+			{
+				log.Info(e.Message);
+				log.Info(e.StackTrace);
+			}
+		}
 
 		/// <summary>
 		/// Constructor
@@ -78,6 +128,9 @@ namespace Simias.FileMonitor.INotifyWatcher
 				{
 					if (started == false)
 					{
+						// For testing
+						Thread.Sleep(30000);
+
 						/*
 							Get all the current collections that contain file or
 							directory nodes and start watching.
@@ -85,10 +138,31 @@ namespace Simias.FileMonitor.INotifyWatcher
 							Also, subscribe to a new collection event so we can watch
 							any new ones that come into the system	
 						*/
-						
-						
+
+						ICSList collections = 
+							store.GetCollectionsByDomain(store.DefaultDomain);
+
+						foreach(ShallowNode shallowNode in collections)
+						{
+							Collection cCollection = store.GetCollectionByID(shallowNode.ID);
+							DirNode dirNode = cCollection.GetRootDirectory();
+							if(dirNode != null)
+							{
+								Uri colPath = 
+									Simias.Web.SharedCollection.GetUriPath(dirNode.GetFullPath(cCollection));
+								log.Info("Watching collection: " + colPath.ToString());
+								
+								// Add this puppy
+							}
+						}
+
+						// Subscribe to all events from all collections
+						subscriber = new EventSubscriber();
+						subscriber.Enabled = true;
 					
-					
+						//subscriber.NodeTypeFilter = NodeTypes.NodeType;
+						subscriber.NodeCreated += new NodeEventHandler(OnCreated);
+						subscriber.NodeDeleted += new NodeEventHandler(OnDeleted);
 					}
 				}
 			}
