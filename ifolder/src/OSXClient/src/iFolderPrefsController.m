@@ -1,7 +1,6 @@
 #import "iFolderPrefsController.h"
-#import "iFolderDomain.h"
-#import "iFolderService.h"
 #import "MainWindowController.h"
+#import "AccountsController.h"
 
 @implementation iFolderPrefsController
 
@@ -18,35 +17,8 @@
 
 	[toolbar setSelectedItemIdentifier:@"General"];
 
-
-	webService = [[iFolderService alloc] init];
-
-	@try
-	{
-		int x;
-		
-		NSArray *newDomains = [webService GetDomains];
-	
-		// add all domains that are not workgroup
-		for(x=0; x < [newDomains count]; x++)
-		{
-			iFolderDomain *dom = [newDomains objectAtIndex:x];
-			NSString *domainID = [[dom properties] valueForKey:@"ID"];
-			
-			if([domainID compare:WORKGROUP_DOMAIN] != 0)
-			{
-				[domainsController addObject:dom];
-			}
-		}
-
-//		[domainsController addObjects:newDomains];
-	}
-	@catch (NSException *e)
-	{
-		[[NSApp delegate] addLog:@"Reading domains failed with exception"];
-	}
-
 	modalReturnCode = 0;
+
 	// Setup the controls
 }
 
@@ -80,23 +52,16 @@
 }
 
 
-
-
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
 {
 	return toolbarItemArray;
 }
 
 
-
-
-
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
 	return toolbarItemArray;
 }
-
-
 
 
 - (void)generalPreferences:(NSToolbarItem *)item
@@ -112,21 +77,18 @@
 }
 
 
-
-
 - (void)accountPreferences:(NSToolbarItem *)item
 {
 	if([[self window] contentView] != accountsView)
 	{
 		NSLog(@"Switching view to accounts Page");
+//		[accountsController refreshData];
 		[[self window] setContentView: blankView];
 		[self updateSize:[accountsView frame].size];
 		[[self window] setContentView: accountsView];
 		[[self window] setTitle:@"iFolder Preferences: Accounts"];	
 	}
 }
-
-
 
 
 - (void)syncPreferences:(NSToolbarItem *)item
@@ -140,8 +102,6 @@
 		[[self window] setTitle:@"iFolder Preferences: Synchronization"];	
 	}
 }
-
-
 
 
 - (void)notifyPreferences:(NSToolbarItem *)item
@@ -220,79 +180,46 @@
 
 
 
+/*
+	This is old binding code that I didn't want to loose so it's down here
 
-- (BOOL)selectionShouldChangeInTableView:(NSTableView *)aTableView
-{
-	int selIndex = [domainsController selectionIndex];
-	iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:selIndex];
-	if([[dom properties] objectForKey:@"Authenticated"] != nil)
-	{
-		NSBeginAlertSheet(@"Save Account", @"Save", @"Don't Save", @"Cancel", 
-			[self window], self, @selector(changeSelectionResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
-			@"The selected account has not been logged in to and saved.  Would you like to login and save it now?");
-	}
-	return YES;
-}
+    NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
+    	
+	// binding options for "name"
+	[bindingOptions setObject:@"No Name" forKey:@"NSNullPlaceholder"];
 
+	// binding for "price" column
+    NSTableColumn *accountsColumn = [accountView tableColumnWithIdentifier:@"Accounts"];
 
+    [accountsColumn bind:@"value" toObject:[[NSApp delegate] DomainsController]
+	  withKeyPath:@"arrangedObjects.properties.Name" options:bindingOptions];
 
-- (IBAction)addDomain:(id)sender
-{
-	[domainsController add:sender];
-}
+	// binding for selected "Name" field
+    [accountName bind:@"value" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.Name" options:bindingOptions];
 
 
-
-- (IBAction)removeDomain:(id)sender
-{
-	[domainsController remove:sender];
-}
-
-
-
-- (IBAction)loginToDomain:(id)sender
-{
-	int selIndex = [domainsController selectionIndex];
-	iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:selIndex];
-	if([[dom properties] objectForKey:@"Authenticated"] != nil)
-	{
-		if( ([[dom UserName] length] > 0) &&
-			([[dom Host] length] > 0) &&
-			([[dom Password] length] > 0) )
-		{
-			if([[NSApp delegate] connectToDomain:dom] == YES)
-			{
-				// we logged in, the domain object should be updated
-			}
-			else
-			{
-				NSBeginAlertSheet(@"Login Failed", @"OK", nil, nil, 
-					[self window], nil, nil, nil, nil, 
-					@"Login failed, please try again.");
-			}
-		}
-	}
-}
+	// binding for selected "Host" field
+    [host bind:@"value" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.Host" options:bindingOptions];	  	
+    [host bind:@"enabled" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.CanEditHost" options:bindingOptions];	
 
 
+	// binding for selected "UserName" field
+    [userName bind:@"value" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.UserName" options:bindingOptions];	
+    [userName bind:@"enabled" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.CanEditUserName" options:bindingOptions];	
 
-- (void)changeSelectionResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-	switch(returnCode)
-	{
-		case NSAlertDefaultReturn:
-			[domainsController setSelectionIndex:(int)contextInfo];
-			// login 
-//			iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:(int)contextInfo];
-			break;
-		case NSAlertAlternateReturn:
-			[domainsController removeObjectAtArrangedObjectIndex:(int)contextInfo];
-			break;
-		case NSAlertOtherReturn:
-		case NSAlertErrorReturn:
-			[domainsController setSelectionIndex:(int)contextInfo];
-			break;
-	}
-}
+
+	// binding for selected "Password" field
+    [password bind:@"value" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.Password" options:bindingOptions];	
+    [password bind:@"enabled" toObject:[[NSApp delegate] DomainsController]
+				 withKeyPath:@"selection.properties.CanEditPassword" options:bindingOptions];	
+*/
+
+
 
 @end

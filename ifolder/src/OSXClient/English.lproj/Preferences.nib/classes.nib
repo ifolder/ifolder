@@ -1,14 +1,41 @@
 {
     IBClasses = (
+        {
+            ACTIONS = {
+                activateAccount = id; 
+                addAccount = id; 
+                removeAccount = id; 
+                toggleActive = id; 
+                toggleDefault = id; 
+                toggleSavePassword = id; 
+            }; 
+            CLASS = AccountsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accounts = NSTableView; 
+                activate = NSButton; 
+                addAccount = NSButton; 
+                defaultAccount = NSButton; 
+                enableAccount = NSButton; 
+                host = NSTextField; 
+                name = NSTextField; 
+                parentWindow = NSWindow; 
+                password = NSSecureTextField; 
+                rememberPassword = NSButton; 
+                removeAccount = NSButton; 
+                userName = NSTextField; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {addDomain = id; loginToDomain = id; removeDomain = id; }; 
             CLASS = iFolderPrefsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountsController = AccountsController; 
                 accountsView = NSView; 
                 blankView = NSView; 
-                domainsController = NSArrayController; 
                 generalView = NSView; 
                 notifyView = NSView; 
                 syncView = NSView; 

@@ -80,7 +80,7 @@ void cleanup_gsoap(struct soap *pSoap);
  	if(soap.error)
 	{
 		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
-					format:@"Error in GetDomains"];
+					format:@"iFolderService.GetDomains"];
 	}
 	else
 	{

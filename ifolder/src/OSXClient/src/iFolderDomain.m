@@ -30,15 +30,20 @@
 {
 	if(self = [super init])
 	{
-		NSArray *keys	= [NSArray arrayWithObjects: @"Name", @"Authenticated", nil];
-		NSArray *values = [NSArray arrayWithObjects: @"New Domain", @"NO", nil];
-		
+		NSArray *keys	= [NSArray arrayWithObjects:	@"name", 
+														@"password",
+														nil];
+
+		NSArray *values = [NSArray arrayWithObjects:	@"New Domain",
+														@"",
+														nil];
+
 		properties = [[NSMutableDictionary alloc]
 			initWithObjects:values forKeys:keys];
 	}
+	
 	return self;
 }
-
 
 
 
@@ -48,7 +53,6 @@
 	
 	[super dealloc];
 }
-
 
 
 
@@ -76,28 +80,24 @@
 {
 	NSMutableDictionary *newProperties = [[NSMutableDictionary alloc] init];
 	
+	// Setup properties from the domainWeb object
 	if(domainWeb->ID != nil)
 		[newProperties setObject:[NSString stringWithCString:domainWeb->ID] forKey:@"ID"];
-						
 	if(domainWeb->POBoxID != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->POBoxID] forKey:@"POBoxID"];
-	
+		[newProperties setObject:[NSString stringWithCString:domainWeb->POBoxID] forKey:@"poboxID"];
 	if(domainWeb->Name != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->Name] forKey:@"Name"];
-		
+		[newProperties setObject:[NSString stringWithCString:domainWeb->Name] forKey:@"name"];
 	if(domainWeb->Description != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->Description] forKey:@"Description"];
-	
+		[newProperties setObject:[NSString stringWithCString:domainWeb->Description] forKey:@"description"];
 	if(domainWeb->Host != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->Host] forKey:@"Host"];
-	
+		[newProperties setObject:[NSString stringWithCString:domainWeb->Host] forKey:@"host"];
 	if(domainWeb->UserID != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->UserID] forKey:@"UserID"];
-
+		[newProperties setObject:[NSString stringWithCString:domainWeb->UserID] forKey:@"userID"];
 	if(domainWeb->UserName != nil)
-		[newProperties setObject:[NSString stringWithCString:domainWeb->UserName] forKey:@"UserName"];
-
-	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsDefault] forKey:@"IsDefault"];
+		[newProperties setObject:[NSString stringWithCString:domainWeb->UserName] forKey:@"userName"];
+	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsDefault] forKey:@"isDefault"];
+	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsSlave] forKey:@"isSlave"];
+	[newProperties setObject:[NSNumber numberWithBool:domainWeb->IsEnabled] forKey:@"isEnabled"];
 
 	[self setProperties:newProperties];
 }
@@ -113,39 +113,53 @@
 
 
 
--(NSString *)Name
+-(NSString *)name
 {
-	return [properties objectForKey:@"Name"];
+	return [self valueForKeyPath:@"properties.name"]; 
 }
 
 
 
 
--(NSString *)UserName
+-(NSString *)userName
 {
-	return [properties objectForKey:@"UserName"];
+	return [self valueForKeyPath:@"properties.userName"]; 
 }
 
 
 
 
--(NSString *)Host
+-(NSString *)host
 {
-	return [properties objectForKey:@"Host"];
+	return [self valueForKeyPath:@"properties.host"]; 
 }
 
 
 
 
--(NSString *)Password
+-(NSString *)password
 {
-	return [properties objectForKey:@"Password"];
+	return [self valueForKeyPath:@"properties.password"]; 
 }
 
 
--(NSNumber *)IsDefault
+-(NSNumber *)isDefault
 {
-	return [properties objectForKey:@"IsDefault"];
+	return [self valueForKeyPath:@"properties.isDefault"]; 
 }
+
+
+-(NSNumber *)isSlave
+{
+	return [self valueForKeyPath:@"properties.isSlave"]; 
+}
+
+
+-(NSNumber *)isEnabled
+{
+	return [self valueForKeyPath:@"properties.isEnabled"]; 
+}
+
+
 
 @end
