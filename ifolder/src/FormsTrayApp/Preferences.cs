@@ -33,6 +33,7 @@ using Microsoft.Win32;
 using Novell.iFolderCom;
 using Novell.Win32Util;
 using Simias.Client;
+using Simias.Client.Authentication;
 using Simias.Client.Event;
 
 namespace Novell.FormsTrayApp
@@ -1519,7 +1520,7 @@ namespace Novell.FormsTrayApp
 
 				// Set the credentials in the current process.
 				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
-				AuthenticationStatus authStatus = domainAuth.Authenticate();
+				Status authStatus = domainAuth.Authenticate();
 
 				Domain domain = new Domain(domainInfo);
 
