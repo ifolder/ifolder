@@ -50,14 +50,16 @@ endif
 endif
 
 install-exec-local: Novell.iFolder.dll iFolderCmd.exe
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) Novell.iFolder.dll iFolderCmd.exe $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) Novell.iFolder.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) --mode=644 iFolderCmd.exe $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll iFolderCmd.exe iFolderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll iFolderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe
 
 installcheck-local: install $(NUNIT_TESTS)
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
 	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderTests.test.xml $(NUNIT_TESTS)
 	
