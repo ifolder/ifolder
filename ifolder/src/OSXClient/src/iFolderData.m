@@ -132,6 +132,7 @@ static iFolderData *sharedInstance = nil;
 	@catch (NSException *e)
 	{
 		NSLog(@"*********Exception refreshing iFolderData");
+		NSLog(@"%@ :: %@", [e name], [e reason]);
 	}
 
 	[instanceLock unlock];
@@ -272,5 +273,22 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock unlock];	
 	return dom;
 }
+
+
+
+
+//===================================================================
+// getDomainCount
+// Returns the number of current domains
+//===================================================================
+-(int)getDomainCount
+{
+	int count = 0;
+	[instanceLock lock];
+	count = [keyedDomains count];
+	[instanceLock unlock];	
+	return count;	
+}
+
 
 @end
