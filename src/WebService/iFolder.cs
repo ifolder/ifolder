@@ -99,8 +99,10 @@ namespace Novell.iFolder.Web
 			this.Description = "";
 			this.IsSubscription = false;
 			this.EnumeratedState = -1;
-			this.IsWorkgroup = 
-				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
+
+			// There is no longer a WorkGroup domain ... for now return false. We
+			// probably need to change this to return a type instead.
+			this.IsWorkgroup = false;
 			this.HasConflicts = collection.HasCollisions();
 
 			Member tmpMember = collection.GetCurrentMember();

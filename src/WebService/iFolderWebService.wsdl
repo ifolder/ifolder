@@ -16,45 +16,6 @@
       <xs:element name="PingResponse">
         <xs:complexType/>
       </xs:element>
-      <xs:element name="GetSettings">
-        <xs:complexType/>
-      </xs:element>
-      <xs:complexType name="iFolderSettings">
-        <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="1" name="DefaultDomainID" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="DefaultPOBoxID" type="xs:string"/>
-          <xs:element minOccurs="1" maxOccurs="1" name="HaveEnterprise" type="xs:boolean"/>
-          <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation" type="xs:boolean"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="EnterpriseName" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="EnterpriseDescription"
-                type="xs:string"/>
-          <xs:element minOccurs="1" maxOccurs="1" name="DefaultSyncInterval" type="xs:int"/>
-          <xs:element minOccurs="1" maxOccurs="1" name="UseProxy" type="xs:boolean"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="ProxyHost" type="xs:string"/>
-          <xs:element minOccurs="1" maxOccurs="1" name="ProxyPort" type="xs:int"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserName" type="xs:string"/>
-        </xs:sequence>
-      </xs:complexType>
-      <xs:element name="GetSettingsResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="GetSettingsResult"
-                  type="s0:iFolderSettings"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetDisplayConfirmation">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="DisplayConfirmation"
-                  type="xs:boolean"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SetDisplayConfirmationResponse">
-        <xs:complexType/>
-      </xs:element>
       <xs:element name="IsiFolder">
         <xs:complexType>
           <xs:sequence>
@@ -561,23 +522,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="ConnectToEnterpriseServer">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string"/>
-            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string"/>
-            <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="ConnectToEnterpriseServerResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="1" name="ConnectToEnterpriseServerResult"
-                  type="s0:iFolderSettings"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
       <xs:element name="AuthenticateToDomain">
         <xs:complexType>
           <xs:sequence>
@@ -754,7 +698,6 @@
       <xs:element name="SetiFolderFileSizeLimitResponse">
         <xs:complexType/>
       </xs:element>
-      <xs:element name="iFolderSettings" type="s0:iFolderSettings"/>
       <xs:element name="boolean" type="xs:boolean"/>
       <xs:element name="iFolderWeb" type="s0:iFolderWeb"/>
       <xs:element name="ArrayOfIFolderWeb" type="s0:ArrayOfIFolderWeb"/>
@@ -772,18 +715,6 @@
   </message>
   <message name="PingSoapOut">
     <part name="parameters" element="s0:PingResponse"/>
-  </message>
-  <message name="GetSettingsSoapIn">
-    <part name="parameters" element="s0:GetSettings"/>
-  </message>
-  <message name="GetSettingsSoapOut">
-    <part name="parameters" element="s0:GetSettingsResponse"/>
-  </message>
-  <message name="SetDisplayConfirmationSoapIn">
-    <part name="parameters" element="s0:SetDisplayConfirmation"/>
-  </message>
-  <message name="SetDisplayConfirmationSoapOut">
-    <part name="parameters" element="s0:SetDisplayConfirmationResponse"/>
   </message>
   <message name="IsiFolderSoapIn">
     <part name="parameters" element="s0:IsiFolder"/>
@@ -977,12 +908,6 @@
   <message name="GetDefaultSyncIntervalSoapOut">
     <part name="parameters" element="s0:GetDefaultSyncIntervalResponse"/>
   </message>
-  <message name="ConnectToEnterpriseServerSoapIn">
-    <part name="parameters" element="s0:ConnectToEnterpriseServer"/>
-  </message>
-  <message name="ConnectToEnterpriseServerSoapOut">
-    <part name="parameters" element="s0:ConnectToEnterpriseServerResponse"/>
-  </message>
   <message name="AuthenticateToDomainSoapIn">
     <part name="parameters" element="s0:AuthenticateToDomain"/>
   </message>
@@ -1057,14 +982,6 @@
   </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
-  <message name="GetSettingsHttpGetIn"/>
-  <message name="GetSettingsHttpGetOut">
-    <part name="Body" element="s0:iFolderSettings"/>
-  </message>
-  <message name="SetDisplayConfirmationHttpGetIn">
-    <part name="DisplayConfirmation" type="s:boolean"/>
-  </message>
-  <message name="SetDisplayConfirmationHttpGetOut"/>
   <message name="IsiFolderHttpGetIn">
     <part name="LocalPath" type="s:string"/>
   </message>
@@ -1253,14 +1170,6 @@
   <message name="GetDefaultSyncIntervalHttpGetOut">
     <part name="Body" element="s0:int"/>
   </message>
-  <message name="ConnectToEnterpriseServerHttpGetIn">
-    <part name="UserName" type="s:string"/>
-    <part name="Password" type="s:string"/>
-    <part name="Host" type="s:string"/>
-  </message>
-  <message name="ConnectToEnterpriseServerHttpGetOut">
-    <part name="Body" element="s0:iFolderSettings"/>
-  </message>
   <message name="AuthenticateToDomainHttpGetIn">
     <part name="DomainID" type="s:string"/>
     <part name="Password" type="s:string"/>
@@ -1327,14 +1236,6 @@
   <message name="SetiFolderFileSizeLimitHttpGetOut"/>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
-  <message name="GetSettingsHttpPostIn"/>
-  <message name="GetSettingsHttpPostOut">
-    <part name="Body" element="s0:iFolderSettings"/>
-  </message>
-  <message name="SetDisplayConfirmationHttpPostIn">
-    <part name="DisplayConfirmation" type="s:boolean"/>
-  </message>
-  <message name="SetDisplayConfirmationHttpPostOut"/>
   <message name="IsiFolderHttpPostIn">
     <part name="LocalPath" type="s:string"/>
   </message>
@@ -1523,14 +1424,6 @@
   <message name="GetDefaultSyncIntervalHttpPostOut">
     <part name="Body" element="s0:int"/>
   </message>
-  <message name="ConnectToEnterpriseServerHttpPostIn">
-    <part name="UserName" type="s:string"/>
-    <part name="Password" type="s:string"/>
-    <part name="Host" type="s:string"/>
-  </message>
-  <message name="ConnectToEnterpriseServerHttpPostOut">
-    <part name="Body" element="s0:iFolderSettings"/>
-  </message>
   <message name="AuthenticateToDomainHttpPostIn">
     <part name="DomainID" type="s:string"/>
     <part name="Password" type="s:string"/>
@@ -1601,16 +1494,6 @@
       <output message="s0:PingSoapOut"/>
       <documentation>Allows a client to pint to make sure the Web Service is up and
             running</documentation>
-    </operation>
-    <operation name="GetSettings">
-      <input message="s0:GetSettingsSoapIn"/>
-      <output message="s0:GetSettingsSoapOut"/>
-      <documentation>Gets the current iFolder Settings</documentation>
-    </operation>
-    <operation name="SetDisplayConfirmation">
-      <input message="s0:SetDisplayConfirmationSoapIn"/>
-      <output message="s0:SetDisplayConfirmationSoapOut"/>
-      <documentation>Sets the display iFolder confirmation setting</documentation>
     </operation>
     <operation name="IsiFolder">
       <input message="s0:IsiFolderSoapIn"/>
@@ -1780,11 +1663,6 @@
       <output message="s0:GetDefaultSyncIntervalSoapOut"/>
       <documentation>Gets the Default Sync Interval</documentation>
     </operation>
-    <operation name="ConnectToEnterpriseServer">
-      <input message="s0:ConnectToEnterpriseServerSoapIn"/>
-      <output message="s0:ConnectToEnterpriseServerSoapOut"/>
-      <documentation>Connects to an iFolder Enterprise Server</documentation>
-    </operation>
     <operation name="AuthenticateToDomain">
       <input message="s0:AuthenticateToDomainSoapIn"/>
       <output message="s0:AuthenticateToDomainSoapOut"/>
@@ -1854,16 +1732,6 @@
       <output message="s0:PingHttpGetOut"/>
       <documentation>Allows a client to pint to make sure the Web Service is up and
             running</documentation>
-    </operation>
-    <operation name="GetSettings">
-      <input message="s0:GetSettingsHttpGetIn"/>
-      <output message="s0:GetSettingsHttpGetOut"/>
-      <documentation>Gets the current iFolder Settings</documentation>
-    </operation>
-    <operation name="SetDisplayConfirmation">
-      <input message="s0:SetDisplayConfirmationHttpGetIn"/>
-      <output message="s0:SetDisplayConfirmationHttpGetOut"/>
-      <documentation>Sets the display iFolder confirmation setting</documentation>
     </operation>
     <operation name="IsiFolder">
       <input message="s0:IsiFolderHttpGetIn"/>
@@ -2033,11 +1901,6 @@
       <output message="s0:GetDefaultSyncIntervalHttpGetOut"/>
       <documentation>Gets the Default Sync Interval</documentation>
     </operation>
-    <operation name="ConnectToEnterpriseServer">
-      <input message="s0:ConnectToEnterpriseServerHttpGetIn"/>
-      <output message="s0:ConnectToEnterpriseServerHttpGetOut"/>
-      <documentation>Connects to an iFolder Enterprise Server</documentation>
-    </operation>
     <operation name="AuthenticateToDomain">
       <input message="s0:AuthenticateToDomainHttpGetIn"/>
       <output message="s0:AuthenticateToDomainHttpGetOut"/>
@@ -2107,16 +1970,6 @@
       <output message="s0:PingHttpPostOut"/>
       <documentation>Allows a client to pint to make sure the Web Service is up and
             running</documentation>
-    </operation>
-    <operation name="GetSettings">
-      <input message="s0:GetSettingsHttpPostIn"/>
-      <output message="s0:GetSettingsHttpPostOut"/>
-      <documentation>Gets the current iFolder Settings</documentation>
-    </operation>
-    <operation name="SetDisplayConfirmation">
-      <input message="s0:SetDisplayConfirmationHttpPostIn"/>
-      <output message="s0:SetDisplayConfirmationHttpPostOut"/>
-      <documentation>Sets the display iFolder confirmation setting</documentation>
     </operation>
     <operation name="IsiFolder">
       <input message="s0:IsiFolderHttpPostIn"/>
@@ -2286,11 +2139,6 @@
       <output message="s0:GetDefaultSyncIntervalHttpPostOut"/>
       <documentation>Gets the Default Sync Interval</documentation>
     </operation>
-    <operation name="ConnectToEnterpriseServer">
-      <input message="s0:ConnectToEnterpriseServerHttpPostIn"/>
-      <output message="s0:ConnectToEnterpriseServerHttpPostOut"/>
-      <documentation>Connects to an iFolder Enterprise Server</documentation>
-    </operation>
     <operation name="AuthenticateToDomain">
       <input message="s0:AuthenticateToDomainHttpPostIn"/>
       <output message="s0:AuthenticateToDomainHttpPostOut"/>
@@ -2358,25 +2206,6 @@
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="Ping">
       <soap:operation soapAction="http://novell.com/ifolder/web/Ping" style="document"/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="GetSettings">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetSettings" style="document"/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
-    <operation name="SetDisplayConfirmation">
-      <soap:operation soapAction="http://novell.com/ifolder/web/SetDisplayConfirmation"
-            style="document"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -2697,16 +2526,6 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="ConnectToEnterpriseServer">
-      <soap:operation soapAction="http://novell.com/ifolder/web/ConnectToEnterpriseServer"
-            style="document"/>
-      <input>
-        <soap:body use="literal"/>
-      </input>
-      <output>
-        <soap:body use="literal"/>
-      </output>
-    </operation>
     <operation name="AuthenticateToDomain">
       <soap:operation soapAction="http://novell.com/ifolder/web/AuthenticateToDomain"
             style="document"/>
@@ -2835,22 +2654,6 @@
       </input>
       <output/>
     </operation>
-    <operation name="GetSettings">
-      <http:operation location="/GetSettings"/>
-      <input>
-        <http:urlEncoded/>
-      </input>
-      <output>
-        <mime:mimeXml part="Body"/>
-      </output>
-    </operation>
-    <operation name="SetDisplayConfirmation">
-      <http:operation location="/SetDisplayConfirmation"/>
-      <input>
-        <http:urlEncoded/>
-      </input>
-      <output/>
-    </operation>
     <operation name="IsiFolder">
       <http:operation location="/IsiFolder"/>
       <input>
@@ -3114,15 +2917,6 @@
     </operation>
     <operation name="GetDefaultSyncInterval">
       <http:operation location="/GetDefaultSyncInterval"/>
-      <input>
-        <http:urlEncoded/>
-      </input>
-      <output>
-        <mime:mimeXml part="Body"/>
-      </output>
-    </operation>
-    <operation name="ConnectToEnterpriseServer">
-      <http:operation location="/ConnectToEnterpriseServer"/>
       <input>
         <http:urlEncoded/>
       </input>
@@ -3234,22 +3028,6 @@
       </input>
       <output/>
     </operation>
-    <operation name="GetSettings">
-      <http:operation location="/GetSettings"/>
-      <input>
-        <mime:content type="application/x-www-form-urlencoded"/>
-      </input>
-      <output>
-        <mime:mimeXml part="Body"/>
-      </output>
-    </operation>
-    <operation name="SetDisplayConfirmation">
-      <http:operation location="/SetDisplayConfirmation"/>
-      <input>
-        <mime:content type="application/x-www-form-urlencoded"/>
-      </input>
-      <output/>
-    </operation>
     <operation name="IsiFolder">
       <http:operation location="/IsiFolder"/>
       <input>
@@ -3513,15 +3291,6 @@
     </operation>
     <operation name="GetDefaultSyncInterval">
       <http:operation location="/GetDefaultSyncInterval"/>
-      <input>
-        <mime:content type="application/x-www-form-urlencoded"/>
-      </input>
-      <output>
-        <mime:mimeXml part="Body"/>
-      </output>
-    </operation>
-    <operation name="ConnectToEnterpriseServer">
-      <http:operation location="/ConnectToEnterpriseServer"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
