@@ -82,6 +82,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(MyMessageBox));
 			this.yes = new System.Windows.Forms.Button();
 			this.no = new System.Windows.Forms.Button();
 			this.message = new System.Windows.Forms.Label();
@@ -91,64 +92,151 @@ namespace Novell.iFolderCom
 			// 
 			// yes
 			// 
+			this.yes.AccessibleDescription = resources.GetString("yes.AccessibleDescription");
+			this.yes.AccessibleName = resources.GetString("yes.AccessibleName");
+			this.yes.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("yes.Anchor")));
+			this.yes.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("yes.BackgroundImage")));
 			this.yes.DialogResult = System.Windows.Forms.DialogResult.Yes;
-			this.yes.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.yes.Location = new System.Drawing.Point(176, 64);
+			this.yes.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("yes.Dock")));
+			this.yes.Enabled = ((bool)(resources.GetObject("yes.Enabled")));
+			this.yes.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("yes.FlatStyle")));
+			this.yes.Font = ((System.Drawing.Font)(resources.GetObject("yes.Font")));
+			this.yes.Image = ((System.Drawing.Image)(resources.GetObject("yes.Image")));
+			this.yes.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("yes.ImageAlign")));
+			this.yes.ImageIndex = ((int)(resources.GetObject("yes.ImageIndex")));
+			this.yes.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("yes.ImeMode")));
+			this.yes.Location = ((System.Drawing.Point)(resources.GetObject("yes.Location")));
 			this.yes.Name = "yes";
-			this.yes.Size = new System.Drawing.Size(77, 23);
-			this.yes.TabIndex = 0;
-			this.yes.Text = "Yes";
-			this.yes.Visible = false;
+			this.yes.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("yes.RightToLeft")));
+			this.yes.Size = ((System.Drawing.Size)(resources.GetObject("yes.Size")));
+			this.yes.TabIndex = ((int)(resources.GetObject("yes.TabIndex")));
+			this.yes.Text = resources.GetString("yes.Text");
+			this.yes.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("yes.TextAlign")));
+			this.yes.Visible = ((bool)(resources.GetObject("yes.Visible")));
 			// 
 			// no
 			// 
+			this.no.AccessibleDescription = resources.GetString("no.AccessibleDescription");
+			this.no.AccessibleName = resources.GetString("no.AccessibleName");
+			this.no.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("no.Anchor")));
+			this.no.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("no.BackgroundImage")));
 			this.no.DialogResult = System.Windows.Forms.DialogResult.No;
-			this.no.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.no.Location = new System.Drawing.Point(256, 64);
+			this.no.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("no.Dock")));
+			this.no.Enabled = ((bool)(resources.GetObject("no.Enabled")));
+			this.no.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("no.FlatStyle")));
+			this.no.Font = ((System.Drawing.Font)(resources.GetObject("no.Font")));
+			this.no.Image = ((System.Drawing.Image)(resources.GetObject("no.Image")));
+			this.no.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("no.ImageAlign")));
+			this.no.ImageIndex = ((int)(resources.GetObject("no.ImageIndex")));
+			this.no.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("no.ImeMode")));
+			this.no.Location = ((System.Drawing.Point)(resources.GetObject("no.Location")));
 			this.no.Name = "no";
-			this.no.TabIndex = 1;
-			this.no.Text = "No";
-			this.no.Visible = false;
+			this.no.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("no.RightToLeft")));
+			this.no.Size = ((System.Drawing.Size)(resources.GetObject("no.Size")));
+			this.no.TabIndex = ((int)(resources.GetObject("no.TabIndex")));
+			this.no.Text = resources.GetString("no.Text");
+			this.no.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("no.TextAlign")));
+			this.no.Visible = ((bool)(resources.GetObject("no.Visible")));
 			// 
 			// message
 			// 
-			this.message.Location = new System.Drawing.Point(64, 24);
+			this.message.AccessibleDescription = resources.GetString("message.AccessibleDescription");
+			this.message.AccessibleName = resources.GetString("message.AccessibleName");
+			this.message.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("message.Anchor")));
+			this.message.AutoSize = ((bool)(resources.GetObject("message.AutoSize")));
+			this.message.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("message.Dock")));
+			this.message.Enabled = ((bool)(resources.GetObject("message.Enabled")));
+			this.message.Font = ((System.Drawing.Font)(resources.GetObject("message.Font")));
+			this.message.Image = ((System.Drawing.Image)(resources.GetObject("message.Image")));
+			this.message.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("message.ImageAlign")));
+			this.message.ImageIndex = ((int)(resources.GetObject("message.ImageIndex")));
+			this.message.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("message.ImeMode")));
+			this.message.Location = ((System.Drawing.Point)(resources.GetObject("message.Location")));
 			this.message.Name = "message";
-			this.message.Size = new System.Drawing.Size(400, 16);
-			this.message.TabIndex = 2;
+			this.message.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("message.RightToLeft")));
+			this.message.Size = ((System.Drawing.Size)(resources.GetObject("message.Size")));
+			this.message.TabIndex = ((int)(resources.GetObject("message.TabIndex")));
+			this.message.Text = resources.GetString("message.Text");
+			this.message.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("message.TextAlign")));
+			this.message.Visible = ((bool)(resources.GetObject("message.Visible")));
 			// 
 			// messageIcon
 			// 
-			this.messageIcon.Location = new System.Drawing.Point(16, 24);
+			this.messageIcon.AccessibleDescription = resources.GetString("messageIcon.AccessibleDescription");
+			this.messageIcon.AccessibleName = resources.GetString("messageIcon.AccessibleName");
+			this.messageIcon.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("messageIcon.Anchor")));
+			this.messageIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("messageIcon.BackgroundImage")));
+			this.messageIcon.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("messageIcon.Dock")));
+			this.messageIcon.Enabled = ((bool)(resources.GetObject("messageIcon.Enabled")));
+			this.messageIcon.Font = ((System.Drawing.Font)(resources.GetObject("messageIcon.Font")));
+			this.messageIcon.Image = ((System.Drawing.Image)(resources.GetObject("messageIcon.Image")));
+			this.messageIcon.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("messageIcon.ImeMode")));
+			this.messageIcon.Location = ((System.Drawing.Point)(resources.GetObject("messageIcon.Location")));
 			this.messageIcon.Name = "messageIcon";
-			this.messageIcon.Size = new System.Drawing.Size(32, 32);
-			this.messageIcon.TabIndex = 3;
+			this.messageIcon.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("messageIcon.RightToLeft")));
+			this.messageIcon.Size = ((System.Drawing.Size)(resources.GetObject("messageIcon.Size")));
+			this.messageIcon.SizeMode = ((System.Windows.Forms.PictureBoxSizeMode)(resources.GetObject("messageIcon.SizeMode")));
+			this.messageIcon.TabIndex = ((int)(resources.GetObject("messageIcon.TabIndex")));
 			this.messageIcon.TabStop = false;
+			this.messageIcon.Text = resources.GetString("messageIcon.Text");
+			this.messageIcon.Visible = ((bool)(resources.GetObject("messageIcon.Visible")));
 			// 
 			// ok
 			// 
+			this.ok.AccessibleDescription = resources.GetString("ok.AccessibleDescription");
+			this.ok.AccessibleName = resources.GetString("ok.AccessibleName");
+			this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("ok.Anchor")));
+			this.ok.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ok.BackgroundImage")));
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Location = new System.Drawing.Point(96, 64);
+			this.ok.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ok.Dock")));
+			this.ok.Enabled = ((bool)(resources.GetObject("ok.Enabled")));
+			this.ok.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("ok.FlatStyle")));
+			this.ok.Font = ((System.Drawing.Font)(resources.GetObject("ok.Font")));
+			this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
+			this.ok.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.ImageAlign")));
+			this.ok.ImageIndex = ((int)(resources.GetObject("ok.ImageIndex")));
+			this.ok.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("ok.ImeMode")));
+			this.ok.Location = ((System.Drawing.Point)(resources.GetObject("ok.Location")));
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 4;
-			this.ok.Text = "OK";
+			this.ok.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ok.RightToLeft")));
+			this.ok.Size = ((System.Drawing.Size)(resources.GetObject("ok.Size")));
+			this.ok.TabIndex = ((int)(resources.GetObject("ok.TabIndex")));
+			this.ok.Text = resources.GetString("ok.Text");
+			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
+			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
 			// 
 			// MyMessageBox
 			// 
 			this.AcceptButton = this.yes;
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.no;
-			this.ClientSize = new System.Drawing.Size(490, 96);
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.messageIcon);
 			this.Controls.Add(this.message);
 			this.Controls.Add(this.no);
 			this.Controls.Add(this.yes);
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.MaximizeBox = false;
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimizeBox = false;
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "MyMessageBox";
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.ShowInTaskbar = false;
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.Text = resources.GetString("$this.Text");
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.MyMessageBox_Paint);
 			this.ResumeLayout(false);
 

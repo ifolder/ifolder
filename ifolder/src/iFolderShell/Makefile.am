@@ -12,6 +12,7 @@ iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.c
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES = 
 iFolderComponent_RESOURCES =
+iFolderComponent_RESOURCES_FILES = ConflictResolver.resources iFolderAdvanced.resources MyMessageBox.resources NewiFolder.resources Picker.resources UserProperties.resources GaugeChart.resources
 iFolderComponent_FLAGS = $(CSC_LIBFLAG)
 iFolderComponent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Novell.iFolder.dll Simias.dll
 iFolderComponent_LIBPATH = ../iFolder
@@ -55,8 +56,11 @@ iFolderShell.dll: iFolderComponent.tlb $(iFolderShell_OBJFILES)
 iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
-iFolderComponent.dll: $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
+iFolderComponent.dll: $(iFolderComponent_RESOURCES_FILES) $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(SIMIAS_LIBS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_RESOURCES_FILES:%=/res:Novell.iFolderCom.%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
+	
+%.resources : %.resx
+	$(RESG) $< Novell.iFolderCom.$@
 
 if DEBUG
 if WINDOWS
@@ -95,7 +99,7 @@ unregister:
 	-$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
 	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
 
-CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli iFolderComponent.doc.xml iFolderShell.exp iFolderShell.lib
+CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderComponent_RESOURCES_FILES:%=Novell.iFolderCom.%) $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli iFolderComponent.doc.xml iFolderShell.exp iFolderShell.lib
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

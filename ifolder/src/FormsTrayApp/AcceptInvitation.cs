@@ -365,6 +365,7 @@ namespace Novell.FormsTrayApp
 				case "Admin":
 				case "ReadWrite":
 				case "ReadOnly":
+				case "Deny":
 				{
 					rightsString = resourceManager.GetString(rights);
 					break;

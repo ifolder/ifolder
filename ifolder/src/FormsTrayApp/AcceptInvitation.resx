@@ -922,4 +922,7 @@
 	<data name="rights">
 		<value>Rights: {0}</value>
 	</data>
+	<data name="Deny">
+		<value>Deny</value>
+	</data>
 </root>

@@ -119,7 +119,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.Label label16;
-		private Novell.Forms.Controls.GaugeChart gaugeChart1;
+		private Novell.iFolderCom.GaugeChart gaugeChart1;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.Label label18;
 		private System.Windows.Forms.Label enterpriseDescription;
@@ -251,7 +251,7 @@ namespace Novell.FormsTrayApp
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label17 = new System.Windows.Forms.Label();
-			this.gaugeChart1 = new Novell.Forms.Controls.GaugeChart();
+			this.gaugeChart1 = new Novell.iFolderCom.GaugeChart();
 			this.label16 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
