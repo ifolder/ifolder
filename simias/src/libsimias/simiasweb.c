@@ -46,6 +46,8 @@
 static char *the_soap_url = NULL;
 
 /* Foward Declarations */
+/* Foward Declarations */
+static char *parse_local_service_url(FILE *file);
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
 static char *get_soap_url(bool reread_config);
@@ -89,6 +91,67 @@ simias_get_local_service_url(char **url)
 	return SIMIAS_SUCCESS;
 }
 
+/**
+ * Parse through the file looking for the following line:
+ * 
+ * 	<setting name="WebServiceUri" value="http://127.0.0.1:12345/simias10/username"/>
+ * 
+ * Return a strdup of the URL inside "value" (the caller must free the char *
+ * when finished with it).
+ */
+static char *
+parse_local_service_url(FILE *file)
+{
+	long file_size;
+	char *buffer;
+	char *setting_idx;
+	char *value_idx;
+	char *start_quote_idx;
+	char *uri;
+	int b_uri_found;
+	
+	b_uri_found = 0;
+	
+	/* Determine the file size */
+	fseek(file, 0, SEEK_END);
+	file_size = ftell(file);
+	rewind(file);
+	
+	/* Allocate memory to suck in the whole file into the buffer */
+	buffer = (char *) malloc(file_size);
+	if (!buffer) {
+		SIMIAS_DEBUG((stderr, "Couldn't allocate memory to read Simias.config\n"));
+		return NULL;
+	}
+	
+	/* Read the contents of the file into the buffer */
+	fread(buffer, 1, file_size, file);
+	
+	/* Now parse for the URL */
+	/* Look for "WebServiceUri" */
+	setting_idx = strstr(buffer, "WebServiceUri");
+	if (setting_idx) {
+		value_idx = strstr(setting_idx, "value");
+		if (value_idx) {
+			start_quote_idx = strstr(value_idx, "\"");
+			if (start_quote_idx) {
+				uri = strtok(start_quote_idx + 1, "\"");
+				if (uri) {
+					b_uri_found = 1;
+				}
+			}
+		}
+	}
+	
+	/* Free up buffer memory */
+	free(buffer);
+	
+	if (!b_uri_found) {
+		return NULL;
+	}
+
+	return strdup(uri);
+}
 
 /******************************************************************************
  * gSOAP Wrappers for WebService Calls                                        *

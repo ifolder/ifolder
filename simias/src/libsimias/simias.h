@@ -60,4 +60,10 @@ int simias_get_local_service_url(char **url);
  */
 int simias_get_web_service_credential(char *username, char *password);
 
+/**
+ * Returns ~/.local/share/simias in Linux/Mac and the correct location when
+ * running in Win32.
+ */
+char *simias_get_user_profile_dir_path(char *dest_path);
+
 #endif
