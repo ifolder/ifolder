@@ -26,7 +26,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Xml;
+
 using Simias;
 using Simias.Event;
 using Persist = Simias.Storage.Provider;
@@ -63,75 +65,21 @@ namespace Simias.Storage
 		/// <summary>
 		/// Handle to the store object.
 		/// </summary>
-		private Store store;
+		internal Store store;
 
 		/// <summary>
 		/// Reference to node data. 
 		/// </summary>
-		internal protected CacheNode cNode = null;
+		internal CacheNode cNode = null;
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Gets the collection that this node belongs to.
-		/// </summary>
-		public Collection CollectionNode
-		{
-			get { return cNode.collection; }
-		}
-
-		/// <summary>
-		/// Gets whether this node has children.
-		/// </summary>
-		public bool HasChildren
-		{
-			get
-			{
-				// Search for any children belonging to this node.
-				ICSEnumerator e = ( ICSEnumerator )CollectionNode.Search( Property.ParentID, Id, Property.Operator.Equal ).GetEnumerator();
-				bool isParent = e.MoveNext();
-				e.Dispose();
-				return isParent;
-			}
-		}
-
-		/// <summary>
-		/// Gets the globally unique identifier for this node.
-		/// </summary>
-		public string Id
-		{
-			get { return cNode.id; }
-		}
-
 		/// <summary>
 		/// Allows the collection object to set the collection object during construction.
 		/// </summary>
 		internal Collection InternalCollectionHandle
 		{
 			set { cNode.collection = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the name of this node.
-		/// </summary>
-		public string Name
-		{
-			get { return cNode.name; }
-
-			set 
-			{ 
-				cNode.name = value;
-				SetNodeAttribute( Properties.PropertyRoot, Property.NameAttr, cNode.name );
-				CollectionNode.AddDirtyNodeToList( this );
-			}
-		}
-
-		/// <summary>
-		/// Gets the type of node (Collection, Node, etc.) for this node.
-		/// </summary>
-		public string Type
-		{
-			get { return NameSpaceType.Substring( NameSpaceType.IndexOf( '.' ) + 1 ); }
 		}
 
 		/// <summary>
@@ -146,47 +94,6 @@ namespace Simias.Storage
 				cNode.type = value;
 				SetNodeAttribute( Properties.PropertyRoot, Property.TypeAttr, cNode.type );
 				CollectionNode.AddDirtyNodeToList( this );
-			}
-		}
-
-		/// <summary>
-		/// Gets whether this is a Collection type node.
-		/// </summary>
-		public bool IsCollection
-		{
-			get { return NameSpaceType.StartsWith( CollectionType ); }
-		}
-
-		/// <summary>
-		/// Gets whether this is a Node type node.
-		/// </summary>
-		public bool IsNode
-		{
-			get { return NameSpaceType.StartsWith( NodeType ); }
-		}
-
-		/// <summary>
-		/// Gets whether this is a Tombstone type node.
-		/// </summary>
-		public bool IsTombstone
-		{
-			get { return NameSpaceType.StartsWith( TombstoneType ); }
-		}
-
-		/// <summary>
-		/// Gets the list of properties for this node.
-		/// </summary>
-		public PropertyList Properties
-		{
-			get 
-			{ 
-				if ( cNode.properties == null )
-				{
-					// The node is not fully instantiated.  Go and get the properties for this node.
-					SetNodeProperties();
-				}
-
-				return cNode.properties; 
 			}
 		}
 
@@ -210,30 +117,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the path name for this node.  The path name for a node consists of the hierarchy of
-		/// names from the collection to the leaf node.
-		/// </summary>
-		public string PathName
-		{
-			get
-			{
-				StringBuilder sb = new StringBuilder();
-				Node parentNode = this;
-
-				while ( parentNode != null )
-				{
-					// Insert the friendly name into the path.
-					sb.Insert( 0, "/" + parentNode.Name );
-
-					// Get this node's parent.
-					parentNode = parentNode.GetParent();
-				}
-
-				return sb.ToString();
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets whether this node has been committed to the database.
 		/// </summary>
 		internal bool IsPersisted
@@ -243,19 +126,195 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the collection that this node belongs to.
+		/// </summary>
+		public Collection CollectionNode
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return cNode.collection; 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets whether this node has children.
+		/// </summary>
+		public bool HasChildren
+		{
+			get
+			{
+				lock ( store )
+				{
+					// Search for any children belonging to this node.
+					ICSEnumerator e = ( ICSEnumerator )CollectionNode.Search( Property.ParentID, Id, Property.Operator.Equal ).GetEnumerator();
+					bool isParent = e.MoveNext();
+					e.Dispose();
+					return isParent;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the globally unique identifier for this node.
+		/// </summary>
+		public string Id
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return cNode.id; 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the name of this node.
+		/// </summary>
+		public string Name
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return cNode.name; 
+				}
+			}
+
+			set 
+			{ 
+				lock ( store )
+				{
+					cNode.name = value;
+					SetNodeAttribute( Properties.PropertyRoot, Property.NameAttr, cNode.name );
+					CollectionNode.AddDirtyNodeToList( this );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the type of node (Collection, Node, etc.) for this node.
+		/// </summary>
+		public string Type
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return NameSpaceType.Substring( NameSpaceType.IndexOf( '.' ) + 1 ); 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets whether this is a Collection type node.
+		/// </summary>
+		public bool IsCollection
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return NameSpaceType.StartsWith( CollectionType ); 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets whether this is a Node type node.
+		/// </summary>
+		public bool IsNode
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return NameSpaceType.StartsWith( NodeType ); 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets whether this is a Tombstone type node.
+		/// </summary>
+		public bool IsTombstone
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					return NameSpaceType.StartsWith( TombstoneType ); 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the list of properties for this node.
+		/// </summary>
+		public PropertyList Properties
+		{
+			get 
+			{ 
+				lock ( store )
+				{
+					if ( cNode.properties == null )
+					{
+						// The node is not fully instantiated.  Go and get the properties for this node.
+						SetNodeProperties();
+					}
+
+					return cNode.properties; 
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the path name for this node.  The path name for a node consists of the hierarchy of
+		/// names from the collection to the leaf node.
+		/// </summary>
+		public string PathName
+		{
+			get
+			{
+				lock ( store )
+				{
+					StringBuilder sb = new StringBuilder();
+					Node parentNode = this;
+
+					while ( parentNode != null )
+					{
+						// Insert the friendly name into the path.
+						sb.Insert( 0, "/" + parentNode.Name );
+
+						// Get this node's parent.
+						parentNode = parentNode.GetParent();
+					}
+
+					return sb.ToString();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the local incarnation value from the node.
 		/// </summary>
 		public ulong LocalIncarnation
 		{
 			get 
 			{
-				Property p = Properties.GetSingleProperty( Property.LocalIncarnation );
-				if ( p == null )
+				lock ( store )
 				{
-					throw new ApplicationException( "Node does not have a local incarnation property." );
-				}
+					Property p = Properties.GetSingleProperty( Property.LocalIncarnation );
+					if ( p == null )
+					{
+						throw new ApplicationException( "Node does not have a local incarnation property." );
+					}
 
-				return ( ulong )p.Value;
+					return ( ulong )p.Value;
+				}
 			}
 		}
 
@@ -266,13 +325,16 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				Property p = Properties.GetSingleProperty( Property.MasterIncarnation );
-				if ( p == null )
+				lock ( store )
 				{
-					throw new ApplicationException( "Node does not have a master incarnation property." );
-				}
+					Property p = Properties.GetSingleProperty( Property.MasterIncarnation );
+					if ( p == null )
+					{
+						throw new ApplicationException( "Node does not have a master incarnation property." );
+					}
 
-				return ( ulong )p.Value;
+					return ( ulong )p.Value;
+				}
 			}
 		}
 		#endregion
@@ -458,10 +520,19 @@ namespace Simias.Storage
 		/// Constructor for creating a node from an existing cache node.
 		/// </summary>
 		/// <param name="cNode">Cache node that contains the node data.</param>
-		internal Node( CacheNode cNode )
+		/// <param name="incReference">Increments the reference count on cNode if true.</param>
+		internal Node( CacheNode cNode, bool incReference )
 		{
-			this.store = cNode.store;
-			this.cNode = cNode;
+			lock ( cNode.store )
+			{
+				this.store = cNode.store;
+				this.cNode = cNode;
+
+				if ( incReference )
+				{
+					++cNode.referenceCount;
+				}
+			}
 		}
 
 		/// <summary>
@@ -806,7 +877,10 @@ namespace Simias.Storage
 		[ Obsolete( "This method is marked for removal. Use AddFileEntry() instead.", false ) ]
 		public NodeStream AddStream( string name, string type, string relativePath )
 		{
-			return new NodeStream( this, name, type, relativePath );
+			lock ( store )
+			{
+				return new NodeStream( this, name, type, relativePath );
+			}
 		}
 
 		/// <summary>
@@ -829,7 +903,10 @@ namespace Simias.Storage
 		/// <returns>A FileEntry object representing the file in the file system.</returns>
 		public FileEntry AddFileEntry( string name, string type, string relativePath )
 		{
-			return new FileEntry( this, name, type, relativePath );
+			lock ( store )
+			{
+				return new FileEntry( this, name, type, relativePath );
+			}
 		}
 
 		/// <summary>
@@ -852,7 +929,10 @@ namespace Simias.Storage
 		/// <returns>A DirectoryEntry object representing the directory in the file system.</returns>
 		public DirectoryEntry AddDirectoryEntry( string name, string type, string relativePath )
 		{
-			return new DirectoryEntry( this, name, type, relativePath );
+			lock ( store )
+			{
+				return new DirectoryEntry( this, name, type, relativePath );
+			}
 		}
 
 		/// <summary>
@@ -862,80 +942,83 @@ namespace Simias.Storage
 		/// </summary>
 		public void Commit()
 		{
-			Node commitNode = null;
-
-			// Make sure that current user has write rights to this collection.
-			if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
+			lock ( store )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
+				Node commitNode = null;
 
-			try
-			{
-				// Acquire the store mutex.
-				store.LockStore();
+				// Make sure that current user has write rights to this collection.
+				if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
+				{
+					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+				}
 
-				// If this node has not been persisted, no need to do a merge.
-				commitNode = IsPersisted ? MergeNodeProperties( true ) : this;
+				try
+				{
+					// Acquire the store lock.
+					store.LockStore();
+
+					// If this node has not been persisted, no need to do a merge.
+					commitNode = IsPersisted ? MergeNodeProperties( true ) : this;
+					if ( commitNode != null )
+					{
+						// Set the modify time for this node.
+						commitNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+
+						// Increment the local incarnation number on the local node .
+						commitNode.IncrementLocalIncarnation();
+
+						// If this is a new collection, create it.
+						if ( !commitNode.IsPersisted && commitNode.IsCollection )
+						{
+							store.StorageProvider.CreateCollection( Id );
+						}
+
+						// Call the store provider to update the records.
+						store.StorageProvider.CreateRecord( commitNode.Properties.PropertyDocument.OuterXml, CollectionNode.Id );
+					}
+				}
+				finally
+				{
+					// Release the store lock.
+					store.UnlockStore();
+				}
+
+				// Remove this node from the collection's dirty list.  Don't add any new properties
+				// after this or it will go back onto the dirty list.
+				CollectionNode.RemoveDirtyNodeFromList( Id );
+
+				// Make sure that the node was written to the database.
 				if ( commitNode != null )
 				{
-					// Set the modify time for this node.
-					commitNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
-					// Increment the local incarnation number on the local node .
-					commitNode.IncrementLocalIncarnation();
-
-					// If this is a new collection, create it.
-					if ( !commitNode.IsPersisted && commitNode.IsCollection )
+					// Fire an event for this commit action.
+					if ( IsPersisted )
 					{
-						store.StorageProvider.CreateCollection( Id );
+						// Update this node to reflect the latest changes.
+						cNode.Copy( commitNode.cNode );
+
+						// Fire an event to notify that this node has been changed.
+						store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeChanged, store.Instance ) );
+					}
+					else
+					{
+						// Fire an event to notify that this node has been created.
+						store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeCreated, store.Instance ) );
+
+						// This node has been successfully committed to the database.
+						IsPersisted = true;
 					}
 
-					// Call the store provider to update the records.
-					store.StorageProvider.CreateRecord( commitNode.Properties.PropertyDocument.OuterXml, CollectionNode.Id );
-				}
-			}
-			finally
-			{
-				// Release the store mutex.
-				store.UnlockStore();
-			}
-
-			// Remove this node from the collection's dirty list.  Don't add any new properties
-			// after this or it will go back onto the dirty list.
-			CollectionNode.RemoveDirtyNodeFromList( Id );
-
-			// Make sure that the node was written to the database.
-			if ( commitNode != null )
-			{
-				// Fire an event for this commit action.
-				if ( IsPersisted )
-				{
-					// Update this node to reflect the latest changes.
-					cNode.Copy( commitNode.cNode );
-
-					// Fire an event to notify that this node has been changed.
-					store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeChanged, store.Instance ) );
-				}
-				else
-				{
-					// Fire an event to notify that this node has been created.
-					store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeCreated, store.Instance ) );
-
-					// This node has been successfully committed to the database.
-					IsPersisted = true;
-				}
-
-				if ( IsCollection )
-				{
-					// Update the access control list.
-					CollectionNode.UpdateAccessControl();
-				}
-				else
-				{
-					// Need to update the incarnation number on the collection.  Can do this just by committing
-					// the collection object.
-					CollectionNode.Commit();
+					if ( IsCollection )
+					{
+						// Update the access control list.
+						CollectionNode.UpdateAccessControl();
+					}
+					else
+					{
+						// Need to update the incarnation number on the collection.  Can do this just by committing
+						// the collection object.
+						CollectionNode.Commit();
+					}
 				}
 			}
 		}
@@ -956,9 +1039,12 @@ namespace Simias.Storage
 		/// <param name="type">Type of node to create.</param>
 		public Node CreateChild( string name, string type )
 		{
-			// Create the new child node.
-			Node child = new Node( CollectionNode, name, Guid.NewGuid().ToString(), type );
-			return child.SetParent( this );
+			lock ( store )
+			{
+				// Create the new child node.
+				Node child = new Node( CollectionNode, name, Guid.NewGuid().ToString(), type );
+				return child.SetParent( this );
+			}
 		}
 
 		/// <summary>
@@ -978,118 +1064,121 @@ namespace Simias.Storage
 		/// <returns>Returns the node as a tombstone object.</returns>
 		public Node Delete( bool deep )
 		{
-			// No sense in deleting a node that has not been persisted.
-			if ( IsPersisted )
+			lock ( store )
 			{
-				// Only node deletes are access checked.
-				if ( !IsCollection )
+				// No sense in deleting a node that has not been persisted.
+				if ( IsPersisted )
 				{
-					if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
+					// Only node deletes are access checked.
+					if ( !IsCollection )
 					{
-						throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-					}
-				}
-
-				if ( deep )
-				{
-					if ( IsCollection )
-					{
-						// Generate a delete event.
-						store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeDeleted, store.Instance ) );
-
-						// Just delete the collection, the store provider will remove all of the nodes.
-						ChangeToTombstone( false );
-						store.StorageProvider.DeleteCollection( Id );
-						CollectionNode.ClearDirtyList();
-					}
-					else
-					{
-						if ( !IsTombstone )
+						if ( !CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
 						{
-							// Build a node list for this node and all of its children and then turn each
-							// of them into a tombstone.
-							ICSList idList = GetIdPathList();
-							foreach ( Node delNode in idList )
-							{
-								// Generate a delete event.
-								store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, delNode.Id, CollectionNode.Id, delNode.NameSpaceType, EventType.NodeDeleted, store.Instance ) );
-
-								// Change the current this object into a tombstone rather than using the
-								// enumerated object.  That way the tombstone will be passed back to the caller.
-								if ( delNode.Id == Id )
-								{
-									ChangeToTombstone( true );
-								}
-								else
-								{
-									delNode.ChangeToTombstone( true );
-								}
-							}
-						}
-						else
-						{
-							// A Tombstone has no children.  Therefore just delete it from the database.
-							store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
-
-							// Remove this object from the commitList.
-							CollectionNode.RemoveDirtyNodeFromList( Id );
+							throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
 						}
 					}
-				}
-				else
-				{
-					if ( !IsTombstone )
-					{
-						if ( HasChildren )
-						{
-							throw new ApplicationException( "Node has children" );	
-						}
 
+					if ( deep )
+					{
 						if ( IsCollection )
 						{
 							// Generate a delete event.
 							store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeDeleted, store.Instance ) );
 
-							// Find the node object and delete it from the persistent store.
+							// Just delete the collection, the store provider will remove all of the nodes.
 							ChangeToTombstone( false );
-							store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+							store.StorageProvider.DeleteCollection( Id );
+							CollectionNode.ClearDirtyList();
 						}
 						else
 						{
-							// Generate a delete event.
-							store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeDeleted, store.Instance ) );
+							if ( !IsTombstone )
+							{
+								// Build a node list for this node and all of its children and then turn each
+								// of them into a tombstone.
+								ICSList idList = GetIdPathList();
+								foreach ( Node delNode in idList )
+								{
+									// Generate a delete event.
+									store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, delNode.Id, CollectionNode.Id, delNode.NameSpaceType, EventType.NodeDeleted, store.Instance ) );
 
-							// Convert this node to a tombstone and immediately commit it.
-							ChangeToTombstone( true );
+									// Change the current this object into a tombstone rather than using the
+									// enumerated object.  That way the tombstone will be passed back to the caller.
+									if ( delNode.Id == Id )
+									{
+										ChangeToTombstone( true );
+									}
+									else
+									{
+										delNode.ChangeToTombstone( true );
+									}
+								}
+							}
+							else
+							{
+								// A Tombstone has no children.  Therefore just delete it from the database.
+								store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+
+								// Remove this object from the commitList.
+								CollectionNode.RemoveDirtyNodeFromList( Id );
+							}
 						}
 					}
 					else
 					{
-						// Find the node object and delete it from the persistent store.
-						store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
-					}
+						if ( !IsTombstone )
+						{
+							if ( HasChildren )
+							{
+								throw new ApplicationException( "Node has children" );	
+							}
 
-					// Remove this object from the commitList.
-					CollectionNode.RemoveDirtyNodeFromList( Id );
-				}
-			}
-			else
-			{
-				// Convert the nodes to a tombstone.
-				ChangeToTombstone( false );
-				if ( IsCollection )
-				{
-					// This is a collection all changed nodes should be released.
-					CollectionNode.ClearDirtyList();
+							if ( IsCollection )
+							{
+								// Generate a delete event.
+								store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeDeleted, store.Instance ) );
+
+								// Find the node object and delete it from the persistent store.
+								ChangeToTombstone( false );
+								store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+							}
+							else
+							{
+								// Generate a delete event.
+								store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, Id, CollectionNode.Id, NameSpaceType, EventType.NodeDeleted, store.Instance ) );
+
+								// Convert this node to a tombstone and immediately commit it.
+								ChangeToTombstone( true );
+							}
+						}
+						else
+						{
+							// Find the node object and delete it from the persistent store.
+							store.StorageProvider.DeleteRecord( Id, CollectionNode.Id );
+						}
+
+						// Remove this object from the commitList.
+						CollectionNode.RemoveDirtyNodeFromList( Id );
+					}
 				}
 				else
 				{
-					// Remove this object from the commitList.
-					CollectionNode.RemoveDirtyNodeFromList( Id );
+					// Convert the nodes to a tombstone.
+					ChangeToTombstone( false );
+					if ( IsCollection )
+					{
+						// This is a collection all changed nodes should be released.
+						CollectionNode.ClearDirtyList();
+					}
+					else
+					{
+						// Remove this object from the commitList.
+						CollectionNode.RemoveDirtyNodeFromList( Id );
+					}
 				}
-			}
 
-			return this;
+				return this;
+			}
 		}
 
 		/// <summary>
@@ -1100,16 +1189,19 @@ namespace Simias.Storage
 		/// specified name.</returns>
 		public ICSList GetFileSystemEntriesByName( string name )
 		{
-			ICSList fseList = new ICSList();
-			foreach( FileSystemEntry fse in GetFileSystemEntryList() )
+			lock ( store )
 			{
-				if ( fse.Name == name )
+				ICSList fseList = new ICSList();
+				foreach( FileSystemEntry fse in GetFileSystemEntryList() )
 				{
-					fseList.Add( fse );
+					if ( fse.Name == name )
+					{
+						fseList.Add( fse );
+					}
 				}
-			}
 
-			return fseList;
+				return fseList;
+			}
 		}
 
 		/// <summary>
@@ -1120,16 +1212,19 @@ namespace Simias.Storage
 		/// specified type.</returns>
 		public ICSList GetFileSystemEntriesByType( string type )
 		{
-			ICSList fseList = new ICSList();
-			foreach( FileSystemEntry fse in GetFileSystemEntryList() )
+			lock ( store )
 			{
-				if ( fse.Type == type )
+				ICSList fseList = new ICSList();
+				foreach( FileSystemEntry fse in GetFileSystemEntryList() )
 				{
-					fseList.Add( fse );
+					if ( fse.Type == type )
+					{
+						fseList.Add( fse );
+					}
 				}
-			}
 
-			return fseList;
+				return fseList;
+			}
 		}
 
 		/// <summary>
@@ -1139,17 +1234,20 @@ namespace Simias.Storage
 		/// <returns>A FileSystemEntry object that represents the specified ID.</returns>
 		public FileSystemEntry GetFileSystemEntryById( string id )
 		{
-			string lowerId = id.ToLower();
-			ICSList entryList = GetFileSystemEntryList();
-			foreach( FileSystemEntry fse in entryList )
+			lock ( store )
 			{
-				if ( fse.Id == lowerId )
+				string lowerId = id.ToLower();
+				ICSList entryList = GetFileSystemEntryList();
+				foreach( FileSystemEntry fse in entryList )
 				{
-					return fse;
+					if ( fse.Id == lowerId )
+					{
+						return fse;
+					}
 				}
-			}
 
-			return null;
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -1158,7 +1256,10 @@ namespace Simias.Storage
 		/// <returns>An ICSList object that contains the file system entry objects.</returns>
 		public ICSList GetFileSystemEntryList()
 		{
-			return new ICSList( new FileSystemEntry.FileSystemEntryEnumerator( this ) );
+			lock ( store )
+			{
+				return new ICSList( new FileSystemEntry.FileSystemEntryEnumerator( this ) );
+			}
 		}
 
 		/// <summary>
@@ -1168,85 +1269,88 @@ namespace Simias.Storage
 		/// <returns>Node object</returns>
 		public Node GetNodeById( string nodeId )
 		{
-			Node node = null;
-			string normalizedId = nodeId.ToLower();
-
-			// See if there is already an instance of this data in the cache table.
-			CacheNode cNode = store.GetCacheNode( normalizedId );
-			if ( cNode == null )
+			lock ( store )
 			{
-				// Call the provider to get an XML string that represents this node.
-				string xmlNode = store.StorageProvider.GetRecord( normalizedId, CollectionNode.Id );
-				if ( xmlNode != null )
+				Node node = null;
+				string normalizedId = nodeId.ToLower();
+
+				// See if there is already an instance of this data in the cache table.
+				CacheNode cNode = store.GetCacheNode( normalizedId );
+				if ( cNode == null )
 				{
-					// Covert the XML string into a DOM that we can then parse.
-					XmlDocument nodeDoc = new XmlDocument();
-					nodeDoc.LoadXml( xmlNode );
-
-					// Do not allow retrieval of nodes outside of this collection.
-					XmlNode propNode = nodeDoc.DocumentElement.FirstChild.SelectSingleNode( Property.PropertyTag + "[@" + Property.NameAttr + "='" + Property.CollectionID + "']" );
-					if ( ( propNode != null ) && ( propNode.InnerText == CollectionNode.Id ) )
+					// Call the provider to get an XML string that represents this node.
+					string xmlNode = store.StorageProvider.GetRecord( normalizedId, CollectionNode.Id );
+					if ( xmlNode != null )
 					{
-						// Point to the node tag.
-						XmlElement element = nodeDoc.DocumentElement[ Property.ObjectTag ];
+						// Covert the XML string into a DOM that we can then parse.
+						XmlDocument nodeDoc = new XmlDocument();
+						nodeDoc.LoadXml( xmlNode );
 
-						// Get the type of Node, so we can create the right type.
-						string nodeType = element.GetAttribute( Property.TypeAttr );
-						string prefix = GetNameSpacePrefix( nodeType );
-						if ( prefix != null )
+						// Do not allow retrieval of nodes outside of this collection.
+						XmlNode propNode = nodeDoc.DocumentElement.FirstChild.SelectSingleNode( Property.PropertyTag + "[@" + Property.NameAttr + "='" + Property.CollectionID + "']" );
+						if ( ( propNode != null ) && ( propNode.InnerText == CollectionNode.Id ) )
 						{
-							switch ( prefix )
+							// Point to the node tag.
+							XmlElement element = nodeDoc.DocumentElement[ Property.ObjectTag ];
+
+							// Get the type of Node, so we can create the right type.
+							string nodeType = element.GetAttribute( Property.TypeAttr );
+							string prefix = GetNameSpacePrefix( nodeType );
+							if ( prefix != null )
 							{
-								case CollectionType:
-									node = new Collection( store, element, false );
-									break;
+								switch ( prefix )
+								{
+									case CollectionType:
+										node = new Collection( store, element, false );
+										break;
 
-								case NodeType:
-									node = new Node( CollectionNode, element, true, false, true );
-									break;
+									case NodeType:
+										node = new Node( CollectionNode, element, true, false, true );
+										break;
 
-								case TombstoneType:
-									node = new Node( CollectionNode, element, true, false, true );
-									break;
+									case TombstoneType:
+										node = new Node( CollectionNode, element, true, false, true );
+										break;
 
-								default:
-									throw new ApplicationException( "Invalid namespace type" );
+									default:
+										throw new ApplicationException( "Invalid namespace type" );
+								}
+							}
+							else
+							{
+								throw new ApplicationException( "Invalid namespace type" );
 							}
 						}
 						else
 						{
-							throw new ApplicationException( "Invalid namespace type" );
+							throw new ApplicationException( "Specified ID does not belong to this Collection" );
 						}
 					}
-					else
+				}
+				else
+				{
+					// An instance of the data already exists.
+					switch ( GetNameSpacePrefix( cNode.type ) )
 					{
-						throw new ApplicationException( "Specified ID does not belong to this Collection" );
+						case CollectionType:
+							node = new Collection( store, cNode, false );
+							break;
+
+						case NodeType:
+							node = new Node( cNode, false );
+							break;
+
+						case TombstoneType:
+							node = new Node( cNode, false );
+							break;
+
+						default:
+							throw new ApplicationException( "Invalid namespace type" );
 					}
 				}
+
+				return node;
 			}
-			else
-			{
-				// An instance of the data already exists.
-				switch ( GetNameSpacePrefix( cNode.type ) )
-				{
-					case CollectionType:
-						node = new Collection( store, cNode );
-						break;
-
-					case NodeType:
-						node = new Node( cNode );
-						break;
-
-					case TombstoneType:
-						node = new Node( cNode );
-						break;
-
-					default:
-						throw new ApplicationException( "Invalid namespace type" );
-				}
-			}
-
-			return node;
 		}
 
 		/// <summary>
@@ -1256,7 +1360,10 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing the node(s) that that have the specified name.</returns>
 		public ICSList GetNodesByName( string name )
 		{
-			return CollectionNode.Search( Property.ObjectName, name, Property.Operator.Equal );
+			lock ( store )
+			{
+				return CollectionNode.Search( Property.ObjectName, name, Property.Operator.Equal );
+			}
 		}
 
 		/// <summary>
@@ -1267,20 +1374,23 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing the node(s) that correspond to the specified path name.</returns>
 		public ICSList GetNodesByPathName( string pathName )
 		{
-			ICSList nodeList = new ICSList();
-			string leafName = pathName.Substring( pathName.LastIndexOf( '/' ) + 1 );
-
-			// Find all nodes in this collection with this leaf name.
-			ICSList tempList = GetNodesByName( leafName );
-			foreach ( Node tempNode in tempList )
+			lock ( store )
 			{
-				if ( pathName == tempNode.PathName )
-				{
-					nodeList.Add( tempNode );
-				}
-			}
+				ICSList nodeList = new ICSList();
+				string leafName = pathName.Substring( pathName.LastIndexOf( '/' ) + 1 );
 
-			return nodeList;
+				// Find all nodes in this collection with this leaf name.
+				ICSList tempList = GetNodesByName( leafName );
+				foreach ( Node tempNode in tempList )
+				{
+					if ( pathName == tempNode.PathName )
+					{
+						nodeList.Add( tempNode );
+					}
+				}
+
+				return nodeList;
+			}
 		}
 
 		/// <summary>
@@ -1290,7 +1400,10 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing the node(s) that that have the specified type.</returns>
 		public ICSList GetNodesByType( string type )
 		{
-			return CollectionNode.Search( Property.ObjectType, NodeType + type , Property.Operator.Begins );
+			lock ( store )
+			{
+				return CollectionNode.Search( Property.ObjectType, NodeType + type , Property.Operator.Begins );
+			}
 		}
 
 		/// <summary>
@@ -1299,14 +1412,17 @@ namespace Simias.Storage
 		/// <returns>Node that represents the parent of this node.  Null is return if node has no parent.</returns>
 		public Node GetParent()
 		{
-			Property p = Properties.GetSingleProperty( Property.ParentID );
-			if ( p != null )
+			lock ( store )
 			{
-				return GetNodeById( p.ToString() );
-			}
-			else
-			{
-				return null;
+				Property p = Properties.GetSingleProperty( Property.ParentID );
+				if ( p != null )
+				{
+					return GetNodeById( p.ToString() );
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -1317,16 +1433,19 @@ namespace Simias.Storage
 		/// <returns>A FileSystemEntry object that represents the specified name.</returns>
 		public FileSystemEntry GetSingleFileSystemEntryByName( string name )
 		{
-			ICSList entryList = GetFileSystemEntryList();
-			foreach( FileSystemEntry fse in entryList )
+			lock ( store )
 			{
-				if ( fse.Name == name )
+				ICSList entryList = GetFileSystemEntryList();
+				foreach( FileSystemEntry fse in entryList )
 				{
-					return fse;
+					if ( fse.Name == name )
+					{
+						return fse;
+					}
 				}
-			}
 
-			return null;
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -1336,16 +1455,19 @@ namespace Simias.Storage
 		/// <returns>A FileSystemEntry object that represents the specified type.</returns>
 		public FileSystemEntry GetSingleFileSystemEntryByType( string type )
 		{
-			ICSList entryList = GetFileSystemEntryList();
-			foreach( FileSystemEntry fse in entryList )
+			lock ( store )
 			{
-				if ( fse.Type == type )
+				ICSList entryList = GetFileSystemEntryList();
+				foreach( FileSystemEntry fse in entryList )
 				{
-					return fse;
+					if ( fse.Type == type )
+					{
+						return fse;
+					}
 				}
-			}
 
-			return null;
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -1355,15 +1477,18 @@ namespace Simias.Storage
 		/// <returns>The first node object that matches the specified name.  A null is returned if no matching nodes are found.</returns>
 		public Node GetSingleNodeByName( string name )
 		{
-			Node node = null;
-			ICSList nodeList = CollectionNode.Search( Property.ObjectName, name, Property.Operator.Equal );
-			foreach ( Node tempNode in nodeList )
+			lock ( store )
 			{
-				node = tempNode;
-				break;
-			}
+				Node node = null;
+				ICSList nodeList = CollectionNode.Search( Property.ObjectName, name, Property.Operator.Equal );
+				foreach ( Node tempNode in nodeList )
+				{
+					node = tempNode;
+					break;
+				}
 
-			return node;
+				return node;
+			}
 		}
 
 		/// <summary>
@@ -1374,17 +1499,20 @@ namespace Simias.Storage
 		/// <returns>The first node that corresponds to the specified node path name.  A null is returned if no matching nodes are found.</returns>
 		public Node GetSingleNodeByPathName( string pathName )
 		{
-			Node node = null;
-
-			// Find at least one node that corresponds to the node path name.
-			ICSList nodeList = GetNodesByPathName( pathName );
-			foreach ( Node tempNode in nodeList )
+			lock ( store )
 			{
-				node = tempNode;
-				break;
-			}
+				Node node = null;
 
-			return node;
+				// Find at least one node that corresponds to the node path name.
+				ICSList nodeList = GetNodesByPathName( pathName );
+				foreach ( Node tempNode in nodeList )
+				{
+					node = tempNode;
+					break;
+				}
+
+				return node;
+			}
 		}
 
 		/// <summary>
@@ -1394,17 +1522,20 @@ namespace Simias.Storage
 		/// <returns>The first node that corresponds to the specified node path name.  A null is returned if no matching nodes are found.</returns>
 		public Node GetSingleNodeByType( string type )
 		{
-			Node node = null;
-
-			// Find at least one node that corresponds to the node type.
-			ICSList nodeList = GetNodesByType( type );
-			foreach ( Node tempNode in nodeList )
+			lock ( store )
 			{
-				node = tempNode;
-				break;
-			}
+				Node node = null;
 
-			return node;
+				// Find at least one node that corresponds to the node type.
+				ICSList nodeList = GetNodesByType( type );
+				foreach ( Node tempNode in nodeList )
+				{
+					node = tempNode;
+					break;
+				}
+
+				return node;
+			}
 		}
 
 		/// <summary>
@@ -1415,17 +1546,20 @@ namespace Simias.Storage
 		[ Obsolete( "This method is marked for removal. Use GetFileSystemEntryById() instead.", false ) ]
 		public NodeStream GetStreamById( string id )
 		{
-			string lowerId = id.ToLower();
-			ICSList streamList = GetStreamList();
-			foreach( NodeStream ns in streamList )
+			lock ( store )
 			{
-				if ( ns.Id == lowerId )
+				string lowerId = id.ToLower();
+				ICSList streamList = GetStreamList();
+				foreach( NodeStream ns in streamList )
 				{
-					return ns;
+					if ( ns.Id == lowerId )
+					{
+						return ns;
+					}
 				}
-			}
 
-			return null;
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -1435,7 +1569,10 @@ namespace Simias.Storage
 		[ Obsolete( "This method is marked for removal. Use GetFileSystemEntryList() instead.", false ) ]
 		public ICSList GetStreamList()
 		{
-			return new ICSList( new NodeStream.NodeStreamEnumerator( this ) );
+			lock ( store )
+			{
+				return new ICSList( new NodeStream.NodeStreamEnumerator( this ) );
+			}
 		}
 
 		/// <summary>
@@ -1444,50 +1581,53 @@ namespace Simias.Storage
 		/// <param name="newParent">New parent node.</param>
 		public void Move( Node newParent )
 		{
-			// This node cannot be a collection object.
-			if ( IsCollection )
+			lock ( store )
 			{
-				throw new ApplicationException( "Cannot move collections or collections cannot have parents." );
-			}
-
-			// Make sure that this node is in the same collection.
-			if ( newParent.CollectionNode.Id != CollectionNode.Id )
-			{
-				throw new ApplicationException( "Nodes must exist in the same collection" );
-			}
-
-			if ( IsPersisted )
-			{
-				// If the new parent is the same as the existing parent, do nothing.
-				Property p = Properties.GetSingleProperty( Property.ParentID );
-				if ( ( p == null ) || ( p.ToString() != newParent.Id ) )
+				// This node cannot be a collection object.
+				if ( IsCollection )
 				{
-					// Get a list of all children nodes that contain this id in its ID path.
-					ICSList idList = GetIdPathList();
-					foreach ( Node tempNode in idList )
-					{
-						// Get the ID path property for this subordinate node.
-						p = tempNode.Properties.GetSingleProperty( Property.IDPath );
-						if ( p != null )
-						{
-							// Strip off the parent of the current node and add the new parent ID path.
-							string idPath = p.ToString();
-							p.SetPropertyValue( newParent.IDPath + "/" + idPath.Substring( idPath.IndexOf( Id ) ) );
-						}
-						else
-						{
-							throw new ApplicationException( "Node does not contain an ID path" );
-						}
-					}
-
-					// Set the parent Id of this node to point to the new parent.
-					Properties.ModifyNodeProperty( Property.ParentID, newParent.Id );
+					throw new ApplicationException( "Cannot move collections or collections cannot have parents." );
 				}
-			}
-			else
-			{
-				Properties.AddNodeProperty( Property.ParentID, newParent.Id );
-				Properties.AddNodeProperty( Property.IDPath, newParent.IDPath + "/" + Id );
+
+				// Make sure that this node is in the same collection.
+				if ( newParent.CollectionNode.Id != CollectionNode.Id )
+				{
+					throw new ApplicationException( "Nodes must exist in the same collection" );
+				}
+
+				if ( IsPersisted )
+				{
+					// If the new parent is the same as the existing parent, do nothing.
+					Property p = Properties.GetSingleProperty( Property.ParentID );
+					if ( ( p == null ) || ( p.ToString() != newParent.Id ) )
+					{
+						// Get a list of all children nodes that contain this id in its ID path.
+						ICSList idList = GetIdPathList();
+						foreach ( Node tempNode in idList )
+						{
+							// Get the ID path property for this subordinate node.
+							p = tempNode.Properties.GetSingleProperty( Property.IDPath );
+							if ( p != null )
+							{
+								// Strip off the parent of the current node and add the new parent ID path.
+								string idPath = p.ToString();
+								p.SetPropertyValue( newParent.IDPath + "/" + idPath.Substring( idPath.IndexOf( Id ) ) );
+							}
+							else
+							{
+								throw new ApplicationException( "Node does not contain an ID path" );
+							}
+						}
+
+						// Set the parent Id of this node to point to the new parent.
+						Properties.ModifyNodeProperty( Property.ParentID, newParent.Id );
+					}
+				}
+				else
+				{
+					Properties.AddNodeProperty( Property.ParentID, newParent.Id );
+					Properties.AddNodeProperty( Property.IDPath, newParent.IDPath + "/" + Id );
+				}
 			}
 		}
 
@@ -1496,10 +1636,13 @@ namespace Simias.Storage
 		/// </summary>
 		public void Refresh()
 		{
-			Node node = MergeNodeProperties( false );
-			if ( node != null )
+			lock ( store )
 			{
-				cNode.Copy( node.cNode );
+				Node node = MergeNodeProperties( false );
+				if ( node != null )
+				{
+					cNode.Copy( node.cNode );
+				}
 			}
 		}
 
@@ -1509,8 +1652,11 @@ namespace Simias.Storage
 		/// </summary>
 		public void Rollback()
 		{
-			RollbackNode();
-			CollectionNode.RemoveDirtyNodeFromList( Id );
+			lock ( store )
+			{
+				RollbackNode();
+				CollectionNode.RemoveDirtyNodeFromList( Id );
+			}
 		}
 
 		/// <summary>
@@ -1520,8 +1666,11 @@ namespace Simias.Storage
 		/// <returns>Node where parent was set.</returns>
 		public Node SetParent( Node parentNode )
 		{
-			Move( parentNode );
-			return this;
+			lock ( store )
+			{
+				Move( parentNode );
+				return this;
+			}
 		}
 
 		/// <summary>
@@ -1534,64 +1683,67 @@ namespace Simias.Storage
 		/// <returns>True if incarnation value was updated, otherwise false is returned indicating a collision.</returns>
 		public bool UpdateIncarnation( ulong master )
 		{
-			bool updated = false;
-
-			// Only the synker role has rights to make this call.
-			if ( store.CurrentUser != Access.SyncOperatorRole )
+			lock ( store )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection synchronization right." );
-			}
+				bool updated = false;
 
-			try
-			{
-				// Acquire the store mutex.
-				store.LockStore();
-
-				// See if the node has been updated since the last time we checked.
-				Node currentNode = GetNodeFromDatabase( Id );
-				if ( ( currentNode == null ) || ( currentNode.LocalIncarnation == LocalIncarnation ) )
+				// Only the synker role has rights to make this call.
+				if ( store.CurrentUser != Access.SyncOperatorRole )
 				{
-					// Update both incarnation values to the specified value.
-					Properties.ModifyNodeProperty( Property.MasterIncarnation, master );
-					Properties.ModifyNodeProperty( Property.LocalIncarnation, master );
+					throw new UnauthorizedAccessException( "Current user does not have collection synchronization right." );
+				}
 
-					// If this is a new collection, create it.
-					if ( !IsPersisted && IsCollection )
+				try
+				{
+					// Acquire the store lock.
+					store.LockStore();
+
+					// See if the node has been updated since the last time we checked.
+					Node currentNode = GetNodeFromDatabase( Id );
+					if ( ( currentNode == null ) || ( currentNode.LocalIncarnation == LocalIncarnation ) )
 					{
-						store.StorageProvider.CreateCollection( Id );
+						// Update both incarnation values to the specified value.
+						Properties.ModifyNodeProperty( Property.MasterIncarnation, master );
+						Properties.ModifyNodeProperty( Property.LocalIncarnation, master );
+
+						// If this is a new collection, create it.
+						if ( !IsPersisted && IsCollection )
+						{
+							store.StorageProvider.CreateCollection( Id );
+						}
+
+						// Call the store provider to update the records.
+						store.StorageProvider.CreateRecord( Properties.PropertyDocument.OuterXml, CollectionNode.Id );
+
+						// Node has been updated.
+						updated = true;
 					}
-
-					// Call the store provider to update the records.
-					store.StorageProvider.CreateRecord( Properties.PropertyDocument.OuterXml, CollectionNode.Id );
-
-					// Node has been updated.
-					updated = true;
 				}
-			}
-			finally
-			{
-				// Release the store mutex.
-				store.UnlockStore();
-			}
-
-			// If the node has been updated, a little more processing outside of the store lock is needed.
-			if ( updated )
-			{
-				// Remove this node from the collection's dirty list.  Don't add any new properties
-				// after this or it will go back onto the dirty list.
-				CollectionNode.RemoveDirtyNodeFromList( Id );
-
-				// This node has been successfully committed to the database.
-				IsPersisted = true;
-
-				if ( IsCollection )
+				finally
 				{
-					// Update the access control list.
-					CollectionNode.UpdateAccessControl();
+					// Release the store lock.
+					store.UnlockStore();
 				}
-			}
 
-			return updated;
+				// If the node has been updated, a little more processing outside of the store lock is needed.
+				if ( updated )
+				{
+					// Remove this node from the collection's dirty list.  Don't add any new properties
+					// after this or it will go back onto the dirty list.
+					CollectionNode.RemoveDirtyNodeFromList( Id );
+
+					// This node has been successfully committed to the database.
+					IsPersisted = true;
+
+					if ( IsCollection )
+					{
+						// Update the access control list.
+						CollectionNode.UpdateAccessControl();
+					}
+				}
+
+				return updated;
+			}
 		}
 		#endregion
 

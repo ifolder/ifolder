@@ -93,19 +93,40 @@ namespace Simias.Storage
 		/// from the file system if true.</param>
 		public override void Delete( bool deleteEntry )
 		{
-			// Make sure that current user has write rights to this collection.
-			if ( !node.CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
+			lock ( store )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
+				// Make sure that current user has write rights to this collection.
+				if ( !node.CollectionNode.IsAccessAllowed( Access.Rights.ReadWrite ) )
+				{
+					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+				}
 
-			if ( deleteEntry && Exists )
-			{
-				Directory.Delete( FullName, true );
-			}
+				if ( deleteEntry && Exists )
+				{
+					Directory.Delete( FullName, true );
+				}
 
-			// Delete this property off of the node.
-			entryProperty.DeleteProperty();
+				// Need to clean off any pending merge properties that are on the merge list.
+				string id = Properties.PropertyRoot.GetAttribute( Property.IDAttr );
+
+				// Walk each property in the merge list to determine if the specified property is in the list.
+				foreach ( Property p in node.cNode.mergeList )
+				{
+					// Is this a file system entry property?
+					if ( p.Name == Property.NodeFileSystemEntry )
+					{
+						// To validate for sure, compare the file ids.
+						if ( p.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) == id )
+						{
+							// Mark this property as expired so it won't be merged.
+							p.Expire = true;
+						}
+					}
+				}
+
+				// Delete this property off of the node.
+				entryProperty.DeleteProperty();
+			}
 		}
 		#endregion
 	}

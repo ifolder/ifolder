@@ -27,11 +27,9 @@ using System.Collections;
 using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
-using System.Threading;
 using NUnit.Framework;
 
 using Simias;
-using Simias.Event;
 using Simias.Storage;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
@@ -53,9 +51,6 @@ namespace Simias.Storage.Tests
 
 		// Path to store.
 		private Uri basePath = new Uri( Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" ) );
-
-		// Event object used to shutdown broker.
-		private EventPublisher publisher;
 		#endregion
 
 		#region Test Setup
@@ -65,9 +60,8 @@ namespace Simias.Storage.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			// Make the event broker run as a singleton.
-			EventBroker.overrideConfig = true;
-			publisher = new EventPublisher( new Configuration( basePath.LocalPath + Path.DirectorySeparatorChar + ".simias" ) );
+			// Send all traces to the console.
+			MyTrace.SendTraceToStandardOutput();
 
 			// Connect to the store.
 			store = Store.Connect( basePath );
@@ -968,6 +962,7 @@ namespace Simias.Storage.Tests
 
 				// Delete the node stream object.
 				fe.Delete();
+				collection.Commit();
 			}
 			finally
 			{
@@ -1821,9 +1816,49 @@ namespace Simias.Storage.Tests
                 
 				// Delete the collection.
 				collection.Delete( true );
+				collection.Dispose();
 
 				// Release the merge store handle.
 				mergeStore.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// Tests the file property merge on a node.
+		/// </summary>
+		[Test]
+		public void FilePropertyTest()
+		{
+			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			try
+			{
+				// Add a file to the collection object.
+				FileEntry fEntry = collection.AddFileEntry( "CS_TestFile", "Test.txt" );
+
+				Property p = new Property( "MyFileProperty", "Hello world" );
+				fEntry.Properties.AddProperty( p );
+				collection.Commit();
+
+				// Modify the property.
+				fEntry.Properties.ModifyProperty( "MyFileProperty", "Hello again world" );
+				p.Value = "Goodbye";
+				collection.Commit();
+
+				// Add a property.
+				fEntry.Properties.AddProperty( "MyOtherProperty", "Test1" );
+
+				// Add a value after deleting the file entry. The new value should not be applied.
+				fEntry.Delete();
+				p.Value = "Hello";
+				collection.Commit();
+			}
+			finally
+			{
+				// Get rid of the root path.
+				Directory.Delete( collection.DocumentRoot.LocalPath, true );
+                
+				// Delete the collection.
+				collection.Delete( true );
 			}
 		}
 		#endregion
@@ -1846,9 +1881,6 @@ namespace Simias.Storage.Tests
 			{
 				Directory.Delete( dirPath, true );
 			}
-
-			// Tell the event broker to shutdown.
-			publisher.RaiseEvent(new ServiceEventArgs(ServiceEventArgs.TargetAll, ServiceControl.Shutdown));
 		}
 		#endregion
 	}

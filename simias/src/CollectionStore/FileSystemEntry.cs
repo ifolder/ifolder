@@ -36,6 +36,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Reference to the store handle.
+		/// </summary>
+		internal protected Store store;
+
+		/// <summary>
 		/// Node that this file system entry belongs to.
 		/// </summary>
 		internal protected Node node;
@@ -59,18 +64,27 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileCreationTime );
-				if ( p != null )
+				lock ( store )
 				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new FileNotFoundException();
+					Property p = properties.FindSingleValue( Property.FileCreationTime );
+					if ( p != null )
+					{
+						return ( DateTime )p.Value;
+					}
+					else
+					{
+						throw new FileNotFoundException();
+					}
 				}
 			}
 
-			set	{ properties.ModifyNodeProperty( Property.FileCreationTime, value ); }
+			set	
+			{ 
+				lock ( store )
+				{
+					properties.ModifyNodeProperty( Property.FileCreationTime, value ); 
+				}
+			}
 		}
 
 		/// <summary>
@@ -104,9 +118,11 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				// Get the paths required to create a full path to this object.
-				Property rootPath = node.CollectionNode.Properties.GetSingleProperty( Property.DocumentRoot );
-				return Path.Combine( ( ( Uri )rootPath.Value ).LocalPath, RelativePath );
+				lock ( store )
+				{
+					// Get the paths required to create a full path to this object.
+					return Path.Combine( node.CollectionNode.DocumentRoot.LocalPath, RelativePath );
+				}
 			}
 		}
 
@@ -117,14 +133,17 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.EntryType );
-				if ( p != null )
+				lock ( store )
 				{
-					return ( p.ToString() == Property.DirectoryType ) ? true : false;
-				}
-				else
-				{
-					throw new FileNotFoundException();
+					Property p = properties.FindSingleValue( Property.EntryType );
+					if ( p != null )
+					{
+						return ( p.ToString() == Property.DirectoryType ) ? true : false;
+					}
+					else
+					{
+						throw new FileNotFoundException();
+					}
 				}
 			}
 		}
@@ -136,14 +155,17 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.EntryType );
-				if ( p != null )
+				lock ( store )
 				{
-					return ( p.ToString() == Property.FileType ) ? true : false;
-				}
-				else
-				{
-					throw new FileNotFoundException();
+					Property p = properties.FindSingleValue( Property.EntryType );
+					if ( p != null )
+					{
+						return ( p.ToString() == Property.FileType ) ? true : false;
+					}
+					else
+					{
+						throw new FileNotFoundException();
+					}
 				}
 			}
 		}
@@ -155,14 +177,17 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileLastAccessTime );
-				if ( p != null )
+				lock ( store )
 				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new FileNotFoundException();
+					Property p = properties.FindSingleValue( Property.FileLastAccessTime );
+					if ( p != null )
+					{
+						return ( DateTime )p.Value;
+					}
+					else
+					{
+						throw new FileNotFoundException();
+					}
 				}
 			}
 
@@ -176,14 +201,17 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.FileLastWriteTime );
-				if ( p != null )
+				lock ( store )
 				{
-					return ( DateTime )p.Value;
-				}
-				else
-				{
-					throw new FileNotFoundException();
+					Property p = properties.FindSingleValue( Property.FileLastWriteTime );
+					if ( p != null )
+					{
+						return ( DateTime )p.Value;
+					}
+					else
+					{
+						throw new FileNotFoundException();
+					}
 				}
 			}
 
@@ -195,8 +223,21 @@ namespace Simias.Storage
 		/// </summary>
 		public string Name
 		{
-			get { return entryProperty.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.NameAttr ); }
-			set { entryProperty.XmlProperty[ Property.FileSystemEntryTag ].SetAttribute( Property.NameAttr, value ); node.Properties.SetListChanged(); }
+			get 
+			{ 
+				lock ( store )
+				{
+					return entryProperty.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.NameAttr ); 
+				}
+			}
+
+			set 
+			{ 
+				lock ( store )
+				{
+					entryProperty.XmlProperty[ Property.FileSystemEntryTag ].SetAttribute( Property.NameAttr, value ); node.Properties.SetListChanged(); 
+				}
+			}
 		}
 
 		/// <summary>
@@ -206,18 +247,27 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				Property p = properties.FindSingleValue( Property.DocumentPath ); 
-				if ( p != null )
+				lock ( store )
 				{
-					return ( string )p.Value;
-				}
-				else
-				{
-					throw new FileNotFoundException();
+					Property p = properties.FindSingleValue( Property.DocumentPath ); 
+					if ( p != null )
+					{
+						return ( string )p.Value;
+					}
+					else
+					{
+						throw new FileNotFoundException();
+					}
 				}
 			}
 
-			set { properties.ModifyNodeProperty( Property.DocumentPath, value ); }
+			set 
+			{ 
+				lock ( store )
+				{
+					properties.ModifyNodeProperty( Property.DocumentPath, value ); 
+				}
+			}
 		}
 
 		/// <summary>
@@ -225,7 +275,13 @@ namespace Simias.Storage
 		/// </summary>
 		public string Type
 		{
-			get { return entryProperty.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.TypeAttr ); }
+			get 
+			{ 
+				lock ( store )
+				{
+					return entryProperty.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.TypeAttr ); 
+				}
+			}
 		}
 
 		/// <summary>
@@ -233,7 +289,13 @@ namespace Simias.Storage
 		/// </summary>
 		public string Id
 		{
-			get { return entryProperty.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ); }
+			get 
+			{ 
+				lock ( store )
+				{
+					return entryProperty.XmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ); 
+				}
+			}
 		}
 
 		/// <summary>
@@ -263,7 +325,7 @@ namespace Simias.Storage
 		/// <param name="relativePath">Path relative to the collection root where this stream exists.</param>
 		internal FileSystemEntry( Node node, string name, string type, string relativePath )
 		{
-			// Save the node that this stream will belong to.
+			this.store = node.store;
 			this.node = node;
 
 			// Create an xml document that will represent this stream.
@@ -292,6 +354,7 @@ namespace Simias.Storage
 		/// <param name="entryProperty">Property that represents this node stream.</param>
 		internal FileSystemEntry( Node node, Property entryProperty )
 		{
+			this.store = node.store;
 			this.node = node;
 			this.entryProperty = entryProperty;
 			this.properties = new PropertyList( node, entryProperty.XmlProperty[ Property.FileSystemEntryTag ] );
@@ -323,6 +386,11 @@ namespace Simias.Storage
 		{
 			#region Class Members
 			/// <summary>
+			/// Reference to the store handle.
+			/// </summary>
+			private Store store;
+
+			/// <summary>
 			/// Node that these entries belong to.
 			/// </summary>
 			private Node node;
@@ -345,6 +413,7 @@ namespace Simias.Storage
 			/// <param name="node">Node that this enumerator belongs to.</param>
 			internal FileSystemEntryEnumerator( Node node )
 			{
+				this.store = node.store;
 				this.node = node;
 				entryListEnumerator = ( ICSEnumerator )node.Properties.FindValues( Property.NodeFileSystemEntry, true ).GetEnumerator();
 			}
@@ -357,12 +426,15 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				if ( disposed )
+				lock ( store )
 				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-				entryListEnumerator.Reset();
+					entryListEnumerator.Reset();
+				}
 			}
 
 			/// <summary>
@@ -372,21 +444,24 @@ namespace Simias.Storage
 			{
 				get
 				{
-					if ( disposed )
+					lock ( store )
 					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
+						if ( disposed )
+						{
+							throw new ObjectDisposedException( this.ToString() );
+						}
 
-					// Figure out if the type is a file or directory.
-					Property p = ( Property )entryListEnumerator.Current;
-					XmlNode entryType = p.XmlProperty.FirstChild.SelectSingleNode( Property.PropertyTag + "[@" + Property.NameAttr + "='" + Property.EntryType + "']" );
-					if ( entryType.InnerText == Property.DirectoryType )
-					{
-						return new DirectoryEntry( node, p );
-					}
-					else
-					{
-						return new FileEntry( node, p );
+						// Figure out if the type is a file or directory.
+						Property p = ( Property )entryListEnumerator.Current;
+						XmlNode entryType = p.XmlProperty.FirstChild.SelectSingleNode( Property.PropertyTag + "[@" + Property.NameAttr + "='" + Property.EntryType + "']" );
+						if ( entryType.InnerText == Property.DirectoryType )
+						{
+							return new DirectoryEntry( node, p );
+						}
+						else
+						{
+							return new FileEntry( node, p );
+						}
 					}
 				}
 			}
@@ -400,13 +475,16 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				if ( disposed )
+				lock ( store )
 				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-				// Get the next object in the list.
-				return entryListEnumerator.MoveNext();
+					// Get the next object in the list.
+					return entryListEnumerator.MoveNext();
+				}
 			}
 			#endregion
 
@@ -417,8 +495,11 @@ namespace Simias.Storage
 			/// </summary>
 			public void Dispose()
 			{
-				Dispose( true );
-				GC.SuppressFinalize( this );
+				lock ( store )
+				{
+					Dispose( true );
+					GC.SuppressFinalize( this );
+				}
 			}
 
 			/// <summary>
@@ -456,7 +537,10 @@ namespace Simias.Storage
 			/// </summary>
 			~FileSystemEntryEnumerator()      
 			{
-				Dispose( false );
+				lock ( store )
+				{
+					Dispose( false );
+				}
 			}
 			#endregion
 		}

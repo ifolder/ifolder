@@ -38,6 +38,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Reference to the store object for this property list.
+		/// </summary>
+		private Store store;
+
+		/// <summary>
 		/// The node that this PropertyList belongs to.
 		/// </summary>
 		private Node node;
@@ -54,22 +59,6 @@ namespace Simias.Storage
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Gets the count of properties in the list not including the hidden properties.
-		/// </summary>
-		public int Count
-		{
-			get {  return InternalCount - HiddenCount; }
-		}
-
-		/// <summary>
-		/// Returns the DOM representing this node.
-		/// </summary>
-		internal XmlDocument PropertyDocument
-		{
-			get { return nodeDocument; }
-		}
-
 		/// <summary>
 		/// Gets the count of hidden properties in the list.
 		/// </summary>
@@ -106,6 +95,28 @@ namespace Simias.Storage
 		{
 			get { return node; }
 		}
+
+		/// <summary>
+		/// Returns the DOM representing this node.
+		/// </summary>
+		internal XmlDocument PropertyDocument
+		{
+			get { return nodeDocument; }
+		}
+
+		/// <summary>
+		/// Gets the count of properties in the list not including the hidden properties.
+		/// </summary>
+		public int Count
+		{
+			get 
+			{  
+				lock ( store )
+				{
+					return InternalCount - HiddenCount; 
+				}
+			}
+		}
 		#endregion
 
 		#region Constructors
@@ -115,7 +126,7 @@ namespace Simias.Storage
 		/// <param name="node">The node that this PropertyList belongs to.</param>
 		internal PropertyList( Node node )
 		{
-			// Save the node that this PropertyList belongs to.
+			this.store = node.store;
 			this.node = node;
 
 			// Create an empty DOM document that will hold the properties.
@@ -139,6 +150,7 @@ namespace Simias.Storage
 		/// <param name="xmlProperties">An XML element where the properties for this node are rooted.</param>
 		internal PropertyList( Node node, XmlElement xmlProperties )
 		{
+			this.store = node.store;
 			this.node = node;
 			this.nodeDocument = xmlProperties.OwnerDocument;
 			this.propertyRoot = xmlProperties;
@@ -622,15 +634,18 @@ namespace Simias.Storage
 		/// <param name="property">Property to add.</param>
 		public void AddProperty( Property property )
 		{
-			// Check to see if the property being set is a system property.
-			if ( !property.IsSystemProperty() )
+			lock ( store )
 			{
-				// Make sure that current user has write rights to this collection.
-				AddNodeProperty( property );
-			}
-			else
-			{
-				throw new ApplicationException( "Cannot set reserved property" );
+				// Check to see if the property being set is a system property.
+				if ( !property.IsSystemProperty() )
+				{
+					// Make sure that current user has write rights to this collection.
+					AddNodeProperty( property );
+				}
+				else
+				{
+					throw new ApplicationException( "Cannot set reserved property" );
+				}
 			}
 		}
 
@@ -810,11 +825,14 @@ namespace Simias.Storage
 		/// <param name="name">Name of property to delete.</param>
 		public void DeleteProperties( string name )
 		{
-			// Find all of the existing values.
-			MultiValuedList mvp = FindValues( name );
-			foreach ( Property p in mvp )
+			lock ( store )
 			{
-				p.Delete();
+				// Find all of the existing values.
+				MultiValuedList mvp = FindValues( name );
+				foreach ( Property p in mvp )
+				{
+					p.Delete();
+				}
 			}
 		}
 
@@ -824,12 +842,15 @@ namespace Simias.Storage
 		/// <param name="name">Name of property to delete.</param>
 		public void DeleteSingleProperty( string name )
 		{
-			// Find the first existing value.
-			Property existingProperty = FindSingleValue( name );
-			if ( existingProperty != null )
+			lock ( store )
 			{
-				// Remove this property from the node.
-				existingProperty.Delete();
+				// Find the first existing value.
+				Property existingProperty = FindSingleValue( name );
+				if ( existingProperty != null )
+				{
+					// Remove this property from the node.
+					existingProperty.Delete();
+				}
 			}
 		}
 
@@ -849,15 +870,18 @@ namespace Simias.Storage
 		/// <returns>A property object containing the value of the property if it exists. Otherwise a null is returned.</returns>
 		public Property GetSingleProperty( string name )
 		{
-			// Get the property.
-			Property p = FindSingleValue( name );
-			if ( ( p != null ) && ( p.HiddenProperty == false ) )
+			lock ( store )
 			{
-				return p;
-			}
-			else
-			{
-				return null;
+				// Get the property.
+				Property p = FindSingleValue( name );
+				if ( ( p != null ) && ( p.HiddenProperty == false ) )
+				{
+					return p;
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -868,7 +892,10 @@ namespace Simias.Storage
 		/// <returns>A MultiValuedList object that contains all of the values for the specified property.</returns>
 		public MultiValuedList GetProperties( string name )
 		{
-			return FindValues( name );
+			lock ( store )
+			{
+				return FindValues( name );
+			}
 		}
 
 		/// <summary>
@@ -878,13 +905,16 @@ namespace Simias.Storage
 		/// <param name="property">Property to modify.</param>
 		public void ModifyProperty( Property property )
 		{
-			if ( !property.IsSystemProperty() )
+			lock ( store )
 			{
-				ModifyNodeProperty( property );
-			}
-			else
-			{
-				throw new ApplicationException( "Cannot modify a system property" );
+				if ( !property.IsSystemProperty() )
+				{
+					ModifyNodeProperty( property );
+				}
+				else
+				{
+					throw new ApplicationException( "Cannot modify a system property" );
+				}
 			}
 		}
 
@@ -1087,7 +1117,10 @@ namespace Simias.Storage
 		/// <returns>A property object that can enumerate the property list.</returns>
 		public IEnumerator GetEnumerator()
 		{
-			return new PropertyEnumerator( this, propertyRoot );
+			lock ( store )
+			{
+				return new PropertyEnumerator( this, propertyRoot );
+			}
 		}
 
 		/// <summary>
@@ -1128,7 +1161,10 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				propertyEnumerator.Reset();
+				lock ( propertyList.store )
+				{
+					propertyEnumerator.Reset();
+				}
 			}
 
 			/// <summary>
@@ -1138,7 +1174,10 @@ namespace Simias.Storage
 			{
 				get
 				{
-					return new Property( propertyList, ( XmlElement )propertyEnumerator.Current );
+					lock ( propertyList.store )
+					{
+						return new Property( propertyList, ( XmlElement )propertyEnumerator.Current );
+					}
 				}
 			}
 
@@ -1151,21 +1190,24 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				bool moreData = propertyEnumerator.MoveNext();
-				while ( moreData )
+				lock ( propertyList.store )
 				{
-					// See if this is a property that is not supposed to be returned.
-					if ( ( ( Property )Current ).HiddenProperty )
+					bool moreData = propertyEnumerator.MoveNext();
+					while ( moreData )
 					{
-						moreData = propertyEnumerator.MoveNext();
+						// See if this is a property that is not supposed to be returned.
+						if ( ( ( Property )Current ).HiddenProperty )
+						{
+							moreData = propertyEnumerator.MoveNext();
+						}
+						else
+						{
+							break;
+						}
 					}
-					else
-					{
-						break;
-					}
-				}
 
-				return moreData;
+					return moreData;
+				}
 			}
 			#endregion
 

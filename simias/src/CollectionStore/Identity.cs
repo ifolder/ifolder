@@ -211,10 +211,10 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="node">Node that is an identity type.</param>
 		internal Identity( Node node ) :
-			base( node.cNode )
+			base( node.cNode, true )
 		{
 			// Need to convert the collection type to a local address book type.
-			this.localAb = new LocalAddressBook( CollectionNode.LocalStore, CollectionNode );
+			this.localAb = new LocalAddressBook( store, CollectionNode );
 			InternalCollectionHandle = this.localAb;
 		}
 		#endregion
@@ -350,23 +350,26 @@ namespace Simias.Storage
 		/// <param name="publicKey">Domain's public key.</param>
 		public Alias CreateAlias( string domain, string userGuid, RSACryptoServiceProvider publicKey )
 		{
-			// Set up an alias object to store on this identity.
-			Alias alias = new Alias( domain, userGuid, publicKey );
-
-			// Look for an existing alias property.
-			Property aliasProperty = FindAliasProperty( domain, userGuid );
-			if (aliasProperty == null )
+			lock ( store )
 			{
-				// Create a property to store the object on.
-				Properties.AddNodeProperty( new Property( Property.Alias, alias.ToXmlString() ) );
-			}
-			else
-			{
-				// Set a new credential on an existing alias property.
-				aliasProperty.SetPropertyValue( alias.ToXmlString() );
-			}
+				// Set up an alias object to store on this identity.
+				Alias alias = new Alias( domain, userGuid, publicKey );
 
-			return alias;
+				// Look for an existing alias property.
+				Property aliasProperty = FindAliasProperty( domain, userGuid );
+				if (aliasProperty == null )
+				{
+					// Create a property to store the object on.
+					Properties.AddNodeProperty( new Property( Property.Alias, alias.ToXmlString() ) );
+				}
+				else
+				{
+					// Set a new credential on an existing alias property.
+					aliasProperty.SetPropertyValue( alias.ToXmlString() );
+				}
+
+				return alias;
+			}
 		}
 
 		/// <summary>
@@ -376,10 +379,13 @@ namespace Simias.Storage
 		/// <param name="userGuid">Unique identifier that user is known as in specified domain. </param>
 		public void DeleteAlias( string domain, string userGuid )
 		{
-			Property p = FindAliasProperty( domain, userGuid );
-			if ( p != null )
+			lock ( store )
 			{
-				p.Delete();
+				Property p = FindAliasProperty( domain, userGuid );
+				if ( p != null )
+				{
+					p.Delete();
+				}
 			}
 		}
 
@@ -391,8 +397,11 @@ namespace Simias.Storage
 		/// <returns>The specified alias if found, otherwise a null.</returns>
 		public Alias FindAlias( string domain, string userGuid )
 		{
-			Property p = FindAliasProperty( domain, userGuid );
-			return ( p != null ) ? new Alias( p ) : null;
+			lock ( store )
+			{
+				Property p = FindAliasProperty( domain, userGuid );
+				return ( p != null ) ? new Alias( p ) : null;
+			}
 		}
 
 		/// <summary>
@@ -402,19 +411,22 @@ namespace Simias.Storage
 		/// <returns>An alias object representing the user in the specified domain.</returns>
 		public Alias GetAliasFromDomain( string domain )
 		{
-			Alias alias = null;
-
-			// Look through the list of aliases that this identity is known by in other domains.
-			foreach ( Alias tempAlias in GetAliasList() )
+			lock ( store )
 			{
-				if ( tempAlias.Domain == domain )
-				{
-					alias = tempAlias;
-					break;
-				}
-			}
+				Alias alias = null;
 
-			return alias;
+				// Look through the list of aliases that this identity is known by in other domains.
+				foreach ( Alias tempAlias in GetAliasList() )
+				{
+					if ( tempAlias.Domain == domain )
+					{
+						alias = tempAlias;
+						break;
+					}
+				}
+
+				return alias;
+			}
 		}
 
 		/// <summary>
@@ -423,14 +435,17 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing all of the aliases for this identity.</returns>
 		public ICSList GetAliasList()
 		{
-			ICSList aliasList = new ICSList();
-			MultiValuedList mvl = Properties.FindValues( Property.Alias );
-			foreach( Property p in mvl )
+			lock ( store )
 			{
-				aliasList.Add( new Alias( p ) );
-			}
+				ICSList aliasList = new ICSList();
+				MultiValuedList mvl = Properties.FindValues( Property.Alias );
+				foreach( Property p in mvl )
+				{
+					aliasList.Add( new Alias( p ) );
+				}
 
-			return aliasList;
+				return aliasList;
+			}
 		}
 
 		/// <summary>
@@ -439,16 +454,19 @@ namespace Simias.Storage
 		/// <returns>An array list of guids that represents the current user and all of its aliases.</returns>
 		public ArrayList GetIdentityAndAliases()
 		{
-			ArrayList ids = new ArrayList();
-			ids.Add( Id );
-
-			// Add any aliases to the list also.
-			foreach ( Alias alias in GetAliasList() )
+			lock ( store )
 			{
-				ids.Add( alias.Id );
-			}
+				ArrayList ids = new ArrayList();
+				ids.Add( Id );
 
-			return ids;
+				// Add any aliases to the list also.
+				foreach ( Alias alias in GetAliasList() )
+				{
+					ids.Add( alias.Id );
+				}
+
+				return ids;
+			}
 		}
 
 		/// <summary>
@@ -459,24 +477,27 @@ namespace Simias.Storage
 		/// in the specified domain, the current user guid is returned.</returns>
 		public string GetDomainUserGuid( string domain )
 		{
-			string userGuid = Id;
-
-			// If no domain is specified or it is the current domain, use the current identity.
-			if ( ( domain != null ) && ( domain != CollectionNode.DomainName ) )
+			lock ( store )
 			{
-				// This is not the store's domain.  Look through the list of aliases that this
-				// identity is known by in other domains.
-				foreach ( Alias alias in GetAliasList() )
+				string userGuid = Id;
+
+				// If no domain is specified or it is the current domain, use the current identity.
+				if ( ( domain != null ) && ( domain != CollectionNode.DomainName ) )
 				{
-					if ( alias.Domain == domain )
+					// This is not the store's domain.  Look through the list of aliases that this
+					// identity is known by in other domains.
+					foreach ( Alias alias in GetAliasList() )
 					{
-						userGuid = alias.Id;
-						break;
+						if ( alias.Domain == domain )
+						{
+							userGuid = alias.Id;
+							break;
+						}
 					}
 				}
-			}
 
-			return userGuid;
+				return userGuid;
+			}
 		}
 		#endregion
 	}

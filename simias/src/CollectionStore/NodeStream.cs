@@ -327,7 +327,7 @@ namespace Simias.Storage
 		private void AddFileMetadata()
 		{
 			// loadDir contains the path where this assembly was loaded from.
-			string loadDir = node.CollectionNode.LocalStore.AssemblyPath.LocalPath;
+			string loadDir = node.store.AssemblyPath.LocalPath;
 			string xmlMetaFile = Path.Combine( loadDir, metadataExtensionFile );
 			if ( File.Exists( xmlMetaFile ) )
 			{

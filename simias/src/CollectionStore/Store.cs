@@ -52,6 +52,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Object used to control race condition when creating the database.
+		/// </summary>
+		static private string ctorLock = "";
+
+		/// <summary>
 		/// Initial size of the cacheNode hash table.
 		/// </summary>
 		private const int cacheNodeTableSize = 20;
@@ -102,7 +107,7 @@ namespace Simias.Storage
 		private EventPublisher publisher;
 
 		/// <summary>
-		/// Mutex used to serialize access to the database during a commit.
+		/// TODO: Remove this once we have a cross-process database lock function.
 		/// </summary>
 		private Mutex storeMutex;
 
@@ -160,7 +165,15 @@ namespace Simias.Storage
 		/// </summary>
 		internal Persist.IProvider StorageProvider
 		{
-			get { return storageProvider; }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return storageProvider; 
+			}
 		}
 
 		/// <summary>
@@ -168,7 +181,15 @@ namespace Simias.Storage
 		/// </summary>
 		internal Uri StoreManagedPath
 		{
-			get { return storeManagedPath; }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return storeManagedPath; 
+			}
 		}
 
 		/// <summary>
@@ -176,7 +197,15 @@ namespace Simias.Storage
 		/// </summary>
 		internal Uri AssemblyPath
 		{
-			get { return assemblyPath; }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return assemblyPath; 
+			}
 		}
 
 		/// <summary>
@@ -184,7 +213,15 @@ namespace Simias.Storage
 		/// </summary>
 		internal EventPublisher Publisher
 		{
-			get { return publisher; }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return publisher; 
+			}
 		}
 
 		/// <summary>
@@ -192,7 +229,15 @@ namespace Simias.Storage
 		/// </summary>
 		internal string ComponentId
 		{
-			get { return componentId; }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return componentId; 
+			}
 		}
 
 		/// <summary>
@@ -200,7 +245,15 @@ namespace Simias.Storage
 		/// </summary>
 		internal int Instance
 		{
-			get { return this.GetHashCode(); }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return this.GetHashCode(); 
+			}
 		}
 
 		/// <summary>
@@ -208,7 +261,18 @@ namespace Simias.Storage
 		/// </summary>
 		public string CurrentUser
 		{
-			get { return identityManager.CurrentUserGuid; }
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return identityManager.CurrentUserGuid; 
+				}
+			}
 		}
 
 		/// <summary>
@@ -216,7 +280,18 @@ namespace Simias.Storage
 		/// </summary>
 		public string DomainName
 		{
-			get { return identityManager.DomainName; }
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return identityManager.DomainName; 
+				}
+			}
 		}
 
 		/// <summary>
@@ -224,7 +299,18 @@ namespace Simias.Storage
 		/// </summary>
 		public Identity CurrentIdentity
 		{
-			get { return identityManager.CurrentIdentity; }
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return identityManager.CurrentIdentity; 
+				}
+			}
 		}
 
 		/// <summary>
@@ -232,7 +318,18 @@ namespace Simias.Storage
 		/// </summary>
 		public Uri StorePath
 		{
-			get { return storageProvider.StoreDirectory; }
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return storageProvider.StoreDirectory; 
+				}
+			}
 		}
 
 		/// <summary>
@@ -240,7 +337,18 @@ namespace Simias.Storage
 		/// </summary>
 		public RsaKeyStore KeyStore
 		{
-			get { return identityManager; }
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return identityManager; 
+				}
+			}
 		}
 
 		/// <summary>
@@ -248,7 +356,18 @@ namespace Simias.Storage
 		/// </summary>
 		public RSACryptoServiceProvider ServerPublicKey
 		{
-			get { return identityManager.PublicKey; } 
+			get 
+			{ 
+				lock ( this )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					return identityManager.PublicKey; 
+				}
+			} 
 		}
 		#endregion
 
@@ -263,9 +382,8 @@ namespace Simias.Storage
 		/// is opening this instance of the object.</param>
 		private Store( Uri databasePath, string componentId )
 		{
-			// Don't let another process authenticate while the database is 
-			// still being initialized.
-			lock( this )
+			// Don't let another process authenticate while the database is still being initialized.
+			lock ( Store.ctorLock )
 			{
 				bool created;
 
@@ -324,7 +442,7 @@ namespace Simias.Storage
 			}
 
 			// TODO: Remove this when Russ gets the database lock in.
-			storeMutex= new Mutex( false, localAb.Name );
+			storeMutex = new Mutex( false, localAb.Name );
 
 			// Look up to see if the current user has an identity.
 			Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
@@ -422,7 +540,7 @@ namespace Simias.Storage
 			LocalAddressBook localAb = new LocalAddressBook( this, domainName, ownerGuid );
 
 			// TODO: Remove this when Russ gets the database lock in.
-			storeMutex= new Mutex( false, localAb.Name );
+			storeMutex = new Mutex( false, localAb.Name );
 
 			// Create an identity that represents the current user.  This user will become the database owner.
 			Identity identity = new Identity( localAb, Environment.UserName, ownerGuid );
@@ -567,6 +685,26 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// This method is informed of a change to the local addressbook object and will automatically refresh it.
+		/// </summary>
+		/// <param name="args">Event context arguments.</param>
+		private void OnChangedAb( NodeEventArgs args )
+		{
+			MyTrace.WriteLine( "Refreshing local address book object." );
+			localAb.Refresh();
+		}
+
+		/// <summary>
+		/// This method is informed of a change to the local database object and will automatically refresh it.
+		/// </summary>
+		/// <param name="args">Event context arguments.</param>
+		private void OnChangedDb( NodeEventArgs args )
+		{
+			MyTrace.WriteLine( "Refreshing local database object." );
+			localDb.Refresh();
+		}
+
+		/// <summary>
 		/// Digitally signs an xml document so that it can be validated before it is deserialized.
 		/// </summary>
 		/// <param name="collectionStoreDoc"></param>
@@ -622,15 +760,25 @@ namespace Simias.Storage
 		/// <returns>Collection object</returns>
 		internal Collection GetShallowCollection( XmlNode xmlNode )
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			// Create a new collection object from the DOM.
 			return new Collection( this, xmlNode.Attributes[ Property.NameAttr ].Value, xmlNode.Attributes[ Property.IDAttr ].Value, xmlNode.Attributes[ Property.TypeAttr ].Value );
 		}
 
 		/// <summary>
-		/// Acquires the store mutex protecting the database against simultaneous commits.
+		/// Acquires the store lock protecting the database against simultaneous commits.
 		/// </summary>
 		internal void LockStore()
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			storeMutex.WaitOne();
 		}
 
@@ -641,6 +789,11 @@ namespace Simias.Storage
 		/// <returns>A cache node object if one exists, otherwise a null.</returns>
 		internal CacheNode GetCacheNode( string key )
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			lock ( this )
 			{
 				CacheNode cNode = ( CacheNode )cacheNodeTable[ key ];
@@ -682,6 +835,11 @@ namespace Simias.Storage
 		/// object is added to the table and returned.</returns>
 		internal CacheNode SetCacheNode( string key, CacheNode cNode )
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			lock ( this )
 			{
 				CacheNode cTempNode = ( CacheNode )cacheNodeTable[ key ];
@@ -701,10 +859,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Releases the store mutex.
+		/// Releases the store lock.
 		/// </summary>
 		internal void UnlockStore()
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			storeMutex.ReleaseMutex();
 		}
 		#endregion
@@ -772,12 +935,15 @@ namespace Simias.Storage
 		/// <returns>An object to a new collection.</returns>
 		public Collection CreateCollection( string collectionName, string type )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			return new Collection( this, collectionName, type );
+				return new Collection( this, collectionName, type );
+			}
 		}
 
 		/// <summary>
@@ -799,12 +965,15 @@ namespace Simias.Storage
 		/// <returns>An object to a new collection.</returns>
 		public Collection CreateCollection( string collectionName, string type, Uri documentRoot )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			return new Collection( this, collectionName, type, documentRoot );
+				return new Collection( this, collectionName, type, documentRoot );
+			}
 		}
 
 		/// <summary>
@@ -823,25 +992,28 @@ namespace Simias.Storage
 		/// </summary>
 		public void Delete()
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			// Check if the current user is the store owner.
-			if ( !IsStoreAdmin )
-			{
-				throw new UnauthorizedAccessException( "Current user is not the store owner." );
-			}
+				// Check if the current user is the store owner.
+				if ( !IsStoreAdmin )
+				{
+					throw new UnauthorizedAccessException( "Current user is not the store owner." );
+				}
 
-			// Check if the store managed path still exists. If it does, delete it.
-			if ( Directory.Exists( storeManagedPath.LocalPath ) )
-			{
-				Directory.Delete( storeManagedPath.LocalPath, true );
-			}
+				// Check if the store managed path still exists. If it does, delete it.
+				if ( Directory.Exists( storeManagedPath.LocalPath ) )
+				{
+					Directory.Delete( storeManagedPath.LocalPath, true );
+				}
 
-			// Say bye-bye to the store.
-			storageProvider.DeleteStore();
+				// Say bye-bye to the store.
+				storageProvider.DeleteStore();
+			}
 		}
 
 		/// <summary>
@@ -853,25 +1025,28 @@ namespace Simias.Storage
 		/// <returns>An XmlDocument object that represents the exported node(s).</returns>
 		public XmlDocument ExportNodesToXml( Collection collection, string id, bool deep )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				// Create a new document and add this node to it.
+				XmlDocument doc = new XmlDocument();
+				XmlElement element = doc.CreateElement( Property.ObjectListTag );
+				element.SetAttribute( Property.CollectionID, collection.Id );
+				doc.AppendChild( element );
+
+				// Add the node to the document.
+				collection.NodeToXml( doc, collection.GetNodeById( id.ToLower() ), deep );
+
+				// Sign the xml document before returning.
+				// TEMP: This is commented out until I get a fix on Mono for the XML digital signature stuff.
+				// return SignXmlDocument( doc );
+				return doc;
+				// TEMP
 			}
-
-			// Create a new document and add this node to it.
-			XmlDocument doc = new XmlDocument();
-			XmlElement element = doc.CreateElement( Property.ObjectListTag );
-			element.SetAttribute( Property.CollectionID, collection.Id );
-			doc.AppendChild( element );
-
-			// Add the node to the document.
-			collection.NodeToXml( doc, collection.GetNodeById( id.ToLower() ), deep );
-
-			// Sign the xml document before returning.
-			// TEMP: This is commented out until I get a fix on Mono for the XML digital signature stuff.
-			// return SignXmlDocument( doc );
-			return doc;
-			// TEMP
 		}
 
 		/// <summary>
@@ -894,44 +1069,52 @@ namespace Simias.Storage
 		[ Obsolete( "This method is marked for removal. Use other overloaded method instead.", false ) ]
 		public ICSList GetNodesAssociatedWithPath( Uri documentRoot, string relativePath )
 		{
-			// Create an empty list.
-			ICSList nodeList = new ICSList();
-
-			// Build a query for the document root.
-			Persist.Query query = new Persist.Query( Property.DocumentRoot, Persist.Query.Operator.Equal, documentRoot.ToString(), Syntax.Uri );
-			char[] results = new char[ Store.resultsArraySize ];
-
-			// Do the search.
-			Persist.IResultSet chunkIterator = storageProvider.Search( query );
-			while ( chunkIterator != null )
+			lock ( this )
 			{
-				// Get the first set of results from the query.
-				int length = chunkIterator.GetNext( ref results );
-				if ( length > 0 )
+				if ( disposed )
 				{
-					// Set up the XML document that we will use as the granular query to the client.
-					XmlDocument xmlNodeList = new XmlDocument();
-					xmlNodeList.LoadXml( new string( results, 0, length ) );
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-					// Enumerate through the results.
-					foreach ( XmlElement element in xmlNodeList.DocumentElement )
+				// Create an empty list.
+				ICSList nodeList = new ICSList();
+
+				// Build a query for the document root.
+				Persist.Query query = new Persist.Query( Property.DocumentRoot, Persist.Query.Operator.Equal, documentRoot.ToString(), Syntax.Uri );
+				char[] results = new char[ Store.resultsArraySize ];
+
+				// Do the search.
+				Persist.IResultSet chunkIterator = storageProvider.Search( query );
+				while ( chunkIterator != null )
+				{
+					// Get the first set of results from the query.
+					int length = chunkIterator.GetNext( ref results );
+					if ( length > 0 )
 					{
-						ICSList pathList = GetNodesAssociatedWithPath( element.GetAttribute( Property.IDAttr ), relativePath );
-						foreach ( Node node in pathList )
+						// Set up the XML document that we will use as the granular query to the client.
+						XmlDocument xmlNodeList = new XmlDocument();
+						xmlNodeList.LoadXml( new string( results, 0, length ) );
+
+						// Enumerate through the results.
+						foreach ( XmlElement element in xmlNodeList.DocumentElement )
 						{
-							// Insert this list into the outer list.
-							nodeList.Add( node );
+							ICSList pathList = GetNodesAssociatedWithPath( element.GetAttribute( Property.IDAttr ), relativePath );
+							foreach ( Node node in pathList )
+							{
+								// Insert this list into the outer list.
+								nodeList.Add( node );
+							}
 						}
 					}
+					else
+					{
+						chunkIterator.Dispose();
+						chunkIterator = null;
+					}
 				}
-				else
-				{
-					chunkIterator.Dispose();
-					chunkIterator = null;
-				}
-			}
 
-			return nodeList;
+				return nodeList;
+			}
 		}
 
 		/// <summary>
@@ -942,33 +1125,41 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containg nodes that reference the specified file system entry.</returns>
 		public ICSList GetNodesAssociatedWithPath( string collectionId, string relativePath )
 		{
-			// Create an empty list.
-			ICSList nodeList = new ICSList();
-
-			// Instantiate the specified collection object.
-			Collection collection = GetCollectionById( collectionId );
-			if ( collection == null )
+			lock ( this )
 			{
-				throw new ApplicationException( "Collection does not exist." );
-			}
-
-			// Search in this collection for the relative path.
-			ICSList pathList = collection.Search( Property.NodeFileSystemEntry, relativePath, Property.Operator.Contains );
-			foreach ( Node node in pathList )
-			{
-				// See if this node contains the proper path.
-				foreach ( FileSystemEntry fse in node.GetFileSystemEntryList() )
+				if ( disposed )
 				{
-					if ( fse.RelativePath == relativePath )
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				// Create an empty list.
+				ICSList nodeList = new ICSList();
+
+				// Instantiate the specified collection object.
+				Collection collection = GetCollectionById( collectionId );
+				if ( collection == null )
+				{
+					throw new ApplicationException( "Collection does not exist." );
+				}
+
+				// Search in this collection for the relative path.
+				ICSList pathList = collection.Search( Property.NodeFileSystemEntry, relativePath, Property.Operator.Contains );
+				foreach ( Node node in pathList )
+				{
+					// See if this node contains the proper path.
+					foreach ( FileSystemEntry fse in node.GetFileSystemEntryList() )
 					{
-						// This is a node that we are looking for.
-						nodeList.Add( node );
-						break;
+						if ( fse.RelativePath == relativePath )
+						{
+							// This is a node that we are looking for.
+							nodeList.Add( node );
+							break;
+						}
 					}
 				}
-			}
 
-			return nodeList;
+				return nodeList;
+			}
 		}
 
 		/// <summary>
@@ -978,38 +1169,41 @@ namespace Simias.Storage
 		/// <returns>Collection object that corresponds to the specified collection ID.  If the collection doesn't exist a null is returned.</returns>
 		public Collection GetCollectionById( string collectionId )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			Collection collection = null;
-
-			// Get the specified object from the persistent store.
-			string normalizedId = collectionId.ToLower();
-
-			// First check to see if an instance of the data is already in cache.
-			CacheNode cNode = GetCacheNode( normalizedId );
-			if ( cNode == null )
-			{
-				string xmlCollection = storageProvider.GetRecord( normalizedId, normalizedId );
-				if ( xmlCollection != null )
+				if ( disposed )
 				{
-					// Covert the XML string into a DOM that we can then parse.
-					XmlDocument collectionDoc = new XmlDocument();
-					collectionDoc.LoadXml( xmlCollection );
-
-					// Create a new collection from the DOM.
-					collection = new Collection( this, collectionDoc.DocumentElement[ Property.ObjectTag ], false );
+					throw new ObjectDisposedException( this.ToString() );
 				}
-			}
-			else
-			{
-				// Just build the collection from the existing data.
-				collection = new Collection( this, cNode );
-			}
 
-			return collection;
+				Collection collection = null;
+
+				// Get the specified object from the persistent store.
+				string normalizedId = collectionId.ToLower();
+
+				// First check to see if an instance of the data is already in cache.
+				CacheNode cNode = GetCacheNode( normalizedId );
+				if ( cNode == null )
+				{
+					string xmlCollection = storageProvider.GetRecord( normalizedId, normalizedId );
+					if ( xmlCollection != null )
+					{
+						// Covert the XML string into a DOM that we can then parse.
+						XmlDocument collectionDoc = new XmlDocument();
+						collectionDoc.LoadXml( xmlCollection );
+
+						// Create a new collection from the DOM.
+						collection = new Collection( this, collectionDoc.DocumentElement[ Property.ObjectTag ], false );
+					}
+				}
+				else
+				{
+					// Just build the collection from the existing data.
+					collection = new Collection( this, cNode, false );
+				}
+
+				return collection;
+			}
 		}
 
 		/// <summary>
@@ -1020,27 +1214,30 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing the collections(s) that have the specified name.</returns>
 		public ICSList GetCollectionsByName( string name )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			// Create a container object to hold all collections that match the specified name.
-			ICSList collectionList = new ICSList();
-
-			// Build a regular expression class to use as the comparision.
-			Regex searchName = new Regex( "^" + name + "$", RegexOptions.IgnoreCase );
-
-			// Look at each collection that this user has rights to and match up on the name.
-			foreach ( Collection c in this )
-			{
-				if ( searchName.IsMatch( c.Name ) )
+				if ( disposed )
 				{
-					collectionList.Add( c );
+					throw new ObjectDisposedException( this.ToString() );
 				}
-			}
 
-			return collectionList;
+				// Create a container object to hold all collections that match the specified name.
+				ICSList collectionList = new ICSList();
+
+				// Build a regular expression class to use as the comparision.
+				Regex searchName = new Regex( "^" + name + "$", RegexOptions.IgnoreCase );
+
+				// Look at each collection that this user has rights to and match up on the name.
+				foreach ( Collection c in this )
+				{
+					if ( searchName.IsMatch( c.Name ) )
+					{
+						collectionList.Add( c );
+					}
+				}
+
+				return collectionList;
+			}
 		}
 
 		/// <summary>
@@ -1051,27 +1248,30 @@ namespace Simias.Storage
 		/// <returns>An ICSList object containing the collection(s) that have the specified type.</returns>
 		public ICSList GetCollectionsByType( string type )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			// Create a container object to hold all collections that match the specified name.
-			ICSList collectionList = new ICSList();
-
-			// Build a regular expression class to use as the comparision.
-			Regex searchType = new Regex( "^" + type + "$", RegexOptions.IgnoreCase );
-
-			// Look at each collection that this user has rights to and match up on the name.
-			foreach ( Collection c in this )
-			{
-				if ( searchType.IsMatch( c.Type ) )
+				if ( disposed )
 				{
-					collectionList.Add( c );
+					throw new ObjectDisposedException( this.ToString() );
 				}
-			}
 
-			return collectionList;
+				// Create a container object to hold all collections that match the specified name.
+				ICSList collectionList = new ICSList();
+
+				// Build a regular expression class to use as the comparision.
+				Regex searchType = new Regex( "^" + type + "$", RegexOptions.IgnoreCase );
+
+				// Look at each collection that this user has rights to and match up on the name.
+				foreach ( Collection c in this )
+				{
+					if ( searchType.IsMatch( c.Type ) )
+					{
+						collectionList.Add( c );
+					}
+				}
+
+				return collectionList;
+			}
 		}
 
 		/// <summary>
@@ -1080,37 +1280,44 @@ namespace Simias.Storage
 		/// <returns>A collection object that represents a database object.</returns>
 		public Collection GetDatabaseObject()
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-// TODO: Remove this comment once the cache nodes are automatically updated.
-//			if ( localDb == null )
-//			{
-				// Look for the address book by its name, which is the domain name.
-				Persist.Query query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Equal, Node.CollectionType + DatabaseType, Syntax.String );
-
-				// Do the search.
-				char[] results = new char[ 4096 ];
-				Persist.IResultSet chunkIterator = storageProvider.Search( query );
-				if ( chunkIterator != null )
+				if ( disposed )
 				{
-					// Get the first set of results from the query.
-					int length = chunkIterator.GetNext( ref results );
-					if ( length > 0 )
-					{
-						// Set up the XML document so the data can be easily extracted.
-						XmlDocument dbDocument = new XmlDocument();
-						dbDocument.LoadXml( new string( results, 0, length ) );
-						localDb = GetShallowCollection( dbDocument.DocumentElement.FirstChild );
-					}
-
-					chunkIterator.Dispose();
+					throw new ObjectDisposedException( this.ToString() );
 				}
-//			}
 
-			return localDb;
+				if ( localDb == null )
+				{
+					// Look for the address book by its name, which is the domain name.
+					Persist.Query query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Equal, Node.CollectionType + DatabaseType, Syntax.String );
+
+					// Do the search.
+					char[] results = new char[ 4096 ];
+					Persist.IResultSet chunkIterator = storageProvider.Search( query );
+					if ( chunkIterator != null )
+					{
+						// Get the first set of results from the query.
+						int length = chunkIterator.GetNext( ref results );
+						if ( length > 0 )
+						{
+							// Set up the XML document so the data can be easily extracted.
+							XmlDocument dbDocument = new XmlDocument();
+							dbDocument.LoadXml( new string( results, 0, length ) );
+							localDb = GetShallowCollection( dbDocument.DocumentElement.FirstChild );
+
+							// Set up a delegate to update the local database object if it changes.
+							string[] nodeFilter = new string[ 1 ];
+							nodeFilter[ 0 ] = localDb.Id;
+							localDb.NodeEventsSubscribe( new Collection.NodeChangeHandler( OnChangedDb ), nodeFilter );
+						}
+
+						chunkIterator.Dispose();
+					}
+				}
+
+				return localDb;
+			}
 		}
 
 		/// <summary>
@@ -1120,37 +1327,44 @@ namespace Simias.Storage
 		/// Otherwise null is returned.</returns>
 		public LocalAddressBook GetLocalAddressBook()
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-// TODO: Remove this comment once the cache nodes are automatically updated.
-//			if ( localAb == null )
-//			{
-				// Look for the address book by its name, which is the domain name.
-				Persist.Query query = new Persist.Query( Property.LocalAddressBook, Persist.Query.Operator.Equal, "true", Syntax.Boolean );
-
-				// Do the search.
-				char[] results = new char[ 4096 ];
-				Persist.IResultSet chunkIterator = storageProvider.Search( query );
-				if ( chunkIterator != null )
+				if ( disposed )
 				{
-					// Get the first set of results from the query.
-					int length = chunkIterator.GetNext( ref results );
-					if ( length > 0 )
-					{
-						// Set up the XML document so the data can be easily extracted.
-						XmlDocument abDocument = new XmlDocument();
-						abDocument.LoadXml( new string( results, 0, length ) );
-						localAb = new LocalAddressBook( this, GetShallowCollection( abDocument.DocumentElement.FirstChild ) );
-					}
-
-					chunkIterator.Dispose();
+					throw new ObjectDisposedException( this.ToString() );
 				}
-//			}
 
-			return localAb;
+				if ( localAb == null )
+				{
+					// Look for the address book by its name, which is the domain name.
+					Persist.Query query = new Persist.Query( Property.LocalAddressBook, Persist.Query.Operator.Equal, "true", Syntax.Boolean );
+
+					// Do the search.
+					char[] results = new char[ 4096 ];
+					Persist.IResultSet chunkIterator = storageProvider.Search( query );
+					if ( chunkIterator != null )
+					{
+						// Get the first set of results from the query.
+						int length = chunkIterator.GetNext( ref results );
+						if ( length > 0 )
+						{
+							// Set up the XML document so the data can be easily extracted.
+							XmlDocument abDocument = new XmlDocument();
+							abDocument.LoadXml( new string( results, 0, length ) );
+							localAb = new LocalAddressBook( this, GetShallowCollection( abDocument.DocumentElement.FirstChild ) );
+
+							// Set up a delegate to update the local address book object if it changes.
+							string[] nodeFilter = new string[ 1 ];
+							nodeFilter[ 0 ] = localAb.Id;
+							localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedAb ), nodeFilter );
+						}
+
+						chunkIterator.Dispose();
+					}
+				}
+
+				return localAb;
+			}
 		}
 
 		/// <summary>
@@ -1161,20 +1375,23 @@ namespace Simias.Storage
 		/// <returns>The first collection object that matches the specified name.  A null is returned if no matching collections are found.</returns>
 		public Collection GetSingleCollectionByName( string name )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			Collection collection = null;
-			ICSList collectionList = GetCollectionsByName( name );
-			foreach ( Collection tempCollection in collectionList )
-			{
-				collection = tempCollection;
-				break;
-			}
+				Collection collection = null;
+				ICSList collectionList = GetCollectionsByName( name );
+				foreach ( Collection tempCollection in collectionList )
+				{
+					collection = tempCollection;
+					break;
+				}
 
-			return collection;
+				return collection;
+			}
 		}
 
 		/// <summary>
@@ -1185,20 +1402,23 @@ namespace Simias.Storage
 		/// <returns>The first collection object that matches the specified type.  A null is returned if no matching collections are found.</returns>
 		public Collection GetSingleCollectionByType( string type )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			Collection collection = null;
-			ICSList collectionList = GetCollectionsByType( type );
-			foreach ( Collection tempCollection in collectionList )
-			{
-				collection = tempCollection;
-				break;
-			}
+				Collection collection = null;
+				ICSList collectionList = GetCollectionsByType( type );
+				foreach ( Collection tempCollection in collectionList )
+				{
+					collection = tempCollection;
+					break;
+				}
 
-			return collection;
+				return collection;
+			}
 		}
 
 		/// <summary>
@@ -1218,12 +1438,15 @@ namespace Simias.Storage
 		/// <param name="userGuid">Identifier for the user.</param>
 		public void ImpersonateUser( string userGuid )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			identityManager.Impersonate( userGuid.ToLower() );
+				identityManager.Impersonate( userGuid.ToLower() );
+			}
 		}
 
 		/// <summary>
@@ -1236,65 +1459,68 @@ namespace Simias.Storage
 		/// <returns>Collection object where nodes where imported into.</returns>
 		public Collection ImportNodesFromXml( XmlDocument signedDocument, Uri documentRoot )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
-
-			// Verify digital signature on the xml document and get the xml object that represents the object list.
-			// TEMP: This is commented out until I get a fix on Mono for the XML digital signature stuff.			
-			// XmlDocument collectionDocument = GetValidatedXmlDocument( signedDocument );
-			XmlDocument collectionDocument = signedDocument;
-			// TEMP
-
-			// Get the identifier for the collection where the nodes are to be created.
-			string collectionId = collectionDocument.DocumentElement.GetAttribute( Property.CollectionID );
-
-			// Check if the collection already exists and if the user has rights to modify this collection.
-			Collection collection = GetCollectionById( collectionId );
-			if ( ( collection != null ) && ( !collection.IsAccessAllowed( Access.Rights.ReadWrite ) ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-
-			// Find the collection node in the xml document if it exists.
-			XmlElement xmlCollection = ( XmlElement )collectionDocument.DocumentElement.SelectSingleNode( Property.ObjectTag + "[@" + Property.IDAttr + "='" + collectionId + "']" );
-			if ( xmlCollection == null )
-			{
-				// There is no collection element in the document.  There had better be an existing one.
-				if ( collection == null )
+				if ( disposed )
 				{
-					throw new ApplicationException( "Cannot deserialize document when no collection node exists" );
+					throw new ObjectDisposedException( this.ToString() );
 				}
-			}
-			else
-			{
-				// If there is no collection object in the database, create an empty one.
-				if ( collection == null )
-				{
-					// Just pass in the user type of the collection.
-					string baseType = xmlCollection.GetAttribute( Property.TypeAttr );
-					string userType = baseType.Substring( baseType.IndexOf( "." ) + 1 );
-					collection = new Collection( this, xmlCollection.GetAttribute( Property.NameAttr), collectionId, userType, documentRoot );
-					collection.Commit();
 
-					// Create the document root directory.
-					if ( !Directory.Exists( documentRoot.LocalPath ) )
+				// Verify digital signature on the xml document and get the xml object that represents the object list.
+				// TEMP: This is commented out until I get a fix on Mono for the XML digital signature stuff.			
+				// XmlDocument collectionDocument = GetValidatedXmlDocument( signedDocument );
+				XmlDocument collectionDocument = signedDocument;
+				// TEMP
+
+				// Get the identifier for the collection where the nodes are to be created.
+				string collectionId = collectionDocument.DocumentElement.GetAttribute( Property.CollectionID );
+
+				// Check if the collection already exists and if the user has rights to modify this collection.
+				Collection collection = GetCollectionById( collectionId );
+				if ( ( collection != null ) && ( !collection.IsAccessAllowed( Access.Rights.ReadWrite ) ) )
+				{
+					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+				}
+
+				// Find the collection node in the xml document if it exists.
+				XmlElement xmlCollection = ( XmlElement )collectionDocument.DocumentElement.SelectSingleNode( Property.ObjectTag + "[@" + Property.IDAttr + "='" + collectionId + "']" );
+				if ( xmlCollection == null )
+				{
+					// There is no collection element in the document.  There had better be an existing one.
+					if ( collection == null )
 					{
-						Directory.CreateDirectory( documentRoot.LocalPath );
+						throw new ApplicationException( "Cannot deserialize document when no collection node exists" );
 					}
 				}
-			}
+				else
+				{
+					// If there is no collection object in the database, create an empty one.
+					if ( collection == null )
+					{
+						// Just pass in the user type of the collection.
+						string baseType = xmlCollection.GetAttribute( Property.TypeAttr );
+						string userType = baseType.Substring( baseType.IndexOf( "." ) + 1 );
+						collection = new Collection( this, xmlCollection.GetAttribute( Property.NameAttr), collectionId, userType, documentRoot );
+						collection.Commit();
 
-			// Import each node in the document.
-			foreach ( XmlElement xmlNode in collectionDocument.DocumentElement )
-			{
-				MergeXmlNode( collection, xmlNode );
-			}
+						// Create the document root directory.
+						if ( !Directory.Exists( documentRoot.LocalPath ) )
+						{
+							Directory.CreateDirectory( documentRoot.LocalPath );
+						}
+					}
+				}
 
-			// Commit all changes in the collection.
-			collection.Commit( true );
-			return collection;
+				// Import each node in the document.
+				foreach ( XmlElement xmlNode in collectionDocument.DocumentElement )
+				{
+					MergeXmlNode( collection, xmlNode );
+				}
+
+				// Commit all changes in the collection.
+				collection.Commit( true );
+				return collection;
+			}
 		}
 
 		/// <summary>
@@ -1305,25 +1531,28 @@ namespace Simias.Storage
 		/// <returns>Imported node object instantiated from the xml document.</returns>
 		public Node ImportSingleNodeFromXml( Collection collection, XmlDocument signedDocument )
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				// Verify digital signature on the xml document and get the xml object that represents the object list.
+				// TEMP: This is commented out until I get a fix on Mono for the XML digital signature stuff.			
+				// XmlDocument nodeDocument = GetValidatedXmlDocument( signedDocument );
+				XmlDocument nodeDocument = signedDocument;
+				// TEMP
+
+				// Check if the user has rights to modify this collection.
+				if ( !collection.IsAccessAllowed( Access.Rights.ReadWrite ) )
+				{
+					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+				}
+
+				// Merge the xml node document with any existing node.
+				return MergeXmlNode( collection, (XmlElement)nodeDocument.DocumentElement.FirstChild );
 			}
-
-			// Verify digital signature on the xml document and get the xml object that represents the object list.
-			// TEMP: This is commented out until I get a fix on Mono for the XML digital signature stuff.			
-			// XmlDocument nodeDocument = GetValidatedXmlDocument( signedDocument );
-			XmlDocument nodeDocument = signedDocument;
-			// TEMP
-
-			// Check if the user has rights to modify this collection.
-			if ( !collection.IsAccessAllowed( Access.Rights.ReadWrite ) )
-			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-
-			// Merge the xml node document with any existing node.
-			return MergeXmlNode( collection, (XmlElement)nodeDocument.DocumentElement.FirstChild );
 		}
 
 		/// <summary>
@@ -1331,12 +1560,15 @@ namespace Simias.Storage
 		/// </summary>
 		public void Revert()
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			identityManager.Revert();
+				identityManager.Revert();
+			}
 		}
 		#endregion
 
@@ -1351,12 +1583,15 @@ namespace Simias.Storage
 		/// <returns>IEnumerator object used to enumerate collections.</returns>
 		public IEnumerator GetEnumerator()
 		{
-			if ( disposed )
+			lock ( this )
 			{
-				throw new ObjectDisposedException( this.ToString() );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			return new StoreEnumerator( this );
+				return new StoreEnumerator( this );
+			}
 		}
 
 		/// <summary>
@@ -1384,7 +1619,7 @@ namespace Simias.Storage
 			/// <summary>
 			/// The virtual store of where to enumerate the collection objects.
 			/// </summary>
-			private Store localStore;
+			private Store store;
 
 			/// <summary>
 			/// The internal enumerator to use to enumerate all of the child nodes belonging to this node.
@@ -1406,15 +1641,15 @@ namespace Simias.Storage
 			/// <summary>
 			/// Constructor for the StoreEnumerator class.
 			/// </summary>
-			/// <param name="localStore">Virtual store object where to enumerate the collections.</param>
-			public StoreEnumerator( Store localStore )
+			/// <param name="store">Virtual store object where to enumerate the collections.</param>
+			public StoreEnumerator( Store store )
 			{
-				this.localStore = localStore;
+				this.store = store;
 
 				// If this user does not have owner rights, then get all the identities that he is known as.
-				if ( localStore.CurrentUser != localStore.StoreAdmin )
+				if ( store.CurrentUser != store.StoreAdmin )
 				{
-					idsEnumerator = localStore.CurrentIdentity.GetIdentityAndAliases().GetEnumerator();
+					idsEnumerator = store.CurrentIdentity.GetIdentityAndAliases().GetEnumerator();
 				}
 
 				Reset();
@@ -1431,7 +1666,7 @@ namespace Simias.Storage
 				Persist.Query query;
 
 				// Create a query object that will return a result set containing the children of this node.
-				if ( currentUserGuid == localStore.StoreAdmin )
+				if ( currentUserGuid == store.StoreAdmin )
 				{
 					// If the store owner is doing the search, return all collections in his store.
 					query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Begins, Node.CollectionType, Syntax.String );
@@ -1443,7 +1678,7 @@ namespace Simias.Storage
 				}
 
 				// Do the search.
-				chunkIterator = localStore.storageProvider.Search( query );
+				chunkIterator = store.storageProvider.Search( query );
 				if ( chunkIterator != null )
 				{
 					// Get the first set of results from the query.
@@ -1474,36 +1709,39 @@ namespace Simias.Storage
 			/// </summary>
 			public void Reset()
 			{
-				if ( disposed )
+				lock ( store )
 				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
-
-				// Release previously allocated chunkIterator.
-				if ( chunkIterator != null )
-				{
-					chunkIterator.Dispose();
-				}
-
-				// If the store owner is not the current user, then use the set of ids that have been enumerated
-				// by the constructor.
-				if ( idsEnumerator != null )
-				{
-					// Start at the beginning of the id list and make sure there are entries in the list.
-					idsEnumerator.Reset();
-					if ( idsEnumerator.MoveNext() )
+					if ( disposed )
 					{
-						CollectionQuery( ( string )idsEnumerator.Current );
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					// Release previously allocated chunkIterator.
+					if ( chunkIterator != null )
+					{
+						chunkIterator.Dispose();
+					}
+
+					// If the store owner is not the current user, then use the set of ids that have been enumerated
+					// by the constructor.
+					if ( idsEnumerator != null )
+					{
+						// Start at the beginning of the id list and make sure there are entries in the list.
+						idsEnumerator.Reset();
+						if ( idsEnumerator.MoveNext() )
+						{
+							CollectionQuery( ( string )idsEnumerator.Current );
+						}
+						else
+						{
+							collectionEnumerator = null;
+						}
 					}
 					else
 					{
-						collectionEnumerator = null;
+						// Perform a new query.
+						CollectionQuery( store.StoreAdmin );
 					}
-				}
-				else
-				{
-					// Perform a new query.
-					CollectionQuery( localStore.StoreAdmin );
 				}
 			}
 
@@ -1514,17 +1752,20 @@ namespace Simias.Storage
 			{
 				get
 				{
-					if ( disposed )
+					lock ( store )
 					{
-						throw new ObjectDisposedException( this.ToString() );
-					}
+						if ( disposed )
+						{
+							throw new ObjectDisposedException( this.ToString() );
+						}
 
-					if ( collectionEnumerator == null )
-					{
-						throw new InvalidOperationException( "Empty enumeration" );
-					}
+						if ( collectionEnumerator == null )
+						{
+							throw new InvalidOperationException( "Empty enumeration" );
+						}
 
-					return localStore.GetShallowCollection( ( XmlNode )collectionEnumerator.Current );
+						return store.GetShallowCollection( ( XmlNode )collectionEnumerator.Current );
+					}
 				}
 			}
 
@@ -1537,34 +1778,50 @@ namespace Simias.Storage
 			/// </returns>
 			public bool MoveNext()
 			{
-				bool moreData = false;
-
-				if ( disposed )
+				lock ( store )
 				{
-					throw new ObjectDisposedException( this.ToString() );
-				}
+					bool moreData = false;
 
-				// Make sure that there is data in the list.
-				while ( ( collectionEnumerator != null ) && !moreData )
-				{
-					// See if there is anymore data left in this result set.
-					moreData = collectionEnumerator.MoveNext();
-					if ( !moreData )
+					if ( disposed )
 					{
-						// Get the next page of the results set.
-						int length = chunkIterator.GetNext( ref results );
-						if ( length > 0 )
-						{
-							// Set up the XML document that we will use as the granular query to the client.
-							collectionList = new XmlDocument();
-							collectionList.LoadXml( new string( results, 0, length ) );
-							collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-							// Move to the first entry in the document.
-							moreData = collectionEnumerator.MoveNext();
-							if ( !moreData )
+					// Make sure that there is data in the list.
+					while ( ( collectionEnumerator != null ) && !moreData )
+					{
+						// See if there is anymore data left in this result set.
+						moreData = collectionEnumerator.MoveNext();
+						if ( !moreData )
+						{
+							// Get the next page of the results set.
+							int length = chunkIterator.GetNext( ref results );
+							if ( length > 0 )
 							{
-								// See if there are any more ids to enumerate.
+								// Set up the XML document that we will use as the granular query to the client.
+								collectionList = new XmlDocument();
+								collectionList.LoadXml( new string( results, 0, length ) );
+								collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
+
+								// Move to the first entry in the document.
+								moreData = collectionEnumerator.MoveNext();
+								if ( !moreData )
+								{
+									// See if there are any more ids to enumerate.
+									if ( ( idsEnumerator != null ) && idsEnumerator.MoveNext() )
+									{
+										CollectionQuery( ( string )idsEnumerator.Current );
+									}
+									else
+									{
+										// Out of data.
+										collectionEnumerator = null;
+									}
+								}
+							}
+							else
+							{
+								// See if there are more ids to enumerate.
 								if ( ( idsEnumerator != null ) && idsEnumerator.MoveNext() )
 								{
 									CollectionQuery( ( string )idsEnumerator.Current );
@@ -1573,27 +1830,14 @@ namespace Simias.Storage
 								{
 									// Out of data.
 									collectionEnumerator = null;
+									moreData = false;
 								}
 							}
 						}
-						else
-						{
-							// See if there are more ids to enumerate.
-							if ( ( idsEnumerator != null ) && idsEnumerator.MoveNext() )
-							{
-								CollectionQuery( ( string )idsEnumerator.Current );
-							}
-							else
-							{
-								// Out of data.
-								collectionEnumerator = null;
-								moreData = false;
-							}
-						}
 					}
-				}
 
-				return moreData;
+					return moreData;
+				}
 			}
 			#endregion
 
@@ -1604,8 +1848,11 @@ namespace Simias.Storage
 			/// </summary>
 			public void Dispose()
 			{
-				Dispose( true );
-				GC.SuppressFinalize( this );
+				lock ( store )
+				{
+					Dispose( true );
+					GC.SuppressFinalize( this );
+				}
 			}
 
 			/// <summary>
@@ -1646,7 +1893,10 @@ namespace Simias.Storage
 			/// </summary>
 			~StoreEnumerator()      
 			{
-				Dispose( false );
+				lock ( store )
+				{
+					Dispose( false );
+				}
 			}
 			#endregion
 		}
@@ -1659,8 +1909,11 @@ namespace Simias.Storage
 		/// </summary>
 		public void Dispose()
 		{
-			Dispose( true );
-			GC.SuppressFinalize( this );
+			lock ( this )
+			{
+				Dispose( true );
+				GC.SuppressFinalize( this );
+			}
 		}
 
 		/// <summary>
@@ -1684,9 +1937,31 @@ namespace Simias.Storage
 				// If disposing equals true, dispose all managed and unmanaged resources.
 				if ( disposing )
 				{
+					// Let go of the address book and collection database references.
+					if ( localAb != null )
+					{
+						localAb.Dispose();
+					}
+
+					if ( localDb != null )
+					{
+						localDb.Dispose();
+					}
+
+					// Clean out the cache node table.
+					cacheNodeTable.Clear();
+
+					// Let go of the event publisher.
+					publisher = null;
+
+					// Let go of the identity manager.
+					if ( identityManager != null )
+					{
+						identityManager.Dispose();
+					}
+
 					// Dispose managed resources.
 					storageProvider.Dispose();
-					storeMutex.Close();
 				}
 			}
 		}
@@ -1699,7 +1974,10 @@ namespace Simias.Storage
 		/// </summary>
 		~Store()      
 		{
-			Dispose( false );
+			lock ( this )
+			{
+				Dispose( false );
+			}
 		}
 		#endregion
 	}

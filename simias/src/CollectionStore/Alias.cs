@@ -81,13 +81,16 @@ namespace Simias.Storage
 		{
 			get 
 			{ 
-				if ( credential == null )
+				lock ( this )
 				{
-					credential = new RSACryptoServiceProvider();
-					credential.FromXmlString( credentialString );
-				}
+					if ( credential == null )
+					{
+						credential = new RSACryptoServiceProvider();
+						credential.FromXmlString( credentialString );
+					}
 
-				return credential; 
+					return credential; 
+				}
 			}
 		}
 		#endregion

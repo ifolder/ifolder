@@ -33,7 +33,7 @@ namespace Simias.Storage
 	/// Represents the data of a node in the store.  Multiple node objects allocated from
 	/// the same store object can reference this as a singleton object.
 	/// </summary>
-	public class CacheNode : IDisposable
+	internal class CacheNode : IDisposable
 	{
 		#region Class Members
 		/// <summary>
@@ -49,50 +49,50 @@ namespace Simias.Storage
 		/// <summary>
 		/// Object that contains a list of properties on the node.
 		/// </summary>
-		public PropertyList properties = null;
+		internal PropertyList properties = null;
 
 		/// <summary>
 		/// The display name for the node.  This is the "friendly" name that
 		/// applications will use for the node.
 		/// </summary>
-		public string name;
+		internal string name;
 
 		/// <summary>
 		/// The globally unique identifier for this node.
 		/// </summary>
-		public readonly string id;
+		internal readonly string id;
 
 		/// <summary>
 		/// The type of node.
 		/// </summary>
-		public string type;
+		internal string type;
 
 		/// <summary>
 		/// All nodes must belong to a collection.  This is here so we don't have to look
 		/// it up each time we need to know which collection we belong to.
 		/// </summary>
-		public Collection collection;
+		internal Collection collection;
 
 		/// <summary>
 		/// A flag that is used to tell whether this node has been committed to the database or if it
 		/// is newly created.
 		/// </summary>
-		public bool isPersisted;
+		internal bool isPersisted;
 
 		/// <summary>
 		/// Contains nodes that have changed and need to be written to the persistent store.
 		/// </summary>
-		public Hashtable dirtyNodeList = null;
+		internal Hashtable dirtyNodeList = null;
 
 		/// <summary>
 		/// Provides an interface for access control.
 		/// </summary>
-		public AccessControl accessControl = null;
+		internal AccessControl accessControl = null;
 
 		/// <summary>
 		/// List used to hold Property objects so that they may be merged at object commit time.
 		/// </summary>
-		public ArrayList mergeList = new ArrayList();
+		internal ArrayList mergeList = new ArrayList();
 		#endregion
 
 		#region Constructor
@@ -101,20 +101,20 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="store">An object that represents the local store.</param>
 		/// <param name="id">The Id that uniquely identifies this object.</param>
-		public CacheNode( Store store, string id )
+		internal CacheNode( Store store, string id )
 		{
 			this.id = id;
 			this.store = store;
 		}
 		#endregion
 
-		#region Public Methods
+		#region Internal Methods
 		/// <summary>
 		/// Adds this cache node to the store's cache table.
 		/// </summary>
 		/// <returns>If there is already an existing node in the cache table, it will be returned in place of the
 		/// current object.  Otherwise the current object is added to the table and returned.</returns>
-		public CacheNode AddToCacheTable()
+		internal CacheNode AddToCacheTable()
 		{
 			// See if this node already exists in the store cache table.
 			return store.SetCacheNode( id, this );
@@ -124,7 +124,7 @@ namespace Simias.Storage
 		/// Copies the specified cache node object to this object.
 		/// </summary>
 		/// <param name="cNode">Cache node object to copy.</param>
-		public void Copy( CacheNode cNode )
+		internal void Copy( CacheNode cNode )
 		{
 			this.properties.Copy( cNode.properties );
 			this.name = cNode.name;

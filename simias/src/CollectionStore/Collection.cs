@@ -37,18 +37,13 @@ namespace Simias.Storage
 	/// of objects (such as files).  A collection cannot be contained in another Collection or within a
 	/// node.
 	/// </summary>
-	public class Collection : Node
+	public class Collection : Node, IDisposable
 	{
 		#region Class Members
 		/// <summary>
 		/// Initial size of the list that keeps track of the dirty nodes.
 		/// </summary>
 		private const int initialDirtyNodeListSize = 10;
-
-		/// <summary>
-		/// Reference to the virtual store object where this collection object is contained.
-		/// </summary>
-		private Store localStore;
 
 		/// <summary>
 		/// Reference to the persistent database object.
@@ -76,6 +71,11 @@ namespace Simias.Storage
 		private event NodeChangeHandler nEventHandler = null;
 
 		/// <summary>
+		/// Indicates if object has been disposed.
+		/// </summary>
+		private bool disposed = false;
+
+		/// <summary>
 		/// Delegate to capture node change events for this collection.
 		/// </summary>
 		public delegate void NodeChangeHandler( NodeEventArgs args );
@@ -83,11 +83,51 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
+		/// Gets whether current user has owner access rights to this collection.
+		/// </summary>
+		internal bool HasOwnerAccess
+		{
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return cNode.accessControl.IsOwnerAccessAllowed(); 
+			}
+		}
+
+		/// <summary>
+		/// Gets the identity that the current user is known as in the collection's domain.
+		/// </summary>
+		internal string DomainIdentity
+		{
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return store.CurrentIdentity.GetDomainUserGuid( DomainName ); 
+			}
+		}
+
+		/// <summary>
 		/// Gets the local store handle.
 		/// </summary>
 		public Store LocalStore
 		{
-			get { return localStore; }
+			get 
+			{ 
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return store; 
+			}
 		}
 
 		/// <summary>
@@ -96,15 +136,18 @@ namespace Simias.Storage
 		public string Owner
 		{
 			// An owner property will always exist.
-			get { return cNode.accessControl.Owner; }
-		}
+			get 
+			{ 
+				lock ( store )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-		/// <summary>
-		/// Gets whether current user has owner access rights to this collection.
-		/// </summary>
-		internal bool HasOwnerAccess
-		{
-			get { return cNode.accessControl.IsOwnerAccessAllowed(); }
+					return cNode.accessControl.Owner; 
+				}
+			}
 		}
 
 		/// <summary>
@@ -117,20 +160,36 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				Property p = Properties.GetSingleProperty( Property.Shareable );
-				bool shareable = ( p != null ) ? ( bool )p.Value : true;
-				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
+				lock ( store )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					Property p = Properties.GetSingleProperty( Property.Shareable );
+					bool shareable = ( p != null ) ? ( bool )p.Value : true;
+					return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
+				}
 			}
 
 			set 
 			{
-				// Only allow the collection owner to set this property.
-				if ( !HasOwnerAccess )
+				lock ( store )
 				{
-					throw new ApplicationException( "Current user is not the collection owner." );
-				}
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-				Properties.ModifyNodeProperty( Property.Shareable, value );
+					// Only allow the collection owner to set this property.
+					if ( !HasOwnerAccess )
+					{
+						throw new ApplicationException( "Current user is not the collection owner." );
+					}
+
+					Properties.ModifyNodeProperty( Property.Shareable, value );
+				}
 			}
 		}
 
@@ -144,19 +203,35 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				Property p = Properties.GetSingleProperty( Property.Syncable );
-				return ( p != null ) ? ( bool )p.Value : true;
+				lock ( store )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					Property p = Properties.GetSingleProperty( Property.Syncable );
+					return ( p != null ) ? ( bool )p.Value : true;
+				}
 			}
 
 			set 
 			{
-				// Only allow the collection owner to set this property.
-				if ( !HasOwnerAccess )
+				lock ( store )
 				{
-					throw new ApplicationException( "Current user is not the collection owner." );
-				}
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-				Properties.ModifyNodeProperty( Property.Syncable, value );
+					// Only allow the collection owner to set this property.
+					if ( !HasOwnerAccess )
+					{
+						throw new ApplicationException( "Current user is not the collection owner." );
+					}
+
+					Properties.ModifyNodeProperty( Property.Syncable, value );
+				}
 			}
 		}
 
@@ -180,13 +255,21 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				if ( domainName == null )
+				lock ( store )
 				{
-					Property p = Properties.GetSingleProperty( Property.DomainName );
-					domainName = p.ToString();
-				}
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-				return domainName;
+					if ( domainName == null )
+					{
+						Property p = Properties.GetSingleProperty( Property.DomainName );
+						domainName = p.ToString();
+					}
+
+					return domainName;
+				}
 			}
 		}
 
@@ -198,19 +281,30 @@ namespace Simias.Storage
 		{
 			get 
 			{
-				Property p = Properties.GetSingleProperty( Property.DocumentRoot );
-				return ( p != null ) ? ( Uri )p.Value : null;
+				lock ( store )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
+
+					Property p = Properties.GetSingleProperty( Property.DocumentRoot );
+					return ( p != null ) ? ( Uri )p.Value : null;
+				}
 			}
 
-			set { MoveRoot( value ); }
-		}
+			set 
+			{ 
+				lock ( store )
+				{
+					if ( disposed )
+					{
+						throw new ObjectDisposedException( this.ToString() );
+					}
 
-		/// <summary>
-		/// Gets the identity that the current user is known as in the collection's domain.
-		/// </summary>
-		internal string DomainIdentity
-		{
-			get { return localStore.CurrentIdentity.GetDomainUserGuid( DomainName ); }
+					MoveRoot( value ); 
+				}
+			}
 		}
 		#endregion
 
@@ -218,112 +312,115 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor to create a new collection object.
 		/// </summary>
-		/// <param name="localStore">Virtual store that this collection belongs to.</param>
+		/// <param name="store">Virtual store that this collection belongs to.</param>
 		/// <param name="name">Name that is used by applications to describe the collection.</param>
 		/// <param name="id">Globally unique identifier for this collection.</param>
 		/// <param name="type">Type of collection.</param>
 		/// <param name="documentRoot">Path where the collection documents are rooted.</param>
-		public Collection( Store localStore, string name, string id, string type, Uri documentRoot ) :
-			base( localStore, name, ( id == String.Empty ) ? Guid.NewGuid().ToString() : id, CollectionType + type, false )
+		public Collection( Store store, string name, string id, string type, Uri documentRoot ) :
+			base( store, name, ( id == String.Empty ) ? Guid.NewGuid().ToString() : id, CollectionType + type, false )
 		{
-			// Set the collection into the node.  Since node is a sub-class of collection, its 
-			// constructor runs before the collection constructor, so we can't set the 'this' value.
-			InternalCollectionHandle = this;
-
-			// Setup the dirty list.
-			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
-
-			// Don't allow another database object to be created.
-			if ( ( type == Store.DatabaseType ) && ( localStore.GetDatabaseObject() != null ) )
+			lock ( store )
 			{
-				throw new ApplicationException( Store.DatabaseType + " already exists." );
+				// Set the collection into the node.  Since node is a sub-class of collection, its 
+				// constructor runs before the collection constructor, so we can't set the 'this' value.
+				InternalCollectionHandle = this;
+
+				// Setup the dirty list.
+				cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
+
+				// Don't allow another database object to be created.
+				if ( ( type == Store.DatabaseType ) && ( store.GetDatabaseObject() != null ) )
+				{
+					throw new ApplicationException( Store.DatabaseType + " already exists." );
+				}
+
+				// Don't allow this collection to be created, if one already exist by the same id.
+				if ( store.GetCollectionById( Id ) != null )
+				{
+					throw new ApplicationException( "Collection already exists with specified ID." );
+				}
+
+				// Initialize my class members.
+				this.store = store;
+				this.database = store.StorageProvider;
+
+				// Initialize the access control object.
+				cNode.accessControl = new AccessControl( this );
+
+				// Set the default access control for this collection.
+				cNode.accessControl.SetDefaultAccessControl();
+				UpdateAccessControl();
+
+				// If no document root was passed in, use the default one.
+				if ( documentRoot == null )
+				{
+					documentRoot = GetStoreManagedPath();
+				}
+
+				// If the document root directory does not exist, create it.
+				if ( !Directory.Exists( documentRoot.LocalPath ) )
+				{
+					Directory.CreateDirectory( documentRoot.LocalPath );
+				}
+
+				// Set the default properties for this node.
+				Properties.AddNodeProperty( Property.CreationTime, DateTime.UtcNow );
+				Properties.AddNodeProperty( Property.ModifyTime, DateTime.UtcNow );
+				Properties.AddNodeProperty( Property.CollectionID, Id );
+				Properties.AddNodeProperty( Property.IDPath, "/" + Id );
+				Properties.AddNodeProperty( Property.DomainName, store.DomainName );
+
+				// Add the document root as a local property.
+				Property docRootProp = new Property( Property.DocumentRoot, documentRoot );
+				docRootProp.LocalProperty = true;
+				Properties.AddNodeProperty( docRootProp );
+
+				// Set the sync versions.
+				Property mvProp = new Property( Property.MasterIncarnation, ( ulong )0 );
+				mvProp.LocalProperty = true;
+				Properties.AddNodeProperty( mvProp );
+
+				Property lvProp = new Property( Property.LocalIncarnation, ( ulong )0 );
+				lvProp.LocalProperty = true;
+				Properties.AddNodeProperty( lvProp );
+
+				// Add this node to the cache table.
+				cNode = cNode.AddToCacheTable();
 			}
-
-			// Don't allow this collection to be created, if one already exist by the same id.
-			if ( localStore.GetCollectionById( Id ) != null )
-			{
-				throw new ApplicationException( "Collection already exists with specified ID." );
-			}
-
-			// Initialize my class members.
-            this.localStore = localStore;
-			this.database = localStore.StorageProvider;
-
-			// Initialize the access control object.
-			cNode.accessControl = new AccessControl( this );
-
-			// Set the default access control for this collection.
-			cNode.accessControl.SetDefaultAccessControl();
-			UpdateAccessControl();
-
-			// If no document root was passed in, use the default one.
-			if ( documentRoot == null )
-			{
-				documentRoot = GetStoreManagedPath();
-			}
-
-			// If the document root directory does not exist, create it.
-			if ( !Directory.Exists( documentRoot.LocalPath ) )
-			{
-				Directory.CreateDirectory( documentRoot.LocalPath );
-			}
-
-			// Set the default properties for this node.
-			Properties.AddNodeProperty( Property.CreationTime, DateTime.UtcNow );
-			Properties.AddNodeProperty( Property.ModifyTime, DateTime.UtcNow );
-			Properties.AddNodeProperty( Property.CollectionID, Id );
-			Properties.AddNodeProperty( Property.IDPath, "/" + Id );
-			Properties.AddNodeProperty( Property.DomainName, localStore.DomainName );
-
-			// Add the document root as a local property.
-			Property docRootProp = new Property( Property.DocumentRoot, documentRoot );
-			docRootProp.LocalProperty = true;
-			Properties.AddNodeProperty( docRootProp );
-
-			// Set the sync versions.
-			Property mvProp = new Property( Property.MasterIncarnation, ( ulong )0 );
-			mvProp.LocalProperty = true;
-			Properties.AddNodeProperty( mvProp );
-
-			Property lvProp = new Property( Property.LocalIncarnation, ( ulong )0 );
-			lvProp.LocalProperty = true;
-			Properties.AddNodeProperty( lvProp );
-
-			// Add this node to the cache table.
-			cNode = cNode.AddToCacheTable();
 		}
 
 		/// <summary>
 		/// Constructor to create a new collection object.
 		/// </summary>
-		/// <param name="localStore">Virtual store that this collection belongs to.</param>
+		/// <param name="store">Virtual store that this collection belongs to.</param>
 		/// <param name="name">Name that is used by applications to describe the collection.</param>
 		/// <param name="type">Type of collection.</param>
 		/// <param name="documentRoot">Path where the collection documents are rooted.</param>
-		public Collection( Store localStore, string name, string type, Uri documentRoot ) :
-			this( localStore, name, String.Empty, type, documentRoot )
+		public Collection( Store store, string name, string type, Uri documentRoot ) :
+			this( store, name, String.Empty, type, documentRoot )
 		{
 		}
 
 		/// <summary>
 		/// Constructor to create a new collection object that contains store-managed files.
 		/// </summary>
-		/// <param name="localStore">Virtual store that this collection belongs to.</param>
+		/// <param name="store">Virtual store that this collection belongs to.</param>
 		/// <param name="name">Name that is used by applications to describe the collection.</param>
 		/// <param name="type">Type of collection.</param>
-		public Collection( Store localStore, string name, string type ) :
-			this( localStore, name, String.Empty, type, ( Uri )null )
+		public Collection( Store store, string name, string type ) :
+			this( store, name, String.Empty, type, ( Uri )null )
 		{
 		}
 
 		/// <summary>
 		/// Constructor to create an existing collection object.
 		/// </summary>
-		/// <param name="localStore">Virtual store that this collection belongs to.</param>
+		/// <param name="store">Virtual store that this collection belongs to.</param>
 		/// <param name="xmlProperties">List of properties that belong to this collection.</param>
 		/// <param name="imported">Set to true if collection is being imported.</param>
-		internal Collection( Store localStore, XmlElement xmlProperties, bool imported ) :
-			base( localStore, xmlProperties )
+		internal Collection( Store store, XmlElement xmlProperties, bool imported ) :
+			base( store, xmlProperties )
 		{
 			// Set the collection into the node.  Since node is a sub-class of collection, its 
 			// constructor runs before the collection constructor, so we can't set the value.
@@ -333,8 +430,8 @@ namespace Simias.Storage
 			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
 
 			// Initialize my class members.
-			this.localStore = localStore;
-			this.database = localStore.StorageProvider;
+			this.store = store;
+			this.database = store.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this );
@@ -344,7 +441,7 @@ namespace Simias.Storage
 			{
 				// Because this node is being imported, it needs to be the one in the cache node table.
 				// Otherwise all import changes will be lost.
-				CacheNode tempCacheNode = localStore.GetCacheNode( Id );
+				CacheNode tempCacheNode = store.GetCacheNode( Id );
 				if ( tempCacheNode != null )
 				{
 					// Copy this cache node to the one in the table so that all node will see the import
@@ -352,7 +449,7 @@ namespace Simias.Storage
 					tempCacheNode.Copy( cNode );
 
 					// GetCacheNode() incremented the reference count.  Need to decrement it.
-					localStore.RemoveCacheNode( Id, false );
+					store.RemoveCacheNode( Id, false );
 				}
 
 				// Add this node to the cache table.
@@ -371,12 +468,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor to create an existing collection object without properties.
 		/// </summary>
-		/// <param name="localStore">Virtual store that this collection belongs to.</param>
+		/// <param name="store">Virtual store that this collection belongs to.</param>
 		/// <param name="name">Name used by applications to describe the collection.</param>
 		/// <param name="id">Globally unique identifier for this collection.</param>
 		/// <param name="type">Type of collection.</param>
-		internal Collection( Store localStore, string name, string id, string type ) :
-			base( localStore, name, id, type, true )
+		internal Collection( Store store, string name, string id, string type ) :
+			base( store, name, id, type, true )
 		{
 			// Set the collection into the node.  Since node is a sub-class of collection, its 
 			// constructor runs before the collection constructor, so we can't set the value.
@@ -386,8 +483,8 @@ namespace Simias.Storage
 			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
 
 			// Initialize my class members.
-			this.localStore = localStore;
-			this.database = localStore.StorageProvider;
+			this.store = store;
+			this.database = store.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this );
@@ -401,13 +498,13 @@ namespace Simias.Storage
 		/// This constructor is used at store construction time because there is no current owner of the store 
 		/// established yet.
 		/// </summary>
-		/// <param name="localStore">Virtual store that this collection belongs to.</param>
+		/// <param name="store">Virtual store that this collection belongs to.</param>
 		/// <param name="name">Name used by applications to describe the collection.</param>
 		/// <param name="id">Globally unique identifier for this collection.</param>
 		/// <param name="type">Type of collection.</param>
 		/// <param name="constructorId">Identifier of user opening this object.</param>
-		internal Collection( Store localStore, string name, string id, string type, string constructorId ) :
-			base( localStore, name, id, type, true )
+		internal Collection( Store store, string name, string id, string type, string constructorId ) :
+			base( store, name, id, type, true )
 		{
 			// Set the collection into the node.  Since node is a sub-class of collection, its 
 			// constructor runs before the collection constructor, so we can't set the value.
@@ -417,8 +514,8 @@ namespace Simias.Storage
 			cNode.dirtyNodeList = new Hashtable( initialDirtyNodeListSize );
 
 			// Initialize my class members.
-			this.localStore = localStore;
-			this.database = localStore.StorageProvider;
+			this.store = store;
+			this.database = store.StorageProvider;
 
 			// Initialize the access control object.
 			cNode.accessControl = new AccessControl( this, constructorId );
@@ -432,11 +529,12 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="store">Object representing the local store.</param>
 		/// <param name="cNode">Cache node that contains the node data.</param>
-		internal Collection( Store store, CacheNode cNode ) :
-			base( cNode )
+		/// <param name="incReference">Increments the reference count on cNode if true.</param>
+		internal Collection( Store store, CacheNode cNode, bool incReference ) :
+			base( cNode, incReference )
 		{
 			// Initialize my class members.
-			this.localStore = store;
+			this.store = store;
 			this.database = store.StorageProvider;
 		}
 		#endregion
@@ -452,7 +550,7 @@ namespace Simias.Storage
 			bool publish = false;
 
 			// Don't publish events that came from this store handle.
-			if ( args.EventId != localStore.Instance )
+			if ( args.EventId != store.Instance )
 			{
 				// If no filter specified, then publish all events.
 				if ( nodeFilter == null )
@@ -509,7 +607,7 @@ namespace Simias.Storage
 					Directory.Move( newRoot.LocalPath, sourcePathString );
 
 					// Generate event that document root was changed.
-					localStore.Publisher.RaiseEvent( new CollectionRootChangedEventArgs( localStore.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
+					store.Publisher.RaiseEvent( new CollectionRootChangedEventArgs( store.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
 				}
 				catch
 				{
@@ -552,6 +650,11 @@ namespace Simias.Storage
 		/// <param name="dirtyNode">Node object to add to the list.</param>
 		internal void AddDirtyNodeToList( Node dirtyNode )
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			if ( !cNode.dirtyNodeList.ContainsKey( dirtyNode.Id ) && !dirtyNode.IsTombstone )
 			{
 				cNode.dirtyNodeList.Add( dirtyNode.Id, dirtyNode.cNode );
@@ -563,6 +666,11 @@ namespace Simias.Storage
 		/// </summary>
 		internal void ClearDirtyList()
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			cNode.dirtyNodeList.Clear();
 		}
 
@@ -572,7 +680,12 @@ namespace Simias.Storage
 		/// <returns>A Uri object that represents the store managed path.</returns>
 		internal Uri GetStoreManagedPath()
 		{
-			return new Uri( Path.Combine( database.StoreDirectory.LocalPath, Path.Combine( localStore.StoreManagedPath.LocalPath, Id ) ) );
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
+			return new Uri( Path.Combine( database.StoreDirectory.LocalPath, Path.Combine( store.StoreManagedPath.LocalPath, Id ) ) );
 		}
 
 		/// <summary>
@@ -581,12 +694,22 @@ namespace Simias.Storage
 		/// <param name="nodeId">Node identifier to remove from the dirtyList.</param>
 		internal void RemoveDirtyNodeFromList( string nodeId )
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			cNode.dirtyNodeList.Remove( nodeId );
 		}
 
 		// Updates the access control list from the committed properties.
 		internal void UpdateAccessControl()
 		{
+			if ( disposed )
+			{
+				throw new ObjectDisposedException( this.ToString() );
+			}
+
 			cNode.accessControl.GetCommittedAcl();
 		}
 		#endregion
@@ -600,7 +723,15 @@ namespace Simias.Storage
 		/// <param name="oldOwnerRights">Rights to give the old owner of the collection.</param>
 		public void ChangeOwner( string newOwnerId, Access.Rights oldOwnerRights )
 		{
-			cNode.accessControl.ChangeOwner( newOwnerId.ToLower(), oldOwnerRights );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				cNode.accessControl.ChangeOwner( newOwnerId.ToLower(), oldOwnerRights );
+			}
 		}
 
 		/// <summary>
@@ -611,115 +742,123 @@ namespace Simias.Storage
 		/// </summary>
 		public void Commit( bool deep )
 		{
-			// Make sure the current user has write access to this collection.
-			if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
+			lock ( store )
 			{
-				throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
-			}
-
-			if ( deep )
-			{
-				// Allocate a queue to hold committed nodes.
-				Queue nodeQ = new Queue( cNode.dirtyNodeList.Count );
-
-				// Create an XML document that will contain all of the changed nodes.
-				XmlDocument commitDoc = new XmlDocument();
-				commitDoc.AppendChild( commitDoc.CreateElement( Property.ObjectListTag ) );
-
-				try
+				if ( disposed )
 				{
-					// Acquire the store mutex.
-					localStore.LockStore();
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-					// Increment the collection incarnation number here so it gets added to the dirty list and
-					// processed with the rest of the changed nodes.
-					IncrementLocalIncarnation();
+				// Make sure the current user has write access to this collection.
+				if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
+				{
+					throw new UnauthorizedAccessException( "Current user does not have collection modify right." );
+				}
 
-					// Parse the node into an XML document because that is the format that the provider expects.
-					foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
+				if ( deep )
+				{
+					// Allocate a queue to hold committed nodes.
+					Queue nodeQ = new Queue( cNode.dirtyNodeList.Count );
+
+					// Create an XML document that will contain all of the changed nodes.
+					XmlDocument commitDoc = new XmlDocument();
+					commitDoc.AppendChild( commitDoc.CreateElement( Property.ObjectListTag ) );
+
+					try
 					{
-						// Instantiate a node object from the cache node.
-						Node tempNode = new Node( tempCacheNode );
+						// Acquire the store lock.
+						store.LockStore();
 
-						// If this node has not been persisted, no need to do a merge.
-						if ( tempNode.IsPersisted )
+						// Increment the collection incarnation number here so it gets added to the dirty list and
+						// processed with the rest of the changed nodes.
+						IncrementLocalIncarnation();
+
+						// Parse the node into an XML document because that is the format that the provider expects.
+						foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
 						{
-							// Merge this node with the current node in the database.
-							tempNode = tempNode.MergeNodeProperties( true );
-							if ( tempNode == null )
+							// Instantiate a node object from the cache node.
+							Node tempNode = new Node( tempCacheNode, true );
+
+							// If this node has not been persisted, no need to do a merge.
+							if ( tempNode.IsPersisted )
 							{
-								// The node has been deleted in the database, move to the next one.
-								continue;
+								// Merge this node with the current node in the database.
+								tempNode = tempNode.MergeNodeProperties( true );
+								if ( tempNode == null )
+								{
+									// The node has been deleted in the database, move to the next one.
+									continue;
+								}
+
+								// Update this node to reflect the latest changes.
+								tempCacheNode.Copy( tempNode.cNode );
 							}
 
-							// Update this node to reflect the latest changes.
-							tempCacheNode.Copy( tempNode.cNode );
+							// Set the modify time for this node.
+							tempNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+
+							// Don't increment the incarnation number on the collection again.
+							if ( !tempNode.IsCollection )
+							{
+								// Increment the local incarnation number.
+								tempNode.IncrementLocalIncarnation();
+							}
+
+							// Copy the XML node over to the modify document.
+							XmlNode xmlNode = commitDoc.ImportNode( tempNode.Properties.PropertyRoot, true );
+							commitDoc.DocumentElement.AppendChild( xmlNode );
+
+							// Add the cache node to the queue.
+							nodeQ.Enqueue( tempCacheNode );
 						}
 
-						// Set the modify time for this node.
-						tempNode.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
-						// Don't increment the incarnation number on the collection again.
-						if ( !tempNode.IsCollection )
+						// If this collection is new, call to create it before sending down the nodes.
+						if ( !IsPersisted )
 						{
-							// Increment the local incarnation number.
-							tempNode.IncrementLocalIncarnation();
+							database.CreateCollection( Id );
 						}
 
-						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDoc.ImportNode( tempNode.Properties.PropertyRoot, true );
-						commitDoc.DocumentElement.AppendChild( xmlNode );
-
-						// Add the cache node to the queue.
-						nodeQ.Enqueue( tempCacheNode );
+						// Call the store provider to create the records.
+						database.CreateRecord( commitDoc.OuterXml, Id );
 					}
-
-					// If this collection is new, call to create it before sending down the nodes.
-					if ( !IsPersisted )
+					finally
 					{
-						database.CreateCollection( Id );
+						// Release the store lock.
+						store.UnlockStore();
 					}
 
-					// Call the store provider to create the records.
-					database.CreateRecord( commitDoc.OuterXml, Id );
+					// Set all of the nodes in the list as committed.
+					foreach ( CacheNode tempCacheNode in nodeQ )
+					{
+						// Fire an event for this commit action.
+						if ( tempCacheNode.isPersisted )
+						{
+							// Fire an event to notify that this node has been changed.
+							store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeChanged, store.Instance ) );
+						}
+						else
+						{
+							// Fire an event to notify that this node has been created.
+							store.Publisher.RaiseEvent( new NodeEventArgs( store.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeCreated, store.Instance ) );
+
+							// Mark the node as persisted.
+							tempCacheNode.isPersisted = true;
+						}
+					}
+
+					// Clear the cached node queue.
+					nodeQ.Clear();
+
+					// Clear the dirty node queue.
+					ClearDirtyList();
+
+					// Update the access control list.
+					UpdateAccessControl();
 				}
-				finally
+				else
 				{
-					// Release the store mutex.
-					localStore.UnlockStore();
+					base.Commit();
 				}
-
-				// Set all of the nodes in the list as committed.
-				foreach ( CacheNode tempCacheNode in nodeQ )
-				{
-					// Fire an event for this commit action.
-					if ( tempCacheNode.isPersisted )
-					{
-						// Fire an event to notify that this node has been changed.
-						localStore.Publisher.RaiseEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeChanged, localStore.Instance ) );
-					}
-					else
-					{
-						// Fire an event to notify that this node has been created.
-						localStore.Publisher.RaiseEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeCreated, localStore.Instance ) );
-
-						// Mark the node as persisted.
-						tempCacheNode.isPersisted = true;
-					}
-				}
-
-				// Clear the cached node queue.
-				nodeQ.Clear();
-
-				// Clear the dirty node queue.
-				ClearDirtyList();
-
-				// Update the access control list.
-				UpdateAccessControl();
-			}
-			else
-			{
-				base.Commit();
 			}
 		}
 
@@ -739,14 +878,22 @@ namespace Simias.Storage
 		/// <param name="deep">Indicates whether to all children nodes of this node are deleted also.</param>
 		public new void Delete( bool deep )
 		{
-			// Delete the collection and all of its members if specified.
-			base.Delete( deep );
-
-			// If there are store managed files, delete them also.
-			Uri documentRoot = GetStoreManagedPath();
-			if ( Directory.Exists( documentRoot.LocalPath ) )
+			lock ( store )
 			{
-				Directory.Delete( documentRoot.LocalPath, true );
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				// Delete the collection and all of its members if specified.
+				base.Delete( deep );
+
+				// If there are store managed files, delete them also.
+				Uri documentRoot = GetStoreManagedPath();
+				if ( Directory.Exists( documentRoot.LocalPath ) )
+				{
+					Directory.Delete( documentRoot.LocalPath, true );
+				}
 			}
 		}
 
@@ -756,7 +903,15 @@ namespace Simias.Storage
 		/// <returns>An ICSEnumerator object that will enumerate the access control list.</returns>
 		public ICSList GetAccessControlList()
 		{
-			return new ICSList( new Access( this ) );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return new ICSList( new Access( this ) );
+			}
 		}
 
 		/// <summary>
@@ -766,7 +921,15 @@ namespace Simias.Storage
 		/// <returns>Access rights for the specified user ID.</returns>
 		public Access.Rights GetUserAccess( string userId )
 		{
-			return cNode.accessControl.GetUserRights( userId.ToLower() );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return cNode.accessControl.GetUserRights( userId.ToLower() );
+			}
 		}
 
 		/// <summary>
@@ -776,7 +939,15 @@ namespace Simias.Storage
 		/// <returns>True if the user has the desired access rights, otherwise false.</returns>
 		public bool IsAccessAllowed( Access.Rights desiredRights )
 		{
-			return cNode.accessControl.IsAccessAllowed( desiredRights );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return cNode.accessControl.IsAccessAllowed( desiredRights );
+			}
 		}
 
 		/// <summary>
@@ -785,7 +956,15 @@ namespace Simias.Storage
 		/// <param name="userId">User ID to remove rights for.</param>
 		public void RemoveUserAccess( string userId )
 		{
-			cNode.accessControl.RemoveUserRights( userId.ToLower() );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				cNode.accessControl.RemoveUserRights( userId.ToLower() );
+			}
 		}
 
 		/// <summary>
@@ -794,13 +973,21 @@ namespace Simias.Storage
 		/// </summary>
 		new public void Rollback()
 		{
-			// Take each node that is currently on the dirty list and roll it back to it's post committed state.
-			foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
+			lock ( store )
 			{
-				new Node( tempCacheNode ).RollbackNode();
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			ClearDirtyList();
+				// Take each node that is currently on the dirty list and roll it back to it's post committed state.
+				foreach ( CacheNode tempCacheNode in cNode.dirtyNodeList.Values )
+				{
+					new Node( tempCacheNode, true ).RollbackNode();
+				}
+
+				ClearDirtyList();
+			}
 		}
 
 		/// <summary>
@@ -812,7 +999,15 @@ namespace Simias.Storage
 		/// <returns>An ICSList object that contains the results of the search.</returns>
 		public ICSList Search( Property property, Property.Operator queryOperator )
 		{
-			return new ICSList( new NodeEnumerator( this, property, Property.MapQueryOp( queryOperator ) ) );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return new ICSList( new NodeEnumerator( this, property, Property.MapQueryOp( queryOperator ) ) );
+			}
 		}
 
 		/// <summary>
@@ -1043,12 +1238,20 @@ namespace Simias.Storage
 		/// <param name="desiredRights">Rights to assign to user.</param>
 		public void SetUserAccess( string userId, Access.Rights desiredRights )
 		{
-			if ( userId == String.Empty )
+			lock ( store )
 			{
-				throw new ApplicationException( "Invalid user guid." );
-			}
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			cNode.accessControl.SetUserRights( userId.ToLower(), desiredRights );
+				if ( userId == String.Empty )
+				{
+					throw new ApplicationException( "Invalid user guid." );
+				}
+
+				cNode.accessControl.SetUserRights( userId.ToLower(), desiredRights );
+			}
 		}
 
 		/// <summary>
@@ -1059,15 +1262,23 @@ namespace Simias.Storage
 		/// node changes in the collection will be indicated.</param>
 		public void NodeEventsSubscribe( NodeChangeHandler handler, string[] nodeIdFilter )
 		{
-			// Setup to watch for node changes on this collection.
-			subscriber = new EventSubscriber( new Configuration( localStore.StorePath.LocalPath ), Id);
-			subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
-			subscriber.NodeCreated += new NodeEventHandler( OnNodeChanged );
-			subscriber.NodeDeleted += new NodeEventHandler( OnNodeChanged );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			// Register the delegate with the event handler.
-			nEventHandler += handler;
-			nodeFilter = nodeIdFilter;
+				// Setup to watch for node changes on this collection.
+				subscriber = new EventSubscriber( new Configuration( store.StorePath.LocalPath ), Id);
+				subscriber.NodeChanged += new NodeEventHandler( OnNodeChanged );
+				subscriber.NodeCreated += new NodeEventHandler( OnNodeChanged );
+				subscriber.NodeDeleted += new NodeEventHandler( OnNodeChanged );
+
+				// Register the delegate with the event handler.
+				nEventHandler += handler;
+				nodeFilter = nodeIdFilter;
+			}
 		}
 
 		/// <summary>
@@ -1076,16 +1287,24 @@ namespace Simias.Storage
 		/// <param name="handler">Delegate passed to NodeEventsSubscribe.</param>
 		public void NodeEventsUnsubscribe( NodeChangeHandler handler )
 		{
-			// Deregister from the event broker.
-			subscriber = new EventSubscriber( new Configuration( localStore.StorePath.LocalPath ) );
-			subscriber.NodeChanged -= new NodeEventHandler( OnNodeChanged );
-			subscriber.NodeCreated -= new NodeEventHandler( OnNodeChanged );
-			subscriber.NodeDeleted -= new NodeEventHandler( OnNodeChanged );
-			subscriber.Dispose();
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
 
-			// Deregister the delegate with the event handler.
-			nEventHandler -= handler;
-			nodeFilter = null;
+				// Deregister from the event broker.
+				subscriber = new EventSubscriber( new Configuration( store.StorePath.LocalPath ) );
+				subscriber.NodeChanged -= new NodeEventHandler( OnNodeChanged );
+				subscriber.NodeCreated -= new NodeEventHandler( OnNodeChanged );
+				subscriber.NodeDeleted -= new NodeEventHandler( OnNodeChanged );
+				subscriber.Dispose();
+
+				// Deregister the delegate with the event handler.
+				nEventHandler -= handler;
+				nodeFilter = null;
+			}
 		}
 		#endregion
 
@@ -1100,7 +1319,88 @@ namespace Simias.Storage
 		/// <returns>IEnumerator object used to enumerate nodes within collections.</returns>
 		public new IEnumerator GetEnumerator()
 		{
-			return new NodeEnumerator( this, new Property( Property.CollectionID, Id ), Persist.Query.Operator.Equal );
+			lock ( store )
+			{
+				if ( disposed )
+				{
+					throw new ObjectDisposedException( this.ToString() );
+				}
+
+				return new NodeEnumerator( this, new Property( Property.CollectionID, Id ), Persist.Query.Operator.Equal );
+			}
+		}
+		#endregion
+
+		#region IDisposable Members
+		/// <summary>
+		/// Allows for quick release of managed and unmanaged resources.
+		/// Called by applications.
+		/// </summary>
+		public void Dispose()
+		{
+			lock ( store )
+			{
+				Dispose( true );
+				GC.SuppressFinalize( this );
+			}
+		}
+
+		/// <summary>
+		/// Dispose( bool disposing ) executes in two distinct scenarios.
+		/// If disposing equals true, the method has been called directly
+		/// or indirectly by a user's code. Managed and unmanaged resources
+		/// can be disposed.
+		/// If disposing equals false, the method has been called by the 
+		/// runtime from inside the finalizer and you should not reference 
+		/// other objects. Only unmanaged resources can be disposed.
+		/// </summary>
+		/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
+		private void Dispose( bool disposing )
+		{
+			// Check to see if Dispose has already been called.
+			if ( !disposed )
+			{
+				// Protect callers from accessing the freed members.
+				disposed = true;
+
+				// If disposing equals true, dispose all managed and unmanaged resources.
+				if ( disposing )
+				{
+					// Dispose managed resources.
+					if ( nEventHandler != null )
+					{
+						Delegate[] delegateList = nEventHandler.GetInvocationList();
+						foreach ( Delegate d in delegateList )
+						{
+							nEventHandler -= d as NodeChangeHandler;
+						}
+
+						nEventHandler = null;
+					}
+
+					if ( subscriber != null )
+					{
+						subscriber.Dispose();
+					}
+
+					database = null;
+					store = null;
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Use C# destructor syntax for finalization code.
+		/// This destructor will run only if the Dispose method does not get called.
+		/// It gives your base class the opportunity to finalize.
+		/// Do not provide destructors in types derived from this class.
+		/// </summary>
+		~Collection()      
+		{
+			lock ( store )
+			{
+				Dispose( false );
+			}
 		}
 		#endregion
 	}

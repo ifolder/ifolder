@@ -52,7 +52,7 @@ namespace Simias.Storage
 		/// <param name="bookName">Name of the address book.</param>
 		/// <param name="ownerGuid">Owner guid of this collection.</param>
 		internal LocalAddressBook( Store store, string bookName, string ownerGuid ) :
-			base( store, new CacheNode( store, Guid.NewGuid().ToString().ToLower() ) )
+			base( store, new CacheNode( store, Guid.NewGuid().ToString().ToLower() ), false )
 		{
 			// Fill out the Cache node object.
 			cNode.collection = this;
@@ -134,7 +134,7 @@ namespace Simias.Storage
 		/// <param name="store">Local store object.</param>
 		/// <param name="collection">Collection that is an address book.</param>
 		internal LocalAddressBook( Store store, Collection collection ) :
-			base( store, collection.cNode )
+			base( store, collection.cNode, true )
 		{
 		}
 		#endregion
@@ -158,28 +158,31 @@ namespace Simias.Storage
 		/// <returns>An Identity object representing the specified user.</returns>
 		public Identity AddIdentity( string userName, string userGuid )
 		{
-			// Check to see if this identity already exists.
-			Identity identity = GetSingleIdentityByName( userName );
-			if ( identity == null )
+			lock ( store )
 			{
-				// See if the same identity exists by Id.
-				identity = GetIdentityById( userGuid );
+				// Check to see if this identity already exists.
+				Identity identity = GetSingleIdentityByName( userName );
 				if ( identity == null )
 				{
-					// The identity doesn't exist, create it.
-					identity = new Identity( this, userName, userGuid );
+					// See if the same identity exists by Id.
+					identity = GetIdentityById( userGuid );
+					if ( identity == null )
+					{
+						// The identity doesn't exist, create it.
+						identity = new Identity( this, userName, userGuid );
+					}
 				}
-			}
-			else
-			{
-				// Don't want to have separate identities with the same user name.
-				if ( identity.Id != userGuid )
+				else
 				{
-					throw new ApplicationException( "Identity already exists by specified name." );
+					// Don't want to have separate identities with the same user name.
+					if ( identity.Id != userGuid )
+					{
+						throw new ApplicationException( "Identity already exists by specified name." );
+					}
 				}
-			}
 
-			return identity;
+				return identity;
+			}
 		}
 
 		/// <summary>
@@ -188,11 +191,14 @@ namespace Simias.Storage
 		/// <param name="userGuid">Unique identifier of identity to delete.</param>
 		public void DeleteIdentity( string userGuid )
 		{
-			// Lookup the identity to make sure that it exists.
-			Identity identity = GetIdentityById( userGuid );
-			if ( identity != null )
+			lock ( store )
 			{
-				identity.Delete( true );
+				// Lookup the identity to make sure that it exists.
+				Identity identity = GetIdentityById( userGuid );
+				if ( identity != null )
+				{
+					identity.Delete( true );
+				}
 			}
 		}
 
@@ -203,16 +209,19 @@ namespace Simias.Storage
 		/// <returns>An Identity object representing the user Id if it exists. Otherwise a null is returned.</returns>
 		public Identity GetIdentityById( string userGuid )
 		{
-			Identity identityNode = null;
-
-			// Get the matching node out of the address book collection.
-			Node tempNode = GetNodeById( userGuid );
-			if ( tempNode != null )
+			lock ( store )
 			{
-				identityNode = new Identity( tempNode );
-			}
+				Identity identityNode = null;
 
-			return identityNode;
+				// Get the matching node out of the address book collection.
+				Node tempNode = GetNodeById( userGuid );
+				if ( tempNode != null )
+				{
+					identityNode = new Identity( tempNode );
+				}
+
+				return identityNode;
+			}
 		}
 
 		/// <summary>
@@ -222,16 +231,19 @@ namespace Simias.Storage
 		/// <returns>An Identity object representing the userName if it exists. Otherwise a null is returned.</returns>
 		public Identity GetSingleIdentityByName( string userName )
 		{
-			Identity identityNode = null;
-
-			// Get the matching node out of the address book collection.
-			Node tempNode = GetSingleNodeByName( userName );
-			if ( tempNode != null )
+			lock ( store )
 			{
-				identityNode = new Identity( tempNode );
-			}
+				Identity identityNode = null;
 
-			return identityNode;
+				// Get the matching node out of the address book collection.
+				Node tempNode = GetSingleNodeByName( userName );
+				if ( tempNode != null )
+				{
+					identityNode = new Identity( tempNode );
+				}
+
+				return identityNode;
+			}
 		}
 		#endregion
 	}

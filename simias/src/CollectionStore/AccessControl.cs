@@ -83,6 +83,11 @@ namespace Simias.Storage
 		public const string WorldRole = "1edcfe93-45e8-11d8-a9c7-444553544200";
 
 		/// <summary>
+		/// Reference to the store object.
+		/// </summary>
+		private Store store;
+
+		/// <summary>
 		/// Access control list enumerator.
 		/// </summary>
 		private ICSEnumerator aclEnumerator;
@@ -95,6 +100,7 @@ namespace Simias.Storage
 		/// <param name="collection">Collection to enumerator rights on.</param>
 		internal Access( Collection collection )
 		{
+			this.store = collection.LocalStore;
 			MultiValuedList mvl = collection.Properties.FindValues( Property.Ace, true );
 			aclEnumerator = ( ICSEnumerator )mvl.GetEnumerator();
 		}
@@ -107,7 +113,10 @@ namespace Simias.Storage
 		/// </summary>
 		public void Reset()
 		{
-			aclEnumerator.Reset();
+			lock ( store )
+			{
+				aclEnumerator.Reset();
+			}
 		}
 
 		/// <summary>
@@ -115,7 +124,13 @@ namespace Simias.Storage
 		/// </summary>
 		public object Current
 		{
-			get { return new AccessControlEntry( ( Property )aclEnumerator.Current ); }
+			get 
+			{ 
+				lock ( store )
+				{
+					return new AccessControlEntry( ( Property )aclEnumerator.Current ); 
+				}
+			}
 		}
 
 		/// <summary>
@@ -127,7 +142,10 @@ namespace Simias.Storage
 		/// </returns>
 		public bool MoveNext()
 		{
-			return aclEnumerator.MoveNext();
+			lock ( store )
+			{
+				return aclEnumerator.MoveNext();
+			}
 		}
 		#endregion
 
@@ -277,7 +295,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Object that provides access control functionality for the CollectionStore.
 	/// </summary>
-	public class AccessControl
+	internal class AccessControl
 	{
 		#region Class Members
 		/// <summary>
