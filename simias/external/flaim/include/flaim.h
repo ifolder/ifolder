@@ -4,7 +4,7 @@ Title:   Applications Include File
 Owner:   FLAIM Team
 Tabs:    4,3
 
-			Copyright (c) 1991-2000, Novell Inc.,
+			Copyright (c) 1991-2000, Novell Inc., 
 			All Rights Reserved, Patents Pending
 			COMPANY CONFIDENTIAL -- NOT FOR DISTRIBUTION
 -----------------------------------------------------------------------------
@@ -12,189 +12,11 @@ Desc: This include file contains the structure definitions and prototypes
 		needed by an application to interface with FLAIM.
 
  * $Log$
- * Revision 1.2  2004/11/19 22:18:49  ryoung65
- * Checked in new flaim rosalind.
- * Added SyncPolicy.
- * Added Authentication support.
- * Fixed a time resolution problem that caused files to be uploaded when they haven't changed.
+ * Revision 1.3  2004/11/19 23:28:45  ryoung65
+ * Rolled back Flaim.
  *
- * Revision 4.131.4.43.2.7  2004/09/21 16:24:43  dius
- * DEFECT 000384423 - Restoreing incremental files fixes.
- *
- * Revision 4.131.4.43.2.6  2004/09/10 16:58:27  dius
- * DEFECT000382731 - additionally a fix to separate the picket fence and check record
- * processing from the standard FLM_DEBUG code.  Added FLM_CHECK_RECORD
- * and FLM_PICKET_FENCE to include these debug capabilities.  Tested in both debug and
- * release code.
- *
- * Revision 4.131.4.43.2.5  2004/08/19 20:40:36  dius
- * Changes to fix defect 380253.
- *
- * Revision 4.131.4.43.2.4  2004/07/14 20:00:24  rmiller
- * Set FLM_ERROR_BASE to 0
- *
- * Revision 4.131.4.43.2.3  2004/07/13 17:07:28  dius
- * Added FERR_PASSWD_INVALID error code.
- *
- * Revision 4.131.4.43.2.2  2004/07/12 22:17:33  dius
- * Added password parameter to FlmDbOpen - task 1613
- *
- * Revision 4.131.4.43.2.1  2004/07/09 22:10:14  dius
- * Separated the code to generate a key in an upgrade and added
- * bHaveEncKey to the pFile so we can override the bAllowLimited
- * flag if needed.
- *
- * Revision 4.131.4.43  2004/05/13 22:03:08  rmiller
- * Added the size_t typedef for HPUX only
- *
- * Revision 4.131.4.42  2004/05/06 16:09:11  rmiller
- * More changes to operator new.  This time for AIX.
- *
- * Revision 4.131.4.41  2004/05/04 23:20:18  rmiller
- * Used FLM_UNIX in a few places where I should have used FLM_HPUX
- *
- * Revision 4.131.4.40  2004/05/04 23:17:45  rmiller
- * Various changes to get flaim building on hp-ux.
- *
- * Revision 4.131.4.39  2004/05/03 15:37:33  dius
- * Updates to support the backup/restore with password
- *
- * Revision 4.131.4.38  2004/04/27 20:26:55  dius
- * Removed unused error codes.
- *
- * Revision 4.131.4.37  2004/04/26 22:26:30  dius
- * Bug fix - set the encLength and encId in getFieldInfo.
- *
- * Revision 4.131.4.36  2004/04/20 17:34:42  dius
- * Made F_Rfl a friend to FlmRecord.  Removed FlmRecord methods
- * that were no longer needed as a result.
- *
- * Revision 4.131.4.35  2004/04/14 22:30:48  dius
- * inlined a few functions as per Code review.  Added methods locateFieldByPosition
- * and locateLastField to the FlmRecord class.
- *
- * Revision 4.131.4.34  2004/04/14 19:04:43  dius
- * Added encryption flags to NODE and fixed the GedPutXXX
- * functions as per code review.  Import based on the encryption flags.
- *
- * Revision 4.131.4.33  2004/04/14 16:39:04  dius
- * Code review changes
- *
- * Revision 4.131.4.32  2004/04/13 16:52:07  dsanders
- * Fixed up some tabs.
- *
- * Revision 4.131.4.31  2004/04/12 17:40:10  dius
- * Added encrypted value to the NODE structure.  Also added
- * the method insertAt to the FlmRecord class.
- *
- * Revision 4.131.4.30  2004/04/09 19:48:18  dius
- * Added private methods in FlmRecords that reduced the
- * number of times we need to call getFieldPionter from
- * within a FlmRecord.
- *
- * Revision 4.131.4.29  2004/04/07 23:35:21  dius
- * Optimized a few parameters being passed in getFieldInfo
- *
- * Revision 4.131.4.28  2004/04/02 20:56:43  rmiller
- * Fixed a warning about a redefinition of function tokenIsNum
- *
- * Revision 4.131.4.27  2004/04/01 16:38:16  dius
- * Merged getEncFieldInfo and getFieldInfo.  Added two parameters
- * to getFieldInfo.
- *
- * Revision 4.131.4.26  2004/03/23 21:34:57  dius
- * Added method setEncHeader to FlmRecord.
- *
- * Revision 4.131.4.25  2004/03/18 16:30:40  dius
- * New private versions of getEncFlags, setEncFlags and getEncryptionID
- * that use the FlmField pointer.
- *
- * Revision 4.131.4.24  2004/03/17 17:07:44  dius
- * Added uiEncId to all FlmRecord::setXXX and FlmRecord::getXXX methods.
- *
- * Revision 4.131.4.23  2004/03/13 01:05:00  ahodgkinson
- * Support for background index deletion.  Also performed misc. cleanup.
- *
- * Revision 4.131.4.22  2004/03/12 21:32:13  dius
- * Added a few new error codes.  Added optional parameter
- * to all FlmRecord field setters.
- *
- * Revision 4.131.4.21  2004/03/09 23:50:58  dius
- * Rename getImportDataPtr to allocStorageSpace. Removed getNewEncDataPtr.
- *
- * Revision 4.131.4.20  2004/03/09 20:33:30  rmiller
- * New error code: FERR_ENCRYPTION_UNAVAILABLE
- * Also removed an extra getDataPtr from FlmRecord
- *
- * Revision 4.131.4.19  2004/03/08 16:50:31  dsanders
- * Defect 346120.  Added support during a structural rebuild for setting
- * SMI USTRING index key limits on indexes that do not already have limits.
- *
- * Revision 4.131.4.18  2004/03/05 20:17:24  dius
- * Removed exportComplete().
- *
- * Revision 4.131.4.17  2004/03/05 19:51:38  dius
- * Changed getExportDataPtr to getDataPtr.
- *
- * Revision 4.131.4.16  2004/03/05 19:43:39  dius
- * Removed importComplete
- *
- * Revision 4.131.4.15  2004/03/05 18:58:18  dius
- * Renamed getImportDataPtr to allocStorageSpace.
- *
- * Revision 4.131.4.14  2004/03/04 19:30:48  dius
- * New getNewEncDataPtr function. Changed FLM_ENC_FLD_OVERHEAD
- *  to 8 instead of 10. The encrypted data length is now two bytes.
- *
- * Revision 4.131.4.13  2004/03/02 19:44:42  dius
- * New calling format for getImportDataPtr.  Moved NICI codes to
- * new location.
- *
- * Revision 4.131.4.12  2004/03/01 22:54:33  dius
- * no message
- *
- * Revision 4.131.4.11  2004/02/27 19:55:07  dius
- * Added some methods for handling encrypted fields to the FlmRecord,
- *  fixed up some comments and added a few fields to the EGDCOM NODE
- * structure.
- *
- * Revision 4.131.4.10  2004/02/25 23:26:41  ahodgkinson
- * Merged changes made to the FLAIM 4 branch.
- *
- * Revision 4.131.4.9  2004/02/25 22:46:53  rmiller
- * Backup and restore functions now accept a password and will shroud and
- * unshroud the database key.
- *
- * Revision 4.131.4.8  2004/02/25 18:15:24  dius
- * Put some of the encryption methods of the FlmRecord into
- * an ifdef USE_NICI clause.
- *
- * Revision 4.131.4.7  2004/02/25 16:42:29  dius
- * Added isEncryptedField, getEncryptedDataLength, getEncryptionID
- *  and encryptField to FlmRecord class.
- *
- * Revision 4.131.4.6  2004/02/24 00:11:48  dius
- * New NICI error Code.
- *
- * Revision 4.131.4.5  2004/02/20 18:45:13  rmiller
- * Removed all the password stuff from the database open code since it's
- * no longer necessary.
- *
- * Revision 4.131.4.4  2004/02/18 20:57:37  dius
- * New error code.
- *
- * Revision 4.131.4.3  2004/02/18 16:05:17  dius
- * Added code for parsing EncDef records
- *
- * Revision 4.131.4.2  2004/02/10 22:02:30  rmiller
- * Encryption stuff related to FlmDbOpen, FlmDbRewrapKeys and FlmGetWrapMethod
- *
- * Revision 4.131.4.1  2004/02/02 22:31:48  rmiller
- * Added a few variables needed for encryption support to FDB and FSYSDATA
- *
- * Revision 4.131  2004/01/26 18:18:25  ahodgkinson
- * Changes to support a FLAIM memory allocator designed to reduce
- * memory fragmentation.
+ * Revision 1.1  2004/09/21 20:06:06  ryoung65
+ * Added Flaim support for windows.
  *
  * Revision 4.130  2003/12/06 00:26:15  ahodgkinson
  * Created new FlmGetConfig options to determine if dynamic cache
@@ -871,12 +693,14 @@ Desc: This include file contains the structure definitions and prototypes
 #ifndef  FLAIM_H
 #define  FLAIM_H
 
-	#if defined( XFLAIM_H) && defined( SUPPORT_OLD_XFLAIM_NAMES)
-		#error Cannot support old X-FLAIM typedefs, etc. when including flaim.h
-	#endif
+	// Forward declarations
 
-	#ifndef FLM_PLATFORM_CONFIGURED
-		#define FLM_PLATFORM_CONFIGURED
+	class FlmRecord;
+	class FlmRecordSet;
+	class F_LogMessage;
+	class F_FileHdl;
+	class F_ListItem;
+	class F_ListMgr;
 
 	// Determine the build platform
 
@@ -891,19 +715,17 @@ Desc: This include file contains the structure definitions and prototypes
 	#undef FLM_OSF
 	#undef FLM_HPUX
 	#undef FLM_MAXOSX
-		#undef FLM_BIG_ENDIAN
 
-	#if defined( __NETWARE__) || defined( NLM) || defined( N_PLAT_NLM)
-		#define FLM_NLM
-	#elif defined( _WIN64)
+	#if defined( _WIN64)
 		#define FLM_WIN32
 		#define FLM_WIN64
 	#elif defined( _WIN32)
 		#define FLM_WIN32
+	#elif defined( __NETWARE__)
+		#define FLM_NLM
 	#elif defined( _AIX)
 		#define FLM_UNIX
 		#define FLM_AIX
-		#define FLM_BIG_ENDIAN
 	#elif defined( linux)
 		#define FLM_UNIX
 		#define FLM_LINUX
@@ -912,22 +734,18 @@ Desc: This include file contains the structure definitions and prototypes
 		#define FLM_SOLARIS
 		#if defined( sparc) || defined( __sparc)
 			#define FLM_SPARC
-				#define FLM_BIG_ENDIAN
 		#endif
 	#elif defined( __osf__)
 		#define FLM_UNIX
 		#define FLM_OSF
-			#define FLM_BIG_ENDIAN
 	#elif defined( __hpux) || defined( hpux)
 		#define FLM_UNIX
 		#define FLM_HPUX
-			#define FLM_BIG_ENDIAN
 	#elif defined( __ppc__) && defined( __APPLE__)
 		#define FLM_UNIX
 		#define FLM_MACOSX
-		#define FLM_BIG_ENDIAN
 	#else
-			#error Platform architecture is undefined.
+		#error XFLAIM: Platform architecture is undefined.
 	#endif
 
 	// Debug or release build?
@@ -937,77 +755,6 @@ Desc: This include file contains the structure definitions and prototypes
 			#define FLM_DEBUG
 		#endif
 	#endif
-
-	// Alignment
-
-	#if( defined( FLM_WIN32) && !defined( FLM_WIN64)) || defined( FLM_NLM)
-			#define FLM_ALLOC_ALIGN			0x0003
-			#define FLM_ALIGN_SIZE			4
-	#elif defined( FLM_UNIX) || defined( FLM_WIN64)
-			#define FLM_ALLOC_ALIGN			0x0007
-			#define FLM_ALIGN_SIZE			8
-	#else
-		#error Platform not supported
-	#endif
-
-	// Basic type definitions
-
-	#if defined( FLM_UNIX)
-		typedef unsigned long		FLMUINT;
-		typedef long					FLMINT;
-		typedef unsigned char		FLMBYTE;
-		typedef unsigned short		FLMUNICODE;
-
-		typedef unsigned long long	FLMUINT64;
-		typedef unsigned int   		FLMUINT32;
-		typedef unsigned short		FLMUINT16;
-		typedef unsigned char  		FLMUINT8;
-		typedef			  long long	FLMINT64;
-		typedef			  int	  		FLMINT32;
-		typedef          short		FLMINT16;
-		typedef signed   char		FLMINT8;
-
-		// HPUX needs a size_t type, but we can't include any system
-		// header files.....
-		#ifdef FLM_HPUX
-			typedef unsigned long	size_t;
-		#endif
-	#else
-
-		#if defined( FLM_WIN64)
-			typedef unsigned __int64	FLMUINT;
-			typedef __int64				FLMINT;
-		#else
-			typedef unsigned long		FLMUINT;
-			typedef long					FLMINT;
-		#endif
-
-		typedef unsigned char			FLMBYTE;
-		typedef unsigned short int		FLMUNICODE;
-
-		typedef unsigned int   			FLMUINT32;
-		typedef unsigned short int		FLMUINT16;
-		typedef unsigned char  			FLMUINT8;
-		typedef signed int   			FLMINT32;
-		typedef signed short int		FLMINT16;
-		typedef signed char				FLMINT8;
-
-		#if defined( __MWERKS__)
-			typedef unsigned long long		FLMUINT64;
-			typedef long long					FLMINT64;
-		#else
-			typedef unsigned __int64 		FLMUINT64;
-			typedef __int64 					FLMINT64;
-		#endif
-
-	#endif
-
-		typedef FLMINT								RCODE;
-		typedef FLMINT								FLMBOOL;
-
-	#endif
-
-	// Disable certain compiler warnings
 
 	#ifdef FLM_WIN32
 
@@ -1024,6 +771,76 @@ Desc: This include file contains the structure definitions and prototypes
 
 	#if !defined( FLM_UNIX) && !defined( FLM_WIN64)
 		#pragma pack( push, 1)
+	#endif
+
+	// Basic type definitions
+
+	#if defined( FLM_UNIX)
+
+		#if !defined( FLM_MACOSX)
+			#ifdef HAVE_CONFIG_H
+				#include "config.h"
+			#endif
+		#endif
+
+		typedef unsigned long		FLMUINT;
+		typedef unsigned long *		FLMUINT_p;
+		typedef long					FLMINT;
+		typedef long *					FLMINT_p;
+		typedef unsigned char		FLMBYTE;
+		typedef unsigned char *		FLMBYTE_p;
+		typedef unsigned short		FLMUNICODE;
+		typedef unsigned short	*	FLMUNICODE_p;
+		typedef FLMUINT				RCODE;
+
+		typedef unsigned long long	FLMUINT64;
+		typedef unsigned int   		FLMUINT32;
+		typedef unsigned short		FLMUINT16;
+		typedef unsigned char  		FLMUINT8;
+		typedef			  long long	FLMINT64;
+		typedef			  int	  		FLMINT32;
+		typedef          short		FLMINT16;
+		typedef signed   char		FLMINT8;
+		typedef FLMINT					FLMBOOL;
+		typedef FLMINT_p 				FLMBOOL_p;
+
+	#else
+		
+		#if defined( FLM_WIN64)
+			typedef unsigned __int64	FLMUINT;
+			typedef unsigned __int64 *	FLMUINT_p;
+			typedef __int64				FLMINT;
+			typedef __int64 *				FLMINT_p;
+		#else
+			typedef unsigned long		FLMUINT;
+			typedef unsigned long *		FLMUINT_p;
+			typedef long					FLMINT;
+			typedef long *					FLMINT_p;
+		#endif
+
+		typedef unsigned char			FLMBYTE;
+		typedef unsigned char *			FLMBYTE_p;
+		typedef unsigned short int		FLMUNICODE;
+		typedef unsigned short int *	FLMUNICODE_p;
+		typedef FLMUINT					RCODE;
+
+		typedef unsigned int   			FLMUINT32;
+		typedef unsigned short int		FLMUINT16;
+		typedef unsigned char  			FLMUINT8;
+		typedef signed int   			FLMINT32;
+		typedef signed short int		FLMINT16;
+		typedef signed char				FLMINT8;
+		typedef FLMINT						FLMBOOL;
+		typedef FLMINT_p					FLMBOOL_p;
+
+		#if defined( __MWERKS__)
+			typedef unsigned long long		FLMUINT64;
+			typedef long long					FLMINT64;
+		#else
+			typedef unsigned __int64 		FLMUINT64;
+			typedef __int64 					FLMINT64;
+		#endif
+
 	#endif
 
 	#ifndef NULL
@@ -1046,291 +863,235 @@ Desc: This include file contains the structure definitions and prototypes
 	#define F_FILENAME_SIZE				256
 	#define F_PATH_MAX_SIZE				256
 
-	#ifndef RC_OK
-		#define RC_OK( rc)						((rc) == 0)
-	#endif
 
-	#ifndef RC_BAD
-		#define RC_BAD( rc)						((rc) != 0)
-	#endif
+	#define RC_OK( rc)					((rc) == FERR_OK)
+	#define RC_BAD( rc)					((rc) != FERR_OK)
 
-	#define FLM_ERROR_BASE(e)					((RCODE)((int)((e))))
 	#define FERR_OK						0
 
-	#define FIRST_FLAIM_ERROR					FLM_ERROR_BASE( 0xC001)		// First (lowest) error currently defined
-	#define FERR_BOF_HIT							FLM_ERROR_BASE( 0xC001)		// Beginning of file hit
-	#define FERR_EOF_HIT							FLM_ERROR_BASE( 0xC002)		// End of file hit
-	#define FERR_END								FLM_ERROR_BASE( 0xC003)		// End of file for gedcom routine.  This is an internal error
-	#define FERR_EXISTS							FLM_ERROR_BASE( 0xC004)		// Record already exists
-	#define FERR_FAILURE							FLM_ERROR_BASE( 0xC005)		// Internal failure
-	#define FERR_NOT_FOUND						FLM_ERROR_BASE( 0xC006)		// A record, key, or key reference was not found
-	#define FERR_BAD_DICT_ID					FLM_ERROR_BASE( 0xC007)		// Invalid dictionary record number -- outside unreserved range
-	#define FERR_BAD_CONTAINER					FLM_ERROR_BASE( 0xC008)		// Invalid Container Number
-	#define FERR_NO_ROOT_BLOCK					FLM_ERROR_BASE( 0xC009)		// LFILE does not have a root block.
+	#define FIRST_FLAIM_ERROR				0xC001					// First (lowest) error currently defined
+	#define FERR_BOF_HIT						0xC001					// Beginning of file hit
+	#define FERR_EOF_HIT						0xC002					// End of file hit
+	#define FERR_END							0xC003					// End of file for gedcom routine.  This is an internal error
+	#define FERR_EXISTS						0xC004					// Record already exists
+	#define FERR_FAILURE						0xC005					// Internal failure
+	#define FERR_NOT_FOUND					0xC006					// A record, key, or key reference was not found
+	#define FERR_BAD_DICT_ID				0xC007					// Invalid dictionary record number -- outside unreserved range
+	#define FERR_BAD_CONTAINER				0xC008					// Invalid Container Number
+	#define FERR_NO_ROOT_BLOCK				0xC009					// LFILE does not have a root block.
 																				// Always handled internally - never returned to application
-	#define FERR_BAD_DRN							FLM_ERROR_BASE( 0xC00A)		// Cannot pass a zero DRN into modify or delete or 0xFFFFFFFF into add
-	#define FERR_BAD_FIELD_NUM					FLM_ERROR_BASE( 0xC00B)		// Bad field number in record being added
-	#define FERR_BAD_FIELD_TYPE				FLM_ERROR_BASE( 0xC00C)		// Bad field type in record being added
-	#define FERR_BAD_HDL							FLM_ERROR_BASE( 0xC00D)		// Request contained bad db handle
-	#define FERR_BAD_IX							FLM_ERROR_BASE( 0xC00E)		// Invalid Index Number Given
-	#define FERR_BACKUP_ACTIVE					FLM_ERROR_BASE( 0xC00F)		// Operation could not be completed - a backup is being performed
-	#define FERR_SERIAL_NUM_MISMATCH			FLM_ERROR_BASE( 0xC010)		// Comparison of serial numbers failed
-	#define FERR_BAD_RFL_DB_SERIAL_NUM		FLM_ERROR_BASE( 0xC011)		// Bad database serial number in RFL file header
-	#define FERR_BTREE_ERROR					FLM_ERROR_BASE( 0xC012)		// The B-Tree in the file system is bad
-	#define FERR_BTREE_FULL						FLM_ERROR_BASE( 0xC013)		// The B-tree in the file system is full
-	#define FERR_BAD_RFL_FILE_NUMBER			FLM_ERROR_BASE( 0xC014)		// Bad RFL file number in RFL file header
-	#define FERR_CANNOT_DEL_ITEM				FLM_ERROR_BASE( 0xC015)		// Cannot delete field definitions
-	#define FERR_CANNOT_MOD_FIELD_TYPE		FLM_ERROR_BASE( 0xC016)		// Cannot modify a field's type
-	#define FERR_CONV_BAD_DEST_TYPE			FLM_ERROR_BASE( 0xC018)		// Bad destination type specified for conversion
-	#define FERR_CONV_BAD_DIGIT				FLM_ERROR_BASE( 0xC019)		// Non-numeric digit found in text to numeric conversion
-	#define FERR_CONV_BAD_SRC_TYPE			FLM_ERROR_BASE( 0xC01A)		// Bad source type specified for conversion
-	#define FERR_RFL_FILE_NOT_FOUND			FLM_ERROR_BASE( 0xC01B)		// Could not open an RFL file.
-	#define FERR_CONV_DEST_OVERFLOW			FLM_ERROR_BASE( 0xC01C)		// Destination buffer not large enough to hold converted data
-	#define FERR_CONV_ILLEGAL					FLM_ERROR_BASE( 0xC01D)		// Illegal conversion -- not supported
-	#define FERR_CONV_NULL_SRC					FLM_ERROR_BASE( 0xC01E)		// Source cannot be a NULL pointer in conversion
-	#define FERR_CONV_NULL_DEST				FLM_ERROR_BASE( 0xC01F)		// Destination cannot be a NULL pointer in conversion
-	#define FERR_CONV_NUM_OVERFLOW			FLM_ERROR_BASE( 0xC020)		// Numeric overflow (GT upper bound) converting to numeric type
-	#define FERR_CONV_NUM_UNDERFLOW			FLM_ERROR_BASE( 0xC021)		// Numeric underflow (LT lower bound) converting to numeric type
-	#define FERR_DATA_ERROR						FLM_ERROR_BASE( 0xC022)		// Data in the database is invalid
-	#define FERR_DD_ERROR						FLM_ERROR_BASE( 0xC024)		// Internal logical DD compromised
-	#define FERR_INVALID_FILE_SEQUENCE		FLM_ERROR_BASE( 0xC025)		// Inc. backup file provided during a restore is invalid
-	#define FERR_ILLEGAL_OP						FLM_ERROR_BASE( 0xC026)		// Illegal operation for database
-	#define FERR_DUPLICATE_DICT_REC			FLM_ERROR_BASE( 0xC027)		// Duplicate dictionary record found
-	#define FERR_CANNOT_CONVERT				FLM_ERROR_BASE( 0xC028)		// Condition occurred which prevents database conversion
-	#define FERR_UNSUPPORTED_VERSION			FLM_ERROR_BASE( 0xC029)		// Db version is an unsupported ver of FLAIM (ver 1.2)
-	#define FERR_FILE_ER							FLM_ERROR_BASE( 0xC02A)		// File error in a gedcom routine
-	#define FERR_BAD_FIELD_LEVEL				FLM_ERROR_BASE( 0xC02B)		// Invalid field level
-	#define FERR_GED_BAD_RECID					FLM_ERROR_BASE( 0xC02C)		// Bad record ID syntax
-	#define FERR_GED_BAD_VALUE					FLM_ERROR_BASE( 0xC02D)		// Bad or ambiguous/extra value in GEDCOM
-	#define FERR_GED_MAXLVLNUM					FLM_ERROR_BASE( 0xC02E)		// Exceeded GED_MAXLVLNUM in gedcom routines
-	#define FERR_GED_SKIP_LEVEL				FLM_ERROR_BASE( 0xC02F)		// Bad GEDCOM tree structure -- level skipped
-	#define FERR_ILLEGAL_TRANS					FLM_ERROR_BASE( 0xC030)		// Attempt to start an illegal type of transaction
-	#define FERR_ILLEGAL_TRANS_OP				FLM_ERROR_BASE( 0xC031)		// Illegal operation for transaction type
-	#define FERR_INCOMPLETE_LOG				FLM_ERROR_BASE( 0xC032)		// Incomplete log record encountered during recovery
-	#define FERR_INVALID_BLOCK_LENGTH		FLM_ERROR_BASE( 0xC033)		// Invalid Block Length
-	#define FERR_INVALID_TAG					FLM_ERROR_BASE( 0xC034)		// Invalid tag name
-	#define FERR_KEY_NOT_FOUND					FLM_ERROR_BASE( 0xC035)		// A key|reference is not found -- modify/delete error
-	#define FERR_VALUE_TOO_LARGE				FLM_ERROR_BASE( 0xC036)		// Value too large
-	#define FERR_MEM								FLM_ERROR_BASE( 0xC037)		// General memory allocation error
-	#define FERR_BAD_RFL_SERIAL_NUM			FLM_ERROR_BASE( 0xC038)		// Bad serial number in RFL file header
-	#define FERR_NEWER_FLAIM					FLM_ERROR_BASE( 0xC03A)		// Running old code on a newer database code must be upgraded
-	#define FERR_CANNOT_MOD_FIELD_STATE		FLM_ERROR_BASE( 0xC03B)		// Attempted to change a field state illegally
-	#define FERR_NO_MORE_DRNS					FLM_ERROR_BASE( 0xC03C)		// The highest DRN number has already been used in an add
-	#define FERR_NO_TRANS_ACTIVE				FLM_ERROR_BASE( 0xC03D)		// Attempted to updated DB outside transaction
-	#define FERR_NOT_UNIQUE						FLM_ERROR_BASE( 0xC03E)		// Found Duplicate key for unique index
-	#define FERR_NOT_FLAIM						FLM_ERROR_BASE( 0xC03F)		// Opened a file that was not a FLAIM file
-	#define FERR_NULL_RECORD					FLM_ERROR_BASE( 0xC040)		// NULL Record cannot be passed to add or modify
-	#define FERR_NO_HTTP_STACK					FLM_ERROR_BASE( 0xC041)		// No http stack was loaded
-	#define FERR_OLD_VIEW						FLM_ERROR_BASE( 0xC042)		// While reading was unable to get previous version of block
-	#define FERR_PCODE_ERROR					FLM_ERROR_BASE( 0xC043)		// The integrity of the dictionary PCODE in the database has been compromised
-	#define FERR_PERMISSION						FLM_ERROR_BASE( 0xC044)		// Invalid permission for file operation
-	#define FERR_SYNTAX							FLM_ERROR_BASE( 0xC045)		// Dictionary record has improper syntax
-	#define FERR_CALLBACK_FAILURE				FLM_ERROR_BASE( 0xC046)		// Callback failure
-	#define FERR_TRANS_ACTIVE					FLM_ERROR_BASE( 0xC047)		// Attempted to close DB while transaction was active
-	#define FERR_RFL_TRANS_GAP					FLM_ERROR_BASE( 0xC048)		// A gap was found in the transaction sequence in the RFL
-	#define FERR_BAD_COLLATED_KEY				FLM_ERROR_BASE( 0xC049)		// Something in collated key is bad.
-	#define FERR_UNSUPPORTED_FEATURE			FLM_ERROR_BASE( 0xC04A)		// Attempting a feature that is not supported for the database version.
-	#define FERR_MUST_DELETE_INDEXES			FLM_ERROR_BASE( 0xC04B)		// Attempting to delete a container that has indexes defined for it.  Indexes must be deleted first.
-	#define FERR_RFL_INCOMPLETE				FLM_ERROR_BASE( 0xC04C)		// RFL file is incomplete.
-	#define FERR_CANNOT_RESTORE_RFL_FILES	FLM_ERROR_BASE( 0xC04D)		// Cannot restore RFL files - not using multiple RFL files.
-	#define FERR_INCONSISTENT_BACKUP			FLM_ERROR_BASE( 0xC04E)		// A problem (corruption, etc.) was detected in a backup set
-	#define FERR_BLOCK_CHECKSUM				FLM_ERROR_BASE( 0xC04F)		// Block checksum error
-	#define FERR_ABORT_TRANS					FLM_ERROR_BASE( 0xC050)		// Attempted operation after a critical error - should abort transaction
-	#define FERR_NOT_RFL							FLM_ERROR_BASE( 0xC051)		// Attempted to open RFL file which was not an RFL file
-	#define FERR_BAD_RFL_PACKET				FLM_ERROR_BASE( 0xC052)		// RFL packet was bad
-	#define FERR_DATA_PATH_MISMATCH			FLM_ERROR_BASE( 0xC053)		// Bad data path specified to open database
-	#define FERR_HTTP_REGISTER_FAILURE		FLM_ERROR_BASE( 0xC054)		// FlmConfig( FLM_HTTP_REGISTER_URL) failed
-	#define FERR_HTTP_DEREG_FAILURE			FLM_ERROR_BASE( 0xC055)		// FlmConfig( FLM_HTTP_DEREGISTER_URL) failed
-	#define FERR_IX_FAILURE						FLM_ERROR_BASE( 0xC056)		// Indexing process failed, non-unique data was found when a unique index was being created
-	#define FERR_HTTP_SYMS_EXIST				FLM_ERROR_BASE( 0xC057)		// Tried to import new http related symbols before unimporting the old ones
-	#define FERR_FILE_EXISTS					FLM_ERROR_BASE( 0xC059)		// Attempt to create a database or store file, but the file already exists
-	#define FERR_SYM_RESOLVE_FAIL				FLM_ERROR_BASE( 0xC05A)		// Call to SAL_ModResolveSym failed.
-	#define FERR_BAD_SERVER_CONNECTION		FLM_ERROR_BASE( 0xC05B)		// Connection to FLAIM server is bad
-	#define FERR_CLOSING_DATABASE				FLM_ERROR_BASE( 0xC05C)		// Database is being closed due to a critical erro
-	#define FERR_INVALID_CRC					FLM_ERROR_BASE( 0xC05D)		// CRC could not be verified.
-	#define FERR_KEY_OVERFLOW					FLM_ERROR_BASE( 0xC05E)		// Key generated by the record causes the max key size to be exceeded
-	#define FERR_NOT_IMPLEMENTED				FLM_ERROR_BASE( 0xC05F)		// function not implemented (possibly client/server)
-	#define FERR_MUTEX_OPERATION_FAILED		FLM_ERROR_BASE( 0xC060)		// Mutex operation failed
-	#define FERR_MUTEX_UNABLE_TO_LOCK		FLM_ERROR_BASE( 0xC061)		// Unable to get the mutex lock
-	#define FERR_SEM_OPERATION_FAILED		FLM_ERROR_BASE( 0xC062)		// Semaphore operation failed
-	#define FERR_SEM_UNABLE_TO_LOCK			FLM_ERROR_BASE( 0xC063)		// Unable to get the semaphore lock
-	#define FERR_BAD_REFERENCE					FLM_ERROR_BASE( 0xC069)		// Bad reference in the dictionary
-	#define FERR_DRIVER_NOT_FOUND				FLM_ERROR_BASE( 0xC06C)		// Could not find a matching driver in machine's area definition
-	#define FERR_BAD_DRIVER_PATH				FLM_ERROR_BASE( 0xC06D)		// Tried one or more driver directory paths and failed
-	#define FERR_UNALLOWED_UPGRADE			FLM_ERROR_BASE( 0xC070)		// FlmDbUpgrade cannot upgrade the database
-	#define FERR_ID_RESERVED					FLM_ERROR_BASE( 0xC074)		// Attempted to use a dictionary ID that has been reserved at a lower level
-	#define FERR_CANNOT_RESERVE_ID			FLM_ERROR_BASE( 0xC075)		// Attempted to reserve a dictionary ID that has been used at a higher level
-	#define FERR_DUPLICATE_DICT_NAME			FLM_ERROR_BASE( 0xC076)		// Dictionary record with duplicate name found
-	#define FERR_CANNOT_RESERVE_NAME			FLM_ERROR_BASE( 0xC077)		// Attempted to reserve a dictionary name that is in use
-	#define FERR_BAD_DICT_DRN					FLM_ERROR_BASE( 0xC078)		// Attempted to add, modify, or delete a dictionary DRN >= FLM_RESERVED_TAG_NUMS
-	#define FERR_CANNOT_MOD_DICT_REC_TYPE	FLM_ERROR_BASE( 0xC079)		// Cannot modify a dictionary item into another type of item, must delete then add
-	#define FERR_PURGED_FLD_FOUND				FLM_ERROR_BASE( 0xC07A)		// Record contained 'purged' field
-	#define FERR_DUPLICATE_INDEX				FLM_ERROR_BASE( 0xC07B)		// Duplicate index
-	#define FERR_TOO_MANY_OPEN_FILES			FLM_ERROR_BASE( 0xC07C)		// No session file handles could be closed - in to increase via FlmSetMaxPhysOpens()
-	#define FERR_ACCESS_DENIED					FLM_ERROR_BASE( 0xC07D)		// Access Denied from setting in log header
-	#define FERR_CACHE_ERROR					FLM_ERROR_BASE( 0xC07F)		// Cache Block is somehow corrupt
-	#define FERR_BLOB_MISSING_FILE			FLM_ERROR_BASE( 0xC081)		// Missing BLOB file on add/modify
-	#define FERR_NO_REC_FOR_KEY				FLM_ERROR_BASE( 0xC082)		// Record pointed to by an index key is missing
-	#define FERR_DB_FULL							FLM_ERROR_BASE( 0xC083)		// Database is full, cannot create more blocks
-	#define FERR_TIMEOUT							FLM_ERROR_BASE( 0xC084)		// Query operation timed out
-	#define FERR_CURSOR_SYNTAX					FLM_ERROR_BASE( 0xC085)		// Cursor operation had improper syntax
-	#define FERR_THREAD_ERR						FLM_ERROR_BASE( 0xC086)		// Thread Error
-	#define FERR_SYS_CHECK_FAILED				FLM_ERROR_BASE( 0xC087)		// File system is not supported for the requested operation
-	#define FERR_EMPTY_QUERY					FLM_ERROR_BASE( 0xC088)		// Warning: Query has no results
-	#define FERR_INDEX_OFFLINE					FLM_ERROR_BASE( 0xC089)		// Warning: Index is offline and being rebuilt
-	#define FERR_TRUNCATED_KEY					FLM_ERROR_BASE( 0xC08A)		// Warning: Can't evaluate truncated key against selection criteria
-	#define FERR_INVALID_PARM					FLM_ERROR_BASE( 0xC08B)		// Invalid parm
-	#define FERR_USER_ABORT						FLM_ERROR_BASE( 0xC08C)		// User or application aborted the operation
-	#define FERR_RFL_DEVICE_FULL				FLM_ERROR_BASE( 0xC08D)		// No space on RFL device for logging
-	#define FERR_MUST_WAIT_CHECKPOINT		FLM_ERROR_BASE( 0xC08E)		// Must wait for a checkpoint before starting transaction - due to disk problems - usually in RFL volume.
-	#define FERR_NAMED_SEMAPHORE_ERR			FLM_ERROR_BASE( 0xC08F)		// Something bad happened with the named semaphore class (F_NamedSemaphore)
-	#define FERR_LOAD_LIBRARY					FLM_ERROR_BASE( 0xC090)		// Failed to load a shared library module
-	#define FERR_UNLOAD_LIBRARY				FLM_ERROR_BASE( 0xC091)		// Failed to unload a shared library module
-	#define FERR_IMPORT_SYMBOL					FLM_ERROR_BASE( 0xC092)		// Failed to import a symbol from a shared library module
-	#define FERR_BLOCK_FULL						FLM_ERROR_BASE( 0xC093)		// Destination block for insert is full
-	#define FERR_BAD_BASE64_ENCODING			FLM_ERROR_BASE( 0xC094)		// Could not perform Base64 encoding
-	#define FERR_MISSING_FIELD_TYPE			FLM_ERROR_BASE( 0xC095)		// Adding a dictionary without a field type.
+	#define FERR_BAD_DRN						0xC00A					// Cannot pass a zero DRN into modify or delete or 0xFFFFFFFF into add
+	#define FERR_BAD_FIELD_NUM				0xC00B					// Bad field number in record being added
+	#define FERR_BAD_FIELD_TYPE			0xC00C					// Bad field type in record being added
+	#define FERR_BAD_HDL						0xC00D					// Request contained bad db handle
+	#define FERR_BAD_IX						0xC00E					// Invalid Index Number Given
+	#define FERR_BACKUP_ACTIVE				0xC00F					// Operation could not be completed - a backup is being performed
+	#define FERR_SERIAL_NUM_MISMATCH		0xC010					// Comparison of serial numbers failed
+	#define FERR_BAD_RFL_DB_SERIAL_NUM	0xC011					// Bad database serial number in RFL file header
+	#define FERR_BTREE_ERROR				0xC012					// The B-Tree in the file system is bad
+	#define FERR_BTREE_FULL					0xC013					// The B-tree in the file system is full
+	#define FERR_BAD_RFL_FILE_NUMBER		0xC014					// Bad RFL file number in RFL file header
+	#define FERR_CANNOT_DEL_ITEM			0xC015					// Cannot delete field definitions
+	#define FERR_CANNOT_MOD_FIELD_TYPE	0xC016					// Cannot modify a field's type
+	#define FERR_CANNOT_RECOV_RDONLY		0xC017					// Cannot recover database -- read only
+	#define FERR_CONV_BAD_DEST_TYPE		0xC018					// Bad destination type specified for conversion
+	#define FERR_CONV_BAD_DIGIT			0xC019					// Non-numeric digit found in text to numeric conversion
+	#define FERR_CONV_BAD_SRC_TYPE		0xC01A					// Bad source type specified for conversion
+	#define FERR_RFL_FILE_NOT_FOUND		0xC01B					// Could not open an RFL file.
+	#define FERR_CONV_DEST_OVERFLOW		0xC01C					// Destination buffer not large enough to hold converted data
+	#define FERR_CONV_ILLEGAL				0xC01D					// Illegal conversion -- not supported
+	#define FERR_CONV_NULL_SRC				0xC01E					// Source cannot be a NULL pointer in conversion
+	#define FERR_CONV_NULL_DEST			0xC01F					// Destination cannot be a NULL pointer in conversion
+	#define FERR_CONV_NUM_OVERFLOW		0xC020					// Numeric overflow (GT upper bound) converting to numeric type
+	#define FERR_CONV_NUM_UNDERFLOW		0xC021					// Numeric underflow (LT lower bound) converting to numeric type
+	#define FERR_DATA_ERROR					0xC022					// Data in the database is invalid
+	#define FERR_DB_HANDLE					0xC023					// Out of FLAIM Session Database handles
+	#define FERR_DD_ERROR					0xC024					// Internal logical DD compromised
+	#define FERR_INVALID_FILE_SEQUENCE	0xC025					// Inc. backup file provided during a restore is invalid
+	#define FERR_ILLEGAL_OP					0xC026					// Illegal operation for database
+	#define FERR_DUPLICATE_DICT_REC		0xC027					// Duplicate dictionary record found
+	#define FERR_CANNOT_CONVERT			0xC028					// Condition occurred which prevents database conversion
+	#define FERR_UNSUPPORTED_VERSION		0xC029					// Db version is an unsupported ver of FLAIM (ver 1.2)
+	#define FERR_FILE_ER						0xC02A					// File error in a gedcom routine
+	#define FERR_GED_BAD_LEVEL				0xC02B					// GEDCOM level missing or bad syntax
+	#define FERR_GED_BAD_RECID				0xC02C					// Bad record ID syntax
+	#define FERR_GED_BAD_VALUE				0xC02D					// Bad or ambiguous/extra value in GEDCOM
+	#define FERR_GED_MAXLVLNUM				0xC02E					// Exceeded GED_MAXLVLNUM in gedcom routines
+	#define FERR_GED_SKIP_LEVEL			0xC02F					// Bad GEDCOM tree structure -- level skipped
+	#define FERR_ILLEGAL_TRANS				0xC030					// Attempt to start an illegal type of transaction
+	#define FERR_ILLEGAL_TRANS_OP			0xC031					// Illegal operation for transaction type
+	#define FERR_INCOMPLETE_LOG			0xC032					// Incomplete log record encountered during recovery
+	#define FERR_INVALID_BLOCK_LENGTH	0xC033					// Invalid Block Length
+	#define FERR_INVALID_TAG				0xC034					// Invalid tag name
+	#define FERR_KEY_NOT_FOUND				0xC035					// A key|reference is not found -- modify/delete error
+	#define FERR_VALUE_TOO_LARGE			0xC036					// Value too large
+	#define FERR_MEM							0xC037					// General memory allocation error
+	#define FERR_BAD_RFL_SERIAL_NUM		0xC038					// Bad serial number in RFL file header
+	#define FERR_MULTIPLE_FIELD_TYPES	0xC039					// Multiple field types defined in index definition
+	#define FERR_NEWER_FLAIM				0xC03A					// Running old code on a newer database code must be upgraded
+	#define FERR_CANNOT_MOD_FIELD_STATE	0xC03B					// Attempted to change a field state illegally
+	#define FERR_NO_MORE_DRNS				0xC03C					// The highest DRN number has already been used in an add
+	#define FERR_NO_TRANS_ACTIVE			0xC03D					// Attempted to updated DB outside transaction
+	#define FERR_NOT_UNIQUE					0xC03E					// Found Duplicate key for unique index
+	#define FERR_NOT_FLAIM					0xC03F					// Opened a file that was not a FLAIM file
+	#define FERR_NULL_RECORD				0xC040					// NULL Record cannot be passed to add or modify
+	#define FERR_NO_HTTP_STACK				0XC041					// No http stack was loaded
+	#define FERR_OLD_VIEW					0xC042					// While reading was unable to get previous version of block
+	#define FERR_PCODE_ERROR				0xC043					// The integrity of the dictionary PCODE in the database has been compromised
+	#define FERR_PERMISSION					0xC044					// Invalid permission for file operation
+	#define FERR_SYNTAX						0xC045					// Dictionary record has improper syntax
+	#define FERR_CALLBACK_FAILURE			0xC046					// Callback failure
+	#define FERR_TRANS_ACTIVE				0xC047					// Attempted to close DB while transaction was active
+	#define FERR_RFL_TRANS_GAP				0xC048					// A gap was found in the transaction sequence in the RFL
+	#define FERR_BAD_COLLATED_KEY			0xC049					// Something in collated key is bad.
+	#define FERR_UNSUPPORTED_FEATURE		0xC04A					// Attempting a feature that is not supported for the database version.
+	#define FERR_MUST_DELETE_INDEXES		0xC04B					// Attempting to delete a container that has indexes defined for it.  Indexes must be deleted first.
+	#define FERR_RFL_INCOMPLETE			0xC04C					// RFL file is incomplete.
+	#define FERR_CANNOT_RESTORE_RFL_FILES	0xC04D				// Cannot restore RFL files - not using multiple RFL files.
+	#define FERR_INCONSISTENT_BACKUP		0xC04E					// A problem (corruption, etc.) was detected in a backup set
+	#define FERR_BLOCK_CHECKSUM			0xC04F					// Block checksum error
+	#define FERR_ABORT_TRANS				0xC050					// Attempted operation after a critical error - should abort transaction
+	#define FERR_NOT_RFL						0xC051					// Attempted to open RFL file which was not an RFL file
+	#define FERR_BAD_RFL_PACKET			0xC052					// RFL packet was bad
+	#define FERR_DATA_PATH_MISMATCH		0xc053					// Bad data path specified to open database
+	#define FERR_HTTP_REGISTER_FAILURE	0xC054					// FlmConfig( FLM_HTTP_REGISTER_URL) failed
+	#define FERR_HTTP_DEREG_FAILURE		0xC055					// FlmConfig( FLM_HTTP_DEREGISTER_URL) failed
+	#define FERR_IX_FAILURE					0xC056					// Indexing process failed, non-unique data was found when a unique index was being created
+	#define FERR_HTTP_SYMS_EXIST			0xC057					// Tried to import new http related symbols before unimporting the old ones
+	#define FERR_DB_ALREADY_REBUILT		0xC058					// Database has already been rebuilt
+	#define FERR_FILE_EXISTS				0xC059					// Attempt to create a database or store file, but the file already exists
+	#define FERR_SYM_RESOLVE_FAIL			0xC05A					// Call to SAL_ModResolveSym failed.
+	#define FERR_BAD_SERVER_CONNECTION	0xC05B					// Connection to FLAIM server is bad
+	#define FERR_CLOSING_DATABASE			0xC05C					// Database is being closed due to a critical erro
+	#define FERR_INVALID_CRC				0xC05D					// CRC could not be verified.
+	#define FERR_KEY_OVERFLOW				0xC05E					// Key generated by the record causes the max key size to be exceeded
+	#define FERR_NOT_IMPLEMENTED			0xC05F					// function not implemented (possibly client/server)
+	#define FERR_MUTEX_OPERATION_FAILED	0xC060					// Mutex operation failed
+	#define FERR_MUTEX_UNABLE_TO_LOCK	0xC061					// Unable to get the mutex lock
+	#define FERR_SEM_OPERATION_FAILED	0xC062					// Semaphore operation failed
+	#define FERR_SEM_UNABLE_TO_LOCK		0xC063					// Unable to get the semaphore lock
+	#define FERR_BAD_REFERENCE				0xC069					// Bad reference in the dictionary
+	#define FERR_INVALID_AREA				0xC06A					// Invalid area ID
+	#define FERR_MACHINE_NOT_DEF			0xC06B					// Machine class not defined in area definition
+	#define FERR_DRIVER_NOT_FOUND			0xC06C					// Could not find a matching driver in machine's area definition
+	#define FERR_BAD_DRIVER_PATH			0xC06D					// Tried one or more driver directory paths and failed
+	#define FERR_UNALLOWED_UPGRADE		0xC070					// FlmDbUpgrade cannot upgrade the database
+	#define FERR_BAD_QUERY_SOURCE			0xC073					// No query source, or bad source
+	#define FERR_ID_RESERVED				0xC074					// Attempted to use a dictionary ID that has been reserved at a lower level
+	#define FERR_CANNOT_RESERVE_ID		0xC075					// Attempted to reserve a dictionary ID that has been used at a higher level
+	#define FERR_DUPLICATE_DICT_NAME		0xC076					// Dictionary record with duplicate name found
+	#define FERR_CANNOT_RESERVE_NAME		0xC077					// Attempted to reserve a dictionary name that is in use
+	#define FERR_BAD_DICT_DRN				0xC078					// Attempted to add, modify, or delete a dictionary DRN >= FLM_RESERVED_TAG_NUMS
+	#define FERR_CANNOT_MOD_DICT_REC_TYPE	0xC079				// Cannot modify a dictionary item into another type of item, must delete then add
+	#define FERR_PURGED_FLD_FOUND			0xC07A					// Record contained 'purged' field
+	#define FERR_DUPLICATE_INDEX			0xC07B					// Duplicate index
+	#define FERR_TOO_MANY_OPEN_FILES		0xC07C					// No session file handles could be closed - in to increase via FlmSetMaxPhysOpens()
+	#define FERR_ACCESS_DENIED				0xC07D					// Access Denied from setting in log header
+	#define FERR_ACCESS_CONFLICT			0xC07E					// Setting an access mode where paired mode is also set
+	#define FERR_CACHE_ERROR				0xC07F					// Cache Block is somehow corrupt
+	#define FERR_BLOB_MISSING_FILE		0xC081					// Missing BLOB file on add/modify
+	#define FERR_NO_REC_FOR_KEY			0xC082					// Record pointed to by an index key is missing
+	#define FERR_DB_FULL						0xC083					// Database is full, cannot create more blocks
+	#define FERR_TIMEOUT						0xC084					// Query operation timed out
+	#define FERR_CURSOR_SYNTAX				0xC085					// Cursor operation had improper syntax
+	#define FERR_THREAD_ERR					0xC086					// Thread Error
+	#define FERR_SYS_CHECK_FAILED			0xC087					// File system is not supported for the requested operation
+	#define FERR_EMPTY_QUERY				0xC088					// Warning: Query has no results
+	#define FERR_INDEX_OFFLINE				0xC089					// Warning: Index is offline and being rebuilt
+	#define FERR_TRUNCATED_KEY				0xC08A					// Warning: Can't evaluate truncated key against selection criteria
+	#define FERR_INVALID_PARM				0xC08B					// Invalid parm
+	#define FERR_USER_ABORT					0xC08C					// User or application aborted the operation
+	#define FERR_RFL_DEVICE_FULL			0xC08D					// No space on RFL device for logging
+	#define FERR_MUST_WAIT_CHECKPOINT	0xC08E					// Must wait for a checkpoint before starting transaction - due to disk problems - usually in RFL volume.
+	#define FERR_NAMED_SEMAPHORE_ERR		0xC08F					// Something bad happened with the named semaphore class (F_NamedSemaphore)
+	#define FERR_LOAD_LIBRARY				0xC090					// Failed to load a shared library module
+	#define FERR_UNLOAD_LIBRARY			0xC091					// Failed to unload a shared library module
+	#define FERR_IMPORT_SYMBOL				0xC092					// Failed to import a symbol from a shared library module
 
 	/*============================================================================
 							IO Errors
 	============================================================================*/
 
-	#define FERR_IO_ACCESS_DENIED				FLM_ERROR_BASE( 0xC201)		// Access denied. Caller is not allowed access to a file.
-	#define FERR_IO_BAD_FILE_HANDLE			FLM_ERROR_BASE( 0xC202)		// Bad file handle
-	#define FERR_IO_COPY_ERR					FLM_ERROR_BASE( 0xC203)		// Copy error
-	#define FERR_IO_DISK_FULL					FLM_ERROR_BASE( 0xC204)		// Disk full
-	#define FERR_IO_END_OF_FILE				FLM_ERROR_BASE( 0xC205)		// End of file
-	#define FERR_IO_OPEN_ERR					FLM_ERROR_BASE( 0xC206)		// Error opening file
-	#define FERR_IO_SEEK_ERR					FLM_ERROR_BASE( 0xC207)		// File seek error
-	#define FERR_IO_MODIFY_ERR					FLM_ERROR_BASE( 0xC208)		// File modify error
-	#define FERR_IO_PATH_NOT_FOUND			FLM_ERROR_BASE( 0xC209)		// Path not found
-	#define FERR_IO_TOO_MANY_OPEN_FILES		FLM_ERROR_BASE( 0xC20A)		// Too many files open
-	#define FERR_IO_PATH_TOO_LONG				FLM_ERROR_BASE( 0xC20B)		// Path too long
-	#define FERR_IO_NO_MORE_FILES				FLM_ERROR_BASE( 0xC20C)		// No more files in directory
-	#define FERR_DELETING_FILE					FLM_ERROR_BASE( 0xC20D)		// Had error deleting a file
-	#define FERR_IO_FILE_LOCK_ERR				FLM_ERROR_BASE( 0xC20E)		// File lock error
-	#define FERR_IO_FILE_UNLOCK_ERR			FLM_ERROR_BASE( 0xC20F)		// File unlock error
-	#define FERR_IO_PATH_CREATE_FAILURE		FLM_ERROR_BASE( 0xC210)		// Path create failed
-	#define FERR_IO_RENAME_FAILURE			FLM_ERROR_BASE( 0xC211)		// File rename failed
-	#define FERR_IO_INVALID_PASSWORD			FLM_ERROR_BASE( 0xC212)		// Invalid file password
-	#define FERR_SETTING_UP_FOR_READ			FLM_ERROR_BASE( 0xC213)		// Had error setting up to do a read
-	#define FERR_SETTING_UP_FOR_WRITE		FLM_ERROR_BASE( 0xC214)		// Had error setting up to do a write
-	#define FERR_IO_AT_PATH_ROOT				FLM_ERROR_BASE( 0xC215)		// Currently positioned at the path root level
-	#define FERR_INITIALIZING_IO_SYSTEM		FLM_ERROR_BASE( 0xC216)		// Had error initializing the file system
-	#define FERR_FLUSHING_FILE					FLM_ERROR_BASE( 0xC217)		// Had error flushing a file
-	#define FERR_IO_INVALID_PATH				FLM_ERROR_BASE( 0xC218)		// Invalid path
-	#define FERR_IO_CONNECT_ERROR				FLM_ERROR_BASE( 0xC219)		// Failed to connect to a remote network resource
-	#define FERR_OPENING_FILE					FLM_ERROR_BASE( 0xC21A)		// Had error opening a file
-	#define FERR_DIRECT_OPENING_FILE			FLM_ERROR_BASE( 0xC21B)		// Had error opening a file for direct I/O
-	#define FERR_CREATING_FILE					FLM_ERROR_BASE( 0xC21C)		// Had error creating a file
-	#define FERR_DIRECT_CREATING_FILE		FLM_ERROR_BASE( 0xC21D)		// Had error creating a file for direct I/O
-	#define FERR_READING_FILE					FLM_ERROR_BASE( 0xC21E)		// Had error reading a file
-	#define FERR_DIRECT_READING_FILE			FLM_ERROR_BASE( 0xC21F)		// Had error reading a file using direct I/O
-	#define FERR_WRITING_FILE					FLM_ERROR_BASE( 0xC220)		// Had error writing to a file
-	#define FERR_DIRECT_WRITING_FILE			FLM_ERROR_BASE( 0xC221)		// Had error writing to a file using direct I/O
-	#define FERR_POSITIONING_IN_FILE			FLM_ERROR_BASE( 0xC222)		// Had error positioning within a file
-	#define FERR_GETTING_FILE_SIZE			FLM_ERROR_BASE( 0xC223)		// Had error getting file size
-	#define FERR_TRUNCATING_FILE				FLM_ERROR_BASE( 0xC224)		// Had error truncating a file
-	#define FERR_PARSING_FILE_NAME			FLM_ERROR_BASE( 0xC225)		// Had error parsing a file name
-	#define FERR_CLOSING_FILE					FLM_ERROR_BASE( 0xC226)		// Had error closing a file
-	#define FERR_GETTING_FILE_INFO			FLM_ERROR_BASE( 0xC227)		// Had error getting file information
-	#define FERR_EXPANDING_FILE				FLM_ERROR_BASE( 0xC228)		// Had error expanding a file (using direct I/O)
-	#define FERR_GETTING_FREE_BLOCKS			FLM_ERROR_BASE( 0xC229)		// Had error getting free blocks from file system
-	#define FERR_CHECKING_FILE_EXISTENCE	FLM_ERROR_BASE( 0xC22A)		// Had error checking if a file exists
-	#define FERR_RENAMING_FILE					FLM_ERROR_BASE( 0xC22B)		// Had error renaming a file
-	#define FERR_SETTING_FILE_INFO			FLM_ERROR_BASE( 0xC22C)		// Had error setting file information
-
-	/*============================================================================
-							Encryption / Decryption Errors
-	============================================================================*/
-	#define FERR_NICI_CONTEXT					FLM_ERROR_BASE( 0xC301)		// Failed to obtain a NICI context
-	#define FERR_NICI_FIND_INIT				FLM_ERROR_BASE( 0xC302)		// CCS_FindInit failed
-	#define FERR_NICI_FIND_OBJECT				FLM_ERROR_BASE( 0xC303)		// CCS_FindObject failed
-	#define FERR_NICI_WRAPKEY_NOT_FOUND		FLM_ERROR_BASE( 0xC304)		// Could not locate a wrapping key
-	#define FERR_NICI_ATTRIBUTE_VALUE		FLM_ERROR_BASE( 0xC305)		// CCS_AttributeVAlue failed
-	#define FERR_NICI_BAD_ATTRIBUTE			FLM_ERROR_BASE( 0xC306)		// Invalid attribute
-	#define FERR_NICI_BAD_RANDOM				FLM_ERROR_BASE( 0xC307)		// CCS_GetRandom failed
-	#define FERR_NICI_WRAPKEY_FAILED			FLM_ERROR_BASE( 0xC309)		// CCS_WrapKey failed
-	#define FERR_NICI_GENKEY_FAILED			FLM_ERROR_BASE( 0xC30A)		// CCS_GenerateKey failed
-	#define FERR_REQUIRE_PASSWD				FLM_ERROR_BASE( 0xC30B)		// Password required to unwrap key
-	#define FERR_NICI_SHROUDKEY_FAILED		FLM_ERROR_BASE( 0xC30C)		// CCS_pbeShroudPrivateKey failed
-	#define FERR_NICI_UNSHROUDKEY_FAILED	FLM_ERROR_BASE( 0xC30D)		// CCS_pbdUnshroudPrivateKey failed
-	#define FERR_NICI_UNWRAPKEY_FAILED		FLM_ERROR_BASE( 0xC30E)		// CCS_UnrapKey failed
-	#define FERR_NICI_ENC_INIT_FAILED		FLM_ERROR_BASE( 0xC30F)		// CCS_DataEncryptInit failed
-	#define FERR_NICI_ENCRYPT_FAILED			FLM_ERROR_BASE( 0xC310)		// CCS_DataEncrypt failed
-	#define FERR_NICI_DECRYPT_INIT_FAILED	FLM_ERROR_BASE( 0xC311)		// CCS_DataDecryptInit failed
-	#define FERR_NICI_DECRYPT_FAILED			FLM_ERROR_BASE( 0xC312)		// CCS_DataDecrypt failed
-	#define FERR_NICI_INIT_FAILED				FLM_ERROR_BASE( 0xC313)		// CCS_Init falied.
-	#define FERR_NICI_KEY_NOT_FOUND			FLM_ERROR_BASE( 0xC314)		// Could not locate encryption/decryption key
-	#define FERR_NICI_INVALID_ALGORITHM		FLM_ERROR_BASE( 0xC315)		// Unsupported NICI ecncryption algorithm
-	#define FERR_FLD_NOT_ENCRYPTED			FLM_ERROR_BASE( 0xC316)		// FlmRecord field is not encrypted
-	#define FERR_CANNOT_SET_KEY				FLM_ERROR_BASE( 0xC317)		// Attempted to set a key on record add
-	#define FERR_MISSING_ENC_TYPE				FLM_ERROR_BASE( 0xC318)		// Adding EncDef record without Encryption type.
-	#define FERR_CANNOT_MOD_ENC_TYPE			FLM_ERROR_BASE( 0xC319)		// Attempting to change the encryption type
-	#define FERR_MISSING_ENC_KEY				FLM_ERROR_BASE( 0xC31A)		// Modified EncDef record is missing a key.
-	#define FERR_CANNOT_CHANGE_KEY			FLM_ERROR_BASE( 0xC31B)		// Attempt to modify the key in an EncDef record.
-	#define FERR_BAD_ENC_KEY					FLM_ERROR_BASE( 0xC31C)
-	#define FERR_CANNOT_MOD_ENC_STATE		FLM_ERROR_BASE( 0xC31D)
-	#define FERR_DATA_SIZE_MISMATCH			FLM_ERROR_BASE( 0xC31E)
-	#define FERR_ENCRYPTION_UNAVAILABLE		FLM_ERROR_BASE( 0xC31F)
-	#define FERR_PURGED_ENCDEF_FOUND			FLM_ERROR_BASE( 0xC320)
-	#define FERR_FLD_NOT_DECRYPTED			FLM_ERROR_BASE( 0xC321)
-	#define FERR_BAD_ENCDEF_ID					FLM_ERROR_BASE( 0xC322)
-	#define FERR_PBE_ENCRYPT_FAILED			FLM_ERROR_BASE( 0xC323)
-	#define FERR_DIGEST_FAILED					FLM_ERROR_BASE( 0xC324)
-	#define FERR_DIGEST_INIT_FAILED			FLM_ERROR_BASE( 0xC325)
-	#define FERR_EXTRACT_KEY_FAILED			FLM_ERROR_BASE( 0xC326)
-	#define FERR_INJECT_KEY_FAILED			FLM_ERROR_BASE( 0xC327)
-	#define FERR_PBE_DECRYPT_FAILED			FLM_ERROR_BASE( 0xC328)
-	#define FERR_PASSWD_INVALID				FLM_ERROR_BASE( 0xC329)
-	
+	#define FERR_IO_ACCESS_DENIED				0xC201				// Access denied. Caller is not allowed access to a file.
+	#define FERR_IO_BAD_FILE_HANDLE			0xC202				// Bad file handle
+	#define FERR_IO_COPY_ERR					0xC203				// Copy error
+	#define FERR_IO_DISK_FULL					0xC204				// Disk full
+	#define FERR_IO_END_OF_FILE				0xC205				// End of file
+	#define FERR_IO_OPEN_ERR					0xC206				// Error opening file
+	#define FERR_IO_SEEK_ERR					0xC207				// File seek error
+	#define FERR_IO_MODIFY_ERR					0xC208				// File modify error
+	#define FERR_IO_PATH_NOT_FOUND			0xC209				// Path not found
+	#define FERR_IO_TOO_MANY_OPEN_FILES		0xC20A				// Too many files open
+	#define FERR_IO_PATH_TOO_LONG				0xC20B				// Path too long
+	#define FERR_IO_NO_MORE_FILES				0xC20C				// No more files in directory
+	#define FERR_DELETING_FILE					0xC20D				// Had error deleting a file
+	#define FERR_IO_FILE_LOCK_ERR				0xC20E				// File lock error
+	#define FERR_IO_FILE_UNLOCK_ERR			0xC20F				// File unlock error
+	#define FERR_IO_PATH_CREATE_FAILURE		0xC210				// Path create failed
+	#define FERR_IO_RENAME_FAILURE			0xC211				// File rename failed
+	#define FERR_IO_INVALID_PASSWORD			0xC212				// Invalid file password
+	#define FERR_SETTING_UP_FOR_READ			0xC213				// Had error setting up to do a read
+	#define FERR_SETTING_UP_FOR_WRITE		0xC214				// Had error setting up to do a write
+	#define FERR_IO_AT_PATH_ROOT				0xC215				// Currently positioned at the path root level
+	#define FERR_INITIALIZING_IO_SYSTEM		0xC216				// Had error initializing the file system
+	#define FERR_FLUSHING_FILE					0xC217				// Had error flushing a file
+	#define FERR_IO_INVALID_PATH				0xC218				// Invalid path
+	#define FERR_IO_CONNECT_ERROR				0xC219				// Failed to connect to a remote network resource
+	#define FERR_OPENING_FILE					0xC21A				// Had error opening a file
+	#define FERR_DIRECT_OPENING_FILE			0xC21B				// Had error opening a file for direct I/O
+	#define FERR_CREATING_FILE					0xC21C				// Had error creating a file
+	#define FERR_DIRECT_CREATING_FILE		0xC21D				// Had error creating a file for direct I/O
+	#define FERR_READING_FILE					0xC21E				// Had error reading a file
+	#define FERR_DIRECT_READING_FILE			0xC21F				// Had error reading a file using direct I/O
+	#define FERR_WRITING_FILE					0xC220				// Had error writing to a file
+	#define FERR_DIRECT_WRITING_FILE			0xC221				// Had error writing to a file using direct I/O
+	#define FERR_POSITIONING_IN_FILE			0xC222				// Had error positioning within a file
+	#define FERR_GETTING_FILE_SIZE			0xC223				// Had error getting file size
+	#define FERR_TRUNCATING_FILE				0xC224				// Had error truncating a file
+	#define FERR_PARSING_FILE_NAME			0xC225				// Had error parsing a file name
+	#define FERR_CLOSING_FILE					0xC226				// Had error closing a file
+	#define FERR_GETTING_FILE_INFO			0xC227				// Had error getting file information
+	#define FERR_EXPANDING_FILE				0xC228				// Had error expanding a file (using direct I/O)
+	#define FERR_GETTING_FREE_BLOCKS			0xC229				// Had error getting free blocks from file system
+	#define FERR_CHECKING_FILE_EXISTENCE	0xC22A				// Had error checking if a file exists
+	#define FERR_RENAMING_FILE					0xC22B				// Had error renaming a file
+	#define FERR_SETTING_FILE_INFO			0xC22C				// Had error setting file information
 
 	/*============================================================================
 							Server TCP/IP Errors
 	============================================================================*/
 
-	#define FERR_SVR_NOIP_ADDR					FLM_ERROR_BASE( 0xC900)		// IP address not found
-	#define FERR_SVR_SOCK_FAIL					FLM_ERROR_BASE( 0xC901)		// IP socket failure
-	#define FERR_SVR_CONNECT_FAIL				FLM_ERROR_BASE( 0xC902)		// TCP/IP connection failure
-	#define FERR_SVR_BIND_FAIL					FLM_ERROR_BASE( 0xC903)		// The TCP/IP services on your system may not be configured or installed.  If this POA is not to run Client/Server, use the /notcpip startup switch or disable TCP/IP through the NWADMIN snapin
-	#define FERR_SVR_LISTEN_FAIL				FLM_ERROR_BASE( 0xC904)		// TCP/IP listen failed
-	#define FERR_SVR_ACCEPT_FAIL				FLM_ERROR_BASE( 0xC905)		// TCP/IP accept failed
-	#define FERR_SVR_SELECT_ERR				FLM_ERROR_BASE( 0xC906)		// TCP/IP select failed
-	#define FERR_SVR_SOCKOPT_FAIL				FLM_ERROR_BASE( 0xC907)		// TCP/IP socket operation failed
-	#define FERR_SVR_DISCONNECT				FLM_ERROR_BASE( 0xC908)		// TCP/IP disconnected
-	#define FERR_SVR_READ_FAIL					FLM_ERROR_BASE( 0xC909)		// TCP/IP read failed
-	#define FERR_SVR_WRT_FAIL					FLM_ERROR_BASE( 0xC90A)		// TCP/IP write failed
-	#define FERR_SVR_READ_TIMEOUT				FLM_ERROR_BASE( 0xC90B)		// TCP/IP read timeout
-	#define FERR_SVR_WRT_TIMEOUT				FLM_ERROR_BASE( 0xC90C)		// TCP/IP write timeout
-	#define FERR_SVR_ALREADY_CLOSED			FLM_ERROR_BASE( 0xC90D)		// Connection already closed
-	#define LAST_FLAIM_ERROR					FLM_ERROR_BASE( 0xC90D)		// Last error currently defined
-
-	/***************************************************************************
-	*                        Forward Declarations
-	***************************************************************************/
-
-	class FlmRecord;
-	class FlmRecordSet;
-	class F_LogMessage;
-	class F_FileHdl;
-	class F_ListItem;
-	class F_ListMgr;
+	#define FERR_SVR_NOIP_ADDR					0xC900				// IP address not found
+	#define FERR_SVR_SOCK_FAIL					0xC901				// IP socket failure
+	#define FERR_SVR_CONNECT_FAIL				0xC902				// TCP/IP connection failure
+	#define FERR_SVR_BIND_FAIL					0xC903				// The TCP/IP services on your system may not be configured or installed.  If this POA is not to run Client/Server, use the /notcpip startup switch or disable TCP/IP through the NWADMIN snapin
+	#define FERR_SVR_LISTEN_FAIL				0xC904				// TCP/IP listen failed
+	#define FERR_SVR_ACCEPT_FAIL				0xC905				// TCP/IP accept failed
+	#define FERR_SVR_SELECT_ERR				0xC906				// TCP/IP select failed
+	#define FERR_SVR_SOCKOPT_FAIL				0xC907				// TCP/IP socket operation failed
+	#define FERR_SVR_DISCONNECT				0xC908				// TCP/IP disconnected
+	#define FERR_SVR_READ_FAIL					0xC909				// TCP/IP read failed
+	#define FERR_SVR_WRT_FAIL					0xC90A				// TCP/IP write failed
+	#define FERR_SVR_READ_TIMEOUT				0xC90B				// TCP/IP read timeout
+	#define FERR_SVR_WRT_TIMEOUT				0xC90C				// TCP/IP write timeout
+	#define FERR_SVR_ALREADY_CLOSED			0xC90D				// Connection already closed
+	#define LAST_FLAIM_ERROR					0xC90D				// Last error currently defined
 
 	/***************************************************************************
 	*                             FLAIM Types
 	***************************************************************************/
 
-	typedef void *					HFDB;          // Pointer to a FLAIM Database
+	typedef void *					HFDB;          /* Pointer to a FLAIM Database. */
 		#define HFDB_NULL          NULL
-	typedef void *					HFCURSOR;      // Pointer to a FLAIM Cursor
+	typedef void *					HFCURSOR;      /* Pointer to a FLAIM Cursor. */
 		#define HFCURSOR_NULL      NULL
-	typedef void *             HFBLOB;        // Pointer to a FLAIM BLOB
+	typedef void *             HFBLOB;        /* Pointer to a FLAIM BLOB. */
 		#define HFBLOB_NULL        NULL
-	typedef void **		      HFBLOB_p;      // Handle to a FLAIM BLOB
-	typedef void *					HFBACKUP;		// Database backup handle
+	typedef void * *		      HFBLOB_p;      /* Pts to handle to a FLAIM BLOB. */
+	typedef void *					HFBACKUP;		/* Database backup handle */
 		#define HFBACKUP_NULL	NULL
 
-	typedef struct node *		NODE_p;        // GEDCOM Node (field)
+	typedef struct node *		NODE_p;        /* GEDCOM Node (field) */
 	typedef NODE_p  *				NODE_pp;       // Pointer to a NODE pointer
 
 
@@ -1341,13 +1102,13 @@ Desc: This include file contains the structure definitions and prototypes
 	*        the PMM structure.  This allows a nice way to destroy all
 	*        memory as well as the memory pool structure in one swoop.
 	*/
-
-	typedef struct MBLK
+	typedef struct PoolMemoryBlock *  MBLK_p;
+	typedef struct PoolMemoryBlock
 	{
-		MBLK *		pPrevBlk;         // Points to the previous block
-		FLMUINT		uiBlkSize;			// This block's size
-		FLMUINT		uiFreeOfs;			// Free offset in the block
-		FLMUINT		uiFreeSize;			// Amount of free mem left in block
+		MBLK_p      pPrevBlk;         /* Points to the previous block */
+		FLMUINT     uiBlkSize;			/* This block's size */
+		FLMUINT     uiFreeOfs;			/* Free offset in the block */
+		FLMUINT     uiFreeSize;			/* Amount of free mem left in block*/
 	} MBLK;
 
 
@@ -1359,12 +1120,12 @@ Desc: This include file contains the structure definitions and prototypes
   				block size will be determined and uiAllocBytes will be set
 				to (optimal block size * 100)and uiCount will be set to 100.
 	*/
-	typedef struct
+	typedef struct Pool_Stats
 	{
-		FLMUINT	uiAllocBytes;			// Total number of bytes requested from
-												// GedPoolAlloc & GedPoolCalloc calls
-		FLMUINT	uiCount;					// Number of Free/Resets performed on 
-												// the pool
+		FLMUINT	uiAllocBytes;			/* Total number of bytes requested from
+													GedPoolAlloc & GedPoolCalloc calls.	*/
+		FLMUINT	uiCount;					/* Number of Free/Resets performed on 
+													the pool. */
 	} POOL_STATS;
 
 	/*
@@ -1372,12 +1133,13 @@ Desc: This include file contains the structure definitions and prototypes
 	Desc:    The PMM is the root structure used to track memory allocations
 	*        for GEDCOM.
 	*/
-	typedef struct
+	typedef struct PoolMemoryManager
 	{
-		MBLK *			lblk;
-		FLMUINT			uiBlkSize;
-		FLMUINT			uiBytesAllocated;
-		POOL_STATS *	pPoolStats;
+		MBLK_p      lblk;						/* Pts to last allocated memory blk */
+		FLMUINT     uiBlkSize;				/* Default size of each mem blk */
+		FLMUINT     uiBytesAllocated;		/* number of bytes allocated since pool 
+														init and/or reset */		
+		POOL_STATS *pPoolStats;				/* [optional] only used by smart pools */
 	} PMM, POOL, * PMM_p, * POOL_p;
 
 	void GedPoolInit(
@@ -1408,7 +1170,7 @@ Desc: This include file contains the structure definitions and prototypes
 	*        the create options for a database.  It is returned when calling
 	*        FlmDbOpen.
 	****************************************************************************/
-	typedef struct
+	typedef struct Create_Options
 	{
 		FLMUINT		uiBlockSize;
 	#define DEFAULT_BLKSIZ              4096
@@ -1425,11 +1187,8 @@ Desc: This include file contains the structure definitions and prototypes
 															// container indexes.
 	#define FLM_VER_4_51						451	// Added ability to permanently 
 															// suspend indexes
-	#define FLM_VER_4_52						452	// Added ability to delete indexes
-															// in the background
-	#define FLM_VER_4_60						460	// Added support for encrypted attributes
-	#define FLM_CURRENT_VERSION_NUM		FLM_VER_4_60
-	#define FLM_CURRENT_VER_STR			"4.60"
+	#define CURRENT_VERSION_NUM         FLM_VER_4_51
+	#define FLM_CURRENT_VER_STR			"4.51"
 
 		FLMUINT		uiMinRflFileSize;			// Minimum bytes per RFL file
 	#define DEFAULT_MIN_RFL_FILE_SIZE	((FLMUINT)100 * (FLMUINT)1024 * (FLMUINT)1024)
@@ -1469,52 +1228,20 @@ Desc: This include file contains the structure definitions and prototypes
 		}
 
 		void * operator new(
-#ifdef FLM_NLM
 			unsigned			uiSize);
-#else
-  #if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize) throw();
-  #else
-			unsigned			uiSize) throw();
-  #endif
-#endif
 
 		void * operator new(
-#if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize,
-#else
 			unsigned			uiSize,
-#endif
-			const char *	pszFile,
-#ifdef FLM_NLM
+			char *			pszFile,
 			int				iLine);
-#else
-			int				iLine) throw();
-#endif
 
 		void * operator new[](
-#ifdef FLM_NLM
 			unsigned			uiSize);
-#else
-  #if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize) throw();
-  #else
-			unsigned			uiSize) throw();
-  #endif
-#endif
 
 		void * operator new[](
-#if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize,
-#else
 			unsigned			uiSize,
-#endif
-			const char *	pszFile,
-#ifdef FLM_NLM
+			char *			pszFile,
 			int				iLine);
-#else
-			int				iLine) throw();
-#endif
 
 		void operator delete(
 			void *			ptr);
@@ -1561,18 +1288,11 @@ typedef void * (* FLM_REALLOC_FUNC)(
 	void *				pvOldPtr,
 	FLMUINT				uiNewSize);
 
-typedef void (* FLM_FREE_FUNC)(
+typedef void * (* FLM_FREE_FUNC)(
 	void *				pvPtr);
 
 typedef unsigned int (* FLM_SIZEOF_FUNC)(
 	void *				ppvPtr);
-
-typedef void (* FLM_RELOC_FUNC)(
-	void *				pvOldAlloc,
-	void *				pvNewAlloc);
-
-typedef FLMBOOL (* FLM_CAN_RELOC_FUNC)(
-	void *				pvOldAlloc);
 
 typedef struct
 {
@@ -1597,13 +1317,13 @@ typedef struct
 			 Name Table Function Structures
 	**-------------------------------------------------------*/
 
-	typedef struct
+	typedef struct FlmTagInfoTag
 	{
 		FLMUNICODE *	puzTagName;
 		FLMUINT			uiTagNum;
 		FLMUINT			uiType;
 		FLMUINT			uiSubType;
-	} FLM_TAG_INFO;
+	} FLM_TAG_INFO, * FLM_TAG_INFO_p;
 
 	class F_NameTable : public F_Base
 	{
@@ -1685,7 +1405,7 @@ typedef struct
 			FLMUINT				uiTagNum,
 			FLMUINT				uiType,
 			FLMUINT				uiSubType,
-			FLM_TAG_INFO **	ppTagInfo);
+			FLM_TAG_INFO_p *	ppTagInfo);
 
 		RCODE reallocSortTables(
 			FLMUINT	uiNewTblSize);
@@ -1718,9 +1438,9 @@ typedef struct
 			FLMUINT			uiTagNumTblInsertPos);
 
 		PMM						m_pmm;
-		FLM_TAG_INFO **		m_ppSortedByTagName;
-		FLM_TAG_INFO **		m_ppSortedByTagNum;
-		FLM_TAG_INFO **		m_ppSortedByTagTypeAndName;
+		FLM_TAG_INFO_p *		m_ppSortedByTagName;
+		FLM_TAG_INFO_p *		m_ppSortedByTagNum;
+		FLM_TAG_INFO_p *		m_ppSortedByTagTypeAndName;
 		FLMUINT					m_uiTblSize;
 		FLMUINT					m_uiNumTags;
 		FLMBOOL					m_bTablesSorted;
@@ -1732,7 +1452,7 @@ typedef struct
 
 	#define RECID_UNDEFINED		0xFFFFFFFF
 
-	typedef struct
+	typedef struct FlmIndexStatus
 	{
 		FLMUINT			uiIndexNum;					// Index number
 		FLMBOOL			bSuspended;					// Active or suspended
@@ -1747,7 +1467,7 @@ typedef struct
 															// indexing thread
 	} FINDEX_STATUS;
 
-	typedef enum
+	typedef enum qOptTypesTag
 	{
 		QOPT_NONE = 0,
 		QOPT_USING_INDEX,
@@ -1759,7 +1479,7 @@ typedef struct
 
 	// Structure used on GetConfig's FCURSOR_GET_OPT_INFO_LIST option
 
-	typedef struct
+	typedef struct Optimization_Info
 	{
 		qOptTypes	eOptType;				// Type of optimization done
 		FLMUINT		uiCost;					// Cost calculated for sub-query
@@ -1775,7 +1495,7 @@ typedef struct
 													// QOPT_SINGLE_RECORD_READ
 	} OPT_INFO, * OPT_INFO_p;
 
-	typedef struct
+	typedef struct FlmCacheUsageTag
 	{
 		FLMUINT		uiMaxBytes;
 		FLMUINT		uiTotalBytesAllocated;
@@ -1788,7 +1508,7 @@ typedef struct
 		FLMUINT		uiCacheFaultLooks;
 	} FLM_CACHE_USAGE;
 
-	typedef struct
+	typedef struct FlmECacheUsageTag
 	{
 		FLMUINT64	ui64TotalExtendedMemory;
 		FLMUINT64	ui64RemainingExtendedMemory;
@@ -1797,7 +1517,7 @@ typedef struct
 		FLMUINT64	ui64CacheFaults;
 	} FLM_ECACHE_USAGE;
 
-	typedef struct
+	typedef struct FlmMemInfoTag
 	{
 		FLMBOOL				bDynamicCacheAdjust;
 		FLMUINT				uiCacheAdjustPercent;
@@ -1829,7 +1549,7 @@ typedef struct
 		FLMBYTE *	pszThreadStatus;
 	} F_THREAD_INFO;
 
-	typedef struct
+	typedef struct FlmTransEventTag
 	{
 		FLMUINT		uiThreadId;		// Thread Id
 		HFDB			hDb;				// Database handle
@@ -1837,7 +1557,7 @@ typedef struct
 		RCODE			rc;				// Return code
 	} FLM_TRANS_EVENT, * FLM_TRANS_EVENT_p;
 
-	typedef struct
+	typedef struct FlmUpdateEventTag
 	{
 		FLMUINT		uiThreadId;		// Thread Id
 		HFDB			hDb;				// Database handle
@@ -1849,7 +1569,7 @@ typedef struct
 		FlmRecord *	pOldRecord;		// Old record (modifies, deletes)
 	} FLM_UPDATE_EVENT, * FLM_UPDATE_EVENT_p;
 
-	typedef struct
+	typedef struct CheckPoint_Info
 	{
 		FLMBOOL		bRunning;
 		FLMUINT		uiRunningTime;
@@ -1867,7 +1587,7 @@ typedef struct
 		FLMUINT		uiWaitTruncateTime;
 	} CHECKPOINT_INFO, * CHECKPOINT_INFO_p;
 
-	typedef struct
+	typedef struct Lock_User
 	{
 		FLMUINT		uiThreadId;
 		FLMUINT		uiTime;				// For lock holder, this is the
@@ -1909,7 +1629,7 @@ typedef struct
 
 	Desc: Used by FLAIM's processing hooks to determine severity of error conditions.
 	===========================================================================*/
-	typedef enum
+	typedef enum eFlmFuncs
 	{
 		FLM_UNKNOWN_FUNC,
 		FLM_BLOB_CREATE_REFERENCE,
@@ -1976,21 +1696,21 @@ typedef struct
 
 		// Always insert new funcs before LAST_FLM_FUNC 
 		LAST_FLM_FUNC                 
-	} eFlmFuncs;
+	} FlmFuncs;
 
-	typedef struct
+	typedef struct rec_context
 	{
-		HFDB			hDb;				// Handle to current record's db
-		FLMUINT		uiRecId;			// Database DRN for current record
-		NODE_p		pRec;				// Record
-		FLMUINT		uiContainerId;	// Database Container for current record
+		HFDB			hDb;				/* memory handle to current record's db. */
+		FLMUINT		uiRecId;			/* Database DRN for current record */
+		NODE_p		pRec;				/* Record */
+		FLMUINT		uiContainerId;	/* Database Container for current record */
 	} REC_CONTEXT;
 
 	typedef struct
 	{
 		HFBLOB		hBlob;		// Handle to the BLOB.
 		REC_CONTEXT	RecContext;	// Includes dwRecId, wContainerId
-		eFlmFuncs	FlmFunction;// The FLAIM function value.
+		FlmFuncs		FlmFunction;// The FLAIM function value.
 	} BLOB_CONTEXT;
 
 	typedef struct
@@ -2030,14 +1750,14 @@ typedef struct
 		FLMBYTE			szDstFileName [F_PATH_MAX_SIZE];
 	} DB_RENAME_INFO, * DB_RENAME_INFO_p;
 
-	typedef enum
+	typedef enum eFlmLockType
 	{
 		FLM_LOCK_NONE,
 		FLM_LOCK_EXCLUSIVE,
 		FLM_LOCK_SHARED
 	} FLOCK_TYPE;
 
-	typedef struct
+	typedef struct f_lock_info
 	{
 		FLOCK_TYPE	eCurrLockType;			// Current lock type (FLM_LOCK_NONE,
 													// FLM_LOCK_EXCLUSIVE, or FLM_LOCK_SHARED)
@@ -2058,46 +1778,43 @@ typedef struct
 
 	typedef struct node
 	{
-		NODE_p      next;					// child, next sib, or uncle (compare levels)
-		NODE_p      prior;            // parent, prior sib, or nephew (compare levels)
+		NODE_p      next;					/* child, next sib, or uncle (compare levels) */
+		NODE_p      prior;            /* parent, prior sib, or nephew (compare levels) */
 		FLMBYTE *   value;
-		FLMUINT     uiLength;			// true len of value (exclusive of end NULL)
-		FLMUINT16   ui16TagNum;			// Tag number (short version of DRN)
-		FLMUINT8    ui8Level;			// hierarchy level (0 = root)
-		FLMUINT8		ui8Type;				// value's type defined below
+		FLMUINT     uiLength;			/* true len of value (exclusive of end NULL) */
+		FLMUINT16   ui16TagNum;			/* Tag number (short version of DRN) */
+		FLMUINT8    ui8Level;			/* hierarchy level (0 = root) */
+		FLMUINT8		ui8Type;				/* value's type defined below */
 
-		// Define the allowable field types
+		/* Define the allowable field types */
+		#define FLM_TEXT_TYPE		0
+		#define FLM_NUMBER_TYPE		1
+		#define FLM_BINARY_TYPE		2
+		#define FLM_CONTEXT_TYPE	3
+		#define FLM_REAL_TYPE		4		/* float (SREAL) or double (LREAL) */
+		#define FLM_DATE_TYPE		5		/* Date: year, month, day in month */
+		#define FLM_TIME_TYPE		6		/* Time: hour, minute, second, hundredth*/
+		#define FLM_TMSTAMP_TYPE	7		/* Time stamp */
+		#define FLM_BLOB_TYPE		8		/* Blob type - internal or external */
 
-		#define FLM_TEXT_TYPE			0
-		#define FLM_NUMBER_TYPE			1
-		#define FLM_BINARY_TYPE			2
-		#define FLM_CONTEXT_TYPE		3
-		#define FLM_REAL_TYPE			4		// float (SREAL) or double (LREAL)
-		#define FLM_DATE_TYPE			5		// Date: year, month, day in month
-		#define FLM_TIME_TYPE			6		// Time: hour, minute, second, hundredth
-		#define FLM_TMSTAMP_TYPE		7		// Time stamp
-		#define FLM_BLOB_TYPE			8		// Blob type - internal or external
-
-		#define FLM_NUM_OF_TYPES		9		// Number of field types supported
+		#define FLM_NUM_OF_TYPES    9		/* Number of field types supported */
 
 		#define FLM_DEFAULT_TYPE	FLM_CONTEXT_TYPE
 
-		#define FLM_DATA_LEFT_TRUNCATED	0x10	// Data is left truncated
-		#define FLM_DATA_RIGHT_TRUNCATED	0x20	// Data is right truncated.
-		#define HAS_REC_SOURCE     0x40			// Node has HFDB, container, and
-															// RecId immediatly following the node.
-		#define HAS_REC_ID         0x80			// Node has Record Id (4 bytes) immediately
-															// following the node.
-		FLMUINT		uiEncFlags;						// Encryption flags
-		FLMUINT		uiEncLength;					// The length of the encrypted data
-		FLMUINT		uiEncId;							// The DRN of the encryption record
-		FLMBYTE *	pucEncValue;					// The encrypted value
+		#define FLM_DATA_LEFT_TRUNCATED	0x10	/* Data is left truncated */
+		#define FLM_DATA_RIGHT_TRUNCATED	0x20	/* Data is right truncated. */
+		#define HAS_REC_SOURCE     0x40  /* Node has HFDB, container, and
+														RecId immediatly following the node. */
+		#define HAS_REC_ID         0x80  /* Node has Record Id (4 bytes) immediatly
+														following the node. */
 	} NODE;
+
+	typedef struct Rec_Key * REC_KEY_p;
 
 	typedef struct Rec_Key
 	{
 		FlmRecord *	pKey;
-		Rec_Key *	pNextKey;
+		REC_KEY_p   pNextKey;
 	} REC_KEY;
 
 	FLMUINT FlmLanguage(
@@ -2340,7 +2057,7 @@ typedef struct
 	#define FLM_TRUE			(2)
 	#define FLM_UNK			(4)
 
-	typedef enum
+	typedef enum qTypes
 	{
 		NO_TYPE = 0,				// 0 (internal use only)
 
@@ -2646,7 +2363,7 @@ typedef struct
 
 	void FlmShutdown( void);
 
-	typedef enum
+	enum eFlmConfigTypes
 	{
 		FLM_CLOSE_UNUSED_FILES,		// FlmConfig.  Close all files that have not
 											// been used for the specified number of
@@ -2741,6 +2458,17 @@ typedef struct
 											//									Non-zero=Enable
 											// FlmGetConfig. Return cache checking flag.
 											//		Value1	(FLMBOOL *)
+		FLM_CACHE_PROTECT,			// FlmConfig - Enable or disable cache protection.
+											//		Value1	(FLMUINT)	Zero=Disable
+											//									Non-zero=Enable
+											// FlmGetConfig. Return cache protection flag.
+											//		Value1	(FLMBOOL *)
+		FLM_READWRITE_CHECK,			// FlmConfig - Enable or disable read/write
+											// checking.
+											//		Value1	(FLMUINT)	Zero=Disable
+											//									Non-zero=Enable
+											// FlmGetConfig. Return read/write check flag.
+											//		Value1	(FLMBOOL *)
 		FLM_CLOSE_FILE,				// FlmConfig - Close a DB file.
 											//		Value1	(FLMBYTE *)	pszDbFileName
 		FLM_LOGGER,						// FlmConfig - Specify the logger object.
@@ -2793,7 +2521,9 @@ typedef struct
 		FLM_DYNA_CACHE_SUPPORTED	// FlmGetConfig. Returns TRUE if the current
 											// platform supports dynamic cache adjustments
 											//		Value1	(FLMBOOL *)
-	} eFlmConfigTypes;
+	};
+
+	typedef enum eFlmConfigTypes		FlmConfigTypes;
 
 	// Defaults for certain settable items
 
@@ -2835,12 +2565,12 @@ typedef struct
 		FLM_MEM_INFO *	pMemInfo);
 
 	RCODE FlmConfig(
-		eFlmConfigTypes	eConfigType,
+		FlmConfigTypes eConfigType,
 		void *		Value1,
 		void *		Value2);
 
 	RCODE FlmGetConfig(
-		eFlmConfigTypes	eConfigType,
+		FlmConfigTypes eConfigType,
 		void *	   Value);
 
 	RCODE FlmGetThreadInfo(
@@ -2853,14 +2583,14 @@ typedef struct
 	Statistics
 	============================================================================*/
 
-	typedef struct
+	typedef struct CountPlusTimeStatTag
 	{
 		FLMUINT64	ui64Count;			// Number of times operation was performed
 		FLMUINT64	ui64ElapMilli;		// Total elapsed time (milliseconds) for
 												// the operations.
 	} COUNT_TIME_STAT, * COUNT_TIME_p;
 
-	typedef struct
+	typedef struct DiskIo_Stat
 	{
 		FLMUINT64	ui64Count;			// Number of times operation was performed
 		FLMUINT64	ui64TotalBytes;	// Total number of bytes involved in the
@@ -2869,14 +2599,14 @@ typedef struct
 												// operations.
 	} DISKIO_STAT, * DISKIO_STAT_p;
 
-	typedef struct
+	typedef struct RTrans_Stats
 	{
 		COUNT_TIME_STAT	CommittedTrans;	// Transactions committed
 		COUNT_TIME_STAT	AbortedTrans;		// Transactions aborted
 		COUNT_TIME_STAT	InvisibleTrans;	// Invisible Transactions
 	} RTRANS_STATS, * RTRANS_STATS_p;
 
-	typedef struct
+	typedef struct UTrans_Stats
 	{
 		COUNT_TIME_STAT	CommittedTrans;	// Transactions committed
 		COUNT_TIME_STAT	GroupCompletes;	// Group completes.
@@ -2884,7 +2614,7 @@ typedef struct
 		COUNT_TIME_STAT	AbortedTrans;		// Transactions aborted
 	} UTRANS_STATS, * UTRANS_STATS_p;
 
-	typedef struct
+	typedef struct BlockIO_Stats
 	{
 		DISKIO_STAT		BlockReads;						// Statistics on block reads
 		DISKIO_STAT		OldViewBlockReads;			// Statistics on old view
@@ -2901,7 +2631,7 @@ typedef struct
 		DISKIO_STAT		BlockWrites;					// Statistics on Block writes
 	} BLOCKIO_STATS, * BLOCKIO_STATS_p;
 
-	typedef struct
+	typedef struct LFile_Stats
 	{
 		FLMBOOL			bHaveStats;						// Flag indicating whether or
 																// not there are statistics
@@ -2940,7 +2670,7 @@ typedef struct
 																// logical file's B-Tree
 	} LFILE_STATS, * LFILE_STATS_p;
 
-	typedef struct
+	typedef struct Database_Stats
 	{
 		FLMBYTE *		pszDbName;						// Database name - from pFile.
 		FLMBOOL			bHaveStats;						// Flag indicating whether or
@@ -3012,7 +2742,7 @@ typedef struct
 
 	} DB_STATS, * DB_STATS_p;
 
-	typedef struct
+	typedef struct Flm_Stats
 	{
 		F_MUTEX			hMutex;							// Handle to semaphore for
 																// controlling access and
@@ -3045,14 +2775,14 @@ typedef struct
 			 FLAIM Event Notification structures and routines.
 	**-------------------------------------------------------*/
 
-	typedef enum
+	typedef enum FEventCategoryTag
 	{
 		F_EVENT_LOCKS,
 		F_EVENT_UPDATES,
 		F_MAX_EVENT_CATEGORIES
 	} FEventCategory;
 
-	typedef enum
+	typedef enum FEventTypeTag
 	{
 		F_EVENT_LOCK_WAITING,		// pvEventData1 == hDb, pvEventData2 == thread id
 		F_EVENT_LOCK_GRANTED,		// pvEventData1 == hDb, pvEventData2 == thread id
@@ -3107,20 +2837,18 @@ typedef struct
 
 		// Defines used by FlmDbCreate and FlmDbOpen
 
-		#define FO_SHARE									0
-		#define FO_ONLINE									0x0020
-		#define FO_DONT_REDO_LOG						0x0040
-		#define FO_DONT_RESUME_BACKGROUND_THREADS	0x0080
-		#define FO_DO_LOGICAL_CHECK					0x0100
-		#define FO_DO_EXTENDED_DATA_CHECK			0x0200	// Used only in DbCheck.
-		#define FO_ALLOW_LIMITED						0X0400	// Used only in FlmDbOpen
+		#define FO_SHARE							0
+		#define FO_ONLINE							0x20
+		#define FO_DONT_REDO_LOG				0x40
+		#define FO_DONT_RESUME_INDEXING		0x80
+		#define FO_DO_LOGICAL_CHECK			0x0100
+		#define FO_DO_EXTENDED_DATA_CHECK	0x0200	// Used only in DbCheck.
 
 	RCODE FlmDbOpen(
 		FLMBYTE *      pszDbFileName,
 		FLMBYTE *		pszDataDir,
 		FLMBYTE *		pszRflDir,
 		FLMUINT			uiOpenFlags,
-		FLMBYTE *		pszPassword,
 		HFDB *			phDbRV);
 
 	RCODE FlmDbClose(
@@ -3361,6 +3089,7 @@ typedef struct
 			// write BLOB code.  The more common error codes are: 
 			//		BCEF_ERR_BAD_DATA - Data length in the node is invalid.
 			//		FERR_BLOB_MISSING_FILE - The file for the external BLOB is missing.
+			//		FERR_INVALID_AREA - The area definition cannot be found.
 
 			// Parm1 (BLOB_CONTEXT *)
 			// Parm2 (RCODE) - Current error code
@@ -3404,12 +3133,6 @@ typedef struct
    		// Index processing status while deleting a container
 			// Parm1 (FLMUINT) == Index Number.
 			// Parm2 (FLMUINT) == Elements traversed.
-		#define FLM_REBUILD_ADD_DICT_REC_STATUS	30
-			// Called for each dictionary record recovered by the rebuild code
-			// prior to re-adding the record to the database.  The application
-			// can change the record, if desired.
-			// Parm1 (FlmRecord *)
-			// Parm2 Not used
 
 	typedef RCODE (* BACKER_WRITE_HOOK)( 
 		void *		pvBuffer,
@@ -3438,28 +3161,7 @@ typedef struct
 		FLMUINT		uiIndexNum);
 
 	/*--------------------------------------------------------
-					 Maintenance Thread Info
-	**-------------------------------------------------------*/
-
-	typedef struct
-	{
-		FLMUINT			uiDoing;
-			#define FLM_MAINT_UNKNOWN					0x00000000
-			#define FLM_MAINT_IDLE						0x00000001
-			#define FLM_MAINT_LOOKING_FOR_WORK		0x00000002
-			#define FLM_MAINT_WAITING_FOR_LOCK		0x00000003
-			#define FLM_MAINT_ENDING_TRANS			0x00000004
-			#define FLM_MAINT_TERMINATED				0x00000005
-			#define FLM_MAINT_FREEING_BLOCKS			0x00000006
-		FLMUINT64		ui64BlocksFreed;
-	} FMAINT_STATUS;
-
-	RCODE FlmMaintenanceStatus(
-		HFDB					hDb,
-		FMAINT_STATUS *	pMaintStatus);
-
-	/*--------------------------------------------------------
-					 Error Handling Routines
+					 Error Handling Routines.
 	**-------------------------------------------------------*/
 
 	FLMBOOL FlmErrorIsFileCorrupt(
@@ -3492,12 +3194,10 @@ typedef struct
 			// FERR_BAD_FIELD_NUM - returns invalid field number in record
 		#define FLM_DIAG_AREA_ID         0x0020      // NOTE: pvDiagInfo == FLMUINT *
 			// Area ID that was not defined or for which a machine was not defined.
+			// FERR_INVALID_AREA and/or FERR_MACHINE_NOT_DEF
 		#define FLM_DIAG_FIELD_TYPE      0x0040      // NOTE: pvDiagInfo == FLMUINT *
 			// Field type for field that was not defined
 			// FERR_BAD_FIELD_NUM
-		#define FLM_DIAG_ENC_ID				0x0080		// NOTE: pvDiagInfo == FLMUINT *
-			// Encryption Id that was not defined
-			// FERR_PURGED_ENCDEF_FOUND - Purged encryption definition used
 
 	FLMBOOL   FlmDbUsingCS(
 		HFDB			hDb);
@@ -3555,7 +3255,7 @@ typedef struct
 		FLMBYTE *	pszHeader = NULL);
 
 	#define F_TRANS_HEADER_SIZE		2048	// Size of buffer required for pszHeader
-														// parameter of FlmDbTransBegin
+														// parameter of FlmDbTransBegin */
 
 	RCODE FlmDbTransCommit(
 		HFDB			hDb,
@@ -3580,10 +3280,10 @@ typedef struct
 		 ADD, MODIFY, DELETE and READ record and key routines.
 	**-------------------------------------------------------*/
 
-	#define FLM_AUTO_TRANS				0x0100	// Value ORed into wAutoTrans parameter
-	#define FLM_DO_IN_BACKGROUND		0x0400	// Value ORed into uiAutoTrans parameter
-	#define FLM_DONT_INSERT_IN_CACHE	0x0800	// Value ORed into uiAutoTrans parameter
-	#define FLM_SUSPENDED				0x1000	// Value ORed into wAutoTrans parameter
+	#define FLM_AUTO_TRANS				0x100		// Value ORed into wAutoTrans parameter
+	#define FLM_DO_IN_BACKGROUND		0x400		// Value ORed into uiAutoTrans parameter
+	#define FLM_DONT_INSERT_IN_CACHE	0x800		// Value ORed into uiAutoTrans parameter
+	#define FLM_DONT_START_THREAD		0x1000	// Value ORed into wAutoTrans parameter
 
 	RCODE FlmRecordAdd(
 		HFDB			hDb,
@@ -3702,16 +3402,7 @@ typedef struct
 		STATUS_HOOK	fnStatusCallback,
 		void *		UserData);
 
-	RCODE FlmEnableEncryption(
-		HFDB				hDb,
-		FLMBYTE **		ppucWrappingKeyRV,		// This returned buffer must be freed by the caller
-		FLMUINT32 *		pui32KeyLen);
-
-	RCODE FlmDbWrapKey(
-		HFDB				hDb,
-		FLMBYTE *		pszPassword);				// May be NULL to wrap the key in the server key
-
-	typedef enum
+	typedef enum eFBackupType
 	{
 		// These values are stored in the header of the 
 		// backup, so do not change their values.
@@ -3742,7 +3433,6 @@ typedef struct
 	RCODE FlmDbBackup(
 		HFBACKUP					hBackup,
 		FLMBYTE *				pszBackupPath,
-		FLMBYTE *				pszPassword,
 		BACKER_WRITE_HOOK		fnWrite,
 		STATUS_HOOK				fnStatus,
 		void *					pvUserData,
@@ -3855,12 +3545,14 @@ typedef struct
 
 		virtual RCODE close( void) = 0;
 
-		virtual FLMBYTE * getImportDataPtr(
+		virtual FLMBYTE * getImportDataPtr( 
 			FLMUINT		uiLength) = 0;
+		
+		virtual void importComplete( FLMBYTE *) = 0;
 
 		virtual FLMUINT getDataLength( void) = 0;
 		
-		virtual FLMBYTE * getDataPtr( void) = 0;
+		virtual FLMBYTE * getExportDataPtr( void) = 0;
 		
 		virtual FLMINT compareFileName(
 			FLMBYTE *		pszFileName) = 0;
@@ -3911,13 +3603,6 @@ typedef struct
 		// Value1 (FLMUINT): Index number
 	#define RESTORE_INDEX_RESUME						14
 		// Value1 (FLMUINT): Index number
-	#define RESTORE_BLK_CHAIN_DELETE					15
-		// Value1 (FLMUINT): Tracker DRN
-		// Value2 (FLMUINT): Block count
-	#define RESTORE_WRAP_KEY							16
-		// Value1 (FLMUINT): DBKey Length
-	#define RESTORE_ENABLE_ENCRYPTION				17
-		// Value1 (FLMUINT): DBKey Length
 
 	/*
 	*** Recovery actions
@@ -3980,14 +3665,13 @@ typedef struct
 		FLMBYTE *				pszDataDir,
 		FLMBYTE *				pszBackupPath,
 		FLMBYTE *				pszRflDir,
-		FLMBYTE *				pszPassword,
 		F_Restore *				pRestoreObj);
 
 	/*
 	*** FLAIM message logging
 	*/
 
-	typedef enum
+	typedef enum eFlmLogMessageType
 	{
 		FLM_QUERY_MESSAGE,
 		FLM_TRANSACTION_MESSAGE,
@@ -3995,7 +3679,7 @@ typedef struct
 		FLM_NUM_MESSAGE_TYPES
 	} FlmLogMessageType;
 
-	typedef enum
+	typedef enum eFlmColorType
 	{
 		FLM_BLACK = 0,
 		FLM_BLUE,
@@ -4197,11 +3881,10 @@ typedef struct
 	#define FlmStorage2Unicode( a, b, c, d, e) \
 		flmGetUnicode( a, b, c, d, e)
 
-	RCODE FlmGetUnicodeLength(
-		FLMUINT		uiType,
-		FLMUINT		uiBufLength,
-		FLMBYTE *	pBuffer,
-		FLMUINT *	puiUniLength);
+	FLMUINT FlmGetUnicodeLength(
+		FLMUINT			uiType,
+		FLMUINT			uiBufLength,
+		FLMBYTE *		pBuffer);
 
 	RCODE FlmNative2Storage(
 		FLMBYTE *		pszStr,
@@ -4286,12 +3969,9 @@ typedef struct
 	#define FLM_KEY_TAG_NAME							"Key"
 	#define FLM_REFS_TAG									(TS +  9)
 	#define FLM_REFS_TAG_NAME							"Refs"
-	#define FLM_ENCDEF_TAG								(TS + 10)
-	#define FLM_ENCDEF_TAG_NAME						"EncDef"
-	#define FLM_DELETE_TAG								(TS + 11)
-	#define FLM_DELETE_TAG_NAME						"Delete"
-	#define FLM_BLOCK_CHAIN_TAG						(TS + 12)
-	#define FLM_BLOCK_CHAIN_TAG_NAME					"BlockChain"
+	//#define FLM_NU_10_TAG								(TS + 10)
+	//#define FLM_NU_11_TAG								(TS + 11)
+	//#define FLM_NU_12_TAG								(TS + 12)
 	//#define FLM_NU_13_TAG								(TS + 13)
 	//#define FLM_NU_14_TAG								(TS + 14)
 	//#define FLM_NU_15_TAG								(TS + 15)
@@ -4408,14 +4088,6 @@ typedef struct
 												#  are referencing it.
 			| purge}]                  #  Remove all fld occurances, and delete def.
 	*/
-	
-	/*
-	 Encryption Definition
-	 Desc: The below syntax is used to define an encryption definition record.
-	 0 [@<ID>@] EncDef <name>		# FLM_ENCDEF_TAG
-	 	1 type <below>						# FLM_TYPE_TAG
-	 		{ des3 | aes }
-	 */
 
 	/*
 	Container Definition
@@ -4515,7 +4187,7 @@ typedef struct
 	[ 1 dseq <#>]                    # FLM_DICT_SEQ_TAG - dictionary sequence ID for the record
 	*/
 
-	RCODE FlmKeyBuild(
+	RCODE FlmKeyBuild(					/* Source: flkeys.cpp */
 		HFDB        hDb,
 		FLMUINT     uiIxNum,
 		FLMUINT		uiContainer,
@@ -4524,45 +4196,24 @@ typedef struct
 		FLMBYTE *   pKeyBuf,
 		FLMUINT *   puiKeyLenRV);
 
-	#if FLM_ALIGN_SIZE == 8
-		typedef FLMUINT32		FIELDLINK;
-	#else
-		typedef FLMUINT16		FIELDLINK;
-	#endif
-
 	/*============================================================================
 	Struct: 	FlmField
 	============================================================================*/
-	typedef struct
+	typedef struct _FlmField
 	{
-		FLMUINT32	ui32DataOffset;
-		FLMUINT16	ui16FieldID;
-		FLMUINT8		ui8DataLen;
-		FLMUINT8		ui8TypeAndLevel;
-
-			// Bits 0 - 2 used for type
-
-			#define FLD_TEXT_TYPE				0x00
-			#define FLD_NUMBER_TYPE				0x01
-			#define FLD_BINARY_TYPE				0x02
-			#define FLD_CONTEXT_TYPE			0x03
-			#define FLD_BLOB_TYPE				0x04
-
-			// Bits 3 - 4 used for flags
-
-			#define FLD_DATA_LEFT_TRUNCATED	0x08
-			#define FLD_DATA_RIGHT_TRUNCATED	0x10
-
-			// Bits 5 - 7 for level (max level is 7)
-
-		FIELDLINK	uiPrev;
-		FIELDLINK	uiNext;
-
+		FLMUINT16	ui16FieldID;		// tag number
+		FLMUINT8		ui8Level;			// Gedcom level
+		FLMUINT8		ui8Type;				// Data Type and any flags 
+		FLMUINT		uiDataLength;		
+		FLMUINT		uiDataOffset;		// Offset to location of data
+		_FlmField *	pNext;
+		_FlmField *	pPrev;
 	} FlmField;
 
 	/*============================================================================
-	Desc: 	Class which provides the record interface that FLAIM uses to
-				access and manipulate all records.
+	Class: 	FlmRecord
+	Desc: 	Abstract base class which provides the record interface that
+				FLAIM uses to access and manipulate all records.
 	============================================================================*/
 	class FlmRecord : public F_Base
 	{
@@ -4570,60 +4221,33 @@ typedef struct
 
 		#define RCA_READ_ONLY_FLAG				0x00000001
 		#define RCA_CACHED						0x00000002
-		#define RCA_OK_TO_DELETE				0x00000004
-		#define RCA_OLD_VERSION					0x00000008
 
-		FlmRecord();
+		FlmRecord()
+		{
+			m_uiContainerID = 0;
+			m_uiRecordID = 0;
+			m_uiFlags = 0;
+		}
 
-		~FlmRecord();
-
-		void * operator new(
-#ifdef FLM_NLM
-			unsigned			uiSize);
-#else
-#if defined( FLM_HPUX) || defined( FLM_AIX)
-  			unsigned long	uiSize) throw();
-  #else
-			unsigned			uiSize) throw();
-  #endif
-#endif
+		virtual ~FlmRecord()
+		{
+		}
 
 		void * operator new(
-#if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize,
-#else
-			unsigned			uiSize,
-#endif
-			const char *	pszFile,
-#ifdef FLM_NLM
-			int				iLine);
-#else
-			int				iLine) throw();
-#endif
-
-		void * operator new[](
-#ifdef FLM_NLM
 			unsigned			uiSize);
-#else
-  #if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize) throw();
-  #else
-			unsigned			uiSize) throw();
-  #endif
-#endif
+
+		void * operator new(
+			unsigned			uiSize,
+			char *			pszFile,
+			int				iLine);
 
 		void * operator new[](
-#if defined( FLM_HPUX) || defined( FLM_AIX)
-			unsigned long	uiSize,
-#else
+			unsigned			uiSize);
+
+		void * operator new[](
 			unsigned			uiSize,
-#endif
-			const char *	pszFile,
-#ifdef FLM_NLM
+			char *			pszFile,
 			int				iLine);
-#else
-			int				iLine) throw();
-#endif
 
 		void operator delete(
 			void *			ptr);
@@ -4645,42 +4269,442 @@ typedef struct
 			int				line);
 	#endif
 
-		inline FLMUINT AddRef( void)
+		FLMUINT AddRef( 
+			FLMBOOL			bMutexLocked);
+
+		FLMUINT Release(
+			FLMBOOL			bMutexLocked);
+
+		FLMUINT AddRef( void)
 		{
 			return( AddRef( FALSE));
 		}
 
-		inline FLMUINT Release( void)
+		FLMUINT Release( void)
 		{
 			return( Release( FALSE));
 		}
 
+		virtual FLMBOOL isDefaultRec( void) = 0;
+
+		virtual FlmRecord * copy( void) = 0;
+
+		// Used to return a existing record to a new state (no fields)
+
+		virtual void clear( void) = 0;
+
+		// Returns / sets the database record id (DRN).
+
+		FLMUINT getID( void)
+		{
+			return m_uiRecordID;
+		}
+
+		void setID( 
+			FLMUINT			uiRecordID)
+		{
+			m_uiRecordID = uiRecordID;
+		}
+
+		// Returns / sets the database container that this record is from.
+
+		FLMUINT getContainerID( void)
+		{
+			return m_uiContainerID;
+		}
+
+		void setContainerID( 
+			FLMUINT			uiContainerID)
+		{
+			m_uiContainerID = uiContainerID;
+		}
+
+		virtual RCODE getINT( 
+			void *			pvField,
+			FLMINT *			piNumber) = 0;
+
+		virtual RCODE getUINT( 
+			void *			pvField,
+			FLMUINT *		puiNumber) = 0;
+
+		virtual RCODE getUINT32(
+			void *			pvField,
+			FLMUINT32 *		pui32Number) = 0;
+
+		virtual RCODE getRecPointer( 
+			void *			pvField,
+			FLMUINT *		puiRecPointer) = 0;
+
+		RCODE getRecPointer32( 
+			void *			pvField, 
+			FLMUINT32 *		pui32RecPointer);
+
+		// Return the length of the unicode string value
+
+		virtual RCODE getUnicodeLength( 
+			void *			pvField, 
+			FLMUINT *		puiLength) = 0;
+
+		// Copies the unicode string value into users buffer
+
+		virtual RCODE getUnicode( 
+			void *			pvField, 
+			FLMUNICODE *	pUnicode, FLMUINT  * puiBufLen) = 0;
+			 
+		// Return the length of the native string value
+
+		virtual RCODE getNativeLength( 
+			void *			pvField,
+			FLMUINT *		puiLength) = 0;
+
+		// Copies the native string value into users buffer
+
+		virtual RCODE getNative( 
+			void *			pvField,
+			FLMBYTE *		pszString,
+			FLMUINT *		puiBufLen) = 0;
+		
+		// Return the length of the binary value
+
+		virtual RCODE getBinaryLength( 
+			void *			pvField,
+			FLMUINT *		puiLength) = 0;
+
+		// Copies the binary data into users buffer
+
+		virtual RCODE getBinary( 
+			void *			pvField,
+			void *			pvBuf,
+			FLMUINT *		puiBufLen) = 0;
+
+		// Returns a FlmBlob object.
+
+		virtual RCODE getBlob( 
+			void *			pvField,
+			FlmBlob **		ppBlob) = 0;
+
+		virtual RCODE setINT( 
+			void *			pvField,
+			FLMINT			iNumber) = 0;
+
+		virtual RCODE setUINT( 
+			void *			pvField,
+			FLMUINT			uiNumber) = 0;
+
+		virtual RCODE setRecPointer( 
+			void *			pvField,
+			FLMUINT			uiRecPointer) = 0;
+
+		virtual RCODE setUnicode( 
+			void *			pvField,
+			FLMUNICODE *	puzUnicode) = 0;
+			 
+		virtual RCODE setNative( 
+			void *			pvField,
+			FLMBYTE *		pszString) = 0;
+
+		virtual RCODE setBinary( 
+			void *			pvField,
+			void *			pvBuf,
+			FLMUINT			uiBufLen) = 0;
+
+		virtual RCODE setBlob( 
+			void *			pvField,
+			FlmBlob *		pBlob) = 0;
+
+		// Create a new field at the specified position. Following the insert
+		// the current record position will be positioned on the new field.
+
+		// IMPORTANT NOTE: The insert() and remove() methods are NOT allowed to 
+		// move any fields (i.e. all 'pvField's must be valid after any FlmRecord call).
+		
+			#define INSERT_PREV_SIB			1
+			#define INSERT_NEXT_SIB			2
+			#define INSERT_FIRST_CHILD		3
+			#define INSERT_LAST_CHILD		4
+			#define INSERT_PARENT			5
+
+		virtual RCODE insert(
+			void *			pvField,
+			FLMUINT			uiInsertAt, 
+			FLMUINT			uiFieldID,
+			FLMUINT			uiDataType,
+			void **			ppvField) = 0;
+
+		// Special level based insert. Note: the level must be a value between
+		// 0 - ((last field)->level + 1)
+
+		virtual RCODE insertLast( 
+			FLMUINT			uiLevel,
+			FLMUINT			uiFieldID, 
+			FLMUINT			uiDataType,
+			void **			ppvField) = 0;
+
+		// Delete a field and it's subtree (children). 
+
+		virtual RCODE remove( 
+			void *			pvField) = 0;
+
+		virtual void * nextSibling( 
+			void *			pvField) = 0;
+
+		virtual void * prevSibling( 
+			void *			pvField) = 0;
+
+		virtual void * firstChild( 
+			void *			pvField) = 0;
+
+		virtual void * lastChild( 
+			void *			pvField) = 0;
+
+		virtual void * parent( 
+			void *			pvField) = 0;
+
+		virtual void * root( void) = 0;
+
+		virtual void * next( 
+			void *			pvField) = 0;
+
+		virtual void * prev( 
+			void *			pvField) = 0;
+
+		// Attempts to find a field given a field 
+		// number or a zero terminated field path
+
+		#define SEARCH_TREE		1	
+		#define SEARCH_FOREST	2
+
+		virtual void * find( 
+			void *			pvStartField,
+			FLMUINT			uiFieldID,
+			FLMUINT			uiOccur = 1, 
+			FLMUINT			uiFindOption = SEARCH_FOREST);
+
+		virtual void * find( 
+			void *			pvStartField,
+			FLMUINT *		puiFieldPath,
+			FLMUINT			uiOccur = 1, 
+			FLMUINT			uiFindOption = SEARCH_FOREST);
+
+		virtual FLMUINT getLevel( 
+			void *			pvField) = 0;
+
+		virtual FLMUINT getFieldID( 
+			void *			pvField) = 0;
+
+		virtual void setFieldID( 
+			void *			pvField,
+			FLMUINT			uiFieldID) = 0;
+
+		virtual FLMUINT getDataType( 
+			void *			pvField) = 0;
+
+		// Returns the storage length of the current field.
+
+		virtual FLMUINT getDataLength( 
+			void *			pvField) = 0;
+
+		// Does the current field have a child field
+
+		virtual FLMBOOL hasChild( 
+			void *			pvField) = 0;
+
+		// Is current field the last field within the
+		// record (via depth-first traversal)
+
+		virtual FLMBOOL isLast( 
+			void *			pvField) = 0;
+
+		// Special field flag - is the value truncated.
+
+		virtual FLMBOOL isRightTruncated( 
+			void *			pvField) = 0;
+
+		virtual void setRightTruncated( 
+			void *			pvField,
+			FLMBOOL			bTrueFalse) = 0;
+
+		// Special field flag - is the value the first sub-string.
+
+		virtual FLMBOOL isLeftTruncated( 
+			void *			pvField) = 0;
+
+		virtual void setLeftTruncated( 
+			void *			pvField,
+			FLMBOOL			bTrueFalse) = 0;
+
+		// Returns info about the current field
+
+		virtual RCODE getFieldInfo( 
+			void *			pvField,
+			FLMUINT *		puiFieldID, 
+			FLMUINT *		puiLevel,
+			FLMUINT *		puiDataType,
+			FLMUINT *		puiStorageLength) = 0;
+
+		// Import data from a file, buffer, or GEDCOM node. Note: the record will
+		// be cleared (via clear method) before a record is imported.
+
+		RCODE importRecord( 
+			F_FileHdl *		pFileHdl,
+			F_NameTable *	pNameTable);
+
+		RCODE importRecord(
+			FLMBYTE **		ppBuffer, 
+			FLMUINT			uiBufSize,
+			F_NameTable *	pNameTable);
+
+		RCODE importRecord( 
+			NODE_p			pNode);
+
+		RCODE exportRecord(
+			HFDB				hDb,
+			POOL *			pPool,
+			NODE_p *			ppNode);
+
+		// Gives the implementor information about how many fields and how much
+		// data will be placed within this record.
+
+		virtual RCODE preallocSpace(
+			FLMUINT			uiFieldCount,
+			FLMUINT			uiDataSize) = 0;
+			
+		// Special data put/get methods. These methods are used to input and extract 
+		// the records data at the FLAIM file system level. The data will be within 
+		// FLAIM internal format (See flaim.h for convert functions). 
+
+		// Return a buffer that the caller can then stream the data into.
+		// Note: uiLength of 0 will delete the field's value (if present).
+
+		virtual FLMBYTE * getImportDataPtr( 
+			void *			pvField,
+			FLMUINT			uiDataType, 
+			FLMUINT			uiLength) = 0;
+
+		// Following a call to getImportDataPtr the caller must call importComplete,
+		// this will enable the implementor to free any temp buffers for convert data.
+
+		virtual void importComplete( 
+			FLMBYTE *		pvImportPtr) = 0;
+
+		// Returns a pointer to the field's data in FLAIM's storage format
+
+		virtual FLMBYTE * getExportDataPtr( 
+			void *			pvField) = 0;
+
+		// Called after getExportDataPtr - enables object to free any temp buffers.
+
+		virtual void exportComplete( 
+			FLMBYTE *		pvExportPtr) = 0;
+
+		// set/get read-only flag. NOTE: all records returned from database reads will
+		// be marked read-only. Any calls to setter and/or tree manipulation methods
+		// will return an FERR_READ_ONLY error. To modify a record the user will need
+		// to make a copy. 
+
+		void setReadOnly( void)
+		{
+			m_uiFlags |= RCA_READ_ONLY_FLAG;
+		}
+
+		FLMBOOL isReadOnly( void)
+		{
+			return( (m_uiFlags & RCA_READ_ONLY_FLAG) ? TRUE : FALSE);
+		}
+
+		void setCached( void)
+		{
+			m_uiFlags |= RCA_CACHED;
+		}
+
+		void clearCached( void)
+		{
+			m_uiFlags &= ~RCA_CACHED;
+		}
+
+		FLMBOOL isCached( void)
+		{
+			return( (m_uiFlags & RCA_CACHED) ? TRUE : FALSE);
+		}
+
+		// Mutex that should be used during release operation
+
+		virtual FLMUINT getTotalMemory( void) = 0;
+
+		virtual FLMUINT getFreeMemory( void) = 0;
+
+		virtual RCODE compressMemory( void) = 0;
+
+	protected:
+
+		FLMUINT		m_uiContainerID;
+		FLMUINT		m_uiRecordID;
+		FLMUINT		m_uiFlags;
+
+	friend class F_RecordPage;
+	};
+
+	/*============================================================================
+	Class: 	FlmDefaultRec
+	Desc: 	FLAIM's default implementation of the FlmRecord class.
+	============================================================================*/
+	class FlmDefaultRec : public FlmRecord
+	{
+	public:
+
+		FlmDefaultRec();
+
+		~FlmDefaultRec();
+
 		FlmRecord * copy( void);
 
-		RCODE clear(
-			FLMBOOL			bReleaseMemory = FALSE);
+		void clear( void);
+
+		inline FLMBOOL isDefaultRec( void)
+		{
+			return( TRUE);
+		}
 
 		RCODE getINT( 
 			void *			pvField,
-			FLMINT *			piNumber);
+			FLMINT *			piNumber)
+		{
+			return (pvField)
+				? FlmStorage2INT( getDataType( pvField), getDataLength( pvField),
+							getDataPtr( (FlmField *)pvField), piNumber)
+				: FERR_NOT_FOUND;
+		}
 
 		RCODE getUINT( 
 			void *			pvField,
-			FLMUINT *		puiNumber);
+			FLMUINT *		puiNumber)
+		{
+			return (pvField)
+				? FlmStorage2UINT( getDataType( pvField), getDataLength( pvField),
+							getDataPtr( (FlmField *)pvField), puiNumber)
+				: FERR_NOT_FOUND;
+		}
 
 		RCODE getUINT32(
 			void *			pvField,
-			FLMUINT32 *		pui32Number);
+			FLMUINT32 *		pui32Number)
+		{
+			return (pvField)
+				? FlmStorage2UINT32( getDataType( pvField), getDataLength( pvField),
+							getDataPtr( (FlmField *)pvField), pui32Number)
+				: FERR_NOT_FOUND;
+		}
 
-		inline RCODE getUnicodeLength( 
+		RCODE getUnicodeLength( 
 			void *			pvField,
 			FLMUINT *		puiLength)
 		{
 			if( pvField)
 			{
-				return( FlmGetUnicodeLength( 
-					getDataType( pvField), getDataLength( pvField), 
-					getDataPtr( pvField), puiLength));
+				*puiLength = FlmGetUnicodeLength( getDataType( pvField),
+									getDataLength( pvField), 
+									getDataPtr( (FlmField *)pvField));
+				return FERR_OK;
 			}
 
 			return( FERR_NOT_FOUND);
@@ -4689,9 +4713,16 @@ typedef struct
 		RCODE getUnicode( 
 			void *			pvField,
 			FLMUNICODE *	pUnicode, 
-			FLMUINT *		puiBufLen);
+			FLMUINT *		puiBufLen)
+		{
+			return (pvField)
+				? FlmStorage2Unicode( getDataType( pvField), 
+						getDataLength( pvField), getDataPtr( (FlmField *) pvField),
+						puiBufLen, pUnicode)
+				: FERR_NOT_FOUND;
+		}
 
-		inline RCODE getNativeLength( 
+		RCODE getNativeLength( 
 			void *			pvField,
 			FLMUINT *		puiLength)
 		{
@@ -4699,7 +4730,7 @@ typedef struct
 			{
 				*puiLength = FlmGetNativeLength( 
 									getDataType( pvField), getDataLength( pvField),
-									getDataPtr( pvField));
+									getDataPtr( (FlmField *) pvField));
 				return FERR_OK;
 			}
 
@@ -4709,9 +4740,16 @@ typedef struct
 		RCODE getNative( 
 			void *			pvField,
 			FLMBYTE *		pszString, 
-			FLMUINT *		puiBufLen);
+			FLMUINT *		puiBufLen)
+		{
+			return (pvField)
+				? FlmStorage2Native( 
+						getDataType( pvField), getDataLength( pvField),
+						getDataPtr( (FlmField *) pvField), puiBufLen, pszString)
+				: FERR_NOT_FOUND;
+		}
 
-		inline RCODE getBinaryLength( 
+		RCODE getBinaryLength( 
 			void *			pvField,
 			FLMUINT *		puiLength)
 		{
@@ -4728,18 +4766,9 @@ typedef struct
 			void *			pvField,
 			FLMUINT *		puiRecPointer);
 
-		inline RCODE getRecPointer32( 
-			void *			pvField, 
-			FLMUINT32 *		pui32RecPointer)
-		{
-			FLMUINT	uiRecPointer;
-			RCODE		rc;
-			
-			rc = getRecPointer( pvField, &uiRecPointer);
-			*pui32RecPointer = (FLMUINT32)uiRecPointer;
-
-			return( rc);
-		}
+		RCODE getRecPointer32( 
+			void *			pvField,
+			FLMUINT32 *		pui32RecPointer);
 
 		RCODE getBinary(
 			void *			pvField,
@@ -4752,46 +4781,34 @@ typedef struct
 
 		RCODE setINT(
 			void *			pvField,
-			FLMINT			iNumber,
-			FLMUINT			uiEncId = 0);
+			FLMINT			iNumber);
 
 		RCODE setUINT( 
 			void *			pvField,
-			FLMUINT			uiNumber,
-			FLMUINT			uiEncId = 0);
+			FLMUINT			uiNumber);
 
 		RCODE setRecPointer(
 			void *			pvField,
-			FLMUINT			uiRecPointer,
-			FLMUINT			uiEncId = 0);
+			FLMUINT			uiRecPointer);
 
 		RCODE setUnicode(
 			void *			pvField,
-			FLMUNICODE *	puzUnicode,
-			FLMUINT			uiEncId = 0);
+			FLMUNICODE *	puzUnicode);
 
 		RCODE setNative(
 			void *			pvField,
-			FLMBYTE *		pszString,
-			FLMUINT			uiEncId = 0);
+			FLMBYTE *		pszString);
 
 		RCODE setBinary(
 			void *			pvField,
 			void *			pvBuf,
-			FLMUINT			uiBufLen,
-			FLMUINT			uiEncId = 0);
+			FLMUINT			uiBufLen);
 
 		RCODE setBlob( 
 			void *			pvField,
-			FlmBlob *		pBlob,
-			FLMUINT			uiEncId = 0);
+			FlmBlob *		pBlob);
 
-		#define INSERT_PREV_SIB			1
-		#define INSERT_NEXT_SIB			2
-		#define INSERT_FIRST_CHILD		3
-		#define INSERT_LAST_CHILD		4
-
-		RCODE insert(
+		RCODE insert( 
 			void *			pvField,
 			FLMUINT			uiInsertAt, 
 			FLMUINT			uiFieldID,
@@ -4804,76 +4821,54 @@ typedef struct
 			FLMUINT			uiDataType,
 			void **			ppvField);
 
-		inline RCODE remove(
-			void *			pvField)
+		RCODE remove( 
+			void *			pvField);
+
+		void * root( void)
 		{
-			return remove( getFieldPointer( pvField));
+			return( m_pFirstFld);
 		}
 
-		inline void * root( void)
-		{
-			if( m_uiFldTblOffset)
-			{
-				return( (void *)1);
-			}
-
-			return( NULL);
-		}
-
-		inline void * nextSibling(
+		void * nextSibling(
 			void *			pvField)
 		{
-			return( pvField 
-						? getFieldVoid( nextSiblingField( 
-								getFieldPointer( pvField)))
-						: NULL);
+			return pvField 
+						? nextSiblingField( (FlmField *)pvField) 
+						: NULL;
 		}
 
-		inline void * firstChild( 
+		void * firstChild( 
 			void *			pvField)
 		{
-			return( pvField 
-						? getFieldVoid( firstChildField( 
-								getFieldPointer( pvField)))
-						: NULL);
+			return pvField
+						? firstChildField( (FlmField *)pvField) 
+						: NULL;
 		}
 
-		inline void * next(
+		void * next(
 			void *			pvField)
 		{
-			return( pvField 
-						? getFieldVoid( nextField( 
-								getFieldPointer( pvField)))
-						: NULL);
+			return pvField
+						? nextField( (FlmField * )pvField) 
+						: NULL;
 		}
 
-		inline void * prev(
+		void * prev(
 			void *			pvField)
 		{
-			return( pvField 
-						? getFieldVoid( prevField( 
-								getFieldPointer( pvField)))
-						: NULL);
+			return pvField
+						? prevField( (FlmField *)pvField) 
+						: NULL;
 		}
 
 		void * prevSibling( 
 			void *			pvField);
 
-		inline void * lastChild( 
-			void *			pvField)
-		{
-			return( getFieldVoid( 
-				lastChildField( getFieldPointer( pvField))));
-		}
+		void * lastChild( 
+			void *			pvField);
 
-		inline void * parent( 
-			void *			pvField)
-		{
-			return parent( getFieldPointer( pvField));
-		}
-
-		#define SEARCH_TREE		1	
-		#define SEARCH_FOREST	2
+		void * parent( 
+			void *			pvField);
 
 		void * find(
 			void *			pvStartField,
@@ -4887,121 +4882,86 @@ typedef struct
 			FLMUINT			uiOccur = 1, 
 			FLMUINT			uiFindOption = SEARCH_FOREST);
 
-		inline FLMUINT getLevel(
+		FLMUINT getLevel(
 			void *			pvField)
 		{
-			return( getFieldLevel( getFieldPointer( pvField)));
+			return ((FlmField *)pvField)->ui8Level;
 		}
 
-		inline FLMUINT getFieldID(
+		FLMUINT getFieldID(
 			void *			pvField)
 		{
-			return( getFieldPointer( pvField)->ui16FieldID);
+			return ((FlmField *)pvField)->ui16FieldID;
 		}
 
-		inline void setFieldID(
+		void setFieldID(
 			void *			pvField,
 			FLMUINT			uiFieldID)
 		{
-			if( uiFieldID)
-			{
-				getFieldPointer( pvField)->ui16FieldID = (FLMUINT16)uiFieldID;
-			}
+			((FlmField *)pvField)->ui16FieldID = (FLMUINT16) uiFieldID;
 		}
 
-		inline FLMUINT getDataType(
+		FLMUINT getDataType(
 			void *			pvField)
 		{
-			return( getFieldDataType( getFieldPointer( pvField)));
+			return ((FlmField *)pvField)->ui8Type & 0x0F;
 		}
 
-		inline FLMUINT getDataLength(
+		FLMUINT getDataLength(
 			void *			pvField)
 		{
-			return( getFieldDataLength( getFieldPointer( pvField)));
+			return ((FlmField *)pvField)->uiDataLength;
 		}
 
-		inline FLMBOOL hasChild( 
+		FLMBOOL hasChild( 
 			void *			pvField)
 		{
-			return( firstChildField( 
-				getFieldPointer( pvField)) != NULL) ? TRUE : FALSE;
+			return( firstChildField( (FlmField *)pvField) != NULL) ? TRUE : FALSE;
 		}
 
-		inline FLMBOOL isLast( 
+		FLMBOOL isLast( 
 			void *			pvField)
 		{
-			return( nextField( 
-				getFieldPointer( pvField)) == NULL) ? TRUE : FALSE;
+			return( nextField( (FlmField *)pvField) == NULL) ? TRUE : FALSE;	
 		}
 
-		inline void setRightTruncated( 
+		FLMBOOL isRightTruncated(
+			void *			pvField)
+		{
+			return( ((FlmField *)pvField)->ui8Type & FLM_DATA_RIGHT_TRUNCATED) 
+						? TRUE 
+						: FALSE;
+		}
+
+		FLMBOOL isLeftTruncated( 
+			void *			pvField)
+		{
+			return( ((FlmField *)pvField)->ui8Type & FLM_DATA_LEFT_TRUNCATED) 
+						? TRUE 
+						: FALSE;
+		}
+
+		void setRightTruncated( 
 			void *			pvField,
-			FLMBOOL			bTrueFalse)
-		{
-			setRightTruncated( getFieldPointer( pvField),
-									 bTrueFalse);
-		}
+			FLMBOOL			bTrueFalse);
 
-		inline FLMBOOL isRightTruncated(
-			void *			pvField)
-		{
-			return( isRightTruncated( getFieldPointer( pvField)));
-		}
-
-		inline void setLeftTruncated( 
+		void setLeftTruncated( 
 			void *			pvField,
-			FLMBOOL			bTrueFalse)
-		{
-			setLeftTruncated( getFieldPointer( pvField),
-									bTrueFalse);
-		}
+			FLMBOOL			bTrueFalse);
 
-		inline FLMBOOL isLeftTruncated( 
-			void *			pvField)
-		{
-			return( isLeftTruncated( getFieldPointer( pvField)));
-		}
-
-		inline RCODE getFieldInfo(
+		RCODE getFieldInfo( 
 			void *			pvField,
 			FLMUINT *		puiFieldID, 
 			FLMUINT *		puiLevel, 
 			FLMUINT *		puiDataType,	
-			FLMUINT *		puiLength,
-			FLMUINT *		puiEncLength,
-			FLMUINT *		puiEncId)
+			FLMUINT *		puiLength)
 		{
-			FlmField *	pField = getFieldPointer( pvField);
+			FlmField *	pField = (FlmField *)pvField;
 
 			*puiFieldID = pField->ui16FieldID;
-			*puiLevel	= getLevel( pvField);
-			*puiLength	= getDataLength( pvField);
+			*puiLevel	= pField->ui8Level;
+			*puiLength	= pField->uiDataLength;
 			*puiDataType = getDataType( pvField);
-
-			if (isEncryptedField( pField))
-			{
-				if (puiEncLength)
-				{
-					*puiEncLength = getEncryptedDataLength( pField);
-				}
-
-				if (puiEncId)
-				{
-					*puiEncId = getEncryptionID( pField);
-				}
-			}
-			else
-			{
-				if (puiEncLength)
-				{
-					*puiEncLength = 0;
-				}
-				if (puiEncId)
-				{
-					*puiEncId = 0;
-				}
-			}
 
 			return FERR_OK;
 		}
@@ -5010,190 +4970,83 @@ typedef struct
 			FLMUINT			uiFieldCount,
 			FLMUINT			uiDataSize);
 
-		RCODE allocStorageSpace(
+		FLMBYTE * getImportDataPtr( 
 			void *			pvField,
-			FLMUINT			uiDataType,
-			FLMUINT			uiLength,
-			FLMUINT			uiEncLength,
-			FLMUINT			uiEncId,
-			FLMUINT			uiFlags,
-			FLMBYTE **		ppDataPtr,
-			FLMBYTE **		ppEncDataPtr);
+			FLMUINT			uiDataType, 
+			FLMUINT			uiLength);
+
+		void importComplete( FLMBYTE *)
+		{
+		}
+
+		FLMBYTE * getExportDataPtr( 
+			void *			pvField)
+		{
+			return getDataPtr( (FlmField *)pvField);
+		}
+
+		void exportComplete( FLMBYTE *)
+		{
+		}
 
 		FLMUINT getTotalMemory( void);
 
-		inline FLMUINT getFreeMemory( void)
-		{
-			return( ((m_uiFldTblSize - m_uiFldTblOffset) * sizeof( FlmField)) +
-				(m_uiAvailFields * sizeof( FlmField)) +
-				(getDataBufSize() - m_uiDataBufOffset));
-		}
+		FLMUINT getFreeMemory( void);
 
 		RCODE compressMemory( void);
 
-		inline FLMUINT getID( void)
-		{
-			return( m_uiRecordID);
-		}
-
-		inline void setID(
-			FLMUINT			uiRecordID)
-		{
-			m_uiRecordID = uiRecordID;
-		}
-
-		inline FLMUINT getContainerID( void)
-		{
-			return( m_uiContainerID);
-		}
-
-		inline void setContainerID(
-			FLMUINT			uiContainerID)
-		{
-			m_uiContainerID = uiContainerID;
-		}
-
-		RCODE importRecord(
-			F_FileHdl *		pFileHdl,
-			F_NameTable *	pNameTable);
-
-		RCODE importRecord(
-			FLMBYTE **		ppBuffer,
-			FLMUINT			uiBufSize,
-			F_NameTable *	pNameTable);
-
-		RCODE importRecord(
-			NODE_p			pNode);
-
-		RCODE exportRecord(
-			HFDB				hDb,
-			POOL *			pPool,
-			NODE_p *			ppNode);
-
-		inline FLMBOOL isReadOnly( void)
-		{
-			return( (m_uiFlags & RCA_READ_ONLY_FLAG) ? TRUE : FALSE);
-		}
-
-		inline FLMBOOL isCached( void)
-		{
-			return( (m_uiFlags & RCA_CACHED) ? TRUE : FALSE);
-		}
-
-		inline FLMBOOL isOldVersion( void)
-		{
-			return( (m_uiFlags & RCA_OLD_VERSION) ? TRUE : FALSE);
-		}
-
-		inline FLMBYTE * getDataPtr(
-			void *			pvField)
-		{
-			return( getDataPtr( getFieldPointer( pvField)));
-		}
-
-		inline FLMBOOL isEncryptedField(
-			void *			pvField)
-		{
-			return isEncryptedField( getFieldPointer( pvField));
-		}
-
-		inline FLMBYTE * getEncryptionDataPtr(
-			void *			pvField)
-		{
-			return( getEncryptionDataPtr( getFieldPointer( pvField)));
-		}
-
-		inline FLMUINT getEncryptedDataLength(
-			void *			pvField)
-		{
-			return getEncryptedDataLength( getFieldPointer(pvField));
-		}
-		
-		FLMUINT getEncryptionID( 
-			void *			pvField)
-		{
-			return getEncryptionID( getFieldPointer( pvField));
-		}
-			
-		FLMUINT getEncFlags(
-			void *			pvField)
-		{
-			return getEncFlags( getFieldPointer( pvField));
-		}
-		
-		void setEncFlags(
-			void *			pvField,
-			FLMUINT			uiFlags)
-		{
-			setEncFlags( getFieldPointer( pvField), uiFlags);
-		}
-
-		void * locateFieldByPosition(
-			FLMUINT			uiPosition);
-
-		
-		RCODE checkRecord( void);
-
-		RCODE checkField(
-			FlmField *			pFld);
-
-#define FLD_HAVE_ENCRYPTED_DATA		0x01
-#define FLD_HAVE_DECRYPTED_DATA		0x02
-#define FLD_PICKET_FENCE_SIZE			8		// Only used in debug builds in encrypted fields
-														// Represents the size of two picket fences.
-#define FLD_RAW_FENCE					"RAWD"
-#define FLD_ENC_FENCE					"ENCD"
-
 	private:
 
-		FLMUINT AddRef( 
-			FLMBOOL			bMutexLocked);
+		POOL			m_pool;
+	#define FIELD_LIST_SIZE		25
+		FlmField		m_fieldList[ FIELD_LIST_SIZE];
+		FlmField *	m_pFirstFld;
+		FlmField *	m_pLastFld;
+		FlmField *	m_pAvailFld;			// Single linked list of avail fields
+		
+		FLMBYTE *	m_pDataBuf;
+		FLMUINT		m_uiDataBufOffset;	// Current offset into allocated data buffer.
+		FLMUINT		m_uiHolesInData;
+		FLMUINT		m_uiDataBufLength;	// Bytes of data allocated
 
-		FLMUINT Release( 
-			FLMBOOL			bMutexLocked);
+		/*
+		** Private Methods
+		*/
 
-		void * parent( 
-			FlmField *		pField);
+		RCODE copyData(
+			FlmDefaultRec *	pRec);
 
-		inline FLMUINT getFieldLevel(
+		void resetFieldList( void);
+
+		// Returns the first field or if none it will point to the trailer field
+
+		FlmField * getFirstField( void)
+		{
+			return( m_pFirstFld);
+		}
+
+		FlmField * firstChildField( 
 			FlmField *		pField)
 		{
-			return( (pField->ui8TypeAndLevel & 0xE0) >> 5);
+			FLMUINT8 ui8Level = pField->ui8Level;
+
+			return ((pField = nextField( pField)) != NULL && 
+						pField->ui8Level > ui8Level)
+							? pField
+							: NULL;
 		}
 
-		inline void setReadOnly( void)
+		FlmField * prevField( 
+			FlmField *		pField)
 		{
-			m_uiFlags |= RCA_READ_ONLY_FLAG;
+			return (FlmField *)(pField ? pField->pPrev : NULL);
 		}
 
-		inline void setCached( void)
+		FlmField * nextField(
+			FlmField *		pField)
 		{
-			m_uiFlags |= RCA_CACHED;
+			return (FlmField *)(pField ? pField->pNext : NULL);
 		}
-
-		inline void clearCached( void)
-		{
-			m_uiFlags &= ~RCA_CACHED;
-		}
-
-		inline void setOldVersion( void)
-		{
-			m_uiFlags |= RCA_OLD_VERSION;
-		}
-
-		inline void clearOldVersion( void)
-		{
-			m_uiFlags &= ~RCA_OLD_VERSION;
-		}
-
-		void * getFieldVoid(
-			FlmField *		pField);
-
-		FlmField * getFieldPointer(
-			void *			pvField);
-
-		FLMBYTE * getDataPtr(
-			FlmField *		pField);
 
 		FlmField * nextSiblingField(
 			FlmField *		pField);
@@ -5201,168 +5054,54 @@ typedef struct
 		FlmField * lastSubTreeField( 
 			FlmField *		pField);
 
+		// Create a new field after pCurField. 
+		// ppNewField - [out] address of the new field. That the caller then can
+		//			set the structure values.
+
 		RCODE createField( 
-			FlmField *		pPrevField,
+			FlmField *		pCurField,
 			FlmField **		ppNewField); 
 
+		// Remove a specific field, or a range of fields
 		RCODE removeFields(
 			FlmField *		pFirstField,
 			FlmField *		pLastField = NULL);
 
+		// Copies the supplied field tree into this object.
 		RCODE copyFields( 
 			FlmField *		pSrcFields);
+
+		// Return a pointer to this fields data
+
+		FLMBYTE * getDataPtr(
+			FlmField *		pField) 
+		{
+			if( pField->uiDataLength == 0)
+			{
+				return NULL;
+			}
+			else if( pField->uiDataLength <= 4)
+			{
+				return (FLMBYTE *) &(pField->uiDataOffset);
+			}
+			else
+			{
+				return (m_pDataBuf + pField->uiDataOffset);
+			}
+		}
+
+		// Returns a pointer that is of size 'uiNewLength' that the caller
+		// can then write a fields data to. If possible the fields current
+		// data pointer will be reused. 
 
 		RCODE getNewDataPtr(
 			FlmField *		pField,
 			FLMUINT			uiDataType,
 			FLMUINT			uiNewLength,
-			FLMUINT			uiNewEncLength,
-			FLMUINT			uiEncId,
-			FLMUINT			uiFlags,
-			FLMBYTE **		ppDataPtr,
-			FLMBYTE **		ppEncDataPtr);
+			FLMBYTE **		ppDataPtr);
 
-		inline FlmField * firstChildField( 
-			FlmField *		pField)
-		{
-			FLMUINT	uiLevel = getLevel( getFieldVoid( pField));
-
-			return ((pField = nextField( pField)) != NULL && 
-						getLevel( getFieldVoid( pField)) > uiLevel)
-							? pField
-							: NULL;
-		}
-
-		FlmField * lastChildField(
-			FlmField *		pField);
-
-		FlmField * getFirstField( void);
-
-		FlmField * getLastField( void);
-
-		FlmField * prevField( 
-			FlmField *		pField);
-
-		FlmField * nextField(
-			FlmField *		pField);
-
-		RCODE setFieldLevel(
-			FlmField *		pField,
-			FLMUINT			uiLevel);
-
-		void setFieldDataType(
-			FlmField *		pField,
-			FLMUINT			uiDataType);
-
-		inline FLMUINT getFieldDataType(
-			FlmField *			pField)
-		{
-			FLMUINT	uiFldType;
-
-			if( (uiFldType = pField->ui8TypeAndLevel & 0x07) <= 3)
-			{
-				return( uiFldType);
-			}
-
-			return( FLM_BLOB_TYPE);
-		}
-
-		FLMUINT getFieldDataLength(
-			FlmField *			pField);
-
-		inline FlmField * getFieldTable( void)
-		{
-			return( (FlmField *)(m_pucBuffer + FLM_ALIGN_SIZE));
-		}
-
-		inline FLMUINT getDataBufSize( void)
-		{
-			return( (FLMUINT)((m_pucBuffer + m_uiBufferSize) - 
-				(FLMBYTE *)(&(getFieldTable()[ m_uiFldTblSize]))));
-		}
-
-		inline FLMBYTE * getDataBufPtr( void)
-		{
-			return( (FLMBYTE *)(&(getFieldTable()[ m_uiFldTblSize])));
-		}
-
-		RCODE compactMemory( void);
-
-		FLMBOOL isEncryptedField(
-			FlmField *			pField);
-
-		FLMBYTE * getEncryptionDataPtr(
-			FlmField *		pField);
-			
-		FLMUINT getEncryptedDataLength(
-			FlmField *		pField);
-
-		FLMUINT getEncryptionID( 
-			FlmField *			pField);
-			
-		FLMUINT getEncFlags(
-			FlmField *			pField);
-		
-		void setEncFlags(
-			FlmField *		pField,
-			FLMUINT			uiFlags);
-			
-		void setEncHeader(
-			FLMBYTE *		pBuffer,
-			FLMUINT			uiFlags,
-			FLMUINT			uiEncId,
-			FLMUINT			uiNewLength,
-			FLMUINT			uiEncNewLength);
-
-		void setRightTruncated( 
-			FlmField *		pField,
-			FLMBOOL			bTrueFalse);
-
-		void setLeftTruncated( 
-			FlmField *		pField,
-			FLMBOOL			bTrueFalse);
-
-		inline FLMBOOL isRightTruncated(
-			FlmField *		pField)
-		{
-			return( pField->ui8TypeAndLevel & 
-							FLD_DATA_RIGHT_TRUNCATED
-						? TRUE 
-						: FALSE);
-		}
-
-		inline FLMBOOL isLeftTruncated(
-			FlmField *		pField)
-		{
-			return( pField->ui8TypeAndLevel & 
-							FLD_DATA_LEFT_TRUNCATED
-						? TRUE 
-						: FALSE);
-		}
-		
-		RCODE remove(
-			FlmField *		pField);
-
-		FLMUINT		m_uiContainerID;
-		FLMUINT		m_uiRecordID;
-		FLMUINT		m_uiFlags;
-		FLMBYTE *	m_pucBuffer;
-		FLMUINT		m_uiBufferSize;
-		FLMUINT		m_uiFldTblSize;
-		FLMUINT		m_uiFldTblOffset;
-		FLMUINT		m_uiDataBufOffset;
-		FLMBOOL		m_bHolesInData;
-		FLMUINT		m_uiAvailFields;
-		FIELDLINK	m_uiFirstAvail;
-
-		friend struct FlmRecordExt;
-		friend class F_Rfl;
+	friend class F_RecordPage;
 	};
-
-	// Define FlmDefaultRec for existing applications that do a new
-	// on it
-
-	#define FlmDefaultRec	FlmRecord
 
 	RCODE flmCurPerformRead(
 		eFlmFuncs		eFlmFuncId,
@@ -5371,7 +5110,7 @@ typedef struct
 		FLMBOOL			bSetFirst,
 		FLMUINT *		puiSkipCount,
 		FlmRecord **	ppRecord,
-		FLMUINT *		puiDrn );
+		FLMUINT_p		puiDrn );
 
 	/*
 	Desc : Positions the cursor to the first item in a set defined by a cursor
@@ -5669,7 +5408,7 @@ typedef struct
 
 	} DB_CHECK_PROGRESS;
 
-	typedef struct
+	typedef struct	Rebuild_Info
 	{
 		FLMINT			iDoingFlag;
 	#define					REBUILD_GET_BLK_SIZ		1
@@ -6083,25 +5822,6 @@ typedef struct
 	void f_nativetounistrcpy(
 		FLMUNICODE *	puzDestBuf,
 		FLMBYTE *		pszSrcBuf);
-
-	FLMBOOL tokenIsNum(
-		FLMBYTE *	pszToken,
-		FLMUINT *	puiNum);
-
-	inline void f_align32(
-		FLMBYTE *		pucStart,
-		FLMBYTE **		pucCur)
-	{
-		FLMBYTE *	pucTmp = *pucCur;
-		FLMUINT		uiSize;
-
-		uiSize = sizeof( FLMUINT32) - (pucTmp - pucStart) % sizeof( FLMUINT32);
-
-		if( uiSize != sizeof( FLMUINT32))
-		{
-			*pucCur = pucTmp + uiSize;
-		}
-	}
 
 	#if !defined( FLM_UNIX) && !defined( FLM_WIN64)
 		#pragma pack(pop)
