@@ -558,7 +558,77 @@ invitations_dialog_close_button_cb(GtkWidget *widget, int response,
 static void
 in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 {
-	g_print("FIXME: Implement in_inv_accept_button_cb()\n");
+	GtkTreeSelection *sel;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	Invitation *invitation;
+	GaimBuddy *buddy;
+	int send_result;
+	GtkWidget *dialog;
+
+	sel = gtk_tree_view_get_selection(tree);
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		/**
+		 * This shouldn't happen since the button should be disabled when no
+		 * items in the list are selected.
+		 */
+		g_print("in_inv_accept_button_cb() called without an active selection\n");
+		return;
+	}
+	
+	/* Extract the Invitation * from the model using iter */
+	gtk_tree_model_get(model, &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+
+	/**
+	 * Attempt to send the reply message.  If we get a failure, it could be
+	 * because the buddy is not online.  If we want to show presence in the
+	 * Invitations Dialog, then we must require that Invitations can only exist
+	 * for buddies that are in your buddy list.
+	 * 
+	 * FIXME: Make a decision about requiring a buddy to be in your buddy list to send/receive simias messages
+	 * This decision might have just been made because the send_invitation_msg
+	 * stuff requires you to pass in the GaimBuddy * as the first argument.  I
+	 * don't think gaim_find_buddy() returns a GaimBuddy if the buddy is not in
+	 * your buddy list.  This needs investigation.
+	 */
+	buddy = gaim_find_buddy(invitation->gaim_account, invitation->buddy_name);
+	if (!buddy) {
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("This buddy is not in your buddy list.  If you want to accept this invitation, please add this buddy to your buddy list."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+
+	send_result =
+		send_invitation_request_accept_msg(buddy, invitation->collection_id);
+		
+	if (send_result <= 0) {
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("There was an error sending this message.  Perhaps the buddy is not online."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+	
+	/**
+	 * If we make it to this point, the reply message was sent and we can now
+	 * remove the Invitation from our list.  Don't forget to free the memory
+	 * being used by Invitation *!
+	 */
+	free(invitation);
+	
+	if (!gtk_list_store_remove(GTK_LIST_STORE(model), &iter)) {
+		g_print("There was an error with the iterator when trying to remove an invitation after sending an accept message.\n");
+	}
 }
 
 /**
