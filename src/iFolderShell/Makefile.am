@@ -1,7 +1,9 @@
+if WINDOWS
 WINDIR_UNIX = $(shell cygpath --unix $$WINDIR)
 REGSVR32 = $(shell cygpath --unix $$WINDIR\\system32\\Regsvr32.exe)
 REGASM = $(shell cygpath --unix $$FRAMEWORKDIR\\v1.1*\\RegAsm.exe)
 REGEDIT = regedit
+endif
 
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)

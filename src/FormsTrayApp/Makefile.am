@@ -1,7 +1,9 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
+if WINDOWS
 INSTALLUTIL := $(shell cygpath --unix "$(FRAMEWORKDIR)\v1.1*\InstallUtil.exe")
+endif
 
 iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs $(srcdir)/MessageForm.cs $(srcdir)/iFolderAppInstallerClass.cs $(srcdir)/ServerInfo.cs
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
