@@ -23,6 +23,7 @@
 
 using System;
 using System.Data;
+using System.Text;
 using Simias.Storage.Provider;
 using System.Runtime.InteropServices;
 
@@ -63,6 +64,47 @@ namespace Simias.Storage.Provider.Sqlite
 		}
 
 		#region IObjectIterator Members
+
+		/// <summary>
+		/// Translates any reserved XML characters into the proper format for inclusion in a XML string.
+		/// </summary>
+		/// <param name="normal">String to translate.</param>
+		/// <returns>Translated string.</returns>
+		private string TranslateStringToXml(string normal)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (char c in normal)
+			{
+				switch (c)
+				{
+					case '&':
+						sb.Append("&amp;");
+						break;
+
+					case '<':
+						sb.Append("&lt;");
+						break;
+
+					case '>':
+						sb.Append("&gt;");
+						break;
+
+					case '\"':
+						sb.Append("&quot;");
+						break;
+
+					case '\'':
+						sb.Append("&#39;");
+						break;
+
+					default:
+						sb.Append(c);
+						break;
+				}
+			}
+
+			return sb.ToString();
+		}
 
 		/// <summary>
 		/// Method to return the next set of objects.
@@ -111,12 +153,12 @@ namespace Simias.Storage.Provider.Sqlite
 						string objectXml = string.Format("<{0} {1}=\"{2}\" {3}=\"{4}\" {5}=\"{6}\"{7}/>", 
 								XmlTags.ObjectTag,
 								XmlTags.IdAttr,
-								id,
+								TranslateStringToXml(id),
 								XmlTags.NameAttr,
-								name,
+								TranslateStringToXml(name),
 								XmlTags.TypeAttr,
-								type,
-								cid);
+								TranslateStringToXml(type),
+								TranslateStringToXml(cid));
 
 						stringLen = objectXml.Length;
 						if (length > stringLen)
