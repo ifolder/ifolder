@@ -306,6 +306,20 @@ namespace Simias.Storage
 					// If this is a collection in a proxy state, create a special member for it with read
 					// only rights. This member will not be committable and should be treated as a read-only
 					// object.
+					string userName = identity.Name;
+
+					// Get the member that is represented in the roster.
+					Roster roster = store.GetRoster( collection.Domain );
+					if ( roster != null )
+					{
+						// Find the member in the roster.
+						Member rosterMember = roster.GetMemberByID( userID );
+						if ( rosterMember != null )
+						{
+							userName = rosterMember.Name;
+						}
+					}
+
 					if ( createMember || collection.IsProxy )
 					{
 						Access.Rights rights = createMember ? Access.Rights.Admin : Access.Rights.ReadOnly;
@@ -314,11 +328,11 @@ namespace Simias.Storage
 						// and the public key must be used.
 						if ( userID == identity.ID )
 						{
-							member = new Member( identity.Name, userID, rights, identity.PublicKey );
+							member = new Member( userName, userID, rights, identity.PublicKey );
 						}
 						else
 						{
-							member = new Member( identity.Name, userID, rights );
+							member = new Member( userName, userID, rights );
 						}
 
 						// Proxy members can never be the owner.
@@ -333,7 +347,7 @@ namespace Simias.Storage
 					}
 					else
 					{
-						throw new DoesNotExistException( String.Format( "The identity {0} - ID: {1} is not a member of collection {2} - ID: {3}.", identity.Name, userID, collection.Name, collection.ID ) );
+						throw new DoesNotExistException( String.Format( "The identity {0} - ID: {1} is not a member of collection {2} - ID: {3}.", userName, userID, collection.Name, collection.ID ) );
 					}
 				}
 			}
