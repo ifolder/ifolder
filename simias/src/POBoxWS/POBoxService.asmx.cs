@@ -368,13 +368,6 @@ namespace Simias.POBoxService.Web
 				throw new ApplicationException("Collection not found.");
 			}
 
-			if (cSub.SubscriptionCollectionURL == null)
-			{
-				SyncCollection sc = new SyncCollection(cSharedCollection);
-				cSub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
-				poBox.Commit(cSub);
-			}
-
 			SubscriptionInformation subInfo = new SubscriptionInformation();
 			subInfo.GenerateFromSubscription(cSub);
 
@@ -536,6 +529,7 @@ namespace Simias.POBoxService.Web
 	[Serializable]
 	public class SubscriptionInformation
 	{
+		public string   Name;
 		public string	MsgID;
 		public string	FromID;
 		public string	FromName;
@@ -563,6 +557,7 @@ namespace Simias.POBoxService.Web
 
 		internal void GenerateFromSubscription(Subscription cSub)
 		{
+			this.Name = cSub.Name;
 			this.MsgID = cSub.MessageID;
 			this.FromID = cSub.FromIdentity;
 			this.FromName = cSub.FromName;
