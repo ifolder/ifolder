@@ -48,6 +48,11 @@ simias_init_default_prefs()
 				      SIMIAS_PREF_SYNC_INTERVAL_DEF);
 	}
 
+	if (!gaim_prefs_exists(SIMIAS_PREF_SYNC_PRUNE_MEMBERS)) {
+		gaim_prefs_add_bool(SIMIAS_PREF_SYNC_PRUNE_MEMBERS,
+							SIMIAS_PREF_SYNC_PRUNE_MEMBERS_DEF);
+	}
+
 	if (!gaim_prefs_exists(SIMIAS_PREF_PING_REPLY_TYPE)) {
 		gaim_prefs_add_string(SIMIAS_PREF_PING_REPLY_TYPE,
 				      SIMIAS_PREF_PING_REPLY_TYPE_DEF);

@@ -248,6 +248,7 @@ simias_get_config_frame(GaimPlugin *plugin)
 {
 	GtkWidget *ret;
 	GtkWidget *vbox;
+	GtkWidget *hbox;
 	GtkWidget *label;
 	GtkWidget *sync_now_button;
 	GtkWidget *select;
@@ -263,14 +264,26 @@ simias_get_config_frame(GaimPlugin *plugin)
 		_("iFolder-enabled buddies"), SIMIAS_PREF_SYNC_METHOD_PLUGIN_ENABLED,
 		NULL);
 
-	select = gaim_gtk_prefs_labeled_spin_button(vbox,
+	gaim_gtk_prefs_checkbox(_("Remove members from domain if removed from buddy list"),
+							SIMIAS_PREF_SYNC_PRUNE_MEMBERS, vbox);
+
+	hbox = gtk_hbox_new(FALSE, 0);
+
+	select = gaim_gtk_prefs_labeled_spin_button(hbox,
 			_("Synchronize every:"), SIMIAS_PREF_SYNC_INTERVAL,
 			1, 24 * 60, NULL);
-
+	label = gtk_label_new(_("minutes"));
+	gtk_box_pack_end(GTK_BOX(hbox), label, TRUE, TRUE, 4);
+	
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+	
+	hbox = gtk_hbox_new(TRUE, 0);
 	sync_now_button =
 		gtk_button_new_with_mnemonic(_("_Synchronize Now"));
-	gtk_box_pack_end(GTK_BOX(ret),
-			sync_now_button, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(hbox),
+			sync_now_button, FALSE, FALSE, 50);
+	gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+
 	g_signal_connect(G_OBJECT(sync_now_button), "clicked",
 		G_CALLBACK(simias_sync_member_list), NULL);
 
