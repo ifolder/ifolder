@@ -110,6 +110,7 @@ namespace Simias.Sync.Web
 			{
 				Response.StatusCode = (int)HttpStatusCode.BadRequest;
 			}
+			Response.End();
 		}
 
 		public bool IsReusable
