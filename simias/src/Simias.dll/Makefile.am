@@ -18,12 +18,12 @@ endif
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in
 
-simias-client-bootstrap.config: ../Common/simias-client-bootstrap.config.in
-	sed -e 's,@_webdir_@,@webdir@,g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > $@
+../Common/simias-client-bootstrap.config: ../Common/simias-client-bootstrap.config.in
+	sed -e 's,@_webdir_@,@webdir@,g' -e 's,@_StoreProviderAssembly_@,@StoreProviderAssembly@,g' -e 's,@_StoreProviderType_@,@StoreProviderType@,g' $< > ../Common/simias-client-bootstrap.config
 	chmod +x $@
 	
-MyDns.cs: ../Common/MyDns.cs.in
-	sed -e 's,@_webbindir_@,@webbindir@,g' $< > $@
+../Common/MyDns.cs: ../Common/MyDns.cs.in
+	sed -e 's,@_webbindir_@,@webbindir@,g' $< > ../Common/MyDns.cs
 	chmod +x $@
 
 if MAKE_DOC_FILE
@@ -65,7 +65,7 @@ uninstall-local:
 	cd $(DESTDIR)$(sysconfdir); rm -f Simias.log4net simias-client-bootstrap.config
 	cd $(DESTDIR)$(datadir)/simias; rm -f log4net.LICENSE.txt
 
-CLEAN_FILES = Simias.dll $(DOC_FILE_CLEAN) $(DEBUG_FILES)
+CLEAN_FILES = Simias.dll $(DOC_FILE_CLEAN) $(DEBUG_FILES) simias-client-bootstrap.config MyDns.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES)

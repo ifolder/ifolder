@@ -430,13 +430,7 @@ AC_SUBST(XML2_LIBS)
 #
 AC_OUTPUT([
 Makefile
-simias.pc
-simias-client.pc
-simias-client-c.pc
 src/Makefile
-src/SimiasClient/SimiasSetup.cs
-src/Common/MyDns.cs
-src/Common/simias-client-bootstrap.config
 src/GaimDomain/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
@@ -445,7 +439,6 @@ src/FlaimProvider/Makefile
 src/FlaimProvider/FlaimWrapper/Makefile
 src/SimiasApp/Makefile
 src/SimiasServer/Makefile
-src/SimiasServer/simias
 src/mDnsService/Makefile
 src/WebService/Makefile
 src/POBoxWS/Makefile
