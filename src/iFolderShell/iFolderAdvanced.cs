@@ -1409,7 +1409,15 @@ namespace Novell.iFolder.iFolderCom
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
-
+			if (shareWith.SelectedItems.Count == 1)
+			{
+				ListViewItem lvi = shareWith.SelectedItems[0];
+				menuAccept.Visible = menuDecline.Visible = lvi.SubItems[1].Text.Equals(SubscriptionStates.Pending);
+			}
+			else
+			{
+				menuAccept.Visible = menuDecline.Visible = false;
+			}
 		}
 		#endregion
 
