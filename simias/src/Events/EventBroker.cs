@@ -99,10 +99,13 @@ namespace Simias.Event
 						{
 							try 
 							{ 
+								cb(args);
+								/*
 								cb.BeginInvoke(
 									args, 
 									new AsyncCallback(EventRaisedCallback), 
 									null);
+								*/
 							}
 							catch (Exception ex)
 							{

@@ -364,9 +364,10 @@ namespace Simias.Sync
 		private void Close(bool InFinalizer, bool commit)
 		{
 			if (!InFinalizer)
+			{
 				GC.SuppressFinalize(this);
-
-			asyncEvent.WaitOne();
+				asyncEvent.WaitOne();
+			}
 			if (stream != null)
 			{
 				stream.Close();
