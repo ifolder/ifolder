@@ -27,7 +27,7 @@ endif
 
 install-exec-local: ContactBrowser.exe $(DATA_FILES) $(PNG_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) ContactBrowser.exe ContactBrowser.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) ContactBrowser.exe $(srcdir)/ContactBrowser.exe.manifest $(DEBUG_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(DATA_FILES) $(PNG_FILES) $(DESTDIR)$(bindir)/res
     
 uninstall-local:
