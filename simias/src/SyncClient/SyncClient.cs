@@ -29,6 +29,7 @@ using System.IO;
 using System.Xml;
 using System.Diagnostics;
 using System.Threading;
+using System.Net;
 using Simias;
 using Simias.Storage;
 using Simias.Service;
@@ -204,6 +205,7 @@ namespace Simias.Sync
 		SimiasSyncService service;
 		Store			store;
 		SyncCollection	collection;
+		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
 		Hashtable		nodesFromServer;
@@ -216,6 +218,7 @@ namespace Simias.Sync
 		Rights			rights;
 		string			serverContext;
 		string			clientContext;
+		int				MAX_XFER_SIZE = 1024 * 64;
 		static int		BATCH_SIZE = 10;
 		bool			HadErrors;
 		private const string	ServerCLContextProp = "ServerCLContext";
@@ -244,7 +247,9 @@ namespace Simias.Sync
 
 				case SyncCollectionRoles.Slave:
 					Initialize();
-					int delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : 0;
+					int delay;
+					if (collection.MasterIncarnation == 0) delay = 0;
+					else delay = collection.Interval == Timeout.Infinite ? Timeout.Infinite : 0;
 					timer = new Timer(callback, this, delay, Timeout.Infinite);
 					break;
 			}
@@ -275,6 +280,10 @@ namespace Simias.Sync
 
 		private void Initialize()
 		{
+			if (collection.CreateMaster)
+			{
+				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
+			}
 			fileMonitor = new FileWatcher(collection, false);
 			nodesFromServer = new Hashtable();
 			filesFromServer = new Hashtable();
@@ -283,11 +292,12 @@ namespace Simias.Sync
 			killOnClient = new Hashtable();
 			serverContext = null;
 			clientContext = null;
+			buffer = new byte[MAX_XFER_SIZE];
 		}
 
 		internal void Reschedule()
 		{
-			timer.Change(collection.Interval, Timeout.Infinite);
+			timer.Change(collection.Interval * 1000, Timeout.Infinite);
 		}
 
 		internal void Stop()
@@ -306,17 +316,20 @@ namespace Simias.Sync
 
 			// Setup the url to the server.
 			service = new SimiasSyncService();
+			service.CookieContainer = new CookieContainer();
 			UriBuilder hostUrl = new UriBuilder(service.Url);
 			hostUrl.Host = collection.MasterUrl.Host;
-			if (collection.MasterUrl.Port != 0)
-				hostUrl.Port = collection.MasterUrl.Port;
+			// BUGBUG this need to be put back 
+			// if (collection.MasterUrl.Port != 0)
+			//	hostUrl.Port = collection.MasterUrl.Port;
 			service.Url = hostUrl.ToString();
 
 			rights = service.Start(collection.ID, collection.StoreReference.GetUserIDFromDomainID(collection.Domain));
 			
 			// Now lets determine the files that need to be synced.
 			GetNodesToSync();
-
+			ExecuteSync();
+			SetChangeLogContext(serverContext, clientContext, !HadErrors);
 			service.Stop();
 		}
 
@@ -344,8 +357,6 @@ namespace Simias.Sync
 				cstamps =  GetNodeStamps();
 				ReconcileAllNodeStamps(sstamps, cstamps);
 			}
-			//ExecuteSync();
-			SetChangeLogContext(serverContext, clientContext, !HadErrors);
 		}
 
 		/// <summary>
@@ -622,7 +633,7 @@ namespace Simias.Sync
 			}
 
 			// Now any nodes left are on the server but not on the client.
-			foreach(SyncNodeStamp sStamp in tempTable)
+			foreach(SyncNodeStamp sStamp in tempTable.Values)
 			{
 				GetNodeFromServer(sStamp);
 			}
@@ -632,7 +643,7 @@ namespace Simias.Sync
 		{
 			ProcessKillOnClient();
 			ProcessNodesFromServer();
-			//ProcessFilesFromServer();
+			ProcessFilesFromServer();
 			ProcessNodesToServer();
 			//ProcessFilesToServer();
 		}
@@ -731,8 +742,48 @@ namespace Simias.Sync
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(sn.node);
 				Node node = new Node(xNode);
-				collection.ImportNode(node, true, 0);
-				commitList[i++] = node;
+				if (collection.IsBaseType(node, NodeTypes.DirNodeType))
+				{
+					// This is a DirNode we need to make sure the directory exists.
+					try
+					{
+						DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
+						DirNode dn = new DirNode(node);
+						string path = dn.GetFullPath(collection);
+						if (oldNode != null)
+						{
+							// Check to see if we have a rename
+							// This could be a rename.
+							string oldPath = oldNode.GetFullPath(collection);
+							if (oldPath != path)
+							{
+								try
+								{
+									Directory.Move(oldPath, path);
+								}
+								catch
+								{
+									continue;
+								}
+							}
+						}
+
+						if (!Directory.Exists(path))
+						{
+							Directory.CreateDirectory(path);
+						}
+						collection.ImportNode(dn, false, 0);
+						collection.Commit(dn);
+						nodesFromServer.Remove(dn.ID);
+						commitList[i++] = null;
+					}
+					catch {}
+				}
+				else
+				{
+					collection.ImportNode(node, false, 0);
+					commitList[i++] = node;
+				}
 			}
 			try
 			{
@@ -749,8 +800,11 @@ namespace Simias.Sync
 				{
 					try
 					{
-						collection.Commit(node);
-						nodesFromServer.Remove(node.ID);
+						if (node != null)
+						{
+							collection.Commit(node);
+							nodesFromServer.Remove(node.ID);
+						}
 					}
 					catch (CollisionException)
 					{
@@ -771,6 +825,36 @@ namespace Simias.Sync
 						// Handle any other errors.
 						HadErrors = true;
 					}
+				}
+			}
+		}
+
+		void ProcessFilesFromServer()
+		{
+			if (filesFromServer.Count == 0)
+				return;
+
+			string[] nodeIDs = new string[filesFromServer.Count];
+			filesFromServer.Keys.CopyTo(nodeIDs, 0);
+
+			foreach (string nodeID in nodeIDs)
+			{
+				// Get the node.
+				SyncNode sn = service.GetFileNode(nodeID);
+				XmlDocument xNode = new XmlDocument();
+				xNode.LoadXml(sn.node);
+				Node node = new Node(xNode);
+				collection.ImportNode(node, false, 0);
+				
+				// Now get the file.
+				string fPath = "temp";
+				long offset = 0;
+				FileStream stream = File.Create(fPath);
+				int bytesRead;
+				while ((bytesRead = service.Read(offset, buffer.Length, out buffer)) != 0)
+				{
+					stream.Write(buffer, 0, bytesRead);
+					offset += bytesRead;
 				}
 			}
 		}

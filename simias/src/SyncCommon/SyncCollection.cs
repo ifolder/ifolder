@@ -228,7 +228,7 @@ namespace Simias.Sync
 			get
 			{
 				// get the policy sync interval
-				return SyncInterval.GetInterval((Collection)this);
+				return SyncInterval.Get(GetCurrentMember(), this).Interval;
 			}
 		}
 
