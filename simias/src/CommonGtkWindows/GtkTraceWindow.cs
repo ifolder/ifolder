@@ -34,6 +34,8 @@ namespace Simias
 		private Gtk.Window win;
 		private Gtk.TreeStore store;
 		private Gtk.TreeView tv;
+		private Gtk.Button stopButton;
+		private Gtk.Button startButton;
 
 		bool pause = false;
 
@@ -51,19 +53,48 @@ namespace Simias
 			{
 				win = new Gtk.Window ("Denali Trace Window");
 				win.DeleteEvent += new DeleteEventHandler (Window_Delete);
-				win.SetDefaultSize(640, 240);
+				win.SetDefaultSize(640, 480);
+
+				VBox vb = new VBox(false, 10);
+				HBox hb = new HBox(false, 10);
+
+				Button closeButton = new Button(Stock.Close);
+				hb.PackEnd(closeButton, false, false, 5);
+				closeButton.Clicked += 
+						new EventHandler (on_closeButton_clicked);
+
+				stopButton = new Button(Stock.Stop);
+				hb.PackEnd(stopButton, false, false, 5);
+				stopButton.Clicked += 
+						new EventHandler (on_stopstartButton_clicked);
+				startButton = new Button(Stock.Execute);
+				startButton.Hide();
+				hb.PackEnd(startButton, false, false, 5);
+				startButton.Clicked += 
+						new EventHandler (on_stopstartButton_clicked);
+
+
+				Button clearButton = new Button(Stock.Clear);
+				hb.PackEnd(clearButton, false, false, 5);
+				clearButton.Clicked += 
+						new EventHandler (clear_all);
+
+
 
 				ScrolledWindow sw = new ScrolledWindow();
-				win.Add(sw);
+				vb.PackStart(sw, true, true, 0);
+				vb.PackStart(hb, false, false, 5);
+
+				win.Add(vb);
 
 				tv = new TreeView();
 				tv.Model = store;
 				tv.HeadersVisible = false;
 				tv.AppendColumn("Messages", new CellRendererText(), "text", 0);
 				sw.Add(tv);
-
 			}
 			win.ShowAll();
+			startButton.Hide();
 		}
 		
 		private void Window_Delete (object obj, DeleteEventArgs args)
@@ -101,7 +132,31 @@ namespace Simias
 				pause = value;
 			}
 		}
+
+
+		private void on_closeButton_clicked(object obj, EventArgs args)
+		{
+			win.Hide();
+		}
+
 		
+		private void on_stopstartButton_clicked(object obj, EventArgs args)
+		{
+			pause = !pause;
+			if(pause == true)
+			{
+				stopButton.Hide();
+				startButton.ShowAll();
+			}
+			else
+			{
+				stopButton.ShowAll();
+				startButton.Hide();
+			}
+
+		}
+
+
 		private void window_clicked(object obj, ButtonPressEventArgs args)
 		{
 			Console.WriteLine("Ney, we clicked");
