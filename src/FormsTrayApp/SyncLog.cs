@@ -110,6 +110,7 @@ namespace Novell.FormsTrayApp
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SyncLog));
 			this.log = new System.Windows.Forms.ListBox();
+			this.toolBar1 = new Novell.FormsTrayApp.ToolBarEx();
 			this.toolBarSave = new System.Windows.Forms.ToolBarButton();
 			this.toolBarClear = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
@@ -136,6 +137,36 @@ namespace Novell.FormsTrayApp
 			this.log.Size = ((System.Drawing.Size)(resources.GetObject("log.Size")));
 			this.log.TabIndex = ((int)(resources.GetObject("log.TabIndex")));
 			this.log.Visible = ((bool)(resources.GetObject("log.Visible")));
+			// 
+			// toolBar1
+			// 
+			this.toolBar1.AccessibleDescription = resources.GetString("toolBar1.AccessibleDescription");
+			this.toolBar1.AccessibleName = resources.GetString("toolBar1.AccessibleName");
+			this.toolBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("toolBar1.Anchor")));
+			this.toolBar1.Appearance = ((System.Windows.Forms.ToolBarAppearance)(resources.GetObject("toolBar1.Appearance")));
+			this.toolBar1.AutoSize = ((bool)(resources.GetObject("toolBar1.AutoSize")));
+			this.toolBar1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("toolBar1.BackgroundImage")));
+			this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+																						this.toolBarSave,
+																						this.toolBarClear});
+			this.toolBar1.ButtonSize = ((System.Drawing.Size)(resources.GetObject("toolBar1.ButtonSize")));
+			this.toolBar1.DisabledImageList = null;
+			this.toolBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("toolBar1.Dock")));
+			this.toolBar1.DropDownArrows = ((bool)(resources.GetObject("toolBar1.DropDownArrows")));
+			this.toolBar1.Enabled = ((bool)(resources.GetObject("toolBar1.Enabled")));
+			this.toolBar1.Font = ((System.Drawing.Font)(resources.GetObject("toolBar1.Font")));
+			this.toolBar1.HotImageList = null;
+			this.toolBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("toolBar1.ImeMode")));
+			this.toolBar1.Location = ((System.Drawing.Point)(resources.GetObject("toolBar1.Location")));
+			this.toolBar1.Name = "toolBar1";
+			this.toolBar1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("toolBar1.RightToLeft")));
+			this.toolBar1.ShowToolTips = ((bool)(resources.GetObject("toolBar1.ShowToolTips")));
+			this.toolBar1.Size = ((System.Drawing.Size)(resources.GetObject("toolBar1.Size")));
+			this.toolBar1.TabIndex = ((int)(resources.GetObject("toolBar1.TabIndex")));
+			this.toolBar1.TextAlign = ((System.Windows.Forms.ToolBarTextAlign)(resources.GetObject("toolBar1.TextAlign")));
+			this.toolBar1.Visible = ((bool)(resources.GetObject("toolBar1.Visible")));
+			this.toolBar1.Wrappable = ((bool)(resources.GetObject("toolBar1.Wrappable")));
+			this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
 			// 
 			// toolBarSave
 			// 
@@ -164,6 +195,7 @@ namespace Novell.FormsTrayApp
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.log);
+			this.Controls.Add(this.toolBar1);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
