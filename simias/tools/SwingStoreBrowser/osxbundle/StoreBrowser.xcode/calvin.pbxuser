@@ -17,9 +17,9 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					367,
+					447,
 					20,
-					69,
+					82,
 					43,
 					43,
 					20,
@@ -39,10 +39,10 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					316,
-					70,
+					381,
+					84,
 					20,
-					70,
+					84,
 					43,
 					43,
 				);
@@ -56,7 +56,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 130357785;
+			PBXPerProjectTemplateStateSaveDate = 130360751;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -233,19 +233,17 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 130357785;
+			PBXWorkspaceStateSaveDate = 130360751;
 		};
 		perUserProjectItems = {
 			3E72B1B607C51AD300F2A562 = 3E72B1B607C51AD300F2A562;
 			3E72B1B707C51AD300F2A562 = 3E72B1B707C51AD300F2A562;
 			3E72B1B907C51AD300F2A562 = 3E72B1B907C51AD300F2A562;
 			3E72B1BA07C51AD300F2A562 = 3E72B1BA07C51AD300F2A562;
-			3E72B1C407C51B7900F2A562 = 3E72B1C407C51B7900F2A562;
 			3E72B1C607C51B7900F2A562 = 3E72B1C607C51B7900F2A562;
-			3E72B1CC07C51B9A00F2A562 = 3E72B1CC07C51B9A00F2A562;
-			3E72B1CE07C51B9A00F2A562 = 3E72B1CE07C51B9A00F2A562;
-			3E72B1CF07C51B9A00F2A562 = 3E72B1CF07C51B9A00F2A562;
-			3E72B1D207C51B9B00F2A562 = 3E72B1D207C51B9B00F2A562;
+			3E9D8EDE07C523F200C57DC1 = 3E9D8EDE07C523F200C57DC1;
+			3ECFAD0607C5207C001B0038 = 3ECFAD0607C5207C001B0038;
+			3EEB06C507C525C1003DE34C = 3EEB06C507C525C1003DE34C;
 		};
 		sourceControlManager = 3ED2846907C5169B00F2B104;
 		userBuildSettings = {
@@ -322,16 +320,6 @@
 		vrLen = 1046;
 		vrLoc = 0;
 	};
-	3E72B1C407C51B7900F2A562 = {
-		fRef = 3ED2848207C5179100F2B104;
-		isa = PBXTextBookmark;
-		name = "StoreBrowserWindow.java: 314";
-		rLen = 0;
-		rLoc = 9505;
-		rType = 0;
-		vrLen = 967;
-		vrLoc = 9061;
-	};
 	3E72B1C607C51B7900F2A562 = {
 		fRef = 3ED2848207C5179100F2B104;
 		isa = PBXTextBookmark;
@@ -342,75 +330,19 @@
 		vrLen = 967;
 		vrLoc = 9061;
 	};
-	3E72B1CC07C51B9A00F2A562 = {
-		fRef = 3E72B1CD07C51B9A00F2A562;
-		isa = PBXTextBookmark;
-		name = "(null): 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 1571;
-		vrLoc = 49;
-	};
-	3E72B1CD07C51B9A00F2A562 = {
-		isa = PBXFileReference;
-		name = AboutBox.java;
-		path = /Users/calvin/Desktop/AboutBox.java;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E72B1CE07C51B9A00F2A562 = {
+	3E9D8EDE07C523F200C57DC1 = {
 		isa = PBXTargetBookmark;
 		trg = 1601BCDBFEEE210811DB9C8B;
-		uiCtxt = {
-			TOCViewDetailVisibleRect = "{{0, 0}, {421, 233}}";
-			TOCViewExpandedItems = (
-				"com.apple.target-editor-pane.settings",
-				"com.apple.target-editor-pane.settings.simple",
-				"com.apple.target-editor-pane.info-plist",
-				"com.apple.target-editor-pane.info-plist.simple",
-				"com.apple.target-editor-pane.buildphases",
-			);
-			TOCViewMasterVisibleRect = "{{0, 0}, {165, 549}}";
-			TOCViewSelectedItems = (
-				PBXTargetSummarySettingsModule,
-			);
-		};
 	};
-	3E72B1CF07C51B9A00F2A562 = {
-		fRef = 3E72B1D007C51B9A00F2A562;
+	3ECFAD0607C5207C001B0038 = {
+		fRef = 3ED2848207C5179100F2B104;
 		isa = PBXTextBookmark;
-		name = "(null): 1";
+		name = "StoreBrowserWindow.java: 310";
 		rLen = 0;
-		rLoc = 0;
+		rLoc = 9339;
 		rType = 0;
-		vrLen = 1571;
-		vrLoc = 49;
-	};
-	3E72B1D007C51B9A00F2A562 = {
-		isa = PBXFileReference;
-		name = AboutBox.java;
-		path = /Users/calvin/Desktop/AboutBox.java;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	3E72B1D207C51B9B00F2A562 = {
-		isa = PBXTargetBookmark;
-		trg = 1601BCDBFEEE210811DB9C8B;
-		uiCtxt = {
-			TOCViewDetailVisibleRect = "{{0, 0}, {421, 233}}";
-			TOCViewExpandedItems = (
-				"com.apple.target-editor-pane.settings",
-				"com.apple.target-editor-pane.settings.simple",
-				"com.apple.target-editor-pane.info-plist",
-				"com.apple.target-editor-pane.info-plist.simple",
-				"com.apple.target-editor-pane.buildphases",
-			);
-			TOCViewMasterVisibleRect = "{{0, 0}, {165, 549}}";
-			TOCViewSelectedItems = (
-				PBXTargetSummarySettingsModule,
-			);
-		};
+		vrLen = 2028;
+		vrLoc = 0;
 	};
 	3ED2846907C5169B00F2B104 = {
 		fallbackIsa = XCSourceControlManager;
@@ -439,6 +371,7 @@
 			sepNavIntBoundsRect = "{{0, 0}, {770, 6635}}";
 			sepNavSelRange = "{9505, 0}";
 			sepNavVisRect = "{{0, 4122}, {586, 566}}";
+			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
 	};
 	3ED2848307C5179100F2B104 = {
@@ -454,6 +387,24 @@
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRect = "{{0, 84}, {563, 314}}";
 			sepNavWindowFrame = "{{8, 202}, {695, 794}}";
+		};
+	};
+	3EEB06C507C525C1003DE34C = {
+		isa = PBXTargetBookmark;
+		trg = 1601BCDBFEEE210811DB9C8B;
+		uiCtxt = {
+			TOCViewDetailVisibleRect = "{{0, 0}, {487, 233}}";
+			TOCViewExpandedItems = (
+				"com.apple.target-editor-pane.settings",
+				"com.apple.target-editor-pane.settings.simple",
+				"com.apple.target-editor-pane.info-plist",
+				"com.apple.target-editor-pane.info-plist.simple",
+				"com.apple.target-editor-pane.buildphases",
+			);
+			TOCViewMasterVisibleRect = "{{0, 0}, {192, 491}}";
+			TOCViewSelectedItems = (
+				PBXTargetSummarySettingsModule,
+			);
 		};
 	};
 	6AAAF056023EA5D30CC91562 = {

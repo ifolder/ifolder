@@ -126,6 +126,7 @@
 //164
 		1601BCDBFEEE210811DB9C8B = {
 			buildPhases = (
+				3E9D8EEA07C524D200C57DC1,
 				1601BCDCFEEE210811DB9C8B,
 				1601BCDEFEEE210811DB9C8B,
 				1601BCDFFEEE210811DB9C8B,
@@ -174,7 +175,17 @@
 	<key>Java</key>
 	<dict>
 		<key>ClassPath</key>
-		<string>$JAVAROOT/StoreBrowser.jar</string>
+		<array>
+			<string>$JAVAROOT/StoreBrowser.jar</string>
+			<string>$JAVAROOT/log4j-1.2.8.jar</string>
+			<string>$JAVAROOT/saaj.jar</string>
+			<string>$JAVAROOT/wsdl4j.jar</string>
+			<string>$JAVAROOT/axis-ant.jar</string>
+			<string>$JAVAROOT/axis.jar</string>
+			<string>$JAVAROOT/commons-discovery.jar</string>
+			<string>$JAVAROOT/commons-logging.jar</string>
+			<string>$JAVAROOT/jaxrpc.jar</string>
+		</array>
 		<key>JVMVersion</key>
 		<string>1.4+</string>
 		<key>MainClass</key>
@@ -264,6 +275,71 @@
 //3E2
 //3E3
 //3E4
+		3E9D8EEA07C524D200C57DC1 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 15;
+			files = (
+				3E9D8EEB07C524E000C57DC1,
+				3E9D8EEF07C524ED00C57DC1,
+				3E9D8EF007C524ED00C57DC1,
+				3E9D8EF107C524ED00C57DC1,
+				3E9D8EF207C524ED00C57DC1,
+				3E9D8EF307C524ED00C57DC1,
+				3E9D8EF407C524ED00C57DC1,
+				3E9D8EF507C524ED00C57DC1,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9D8EEB07C524E000C57DC1 = {
+			fileRef = 3ED2849407C5185500F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EEF07C524ED00C57DC1 = {
+			fileRef = 3ED2849507C5185600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EF007C524ED00C57DC1 = {
+			fileRef = 3ED2849607C5185600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EF107C524ED00C57DC1 = {
+			fileRef = 3ED2849707C5185600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EF207C524ED00C57DC1 = {
+			fileRef = 3ED2848C07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EF307C524ED00C57DC1 = {
+			fileRef = 3ED2848D07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EF407C524ED00C57DC1 = {
+			fileRef = 3ED2848E07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E9D8EF507C524ED00C57DC1 = {
+			fileRef = 3ED2848F07C5184600F2B104;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3ED2847207C5176E00F2B104 = {
 			children = (
 				3ED2847307C5177A00F2B104,
