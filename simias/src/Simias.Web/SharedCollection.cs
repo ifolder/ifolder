@@ -347,9 +347,7 @@ namespace Simias.Web
 			// the source in iFolderManager
 
 #if WINDOWS
-			uint type = GetDriveType(Path.GetPathRoot(path));
-			if (!((type == DRIVE_REMOVABLE) ||
-				(type == DRIVE_FIXED)))
+			if (GetDriveType(Path.GetPathRoot(path)) != DRIVE_FIXED)
 			{
 				return false;
 			}
