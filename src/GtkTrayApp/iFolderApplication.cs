@@ -295,7 +295,7 @@ namespace Novell.iFolder
 						}
 					}
 
-					if (!authentiated)
+					if (!authenticated)
 					{
 						LoginDialog.ShowAll();
 					}
