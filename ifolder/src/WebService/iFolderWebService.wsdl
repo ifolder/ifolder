@@ -194,9 +194,8 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="Rights" type="xs:string" />
-          <xs:element minOccurs="1" maxOccurs="1" name="IsOwner" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
-          <xs:element minOccurs="1" maxOccurs="1" name="IsSubscription" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetOwnerResponse">

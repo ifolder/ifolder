@@ -187,7 +187,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if(user.IsSubscription)
+			if(user.State != "Member")
 				((CellRendererPixbuf) cell).Pixbuf = InvitedPixBuf;
 			else
 				((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
@@ -201,7 +201,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
-			if(user.IsSubscription)
+			if(user.State != "Member")
 				((CellRendererText) cell).Text = "Invited User";
 			else
 				((CellRendererText) cell).Text = "iFolder User";

@@ -673,13 +673,10 @@ public class iFolderUser {
     public string Rights;
 
     /// <remarks/>
-    public bool IsOwner;
-
-    /// <remarks/>
     public string ID;
 
     /// <remarks/>
-    public bool IsSubscription;
+    public string State;
 }
 
 /// <remarks/>
