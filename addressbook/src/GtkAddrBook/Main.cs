@@ -36,14 +36,12 @@ namespace ContactBrowser
 		public static void Main (string[] args)
 		{
 			Gnome.Program program =
-				new Program("ContactBrowser", "0.0.1", Modules.UI, args);
+				new Program("contact-browser", "0.10.0", Modules.UI, args);
 
-//			Application.Init();
 			ContactBrowser cb = new ContactBrowser();
 			cb.AddrBookClosed += new EventHandler(on_cb_closed);
 			cb.ShowAll();
 			program.Run();
-//			Application.Run();
 		}
 
 		public static void on_cb_closed(object o, EventArgs args) 
