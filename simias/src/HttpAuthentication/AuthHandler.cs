@@ -25,7 +25,6 @@ using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.ComponentModel;
-//using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -35,7 +34,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
-////using Simias.Client;
+//using Simias.Client;
 //using Simias.Client.Authentication;
 
 using Simias;
@@ -128,6 +127,7 @@ namespace Simias.Security.Web
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		private string domainID;
 		private string username;
 		private string password;
 		private string authType;
@@ -136,10 +136,16 @@ namespace Simias.Security.Web
 		private readonly char[] backDelimeter = {'\\'};
 
 		#region Properties
-		public string Username 
+		public string AuthType
 		{
-			get { return this.username; }
-			set { this.username = value; }
+			get { return this.authType; }
+			set { this.authType = value; }
+		}
+
+		public string DomainID
+		{
+			get { return this.domainID; }
+			set { this.domainID = value; }
 		}
 
 		public string Password
@@ -148,10 +154,10 @@ namespace Simias.Security.Web
 			set { this.password = value; }
 		}
 
-		public string AuthType
+		public string Username 
 		{
-			get { return this.authType; }
-			set { this.authType = value; }
+			get { return this.username; }
+			set { this.username = value; }
 		}
 		#endregion
 
@@ -173,28 +179,65 @@ namespace Simias.Security.Web
 		{
 			Simias.Authentication.Status authStatus = null;
 
-			if ( this.authType == "basic" &&
-				this.username != null &&
-				this.password != null )
+			if ( this.username != null && this.password != null )
 			{
-				try
+				if ( this.authType == "basic" )
 				{
-					IAuthenticationService iAuth;
-					iAuth = (IAuthenticationService) Activator.CreateInstance( iAuthService );
-					authStatus = iAuth.AuthenticateByName( this.username, this.password );
-					iAuth = null;
+					try
+					{
+						IAuthenticationService iAuth;
+						iAuth = (IAuthenticationService) Activator.CreateInstance( iAuthService );
+						authStatus = iAuth.AuthenticateByName( this.username, this.password );
+						iAuth = null;
+					}
+					catch(Exception e)
+					{
+						log.Error( e.Message );
+						log.Error( e.StackTrace );
+						authStatus = new Simias.Authentication.Status( SCodes.InternalException );
+						authStatus.ExceptionMessage = e.Message;
+					}
 				}
-				catch(Exception e)
+				else
+				if ( this.authType == "ppk" )
 				{
-					log.Error( e.Message );
-					log.Error( e.StackTrace );
-					authStatus = new Simias.Authentication.Status( SCodes.InternalException );
-					authStatus.ExceptionMessage = e.Message;
+					//
+					// FIXME:: for now let's just verify the user in the store and let him through
+					//
+					authStatus = new Simias.Authentication.Status( SCodes.Unknown );
+
+					try
+					{
+						Simias.Storage.Domain domain = Store.GetStore().GetDomain( this.domainID );
+						if ( domain != null )
+						{
+							Member member = domain.GetMemberByID( this.username );
+							if ( member != null )
+							{
+								authStatus.UserID = member.UserID;
+								authStatus.UserName = member.Name;
+								authStatus.statusCode = SCodes.Success;
+							}
+							else
+							{
+								authStatus.statusCode = SCodes.UnknownUser;
+							}
+						}
+						else
+						{
+							authStatus.statusCode = SCodes.UnknownDomain;
+						}
+					}
+					catch( Exception e )
+					{
+						log.Debug( e.Message );
+						log.Debug( e.StackTrace );
+					}
 				}
 			}
 			else
 			{
-				authStatus = new Simias.Authentication.Status( SCodes.Unknown );
+				authStatus = new Simias.Authentication.Status( SCodes.InvalidCredentials );
 			}
 
 			return authStatus;
@@ -242,8 +285,18 @@ namespace Simias.Security.Web
 
 				if (credentials.Length == 2)
 				{
-					this.authType = "basic";
-					this.username = credentials[0];
+					// Check if this is a Rendezvous client attempting to authenticate
+					if ( credentials[0].StartsWith( "@ppk@" ) )
+					{
+						this.authType = "ppk";
+						this.username = credentials[0].Remove(0, 5);
+					}
+					else
+					{
+						this.authType = "basic";
+						this.username = credentials[0];
+					}
+
 					this.password = credentials[1];
 					returnStatus = true;
 				}
@@ -392,12 +445,12 @@ namespace Simias.Security.Web
 			// Check the session to see if we have already authenticated this user
 			//
 
-			if (context.Session != null)
+			if ( context.Session != null )
 			{
 				//log.Debug( "SessionTag: " + app.Context.Session.SessionID );
    				GenericPrincipal sessionPrincipal;
    
-				sessionPrincipal = (GenericPrincipal)(context.Session[this.sessionTag]);
+				sessionPrincipal = (GenericPrincipal)( context.Session[this.sessionTag] );
    				if (sessionPrincipal != null)
    				{
    					context.User = sessionPrincipal;
@@ -408,7 +461,7 @@ namespace Simias.Security.Web
 					//log.Debug( "Session object " + sessionTag + " not set!" );
 				}
    
-   				if (context.User.Identity.IsAuthenticated)
+   				if ( context.User.Identity.IsAuthenticated )
    				{
 					challengeRequest = false;
 
@@ -423,28 +476,27 @@ namespace Simias.Security.Web
    					// Check for Authorization headers coming back
    					//
    
-   					string[] encodedCredentials = context.Request.Headers.GetValues("Authorization");
+   					string[] encodedCredentials = context.Request.Headers.GetValues( "Authorization" );
 					if ( encodedCredentials != null && encodedCredentials[0] != null )
 					{
-						string authServiceUser = null;
+						bool success;
 
 						SimiasCredentials creds = new SimiasCredentials();
-						bool success = 
-							creds.AuthorizationHeaderToCredentials( encodedCredentials[0] );
+						success = creds.AuthorizationHeaderToCredentials( encodedCredentials[0] );
 						if ( success == true )
 						{
-							Simias.Authentication.Status authStatus = 
-								creds.Authenticate( this.iAuthService );
+
+
+							Simias.Authentication.Status authStatus;
+							authStatus = creds.Authenticate( this.iAuthService );
 
 							this.SetSimiasResponseHeaders( context, authStatus );
 
 							if ( authStatus.statusCode == SCodes.Success ||
 								authStatus.statusCode == SCodes.SuccessInGrace )
 							{
-								authServiceUser = authStatus.UserID;
 								challengeRequest = false;
-
-								this.SetLastLoginTime( context, authStatus );
+								this.SetLastLoginTime( creds, authStatus );
    
 								//
 								// Set the context user for this request
@@ -453,7 +505,7 @@ namespace Simias.Security.Web
 								context.User = 
 									new GenericPrincipal(
 										new GenericIdentity(
-											authServiceUser, 
+											authStatus.UserID,
 											"Basic authentication"), 
 											rolesArray);
    
@@ -502,6 +554,15 @@ namespace Simias.Security.Web
 							creds.AuthorizationHeaderToCredentials( encodedCredentials[0] );
 						if ( success == true )
 						{
+							// Get the domain from the request header
+							string[] domainID = 
+								context.Request.Headers.GetValues(
+									Simias.Security.Web.AuthenticationService.Login.DomainIDHeader );
+							if ( domainID != null && domainID[0] != null && domainID[0] != "" )
+							{
+								creds.DomainID = domainID[0];
+							}
+
 							Simias.Authentication.Status authStatus = 
 								creds.Authenticate( this.iAuthService );
 
@@ -510,7 +571,7 @@ namespace Simias.Security.Web
 							if ( authStatus.statusCode == SCodes.Success ||
 								authStatus.statusCode == SCodes.SuccessInGrace )
 							{
-								this.SetLastLoginTime( context, authStatus );
+								this.SetLastLoginTime( creds, authStatus );
 							}
 
 							app.CompleteRequest();
@@ -571,7 +632,7 @@ namespace Simias.Security.Web
 		{
 			HttpContext context = HttpContext.Current;
 
-			log.Debug( "OnAuthenticateRequest called" );
+			//log.Debug( "OnAuthenticateRequest called" );
 
 			//
 			// There is no way to access session information from the OnAuthenticateRequest
@@ -682,14 +743,11 @@ namespace Simias.Security.Web
 			}
 		}
 
-		private void SetLastLoginTime( HttpContext context, Simias.Authentication.Status authStatus)
+		private void SetLastLoginTime( SimiasCredentials creds, Simias.Authentication.Status authStatus )
 		{
-			string[] domainID = 
-				context.Request.Headers.GetValues(
-				Simias.Security.Web.AuthenticationService.Login.DomainIDHeader);
-			if ( domainID != null && domainID[0] != null && domainID[0] != "" )
+			if ( creds.DomainID != null )
 			{
-				Simias.Storage.Domain domain = Store.GetStore().GetDomain( domainID[0] );
+				Simias.Storage.Domain domain = Store.GetStore().GetDomain( creds.DomainID );
 				if ( domain != null )
 				{
 					Member member = domain.GetMemberByID( authStatus.UserID );
