@@ -79,7 +79,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.CheckBox rememberPassword;
 		private System.Windows.Forms.CheckBox autoLogin;
-		private System.Windows.Forms.Button advanced;
 		private System.Windows.Forms.Button details;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label9;
@@ -89,12 +88,14 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ListView accounts;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
-		private System.Windows.Forms.Button connect;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.TabPage tabAccounts;
 		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button login;
+		private System.Windows.Forms.Button proxy;
+		private System.Windows.Forms.Button logout;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -160,13 +161,14 @@ namespace Novell.FormsTrayApp
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.details = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.connect = new System.Windows.Forms.Button();
+			this.logout = new System.Windows.Forms.Button();
+			this.login = new System.Windows.Forms.Button();
 			this.password = new System.Windows.Forms.TextBox();
 			this.server = new System.Windows.Forms.TextBox();
 			this.userName = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this.advanced = new System.Windows.Forms.Button();
+			this.proxy = new System.Windows.Forms.Button();
 			this.autoLogin = new System.Windows.Forms.CheckBox();
 			this.rememberPassword = new System.Windows.Forms.CheckBox();
 			this.label10 = new System.Windows.Forms.Label();
@@ -557,8 +559,8 @@ namespace Novell.FormsTrayApp
 			this.accounts.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("accounts.Anchor")));
 			this.accounts.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accounts.BackgroundImage")));
 			this.accounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																					   this.columnHeader2,
-																					   this.columnHeader3});
+																					   this.columnHeader3,
+																					   this.columnHeader2});
 			this.accounts.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accounts.Dock")));
 			this.accounts.Enabled = ((bool)(resources.GetObject("accounts.Enabled")));
 			this.accounts.Font = ((System.Drawing.Font)(resources.GetObject("accounts.Font")));
@@ -620,13 +622,14 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.AccessibleName = resources.GetString("groupBox2.AccessibleName");
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox2.Anchor")));
 			this.groupBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox2.BackgroundImage")));
-			this.groupBox2.Controls.Add(this.connect);
+			this.groupBox2.Controls.Add(this.logout);
+			this.groupBox2.Controls.Add(this.login);
 			this.groupBox2.Controls.Add(this.password);
 			this.groupBox2.Controls.Add(this.server);
 			this.groupBox2.Controls.Add(this.userName);
 			this.groupBox2.Controls.Add(this.label9);
 			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.advanced);
+			this.groupBox2.Controls.Add(this.proxy);
 			this.groupBox2.Controls.Add(this.autoLogin);
 			this.groupBox2.Controls.Add(this.rememberPassword);
 			this.groupBox2.Controls.Add(this.label10);
@@ -645,29 +648,53 @@ namespace Novell.FormsTrayApp
 			this.groupBox2.Text = resources.GetString("groupBox2.Text");
 			this.groupBox2.Visible = ((bool)(resources.GetObject("groupBox2.Visible")));
 			// 
-			// connect
+			// logout
 			// 
-			this.connect.AccessibleDescription = resources.GetString("connect.AccessibleDescription");
-			this.connect.AccessibleName = resources.GetString("connect.AccessibleName");
-			this.connect.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("connect.Anchor")));
-			this.connect.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("connect.BackgroundImage")));
-			this.connect.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("connect.Dock")));
-			this.connect.Enabled = ((bool)(resources.GetObject("connect.Enabled")));
-			this.connect.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("connect.FlatStyle")));
-			this.connect.Font = ((System.Drawing.Font)(resources.GetObject("connect.Font")));
-			this.connect.Image = ((System.Drawing.Image)(resources.GetObject("connect.Image")));
-			this.connect.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.ImageAlign")));
-			this.connect.ImageIndex = ((int)(resources.GetObject("connect.ImageIndex")));
-			this.connect.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("connect.ImeMode")));
-			this.connect.Location = ((System.Drawing.Point)(resources.GetObject("connect.Location")));
-			this.connect.Name = "connect";
-			this.connect.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("connect.RightToLeft")));
-			this.connect.Size = ((System.Drawing.Size)(resources.GetObject("connect.Size")));
-			this.connect.TabIndex = ((int)(resources.GetObject("connect.TabIndex")));
-			this.connect.Text = resources.GetString("connect.Text");
-			this.connect.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("connect.TextAlign")));
-			this.connect.Visible = ((bool)(resources.GetObject("connect.Visible")));
-			this.connect.Click += new System.EventHandler(this.connect_Click);
+			this.logout.AccessibleDescription = resources.GetString("logout.AccessibleDescription");
+			this.logout.AccessibleName = resources.GetString("logout.AccessibleName");
+			this.logout.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("logout.Anchor")));
+			this.logout.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("logout.BackgroundImage")));
+			this.logout.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("logout.Dock")));
+			this.logout.Enabled = ((bool)(resources.GetObject("logout.Enabled")));
+			this.logout.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("logout.FlatStyle")));
+			this.logout.Font = ((System.Drawing.Font)(resources.GetObject("logout.Font")));
+			this.logout.Image = ((System.Drawing.Image)(resources.GetObject("logout.Image")));
+			this.logout.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.ImageAlign")));
+			this.logout.ImageIndex = ((int)(resources.GetObject("logout.ImageIndex")));
+			this.logout.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("logout.ImeMode")));
+			this.logout.Location = ((System.Drawing.Point)(resources.GetObject("logout.Location")));
+			this.logout.Name = "logout";
+			this.logout.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("logout.RightToLeft")));
+			this.logout.Size = ((System.Drawing.Size)(resources.GetObject("logout.Size")));
+			this.logout.TabIndex = ((int)(resources.GetObject("logout.TabIndex")));
+			this.logout.Text = resources.GetString("logout.Text");
+			this.logout.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("logout.TextAlign")));
+			this.logout.Visible = ((bool)(resources.GetObject("logout.Visible")));
+			this.logout.Click += new System.EventHandler(this.logout_Click);
+			// 
+			// login
+			// 
+			this.login.AccessibleDescription = resources.GetString("login.AccessibleDescription");
+			this.login.AccessibleName = resources.GetString("login.AccessibleName");
+			this.login.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("login.Anchor")));
+			this.login.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("login.BackgroundImage")));
+			this.login.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("login.Dock")));
+			this.login.Enabled = ((bool)(resources.GetObject("login.Enabled")));
+			this.login.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("login.FlatStyle")));
+			this.login.Font = ((System.Drawing.Font)(resources.GetObject("login.Font")));
+			this.login.Image = ((System.Drawing.Image)(resources.GetObject("login.Image")));
+			this.login.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.ImageAlign")));
+			this.login.ImageIndex = ((int)(resources.GetObject("login.ImageIndex")));
+			this.login.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("login.ImeMode")));
+			this.login.Location = ((System.Drawing.Point)(resources.GetObject("login.Location")));
+			this.login.Name = "login";
+			this.login.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("login.RightToLeft")));
+			this.login.Size = ((System.Drawing.Size)(resources.GetObject("login.Size")));
+			this.login.TabIndex = ((int)(resources.GetObject("login.TabIndex")));
+			this.login.Text = resources.GetString("login.Text");
+			this.login.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("login.TextAlign")));
+			this.login.Visible = ((bool)(resources.GetObject("login.Visible")));
+			this.login.Click += new System.EventHandler(this.login_Click);
 			// 
 			// password
 			// 
@@ -791,29 +818,29 @@ namespace Novell.FormsTrayApp
 			this.label5.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label5.TextAlign")));
 			this.label5.Visible = ((bool)(resources.GetObject("label5.Visible")));
 			// 
-			// advanced
+			// proxy
 			// 
-			this.advanced.AccessibleDescription = resources.GetString("advanced.AccessibleDescription");
-			this.advanced.AccessibleName = resources.GetString("advanced.AccessibleName");
-			this.advanced.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("advanced.Anchor")));
-			this.advanced.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("advanced.BackgroundImage")));
-			this.advanced.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("advanced.Dock")));
-			this.advanced.Enabled = ((bool)(resources.GetObject("advanced.Enabled")));
-			this.advanced.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("advanced.FlatStyle")));
-			this.advanced.Font = ((System.Drawing.Font)(resources.GetObject("advanced.Font")));
-			this.advanced.Image = ((System.Drawing.Image)(resources.GetObject("advanced.Image")));
-			this.advanced.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("advanced.ImageAlign")));
-			this.advanced.ImageIndex = ((int)(resources.GetObject("advanced.ImageIndex")));
-			this.advanced.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("advanced.ImeMode")));
-			this.advanced.Location = ((System.Drawing.Point)(resources.GetObject("advanced.Location")));
-			this.advanced.Name = "advanced";
-			this.advanced.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("advanced.RightToLeft")));
-			this.advanced.Size = ((System.Drawing.Size)(resources.GetObject("advanced.Size")));
-			this.advanced.TabIndex = ((int)(resources.GetObject("advanced.TabIndex")));
-			this.advanced.Text = resources.GetString("advanced.Text");
-			this.advanced.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("advanced.TextAlign")));
-			this.advanced.Visible = ((bool)(resources.GetObject("advanced.Visible")));
-			this.advanced.Click += new System.EventHandler(this.advanced_Click);
+			this.proxy.AccessibleDescription = resources.GetString("proxy.AccessibleDescription");
+			this.proxy.AccessibleName = resources.GetString("proxy.AccessibleName");
+			this.proxy.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("proxy.Anchor")));
+			this.proxy.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("proxy.BackgroundImage")));
+			this.proxy.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("proxy.Dock")));
+			this.proxy.Enabled = ((bool)(resources.GetObject("proxy.Enabled")));
+			this.proxy.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("proxy.FlatStyle")));
+			this.proxy.Font = ((System.Drawing.Font)(resources.GetObject("proxy.Font")));
+			this.proxy.Image = ((System.Drawing.Image)(resources.GetObject("proxy.Image")));
+			this.proxy.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("proxy.ImageAlign")));
+			this.proxy.ImageIndex = ((int)(resources.GetObject("proxy.ImageIndex")));
+			this.proxy.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("proxy.ImeMode")));
+			this.proxy.Location = ((System.Drawing.Point)(resources.GetObject("proxy.Location")));
+			this.proxy.Name = "proxy";
+			this.proxy.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("proxy.RightToLeft")));
+			this.proxy.Size = ((System.Drawing.Size)(resources.GetObject("proxy.Size")));
+			this.proxy.TabIndex = ((int)(resources.GetObject("proxy.TabIndex")));
+			this.proxy.Text = resources.GetString("proxy.Text");
+			this.proxy.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("proxy.TextAlign")));
+			this.proxy.Visible = ((bool)(resources.GetObject("proxy.Visible")));
+			this.proxy.Click += new System.EventHandler(this.proxy_Click);
 			// 
 			// autoLogin
 			// 
@@ -1285,7 +1312,7 @@ namespace Novell.FormsTrayApp
 					currentDefaultDomain = domain;
 				}
 
-				ListViewItem lvi = new ListViewItem(new string[] {domainWeb.UserName, domain.Name});
+				ListViewItem lvi = new ListViewItem(new string[] {domain.Name, domainWeb.UserName});
 				lvi.Tag = domain;
 				lvi.Selected = domainWeb.IsDefault;
 				accounts.Items.Add(lvi);
@@ -1352,9 +1379,12 @@ namespace Novell.FormsTrayApp
 
 				Domain domain = new Domain(domainWeb);
 
+				updateAccount(domain);
+
 				// Associate the new domain with the listview item.
-				newAccountLvi.SubItems[1].Text = domainWeb.Name;
+				newAccountLvi.SubItems[0].Text = domainWeb.Name;
 				newAccountLvi.Tag = domain;
+				server.Text = domainWeb.Host;
 				newAccountLvi = null;
 
 				// Successfully joined ... don't allow the fields to be changed.
@@ -1389,9 +1419,9 @@ namespace Novell.FormsTrayApp
 					defaultServer.Enabled = false;
 				}
 
-				updateAccount(domain);
-
+				// TODO: enable the logout button
 				addAccount.Enabled = details.Enabled = true;
+				login.Enabled = false;
 
 				try
 				{
@@ -1566,7 +1596,7 @@ namespace Novell.FormsTrayApp
 			{
 				// Update the password, if this is not the workgroup account and the 
 				// password settings have changed.
-				if (!domain.ID.Equals(FormsTrayApp.WorkGroupDomainID) && updatePassword)
+				if (!domain.ID.Equals(FormsTrayApp.WorkGroupDomainID) && (updatePassword || (newAccountLvi != null)))
 				{
 					try
 					{
@@ -1574,7 +1604,7 @@ namespace Novell.FormsTrayApp
 						{
 							simiasWebService.SaveDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
 						}
-						else
+						else if (newAccountLvi == null)
 						{
 							simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
 						}
@@ -1857,8 +1887,10 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					ListViewItem lvi = accounts.SelectedItems[0];
-					lvi.SubItems[0].Text = userName.Text;
-					apply.Enabled = true;
+					lvi.SubItems[1].Text = userName.Text;
+					login.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
+
+//					apply.Enabled = true;
 				}
 				catch {}
 			}
@@ -1871,8 +1903,10 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					ListViewItem lvi = accounts.SelectedItems[0];
-					lvi.SubItems[1].Text = server.Text;
-					apply.Enabled = true;
+					lvi.SubItems[0].Text = server.Text;
+					login.Enabled = !userName.Text.Equals(string.Empty) && !server.Text.Equals(string.Empty);
+
+//					apply.Enabled = true;
 				}
 				catch {}
 			}
@@ -1880,7 +1914,7 @@ namespace Novell.FormsTrayApp
 
 		private void password_TextChanged(object sender, System.EventArgs e)
 		{
-			if (password.Focused)
+			if (password.Focused && (newAccountLvi != null))
 			{
 				apply.Enabled = apply.Enabled ? true : rememberPassword.Checked;
 				updatePassword = rememberPassword.Checked;
@@ -1931,7 +1965,7 @@ namespace Novell.FormsTrayApp
 
 		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
 		{
-			if (rememberPassword.Focused)
+			if (rememberPassword.Focused && (newAccountLvi == null))
 			{
 				apply.Enabled = true;
 				updatePassword = true;
@@ -1964,11 +1998,21 @@ namespace Novell.FormsTrayApp
 			{
 				if (MessageBox.Show(resourceManager.GetString("saveAccountPrompt"), resourceManager.GetString("saveAccountTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
-					processing = true;
-					if (!connectToEnterprise())
+					if (userName.Text.Equals(string.Empty) || server.Text.Equals(string.Empty))
 					{
+						processing = true;
+						MessageBox.Show("Incomplete fields");
 						timer1.Start();
-						return;
+						server.Focus();
+					}
+					else
+					{
+						processing = true;
+						if (!connectToEnterprise())
+						{
+							timer1.Start();
+							return;
+						}
 					}
 				}
 				else
@@ -1996,13 +2040,17 @@ namespace Novell.FormsTrayApp
 				ListViewItem lvi = accounts.SelectedItems[0];
 				if (lvi != null)
 				{
+					proxy.Enabled = true;
+
+					// TODO: determine which are enabled.
+					login.Enabled = logout.Enabled = false;
+
 					if ((newAccountLvi == null) || (lvi == newAccountLvi))
 					{
 						userName.Enabled = server.Enabled = 
 							rememberPassword.Enabled = password.Enabled = true;
 
-						userName.Text = lvi.SubItems[0].Text;
-						server.Text = lvi.SubItems[1].Text;
+						userName.Text = lvi.SubItems[1].Text;
 						password.Text = string.Empty;
 
 						selectedDomain = (Domain)lvi.Tag;
@@ -2010,14 +2058,16 @@ namespace Novell.FormsTrayApp
 						if (selectedDomain == null)
 						{
 							// This is a new account.
+							server.Text = lvi.SubItems[0].Text;
 							newAccountLvi = lvi;
 							userName.ReadOnly = server.ReadOnly = false;
 							removeAccount.Enabled = true;
 							details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
-							userName.Focus();
+							server.Focus();
 						}
 						else
 						{
+							server.Text = selectedDomain.DomainWeb.Host;
 							details.Enabled = true;
 							userName.ReadOnly = server.ReadOnly = true;
 
@@ -2065,7 +2115,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-			else
+			else if (!processing)
 			{
 				selectedDomain = null;
 
@@ -2076,7 +2126,7 @@ namespace Novell.FormsTrayApp
 				// Disable the controls.
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					autoLogin.Enabled = defaultServer.Enabled = details.Enabled = 
-					removeAccount.Enabled = false;
+					removeAccount.Enabled = proxy.Enabled = login.Enabled = logout.Enabled = false;
 			}
 		}
 
@@ -2090,17 +2140,23 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void advanced_Click(object sender, System.EventArgs e)
+		private void proxy_Click(object sender, System.EventArgs e)
 		{
 			AdvancedSettings advancedSettings = new AdvancedSettings();
 			advancedSettings.ShowDialog();
 		}
 
-		private void connect_Click(object sender, System.EventArgs e)
+		private void login_Click(object sender, System.EventArgs e)
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
+			connectToEnterprise();
+
 			Cursor.Current = Cursors.Default;
+		}
+
+		private void logout_Click(object sender, System.EventArgs e)
+		{
 		}
 		#endregion
 
