@@ -69,6 +69,16 @@ namespace Novell.iFolder
 
 		public static void Main (string[] args)
 		{
+			conf = new Configuration();
+			Process[] processes = 
+				System.Diagnostics.Process.GetProcessesByName("iFolderGtkApp");
+
+			if(processes.Length > 1)
+			{
+				Console.WriteLine("iFolder is already running!");
+				return;
+			}
+
 			Gnome.Program program =
 				new Program("iFolder", "0.10.0", Modules.UI, args);
 			
@@ -104,8 +114,6 @@ namespace Novell.iFolder
 				tIcon.Add(eBox);
 
 				tIcon.ShowAll();	
-
-				conf = new Configuration();
 
 				sManager = new Simias.Service.Manager(conf);
 
