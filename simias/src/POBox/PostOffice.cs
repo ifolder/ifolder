@@ -101,7 +101,7 @@ namespace Simias.POBox
 						box = POBox.GetPOBox(store, message.DomainID, temp.ToIdentity);
 						if (box != null)
 						{
-							subscription = new Subscription(message.Name, message.ID);
+							subscription = new Subscription(message.Name, message.MessageID);
 							subscription.SubscriptionState =  SubscriptionStates.Received;
 							subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
 							subscription.FromName = temp.FromName;
@@ -127,10 +127,19 @@ namespace Simias.POBox
 					}
 					if (box != null)
 					{
-						Node node = box.GetNodeByID(message.ID);
-						if (node != null)
+						ICSList list = box.Search(Message.MessageIDProperty, message.MessageID, SearchOp.Equal);
+			
+						ICSEnumerator e = (ICSEnumerator)list.GetEnumerator();
+						ShallowNode sn = null;
+
+						if (e.MoveNext())
 						{
-							subscription = new Subscription(node);
+							sn = (ShallowNode) e.Current;
+						}
+
+						if (sn != null)
+						{
+							subscription = new Subscription(box, sn);
 							string ToID;
 							if (workgroup)
 							{
@@ -178,13 +187,21 @@ namespace Simias.POBox
 				throw new ApplicationException("PO Box not found.");
 
 			// check that the message has already not been posted
-			Node node = box.GetNodeByID(message);
+			ICSList list = box.Search(Message.MessageIDProperty, message, SearchOp.Equal);
+			
+			ICSEnumerator e = (ICSEnumerator)list.GetEnumerator();
+			ShallowNode sn = null;
 
-			if (node == null)
+			if (e.MoveNext())
+			{
+				sn = (ShallowNode) e.Current;
+			}
+
+			if (sn == null)
 				throw new ApplicationException("Subscription does not exist.");
 
 			// get the subscription object
-			Subscription subscription = new Subscription(node);
+			Subscription subscription = new Subscription(box, sn);
 			subscription.SubscriptionState = SubscriptionStates.Acknowledged;
 			box.Commit(subscription);
 
@@ -205,13 +222,22 @@ namespace Simias.POBox
 				throw new ApplicationException("PO Box not found.");
 
 			// check that the message has already not been posted
-			Node node = box.GetNodeByID(message);
+			// check that the message has already not been posted
+			ICSList list = box.Search(Message.MessageIDProperty, message, SearchOp.Equal);
+			
+			ICSEnumerator e = (ICSEnumerator)list.GetEnumerator();
+			ShallowNode sn = null;
 
-			if (node == null)
+			if (e.MoveNext())
+			{
+				sn = (ShallowNode) e.Current;
+			}
+
+			if (sn == null)
 				throw new ApplicationException("Subscription already exists.");
 
 			// get the status object
-			Subscription subscription = new Subscription(node);
+			Subscription subscription = new Subscription(box, sn);
 			status = subscription.GenerateStatus();
 
 			return status;

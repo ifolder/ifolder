@@ -603,13 +603,23 @@ namespace Simias.POBox
 		{
 			Subscription subscription;
 
-			// Check for existing Subscription object in the POBox.
+			// check for existing subscription object in the POBox
 			POBox poBox = POBox.GetPOBox(store, subscriptionInfo.DomainID);
-			Node node = poBox.GetNodeByID(subscriptionInfo.SubscriptionID);
-			if (node != null)
+			
+			ICSList list = poBox.Search(Message.MessageIDProperty, subscriptionInfo.SubscriptionID, SearchOp.Equal);
+			
+			ICSEnumerator e = (ICSEnumerator)list.GetEnumerator();
+			ShallowNode sn = null;
+
+			if (e.MoveNext())
 			{
-				// New up the subscription from the existing node.
-				subscription = new Subscription(node);
+				sn = (ShallowNode) e.Current;
+			}
+
+			if (sn != null)
+			{
+				// new up the subscription from the existing node.
+				subscription = new Subscription(poBox, sn);
 			}
 			else
 			{
@@ -645,7 +655,7 @@ namespace Simias.POBox
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionCollectionName = SubscriptionCollectionName;
 			si.SubscriptionCollectionType = SubscriptionCollectionType;
-			si.SubscriptionID = ID;
+			si.SubscriptionID = MessageID;
 
 			// dir node ?
 			Collection c = store.GetCollectionByID(SubscriptionCollectionID);

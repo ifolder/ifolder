@@ -254,7 +254,7 @@ namespace Simias.POBox
 
 			// post subscription
 			SubscriptionStatus status = po.GetSubscriptionStatus(subscription.DomainID,
-				subscription.FromIdentity, subscription.ID);
+				subscription.FromIdentity, subscription.MessageID);
 
 			// update subscription
 			if (status.State == SubscriptionStates.Responded)
@@ -275,7 +275,7 @@ namespace Simias.POBox
 
 				// acknowledge the message
 				po.AckSubscription(subscription.DomainID,
-					subscription.FromIdentity, subscription.ID);
+					subscription.FromIdentity, subscription.MessageID);
 
 				// done with the subscription
 				poBox.Commit(poBox.Delete(subscription));

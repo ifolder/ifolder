@@ -74,6 +74,11 @@ namespace Simias.POBox
 		public static readonly string OutboundMessage = "Outbound";
 
 		/// <summary>
+		/// The name of the property storing the message id.
+		/// </summary>
+		public const string MessageIDProperty = "MsgID";
+
+		/// <summary>
 		/// The name of the property storing the message type.
 		/// </summary>
 		public const string MessageTypeProperty = "MsgType";
@@ -141,6 +146,22 @@ namespace Simias.POBox
 		#endregion
 
 		#region Properties
+		
+		/// <summary>
+		/// Gets/sets the id of the message.
+		/// </summary>
+		public string MessageID
+		{
+			get
+			{
+				Property p = Properties.GetSingleProperty(MessageIDProperty);
+				return (p != null) ? p.ToString() : null;
+			}
+			set
+			{
+				Properties.ModifyProperty(MessageIDProperty, value);
+			}
+		}
 		
 		/// <summary>
 		/// Gets/sets the type of the message.
@@ -369,8 +390,10 @@ namespace Simias.POBox
 		/// <param name="messageName">The friendly name of the Message object.</param>
 		/// <param name="messageID">The ID of the Message object.</param>
 		public Message(string messageName, string messageID) :
-			base (messageName, messageID)
+			base (messageName)
 		{
+			this.MessageID = messageID;
+
 			Properties.AddNodeProperty(PropertyTags.Types, typeof(Message).Name);
 		}
 
