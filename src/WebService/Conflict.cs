@@ -34,6 +34,9 @@ namespace Novell.iFolder.Web
 	[Serializable]
 	public class Conflict
 	{
+		private const long kilobyte = 1024;
+		private const long megabyte = 1048576;
+
 		public string	iFolderID;
 		public string	ConflictID;
 		public string	LocalName;
@@ -45,6 +48,9 @@ namespace Novell.iFolder.Web
 		public string	ServerDate;
 		public string	ServerSize;
 
+		/// <summary>
+		/// Constructs a Conflict object.
+		/// </summary>
 		public Conflict()
 		{
 		}
@@ -52,6 +58,11 @@ namespace Novell.iFolder.Web
 
 
 
+		/// <summary>
+		/// Constructs a Conflict object.
+		/// </summary>
+		/// <param name="col">The collection containing the conflict.</param>
+		/// <param name="node">The conflicting node.</param>
 		public Conflict(Collection col, Node node)
 		{
 			iFolderID = col.ID;
@@ -71,17 +82,24 @@ namespace Novell.iFolder.Web
 				
 				LocalName = localFileNode.GetFileName();
 				LocalDate = localFileNode.LastWriteTime.ToString();
-				LocalSize = "N/A";
+				LocalSize = formatFileSize(localFileNode.Length);
 			
 				ServerName = serverFileNode.GetFileName();
 				ServerDate = serverFileNode.LastWriteTime.ToString();
-				ServerSize = "N/A";
+				ServerSize = formatFileSize(serverFileNode.Length);
 			}
 		}
 
 
 
 
+		/// <summary>
+		/// A method used to resolve a conflict.
+		/// </summary>
+		/// <param name="col">The collection containing the conflict.</param>
+		/// <param name="node">The conflicting node.</param>
+		/// <param name="localChangesWin">Set to <b>True</b> to overwrite the server node (or file) with the local node (or file), 
+		/// set to <b>False</b> to overwrite the local node (or file) with the server node (or file).</param>
 		public static void Resolve(Collection col, Node node, 
 										bool localChangesWin)
 		{
@@ -97,6 +115,12 @@ namespace Novell.iFolder.Web
 
 
 
+		/// <summary>
+		/// A method used to resolve a name conflict.
+		/// </summary>
+		/// <param name="col">The collection containing the conflict.</param>
+		/// <param name="node">The conflicting node.</param>
+		/// <param name="newNodeName">The new name to assign the node (file).</param>
 		public static void Resolve(Collection col, Node node, 
 										string newNodeName)
 		{
@@ -107,6 +131,29 @@ namespace Novell.iFolder.Web
 			}
 			else
 				throw new Exception("Resolve must be called with a boolean option of which version wins, server or local.  This call is for Name conflicts");
+		}
+
+		
+	
+	
+		private string formatFileSize(long fileLength)
+		{
+			string fileSize;
+
+			if (fileLength < kilobyte)
+			{
+				fileSize = fileLength.ToString() + " bytes";
+			}
+			else if (fileLength < megabyte)
+			{
+				fileSize = Math.Round((double)fileLength / kilobyte, 1).ToString() + " KB";
+			}
+			else
+			{
+				fileSize = Math.Round((double)fileLength / megabyte, 2).ToString() + " MB";
+			}
+
+			return fileSize;
 		}
 	}
 }

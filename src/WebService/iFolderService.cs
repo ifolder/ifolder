@@ -1831,7 +1831,7 @@ namespace Novell.iFolder.Web
 		/// </summary>
 		/// <param name="UserID">The ID of the user.</param>
 		/// <param name="iFolderID">The ID of the iFolder.</param>
-		/// <returns>The file size limit in megabytes.</returns>
+		/// <returns>The file size limit in bytes.</returns>
 		[WebMethod(Description="Get a users file size limit on an iFolder")]
 		[SoapDocumentMethod]
 		public long GetMemberiFolderFileSizeLimit(string UserID, string iFolderID)
@@ -1865,7 +1865,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that gets the File Size Limit of an iFolder.
 		/// </summary>
 		/// <param name="iFolderID">The ID of the iFolder.</param>
-		/// <returns>The file size limit in megabytes.</returns>
+		/// <returns>The file size limit in bytes.</returns>
 		[WebMethod(Description="Get the file size limit of an iFolder")]
 		[SoapDocumentMethod]
 		public long GetiFolderFileSizeLimit(string iFolderID)
@@ -1886,7 +1886,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that sets the File Size Limit of an iFolder.
 		/// </summary>
 		/// <param name="iFolderID">The ID of the iFolder.</param>
-		/// <param name="Limit">The file size limit (in megabytes) to set.</param>
+		/// <param name="Limit">The file size limit (in bytes) to set.</param>
 		[WebMethod(Description="Set the file size limit of an iFolder")]
 		[SoapDocumentMethod]
 		public void SetiFolderFileSizeLimit(string iFolderID, long Limit)
