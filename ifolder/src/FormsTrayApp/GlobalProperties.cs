@@ -1058,7 +1058,9 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.ok);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.KeyPreview = true;
+			this.MaximizeBox = false;
 			this.Menu = this.mainMenu1;
+			this.MinimizeBox = false;
 			this.Name = "GlobalProperties";
 			this.Text = "iFolder";
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);

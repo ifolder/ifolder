@@ -170,6 +170,8 @@ namespace Novell.iFolderCom
 			this.Controls.Add(this.accessButtons);
 			this.Controls.Add(this.owner);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "UserProperties";
 			this.Text = "TestForm";
 			this.Load += new System.EventHandler(this.TestForm_Load);
