@@ -29,7 +29,6 @@ using Novell.AddressBook.UI.gtk;
 
 using Gtk;
 using Gdk;
-using Gnome;
 using Glade;
 using GtkSharp;
 using GLib;

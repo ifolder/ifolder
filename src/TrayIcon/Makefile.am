@@ -25,7 +25,7 @@ ASSEMBLIES=	-r gtk-sharp.dll	\
 all: $(LIBRARY)
 
 $(LIBRARY):
-	mcs --unsafe --target library $(ASSEMBLIES) --recurse '*.cs' -o $(LIBRARY)
+	mcs --unsafe --target library $(GTK_SHARP_LIBS) --recurse '*.cs' -o $(LIBRARY)
 
 generated-stamp: $(API)
 	gapi-fixup --api=$(API) --metadata=Egg.metadata && \
