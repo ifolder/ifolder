@@ -1,16 +1,16 @@
 if LINUX
-SUBDIRS = WebService iFolder TrayIcon GtkTrayApp
+SUBDIRS = WebService iFolder ClientUpgrade TrayIcon GtkTrayApp
 endif
 
 if DARWIN
-SUBDIRS = WebService iFolder
+SUBDIRS = WebService iFolder ClientUpgrade
 endif
 
 if WINDOWS
-SUBDIRS = WebService iFolder iFolderShell FormsTrayApp
+SUBDIRS = WebService iFolder ClientUpgrade iFolderShell FormsTrayApp
 endif
 
-DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp WebService
+DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp WebService	ClientUpgrade
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys
 
@@ -21,7 +21,7 @@ endif
 
 clean-local:
 	rm -rf $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

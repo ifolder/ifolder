@@ -45,19 +45,14 @@ namespace Simias.Client
 		private static string EnabledTag = "enabled";
 
 		/// <summary>
-		/// Default scheme.
-		/// </summary>
-		private static string defaultScheme = "http";
-
-		/// <summary>
 		/// Holds a reference to the simias configuration file.
 		/// </summary>
 		private Configuration config = new Configuration();
 
 		/// <summary>
-		/// Name of the domain for which configuration information is associated with.
+		/// Identifier of the domain for which configuration information is associated with.
 		/// </summary>
-		private string domainName;
+		private string domainID;
 		#endregion
 
 		#region Properties
@@ -66,7 +61,15 @@ namespace Simias.Client
 		/// </summary>
 		public string ID
 		{
-			get { return GetDomainAttribute( IDTag ); }
+			get { return domainID; }
+		}
+
+		/// <summary>
+		/// Gets the domain name.
+		/// </summary>
+		public string Name
+		{
+			get { return GetDomainAttribute( NameTag ); }
 		}
 
 		/// <summary>
@@ -142,10 +145,10 @@ namespace Simias.Client
 		/// <summary>
 		/// Initializes a new instance of this object.
 		/// </summary>
-		/// <param name="domainName"></param>
-		public DomainConfig( string domainName )
+		/// <param name="domainID"></param>
+		public DomainConfig( string domainID )
 		{
-			this.domainName = domainName;
+			this.domainID = domainID;
 		}
 		#endregion
 
@@ -155,7 +158,7 @@ namespace Simias.Client
 			XmlElement serverElement = null;
 			foreach( XmlElement element in rootElement )
 			{
-				if ( element.GetAttribute( NameTag ) == domainName )
+				if ( element.GetAttribute( IDTag ) == domainID )
 				{
 					serverElement = element;
 					break;

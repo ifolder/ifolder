@@ -454,19 +454,19 @@ case $IFOLDER_OS in
         GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
         AC_SUBST(GTK_SHARP_PREFIX)
         AC_SUBST(GTK_SHARP_LIBS)
-    
+
         PKG_CHECK_MODULES(GNOME_SHARP, gnome-sharp >= $GNOME_SHARP_MINIMUM_VERSION)
         AC_SUBST(GNOME_SHARP_PREFIX)
         AC_SUBST(GNOME_SHARP_LIBS)
-    
+
 #        PKG_CHECK_MODULES(GLADE_SHARP, glade-sharp >= $GLADE_SHARP_MINIMUM_VERSION)
 #        AC_SUBST(GLADE_SHARP_PREFIX)
 #        AC_SUBST(GLADE_SHARP_LIBS)
-    
+
         PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
         AC_SUBST(GDK20_CFLAGS)
         AC_SUBST(GDK20_LIBS)
-    
+
         PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
         AC_SUBST(ATK_CFLAGS)
         AC_SUBST(ATK_LIBS)
@@ -493,6 +493,7 @@ src/iFolderShell/Makefile
 src/TrayIcon/Makefile
 src/TrayIcon/libtrayicon/Makefile
 src/WebService/Makefile
+src/ClientUpgrade/Makefile
 test/Makefile
 test/iFolder/Makefile
 test/iFolderComponent/Makefile

@@ -203,11 +203,11 @@ namespace Simias.Client
 		/// <summary>
 		/// Gets the remote address to the specified domain server.
 		/// </summary>
-		/// <param name="domainName">Name of the domain to get address for.</param>
+		/// <param name="domainID">Identifier of the domain to get address for.</param>
 		/// <returns>A Uri object that contain the remote address for the domain server.</returns>
-		static public Uri GetDomainServiceUrl( string domainName )
+		static public Uri GetDomainServiceUrl( string domainID )
 		{
-			DomainConfig domainCfg = new DomainConfig( domainName );
+			DomainConfig domainCfg = new DomainConfig( domainID );
 			return domainCfg.ServiceUrl;
 		}
 

@@ -57,19 +57,14 @@ namespace Simias.Domain
 		private static string EnabledTag = "enabled";
 
 		/// <summary>
-		/// Default scheme.
-		/// </summary>
-		private static string defaultScheme = "http";
-
-		/// <summary>
 		/// Holds a reference to the simias configuration file.
 		/// </summary>
 		private Configuration config = Configuration.GetConfiguration();
 
 		/// <summary>
-		/// Name of the domain for which configuration information is associated with.
+		/// Identifier of the domain for which configuration information is associated with.
 		/// </summary>
-		private string domainName;
+		private string domainID;
 		#endregion
 
 		#region Properties
@@ -78,8 +73,17 @@ namespace Simias.Domain
 		/// </summary>
 		public string ID
 		{
-			get { return GetDomainAttribute(IDTag); }
-			set { SetDomainAttribute(IDTag, value); }
+			get { return domainID; }
+			set { domainID = value; SetDomainAttribute(IDTag, value); }
+		}
+
+		/// <summary>
+		/// Gets or sets the domain name.
+		/// </summary>
+		public string Name
+		{
+			get { return GetDomainAttribute(NameTag); }
+			set { SetDomainAttribute(NameTag, value ); }
 		}
 
 		/// <summary>
@@ -184,10 +188,10 @@ namespace Simias.Domain
 		/// <summary>
 		/// Initializes a new instance of this object.
 		/// </summary>
-		/// <param name="domainName"></param>
-		public DomainConfig(string domainName)
+		/// <param name="domainID">Identifier of the domain.</param>
+		public DomainConfig(string domainID)
 		{
-			this.domainName = domainName;
+			this.domainID = domainID;
 		}
 
 		/// <summary>
@@ -196,7 +200,7 @@ namespace Simias.Domain
 		public DomainConfig()
 		{
 			Store store = Store.GetStore();
-			this.domainName = store.GetDomain( store.DefaultDomain ).Name;
+			domainID = store.DefaultDomain;
 		}
 		#endregion
 
@@ -206,7 +210,7 @@ namespace Simias.Domain
 			XmlElement serverElement = null;
 			foreach(XmlElement element in rootElement)
 			{
-				if (element.GetAttribute(NameTag) == domainName)
+				if (element.GetAttribute(IDTag) == domainID)
 				{
 					serverElement = element;
 					break;
@@ -230,7 +234,7 @@ namespace Simias.Domain
 			if (element == null)
 			{
 				element = root.OwnerDocument.CreateElement(ServerTag);
-				element.SetAttribute(NameTag, domainName);
+				element.SetAttribute(IDTag, domainID);
 				root.AppendChild(element);
 			}
 
@@ -243,11 +247,11 @@ namespace Simias.Domain
 		/// <summary>
 		/// Sets all the parameters in one shot.
 		/// </summary>
-		/// <param name="ID"></param>
+		/// <param name="name"></param>
 		/// <param name="description"></param>
 		/// <param name="serviceAddress"></param>
 		/// <param name="enabled"></param>
-		public void SetAttributes(string ID, string description, Uri serviceAddress, bool enabled)
+		public void SetAttributes(string name, string description, Uri serviceAddress, bool enabled)
 		{
 			XmlElement root = config.GetElement(SectionTag, ServersTag);
 			XmlElement element = GetServerElement(root);
@@ -257,8 +261,8 @@ namespace Simias.Domain
 				root.AppendChild(element);
 			}
 
-			element.SetAttribute(NameTag, domainName);
-			element.SetAttribute(IDTag, ID);
+			element.SetAttribute(IDTag, domainID);
+			element.SetAttribute(NameTag, name);
 			element.SetAttribute(DescriptionTag, description);
 			element.SetAttribute(UriTag, serviceAddress.ToString());
 			element.SetAttribute(EnabledTag, enabled.ToString());
@@ -291,7 +295,7 @@ namespace Simias.Domain
 		/// </summary>
 		public DomainAgent()
 		{
-			domainConfiguration = new DomainConfig(store.GetDomain(store.DefaultDomain).Name);
+			domainConfiguration = new DomainConfig(store.DefaultDomain);
 		}
 
 		/// <summary>
@@ -306,10 +310,10 @@ namespace Simias.Domain
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="domainName"></param>
-		public DomainAgent(string domainName)
+		/// <param name="domainID">Identifier for the domain.</param>
+		public DomainAgent(string domainID)
 		{
-			domainConfiguration = new DomainConfig(domainName);
+			domainConfiguration = new DomainConfig(domainID);
 		}
 		#endregion
 
@@ -391,8 +395,8 @@ namespace Simias.Domain
 				}
 
 				// Set the host and port number in the configuration file.
-				domainConfiguration = new DomainConfig(domainInfo.Name);
-				domainConfiguration.SetAttributes(domain.ID, domain.Description, hostUri, true);
+				domainConfiguration = new DomainConfig(domainInfo.ID);
+				domainConfiguration.SetAttributes(domain.Name, domain.Description, hostUri, true);
 
 				store.LocalDb.Commit( domain );
 			}
