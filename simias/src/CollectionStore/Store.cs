@@ -344,7 +344,7 @@ namespace Simias.Storage
 					}
 
 					// Look up to see if the current user has an identity.
-					BaseContact identity = localAb.GetSingleNodeByName( Environment.UserName ) as BaseContact;
+					BaseContact identity = localAb.GetContactByName( Environment.UserName );
 					if ( identity == null )
 					{
 						throw new DoesNotExistException( String.Format( "User: {0} does not exist in local address book.", Environment.UserName ) );

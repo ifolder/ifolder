@@ -113,7 +113,18 @@ namespace Simias.Storage
 		/// <returns>A BaseContact object that matches the specified name.</returns>
 		public BaseContact GetContactByName( string name )
 		{
-			return GetSingleNodeByName( name ) as BaseContact;
+			BaseContact identity = null;
+			ICSList idList = GetNodesByName( name );
+			foreach ( ShallowNode shallowNode in idList )
+			{
+				if ( shallowNode.Type == NodeTypes.BaseContactType )
+				{
+					identity = new BaseContact( this, shallowNode );
+					break;
+				}
+			}
+
+			return identity;
 		}
 		#endregion
 	}
