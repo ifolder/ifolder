@@ -282,15 +282,13 @@ namespace Simias.Storage
 		/// this node has been committed to disk.
 		/// </summary>
 		/// <param name="node">Node object that contains the local incarnation value.</param>
-		/// <param name="isMaster">If true then the specified Node object is the master and a read of
-		/// the Node object off the disk to check for collisions is not necessary.</param>
-		private void IncrementLocalIncarnation( Node node, bool isMaster )
+		private void IncrementLocalIncarnation( Node node )
 		{
 			// Check if the master incarnation value needs to be set.
 			if ( node.IncarnationUpdate != 0 )
 			{
 				// The Master incarnation number needs to be set.
-				Node checkNode = isMaster ? node : GetNodeByID( node.ID );
+				Node checkNode = GetNodeByID( node.ID );
 				if ( ( checkNode == null ) || ( checkNode.LocalIncarnation == node.LocalIncarnation ) )
 				{
 					// Update both incarnation values to the specified value.
@@ -381,7 +379,7 @@ namespace Simias.Storage
 		/// have occurred if it had to be merged with the current Collection object in the database.
 		/// </summary>
 		/// <param name="nodeList">Array of Node objects to commit to the database.</param>
-		public void ProcessCommit( Node[] nodeList )
+		private void ProcessCommit( Node[] nodeList )
 		{
 			bool deleteCollection = false;
 			Node[] commitList = nodeList;
@@ -406,7 +404,7 @@ namespace Simias.Storage
 						node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
 						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node, true );
+						IncrementLocalIncarnation( node );
 
 						// Copy the XML node over to the modify document.
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -439,7 +437,7 @@ namespace Simias.Storage
 								node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
 								// Increment the local incarnation number for the object.
-								IncrementLocalIncarnation( node, true );
+								IncrementLocalIncarnation( node );
 
 								// Copy the XML node over to the modify document.
 								xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -461,7 +459,7 @@ namespace Simias.Storage
 							node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
 							// Increment the local incarnation number for the object.
-							IncrementLocalIncarnation( node, true );
+							IncrementLocalIncarnation( mergeNode );
 
 							// Copy the XML node over to the modify document.
 							xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
@@ -473,8 +471,11 @@ namespace Simias.Storage
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
+						// Copy over the local properties to this Node object which is being imported.
+						SetLocalProperties( node );
+
 						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node, false );
+						IncrementLocalIncarnation( node );
 
 						// Copy the XML node over to the modify document.
 						xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -515,6 +516,67 @@ namespace Simias.Storage
 				else if ( node.Properties.State != PropertyList.PropertyListState.Disposed )
 				{
 					node.Properties.State = PropertyList.PropertyListState.Update;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the local properties from a Node object in the database and adds them to the specified Node object.
+		/// </summary>
+		/// <param name="node">Node to copy local properties to.</param>
+		private void SetLocalProperties( Node node )
+		{
+			if ( IsCollection( node ) )
+			{
+				// Instantiate the Collection object to be imported.
+				Collection importCollection = new Collection( store, node );
+
+				// See if the user has the right to update the access control list.  If he doesn't,
+				// use the ACL in the current collection.
+				if ( !IsAccessAllowed( Access.Rights.Admin ) )
+				{
+					// Get the list of access control entries and remove them from the collection object.
+					ICSList aclList = importCollection.GetAccessControlList();
+					foreach ( AccessControlEntry ace in aclList )
+					{
+						ace.Delete();
+					}
+
+					// Now add in the existing collection aces
+					aclList = GetAccessControlList();
+					foreach ( AccessControlEntry ace in aclList )
+					{
+						importCollection.accessControl.SetUserRights( ace.ID, ace.Rights );
+					}
+
+					// Set the owner.
+					node.Properties.ModifyNodeProperty( PropertyTags.Owner, Owner );
+				}
+				else
+				{
+					// The user must have owner access in order to set the new owner.
+					if ( !accessControl.IsOwnerAccessAllowed() )
+					{
+						importCollection.accessControl.ChangeCollectionOwner( Owner, Access.Rights.Deny );
+					}
+				}
+
+				// If the managed directory does not exist, create it.
+				if ( !Directory.Exists( importCollection.ManagedPath ) )
+				{
+					Directory.CreateDirectory( importCollection.ManagedPath );
+				}
+			}
+
+			// Get the local properties from the old node, if it exists, and add them to the new node.
+			Node oldNode = GetNodeByID( node.ID );
+			if ( oldNode != null )
+			{
+				// Get the local properties.
+				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
+				foreach ( Property p in localProps )
+				{
+					node.Properties.AddNodeProperty( p );
 				}
 			}
 		}
@@ -904,67 +966,13 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Imports a Node object into this Collection, merging all local properties.
+		/// Readies a Node object for import into this Collection.
 		/// </summary>
 		/// <param name="node">Node to import into this Collection.</param>
 		public void ImportNode( Node node )
 		{
 			// Set the current state of the node indicating that it is being imported.
 			node.Properties.State = PropertyList.PropertyListState.Import;
-
-			if ( IsCollection( node ) )
-			{
-				// Instantiate the Collection object to be imported.
-				Collection importCollection = new Collection( store, node );
-
-				// See if the user has the right to update the access control list.  If he doesn't,
-				// use the ACL in the current collection.
-				if ( !IsAccessAllowed( Access.Rights.Admin ) )
-				{
-					// Get the list of access control entries and remove them from the collection object.
-					ICSList aclList = importCollection.GetAccessControlList();
-					foreach ( AccessControlEntry ace in aclList )
-					{
-						ace.Delete();
-					}
-
-					// Now add in the existing collection aces
-					aclList = GetAccessControlList();
-					foreach ( AccessControlEntry ace in aclList )
-					{
-						importCollection.accessControl.SetUserRights( ace.ID, ace.Rights );
-					}
-
-					// Set the owner.
-					node.Properties.ModifyNodeProperty( PropertyTags.Owner, Owner );
-				}
-				else
-				{
-					// The user must have owner access in order to set the new owner.
-					if ( !accessControl.IsOwnerAccessAllowed() )
-					{
-						importCollection.accessControl.ChangeCollectionOwner( Owner, Access.Rights.Deny );
-					}
-				}
-
-				// If the managed directory does not exist, create it.
-				if ( !Directory.Exists( importCollection.ManagedPath ) )
-				{
-					Directory.CreateDirectory( importCollection.ManagedPath );
-				}
-			}
-
-			// Get the local properties from the old node, if it exists, and add them to the new node.
-			Node oldNode = GetNodeByID( node.ID );
-			if ( oldNode != null )
-			{
-				// Get the local properties.
-				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
-				foreach ( Property p in localProps )
-				{
-					node.Properties.AddNodeProperty( p );
-				}
-			}
 		}
 
 		/// <summary>
