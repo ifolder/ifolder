@@ -268,25 +268,12 @@ namespace Simias.mDns
 		User.kErrorType
 		DeregisterLocalMember(string ID, int Cookie);
 
-		[ DllImport( "simdezvous" ) ]
-		private 
-		extern 
-		static 
-		User.kErrorType
-		GetMemberInfo(
-			[MarshalAs(UnmanagedType.LPStr)] string	ID,
-			[In, Out] char[]	MemberName,
-			[In, Out] char[]	ServicePath,
-			[In, Out] byte[]	PublicKey,
-			[In, Out] char[]	HostName,
-			ref       int		Port);
-
 		[ DllImport( "simdezvous", CharSet=CharSet.Auto ) ]
 		private 
 		extern 
 		static 
 		User.kErrorType
-		GetMemberInfo2(
+		GetMemberInfo(
 			[MarshalAs(UnmanagedType.LPStr)] string	ID,
 			[In, Out] MemberInfo Info);
 
@@ -310,16 +297,6 @@ namespace Simias.mDns
 		static 
 		User.kErrorType
 		BrowseMembers( int handle, int timeout );
-
-		[ DllImport( "simdezvous" ) ]
-		internal 
-		extern 
-		static 
-		User.kErrorType
-		ResolveAddress(
-			[MarshalAs(UnmanagedType.LPStr)] string	hostName,
-			int	BufferLength,
-			[In, Out] char[] TextualIPAddress);
 		#endregion
 
 		#region Class Members
@@ -537,6 +514,7 @@ namespace Simias.mDns
 		#region Internal Methods
 		internal static void RegisterUser()
 		{
+			log.Debug( "RegisterUser called" );
 			if ( registered == true )
 			{
 				User.UnregisterUser();
@@ -558,6 +536,7 @@ namespace Simias.mDns
 				//RSACryptoServiceProvider credential = Store.GetStore().CurrentUser.Credential;
 				short sport = (short) webServiceUri.Port;
 
+				log.Debug( "  calling RegisterLocalMember" );
 				kErrorType status =
 					RegisterLocalMember( 
 						User.mDnsUserID, 
@@ -571,12 +550,14 @@ namespace Simias.mDns
 				{
 					throw new SimiasException( "Failed to register local member with Rendezvous" );
 				}
+				log.Debug( "  out of RegisterLocalMember" );
 			}
 			catch( Exception e2 )
 			{
 				log.Error( e2.Message );
 				log.Error( e2.StackTrace );
 			}			
+			log.Debug( "RegisterUser exit" );
 		}
 
 		internal static void UnregisterUser()
@@ -618,10 +599,12 @@ namespace Simias.mDns
 
 			do
 			{
+				log.Debug( "  calling BrowseMembersInit" );
 				status = BrowseMembersInit( myCallback, ref User.browseHandle );
 				if ( status == User.kErrorType.kDNSServiceErr_NoError )
 				{
 					// A timeout is returning success so we're OK
+					log.Debug( "  calling BrowseMembers" );
 					status = BrowseMembers( User.browseHandle.ToInt32(), 300 );
 				}
 			} while ( status == User.kErrorType.kDNSServiceErr_NoError );
@@ -694,11 +677,7 @@ namespace Simias.mDns
 		public void SynchronizeMembers()
 		{
 			// FIXME::define sizes
-			char[] trimNull = { '\0' };
-			char[] infoHost = new char[ 64 ];
-			char[]	infoName = new char[ 128 ];
-			char[]	infoServicePath = new char[ 128 ];
-			byte[]	infoPublicKey = new byte[ 512 ];
+			//char[] trimNull = { '\0' };
 
 			log.Debug( "Syncing mDns members" );
 			//Thread.Sleep( 30000 );
@@ -716,30 +695,20 @@ namespace Simias.mDns
 
 					try
 					{
-						int	port = 0;
+						//int	port = 0;
 						log.Debug( "Calling GetMemberInfo for: " + rMember.UserID );
 
 						MemberInfo info = new MemberInfo();
 
-						status = GetMemberInfo2( rMember.UserID, info );
-						log.Debug( "  Friendly Name: " + info.Name );
-						log.Debug( "  Service Path:  " + info.ServicePath );
-						log.Debug( "  Host:          " + info.Host );
-						log.Debug( "  Port:          " + info.Port.ToString() );
-
-						/*
-						status = 
-							GetMemberInfo( 
-								rMember.UserID,
-								infoName,
-								infoServicePath,
-								infoPublicKey,
-								infoHost,
-								ref port );
-							*/
+						status = GetMemberInfo( rMember.UserID, info );
 
 						if ( status == kErrorType.kDNSServiceErr_NoError )
 						{
+							log.Debug( "  Friendly Name: " + info.Name );
+							log.Debug( "  Service Path:  " + info.ServicePath );
+							log.Debug( "  Host:          " + info.Host );
+							log.Debug( "  Port:          " + info.Port.ToString() );
+							
 //							rMember.Name = (new string( infoName )).TrimEnd( trimNull );
 							rMember.Name = info.Name;
 							rMember.FN = rMember.Name;
