@@ -120,6 +120,7 @@ namespace Novell.iFolder.FormsBookLib
 			emailHT = new Hashtable();
 			homeAddrEntry = new AddressEntry();
 			workAddrEntry = new AddressEntry();
+			preferredEmail.Enabled = false;
 		}
 
 		/// <summary>
@@ -400,6 +401,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.preferredEmail.Size = new System.Drawing.Size(168, 16);
 			this.preferredEmail.TabIndex = 8;
 			this.preferredEmail.Text = "&Preferred email account";
+			this.preferredEmail.CheckedChanged += new System.EventHandler(this.preferredEmail_CheckedChanged);
 			// 
 			// phoneSelect3
 			// 
@@ -544,6 +546,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.eMail.Size = new System.Drawing.Size(192, 20);
 			this.eMail.TabIndex = 7;
 			this.eMail.Text = "";
+			this.eMail.TextChanged += new System.EventHandler(this.eMail_TextChanged);
 			this.eMail.Leave += new System.EventHandler(this.eMail_Leave);
 			// 
 			// groupBox1
@@ -716,6 +719,12 @@ namespace Novell.iFolder.FormsBookLib
 						}
 					}
 				}
+
+				// If there is something in the edit box then check and enable the preferred box.
+				if (eMail.Text != "")
+				{
+					preferredEmail.Checked = true;
+				}
 			}
 			catch{}
 
@@ -843,6 +852,19 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			string displayName = name.Prefix + " " + name.Given + " " + name.Family + " " + name.Suffix;
 			return displayName.Trim();
+		}
+
+		private EmailEntry GetPreferredEmail()
+		{
+			foreach (EmailEntry ee in emailHT.Values)
+			{
+				if ((ee.EMail.Types & EmailTypes.preferred) == EmailTypes.preferred)
+				{
+					return ee;
+				}
+			}
+
+			return null;
 		}
 		#endregion
 
@@ -1087,10 +1109,14 @@ namespace Novell.iFolder.FormsBookLib
 			if ((entry != null) && !entry.Remove)
 			{
 				eMail.Text = entry.EMail.Address;
+				preferredEmail.Enabled = (entry.EMail.Types & EmailTypes.preferred) != EmailTypes.preferred;
+				preferredEmail.Checked = !preferredEmail.Enabled;
 			}
 			else
 			{
 				eMail.Text = "";
+				preferredEmail.Enabled = false;
+				preferredEmail.Checked = false;
 			}
 		}
 
@@ -1169,10 +1195,50 @@ namespace Novell.iFolder.FormsBookLib
 					// The first entry is set as the preferred address.
 					// TODO - preferred should probably be added to the UI
 					if (emailHT.Count == 0)
+					{
 						entry.EMail.Types |= EmailTypes.preferred;
+						preferredEmail.Checked = true;
+					}
 
 					emailHT.Add(emailSelect.Text, entry);
 				}
+			}
+		}
+
+		private void eMail_TextChanged(object sender, System.EventArgs e)
+		{
+			if (eMail.Text.Trim() != "")
+			{
+				if (GetPreferredEmail() == null)
+				{
+					preferredEmail.Checked = true;
+				}
+
+				preferredEmail.Enabled = !preferredEmail.Checked;
+			}
+			else
+			{
+				preferredEmail.Enabled = false;
+			}
+		}
+
+		private void preferredEmail_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (preferredEmail.Enabled && preferredEmail.Checked)
+			{
+				EmailEntry entry = GetPreferredEmail();
+				if (entry != null)
+				{
+					entry.EMail.Types &= ~EmailTypes.preferred;
+				}
+
+				entry = (EmailEntry)emailHT[emailSelect.Text];
+				if (entry != null)
+				{
+					entry.EMail.Types |= EmailTypes.preferred;
+				}
+
+				preferredEmail.Enabled = false;
 			}
 		}
 
