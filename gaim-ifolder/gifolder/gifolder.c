@@ -194,6 +194,12 @@ plugin_load(GaimPlugin *plugin)
 	 * in front of the user to let them know this plugin only works with the
 	 * AIM protocol for now.
 	 */
+	 
+	/**
+	 * This could be the very first time that the user enabled the plugin.  If
+	 * so, poke the thread service to do a sync.
+	 */
+	simias_sync_member_list();
 
 	return TRUE;
 }
