@@ -3511,6 +3511,9 @@
   <data name="graceLoginTitle">
     <value>Expired Password</value>
   </data>
+  <data name="alreadyJoined">
+    <value>An account for this server already exists on the local machine.  Only one account per server is allowed.</value>
+  </data>
   <data name="saveSyncError">
     <value>An error was encountered while saving the default sync interval.</value>
   </data>
@@ -3570,5 +3573,11 @@
   </data>
   <data name="days">
     <value>days</value>
+  </data>
+  <data name="verifyCert">
+    <value>Unable to verify the identity of {0} as a trusted site.  Before accepting this certificate, you should examine the certificate by clicking Show Details.  Do you want to accept this certificate?</value>
+  </data>
+  <data name="verifyCertTitle">
+    <value>Unable to Verify Identity</value>
   </data>
 </root>

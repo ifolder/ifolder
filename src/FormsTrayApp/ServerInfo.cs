@@ -42,9 +42,9 @@ namespace Novell.FormsTrayApp
 	public class ServerInfo : System.Windows.Forms.Form
 	{
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ServerInfo));
-		string domainID;
 		bool cancelled = false;
 		bool updateStarted = false;
+		private DomainInformation domainInfo;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox password;
@@ -66,15 +66,15 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Constructs a ServerInfo object.
 		/// </summary>
-		/// <param name="domainID">The ID of the domain.</param>
-		public ServerInfo(string domainID, string password)
+		/// <param name="domainInfo">The DomainInformation object for the domain.</param>
+		public ServerInfo(DomainInformation domainInfo, string password)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
-			this.domainID = domainID;
+			this.domainInfo = domainInfo;
 
 			if (password != null)
 			{
@@ -470,28 +470,34 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		public string DomainID
 		{
-			get { return domainID; }
+			get { return domainInfo.ID; }
 		}
 		#endregion
 
-		#region Event Handlers
-		private void cancel_Click(object sender, System.EventArgs e)
+		#region Private Methods
+		private bool authenticate()
 		{
-			cancelled = true;
-			Close();
-		}
+			bool result = false;
 
-		private void ok_Click(object sender, System.EventArgs e)
-		{
 			Cursor.Current = Cursors.WaitCursor;
 
 			try
 			{
-				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainID, password.Text);
+				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
 				Status authStatus = domainAuth.Authenticate();
 				MyMessageBox mmb;
 				switch (authStatus.statusCode)
 				{
+					case StatusCodes.InvalidCertificate:
+						byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
+						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+						mmb = new MyMessageBox(resourceManager.GetString("verifyCert"), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+						if (mmb.ShowDialog() == DialogResult.Yes)
+						{
+							simiasWebService.StoreCertificate(byteArray, domainInfo.Host);
+							result = authenticate();
+						}
+						break;
 					case StatusCodes.Success:
 					case StatusCodes.SuccessInGrace:
 						if (authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
@@ -510,7 +516,7 @@ namespace Novell.FormsTrayApp
 						{
 							try
 							{
-								updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
+								updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
 							}
 							catch // Ignore
 							{
@@ -522,7 +528,7 @@ namespace Novell.FormsTrayApp
 							try
 							{
 								simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-								simiasWebService.SetDomainCredentials(domainID, password.Text, CredentialType.Basic);
+								simiasWebService.SetDomainCredentials(domainInfo.ID, password.Text, CredentialType.Basic);
 							}
 							catch (Exception ex)
 							{
@@ -531,8 +537,7 @@ namespace Novell.FormsTrayApp
 							}
 						}
 
-						password.Clear();
-						Close();
+						result = true;
 						break;
 					case StatusCodes.InvalidCredentials:
 					case StatusCodes.InvalidPassword:
@@ -560,13 +565,33 @@ namespace Novell.FormsTrayApp
 				mmb.ShowDialog();
 			}
 
-			password.Focus();
-			if (!password.Text.Equals(string.Empty))
-			{
-				password.SelectAll();
-			}
-
 			Cursor.Current = Cursors.Default;
+			return result;
+		}
+		#endregion
+
+		#region Event Handlers
+		private void cancel_Click(object sender, System.EventArgs e)
+		{
+			cancelled = true;
+			Close();
+		}
+
+		private void ok_Click(object sender, System.EventArgs e)
+		{
+			if (authenticate())
+			{
+				password.Clear();
+				Close();
+			}
+			else
+			{
+				password.Focus();
+				if (!password.Text.Equals(string.Empty))
+				{
+					password.SelectAll();
+				}
+			}
 		}
 
 		private void ServerInfo_Load(object sender, System.EventArgs e)
@@ -590,8 +615,6 @@ namespace Novell.FormsTrayApp
 			{
 				simiasWebService = new SimiasWebService();
 				simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-
-				DomainInformation domainInfo = simiasWebService.GetDomainInformation(domainID);
 
 				if (domainInfo != null)
 				{
