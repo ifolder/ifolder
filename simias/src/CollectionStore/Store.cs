@@ -63,14 +63,15 @@ namespace Simias.Storage
 		static private string storeUnmanagedDirectoryName = "SimiasFiles";
 
 		/// <summary>
-		/// File used to store the private key for the local identity.
+		/// File used to store the local password used to authenticate local
+		/// web services.
 		/// </summary>
-		static private string KeyFile = ".if.pri";
+		static private string LocalPasswordFile = ".local.if";
 
 		/// <summary>
 		/// Name of the local domain.
 		/// </summary>
-		static public string LocalDomainName = "Local";
+		static internal string LocalDomainName = "Local";
 
 		/// <summary>
 		/// Default sync interval for the machine. Synchronizes every 5 minutes.
@@ -184,6 +185,25 @@ namespace Simias.Storage
 		internal NodeCache Cache
 		{
 			get { return cache; }
+		}
+
+		/// <summary>
+		/// Gets or sets a local password on the local domain object.
+		/// </summary>
+		internal string LocalPassword
+		{
+			get
+			{
+				Property p = LocalDb.Properties.GetSingleProperty( PropertyTags.LocalPassword );
+				return ( p != null ) ? p.ToString() : null;
+			}
+
+			set
+			{
+				LocalDatabase ldb = LocalDb;
+				ldb.Properties.ModifyNodeProperty( PropertyTags.LocalPassword, value );
+				ldb.Commit();
+			}
 		}
 
 		/// <summary>
@@ -331,7 +351,10 @@ namespace Simias.Storage
 					identity = owner.ID;
 
 					// Create a credential to be used to identify the local user.
-					owner.AddDomainIdentity( owner.ID, localDomainID, CreateLocalCredential(), CredentialType.PPK );
+					RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
+
+					// Create a credential to be used to identify the local user.
+					owner.AddDomainIdentity( owner.ID, localDomainID, credential.ToXmlString( true ), CredentialType.PPK );
                     
 					// Create a member object that will own the local database.
 					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
@@ -391,6 +414,9 @@ namespace Simias.Storage
 					throw new DoesNotExistException( "Identity object does not exist." );
 				}
 			}
+
+			// Create a one-time password for non-simias processes to use to authenticate to the local web services.
+			CreateLocalCredential();
 		}
 		#endregion
 
@@ -433,22 +459,23 @@ namespace Simias.Storage
 		/// <summary>
 		/// Creates a local credential to be used to identify the local user.
 		/// </summary>
-		/// <returns>A string representation of the created credential </returns>
-		private string CreateLocalCredential()
+		private void CreateLocalCredential()
 		{
-			// Create a credential to be used to identify the local user.
-			RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
-			string credentialString = credential.ToXmlString( true );
-
-			// Export the credential to a file stored in the directory where the simias store
-			// is located. The local web services will use the file credential to authenticate
-			// to the local box.
-			using ( StreamWriter sw = new StreamWriter( Path.Combine( StorePath, KeyFile ) ) )
+			// Check if the file already exists.
+			string path = Path.Combine( StorePath, LocalPasswordFile );
+			if ( !File.Exists( path ) )
 			{
-				sw.Write( credentialString );
-			}
+				// Set a random password.
+				LocalPassword = Guid.NewGuid().ToString();
 
-			return credentialString;
+				// Export the credential to a file stored in the directory where the simias store
+				// is located. The local web services will use the file credential to authenticate
+				// to the local box.
+				using ( StreamWriter sw = new StreamWriter( path ) )
+				{
+					sw.Write( LocalDomain + LocalPassword );
+				}
+			}
 		}
 
 		/// <summary>
@@ -628,6 +655,13 @@ namespace Simias.Storage
 			if ( Directory.Exists( storeManagedPath ) )
 			{
 				Directory.Delete( storeManagedPath, true );
+			}
+
+			// Delete the local password file.
+			string path = Path.Combine( StorePath, LocalPasswordFile );
+			if ( File.Exists( path ) )
+			{
+				File.Delete( path );
 			}
 
 			// Say bye-bye to the store.

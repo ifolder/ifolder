@@ -3,6 +3,7 @@
       <setting name="WebServicePath" value="@_webdir_@" />
       <setting name="Services">
       <Service name="Simias Enterprise Domain Provider" assembly="Simias" enabled="True" type="Thread" class="Simias.EnterpriseProvider" />
+      <Service name="Simias Local Domain Provider" assembly="Simias" enabled="True" type="Thread" class="Simias.LocalProvider" />
       <Service name="Simias Domain Watcher" assembly="Simias" enabled="True" type="Thread" class="Simias.DomainWatcher.Service" />
       <Service name="Simias Change Log Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Storage.ChangeLog" />
       <Service name="Simias Interprocess Event Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Event.IProcEventServer" />

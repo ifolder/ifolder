@@ -473,8 +473,9 @@ namespace Novell.FormsTrayApp
 					syncLog.CreateControl();
 					handle = syncLog.Handle;
 
-					// Cause the web service to start.
-					ifWebService.Ping();
+					// Cause the web services to start.
+					LocalService.Start(simiasWebService);
+					LocalService.Start(ifWebService);
 
 					try
 					{

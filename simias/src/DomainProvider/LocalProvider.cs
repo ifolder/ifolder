@@ -43,6 +43,130 @@ using SCodes = Simias.Authentication.StatusCodes;
 namespace Simias
 {
 	/// <summary>
+	/// Internal class for managing and authenticating local credentials
+	/// 
+	/// Note: Today we only support 'basic'
+	/// </summary>
+	internal class LocalCredentials
+	{
+		#region Class Members
+		static private readonly int GuidLength = Guid.NewGuid().ToString().Length;
+		private string domainID;
+		private string username;
+		private string password;
+		private string authType;
+
+		private readonly char[] colonDelimeter = {':'};
+		private readonly char[] backDelimeter = {'\\'};
+		#endregion
+
+		#region Properties
+		public string AuthType
+		{
+			get { return this.authType; }
+			set { this.authType = value; }
+		}
+
+		public string DomainID
+		{
+			get { return this.domainID; }
+			set { this.domainID = value; }
+		}
+
+		public string Password
+		{
+			get { return this.password; }
+			set { this.password = value; }
+		}
+
+		public string Username 
+		{
+			get { return this.username; }
+			set { this.username = value; }
+		}
+		#endregion
+
+		#region Constructors
+		public LocalCredentials()
+		{
+		}
+
+		public LocalCredentials( string username, string password )
+		{
+			this.username = username;
+			this.password = password;
+			this.authType = "basic";
+		}
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Gets the credentials from an encoded authorization header.
+		/// </summary>
+		/// <param name="authHeader"></param>
+		/// <returns></returns>
+		public bool AuthorizationHeaderToCredentials( string authHeader )
+		{
+			bool returnStatus = false;
+
+			// Make sure we are dealing with "Basic" credentials
+			if ( authHeader.StartsWith( "Basic " ) )
+			{
+				// The authHeader after the basic signature is encoded
+				authHeader = authHeader.Remove( 0, 6 );
+				byte[] credential = System.Convert.FromBase64String( authHeader );
+				string decodedCredential = 
+					System.Text.Encoding.ASCII.GetString(
+					credential, 
+					0, 
+					credential.Length );
+   
+				// Clients that newed up a NetCredential object with a URL
+				// come though on the authorization line like:
+				// http://domain:port/simias10/service.asmx\username:password
+
+				string[] credentials = decodedCredential.Split( this.backDelimeter );
+				if ( credentials.Length == 1 )
+				{
+					credentials = decodedCredential.Split( this.colonDelimeter, 2 );
+				}
+				else if ( credentials.Length >= 2 )
+				{
+					credentials = credentials[ credentials.Length - 1 ].Split( colonDelimeter, 2 );
+				}
+
+				if ( credentials.Length == 2 )
+				{
+					this.username = credentials[ 0 ];
+
+					// The password portion is really two GUIDs back-to-back. 
+					// The first GUID is the local domain ID and the second is the password.
+					this.password = credentials[ 1 ].Substring( GuidLength );
+					this.domainID = credentials[ 1 ].Substring( 0, GuidLength );
+
+					this.authType = "basic";
+					returnStatus = true;
+				}
+
+				credentials = null;
+			}
+
+			return returnStatus;
+		}
+
+		/// <summary>
+		/// Returns whether the object has credentials.
+		/// </summary>
+		/// <returns></returns>
+		public bool HasCredentials()
+		{
+			return ( ( this.username != null ) && ( this.password != null ) ) ? true : false;
+		}
+		#endregion
+	}
+
+
+	/// <summary>
 	/// Implementation of the DomainProvider Interface for the local domain.
 	/// </summary>
 	public class LocalProvider : IDomainProvider, IThreadService
@@ -59,11 +183,6 @@ namespace Simias
 		/// </summary>
 		static private string providerName = "Local Domain Provider";
 		static private string providerDescription = "Domain Provider for Simias Local Domain";
-
-		/// <summary>
-		/// Session tag used to identify session state information.
-		/// </summary>
-		static private string localSessionTag = "local";
 
 		/// <summary>
 		/// Store object.
@@ -108,80 +227,29 @@ namespace Simias
 			// Requires session support
 			if ( httpContext.Session != null )
 			{
-				// State should be 1
-				string memberID = httpContext.Request.Headers[ "local-member" ];
-				if ( ( memberID == null ) || ( memberID == String.Empty ) )
+				// Check for an authorization header.
+				string[] encodedCredentials = httpContext.Request.Headers.GetValues( "Authorization" );
+				if ( ( encodedCredentials != null ) && ( encodedCredentials[0] != null ) )
 				{
-					return status;
-				}
-
-				// Get the member that was specified as belonging to this domain.
-				Member member = domain.GetMemberByID( memberID );
-				if ( member == null )
-				{
-					return status;
-				}
-
-				status.UserName = member.Name;
-				status.UserID = member.UserID;
-
-				LocalSession localSession = httpContext.Session[ localSessionTag ] as LocalSession;
-				if ( localSession == null )
-				{
-					localSession = new LocalSession();
-					localSession.MemberID = member.UserID;
-					localSession.State = 1;
-
-					// Fixme
-					localSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
-					RSACryptoServiceProvider publicKey = member.PublicKey;
-					if ( publicKey != null )
+					// Get the credentials from the auth header.
+					LocalCredentials creds = new LocalCredentials();
+					bool success = creds.AuthorizationHeaderToCredentials( encodedCredentials[0] );
+					if ( success )
 					{
-						byte[] oneTime = new UTF8Encoding().GetBytes( localSession.OneTimePassword );
-						byte[] encryptedText = publicKey.Encrypt( oneTime, false );
-
-						// Set the encrypted one time password in the response
-						httpContext.Response.AddHeader( "local-secret", Convert.ToBase64String( encryptedText ) );
-						httpContext.Session[ localSessionTag ] = localSession;
-					}
-				}
-				else if ( status.UserID == localSession.MemberID )
-				{
-					// State should be 1
-					string encodedSecret = httpContext.Request.Headers[ "local-secret" ];
-					if ( ( encodedSecret != null ) && ( encodedSecret != String.Empty ) )
-					{
-						UTF8Encoding utf8 = new UTF8Encoding();
-						string decodedString = utf8.GetString( Convert.FromBase64String( encodedSecret ) );
-
-						// Check it...
-						if ( decodedString.Equals( localSession.OneTimePassword ) )
+						// Valid credentials?
+						if ( ( creds.Username != null ) && ( creds.Password != null ) && ( creds.DomainID != null ) )
 						{
-							status.statusCode = SCodes.Success;
-							localSession.State = 2;
-						}
-					}
-					else
-					{
-						// Fixme
-						localSession.OneTimePassword = DateTime.UtcNow.Ticks.ToString();
-						localSession.State = 1;
-
-						RSACryptoServiceProvider publicKey = member.PublicKey;
-						if ( publicKey != null )
-						{
-							try
+							// Only support basic and make sure that the domain is local.
+							if ( ( creds.AuthType == "basic" ) && ( creds.DomainID == store.LocalDomain ) )
 							{
-								byte[] oneTime = new UTF8Encoding().GetBytes( localSession.OneTimePassword );
-								byte[] encryptedText = publicKey.Encrypt( oneTime, false );
-
-								// Set the encrypted one time password in the response
-								httpContext.Response.AddHeader( "local-secret", Convert.ToBase64String( encryptedText ) );
-							}
-							catch( Exception encr )
-							{
-								log.Debug( encr.Message );
-								log.Debug( encr.StackTrace );
+								// Get the member of the local domain and compare the passwords.
+								Member member = domain.GetMemberByName( creds.Username );
+								if ( ( member != null ) && ( store.LocalPassword == creds.Password ) )
+								{
+									status.UserName = member.Name;
+									status.UserID = member.UserID;
+									status.statusCode = SCodes.Success;
+								}
 							}
 						}
 					}
@@ -416,25 +484,6 @@ namespace Simias
 		{
 		}
 
-		#endregion
-
-		#region LocalSession
-		/// <summary>
-		/// Session state object used to hold state to authenticate local requests.
-		/// </summary>
-		private class LocalSession
-		{
-			#region Class Members
-
-			/// <summary>
-			/// Session state variables used to authenticate local requests.
-			/// </summary>
-			public string MemberID;
-			public string OneTimePassword;
-			public int State;
-
-			#endregion
-		}
 		#endregion
 	}
 }

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://novell.com/simias/web/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/simias/web/" xmlns="http://schemas.xmlsoap.org/wsdl/">
-  <types>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://novell.com/simias/web/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://novell.com/simias/web/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/web/">
+      <s:element name="Ping">
+        <s:complexType />
+      </s:element>
+      <s:element name="PingResponse">
+        <s:complexType />
+      </s:element>
       <s:element name="AddMemberToDomain">
         <s:complexType>
           <s:sequence>
@@ -52,14 +58,14 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindFirstMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="s0:ArrayOfMemberInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
             <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
       <s:complexType name="ArrayOfMemberInfo">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="MemberInfo" nillable="true" type="s0:MemberInfo" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MemberInfo" nillable="true" type="tns:MemberInfo" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="MemberInfo">
@@ -80,7 +86,7 @@
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="attributeName" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="searchString" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="operation" type="s0:SearchType" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation" type="tns:SearchType" />
             <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
           </s:sequence>
         </s:complexType>
@@ -105,7 +111,7 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindFirstSpecificMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="s0:ArrayOfMemberInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
             <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
           </s:sequence>
         </s:complexType>
@@ -124,7 +130,7 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindNextMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="s0:ArrayOfMemberInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -142,7 +148,7 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindPreviousMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="s0:ArrayOfMemberInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -161,7 +167,7 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindSeekMembersResult" type="s:boolean" />
             <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="s0:ArrayOfMemberInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -185,13 +191,13 @@
       <s:element name="GetDomainInformationResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDomainInformationResult" type="s0:DomainInformation" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainInformationResult" type="tns:DomainInformation" />
           </s:sequence>
         </s:complexType>
       </s:element>
       <s:complexType name="DomainInformation">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="Type" type="s0:DomainType" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:DomainType" />
           <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
           <s:element minOccurs="1" maxOccurs="1" name="Authenticated" type="s:boolean" />
           <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
@@ -204,7 +210,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="Host" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="IsSlave" type="s:boolean" />
           <s:element minOccurs="1" maxOccurs="1" name="IsDefault" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="StatusCode" type="s0:StatusCodes" />
+          <s:element minOccurs="1" maxOccurs="1" name="StatusCode" type="tns:StatusCodes" />
         </s:sequence>
       </s:complexType>
       <s:simpleType name="DomainType">
@@ -243,13 +249,13 @@
       <s:element name="GetDomainsResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDomainsResult" type="s0:ArrayOfDomainInformation" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainsResult" type="tns:ArrayOfDomainInformation" />
           </s:sequence>
         </s:complexType>
       </s:element>
       <s:complexType name="ArrayOfDomainInformation">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation" nillable="true" type="s0:DomainInformation" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation" nillable="true" type="tns:DomainInformation" />
         </s:sequence>
       </s:complexType>
       <s:element name="LoginToRemoteDomain">
@@ -263,13 +269,13 @@
       <s:element name="LoginToRemoteDomainResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="LoginToRemoteDomainResult" type="s0:Status" />
+            <s:element minOccurs="0" maxOccurs="1" name="LoginToRemoteDomainResult" type="tns:Status" />
           </s:sequence>
         </s:complexType>
       </s:element>
       <s:complexType name="Status">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="statusCode" type="s0:StatusCodes" />
+          <s:element minOccurs="1" maxOccurs="1" name="statusCode" type="tns:StatusCodes" />
           <s:element minOccurs="0" maxOccurs="1" name="DomainID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
@@ -289,7 +295,7 @@
       <s:element name="LogoutFromRemoteDomainResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="LogoutFromRemoteDomainResult" type="s0:Status" />
+            <s:element minOccurs="0" maxOccurs="1" name="LogoutFromRemoteDomainResult" type="tns:Status" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -365,7 +371,7 @@
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="credentials" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="type" type="s0:CredentialType" />
+            <s:element minOccurs="1" maxOccurs="1" name="type" type="tns:CredentialType" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -390,7 +396,7 @@
       <s:element name="GetDomainCredentialsResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="GetDomainCredentialsResult" type="s0:CredentialType" />
+            <s:element minOccurs="1" maxOccurs="1" name="GetDomainCredentialsResult" type="tns:CredentialType" />
             <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="credentials" type="s:string" />
           </s:sequence>
@@ -408,7 +414,7 @@
       <s:element name="ConnectToDomainResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="ConnectToDomainResult" type="s0:DomainInformation" />
+            <s:element minOccurs="0" maxOccurs="1" name="ConnectToDomainResult" type="tns:DomainInformation" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -469,536 +475,556 @@
         <s:complexType />
       </s:element>
     </s:schema>
-  </types>
-  <message name="AddMemberToDomainSoapIn">
-    <part name="parameters" element="s0:AddMemberToDomain" />
-  </message>
-  <message name="AddMemberToDomainSoapOut">
-    <part name="parameters" element="s0:AddMemberToDomainResponse" />
-  </message>
-  <message name="RemoveMemberFromDomainSoapIn">
-    <part name="parameters" element="s0:RemoveMemberFromDomain" />
-  </message>
-  <message name="RemoveMemberFromDomainSoapOut">
-    <part name="parameters" element="s0:RemoveMemberFromDomainResponse" />
-  </message>
-  <message name="FindCloseMembersSoapIn">
-    <part name="parameters" element="s0:FindCloseMembers" />
-  </message>
-  <message name="FindCloseMembersSoapOut">
-    <part name="parameters" element="s0:FindCloseMembersResponse" />
-  </message>
-  <message name="FindFirstMembersSoapIn">
-    <part name="parameters" element="s0:FindFirstMembers" />
-  </message>
-  <message name="FindFirstMembersSoapOut">
-    <part name="parameters" element="s0:FindFirstMembersResponse" />
-  </message>
-  <message name="FindFirstSpecificMembersSoapIn">
-    <part name="parameters" element="s0:FindFirstSpecificMembers" />
-  </message>
-  <message name="FindFirstSpecificMembersSoapOut">
-    <part name="parameters" element="s0:FindFirstSpecificMembersResponse" />
-  </message>
-  <message name="FindNextMembersSoapIn">
-    <part name="parameters" element="s0:FindNextMembers" />
-  </message>
-  <message name="FindNextMembersSoapOut">
-    <part name="parameters" element="s0:FindNextMembersResponse" />
-  </message>
-  <message name="FindPreviousMembersSoapIn">
-    <part name="parameters" element="s0:FindPreviousMembers" />
-  </message>
-  <message name="FindPreviousMembersSoapOut">
-    <part name="parameters" element="s0:FindPreviousMembersResponse" />
-  </message>
-  <message name="FindSeekMembersSoapIn">
-    <part name="parameters" element="s0:FindSeekMembers" />
-  </message>
-  <message name="FindSeekMembersSoapOut">
-    <part name="parameters" element="s0:FindSeekMembersResponse" />
-  </message>
-  <message name="GetSimiasInformationSoapIn">
-    <part name="parameters" element="s0:GetSimiasInformation" />
-  </message>
-  <message name="GetSimiasInformationSoapOut">
-    <part name="parameters" element="s0:GetSimiasInformationResponse" />
-  </message>
-  <message name="GetDomainInformationSoapIn">
-    <part name="parameters" element="s0:GetDomainInformation" />
-  </message>
-  <message name="GetDomainInformationSoapOut">
-    <part name="parameters" element="s0:GetDomainInformationResponse" />
-  </message>
-  <message name="GetDomainsSoapIn">
-    <part name="parameters" element="s0:GetDomains" />
-  </message>
-  <message name="GetDomainsSoapOut">
-    <part name="parameters" element="s0:GetDomainsResponse" />
-  </message>
-  <message name="LoginToRemoteDomainSoapIn">
-    <part name="parameters" element="s0:LoginToRemoteDomain" />
-  </message>
-  <message name="LoginToRemoteDomainSoapOut">
-    <part name="parameters" element="s0:LoginToRemoteDomainResponse" />
-  </message>
-  <message name="LogoutFromRemoteDomainSoapIn">
-    <part name="parameters" element="s0:LogoutFromRemoteDomain" />
-  </message>
-  <message name="LogoutFromRemoteDomainSoapOut">
-    <part name="parameters" element="s0:LogoutFromRemoteDomainResponse" />
-  </message>
-  <message name="DisableDomainAutoLoginSoapIn">
-    <part name="parameters" element="s0:DisableDomainAutoLogin" />
-  </message>
-  <message name="DisableDomainAutoLoginSoapOut">
-    <part name="parameters" element="s0:DisableDomainAutoLoginResponse" />
-  </message>
-  <message name="IsDomainActiveSoapIn">
-    <part name="parameters" element="s0:IsDomainActive" />
-  </message>
-  <message name="IsDomainActiveSoapOut">
-    <part name="parameters" element="s0:IsDomainActiveResponse" />
-  </message>
-  <message name="SetDomainActiveSoapIn">
-    <part name="parameters" element="s0:SetDomainActive" />
-  </message>
-  <message name="SetDomainActiveSoapOut">
-    <part name="parameters" element="s0:SetDomainActiveResponse" />
-  </message>
-  <message name="SetDomainInactiveSoapIn">
-    <part name="parameters" element="s0:SetDomainInactive" />
-  </message>
-  <message name="SetDomainInactiveSoapOut">
-    <part name="parameters" element="s0:SetDomainInactiveResponse" />
-  </message>
-  <message name="ValidCredentialsSoapIn">
-    <part name="parameters" element="s0:ValidCredentials" />
-  </message>
-  <message name="ValidCredentialsSoapOut">
-    <part name="parameters" element="s0:ValidCredentialsResponse" />
-  </message>
-  <message name="SetDomainCredentialsSoapIn">
-    <part name="parameters" element="s0:SetDomainCredentials" />
-  </message>
-  <message name="SetDomainCredentialsSoapOut">
-    <part name="parameters" element="s0:SetDomainCredentialsResponse" />
-  </message>
-  <message name="GetDomainCredentialsSoapIn">
-    <part name="parameters" element="s0:GetDomainCredentials" />
-  </message>
-  <message name="GetDomainCredentialsSoapOut">
-    <part name="parameters" element="s0:GetDomainCredentialsResponse" />
-  </message>
-  <message name="ConnectToDomainSoapIn">
-    <part name="parameters" element="s0:ConnectToDomain" />
-  </message>
-  <message name="ConnectToDomainSoapOut">
-    <part name="parameters" element="s0:ConnectToDomainResponse" />
-  </message>
-  <message name="LeaveDomainSoapIn">
-    <part name="parameters" element="s0:LeaveDomain" />
-  </message>
-  <message name="LeaveDomainSoapOut">
-    <part name="parameters" element="s0:LeaveDomainResponse" />
-  </message>
-  <message name="SetDefaultDomainSoapIn">
-    <part name="parameters" element="s0:SetDefaultDomain" />
-  </message>
-  <message name="SetDefaultDomainSoapOut">
-    <part name="parameters" element="s0:SetDefaultDomainResponse" />
-  </message>
-  <message name="GetDefaultDomainIDSoapIn">
-    <part name="parameters" element="s0:GetDefaultDomainID" />
-  </message>
-  <message name="GetDefaultDomainIDSoapOut">
-    <part name="parameters" element="s0:GetDefaultDomainIDResponse" />
-  </message>
-  <message name="GetCertificateSoapIn">
-    <part name="parameters" element="s0:GetCertificate" />
-  </message>
-  <message name="GetCertificateSoapOut">
-    <part name="parameters" element="s0:GetCertificateResponse" />
-  </message>
-  <message name="StoreCertificateSoapIn">
-    <part name="parameters" element="s0:StoreCertificate" />
-  </message>
-  <message name="StoreCertificateSoapOut">
-    <part name="parameters" element="s0:StoreCertificateResponse" />
-  </message>
-  <portType name="Simias_x0020_Web_x0020_ServiceSoap">
-    <operation name="AddMemberToDomain">
-      <documentation>Add a member to the domain.</documentation>
-      <input message="s0:AddMemberToDomainSoapIn" />
-      <output message="s0:AddMemberToDomainSoapOut" />
-    </operation>
-    <operation name="RemoveMemberFromDomain">
-      <documentation>Remove a member from the domain.</documentation>
-      <input message="s0:RemoveMemberFromDomainSoapIn" />
-      <output message="s0:RemoveMemberFromDomainSoapOut" />
-    </operation>
-    <operation name="FindCloseMembers">
-      <documentation>End the search for domain members.</documentation>
-      <input message="s0:FindCloseMembersSoapIn" />
-      <output message="s0:FindCloseMembersSoapOut" />
-    </operation>
-    <operation name="FindFirstMembers">
-      <documentation>Starts a search for all domain members.</documentation>
-      <input message="s0:FindFirstMembersSoapIn" />
-      <output message="s0:FindFirstMembersSoapOut" />
-    </operation>
-    <operation name="FindFirstSpecificMembers">
-      <documentation>Starts a search for a specific set of domain members.</documentation>
-      <input message="s0:FindFirstSpecificMembersSoapIn" />
-      <output message="s0:FindFirstSpecificMembersSoapOut" />
-    </operation>
-    <operation name="FindNextMembers">
-      <documentation>Continues the search for domain members from the current record location.</documentation>
-      <input message="s0:FindNextMembersSoapIn" />
-      <output message="s0:FindNextMembersSoapOut" />
-    </operation>
-    <operation name="FindPreviousMembers">
-      <documentation>Continues the search for domain members previous to the current record location.</documentation>
-      <input message="s0:FindPreviousMembersSoapIn" />
-      <output message="s0:FindPreviousMembersSoapOut" />
-    </operation>
-    <operation name="FindSeekMembers">
-      <documentation>Continues the search for domain members from the specified record location.</documentation>
-      <input message="s0:FindSeekMembersSoapIn" />
-      <output message="s0:FindSeekMembersSoapOut" />
-    </operation>
-    <operation name="GetSimiasInformation">
-      <documentation>GetSimiasInformation</documentation>
-      <input message="s0:GetSimiasInformationSoapIn" />
-      <output message="s0:GetSimiasInformationSoapOut" />
-    </operation>
-    <operation name="GetDomainInformation">
-      <documentation>GetDomainInformation</documentation>
-      <input message="s0:GetDomainInformationSoapIn" />
-      <output message="s0:GetDomainInformationSoapOut" />
-    </operation>
-    <operation name="GetDomains">
-      <documentation>Get a list of local domains</documentation>
-      <input message="s0:GetDomainsSoapIn" />
-      <output message="s0:GetDomainsSoapOut" />
-    </operation>
-    <operation name="LoginToRemoteDomain">
-      <documentation>Login or authenticate to a remote domain</documentation>
-      <input message="s0:LoginToRemoteDomainSoapIn" />
-      <output message="s0:LoginToRemoteDomainSoapOut" />
-    </operation>
-    <operation name="LogoutFromRemoteDomain">
-      <documentation>Logout from a remote domain</documentation>
-      <input message="s0:LogoutFromRemoteDomainSoapIn" />
-      <output message="s0:LogoutFromRemoteDomainSoapOut" />
-    </operation>
-    <operation name="DisableDomainAutoLogin">
-      <documentation>Disable automatic authentication to the specified domain</documentation>
-      <input message="s0:DisableDomainAutoLoginSoapIn" />
-      <output message="s0:DisableDomainAutoLoginSoapOut" />
-    </operation>
-    <operation name="IsDomainActive">
-      <documentation>WebMethod to check if a domain is active</documentation>
-      <input message="s0:IsDomainActiveSoapIn" />
-      <output message="s0:IsDomainActiveSoapOut" />
-    </operation>
-    <operation name="SetDomainActive">
-      <documentation>SetDomainActive - enables synchronization to the remote server</documentation>
-      <input message="s0:SetDomainActiveSoapIn" />
-      <output message="s0:SetDomainActiveSoapOut" />
-    </operation>
-    <operation name="SetDomainInactive">
-      <documentation>SetDomainInactive - disables remote synchronization</documentation>
-      <input message="s0:SetDomainInactiveSoapIn" />
-      <output message="s0:SetDomainInactiveSoapOut" />
-    </operation>
-    <operation name="ValidCredentials">
-      <documentation>ValidCredentials</documentation>
-      <input message="s0:ValidCredentialsSoapIn" />
-      <output message="s0:ValidCredentialsSoapOut" />
-    </operation>
-    <operation name="SetDomainCredentials">
-      <documentation>Sets domain credentials in the local store</documentation>
-      <input message="s0:SetDomainCredentialsSoapIn" />
-      <output message="s0:SetDomainCredentialsSoapOut" />
-    </operation>
-    <operation name="GetDomainCredentials">
-      <documentation>Get the saved credentials from a domain</documentation>
-      <input message="s0:GetDomainCredentialsSoapIn" />
-      <output message="s0:GetDomainCredentialsSoapOut" />
-    </operation>
-    <operation name="ConnectToDomain">
-      <documentation>Connects to a Domain</documentation>
-      <input message="s0:ConnectToDomainSoapIn" />
-      <output message="s0:ConnectToDomainSoapOut" />
-    </operation>
-    <operation name="LeaveDomain">
-      <documentation>Removes a domain account from the workstation</documentation>
-      <input message="s0:LeaveDomainSoapIn" />
-      <output message="s0:LeaveDomainSoapOut" />
-    </operation>
-    <operation name="SetDefaultDomain">
-      <documentation>Change the default domain to the specified domain ID</documentation>
-      <input message="s0:SetDefaultDomainSoapIn" />
-      <output message="s0:SetDefaultDomainSoapOut" />
-    </operation>
-    <operation name="GetDefaultDomainID">
-      <documentation>Get the ID of the default domain</documentation>
-      <input message="s0:GetDefaultDomainIDSoapIn" />
-      <output message="s0:GetDefaultDomainIDSoapOut" />
-    </operation>
-    <operation name="GetCertificate">
-      <documentation>Get the certificate of the specified host.</documentation>
-      <input message="s0:GetCertificateSoapIn" />
-      <output message="s0:GetCertificateSoapOut" />
-    </operation>
-    <operation name="StoreCertificate">
-      <documentation>Store the certificate for the specified host.</documentation>
-      <input message="s0:StoreCertificateSoapIn" />
-      <output message="s0:StoreCertificateSoapOut" />
-    </operation>
-  </portType>
-  <binding name="Simias_x0020_Web_x0020_ServiceSoap" type="s0:Simias_x0020_Web_x0020_ServiceSoap">
+  </wsdl:types>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddMemberToDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:AddMemberToDomain" />
+  </wsdl:message>
+  <wsdl:message name="AddMemberToDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:AddMemberToDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveMemberFromDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveMemberFromDomain" />
+  </wsdl:message>
+  <wsdl:message name="RemoveMemberFromDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveMemberFromDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindCloseMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindCloseMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindCloseMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindCloseMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindFirstMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindFirstMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstSpecificMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindFirstSpecificMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindFirstSpecificMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindFirstSpecificMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindNextMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindNextMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindNextMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindNextMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindPreviousMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindPreviousMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindPreviousMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindPreviousMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindSeekMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindSeekMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindSeekMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindSeekMembersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSimiasInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSimiasInformation" />
+  </wsdl:message>
+  <wsdl:message name="GetSimiasInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSimiasInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDomainInformation" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDomainInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDomains" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDomainsResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoginToRemoteDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:LoginToRemoteDomain" />
+  </wsdl:message>
+  <wsdl:message name="LoginToRemoteDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginToRemoteDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogoutFromRemoteDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:LogoutFromRemoteDomain" />
+  </wsdl:message>
+  <wsdl:message name="LogoutFromRemoteDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:LogoutFromRemoteDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="DisableDomainAutoLoginSoapIn">
+    <wsdl:part name="parameters" element="tns:DisableDomainAutoLogin" />
+  </wsdl:message>
+  <wsdl:message name="DisableDomainAutoLoginSoapOut">
+    <wsdl:part name="parameters" element="tns:DisableDomainAutoLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsDomainActiveSoapIn">
+    <wsdl:part name="parameters" element="tns:IsDomainActive" />
+  </wsdl:message>
+  <wsdl:message name="IsDomainActiveSoapOut">
+    <wsdl:part name="parameters" element="tns:IsDomainActiveResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetDomainActiveSoapIn">
+    <wsdl:part name="parameters" element="tns:SetDomainActive" />
+  </wsdl:message>
+  <wsdl:message name="SetDomainActiveSoapOut">
+    <wsdl:part name="parameters" element="tns:SetDomainActiveResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetDomainInactiveSoapIn">
+    <wsdl:part name="parameters" element="tns:SetDomainInactive" />
+  </wsdl:message>
+  <wsdl:message name="SetDomainInactiveSoapOut">
+    <wsdl:part name="parameters" element="tns:SetDomainInactiveResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidCredentialsSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidCredentials" />
+  </wsdl:message>
+  <wsdl:message name="ValidCredentialsSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidCredentialsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetDomainCredentialsSoapIn">
+    <wsdl:part name="parameters" element="tns:SetDomainCredentials" />
+  </wsdl:message>
+  <wsdl:message name="SetDomainCredentialsSoapOut">
+    <wsdl:part name="parameters" element="tns:SetDomainCredentialsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainCredentialsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDomainCredentials" />
+  </wsdl:message>
+  <wsdl:message name="GetDomainCredentialsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDomainCredentialsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ConnectToDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:ConnectToDomain" />
+  </wsdl:message>
+  <wsdl:message name="ConnectToDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:ConnectToDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="LeaveDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:LeaveDomain" />
+  </wsdl:message>
+  <wsdl:message name="LeaveDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:LeaveDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetDefaultDomainSoapIn">
+    <wsdl:part name="parameters" element="tns:SetDefaultDomain" />
+  </wsdl:message>
+  <wsdl:message name="SetDefaultDomainSoapOut">
+    <wsdl:part name="parameters" element="tns:SetDefaultDomainResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultDomainIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultDomainID" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultDomainIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDefaultDomainIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCertificateSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCertificate" />
+  </wsdl:message>
+  <wsdl:message name="GetCertificateSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCertificateResponse" />
+  </wsdl:message>
+  <wsdl:message name="StoreCertificateSoapIn">
+    <wsdl:part name="parameters" element="tns:StoreCertificate" />
+  </wsdl:message>
+  <wsdl:message name="StoreCertificateSoapOut">
+    <wsdl:part name="parameters" element="tns:StoreCertificateResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Simias_x0020_Web_x0020_ServiceSoap">
+    <wsdl:operation name="Ping">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Allows a client to ping to make sure the Web Service is up and running</documentation>
+      <wsdl:input message="tns:PingSoapIn" />
+      <wsdl:output message="tns:PingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddMemberToDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Add a member to the domain.</documentation>
+      <wsdl:input message="tns:AddMemberToDomainSoapIn" />
+      <wsdl:output message="tns:AddMemberToDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveMemberFromDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Remove a member from the domain.</documentation>
+      <wsdl:input message="tns:RemoveMemberFromDomainSoapIn" />
+      <wsdl:output message="tns:RemoveMemberFromDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindCloseMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">End the search for domain members.</documentation>
+      <wsdl:input message="tns:FindCloseMembersSoapIn" />
+      <wsdl:output message="tns:FindCloseMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Starts a search for all domain members.</documentation>
+      <wsdl:input message="tns:FindFirstMembersSoapIn" />
+      <wsdl:output message="tns:FindFirstMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstSpecificMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Starts a search for a specific set of domain members.</documentation>
+      <wsdl:input message="tns:FindFirstSpecificMembersSoapIn" />
+      <wsdl:output message="tns:FindFirstSpecificMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindNextMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members from the current record location.</documentation>
+      <wsdl:input message="tns:FindNextMembersSoapIn" />
+      <wsdl:output message="tns:FindNextMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindPreviousMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members previous to the current record location.</documentation>
+      <wsdl:input message="tns:FindPreviousMembersSoapIn" />
+      <wsdl:output message="tns:FindPreviousMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members from the specified record location.</documentation>
+      <wsdl:input message="tns:FindSeekMembersSoapIn" />
+      <wsdl:output message="tns:FindSeekMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSimiasInformation">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetSimiasInformation</documentation>
+      <wsdl:input message="tns:GetSimiasInformationSoapIn" />
+      <wsdl:output message="tns:GetSimiasInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainInformation">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetDomainInformation</documentation>
+      <wsdl:input message="tns:GetDomainInformationSoapIn" />
+      <wsdl:output message="tns:GetDomainInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDomains">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get a list of local domains</documentation>
+      <wsdl:input message="tns:GetDomainsSoapIn" />
+      <wsdl:output message="tns:GetDomainsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginToRemoteDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Login or authenticate to a remote domain</documentation>
+      <wsdl:input message="tns:LoginToRemoteDomainSoapIn" />
+      <wsdl:output message="tns:LoginToRemoteDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogoutFromRemoteDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Logout from a remote domain</documentation>
+      <wsdl:input message="tns:LogoutFromRemoteDomainSoapIn" />
+      <wsdl:output message="tns:LogoutFromRemoteDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DisableDomainAutoLogin">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Disable automatic authentication to the specified domain</documentation>
+      <wsdl:input message="tns:DisableDomainAutoLoginSoapIn" />
+      <wsdl:output message="tns:DisableDomainAutoLoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsDomainActive">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">WebMethod to check if a domain is active</documentation>
+      <wsdl:input message="tns:IsDomainActiveSoapIn" />
+      <wsdl:output message="tns:IsDomainActiveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetDomainActive">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">SetDomainActive - enables synchronization to the remote server</documentation>
+      <wsdl:input message="tns:SetDomainActiveSoapIn" />
+      <wsdl:output message="tns:SetDomainActiveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetDomainInactive">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">SetDomainInactive - disables remote synchronization</documentation>
+      <wsdl:input message="tns:SetDomainInactiveSoapIn" />
+      <wsdl:output message="tns:SetDomainInactiveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidCredentials">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">ValidCredentials</documentation>
+      <wsdl:input message="tns:ValidCredentialsSoapIn" />
+      <wsdl:output message="tns:ValidCredentialsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetDomainCredentials">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Sets domain credentials in the local store</documentation>
+      <wsdl:input message="tns:SetDomainCredentialsSoapIn" />
+      <wsdl:output message="tns:SetDomainCredentialsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainCredentials">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get the saved credentials from a domain</documentation>
+      <wsdl:input message="tns:GetDomainCredentialsSoapIn" />
+      <wsdl:output message="tns:GetDomainCredentialsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ConnectToDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Connects to a Domain</documentation>
+      <wsdl:input message="tns:ConnectToDomainSoapIn" />
+      <wsdl:output message="tns:ConnectToDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LeaveDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Removes a domain account from the workstation</documentation>
+      <wsdl:input message="tns:LeaveDomainSoapIn" />
+      <wsdl:output message="tns:LeaveDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetDefaultDomain">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Change the default domain to the specified domain ID</documentation>
+      <wsdl:input message="tns:SetDefaultDomainSoapIn" />
+      <wsdl:output message="tns:SetDefaultDomainSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultDomainID">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get the ID of the default domain</documentation>
+      <wsdl:input message="tns:GetDefaultDomainIDSoapIn" />
+      <wsdl:output message="tns:GetDefaultDomainIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCertificate">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get the certificate of the specified host.</documentation>
+      <wsdl:input message="tns:GetCertificateSoapIn" />
+      <wsdl:output message="tns:GetCertificateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StoreCertificate">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Store the certificate for the specified host.</documentation>
+      <wsdl:input message="tns:StoreCertificateSoapIn" />
+      <wsdl:output message="tns:StoreCertificateSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Simias_x0020_Web_x0020_ServiceSoap" type="tns:Simias_x0020_Web_x0020_ServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-    <operation name="AddMemberToDomain">
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://novell.com/simias/web/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMemberToDomain">
       <soap:operation soapAction="http://novell.com/simias/web/AddMemberToDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="RemoveMemberFromDomain">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveMemberFromDomain">
       <soap:operation soapAction="http://novell.com/simias/web/RemoveMemberFromDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="FindCloseMembers">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindCloseMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindCloseMembers" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="FindFirstMembers">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindFirstMembers" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="FindFirstSpecificMembers">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindFirstSpecificMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindFirstSpecificMembers" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="FindNextMembers">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindNextMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindNextMembers" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="FindPreviousMembers">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindPreviousMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindPreviousMembers" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="FindSeekMembers">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindSeekMembers" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="GetSimiasInformation">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSimiasInformation">
       <soap:operation soapAction="http://novell.com/simias/web/GetSimiasInformation" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="GetDomainInformation">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainInformation">
       <soap:operation soapAction="http://novell.com/simias/web/GetDomainInformation" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="GetDomains">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomains">
       <soap:operation soapAction="http://novell.com/simias/web/GetDomains" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="LoginToRemoteDomain">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginToRemoteDomain">
       <soap:operation soapAction="http://novell.com/simias/web/LoginToRemoteDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="LogoutFromRemoteDomain">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogoutFromRemoteDomain">
       <soap:operation soapAction="http://novell.com/simias/web/LogoutFromRemoteDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="DisableDomainAutoLogin">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DisableDomainAutoLogin">
       <soap:operation soapAction="http://novell.com/simias/web/DisableDomainAutoLogin" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="IsDomainActive">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsDomainActive">
       <soap:operation soapAction="http://novell.com/simias/web/IsDomainActive" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="SetDomainActive">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetDomainActive">
       <soap:operation soapAction="http://novell.com/simias/web/SetDomainActive" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="SetDomainInactive">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetDomainInactive">
       <soap:operation soapAction="http://novell.com/simias/web/SetDomainInactive" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="ValidCredentials">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidCredentials">
       <soap:operation soapAction="http://novell.com/simias/web/ValidCredentials" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="SetDomainCredentials">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetDomainCredentials">
       <soap:operation soapAction="http://novell.com/simias/web/SetDomainCredentials" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="GetDomainCredentials">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDomainCredentials">
       <soap:operation soapAction="http://novell.com/simias/web/GetDomainCredentials" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="ConnectToDomain">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ConnectToDomain">
       <soap:operation soapAction="http://novell.com/simias/web/ConnectToDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="LeaveDomain">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LeaveDomain">
       <soap:operation soapAction="http://novell.com/simias/web/LeaveDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="SetDefaultDomain">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetDefaultDomain">
       <soap:operation soapAction="http://novell.com/simias/web/SetDefaultDomain" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="GetDefaultDomainID">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDefaultDomainID">
       <soap:operation soapAction="http://novell.com/simias/web/GetDefaultDomainID" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="GetCertificate">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCertificate">
       <soap:operation soapAction="http://novell.com/simias/web/GetCertificate" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-    <operation name="StoreCertificate">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StoreCertificate">
       <soap:operation soapAction="http://novell.com/simias/web/StoreCertificate" style="document" />
-      <input>
+      <wsdl:input>
         <soap:body use="literal" />
-      </input>
-      <output>
+      </wsdl:input>
+      <wsdl:output>
         <soap:body use="literal" />
-      </output>
-    </operation>
-  </binding>
-  <service name="Simias_x0020_Web_x0020_Service">
-    <documentation>Web Service providing access to Simias</documentation>
-    <port name="Simias_x0020_Web_x0020_ServiceSoap" binding="s0:Simias_x0020_Web_x0020_ServiceSoap">
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Simias_x0020_Web_x0020_Service">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Web Service providing access to Simias</documentation>
+    <wsdl:port name="Simias_x0020_Web_x0020_ServiceSoap" binding="tns:Simias_x0020_Web_x0020_ServiceSoap">
       <soap:address location="http://127.0.0.1:8086/simias10/Simias.asmx" />
-    </port>
-  </service>
-</definitions>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

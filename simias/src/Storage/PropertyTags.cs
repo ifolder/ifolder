@@ -141,6 +141,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string LocalPassword = "LocalPwd";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string MasterIncarnation = "SrvRev";
 
 		/// <summary>
@@ -262,6 +267,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( LastWriteTime, null );
 			systemPropertyTable.Add( LinkReference, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
+			systemPropertyTable.Add( LocalPassword, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( MasterUrl, null );
 			systemPropertyTable.Add( NodeCreationTime, null );

@@ -55,11 +55,6 @@ namespace Simias
 		private const string storeProviderPath = "Path";
 
 		/// <summary>
-		/// Certificate policy for the simias process.
-		/// </summary>
-		private static CertPolicy certPolicy;
-
-		/// <summary>
 		/// Only a single instance of this class in the process.
 		/// </summary>
 		private static Configuration instance = null;

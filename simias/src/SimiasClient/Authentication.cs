@@ -97,9 +97,8 @@ namespace Simias.Client.Authentication
 			try
 			{
 				SimiasWebService simiasSvc = new SimiasWebService();
-				simiasSvc.Url = 
-					Simias.Client.Manager.LocalServiceUrl.ToString() +
-					"/Simias.asmx";
+				simiasSvc.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+				LocalService.Start( simiasSvc );
 
 				DomainInformation cInfo = simiasSvc.GetDomainInformation( this.domainID );
 				if ( cInfo != null )

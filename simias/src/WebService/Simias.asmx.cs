@@ -195,6 +195,17 @@ namespace Simias.Web
 		}
 
 		/// <summary>
+		/// WebMethod that allows a client to ping the service to see
+		/// if it is up and running
+		/// </summary>
+		[WebMethod(EnableSession=true, Description="Allows a client to ping to make sure the Web Service is up and running")]
+		[SoapDocumentMethod]
+		public void Ping()
+		{
+			// Nothing to do here, just return
+		}
+
+		/// <summary>
 		/// Add a member to a domain.
 		/// </summary>
 		/// <param name="DomainID">The ID of the domain to add the member to.</param>
@@ -1022,11 +1033,6 @@ namespace Simias.Web
         public string POBoxID;
 
 		/// <summary>
-		/// The Simias URL for this domain.
-		/// </summary>
-		public string HostUrl;
-
-		/// <summary>
 		/// The host for this domain.
 		/// </summary>
 		public string Host;
@@ -1081,8 +1087,7 @@ namespace Simias.Web
 				uri.ToString() + "/DomainService.asmx" :
 				String.Empty;
 
-			this.HostUrl = (uri != null) ? uri.ToString() : String.Empty;
-			this.Host = ParseHostAndPort(this.HostUrl);
+			this.Host = (uri != null) ? uri.ToString() : String.Empty;
 			this.IsSlave = cDomain.Role.Equals(Simias.Sync.SyncRoles.Slave);
 			this.IsDefault = domainID.Equals(store.DefaultDomain);
 		}
@@ -1106,7 +1111,6 @@ namespace Simias.Web
 			builder.AppendFormat("  Member Node Name : {0}{1}", this.MemberName, newLine);
 			builder.AppendFormat("  Remote Url       : {0}{1}", this.RemoteUrl, newLine);
 			builder.AppendFormat("  POBox ID         : {0}{1}", this.POBoxID, newLine);
-			builder.AppendFormat("  HostUrl          : {0}{1}", this.HostUrl, newLine);
 			builder.AppendFormat("  Host             : {0}{1}", this.Host, newLine);
 
 			return builder.ToString();
@@ -1132,28 +1136,6 @@ namespace Simias.Web
 			}
 
 			return type;
-		}
-
-		/// <summary>
-		/// The purpose of this method is to be able to strip off the URL parts
-		/// off of the Simias URL.  There's no reason to show this to an end
-		/// user.
-		/// </summary>
-		private string ParseHostAndPort(string hostUrl)
-		{
-			// hostUrl will be in the following format:
-			//     http(s)://servername[:optional port]/simias10
-			//               ^^We're after this part^^^
-			
-			if (hostUrl == null) return "";	// Prevent a null return
-
-			int doubleSlashPos = hostUrl.IndexOf("//");
-			int lastSlashPos   = hostUrl.IndexOf('/', doubleSlashPos + 2);
-
-			if (doubleSlashPos > 0 && lastSlashPos > 0)
-				return hostUrl.Substring(doubleSlashPos + 2, lastSlashPos - doubleSlashPos - 2);
-
-			return hostUrl;
 		}
 	}
 }

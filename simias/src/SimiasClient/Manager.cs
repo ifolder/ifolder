@@ -295,7 +295,7 @@ namespace Simias.Client
 			{
 				try
 				{
-					service.GetSimiasInformation();
+					service.Ping();
 					serviceStarted = true;
 				}
 				catch
