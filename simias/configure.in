@@ -464,6 +464,8 @@ test/SyncCommon/Makefile
 test/SyncManager/Makefile
 test/SyncEndToEnd/Makefile
 test/POBox/Makefile
+test/SimiasTestsWS/Makefile
+test/SimiasTestsCmd/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

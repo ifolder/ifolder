@@ -5,6 +5,8 @@ SUBDIRS = \
 	CollectionStore \
 	Smtp \
 	Location \
+	SimiasTestsWS \
+	SimiasTestsCmd \
 	SyncCommon \
 	SyncManager \
 	SyncEndToEnd \
