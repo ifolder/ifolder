@@ -1,0 +1,23 @@
+GSOAP=../../soapcpp2
+SOAPH=../../stdsoap2.h
+SOAPC=../../stdsoap2.c
+SOAPCPP=../../stdsoap2.cpp
+CC=gcc
+CPP=g++
+LIBS=-lxnet -lnsl -lsocket
+COFLAGS=-O2
+CWFLAGS=-Wall
+CIFLAGS=-I../..
+CMFLAGS=
+CFLAGS= $(CWFLAGS) $(COFLAGS) $(CIFLAGS) $(CMFLAGS)
+all:		luclient luserver
+luclient:	lu.h luclient.cpp lumat.cpp $(SOAPH) $(SOAPCPP)
+		$(GSOAP) lu.h
+		$(CPP) $(CFLAGS) -o luclient luclient.cpp lumat.cpp soapC.cpp soapClient.cpp $(SOAPCPP) $(LIBS)
+luserver:	lu.h luserver.cpp lumat.cpp $(SOAPH) $(SOAPCPP)
+		$(GSOAP) lu.h
+		$(CPP) $(CFLAGS) -o luserver luserver.cpp lumat.cpp soapC.cpp soapServer.cpp $(SOAPCPP) $(LIBS)
+clean:
+		rm -f *.o soapH.h soapStub.h soapC.cpp soapC.c soapClient.cpp soapClient.c soapServer.cpp soapServer.c soap*Proxy.h
+distclean:
+		rm -f *.o *.wsdl *.xsd *.xml *.nsmap *.log soapH.h soapStub.h soapC.cpp soapC.c soapClient.cpp soapClient.c soapServer.cpp soapServer.c soap*Proxy.h luclient luserver

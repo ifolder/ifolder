@@ -1,0 +1,8 @@
+<router>
+ <item>
+  <key>dime</key>
+  <endpoint>http://localhost:18000</endpoint>
+  <userid>guest</userid>
+  <passwd>guest</passwd>
+ </item>
+</router>

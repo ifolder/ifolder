@@ -1,0 +1,326 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 38;
+	objects = {
+		014CEA520018CE5811CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA530018CE5811CA2923 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//010
+//011
+//012
+//013
+//014
+//030
+//031
+//032
+//033
+//034
+		034768E8FF38A79811DB9C8B = {
+			isa = PBXExecutableFileReference;
+			path = Quote;
+			refType = 3;
+		};
+//030
+//031
+//032
+//033
+//034
+//080
+//081
+//082
+//083
+//084
+		08FB7793FE84155DC02AAC07 = {
+			buildStyles = (
+				014CEA520018CE5811CA2923,
+				014CEA530018CE5811CA2923,
+			);
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = "";
+			targets = (
+				08FB779FFE84155DC02AAC07,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				08FB7795FE84155DC02AAC07,
+				C6A0FF2B0290797F04C91782,
+				1AB674ADFE9D54B511CA2CBB,
+			);
+			isa = PBXGroup;
+			name = Quote;
+			refType = 4;
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				F58F8DA804A90C7A0145D34B,
+				F58F8DA904A90C7A0145D34B,
+				F58F8DBD04A90E5B0145D34B,
+				F58F8DAD04A90C940145D34B,
+				F58F8DBA04A90E3D0145D34B,
+				F58F8DB904A90E3D0145D34B,
+				F58F8DB304A90DBE0145D34B,
+				F58F8DB704A90DD20145D34B,
+			);
+			isa = PBXGroup;
+			name = Source;
+			refType = 4;
+		};
+		08FB779FFE84155DC02AAC07 = {
+			buildPhases = (
+				F58F8DB004A90D0E0145D34B,
+				08FB77A0FE84155DC02AAC07,
+				08FB77A1FE84155DC02AAC07,
+				08FB77A3FE84155DC02AAC07,
+				08FB77A5FE84155DC02AAC07,
+				C6A0FF2D029079AD04C91782,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Quote;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = Quote;
+			productInstallPath = "$(HOME)/bin";
+			productName = Quote;
+			productReference = 034768E8FF38A79811DB9C8B;
+			shouldUseHeadermap = 1;
+		};
+		08FB77A0FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				F58F8DAB04A90C7A0145D34B,
+				F58F8DAF04A90C940145D34B,
+				F58F8DB604A90DBE0145D34B,
+				F58F8DB804A90DD20145D34B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		08FB77A1FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				F58F8DAA04A90C7A0145D34B,
+				F58F8DBB04A90E3D0145D34B,
+				F58F8DBC04A90E3D0145D34B,
+				F58F8DBE04A90E5B0145D34B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		08FB77A3FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		08FB77A5FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+//080
+//081
+//082
+//083
+//084
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				034768E8FF38A79811DB9C8B,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+//C60
+//C61
+//C62
+//C63
+//C64
+		C6A0FF2B0290797F04C91782 = {
+			children = (
+				C6A0FF2C0290799A04C91782,
+			);
+			isa = PBXGroup;
+			name = Documentation;
+			refType = 4;
+		};
+		C6A0FF2C0290799A04C91782 = {
+			isa = PBXFileReference;
+			path = Quote.1;
+			refType = 4;
+		};
+		C6A0FF2D029079AD04C91782 = {
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				C6A0FF2E029079C004C91782,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		C6A0FF2E029079C004C91782 = {
+			fileRef = C6A0FF2C0290799A04C91782;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//C60
+//C61
+//C62
+//C63
+//C64
+//F50
+//F51
+//F52
+//F53
+//F54
+		F58F8DA804A90C7A0145D34B = {
+			isa = PBXFileReference;
+			path = quote.c;
+			refType = 4;
+		};
+		F58F8DA904A90C7A0145D34B = {
+			isa = PBXFileReference;
+			path = quote.h;
+			refType = 4;
+		};
+		F58F8DAA04A90C7A0145D34B = {
+			fileRef = F58F8DA804A90C7A0145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DAB04A90C7A0145D34B = {
+			fileRef = F58F8DA904A90C7A0145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DAD04A90C940145D34B = {
+			isa = PBXFileReference;
+			path = stdsoap2.h;
+			refType = 4;
+		};
+		F58F8DAF04A90C940145D34B = {
+			fileRef = F58F8DAD04A90C940145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DB004A90D0E0145D34B = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			generatedFileNames = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			neededFileNames = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "~/bin/soapcpp2 -c quote.h";
+		};
+		F58F8DB304A90DBE0145D34B = {
+			isa = PBXFileReference;
+			path = soapH.h;
+			refType = 4;
+		};
+		F58F8DB604A90DBE0145D34B = {
+			fileRef = F58F8DB304A90DBE0145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DB704A90DD20145D34B = {
+			isa = PBXFileReference;
+			path = soapStub.h;
+			refType = 4;
+		};
+		F58F8DB804A90DD20145D34B = {
+			fileRef = F58F8DB704A90DD20145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DB904A90E3D0145D34B = {
+			isa = PBXFileReference;
+			path = soapC.c;
+			refType = 4;
+		};
+		F58F8DBA04A90E3D0145D34B = {
+			isa = PBXFileReference;
+			path = soapClient.c;
+			refType = 4;
+		};
+		F58F8DBB04A90E3D0145D34B = {
+			fileRef = F58F8DB904A90E3D0145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DBC04A90E3D0145D34B = {
+			fileRef = F58F8DBA04A90E3D0145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58F8DBD04A90E5B0145D34B = {
+			isa = PBXFileReference;
+			path = stdsoap2.c;
+			refType = 4;
+		};
+		F58F8DBE04A90E5B0145D34B = {
+			fileRef = F58F8DBD04A90E5B0145D34B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
