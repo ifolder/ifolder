@@ -289,7 +289,7 @@ namespace Simias.POBoxService.Web
 
 			// Validate the shared collection
 			Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
-			if (cSharedCollection != null)
+			if (cSharedCollection == null)
 			{
 				log.Debug("POBoxService::DeclinedSubscription - Collection not found");
 				return(POBoxStatus.UnknownCollection);
@@ -714,13 +714,17 @@ namespace Simias.POBoxService.Web
 				cSub.FromIdentity = fromUserID;
 				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) rights;
 
+				string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
+				appPath += "/POBoxService.asmx";
+
+				log.Info(  "application path: " + appPath);
+
 				UriBuilder poUri = 
 					new UriBuilder(
 						this.Context.Request.Url.Scheme,
 						this.Context.Request.Url.Host,
 						this.Context.Request.Url.Port,
-						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ),
-						"/POBoxService.asmx");
+						appPath);
 
 				log.Info("  newup service url: " + poUri.ToString());
 
