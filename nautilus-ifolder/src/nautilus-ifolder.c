@@ -676,7 +676,7 @@ get_all_ifolder_paths ()
 				for (i = 0; i < array_of_ifolders->__sizeiFolderWeb; i++) {
 					ifolder_local_paths =
 						g_slist_prepend (ifolder_local_paths,
-								strdup (array_of_ifolders->iFolderWeb [i]->ID));
+								strdup (array_of_ifolders->iFolderWeb [i]->UnManagedPath));
 				}
 			}
 		}
@@ -832,6 +832,8 @@ slist_invalidate_local_path (gpointer data, gpointer user_data)
 		g_printf ("invalidate_local_path: %s\n", file_uri);
 		/* Let nautilus run this in the main loop */
 		g_idle_add (invalidate_ifolder_extension_info, file);
+	} else {
+g_print ("nautilus-ifolder: \"%s\" existing not found\n", file_uri);
 	}
 }
 
