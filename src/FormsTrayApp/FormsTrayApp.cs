@@ -43,9 +43,9 @@ namespace Novell.iFolder.FormsTrayApp
 	/// </summary>
 	public class FormsTrayApp : Form
 	{
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
-		
         #region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+
 		private NotifyIcon notifyIcon1;
 		private ContextMenu contextMenu1;
 		private MenuItem menuItemExit;
@@ -106,6 +106,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			// Initialize menuItemProperties
 			this.menuItemProperties.Index = 0;
+			this.menuItemProperties.DefaultItem = true;
 			this.menuItemProperties.Click += new EventHandler(menuItemProperties_Click);
 
 			// Initialize menuItemInviteWizard
@@ -173,7 +174,7 @@ namespace Novell.iFolder.FormsTrayApp
 			notifyIcon1.Visible = true;
 
 			// Handle the DoubleClick event to activate the form.
-			//notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+			notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
 
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.FormsTrayApp_Closing);
 			this.Load += new System.EventHandler(FormsTrayApp_Load);
@@ -190,19 +191,11 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 
 		#region Event Handlers
-//		private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
-//		{
-			// Show the form when the user double clicks on the notify icon.
-
-			// Set the WindowState to normal if the form is minimized.
-//			if (this.WindowState == FormWindowState.Minimized)
-//				this.WindowState = FormWindowState.Normal;
-
-//			this.ShowInTaskbar = true;
-
-			// Activate the form.
-//			this.Activate();
-//		}
+		private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
+		{
+			// Show the properties when the user double clicks on the notify icon.
+			menuItemProperties_Click(Sender, e);
+		}
 
 		private void menuItemExit_Click(object Sender, System.EventArgs e)
 		{
@@ -222,7 +215,7 @@ namespace Novell.iFolder.FormsTrayApp
 //			}
 //			else
 			{
-				Process.Start("InvitationWizard.exe");
+				Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"));
 			}
 		}
 
@@ -236,7 +229,7 @@ namespace Novell.iFolder.FormsTrayApp
 //			}
 //			else
 			{
-				Process.Start("ContactBrowser.exe");
+				Process.Start(Path.Combine(Application.StartupPath, "ContactBrowser.exe"));
 			}
 		}
 
@@ -274,7 +267,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuItemBrowser_Click(object sender, EventArgs e)
 		{
-			Process.Start("StoreBrowser.exe");
+			Process.Start(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
 		}
 
 		private void FormsTrayApp_Load(object sender, System.EventArgs e)
@@ -352,7 +345,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void contextMenu1_Popup(object sender, EventArgs e)
 		{
 			// Dynamically add/remove store browser menu item based on whether or not the file is installed.
-			if (File.Exists(Path.Combine(Environment.CurrentDirectory, "StoreBrowser.exe")))
+			if (File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe")))
 			{
 				if (this.contextMenu1.MenuItems.Contains(this.menuItemBrowser) == false)
 					this.contextMenu1.MenuItems.Add(0, this.menuItemBrowser);

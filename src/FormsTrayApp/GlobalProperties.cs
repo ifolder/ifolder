@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.IO;
 using Simias;
 using Simias.Sync;
 
@@ -14,6 +15,8 @@ namespace Novell.iFolder.FormsTrayApp
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
 		#region Class Members
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -164,6 +167,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.displayConfirmation);
 			this.Controls.Add(this.defaultInterval);
 			this.Controls.Add(this.label1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "GlobalProperties";
 			this.Text = "Global iFolder Properties";
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
@@ -176,6 +180,16 @@ namespace Novell.iFolder.FormsTrayApp
 		#region Event Handlers
 		private void GlobalProperties_Load(object sender, System.EventArgs e)
 		{
+			// Load the application icon.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Loading icon");
+			}
+
 			try
 			{
 				Configuration config = new Configuration();
