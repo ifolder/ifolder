@@ -494,6 +494,29 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
+		/// Remove contact from group
+		/// </summary>
+		/// <remarks>
+		/// </remarks>
+		public void RemoveContact(Contact cContact)
+		{
+			try
+			{
+				MultiValuedList	mList = this.Properties.GetProperties(Common.groupToContact);
+				foreach(Property p in mList)
+				{
+					if (((Relationship) p.Value).NodeID == cContact.ID)
+					{
+						p.Delete();
+						break;
+					}
+				}
+			}
+			catch{}
+			return;
+		}
+
+		/// <summary>
 		/// Adds a vCard ADR property to the Group.
 		/// </summary>
 		/// <remarks>

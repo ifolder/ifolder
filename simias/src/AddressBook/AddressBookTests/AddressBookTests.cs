@@ -1285,6 +1285,17 @@ namespace Novell.AddressBook.Tests
 				{
 					Console.WriteLine(cContact.UserName);
 				}
+
+				// Now remove user two from the group and re-enumerate
+				cGroup.RemoveContact(user2);
+				cGroup.Commit();
+
+				// Now enumerate the contacts in the list
+				foreach(Contact cContact in cGroup.GetContactList())
+				{
+					Console.WriteLine(cContact.UserName);
+				}
+
 			}
 			finally
 			{
