@@ -88,7 +88,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="commit">True if changes should be commited.</param>
 		/// <returns>The status of the sync.</returns>
-		public new SyncNodeStatus Close(bool commit)
+		public SyncNodeStatus Close(bool commit)
 		{
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
@@ -181,7 +181,7 @@ namespace Simias.Sync
 		/// Called to close the file.
 		/// </summary>
 		/// <returns>The status of the sync.</returns>
-		public new SyncNodeStatus Close()
+		public SyncNodeStatus Close()
 		{
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;

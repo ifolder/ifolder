@@ -105,8 +105,6 @@ namespace Simias.POBoxService.Web
 		//Required by the Web Services Designer 
 		private IContainer components = null;
 
-		private string versionEndpoint = "/simias10";
-				
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
