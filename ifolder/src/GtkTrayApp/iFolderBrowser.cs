@@ -291,10 +291,13 @@ namespace Novell.iFolder
 
 		public void on_move_up_event(object o, EventArgs args)
 		{
-			if(curDirEntry.FullName != topDirEntry.FullName)
+			if(curDirEntry != null)
 			{
-				SetCurrentDir(new 
-						DirectoryEntry(curDirEntry.DirectoryInfo.Parent) );
+				if(curDirEntry.FullName != topDirEntry.FullName)
+				{
+					SetCurrentDir(new 
+							DirectoryEntry(curDirEntry.DirectoryInfo.Parent) );
+				}
 			}
 		}
 
