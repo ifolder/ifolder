@@ -92,7 +92,7 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 - (IBAction)clearLog:(id)sender
 {
-	[[[NSApp delegate] logArrayController] setContent:nil];
+	[[NSApp delegate] clearLog];
 }
 
 

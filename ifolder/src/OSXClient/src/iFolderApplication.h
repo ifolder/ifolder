@@ -61,6 +61,7 @@
 - (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
 - (NSArrayController *)logArrayController;
 - (BOOL)simiasIsRunning;
+- (void)clearLog;
 
 
 //==========================================
