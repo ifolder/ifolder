@@ -106,7 +106,30 @@ namespace StoreBrowser
 					c = c == Color.LightBlue ? Color.White : Color.LightBlue;
 					item = new ListViewItem(p.Name);
 					item.BackColor = c;
-					item.SubItems.Add(p.Value.ToString());
+
+					if (p.Type == Syntax.Relationship)
+					{
+						Node rNode = null;
+						Collection rCol = store.GetCollectionByID((p.Value as Relationship).CollectionID);
+						if (rCol != null )
+						{
+							rNode = rCol.GetNodeByID((p.Value as Relationship).NodeID);
+						}
+
+						if (rCol == null || rNode == null)
+						{
+							item.SubItems.Add(p.ToString());
+						}
+						else
+						{
+							item.SubItems.Add(rCol.Name + ":" + rNode.Name);
+						}
+					}
+					else
+					{
+						item.SubItems.Add(p.ToString());
+					}
+
 					item.SubItems.Add(p.Type.ToString());
 					lView.Items.Add(item);
 				}
@@ -123,18 +146,18 @@ namespace StoreBrowser
 			Color c = Color.LightBlue;
 			foreach (Property p in node.Properties)
 			{
-				if (p.Type == Syntax.Relationship)
-				{
-				}
-				else
-				{
+//				if (p.Type == Syntax.Relationship)
+//				{
+//				}
+//				else
+//				{
 					TreeNode pNode = new TreeNode(string.Format("{0,-20} : {1,40}", p.Name, p.Value.ToString()), 1, 1);
 					c = pNode.BackColor = (c == Color.LightBlue) ? Color.White : Color.LightBlue;
 					pNode.Nodes.Add(new TreeNode("Value: " + p.Value.ToString(), 1, 1));
 					pNode.Nodes.Add(new TreeNode("Type : " + p.Type.ToString(), 1, 1));
 					pNode.Nodes.Add(new TreeNode("Flags: " + p.Flags.ToString(), 1, 1));
 					tNode.Nodes.Add(pNode);
-				}
+//				}
 			}
 		}
 
@@ -162,24 +185,19 @@ namespace StoreBrowser
 			else
 			{
 				Node node = (Node)tNode.Tag;
-				switch (node.Type)
+				if ( node is Collection )
 				{
-					case "Collection":
-						//AddProperties(tNode, node);
-						foreach (ShallowNode sn in (Collection)node)
+					foreach (ShallowNode sn in (Collection)node)
+					{
+						if (sn.ID != node.ID)
 						{
-							if (sn.ID != node.ID)
-							{
-								Node n = new Node((Collection)node, sn);
-								TreeNode nNode = new TreeNode(n.Name);
-								nNode.Tag = n;
-								tNode.Nodes.Add(nNode);
-								nNode.Nodes.Add("temp");
-							}
+							Node n = new Node((Collection)node, sn);
+							TreeNode nNode = new TreeNode(n.Name);
+							nNode.Tag = n;
+							tNode.Nodes.Add(nNode);
+							nNode.Nodes.Add("temp");
 						}
-						break;
-					default:
-						break;
+					}
 				}
 			}
 		}

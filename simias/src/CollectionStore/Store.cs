@@ -778,30 +778,54 @@ namespace Simias.Storage
 			/// <param name="currentUserGuid">The guid that the current user is known as.</param>
 			private void CollectionQuery( string currentUserGuid )
 			{
-				// Create the collection query.
-				Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, currentUserGuid, Syntax.String );
-
-				// Do the search.
-				chunkIterator = store.storageProvider.Search( query );
-				if ( chunkIterator != null )
+				while ( IDEnumerator != null )
 				{
-					// Get the first set of results from the query.
-					int length = chunkIterator.GetNext( ref results );
-					if ( length > 0 )
+					// Create the collection query.
+					Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, currentUserGuid, Syntax.String );
+
+					// Do the search.
+					chunkIterator = store.storageProvider.Search( query );
+					if ( chunkIterator != null )
 					{
-						// Set up the XML document that we will use as the granular query to the client.
-						collectionList = new XmlDocument();
-						collectionList.LoadXml( new string( results, 0, length ) );
-						collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
+						// Get the first set of results from the query.
+						int length = chunkIterator.GetNext( ref results );
+						if ( length > 0 )
+						{
+							// Set up the XML document that we will use as the granular query to the client.
+							collectionList = new XmlDocument();
+							collectionList.LoadXml( new string( results, 0, length ) );
+							collectionEnumerator = collectionList.DocumentElement.GetEnumerator();
+							break;
+						}
+						else
+						{
+							// The search with the previous ID did not find anything. Look to see if there
+							// is another ID to search with.
+							if ( IDEnumerator.MoveNext() )
+							{
+								currentUserGuid = IDEnumerator.Current as string;
+							}
+							else
+							{
+								IDEnumerator = null;
+								collectionEnumerator = null;
+							}
+						}
 					}
 					else
 					{
-						collectionEnumerator = null;
+						// The search with the previous ID did not find anything. Look to see if there
+						// is another ID to search with.
+						if ( IDEnumerator.MoveNext() )
+						{
+							currentUserGuid = IDEnumerator.Current as string;
+						}
+						else
+						{
+							IDEnumerator = null;
+							collectionEnumerator = null;
+						}
 					}
-				}
-				else
-				{
-					collectionEnumerator = null;
 				}
 			}
 			#endregion

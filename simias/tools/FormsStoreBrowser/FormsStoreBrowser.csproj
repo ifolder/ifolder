@@ -92,7 +92,7 @@
                 <Reference
                     Name = "Simias"
                     AssemblyName = "Simias"
-                    HintPath = "..\..\src\Simias.dll\Simias.dll"
+                    HintPath = "..\..\stage\Simias.dll"
                 />
             </References>
         </Build>
