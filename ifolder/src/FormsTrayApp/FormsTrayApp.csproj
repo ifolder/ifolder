@@ -129,6 +129,11 @@
                     AssemblyName = "SyncManager"
                     HintPath = "..\..\..\simias\src\SyncManager\SyncManager.dll"
                 />
+                <Reference
+                    Name = "UserService"
+                    AssemblyName = "UserService"
+                    HintPath = "..\..\..\simias\src\UserService\UserService.dll"
+                />
             </References>
         </Build>
         <Files>
