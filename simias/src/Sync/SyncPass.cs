@@ -331,6 +331,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	public override void DoSyncWork()
 	{
+	Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
+	try
+	{
 		Access.Rights rights = ss.Start();
 
 		if (rights == Access.Rights.Deny)
@@ -338,8 +341,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 			Log.Error("Sync with collection {0} denied", collection.Name);
 			return;
 		}
-
-		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 
 		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 		new Dredger(collection, false);
@@ -559,7 +560,14 @@ public class SynkerWorkerA: SyncCollectionWorker
 			}
 		}
 		largeFromServer.Clear();
-		Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
+	}
+	catch (Exception e)
+	{
+		Log.Spew("Uncaught exception in DoSyncWork: {0}", e.Message);
+		Log.Spew(e.StackTrace);
+	}
+	catch { Log.Spew("Uncaught foreign exception in DoSyncWork"); }
+	Log.Spew("-------- end of sync pass for collection {0}", collection.Name);
 	}
 }
 
