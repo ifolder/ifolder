@@ -77,7 +77,7 @@ case $IFOLDER_OS in
         DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
         DEBUG_CXXFLAGS="-g -DDEBUG"
         DEBUG_LDFLAGS="-g"
-        DEBUG_NUNIT_FLAGS='--debug'
+        DEBUG_NUNIT_FLAGS=''
         EMPTY=
         EXE_EXT=''
         ICON_EXT='.ico'
