@@ -29,6 +29,7 @@ using System.Configuration.Install;
 using System.Xml;
 using System.IO;
 using System.Text;
+using Simias.Client;
 
 namespace Novell.FormsTrayApp
 {
@@ -147,6 +148,14 @@ namespace Novell.FormsTrayApp
 					}
 					catch {}
 					process.Close();
+				}
+				// Get store path
+				Simias.Client.Configuration configuration = new Simias.Client.Configuration();
+				Directory.Delete(configuration.StorePath, true);
+				string configPath = configuration.ConfigPath;
+				if (File.Exists(configPath))
+				{
+					File.Delete(configPath);
 				}
 			}
 		}
