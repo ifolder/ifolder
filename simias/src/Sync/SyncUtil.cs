@@ -129,7 +129,8 @@ public class FileInviter
 			c.Commit(c);
 			c.Commit(dn);
 			sc = new SyncCollection(c);
-			UriBuilder builder = new UriBuilder("http", host, port);
+			//UriBuilder builder = new UriBuilder("http", host, port);
+			UriBuilder builder = new UriBuilder("tcp", host, port);
 			sc.MasterUri = builder.Uri;
 			sc.Commit();
 			Log.Spew("Created new master collection for {0}, id {1}, {2}:{3}",
@@ -188,7 +189,8 @@ public class CmdServer
 
 	internal static string MakeUri(string host, int port)
 	{
-		return String.Format("http://{0}:{1}/{2}", host, port, serviceTag);
+		//return String.Format("http://{0}:{1}/{2}", host, port, serviceTag);
+		return String.Format("tcp://{0}:{1}/{2}", host, port, serviceTag);
 	}
 
 	/// <summary>
@@ -199,7 +201,8 @@ public class CmdServer
 	{
 		uri = MakeUri(host, port);
 		obj = new CmdService(storeLocation);
-		channel = new HttpServerChannel(channelName, port, new BinaryServerFormatterSinkProvider());
+		//channel = new HttpServerChannel(channelName, port, new BinaryServerFormatterSinkProvider());
+		channel = new TcpServerChannel(channelName, port, new BinaryServerFormatterSinkProvider());
 		ChannelServices.RegisterChannel(channel);
 		objRef = RemotingServices.Marshal(obj, serviceTag);
 		Log.Info("CmdServer {0} is up and running from store '{1}'", uri, storeLocation);
@@ -243,7 +246,8 @@ public class CmdClient
 
 	CmdClient(string host, int port, string collectionId)
 	{
-		channel = new HttpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
+		//channel = new HttpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
+		channel = new TcpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
 		ChannelServices.RegisterChannel(channel);
 		string serverURL = CmdServer.MakeUri(host, port);
 		service = (CmdService)Activator.GetObject(typeof(CmdService), serverURL);
