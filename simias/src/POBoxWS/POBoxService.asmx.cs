@@ -861,6 +861,7 @@ namespace Simias.POBoxService.Web
 
 				log.Debug("  application path: " + appPath);
 
+				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
 				UriBuilder poUri = 
 					new UriBuilder(
 						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
@@ -877,6 +878,7 @@ namespace Simias.POBoxService.Web
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
 				cSub.MessageType = "Outbound";  // ????
 
+				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
 				UriBuilder coUri = 
 					new UriBuilder(
 						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
