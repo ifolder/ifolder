@@ -43,15 +43,17 @@
 #include <libxml/xpathInternals.h>
 
 #include <simias-event-client.h>
+#include <simias.h>
 
-#include "iFolderClientStub.h"
-#include "iFolderClient.nsmap"
+#include <ifolder.h>
+#include <iFolderStub.h>
+#include <iFolder.nsmap>
 
 #include "nautilus-ifolder.h"
 #include "../config.h"
 
 /* Turn this on to see debug messages */
-#if 0
+#if 1
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
 #else
 #define DEBUG_IFOLDER
@@ -85,7 +87,7 @@ typedef struct {
 
 static GType provider_types[1];
 
-char *soapURL = NULL;
+static char *soapURL = NULL;
 time_t last_read_of_soap_url = 0;
 
 static void ifolder_extension_register_type (GTypeModule *module);
@@ -122,25 +124,24 @@ static char * getLocalServiceUrl ();
 static void reread_local_service_url ();
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
-gchar * get_file_path (NautilusFileInfo *file);
-gboolean is_ifolder_running ();
-gboolean is_ifolder (NautilusFileInfo *file);
-gboolean can_be_ifolder (NautilusFileInfo *file);
-gint create_local_ifolder (NautilusFileInfo *file);
-gchar * get_ifolder_id_by_local_path (gchar *path);
-gint revert_ifolder (NautilusFileInfo *file);
-gchar * get_unmanaged_path (gchar *ifolder_id);
-GSList *get_all_ifolder_paths ();
+static gchar * get_file_path (NautilusFileInfo *file);
+static gboolean is_ifolder (NautilusFileInfo *file);
+static gboolean can_be_ifolder (NautilusFileInfo *file);
+static gint create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id);
+static gchar * get_ifolder_id_by_local_path (gchar *path);
+static gint revert_ifolder (NautilusFileInfo *file);
+static gchar * get_unmanaged_path (gchar *ifolder_id);
+static GSList *get_all_ifolder_paths ();
 
 /* Functions for seen_ifolders_ht (GHashTable) */
-void seen_ifolders_ht_destroy_key (gpointer key);
-void seen_ifolders_ht_destroy_value (gpointer value);
-void ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data);
-gboolean ht_remove_ifolder (gpointer key, gpointer value, gpointer user_data);
+static void seen_ifolders_ht_destroy_key (gpointer key);
+static void seen_ifolders_ht_destroy_value (gpointer value);
+static void ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data);
+static gboolean ht_remove_ifolder (gpointer key, gpointer value, gpointer user_data);
 
 /* Functions used to work on GSList of iFolder local paths */
-void slist_invalidate_local_path (gpointer data, gpointer user_data);
-void slist_free_local_path_str (gpointer data, gpointer user_data);
+static void slist_invalidate_local_path (gpointer data, gpointer user_data);
+static void slist_free_local_path_str (gpointer data, gpointer user_data);
 
 /* Functions and defines used to read user config files */
 #define XPATH_SHOW_CREATION_DIALOG	"//setting[@name='ShowCreationDialog']/@value"
@@ -161,7 +162,7 @@ static void ifolder_help_callback (NautilusMenuItem *item, gpointer user_data);
  * NautilusFileInfo *.  It must be run from the main loop (hence being called
  * with g_idle_add ()).
  */
-gboolean
+static gboolean
 invalidate_ifolder_extension_info (void *user_data)
 {
  	NautilusFileInfo *file = (NautilusFileInfo *)user_data;
@@ -177,7 +178,7 @@ invalidate_ifolder_extension_info (void *user_data)
 /**
  * Callback functions for the Simias Event Client
  */
-int
+static int
 simias_node_created_cb (SimiasNodeEvent *event, void *data)
 {
 	char *file_uri;
@@ -213,7 +214,7 @@ simias_node_created_cb (SimiasNodeEvent *event, void *data)
 	return 0;
 }
 
-int
+static int
 simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 {
 	gchar *file_uri;
@@ -248,7 +249,7 @@ simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 	return 0;
 }
 
-int
+static int
 ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 {
 	SimiasEventClient *ec = (SimiasEventClient *)data;
@@ -355,7 +356,7 @@ init_gsoap (struct soap *p_soap)
 {
 	/* Initialize gSOAP */
 	soap_init (p_soap);
-	soap_set_namespaces (p_soap, iFolderClient_namespaces);
+	soap_set_namespaces (p_soap, iFolder_namespaces);
 }
 
 static void
@@ -372,7 +373,7 @@ cleanup_gsoap (struct soap *p_soap)
 /**
  * g_free () must be called on the returned string
  */
-gchar *
+static gchar *
 get_file_path (NautilusFileInfo *file)
 {
 	gchar *file_path, *uri;
@@ -390,41 +391,7 @@ get_file_path (NautilusFileInfo *file)
 	return file_path;
 }
 
-/**
- * Calls to iFolder via GSoap
- */
-gboolean
-is_ifolder_running ()
-{
-	struct soap soap;
-	gboolean b_is_ifolder_running = TRUE;
-	int err_code;
-
-	struct _ns1__Ping ns1__Ping;
-	struct _ns1__PingResponse ns1__PingResponse;
-
-	init_gsoap (&soap);
-	err_code = soap_call___ns1__Ping (&soap,
-										soapURL,
-						   				NULL,
-						   				&ns1__Ping,
-						   				&ns1__PingResponse);
-						   				
-	if (err_code != SOAP_OK || soap.error) {
-		b_is_ifolder_running = FALSE;
-		DEBUG_IFOLDER (("err_code: %d gSOAP error: %d\n", err_code, soap.error));
-		soap_print_fault (&soap, stderr);
-		if (soap.error == SOAP_TCP_ERROR) {
-			reread_local_service_url ();
-		}
-	}
-	
-	cleanup_gsoap (&soap);
-	
-	return b_is_ifolder_running;
-}
- 
-gboolean
+static gboolean
 is_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
@@ -462,7 +429,7 @@ is_ifolder (NautilusFileInfo *file)
 	return b_is_ifolder;
 }
 
-gboolean
+static gboolean
 can_be_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
@@ -503,27 +470,24 @@ can_be_ifolder (NautilusFileInfo *file)
 	return b_can_be_ifolder;
 }
 
-gint
-create_local_ifolder (NautilusFileInfo *file)
+static gint
+create_ifolder_in_domain (NautilusFileInfo *file, char *domain_id)
 {
 	struct soap soap;
 	gchar *folder_path;
 	
 	folder_path = get_file_path (file);
 	if (folder_path != NULL) {
-		DEBUG_IFOLDER (("****About to call CreateLocaliFolder (\"%s\")...\n", folder_path));
-		struct _ns1__CreateLocaliFolder ns1__CreateLocaliFolder;
-		struct _ns1__CreateLocaliFolderResponse ns1__CreateLocaliFolderResponse;
-		ns1__CreateLocaliFolder.Path = folder_path;
+		DEBUG_IFOLDER (("****About to call CreateiFolderInDomain (\"%s\", \"%s\")...\n", folder_path, domain_id));
+		struct _ns1__CreateiFolderInDomain req;
+		struct _ns1__CreateiFolderInDomainResponse resp;
+		req.Path = folder_path;
+		req.DomainID = domain_id;
 		init_gsoap (&soap);
-		soap_call___ns1__CreateLocaliFolder (&soap, 
-											 soapURL, 
-											 NULL, 
-											 &ns1__CreateLocaliFolder, 
-											 &ns1__CreateLocaliFolderResponse);
+		soap_call___ns1__CreateiFolderInDomain (&soap, soapURL, NULL, &req, &resp);
 		g_free (folder_path);
 		if (soap.error) {
-			DEBUG_IFOLDER (("****error calling CreateLocaliFolder***\n"));
+			DEBUG_IFOLDER (("****error calling CreateiFolderInDomain***\n"));
 			soap_print_fault (&soap, stderr);
 			if (soap.error == SOAP_TCP_ERROR) {
 				reread_local_service_url ();
@@ -531,9 +495,8 @@ create_local_ifolder (NautilusFileInfo *file)
 			cleanup_gsoap (&soap);
 			return -1;
 		} else {
-			DEBUG_IFOLDER (("***calling CreateLocaliFolder succeeded***\n"));
-			struct ns1__iFolderWeb *ifolder = 
-				ns1__CreateLocaliFolderResponse.CreateLocaliFolderResult;
+			DEBUG_IFOLDER (("***calling CreateiFolderInDomain succeeded***\n"));
+			struct ns1__iFolderWeb *ifolder = resp.CreateiFolderInDomainResult;
 			if (ifolder == NULL) {
 				DEBUG_IFOLDER (("***The created iFolder is NULL\n"));
 				cleanup_gsoap (&soap);
@@ -552,7 +515,7 @@ create_local_ifolder (NautilusFileInfo *file)
 	return 0;
 }
 
-gchar *
+static gchar *
 get_ifolder_id_by_local_path (gchar *path)
 {
 	struct soap soap;
@@ -599,7 +562,7 @@ get_ifolder_id_by_local_path (gchar *path)
 	return ifolder_id;
 }
 
-gint
+static gint
 revert_ifolder (NautilusFileInfo *file)
 {
 	struct soap soap;
@@ -652,7 +615,7 @@ revert_ifolder (NautilusFileInfo *file)
 	return 0;
 }
 
-gchar *
+static gchar *
 get_unmanaged_path (gchar *ifolder_id)
 {
 	struct soap soap;
@@ -706,7 +669,7 @@ get_unmanaged_path (gchar *ifolder_id)
  * iFolders.  When the caller is finished with the GSList, they should call
  * g_slist_free () to cleanup the memory used by the list.
  */
-GSList *
+static GSList *
 get_all_ifolder_paths ()
 {
 	GSList *ifolder_local_paths;
@@ -845,7 +808,7 @@ ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
  * This function gets called when the entry is being removed and this allows us
  * to cleanup the memory being used by the ifolder_id.
  */
-void
+static void
 seen_ifolders_ht_destroy_key (gpointer key)
 {
 	char *ifolder_id = (char *)key;
@@ -857,7 +820,7 @@ seen_ifolders_ht_destroy_key (gpointer key)
  * This function gets called when the entry is being removed and this allows us
  * to cleanup the memory being used by the file_uri.
  */
-void
+static void
 seen_ifolders_ht_destroy_value (gpointer value)
 {
 	gchar *file_uri = (gchar *)value;
@@ -865,7 +828,7 @@ seen_ifolders_ht_destroy_value (gpointer value)
 	g_free (file_uri);
 }
 
-void
+static void
 ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data)
 {
 	gchar *file_uri;
@@ -881,7 +844,7 @@ ht_invalidate_ifolder (gpointer key, gpointer value, gpointer user_data)
 	}
 }
 
-gboolean
+static gboolean
 ht_remove_ifolder (gpointer key, gpointer value, gpointer user_data)
 {
 	/**
@@ -895,7 +858,7 @@ ht_remove_ifolder (gpointer key, gpointer value, gpointer user_data)
 /**
  * Functions used to work on GSList of iFolder local paths
  */
-void
+static void
 slist_invalidate_local_path (gpointer data, gpointer user_data)
 {
 	char *local_path;
@@ -920,7 +883,7 @@ slist_invalidate_local_path (gpointer data, gpointer user_data)
 	}
 }
 
-void
+static void
 slist_free_local_path_str (gpointer data, gpointer user_data)
 {
 	char *local_path = (char *)data;
@@ -1163,7 +1126,7 @@ gboolean show_created_dialog ()
  * Nautilus Menu Provider Implementation
  */
 
-gboolean
+static gboolean
 show_ifolder_error_message (void *user_data)
 {
 	DEBUG_IFOLDER (("*** show_ifolder_error_message () called\n"));
@@ -1216,7 +1179,7 @@ creation_dialog_button_callback (GtkDialog *dialog,
 	}
 }
 
-gboolean
+static gboolean
 show_ifolder_created_dialog (void *user_data)
 {
 	DEBUG_IFOLDER (("*** show_ifolder_created_dialog () called\n"));
@@ -1333,12 +1296,14 @@ create_ifolder_thread (gpointer user_data)
 	GList *files;
 	NautilusFileInfo *file;
 	gint error;
+	char *domain_id;
 	
 	item = (NautilusMenuItem *)user_data;
 	files = g_object_get_data (G_OBJECT (item), "files");
+	domain_id = (char *)g_object_get_data (G_OBJECT (item), "domain_id");
 	file = NAUTILUS_FILE_INFO (files->data);
 
-	error = create_local_ifolder (file);
+	error = create_ifolder_in_domain (file, domain_id);
 	if (error) {
 		DEBUG_IFOLDER (("An error occurred creating an iFolder\n"));
 		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
@@ -1353,6 +1318,8 @@ create_ifolder_thread (gpointer user_data)
 						g_object_get_data (G_OBJECT (item), "parent_window"));
 		}
 	}
+
+	free (domain_id);
 }
 
 static void
@@ -1360,10 +1327,183 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	pthread_t thread;
 
-	pthread_create (&thread, 
-					NULL, 
-					create_ifolder_thread,
-					item);
+	/* Prompt the user for what domain to use */
+	GtkWidget *dialog;
+	GtkWidget *vbox;
+	GtkWidget *path_label;
+	GtkWidget *path_entry;
+	GtkWidget *domain_label;
+	GtkWidget *domain_menu;
+	gint response;
+	int result;
+	char domain_name[1024];
+	char guid[512];
+	
+	GtkListStore *domain_store;
+	GtkTreeIter iter;
+	GtkCellRenderer *renderer;
+	char *domain_id;
+
+	int default_domain_idx = 0;
+	
+	SimiasDomainInfo **domainsA;
+	SimiasDomainInfo *domain;
+	int i;
+	
+	GtkWidget *parent_window;
+
+	GList *files;
+	NautilusFileInfo *file;
+	gchar *file_path;
+
+	parent_window = g_object_get_data (G_OBJECT (item), "parent_window");
+	
+g_print("create_ifolder_callback() called\n");	
+	/**
+	 * Make the call to get the list of domains and only continue if the call
+	 * is successful (no sense wasting time/effort dealing with a dialog if
+	 * there's nothing to fill it with.
+	 */
+
+	if (simias_get_domains(false, &domainsA) != SIMIAS_SUCCESS) {
+		/* FIXME: Display an error to the user that we couldn't get the list of domains */
+		return;
+	}
+	
+	/**
+	 * If we made it this far, we have a list of domains and can fill the
+	 * GtkListStore with them so they're ready to be displayed in the dialog.
+	 */
+	domain_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+	/*                                    Domain Name    Domain ID            */
+	/*                                                   (Not shown)          */
+
+g_print("2\n");	
+	i = 0;
+	domain = domainsA[i];
+	while (domain) {
+g_print("3\n");	
+		gtk_list_store_append(domain_store, &iter);
+		gtk_list_store_set(domain_store, &iter,
+						   0, strdup(domain->name),
+						   1, strdup(domain->id),
+						   -1);
+		
+		if (domain->is_default) {
+			default_domain_idx = i;
+		}
+
+		domain = domainsA[++i];
+	}
+g_print("4\n");	
+	
+	/* Cleanup the memory used by domainsA */
+	simias_free_domains(&domainsA);
+
+g_print("5\n");
+
+/**
+ * FIXME: Add some code to popup a message to the user if there are NO domains and
+ * prevent them from creating any iFolders...direct them to go login to a server.
+ */
+
+	dialog = gtk_dialog_new_with_buttons(_("Convert to an iFolder"),
+			GTK_WINDOW(parent_window),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_CANCEL,
+			GTK_RESPONSE_CANCEL,
+			NULL);
+g_print("6\n");	
+
+	gtk_dialog_set_has_separator(GTK_DIALOG(dialog), FALSE);
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+
+	vbox = gtk_vbox_new(FALSE, 10);
+	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
+	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
+
+	/* Domain drop-down list */
+	domain_label = gtk_label_new(NULL);
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(domain_label), _("<b>_Domain:</b>"));
+	gtk_misc_set_alignment(GTK_MISC(domain_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(vbox), domain_label, FALSE, FALSE, 0);
+	
+	domain_menu = gtk_combo_box_new_with_model(GTK_TREE_MODEL(domain_store));
+	gtk_label_set_mnemonic_widget(GTK_LABEL(domain_label), domain_menu);
+
+	/* Only show the Domain Name in the drop-down */	
+	renderer = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(domain_menu), renderer, TRUE);
+	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(domain_menu), renderer,
+								   "text", 0, NULL);
+
+	/* Select the first in the list or the default */
+	gtk_combo_box_set_active(GTK_COMBO_BOX(domain_menu), default_domain_idx);
+	
+	gtk_box_pack_start(GTK_BOX(vbox), domain_menu, FALSE, FALSE, 0);
+	
+	/* Folder Path */
+	path_label = gtk_label_new(NULL);
+	gtk_label_set_markup_with_mnemonic(GTK_LABEL(path_label), _("<b>_Path:</b>"));
+	gtk_misc_set_alignment(GTK_MISC(path_label), 0, 0.5);
+	gtk_box_pack_start(GTK_BOX(vbox), path_label, FALSE, FALSE, 0);
+
+	path_entry = gtk_entry_new();
+	gtk_label_set_mnemonic_widget(GTK_LABEL(path_label), path_entry);
+
+	/* Get the Folder's Path to fill in the path_entry */
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
+	file_path = get_file_path (file);
+	
+	gtk_entry_set_text(GTK_ENTRY(path_entry), file_path);
+	g_free(file_path);
+	
+	gtk_widget_set_sensitive(path_entry, FALSE); /* Gray out the entry */
+	gtk_box_pack_start(GTK_BOX(vbox), path_entry, FALSE, FALSE, 0);
+	
+	gtk_widget_show_all(vbox);
+
+	response = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (response == GTK_RESPONSE_ACCEPT) {
+		/**
+		 * Get the Default ID of the Domain that was selected and make the call
+		 * to create the iFolder.
+		 */
+		if (!gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(domain_store),
+										   &iter, NULL,
+										   gtk_combo_box_get_active(
+										   		GTK_COMBO_BOX(domain_menu)))) {
+			/* FIXME: Let the user know nothing was selected */
+			gtk_widget_destroy(dialog);
+			return;
+		}
+
+		gtk_tree_model_get(GTK_TREE_MODEL(domain_store), &iter,
+							1, &domain_id,
+							-1);
+		
+		if (!domain_id) {
+			/* FIXME: Let the user know there was some type of an error */
+			gtk_widget_destroy(dialog);
+			return;
+		}
+		
+		/**
+		 * Make the call to create the iFolder.  The create_ifolder_thread will
+		 * have to free the memory being used by the domain_id char *.
+		 */
+		g_object_set_data (G_OBJECT (item), "domain_id", domain_id);
+		pthread_create (&thread, 
+						NULL, 
+						create_ifolder_thread,
+						item);
+	}
+
+	gtk_widget_destroy(dialog);
 }
 
 static void *
@@ -1725,38 +1865,21 @@ ifolder_extension_register_type (GTypeModule *module)
 static char *
 getLocalServiceUrl ()
 {
-	char readBuffer [1024];
+	int err;
+	char *url;
 	char tmpUrl [1024];
-	gchar *localServiceUrl = NULL;
-	char args [1024];
 
 	DEBUG_IFOLDER (("getLocalServiceUrl () attempting to determine soapURL\n"));
-
-	memset (args, '\0', sizeof (args));
-	memset (readBuffer, '\0', sizeof (readBuffer));
-	memset (tmpUrl, '\0', sizeof (tmpUrl));
-
-	FILE *output;
 	
-	sprintf (args, "%s WebServiceURL", NAUTILUS_IFOLDER_SH_PATH);
-	
-	output = popen (args, "r");
-	if (output == NULL) {
-		/* error calling mono nautilus-ifolder.exe */
-		DEBUG_IFOLDER (("Error calling 'mono nautilus-ifolder.exe WebServiceURL\n"));
+	err = simias_get_local_service_url(&url);
+	if (err != SIMIAS_SUCCESS) {
+		DEBUG_IFOLDER(("simias_get_local_service_url() returned NULL!\n"));
 		return NULL;
 	}
 	
-	if (fgets (readBuffer, 1024, output) != NULL) {
-		strcpy (tmpUrl, readBuffer);
-		strcat (tmpUrl, "/iFolder.asmx");
-		localServiceUrl = strdup (tmpUrl);
-		DEBUG_IFOLDER (("*** Web Service URL: %s\n", localServiceUrl));
-	}
-
-	pclose (output);	
-	
-	return localServiceUrl;
+	sprintf(tmpUrl, "%s/iFolder.asmx", url);
+	free(url);
+	return strdup(tmpUrl);
 }
 
 static void
