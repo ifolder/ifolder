@@ -38,7 +38,7 @@ namespace Simias.Server
 	public class SimiasServer
 	{
 		private static readonly string Path = @"simias10";
-		private static readonly string Dir = SimiasSetup.webdir;
+		private static readonly string Dir = MyEnvironment.Unix ? @"../web" : @"web";
 		private static readonly int Port = 8086;
 		private static readonly string Page = @"Simias.asmx?WSDL";
 		private static readonly string Application = @"SimiasApp.exe";
