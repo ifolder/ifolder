@@ -179,10 +179,14 @@ namespace Simias.Event
 		{
 			lock (this)
 			{
-				foreach (CollectionFilesWatcher cw in watcherTable)
+				try
 				{
-					cw.Dispose();
+					foreach (CollectionFilesWatcher cw in watcherTable)
+					{
+						cw.Dispose();
+					}
 				}
+				catch {}
 				watcherTable.Clear();
 				watcherTable = null;
 				collectionWatcher.Dispose();

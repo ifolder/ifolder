@@ -113,7 +113,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "EventServcie.cs"
+                    RelPath = "EventService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

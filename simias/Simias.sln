@@ -141,10 +141,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormWindowsTests", "s
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventService", "src\CollectionEvents\CsEventBroker\EventService.csproj", "{66557955-5474-4E02-B14E-8DA278BAC6EB}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferLibrary", "src\RemotingSniffer\Library\RemotingSnifferLibrary.csproj", "{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -211,6 +207,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadServiceTest", "src\Se
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessServiceTest", "src\Service\ProcessServiceTest\ProcessServiceTest.csproj", "{C1460E06-8B4E-4BE8-8EA5-7641470F12F6}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventService", "src\CollectionEvents\EventService\EventService.csproj", "{66557955-5474-4E02-B14E-8DA278BAC6EB}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -348,10 +348,6 @@ Global
 		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Debug.Build.0 = Debug|.NET
 		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Release.ActiveCfg = Release|.NET
 		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Release.Build.0 = Release|.NET
-		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.ActiveCfg = Debug|.NET
-		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
-		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
-		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
 		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Debug.ActiveCfg = Debug|.NET
 		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Debug.Build.0 = Debug|.NET
 		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Release.ActiveCfg = Release|.NET
@@ -420,6 +416,10 @@ Global
 		{C1460E06-8B4E-4BE8-8EA5-7641470F12F6}.Debug.Build.0 = Debug|.NET
 		{C1460E06-8B4E-4BE8-8EA5-7641470F12F6}.Release.ActiveCfg = Release|.NET
 		{C1460E06-8B4E-4BE8-8EA5-7641470F12F6}.Release.Build.0 = Release|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.ActiveCfg = Debug|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
