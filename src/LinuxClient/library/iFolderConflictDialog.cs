@@ -93,6 +93,10 @@ namespace Novell.iFolder
 			this.SetDefaultSize (600, 400);
 			this.Icon = 
 				new Gdk.Pixbuf(Util.ImagesPath("ifolder-collision.png"));
+			VBox vbox = new VBox();
+			vbox.Spacing = 10;
+			vbox.BorderWidth = 10;
+			this.VBox.PackStart(vbox, true, true, 0);
 
 			HBox topbox = new HBox();
 			topbox.Spacing = 10;
@@ -135,7 +139,7 @@ namespace Novell.iFolder
 
 			topbox.PackStart(textbox, true, true, 0);
 
-			this.VBox.PackStart(topbox, false, true, 0);
+			vbox.PackStart(topbox, false, true, 0);
 
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
@@ -143,7 +147,7 @@ namespace Novell.iFolder
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.Add(ConflictTreeView);
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
-			this.VBox.PackStart(sw, true, true, 0);
+			vbox.PackStart(sw, true, true, 0);
 
 
 			HBox bottombox = new HBox();
@@ -186,6 +190,7 @@ namespace Novell.iFolder
 			LocalSaveButton = new Button(Stock.Save);
 			localTable.Attach(LocalSaveButton, 0,1,3,4,
 				Gtk.AttachOptions.Shrink, Gtk.AttachOptions.Shrink, 0, 5);
+			LocalSaveButton.Clicked += new EventHandler(SaveLocalHandler);
 
 			LocalFrame.Add(localTable);
 
@@ -228,10 +233,11 @@ namespace Novell.iFolder
 			ServerSaveButton = new Button(Stock.Save);
 			serverTable.Attach(ServerSaveButton, 0,1,3,4,
 				Gtk.AttachOptions.Shrink, Gtk.AttachOptions.Shrink, 0, 5);
+			ServerSaveButton.Clicked += new EventHandler(SaveServerHandler);
 
 			ServerFrame.Add(serverTable);
 
-			this.VBox.PackStart(bottombox, false, false, 0);
+			vbox.PackStart(bottombox, false, false, 0);
 
 
 
@@ -271,11 +277,16 @@ namespace Novell.iFolder
 
 		private void RefreshConflictList()
 		{
-			Conflict[] conflictList = ifws.GetiFolderConflicts(ifolder.ID);
-			foreach(Conflict con in conflictList)
+			try
 			{
-				ConflictTreeStore.AppendValues(con);
+				Conflict[] conflictList = ifws.GetiFolderConflicts(ifolder.ID);
+				foreach(Conflict con in conflictList)
+				{
+					ConflictTreeStore.AppendValues(con);
+				}
 			}
+			catch(Exception ex)
+			{}
 		}
 
 
@@ -306,21 +317,31 @@ namespace Novell.iFolder
 		private void OnConflictSelectionChanged(object o, EventArgs args)
 		{
 			TreeSelection tSelect = ConflictTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
+			if(tSelect.CountSelectedRows() > 0)
 			{
 				TreeModel tModel;
-				TreeIter iter;
+				Conflict con;
 
-				tSelect.GetSelected(out tModel, out iter);
-				Conflict con = (Conflict) tModel.GetValue(iter, 0);
+				Array treePaths = tSelect.GetSelectedRows(out tModel);
 
-				UpdateFields(con);
+				foreach(TreePath tPath in treePaths)
+				{
+					TreeIter iter;
+
+					if(ConflictTreeStore.GetIter(out iter, tPath))
+					{
+						con = (Conflict) tModel.GetValue(iter, 0);
+						UpdateFields(con, (tSelect.CountSelectedRows() > 1));
+					}
+					// we only need the first conflict
+					break;
+				}
 			}
 		}
 
 
 
-		private void UpdateFields(Conflict con)
+		private void UpdateFields(Conflict con, bool multiSelect)
 		{
 			if(con == null)
 			{
@@ -336,14 +357,28 @@ namespace Novell.iFolder
 				return;
 			}
 			
-			EnableConflictControls(true);
-			LocalNameValue.Text = con.LocalName;
-			LocalDateValue.Text = con.LocalDate;
-			LocalSizeValue.Text = con.LocalSize;
+			if(!multiSelect)
+			{
+				EnableConflictControls(true);
+				LocalNameValue.Text = con.LocalName;
+				LocalDateValue.Text = con.LocalDate;
+				LocalSizeValue.Text = con.LocalSize;
 			
-			ServerNameValue.Text = con.ServerName;
-			ServerDateValue.Text = con.ServerDate;
-			ServerSizeValue.Text = con.ServerSize;
+				ServerNameValue.Text = con.ServerName;
+				ServerDateValue.Text = con.ServerDate;
+				ServerSizeValue.Text = con.ServerSize;
+			}
+			else
+			{
+				EnableConflictControls(true);
+				LocalNameValue.Text = Util.GS("Multiple selected");
+				LocalDateValue.Text = "";
+				LocalSizeValue.Text = "";
+			
+				ServerNameValue.Text = Util.GS("Multiple selected");
+				ServerDateValue.Text = "";
+				ServerSizeValue.Text = "";
+			}
 		}
 
 
@@ -366,6 +401,63 @@ namespace Novell.iFolder
 			ServerSizeLabel.Sensitive = enable;
 			ServerSizeValue.Sensitive = enable;
 			ServerSaveButton.Sensitive = enable;
+		}
+
+
+		private void SaveLocalHandler(object o, EventArgs args)
+		{
+			ResolveSelectedConflicts(true);
+		}
+
+
+		private void SaveServerHandler(object o, EventArgs args)
+		{
+			ResolveSelectedConflicts(false);
+		}
+
+		private void ResolveSelectedConflicts(bool localChangesWin)
+		{
+			TreeModel tModel;
+			Queue   iterQueue;
+
+			iterQueue = new Queue();
+			TreeSelection tSelect = ConflictTreeView.Selection;
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+
+			// We can't remove anything while getting the iters
+			// because it will change the paths and we'll remove
+			// the wrong stuff.
+			foreach(TreePath tPath in treePaths)
+			{
+				TreeIter iter;
+
+				if(tModel.GetIter(out iter, tPath))
+				{
+					iterQueue.Enqueue(iter);
+				}
+			}
+
+			// Now that we have all of the TreeIters, loop and
+			// remove them all
+			while(iterQueue.Count > 0)
+			{
+				TreeIter iter = (TreeIter) iterQueue.Dequeue();
+
+				Conflict con = (Conflict) tModel.GetValue(iter, 0);
+
+				try
+				{
+					ifws.ResolveFileConflict(	con.iFolderID, 
+												con.ConflictID, 
+												localChangesWin);
+
+					ConflictTreeStore.Remove(ref iter);
+				}
+				catch(Exception ex)
+				{}
+			}
+
+			UpdateFields(null, false);
 		}
 
 
