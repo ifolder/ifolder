@@ -39,30 +39,101 @@ namespace Novell.iFolder
 		private iFolderWeb	ifolder;
 		private bool		isSyncing;
 		private bool		syncSuccessful;
+		private string		path;
+		private string		state;
 
 		public iFolderHolder(iFolderWeb ifolder)
 		{
 			this.ifolder = ifolder;
 			isSyncing = false;
 			syncSuccessful = true;
+			UpdateDisplayData();
 		}
 
 		public iFolderWeb iFolder
 		{
 			get{ return ifolder; }
-			set{ this.ifolder = value; }
+
+			set
+			{ 
+				this.ifolder = value; 
+				UpdateDisplayData();
+			}
 		}
 
 		public bool IsSyncing
 		{
 			get{ return isSyncing; }
-			set{ this.isSyncing = value; }
+			set
+			{ 
+				this.isSyncing = value; 
+				UpdateDisplayData();
+			}
 		}
 
 		public bool SyncSuccessful
 		{
 			get{ return syncSuccessful; }
-			set{ this.syncSuccessful = value; }
+			set
+			{
+				this.syncSuccessful = value;
+				UpdateDisplayData();
+			}
+		}
+
+		public string Path
+		{
+			get{ return path; }
+		}
+
+		public string State
+		{
+			get{ return state; }
+		}
+
+		private void UpdateDisplayData()
+		{
+			if(iFolder.IsSubscription)
+			{
+				if(iFolder.State == "Available")
+					state = Util.GS("Available");
+				else if(iFolder.State == "WaitConnect")
+					state = Util.GS("Waiting to Connect");
+				else if(iFolder.State == "WaitSync")
+					state = Util.GS("Waiting to Sync");
+				else
+					state = Util.GS("Unknown");
+			}
+			else
+			{
+				if(IsSyncing)
+					state = Util.GS("Synchronizing");
+				else if(iFolder.State == "WaitSync")
+					state = Util.GS("Waiting to Sync");
+				else if(iFolder.State == "Local")
+				{
+					if(iFolder.HasConflicts)
+						state = Util.GS("Has File Conflicts");
+					else if(!SyncSuccessful)
+						state = Util.GS("Sync Failed");
+					else
+						state = Util.GS("OK");
+				}
+				else
+					state = Util.GS("Unknown");
+			}
+
+
+			if(iFolder.IsSubscription)
+			{
+				if(iFolder.State == "Available")
+					path = iFolder.Owner;
+			}
+			else
+			{
+				path = iFolder.UnManagedPath;
+			}
+
 		}
 	}
 
@@ -1165,10 +1236,7 @@ namespace Novell.iFolder
 		{
 			iFolderHolder ifHolder = 
 						(iFolderHolder) tree_model.GetValue(iter,0);
-			if(ifHolder.iFolder.State == "Local")
-				((CellRendererText) cell).Text = ifHolder.iFolder.UnManagedPath;
-			else if(ifHolder.iFolder.State == "Available")
-				((CellRendererText) cell).Text = ifHolder.iFolder.Owner;
+			((CellRendererText) cell).Text = ifHolder.Path;
 		}
 
 
@@ -1181,28 +1249,8 @@ namespace Novell.iFolder
 		{
 			iFolderHolder ifHolder =
 					(iFolderHolder) tree_model.GetValue(iter,0);
-			if(ifHolder.iFolder.State == "Local")
-			{
-				if(ifHolder.IsSyncing)
-					((CellRendererText) cell).Text = 
-									Util.GS("Synchronizing");
-				else if(ifHolder.iFolder.HasConflicts)
-					((CellRendererText) cell).Text = 
-									Util.GS("Has File Conflicts");
-				else if(!ifHolder.SyncSuccessful)
-					((CellRendererText) cell).Text = 
-									Util.GS("Sync Failed");
-				else
-					((CellRendererText) cell).Text = Util.GS("OK");
-			}
-			else if(ifHolder.iFolder.State == "Available")
-				((CellRendererText) cell).Text = Util.GS("Available");
-			else if(ifHolder.iFolder.State == "WaitConnect")
-				((CellRendererText) cell).Text = Util.GS("Waiting to Connect");
-			else if(ifHolder.iFolder.State == "WaitSync")
-				((CellRendererText) cell).Text = Util.GS("Waiting to Sync");
-			else
-				((CellRendererText) cell).Text = Util.GS("Unknown");
+
+			((CellRendererText) cell).Text = ifHolder.State;
 		}
 
 
@@ -1212,7 +1260,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			iFolderHolder ifHolder = (iFolderHolder) tree_model.GetValue(iter,0);
+			iFolderHolder ifHolder = (iFolderHolder)tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = ifHolder.iFolder.Name;
 		}
 
@@ -1226,15 +1274,15 @@ namespace Novell.iFolder
 			iFolderHolder ifHolder = 
 					(iFolderHolder) tree_model.GetValue(iter,0);
 
-			if(ifHolder.iFolder.State == "Local")
+			if(ifHolder.iFolder.IsSubscription)
+				((CellRendererPixbuf) cell).Pixbuf = ServeriFolderPixBuf;
+			else
 			{
 				if(ifHolder.iFolder.HasConflicts)
 					((CellRendererPixbuf) cell).Pixbuf = ConflictPixBuf;
 				else
 					((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
 			}
-			else
-				((CellRendererPixbuf) cell).Pixbuf = ServeriFolderPixBuf;
 		}
 
 
@@ -1419,7 +1467,7 @@ namespace Novell.iFolder
 							tSelect.GetSelected(out tModel, out iter);
 							ifHolder = (iFolderHolder) tModel.GetValue(iter, 0);
 
-							if(ifHolder.iFolder.State == "Local")
+							if(ifHolder.iFolder.IsSubscription == false)
 							{
 								MenuItem item_open = 
 									new MenuItem (Util.GS("Open"));
@@ -2434,8 +2482,9 @@ namespace Novell.iFolder
 						// Sometimes, iFolders will come through that
 						// don't have members so we need to update them
 						// to have the members
-						if( (ifHolder.iFolder.CurrentUserID == null) ||
-								(ifHolder.iFolder.CurrentUserID.Length == 0) )
+						if(	(ifHolder.iFolder.State == "WaitSync") ||
+							(ifHolder.iFolder.CurrentUserID == null) ||
+							(ifHolder.iFolder.CurrentUserID.Length == 0) )
 						{
 							iFolderWeb updatediFolder;
 							try
