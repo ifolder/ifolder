@@ -19,6 +19,10 @@
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server
 {
 	[[_loginController window] orderOut:nil];
+	
+	
+	
+	
 }
 
 - (IBAction)login:(id)sender

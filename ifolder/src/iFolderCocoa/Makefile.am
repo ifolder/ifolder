@@ -1,4 +1,6 @@
 # handle Mono secondary dependencies
+GSOAP_DIR=../../tools/gsoap/macosx-2.7
+
 export MONO_PATH := $(MONO_PATH)
 
 EXTRA_DIST = $(srcdir)/English.lproj $(srcdir)/Info.plist $(srcdir)/iFolder.xcode $(srcdir)/iFolder_Prefix.pch $(srcdir)/ifolder.icns $(srcdir)/main.m $(srcdir)/version.plist $(srcdir)/LoginWindowController.h $(srcdir)/LoginWindowController.m $(srcdir)/MainWindowController.h $(srcdir)/MainWindowController.m
@@ -7,12 +9,18 @@ CUR_DIR := $(shell pwd)
 
 all: $(srcdir)/build/iFolder.app
 
-$(srcdir)/stubs/iFolder.m: $(srcdir)/../WebService/iFolderWebService.wsdl
-	mkdir stubs
-	/Developer/Tools/WSMakeStubs -x ObjC -dir ./stubs -name iFolder -file $(srcdir)/../WebService/iFolderWebService.wsdl
+$(srcdir)/stubs/iFolderClient.h: $(GSOAP_DIR)/wsdl2h $(srcdir)/../WebService/iFolderWebService.wsdl
+	$(mkinstalldirs) stubs
+	cd stubs; ../$(GSOAP_DIR)/wsdl2h -c -o iFolderClient.h ../../WebService/iFolderWebService.wsdl
 
-$(srcdir)/build/iFolder.app: iFolder.xcode $(srcdir)/stubs/iFolder.m
-	xcodebuild
+$(srcdir)/stubs/iFolderClient.c: $(GSOAP_DIR)/soapcpp2 $(srcdir)/stubs/iFolderClient.h
+	cd stubs; ../$(GSOAP_DIR)/soapcpp2 -c -n -piFolderClient iFolderClient.h
+	cp $(GSOAP_DIR)/stdsoap2.c stubs
+	cp $(GSOAP_DIR)/stdsoap2.h stubs
+
+
+$(srcdir)/build/iFolder.app: iFolder.xcode $(srcdir)/stubs/iFolderClient.c
+	xcodebuild -activebuildstyle
 
 install-exec-local: $(srcdir)/build/iFolder.app
 	$(mkinstalldirs) $(DESTDIR)$(prefix)/Applications
