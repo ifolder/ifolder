@@ -182,7 +182,7 @@ namespace Simias.Sync.Http
 			url = collection.MasterUrl.ToString().TrimEnd('/') + "/SyncHandler.ashx";
 			this.userName = userName;
 			this.userID = userID;
-			webState = new WebState(collection.Domain, collection.ID);
+			webState = new WebState(collection.Domain, userID);
 		}
 
 		/// <summary>
