@@ -1,0 +1,54 @@
+FsProvider_CSFILES := $(srcdir)/AssemblyInfo.cs $(srcdir)/FsProvider.cs $(srcdir)/FsResultSet.cs
+FsProvider_CSFILES_CSC := $(subst /,$(SEP),$(FsProvider_CSFILES))
+FsProvider_INCLUDES = 
+FsProvider_RESOURCES =
+FsProvider_FLAGS = $(CSC_LIBFLAG)
+FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll StoreProvider.dll
+FsProvider_LIBPATH = ../Configuration ../StoreProvider
+
+NUNIT_TESTS := FsProviderTests.dll
+
+FsProviderTests_CSFILES = $(srcdir)/FsProviderTests/AssemblyInfo.cs $(srcdir)/FsProviderTests/FsTests1.cs
+FsProviderTests_CSFILES_CSC := $(subst /,$(SEP),$(FsProviderTests_CSFILES))
+FsProviderTests_INCLUDES = 
+FsProviderTests_RESOURCES =
+FsProviderTests_FLAGS = $(CSC_LIBFLAG)
+FsProviderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll Configuration.dll StoreProvider.dll ProviderTest.dll
+FsProviderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Configuration ../StoreProvider
+
+EXTRA_DIST = $(FsProvider_CSFILES) $(FsProviderTests_CSFILES)
+
+CUR_DIR := $(shell pwd)
+
+all: FsProvider.dll
+
+FsProvider.dll: $(FsProvider_CSFILES) $(FsProvider_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(FsProvider_FLAGS) $(FsProvider_LIBS:%=/r:%) $(FsProvider_LIBPATH:%=/lib:%) $(FsProvider_CSFILES_CSC) /doc:FsProvider.xml
+
+FsProviderTests.dll: $(FsProviderTests_CSFILES) $(FsProviderTests_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(FsProviderTests_FLAGS) $(FsProviderTests_LIBS:%=/r:%) $(FsProviderTests_LIBPATH:%=/lib:%) $(FsProviderTests_CSFILES_CSC)
+	
+install-exec-local: FsProvider.dll
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) FsProvider.dll $(DESTDIR)$(bindir)
+    
+uninstall-local:
+	cd $(DESTDIR)$(bindir); rm -f FsProvider.dll FsProviderTests.xml $(NUNIT_TESTS)
+    
+installcheck-local: install $(NUNIT_TESTS)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:FsProviderTests.xml $(NUNIT_TESTS)
+	
+CLEAN_FILES = FsProvider.dll $(NUNIT_TESTS) FsProvider.xml FsProviderTests.xml
+CLEAN_DIRS = .cstore
+
+clean-local:
+	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+	rm -rf $(CLEAN_DIRS)
+    
+distclean-local: clean
+
+maintainer-clean-local:
+	rm -f Makefile.in
+
