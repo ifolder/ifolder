@@ -430,7 +430,6 @@ AC_SUBST(XML2_LIBS)
 AC_OUTPUT([
 Makefile
 src/Makefile
-src/GaimDomain/Makefile
 src/SimiasClient/Makefile
 src/SimiasClient/libsimias-event/Makefile
 src/Simias.dll/Makefile

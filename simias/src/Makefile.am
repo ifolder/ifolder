@@ -1,17 +1,17 @@
-DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias GaimDomain libsimdezvous
+DIST_SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer mDnsDomain libsimias libsimdezvous
 
 if DARWIN
-SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias GaimDomain mDnsDomain
+SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias mDnsDomain
 
 endif
 
 if LINUX
-SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias GaimDomain mDnsDomain
+SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias mDnsDomain
 
 endif
 
 if WINDOWS
-SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias GaimDomain mDnsDomain
+SUBDIRS = SimiasClient Simias.dll FlaimProvider WebService SyncService POBoxWS SimiasApp SimiasServer libsimias mDnsDomain
 
 endif
 
