@@ -111,6 +111,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string NodeStamp = "Stamp";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string Owner = "Owner";
 
 		/// <summary>
@@ -193,6 +198,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( NodeCreationTime, null );
+			systemPropertyTable.Add( NodeStamp, null );
 			systemPropertyTable.Add( Owner, null );
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( ProxyUserID, null );

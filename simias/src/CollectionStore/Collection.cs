@@ -341,7 +341,8 @@ namespace Simias.Storage
 		/// this node has been committed to disk.
 		/// </summary>
 		/// <param name="node">Node object that contains the local incarnation value.</param>
-		private void IncrementLocalIncarnation( Node node )
+		/// <param name="nodeStamp">Value used by sync to easily detect store changes.</param>
+		private void IncrementLocalIncarnation( Node node, DateTime nodeStamp )
 		{
 			ulong incarnationValue;
 
@@ -394,11 +395,15 @@ namespace Simias.Storage
 						node.Properties.StripLocalProperties();
 						throw new CollisionException( checkNode.ID, checkNode.LocalIncarnation );
 					}
+
+					// Always set the nodestamp on the server.
+					node.NodeStamp = nodeStamp;
 				}
 			}
 			else
 			{
 				incarnationValue = node.LocalIncarnation + 1;
+				node.NodeStamp = nodeStamp;
 			}
 
 			// Update the local incarnation value to the specified value.
@@ -487,6 +492,9 @@ namespace Simias.Storage
 		{
 			bool deleteCollection = false;
 
+			// Value used by sync to easily check for changes.
+			DateTime nodeStamp = DateTime.Now;
+
 			// Create an XML document that will contain all of the changed nodes.
 			XmlDocument commitDocument = new XmlDocument();
 			commitDocument.AppendChild( commitDocument.CreateElement( XmlTags.ObjectListTag ) );
@@ -508,7 +516,7 @@ namespace Simias.Storage
 						ValidateNodeForCommit( node );
 
 						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node );
+						IncrementLocalIncarnation( node, nodeStamp );
 
 						// If this is a StoreFileNode, commit the buffered stream to disk.
 						if ( IsType( node, NodeTypes.StoreFileNodeType ) )
@@ -564,7 +572,7 @@ namespace Simias.Storage
 								ValidateNodeForCommit( node );
 
 								// Increment the local incarnation number for the object.
-								IncrementLocalIncarnation( node );
+								IncrementLocalIncarnation( node, nodeStamp );
 
 								// Copy the XML node over to the modify document.
 								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -585,6 +593,9 @@ namespace Simias.Storage
 							Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
 							if ( mergeNode != null )
 							{
+								// Remember later for event processing.
+								node.LocalChanges = onlyLocalChanges;
+
 								// Validate this Collection object.
 								ValidateNodeForCommit( mergeNode );
 
@@ -593,7 +604,7 @@ namespace Simias.Storage
 								if ( !onlyLocalChanges )
 								{
 									// Increment the local incarnation number for the object.
-									IncrementLocalIncarnation( mergeNode );
+									IncrementLocalIncarnation( mergeNode, nodeStamp );
 								}
 
 								// Copy the XML node over to the modify document.
@@ -613,7 +624,7 @@ namespace Simias.Storage
 						SetLocalProperties( node );
 
 						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node );
+						IncrementLocalIncarnation( node, nodeStamp );
 
 						// Copy the XML node over to the modify document.
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
@@ -629,6 +640,9 @@ namespace Simias.Storage
 						Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
 						if ( mergeNode != null )
 						{
+							// Remember later for event processing.
+							node.LocalChanges = onlyLocalChanges;
+
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
@@ -678,7 +692,9 @@ namespace Simias.Storage
 					if ( node.Properties.State == PropertyList.PropertyListState.Add )
 					{
 						string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
-						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0 ) );
+						NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0 );
+						args.LocalOnly = node.LocalChanges;
+						store.EventPublisher.RaiseEvent( args );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
 					}
 				}
@@ -688,22 +704,37 @@ namespace Simias.Storage
 					{
 						case PropertyList.PropertyListState.Add:
 						case PropertyList.PropertyListState.Proxy:
-							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
+						{
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 );
+							args.LocalOnly = node.LocalChanges;
+							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
 							break;
+						}
 
 						case PropertyList.PropertyListState.Delete:
-							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
+						{
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 );
+							args.LocalOnly = node.LocalChanges;
+							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Disposed;
 							break;
+						}
 
 						case PropertyList.PropertyListState.Import:
-							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+						{
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 );
+							args.LocalOnly = node.LocalChanges;
+							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
 							break;
+						}
 
 						case PropertyList.PropertyListState.Update:
-							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+						{
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 );
+							args.LocalOnly = node.LocalChanges;
+							store.EventPublisher.RaiseEvent( args );
 
 							// If this is a member Node, update the access control entry.
 							if ( IsType( node, NodeTypes.MemberType ) )
@@ -717,8 +748,10 @@ namespace Simias.Storage
 								}
 							}
 							break;
+						}
 
 						case PropertyList.PropertyListState.Internal:
+						{
 							node.Properties.State = PropertyList.PropertyListState.Update;
 
 							// If this is a member Node, update the access control entry.
@@ -733,11 +766,13 @@ namespace Simias.Storage
 								}
 							}
 							break;
+						}
 					}
 				}
 
-				// Reset the DiskNode property so it won't be valid anymore.
+				// Reset in-memory properties.
 				node.DiskNode = null;
+				node.LocalChanges = false;
 			}
 		}
 

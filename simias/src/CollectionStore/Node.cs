@@ -94,6 +94,12 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected Node diskNode = null;
+
+		/// <summary>
+		/// Indicates if object property changes are local changes only.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool localChanges = false;
 		#endregion
 
 		#region Properties
@@ -146,6 +152,15 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets whether object property changes are local changes only.
+		/// </summary>
+		internal bool LocalChanges
+		{
+			get { return localChanges; }
+			set { localChanges = value; }
+		}
+
+		/// <summary>
 		/// Gets or sets whether to allow the Node object to skip collision checking at commit time.
 		/// </summary>
 		internal bool SkipCollisionCheck
@@ -170,6 +185,25 @@ namespace Simias.Storage
 		{
 			get { return mergeCollisions; }
 			set { mergeCollisions = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the nodestamp property on the object.
+		/// </summary>
+		internal DateTime NodeStamp
+		{
+			get 
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.NodeStamp );
+				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
+			}
+
+			set
+			{
+				Property p = new Property( PropertyTags.NodeStamp, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p );
+			}
 		}
 
 		/// <summary>
