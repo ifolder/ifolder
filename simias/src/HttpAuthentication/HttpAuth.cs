@@ -77,9 +77,9 @@ namespace Simias.Authentication
 		}
 
 		private 
-		static 
-		void 
-		SetResponseHeaders( HttpContext ctx, Simias.Authentication.Status status )
+			static 
+			void 
+			SetResponseHeaders( HttpContext ctx, Simias.Authentication.Status status )
 		{
 			switch ( status.statusCode )
 			{
@@ -258,11 +258,11 @@ namespace Simias.Authentication
 					// Setup a principal
 					ctx.User = 
 						new GenericPrincipal(
-							new GenericIdentity(
-								member.UserID,
-								"Simias Authentication"), 
-								//"Basic authentication"), 
-								rolesArray);
+						new GenericIdentity(
+						member.UserID,
+						"Simias Authentication"), 
+						//"Basic authentication"), 
+						rolesArray);
 
 					Thread.CurrentPrincipal = ctx.User;
 				}
@@ -280,98 +280,6 @@ namespace Simias.Authentication
 			}
 
 			return member;
-		}
-
-
-		private class MDnsSession
-		{
-			public string	MemberID;
-			public string	OneTimePassword;
-			public int		State;
-
-			public MDnsSession()
-			{
-			}
-		}
-
-		/// <summary>
-		/// TEMP function
-		/// </summary>
-		static 
-		public 
-		Simias.Authentication.Status 
-		Authenticate( Simias.Storage.Domain domain, HttpContext ctx )
-		{
-			string mdnsSessionTag = "mdns";
-
-			Simias.Storage.Member member = null;
-			Simias.Authentication.Status status = 
-				new Simias.Authentication.Status( StatusCodes.Unknown );
-
-			// Rendezvous domain requires session support
-			if ( ctx.Session != null )
-			{
-				MDnsSession mdnsSession;
-
-				// State should be 1
-				string memberID = ctx.Request.Headers[ "mdns-member" ];
-				if ( memberID == null || memberID == "" )
-				{
-					status.statusCode = StatusCodes.InvalidCredentials;
-					return status;
-				}
-
-				member = domain.GetMemberByID( memberID );
-				if ( member == null )
-				{
-					status.statusCode = StatusCodes.InvalidCredentials;
-					return status;
-				}
-
-				status.UserName = member.Name;
-				status.UserID = member.UserID;
-
-				mdnsSession = ctx.Session[ mdnsSessionTag ] as MDnsSession;
-				if ( mdnsSession == null )
-				{
-					mdnsSession = new MDnsSession();
-					mdnsSession.MemberID = member.UserID;
-					mdnsSession.State = 1;
-
-					// Fixme
-					mdnsSession.OneTimePassword = DateTime.Now.ToString();
-
-					// Set the one time password in the response
-					ctx.Response.AddHeader(
-						"mdns-secret",
-						mdnsSession.OneTimePassword);
-
-					ctx.Session[ mdnsSessionTag ] = mdnsSession;
-					status.statusCode = StatusCodes.InvalidCredentials;
-				}
-				else
-				{
-					if ( status.UserID == mdnsSession.MemberID )
-					{
-						// State should be 1
-						string oneTime = ctx.Request.Headers[ "mdns-secret" ];
-
-						// decrypt with user's public key
-
-						if ( oneTime.Equals( mdnsSession.OneTimePassword ) == true )
-						{
-							status.statusCode = StatusCodes.Success;
-							mdnsSession.State = 2;
-						}
-						else
-						{
-							status.statusCode = StatusCodes.InvalidCredentials;
-						}
-					}
-				}
-			}
-
-			return status;
 		}
 	}
 }
