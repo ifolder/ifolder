@@ -40,6 +40,7 @@ namespace Novell.iFolderCom
 	public class CreateiFolder : System.Windows.Forms.Form
 	{
 		#region Class Members
+		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(CreateiFolder));
 		private iFolderWebService ifWebService;
 		private bool successful;
 		private Domain selectedDomain;
@@ -391,8 +392,7 @@ namespace Novell.iFolderCom
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
 
-			// TODO: Localize
-			folderBrowserDialog.Description = "Choose a folder";//resourceManager.GetString("chooseFolder");
+			folderBrowserDialog.Description = resourceManager.GetString("chooseFolder");
 			folderBrowserDialog.SelectedPath = ifolderPath.Text;
 
 			if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
@@ -414,8 +414,7 @@ namespace Novell.iFolderCom
 			{
 				if (!Directory.Exists(ifolderPath.Text))
 				{
-					// TODO: Localize
-					MyMessageBox mmb = new MyMessageBox("The specified path does not exist.  Do you want to create it?", "Create Path", string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("createPrompt"), resourceManager.GetString("createPromptTitle"), string.Empty, MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question);
 					if (mmb.ShowDialog() == DialogResult.Yes)
 					{
 						Directory.CreateDirectory(ifolderPath.Text);
@@ -445,8 +444,7 @@ namespace Novell.iFolderCom
 					{
 						successful = false;
 						Cursor.Current = Cursors.Default;
-						// TODO: Localize
-						MyMessageBox mmb = new MyMessageBox("Invalid Folder");//resourceManager.GetString("invalidFolder"));
+						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("invalidFolder"), string.Empty, string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 					}
 				}
@@ -455,8 +453,7 @@ namespace Novell.iFolderCom
 			{
 				successful = false;
 				Cursor.Current = Cursors.Default;
-				// TODO: Localize
-				MyMessageBox mmb = new MyMessageBox("Error creating iFolder"/*resourceManager.GetString("iFolderCreateError")*/, string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("iFolderCreateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 		}
