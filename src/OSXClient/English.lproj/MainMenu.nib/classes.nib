@@ -1,11 +1,32 @@
 {
     IBClasses = (
+        {
+            ACTIONS = {
+                browseForPath = id; 
+                cancelCreating = id; 
+                createiFolder = id; 
+                showWindow = id; 
+            }; 
+            CLASS = CreateiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                createSheet = id; 
+                domainIDField = NSTextField; 
+                domainSelector = NSComboBox; 
+                mainWindow = id; 
+                pathField = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {login = id; }; 
+            ACTIONS = {showLoginWindow = id; }; 
             CLASS = MainWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {ifolderTabView = NSTabView; }; 
+            OUTLETS = {
+                domainsController = NSArrayController; 
+                ifoldersController = NSArrayController; 
+            }; 
             SUPERCLASS = NSWindowController; 
         }
     ); 

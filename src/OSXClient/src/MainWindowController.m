@@ -1,47 +1,51 @@
 #import "MainWindowController.h"
-#import "SubViewController.h"
 
 @implementation MainWindowController
+
 
 -(id)init
 {
     [super init];
-    ifoldersView = nil;
     return self;
 }
+
+
+
 
 - (void)dealloc
 {
     [super dealloc];
-    [ifoldersView release];
 }
+
+
+
 
 -(void)awakeFromNib
 {
-	// Setup the views to look the way they should when
-	//  load
-	ifoldersView = [[self loadViewFromNib:@"iFoldersView"] retain];
-    if (ifoldersView) 
-	{
-		[[ifolderTabView tabViewItemAtIndex:0] setView:ifoldersView];
-	}
-
 	webService = [[iFolderService alloc] init];
 
 	@try
 	{
-		domains = [webService GetDomains];
-	
-		NSArray *keys = [domains allKeys];
+		NSArray *newDomains = [webService GetDomains];
+
+		[domainsController addObjects:newDomains];
+		
+
+		NSArray *newiFolders = [webService GetiFolders];
+		if(newiFolders != nil)
+		{
+			[ifoldersController addObjects:newiFolders];
+		}
 
 		// if we have less than two domains, we don't have enterprise
 		// so we better ask the user to login
-		if([keys count] < 2)
-			[self showLoginWindow];
+//		if([newDomains count] < 2)
+//			[self showLoginWindow:self];
+//		else
+		[self showWindow:self];
 	}
 	@catch (NSException *e)
 	{
-		domains = [ [NSMutableDictionary alloc]  initWithCapacity:2];
 		[self showWindow:self];
 	}
 }
@@ -49,15 +53,15 @@
 
 
 
-- (void)showLoginWindow
+- (IBAction)showLoginWindow:(id)sender
 {
-	if(_loginController == nil)
+	if(loginController == nil)
 	{
-		_loginController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
+		loginController = [[LoginWindowController alloc] initWithWindowNibName:@"LoginWindow"];
 	}
 	
-	[[_loginController window] center];
-	[_loginController showWindow:self];
+	[[loginController window] center];
+	[loginController showWindow:self];
 }
 
 
@@ -65,92 +69,51 @@
 
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server
 {
-	IFDomain *domain;
-	
 	@try
 	{
-		domain = [webService ConnectToDomain:username usingPassword:password andHost:server];
+		iFolderDomain *domain = [webService ConnectToDomain:username usingPassword:password andHost:server];
+		[domainsController addObject:domain];
 	}
 	@catch (NSException *e)
 	{
 		NSString *error = [e name];
-		
 		NSRunAlertPanel(@"Error connecting to Server", [e name], @"OK",nil, nil);
-
-		domain = nil;
 	}
 
-	if(domain != nil)
+	[self showWindow:self];
+}
+
+
+
+
+- (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID
+{
+	@try
 	{
-		// If the domain is not know, add it to our Domains
-		if([domains objectForKey:domain->ID] == nil)
-			[domains setObject:domain forKey:domain->ID];
-		[[_loginController window]  close];
-		
-		[self showWindow:self];
-	}	
-}
-
-
-
-
-- (IBAction)login:(id)sender
-{
-	[self showLoginWindow];
-}
-
-
-
-
--(NSView*)loadViewFromNib:(NSString*)nibName
-{
-    NSView * 		newView;
-    SubViewController *	subViewController;
-    
-    subViewController = [SubViewController alloc];
-    // Creates an instance of SubViewController which loads the specified nib.
-    [subViewController initWithNibName:nibName andOwner:self];
-    newView = [subViewController view];
-    return newView;
-}
-
-
-
-
-- (void)tabView:(NSTabView*)tabView didSelectTabViewItem:(NSTabViewItem*)tabViewItem
-{
-    NSString * 		nibName;
-    nibName = nil;
-    // The NSTabView will manage the views being displayed but without the NSTabView, you need to use removeSubview: which releases the view and you need to retain it if you want to use it again later.
-
-    // Based on the tab selected, we load the appropriate nib and set the tabViewItem's view to the 
-    // view fromt he nib.
-    if([[tabViewItem identifier] isEqualToString:@"1"])
+		iFolder *newiFolder = [webService CreateiFolder:path InDomain:domainID];
+		[ifoldersController addObject:newiFolder];
+	}
+	@catch (NSException *e)
 	{
-        if(ifoldersView) 
-            [tabViewItem setView:ifoldersView];
-        else 
-		{
-            ifoldersView = [[self loadViewFromNib:@"iFoldersView"] retain];
-            if (ifoldersView) 
-			{
-                [tabViewItem setView:ifoldersView];
-            }
-        }
-    }
-	
-/*
-    if([[tabViewItem identifier] isEqualToString:@"2"]){
-        if(_setColorNibView) 
-            [tabViewItem setView:_setColorNibView];
-        else {
-            _setColorNibView = [[self loadViewFromNib:@"SetColor"] retain];
-            if (_setColorNibView) {
-                [tabViewItem setView:_setColorNibView];
-            }
-        }
-    }
-*/
+		NSString *error = [e name];
+		NSRunAlertPanel(@"Error connecting to Server", [e name], @"OK",nil, nil);
+	}
+}
+
+
+
+
+- (void)addDomain:(iFolderDomain *)newDomain
+{
+	[domainsController addObject:newDomain];
+}
+
+
+
+
+- (void)addiFolder:(iFolder *)newiFolder
+{
+	[ifoldersController addObject:newiFolder];
 }
 
 
