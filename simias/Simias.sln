@@ -169,6 +169,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindowsTests", "
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEventBroker", "src\CollectionEvents\CsEventBroker\CsEventBroker.csproj", "{66557955-5474-4E02-B14E-8DA278BAC6EB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -331,6 +335,10 @@ Global
 		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Debug.Build.0 = Debug|.NET
 		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Release.ActiveCfg = Release|.NET
 		{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}.Release.Build.0 = Release|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.ActiveCfg = Debug|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
+		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
