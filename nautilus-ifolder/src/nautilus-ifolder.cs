@@ -127,9 +127,9 @@ namespace Novell.iFolder.Nautilus
 							null,
 							iFolderMsgDialog.DialogType.Question,
 							iFolderMsgDialog.ButtonSet.YesNo,
-							"iFolder Confirmation",
-							"Revert this iFolder?",
-							"This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.");
+							Util.GS("iFolder Confirmation"),
+							Util.GS("Revert this iFolder?"),
+							Util.GS("This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync."));
 			int rc = msgDialog.Run ();
 			msgDialog.Hide ();
 			msgDialog.Destroy ();
