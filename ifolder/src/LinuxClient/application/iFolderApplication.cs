@@ -645,6 +645,8 @@ namespace Novell.iFolder
 			about_item.Image = new Gtk.Image(Gnome.Stock.About,
 											Gtk.IconSize.Menu);
 			trayMenu.Append(about_item);
+			about_item.Activated += 
+					new EventHandler(show_about);
 
 			
 /*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
@@ -730,6 +732,13 @@ namespace Novell.iFolder
 		private void show_help(object o, EventArgs args)
 		{
 			Util.ShowHelp("front.html", null);
+		}
+
+
+
+		private void show_about(object o, EventArgs args)
+		{
+			Util.ShowAbout();
 		}
 
 

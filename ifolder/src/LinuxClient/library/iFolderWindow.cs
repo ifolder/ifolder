@@ -209,7 +209,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void CreateWidgets()
 		{
-			this.SetDefaultSize (540, 480);
+			this.SetDefaultSize (600, 480);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
@@ -425,8 +425,10 @@ namespace Novell.iFolder
 			HelpMenuItem.Activated += new EventHandler(OnHelpMenuItem);
 
 			AboutMenuItem = new ImageMenuItem(Util.GS("A_bout"));
-			AboutMenuItem.Image = new Image(
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
+			AboutMenuItem.Image = new Image(Gnome.Stock.About, 
+							Gtk.IconSize.Menu);
+//			AboutMenuItem.Image = new Image(
+//					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
 			HelpMenu.Append(AboutMenuItem);
 			AboutMenuItem.Activated += new EventHandler(OnAbout);
 
