@@ -35,7 +35,7 @@ namespace Novell.iFolder
 	/// </summary>
 	public class LogWindow : Window
 	{
-		private string				SyncFileName = "";
+//		private string				SyncFileName = "";
 
 //		private iFolderWebService	iFolderWS;
 

@@ -427,7 +427,7 @@ namespace Novell.iFolder
 			if(ifdata.IsiFolder(syncEventArgs.ID))
 			{
 				iFolderHolder ifHolder =
-					ifdata.GetiFolder(syncEventArgs.ID, false);
+					ifdata.GetiFolder(syncEventArgs.ID);
 
 				if(syncEventArgs.Action == Action.StartSync)
 					ifHolder.IsSyncing = true;
@@ -440,7 +440,7 @@ namespace Novell.iFolder
 				{
 					// Because the iFolder has no path
 					// re-read the iFolder and fire a changed event
-					ifHolder = ifdata.GetiFolder(syncEventArgs.ID, true);
+					ifHolder = ifdata.ReadiFolder(syncEventArgs.ID);
 					lock(NodeEventQueue)
 					{
 						NodeEventQueue.Enqueue(new SimiasEvent(
@@ -472,21 +472,23 @@ namespace Novell.iFolder
 						// is most likely an invitation
 
 						iFolderHolder ifHolder =
-							ifdata.GetAvailableiFolder(nargs.Collection,
-													nargs.ID,
-													false);
-						if(	(ifHolder != null) &&
-							(!ifdata.IsiFolder(ifHolder.iFolder.CollectionID)))
+							ifdata.ReadAvailableiFolder(nargs.ID,
+														nargs.Collection);
+
+						// if the iFolder already exists, ifdata will
+						// return null to check it here
+						if(ifHolder != null)
 						{
 							lock(NodeEventQueue)
 							{
 								NodeEventQueue.Enqueue(new SimiasEvent(
-									ifHolder.iFolder.ID, null, null,
+									ifHolder.iFolder.CollectionID, null, null,
 									SimiasEventType.NewiFolder));
 								SimiasEventFired.WakeupMain();
 							}
 						}
 					}
+
 					break;
 				}					
 
@@ -517,7 +519,7 @@ namespace Novell.iFolder
 				case "Collection":
 				{
 					iFolderHolder ifHolder =
-							ifdata.GetiFolder(nargs.Collection, true);
+							ifdata.ReadiFolder(nargs.Collection);
 
 					if(ifHolder != null)
 					{
@@ -544,7 +546,7 @@ namespace Novell.iFolder
 				case "Collection":
 				{
 					iFolderHolder ifHolder =
-						ifdata.GetiFolder(nargs.Collection, true);
+						ifdata.ReadiFolder(nargs.Collection);
 
 					if( (ifHolder != null) &&
 						(ifHolder.iFolder.HasConflicts) )
@@ -594,15 +596,14 @@ namespace Novell.iFolder
 						// is most likely an invitation
 
 						iFolderHolder ifHolder =
-							ifdata.GetAvailableiFolder(nargs.Collection,
-													nargs.ID,
-													true);
+							ifdata.ReadAvailableiFolder(nargs.ID,
+														nargs.Collection);
 						if(ifHolder != null)
 						{
 							lock(NodeEventQueue)
 							{
 								NodeEventQueue.Enqueue(new SimiasEvent(
-									ifHolder.iFolder.ID, null, null,
+									ifHolder.iFolder.CollectionID, null, null,
 									SimiasEventType.ChangediFolder));
 								SimiasEventFired.WakeupMain();
 							}
@@ -625,8 +626,9 @@ namespace Novell.iFolder
 					{
 						lock(NodeEventQueue)
 						{
+							ifdata.DeliFolder(nargs.ID);
 							NodeEventQueue.Enqueue(new SimiasEvent(
-								nargs.ID, null, null,
+								nargs.Collection, null, null,
 								SimiasEventType.DeliFolder));
 							SimiasEventFired.WakeupMain();
 						}
@@ -637,9 +639,15 @@ namespace Novell.iFolder
 				{	
 					lock(NodeEventQueue)
 					{
-						NodeEventQueue.Enqueue(new SimiasEvent(
-							nargs.Collection, null, null,
-							SimiasEventType.DeliFolder));
+						iFolderHolder ifHolder =
+							ifdata.GetiFolder(nargs.Collection);
+						if( (ifHolder != null) &&
+							(!ifHolder.iFolder.IsSubscription) )
+						{
+							NodeEventQueue.Enqueue(new SimiasEvent(
+								nargs.Collection, null, null,
+								SimiasEventType.DeliFolder));
+						}
 						SimiasEventFired.WakeupMain();
 					}
 					break;

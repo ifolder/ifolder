@@ -659,7 +659,8 @@ namespace Novell.iFolder
 						{
 							case StatusCodes.Success:
 							case StatusCodes.SuccessInGrace:
-								ifdata.AddDomain(domainInfo);
+								ifdata.RefreshDomains();
+							//	AddDomain(domainInfo);
 
 								NewAccountMode = false;
 								TreeIter iter = AccTreeStore.AppendValues(domainInfo);

@@ -37,7 +37,7 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWeb				ifolder;
 		private Gtk.Notebook		propNoteBook;
-		private Hashtable			ifHash;
+//		private Hashtable			ifHash;
 		private HBox				ConflictBox;
 		private HBox				ConflictHolder;
 		private iFolderConflictDialog ConflictDialog;
@@ -78,7 +78,7 @@ namespace Novell.iFolder
 				this.TransientFor = parent;
 			this.Title = Util.GS("iFolder Properties");
 
-			ifHash = new Hashtable();
+//			ifHash = new Hashtable();
 
 			InitializeWidgets(ifolders);
 			SetValues();
@@ -126,7 +126,7 @@ namespace Novell.iFolder
 			this.Modal = true;
 			this.Title = Util.GS("iFolder Properties");
 
-			ifHash = new Hashtable();
+//			ifHash = new Hashtable();
 
 			InitializeWidgets(ifolders);
 			SetValues();

@@ -209,7 +209,6 @@ namespace Novell.iFolder
 		private iFolderPropertiesDialog PropertiesDialog;
 
 		private Hashtable			curiFolders;
-		private Hashtable			acceptediFolders;
 
 		// curDomain should be set to the ID of the domain selected in the
 		// Domain Filter or if "all" domains are selected, this should be
@@ -230,7 +229,6 @@ namespace Novell.iFolder
 			ifws = webService;
 			ifdata = iFolderData.GetData();
 			curiFolders = new Hashtable();
-			acceptediFolders = new Hashtable();
 			curDomain = null;
 			curDomains = null;
 			CreateWidgets();
@@ -669,10 +667,9 @@ namespace Novell.iFolder
 		{
 			curiFolders.Clear();
 			iFolderTreeStore.Clear();
-			acceptediFolders.Clear();
 
 			if(readFromSimias)
-				ifdata.RefreshData();
+				ifdata.Refresh();
 
 			iFolderHolder[] ifolders = ifdata.GetiFolders();
 			if(ifolders != null)
@@ -682,13 +679,13 @@ namespace Novell.iFolder
 					if (curDomain == null)
 					{
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
-						curiFolders.Add(holder.iFolder.ID, iter);
+						curiFolders[holder.iFolder.CollectionID] = iter;
 					}
 					else if (curDomain == holder.iFolder.DomainID)
 					{
 						// Only add in iFolders that match the current domain filter
 						TreeIter iter = iFolderTreeStore.AppendValues(holder);
-						curiFolders.Add(holder.iFolder.ID, iter);
+						curiFolders[holder.iFolder.CollectionID] = iter;
 					}
 				}
 			}
@@ -1192,15 +1189,16 @@ namespace Novell.iFolder
 				{
 					try
 					{
-    					iFolderWeb newiFolder = 
-								ifws.RevertiFolder(ifHolder.iFolder.ID);
-						curiFolders.Remove(ifHolder.iFolder.ID);
+    					iFolderHolder newHolder =
+								ifdata.RevertiFolder(ifHolder.iFolder.ID);
+
+//						curiFolders.Remove(ifHolder.iFolder.ID);
 
 						// Set the value of the returned value for the one
 						// that was there
-						iFolderHolder holder = new iFolderHolder(newiFolder);
-						iFolderTreeStore.SetValue(iter, 0, holder);
-						curiFolders.Add(newiFolder.ID, iter);
+//						iFolderHolder holder = new iFolderHolder(newiFolder);
+						iFolderTreeStore.SetValue(iter, 0, newHolder);
+//						curiFolders.Add(newiFolder.ID, iter);
 					}
 					catch(Exception e)
 					{
@@ -1305,54 +1303,23 @@ namespace Novell.iFolder
 				if(rc != -8)
 					return;
 
-				iFolderWeb remiFolder = ifHolder.iFolder;
-
-				// Check if this is a subscription
-				// if it is not, the revert the ifolder first
-				if(!ifHolder.iFolder.IsSubscription)
-				{
-					try
-					{
-    					remiFolder = 
-								ifws.RevertiFolder(ifHolder.iFolder.ID);
-						curiFolders.Remove(ifHolder.iFolder.ID);
-
-						// Set the value of the returned value for the one
-						// that was there
-						iFolderHolder holder = new iFolderHolder(remiFolder);
-						iFolderTreeStore.SetValue(iter, 0, holder);
-
-						curiFolders.Add(remiFolder.ID, iter);
-					}
-					catch(Exception e)
-					{
-						iFolderExceptionDialog ied = 
-							new iFolderExceptionDialog(
-								this,
-								e);
-						ied.Run();
-						ied.Hide();
-						ied.Destroy();
-						return;
-					}
-				}
-
+//				iFolderWeb remiFolder = ifHolder.iFolder;
 
 				try
 				{
-					// remove the current iFolder so events don't replace it
-					curiFolders.Remove(remiFolder.ID);
-   		 			ifws.DeclineiFolderInvitation(remiFolder.DomainID, remiFolder.ID);
-					// if no exception, remove it from the list
 					iFolderTreeStore.Remove(ref iter);
+
+					curiFolders.Remove(ifHolder.iFolder.CollectionID);
+
+					// use the ID here because it could be a subscription
+					ifdata.DeleteiFolder(ifHolder.iFolder.ID);
 				}
 				catch(Exception e)
 				{
-					// if we threw an exceptoin, add the old ifolder back
-					curiFolders.Add(remiFolder.ID, iter);
-
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														this, e);
+					iFolderExceptionDialog ied = 
+						new iFolderExceptionDialog(
+							this,
+							e);
 					ied.Run();
 					ied.Hide();
 					ied.Destroy();
@@ -1456,7 +1423,7 @@ namespace Novell.iFolder
 		{
 			if(curiFolders.ContainsKey(iFolderID))
 			{
-				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID, false);
+				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
 
 				TreeIter iter = (TreeIter)curiFolders[iFolderID];
 
@@ -1473,7 +1440,7 @@ namespace Novell.iFolder
 		{
 			if(curiFolders.ContainsKey(iFolderID))
 			{
-				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID, false);
+				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
 
 				TreeIter iter = (TreeIter)curiFolders[iFolderID];
 
@@ -1500,37 +1467,27 @@ namespace Novell.iFolder
 			if(!curiFolders.ContainsKey(iFolderID))
 			{
 				TreeIter iter;
-				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID, false);
+				iFolderHolder ifHolder = ifdata.GetiFolder(iFolderID);
 
-				// Don't add the iFolder in the TreeView if the user has
-				// the domain filter set to a different domain.
-				if (curDomain != null)
+				if( (curDomain != null) && 
+						(curDomain != ifHolder.iFolder.DomainID) )
 				{
-					if (curDomain != ifHolder.iFolder.DomainID)
-					{
-						if (acceptediFolders.ContainsKey(iFolderID))
-						{
-							acceptediFolders.Remove(iFolderID);
-						}
-					}
+					// don't do anything because we are not showing this
+					// domain right now
 				}
 				else
 				{
-					if(acceptediFolders.ContainsKey(iFolderID))
-					{
-						iter = (TreeIter) acceptediFolders[iFolderID];
-	
-						iFolderTreeStore.SetValue(iter, 0, ifHolder);
-	
-						acceptediFolders.Remove(iFolderID);
-					}
-					else
-					{
-						iter = iFolderTreeStore.AppendValues(ifHolder);
-					}
-	
+					iter = iFolderTreeStore.AppendValues(ifHolder);
 					curiFolders[iFolderID] = iter;
 				}
+			}
+			else
+			{
+				// just update with the current from ifdata
+				TreeIter iter = (TreeIter)curiFolders[iFolderID];
+				iFolderHolder ifHolder = 
+							ifdata.GetiFolder(iFolderID);
+				iFolderTreeStore.SetValue(iter, 0, ifHolder);
 			}
 		}
 
@@ -1560,19 +1517,10 @@ namespace Novell.iFolder
 						if( (ifHolder.iFolder.UnManagedPath == null) ||
 								(ifHolder.iFolder.UnManagedPath.Length == 0) )
 						{
-							iFolderWeb updatediFolder;
-
-							try
-							{
-								updatediFolder = ifws.GetiFolder(
-									args.ID);
-							}
-							catch(Exception e)
-							{
-								updatediFolder = null;
-							}
-							if(updatediFolder != null)
-								ifHolder.iFolder = updatediFolder;
+							iFolderHolder updatedHolder = null;
+							updatedHolder = ifdata.ReadiFolder(args.ID);
+							if(updatedHolder != null)
+								ifHolder = updatedHolder;
 						}
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 					}
@@ -1599,18 +1547,10 @@ namespace Novell.iFolder
 							(ifHolder.iFolder.CurrentUserID == null) ||
 							(ifHolder.iFolder.CurrentUserID.Length == 0) )
 						{
-							iFolderWeb updatediFolder;
-							try
-							{
-								updatediFolder = ifws.GetiFolder(
-									args.ID);
-							}
-							catch(Exception e)
-							{
-								updatediFolder = null;
-							}
-							if(updatediFolder != null)
-								ifHolder.iFolder = updatediFolder;
+							iFolderHolder updatedHolder = null;
+							updatedHolder = ifdata.ReadiFolder(args.ID);
+							if(updatedHolder != null)
+								ifHolder = updatedHolder;
 						}
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 					}
@@ -1702,7 +1642,7 @@ namespace Novell.iFolder
 
 			// Get the iFolderHolder and set the objectsToSync (only if the
 			// domain filter isn't set or is for this iFolder's domain.
-			iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID, false);
+			iFolderHolder ifHolder = ifdata.GetiFolder(args.CollectionID);
 			if (ifHolder != null && (curDomain == null || curDomain == ifHolder.iFolder.DomainID))
 			{
 				SyncSize syncSize = null;
@@ -1814,24 +1754,20 @@ namespace Novell.iFolder
 					// Read the updated subscription, and place it back
 					// in the list to show status until the real iFolder
 					// comes along
-					curiFolders.Remove(ifHolder.iFolder.ID);
+//					curiFolders.Remove(ifHolder.iFolder.ID);
 
-					acceptediFolders[ifHolder.iFolder.CollectionID]
-							= iter;
+					iFolderHolder newHolder = ifdata.AcceptiFolderInvitation(
+													ifHolder.iFolder.ID,
+													ifHolder.iFolder.DomainID,
+													newPath);
 
-   		 			iFolderWeb newiFolder = ifws.AcceptiFolderInvitation(
-											ifHolder.iFolder.DomainID,
-											ifHolder.iFolder.ID,
-											newPath);
-	
-					tModel.SetValue(iter, 0, 
-							new iFolderHolder(newiFolder));
-					curiFolders.Add(newiFolder.ID, iter);
+					tModel.SetValue(iter, 0, newHolder);
+//					curiFolders.Add(newiFolder.ID, iter);
 				}
 				catch(Exception e)
 				{
 					// if we threw an exceptoin, add the old ifolder back
-					curiFolders.Add(ifHolder.iFolder.ID, iter);
+//					curiFolders.Add(ifHolder.iFolder.ID, iter);
 
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
 														this, e);
@@ -1889,11 +1825,11 @@ namespace Novell.iFolder
 						rc = 0;
 						try
 						{
-   			 				iFolderWeb newiFolder = 
-								ifws.CreateiFolderInDomain(selectedFolder,
-															selectedDomain);
-	
-							if(newiFolder == null)
+							iFolderHolder ifHolder =
+								ifdata.CreateiFolder(	selectedFolder,
+														selectedDomain);
+
+							if(ifHolder == null)
 								throw new Exception("Simias returned null");
 
 							// Reset the domain filter so the new iFolder will show
@@ -1901,15 +1837,16 @@ namespace Novell.iFolder
 							// DomainFilterOptionMenu.SetHistory(0);
 	
 							TreeIter iter = 
-								iFolderTreeStore.AppendValues(
-									new iFolderHolder(newiFolder));
-							curiFolders.Add(newiFolder.ID, iter);
+								iFolderTreeStore.AppendValues(ifHolder);
+
+							curiFolders[ifHolder.iFolder.ID] = iter;
 	
-							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
+
+/*							if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, 
 											"true") == "true")
 							{
 								iFolderCreationDialog dlg = 
-									new iFolderCreationDialog(newiFolder);
+									new iFolderCreationDialog(ifHolder.iFolder);
 								dlg.TransientFor = this;
 								int createRC;
 								do
@@ -1932,6 +1869,7 @@ namespace Novell.iFolder
 								cd.Destroy();
 								cd = null;
 							}
+*/
 						}
 						catch(Exception e)
 						{

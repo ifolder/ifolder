@@ -59,12 +59,17 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Hashtable to hold the ifolders
 		/// </summary>
-		private Hashtable		curiFolders = null;
+		private Hashtable		keyediFolders = null;
 
 		/// <summary>
 		/// Hashtable to hold the domains
 		/// </summary>
-		private Hashtable		curDomains = null;
+		private Hashtable		keyedDomains = null;
+
+		/// <summary>
+		/// Hashtable to hold the subscription to ifolder map
+		/// </summary>
+		private Hashtable		keyedSubscriptions = null;
 
 
 		/// <summary>
@@ -104,18 +109,20 @@ namespace Novell.iFolder
 			}
 
 
-			curiFolders = new Hashtable();
-			curDomains = new Hashtable();
-			RefreshData();
+			keyediFolders = new Hashtable();
+			keyedDomains = new Hashtable();
+			keyedSubscriptions = new Hashtable();
+
+			Refresh();
 		}
 
 
 
 
-		/// <summary>
-		/// Gets the instance of the iFolderData object for this process.
-		/// </summary>
-		/// <returns>A reference to the iFolderData object.</returns>
+		//===================================================================
+		// GetData
+		// Gets the current instance of iFolderData
+		//===================================================================
 		static public iFolderData GetData()
 		{
 			lock (typeof(iFolderData))
@@ -132,7 +139,11 @@ namespace Novell.iFolder
 
 
 
-		public void RefreshData()
+		//===================================================================
+		// Refresh
+		// Reads the current ifolder and domains from Simias
+		//===================================================================
+		public void Refresh()
 		{
 			lock (typeof(iFolderData) )
 			{
@@ -149,28 +160,15 @@ namespace Novell.iFolder
 
 				if(ifolders != null)
 				{
-					Hashtable newiFolders = new Hashtable();
+					// clear out the map from subscription to iFolder
+					keyediFolders.Clear();
+					keyedSubscriptions.Clear();
 
 					foreach(iFolderWeb ifolder in ifolders)
 					{
-						iFolderHolder ifHolder;
-
-						if(curiFolders.ContainsKey(ifolder.ID))
-						{
-							ifHolder = (iFolderHolder)curiFolders[ifolder.ID];
-							ifHolder.iFolder = ifolder;
-						}
-						else
-							ifHolder = new iFolderHolder(ifolder);
-						
-						newiFolders.Add(ifolder.ID, ifHolder);
+						AddiFolder(ifolder);
 					}
-					// set the new hash table to be the current one
-					curiFolders.Clear();
-					curiFolders = newiFolders;
 				}
-
-
 				// Refresh the Domains
 				RefreshDomains();
 			}
@@ -179,12 +177,16 @@ namespace Novell.iFolder
 
 
 
+		//===================================================================
+		// RefreshDomains
+		// Reads the current domains from Simias
+		//===================================================================
 		public void RefreshDomains()
 		{
 			lock (typeof(iFolderData) )
 			{
 				// Refresh the Domains
-				curDomains.Clear();
+				keyedDomains.Clear();
 				DomainInformation[] domains = null;
 				try
 				{
@@ -199,44 +201,128 @@ namespace Novell.iFolder
 				{
 					foreach(DomainInformation domain in domains)
 					{
-						curDomains.Add(domain.ID, domain);
-
 						if(domain.IsDefault)
 							defDomain = domain;
+
+						AddDomain(domain);
 					}
 				}
 			}
 		}
 
 
+		
 
+		//===================================================================
+		// AddDomain
+		// adds the domain to the iFolderData internal tables
+		//===================================================================
+		private void AddDomain(DomainInformation newDomain)
+		{
+			lock (typeof(iFolderData) )
+			{
+				if(newDomain != null)
+				{
+					keyedDomains[newDomain.ID] = newDomain;
+				}
+			}
+		}
+
+
+
+
+		//===================================================================
+		// AddiFolder
+		// adds the ifolder to the iFolderData internal tables
+		//===================================================================
+		private iFolderHolder AddiFolder(iFolderWeb ifolder)
+		{
+			lock (typeof(iFolderData) )
+			{
+				iFolderHolder ifHolder = null;
+				if(ifolder.IsSubscription)
+				{
+					ifHolder = new iFolderHolder(ifolder);
+					keyediFolders[ifolder.CollectionID] = ifHolder;
+					keyedSubscriptions[ifolder.ID] = ifolder.CollectionID;
+				}
+				else
+				{
+					ifHolder = new iFolderHolder(ifolder);
+					keyediFolders[ifolder.ID] = ifHolder;
+				}
+				return ifHolder;
+			}
+		}
+
+		
+
+
+		//===================================================================
+		// DeliFolder
+		// removes the ifolder from the iFolderData internal tables
+		//===================================================================
+		public void DeliFolder(string ifolderID)
+		{
+			lock (typeof(iFolderData) )
+			{
+				string realID = ifolderID;
+
+				if(!IsiFolder(realID))
+				{
+					realID = GetiFolderID(ifolderID);
+					if( (realID == null) || (!IsiFolder(realID)) )
+						return;
+
+					keyedSubscriptions.Remove(ifolderID);
+				}
+
+				keyediFolders.Remove(realID);
+			}
+		}
+
+		
+
+
+		//===================================================================
+		// IsDomain
+		// Checks to see if the ID passed is a Domain
+		//===================================================================
 		public bool IsDomain(string domainID)
 		{
 			lock(typeof(iFolderWeb))
 			{
-				return curDomains.ContainsKey(domainID);
+				return keyedDomains.ContainsKey(domainID);
 			}
 		}
 
 
 
 
+		//===================================================================
+		// IsiFolder
+		// Checks to see if the ID passed is an iFolder
+		//===================================================================
 		public bool IsiFolder(string ifolderID)
 		{
 			lock(typeof(iFolderWeb))
 			{
-				return curiFolders.ContainsKey(ifolderID);
+				return keyediFolders.ContainsKey(ifolderID);
 			}
 		}
 
 
 
 
+		//===================================================================
+		// ISPOBox
+		// Checks to see if the ID passed is a pobox in a current domain
+		//===================================================================
 		public bool ISPOBox(string poBoxID)
 		{
 			lock(typeof(iFolderWeb))
 			{
-				ICollection icol = curDomains.Values;
+				ICollection icol = keyedDomains.Values;
 				foreach(DomainInformation domain in icol)
 				{
 					if(domain.POBoxID.Equals(poBoxID))
@@ -249,18 +335,54 @@ namespace Novell.iFolder
 
 
 
-		public iFolderHolder GetiFolder(string ifolderID, bool updateData)
+		//===================================================================
+		// GetiFolderID
+		// Gets the iFolder ID for a subscription that's been added
+		//===================================================================
+		public string GetiFolderID(string subscriptionID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				return (string)keyedSubscriptions[subscriptionID];
+			}
+		}
+
+
+
+
+		//===================================================================
+		// GetiFolder
+		// Gets the iFolderHolder from the iFolderData structures
+		//===================================================================
+		public iFolderHolder GetiFolder(string ifolderID)
 		{
 			lock(typeof(iFolderWeb))
 			{
 				iFolderHolder ifHolder = null;
 
-				if(curiFolders.ContainsKey(ifolderID))
+				if(keyediFolders.ContainsKey(ifolderID))
 				{
-					ifHolder = (iFolderHolder)curiFolders[ifolderID];
-					if(!updateData)
-						return ifHolder;
+					ifHolder = (iFolderHolder)keyediFolders[ifolderID];
 				}
+				return ifHolder;
+			}
+		}
+
+
+
+
+		//===================================================================
+		// ReadiFolder
+		// Reads and returns the iFolderHolder for the specificed ifolderID
+		//===================================================================
+		public iFolderHolder ReadiFolder(string ifolderID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				iFolderHolder ifHolder = null;
+
+				if(keyediFolders.ContainsKey(ifolderID))
+					ifHolder = (iFolderHolder)keyediFolders[ifolderID];
 
 				// at this point if we had the iFolder, we'll have the
 				// original iFolderHolder that we can update
@@ -270,12 +392,14 @@ namespace Novell.iFolder
 							ifws.GetiFolder(ifolderID);
 					if(ifolder != null)
 					{
-						if(ifHolder == null)
-							ifHolder = new iFolderHolder(ifolder);
-						else
+						if(ifHolder != null)
 							ifHolder.iFolder = ifolder;
-
-						curiFolders[ifolder.ID] = ifHolder;
+						else
+						{
+							ifHolder = new iFolderHolder(ifolder);
+							keyediFolders[ifolder.ID] = ifHolder;
+//							keyediFolders.Add(ifolder.ID, ifHolder);
+						}
 					}
 				}
 				catch(Exception e)
@@ -290,14 +414,18 @@ namespace Novell.iFolder
 
 
 
+		//===================================================================
+		// GetiFolders
+		// Returns an array of the current iFolderHolders
+		//===================================================================
 		public iFolderHolder[] GetiFolders()
 		{
 			lock(typeof(iFolderWeb))
 			{
 				iFolderHolder[] ifolders = 
-					new iFolderHolder[curiFolders.Count];
+					new iFolderHolder[keyediFolders.Count];
 
-				ICollection icol = curiFolders.Values;
+				ICollection icol = keyediFolders.Values;
 				icol.CopyTo(ifolders, 0);
 
 				return ifolders;
@@ -307,30 +435,64 @@ namespace Novell.iFolder
 
 
 
-		public iFolderHolder GetAvailableiFolder(string collectionID,
-													string ifolderID,
-													bool updateData)
+		//===================================================================
+		// GetAvailableiFolder
+		// Returns the subscription for an iFolder or null if it isn't there
+		//===================================================================
+		public iFolderHolder GetAvailableiFolder(string ifolderID)
 		{
 			lock(typeof(iFolderWeb))
 			{
+				string realID;
 				iFolderHolder ifHolder = null;
 
-				if((curiFolders.ContainsKey(ifolderID)) && (!updateData) )
+				realID = GetiFolderID(ifolderID);
+				if(realID != null)
 				{
-					ifHolder = (iFolderHolder)curiFolders[ifolderID];
-					return ifHolder;
+					if(keyediFolders.ContainsKey(realID))
+					{
+						ifHolder = (iFolderHolder)keyediFolders[realID];
+					}
 				}
+				return ifHolder;
+			}
+		}
+
+
+
+
+		//===================================================================
+		// ReadAvailableiFolder
+		// Returns the subscription for an iFolder and reads the update version
+		//===================================================================
+		public iFolderHolder ReadAvailableiFolder(	string ifolderID,
+													string collectionID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				iFolderHolder ifHolder = GetAvailableiFolder(ifolderID);
 
 				try
 				{
 					iFolderWeb ifolder = ifws.GetiFolderInvitation(
 								collectionID, ifolderID);
 
-					if(ifolder != null)
+					if(ifHolder != null)
 					{
-						ifHolder = new iFolderHolder(ifolder);
+						if(!IsiFolder(ifolder.CollectionID))
+							ifHolder.iFolder = ifolder;
+					}
+					else
+					{
+						if(!IsiFolder(ifolder.CollectionID))
+						{
+							ifHolder = new iFolderHolder(ifolder);
 
-						curiFolders[ifolder.ID] = ifHolder;
+							keyediFolders[ifolder.CollectionID] = ifHolder;
+//							keyediFolders.Add(ifolder.CollectionID, ifHolder);
+							keyedSubscriptions.Add(ifolder.ID, 
+														ifolder.CollectionID);
+						}
 					}
 				}
 				catch(Exception e)
@@ -339,6 +501,127 @@ namespace Novell.iFolder
 				}
 				return ifHolder;
 			}
+		}
+
+
+
+
+		//===================================================================
+		// CreateiFolder
+		// creates an iFolder in the domain at the path specified
+		//===================================================================
+		public iFolderHolder CreateiFolder(string path, string domainID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+   				iFolderWeb newiFolder = 
+								ifws.CreateiFolderInDomain(path, domainID);
+
+				iFolderHolder ifHolder = AddiFolder(newiFolder);
+				return ifHolder;
+			}	
+		}
+
+
+
+
+		//===================================================================
+		// AcceptiFolderInvitation
+		// accepts an iFolder Invitation and updates the iFoler Information
+		//===================================================================
+		public iFolderHolder AcceptiFolderInvitation(	string ifolderID,
+														string domainID,
+														string localPath)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				iFolderHolder ifHolder = null;
+				string collectionID = GetiFolderID(ifolderID);
+
+   		 		iFolderWeb newifolder = ifws.AcceptiFolderInvitation(
+											domainID,
+											ifolderID,
+											localPath);
+				if(newifolder.ID != ifolderID)
+				{
+					keyedSubscriptions.Remove(ifolderID);
+					if(newifolder.IsSubscription)
+						keyedSubscriptions[newifolder.ID] = 
+													newifolder.CollectionID;
+				}
+
+				ifHolder = GetiFolder(collectionID);
+				ifHolder.iFolder = newifolder;
+				return ifHolder;
+			}	
+		}
+
+
+
+
+		//===================================================================
+		// RevertiFolder
+		// reverts an iFolder to an invitation
+		//===================================================================
+		public iFolderHolder RevertiFolder(	string ifolderID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				iFolderHolder ifHolder = null;
+
+				ifHolder = GetiFolder(ifolderID);
+				if(ifHolder == null)
+				{
+					throw new Exception("iFolder did not exist");
+				}
+
+    			iFolderWeb reviFolder = 
+								ifws.RevertiFolder(ifHolder.iFolder.ID);
+
+				ifHolder.iFolder = reviFolder;
+				if(reviFolder.IsSubscription)
+				{
+					keyedSubscriptions[reviFolder.ID] = reviFolder.CollectionID;
+				}
+				return ifHolder;
+			}
+		}
+
+
+
+
+		//===================================================================
+		// DeleteiFolder
+		// reverts and/or declines an iFolder invitation
+		//===================================================================
+		public void DeleteiFolder(string ifolderID)
+		{
+			lock(typeof(iFolderWeb))
+			{
+				iFolderHolder revertediFolder = null;
+
+				if(IsiFolder(ifolderID))
+				{
+					revertediFolder = RevertiFolder(ifolderID);
+				}
+				else
+				{
+					string realID = GetiFolderID(ifolderID);
+					if(realID != null)
+					{
+						revertediFolder = GetiFolder(realID);
+					}
+				}
+
+				if(	(revertediFolder != null) && 
+								(revertediFolder.iFolder.IsSubscription) )
+				{
+   		 			ifws.DeclineiFolderInvitation(
+										revertediFolder.iFolder.DomainID,
+										revertediFolder.iFolder.ID);
+					DeliFolder(revertediFolder.iFolder.ID);
+				}
+			}	
 		}
 
 
@@ -370,7 +653,7 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				ICollection icol = curDomains.Values;
+				ICollection icol = keyedDomains.Values;
 				foreach(DomainInformation domain in icol)
 				{
 					if(domain.MemberUserID.Equals(UserID))
@@ -382,29 +665,12 @@ namespace Novell.iFolder
 
 
 
-		public void AddDomain(DomainInformation newDomain)
-		{
-			lock (typeof(iFolderData) )
-			{
-				if(newDomain != null)
-				{
-					curDomains.Add(newDomain.ID, newDomain);
-					if(defDomain != null)
-						defDomain.IsDefault = false;
-					defDomain = newDomain;
-				}
-			}
-		}
-
-
-
-
 		public void RemoveDomain(string domainID)
 		{
 			lock (typeof(iFolderData) )
 			{
-				if(curDomains.ContainsKey(domainID))
-					curDomains.Remove(domainID);
+				if(keyedDomains.ContainsKey(domainID))
+					keyedDomains.Remove(domainID);
 			}
 		}
 
@@ -415,9 +681,9 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				DomainInformation[] domains = new DomainInformation[curDomains.Count];
+				DomainInformation[] domains = new DomainInformation[keyedDomains.Count];
 
-				ICollection icol = curDomains.Values;
+				ICollection icol = keyedDomains.Values;
 				icol.CopyTo(domains, 0);
 
 				return domains;
@@ -483,7 +749,7 @@ namespace Novell.iFolder
 		{
 			lock(typeof(iFolderWeb))
 			{
-				return curDomains.Count;
+				return keyedDomains.Count;
 			}
 		}
 
