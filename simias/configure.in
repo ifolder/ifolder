@@ -408,6 +408,7 @@ simias-client.pc
 src/Makefile
 src/SimiasClient/SimiasSetup.cs
 src/Common/MyDns.cs
+src/Common/simias-client-bootstrap.config
 src/SimiasClient/Makefile
 src/Simias.dll/Makefile
 src/FlaimProvider/Makefile
