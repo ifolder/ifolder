@@ -1,5 +1,7 @@
 .PHONY: ifolder-install ndoc ndoc-nodeps ndoc-clean
 
+DOC_TARBALL = $(PACKAGE)-doc-$(VERSION).tar.gz
+
 all: ndoc
 
 all-nodeps: ndoc-nodeps
@@ -20,7 +22,7 @@ if WINDOWS
 else # NOT WINDOWS
 	"$(NDOC_CMD)" "$(bindir)/Novell.iFolder.dll","../src/iFolder/Novell.iFolder.doc.xml" -documenter=MSDN -Title=iFolder -OutputDirectory=ifolder-ndoc
 endif # WINDOWS
-	tar -czf ifolder-ndoc.tar.gz ifolder-ndoc
+	tar -czf $(DOC_TARBALL) ifolder-ndoc
 
 else # NDOC
 
@@ -32,7 +34,7 @@ ndoc ndoc-nodeps:
 endif # NDOC
 
 ndoc-clean:
-	rm -rf ifolder-ndoc ifolder-ndoc.tar.gz
+	rm -rf ifolder-ndoc $(PACKAGE)-doc-*.tar.gz
 
 maintainer-clean-local:
 	rm -f Makefile.in
