@@ -100,11 +100,6 @@
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
                 <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
-                />
-                <Reference
                     Name = "iFolderComponent"
                     AssemblyName = "iFolderComponent"
                     HintPath = "..\iFolderShell\iFolderComponent.dll"
@@ -115,9 +110,14 @@
                     HintPath = "..\iFolder\Novell.iFolder.dll"
                 />
                 <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\..\..\dev\final\web\bin\SimiasClient.dll"
+                />
+                <Reference
                     Name = "ClientUpgrade"
                     AssemblyName = "ClientUpgrade"
-                    HintPath = "..\..\..\final\web\bin\ClientUpgrade.dll"
+                    HintPath = "..\..\..\..\dev\final\web\bin\ClientUpgrade.dll"
                 />
             </References>
         </Build>
@@ -134,6 +134,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "AdvancedSettings.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AdvancedSettings.resx"
+                    DependentUpon = "AdvancedSettings.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "App.ico"
                     BuildAction = "Content"
                 />
@@ -144,6 +154,11 @@
                 />
                 <File
                     RelPath = "BalloonType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DomainConnectEventArgs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -183,6 +198,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Preferences.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Preferences.resx"
+                    DependentUpon = "Preferences.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ServerDetails.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ServerDetails.resx"
+                    DependentUpon = "ServerDetails.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "ServerInfo.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -190,6 +225,16 @@
                 <File
                     RelPath = "ServerInfo.resx"
                     DependentUpon = "ServerInfo.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "SyncLog.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SyncLog.resx"
+                    DependentUpon = "SyncLog.cs"
                     BuildAction = "EmbeddedResource"
                 />
             </Include>

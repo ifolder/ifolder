@@ -57,7 +57,6 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
     UINT idCmd= idCmdFirst;
 	TCHAR sziFolderMenu[]= TEXT("iFolder");
 
-	// TODO: Localize
     TCHAR szCreateiFolderMenu[MAX_MENU_LENGTH];
     TCHAR szDeleteiFolderMenu[MAX_MENU_LENGTH];
 	TCHAR sziFolderConflictMenu[MAX_MENU_LENGTH];
