@@ -64,9 +64,9 @@ namespace Simias.Sync.Tests
 
 			SyncProperties properties = new SyncProperties(config);
 
-			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+			properties.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
-			SyncManager manager = new SyncManager(properties);
+			SyncManager manager = new SyncManager(config);
 			
 			manager.Start();
 
@@ -104,9 +104,9 @@ namespace Simias.Sync.Tests
 			// sync
 			SyncProperties properties = new SyncProperties(config);
 
-			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+			properties.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
 
-			SyncManager manager = new SyncManager(properties);
+			SyncManager manager = new SyncManager(config);
 			
 			manager.Start();
 
@@ -115,6 +115,9 @@ namespace Simias.Sync.Tests
 			manager.Stop();
 
 			manager.Dispose();
+
+			store.Dispose();
+			store.Delete();
 		}
 	}
 }

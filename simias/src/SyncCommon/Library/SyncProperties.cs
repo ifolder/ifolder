@@ -24,54 +24,56 @@
 using System;
 using System.IO;
 
+using Simias;
+using Simias.Storage;
+
 namespace Simias.Sync
 {
 	/// <summary>
 	/// Sync Properties
 	/// </summary>
-	/// <remarks>The clone() method must be updated and verified
-	/// with any changes to this objects fields.
-	/// </remarks>
 	[Serializable]
-	public class SyncProperties : ICloneable
+	public class SyncProperties
 	{
 		/// <summary>
 		/// The suggested sync host or ip address for the current machine.
 		/// </summary>
-		public static readonly string SuggestedHost = MyDns.GetHostName();
+		private static readonly string DefaultHost = MyDns.GetHostName();
+		private static readonly string HostPropertyName = "Sync Host";
 
 		/// <summary>
 		/// The suggested sync port for the current machine.
 		/// </summary>
-		public static readonly int SuggestedPort = 6436;
+		private static readonly int DefaultPort = 6436;
+		private static readonly string PortPropertyName = "Sync Port";
 
 		/// <summary>
 		/// The suggested sync logic factory for syncing.
 		/// </summary>
-		public static readonly Type SuggestedLogicFactory = typeof(SyncLogicFactory);
+		private static readonly Type DefaultLogicFactory = typeof(SyncLogicFactory);
+		private static readonly string LogicFactoryPropertyName = "Sync Logic Factory";
 		
 		/// <summary>
 		/// The suggested sync interval in seconds.
 		/// </summary>
-		public static readonly int SuggestedSyncInterval = 5;
+		private static readonly int DefaultInterval = 5;
+		private static readonly string IntervalPropertyName = "Sync Interval";
 
 		/// <summary>
 		/// The suggested sync channel sinks.
 		/// </summary>
-		public static readonly SyncChannelSinks SuggestedChannelSinks =
+		private static readonly SyncChannelSinks DefaultChannelSinks =
 #if DEBUG
-			SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
+			SyncChannelSinks.Binary | SyncChannelSinks.Monitor; // | SyncChannelSinks.Security;
 #else
-			SyncChannelSinks.Binary | SyncChannelSinks.Security;
+			SyncChannelSinks.Binary; // | SyncChannelSinks.Security;
 #endif
+		private static readonly string ChannelSinksPropertyName = "Sync Channel Sinks";
 
-		// properties
-		private string host	= SuggestedHost;
-		private int port = SuggestedPort;
-		private Type logicFactory = SuggestedLogicFactory;
-		private int interval = SuggestedSyncInterval;
-		private SyncChannelSinks sinks = SuggestedChannelSinks;
+		// fields
 		private Configuration config;
+		private Store store;
+		private Collection localDb;
 
 		/// <summary>
 		/// Constructor
@@ -79,41 +81,80 @@ namespace Simias.Sync
 		public SyncProperties(Configuration config)
 		{
 			this.config = config;
+
+			store = new Store(config);
+			localDb = store.GetDatabaseObject();
 		}
 
-		#region ICloneable Members
+		#region Property Methods
 
 		/// <summary>
-		/// Create a copy of the sync properties object.
+		/// Get a property value from the base node.
 		/// </summary>
-		/// <returns>A copy of the sync properties object.</returns>
-		public object Clone()
+		/// <param name="name">The name of the property.</param>
+		/// <returns>The value of the property.</returns>
+		private object GetProperty(string name)
 		{
-			// note: watch carefully!
-			SyncProperties clone = new SyncProperties(config);
-			
-			clone.host = host;
-			clone.port = port;
-			clone.logicFactory = logicFactory;
-			clone.interval = interval;
-			clone.sinks = sinks;
+			return GetProperty(name, null);
+		}
 
-			return clone;
+		/// <summary>
+		/// Get a poperty value from the base node.
+		/// </summary>
+		/// <param name="name">The name of the property.</param>
+		/// <param name="value">A default value to return if the property has no value.</param>
+		/// <returns>The property value, if it exists, or the default value.</returns>
+		private object GetProperty(string name, object value)
+		{
+			object result = value;
+
+			Property p = localDb.Properties.GetSingleProperty(name);
+
+			if (p != null)
+			{
+				result = p.Value;
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Set the value of the given property of the base node.
+		/// </summary>
+		/// <param name="name">The property name.</param>
+		/// <param name="value">The new property value.</param>
+		private void SetProperty(string name, object value)
+		{
+			SetProperty(name, value, false);
+		}
+
+		/// <summary>
+		/// Set the value of the given property of the base node.
+		/// </summary>
+		/// <param name="name">The property name.</param>
+		/// <param name="value">The new property value.</param>
+		/// <param name="local">Is this a local only property? (non-synced)</param>
+		private void SetProperty(string name, object value, bool local)
+		{
+			if (value != null)
+			{
+				Property p = new Property(name, value);
+				p.LocalProperty = local;
+
+				localDb.Properties.ModifyProperty(p);
+			}
+			else
+			{
+				localDb.Properties.DeleteSingleProperty(name);
+			}
+
+			localDb.Commit();
 		}
 
 		#endregion
 
 		#region Properties
 		
-		/// <summary>
-		/// The default sync host.
-		/// </summary>
-		public string DefaultHost
-		{
-			get { return host; }
-			set { host = value; }
-		}
-
 		/// <summary>
 		/// The Simias configuration object.
 		/// </summary>
@@ -123,39 +164,48 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// The default sync port.
+		/// The sync host.
 		/// </summary>
-		public int DefaultPort
+		public string Host
 		{
-			get { return port; }
-			set { port = value; }
+			get { return (string)GetProperty(HostPropertyName, DefaultHost); }
+			set { SetProperty(HostPropertyName, value, true); }
 		}
 
 		/// <summary>
-		/// The default sync interval in seconds.
+		/// The sync port.
 		/// </summary>
-		public int DefaultSyncInterval
+		public int Port
 		{
-			get { return interval; }
-			set { interval = value; }
+			get { return (int)GetProperty(PortPropertyName, DefaultPort); }
+			set { SetProperty(PortPropertyName, value, true); }
 		}
 
 		/// <summary>
-		/// The default sync logic factory.
+		/// The sync interval in seconds.
 		/// </summary>
-		public Type DefaultLogicFactory
+		public int Interval
 		{
-			get { return logicFactory; }
-			set { logicFactory = value; }
+			get { return (int)GetProperty(IntervalPropertyName, DefaultInterval); }
+			set { SetProperty(IntervalPropertyName, value, true); }
 		}
 
 		/// <summary>
-		/// The default channel sinks.
+		/// The sync logic factory.
 		/// </summary>
-		public SyncChannelSinks DefaultChannelSinks
+		public Type LogicFactory
 		{
-			get { return sinks; }
-			set { sinks = value; }
+			get { return (Type)GetProperty(LogicFactoryPropertyName, DefaultLogicFactory); }
+			set { SetProperty(LogicFactoryPropertyName, value, true); }
+		}
+
+		/// <summary>
+		/// The sync channel sinks.
+		/// </summary>
+		public SyncChannelSinks ChannelSinks
+		{
+			get { return (SyncChannelSinks)GetProperty(ChannelSinksPropertyName, DefaultChannelSinks); }
+			set { SetProperty(ChannelSinksPropertyName, value, true); }
 		}
 
 		#endregion

@@ -81,17 +81,20 @@ namespace Simias.Sync
 		private SyncStoreManager storeManager;
 		private SyncLogicFactory logicFactory;
 		private LocationService locationService;
+		private Configuration config;
 
 		private int active;
 		private object activeLock = new object();
 
-		public SyncManager(SyncProperties properties)
+		public SyncManager(Configuration config)
 		{
+			this.config = config;
+
 			// properties
-			this.properties = (SyncProperties)properties.Clone();
+			this.properties = new SyncProperties(config);
 
 			// logic factory
-			logicFactory = (SyncLogicFactory)Activator.CreateInstance(properties.DefaultLogicFactory);
+			logicFactory = (SyncLogicFactory)Activator.CreateInstance(properties.LogicFactory);
 
 			// channel factory
 			channelFactory = SyncChannelFactory.GetInstance();
@@ -103,7 +106,7 @@ namespace Simias.Sync
 			active = 0;
 
 			// create the location service
-			locationService = new LocationService(properties.Config);
+			locationService = new LocationService(config);
 		}
 
 		public void Start()
@@ -170,19 +173,19 @@ namespace Simias.Sync
 		{
 			get
 			{
-				UriBuilder builder = new UriBuilder("http", properties.DefaultHost, properties.DefaultPort);
+				UriBuilder builder = new UriBuilder("http", properties.Host, properties.Port);
 				return builder.Uri;
 			}
 		}
 		
 		public string StorePath
 		{
-			get { return properties.Config.StorePath; }
+			get { return config.StorePath; }
 		}
 
 		public int SyncInterval
 		{
-			get { return properties.DefaultSyncInterval; }
+			get { return properties.Interval; }
 		}
 
 		public SyncStoreManager StoreManager
@@ -197,7 +200,7 @@ namespace Simias.Sync
 
 		public SyncChannelSinks ChannelSinks
 		{
-			get { return properties.DefaultChannelSinks; }
+			get { return properties.ChannelSinks; }
 		}
 
 		public SyncLogicFactory LogicFactory
@@ -212,7 +215,7 @@ namespace Simias.Sync
 
 		public Configuration Config
 		{
-			get { return properties.Config; }
+			get { return config; }
 		}
 
 		#endregion

@@ -67,12 +67,6 @@ namespace Simias.Location.Tests
 			Collection collection = new Collection(store, "Location 1");
 			collection.Commit();
 
-			// sync properties
-			SyncCollection sc = new SyncCollection(collection);
-			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
-			sc.MasterUri = builder.Uri;
-			sc.Commit();
-
 			// locate collection
 			LocationService service = new LocationService(config);
 
@@ -81,6 +75,8 @@ namespace Simias.Location.Tests
 			Assert("Location Not Found!", location != null);
 
 			Console.WriteLine("Location: {0}", location);
+
+			store.Dispose();
 		}
 		
 		/// <summary>
@@ -103,12 +99,6 @@ namespace Simias.Location.Tests
 			Collection collection = new Collection(store, "Location 2");
 			collection.Commit();
 
-			// sync properties
-			SyncCollection sc = new SyncCollection(collection);
-			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
-			sc.MasterUri = builder.Uri;
-			sc.Commit();
-
 			// locate collection
 			LocationService service = new LocationService(config);
 
@@ -121,6 +111,8 @@ namespace Simias.Location.Tests
 			Console.WriteLine("Location: {0}", location);
 
 			service.Unregister(collection.ID);
+
+			store.Dispose();
 		}
 	}
 }

@@ -73,11 +73,13 @@ namespace Simias.Mini
 			SyncProperties properties = new SyncProperties(config);
 
 			// logic factory
-			properties.DefaultLogicFactory = typeof(SyncLogicFactoryLite);
-			//properties.DefaultLogicFactory = typeof(SynkerA);
+			properties.LogicFactory = typeof(SyncLogicFactoryLite);
+			//properties.LogicFactory = typeof(SynkerA);
 
 			// sinks
-			properties.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+			properties.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor;
+
+			Store store;
 
 			if (args.Length == 0)
 			{
@@ -90,15 +92,13 @@ namespace Simias.Mini
 				if (Directory.Exists(path)) Directory.Delete(path, true);
 
 				// create store
-				Store store = new Store(config);
+				store = new Store(config);
 
 				// note: we need to revert any internal impersonations
 				store.Revert();
 
 				// create the master collection
 				SyncCollection collection = new SyncCollection(new Collection(store, collectionName));
-				UriBuilder builder = new UriBuilder("http", properties.DefaultHost, 7464);
-				collection.MasterUri = builder.Uri;
 				collection.Commit();
 
 				// create invitation
@@ -109,7 +109,7 @@ namespace Simias.Mini
 				invitation.Save(Path.Combine(path, "invitation.ifi"));
 
 				// sync properties
-				properties.DefaultPort = collection.MasterUri.Port;
+				properties.Port = collection.MasterUri.Port;
 			}
 			else
             {
@@ -122,7 +122,7 @@ namespace Simias.Mini
 				if (Directory.Exists(path)) Directory.Delete(path, true);
 
 				// create store
-				Store store = new Store(config);
+				store = new Store(config);
 
 				// note: we need to revert any internal impersonations
 				store.Revert();
@@ -134,13 +134,10 @@ namespace Simias.Mini
 				// accept invitation
 				SyncCollection collection = new SyncCollection(store, invitation);
 				collection.Commit();
-
-				// sync properties
-				properties.DefaultPort = 7465;
 			}
 			
 			// start sync manager
-			SyncManager manager = new SyncManager(properties);
+			SyncManager manager = new SyncManager(config);
 			manager.ChangedState += new ChangedSyncStateEventHandler(OnChangedSyncState);
 			manager.Start();
 
@@ -155,6 +152,7 @@ namespace Simias.Mini
 
 			// clean-up
 			manager.Dispose();
+			store.Dispose();
 
 			Console.WriteLine("Done.");
 

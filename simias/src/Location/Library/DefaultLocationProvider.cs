@@ -74,6 +74,8 @@ namespace Simias.Location
 				result = sc.MasterUri;
 			}
 
+			store.Dispose();
+
 			return result;
 		}
 		

@@ -68,10 +68,15 @@ namespace Simias.Tests
 		private Store storeB;
 		private Store storeC;
 
-		// sync managers
-		private SyncManager syncManagerA;
-		private SyncManager syncManagerB;
-		private SyncManager syncManagerC;
+		// properties
+		private SyncProperties syncPropsA;
+		private SyncProperties syncPropsB;
+		private SyncProperties syncPropsC;
+
+		// service managers
+		private Manager managerA;
+		private Manager managerB;
+		private Manager managerC;
 
 		// collections
 		private Collection collection1A;
@@ -118,39 +123,41 @@ namespace Simias.Tests
 				storeB.Revert();
 				storeC.Revert();
 
-				// start the sync manager for store A
-				SyncProperties syncPropsA = new SyncProperties(configA);
-				syncPropsA.DefaultLogicFactory = syncLogicType;
-				syncPropsA.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
-				syncManagerA = new SyncManager(syncPropsA);
-				syncManagerA.Start();
+				// set the sync properties for store A
+				syncPropsA = new SyncProperties(configA);
+				syncPropsA.LogicFactory = syncLogicType;
+				syncPropsA.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
+				
+				// start the service for store A
+				managerA = new Manager(configA);
+				managerA.StartServices();
 
-				// start the sync manager for store B
-				SyncProperties syncPropsB = new SyncProperties(configB);
-				syncPropsB.DefaultLogicFactory = syncLogicType;
-				syncPropsB.DefaultPort = SyncProperties.SuggestedPort + 1;
-				syncPropsB.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
-				syncManagerB = new SyncManager(syncPropsB);
-				syncManagerB.Start();
+				// set the sync properties for store B
+				syncPropsB = new SyncProperties(configB);
+				syncPropsB.LogicFactory = syncLogicType;
+				syncPropsB.Port = syncPropsA.Port + 1;
+				syncPropsB.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
+				
+				// start the service for store B
+				managerB = new Manager(configB);
+				managerB.StartServices();
 
-				// start the sync manager for store C
-				SyncProperties syncPropsC = new SyncProperties(configC);
-				syncPropsC.DefaultLogicFactory = syncLogicType;
-				syncPropsC.DefaultPort = SyncProperties.SuggestedPort + 2;
-				syncPropsC.DefaultChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
-				syncManagerC = new SyncManager(syncPropsC);
-				syncManagerC.Start();
+				// set the sync properties for store C
+				syncPropsC = new SyncProperties(configC);
+				syncPropsC.LogicFactory = syncLogicType;
+				syncPropsB.Port = syncPropsA.Port + 2;
+				syncPropsC.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
+				
+				// start the service for store A
+				managerC = new Manager(configC);
+				managerC.StartServices();
 
 				// create a master collection on A
 				collection1A = new Collection(storeA, collectionName1);
 				sc1A = new SyncCollection(collection1A);
 				DirNode dn = new DirNode(sc1A, collectionPath1A);
+				sc1A.Commit(dn);
 				Console.WriteLine("Created Master Collection 1A: {0}", sc1A);
-
-				// set the host and port on the master collection
-				UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
-				sc1A.MasterUri = builder.Uri;
-				sc1A.Commit();
 
 				// create an invitation for B and C
 				Invitation invitation1 = sc1A.CreateInvitation(storeA.CurrentUserGuid);
@@ -166,7 +173,7 @@ namespace Simias.Tests
 				Console.WriteLine("Accepted Invitation 1 on Store C.");
 
 				// sleep for the sync interval
-				Thread.Sleep(TimeSpan.FromSeconds(SyncProperties.SuggestedSyncInterval + 1));
+				Thread.Sleep(TimeSpan.FromSeconds(syncPropsA.Interval + 1));
 
 				// get slave collection on B
 				collection1B = storeB.GetCollectionByID(collection1A.ID);
@@ -207,9 +214,14 @@ namespace Simias.Tests
 		public void FixtureTearDown()
 		{
 			// stop syncing
-			syncManagerC.Stop();
-			syncManagerB.Stop();
-			syncManagerA.Stop();
+			managerC.StopServices();
+			managerB.StopServices();
+			managerA.StopServices();
+
+			// dispose stores
+			storeC.Dispose();
+			storeB.Dispose();
+			storeA.Dispose();
 
 			// delete stores
 			DeleteStore(ref storeC);
@@ -255,7 +267,7 @@ namespace Simias.Tests
 			writer.Close();
 
 			// sleep for the sync interval
-			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 1));
+			Thread.Sleep(TimeSpan.FromSeconds((syncPropsA.Interval + 2) * 1));
 			
 			Assert("File not found in store B.", File.Exists(Path.Combine(collectionPath1B, file)));
 			
@@ -277,7 +289,7 @@ namespace Simias.Tests
 			long length = File.OpenRead(Path.Combine(collectionPath1A, file)).Length;
 
 			// sleep for the sync interval
-			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 1));
+			Thread.Sleep(TimeSpan.FromSeconds((syncPropsA.Interval + 2) * 1));
 			
 			Assert("File not modified in store B.", File.OpenRead(Path.Combine(collectionPath1B, file)).Length == length);
 			
@@ -295,7 +307,7 @@ namespace Simias.Tests
 			File.Delete(Path.Combine(collectionPath1A, file));
 
 			// sleep for the sync interval
-			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 1));
+			Thread.Sleep(TimeSpan.FromSeconds((syncPropsA.Interval + 2) * 1));
 			
 			Assert("File not deleted in store B.", !File.Exists(Path.Combine(collectionPath1B, file)));
 			
@@ -315,7 +327,7 @@ namespace Simias.Tests
 			writer.Close();
 
 			// sleep for the sync interval
-			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 2));
+			Thread.Sleep(TimeSpan.FromSeconds((syncPropsA.Interval + 2) * 2));
 			
 			Assert("File not found in store A.", File.Exists(Path.Combine(collectionPath1A, file)));
 			
@@ -337,7 +349,7 @@ namespace Simias.Tests
 			long length = File.OpenRead(Path.Combine(collectionPath1B, file)).Length;
 
 			// sleep for the sync interval
-			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 2));
+			Thread.Sleep(TimeSpan.FromSeconds((syncPropsA.Interval + 2) * 2));
 			
 			Assert("File not modified in store A.", File.OpenRead(Path.Combine(collectionPath1A, file)).Length == length);
 			
@@ -355,7 +367,7 @@ namespace Simias.Tests
 			File.Delete(Path.Combine(collectionPath1B, file));
 
 			// sleep for the sync interval
-			Thread.Sleep(TimeSpan.FromSeconds((SyncProperties.SuggestedSyncInterval + 2) * 2));
+			Thread.Sleep(TimeSpan.FromSeconds((syncPropsA.Interval + 2) * 2));
 			
 			Assert("File not deleted in store A.", !File.Exists(Path.Combine(collectionPath1A, file)));
 			

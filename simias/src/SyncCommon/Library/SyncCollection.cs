@@ -66,6 +66,7 @@ namespace Simias.Sync
 		/// <param name="collection">The collection object.</param>
 		public SyncCollection(Collection collection) : base	(collection)
 		{
+
 		}
 
 		/// <summary>
@@ -111,12 +112,6 @@ namespace Simias.Sync
 		/// <returns>A new invitation object.</returns>
 		public Invitation CreateInvitation(string identity)
 		{
-			// validate the master URL
-			if (MasterUri == null)
-			{
-				throw new ArgumentException("An invitation requires the master URL for the collection.");
-			}
-
 			// create the invitation
 			Invitation invitation = new Invitation();
 
@@ -146,7 +141,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="name">The name of the property.</param>
 		/// <returns>The value of the property.</returns>
-		public object GetProperty(string name)
+		private object GetProperty(string name)
 		{
 			return GetProperty(name, null);
 		}
@@ -157,7 +152,7 @@ namespace Simias.Sync
 		/// <param name="name">The name of the property.</param>
 		/// <param name="value">A default value to return if the property has no value.</param>
 		/// <returns>The property value, if it exists, or the default value.</returns>
-		public object GetProperty(string name, object value)
+		private object GetProperty(string name, object value)
 		{
 			object result = value;
 
@@ -176,7 +171,7 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="name">The property name.</param>
 		/// <param name="value">The new property value.</param>
-		public void SetProperty(string name, object value)
+		private void SetProperty(string name, object value)
 		{
 			SetProperty(name, value, false);
 		}
@@ -187,7 +182,7 @@ namespace Simias.Sync
 		/// <param name="name">The property name.</param>
 		/// <param name="value">The new property value.</param>
 		/// <param name="local">Is this a local only property? (non-synced)</param>
-		public void SetProperty(string name, object value, bool local)
+		private void SetProperty(string name, object value, bool local)
 		{
 			if (value != null)
 			{
@@ -238,7 +233,23 @@ namespace Simias.Sync
 		/// </summary>
 		public Uri MasterUri
 		{
-			get { return (Uri)GetProperty(MasterUriPropertyName); }
+			get
+			{
+				Uri result = (Uri)GetProperty(MasterUriPropertyName);
+
+				if (result == null)
+				{
+					// create a default
+					SyncProperties props = new SyncProperties(this.StoreReference.Config);
+
+					UriBuilder ub = new UriBuilder("http", props.Host, props.Port);
+
+					result = ub.Uri;
+				}
+
+				return result;
+			}
+			
 			set { SetProperty(MasterUriPropertyName, value, true); }
 		}
 

@@ -72,8 +72,6 @@ namespace Simias.Invite.Tests
 
 			// create collection
 			collection = new Collection(store, "Invitation Collection");
-			UriBuilder builder = new UriBuilder("http", SyncProperties.SuggestedHost, SyncProperties.SuggestedPort);
-			collection.Properties.AddProperty(SyncCollection.MasterUriPropertyName, builder.Uri);
 			collection.Commit();
 		}
 

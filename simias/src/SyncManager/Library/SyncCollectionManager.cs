@@ -67,25 +67,6 @@ namespace Simias.Sync
 			collection = new SyncCollection(store.GetCollectionByID(id));
 
 			Debug.Assert(collection != null);
-
-			// check sync properties
-			CheckProperties();
-		}
-
-		private void CheckProperties()
-		{
-			// collection port default
-			if ((collection.MasterUri == null) || (collection.Interval == -1))
-			{
-				// set the host
-				if (collection.MasterUri == null) collection.MasterUri = syncManager.MasterUri;
-				
-				// set the sync interval
-				if (collection.Interval == -1) collection.Interval = syncManager.SyncInterval;
-				
-				// save the defaults
-				collection.Commit();
-			}
 		}
 
 		public void Start()

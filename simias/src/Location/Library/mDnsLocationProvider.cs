@@ -175,6 +175,8 @@ namespace Simias.Location
 					log.Debug("Failed to register {0} with Reunion.", service);
 				}
 			}
+
+			store.Dispose();
 		}
 
 		/// <summary>

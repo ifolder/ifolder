@@ -34,13 +34,11 @@ namespace Simias.Sync
 	public class SyncManagerService : IThreadService
 	{
 		private Configuration config;
-		private SyncProperties properties;
 		private SyncManager manager;
 
 		public SyncManagerService()
 		{
 			config = null;
-			properties = null;
 			manager = null;
 		}
 
@@ -52,8 +50,7 @@ namespace Simias.Sync
 
 			this.config = config;
 
-			properties = new SyncProperties(config);
-			manager = new SyncManager(properties);
+			manager = new SyncManager(config);
 
 			manager.Start();
 		}

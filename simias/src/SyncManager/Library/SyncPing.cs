@@ -53,7 +53,7 @@ namespace Simias.Sync
 		/// <returns>A ping object from the server.</returns>
 		public static SyncStoreInfo PingStore(Store store, string host)
 		{
-			return PingStore(store, host, SyncProperties.SuggestedPort);
+			return PingStore(store, host, 6436);
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace Simias.Sync
 			SyncStoreInfo info = null;
 
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store, SyncProperties.SuggestedChannelSinks);
+			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store, SyncChannelSinks.Binary);
 
 			// service URL
 			string serviceUrl = new UriBuilder("http", host, port, SyncStoreService.GetEndPoint(port)).ToString();
