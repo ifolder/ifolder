@@ -579,6 +579,9 @@ namespace Novell.iFolder.iFolderCom
 				shareWith.Items.Add(lvitem);
 			}
 
+			// Select the first item in the list.
+			shareWith.Items[0].Selected = true;
+
 			// Restore the cursor.
 			Cursor = Cursors.Default;
 		}
@@ -700,6 +703,9 @@ namespace Novell.iFolder.iFolderCom
 			DialogResult result = picker.ShowDialog();
 			if (result == DialogResult.OK)
 			{
+				// Unselect all items.
+				shareWith.SelectedItems.Clear();
+
 				// Get the list of added items from the picker.
 				ArrayList contactList = picker.GetContactList;
 				foreach (Contact c in contactList)
@@ -748,6 +754,10 @@ namespace Novell.iFolder.iFolderCom
 					}
 
 					lvitem.Tag = shareContact;
+
+					// Select the contacts that were just added.
+					lvitem.Selected = true;
+
 					this.shareWith.Items.Add(lvitem);
 				}
 			}
