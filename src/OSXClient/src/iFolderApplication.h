@@ -62,6 +62,7 @@
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)showPrefs:(id)sender;
 - (IBAction)showiFolderWindow:(id)sender;
+- (IBAction)showHelp:(id)sender;
 
 
 
