@@ -376,11 +376,14 @@ namespace Novell.iFolder.Web
 					{
 						continue;
 					}
-					// CRG: this used to check for ready but the subscriptions
-					// for other users were showing up
-//					if( (sub.SubscriptionState == SubscriptionStates.Ready)||
-//					{
-//					}
+					// Add check for declined iFolders
+					// We don't want those to show up either since they
+					// are going to be deleted by the PO Service
+					if(sub.SubscriptionDisposition == 
+								SubscriptionDispositions.Declined)
+					{
+						continue;
+					}
 
 					list.Add(new iFolder(sub));
 				}
