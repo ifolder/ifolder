@@ -209,7 +209,7 @@ namespace Simias.Channels
 				{
 					IClientChannelSinkProvider clientMonitorProvider = new SnifferClientChannelSinkProvider();
 					clientMonitorProvider.Next = clientProvider;
-					clientProvider.Next = clientMonitorProvider;
+					clientProvider = clientMonitorProvider;
 				}
 
 				// setup format provider
@@ -218,14 +218,14 @@ namespace Simias.Channels
 					// soap
 					IClientChannelSinkProvider clientFormatProvider = new SoapClientFormatterSinkProvider();
 					clientFormatProvider.Next = clientProvider;
-					clientProvider.Next = clientFormatProvider;
+					clientProvider = clientFormatProvider;
 				}
 				else
 				{
 					// binary
 					IClientChannelSinkProvider clientFormatProvider = new BinaryClientFormatterSinkProvider();
 					clientFormatProvider.Next = clientProvider;
-					clientProvider.Next = clientFormatProvider;
+					clientProvider = clientFormatProvider;
 				}
 
 
