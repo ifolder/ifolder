@@ -2038,7 +2038,7 @@ namespace Novell.iFolder
 					}
 				}
 
-				iFolderTreeStore.SetValue(iter, 0, ifolder);
+				iFolderTreeStore.SetValue(iter, 0, new iFolderHolder(ifolder));
 			}
 		}
 
