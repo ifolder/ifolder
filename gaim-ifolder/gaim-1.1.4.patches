@@ -3,7 +3,7 @@ Index: configure.ac
 RCS file: /cvsroot/gaim/gaim/configure.ac,v
 retrieving revision 1.271.2.29
 diff -r1.271.2.29 configure.ac
-346a347,364
+346a347,362
 > dnl # Check for stuff needed by the iFolder plugin.
 > dnl #######################################################################
 > build_gifolder=no
@@ -12,9 +12,7 @@ diff -r1.271.2.29 configure.ac
 > if test "x$enable_gifolder" = "xyes"; then
 > 	gifolder_deps="simias-client-c"
 > 	PKG_CHECK_MODULES(SIMIAS_CLIENT, $gifolder_deps, build_gifolder=yes, build_gifolder=no)
-> 	SIMIAS_CLIENT_PREFIX=`$PKG_CONFIG --variable=prefix simias-client-c`
 > 
-> 	AC_SUBST(SIMIAS_CLIENT_PREFIX)
 > 	AC_SUBST(SIMIAS_CLIENT_CFLAGS)
 > 	AC_SUBST(SIMIAS_CLIENT_LIBS)
 > fi
@@ -22,7 +20,7 @@ diff -r1.271.2.29 configure.ac
 > AM_CONDITIONAL(BUILD_GIFOLDER, test "x$build_gifolder" = "xyes")
 > 
 > dnl #######################################################################
-1178a1197,1198
+1178a1195,1196
 > 		   plugins/gifolder/Makefile
 > 		   plugins/gifolder/pixmaps/Makefile
 Index: plugins/Makefile.am
