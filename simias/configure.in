@@ -339,6 +339,8 @@ AC_OUTPUT([
 Makefile
 simias.pc
 src/Makefile
+src/Simias.dll/Makefile
+src/mDnsService/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
