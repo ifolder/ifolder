@@ -20,7 +20,7 @@ AC_PROG_CC
 AM_PROG_LIBTOOL
 
 dnl ==========================================================================
-ALL_LINGUAS="es de fr it ja pt_BR ru"
+ALL_LINGUAS="es de fi fr it ja pt_BR ru"
 
 GETTEXT_PACKAGE=$PACKAGE
 AC_SUBST(GETTEXT_PACKAGE)
