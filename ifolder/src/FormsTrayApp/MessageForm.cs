@@ -410,7 +410,9 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				case SubscriptionStates.Received:
 				case SubscriptionStates.Ready:
-					Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"), "/ID=" + sub.ID + ":" + sub.DomainID);
+					//Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"), "/ID=" + sub.ID + ":" + sub.DomainID);
+					AcceptInvitation acceptInvitation = new AcceptInvitation(poBox, sub);
+					acceptInvitation.ShowDialog();
 					break;
 				case SubscriptionStates.Pending:
 					try
