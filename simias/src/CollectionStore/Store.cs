@@ -272,7 +272,7 @@ namespace Simias.Storage
 
 						// Set the local uri address for the domains. This will have to change
 						// when we support upstream servers.
-						localUri = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString() ).Uri;
+						localUri = new UriBuilder( Uri.UriSchemeHttp, MyDns.GetHostName(), 80, "simias10" ).Uri;
 
 						// Get the name of the user to create as the identity.
 						string proxyName = config.Get( LdapAuthenticationTag, ProxyDNTag, null );
@@ -284,7 +284,21 @@ namespace Simias.Storage
 					else
 					{
 						// Set the local uri address from the config file since this is a workgroup machine.
-						localUri = Manager.LocalServiceUrl;
+						Uri tempUri = Manager.LocalServiceUrl;
+						if ( tempUri != null )
+						{
+							// If the host address is loopback, convert it to the endpoint address.
+							string hostAddress = IPAddress.IsLoopback( IPAddress.Parse( tempUri.Host ) ) ? 
+								MyDns.GetHostName() : tempUri.Host;
+
+							localUri = new UriBuilder( tempUri.Scheme, hostAddress, tempUri.Port, tempUri.PathAndQuery ).Uri;
+						}
+						else
+						{
+							// This is used for when running Simias without calling Manager.Start(). This is intended
+							// for debug mode only.
+							localUri = new UriBuilder( Uri.UriSchemeHttp, MyDns.GetHostName(), 8086, "simias10/" + Environment.UserName ).Uri;
+						}
 					}
 
 					// Create an object that represents the database collection.
