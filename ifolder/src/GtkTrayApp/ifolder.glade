@@ -855,6 +855,7 @@
 
       <child>
 	<widget class="GtkHBox" id="hbox9">
+	  <property name="border_width">10</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">0</property>
@@ -867,7 +868,7 @@
 	    <widget class="GtkHBox" id="ButtonHBox">
 	      <property name="visible">True</property>
 	      <property name="homogeneous">True</property>
-	      <property name="spacing">0</property>
+	      <property name="spacing">10</property>
 
 	      <child>
 		<widget class="GtkButton" id="BackButton">
@@ -910,7 +911,7 @@
 		  <signal name="clicked" handler="on_cancel_clicked" last_modification_time="Fri, 09 Jan 2004 22:49:34 GMT"/>
 		</widget>
 		<packing>
-		  <property name="padding">10</property>
+		  <property name="padding">0</property>
 		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
@@ -925,7 +926,7 @@
 	  </child>
 	</widget>
 	<packing>
-	  <property name="padding">5</property>
+	  <property name="padding">0</property>
 	  <property name="expand">False</property>
 	  <property name="fill">False</property>
 	  <property name="pack_type">GTK_PACK_END</property>
@@ -1580,7 +1581,7 @@ machine.</property>
       <child>
 	<widget class="GtkLabel" id="label35">
 	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">Congadulations!  You have successfully accepted the following
+	  <property name="label" translatable="yes">Congatulations!  You have successfully accepted the following
 shared iFolder:</property>
 	  <property name="use_underline">False</property>
 	  <property name="use_markup">False</property>
@@ -1852,7 +1853,7 @@ shared iFolder:</property>
       <child>
 	<widget class="GtkLabel" id="label43">
 	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">This iFolder will be syncronized and available at:</property>
+	  <property name="label" translatable="yes">This iFolder will be synchronized and available at:</property>
 	  <property name="use_underline">False</property>
 	  <property name="use_markup">False</property>
 	  <property name="justify">GTK_JUSTIFY_LEFT</property>
