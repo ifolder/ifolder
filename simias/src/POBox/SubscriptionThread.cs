@@ -139,7 +139,7 @@ namespace Simias.POBox
 			if ( domain.ConfigType == Simias.Storage.Domain.ConfigurationType.ClientServer )
 			{
 				WebState webState = 
-					new WebState( subscription.DomainID, subscription.SubscriptionCollectionID );
+					new WebState( subscription.DomainID, subscription.FromIdentity );
 				try
 				{
 					webState.InitializeWebClient( poService );
