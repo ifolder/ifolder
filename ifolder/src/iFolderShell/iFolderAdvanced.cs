@@ -64,11 +64,9 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.HelpProvider helpProvider1;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.NumericUpDown syncInterval;
 		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.CheckBox autoSync;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.Label objectCount;
@@ -103,6 +101,9 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.MenuItem menuReadOnly;
 		private System.Windows.Forms.Button access;
 		private Novell.Forms.Controls.GaugeChart gaugeChart;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label total;
+		private System.Windows.Forms.Label label12;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -153,11 +154,9 @@ namespace Novell.iFolderCom
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.syncInterval = new System.Windows.Forms.NumericUpDown();
 			this.label6 = new System.Windows.Forms.Label();
-			this.label7 = new System.Windows.Forms.Label();
 			this.autoSync = new System.Windows.Forms.CheckBox();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.objectCount = new System.Windows.Forms.Label();
@@ -165,7 +164,6 @@ namespace Novell.iFolderCom
 			this.label8 = new System.Windows.Forms.Label();
 			this.byteCount = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.gaugeChart = new Novell.Forms.Controls.GaugeChart();
 			this.limit = new System.Windows.Forms.TextBox();
 			this.setLimit = new System.Windows.Forms.CheckBox();
 			this.label10 = new System.Windows.Forms.Label();
@@ -201,10 +199,13 @@ namespace Novell.iFolderCom
 			this.ifolders = new System.Windows.Forms.ComboBox();
 			this.ifolderLabel = new System.Windows.Forms.Label();
 			this.open = new System.Windows.Forms.Button();
+			this.label7 = new System.Windows.Forms.Label();
+			this.total = new System.Windows.Forms.Label();
+			this.label12 = new System.Windows.Forms.Label();
+			this.gaugeChart = new Novell.Forms.Controls.GaugeChart();
 			this.tabControl1.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).BeginInit();
 			this.groupBox4.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -234,39 +235,26 @@ namespace Novell.iFolderCom
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.groupBox2);
-			this.groupBox1.Controls.Add(this.autoSync);
 			this.groupBox1.Controls.Add(this.groupBox4);
+			this.groupBox1.Controls.Add(this.label5);
+			this.groupBox1.Controls.Add(this.syncInterval);
+			this.groupBox1.Controls.Add(this.label6);
+			this.groupBox1.Controls.Add(this.autoSync);
 			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox1.Location = new System.Drawing.Point(8, 8);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(400, 240);
+			this.groupBox1.Size = new System.Drawing.Size(400, 184);
 			this.groupBox1.TabIndex = 4;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Synchronization";
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.syncInterval);
-			this.groupBox2.Controls.Add(this.label6);
-			this.groupBox2.Controls.Add(this.label7);
-			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox2.Location = new System.Drawing.Point(16, 48);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(368, 104);
-			this.groupBox2.TabIndex = 1;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Synchronize to host";
 			// 
 			// label5
 			// 
 			this.label5.Location = new System.Drawing.Point(16, 24);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(336, 40);
+			this.label5.Size = new System.Drawing.Size(336, 24);
 			this.label5.TabIndex = 0;
-			this.label5.Text = "This value sets the default value for how often the host of an iFolder will be co" +
-				"ntacted  to sync files.";
+			this.label5.Text = "This will set the sync setting for this iFolder.";
 			// 
 			// syncInterval
 			// 
@@ -275,7 +263,7 @@ namespace Novell.iFolderCom
 																		   0,
 																		   0,
 																		   0});
-			this.syncInterval.Location = new System.Drawing.Point(232, 72);
+			this.syncInterval.Location = new System.Drawing.Point(144, 56);
 			this.syncInterval.Maximum = new System.Decimal(new int[] {
 																		 86400,
 																		 0,
@@ -292,19 +280,11 @@ namespace Novell.iFolderCom
 			// 
 			// label6
 			// 
-			this.label6.Location = new System.Drawing.Point(304, 72);
+			this.label6.Location = new System.Drawing.Point(216, 56);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(48, 16);
 			this.label6.TabIndex = 3;
 			this.label6.Text = "seconds";
-			// 
-			// label7
-			// 
-			this.label7.Location = new System.Drawing.Point(16, 72);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(140, 16);
-			this.label7.TabIndex = 1;
-			this.label7.Text = "Sync to host every:";
 			// 
 			// autoSync
 			// 
@@ -312,11 +292,11 @@ namespace Novell.iFolderCom
 			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.autoSync.Enabled = false;
 			this.autoSync.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.autoSync.Location = new System.Drawing.Point(16, 24);
+			this.autoSync.Location = new System.Drawing.Point(16, 56);
 			this.autoSync.Name = "autoSync";
-			this.autoSync.Size = new System.Drawing.Size(360, 16);
+			this.autoSync.Size = new System.Drawing.Size(160, 16);
 			this.autoSync.TabIndex = 0;
-			this.autoSync.Text = "Automatic sync";
+			this.autoSync.Text = "Sync to host every:";
 			// 
 			// groupBox4
 			// 
@@ -325,7 +305,7 @@ namespace Novell.iFolderCom
 			this.groupBox4.Controls.Add(this.label8);
 			this.groupBox4.Controls.Add(this.byteCount);
 			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Location = new System.Drawing.Point(16, 160);
+			this.groupBox4.Location = new System.Drawing.Point(16, 104);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Size = new System.Drawing.Size(368, 72);
 			this.groupBox4.TabIndex = 9;
@@ -367,6 +347,9 @@ namespace Novell.iFolderCom
 			// groupBox3
 			// 
 			this.groupBox3.Controls.Add(this.gaugeChart);
+			this.groupBox3.Controls.Add(this.label7);
+			this.groupBox3.Controls.Add(this.total);
+			this.groupBox3.Controls.Add(this.label12);
 			this.groupBox3.Controls.Add(this.limit);
 			this.groupBox3.Controls.Add(this.setLimit);
 			this.groupBox3.Controls.Add(this.label10);
@@ -379,29 +362,20 @@ namespace Novell.iFolderCom
 			this.groupBox3.Controls.Add(this.label1);
 			this.groupBox3.Controls.Add(this.label4);
 			this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox3.Location = new System.Drawing.Point(8, 256);
+			this.groupBox3.Location = new System.Drawing.Point(8, 208);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(400, 120);
+			this.groupBox3.Size = new System.Drawing.Size(400, 144);
 			this.groupBox3.TabIndex = 12;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Quota";
-			// 
-			// gaugeChart
-			// 
-			this.gaugeChart.Used = 0;
-			this.gaugeChart.Location = new System.Drawing.Point(312, 32);
-			this.gaugeChart.MaxValue = 0;
-			this.gaugeChart.Name = "gaugeChart";
-			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
-			this.gaugeChart.TabIndex = 12;
+			this.groupBox3.Text = "Disk space";
 			// 
 			// limit
 			// 
 			this.limit.Enabled = false;
-			this.limit.Location = new System.Drawing.Point(160, 32);
+			this.limit.Location = new System.Drawing.Point(160, 112);
 			this.limit.Name = "limit";
 			this.limit.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.limit.Size = new System.Drawing.Size(96, 20);
+			this.limit.Size = new System.Drawing.Size(160, 20);
 			this.limit.TabIndex = 1;
 			this.limit.Text = "";
 			this.limit.TextChanged += new System.EventHandler(this.limit_TextChanged);
@@ -409,7 +383,7 @@ namespace Novell.iFolderCom
 			// setLimit
 			// 
 			this.setLimit.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.setLimit.Location = new System.Drawing.Point(16, 34);
+			this.setLimit.Location = new System.Drawing.Point(48, 114);
 			this.setLimit.Name = "setLimit";
 			this.setLimit.Size = new System.Drawing.Size(144, 16);
 			this.setLimit.TabIndex = 0;
@@ -418,7 +392,7 @@ namespace Novell.iFolderCom
 			// 
 			// label10
 			// 
-			this.label10.Location = new System.Drawing.Point(336, 88);
+			this.label10.Location = new System.Drawing.Point(336, 80);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(48, 16);
 			this.label10.TabIndex = 11;
@@ -426,7 +400,7 @@ namespace Novell.iFolderCom
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(336, 32);
+			this.label3.Location = new System.Drawing.Point(336, 24);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(48, 16);
 			this.label3.TabIndex = 10;
@@ -434,7 +408,7 @@ namespace Novell.iFolderCom
 			// 
 			// availableUnits
 			// 
-			this.availableUnits.Location = new System.Drawing.Point(264, 88);
+			this.availableUnits.Location = new System.Drawing.Point(264, 32);
 			this.availableUnits.Name = "availableUnits";
 			this.availableUnits.Size = new System.Drawing.Size(24, 16);
 			this.availableUnits.TabIndex = 8;
@@ -442,7 +416,7 @@ namespace Novell.iFolderCom
 			// 
 			// available
 			// 
-			this.available.Location = new System.Drawing.Point(168, 88);
+			this.available.Location = new System.Drawing.Point(168, 32);
 			this.available.Name = "available";
 			this.available.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.available.Size = new System.Drawing.Size(88, 16);
@@ -450,15 +424,15 @@ namespace Novell.iFolderCom
 			// 
 			// label9
 			// 
-			this.label9.Location = new System.Drawing.Point(16, 88);
+			this.label9.Location = new System.Drawing.Point(16, 32);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(144, 16);
 			this.label9.TabIndex = 6;
-			this.label9.Text = "Space available:";
+			this.label9.Text = "Free space:";
 			// 
 			// usedUnits
 			// 
-			this.usedUnits.Location = new System.Drawing.Point(264, 64);
+			this.usedUnits.Location = new System.Drawing.Point(264, 56);
 			this.usedUnits.Name = "usedUnits";
 			this.usedUnits.Size = new System.Drawing.Size(24, 16);
 			this.usedUnits.TabIndex = 4;
@@ -466,7 +440,7 @@ namespace Novell.iFolderCom
 			// 
 			// used
 			// 
-			this.used.Location = new System.Drawing.Point(168, 64);
+			this.used.Location = new System.Drawing.Point(168, 56);
 			this.used.Name = "used";
 			this.used.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.used.Size = new System.Drawing.Size(88, 16);
@@ -474,15 +448,15 @@ namespace Novell.iFolderCom
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 64);
+			this.label1.Location = new System.Drawing.Point(16, 56);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(144, 16);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Space used:";
+			this.label1.Text = "Used space:";
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(264, 34);
+			this.label4.Location = new System.Drawing.Point(328, 114);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(24, 16);
 			this.label4.TabIndex = 5;
@@ -575,7 +549,7 @@ namespace Novell.iFolderCom
 			// 
 			// columnHeader1
 			// 
-			this.columnHeader1.Text = "Share with";
+			this.columnHeader1.Text = "Name";
 			this.columnHeader1.Width = 107;
 			// 
 			// columnHeader3
@@ -688,6 +662,37 @@ namespace Novell.iFolderCom
 			this.open.TabIndex = 8;
 			this.open.Click += new System.EventHandler(this.open_Click);
 			// 
+			// label7
+			// 
+			this.label7.Location = new System.Drawing.Point(264, 80);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(24, 16);
+			this.label7.TabIndex = 14;
+			this.label7.Text = "MB";
+			// 
+			// total
+			// 
+			this.total.Location = new System.Drawing.Point(168, 80);
+			this.total.Name = "total";
+			this.total.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.total.Size = new System.Drawing.Size(88, 16);
+			this.total.TabIndex = 13;
+			// 
+			// label12
+			// 
+			this.label12.Location = new System.Drawing.Point(16, 80);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(144, 16);
+			this.label12.TabIndex = 12;
+			this.label12.Text = "Total space:";
+			// 
+			// gaugeChart
+			// 
+			this.gaugeChart.Location = new System.Drawing.Point(312, 24);
+			this.gaugeChart.Name = "gaugeChart1";
+			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
+			this.gaugeChart.TabIndex = 15;
+			// 
 			// iFolderAdvanced
 			// 
 			this.AcceptButton = this.ok;
@@ -713,7 +718,6 @@ namespace Novell.iFolderCom
 			this.tabControl1.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.syncInterval)).EndInit();
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
