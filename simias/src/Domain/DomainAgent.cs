@@ -92,24 +92,37 @@ namespace Simias.Domain
 			store.AddDomainIdentity(provisionInfo.UserID, domainInfo.Name,
 				domainInfo.ID, domainInfo.Description);
 
-			// create roster stub
-			CreateSlave(store, domainInfo.ID, domainInfo.RosterID,
-				domainInfo.RosterName, domainInfo.SyncServiceUrl);
-			
-			// create PO Box stub
-			Collection cStub = CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
-				provisionInfo.POBoxName, domainInfo.SyncServiceUrl);
-
-			// Get a POBox object from its created stub.
-			PostOffice.POBox poBox = new PostOffice.POBox(store, cStub);
-			poBox.POServiceUrl = domainInfo.POServiceUrl;
-			poBox.Commit();
-
 			// set the default domain
+			string previousDomain = store.DefaultDomain;
 			store.DefaultDomain = domainInfo.ID;
 
-			// enable the new domain
-			this.Enabled = true;
+			try
+			{
+				// create roster stub
+				CreateSlave(store, domainInfo.ID, domainInfo.RosterID,
+					domainInfo.RosterName, domainInfo.SyncServiceUrl);
+			
+				// create PO Box stub
+				Collection cStub = CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
+					provisionInfo.POBoxName, domainInfo.SyncServiceUrl);
+
+				// Get a POBox object from its created stub.
+				PostOffice.POBox poBox = new PostOffice.POBox(store, cStub);
+				poBox.POServiceUrl = domainInfo.POServiceUrl;
+				poBox.Commit();
+
+				// enable the new domain
+				this.Enabled = true;
+			}
+			catch(Exception e)
+			{
+				throw e;
+			}
+			finally
+			{
+				// restore the previous domain
+				store.DefaultDomain = previousDomain;
+			}
 
 			// clean-up
 			store.Dispose();

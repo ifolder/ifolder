@@ -614,7 +614,7 @@ namespace Simias.POBox
 			else
 			{
 				// Create a new subscription object.
-				subscription = new Subscription(subscriptionInfo.SubscriptionCollectionName + " subscription", subscriptionInfo);
+				subscription = new Subscription(subscriptionInfo.SubscriptionCollectionName + " Subscription", subscriptionInfo);
 
 				// Set the state to received.
 				subscription.SubscriptionState = SubscriptionStates.Received;

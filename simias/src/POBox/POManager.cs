@@ -30,6 +30,7 @@ using System.Diagnostics;
 using Simias;
 using Simias.Storage;
 using Simias.Channels;
+using Simias.Sync;
 
 namespace Simias.POBox
 {
@@ -100,11 +101,21 @@ namespace Simias.POBox
 					// marshal service
 					RemotingServices.Marshal(service, PostOffice.EndPoint);
 				
-					// start collection managers
-					subscriber.Enabled = true;
-					foreach(ShallowNode n in store)
+					// check for the server
+					Storage.Domain domain = store.GetDomain(store.DefaultDomain);
+					Roster roster = domain.GetRoster(store);
+					SyncCollection sc = new SyncCollection(roster);
+
+					// only use collection managers on client machines
+					if (sc.Role == SyncCollectionRoles.Slave)
 					{
-						AddPOBoxManager(n.ID);
+						// start collection managers
+						subscriber.Enabled = true;
+						
+						foreach(ShallowNode n in store.GetCollectionsByType(typeof(POBox).Name))
+						{
+							AddPOBoxManager(n.ID);
+						}
 					}
 				}
 			}
