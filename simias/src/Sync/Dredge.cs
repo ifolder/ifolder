@@ -75,6 +75,8 @@ public class Dredger
 	}
 
 	//--------------------------------------------------------------------
+	// TODO: what about file permissions and symlinks?
+
 	DirNode DoNode(DirNode parentNode, string path, string type)
 	{
 		Node node = null;
@@ -84,30 +86,32 @@ public class Dredger
 		if (name.StartsWith(IncomingNode.TempFilePrefix) && type == typeof(FileNode).Name)
 			return null;
 
-		// delete nodes that are wrong type or dups
-		// TODO: perhaps we should move dups to trash or log as error
-		// TODO: what about file permissions and symlinks?
-		// TODO: if it is a duplicate DirNode, its children should be moved to the winning node
-
+		// find if node for this file or dir already exists
+		// delete nodes that are wrong type
 		foreach (ShallowNode sn in collection.GetNodesByName(name))
 		{
 			Node n = new Node(collection, sn);
-			Property p = n.Properties.GetSingleProperty(PropertyTags.Parent);
-			Relationship parent = p == null? null: p.Value as Relationship;
-
-			if (p != null && parent.NodeID == parentNode.ID && n.Name == name
-					&& (collection.IsType(n, typeof(DirNode).Name)
-							|| collection.IsType(n, typeof(FileNode).Name)))
+			DirNode dn = SyncOps.CastToDirNode(collection, n);
+			string npath = dn != null? dn.GetFullPath(collection):
+					SyncOps.CastToBaseFileNode(collection, n).GetFullPath(collection);
+			if (npath == path)
 			{
-				if (!collection.IsType(n, type) || node != null)
+				if (!collection.IsType(n, type))
+				{
 					DeleteNode(n);
-				else
-					node = n;
+					continue;
+				}
+
+				Property p = n.Properties.GetSingleProperty(PropertyTags.Parent);
+				Relationship rship = p == null? null: p.Value as Relationship;
+				if (rship != null && rship.NodeID != parentNode.ID)
+					return null;
+				node = n;
+				break;
 			}
 		}
 
-		bool newNode = node == null;
-		if (newNode)
+		if (node == null) // it's a new node
 		{
 			if (type == typeof(FileNode).Name)
 			{
@@ -125,6 +129,7 @@ public class Dredger
 			collection.Commit(dnode);
 			return dnode;
 		}
+
 		if (type != typeof(FileNode).Name)
 			return new DirNode(node);
 
@@ -161,6 +166,9 @@ public class Dredger
 	//--------------------------------------------------------------------
 	void DoSubtree(DirNode dnode)
 	{
+		if (dnode == null)
+			return;
+
 		string path = dnode.GetFullPath(collection);
 
 		// remove all nodes from store that no longer exist in the file system
@@ -186,9 +194,7 @@ public class Dredger
 	{
 		this.collection = collection;
 		this.onServer = onServer;
-		DirNode root = collection.GetRootDirectory();
-		if (root != null)
-			DoSubtree(root);
+		DoSubtree(collection.GetRootDirectory());
 	}
 }
 
