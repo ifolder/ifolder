@@ -199,13 +199,13 @@ namespace Simias.Service
 							svcCtl.Custom(msg.CustomMessage, msg.Data);
 							break;
 						case MessageCode.StartComplete:
-							servicesStarted.Set();
 							servicesStopped.Reset();
+							servicesStarted.Set();
 							logger.Info("Services started.");
 							break;
 						case MessageCode.StopComplete:
-							servicesStopped.Set();
 							servicesStarted.Reset();
+							servicesStopped.Set();
 							logger.Info("Services stopped.");
 							break;
 					}
