@@ -28,6 +28,7 @@ using System.Collections;
 using Gtk;
 using Simias.Client.Event;
 using Simias.Client;
+using Simias.Client.Authentication;
 
 namespace Novell.iFolder
 {
@@ -586,7 +587,7 @@ namespace Novell.iFolder
 				{
 					string userID;
 					string credentials;
-					CredentialType credType = simws.GetSavedDomainCredentials(
+					CredentialType credType = simws.GetDomainCredentials(
 						dom.ID, out userID, out credentials);
 					if( (credentials != null) &&
 						(credType == CredentialType.Basic) )
@@ -753,12 +754,12 @@ namespace Novell.iFolder
 				if( (savePasswordButton.Active == true) &&
 						(passEntry.Text.Length > 0) )
 				{
-					simws.SaveDomainCredentials(curDomain.ID, 
+					simws.SetDomainCredentials(curDomain.ID, 
 							passEntry.Text, CredentialType.Basic);
 				}
 				else
 				{
-					simws.SaveDomainCredentials(curDomain.ID, null,
+					simws.SetDomainCredentials(curDomain.ID, null,
 							CredentialType.None);
 				}
 				curDomainPassword = passEntry.Text;
