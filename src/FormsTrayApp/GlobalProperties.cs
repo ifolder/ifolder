@@ -48,13 +48,14 @@ namespace Novell.FormsTrayApp
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private const string iFolderRun = "DisableAutoStart";
 		private const string iFolderKey = @"SOFTWARE\Novell2\iFolder";
-
 		private const double megaByte = 1048576;
 		private const int maxMessages = 500;
+		private System.Timers.Timer updateEnterpriseTimer;
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
 		private string currentUserID;
+		private bool initialConnect = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -118,7 +119,6 @@ namespace Novell.FormsTrayApp
 		private Novell.iFolderCom.GaugeChart gaugeChart1;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.Label label18;
-		private System.Windows.Forms.Label enterpriseDescription;
 		private System.Windows.Forms.MenuItem menuResolve;
 		private System.Windows.Forms.MenuItem menuActionResolve;
 		private System.Windows.Forms.MenuItem menuAccept;
@@ -139,10 +139,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.NumericUpDown port;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label status;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private System.Windows.Forms.TextBox enterpriseDescription;
+		private System.ComponentModel.IContainer components;
 		#endregion
 
 		/// <summary>
@@ -168,6 +166,9 @@ namespace Novell.FormsTrayApp
 			eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(global_collectionSyncHandler));
 			eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(global_fileSyncHandler));
 
+			updateEnterpriseTimer = new System.Timers.Timer(100);
+			updateEnterpriseTimer.AutoReset = false;
+			updateEnterpriseTimer.Elapsed += new System.Timers.ElapsedEventHandler(updateEnterpriseTimer_Elapsed);
 			ht = new Hashtable();
 
 			// Set the min/max values for port.
@@ -242,6 +243,7 @@ namespace Novell.FormsTrayApp
 			this.log = new System.Windows.Forms.ListBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.enterpriseDescription = new System.Windows.Forms.TextBox();
 			this.userName = new System.Windows.Forms.Label();
 			this.label10 = new System.Windows.Forms.Label();
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -257,7 +259,6 @@ namespace Novell.FormsTrayApp
 			this.label13 = new System.Windows.Forms.Label();
 			this.label12 = new System.Windows.Forms.Label();
 			this.label11 = new System.Windows.Forms.Label();
-			this.enterpriseDescription = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.enterpriseName = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
@@ -1070,10 +1071,10 @@ namespace Novell.FormsTrayApp
 			this.tabPage5.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage5.AutoScrollMargin")));
 			this.tabPage5.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage5.AutoScrollMinSize")));
 			this.tabPage5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage5.BackgroundImage")));
+			this.tabPage5.Controls.Add(this.enterpriseDescription);
 			this.tabPage5.Controls.Add(this.userName);
 			this.tabPage5.Controls.Add(this.label10);
 			this.tabPage5.Controls.Add(this.groupBox6);
-			this.tabPage5.Controls.Add(this.enterpriseDescription);
 			this.tabPage5.Controls.Add(this.label9);
 			this.tabPage5.Controls.Add(this.enterpriseName);
 			this.tabPage5.Controls.Add(this.label8);
@@ -1090,6 +1091,32 @@ namespace Novell.FormsTrayApp
 			this.tabPage5.Text = resources.GetString("tabPage5.Text");
 			this.tabPage5.ToolTipText = resources.GetString("tabPage5.ToolTipText");
 			this.tabPage5.Visible = ((bool)(resources.GetObject("tabPage5.Visible")));
+			// 
+			// enterpriseDescription
+			// 
+			this.enterpriseDescription.AccessibleDescription = resources.GetString("enterpriseDescription.AccessibleDescription");
+			this.enterpriseDescription.AccessibleName = resources.GetString("enterpriseDescription.AccessibleName");
+			this.enterpriseDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("enterpriseDescription.Anchor")));
+			this.enterpriseDescription.AutoSize = ((bool)(resources.GetObject("enterpriseDescription.AutoSize")));
+			this.enterpriseDescription.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("enterpriseDescription.BackgroundImage")));
+			this.enterpriseDescription.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("enterpriseDescription.Dock")));
+			this.enterpriseDescription.Enabled = ((bool)(resources.GetObject("enterpriseDescription.Enabled")));
+			this.enterpriseDescription.Font = ((System.Drawing.Font)(resources.GetObject("enterpriseDescription.Font")));
+			this.enterpriseDescription.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("enterpriseDescription.ImeMode")));
+			this.enterpriseDescription.Location = ((System.Drawing.Point)(resources.GetObject("enterpriseDescription.Location")));
+			this.enterpriseDescription.MaxLength = ((int)(resources.GetObject("enterpriseDescription.MaxLength")));
+			this.enterpriseDescription.Multiline = ((bool)(resources.GetObject("enterpriseDescription.Multiline")));
+			this.enterpriseDescription.Name = "enterpriseDescription";
+			this.enterpriseDescription.PasswordChar = ((char)(resources.GetObject("enterpriseDescription.PasswordChar")));
+			this.enterpriseDescription.ReadOnly = true;
+			this.enterpriseDescription.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("enterpriseDescription.RightToLeft")));
+			this.enterpriseDescription.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("enterpriseDescription.ScrollBars")));
+			this.enterpriseDescription.Size = ((System.Drawing.Size)(resources.GetObject("enterpriseDescription.Size")));
+			this.enterpriseDescription.TabIndex = ((int)(resources.GetObject("enterpriseDescription.TabIndex")));
+			this.enterpriseDescription.Text = resources.GetString("enterpriseDescription.Text");
+			this.enterpriseDescription.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("enterpriseDescription.TextAlign")));
+			this.enterpriseDescription.Visible = ((bool)(resources.GetObject("enterpriseDescription.Visible")));
+			this.enterpriseDescription.WordWrap = ((bool)(resources.GetObject("enterpriseDescription.WordWrap")));
 			// 
 			// userName
 			// 
@@ -1428,28 +1455,6 @@ namespace Novell.FormsTrayApp
 			this.label11.Text = resources.GetString("label11.Text");
 			this.label11.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label11.TextAlign")));
 			this.label11.Visible = ((bool)(resources.GetObject("label11.Visible")));
-			// 
-			// enterpriseDescription
-			// 
-			this.enterpriseDescription.AccessibleDescription = resources.GetString("enterpriseDescription.AccessibleDescription");
-			this.enterpriseDescription.AccessibleName = resources.GetString("enterpriseDescription.AccessibleName");
-			this.enterpriseDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("enterpriseDescription.Anchor")));
-			this.enterpriseDescription.AutoSize = ((bool)(resources.GetObject("enterpriseDescription.AutoSize")));
-			this.enterpriseDescription.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("enterpriseDescription.Dock")));
-			this.enterpriseDescription.Enabled = ((bool)(resources.GetObject("enterpriseDescription.Enabled")));
-			this.enterpriseDescription.Font = ((System.Drawing.Font)(resources.GetObject("enterpriseDescription.Font")));
-			this.enterpriseDescription.Image = ((System.Drawing.Image)(resources.GetObject("enterpriseDescription.Image")));
-			this.enterpriseDescription.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("enterpriseDescription.ImageAlign")));
-			this.enterpriseDescription.ImageIndex = ((int)(resources.GetObject("enterpriseDescription.ImageIndex")));
-			this.enterpriseDescription.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("enterpriseDescription.ImeMode")));
-			this.enterpriseDescription.Location = ((System.Drawing.Point)(resources.GetObject("enterpriseDescription.Location")));
-			this.enterpriseDescription.Name = "enterpriseDescription";
-			this.enterpriseDescription.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("enterpriseDescription.RightToLeft")));
-			this.enterpriseDescription.Size = ((System.Drawing.Size)(resources.GetObject("enterpriseDescription.Size")));
-			this.enterpriseDescription.TabIndex = ((int)(resources.GetObject("enterpriseDescription.TabIndex")));
-			this.enterpriseDescription.Text = resources.GetString("enterpriseDescription.Text");
-			this.enterpriseDescription.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("enterpriseDescription.TextAlign")));
-			this.enterpriseDescription.Visible = ((bool)(resources.GetObject("enterpriseDescription.Visible")));
 			// 
 			// label9
 			// 
@@ -1835,6 +1840,14 @@ namespace Novell.FormsTrayApp
 
 		#region Properties
 		/// <summary>
+		/// Set when initially connecting to enterprise so that the Servers tab can be updated after the first sync cycle.
+		/// </summary>
+		public bool InitialConnect
+		{
+			set { initialConnect = value; }
+		}
+
+		/// <summary>
 		/// Shows/hides the Enterprise tab.
 		/// </summary>
 		public bool ShowEnterpriseTab
@@ -1846,12 +1859,6 @@ namespace Novell.FormsTrayApp
 					if (!tabControl1.Controls.Contains(tabPage5))
 					{
 						tabControl1.Controls.Add(this.tabPage5);
-						try
-						{
-							iFolderSettings ifSettings = ifWebService.GetSettings();
-							updateEnterpriseData(ifSettings);
-						}
-						catch {}
 					}
 				}
 				else
@@ -2210,6 +2217,13 @@ namespace Novell.FormsTrayApp
 
 			e.Cancel = true;
 			Hide();
+		}
+
+		private void updateEnterpriseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			updateEnterpriseTimer.Stop();
+			iFolderSettings ifSettings = ifWebService.GetSettings();
+			updateEnterpriseData(ifSettings);
 		}
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
@@ -2726,6 +2740,11 @@ namespace Novell.FormsTrayApp
 					{
 						message = string.Format(syncEventArgs.Successful ? resourceManager.GetString("syncSucceeded") : resourceManager.GetString("syncFailed"), syncEventArgs.Name);
 						status.Text = resourceManager.GetString("status.Text");
+						if (initialConnect)
+						{
+							initialConnect = false;
+							updateEnterpriseTimer.Start();
+						}
 						break;
 					}
 				}

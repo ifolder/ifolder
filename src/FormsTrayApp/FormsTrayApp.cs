@@ -466,6 +466,7 @@ namespace Novell.FormsTrayApp
 		private void serverInfo_EnterpriseConnect(object sender, EventArgs e)
 		{
 			globalProperties.ShowEnterpriseTab = true;
+			globalProperties.InitialConnect = true;
 		}
 		#endregion
 
