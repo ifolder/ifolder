@@ -161,11 +161,16 @@ NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 	}
 	else
 	{
-		domain = [[[iFolderDomain alloc] init] autorelease];
-		
 		struct ns1__DomainInformation *curDomain;
-			
 		curDomain = connectToDomainResponse.ConnectToDomainResult;
+		if(curDomain == NULL)
+		{
+			cleanup_simias_gsoap(&soap);
+			[NSException raise:@"Unable to connect to domain"
+							format:@"Error in ConnectToDomain"];		
+		}
+
+		domain = [[[iFolderDomain alloc] init] autorelease];
 		[domain setProperties:getDomainProperties(curDomain)];
     }
 

@@ -5,12 +5,15 @@
 @class iFolderService;
 @class iFolder;
 @class DiskSpace;
+@class VerticalBarView;
 
 @interface PropGeneralController : NSObject
 {
 	iFolder					*curiFolder;
 	iFolderService			*ifolderService;
 	DiskSpace				*diskSpace;
+	
+	long long				prevLimit;	
 
     IBOutlet NSTextField	*availableSpace;
     IBOutlet NSTextField	*currentSpace;
@@ -27,9 +30,11 @@
 	IBOutlet NSImageView	*hasConflictsImage;
 	IBOutlet NSTextField	*ownerName;
 	IBOutlet NSTextField	*ifolderName;
+	IBOutlet VerticalBarView	*barView;
 }
 
 - (IBAction)enableLimitToggled:(id)sender;
 - (IBAction)syncNow:(id)sender;
 - (IBAction)updateLimitValue:(id)sender;
+
 @end

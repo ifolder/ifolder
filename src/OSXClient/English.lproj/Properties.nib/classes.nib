@@ -6,6 +6,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 availableSpace = NSTextField; 
+                barView = VerticalBarView; 
                 currentSpace = NSTextField; 
                 enableLimit = NSButton; 
                 filesToSync = NSTextField; 
@@ -55,7 +56,8 @@
                 tabView = NSTabView; 
             }; 
             SUPERCLASS = NSWindowController; 
-        }
+        }, 
+        {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
     ); 
     IBVersion = 1; 
 }
