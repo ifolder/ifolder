@@ -68,7 +68,10 @@ namespace Novell.iFolderCom
 		/// </summary>
 		public string Name
 		{
-			get { return name; }
+			get 
+			{
+				return showAll ? name : domainWeb.Name;
+			}
 			set { name = value; }
 		}
 

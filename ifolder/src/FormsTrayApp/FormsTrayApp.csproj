@@ -198,6 +198,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ServerDetails.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ServerDetails.resx"
+                    DependentUpon = "ServerDetails.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "ServerInfo.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
