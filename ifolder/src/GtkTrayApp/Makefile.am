@@ -52,7 +52,7 @@ installcheck-local: install
 CLEAN_FILES = iFolderApp.exe iFolderApp.xml InvitationWizard.exe InvitationWizard.xml CollectionBrowser.exe CollectionBrowser.xml
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+	rm -f *.dbg *.exe $(CLEAN_FILES)
     
 distclean-local: clean
 
