@@ -27,62 +27,58 @@
 using Gtk;
 using Gdk;
 using System;
+using System.Collections;
 using System.Runtime.InteropServices;
 
 namespace Novell.iFolder
 {
 	public class NotifyWindow : Gtk.Window
 	{
-		private Pixbuf	background;
-		private Pixbuf	activebackground;
-		private Pixbuf	inactivebackground;
+		private Widget parentWidget;
+		private Pixbuf	background = null;
+		private Pixbuf	activebackground = null;
+		private Pixbuf	inactivebackground = null;
 		private uint	closeWindowTimeoutID;
+		private bool	isSelected = false;
+		private int		wbsize = 16;
 
-		public NotifyWindow(Gtk.Widget parent) : base(Gtk.WindowType.Popup)
+		public NotifyWindow(Gtk.Widget parent, string message, string details)
+			: base(Gtk.WindowType.Popup)
  		{
-			int parentX, parentY, parentWidth, parentHeight, parentDepth;
 			this.AppPaintable = true;
+			parentWidget = parent;
 
-			parent.GdkWindow.GetGeometry(out parentX, out parentY,
-												out parentWidth,
-												out parentHeight,
-												out parentDepth);
-
-			parent.GdkWindow.GetOrigin(out parentX, out parentY);
-
-			Move(parentX + (parentWidth / 2) - 55, parentY + parentHeight - 5);
-
-			inactivebackground = new Gdk.Pixbuf(Util.ImagesPath("notify.xpm"));
-			activebackground = 
-					new Gdk.Pixbuf(Util.ImagesPath("notify-active.xpm"));
-			background = inactivebackground;
-
-			this.SetDefaultSize(320, 110);
-
-			Gtk.Fixed fxd = new Gtk.Fixed();
-			this.Add(fxd);
+			Gtk.HBox hbox = new HBox();
+			this.Add(hbox);
+			hbox.BorderWidth = (uint)wbsize + 10;
+			hbox.Spacing = 20;
 
 			Gtk.Image iFolderImage = new Gtk.Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
 
-			fxd.Put(iFolderImage, 15, 30);
+			hbox.PackStart(iFolderImage, false, true, 0);
 		
-			Label l = new Label("<span weight=\"bold\" size=\"large\">" +
-							"New iFolder Recieved" + "</span>");
+			Gtk.VBox vbox = new VBox();
+//			vbox.Spacing = 5;
+			hbox.PackStart(vbox, true, false, 0);
+//			Label l = new Label("<span weight=\"bold\" size=\"large\">" +
+			Label l = new Label("<span weight=\"bold\">" +
+							message + 
+							"</span>");
 			l.LineWrap = false;
 			l.UseMarkup = true;
 			l.Selectable = false;
 			l.Xalign = 0;
 			l.Yalign = 0;
-			fxd.Put(l, 80, 22);
+			vbox.PackStart(l, false, true, 0);
 
-			l = new Label("<span size=\"small\">" +
-				"Brady has shared an iFolder named\n\"Vespa Scooters\" with you." + "</span>");
-			l.UseMarkup = true;
-			l.LineWrap = false;
-			l.Xalign = 0;
+
+			Label l2 = new Label("<span size=\"small\">" + details + "</span>");
+			l2.UseMarkup = true;
+			l2.LineWrap = true;
+			l2.Xalign = 0;
 			l.Yalign = 0;
-			fxd.Put(l, 80, 45);
+			vbox.PackStart(l2, false, true, 0);
 /*
 			l = new Label("<span size=\"small\" underline=\"single\">" +
 				"Go There" + "</span>");
@@ -95,24 +91,29 @@ namespace Novell.iFolder
 						OnLabelClicked);
 */
 
+			HBox buttonBox = new HBox();
+			buttonBox.Spacing = 10;
+			vbox.PackStart(buttonBox, true, true, 0);
+
 			Button but = new Button("_Close");
 			but.Clicked += new EventHandler(OnCloseButton);
 			but.Relief = Gtk.ReliefStyle.None;
-			fxd.Put(but, 255, 70);
-
-
-			Gdk.Bitmap mask;
-			Gtk.Style style = new Gtk.Style();
-
-			CreateFromXpm(RootWindow,
-					out mask, style.Background(Gtk.StateType.Normal), 
-					Util.ImagesPath("notify.xpm"));
-			if(mask != null)
-				this.ShapeCombineMask(mask, 0, 0);
-			else
-				Console.WriteLine("mask was null");
+			buttonBox.PackEnd(but, false, true, 0);
 
 			closeWindowTimeoutID = 0;
+		}
+
+
+
+		protected override void OnShown()
+		{
+			base.OnShown();
+
+			if(closeWindowTimeoutID == 0)
+			{
+				closeWindowTimeoutID = Gtk.Timeout.Add(5000, new Gtk.Function(
+						HideWindowCallback));
+			}
 		}
 /*
 		[GLib.ConnectBefore]
@@ -134,25 +135,266 @@ namespace Novell.iFolder
 			this.Destroy();
 		}
 
+		protected override void OnSizeAllocated(Gdk.Rectangle sized)
+		{
+			base.OnSizeAllocated(sized);	
+
+			if(background == null)
+			{
+				Gdk.Bitmap mask;
+
+				RenderBubbles(this.RootWindow, sized, out activebackground, 
+							out inactivebackground, out mask);
+
+				background = inactivebackground;
+
+				Gtk.Style style = new Gtk.Style();
+
+				if(mask != null)
+					this.ShapeCombineMask(mask, 0, 0);
+				else
+					Console.WriteLine("mask was null");
+			}
+
+		}
+		
+		private void RenderBubbles(Gdk.Window win, Gdk.Rectangle size, 
+						out Pixbuf pbactive, out Pixbuf pbinactive, 
+						out Bitmap pbbm)
+		{
+			int pmHeight, pmWidth;
+			Gdk.Pixmap daPixmap;
+			Gdk.Bitmap daBitmap;
+
+			pmHeight = size.Height - (wbsize * 2);
+			pmWidth = size.Width - (wbsize * 2);
+
+			Gdk.GC gc = new Gdk.GC(win);
+
+			// Build active Pixbuf
+//			Gdk.Pixmap pm = new Pixmap(win, pmWidth, pmHeight, -1);
+			Gdk.Pixmap pm = new Pixmap(win, size.Width, size.Height, -1);
+
+			// Paint the background white
+			gc.RgbFgColor = new Gdk.Color(255, 255, 255);
+			pm.DrawRectangle(gc, true, 0, 0, size.Width, size.Height);
+
+			/***********************************
+				draw painted oval window
+			***********************************/
+			// Paint the inside of the window
+			gc.RgbFgColor = new Gdk.Color(249, 253, 202);
+			Gdk.Point[] roundedSquare = CalculateRect(wbsize, wbsize, 
+										pmWidth, pmHeight);
+			pm.DrawPolygon(gc, true, roundedSquare);
+
+			// Paint the border of the window
+			Gdk.Point[] roundedborder = CalculateRect(wbsize, wbsize, 
+												pmWidth - 1, pmHeight - 1);
+			gc.RgbFgColor = new Gdk.Color(0, 0, 0);
+			pm.DrawPolygon(gc, false, roundedborder);
+
+			/***********************************
+				add tab to bitmap
+			***********************************/
+			Gdk.Point[] balloonptr = CalcPointerMoveWindow( size.Width,
+													size.Height );
+			// Draw colored pointer
+			gc.RgbFgColor = new Gdk.Color(249, 253, 202);
+			pm.DrawPolygon(gc, true, balloonptr);
+			gc.RgbFgColor = new Gdk.Color(0, 0, 0);
+			// subtract one because the fill above used and extra line
+			pm.DrawLine(gc, balloonptr[0].X, balloonptr[0].Y-1, balloonptr[1].X,
+							balloonptr[1].Y);
+			pm.DrawLine(gc, balloonptr[1].X, balloonptr[1].Y, balloonptr[2].X,
+							balloonptr[2].Y-1);
+
+			Gdk.Pixbuf pb = new Pixbuf(Gdk.Colorspace.Rgb, false, 
+						8, size.Width, size.Height);
+
+			pb = pb.CreateFromDrawable(	pm, pm.Colormap, 0, 0, 0, 0, 
+						size.Width, size.Height);
+			pb = pb.AddAlpha(true, 255, 255,255);
+
+			RenderPixmapAndMask(pb, out daPixmap, out daBitmap, 2);
+			pbactive = pb;
+			pbbm = daBitmap;
+
+			// Reset backgound to white and get next bitmap
+			gc.RgbFgColor = new Gdk.Color(255, 255, 255);
+			pm.DrawRectangle(gc, true, 0, 0, size.Width, size.Height);
+
+			// Paint the border of the window
+			gc.RgbFgColor = new Gdk.Color(0, 0, 0);
+			pm.DrawPolygon(gc, false, roundedborder);
+
+			// Draw white pointer
+			gc.RgbFgColor = new Gdk.Color(255, 255, 255);
+			pm.DrawPolygon(gc, true, balloonptr);
+			gc.RgbFgColor = new Gdk.Color(0, 0, 0);
+			// subtract one because the fill above used and extra line
+			pm.DrawLine(gc, balloonptr[0].X, balloonptr[0].Y-1, balloonptr[1].X,
+							balloonptr[1].Y);
+			pm.DrawLine(gc, balloonptr[1].X, balloonptr[1].Y, balloonptr[2].X,
+							balloonptr[2].Y - 1);
+
+			pb = pb.CreateFromDrawable(	pm, 
+						pm.Colormap, 0, 0, 0, 0, size.Width, size.Height);
+
+			pbinactive = pb;
+		}
+
+
+
+		protected Gdk.Point[] CalcPointerMoveWindow( int width, int height )
+		{
+			int parentX, parentY, parentWidth, parentHeight, parentDepth;
+			int midParentX, midParentY, posX, posY;
+			int ptsize = wbsize;
+			bool drawRight, drawDown;
+
+			parentWidget.GdkWindow.GetGeometry(out parentX, out parentY,
+												out parentWidth,
+												out parentHeight,
+												out parentDepth);
+			parentWidget.GdkWindow.GetOrigin(out parentX, out parentY);
+
+			midParentX = parentX + (parentWidth / 2);
+			midParentY = parentY + (parentHeight / 2);
+
+			// Do we draw to the left or to the right of the icon
+			if(parentX >= (this.Screen.Width / 2) )
+			{
+				drawRight = false;
+				posX = midParentX - width;
+			}
+			else
+			{
+				drawRight = true;
+				posX = midParentX;
+			}
+
+			// Do we draw above or below the icon
+			if(parentY >= (this.Screen.Height / 2) )
+			{
+				drawDown = false;
+				posY = midParentY - height;
+			}
+			else
+			{
+				drawDown = true;
+				posY = midParentY;
+			}
+
+			Move(posX, posY);
+
+			Console.WriteLine("Icon Placement = {0},{1} x {2},{3}",
+								parentX, parentY, parentWidth, parentHeight);
+
+			ArrayList list = new ArrayList();
+
+			if(drawRight)
+			{
+				if(drawDown)
+				{
+					list.Add(new Point( (wbsize),
+										(wbsize + ptsize) ));
+					list.Add(new Point( 0, 0 ));
+					list.Add(new Point( (wbsize + ptsize),
+										(wbsize) ));
+				}
+				else
+				{
+					list.Add(new Point( (wbsize + ptsize),
+										(height - wbsize) ));
+					list.Add(new Point( 0, height ));
+					list.Add(new Point( (wbsize),
+										(height - wbsize - ptsize) ));
+				}
+			}
+			else
+			{
+				if(drawDown)
+				{
+					list.Add(new Point( (width - wbsize - ptsize),
+										(wbsize) ));
+					list.Add(new Point( width, 0 ));
+					list.Add(new Point( (width - wbsize),
+										(wbsize + ptsize) ));
+				}
+				else
+				{
+					list.Add(new Point( (width - wbsize - ptsize),
+										(height - wbsize) ));
+					list.Add(new Point( width, height ));
+					list.Add(new Point( (width - wbsize),
+										(height - wbsize - ptsize) ));
+				}
+			}
+
+			return (Gdk.Point[]) (list.ToArray(typeof(Gdk.Point)));
+		}
+
+
+		protected Gdk.Point[] CalculateRect(	int xorg, int yorg, 
+												int height, int width)
+		{
+			ArrayList list = new ArrayList();
+
+			// top left corner
+			list.Add(new Point(xorg, yorg + 4));
+			list.Add(new Point(xorg + 1, yorg + 4));
+			list.Add(new Point(xorg + 1, yorg + 2));
+			list.Add(new Point(xorg + 2, yorg + 2));
+			list.Add(new Point(xorg + 2, yorg + 1));
+			list.Add(new Point(xorg + 4, yorg + 1));
+			list.Add(new Point(xorg + 4, yorg));
+			
+			// top Right corner
+			list.Add(new Point( (xorg + height) - 4, yorg));
+			list.Add(new Point( (xorg + height) - 4, yorg + 1));
+			list.Add(new Point( (xorg + height) - 2, yorg + 1));
+			list.Add(new Point( (xorg + height) - 2, yorg + 2));
+			list.Add(new Point( (xorg + height) - 1, yorg + 2));
+			list.Add(new Point( (xorg + height) - 1, yorg + 4));
+			list.Add(new Point( (xorg + height), yorg + 4));
+
+			// bottom Right corner
+			list.Add(new Point( (xorg + height), (yorg + width) - 4));
+			list.Add(new Point( (xorg + height) - 1, (yorg + width) - 4));
+			list.Add(new Point( (xorg + height) - 1, (yorg + width) - 2));
+			list.Add(new Point( (xorg + height) - 2, (yorg + width) - 2));
+			list.Add(new Point( (xorg + height) - 2, (yorg + width) - 1));
+			list.Add(new Point( (xorg + height) - 4, (yorg + width) - 1));
+			list.Add(new Point( (xorg + height) - 4, (yorg + width)));
+			
+			// bottom Left corner
+			list.Add(new Point( xorg + 4, (yorg + width)));
+			list.Add(new Point( xorg + 4, (yorg + width) - 1));
+			list.Add(new Point( xorg + 2, (yorg + width) - 1));
+			list.Add(new Point( xorg + 2, (yorg + width) - 2));
+			list.Add(new Point( xorg + 1, (yorg + width) - 2));
+			list.Add(new Point( xorg + 1, (yorg + width) - 4));
+			list.Add(new Point( xorg, (yorg + width) - 4));
+
+			return (Gdk.Point[]) (list.ToArray(typeof(Gdk.Point)));
+		}
+
+
 		protected override bool OnExposeEvent(Gdk.EventExpose args)
 		{
+			if(isSelected)
+				background = activebackground;
+			else
+				background = inactivebackground;
+
 			GdkWindow.DrawPixbuf(Style.BackgroundGC(State), background, 0, 0,
-				0, 0, background.Width, background.Height, Gdk.RgbDither.None, 
-				0, 0);
+				0, 0, background.Width, background.Height, 
+				Gdk.RgbDither.None, 0, 0);
+
 			return base.OnExposeEvent(args);
 		}
 
-		protected override void OnShown()
-		{
-			base.OnShown();
-
-			if(closeWindowTimeoutID == 0)
-			{
-				closeWindowTimeoutID = Gtk.Timeout.Add(5000, new Gtk.Function(
-						HideWindowCallback));
-			}
-		}
-		
 		protected override bool OnEnterNotifyEvent(Gdk.EventCrossing evnt)
 		{
 			// if we just left or entered from our own child widget
@@ -165,7 +407,7 @@ namespace Novell.iFolder
 				closeWindowTimeoutID = 0;
 			}
 
-			background = activebackground;
+			isSelected = true;
 			QueueDraw();
 
 			return false;
@@ -176,7 +418,8 @@ namespace Novell.iFolder
 			// if we just left or entered from our own child widget
 			if(evnt.Detail == Gdk.NotifyType.Inferior)
 				return false;
-			background = inactivebackground;
+
+			isSelected = false;
 			QueueDraw();
 
 			if(closeWindowTimeoutID != 0)
@@ -216,6 +459,26 @@ namespace Novell.iFolder
 
 			return ret;
 		}
+
+		[DllImport("libgtk-x11-2.0.so")]
+		static extern void gdk_pixbuf_render_pixmap_and_mask(IntPtr raw, 
+				out IntPtr pixmap_return, out IntPtr mask_return, 
+				int alpha_threshold);
+
+		public void RenderPixmapAndMask(Gdk.Pixbuf pixbuf, 
+				out Gdk.Pixmap pixmap_return, out Gdk.Bitmap mask_return, 
+				int alpha_threshold) 
+		{
+			IntPtr pm_handle;
+			IntPtr bm_handle;
+
+			gdk_pixbuf_render_pixmap_and_mask(pixbuf.Handle, out pm_handle,
+					out bm_handle, alpha_threshold);
+
+			pixmap_return = new Gdk.Pixmap(pm_handle);
+			mask_return = new Gdk.Bitmap(bm_handle);
+		}
+
 
 	}
 }

@@ -400,7 +400,9 @@ namespace Novell.iFolder
 
 		private void show_notify(object o, EventArgs args)
 		{
-			NotifyWindow notifyWin = new NotifyWindow(tIcon);
+			NotifyWindow notifyWin = new NotifyWindow(tIcon,
+									"New Notification!",
+									"You are looking at a spiffy new notification");
 			notifyWin.ShowAll();
 		}
 
