@@ -29,16 +29,15 @@ namespace Novell.iFolder
 {
 	public class AccountDialog : Dialog
 	{
-
-		private iFolderWebService	ifws;
+		private iFolderData			ifdata;
 		private DomainWeb			domain;
 
 
-		public AccountDialog(iFolderWebService webService, DomainWeb curDomain)
+		public AccountDialog(DomainWeb curDomain)
 			: base()
 		{
-			ifws = webService;
 			domain = curDomain;
+			ifdata = iFolderData.GetData();
 			SetupDialog();
 		}
 
@@ -244,20 +243,7 @@ namespace Novell.iFolder
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
 
 
-			DiskSpace ds = null;
-			try
-			{
-				ds = ifws.GetUserDiskSpace(domain.UserName);
-			}
-			catch(Exception e)
-			{
-//				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-//													null, e);
-//				ied.Run();
-//				ied.Hide();
-//				ied.Destroy();
-//				ds = null;
-			}
+			DiskSpace ds = ifdata.GetUserDiskSpace(domain.UserID);
 
 			if(ds == null)
 			{

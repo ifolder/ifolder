@@ -48,25 +48,18 @@ namespace Novell.iFolder
 
 	internal class SimiasEvent
 	{
-		private iFolderWeb				ifolder;
 		private iFolderUser			ifUser;
 		private string				ifolderID;
 		private string				userID;
 		private SimiasEventType		type;
 	
-		public SimiasEvent(iFolderWeb ifldr, iFolderUser ifldrUser, 
-					string iFolderID, string UserID, SimiasEventType type)
+		public SimiasEvent(string iFolderID, iFolderUser ifldrUser, 
+					string UserID, SimiasEventType type)
 		{
-			this.ifolder = ifldr;
 			this.ifUser = ifldrUser;
 			this.ifolderID = iFolderID;
 			this.userID = UserID;
 			this.type = type;
-		}
-
-		public iFolderWeb iFolder
-		{
-			get{ return this.ifolder; }
 		}
 
 		public iFolderUser iFolderUser
@@ -93,16 +86,16 @@ namespace Novell.iFolder
 
 	public class iFolderAddedEventArgs : EventArgs
 	{
-		private iFolderWeb	ifolder;
+		private string ifolderID;
 
-		public iFolderAddedEventArgs(iFolderWeb ifldr)
+		public iFolderAddedEventArgs(string ifolderID)
 		{
-			this.ifolder = ifldr;
+			this.ifolderID = ifolderID;
 		}
 
-		public iFolderWeb iFolder
+		public string iFolderID
 		{
-			get{ return this.ifolder; }
+			get{ return this.ifolderID; }
 		}
 	}
 	public delegate void iFolderAddedEventHandler(object sender,
@@ -111,16 +104,16 @@ namespace Novell.iFolder
 
 	public class iFolderChangedEventArgs : EventArgs
 	{
-		private iFolderWeb	ifolder;
+		private string ifolderID;
 
-		public iFolderChangedEventArgs(iFolderWeb ifldr)
+		public iFolderChangedEventArgs(string ifolderID)
 		{
-			this.ifolder = ifldr;
+			this.ifolderID = ifolderID;
 		}
 
-		public iFolderWeb iFolder
+		public string iFolderID
 		{
-			get{ return this.ifolder; }
+			get{ return this.ifolderID; }
 		}
 	}
 	public delegate void iFolderChangedEventHandler(object sender,
@@ -131,9 +124,9 @@ namespace Novell.iFolder
 	{
 		private string ifolderID;
 
-		public iFolderDeletedEventArgs(string ifldID)
+		public iFolderDeletedEventArgs(string ifolderID)
 		{
-			this.ifolderID = ifldID;
+			this.ifolderID = ifolderID;
 		}
 
 		public string iFolderID
@@ -228,10 +221,12 @@ namespace Novell.iFolder
 	public delegate void NotifyEventHandler(object sender,
 							NotifyEventArgs args);
 
+
+
+
 	public class SimiasEventBroker
 	{
-		private iFolderWebService	ifws;
-		private iFolderSettings		ifSettings;
+		private iFolderData			ifdata;
 		private IProcEventClient	simiasEventClient;
 
 		private Gtk.ThreadNotify	SimiasEventFired;
@@ -282,49 +277,11 @@ namespace Novell.iFolder
 		}
 
 
-		public void RefreshSettings()
-		{
-			// the SimiasEventBroker needs it's own connection to
-			// the web service so it can verify data independent
-			// of the main GUI
-			lock(ifws)
-			{
-				try
-				{
-					ifSettings = ifws.GetSettings();
-				}
-				catch(Exception e)
-				{
-					ifSettings = null;
-				}
-			}
-		}
-
 
 
 		public void Register()
 		{
-			// the SimiasEventBroker needs it's own connection to
-			// the web service so it can verify data independent
-			// of the main GUI
-			if(ifws == null)
-			{
-				try
-				{
-					ifws = new iFolderWebService();
-					ifws.Url = 
-						Simias.Client.Manager.LocalServiceUrl.ToString() +
-							"/iFolder.asmx";
-//					ifws.Ping();
-	
-					ifSettings = ifws.GetSettings();
-				}
-				catch(Exception e)
-				{
-//					ifws = null;
-					ifSettings = null;
-				}
-			}
+			ifdata = iFolderData.GetData();
 
 			simiasEventClient = new IProcEventClient( 
 					new IProcEventError( ErrorHandler), null);
@@ -467,6 +424,34 @@ namespace Novell.iFolder
 			CollectionSyncEventArgs syncEventArgs =
 				args as CollectionSyncEventArgs;
 
+			if(ifdata.IsiFolder(syncEventArgs.ID))
+			{
+				iFolderHolder ifHolder =
+					ifdata.GetiFolder(syncEventArgs.ID, false);
+
+				if(syncEventArgs.Action == Action.StartSync)
+					ifHolder.IsSyncing = true;
+				else
+					ifHolder.IsSyncing = false;
+
+
+				if( (ifHolder.iFolder.UnManagedPath == null) ||
+						(ifHolder.iFolder.UnManagedPath.Length == 0) )
+				{
+					// Because the iFolder has no path
+					// re-read the iFolder and fire a changed event
+					ifHolder = ifdata.GetiFolder(syncEventArgs.ID, true);
+					lock(NodeEventQueue)
+					{
+						NodeEventQueue.Enqueue(new SimiasEvent(
+									ifHolder.iFolder.ID, null, 
+									null, SimiasEventType.ChangediFolder));
+						SimiasEventFired.WakeupMain();
+					}
+				}
+			}
+
+			// pass the sync event on to the client
 			lock(SyncEventQueue)
 			{
 				SyncEventQueue.Enqueue(syncEventArgs);
@@ -481,53 +466,24 @@ namespace Novell.iFolder
 			{
 				case "Node":
 				{
-					lock(ifws)
+					if(ifdata.ISPOBox(nargs.Collection))
 					{
-						// Check to see if the Node that changed is part of
-						// the POBox
-						if(	(ifSettings != null) && 
-							(nargs.Collection == ifSettings.DefaultPOBoxID) )
+						// The Collection is the PO Box so the node
+						// is most likely an invitation
+
+						iFolderHolder ifHolder =
+							ifdata.GetAvailableiFolder(nargs.Collection,
+													nargs.ID,
+													false);
+						if(	(ifHolder != null) &&
+							(!ifdata.IsiFolder(ifHolder.iFolder.CollectionID)))
 						{
-							iFolderWeb ifolder;
-
-							try
+							lock(NodeEventQueue)
 							{
-								ifolder = ifws.GetiFolder(nargs.ID);
-							}
-							catch(Exception e)
-							{
-								ifolder = null;
-							}
-
-							if(	(ifolder != null) &&
-								(ifolder.State == "Available") )
-							{
-								// At this point we know it's a new subscription
-								// that's available, now check to make sure
-								// the corresponding iFolder isn't on the
-								// machine already (it was created here)
-								iFolderWeb localiFolder;
-
-								try
-								{
-									localiFolder = ifws.GetiFolder(
-												ifolder.CollectionID);
-								}
-								catch(Exception e)
-								{
-									localiFolder = null;
-								}
-
-								if(localiFolder != null)
-									return;
-								
-								lock(NodeEventQueue)
-								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										ifolder, null, ifolder.ID, null,
-										SimiasEventType.NewiFolder));
-									SimiasEventFired.WakeupMain();
-								}
+								NodeEventQueue.Enqueue(new SimiasEvent(
+									ifHolder.iFolder.ID, null, null,
+									SimiasEventType.NewiFolder));
+								SimiasEventFired.WakeupMain();
 							}
 						}
 					}
@@ -536,38 +492,23 @@ namespace Novell.iFolder
 
 				case "Member":
 				{
-					lock(ifws)
+					if(ifdata.IsiFolder(nargs.Collection))
 					{
-						try
-						{
-							// first test to see if this is an
-							// ifolder.  We don't care if it is
-							// not an iFolder
-							iFolderWeb localiFolder = ifws.GetiFolder(
-											nargs.Collection);
-							if(localiFolder != null)
-							{
-								iFolderUser newuser = 
-									ifws.GetiFolderUserFromNodeID(
-										nargs.Collection, nargs.ID);
+						iFolderUser newuser =
+							ifdata.GetiFolderUserFromNodeID(
+									nargs.Collection, nargs.ID);
 
-								if( (newuser != null) &&
-									(newuser.UserID != 
-											ifSettings.CurrentUserID) )
-								{
-									lock(NodeEventQueue)
-									{
-										NodeEventQueue.Enqueue(new SimiasEvent(
-											null, newuser, nargs.Collection,
+						if( (newuser != null) &&
+								!ifdata.IsCurrentUser(newuser.UserID) )
+						{
+							lock(NodeEventQueue)
+							{
+								NodeEventQueue.Enqueue(new SimiasEvent(
+											nargs.Collection, newuser,
 											newuser.UserID,
 											SimiasEventType.NewUser));
-										SimiasEventFired.WakeupMain();
-									}
-								}
+								SimiasEventFired.WakeupMain();
 							}
-						}
-						catch(Exception e)
-						{
 						}
 					}
 					break;
@@ -575,25 +516,17 @@ namespace Novell.iFolder
 
 				case "Collection":
 				{
-					lock(ifws)
+					iFolderHolder ifHolder =
+							ifdata.GetiFolder(nargs.Collection, true);
+
+					if(ifHolder != null)
 					{
-						try
+						lock(NodeEventQueue)
 						{
-							iFolderWeb ifolder = 
-									ifws.GetiFolder(nargs.Collection);
-							if(ifolder != null)
-							{
-								lock(NodeEventQueue)
-								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										ifolder, null, ifolder.ID, null,
-										SimiasEventType.NewiFolder));
-									SimiasEventFired.WakeupMain();
-								}
-							}
-						}
-						catch(Exception e)
-						{
+							NodeEventQueue.Enqueue(new SimiasEvent(
+								ifHolder.iFolder.ID, null, null,
+								SimiasEventType.NewiFolder));
+							SimiasEventFired.WakeupMain();
 						}
 					}
 					break;
@@ -610,55 +543,43 @@ namespace Novell.iFolder
 			{
 				case "Collection":
 				{
-					lock(ifws)
+					iFolderHolder ifHolder =
+						ifdata.GetiFolder(nargs.Collection, true);
+
+					if( (ifHolder != null) &&
+						(ifHolder.iFolder.HasConflicts) )
 					{
-						try
+						lock(NodeEventQueue)
 						{
-							iFolderWeb ifolder = 
-									ifws.GetiFolder(nargs.Collection);
-							if( (ifolder != null) && (ifolder.HasConflicts) )
-							{
-								lock(NodeEventQueue)
-								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										ifolder, null, ifolder.ID, null,
-										SimiasEventType.ChangediFolder));
-									SimiasEventFired.WakeupMain();
-								}
-							}
-						}
-						catch(Exception e)
-						{
+							NodeEventQueue.Enqueue(new SimiasEvent(
+								ifHolder.iFolder.ID, null, null,
+								SimiasEventType.ChangediFolder));
+							SimiasEventFired.WakeupMain();
 						}
 					}
+
 					break;
 				}
 
 				case "Member":
 				{
-					lock(ifws)
+					if(ifdata.IsiFolder(nargs.Collection))
 					{
-						try
-						{
-							iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
-								nargs.Collection, nargs.ID);
+						iFolderUser newuser =
+							ifdata.GetiFolderUserFromNodeID(
+									nargs.Collection, nargs.ID);
 
-							if( (newuser != null) &&
-								(newuser.UserID != 
-										ifSettings.CurrentUserID) )
-							{
-								lock(NodeEventQueue)
-								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										null, newuser, nargs.Collection,
-										newuser.UserID,
-										SimiasEventType.ChangedUser));
-									SimiasEventFired.WakeupMain();
-								}
-							}
-						}
-						catch(Exception e)
+						if( (newuser != null) &&
+								!ifdata.IsCurrentUser(newuser.UserID) )
 						{
+							lock(NodeEventQueue)
+							{
+								NodeEventQueue.Enqueue(new SimiasEvent(
+											nargs.Collection, newuser, 
+											newuser.UserID,
+											SimiasEventType.ChangedUser));
+								SimiasEventFired.WakeupMain();
+							}
 						}
 					}
 					break;
@@ -667,30 +588,23 @@ namespace Novell.iFolder
 
 				case "Node":
 				{
-					lock(ifws)
+					if(ifdata.ISPOBox(nargs.Collection))
 					{
-						// Check to see if the Node that changed is part of
-						// the POBox
-						if(nargs.Collection == ifSettings.DefaultPOBoxID)
-						{
-							try
-							{
-								iFolderWeb ifolder = 
-									ifws.GetiFolder(nargs.ID);
+						// The Collection is the PO Box so the node
+						// is most likely an invitation
 
-								if(ifolder != null)
-								{
-									lock(NodeEventQueue)
-									{
-										NodeEventQueue.Enqueue(new SimiasEvent(
-											ifolder, null, ifolder.ID, null,
-											SimiasEventType.ChangediFolder));
-										SimiasEventFired.WakeupMain();
-									}
-								}
-							}
-							catch(Exception e)
+						iFolderHolder ifHolder =
+							ifdata.GetAvailableiFolder(nargs.Collection,
+													nargs.ID,
+													true);
+						if(ifHolder != null)
+						{
+							lock(NodeEventQueue)
 							{
+								NodeEventQueue.Enqueue(new SimiasEvent(
+									ifHolder.iFolder.ID, null, null,
+									SimiasEventType.ChangediFolder));
+								SimiasEventFired.WakeupMain();
 							}
 						}
 					}
@@ -707,18 +621,14 @@ namespace Novell.iFolder
 			{
 				case "Node":
 				{
-					lock(ifws)
+					if(ifdata.ISPOBox(nargs.Collection))
 					{
-						if( (ifSettings != null) && 
-							(nargs.Collection == ifSettings.DefaultPOBoxID) )
+						lock(NodeEventQueue)
 						{
-							lock(NodeEventQueue)
-							{
-								NodeEventQueue.Enqueue(new SimiasEvent(
-									null, null, nargs.ID, null,
-									SimiasEventType.DeliFolder));
-								SimiasEventFired.WakeupMain();
-							}
+							NodeEventQueue.Enqueue(new SimiasEvent(
+								nargs.ID, null, null,
+								SimiasEventType.DeliFolder));
+							SimiasEventFired.WakeupMain();
 						}
 					}
 					break;
@@ -728,7 +638,7 @@ namespace Novell.iFolder
 					lock(NodeEventQueue)
 					{
 						NodeEventQueue.Enqueue(new SimiasEvent(
-							null, null, nargs.Collection, null,
+							nargs.Collection, null, null,
 							SimiasEventType.DeliFolder));
 						SimiasEventFired.WakeupMain();
 					}
@@ -736,27 +646,14 @@ namespace Novell.iFolder
 				}
 				case "Member":
 				{
-					lock(ifws)
+					if(ifdata.IsiFolder(nargs.Collection))
 					{
-
-						try
+						lock(NodeEventQueue)
 						{
-							iFolderWeb ifolder = 
-								ifws.GetiFolder(nargs.Collection);
-
-							if(ifolder != null)
-							{
-								lock(NodeEventQueue)
-								{
-									NodeEventQueue.Enqueue(new SimiasEvent(
-										null, null, nargs.Collection, nargs.ID,
-										SimiasEventType.DelUser));
-									SimiasEventFired.WakeupMain();
-								}
-							}
-						}
-						catch(Exception e)
-						{
+							NodeEventQueue.Enqueue(new SimiasEvent(
+								nargs.Collection, null, nargs.ID,
+									SimiasEventType.DelUser));
+							SimiasEventFired.WakeupMain();
 						}
 					}
 					break;
@@ -884,7 +781,7 @@ namespace Novell.iFolder
 					case SimiasEventType.NewiFolder:
 						if(iFolderAdded != null)
 							iFolderAdded(this,
-								new iFolderAddedEventArgs(sEvent.iFolder));
+								new iFolderAddedEventArgs(sEvent.iFolderID));
 						break;
 					case SimiasEventType.ChangedUser:
 						if(iFolderUserChanged != null)
@@ -896,7 +793,7 @@ namespace Novell.iFolder
 					case SimiasEventType.ChangediFolder:
 						if(iFolderChanged != null)
 							iFolderChanged(this,
-								new iFolderChangedEventArgs(sEvent.iFolder));
+								new iFolderChangedEventArgs(sEvent.iFolderID));
 						break;
 					case SimiasEventType.DelUser:
 						if(iFolderUserDeleted != null)

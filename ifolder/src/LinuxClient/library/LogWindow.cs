@@ -63,7 +63,7 @@ namespace Novell.iFolder
 		/// </summary>
 		private void CreateWidgets()
 		{
-			this.SetDefaultSize (500, 200);
+			this.SetDefaultSize (500, 400);
 			this.DeleteEvent += new DeleteEventHandler(WindowDeleteHandler);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
