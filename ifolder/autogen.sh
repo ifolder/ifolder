@@ -63,7 +63,7 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
-for coin in `find $srcdir -name configure.in -print`
+for coin in `find $srcdir -name configure.in -maxdepth 1 -print`
 do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
@@ -110,18 +110,18 @@ do
       fi
       if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
 	echo "Running libtoolize..."
-	libtoolize --force --copy
+	libtoolize --force --copy || exit 1
       fi
       echo "Running $ACLOCAL $aclocalinclude ..."
       $ACLOCAL $aclocalinclude
       if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then
 	echo "Running autoheader..."
-	autoheader
+	autoheader || exit 1
       fi
       echo "Running $AUTOMAKE --gnu $am_opt ..."
       $AUTOMAKE --add-missing --gnu $am_opt
       echo "Running autoconf ..."
-      autoconf
+      autoconf || exit 1
     )
   fi
 done
