@@ -2,7 +2,7 @@ iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdi
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
 iFolderApp_INCLUDES = 
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
-iFolderApp_FLAGS = $(CSC_EXEFLAG)
+iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
 iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Sync.dll SyncManager.dll SyncCommon.dll CommonFormWindows.dll Common.dll SyncLogicLite.dll Configuration.dll CollectionEvents.dll
 iFolderApp_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
