@@ -1642,6 +1642,12 @@ namespace Simias.Storage
 				if ( node != null )
 				{
 					cNode.Copy( node.cNode );
+
+					// If this is a collection, update the access control cache.
+					if ( node.IsCollection )
+					{
+						node.CollectionNode.UpdateAccessControl();
+					}
 				}
 			}
 		}

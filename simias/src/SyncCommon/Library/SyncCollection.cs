@@ -135,7 +135,7 @@ namespace Simias.Sync
 		/// </summary>
 		public void Refresh()
 		{
-			baseCollection = baseCollection.LocalStore.GetCollectionById(baseCollection.Id);
+			baseCollection.Refresh();
 		}
 
 		/// <summary>
