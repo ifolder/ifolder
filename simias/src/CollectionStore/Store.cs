@@ -237,13 +237,12 @@ namespace Simias.Storage
 			{
 				try
 				{
+					// Default the user name to the machine user name.
 					string userName = Environment.UserName;
-					ArrayList nodeList = new ArrayList();
 
 					// Create an object that represents the database collection.
 					LocalDatabase ldb = new LocalDatabase( this );
 					localDb = ldb.ID;
-					nodeList.Add( ldb );
 
 					// Does the configuration indicate that this is an enterprise server?
 					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
@@ -263,19 +262,17 @@ namespace Simias.Storage
 					// database owner. Add the domain mapping to the identity.
 					Identity owner = new Identity( userName, Guid.NewGuid().ToString() );
 					identity = owner.ID;
-					nodeList.Add( owner );
 
 					// Create a member object that will own the local database.
 					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
 					member.IsOwner = true;
-					nodeList.Add( member );
 
-					// Create the default workgroup domain.
+					// Create the default workgroup domain and add an identity mapping.
 					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
-					nodeList.Add( wgDomain );
-
-					// Create an identity mapping for the workgroup.
 					owner.AddDomainIdentity( owner.ID, wgDomain.ID );
+
+					// Save the local database changes.
+					ldb.Commit( new Node[] { ldb, member, owner, wgDomain } );
 
 					// Create an empty roster for the workgroup domain.
 					Roster wgRoster = new Roster( this, wgDomain );
@@ -299,15 +296,13 @@ namespace Simias.Storage
 						// Check if there is a description for this enterprise domain.
 						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
 
-						// Create the new domain object.
+						// Create the new domain object and add the identity mapping.
 						Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
-						nodeList.Add( eDomain );
-
-						// Add the domain identity mapping.
 						owner.AddDomainIdentity( owner.ID, eDomain.ID );
 
 						// Add the enterprise domain as the default domain.
 						ldb.DefaultDomain = eDomain.ID;
+						ldb.Commit( new Node[] { ldb, eDomain, owner } );
 
 						// Create a domain roster that will contain the member of the domain.
 						Roster entRoster = new Roster( this, eDomain );
@@ -316,11 +311,8 @@ namespace Simias.Storage
 						entRoster.Commit( new Node[] { entRoster, entRosterOwner } );
 
 						// Create a default sync interval policy for this roster.
-//						SyncInterval.Create( entRoster, DefaultRosterSyncInterval );
+						SyncInterval.Create( entRoster, DefaultRosterSyncInterval );
 					}
-
-					// Save the local database changes.
-					ldb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
 				}
 				catch ( Exception e )
 				{
