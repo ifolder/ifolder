@@ -36,7 +36,7 @@ namespace Simias
 	/// <summary>
 	/// Class used to keep track of outstanding searches.
 	/// </summary>
-	internal class SearchContext : IDisposable
+	internal class SearchState : IDisposable
 	{
 		#region Class Members
 		/// <summary>
@@ -120,8 +120,8 @@ namespace Simias
 		/// </summary>
 		/// <param name="domainID">Identifier for the domain that is being searched.</param>
 		/// <param name="enumerator">Search iterator.</param>
-		public SearchContext( string domainID, ICSEnumerator enumerator ) :
-			this( domainID, enumerator, SearchContext.defaultTimeout )
+		public SearchState( string domainID, ICSEnumerator enumerator ) :
+			this( domainID, enumerator, SearchState.defaultTimeout )
 		{
 		}
 
@@ -131,7 +131,7 @@ namespace Simias
 		/// <param name="domainID">Identifier for the domain that is being searched.</param>
 		/// <param name="enumerator">Search iterator.</param>
 		/// <param name="searchTimeout">Amount of time in milliseconds that the search context remains valid.</param>
-		public SearchContext( string domainID, ICSEnumerator enumerator, int searchTimeout )
+		public SearchState( string domainID, ICSEnumerator enumerator, int searchTimeout )
 		{
 			this.domainID = domainID;
 			this.enumerator = enumerator;
@@ -165,8 +165,8 @@ namespace Simias
 		/// <param name="timerState">State that indicates which context has timed out.</param>
 		private void SearchOrphaned( Object timerState )
 		{
-			SearchContext context = timerState as SearchContext;
-			context.Dispose();
+			SearchState searchState = timerState as SearchState;
+			searchState.Dispose();
 		}
 		#endregion
 
@@ -175,23 +175,23 @@ namespace Simias
 		/// Returns a search context object that contains the state information for an outstanding search.
 		/// </summary>
 		/// <param name="contextHandle">Context handle that refers to a specific search context object.</param>
-		/// <returns>A SearchContext object if a valid one exists, otherwise a null is returned.</returns>
-		static public SearchContext GetSearchContext( string contextHandle )
+		/// <returns>A SearchState object if a valid one exists, otherwise a null is returned.</returns>
+		static public SearchState GetSearchState( string contextHandle )
 		{
-			SearchContext searchContext = null;
+			SearchState searchState = null;
 
 			lock ( searchTable )
 			{
-				searchContext = searchTable[ contextHandle ] as SearchContext;
+				searchState = searchTable[ contextHandle ] as SearchState;
 			}
 
-			if ( searchContext != null )
+			if ( searchState != null )
 			{
 				// Reset the timer.
-				searchContext.Reset();
+				searchState.Reset();
 			}
 
-			return searchContext;
+			return searchState;
 		}
 		#endregion
 
@@ -246,7 +246,7 @@ namespace Simias
 		/// It gives your base class the opportunity to finalize.
 		/// Do not provide destructors in types derived from this class.
 		/// </summary>
-		~SearchContext()      
+		~SearchState()      
 		{
 			Dispose( false );
 		}
@@ -351,7 +351,7 @@ namespace Simias
 		public void FindCloseDomainMembers( Object searchContext )
 		{
 			// See if there is a valid search context.
-			SearchContext searchState = SearchContext.GetSearchContext( searchContext as String );
+			SearchState searchState = SearchState.GetSearchState( searchContext as String );
 			if ( searchState != null )
 			{
 				searchState.Dispose();
@@ -378,7 +378,7 @@ namespace Simias
 			Domain domain = store.GetDomain( domainID );
 			if ( domain != null )
 			{
-				SearchContext searchState = new SearchContext( domainID, domain.GetMemberList().GetEnumerator() as ICSEnumerator );
+				SearchState searchState = new SearchState( domainID, domain.GetMemberList().GetEnumerator() as ICSEnumerator );
 				searchContext = searchState.ContextHandle;
 				moreEntries = FindNextDomainMembers( ref searchContext, out memberList, count );
 			}
@@ -410,7 +410,7 @@ namespace Simias
 			if ( domain != null )
 			{
 				ICSList list = domain.Search( attributeName, searchString, operation );
-				SearchContext searchState = new SearchContext( domainID, list.GetEnumerator() as ICSEnumerator );
+				SearchState searchState = new SearchState( domainID, list.GetEnumerator() as ICSEnumerator );
 				searchContext = searchState.ContextHandle;
 				moreEntries = FindNextDomainMembers( ref searchContext, out memberList, count );
 			}
@@ -433,7 +433,7 @@ namespace Simias
 			memberList = null;
 
 			// See if there is a valid search context.
-			SearchContext searchState = SearchContext.GetSearchContext( searchContext as String );
+			SearchState searchState = SearchState.GetSearchState( searchContext as String );
 			if ( searchState != null )
 			{
 				// Get the domain being searched.
@@ -443,8 +443,9 @@ namespace Simias
 					// Allocate a list to hold the member objects.
 					ArrayList tempList = new ArrayList( count );
 					ICSEnumerator enumerator = searchState.Enumerator;
-					while( enumerator.MoveNext() && ( count > 0 ) )
+					while( ( count > 0 ) && enumerator.MoveNext() )
 					{
+						// The enumeration returns ShallowNode objects.
 						ShallowNode sn = enumerator.Current as ShallowNode;
 						if ( sn.Type == NodeTypes.MemberType )
 						{
