@@ -284,6 +284,7 @@ static int sec_send_message (RealSimiasEventClient *ec,
 							 char * message, int len);
 static int sec_get_server_host_address (RealSimiasEventClient *ec,
 										struct sockaddr_in *sin);
+static char * sec_get_user_profile_dir_path (char *dest_path);
 static char * sec_get_config_file_path (char *dest_path);
 
 static void * sec_parse_struct_from_doc (xmlDoc *doc);
@@ -319,6 +320,9 @@ int sec_init (SimiasEventClient *sec,
 	RealSimiasEventClient *ec;
 	union semun arg;
 	struct sembuf sb = {0, -1, 0};
+	key_t received_messages_mutex_key;
+	key_t received_messages_sem_key;
+	char user_profile_dir [1024];
 
 	ec = malloc (sizeof (RealSimiasEventClient));
 	DEBUG_SEC (("sec_init () called\n"));
@@ -347,8 +351,17 @@ int sec_init (SimiasEventClient *sec,
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
 	/* Get received_messages_mutex ready */
+	if (sec_get_user_profile_dir_path (user_profile_dir) == NULL) {
+		DEBUG_SEC (("Couldn't get config path information\n"));
+		return -1;
+	}
+	
+	if ((received_messages_mutex_key = ftok (user_profile_dir, 'M')) == -1) {
+		perror ("sec: ftok failed on mutex key");
+		return -1;
+	}
 	if ((ec->received_messages_mutex = 
-			semget(IPC_PRIVATE, 1, IPC_CREAT | 0666)) == -1) {
+			semget(received_messages_mutex_key, 1, IPC_CREAT | 0666)) == -1) {
 		perror ("sec: semget failed received_messages_mutex");
 		return -1;
 	}
@@ -361,8 +374,12 @@ int sec_init (SimiasEventClient *sec,
 	}
 	
 	/* Get received_messages_sem ready */
+	if ((received_messages_sem_key = ftok (user_profile_dir, 'S')) == -1) {
+		perror ("sec: ftok failed on mutex key");
+		return -1;
+	}
 	if ((ec->received_messages_sem = 
-			semget(IPC_PRIVATE, 1, IPC_CREAT | 0666)) == -1) {
+			semget(received_messages_sem_key, 1, IPC_CREAT | 0666)) == -1) {
 		perror ("sec: semget failed received_messages_sem");
 		return -1;
 	}
@@ -401,6 +418,7 @@ int
 sec_cleanup (SimiasEventClient *sec)
 {
 	int i;
+	union semun arg;
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)*sec;
 	
 	/**
@@ -1256,7 +1274,7 @@ sec_get_server_host_address (RealSimiasEventClient *ec,
 }
 
 static char *
-sec_get_config_file_path (char *dest_path)
+sec_get_user_profile_dir_path (char *dest_path)
 {
 #if defined(WIN32)
 	char *user_profile;
@@ -1267,9 +1285,7 @@ sec_get_config_file_path (char *dest_path)
 		return NULL;
 	}
 
-	sprintf (dest_path,
-			 "%s\\Local Settings\\Application Data\\IProcEvent.cfg",
-			 user_profile);
+	sprintf (dest_path, user_profile);
 #else
 	char *home_dir;
 	char dot_local_path [512];
@@ -1293,8 +1309,28 @@ sec_get_config_file_path (char *dest_path)
 		perror ("Cannot create '~/.local/share' directory");
 		return NULL;
 	}
+	
+	sprintf (dest_path, dot_local_share_path);
+#endif	/* WIN32 */
 
-	sprintf (dest_path, "%s/IProcEvent.cfg", dot_local_share_path);
+	return dest_path;
+}
+
+static char *
+sec_get_config_file_path (char *dest_path)
+{
+	char user_profile_dir [1024];
+	if (sec_get_user_profile_dir_path (user_profile_dir) == NULL) {
+		DEBUG_SEC (("Could not get base dir for config file\n"));
+		return NULL;
+	}
+
+#if defined(WIN32)
+	sprintf (dest_path,
+			 "%s\\Local Settings\\Application Data\\IProcEvent.cfg",
+			 user_profile_dir);
+#else
+	sprintf (dest_path, "%s/IProcEvent.cfg", user_profile_dir);
 #endif	/* WIN32 */
 
 	return dest_path;
