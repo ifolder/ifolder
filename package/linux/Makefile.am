@@ -8,9 +8,7 @@ SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
 all clean:
 
-package: $(RPM_FILE) $(SRPM_FILE)
- 
-$(RPM_FILE) $(SRPM_FILE): ifolder.spec
+package:
 	cd $(top_srcdir); make dist
 	rm -rf RPM
 	mkdir RPM
@@ -26,7 +24,7 @@ $(RPM_FILE) $(SRPM_FILE): ifolder.spec
 	cp RPM/RPMS/*/$(RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
 
-package-install: $(RPM_FILE)
+package-install: package
 	su -c "rpm -Uvh $(RPM_FILE)"
 	
 package-uninstall:
