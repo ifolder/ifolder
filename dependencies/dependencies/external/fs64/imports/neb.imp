@@ -1,6 +1,0 @@
-RegisterProducer
-UnRegisterProducer
-RegisterConsumer
-UnRegisterConsumer
-ProduceEvent 
-GetConsumerName

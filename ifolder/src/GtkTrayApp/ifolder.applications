@@ -1,7 +1,0 @@
-invitationwizard
-	command=invitationwizard
-	name=iFolder Invitation Wizard
-	can_open_multiple_files=false
-	expects_uris=false
-	requires_terminal=false
-	mime_types=application/x-ifi
