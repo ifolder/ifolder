@@ -73,11 +73,11 @@ namespace Novell.iFolder
 			{
 				ifldr = ifmgr.GetiFolderByPath(path);
 
-				spage = new SharingPage(win, ifldr);
+				spage = new SharingPage(ifldr);
 				swidget = spage.GetWidget();
 				propNotebook.AppendPage(swidget, new Label("iFolder Sharing"));
 
-				nppage = new NodePropertyPage(win, ifldr.CurrentNode);
+				nppage = new NodePropertyPage(ifldr.CurrentNode);
 				npwidget = nppage.GetWidget();
 				propNotebook.AppendPage(npwidget, new Label("iFolder"));
 			}
@@ -99,7 +99,7 @@ namespace Novell.iFolder
 			iFolderPixBuf = new Pixbuf("ifolderfolder.png");
 */
 
-			nppage = new NodePropertyPage(win, node);
+			nppage = new NodePropertyPage(node);
 			npwidget = nppage.GetWidget();
 			propNotebook.AppendPage(npwidget, new Label("Node Properties"));
 		}

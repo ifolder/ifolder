@@ -99,13 +99,11 @@ namespace Novell.iFolder
 		ContactPicker cp;
 		Novell.AddressBook.Manager 	abMan;
 		AddressBook	dAddrBook;
-		Gtk.Window propWin;
 		ArrayList	guidList;
 
-		public SharingPage (Gtk.Window win, iFolder ifolder)
+		public SharingPage (iFolder ifolder)
 		{
 			ifldr = ifolder;
-			propWin = win;
 
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
 					"SharingPropertyPage", null);
@@ -328,7 +326,7 @@ namespace Novell.iFolder
 						return;
 					}
 					else
-						ce = new ContactEditor(propWin, owner, false);
+						ce = new ContactEditor((Gtk.Window)GetWidget().Toplevel, owner, false);
 
 					ce.ContactEdited += new ContactEditEventHandler(
 							CreateContactEventHandler);
@@ -339,7 +337,7 @@ namespace Novell.iFolder
 			{
 				if( (cp == null) || (!cp.IsValid()) )
 				{
-					cp = new ContactPicker(propWin);
+					cp = new ContactPicker((Gtk.Window)GetWidget().Toplevel);
 					cp.ContactsPicked += new ContactsPickedEventHandler(
 							onContactsPicked);
 				}

@@ -43,12 +43,10 @@ namespace Novell.iFolder
 		ListStore PropertyTreeStore;
 		Pixbuf	PropertyPixBuf;
 		Node	node;
-		Gtk.Window propWin;
 
-		public NodePropertyPage (Gtk.Window win, Node node)
+		public NodePropertyPage (Node node)
 		{
 			this.node = node;
-			propWin = win;
 
 			Glade.XML gxml = new Glade.XML ("ifolder.glade", "NodePropertiesPage", null);
 
