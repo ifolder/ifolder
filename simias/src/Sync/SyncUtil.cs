@@ -45,6 +45,9 @@ public class FileInviter
 	Store store;
 	SyncStore syncStore;
 
+	/// <summary>
+	/// public constructor when specifying store location
+	/// </summary>
 	public FileInviter(Uri storeLocation)
 	{
 		syncStore = new SyncStore(storeLocation == null? null: storeLocation.LocalPath);
@@ -136,15 +139,21 @@ public class FileInviter
 }
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// Classreate an invitation file for user to a collection
+/// </summary>
 public class CmdService: MarshalByRefObject
 {
-	private Uri storeLocation;
+	Uri storeLocation;
 
-	public CmdService(Uri storeLocation)
+	internal CmdService(Uri storeLocation)
 	{
 		this.storeLocation = storeLocation;
 	}
 
+	/// <summary>
+	/// Classreate an invitation file for user to a collection
+	/// </summary>
 	public SynkerServiceA StartSession(string collectionId)
 	{
 		try
@@ -159,6 +168,9 @@ public class CmdService: MarshalByRefObject
 }
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// a simple sync server, used for testing and command line tools
+/// </summary>
 public class CmdServer
 {
 	CmdService obj = null;
@@ -169,12 +181,16 @@ public class CmdServer
 	const string serviceTag = "sync.rem";
 	const string channelName = "SyncCmdServer";
 
-	public static string MakeUri(string host, int port, bool useTCP)
+	internal static string MakeUri(string host, int port, bool useTCP)
 	{
 		return String.Format("{0}://{1}:{2}/{3}",
 				(useTCP? "tcp": "http"), host, port, serviceTag);
 	}
 
+	/// <summary>
+	/// Create server on specified port using specified store and remoting channel type.
+	/// host is only used to generate a URI for debug messages.
+	/// </summary>
 	public CmdServer(string host, int port, Uri storeLocation, bool useTCP)
 	{
 		uri = MakeUri(host, port, useTCP);
@@ -186,6 +202,9 @@ public class CmdServer
 		Log.Info("CmdServer {0} is up and running from store '{1}'", uri, storeLocation);
 	}
 
+	/// <summary>
+	/// immediately stop the server, unregister and clean up all resources.
+	/// </summary>
 	public void Stop()
 	{
 		if (uri != null)
@@ -200,19 +219,26 @@ public class CmdServer
 		uri = null;
 	}
 
+	
+	/// <summary>
+	/// clean up in case caller did not call Stop()
+	/// </summary>
 	~CmdServer() { Stop(); }
 }
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// a simple sync client, used for testing and command line tools
+/// </summary>
 public class CmdClient
 {
 	CmdService service = null;
 	IChannel channel = null;
-	public SynkerServiceA session = null;
+	SynkerServiceA session = null;
 
 	const string channelName = "SyncCmdClient";
 
-	public CmdClient(string host, int port, string collectionId, bool useTCP)
+	CmdClient(string host, int port, string collectionId, bool useTCP)
 	{
 		if (useTCP)
 			channel = new TcpClientChannel(channelName, new BinaryClientFormatterSinkProvider());
@@ -226,7 +252,7 @@ public class CmdClient
 		Log.Spew("connected to server at {0}", serverURL);
 	}
 
-	public void Stop()
+	void Stop()
 	{
 		//session.Done();
 		session = null;
@@ -238,6 +264,9 @@ public class CmdClient
 		}
 	}
 
+	/// <summary>
+	/// instantiates a client and runs one sync pass for the specified collection to the specified server
+	/// </summary>
 	public static bool RunOnce(Uri storeLocation, Uri docRoot, string serverStoreLocation, bool useTCP)
 	{
 		Store store = Store.Connect(new Configuration(

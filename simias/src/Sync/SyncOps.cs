@@ -32,8 +32,28 @@ using Simias;
 namespace Simias.Sync
 {
 
+/// <summary>
+/// valid states of a node update attempt
+/// TODO: requiring a comment on every enum member is counter-productive. How to fix?
+/// </summary>
 [Serializable]
-public enum NodeStatus { Complete, UpdateCollision, FileSystemEntryCollision, ServerFailure, InProgess };
+public enum NodeStatus
+{
+	/// <summary> node update was successful </summary>
+	Complete,
+
+	/// <summary> node update was aborted due to update from other client </summary>
+	UpdateCollision,
+
+	/// <summary> node update was aborted due to other node referencing same file </summary>
+	FileSystemEntryCollision,
+
+	/// <summary> node update was probably unsuccessful, unhandled exception on the server </summary>
+	ServerFailure,
+
+	/// <summary> node update is in progress </summary>
+	InProgess
+};
 
 //---------------------------------------------------------------------------
 /// <summary>
@@ -45,30 +65,44 @@ public struct Nid
 {
 	private string g;
 
-	// run string through Guid constructor to throw exception if bad format
+	/// <summary>
+	/// runs string through Guid constructor to throw exception if bad format
+	/// </summary>
 	public Nid(string s)
 	{
 		try { g = new Guid(s).ToString(); }
 		catch (FormatException) { Log.Spew("'{0}' is not a valid guid", s); throw; }
 	}
 
+	/// <summary> implement some convenient operator overloads </summary>
 	public static explicit operator Nid(string s) { return new Nid(s); }
-	public override bool Equals(object o) { return CompareTo(o) == 0; }
-	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }
-	public static bool operator!=(Nid a, Nid b) { return !a.Equals(b); }
-	public override string ToString() { return g; }
-	public override int GetHashCode() { return g.GetHashCode(); }
-	public bool Valid() { return Valid(g); }
-	public void Validate() { Log.Assert(Valid(g)); }
-	static public void Validate(string g) { Log.Assert(Valid(g)); }
 
-	static public bool Valid(string g)
+	/// <summary> implement some convenient operator overloads </summary>
+	public override bool Equals(object o) { return CompareTo(o) == 0; }
+
+	/// <summary> implement some convenient operator overloads </summary>
+	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }
+
+	/// <summary> implement some convenient operator overloads </summary>
+	public static bool operator!=(Nid a, Nid b) { return !a.Equals(b); }
+
+	/// <summary> implement some convenient operator overloads </summary>
+	public override string ToString() { return g; }
+
+	/// <summary> implement some convenient operator overloads </summary>
+	public override int GetHashCode() { return g.GetHashCode(); }
+
+	internal bool Valid() { return Valid(g); }
+	internal void Validate() { Log.Assert(Valid(g)); }
+	static internal void Validate(string g) { Log.Assert(Valid(g)); }
+
+	static internal bool Valid(string g)
 	{
 		try { return String.Compare(new Nid(g).ToString(), g, true) == 0; }
 		catch (FormatException) { return false; }
 	}
 
-	public int CompareTo(object obj)
+	internal int CompareTo(object obj)
 	{
 		if (!(obj is Nid))
 			throw new ArgumentException("object is not Nid");
@@ -84,16 +118,17 @@ public struct Nid
 [Serializable]
 public struct NodeStamp: IComparable
 {
-	public Nid id;
+	internal Nid id;
 
 	// if localIncarn == UInt64.MaxValue, node is a tombstone
-	public ulong localIncarn, masterIncarn;
+	internal ulong localIncarn, masterIncarn;
 
 	// total size of all streams
-	public ulong streamsSize;
+	internal ulong streamsSize;
 
-	public string name; //just for debug
+	internal string name; //just for debug
 
+	/// <summary> implement some convenient operator overloads </summary>
 	public int CompareTo(object obj)
 	{
 		if (obj == null)
@@ -105,32 +140,41 @@ public struct NodeStamp: IComparable
 }
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// a chunk of data that is part of a node data stream property
+/// </summary>
 [Serializable]
 public class FseChunk
 {
-	public string relativePath = null;
-	public byte[] data = null; // if null, IsDirectory
+	internal string relativePath = null;
+	internal byte[] data = null; // if null, IsDirectory
 }
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// a chunk of data about a particular incarnation of a node
+/// </summary>
 [Serializable]
 public struct NodeChunk
 {
-	public const int MaxSize = 128 * 1024;
-	public NodeStamp stamp;
-	public string metaData;
-	public int totalSize;
-	public FseChunk[] fseChunks;
+	internal const int MaxSize = 128 * 1024;
+	internal NodeStamp stamp;
+	internal string metaData;
+	internal int totalSize;
+	internal FseChunk[] fseChunks;
 }
 
 
 //---------------------------------------------------------------------------
+/// <summary>
+/// node collision information
+/// </summary>
 [Serializable]
 public struct RejectedNode
 {
-	public Nid nid;
-	public NodeStatus status;
-	public RejectedNode(Nid nid, NodeStatus status)
+	internal Nid nid;
+	internal NodeStatus status;
+	internal RejectedNode(Nid nid, NodeStatus status)
 	{
 		this.nid = nid;
 		this.status = status;
@@ -141,7 +185,7 @@ public struct RejectedNode
 /// <summary>
 /// class to dish out Node information in pieces.
 /// </summary>
-public class SyncOutgoingNode
+internal class SyncOutgoingNode
 {
 	Collection collection;
 
@@ -226,7 +270,7 @@ public class SyncOutgoingNode
 /// Complete() must be called to complete the file or the partial
 /// file will be deleted by the destructor.
 /// </summary>
-public class SyncIncomingNode
+internal class SyncIncomingNode
 {
 	Collection collection;
 	bool onServer;
@@ -365,7 +409,7 @@ public class SyncIncomingNode
 }
 
 //---------------------------------------------------------------------------
-public class SyncOps
+internal class SyncOps
 {
 	Collection collection;
 	bool onServer;

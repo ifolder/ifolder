@@ -29,10 +29,8 @@ namespace Simias.Sync
 {
 
 //---------------------------------------------------------------------------
-/// <summary>
-/// controlled tracing and debugging output by class categories
-/// </summary>
-[Obsolete("Use log4net instead.")]
+/// <summary> controlled tracing and debugging output by class categories </summary>
+//[Obsolete("Use log4net instead.")]
 public class Log
 {
 	static TraceSwitch traceSwitch = new TraceSwitch("SyncTrace", "sync trace switch");
@@ -61,7 +59,7 @@ public class Log
 		}
 	}
 
-	public static void Here()
+	internal static void Here()
 	{
 		if (traceSwitch.TraceVerbose)
 		{
@@ -71,7 +69,7 @@ public class Log
 		}
 	}
 
-	public static void Uncaught(Exception e)
+	internal static void Uncaught(Exception e)
 	{
 		Trace.WriteLine("Uncaught exception: " + e.Message);
 		Trace.WriteLine(e.StackTrace);
@@ -89,7 +87,7 @@ public class Log
 		}
 	}
 
-	public static void Info(string format, params object[] args)
+	internal static void Info(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceInfo)
 		{
@@ -97,7 +95,7 @@ public class Log
 		}
 	}
 
-	public static void Warn(string format, params object[] args)
+	internal static void Warn(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceWarning)
 		{
@@ -106,6 +104,7 @@ public class Log
 		}
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static void Error(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceError)
@@ -115,7 +114,7 @@ public class Log
 		}
 	}
 
-	public static void Assert(bool assertion)
+	internal static void Assert(bool assertion)
 	{
 		if (!assertion)
 		{
@@ -124,6 +123,7 @@ public class Log
 		}
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static void Spew(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceVerbose)
@@ -132,6 +132,7 @@ public class Log
 		}
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static bool SetLevel(string level)
 	{
 		switch (level)
@@ -146,6 +147,7 @@ public class Log
 		return true;
 	}
 
+	/// <summary> controlled tracing and debugging output by class categories </summary>
 	public static void SetCategory(string category)
 	{
 		if (category == "all")

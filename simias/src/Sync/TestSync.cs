@@ -100,7 +100,7 @@ public class SyncTests: Assertion
 		try
 		{
 			Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
-			Log.SetLevel("verbose");
+			//Log.SetLevel("verbose");
 
 			// set up server store and collections, and some ifolder file data
 			if (Directory.Exists(serverDir) || Directory.Exists(clientDir)

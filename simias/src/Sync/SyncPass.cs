@@ -300,6 +300,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 	SynkerServiceA ss;
 	Collection collection;
 
+	/// <summary>
+	/// public constructor which accepts real or proxy objects specifying master and collection
+	/// </summary>
 	public SynkerWorkerA(SynkerServiceA master, SyncCollection slave): base(master, slave)
 	{
 		ss = master;

@@ -36,7 +36,7 @@ namespace Simias.Sync
 /// class to sync a portion of the file system with a collection
 /// applying iFolder specific behavior
 /// </summary>
-public class Dredger
+internal class Dredger
 {
 	Collection collection = null;
 	bool onServer = false;
