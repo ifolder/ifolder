@@ -197,23 +197,40 @@ namespace Novell.iFolder
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
-			Console.WriteLine("iFolder received a SimiasNotifyEvent");
 			switch(args.EventData)
 			{
 				case "Domain-Up":
 				{
-					Console.WriteLine(
-						"iFolder authenticating to domain {0}", 
-						args.Message);
+					if(LoginDialog == null)
+					{
+						LoginDialog = new iFolderLoginDialog(args.Message);
+						LoginDialog.Response +=
+							new ResponseHandler(OnReLoginDialogResponse);
+						LoginDialog.ShowAll();
+					}
+					else
+						LoginDialog.Present();
+					break;
+				}
+			}
+		}
 
+
+		private void OnReLoginDialogResponse(object o, ResponseArgs args)
+		{
+			LoginDialog.Hide();
+			switch(args.ResponseId)
+			{
+				case Gtk.ResponseType.Ok:
+				{
 					AuthenticationStatus status;
 					DomainAuthentication cAuth = new DomainAuthentication(
-							args.Message, "iFolder!",  null);
+							LoginDialog.Domain, LoginDialog.Password);
 					status = cAuth.Authenticate();
 					if(status != AuthenticationStatus.Success)
 					{
 						iFolderMsgDialog mDialog = new iFolderMsgDialog(
-							null,
+							tIcon, 
 							iFolderMsgDialog.DialogType.Error,
 							iFolderMsgDialog.ButtonSet.Ok,
 							Util.GS("iFolder Connect Error"),
@@ -223,11 +240,13 @@ namespace Novell.iFolder
 						mDialog.Hide();
 						mDialog.Destroy();
 						mDialog = null;
-						
 					}
+
 					break;
 				}
 			}
+			LoginDialog.Destroy();
+			LoginDialog = null;
 		}
 
 
@@ -258,8 +277,6 @@ namespace Novell.iFolder
 			if(ifwin != null)
 				ifwin.HandleSyncEvent(args);
 		}
-
-
 
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
