@@ -193,6 +193,12 @@ case $IFOLDER_OS in
         STORELIB_PATH="../../external/sqlite/darwin"
         STORELIB="sqlite"
         SYSTEM_XML='System.Xml.dll'
+        #
+        # Set pkg-config variables
+        #
+        PKG_CONFIG_REQUIRES="simias >= 1.0"
+		PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
+		PKG_CONFIG_CONFLICTS=""
     ;;
     #
     # Linux-specific configuration
@@ -224,8 +230,9 @@ case $IFOLDER_OS in
         #
         # Set pkg-config variables
         #
-        UI_PKG_CONFIG_REQUIRES="ifolder = $VERSION gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        UI_PKG_CONFIG_LIBS="/r:TrayIcon.dll"
+        PKG_CONFIG_REQUIRES="simias >= 1.0 gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
+		PKG_CONFIG_LIBS="/r:Novell.iFolder.dll /r:Novell.iFolder.UI.gtk.dll /r:TrayIcon.dll"
+		PKG_CONFIG_CONFLICTS=""
     ;;
     #
     # Windows-specific configuration
@@ -291,8 +298,9 @@ case $IFOLDER_OS in
         #
         # Set pkg-config variables
         #
-        UI_PKG_CONFIG_REQUIRES="ifolder = $VERSION"
-        UI_PKG_CONFIG_LIBS="/r:TrayIcon.dll"
+        PKG_CONFIG_REQUIRES="simias >= 1.0"
+		PKG_CONFIG_LIBS="/r:Novell.iFolder.dll /r:TrayIcon.dll"
+		PKG_CONFIG_CONFLICTS=""
         #
         # Override Linux-like directory structure
         #
@@ -335,17 +343,9 @@ AC_SUBST(webbindir)
 #
 # Set pkg-config variables
 #
-PKG_CONFIG_REQUIRES="simias >= 1.0"
-PKG_CONFIG_CONFLICTS=""
-PKG_CONFIG_LIBS="/r:Novell.iFolder.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
-
-UI_PKG_CONFIG_CONFLICTS=""
-AC_SUBST(UI_PKG_CONFIG_REQUIRES)
-AC_SUBST(UI_PKG_CONFIG_LIBS)
-AC_SUBST(UI_PKG_CONFIG_CONFLICTS)
 
 #
 # Run standard macros
@@ -467,9 +467,7 @@ esac
 AC_OUTPUT([
 Makefile
 ifolder3.pc
-ifolder3-ui.pc
 src/Makefile
-src/install-ifolder-to-gac
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/Util.cs
@@ -492,5 +490,4 @@ doc/Makefile
 help/Makefile
 ])
 
-chmod +x src/install-ifolder-to-gac
 
