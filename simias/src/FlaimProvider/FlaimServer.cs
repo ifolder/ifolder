@@ -38,7 +38,6 @@ namespace Simias.Storage.Provider.Flaim
 		static IntPtr			pDB;
 		string					DbPath;
 		static bool				opened = false;
-		static Hashtable		handleTable = new Hashtable();
 		
 		#region Flaim Wrapper Imports
 		/// <summary>
@@ -52,14 +51,16 @@ namespace Simias.Storage.Provider.Flaim
 		private static extern FlaimError.Error FWCreateStore(string path, out IntPtr ipStore, out IntPtr ipDB);
 		internal FlaimError.Error CreateStore()
 		{
-			FlaimError.Error rc = FlaimError.Error.FERR_FAILURE;
-			lock (handleTable)
+			FlaimError.Error rc = FlaimError.Error.FERR_FILE_EXISTS;
+			lock (this)
 			{
-				rc = FWCreateStore(DbPath, out pStore, out pDB);
-				if (FlaimError.IsSuccess(rc))
+				if (pStore == IntPtr.Zero)
 				{
-					handleTable.Add(pStore, pStore);
-					opened = true;
+					rc = FWCreateStore(DbPath, out pStore, out pDB);
+					if (FlaimError.IsSuccess(rc))
+					{
+						opened = true;
+					}
 				}
 			}
 			return rc;
@@ -77,13 +78,19 @@ namespace Simias.Storage.Provider.Flaim
 		internal FlaimError.Error OpenStore()
 		{
 			FlaimError.Error rc = FlaimError.Error.FERR_FAILURE;
-			lock (handleTable)
+			lock (this)
 			{
-				rc = FWOpenStore(DbPath, out pStore, out pDB);
-				if (FlaimError.IsSuccess(rc))
+				if (pStore == IntPtr.Zero)
 				{
-					handleTable.Add(pStore, pStore);
-					opened = true;
+					rc = FWOpenStore(DbPath, out pStore, out pDB);
+					if (FlaimError.IsSuccess(rc))
+					{
+						opened = true;
+					}
+				}
+				else
+				{
+					rc = FlaimError.Error.FERR_OK;
 				}
 			}
 			return rc;
@@ -99,24 +106,21 @@ namespace Simias.Storage.Provider.Flaim
 		internal FlaimError.Error DeleteStore()
 		{
 			FlaimError.Error rc = FlaimError.Error.FERR_FAILURE;
-			// Close the current handle.
-			CloseStore();
-
-			// Now force the other instances closed.
-			lock (handleTable)
+			
+			lock (this)
 			{
-				foreach (IntPtr p in handleTable.Keys)
+				if (pStore != IntPtr.Zero)
 				{
-					FWCloseStore(p);
+					FWCloseStore(pStore);
+					pStore = IntPtr.Zero;
 				}
-				handleTable.Clear();
+				pDB = IntPtr.Zero;
 				rc = FWDeleteStore(DbPath);
 				if (FlaimError.IsSuccess(rc))
 				{
 					opened = false;
 				}
 			}
-			pDB = IntPtr.Zero;
 			return rc;
 		}
 
@@ -128,15 +132,13 @@ namespace Simias.Storage.Provider.Flaim
 		private static extern void FWCloseStore(IntPtr ipStore);
 		internal void CloseStore()
 		{
-			lock (handleTable)
+			lock (this)
 			{
 				if (pStore != IntPtr.Zero)
 				{
 					FWCloseStore(pStore);
-					handleTable.Remove(pStore);
 					pStore = IntPtr.Zero;
-					if (handleTable.Count == 0)
-						pDB = IntPtr.Zero;
+					pDB = IntPtr.Zero;
 				}
 			}
 		}
@@ -466,7 +468,7 @@ namespace Simias.Storage.Provider.Flaim
 		const string			IdName = "FlaimSimias.IDs";
 		const string			version = "0.2";
 
-		internal Flaim4 Flaim
+		private Flaim4 Flaim
 		{
 			get
 			{
@@ -493,7 +495,7 @@ namespace Simias.Storage.Provider.Flaim
 			}
 		}
 		
-		internal FlaimServer()
+		private FlaimServer()
 		{
 			conf = new ProviderConfig();
 			DbPath = Path.Combine(Path.GetFullPath(conf.Path), Name);
@@ -515,7 +517,7 @@ namespace Simias.Storage.Provider.Flaim
 			}
 		}
 
-		internal void Dispose(bool inFinalizer)
+		private void Dispose(bool inFinalizer)
 		{
 			if (!AlreadyDisposed)
 			{
