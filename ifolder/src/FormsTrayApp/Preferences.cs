@@ -2652,7 +2652,12 @@ namespace Novell.FormsTrayApp
 					int y = (int)regKey.GetValue(preferencesY);
 
 					Point point = new Point(x, y);
-					this.Location = point;
+
+					// Only set the location if the point is on the screen.
+					if (SystemInformation.VirtualScreen.Contains(point))
+					{
+						this.Location = point;
+					}
 				}
 				catch {}
 
