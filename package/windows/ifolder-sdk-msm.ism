@@ -435,7 +435,7 @@
 		<col def="S255">IncludeFiles</col>
 		<col def="S255">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Documentation.292BBE1D_2B47_4213_B226_08D68798BA46</td><td>&lt;PATH_TO_DOC_FILES&gt;\ndoc</td><td>4</td><td/><td/><td>2</td></row>
+		<row><td>Documentation.292BBE1D_2B47_4213_B226_08D68798BA46</td><td>&lt;ISProjectFolder&gt;\..\..\doc\ifolder-ndoc</td><td>4</td><td/><td/><td>2</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
