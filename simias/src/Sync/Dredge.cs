@@ -389,9 +389,12 @@ public class Dredger
 		public void Stop()
 		{
 			shuttingDown = true;
-			thread.Interrupt();
-			es.Dispose();
-			store.Dispose();
+			if (thread != null)
+				thread.Interrupt();
+			if (es != null)
+				es.Dispose();
+			if (store != null)
+				store.Dispose();
 		}
 
 		#endregion
