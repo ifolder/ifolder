@@ -77,6 +77,8 @@ namespace Simias.Sync
 //		string						collectionId;
 		internal FileSystemWatcher	watcher;
 		Hashtable					changes = new Hashtable();
+		Timer						timer;
+		int							updateTime = Timeout.Infinite;
 
 		internal class fileChangeEntry
 		{
@@ -132,7 +134,18 @@ namespace Simias.Sync
 					// Now dredge to find any files that were changed while we were down.
 				}
 			}
+			timer = new Timer(new TimerCallback(SyncChanges), null, Timeout.Infinite, Timeout.Infinite);
 			disposed = false;
+		}
+
+		/// <summary>
+		/// Called to sync up changes.
+		/// </summary>
+		/// <param name="state"></param>
+		private void SyncChanges(object state)
+		{
+			if (changes.Count != 0)
+				SyncClient.ScheduleSync(collection.ID);
 		}
 			
 		/// <summary>
@@ -846,6 +859,7 @@ namespace Simias.Sync
 				{
 					changes[fullPath] = new fileChangeEntry(e);
 				}
+				timer.Change(updateTime, Timeout.Infinite);
 			}
 		}
 
@@ -862,6 +876,7 @@ namespace Simias.Sync
 				changes.Remove(e.OldFullPath);
 				changes[fullPath] = new fileChangeEntry(e);
 			}
+			timer.Change(updateTime, Timeout.Infinite);
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
@@ -875,6 +890,7 @@ namespace Simias.Sync
 			{
 				changes[fullPath] = new fileChangeEntry(e);
 			}
+			timer.Change(updateTime, Timeout.Infinite);
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
@@ -888,6 +904,7 @@ namespace Simias.Sync
 			{
 				changes[fullPath] = new fileChangeEntry(e);
 			}
+			timer.Change(updateTime, Timeout.Infinite);
 		}
 
 		private void watcher_Error(object sender, ErrorEventArgs e)

@@ -272,9 +272,23 @@ public class Conflict
 	/// </summary>
 	public void Resolve(string newNodeName)
 	{
-		//TODO: what if move succeeds but node rename or commit fails?
-		File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
-		node.Name = newNodeName;
+		if (newNodeName == node.Name)
+		{
+			// We are resolving to the same name.
+			if (Path.GetDirectoryName(FileNameConflictPath) != Path.GetDirectoryName(NonconflictedPath))
+			{
+				// This file is in the conflict bin and has been sync-ed from the server.  We do not need
+				// To push it back up.  Set internal.
+				node.Properties.State = PropertyList.PropertyListState.Internal;
+				File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
+			}
+		}
+		else
+		{
+			//TODO: what if move succeeds but node rename or commit fails?
+			File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
+			node.Name = newNodeName;
+		}
 		Node newNode = collection.DeleteCollision(node);
 		newNode.Properties.DeleteSingleProperty(ConflictNameProperty);
 		collection.Commit(newNode);
