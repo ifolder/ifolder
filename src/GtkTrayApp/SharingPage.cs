@@ -142,35 +142,34 @@ namespace Novell.iFolder
 			foreach(IFAccessControlEntry iface in ifacl)
 			{
 				SharingListHolder slh = new SharingListHolder(
-					iface.Rights, iface.Contact);
+						iface.Rights, iface.Contact);
 				ContactTreeStore.AppendValues(slh);
-				guidList.Add(iface.Contact.ID);
 			}
 
-/*			ICSList acl = ifldr.GetShareAccess();
+			/*			ICSList acl = ifldr.GetShareAccess();
 
-			foreach(AccessControlEntry ace in acl)
-			{
-				if(ace.WellKnown != true)
-				{
-					try
-					{
+						foreach(AccessControlEntry ace in acl)
+						{
+						if(ace.WellKnown != true)
+						{
+						try
+						{
 						Contact con = dAddrBook.GetContact(ace.Id);
 
 						SharingListHolder slh = new SharingListHolder(
-								(iFolder.Rights)ace.Rights, con);
+						(iFolder.Rights)ace.Rights, con);
 						ContactTreeStore.AppendValues(slh);
 						guidList.Add(ace.Id);
-					}
-					catch(Exception e)
-					{
+						}
+						catch(Exception e)
+						{
 						SharingListHolder slh = new SharingListHolder(
-								(iFolder.Rights)ace.Rights, null);
+						(iFolder.Rights)ace.Rights, null);
 						ContactTreeStore.AppendValues(slh);
-					}
-				}
-			}
-*/
+						}
+						}
+						}
+			 */
 			if(ifldr.IsShareable())
 				addSharingButton.Sensitive = true;
 			else
@@ -253,12 +252,12 @@ namespace Novell.iFolder
 				if(tModel != null)
 					tModel = null;
 				SharingListHolder slh = (SharingListHolder) 
-						ContactTreeStore.GetValue(iter,0);
+					ContactTreeStore.GetValue(iter,0);
 
 				// Check the identity here
 				// If it is the owner, dont' let them deny themselves
 				if( (!ifldr.IsShareable()) ||
-					(slh.Contact.ID == ifldr.OwnerIdentity) )
+						(slh.Contact.ID == ifldr.OwnerIdentity) )
 				{
 					removeSharingButton.Sensitive = false;
 					FullControlRB.Sensitive = false;
@@ -323,10 +322,10 @@ namespace Novell.iFolder
 					if(owner == null)
 					{
 						MessageDialog med = new MessageDialog(null,
-							DialogFlags.DestroyWithParent | DialogFlags.Modal,
-							MessageType.Error,
-							ButtonsType.Close,
-							"Your identity in iFolder is corrupt and you will not be able to share with other people.  Please contact Brady Anderson (banderson@novell.com) for assistance.");
+								DialogFlags.DestroyWithParent | DialogFlags.Modal,
+								MessageType.Error,
+								ButtonsType.Close,
+								"Your identity in iFolder is corrupt and you will not be able to share with other people.  Please contact Brady Anderson (banderson@novell.com) for assistance.");
 						med.Run();
 						med.Hide();
 						return;
@@ -383,7 +382,7 @@ namespace Novell.iFolder
 					Console.WriteLine("Error in SetRights on : " + c.UserName);
 					return;
 				}
-				
+
 				try
 				{
 					ifldr.Invite(c);
@@ -410,7 +409,7 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				SharingListHolder slh = (SharingListHolder)
-						ContactTreeStore.GetValue(iter,0);
+					ContactTreeStore.GetValue(iter,0);
 
 				ifldr.SetRights(slh.Contact, rights);
 				slh.Rights = rights;
@@ -430,7 +429,7 @@ namespace Novell.iFolder
 				if(tModel != null)
 					tModel = null;
 				SharingListHolder slh = (SharingListHolder)
-						ContactTreeStore.GetValue(iter,0);
+					ContactTreeStore.GetValue(iter,0);
 
 				ifldr.RemoveRights(slh.Contact);
 				ContactTreeStore.Remove(out iter);

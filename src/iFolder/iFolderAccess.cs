@@ -128,6 +128,7 @@ namespace Novell.iFolder
 					}
 					catch(Exception e)
 					{
+						Console.WriteLine("Returning Null!");
 						return null;
 					}
 
@@ -144,14 +145,15 @@ namespace Novell.iFolder
 					if(iEnumerator.MoveNext() == false)
 						return false;
 
+					if(this.Current == null)
+						continue;
+
 					AccessControlEntry ace = 
 						(AccessControlEntry)iEnumerator.Current;
 
 					if(ace.WellKnown == false)
 						return true;
 
-					if(Current == null)
-						return false;
 				}
 			}
 		}
