@@ -2986,4 +2986,7 @@
 	<data name="updateTitle">
 		<value>Save account</value>
 	</data>
+	<data name="requiredFieldsMissing">
+		<value>The user name and server host are required fields.  Please fill in the missing information and try again.</value>
+	</data>
 </root>
