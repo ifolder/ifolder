@@ -121,13 +121,6 @@ enum
 /****************************************************
  * Data Structures                                  *
  ****************************************************/
-/*
-typedef struct
-{
-	SIMIAS_MSG_TYPE type;
-	char ip_addr[16];
-} iFolderMessage;
-*/
 
 typedef struct
 {
@@ -193,6 +186,9 @@ static void out_inv_cancel_button_cb(GtkWindow *w, GtkTreeView *tree);
 static void out_inv_remove_button_cb(GtkWindow *w, GtkTreeView *tree);
 static void out_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree);
 
+static char * fill_time_str(char *time_str, int buf_len, time_t time);
+static char * fill_state_str(char *state_str, INVITATION_STATE state);
+
 static void add_invitation_to_store(GtkListStore *store,
 									Invitation *invitation);
 static void init_invitation_stores();
@@ -208,6 +204,10 @@ static int length_of_ip_address(const char *buffer);
 
 static gboolean receiving_im_msg_cb(GaimAccount *account, char **sender,
 									char **buffer, int *flags, void *data);
+
+static gboolean lookup_collection_in_store(GtkListStore *store,
+											char *collection_id,
+											GtkTreeIter *iter);
 
 static gboolean handle_invitation_request(GaimAccount *account,
 										  const char *sender,
@@ -451,6 +451,10 @@ buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 	const gchar *name;
 	GaimBuddy *buddy;
 	int result;
+	char *collection_type = "ifolder";	/* FIXME: This is hardcoded.  When other Simias Collection types are supported, this shouuld be fixed. */
+	GtkWidget *err_dialog;
+	Invitation *invitation;
+	char guid[128];
 
 	if (!GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		return;
@@ -494,12 +498,47 @@ buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 		 */
 		name = gtk_entry_get_text(GTK_ENTRY(name_entry));
 		if (name && strlen(name) > 0) {
+
+			/* FIXME: Fix this spoofing of a Simias ID to a real Simias ID */
+			srand((unsigned) time(NULL)/2);
+			sprintf(guid, "{%d-%d}", rand(), rand());
+
 			result = send_invitation_request_msg(
 					buddy,
-					"{1234-A-Collection-ID}",
-					"ifolder",
+					guid,
+					collection_type,
 					(char *)name);
 			g_print("send_invitation_request_msg(): %d\n", result);
+			if (result <= 0) {
+				err_dialog = gtk_message_dialog_new(NULL,
+								GTK_DIALOG_DESTROY_WITH_PARENT,
+								GTK_MESSAGE_ERROR,
+								GTK_BUTTONS_CLOSE,
+								_("Error sending the invitation.  Error response: %d"),
+								result);
+				gtk_dialog_run(GTK_DIALOG(err_dialog));
+				gtk_widget_destroy(err_dialog);
+			} else {
+				/**
+				 * The message was sent.  So, we can now add a new Invitation
+				 * into the outgoing invitations list.
+				 */
+				invitation = malloc(sizeof(Invitation));
+				if (invitation) {
+					invitation->gaim_account = buddy->account;
+					sprintf(invitation->buddy_name, buddy->name);
+					invitation->state = STATE_SENT;
+					time(&(invitation->time));
+					sprintf(invitation->collection_id, guid);
+					sprintf(invitation->collection_type, collection_type);
+					sprintf(invitation->collection_name, name);
+					/*sprintf(invitation->ip_addr, "\0");*/
+					
+					add_invitation_to_store(out_inv_store, invitation);
+				} else {
+					g_print("Out of memory trying to create Invitation * inside buddylist_cb_simulate_share_ifolder\n");
+				}
+			}
 		}
 	}
 
@@ -522,10 +561,84 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 	g_print("FIXME: Implement in_inv_accept_button_cb()\n");
 }
 
+/**
+ * This function should get the Invitation * at the current selection and
+ * send a reply message if the buddy is online.
+ */
 static void
 in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 {
-	g_print("FIXME: Implement in_inv_reject_button_cb()\n");
+	GtkTreeSelection *sel;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	Invitation *invitation;
+	GaimBuddy *buddy;
+	int send_result;
+	GtkWidget *dialog;
+
+	sel = gtk_tree_view_get_selection(tree);
+	if (!gtk_tree_selection_get_selected(sel, &model, &iter)) {
+		/**
+		 * This shouldn't happen since the button should be disabled when no
+		 * items in the list are selected.
+		 */
+		g_print("in_inv_reject_button_cb() called without an active selection\n");
+		return;
+	}
+	
+	/* Extract the Invitation * from the model using iter */
+	gtk_tree_model_get(model, &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+
+	/**
+	 * Attempt to send the reply message.  If we get a failure, it could be
+	 * because the buddy is not online.  If we want to show presence in the
+	 * Invitations Dialog, then we must require that Invitations can only exist
+	 * for buddies that are in your buddy list.
+	 * 
+	 * FIXME: Make a decision about requiring a buddy to be in your buddy list to send/receive simias messages
+	 * This decision might have just been made because the send_invitation_msg
+	 * stuff requires you to pass in the GaimBuddy * as the first argument.  I
+	 * don't think gaim_find_buddy() returns a GaimBuddy if the buddy is not in
+	 * your buddy list.  This needs investigation.
+	 */
+	buddy = gaim_find_buddy(invitation->gaim_account, invitation->buddy_name);
+	if (!buddy) {
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("This buddy is not in your buddy list.  If you do not wish to accept this invitation, please remove it from your list."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+
+	send_result =
+		send_invitation_request_deny_msg(buddy, invitation->collection_id);
+		
+	if (send_result <= 0) {
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("There was an error sending this message.  Perhaps the buddy is not online."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+	
+	/**
+	 * If we make it to this point, the reply message was sent and we can now
+	 * remove the Invitation from our list.  Don't forget to free the memory
+	 * being used by Invitation *!
+	 */
+	free(invitation);
+	
+	if (!gtk_list_store_remove(GTK_LIST_STORE(model), &iter)) {
+		g_print("There was an error with the iterator when trying to remove an invitation after sending a reject message.\n");
+	}
 }
 
 static void
@@ -558,31 +671,21 @@ out_inv_sel_changed_cb(GtkTreeSelection *sel, GtkTreeView *tree)
 	g_print("FIXME: Implement out_inv_sel_changed_cb()\n");
 }
 
-/**
- * This function adds the elements of the Invitation object to the
- * store and also saves the Invitation as one of the items also.
- */
-static void
-add_invitation_to_store(GtkListStore *store, Invitation *invitation)
+static char *
+fill_time_str(char *time_str, int buf_len, time_t time)
 {
-	GtkTreeIter iter;
-	GtkListStore *model;
 	struct tm *time_ptr;
-	char time_str[32];
-	char state_str[32];
-
-if (store) {
-	g_print("store is NOT NULL\n");
-} else {
-	g_print("store is NULL!\n");
+	
+	time_ptr = localtime(&time);
+	strftime(time_str, buf_len, "%I/%d/%Y %H:%M %p", time_ptr);
+	
+	return time_str;
 }
 
-	/* Format the time to a string */
-	time_ptr = localtime(&(invitation->time));
-	strftime(time_str, 32, "%I/%d/%Y %H:%M %p", time_ptr);
-	
-	/* Format the state string */
-	switch (invitation->state) {
+static char *
+fill_state_str(char *state_str, INVITATION_STATE state)
+{
+	switch (state) {
 		case STATE_INIT:
 			sprintf(state_str, _("Initializing"));
 			break;
@@ -604,6 +707,32 @@ if (store) {
 		default:
 			sprintf(state_str, _("N/A"));
 	}
+	
+	return state_str;
+}
+
+/**
+ * This function adds the elements of the Invitation object to the
+ * store and also saves the Invitation as one of the items also.
+ */
+static void
+add_invitation_to_store(GtkListStore *store, Invitation *invitation)
+{
+	GtkTreeIter iter;
+	char time_str[32];
+	char state_str[32];
+
+if (store) {
+	g_print("store is NOT NULL\n");
+} else {
+	g_print("store is NULL!\n");
+}
+
+	/* Format the time to a string */
+	fill_time_str(time_str, 32, invitation->time);
+
+	/* Format the state string */
+	fill_state_str(state_str, invitation->state);
 	
 	/**
 	 * Aquire an iterator.  This appends an empty row in the store and the row
@@ -786,6 +915,7 @@ if (in_inv_store) {
 	in_inv_accept_button = gtk_button_new_with_mnemonic(_("_Accept"));
 	
 	in_inv_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(in_inv_tree));
+	gtk_tree_selection_set_mode(in_inv_sel, GTK_SELECTION_SINGLE);
 	
 	gtk_box_pack_end(GTK_BOX(in_inv_buttons_vbox),
 			in_inv_accept_button, FALSE, FALSE, 0);
@@ -843,7 +973,7 @@ if (in_inv_store) {
 	/* TIME_COL */
 	gtk_tree_view_insert_column_with_attributes(
 		GTK_TREE_VIEW(out_inv_tree),
-		-1, _("Received"), out_inv_renderer, "text", TIME_COL, NULL);
+		-1, _("Sent/Received"), out_inv_renderer, "text", TIME_COL, NULL);
 
 	/* COLLECTION_NAME_COL */
 	gtk_tree_view_insert_column_with_attributes(
@@ -872,6 +1002,7 @@ if (in_inv_store) {
 	out_inv_resend_button = gtk_button_new_with_mnemonic(_("Re_send"));
 
 	out_inv_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(out_inv_tree));
+	gtk_tree_selection_set_mode(out_inv_sel, GTK_SELECTION_SINGLE);
 	
 	gtk_box_pack_end(GTK_BOX(out_inv_buttons_vbox),
 			out_inv_resend_button, FALSE, FALSE, 0);
@@ -1126,6 +1257,36 @@ receiving_im_msg_cb(GaimAccount *account, char **sender, char **buffer,
 }
 
 /**
+ * This function walks the GtkListStore and looks for the collection_id inside
+ * the G_TYPE_POINTER column that points to an Invitation *.  If a match is
+ * found, iter will be returned pointing to this row AND the function will
+ * return TRUE.  If no match is found, it will return FALSE;
+ */
+static gboolean
+lookup_collection_in_store(GtkListStore *store, char *collection_id,
+							GtkTreeIter *iter)
+{
+	Invitation *invitation;
+	gboolean valid;
+	
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(store), iter);
+	while (valid) {
+		/* Extract the Invitation * out of the model */
+		gtk_tree_model_get(GTK_TREE_MODEL(store), iter,
+							INVITATION_PTR, &invitation,
+							-1);
+							
+		/* Check to see if the collection IDs match */
+		if (strcmp(invitation->collection_id, collection_id) == 0) {
+			/* We've found our match! */
+			return TRUE;
+		}
+	}
+	
+	return FALSE; /* No match was found */
+}
+
+/**
  * This fuction checks to see if this is a properly formatted Simias Invitation
  * Request and then notifies the user of an incoming invitation.  The user can
  * then accept or deny the request at will.
@@ -1247,8 +1408,89 @@ handle_invitation_request_deny(GaimAccount *account,
 							   const char *sender,
 							   const char *buffer)
 {
-	g_print("FIXME: Implement handle_invitation_request_deny()\n");
-	return FALSE;
+	GtkTreeIter iter;
+	Invitation *invitation;
+	char time_str[32];
+	char state_str[32];
+	
+	/**
+	 * Since this method is called, we already know that the first part of
+	 * the message matches our #define.  So, because of that, we can take
+	 * that portion out of the picture and start tokenizing the different
+	 * parts.
+	 */
+	char *collection_id;
+	
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 * 	[simias:invitation-request-deny:<collection-id>]
+	 *                                  ^
+	 */
+	collection_id = strtok((char *) buffer + strlen(INVITATION_REQUEST_DENY_MSG), "]");
+	if (!collection_id) {
+		g_print("handle_invitation_request_deny() couldn't parse the collection-id\n");
+		return FALSE;
+	}
+	
+	/**
+	 * Lookup the collection_id in the current out_inv_store.  If it's not there
+	 * we'll just discard this message.  If it IS there, we need to update the
+	 * status of the invitation and take more action with Simias.
+	 */
+	if (!lookup_collection_in_store(out_inv_store, collection_id, &iter)) {
+		g_print("handle_invitation_request_den() couldn't find the collection-id in out_inv_store\n");
+		/* FIXME: Before returning from here, we should try to retrieve more information from Simias in case the user deleted this invitation information from Gaim */
+		return FALSE;
+	}
+	
+	/**
+	 * If we get this far, iter now points to the row of data in the store model
+	 * that contains the Invitation * corresponding with this message.
+	 * 
+	 * Update the time and the invitation state in the store/model.
+	 */
+
+	/* Extract the Invitation * out of the model */
+	gtk_tree_model_get(GTK_TREE_MODEL(out_inv_store), &iter,
+						INVITATION_PTR, &invitation,
+						-1);
+						
+	/**
+	 * Double-check to make sure nothing has changed since returning from the
+	 * lookup call.  If it did, call this function recursively.  If the row
+	 * was actually removed, it should stop processing in the recursive call.
+	 */
+	if (strcmp(invitation->collection_id, collection_id) != 0) {
+		/* The row changed */
+		return handle_invitation_request_deny(account, sender, buffer);
+	}
+	
+	/* Update the invitation time */
+	time(&(invitation->time));
+	
+	/* Update the invitation state */
+	invitation->state = STATE_REJECTED;
+	
+	/* Format the time to a string */
+	fill_time_str(time_str, 32, invitation->time);
+
+	/* Format the state string */
+	fill_state_str(state_str, invitation->state);
+	
+	/* Update the out_inv_store */
+	gtk_list_store_set(out_inv_store, &iter,
+		/* FIXME: Figure out how to add the correct protocol icon as the first column */
+		TIME_COL,				time_str,
+		STATE_COL,				state_str,
+		-1);
+
+	/* FIXME: Add more interaction with Simias as described in the notes of the function */
+
+	/* FIXME: Change this to a tiny bubble notification instead of popping up the big Invitations Dialog */
+	show_invitations_window();
+	
+	return TRUE;	/* Message was handled correctly */
 }
 
 /**
