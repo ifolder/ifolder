@@ -43,7 +43,7 @@ namespace Simias
 		private static readonly string SimiasLogFile = "simias.log";
 		
 		// TEMP
-		private static readonly string SimiasPatternLayout = "%d [%t] %-5p %c: %m%n";
+		private static readonly string SimiasPatternLayout = "%d [%t] %-5p %c - %m%n";
 		
 		static SimiasLogManager()
 		{
