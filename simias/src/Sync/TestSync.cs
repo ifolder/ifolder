@@ -50,14 +50,12 @@ public class SyncTests: Assertion
 	const bool useTCP = false;
 	const string relClientDir = "SyncTestClientData";
 	const string remoteBinDir = "$IFOLDER_BIN";
-	//const string remoteBinDir = "ifolder/bin";
-	//const string localBinDir = "/cygdrive/c/ifbin/bin";
 	static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
 	static readonly string clientDir = Path.GetFullPath(relClientDir);
 	static readonly string clientFolder = Path.Combine(clientDir, folderName);
 	static readonly string serverFolder = Path.Combine(serverDir, folderName);
 
-	bool runChildProcess = true;
+	bool runChildProcess = false;
 	string clientAddress = null; // for use in SSH commandlines, can be user@hostname, raw IP, etc.
 	string host = "127.0.0.1"; // must be set to name or external address of this machine if clientAddress is set
 
@@ -95,23 +93,6 @@ public class SyncTests: Assertion
 	bool RemoteCopy(string path, string target, bool toRemoteHost)
 	{
 		Assert(clientAddress != null);
-
-		//Console.WriteLine("run pwd start");
-		//Run("pwd", "");
-		//Console.WriteLine("run pwd end");
-
-		//Console.WriteLine("run ls " + path + " start");
-		//Run("ls", path);
-		//Console.WriteLine("run ls end");
-
-		//Console.WriteLine("run cmd start");
-		//Run("cmd", "");
-		//Console.WriteLine("run cmd end");
-
-		//Console.WriteLine("run bash start");
-		//Run("bash", "");
-		//Console.WriteLine("run bash end");
-		
 		string opts = String.Format(toRemoteHost? "-p -r {1}/{2} {0}:{3}/{1}": "-p -r {0}:{3}/{1}/{2} {1}",
 				clientAddress, SSHPath(path), SSHPath(target), remoteBinDir);
 		int err = Run(scpCmd, opts);
@@ -135,7 +116,7 @@ public class SyncTests: Assertion
 		{
 			// run client code as local child process
 			int err;
-			string syncCmdLine = String.Format("-s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
+			string syncCmdLine = String.Format(" -s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
 
 			//TODO: very gross check to determine if we are on mono, but what to do?
 			if (Path.DirectorySeparatorChar == '/')
@@ -182,7 +163,7 @@ public class SyncTests: Assertion
 		try
 		{
 			Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
-			//Log.SetLevel("verbose");
+			Log.SetLevel("verbose");
 
 			// set up server store and collections, and some ifolder file data
 			if (Directory.Exists(serverDir) || Directory.Exists(clientDir)

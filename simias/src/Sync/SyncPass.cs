@@ -335,6 +335,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	try
 	{
 		Access.Rights rights = ss.Start();
+		Log.Spew("-------- started sync pass for collection {0}", collection.Name);
 
 		if (rights == Access.Rights.Deny)
 		{
@@ -342,6 +343,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			return;
 		}
 
+		Log.Spew("-------- starting dredge for collection {0}", collection.Name);
 		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
 		new Dredger(collection, false);
 
