@@ -67,8 +67,6 @@ static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
 
 static SimiasEventClient ec;
-static pthread_t ec_register_handlers_thread;
-
 static gboolean b_nautilus_ifolder_running;
 
 /**
@@ -195,37 +193,51 @@ simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
 	return 0;
 }
 
-static void *
-ec_register_event_handlers (gpointer user_data)
+int
+ec_state_event_cb (SEC_STATE_EVENT state_event, const char *message, void *data)
 {
-	CLIENT_STATE state;
-	/**
-	 * Wait until the event client is attached to the event server and then
-	 * register to listen to the following event types.
-	 */
-	while ((state = sec_get_state (ec)) != CLIENT_STATE_RUNNING) {
-		if (state == CLIENT_STATE_SHUTDOWN
-				|| b_nautilus_ifolder_running == FALSE) {
-			return NULL; /* end this thread */
-		}
-		
-		/* FIXME: Figure out a better way to wait besides a sleep () */
-		sleep (2);
+	SimiasEventClient *ec = (SimiasEventClient *)data;
+	
+	switch (state_event) {
+		case SEC_STATE_EVENT_CONNECTED:
+			g_print ("nautilus-ifolder: Connected event received by SEC\n");
+
+			/* Register our event handler */
+			sec_set_event (*ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
+			sec_set_event (*ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_cb, NULL);
+			g_printf ("nautilus-ifolder: finished registering for simias events\n");
+			
+			/**
+			 * FIXME: Call and get all iFolders and invalidate the extension info
+			 * so that if nautilus-ifolder is loaded before iFolder is even
+			 * running, nautilus-ifolder will be able to add iFolder emblems on
+			 * any iFolder which we've already provided extension info on.
+			 * 
+			 * invalidate_all_extension_info ()
+			 */
+			break;
+		case SEC_STATE_EVENT_DISCONNECTED:
+			g_print ("nautilus-ifolder: Disconnected event received by SEC\n");
+
+			break;
+		case SEC_STATE_EVENT_ERROR:
+			if (message) {
+				g_print ("Error in Simias Event Client: %s\n", message);
+			} else {
+				g_print ("An unknown error occurred in Simias Event Client\n");
+			}
+			break;
+		default:
+			fprintf (stderr, "An unknown Simias Event Client State Event occurred\n");
 	}
 	
-	/* Register our event handler */
-	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
-	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_cb, NULL);
-	
-	g_printf ("nautilus-ifolder: finished registering for simias events\n");
-	
-	return NULL;
+	return 0;
 }
 
 static int
 start_simias_event_client ()
 {
-	if (sec_init (&ec, NULL) != 0) {
+	if (sec_init (&ec, ec_state_event_cb, &ec) != 0) {
 		g_printf ("sec_init failed\n");
 		return -1;
 	}
@@ -235,16 +247,7 @@ start_simias_event_client ()
 		return -1;
 	}
 	
-	printf ("Registration complete\n");
-
-	/**
-	 * Start a thread that will wait until the event client is running and then
-	 * register for events.
-	 */
-	pthread_create (&ec_register_handlers_thread, 
-					NULL, 
-					ec_register_event_handlers,
-					NULL);
+	printf ("sec registration complete\n");
 
 	return 0;
 }
