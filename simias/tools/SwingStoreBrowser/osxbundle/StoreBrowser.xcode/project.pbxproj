@@ -476,33 +476,33 @@
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = "axis-ant.jar";
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/axis-ant.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/axis-ant.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2848D07C5184600F2B104 = {
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = axis.jar;
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/axis.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/axis.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2848E07C5184600F2B104 = {
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = "commons-discovery.jar";
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/commons-discovery.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/commons-discovery.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2848F07C5184600F2B104 = {
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = "commons-logging.jar";
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/commons-logging.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/commons-logging.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2849007C5184600F2B104 = {
 			fileRef = 3ED2848C07C5184600F2B104;
@@ -532,33 +532,33 @@
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = jaxrpc.jar;
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/jaxrpc.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/jaxrpc.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2849507C5185600F2B104 = {
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = "log4j-1.2.8.jar";
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/log4j-1.2.8.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/log4j-1.2.8.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2849607C5185600F2B104 = {
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = saaj.jar;
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/saaj.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/saaj.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2849707C5185600F2B104 = {
 			isa = PBXFileReference;
 			lastKnownFileType = archive.jar;
 			name = wsdl4j.jar;
-			path = "/Users/calvin/code/ifolder/simias/tools/SwingStoreBrowser/tools/axis-1_2RC2/lib/wsdl4j.jar";
-			refType = 0;
-			sourceTree = "<absolute>";
+			path = "../tools/axis-1_2RC2/lib/wsdl4j.jar";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		3ED2849807C5185600F2B104 = {
 			fileRef = 3ED2849407C5185500F2B104;
