@@ -2,37 +2,31 @@ SUBDIRS = src package
 
 DIST_SUBDIRS = $(SUBDIRS) doc
 
-EXTRA_DIST = tools
+EXTRA_DIST = tools $(srcdir)/addressbook.pc.in
 
 .PHONY: doc doc-clean
-doc: sub-doc
+doc:
 	$(MAKE) -C doc all
 
-doc-clean: sub-doc-clean
+doc-clean:
 	$(MAKE) -C doc clean
 
-.PHONY: sub-all sub-clean sub-install sub-uninstall sub-installcheck
-.PHONY: sub-distclean sub-maintainer-clean sub-package sub-installcheck-summary
-.PHONY: sub-package-clean sub-doc sub-doc-clean
-
-clean: sub-clean
-	rm -rf stage *.suo
-
 install-exec-local:
-if LINUX
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
-	$(INSTALL_PROGRAM) $(srcdir)/package/linux/addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
-endif
+	$(INSTALL_PROGRAM) $(srcdir)/addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
 
-installcheck-summary: sub-installcheck-summary
+installcheck-summary:
 	$(MAKE) -C src $@
 
-uninstall-local: sub-uninstall
-if LINUX	
+uninstall-local:
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f addressbook.pc
-endif
 
-maintainer-clean-local: sub-maintainer-clean
+clean-local:
+	rm -rf stage *.suo
+
+dist-clean-local: doc-clean
+
+maintainer-clean-local:
 	rm -f configure Makefile.in addressbook-*.tar.gz config.cache
 	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status
@@ -43,58 +37,5 @@ maintainer-clean-local: sub-maintainer-clean
 
 .PHONY: package package-clean package-install package-uninstall
 
-package package-clean: %: sub-%
+package package-clean package-install package-uninstall:
 	$(MAKE) -C package $@
-
-package-install package-uninstall:
-	$(MAKE) -C package $@
-   
-#
-# Targets to use if building subprojects
-#
-if BUILD_SUBPROJECTS
-
-all install installcheck: %: sub-%
-	@echo "$@ sub done"
-
-#distclean-local: sub-distclean
-distclean: sub-distclean
-	@echo "$@ sub done"
-
-# for all, install subprojects
-sub-all:
-	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-		cd $$subproj; $(MAKE) install; \
-	done
-
-# pass these targets on to subprojects (stripping off sub-)
-sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean sub-package-clean sub-doc sub-doc-clean:
-	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-		cd $$subproj; $(MAKE) $(subst sub-,,$@); \
-	done
-
-# for package, install subprojects then build subproject packages
-sub-package:
-	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-		cd $$subproj; $(MAKE) install package; \
-	done
-
-#
-# Targets to use if not building subprojects
-#
-else
-
-sub-clean:
-sub-installcheck-summary:
-sub-uninstall:
-sub-maintainer-clean:
-sub-package:
-sub-package-clean:
-sub-doc:
-sub-doc-clean:
-
-endif
-

@@ -36,8 +36,10 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : mono >= 0.31
-Requires     : gtk-sharp >= 0.17
+Requires     : mono-core >= 0.91
+Requires     : mono-data >= 0.91
+Requires     : mono-posix >= 0.91
+Requires     : mono-remoting >= 0.91
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================

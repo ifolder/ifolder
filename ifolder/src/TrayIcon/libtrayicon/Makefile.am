@@ -27,4 +27,5 @@ libtrayicon_la_SOURCES = \
 #  eggstatusicon.h\
 #  eggtraymanager.h
 
-
+maintainer-clean-local:
+	rm -f Makefile.in

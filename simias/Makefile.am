@@ -2,7 +2,7 @@ SUBDIRS = src package
 
 DIST_SUBDIRS = $(SUBDIRS) doc
 
-EXTRA_DIST = tools external
+EXTRA_DIST = tools external $(srcdir)/simias.pc.in
 
 .PHONY: doc doc-clean
 doc:
@@ -11,23 +11,15 @@ doc:
 doc-clean:
 	$(MAKE) -C doc clean
 
-.PHONY: package package-clean package-install package-uninstall
-package package-clean package-install package-uninstall:
-	$(MAKE) -C package $@
-
 install-exec-local:
-if LINUX
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
-	$(INSTALL_PROGRAM) $(srcdir)/package/linux/simias.pc $(DESTDIR)$(libdir)/pkgconfig
-endif
+	$(INSTALL_PROGRAM) $(srcdir)/simias.pc $(DESTDIR)$(libdir)/pkgconfig
 
 installcheck-summary:
 	$(MAKE) -C src $@
 	
 uninstall-local:
-if LINUX
 	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f simias.pc
-endif # LINUX
 
 clean-local:
 	rm -rf stage *.suo
@@ -43,3 +35,7 @@ maintainer-clean-local:
 	rm -f missing missing.lnk mkinstalldirs mkinstalldir.lnk
 	rm -rf autom4te.cache
 
+.PHONY: package package-clean package-install package-uninstall
+
+package package-clean package-install package-uninstall:
+	$(MAKE) -C package $@

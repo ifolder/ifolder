@@ -34,6 +34,26 @@ AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
 AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
 
 #
+# We add $prefix to PKG_CONFIG_PATH so pkg-config will find any other
+# packages 'make install'-ed to the same prefix.
+#
+# The default value of $prefix is not set until later in the script.
+# We set the default here, if needed.
+#
+echo prefix=${prefix}
+CONFIGURED_PREFIX="${prefix}"
+test -z "$CONFIGURED_PREFIX" -o "$CONFIGURED_PREFIX" = "NONE" && CONFIGURED_PREFIX=$ac_default_prefix
+echo CONFIGURED_PREFIX=$CONFIGURED_PREFIX
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+if test -z "$PKG_CONFIG_PATH"; then
+    export PKG_CONFIG_PATH="$CONFIGURED_PREFIX/lib/pkgconfig"
+else
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$CONFIGURED_PREFIX/lib/pkgconfig"
+fi
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+AC_SUBST(PKG_CONFIG_PATH)
+
+#
 # Configure C# compiler settings
 #
 case $CSC in
@@ -49,7 +69,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH='$(LOG4NET_DIR):$(MDNSRESPONDER_DIR):$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
+        MONO_PATH="\$(LOG4NET_DIR):\$(MDNSRESPONDER_DIR):\$(top_srcdir)/external/SecureChannelSinks:\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),\$(COMMON_SUBDIRS)))"
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
@@ -101,27 +121,7 @@ AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 
-#
-# Check for a valid operating system
-#
-case $host_os in
-    linux*)
-        SIMIAS_OS='linux'
-    ;;
-    darwin*)
-        SIMIAS_OS='darwin'
-    ;;
-    cygwin*)
-        SIMIAS_OS='windows'
-    ;;
-    *)
-        AC_MSG_ERROR([Unknown host_os: $host_os])
-    ;;
-esac
-AC_SUBST(SIMIAS_OS)
-AM_CONDITIONAL(LINUX, test "$SIMIAS_OS" = "linux")
-AM_CONDITIONAL(WINDOWS, test "$SIMIAS_OS" = "windows")
-AM_CONDITIONAL(DARWIN, test "$SIMIAS_OS" = "darwin")
+COMMON_LIBS="/r:AddressBook.dll /r:Agent.dll /r:CollectionEvents.dll /r:CollectionStore.dll /r:Common.dll /r:CommonGtkWindows.dll /r:Invitation.dll /r:Location.dll /r:RemotingSnifferLibrary.dll /r:Simias.Service.dll /r:Smtp.dll /r:SmtpInvitationProvider.dll /r:SqliteProvider.dll /r:SqliteWrapper.dll /r:Storage.dll /r:StoreProvider.dll /r:SyncCommon.dll /r:Sync.dll /r:SyncLogicLite.dll /r:SyncManager.dll"
 
 #
 # Set platform-specific variables
@@ -151,6 +151,12 @@ case $SIMIAS_OS in
         SEP='/'
         SQLITELIB="libsqlite.so"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
+        #
+        # Set pkg-config variables
+        #
+        PKG_CONFIG_REQUIRES=""
+        PKG_CONFIG_CONFLICTS=""
+        PKG_CONFIG_LIBS="$COMMON_LIBS"
     ;;
     #
     # Linux-specific configuration
@@ -175,6 +181,15 @@ case $SIMIAS_OS in
         SEP='/'
         SQLITELIB="libsqlite.so"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
+        #
+        # Set pkg-config variables
+        #
+        MONO_MINIMUM_VERSION=0.91
+        AC_SUBST(MONO_MINIMUM_VERSION)
+        
+        PKG_CONFIG_REQUIRES=""
+        PKG_CONFIG_CONFLICTS=""
+        PKG_CONFIG_LIBS="$COMMON_LIBS"
     ;;
     #
     # Windows-specific configuration
@@ -196,6 +211,12 @@ case $SIMIAS_OS in
         SEP='$(EMPTY)\\$(EMPTY)'
         SQLITELIB="sqlite.dll"
         SQLITELIB_PATH="$EXTERNAL_DIR/sqlite/w32"
+        #
+        # Set pkg-config variables
+        #
+        PKG_CONFIG_REQUIRES=""
+        PKG_CONFIG_CONFLICTS=""
+        PKG_CONFIG_LIBS="$COMMON_LIBS"
     ;;
 esac
 AC_SUBST(COMMON_CLEAN_FILES)
@@ -206,6 +227,9 @@ AC_SUBST(MDNSRESPONDER_DIR)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
+AC_SUBST(PKG_CONFIG_REQUIRES)
+AC_SUBST(PKG_CONFIG_CONFLICTS)
+AC_SUBST(PKG_CONFIG_LIBS)
 AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(REPORT_DIR)
 AC_SUBST(REPORT_EXE)
@@ -244,7 +268,7 @@ if test -n "$NDOC_PATH"; then
     fi
     test -e "$NDOC_CMD" || AC_MSG_ERROR([NDocConsole.exe not found in $NDOC_PATH])
 fi
-echo NDOC_CMD=$NDOC_CMD
+#echo NDOC_CMD=$NDOC_CMD
 AC_SUBST(NDOC_CMD)
 AM_CONDITIONAL(NDOC, test -n "$NDOC_CMD")
 
@@ -276,7 +300,6 @@ else
   DEVENV_CONFIGURATION=Release
   NUNIT_FLAGS="$NUNITFLAGS_OPTIMIZE $NUNIT_FLAGS"
 fi
-AC_SUBST(CSCFLAGS)
 AC_SUBST(DEVENV_CONFIGURATION)
 
 #
@@ -284,20 +307,15 @@ AC_SUBST(DEVENV_CONFIGURATION)
 #
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "x$PKG_CONFIG" = "xno"; then
-	AC_MSG_ERROR([You need to install pkg-config])
+    AC_MSG_ERROR([You need to install pkg-config])
 fi
-case $SIMIAS_OS in
-    linux)
-        GTK_SHARP_REQUIRED_VERSION=0.10
-        PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_REQUIRED_VERSION)
-    ;;
-esac
 
 #
 # Configure files
 #
 AC_OUTPUT([
 Makefile
+simias.pc
 src/Makefile
 src/Common/Makefile
 src/CommonGtkWindows/Makefile
@@ -329,6 +347,5 @@ package/windows/Makefile
 package/linux/Makefile
 package/darwin/Makefile
 package/linux/simias.spec
-package/linux/simias.pc
 doc/Makefile
 ])
