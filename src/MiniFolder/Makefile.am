@@ -3,7 +3,7 @@ MiniFolder_CSFILES_CSC := $(subst /,$(SEP),$(MiniFolder_CSFILES))
 MiniFolder_INCLUDES = 
 MiniFolder_RESOURCES =
 MiniFolder_FLAGS = $(CSC_EXEFLAG)
-MiniFolder_LIBS = System.dll $(SYSTEM_XML) Common.dll CollectionStore.dll StoreProvider.dll Identity.dll SyncManager.dll CollectionWatcher.dll SyncCommon.dll SyncLogicLite.dll Sync.dll
+MiniFolder_LIBS = System.dll $(SYSTEM_XML) Common.dll CollectionStore.dll StoreProvider.dll SyncManager.dll CollectionWatcher.dll SyncCommon.dll SyncLogicLite.dll Sync.dll
 MiniFolder_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 NUNIT_TESTS :=

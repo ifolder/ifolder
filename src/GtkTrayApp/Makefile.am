@@ -3,7 +3,7 @@ TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
 TrayAppGtk_FLAGS = $(CSC_EXEFLAG)
-TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll Identity.dll CollectionStore.dll AddressBook.dll Agent.dll iFolder.dll egg-sharp.dll BookLib.dll Sync.dll SyncCommon.dll SyncManager.dll Configuration.dll Common.dll CommonGtkWindows.dll SyncLogicLite.dll
+TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll CollectionStore.dll AddressBook.dll Agent.dll iFolder.dll egg-sharp.dll BookLib.dll Sync.dll SyncCommon.dll SyncManager.dll Configuration.dll Common.dll CommonGtkWindows.dll SyncLogicLite.dll
 TrayAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
 
 
@@ -21,7 +21,7 @@ CollectionBrowserGtk_CSFILES_CSC := $(subst /,$(SEP),$(CollectionBrowserGtk_CSFI
 CollectionBrowserGtk_INCLUDES = 
 CollectionBrowserGtk_RESOURCES =
 CollectionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
-CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll Identity.dll CollectionStore.dll Configuration.dll AddressBook.dll Agent.dll iFolder.dll BookLib.dll
+CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) StoreProvider.dll CollectionStore.dll Configuration.dll AddressBook.dll Agent.dll iFolder.dll BookLib.dll
 CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin ../iFolder
 
 

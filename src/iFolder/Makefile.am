@@ -3,7 +3,7 @@ iFolder_CSFILES_CSC := $(subst /,$(SEP),$(iFolder_CSFILES))
 iFolder_INCLUDES = 
 iFolder_RESOURCES =
 iFolder_FLAGS = $(CSC_LIBFLAG)
-iFolder_LIBS = System.dll $(SYSTEM_XML) CollectionStore.dll Agent.dll Identity.dll
+iFolder_LIBS = System.dll $(SYSTEM_XML) CollectionStore.dll Agent.dll
 iFolder_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 iFolderCmd_CSFILES = $(srcdir)/iFolderCmd.cs
@@ -11,7 +11,7 @@ iFolderCmd_CSFILES_CSC := $(subst /,$(SEP),$(iFolderCmd_CSFILES))
 iFolderCmd_INCLUDES = 
 iFolderCmd_RESOURCES =
 iFolderCmd_FLAGS = $(CSC_EXEFLAG)
-iFolderCmd_LIBS = System.dll $(SYSTEM_XML) CollectionStore.dll Agent.dll Identity.dll iFolder.dll
+iFolderCmd_LIBS = System.dll $(SYSTEM_XML) CollectionStore.dll Agent.dll iFolder.dll
 iFolderCmd_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
 
 NUNIT_TESTS := iFolderTests.dll
@@ -21,7 +21,7 @@ iFolderTests_CSFILES_CSC := $(subst /,$(SEP),$(iFolderTests_CSFILES))
 iFolderTests_INCLUDES = 
 iFolderTests_RESOURCES =
 iFolderTests_FLAGS = $(CSC_LIBFLAG)
-iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Agent.dll iFolder.dll CollectionStore.dll Identity.dll
+iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Agent.dll iFolder.dll CollectionStore.dll 
 iFolderTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin $(SIMIAS_INSTALL_PATH)/bin
 
 EXTRA_DIST = $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderTests_CSFILES)
