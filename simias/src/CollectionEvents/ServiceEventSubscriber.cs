@@ -85,7 +85,7 @@ namespace Simias.Event
 		//[OneWay]
 		public void OnServiceControl(ServiceEventArgs args)
 		{
-			if (ServiceControl != null && userName == args.UserName)
+			if (ServiceControl != null)
 			{
 				Delegate[] cbList = ServiceControl.GetInvocationList();
 				foreach (ServiceEventHandler cb in cbList)

@@ -83,10 +83,10 @@ namespace Simias
 			{
 				switch (args.EventType)
 				{
-					case ServiceEventArgs.ServiceEvent.Shutdown:
+					case ServiceEvent.Shutdown:
 						shutdownEvent.Set();
 						break;
-					case ServiceEventArgs.ServiceEvent.Reconfigure:
+					case ServiceEvent.Reconfigure:
 						OnReconfigure();
 						break;
 				}

@@ -34,8 +34,12 @@ namespace Simias.Event
 	/// </summary>
 	public class EventPublisher
 	{
+		#region Fields
+
 		EventBroker broker;
 		Configuration	conf;
+
+		#endregion
 			
 		#region Constructor
 
@@ -52,49 +56,16 @@ namespace Simias.Event
 
 		#endregion
 
-		#region Publish Calls.
+		#region Publish Call.
 
 		/// <summary>
-		/// Called to publish a Collection root change event.
+		/// Called to publish a collection event.
 		/// </summary>
 		/// <param name="args"></param>
-		public void RaiseCollectionRootChangedEvent(CollectionRootChangedEventArgs args)
+		public void RaiseEvent(CollectionEventArgs args)
 		{
 			if (broker != null)
-				broker.RaiseCollectionRootChangedEvent(args);
-		}
-
-		/// <summary>
-		/// Called to publish a Node event.
-		/// </summary>
-		/// <param name="args"></param>
-		public void RaiseNodeEvent(NodeEventArgs args)
-		{
-			if (broker != null)
-			{
-				//broker.RaiseEvent(args.ChangeType, args);
-				broker.RaiseNodeEvent(args);
-			}
-		}
-
-		/// <summary>
-		/// Called to publish a File event.
-		/// </summary>
-		/// <param name="args"></param>
-		public void RaiseFileEvent(FileEventArgs args)
-		{
-			if (broker != null)
-				broker.RaiseFileEvent(args);
-		}
-
-		/// <summary>
-		/// Called to publish a service event to listening services.
-		/// </summary>
-		/// <param name="args">Arguments for the event.</param>
-		public void RaiseServiceEvent(ServiceEventArgs args)
-		{
-			if (broker != null)
-				broker.RaiseServiceEvent(args);
+				broker.RaiseEvent(args);
 		}
 
 		#endregion

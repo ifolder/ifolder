@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 using System;
+using System.Text;
 
 namespace Simias.Event
 {
@@ -31,6 +32,18 @@ namespace Simias.Event
 	[Serializable]
 	public class NodeEventArgs : CollectionEventArgs
 	{
+		#region Fields
+
+		string					source;
+		string					id;
+		string					collection;
+		string					type;
+		int						eventId;
+		
+		#endregion
+
+		#region Constructor
+
 		/// <summary>
 		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
 		/// Descibes the node affected by the event.
@@ -56,10 +69,86 @@ namespace Simias.Event
 		/// <param name="changeType">The type of change that occured.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
 		public NodeEventArgs(string source, string node, string collection, string type, EventType changeType, int eventId) :
-			base(source, node, collection, type, changeType, eventId)
+			base(changeType)
 		{
+			this.source = source;
+			this.id = node;
+			this.collection = collection;
+			this.type = type;
+			this.eventId = eventId;
+		}
+
+		#endregion
+
+		#region Marshallers
+
+		internal override string MarshallToString()
+		{
+            StringBuilder sb = new StringBuilder(base.MarshallToString());
+			sb.Append(source + seperatorChar);
+			sb.Append(id + seperatorChar);
+			sb.Append(collection + seperatorChar);
+			sb.Append(type + seperatorChar);
+			sb.Append(eventId + seperatorChar);
+			return sb.ToString();
+		}
+
+		internal override void MarshallFromString(string sArgs)
+		{
+			int i = 0;
+			string [] sArg = sArgs.Split(seperatorChar);
+			source = sArg[i++];
+			id = sArg[i++];
+			collection = sArg[i++];
+			type = sArg[i++];
+			eventId = int.Parse(sArg[i++]);
+		}
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets the string that represents the source of the event.
+		/// </summary>
+		public string Source
+		{
+			get {return source;}
+		}
+
+		/// <summary>
+		/// Gets the ID of the affected Node/Collection.
+		/// </summary>
+		public string ID
+		{
+			get {return id;}
 		}
 		
+		/// <summary>
+		/// Gets the containing collection ID.
+		/// </summary>
+		public string Collection
+		{
+			get {return collection;}
+		}
+
+		/// <summary>
+		/// Gets the Type of the affected Node.
+		/// </summary>
+		public string Type
+		{
+			get {return type;}
+		}
+
+		/// <summary>
+		/// Gets a Sets an event ID.  Usually 0. 
+		/// Used by a publisher. Can be used to detect circular events.
+		/// </summary>
+		public int EventId
+		{
+			get {return eventId;}
+		}
+
 		/// <summary>
 		/// Gets the Node ID.
 		/// </summary>
@@ -67,5 +156,7 @@ namespace Simias.Event
 		{
 			get {return ID;}
 		}
+
+		#endregion
 	}
 }

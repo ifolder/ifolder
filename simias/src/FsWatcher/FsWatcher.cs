@@ -55,27 +55,27 @@ namespace Simias.Event
 		{
 			// Specify what is done when a file is changed, created, or deleted.
 			System.Diagnostics.Debug.WriteLine("Changed File: " +  e.FullPath + " " + e.ChangeType);
-			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Changed));
+			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileChanged));
 		}
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
-			publish.RaiseFileEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
+			publish.RaiseEvent(new FileRenameEventArgs(source.ToString(), e.FullPath, collectionId, e.OldFullPath));
 			System.Diagnostics.Debug.WriteLine(string.Format("Renamed File: {0} renamed to {1}", e.OldFullPath, e.FullPath));
 		}
 
 		private void OnDeleted(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is changed, created, or deleted.
-			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Deleted));
+			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileDeleted));
 			System.Diagnostics.Debug.WriteLine("Deleted File: " +  e.FullPath + " " + e.ChangeType);
 		}
 
 		private void OnCreated(object source, FileSystemEventArgs e)
 		{
 			// Specify what is done when a file is renamed.
-			publish.RaiseFileEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, FileEventArgs.EventType.Created));
+			publish.RaiseEvent(new FileEventArgs(source.ToString(), e.FullPath, collectionId, EventType.FileCreated));
 			System.Diagnostics.Debug.WriteLine("Created File: {0} Created.", e.FullPath);
 		}
 	}

@@ -455,7 +455,7 @@ namespace Simias.Storage
 					Directory.Move( newRoot.LocalPath, sourcePathString );
 
 					// Generate event that document root was changed.
-					localStore.Publisher.RaiseCollectionRootChangedEvent( new CollectionRootChangedEventArgs( localStore.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
+					localStore.Publisher.RaiseEvent( new CollectionRootChangedEventArgs( localStore.ComponentId, Id, NameSpaceType, sourcePathString, newRoot.LocalPath ) );
 				}
 				catch
 				{
@@ -619,12 +619,12 @@ namespace Simias.Storage
 					if ( tempCacheNode.isPersisted )
 					{
 						// Fire an event to notify that this node has been changed.
-						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, NodeEventArgs.EventType.Changed, localStore.Instance ) );
+						localStore.Publisher.RaiseEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeChanged, localStore.Instance ) );
 					}
 					else
 					{
 						// Fire an event to notify that this node has been created.
-						localStore.Publisher.RaiseNodeEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, NodeEventArgs.EventType.Created, localStore.Instance ) );
+						localStore.Publisher.RaiseEvent( new NodeEventArgs( localStore.ComponentId, tempCacheNode.id, Id, tempCacheNode.type, EventType.NodeCreated, localStore.Instance ) );
 
 						// Mark the node as persisted.
 						tempCacheNode.isPersisted = true;

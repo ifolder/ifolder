@@ -44,7 +44,7 @@ namespace Simias.Event
 		/// <param name="collectionId">The collection that this file belongs to.</param>
 		/// <param name="oldPath">The full path to the old name.</param>
 		public FileRenameEventArgs(string source, string fullPath, string collectionId, string oldPath):
-			base(source, fullPath, collectionId, FileEventArgs.EventType.Renamed)
+			base(source, fullPath, collectionId, EventType.FileRenamed)
 		{
 			this.oldPath = oldPath;
 		}

@@ -40,12 +40,17 @@ namespace Simias.Event
 	/// <summary>
 	/// Delegate definition for handling collection events.
 	/// </summary>
-	public delegate void CollectionEventHandler(CollectionRootChangedEventArgs args);
+	public delegate void CollectionEventHandler(CollectionEventArgs args);
 
 	/// <summary>
 	/// Delegate definition for handling collection events.
 	/// </summary>
 	public delegate void NodeEventHandler(NodeEventArgs args);
+
+	/// <summary>
+	/// Delegate definition for handling Collection root change events.
+	/// </summary>
+	public delegate void CollectionRootChangedHandler(CollectionRootChangedEventArgs args);
 	
 	/// <summary>
 	/// Delegate definition for file events.
@@ -65,8 +70,9 @@ namespace Simias.Event
 	/// <summary>
 	/// Used to get around a marshalling problem seen with explorer.
 	/// </summary>
-	public delegate void InternalEventHandler(CollectionEventArgs.EventType type, string args);
+	public delegate void InternalEventHandler(EventType type, string args);
 
+	
 	#endregion
 
 	#region EventBroker class
@@ -76,7 +82,10 @@ namespace Simias.Event
 	/// </summary>
 	public class EventBroker : MarshalByRefObject
 	{
-		EventBroker instance = null;
+		bool shuttingDown = false;
+		Queue eventQueue;
+		ManualResetEvent queued;
+
 		#region Events
 
 		/// <summary>
@@ -97,7 +106,7 @@ namespace Simias.Event
 		/// <summary>
 		/// Delegate to handle Collection Root Path changes.
 		/// </summary>
-		public event CollectionEventHandler CollectionRootChanged;
+		public event CollectionRootChangedHandler CollectionRootChanged;
 		/// <summary>
 		/// Delegate to handle File Creations.
 		/// </summary>
@@ -119,53 +128,117 @@ namespace Simias.Event
 		/// </summary>
 		public event ServiceEventHandler ServiceControl;
 
-		/// <summary>
-		/// Used to work around a marshalling problem seen with explorer.
-		/// </summary>
-		public event InternalEventHandler InternalEvent;
+		#endregion
+
+		#region Constructor
+
+		public EventBroker()
+		{
+			// Start a thread to handle events.
+			eventQueue = new Queue();
+			queued = new ManualResetEvent(false);
+			System.Threading.Thread t = new Thread(new ThreadStart(EventThread));
+			t.Start();
+		}
 
 		#endregion
 
-		#region Event Signalers
+		#region EventThread
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="eventType"></param>
-		/// <param name="args"></param>
-		public void RaiseEvent(CollectionEventArgs.EventType eventType, CollectionEventArgs args)
+		private void EventThread()
 		{
-			MyTrace.WriteLine("Recieved Event {0}", eventType.ToString());
-			if (InternalEvent != null)
+			while (!shuttingDown)
 			{
-				string eventArgs = args.MarshallToString();
-				foreach (InternalEventHandler cb in InternalEvent.GetInvocationList())
+				try
 				{
-					try
+					queued.WaitOne();
+					lock (eventQueue)
 					{
-						cb(eventType, eventArgs);
+						if (eventQueue.Count > 0)
+						{
+							CollectionEventArgs args = (CollectionEventArgs)eventQueue.Dequeue();
+
+							switch (args.ChangeType)
+							{
+								case EventType.NodeCreated:
+									callNodeDelegate(NodeCreated, (NodeEventArgs)args);
+									break;
+								case EventType.NodeDeleted:
+									callNodeDelegate(NodeDeleted, (NodeEventArgs)args);
+									break;
+								case EventType.NodeChanged:
+									callNodeDelegate(NodeChanged, (NodeEventArgs)args);
+									break;
+								case EventType.CollectionRootChanged:
+									callCrcDelegate((CollectionRootChangedEventArgs)args);
+									break;
+								case EventType.FileCreated:
+									callFileDelegate(FileCreated, (FileEventArgs)args);
+									break;
+								case EventType.FileDeleted:
+									callFileDelegate(FileDeleted, (FileEventArgs)args);
+									break;
+								case EventType.FileChanged:
+									callFileDelegate(FileChanged, (FileEventArgs)args);
+									break;
+								case EventType.FileRenamed:
+									callFileRenDelegate((FileRenameEventArgs)args);
+									break;
+								case EventType.ServiceEvent:
+									callSvcDelegate((ServiceEventArgs)args);
+									break;
+							}
+						}
+						else
+						{
+							queued.Reset();
+						}
 					}
-					catch
+				}
+				catch {}
+			}
+		}
+
+		#endregion
+
+		void callNodeDelegate(NodeEventHandler eHandler, NodeEventArgs args)
+		{
+			if (eHandler != null)
+			{
+				Delegate[] cbList = eHandler.GetInvocationList();
+				foreach (NodeEventHandler cb in cbList)
+				{
+					try 
+					{ 
+						cb(args);
+					}
+					catch 
 					{
-						InternalEvent -= cb;
+						// Remove the offending delegate.
+						switch (args.ChangeType)
+						{
+							case EventType.NodeCreated:
+								NodeCreated -= cb;
+								break;
+							case EventType.NodeDeleted:
+								NodeDeleted -= cb;
+								break;
+							case EventType.NodeChanged:
+								NodeChanged -= cb;
+								break;
+						}
 						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
 		}
 
-		/// <summary>
-		/// Used to publish a Collection root changed event.
-		/// </summary>
-		/// <param name="args">The arguments of the event.</param>
-		[OneWay]
-		public void RaiseCollectionRootChangedEvent(CollectionRootChangedEventArgs args)
+		void callCrcDelegate(CollectionRootChangedEventArgs args)
 		{
-			MyTrace.WriteLine("Recieved CollectionRootChangedEvent ID = {0}", args.ID);
 			if (CollectionRootChanged != null)
 			{
 				Delegate[] cbList = CollectionRootChanged.GetInvocationList();
-				foreach (CollectionEventHandler cb in cbList)
+				foreach (CollectionRootChangedHandler cb in cbList)
 				{
 					try 
 					{ 
@@ -181,115 +254,8 @@ namespace Simias.Event
 			}
 		}
 
-		/// <summary>
-		/// Used to publish a Node event.
-		/// </summary>
-		/// <param name="args">The arguments of the event.</param>
-		[OneWay]
-		public void RaiseNodeEvent(NodeEventArgs args)
+		void callFileDelegate(FileEventHandler eHandler, FileEventArgs args)
 		{
-			NodeEventHandler eHandler;
-			switch (args.ChangeType)
-			{
-				case NodeEventArgs.EventType.Created:
-					MyTrace.WriteLine("Received Node Create Event. ID = {0}", args.ID);
-					eHandler = NodeCreated;
-					break;
-				case NodeEventArgs.EventType.Changed:
-					MyTrace.WriteLine("Received Node Changed Event. ID = {0}", args.ID);
-					eHandler = NodeChanged;
-					break;
-				case NodeEventArgs.EventType.Deleted:
-					MyTrace.WriteLine("Received Node Delete Event. ID = {0}", args.ID);
-					eHandler = NodeDeleted;
-					break;
-				default:
-					eHandler = null;
-					break;
-			}
-
-			if (eHandler != null)
-			{
-				Delegate[] cbList = eHandler.GetInvocationList();
-				foreach (NodeEventHandler cb in cbList)
-				{
-					try 
-					{ 
-						cb(args);
-					}
-					catch 
-					{
-						// Remove the offending delegate.
-						switch (args.ChangeType)
-						{
-							case NodeEventArgs.EventType.Created:
-								NodeCreated -= cb;
-								break;
-							case NodeEventArgs.EventType.Changed:
-								NodeChanged -= cb;
-								break;
-							case NodeEventArgs.EventType.Deleted:
-								NodeDeleted -= cb;
-								break;
-							default:
-								break;
-						}
-						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-					}
-				}
-			}
-		}
-
-		
-
-		/// <summary>
-		/// Used to publish a File event.
-		/// </summary>
-		/// <param name="args">The arguments of the event.</param>
-		[OneWay]
-		public void RaiseFileEvent(FileEventArgs args)
-		{
-			FileEventHandler eHandler;
-			switch (args.ChangeType)
-			{
-				case FileEventArgs.EventType.Created:
-					MyTrace.WriteLine("Received File Create Event. Name = {0}", args.Name);
-					eHandler = FileCreated;
-					break;
-				case FileEventArgs.EventType.Changed:
-					MyTrace.WriteLine("Received File Changed Event. Name = {0}", args.Name);
-					eHandler = FileChanged;
-					break;
-				case FileEventArgs.EventType.Deleted:
-					MyTrace.WriteLine("Received File Delete Event. Name = {0}", args.Name);
-					eHandler = FileDeleted;
-					break;
-				case FileEventArgs.EventType.Renamed:
-					MyTrace.WriteLine("Received File Rename Event. OldName = {0} NewName = {1}", ((FileRenameEventArgs)args).OldName, args.Name);
-					eHandler = null;
-					if (FileRenamed != null)
-					{
-						Delegate[] cbList = FileRenamed.GetInvocationList();
-						foreach (FileRenameEventHandler cb in cbList)
-						{
-							try 
-							{ 
-								cb((FileRenameEventArgs)args);
-							}
-							catch 
-							{
-								// Remove the offending delegate.
-								FileRenamed -= cb;
-								MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
-							}
-						}
-					}
-					break;
-				default:
-					eHandler = null;
-					break;
-			}
-
 			if (eHandler != null)
 			{
 				Delegate[] cbList = eHandler.GetInvocationList();
@@ -304,14 +270,14 @@ namespace Simias.Event
 						// Remove the offending delegate.
 						switch (args.ChangeType)
 						{
-							case FileEventArgs.EventType.Created:
+							case EventType.FileCreated:
 								FileCreated -= cb;
 								break;
-							case FileEventArgs.EventType.Changed:
-								FileChanged -= cb;
-								break;
-							case FileEventArgs.EventType.Deleted:
+							case EventType.FileDeleted:
 								FileDeleted -= cb;
+								break;
+							case EventType.FileChanged:
+								FileChanged -= cb;
 								break;
 						}
 						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
@@ -320,12 +286,28 @@ namespace Simias.Event
 			}
 		}
 
-		/// <summary>
-		/// Used to publish a service control event to listening service.
-		/// </summary>
-		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
-		public void RaiseServiceEvent(ServiceEventArgs args)
+		void callFileRenDelegate(FileRenameEventArgs args)
+		{
+			if (FileRenamed != null)
+			{
+				Delegate[] cbList = FileRenamed.GetInvocationList();
+				foreach (FileRenameEventHandler cb in cbList)
+				{
+					try 
+					{ 
+						cb(args);
+					}
+					catch 
+					{
+						// Remove the offending delegate.
+						FileRenamed -= cb;
+						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
+					}
+				}
+			}
+		}
+
+		void callSvcDelegate(ServiceEventArgs args)
 		{
 			if (ServiceControl != null)
 			{
@@ -344,10 +326,27 @@ namespace Simias.Event
 					}
 				}
 			}
-			if (args.Target == ServiceEventArgs.TargetAll && args.EventType == ServiceEventArgs.ServiceEvent.Shutdown)
+			if (args.EventType == ServiceEvent.Shutdown)
 			{
 				System.Diagnostics.Process.GetCurrentProcess().Kill();
 			}
+		}
+
+
+		#region Event Signalers
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="args"></param>
+		public void RaiseEvent(CollectionEventArgs args)
+		{
+			lock (eventQueue)
+			{
+				eventQueue.Enqueue(args);
+				queued.Set();
+			}
+			MyTrace.WriteLine("Recieved Event {0}", args.ChangeType.ToString());
 		}
 
 		#endregion

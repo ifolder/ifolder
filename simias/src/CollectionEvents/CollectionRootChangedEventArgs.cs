@@ -62,7 +62,7 @@ namespace Simias.Event
 		/// <param name="newRoot">The new path to the root path.</param>
 		/// <param name="eventId">A user defined event ID. Only has meaning to a publisher.</param>
 		public CollectionRootChangedEventArgs(string source, string collection, string type, string oldRoot, string newRoot, int eventId) :
-			base(source, collection, collection, type, CollectionEventArgs.EventType.RootChanged, eventId)
+			base(source, collection, collection, type, EventType.CollectionRootChanged, eventId)
 
 		{
 			this.oldRoot = oldRoot;

@@ -219,8 +219,8 @@ namespace Novell.iFolder.FormsTrayApp
 
 			if (publisher != null)
 			{
-				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEventArgs.ServiceEvent.Shutdown);
-				publisher.RaiseServiceEvent(args);
+				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEvent.Shutdown);
+				publisher.RaiseEvent(args);
 			}
 
 			/*
@@ -280,8 +280,8 @@ namespace Novell.iFolder.FormsTrayApp
 
 			if (publisher != null)
 			{
-				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEventArgs.ServiceEvent.Shutdown);
-				publisher.RaiseServiceEvent(args);
+				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEvent.Shutdown);
+				publisher.RaiseEvent(args);
 			}
 
 			/*

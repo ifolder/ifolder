@@ -30,7 +30,7 @@ namespace Simias.Event
 	/// The event arguments for file events.
 	/// </summary>
 	[Serializable]
-	public class FileEventArgs : CollectionEventArgs
+	public class FileEventArgs : NodeEventArgs
 	{
 		/// <summary>
 		/// Constructs a CollectionEventArgs that will be used by CollectionHandler delegates.
