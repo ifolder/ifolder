@@ -44,7 +44,7 @@ namespace Novell.iFolderCom
 		private iFolderWeb ifolder;
 		private string loadPath;
 		private bool fixPath = true;
-		private Conflict conflict = null;
+		private Conflicts conflicts = null;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -940,12 +940,12 @@ namespace Novell.iFolderCom
 		{
 			foreach (ListViewItem lvi in conflictsView.SelectedItems)
 			{
-				Conflict conflict = (Conflict)lvi.Tag;
-				if (!conflict.IsNameConflict)
+				Conflicts conflicts = (Conflicts)lvi.Tag;
+				if (!conflicts.ServerConflict.IsNameConflict)
 				{
 					try
 					{
-						ifWebService.ResolveFileConflict(ifolder.ID, conflict.ConflictID, localWins);
+						ifWebService.ResolveFileConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, localWins);
 						lvi.Remove();
 					}
 					catch (Exception ex)
@@ -956,22 +956,43 @@ namespace Novell.iFolderCom
 				}
 				else
 				{
-					// Prompt for new name.
 					NameConflictPrompt namePrompt = new NameConflictPrompt();
 					namePrompt.FilePath = ifolder.UnManagedPath;
-					namePrompt.FileName = (conflict.LocalName != null) ? conflict.LocalName : conflict.ServerName;
-					namePrompt.LocalName = (conflict.LocalName != null) ? conflict.LocalFullPath : string.Empty;
-					if (namePrompt.ShowDialog() == DialogResult.OK)
+
+					if (conflicts.LocalConflict != null)
 					{
-						try
+						namePrompt.FileName = conflicts.LocalConflict.LocalName;
+						if (namePrompt.ShowDialog() == DialogResult.OK)
 						{
-							ifWebService.ResolveNameConflict(ifolder.ID, conflict.ConflictID, namePrompt.FileName);
-							lvi.Remove();
+							try
+							{
+								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, namePrompt.FileName);
+								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, conflicts.ServerConflict.ServerName);
+								lvi.Remove();
+							}
+							catch (Exception ex)
+							{
+								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 						}
-						catch (Exception ex)
+					}
+					else
+					{
+						// Prompt for new name.
+						namePrompt.FileName = conflicts.ServerConflict.ServerName;
+						if (namePrompt.ShowDialog() == DialogResult.OK)
 						{
-							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
+							try
+							{
+								ifWebService.ResolveNameConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, namePrompt.FileName);
+								lvi.Remove();
+							}
+							catch (Exception ex)
+							{
+								MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("conflictResolveError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
+							}
 						}
 					}
 				}
@@ -1045,22 +1066,45 @@ namespace Novell.iFolderCom
 				ifolderName.Text = ifolder.Name;
 
 				// Put the conflicts in the listview.
-				Conflict[] conflicts = ifWebService.GetiFolderConflicts(ifolder.ID);
-				foreach (Conflict conflict in conflicts)
+				Conflict[] conflictArray = ifWebService.GetiFolderConflicts(ifolder.ID);
+				foreach (Conflict conflict in conflictArray)
 				{
 					// TODO: what name to use ... and icon.
-					ListViewItem lvi;
+					Conflicts conflicts = new Conflicts();
+					ListViewItem lvi = null;
 					if (!conflict.IsNameConflict)
 					{
 						lvi = new ListViewItem(conflict.LocalName);
+						conflicts.LocalConflict = conflict;
 					}
-					else
+					else if (conflict.ServerName != null)
 					{
-						lvi = new ListViewItem((conflict.ServerName != null) ? conflict.ServerName : conflict.LocalName);
+						lvi = new ListViewItem(conflict.ServerName);
+						conflicts.ServerConflict = conflict;
 					}
 
-					lvi.Tag = conflict;
-					this.conflictsView.Items.Add(lvi);
+					if (lvi != null)
+					{
+						lvi.Tag = conflicts;
+						conflictsView.Items.Add(lvi);
+					}
+				}
+
+				foreach (Conflict conflict in conflictArray)
+				{
+					if (conflict.IsNameConflict && (conflict.LocalFullPath != null))
+					{
+						foreach (ListViewItem lvi in conflictsView.Items)
+						{
+							Conflicts conflicts = (Conflicts)lvi.Tag;
+
+							if (lvi.Text.Equals(conflict.LocalName) && conflicts.ServerConflict.ServerFullPath.Equals(conflict.LocalFullPath))
+							{
+								((Conflicts)lvi.Tag).LocalConflict = conflict;
+								break;
+							}
+						}
+					}
 				}
 			}
 			catch (Exception ex)
@@ -1077,35 +1121,50 @@ namespace Novell.iFolderCom
 
 			if (conflictsView.SelectedItems.Count == 1)
 			{
-				conflict = (Conflict)conflictsView.SelectedItems[0].Tag;
-
-				// Fill in the local data.
-				if (conflict.LocalName != null)
-				{
-					localName.Text = conflict.LocalName;
-					localDate.Text = conflict.LocalDate;
-					localSize.Text = conflict.LocalSize;
-				}
+				conflicts = (Conflicts)conflictsView.SelectedItems[0].Tag;
 
 				// Fill in the server data.
-				if (conflict.ServerName != null)
-				{
-					serverName.Text = conflict.ServerName;
-					serverDate.Text = conflict.ServerDate;
-					serverSize.Text = conflict.ServerSize;
-				}
+				serverName.Text = conflicts.ServerConflict.ServerName;
+				serverDate.Text = conflicts.ServerConflict.ServerDate;
+				serverSize.Text = conflicts.ServerConflict.ServerSize;
 
-				saveLocal.Enabled = conflict.LocalName != null;
-				saveServer.Enabled = conflict.ServerName != null;
+				if (!conflicts.ServerConflict.IsNameConflict)
+				{
+					// Fill in the server data.
+					localName.Text = conflicts.ServerConflict.LocalName;
+					localDate.Text = conflicts.ServerConflict.LocalDate;
+					localSize.Text = conflicts.ServerConflict.LocalSize;
+
+					saveLocal.Enabled = saveServer.Enabled = true;
+				}
+				else
+				{
+					if (conflicts.LocalConflict != null)
+					{
+						// Fill in the local data.
+						localName.Text = conflicts.LocalConflict.LocalName;
+						localDate.Text = conflicts.LocalConflict.LocalDate;
+						localSize.Text = conflicts.LocalConflict.LocalSize;
+						saveLocal.Enabled = true;
+						saveServer.Enabled = false;
+					}
+					else
+					{
+						saveLocal.Enabled = false;
+						saveServer.Enabled = true;
+					}
+				}
 			}
 			else
 			{
-				conflict = null;
+				conflicts = null;
 
 				// Clear the data fields.
 				localName.Text = serverName.Text =
 					localDate.Text = serverDate.Text =
 					localSize.Text = serverSize.Text = "";
+
+				saveLocal.Enabled = saveServer.Enabled = false;
 			}
 		}
 
@@ -1121,11 +1180,18 @@ namespace Novell.iFolderCom
 
 		private void localName_DoubleClick(object sender, System.EventArgs e)
 		{
-			if (conflict != null)
+			if (conflicts != null)
 			{
 				try
 				{
-					System.Diagnostics.Process.Start(conflict.LocalFullPath);
+					if (!conflicts.ServerConflict.IsNameConflict)
+					{
+						System.Diagnostics.Process.Start(conflicts.ServerConflict.LocalFullPath);
+					}
+					else if (conflicts.LocalConflict != null)
+					{
+						System.Diagnostics.Process.Start(conflicts.LocalConflict.LocalFullPath);
+					}
 				}
 				catch (Exception ex)
 				{
@@ -1137,11 +1203,11 @@ namespace Novell.iFolderCom
 
 		private void serverName_DoubleClick(object sender, System.EventArgs e)
 		{
-			if (conflict != null)
+			if (conflicts != null)
 			{
 				try
 				{
-					System.Diagnostics.Process.Start(conflict.ServerFullPath);
+					System.Diagnostics.Process.Start(conflicts.ServerConflict.ServerFullPath);
 				}
 				catch (Exception ex)
 				{
@@ -1201,5 +1267,37 @@ namespace Novell.iFolderCom
 			localPanel.Width = versionsPanel.Width / 2;
 		}
 		#endregion
+	}
+
+	[ComVisible(false)]
+	public class Conflicts
+	{
+		private Conflict localConflict = null;
+		private Conflict serverConflict = null;
+
+		/// <summary>
+		/// Constructs a Conflicts object.
+		/// </summary>
+		public Conflicts()
+		{
+		}
+
+		/// <summary>
+		/// Gets/sets the LocalConflict.
+		/// </summary>
+		public Conflict LocalConflict
+		{
+			get { return (this.localConflict); }
+			set { this.localConflict = value; }
+		}
+
+		/// <summary>
+		/// Gets/sets the ServerConflict.
+		/// </summary>
+		public Conflict ServerConflict
+		{
+			get { return (this.serverConflict); }
+			set { this.serverConflict = value; }
+		}
 	}
 }
