@@ -52,6 +52,32 @@ namespace Simias
 		static private Hashtable registeredProviders = new Hashtable();
 		#endregion
 
+		#region Properties
+		/// <summary>
+		/// Gets the number of registered providers.
+		/// </summary>
+		static public int Count
+		{
+			get { return registeredProviders.Count; }
+		}
+
+		/// <summary>
+		/// Returns the registered domain providers.
+		/// </summary>
+		static public IDomainProvider[] Providers
+		{
+			get
+			{
+				IDomainProvider[] providers = new IDomainProvider[ registeredProviders.Count ];
+				lock ( typeof( DomainProvider ) )
+				{
+					registeredProviders.CopyTo( providers, 0 );
+				}
+				return providers;
+			}
+		}
+		#endregion
+
 		#region Private Methods
 		/// <summary>
 		/// Searches the list of registered location providers and asks if

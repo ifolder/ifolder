@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH):$(DESTDIR)$(libdir)
 
-CollectionStoreTests_CSFILES = $(srcdir)/CollectionStoreTests.cs $(srcdir)/AssemblyInfo.cs
+CollectionStoreTests_CSFILES = $(srcdir)/CollectionStoreTests.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/FindMemberTests.cs
 CollectionStoreTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStoreTests_CSFILES))
 CollectionStoreTests_INCLUDES =
 CollectionStoreTests_RESOURCES =
@@ -42,7 +42,7 @@ CLEAN_FILES = $(NUNIT_TESTS) CollectionStoreTests.doc.xml CollectionStoreTests.t
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-    
+
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)
 

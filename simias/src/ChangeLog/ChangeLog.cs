@@ -1110,12 +1110,12 @@ namespace Simias.Storage
 								ChangeLogWriter logWriter = logWriterTable[ work.Args.Collection ] as ChangeLogWriter;
 								logWriterTable.Remove( work.Args.Collection );
 
-								if ( File.Exists( logWriter.LogFile ) )
-								{
-									File.Delete( logWriter.LogFile );
-								}
-
+								// Get the path to the file before disposing it.
+								string logPath = logWriter.LogFile;
 								logWriter.Dispose();
+
+								try { File.Delete( logPath ); } catch {}
+
 								log.Debug( "Deleted ChangeLogWriter for collection {0}", work.Args.Collection );
 							}
 						}

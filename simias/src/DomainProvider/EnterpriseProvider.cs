@@ -73,6 +73,11 @@ namespace Simias
 		/// The cursor for the caller.
 		/// </summary>
 		private int currentRecord = 0;
+
+		/// <summary>
+		/// The last count of records returned.
+		/// </summary>
+		private int previousCount = 0;
 		#endregion
 
 		#region Properties
@@ -107,6 +112,15 @@ namespace Simias
 		public string DomainID
 		{
 			get { return domainID; }
+		}
+
+		/// <summary>
+		/// Gets or sets the last record count.
+		/// </summary>
+		public int LastCount
+		{
+			get { return previousCount; }
+			set { previousCount = value; }
 		}
 
 		/// <summary>
@@ -301,7 +315,7 @@ namespace Simias
 		/// <returns>The status from the authentication.</returns>
 		public Authentication.Status Authenticate( Domain domain, HttpContext httpContext )
 		{
-			return new Authentication.Status( Authentication.StatusCodes.Success );
+			return new Authentication.Status( Authentication.StatusCodes.InternalException );
 		}
 
 		/// <summary>
@@ -399,29 +413,41 @@ namespace Simias
 			SearchState searchState = SearchState.GetSearchState( searchContext );
 			if ( searchState != null )
 			{
-				// Get the domain being searched.
-				Domain domain = store.GetDomain( searchState.DomainID );
-				if ( domain != null )
+				// See if entries are to be returned.
+				if ( count > 0 )
 				{
-					// Allocate a list to hold the member objects.
-					ArrayList tempList = new ArrayList( count );
-					ICSEnumerator enumerator = searchState.Enumerator;
-					while( ( count > 0 ) && enumerator.MoveNext() )
+					// Get the domain being searched.
+					Domain domain = store.GetDomain( searchState.DomainID );
+					if ( domain != null )
 					{
-						// The enumeration returns ShallowNode objects.
-						ShallowNode sn = enumerator.Current as ShallowNode;
-						if ( sn.Type == NodeTypes.MemberType )
+						// Allocate a list to hold the member objects.
+						ArrayList tempList = new ArrayList( count );
+						ICSEnumerator enumerator = searchState.Enumerator;
+						while( ( count > 0 ) && enumerator.MoveNext() )
 						{
-							tempList.Add( new Member( domain, sn ) );
-							--count;
+							// The enumeration returns ShallowNode objects.
+							ShallowNode sn = enumerator.Current as ShallowNode;
+							if ( sn.Type == NodeTypes.MemberType )
+							{
+								tempList.Add( new Member( domain, sn ) );
+								--count;
+							}
+						}
+
+						if ( tempList.Count > 0 )
+						{
+							memberList = tempList.ToArray( typeof ( Member ) ) as Member[];
+							searchState.CurrentRecord += memberList.Length;
+							searchState.LastCount = memberList.Length;
+							moreEntries = ( count == 0 ) ? true : false;
 						}
 					}
-
-					if ( tempList.Count > 0 )
+				}
+				else
+				{
+					if ( searchState.CurrentRecord < searchState.TotalRecords )
 					{
-						memberList = tempList.ToArray( typeof ( Member ) ) as Member[];
-						searchState.CurrentRecord += memberList.Length;
-						moreEntries = ( count == 0 ) ? true : false;
+						moreEntries = true;
 					}
 				}
 			}
@@ -448,14 +474,31 @@ namespace Simias
 			if ( searchState != null )
 			{
 				// Backup the current cursor, but don't go passed the first record.
-				int cursorIndex = ( searchState.CurrentRecord > count ) ? searchState.CurrentRecord - count : 0;
-				if ( searchState.Enumerator.SetCursor( Simias.Storage.Provider.IndexOrigin.SET, cursorIndex ) )
+				if ( searchState.CurrentRecord > 0 )
 				{
-					// Reset the current record.
-					searchState.CurrentRecord = cursorIndex;
+					bool invalidIndex = false;
+					int cursorIndex = ( searchState.CurrentRecord - ( searchState.LastCount + count ) );
+					if ( cursorIndex < 0 )
+					{
+						invalidIndex = true;
+						count = searchState.CurrentRecord - searchState.LastCount;
+						cursorIndex = 0;
+					}
 
-					// Complete the search.
-					moreEntries = FindNextDomainMembers( ref searchContext, count, out memberList );
+					// Set the new index for the cursor.
+					if ( searchState.Enumerator.SetCursor( Simias.Storage.Provider.IndexOrigin.SET, cursorIndex ) )
+					{
+						// Reset the current record.
+						searchState.CurrentRecord = cursorIndex;
+
+						// Complete the search.
+						FindNextDomainMembers( ref searchContext, count, out memberList );
+
+						if ( ( invalidIndex == false ) && ( memberList != null ) )
+						{
+							moreEntries = true;
+						}
+					}
 				}
 			}
 
@@ -483,7 +526,7 @@ namespace Simias
 			if ( searchState != null )
 			{
 				// Make sure that the specified offset is valid.
-				if ( ( offset >= 0 ) && ( offset < searchState.TotalRecords ) )
+				if ( ( offset >= 0 ) && ( offset <= searchState.TotalRecords ) )
 				{
 					// Set the cursor to the specified offset.
 					if ( searchState.Enumerator.SetCursor( Simias.Storage.Provider.IndexOrigin.SET, offset ) )
