@@ -38,9 +38,43 @@ namespace Novell.Collaboration
 		public static string	dateProperty = "SLOG:Date";
 		public static string	titleProperty = "SLOG:Title";
 		public static string	entryProperty = "SLOG:Entry";
+		public static string	userIDProperty = "SLOG:UserID";
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// UserID
+		/// !NOTE! Doc incomplete
+		/// </summary>
+		public string UserID
+		{
+			get
+			{
+				try
+				{
+					return(this.Properties.GetSingleProperty(userIDProperty).ToString());
+				}
+				catch{}
+				return("");
+			}
+
+			set
+			{
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(userIDProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(userIDProperty);
+					}
+				}
+				catch{}
+			}
+		}
+
 		/// <summary>
 		/// Date
 		/// !NOTE! Doc incomplete

@@ -330,6 +330,35 @@ namespace Novell.AddressBook
 
 			return foundContact;
 		}
+
+
+		/// <summary>
+		/// Get an enumerator for enuming address books
+		/// </summary>
+		///	<returns>An IEnumerator object</returns>
+		public Contact GetContact(string UserID)
+		{
+			Contact foundContact = null;
+			ICSList	abList = this.store.GetCollectionsByType(Common.addressBookType);
+			foreach(ShallowNode sNode in abList)
+			{
+				AddressBook cBook = GetAddressBook(sNode.ID);
+				
+				ICSList results = cBook.Search(	Common.userIDProperty,
+												UserID,
+												SearchOp.Equal );
+
+				// Instead of looping trough the results, we are just
+				// going to return the first one
+				foreach(ShallowNode cNode in results)
+				{
+					foundContact = cBook.GetContact(cNode.ID);
+					return foundContact;
+				}
+			}
+
+			return foundContact;
+		}
 		#endregion
 
 		#region IEnumerable

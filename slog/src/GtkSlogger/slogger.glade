@@ -8,7 +8,7 @@
 <widget class="GnomeApp" id="SloggerApp">
   <property name="title" translatable="yes">Slogger</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
   <property name="default_width">800</property>
   <property name="default_height">600</property>
@@ -47,9 +47,30 @@
 			  <signal name="activate" handler="on_new_slog" last_modification_time="Sat, 10 Jul 2004 04:57:30 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image16">
+			    <widget class="GtkImage" id="image39">
 			      <property name="visible">True</property>
 			      <property name="stock">gnome-stock-book-green</property>
+			      <property name="icon_size">1</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkImageMenuItem" id="newEntryItem">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">New _Entry</property>
+			  <property name="use_underline">True</property>
+			  <signal name="activate" handler="on_new_entry" last_modification_time="Fri, 16 Jul 2004 13:06:33 GMT"/>
+
+			  <child internal-child="image">
+			    <widget class="GtkImage" id="image40">
+			      <property name="visible">True</property>
+			      <property name="stock">gnome-stock-book-open</property>
 			      <property name="icon_size">1</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
@@ -67,14 +88,6 @@
 		      </child>
 
 		      <child>
-			<widget class="GtkImageMenuItem" id="save1">
-			  <property name="visible">True</property>
-			  <property name="stock_item">GNOMEUIINFO_MENU_SAVE_ITEM</property>
-			  <signal name="activate" handler="on_save" last_modification_time="Sat, 10 Jul 2004 05:01:47 GMT"/>
-			</widget>
-		      </child>
-
-		      <child>
 			<widget class="GtkImageMenuItem" id="DeleteItem">
 			  <property name="visible">True</property>
 			  <property name="label" translatable="yes">_Delete</property>
@@ -82,7 +95,7 @@
 			  <signal name="activate" handler="on_delete" last_modification_time="Sat, 10 Jul 2004 05:01:47 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image17">
+			    <widget class="GtkImage" id="image41">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-delete</property>
 			      <property name="icon_size">1</property>
@@ -103,7 +116,7 @@
 			  <signal name="activate" handler="on_refresh" last_modification_time="Sat, 10 Jul 2004 07:32:40 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image18">
+			    <widget class="GtkImage" id="image42">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-refresh</property>
 			      <property name="icon_size">1</property>
@@ -130,7 +143,7 @@
 			  <signal name="activate" handler="on_properties" last_modification_time="Sat, 10 Jul 2004 07:33:42 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image19">
+			    <widget class="GtkImage" id="image43">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-convert</property>
 			      <property name="icon_size">1</property>
@@ -217,16 +230,13 @@
 	      </child>
 
 	      <child>
-		<widget class="button" id="SaveButton">
+		<widget class="button" id="button9">
 		  <property name="visible">True</property>
-		  <property name="label">gtk-save</property>
-		  <property name="use_stock">True</property>
-		  <property name="new_group">True</property>
-		  <signal name="clicked" handler="on_save" last_modification_time="Sat, 10 Jul 2004 05:02:00 GMT"/>
+		  <property name="label" translatable="yes">New _Entry</property>
+		  <property name="use_underline">True</property>
+		  <property name="stock_pixmap">gnome-stock-book-open</property>
+		  <signal name="clicked" handler="on_new_entry" last_modification_time="Fri, 16 Jul 2004 13:06:16 GMT"/>
 		</widget>
-		<packing>
-		  <property name="new_group">True</property>
-		</packing>
 	      </child>
 
 	      <child>
@@ -234,8 +244,12 @@
 		  <property name="visible">True</property>
 		  <property name="label">gtk-delete</property>
 		  <property name="use_stock">True</property>
+		  <property name="new_group">True</property>
 		  <signal name="clicked" handler="on_delete" last_modification_time="Sat, 10 Jul 2004 05:02:10 GMT"/>
 		</widget>
+		<packing>
+		  <property name="new_group">True</property>
+		</packing>
 	      </child>
 
 	      <child>
@@ -276,13 +290,13 @@
 	<widget class="GtkVPaned" id="vpaned1">
 	  <property name="visible">True</property>
 	  <property name="can_focus">True</property>
-	  <property name="position">200</property>
+	  <property name="position">160</property>
 
 	  <child>
 	    <widget class="GtkHPaned" id="hpaned1">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="position">200</property>
+	      <property name="position">130</property>
 
 	      <child>
 		<widget class="GtkScrolledWindow" id="scrolledwindow5">
@@ -320,7 +334,7 @@
 		    <widget class="GtkCalendar" id="SlogCal">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="display_options">GTK_CALENDAR_SHOW_HEADING|GTK_CALENDAR_SHOW_DAY_NAMES</property>
+		      <property name="display_options">GTK_CALENDAR_SHOW_HEADING</property>
 		      <signal name="day_selected" handler="on_day_selected" last_modification_time="Sat, 10 Jul 2004 05:35:40 GMT"/>
 		    </widget>
 		    <packing>
@@ -566,10 +580,9 @@
 </widget>
 
 <widget class="GtkDialog" id="NewSlogDialog">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">New Slog</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
@@ -672,6 +685,197 @@
 	  <property name="padding">0</property>
 	  <property name="expand">False</property>
 	  <property name="fill">False</property>
+	</packing>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+<widget class="GtkDialog" id="NewEntryDialog">
+  <property name="title" translatable="yes">New Entry</property>
+  <property name="type">GTK_WINDOW_TOPLEVEL</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
+  <property name="modal">False</property>
+  <property name="default_width">640</property>
+  <property name="default_height">480</property>
+  <property name="resizable">True</property>
+  <property name="destroy_with_parent">False</property>
+  <property name="has_separator">True</property>
+
+  <child internal-child="vbox">
+    <widget class="GtkVBox" id="dialog-vbox2">
+      <property name="visible">True</property>
+      <property name="homogeneous">False</property>
+      <property name="spacing">0</property>
+
+      <child internal-child="action_area">
+	<widget class="GtkHButtonBox" id="dialog-action_area2">
+	  <property name="visible">True</property>
+	  <property name="layout_style">GTK_BUTTONBOX_END</property>
+
+	  <child>
+	    <widget class="GtkButton" id="cancelbutton2">
+	      <property name="visible">True</property>
+	      <property name="can_default">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="label">gtk-cancel</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="response_id">-6</property>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkButton" id="OKButton">
+	      <property name="visible">True</property>
+	      <property name="can_default">True</property>
+	      <property name="has_default">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="label">gtk-ok</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="response_id">-5</property>
+	    </widget>
+	  </child>
+	</widget>
+	<packing>
+	  <property name="padding">0</property>
+	  <property name="expand">False</property>
+	  <property name="fill">True</property>
+	  <property name="pack_type">GTK_PACK_END</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkVBox" id="vbox4">
+	  <property name="border_width">10</property>
+	  <property name="visible">True</property>
+	  <property name="homogeneous">False</property>
+	  <property name="spacing">10</property>
+
+	  <child>
+	    <widget class="GtkHBox" id="hbox3">
+	      <property name="visible">True</property>
+	      <property name="homogeneous">False</property>
+	      <property name="spacing">0</property>
+
+	      <child>
+		<widget class="GtkCalendar" id="EntryCalendar">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="display_options">GTK_CALENDAR_SHOW_HEADING</property>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">False</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<placeholder/>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkHBox" id="hbox4">
+	      <property name="visible">True</property>
+	      <property name="homogeneous">False</property>
+	      <property name="spacing">10</property>
+
+	      <child>
+		<widget class="GtkLabel" id="label4">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Title:</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0.5</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">False</property>
+		  <property name="fill">False</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="TitleEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="has_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">True</property>
+		  <signal name="changed" handler="on_title_changed" last_modification_time="Fri, 16 Jul 2004 13:20:58 GMT"/>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">True</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkScrolledWindow" id="scrolledwindow6">
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	      <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	      <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+	      <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+	      <child>
+		<widget class="GtkTextView" id="MessageTextView">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="justification">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap_mode">GTK_WRAP_WORD</property>
+		  <property name="cursor_visible">True</property>
+		  <property name="pixels_above_lines">0</property>
+		  <property name="pixels_below_lines">0</property>
+		  <property name="pixels_inside_wrap">0</property>
+		  <property name="left_margin">10</property>
+		  <property name="right_margin">10</property>
+		  <property name="indent">0</property>
+		  <property name="text" translatable="yes"></property>
+		</widget>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">True</property>
+	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+	</widget>
+	<packing>
+	  <property name="padding">0</property>
+	  <property name="expand">True</property>
+	  <property name="fill">True</property>
 	</packing>
       </child>
     </widget>

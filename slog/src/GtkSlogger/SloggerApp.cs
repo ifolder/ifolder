@@ -28,6 +28,7 @@ using Simias;
 using System.Collections;
 using System.IO;
 using Novell.AddressBook.UI.gtk;
+using Novell.AddressBook;
 
 using Gtk;
 using Gdk;
@@ -46,7 +47,6 @@ namespace SloggerApplication
 		[Glade.Widget] private TreeView		EntryTreeView = null;
 
 		[Glade.Widget] private Gtk.Calendar SlogCal = null;
-		[Glade.Widget] private Gtk.Button 	SaveButton = null;
 		[Glade.Widget] private Gtk.Button 	DeleteButton = null;
 		[Glade.Widget] private Gtk.Button 	PropButton = null;
 
@@ -58,8 +58,10 @@ namespace SloggerApplication
 		private ListStore		EntryTreeStore;
 
 		private SlogManager		sMan;
+		private Novell.AddressBook.Manager			abMan;
 		private Slog			curSlog = null;
 		private SlogEntry		curSlogEntry = null;
+		private Pixbuf			defaultPixbuf = null;
 
 		public GtkSlogger() 
 		{
@@ -67,6 +69,10 @@ namespace SloggerApplication
 
 			if(sMan == null)
 				sMan = SlogManager.Connect();
+			if(abMan == null)
+				abMan = Novell.AddressBook.Manager.Connect();
+
+			defaultPixbuf = new Pixbuf(Util.ImagesPath("sloghead.png"));
 
 			Refresh();
 		}
@@ -76,8 +82,7 @@ namespace SloggerApplication
 			SlogTreeStore.Clear();
 			EntryTreeStore.Clear();
 			DeleteButton.Sensitive = false;
-			SaveButton.Sensitive = false;
-		 	PropButton.Sensitive = false;
+			PropButton.Sensitive = false;
 			TitleEntry.Text = "";
 			DateEntry.Text = "";
 			SlogTextView.Buffer.Text = "";
@@ -93,7 +98,7 @@ namespace SloggerApplication
 		{
 			Glade.XML gxml = 
 				new Glade.XML (Util.GladePath("slogger.glade"),
-				"SloggerApp", null);
+						"SloggerApp", null);
 
 			gxml.Autoconnect (this);
 
@@ -115,14 +120,19 @@ namespace SloggerApplication
 			EntryTreeStore = new ListStore(typeof(SlogEntry));
 			EntryTreeView.Model = EntryTreeStore;
 
-//			TreeViewColumn btvc = new TreeViewColumn();
-//			CellRendererPixbuf bcrp = new CellRendererPixbuf();
-//			btvc.PackStart(bcrp, false);
-//			btvc.SetCellDataFunc(bcrp, new TreeCellDataFunc(
-//						SubCellPixbufDataFunc));
-			EntryTreeView.AppendColumn("Entries", 
-					new CellRendererText(), 
-					new TreeCellDataFunc(EntryCellTextDataFunc));
+			TreeViewColumn entryColumn = new TreeViewColumn();
+			CellRendererPixbuf entryPBCR = new CellRendererPixbuf();
+			entryColumn.PackStart(entryPBCR, false);
+			entryColumn.SetCellDataFunc(entryPBCR, new TreeCellDataFunc(
+						EntryCellPixbufDataFunc));
+			CellRendererText entryTextCR = new CellRendererText();
+			entryColumn.PackStart(entryTextCR, false);
+			entryColumn.SetCellDataFunc(entryTextCR, new TreeCellDataFunc(
+						EntryCellTextDataFunc));
+			entryColumn.Title = "Entries";
+
+			EntryTreeView.AppendColumn(entryColumn);
+
 			EntryTreeView.Selection.Changed +=
 				new EventHandler(on_entry_selection_changed);
 		}
@@ -132,7 +142,16 @@ namespace SloggerApplication
 				Gtk.TreeIter iter)
 		{
 			SlogEntry se = (SlogEntry) EntryTreeStore.GetValue(iter,0);
-			((CellRendererText) cell).Text = se.Name;
+			((CellRendererText) cell).Text = se.Title;
+		}
+
+		private void EntryCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			SlogEntry se = (SlogEntry) EntryTreeStore.GetValue(iter,0);
+			Contact con = abMan.GetContact(se.UserID);
+			((CellRendererPixbuf) cell).Pixbuf = GetScaledPhoto(con, 24);
 		}
 
 		private void SlogCellTextDataFunc (Gtk.TreeViewColumn tree_column,
@@ -168,9 +187,9 @@ namespace SloggerApplication
 
 				curSlog = (Slog) 
 					SlogTreeStore.GetValue(iter,0);
-				
+
 				EntryTreeStore.Clear();
-		 		PropButton.Sensitive = true;
+				PropButton.Sensitive = true;
 
 				foreach(SlogEntry se in curSlog)
 				{
@@ -181,7 +200,7 @@ namespace SloggerApplication
 			else
 			{
 				curSlog = null;
-		 		PropButton.Sensitive = false;
+				PropButton.Sensitive = false;
 				DeleteButton.Sensitive = false;
 			}
 		}
@@ -219,29 +238,16 @@ namespace SloggerApplication
 			Refresh();
 		}
 
-		public void on_save(object o, EventArgs eventArgs)
-		{
-			if(curSlog != null)
-			{
-				SlogEntry se = new SlogEntry(curSlog, 
-							SlogCal.Date.ToLongDateString());
-				se.Title = TitleEntry.Text;
-				se.Description = SlogTextView.Buffer.Text;
-				curSlog.Commit(se);
-				EntryTreeStore.AppendValues(se);
-			}
-		}
-
 		public void on_delete(object o, EventArgs eventArgs)
 		{
 			if(EntryTreeView.HasFocus)
 			{
 				MessageDialog dialog = new MessageDialog(SloggerApp,
-					DialogFlags.Modal | 
-					DialogFlags.DestroyWithParent,
-					MessageType.Question,
-					ButtonsType.YesNo,
-					"Do you want to delete the selected Slog Entries?");
+						DialogFlags.Modal | 
+						DialogFlags.DestroyWithParent,
+						MessageType.Question,
+						ButtonsType.YesNo,
+						"Do you want to delete the selected Slog Entries?");
 
 				dialog.Title = "Delete Slog Entries";
 				dialog.TransientFor = SloggerApp;
@@ -255,11 +261,11 @@ namespace SloggerApplication
 			else if(SlogTreeView.HasFocus)
 			{
 				MessageDialog dialog = new MessageDialog(SloggerApp,
-					DialogFlags.Modal | 
-					DialogFlags.DestroyWithParent,
-					MessageType.Question,
-					ButtonsType.YesNo,
-					"Do you want to delete the selected Slogs?");
+						DialogFlags.Modal | 
+						DialogFlags.DestroyWithParent,
+						MessageType.Question,
+						ButtonsType.YesNo,
+						"Do you want to delete the selected Slogs?");
 
 				dialog.Title = "Delete Slogs";
 				dialog.TransientFor = SloggerApp;
@@ -270,6 +276,8 @@ namespace SloggerApplication
 					DeleteSelectedSlogs();
 				}
 			}
+			TitleEntry.Text = "";
+			SlogTextView.Buffer.Text = "";
 			DeleteButton.Sensitive = false;
 		}
 
@@ -290,7 +298,6 @@ namespace SloggerApplication
 
 				curSlog.Commit(curSlog.Delete(curSlogEntry));
 				EntryTreeStore.Remove(ref iter);
-				curSlog = null;
 			}
 		}
 
@@ -328,6 +335,18 @@ namespace SloggerApplication
 
 		public void on_new_entry(object o, EventArgs eventArgs)
 		{
+			EntryEditor ee = new EntryEditor();
+			ee.TransientFor = SloggerApp;
+			if(ee.Run() == -5)
+			{
+				SlogEntry se = new SlogEntry(curSlog, 
+						ee.Date.ToLongDateString());
+				se.Title = ee.Title;
+				se.Description = ee.Message;
+				se.UserID = curSlog.GetCurrentMember().UserID;
+				curSlog.Commit(se);
+				EntryTreeStore.AppendValues(se);
+			}
 		}
 
 		public void on_about(object o, EventArgs eventArgs)
@@ -337,7 +356,11 @@ namespace SloggerApplication
 
 		public void on_day_selected(object o, EventArgs eventArgs)
 		{
+			TreeSelection tSelect = EntryTreeView.Selection;
+			tSelect.UnselectAll();
 			DateEntry.Text = SlogCal.Date.ToLongDateString();
+			TitleEntry.Text = "";
+			SlogTextView.Buffer.Text = "";
 		}
 
 		public void on_properties(object o, EventArgs eventArgs)
@@ -351,10 +374,6 @@ namespace SloggerApplication
 
 		public void on_title_changed(object o, EventArgs eventArgs)
 		{
-			if(TitleEntry.Text.Length > 0)
-				SaveButton.Sensitive = true;
-			else
-				SaveButton.Sensitive = false;
 		}
 
 		public void on_quit(object o, EventArgs args)
@@ -374,6 +393,39 @@ namespace SloggerApplication
 			GtkSlogger slogger = new GtkSlogger();
 			slogger.ShowAll();
 			program.Run();
+		}
+
+		private Pixbuf GetScaledPhoto(Contact c, int height)
+		{
+			Pixbuf pb = null;
+
+			if(c == null)
+				return defaultPixbuf;
+
+			try
+			{
+				int newWidth, newHeight;
+				//      Console.WriteLine("getting photo for : " + c.FN);
+
+				pb = new Pixbuf(c.ExportPhoto());
+
+				newHeight = height;
+				newWidth = height;
+
+				if(pb.Height != pb.Width)
+				{
+					int perc = (height * 1000) / pb.Height;
+					newWidth = pb.Width * perc / 1000;
+				}
+
+				pb = pb.ScaleSimple(newWidth, newHeight,
+						InterpType.Bilinear);
+			}
+			catch(Exception e)
+			{
+				pb = defaultPixbuf;
+			}
+			return pb;
 		}
 	}
 }

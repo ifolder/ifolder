@@ -1,12 +1,12 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Slogger_CSFILES = $(srcdir)/SloggerApp.cs $(srcdir)/SlogEditor.cs $(srcdir)/Util.cs
+Slogger_CSFILES = $(srcdir)/SloggerApp.cs $(srcdir)/EntryEditor.cs $(srcdir)/SlogEditor.cs $(srcdir)/Util.cs
 Slogger_CSFILES_CSC := $(subst /,$(SEP),$(Slogger_CSFILES))
 Slogger_INCLUDES = 
 Slogger_RESOURCES =
 Slogger_FLAGS = $(CSC_EXEFLAG)
-Slogger_LIBS = System.dll System.Drawing.dll System.Data.dll Slog.dll Novell.AddressBook.UI.gtk.dll
+Slogger_LIBS = System.dll System.Drawing.dll System.Data.dll Slog.dll Novell.AddressBook.dll Novell.AddressBook.UI.gtk.dll
 Slogger_LIBPATH = $(srcdir)/../Slog
 
 INSTALL_BIN_FILES = $(srcdir)/slogger
@@ -15,7 +15,7 @@ INSTALL_LIB_FILES =
 
 GLADE_FILES = slogger.glade
 
-IMAGE_FILES = 
+IMAGE_FILES = sloghead.png
 
 MIME_FILES = 
 APPLICATIONS_FILES = 
@@ -30,11 +30,13 @@ Slogger.exe: $(Slogger_CSFILES) $(Slogger_RESOURCES)
 install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/slog/glade $(DESTDIR)$(datadir)/slog/images
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/slog/glade
+	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/slog/images
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) Slogger.exe $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
 	cd $(DESTDIR)$(datadir)/ifolder/glade; rm -f $(GLADE_FILES)
+	cd $(DESTDIR)$(datadir)/ifolder/images; rm -f $(IMAGE_FILES)
 	cd $(DESTDIR)$(bindir); rm -f Slogger.exe $(notdir $(INSTALL_BIN_FILES))
     
 CLEAN_FILES = Slogger.exe
