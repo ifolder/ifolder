@@ -68,6 +68,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.add.Enabled = false;
 			this.remove.Enabled = false;
 			this.edit.Enabled = false;
+			this.ok.Enabled = false;
 		}
 
 		/// <summary>
@@ -235,6 +236,7 @@ namespace Novell.iFolder.FormsBookLib
 				item.ForeColor = Color.Gray;
 			}
 
+			this.ok.Enabled = addedContacts.Items.Count > 0;
 			this.add.Enabled = false;
 		}
 
@@ -250,6 +252,8 @@ namespace Novell.iFolder.FormsBookLib
 				((ListViewItem)item.Tag).ForeColor = Color.Black;
 				addedContacts.Items.Remove(item);
 			}
+
+			this.ok.Enabled = addedContacts.Items.Count > 0;
 		}
 
 		private void edit_Click(object sender, System.EventArgs e)
