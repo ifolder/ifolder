@@ -1151,8 +1151,7 @@ namespace Novell.FormsTrayApp
 				!((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.IsSubscription &&
 				((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.DomainID.Equals(domainInfo.ID))
 			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = 
-					((iFolderObject)iFolderView.SelectedItems[0].Tag).iFolderWeb.Role.Equals("Slave") && domainInfo.Active;
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = domainInfo.Active;
 			}
 		}
 		#endregion
@@ -1675,7 +1674,7 @@ namespace Novell.FormsTrayApp
 					menuSeparator1.Visible = menuSeparator2.Visible = 				
 					!ifolderWeb.IsSubscription;
 
-				if (ifolderWeb.IsSubscription || !ifolderWeb.Role.Equals("Slave"))
+				if (ifolderWeb.IsSubscription)
 				{
 					menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = false;
 				}
