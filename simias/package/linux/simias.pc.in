@@ -1,10 +1,12 @@
 # pkg-config metadata file for simias
-prefix=/opt/ifolder
-
 Name: Simias
 Description: Simias
 Version: @VERSION@
 Requires: mono >= 0.31, gtk-sharp >= 0.17
-#Conflicts: foobar <= 4.5
-#Libs: -L${libdir} -lgobject-1.3
-#Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib/include
+
+prefix=@prefix@
+libdir=${prefix}/bin
+
+LIBPATH=/lib:${libdir}
+LIBS=/r:AddressBook.dll /r:Agent.dll /r:CollectionEvents.dll /r:CollectionStore.dll /r:Common.dll /r:CommonGtkWindows.dll /r:Invitation.dll /r:Location.dll /r:RemotingSnifferLibrary.dll /r:Simias.Service.dll /r:Smtp.dll /r:SmtpInvitationProvider.dll /r:SqliteProvider.dll /r:SqliteWrapper.dll /r:Storage.dll /r:StoreProvider.dll /r:SyncCommon.dll /r:Sync.dll /r:SyncLogicLite.dll /r:SyncManager.dll
+
