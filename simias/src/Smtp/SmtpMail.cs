@@ -75,7 +75,7 @@ namespace Simias.Mail
 				string subject, string messageText) 
 		{
 			string smtpServer;
-			smtpServer = new Configuration().Get("Simias.Mail", "smtpServer", "localhost");
+			smtpServer = new Configuration().Get("Simias.Mail", "smtpServer", "mail");
 			return Send(smtpServer, from, to, subject, messageText);
 		}
 
