@@ -38,12 +38,6 @@ namespace Novell.FormsTrayApp
 	public class SyncLog : System.Windows.Forms.Form
 	{
 		#region Class Members
-		// Delegates used to marshal back to the control's creation thread.
-		private delegate void SyncCollectionDelegate(CollectionSyncEventArgs syncEventArgs);
-		private SyncCollectionDelegate syncCollectionDelegate;
-		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
-		private SyncFileDelegate syncFileDelegate;
-
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(SyncLog));
 		private const int maxMessages = 500;
 		private IProcEventClient eventClient;
@@ -61,23 +55,12 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Constructs a SyncLog object.
 		/// </summary>
-		/// <param name="eventClient">IProcEventClient object used to get events from simias.</param>
-		public SyncLog(IProcEventClient eventClient)
+		public SyncLog()
 		{
-			syncCollectionDelegate = new SyncCollectionDelegate(syncCollection);
-			syncFileDelegate = new SyncFileDelegate(syncFile);
-
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			this.eventClient = eventClient;
-
-			// Set up the event handlers for sync events ... these need to be active here so that sync events can
-			// be written to the log listbox.
-			eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(log_collectionSyncHandler));
-			eventClient.SetEvent(IProcEventAction.AddFileSync, new IProcEventHandler(log_fileSyncHandler));
 		}
 
 		/// <summary>
@@ -206,30 +189,8 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
-		#region Sync Event Handlers
-		private void log_collectionSyncHandler(SimiasEventArgs args)
-		{
-			try
-			{
-				CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
-				BeginInvoke(syncCollectionDelegate, new object[] {syncEventArgs});
-			}
-			catch {}
-		}
-
-		private void log_fileSyncHandler(SimiasEventArgs args)
-		{
-			try
-			{
-				FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
-				BeginInvoke(syncFileDelegate, new object[] {syncEventArgs});
-			}
-			catch {}
-		}
-		#endregion
-
-		#region Private Methods
-		private void addMessageToLog(DateTime dateTime, string message)
+		#region Public Methods
+		public void AddMessageToLog(DateTime dateTime, string message)
 		{
 			if (message != null)
 			{
@@ -244,7 +205,9 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
+		#endregion
 
+		#region Private Methods
 		private void clearLog()
 		{
 			log.Items.Clear();
@@ -269,78 +232,12 @@ namespace Novell.FormsTrayApp
 				streamWriter.Close();
 			}
 		}
-
-		private void syncCollection(CollectionSyncEventArgs syncEventArgs)
-		{
-			try
-			{
-				string message = null;
-				switch (syncEventArgs.Action)
-				{
-					case Action.StartSync:
-					{
-						message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
-						break;
-					}
-					case Action.StopSync:
-					{
-						message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
-						break;
-					}
-				}
-
-				// Add message to log.
-				addMessageToLog(syncEventArgs.TimeStamp, message);
-			}
-			catch {}
-		}
-
-		private void syncFile(FileSyncEventArgs syncEventArgs)
-		{
-			try
-			{
-				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
-				{
-					string message = null;
-					switch (syncEventArgs.ObjectType)
-					{
-						case ObjectType.File:
-							if (syncEventArgs.Delete)
-							{
-								message = string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name);
-							}
-							else if (syncEventArgs.SizeToSync < syncEventArgs.Size)
-							{
-								// Delta sync message.
-								int savings = (int)((1 - ((double)syncEventArgs.SizeToSync / (double)syncEventArgs.Size)) * 100);
-								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDeltaSyncFile" : "downloadDeltaSyncFile"), syncEventArgs.Name, savings);
-							}
-							else
-							{
-								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
-							}								
-							break;
-						case ObjectType.Directory:
-							message = syncEventArgs.Delete ? 
-								string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name) :
-								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDir" : "downloadDir"), syncEventArgs.Name);
-							break;
-						case ObjectType.Unknown:
-							message = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
-							break;
-					}
-
-					// Add message to log.
-					addMessageToLog(syncEventArgs.TimeStamp, message);
-				}
-			}
-			catch {}
-		}
 		#endregion
 
 		#region Event Handlers
 		private void SyncLog_Load(object sender, System.EventArgs e)
 		{
+			// TODO: add toolbar icons.
 			// Load the application icon.
 			try
 			{

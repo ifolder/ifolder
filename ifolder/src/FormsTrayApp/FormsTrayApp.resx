@@ -583,4 +583,37 @@
   <data name="serverConnectErrorTitle">
     <value>Unable to Connect to iFolder Server</value>
   </data>
+  <data name="synciFolder">
+    <value>Started sync of: {0}</value>
+  </data>
+  <data name="syncComplete">
+    <value>Finished sync of: {0}</value>
+  </data>
+  <data name="deleteClientFile">
+    <value>Deleting file on client: {0}</value>
+  </data>
+  <data name="uploadDeltaSyncFile">
+    <value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
+  </data>
+  <data name="downloadDeltaSyncFile">
+    <value>Downloading file: {0}. Synchronizing changes only: {1}% savings.</value>
+  </data>
+  <data name="uploadFile">
+    <value>Uploading file: {0}</value>
+  </data>
+  <data name="downloadFile">
+    <value>Downloading file: {0}</value>
+  </data>
+  <data name="deleteClientDir">
+    <value>Deleting directory on client: {0}</value>
+  </data>
+  <data name="uploadDir">
+    <value>Uploading directory: {0}</value>
+  </data>
+  <data name="downloadDir">
+    <value>Downloading directory: {0}</value>
+  </data>
+  <data name="deleteUnknown">
+    <value>Deleting on server: {0}</value>
+  </data>
 </root>
