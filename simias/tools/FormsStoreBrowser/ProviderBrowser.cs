@@ -78,7 +78,7 @@ namespace StoreBrowser
 			tNode.Nodes.Clear();
 			// Get each Collection.
 			char [] buffer1 = new char[4096];
-			IResultSet results1 = provider.Search(new Query(BaseSchema.ObjectName, SearchOp.Begins, "", Syntax.String));
+			IResultSet results1 = provider.Search(new Query("Types", SearchOp.Equal, "Collection", Syntax.String));
 			int len1 = results1.GetNext(ref buffer1);
 			if (len1 > 0)
 			{
