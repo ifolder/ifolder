@@ -74,12 +74,6 @@ namespace Simias
 						new EventHandler (on_stopstartButton_clicked);
 
 
-				Button clearButton = new Button(Stock.Clear);
-				hb.PackEnd(clearButton, false, false, 5);
-				clearButton.Clicked += 
-						new EventHandler (clear_all);
-
-
 
 				ScrolledWindow sw = new ScrolledWindow();
 				vb.PackStart(sw, true, true, 0);
