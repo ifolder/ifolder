@@ -35,7 +35,7 @@ install-exec-local: Identity.dll
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f Identity.dll IdentityTests.xml $(NUNIT_TESTS)
     
-#installcheck-local: install $(NUNIT_TESTS)
+installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
 #	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:IdentityTests.xml $(NUNIT_TESTS)
