@@ -47,6 +47,7 @@ namespace Novell.FormsTrayApp
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(SyncLog));
 		private const int maxMessages = 500;
 		private IProcEventClient eventClient;
+		private bool shutdown = false;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ListBox log;
 		private System.Windows.Forms.Button saveLog;
@@ -226,6 +227,8 @@ namespace Novell.FormsTrayApp
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
+			this.Closing += new System.ComponentModel.CancelEventHandler(this.SyncLog_Closing);
+			this.Load += new System.EventHandler(this.SyncLog_Load);
 			this.ResumeLayout(false);
 
 		}
@@ -328,6 +331,27 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Event Handlers
+		private void SyncLog_Load(object sender, System.EventArgs e)
+		{
+			// Load the application icon.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
+			}
+			catch {} // Non-fatal ...
+
+		}
+
+		private void SyncLog_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			// If we haven't received a shutdown event, hide this dialog and cancel the event.
+			if (!shutdown)
+			{
+				e.Cancel = true;
+				Hide();
+			}
+		}
+
 		private void saveLog_Click(object sender, System.EventArgs e)
 		{
 			SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -353,5 +377,20 @@ namespace Novell.FormsTrayApp
 			saveLog.Enabled = clearLog.Enabled = false;
 		}
 		#endregion
+
+		private const int WM_QUERYENDSESSION = 0x0011;
+
+		protected override void WndProc(ref Message m)
+		{
+			// Keep track if we receive a shutdown message.
+			switch (m.Msg)
+			{
+				case WM_QUERYENDSESSION:
+					this.shutdown = true;
+					break;
+			}
+
+			base.WndProc (ref m);
+		}
 	}
 }
