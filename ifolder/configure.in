@@ -141,6 +141,41 @@ AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
 #
 case $IFOLDER_OS in
     #
+    # MAC OS X configuration
+    #
+    darwin)
+        #
+        # Set variables
+        #
+        EMPTY=
+        EXE_EXT=''
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        INSTALL_EXE_OPTS='--mode=644'
+        NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/mono/NUnit/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
+        OBJ_EXT='.o'
+        PLATFORM_SUBDIRS=$DARWIN_SUBDIRS
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
+        SEP='/'
+        SHARED_LIB_EXT='.dylib'
+        SHARED_LIB_FLAG='-shared'
+        SQLITELIB_PATH="../../external/sqlite/darwin"
+        SQLITELIB="sqlite"
+        SYSTEM_XML='System.Xml.dll'
+        #
+        # Set pkg-config variables
+        #
+        MONO_MINIMUM_VERSION=0.95
+        AC_SUBST(MONO_MINIMUM_VERSION)
+
+        SIMIAS_INSTALL_PATH=`pkg-config --variable=prefix simias`
+    ;;
+    #
     # Linux-specific configuration
     #
     linux)
@@ -408,12 +443,12 @@ fi
 PKG_CHECK_MODULES(SIMIAS, simias >= 0)
 AC_SUBST(SIMIAS_LIBS)
 
-PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 0)
-AC_SUBST(ADDRESSBOOK_LIBS)
-
 # if using csc, convert /lib paths using cygpath
 case $CSC in
     csc)
+		PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 0)
+		AC_SUBST(ADDRESSBOOK_LIBS)
+
         libdir_pkg=`pkg-config --variable=libdir simias`
         libdir_cyg=`cygpath --windows $libdir_pkg | sed 's,\\\\,/,g'`
         SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
@@ -423,6 +458,9 @@ esac
 
 case $IFOLDER_OS in
     linux)
+	PKG_CHECK_MODULES(ADDRESSBOOK, addressbook >= 0)
+	AC_SUBST(ADDRESSBOOK_LIBS)
+
 	PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
     GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
     GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
@@ -452,6 +490,7 @@ ifolder.pc
 src/Makefile
 src/install-ifolder-to-gac
 src/iFolder/Makefile
+src/iFolder/iFolderCmd
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolderbrowser
@@ -469,6 +508,7 @@ package/Makefile
 package/windows/Makefile
 package/linux/Makefile
 package/linux/ifolder.spec
+package/darwin/Makefile
 doc/Makefile
 ])
 
