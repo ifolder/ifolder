@@ -74,8 +74,6 @@ namespace Novell.FormsTrayApp
 		private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
 		private const string notifyJoinDisabled = "NotifyJoinDisabled";
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
-//		private const double megaByte = 1048576;
-		private const int maxMessages = 500;
 		private System.Timers.Timer updateEnterpriseTimer;
 		private short retryCount = 2;
 		private Hashtable ht;
@@ -91,7 +89,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage tabPage2;
-		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox autoSync;
@@ -100,10 +97,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ListView iFolderView;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.ListBox log;
-		private System.Windows.Forms.Button saveLog;
-		private System.Windows.Forms.Button clearLog;
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuOpen;
 		private System.Windows.Forms.MenuItem menuCreate;
@@ -286,11 +279,6 @@ namespace Novell.FormsTrayApp
 			this.useProxy = new System.Windows.Forms.CheckBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.clearLog = new System.Windows.Forms.Button();
-			this.saveLog = new System.Windows.Forms.Button();
-			this.log = new System.Windows.Forms.ListBox();
-			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
 			this.accounts = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -341,7 +329,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.port)).BeginInit();
-			this.tabPage3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
@@ -438,7 +425,6 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabControl1.BackgroundImage")));
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
-			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
 			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
@@ -1157,126 +1143,6 @@ namespace Novell.FormsTrayApp
 			this.label4.Text = resources.GetString("label4.Text");
 			this.label4.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label4.TextAlign")));
 			this.label4.Visible = ((bool)(resources.GetObject("label4.Visible")));
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.AccessibleDescription = resources.GetString("tabPage3.AccessibleDescription");
-			this.tabPage3.AccessibleName = resources.GetString("tabPage3.AccessibleName");
-			this.tabPage3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage3.Anchor")));
-			this.tabPage3.AutoScroll = ((bool)(resources.GetObject("tabPage3.AutoScroll")));
-			this.tabPage3.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage3.AutoScrollMargin")));
-			this.tabPage3.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage3.AutoScrollMinSize")));
-			this.tabPage3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage3.BackgroundImage")));
-			this.tabPage3.Controls.Add(this.clearLog);
-			this.tabPage3.Controls.Add(this.saveLog);
-			this.tabPage3.Controls.Add(this.log);
-			this.tabPage3.Controls.Add(this.label6);
-			this.tabPage3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage3.Dock")));
-			this.tabPage3.Enabled = ((bool)(resources.GetObject("tabPage3.Enabled")));
-			this.tabPage3.Font = ((System.Drawing.Font)(resources.GetObject("tabPage3.Font")));
-			this.tabPage3.ImageIndex = ((int)(resources.GetObject("tabPage3.ImageIndex")));
-			this.tabPage3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage3.ImeMode")));
-			this.tabPage3.Location = ((System.Drawing.Point)(resources.GetObject("tabPage3.Location")));
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage3.RightToLeft")));
-			this.tabPage3.Size = ((System.Drawing.Size)(resources.GetObject("tabPage3.Size")));
-			this.tabPage3.TabIndex = ((int)(resources.GetObject("tabPage3.TabIndex")));
-			this.tabPage3.Text = resources.GetString("tabPage3.Text");
-			this.tabPage3.ToolTipText = resources.GetString("tabPage3.ToolTipText");
-			this.tabPage3.Visible = ((bool)(resources.GetObject("tabPage3.Visible")));
-			// 
-			// clearLog
-			// 
-			this.clearLog.AccessibleDescription = resources.GetString("clearLog.AccessibleDescription");
-			this.clearLog.AccessibleName = resources.GetString("clearLog.AccessibleName");
-			this.clearLog.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("clearLog.Anchor")));
-			this.clearLog.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("clearLog.BackgroundImage")));
-			this.clearLog.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("clearLog.Dock")));
-			this.clearLog.Enabled = ((bool)(resources.GetObject("clearLog.Enabled")));
-			this.clearLog.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("clearLog.FlatStyle")));
-			this.clearLog.Font = ((System.Drawing.Font)(resources.GetObject("clearLog.Font")));
-			this.clearLog.Image = ((System.Drawing.Image)(resources.GetObject("clearLog.Image")));
-			this.clearLog.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("clearLog.ImageAlign")));
-			this.clearLog.ImageIndex = ((int)(resources.GetObject("clearLog.ImageIndex")));
-			this.clearLog.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("clearLog.ImeMode")));
-			this.clearLog.Location = ((System.Drawing.Point)(resources.GetObject("clearLog.Location")));
-			this.clearLog.Name = "clearLog";
-			this.clearLog.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("clearLog.RightToLeft")));
-			this.clearLog.Size = ((System.Drawing.Size)(resources.GetObject("clearLog.Size")));
-			this.clearLog.TabIndex = ((int)(resources.GetObject("clearLog.TabIndex")));
-			this.clearLog.Text = resources.GetString("clearLog.Text");
-			this.clearLog.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("clearLog.TextAlign")));
-			this.clearLog.Visible = ((bool)(resources.GetObject("clearLog.Visible")));
-			this.clearLog.Click += new System.EventHandler(this.clearLog_Click);
-			// 
-			// saveLog
-			// 
-			this.saveLog.AccessibleDescription = resources.GetString("saveLog.AccessibleDescription");
-			this.saveLog.AccessibleName = resources.GetString("saveLog.AccessibleName");
-			this.saveLog.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("saveLog.Anchor")));
-			this.saveLog.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("saveLog.BackgroundImage")));
-			this.saveLog.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("saveLog.Dock")));
-			this.saveLog.Enabled = ((bool)(resources.GetObject("saveLog.Enabled")));
-			this.saveLog.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("saveLog.FlatStyle")));
-			this.saveLog.Font = ((System.Drawing.Font)(resources.GetObject("saveLog.Font")));
-			this.saveLog.Image = ((System.Drawing.Image)(resources.GetObject("saveLog.Image")));
-			this.saveLog.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("saveLog.ImageAlign")));
-			this.saveLog.ImageIndex = ((int)(resources.GetObject("saveLog.ImageIndex")));
-			this.saveLog.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("saveLog.ImeMode")));
-			this.saveLog.Location = ((System.Drawing.Point)(resources.GetObject("saveLog.Location")));
-			this.saveLog.Name = "saveLog";
-			this.saveLog.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("saveLog.RightToLeft")));
-			this.saveLog.Size = ((System.Drawing.Size)(resources.GetObject("saveLog.Size")));
-			this.saveLog.TabIndex = ((int)(resources.GetObject("saveLog.TabIndex")));
-			this.saveLog.Text = resources.GetString("saveLog.Text");
-			this.saveLog.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("saveLog.TextAlign")));
-			this.saveLog.Visible = ((bool)(resources.GetObject("saveLog.Visible")));
-			this.saveLog.Click += new System.EventHandler(this.saveLog_Click);
-			// 
-			// log
-			// 
-			this.log.AccessibleDescription = resources.GetString("log.AccessibleDescription");
-			this.log.AccessibleName = resources.GetString("log.AccessibleName");
-			this.log.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("log.Anchor")));
-			this.log.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("log.BackgroundImage")));
-			this.log.ColumnWidth = ((int)(resources.GetObject("log.ColumnWidth")));
-			this.log.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("log.Dock")));
-			this.log.Enabled = ((bool)(resources.GetObject("log.Enabled")));
-			this.log.Font = ((System.Drawing.Font)(resources.GetObject("log.Font")));
-			this.log.HorizontalExtent = ((int)(resources.GetObject("log.HorizontalExtent")));
-			this.log.HorizontalScrollbar = ((bool)(resources.GetObject("log.HorizontalScrollbar")));
-			this.log.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("log.ImeMode")));
-			this.log.IntegralHeight = ((bool)(resources.GetObject("log.IntegralHeight")));
-			this.log.ItemHeight = ((int)(resources.GetObject("log.ItemHeight")));
-			this.log.Location = ((System.Drawing.Point)(resources.GetObject("log.Location")));
-			this.log.Name = "log";
-			this.log.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("log.RightToLeft")));
-			this.log.ScrollAlwaysVisible = ((bool)(resources.GetObject("log.ScrollAlwaysVisible")));
-			this.log.Size = ((System.Drawing.Size)(resources.GetObject("log.Size")));
-			this.log.TabIndex = ((int)(resources.GetObject("log.TabIndex")));
-			this.log.Visible = ((bool)(resources.GetObject("log.Visible")));
-			// 
-			// label6
-			// 
-			this.label6.AccessibleDescription = resources.GetString("label6.AccessibleDescription");
-			this.label6.AccessibleName = resources.GetString("label6.AccessibleName");
-			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label6.Anchor")));
-			this.label6.AutoSize = ((bool)(resources.GetObject("label6.AutoSize")));
-			this.label6.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label6.Dock")));
-			this.label6.Enabled = ((bool)(resources.GetObject("label6.Enabled")));
-			this.label6.Font = ((System.Drawing.Font)(resources.GetObject("label6.Font")));
-			this.label6.Image = ((System.Drawing.Image)(resources.GetObject("label6.Image")));
-			this.label6.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label6.ImageAlign")));
-			this.label6.ImageIndex = ((int)(resources.GetObject("label6.ImageIndex")));
-			this.label6.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label6.ImeMode")));
-			this.label6.Location = ((System.Drawing.Point)(resources.GetObject("label6.Location")));
-			this.label6.Name = "label6";
-			this.label6.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label6.RightToLeft")));
-			this.label6.Size = ((System.Drawing.Size)(resources.GetObject("label6.Size")));
-			this.label6.TabIndex = ((int)(resources.GetObject("label6.TabIndex")));
-			this.label6.Text = resources.GetString("label6.Text");
-			this.label6.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label6.TextAlign")));
-			this.label6.Visible = ((bool)(resources.GetObject("label6.Visible")));
 			// 
 			// tabPage5
 			// 
@@ -2032,7 +1898,6 @@ namespace Novell.FormsTrayApp
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.port)).EndInit();
-			this.tabPage3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -2344,13 +2209,11 @@ namespace Novell.FormsTrayApp
 			{
 				progressBar1.Visible = false;
 
-				string message = null;
 				switch (syncEventArgs.Action)
 				{
 					case Action.StartSync:
 					{
-						message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
-						status.Text = message;
+						status.Text = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
 						lock (ht)
 						{
 							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
@@ -2367,7 +2230,6 @@ namespace Novell.FormsTrayApp
 						{
 							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
 
-							message = string.Format(resourceManager.GetString("syncComplete"), syncEventArgs.Name);
 							if (lvi != null)
 							{
 								lvi.SubItems[2].Text = syncEventArgs.Successful ? resourceManager.GetString("statusOK") : resourceManager.GetString("statusSyncFailure");
@@ -2383,9 +2245,6 @@ namespace Novell.FormsTrayApp
 						break;
 					}
 				}
-
-				// Add message to log.
-				addMessageToLog(syncEventArgs.TimeStamp, message);
 			}
 			catch {}
 		}
@@ -2416,9 +2275,6 @@ namespace Novell.FormsTrayApp
 							status.Text = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
 							break;
 					}
-
-					// Add message to log.
-					addMessageToLog(syncEventArgs.TimeStamp, status.Text);
 				}
 				else
 				{
@@ -2498,22 +2354,6 @@ namespace Novell.FormsTrayApp
 
 					// Add the listviewitem to the hashtable.
 					ht.Add(ifolder.ID, lvi);
-				}
-			}
-		}
-
-		private void addMessageToLog(DateTime dateTime, string message)
-		{
-			if (message != null)
-			{
-				log.Items.Add(dateTime.ToString() + " " + message);
-				log.SelectedIndex = log.Items.Count - 1;
-				saveLog.Enabled = clearLog.Enabled = true;
-
-				// This should only have to execute once.
-				while (log.Items.Count > maxMessages)
-				{
-					log.Items.RemoveAt(0);
 				}
 			}
 		}
@@ -3091,33 +2931,6 @@ namespace Novell.FormsTrayApp
 					menuOpen_Click(sender, e);
 				}
 			}
-		}
-		#endregion
-
-		#region Log Tab
-		private void saveLog_Click(object sender, System.EventArgs e)
-		{
-			SaveFileDialog saveFileDialog = new SaveFileDialog();
-			if (saveFileDialog.ShowDialog() == DialogResult.OK)
-			{
-				StreamWriter streamWriter = File.CreateText(saveFileDialog.FileName);
-				foreach (string s in log.Items)
-				{
-					streamWriter.WriteLine(s);
-				}
-
-				streamWriter.Flush();
-				streamWriter.Close();
-			}
-		}
-
-		private void clearLog_Click(object sender, System.EventArgs e)
-		{
-			log.Items.Clear();
-
-			log.Items.Add(DateTime.Now.ToString() + " " + resourceManager.GetString("logEntriesCleared"));
-
-			saveLog.Enabled = clearLog.Enabled = false;
 		}
 		#endregion
 

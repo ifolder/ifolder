@@ -92,6 +92,7 @@ namespace Novell.FormsTrayApp
 		private iFolderSettings ifolderSettings = null;
 		private IProcEventClient eventClient;
 		private GlobalProperties globalProperties;
+		private SyncLog syncLog;
 		private bool eventError = false;
 		private IntPtr hwnd;
 		private System.Windows.Forms.MenuItem menuJoin;
@@ -99,6 +100,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuTools;
 		private System.Windows.Forms.Timer syncAnimateTimer;
 		private System.Windows.Forms.MenuItem menuLogin;
+		private System.Windows.Forms.MenuItem menuSyncLog;
 		private int iconID;
 		#endregion
 
@@ -299,6 +301,18 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
+		private void menuSyncLog_Click(object sender, System.EventArgs e)
+		{
+			if (syncLog.Visible)
+			{
+				syncLog.Activate();
+			}
+			else
+			{
+				syncLog.Show();
+			}
+		}
+
 		private void menuHelp_Click(object sender, System.EventArgs e)
 		{
 			new iFolderComponent().ShowHelp(Application.StartupPath, string.Empty);
@@ -387,6 +401,10 @@ namespace Novell.FormsTrayApp
 					// For some reason, the handle isn't created until it is referenced.
 					globalProperties.CreateControl();
 					IntPtr handle = globalProperties.Handle;
+
+					syncLog = new SyncLog(eventClient);
+					syncLog.CreateControl();
+					handle = syncLog.Handle;
 
 					// Cause the web service to start.
 					ifWebService.Ping();
@@ -519,6 +537,7 @@ namespace Novell.FormsTrayApp
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
 			this.syncAnimateTimer = new System.Windows.Forms.Timer(this.components);
+			this.menuSyncLog = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -535,6 +554,7 @@ namespace Novell.FormsTrayApp
 																						 this.menuSeparator1,
 																						 this.menuProperties,
 																						 this.menuLogin,
+																						 this.menuSyncLog,
 																						 this.menuJoin,
 																						 this.menuHelp,
 																						 this.menuItem10,
@@ -607,7 +627,7 @@ namespace Novell.FormsTrayApp
 			// menuJoin
 			// 
 			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
-			this.menuJoin.Index = 4;
+			this.menuJoin.Index = 5;
 			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
 			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
 			this.menuJoin.Text = resources.GetString("menuJoin.Text");
@@ -617,7 +637,7 @@ namespace Novell.FormsTrayApp
 			// menuHelp
 			// 
 			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
-			this.menuHelp.Index = 5;
+			this.menuHelp.Index = 6;
 			this.menuHelp.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuHelp.Shortcut")));
 			this.menuHelp.ShowShortcut = ((bool)(resources.GetObject("menuHelp.ShowShortcut")));
 			this.menuHelp.Text = resources.GetString("menuHelp.Text");
@@ -627,7 +647,7 @@ namespace Novell.FormsTrayApp
 			// menuItem10
 			// 
 			this.menuItem10.Enabled = ((bool)(resources.GetObject("menuItem10.Enabled")));
-			this.menuItem10.Index = 6;
+			this.menuItem10.Index = 7;
 			this.menuItem10.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem10.Shortcut")));
 			this.menuItem10.ShowShortcut = ((bool)(resources.GetObject("menuItem10.ShowShortcut")));
 			this.menuItem10.Text = resources.GetString("menuItem10.Text");
@@ -636,7 +656,7 @@ namespace Novell.FormsTrayApp
 			// menuExit
 			// 
 			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
-			this.menuExit.Index = 7;
+			this.menuExit.Index = 8;
 			this.menuExit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuExit.Shortcut")));
 			this.menuExit.ShowShortcut = ((bool)(resources.GetObject("menuExit.ShowShortcut")));
 			this.menuExit.Text = resources.GetString("menuExit.Text");
@@ -646,6 +666,16 @@ namespace Novell.FormsTrayApp
 			// syncAnimateTimer
 			// 
 			this.syncAnimateTimer.Tick += new System.EventHandler(this.syncAnimateTimer_Tick);
+			// 
+			// menuSyncLog
+			// 
+			this.menuSyncLog.Enabled = ((bool)(resources.GetObject("menuSyncLog.Enabled")));
+			this.menuSyncLog.Index = 4;
+			this.menuSyncLog.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSyncLog.Shortcut")));
+			this.menuSyncLog.ShowShortcut = ((bool)(resources.GetObject("menuSyncLog.ShowShortcut")));
+			this.menuSyncLog.Text = resources.GetString("menuSyncLog.Text");
+			this.menuSyncLog.Visible = ((bool)(resources.GetObject("menuSyncLog.Visible")));
+			this.menuSyncLog.Click += new System.EventHandler(this.menuSyncLog_Click);
 			// 
 			// FormsTrayApp
 			// 
