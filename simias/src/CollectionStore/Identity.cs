@@ -28,185 +28,9 @@ using System.Xml;
 using System.IO;
 
 using Persist = Simias.Storage.Provider;
-using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 namespace Simias.Storage
 {
-	/// <summary>
-	/// Class that is used to supply credentials for remote access security.
-	/// </summary>
-	internal class IdentityKeyStore : RsaKeyStore
-	{
-		#region Class Members
-		/// <summary>
-		/// Reference to a Store object.
-		/// </summary>
-		private Store store;
-		#endregion
-
-		#region Constructor
-		/// <summary>
-		/// Initializes a new instance of the object class.
-		/// </summary>
-		/// <param name="store">Reference to a Store object.</param>
-		public IdentityKeyStore( Store store )
-		{
-			this.store = store;
-		}
-		#endregion
-
-		#region Private Methods
-		/// <summary>
-		/// Gets the Member object from the user identitifer.
-		/// </summary>
-		/// <param name="userID">Identifier of user to look up Member object with.</param>
-		/// <returns>The Member object that is associated with the specified user ID if successful. Otherwise
-		/// null is returned.</returns>
-		private Member GetWorkGroupMember( string userID )
-		{
-			Member member = null;
-
-			// Need to search across collection looking for any Member object that contains the specified
-			// user ID.
-			Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, userID, Syntax.String );
-			Persist.IResultSet chunkIterator = store.StorageProvider.Search( query );
-			if ( chunkIterator != null )
-			{
-				// Get the first set of results from the query.
-				char[] results = new char[ 1024 ];
-				int length = chunkIterator.GetNext( ref results );
-				if ( length > 0 )
-				{
-					// Set up the XML document to parse the results.
-					XmlDocument shallowList = new XmlDocument();
-					shallowList.LoadXml( new string( results, 0, length ) );
-					foreach ( XmlElement xe in shallowList.DocumentElement )
-					{
-						// The member can only be created from an XML Document object.
-						XmlDocument xmlMember = new XmlDocument();
-						xmlMember.AppendChild( xmlMember.CreateElement( XmlTags.ObjectListTag ) );
-						xmlMember.DocumentElement.AppendChild( xmlMember.ImportNode( xe, true ) );
-						member = new Member( xmlMember );
-						break;
-					}
-				}
-
-				chunkIterator.Dispose();
-			}
-
-			return member;
-		}
-		#endregion
-
-		#region Public Methods
-		/// <summary>
-		/// Requests the acceptance of the presented "server" principal credentials.
-		/// 
-		/// IMPORTANT: The method must raise an exception if there is a security policy in effect that
-		/// prevents it from accepting credentials received during peer authentication. Failing to
-		/// raise an exception with such a policy in effect will result in a policy violation because
-		/// the caller will consider that it is OK to use the credentials to authenticate the peer.
-		/// </summary>
-		/// <param name="realm">The realm to which the server principal belongs</param>
-		/// <param name="principalName">The name of the server principal</param>
-		/// <param name="rsaKeys">RSA algorithm with the server principal's public key</param>
-		public override void AcceptServerPrincipalCredentials(string realm, string principalName, RSACryptoServiceProvider rsaKeys)
-		{
-			throw new CollectionStoreException( "Credentials not accepted." );
-		}
-
-		/// <summary>
-		/// Requests the acceptance of the presented "client" principal credentials.
-		/// 
-		/// IMPORTANT: The method must raise an exception if there is a security policy in effect that
-		/// prevents it from accepting credentials received during peer authentication. Failing to
-		/// raise an exception with such a policy in effect will result in a policy violation because
-		/// the caller will consider that it is OK to use the credentials to authenticate the peer.
-		/// </summary>
-		/// <param name="realm">The realm to which the client principal belongs</param>
-		/// <param name="principalName">The name of the client principal</param>
-		/// <param name="rsaKeys">RSA algorithm with the client principal's public key</param>
-		public override void AcceptClientPrincipalCredentials(string realm, string principalName, RSACryptoServiceProvider rsaKeys)
-		{
-			throw new CollectionStoreException( "Credentials not accepted." );
-		}
-
-		/// <summary>
-		/// Obtains the credentials associated with the specified "client" principal.
-		/// </summary>
-		/// <param name="realm">The realm to which the client principal belongs</param>
-		/// <param name="principalName">The name of the client principal</param>
-		/// <param name="rsaKeys">RSA algorithm with the client principal's public key, null if no credentials found</param>
-		public override void GetClientPrincipalCredentials(string realm, string principalName, out RSACryptoServiceProvider rsaKeys)
-		{
-			// Get the Member object for the specified realm.
-			Member member = GetWorkGroupMember( principalName );
-			if ( member != null )
-			{
-				rsaKeys = member.PublicKey;
-			}
-			else
-			{
-				rsaKeys = null;
-			}
-		}
-
-		/// <summary>
-		/// Obtains the credentials necessary for authentication against the specified server
-		/// 
-		/// Note: Exception thrown if no credential materials are found.
-		/// </summary>
-		/// <param name="serverRealm">The realm to which the server principal belongs</param>
-		/// <param name="server">The name of the server principal</param>
-		/// <param name="realm">The realm to which the client principal belongs</param>
-		/// <param name="principalName">The name of the client principal</param>
-		/// <param name="rsaKeys">RSA algorithm with the client principal's public and private keys</param>
-		public override void GetLocalCredentialsForServer(string serverRealm, string server, out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
-		{
-			Identity identity = store.CurrentUser;
-			realm = Domain.WorkGroupDomainID;
-			principalName = identity.ID;
-			rsaKeys = identity.Credential;
-		}
-
-		/// <summary>
-		/// Gets the server credentials for the WorkGroup domain. 
-		/// 
-		/// Note: Exception thrown if no credential materials are found.
-		/// </summary>
-		/// <param name="realm">The realm to which the principal belongs</param>
-		/// <param name="principalName">The name of the server principal</param>
-		/// <param name="rsaKeys">RSA algorithm with the principal's public and private keys</param>
-		public override void GetServerCredentials(out string realm, out string principalName, out RSACryptoServiceProvider rsaKeys)
-		{
-			Identity identity = store.CurrentUser;
-			realm = Domain.WorkGroupDomainID;
-			principalName = identity.ID;
-			rsaKeys = identity.Credential;
-		}
-
-		/// <summary>
-		/// Obtains the credentials associated with the specified "server" principal.
-		/// </summary>
-		/// <param name="realm">The realm to which the server principal belongs</param>
-		/// <param name="principalName">The name of the server principal</param>
-		/// <param name="rsaKeys">RSA algorithm with the server principal's public key, null if no credentials found</param>
-		public override void GetServerPrincipalCredentials(string realm, string principalName, out RSACryptoServiceProvider rsaKeys)
-		{
-			// Get the Member object for the specified realm.
-			Member member = GetWorkGroupMember( principalName );
-			if ( member != null )
-			{
-				rsaKeys = member.PublicKey;
-			}
-			else
-			{
-				rsaKeys = null;
-			}
-		}
-		#endregion
-	}
-
 	/// <summary>
 	/// Class that represents a user identity in the Collection Store.
 	/// </summary>
@@ -224,11 +48,6 @@ namespace Simias.Storage
 		/// Used to separate the user ID and domain ID in the Domain property.
 		/// </summary>
 		static private char valueSeparator = ':';
-
-		/// <summary>
-		/// Used to get credentials for remote access security.
-		/// </summary>
-		private IdentityKeyStore keyStore;
 		#endregion
 
 		#region Properties
@@ -251,14 +70,6 @@ namespace Simias.Storage
 
 				return credential;
 			}
-		}
-
-		/// <summary>
-		/// Gets the RSAKeyStore object in order to validate remote access.
-		/// </summary>
-		internal RsaKeyStore KeyStore
-		{
-			get { return keyStore; }
 		}
 
 		/// <summary>
@@ -297,15 +108,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for creating a new Identity object.
 		/// </summary>
-		/// <param name="store">Reference to a Store object.</param>
 		/// <param name="userName">User name of the identity.</param>
 		/// <param name="userGuid">Unique identifier for the user.</param>
-		internal Identity( Store store, string userName, string userGuid ) :
+		internal Identity( string userName, string userGuid ) :
 			base ( userName, userGuid, NodeTypes.IdentityType )
 		{
-			// Setup the key store.
-			keyStore = new IdentityKeyStore( store );
-
 			// Create a local, hidden property to store the credential in.
 			Property p;
 
@@ -321,7 +128,7 @@ namespace Simias.Storage
 			else
 			{
 				// The RSA parameters will be stored as a string object on the identity node.
-				RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
+				RSACryptoServiceProvider credential = new RSACryptoServiceProvider( 1024 );
 				p = new Property( PropertyTags.Credential, credential.ToXmlString( true ) );
 			}
 			
@@ -333,17 +140,14 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor that creates an Identity object from a Node object.
 		/// </summary>
-		/// <param name="store">Reference to a Store object.</param>
 		/// <param name="node">Node object to create the Identity object from.</param>
-		internal Identity( Store store, Node node ) :
+		internal Identity( Node node ) :
 			base( node )
 		{
 			if ( type != NodeTypes.IdentityType )
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.IdentityType, type ) );
 			}
-
-			keyStore = new IdentityKeyStore( store );
 		}
 
 		/// <summary>
@@ -358,24 +162,19 @@ namespace Simias.Storage
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.IdentityType, type ) );
 			}
-
-			keyStore = new IdentityKeyStore( collection.StoreReference );
 		}
 
 		/// <summary>
 		/// Constructor that creates an Identity object from an Xml document object.
 		/// </summary>
-		/// <param name="store">Reference to a Store object.</param>
 		/// <param name="document">Xml document object to create the Identity object from.</param>
-		internal Identity( Store store, XmlDocument document ) :
+		internal Identity( XmlDocument document ) :
 			base( document )
 		{
 			if ( type != NodeTypes.IdentityType )
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.IdentityType, type ) );
 			}
-
-			keyStore = new IdentityKeyStore( store );
 		}
 		#endregion
 

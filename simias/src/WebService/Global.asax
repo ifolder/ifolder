@@ -1,2 +1,2 @@
-<%@ Application Codebehind="Global.cs" Inherits="Simias.Web.Global,Simias.Web" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="Simias.Web.Global,Simias.Web" %>
 

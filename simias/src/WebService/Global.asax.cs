@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  *
- *  Copyright Â© Unpublished Work of Novell, Inc. All Rights Reserved.
+ *  Copyright © Unpublished Work of Novell, Inc. All Rights Reserved.
  *
  *  THIS WORK IS AN UNPUBLISHED WORK AND CONTAINS CONFIDENTIAL,
  *  PROPRIETARY AND TRADE SECRET INFORMATION OF NOVELL, INC. ACCESS TO 
@@ -20,8 +20,6 @@
  *          Rob Lyon <rlyon@novell.com>
  *
  ***********************************************************************/
-
-
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -34,26 +32,27 @@ using Simias;
 namespace Simias.Web
 {
 	/// <summary>
-	/// Global
+	/// Summary description for Global.
 	/// </summary>
 	public class Global : HttpApplication
 	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 		private Simias.Service.Manager serviceManager;
 
 		public Global()
 		{
+			InitializeComponent();
 		}	
 		
 		protected void Application_Start(Object sender, EventArgs e)
 		{
-            // update the prefix of the installed directory
-            SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
+			// update the prefix of the installed directory
+			SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
             
-            // CRG: This is a total hack for now
-			//string newdir = Directory.GetCurrentDirectory() +
-			//					System.IO.Path.DirectorySeparatorChar + "bin";
-
-            string newdir = SimiasSetup.webbindir;
+			string newdir = SimiasSetup.webbindir;
 
 			Environment.CurrentDirectory = newdir;
 
@@ -62,7 +61,7 @@ namespace Simias.Web
 			Configuration config = Configuration.GetConfiguration();
 			serviceManager = new Simias.Service.Manager(config);
 			
-            Console.WriteLine("Starting Simias Process");
+			Console.WriteLine("Starting Simias Process");
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
 			Console.WriteLine("Simias Process Running");
@@ -78,11 +77,9 @@ namespace Simias.Web
 
 		protected void Application_EndRequest(Object sender, EventArgs e)
 		{
-
 		}
 
-		protected void Application_AuthenticateRequest(Object sender, 
-							EventArgs e)
+		protected void Application_AuthenticateRequest(Object sender, EventArgs e)
 		{
 		}
 
@@ -92,7 +89,6 @@ namespace Simias.Web
 
 		protected void Session_End(Object sender, EventArgs e)
 		{
-
 		}
 
 		protected void Application_End(Object sender, EventArgs e)
@@ -101,6 +97,17 @@ namespace Simias.Web
 			serviceManager.StopServices();
 			serviceManager.WaitForServicesStopped();
 		}
+			
+		#region Web Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{    
+			this.components = new System.ComponentModel.Container();
+		}
+		#endregion
 	}
 }
 

@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\&#xd;&#xa;copy $(SolutionDir)external\SecureChannelSinks\*.dll $(SolutionDir)stage\&#xd;&#xa;copy $(SolutionDir)external\sqlite\w32\sqlite.dll $(SolutionDir)stage\&#xd;&#xa;copy $(SolutionDir)external\log4net\bin\net\1.1\release $(SolutionDir)stage\&#xd;&#xa;copy $(SolutionDir)tools\NUnit\net\bin\nunit.core.dll $(SolutionDir)stage\&#xd;&#xa;copy $(SolutionDir)tools\NUnit\net\bin\nunit.framework.dll $(SolutionDir)stage\"
+                PostBuildEvent = "if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage&#xd;&#xa;if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web&#xd;&#xa;if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(SolutionDir)external\log4net\bin\net\1.1\release $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(SolutionDir)external\mDnsResponder\net\bin\mDnsResponder.dll $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(SolutionDir)external\mDnsResponder\net\bin\mDnsResponderApi.dll $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(SolutionDir)external\mDnsResponder\net\bin\mDnsResponderCmd.exe $(SolutionDir)stage\web\bin&#xd;&#xa;copy $(SolutionDir)external\mDnsResponder\net\bin\mDnsResponderExe.exe $(SolutionDir)stage\web\bin&#xd;&#xa;"
                 RootNamespace = "Simias"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -95,29 +95,9 @@
                     HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
-                />
-                <Reference
                     Name = "mDnsResponderApi"
                     AssemblyName = "mDnsResponderApi"
                     HintPath = "external\mDnsResponder\net\bin\mDnsResponderApi.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink"
-                    AssemblyName = "Novell.Security.SecureSink"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.dll"
                 />
             </References>
         </Build>
@@ -397,11 +377,6 @@
                     RelPath = "src\FlaimProvider\FlaimProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\FlaimProvider\FlaimProvider.resx"
-                    DependentUpon = "FlaimProvider.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "src\FlaimProvider\FlaimRecord.cs"
