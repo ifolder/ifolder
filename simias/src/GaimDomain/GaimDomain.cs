@@ -104,7 +104,7 @@ namespace Simias.Gaim
 
 		#region Constructors
 		
-		/// FIXME: Modify this domain so that it is NOT created if
+		/// This domain so that it is NOT created if
 		/// the user does not have Gaim installed/configured/etc.  The
 		/// Gaim domain should only be created if the user has it installed
 		/// and has a prpl-oscar account setup in .gaim/accounts.xml.
@@ -854,11 +854,11 @@ namespace Simias.Gaim
 				Simias.Storage.Member member =
 					new Simias.Storage.Member(domain, sNode);
 
+				if (member.IsOwner) continue; // Don't nuke the owner
+
 				if (!IsMemberInBuddyList(member, buddies))
 				{
-					// FIXME: This isn't actually deleting the member
-					domain.Delete(member);
-					domain.Commit();
+					domain.Commit(domain.Delete(member));
 				}
 			}
 		}
