@@ -592,7 +592,7 @@ namespace Simias.Sync.Http
 			request.ContentLength = count;
 			headers.Add(SyncHeaders.Range, offset.ToString() + "-" + ((long)(offset + count)).ToString());
 			Stream rStream = request.GetRequestStream();
-			byte[] buffer = new byte[4096];
+			byte[] buffer = new byte[64 * 1024];
 			long bytesSent = 0;
 			while (bytesSent < count)
 			{
