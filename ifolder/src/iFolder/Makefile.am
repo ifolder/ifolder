@@ -51,7 +51,7 @@ installcheck-local: install $(NUNIT_TESTS)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
 #	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderTests.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = iFolder.dll iFolderCmd.exe $(NUNIT_TESTS) iFolder.xml iFolderTests.xml
+CLEAN_FILES = iFolder.dll iFolderCmd.exe $(NUNIT_TESTS) iFolder.xml iFolderTests.xml iFolderCmd.xml
 CLEAN_DIRS = .cstore
 
 clean-local:

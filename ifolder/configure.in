@@ -9,9 +9,9 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
-COMMON_SUBDIRS="MiniFolder iFolder GtkTrayApp"
-LINUX_SUBDIRS=
-WINDOWS_SUBDIRS=
+COMMON_SUBDIRS="MiniFolder iFolder"
+LINUX_SUBDIRS="GtkTrayApp"
+WINDOWS_SUBDIRS="FormsTrayApp"
 
 case $host_os in
     linux*)
@@ -134,14 +134,38 @@ AC_HEADER_STDC
 #AM_PROG_LIBTOOL
 
 #
+# Handle --with-cygwin-path
+#
+AC_ARG_WITH(cygwin-path,
+    [  --with-cygwin-path=PATH full path to Cygwin (default is c:/cygwin)],
+    [ CYGWIN_PATH=$withval ],
+    [ CYGWIN_PATH="c:/cygwin" ]
+    )
+AC_SUBST(CYGWIN_PATH)
+
+#
 # Handle --with-simias-path
 #
-AC_ARG_WITH(simias-path, [
-  --with-simias-path=PATH Full path to installed Simias assemblies],
-	[ SIMIAS_INSTALL_PATH=$withval ],
-	[ SIMIAS_INSTALL_PATH=\${prefix} ]
-	)
+AC_ARG_WITH(simias-path,
+    [  --with-simias-path=PATH full path to installed Simias assemblies (default is \${prefix}],
+    [ SIMIAS_INSTALL_PATH=$withval ],
+    [ SIMIAS_INSTALL_PATH=$prefix ]
+    )
+test "x$SIMIAS_INSTALL_PATH" = xNONE && SIMIAS_INSTALL_PATH=$ac_default_prefix
+case $host_os in
+    cygwin*)
+        if ( expr "$SIMIAS_INSTALL_PATH" : ".*cygdrive.*" > /dev/null ); then
+            SIMIAS_INSTALL_PATH=`echo "$SIMIAS_INSTALL_PATH" | sed 's,/cygdrive/\(.\)/,\1:/,'`
+        else
+            SIMIAS_INSTALL_PATH="\$(CYGWIN_PATH)$SIMIAS_INSTALL_PATH"
+        fi
+    ;;
+esac
 AC_SUBST(SIMIAS_INSTALL_PATH)
+
+DISTCHECK_CONFIGURE_FLAGS="--with-simias-path=$SIMIAS_INSTALL_PATH"
+AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
+
 
 #
 # Handle --enable-debug
@@ -210,4 +234,5 @@ src/Makefile
 src/MiniFolder/Makefile
 src/iFolder/Makefile
 src/GtkTrayApp/Makefile
+src/FormsTrayApp/Makefile
 ])
