@@ -65,7 +65,7 @@ namespace Simias.Storage
 		/// <param name="storeObject">Store object.</param>
 		/// <param name="workGroup">Default WorkGroup for this store.</param>
 		/// <param name="ownerGuid">Owner identifier of this object.</param>
-		/// <param name="domainName">Name of the domain that this address book belongs to.</param>
+		/// <param name="domain">Name of the domain that this address book belongs to.</param>
 		internal LocalDatabase( Store storeObject, WorkGroup workGroup, string ownerGuid, string domain ) :
 			base ( storeObject, "LocalDatabase", Guid.NewGuid().ToString(), NodeTypes.LocalDatabaseType, ownerGuid, domain )
 		{

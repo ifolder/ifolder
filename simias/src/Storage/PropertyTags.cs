@@ -66,11 +66,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		public static string CollisionData = "CollisionData";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
 		public static string ContactType = "AB:Contact";
 
 		/// <summary>
@@ -225,7 +220,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( ClientCredential, null );
 			systemPropertyTable.Add( ClientPublicKey, null );
 			systemPropertyTable.Add( Collision, null );
-			systemPropertyTable.Add( CollisionData, null );
 			systemPropertyTable.Add( CreationTime, null );
 			systemPropertyTable.Add( DirCreationTime, null );
 			systemPropertyTable.Add( DirLastAccessTime, null );

@@ -324,10 +324,6 @@ namespace Simias.Storage
 
 						// Set the database ID.
 						databaseID = localDb.ID;
-
-						// Create the collision container.
-						Collision collision = new Collision( this );
-						collision.Commit();
 					}
 					catch ( Exception e )
 					{
@@ -538,21 +534,6 @@ namespace Simias.Storage
 			}
 
 			return collectionList;
-		}
-
-		/// <summary>
-		/// Returns the Collision object for this store.
-		/// </summary>
-		/// <returns>The Collision object for this store. A null is returned if the Collision object 
-		/// does not exist.</returns>
-		public Collision GetCollisionObject()
-		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
-			return GetCollectionByID( Collision.CollisionID ) as Collision;
 		}
 
 		/// <summary>

@@ -1025,7 +1025,7 @@ namespace Simias.Storage.Tests
 
 				int count = 0;
 				while ( e2.MoveNext() ) ++count;
-				if ( count != 6 )
+				if ( count != 5 )
 				{
 					e2.Dispose();
 					throw new ApplicationException( "Enumeration access control without impersonation failed" );
@@ -1614,22 +1614,23 @@ namespace Simias.Storage.Tests
 				// Commit the collection.
 				collection.Commit();
 
-				// Get the collision object.
-				Collision collision = store.GetCollisionObject();
+				// Create a node object.
+				Node node = new Node( "CS_TestNode" );
+				collection.Commit( node );
 
 				// Create a collision Node that represents the collection object and commit it to the collision
 				// collection.
-				Node node = collision.CreateCollisionNode( collection, collection );
-				collision.Commit( node );
+				Node collisionNode = collection.CreateCollision( node );
+				collection.Commit( collisionNode );
 
 				// Should have a collision.
-				if ( !collision.HasCollisions( collection, collection ) )
+				if ( !collection.HasCollisions() )
 				{
 					throw new ApplicationException( "Collision node not created." );
 				}
 
 				// Find the collision Node.
-				ICSList colList = collision.GetCollisions( collection );
+				ICSList colList = collection.GetCollisions();
 				ICSEnumerator e = colList.GetEnumerator() as ICSEnumerator;
 				if ( e.MoveNext() )
 				{
@@ -1650,42 +1651,19 @@ namespace Simias.Storage.Tests
 
 				e.Dispose();
 
-				// Try to find the collision Node object a different way.
-				colList = collision.GetCollisions( collection, collection );
-				e = colList.GetEnumerator() as ICSEnumerator;
-				if ( e.MoveNext() )
+
+				// Reconstitute the collision Node and get the Node that it represents.
+				Node collectionNode = collection.GetNodeFromCollision( collisionNode );
+				if ( collisionNode.ID != collectionNode.ID )
 				{
-					ShallowNode sn = e.Current as ShallowNode;
-					if ( sn.ID != node.ID )
-					{
-						throw new ApplicationException( "Found wrong collision node." );
-					}
-
-					if ( e.MoveNext() )
-					{
-						throw new ApplicationException( "Collision node exception." );
-					}
-
-					// Reconstitute the collision Node and get the Node that it represents.
-					node = new Node( collision, sn );
-					Node collectionNode = collision.GetNodeFromCollision( node );
-					if ( collectionNode.ID != collection.ID )
-					{
-						throw new ApplicationException( "Cannot find proper Node from collision." );
-					}
-
-					// Delete the collision node.
-					collision.Commit( collision.Delete( node ) );
-				}
-				else
-				{
-					throw new ApplicationException( "Collision node exception." );
+					throw new ApplicationException( "Cannot find proper Node from collision." );
 				}
 
-				e.Dispose();
+				// Delete the collision node.
+				collection.Commit( collection.DeleteCollision( collisionNode ) );
 
 				// Should not be anymore collisions.
-				if ( collision.HasCollisions( collection ) )
+				if ( collection.HasCollisions() )
 				{
 					throw new ApplicationException( "Cannot delete collision node." );
 				}

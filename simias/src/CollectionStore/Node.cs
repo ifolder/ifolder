@@ -301,10 +301,6 @@ namespace Simias.Storage
 					rNode = new Node( document );
 					break;
 
-				case "Collision":
-					rNode = new Collision( store, document );
-					break;
-
 				case "WorkGroup":
 					rNode = new WorkGroup( store, document );
 					break;
@@ -369,10 +365,6 @@ namespace Simias.Storage
 
 				case "Tombstone":
 					rNode = new Node( collection, shallowNode );
-					break;
-
-				case "Collision":
-					rNode = new Collision( collection.StoreReference, shallowNode );
 					break;
 
 				case "WorkGroup":

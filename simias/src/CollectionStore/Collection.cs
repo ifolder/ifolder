@@ -727,10 +727,6 @@ namespace Simias.Storage
 					rCollection = new LocalAddressBook( store, shallowNode );
 					break;
 
-				case "Collision":
-					rCollection = new Collision( store, shallowNode );
-					break;
-
 				case "WorkGroup":
 					rCollection = new WorkGroup( store, shallowNode );
 					break;
@@ -869,6 +865,27 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Creates a property on a Node object that represents the collision of the specified Node object 
+		/// with another instance.
+		/// </summary>
+		/// <param name="collisionNode">Node object that has collided with another instance.</param>
+		/// <returns>A Node object that the collision was stored on.</returns>
+		public Node CreateCollision( Node collisionNode )
+		{
+			// Look up the Node by ID.
+			Node node = GetNodeByID( collisionNode.ID );
+			if ( node != null )
+			{
+				// Add a property that holds the data from the collided Node object.
+				Property p = new Property( PropertyTags.Collision, collisionNode.Properties.PropertyDocument );
+				p.LocalProperty = true;
+				node.Properties.ModifyNodeProperty( p );
+			}
+
+			return node;
+		}
+
+		/// <summary>
 		/// Deletes the specified collection from the persistent store.
 		/// </summary>
 		/// <returns>The Node object that has been deleted.</returns>
@@ -941,6 +958,22 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Deletes the collision from the specified Node object.
+		/// </summary>
+		/// <param name="node">Node object from which to delete collision.</param>
+		/// <returns>The node object that the collision was deleted from.</returns>
+		public Node DeleteCollision( Node node )
+		{
+			Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
+			if ( p != null )
+			{
+				p.DeleteProperty();
+			}
+
+			return node;
+		}
+
+		/// <summary>
 		/// Searches all Node objects in the Collection for the specified Types value.
 		/// </summary>
 		/// <param name="type">String object containing class type to find.</param>
@@ -958,6 +991,17 @@ namespace Simias.Storage
 		public ICSList GetAccessControlList()
 		{
 			return new ICSList( new Access( this ) );
+		}
+
+		/// <summary>
+		/// Gets a list of ShallowNode objects that represent Node objects that contain collisions in the current
+		/// collection.
+		/// </summary>
+		/// <returns>An ICSList object containing ShallowNode objects representing Node objects that 
+		/// contain collisions.</returns>
+		public ICSList GetCollisions()
+		{
+			return Search( PropertyTags.Collision, Syntax.XmlDocument );
 		}
 
 		/// <summary>
@@ -1000,6 +1044,17 @@ namespace Simias.Storage
 		public ICSList GetNodesByType( string typeString )
 		{
 			return Search( PropertyTags.Types, typeString , SearchOp.Equal );
+		}
+
+		/// <summary>
+		/// Gets the Node object that the collision property represents.
+		/// </summary>
+		/// <param name="node">Node object that contains a collision property.</param>
+		/// <returns>The Node object that caused the collision. Otherwise a null is returned.</returns>
+		public Node GetNodeFromCollision( Node node )
+		{
+			Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
+			return ( p == null ) ? null : Node.NodeFactory( StoreReference, p.Value as XmlDocument );
 		}
 
 		/// <summary>
@@ -1067,6 +1122,28 @@ namespace Simias.Storage
 		public Access.Rights GetUserAccess( string userID )
 		{
 			return accessControl.GetUserRights( userID );
+		}
+
+		/// <summary>
+		/// Returns whether the collection has collisions.
+		/// </summary>
+		/// <returns>True if the collection contains collisions, otherwise false is returned.</returns>
+		public bool HasCollisions()
+		{
+			ICSEnumerator e = GetCollisions().GetEnumerator() as ICSEnumerator;
+			bool hasCollisions = e.MoveNext();
+			e.Dispose();
+			return hasCollisions;
+		}
+
+		/// <summary>
+		/// Returns whether the specified Node object has collisions.
+		/// </summary>
+		/// <param name="node">Node object to check for collisions.</param>
+		/// <returns>True if the Node object contains collisions, otherwise false is returned.</returns>
+		public bool HasCollisions( Node node )
+		{
+			return ( node.Properties.GetSingleProperty( PropertyTags.Collision ) != null ) ? true : false;
 		}
 
 		/// <summary>
@@ -1202,7 +1279,13 @@ namespace Simias.Storage
 			{
 				// The Uri object must contain a valid path or it cannot be constructed. Put in a bogus path
 				// so that it can be constructed. The value will be ignored in the search.
-				return new ICSList( new NodeEnumerator( this, new Property( propertyName,propertySyntax, Directory.GetCurrentDirectory() ), SearchOp.Exists ) );
+				return new ICSList( new NodeEnumerator( this, new Property( propertyName, new Uri( Directory.GetCurrentDirectory() ) ), SearchOp.Exists ) );
+			}
+			else if ( propertySyntax == Syntax.XmlDocument )
+			{
+				XmlDocument document = new XmlDocument();
+				document.LoadXml( "<Dummy/>" );
+				return new ICSList( new NodeEnumerator( this, new Property( propertyName, document ), SearchOp.Exists ) );
 			}
 			else
 			{
