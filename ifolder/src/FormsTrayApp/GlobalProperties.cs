@@ -1571,8 +1571,19 @@ namespace Novell.FormsTrayApp
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\serverifolder.ico")));
 				iFolderView.SmallImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));
 
-				// TODO: add icons for toolbar buttons.
+				// Add icons for toolbar buttons.
 				toolBar1.ImageList = new ImageList();
+				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\newifolder24.png")), Color.Black);
+				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\setup24.png")), Color.Black);
+				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\share24.png")), Color.Black);
+				toolBar1.ImageList.Images.Add(new Icon(Path.Combine(Application.StartupPath, @"res\ifolderconflict.ico")));//(new Bitmap(Path.Combine(Application.StartupPath, @"res\conflict24.png")), Color.Black);
+				toolBar1.ImageList.Images.Add(new Bitmap(Path.Combine(Application.StartupPath, @"res\sync24.png")), Color.Black);
+
+				toolBarCreate.ImageIndex = 0;
+				toolBarSetup.ImageIndex = 1;
+				toolBarShare.ImageIndex = 2;
+				toolBarResolve.ImageIndex = 3;
+				toolBarSync.ImageIndex = 4;
 			}
 			catch {} // Non-fatal ... just missing some graphics.
 

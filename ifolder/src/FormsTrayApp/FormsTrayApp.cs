@@ -47,11 +47,6 @@ namespace Novell.FormsTrayApp
 	public class FormsTrayApp : Form
 	{
         #region Class Members
-		/// <summary>
-		/// Well known identitifer for workgroup.
-		/// </summary>
-		static public string WorkGroupDomainID = "363051d1-8841-4c7b-a1dd-71abbd0f4ada";
-
 		// Delegates used to marshal back to the control's creation thread.
 		private delegate void SyncCollectionDelegate(CollectionSyncEventArgs syncEventArgs);
 		private SyncCollectionDelegate syncCollectionDelegate;
