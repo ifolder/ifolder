@@ -36,12 +36,10 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWeb			ifolder;
 		private DiskSpace			ds;
-		private	CheckButton 		AutoSyncCheckButton;
-		private SpinButton			SyncSpinButton;
-		private Label				SyncUnitsLabel;
 
-		private	Label				UploadValue;
+		private	Label				LastSuccessfulSync;
 		private Label				FFSyncValue;
+		private Label				SyncIntervalValue;
 
 		private Label				UsedValue;
 
@@ -81,45 +79,19 @@ namespace Novell.iFolder
 		{
 			this.ifolder = ifolder;
 
-			if(ifolder.Synchronizable)
-			{
-				SyncSpinButton.Value = ifolder.SyncInterval;
-				AutoSyncCheckButton.Sensitive = true;
-
-				if(SyncSpinButton.Value == 0)
-				{
-					AutoSyncCheckButton.Active = false;
-					SyncSpinButton.Sensitive = false;
-					SyncUnitsLabel.Sensitive = false;
-				}
-				else
-				{
-					AutoSyncCheckButton.Active = true;
-					SyncSpinButton.Sensitive = true;
-					SyncUnitsLabel.Sensitive = true;
-				}
-			}
-			else
-			{
-				AutoSyncCheckButton.Active = false;
-				AutoSyncCheckButton.Sensitive = false;
-				SyncSpinButton.Sensitive = false;
-				SyncUnitsLabel.Sensitive = false;
-				SyncSpinButton.Value = ifolder.SyncInterval;
-			}
-
-			UploadValue.Text = "0";
+			LastSuccessfulSync.Text = ifolder.LastSyncTime;
 			FFSyncValue.Text = "0";
+			SyncIntervalValue.Text = ifolder.SyncInterval + " " + Util.GS("minute(s)");
 			
 /*			try
 			{
 				SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
-				UploadValue.Text = string.Format("{0}", ss.SyncByteCount);
+				LastSuccessfulSync.Text = string.Format("{0}", ss.SyncByteCount);
 				FFSyncValue.Text = string.Format("{0}", ss.SyncNodeCount);
 			}
 			catch(Exception e)
 			{
-				UploadValue.Text = Util.GS("N/A");
+				LastSuccessfulSync.Text = Util.GS("N/A");
 				FFSyncValue.Text = Util.GS("N/A");
 
 //				iFolderExceptionDialog ied = new iFolderExceptionDialog(
@@ -301,103 +273,6 @@ namespace Novell.iFolder
 			this.BorderWidth = Util.DefaultBorderWidth;
 
 			//------------------------------
-			// Sync Settings
-			//------------------------------
-			// create a section box
-			VBox syncSectionBox = new VBox();
-			syncSectionBox.Spacing = Util.SectionTitleSpacing;
-			this.PackStart(syncSectionBox, false, true, 0);
-			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Synchronization") +
-												"</span>");
-			syncSectionLabel.UseMarkup = true;
-			syncSectionLabel.Xalign = 0;
-			syncSectionBox.PackStart(syncSectionLabel, false, true, 0);
-
-			// create a hbox to provide spacing
-			HBox syncSpacerBox = new HBox();
-			syncSpacerBox.Spacing = 10;
-			syncSectionBox.PackStart(syncSpacerBox, false, true, 0);
-			Label syncSpaceLabel = new Label("");
-			syncSpacerBox.PackStart(syncSpaceLabel, false, true, 0);
-
-			// create a vbox to actually place the widgets in for section
-			VBox syncWidgetBox = new VBox();
-			syncSpacerBox.PackStart(syncWidgetBox, false, true, 0);
-			syncWidgetBox.Spacing = 10;
-
-
-			Label syncHelpLabel = new Label(Util.GS("This will set the sync setting for this iFolder."));
-			syncHelpLabel.LineWrap = true;
-			syncHelpLabel.Xalign = 0;
-			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
-
-			HBox syncHBox = new HBox();
-			syncWidgetBox.PackStart(syncHBox, false, true, 0);
-			syncHBox.Spacing = 10;
-			AutoSyncCheckButton = 
-					new CheckButton(Util.GS("Sync to host _every:"));
-			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
-			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
-			SyncSpinButton = new SpinButton(0, 99999, 5);
-			SyncSpinButton.ValueChanged += 
-					new EventHandler(OnSyncIntervalChanged);
-			syncHBox.PackStart(SyncSpinButton, false, false, 0);
-			SyncUnitsLabel = new Label(Util.GS("seconds"));
-			SyncUnitsLabel.Xalign = 0;
-			syncHBox.PackEnd(SyncUnitsLabel, true, true, 0);
-
-
-
-			//------------------------------
-			// Statistics Information
-			//------------------------------
-			// create a section box
-			VBox srvSectionBox = new VBox();
-			srvSectionBox.Spacing = Util.SectionTitleSpacing;
-			this.PackStart(srvSectionBox, false, true, 0);
-			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
-												Util.GS("Statistics") +
-												"</span>");
-			srvSectionLabel.UseMarkup = true;
-			srvSectionLabel.Xalign = 0;
-			srvSectionBox.PackStart(srvSectionLabel, false, true, 0);
-
-			// create a hbox to provide spacing
-			HBox srvSpacerBox = new HBox();
-			srvSpacerBox.Spacing = 10;
-			srvSectionBox.PackStart(srvSpacerBox, true, true, 0);
-			Label srvSpaceLabel = new Label("");
-			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
-
-			// create a vbox to actually place the widgets in for section
-			VBox srvWidgetBox = new VBox();
-			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
-
-			// create a table to hold the values
-			Table srvTable = new Table(2,2,false);
-			srvWidgetBox.PackStart(srvTable, true, true, 0);
-			srvTable.Homogeneous = false;
-			srvTable.ColumnSpacing = 20;
-			Label uploadLabel = new Label(Util.GS("Amount to upload:"));
-			uploadLabel.Xalign = 0;
-			srvTable.Attach(uploadLabel, 0,1,0,1,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			UploadValue = new Label("0");
-			UploadValue.Xalign = 0;
-			srvTable.Attach(UploadValue, 1,2,0,1);
-			Label FFSyncLabel = 
-					new Label(Util.GS("Files/Folders to synchronize:"));
-			FFSyncLabel.Xalign = 0;
-			srvTable.Attach(FFSyncLabel, 0,1,1,2,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			FFSyncValue = new Label("0");
-			FFSyncValue.Xalign = 0;
-			srvTable.Attach(FFSyncValue, 1,2,1,2);
-
-
-
-			//------------------------------
 			// Disk Space
 			//------------------------------
 			// create a section box
@@ -483,49 +358,66 @@ namespace Novell.iFolder
 			DiskUsageEmptyLabel.Xalign = 0;
 			DiskUsageEmptyLabel.Yalign = 1;
 			graphLabelBox.PackStart(DiskUsageEmptyLabel, true, true, 0);
-		}
 
 
 
+			//------------------------------
+			// Synchronization Information
+			//------------------------------
+			// create a section box
+			VBox syncSectionBox = new VBox();
+			syncSectionBox.Spacing = Util.SectionTitleSpacing;
+			this.PackStart(syncSectionBox, false, true, 0);
+			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
+												Util.GS("Synchronization") +
+												"</span>");
+			syncSectionLabel.UseMarkup = true;
+			syncSectionLabel.Xalign = 0;
+			syncSectionBox.PackStart(syncSectionLabel, false, true, 0);
 
-		private void OnSyncIntervalChanged(object o, EventArgs args)
-		{
-			if(SyncSpinButton.Value != ifolder.SyncInterval)
-			{
-				try
-				{
-					ifolder.SyncInterval = (int)SyncSpinButton.Value;
-					ifws.SetiFolderSyncInterval(ifolder.ID, 
-												ifolder.SyncInterval);
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-														topLevelWindow, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					return;
-				}
-			}
-		}
+			// create a hbox to provide spacing
+			HBox syncSpacerBox = new HBox();
+			syncSpacerBox.Spacing = 10;
+			syncSectionBox.PackStart(syncSpacerBox, true, true, 0);
+			Label srvSpaceLabel = new Label("");
+			syncSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
 
+			// create a vbox to actually place the widgets in for section
+			VBox syncWidgetBox = new VBox();
+			syncSpacerBox.PackStart(syncWidgetBox, true, true, 0);
 
-
-
-		private void OnAutoSyncButton(object o, EventArgs args)
-		{
-			if(AutoSyncCheckButton.Active == true)
-			{
-				SyncSpinButton.Sensitive = true;
-				SyncUnitsLabel.Sensitive = true;
-			}
-			else
-			{
-				SyncSpinButton.Sensitive = false;
-				SyncUnitsLabel.Sensitive = false;
-				SyncSpinButton.Value = 0;
-			}
+			// create a table to hold the values
+			Table syncTable = new Table(3,2,false);
+			syncWidgetBox.PackStart(syncTable, true, true, 0);
+			syncTable.Homogeneous = false;
+			syncTable.ColumnSpacing = 20;
+			syncTable.RowSpacing = 5;
+			
+			Label lastSyncLabel = new Label(Util.GS("Last successful sync:"));
+			lastSyncLabel.Xalign = 0;
+			syncTable.Attach(lastSyncLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			LastSuccessfulSync = new Label(Util.GS("N/A"));
+			LastSuccessfulSync.Xalign = 0;
+			syncTable.Attach(LastSuccessfulSync, 1,2,0,1);
+			
+			Label FFSyncLabel = 
+					new Label(Util.GS("Files/Folders to synchronize:"));
+			FFSyncLabel.Xalign = 0;
+			syncTable.Attach(FFSyncLabel, 0,1,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			FFSyncValue = new Label("0");
+			FFSyncValue.Xalign = 0;
+			syncTable.Attach(FFSyncValue, 1,2,1,2);
+			
+			Label SyncIntervalLabel =
+				new Label(Util.GS("This iFolder will sync with the host every:"));
+			SyncIntervalLabel.Xalign = 0;
+			syncTable.Attach(SyncIntervalLabel, 0,1,2,3,
+				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			SyncIntervalValue = new Label("1 minute(s)");
+			SyncIntervalValue.Xalign = 0;
+			syncTable.Attach(SyncIntervalValue, 1,2,2,3);
 		}
 
 
