@@ -308,6 +308,11 @@ internal class IncomingNode
 	{
 		Log.Spew("importing {0} {1} to collection {2}", node.Name, node.ID, collection.Name);
 
+		if (!onServer && expectedIncarn == 0)
+		{
+			// This is the first sync.  We expect the servers version.
+			expectedIncarn = node.LocalIncarnation;
+		}
 		collection.ImportNode(node, expectedIncarn);
 		node.Properties.ModifyProperty(TempFileDone, true);
 		if (onServer)
