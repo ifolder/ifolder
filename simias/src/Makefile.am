@@ -1,4 +1,4 @@
-SUBDIRS = Configuration StoreProvider
+SUBDIRS = Configuration Common
 
 maintainer-clean-local:
 	rm -f Makefile.in
