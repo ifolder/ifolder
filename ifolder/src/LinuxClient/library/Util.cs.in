@@ -141,7 +141,7 @@ namespace Novell.iFolder
 										null,
 										null,
 										new Gdk.Pixbuf(Util.ImagesPath(
-											"ifolder-about.png")));
+											"ifolder128.png")));
 				about.Show();
 			}
 			catch(Exception e)
