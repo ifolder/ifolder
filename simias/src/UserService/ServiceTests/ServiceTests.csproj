@@ -3,22 +3,22 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{CD27F275-744D-482D-A4C6-CCDCC64E2A83}"
+        ProjectGuid = "{1B08B496-14CB-4361-AE3B-C2384D62B1D0}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "UserService"
+                AssemblyName = "ServiceTests"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Library"
+                OutputType = "Exe"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "UserService"
+                RootNamespace = "ServiceTests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -67,31 +67,31 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "CollectionEvents"
-                    Project = "{680C2A55-3F33-45EA-AA67-5652592D93FE}"
+                    Name = "UserService"
+                    Project = "{CD27F275-744D-482D-A4C6-CCDCC64E2A83}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\..\tools\NUnit\bin\nunit.framework.dll"
                 />
                 <Reference
                     Name = "Configuration"
                     Project = "{9B517041-29A3-4817-BA8E-02ECF03477C4}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Common"
-                    Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
@@ -104,17 +104,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ICollectionWorker.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SystemManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "UserService.cs"
+                    RelPath = "ServiceTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
