@@ -67,6 +67,7 @@ namespace Novell.iFolder
 		private	iFolderLoginDialog	LoginDialog;
 		private bool				logwinShown;
 		private string				redomainID;
+		private bool				simiasRestarted = false;
 
 		public iFolderApplication(string[] args)
 			: base("ifolder", "1.0", Modules.UI, args)
@@ -216,16 +217,44 @@ namespace Novell.iFolder
 
 		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
 		{
-			Console.WriteLine("Switching on args.EventData");
 			switch(args.EventData)
 			{
 				case "Domain-Up":
 				{
-					Console.WriteLine("Got a Domain-Up");
 					redomainID = args.Message;
 					ReLogin(args.Message);
 					break;
 				}
+
+				case "Simias-Restart":
+				{
+					simiasRestarted = true;
+					break;
+				}
+
+				case "EventService-Up":
+				{
+					// See if simias was restarted and credentials need
+					// to be reset.
+					if (simiasRestarted)
+					{
+						simiasRestarted = false;
+
+						DomainAuthentication domainAuth =
+							new DomainAuthentication(
+									"iFolder",
+									redomainID,
+									null);
+
+						AuthenticationStatus authStatus =
+							domainAuth.Authenticate();
+
+						if (authStatus != AuthenticationStatus.Success)
+							ReLogin(redomainID);
+					}
+					break;
+				}
+
 			}
 		}
 
