@@ -292,15 +292,18 @@ namespace Simias.Security.Web
 				if ( Http.GetMember( domainID, context ) != null )
 				{
 					// Set the session to never expire on the local web service.
-					if ( domainID == StoreReference.LocalDomain )
+					if ( context.Session != null )
 					{
-						// Set to a very long time.
-						context.Session.Timeout = 60 * 24 * 365;
-					}
-					else
-					{
-						// Set all other sessions to 10 minutes.
-						context.Session.Timeout = 10;
+						if ( domainID == StoreReference.LocalDomain )
+						{
+							// Set to a very long time.
+							context.Session.Timeout = 60 * 24 * 365;
+						}
+						else
+						{
+							// Set all other sessions to 10 minutes.
+							context.Session.Timeout = 10;
+						}
 					}
 				}
 			}
