@@ -1935,7 +1935,7 @@ namespace Novell.iFolderCom
 			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
 			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
 
-			if (currentiFolder.IsWorkgroup)
+/*			if (currentiFolder.IsWorkgroup)
 			{
 				// TODO: check if this iFolder is hosted locally.
 				bool local = false;
@@ -1953,7 +1953,7 @@ namespace Novell.iFolderCom
 					syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), syncValue, resourceManager.GetString(units));
 				}
 			}
-			else
+			else*/
 			{
 				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = false;
 				syncNow.Enabled = true;
@@ -2150,27 +2150,6 @@ namespace Novell.iFolderCom
 					// Process added and changed members.
 					if (slMember.Added)
 					{
-						// TODO: we'll get the email a different way in the future.
-/*						if (currentiFolder.Domain.Equals(Domain.WorkGroupDomainID) &&
-							(sendersEmail == null))
-						{
-							// TODO: check for an existing contact for the current user.
-							EmailPrompt emailPrompt = new EmailPrompt();
-							if (DialogResult.OK == emailPrompt.ShowDialog())
-							{
-								sendersEmail = emailPrompt.Email;
-							}
-						}
-
-						// Add the from e-mail address.
-						slMember.Subscription.FromAddress = sendersEmail;
-
-						// Add the listviewitem to the hashtable so we can quickly find it.
-						lock (subscrHT)
-						{
-							subscrHT.Add(slMember.Subscription.ID, lvitem);
-						}*/
-
 						// Send the invitation.
 						slMember.iFolderUser = ifWebService.InviteUser(currentiFolder.ID, slMember.iFolderUser.UserID, slMember.iFolderUser.Rights);
 
@@ -2798,60 +2777,7 @@ namespace Novell.iFolderCom
 						if (slMemberToRemove != null)
 							removedList.Remove(slMemberToRemove);
 					}*/
-
-/*					if (shareMember == null)
-					{
-						// TODO: this needs to be reworked after BETA1 ... for now we will only allow them to choose a contact that is linked to a member.
-						if ((!currentiFolder.Domain.Equals(Domain.WorkGroupDomainID)) &&
-							((c.UserID == null) || (c.UserID.Length == 0)))
-						{
-							MessageBox.Show("Unable to share with the following incomplete user:\n\n" + c.FN, "Share Failure");
-						}
-						else
-						{
-							// The contact was not in the removed list, so create a new one.
-							shareMember = new ShareListMember();
-							shareMember.Added = true;
-
-							shareMember.Subscription = poBox.CreateSubscription(currentiFolder, currentMember, typeof(iFolder).Name);
-
-							// Add all of the other properties (ToAddress, FromAddress, etc.)
-							shareMember.Rights = Access.Rights.ReadWrite;
-							shareMember.Subscription.ToName = c.FN;
-							shareMember.Subscription.SubscriptionCollectionName = currentiFolder.Name;
-
-							if (currentiFolder.Domain.Equals(Domain.WorkGroupDomainID))
-							{
-								// Check if the contact has already been linked.
-								if (c.UserID.Equals(String.Empty))
-								{
-									// Create a relationship on the Subscription object ... this will be used later to link the member with the contact.
-									string collectionId = (string)c.Properties.GetSingleProperty(BaseSchema.CollectionId).Value;
-									shareMember.Subscription.Properties.AddProperty("Contact", new Relationship(collectionId, c.ID));
-								}
-								shareMember.Subscription.ToAddress = c.EMail;
-							}
-							else
-							{
-								Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(c.Properties.GetSingleProperty(BaseSchema.CollectionId).ToString());
-								shareMember.Subscription.ToIdentity = ab.GetMemberByID(c.UserID).UserID;
-							}
-						}
-					}
-
-					// If we have a valid shareMember, then add it to the listview.
-					if (shareMember != null)
-					{
-						lvitem.Tag = shareMember;
-
-						// Select the contacts that were just added.
-						lvitem.Selected = true;
-
-						shareWith.Items.Add(lvitem);
-					}
-				}
-			}
-*/		}
+		}
 
 		private void remove_Click(object sender, System.EventArgs e)
 		{

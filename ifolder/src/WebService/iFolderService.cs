@@ -88,7 +88,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// Settings
 		/// </returns>
-		[WebMethod(Description="Gets the current iFolder Settings")]
+/*		[WebMethod(Description="Gets the current iFolder Settings")]
 		[SoapDocumentMethod]
 		public iFolderSettings GetSettings()
 		{
@@ -111,7 +111,7 @@ namespace Novell.iFolder.Web
 		public void SetDisplayConfirmation(bool DisplayConfirmation)
 		{
 			iFolderSettings.SetDisplayConfirmation(DisplayConfirmation);
-		}
+		}*/
 
 
 
@@ -1064,10 +1064,6 @@ namespace Novell.iFolder.Web
 			if(col == null)
 				throw new Exception("Invalid iFolderID");
 
-			// TODO: Rework for workgroup.
-			if(col.Domain == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("This iFolder is a Workgroup iFolder.  InviteUser will only work for an Enterprise iFolder.");
-
 			Roster roster = 
 				store.GetRoster(col.Domain);
 
@@ -1133,10 +1129,6 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 
-			// Check to be sure we are not in Workgroup Mode
-			if(DomainID == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
-
 			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 						DomainID, 
 						store.GetUserIDFromDomainID(DomainID));
@@ -1186,11 +1178,6 @@ namespace Novell.iFolder.Web
 		public void DeclineiFolderInvitation( string DomainID, string iFolderID )
 		{
 			Store store = Store.GetStore();
-
-			// TODO: Rework for workgroup
-			// Check to be sure we are not in Workgroup Mode
-			if(DomainID == Simias.Storage.Domain.WorkGroupDomainID)
-				throw new Exception("The client default is set to Workgroup Mode.  Invitations only work in the enterprise version of ifolder.");
 
 			Simias.POBox.POBox poBox = 
 				Simias.POBox.POBox.GetPOBox( store, DomainID );
@@ -1368,7 +1355,7 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// The current Settings
 		/// </returns>
-		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
+/*		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
 		[SoapDocumentMethod]
 		public iFolderSettings ConnectToEnterpriseServer(	string UserName,
 															string Password,
@@ -1376,10 +1363,10 @@ namespace Novell.iFolder.Web
 		{
 			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
 			da.Attach(Host, UserName, Password);
-			iFolderSettings ifSettings = new iFolderSettings();
+			iFolderSettings ifSettings = new siFolderSettings();
 			ifSettings.CurrentUserName = UserName;
 			return ifSettings;
-		}
+		}*/
 
 
 
