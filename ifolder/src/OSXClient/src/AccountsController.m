@@ -431,11 +431,21 @@
 		}
 		@catch (NSException *e)
 		{
-			NSLog(@"Exception thrown calling ConnectToDomain: %@", [e name]);
-			NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
-				NSLocalizedString(@"OK", nil), nil, nil, 
-				parentWindow, nil, nil, nil, nil, 
-				NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+			NSLog(@"Exception thrown calling ConnectToDomain: %@", [e reason]);
+			if([[e reason] isEqualToString:@"DomainExistsError"])
+			{
+				NSBeginAlertSheet(NSLocalizedString(@"Account Exists", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"You have already logged into this server using a different account.  You can only login to a server once.", nil));
+			}
+			else
+			{
+				NSBeginAlertSheet(NSLocalizedString(@"Unable to Connect to iFolder Server", nil), 
+					NSLocalizedString(@"OK", nil), nil, nil, 
+					parentWindow, nil, nil, nil, nil, 
+					NSLocalizedString(@"An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator.", nil));
+			}
 		}
 	}
 }
