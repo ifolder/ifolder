@@ -38,11 +38,11 @@ BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : addressbook = %{version}
 Requires     : simias = %{version}
-Requires     : mono-core >= 0.91
-Requires     : mono-data >= 0.91
-Requires     : mono-remoting >= 0.91
-Requires     : mono-nunit >= 0.91
-Requires     : gtk-sharp >= 0.91
+Requires     : mono-core >= 1.0
+Requires     : mono-data >= 1.0
+Requires     : mono-remoting >= 1.0
+Requires     : mono-nunit >= 1.0
+Requires     : gtk-sharp >= 1.0
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
