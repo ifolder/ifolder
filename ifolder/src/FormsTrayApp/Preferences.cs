@@ -1535,7 +1535,10 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-			updateAccount();
+			if (!updateAccount())
+			{
+				result = false;
+			}
 
 			Cursor.Current = Cursors.Default;
 
@@ -1573,7 +1576,12 @@ namespace Novell.FormsTrayApp
 						simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
 					}
 				}
-				catch {}
+				catch (Exception ex)
+				{
+					result = false;
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+				}
 			}
 
 			return result;
