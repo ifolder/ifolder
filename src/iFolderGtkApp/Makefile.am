@@ -16,7 +16,7 @@ EXTRA_DIST = $(iFolderApp_CSFILES) $(INSTALL_BIN_FILES)
 all: iFolderApp.exe
 
 iFolderApp.exe: $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_LIBS) $(ADDRESSBOOK_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_LIBS) $(ADDRESSBOOK_UI_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
 
 install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir)

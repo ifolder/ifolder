@@ -511,6 +511,12 @@ namespace Novell.iFolder
 
 		private bool folderAllowedByType(Uri nPath)
 		{
+			bool folderAllowed = true;
+/*
+			// This is making calls which are very Linux
+			// specific and is not checking for Linux
+			// Checking for Unix is not good enough
+
 			bool folderAllowed = false;
 			
 			if (MyEnvironment.Unix)
@@ -540,6 +546,7 @@ namespace Novell.iFolder
 			{
 				folderAllowed = true;
 			}
+*/
 
 			return folderAllowed;
 		}
