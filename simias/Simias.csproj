@@ -750,12 +750,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\Conflict.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\Differ.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\Sync\Dredge.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\IncomingNode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\OutgoingNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -775,17 +790,22 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\SyncPass.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Sync\SyncSize.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\Sync\SyncUtil.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SynkerServiceA.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SynkerWorkerA.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
