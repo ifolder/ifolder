@@ -831,12 +831,6 @@ namespace Novell.iFolder.FormsBookLib
 			}
 		}
 
-		private string BuildDisplayableName(Name name)
-		{
-			string displayName = name.Prefix + " " + name.Given + " " + name.Family + " " + name.Suffix;
-			return displayName.Trim();
-		}
-
 		private EmailEntry GetPreferredEmail()
 		{
 			foreach (EmailEntry ee in emailHT.Values)
@@ -881,7 +875,7 @@ namespace Novell.iFolder.FormsBookLib
 				try
 				{
 					name = this.contact.GetPreferredName();
-					fullName.Text = BuildDisplayableName(name);
+					fullName.Text = name.FN;
 				}
 				catch
 				{
@@ -1323,7 +1317,7 @@ namespace Novell.iFolder.FormsBookLib
 				name.Family = fullNameDlg.LastName;
 				name.Suffix = fullNameDlg.Suffix;
 
-				fullName.Text = BuildDisplayableName(name);
+				fullName.Text = name.FN;
 			}
 		}
 
