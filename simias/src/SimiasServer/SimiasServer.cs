@@ -99,9 +99,10 @@ namespace Simias.Server
             Console.WriteLine("Pinging: {0}", ub);
             try
             {
-                WebRequest request = WebRequest.Create(ub.Uri);
-                WebResponse response = request.GetResponse();
-                response.Close();
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ub.Uri);
+				request.CookieContainer = new CookieContainer();
+
+				request.GetResponse().Close();
             }
             catch(Exception e)
             {
