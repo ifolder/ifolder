@@ -100,7 +100,7 @@ namespace Novell.iFolder
 			dialogBox.BorderWidth = 10;
 			dialogBox.Spacing = 10;
 
-			this.SetDefaultSize (100, 480);
+			this.SetDefaultSize (480, 480);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 
 			//-----------------------------

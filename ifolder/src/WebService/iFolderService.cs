@@ -183,11 +183,19 @@ namespace Novell.iFolder.Web
 		[SoapDocumentMethod]
 		public iFolder CreateLocaliFolder(string Path)
 		{
+			try
+			{
 			// TODO: Figure out who we are running as so we
 			// can create the ifolder as the correct user
 			Collection col = SharedCollection.CreateLocalSharedCollection(
 								Path, iFolder.iFolderType);
 			return new iFolder(col);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+				return null;
+			}
 		}
 
 

@@ -48,6 +48,7 @@ namespace Novell.iFolder.Web
 		public ulong MasterIncarnation;
         public string Name;
 		public string Owner;
+		public string OwnerID;
 		public int SyncInterval;
 		public bool Synchronizable;
 		public string Type;
@@ -58,6 +59,7 @@ namespace Novell.iFolder.Web
 		public bool IsWorkgroup;
 		public bool HasConflicts;
 		public string CurrentUserID;
+		public string CurrentUserRights;
 
 		public iFolder()
 		{
@@ -78,9 +80,15 @@ namespace Novell.iFolder.Web
 			this.MasterIncarnation = collection.MasterIncarnation;
 			this.Name = collection.Name;
 			if(collection.Owner != null)
+			{
 				this.Owner = collection.Owner.Name;
+				this.OwnerID = collection.Owner.UserID;
+			}
 			else
+			{
 				this.Owner = "Not available";
+				this.OwnerID = "0";
+			}
 
 			this.SyncInterval = 
 				Simias.Policy.SyncInterval.GetInterval(collection);
@@ -97,7 +105,10 @@ namespace Novell.iFolder.Web
 			// current user may not be available yet
 			Member tmpMember = collection.GetCurrentMember();
 			if(tmpMember != null)
+			{
 				this.CurrentUserID = tmpMember.UserID;
+				this.CurrentUserRights = tmpMember.Rights.ToString();
+			}
 		}
 
 
