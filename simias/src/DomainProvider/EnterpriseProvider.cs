@@ -336,14 +336,14 @@ namespace Simias
 		/// Starts a search for all domain members.
 		/// </summary>
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count )
+		public bool FindFirstDomainMembers( string domainID, int count, out Object searchContext, out Member[] memberList, out int total )
 		{
-			return FindFirstDomainMembers( domainID, PropertyTags.FullName, String.Empty, SearchOp.Exists, out searchContext, out memberList, out total, count );
+			return FindFirstDomainMembers( domainID, PropertyTags.FullName, String.Empty, SearchOp.Exists, count, out searchContext, out memberList, out total );
 		}
 
 		/// <summary>
@@ -353,12 +353,12 @@ namespace Simias
 		/// <param name="attributeName">Name of attribute to search.</param>
 		/// <param name="searchString">String that contains a pattern to search for.</param>
 		/// <param name="operation">Type of search operation to perform.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count )
+		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out Object searchContext, out Member[] memberList, out int total )
 		{
 			bool moreEntries = false;
 
@@ -375,7 +375,7 @@ namespace Simias
 				SearchState searchState = new SearchState( domainID, list.GetEnumerator() as ICSEnumerator, list.Count );
 				searchContext = searchState.ContextHandle;
 				total = list.Count;
-				moreEntries = FindNextDomainMembers( ref searchContext, out memberList, count );
+				moreEntries = FindNextDomainMembers( ref searchContext, count, out memberList );
 			}
 
 			return moreEntries;
@@ -385,10 +385,10 @@ namespace Simias
 		/// Continues the search for all domain members started by calling the FindFirstDomainMembers method.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindNextDomainMembers( ref Object searchContext, out Member[] memberList, int count )
+		public bool FindNextDomainMembers( ref Object searchContext, int count, out Member[] memberList )
 		{
 			bool moreEntries = false;
 
@@ -433,10 +433,10 @@ namespace Simias
 		/// Continues the search for domain members from a previous cursor.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindPreviousDomainMembers( ref Object searchContext, out Member[] memberList, int count )
+		public bool FindPreviousDomainMembers( ref Object searchContext, int count, out Member[] memberList )
 		{
 			bool moreEntries = false;
 
@@ -455,7 +455,7 @@ namespace Simias
 					searchState.CurrentRecord = cursorIndex;
 
 					// Complete the search.
-					moreEntries = FindNextDomainMembers( ref searchContext, out memberList, count );
+					moreEntries = FindNextDomainMembers( ref searchContext, count, out memberList );
 				}
 			}
 

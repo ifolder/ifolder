@@ -271,29 +271,29 @@ namespace Simias.Web
 		/// Starts a search for all domain members.
 		/// </summary>
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="searchContext">Receives a provider specific search context object.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		[WebMethod(Description="Start the search for all of the members in a specified domain.")]
 		[SoapDocumentMethod]
 		public bool FindFirstMembers( 
 			string domainID, 
+			int count,
 			out object searchContext, 
 			out MemberInfo[] memberList, 
-			out int totalMembers, 
-			int count )
+			out int totalMembers )
 		{
 			Member[] tempList;
 
 			bool moreEntries = 
 				DomainProvider.FindFirstDomainMembers(
 					domainID, 
+					count,
 					out searchContext, 
 					out tempList, 
-					out totalMembers, 
-					count );
+					out totalMembers );
 
 			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
 			{
@@ -320,10 +320,10 @@ namespace Simias.Web
 		/// <param name="attributeName">Attribute name to search.</param>
 		/// <param name="searchString">String that contains a pattern to search for.</param>
 		/// <param name="operation">Type of search operation to perform.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="searchContext">Receives a provider specific search context object.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="totalMembers">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		[WebMethod(Description="Start the search for specific members in a specified domain.")]
 		[SoapDocumentMethod]
@@ -332,10 +332,10 @@ namespace Simias.Web
 			string attributeName, 
 			string searchString, 
 			SearchType operation, 
+			int count,
 			out object searchContext, 
 			out MemberInfo[] memberList, 
-			out int totalMembers, 
-			int count )
+			out int totalMembers )
 		{
 			Member[] tempList;
 
@@ -345,10 +345,10 @@ namespace Simias.Web
 					attributeName,
 					searchString,
 					( Simias.Storage.SearchOp )Enum.ToObject( typeof( Simias.Storage.SearchOp ), operation ),
+					count,
 					out searchContext, 
 					out tempList, 
-					out totalMembers, 
-					count );
+					out totalMembers );
 
 			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
 			{
@@ -375,20 +375,20 @@ namespace Simias.Web
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers 
 		/// FindFirstSpecificMembers methods.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		[WebMethod(Description="Continues the search for the next members in a specified domain.")]
 		[SoapDocumentMethod]
 		public bool FindNextMembers( 
 			string domainID, 
 			ref object searchContext, 
-			out MemberInfo[] memberList, 
-			int count )
+			int count,
+			out MemberInfo[] memberList )
 		{
 			Member[] tempList;
 
-			bool moreEntries = DomainProvider.FindNextDomainMembers( domainID, ref searchContext, out tempList, count );
+			bool moreEntries = DomainProvider.FindNextDomainMembers( domainID, ref searchContext, count, out tempList );
 
 			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
 			{
@@ -415,20 +415,20 @@ namespace Simias.Web
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstMembers or
 		/// FindFirstSpecificMembers methods.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		[WebMethod(Description="Continues the search for the previous members in a specified domain.")]
 		[SoapDocumentMethod]
 		public bool FindPreviousMembers( 
 			string domainID, 
 			ref Object searchContext, 
-			out MemberInfo[] memberList, 
-			int count )
+			int count,
+			out MemberInfo[] memberList )
 		{
 			Member[] tempList;
 
-			bool moreEntries = DomainProvider.FindPreviousDomainMembers( domainID, ref searchContext, out tempList, count );
+			bool moreEntries = DomainProvider.FindPreviousDomainMembers( domainID, ref searchContext, count, out tempList );
 
 			if ( ( tempList != null ) && ( tempList.Length > 0 ) )
 			{

@@ -80,12 +80,12 @@ namespace Simias
 		/// Starts a search for all domain members.
 		/// </summary>
 		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count );
+		bool FindFirstDomainMembers( string domainID, int count, out Object searchContext, out Member[] memberList, out int total );
 
 		/// <summary>
 		/// Starts a search for a specific set of domain members.
@@ -94,30 +94,30 @@ namespace Simias
 		/// <param name="attributeName">Attribute name to search.</param>
 		/// <param name="searchString">String that contains a pattern to search for.</param>
 		/// <param name="operation">Type of search operation to perform.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="searchContext">Receives a provider specific search context object. This object must be serializable.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
-		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count );
+		bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out Object searchContext, out Member[] memberList, out int total );
 
 		/// <summary>
 		/// Continues the search for all domain members started by calling the FindFirstDomainMembers method.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindNextDomainMembers( ref Object searchContext, out Member[] memberList, int count );
+		bool FindNextDomainMembers( ref Object searchContext, int count, out Member[] memberList );
 
 		/// <summary>
 		/// Continues the search for domain members from a previous cursor.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
-		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindPreviousDomainMembers( ref Object searchContext, out Member[] memberList, int count );
+		bool FindPreviousDomainMembers( ref Object searchContext, int count, out Member[] memberList );
 
 		/// <summary>
 		/// Determines if the provider claims ownership for the 

@@ -143,9 +143,9 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, out Object searchContext, out Member[] memberList, out int total, int count )
+		public bool FindFirstDomainMembers( string domainID, int count, out Object searchContext, out Member[] memberList, out int total )
 		{
-			return FindFirstDomainMembers(domainID, PropertyTags.FullName, String.Empty, SearchOp.Contains, out searchContext, out memberList, out total, count);
+			return FindFirstDomainMembers(domainID, PropertyTags.FullName, String.Empty, SearchOp.Contains, count, out searchContext, out memberList, out total);
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace Simias.Gaim
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count )
+		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out Object searchContext, out Member[] memberList, out int total )
 		{
 			// Ignore the domainID since we only ever have one domain to deal with
 
@@ -227,7 +227,7 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindNextDomainMembers( ref Object searchContext, out Member[] memberList, int count )
+		public bool FindNextDomainMembers( ref Object searchContext, int count, out Member[] memberList )
 		{
 			bool bMoreEntries = false;
 			ArrayList members = new ArrayList();
@@ -291,7 +291,7 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindPreviousDomainMembers( ref Object searchContext, out Member[] memberList, int count )
+		public bool FindPreviousDomainMembers( ref Object searchContext, int count, out Member[] memberList )
 		{
 			// FIXME: Implement FindPreviousDomainMembers()
 			memberList = null;
