@@ -1264,6 +1264,11 @@ namespace Novell.iFolder.FormsTrayApp
 				// Notify the shell.
 				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, path, IntPtr.Zero);
 
+				lock (ht)
+				{
+					ht.Remove((string)lvi.Tag);
+				}
+
 				lvi.Remove();
 			}
 			catch (SimiasException ex)
@@ -1531,12 +1536,12 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void subscriber_NodeDeleted(NodeEventArgs args)
 		{
-			ListViewItem lvi = (ListViewItem)ht[args.Node];
-			if (lvi != null)
+			lock (ht)
 			{
-				lvi.Remove();
-				lock (ht)
+				ListViewItem lvi = (ListViewItem)ht[args.Node];
+				if (lvi != null)
 				{
+					lvi.Remove();
 					ht.Remove(args.Node);
 				}
 			}
