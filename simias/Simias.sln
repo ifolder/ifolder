@@ -15,10 +15,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlaimWrapper", "src\FlaimPr
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IProcEvent", "src\IProcEvent\IProcEvent.csproj", "{B173656F-50DE-4B04-8204-43E3DFF92FDC}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -41,10 +37,6 @@ Global
 		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Debug.Build.0 = Debug|Win32
 		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Release.ActiveCfg = Release|Win32
 		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Release.Build.0 = Release|Win32
-		{B173656F-50DE-4B04-8204-43E3DFF92FDC}.Debug.ActiveCfg = Debug|.NET
-		{B173656F-50DE-4B04-8204-43E3DFF92FDC}.Debug.Build.0 = Debug|.NET
-		{B173656F-50DE-4B04-8204-43E3DFF92FDC}.Release.ActiveCfg = Release|.NET
-		{B173656F-50DE-4B04-8204-43E3DFF92FDC}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -29,10 +29,9 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 
-using Simias.Event;
 using Simias.Storage;
 
-namespace Simias.IProcEvent
+namespace Simias.Event
 {
 	/// <summary>
 	/// Delegate used to indicate events to the client subscriber.
