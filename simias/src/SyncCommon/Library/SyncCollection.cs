@@ -78,9 +78,6 @@ namespace Simias.Sync
 			: base(store, invitation.CollectionName, invitation.CollectionID,
 					invitation.Owner, invitation.Domain)
 		{
-			this.MasterUri = invitation.MasterUri;
-			this.Role = SyncCollectionRoles.Slave;
-			
 			// add any secret to the current identity chain
 			if ((invitation.PublicKey != null) && (invitation.PublicKey.Length > 0))
 			{
@@ -89,6 +86,9 @@ namespace Simias.Sync
 				store.GetLocalAddressBook().Commit(identity);
 			}
 
+			this.MasterUri = invitation.MasterUri;
+			this.Role = SyncCollectionRoles.Slave;
+			
 			// commit
 			Commit();
 
