@@ -407,7 +407,6 @@ src/SimiasApp/Makefile
 src/SimiasApp/simias
 src/AddressBook/Makefile
 src/mDnsService/Makefile
-src/SimiasAspService/Makefile
 src/WebService/Makefile
 test/Makefile
 test/ChangeLog/Makefile

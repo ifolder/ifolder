@@ -1,12 +1,12 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasApp_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SimiasApp.cs
+SimiasApp_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/SimiasApp.cs $(srcdir)/ApplicationServer.cs $(srcdir)/IApplicationHost.cs $(srcdir)/IWebSource.cs $(srcdir)/Tracing.cs $(srcdir)/XSPApplicationHost.cs $(srcdir)/BaseApplicationHost.cs $(srcdir)/BaseRequestBroker.cs $(srcdir)/MonoWorkerRequest.cs $(srcdir)/XSPWorkerRequest.cs $(srcdir)/LingeringNetworkStream.cs $(srcdir)/InitialWorkerRequest.cs 
 SimiasApp_CSFILES := $(subst /,$(SEP),$(SimiasApp_CSFILES1))
 SimiasApp_INCLUDES = 
 SimiasApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
 SimiasApp_FLAGS = $(CSC_EXEFLAG)
-SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll
+SimiasApp_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll System.Web.dll
 SimiasApp_LIBPATH = $(NUNIT_LIBPATH) $(LOG4NET_DIR) ../Simias.dll
 
 EXTRA_DIST = App.ico $(SimiasApp_CSFILES) simias.in

@@ -250,7 +250,7 @@ namespace Simias.Service
 			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
 			Install(new ThreadServiceCtl(conf, "Simias PO Service", "Simias", "Simias.POBox.POService"));
 			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 5);
-			Install(new ThreadServiceCtl(conf, "Simias Asp Service", "SimiasAspService", "Simias.Web.SimiasAspService"), 6);
+//			Install(new ThreadServiceCtl(conf, "Simias Asp Service", "SimiasAspService", "Simias.Web.SimiasAspService"), 6);
 		}
 
 		/// <summary>

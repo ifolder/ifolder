@@ -28,6 +28,8 @@ using System.ComponentModel;
 using System.Web;
 using System.Web.SessionState;
 
+using Simias;
+
 namespace Simias.Web
 {
 	/// <summary>
@@ -35,12 +37,22 @@ namespace Simias.Web
 	/// </summary>
 	public class Global : HttpApplication
 	{
+		private Simias.Service.Manager serviceManager;
+
 		public Global()
 		{
+			Configuration config;
+
+			config = Configuration.GetConfiguration();
+			serviceManager = new Simias.Service.Manager(config);
 		}	
 		
 		protected void Application_Start(Object sender, EventArgs e)
 		{
+			Console.WriteLine("Starting Simias Process");
+			serviceManager.StartServices();
+			serviceManager.WaitForServicesStarted();
+			Console.WriteLine("Simias Process Running");
 		}
  
 		protected void Session_Start(Object sender, EventArgs e)
@@ -72,7 +84,9 @@ namespace Simias.Web
 
 		protected void Application_End(Object sender, EventArgs e)
 		{
-
+			Console.WriteLine("Shutdown Simias Process now");
+			serviceManager.StopServices();
+			serviceManager.WaitForServicesStopped();
 		}
 	}
 }

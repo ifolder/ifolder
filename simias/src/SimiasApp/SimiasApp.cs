@@ -12,20 +12,18 @@ using System.Threading;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Net;
 
-using Simias;
-using Simias.Service;
-using Simias.Event;
-using Simias.Sync;
+using Mono.ASPNET;
 
-namespace Simias
+namespace Simias.Web
 {
 	/// <summary>
 	/// Simias Application
 	/// </summary>
 	class SimiasApp
 	{
-		private Manager manager;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -33,117 +31,38 @@ namespace Simias
 		[STAThread]
 		static int Main(string[] args)
 		{
-            SimiasApp simias = new SimiasApp();
+			ApplicationServer server;
+			IPAddress ipaddr = null;
+			ushort port;
 
-            // do command
-            return simias.DoCommand(args);
+			port = Convert.ToUInt16 (8086);
+			ipaddr = IPAddress.Parse ("0.0.0.0");
+
+			IWebSource webSource = new XSPWebSource (ipaddr, port);
+			server = new ApplicationServer (webSource);
+
+			server.Verbose = false;
+
+			// not sure what this does
+			// but it startup up asmx file and xsp did it
+			server.AddApplicationsFromCommandLine("/:.");
+
+			if (server.Start (false) == false)
+			{
+				Console.WriteLine("SimiasApp failed to start");
+			}
+			else
+			{
+				Console.WriteLine("SimiasApp Asp.Net started");
+			}
+			Console.WriteLine("Press any key to quit");
+			Console.Read();
+
+			server.Stop();
+			return 0;
         }
 
-        private SimiasApp()
-        {
-        }
 
-        private int DoCommand(string[] args)
-        {
-			int result = -1;
-			
-			Console.WriteLine("Simias Application");
-			Console.WriteLine();
-			
-			// check arguments
-            if (args.Length < 1)
-			{
-				ShowUsage();
-				return -1;
-			}
 
-			// create configuration
-			Configuration config;
-
-            if (args.Length > 1)
-            {
-                config = Configuration.CreateDefaultConfig(Path.GetFullPath(args[1]));
-            }
-            else
-            {
-                config = Configuration.GetConfiguration();
-            }
-
-			// command
-			string command = args[0];
-
-			switch(command)
-			{
-				// start the services
-				case "start":
-				{
-					Console.WriteLine("Starting...");
-
-					// create a manager
-					manager = new Manager(config);
-
-					// add a shutdown event handler
-					manager.Shutdown +=new ShutdownEventHandler(this.Shutdown);
-				
-					// start services and wait
-					manager.StartServices();
-					manager.WaitForServicesStarted();
-
-					Console.WriteLine("Running...");
-
-					// hang around for the end
-					manager.WaitForServicesStopped();
-					
-					Console.WriteLine("Stopped.");
-
-					result = 0;
-					break;
-				}
-
-				case "stop":
-				{
-					Console.WriteLine("Stopping...");
-
-					// publish the shutdown event
-					EventPublisher p = new EventPublisher();
-
-					p.RaiseEvent(new ShutdownEventArgs());
-
-					result = 0;
-					break;
-				}
-
-				default:
-				{
-					Console.WriteLine("Unkown Command: {0}", command);
-					ShowUsage();
-					break;
-				}
-			}
-
-			Console.WriteLine("Done.");
-
-			return result;
-		}
-
-		/// <summary>
-		/// Handle the shutdown event.
-		/// </summary>
-		/// <param name="args">Shutdown Event Arguments</param>
-		private void Shutdown(ShutdownEventArgs args)
-		{
-			Console.WriteLine("Stopping...");
-			
-            // stop services and wait
-			manager.StopServices();
-			manager.WaitForServicesStopped();
-		}
-
-		private static void ShowUsage()
-		{
-			Console.WriteLine();
-			Console.WriteLine("USAGE: SimiasApp [start|stop] [path]");
-			Console.WriteLine();
-		}
 	}
 }

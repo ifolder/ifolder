@@ -6,8 +6,8 @@ SimiasWebService_CSFILES := $(subst /,$(SEP),$(SimiasWebService_CSFILES1))
 SimiasWebService_INCLUDES = 
 SimiasWebService_RESOURCES =  
 SimiasWebService_FLAGS = $(CSC_LIBFLAG)
-SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
-SimiasWebService_LIBPATH =
+SimiasWebService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Simias.dll
+SimiasWebService_LIBPATH = ../Simias.dll
 
 EXTRA_DIST = web.config Global.asax Simias.asmx $(SimiasWebService_CSFILES)
 
