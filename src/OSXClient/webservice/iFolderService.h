@@ -72,10 +72,11 @@
 -(void)SetiFolderDiskSpace:(long long)limit oniFolder:(NSString *)ifolderID;
 -(SyncSize *)CalculateSyncSize:(NSString *)ifolderID;
 
-
 -(int)GetDefaultSyncInterval;
 -(void)SetDefaultSyncInterval:(int)syncInterval;
 
+-(void)SetUserRights:(NSString *)ifolderID forUser:(NSString *)userID withRights:(NSString *)rights;
+-(void)ChanageOwner:(NSString *)ifolderID toUser:(NSString *)userID oldOwnerRights:(NSString *)rights;
 
 
 @end

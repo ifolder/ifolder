@@ -47,6 +47,8 @@
 }
 */
 
+@class User;
+
 @interface iFolder : NSObject
 {
 	NSMutableDictionary * properties;
@@ -75,6 +77,7 @@
 -(NSString *)Role;
 -(long)SyncInterval;
 -(long)EffectiveSyncInterval;
+-(void)SetOwner:(User *)user;
 
 -(void) updateDisplayInformation;
 

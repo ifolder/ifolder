@@ -35,7 +35,9 @@
 	IBOutlet NSTabView				*tabView;
 	IBOutlet NSTabViewItem			*generalItem;
 	IBOutlet NSTabViewItem			*sharingItem;
+	IBOutlet NSMenu					*userMenu;
 
+    NSMenuItem						*userMenuItem;
 	int		initalTab;
 }
 + (PropertiesWindowController *)sharedInstance;

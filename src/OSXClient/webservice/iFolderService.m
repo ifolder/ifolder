@@ -1162,6 +1162,79 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
 
+-(void)SetUserRights:(NSString *)ifolderID forUser:(NSString *)userID withRights:(NSString *)rights
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (userID != nil), @"userID was nil");
+	NSAssert( (rights != nil), @"rights was nil");
+
+	struct _ns1__SetUserRights			setRightsMessage;
+	struct _ns1__SetUserRightsResponse	setRightsResponse;
+
+	setRightsMessage.iFolderID = (char *)[ifolderID cString];
+	setRightsMessage.UserID = (char *)[userID cString];
+	setRightsMessage.Rights = (char *)[rights cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__SetUserRights(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &setRightsMessage,
+            &setRightsResponse);
+
+ 	if(soap.error)
+	{
+	    cleanup_gsoap(&soap);
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in SetUserRights"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
+
+
+-(void)ChanageOwner:(NSString *)ifolderID toUser:(NSString *)userID oldOwnerRights:(NSString *)rights
+{
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (ifolderID != nil), @"ifolderID was nil");
+	NSAssert( (userID != nil), @"userID was nil");
+	NSAssert( (rights != nil), @"rights was nil");
+
+	struct _ns1__ChangeOwner			changeOwnerMessage;
+	struct _ns1__ChangeOwnerResponse	changeOwnerResponse;
+
+	changeOwnerMessage.iFolderID = (char *)[ifolderID cString];
+	changeOwnerMessage.NewOwnerUserID = (char *)[userID cString];
+	changeOwnerMessage.OldOwnerRights = (char *)[rights cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__ChangeOwner(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &changeOwnerMessage,
+            &changeOwnerResponse);
+
+ 	if(soap.error)
+	{
+	    cleanup_gsoap(&soap);
+		[NSException raise:[NSString stringWithFormat:@"%s", soap.fault->faultstring]
+					format:@"Error in ChanageOwner"];
+	}
+
+    cleanup_gsoap(&soap);
+}
+
+
+
 
 void init_gsoap(struct soap *pSoap)
 {

@@ -54,8 +54,12 @@
 					User *newUser = [newUsers objectAtIndex:userCount];
 
 					[self addUser:newUser];
+					if([newUser isOwner])
+						[ownerName setStringValue:[newUser FN]];
 				}
 			}
+			isOwner = ([[curiFolder OwnerUserID] compare:[curiFolder CurrentUserID]] == 0);
+			hasAdminRights = ([[curiFolder CurrentUserRights] compare:@"Admin"] == 0); 
 		}
 	}
 	@catch (NSException *e)
@@ -153,7 +157,7 @@
 {
 	switch(returnCode)
 	{
-		case NSAlertDefaultReturn:		// Revert iFolder
+		case NSAlertDefaultReturn:
 		{
 			NSLog(@"Removing Selected users");
 			NSArray *selectedUsers = [usersController selectedObjects];
@@ -233,5 +237,162 @@
 		}
 	}
 }
+
+
+- (IBAction)grantFullControl:(id)sender
+{
+	[self setSelectedUserRights:@"Admin"];
+}
+
+
+- (IBAction)grantReadWrite:(id)sender
+{
+	[self setSelectedUserRights:@"ReadWrite"];
+}
+
+
+- (IBAction)grantReadOnly:(id)sender
+{
+	[self setSelectedUserRights:@"ReadOnly"];
+}
+
+
+- (IBAction)makeOwner:(id)sender
+{
+	NSArray *selectedUsers = [usersController selectedObjects];
+
+	if([selectedUsers count] == 1)
+	{
+		User *selUser = [selectedUsers objectAtIndex:0];
+
+		@try
+		{
+			[ifolderService	ChanageOwner:[curiFolder ID]
+									toUser:[selUser UserID] 
+									oldOwnerRights:@"Admin"];
+			[selUser setIsOwner:YES];
+			[selUser setRights:@"Admin"];
+			NSString *oldOwnerID = [curiFolder OwnerUserID];
+			[curiFolder SetOwner:selUser];
+			[ownerName setStringValue:[selUser FN]];			
+			
+			NSArray *allUsers = [usersController arrangedObjects];
+			int counter = 0;
+			for(counter=1; counter<[allUsers count]; counter++)
+			{
+				User *curUser = [allUsers objectAtIndex:counter];
+				if([[curUser UserID] compare:oldOwnerID] == 0)
+				{
+					[curUser setIsOwner:NO];
+					break;
+				}
+			}
+		}
+		@catch (NSException *e)
+		{
+			[[NSApp delegate] addLog:@"Adding iFolder User failed"];
+		}
+	}
+}
+
+
+-(void)setSelectedUserRights:(NSString *)rights
+{
+	NSArray *selectedUsers = [usersController selectedObjects];
+
+	int i;
+	for(i=0; i < [selectedUsers count]; i++)
+	{
+		User *selUser = [selectedUsers objectAtIndex:i];
+	
+		if( ([[curiFolder OwnerUserID] compare:[selUser UserID]] != 0) &&
+			([[curiFolder CurrentUserID] compare:[selUser UserID]] != 0) )
+		{
+			@try
+			{
+				[ifolderService	SetUserRights:[curiFolder ID]
+										forUser:[selUser UserID] 
+										withRights:rights];
+				[selUser setRights:rights];
+			}
+			@catch (NSException *e)
+			{
+				[[NSApp delegate] addLog:@"Adding iFolder User failed"];
+			}
+		}
+	}
+}
+
+
+
+- (BOOL)validateUserInterfaceItem:(id)anItem
+{
+	SEL action = [anItem action];
+
+	if(action == @selector(grantFullControl:))
+	{
+		if([[usersController selectedObjects] count] == 0)
+			return NO;
+			
+		if( (!hasAdminRights) || [self selectionContainsOwnerorCurrent])
+			return NO;
+		else
+			return YES;
+	}
+	else if(action == @selector(grantReadWrite:))
+	{
+		if([[usersController selectedObjects] count] == 0)
+			return NO;
+
+		if( (!hasAdminRights) || [self selectionContainsOwnerorCurrent])
+			return NO;
+		else
+			return YES;
+	}
+	else if(action == @selector(grantReadOnly:))
+	{
+		if([[usersController selectedObjects] count] == 0)
+			return NO;
+
+		if( (!hasAdminRights) || [self selectionContainsOwnerorCurrent])
+			return NO;
+		else
+			return YES;
+	}
+	else if(action == @selector(makeOwner:))
+	{
+		if([[usersController selectedObjects] count] == 0)
+			return NO;
+
+		if( (!isOwner) || [self selectionContainsOwnerorCurrent])
+			return NO;
+		else
+			return YES;
+	}
+	
+	return YES;
+}
+
+
+
+- (BOOL)selectionContainsOwnerorCurrent
+{
+	NSArray *selectedUsers = [usersController selectedObjects];
+
+	int i;
+	for(i=0; i < [selectedUsers count]; i++)
+	{
+		User *selUser = [selectedUsers objectAtIndex:i];
+				
+		if( ([[curiFolder OwnerUserID] compare:[selUser UserID]] == 0) ||
+			([[curiFolder CurrentUserID] compare:[selUser UserID]] == 0) )
+			return YES;
+	}
+	return NO;
+}
+
+
+
+
 
 @end

@@ -27,6 +27,8 @@
 			[hasConflictsImage setHidden:NO];
 		}
 		
+		// We'll set this now from the sharing page
+/*
 		@try
 		{
 			User *user = [ifolderService GetiFolderUser:[curiFolder OwnerUserID] ];
@@ -40,7 +42,7 @@
 		{
 			[ownerName setStringValue:@"unavailable"];
 		}
-		
+*/		
 		// Change this so the check box is gone
 		if([[curiFolder CurrentUserID] compare:[curiFolder OwnerUserID]] == 0)
 		{

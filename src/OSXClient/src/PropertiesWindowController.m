@@ -50,7 +50,11 @@ static PropertiesWindowController *sharedInstance = nil;
 -(void)awakeFromNib
 {
 	[tabView selectTabViewItemAtIndex:initalTab];
-	
+
+	userMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Users" action:NULL keyEquivalent:@""];
+	[userMenu setTitle:@"Users"];
+    [userMenuItem setSubmenu:userMenu];
+    [[NSApp mainMenu] addItem:userMenuItem];	
 }
 
 
@@ -60,6 +64,8 @@ static PropertiesWindowController *sharedInstance = nil;
 {
 	if(sharedInstance != nil)
 	{
+		[[NSApp mainMenu] removeItem:userMenuItem];	
+		[userMenuItem release];
 		[sharedInstance release];
 		sharedInstance = nil;
 	}
@@ -88,5 +94,6 @@ static PropertiesWindowController *sharedInstance = nil;
 {
 	initalTab = 0;
 }
+
 
 @end
