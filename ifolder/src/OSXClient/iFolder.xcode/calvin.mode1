@@ -242,7 +242,7 @@
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>3E19994507BAE41E00AAC29A</string>
 								<string>3E66704F07B7D3A90047E683</string>
-								<string>080E96DDFE201D6D7F000001</string>
+								<string>3EE887F407B95BF000484B9F</string>
 								<string>3EE887F307B95BD700484B9F</string>
 								<string>3E255FFC077235290062AB7A</string>
 								<string>29B97317FDCFA39411CA2CEA</string>
@@ -252,13 +252,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>13</integer>
+									<integer>15</integer>
 									<integer>10</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 102}, {288, 821}}</string>
+							<string>{{0, 119}, {288, 821}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -289,7 +289,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Simias.m</string>
+								<string>iFolderApplication.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -297,9 +297,9 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Simias.m</string>
+										<string>iFolderApplication.m</string>
 										<key>bookmark</key>
-										<string>3EA1D92107C31E1B002F357B</string>
+										<string>3E41023507C3B36D00D6112D</string>
 										<key>history</key>
 										<array>
 											<string>3EAEF46C0769032700B98AF6</string>
@@ -385,14 +385,14 @@
 											<string>3EF4E63807C3097F00AD5D7C</string>
 											<string>3EF4E63F07C30C5E00AD5D7C</string>
 											<string>3EF4E64007C30C5E00AD5D7C</string>
-											<string>3EA1D8E307C31AB6002F357B</string>
 											<string>3EA1D8EF07C31B2D002F357B</string>
 											<string>3EA1D90307C31C42002F357B</string>
 											<string>3EA1D90407C31C42002F357B</string>
 											<string>3EA1D90507C31C42002F357B</string>
-											<string>3EA1D91107C31D57002F357B</string>
 											<string>3EA1D91207C31D57002F357B</string>
-											<string>3EA1D91307C31D57002F357B</string>
+											<string>3E41020407C39E4A00D6112D</string>
+											<string>3E41020507C39E4A00D6112D</string>
+											<string>3E41023107C3B36700D6112D</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -480,38 +480,13 @@
 											<string>3EE238F007C1092900772501</string>
 											<string>3EE238F107C1092900772501</string>
 											<string>3EF4E54707C2EB6400AD5D7C</string>
-											<string>3EA1D8AF07C311AE002F357B</string>
-											<string>3EA1D8B007C311AE002F357B</string>
-											<string>3EA1D8B907C317B1002F357B</string>
-											<string>3EA1D8BA07C317B1002F357B</string>
-											<string>3EA1D8D407C3192A002F357B</string>
-											<string>3EA1D8D507C3192A002F357B</string>
-											<string>3EA1D8D607C3192A002F357B</string>
-											<string>3EA1D8DD07C31A55002F357B</string>
-											<string>3EA1D8DE07C31A55002F357B</string>
-											<string>3EA1D8DF07C31A55002F357B</string>
-											<string>3EA1D8E007C31A55002F357B</string>
-											<string>3EA1D8E107C31A55002F357B</string>
-											<string>3EA1D8E507C31AB6002F357B</string>
-											<string>3EA1D8E607C31AB6002F357B</string>
-											<string>3EA1D8EA07C31AFC002F357B</string>
-											<string>3EA1D8EB07C31AFC002F357B</string>
-											<string>3EA1D8F107C31B2D002F357B</string>
-											<string>3EA1D8F207C31B2D002F357B</string>
-											<string>3EA1D8F307C31B2D002F357B</string>
-											<string>3EA1D8F407C31B2D002F357B</string>
-											<string>3EA1D8F507C31B2D002F357B</string>
-											<string>3EA1D8F607C31B2D002F357B</string>
-											<string>3EA1D8F707C31B2D002F357B</string>
-											<string>3EA1D8F807C31B2D002F357B</string>
-											<string>3EA1D90007C31BD0002F357B</string>
-											<string>3EA1D90707C31C42002F357B</string>
-											<string>3EA1D90807C31C42002F357B</string>
-											<string>3EA1D90907C31C42002F357B</string>
-											<string>3EA1D90A07C31C42002F357B</string>
-											<string>3EA1D91407C31D57002F357B</string>
-											<string>3EA1D91507C31D57002F357B</string>
-											<string>3EA1D91607C31D57002F357B</string>
+											<string>3E41020707C39E4A00D6112D</string>
+											<string>3E41020807C39E4A00D6112D</string>
+											<string>3E41020907C39E4A00D6112D</string>
+											<string>3E41020A07C39E4A00D6112D</string>
+											<string>3E41020B07C39E4A00D6112D</string>
+											<string>3E41020C07C39E4A00D6112D</string>
+											<string>3E41020D07C39E4A00D6112D</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -569,9 +544,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>3EA1D8A607C31118002F357B</string>
+				<string>3E41020F07C39E4A00D6112D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>3EA1D8A707C31118002F357B</string>
+				<string>3E41021007C39E4A00D6112D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -1028,7 +1003,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {697, 608}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1707 354 697 650 1280 0 1280 1024 </string>
+								<string>1808 363 697 650 1280 0 1280 1024 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXRunSessionModule</string>
@@ -1051,14 +1026,14 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>3EB7837807C2BCFF00E2B733</string>
-				<string>3EA1D8A807C31118002F357B</string>
+				<string>3E41021107C39E4A00D6112D</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>3EA1D8A907C31118002F357B</string>
+				<string>3E41021207C39E4A00D6112D</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
 			<key>WindowString</key>
-			<string>1707 354 697 650 1280 0 1280 1024 </string>
+			<string>1808 363 697 650 1280 0 1280 1024 </string>
 			<key>WindowToolGUID</key>
 			<string>3EB7837807C2BCFF00E2B733</string>
 			<key>WindowToolIsVisible</key>

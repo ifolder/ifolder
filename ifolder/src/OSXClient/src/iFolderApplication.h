@@ -37,6 +37,7 @@
 	LoginWindowController			*loginWindowController;
 	iFolderData						*ifolderdata;
 	BOOL							runThreads;
+	BOOL							simiasIsLoaded;
 	NSMutableArray					*logEntries;
     IBOutlet NSArrayController		*logController;
 }
@@ -59,6 +60,7 @@
 - (void)initializeSimiasEvents;
 - (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
 - (NSArrayController *)logArrayController;
+- (BOOL)simiasIsRunning;
 
 
 //==========================================

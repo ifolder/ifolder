@@ -45,6 +45,7 @@
 -(void)awakeFromNib
 {
 	NSLog(@"Waiting for app to enable multithreading");
+	simiasIsLoaded = NO;
 
 	// this baby will get cocoa objects ready for mutlitple threads
     [NSThread detachNewThreadSelector:@selector(enableThreads:)
@@ -163,6 +164,18 @@
 
 
 
+//===================================================================
+// simiasIsRunning
+// This flag lets other parts of the app know that simias is up and
+// running.
+//===================================================================
+-(BOOL)simiasIsRunning
+{
+	return simiasIsLoaded;
+}
+
+
+
 
 //===================================================================
 // showLoginWindow
@@ -220,11 +233,22 @@
 //===================================================================
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	[self showiFolderWindow:self];
+	[iFolderWindowController updateStatusTS:@"Loading synchronization process..."];
 }
 
+
+
+
+//===================================================================
+// postSimiasInit
+// This should be called by the startup thread that is starting simias
+// so we know it's ok to go ahead and do stuff
+//===================================================================
 - (void)postSimiasInit:(id)arg
 {
 	runThreads = YES;
+	simiasIsLoaded = YES;
 
 	NSLog(@"Creating and loading iFolderData");
 	[ifolderdata refresh:NO];
@@ -233,11 +257,17 @@
     [NSThread detachNewThreadSelector:@selector(simiasEventThread:)
         toTarget:self withObject:nil];
 
-	[self showiFolderWindow:self];
-
 	[iFolderWindowController updateStatusTS:@"Idle..."];
 }
 
+
+
+
+//===================================================================
+// simiasHasStarted
+// This is a thread safe method that the simias startup routine calls
+// once simias is up and running
+//===================================================================
 -(void)simiasHasStarted
 {
 	[self performSelectorOnMainThread:@selector(postSimiasInit:) 
