@@ -35,7 +35,6 @@ namespace Novell.iFolder
 		private Gtk.Window			topLevelWindow;
 		private iFolderWebService	ifws;
 		private iFolder				ifolder;
-		private iFolderUser			ifolderUser;
 		private DiskSpace			ds;
 		private	CheckButton 		AutoSyncCheckButton;
 		private SpinButton			SyncSpinButton;
@@ -131,13 +130,10 @@ namespace Novell.iFolder
 
 			try
 			{
-				ifolderUser = ifws.GetiFolderUserFromiFolder(
-									ifolder.CurrentUserID, ifolder.ID);
 				ds = ifws.GetiFolderDiskSpace(ifolder.ID);
 			}
 			catch(Exception e)
 			{
-				ifolderUser = null;
 				ds = null;
 //				iFolderExceptionDialog ied = new iFolderExceptionDialog(
 //													topLevelWindow, e);
@@ -146,8 +142,8 @@ namespace Novell.iFolder
 //				ied.Destroy();
 			}
 
-			// check for Admin rights
-			if( (ifolderUser != null) && (ifolderUser.Rights == "Admin") )
+			// check for iFolder Owner
+			if(ifolder.CurrentUserID == ifolder.OwnerID)
 			{
 				if(LimitCheckButton == null)
 				{

@@ -23,6 +23,7 @@
 
 using System;
 using Gtk;
+using System.Collections;
 
 namespace Novell.iFolder
 {
@@ -109,29 +110,28 @@ namespace Novell.iFolder
 			UserColumn.Resizable = true;
 
 			CellRendererText statecr = new CellRendererText();
-//			statecr.Xalign = 1;
-			statecr.Xpad = 10;
+			statecr.Xpad = 5;
 			TreeViewColumn stateColumn = 
 			UserTreeView.AppendColumn("State",
 					statecr,
 					new TreeCellDataFunc(StateCellTextDataFunc));
-//			stateColumn.Alignment = 1;
 			stateColumn.Resizable = true;
-			stateColumn.MinWidth = 200;
+			stateColumn.MinWidth = 150;
 
 			CellRendererText accesscr = new CellRendererText();
-//			accesscr.Xalign = 1;
-			accesscr.Xpad = 10;
+			accesscr.Xpad = 5;
 			TreeViewColumn accessColumn = 
 			UserTreeView.AppendColumn("Access",
 					accesscr,
 					new TreeCellDataFunc(AccessCellTextDataFunc));
-//			accessColumn.Alignment = 1;
 			accessColumn.Resizable = true;
 
 			UserTreeView.Selection.Mode = SelectionMode.Multiple;
 			UserTreeView.Selection.Changed +=
 				new EventHandler(OnUserSelectionChanged);
+
+//			UserTreeView.ButtonPressEvent += new ButtonPressEventHandler(
+//						OnUserTreeViewButtonPressed);
 
 			UserPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
@@ -161,6 +161,7 @@ namespace Novell.iFolder
 
 			RemoveButton = new Button(Gtk.Stock.Remove);
 			rightBox.PackStart(RemoveButton);
+			RemoveButton.Clicked += new EventHandler(OnRemoveUser);
 
 			AccessButton = new Button("Set Access");
 			leftBox.PackStart(AccessButton);
@@ -257,6 +258,72 @@ namespace Novell.iFolder
 
 
 
+		private void OnRemoveUser(object o, EventArgs args)
+		{
+			TreeModel tModel;
+
+			TreeSelection tSelect = UserTreeView.Selection;
+
+			if(tSelect.CountSelectedRows() > 0)
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+					topLevelWindow,
+					iFolderMsgDialog.DialogType.Question,
+					iFolderMsgDialog.ButtonSet.YesNo,
+					"iFolder Confirmation",
+					"Remove Selected Users?",
+					"This will remove the selected users from this iFolder.  They will no longer be able to sync file to this iFolder.");
+				int rc = dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				if(rc == -8)
+				{
+					Queue   iterQueue;
+					Array treePaths = tSelect.GetSelectedRows(out tModel);
+
+					iterQueue = new Queue();
+	
+					foreach(TreePath tPath in treePaths)
+					{
+						TreeIter iter;
+		
+						if(UserTreeStore.GetIter(out iter, tPath))
+						{
+							iterQueue.Enqueue(iter);
+						}
+					}
+					// Now that we have all of the TreeIters, loop and
+					// remove them all
+					while(iterQueue.Count > 0)
+					{
+						TreeIter iter = (TreeIter) iterQueue.Dequeue();
+
+						iFolderUser user = 
+								(iFolderUser) tModel.GetValue(iter, 0);
+		
+						try
+						{
+   			 				ifws.RemoveiFolderUser(ifolder.ID,
+													user.UserID);
+							UserTreeStore.Remove(ref iter);
+						}
+						catch(Exception e)
+						{
+							iFolderExceptionDialog ied = 
+									new iFolderExceptionDialog(
+											topLevelWindow, e);
+							ied.Run();
+							ied.Hide();
+							ied.Destroy();
+							ied = null;
+						}
+					}
+				}
+			}
+		}
+
+
+
 
 		private void OnAccessClicked(object o, EventArgs args)
 		{
@@ -268,6 +335,8 @@ namespace Novell.iFolder
 
 			TreeSelection tSelect = UserTreeView.Selection;
 
+			// only allow the changing of the owner if the current
+			// user is the owner and if the selected users are members
 			if(tSelect.CountSelectedRows() == 1)
 			{
 				Array treePaths = tSelect.GetSelectedRows(out tModel);
@@ -282,7 +351,9 @@ namespace Novell.iFolder
 								(iFolderUser) tModel.GetValue(iter, 0);
 						userName = user.Name;
 						defaultRights = user.Rights;
-						if(user.State == "Member")
+
+						if( (ifolder.CurrentUserID == ifolder.OwnerID) &&
+							(user.State == "Member") )
 							allowOwner = true;
 					}
 					break;
@@ -297,6 +368,7 @@ namespace Novell.iFolder
 			if(rc == -5)
 			{
 				string newrights = accDialog.Rights;
+				string oldOwnerID;
 
 				Array treePaths = tSelect.GetSelectedRows(out tModel);
 
@@ -315,6 +387,45 @@ namespace Novell.iFolder
 												user.UserID,
 												newrights);
 							user.Rights = newrights;
+		
+							// if the user selected to make this
+							// use the owner set that right now
+							if(accDialog.IsOwner)
+							{
+								ifws.ChangeOwner(	ifolder.ID,
+													user.UserID,
+													"Admin");
+
+								// update the objects here instead of
+								// re-reading them, that's expensive!
+								oldOwnerID = ifolder.OwnerID;
+								user.Rights = "Admin";
+								ifolder.Owner = user.Name;
+								ifolder.OwnerID = user.UserID;
+
+								// now loop through the users, find
+								// the current owner, and set him to
+								// not be the owner any more
+								TreeIter ownIter;
+								if(UserTreeStore.GetIterFirst(out ownIter))
+								{
+									do
+									{
+										iFolderUser ownUser = (iFolderUser) 
+											UserTreeStore.GetValue(ownIter,0);
+										if(oldOwnerID == ownUser.UserID)
+										{
+											ownUser.Rights = "Admin";
+											tModel.SetValue(ownIter, 
+																0, ownUser);
+											break;
+										}
+									}
+									while(UserTreeStore.IterNext(ref ownIter));
+								}
+
+							}
+
 							tModel.SetValue(iter, 0, user);
 						}
 						catch(Exception e)
@@ -357,7 +468,8 @@ namespace Novell.iFolder
 				}
 
 				TreeSelection tSelect = UserTreeView.Selection;
-				if((tSelect.CountSelectedRows() < 1) || SelectionHasOwner())
+				if((tSelect.CountSelectedRows() < 1) || 
+					SelectionHasOwnerOrCurrent() )
 				{
 					RemoveButton.Sensitive = false;
 					AccessButton.Sensitive = false;
@@ -428,7 +540,7 @@ namespace Novell.iFolder
 
 
 
-		public bool SelectionHasOwner()
+		public bool SelectionHasOwnerOrCurrent()
 		{
 			TreeModel tModel;
 
@@ -448,11 +560,12 @@ namespace Novell.iFolder
 							(iFolderUser) UserTreeStore.GetValue(iter,0);
 					if(user.UserID == ifolder.OwnerID)
 						return true;
+					if(user.UserID == ifolder.CurrentUserID)
+						return true;
 				}
 			}
 			return false;
 		}
-
 
 
 	}

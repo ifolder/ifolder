@@ -178,6 +178,16 @@
       <xs:element name="DeleteiFolderResponse">
         <xs:complexType />
       </xs:element>
+      <xs:element name="RevertiFolder">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RevertiFolderResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="GetAlliFolders">
         <xs:complexType />
       </xs:element>
@@ -665,6 +675,12 @@
   <message name="DeleteiFolderSoapOut">
     <part name="parameters" element="s0:DeleteiFolderResponse" />
   </message>
+  <message name="RevertiFolderSoapIn">
+    <part name="parameters" element="s0:RevertiFolder" />
+  </message>
+  <message name="RevertiFolderSoapOut">
+    <part name="parameters" element="s0:RevertiFolderResponse" />
+  </message>
   <message name="GetAlliFoldersSoapIn">
     <part name="parameters" element="s0:GetAlliFolders" />
   </message>
@@ -896,6 +912,10 @@
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="DeleteiFolderHttpGetOut" />
+  <message name="RevertiFolderHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="RevertiFolderHttpGetOut" />
   <message name="GetAlliFoldersHttpGetIn" />
   <message name="GetAlliFoldersHttpGetOut">
     <part name="Body" element="s0:ArrayOfIFolder" />
@@ -1114,6 +1134,10 @@
     <part name="iFolderID" type="s:string" />
   </message>
   <message name="DeleteiFolderHttpPostOut" />
+  <message name="RevertiFolderHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="RevertiFolderHttpPostOut" />
   <message name="GetAlliFoldersHttpPostIn" />
   <message name="GetAlliFoldersHttpPostOut">
     <part name="Body" element="s0:ArrayOfIFolder" />
@@ -1319,7 +1343,7 @@
     <operation name="GetSubscription">
       <input message="s0:GetSubscriptionSoapIn" />
       <output message="s0:GetSubscriptionSoapOut" />
-      <documentation>Get a subscription.</documentation>
+      <documentation>Get a subscription</documentation>
     </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathSoapIn" />
@@ -1330,6 +1354,11 @@
       <input message="s0:DeleteiFolderSoapIn" />
       <output message="s0:DeleteiFolderSoapOut" />
       <documentation>Delete An iFolder</documentation>
+    </operation>
+    <operation name="RevertiFolder">
+      <input message="s0:RevertiFolderSoapIn" />
+      <output message="s0:RevertiFolderSoapOut" />
+      <documentation>Revert an iFolder on the local computer but remain a member</documentation>
     </operation>
     <operation name="GetAlliFolders">
       <input message="s0:GetAlliFoldersSoapIn" />
@@ -1521,7 +1550,7 @@
     <operation name="GetSubscription">
       <input message="s0:GetSubscriptionHttpGetIn" />
       <output message="s0:GetSubscriptionHttpGetOut" />
-      <documentation>Get a subscription.</documentation>
+      <documentation>Get a subscription</documentation>
     </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathHttpGetIn" />
@@ -1532,6 +1561,11 @@
       <input message="s0:DeleteiFolderHttpGetIn" />
       <output message="s0:DeleteiFolderHttpGetOut" />
       <documentation>Delete An iFolder</documentation>
+    </operation>
+    <operation name="RevertiFolder">
+      <input message="s0:RevertiFolderHttpGetIn" />
+      <output message="s0:RevertiFolderHttpGetOut" />
+      <documentation>Revert an iFolder on the local computer but remain a member</documentation>
     </operation>
     <operation name="GetAlliFolders">
       <input message="s0:GetAlliFoldersHttpGetIn" />
@@ -1723,7 +1757,7 @@
     <operation name="GetSubscription">
       <input message="s0:GetSubscriptionHttpPostIn" />
       <output message="s0:GetSubscriptionHttpPostOut" />
-      <documentation>Get a subscription.</documentation>
+      <documentation>Get a subscription</documentation>
     </operation>
     <operation name="GetiFolderByLocalPath">
       <input message="s0:GetiFolderByLocalPathHttpPostIn" />
@@ -1734,6 +1768,11 @@
       <input message="s0:DeleteiFolderHttpPostIn" />
       <output message="s0:DeleteiFolderHttpPostOut" />
       <documentation>Delete An iFolder</documentation>
+    </operation>
+    <operation name="RevertiFolder">
+      <input message="s0:RevertiFolderHttpPostIn" />
+      <output message="s0:RevertiFolderHttpPostOut" />
+      <documentation>Revert an iFolder on the local computer but remain a member</documentation>
     </operation>
     <operation name="GetAlliFolders">
       <input message="s0:GetAlliFoldersHttpPostIn" />
@@ -1975,6 +2014,15 @@
     </operation>
     <operation name="DeleteiFolder">
       <soap:operation soapAction="http://novell.com/ifolder/web/DeleteiFolder" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="RevertiFolder">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RevertiFolder" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -2339,6 +2387,13 @@
       </input>
       <output />
     </operation>
+    <operation name="RevertiFolder">
+      <http:operation location="/RevertiFolder" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
     <operation name="GetAlliFolders">
       <http:operation location="/GetAlliFolders" />
       <input>
@@ -2665,6 +2720,13 @@
     </operation>
     <operation name="DeleteiFolder">
       <http:operation location="/DeleteiFolder" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="RevertiFolder">
+      <http:operation location="/RevertiFolder" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>
