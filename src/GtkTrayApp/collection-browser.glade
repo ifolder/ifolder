@@ -6,7 +6,6 @@
 <widget class="GtkWindow" id="ColWindow">
   <property name="width_request">715</property>
   <property name="height_request">430</property>
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Simias Collection Browser</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -29,41 +28,38 @@
 	  <child>
 	    <widget class="GtkMenuItem" id="menuitem1">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_File</property>
+	      <property name="label" translatable="yes">_Collections</property>
 	      <property name="use_underline">True</property>
 
 	      <child>
 		<widget class="GtkMenu" id="menuitem1_menu">
 
 		  <child>
-		    <widget class="GtkImageMenuItem" id="new2">
+		    <widget class="GtkImageMenuItem" id="create1">
 		      <property name="visible">True</property>
-		      <property name="label">gtk-new</property>
-		      <property name="use_stock">True</property>
+		      <property name="label" translatable="yes">C_reate</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_create" last_modification_time="Fri, 04 Jun 2004 22:34:38 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image2">
+			  <property name="visible">True</property>
+			  <property name="pixbuf">collection.png</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
 		    <widget class="GtkImageMenuItem" id="open2">
 		      <property name="visible">True</property>
-		      <property name="label">gtk-open</property>
+		      <property name="label">gtk-delete</property>
 		      <property name="use_stock">True</property>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="save2">
-		      <property name="visible">True</property>
-		      <property name="label">gtk-save</property>
-		      <property name="use_stock">True</property>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="save_as2">
-		      <property name="visible">True</property>
-		      <property name="label">gtk-save-as</property>
-		      <property name="use_stock">True</property>
+		      <signal name="activate" handler="on_delete" last_modification_time="Fri, 04 Jun 2004 22:34:55 GMT"/>
 		    </widget>
 		  </child>
 
@@ -78,51 +74,7 @@
 		      <property name="visible">True</property>
 		      <property name="label">gtk-quit</property>
 		      <property name="use_stock">True</property>
-		    </widget>
-		  </child>
-		</widget>
-	      </child>
-	    </widget>
-	  </child>
-
-	  <child>
-	    <widget class="GtkMenuItem" id="menuitem2">
-	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_Edit</property>
-	      <property name="use_underline">True</property>
-
-	      <child>
-		<widget class="GtkMenu" id="menuitem2_menu">
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="cut2">
-		      <property name="visible">True</property>
-		      <property name="label">gtk-cut</property>
-		      <property name="use_stock">True</property>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="copy2">
-		      <property name="visible">True</property>
-		      <property name="label">gtk-copy</property>
-		      <property name="use_stock">True</property>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="paste2">
-		      <property name="visible">True</property>
-		      <property name="label">gtk-paste</property>
-		      <property name="use_stock">True</property>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="delete1">
-		      <property name="visible">True</property>
-		      <property name="label">gtk-delete</property>
-		      <property name="use_stock">True</property>
+		      <signal name="activate" handler="on_quit" last_modification_time="Fri, 04 Jun 2004 22:35:04 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -135,6 +87,29 @@
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">_View</property>
 	      <property name="use_underline">True</property>
+
+	      <child>
+		<widget class="GtkMenu" id="menuitem3_menu">
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="refresh1">
+		      <property name="visible">True</property>
+		      <property name="label">gtk-refresh</property>
+		      <property name="use_stock">True</property>
+		      <signal name="activate" handler="on_refresh" last_modification_time="Fri, 04 Jun 2004 22:36:14 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="properties1">
+		      <property name="visible">True</property>
+		      <property name="label">gtk-properties</property>
+		      <property name="use_stock">True</property>
+		      <signal name="activate" handler="on_properties" last_modification_time="Fri, 04 Jun 2004 22:36:14 GMT"/>
+		    </widget>
+		  </child>
+		</widget>
+	      </child>
 	    </widget>
 	  </child>
 
@@ -148,10 +123,22 @@
 		<widget class="GtkMenu" id="menuitem4_menu">
 
 		  <child>
-		    <widget class="GtkMenuItem" id="about2">
+		    <widget class="GtkImageMenuItem" id="about2">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_About</property>
 		      <property name="use_underline">True</property>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image3">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-dialog-question</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>
@@ -177,8 +164,10 @@
 	    <widget class="button" id="button9">
 	      <property name="visible">True</property>
 	      <property name="tooltip" translatable="yes">Create a new Collection or Node</property>
-	      <property name="label">gtk-new</property>
-	      <property name="use_stock">True</property>
+	      <property name="label" translatable="yes">Create</property>
+	      <property name="use_underline">True</property>
+	      <property name="icon">collection.png</property>
+	      <signal name="clicked" handler="on_create" last_modification_time="Fri, 04 Jun 2004 22:30:32 GMT"/>
 	    </widget>
 	  </child>
 
@@ -188,33 +177,22 @@
 	      <property name="tooltip" translatable="yes">Delete current object</property>
 	      <property name="label">gtk-delete</property>
 	      <property name="use_stock">True</property>
+	      <signal name="clicked" handler="on_delete" last_modification_time="Fri, 04 Jun 2004 22:30:24 GMT"/>
 	    </widget>
-	  </child>
-
-	  <child>
-	    <widget class="button" id="button12">
-	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Refresh Collections</property>
-	      <property name="label" translatable="yes">Collections</property>
-	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-refresh</property>
-	      <property name="new_group">True</property>
-	      <signal name="clicked" handler="on_refreshCollections" last_modification_time="Fri, 14 May 2004 18:36:20 GMT"/>
-	    </widget>
-	    <packing>
-	      <property name="new_group">True</property>
-	    </packing>
 	  </child>
 
 	  <child>
 	    <widget class="button" id="button15">
 	      <property name="visible">True</property>
 	      <property name="tooltip" translatable="yes">Refresh view of Nodes</property>
-	      <property name="label" translatable="yes">Nodes</property>
-	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-refresh</property>
-	      <signal name="clicked" handler="on_refreshNodes" last_modification_time="Fri, 14 May 2004 18:58:31 GMT"/>
+	      <property name="label">gtk-refresh</property>
+	      <property name="use_stock">True</property>
+	      <property name="new_group">True</property>
+	      <signal name="clicked" handler="on_refresh" last_modification_time="Fri, 04 Jun 2004 22:29:57 GMT"/>
 	    </widget>
+	    <packing>
+	      <property name="new_group">True</property>
+	    </packing>
 	  </child>
 
 	  <child>
@@ -223,11 +201,8 @@
 	      <property name="tooltip" translatable="yes">Current Object Properties</property>
 	      <property name="label">gtk-properties</property>
 	      <property name="use_stock">True</property>
-	      <property name="new_group">True</property>
+	      <signal name="clicked" handler="on_properties" last_modification_time="Fri, 04 Jun 2004 22:30:13 GMT"/>
 	    </widget>
-	    <packing>
-	      <property name="new_group">True</property>
-	    </packing>
 	  </child>
 	</widget>
 	<packing>
