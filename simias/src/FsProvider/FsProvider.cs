@@ -395,7 +395,7 @@ namespace Simias.Storage.Provider.Fs
 				// Make sure the version is correct.
 				if (conf.Version != version)
 				{
-					throw new VersionException(conf.Version, version);
+					throw new VersionException(DbPath, conf.Version, version);
 				}
  			}
 			

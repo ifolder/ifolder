@@ -218,4 +218,17 @@ namespace Simias.Storage.Provider
 			}
 		}
 	}
+
+	public class CommitException : SimiasException
+	{
+		public XmlDocument CreateDoc;
+		public XmlDocument DeleteDoc;
+
+		public CommitException(XmlDocument createDoc, XmlDocument deleteDoc, Exception ex) :
+			base("Failed to commite Records", ex)
+		{
+			CreateDoc = createDoc;
+			DeleteDoc = deleteDoc;
+		}
+	}
 }
