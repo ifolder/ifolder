@@ -114,7 +114,7 @@ case $ADDRESSBOOK_OS in
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
-        NUNITFLAGS_DEBUG='--debug'
+        NUNITFLAGS_DEBUG=''
         NUNITFLAGS_OPTIMIZE=''
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
         REPORT_DIR='$(DESTDIR)$(bindir)'
