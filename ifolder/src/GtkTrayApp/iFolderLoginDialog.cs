@@ -32,7 +32,9 @@ namespace Novell.iFolder
 		private Entry	nameEntry;
 		private Entry	passEntry;
 		private Entry	serverEntry;
-		private string	DomainName;
+		private string	DomainID;
+		private string  DomainName;
+		private string  DomainUserName;
 		private bool	FullDialog;
 
 
@@ -74,14 +76,17 @@ namespace Novell.iFolder
 				if(FullDialog)
 					return "";
 				else
-					return DomainName;
+					return DomainID;
 			}
 		}
 
 
-		public iFolderLoginDialog(string domain) : base()
+		public iFolderLoginDialog(string domain, string domainName,
+					string userName) : base()
 		{
-			DomainName = domain;
+			DomainID = domain;
+			DomainName = domainName;
+			DomainUserName = userName;
 			FullDialog = false;
 			SetupDialog();
 		}
@@ -108,10 +113,7 @@ namespace Novell.iFolder
 	
 			Table loginTable;
 
-			if(FullDialog)
-				loginTable = new Table(3,2,false);
-			else
-				loginTable = new Table(1,2,false);
+			loginTable = new Table(3,2,false);
 
 			loginTable.BorderWidth = 10;
 			loginTable.RowSpacing = 10;
@@ -121,35 +123,32 @@ namespace Novell.iFolder
 			if(FullDialog)
 			{
 				Label nameLabel = new Label(Util.GS("User name:"));
-				nameLabel.Xalign = 0;
+				nameLabel.Xalign = 1; 
 				loginTable.Attach(nameLabel, 0,1,0,1,
-						AttachOptions.Shrink, 0,0,0);
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 	
 				nameEntry = new Entry();
 				nameEntry.Changed += new EventHandler(OnFieldsChanged);
 				nameEntry.ActivatesDefault = true;
 				loginTable.Attach(nameEntry, 1,2,0,1, 
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			}
 
-			Label passLabel = new Label(Util.GS("Password:"));
-			passLabel.Xalign = 0;
-			loginTable.Attach(passLabel, 0,1,1,2,
-					AttachOptions.Shrink, 0,0,0);
+				Label passLabel = new Label(Util.GS("Password:"));
+				passLabel.Xalign = 1;
+				loginTable.Attach(passLabel, 0,1,1,2,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 	
-			passEntry = new Entry();
-			passEntry.Changed += new EventHandler(OnFieldsChanged);
-			passEntry.ActivatesDefault = true;
-			passEntry.Visibility = false;
-			loginTable.Attach(passEntry, 1,2,1,2,
+				passEntry = new Entry();
+				passEntry.Changed += new EventHandler(OnFieldsChanged);
+				passEntry.ActivatesDefault = true;
+				passEntry.Visibility = false;
+				loginTable.Attach(passEntry, 1,2,1,2,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-	
-			if(FullDialog)
-			{
+
 				Label serverLabel = new Label(Util.GS("Server host:"));
-				serverLabel.Xalign = 0;
+				serverLabel.Xalign = 1;
 				loginTable.Attach(serverLabel, 0,1,2,3,
-						AttachOptions.Shrink, 0,0,0);
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 	
 				serverEntry = new Entry();
 				serverEntry.Changed += new EventHandler(OnFieldsChanged);
@@ -157,6 +156,45 @@ namespace Novell.iFolder
 				loginTable.Attach(serverEntry, 1,2,2,3,
 						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			}
+			else
+			{
+				Label domainLabel = new Label(Util.GS("iFolder Server:"));
+				domainLabel.Xalign = 1;
+				loginTable.Attach(domainLabel, 0,1,0,1,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+
+				Label domainNameLabel = new Label(DomainName);
+				domainNameLabel.Xalign = 0;
+				loginTable.Attach(domainNameLabel, 1,2,0,1,
+						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+
+
+				Label nameLabel = new Label(Util.GS("User name:"));
+				nameLabel.Xalign = 1;
+				loginTable.Attach(nameLabel, 0,1,1,2,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+	
+				Label userNameLabel = new Label(DomainUserName);
+				userNameLabel.Xalign = 0;
+				loginTable.Attach(userNameLabel, 1,2,1,2, 
+						AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+						
+
+				Label passLabel = new Label(Util.GS("Password:"));
+				passLabel.Xalign = 1;
+				loginTable.Attach(passLabel, 0,1,2,3,
+						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+	
+				passEntry = new Entry();
+				passEntry.Changed += new EventHandler(OnFieldsChanged);
+				passEntry.ActivatesDefault = true;
+				passEntry.Visibility = false;
+				loginTable.Attach(passEntry, 1,2,2,3,
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+			}
+
 	
 			this.VBox.PackStart(loginTable, false, false, 0);
 			this.VBox.ShowAll();
