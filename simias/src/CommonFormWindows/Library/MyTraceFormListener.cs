@@ -33,9 +33,9 @@ namespace Simias
 	/// <summary>
 	/// My Trace Listener
 	/// </summary>
-	public class MyTraceListener : TraceListener
+	public class MyTraceFormListener : TraceListener
 	{
-		private static readonly string NO_CATEGORY = "No Category";
+		private static readonly string NO_CATEGORY = "?";
 
 		private ListView list;
 		private TreeView tree;
@@ -44,7 +44,7 @@ namespace Simias
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public MyTraceListener(TreeView tree, ListView list)
+		public MyTraceFormListener(TreeView tree, ListView list)
 		{
 			this.tree = tree;
 			this.list = list;
@@ -88,8 +88,14 @@ namespace Simias
 			// add category
 			TreeNode node = GetCategory(category);
 
+			string[] categories = Regex.Split(category, @"(\.)", RegexOptions.Compiled);
+
 			// add message
-			ListViewItem item = list.Items.Add(message);
+			ListViewItem item = new ListViewItem(new string[]
+				{ message, categories[categories.Length - 1],
+					DateTime.Now.ToShortTimeString() + " "
+					+ DateTime.Now.ToShortDateString() });
+			item = list.Items.Add(item);
 			
 			// associate category and message
 			if ((node.Tag == null) || (node.GetType() != typeof(ArrayList)))

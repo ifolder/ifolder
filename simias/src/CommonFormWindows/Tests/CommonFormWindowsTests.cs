@@ -41,7 +41,7 @@ namespace Simias.Tests
 		/// </summary>
 		public CommonFormWindowsTests()
 		{
-			MyTrace.SendTraceToStandardOutput();
+			MyTrace.SendToConsole();
 		}
 
 		/// <summary>

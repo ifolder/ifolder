@@ -114,7 +114,7 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "MyTraceListener.cs"
+                    RelPath = "MyTraceFormListener.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -49,10 +49,12 @@ namespace Simias
 		private MenuItem scrollLockMenuItem;
 		private MenuItem copyMenuItem;
 		private MenuItem clearMenuItem;
-		private MyTraceListener traceListener;
+		private MyTraceFormListener traceListener;
 		private ColumnHeader columnHeader2;
 		private System.Windows.Forms.Splitter splitter;
 		private System.Windows.Forms.Panel logListPanel;
+		private System.Windows.Forms.ColumnHeader columnHeader1;
+		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private bool shutdown = false;
 
 		/// <summary>
@@ -72,7 +74,7 @@ namespace Simias
 			this.Location = start;
 
 			// start listener
-			traceListener = new MyTraceListener(logTreeView, logListView);
+			traceListener = new MyTraceFormListener(logTreeView, logListView);
 			Trace.Listeners.Add(traceListener);
 
 			// set log list view column size
@@ -132,6 +134,8 @@ namespace Simias
 			this.clearMenuItem = new System.Windows.Forms.MenuItem();
 			this.splitter = new System.Windows.Forms.Splitter();
 			this.logListPanel = new System.Windows.Forms.Panel();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.logListPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -150,7 +154,9 @@ namespace Simias
 			// logListView
 			// 
 			this.logListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						  this.columnHeader2});
+																						  this.columnHeader3,
+																						  this.columnHeader2,
+																						  this.columnHeader1});
 			this.logListView.ContextMenu = this.logContextMenu;
 			this.logListView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.logListView.FullRowSelect = true;
@@ -163,8 +169,7 @@ namespace Simias
 			// 
 			// columnHeader2
 			// 
-			this.columnHeader2.Text = "Message";
-			this.columnHeader2.Width = 99;
+			this.columnHeader2.Text = "Method";
 			// 
 			// logContextMenu
 			// 
@@ -209,6 +214,15 @@ namespace Simias
 			this.logListPanel.Name = "logListPanel";
 			this.logListPanel.Size = new System.Drawing.Size(349, 454);
 			this.logListPanel.TabIndex = 3;
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Time";
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "Message";
+			this.columnHeader3.Width = 200;
 			// 
 			// MyTraceForm
 			// 
@@ -259,7 +273,9 @@ namespace Simias
 		private void MyTraceForm_SizeChanged(object sender, EventArgs e)
 		{
 			// update the width of the column
-			logListView.Columns[0].Width = (logListView.Size.Width - SCROLLBAR_WIDTH - 1);
+			logListView.Columns[0].Width = (logListView.Size.Width
+				- logListView.Columns[1].Width - logListView.Columns[2].Width
+				- SCROLLBAR_WIDTH - 1);
 		}
 
 		private void logTreeView_AfterCheck(object sender, TreeViewEventArgs e)

@@ -42,7 +42,7 @@ namespace Simias.Agent.Tests
 		/// </summary>
 		public AgentTests()
 		{
-			MyTrace.SendTraceToStandardOutput();
+			MyTrace.SendToConsole();
 		}
 
 		/// <summary>

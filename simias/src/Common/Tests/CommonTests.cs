@@ -49,7 +49,7 @@ namespace Simias.Tests
 		[SetUp]
 		public void CaseSetup()
 		{
-			MyTrace.SendTraceToStandardOutput();
+			MyTrace.SendToConsole();
 			MyTrace.Switch.Level = TraceLevel.Info;
 		}
 

@@ -54,7 +54,7 @@ namespace Simias.Sync.Tests
 		/// </summary>
 		public CollectionWatcherTests()
 		{
-			MyTrace.SendTraceToStandardOutput();
+			MyTrace.SendToConsole();
 		}
 
 		/// <summary>

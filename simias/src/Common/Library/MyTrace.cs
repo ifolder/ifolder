@@ -33,14 +33,12 @@ namespace Simias
 	/// </summary>
 	public sealed class MyTrace
 	{
+		private static bool send = false;
+
 		/// <summary>
 		/// Trace Switch
 		/// </summary>
 		public static TraceSwitch Switch;
-
-		private static bool stdout = false;
-
-		private static object lockRoot = new object();
 
 		/// <summary>
 		/// Static Constructor
@@ -62,19 +60,18 @@ namespace Simias
 		}
 
 		/// <summary>
-		/// Add a trace listener to send trace message to standard out.
+		/// Add a trace listener to send trace message to the console.
 		/// </summary>
-		public static void SendTraceToStandardOutput()
+		public static void SendToConsole()
 		{
-			if (stdout == false)
+			if (send == false)
 			{
-				lock(lockRoot)
+				lock(typeof(MyTrace))
 				{
-					if (stdout == false)
+					if (send == false)
 					{
-						stdout = true;
-						Trace.Listeners.Add(new TextWriterTraceListener(
-							Console.Out));
+						send = true;
+						Trace.Listeners.Add(new MyTraceListener(Console.Error));
 					}
 				}
 			}
@@ -100,6 +97,58 @@ namespace Simias
 			WriteLine(1, message);
 		}
 		
+		/// <summary>
+		/// Writes a message to the trace listeners if the trace level is Error or higher.
+		/// </summary>
+		/// <param name="format">The formatting string.</param>
+		/// <param name="arg">An array of object for the formatting string.</param>
+		public static void Error(string format, params object[] arg)
+		{
+			if (Switch.Level >= TraceLevel.Error)
+			{
+				WriteLine(1, format, arg);
+			}
+		}
+
+		/// <summary>
+		/// Writes a message to the trace listeners if the trace level is Warning or higher.
+		/// </summary>
+		/// <param name="format">The formatting string.</param>
+		/// <param name="arg">An array of object for the formatting string.</param>
+		public static void Warning(string format, params object[] arg)
+		{
+			if (Switch.Level >= TraceLevel.Warning)
+			{
+				WriteLine(1, format, arg);
+			}
+		}
+
+		/// <summary>
+		/// Writes a message to the trace listeners if the trace level is Info or higher.
+		/// </summary>
+		/// <param name="format">The formatting string.</param>
+		/// <param name="arg">An array of object for the formatting string.</param>
+		public static void Info(string format, params object[] arg)
+		{
+			if (Switch.Level >= TraceLevel.Info)
+			{
+				WriteLine(1, format, arg);
+			}
+		}
+
+		/// <summary>
+		/// Writes a message to the trace listeners if the trace level is Verbose or higher.
+		/// </summary>
+		/// <param name="format">The formatting string.</param>
+		/// <param name="arg">An array of object for the formatting string.</param>
+		public static void Verbose(string format, params object[] arg)
+		{
+			if (Switch.Level >= TraceLevel.Verbose)
+			{
+				WriteLine(1, format, arg);
+			}
+		}
+
 		/// <summary>
 		/// Writes a message to the trace listeners.
 		/// </summary>
@@ -127,29 +176,11 @@ namespace Simias
 			{
 				StackFrame frame = trace.GetFrame(0);
 				
-				category = frame.GetMethod().DeclaringType.FullName;
-				string path = frame.GetFileName();
-
-				// if verbose mode and we have debugging information - show it
-				if ((Switch.Level == TraceLevel.Verbose) && (path != null) && (path.Length > 0))
-				{
-					message = String.Format("[{0}(), {1}:{2}] {3}",
-						frame.GetMethod().Name,
-						Path.GetFileName(frame.GetFileName()),
-						frame.GetFileLineNumber(), message);
-				}
-				else
-				{
-					message = String.Format("[{0}()] {1}",
-						frame.GetMethod().Name, message);
-				}
+				category = String.Format("{0}.{1}", 
+					frame.GetMethod().DeclaringType.FullName,
+					frame.GetMethod().Name);
 			}
 
-			if (Switch.Level == TraceLevel.Verbose)
-			{
-				Trace.WriteLine(DateTime.Now);
-			}
-			
 			Trace.WriteLine(message, category);
 		}
 	}

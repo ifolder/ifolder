@@ -53,9 +53,6 @@ namespace Simias.Sync.Tools
 		/// <param name="host">The sync server host.</param>
 		private SyncPinger(string host)
 		{
-			// TODO: temp
-			MyTrace.SendTraceToStandardOutput();
-
 			this.host = host;
 		}
 

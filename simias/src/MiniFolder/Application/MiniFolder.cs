@@ -50,7 +50,7 @@ namespace Novell.iFolder.Mini
 		static int Main(string[] args)
 		{
 			// tracing
-			MyTrace.SendTraceToStandardOutput();
+			MyTrace.SendToConsole();
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 
 			// title
