@@ -388,7 +388,9 @@ namespace Simias.Web
 				in <0x00050> (wrapper managed-to-native) Mono.Posix.Syscall:syscall_access (string,int)
 				in <0x00027> Mono.Posix.Syscall:access (string,Mono.Posix.AccessMode)
 				in <0x00147> Simias.Web.SharedCollection:CanBeCollection (string)
-*/
+
+				That used to be the error, now on OS X we get a dll not found exception: cannot find libMonoPosixHelper.dylib
+
 			try
 			{
 				if(Mono.Posix.Syscall.access(path, 
@@ -401,6 +403,7 @@ namespace Simias.Web
 			{
 				Console.WriteLine(e);
 			}
+*/
 
 
 			// put an ugly try catch around this to see what is 
