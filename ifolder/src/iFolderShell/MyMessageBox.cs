@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Novell.iFolder.iFolderCom
 {
 	/// <summary>
 	/// Summary description for MyMessageBox.
 	/// </summary>
+	[ComVisible(false)]
 	public class MyMessageBox : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.Button yes;
@@ -107,7 +109,5 @@ namespace Novell.iFolder.iFolderCom
 				this.message.Text = value;
 			}
 		}
-
-		
 	}
 }
