@@ -243,7 +243,7 @@ public class SynkerServiceA: SyncCollectionService
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			NodeChunk nc;
+			NodeChunk nc = new NodeChunk();
 			nc.fseChunks = outNode.Start(nid, out nc.stamp, out nc.metaData)? outNode.ReadChunks(maxSize, out nc.totalSize): null;
 			return nc;
 		}
