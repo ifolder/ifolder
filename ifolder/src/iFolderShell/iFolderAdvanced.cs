@@ -1953,10 +1953,11 @@ namespace Novell.iFolderCom
 			lastSync.Text = currentiFolder.LastSyncTime;
 
 			// Get the sync interval.
-			// TODO: if the policy doesn't exist a 0 (zero) will be returned.
+			// TODO: Should this be set to the effective interval.
 			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
 			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
 
+			// TODO: Need to set syncUnits value using similar method as trayapp.
 			switch (currentiFolder.Role)
 			{
 				case "Master":

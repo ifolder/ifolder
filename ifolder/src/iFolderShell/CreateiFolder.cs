@@ -403,7 +403,14 @@ namespace Novell.iFolderCom
 			}
 			else
 			{
-				servers.SelectedItem = selectedDomain;
+				if (selectedDomain != null)
+				{
+					servers.SelectedItem = selectedDomain;
+				}
+				else if (servers.Items.Count > 0)
+				{
+					servers.SelectedIndex = 0;
+				}
 			}
 		}
 

@@ -1823,15 +1823,18 @@ namespace Novell.FormsTrayApp
 					// Notify the shell.
 					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
 
-					lvi.Tag = new iFolderObject(newiFolder);
-
-					lock (ht)
+					if (newiFolder != null)
 					{
-						ht.Remove(ifolder.ID);
-						ht.Add(newiFolder.ID, lvi);
-					}
+						lvi.Tag = new iFolderObject(newiFolder);
 
-					updateListViewItem(lvi);
+						lock (ht)
+						{
+							ht.Remove(ifolder.ID);
+							ht.Add(newiFolder.ID, lvi);
+						}
+
+						updateListViewItem(lvi);
+					}
 				}
 			}
 			catch (Exception ex)
@@ -1879,7 +1882,7 @@ namespace Novell.FormsTrayApp
 				if (!d.ShowAll)
 				{
 					DomainItem domainItem = new DomainItem(d.Name, d.ID);
-					if (d.ID.Equals(selectedDomain.ID))
+					if ((selectedDomain != null) && d.ID.Equals(selectedDomain.ID))
 					{
 						selectedDomainItem = domainItem;
 					}
