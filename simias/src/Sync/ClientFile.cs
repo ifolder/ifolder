@@ -262,6 +262,9 @@ namespace Simias.Sync
 				
 			Log.log.Debug("Downloading {0} bytes, filesize = {1}", sizeToSync, fileSize); 
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+			// If We don't have any entries in the file map the file is of length 0.
+			if (fileMap.Length == 0)
+				return true;
 			
 			// Get the file blocks from the server.
 			byte[] buffer = new byte[HashData.BlockSize];

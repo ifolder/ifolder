@@ -696,6 +696,7 @@ namespace Simias.Sync.Http
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.EndSync);
 			request.ContentLength = 0;
+			request.KeepAlive = false;
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			try
 			{
@@ -735,7 +736,6 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			si.Serialize(writer);
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -758,7 +758,6 @@ namespace Simias.Sync.Http
 				}
 				writer.Close();
 			}
-			response.End();
 		}
 		
 		
@@ -793,7 +792,6 @@ namespace Simias.Sync.Http
 				status.Serialize(writer);
 			}
 			writer.Close();
-			response.End();
 		}
 		
 		/// <summary>
@@ -827,7 +825,6 @@ namespace Simias.Sync.Http
 				node.Serialize(writer);
 			}
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -861,7 +858,6 @@ namespace Simias.Sync.Http
 				status.Serialize(writer);
 			}
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -905,7 +901,6 @@ namespace Simias.Sync.Http
 				status.Serialize(writer);
 			}
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -922,7 +917,6 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			writer.Write((byte)status);
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -939,7 +933,6 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			node.Serialize(writer);
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -961,7 +954,6 @@ namespace Simias.Sync.Http
 				return;
 			}
 			response.AddHeader(SyncHeaders.ObjectCount, "0");
-			response.End();
 		}
 
 		public void PutHashMap(HttpRequest request, HttpResponse response)
@@ -998,6 +990,7 @@ namespace Simias.Sync.Http
 				}
 				else
 				{
+					response.BufferOutput = false;
 					long offset = 0;
 					byte[] buffer = new byte[blockSize];
 					Stream outStream = response.OutputStream;
@@ -1010,13 +1003,13 @@ namespace Simias.Sync.Http
 						}
 						offset += blockSize;
 					}
+					outStream.Close();
 				}
 			}
 			else
 			{
 				response.StatusCode = (int)HttpStatusCode.BadRequest;
 			}
-			response.End();
 		}
 
 		/// <summary>
@@ -1033,7 +1026,6 @@ namespace Simias.Sync.Http
 			}
 			else
 				response.StatusCode = (int)HttpStatusCode.BadRequest;
-			response.End();
 		}
 
 		/// <summary>
@@ -1059,7 +1051,6 @@ namespace Simias.Sync.Http
 				BlockSegment bSeg = new BlockSegment(reader);
 				service.Copy(bSeg.Block * blockSize, bSeg.Offset, blockSize);
 			}
-			response.End();
 		}
 
 		/// <summary>
@@ -1077,7 +1068,6 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(response.OutputStream);
 			status.Serialize(writer);
 			writer.Close();
-			response.End();
 		}
 
 		/// <summary>
@@ -1088,7 +1078,6 @@ namespace Simias.Sync.Http
 		public void EndSync(HttpRequest request, HttpResponse response)
 		{
 			service.Stop();
-			response.End();
 		}
 
 		/// <summary>

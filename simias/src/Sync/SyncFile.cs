@@ -332,7 +332,7 @@ namespace Simias.Sync
 		/// </summary>
 		public long Length
 		{
-			get { return stream == null ? 0 : stream.Length; }
+			get { return node.Length; }
 		}
 		
 		#endregion
