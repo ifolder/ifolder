@@ -50,7 +50,7 @@ static char *parse_local_service_url(FILE *file);
 
 static void init_gsoap (struct soap *p_soap);
 static void cleanup_gsoap (struct soap *p_soap);
-static char *get_soap_url(SIMIAS_BOOL reread_config);
+static char *get_soap_url(bool reread_config);
 
 /* Function Implementations */
 int
@@ -190,7 +190,7 @@ parse_local_service_url(FILE *file)
  ******************************************************************************/
 /* Wrapper for GetDomains */
 int
-simias_get_domains(SIMIAS_BOOL only_slaves, SimiasDomainInfo **ret_domainsA[])
+simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 {
 	char *soap_url;
 	struct soap soap;
@@ -203,13 +203,15 @@ simias_get_domains(SIMIAS_BOOL only_slaves, SimiasDomainInfo **ret_domainsA[])
 	struct ns1__ArrayOfDomainInformation *array_of_domain_infos;
 	struct ns1__DomainInformation **domainsA;
 	
-	soap_url = get_soap_url(SIMIAS_FALSE);
+	soap_url = get_soap_url(true);
 	if (!soap_url) {
+		soap_print_fault(&soap, stderr);
+		soap_print_fault(&soap, stdout);
 		return -1;
 	}
-	
+
 	/* Setup the Request */
-	req.onlySlaves = false_;
+	req.onlySlaves = only_slaves ? true_ : false_;
 	
 	init_gsoap(&soap);
 	soap_call___ns1__GetDomains(&soap, soap_url, NULL, &req, &resp);
@@ -259,9 +261,9 @@ simias_get_domains(SIMIAS_BOOL only_slaves, SimiasDomainInfo **ret_domainsA[])
 				
 				/* Active */
 				if (domainsA[i]->Active == true_) {
-					domain->active = SIMIAS_TRUE;
+					domain->active = true;
 				} else {
-					domain->active = SIMIAS_FALSE;
+					domain->active = false;
 				}
 				
 				/* Name */
@@ -296,16 +298,16 @@ simias_get_domains(SIMIAS_BOOL only_slaves, SimiasDomainInfo **ret_domainsA[])
 				
 				/* IsSlave */
 				if (domainsA[i]->IsSlave == true_) {
-					domain->is_slave = SIMIAS_TRUE;
+					domain->is_slave = true;
 				} else {
-					domain->is_slave = SIMIAS_FALSE;
+					domain->is_slave = false;
 				}
 				
 				/* IsDefault */
 				if (domainsA[i]->IsDefault == true_) {
-					domain->is_default = SIMIAS_TRUE;
+					domain->is_default = true;
 				} else {
-					domain->is_default = SIMIAS_FALSE;
+					domain->is_default = false;
 				}
 				
 				/* Add this to the Array */
@@ -379,7 +381,7 @@ cleanup_gsoap (struct soap *p_soap)
 }
 
 static char *
-get_soap_url(SIMIAS_BOOL reread_config)
+get_soap_url(bool reread_config)
 {
 	char *url;
 	char gaim_domain_url[512];
