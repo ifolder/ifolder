@@ -744,37 +744,52 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\ClientFile.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\Conflict.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\Differ.cs"
+                    RelPath = "src\Sync\FileMonitor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\Dredge.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\FileDelta.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\IncomingNode.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\OutgoingNode.cs"
-                    SubType = "Code"
+                    RelPath = "src\Sync\SimiasSyncService.cs"
+                    SubType = "code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\Sync\StrongHash.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\StrongWeakHashtable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncClient.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncCollectionRoles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncFile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -784,32 +799,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\SyncOps.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SyncSize.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Sync\WeakHash.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollectionRoles.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncStoreService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -132,11 +132,8 @@ namespace Simias.Location
 							}
 						}
 
-						UriBuilder ub = new UriBuilder(scheme, ha.PrefAddress.ToString(), port,
-							SyncStoreService.EndPoint);
-
+						UriBuilder ub = new UriBuilder(scheme, ha.PrefAddress.ToString(), port);
 						result = ub.Uri;
-
 						log.Debug("Reunion URI for {0}: {1}", service, result);
 					}
 				}

@@ -126,18 +126,16 @@ AssemblyInfo.cs
 ../StoreProvider/Provider.cs
 ../StoreProvider/Query.cs
 ../StoreProvider/Record.cs
-../SyncCommon/SyncCollection.cs
-../SyncCommon/SyncCollectionRoles.cs
-../SyncCommon/SyncStoreService.cs
+../Sync/ClientFile.cs
 ../Sync/Conflict.cs
-../Sync/Differ.cs
-../Sync/Dredge.cs
-../Sync/FileDelta.cs
-../Sync/IncomingNode.cs
-../Sync/OutgoingNode.cs
+../Sync/FileMonitor.cs
+../Sync/SimiasSyncService.cs
 ../Sync/StrongHash.cs
+../Sync/StrongWeakHashtable.cs
+../Sync/SyncClient.cs
+../Sync/SyncCollection.cs
+../Sync/SyncCollectionRoles.cs
+../Sync/SyncFile.cs
 ../Sync/SyncLog.cs
-../Sync/SyncOps.cs
-../Sync/SyncSize.cs
 ../Sync/WeakHash.cs
 

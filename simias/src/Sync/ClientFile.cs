@@ -195,7 +195,6 @@ namespace Simias.Sync.Client
 			}
 			catch
 			{
-				// BUGBUG this is a name collision.
 				string collisionName = Conflict.GetFileConflictPath(collection, node);
 				File.Copy(workFile, collisionName, true);
 				collection.CreateCollision(node, true);

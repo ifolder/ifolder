@@ -22,52 +22,32 @@
  ***********************************************************************/
 
 using System;
-using System.Runtime.Remoting;
 
 namespace Simias.Sync
 {
 	/// <summary>
-	/// Sync Collection Service
+	/// Sync Collection Roles
 	/// </summary>
-	public class SyncCollectionService : MarshalByRefObject
+	public enum SyncCollectionRoles
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionService));
+		/// <summary>
+		/// A Master Collection Role
+		/// </summary>
+		Master,
 
 		/// <summary>
-		/// The current collection.
+		/// A Slave Collection Role
 		/// </summary>
-		protected SyncCollection collection;
+		Slave,
 
 		/// <summary>
-		/// Constructor
+		/// A Local Collection Role
 		/// </summary>
-		/// <param name="collection">The collection object.</param>
-		public SyncCollectionService(SyncCollection collection)
-		{
-			log.Debug("Creating Sync Collection Service: {0}", collection.Name);
-			
-			this.collection = collection;
-		}
+		Local,
 
 		/// <summary>
-		/// Generate the ping information for the collection.
+		/// No Collection Role
 		/// </summary>
-		/// <returns></returns>
-		public SyncCollectionInfo Ping()
-		{
-			SyncCollectionInfo info = new SyncCollectionInfo(collection);
-
-			log.Debug("Preparing Ping Response: {0}", info);
-
-			return info;
-		}
-
-		/// <summary>
-		/// Release this object on the server.
-		/// </summary>
-		public void Release()
-		{
-			RemotingServices.Disconnect(this);
-		}
+		None,
 	}
 }

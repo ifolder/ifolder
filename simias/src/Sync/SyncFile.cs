@@ -25,6 +25,7 @@ using System.IO;
 using System.Collections;
 using System.Security.Cryptography;
 using Simias.Storage;
+using Simias.Sync.Client;
 
 namespace Simias.Sync
 {
@@ -407,6 +408,36 @@ namespace Simias.Sync
 		}
 
 		#endregion
+	}
+
+	#endregion
+
+	#region SyncSize
+
+	/// <summary>
+	/// class to approximate amount of data that is out of sync with master
+	/// Note that this is worst-case of data that may need to be sent from
+	/// this collection to the master. It does not include data that may need
+	/// to be retrieved from the master. It also does not account for
+	/// delta-sync algorithms that may reduce what needs to be sent
+	/// </summary>
+	public class SyncSize
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="col"></param>
+		/// <param name="nodeCount"></param>
+		/// <param name="maxBytesToSend"></param>
+		public static void CalculateSendSize(Collection col, out uint nodeCount, out ulong maxBytesToSend)
+		{
+			Log.log.Debug("starting to calculate size to send to master for collection {0}", col.Name);
+
+			maxBytesToSend = 0;
+			nodeCount = 0;
+
+			maxBytesToSend = SyncClient.GetSizeToSync(col.ID, out nodeCount);
+		}
 	}
 
 	#endregion

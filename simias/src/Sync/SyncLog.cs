@@ -32,6 +32,9 @@ namespace Simias.Sync
 /// <summary> catch-all log for misc sync classes</summary>
 public class Log
 {
+	/// <summary>
+	/// The logging object.
+	/// </summary>
 	public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Log));
 
 	// don't always get line numbers from stack dumps, so force it here
@@ -47,23 +50,28 @@ public class Log
 		}
 	}
 
-	/// <summary> controlled tracing and debugging output by class categories </summary>
-	internal static void Spew(string format, params object[] args) { log.Debug(format, args); }
-	internal static void Info(string format, params object[] args) { log.Info(format, args); }
-	internal static void Warn(string format, params object[] args) { log.Warn(format, args); }
-	internal static void Error(string format, params object[] args) { log.Error(format, args); DumpStack(); }
-
+	/// <summary>
+	/// Prints out the stack frame.
+	/// </summary>
 	public static void Here()
 	{
 		StackFrame sf = new StackTrace(1, true).GetFrame(0);
 		log.Debug("Here: {0}:{1} {2}", sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString());
 	}
 
+	/// <summary>
+	/// Prints the exception.
+	/// </summary>
+	/// <param name="e"></param>
 	public static void Uncaught(Exception e)
 	{
 		log.Debug(String.Format("Uncaught exception: {0}\n{1}", e.Message, e.StackTrace));
 	}
 
+	/// <summary>
+	/// Logs an assertion.
+	/// </summary>
+	/// <param name="assertion"></param>
 	public static void Assert(bool assertion)
 	{
 		if (!assertion)

@@ -83,15 +83,19 @@ namespace Simias.Sync.Client
 
 	#endregion
 
+	#region SyncClient
+
 	/// <summary>
 	/// Class that manages the synchronization for all collection.
 	/// </summary>
 	public class SyncClient : Simias.Service.IThreadService
 	{
+		#region Fields
+
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncClient));
 		Configuration		conf;
 		Store				store;
-		Hashtable			collections;
+		static Hashtable	collections;
 		EventSubscriber		storeEvents;
 		Queue				syncQueue;
 		ManualResetEvent	queueEvent;
@@ -99,6 +103,9 @@ namespace Simias.Sync.Client
 		bool				shuttingDown;
 		bool				paused;
 
+		#endregion
+
+		#region public methods.
 
 		/// <summary>
 		/// Called by The CollectionSyncClient when it is time to run another sync pass.
@@ -113,6 +120,32 @@ namespace Simias.Sync.Client
 				queueEvent.Set();
 			}
 		}
+
+		/// <summary>
+		/// Returns the number of bytes to sync to the server.
+		/// </summary>
+		/// <param name="collectionID"></param>
+		/// <param name="fileCount">Returns the number of files to sync to the server.</param>
+		/// <returns>The size of the files.</returns>
+		public static ulong GetSizeToSync(string collectionID, out uint fileCount)
+		{
+			CollectionSyncClient sc;
+			lock (collections)
+			{
+				sc = (CollectionSyncClient)collections[collectionID];
+			}
+			if (sc != null)
+				return sc.GetSyncSize(out fileCount);
+			else
+			{
+				fileCount = 0;
+				return 0;
+			}
+		}
+
+		#endregion
+
+		#region private methods.
 
 		/// <summary>
 		/// The main synchronization thread.
@@ -160,6 +193,51 @@ namespace Simias.Sync.Client
 				}
 			}
 		}
+
+		/// <summary>
+		/// Called when a node is created.
+		/// </summary>
+		/// <param name="args">Arguments of the create.</param>
+		private void storeEvents_NodeCreated(NodeEventArgs args)
+		{
+			// If the ID matched the Collection this is a collection.
+			if (args.ID == args.Collection)
+			{
+				lock (collections)
+				{
+					// Add this to the collections to sync if not already added.
+					if (!collections.Contains(args.ID))
+					{
+						collections.Add(args.ID, new CollectionSyncClient(args.ID, new TimerCallback(TimeToSync)));
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Called when a Node is deleted.
+		/// </summary>
+		/// <param name="args">Arguments of the delete.</param>
+		private void storeEvents_NodeDeleted(NodeEventArgs args)
+		{
+			// If the ID matched the Collection this is a collection.
+			if (args.ID == args.Collection)
+			{
+				lock (collections)
+				{
+					// Remove the CollectionSyncClient.
+					CollectionSyncClient client = (CollectionSyncClient)collections[args.ID];
+					if (client != null)
+					{
+						client.Stop();
+						collections.Remove(args.ID);
+						client.Dispose();
+					}
+				}
+			}
+		}
+
+		#endregion
 
 		#region IThreadService Members
 
@@ -240,56 +318,19 @@ namespace Simias.Sync.Client
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Called when a node is created.
-		/// </summary>
-		/// <param name="args">Arguments of the create.</param>
-		private void storeEvents_NodeCreated(NodeEventArgs args)
-		{
-			// If the ID matched the Collection this is a collection.
-			if (args.ID == args.Collection)
-			{
-				lock (collections)
-				{
-					// Add this to the collections to sync if not already added.
-					if (!collections.Contains(args.ID))
-					{
-						collections.Add(args.ID, new CollectionSyncClient(args.ID, new TimerCallback(TimeToSync)));
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Called when a Node is deleted.
-		/// </summary>
-		/// <param name="args">Arguments of the delete.</param>
-		private void storeEvents_NodeDeleted(NodeEventArgs args)
-		{
-			// If the ID matched the Collection this is a collection.
-			if (args.ID == args.Collection)
-			{
-				lock (collections)
-				{
-					// Remove the CollectionSyncClient.
-					CollectionSyncClient client = (CollectionSyncClient)collections[args.ID];
-					if (client != null)
-					{
-						client.Stop();
-						collections.Remove(args.ID);
-						client.Dispose();
-					}
-				}
-			}
-		}
 	}
+
+	#endregion
+
+	#region CollectionSyncClient
 
 	/// <summary>
 	/// Class that implements the synchronization logic for a collection.
 	/// </summary>
 	public class CollectionSyncClient
 	{
+		#region fields
+
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
 		SimiasSyncService service;
 		Store			store;
@@ -314,8 +355,10 @@ namespace Simias.Sync.Client
 		static int		BATCH_SIZE = 50;
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
+
+		#endregion
 	
-		
+		#region Constructor / Finalizer
 		/// <summary>
 		/// Construct a new CollectionSyncClient.
 		/// </summary>
@@ -346,18 +389,189 @@ namespace Simias.Sync.Client
 			}
 		}
 
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
 		~CollectionSyncClient()
 		{
 			Dispose(true);
 		}
 
+		#endregion
+
+		#region public Methods.
+
+		/// <summary>
+		/// Returns the name of the collection.
+		/// </summary>
+		/// <returns>Name of the collection.</returns>
+		public override string ToString()
+		{
+			return collection.Name;
+		}
+
+		#endregion
+
+		#region internal Methods.
+
 		/// <summary>
 		/// Called to dispose the CollectionSyncClient.
 		/// </summary>
-		public void Dispose()
+		internal void Dispose()
 		{
 			Dispose(false);
 		}
+
+		/// <summary>
+		/// Called to schedule a sync operation a the set sync Interval.
+		/// </summary>
+		internal void Reschedule()
+		{
+			if (!stopping)
+				timer.Change(collection.Interval * 1000, Timeout.Infinite);
+		}
+
+		/// <summary>
+		/// Called to stop this instance from sync-ing.
+		/// </summary>
+		internal void Stop()
+		{
+			timer.Dispose();
+			stopping = true;
+		}
+
+		/// <summary>
+		/// Get the number of bytes to sync.
+		/// </summary>
+		/// <param name="fileCount">Returns the number of files to be synced.</param>
+		/// <returns>The number of bytes to sync.</returns>
+		internal ulong GetSyncSize(out uint fileCount)
+		{
+			ulong size = 0;
+			fileCount = 0;
+			if (collection.Role != SyncCollectionRoles.Slave)
+			{
+				return size;
+			}
+			lock (this)
+			{
+				NodeStamp[]		cstamps;
+				fileMonitor.CheckForFileChanges();
+				GetChangeLogContext(out serverContext, out clientContext);
+				if (GetChangedNodeStamps(out cstamps, ref clientContext))
+				{
+					foreach (NodeStamp ns in cstamps)
+					{
+						if (ns.type == NodeTypes.BaseFileNodeType)
+						{
+							BaseFileNode bfn = collection.GetNodeByID(ns.id) as BaseFileNode;
+							if (bfn != null)
+							{
+								fileCount++;
+								size += (ulong)(new FileInfo(bfn.GetFullPath(collection)).Length);
+							}
+						}
+					}
+				}
+				return size;
+			}
+		}
+
+		/// <summary>
+		/// Called to synchronize this collection.
+		/// </summary>
+		internal void SyncNow()
+		{
+			lock (this)
+			{
+				// Refresh the collection.
+				collection.Refresh();
+			
+				// Sync the file system with the local store.
+				fileMonitor.CheckForFileChanges();
+
+				// We may have just created or deleted nodes wait for the events to settle.
+				Thread.Sleep(500);
+
+				// Setup the url to the server.
+				service = new SimiasSyncService();
+				service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
+				service.CookieContainer = new CookieContainer();
+			
+				SyncNodeStamp[] sstamps;
+				NodeStamp[]		cstamps;
+			
+				// Get the current sync state.
+				GetChangeLogContext(out serverContext, out clientContext);
+				bool gotClientChanges = GetChangedNodeStamps(out cstamps, ref clientContext);
+
+				// Setup the SyncStartInfo.
+				SyncStartInfo si = new SyncStartInfo();
+				si.CollectionID = collection.ID;
+				si.Context = serverContext;
+				si.ChangesOnly = gotClientChanges | !SyncComplete;
+				si.ClientHasChanges = si.ChangesOnly;
+			
+				// Start the Sync pass and save the rights.
+				sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
+
+				serverContext = si.Context;
+				rights = si.Access;
+
+				switch (si.Status)
+				{
+					case SyncColStatus.Busy:
+						// BUGBUG. we may need to back off.
+						// Re-queue this to run.
+						callback(this);
+						break;
+					case SyncColStatus.NotFound:
+						// The collection does not exist or we do not have rights.
+						collection.Commit(collection.Delete());
+						break;
+					case SyncColStatus.NoWork:
+						break;
+					case SyncColStatus.Success:
+					switch (rights)
+					{
+						case Rights.Deny:
+							break;
+						case Rights.Admin:
+						case Rights.ReadOnly:
+						case Rights.ReadWrite:
+							try
+							{
+								// Now lets determine the files that need to be synced.
+								if (si.ChangesOnly)
+								{
+									// We only need to look at the changed nodes.
+									ProcessChangedNodeStamps(sstamps, cstamps);
+								}
+								else
+								{
+									// We don't have any state. So do a full sync.
+									cstamps =  GetNodeStamps();
+									ReconcileAllNodeStamps(sstamps, cstamps);
+								}
+								ExecuteSync();
+							}
+							finally
+							{
+								// Save the sync state.
+								SetChangeLogContext(serverContext, clientContext, SyncComplete);
+								// End the sync.
+								service.Stop();
+							}
+							break;
+					}
+						break;
+				}
+			}
+		}
+
+		#endregion
+
+		#region private Methods
 
 		/// <summary>
 		/// Called to dispose the CollectionSyncClient.
@@ -380,16 +594,6 @@ namespace Simias.Sync.Client
 				fileMonitor = null;
 			}
 		}
-
-		/// <summary>
-		/// Returns the name of the collection.
-		/// </summary>
-		/// <returns>Name of the collection.</returns>
-		public override string ToString()
-		{
-			return collection.Name;
-		}
-
 
 		/// <summary>
 		/// Initializes the instance.
@@ -434,112 +638,7 @@ namespace Simias.Sync.Client
 			}
 		}
 
-		/// <summary>
-		/// Called to schedule a sync operation a the set sync Interval.
-		/// </summary>
-		internal void Reschedule()
-		{
-			if (!stopping)
-				timer.Change(collection.Interval * 1000, Timeout.Infinite);
-		}
-
-		/// <summary>
-		/// Called to stop this instance from sync-ing.
-		/// </summary>
-		internal void Stop()
-		{
-			timer.Dispose();
-			stopping = true;
-		}
-
-		/// <summary>
-		/// Called to synchronize this collection.
-		/// </summary>
-		internal void SyncNow()
-		{
-			// Refresh the collection.
-			collection.Refresh();
-			
-			// Sync the file system with the local store.
-			fileMonitor.CheckForFileChanges();
-
-			// We may have just created or deleted nodes wait for the events to settle.
-			Thread.Sleep(500);
-
-			// Setup the url to the server.
-			service = new SimiasSyncService();
-			service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
-			service.CookieContainer = new CookieContainer();
-			
-			SyncNodeStamp[] sstamps;
-			NodeStamp[]		cstamps;
-			
-			// Get the current sync state.
-			GetChangeLogContext(out serverContext, out clientContext);
-			bool gotClientChanges = GetChangedNodeStamps(out cstamps, ref clientContext);
-
-			// Setup the SyncStartInfo.
-			SyncStartInfo si = new SyncStartInfo();
-			si.CollectionID = collection.ID;
-			si.Context = serverContext;
-			si.ChangesOnly = gotClientChanges | !SyncComplete;
-			si.ClientHasChanges = si.ChangesOnly;
-			
-			// Start the Sync pass and save the rights.
-			sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
-
-			serverContext = si.Context;
-			rights = si.Access;
-
-			switch (si.Status)
-			{
-				case SyncColStatus.Busy:
-					// BUGBUG. we may need to back off.
-					// Re-queue this to run.
-					callback(this);
-					break;
-				case SyncColStatus.NotFound:
-					// The collection does not exist or we do not have rights.
-					collection.Commit(collection.Delete());
-					break;
-				case SyncColStatus.NoWork:
-					break;
-				case SyncColStatus.Success:
-				switch (rights)
-					{
-						case Rights.Deny:
-							break;
-						case Rights.Admin:
-						case Rights.ReadOnly:
-						case Rights.ReadWrite:
-							try
-							{
-								// Now lets determine the files that need to be synced.
-								if (si.ChangesOnly)
-								{
-									// We only need to look at the changed nodes.
-									ProcessChangedNodeStamps(sstamps, cstamps);
-								}
-								else
-								{
-									// We don't have any state. So do a full sync.
-									cstamps =  GetNodeStamps();
-									ReconcileAllNodeStamps(sstamps, cstamps);
-								}
-								ExecuteSync();
-							}
-							finally
-							{
-								// Save the sync state.
-								SetChangeLogContext(serverContext, clientContext, SyncComplete);
-								// End the sync.
-								service.Stop();
-							}
-							break;
-					}
-					break;
-			}
-		}
+		
 
 		/// <summary>
 		/// Set the new context strings that are used by ChangeLog.
@@ -548,7 +647,7 @@ namespace Simias.Sync.Client
 		/// <param name="serverContext">The server context.</param>
 		/// <param name="clientContext">The client context.</param>
 		/// <param name="persist">Persist the changes if true.</param>
-		internal void SetChangeLogContext(string serverContext, string clientContext, bool persist)
+		private void SetChangeLogContext(string serverContext, string clientContext, bool persist)
 		{
 			this.serverContext = serverContext;
 			this.clientContext = clientContext;
@@ -639,7 +738,7 @@ namespace Simias.Sync.Client
 		/// <param name="nodes">returns the list of changes.</param>
 		/// <param name="context">The context handed back from the last call.</param>
 		/// <returns>false the call failed. The context is initialized.</returns>
-		internal bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string context)
+		private bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string context)
 		{
 			log.Debug("GetChangedNodeStamps Start");
 			EventContext eventContext;
@@ -715,7 +814,7 @@ namespace Simias.Sync.Client
 		/// Determins how this node should be retrieved from the server.
 		/// </summary>
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
-		void GetNodeFromServer(SyncNodeStamp stamp)
+		private void GetNodeFromServer(SyncNodeStamp stamp)
 		{
 			if (stamp.Operation == SyncOperation.Delete)
 			{
@@ -754,7 +853,7 @@ namespace Simias.Sync.Client
 		/// Determins how this node should be sent to the server.
 		/// </summary>
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
-		void PutNodeToServer(NodeStamp stamp)
+		private void PutNodeToServer(NodeStamp stamp)
 		{
 			if (stamp.type == NodeTypes.TombstoneType || stamp.changeType == ChangeLogRecord.ChangeLogOp.Deleted)
 			{
@@ -793,7 +892,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="sstamps">The server nodes.</param>
 		/// <param name="cstamps">The client nodes.</param>
-		void ReconcileAllNodeStamps(SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
+		private void ReconcileAllNodeStamps(SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
 		{
 			// Clear all the tables because we are doing a full sync.
 			killOnClient.Clear();
@@ -877,7 +976,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Do the work that is needed to synchronize the client and server.
 		/// </summary>
-		void ExecuteSync()
+		private void ExecuteSync()
 		{
 			// Get the updates from the server.
 			ProcessNodesFromServer();
@@ -894,7 +993,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Delete the nodes on the client.
 		/// </summary>
-		void ProcessKillOnClient()
+		private void ProcessKillOnClient()
 		{
 			// remove deleted nodes from client
 			if (killOnClient.Count > 0)
@@ -922,7 +1021,6 @@ namespace Simias.Sync.Client
 						// If this is a collision node then delete the collision file.
 						if (collection.HasCollisions(node))
 						{
-							// BUGBUG what about an update conflict.
 							Conflict conflict = new Conflict(collection, node);
 							string conflictPath;
 							if (conflict.IsFileNameConflict)
@@ -964,7 +1062,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Copy the generic nodes from the server.
 		/// </summary>
-		void ProcessNodesFromServer()
+		private void ProcessNodesFromServer()
 		{
 			SyncNode[] updates = null;
 
@@ -1001,7 +1099,7 @@ namespace Simias.Sync.Client
 		/// Save the nodes from the server in the local store.
 		/// </summary>
 		/// <param name="nodes"></param>
-		public void StoreNodes(SyncNode [] nodes)
+		private void StoreNodes(SyncNode [] nodes)
 		{
 			Node[]		commitList = new Node[nodes.Length];
 
@@ -1061,7 +1159,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Get the directory nodes from the server.
 		/// </summary>
-		void ProcessDirsFromServer()
+		private void ProcessDirsFromServer()
 		{
 			SyncNode[] updates = null;
 
@@ -1106,7 +1204,7 @@ namespace Simias.Sync.Client
 		/// Called to import a node.
 		/// </summary>
 		/// <param name="node"></param>
-		void Import(Node node)
+		private void Import(Node node)
 		{
 			collection.ImportNode(node, false, 0);
 			node.IncarnationUpdate = node.LocalIncarnation;
@@ -1116,7 +1214,7 @@ namespace Simias.Sync.Client
 		/// Store the directory node in the local store also create the directory.
 		/// </summary>
 		/// <param name="snode">The node to store.</param>
-		void StoreDir(SyncNode snode)
+		private void StoreDir(SyncNode snode)
 		{
 			try
 			{
@@ -1162,7 +1260,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Get the file nodes from the server.
 		/// </summary>
-		void ProcessFilesFromServer()
+		private void ProcessFilesFromServer()
 		{
 			if (filesFromServer.Count == 0)
 				return;
@@ -1210,7 +1308,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Delete nodes from the server.
 		/// </summary>
-		void ProcessKillOnServer()
+		private void ProcessKillOnServer()
 		{
 			// remove deleted nodes from server
 			if (killOnServer.Count == 0)
@@ -1252,7 +1350,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Upload the nodes to the server.
 		/// </summary>
-		void ProcessNodesToServer()
+		private void ProcessNodesToServer()
 		{
 			// get small nodes and files from server
 			if (nodesToServer.Count == 0)
@@ -1325,7 +1423,7 @@ namespace Simias.Sync.Client
 			}
 		}
 
-		void ProcessDirsToServer()
+		private void ProcessDirsToServer()
 		{
 			// get small nodes and files from server
 			if (dirsToServer.Count == 0)
@@ -1399,7 +1497,7 @@ namespace Simias.Sync.Client
 			}
 		}
 
-		void ProcessFilesToServer()
+		private void ProcessFilesToServer()
 		{
 			if (filesToServer.Count == 0)
 				return;
@@ -1447,5 +1545,9 @@ namespace Simias.Sync.Client
 				}
 			}
 		}
+
+		#endregion
 	}
+
+	#endregion
 }
