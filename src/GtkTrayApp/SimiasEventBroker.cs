@@ -219,6 +219,11 @@ namespace Novell.iFolder
 	public delegate void iFolderUserDeletedEventHandler(object sender,
 							iFolderUserDeletedEventArgs args);
 
+	public delegate void CollectionSyncEventHandler(object sender,
+							CollectionSyncEventArgs args);
+
+	public delegate void FileSyncEventHandler(object sender,
+							FileSyncEventArgs args);
 
 	public class SimiasEventBroker
 	{
@@ -227,7 +232,11 @@ namespace Novell.iFolder
 		private IProcEventClient	simiasEventClient;
 
 		private Gtk.ThreadNotify	SimiasEventFired;
-		private Queue				EventQueue;
+		private Gtk.ThreadNotify	SyncEventFired;
+		private Gtk.ThreadNotify	FileEventFired;
+		private Queue				NodeEventQueue;
+		private Queue				SyncEventQueue;
+		private Queue				FileEventQueue;
 
 		public event iFolderAddedEventHandler iFolderAdded;
 		public event iFolderChangedEventHandler iFolderChanged;
@@ -236,12 +245,21 @@ namespace Novell.iFolder
 		public event iFolderUserChangedEventHandler iFolderUserChanged;
 		public event iFolderUserDeletedEventHandler iFolderUserDeleted;
 
+		public event CollectionSyncEventHandler CollectionSyncEventFired;
+		public event FileSyncEventHandler FileSyncEventFired;
+
 		public SimiasEventBroker()
 		{
-			EventQueue = new Queue();
+			NodeEventQueue = new Queue();
+			SyncEventQueue = new Queue();
+			FileEventQueue = new Queue();
 
 			SimiasEventFired = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OnSimiasEventFired) );
+			SyncEventFired = new Gtk.ThreadNotify(
+							new Gtk.ReadyEvent(OnSyncEventFired) );
+			FileEventFired = new Gtk.ThreadNotify(
+							new Gtk.ReadyEvent(OnFileEventFired) );
 		}
 
 
@@ -302,6 +320,12 @@ namespace Novell.iFolder
 
 			simiasEventClient.SetEvent( IProcEventAction.AddNodeDeleted,
 				new IProcEventHandler( SimiasEventNodeDeletedHandler ) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddCollectionSync,
+				new IProcEventHandler( SimiasEventSyncCollectionHandler) );
+
+			simiasEventClient.SetEvent( IProcEventAction.AddFileSync,
+				new IProcEventHandler( SimiasEventSyncFileHandler) );
 		}
 
 
@@ -325,15 +349,40 @@ namespace Novell.iFolder
 		private void ErrorHandler( ApplicationException e, object context )
 		{
 /*
-			lock(EventQueue)
+			lock(NodeEventQueue)
 			{
-				EventQueue.Enqueue(new iFolderEvent(e.Message));
+				NodeEventQueue.Enqueue(new iFolderEvent(e.Message));
 				SimiasEventFired.WakeupMain();
 			}
 */
 		}
 
 
+
+		private void SimiasEventSyncFileHandler(SimiasEventArgs args)
+		{
+			FileSyncEventArgs fileSyncArgs = args as FileSyncEventArgs;
+
+			lock(FileEventQueue)
+			{
+				FileEventQueue.Enqueue(fileSyncArgs);
+				FileEventFired.WakeupMain();
+			}
+		}
+
+
+
+		private void SimiasEventSyncCollectionHandler(SimiasEventArgs args)
+		{
+			CollectionSyncEventArgs syncEventArgs =
+				args as CollectionSyncEventArgs;
+
+			lock(SyncEventQueue)
+			{
+				SyncEventQueue.Enqueue(syncEventArgs);
+				SyncEventFired.WakeupMain();
+			}
+		}
 
 
 		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
@@ -384,9 +433,9 @@ namespace Novell.iFolder
 								if(localiFolder != null)
 									return;
 								
-								lock(EventQueue)
+								lock(NodeEventQueue)
 								{
-									EventQueue.Enqueue(new SimiasEvent(
+									NodeEventQueue.Enqueue(new SimiasEvent(
 										ifolder, null, ifolder.ID, null,
 										SimiasEventType.NewiFolder));
 									SimiasEventFired.WakeupMain();
@@ -418,9 +467,9 @@ namespace Novell.iFolder
 									(newuser.UserID != 
 											ifSettings.CurrentUserID) )
 								{
-									lock(EventQueue)
+									lock(NodeEventQueue)
 									{
-										EventQueue.Enqueue(new SimiasEvent(
+										NodeEventQueue.Enqueue(new SimiasEvent(
 											null, newuser, nargs.Collection,
 											newuser.UserID,
 											SimiasEventType.NewUser));
@@ -446,9 +495,9 @@ namespace Novell.iFolder
 									ifws.GetiFolder(nargs.Collection);
 							if(ifolder != null)
 							{
-								lock(EventQueue)
+								lock(NodeEventQueue)
 								{
-									EventQueue.Enqueue(new SimiasEvent(
+									NodeEventQueue.Enqueue(new SimiasEvent(
 										ifolder, null, ifolder.ID, null,
 										SimiasEventType.NewiFolder));
 									SimiasEventFired.WakeupMain();
@@ -483,9 +532,9 @@ namespace Novell.iFolder
 									ifws.GetiFolder(nargs.Collection);
 							if( (ifolder != null) && (ifolder.HasConflicts) )
 							{
-								lock(EventQueue)
+								lock(NodeEventQueue)
 								{
-									EventQueue.Enqueue(new SimiasEvent(
+									NodeEventQueue.Enqueue(new SimiasEvent(
 										ifolder, null, ifolder.ID, null,
 										SimiasEventType.ChangediFolder));
 									SimiasEventFired.WakeupMain();
@@ -512,9 +561,9 @@ namespace Novell.iFolder
 								(newuser.UserID != 
 										ifSettings.CurrentUserID) )
 							{
-								lock(EventQueue)
+								lock(NodeEventQueue)
 								{
-									EventQueue.Enqueue(new SimiasEvent(
+									NodeEventQueue.Enqueue(new SimiasEvent(
 										null, newuser, nargs.Collection,
 										newuser.UserID,
 										SimiasEventType.ChangedUser));
@@ -545,9 +594,9 @@ namespace Novell.iFolder
 
 								if(ifolder != null)
 								{
-									lock(EventQueue)
+									lock(NodeEventQueue)
 									{
-										EventQueue.Enqueue(new SimiasEvent(
+										NodeEventQueue.Enqueue(new SimiasEvent(
 											ifolder, null, ifolder.ID, null,
 											SimiasEventType.ChangediFolder));
 										SimiasEventFired.WakeupMain();
@@ -579,9 +628,9 @@ namespace Novell.iFolder
 						if( (ifSettings != null) && 
 							(nargs.Collection == ifSettings.DefaultPOBoxID) )
 						{
-							lock(EventQueue)
+							lock(NodeEventQueue)
 							{
-								EventQueue.Enqueue(new SimiasEvent(
+								NodeEventQueue.Enqueue(new SimiasEvent(
 									null, null, nargs.ID, null,
 									SimiasEventType.DeliFolder));
 								SimiasEventFired.WakeupMain();
@@ -592,9 +641,9 @@ namespace Novell.iFolder
 				}
 				case "Collection":
 				{	
-					lock(EventQueue)
+					lock(NodeEventQueue)
 					{
-						EventQueue.Enqueue(new SimiasEvent(
+						NodeEventQueue.Enqueue(new SimiasEvent(
 							null, null, nargs.Collection, null,
 							SimiasEventType.DeliFolder));
 						SimiasEventFired.WakeupMain();
@@ -613,9 +662,9 @@ namespace Novell.iFolder
 
 							if(ifolder != null)
 							{
-								lock(EventQueue)
+								lock(NodeEventQueue)
 								{
-									EventQueue.Enqueue(new SimiasEvent(
+									NodeEventQueue.Enqueue(new SimiasEvent(
 										null, null, nargs.Collection, nargs.ID,
 										SimiasEventType.DelUser));
 									SimiasEventFired.WakeupMain();
@@ -633,23 +682,82 @@ namespace Novell.iFolder
 		}
 
 
+
+		private void OnFileEventFired()
+		{
+			bool hasmore = false;
+
+			lock(FileEventQueue)
+			{
+				hasmore = (FileEventQueue.Count > 0);
+			}
+			while(hasmore)
+			{
+				FileSyncEventArgs args;
+
+				lock(FileEventQueue)
+				{
+					args = (FileSyncEventArgs)FileEventQueue.Dequeue();
+				}
+
+				if(FileSyncEventFired != null)
+					FileSyncEventFired(this, args);
+
+				lock(FileEventQueue)
+				{
+					hasmore = (FileEventQueue.Count > 0);
+				}
+			}
+		
+		}
+
+
+		private void OnSyncEventFired()
+		{
+			bool hasmore = false;
+
+			lock(SyncEventQueue)
+			{
+				hasmore = (SyncEventQueue.Count > 0);
+			}
+			while(hasmore)
+			{
+				CollectionSyncEventArgs args;
+
+				lock(SyncEventQueue)
+				{
+					args = (CollectionSyncEventArgs)SyncEventQueue.Dequeue();
+				}
+
+				if(CollectionSyncEventFired != null)
+					CollectionSyncEventFired(this, args);
+
+				lock(SyncEventQueue)
+				{
+					hasmore = (SyncEventQueue.Count > 0);
+				}
+			}
+		}
+
+
+
 		private void OnSimiasEventFired()
 		{
 			bool hasmore = false;
 			// at this point, we are running in the same thread
 			// so we can safely show events
-			lock(EventQueue)
+			lock(NodeEventQueue)
 			{
-				hasmore = (EventQueue.Count > 0);
+				hasmore = (NodeEventQueue.Count > 0);
 			}
 
 			while(hasmore)
 			{
 				SimiasEvent sEvent;
 
-				lock(EventQueue)
+				lock(NodeEventQueue)
 				{
-					sEvent = (SimiasEvent)EventQueue.Dequeue();
+					sEvent = (SimiasEvent)NodeEventQueue.Dequeue();
 				}
 				
 				switch(sEvent.EventType)
@@ -692,9 +800,9 @@ namespace Novell.iFolder
 						break;
 				}
 
-				lock(EventQueue)
+				lock(NodeEventQueue)
 				{
-					hasmore = (EventQueue.Count > 0);
+					hasmore = (NodeEventQueue.Count > 0);
 				}
 			}
 		}

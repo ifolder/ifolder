@@ -58,6 +58,7 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			RunningPixbuf;
 		private Gdk.Pixbuf			StartingPixbuf;
 		private Gdk.Pixbuf			StoppingPixbuf;
+		private Gdk.PixbufAnimation	SyncingPixbuf;
 		private Gtk.EventBox		eBox;
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
@@ -87,6 +88,8 @@ namespace Novell.iFolder
 					new Pixbuf(Util.ImagesPath("ifolder-startup.png"));
 			StoppingPixbuf = 
 					new Pixbuf(Util.ImagesPath("ifolder-shutdown.png"));
+			SyncingPixbuf =
+					new Gdk.PixbufAnimation(Util.ImagesPath("ifolder.gif"));
 
 			gAppIcon = new Gtk.Image(RunningPixbuf);
 
@@ -175,6 +178,25 @@ namespace Novell.iFolder
 			iFolderStateChanged.WakeupMain();
 		}
 
+
+		private void OniFolderSyncEvent(object o, CollectionSyncEventArgs args)
+		{
+			switch(args.Action)
+			{
+				case Action.StartSync:
+				{
+					gAppIcon.FromAnimation = SyncingPixbuf;
+					// TODO: Add a log entry that we started
+					break;
+				}
+				case Action.StopSync:
+				{
+					gAppIcon.Pixbuf = RunningPixbuf;
+					// TODO: Add a log entry that we stopped
+					break;
+				}
+			}
+		}
 
 
 		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
@@ -268,6 +290,10 @@ namespace Novell.iFolder
 						EventBroker.iFolderUserAdded +=
 							new iFolderUserAddedEventHandler(
 												OniFolderUserAddedEvent);
+						EventBroker.CollectionSyncEventFired +=
+							new CollectionSyncEventHandler(
+												OniFolderSyncEvent);
+
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
