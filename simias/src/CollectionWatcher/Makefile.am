@@ -1,19 +1,19 @@
 CollectionWatcher_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/CollectionWatcher.cs
 CollectionWatcher_CSFILES_CSC := $(subst /,$(SEP),$(CollectionWatcher_CSFILES))
-CollectionWatcher_INCLUDES = 
+CollectionWatcher_INCLUDES =
 CollectionWatcher_RESOURCES =
 CollectionWatcher_FLAGS = $(CSC_LIBFLAG)
-CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Identity.dll CollectionEvents.dll CollectionStore.dll Common.dll Agent.dll SyncCommon.dll
+CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Common.dll Agent.dll SyncCommon.dll
 CollectionWatcher_LIBPATH = Library ../CollectionStore ../StoreProvider ../Identity ../Common ../SyncCommon ../Configuration ../CollectionEvents ../Agent
 
 NUNIT_TESTS := CollectionWatcherTests.dll
 
 CollectionWatcherTests_CSFILES = $(srcdir)/Tests/CollectionWatcherTests.cs $(srcdir)/Tests/AssemblyInfo.cs
 CollectionWatcherTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionWatcherTests_CSFILES))
-CollectionWatcherTests_INCLUDES = 
+CollectionWatcherTests_INCLUDES =
 CollectionWatcherTests_RESOURCES =
 CollectionWatcherTests_FLAGS = $(CSC_LIBFLAG)
-CollectionWatcherTests_LIBS = $(CollectionWatcher_LIBS) $(SYSTEM_XML) nunit.framework.dll CollectionWatcher.dll 
+CollectionWatcherTests_LIBS = $(CollectionWatcher_LIBS) $(SYSTEM_XML) nunit.framework.dll CollectionWatcher.dll
 CollectionWatcherTests_LIBPATH = $(CollectionWatcher_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(CollectionWatcher_CSFILES) $(CollectionWatcherTests_CSFILES)
@@ -31,12 +31,12 @@ CollectionWatcherTests.dll: $(CollectionWatcherTests_CSFILES) $(CollectionWatche
 install-exec-local: CollectionWatcher.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) CollectionWatcher.dll $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
 		rm -f CollectionWatcher.dll CollectionWatcherTests.xml $(NUNIT_TESTS); \
 		rm -rf cwatcher
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -48,7 +48,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:

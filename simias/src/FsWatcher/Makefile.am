@@ -1,19 +1,19 @@
 FsWatcher_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FsWatcher.cs
 FsWatcher_CSFILES_CSC := $(subst /,$(SEP),$(FsWatcher_CSFILES))
-FsWatcher_INCLUDES = 
+FsWatcher_INCLUDES =
 FsWatcher_RESOURCES =
 FsWatcher_FLAGS = $(CSC_EXEFLAG) $(ICON_FLAG)$(srcdir)/App$(ICON_EXT)
-FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll Identity.dll CollectionStore.dll UserService.dll
-FsWatcher_LIBPATH = ../Configuration ../StoreProvider ../CollectionStore ../CollectionEvents ../UserService ../Identity
+FsWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll UserService.dll
+FsWatcher_LIBPATH = ../Configuration ../StoreProvider ../CollectionStore ../CollectionEvents ../UserService
 
-NUNIT_TESTS := 
+NUNIT_TESTS :=
 
-FsWatcherTests_CSFILES = 
+FsWatcherTests_CSFILES =
 FsWatcherTests_CSFILES_CSC := $(subst /,$(SEP),$(FsWatcherTests_CSFILES))
-FsWatcherTests_INCLUDES = 
+FsWatcherTests_INCLUDES =
 FsWatcherTests_RESOURCES =
-FsWatcherTests_FLAGS = 
-FsWatcherTests_LIBS = 
+FsWatcherTests_FLAGS =
+FsWatcherTests_LIBS =
 FsWatcherTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(FsWatcher_CSFILES) $(FsWatcherTests_CSFILES) App$(ICON_EXT)
@@ -31,10 +31,10 @@ FsWatcher.exe: $(FsWatcher_CSFILES) $(FsWatcher_RESOURCES)
 install-exec-local: FsWatcher.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) FsWatcher.exe $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f FsWatcher.exe FsWatcherTests.xml $(NUNIT_TESTS)
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -46,7 +46,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:

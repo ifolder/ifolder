@@ -1,16 +1,16 @@
 Agent_CSFILES = $(srcdir)/Library/AgentFactory.cs $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/IInviteAgent.cs $(srcdir)/Library/Invitation.cs
 Agent_CSFILES_CSC := $(subst /,$(SEP),$(Agent_CSFILES))
-Agent_INCLUDES = 
+Agent_INCLUDES =
 Agent_RESOURCES =
 Agent_FLAGS = $(CSC_LIBFLAG)
-Agent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Identity.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll
+Agent_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll
 Agent_LIBPATH = ../Configuration ../Identity ../StoreProvider ../CollectionEvents ../CollectionStore Library
 
 NUNIT_TESTS := AgentTests.dll
 
 AgentTests_CSFILES = $(srcdir)/Tests/AgentTests.cs $(srcdir)/Tests/AssemblyInfo.cs
 AgentTests_CSFILES_CSC := $(subst /,$(SEP),$(AgentTests_CSFILES))
-AgentTests_INCLUDES = 
+AgentTests_INCLUDES =
 AgentTests_RESOURCES =
 AgentTests_FLAGS = $(CSC_LIBFLAG)
 AgentTests_LIBS = $(Agent_LIBS) $(SYSTEM_XML) Common.dll Agent.dll nunit.framework.dll
@@ -31,10 +31,10 @@ AgentTests.dll: $(AgentTests_CSFILES) $(AgentTests_RESOURCES)
 install-exec-local: Agent.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Agent.dll $(DESTDIR)$(bindir)
-    
+
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.xml invitation.ifi $(NUNIT_TESTS)
-    
+
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
@@ -46,7 +46,7 @@ CLEAN_DIRS = .cstore
 clean-local:
 	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
 	rm -rf $(CLEAN_DIRS)
-    
+
 distclean-local: clean
 
 maintainer-clean-local:
