@@ -388,6 +388,7 @@ namespace Novell.iFolder
 			dialog.Title = "Scotty's Helpful Hints";
 			dialog.Run();
 			dialog.Hide();
+			dialog.Destroy();
 		}
 
 
@@ -424,6 +425,7 @@ namespace Novell.iFolder
 			dialog.Title = "Scotty's Helpful Hints";
 			dialog.Run();
 			dialog.Hide();
+			dialog.Destroy();
 		}
 
 
@@ -515,10 +517,16 @@ namespace Novell.iFolder
 						ButtonsType.YesNo,
 						"Do you want to delete the selected Contacts?");
 
-						dialog.Response += 
-								new ResponseHandler(DeleteContactResponse);
 						dialog.Title = "Delete Contacts";
-						dialog.Show();
+						dialog.TransientFor = cpDialog;
+						int rc = dialog.Run();
+						dialog.Hide();
+						dialog.Destroy();
+
+						if(rc == (int)ResponseType.Yes)
+						{
+							DeleteSelectedContacts();
+						}
 					}
 					break;					
 				}
@@ -528,37 +536,38 @@ namespace Novell.iFolder
 
 
 
-		public void DeleteContactResponse(object sender, ResponseArgs args)
-		{
-			MessageDialog dialog = (MessageDialog) sender;
-
-			switch((ResponseType)args.ResponseId)
-			{
-				case ResponseType.Yes:
-					DeleteSelectedContacts();
-					break;
-				default:
-					break;
-			}
-			dialog.Destroy();
-		}
-
-
-
-
 		public void DeleteSelectedContacts()
 		{
+			TreeModel tModel;
+			Queue	iterQueue;
+
+			iterQueue = new Queue();
 			TreeSelection tSelect = ContactTreeView.Selection;
-			if(tSelect.CountSelectedRows() == 1)
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+			
+			// We can't remove anything while getting the iters
+			// because it will change the paths and we'll remove
+			// the wrong stuff.
+			foreach(TreePath tPath in treePaths)
 			{
-				TreeModel tModel;
 				TreeIter iter;
 
-				tSelect.GetSelected(out tModel, out iter);
-				if(tModel != null)
-					tModel = null;
-				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-				if(cnt.IsCurrentUser)
+				if(ContactTreeStore.GetIter(out iter, tPath))
+				{
+					iterQueue.Enqueue(iter);
+				}
+			}
+			
+			// Now that we have all of the TreeIters, loop and
+			// remove them all
+			while(iterQueue.Count > 0)
+			{
+				TreeIter iter = (TreeIter) iterQueue.Dequeue();
+				Contact c = (Contact) ContactTreeStore.GetValue(iter,0);
+				if(c.IsCurrentUser)
 				{
 					MessageDialog med = new MessageDialog(cpDialog,
 							DialogFlags.DestroyWithParent | DialogFlags.Modal,
@@ -568,18 +577,20 @@ namespace Novell.iFolder
 					med.Title = "This ain't right";
 					med.Run();
 					med.Hide();
-					return;
+					med.Destroy();
 				}
-
-				ContactTreeStore.Remove(out iter);
-
-				try
+				else
 				{
-					cnt.Delete();
-				}
-				catch(ApplicationException e)
-				{
-					Console.WriteLine(e);
+					ContactTreeStore.Remove(out iter);
+
+					try
+					{
+						c.Delete();
+					}
+					catch(ApplicationException e)
+					{
+						Console.WriteLine(e);
+					}
 				}
 			}
 		}
@@ -597,37 +608,27 @@ namespace Novell.iFolder
 						TreeSelection tSelect = BookTreeView.Selection;
 						if(tSelect.CountSelectedRows() > 0)
 						{
-							MessageDialog dialog = new MessageDialog(	cpDialog,
-									DialogFlags.Modal | DialogFlags.DestroyWithParent,
+							MessageDialog dialog = new MessageDialog(cpDialog,
+									DialogFlags.Modal | 
+									DialogFlags.DestroyWithParent,
 									MessageType.Question,
 									ButtonsType.YesNo,
 									"Do you want to delete the selected Address Books?");
 
-							dialog.Response += new ResponseHandler(DeleteBookResponse);
 							dialog.Title = "Delete Books";
-							dialog.Show();
+							dialog.TransientFor = cpDialog;
+							int rc = dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+
+							if(rc == (int)ResponseType.Yes)
+							{
+								DeleteSelectedBooks();
+							}
 						}
 						break;					
 					}
 			}
-		}
-
-
-
-
-		public void DeleteBookResponse(object sender, ResponseArgs args)
-		{
-			MessageDialog dialog = (MessageDialog) sender;
-
-			switch((ResponseType)args.ResponseId)
-			{
-				case ResponseType.Yes:
-					DeleteSelectedBooks();
-					break;
-				default:
-					break;
-			}
-			dialog.Destroy();
 		}
 
 
@@ -655,6 +656,7 @@ namespace Novell.iFolder
 					med.Title = "This ain't right";
 					med.Run();
 					med.Hide();
+					med.Destroy();
 					return;
 				}
 

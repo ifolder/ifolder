@@ -773,19 +773,10 @@ namespace Novell.iFolder
 
 		public void on_show_picker(object o, EventArgs args)
 		{
-
 			ContactPicker cp = new ContactPicker();
 			cp.AddrBookManager = abMan;
 			// cbWindow
 			int rc = cp.Run();
-			if(rc == -5)
-			{
-				foreach(Contact c in cp.Contacts)
-				{
-					Console.WriteLine("Contact Picked: {0}", c.FN);
-				}
-			}
-			Console.WriteLine("Returned from running: {0}", rc);
 		}
 
 		// This is code to setup the HTML Text view thingy
