@@ -186,15 +186,15 @@ namespace Simias.Sync
 			nodeContainer = null;
 			getAllNodes = false;
 
-			Collection col = store.GetCollectionByID(si.CollectionID);
-			if (col == null)
+			collection = store.GetCollectionByID(si.CollectionID);
+			if (collection == null)
 			{
 				si.Status = StartSyncStatus.NotFound;
 				return;
 			}
 
 			// If we are locked return busy.
-			if (col.IsLocked)
+			if (collection.IsLocked)
 			{
 				si.Status = StartSyncStatus.Locked;
 				return;
@@ -209,13 +209,13 @@ namespace Simias.Sync
 					userID = user;
 				// End BUGBUG
 				if (userID.Length != 0)
-					member = col.GetMemberByID(userID);
+					member = collection.GetMemberByID(userID);
 				if (member != null)
 				{
-					col.Impersonate(member);
+					collection.Impersonate(member);
 					rights = member.Rights;
 					si.Access = rights;
-					log.Info("Starting Sync of {0} for {1} rights : {2}.", col.Name, member.Name, rights);
+					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
 				}
 			}
 			else
@@ -242,7 +242,7 @@ namespace Simias.Sync
 						}
 					}
 
-					cLock = CollectionLock.GetLock(col.ID);
+					cLock = CollectionLock.GetLock(collection.ID);
 					if (cLock == null)
 					{
 						si.Status = StartSyncStatus.Busy;
