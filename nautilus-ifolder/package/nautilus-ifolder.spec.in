@@ -25,8 +25,8 @@
 %define prefix /opt/gnome
 
 Summary      : nautilus-ifolder
-Name         : nautilus-ifolder
-Version      : 0.1.0
+Name         : @PACKAGE@
+Version      : @VERSION@
 Release      : 1
 Copyright    : GPL
 Group        : Applications/Productivity
