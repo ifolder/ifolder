@@ -1,7 +1,7 @@
 Book_CSFILES = $(srcdir)/Main.cs
 Book_CSFILES_CSC := $(subst /,$(SEP),$(Book_CSFILES))
 Book_INCLUDES = 
-Book_RESOURCES = $(srcdir)/App$(ICON_EXT)
+Book_RESOURCES =
 Book_FLAGS = $(CSC_EXEFLAG)
 Book_LIBS = $(BookLib_LIBS) BookLib.dll
 Book_LIBPATH = $(BookLib_LIBPATH)
