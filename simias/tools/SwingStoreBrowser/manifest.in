@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: Novell, Inc.
+Implementation-Title: Simias Swing Store Browser
+Implementation-Description: Simias Store Browser
+Implementation-Vendor: Novell, Inc.
+Module-ID: simias-swing-store-browser
+Implementation-Version: @VERSION@
+Main-Class: com.novell.simias.storebrowser.SwingStoreBrowser
+
