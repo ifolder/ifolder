@@ -861,7 +861,7 @@ namespace Novell.FormsTrayApp
 									string domainID = notifyEventArgs.Message;
 
 									// See if there is a password saved on this domain.
-									CredentialType credType = simiasWebService.GetSavedDomainCredentials(domainID, out userID, out credentials);
+									CredentialType credType = simiasWebService.GetDomainCredentials(domainID, out userID, out credentials);
 									if ((credType == CredentialType.Basic) && (credentials != null))
 									{
 										// There are credentials that were saved on the domain. Use them to authenticate.
@@ -878,7 +878,7 @@ namespace Novell.FormsTrayApp
 											authStatus.statusCode == StatusCodes.InvalidCredentials )
 										{
 											// There are bad credentials stored. Remove them.
-											simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
+											simiasWebService.SetDomainCredentials(domainID, null, CredentialType.None);
 										}
 									}
 

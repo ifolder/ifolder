@@ -1800,11 +1800,11 @@ namespace Novell.FormsTrayApp
 					{
 						if (rememberPassword.Checked)
 						{
-							simiasWebService.SaveDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
+							simiasWebService.SetDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
 						}
 						else if (newAccountLvi == null)
 						{
-							simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
+							simiasWebService.SetDomainCredentials(domain.ID, null, CredentialType.None);
 						}
 
 						updatePassword = false;
@@ -2438,7 +2438,7 @@ namespace Novell.FormsTrayApp
 							{
 								string userID;
 								string credentials;
-								CredentialType credType = simiasWebService.GetSavedDomainCredentials(selectedDomain.ID, out userID, out credentials);
+								CredentialType credType = simiasWebService.GetDomainCredentials(selectedDomain.ID, out userID, out credentials);
 								if ((credType == CredentialType.Basic) && (credentials != null))
 								{
 									// There are credentials that were saved on the domain.
