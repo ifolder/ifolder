@@ -43,12 +43,12 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="storeObject">Store object that this POBox belongs to.</param>
 		/// <param name="node">Node object to construct POBox object from.</param>
-		public POBox(Store storeObject, Node node) :
+		internal POBox(Store storeObject, Node node) :
 			base (storeObject, node)
 		{
 		}
 
-		public POBox(Store storeObject, string collectionName, string domainName) :
+		internal POBox(Store storeObject, string collectionName, string domainName) :
 			base (storeObject, collectionName, domainName)
 		{
 			SetType(this, typeof(POBox).Name);
@@ -59,6 +59,32 @@ namespace Simias.POBox
 		#endregion
 
 		#region Public Methods
+		public static POBox GetPOBox(Store storeObject, string domainName)
+		{
+			POBox poBox = null;
+
+			// Search for an existing POBox
+			ICSList list = storeObject.GetCollectionsByType(typeof(POBox).Name);
+			foreach (ShallowNode shallowNode in list)
+			{
+				Collection collection = new Collection(storeObject, shallowNode);
+				if (collection.Domain.Equals(domainName))
+				{
+					poBox = new POBox(storeObject, collection);
+					break;
+				}
+			}
+
+			// If one cannot be found then create it.
+			if (poBox == null)
+			{
+				poBox = new POBox(storeObject, "POBox", domainName);
+				poBox.Commit();
+			}
+
+			return poBox;
+		}
+
 		/// <summary>
 		/// Adds a message to the POBox object.
 		/// </summary>
