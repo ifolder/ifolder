@@ -466,10 +466,32 @@ namespace Simias.Gaim
 		#endregion
 		
 		#region More Internal Methods
+
+		/// <summary>
+		/// This function is responsible for returning the path to the Gaim
+		/// Configuration directory.  In Windows, this is typically:
+		///
+		///     C:\Documents and Settings\<username>\Application Data\.gaim
+		///
+		/// In Linux/Mac this is usually:
+		///
+		///    ~/.gaim
+		/// </summary>
 		internal static string GetGaimConfigDir()
 		{
-			// FIXME: Write some code to properly return the Gaim Config Dir (typically ~/.gaim/ in Linux
-			return "/home/boyd/.gaim";
+			string gaimConfigDir = "";
+			if (MyEnvironment.Windows)
+			{
+				string userProfileDir = Environment.GetEnvironmentVariable("USERPROFILE");
+				gaimConfigDir = string.Format("{0}\\Application Data\\.gaim", userProfileDir);
+			}
+			else
+			{
+				string userHomeDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				gaimConfigDir = string.Format("{0}/.gaim", userHomeDir);
+			}
+
+			return gaimConfigDir;
 		}
 		
 		/// <summary>
