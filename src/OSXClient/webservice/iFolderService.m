@@ -49,7 +49,6 @@ void cleanup_gsoap(struct soap *pSoap);
 	NSMutableDictionary *domains = nil;
 	
     struct soap soap;
-    bool isRunning = false;
     int err_code;
 
 	struct _ns1__GetDomains getDomainsMessage;
@@ -66,7 +65,7 @@ void cleanup_gsoap(struct soap *pSoap);
     if (err_code == SOAP_OK)
     {
 		domains = [[NSMutableDictionary alloc]
-					initWithCapacity:getDomainsResponse.GetDomainsResult->__sizeDomainWeb];
+				initWithCapacity:getDomainsResponse.GetDomainsResult->__sizeDomainWeb];
 		int counter;
 		for(counter=0;counter<getDomainsResponse.GetDomainsResult->__sizeDomainWeb;counter++)
 		{
@@ -80,11 +79,61 @@ void cleanup_gsoap(struct soap *pSoap);
 			[domains setObject:newDomain forKey:newDomain->ID];
 		}
     }
+	else
+	{
+		[NSException raise:@"GetDomainsException" format:@"An error happened when calling GetDomains"];
+	}
 
     cleanup_gsoap(&soap);
 
 	return domains;
 }
+
+
+-(IFDomain *) ConnectToDomain:(NSString *)username usingPassword:(NSString *)password andHost:(NSString *)host
+{
+	IFDomain *domain = nil;
+    struct soap soap;
+    int err_code;
+
+	NSAssert( (username != nil), @"username was nil");
+	NSAssert( (password != nil), @"password was nil");
+	NSAssert( (host != nil), @"host was nil");
+
+	struct _ns1__ConnectToDomain connectToDomainMessage;
+	struct _ns1__ConnectToDomainResponse connectToDomainResponse;
+	
+	connectToDomainMessage.UserName = (char *)[username cString];
+	connectToDomainMessage.Password = (char *)[password cString];
+	connectToDomainMessage.Host = (char *)[host cString];
+
+    init_gsoap (&soap);
+    err_code = soap_call___ns1__ConnectToDomain(
+			&soap,
+            NULL, //http://127.0.0.1:8086/simias10/iFolder.asmx
+            NULL,
+            &connectToDomainMessage,
+            &connectToDomainResponse);
+
+    if (err_code == SOAP_OK)
+    {
+		domain = [ [IFDomain alloc] init];
+		
+		struct ns1__DomainWeb *curDomain;
+			
+		curDomain = connectToDomainResponse.ConnectToDomainResult;
+		[domain from_gsoap:curDomain];
+    }
+	else
+	{
+		[NSException raise:@"ConnectToDomainException" format:@"An error happened when calling ConnectToDomain"];
+	}
+
+    cleanup_gsoap(&soap);
+
+	return domain;
+}
+
 
 
 
