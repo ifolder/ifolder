@@ -42,48 +42,7 @@ namespace Simias.Storage.Provider
 	/// </summary>
 	public abstract class Provider
 	{
-		#region Errors
-
-		/// <summary>
-		/// The defined errors.
-		/// </summary>
-		public enum Error
-		{
-			/// <summary>
-			/// The call completed successfully.
-			/// </summary>
-			OK = 0,
-			/// <summary>
-			/// Invalid DataBase Version.
-			/// </summary>
-			Version = -1,
-			/// <summary>
-			/// Failed to create object.
-			/// </summary>
-			Create = -2,
-			/// <summary>
-			/// The Object already exists.
-			/// </summary>
-			Exists = -3,
-			/// <summary>
-			/// Invalid Object Format.
-			/// </summary>
-			Format = -4,
-			/// <summary>
-			/// Failed to delete object.
-			/// </summary>
-			Delete = -5,
-			/// <summary>
-			/// Transaction Error.
-			/// </summary>
-			Transaction = -6,
-			/// <summary>
-			/// Open DB Error.
-			/// </summary>
-			Open = -7,
-		}
-
-		#endregion
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(Provider));
 
 		#region Static Methods.
 
@@ -113,62 +72,25 @@ namespace Simias.Storage.Provider
 
 			// Load the assembly and find our provider.
 			Assembly pAssembly = AppDomain.CurrentDomain.Load(Path.GetFileNameWithoutExtension(assembly));
-			Type pType = null;
-			Type[] types = pAssembly.GetExportedTypes();
-			foreach (Type t in types)
-			{
-				if (t.FullName.Equals(providerType))
-				{
-					pType = t;
-					break;
-				}
-			}
-
-			// If we did not find our type return a null.
-			if (pType == null)
-			{
-				return (null);
-			}
-
 			object[] args = {conf};
 			object[] activationAttrs = null;
 			
-			/* This needs to be commented out till I can fix the service code.
-			if (Environment.OSVersion.Platform.Equals(PlatformID.Win32NT))
-			{
-				// Try to create the mutex.
-				bool createdMutex;
-				string name = "FlaimService_Mutex";
-
-				Mutex mutex = new Mutex(true, name, out createdMutex);
-			
-				if (!createdMutex)
-				{
-					// The service is running attach to the remote service.
-					object[] parameters = {path};
-					activationAttrs = new object[] {new UrlAttribute ("tcp://localhost:1234")};
-					//RemotingConfiguration.RegisterActivatedClientType(pType, "tcp://localHost:1234");
-				}
-				else
-				{
-					mutex.ReleaseMutex();
-				}
-			}
-			*/
-
 			provider = (IProvider)pAssembly.CreateInstance(providerType, false, 0, null, args, null, activationAttrs);
-
-			try
+			if (provider != null)
 			{
-				provider.OpenStore();
-			}
-			catch
-			{
-				provider.CreateStore();
-				// Set the Provider in the configuration.
-				conf.Assembly = assembly;
-				conf.TypeName = providerType;
-				created = true;
+				try
+				{
+					provider.OpenStore();
+				}
+				catch
+				{
+					provider.CreateStore();
+					// Set the Provider in the configuration.
+					conf.Assembly = assembly;
+					conf.TypeName = providerType;
+					created = true;
+					logger.Info("Created new store {0}.", provider.StoreDirectory);
+				}
 			}
 			
 			return (provider);
@@ -182,6 +104,7 @@ namespace Simias.Storage.Provider
 			if (Directory.Exists(path))
 			{
 				Directory.Delete(path, true);
+				logger.Info("Deleted store {0}.", path);
 			}
 		}
 		

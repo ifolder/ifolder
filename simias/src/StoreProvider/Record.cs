@@ -63,7 +63,7 @@ namespace Simias.Storage.Provider
 			// Make sure this is a valid record.
 			if (Name == null || Id == null || Type == null)
 			{
-				new CSPException("Invalid Record", Provider.Error.Format);
+				throw new FormatException();
 			}
 		}
 
