@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsResponder", "mDnsResponder.csproj", "{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mDnsClient", "mDnsClient\mDnsClient.csproj", "{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}.Debug.ActiveCfg = Debug|.NET
+		{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}.Debug.Build.0 = Debug|.NET
+		{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}.Release.ActiveCfg = Release|.NET
+		{7A8C5EAF-B99F-44B8-92AE-D594BB2AC0DB}.Release.Build.0 = Release|.NET
+		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Debug.ActiveCfg = Debug|.NET
+		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Debug.Build.0 = Debug|.NET
+		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Release.ActiveCfg = Release|.NET
+		{E96BCF93-5C7D-4C3F-BB29-71C264C8B5EE}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
