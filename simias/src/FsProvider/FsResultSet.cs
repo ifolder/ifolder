@@ -66,8 +66,8 @@ namespace Simias.Storage.Provider.Fs
 			{
 				int length = buffer.Length;
 				int offset = 0;
-				string startListTag = "<" + Provider.ObjectListTag + ">";
-				string endListTag = "</" + Provider.ObjectListTag + ">";
+				string startListTag = "<" + XmlTags.ObjectListTag + ">";
+				string endListTag = "</" + XmlTags.ObjectListTag + ">";
 				if (length > startListTag.Length)
 				{
 					int stringLen = startListTag.Length;

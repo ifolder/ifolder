@@ -6,8 +6,8 @@ FsProvider_CSFILES_CSC := $(subst /,$(SEP),$(FsProvider_CSFILES))
 FsProvider_INCLUDES = 
 FsProvider_RESOURCES =
 FsProvider_FLAGS = $(CSC_LIBFLAG)
-FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll StoreProvider.dll
-FsProvider_LIBPATH = ../Configuration ../StoreProvider
+FsProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll Storage.dll StoreProvider.dll
+FsProvider_LIBPATH = ../Configuration ../Storage ../StoreProvider
 
 NUNIT_TESTS := FsProviderTests.dll
 

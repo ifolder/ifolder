@@ -30,6 +30,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreProvider", "src\StoreProvider\StoreProvider.csproj", "{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9B517041-29A3-4817-BA8E-02ECF03477C4} = {9B517041-29A3-4817-BA8E-02ECF03477C4}
+		{1614B641-3E27-43CD-B611-A0EE2B03EDFE} = {1614B641-3E27-43CD-B611-A0EE2B03EDFE}
 		{680C2A55-3F33-45EA-AA67-5652592D93FE} = {680C2A55-3F33-45EA-AA67-5652592D93FE}
 		{2E918CCD-6919-4453-9BDE-1FF22657CAB5} = {2E918CCD-6919-4453-9BDE-1FF22657CAB5}
 	EndProjectSection
@@ -57,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteProviderTests", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionStore", "src\CollectionStore\CollectionStore.csproj", "{CB7ACE79-DE8D-4A5C-A8EF-4606199B225D}"
 	ProjectSection(ProjectDependencies) = postProject
+		{66557955-5474-4E02-B14E-8DA278BAC6EB} = {66557955-5474-4E02-B14E-8DA278BAC6EB}
+		{D18468EC-F33F-4AB5-B67C-25E14DDBDADB} = {D18468EC-F33F-4AB5-B67C-25E14DDBDADB}
 		{4271E7EE-BB9B-4C31-B753-EE4796B4E1CB} = {4271E7EE-BB9B-4C31-B753-EE4796B4E1CB}
 	EndProjectSection
 EndProject
@@ -133,7 +136,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncLogicLiteTests", "src\S
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncPing", "src\SyncTools\Ping\SyncPing.csproj", "{99CAC662-0DDA-4094-8473-CDFE1ACE7AD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ping", "src\SyncTools\Ping\Ping.csproj", "{99CAC662-0DDA-4094-8473-CDFE1ACE7AD6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -161,11 +164,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InviteAgentTests", "src\Inv
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormWindows", "src\CommonFormWindows\Library\CommonFormWindows.csproj", "{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindows", "src\CommonFormWindows\Library\CommonFormsWindows.csproj", "{CCCF72D7-AC9A-45DC-AF2D-0CF52BBA0565}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormWindowsTests", "src\CommonFormWindows\Tests\CommonFormWindowsTests.csproj", "{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonFormsWindowsTests", "src\CommonFormWindows\Tests\CommonFormsWindowsTests.csproj", "{27C8E063-4FA2-4A0E-B9AA-0BB5ED1F4903}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -173,27 +176,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEventBroker", "src\Collec
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferLibrary", "src\RemotingSniffer\Library\RemotingSnifferLibrary.csproj", "{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferApplication", "src\RemotingSniffer\ApplicationForms\RemotingSnifferApplication.csproj", "{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InviteAgentEmail", "src\InviteAgent\LibraryEmail\InviteAgentEmail.csproj", "{C93C8AC4-945E-4080-BEC7-7A54ED198831}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingSnifferTests", "src\RemotingSniffer\Tests\RemotingSnifferTests.csproj", "{DD373AFC-9C3E-497E-A307-EE4362D84940}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolder", "src\MiniFolder\Application\MiniFolder.csproj", "{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniFolderTests", "src\MiniFolder\Tests\MiniFolderTests.csproj", "{3BFF1544-260B-495B-9EA1-522ED7D71DEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "src\Storage\Storage.csproj", "{1614B641-3E27-43CD-B611-A0EE2B03EDFE}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -363,30 +346,10 @@ Global
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Debug.Build.0 = Debug|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.ActiveCfg = Release|.NET
 		{66557955-5474-4E02-B14E-8DA278BAC6EB}.Release.Build.0 = Release|.NET
-		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Debug.ActiveCfg = Debug|.NET
-		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Debug.Build.0 = Debug|.NET
-		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Release.ActiveCfg = Release|.NET
-		{8A075DA2-E3C4-4CFA-BF1D-0FBAC43BD862}.Release.Build.0 = Release|.NET
-		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Debug.ActiveCfg = Debug|.NET
-		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Debug.Build.0 = Debug|.NET
-		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Release.ActiveCfg = Release|.NET
-		{DD366FDF-1C34-4EED-AEFA-8D0DFE9144BC}.Release.Build.0 = Release|.NET
-		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Debug.ActiveCfg = Debug|.NET
-		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Debug.Build.0 = Debug|.NET
-		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Release.ActiveCfg = Release|.NET
-		{C93C8AC4-945E-4080-BEC7-7A54ED198831}.Release.Build.0 = Release|.NET
-		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Debug.ActiveCfg = Debug|.NET
-		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Debug.Build.0 = Debug|.NET
-		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Release.ActiveCfg = Release|.NET
-		{DD373AFC-9C3E-497E-A307-EE4362D84940}.Release.Build.0 = Release|.NET
-		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Debug.ActiveCfg = Debug|.NET
-		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Debug.Build.0 = Debug|.NET
-		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Release.ActiveCfg = Release|.NET
-		{B4195A1D-0450-4DF0-89BE-CA7A2C9D69E9}.Release.Build.0 = Release|.NET
-		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Debug.ActiveCfg = Debug|.NET
-		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Debug.Build.0 = Debug|.NET
-		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Release.ActiveCfg = Release|.NET
-		{3BFF1544-260B-495B-9EA1-522ED7D71DEC}.Release.Build.0 = Release|.NET
+		{1614B641-3E27-43CD-B611-A0EE2B03EDFE}.Debug.ActiveCfg = Debug|.NET
+		{1614B641-3E27-43CD-B611-A0EE2B03EDFE}.Debug.Build.0 = Debug|.NET
+		{1614B641-3E27-43CD-B611-A0EE2B03EDFE}.Release.ActiveCfg = Release|.NET
+		{1614B641-3E27-43CD-B611-A0EE2B03EDFE}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

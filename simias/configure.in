@@ -9,10 +9,11 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
+=======
 EMPTY=
 SPACE='$(EMPTY) $(EMPTY)'
 
-COMMON_SUBDIRS="Configuration Common CollectionEvents UserService StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook Smtp InviteAgent MiniFolder"
+COMMON_SUBDIRS="Configuration Common CollectionEvents UserService Storage StoreProvider FsProvider SqliteProvider CollectionStore FsWatcher Agent SyncCommon StoreWatcher CollectionWatcher SyncManager Sync SyncLogicLite SyncTools AddressBook Smtp InviteAgent MiniFolder"
 LINUX_SUBDIRS="CommonGtkWindows"
 WINDOWS_SUBDIRS="CommonFormWindows"
 
@@ -294,6 +295,7 @@ src/CommonGtkWindows/Makefile
 src/CommonFormWindows/Makefile
 src/CollectionEvents/Makefile
 src/UserService/Makefile
+src/Storage/Makefile
 src/StoreProvider/Makefile
 src/FsProvider/Makefile
 src/SqliteProvider/Makefile

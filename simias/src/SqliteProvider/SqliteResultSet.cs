@@ -79,8 +79,8 @@ namespace Simias.Storage.Provider.Sqlite
 			{
 				int length = buffer.Length;
 				int offset = 0;
-				string startListTag = "<" + Provider.ObjectListTag + ">";
-				string endListTag = "</" + Provider.ObjectListTag + ">";
+				string startListTag = "<" + XmlTags.ObjectListTag + ">";
+				string endListTag = "</" + XmlTags.ObjectListTag + ">";
 				if (length > startListTag.Length)
 				{
 					int stringLen = startListTag.Length;
@@ -97,12 +97,12 @@ namespace Simias.Storage.Provider.Sqlite
 						string type = Reader[2].ToString();
 
 						string objectXml = string.Format("<{0} {1}=\"{2}\" {3}=\"{4}\" {5}=\"{6}\"/>", 
-								Provider.ObjectTag,
-								Provider.IdAttr,
+								XmlTags.ObjectTag,
+								XmlTags.IdAttr,
 								id,
-								Provider.NameAttr,
+								XmlTags.NameAttr,
 								name,
-								Provider.TypeAttr,
+								XmlTags.TypeAttr,
 								type);
 
 						stringLen = objectXml.Length;

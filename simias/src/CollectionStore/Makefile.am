@@ -6,8 +6,8 @@ CollectionStore_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStore_CSFILES))
 CollectionStore_INCLUDES =
 CollectionStore_RESOURCES =
 CollectionStore_FLAGS = $(CSC_LIBFLAG)
-CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll System.Security.dll Common.dll CollectionEvents.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll
-CollectionStore_LIBPATH = ../Configuration ../Common ../StoreProvider ../CollectionEvents ../../external/SecureChannelSinks
+CollectionStore_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Storage.dll StoreProvider.dll System.Security.dll Common.dll CollectionEvents.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll
+CollectionStore_LIBPATH = ../Configuration ../Common ../Storage ../StoreProvider ../CollectionEvents ../../external/SecureChannelSinks
 
 NUNIT_TESTS := CollectionStoreTests.dll
 

@@ -34,7 +34,7 @@ namespace Simias.Storage.Provider
 		string property;
 		Operator operation;
 		string value;
-		string type;
+		Syntax type;
 
 		/// <summary>
 		/// Search Operators.
@@ -91,14 +91,14 @@ namespace Simias.Storage.Provider
 		/// <param name="op">The operator used for the match criteria.</param>
 		/// <param name="value">The value to match.</param>
 		/// <param name="type">The Type of the value to search for.</param>
-		public Query(string collectionId, string property, Operator op, string value, string type)
+		public Query(string collectionId, string property, Operator op, string value, Syntax type)
 		{
 			this.collectionId = collectionId;
 			this.property = property;
 			this.operation = op;
 			this.type = type;
 
-			if (type == Provider.Syntax.Boolean)
+			if (type == Syntax.Boolean)
 			{
 				this.value = ( String.Compare(value, "true", true) == 0) ? "1" : "0";
 			}
@@ -115,7 +115,7 @@ namespace Simias.Storage.Provider
 		/// <param name="op"></param>
 		/// <param name="value"></param>
 		/// <param name="type"></param>
-		public Query(string property, Operator op, string value, string type) :
+		public Query(string property, Operator op, string value, Syntax type) :
 			this(null, property, op, value, type)
 		{
 		}
@@ -167,7 +167,7 @@ namespace Simias.Storage.Provider
 		/// <summary>
 		/// Read only property that gets the value type.
 		/// </summary>
-		public string Type
+		public Syntax Type
 		{
 			get
 			{

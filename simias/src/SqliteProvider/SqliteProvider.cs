@@ -530,7 +530,7 @@ namespace Simias.Storage.Provider.Sqlite
 		{
 			string table = TablePrefix + collectionId;
 			XmlElement root = doc.DocumentElement;
-			XmlNodeList recordList = root.SelectNodes(Provider.ObjectTag);
+			XmlNodeList recordList = root.SelectNodes(XmlTags.ObjectTag);
 
 			foreach (XmlElement recordEl in recordList)
 			{
@@ -761,7 +761,7 @@ namespace Simias.Storage.Provider.Sqlite
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(recordXml);
 			XmlElement root = doc.DocumentElement;
-			XmlNodeList objectList = root.SelectNodes(Provider.ObjectTag);
+			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
 			
 			IDbTransaction trans = sqliteDb.BeginTransaction();
 			try
@@ -769,7 +769,7 @@ namespace Simias.Storage.Provider.Sqlite
 				foreach (XmlElement recordEl in objectList)
 				{
 					// Get ID.
-					string id = recordEl.GetAttribute(Provider.IdAttr);
+					string id = recordEl.GetAttribute(XmlTags.IdAttr);
 					if (id != null)
 					{
 						InternalDeleteRecord(id, collectionId);
@@ -801,7 +801,7 @@ namespace Simias.Storage.Provider.Sqlite
 			if (RecordTable.Select(recordId, command, out Name, out Type))
 			{
 				XmlElement node, root;
-				root = doc.CreateElement(Provider.ObjectListTag);
+				root = doc.CreateElement(XmlTags.ObjectListTag);
 				doc.AppendChild(root);
 				node = new Record(Name, recordId, Type).ToXml(doc);			
 				root.AppendChild(node);
@@ -845,15 +845,15 @@ namespace Simias.Storage.Provider.Sqlite
 			
 			switch (query.Property)
 			{
-				case Provider.ObjectName:
+				case BaseSchema.ObjectName:
 					attribute = RecordTable.Name;
 					isAttribute = true;
 					break;
-				case Provider.ObjectId:
+				case BaseSchema.ObjectId:
 					attribute = RecordTable.Id;
 					isAttribute = true;
 					break;
-				case Provider.ObjectType:
+				case BaseSchema.ObjectType:
 					attribute = RecordTable.Type;
 					isAttribute = true;
 					break;

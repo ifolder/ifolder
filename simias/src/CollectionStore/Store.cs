@@ -927,7 +927,7 @@ namespace Simias.Storage
 			ICSList nodeList = new ICSList();
 
 			// Build a query for the document root.
-			Persist.Query query = new Persist.Query( Property.DocumentRoot, Persist.Query.Operator.Equal, documentRoot.ToString(), Property.Syntax.Uri.ToString() );
+			Persist.Query query = new Persist.Query( Property.DocumentRoot, Persist.Query.Operator.Equal, documentRoot.ToString(), Syntax.Uri );
 			char[] results = new char[ Store.resultsArraySize ];
 
 			// Do the search.
@@ -1429,12 +1429,12 @@ namespace Simias.Storage
 				if ( currentUserGuid == localStore.StoreAdmin )
 				{
 					// If the store owner is doing the search, return all collections in his store.
-					query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Begins, Node.CollectionType, Property.Syntax.String.ToString() );
+					query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Begins, Node.CollectionType, Syntax.String );
 				}
 				else
 				{
 					// This is not the store owner.  Only search for collections that the specified user has rights to.
-					query = new Persist.Query( Property.Ace, Persist.Query.Operator.Begins, currentUserGuid, Property.Syntax.String.ToString() );
+					query = new Persist.Query( Property.Ace, Persist.Query.Operator.Begins, currentUserGuid, Syntax.String );
 				}
 
 				// Do the search.

@@ -55,9 +55,9 @@ namespace Simias.Storage.Provider
 			recordEl = recordXml;
 
 			// Get the Name, ID, and type.
-			Name = recordEl.GetAttribute(Provider.NameAttr);
-			Id = recordEl.GetAttribute(Provider.IdAttr);
-			Type = recordEl.GetAttribute(Provider.TypeAttr);
+			Name = recordEl.GetAttribute(XmlTags.NameAttr);
+			Id = recordEl.GetAttribute(XmlTags.IdAttr);
+			Type = recordEl.GetAttribute(XmlTags.TypeAttr);
 		
 			// Make sure this is a valid record.
 			if (Name == null || Id == null || Type == null)
@@ -88,10 +88,10 @@ namespace Simias.Storage.Provider
 		/// <returns>The XmlElement representing this Record.</returns>
 		public XmlElement ToXml(XmlDocument doc)
 		{
-			recordEl = doc.CreateElement(Provider.ObjectTag);
-			recordEl.SetAttribute(Provider.NameAttr, Name);
-			recordEl.SetAttribute(Provider.IdAttr, Id);
-			recordEl.SetAttribute(Provider.TypeAttr, Type);
+			recordEl = doc.CreateElement(XmlTags.ObjectTag);
+			recordEl.SetAttribute(XmlTags.NameAttr, Name);
+			recordEl.SetAttribute(XmlTags.IdAttr, Id);
+			recordEl.SetAttribute(XmlTags.TypeAttr, Type);
 			return recordEl;
 		}
 
@@ -103,7 +103,7 @@ namespace Simias.Storage.Provider
 		/// <returns></returns>
 		public IEnumerator GetEnumerator()
 		{
-			return (new PropertyEnumerator(recordEl.SelectNodes(Provider.PropertyTag)));
+			return (new PropertyEnumerator(recordEl.SelectNodes(XmlTags.PropertyTag)));
 		}
 
 		#endregion
@@ -190,10 +190,10 @@ namespace Simias.Storage.Provider
 		public Property(XmlElement propertyEl)
 		{
 			property = propertyEl;
-			Name = property.GetAttribute(Provider.NameAttr);
-			Type = property.GetAttribute(Provider.TypeAttr);
+			Name = property.GetAttribute(XmlTags.NameAttr);
+			Type = property.GetAttribute(XmlTags.TypeAttr);
 			Value = property.InnerXml;
-			Flags = property.GetAttribute(Provider.FlagsAttr);
+			Flags = property.GetAttribute(XmlTags.FlagsAttr);
 			if (string.Empty == Flags)
 			{
 				Flags = "0";
@@ -211,10 +211,10 @@ namespace Simias.Storage.Provider
 		/// <returns>The created XMLElement.</returns>
 		public static XmlElement CreateXmlNode(XmlDocument doc, string Name, string Type, string Flags, string Value)
 		{
-			XmlElement node = doc.CreateElement(Provider.PropertyTag);
-			node.SetAttribute(Provider.NameAttr, Name);
-			node.SetAttribute(Provider.TypeAttr, Type);
-			node.SetAttribute(Provider.FlagsAttr, Flags);
+			XmlElement node = doc.CreateElement(XmlTags.PropertyTag);
+			node.SetAttribute(XmlTags.NameAttr, Name);
+			node.SetAttribute(XmlTags.TypeAttr, Type);
+			node.SetAttribute(XmlTags.FlagsAttr, Flags);
 			node.InnerXml = Value;
 			return node;
 		}

@@ -125,7 +125,7 @@ namespace Simias.Storage.Provider
 				Console.WriteLine("Read {0} Objects in {1} seconds.", recordCount, elapsedTime.TotalSeconds);
 
 				DateTime t1 = DateTime.Now;
-				internalSearch(Provider.ObjectName, Query.Operator.Equal, recordName+recordCount, "String", true); 
+				internalSearch(BaseSchema.ObjectName, Query.Operator.Equal, recordName+recordCount, Syntax.String, true); 
 				Console.WriteLine("Found Object in {0} seconds.", (DateTime.Now - t1).TotalSeconds);
 
 				// Now delete the collection.
@@ -209,7 +209,7 @@ namespace Simias.Storage.Provider
 					XmlDocument originalObject = new XmlDocument();
 					originalObject.LoadXml(sObject);
 					XmlElement root = originalObject.DocumentElement;
-					XmlNode node = root.SelectSingleNode("*/" + Provider.PropertyTag);
+					XmlNode node = root.SelectSingleNode("*/" + XmlTags.PropertyTag);
 					if (node != null)
 					{
 						node.ParentNode.RemoveChild(node);
@@ -246,35 +246,35 @@ namespace Simias.Storage.Provider
 			while (i <= recordCount)
 			{
 				XmlElement element, rootElement;
-				rootElement = objectDoc.CreateElement(Provider.ObjectListTag);
+				rootElement = objectDoc.CreateElement(XmlTags.ObjectListTag);
 				objectDoc.AppendChild(rootElement);
 				for (; i <= recordCount; ++i)
 				{
-					element = objectDoc.CreateElement(Provider.ObjectTag);
-					element.SetAttribute(Provider.NameAttr, recordName + i);
-					element.SetAttribute(Provider.IdAttr, recordId + i);
-					element.SetAttribute(Provider.TypeAttr, recordType);
+					element = objectDoc.CreateElement(XmlTags.ObjectTag);
+					element.SetAttribute(XmlTags.NameAttr, recordName + i);
+					element.SetAttribute(XmlTags.IdAttr, recordId + i);
+					element.SetAttribute(XmlTags.TypeAttr, recordType);
 					rootElement.AppendChild(element);
 
 					if (includeProperties)
 					{
 						// Add properties to the object.
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My String", "String", "0", "This is a \"string\""));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My SByte", "SByte", "0", "-51"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Byte", "Byte", "0", "251"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Int16", "Int16", "0", "-4001"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My UInt16", "UInt16", "0", "4001"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Int32", "Int32", "0", "-2147483641"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My UInt32", "UInt32", "0", "4294967291"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Int64", "Int64", "0", "-4294967291"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My UInt64", "UInt64", "0", "4294967291"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Char", "Char", "0", "3001"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Single", "Single", "0", "42949.67291"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Boolean", "Boolean", "0", "0"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My DateTime", "DateTime", "0", "4294967291"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Uri", "Uri", "0", "http://server/path/doc.htm"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Xml", "Xml", "0", "<tag1>this is xml</tag1>"));
-						element.AppendChild(Property.CreateXmlNode(objectDoc, Provider.CollectionId, "String", "0", collectionId));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My String", Syntax.String.ToString(), "0", "This is a \"string\""));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My SByte", Syntax.SByte.ToString(), "0", "-51"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Byte", Syntax.Byte.ToString(), "0", "251"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Int16", Syntax.Int16.ToString(), "0", "-4001"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My UInt16", Syntax.UInt16.ToString(), "0", "4001"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Int32", Syntax.Int32.ToString(), "0", "-2147483641"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My UInt32", Syntax.UInt32.ToString(), "0", "4294967291"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Int64", Syntax.Int64.ToString(), "0", "-4294967291"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My UInt64", Syntax.UInt64.ToString(), "0", "4294967291"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Char", Syntax.Char.ToString(), "0", "3001"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Single", Syntax.Single.ToString(), "0", "42949.67291"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Boolean", Syntax.Boolean.ToString(), "0", "0"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My DateTime", Syntax.DateTime.ToString(), "0", "4294967291"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Uri", Syntax.Uri.ToString(), "0", "http://server/path/doc.htm"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, "My Xml", Syntax.XmlDocument.ToString(), "0", "<tag1>this is xml</tag1>"));
+						element.AppendChild(Property.CreateXmlNode(objectDoc, BaseSchema.CollectionId, Syntax.String.ToString(), "0", collectionId));
 					}
 					if (i % transactionSize == 0)
 					{
@@ -358,7 +358,7 @@ namespace Simias.Storage.Provider
 		/// <param name="value">Value to match</param>
 		/// <param name="type">The type of the value.</param>
 		/// <param name="shouldMatch">If true the search should return a result.</param>
-		private void internalSearch(string name, Query.Operator op, string value, string type, bool shouldMatch)
+		private void internalSearch(string name, Query.Operator op, string value, Syntax type, bool shouldMatch)
 		{
 			IResultSet results;
 			bool foundMatch = false;
@@ -390,202 +390,202 @@ namespace Simias.Storage.Provider
 		{
 			// Try all of the string searches.
 			// First search for an attribute.
-			internalSearch(Provider.ObjectType, Query.Operator.Equal, "collection", "String", true); 
-			internalSearch(Provider.ObjectType, Query.Operator.Begins, "coll", "String", true); 
-			internalSearch(Provider.ObjectType, Query.Operator.Contains, "llec", "String", true); 
-			internalSearch(Provider.ObjectType, Query.Operator.Ends, "tion", "String", true); 
-			internalSearch(Provider.ObjectType, Query.Operator.Ends, "tiin", "String", false); 
+			internalSearch(BaseSchema.ObjectType, Query.Operator.Equal, "collection", Syntax.String, true); 
+			internalSearch(BaseSchema.ObjectType, Query.Operator.Begins, "coll", Syntax.String, true); 
+			internalSearch(BaseSchema.ObjectType, Query.Operator.Contains, "llec", Syntax.String, true); 
+			internalSearch(BaseSchema.ObjectType, Query.Operator.Ends, "tion", Syntax.String, true); 
+			internalSearch(BaseSchema.ObjectType, Query.Operator.Ends, "tiin", Syntax.String, false); 
 
 			// Now search for a string.
-			internalSearch(Provider.CollectionId, Query.Operator.Equal, collectionId, "String", true); 
-			internalSearch(Provider.CollectionId, Query.Operator.Begins, collectionId.Substring(0, 4), "String", true); 
-			internalSearch(Provider.CollectionId, Query.Operator.Contains, collectionId.Substring(1, 5), "String", true); 
-			internalSearch(Provider.CollectionId, Query.Operator.Ends, collectionId.Substring(4), "String", true); 
-			internalSearch(Provider.CollectionId, Query.Operator.Ends, "tiin", "String", false); 
+			internalSearch(BaseSchema.CollectionId, Query.Operator.Equal, collectionId, Syntax.String, true); 
+			internalSearch(BaseSchema.CollectionId, Query.Operator.Begins, collectionId.Substring(0, 4), Syntax.String, true); 
+			internalSearch(BaseSchema.CollectionId, Query.Operator.Contains, collectionId.Substring(1, 5), Syntax.String, true); 
+			internalSearch(BaseSchema.CollectionId, Query.Operator.Ends, collectionId.Substring(4), Syntax.String, true); 
+			internalSearch(BaseSchema.CollectionId, Query.Operator.Ends, "tiin", Syntax.String, false); 
 
 			// Search for SByte types
-			internalSearch("My SByte", Query.Operator.Equal, "-51", "SByte", true); 
-			internalSearch("My SByte", Query.Operator.Greater_Equal, "-51", "SByte", true); 
-			internalSearch("My SByte", Query.Operator.Greater_Equal, "-52", "SByte", true); 
-			internalSearch("My SByte", Query.Operator.Greater_Equal, "-50", "SByte", false); 
-			internalSearch("My SByte", Query.Operator.Greater, "-51", "SByte", false); 
-			internalSearch("My SByte", Query.Operator.Greater, "-52", "SByte", true); 
-			internalSearch("My SByte", Query.Operator.Greater, "-50", "SByte", false); 
-			internalSearch("My SByte", Query.Operator.Less_Equal, "-51", "SByte", true); 
-			internalSearch("My SByte", Query.Operator.Less_Equal, "-52", "SByte", false); 
-			internalSearch("My SByte", Query.Operator.Less_Equal, "-50", "SByte", true); 
-			internalSearch("My SByte", Query.Operator.Less, "-51", "SByte", false); 
-			internalSearch("My SByte", Query.Operator.Less, "-52", "SByte", false); 
-			internalSearch("My SByte", Query.Operator.Less, "-50", "SByte", true); 
+			internalSearch("My SByte", Query.Operator.Equal, "-51", Syntax.SByte, true); 
+			internalSearch("My SByte", Query.Operator.Greater_Equal, "-51", Syntax.SByte, true); 
+			internalSearch("My SByte", Query.Operator.Greater_Equal, "-52", Syntax.SByte, true); 
+			internalSearch("My SByte", Query.Operator.Greater_Equal, "-50", Syntax.SByte, false); 
+			internalSearch("My SByte", Query.Operator.Greater, "-51", Syntax.SByte, false); 
+			internalSearch("My SByte", Query.Operator.Greater, "-52", Syntax.SByte, true); 
+			internalSearch("My SByte", Query.Operator.Greater, "-50", Syntax.SByte, false); 
+			internalSearch("My SByte", Query.Operator.Less_Equal, "-51", Syntax.SByte, true); 
+			internalSearch("My SByte", Query.Operator.Less_Equal, "-52", Syntax.SByte, false); 
+			internalSearch("My SByte", Query.Operator.Less_Equal, "-50", Syntax.SByte, true); 
+			internalSearch("My SByte", Query.Operator.Less, "-51", Syntax.SByte, false); 
+			internalSearch("My SByte", Query.Operator.Less, "-52", Syntax.SByte, false); 
+			internalSearch("My SByte", Query.Operator.Less, "-50", Syntax.SByte, true); 
 
 			// Search for Byte types
-			internalSearch("My Byte", Query.Operator.Equal, "251", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Greater_Equal, "251", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Greater_Equal, "252", "Byte", false); 
-			internalSearch("My Byte", Query.Operator.Greater_Equal, "250", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Greater, "251", "Byte", false); 
-			internalSearch("My Byte", Query.Operator.Greater, "252", "Byte", false); 
-			internalSearch("My Byte", Query.Operator.Greater, "250", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Less_Equal, "251", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Less_Equal, "252", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Less_Equal, "250", "Byte", false); 
-			internalSearch("My Byte", Query.Operator.Less, "251", "Byte", false); 
-			internalSearch("My Byte", Query.Operator.Less, "252", "Byte", true); 
-			internalSearch("My Byte", Query.Operator.Less, "250", "Byte", false); 
+			internalSearch("My Byte", Query.Operator.Equal, "251", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Greater_Equal, "251", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Greater_Equal, "252", Syntax.Byte, false); 
+			internalSearch("My Byte", Query.Operator.Greater_Equal, "250", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Greater, "251", Syntax.Byte, false); 
+			internalSearch("My Byte", Query.Operator.Greater, "252", Syntax.Byte, false); 
+			internalSearch("My Byte", Query.Operator.Greater, "250", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Less_Equal, "251", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Less_Equal, "252", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Less_Equal, "250", Syntax.Byte, false); 
+			internalSearch("My Byte", Query.Operator.Less, "251", Syntax.Byte, false); 
+			internalSearch("My Byte", Query.Operator.Less, "252", Syntax.Byte, true); 
+			internalSearch("My Byte", Query.Operator.Less, "250", Syntax.Byte, false); 
 
 			// Search for Int16
-			internalSearch("My Int16", Query.Operator.Equal, "-4001", "Int16", true); 
-			internalSearch("My Int16", Query.Operator.Greater_Equal, "-4001", "Int16", true); 
-			internalSearch("My Int16", Query.Operator.Greater_Equal, "-4002", "Int16", true); 
-			internalSearch("My Int16", Query.Operator.Greater_Equal, "-4000", "Int16", false); 
-			internalSearch("My Int16", Query.Operator.Greater, "-4001", "Int16", false); 
-			internalSearch("My Int16", Query.Operator.Greater, "-4002", "Int16", true); 
-			internalSearch("My Int16", Query.Operator.Greater, "-4000", "Int16", false); 
-			internalSearch("My Int16", Query.Operator.Less_Equal, "-4001", "Int16", true); 
-			internalSearch("My Int16", Query.Operator.Less_Equal, "-4002", "Int16", false); 
-			internalSearch("My Int16", Query.Operator.Less_Equal, "-4000", "Int16", true); 
-			internalSearch("My Int16", Query.Operator.Less, "-4001", "Int16", false); 
-			internalSearch("My Int16", Query.Operator.Less, "-4002", "Int16", false); 
-			internalSearch("My Int16", Query.Operator.Less, "-4000", "Int16", true); 
+			internalSearch("My Int16", Query.Operator.Equal, "-4001", Syntax.Int16, true); 
+			internalSearch("My Int16", Query.Operator.Greater_Equal, "-4001", Syntax.Int16, true); 
+			internalSearch("My Int16", Query.Operator.Greater_Equal, "-4002", Syntax.Int16, true); 
+			internalSearch("My Int16", Query.Operator.Greater_Equal, "-4000", Syntax.Int16, false); 
+			internalSearch("My Int16", Query.Operator.Greater, "-4001", Syntax.Int16, false); 
+			internalSearch("My Int16", Query.Operator.Greater, "-4002", Syntax.Int16, true); 
+			internalSearch("My Int16", Query.Operator.Greater, "-4000", Syntax.Int16, false); 
+			internalSearch("My Int16", Query.Operator.Less_Equal, "-4001", Syntax.Int16, true); 
+			internalSearch("My Int16", Query.Operator.Less_Equal, "-4002", Syntax.Int16, false); 
+			internalSearch("My Int16", Query.Operator.Less_Equal, "-4000", Syntax.Int16, true); 
+			internalSearch("My Int16", Query.Operator.Less, "-4001", Syntax.Int16, false); 
+			internalSearch("My Int16", Query.Operator.Less, "-4002", Syntax.Int16, false); 
+			internalSearch("My Int16", Query.Operator.Less, "-4000", Syntax.Int16, true); 
 
 			// Search for UInt16
-			internalSearch("My UInt16", Query.Operator.Equal, "4001", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Greater_Equal, "4001", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Greater_Equal, "4002", "UInt16", false); 
-			internalSearch("My UInt16", Query.Operator.Greater_Equal, "4000", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Greater, "4001", "UInt16", false); 
-			internalSearch("My UInt16", Query.Operator.Greater, "4002", "UInt16", false); 
-			internalSearch("My UInt16", Query.Operator.Greater, "4000", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Less_Equal, "4001", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Less_Equal, "4002", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Less_Equal, "4000", "UInt16", false); 
-			internalSearch("My UInt16", Query.Operator.Less, "4001", "UInt16", false); 
-			internalSearch("My UInt16", Query.Operator.Less, "4002", "UInt16", true); 
-			internalSearch("My UInt16", Query.Operator.Less, "4000", "UInt16", false); 
+			internalSearch("My UInt16", Query.Operator.Equal, "4001", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Greater_Equal, "4001", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Greater_Equal, "4002", Syntax.UInt16, false); 
+			internalSearch("My UInt16", Query.Operator.Greater_Equal, "4000", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Greater, "4001", Syntax.UInt16, false); 
+			internalSearch("My UInt16", Query.Operator.Greater, "4002", Syntax.UInt16, false); 
+			internalSearch("My UInt16", Query.Operator.Greater, "4000", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Less_Equal, "4001", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Less_Equal, "4002", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Less_Equal, "4000", Syntax.UInt16, false); 
+			internalSearch("My UInt16", Query.Operator.Less, "4001", Syntax.UInt16, false); 
+			internalSearch("My UInt16", Query.Operator.Less, "4002", Syntax.UInt16, true); 
+			internalSearch("My UInt16", Query.Operator.Less, "4000", Syntax.UInt16, false); 
 
 
 			// Search for Int32
-			internalSearch("My Int32", Query.Operator.Equal, "-2147483641", "Int32", true); 
-			internalSearch("My Int32", Query.Operator.Greater_Equal, "-2147483641", "Int32", true); 
-			internalSearch("My Int32", Query.Operator.Greater_Equal, "-2147483642", "Int32", true); 
-			internalSearch("My Int32", Query.Operator.Greater_Equal, "-2147483640", "Int32", false); 
-			internalSearch("My Int32", Query.Operator.Greater, "-2147483641", "Int32", false); 
-			internalSearch("My Int32", Query.Operator.Greater, "-2147483642", "Int32", true); 
-			internalSearch("My Int32", Query.Operator.Greater, "-2147483640", "Int32", false); 
-			internalSearch("My Int32", Query.Operator.Less_Equal, "-2147483641", "Int32", true); 
-			internalSearch("My Int32", Query.Operator.Less_Equal, "-2147483642", "Int32", false); 
-			internalSearch("My Int32", Query.Operator.Less_Equal, "-2147483640", "Int32", true); 
-			internalSearch("My Int32", Query.Operator.Less, "-2147483641", "Int32", false); 
-			internalSearch("My Int32", Query.Operator.Less, "-2147483642", "Int32", false); 
-			internalSearch("My Int32", Query.Operator.Less, "-2147483640", "Int32", true); 
+			internalSearch("My Int32", Query.Operator.Equal, "-2147483641", Syntax.Int32, true); 
+			internalSearch("My Int32", Query.Operator.Greater_Equal, "-2147483641", Syntax.Int32, true); 
+			internalSearch("My Int32", Query.Operator.Greater_Equal, "-2147483642", Syntax.Int32, true); 
+			internalSearch("My Int32", Query.Operator.Greater_Equal, "-2147483640", Syntax.Int32, false); 
+			internalSearch("My Int32", Query.Operator.Greater, "-2147483641", Syntax.Int32, false); 
+			internalSearch("My Int32", Query.Operator.Greater, "-2147483642", Syntax.Int32, true); 
+			internalSearch("My Int32", Query.Operator.Greater, "-2147483640", Syntax.Int32, false); 
+			internalSearch("My Int32", Query.Operator.Less_Equal, "-2147483641", Syntax.Int32, true); 
+			internalSearch("My Int32", Query.Operator.Less_Equal, "-2147483642", Syntax.Int32, false); 
+			internalSearch("My Int32", Query.Operator.Less_Equal, "-2147483640", Syntax.Int32, true); 
+			internalSearch("My Int32", Query.Operator.Less, "-2147483641", Syntax.Int32, false); 
+			internalSearch("My Int32", Query.Operator.Less, "-2147483642", Syntax.Int32, false); 
+			internalSearch("My Int32", Query.Operator.Less, "-2147483640", Syntax.Int32, true); 
 
 			// Search for UInt32
-			internalSearch("My UInt32", Query.Operator.Equal, "4294967291", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Greater_Equal, "4294967291", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Greater_Equal, "4294967292", "UInt32", false); 
-			internalSearch("My UInt32", Query.Operator.Greater_Equal, "4294967290", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Greater, "4294967291", "UInt32", false); 
-			internalSearch("My UInt32", Query.Operator.Greater, "4294967292", "UInt32", false); 
-			internalSearch("My UInt32", Query.Operator.Greater, "4294967290", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Less_Equal, "4294967291", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Less_Equal, "4294967292", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Less_Equal, "4294967290", "UInt32", false); 
-			internalSearch("My UInt32", Query.Operator.Less, "4294967291", "UInt32", false); 
-			internalSearch("My UInt32", Query.Operator.Less, "4294967292", "UInt32", true); 
-			internalSearch("My UInt32", Query.Operator.Less, "4294967290", "UInt32", false); 
+			internalSearch("My UInt32", Query.Operator.Equal, "4294967291", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Greater_Equal, "4294967291", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Greater_Equal, "4294967292", Syntax.UInt32, false); 
+			internalSearch("My UInt32", Query.Operator.Greater_Equal, "4294967290", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Greater, "4294967291", Syntax.UInt32, false); 
+			internalSearch("My UInt32", Query.Operator.Greater, "4294967292", Syntax.UInt32, false); 
+			internalSearch("My UInt32", Query.Operator.Greater, "4294967290", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Less_Equal, "4294967291", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Less_Equal, "4294967292", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Less_Equal, "4294967290", Syntax.UInt32, false); 
+			internalSearch("My UInt32", Query.Operator.Less, "4294967291", Syntax.UInt32, false); 
+			internalSearch("My UInt32", Query.Operator.Less, "4294967292", Syntax.UInt32, true); 
+			internalSearch("My UInt32", Query.Operator.Less, "4294967290", Syntax.UInt32, false); 
 
 			// Search for Int64
-			internalSearch("My Int64", Query.Operator.Equal, "-4294967291", "Int64", true); 
-			internalSearch("My Int64", Query.Operator.Greater_Equal, "-4294967291", "Int64", true); 
-			internalSearch("My Int64", Query.Operator.Greater_Equal, "-4294967292", "Int64", true); 
-			internalSearch("My Int64", Query.Operator.Greater_Equal, "-4294967290", "Int64", false); 
-			internalSearch("My Int64", Query.Operator.Greater, "-4294967291", "Int64", false); 
-			internalSearch("My Int64", Query.Operator.Greater, "-4294967292", "Int64", true); 
-			internalSearch("My Int64", Query.Operator.Greater, "-4294967290", "Int64", false); 
-			internalSearch("My Int64", Query.Operator.Less_Equal, "-4294967291", "Int64", true); 
-			internalSearch("My Int64", Query.Operator.Less_Equal, "-4294967292", "Int64", false); 
-			internalSearch("My Int64", Query.Operator.Less_Equal, "-4294967290", "Int64", true); 
-			internalSearch("My Int64", Query.Operator.Less, "-4294967291", "Int64", false); 
-			internalSearch("My Int64", Query.Operator.Less, "-4294967292", "Int64", false); 
-			internalSearch("My Int64", Query.Operator.Less, "-4294967290", "Int64", true); 
+			internalSearch("My Int64", Query.Operator.Equal, "-4294967291", Syntax.Int64, true); 
+			internalSearch("My Int64", Query.Operator.Greater_Equal, "-4294967291", Syntax.Int64, true); 
+			internalSearch("My Int64", Query.Operator.Greater_Equal, "-4294967292", Syntax.Int64, true); 
+			internalSearch("My Int64", Query.Operator.Greater_Equal, "-4294967290", Syntax.Int64, false); 
+			internalSearch("My Int64", Query.Operator.Greater, "-4294967291", Syntax.Int64, false); 
+			internalSearch("My Int64", Query.Operator.Greater, "-4294967292", Syntax.Int64, true); 
+			internalSearch("My Int64", Query.Operator.Greater, "-4294967290", Syntax.Int64, false); 
+			internalSearch("My Int64", Query.Operator.Less_Equal, "-4294967291", Syntax.Int64, true); 
+			internalSearch("My Int64", Query.Operator.Less_Equal, "-4294967292", Syntax.Int64, false); 
+			internalSearch("My Int64", Query.Operator.Less_Equal, "-4294967290", Syntax.Int64, true); 
+			internalSearch("My Int64", Query.Operator.Less, "-4294967291", Syntax.Int64, false); 
+			internalSearch("My Int64", Query.Operator.Less, "-4294967292", Syntax.Int64, false); 
+			internalSearch("My Int64", Query.Operator.Less, "-4294967290", Syntax.Int64, true); 
 
 			// Search for UInt64
-			internalSearch("My UInt64", Query.Operator.Equal, "4294967291", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Greater_Equal, "4294967291", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Greater_Equal, "4294967292", "UInt64", false); 
-			internalSearch("My UInt64", Query.Operator.Greater_Equal, "4294967290", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Greater, "4294967291", "UInt64", false); 
-			internalSearch("My UInt64", Query.Operator.Greater, "4294967292", "UInt64", false); 
-			internalSearch("My UInt64", Query.Operator.Greater, "4294967290", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Less_Equal, "4294967291", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Less_Equal, "4294967292", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Less_Equal, "4294967290", "UInt64", false); 
-			internalSearch("My UInt64", Query.Operator.Less, "4294967291", "UInt64", false); 
-			internalSearch("My UInt64", Query.Operator.Less, "4294967292", "UInt64", true); 
-			internalSearch("My UInt64", Query.Operator.Less, "4294967290", "UInt64", false); 
+			internalSearch("My UInt64", Query.Operator.Equal, "4294967291", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Greater_Equal, "4294967291", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Greater_Equal, "4294967292", Syntax.UInt64, false); 
+			internalSearch("My UInt64", Query.Operator.Greater_Equal, "4294967290", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Greater, "4294967291", Syntax.UInt64, false); 
+			internalSearch("My UInt64", Query.Operator.Greater, "4294967292", Syntax.UInt64, false); 
+			internalSearch("My UInt64", Query.Operator.Greater, "4294967290", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Less_Equal, "4294967291", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Less_Equal, "4294967292", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Less_Equal, "4294967290", Syntax.UInt64, false); 
+			internalSearch("My UInt64", Query.Operator.Less, "4294967291", Syntax.UInt64, false); 
+			internalSearch("My UInt64", Query.Operator.Less, "4294967292", Syntax.UInt64, true); 
+			internalSearch("My UInt64", Query.Operator.Less, "4294967290", Syntax.UInt64, false); 
 
 			// Search for Char
-			internalSearch("My Char", Query.Operator.Equal, "3001", "Char", true); 
-			internalSearch("My Char", Query.Operator.Greater_Equal, "3001", "Char", true); 
-			internalSearch("My Char", Query.Operator.Greater_Equal, "3002", "Char", false); 
-			internalSearch("My Char", Query.Operator.Greater_Equal, "3000", "Char", true); 
-			internalSearch("My Char", Query.Operator.Greater, "3001", "Char", false); 
-			internalSearch("My Char", Query.Operator.Greater, "3002", "Char", false); 
-			internalSearch("My Char", Query.Operator.Greater, "3000", "Char", true); 
-			internalSearch("My Char", Query.Operator.Less_Equal, "3001", "Char", true); 
-			internalSearch("My Char", Query.Operator.Less_Equal, "3002", "Char", true); 
-			internalSearch("My Char", Query.Operator.Less_Equal, "3000", "Char", false); 
-			internalSearch("My Char", Query.Operator.Less, "3001", "Char", false); 
-			internalSearch("My Char", Query.Operator.Less, "3002", "Char", true); 
-			internalSearch("My Char", Query.Operator.Less, "3000", "Char", false);
+			internalSearch("My Char", Query.Operator.Equal, "3001", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Greater_Equal, "3001", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Greater_Equal, "3002", Syntax.Char, false); 
+			internalSearch("My Char", Query.Operator.Greater_Equal, "3000", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Greater, "3001", Syntax.Char, false); 
+			internalSearch("My Char", Query.Operator.Greater, "3002", Syntax.Char, false); 
+			internalSearch("My Char", Query.Operator.Greater, "3000", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Less_Equal, "3001", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Less_Equal, "3002", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Less_Equal, "3000", Syntax.Char, false); 
+			internalSearch("My Char", Query.Operator.Less, "3001", Syntax.Char, false); 
+			internalSearch("My Char", Query.Operator.Less, "3002", Syntax.Char, true); 
+			internalSearch("My Char", Query.Operator.Less, "3000", Syntax.Char, false);
   
 			// Search for Single
-			internalSearch("My Single", Query.Operator.Equal, "42949.67291", "Single", true); 
-			internalSearch("My Single", Query.Operator.Greater_Equal, "42949.67291", "Single", true); 
-			internalSearch("My Single", Query.Operator.Greater_Equal, "42949.67292", "Single", false); 
-			internalSearch("My Single", Query.Operator.Greater_Equal, "42949.67290", "Single", true); 
-			internalSearch("My Single", Query.Operator.Greater, "42949.67291", "Single", false); 
-			internalSearch("My Single", Query.Operator.Greater, "42949.67292", "Single", false); 
-			internalSearch("My Single", Query.Operator.Greater, "42949.67290", "Single", true); 
-			internalSearch("My Single", Query.Operator.Less_Equal, "42949.67291", "Single", true); 
-			internalSearch("My Single", Query.Operator.Less_Equal, "42949.67292", "Single", true); 
-			internalSearch("My Single", Query.Operator.Less_Equal, "42949.67290", "Single", false); 
-			internalSearch("My Single", Query.Operator.Less, "42949.67291", "Single", false); 
-			internalSearch("My Single", Query.Operator.Less, "42949.67292", "Single", true); 
-			internalSearch("My Single", Query.Operator.Less, "42949.67290", "Single", false);
+			internalSearch("My Single", Query.Operator.Equal, "42949.67291", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Greater_Equal, "42949.67291", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Greater_Equal, "42949.67292", Syntax.Single, false); 
+			internalSearch("My Single", Query.Operator.Greater_Equal, "42949.67290", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Greater, "42949.67291", Syntax.Single, false); 
+			internalSearch("My Single", Query.Operator.Greater, "42949.67292", Syntax.Single, false); 
+			internalSearch("My Single", Query.Operator.Greater, "42949.67290", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Less_Equal, "42949.67291", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Less_Equal, "42949.67292", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Less_Equal, "42949.67290", Syntax.Single, false); 
+			internalSearch("My Single", Query.Operator.Less, "42949.67291", Syntax.Single, false); 
+			internalSearch("My Single", Query.Operator.Less, "42949.67292", Syntax.Single, true); 
+			internalSearch("My Single", Query.Operator.Less, "42949.67290", Syntax.Single, false);
 
 			// Search For Boolean
-			internalSearch("My Boolean", Query.Operator.Equal, false.ToString(), "Boolean", true); 
-			internalSearch("My Boolean", Query.Operator.Equal, true.ToString(), "Boolean", false); 
+			internalSearch("My Boolean", Query.Operator.Equal, false.ToString(), Syntax.Boolean, true); 
+			internalSearch("My Boolean", Query.Operator.Equal, true.ToString(), Syntax.Boolean, false); 
 			
 			// Search for DateTime
-			internalSearch("My DateTime", Query.Operator.Equal, "4294967291", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Greater_Equal, "4294967291", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Greater_Equal, "4294967292", "DateTime", false); 
-			internalSearch("My DateTime", Query.Operator.Greater_Equal, "4294967290", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Greater, "4294967291", "DateTime", false); 
-			internalSearch("My DateTime", Query.Operator.Greater, "4294967292", "DateTime", false); 
-			internalSearch("My DateTime", Query.Operator.Greater, "4294967290", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Less_Equal, "4294967291", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Less_Equal, "4294967292", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Less_Equal, "4294967290", "DateTime", false); 
-			internalSearch("My DateTime", Query.Operator.Less, "4294967291", "DateTime", false); 
-			internalSearch("My DateTime", Query.Operator.Less, "4294967292", "DateTime", true); 
-			internalSearch("My DateTime", Query.Operator.Less, "4294967290", "DateTime", false); 
+			internalSearch("My DateTime", Query.Operator.Equal, "4294967291", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Greater_Equal, "4294967291", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Greater_Equal, "4294967292", Syntax.DateTime, false); 
+			internalSearch("My DateTime", Query.Operator.Greater_Equal, "4294967290", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Greater, "4294967291", Syntax.DateTime, false); 
+			internalSearch("My DateTime", Query.Operator.Greater, "4294967292", Syntax.DateTime, false); 
+			internalSearch("My DateTime", Query.Operator.Greater, "4294967290", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Less_Equal, "4294967291", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Less_Equal, "4294967292", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Less_Equal, "4294967290", Syntax.DateTime, false); 
+			internalSearch("My DateTime", Query.Operator.Less, "4294967291", Syntax.DateTime, false); 
+			internalSearch("My DateTime", Query.Operator.Less, "4294967292", Syntax.DateTime, true); 
+			internalSearch("My DateTime", Query.Operator.Less, "4294967290", Syntax.DateTime, false); 
 
 			// Search for Uri.
-			internalSearch("My Uri", Query.Operator.Equal, "http://server/path/doc.htm", "Uri", true); 
-			internalSearch("My Uri", Query.Operator.Begins, "http:", "Uri", true); 
-			internalSearch("My Uri", Query.Operator.Contains, "/server/", "Uri", true); 
-			internalSearch("My Uri", Query.Operator.Ends, "doc.htm", "Uri", true); 
-			internalSearch("My Uri", Query.Operator.Ends, "doc.html", "Uri", false); 
+			internalSearch("My Uri", Query.Operator.Equal, "http://server/path/doc.htm", Syntax.Uri, true); 
+			internalSearch("My Uri", Query.Operator.Begins, "http:", Syntax.Uri, true); 
+			internalSearch("My Uri", Query.Operator.Contains, "/server/", Syntax.Uri, true); 
+			internalSearch("My Uri", Query.Operator.Ends, "doc.htm", Syntax.Uri, true); 
+			internalSearch("My Uri", Query.Operator.Ends, "doc.html", Syntax.Uri, false); 
 
 			// Search for Xml.
-			internalSearch("My Xml", Query.Operator.Equal, "<tag1>this is xml</tag1>", "Xml", true); 
-			internalSearch("My Xml", Query.Operator.Begins, "<tag1>", "Xml", true); 
-			internalSearch("My Xml", Query.Operator.Contains, "this is xml", "Xml", true); 
-			internalSearch("My Xml", Query.Operator.Ends, "</tag1>", "Xml", true); 
-			internalSearch("My Xml", Query.Operator.Ends, "</tag1//>", "Xml", false);
+			internalSearch("My Xml", Query.Operator.Equal, "<tag1>this is xml</tag1>", Syntax.XmlDocument, true); 
+			internalSearch("My Xml", Query.Operator.Begins, "<tag1>", Syntax.XmlDocument, true); 
+			internalSearch("My Xml", Query.Operator.Contains, "this is xml", Syntax.XmlDocument, true); 
+			internalSearch("My Xml", Query.Operator.Ends, "</tag1>", Syntax.XmlDocument, true); 
+			internalSearch("My Xml", Query.Operator.Ends, "</tag1//>", Syntax.XmlDocument, false);
 		}
 
 		/// <summary>

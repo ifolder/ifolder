@@ -90,29 +90,14 @@
                     HintPath = "..\..\..\tools\nunit\bin\nunit.framework.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "..\..\..\..\SecureChannelSinks\Common\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
-                />
-                <Reference
                     Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
                     AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
                     HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.Utilities"
-                    AssemblyName = "Novell.Security.SecureSink.Utilities"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.Utilities.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink"
-                    AssemblyName = "Novell.Security.SecureSink"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.dll"
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
+                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
                 />
             </References>
         </Build>

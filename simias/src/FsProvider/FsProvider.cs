@@ -253,7 +253,7 @@ namespace Simias.Storage.Provider.Fs
 		private void CreateObject(XmlDocument doc, string collectionId)
 		{
 			XmlElement root = doc.DocumentElement;
-			XmlNodeList objectList = root.SelectNodes(Provider.ObjectTag);
+			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
 
 			// Build the path to the collection and make sure it exists.
 			string collectionPath = DbPath;
@@ -267,9 +267,9 @@ namespace Simias.Storage.Provider.Fs
 				foreach (XmlElement recordEl in objectList)
 				{
 					// Get the Name, ID, and type.
-					string name = recordEl.GetAttribute(Provider.NameAttr);
-					string id = recordEl.GetAttribute(Provider.IdAttr);
-					string type = recordEl.GetAttribute(Provider.TypeAttr);
+					string name = recordEl.GetAttribute(XmlTags.NameAttr);
+					string id = recordEl.GetAttribute(XmlTags.IdAttr);
+					string type = recordEl.GetAttribute(XmlTags.TypeAttr);
 		
 					// Make sure this is a valid record.
 					if (name != null && id != null && type != null)
@@ -441,7 +441,7 @@ namespace Simias.Storage.Provider.Fs
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(recordXml);
 			XmlElement root = doc.DocumentElement;
-			XmlNodeList objectList = root.SelectNodes(Provider.ObjectTag);
+			XmlNodeList objectList = root.SelectNodes(XmlTags.ObjectTag);
 			Transaction trans = new Transaction(collectionPath);
 			trans.Begin();
 			try
@@ -449,7 +449,7 @@ namespace Simias.Storage.Provider.Fs
 				foreach (XmlElement recordEl in objectList)
 				{
 					// Get ID.
-					string id = recordEl.GetAttribute(Provider.IdAttr);
+					string id = recordEl.GetAttribute(XmlTags.IdAttr);
 					string objectPath = Path.Combine(collectionPath, id);
 					trans.removeObject(id);
 				}
@@ -475,7 +475,7 @@ namespace Simias.Storage.Provider.Fs
 			string recordXml = null;
 			recordPath = Path.Combine(recordPath, recordId);
 			XmlDocument doc = new XmlDocument();
-			XmlElement rootElement = doc.CreateElement(Provider.ObjectListTag);
+			XmlElement rootElement = doc.CreateElement(XmlTags.ObjectListTag);
 			doc.AppendChild(rootElement);
 
 			try
@@ -522,16 +522,16 @@ namespace Simias.Storage.Provider.Fs
 			{
 				switch (query.Property)
 				{
-					case Provider.ObjectName:
-						attribute = Provider.NameAttr;
+					case BaseSchema.ObjectName:
+						attribute = XmlTags.NameAttr;
 						isAttribute = true;
 						break;
-					case Provider.ObjectId:
-						attribute = Provider.IdAttr;
+					case BaseSchema.ObjectId:
+						attribute = XmlTags.IdAttr;
 						isAttribute = true;
 						break;
-					case Provider.ObjectType:
-						attribute = Provider.TypeAttr;
+					case BaseSchema.ObjectType:
+						attribute = XmlTags.TypeAttr;
 						isAttribute = true;
 						break;
 				}
@@ -542,58 +542,58 @@ namespace Simias.Storage.Provider.Fs
 					case Query.Operator.Not_Equal:
 						if (isAttribute)
 						{
-							pattern = string.Format("<{0}[^>]*{1}=\"{2}\"[^>]*", Provider.ObjectTag, attribute, query.Value);
+							pattern = string.Format("<{0}[^>]*{1}=\"{2}\"[^>]*", XmlTags.ObjectTag, attribute, query.Value);
 						}
 						else
 						{
-							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>{3}</{0}>", Provider.PropertyTag, query.Property, query.Type, query.Value);
+							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>{3}</{0}>", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
 					case Query.Operator.Begins:
 						if (isAttribute)
 						{
-							pattern = string.Format("<{0}[^>]*{1}=\"{2}", Provider.ObjectTag, attribute, query.Value);
+							pattern = string.Format("<{0}[^>]*{1}=\"{2}", XmlTags.ObjectTag, attribute, query.Value);
 						}
 						else
 						{
-							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>{3}", Provider.PropertyTag, query.Property, query.Type, query.Value);
+							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>{3}", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
 					case Query.Operator.Ends:
 						if (isAttribute)
 						{
-							pattern = string.Format("<{0}[^>]*{1}=\"[^\"]*{2}\"", Provider.ObjectTag, attribute, query.Value);
+							pattern = string.Format("<{0}[^>]*{1}=\"[^\"]*{2}\"", XmlTags.ObjectTag, attribute, query.Value);
 						}
 						else
 						{
-							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>.*{3}</{0}>", Provider.PropertyTag, query.Property, query.Type, query.Value);
+							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>.*{3}</{0}>", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
 					case Query.Operator.Contains:
 						if (isAttribute)
 						{
-							pattern = string.Format("<{0}[^>]*{1}=\"[^\"]*{2}", Provider.ObjectTag, attribute, query.Value);
+							pattern = string.Format("<{0}[^>]*{1}=\"[^\"]*{2}", XmlTags.ObjectTag, attribute, query.Value);
 						}
 						else
 						{
-							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>.*{3}.*</{0}>", Provider.PropertyTag, query.Property, query.Type, query.Value);
+							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>.*{3}.*</{0}>", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
 					case Query.Operator.Greater:
 					case Query.Operator.Less:
 					case Query.Operator.Greater_Equal:
 					case Query.Operator.Less_Equal:
-						pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\"[^>]*>", Provider.PropertyTag, query.Property, query.Type);
+						pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\"[^>]*>", XmlTags.PropertyTag, query.Property, query.Type);
 						valueCompare = true;
 						break;
 					case Query.Operator.Exists:
 						if (isAttribute)
 						{
-							pattern = string.Format("<{0}[^>]*{1}=\"[^>]*", Provider.ObjectTag, attribute, query.Value);
+							pattern = string.Format("<{0}[^>]*{1}=\"[^>]*", XmlTags.ObjectTag, attribute, query.Value);
 						}
 						else
 						{
-							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>", Provider.PropertyTag, query.Property, query.Type);
+							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>", XmlTags.PropertyTag, query.Property, query.Type);
 						}
 						break;
 				}
@@ -654,30 +654,30 @@ namespace Simias.Storage.Provider.Fs
 										
 									switch (query.Type)
 									{
-										case Provider.Syntax.Byte:
-										case Provider.Syntax.DateTime:
-										case Provider.Syntax.TimeSpan:
-										case Provider.Syntax.UInt16:
-										case Provider.Syntax.UInt32:
-										case Provider.Syntax.UInt64:
-										case Provider.Syntax.Char:
+										case Syntax.Byte:
+										case Syntax.DateTime:
+										case Syntax.TimeSpan:
+										case Syntax.UInt16:
+										case Syntax.UInt32:
+										case Syntax.UInt64:
+										case Syntax.Char:
 										{
 											ulong v1 = ulong.Parse(s1);
 											ulong v2 = ulong.Parse(query.Value);
 											diff = v1.CompareTo(v2);
 											break;
 										}
-										case Provider.Syntax.SByte:
-										case Provider.Syntax.Int16:
-										case Provider.Syntax.Int32:
-										case Provider.Syntax.Int64:
+										case Syntax.SByte:
+										case Syntax.Int16:
+										case Syntax.Int32:
+										case Syntax.Int64:
 										{
 											long v1 = long.Parse(s1);
 											long v2 = long.Parse(query.Value);
 											diff = v1.CompareTo(v2);
 											break;
 										}
-										case Provider.Syntax.Single:
+										case Syntax.Single:
 										{
 											Double v1 = Double.Parse(s1);
 											Double v2 = Double.Parse(query.Value);

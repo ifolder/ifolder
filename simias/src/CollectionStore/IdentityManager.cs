@@ -162,7 +162,7 @@ namespace Simias.Storage
 			LocalAddressBook localAb = null;
 
 			// Look for the address book by its name, which is the domain name.
-			Persist.Query query = new Persist.Query( Property.ObjectName, Persist.Query.Operator.Equal, domainName, Property.Syntax.String.ToString() );
+			Persist.Query query = new Persist.Query( Property.ObjectName, Persist.Query.Operator.Equal, domainName, Syntax.String );
 
 			// Do the search.
 			char[] results = new char[ 4096 ];
