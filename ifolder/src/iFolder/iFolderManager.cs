@@ -141,71 +141,14 @@ namespace Novell.iFolder
 					throw new ApplicationException("The path specified is either a parent or a child of an existing iFolder");
 				}
 
-				iFolder newiFolder = new iFolder( config, store, abMan );
-				newiFolder.Create( path );
+				string name = Path.GetFileName(path);
+
+				iFolder newiFolder = new iFolder(store, name, path, abMan);
 				return newiFolder;
 			}
 			catch( Exception e )
 			{
 				throw new ApplicationException("iFolder not created for " +  path + " - Reason: " + e.ToString());
-			}
-		}
-
-		/// <summary>
-		/// OBSOLETE: Create an iFolder with a specific friendly name.
-		/// </summary>
-		/// <param name="name">
-		/// The friendly name of the iFolder.
-		/// </param>
-		/// <param name="path">
-		/// The absolute path where the iFolder will be located.
-		/// </param>
-		/// <returns>
-		/// An <see cref="iFolder"/> for <paramref name="path"/>.
-		/// </returns>
-		/// <remarks>
-		/// This overload of CreateiFolder is obsolete. Please do not use it.
-		/// </remarks>
-		[ Obsolete( "This overloaded method is marked for removal. There is no replacement.", false ) ]
-		public iFolder CreateiFolder( string name, string path )
-		{
-			try
-			{
-				iFolder newiFolder = new iFolder( config, store, abMan );
-				newiFolder.Create( name, path );
-				return newiFolder;
-			}
-			catch(Exception e)
-			{
-				throw new ApplicationException("iFolder " + name + "not created - Reason: " + e.ToString());
-			}
-		}
-
-		/// <summary>
-		/// OBSOLETE: Deletes an iFolder by rooted path name or by ID.
-		/// </summary>
-		/// <param name="iFolderName">
-		/// The root path of the iFolder or the iFolder ID.
-		/// The iFolder ID can be queried from the object representing the
-		/// iFolder.
-		/// </param>
-		/// <param name="byID">
-		/// Specify <b>true</b> if <paramref name="name"/> is the iFolder ID,
-		/// or <b>false</b> if it specifies the root path of the iFolder.
-		/// </param>
-		/// <remarks>
-		/// This overload of DeleteiFolder is obsolete. Please do not use it.
-		/// </remarks>
-		[ Obsolete( "Please use DeleteiFolderByPath or DeleteiFolderById instead.", false ) ]
-		public void DeleteiFolder(string iFolderName, bool byID)
-		{
-			if ( byID )
-			{
-				DeleteiFolderById( iFolderName );
-			}
-			else
-			{
-				DeleteiFolderByPath( iFolderName );
 			}
 		}
 
@@ -270,8 +213,8 @@ namespace Novell.iFolder
 
 			try
 			{
-				ifolder = new iFolder( config, store, abMan );
-				ifolder.Load( store, id );
+				Collection collection = store.GetCollectionByID(id);
+				ifolder = new iFolder(store, collection, abMan);
 			}
 			catch
 			{

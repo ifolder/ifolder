@@ -64,7 +64,7 @@ namespace Novell.iFolder.Tests
 
 			try
 			{
-			// Celan up any store that may be there before the tests
+			// Clean up any store that may be there before the tests
 			Directory.Delete(path, true);
 			Directory.Delete(simiasPath, true);
 			}
@@ -541,8 +541,9 @@ namespace Novell.iFolder.Tests
 			{
 				manager.DeleteiFolderByPath(ifolder.LocalPath);
 			}
-			Directory.Delete(path, true);
-			Directory.Delete(simiasPath, true);
+
+//			Directory.Delete(path, true);
+//			Directory.Delete(simiasPath, true);
 		}
 	}
 
