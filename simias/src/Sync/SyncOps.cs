@@ -417,7 +417,7 @@ internal class SyncIncomingNode
 			 *  and concurrent clients accessing this collection on the server?
 			 */
 			Log.Spew("Collision: overwriting local node {0} with node from server", node.Name);
-			collection.ImportNode(node);
+			collection.ImportNode(node, expectedIncarn);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			CommitFile();
 			collection.Commit(node);
@@ -462,7 +462,7 @@ internal class SyncIncomingNode
 			return NodeStatus.UpdateCollision;
 		}
 		CommitFile();
-		collection.ImportNode(node);
+		collection.ImportNode(node, expectedIncarn);
 		collection.Commit(node);
 		return NodeStatus.Complete;
 	}
