@@ -285,10 +285,10 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
-					Simias.Service.Manager.Start();
+					Simias.Client.Manager.Start();
 
 					ifWebService = new iFolderWebService();
-					ifWebService.Url = Simias.Service.Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+					ifWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 					ifWebService.Ping();
 					//iFolderManager.CreateDefaultExclusions(config);
 
@@ -639,7 +639,7 @@ namespace Novell.FormsTrayApp
 				}
 
 				// Shut down the web server.
-				Simias.Service.Manager.Stop();
+				Simias.Client.Manager.Stop();
 
 				if ((workerThread != null) && workerThread.IsAlive)
 				{
