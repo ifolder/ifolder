@@ -41,10 +41,7 @@ namespace Novell.iFolder
 		/// </summary>
 		public iFolder.Rights Rights
 		{
-			get
-			{
-				return(rights);
-			}
+			get { return rights; }
 		}
 
 		/// <summary>
@@ -52,16 +49,13 @@ namespace Novell.iFolder
 		/// </summary>
 		public Contact Contact
 		{
-			get
-			{
-				return(contact);
-			}
+			get { return contact; }
 		}
 
 		/// <summary>
 		/// Constructor for the IFACEList to use to construct entries
 		/// </summary>
-		internal IFAccessControlEntry(iFolder.Rights rights, Contact contact)
+		internal IFAccessControlEntry( iFolder.Rights rights, Contact contact )
 		{
 			this.rights = rights;
 			this.contact = contact;
@@ -80,12 +74,9 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Constructor for the IFACEList to use to construct entries
 		/// </summary>
-		internal IFAccessControlList(Collection collection, Novell.AddressBook.AddressBook ab)
+		internal IFAccessControlList( Collection collection, Novell.AddressBook.AddressBook ab )
 		{
-			ICSList icsList = collection.GetAccessControlList();
-
-			this.ifACLEnumerator = new IFACLEnumerator( ab, 
-					icsList.GetEnumerator());
+			ifACLEnumerator = new IFACLEnumerator( ab, collection.GetAccessControlList().GetEnumerator() );
 		}
 
 		public IEnumerator GetEnumerator()
@@ -99,8 +90,7 @@ namespace Novell.iFolder
 			private IEnumerator iEnumerator;
 			private Novell.AddressBook.AddressBook	ab;
 
-			public IFACLEnumerator( Novell.AddressBook.AddressBook ab,
-									IEnumerator iEnumerator )
+			public IFACLEnumerator( Novell.AddressBook.AddressBook ab, IEnumerator iEnumerator )
 			{
 				this.ab = ab;
 				this.iEnumerator = iEnumerator;
@@ -115,25 +105,19 @@ namespace Novell.iFolder
 			{
 				get
 				{
-					AccessControlEntry ace = 
-						(AccessControlEntry)iEnumerator.Current;
-
 					try
 					{
-						Contact c = ab.GetContact(ace.Id);
-						IFAccessControlEntry iface = new 
-							IFAccessControlEntry((iFolder.Rights)ace.Rights, c);
-
-						return( iface );
+						AccessControlEntry ace = iEnumerator.Current as AccessControlEntry;
+						Contact c = ab.GetContact( ace.ID );
+						return new IFAccessControlEntry( iFolder.MapAccessRights( ace.Rights ), c );
 					}
-					catch(Exception e)
+					catch( Exception e )
 					{
 						// This should never happen unless somebody calls
 						// Current before MoveNext() which they are not
 						// supposed to do
 						return null;
 					}
-
 				}
 			}
 
@@ -142,20 +126,19 @@ namespace Novell.iFolder
 				// The collection has some entries that are well known
 				// and should not be exposed at the iFolder level
 				// Loop past these while enumerating
-				while(true)
+				bool hasData = iEnumerator.MoveNext();
+				while ( hasData )
 				{
-					if(iEnumerator.MoveNext() == false)
-						return false;
-
-					AccessControlEntry ace = 
-						(AccessControlEntry)iEnumerator.Current;
-
-					if(ace.WellKnown == false)
+					AccessControlEntry ace = iEnumerator.Current as AccessControlEntry;
+					if ( ace.ID != Access.World )
 					{
-						if(this.Current != null)
-							return true;
+						break;
 					}
+
+					hasData = iEnumerator.MoveNext();
 				}
+
+				return hasData;
 			}
 		}
 	}

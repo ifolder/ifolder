@@ -3,22 +3,22 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{FFAB1125-A2DD-43BC-AD47-74B409037C97}"
+        ProjectGuid = "{6205D971-12A4-423C-B04E-A7FE6139BFA8}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "JpegMeta"
+                AssemblyName = "iFolderTests"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Library"
+                OutputType = "Exe"
                 PreBuildEvent = ""
-                PostBuildEvent = "if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\..\stage&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\..\stage"
-                RootNamespace = "JpegMeta"
+                PostBuildEvent = ""
+                RootNamespace = "iFolderTests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -28,7 +28,7 @@
                     BaseAddress = "285212672"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE"
+                    DefineConstants = ""
                     DocumentationFile = ""
                     DebugSymbols = "true"
                     FileAlignment = "4096"
@@ -40,7 +40,7 @@
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
+                    WarningLevel = "1"
                 />
                 <Config
                     Name = "Release"
@@ -48,57 +48,33 @@
                     BaseAddress = "285212672"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
+                    DefineConstants = ""
                     DocumentationFile = ""
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
                     NoStdLib = "false"
                     NoWarn = ""
-                    Optimize = "true"
+                    Optimize = "false"
                     OutputPath = "bin\Release\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
+                    WarningLevel = "1"
                 />
             </Settings>
             <References>
                 <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                    Name = "iFolder"
+                    Project = "{7FDE5803-614E-4B16-B4AC-2BA6FD274D98}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "csmetadata.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "JpegMeta.cs"
+                    RelPath = "iFolderTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

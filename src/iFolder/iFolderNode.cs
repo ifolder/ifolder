@@ -27,9 +27,6 @@ using Simias.Storage;
 namespace Novell.iFolder
 {
 	/// <summary>
-	/// The default type is "work" and "internet".
-	/// There can exist only one "preferred" email address per contact.
-	/// "internet" and "x400" are exclusive to each other
 	/// </summary>
 	public enum NodeType : uint
 	{
@@ -50,28 +47,18 @@ namespace Novell.iFolder
 	/// </summary>
 	public class iFolderNode
 	{
-#region Class Members
+		#region Class Members
 		private iFolder 	ifolder;
 		private Node 		node;
-		private NodeType	type;
+		#endregion
 
-		private const string iFolderFileType = "File";
-		private const string iFolderDirectoryType = "Directory";
-#endregion
-
-
-
-
-#region Properties
+		#region Properties
 		/// <summary>
 		/// Gets the iFolder to which this iFoldeNode belongs
 		/// </summary>
 		public iFolder iFolder
 		{
-			get
-			{
-				return(ifolder);
-			}
+			get { return ifolder; }
 		}
 
 		/// <summary>
@@ -79,10 +66,7 @@ namespace Novell.iFolder
 		/// </summary>
 		public NodeType Type
 		{
-			get
-			{
-				return(type);
-			}
+			get { return ( node.Type == "FileNode" ) ? file : folder; }
 		}
 
 		/// <summary>
@@ -90,15 +74,8 @@ namespace Novell.iFolder
 		/// </summary>
 		public string Name
 		{
-			get
-			{
-				return(node.Name);
-			}
-
-			set
-			{
-				node.Name = value;
-			}
+			get { return node.Name; }
+			set	{ node.Name = value; }
 		}
 
 		/// <summary>
@@ -106,34 +83,17 @@ namespace Novell.iFolder
 		/// </summary>
 		public string Description
 		{
-			get
-			{
-				return (node.Properties.
-					GetSingleProperty("Description").ToString());
-			}
-
-			set
-			{
-				node.Properties.ModifyProperty("Description", value);
-			}
+			get { return (node.Properties.GetSingleProperty( "Description" ).ToString() ); }
+			set	{ node.Properties.ModifyProperty( "Description", value ); }
 		}
 #endregion
 
-
-
-
-#region Constructors
-		internal iFolderNode(iFolder ifolder, Node node)
+		#region Constructors
+		internal iFolderNode( iFolder ifolder, Node node )
 		{
 			this.ifolder= ifolder;
 			this.node = node;
-
-			// Set the type on the node
-			if(node.Type == iFolderFileType)
-				this.type = NodeType.file;
-			else if(node.Type == iFolderDirectoryType)
-				this.type = NodeType.folder;
 		}
-#endregion
+		#endregion
 	}
 }
