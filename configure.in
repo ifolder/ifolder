@@ -248,20 +248,20 @@ AC_SUBST(SIMIAS_INSTALL_PATH)
 #
 AC_ARG_WITH(addressbook-path,
     [  --with-addressbook-path=PATH full path to installed AddressBook assemblies (default is $ac_default_prefix)],
-    [ SIMIAS_ADDRESSSBOOK_PATH=$withval ],
-    [ SIMIAS_ADDRESSSBOOK_PATH=$prefix ]
+    [ ADDRESSSBOOK_INSTALL_PATH=$withval ],
+    [ ADDRESSSBOOK_INSTALL_PATH=$prefix ]
     )
-test "x$SIMIAS_ADDRESSSBOOK_PATH" = xNONE && SIMIAS_ADDRESSSBOOK_PATH=$ac_default_prefix
+test "x$ADDRESSSBOOK_INSTALL_PATH" = xNONE && ADDRESSSBOOK_INSTALL_PATH=$ac_default_prefix
 case $host_os in
     cygwin*)
-        if ( expr "$SIMIAS_ADDRESSSBOOK_PATH" : ".*cygdrive.*" > /dev/null ); then
-            SIMIAS_ADDRESSSBOOK_PATH=`echo "$SIMIAS_ADDRESSSBOOK_PATH" | sed 's,/cygdrive/\(.\)/,\1:/,'`
+        if ( expr "$ADDRESSSBOOK_INSTALL_PATH" : ".*cygdrive.*" > /dev/null ); then
+            ADDRESSSBOOK_INSTALL_PATH=`echo "$ADDRESSSBOOK_INSTALL_PATH" | sed 's,/cygdrive/\(.\)/,\1:/,'`
         else
-            SIMIAS_ADDRESSSBOOK_PATH="\$(CYGWIN_PATH)$SIMIAS_ADDRESSSBOOK_PATH"
+            ADDRESSSBOOK_INSTALL_PATH="\$(CYGWIN_PATH)$ADDRESSSBOOK_INSTALL_PATH"
         fi
     ;;
 esac
-AC_SUBST(SIMIAS_ADDRESSSBOOK_PATH)
+AC_SUBST(ADDRESSSBOOK_INSTALL_PATH)
 
 DISTCHECK_CONFIGURE_FLAGS="--with-simias-path=$SIMIAS_INSTALL_PATH --with-addressbook-path=$SIMIAS_ADDRESSBOOK_PATH"
 AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
@@ -281,29 +281,39 @@ AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
 if test "$enable_debug" = "true"
 then
   # Build debug version.
-  CSCFLAGS="$DEBUG_CSCFLAGS $CSCFLAGS"
   CFLAGS="$DEBUG_CFLAGS $CFLAGS"
+  CSCFLAGS="$DEBUG_CSCFLAGS $CSCFLAGS"
   CXXFLAGS="$DEBUG_CXXFLAGS $CXXFLAGS"
+  DEVENV_CONFIGURATION=Debug
   NUNIT_FLAGS="$DEBUG_NUNITFLAGS $NUNIT_FLAGS"
 else
   # Build optimized version.
-  CSCFLAGS="$OPTIMIZE_CSCFLAGS $CSCFLAGS"
   CFLAGS="$OPTIMIZE_CFLAGS $CFLAGS"
+  CSCFLAGS="$OPTIMIZE_CSCFLAGS $CSCFLAGS"
   CXXFLAGS="$OPTIMIZE_CXXFLAGS $CXXFLAGS"
+  DEVENV_CONFIGURATION=Release
   NUNIT_FLAGS="$OPTIMIZE_NUNITFLAGS $NUNIT_FLAGS"
 fi
+AC_SUBST(CSCFLAGS)
+AC_SUBST(DEVENV_CONFIGURATION)
 
+#
+# Configure PKG_CONFIG
+#
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "x$PKG_CONFIG" = "xno"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
-case $host_os in
+case $IFOLDER_OS in
     linux)
         GTK_SHARP_REQUIRED_VERSION=0.10
         PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_REQUIRED_VERSION)
     ;;
 esac
 
+#
+# Configure files
+#
 AC_OUTPUT([
 Makefile
 src/Makefile
@@ -313,4 +323,7 @@ src/GtkTrayApp/Makefile
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
+src/package/Makefile
+src/package/windows/Makefile
+src/package/linux/Makefile
 ])
