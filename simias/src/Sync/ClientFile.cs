@@ -214,7 +214,6 @@ namespace Simias.Sync.Client
 			long	sizeRemaining;
 			long[] fileMap = this.GetDownloadFileMap(out sizeToSync);
 			sizeRemaining = sizeToSync;
-			//byte[] buffer = new byte[BlockSize];
 			WritePosition = 0;
 				
 			for (int i = 0; i < fileMap.Length; ++i)
@@ -276,13 +275,14 @@ namespace Simias.Sync.Client
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
+			sizeToSync = 0;
 			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
-			sizeToSync = BlockSize * serverHashMap.Length;
-
 			if (serverHashMap == null)
 			{
 				return new long[0];
 			}
+			
+			sizeToSync = BlockSize * serverHashMap.Length;
 			table.Add(serverHashMap);
 			long[] fileMap = new long[serverHashMap.Length];
 
