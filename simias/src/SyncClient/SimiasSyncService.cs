@@ -131,43 +131,83 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/PutNonFileNodes", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public SyncNodeStatus[] PutNonFileNodes(SyncNode[] nodes) {
-        object[] results = this.Invoke("PutNonFileNodes", new object[] {
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/PutNodes", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public SyncNodeStatus[] PutNodes(SyncNode[] nodes) {
+        object[] results = this.Invoke("PutNodes", new object[] {
                     nodes});
         return ((SyncNodeStatus[])(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginPutNonFileNodes(SyncNode[] nodes, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("PutNonFileNodes", new object[] {
+    public System.IAsyncResult BeginPutNodes(SyncNode[] nodes, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("PutNodes", new object[] {
                     nodes}, callback, asyncState);
     }
     
     /// <remarks/>
-    public SyncNodeStatus[] EndPutNonFileNodes(System.IAsyncResult asyncResult) {
+    public SyncNodeStatus[] EndPutNodes(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
         return ((SyncNodeStatus[])(results[0]));
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetNonFileNodes", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public SyncNode[] GetNonFileNodes(string[] nids) {
-        object[] results = this.Invoke("GetNonFileNodes", new object[] {
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetNodes", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public SyncNode[] GetNodes(string[] nids) {
+        object[] results = this.Invoke("GetNodes", new object[] {
                     nids});
         return ((SyncNode[])(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginGetNonFileNodes(string[] nids, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetNonFileNodes", new object[] {
+    public System.IAsyncResult BeginGetNodes(string[] nids, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetNodes", new object[] {
                     nids}, callback, asyncState);
     }
     
     /// <remarks/>
-    public SyncNode[] EndGetNonFileNodes(System.IAsyncResult asyncResult) {
+    public SyncNode[] EndGetNodes(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
         return ((SyncNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetDirs", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public SyncNode[] GetDirs(string[] nids) {
+        object[] results = this.Invoke("GetDirs", new object[] {
+                    nids});
+        return ((SyncNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginGetDirs(string[] nids, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetDirs", new object[] {
+                    nids}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public SyncNode[] EndGetDirs(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((SyncNode[])(results[0]));
+    }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/PutDirs", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public SyncNodeStatus[] PutDirs(SyncNode[] nodes) {
+        object[] results = this.Invoke("PutDirs", new object[] {
+                    nodes});
+        return ((SyncNodeStatus[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginPutDirs(SyncNode[] nodes, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("PutDirs", new object[] {
+                    nodes}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public SyncNodeStatus[] EndPutDirs(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((SyncNodeStatus[])(results[0]));
     }
     
     /// <remarks/>

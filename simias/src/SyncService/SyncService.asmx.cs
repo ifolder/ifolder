@@ -114,7 +114,7 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns>An array of the failed nodes.</returns>
 		[WebMethod(EnableSession = true)]
-		public SyncNodeStatus[] PutNonFileNodes(SyncNode[] nodes)
+		public SyncNodeStatus[] PutNodes(SyncNode[] nodes)
 		{
 			return Service.PutNonFileNodes(nodes);
 		}
@@ -124,9 +124,29 @@ namespace Simias.Sync.Web
 		/// </summary>
 		/// <returns>An Array of non-file nodes.</returns>
 		[WebMethod(EnableSession = true)]
-		public SyncNode[] GetNonFileNodes(string[] nids)
+		public SyncNode[] GetNodes(string[] nids)
 		{
 			return Service.GetNonFileNodes(nids);
+		}
+
+		/// <summary>
+		/// gets an array of dir nodes
+		/// </summary>
+		/// <returns>An Array of non-file nodes.</returns>
+		[WebMethod(EnableSession = true)]
+		public SyncNode[] GetDirs(string[] nids)
+		{
+			return Service.GetNonFileNodes(nids);
+		}
+
+		/// <summary>
+		/// Takes an array of non-file nodes and writes them to the store.
+		/// </summary>
+		/// <returns>An array of the failed nodes.</returns>
+		[WebMethod(EnableSession = true)]
+		public SyncNodeStatus[] PutDirs(SyncNode[] nodes)
+		{
+			return Service.PutDirs(nodes);
 		}
 
 		/// <summary>

@@ -99,9 +99,9 @@ namespace Simias.Sync
 					if (!shuttingDown || !paused)
 					{
 						// Sync this collection now.
-						log.Info("Starting Sync for {0}.", cClient);
+						log.Info("{0} : Starting Sync.", cClient);
 						cClient.SyncNow();
-						log.Info("Finished Sync for {0}.", cClient);
+						log.Info("{0} : Finished Sync.", cClient);
 						cClient.Reschedule();
 					}
 				}
@@ -281,6 +281,12 @@ namespace Simias.Sync
 			}
 		}
 
+		public override string ToString()
+		{
+			return collection.Name;
+		}
+
+
 		private void Initialize()
 		{
 			if (collection.CreateMaster)
@@ -327,8 +333,8 @@ namespace Simias.Sync
 			UriBuilder hostUrl = new UriBuilder(service.Url);
 			hostUrl.Host = collection.MasterUrl.Host;
 			// BUGBUG this need to be put back 
-			// if (collection.MasterUrl.Port != 0)
-			//	hostUrl.Port = collection.MasterUrl.Port;
+			if (collection.MasterUrl.Port != 0 && collection.MasterUrl.Port != 6436)
+				hostUrl.Port = collection.MasterUrl.Port;
 			service.Url = hostUrl.ToString();
 
 			rights = service.Start(collection.ID, collection.StoreReference.GetUserIDFromDomainID(collection.Domain));
@@ -674,7 +680,7 @@ namespace Simias.Sync
 			ProcessKillOnServer();
 			ProcessNodesToServer();
 			ProcessDirsToServer();
-			//ProcessFilesToServer();
+			ProcessFilesToServer();
 		}
 
 		void ProcessKillOnClient()
@@ -753,7 +759,7 @@ namespace Simias.Sync
 					Array.Copy(nodeIDs, offset, batchIDs, 0, batchCount);
 					offset += batchCount;
 
-					updates = service.GetNonFileNodes(batchIDs);
+					updates = service.GetNodes(batchIDs);
 
 					StoreNodes(updates);
 				}
@@ -771,48 +777,9 @@ namespace Simias.Sync
 				XmlDocument xNode = new XmlDocument();
 				xNode.LoadXml(sn.node);
 				Node node = Node.NodeFactory(store, xNode);
-				if (collection.IsBaseType(node, NodeTypes.DirNodeType))
-				{
-					// This is a DirNode we need to make sure the directory exists.
-					try
-					{
-						DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
-						DirNode dn = new DirNode(node);
-						string path = dn.GetFullPath(collection);
-						if (oldNode != null)
-						{
-							// Check to see if we have a rename
-							// This could be a rename.
-							string oldPath = oldNode.GetFullPath(collection);
-							if (oldPath != path)
-							{
-								try
-								{
-									Directory.Move(oldPath, path);
-								}
-								catch
-								{
-									continue;
-								}
-							}
-						}
-
-						if (!Directory.Exists(path))
-						{
-							Directory.CreateDirectory(path);
-						}
-						collection.ImportNode(dn, false, 0);
-						collection.Commit(dn);
-						nodesFromServer.Remove(dn.ID);
-						commitList[i++] = null;
-					}
-					catch {}
-				}
-				else
-				{
-					collection.ImportNode(node, false, 0);
-					commitList[i++] = node;
-				}
+				log.Info("Updating {0} {1} from server", node.Name, node.Type);
+				collection.ImportNode(node, false, 0);
+				commitList[i++] = node;
 			}
 			try
 			{
@@ -858,6 +825,69 @@ namespace Simias.Sync
 			}
 		}
 
+		void ProcessDirsFromServer()
+		{
+			SyncNode[] updates = null;
+
+			// get small nodes and files from server
+			if (dirsFromServer.Count > 0)
+			{
+				string[] nodeIDs = new string[dirsFromServer.Count];
+				dirsFromServer.Keys.CopyTo(nodeIDs, 0);
+				
+				// Now get the nodes in groups of BATCH_SIZE.
+				int offset = 0;
+				while (offset < nodeIDs.Length && !stopping)
+				{
+					int batchCount = nodeIDs.Length - offset < BATCH_SIZE ? nodeIDs.Length - offset : BATCH_SIZE;
+					string[] batchIDs = new string[batchCount];
+					Array.Copy(nodeIDs, offset, batchIDs, 0, batchCount);
+					offset += batchCount;
+
+					updates = service.GetDirs(batchIDs);
+
+					foreach (SyncNode snode in updates)
+					{
+						StoreDir(snode);
+					}
+				}
+			}
+		}
+
+		void StoreDir(SyncNode snode)
+		{
+			try
+			{
+				XmlDocument xNode = new XmlDocument();
+				xNode.LoadXml(snode.node);
+				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
+				log.Info("Updating {0} {1} from server", node.Name, node.Type);
+
+				collection.ImportNode(node, false, 0);
+			
+				// Get the old node to see if the node was renamed.
+				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
+				string path = node.GetFullPath(collection);
+				if (oldNode != null)
+				{
+					// We already have this node look for a rename.
+					string oldPath = oldNode.GetFullPath(collection);
+					if (oldPath != path)
+					{
+						Directory.Move(oldPath, path);
+					}
+				}
+
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
+				collection.Commit(node);
+				dirsFromServer.Remove(node.ID);
+			}
+			catch {}
+		}
+
 		void ProcessFilesFromServer()
 		{
 			if (filesFromServer.Count == 0)
@@ -888,6 +918,10 @@ namespace Simias.Sync
 			}
 		}
 
+		void ProcessKillOnServer()
+		{
+		}
+
 		void ProcessNodesToServer()
 		{
 			// get small nodes and files from server
@@ -910,6 +944,7 @@ namespace Simias.Sync
 					Node node = collection.GetNodeByID(nodeIDs[i]);
 					if (node != null)
 					{
+						log.Info("Updating {0} {1} to server", node.Name, node.Type);
 						nodes[i - offset] = node;
 						SyncNode snode = new SyncNode();
 						snode.node = node.Properties.ToString(true);
@@ -920,7 +955,7 @@ namespace Simias.Sync
 
 				offset += batchCount;
 
-				SyncNodeStatus[] nodeStatus = service.PutNonFileNodes(updates);
+				SyncNodeStatus[] nodeStatus = service.PutNodes(updates);
 					
 				for (int i = 0; i < nodes.Length; ++ i)
 				{
@@ -957,6 +992,14 @@ namespace Simias.Sync
 					}
 				}
 			}
+		}
+
+		void ProcessDirsToServer()
+		{
+		}
+
+		void ProcessFilesToServer()
+		{
 		}
 	}
 }

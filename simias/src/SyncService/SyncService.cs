@@ -304,6 +304,56 @@ public class SyncService
 		return true;
 	}
 
+	public SyncNodeStatus[] PutDirs(SyncNode [] nodes)
+	{
+		SyncNodeStatus[]	statusList = new SyncNodeStatus[nodes.Length];
+
+		int i = 0;
+		foreach (SyncNode snode in nodes)
+		{
+			SyncNodeStatus status = new SyncNodeStatus();
+			statusList[i++] = status;
+			status.status = SyncNodeStatus.SyncStatus.ServerFailure;
+			try
+			{
+				XmlDocument xNode = new XmlDocument();
+				xNode.LoadXml(snode.node);
+				DirNode node = (DirNode)Node.NodeFactory(store, xNode);
+				log.Debug("Updating {0} {1} from client", node.Name, node.Type);
+
+				status.nodeID = node.ID;
+				collection.ImportNode(node, true, snode.expectedIncarn);
+			
+				// Get the old node to see if the node was renamed.
+				DirNode oldNode = collection.GetNodeByID(node.ID) as DirNode;
+				string path = node.GetFullPath(collection);
+				if (oldNode != null)
+				{
+					// We already have this node look for a rename.
+					string oldPath = oldNode.GetFullPath(collection);
+					if (oldPath != path)
+					{
+						Directory.Move(oldPath, path);
+					}
+				}
+
+				if (!Directory.Exists(path))
+				{
+					Directory.CreateDirectory(path);
+				}
+				collection.Commit(node);
+				status.status = SyncNodeStatus.SyncStatus.Success;
+			}
+			catch (CollisionException)
+			{
+				// The current node failed because of a collision.
+				status.status = SyncNodeStatus.SyncStatus.UpdateConflict;
+			}
+			catch {}
+		}
+		return statusList;
+	}
+
 	public SyncNode[] GetNonFileNodes(string[] nodeIDs)
 	{
 		SyncNode[] nodes = new SyncNode[nodeIDs.Length];
