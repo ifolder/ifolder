@@ -29,38 +29,67 @@ using Simias.Storage;
 namespace Novell.AddressBook
 {
 	/// <summary>
+	/// Bitmap of changed "known" properties
+	/// </summary>
+	internal enum ChangeMap : uint
+	{
+		username =		0x00000001,
+		title =			0x00000002,
+		role =			0x00000004,
+		organization =	0x00000008,
+		nickname =		0x00000010,
+		birthday =		0x00000020,
+		url =			0x00000040,
+		blog =			0x00000080,
+		workforce =		0x00000100,
+		manager =		0x00000200,
+		note =			0x00000400,
+		productid =		0x00000800,
+		photo =			0x00001000,
+		logo =			0x00002000,
+		sound =			0x00004000,
+		email =			0x00008000,
+		phone =			0x00010000,
+		address =		0x00020000,
+		name =			0x00040000,
+		unknown =		0x08000000
+	}
+
+	/// <summary>
 	/// Summary description for contact.
 	/// A contact is equivalent to a Node in the collection server.
 	/// </summary>
 	public class Contact : IEnumerable, IEnumerator
 	{
 		#region Class Members
-		private bool			propertyChanged = false;
-		private Node            thisNode = null;
-		private Collection		collection = null;
-		private AddressBook		addressBook = null;
-		private	IEnumerator		thisEnum = null;
-		private string			userName = "";
-		private string			id;
-		private string			url;
-		private string			nickName;
-		private string			title;
-		private string			role;
-		private string			birthday;
-		private string			productID;
-		private string			workforceID;
-		private string			note;
-		private string			manager;
-		private string			blogUrl;
-		private string			organization;
+		internal	Node			thisNode = null;
+		internal	Collection		collection = null;
+		private		AddressBook		addressBook = null;
+		private		IEnumerator		thisEnum = null;
+		private		string			userName = "";
+		private		string			id;
+		private		string			url;
+		private		string			nickName;
+		private		string			title;
+		private		string			role;
+		private		string			birthday;
+		private		string			productID;
+		private		string			workforceID;
+		private		string			note;
+		private		string			manager;
+		private		string			blogUrl;
+		private		string			organization;
 
 		// Private members used for caching objects to the contact before
 		// the contact has been added to an address list
-		private	ArrayList		addressList = null;
-		private ArrayList		nameList = null;
-		private ArrayList		emailList = null;
-		private ArrayList		phoneList = null;
-		private	Stream			photoStream = null;
+		private		ArrayList		addressList = null;
+		private		ArrayList		nameList = null;
+		private		Stream			photoStream = null;
+		internal	ArrayList		emailList = null;
+		internal	ArrayList		phoneList = null;
+
+		// Map for keeping track of what properties actually changed
+		private ChangeMap		propertyChangeMap = 0;
 
 		#endregion
 
@@ -106,7 +135,7 @@ namespace Novell.AddressBook
 			set
 			{
 				userName = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.username;
 			}
 		}
 
@@ -122,16 +151,14 @@ namespace Novell.AddressBook
 				{
 					return(this.title);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.title = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.title;
 			}
 		}
 
@@ -147,24 +174,22 @@ namespace Novell.AddressBook
 				{
 					return(this.role);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.role = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.role;
 			}
 		}
 
 		/// <summary>
-		/// NickName -
+		/// Nickname -
 		/// !NOTE! Doc incomplete
 		/// </summary>
-		public string NickName
+		public string Nickname
 		{
 			get
 			{
@@ -172,16 +197,14 @@ namespace Novell.AddressBook
 				{
 					return(this.nickName);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.nickName = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.nickname;
 			}
 		}
 
@@ -201,16 +224,14 @@ namespace Novell.AddressBook
 				{
 					return(this.birthday);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.birthday = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.birthday;
 			}
 		}
 
@@ -231,21 +252,7 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					if (this.thisNode != null)
-					{
-						Email prefMail = GetPreferredEmailAddress();
-						return(prefMail.Address);
-					}
-					else
-					{
-						foreach(Email prefMail in this.emailList)
-						{
-							if (prefMail.Preferred == true)
-							{
-								return(prefMail.Address);
-							}
-						}
-					}
+					return(GetPreferredEmailAddress().Address);
 				}
 				catch{}
 				return("");
@@ -257,35 +264,7 @@ namespace Novell.AddressBook
 				{ 
 					Email tmpMail = new Email((EmailTypes.internet | EmailTypes.work), value);
 					tmpMail.Preferred = true;
-
-					if (this.thisNode != null)
-					{
-						tmpMail.Add(this.collection, this.thisNode, this);
-					}
-					else
-					{
-						bool updated = false;
-						foreach(Email cMail in this.emailList)
-						{
-							if( cMail.Address == tmpMail.Address )
-							{
-								cMail.Types = tmpMail.Types;
-								cMail.Preferred = tmpMail.Preferred;
-								updated = true;
-							}
-							else
-							if( cMail.Preferred == true )
-							{
-								cMail.Preferred = false;
-							}
-						}
-
-						if (updated == false)
-						{
-							this.emailList.Add(tmpMail);
-						}
-					}
-					propertyChanged = true;
+					this.AddEmailAddress(tmpMail);
 				}
 				catch{}
 			}
@@ -307,10 +286,14 @@ namespace Novell.AddressBook
 				{
 					return(this.productID);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
+			}
+
+			set
+			{
+				this.productID = value;
+				propertyChangeMap |= ChangeMap.productid;
 			}
 		}
 
@@ -330,16 +313,14 @@ namespace Novell.AddressBook
 				{
 					return(this.url);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.url = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.url;
 			}
 		}
 
@@ -359,16 +340,14 @@ namespace Novell.AddressBook
 				{
 					return(this.note);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.note = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.note;
 			}
 		}
 
@@ -388,16 +367,14 @@ namespace Novell.AddressBook
 				{
 					return(this.workforceID);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.workforceID = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.workforce;
 			}
 		}
 
@@ -417,16 +394,14 @@ namespace Novell.AddressBook
 				{
 					return(this.manager);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
 				this.manager = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.manager;
 			}
 		}
 
@@ -453,7 +428,7 @@ namespace Novell.AddressBook
 			set
 			{
 				this.blogUrl = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.blog;
 			}
 		}
 
@@ -480,7 +455,7 @@ namespace Novell.AddressBook
 			set
 			{
 				this.organization = value;
-				propertyChanged = true;
+				propertyChangeMap |= ChangeMap.organization;
 			}
 		}
 
@@ -509,10 +484,8 @@ namespace Novell.AddressBook
 				{
 					return(this.id);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 		}
 
@@ -571,7 +544,10 @@ namespace Novell.AddressBook
 					this.id = this.thisNode.Id;
 
 					// Add the product ID property
-					this.productID = "Novell.AddressBook";
+					if (this.productID == null)
+					{
+						this.productID = "Novell.AddressBook";
+					}
 
 					// Store the guid of the identity in the contact
 					//this.thisNode.Properties.ModifyProperty( Common.identityProperty, userGuid );
@@ -593,17 +569,21 @@ namespace Novell.AddressBook
 					}
 					this.nameList.Clear();
 
+					/*
 					foreach(Email mail in this.emailList)
 					{
 						this.AddEmailAddress(mail);
 					}
 					this.emailList.Clear();
+					*/
 
+					/*
 					foreach(Telephone phone in this.phoneList)
 					{
 						this.AddTelephoneNumber(phone);
 					}
 					this.phoneList.Clear();
+					*/
 
 					if (this.photoStream != null)
 					{
@@ -625,7 +605,12 @@ namespace Novell.AddressBook
 
 		internal void SetDirty()
 		{
-			this.propertyChanged = true;
+			this.propertyChangeMap |= ChangeMap.unknown;
+		}
+
+		internal void SetDirty(ChangeMap dirtyProperty)
+		{
+			this.propertyChangeMap |= dirtyProperty;
 		}
 
 		private	string GetFullName()
@@ -674,16 +659,17 @@ namespace Novell.AddressBook
 					{
 						this.userName = cNode.Name;
 						this.id = cNode.Id;
+						this.thisNode = cNode;
 
 						try
 						{
-							nickName = cNode.Properties.GetSingleProperty(Common.nicknameProperty).ToString();
+							this.nickName = cNode.Properties.GetSingleProperty(Common.nicknameProperty).ToString();
 						}
 						catch{}
 
 						try
 						{
-							title = cNode.Properties.GetSingleProperty(Common.titleProperty).ToString();
+							this.title = cNode.Properties.GetSingleProperty(Common.titleProperty).ToString();
 						}
 						catch{}
 
@@ -741,7 +727,30 @@ namespace Novell.AddressBook
 						}
 						catch{}
 
-						this.thisNode = cNode;
+						try
+						{
+							// Load up email addresses
+							this.emailList.Clear();
+							MultiValuedList	mList = cNode.Properties.GetProperties(Common.emailProperty);
+							foreach(Property p in mList)
+							{
+								//Email tmpMail = new Email(this.collection, this.thisNode, this, (string) p.Value);
+								this.emailList.Add(new Email(this, (string) p.Value));
+							}
+						}
+						catch{}
+
+						try
+						{
+							// Load up telephone numbers
+							this.phoneList.Clear();
+							MultiValuedList	mList = cNode.Properties.GetProperties(Common.phoneProperty);
+							foreach(Property p in mList)
+							{
+								this.phoneList.Add(new Telephone(this, (string) p.Value));
+							}
+						}
+						catch{}
 						return;
 					}
 				}
@@ -774,14 +783,7 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				if (this.thisNode != null)
-				{
-					email.Add(this.collection, this.thisNode, this);
-				}
-				else
-				{
-					this.emailList.Add(email);
-				}
+				email.Add(this);
 			}
 			catch{}
 			return;
@@ -797,21 +799,9 @@ namespace Novell.AddressBook
 
 			try
 			{
-				if (this.thisNode != null)
+				foreach(Email tmpMail in this.emailList)
 				{
-					MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.emailProperty);
-					foreach(Property p in mList)
-					{
-						//Email tmpMail = new Email(this.collection, this.thisNode, this, (string) p.Value);
-						cList.Add(new Email(this.collection, this.thisNode, this, (string) p.Value));
-					}
-				}
-				else
-				{
-					foreach(Email tmpMail in this.emailList)
-					{
-						cList.Add(tmpMail);
-					}
+					cList.Add(tmpMail);
 				}
 			}
 			catch{}
@@ -824,7 +814,7 @@ namespace Novell.AddressBook
 		/// <returns>The preferred Email object.</returns>
 		public Email GetPreferredEmailAddress()
 		{
-			foreach(Email tmpMail in this.GetEmailAddresses())
+			foreach(Email tmpMail in this.emailList)
 			{
 				if(tmpMail.Preferred == true)
 				{
@@ -852,6 +842,9 @@ namespace Novell.AddressBook
 		{
 			try
 			{
+				this.phoneList.Add(telephone);
+
+				/*
 				if (this.thisNode != null)
 				{
 					telephone.Add(this.collection, this.thisNode, this);
@@ -860,6 +853,7 @@ namespace Novell.AddressBook
 				{
 					this.phoneList.Add(telephone);
 				}
+				*/
 			}
 			catch{}
 			return;
@@ -875,21 +869,9 @@ namespace Novell.AddressBook
 
 			try
 			{
-				if (this.thisNode != null)
+				foreach(Telephone phone in this.phoneList)
 				{
-					MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.phoneProperty);
-					foreach(Property p in mList)
-					{
-						Telephone phone = new Telephone(this.collection, this.thisNode, this, (string) p.Value);
-						cList.Add(phone);
-					}
-				}
-				else
-				{
-					foreach(Telephone phone in this.phoneList)
-					{
-						this.phoneList.Add(phone);
-					}
+					cList.Add(phone);
 				}
 			}
 			catch{}
@@ -920,69 +902,166 @@ namespace Novell.AddressBook
 		/// </summary>
 		public void Commit()
 		{
-			if(propertyChanged == true && this.thisNode != null)
+			if (propertyChangeMap != 0 && this.thisNode != null)
 			{
 				try
 				{
 					this.thisNode.Name = userName;
 
-					if (this.url != null)
+					if ((propertyChangeMap & ChangeMap.url) == ChangeMap.url)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.urlProperty, this.url);
+						if (this.url != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.urlProperty, this.url);
+						}
+						else
+						{
+							Property p = new Property(Common.urlProperty, this.url);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.nickName != null)
+					if ((propertyChangeMap & ChangeMap.nickname) == ChangeMap.nickname)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.nicknameProperty, this.nickName);
+						if (this.nickName != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.nicknameProperty, this.nickName);
+						}
+						else
+						{
+							this.thisNode.Properties.DeleteProperties(Common.nicknameProperty);
+						}
 					}
 
-					if (this.title != null)
+					if ((propertyChangeMap & ChangeMap.title) == ChangeMap.title)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.titleProperty, this.title);
+						if (this.title != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.titleProperty, this.title);
+						}
+						else
+						{
+							Property p = new Property(Common.titleProperty, this.title);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.role != null)
+					if ((propertyChangeMap & ChangeMap.role) == ChangeMap.role)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.roleProperty, this.role);
+						if (this.role != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.roleProperty, this.role);
+						}
+						else
+						{
+							Property p = new Property(Common.roleProperty, this.role);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.birthday != null)
+					if ((propertyChangeMap & ChangeMap.birthday) == ChangeMap.birthday)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.birthdayProperty, this.birthday);
+						if (this.birthday != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.birthdayProperty, this.birthday);
+						}
+						else
+						{
+							Property p = new Property(Common.birthdayProperty, this.birthday);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.productID != null)
+					if ((propertyChangeMap & ChangeMap.productid) == ChangeMap.productid)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.productIDProperty, this.productID);
+						if (this.productID != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.productIDProperty, this.productID);
+						}
+						else
+						{
+							Property p = new Property(Common.productIDProperty, this.productID);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.workforceID != null)
+					if ((propertyChangeMap & ChangeMap.workforce) == ChangeMap.workforce)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.workForceIDProperty, this.workforceID);
+						if (this.workforceID != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.workForceIDProperty, this.workforceID);
+						}
+						else
+						{
+							Property p = new Property(Common.workForceIDProperty, this.workforceID);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.manager != null)
+					if ((propertyChangeMap & ChangeMap.manager) == ChangeMap.manager)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.managerIDProperty, this.manager);
+						if (this.manager != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.managerIDProperty, this.manager);
+						}
+						else
+						{
+							Property p = new Property(Common.managerIDProperty, this.manager);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.note != null)
+					if ((propertyChangeMap & ChangeMap.note) == ChangeMap.note)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.noteProperty, this.note);
+						if (this.note != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.noteProperty, this.note);
+						}
+						else
+						{
+							Property p = new Property(Common.noteProperty, this.note);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.blogUrl != null)
+					if ((propertyChangeMap & ChangeMap.blog) == ChangeMap.blog)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.blogProperty, this.blogUrl);
+						if (this.blogUrl != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.blogProperty, this.blogUrl);
+						}
+						else
+						{
+							Property p = new Property(Common.blogProperty, this.blogUrl);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
 					}
 
-					if (this.organization != null)
+					if ((propertyChangeMap & ChangeMap.organization) == ChangeMap.organization)
 					{
-						this.thisNode.Properties.ModifyProperty(Common.organizationProperty, this.organization);
+						if (this.organization != null)
+						{
+							this.thisNode.Properties.ModifyProperty(Common.organizationProperty, this.organization);
+						}
+						else
+						{
+							Property p = new Property(Common.organizationProperty, this.organization);
+							this.thisNode.Properties.DeleteSingleProperty(p);
+						}
+					}
+
+					if (this.emailList.Count > 0 && ((propertyChangeMap & ChangeMap.email) == ChangeMap.email))
+					{
+						Email.PersistToStore(this);
+					}
+
+					if (this.phoneList.Count > 0 && ((propertyChangeMap & ChangeMap.phone) == ChangeMap.phone))
+					{
+						Telephone.PersistToStore(this);
 					}
 
 					this.collection.Commit(true);
-					propertyChanged = false;
+					propertyChangeMap = 0;
 				}
 				catch
 				{
@@ -1019,16 +1098,15 @@ namespace Novell.AddressBook
 		{
 			try
 			{
+				this.propertyChangeMap |= ChangeMap.address;
 				if (this.collection != null && this.thisNode != null)
 				{
 					addr.Create(this.collection, this.thisNode, this);
-					this.propertyChanged = true;
 					return;
 				}
 				else
 				{
 					this.addressList.Add(addr);
-					this.propertyChanged = true;
 					return;
 				}
 			}
@@ -1149,16 +1227,15 @@ namespace Novell.AddressBook
 		{
 			try
 			{
+				this.propertyChangeMap |= ChangeMap.name;
 				if (this.collection != null && this.thisNode != null)
 				{
 					name.Create(this.collection, thisNode, this);
-					this.propertyChanged = true;
 					return;
 				}
 				else
 				{
 					this.nameList.Add(name);
-					this.propertyChanged = true;
 					return;
 				}
 			}

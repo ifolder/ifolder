@@ -912,7 +912,7 @@ namespace Novell.AddressBook
 									{
 										if ((string) enumTokens.Current != "")
 										{
-											cContact.NickName = (string) enumTokens.Current;
+											cContact.Nickname = (string) enumTokens.Current;
 										}
 									}
 								}

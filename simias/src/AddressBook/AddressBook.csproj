@@ -119,11 +119,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ContactList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Email.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

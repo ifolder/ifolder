@@ -89,8 +89,8 @@ namespace Novell.AddressBook
 	public class Email
 	{
 		#region Class Members
-		Collection		parentCollection;
-		Node			thisNode;
+		//Collection		parentCollection;
+		//Node			thisNode;
 		Contact			parentContact;
 		string			address;
 //		string			originalSerializedMail;
@@ -124,73 +124,30 @@ namespace Novell.AddressBook
 				if (value == true)
 				{
 					this.emailTypes |= EmailTypes.preferred;
+					if (this.parentContact != null)
+					{
+						// There can only be one preferred make sure it's this object
+						foreach (Email tmpMail in this.parentContact.emailList)
+						{
+							if (tmpMail.address != this.address)
+							{
+								if (tmpMail.Preferred == true)
+								{
+									tmpMail.Preferred = false;
+								}
+							}
+						}
+					}
 				}
 				else
 				{
 					this.emailTypes &= ~EmailTypes.preferred;
 				}
 
-				try
+				if (this.parentContact != null)
 				{
-					// If this object is attached to the store - fix it up
-					if (this.thisNode != null)
-					{
-						char[] semiSep = new char[]{';'};
-						MultiValuedList mList = null;
-
-						// Remove the preferred bit off any other email properties
-						if (value == true)
-						{
-							mList = this.thisNode.Properties.GetProperties(Common.emailProperty);
-							foreach(Property p in mList)
-							{
-								IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-								// First token should be the address itself (ex. banderso@novell.com)
-								if (enumTokens.MoveNext())
-								{
-									string	tmpAddress = (string) enumTokens.Current;
-
-									// Now the types
-									if (enumTokens.MoveNext())
-									{
-										EmailTypes tmpTypes = 
-											(EmailTypes) Convert.ToUInt32((string) enumTokens.Current, 16);
-										if (tmpAddress != this.address && 
-											((tmpTypes & EmailTypes.preferred) == EmailTypes.preferred))
-										{
-											tmpTypes &= ~EmailTypes.preferred;
-											tmpAddress += ";" + Convert.ToString((uint) tmpTypes, 16);
-											p.Value = tmpAddress;
-
-											this.thisNode.Properties.ModifyProperty(p);
-										}
-									}
-								}
-							}
-						}
-
-						mList = this.thisNode.Properties.GetProperties(Common.emailProperty);
-						foreach(Property p in mList)
-						{
-							IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-							// First token should be the address itself (ex. banderso@novell.com)
-							enumTokens.MoveNext();
-
-							if ((string) enumTokens.Current == this.address)
-							{
-								p.Delete();
-								break;
-							}
-						}
-
-						// Add the serialized one back
-						this.thisNode.Properties.AddProperty(Common.emailProperty, this.Serialize());
-						this.parentContact.SetDirty();
-					}
+					this.parentContact.SetDirty(ChangeMap.email);
 				}
-				catch{}
 			}
 		}
 
@@ -219,33 +176,10 @@ namespace Novell.AddressBook
 					this.emailTypes &= ~EmailTypes.x400;
 				}
 
-				try
+				if (this.parentContact != null)
 				{
-					// If this object is attached to the store - fix it up
-					if (this.thisNode != null)
-					{
-						char[] semiSep = new char[]{';'};
-						MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.emailProperty);
-						foreach(Property p in mList)
-						{
-							IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-							// First token should be the address itself (ex. banderso@novell.com)
-							enumTokens.MoveNext();
-
-							if ((string) enumTokens.Current == this.address)
-							{
-								p.Delete();
-								break;
-							}
-						}
-
-						// Add the serialized one back
-						this.thisNode.Properties.AddProperty(Common.emailProperty, this.Serialize());
-						this.parentContact.SetDirty();
-					}
+					this.parentContact.SetDirty(ChangeMap.email);
 				}
-				catch{}
 			}
 		}
 
@@ -263,38 +197,23 @@ namespace Novell.AddressBook
 
 			set
 			{
-				try
+				this.address = value;
+				if (this.parentContact != null)
 				{
-					// If this object is attached to the store - fix it up
-					if (this.thisNode != null)
+					// address distinguishes so there can't be two email objects with the same address
+					foreach (Email tmpMail in this.parentContact.emailList)
 					{
-						char[] semiSep = new char[]{';'};
-						MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.emailProperty);
-						foreach(Property p in mList)
+						if (tmpMail != this)
 						{
-							IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-							// First token should be the address itself (ex. banderso@novell.com)
-							enumTokens.MoveNext();
-
-							if ((string) enumTokens.Current == this.address)
+							if (tmpMail.address == this.address)
 							{
-								p.Delete();
-								break;
+								this.parentContact.emailList.Remove(tmpMail);
 							}
 						}
+					}
 
-						// Add the serialized one back
-						this.address = value;
-						this.thisNode.Properties.AddProperty(Common.emailProperty, this.Serialize());
-						this.parentContact.SetDirty();
-					}
-					else
-					{
-						this.address = value;
-					}
+					this.parentContact.SetDirty(ChangeMap.email);
 				}
-				catch{}
 			}
 		}
 
@@ -329,15 +248,13 @@ namespace Novell.AddressBook
 
 		internal Email(Collection parentCollection, Node parentNode, string serializedEmail)
 		{
-			this.parentCollection = parentCollection;
-			this.thisNode = parentNode;
+//			this.parentCollection = parentCollection;
+//			this.thisNode = parentNode;
 			this.Unserialize(serializedEmail);
 		}
 
-		internal Email(Collection parentCollection, Node parentNode, Contact contact, string serializedEmail)
+		internal Email(Contact contact, string serializedEmail)
 		{
-			this.parentCollection = parentCollection;
-			this.thisNode = parentNode;
 			this.parentContact = contact;
 			this.Unserialize(serializedEmail);
 		}
@@ -345,10 +262,72 @@ namespace Novell.AddressBook
 		#endregion
 
 		#region Private Methods
-		internal bool Add(Collection collection, Node node, Contact contact)
+
+		internal static bool PersistToStore(Contact contact)
 		{
-			this.parentCollection = collection;
-			this.thisNode = node;
+			// The contact needs to be attached to the store in order to persist
+			if (contact.thisNode == null)
+			{
+				return(false);
+			}
+
+			// Anything in the list to persist?
+			if (contact.emailList.Count == 0)
+			{
+				return(false);
+			}
+
+			// First delete the property
+			contact.thisNode.Properties.DeleteProperties(Common.emailProperty);
+
+			// assume no preferred is set
+			bool foundPreferred = false;
+
+			// Make sure we have a preferred
+			foreach(Email tmpMail in contact.emailList)
+			{
+				if (tmpMail.Preferred == true)
+				{
+					foundPreferred = true;
+					break;
+				}
+			}
+
+			if (foundPreferred == false)
+			{
+				// No preferred do we have one typed WORK?
+				foreach(Email tmpMail in contact.emailList)
+				{
+					if ((tmpMail.emailTypes & EmailTypes.work) == EmailTypes.work)
+					{
+						tmpMail.Preferred = true;
+						break;
+					}
+				}
+
+				// Any will do
+				if (foundPreferred == false)
+				{
+					foreach(Email tmpMail in contact.emailList)
+					{
+						tmpMail.Preferred = true;
+						break;
+					}
+				}
+			}
+
+			// To the collection store they go!
+			foreach(Email tmpMail in contact.emailList)
+			{
+				Property p = new Property(Common.emailProperty, tmpMail.Serialize());
+				contact.thisNode.Properties.AddProperty(p);
+			}
+
+			return(true);
+		}
+
+		internal bool Add(Contact contact)
+		{
 			this.parentContact = contact;
 
 			//
@@ -367,13 +346,11 @@ namespace Novell.AddressBook
 			// If the email address exists, delete the existing property
 			//
 
-			foreach(Email tmpMail in contact.GetEmailAddresses())
+			foreach(Email tmpMail in contact.emailList)
 			{
 				if(tmpMail.Address == this.Address)
 				{
-					Property p = new Property(Common.emailProperty, tmpMail.Serialize());
-					this.thisNode.Properties.DeleteSingleProperty(p);
-					break;
+					contact.emailList.Remove(tmpMail);
 				}
 			}
 
@@ -383,28 +360,21 @@ namespace Novell.AddressBook
 				// If another property is already preferred delete, change it
 				//
 
-				foreach(Email tmpMail in contact.GetEmailAddresses())
+				foreach(Email tmpMail in contact.emailList)
 				{
 					if(tmpMail.Preferred == true)
 					{
-						Property p = new Property(Common.emailProperty, tmpMail.Serialize());
-						this.thisNode.Properties.DeleteSingleProperty(p);
 						tmpMail.Preferred = false;
-						p.SetValue(tmpMail.Serialize());
-						this.thisNode.Properties.AddProperty(p);
-						break;
 					}
 				}
 			}
 
 			//
-			// Add the address to the store
+			// Add the new email address to the list
 			//
 
-			Property p1 = new Property(Common.emailProperty, this.Serialize());
-			this.thisNode.Properties.AddProperty(p1);
-			this.parentContact.SetDirty();
-
+			contact.emailList.Add(this);
+			contact.SetDirty(ChangeMap.email);
 			return(true);
 		}
 
@@ -477,31 +447,17 @@ namespace Novell.AddressBook
 		#region Public Methods
 
 		/// <summary>
-		/// Commits an email address
-		/// !NOTE! obsolete in the future
-		/// </summary>
-		[ Obsolete( "This method is marked for eventual removal. It's no longer necessary to call 'Commit'.", false ) ]
-		public void Commit()
-		{
-			try
-			{
-				if (this.parentCollection != null)
-				{
-					this.parentCollection.Commit();
-				}
-			}
-			catch{}
-		}
-
-		/// <summary>
 		/// Delete this e-mail from the e-mail list attached to the contact record
 		/// </summary>
 		public void Delete()
 		{
 			try
 			{
-				Property p = new Property(Common.emailProperty, this.Serialize());
-				p.Delete();
+				if (this.parentContact != null)
+				{
+					this.parentContact.emailList.Remove(this);
+					this.parentContact.SetDirty(ChangeMap.email);
+				}
 			}
 			catch{}
 			return;

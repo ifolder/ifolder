@@ -127,13 +127,10 @@ namespace Novell.AddressBook
 	public class Telephone
 	{
 		#region Class Members
-		Collection					parentCollection;
-		Node						thisNode;
 		Contact						parentContact;
 		string						phoneNumber;
 		PhoneTypes					phoneTypes;
 		private const PhoneTypes	defaultPhoneTypes = (PhoneTypes.voice | PhoneTypes.work);
-
 		#endregion
 
 		#region Properties
@@ -160,81 +157,38 @@ namespace Novell.AddressBook
 
 			set
 			{
-				try
+				if (value == true)
 				{
-					if (value == true)
+					this.phoneTypes |= PhoneTypes.preferred;
+					if (this.parentContact != null)
 					{
-						this.phoneTypes |= PhoneTypes.preferred;
-					}
-					else
-					{
-						this.phoneTypes &= ~PhoneTypes.preferred;
-					}
-
-					// If this object is attached to the store - fix it up
-					if (this.thisNode != null)
-					{
-						char[] semiSep = new char[]{';'};
-						MultiValuedList mList = null;
-
-						// Remove the preferred bit off all other phone properties
-						if (value == true)
+						// There can only be one preferred make sure it's this object
+						foreach (Telephone tmpPhone in this.parentContact.phoneList)
 						{
-							mList = this.thisNode.Properties.GetProperties(Common.phoneProperty);
-							foreach(Property p in mList)
+							if (tmpPhone.phoneNumber != this.phoneNumber)
 							{
-								IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-								// First token should be the number
-								if (enumTokens.MoveNext())
+								if (tmpPhone.Preferred == true)
 								{
-									string	tmpNumber = (string) enumTokens.Current;
-
-									// Now the types
-									if (enumTokens.MoveNext())
-									{
-										PhoneTypes tmpTypes = 
-											(PhoneTypes) Convert.ToUInt32((string) enumTokens.Current, 16);
-										if (tmpNumber != this.phoneNumber && 
-											((tmpTypes & PhoneTypes.preferred) == PhoneTypes.preferred))
-										{
-											tmpTypes &= ~PhoneTypes.preferred;
-											tmpNumber += ";" + Convert.ToString((uint) tmpTypes, 16);
-											p.Value = tmpNumber;
-
-											this.thisNode.Properties.ModifyProperty(p);
-										}
-									}
+									tmpPhone.Preferred = false;
 								}
 							}
 						}
-
-						mList = this.thisNode.Properties.GetProperties(Common.phoneProperty);
-						foreach(Property p in mList)
-						{
-							IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-							// First token should be the number itself
-							enumTokens.MoveNext();
-
-							if ((string) enumTokens.Current == this.phoneNumber)
-							{
-								p.Delete();
-								break;
-							}
-						}
-
-						// Add the serialized one back
-						this.thisNode.Properties.AddProperty(Common.phoneProperty, this.Serialize());
-						this.parentContact.SetDirty();
 					}
 				}
-				catch{}
+				else
+				{
+					this.phoneTypes &= ~PhoneTypes.preferred;
+				}
+
+				if (this.parentContact != null)
+				{
+					this.parentContact.SetDirty(ChangeMap.phone);
+				}
 			}
 		}
 
 		/// <summary>
-		/// Address: actual telephone number
+		/// Number: actual telephone number
 		/// Type Value: String
 		/// ex. 801-861-3130
 		/// </summary>
@@ -246,41 +200,28 @@ namespace Novell.AddressBook
 				{
 					return(this.phoneNumber);
 				}
-				else
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
-				// If this object is attached to the store - fix it up
-				if (this.thisNode != null)
+				this.phoneNumber = value;
+				if (this.parentContact != null)
 				{
-					char[] semiSep = new char[]{';'};
-					MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.phoneProperty);
-					foreach(Property p in mList)
+					// number distinguishes so there can't be two phone objects with the same number
+					foreach (Telephone tmpPhone in this.parentContact.phoneList)
 					{
-						IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-						// First token should be the number itself
-						enumTokens.MoveNext();
-
-						if ((string) enumTokens.Current == this.phoneNumber)
+						if (tmpPhone != this)
 						{
-							p.Delete();
-							break;
+							if (tmpPhone.phoneNumber == this.phoneNumber)
+							{
+								this.parentContact.phoneList.Remove(tmpPhone);
+							}
 						}
 					}
 
-					// Add the serialized one back
-					this.phoneNumber = value;
-					this.thisNode.Properties.AddProperty(Common.phoneProperty, this.Serialize());
-					this.parentContact.SetDirty();
-				}
-				else
-				{
-					this.phoneNumber = value;
+					this.parentContact.SetDirty(ChangeMap.phone);
 				}
 			}
 		}
@@ -300,28 +241,9 @@ namespace Novell.AddressBook
 			{
 				this.phoneTypes = value;
 
-				// If this object is attached to the store - fix it up
-				if (this.thisNode != null)
+				if (this.parentContact != null)
 				{
-					char[] semiSep = new char[]{';'};
-					MultiValuedList	mList = this.thisNode.Properties.GetProperties(Common.phoneProperty);
-					foreach(Property p in mList)
-					{
-						IEnumerator enumTokens = p.Value.ToString().Split(semiSep).GetEnumerator();
-
-						// First token should be the telephone number itself 
-						enumTokens.MoveNext();
-
-						if ((string) enumTokens.Current == this.phoneNumber)
-						{
-							p.Delete();
-							break;
-						}
-					}
-
-					// Add the serialized one back
-					this.thisNode.Properties.AddProperty(Common.phoneProperty, this.Serialize());
-					this.parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.phone);
 				}
 			}
 		}
@@ -354,73 +276,114 @@ namespace Novell.AddressBook
 			this.phoneTypes = types;
 		}
 
-		internal Telephone(Collection parentCollection, Node parentNode, string serializedNumber)
+		internal Telephone(Contact contact, string serializedNumber)
 		{
-			this.parentCollection = parentCollection;
-			this.thisNode = parentNode;
-			this.Unserialize(serializedNumber);
-		}
-
-		internal Telephone(Collection parentCollection, Node parentNode, Contact contact, string serializedNumber)
-		{
-			this.parentCollection = parentCollection;
-			this.thisNode = parentNode;
 			this.parentContact = contact;
 			this.Unserialize(serializedNumber);
 		}
-
 		#endregion
 
 		#region Private Methods
-		internal bool Add(Collection collection, Node node, Contact contact)
+		internal bool Add(Contact contact)
 		{
-			this.parentCollection = collection;
-			this.thisNode = node;
 			this.parentContact = contact;
 
 			//
-			// If the telephone number already exists, delete the existing property
+			// If the phone number exists, delete the existing one
 			//
 
-			foreach(Telephone tmpPhone in contact.GetTelephoneNumbers())
+			foreach(Telephone tmpPhone in contact.phoneList)
 			{
 				if(tmpPhone.Number == this.Number)
 				{
-					Property p = new Property(Common.phoneProperty, tmpPhone.Serialize());
-					this.thisNode.Properties.DeleteSingleProperty(p);
-					break;
+					contact.phoneList.Remove(tmpPhone);
 				}
 			}
 
 			if (this.Preferred == true)
 			{
 				//
-				// If another property is already preferred delete, change it
+				// If another property is already preferred, change it
 				//
 
-				foreach(Telephone tmpPhone in contact.GetTelephoneNumbers())
+				foreach(Telephone tmpPhone in contact.phoneList)
 				{
 					if(tmpPhone.Preferred == true)
 					{
-						Property p = new Property(Common.phoneProperty, tmpPhone.Serialize());
-						this.thisNode.Properties.DeleteSingleProperty(p);
 						tmpPhone.Preferred = false;
-						p.SetValue(tmpPhone.Serialize());
-						this.thisNode.Properties.AddProperty(p);
-						break;
 					}
 				}
 			}
 
 			//
-			// Add the phone to the store
+			// Add the new phone number to the list
 			//
 
-			Property p1 = new Property(Common.phoneProperty, this.Serialize());
-			this.thisNode.Properties.AddProperty(p1);
+			contact.phoneList.Add(this);
+			contact.SetDirty(ChangeMap.phone);
+			return(true);
+		}
 
-			//this.thisNode.Save();
-			this.parentContact.SetDirty();
+		internal static bool PersistToStore(Contact contact)
+		{
+			// The contact needs to be attached to the store in order to persist
+			if (contact.thisNode == null)
+			{
+				return(false);
+			}
+
+			// Anything in the list to persist?
+			if (contact.phoneList.Count == 0)
+			{
+				return(false);
+			}
+
+			// First delete the property
+			contact.thisNode.Properties.DeleteProperties(Common.phoneProperty);
+
+			// assume no preferred is set
+			bool foundPreferred = false;
+
+			// Make sure we have a preferred
+			foreach(Telephone tmpPhone in contact.phoneList)
+			{
+				if (tmpPhone.Preferred == true)
+				{
+					foundPreferred = true;
+					break;
+				}
+			}
+
+			if (foundPreferred == false)
+			{
+				// No preferred do we have one typed WORK?
+				foreach(Telephone tmpPhone in contact.phoneList)
+				{
+					if ((tmpPhone.phoneTypes & PhoneTypes.work) == PhoneTypes.work)
+					{
+						tmpPhone.Preferred = true;
+						break;
+					}
+				}
+
+				// Any will do
+				if (foundPreferred == false)
+				{
+					foreach(Telephone tmpPhone in contact.phoneList)
+					{
+						tmpPhone.Preferred = true;
+						break;
+					}
+				}
+			}
+
+			// To the collection store they go!
+			foreach(Telephone tmpPhone in contact.phoneList)
+			{
+				Property p = new Property(Common.phoneProperty, tmpPhone.Serialize());
+				contact.thisNode.Properties.AddProperty(p);
+			}
+
 			return(true);
 		}
 
@@ -476,30 +439,17 @@ namespace Novell.AddressBook
 		#region Public Methods
 
 		/// <summary>
-		/// Commits the telehone object to the store
-		/// </summary>
-		[ Obsolete( "This method is marked for eventual removal. It's no longer necessary to call 'Commit'.", false ) ]
-		public void Commit()
-		{
-			try
-			{
-				if (this.parentCollection != null)
-				{
-					this.parentCollection.Commit();
-				}
-			}
-			catch{}
-		}
-
-		/// <summary>
 		/// Delete this TEL from the phone list attached to the contact record
 		/// </summary>
 		public void Delete()
 		{
 			try
 			{
-				Property p = new Property(Common.phoneProperty, this.Serialize());
-				p.Delete();
+				if (this.parentContact != null)
+				{
+					this.parentContact.phoneList.Remove(this);
+					this.parentContact.SetDirty(ChangeMap.phone);
+				}
 			}
 			catch{}
 			return;
