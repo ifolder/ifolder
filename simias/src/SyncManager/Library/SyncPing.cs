@@ -36,6 +36,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncPing
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncPing));
+
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
@@ -57,7 +59,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Ping the sync store server.
 		/// </summary>
-		/// <param name="syncStore">The sync store object.</param>
+		/// <param name="store">The store object.</param>
 		/// <param name="host">The sync store server host.</param>
 		/// <param name="port">The sync store sever port.</param>
 		/// <returns>A ping object from the server.</returns>
@@ -82,13 +84,13 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine("Ping Failed: {0}", e.Message);
+				log.Error(e, "Ping Failed");
 			}
 
 			// close
 			channel.Dispose();
 
-			MyTrace.WriteLine("Ping: {0}", info);
+			log.Debug("Ping: {0}", info);
 
 			return info;
 		}

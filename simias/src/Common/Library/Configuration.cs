@@ -29,6 +29,9 @@ using System.Threading;
 
 namespace Simias
 {
+	/// <summary>
+	/// Simias Configuration Class
+	/// </summary>
 	public sealed class Configuration
 	{
 		private static readonly string RootElementTag = "configuration";

@@ -57,6 +57,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncManager : IDisposable
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncManager));
+
 		/// <summary>
 		/// Occurs when the sync state has changed.
 		/// </summary>
@@ -124,7 +126,7 @@ namespace Simias.Sync
 
 		internal void ReadyToWork()
 		{
-			MyTrace.WriteLine("Ready Work: {0}", active);
+			log.Debug("Ready Work: {0}", active);
 
 			lock(activeLock)
 			{
@@ -149,7 +151,7 @@ namespace Simias.Sync
 				}
 			}
 
-			MyTrace.WriteLine("Done Work: {0}", active);
+			log.Debug("Done Work: {0}", active);
 		}
 
 		#region IDisposable Members

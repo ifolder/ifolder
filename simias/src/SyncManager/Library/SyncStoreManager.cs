@@ -37,6 +37,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncStoreManager : IDisposable
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncStoreManager));
+
 		private Store store;
 		private SyncStoreService service;
 		private SyncManager syncManager;
@@ -84,7 +86,7 @@ namespace Simias.Sync
 					// create service
 					service = new SyncStoreService(this);
 
-					MyTrace.WriteLine("Starting Store Service: {0}", service.ServiceUrl);
+					log.Debug("Starting Store Service: {0}", service.ServiceUrl);
 
 					// marshal service
 					RemotingServices.Marshal(service, SyncStoreService.EndPoint);
@@ -99,7 +101,7 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine(e);
+				log.Error(e, "Unable to start store manager.");
 
 				throw e;
 			}
@@ -115,7 +117,7 @@ namespace Simias.Sync
 
 					if (service != null)
                     {
-                        MyTrace.WriteLine("Stopping Store Service: {0}", service.ServiceUrl);
+                        log.Debug("Stopping Store Service: {0}", service.ServiceUrl);
                     }
 
 					// stop collection managers
@@ -142,7 +144,7 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				MyTrace.WriteLine(e);
+				log.Error(e, "Unable to stop store manager.");
 
 				throw e;
 			}
@@ -163,7 +165,7 @@ namespace Simias.Sync
 
                 service = scm.GetService();
 
-				MyTrace.WriteLine("Serving Collection Service: {0}", service.Ping().ToString());
+				log.Debug("Serving Collection Service: {0}", service.Ping().ToString());
 			}
 
 			return service;
@@ -177,7 +179,7 @@ namespace Simias.Sync
 			{
 				if (!collectionManagers.Contains(id))
 				{
-					MyTrace.WriteLine("Adding Collection Manager: {0}", id);
+					log.Debug("Adding Collection Manager: {0}", id);
 
 					try
 					{
@@ -189,7 +191,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						MyTrace.WriteLine(e);
+						log.Debug(e, "Ignored");
 					}
 				}
 			}
@@ -203,7 +205,7 @@ namespace Simias.Sync
 			{
 				if (collectionManagers.Contains(id))
 				{
-					MyTrace.WriteLine("Removing Collection Manager: {0}", id);
+					log.Debug("Removing Collection Manager: {0}", id);
 
 					try
 					{
@@ -215,7 +217,7 @@ namespace Simias.Sync
 					}
 					catch(Exception e)
 					{
-						MyTrace.WriteLine(e);
+						log.Debug(e, "Ignored");
 					}
 				}
 			}

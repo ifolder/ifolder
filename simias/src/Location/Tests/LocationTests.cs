@@ -44,7 +44,6 @@ namespace Simias.Location.Tests
 		/// </summary>
 		public LocationTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>
@@ -82,7 +81,7 @@ namespace Simias.Location.Tests
 
 			Assert("Location Not Found!", location != null);
 
-			MyTrace.WriteLine("Location: {0}", location);
+			Console.WriteLine("Location: {0}", location);
 		}
 	}
 }

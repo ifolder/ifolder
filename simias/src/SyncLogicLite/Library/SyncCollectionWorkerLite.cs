@@ -39,11 +39,12 @@ namespace Simias.Sync
 	/// </remarks>
 	public class SyncCollectionWorkerLite : SyncCollectionWorker
 	{
-		SyncCollectionServiceLite masterService;
-		SyncCollection local;
-		SyncCollectionServiceLite localService;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionServiceLite));
 
-		// TODO: should we be using two services?
+		private SyncCollectionServiceLite masterService;
+		private SyncCollection local;
+		private SyncCollectionServiceLite localService;
+
 		public SyncCollectionWorkerLite(SyncCollectionServiceLite master,
 			SyncCollection slave)
 				: base(master, slave)
@@ -58,9 +59,9 @@ namespace Simias.Sync
 			SyncNodeInfo[] masterNodes = masterService.GetNodes();
 			SyncNodeInfo[] localNodes = localService.GetNodes();
 
-			MyTrace.WriteLine("Master Nodes: {0}", masterNodes.Length);
+			log.Debug("Master Nodes: {0}", masterNodes.Length);
 			
-			MyTrace.WriteLine("Local Nodes: {0}", localNodes.Length);
+			log.Debug("Local Nodes: {0}", localNodes.Length);
 			
 			// create a working local node list
 			Hashtable localNodeList = new Hashtable();
@@ -75,7 +76,7 @@ namespace Simias.Sync
 				// download any nodes that we do not have
 				if (!localNodeList.Contains(masterNodeInfo.ID))
 				{
-					MyTrace.WriteLine("Download New Node: {0}", masterNodeInfo.Name);
+					log.Debug("Download New Node: {0}", masterNodeInfo.Name);
 					
 					// download and update master incarnation
 					Download(masterNodeInfo);
@@ -93,7 +94,7 @@ namespace Simias.Sync
 					// check for changes on the master first (ignore tombstones)
 					if (masterNodeInfo.LocalIncarnation > localNodeInfo.MasterIncarnation)
 					{
-						MyTrace.WriteLine("Download Changed Node: {0}", masterNodeInfo.Name);
+						log.Debug("Download Changed Node: {0}", masterNodeInfo.Name);
 						
 						// download and update master incarnation
 						Download(masterNodeInfo);
@@ -102,7 +103,7 @@ namespace Simias.Sync
 					// check for local changes
 					else if (localNodeInfo.LocalIncarnation > localNodeInfo.MasterIncarnation)
 					{
-						MyTrace.WriteLine("Upload Changed Node: {0}", masterNodeInfo.Name);
+						log.Debug("Upload Changed Node: {0}", masterNodeInfo.Name);
 						
 						// upload
 						Upload(localNodeInfo);
@@ -121,7 +122,7 @@ namespace Simias.Sync
 				// is this node unmodified and deleted off the master?
 				if (localNodeInfo.MasterIncarnation == localNodeInfo.LocalIncarnation)
 				{
-					MyTrace.WriteLine("Download Deleted Node: {0}", localNodeInfo.Name);
+					log.Debug("Download Deleted Node: {0}", localNodeInfo.Name);
 					
 					// pop
 					localService.DeleteNode(localNodeInfo.ID);
@@ -131,7 +132,7 @@ namespace Simias.Sync
 				else
 				{
 					// upload
-					MyTrace.WriteLine("Upload New Node: {0}", localNodeInfo.Name);
+					log.Debug("Upload New Node: {0}", localNodeInfo.Name);
 					
 					Upload(localNodeInfo);
 				}

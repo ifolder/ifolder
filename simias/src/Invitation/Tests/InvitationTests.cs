@@ -50,7 +50,6 @@ namespace Simias.Invite.Tests
 		/// </summary>
 		public InvitationTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>

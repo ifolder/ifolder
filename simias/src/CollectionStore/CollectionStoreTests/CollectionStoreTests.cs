@@ -61,9 +61,6 @@ namespace Simias.Storage.Tests
 		[TestFixtureSetUp]
 		public void Init()
 		{
-			// Send all traces to the console.
-			MyTrace.SendToConsole();
-
 			// Connect to the store.
 			store = new Store( new Configuration( basePath ) );
 

@@ -48,10 +48,6 @@ namespace Simias.Mini
 		[STAThread]
 		static int Main(string[] args)
 		{
-			// tracing
-			MyTrace.SendToConsole();
-			MyTrace.Switch.Level = TraceLevel.Verbose;
-
 			// check arguments
 			if (args.Length > 1)
 			{
@@ -142,7 +138,7 @@ namespace Simias.Mini
 			manager.ChangedState += new ChangedSyncStateEventHandler(OnChangedSyncState);
 			manager.Start();
 
-			MyTrace.WriteLine("Running...");
+			Console.WriteLine("Running...");
 
 			// exit message
 			Console.WriteLine("Press [Enter] to exit...");
@@ -154,7 +150,7 @@ namespace Simias.Mini
 			// clean-up
 			manager.Dispose();
 
-			MyTrace.WriteLine("Done.");
+			Console.WriteLine("Done.");
 
 			// kludge to kill all threads
 			Environment.Exit(0);
@@ -164,7 +160,7 @@ namespace Simias.Mini
 
 		private static void OnChangedSyncState(SyncManagerStates state)
 		{
-			MyTrace.WriteLine("Sync State Changed: {0}", state);
+			Console.WriteLine("Sync State Changed: {0}", state);
 		}
 	}
 }

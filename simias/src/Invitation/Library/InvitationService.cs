@@ -97,7 +97,7 @@ namespace Simias.Invite
 			// save the new collection
 			collection.Commit();
 
-			MyTrace.WriteLine("Invitation Accepted: {0}", invitation);
+			log.Debug("Invitation Accepted: {0}", invitation);
 		}
 	}
 }

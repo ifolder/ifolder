@@ -40,9 +40,9 @@ namespace Simias.Sync
 		private string type;
 		private string assembly;
 		private string method;
-		private ArrayList args;
+		//private ArrayList args;
 		private ArrayList keys;
-		private string result;
+		//private string result;
 		private string uri;
 
 		public SnifferMessage(IMessage msg)
@@ -118,15 +118,15 @@ namespace Simias.Sync
 
 			if (method != null) buffer.AppendFormat("  Method: {0}\n", method);
 
-			if (result != null) buffer.AppendFormat("  Result: {0}\n", result);
+			//if (result != null) buffer.AppendFormat("  Result: {0}\n", result);
 
-			if (args != null)
+			/*if (args != null)
 			{
 				for(int i=0; i < args.Count; i++)
 				{
 					buffer.AppendFormat("  Arg {0,2}: {1}\n", i, args[i]);
 				}
-			}
+			}*/
 
 			if (uri != null) buffer.AppendFormat("     Uri: {0}\n", uri);
 

@@ -46,6 +46,8 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncChannelFactory
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncChannelFactory));
+
 		private static SyncChannelFactory singleton;
 
 		private ArrayList channels;
@@ -69,7 +71,7 @@ namespace Simias.Sync
 				config = "Not Found";
 			}
 
-			MyTrace.WriteLine("Configuration File: {0}", config);
+			log.Debug("Remoting Configuration File: {0}", config);
 		}
 
 		public static SyncChannelFactory GetInstance()
@@ -119,7 +121,7 @@ namespace Simias.Sync
 									"Another channel already exists on the requested port with different sinks.");
 							}
 
-							MyTrace.WriteLine("Channel Opened: {0}", sc.Name);
+							log.Debug("Channel Opened: {0}", sc.Name);
 
 							break;
 						}
@@ -214,7 +216,7 @@ namespace Simias.Sync
 					// add channel
 					channels.Add(result);
 
-					MyTrace.WriteLine("Channel Registered: {0} ({1})", name, sinks);
+					log.Debug("Channel Registered: {0} ({1})", name, sinks);
 				}
 			}
 	
@@ -229,7 +231,7 @@ namespace Simias.Sync
 				ChannelServices.UnregisterChannel(channel.Channel);
 			}
 
-			MyTrace.WriteLine("Channel Unregistered: {0}", channel.Name);
+			log.Debug("Channel Unregistered: {0}", channel.Name);
 		}
 	}
 }

@@ -44,7 +44,6 @@ namespace Simias.Sync.Tests
 		/// </summary>
 		public SyncManagerTests()
 		{
-			MyTrace.SendToConsole();
 		}
 
 		/// <summary>

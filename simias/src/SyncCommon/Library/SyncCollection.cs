@@ -68,10 +68,16 @@ namespace Simias.Sync
 		/// <summary>
 		/// Copy Constructor
 		/// </summary>
+		/// <param name="collection">The collection object.</param>
 		public SyncCollection(Collection collection) : base	(collection)
 		{
 		}
 
+		/// <summary>
+		/// Invitation Constructor
+		/// </summary>
+		/// <param name="store">The store object.</param>
+		/// <param name="invitation">An invitation object.</param>
 		public SyncCollection(Store store, Invitation invitation)
 			: base(store, invitation.CollectionName, invitation.CollectionId,
 					invitation.Owner, invitation.Domain)

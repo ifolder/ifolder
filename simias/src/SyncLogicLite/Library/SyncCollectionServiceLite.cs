@@ -35,7 +35,9 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncCollectionServiceLite : SyncCollectionService
 	{
-		SyncCollection collection;
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncCollectionServiceLite));
+
+		private SyncCollection collection;
 
 		public SyncCollectionServiceLite(SyncCollection collection)
 			: base(collection)
@@ -69,8 +71,7 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				// ignore ?
-				MyTrace.WriteLine(e);
+				log.Debug(e, "Ignored");
 			}
 
 			return packet;
@@ -91,8 +92,7 @@ namespace Simias.Sync
 			}
 			catch(Exception e)
 			{
-				// ignore ?
-				MyTrace.WriteLine(e);
+				log.Debug(e, "Ignored");
 			}
 
 			return result;
@@ -109,7 +109,7 @@ namespace Simias.Sync
 
 			try
 			{
-				MyTrace.WriteLine("Node Download: {0}", node.Name);
+				log.Debug("Node Download: {0}", node.Name);
 
 				int start = Environment.TickCount;
 
@@ -144,7 +144,7 @@ namespace Simias.Sync
 
 					int length = 0;
 					
-					MyTrace.WriteLine("Starting File Download: {0}", path);
+					log.Debug("Starting File Download: {0}", path);
 					
 					int streamStart = Environment.TickCount;
 
@@ -158,7 +158,7 @@ namespace Simias.Sync
 
 					int streamStop = Environment.TickCount;
 
-					MyTrace.WriteLine("Completed File Download: {0} ({1} ms)", path, (streamStop - streamStart));
+					log.Debug("Completed File Download: {0} ({1} ms)", path, (streamStop - streamStart));
 					
 					// validate that the full path directory exists
 					if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
@@ -183,15 +183,14 @@ namespace Simias.Sync
 
 				int stop = Environment.TickCount;
 
-				MyTrace.WriteLine("Completed Node Download: {0} ({1}.{2}) [{3} ms]", path,
+				log.Debug("Completed Node Download: {0} ({1}.{2}) [{3} ms]", path,
 					node.MasterIncarnation, node.LocalIncarnation, (stop-start));
 
 				result = node.LocalIncarnation;
 			}
 			catch(Exception e)
 			{
-				// ignore ?
-				MyTrace.WriteLine(e);
+				log.Debug(e, "Ignored");
 			}
 
 			return result;
@@ -201,7 +200,7 @@ namespace Simias.Sync
 		{
 			Node node = collection.GetNodeByID(id);
 
-			MyTrace.WriteLine("Deleting Node: {0}", node.Name);
+			log.Debug("Deleting Node: {0}", node.Name);
 
 			collection.Delete(node);
 		}

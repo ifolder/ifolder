@@ -32,7 +32,7 @@ using Simias.Sync;
 namespace Simias.Sync.Tools
 {
 	/// <summary>
-	/// Sync Ping
+	/// Sync Pinger
 	/// </summary>
 	public class SyncPinger
 	{
@@ -107,9 +107,8 @@ namespace Simias.Sync.Tools
 
 					info = SyncPing.PingStore(new Store(new Configuration()), host);
 				}
-				catch(Exception e)
+				catch
 				{
-					MyTrace.WriteLine(e);
 					info = null;
 				}
 				finally

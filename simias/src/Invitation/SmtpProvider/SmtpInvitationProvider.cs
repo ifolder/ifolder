@@ -97,7 +97,7 @@ namespace Simias.Invite
 			// delete invitation file
 			File.Delete(filename);
 
-			MyTrace.WriteLine("Invitation Sent: {0}", invitation);
+			log.Info("Invitation Sent: {0}", invitation);
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace Simias.Invite
 		{
 			if (invitation.FromEmail == null || invitation.FromEmail.Length == 0)
 			{
-				MyTrace.WriteLine("Invalid Invitation (No From Email Address): {0}",
+				log.Debug("Invalid Invitation (No From Email Address): {0}",
 					invitation);
 				
 				throw new ArgumentNullException("FromEmail");
@@ -116,7 +116,7 @@ namespace Simias.Invite
 
 			if (invitation.ToEmail == null || invitation.ToEmail.Length == 0)
 			{
-				MyTrace.WriteLine("Invalid Invitation (No To Email Address): {0}",
+				log.Debug("Invalid Invitation (No To Email Address): {0}",
 					invitation);
 				
 				throw new ArgumentNullException("ToEmail");
