@@ -659,6 +659,10 @@ namespace Simias.Sync
 												ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
 												foreach (ShallowNode csn in csnList)
 												{
+													// Skip the collection.
+													if (csn.ID == node.ID)
+														continue;
+
 													Node childNode = collection.GetNodeByID(csn.ID);
 													if (childNode != null)
 													{
