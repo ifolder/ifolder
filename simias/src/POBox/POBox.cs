@@ -262,7 +262,7 @@ namespace Simias.POBox
 		/// <returns>A Subscription object.  This object must be added to the POBox using one of the AddMessage() methods.</returns>
 		public Subscription CreateSubscription(Collection collection, Member fromMember, string type)
 		{
-			Subscription subscription = new Subscription(collection.Name + " subscription", Message.OutboundMessage, fromMember.UserID);
+			Subscription subscription = new Subscription(collection.Name + " Subscription", Message.OutboundMessage, fromMember.UserID);
 
 			subscription.FromName = fromMember.Name;
 			subscription.FromIdentity = fromMember.UserID;
@@ -274,6 +274,9 @@ namespace Simias.POBox
 			subscription.POServiceURL = new Uri(this.POServiceUrl);
 			subscription.SubscriptionCollectionType = type;
 			subscription.SubscriptionKey = Guid.NewGuid().ToString();
+
+			// TODO: clean this up
+			subscription.HasDirNode = (collection != null) ? (collection.GetRootDirectory() != null) : false;
 
 			return subscription;
 		}
