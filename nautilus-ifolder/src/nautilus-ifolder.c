@@ -372,7 +372,6 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 								   NautilusOperationHandle	**handle)
 {
 	g_print ("--> ifolder_nautilus_update_file_info called\n");
-	gchar *ifolder_type = NULL;
 	
 	/* Don't do anything if the specified file is not a directory. */
 	if (!nautilus_file_info_is_directory (file))
@@ -382,35 +381,9 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 		if (is_ifolder (file))
 		{
 			nautilus_file_info_add_emblem (file, "ifolder");
-			ifolder_type = _("yes");
 		}
-		else
-		{
-			ifolder_type = _("no");
-		}
-		
-		nautilus_file_info_add_string_attribute (
-			file,
-			"NautilusiFolder::is_ifolder",
-			ifolder_type);
 	} else {
 		g_print ("*** iFolder is NOT running\n");
-		/**
-		 * If iFolder is not currently running on the machine, check
-		 * the "NautilusiFolder::ifolder_type" attribute to determine
-		 * whether the folder has been marked as an iFolder.
-		 */
-		ifolder_type = nautilus_file_info_get_string_attribute (
-			file,
-			"NautilusiFolder::is_ifolder");
-			 
-		if (ifolder_type) {
-			g_print (ifolder_type);
-		}
-			
-		if (ifolder_type && (!strcmp (ifolder_type, "yes"))) {
-			nautilus_file_info_add_emblem (file, "ifolder");
-		}
 	}
 											 
 	return NAUTILUS_OPERATION_COMPLETE;
