@@ -64,10 +64,11 @@ installcheck-local: install $(NUNIT_TESTS)
 CLEAN_FILES = CollectionEvents.dll EventService.dll $(NUNIT_TESTS) CollectionEvents.doc.xml EventService.doc.xml
 
 clean-local:
-	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
-distclean-local: clean
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

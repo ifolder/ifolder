@@ -123,6 +123,13 @@ AC_SUBST(WINDOWS_SUBDIRS)
 
 COMMON_LIBS="/r:AddressBook.dll /r:Agent.dll /r:CollectionEvents.dll /r:CollectionStore.dll /r:Common.dll /r:CommonGtkWindows.dll /r:Invitation.dll /r:Location.dll /r:RemotingSnifferLibrary.dll /r:Simias.Service.dll /r:Smtp.dll /r:SmtpInvitationProvider.dll /r:SqliteProvider.dll /r:SqliteWrapper.dll /r:Storage.dll /r:StoreProvider.dll /r:SyncCommon.dll /r:Sync.dll /r:SyncLogicLite.dll /r:SyncManager.dll"
 
+COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
+COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
+AC_SUBST(COMMON_CLEAN_FILES)
+AC_SUBST(COMMON_DISTCLEAN_FILES)
+AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
+
 #
 # Set platform-specific variables
 #
@@ -134,7 +141,6 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
-        COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
@@ -165,7 +171,6 @@ case $SIMIAS_OS in
         #
         # Set variables
         #
-        COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
@@ -195,7 +200,6 @@ case $SIMIAS_OS in
     # Windows-specific configuration
     #
     windows)
-        COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
@@ -219,7 +223,6 @@ case $SIMIAS_OS in
         PKG_CONFIG_LIBS="$COMMON_LIBS"
     ;;
 esac
-AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(LOG4NET_DIR)

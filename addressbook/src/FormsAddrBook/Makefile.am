@@ -36,10 +36,11 @@ installcheck-local: install
 CLEAN_FILES = ContactBrowser.exe ContactBrowser.doc.xml
 
 clean-local:
-	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
     
-distclean-local: clean
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

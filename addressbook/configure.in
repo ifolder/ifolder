@@ -119,6 +119,13 @@ AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 
+COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
+COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
+AC_SUBST(COMMON_CLEAN_FILES)
+AC_SUBST(COMMON_DISTCLEAN_FILES)
+AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
+
 #
 # Set platform-specific variables
 #
@@ -130,7 +137,6 @@ case $ADDRESSBOOK_OS in
         #
         # Set variables
         #
-        COMMON_CLEAN_FILES='.cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
@@ -169,7 +175,6 @@ case $ADDRESSBOOK_OS in
     # Windows-specific configuration
     #
     windows)
-        COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
@@ -199,7 +204,6 @@ case $ADDRESSBOOK_OS in
 esac
 AC_SUBST(SIMIAS_INSTALL_PATH)
 
-AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(NUNIT)

@@ -58,8 +58,8 @@ package-clean clean-local:
 	rm -rf *.rpm RPM
 
 distclean-local: package-clean
-	rm -f Makefile simias.spec
+	rm -f simias.spec
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

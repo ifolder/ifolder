@@ -58,8 +58,8 @@ package-clean clean-local:
 	rm -rf *.rpm RPM
 
 distclean-local: package-clean
-	rm -f Makefile addressbook.spec
+	rm -f addressbook.spec
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

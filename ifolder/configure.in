@@ -126,6 +126,13 @@ AC_SUBST(NOBUILD_SUBDIRS)
 
 COMMON_LIBS="/r:iFolder.dll"
 
+COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
+COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
+COMMON_MAINTAINER_CLEAN_FILES='Makefile.in'
+AC_SUBST(COMMON_CLEAN_FILES)
+AC_SUBST(COMMON_DISTCLEAN_FILES)
+AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
+
 #
 # Set platform-specific variables
 #
@@ -137,7 +144,6 @@ case $IFOLDER_OS in
         #
         # Set variables
         #
-        COMMON_CLEAN_FILES='.cstore .simias'
         EMPTY=
         EXE_EXT=''
         ICON_EXT='.ico'
@@ -202,7 +208,6 @@ case $IFOLDER_OS in
         CFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
         CFLAGS_OPTIMIZE="-MD -O2 -DNDEBUG"
         CINC='-I'
-        COMMON_CLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj *.xml */*.xml *.pdb */*.pdb .cstore .simias'
         COUT='-Fo'
         CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=\$(PACKAGE) -DVERSION=\$(VERSION)";
         CXXFLAGS_DEBUG="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
@@ -262,7 +267,6 @@ AC_SUBST(ADDRESSBOOK_INSTALL_PATH)
 
 AC_SUBST(CDEF)
 AC_SUBST(CINC)
-AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(COUT)
 AC_SUBST(CXX)
 AC_SUBST(CXXFLAGS)

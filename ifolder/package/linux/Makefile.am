@@ -61,5 +61,5 @@ distclean-local: package-clean
 	rm -f ifolder.spec
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

@@ -52,10 +52,11 @@ installcheck-local: install $(NUNIT_TESTS)
 CLEAN_FILES = FsWatcher.dll $(NUNIT_TESTS) FsWatcher.doc.xml FsWatcherTests.test.xml
 
 clean-local:
-	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
-
-distclean-local: clean
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+    
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

@@ -39,14 +39,13 @@ installcheck-local: install $(NUNIT_TESTS)
 #	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:RemotingSnifferLibraryTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = RemotingSnifferLibrary.dll $(NUNIT_TESTS) RemotingSnifferLibrary.doc.xml RemotingSnifferLibraryTests.test.xml
-CLEAN_DIRS = .cstore
 
 clean-local:
-	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
-	rm -rf $(CLEAN_DIRS)
-
-distclean-local: clean
+	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
+    
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES)
 
 maintainer-clean-local:
-	rm -f Makefile.in
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 

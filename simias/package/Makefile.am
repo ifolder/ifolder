@@ -24,8 +24,8 @@ SUBDIRS = $(SIMIAS_OS)
 
 DIST_SUBDIRS = darwin linux windows
 
-.PHONY: package package-clean package-install package-uninstall
-package package-clean package-install package-uninstall:
+.PHONY: package package-sdk package-clean package-install package-uninstall
+package package-sdk package-clean package-install package-uninstall:
 	$(MAKE) -C $(SIMIAS_OS) $@
 
 maintainer-clean-local:
