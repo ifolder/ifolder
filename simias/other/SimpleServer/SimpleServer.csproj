@@ -80,16 +80,6 @@
                     HintPath = "Novell.Security.Web.IAuthenticationService.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\Simias.dll\Simias.dll"
-                />
-                <Reference
-                    Name = "SimiasClient"
-                    AssemblyName = "SimiasClient"
-                    HintPath = "..\SimiasClient\SimiasClient.dll"
-                />
-                <Reference
                     Name = "Novell.AddressBook"
                     AssemblyName = "Novell.AddressBook"
                     HintPath = "..\..\src\AddressBook\Novell.AddressBook.dll"
@@ -103,6 +93,16 @@
                     Name = "System.Web.Services"
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\src\Simias.dll\Simias.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\src\SimiasClient\SimiasClient.dll"
                 />
             </References>
         </Build>
@@ -120,7 +120,7 @@
                 />
                 <File
                     RelPath = "DomainService.asmx.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File

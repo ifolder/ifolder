@@ -43,10 +43,8 @@ namespace Simias.SimpleServer
 
 		/// <summary>
 		/// GUID for this SimpleServer domain
-		/// FIXME::This ID shouldn't be static but we don't have
-		/// a way to look a domain by id
 		/// </summary>
-		private string id = "29ebbf9c-d9e8-4471-be80-df3dd90db0ff";
+		private string id = "";
 
 		/// <summary>
 		/// Friendly name for the workgroup domain.
@@ -218,50 +216,28 @@ namespace Simias.SimpleServer
 
 				//
 				// Verify the SimpleServer domain exists
-				// FIXME:: need to enum domains and look for my special property
-				// or maybe add a new type to the domain to know it's a SimpleServer
-				// You should only be able to have one SimpleServer domain in a master
-				// role per store
 				//
 			
-				Uri localUri = new Uri("http://" + hostAddress + "/simias10");
-				Simias.Storage.Domain rDomain = store.GetDomain( this.id );
-				if (rDomain == null)
+				Simias.Storage.Domain rDomain = 
+					this.GetSimpleServerDomain( true, ldbMember.ID );
+
+				if ( rDomain == null )
 				{
-					// Create the mDnsDomain and add an identity mapping.
-					/* Reliase when Mike checks in Role changes
-					store.AddDomainIdentity(
-						ldbMember.ID,
-						this.domainName,
-						this.id, 
-						this.description,
-						localUri,
-						Simias.Storage.Domain.DomainRole.Master);
-					*/
-
-					store.AddDomainIdentity(
-						ldbMember.ID,
-						this.domainName,
-						this.id, 
-						this.description,
-						localUri);
-
-					rDomain = store.GetDomain( this.id );
-					//Node cNode = new Node( this.id, (Simias.Storage.Node) rDomain );
-					//cNode.SetType( cNode, "SimpleServer" );
+					log.Error( "Couldn't create or verify SimpleServer domain" );
+					return;
 				}
 
 				//
 				// Make this domain the default
 				//
 
-				store.DefaultDomain = rDomain.ID;
+				//store.DefaultDomain = rDomain.ID;
 
 				//
 				// Verify the SimpleServer roster
 				//
 
-				Roster ssRoster = null;
+				Simias.Storage.Roster ssRoster = null;
 				Member rMember;
 				ArrayList changeList = new ArrayList();
 
@@ -272,7 +248,7 @@ namespace Simias.SimpleServer
 				catch{}
 				if ( ssRoster == null )
 				{
-					ssRoster = new Roster( store, store.GetDomain( this.id ));
+					ssRoster = new Roster( store, rDomain );
 					rMember = new Member( ldbMember.Name, ldbMember.ID, Access.Rights.Admin );
 					rMember.IsOwner = true;
 					changeList.Add(ssRoster);
@@ -298,16 +274,16 @@ namespace Simias.SimpleServer
 			
 				Member pMember;
 				Simias.POBox.POBox poBox = null;
-				string poBoxName = "POBox:" + this.id + ":" + ldbMember.ID;
+				string poBoxName = "POBox:" + rDomain.ID + ":" + ldbMember.ID;
 
 				try
 				{
-					poBox = Simias.POBox.POBox.FindPOBox( store, this.ID, ldbMember.ID );
+					poBox = Simias.POBox.POBox.FindPOBox( store, rDomain.ID, ldbMember.ID );
 				}
 				catch{}
 				if (poBox == null)
 				{
-					poBox = new Simias.POBox.POBox( store, poBoxName, this.id );
+					poBox = new Simias.POBox.POBox( store, poBoxName, rDomain.ID );
 					pMember = 
 						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
 					pMember.IsOwner = true;
@@ -335,6 +311,66 @@ namespace Simias.SimpleServer
 				//throw e1;
 				// FIXME:: rethrow the exception
 			}			
+		}
+
+		/// <summary>
+		/// Method to get the Simias simple server domain
+		/// If the the domain does not exist and the create flag is true
+		/// the domain will be created.  If create == false, ownerID is ignored
+		/// </summary>
+		internal Simias.Storage.Domain GetSimpleServerDomain( bool create, string ownerID )
+		{
+			//
+			//  Check if the SimpleServer domain exists in the store
+			//
+
+			Simias.Storage.Domain ssDomain = null;
+
+			try
+			{
+				Store store = Store.GetStore();
+
+				foreach( ShallowNode sNode in store.GetDomainList() )
+				{
+					Simias.Storage.Domain tmpDomain = store.GetDomain( sNode.ID );
+					Property p = tmpDomain.Properties.GetSingleProperty( "SimpleServer" );
+					if ( p != null && (bool) p.Value == true )
+					{
+						ssDomain = tmpDomain;
+						break;
+					}
+				}
+
+				if ( ssDomain == null && create == true )
+				{
+					string id = Guid.NewGuid().ToString();
+					Uri localUri = new Uri("http://" + MyDns.GetHostName() + "/simias10");
+
+					ssDomain =
+						store.AddDomainIdentity(
+							ownerID,
+							this.domainName,
+							id, 
+							this.description,
+							localUri);
+
+					if ( ssDomain != null )
+					{
+						Property p = new Property( "SimpleServer", true );
+						p.LocalProperty = true;
+						ssDomain.Properties.ModifyProperty( p );
+						store.GetDatabaseObject().Commit( ssDomain );
+						this.id = ssDomain.ID;
+					}
+				}
+			}
+			catch(Exception gssd)
+			{
+				log.Error( gssd.Message );
+				log.Error( gssd.StackTrace );
+			}
+
+			return ssDomain;
 		}
 
 		#region Public Methods
@@ -379,18 +415,14 @@ namespace Simias.SimpleServer
 
 			try
 			{
-				ssDomain = store.GetDomain( this.id );
+				ssDomain = this.GetSimpleServerDomain( false, "" );
 				ssRoster = ssDomain.GetRoster( store );
 			}
-			catch(Exception e)
-			{
-				log.Error("Failed getting the SimpleServer roster");
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
-			}
+			catch{}
 
 			if (ssRoster == null)
 			{
+				log.Error( "Failed getting the SimpleServer roster" );
 				return;
 			}
 

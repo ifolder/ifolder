@@ -55,7 +55,12 @@ namespace Novell.iFolder.DomainService
 			Store store = Store.GetStore();
 
 			// domain
-			Domain domain = store.GetDomain(store.DefaultDomain);
+			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
+			if ( domain == null )
+			{
+				throw new SimiasException( "SimpleServer domain does not exist" );
+			}
 
 			DomainInfo info = new DomainInfo();
 			info.ID = domain.ID;
@@ -95,20 +100,25 @@ namespace Novell.iFolder.DomainService
 
 			// store
 			Store store = Store.GetStore();
+			Simias.SimpleServer.Domain ssDomain = new Simias.SimpleServer.Domain( false );
+			Simias.Storage.Domain domain = ssDomain.GetSimpleServerDomain( false, "" );
+			if ( domain == null )
+			{
+				throw new SimiasException( "SimpleServer domain does not exist" );
+			}
 
 			// roster
-			Domain domain = store.GetDomain(store.DefaultDomain);
-			Roster roster = domain.GetRoster(store);
+			Roster roster = domain.GetRoster( store );
 
 			// find user
-			Member member = roster.GetMemberByName(user);
+			Member member = roster.GetMemberByName( user );
 			if (member != null)
 			{
 				info = new ProvisionInfo();
 				info.UserID = member.UserID;
 
 				// post-office box
-				POBox poBox = POBox.GetPOBox(store, store.DefaultDomain, info.UserID);
+				POBox poBox = POBox.GetPOBox( store, domain.ID, info.UserID );
 
 				info.POBoxID = poBox.ID;
 				info.POBoxName = poBox.Name;
@@ -133,7 +143,7 @@ namespace Novell.iFolder.DomainService
 		/// <param name="memberName">Name of the member object that is the owner of this collection.</param>
 		/// <param name="memberID">Identifier of the member object that is the owner of this collection.</param>
 		/// <param name="memberRights">Rights of the member that is the owner of this collection.</param>
-		/// <returns>The url that the client should use to contact the server.</returns>
+		/// <returns>The master url that the client should use to contact the server.</returns>
 		[WebMethod(EnableSession=true)]
 		[SoapDocumentMethod]
 		public string CreateMaster(string collectionID, string collectionName, string rootDirID, string rootDirName, string userID, string memberName, string memberID, string memberRights)
@@ -143,15 +153,22 @@ namespace Novell.iFolder.DomainService
 			// store
 			Store store = Store.GetStore();
 
-			Collection c = new Collection(store, collectionName, collectionID, store.DefaultDomain);
+			Simias.Storage.Domain domain = 
+				new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
+			if ( domain == null )
+			{
+				throw new SimiasException( "SimpleServer domain does not exist." );
+			}
+
+			Collection c = new Collection( store, collectionName, collectionID, domain.ID );
 			c.Proxy = true;
 			nodeList.Add(c);
 			
 			// Make sure that the caller is the current owner.
-			Roster roster = store.GetRoster(store.DefaultDomain);
+			Roster roster = domain.GetRoster( store );
 			if (roster == null)
 			{
-				throw new SimiasException( "Roster does not exist for the default domain." );
+				throw new SimiasException( "Roster does not exist for the SimpleServer domain." );
 			}
 
 			string existingUserID = Thread.CurrentPrincipal.Identity.Name;
@@ -200,11 +217,12 @@ namespace Novell.iFolder.DomainService
 			}
 
 			// Create the collection.
-			c.Commit(nodeList.ToArray(typeof(Node)) as Node[]);
+			c.Commit( nodeList.ToArray( typeof(Node) ) as Node[] );
 
 			// get the collection master url
 			Uri request = Context.Request.Url;
-			UriBuilder uri = new UriBuilder(request.Scheme, request.Host, request.Port, Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ) );
+			UriBuilder uri = 
+				new UriBuilder(request.Scheme, request.Host, request.Port, Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ) );
 			return uri.ToString();
 		}
 
@@ -218,15 +236,22 @@ namespace Novell.iFolder.DomainService
 		[SoapDocumentMethod]
 		public void RemoveServerCollections(string domainID, string userID)
 		{
-			// Don't let the Workgroup domain be used in this call.
-			if (domainID == Domain.WorkGroupDomainID)
+			// This method can only target the simple server
+			Simias.Storage.Domain domain = 
+				new Simias.SimpleServer.Domain( false ).GetSimpleServerDomain( false, "" );
+			if ( domain == null )
 			{
-				throw new SimiasException("The WorkGroup domain cannot be used.");
+				throw new SimiasException( "SimpleServer domain does not exist." );
+			}
+
+			if ( domainID != domain.ID )
+			{
+				throw new SimiasException("Only the SimpleServer domain can be used.");
 			}
 
 			// Make sure that the caller is the current owner.
 			Store store = Store.GetStore();
-			Roster roster = store.GetRoster(domainID);
+			Roster roster = domain.GetRoster( store );
 			if (roster == null)
 			{
 				throw new SimiasException(String.Format("Roster does not exist for domain.", domainID));
