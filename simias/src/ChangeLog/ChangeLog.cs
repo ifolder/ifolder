@@ -326,7 +326,7 @@ namespace Simias.Storage
 		/// Initializes a new instance from a string obtained from ToString
 		/// </summary>
 		/// <param name="cookie">The string representation of the context.</param>
-		internal EventContext( string cookie)
+		public EventContext( string cookie)
 		{
 			string [] values = cookie.Split(valueSeparator);
 			if (values.Length != 3)

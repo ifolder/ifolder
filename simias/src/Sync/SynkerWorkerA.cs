@@ -110,56 +110,45 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 	void PutNodeToServer(ref NodeStamp stamp, string message)
 	{
-		// TODO: deal with small files in pages, right now we just limit the
-		// first small file page and then consider everything a large file
-		Log.Assert(stamp.streamsSize >= -1);
+		if (stamp.masterIncarn == stamp.localIncarn)
+		{
+			// This node has not changed.
+			return;
+		}
 
-		if (stamp.isDir)
+		if (stamp.type == NodeTypes.DirNodeType)
 		{
 			if (!dirsToServer.Contains(stamp.id))
 				dirsToServer.Add(stamp.id, stamp);
 		}
-		else if (stamp.streamsSize == -1)
+		else if (stamp.type != NodeTypes.BaseFileNodeType)
 		{
 			if (!smallToServer.Contains(stamp.id))
 				smallToServer.Add(stamp.id, stamp);
-		}
-		else if (stamp.streamsSize >= NodeChunk.MaxSize)
-		{
-			if (!largeToServer.Contains(stamp.id))
-				largeToServer.Add(stamp.id, stamp);
 		}
 		else
 		{
-			if (!smallToServer.Contains(stamp.id))
-				smallToServer.Add(stamp.id, stamp);
+			if (!largeToServer.Contains(stamp.id))
+				largeToServer.Add(stamp.id, stamp);
 		}
 	}
 
 	void GetNodeFromServer(ref NodeStamp stamp, string message)
 	{
-		// TODO: deal with small files in pages, right now we just limit the
-		// first small file page and then consider everything a large file
-		Log.Assert(stamp.streamsSize >= -1);
-		if (stamp.isDir)
+		if (stamp.type == NodeTypes.DirNodeType)
 		{
 			if(!dirsFromServer.Contains(stamp.id))
 				dirsFromServer.Add(stamp.id, stamp);
 		}
-		else if (stamp.streamsSize == -1)
+		else if (stamp.type != NodeTypes.BaseFileNodeType)
 		{
 			if (!smallFromServer.Contains(stamp.id))
 				smallFromServer.Add(stamp.id, stamp);
-		}
-		else if (stamp.streamsSize >= NodeChunk.MaxSize)
-		{
-			if (!largeFromServer.Contains(stamp.id))
-				largeFromServer.Add(stamp.id, stamp);
 		}
 		else
 		{
-			if (!smallFromServer.Contains(stamp.id))
-				smallFromServer.Add(stamp.id, stamp);
+			if (!largeFromServer.Contains(stamp.id))
+				largeFromServer.Add(stamp.id, stamp);
 		}
 	}
 
@@ -195,7 +184,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 				string clientCookie, serverCookie;
 				bool gotServerChanges, gotClientChanges;
 				ops.GetChangeLogCookies(out serverCookie, out clientCookie);
-				gotServerChanges = ss.GetChangedNodeStamps(out sstamps, ref serverCookie);
+				gotServerChanges = /* WEB ss*/ ops.GetChangedNodeStamps(out sstamps, ref serverCookie);
 				gotClientChanges = ops.GetChangedNodeStamps(out cstamps, ref clientCookie);
 		
 				if (gotServerChanges && gotClientChanges)
@@ -211,7 +200,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 				}
 				else
 				{
-					sstamps =  ss.GetNodeStamps();
+					// WEB
+					sstamps = null;
+					//sstamps =  ss.GetNodeStamps();
 					if (sstamps == null)
 					{
 						Log.log.Error("Server Failure: could not get nodestamps");
@@ -252,7 +243,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			{
 				// node ci exists on client but not server
 				if (cstamps[ci].masterIncarn == 0
-					&& cstamps[ci].localIncarn != UInt64.MaxValue
+					&& cstamps[ci].type != NodeTypes.TombstoneType
 					&& rights != Access.Rights.ReadOnly)
 					PutNodeToServer(ref cstamps[ci], "is new on the client, send to server");
 				else
@@ -270,7 +261,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			else
 			{
 				Log.Assert(ci < cCount && si < sCount && cstamps[ci].CompareTo(sstamps[si]) == 0);
-				if (cstamps[ci].localIncarn == UInt64.MaxValue)
+				if (cstamps[ci].type == NodeTypes.TombstoneType)
 				{
 					if (rights == Access.Rights.ReadOnly)
 					{
@@ -279,7 +270,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 					}
 					else
 					{
-						Log.Assert(cstamps[ci].streamsSize == -1);
 						PutNodeToServer(ref cstamps[ci], "is local tombstone, delete on server");
 					}
 				}
@@ -517,9 +507,19 @@ public class SynkerWorkerA: SyncCollectionWorker
 							{
 								Log.log.Debug("skipping update of incarnation for small node {0} due to {1} on server",
 									reject.nid, reject.status);
-								updateIncarn = false;
-								HadErrors = true;
-								removeFromList = false;
+								if (reject.status == NodeStatus.UpdateConflict)
+								{
+									// There is a conflict on the server get the node from the server.
+									// Since we don't know the state of the node get it as a large node.
+									//if (!largeFromServer.Contains(reject.nid))
+										//largeFromServer.Add(reject.nid, stamp);
+								}
+								else
+								{
+									updateIncarn = false;
+									HadErrors = true;
+									removeFromList = false;
+								}
 								break;
 							}
 						}

@@ -51,7 +51,6 @@ public struct NodeStamp: IComparable
 
 	/// <summary>
 	/// The locale incartion of the node.
-	/// if localIncarn == UInt64.MaxValue, node is a tombstone
 	/// </summary>
 	public ulong localIncarn;
 
@@ -61,14 +60,9 @@ public struct NodeStamp: IComparable
 	public ulong masterIncarn;
 
 	/// <summary>
-	/// The size of the stream associated with this node.
-	/// </summary>
-	public long streamsSize;
-
-	/// <summary>
 	/// 
 	/// </summary>
-	public bool isDir;
+	public string type;
 
 	/// <summary>
 	/// 
@@ -91,8 +85,14 @@ public struct NodeStamp: IComparable
 [Serializable]
 public struct NodeChunk
 {
-	internal Node node;
-	internal const int MaxSize = 128 * 1024;
+	/// <summary>
+	/// The node.
+	/// </summary>
+	public Node node;
+	/// <summary>
+	/// The Maximum Xfer Size.
+	/// </summary>
+	public const int MaxSize = 128 * 1024;
 	/// <summary>
 	/// The string representation of the node.
 	/// </summary>
@@ -139,15 +139,16 @@ public struct RejectedNode
 
 //---------------------------------------------------------------------------
 // various useful Sync operations that are called by client and server
-internal class SyncOps
+public class SyncOps
 {
 	SyncCollection collection;
 	bool onServer;
-	private const string ServerChangeLogCookieProp = "ServerChangeLogCookie";
-	private const string ClientChangeLogCookieProp = "ClientChangeLogCookie";
-	private string clientCookie = null;
-	private string serverCookie = null;
-	EventContext eventCookie;
+	private const string	ServerChangeLogCookieProp = "ServerChangeLogCookie";
+	private const string	ClientChangeLogCookieProp = "ClientChangeLogCookie";
+	private string			clientCookie = null;
+	private string			serverCookie = null;
+	EventContext			eventCookie;
+	ArrayList				NodeList = new ArrayList();
 
 	//TODO: remove after verifying that 'node as BaseFileNode' works for this
 	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
@@ -321,7 +322,8 @@ internal class SyncOps
 		foreach (NodeStamp stamp in stamps.Values)
 		{
 			chunks[i] = GetSmallNode(stamp.id);
-			chunks[i].expectedIncarn = chunks[i].node.MasterIncarnation;
+			if (chunks[i].node != null)
+				chunks[i].expectedIncarn = chunks[i].node.MasterIncarnation;
 			i++;
 		}
 		return chunks;
@@ -432,8 +434,7 @@ internal class SyncOps
 							stamp.masterIncarn = rec.MasterRev;
 							stamp.id = rec.EventID;
 							stamp.changeType = rec.Operation;
-							stamp.streamsSize = rec.FileLength;
-							stamp.isDir = rec.Type == NodeTypes.NodeTypeEnum.DirNode ? true : false;
+							stamp.type = rec.Type.ToString();
 							stampList.Add(stamp);
 						}
 					}

@@ -15,6 +15,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlaimWrapper", "src\FlaimPr
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncClient", "src\SyncClient\SyncClient.csproj", "{0BEB9BE3-C801-4209-AA6B-0FF56D57C956}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncService\SyncService.csproj", "{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -37,6 +45,14 @@ Global
 		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Debug.Build.0 = Debug|Win32
 		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Release.ActiveCfg = Release|Win32
 		{188191A2-3D4D-404E-8F66-A1FAB865F586}.Release.Build.0 = Release|Win32
+		{0BEB9BE3-C801-4209-AA6B-0FF56D57C956}.Debug.ActiveCfg = Debug|.NET
+		{0BEB9BE3-C801-4209-AA6B-0FF56D57C956}.Debug.Build.0 = Debug|.NET
+		{0BEB9BE3-C801-4209-AA6B-0FF56D57C956}.Release.ActiveCfg = Release|.NET
+		{0BEB9BE3-C801-4209-AA6B-0FF56D57C956}.Release.Build.0 = Release|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.ActiveCfg = Debug|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.Build.0 = Debug|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.ActiveCfg = Release|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

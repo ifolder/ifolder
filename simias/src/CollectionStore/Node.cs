@@ -495,7 +495,7 @@ namespace Simias.Storage
 		/// Sets the master incarnation values on a Node object.
 		/// </summary>
 		/// <param name="incarnationValue">The master incarnation value to set.</param>
-		internal void SetMasterIncarnation( ulong incarnationValue )
+		public void SetMasterIncarnation( ulong incarnationValue )
 		{
 			properties.State = PropertyList.PropertyListState.Internal;
 			properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );

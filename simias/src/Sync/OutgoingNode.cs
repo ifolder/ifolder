@@ -81,38 +81,12 @@ namespace Simias.Sync
 		/// <returns></returns>
 		public static NodeStamp GetOutNodeStamp(Collection collection, ref Node node, ChangeLogRecord.ChangeLogOp changeType)
 		{
-			string path;
 			NodeStamp stamp = new NodeStamp();
-				
-			Conflict cf = new Conflict(collection, node);
-			if (cf.IsUpdateConflict)
-			{
-				path = cf.UpdateConflictPath;
-				node = cf.UpdateConflictNode;
-			}
-			else if (cf.IsFileNameConflict)
-				path = cf.FileNameConflictPath;
-			else
-				path = cf.NonconflictedPath;
-		
-			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-			stamp.masterIncarn = cf.IsUpdateConflict ? node.LocalIncarnation : node.MasterIncarnation;
+			stamp.localIncarn = node.LocalIncarnation;
+			stamp.masterIncarn = node.MasterIncarnation;
 			stamp.id = node.ID;
-			stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
+			stamp.type = node.BaseType;
 			stamp.changeType = changeType;
-
-			//TODO: another place to handle multiple forks
-			try
-			{
-				stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
-			}
-			catch (Exception e)
-			{
-				Log.Spew("Could not get file size of {0}: {1}", path, e);
-				stamp.streamsSize = 0;
-			}
-
 			return stamp;
 		}
 

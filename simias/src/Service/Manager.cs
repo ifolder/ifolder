@@ -244,14 +244,11 @@ namespace Simias.Service
 		/// </summary>
 		private void installDefaultServices()
 		{
-			InternalUninstall("Simias Dredge Service");
 			Install(new ThreadServiceCtl(conf, "Simias Change Log Service", "Simias", "Simias.Storage.ChangeLog"), 1);
 			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "mDnsService.exe"), 2);
 			Install(new ThreadServiceCtl(conf, "Simias Interprocess Event Service", "Simias", "Simias.Event.IProcEventServer"), 3);
-			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"), 4);
-			Install(new ThreadServiceCtl(conf, "Simias PO Service", "Simias", "Simias.POBox.POService"), 5);
-			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 6);
-//			Install(new ThreadServiceCtl(conf, "Simias Asp Service", "SimiasAspService", "Simias.Web.SimiasAspService"), 7);
+			Install(new ThreadServiceCtl(conf, "Simias PO Service", "Simias", "Simias.POBox.POService"), 4);
+			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 5);
 		}
 
 		/// <summary>

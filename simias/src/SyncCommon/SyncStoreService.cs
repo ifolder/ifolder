@@ -31,56 +31,6 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncStoreService : MarshalByRefObject
 	{
-		private SyncStoreManager manager;
-
-		/// <summary>
-		/// Get a lifetime service object to control the lifetime policy.
-		/// </summary>
-		/// <returns>An ILease object used to control the lifetime policy.</returns>
-		public override object InitializeLifetimeService()
-		{
-			// infinite lease time
-			return null;
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="manager">The sync store manager object.</param>
-		public SyncStoreService(SyncStoreManager manager)
-		{
-			this.manager = manager;
-		}
-
-		/// <summary>
-		/// Generate the sync store information.
-		/// </summary>
-		/// <returns></returns>
-		public SyncStoreInfo Ping()
-		{
-			return new SyncStoreInfo(manager.Store);
-		}
-
-		/// <summary>
-		/// Get the sync collection service.
-		/// </summary>
-		/// <param name="id">The collection id.</param>
-		/// <returns>The sync collection service object.</returns>
-		public SyncCollectionService GetCollectionService(string id)
-		{
-			return manager.GetCollectionService(id);
-		}
-
-		/// <summary>
-		/// Does the collection exist.
-		/// </summary>
-		/// <param name="id">The collection id.</param>
-		/// <returns>true if the collection exists.</returns>
-		public bool DoesCollectionExist(string id)
-		{
-			return manager.DoesCollectionExist(id);
-		}
-
 		#region Properties
 		
         /// <summary>

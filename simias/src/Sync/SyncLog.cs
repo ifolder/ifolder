@@ -32,7 +32,7 @@ namespace Simias.Sync
 /// <summary> catch-all log for misc sync classes</summary>
 public class Log
 {
-	internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Log));
+	public static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Log));
 
 	// don't always get line numbers from stack dumps, so force it here
 	static void DumpStack()
@@ -53,18 +53,18 @@ public class Log
 	internal static void Warn(string format, params object[] args) { log.Warn(format, args); }
 	internal static void Error(string format, params object[] args) { log.Error(format, args); DumpStack(); }
 
-	internal static void Here()
+	public static void Here()
 	{
 		StackFrame sf = new StackTrace(1, true).GetFrame(0);
 		log.Debug("Here: {0}:{1} {2}", sf.GetFileName(), sf.GetFileLineNumber(), sf.GetMethod().ToString());
 	}
 
-	internal static void Uncaught(Exception e)
+	public static void Uncaught(Exception e)
 	{
 		log.Debug(String.Format("Uncaught exception: {0}\n{1}", e.Message, e.StackTrace));
 	}
 
-	internal static void Assert(bool assertion)
+	public static void Assert(bool assertion)
 	{
 		if (!assertion)
 		{
