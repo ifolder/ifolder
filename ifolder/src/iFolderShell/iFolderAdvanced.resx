@@ -97,9 +97,6 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="tabControl1.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>True</value>
-	</data>
 	<data name="tabControl1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>False</value>
 	</data>
@@ -114,6 +111,9 @@
 	</data>
 	<data name="tabControl1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
+	</data>
+	<data name="tabControl1.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>True</value>
 	</data>
 	<data name="tabControl1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value />
@@ -301,6 +301,9 @@
 	<data name="&gt;&gt;tabGeneral.ZOrder">
 		<value>0</value>
 	</data>
+	<data name="groupBox1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
+	</data>
 	<data name="groupBox1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
 	</data>
@@ -309,9 +312,6 @@
 	</data>
 	<data name="groupBox1.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
-	</data>
-	<data name="groupBox1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
 	</data>
 	<data name="groupBox1.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
@@ -362,7 +362,7 @@
 		<value>False</value>
 	</data>
 	<data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>400, 168</value>
+		<value>400, 160</value>
 	</data>
 	<data name="groupBox1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>0</value>
@@ -443,7 +443,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="syncNow.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>160, 120</value>
+		<value>312, 125</value>
 	</data>
 	<data name="syncNow.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -458,7 +458,7 @@
 		<value>7</value>
 	</data>
 	<data name="syncNow.Text">
-		<value>Sync now</value>
+		<value>Sync &amp;now</value>
 	</data>
 	<data name="syncNow.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleCenter</value>
@@ -751,11 +751,11 @@
 	<data name="&gt;&gt;label2.ZOrder">
 		<value>3</value>
 	</data>
-	<data name="syncLabel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
-	</data>
 	<data name="syncLabel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
+	</data>
+	<data name="syncLabel.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+		<value>False</value>
 	</data>
 	<data name="syncLabel.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -803,7 +803,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="syncLabel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>16, 104</value>
+		<value>16, 96</value>
 	</data>
 	<data name="syncLabel.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -827,7 +827,7 @@
 		<value />
 	</data>
 	<data name="syncLabel.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-		<value>False</value>
+		<value>True</value>
 	</data>
 	<data name="&gt;&gt;syncLabel.Name">
 		<value>syncLabel</value>
@@ -881,7 +881,7 @@
 		<value>Inherit</value>
 	</data>
 	<data name="syncInterval.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>144, 134</value>
+		<value>160, 126</value>
 	</data>
 	<data name="syncInterval.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -974,7 +974,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="syncUnits.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>216, 136</value>
+		<value>232, 128</value>
 	</data>
 	<data name="syncUnits.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -983,7 +983,7 @@
 		<value>False</value>
 	</data>
 	<data name="syncUnits.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>88, 16</value>
+		<value>72, 16</value>
 	</data>
 	<data name="syncUnits.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>3</value>
@@ -1073,7 +1073,7 @@
 		<value>NoControl</value>
 	</data>
 	<data name="autoSync.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-		<value>16, 136</value>
+		<value>24, 128</value>
 	</data>
 	<data name="autoSync.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Inherit</value>
@@ -1088,7 +1088,7 @@
 		<value>1</value>
 	</data>
 	<data name="autoSync.Text">
-		<value>Sync to host every:</value>
+		<value>&amp;Sync to host every:</value>
 	</data>
 	<data name="autoSync.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleLeft</value>
@@ -1727,7 +1727,7 @@
 		<value>3</value>
 	</data>
 	<data name="setLimit.Text">
-		<value>Limit size to:</value>
+		<value>&amp;Limit size to:</value>
 	</data>
 	<data name="setLimit.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>MiddleLeft</value>
@@ -4000,9 +4000,6 @@
 	<data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 		<value>8, 8</value>
 	</data>
-	<data name="$this.Name">
-		<value>iFolderAdvanced</value>
-	</data>
 	<data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
 	</data>
@@ -4011,6 +4008,9 @@
 	</data>
 	<data name="$this.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>True</value>
+	</data>
+	<data name="$this.Name">
+		<value>iFolderAdvanced</value>
 	</data>
 	<data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<value>Private</value>
@@ -4227,5 +4227,8 @@
 	</data>
 	<data name="syncError">
 		<value>An error was encountered while sending the sync command.</value>
+	</data>
+	<data name="slaveSyncInterval">
+		<value>This iFolder will sync with the host every {0} seconds.</value>
 	</data>
 </root>

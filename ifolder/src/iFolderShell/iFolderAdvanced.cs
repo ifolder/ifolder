@@ -1844,25 +1844,26 @@ namespace Novell.iFolderCom
 
 			// TODO: Read and display last sync time.
 
+			// Get the sync interval.
+			syncInterval.Value = (decimal)currentiFolder.SyncInterval;
+			autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
+
 			if (currentiFolder.IsWorkgroup)
 			{
 				// TODO: check if this iFolder is hosted locally.
 				bool local = false;
 
-				syncLabel.Visible = autoSync.Visible = syncInterval.Visible = syncUnits.Visible = local;
-				syncNow.Visible = !local;
-
-				if (local)
-				{
-					// Get the refresh interval.
-					syncInterval.Value = (decimal)currentiFolder.SyncInterval;
-					autoSync.Checked = currentiFolder.SyncInterval != Timeout.Infinite;
-				}
+				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = local;
+				syncNow.Enabled = !local;
+				syncLabel.Text = local ? 
+					resourceManager.GetString("syncLabel.Text") : 
+					string.Format(resourceManager.GetString("slaveSyncInterval"), currentiFolder.EffectiveSyncInterval);
 			}
 			else
 			{
-				syncLabel.Visible = autoSync.Visible = syncInterval.Visible = syncUnits.Visible = false;
-				syncNow.Visible = true;
+				syncUnits.Visible = autoSync.Visible = syncInterval.Visible = false;
+				syncNow.Enabled = true;
+				syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), currentiFolder.EffectiveSyncInterval);
 			}
 
 			// Show/hide the collision message.
