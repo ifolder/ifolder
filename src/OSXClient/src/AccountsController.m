@@ -305,9 +305,12 @@
 			
 			// Check to see if we are in grace, if we are, we need to call to get the authStatus so we can
 			// tell the user they are limited by grace logins
-			if(statusCode == ns1__StatusCodes__SuccessInGrace)
+			// For some reason we now need to do this even if we succeed, probably to set some
+			// state down in Simias.
+			if(	(statusCode == ns1__StatusCodes__Success) ||
+				(statusCode == ns1__StatusCodes__SuccessInGrace) )
 			{
-				NSLog(@"ConnectToDomain returned status code of in grace");
+				NSLog(@"ConnectToDomain returned success or success in Grace");
 				@try
 				{
 					authStatus = [[simiasService LoginToRemoteDomain:[newDomain ID] usingPassword:[password stringValue]] retain];
@@ -325,6 +328,9 @@
 				case ns1__StatusCodes__Success:		// Success
 				case ns1__StatusCodes__SuccessInGrace:		// SuccessInGrace
 				{
+					// Set the authenticated to true if the above code was successful
+					[newDomain setValue:[NSNumber numberWithBool:YES] forKeyPath:@"properties.authenticated"];
+
 					if([defaultAccount state] == YES)
 					{
 						@try
