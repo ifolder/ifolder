@@ -40,6 +40,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Label label2;
 		private int labelDelta;
 		private string loadPath;
+		private bool conflictsFound = false;
 		private System.Windows.Forms.ListView conflictFiles;
 		private System.Windows.Forms.MenuItem menuFileOpen;
 		private System.Windows.Forms.MenuItem menuView;
@@ -526,6 +527,21 @@ namespace Novell.iFolder.iFolderCom
 
 			// Redraw the listview.
 			conflictFiles.EndUpdate();
+
+			if (!conflictsFound && conflictFiles.Items.Count > 0)
+				conflictsFound = true;
+
+			if (!conflictsFound && conflictFiles.Items.Count == 0)
+			{
+				MessageBox.Show("There are no conflicts to resolve.");
+			}
+
+			if (conflictsFound && conflictFiles.Items.Count == 0)
+			{
+				MessageBox.Show("All conflicts have been resolved");
+				conflictsFound = false;
+			}
+
 			Cursor.Current = Cursors.Default;
 		}
 		#endregion

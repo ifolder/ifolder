@@ -94,6 +94,16 @@
                     AssemblyName = "Simias"
                     HintPath = "..\..\..\simias\src\Simias.dll\Simias.dll"
                 />
+                <Reference
+                    Name = "Novell.iFolder"
+                    AssemblyName = "Novell.iFolder"
+                    HintPath = "..\iFolder\Novell.iFolder.dll"
+                />
+                <Reference
+                    Name = "iFolderComponent"
+                    AssemblyName = "iFolderComponent"
+                    HintPath = "..\iFolderShell\iFolderComponent.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -126,11 +136,6 @@
                     RelPath = "GlobalProperties.resx"
                     DependentUpon = "GlobalProperties.cs"
                     BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Win32Window.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

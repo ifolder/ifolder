@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.IO;
 using Simias.Sync;
 using Novell.iFolder;
+using Novell.iFolder.iFolderCom;
 using Novell.iFolder.Win32Util;
 using Simias;
 using Simias.Event;
@@ -74,6 +75,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuExit;
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.ContextMenu contextMenu1;
+		private System.Windows.Forms.MenuItem menuConflictResolver;
 
 		private Manager serviceManager;
 		//private const int waitTime = 3000;
@@ -114,7 +116,8 @@ namespace Novell.iFolder.FormsTrayApp
 				this.WindowState = FormWindowState.Minimized;
 				//this.Hide();
 
-				Win32Window win32Window = new Win32Window(this.Handle);
+				Win32Window win32Window = new Win32Window();
+				win32Window.Window = this.Handle;
 				win32Window.MakeToolWindow();
 			}
 			catch (Exception e)
@@ -168,6 +171,20 @@ namespace Novell.iFolder.FormsTrayApp
 //			else
 			{
 				Process.Start(Path.Combine(Application.StartupPath, "ContactBrowser.exe"));
+			}
+		}
+
+		private void menuConflictResolver_Click(object sender, System.EventArgs e)
+		{
+			Win32Window win32Window = Win32Window.FindWindow(null, "Conflict Resolver");
+			if (win32Window != null)
+			{
+				win32Window.BringWindowToTop();
+			}
+			else
+			{
+				ConflictResolver conflictResolver = new ConflictResolver();
+				conflictResolver.Show();
 			}
 		}
 
@@ -333,6 +350,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
+			this.menuConflictResolver = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -348,6 +366,7 @@ namespace Novell.iFolder.FormsTrayApp
 																						 this.menuSeparator1,
 																						 this.menuInvitationWizard,
 																						 this.menuAddressBook,
+																						 this.menuConflictResolver,
 																						 this.menuTraceWindow,
 																						 this.menuItem7,
 																						 this.menuProperties,
@@ -384,39 +403,45 @@ namespace Novell.iFolder.FormsTrayApp
 			// menuTraceWindow
 			// 
 			this.menuTraceWindow.Enabled = false;
-			this.menuTraceWindow.Index = 4;
+			this.menuTraceWindow.Index = 5;
 			this.menuTraceWindow.Text = "Trace Window";
 			this.menuTraceWindow.Click += new System.EventHandler(this.menuTraceWindow_Click);
 			// 
 			// menuItem7
 			// 
-			this.menuItem7.Index = 5;
+			this.menuItem7.Index = 6;
 			this.menuItem7.Text = "-";
 			// 
 			// menuProperties
 			// 
 			this.menuProperties.DefaultItem = true;
-			this.menuProperties.Index = 6;
+			this.menuProperties.Index = 7;
 			this.menuProperties.Text = "Properties...";
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuHelp
 			// 
-			this.menuHelp.Index = 7;
+			this.menuHelp.Index = 8;
 			this.menuHelp.Text = "Help...";
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
 			// 
 			// menuItem10
 			// 
-			this.menuItem10.Index = 8;
+			this.menuItem10.Index = 9;
 			this.menuItem10.Text = "-";
 			// 
 			// menuExit
 			// 
 			this.menuExit.Enabled = false;
-			this.menuExit.Index = 9;
+			this.menuExit.Index = 10;
 			this.menuExit.Text = "Exit";
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+			// 
+			// menuConflictResolver
+			// 
+			this.menuConflictResolver.Index = 4;
+			this.menuConflictResolver.Text = "Conflict Resolver...";
+			this.menuConflictResolver.Click += new System.EventHandler(this.menuConflictResolver_Click);
 			// 
 			// FormsTrayApp
 			// 
