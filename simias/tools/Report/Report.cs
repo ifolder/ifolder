@@ -130,11 +130,11 @@ public class Report
 			if (bool.Parse(node.GetAttribute("executed")))
 			{
 				runs++;
-			}
 
-			if (bool.Parse(node.GetAttribute("success")))
-			{
-				passes++;
+				if (bool.Parse(node.GetAttribute("success")))
+				{
+					passes++;
+				}
 			}
 
 			// not all test-case elementes have a time
