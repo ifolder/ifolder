@@ -80,9 +80,10 @@ public class FileInviter
 		 * done at a lower level
 		 */
 		Invitation invitation = new Invitation(fileName);
+		docRootParent = Path.GetFullPath(docRootParent);
 		invitation.RootPath = docRootParent;
 
-		Uri docRoot = new Uri(Path.Combine(Path.GetFullPath(docRootParent), invitation.CollectionName));
+		Uri docRoot = new Uri(Path.Combine(docRootParent, invitation.CollectionName));
 		Collection c = FindCollection(store, docRoot);
 		if (c != null)
 		{
