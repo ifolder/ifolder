@@ -851,7 +851,7 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				this.phoneList.Add(telephone);
+				telephone.Add(this);
 			}
 			catch{}
 			return;
