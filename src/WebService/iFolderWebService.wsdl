@@ -648,6 +648,22 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="AuthenticateToDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AuthenticateToDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="AuthenticateToDomainResult"
+                  type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetDomains">
         <xs:complexType/>
       </xs:element>
@@ -1035,6 +1051,12 @@
   <message name="ConnectToDomainSoapOut">
     <part name="parameters" element="s0:ConnectToDomainResponse"/>
   </message>
+  <message name="AuthenticateToDomainSoapIn">
+    <part name="parameters" element="s0:AuthenticateToDomain"/>
+  </message>
+  <message name="AuthenticateToDomainSoapOut">
+    <part name="parameters" element="s0:AuthenticateToDomainResponse"/>
+  </message>
   <message name="GetDomainsSoapIn">
     <part name="parameters" element="s0:GetDomains"/>
   </message>
@@ -1319,6 +1341,13 @@
   <message name="ConnectToDomainHttpGetOut">
     <part name="Body" element="s0:DomainWeb"/>
   </message>
+  <message name="AuthenticateToDomainHttpGetIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="Password" type="s:string"/>
+  </message>
+  <message name="AuthenticateToDomainHttpGetOut">
+    <part name="Body" element="s0:int"/>
+  </message>
   <message name="GetDomainsHttpGetIn"/>
   <message name="GetDomainsHttpGetOut">
     <part name="Body" element="s0:ArrayOfDomainWeb"/>
@@ -1592,6 +1621,13 @@
   <message name="ConnectToDomainHttpPostOut">
     <part name="Body" element="s0:DomainWeb"/>
   </message>
+  <message name="AuthenticateToDomainHttpPostIn">
+    <part name="DomainID" type="s:string"/>
+    <part name="Password" type="s:string"/>
+  </message>
+  <message name="AuthenticateToDomainHttpPostOut">
+    <part name="Body" element="s0:int"/>
+  </message>
   <message name="GetDomainsHttpPostIn"/>
   <message name="GetDomainsHttpPostOut">
     <part name="Body" element="s0:ArrayOfDomainWeb"/>
@@ -1843,6 +1879,11 @@
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainSoapIn"/>
       <output message="s0:ConnectToDomainSoapOut"/>
+      <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
+    <operation name="AuthenticateToDomain">
+      <input message="s0:AuthenticateToDomainSoapIn"/>
+      <output message="s0:AuthenticateToDomainSoapOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
     <operation name="GetDomains">
@@ -2103,6 +2144,11 @@
       <output message="s0:ConnectToDomainHttpGetOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
+    <operation name="AuthenticateToDomain">
+      <input message="s0:AuthenticateToDomainHttpGetIn"/>
+      <output message="s0:AuthenticateToDomainHttpGetOut"/>
+      <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
     <operation name="GetDomains">
       <input message="s0:GetDomainsHttpGetIn"/>
       <output message="s0:GetDomainsHttpGetOut"/>
@@ -2359,6 +2405,11 @@
     <operation name="ConnectToDomain">
       <input message="s0:ConnectToDomainHttpPostIn"/>
       <output message="s0:ConnectToDomainHttpPostOut"/>
+      <documentation>Connects to an iFolder Domain</documentation>
+    </operation>
+    <operation name="AuthenticateToDomain">
+      <input message="s0:AuthenticateToDomainHttpPostIn"/>
+      <output message="s0:AuthenticateToDomainHttpPostOut"/>
       <documentation>Connects to an iFolder Domain</documentation>
     </operation>
     <operation name="GetDomains">
@@ -2802,6 +2853,16 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="AuthenticateToDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/AuthenticateToDomain"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
     <operation name="GetDomains">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetDomains" style="document"/>
       <input>
@@ -3230,6 +3291,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="AuthenticateToDomain">
+      <http:operation location="/AuthenticateToDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="GetDomains">
       <http:operation location="/GetDomains"/>
       <input>
@@ -3633,6 +3703,15 @@
     </operation>
     <operation name="ConnectToDomain">
       <http:operation location="/ConnectToDomain"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="AuthenticateToDomain">
+      <http:operation location="/AuthenticateToDomain"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
