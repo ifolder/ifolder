@@ -339,7 +339,7 @@ namespace Novell.iFolder
 					new CheckButton(Util.GS("Sync to host every:"));
 			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
-			SyncSpinButton = new SpinButton(0, 99999, 1);
+			SyncSpinButton = new SpinButton(0, 99999, 5);
 			SyncSpinButton.ValueChanged += 
 					new EventHandler(OnSyncIntervalChanged);
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
