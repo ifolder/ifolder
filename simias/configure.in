@@ -470,6 +470,7 @@ test/SyncEndToEnd/Makefile
 test/POBox/Makefile
 test/SimiasTestsWS/Makefile
 test/SimiasTestsCmd/Makefile
+other/SimpleServer/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
