@@ -817,6 +817,9 @@ public class iFolderSettings {
     
     /// <remarks/>
     public int ProxyPort;
+    
+    /// <remarks/>
+    public string CurrentUserID;
 }
 
 /// <remarks/>

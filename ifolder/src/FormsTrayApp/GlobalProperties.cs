@@ -1322,51 +1322,6 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				// Check to see if we have already connected to an enterprise server.
-/*				Store store = Store.GetStore();
-				LocalDatabase localDB = store.GetDatabaseObject();
-				Domain enterpriseDomain = null;
-				ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
-				foreach (ShallowNode sn in domainList)
-				{
-					if (!sn.Name.Equals(Domain.WorkGroupDomainName))
-					{
-						enterpriseDomain = store.GetDomain(sn.ID);
-						break;
-					}
-				}
-
-				if (enterpriseDomain != null)
-				{
-					// An enterprise domain was found ... display the Enterprise tab.
-					ShowEnterpriseTab = true;
-					enterpriseName.Text = enterpriseDomain.Name;
-					enterpriseDescription.Text = enterpriseDomain.Description;
-
-					Member member = store.GetRoster(enterpriseDomain.ID).GetCurrentMember();
-
-					// Get and display the quota for the current member.
-					double used = 0;
-					double total = 0;
-					double free;
-					DiskSpaceQuota dsq = DiskSpaceQuota.Get(member);
-					if (dsq.Limit != 0)
-					{
-						free = Math.Round(dsq.AvailableSpace/megaByte, 2);
-						used = Math.Round(dsq.UsedSpace/megaByte, 2);
-						total = Math.Round(dsq.Limit/megaByte, 2);
-						
-						freeSpace.Text = free.ToString();
-						usedSpace.Text = used.ToString();
-						totalSpace.Text = total.ToString();
-					}
-
-					gaugeChart1.Used = used;
-					gaugeChart1.MaxValue = total;
-					gaugeChart1.BarColor = SystemColors.ActiveCaption;
-					gaugeChart1.Invalidate(true);
-				}*/
-
 				// TODO: first-time connect takes a while ... display some sort of status message.
 				iFolderSettings ifSettings = ifWebService.GetSettings();
 				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
@@ -1375,6 +1330,27 @@ namespace Novell.FormsTrayApp
 					ShowEnterpriseTab = true;
 					enterpriseName.Text = ifSettings.EnterpriseName;
 					enterpriseDescription.Text = ifSettings.EnterpriseDescription;
+
+					DiskSpace diskSpace = ifWebService.GetUserDiskSpace(ifSettings.CurrentUserID);
+					if (diskSpace.Limit != 0)
+					{
+						totalSpace.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
+
+						double used = Math.Round(diskSpace.UsedSpace/megaByte, 2);
+						usedSpace.Text = used.ToString();
+						freeSpace.Text = ((double)Math.Round(diskSpace.AvailableSpace/megaByte, 2)).ToString();
+
+						gaugeChart1.MaxValue = diskSpace.Limit / megaByte;
+						gaugeChart1.Used = used;
+						gaugeChart1.BarColor = SystemColors.ActiveCaption;
+					}
+					else
+					{
+						usedSpace.Text = freeSpace.Text = totalSpace.Text = "";
+						gaugeChart1.Used = 0;
+					}
+
+					gaugeChart1.Invalidate(true);
 				}
 
 				// Display the default sync interval.

@@ -22,6 +22,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="UseProxy" type="xs:boolean" />
           <xs:element minOccurs="0" maxOccurs="1" name="ProxyHost" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="ProxyPort" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserID" type="xs:string" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetSettingsResponse">

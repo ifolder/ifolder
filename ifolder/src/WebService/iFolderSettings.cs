@@ -43,6 +43,7 @@ namespace Novell.iFolder.Web
 		public bool UseProxy;
 		public string ProxyHost;
 		public int ProxyPort;
+		public string CurrentUserID;
 
 		public iFolderSettings()
 		{
@@ -78,6 +79,8 @@ namespace Novell.iFolder.Web
 
 			// I don't know how to do this but I know we'll need it
 			UseProxy = false;
+
+			CurrentUserID = store.GetRoster(DefaultDomainID).GetCurrentMember().UserID;
 		}
 
 		public static void SetDisplayConfirmation(bool displayConfirmation)
