@@ -950,7 +950,7 @@ namespace Simias.Storage.Tests
 
 				// Get a user that can be impersonated.
 				LocalAddressBook localAb = store.GetLocalAddressBook();
-				BaseContact user = new BaseContact( collection1, localAb.GetSingleNodeByName( "cameron" ) );
+				BaseContact user = localAb.GetContactByName( "cameron" );
 				collection1.SetUserAccess( user.ID, Access.Rights.ReadWrite );
 				collection1.Commit();
 
@@ -1218,40 +1218,41 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 			}
 		}
-/*
+
 		/// <summary>
 		/// Tests the incarnation values that they get updated correctly.
 		/// </summary>
 		[Test]
 		public void TestIncarnationValues()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
-				// Create a child node.
-				Node node1 = collection.CreateChild( "Node1" );
+				// Create a node.
+				Node nodeA = new Node( "CS_NodeA" );
 
 				// The incarnation number on the collection and child node should be zero.
-				if ( ( collection.LocalIncarnation != 0 ) || ( node1.LocalIncarnation != 0 ) )
+				if ( ( collection.LocalIncarnation != 0 ) || ( nodeA.LocalIncarnation != 0 ) )
 				{
 					throw new ApplicationException( "Local incarnation value is not zero." );
 				}
 
 				// Commit the collection which should increment the values both to one.
-				collection.Commit( true );
+				Node[] commitList = { collection, nodeA };
+				collection.Commit( commitList );
 
 				// The incarnation number on the collection and child node should be one.
-				if ( ( collection.LocalIncarnation != 1 ) || ( node1.LocalIncarnation != 1 ) )
+				if ( ( collection.LocalIncarnation != 1 ) || ( nodeA.LocalIncarnation != 1 ) )
 				{
 					throw new ApplicationException( "Local incarnation value is not one." );
 				}
 
 				// Change just the node and commit it.
-				node1.Properties.AddProperty( "Test Property", "This is a test." );
-				node1.Commit();
+				nodeA.Properties.AddProperty( "Test Property", "This is a test." );
+				collection.Commit( nodeA );
 
 				// The incarnation number on the collection and child node should be two.
-				if ( ( collection.LocalIncarnation != 2 ) || ( node1.LocalIncarnation != 2 ) )
+				if ( ( collection.LocalIncarnation != 2 ) || ( nodeA.LocalIncarnation != 2 ) )
 				{
 					throw new ApplicationException( "Local incarnation value is not two." );
 				}
@@ -1259,35 +1260,26 @@ namespace Simias.Storage.Tests
 				// Commit just the collection with no changes to it.
 				collection.Commit();
 
-				// The incarnation number on the collection should be 3 and child node should be two.
-				if ( ( collection.LocalIncarnation != 3 ) || ( node1.LocalIncarnation != 2 ) )
+				// The incarnation number on the collection should be 3 and the node should be two.
+				if ( ( collection.LocalIncarnation != 3 ) || ( nodeA.LocalIncarnation != 2 ) )
 				{
 					throw new ApplicationException( "Local incarnation value is not three and two." );
 				}
 
 				// Add another new child node and commit it.
-				Node node2 = node1.CreateChild( "Node2" );
-				collection.Commit( true );
+				Node nodeB = new Node( "CS_NodeB" );
+				collection.Commit( nodeB );
 
-				// The incarnation number on the collection should be 4 and child node1 should be two
-				// and child node2 should be one.
-				if ( ( collection.LocalIncarnation != 4 ) || ( node1.LocalIncarnation != 2 ) || ( node2.LocalIncarnation != 1 ) )
+				// The incarnation number on the collection should be 4 and nodeA should be two
+				// and nodeB should be one.
+				if ( ( collection.LocalIncarnation != 4 ) || ( nodeA.LocalIncarnation != 2 ) || ( nodeB.LocalIncarnation != 1 ) )
 				{
 					throw new ApplicationException( "Local incarnation value is not four, two, and one." );
 				}
 
-				try
-				{
-					// This next method requires synchronization access.
-					store.ImpersonateUser( Access.SyncOperatorRole );
-
-					// Finally, set the master version of the collection.
-					collection.UpdateIncarnation( 1 );
-				}
-				finally
-				{
-					store.Revert();
-				}
+				// Finally, set the master version of the collection.
+				collection.IncarnationUpdate = 1;
+				collection.Commit();
 
 				// The incarnation number on the collection should be 1.1
 				if ( ( collection.LocalIncarnation != 1 ) && ( collection.MasterIncarnation != 1 ) )
@@ -1297,11 +1289,8 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -1315,18 +1304,18 @@ namespace Simias.Storage.Tests
 			LocalAddressBook localAb = store.GetLocalAddressBook();
 
 			// Add a new identity.
-			Identity identity = new Identity( localAb, "newguy" );
+			BaseContact identity = new BaseContact( "newguy" );
 
 			RSACryptoServiceProvider credential = RsaKeyStore.CreateRsaKeys();
 
-			// Add two aliases to the identity.
+			// Add aliases to the identity.
 			for ( int i = 0; i < 10; ++i )
 			{
-				identity.CreateAlias( "Mike's Domain " + i, Guid.NewGuid().ToString(), credential );
+				identity.CreateAlias( "Mike's Domain " + i, Guid.NewGuid().ToString(), credential.ToXmlString( false ) );
 			}
 
 			// Commit the changes.
-			identity.Commit();
+			localAb.Commit( identity );
 
 			// Get the aliases back.
 			int count = 0;
@@ -1352,28 +1341,36 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void FileToNodeTest()
 		{
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
-				// Add a file to the collection object.
-				collection.AddFileEntry( "CS_TestFile", "Test.txt" );
-				collection.Commit();
+				// Add a root directory.
+				string rootDir = Path.Combine( Directory.GetCurrentDirectory(), "CS_TestCollection" );
+				Directory.CreateDirectory( rootDir );
+				DirNode rootNode = new DirNode( collection, rootDir );
 
-				// See if the collection can be located.
-				ICSList list = store.GetNodesAssociatedWithPath( collection.Id, "Test.txt" );
-				IEnumerator e = list.GetEnumerator();
+				// Add a file to the collection object.
+				FileNode fileNode = new FileNode( collection, rootNode, "Test.txt" );
+
+				Node[] commitList = { collection, rootNode, fileNode };
+				collection.Commit( commitList );
+
+				// See if the node can be located.
+				ICSList results = collection.Search( BaseSchema.ObjectName, fileNode.Name, SearchOp.Equal );
+				ICSEnumerator e = results.GetEnumerator() as ICSEnumerator;
 				if ( !e.MoveNext() )
 				{
 					throw new ApplicationException( "Cannot find associated node." );
 				}
+
+				FileNode temp = new FileNode( collection, e.Current as ShallowNode );
+				Console.WriteLine( "Found file {0}", temp.GetFullPath( collection ) );
+				e.Dispose();
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
+				collection.Commit( collection.Delete() );
 			}
 		}
 
@@ -1384,24 +1381,18 @@ namespace Simias.Storage.Tests
 		public void MergeNodeTest()
 		{
 			// Get a second handle to the current store.
-			Store mergeStore = Store.Connect( new Configuration( basePath ) );
+			Store mergeStore = new Store( new Configuration( basePath ) );
 
 			// Create a collection using the primary store handle.
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 
 			try
 			{
-				// Get the local address book.
-				LocalAddressBook localAb = mergeStore.GetLocalAddressBook();
-				Identity identity = localAb.GetSingleIdentityByName( Environment.UserName );
-				identity.Properties.AddProperty( "CS_TestProperty", "This is a test" );
-				identity.Commit();
-
 				// Commit the collection.
 				collection.Commit();
 
 				// Get a handle to the store through the merge store.
-				Collection mergeCollection = mergeStore.GetCollectionById( collection.Id );
+				Collection mergeCollection = mergeStore.GetCollectionByID( collection.ID );
 
 				// Add a property through the primary store handle.
 				collection.Properties.AddProperty( "CS_TestMergeProperty", "This is a test" );
@@ -1419,6 +1410,7 @@ namespace Simias.Storage.Tests
 				mergeCollection.Commit();
 
 				// Should be able to see both properties now through the merge handle.
+				mergeCollection = mergeStore.GetCollectionByID( mergeCollection.ID );
 				p = mergeCollection.Properties.GetSingleProperty( "CS_TestMergeProperty" );
 				if ( p == null )
 				{
@@ -1435,7 +1427,7 @@ namespace Simias.Storage.Tests
 				collection.Properties.AddProperty( "CS_TestModifyProperty", ( int )1 );
 				collection.Commit();
 
-				mergeCollection.Commit();
+				mergeCollection = mergeStore.GetCollectionByID( mergeCollection.ID );
 
 				collection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int ) 4 );
 				collection.Commit();
@@ -1454,7 +1446,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Refresh the collection and the value should change to 2.
-				collection.Commit();
+				collection = store.GetCollectionByID( collection.ID );
 				if ( ( int )collection.Properties.GetSingleProperty( "CS_TestModifyProperty" ).Value != 2 )
 				{
 					throw new ApplicationException( "Value unexpectedly modified." );
@@ -1467,7 +1459,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Update to the latest.
-				mergeCollection.Commit();
+				mergeCollection = mergeStore.GetCollectionByID( mergeCollection.ID );
 
 				// Modify after the commit.
 				collection.Properties.ModifyProperty( "CS_TestModifyProperty", ( int ) 6 );
@@ -1477,7 +1469,7 @@ namespace Simias.Storage.Tests
 				mergeCollection.Commit();
 
 				// Should have two properties.
-				collection.Commit();
+				collection = store.GetCollectionByID( collection.ID );
 				MultiValuedList mvl = collection.Properties.GetProperties( "CS_TestModifyProperty" );
 				if ( mvl.Count != 2 )
 				{
@@ -1486,18 +1478,13 @@ namespace Simias.Storage.Tests
 			}
 			finally
 			{
-				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
-
 				// Delete the collection.
-				collection.Delete( true );
-				collection.Dispose();
+				collection.Commit( collection.Delete() );
 
 				// Release the merge store handle.
 				mergeStore.Dispose();
 			}
 		}
-*/		
 		#endregion
 
 		#region Test Clean Up

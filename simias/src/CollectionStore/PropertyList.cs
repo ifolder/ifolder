@@ -58,6 +58,11 @@ namespace Simias.Storage
 			Delete,
 
 			/// <summary>
+			/// Node has been deleted and cannot be committed.
+			/// </summary>
+			Disposed,
+
+			/// <summary>
 			/// Node is being imported from another client.
 			/// </summary>
 			Import,

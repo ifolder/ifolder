@@ -85,5 +85,27 @@ namespace Simias.Storage
 		{
 		}
 		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Gets the specified contact by ID.
+		/// </summary>
+		/// <param name="name">Identifier of the contact.</param>
+		/// <returns>A BaseContact object that matches the specified ID.</returns>
+		public BaseContact GetContactByID( string ID )
+		{
+			return new BaseContact( this, GetNodeByID( ID ) );
+		}
+
+		/// <summary>
+		/// Gets the specified contact by name.
+		/// </summary>
+		/// <param name="name">Name of the contact.</param>
+		/// <returns>A BaseContact object that matches the specified name.</returns>
+		public BaseContact GetContactByName( string name )
+		{
+			return new BaseContact( this, GetSingleNodeByName( name ) );
+		}
+		#endregion
 	}
 }

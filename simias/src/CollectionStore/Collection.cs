@@ -448,9 +448,6 @@ namespace Simias.Storage
 						xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
 						break;
-
-					default:
-						throw new ApplicationException( "Invalid PropertyList state." );
 				}
 			}
 
@@ -490,7 +487,11 @@ namespace Simias.Storage
 			foreach( Node node in commitList )
 			{
 				// Set the new state for the Node object.
-				if ( node.Properties.State != PropertyList.PropertyListState.Delete )
+				if ( node.Properties.State == PropertyList.PropertyListState.Delete )
+				{
+					node.Properties.State = PropertyList.PropertyListState.Disposed;
+				}
+				else if ( node.Properties.State != PropertyList.PropertyListState.Disposed )
 				{
 					node.Properties.State = PropertyList.PropertyListState.Update;
 				}
@@ -592,23 +593,29 @@ namespace Simias.Storage
 			if ( nodeList.Length > 0 )
 			{
 				bool containsCollection = false;
+				bool onlyTombstones = true;
 				Node deleteNode = null;
 				Node createNode = null;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
 				{
-					if ( IsCollection( node ) )
+					if ( !IsTombstone( node ) )
 					{
-						containsCollection = true;
+						onlyTombstones = false;
 
-						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
+						if ( IsCollection( node ) )
 						{
-							deleteNode = node;
-						}
-						else if ( node.Properties.State == PropertyList.PropertyListState.Add )
-						{
-							createNode = node;
+							containsCollection = true;
+
+							if ( node.Properties.State == PropertyList.PropertyListState.Delete )
+							{
+								deleteNode = node;
+							}
+							else if ( node.Properties.State == PropertyList.PropertyListState.Add )
+							{
+								createNode = node;
+							}
 						}
 					}
 				}
@@ -627,7 +634,9 @@ namespace Simias.Storage
 					}
 					else
 					{
-						if ( containsCollection )
+						// Use the node list as is if it already contains a Collection object or if the list
+						// just consists of tombstones.
+						if ( containsCollection || onlyTombstones )
 						{
 							// Use the passed in list.
 							commitList = nodeList;
@@ -666,7 +675,7 @@ namespace Simias.Storage
 					// Go through each entry marking it deleted.
 					foreach( Node node in nodeList )
 					{
-						node.Properties.State = PropertyList.PropertyListState.Delete;
+						node.Properties.State = PropertyList.PropertyListState.Disposed;
 					}
 				}
 			}
