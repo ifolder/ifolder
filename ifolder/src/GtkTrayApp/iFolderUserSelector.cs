@@ -180,11 +180,11 @@ namespace Novell.iFolder
 			btnBox.Spacing = 10;
 			selBox.PackStart(btnBox, false, true, 0);
 
-			UserAddButton = new Button(Util.GS("Add ->"));
+			UserAddButton = new Button(Util.GS("_Add ->"));
 			btnBox.PackStart(UserAddButton, false, true, 0);
 			UserAddButton.Clicked += new EventHandler(OnAddButtonClicked);
 
-			UserDelButton = new Button(Util.GS("Remove"));
+			UserDelButton = new Button(Util.GS("_Remove"));
 			btnBox.PackStart(UserDelButton, false, true, 0);
 			UserDelButton.Clicked += new EventHandler(OnRemoveButtonClicked);
 

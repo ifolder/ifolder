@@ -95,6 +95,9 @@ namespace Novell.iFolder
 		private Gtk.Label				SyncUnitsLabel;
 
 		private Gtk.CheckButton			ShowConfirmationButton; 
+		private Gtk.CheckButton			NotifyUsersButton; 
+		private Gtk.CheckButton			NotifyCollisionsButton; 
+		private Gtk.CheckButton			NotifyiFoldersButton; 
 		private Gtk.CheckButton			UseProxyButton; 
 		private Gtk.Entry				ProxyHostEntry;
 		private Gtk.SpinButton			ProxyPortSpinButton;
@@ -280,15 +283,15 @@ namespace Novell.iFolder
 			MainNoteBook = new Notebook();
 //			MainNoteBook.BorderWidth = 10;
 			MainNoteBook.AppendPage(	CreateiFoldersPage(), 
-										new Label(Util.GS("iFolders")));
+										new Label(Util.GS("_iFolders")));
 			MainNoteBook.AppendPage( CreatePreferencesPage(),
-										new Label(Util.GS("Preferences")));
+										new Label(Util.GS("_Preferences")));
 			MainNoteBook.AppendPage( CreateLogPage(),
-										new Label(Util.GS("Sync Log")));
+										new Label(Util.GS("Sync _Log")));
 			if(ifSettings.HaveEnterprise)
 			{
 				MainNoteBook.AppendPage( CreateEnterprisePage(),
-											new Label(Util.GS("Server")));
+											new Label(Util.GS("Se_rver")));
 			}
 			vbox.PackStart(MainNoteBook, true, true, 0);
 			MainNoteBook.SwitchPage += 
@@ -621,11 +624,30 @@ namespace Novell.iFolder
 
 
 			ShowConfirmationButton = 
-				new CheckButton(Util.GS("Show Confirmation dialog when creating iFolders"));
+				new CheckButton(Util.GS("_Show Confirmation dialog when creating iFolders"));
 			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
 			ShowConfirmationButton.Toggled += 
 						new EventHandler(OnShowConfButton);
 
+			NotifyUsersButton =
+				new CheckButton(Util.GS("_Notify of shared iFolders")); 
+			appWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
+			NotifyUsersButton.Toggled += 
+						new EventHandler(OnNotifyUsersButton);
+
+			NotifyCollisionsButton =
+				new CheckButton(Util.GS("Notify of _collisions")); 
+			appWidgetBox.PackStart(NotifyCollisionsButton, false, true, 0);
+			NotifyCollisionsButton.Toggled += 
+						new EventHandler(OnNotifyCollisionsButton);
+
+			NotifyiFoldersButton =
+				new CheckButton(Util.GS("Notify when a _user joins")); 
+			appWidgetBox.PackStart(NotifyiFoldersButton, false, true, 0);
+			NotifyiFoldersButton.Toggled += 
+						new EventHandler(OnNotifyiFoldersButton);
+
+			
 			Label strtlabel = new Label("<span style=\"italic\">To startup iFolder at login, leave iFolder running when you log out and save your current setup.</span>");
 			strtlabel.UseMarkup = true;
 			strtlabel.LineWrap = true;
@@ -668,7 +690,7 @@ namespace Novell.iFolder
 			syncWidgetBox.PackStart(syncHBox, false, true, 0);
 			syncHBox.Spacing = 10;
 			AutoSyncCheckButton = 
-					new CheckButton(Util.GS("Sync to host every:"));
+					new CheckButton(Util.GS("Sync to host _every:"));
 			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
 			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
 			SyncSpinButton = new SpinButton(0, 99999, 5);
@@ -2109,10 +2131,26 @@ namespace Novell.iFolder
 		}
 
 
+		private void OnNotifyUsersButton(object o, EventArgs args)
+		{
+			// TODO: Put something here to change the settings
+		}
+
+		private void OnNotifyCollisionsButton(object o, EventArgs args)
+		{
+			// TODO: Put something here to change the settings
+		}
+
+		private void OnNotifyiFoldersButton(object o, EventArgs args)
+		{
+			// TODO: Put something here to change the settings
+		}
 
 
 		private void OnShowConfButton(object o, EventArgs args)
 		{
+			// TODO: Change this to store it in gconf
+
 			ifSettings.DisplayConfirmation =
 				ShowConfirmationButton.Active;
 			try

@@ -165,7 +165,7 @@ namespace Novell.iFolder
 			rightBox.PackStart(RemoveButton);
 			RemoveButton.Clicked += new EventHandler(OnRemoveUser);
 
-			AccessButton = new Button(Util.GS("Set Access"));
+			AccessButton = new Button(Util.GS("S_et Access"));
 			leftBox.PackStart(AccessButton);
 			AccessButton.Clicked += new EventHandler(OnAccessClicked);
 		}
