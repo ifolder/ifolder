@@ -64,17 +64,16 @@ namespace Simias.Sync
 			this.syncManager = storeManager.Manager;
 			this.storeManager = storeManager;
 			
-			// open store
+            // open store
 			// note: the store provider requires that we open a new store for each thread
 			store = new Store(syncManager.Config);
 
-			// note: we need to revert any internal impersonations
+            // note: we need to revert any internal impersonations
 			store.Revert();
 
-			// open collection			
+            // open collection			
 			collection = new SyncCollection(store.GetCollectionByID(id));
 			Debug.Assert(collection != null);
-
 		}
 
 		/// <summary>
@@ -84,10 +83,12 @@ namespace Simias.Sync
 		{
 			try
 			{
-				switch(collection.Role)
+                log.Debug("Starting {0} Collection Manager: {1}", collection.Role, collection.Name);
+				
+                switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-						// register with the location service
+                        // register with the location service
 						syncManager.Location.Register(collection.ID);
 						break;
 
@@ -117,7 +118,9 @@ namespace Simias.Sync
 		{
 			try
 			{
-				switch(collection.Role)
+                log.Debug("Stopping {0} Collection Manager: {1}", collection.Role, collection.Name);
+				
+                switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
 						// unregister with the location service
