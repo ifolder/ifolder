@@ -49,6 +49,7 @@ MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
 
 #ISSABLD = ../../tools/InstallShield/IsSABld.exe
+ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
 
@@ -74,7 +75,7 @@ issabld:
 
 $(MSI_FILE): issabld $(MSM_FILE) $(SDK_MSM_FILE) $(MSI).ism ShutdowniFolder/ShutdowniFolder.exe
 	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
-	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(MERGE_MODULES_WIN)"'; \
+	@CMD='"$(ISSABLD)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
 		echo $$CMD; \
 		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
 		if test -f "$(MSI_DISK1)"; then \
