@@ -283,6 +283,8 @@ printf ("SEC: sec_init () called\n");
 		return -1;
 	}
 	
+	printf ("SEC: ec->event_socket: %d\n", ec->event_socket);
+	
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
 	/* Save the error handling information. */
@@ -498,16 +500,6 @@ printf ("SEC: sec_thread () called\n");
 		sleep (2);
 	}
 
-	/**
-	 * Notify the state_event_function that we are now connected to the
-	 * Simias Event Server.
-	 */
-	if (ec->state_event_func) {
-		ec->state_event_func (SEC_STATE_EVENT_CONNECTED, 
-							  NULL,
-							  ec->state_event_data);
-	}
-	
 	while ((len = recv (ec->event_socket, buf, sizeof (buf), 0)) > 0) {
 printf ("SEC: sec_thread: recv () called\n");
 		real_length = *((int *)buf);
@@ -554,7 +546,7 @@ sec_reg_thread (void *user_data)
 	int my_sin_addr_len;
 	char reg_msg [4096];
 	char ip_addr [128];
-	int b_connected = 0;
+	bool b_connected = false;
 	char addr_str [32];
 	char port_str [32];
 	char config_file_path [1024];
@@ -575,8 +567,6 @@ printf ("SEC: sec_reg_thread () called\n");
 		if (connect (ec->event_socket, 
 					 (struct sockaddr *)&sin, 
 					 sizeof (sin)) == 0) {
-			b_connected = 1;
-
 			/* Determine what port the client is listening on (implicit bind) */
 			my_sin_addr_len = sizeof (struct sockaddr_in);
 			if (getsockname (ec->event_socket, 
@@ -605,9 +595,20 @@ printf ("SEC: sec_reg_thread () called\n");
 			if (sec_send_message (ec, reg_msg, strlen (reg_msg)) <= 0) {
 				/* FIXME: Handle error...no data sent */
 				perror ("simias-event-client send registration message");
+			} else {
+				ec->state = CLIENT_STATE_RUNNING;
+				b_connected = true;
+	
+				/**
+				 * Notify the state_event_function that we are now connected to
+				 * the Simias Event Server.
+				 */
+				if (ec->state_event_func) {
+					ec->state_event_func (SEC_STATE_EVENT_CONNECTED, 
+										  NULL,
+										  ec->state_event_data);
+				}
 			}
-
-			ec->state = CLIENT_STATE_RUNNING;
 		} else {
 			/* FIXME: Handle the error here */
 			perror ("simias-event-client connect");
@@ -758,13 +759,16 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 	
 	*((int *)real_message) = len;
 	sprintf (real_message + 4, "%s", message);
-	printf ("Sending: %s\n", real_message + 4);
+	printf ("Sending (socket: %d): %s\n", ec->event_socket, real_message + 4);
 	
 	sent_length = send (ec->event_socket, real_message, len + 4, 0);
+
+	printf ("Socket after send (): %d\n", ec->event_socket);
 	
 	free (real_message);
 	
 	if (sent_length == -1) {
+		perror ("SEC: send () error:");
 		sprintf (err_msg,
 				 "Failed to send message to server.  Socket error: %s",
 				 strerror (errno));
