@@ -80,24 +80,24 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\tools\NUnit\net\bin\nunit.framework.dll"
-                />
-                <Reference
                     Name = "System.Security"
                     AssemblyName = "System.Security"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "..\..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
-                />
-                <Reference
                     Name = "Simias"
                     AssemblyName = "Simias"
-                    HintPath = "..\..\stage\Simias.dll"
+                    HintPath = "..\..\..\final\Simias.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\..\tools\NUnit\net\bin\nunit.framework.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
+                    HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
                 />
             </References>
         </Build>

@@ -1736,7 +1736,7 @@ namespace Simias.Storage.Tests
 			string dirPath = Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" );
 			if ( Directory.Exists( dirPath ) )
 			{
-				Directory.Delete( dirPath, true );
+//				Directory.Delete( dirPath, true );
 			}
 		}
 		#endregion

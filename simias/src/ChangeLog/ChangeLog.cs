@@ -175,7 +175,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Contains the layout of the LogFile header information.
 	/// </summary>
-	internal class LogFileHeader
+	public class LogFileHeader
 	{
 		#region Class Members
 		/// <summary>
