@@ -198,6 +198,28 @@ namespace Simias.Web
 			return(status);
 		}
 
+
+
+
+		/// <summary>
+		/// WebMethod to check if a domain is "active"
+		/// </summary>
+		/// <param name = "domainID">
+		/// The specified domain to check
+		/// </param>
+		/// <returns>
+		/// 0 success, !0 failed
+		/// </returns>
+		[WebMethod(Description="WebMethod to check if a domain is active")]
+		[SoapDocumentMethod]
+		public bool IsDomainActive(string domainID)
+		{
+			return( new DomainAgent().IsDomainActive( domainID ) );
+		}
+
+
+
+
 		/// <summary>
 		/// WebMethod to set a slave domain "active"
 		/// A Domain marked "active" will synchronize
@@ -452,7 +474,7 @@ namespace Simias.Web
 		/// <summary>
 		/// The unique member/user ID.
 		/// </summary>
-		public string MemberID;
+		public string MemberUserID;
 
 		/// <summary>
 		/// The name of the member object
@@ -502,7 +524,7 @@ namespace Simias.Web
 			this.RosterID = cRoster.ID;
 			this.RosterName = cRoster.Name;
 			this.RosterID = cRoster.ID;
-			this.MemberID = cMember.UserID;
+			this.MemberUserID = cMember.UserID;
 			this.MemberName = cMember.Name;
 			this.RemoteUrl = 
 				cDomain.HostAddress.ToString() + "/DomainService.asmx";
@@ -529,7 +551,7 @@ namespace Simias.Web
 			builder.AppendFormat("  Description      : {0}{1}", this.Description, newLine);
 			builder.AppendFormat("  Roster ID        : {0}{1}", this.RosterID, newLine);
 			builder.AppendFormat("  Roster Name      : {0}{1}", this.RosterName, newLine);
-			builder.AppendFormat("  Member Node ID   : {0}{1}", this.MemberID, newLine);
+			builder.AppendFormat("  Member User ID   : {0}{1}", this.MemberUserID, newLine);
 			builder.AppendFormat("  Member Node Name : {0}{1}", this.MemberName, newLine);
 			builder.AppendFormat("  Remote Url       : {0}{1}", this.RemoteUrl, newLine);
 			builder.AppendFormat("  POBox ID         : {0}{1}", this.POBoxID, newLine);

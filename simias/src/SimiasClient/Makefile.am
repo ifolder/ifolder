@@ -28,6 +28,9 @@ endif
 if LINUX
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
+if DARWIN
+	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
+endif
 
 SimiasClient.dll: $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES) $(srcdir)/SimiasSetup.cs $(srcdir)/SimiasService.cs
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(DOC_FILE_CMD) 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<definitions xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
-      xmlns:s0="http://novell.com/simias/web/"
-      xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-      xmlns:s="http://www.w3.org/2001/XMLSchema"
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
       xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:s="http://www.w3.org/2001/XMLSchema"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
       xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
-      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" name="Simias Web Service"
+      xmlns:s0="http://novell.com/simias/web/" name="Simias Web Service"
       targetNamespace="http://novell.com/simias/web/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias/web/"
@@ -37,7 +37,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="RosterID" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="RosterName" type="xs:string"/>
-          <xs:element minOccurs="0" maxOccurs="1" name="MemberID" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="MemberUserID" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="MemberName" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="RemoteUrl" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="POBoxID" type="xs:string"/>
@@ -69,8 +69,8 @@
       </xs:element>
       <xs:complexType name="ArrayOfDomainInformation">
         <xs:sequence>
-          <xs:element minOccurs="0" nillable="true" maxOccurs="unbounded"
-                name="DomainInformation" type="s0:DomainInformation"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation"
+                nillable="true" type="s0:DomainInformation"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="GetDomainsResponse">
@@ -95,6 +95,21 @@
           <xs:sequence>
             <xs:element minOccurs="1" maxOccurs="1" name="SetDomainCredentialsResult"
                   type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IsDomainActive">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IsDomainActiveResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="IsDomainActiveResult"
+                  type="xs:boolean"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -260,6 +275,12 @@
   <message name="SetDomainCredentialsSoapOut">
     <part name="parameters" element="s0:SetDomainCredentialsResponse"/>
   </message>
+  <message name="IsDomainActiveSoapIn">
+    <part name="parameters" element="s0:IsDomainActive"/>
+  </message>
+  <message name="IsDomainActiveSoapOut">
+    <part name="parameters" element="s0:IsDomainActiveResponse"/>
+  </message>
   <message name="SetDomainActiveSoapIn">
     <part name="parameters" element="s0:SetDomainActive"/>
   </message>
@@ -338,6 +359,12 @@
   <message name="SetDomainCredentialsHttpGetOut">
     <part name="Body" element="s0:int"/>
   </message>
+  <message name="IsDomainActiveHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="IsDomainActiveHttpGetOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
   <message name="SetDomainActiveHttpGetIn">
     <part name="domainID" type="s:string"/>
   </message>
@@ -402,6 +429,12 @@
   <message name="SetDomainCredentialsHttpPostOut">
     <part name="Body" element="s0:int"/>
   </message>
+  <message name="IsDomainActiveHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="IsDomainActiveHttpPostOut">
+    <part name="Body" element="s0:boolean"/>
+  </message>
   <message name="SetDomainActiveHttpPostIn">
     <part name="domainID" type="s:string"/>
   </message>
@@ -462,6 +495,11 @@
       <input message="s0:SetDomainCredentialsSoapIn"/>
       <output message="s0:SetDomainCredentialsSoapOut"/>
       <documentation>SetDomainCredentials</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveSoapIn"/>
+      <output message="s0:IsDomainActiveSoapOut"/>
+      <documentation>WebMethod to check if a domain is active</documentation>
     </operation>
     <operation name="SetDomainActive">
       <input message="s0:SetDomainActiveSoapIn"/>
@@ -531,6 +569,11 @@
       <output message="s0:SetDomainCredentialsHttpGetOut"/>
       <documentation>SetDomainCredentials</documentation>
     </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveHttpGetIn"/>
+      <output message="s0:IsDomainActiveHttpGetOut"/>
+      <documentation>WebMethod to check if a domain is active</documentation>
+    </operation>
     <operation name="SetDomainActive">
       <input message="s0:SetDomainActiveHttpGetIn"/>
       <output message="s0:SetDomainActiveHttpGetOut"/>
@@ -588,6 +631,11 @@
       <input message="s0:SetDomainCredentialsHttpPostIn"/>
       <output message="s0:SetDomainCredentialsHttpPostOut"/>
       <documentation>SetDomainCredentials</documentation>
+    </operation>
+    <operation name="IsDomainActive">
+      <input message="s0:IsDomainActiveHttpPostIn"/>
+      <output message="s0:IsDomainActiveHttpPostOut"/>
+      <documentation>WebMethod to check if a domain is active</documentation>
     </operation>
     <operation name="SetDomainActive">
       <input message="s0:SetDomainActiveHttpPostIn"/>
@@ -659,6 +707,16 @@
     </operation>
     <operation name="SetDomainCredentials">
       <soap:operation soapAction="http://novell.com/simias/web/SetDomainCredentials"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <soap:operation soapAction="http://novell.com/simias/web/IsDomainActive"
             style="document"/>
       <input>
         <soap:body use="literal"/>
@@ -795,6 +853,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="IsDomainActive">
+      <http:operation location="/IsDomainActive"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="SetDomainActive">
       <http:operation location="/SetDomainActive"/>
       <input>
@@ -886,6 +953,15 @@
     </operation>
     <operation name="SetDomainCredentials">
       <http:operation location="/SetDomainCredentials"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="IsDomainActive">
+      <http:operation location="/IsDomainActive"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

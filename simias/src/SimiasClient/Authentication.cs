@@ -212,7 +212,7 @@ namespace Simias.Client
 						// Call the remote domain service and attempt to
 						// get Domain Information.  This will force an
 						// authentication to occurr
-						cDomainInfo = domainSvc.GetDomainInfo(cInfo.MemberID);
+						cDomainInfo = domainSvc.GetDomainInfo(cInfo.MemberUserID);
 					}
 					catch(WebException webEx)
 					{
@@ -251,7 +251,7 @@ namespace Simias.Client
 
 						int lStatus = 
 							simiasSvc.SetDomainCredentials(
-								cInfo.ID, cInfo.MemberID, this.password);
+								cInfo.ID, cInfo.MemberUserID, this.password);
 						if (lStatus == 0)
 						{
 							// Set the credentials in this process.
