@@ -1,0 +1,211 @@
+AC_INIT(src/iFolder/iFolder.cs)
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE(ifolder, 0.5)
+AM_MAINTAINER_MODE
+AC_PROG_CC
+
+SRCDIR='$(top_srcdir)/src'
+TOOLDIR='$(top_srcdir)/tools'
+DOCDIR="$SRCDIR/doc"
+APIDOCDIR="$SRCDIR/api-doc"
+
+COMMON_SUBDIRS="MiniFolder"
+LINUX_SUBDIRS=
+WINDOWS_SUBDIRS=
+
+case $host_os in
+    linux*)
+        AC_CHECK_PROG(CSC, mcs, mcs)
+        test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
+        AC_CHECK_PROG(CC, cc, cc)
+        test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
+        AC_CHECK_PROG(CXX, c++, c++)
+        test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
+        AC_CHECK_PROG(LD, c++, c++)
+        test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
+        CC='cc -c'
+        CXX='c++ -c'
+        CDEF='-D'
+        COUT='-o'
+        CINC='-I'
+        LIBS=''
+        CSCFLAGS='/d:MONO /warn:4 /d:TRACE'
+        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
+        OPTIMIZE_CSCFLAGS="/optimize+"
+        CFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@"
+        DEBUG_CFLAGS="-g -DDEBUG"
+        OPTIMIZE_CFLAGS="-O2 -DNDEBUG"
+        CXXFLAGS="-pipe -Wall -W -DLINUX -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
+        DEBUG_CXXFLAGS="-g -DDEBUG"
+        OPTIMIZE_CXXFLAGS="-O2 -DNDEBUG"
+        LDFLAGS=''
+        DEBUG_LDFLAGS="-g"
+        OPTIMIZE_LDFLAGS=""
+        LDOUT='-o '
+        LDINC='-L'
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        LIBFLAG='-l'
+        LIB_EXT=''
+        EXE_EXT=''
+        OBJ_EXT='.o'
+        SHARED_LIB_EXT='.so'
+        LIB_PRE='lib'
+        SHARED_LIB_FLAG='-shared'
+        SYSTEM_XML='System.Xml.dll'
+        MONO=mono
+        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
+        NUNIT_FLAGS='/nologo'
+        DEBUG_NUNIT_FLAGS='--debug'
+        OPTIMIZE_NUNIT_FLAGS=''
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
+        EMPTY=
+        SEP='/'
+        PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+        NON_PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
+        ICON_FLAG='/resource:'
+        ICON_EXT='.ico'
+    ;;
+    cygwin*)
+        AC_CHECK_PROG(CSC, csc, csc)
+        test -z "$CSC" && AC_MSG_ERROR([no acceptable C Sharp compiler found in \$PATH])
+        AC_CHECK_PROG(CC, cl, cl)
+        test -z "$CC" && AC_MSG_ERROR([no acceptable C compiler found in \$PATH])
+        AC_CHECK_PROG(CXX, cl, cl)
+        test -z "$CXX" && AC_MSG_ERROR([no acceptable C++ compiler found in \$PATH])
+        AC_CHECK_PROG(LD, link, link)
+        test -z "$LD" && AC_MSG_ERROR([no acceptable linker found in \$PATH])
+        CC='cl -c'
+        CXX='cl -c'
+        CDEF='-D'
+        COUT='-Fo'
+        CINC='-I'
+        LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
+        CSCFLAGS='/d:DOTNET /warn:4 /d:TRACE'
+        DEBUG_CSCFLAGS="/debug+ /d:DEBUG"
+        OPTIMIZE_CSCFLAGS="/optimize+"
+        CFLAGS="-nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
+        DEBUG_CFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        OPTIMIZE_CFLAGS="-MD -O2 -DNDEBUG"
+        CXXFLAGS="-nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPRODUCT_NAME=@PRODUCT_NAME@ -DPRODUCT_VERSION=@PRODUCT_VERSION@";
+        DEBUG_CXXFLAGS="-MDd -Od -Zi -RTC1 -DDEBUG -D_DEBUG"
+        OPTIMIZE_CXXFLAGS="-MD -O2 -DNDEBUG"
+        LDFLAGS='-nologo -machine:X86'
+        DEBUG_LDFLAGS="-DEBUG"
+        LDOUT='-out:'
+        LDINC='-libpath:'
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        LIBFLAG=''
+        LIB_EXT='.lib'
+        EXE_EXT='.exe'
+        OBJ_EXT='.obj'
+        SHARED_LIB_EXT='.dll'
+        LIB_PRE=''
+        SHARED_LIB_FLAG='-dll'
+        TLBX='tlbexp'
+        TYPE_LIB_EXT='.tlb'
+        RES_EXT='.res'
+        RC='rc'
+        RC_FLAGS='-r'
+        DEF='-def:'
+        SYSTEM_XML='System.XML.dll'
+        MONO=
+        NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
+        NUNIT_FLAGS='/nologo'
+        DEBUG_NUNIT_FLAGS=''
+        OPTIMIZE_NUNIT_FLAGS=''
+        NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
+        EMPTY=
+        SEP='$(EMPTY)\\$(EMPTY)'
+        PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
+        NON_PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+        ICON_FLAG='/win32icon:'
+        ICON_EXT='.ico'
+    ;;
+    *)
+        AC_MSG_ERROR([Unknown host_os: $host_os])
+    ;;
+esac
+
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+AC_HEADER_STDC
+#AM_PROG_LIBTOOL
+
+#
+# Handle --with-simias-path
+#
+AC_ARG_WITH(simias-path, [
+  --with-simias-path=PATH Full path to installed Simias assemblies],
+	[ SIMIAS_INSTALL_PATH=$withval ],
+	[ SIMIAS_INSTALL_PATH=\${prefix} ]
+	)
+AC_SUBST(SIMIAS_INSTALL_PATH)
+
+#
+# Handle --enable-debug
+#
+AC_ARG_ENABLE(debug, [
+  --enable-debug    Configure the Makefiles to build in DEBUG mode],
+    [case "${enableval}" in
+        yes) enable_debug=true ;;
+        no)  enable_debug=false ;;
+        *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+    esac],[enable_debug=false])
+AM_CONDITIONAL(DEBUG, test x$enable_debug = xtrue)
+if test "$enable_debug" = "true"
+then
+  # Build debug version.
+  CSCFLAGS="$DEBUG_CSCFLAGS $CSCFLAGS"
+  CFLAGS="$DEBUG_CFLAGS $CFLAGS"
+  CXXFLAGS="$DEBUG_CXXFLAGS $CXXFLAGS"
+  NUNIT_FLAGS="$DEBUG_NUNITFLAGS $NUNIT_FLAGS"
+else
+  # Build optimized version.
+  CSCFLAGS="$OPTIMIZE_CSCFLAGS $CSCFLAGS"
+  CFLAGS="$OPTIMIZE_CFLAGS $CFLAGS"
+  CXXFLAGS="$OPTIMIZE_CXXFLAGS $CXXFLAGS"
+  NUNIT_FLAGS="$OPTIMIZE_NUNITFLAGS $NUNIT_FLAGS"
+fi
+
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "x$PKG_CONFIG" = "xno"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+case $host_os in
+    linux)
+        GTK_SHARP_REQUIRED_VERSION=0.10
+        PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_REQUIRED_VERSION)
+    ;;
+esac
+
+AC_SUBST(EMPTY)
+AC_SUBST(SEP)
+AC_SUBST(ROOTDIR)
+AC_SUBST(SRCDIR)
+AC_SUBST(TOOLDIR)
+AC_SUBST(DOCDIR)
+AC_SUBST(APIDOCDIR)
+AC_SUBST(CSC)
+AC_SUBST(CSCFLAGS)
+AC_SUBST(CSC_EXEFLAG)
+AC_SUBST(CSC_LIBFLAG)
+AC_SUBST(SYSTEM_XML)
+AC_SUBST(MONO)
+AC_SUBST(NUNIT)
+AC_SUBST(NUNIT_FLAGS)
+AC_SUBST(NUNIT_LIBPATH)
+AC_SUBST(COMMON_SUBDIRS)
+AC_SUBST(LINUX_SUBDIRS)
+AC_SUBST(WINDOWS_SUBDIRS)
+AC_SUBST(PLATFORM_SUBDIRS)
+AC_SUBST(NON_PLATFORM_SUBDIRS)
+AC_SUBST(ICON_FLAG)
+AC_SUBST(ICON_EXT)
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+src/MiniFolder/Makefile
+])
