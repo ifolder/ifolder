@@ -49,7 +49,7 @@ namespace Novell.iFolder.iFolderCom
 		bool IsiFolderNode([MarshalAs(UnmanagedType.LPWStr)] string path);
 		bool GetiFolderPropInit();
 		bool GetNextiFolderProp(out string name, out string val);
-		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
+		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, [MarshalAs(UnmanagedType.LPWStr)] string tabPage, bool modal);
 		void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
 		bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path);
@@ -70,9 +70,6 @@ namespace Novell.iFolder.iFolderCom
 		private ICSEnumerator propEnumerator;
 		private ICSEnumerator aclEnumerator;
 
-		static private AddressBook.Manager abManager = null;
-		private Novell.AddressBook.AddressBook addressBook = null;
-
 		private IEnumerator items;
 //		public iFolderComponent(Uri location)
 //		{
@@ -91,18 +88,6 @@ namespace Novell.iFolder.iFolderCom
 				if (manager == null)
 				{
 					manager= iFolderManager.Connect();
-				}
-
-				// Connect to the address book manager
-				if (abManager == null)
-				{
-					abManager = Novell.AddressBook.Manager.Connect();
-				}
-
-				// Open the default address book
-				if (addressBook == null)
-				{
-					addressBook = abManager.OpenDefaultAddressBook();
 				}
 			}
 			catch (SimiasException e)
@@ -274,7 +259,7 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
-		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal)
+		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, [MarshalAs(UnmanagedType.LPWStr)] string tabPage, bool modal)
 		{
 			string windowName = "Advanced iFolder Properties for " + Path.GetFileName(path);
 
@@ -289,9 +274,9 @@ namespace Novell.iFolder.iFolderCom
 				iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
 				ifolderAdvanced.Name = path;
 				ifolderAdvanced.Text = windowName;
-				ifolderAdvanced.ABManager = abManager;
 				ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
 				ifolderAdvanced.LoadPath = dllPath;
+				ifolderAdvanced.ActiveTab = "share";
 
 				if (modal)
 				{
