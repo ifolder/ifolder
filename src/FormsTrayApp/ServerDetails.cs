@@ -610,7 +610,7 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
-					usedSpaceUnits.Text = "N/A";// TODO: resourceManager.GetString("notApplicable");
+					usedSpaceUnits.Text = resourceManager.GetString("notApplicable");
 					usedSpace.Text = "";
 				}
 
@@ -629,15 +629,15 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
-					freeSpaceUnits.Text = totalSpaceUnits.Text = "N/A";
-						//TODO: resourceManager.GetString("notApplicable");
+					freeSpaceUnits.Text = totalSpaceUnits.Text =
+						resourceManager.GetString("notApplicable");
 					freeSpace.Text = totalSpace.Text = "";
 					gaugeChart1.Used = 0;
 				}
 			}
 			catch
 			{
-				usedSpace.Text = freeSpace.Text = totalSpace.Text = "Unknown";//TODO: resourceManager.GetString("statusUnknown");
+				usedSpace.Text = freeSpace.Text = totalSpace.Text = resourceManager.GetString("statusUnknown");
 			}
 
 			// Cause the gauge chart to be redrawn.
