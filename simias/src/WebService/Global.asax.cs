@@ -58,6 +58,8 @@ namespace Simias.Web
 			Environment.CurrentDirectory = SimiasSetup.webbindir;
 			Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
 
+            Simias.Storage.Store.GetStore();
+
             if (serviceManager == null)
             {
                 serviceManager = new Simias.Service.Manager(Configuration.GetConfiguration());
@@ -136,7 +138,7 @@ namespace Simias.Web
 		{
             Console.Error.WriteLine("Simias Process Starting Shutdown");
 
-			// Send the simias down event and wait for 1/2 second for the message to be routed.
+            // Send the simias down event and wait for 1/2 second for the message to be routed.
 			EventPublisher eventPub = new EventPublisher();
 			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Down", "The simias service is terminating", DateTime.Now) );
 			Thread.Sleep( 500 );
