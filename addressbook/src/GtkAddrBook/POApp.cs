@@ -46,6 +46,7 @@ namespace POBoxViewer
 
 		public static void on_po_closed(object o, EventArgs args) 
 		{
+			Console.WriteLine("we are quitting");
 			Application.Quit();
 		}
 	}

@@ -6,15 +6,17 @@
 <requires lib="bonobo"/>
 
 <widget class="GnomeApp" id="POViewerApp">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Teamspace P.O. Box</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
+  <property name="default_width">350</property>
+  <property name="default_height">350</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">teamspace.png</property>
   <property name="enable_layout_config">False</property>
+  <signal name="delete_event" handler="on_POViewerApp_delete_event" last_modification_time="Fri, 09 Jul 2004 14:18:53 GMT"/>
 
   <child internal-child="dock">
     <widget class="BonoboDock" id="bonobodock1">
@@ -37,6 +39,75 @@
 
 		  <child>
 		    <widget class="GtkMenu" id="file2_menu">
+
+		      <child>
+			<widget class="GtkImageMenuItem" id="AcceptItem">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">_Accept</property>
+			  <property name="use_underline">True</property>
+			  <signal name="activate" handler="on_accept" last_modification_time="Fri, 09 Jul 2004 14:25:59 GMT"/>
+
+			  <child internal-child="image">
+			    <widget class="GtkImage" id="image16">
+			      <property name="visible">True</property>
+			      <property name="stock">gtk-apply</property>
+			      <property name="icon_size">1</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkImageMenuItem" id="DeclineItem">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">De_cline</property>
+			  <property name="use_underline">True</property>
+			  <signal name="activate" handler="on_decline" last_modification_time="Fri, 09 Jul 2004 14:26:35 GMT"/>
+
+			  <child internal-child="image">
+			    <widget class="GtkImage" id="image17">
+			      <property name="visible">True</property>
+			      <property name="stock">gtk-cancel</property>
+			      <property name="icon_size">1</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkImageMenuItem" id="DeleteItem">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">_Delete</property>
+			  <property name="use_underline">True</property>
+			  <signal name="activate" handler="on_delete" last_modification_time="Fri, 09 Jul 2004 14:27:03 GMT"/>
+
+			  <child internal-child="image">
+			    <widget class="GtkImage" id="image18">
+			      <property name="visible">True</property>
+			      <property name="stock">gtk-delete</property>
+			      <property name="icon_size">1</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkMenuItem" id="separator1">
+			  <property name="visible">True</property>
+			</widget>
+		      </child>
 
 		      <child>
 			<widget class="GtkImageMenuItem" id="quit2">
@@ -66,7 +137,7 @@
 			  <signal name="activate" handler="on_refresh" last_modification_time="Fri, 09 Jul 2004 04:41:44 GMT"/>
 
 			  <child internal-child="image">
-			    <widget class="GtkImage" id="image1">
+			    <widget class="GtkImage" id="image19">
 			      <property name="visible">True</property>
 			      <property name="stock">gtk-refresh</property>
 			      <property name="icon_size">1</property>
@@ -95,6 +166,7 @@
 			<widget class="GtkImageMenuItem" id="about2">
 			  <property name="visible">True</property>
 			  <property name="stock_item">GNOMEUIINFO_MENU_ABOUT_ITEM</property>
+			  <signal name="activate" handler="on_about" last_modification_time="Fri, 09 Jul 2004 14:23:22 GMT"/>
 			</widget>
 		      </child>
 		    </widget>
@@ -127,31 +199,43 @@
 	      <property name="tooltips">True</property>
 
 	      <child>
-		<widget class="button" id="button1">
+		<widget class="button" id="AcceptButton">
 		  <property name="visible">True</property>
 		  <property name="tooltip" translatable="yes">New File</property>
 		  <property name="label" translatable="yes">_Accept</property>
 		  <property name="use_underline">True</property>
 		  <property name="stock_pixmap">gtk-apply</property>
+		  <signal name="clicked" handler="on_accept" last_modification_time="Fri, 09 Jul 2004 14:24:19 GMT"/>
 		</widget>
 	      </child>
 
 	      <child>
-		<widget class="button" id="button2">
+		<widget class="button" id="DeclineButton">
 		  <property name="visible">True</property>
 		  <property name="tooltip" translatable="yes">Open File</property>
-		  <property name="label" translatable="yes">_Decline</property>
+		  <property name="label" translatable="yes">De_cline</property>
 		  <property name="use_underline">True</property>
 		  <property name="stock_pixmap">gtk-cancel</property>
+		  <signal name="clicked" handler="on_decline" last_modification_time="Fri, 09 Jul 2004 14:24:28 GMT"/>
 		</widget>
 	      </child>
 
 	      <child>
-		<widget class="button" id="button4">
+		<widget class="button" id="DeleteButton">
+		  <property name="visible">True</property>
+		  <property name="label">gtk-delete</property>
+		  <property name="use_stock">True</property>
+		  <signal name="clicked" handler="on_delete" last_modification_time="Fri, 09 Jul 2004 14:24:38 GMT"/>
+		</widget>
+	      </child>
+
+	      <child>
+		<widget class="button" id="RefreshButton">
 		  <property name="visible">True</property>
 		  <property name="label">gtk-refresh</property>
 		  <property name="use_stock">True</property>
 		  <property name="new_group">True</property>
+		  <signal name="clicked" handler="on_refresh" last_modification_time="Fri, 09 Jul 2004 14:24:51 GMT"/>
 		</widget>
 		<packing>
 		  <property name="new_group">True</property>

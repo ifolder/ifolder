@@ -365,6 +365,7 @@ src/FormsAddrBook/Makefile
 src/GtkAddrBook/Makefile
 src/GtkAddrBook/contactbrowser
 src/GtkAddrBook/invitationassistant
+src/GtkAddrBook/poboxviewer
 src/GtkAddrBook/Util.cs
 test/Makefile
 test/AddressBook/Makefile

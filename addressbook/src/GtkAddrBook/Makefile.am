@@ -56,19 +56,19 @@ POBoxViewer.exe: $(PO_CSFILES) $(PO_RESOURCES) Novell.AddressBook.UI.gtk.dll
 Novell.AddressBook.UI.gtk.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:Novell.AddressBook.UI.gtk.doc.xml
 
-install-exec-local: all contactbrowser invitationassistant $(GLADE_FILES) $(IMAGE_FILES)
+install-exec-local: all poboxviewer contactbrowser invitationassistant $(GLADE_FILES) $(IMAGE_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images
 	$(INSTALL_PROGRAM) Novell.AddressBook.UI.gtk.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder/images
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) InvitationAssistant.exe POBoxViewer.exe ContactBrowser.exe $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) contactbrowser invitationassistant $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) poboxviewer contactbrowser invitationassistant $(DESTDIR)$(bindir)
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.AddressBook.UI.gtk.dll $(BookLib_RESOURCES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(datadir)/ifolder/glade; rm -f $(GLADE_FILES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(datadir)/ifolder/images; rm -f $(IMAGE_FILES:$(srcdir)/%=%)
-	cd $(DESTDIR)$(bindir); rm -f POBoxViewer.exe ContactBrowser.exe contactbrowser InvitationAssistant.exe invitationassistant
+	cd $(DESTDIR)$(bindir); rm -f POBoxViewer.exe ContactBrowser.exe poboxviewer contactbrowser InvitationAssistant.exe invitationassistant
     
 installcheck-local: install
 	

@@ -39,6 +39,14 @@ namespace Novell.AddressBook.UI.gtk
 		[Glade.Widget] private Gnome.App	POViewerApp = null;
 		[Glade.Widget] private TreeView		SubTreeView = null;
 
+		[Glade.Widget] private Gtk.MenuItem	AcceptItem = null;
+		[Glade.Widget] private Gtk.MenuItem	DeclineItem = null;
+		[Glade.Widget] private Gtk.MenuItem DeleteItem = null;
+
+		[Glade.Widget] private Gtk.Button	AcceptButton = null;
+		[Glade.Widget] private Gtk.Button	DeclineButton = null;
+		[Glade.Widget] private Gtk.Button	DeleteButton = null;
+
 		private ListStore	SubTreeStore;
 
 		public event EventHandler ViewerClosed;
@@ -73,8 +81,16 @@ namespace Novell.AddressBook.UI.gtk
 						SubCellTextDataFunc));
 			btvc.Title = "Subscription";
 			SubTreeView.AppendColumn(btvc);
-//			BookTreeView.Selection.Changed +=
-//				new EventHandler(on_book_selection_changed);
+			SubTreeView.Selection.Changed +=
+				new EventHandler(on_selection_changed);
+
+			AcceptItem.Sensitive = false;
+			DeclineItem.Sensitive = false;
+			DeleteItem.Sensitive = false;
+
+			AcceptButton.Sensitive = false;
+			DeclineButton.Sensitive = false;
+			DeleteButton.Sensitive = false;
 		}
 
 
@@ -100,17 +116,82 @@ namespace Novell.AddressBook.UI.gtk
 
 		public void on_POViewerApp_delete_event(object o, DeleteEventArgs args) 
 		{
+			Console.WriteLine("We are called to delete");
 			args.RetVal = true;
-			//on_quit(o, args);
+			on_quit(o, args);
 		}
 
+		public void on_selection_changed(object o, EventArgs args)
+		{
+			TreeSelection tSelect = SubTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+
+				string test = (string) tModel.GetValue(iter,0);
+
+				AcceptItem.Sensitive = true;
+				DeclineItem.Sensitive = true;
+				DeleteItem.Sensitive = true;
+				AcceptButton.Sensitive = true;
+				DeclineButton.Sensitive = true;
+				DeleteButton.Sensitive = true;
+			}
+			else
+			{
+				AcceptItem.Sensitive = false;
+				DeclineItem.Sensitive = false;
+				DeleteItem.Sensitive = false;
+				AcceptButton.Sensitive = false;
+				DeclineButton.Sensitive = false;
+				DeleteButton.Sensitive = false;
+			}
+		}
 
 		public void on_refresh(object o, EventArgs eventArgs)
 		{
+			//Refresh the app
+			Console.WriteLine("TODO: add refresh");
 		}
 
-		public void on_quit(object o, EventArgs eventArgs)
+		public void on_accept(object o, EventArgs eventArgs)
 		{
+			//Refresh the app
+			Console.WriteLine("TODO: add accept");
+		}
+
+		public void on_decline(object o, EventArgs eventArgs)
+		{
+			//Refresh the app
+			Console.WriteLine("TODO: add decline");
+		}
+
+		public void on_delete(object o, EventArgs eventArgs)
+		{
+			//Refresh the app
+			Console.WriteLine("TODO: add delete");
+		}
+
+		public void on_about(object o, EventArgs eventArgs)
+		{
+			//Refresh the app
+			Console.WriteLine("TODO: add about");
+		}
+
+		public void on_quit(object o, EventArgs args)
+		{
+			POViewerApp.Hide();
+			POViewerApp.Destroy();
+			POViewerApp = null;
+
+			if(ViewerClosed != null)
+			{
+				EventArgs e = new EventArgs();
+				ViewerClosed(this, e);
+			}
 		}
 	}
 }
