@@ -18,7 +18,7 @@ INCLUDES =						\
 	$(NAUTILUS_CFLAGS)						\
 	$(NONAMESPACE_CFLAGS)					\
 	$(GSOAP_INCLUDES)				\
-	$(SIMIAS_EVENT_CLIENT_CFLAGS)	\
+	$(SIMIAS_CLIENT_C_CFLAGS)	\
 	$(XML2_CFLAGS)
 
 EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png stdsoap2.h
@@ -39,9 +39,9 @@ libnautilus_ifolder_la_SOURCES =     \
 	envC.c iFolderClientClientLib.c stdsoap2.c nautilus-ifolder.c
 
 # Statically link libsimias-event.a
-SIMIAS_EVENT_CLIENT_STATIC_LIB = $(SIMIAS_EVENT_CLIENT_PREFIX)/lib/libsimias-event.a
+SIMIAS_EVENT_CLIENT_STATIC_LIB = $(SIMIAS_CLIENT_C_PREFIX)/lib/libsimias-event.a
 
-libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version $(SIMIAS_EVENT_CLIENT_STATIC_LIB) $(XML2_LIBS)
+libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version $(SIMIAS_CLIENT_C_LIBS) $(SIMIAS_EVENT_CLIENT_STATIC_LIB) $(XML2_LIBS)
 libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
 
 libnautilus_ifolder_la_DEPENDENCIES = nautilus-ifolder.exe
