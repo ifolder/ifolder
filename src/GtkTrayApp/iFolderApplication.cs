@@ -195,6 +195,40 @@ namespace Novell.iFolder
 		}
 
 
+		private void OnSimiasNotifyEvent(object o, NotifyEventArgs args)
+		{
+			Console.WriteLine("iFolder received a SimiasNotifyEvent");
+			switch(args.EventData)
+			{
+				case "Domain-Up":
+				{
+					Console.WriteLine(
+						"iFolder authenticating to domain {0}", 
+						args.Message);
+
+					AuthenticationStatus status;
+					DomainAuthentication cAuth = new DomainAuthentication(
+							args.Message, "iFolder!",  null);
+					status = cAuth.Authenticate();
+					if(status != AuthenticationStatus.Success)
+					{
+						iFolderMsgDialog mDialog = new iFolderMsgDialog(
+							null,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Connect Error"),
+							Util.GS("Unable to Authenticate"),
+							string.Format(Util.GS("The authentication returned the error {0}"), status));
+						mDialog.Run();
+						mDialog.Hide();
+						mDialog.Destroy();
+						mDialog = null;
+						
+					}
+					break;
+				}
+			}
+		}
 
 
 		private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
@@ -348,6 +382,10 @@ namespace Novell.iFolder
 						EventBroker.FileSyncEventFired +=
 							new FileSyncEventHandler(
 												OniFolderFileSyncEvent);
+						
+						EventBroker.NotifyEventFired +=
+							new NotifyEventHandler(
+												OnSimiasNotifyEvent);
 					}
 
 					gAppIcon.Pixbuf = RunningPixbuf;
