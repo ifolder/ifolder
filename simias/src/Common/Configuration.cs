@@ -253,7 +253,7 @@ namespace Simias
 		/// <returns>True if the key exists, otherwise false is returned.</returns>
 		public bool Exists( string key )
 		{
-			return KeyExists(DefaultSection, key);
+			return Exists( DefaultSection, key );
 		}
 
 		/// <summary>
@@ -264,7 +264,15 @@ namespace Simias
 		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
 		public bool Exists( string section, string key )
 		{
-			return KeyExists(section, key);
+			mutex.WaitOne();
+			try
+			{
+				return KeyExists(section, key);
+			}
+			finally
+			{
+				mutex.ReleaseMutex();
+			}
 		}
 
 		// These two methods are going to read the XML document every
