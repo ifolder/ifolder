@@ -84,15 +84,23 @@ namespace Novell.iFolder.FormsTrayApp
 		[STAThread]
 		static void Main(string[] args)
 		{
-			// Check for currently running instance.
-			Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
-			if (iFolderProcess.Length == 1)
+			if (args.Length == 1 && args[0].Equals("-configure"))
 			{
-				Application.Run(new FormsTrayApp());
+				// Set the run key in the registry.
+				GlobalProperties.SetRunValue(true);
 			}
 			else
 			{
-				MessageBox.Show("There is already an instance of iFolder running.");
+				// Check for currently running instance.
+				Process[] iFolderProcess = Process.GetProcessesByName("iFolderApp");
+				if (iFolderProcess.Length == 1)
+				{
+					Application.Run(new FormsTrayApp());
+				}
+				else
+				{
+					MessageBox.Show("There is already an instance of iFolder running.");
+				}
 			}
 		}
 
@@ -276,20 +284,6 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				Configuration config = new Configuration();
-
-				// Check if this is the initial run ...
-				// TODO: TEMPORARY - remove when new install is available.
-				string firstRun = config.Get("iFolderApp", "First run", "true");
-				if (firstRun.Equals("true"))
-				{
-					// Set the run key in the registry.
-					GlobalProperties.SetRunValue(true);
-
-					// Set the configuration setting.
-					config.Set("iFolderApp", "First run", "false");
-					Application.Exit();
-				}
-				// End TEMPORARY
 
 				SimiasLogManager.Configure(config);
 			
