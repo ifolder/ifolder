@@ -327,11 +327,23 @@ namespace Novell.iFolder
 
 					case iFolderEventTypes.NodeCreated:
 					{
-						NotifyWindow notifyWin = new NotifyWindow(tIcon,
-							"Node was created!",
-							string.Format("A node with the id {0} was created.", iEvent.NodeID), 
-							Gtk.MessageType.Info, 5000);
-						notifyWin.ShowAll();
+						if(iEvent.LocalOnly)
+						{
+							NotifyWindow notifyWin = new NotifyWindow(tIcon,
+								"(Local) Node was created!",
+								string.Format("A node with the id {0} was created.", iEvent.NodeID), 
+								Gtk.MessageType.Info, 5000);
+							notifyWin.ShowAll();
+						}
+						else
+						{
+							NotifyWindow notifyWin = new NotifyWindow(tIcon,
+								"(Global) Node was created!",
+								string.Format("A node with the id {0} was created.", iEvent.NodeID), 
+								Gtk.MessageType.Info, 5000);
+							notifyWin.ShowAll();
+						}
+
 						break;
 					}
 

@@ -18,8 +18,6 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author: Calvin Gaisford <cgaisford@novell.com>
- *			Code based on examples from the book "Mono A Develper's Notebook"
- 				by Edd Dumbill and Niel M. Bornstein
  * 
  ***********************************************************************/
 
@@ -42,6 +40,7 @@ namespace Novell.iFolder
 		private bool	isSelected = false;
 		private int		wbsize = 16;
 		private uint	timeout;
+
 
 		public NotifyWindow(Gtk.Widget parent, string message, string details,
 							Gtk.MessageType messageType, uint timeout)
@@ -113,7 +112,7 @@ namespace Novell.iFolder
 			hbox.PackStart(l, false, true, 0);
 
 			Label l2 = new Label("<span size=\"small\">" + details + "</span>");
-//			l2.WidthRequest = 300;
+			l2.WidthRequest = 400;
 			l2.UseMarkup = true;
 			l2.LineWrap = true;
 			l2.Xalign = 0;
