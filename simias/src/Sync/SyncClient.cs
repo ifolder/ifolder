@@ -339,11 +339,11 @@ namespace Simias.Sync.Client
 		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
-		Hashtable		killOnClient;
+		Hashtable		DeleteOnClient;
 		Hashtable		nodesFromServer;
 		Hashtable		dirsFromServer;
 		Hashtable		filesFromServer;
-		Hashtable		killOnServer;
+		Hashtable		DeleteOnServer;
 		Hashtable		nodesToServer;
 		Hashtable		dirsToServer;
 		Hashtable		filesToServer;
@@ -612,11 +612,11 @@ namespace Simias.Sync.Client
 			}
 
 			fileMonitor = new FileWatcher(collection, false);
-			killOnClient = new Hashtable();
+			DeleteOnClient = new Hashtable();
 			nodesFromServer = new Hashtable();
 			dirsFromServer = new Hashtable();
 			filesFromServer = new Hashtable();
-			killOnServer = new Hashtable();
+			DeleteOnServer = new Hashtable();
 			nodesToServer = new Hashtable();
 			dirsToServer = new Hashtable();
 			filesToServer = new Hashtable();
@@ -630,11 +630,11 @@ namespace Simias.Sync.Client
 			get
 			{
 				int count = 0;
-				count += killOnClient.Count;
+				count += DeleteOnClient.Count;
 				count += nodesFromServer.Count;
 				count += dirsFromServer.Count;
 				count += filesFromServer.Count;
-				count += killOnServer.Count;
+				count += DeleteOnServer.Count;
 				count += nodesToServer.Count;
 				count += dirsToServer.Count;
 				count += filesToServer.Count;
@@ -823,13 +823,13 @@ namespace Simias.Sync.Client
 		{
 			if (stamp.Operation == SyncOperation.Delete)
 			{
-				killOnClient[stamp.ID] = stamp.BaseType;
+				DeleteOnClient[stamp.ID] = stamp.BaseType;
 			}
 			else
 			{
 				// If it is scheduled to be deleted remove from delete list.
-				if (killOnClient.Contains(stamp.ID))
-					killOnClient.Remove(stamp.ID);
+				if (DeleteOnClient.Contains(stamp.ID))
+					DeleteOnClient.Remove(stamp.ID);
 
 				// Make sure the node has been changed.
 				Node oldNode = collection.GetNodeByID(stamp.ID);
@@ -862,13 +862,13 @@ namespace Simias.Sync.Client
 		{
 			if (stamp.type == NodeTypes.TombstoneType || stamp.changeType == ChangeLogRecord.ChangeLogOp.Deleted)
 			{
-				killOnServer[stamp.id] = stamp.type;
+				DeleteOnServer[stamp.id] = stamp.type;
 			}
 			else
 			{
 				// Remove from the delete list if it exists.
-				if (killOnServer.Contains(stamp.id))
-					killOnServer.Remove(stamp.id);
+				if (DeleteOnServer.Contains(stamp.id))
+					DeleteOnServer.Remove(stamp.id);
 
 				if (stamp.masterIncarn != stamp.localIncarn)
 				{
@@ -900,11 +900,11 @@ namespace Simias.Sync.Client
 		private void ReconcileAllNodeStamps(SyncNodeStamp[] sstamps, NodeStamp[] cstamps)
 		{
 			// Clear all the tables because we are doing a full sync.
-			killOnClient.Clear();
+			DeleteOnClient.Clear();
 			nodesFromServer.Clear();
 			dirsFromServer.Clear();
 			filesFromServer.Clear();
-			killOnServer.Clear();
+			DeleteOnServer.Clear();
 			nodesToServer.Clear();
 			dirsToServer.Clear();
 			filesToServer.Clear();
@@ -929,7 +929,7 @@ namespace Simias.Sync.Client
 					// If the Master Incarnation is not 0 then this node has been deleted on the server.
 					if (cStamp.masterIncarn != 0)
 					{
-						killOnClient[cStamp.id] = cStamp.type;
+						DeleteOnClient[cStamp.id] = cStamp.type;
 					}
 					else
 					{
@@ -944,7 +944,7 @@ namespace Simias.Sync.Client
 					if (cStamp.type == NodeTypes.TombstoneType)
 					{
 						// This node has been deleted on the client.
-						killOnServer[cStamp.id] = cStamp.type;
+						DeleteOnServer[cStamp.id] = cStamp.type;
 					}
 					else if (cStamp.localIncarn != cStamp.masterIncarn)
 					{
@@ -984,28 +984,28 @@ namespace Simias.Sync.Client
 		private void ExecuteSync()
 		{
 			// Get the updates from the server.
+			ProcessDeleteOnClient();
 			ProcessNodesFromServer();
 			ProcessDirsFromServer();
 			ProcessFilesFromServer();
-			ProcessKillOnClient();
 			// Push the updates from the client.
+			ProcessDeleteOnServer();
 			ProcessNodesToServer();
 			ProcessDirsToServer();
 			ProcessFilesToServer();
-			ProcessKillOnServer();
 		}
 
 		/// <summary>
 		/// Delete the nodes on the client.
 		/// </summary>
-		private void ProcessKillOnClient()
+		private void ProcessDeleteOnClient()
 		{
 			// remove deleted nodes from client
-			if (killOnClient.Count > 0)
+			if (DeleteOnClient.Count > 0)
 			{
-				log.Info("Deleting {0} nodes on client", killOnClient.Count);
-				string[] idList = new string[killOnClient.Count];
-				killOnClient.Keys.CopyTo(idList, 0);
+				log.Info("Deleting {0} nodes on client", DeleteOnClient.Count);
+				string[] idList = new string[DeleteOnClient.Count];
+				DeleteOnClient.Keys.CopyTo(idList, 0);
 				foreach (string id in idList)
 				{
 					if (stopping)
@@ -1018,7 +1018,7 @@ namespace Simias.Sync.Client
 						if (node == null)
 						{
 							log.Debug("Ignoring attempt to delete non-existent node {0}", id);
-							killOnClient.Remove(id);
+							DeleteOnClient.Remove(id);
 							continue;
 						}
 
@@ -1054,7 +1054,7 @@ namespace Simias.Sync.Client
 						// Now delete the tombstones.
 						collection.Commit(deleted);
 
-						killOnClient.Remove(id);
+						DeleteOnClient.Remove(id);
 					}
 					catch
 					{
@@ -1313,18 +1313,18 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Delete nodes from the server.
 		/// </summary>
-		private void ProcessKillOnServer()
+		private void ProcessDeleteOnServer()
 		{
 			// remove deleted nodes from server
-			if (killOnServer.Count == 0)
+			if (DeleteOnServer.Count == 0)
 			{
 				return;
 			}
 			try
 			{
-				log.Info("Deleting {0} Nodes on server", killOnServer.Count);
-				string[] idList = new string[killOnServer.Count];
-				killOnServer.Keys.CopyTo(idList, 0);
+				log.Info("Deleting {0} Nodes on server", DeleteOnServer.Count);
+				string[] idList = new string[DeleteOnServer.Count];
+				DeleteOnServer.Keys.CopyTo(idList, 0);
 				SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
 				foreach (SyncNodeStatus status in nodeStatus)
 				{
@@ -1339,7 +1339,7 @@ namespace Simias.Sync.Client
 								// Delete the tombstone.
 								collection.Commit(collection.Delete(node));
 							}
-							killOnServer.Remove(status.nodeID);
+							DeleteOnServer.Remove(status.nodeID);
 						}
 					}
 					catch 

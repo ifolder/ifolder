@@ -383,7 +383,7 @@ namespace Simias.Sync
 				// Put all the existing nodes in a hashtable to match against the file system.
 				foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
 				{
-					existingNodes.Add(sn.Name, sn);
+					existingNodes[sn.Name] = sn;
 				}
 
 				// Look for new and modified files.
@@ -579,7 +579,7 @@ namespace Simias.Sync
 									
 										// Make sure that there is not a node for the old name.
 										sn = GetShallowNodeForFile(args.OldFullPath);
-										if (sn != null)
+										if (sn != null && sn.ID != node.ID)
 										{
 											node = collection.GetNodeByID(sn.ID);
 											DeleteNode(node);
