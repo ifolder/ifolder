@@ -89,16 +89,13 @@ namespace Novell.iFolder
 			
 			NewAccountMode = false;
 
-			// Create the main TreeView and add it to a scrolled
-			// window, then add it to the main vbox widget
+			// Setup the Accounts tree view in a scrolled window
 			AccTreeView = new iFolderTreeView();
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			sw.Add(AccTreeView);
 			this.PackStart(sw, true, true, 0);
 
-
-			// Setup the iFolder TreeView
 			AccTreeStore = new ListStore(typeof(DomainWeb));
 			AccTreeView.Model = AccTreeStore;
 
@@ -155,60 +152,51 @@ namespace Novell.iFolder
 			Table loginTable;
 			loginTable = new Table(5,2,false);
 
-//			loginTable.BorderWidth = 10;
 			loginTable.RowSpacing = 10;
 			loginTable.ColumnSpacing = 10;
 			loginTable.Homogeneous = false;
 
+
+			// 1. Server host
+			serverLabel = new Label(Util.GS("Server host:"));
+			serverLabel.Xalign = 1;
+			loginTable.Attach(serverLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			serverEntry = new Entry();
+			serverEntry.Changed += new EventHandler(OnFieldsChanged);
+			serverEntry.ActivatesDefault = true;
+			loginTable.Attach(serverEntry, 1,2,0,1,
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+
+			// 2. User name
 			nameLabel = new Label(Util.GS("User name:"));
 			nameLabel.Xalign = 1; 
-			loginTable.Attach(nameLabel, 0,1,0,1,
+			loginTable.Attach(nameLabel, 0,1,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			nameEntry = new Entry();
 			nameEntry.Changed += new EventHandler(OnFieldsChanged);
 			nameEntry.ActivatesDefault = true;
 			nameEntry.WidthChars = 35;
-			loginTable.Attach(nameEntry, 1,2,0,1, 
+			loginTable.Attach(nameEntry, 1,2,1,2, 
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-//			if(!isNewAccount)
-//			{
-//				if(domain.UserName != null)
-//					nameEntry.Text = domain.UserName;
-//				nameEntry.Editable = false;
-//			}
 
-
+			// 3. Password
 			passLabel = new Label(Util.GS("Password:"));
 			passLabel.Xalign = 1;
-			loginTable.Attach(passLabel, 0,1,1,2,
+			loginTable.Attach(passLabel, 0,1,2,3,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 			passEntry = new Entry();
 			passEntry.Changed += new EventHandler(OnFieldsChanged);
 			passEntry.ActivatesDefault = true;
 			passEntry.Visibility = false;
-			loginTable.Attach(passEntry, 1,2,1,2,
+			loginTable.Attach(passEntry, 1,2,2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
-			serverLabel = new Label(Util.GS("Server host:"));
-			serverLabel.Xalign = 1;
-			loginTable.Attach(serverLabel, 0,1,2,3,
-					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-
-			serverEntry = new Entry();
-			serverEntry.Changed += new EventHandler(OnFieldsChanged);
-			serverEntry.ActivatesDefault = true;
-			loginTable.Attach(serverEntry, 1,2,2,3,
-					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-
-//			if(!isNewAccount)
-//			{
-//				if(domain.Host != null)
-//					serverEntry.Text = domain.Host;
-//				serverEntry.Editable = false;
-//			}
 
 			VBox optBox = new VBox();
 
@@ -220,12 +208,12 @@ namespace Novell.iFolder
 
 			autoLoginButton = 
 				new CheckButton(Util.GS(
-					"_Auto Login"));
+					"A_uto login"));
 			optBox.PackStart(autoLoginButton, false, false,0);
 
 			defaultAccButton = 
 				new CheckButton(Util.GS(
-					"_Default account"));
+					"D_efault account"));
 			optBox.PackStart(defaultAccButton, false, false,0);
 
 			loginTable.Attach(optBox, 1,2,3,4,
@@ -235,7 +223,7 @@ namespace Novell.iFolder
 			HBox proxyBox = new HBox();
 
 			proxyButton =
-				new Button(Util.GS("Proxy Settings"));
+				new Button(Util.GS("Pro_xy settings"));
 			proxyBox.PackStart(proxyButton, false, false, 0);
 
 			loginTable.Attach(proxyBox, 1,2,4,5,
@@ -250,13 +238,14 @@ namespace Novell.iFolder
 			loginBox.Layout = ButtonBoxStyle.End;
 
 			logoutButton =
-				new Button(Util.GS("Log_out"));
+				new Button(Util.GS("L_ogout"));
 			loginBox.PackStart(logoutButton, false, false, 0);
 
 			loginButton =
 				new Button(Util.GS("_Login"));
 			loginBox.PackStart(loginButton, false, false, 0);
 			loginButton.Clicked += new EventHandler(OnLoginAccount);
+			loginButton.CanDefault = true;
 
 			vbox.PackStart(loginBox, false, false, 0);
 
@@ -394,7 +383,8 @@ namespace Novell.iFolder
 			serverEntry.Text = "";
 			passEntry.Text = "";
 
-			nameEntry.HasFocus = true;
+			serverEntry.HasFocus = true;
+			loginButton.HasDefault = true;
 		}
 
 
@@ -656,7 +646,9 @@ namespace Novell.iFolder
 				if( (nameEntry.Text.Length > 0) &&
 					(passEntry.Text.Length > 0 ) &&
 					(serverEntry.Text.Length > 0) )
+				{
 					loginButton.Sensitive = true;
+				}
 				else
 					loginButton.Sensitive = false;
 			}
