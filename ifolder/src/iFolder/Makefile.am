@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs
+iFolder_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderWebService.cs
 iFolder_CSFILES_CSC := $(subst /,$(SEP),$(iFolder_CSFILES))
 iFolder_INCLUDES =
 iFolder_RESOURCES =
@@ -15,18 +15,20 @@ CUR_DIR := $(shell pwd)
 
 all: Novell.iFolder.dll
 
-iFolderWebService.cs: $(srcdir)/iFolderWebService.wsdl
+$(srcdir)/iFolderWebService.cs: $(srcdir)/iFolderWebService.wsdl
 if WINDOWS
 	wsdl $(srcdir)/iFolderWebService.wsdl
 endif
 if LINUX
 	wsdl -nologo -out:iFolderWebService.cs $(srcdir)/iFolderWebService.wsdl
+#	We used to have to do this because of the way the wdsl was being generated
+#   But it all appears fine after switching to [SoapDocumentMethod]
 #	cat iFolderWebService.cs | sed 's/iFolder1/iFolder/' | sed 's/iFolderUser1/iFolderUser/' | sed 's/DiskSpace1/DiskSpace/' > newsource.cs
 #	mv newsource.cs iFolderWebService.cs
 endif
 
-Novell.iFolder.dll: iFolderWebService.cs $(iFolder_CSFILES) $(iFolder_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) iFolderWebService.cs /doc:Novell.iFolder.doc.xml
+Novell.iFolder.dll: $(iFolder_CSFILES) $(iFolder_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolder_FLAGS) $(iFolder_LIBS:%=/r:%) $(iFolder_LIBPATH:%=/lib:%) $(iFolder_CSFILES_CSC) /doc:Novell.iFolder.doc.xml
 
 if DEBUG
 if WINDOWS
