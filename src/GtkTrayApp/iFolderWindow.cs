@@ -2419,25 +2419,57 @@ namespace Novell.iFolder
 			switch(args.Direction)
 			{
 				case Simias.Client.Event.Direction.Uploading:
-					UpdateStatus(string.Format(Util.GS(
+				{
+					if(args.Delete)
+					{
+						UpdateStatus(string.Format(Util.GS(
+								"Deleting file from server {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+								"Deleting file from server {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
+					}
+					else
+					{
+						UpdateStatus(string.Format(Util.GS(
 									"Uploading file {0}"), args.Name));
-					if(SyncFileName != args.Name)
-					{
-						LogMessage(string.Format(Util.GS(
-								"Uploading file {0}"), args.Name));
-						SyncFileName = args.Name;
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+									"Uploading file {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
 					}
 					break;
+				}
 				case Simias.Client.Event.Direction.Downloading:
-					UpdateStatus(string.Format(Util.GS(
-									"Downloading file {0}"), args.Name));
-					if(SyncFileName != args.Name)
+				{
+					if(args.Delete)
 					{
-						LogMessage(string.Format(Util.GS(
-								"Downloading file {0}"), args.Name));
-						SyncFileName = args.Name;
+						UpdateStatus(string.Format(Util.GS(
+									"Deleting local file {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+									"Deleing local file {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
+					}
+					else
+					{
+						UpdateStatus(string.Format(Util.GS(
+									"Downloading file {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+									"Downloading file {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
 					}
 					break;
+				}
 			}
 
 			if(SyncBar == null)
