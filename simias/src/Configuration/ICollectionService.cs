@@ -23,14 +23,14 @@
 
 using System;
 
-namespace Novell.iFolder
+namespace Simias
 {
 	/// <summary>
 	/// Collection Service Interface
 	/// </summary>
 	public interface ICollectionService
 	{
-		void Start();
+		void Start(Configuration configuration);
 		void Stop();
 	}
 }
