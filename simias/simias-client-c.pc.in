@@ -8,7 +8,7 @@ Conflicts: @PKG_CONFIG_CONFLICTS@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
-includedir=@prefix@/include
+includedir=@prefix@/include/simias
 
 Libs:-Wl,-rpath,${libdir} -L${libdir} -lsimias -lsimias-event @PC_FILE_LIB_SIMIAS_GAIM@
 Cflags: -I${includedir}
