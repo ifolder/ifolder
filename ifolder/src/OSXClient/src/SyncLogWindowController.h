@@ -27,10 +27,30 @@
 {
 	IBOutlet NSWindow				*window;
 	IBOutlet NSTableColumn			*logColumn;
+
+	
+	NSToolbar						*toolbar;
+	NSMutableDictionary				*toolbarItems;
+	NSMutableArray					*toolbarItemKeys;
 }
+
 + (SyncLogWindowController *)sharedInstance;
 
 - (IBAction)clearLog:(id)sender;
 - (IBAction)saveLog:(id)sender;
+- (IBAction)customizeToolbar:(id)sender;
+- (IBAction)showHideToolbar:(id)sender;
+
+
+//==========================================
+// Toolbar Methods
+//==========================================
+- (void)setupToolbar;
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
+	itemForItemIdentifier:(NSString *)itemIdentifier
+	willBeInsertedIntoToolbar:(BOOL)flag;
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar;
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
+
 
 @end

@@ -58,6 +58,8 @@ static SyncLogWindowController *syncLogInstance = nil;
 -(void)awakeFromNib
 {
 	NSLog(@"SyncLogWindowController Awoke from Nib");
+	[self setupToolbar];
+
 	[super setShouldCascadeWindows:NO];
 	[super setWindowFrameAutosaveName:@"ifolder_log_window"];
 	
@@ -77,8 +79,20 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 
 
+-(void)dealloc
+{
+	[toolbar release];
+	[toolbarItems release];	
+	[toolbarItemKeys release];	
+    [super dealloc];
+}
+
+
+
+
 - (IBAction)clearLog:(id)sender
 {
+	[[[NSApp delegate] logArrayController] setContent:nil];
 }
 
 
@@ -86,7 +100,83 @@ static SyncLogWindowController *syncLogInstance = nil;
 
 - (IBAction)saveLog:(id)sender
 {
+	NSLog(@"Save the log");
 }
+
+
+
+- (IBAction)showHideToolbar:(id)sender
+{
+	[toolbar setVisible:![toolbar isVisible]];
+}
+
+
+
+- (IBAction)customizeToolbar:(id)sender
+{
+	[toolbar runCustomizationPalette:sender];
+}
+
+
+
+// Toobar Delegates
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
+	itemForItemIdentifier:(NSString *)itemIdentifier
+	willBeInsertedIntoToolbar:(BOOL)flag
+{
+	return[toolbarItems objectForKey:itemIdentifier];
+}
+
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
+{
+	return toolbarItemKeys;
+}
+
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
+{
+	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,2)];
+}
+
+
+- (void)setupToolbar
+{
+	toolbarItems =		[[NSMutableDictionary alloc] init];
+	toolbarItemKeys =	[[NSMutableArray alloc] init];
+
+	// New iFolder ToolbarItem
+	NSToolbarItem *item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Save"];
+	[item setPaletteLabel:@"Save Log"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Save"]; // name for the item in the toolbar
+	[item setToolTip:@"Save Log"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(saveLog:)];
+	[item setImage:[NSImage imageNamed:@"save32"]];
+    [toolbarItems setObject:item forKey:@"SaveLog"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"SaveLog"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Clear"];
+	[item setPaletteLabel:@"Clear Log"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Clear"]; // name for the item in the toolbar
+	[item setToolTip:@"Clear Log"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(clearLog:)];
+	[item setImage:[NSImage imageNamed:@"clear32"]];
+    [toolbarItems setObject:item forKey:@"ClearLog"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"ClearLog"];
+	[item release];
+	
+	toolbar = [[NSToolbar alloc] initWithIdentifier:@"SyncLogToolbar"];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:NO];
+	[toolbar setAutosavesConfiguration:NO];
+	[[self window] setToolbar:toolbar];
+}
+
+
+
 
 
 

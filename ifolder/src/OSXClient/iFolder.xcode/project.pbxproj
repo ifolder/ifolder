@@ -175,16 +175,19 @@
 				3E8ACF02078E4D040036C050,
 				3EEAA53B078F167000EE44EE,
 				3EEAA53D078F167B00EE44EE,
-				3E1DBE1407A7606200B31BA4,
-				3E1DBE1607A7607000B31BA4,
-				3E1DBE1807A7607900B31BA4,
-				3E1DBE1A07A7608000B31BA4,
-				3E1DBE1C07A760A600B31BA4,
+				3E09F85F07C04CE200381F59,
+				3E09F83307C048B700381F59,
+				3E09F82D07C048AA00381F59,
+				3E09F82707C0489F00381F59,
+				3E09F82107C0489300381F59,
 				3EE449E107A7DEDB00B93B2F,
 				3EE449E307A7DF0000B93B2F,
 				3E19255007A7E1FF00F9E44D,
 				3E19255207A7E20700F9E44D,
 				3EEA9A3407B1D3580015FCF4,
+				3E09F7AB07C0387700381F59,
+				3E09F7AD07C0388400381F59,
+				3E09F81507C047BB00381F59,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -269,6 +272,118 @@
 //3E2
 //3E3
 //3E4
+		3E09F7AB07C0387700381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = save32.png;
+			path = ../images/save32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F7AC07C0387700381F59 = {
+			fileRef = 3E09F7AB07C0387700381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F7AD07C0388400381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = clear32.png;
+			path = ../images/clear32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F7AE07C0388400381F59 = {
+			fileRef = 3E09F7AD07C0388400381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F81507C047BB00381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.gif;
+			name = "mono-powered-big.gif";
+			path = "../../../../../Desktop/mono-powered-big.gif";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F81607C047BB00381F59 = {
+			fileRef = 3E09F81507C047BB00381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F82107C0489300381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = setup32.png;
+			path = ../images/setup32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F82207C0489300381F59 = {
+			fileRef = 3E09F82107C0489300381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F82707C0489F00381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = share32.png;
+			path = ../images/share32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F82807C0489F00381F59 = {
+			fileRef = 3E09F82707C0489F00381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F82D07C048AA00381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = sync32.png;
+			path = ../images/sync32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F82E07C048AA00381F59 = {
+			fileRef = 3E09F82D07C048AA00381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F83307C048B700381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = conflict32.png;
+			path = ../images/conflict32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F83407C048B700381F59 = {
+			fileRef = 3E09F83307C048B700381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E09F85F07C04CE200381F59 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = newifolder32.png;
+			path = ../images/newifolder32.png;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		3E09F86007C04CE200381F59 = {
+			fileRef = 3E09F85F07C04CE200381F59;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3E19255007A7E1FF00F9E44D = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -399,76 +514,6 @@
 		};
 		3E19994B07BAE47700AAC29A = {
 			fileRef = 3E19994907BAE47700AAC29A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E1DBE1407A7606200B31BA4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = newifolder24.png;
-			path = ../images/newifolder24.png;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3E1DBE1507A7606200B31BA4 = {
-			fileRef = 3E1DBE1407A7606200B31BA4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E1DBE1607A7607000B31BA4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = setup24.png;
-			path = ../images/setup24.png;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3E1DBE1707A7607000B31BA4 = {
-			fileRef = 3E1DBE1607A7607000B31BA4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E1DBE1807A7607900B31BA4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = sync24.png;
-			path = ../images/sync24.png;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3E1DBE1907A7607900B31BA4 = {
-			fileRef = 3E1DBE1807A7607900B31BA4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E1DBE1A07A7608000B31BA4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = share24.png;
-			path = ../images/share24.png;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3E1DBE1B07A7608000B31BA4 = {
-			fileRef = 3E1DBE1A07A7608000B31BA4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3E1DBE1C07A760A600B31BA4 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = conflict24.png;
-			path = ../images/conflict24.png;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		3E1DBE1D07A760A600B31BA4 = {
-			fileRef = 3E1DBE1C07A760A600B31BA4;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1648,11 +1693,6 @@
 				3EEAA53E078F167B00EE44EE,
 				3EB8C50B079392230082AA86,
 				3EB8C513079393B60082AA86,
-				3E1DBE1507A7606200B31BA4,
-				3E1DBE1707A7607000B31BA4,
-				3E1DBE1907A7607900B31BA4,
-				3E1DBE1B07A7608000B31BA4,
-				3E1DBE1D07A760A600B31BA4,
 				3EE449E207A7DEDB00B93B2F,
 				3EE449E407A7DF0000B93B2F,
 				3E19255107A7E1FF00F9E44D,
@@ -1678,6 +1718,14 @@
 				3E19989607BAC5BD00AAC29A,
 				3E1998AF07BAC93600AAC29A,
 				3E19994A07BAE47700AAC29A,
+				3E09F7AC07C0387700381F59,
+				3E09F7AE07C0388400381F59,
+				3E09F81607C047BB00381F59,
+				3E09F82207C0489300381F59,
+				3E09F82807C0489F00381F59,
+				3E09F82E07C048AA00381F59,
+				3E09F83407C048B700381F59,
+				3E09F86007C04CE200381F59,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
