@@ -343,7 +343,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				try
 				{
 					// Make this folder an iFolder.
-					if(m_spiFolder->CreateiFolder(m_szFileUserClickedOn))
+					if(m_spiFolder->CreateiFolder(m_szShellPath, m_szFileUserClickedOn))
 					{
 						// Tell the shell to refresh the icon...
 						SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATH, m_szFileUserClickedOn, NULL);

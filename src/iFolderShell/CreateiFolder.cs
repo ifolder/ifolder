@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml;
 using System.Runtime.InteropServices;
 
 using Novell.Win32Util;
@@ -43,7 +44,8 @@ namespace Novell.iFolderCom
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(CreateiFolder));
 		private iFolderWebService ifWebService;
 		private bool successful;
-		private Domain selectedDomain;
+		private DomainInfo selectedDomain;
+		private string loadPath;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.ComboBox servers;
@@ -80,16 +82,13 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the collection of servers to display in the dropdown list.
 		/// </summary>
-		public ComboBox.ObjectCollection Servers
+		public ArrayList Servers
 		{
 			set
 			{
-				foreach (Domain d in value)
+				foreach (DomainInfo d in value)
 				{
-					if (!d.ShowAll)
-					{
-						servers.Items.Add(d);
-					}
+					servers.Items.Add(d);
 				}
 			}
 		}
@@ -97,7 +96,7 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the domain that will be initially selected in the dropdown list.
 		/// </summary>
-		public Domain SelectedDomain
+		public DomainInfo SelectedDomain
 		{
 			set { selectedDomain = value; }
 		}
@@ -109,6 +108,14 @@ namespace Novell.iFolderCom
 		{
 			get { return ifolderPath.Text; }
 			set { ifolderPath.Text = value; }
+		}
+
+		/// <summary>
+		/// Sets the load path of the assembly.
+		/// </summary>
+		public string LoadPath
+		{
+			set { loadPath = value; }
 		}
 		#endregion
 
@@ -358,23 +365,36 @@ namespace Novell.iFolderCom
 			{
 				try
 				{
-					SimiasWebService simiasWebService = new SimiasWebService();
-					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+					XmlDocument domainsDoc = new XmlDocument();
+					domainsDoc.Load(Path.Combine(loadPath, "domain.list"));
 
-					DomainInformation[] domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
-					foreach (DomainInformation domainInfo in domains)
+					XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+
+					// Get the ID of the default domain.
+					XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+					string defaultID = defaultDomainElement.GetAttribute("ID");
+
+					// Get the domains.
+					// Look for a domain with this ID.
+					XmlNodeList nodeList = element.GetElementsByTagName("domain");
+					foreach (XmlNode node in nodeList)
 					{
-						Domain domain = new Domain(domainInfo);
-						servers.Items.Add(domain);
+						string name = ((XmlElement)node).GetAttribute("name");
+						string id = ((XmlElement)node).GetAttribute("ID");
 
-						if ((selectedDomain == null) && domain.DomainInfo.IsDefault)
+						DomainInfo domainInfo = new DomainInfo(name, id);
+						servers.Items.Add(domainInfo);
+
+						if (id.Equals(defaultID))
 						{
-							selectedDomain = domain;
+							selectedDomain = domainInfo;
 						}
 					}
 
 					if (selectedDomain != null)
 						servers.SelectedItem = selectedDomain;
+					else
+						servers.SelectedIndex = 0;
 				}
 				catch
 				{
@@ -433,10 +453,10 @@ namespace Novell.iFolderCom
 					Cursor.Current = Cursors.WaitCursor;
 					if (ifWebService.CanBeiFolder(ifolderPath.Text))
 					{
-						Domain domain = (Domain)servers.SelectedItem;
+						DomainInfo domainInfo = (DomainInfo)servers.SelectedItem;
 
 						// Create the iFolder.
-						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domain.DomainInfo.ID);
+						iFolderWeb ifolder = ifWebService.CreateiFolderInDomain(ifolderPath.Text, domainInfo.ID);
 
 						// Notify the shell.
 						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolderPath.Text, IntPtr.Zero);

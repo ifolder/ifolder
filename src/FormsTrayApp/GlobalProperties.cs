@@ -76,6 +76,7 @@ namespace Novell.FormsTrayApp
 		private bool initialConnect = false;
 		private bool shutdown = false;
 		private Domain defaultDomain = null;
+		private string domainList;
 		private System.Windows.Forms.ListView iFolderView;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ContextMenu contextMenu1;
@@ -871,6 +872,9 @@ namespace Novell.FormsTrayApp
 				// Keep track of the default domain.
 				defaultDomain = domain;
 			}
+
+			// Update the domain list file.
+			addDomainToFile(domainInfo);
 		}
 
 		/// <summary>
@@ -916,6 +920,9 @@ namespace Novell.FormsTrayApp
 
 				servers.Items.Remove(domain);
 			}
+
+			// Update the domain list file.
+			removeDomainFromFile(domainInfo, defaultDomainID);
 		}
 
 		public void InitializeServerList()
@@ -926,6 +933,38 @@ namespace Novell.FormsTrayApp
 			Domain domain = new Domain(resourceManager.GetString("showAll"));
 			servers.Items.Add(domain);
 			servers.SelectedItem = domain;
+
+			domainList = Path.Combine(Application.StartupPath, "domain.list");
+			XmlDocument domainsDoc = new XmlDocument();
+
+			try
+			{
+				if (!File.Exists(domainList))
+				{
+					domainsDoc.LoadXml("<domains></domains>");
+				}
+				else
+				{
+					// Load the domain list file and clear it out.
+					domainsDoc.Load(domainList);
+					XmlNode node = domainsDoc.SelectSingleNode("/domains");
+					if (node == null)
+					{
+						XmlElement element = domainsDoc.CreateElement("domains");
+						domainsDoc.AppendChild(element);
+					}
+					else
+					{
+						node.RemoveAll();
+					}
+				}
+			}
+			catch (XmlException e)
+			{
+				domainsDoc.LoadXml("<domains></domains>");
+			}
+
+			saveXmlFile(domainsDoc);
 		}
 
 		/// <summary>
@@ -1014,6 +1053,125 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		private void addDomainToFile(DomainInformation domainInfo)
+		{
+			XmlDocument domainsDoc;
+
+			// Load the domain list file.
+			domainsDoc = new XmlDocument();
+			domainsDoc.Load(domainList);
+
+			XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+
+			bool found = false;
+
+			// Look for a domain with this ID.
+			XmlNodeList nodeList = element.GetElementsByTagName("domain");
+			foreach (XmlNode node in nodeList)
+			{
+				string id = ((XmlElement)node).GetAttribute("ID");
+				if (id.Equals(domainInfo.ID))
+				{
+					// The domain is already in the list.
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				// Add the domain.
+
+				// Create an element.
+				XmlElement domain = domainsDoc.CreateElement("domain");
+
+				// Add the attributes.
+				domain.SetAttribute("name", domainInfo.Name);
+				domain.SetAttribute("ID", domainInfo.ID);
+
+				// Add the element.
+				element.AppendChild(domain);
+			}
+
+			// Update the default domain.
+			if (domainInfo.IsDefault)
+			{
+				XmlElement defaultDomainElement = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+				if (defaultDomainElement == null)
+				{
+					defaultDomainElement = domainsDoc.CreateElement("defaultDomain");
+					defaultDomainElement.SetAttribute("ID", domainInfo.ID);
+					element.AppendChild(defaultDomainElement);
+				}
+				else
+				{
+					string id = defaultDomainElement.GetAttribute("ID");
+					if (!id.Equals(domainInfo.ID))
+					{
+						defaultDomainElement.SetAttribute("ID", domainInfo.ID);
+					}
+				}
+			}
+
+			saveXmlFile(domainsDoc);
+		}
+
+		private void removeDomainFromFile(DomainInformation domainInfo, string defaultDomainID)
+		{
+			XmlDocument domainsDoc;
+
+			// Load the domain list file.
+			domainsDoc = new XmlDocument();
+			domainsDoc.Load(domainList);
+
+			XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
+
+
+			// Look for a domain with this ID.
+			XmlNode domainNode = null;
+			XmlNodeList nodeList = element.GetElementsByTagName("domain");
+			foreach (XmlNode node in nodeList)
+			{
+				string id = ((XmlElement)node).GetAttribute("ID");
+				if (id.Equals(domainInfo.ID))
+				{
+					domainNode = node;
+					break;
+				}
+			}
+
+			if (domainNode != null)
+			{
+				// Remove the domain.
+				element.RemoveChild(domainNode);
+			}
+
+			// Update the default domain.
+			element = (XmlElement)domainsDoc.SelectSingleNode("/domains/defaultDomain");
+			if (!element.GetAttribute("ID").Equals(defaultDomainID))
+			{
+				element.SetAttribute("ID", defaultDomainID);
+			}
+
+			saveXmlFile(domainsDoc);
+		}
+
+		private void saveXmlFile(XmlDocument doc)
+		{
+			// Save the config file.
+			XmlTextWriter xtw = new XmlTextWriter(domainList, System.Text.Encoding.UTF8);
+			try
+			{
+				xtw.Formatting = Formatting.Indented;
+
+				doc.WriteTo(xtw);
+			}
+			finally
+			{
+				xtw.Close();
+			}
+		}
+
 		private void syncCollection(CollectionSyncEventArgs syncEventArgs)
 		{
 			try
@@ -1576,9 +1734,9 @@ namespace Novell.FormsTrayApp
 		private void menuCreate_Click(object sender, System.EventArgs e)
 		{
 			CreateiFolder createiFolder = new CreateiFolder();
-			createiFolder.Servers = servers.Items;
-			Domain selectedDomain = (Domain)servers.SelectedItem;
-			createiFolder.SelectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
+//			createiFolder.Servers = servers.Items;
+//			Domain selectedDomain = (Domain)servers.SelectedItem;
+//			createiFolder.SelectedDomain = selectedDomain.ShowAll ? defaultDomain : selectedDomain;
 			createiFolder.iFolderWebService = ifWebService;
 
 			if ((DialogResult.OK == createiFolder.ShowDialog()) && iFolderComponent.DisplayConfirmationEnabled)
