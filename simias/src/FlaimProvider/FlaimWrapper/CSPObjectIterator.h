@@ -25,6 +25,13 @@
 
 #include "CSPStore.h"
 
+typedef enum
+{
+	CUR = 0,
+	END,
+	SET
+} IndexOrigin;
+
 
 class CSPObjectIterator
 {
@@ -32,7 +39,9 @@ public:
 	CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int count, FLMBOOL includeColId);
 	virtual ~CSPObjectIterator(void);
 	int NextXml(FLMUNICODE *pOriginalBuffer, int nChars);
+	bool SetIndex(IndexOrigin origin, int offset);
 
+	
 private:
 	CSPStore	*m_pStore;
 	int			m_Count;

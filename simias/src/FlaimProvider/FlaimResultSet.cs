@@ -41,6 +41,9 @@ namespace Simias.Storage.Provider.Flaim
 		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
 		private static extern int FWGetNextObjectList(IntPtr pResults, [In, Out] char[] buffer, int nChars);
 
+		[DllImport("FlaimWrapper", CharSet=CharSet.Unicode)]
+		private static extern bool FWSetListIndex(IntPtr pResults, IndexOrigin origin, int offset);
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -88,9 +91,20 @@ namespace Simias.Storage.Provider.Flaim
 		}
 
 		/// <summary>
+		/// Set the Index to the specified offset from the origin.
+		/// </summary>
+		/// <param name="origin">The origin to move from</param>
+		/// <param name="offset">The offset to move the index by.</param>
+		/// <returns>True if successful.</returns>
+		public bool SetIndex(IndexOrigin origin, int offset)
+		{
+			return FWSetListIndex(pResults, origin, offset);
+		}
+
+		/// <summary>
 		/// Property to get the count of available objects.
 		/// </summary>
-		private int Count
+		public int Count
 		{
 			get
 			{

@@ -181,6 +181,12 @@ FLAIMWRAPPER_API int FWGetNextObjectList(CSPObjectIterator *pResults, FLMUNICODE
 	return (pResults->NextXml(pBuffer, nChars));
 }
 
+FLAIMWRAPPER_API bool FWSetListIndex(CSPObjectIterator *pResults, int origin, int offset)
+{
+	return (pResults->SetIndex((IndexOrigin)origin, offset));
+}
+
+
 FLAIMWRAPPER_API void FWNOP()
 {
 }

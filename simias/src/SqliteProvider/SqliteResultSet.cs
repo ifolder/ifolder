@@ -185,6 +185,17 @@ namespace Simias.Storage.Provider.Sqlite
 				return buffer.Length - length;
 			}
 		}
+		
+		/// <summary>
+		/// Set the Index to the specified offset from the origin.
+		/// </summary>
+		/// <param name="origin">The origin to move from</param>
+		/// <param name="offset">The offset to move the index by.</param>
+		/// <returns>True if successful.</returns>
+		public bool SetIndex(IndexOrigin origin, int offset)
+		{
+			return false;
+		}
 
 		/// <summary>
 		/// Property to get the count of available objects.

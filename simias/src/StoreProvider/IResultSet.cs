@@ -25,6 +25,13 @@ using System;
 
 namespace Simias.Storage.Provider
 {
+	public enum IndexOrigin
+	{
+		CUR = 0,
+		END,
+		SET
+	}
+
 	/// <summary>
 	/// Result set interface.
 	/// </summary>
@@ -38,5 +45,21 @@ namespace Simias.Storage.Provider
 		/// <param name="buffer">Buffer used to return the objects.</param>
 		/// <returns>true - objects returned. false - no more objects</returns>
 		int GetNext(ref char[] buffer);
+
+		/// <summary>
+		/// Set the Index the specified offset from the origin.
+		/// </summary>
+		/// <param name="origin">The origin to move from</param>
+		/// <param name="offset">The offset to move the index by.</param>
+		/// <returns>True if successful.</returns>
+		bool SetIndex(IndexOrigin origin, int offset);
+
+		/// <summary>
+		/// Gets the number of entries in the result set.
+		/// </summary>
+		int Count
+		{
+			get;
+		}
 	}
 }

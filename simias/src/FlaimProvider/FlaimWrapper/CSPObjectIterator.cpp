@@ -115,4 +115,30 @@ int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
 	return (len != -1 ? charsWritten - nChars : 0);
 }
 
+bool CSPObjectIterator::SetIndex(IndexOrigin origin, int offset)
+{
+	int newOffset = -1;
+	switch (origin)
+	{
+	case CUR:
+		newOffset += offset;
+		break;
+	case END:
+		newOffset = m_Count + offset;
+		break;
+	case SET:
+		newOffset = offset;
+		break;
+	}
+
+	if (newOffset < m_Count && newOffset > 0)
+	{
+			m_Index = newOffset;
+			return true;
+	}
+	else
+		return false;
+}
+
+
 
