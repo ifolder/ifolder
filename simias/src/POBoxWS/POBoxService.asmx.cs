@@ -457,17 +457,23 @@ namespace Simias.POBoxService.Web
 
 				poBox = POBox.POBox.GetPOBox(store, domainID, toUserID);
 
+				string[] hostAndPort;
+				char[] seps = {':'};
+				hostAndPort = this.Context.Request.Url.Authority.Split(seps);
+
+				Console.WriteLine("Host Address: " + hostAndPort[0]);
+
 				cSub = new Subscription(sharedCollection.Name + " subscription", "Subscription", fromUserID);
 				cSub.SubscriptionState = SubscriptionStates.Received;
 				cSub.ToName = toMember.Name;
 				cSub.ToIdentity = toUserID;
 				cSub.FromName = fromMember.Name;
 				cSub.FromIdentity = fromUserID;
-				cSub.POServiceURL = new Uri("http://" + this.Context.Request.Url.Authority + "/PostOffice.rem");
+				cSub.POServiceURL = new Uri("http://" + hostAndPort[0] + ":6436/PostOffice.rem");
 				cSub.SubscriptionCollectionID = sharedCollection.ID;
 				cSub.SubscriptionCollectionType = sharedCollectionType;
 				cSub.SubscriptionCollectionName = sharedCollection.Name;
-				cSub.SubscriptionCollectionURL = "http://" + this.Context.Request.Url.Authority + "/SyncService.rem";
+				cSub.SubscriptionCollectionURL = "http://" + hostAndPort[0] + ":6436/SyncService.rem";
 				cSub.DomainID = domainID;
 				cSub.DomainName = cDomain.Name;
 				cSub.SubscriptionKey = Guid.NewGuid().ToString();
