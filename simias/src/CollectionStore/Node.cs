@@ -285,6 +285,7 @@ namespace Simias.Storage
 			type = node.type;
 			properties = new PropertyList( node.properties );
 			properties.State = PropertyList.PropertyListState.Add;
+			properties.PropertyRoot.SetAttribute( XmlTags.IdAttr, ID );
 
 			// If the collection ID exists on the Node, remove it.
 			Property p = properties.GetSingleProperty( BaseSchema.CollectionId );
