@@ -535,12 +535,12 @@ namespace Novell.FormsTrayApp
 																						 this.menuCreate,
 																						 this.menuRefresh,
 																						 this.menuAccept,
-																						 this.menuRemove,
 																						 this.menuSeparator1,
 																						 this.menuShare,
 																						 this.menuResolve,
 																						 this.menuSyncNow,
 																						 this.menuRevert,
+																						 this.menuRemove,
 																						 this.menuSeparator2,
 																						 this.menuProperties});
 			this.contextMenu1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("contextMenu1.RightToLeft")));
@@ -589,7 +589,7 @@ namespace Novell.FormsTrayApp
 			// menuRemove
 			// 
 			this.menuRemove.Enabled = ((bool)(resources.GetObject("menuRemove.Enabled")));
-			this.menuRemove.Index = 4;
+			this.menuRemove.Index = 9;
 			this.menuRemove.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRemove.Shortcut")));
 			this.menuRemove.ShowShortcut = ((bool)(resources.GetObject("menuRemove.ShowShortcut")));
 			this.menuRemove.Text = resources.GetString("menuRemove.Text");
@@ -599,7 +599,7 @@ namespace Novell.FormsTrayApp
 			// menuSeparator1
 			// 
 			this.menuSeparator1.Enabled = ((bool)(resources.GetObject("menuSeparator1.Enabled")));
-			this.menuSeparator1.Index = 5;
+			this.menuSeparator1.Index = 4;
 			this.menuSeparator1.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSeparator1.Shortcut")));
 			this.menuSeparator1.ShowShortcut = ((bool)(resources.GetObject("menuSeparator1.ShowShortcut")));
 			this.menuSeparator1.Text = resources.GetString("menuSeparator1.Text");
@@ -608,7 +608,7 @@ namespace Novell.FormsTrayApp
 			// menuShare
 			// 
 			this.menuShare.Enabled = ((bool)(resources.GetObject("menuShare.Enabled")));
-			this.menuShare.Index = 6;
+			this.menuShare.Index = 5;
 			this.menuShare.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuShare.Shortcut")));
 			this.menuShare.ShowShortcut = ((bool)(resources.GetObject("menuShare.ShowShortcut")));
 			this.menuShare.Text = resources.GetString("menuShare.Text");
@@ -618,7 +618,7 @@ namespace Novell.FormsTrayApp
 			// menuResolve
 			// 
 			this.menuResolve.Enabled = ((bool)(resources.GetObject("menuResolve.Enabled")));
-			this.menuResolve.Index = 7;
+			this.menuResolve.Index = 6;
 			this.menuResolve.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuResolve.Shortcut")));
 			this.menuResolve.ShowShortcut = ((bool)(resources.GetObject("menuResolve.ShowShortcut")));
 			this.menuResolve.Text = resources.GetString("menuResolve.Text");
@@ -628,7 +628,7 @@ namespace Novell.FormsTrayApp
 			// menuSyncNow
 			// 
 			this.menuSyncNow.Enabled = ((bool)(resources.GetObject("menuSyncNow.Enabled")));
-			this.menuSyncNow.Index = 8;
+			this.menuSyncNow.Index = 7;
 			this.menuSyncNow.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSyncNow.Shortcut")));
 			this.menuSyncNow.ShowShortcut = ((bool)(resources.GetObject("menuSyncNow.ShowShortcut")));
 			this.menuSyncNow.Text = resources.GetString("menuSyncNow.Text");
@@ -638,7 +638,7 @@ namespace Novell.FormsTrayApp
 			// menuRevert
 			// 
 			this.menuRevert.Enabled = ((bool)(resources.GetObject("menuRevert.Enabled")));
-			this.menuRevert.Index = 9;
+			this.menuRevert.Index = 8;
 			this.menuRevert.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuRevert.Shortcut")));
 			this.menuRevert.ShowShortcut = ((bool)(resources.GetObject("menuRevert.ShowShortcut")));
 			this.menuRevert.Text = resources.GetString("menuRevert.Text");
@@ -2527,8 +2527,8 @@ namespace Novell.FormsTrayApp
 			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
 			menuRemove.Visible = 
 				(iFolderView.SelectedItems.Count == 1) && 
-				((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription &&
-				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
+				(!((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription ||
+				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available"));
 			
 			if (menuRemove.Visible)
 			{
@@ -2684,7 +2684,32 @@ namespace Novell.FormsTrayApp
 			iFolder ifolder = (iFolder)lvi.Tag;
 			try
 			{
-				ifWebService.DeclineiFolderInvitation(ifolder.ID);
+				if (ifolder.IsSubscription)
+				{
+					ifWebService.DeclineiFolderInvitation(ifolder.ID);
+				}
+				else
+				{
+					// Revert the iFolder.
+					iFolder newiFolder = ifWebService.RevertiFolder(ifolder.ID);
+
+					// Notify the shell.
+					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+
+					// Update the listview item.
+					lvi.Tag = newiFolder;
+
+					lock (ht)
+					{
+						ht.Remove(ifolder.ID);
+						ht.Add(newiFolder.ID, lvi);
+					}
+
+					updateListViewItem(lvi);
+
+					// Decline the invitation.
+					ifWebService.DeclineiFolderInvitation(newiFolder.ID);
+				}
 			}
 			catch (Exception ex)
 			{
