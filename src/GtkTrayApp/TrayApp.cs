@@ -115,6 +115,7 @@ namespace Novell.iFolder
 
 				tIcon.ShowAll();	
 
+				iFolderManager.CreateDefaultExclusions(conf);
 				sManager = new Simias.Service.Manager(conf);
 
 				ServicesStateNotify = 

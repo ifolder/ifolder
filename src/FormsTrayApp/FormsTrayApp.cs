@@ -314,6 +314,7 @@ namespace Novell.iFolder.FormsTrayApp
 			try
 			{
 				config = Configuration.GetConfiguration();
+				iFolderManager.CreateDefaultExclusions(config);
 
 				SimiasLogManager.Configure(config);
 			
