@@ -78,7 +78,7 @@ namespace StoreBrowser
 		#region Class Members
 		private static string NameTag = "name";
 		private static string TypeTag = "type";
-		private static string FlagTag = "flag";
+		private static string FlagTag = "flags";
 
 		private XmlElement element;
 		#endregion
