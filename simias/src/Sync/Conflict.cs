@@ -47,6 +47,7 @@ public class Conflict
 	{
 		this.collection = collection;
 		this.node = node;
+		conflictNode = collection.GetNodeFromCollision(node);
 	}
 
 	//---------------------------------------------------------------------------
