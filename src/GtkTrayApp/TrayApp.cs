@@ -230,9 +230,11 @@ namespace Novell.iFolder
 //			ifolder_browser_item.Activated += 
 //					new EventHandler(show_ifolder_browser);
 
-			MenuItem connect_item = new MenuItem ("Connect to Server...");
+			MenuItem connect_item = new MenuItem ("Set Server Information");
 			trayMenu.Append (connect_item);
 			connect_item.Activated += new EventHandler(show_server_info);
+
+			trayMenu.Append(new SeparatorMenuItem());
 
 			MenuItem InvWizard_item = new MenuItem ("Invitation Assistant");
 			trayMenu.Append (InvWizard_item);
@@ -341,15 +343,6 @@ namespace Novell.iFolder
 			propDialog = new ApplicationProperties();
 			propDialog.Run();
 		}
-
-/*		static void show_ifolder_browser(object o, EventArgs args)
-		{
-			iFolderBrowser browser;
-
-			browser = new iFolderBrowser();
-			browser.ShowAll();
-		}
-*/
 
 		static void show_rbbrowser(object o, EventArgs args)
 		{

@@ -235,6 +235,7 @@
 		  <property name="rules_hint">False</property>
 		  <property name="reorderable">False</property>
 		  <property name="enable_search">True</property>
+		  <signal name="row_activated" handler="on_ColTreeView_row_activated" last_modification_time="Fri, 09 Jul 2004 03:20:11 GMT"/>
 		</widget>
 	      </child>
 	    </widget>
