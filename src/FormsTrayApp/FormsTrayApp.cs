@@ -334,7 +334,7 @@ namespace Novell.iFolder.FormsTrayApp
 			monitor.StartInfo.FileName = "CsEventBroker.exe";
 			monitor.Start();
 			*/
-			this.publisher = new EventPublisher(new Configuration(), "Event_Domain");
+			this.publisher = new EventPublisher(new Configuration());
 
 			synkEvent = new AutoResetEvent(false);
 
