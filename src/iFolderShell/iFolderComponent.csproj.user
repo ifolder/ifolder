@@ -1,0 +1,60 @@
+<VisualStudioProject>
+    <CSHARP LastOpenVersion = "7.10.3077" >
+        <Build>
+            <Settings ReferencePath = "C:\dev\denali\src\FormsBookLib\;C:\dev\denali\src\iFolder\;C:\dev\denali\src\CollectionStore\;C:\dev\denali\src\AddressBook\;C:\ifolder\denali\src\iFolder\;C:\ifolder\denali\src\CollectionStore\;C:\ifolder\denali\src\AddressBook\;C:\ifolder\denali\src\FormsBookLib\" >
+                <Config
+                    Name = "Debug"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "false"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "false"
+                >
+                    <InteropRegistration
+                        RegisteredComClassic = "true"
+                        RegisteredOutput = "iFolderComponent.dll"
+                        RegisteredTypeLib = "iFolderComponent.tlb"
+                    />
+                </Config>
+                <Config
+                    Name = "Release"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "false"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "false"
+                >
+                    <InteropRegistration
+                        RegisteredComClassic = "true"
+                        RegisteredOutput = "iFolderComponent.dll"
+                        RegisteredTypeLib = "iFolderComponent.tlb"
+                    />
+                </Config>
+            </Settings>
+        </Build>
+        <OtherProjectSettings
+            CopyProjectDestinationFolder = ""
+            CopyProjectUncPath = ""
+            CopyProjectOption = "0"
+            ProjectView = "ProjectFiles"
+            ProjectTrust = "0"
+        />
+    </CSHARP>
+</VisualStudioProject>
+
