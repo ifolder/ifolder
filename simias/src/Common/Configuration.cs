@@ -74,8 +74,7 @@ namespace Simias
 		/// </summary>
 		public string StorePath
 		{
-			get { return fixupPath( Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) ); }
-			set { Set( storeProvider, storeProviderPath, fixupPath( value ) ); }
+			get { return fixupPath( CleanStorePath ); }
 		}
 
 		/// <summary>
