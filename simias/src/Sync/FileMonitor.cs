@@ -95,12 +95,10 @@ namespace Simias.Sync
 			internal void update(FileSystemEventArgs e)
 			{
 				eArgs = e;
-				eventNumber = Interlocked.Increment(ref counter);
 			}
 
 			internal void update()
 			{
-				eventNumber = Interlocked.Increment(ref counter);
 			}
 			
 			#region IComparable Members
