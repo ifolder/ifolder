@@ -251,6 +251,7 @@
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string" />
             <xs:element minOccurs="0" maxOccurs="1" name="SubscriptionID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -878,6 +879,7 @@
   <message name="RemoveSubscriptionHttpGetIn">
     <part name="DomainID" type="s:string" />
     <part name="SubscriptionID" type="s:string" />
+    <part name="UserID" type="s:string" />
   </message>
   <message name="RemoveSubscriptionHttpGetOut" />
   <message name="GetiFolderUsersHttpGetIn">
@@ -1082,6 +1084,7 @@
   <message name="RemoveSubscriptionHttpPostIn">
     <part name="DomainID" type="s:string" />
     <part name="SubscriptionID" type="s:string" />
+    <part name="UserID" type="s:string" />
   </message>
   <message name="RemoveSubscriptionHttpPostOut" />
   <message name="GetiFolderUsersHttpPostIn">

@@ -49,6 +49,7 @@ namespace Novell.FormsTrayApp
 		//private Hashtable ht;
 		//private EventSubscriber subscriber;
 		private iFolderWebService ifWebService;
+		private string currentUserID;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -1283,6 +1284,7 @@ namespace Novell.FormsTrayApp
 			{
 				// TODO: first-time connect takes a while ... display some sort of status message.
 				iFolderSettings ifSettings = ifWebService.GetSettings();
+				currentUserID = ifSettings.CurrentUserID;
 				displayConfirmation.Checked = ifSettings.DisplayConfirmation;
 				if (ifSettings.HaveEnterprise)
 				{
@@ -1595,7 +1597,7 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID);
+				ifWebService.RemoveSubscription(ifolder.Domain, ifolder.ID, currentUserID);
 				lvi.Remove();
 			}
 			catch (WebException ex)

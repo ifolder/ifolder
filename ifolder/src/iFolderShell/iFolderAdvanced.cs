@@ -1061,7 +1061,7 @@ namespace Novell.iFolderCom
 						else
 						{
 							// Delete the subscription.
-							ifWebService.RemoveSubscription(ifolder.Domain, slMember.iFolderUser.ID);
+							ifWebService.RemoveSubscription(ifolder.Domain, slMember.iFolderUser.ID, ifolder.CurrentUserID);
 						}
 					}
 					catch (WebException e)

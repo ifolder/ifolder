@@ -278,13 +278,15 @@ namespace Simias.Web
 			// CRG: There was some code in here to check for allowed types of
 			// paths but it was Linux specific so I didn't include it from
 			// the source in iFolderManager
+
+			// TODO: Change this into a search
 			foreach(ShallowNode sn in store)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
 				DirNode dirNode = col.GetRootDirectory();
 				if(dirNode != null)
 				{
-					Uri colPath = GetUriPath( dirNode.GetFullPath(col) );
+					Uri colPath = GetUriPath(dirNode.GetFullPath(col));
 
 					if(nPath.LocalPath.StartsWith( colPath.LocalPath ) || 
 						colPath.LocalPath.StartsWith( nPath.LocalPath ) )
@@ -294,6 +296,7 @@ namespace Simias.Web
 					}
 				}
 			}
+
 			return canBeCollection;
 		}
 
@@ -438,9 +441,9 @@ namespace Simias.Web
 			if(collection == null)
 				throw new Exception("Invalid CollectionID");
 
-			// If this is a WorkGroup Collection, remove all subscriptions
+			// If this is not a WorkGroup Collection, remove all subscriptions
 			// for it.
-			if(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID)
+			if(collection.Domain != Simias.Storage.Domain.WorkGroupDomainID)
 				RemoveAllSubscriptions(store, collection);
 
 			collection.Delete();
@@ -659,26 +662,33 @@ namespace Simias.Web
 		/// <param name="DomainID">
 		/// The ID of the domain that the subscription belongs to.
 		/// </param>
-		/// <param name="SubsrciptionID">
+		/// <param name="SubscriptionID">
 		/// The ID of the subscription to remove.
 		/// </param>
+		/// <param name="UserID">
+		/// The ID of the user owning the POBox where the subscription is stored.
+		/// </param>
 		public static void RemoveSubscription(string DomainID,
-											  string SubscriptionID)
+											  string SubscriptionID,
+											  string UserID)
 		{
 			Store store = Store.GetStore();
 
 			// Get the current member's POBox
-			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
-																   DomainID);
-
-			Node node = poBox.GetNodeByID(SubscriptionID);
-			if (node != null)
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store,
+																   DomainID,
+																   UserID);
+			if (poBox != null)
 			{
-				Subscription sub = new Subscription(node);
-				
-				if(sub != null)
+				Node node = poBox.GetNodeByID(SubscriptionID);
+				if (node != null)
 				{
-					poBox.Commit(poBox.Delete(sub));
+					Subscription sub = new Subscription(node);
+
+					if(sub != null)
+					{
+						poBox.Commit(poBox.Delete(sub));
+					}
 				}
 			}
 		}
