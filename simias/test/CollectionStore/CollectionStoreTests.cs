@@ -2622,12 +2622,12 @@ namespace Simias.Storage.Tests
 			enterpriseDomain.Commit( nodeList );
 
 			// Get all of the members in the domain.
-			Object searchContext;
+			string searchContext;
 			Member[] memberList;
 			int total;
 			int count = 0;
 
-			bool moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, out searchContext, out memberList, out total, 3 );
+			bool moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, 3, out searchContext, out memberList, out total );
 			while ( memberList != null )
 			{
 				foreach( Member member in memberList )
@@ -2636,7 +2636,7 @@ namespace Simias.Storage.Tests
 					++count;
 				}
 
-				moreEntries = DomainProvider.FindNextDomainMembers( enterpriseDomain.ID, ref searchContext, out memberList, 3 );
+				moreEntries = DomainProvider.FindNextDomainMembers( enterpriseDomain.ID, ref searchContext, 3, out memberList );
 			}
 
 			DomainProvider.FindCloseDomainMembers( enterpriseDomain.ID, searchContext );
@@ -2649,7 +2649,7 @@ namespace Simias.Storage.Tests
 
 			// Only get the members from the Dynamite family.
 			count = 0;
-			moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, PropertyTags.Family, "Dyn", SearchOp.Begins, out searchContext, out memberList, out total, 10 );
+			moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, PropertyTags.Family, "Dyn", SearchOp.Begins, 10, out searchContext, out memberList, out total );
 			while ( memberList != null )
 			{
 				foreach( Member member in memberList )
@@ -2658,7 +2658,7 @@ namespace Simias.Storage.Tests
 					++count;
 				}
 
-				moreEntries = DomainProvider.FindNextDomainMembers( enterpriseDomain.ID, ref searchContext, out memberList, 3 );
+				moreEntries = DomainProvider.FindNextDomainMembers( enterpriseDomain.ID, ref searchContext, 3, out memberList );
 			}
 
 			DomainProvider.FindCloseDomainMembers( enterpriseDomain.ID, searchContext );
@@ -2670,10 +2670,10 @@ namespace Simias.Storage.Tests
 			}
 
 			// Try to back up during the search.
-			moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, out searchContext, out memberList, out total, 5 );
+			moreEntries = DomainProvider.FindFirstDomainMembers( enterpriseDomain.ID, 5, out searchContext, out memberList, out total );
 			if ( moreEntries == true )
 			{
-				moreEntries = DomainProvider.FindPreviousDomainMembers( enterpriseDomain.ID, ref searchContext, out memberList, 5 );
+				moreEntries = DomainProvider.FindPreviousDomainMembers( enterpriseDomain.ID, ref searchContext, 5, out memberList );
 				if ( ( memberList == null ) || ( memberList.Length != 5 ) || ( moreEntries == false ) )
 				{
 					throw new ApplicationException( "Find previous results failed." );
