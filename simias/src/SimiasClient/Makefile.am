@@ -23,7 +23,7 @@ all: SimiasClient.dll
 
 $(srcdir)/SimiasService.cs: $(srcdir)/../WebService/Simias.wsdl
 if WINDOWS
-	wsdl $(srcdir)/../WebService/Simias.wsdl
+	wsdl /out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 if LINUX
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
@@ -32,7 +32,7 @@ if DARWIN
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 
-SimiasClient.dll: $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES) $(srcdir)/SimiasSetup.cs $(srcdir)/SimiasService.cs
+SimiasClient.dll: $(srcdir)/SimiasService.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(DOC_FILE_CMD) 
 
 if DEBUG
