@@ -101,7 +101,7 @@ namespace Simias.POBox
 						box = POBox.GetPOBox(store, message.DomainID, temp.ToIdentity);
 						if (box != null)
 						{
-							subscription = new Subscription(message.Name, message.MessageID);
+							subscription = new Subscription(message);
 							subscription.SubscriptionState =  SubscriptionStates.Received;
 							subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
 							subscription.FromName = temp.FromName;
