@@ -94,6 +94,11 @@
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\..\..\final\web\bin\SimiasClient.dll"
+                />
             </References>
         </Build>
         <Files>

@@ -30,6 +30,8 @@ using System.Data;
 using System.IO;
 using System.Xml;
 
+using Simias.Client;
+
 
 namespace StoreBrowser
 {
@@ -78,18 +80,12 @@ namespace StoreBrowser
 			//
 			InitializeComponent();
 
-			this.hostName = GetHostName();
-			if ( this.hostName == null )
+			Uri uri = Manager.LocalServiceUrl;
+			hostName = ( uri != null ) ? uri.AbsoluteUri : String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
+			HostDialog hDiag = new HostDialog(hostName);
+			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
-				HostDialog hDiag = new HostDialog(this.hostName);
-				if (hDiag.ShowDialog() == DialogResult.OK)
-				{
-					hostName = hDiag.HostName;
-				}
-				else
-				{
-					this.hostName = String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
-				}
+				hostName = hDiag.HostName;
 			}
 
 			AddRecentMI();
@@ -662,63 +658,6 @@ namespace StoreBrowser
 					listView1.Refresh();
 				}
 			}
-		}
-
-		private string GetHostName()
-		{
-			string hostName = null;
-			string configFilePath = Path.Combine( DefaultPath, "Simias.config" );
-
-			if ( File.Exists( configFilePath ) )
-			{
-				XmlDocument configDoc = new XmlDocument();
-				configDoc.Load( configFilePath );
-
-				foreach ( XmlElement e1 in configDoc.DocumentElement )
-				{
-					if ( e1.GetAttribute( "name" ) == "ServiceManager" )
-					{
-						foreach ( XmlElement e2 in e1 )
-						{
-							if ( e2.GetAttribute( "name" ) == "WebServiceUri" )
-							{
-								hostName = e2.GetAttribute( "value" );
-								break;
-							}
-						}
-
-						break;
-					}
-				}
-			}
-
-			return hostName;
-		}
-
-		private string DefaultPath
-		{
-			get
-			{
-				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				if ((path == null) || (path.Length == 0))
-				{
-					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				}
-
-				return fixupPath(path);
-			}
-		}
-
-		private string fixupPath(string path)
-		{
-			if ((path.EndsWith("simias") == false) &&
-				(path.EndsWith("simias/") == false) &&
-				(path.EndsWith(@"simias\") == false))
-			{
-				path = Path.Combine(path, "simias");
-			}
-
-			return path;
 		}
 	}
 
