@@ -83,6 +83,7 @@ namespace Novell.iFolder
 		private Gdk.Pixbuf			ConflictPixBuf;
 
 		private Statusbar			MainStatusBar;
+		private ProgressBar			SyncBar;
 		private Gtk.Notebook		MainNoteBook;
 		private Gtk.TreeView		iFolderTreeView;
 		private Gtk.ListStore		iFolderTreeStore;
@@ -290,7 +291,6 @@ namespace Novell.iFolder
 			vbox.PackStart(MainNoteBook, true, true, 0);
 			MainNoteBook.SwitchPage += 
 					new SwitchPageHandler(OnSwitchPage);
-
 
 
 			//-----------------------------
@@ -2095,6 +2095,8 @@ namespace Novell.iFolder
 				}
 				case Action.StopSync:
 				{
+					if(SyncBar != null)
+						SyncBar.Hide();
 
 					if(args.Successful)
 					{
@@ -2166,6 +2168,40 @@ namespace Novell.iFolder
 						SyncFileName = args.Name;
 					}
 					break;
+			}
+
+			if(SyncBar == null)
+			{
+				SyncBar = new ProgressBar();
+				SyncBar.Orientation = Gtk.ProgressBarOrientation.LeftToRight;
+				SyncBar.PulseStep = .01;
+				MainStatusBar.PackEnd(SyncBar, false, true, 0);
+			}
+
+			if(args.SizeRemaining == args.SizeToSync)
+			{
+				if(args.SizeToSync > 0)
+				{
+					SyncBar.Show();
+					SyncBar.Fraction = 0;
+					Console.WriteLine("Show fraction 0");
+				}
+				else
+					SyncBar.Hide();
+
+			}
+			else
+			{
+				SyncBar.Show();
+				if(args.SizeToSync == 0)
+					SyncBar.Fraction = 1;
+				else
+				{
+					double frac = (((double)args.SizeToSync) - 
+									((double)args.SizeRemaining)) / 
+												((double)args.SizeToSync);
+					SyncBar.Fraction = frac;
+				}
 			}
 		}
 
