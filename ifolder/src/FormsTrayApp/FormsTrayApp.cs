@@ -543,9 +543,9 @@ namespace Novell.FormsTrayApp
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
 			this.menuLogin = new System.Windows.Forms.MenuItem();
+			this.menuJoin = new System.Windows.Forms.MenuItem();
 			this.menuPreferences = new System.Windows.Forms.MenuItem();
 			this.menuSyncLog = new System.Windows.Forms.MenuItem();
-			this.menuJoin = new System.Windows.Forms.MenuItem();
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
@@ -637,6 +637,16 @@ namespace Novell.FormsTrayApp
 			this.menuLogin.Visible = ((bool)(resources.GetObject("menuLogin.Visible")));
 			this.menuLogin.Click += new System.EventHandler(this.menuLogin_Click);
 			// 
+			// menuJoin
+			// 
+			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
+			this.menuJoin.Index = 4;
+			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
+			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
+			this.menuJoin.Text = resources.GetString("menuJoin.Text");
+			this.menuJoin.Visible = ((bool)(resources.GetObject("menuJoin.Visible")));
+			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
+			// 
 			// menuPreferences
 			// 
 			this.menuPreferences.Enabled = ((bool)(resources.GetObject("menuPreferences.Enabled")));
@@ -656,16 +666,6 @@ namespace Novell.FormsTrayApp
 			this.menuSyncLog.Text = resources.GetString("menuSyncLog.Text");
 			this.menuSyncLog.Visible = ((bool)(resources.GetObject("menuSyncLog.Visible")));
 			this.menuSyncLog.Click += new System.EventHandler(this.menuSyncLog_Click);
-			// 
-			// menuJoin
-			// 
-			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
-			this.menuJoin.Index = 4;
-			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
-			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
-			this.menuJoin.Text = resources.GetString("menuJoin.Text");
-			this.menuJoin.Visible = ((bool)(resources.GetObject("menuJoin.Visible")));
-			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
 			// 
 			// menuHelp
 			// 

@@ -1262,14 +1262,14 @@ namespace Novell.FormsTrayApp
 			// Show the first tab page by default.
 			tabControl1.SelectedTab = tabAccounts;
 
-			if (addAccount.Enabled)
+/*			if (addAccount.Enabled)
 			{
 				this.addAccount_Click(this, new EventArgs());
 			}
 			else
 			{
 				userName.Focus();
-			}
+			}*/
 		}
 
 		/// <summary>
