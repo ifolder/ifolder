@@ -343,12 +343,15 @@ public class Dredger
 		{
 			store = new Store(conf);
 			paused = shuttingDown = false;
-			// Start listening to file change events.
-			//es = new EventSubscriber(conf);
-			//es.FileChanged += new FileEventHandler(es_FileChanged);
-			//es.FileCreated += new FileEventHandler(es_FileCreated);
-			//es.FileDeleted += new FileEventHandler(es_FileDeleted);
-			//es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
+			if (!MyEnvironment.Mono)
+			{
+				// Start listening to file change events.
+				es = new EventSubscriber(conf);
+				es.FileChanged += new FileEventHandler(es_FileChanged);
+				es.FileCreated += new FileEventHandler(es_FileCreated);
+				es.FileDeleted += new FileEventHandler(es_FileDeleted);
+				es.FileRenamed += new FileRenameEventHandler(es_FileRenamed);
+			}
 			thread = new Thread(new ThreadStart(DoDredge));
 			thread.IsBackground = true;
 			thread.Priority = ThreadPriority.BelowNormal;
@@ -561,6 +564,10 @@ public class Dredger
 				Log.Spew("Adding file node for {0} {1} from event.", path, fnode.ID);
 				collection.Commit(fnode);
 			}
+			else
+			{
+				needToDredge = true;
+			}
 		}
 
 		void AddDirNode(Collection collection, FileEventArgs args)
@@ -577,6 +584,10 @@ public class Dredger
 				dnode.CreationTime = Directory.GetCreationTime(path);
 				Log.Spew("Adding dir node for {0} {1} from event.", path, dnode.ID);
 				collection.Commit(dnode);
+			}
+			else
+			{
+				needToDredge = true;
 			}
 		}
 
@@ -683,8 +694,10 @@ public class Dredger
 			}
 			else
 			{
+				needToDredge = true;
 				// TODO is this the right thing to do on a rootDir rename.
 				// This is a rename of a root node do not sync it back.
+				/*
 				SyncCollection sCol = new SyncCollection(collection);
 				sCol.Synchronizable = false;
 				sCol.Commit(sCol);
@@ -694,6 +707,7 @@ public class Dredger
 				{
 
 				}
+				*/
 			}
 		}
 	}
