@@ -143,7 +143,7 @@ public class SynkerServiceA: SyncCollectionService
 			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
 				throw new UnauthorizedAccessException("Current user cannot read this collection");
 			NodeStamp[] nss = ops.GetNodeStamps();
-			Log.Spew("server got of {0} NodeStamps", nss.Length);
+			Log.Spew("server returning {0} NodeStamps", nss.Length);
 			return nss;
 		}
 		catch (Exception e) { Log.Uncaught(e); }

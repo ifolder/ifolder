@@ -40,13 +40,24 @@ public class Conflict
 
 	//---------------------------------------------------------------------------
 	/// <summary>
-	/// constructor, looks a lot like a Node
+	/// constructor -- Conflict looks a lot like a Node.
+	/// Perhaps it should be derived from Node.
 	/// </summary>
 	public Conflict(Collection collection, Node node)
 	{
 		this.collection = collection;
 		this.node = node;
-		conflictNode = collection.GetNodeFromCollision(node);
+		if ((conflictNode = collection.GetNodeFromCollision(node)) != null)
+		{
+			conflictNode.IncarnationUpdate = conflictNode.LocalIncarnation;
+			Log.Spew("Reconstituted conflict node {2} local {0}, master {1}",
+					conflictNode.LocalIncarnation, conflictNode.MasterIncarnation, conflictNode.Name);
+		}
+		else
+		{
+			Log.Spew("node {0} is not conflicted", node.Name);
+			Log.Assert(!collection.HasCollisions(node));
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -142,8 +153,7 @@ public class Conflict
 		{
 			File.Delete(UpdateConflictPath);
 			node = collection.DeleteCollision(node);
-			//FNCONFLICT PROP: node.SetIncarnations(conflictNode.LocalIncarnation, conflictNode.MasterIncarnation);
-			node.IncarnationUpdate = conflictNode.MasterIncarnation;
+			node.SetIncarnationValues(conflictNode.MasterIncarnation, conflictNode.LocalIncarnation);
 			collection.Commit(node);
 			return;
 		}
@@ -157,8 +167,8 @@ public class Conflict
 		collection.ImportNode(conflictNode, node.LocalIncarnation);
 		if (fncpath == null)
 			conflictNode = collection.DeleteCollision(conflictNode);
-		//FNCONFLICT PROP: else
-		//FNCONFLICT PROP: 	conflictNode = collection.CreateCollision(conflictNode.ID);
+		else
+			conflictNode = collection.CreateCollision(conflictNode.ID);
 		collection.Commit(conflictNode);
 	}
 

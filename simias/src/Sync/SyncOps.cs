@@ -209,37 +209,23 @@ internal class SyncOps
 		foreach (ShallowNode sn in collection)
 		{
 			Node node = new Node(collection, sn);
+			string path = OutgoingNode.GetOutNode(collection, ref node);
 			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 			if (onServer && tombstone)
 				continue;
 			NodeStamp stamp = new NodeStamp();
 			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-
-			//DEBUG start
-			if (node.Properties.GetSingleProperty( PropertyTags.MasterIncarnation ) == null)
-			{
-				Log.Spew("Node {0} has no MasterIncarnation", node.Name);
-				stamp.masterIncarn = node.LocalIncarnation; //just a guess
-			}
-			else
-			//DEBUG end
-				stamp.masterIncarn = node.MasterIncarnation;
-
+			stamp.masterIncarn = node.MasterIncarnation;
 			stamp.id = new Nid(node.ID);
 			stamp.name = node.Name;
 
 			//TODO: another place to handle multiple forks
-			BaseFileNode bfn = CastToBaseFileNode(collection, node);
-			if (bfn == null)
-				stamp.streamsSize = -1;
-			else
-				stamp.streamsSize = new FileInfo(bfn.GetFullPath(collection)).Length;
-			
+			stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
 			stampList.Add(stamp);
 		}
 
 		stampList.Sort();
-		Log.Spew("Found {0} nodes in {1}", stampList.Count, collection.Name);
+		//Log.Spew("Found {0} nodes in {1}", stampList.Count, collection.Name);
 		return (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
 	}
 

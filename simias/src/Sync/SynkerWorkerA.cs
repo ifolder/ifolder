@@ -197,6 +197,8 @@ public class SynkerWorkerA: SyncCollectionWorker
 				else if (sstamps[si].localIncarn != cstamps[ci].masterIncarn)
 				{
 					Log.Assert(sstamps[si].localIncarn > cstamps[ci].masterIncarn);
+					Log.Spew("server incarn {0}, client incarn {1}, client thinks server is {2}",
+							sstamps[si].localIncarn, cstamps[ci].localIncarn, cstamps[ci].masterIncarn);
 					GetNodeFromServer(ref sstamps[si], "has changed on server, get it");
 				}
 				else if (cstamps[ci].localIncarn != cstamps[ci].masterIncarn)

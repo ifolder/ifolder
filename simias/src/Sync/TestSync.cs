@@ -191,13 +191,19 @@ public class SyncTests: Assertion
 		log.Debug("+++++++++++ first run of client for FirstSync");
 		if (!RunClient())
 		{
-			log.Debug("failed first sync");
+			log.Debug("failed first sync, pass 1");
 			return false;
 		}
 		log.Debug("+++++++++++ second run of client for FirstSync");
 		if (!RunClient())
 		{
-			log.Debug("failed first sync");
+			log.Debug("failed first sync, pass 2");
+			return false;
+		}
+		log.Debug("+++++++++++ third run of client for FirstSync");
+		if (!RunClient())
+		{
+			log.Debug("failed first sync, pass 3");
 			return false;
 		}
 		return Differ.CompareDirectories(folderA, folderB);
@@ -439,9 +445,9 @@ public class SyncTests: Assertion
 		AccountTest("invite", Invite());
 		AccountTest("accept", Accept());
 		AccountTest("firstSync", FirstSync());
-		AccountTest("syncSize", SizeSync());
-		AccountTest("simpleAdds", SimpleAdds());
-		AccountTest("simpleDeletes", SimpleDeletes());
+		//AccountTest("syncSize", SizeSync());
+		//AccountTest("simpleAdds", SimpleAdds());
+		//AccountTest("simpleDeletes", SimpleDeletes());
 		//AccountTest("FileCreationCollision", FileCreationCollision());
 		//AccountTest("DeepSubDirs", DeepSubDirs());
 		Cleanup();

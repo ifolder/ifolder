@@ -47,6 +47,23 @@ internal class OutgoingNode
 		this.collection = collection;
 	}
 
+	public static string GetOutNode(Collection collection, ref Node node)
+	{
+		string path;
+		Conflict cf = new Conflict(collection, node);
+		if (cf.IsUpdateConflict)
+		{
+			path = cf.UpdateConflictPath;
+			node = cf.UpdateConflictNode;
+		}
+		else if (cf.IsFileNameConflict)
+			path = cf.FileNameConflictPath;
+		else
+			path = cf.NonconflictedPath;
+		return path;
+	}
+
+
 	public Node Start(Nid nid)
 	{
 		nid.Validate();
@@ -63,18 +80,7 @@ internal class OutgoingNode
 			return null;
 		}
 
-		string path;
-		Conflict cf = new Conflict(collection, node);
-		if (cf.IsUpdateConflict)
-		{
-			path = cf.UpdateConflictPath;
-			node = cf.UpdateConflictNode;
-		}
-		else if (cf.IsFileNameConflict)
-			path = cf.FileNameConflictPath;
-		else
-			path = cf.NonconflictedPath;
-
+		string path = GetOutNode(collection, ref node);
 		if (path != null)
 		{
 			/* TODO: handle multiple forks (streams), EAs, etc. For right now

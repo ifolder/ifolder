@@ -71,7 +71,7 @@ public class SyncSize
 				BinaryFormatter bf = new BinaryFormatter();
 				bf.Serialize(ms, node);
 
-				//Log.Spew("Adding node {0} to send size: fileSize = {1}, nodeSize = {2}", node.Name, fileSize, ms.Length);
+				Log.Spew("Adding node {0} to send size: fileSize = {1}, nodeSize = {2}", node.Name, fileSize, ms.Length );
 				maxBytesToSend += (ulong)fileSize + (ulong)ms.Length;
 				nodeCount++;
 			}

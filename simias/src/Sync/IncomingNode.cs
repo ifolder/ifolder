@@ -69,7 +69,7 @@ internal class IncomingNode
 
 	Collection collection;
 	bool onServer;
-	Node node;
+	Node node, oldNode;
 	FileInfo fileInfo;
 	class Fork { public string name; public Stream stream; };
 	ArrayList forkList = null;
@@ -120,6 +120,7 @@ internal class IncomingNode
 	{
 		CleanUp();
 		this.node = node;
+		oldNode = null;
 
 		if (collection.IsType(node, typeof(DirNode).Name))
 		{
@@ -190,19 +191,19 @@ internal class IncomingNode
 	// everything else is done, just make sure we clear the TempFileDone flag
 	void ClearTemp()
 	{
-		for (;;)
+		for (Node n = oldNode == null? node: oldNode;;)
 		{
-			node.Properties.DeleteSingleProperty(TempFileDone);
-			collection.ImportNode(node, node.LocalIncarnation);
+			collection.ImportNode(n, n.LocalIncarnation);
+			n.Properties.DeleteSingleProperty(TempFileDone);
 			try
 			{
-				collection.Commit(node);
+				collection.Commit(n);
 				return;
 			}
 			catch (CollisionException ce)
 			{
-				Log.Spew("Node {0} could not commit while completing an update, retrying ...", node.Name);
-				node = collection.Refresh(node);
+				Log.Spew("Node {0} could not commit while completing an update, retrying ...", n.Name);
+				n = collection.GetNodeByID(n.ID);
 			}
 		}
 	}
@@ -278,7 +279,7 @@ internal class IncomingNode
 				return NodeStatus.ServerFailure;
 			}
 			status = NodeStatus.FileNameConflict;
-			//FNCONFLICT PROP: node = collection.CreateCollision(node.ID);
+			node = collection.CreateCollision(node.ID);
 		}
 		try
 		{
@@ -330,11 +331,12 @@ internal class IncomingNode
 			}
 			catch (CollisionException c)
 			{
-				Log.Spew("Node {0} has lost an update collision", node.Name);
+				Log.Spew("Node {0} {1} has lost an update collision", node.Type, node.Name);
 				expectedIncarn = c.ExpectedIncarnation;
+				node.Properties.DeleteSingleProperty(TempFileDone);
 				for (;;)
 				{
-					Node oldNode = collection.CreateCollision(node);
+					oldNode = collection.CreateCollision(node);
 					collection.ImportNode(oldNode, expectedIncarn);
 					oldNode.Properties.ModifyProperty(TempFileDone, true);
 					try
@@ -344,7 +346,7 @@ internal class IncomingNode
 					}
 					catch (CollisionException ce)
 					{
-						Log.Spew("Node {0} has again lost an update collision", node.Name);
+						Log.Spew("Node {0} has again lost an update collision", oldNode.Name);
 						expectedIncarn = ce.ExpectedIncarnation;
 					}
 				}
