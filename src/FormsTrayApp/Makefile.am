@@ -15,7 +15,7 @@ iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.F
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder ../ClientUpgrade
 
 DATA_FILES = App.ico ifolder_app.ico
-RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico $(srcdir)/../images/ifolder-banner.png res/ifolder_contact_card.ico res/inviteduser.ico res/ifolder_me_card.ico res/serverifolder.ico res/ifolderconflict.ico res/ifolder-startup.ico res/ifolder.ico $(srcdir)/../images/newifolder24.png $(srcdir)/../images/share24.png $(srcdir)/../images/sync24.png $(srcdir)/../images/setup24.png
+RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico $(srcdir)/../GtkTrayApp/ifolder-banner.png res/ifolder_contact_card.ico res/inviteduser.ico res/ifolder_me_card.ico res/serverifolder.ico res/ifolderconflict.ico res/ifolder-startup.ico res/ifolder.ico $(srcdir)/../images/newifolder24.png $(srcdir)/../images/share24.png $(srcdir)/../images/sync24.png $(srcdir)/../images/setup24.png
 RESX_FILES = FormsTrayApp.resx GlobalProperties.resx ServerInfo.resx AcceptInvitation.resx ServerDetails.resx SyncLog.resx Preferences.resx AdvancedSettings.resx
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
