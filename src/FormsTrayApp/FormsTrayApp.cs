@@ -264,7 +264,7 @@ namespace Novell.iFolder.FormsTrayApp
 //			}
 //			else
 			{
-				Process.Start("Book.exe");
+				Process.Start("ContactBrowser.exe");
 			}
 		}
 
