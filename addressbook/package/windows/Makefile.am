@@ -26,14 +26,12 @@ EXTRA_DIST = $(srcdir)/$(PACKAGE)-msi.ism $(srcdir)/$(PACKAGE)-msm.ism $(srcdir)
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 CUR_DIR := $(shell pwd)
-OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
 
 if WINDOWS
+OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
 MERGE_MODULES_WIN  := $(shell cygpath --windows "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
 MERGE_MODULES_UNIX := $(shell cygpath --unix "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules")
-else
-MERGE_MODULES_WIN  := 
-MERGE_MODULES_UNIX := 
+ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
 endif
 
 RELEASE = 1
@@ -57,7 +55,6 @@ MSI_LOG_FILE     = issabld-$(MSI).log
 MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
 
-ISSABLD_DIR := $(shell cygpath --windows `dirname $(ISSABLD)`)
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
 
