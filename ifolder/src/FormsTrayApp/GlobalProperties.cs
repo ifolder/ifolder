@@ -50,7 +50,7 @@ namespace Novell.FormsTrayApp
 		private SyncCollectionDelegate syncCollectionDelegate;
 		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
 		private SyncFileDelegate syncFileDelegate;
-		public delegate void CreateChangeEventDelegate(iFolder ifolder, string eventData);
+		public delegate void CreateChangeEventDelegate(iFolderWeb ifolder, string eventData);
 		public CreateChangeEventDelegate createChangeEventDelegate;
 		public delegate void DeleteEventDelegate(string ID);
 		public DeleteEventDelegate deleteEventDelegate;
@@ -2056,7 +2056,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void createChangeEvent(iFolder ifolder, string eventData)
+		private void createChangeEvent(iFolderWeb ifolder, string eventData)
 		{
 			if (ifolder != null)
 			{
@@ -2089,7 +2089,7 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void addiFolderToListView(iFolder ifolder)
+		private void addiFolderToListView(iFolderWeb ifolder)
 		{
 			lock (ht)
 			{
@@ -2131,14 +2131,14 @@ namespace Novell.FormsTrayApp
 
 		private void updateListViewItem(ListViewItem lvi)
 		{
-			iFolder ifolder = (iFolder)lvi.Tag;
+			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 
 			if (ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) != null))
 			{
 				// The iFolder already exists locally ... remove it from the list.
 				lock (ht)
 				{
-					ht.Remove(((iFolder)lvi.Tag).ID);
+					ht.Remove(((iFolderWeb)lvi.Tag).ID);
 				}
 
 				lvi.Remove();
@@ -2230,8 +2230,8 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolder[] ifolderArray = ifWebService.GetAlliFolders();
-				foreach (iFolder ifolder in ifolderArray)
+				iFolderWeb[] ifolderArray = ifWebService.GetAlliFolders();
+				foreach (iFolderWeb ifolder in ifolderArray)
 				{
 					addiFolderToListView(ifolder);
 				}
@@ -2253,7 +2253,7 @@ namespace Novell.FormsTrayApp
 		private void invokeiFolderProperties(ListViewItem lvi, int activeTab)
 		{
 			iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
-			ifolderAdvanced.CurrentiFolder = (iFolder)lvi.Tag;
+			ifolderAdvanced.CurrentiFolder = (iFolderWeb)lvi.Tag;
 			ifolderAdvanced.LoadPath = Application.StartupPath;
 			ifolderAdvanced.ActiveTab = activeTab;
 			ifolderAdvanced.EventClient = eventClient;
@@ -2459,15 +2459,15 @@ namespace Novell.FormsTrayApp
 		{
 			menuActionOpen.Enabled = menuActionShare.Enabled = menuActionSync.Enabled = 
 				menuActionRevert.Enabled = menuActionProperties.Enabled = 
-				(iFolderView.SelectedItems.Count == 1) && !((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+				(iFolderView.SelectedItems.Count == 1) && !((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;
 
 			menuActionCreate.Enabled = tabControl1.SelectedIndex == 0;
 
 			// Enable/disable resolve menu item.
-			menuActionResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
+			menuActionResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolderWeb)iFolderView.SelectedItems[0].Tag).HasConflicts;
 
 			/*menuActionAccept.Visible = menuActionRemove.Visible = menuActionSeparator2.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;*/
+				(iFolderView.SelectedItems.Count == 1) && ((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;*/
 		}
 
 		private void menuView_Popup(object sender, System.EventArgs e)
@@ -2513,33 +2513,33 @@ namespace Novell.FormsTrayApp
 		{
 			menuShare.Visible = menuProperties.Visible = menuRevert.Visible = menuSeparator1.Visible = 
 				menuSeparator2.Visible = menuSyncNow.Visible = menuOpen.Visible = 
-				(iFolderView.SelectedItems.Count == 1) && !((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription;
+				(iFolderView.SelectedItems.Count == 1) && !((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription;
 
-			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolder)iFolderView.SelectedItems[0].Tag).HasConflicts;
+			menuResolve.Visible = (iFolderView.SelectedItems.Count == 1) && ((iFolderWeb)iFolderView.SelectedItems[0].Tag).HasConflicts;
 			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
 
 			// Display the accept menu item if the selected item is a subscription with state "Available"
 			menuAccept.Visible = 
 				(iFolderView.SelectedItems.Count == 1) && 
-				((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription &&
-				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
+				((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription &&
+				((iFolderWeb)iFolderView.SelectedItems[0].Tag).State.Equals("Available");
 
 			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
 			menuRemove.Visible = 
 				(iFolderView.SelectedItems.Count == 1) && 
-				(!((iFolder)iFolderView.SelectedItems[0].Tag).IsSubscription ||
-				((iFolder)iFolderView.SelectedItems[0].Tag).State.Equals("Available"));
+				(!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription ||
+				((iFolderWeb)iFolderView.SelectedItems[0].Tag).State.Equals("Available"));
 			
 			if (menuRemove.Visible)
 			{
-				menuRemove.Text = ((iFolder)iFolderView.SelectedItems[0].Tag).OwnerID.Equals(currentUserID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
+				menuRemove.Text = ((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID.Equals(currentUserID) ? resourceManager.GetString("deleteAction") : resourceManager.GetString("menuRemove.Text");
 			}
 		}
 
 		private void menuOpen_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolder ifolder = (iFolder)lvi.Tag;
+			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 
 			try
 			{
@@ -2562,10 +2562,10 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				iFolder ifolder = (iFolder)lvi.Tag;
+				iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 
 				// Delete the iFolder.
-				iFolder newiFolder = ifWebService.RevertiFolder(ifolder.ID);
+				iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 
 				// Notify the shell.
 				Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
@@ -2594,7 +2594,7 @@ namespace Novell.FormsTrayApp
 		private void menuResolve_Click(object sender, System.EventArgs e)
 		{
 			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.iFolder = (iFolder)iFolderView.SelectedItems[0].Tag;
+			conflictResolver.iFolder = (iFolderWeb)iFolderView.SelectedItems[0].Tag;
 			conflictResolver.iFolderWebService = ifWebService;
 			conflictResolver.LoadPath = Application.StartupPath;
 			conflictResolver.Show();		
@@ -2607,7 +2607,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuSyncNow_Click(object sender, System.EventArgs e)
 		{
-			synciFolder(((iFolder)iFolderView.SelectedItems[0].Tag).ID);
+			synciFolder(((iFolderWeb)iFolderView.SelectedItems[0].Tag).ID);
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
@@ -2631,7 +2631,7 @@ namespace Novell.FormsTrayApp
 							((GlobalProperties.GetDriveType(Path.GetPathRoot(folderBrowserDialog.SelectedPath)) & DRIVE_REMOTE) != DRIVE_REMOTE))
 						{
 							// Create the iFolder.
-							iFolder ifolder = ifWebService.CreateLocaliFolder(folderBrowserDialog.SelectedPath);
+							iFolderWeb ifolder = ifWebService.CreateLocaliFolder(folderBrowserDialog.SelectedPath);
 
 							// Notify the shell.
 							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, folderBrowserDialog.SelectedPath, IntPtr.Zero);
@@ -2671,7 +2671,7 @@ namespace Novell.FormsTrayApp
 		private void menuAccept_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolder ifolder = (iFolder)lvi.Tag;
+			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 
 			AcceptInvitation acceptInvitation = new AcceptInvitation(ifWebService, ifolder);
 			// TODO: get iFolder from acceptInvitation and update the listviewitem with it.
@@ -2681,7 +2681,7 @@ namespace Novell.FormsTrayApp
 		private void menuRemove_Click(object sender, System.EventArgs e)
 		{
 			ListViewItem lvi = iFolderView.SelectedItems[0];
-			iFolder ifolder = (iFolder)lvi.Tag;
+			iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 			try
 			{
 				if (ifolder.IsSubscription)
@@ -2691,7 +2691,7 @@ namespace Novell.FormsTrayApp
 				else
 				{
 					// Revert the iFolder.
-					iFolder newiFolder = ifWebService.RevertiFolder(ifolder.ID);
+					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 
 					// Notify the shell.
 					Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
@@ -2725,7 +2725,7 @@ namespace Novell.FormsTrayApp
 			if (iFolderView.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = iFolderView.SelectedItems[0];
-				iFolder ifolder = (iFolder)lvi.Tag;
+				iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 				if (ifolder.IsSubscription)
 				{
 					menuAccept_Click(sender, e);

@@ -41,7 +41,7 @@ namespace Novell.iFolderCom
 		#region Class Members
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(ConflictResolver));
 		private iFolderWebService ifWebService;
-		private iFolder ifolder;
+		private iFolderWeb ifolder;
 		private string loadPath;
 		private bool initial = true;
 		private System.Windows.Forms.Label label1;
@@ -822,7 +822,7 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Sets the iFolder to resolve conflicts for.
 		/// </summary>
-		public iFolder iFolder
+		public iFolderWeb iFolder
 		{
 			set { ifolder = value; }
 		}
