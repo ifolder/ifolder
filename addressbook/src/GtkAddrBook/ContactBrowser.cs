@@ -457,21 +457,12 @@ namespace Novell.AddressBook.UI.gtk
 		
 		public void on_HelpButton_clicked(object o, EventArgs args)
 		{
-			try
-			{
-				Gnome.Url.Show(Util.HelpURL("bq6lx19.html"));
-			}
-			catch(Exception e)
-			{
-				MessageDialog med = new MessageDialog(cbWindow,
-					DialogFlags.DestroyWithParent | DialogFlags.Modal,
-					MessageType.Error,
-					ButtonsType.Close,
-					string.Format("Error displaying help file:{0}",e));
-				med.Title = "Help file error";
-				med.Run();
-				med.Hide();
-			}
+			Util.ShowHelp("bq6lx19.html", null);
+		}
+
+		public void on_about_event(object o, EventArgs args)
+		{
+			Util.ShowAbout();
 		}
 
 		public void on_DeleteButton_clicked(object o, EventArgs args)

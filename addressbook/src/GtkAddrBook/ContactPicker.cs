@@ -273,7 +273,16 @@ namespace Novell.AddressBook.UI.gtk
 			if(cpDialog != null)
 			{
 				PopulateWidgets();
-				rc = cpDialog.Run();
+				while(rc == 0)
+				{
+					rc = cpDialog.Run();
+					if(rc == -11) // help
+					{
+						rc = 0;
+						Util.ShowHelp("bq6lx1x.html", null);
+					}
+				}
+
 				cpDialog.Hide();
 				cpDialog.Destroy();
 				cpDialog = null;
@@ -382,7 +391,7 @@ namespace Novell.AddressBook.UI.gtk
 				DialogFlags.Modal | DialogFlags.DestroyWithParent,
 				MessageType.Info,
 				ButtonsType.Close,
-				"Groups are not that important to me, kinda like OS X\rWe'll add this feature in the future.");
+				"Groups are still not implemented.  Comming soon...");
 
 			dialog.Title = "Scotty's Helpful Hints";
 			dialog.Run();
@@ -408,23 +417,6 @@ namespace Novell.AddressBook.UI.gtk
 
 				ContactTreeStore.AppendValues(ce.Contact);
 			}
-		}
-
-
-
-
-		public void on_HelpButton_clicked(object o, EventArgs args)
-		{
-			MessageDialog dialog = new MessageDialog(	cpDialog,
-				DialogFlags.Modal | DialogFlags.DestroyWithParent,
-				MessageType.Info,
-				ButtonsType.Close,
-				"Help will be in this iteration, just not yet.");
-
-			dialog.Title = "Scotty's Helpful Hints";
-			dialog.Run();
-			dialog.Hide();
-			dialog.Destroy();
 		}
 
 
