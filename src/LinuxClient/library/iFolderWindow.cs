@@ -668,7 +668,7 @@ namespace Novell.iFolder
 						(iFolderHolder) tModel.GetValue(iter, 0);
 
 				if(	(ifHolder.iFolder != null) && 
-									(!ifHolder.iFolder.HasConflicts) )
+									(ifHolder.iFolder.HasConflicts) )
 				{
 					ConflictMenuItem.Sensitive = true;
 					ConflictButton.Sensitive = true;
