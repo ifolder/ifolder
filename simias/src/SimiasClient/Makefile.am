@@ -25,9 +25,11 @@ endif
 install-exec-local: SimiasClient.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) SimiasClient.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(NOVELL_SECURITY_DIR)/Novell.Security.ClientPasswordManager.PasswordDialog.dll $(DESTDIR)$(webbindir)
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f SimiasClient.dll $(DEBUG_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f Novell.Security.ClientPasswordManager.PasswordDialog.dll
 	
 installcheck-local: install
 	
