@@ -20,15 +20,15 @@ ndoc-nodeps:
 	
 	@echo Novell.AddressBook.dll doc is in simias for now
 	mkdir -p $(PACKAGE)-ndoc
-	touch $(PACKAGE)-ndoc/sdk_doc_for_addressbook_in_simias_for_now
+	touch $(PACKAGE)-ndoc/sdk_doc_for_$(PACKAGE)_in_simias_for_now
 #if WINDOWS
 #	"$(NDOC_CMD)" \
 #		`cygpath --windows "$(bindir)/Novell.Addressbook.dll"`, `cygpath --windows "../src/Addressbook/Novell.Addressbook.doc.xml"` \
-#		-documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
+#		-documenter=MSDN -Title=AddressBook -OutputDirectory=$(PACKAGE)-ndoc
 #else # NOT WINDOWS
 #	"$(NDOC_CMD)" \
 #		"$(bindir)/Novell.Addressbook.dll","../src/Addressbook/Novell.Addressbook.doc.xml" \
-#		-documenter=MSDN -Title=AddressBook -OutputDirectory=addressbook-ndoc
+#		-documenter=MSDN -Title=AddressBook -OutputDirectory=$(PACKAGE)-ndoc
 #endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc
 	@test "x" = "x$(DOC_TARBALLS)" || \
