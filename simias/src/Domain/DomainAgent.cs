@@ -27,7 +27,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Channels;
-using Simias.POBox;
+using PostOffice = Simias.POBox;
 
 namespace Simias.Domain
 {
@@ -97,10 +97,11 @@ namespace Simias.Domain
 				domainInfo.RosterName, domainInfo.RosterUrl);
 			
 			// create PO Box stub
-			CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
+			Collection cStub = CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
 				provisionInfo.POBoxName, domainInfo.RosterUrl);
 
-			POBox.POBox poBox = POBox.POBox.GetPOBoxByID(store, provisionInfo.POBoxID);
+			// Get a POBox object from its created stub.
+			PostOffice.POBox poBox = new PostOffice.POBox(store, cStub);
 
 			// set the default domain
 			store.DefaultDomain = domainInfo.ID;
@@ -114,7 +115,7 @@ namespace Simias.Domain
 			service = null;
 		}
 
-		private void CreateSlave(Store store, string domain, string id, string name, string url)
+		private Collection CreateSlave(Store store, string domain, string id, string name, string url)
 		{
 			Collection c = new Collection(store, name, id, domain);
 			
@@ -132,6 +133,7 @@ namespace Simias.Domain
 			c.Sealed = true;
 			c.IsStub = true;
 			c.Commit();
+			return c;
 		}
 
 		public void CreateMaster(SyncCollection collection)
