@@ -1730,7 +1730,7 @@ namespace Novell.iFolder
 		{
 			// Read all current domains before letting them create
 			// a new ifolder
-			DomainWeb[] domains = ifdata.GetDomains();
+			DomainInformation[] domains = ifdata.GetDomains();
 
 			CreateDialog cd = new CreateDialog(domains);
 			cd.TransientFor = this;

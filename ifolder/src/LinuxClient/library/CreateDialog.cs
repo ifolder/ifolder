@@ -28,9 +28,9 @@ namespace Novell.iFolder
 {
 	public class CreateDialog : Dialog
 	{
-		private Entry		pathEntry;
-		private DomainWeb[]	domains;
-		private OptionMenu	domainOptions;
+		private Entry				pathEntry;
+		private DomainInformation[]	domains;
+		private OptionMenu			domainOptions;
 
 
 		public string iFolderPath
@@ -51,7 +51,7 @@ namespace Novell.iFolder
 		}
 
 
-		public CreateDialog(DomainWeb[] domainArray) : base()
+		public CreateDialog(DomainInformation[] domainArray) : base()
 		{
 			domains = domainArray;
 

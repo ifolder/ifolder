@@ -100,7 +100,7 @@ namespace Novell.iFolder
 			PrefNoteBook.AppendPage( generalPage,
 										new Label(Util.GS("_General")));
 
-			accountsPage = new PrefsAccountsPage(this, ifws);
+			accountsPage = new PrefsAccountsPage(this);
 			PrefNoteBook.AppendPage( accountsPage,
 										new Label(Util.GS("_Accounts")));
 

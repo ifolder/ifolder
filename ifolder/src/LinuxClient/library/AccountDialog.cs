@@ -30,10 +30,10 @@ namespace Novell.iFolder
 	public class AccountDialog : Dialog
 	{
 		private iFolderData			ifdata;
-		private DomainWeb			domain;
+		private DomainInformation	domain;
 
 
-		public AccountDialog(DomainWeb curDomain)
+		public AccountDialog(DomainInformation curDomain)
 			: base()
 		{
 			domain = curDomain;
@@ -110,7 +110,7 @@ namespace Novell.iFolder
 			usrNameLabel.Xalign = 0;
 			srvTable.Attach(usrNameLabel, 0,1,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			Label usrNameValue = new Label(domain.UserName);
+			Label usrNameValue = new Label(domain.MemberName);
 			usrNameValue.Xalign = 0;
 			srvTable.Attach(usrNameValue, 1,2,0,1);
 
@@ -243,7 +243,7 @@ namespace Novell.iFolder
 			graphLabelBox.PackStart(emptyLabel, true, true, 0);
 
 
-			DiskSpace ds = ifdata.GetUserDiskSpace(domain.UserID);
+			DiskSpace ds = ifdata.GetUserDiskSpace(domain.MemberID);
 
 			if(ds == null)
 			{

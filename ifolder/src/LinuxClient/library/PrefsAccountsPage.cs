@@ -39,7 +39,6 @@ namespace Novell.iFolder
 	{
 		private Gtk.Window				topLevelWindow;
 		private iFolderData				ifdata;
-		private iFolderWebService		ifws;
 		private SimiasWebService		simws;
 
 		private iFolderTreeView		AccTreeView;
@@ -63,18 +62,16 @@ namespace Novell.iFolder
 //		private Button		proxyButton;
 		private Button		loginButton;
 
-		private string		curDomainPassword;
-		private DomainWeb	curDomain;
+		private string				curDomainPassword;
+		private DomainInformation	curDomain;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
 		/// </summary>
-		public PrefsAccountsPage(	Gtk.Window topWindow,
-									iFolderWebService webService)
+		public PrefsAccountsPage( Gtk.Window topWindow )
 			: base()
 		{
 			this.topLevelWindow = topWindow;
-			this.ifws = webService;
 			this.simws = new SimiasWebService();
 			simws.Url = Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/Simias.asmx";
@@ -107,7 +104,7 @@ namespace Novell.iFolder
 			sw.Add(AccTreeView);
 			this.PackStart(sw, true, true, 0);
 
-			AccTreeStore = new ListStore(typeof(DomainWeb));
+			AccTreeStore = new ListStore(typeof(DomainInformation));
 			AccTreeView.Model = AccTreeStore;
 
 			TreeViewColumn NameColumn = new TreeViewColumn();
@@ -286,9 +283,9 @@ namespace Novell.iFolder
 			// Read all current domains before letting them create
 			// a new ifolder
 
-			DomainWeb[] domains = ifdata.GetDomains();
+			DomainInformation[] domains = ifdata.GetDomains();
 
-			foreach(DomainWeb dom in domains)
+			foreach(DomainInformation dom in domains)
 			{
 				// only show Domains that are slaves (not on this machine)
 				if(dom.IsSlave)
@@ -328,8 +325,8 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			DomainWeb dom = (DomainWeb) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = dom.UserName;
+			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = dom.MemberName;
 		}
 
 
@@ -339,7 +336,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			DomainWeb dom = (DomainWeb) tree_model.GetValue(iter,0);
+			DomainInformation dom = (DomainInformation) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = dom.Name;
 		}
 
@@ -413,12 +410,12 @@ namespace Novell.iFolder
 					TreeIter iter;
 
 					tSelect.GetSelected(out tModel, out iter);
-					DomainWeb dom = 
-						(DomainWeb) tModel.GetValue(iter, 0);
+					DomainInformation dom = 
+						(DomainInformation) tModel.GetValue(iter, 0);
 
 					try
 					{
-						ifws.LeaveDomain(dom.ID, !(rad.RemoveFromAll));
+						simws.LeaveDomain(dom.ID, !(rad.RemoveFromAll));
 					}
 					catch(Exception e)
 					{
@@ -477,8 +474,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				DomainWeb dom = 
-						(DomainWeb) tModel.GetValue(iter, 0);
+				DomainInformation dom = 
+						(DomainInformation) tModel.GetValue(iter, 0);
 
 				AccountDialog accDialog = new AccountDialog(dom);
 				accDialog.TransientFor = topLevelWindow;
@@ -555,8 +552,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				DomainWeb dom = 
-						(DomainWeb) tModel.GetValue(iter, 0);
+				DomainInformation dom = 
+						(DomainInformation) tModel.GetValue(iter, 0);
 
 				curDomain = dom;
 
@@ -610,12 +607,12 @@ namespace Novell.iFolder
 					savePasswordButton.Active = false;
 				}
 
-				autoLoginButton.Active = dom.IsEnabled;
+				autoLoginButton.Active = dom.Active;
 				defaultAccButton.Active = dom.IsDefault;
 				defaultAccButton.Sensitive = !dom.IsDefault;
 
-				if(dom.UserName != null)
-					nameEntry.Text = dom.UserName;
+				if(dom.MemberName != null)
+					nameEntry.Text = dom.MemberName;
 				else
 					nameEntry.Text = "";
 				if(dom.Host != null)
@@ -632,7 +629,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					DomainWeb dw = ifws.ConnectToDomain(
+					DomainInformation dw = simws.ConnectToDomain(
 										nameEntry.Text,
 										passEntry.Text,
 										serverEntry.Text);
@@ -779,19 +776,19 @@ namespace Novell.iFolder
 			// it will be handled at creation time
 			if(!NewAccountMode)
 			{
-				if(autoLoginButton.Active != curDomain.IsEnabled)
+				if(autoLoginButton.Active != curDomain.Active)
 				{
 					try
 					{
 						if(autoLoginButton.Active)
 						{
-							ifws.SetDomainActive(curDomain.ID);
-							curDomain.IsEnabled = true;
+							simws.SetDomainActive(curDomain.ID);
+							curDomain.Active = true;
 						}
 						else
 						{
-							ifws.SetDomainInactive(curDomain.ID);
-							curDomain.IsEnabled = false;
+							simws.SetDomainInactive(curDomain.ID);
+							curDomain.Active = false;
 						}
 					}
 					catch (Exception ex)
