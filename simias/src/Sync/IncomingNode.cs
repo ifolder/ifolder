@@ -205,9 +205,12 @@ internal class IncomingNode
 	{
 		// TODO is the get by id needed.
 		Node n = collection.GetNodeByID(node.ID);
-		n.Properties.State = PropertyList.PropertyListState.Internal;
-		n.Properties.DeleteSingleProperty(TempFileDone);
-		collection.Commit(n);
+		if (n!= null)
+		{
+			n.Properties.State = PropertyList.PropertyListState.Internal;
+			n.Properties.DeleteSingleProperty(TempFileDone);
+			collection.Commit(n);
+		}
 		return;
 	}
 
@@ -296,6 +299,7 @@ internal class IncomingNode
 			}
 			status = NodeStatus.FileNameConflict;
 			node = collection.CreateCollision(node, true);
+			node.Properties.State = PropertyList.PropertyListState.Internal;
 			collection.Commit(node);
 		}
 		try
@@ -396,6 +400,7 @@ internal class IncomingNode
 
 			try
 			{
+				node.Properties.State = PropertyList.PropertyListState.Internal;
 				collection.Commit(node);
 			}
 			catch (CollisionException c)

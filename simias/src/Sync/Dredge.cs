@@ -292,6 +292,7 @@ public class Dredger
 			Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
 			tsp.LocalProperty = true;
 			collection.Properties.ModifyProperty(tsp);
+			collection.Properties.State = PropertyList.PropertyListState.Internal;
 			collection.Commit(collection);
 		}
 	}

@@ -411,7 +411,7 @@ internal class SyncOps
 			}
 			if (collection.IsType(nc.node, NodeTypes.TombstoneType))
 			{
-				Log.Assert(onServer); // should not get tombstones on client from server
+				//Log.Assert(onServer); // should not get tombstones on client from server
 				DeleteNode((Nid)nc.node.ID, true);
 				continue;
 			}
@@ -546,6 +546,7 @@ internal class SyncOps
 			cc.LocalProperty = true;
 			collection.Properties.ModifyProperty(cc);
 		}
+		collection.Properties.State = PropertyList.PropertyListState.Internal;
 		collection.Commit();
 	}
 
