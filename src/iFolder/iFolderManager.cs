@@ -51,7 +51,7 @@ namespace Novell.iFolder
 		{
 			this.config = config;
             this.store = new Store( config );
-			Novell.AddressBook.Manager abMan = Novell.AddressBook.Manager.Connect( config );
+			this.abMan = Novell.AddressBook.Manager.Connect( config );
 		}
 		#endregion
 
@@ -249,7 +249,7 @@ namespace Novell.iFolder
 		/// </returns>
 		public bool IsiFolder( string path )
 		{
-			return GetiFolderByPath( path ) ? true : false;
+			return ( GetiFolderByPath( path ) != null ) ? true : false;
 		}
 
 		/// <summary>
@@ -297,7 +297,7 @@ namespace Novell.iFolder
 				Uri ifolderPath = new Uri( tempif.LocalPath );
 
 				bool ignoreCase = MyEnvironment.Unix ? false : true;
-				if ( !String.Compare( normalizedPath.LocalPath, ifolderPath.LocalPath, ignoreCase ) )
+				if ( String.Compare( normalizedPath.LocalPath, ifolderPath.LocalPath, ignoreCase ) == 0 )
 				{
 					ifolder = tempif;
 					break;
@@ -427,7 +427,7 @@ namespace Novell.iFolder
 		/// </returns>
 		public IEnumerator GetEnumerator()
 		{
-			return new iFolderEnumerator( store );
+			return new iFolderEnumerator( store, this );
 		}
 
 		/// <summary>
@@ -451,6 +451,11 @@ namespace Novell.iFolder
 			/// Object used to enumerate the iFolder collections.
 			/// </summary>
 			private ICSEnumerator enumerator;
+
+			/// <summary>
+			/// Reference to manager.
+			/// </summary>
+			private iFolderManager ifMan;
 			#endregion
 
 			#region Constructor
@@ -458,11 +463,13 @@ namespace Novell.iFolder
 			/// Constructor for the StoreEnumerator class.
 			/// </summary>
 			/// <param name="storeObject">Store object where to enumerate the collections.</param>
-			public iFolderEnumerator( Store storeObject )
+			/// <param name="ifManager">Reference to an iFolderManager object.</param>
+			public iFolderEnumerator( Store storeObject, iFolderManager ifManager )
 			{
 				// Get all of the collections that are of iFolder type and save the enumerator to the results.
 				store = storeObject;
-				enumerator = store.GetCollectionsByType( iFolder.iFolderType ).GetEnumerator();
+				ifMan = ifManager;
+				enumerator = store.GetCollectionsByType( iFolder.iFolderType ).GetEnumerator() as ICSEnumerator;
 			}
 			#endregion
 
@@ -503,7 +510,7 @@ namespace Novell.iFolder
 						throw new ObjectDisposedException( this.ToString() );
 					}
 
-					return GetiFolderById( ( enumerator.Current as ShallowNode ).ID ); 
+					return ifMan.GetiFolderById( ( enumerator.Current as ShallowNode ).ID ); 
 				}
 			}
 

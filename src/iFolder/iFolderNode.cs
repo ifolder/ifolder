@@ -54,6 +54,14 @@ namespace Novell.iFolder
 
 		#region Properties
 		/// <summary>
+		/// Gets the encapsulated Node object.
+		/// </summary>
+		internal Node Node
+		{
+			get { return node; }
+		}
+
+		/// <summary>
 		/// Gets the iFolder to which this iFoldeNode belongs
 		/// </summary>
 		public iFolder iFolder
@@ -66,7 +74,7 @@ namespace Novell.iFolder
 		/// </summary>
 		public NodeType Type
 		{
-			get { return ( node.Type == "FileNode" ) ? file : folder; }
+			get { return ( node.Type == "FileNode" ) ? NodeType.file : NodeType.folder; }
 		}
 
 		/// <summary>
