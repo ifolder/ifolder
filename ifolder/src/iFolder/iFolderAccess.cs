@@ -118,11 +118,19 @@ namespace Novell.iFolder
 					AccessControlEntry ace = 
 						(AccessControlEntry)iEnumerator.Current;
 
-					Contact c = ab.GetContact(ace.Id);
-					IFAccessControlEntry iface = new 
-						IFAccessControlEntry((iFolder.Rights)ace.Rights, c);
+					try
+					{
+						Contact c = ab.GetContact(ace.Id);
+						IFAccessControlEntry iface = new 
+							IFAccessControlEntry((iFolder.Rights)ace.Rights, c);
 
-					return( iface );
+						return( iface );
+					}
+					catch(Exception e)
+					{
+						return null;
+					}
+
 				}
 			}
 
@@ -137,10 +145,13 @@ namespace Novell.iFolder
 						return false;
 
 					AccessControlEntry ace = 
-							(AccessControlEntry)iEnumerator.Current;
+						(AccessControlEntry)iEnumerator.Current;
 
 					if(ace.WellKnown == false)
 						return true;
+
+					if(Current == null)
+						return false;
 				}
 			}
 		}
