@@ -9,9 +9,6 @@ AssemblyInfo.cs
 ../AddressBook/Manager.cs
 ../AddressBook/Name.cs
 ../AddressBook/Phone.cs
-../AddressBookCmd/AddressBookCmd.cs
-../Agent/Library/Agent.cs
-../Agent/Library/IAgentService.cs
 ../CollectionEvents/CollectionEventArgs.cs
 ../CollectionEvents/CollectionRootChangedEventArgs.cs
 ../CollectionEvents/DefaultSubscriber.cs
@@ -53,8 +50,6 @@ AssemblyInfo.cs
 ../Common/Library/MyRuntimeID.cs
 ../Common/Library/SimiasLog.cs
 ../Common/Library/SimiasLogManager.cs
-../FsProvider/FsProvider.cs
-../FsProvider/FsResultSet.cs
 ../FsWatcher/FsWatcher.cs
 ../Invitation/Library/IInvitationProvider.cs
 ../Invitation/Library/InvitationService.cs
@@ -64,7 +59,6 @@ AssemblyInfo.cs
 ../Location/Library/LocationProviderList.cs
 ../Location/Library/LocationService.cs
 ../Location/Library/MDnsLocationProvider.cs
-../MiniShare/Application/MiniShare.cs
 ../RemotingSniffer/Library/SnifferClientChannelSink.cs
 ../RemotingSniffer/Library/SnifferClientChannelSinkProvider.cs
 ../RemotingSniffer/Library/SnifferMessage.cs
@@ -131,11 +125,6 @@ AssemblyInfo.cs
 ../SyncCommon/Library/SyncLogicFactory.cs
 ../SyncCommon/Library/SyncProperties.cs
 ../SyncCommon/Library/SyncStoreInfo.cs
-../SyncLogicLite/Library/SyncCollectionServiceLite.cs
-../SyncLogicLite/Library/SyncCollectionWorkerLite.cs
-../SyncLogicLite/Library/SyncLogicFactoryLite.cs
-../SyncLogicLite/Library/SyncNodeInfo.cs
-../SyncLogicLite/Library/SyncPacket.cs
 ../SyncManager/Library/SyncChannel.cs
 ../SyncManager/Library/SyncChannelFactory.cs
 ../SyncManager/Library/SyncCollectionManager.cs
@@ -145,4 +134,3 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncPing.cs
 ../SyncManager/Library/SyncStoreManager.cs
 ../SyncManager/Library/SyncStoreService.cs
-../SyncTools/Ping/SyncPinger.cs
