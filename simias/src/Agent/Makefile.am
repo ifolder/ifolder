@@ -33,7 +33,7 @@ install-exec-local: Agent.dll
 	$(INSTALL_PROGRAM) Agent.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.xml invitation.ifi $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

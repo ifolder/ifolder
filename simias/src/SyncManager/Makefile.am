@@ -33,7 +33,9 @@ install-exec-local: SyncManager.dll
 	$(INSTALL_PROGRAM) SyncManager.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SyncManager.dll SyncManagerTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); \
+		rm -f SyncManager.dll SyncManagerTests.xml $(NUNIT_TESTS); \
+		rm -rf manager1
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

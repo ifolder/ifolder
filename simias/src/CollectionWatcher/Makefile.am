@@ -33,7 +33,9 @@ install-exec-local: CollectionWatcher.dll
 	$(INSTALL_PROGRAM) CollectionWatcher.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CollectionWatcher.dll CollectionWatcherTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); \
+		rm -f CollectionWatcher.dll CollectionWatcherTests.xml $(NUNIT_TESTS); \
+		rm -rf cwatcher
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
