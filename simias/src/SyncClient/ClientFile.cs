@@ -191,6 +191,7 @@ namespace Simias.Sync.Client
 		{
 			if (direction == SyncDirection.IN)
 			{
+				node.SetMasterIncarnation(node.LocalIncarnation);
 				collection.Commit(node);
 			}
 			service.CloseFileNode(commit);

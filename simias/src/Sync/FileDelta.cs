@@ -256,7 +256,7 @@ namespace Simias.Sync
 		{
 			this.node = node;
 			file = node.GetFullPath(collection);
-			workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + Path.GetFileName(file));
+			workFile = Path.Combine(Path.GetDirectoryName(file), WorkFilePrefix + node.ID);
 			if (direction == SyncDirection.OUT)
 			{
 				// This file is being pushed make a copy to work from.
@@ -269,7 +269,7 @@ namespace Simias.Sync
 				stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
 				workStream = File.Open(workFile, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
 			}
-			File.SetAttributes(workFile, FileAttributes.Hidden);
+			File.SetAttributes(workFile, File.GetAttributes(workFile) | FileAttributes.Hidden);
 		}
 
 		private void Close(bool InFinalizer, bool commit)
@@ -294,6 +294,7 @@ namespace Simias.Sync
 					if (commit)
 					{
 						File.Copy(workFile, file, true);
+						File.SetAttributes(file, File.GetAttributes(file) & ~FileAttributes.Hidden);
 					}
 				}
 				// We need to delete the temp file.
