@@ -4,6 +4,7 @@ GSOAP_INCLUDES = -I.
 NONAMESPACE_CFLAGS = -DWITH_NONAMESPACES
 INSTALL_EXTENSION_PATH = $(gnome_root)/lib/nautilus/extensions-1.0
 INSTALL_EMBLEM_PATH = $(gnome_root)/share/icons/gnome/48x48/emblems
+INSTALL_ICONS_PATH = $(gnome_root)/share/icons/gnome/24x24/apps
 INSTALL_EXE_PATH = $(libdir)
 
 INCLUDES =						\
@@ -47,6 +48,8 @@ nautilus-ifolder.exe: nautilus-ifolder.cs
 install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)
 	$(INSTALL_PROGRAM) emblem-ifolder.png $(INSTALL_EMBLEM_PATH)
+	$(mkinstalldirs) $(INSTALL_ICONS_PATH)
+	$(INSTALL_PROGRAM) ifolder-folder.png $(INSTALL_ICONS_PATH)
 	$(mkinstalldirs) $(INSTALL_EXE_PATH)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder.exe $(INSTALL_EXE_PATH)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder $(INSTALL_EXE_PATH)
@@ -54,6 +57,7 @@ install-exec-local: libnautilus-ifolder.la
 uninstall-local:
 	cd $(INSTALL_EXTENSION_PATH); rm -f libnautilus-ifolder*
 	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.png
+	cd $(INSTALL_ICONS_PATH); rm -f ifolder-folder.png
 	cd $(INSTALL_EXE_PATH); rm -f nautilus-ifolder*
 
 clean-local:
