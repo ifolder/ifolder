@@ -411,7 +411,7 @@ namespace Simias.Sync
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
 		EventPublisher	eventPublisher = new EventPublisher();
-		HttpClient		service;
+		HttpSyncProxy		service;
 		SyncWorkArray	workArray;
 		Store			store;
 		SyncCollection	collection;
@@ -607,7 +607,7 @@ namespace Simias.Sync
 			// Setup the url to the server.
 			string userID = store.GetUserIDFromDomainID(collection.Domain);
 			string userName = collection.GetMemberByID(userID).Name;
-			service = new HttpClient(collection, userName, store.GetUserIDFromDomainID(collection.Domain));
+			service = new HttpSyncProxy(collection, userName, store.GetUserIDFromDomainID(collection.Domain));
 
 			SyncNodeInfo[] cstamps;
 			

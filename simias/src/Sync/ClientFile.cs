@@ -178,6 +178,79 @@ namespace Simias.Sync
 
 	#endregion
 
+	#region DownloadSegment
+
+	/// <summary>
+	/// Describes a file segment using a block from the remote file. Can be a
+	/// Range of blocks.
+	/// </summary>
+	public class DownloadSegment
+	{
+		/// <summary>
+		/// This is the start block for the unchanged segment of data.
+		/// </summary>
+		public int				StartBlock;
+		/// <summary>
+		/// The ending block in the range of contiguous blocks.
+		/// </summary>
+		public int				EndBlock;
+		
+		public static int		InstanceSize = (4 + 4);
+		/// <summary>
+		/// Initialize a new Offset Segment.
+		/// </summary>
+		/// <param name="block">The block to copy.</param>
+		public DownloadSegment(int block)
+		{
+			this.StartBlock = block;
+			this.EndBlock = block;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="reader"></param>
+		public DownloadSegment(BinaryReader reader)
+		{
+			StartBlock = reader.ReadInt32();
+			EndBlock = reader.ReadInt32();
+		}
+
+		/// <summary>
+		/// Adds the segment to the array.  If this segment is contiguous with the last segment
+		/// combine them.
+		/// </summary>
+		/// <param name="segArray">The array to add the segment to.</param>
+		/// <param name="seg">The new segment to add.</param>
+		public static void AddToArray(ArrayList segArray, DownloadSegment seg)
+		{
+			DownloadSegment lastSeg;
+			if (segArray.Count > 0)
+			{
+				lastSeg = segArray[segArray.Count -1] as DownloadSegment;
+				// Make sure the source and destination are contiguous.
+				if (lastSeg.EndBlock + 1 == seg.StartBlock && lastSeg.EndBlock - lastSeg.StartBlock < 100) 
+				{
+					lastSeg.EndBlock = seg.StartBlock;
+					return;
+				}
+			}
+			segArray.Add(seg);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="writer"></param>
+		public void Serialize(BinaryWriter writer)
+		{
+			writer.Write(StartBlock);
+			writer.Write(EndBlock);
+		}
+	}
+
+	#endregion
+
 	#region HttpClientInFile
 
 	/// <summary>
@@ -188,7 +261,7 @@ namespace Simias.Sync
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		HttpClient				httpClient;
+		HttpSyncProxy				syncService;
 		/// <summary>True if the node should be marked readOnly.</summary>
 		bool					readOnly = false;
 		
@@ -201,11 +274,11 @@ namespace Simias.Sync
 		/// </summary>
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
-		/// <param name="httpClient">The client used to access the server.</param>
-		public HttpClientInFile(SyncCollection collection, string nodeID, HttpClient httpClient) :
+		/// <param name="syncService">The client used to access the server.</param>
+		public HttpClientInFile(SyncCollection collection, string nodeID, HttpSyncProxy syncService) :
 			base(collection)
 		{
-			this.httpClient = httpClient;
+			this.syncService = syncService;
 			this.nodeID = nodeID;
 		}
 
@@ -221,7 +294,7 @@ namespace Simias.Sync
 		public bool Open(bool readOnly)
 		{
 			this.readOnly = readOnly;
-			SyncNode snode = httpClient.OpenFileGet(nodeID);
+			SyncNode snode = syncService.OpenFileGet(nodeID);
 			if (snode == null)
 			{
 				return false;
@@ -245,7 +318,11 @@ namespace Simias.Sync
 			Log.log.Debug("Closing File success = {0}", commit);
 			bool bStatus = commit;
 			// Close the file on the server.
-			httpClient.CloseFile();
+			try
+			{
+				syncService.CloseFile();
+			}
+			catch {}
 			if (commit)
 			{
 				try
@@ -285,7 +362,8 @@ namespace Simias.Sync
 					// BUGBUG this is commented out until we decide what to do with readonly collections.
 					//fa |= FileAttributes.ReadOnly;
 				}
-				fi.Attributes = fa;
+				if (fi.Exists)
+					fi.Attributes = fa;
 			}
 			catch (Exception ex)
 			{
@@ -316,20 +394,31 @@ namespace Simias.Sync
 			// If We don't have any entries in the file map the file is of length 0.
 			if (fileMap.Length == 0)
 				return true;
+
+			ArrayList downloadMap = new ArrayList();
+			// Copy the matches from the local file.
+			for (int i = 0; i < fileMap.Length; ++i)
+			{
+				if (fileMap[i] != -1)
+				{
+					Copy(fileMap[i], WritePosition, HashData.BlockSize);
+				}
+				else
+				{
+					DownloadSegment.AddToArray(downloadMap, new DownloadSegment(i));
+				}
+			}
+				
 			
 			// Get the file blocks from the server.
 			byte[] buffer = new byte[HashData.BlockSize];
-			HttpWebResponse response = httpClient.ReadFile(fileMap, HashData.BlockSize);
-			Stream inStream = response.GetResponseStream();
-			try
+			foreach (DownloadSegment seg in downloadMap)
 			{
-				for (int i = 0; i < fileMap.Length; ++i)
+				HttpWebResponse response = syncService.ReadFile(seg, HashData.BlockSize);
+				Stream inStream = response.GetResponseStream();
+				try
 				{
-					if (fileMap[i] != -1)
-					{
-						Copy(fileMap[i], WritePosition, HashData.BlockSize);
-					}
-					else
+					for (int i = seg.StartBlock; i <= seg.EndBlock; ++i)
 					{
 						int buffOffset = 0;
 						int bytesInBuffer = 0;
@@ -342,20 +431,21 @@ namespace Simias.Sync
 							bytesInBuffer += bytesRead;
 							buffOffset += bytesRead;
 						}
+						WritePosition = i * HashData.BlockSize;
 						Write(buffer, 0, bytesInBuffer);
 						sizeRemaining -= bytesInBuffer;
 						if ((i % 16) == 15)
 							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 					}
 				}
+				finally
+				{
+					inStream.Close();
+					response.Close();
+				}
 			}
-			finally
-			{
-				inStream.Close();
-				response.Close();
-				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
-				Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
-			}
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
+			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 			if (sizeRemaining != 0)
 				return false;
 			return true;
@@ -368,7 +458,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// Compute the Blocks that need to be downloaded from the server. This builds
 		/// an array of offsets where the blocks need to be placed in the local file.
-		/// The block is represented by the index of the array.
+		/// The block number is represented by the index of the array. -1 means no match.
 		/// </summary>
 		/// <param name="sizeToSync">The number of bytes that need to be synced.</param>
 		/// <returns>The file map.</returns>
@@ -380,8 +470,8 @@ namespace Simias.Sync
 			HashData[] serverHashMap;
 			long[] fileMap;
 			
-			if (this.Exists)
-				serverHashMap = httpClient.GetHashMap();
+			if (ReadStream != null)
+				serverHashMap = syncService.GetHashMap();
 			else
 				serverHashMap = new HashData[0];
 
@@ -445,8 +535,15 @@ namespace Simias.Sync
 							if (match != null)
 							{
 								// We found a match save the match;
-								fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
-								sizeToSync -= HashData.BlockSize;
+								if (fileMap[match.BlockNumber] == -1)
+								{
+									fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
+									sizeToSync -= HashData.BlockSize;
+								}
+								startByte += HashData.BlockSize;
+								endByte += HashData.BlockSize;
+								recomputeWeakHash = true;
+								continue;
 							}
 						}
 						dropByte = buffer[startByte];
@@ -513,7 +610,7 @@ namespace Simias.Sync
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		HttpClient				httpClient;
+		HttpSyncProxy				syncService;
 		
 		#endregion
 		
@@ -524,12 +621,12 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync up.</param>
-		/// <param name="httpClient">The service to access the server side sync.</param>
-		public HttpClientOutFile(SyncCollection collection, BaseFileNode node, HttpClient httpClient) :
+		/// <param name="syncService">The service to access the server side sync.</param>
+		public HttpClientOutFile(SyncCollection collection, BaseFileNode node, HttpSyncProxy syncService) :
 			base(collection)
 		{
 			this.node = node;
-			this.httpClient = httpClient;
+			this.syncService = syncService;
 		}
 
 		#endregion
@@ -543,7 +640,7 @@ namespace Simias.Sync
 		public virtual SyncStatus Open()
 		{
 			SyncNode snode = new SyncNode(node);
-			SyncStatus status = httpClient.OpenFilePut(snode);
+			SyncStatus status = syncService.OpenFilePut(snode);
 			if (status == SyncStatus.Success)
 			{
 				base.Open(node, "");
@@ -559,7 +656,7 @@ namespace Simias.Sync
 		public virtual SyncNodeStatus Close(bool commit)
 		{
 			// Close the file on the server.
-			SyncNodeStatus status = httpClient.CloseFile(commit);
+			SyncNodeStatus status = syncService.CloseFile(commit);
 			if (commit && status.status == SyncStatus.Success)
 			{
 				node.SetMasterIncarnation(node.LocalIncarnation);
@@ -586,7 +683,7 @@ namespace Simias.Sync
 
 			if (copyArray.Count > 0)
 			{
-				httpClient.CopyFile(copyArray);
+				syncService.CopyFile(copyArray);
 			}
 			
 			foreach(OffsetSegment seg in writeArray)
@@ -599,7 +696,7 @@ namespace Simias.Sync
 					while (leftToSend > 0)
 					{	
 						int bytesToSend = Math.Min(MaxXFerSize, (int)leftToSend);
-						httpClient.WriteFile(OutStream, ReadPosition, bytesToSend);
+						syncService.WriteFile(OutStream, ReadPosition, bytesToSend);
 						leftToSend -= bytesToSend;
 						sizeRemaining -= bytesToSend;
 						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
@@ -629,7 +726,7 @@ namespace Simias.Sync
 			writeArray = new ArrayList();
 
 			// Get the hash map from the server.
-			HashData[] serverHashMap = httpClient.GetHashMap();
+			HashData[] serverHashMap = syncService.GetHashMap();
 			
 			if (serverHashMap.Length == 0)
 			{
@@ -747,7 +844,7 @@ namespace Simias.Sync
 		/// <returns></returns>
         private SyncStatus UploadHashMap()
 		{
-			return httpClient.PutHashMap(outStream);
+			return syncService.PutHashMap(outStream);
 		}
 
 		/// <summary>
@@ -756,7 +853,7 @@ namespace Simias.Sync
 		/// <returns>The hash map.</returns>
 		private HashData[] DownloadHashMap()
 		{
-			return httpClient.GetHashMap();
+			return syncService.GetHashMap();
 		}
 
 		/// <summary>

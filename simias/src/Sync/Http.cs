@@ -153,7 +153,7 @@ namespace Simias.Sync.Http
 	/// <summary>
 	/// Class used to talk to the HTTP SyncService (SyncHandler.ashx.cs). 
 	/// </summary>
-	public class HttpClient
+	public class HttpSyncProxy
 	{
 		SyncCollection		collection;
 		string				url;
@@ -169,7 +169,7 @@ namespace Simias.Sync.Http
 		/// <param name="collection"></param>
 		/// <param name="userName"></param>
 		/// <param name="userID"></param>
-		public HttpClient(SyncCollection collection, string userName, string userID)
+		public HttpSyncProxy(SyncCollection collection, string userName, string userID)
 		{
 			this.collection = collection;
 			url = collection.MasterUrl.ToString().TrimEnd('/') + "/SyncHandler.ashx";
@@ -552,22 +552,18 @@ namespace Simias.Sync.Http
 		/// <summary>
 		/// Reads the specified blocks from the server.
 		/// </summary>
-		/// <param name="blocks">The block array to read.</param>
+		/// <param name="seg">The range of blocks to read.</param>
 		/// <param name="blockSize">The block size.</param>
 		/// <returns>The response to the read. The data is in the responseStream.
 		/// This response must be closed.</returns>
-		public HttpWebResponse ReadFile(long[] blocks, int blockSize)
+		public HttpWebResponse ReadFile(DownloadSegment seg, int blockSize)
 		{
 			HttpWebRequest request = GetRequest(SyncMethod.ReadFile);
 			WebHeaderCollection headers = request.Headers;
-			headers.Add(SyncHeaders.Blocks, blocks.Length.ToString());
 			headers.Add(SyncHeaders.BlockSize, blockSize.ToString());
-			request.ContentLength = blocks.Length * 8;
+			request.ContentLength = DownloadSegment.InstanceSize;
 			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
-			foreach (long block in blocks)
-			{
-				writer.Write(block);
-			}
+			seg.Serialize(writer);
 			writer.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             if (response.StatusCode == HttpStatusCode.OK)
@@ -968,43 +964,24 @@ namespace Simias.Sync.Http
 		/// <param name="response">The HttpResponse.</param>
 		public void ReadFile(HttpRequest request, HttpResponse response)
 		{
-			string sBlockCount = request.Headers.Get(SyncHeaders.Blocks);
 			string sBlockSize = request.Headers.Get(SyncHeaders.BlockSize);
-			if (sBlockCount != null && sBlockSize != null)
+			if (sBlockSize != null)
 			{
-				int blockCount = int.Parse(sBlockCount);
 				int blockSize = int.Parse(sBlockSize);
-				long[] fileMap = new long[blockCount];
 				BinaryReader reader = new BinaryReader(request.InputStream);
-				for (int i = 0; i < blockCount; ++i)
-				{
-					fileMap[i] = reader.ReadInt64();
-				}
+				DownloadSegment seg = new DownloadSegment(reader);
 				
 				// Now send the data back;
 				response.ContentType = "application/octet-stream";
-				if (blockCount == 0)
+				response.BufferOutput = false;
+				byte[] buffer = new byte[blockSize];
+				Stream outStream = response.OutputStream;
+				for (int i = seg.StartBlock; i <= seg.EndBlock; ++i)
 				{
-					FileStream stream = service.GetReadStream();
-					response.WriteFile(stream.Handle, 0, stream.Length);
+					int bytesRead = service.Read(buffer, i * blockSize, blockSize);
+					outStream.Write(buffer, 0, bytesRead);
 				}
-				else
-				{
-					response.BufferOutput = false;
-					long offset = 0;
-					byte[] buffer = new byte[blockSize];
-					Stream outStream = response.OutputStream;
-					for (int i = 0; i < blockCount; ++i)
-					{
-						if (fileMap[i] == -1)
-						{
-							int bytesRead = service.Read(buffer, offset, blockSize);
-							outStream.Write(buffer, 0, bytesRead);
-						}
-						offset += blockSize;
-					}
-					outStream.Close();
-				}
+				outStream.Close();
 			}
 			else
 			{

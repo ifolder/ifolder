@@ -507,7 +507,6 @@ namespace Simias.Sync
 		static string			workBin;
 		/// <summary>Used to publish Sync events.</summary>
 		static public			EventPublisher	eventPublisher = new EventPublisher();
-		bool					exists = false;
 		
 		#endregion
 
@@ -532,7 +531,6 @@ namespace Simias.Sync
 			this.node = node;
 			this.nodeID = node.ID;
 			this.file = node.GetFullPath(collection);
-			exists = File.Exists(this.file);
 			if (workBin == null)
 			{
 				workBin = Path.Combine(Configuration.GetConfiguration().StorePath, workBinDir);
@@ -549,14 +547,6 @@ namespace Simias.Sync
 		protected string GetMapFileName()
 		{
 			return Path.Combine(collection.ManagedPath, MapFilePrefix + node.ID);
-		}
-
-		/// <summary>
-		/// Checks if the file exists.
-		/// </summary>
-		protected bool Exists
-		{
-			get { return exists; }
 		}
 
 		#endregion
