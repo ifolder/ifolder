@@ -27,7 +27,7 @@ case $CSC in
         CSCFLAGS_OPTIMIZE="/optimize+"
         MONO=mono
         MONO_DEBUG='mono --debug'
-        MONO_PATH='$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
+        MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(SIMIAS_INSTALL_PATH)/bin'
         SYSTEM_XML='System.Xml.dll'
     ;;
     #
