@@ -51,8 +51,11 @@ namespace Novell.FormsTrayApp
 		private const string iFolderKey = @"SOFTWARE\Novell\iFolder";
 		private iFolderWebService ifWebService;
 		private bool shutdown = false;
-		private Domain currentDefaultDomain;
-		private Domain newDefaultDomain;
+		private Domain currentDefaultDomain = null;
+		private Domain newDefaultDomain = null;
+		private ListViewItem newAccountLvi = null;
+		private bool processing = false;
+		private bool successful;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -89,6 +92,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.GroupBox groupBox4;
 		private System.Windows.Forms.TabPage tabGeneral;
 		private System.Windows.Forms.TabPage tabAccounts;
+		private System.Windows.Forms.Timer timer1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -131,6 +135,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Preferences));
 			this.defaultInterval = new System.Windows.Forms.NumericUpDown();
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
@@ -168,6 +173,7 @@ namespace Novell.FormsTrayApp
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabAccounts.SuspendLayout();
@@ -1049,6 +1055,11 @@ namespace Novell.FormsTrayApp
 			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
 			this.ok.Click += new System.EventHandler(this.ok_Click);
 			// 
+			// timer1
+			// 
+			this.timer1.Interval = 10;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
 			// Preferences
 			// 
 			this.AcceptButton = this.ok;
@@ -1257,15 +1268,6 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				foreach (ListViewItem lvi in accounts.Items)
-				{
-					if (lvi.Tag == null)
-					{
-						lvi.Selected = true;
-						break;
-					}
-				}
-
 				userName.Focus();
 			}
 		}
@@ -1376,19 +1378,23 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
-		private void connectToEnterprise()
+		private bool connectToEnterprise()
 		{
+			bool result = true;
+
 			try
 			{
 				DomainWeb domainWeb = ifWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
 				Domain domain = new Domain(domainWeb);
-				ListViewItem lvi = accounts.SelectedItems[0];
-				lvi.SubItems[1].Text = domainWeb.Name;
-				lvi.Tag = domain;
+//				ListViewItem lvi = accounts.SelectedItems[0];
+				newAccountLvi.SubItems[1].Text = domainWeb.Name;
+				newAccountLvi.Tag = domain;
+				newAccountLvi = null;
 
 				// Successfully joined ... don't allow the fields to be changed.
 				userName.ReadOnly = server.ReadOnly = true;
+				processing = false;
 
 				if (EnterpriseConnect != null)
 				{
@@ -1437,6 +1443,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
+				result = false;
 				if (ex.Message.IndexOf("HTTP status 401") != -1)
 				{
 					// TODO: put string in resource file
@@ -1450,6 +1457,8 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -1473,9 +1482,17 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void processChanges()
+		private bool processChanges()
 		{
+			bool result = true;
+
 			Cursor.Current = Cursors.WaitCursor;
+
+			// Add new account.
+			if (newAccountLvi != null)
+			{
+				result = connectToEnterprise();
+			}
 
 			// Check and update auto start setting.
 			if (autoStart.Checked != IsRunEnabled())
@@ -1504,6 +1521,8 @@ namespace Novell.FormsTrayApp
 					}
 					catch (Exception ex)
 					{
+						result = false;
+
 						// TODO: put string in resource file
 						Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("saveSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
@@ -1512,18 +1531,11 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
+				result = false;
+
 				// TODO: put string in resource file
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("readSyncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
-			}
-
-			foreach (ListViewItem lvi in accounts.Items)
-			{
-				if (lvi.Tag == null)
-				{
-					connectToEnterprise();
-					break;
-				}
 			}
 
 			if ((newDefaultDomain != null) && !newDefaultDomain.ID.Equals(currentDefaultDomain.ID))
@@ -1542,11 +1554,15 @@ namespace Novell.FormsTrayApp
 				}
 				catch
 				{
+					result = false;
+
 					// TODO: Error message.
 				}
 			}
 
 			Cursor.Current = Cursors.Default;
+
+			return result;
 		}
 		#endregion
 
@@ -1593,6 +1609,7 @@ namespace Novell.FormsTrayApp
 			if (this.Visible)
 			{
 				accounts.Items.Clear();
+				successful = true;
 
 				DomainWeb[] domains;
 				try
@@ -1636,25 +1653,35 @@ namespace Novell.FormsTrayApp
 
 		private void Preferences_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			// If we haven't received a shutdown event, hide this dialog and cancel the event.
-			if (!shutdown)
+			if (!successful && DialogResult.Equals(DialogResult.OK))
 			{
+				// There was a failure, cancel the close event.
+				e.Cancel = true;
+			}
+			else if (!shutdown)
+			{
+				// If we haven't received a shutdown event, cancel the close event and hide the dialog.
 				e.Cancel = true;
 				currentDefaultDomain = newDefaultDomain = null;
+				newAccountLvi = null;
+				addAccount.Enabled = true;
 				Hide();
 			}
 		}
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
-			processChanges();
+			// If this fails don't dismiss the dialog.
+			successful = processChanges();
 			Close();
 		}
 
 		private void apply_Click(object sender, System.EventArgs e)
 		{
-			processChanges();
-			apply.Enabled = false;
+			if (processChanges())
+			{
+				apply.Enabled = false;
+			}
 		}
 
 		private void cancel_Click(object sender, System.EventArgs e)
@@ -1805,6 +1832,7 @@ namespace Novell.FormsTrayApp
 
 			if (lvi.Tag == null)
 			{
+				newAccountLvi = null;
 				lvi.Remove();
 				addAccount.Enabled = true;
 			}
@@ -1822,43 +1850,78 @@ namespace Novell.FormsTrayApp
 			// TODO:
 		}
 
+		private void timer1_Tick(object sender, System.EventArgs e)
+		{
+			timer1.Stop();
+			newAccountLvi.Selected = true;
+			processing = false;
+		}
+
 		private void accounts_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
+			if (processing)
+				return;
+
+			if (!processing && (newAccountLvi != null))
+			{
+				if (MessageBox.Show("Do you want to save the new account?", "Save New Account", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				{
+					processing = true;
+//					processChanges();
+					if (!connectToEnterprise())
+					{
+						timer1.Start();
+						return;
+					}
+//					apply.Enabled = false;
+				}
+				else
+				{
+					addAccount.Enabled = true;
+					newAccountLvi.Remove();
+					newAccountLvi = null;
+				}
+			}
+
 			if (accounts.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = accounts.SelectedItems[0];
 				if (lvi != null)
 				{
-					userName.Enabled = server.Enabled = password.Enabled = true;
-
-					userName.Text = lvi.SubItems[0].Text;
-					server.Text = lvi.SubItems[1].Text;
-					password.Text = string.Empty;
-
-					if (lvi.Tag == null)
+					if ((newAccountLvi == null) || (lvi == newAccountLvi))
 					{
-						// This is a new account.
-						userName.ReadOnly = server.ReadOnly = false;
-						rememberPassword.Enabled = autoLogin.Enabled = 
-							removeAccount.Enabled = true;
-						details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
-						userName.Focus();
-					}
-					else
-					{
-						details.Enabled = true;
-						userName.ReadOnly = server.ReadOnly = true;
+						userName.Enabled = server.Enabled = password.Enabled = true;
 
-						defaultServer.Checked = ((Domain)lvi.Tag).DomainWeb.IsDefault;
-						defaultServer.Enabled = !defaultServer.Checked;
+						userName.Text = lvi.SubItems[0].Text;
+						server.Text = lvi.SubItems[1].Text;
+						password.Text = string.Empty;
 
-						// TODO: Don't allow the workgroup account to be removed.
-						// Don't allow the default account to be removed.
-						removeAccount.Enabled = !defaultServer.Checked;
+						if (lvi.Tag == null)
+						{
+							// This is a new account.
+							newAccountLvi = lvi;
+							userName.ReadOnly = server.ReadOnly = false;
+							rememberPassword.Enabled = autoLogin.Enabled = 
+								removeAccount.Enabled = true;
+							details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
+							userName.Focus();
+						}
+						else
+						{
+							details.Enabled = true;
+							userName.ReadOnly = server.ReadOnly = true;
 
-						// TODO: Fill in password with fixed long length of characters if it is currently remembered.
+							defaultServer.Checked = ((Domain)lvi.Tag).DomainWeb.IsDefault;
+							defaultServer.Enabled = !defaultServer.Checked;
 
-						// TODO: set remember password and auto login settings.
+							// TODO: Don't allow the workgroup account to be removed.
+							// Don't allow the default account to be removed.
+							removeAccount.Enabled = !defaultServer.Checked;
+
+							// TODO: Fill in password with fixed long length of characters if it is currently remembered.
+
+							// TODO: set remember password and auto login settings.
+						}
 					}
 				}
 			}
