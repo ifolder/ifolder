@@ -32,6 +32,14 @@ namespace Simias.Sync.Tests
 /// </summary>
 class Differ
 {
+	private static bool Same(int len, byte[] a, byte[] b)
+	{
+		for (int i = 0; i < len; ++i)
+			if (a[i] != b[i])
+				return false;
+		return true;
+	}
+
 	/// <summary>
 	/// Compare two files, specific differences are printed to Console.
 	/// returns false if comparison fails.
@@ -48,37 +56,51 @@ class Differ
 			Console.WriteLine("{0} attributes {1} != {2} attributes {3}", fileA, fiA.Attributes, fileB, fiB.Attributes);
 			same = false;
 		}
-		if (fiA.CreationTimeUtc != fiB.CreationTimeUtc)
+		if (fiA.CreationTime != fiB.CreationTime)
 		{
-			Console.WriteLine("{0} creation time {1} != {2} creation time {3}", fileA, fiA.CreationTimeUtc, fileB, fiB.CreationTimeUtc);
+			Console.WriteLine("{0} creation time {1} != {2} creation time {3}", fileA, fiA.CreationTime, fileB, fiB.CreationTime);
 			same = false;
 		}
-		if (fiA.LastAccessTimeUtc != fiB.LastAccessTimeUtc)
+		//if (fiA.LastAccessTime != fiB.LastAccessTime)
+		//{
+		//	Console.WriteLine("{0} access time {1} != {2} access time {3}", fileA, fiA.LastAccessTime, fileB, fiB.LastAccessTime);
+		//	same = false;
+		//}
+		if (fiA.LastWriteTime != fiB.LastWriteTime)
 		{
-			Console.WriteLine("{0} access time {1} != {2} access time {3}", fileA, fiA.LastAccessTimeUtc, fileB, fiB.LastAccessTimeUtc);
-			same = false;
-		}
-		if (fiA.LastWriteTimeUtc != fiB.LastWriteTimeUtc)
-		{
-			Console.WriteLine("{0} write time {1} != {2} write time {3}", fileA, fiA.LastWriteTimeUtc, fileB, fiB.LastWriteTimeUtc);
+			Console.WriteLine("{0} write time {1} != {2} write time {3}", fileA, fiA.LastWriteTime, fileB, fiB.LastWriteTime);
 			same = false;
 		}
 
 		FileStream fsA = fiA.OpenRead(), fsB = fiB.OpenRead();
 		byte[] bufferA = new byte[64 * 1024];
 		byte[] bufferB = new byte[bufferA.Length];
+		//if (!Same(bufferA.Length, bufferA, bufferB))
+		//	Console.WriteLine("uninitialized buffers are not the same");
+			
 		int readA, readB;
 		do
 		{
 			readA = fsA.Read(bufferA, 0, bufferA.Length);
 			readB = fsB.Read(bufferB, 0, bufferB.Length);
 
+			if (readA != readB)
+			{
+				Console.WriteLine("{0} length != {1} length", fileA, fileB);
+				same = false;
+				break;
+			}
+
 			/* I would like to find a better way to compare two byte arrays,
 			 * for now just compare the whole array every time. This is a waste
 			 * for the last read when the array is not full, but it should work OK
 			 * since the bytes from init or previous read should compare.
 			 */
-			if (readA != readB || bufferA != bufferB)
+			// this doesn't work
+			//if (bufferA != bufferB)
+			//	Console.WriteLine("{0} buffer != {1} buffer", fileA, fileB);
+
+			if (!Same(readA, bufferA, bufferB))
 			{
 				Console.WriteLine("{0} contents != {1} contents", fileA, fileB);
 				same = false;

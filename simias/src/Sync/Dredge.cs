@@ -120,12 +120,16 @@ public class Dredger
 
 		// from here we are just checking for modified files
 		DateTime fsLastWrite = File.GetLastWriteTime(path);
+		//DateTime fsLastAccess = File.GetLastAccessTime(path);
+		DateTime fsCreation = File.GetCreationTime(path);
 		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
 		{
 			Log.Assert(fse.IsFile && fse.RelativePath == nodePath);
-			if (fse.LastWriteTime != fsLastWrite)
+			if (fse.LastWriteTime != fsLastWrite || fse.CreationTime != fsCreation)
 			{
 				fse.LastWriteTime = fsLastWrite;
+				//fse.LastAccessTime = fsLastAccess;
+				fse.CreationTime = fsCreation;
 				node.Commit();
 			}
 		}

@@ -342,7 +342,11 @@ public class SyncIncomingNode
 		}
 
 		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
+		{
 			File.SetLastWriteTime(fse.FullName, fse.LastWriteTime);
+			File.SetCreationTime(fse.FullName, fse.CreationTime);
+			//File.SetLastAccessTime(fse.FullName, fse.LastAccessTime);
+		}
 
 		Log.Assert(stamp.localIncarn > node.MasterIncarnation);
 		return node.UpdateIncarnation(stamp.localIncarn)? Status.Complete: Status.UpdateCollision;
@@ -455,12 +459,11 @@ public class SyncOps
 	/// <summary>
 	/// returns nodes were not updated due to collisions
 	/// </summary>
-    // BSK: public RejectedNodes PutSmallNodes(NodeChunk[] nodeChunks)
-	public void PutSmallNodes(NodeChunk[] nodeChunks)
+    public RejectedNodes PutSmallNodes(NodeChunk[] nodeChunks)
 	{
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
-		// BSK: ArrayList updateRejects = new ArrayList();
-		// BSK: ArrayList fseRejects = new ArrayList();
+		ArrayList updateRejects = new ArrayList();
+		ArrayList fseRejects = new ArrayList();
 		foreach (NodeChunk nc in nodeChunks)
 		{
 			if (!onServer && nc.fseChunks == null && nc.totalSize >= NodeChunk.MaxSize)
@@ -472,17 +475,17 @@ public class SyncOps
 			inNode.WriteChunks(nc.fseChunks);
 			switch (inNode.Complete(nc.metaData))
 			{
-				// BSK: case SyncIncomingNode.Status.UpdateCollision: updateRejects.Add(nc.stamp.id); break;
-				// BSK: case SyncIncomingNode.Status.FileSystemEntryCollision: fseRejects.Add(nc.stamp.id); break;
+				case SyncIncomingNode.Status.UpdateCollision: updateRejects.Add(nc.stamp.id); break;
+				case SyncIncomingNode.Status.FileSystemEntryCollision: fseRejects.Add(nc.stamp.id); break;
             default:
                 break;
             }
 		}
 		
-        // BSK: RejectedNodes rejects;
-		// BSK: rejects.updateCollisions = (Nid[])updateRejects.ToArray(typeof(Nid));
-		// BSK: rejects.fileSystemEntryCollisions = (Nid[])fseRejects.ToArray(typeof(Nid));
-		// BSK: return rejects;
+        RejectedNodes rejects;
+		rejects.updateCollisions = (Nid[])updateRejects.ToArray(typeof(Nid));
+		rejects.fileSystemEntryCollisions = (Nid[])fseRejects.ToArray(typeof(Nid));
+		return rejects;
 	}
 
 	/// <summary>

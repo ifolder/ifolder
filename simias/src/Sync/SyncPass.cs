@@ -111,18 +111,18 @@ public class SynkerServiceA: SyncCollectionService
         
         string userId = null;
 
-        // BSK: 
         try
         {
             userId = Thread.CurrentPrincipal.Identity.Name;
+			Log.Spew("Sync session starting for {0}", userId);
         }
-        catch
+        catch (Exception e)
         {
             // kludge
+			Log.Spew("could not get identity in sync start, error {0}", e.Message);
             ignoreRights = true;
         }
         
-        Log.Spew("session started for user '{0}'{1}", userId, ignoreRights? " without access control": "");
         if (ignoreRights || userId == String.Empty)
             userId = Access.SyncOperatorRole;
         collection.LocalStore.ImpersonateUser(userId);
@@ -188,8 +188,7 @@ public class SynkerServiceA: SyncCollectionService
 	/// <summary>
 	/// takes an array of small nodes. returns rejected nodes
 	/// </summary>
-	// BSK: public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
-	public void PutSmallNodes(NodeChunk[] nodes)
+	public RejectedNodes PutSmallNodes(NodeChunk[] nodes)
 	{
 		try
 		{
@@ -197,11 +196,10 @@ public class SynkerServiceA: SyncCollectionService
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
 			Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
-			// BSK: return ops.PutSmallNodes(nodes);
-			ops.PutSmallNodes(nodes);
+			return ops.PutSmallNodes(nodes);
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		// BSK: return new RejectedNodes();
+		return new RejectedNodes();
 	}
 
 	/// <summary>
@@ -458,16 +456,16 @@ public class SynkerWorkerA: SyncCollectionWorker
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 		{
-			// BSK: RejectedNodes rejects = ss.PutSmallNodes(updates);
+			RejectedNodes rejects = ss.PutSmallNodes(updates);
 			ss.PutSmallNodes(updates);
 			foreach (NodeChunk nc in updates)
 			{
-				// BSK: if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
-				// BSK: && Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
+				if (Array.IndexOf(rejects.updateCollisions, nc.stamp.id) == -1
+						&& Array.IndexOf(rejects.fileSystemEntryCollisions, nc.stamp.id) == -1)
 					ops.UpdateIncarn(nc.stamp);
 			}
-			// BSK: foreach (Nid nid in rejects.fileSystemEntryCollisions)
-			// BSK: ops.DeleteSpuriousNode(nid);
+			foreach (Nid nid in rejects.fileSystemEntryCollisions)
+				ops.DeleteSpuriousNode(nid);
 		}
 
 		// get small files from server
