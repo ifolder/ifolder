@@ -222,7 +222,7 @@ simias_get_domains(bool only_slaves, SimiasDomainInfo **ret_domainsA[])
 	array_of_domain_infos = resp.GetDomainsResult;
 	if (array_of_domain_infos) {
 		num_of_domains = array_of_domain_infos->__sizeDomainInformation;
-		if (num_of_domains > 0) {
+		if (num_of_domains >= 0) {
 			domainInfosA = malloc(sizeof(SimiasDomainInfo *)
 									 * (num_of_domains + 1));
 			if (!domainInfosA) {
