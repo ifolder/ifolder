@@ -745,7 +745,8 @@ namespace Novell.iFolder
 						(DomainInformation) tModel.GetValue(iter, 0);
 				try
 				{
-					simws.LogoutFromRemoteDomain(dom.ID);
+					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", dom.ID, null);
+					domainAuth.Logout();
 
 					dom.Authenticated = false;
 					UpdateDomainStatus(dom.ID);
