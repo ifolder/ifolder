@@ -615,23 +615,25 @@ public class SyncService
 				}
 
 				log.Info("Deleting {0}", node.Name);
-				BaseFileNode bfn = node as BaseFileNode;
-				if (bfn != null)
+				// If this is a directory remove the directory.
+				DirNode dn = node as DirNode;
+				if (dn != null)
 				{
-					// If this is a file delete the file.
-					File.Delete(bfn.GetFullPath(collection));
+					Directory.Delete(dn.GetFullPath(collection), true);
+					// Do a deep delete.
+					Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+					collection.Commit(deleted);
 				}
 				else
 				{
-					// If this is a directory remove the directory.
-					DirNode dn = node as DirNode;
-					if (dn != null)
-						Directory.Delete(dn.GetFullPath(collection), true);
+					// If this is a file delete the file.
+					BaseFileNode bfn = node as BaseFileNode;
+					if (bfn != null)
+						File.Delete(bfn.GetFullPath(collection));
+
+					collection.Delete(node);
+					collection.Commit(node);
 				}
-						
-				// Do a deep delete.
-				Node[] deleted = collection.Delete(node, PropertyTags.Parent);
-				collection.Commit(deleted);
 
 				nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
 			}

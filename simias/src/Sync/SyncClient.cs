@@ -1044,12 +1044,16 @@ namespace Simias.Sync.Client
 						DirNode dn = node as DirNode;
 						if (dn != null)
 						{
+							Directory.Delete(dn.GetFullPath(collection), true);
 							Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 							collection.Commit(deleted);
 							collection.Commit(deleted);
 						}
 						else
 						{
+							BaseFileNode bfn = node as BaseFileNode;
+							if (bfn != null)
+								File.Delete(bfn.GetFullPath(collection));
 							collection.Delete(node);
 							collection.Commit(node);
 							collection.Commit(node);
