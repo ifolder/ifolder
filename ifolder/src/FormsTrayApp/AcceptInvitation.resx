@@ -925,4 +925,13 @@
 	<data name="Deny">
 		<value>Deny</value>
 	</data>
+	<data name="createDirectoryError">
+		<value>Unable to create directory.</value>
+	</data>
+	<data name="createDirectoryMessage">
+		<value>The directory specified does not exist.  Do you want to create the directory?</value>
+	</data>
+	<data name="createDirectoryTitle">
+		<value>Create Directory</value>
+	</data>
 </root>

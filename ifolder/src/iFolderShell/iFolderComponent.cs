@@ -41,11 +41,6 @@ namespace Novell.iFolderCom
 	public interface IiFolderComponent
 	{
 		/// <summary>
-		/// Gets/sets the description of the iFolder.
-		/// </summary>
-		//String Description{get; set;}
-
-		/// <summary>
 		/// Checks to see if a path can become an iFolder.
 		/// </summary>
 		/// <param name="path">The path that is tested.</param>
@@ -153,22 +148,6 @@ namespace Novell.iFolderCom
 				// Ignore.
 			}
 		}
-
-		/// <summary>
-		/// Gets/sets the description of the iFolder.
-		/// </summary>
-		/*public String Description
-		{
-			get { return ifoldernode.Description; }
-			set
-			{
-				ifoldernode.Description = value;
-
-				// TODO - move this so that the commit can be done once at the end of
-				// a bunch of modifies.
-//				ifoldernode.iFolder.Commit();
-			}
-		}*/
 
 		/// <summary>
 		/// Checks to see if a path can become an iFolder.
@@ -343,6 +322,7 @@ namespace Novell.iFolderCom
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Message = resourceManager.GetString("propertiesDialogError");
+					mmb.Details = e.Message;
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -354,6 +334,7 @@ namespace Novell.iFolderCom
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Message = resourceManager.GetString("propertiesDialogError");
+					mmb.Details = e.Message;
 					mmb.ShowDialog();
 				}
 			}
@@ -375,10 +356,11 @@ namespace Novell.iFolderCom
 				conflictResolver.LoadPath = dllPath;
 				conflictResolver.Show();		
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("conflictDialogError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 		}
@@ -430,10 +412,15 @@ namespace Novell.iFolderCom
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("helpFileError") + "\n" + helpPath;
+				mmb.Details = e.Message;
 				mmb.ShowDialog();
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the language directory where resource files are installed.
+		/// </summary>
+		/// <returns>The name of the language directory.</returns>
 		public String GetLanguageDirectory()
 		{
 			string languageDirectory;

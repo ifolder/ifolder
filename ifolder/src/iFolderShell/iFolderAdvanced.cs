@@ -1634,10 +1634,11 @@ namespace Novell.iFolderCom
 					gaugeChart.Used = 0;
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("diskQuotaReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 
 				setLimit.Checked = false;
@@ -1672,10 +1673,11 @@ namespace Novell.iFolderCom
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
 				byteCount.Text = syncSize.SyncByteCount.ToString();
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("syncReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 
@@ -1717,6 +1719,7 @@ namespace Novell.iFolderCom
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("memberReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
@@ -1724,10 +1727,11 @@ namespace Novell.iFolderCom
 					ifWebService = null;
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("memberReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 
@@ -1811,6 +1815,7 @@ namespace Novell.iFolderCom
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Message = resourceManager.GetString("changeOwnerError");
+					mmb.Details = e.Message;
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1818,10 +1823,11 @@ namespace Novell.iFolderCom
 						ifWebService = null;
 					}
 				}
-				catch
+				catch (Exception e)
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Message = resourceManager.GetString("changeOwnerError");
+					mmb.Details = e.Message;
 					mmb.ShowDialog();
 				}
 			}
@@ -1887,6 +1893,7 @@ namespace Novell.iFolderCom
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Message = string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name);
+					mmb.Details = e.Message;
 					mmb.ShowDialog();
 
 					if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1894,10 +1901,11 @@ namespace Novell.iFolderCom
 						ifWebService = null;
 					}
 				}
-				catch
+				catch (Exception e)
 				{
 					MyMessageBox mmb = new MyMessageBox();
 					mmb.Message = string.Format(resourceManager.GetString("memberCommitError"), slMember.iFolderUser.Name);
+					mmb.Details = e.Message;
 					mmb.ShowDialog();
 				}
 			}
@@ -1917,7 +1925,8 @@ namespace Novell.iFolderCom
 					catch (WebException e)
 					{
 						MyMessageBox mmb = new MyMessageBox();
-						mmb.Message = resourceManager.GetString("removeError") + "\n\n" + e.Message;
+						mmb.Message = resourceManager.GetString("removeError");
+						mmb.Details = e.Message;
 						mmb.ShowDialog();
 
 						if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1928,7 +1937,8 @@ namespace Novell.iFolderCom
 					catch (Exception e)
 					{
 						MyMessageBox mmb = new MyMessageBox();
-						mmb.Message = resourceManager.GetString("removeError") + "\n\n" + e.Message;
+						mmb.Message = resourceManager.GetString("removeError");
+						mmb.Details = e.Message;
 						mmb.ShowDialog();
 					}
 				}
@@ -1963,6 +1973,7 @@ namespace Novell.iFolderCom
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("policyCommitError");
+				mmb.Details = e.Message;
 				mmb.ShowDialog();
 
 				if (e.Status == WebExceptionStatus.ConnectFailure)
@@ -1970,10 +1981,11 @@ namespace Novell.iFolderCom
 					ifWebService = null;
 				}
 			}
-			catch
+			catch (Exception e)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("policyCommitError");
+				mmb.Details = e.Message;
 				mmb.ShowDialog();
 			}
 
@@ -2190,6 +2202,7 @@ namespace Novell.iFolderCom
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("iFolderReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
@@ -2197,10 +2210,11 @@ namespace Novell.iFolderCom
 					ifWebService = null;
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("iFolderReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 		}
@@ -2491,10 +2505,11 @@ namespace Novell.iFolderCom
 				ifolder = null;
 				ifolder = ifWebService.GetiFolder(id);
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("iFolderReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 		}
@@ -2681,6 +2696,7 @@ namespace Novell.iFolderCom
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("iFolderReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 
 				if (ex.Status == WebExceptionStatus.ConnectFailure)
@@ -2688,10 +2704,11 @@ namespace Novell.iFolderCom
 					ifWebService = null;
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("iFolderReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 		}
@@ -2702,10 +2719,11 @@ namespace Novell.iFolderCom
 			{
 				System.Diagnostics.Process.Start(((iFolderInfo)ifolders.SelectedItem).LocalPath);
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = string.Format(resourceManager.GetString("iFolderOpenError"), ifolder.Name);
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 		}

@@ -412,7 +412,7 @@ namespace Novell.FormsTrayApp
 					}
 
 					// The directory doesn't exist ... 
-					if (MessageBox.Show("The directory specified does not exist.  Do you want to create the directory?", "Create Directory", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+					if (MessageBox.Show(resourceManager.GetString("createDirectoryMessage"), resourceManager.GetString("createDirectoryTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
 					{					
 						// Create the directory.
 						try
@@ -421,7 +421,10 @@ namespace Novell.FormsTrayApp
 						}
 						catch (Exception ex)
 						{
-							MessageBox.Show("Unable to create directory:\n\n" + ex.Message, "Create Failed");
+							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
+							mmb.Message = resourceManager.GetString("createDirectoryError");
+							mmb.Details = ex.Message;
+							mmb.ShowDialog();
 							iFolderLocation.Focus();
 							successful = false;
 						}
@@ -445,13 +448,14 @@ namespace Novell.FormsTrayApp
 					{
 						isPathInvalid = ifWebService.IsPathIniFolder(iFolderLocation.Text);
 					}
-					catch (WebException ex)
-					{
-						MessageBox.Show(resourceManager.GetString("pathValidationError") + "\n\n" + ex.Message, resourceManager.GetString("pathValidationErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(resourceManager.GetString("pathValidationError") + "\n\n" + ex.Message, resourceManager.GetString("pathValidationErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+						Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
+						mmb.Message = resourceManager.GetString("pathValidationError");
+						mmb.MessageIcon = SystemIcons.Error;
+						mmb.Caption = resourceManager.GetString("pathValidationErrorTitle");
+						mmb.Details = ex.Message;
+						mmb.ShowDialog();
 					}
 
 					// Restore the cursor.
@@ -473,14 +477,11 @@ namespace Novell.FormsTrayApp
 						{
 							ifWebService.AcceptiFolderInvitation(ifolder.ID, iFolderLocation.Text);
 						}
-						catch (WebException ex)
-						{
-							MessageBox.Show(resourceManager.GetString("acceptError") + "\n\n" + ex.Message);
-							successful = false;
-						}
 						catch (Exception ex)
 						{
-							MessageBox.Show(resourceManager.GetString("acceptError") + "\n\n" + ex.Message);
+							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
+							mmb.Message = resourceManager.GetString("acceptError");
+							mmb.Details = ex.Message;
 							successful = false;
 						}
 					}

@@ -620,7 +620,12 @@ namespace Novell.FormsTrayApp
 
 			if (ex != null)
 			{
-				MessageBox.Show(resourceManager.GetString("fatalErrorMessage") + "\n\n" + ex.Message, resourceManager.GetString("fatalErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox();
+				mmb.Message = resourceManager.GetString("fatalErrorMessage");
+				mmb.Caption = resourceManager.GetString("fatalErrorTitle");
+				mmb.Details = ex.Message;
+				mmb.MessageIcon = SystemIcons.Error;
+				mmb.ShowDialog();
 			}
 
 			try
@@ -695,10 +700,6 @@ namespace Novell.FormsTrayApp
 
 		private const int WM_MYID = 0xbd1;
 
-		/// <summary>
-		/// Process messages in the Windows message loop.
-		/// </summary>
-		/// <param name="m"></param>
 		/*[System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name="FullTrust")]
 		protected override void WndProc(ref System.Windows.Forms.Message m) 
 		{

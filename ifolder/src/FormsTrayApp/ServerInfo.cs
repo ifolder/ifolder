@@ -371,11 +371,19 @@ namespace Novell.FormsTrayApp
 			}
 			catch (WebException ex)
 			{
-				MessageBox.Show(resourceManager.GetString("serverConnectError") + "\n\n" + ex.Message, resourceManager.GetString("serverConnectErrorTitle"));
+				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
+				mmb.Message = resourceManager.GetString("serverConnectError");
+				mmb.Caption = resourceManager.GetString("serverConnectErrorTitle");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("serverConnectError") + "\n\n" + ex.Message, resourceManager.GetString("serverConnectErrorTitle"));
+				Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
+				mmb.Message = resourceManager.GetString("serverConnectError");
+				mmb.Caption = resourceManager.GetString("serverConnectErrorTitle");
+				mmb.Details = ex.Message;
+				mmb.ShowDialog();
 			}
 
 			password.Clear();
@@ -391,8 +399,9 @@ namespace Novell.FormsTrayApp
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
 				this.banner.Image = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-banner.png"));
 			}
-			catch (Exception ex)
+			catch
 			{
+				// Ignore.
 			}
 		}
 

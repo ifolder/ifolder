@@ -73,6 +73,9 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.ComponentModel.IContainer components;
 
+		/// <summary>
+		/// Instantiates a ConflictResolver object.
+		/// </summary>
 		public ConflictResolver()
 		{
 			//
@@ -772,10 +775,11 @@ namespace Novell.iFolderCom
 						ifWebService.ResolveFileConflict(ifolder.ID, conflict.ConflictID, localWins);
 						lvi.Remove();
 					}
-					catch
+					catch (Exception ex)
 					{
 						MyMessageBox mmb = new MyMessageBox();
 						mmb.Message = resourceManager.GetString("conflictResolveError");
+						mmb.Details = ex.Message;
 						mmb.ShowDialog();
 					}
 				}
@@ -871,10 +875,11 @@ namespace Novell.iFolderCom
 					this.conflictsView.Items.Add(lvi);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
 				MyMessageBox mmb = new MyMessageBox();
 				mmb.Message = resourceManager.GetString("conflictReadError");
+				mmb.Details = ex.Message;
 				mmb.ShowDialog();
 			}
 		}
