@@ -3464,33 +3464,22 @@ namespace Novell.FormsTrayApp
 			{
 				DomainWeb domainWeb = ifWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
-				if (domainWeb != null)
+				Domain domain = new Domain(domainWeb);
+				ListViewItem lvi = accounts.SelectedItems[0];
+				lvi.SubItems[1].Text = domainWeb.Name;
+				lvi.Tag = domain;
+				servers2.Items.Add(domain);
+
+				// Update default.
+				if (domainWeb.IsDefault)
 				{
-					Domain domain = new Domain(domainWeb);
-					ListViewItem lvi = accounts.SelectedItems[0];
-					lvi.Tag = domain;
-					servers2.Items.Add(domain);
-
-					// Update default.
-					if (domainWeb.IsDefault)
-					{
-						defaultDomain.DomainWeb.IsDefault = false;
-						defaultDomain = domain;
-						defaultServer.Checked = true;
-						defaultServer.Enabled = false;
-					}
-
-					if (!rememberPassword.Checked)
-					{
-						password.Text = string.Empty;
-					}
-
-					// TODO: save state of checkboxes.
+					defaultDomain.DomainWeb.IsDefault = false;
+					defaultDomain = domain;
+					defaultServer.Checked = true;
+					defaultServer.Enabled = false;
 				}
-				else
-				{
-					// TODO: Error message.
-				}
+
+				// TODO: save state of checkboxes.
 
 				try
 				{
@@ -3500,18 +3489,20 @@ namespace Novell.FormsTrayApp
 					{
 						// TODO: Shut down the tray app.
 					}
+
+					if (!rememberPassword.Checked)
+					{
+						password.Text = string.Empty;
+					}
 				}
 				catch (Exception ex)
 				{
-					/* TODO:
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
-					*/
 				}
 			}
 			catch (Exception ex)
 			{
-				/* TODO:
 				if (ex.Message.IndexOf("HTTP status 401") != -1)
 				{
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
@@ -3522,7 +3513,6 @@ namespace Novell.FormsTrayApp
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 				}
-				*/
 			}
 
 			Cursor.Current = Cursors.Default;
