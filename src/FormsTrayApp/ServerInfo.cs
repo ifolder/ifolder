@@ -67,7 +67,7 @@ namespace Novell.FormsTrayApp
 		/// Constructs a ServerInfo object.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain.</param>
-		public ServerInfo(string domainID)
+		public ServerInfo(string domainID, string password)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -75,6 +75,12 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			this.domainID = domainID;
+
+			if (password != null)
+			{
+				this.password.Text = password;
+				rememberPassword.Checked = true;
+			}
 		}
 
 		/// <summary>

@@ -494,7 +494,15 @@ namespace Novell.iFolderCom
 			}
 
 			resizeControl();
-			CenterToParent();
+
+			if (StartPosition == FormStartPosition.CenterScreen)
+			{
+				CenterToScreen();
+			}
+			else
+			{
+				CenterToParent();
+			}
 		}
 
 		private void MyMessageBox_Activated(object sender, System.EventArgs e)

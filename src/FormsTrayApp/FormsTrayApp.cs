@@ -1027,6 +1027,7 @@ namespace Novell.FormsTrayApp
 											string.Empty,
 											MyMessageBoxButtons.OK,
 											MyMessageBoxIcon.Information);
+										mmb.StartPosition = FormStartPosition.CenterScreen;
 										mmb.ShowDialog();
 
 										break;
@@ -1034,11 +1035,13 @@ namespace Novell.FormsTrayApp
 									else if (authStatus.statusCode.Equals(StatusCodes.AccountDisabled))
 									{
 										MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+										mmb.StartPosition = FormStartPosition.CenterScreen;
 										mmb.ShowDialog();
 									}
 									else if (authStatus.statusCode.Equals(StatusCodes.AccountLockout))
 									{
 										MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+										mmb.StartPosition = FormStartPosition.CenterScreen;
 										mmb.ShowDialog();
 									}
 									else if (authStatus.statusCode == StatusCodes.UnknownUser ||
@@ -1047,10 +1050,13 @@ namespace Novell.FormsTrayApp
 									{
 										// There are bad credentials stored. Remove them.
 										simiasWebService.SetDomainCredentials(domainID, null, CredentialType.None);
+										MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+										mmb.StartPosition = FormStartPosition.CenterScreen;
+										mmb.ShowDialog();
 									}
 								}
 
-								serverInfo = new ServerInfo(domainID);
+								serverInfo = new ServerInfo(domainID, credentials);
 								serverInfo.Closed += new EventHandler(serverInfo_Closed);
 								serverInfo.Show();
 								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
@@ -1063,11 +1069,15 @@ namespace Novell.FormsTrayApp
 									string.Empty,
 									MyMessageBoxButtons.OK,
 									MyMessageBoxIcon.Information);
+								mmb.StartPosition = FormStartPosition.CenterScreen;
 								mmb.ShowDialog();
 							}
 						}
 					}
-					catch {}
+					catch //(Exception ex)
+					{
+//						MessageBox.Show(ex.Message);
+					}
 					break;
 				}
 			}
