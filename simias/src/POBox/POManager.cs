@@ -107,7 +107,7 @@ namespace Simias.POBox
 					SyncCollection sc = new SyncCollection(roster);
 
 					// only use collection managers on client machines
-					if (sc.Role == SyncCollectionRoles.Slave)
+					if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (sc.Role == SyncCollectionRoles.Slave))
 					{
 						// start collection managers
 						subscriber.Enabled = true;
