@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-RemotingSnifferLibrary_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SnifferClientChannelSink.cs $(srcdir)/Library/SnifferClientChannelSinkProvider.cs $(srcdir)/Library/SnifferServerChannelSink.cs $(srcdir)/Library/SnifferServerChannelSinkProvider.cs
+RemotingSnifferLibrary_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SnifferClientChannelSink.cs $(srcdir)/Library/SnifferClientChannelSinkProvider.cs $(srcdir)/Library/SnifferServerChannelSink.cs $(srcdir)/Library/SnifferServerChannelSinkProvider.cs $(srcdir)/Library/SnifferMessage.cs
 RemotingSnifferLibrary_CSFILES_CSC := $(subst /,$(SEP),$(RemotingSnifferLibrary_CSFILES))
 RemotingSnifferLibrary_INCLUDES =
 RemotingSnifferLibrary_RESOURCES =
