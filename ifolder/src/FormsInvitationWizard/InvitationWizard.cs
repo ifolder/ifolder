@@ -1,24 +1,24 @@
 /***********************************************************************
- *  InvitationWizard.cs - An invitation wizard using Windows.Forms
- * 
+ *  $RCSfile$
+ *
  *  Copyright (C) 2004 Novell, Inc.
  *
- *  This library is free software; you can redistribute it and/or
+ *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
  *  License as published by the Free Software Foundation; either
  *  version 2 of the License, or (at your option) any later version.
  *
- *  This library is distributed in the hope that it will be useful,
+ *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Library General Public License for more details.
+ *  General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public
- *  License along with this library; if not, write to the Free
+ *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Bruce Getter <bgetter@novell.com>
- * 
+ *
  ***********************************************************************/
 
 using System;
@@ -81,10 +81,6 @@ namespace Novell.iFolder.InvitationWizard
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
-
 			// This stuff is here just in case dev studio cuts it out of the InitializeComponent
 			// method ... I added it to that method.
 //			this.selectInvitationPage = new SelectInvitationPage();
@@ -107,6 +103,14 @@ namespace Novell.iFolder.InvitationWizard
 //			this.Controls.Add(this.selectInvitationPage);
 //			this.Controls.Add(this.selectiFolderLocationPage);
 
+			// Load the application icon.
+			try
+			{
+				this.Icon = new Icon(Path.Combine(Application.StartupPath, "Invitation.ico"));
+			}
+			catch{}
+
+			// Put the wizard pages in order.
 			pages = new BaseWizardPage[maxPages];
 			pages[0] = this.welcomePage;
 			pages[1] = this.selectInvitationPage;
@@ -132,6 +136,7 @@ namespace Novell.iFolder.InvitationWizard
 				page.Hide();
 			}
 
+			// Activate the first wizard page.
 			pages[0].ActivatePage(0);
 
 			invitation = new Invitation();
