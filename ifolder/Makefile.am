@@ -1,6 +1,15 @@
 SUBDIRS = src package
 
+DIST_SUBDIRS = $(SUBDIRS) doc
+
 EXTRA_DIST = tools
+
+.PHONY: doc doc-clean
+doc: $(DOC_TARGETS)
+	$(MAKE) -C doc all
+
+doc-clean:
+	$(MAKE) -C doc clean
 
 .PHONY: sub-all sub-clean sub-install sub-uninstall sub-installcheck
 .PHONY: sub-distclean sub-maintainer-clean sub-package sub-installcheck-summary
