@@ -27,7 +27,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using Simias.Agent;
+using Simias.Sync;
+using Simias.Invite;
 
 namespace Novell.iFolder.InvitationWizard
 {

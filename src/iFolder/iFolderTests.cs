@@ -29,7 +29,7 @@ using System.Text;
 using NUnit.Framework;
 
 using Simias.Storage;
-using Simias.Agent;
+using Simias.Sync;
 
 using Novell.iFolder;
 

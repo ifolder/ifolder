@@ -25,7 +25,8 @@ using System;
 using System.Collections;
 using System.IO;
 using Simias.Storage;
-using Simias.Agent;
+using Simias.Sync;
+using Simias.Invite;
 using Simias;
 using Novell.AddressBook;
 
@@ -603,7 +604,7 @@ namespace Novell.iFolder
 
 			invitation.RootPath = path;
 
-			AgentFactory.GetInviteAgent().Accept(store, invitation);
+			InvitationService.Accept(store, invitation);
 		}
 
 

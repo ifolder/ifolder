@@ -24,7 +24,8 @@
 using System;
 using System.IO;
 using System.Drawing;
-using Simias.Agent;
+using Simias.Sync;
+using Simias.Invite;
 
 using Gtk;
 using Gdk;

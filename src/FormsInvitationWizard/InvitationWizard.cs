@@ -29,7 +29,9 @@ using System.Windows.Forms;
 using System.Data;
 using System.IO;
 using System.Reflection;
-using Simias.Agent;
+
+using Simias.Sync;
+using Simias.Invite;
 using Novell.iFolder;
 using System.Text;
 

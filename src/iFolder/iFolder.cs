@@ -26,7 +26,8 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using Simias.Storage;
-using Simias.Agent;
+using Simias.Sync;
+using Simias.Invite;
 using Novell.AddressBook;
 
 namespace Novell.iFolder
@@ -735,9 +736,7 @@ namespace Novell.iFolder
 				if (invite)
 				{
 					// inform the notification service that we have shared
-					IInviteAgent agent = AgentFactory.GetInviteAgent();
-					Invitation invitation = agent.CreateInvitation(collection,
-							userID);
+					Invitation invitation = InvitationService.CreateInvitation(collection, userID);
 
 					// TODO: where should we discover the contact information?
 //					Novell.AddressBook.Manager abManager =
@@ -757,7 +756,7 @@ namespace Novell.iFolder
 					invitation.ToEmail = to.EMail;
 
 					// send the invitation
-					agent.Invite(invitation);
+					InvitationService.Invite(invitation);
 				}
 			}
 
@@ -774,9 +773,7 @@ namespace Novell.iFolder
 		public void Invite(Contact contact)
 		{
 			// inform the notification service that we have shared
-			IInviteAgent agent = AgentFactory.GetInviteAgent();
-			Invitation invitation = agent.CreateInvitation(collection,
-					contact.ID);
+			Invitation invitation = InvitationService.CreateInvitation(collection, contact.ID);
 
 			// TODO: where should we discover the contact information?
 			// CRG: this was connecting to the wrong store
@@ -800,7 +797,7 @@ namespace Novell.iFolder
 			invitation.ToEmail = contact.EMail;
 
 			// send the invitation
-			agent.Invite(invitation);
+			InvitationService.Invite(invitation);
 		}
 
 
@@ -819,9 +816,7 @@ namespace Novell.iFolder
 		public void CreateInvitationFile(Contact contact, string filePath)
 		{
 			// inform the notification service that we have shared
-			IInviteAgent agent = AgentFactory.GetInviteAgent();
-			Invitation invitation = agent.CreateInvitation(collection,
-					contact.ID);
+			Invitation invitation = InvitationService.CreateInvitation(collection, contact.ID);
 
 			// TODO: where should we discover the contact information?
 //			Novell.AddressBook.Manager abManager =
