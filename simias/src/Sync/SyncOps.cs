@@ -419,6 +419,13 @@ internal class SyncIncomingNode
 		}
 	}
 
+	void CheckMasterIncarn(Nid nid)
+	{
+		Node n = collection.GetNodeByID(nid);
+		if (n.Properties.GetSingleProperty( PropertyTags.MasterIncarnation ) == null)
+			Log.Spew("Just completed node {0} has no MasterIncarnation", node.Name);
+	}
+
 	public NodeStatus Complete(ulong expectedIncarn)
 	{
 		Node curNode;
@@ -474,6 +481,7 @@ internal class SyncIncomingNode
 				CommitFile();
 				node.Properties.DeleteSingleProperty("TemporaryFileComplete");
 				collection.Commit(node);
+				CheckMasterIncarn((Nid)node.ID);
 				return NodeStatus.Complete;
 			}
 		}
@@ -523,6 +531,7 @@ internal class SyncIncomingNode
 		CommitFile();
 		node.Properties.DeleteSingleProperty("TemporaryFileComplete");
 		collection.Commit(node);
+		CheckMasterIncarn((Nid)node.ID);
 		return NodeStatus.Complete;
 	}
 }
