@@ -101,7 +101,7 @@ do
       fi
       if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
 	echo "Running libtoolize..."
-		case $host_os in
+		case $OSTYPE in
 			darwin*)
 				glibtoolize --force --copy
 			;;
