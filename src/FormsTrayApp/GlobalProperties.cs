@@ -45,7 +45,7 @@ namespace Novell.iFolder.FormsTrayApp
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
 		#region Class Members
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(FormsTrayApp));
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(GlobalProperties));
 		private const string iFolderRun = "iFolder";
 
 		const string CFG_Section = "ServiceManager";
@@ -258,7 +258,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.displayConfirmation.Name = "displayConfirmation";
 			this.displayConfirmation.Size = new System.Drawing.Size(368, 24);
 			this.displayConfirmation.TabIndex = 1;
-			this.displayConfirmation.Text = "Display iFolder creation confirmation.";
+			this.displayConfirmation.Text = "&Display iFolder creation confirmation.";
 			// 
 			// ok
 			// 
@@ -514,7 +514,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.autoSync.Name = "autoSync";
 			this.autoSync.Size = new System.Drawing.Size(368, 16);
 			this.autoSync.TabIndex = 0;
-			this.autoSync.Text = "Automatic sync";
+			this.autoSync.Text = "&Automatic sync";
 			// 
 			// groupBox3
 			// 
@@ -535,7 +535,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.autoStart.Name = "autoStart";
 			this.autoStart.Size = new System.Drawing.Size(368, 24);
 			this.autoStart.TabIndex = 0;
-			this.autoStart.Text = "Startup iFolder at login.";
+			this.autoStart.Text = "&Startup iFolder at login.";
 			// 
 			// tabPage3
 			// 
@@ -557,7 +557,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.clearLog.Location = new System.Drawing.Point(88, 288);
 			this.clearLog.Name = "clearLog";
 			this.clearLog.TabIndex = 4;
-			this.clearLog.Text = "Clear";
+			this.clearLog.Text = "&Clear";
 			// 
 			// saveLog
 			// 
@@ -566,7 +566,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.saveLog.Location = new System.Drawing.Point(8, 288);
 			this.saveLog.Name = "saveLog";
 			this.saveLog.TabIndex = 3;
-			this.saveLog.Text = "Save...";
+			this.saveLog.Text = "&Save...";
 			// 
 			// log
 			// 
@@ -584,7 +584,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.syncNow.Name = "syncNow";
 			this.syncNow.Size = new System.Drawing.Size(96, 23);
 			this.syncNow.TabIndex = 1;
-			this.syncNow.Text = "Sync now";
+			this.syncNow.Text = "S&ync now";
 			this.syncNow.Click += new System.EventHandler(this.syncNow_Click);
 			// 
 			// label6
