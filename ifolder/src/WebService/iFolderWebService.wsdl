@@ -815,6 +815,16 @@
       <xs:element name="SynciFolderNowResponse">
         <xs:complexType/>
       </xs:element>
+      <xs:element name="SetDefaultDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="domainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDefaultDomainResponse">
+        <xs:complexType/>
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings"/>
       <xs:element name="boolean" type="xs:boolean"/>
       <xs:element name="iFolderWeb" type="s0:iFolderWeb"/>
@@ -1135,6 +1145,12 @@
   <message name="SynciFolderNowSoapOut">
     <part name="parameters" element="s0:SynciFolderNowResponse"/>
   </message>
+  <message name="SetDefaultDomainSoapIn">
+    <part name="parameters" element="s0:SetDefaultDomain"/>
+  </message>
+  <message name="SetDefaultDomainSoapOut">
+    <part name="parameters" element="s0:SetDefaultDomainResponse"/>
+  </message>
   <message name="PingHttpGetIn"/>
   <message name="PingHttpGetOut"/>
   <message name="GetSettingsHttpGetIn"/>
@@ -1424,6 +1440,10 @@
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="SynciFolderNowHttpGetOut"/>
+  <message name="SetDefaultDomainHttpGetIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDefaultDomainHttpGetOut"/>
   <message name="PingHttpPostIn"/>
   <message name="PingHttpPostOut"/>
   <message name="GetSettingsHttpPostIn"/>
@@ -1713,6 +1733,10 @@
     <part name="iFolderID" type="s:string"/>
   </message>
   <message name="SynciFolderNowHttpPostOut"/>
+  <message name="SetDefaultDomainHttpPostIn">
+    <part name="domainID" type="s:string"/>
+  </message>
+  <message name="SetDefaultDomainHttpPostOut"/>
   <portType name="iFolderWebServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn"/>
@@ -1979,6 +2003,11 @@
       <output message="s0:SynciFolderNowSoapOut"/>
       <documentation>Sends a command to the sync engine to sync the iFolder of the specified
             ID.</documentation>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainSoapIn"/>
+      <output message="s0:SetDefaultDomainSoapOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
     </operation>
   </portType>
   <portType name="iFolderWebServiceHttpGet">
@@ -2248,6 +2277,11 @@
       <documentation>Sends a command to the sync engine to sync the iFolder of the specified
             ID.</documentation>
     </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainHttpGetIn"/>
+      <output message="s0:SetDefaultDomainHttpGetOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
   </portType>
   <portType name="iFolderWebServiceHttpPost">
     <operation name="Ping">
@@ -2516,6 +2550,11 @@
       <documentation>Sends a command to the sync engine to sync the iFolder of the specified
             ID.</documentation>
     </operation>
+    <operation name="SetDefaultDomain">
+      <input message="s0:SetDefaultDomainHttpPostIn"/>
+      <output message="s0:SetDefaultDomainHttpPostOut"/>
+      <documentation>Change the default domain to the specified domain ID</documentation>
+    </operation>
   </portType>
   <binding name="iFolderWebServiceSoap" type="s0:iFolderWebServiceSoap">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -2605,7 +2644,8 @@
       </output>
     </operation>
     <operation name="GetiFolderInvitation">
-      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderInvitation" style="document"/>
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderInvitation"
+            style="document"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -3008,6 +3048,16 @@
     </operation>
     <operation name="SynciFolderNow">
       <soap:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SetDefaultDomain"
             style="document"/>
       <input>
         <soap:body use="literal"/>
@@ -3444,6 +3494,13 @@
       </input>
       <output/>
     </operation>
+    <operation name="SetDefaultDomain">
+      <http:operation location="/SetDefaultDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output/>
+    </operation>
   </binding>
   <binding name="iFolderWebServiceHttpPost" type="s0:iFolderWebServiceHttpPost">
     <http:binding verb="POST"/>
@@ -3867,6 +3924,13 @@
     </operation>
     <operation name="SynciFolderNow">
       <http:operation location="/SynciFolderNow"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output/>
+    </operation>
+    <operation name="SetDefaultDomain">
+      <http:operation location="/SetDefaultDomain"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>

@@ -1888,5 +1888,19 @@ namespace Novell.iFolder.Web
 		{
 			SharedCollection.SyncCollectionNow(iFolderID);
 		}
+	
+		
+		
+		
+		/// <summary>
+		/// WebMethod that changes the default domain.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to set as the default.</param>
+		[WebMethod(Description="Change the default domain to the specified domain ID")]
+		[SoapDocumentMethod]
+		public void SetDefaultDomain(string domainID)
+		{
+			SharedCollection.SetDefaultDomain(domainID);
+		}
 	}
 }
