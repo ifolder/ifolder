@@ -95,7 +95,6 @@ namespace Novell.iFolder
 		Pixbuf	UserCardPixBuf;
 		Pixbuf	CurCardPixBuf;
 		Pixbuf	BookPixBuf;
-		Hashtable	listHash;
 
 		public event ContactsPickedEventHandler ContactsPicked;
 
@@ -178,26 +177,9 @@ namespace Novell.iFolder
 			ctvc.Title = "Contacts";
 			ContactTreeView.AppendColumn(ctvc);
 
-//			TreeSelection tSel = ContactTreeView.Selection;
-
-//			tSel.Mode = SelectionMode.Multiple;
-
-	//		ContactTreeStore.SetDefaultSortFunc(new TreeIterCompareFunc(AddrBookSort), null, null);
-/*
-			ContactTreeView.AppendColumn("Email",
-					new CellRendererText(),
-					new TreeCellDataFunc(EmailCellTextDataFunc));
-*/
-
-//			ContactTreeView.RulesHint = true;
-
 			UserCardPixBuf = new Pixbuf("contact.png");
 			CurCardPixBuf = new Pixbuf("contact_me.png");
 			BookPixBuf = new Pixbuf("book.png");
-
-//			Gtk.Image tmpImg = (Gtk.Image) gxml.GetWidget("image4");
-
-			listHash = new Hashtable();
 
 			if(abMan == null)
 			{
@@ -225,6 +207,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		private void BookCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
@@ -236,6 +221,9 @@ namespace Novell.iFolder
 				((CellRendererText) cell).Text = book.Name;
 		}
 
+
+
+
 		private void BookCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
@@ -243,117 +231,51 @@ namespace Novell.iFolder
 			((CellRendererPixbuf) cell).Pixbuf = BookPixBuf;
 		}
 
+
+
+
 		private void ContactCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			if(listHash.ContainsKey(iter))
+			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
+			if(cnt != null)
 			{
-				((CellRendererText) cell).Text = 
-						((CPListData)listHash[iter]).Name;
+				if( (cnt.FN != null) && (cnt.FN.Length > 0) )
+					((CellRendererText) cell).Text = cnt.FN;
+				else
+					((CellRendererText) cell).Text = cnt.UserName;
 			}
 			else
 			{
-				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-				string userName;
-				Pixbuf	cPhoto;
-
-				userName = cnt.FN;
-				if( (userName == null) || (userName.Length == 0) )
-					userName = cnt.UserName;
-
-/*
-				Pixbuf cPhoto = GetScaledPhoto(cnt, 24);
-				if(cPhoto == null)
-				{
-*/
-					if(cnt.IsCurrentUser)
-						cPhoto = CurCardPixBuf;
-					else
-						cPhoto =  UserCardPixBuf;
-//				}
-				listHash.Add(iter, new CPListData(cPhoto, userName));
-
-				((CellRendererText) cell).Text = userName;
-//				Console.WriteLine("Getting Name : " + userName);
+				((CellRendererText) cell).Text = "unknown contact";
 			}
-/*
-
-			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-			string userName;
-
-			userName = cnt.FN;
-			if(userName == null)
-				userName = cnt.UserName;
-
-			((CellRendererText) cell).Text = userName;
-*/
 		}
+
+
+
 
 		private void ContactCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			if(listHash.ContainsKey(iter))
-			{
-				((CellRendererPixbuf) cell).Pixbuf = 
-						((CPListData)listHash[iter]).Icon;
-			}
-			else
-			{
-				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-				string userName;
-				Pixbuf cPhoto;
-
-				userName = cnt.FN;
-				if(userName == null)
-					userName = cnt.UserName;
-				
-/*
-				cPhoto = GetScaledPhoto(cnt, 24);
-				if(cPhoto == null)
-				{
-*/					if(cnt.IsCurrentUser)
-						cPhoto = CurCardPixBuf;
-					else
-						cPhoto =  UserCardPixBuf;
-//				}
-				listHash.Add(iter, new CPListData(cPhoto, userName));
-
-				((CellRendererPixbuf) cell).Pixbuf = cPhoto;
-
-//				Console.WriteLine("Getting Icon for : " + userName);
-			}
-/*
-
 			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-			Pixbuf pb = GetScaledPhoto(cnt, 24);
-			if(pb != null)
-				((CellRendererPixbuf) cell).Pixbuf = pb;
-			else
+
+			if(cnt != null)
 			{
 				if(cnt.IsCurrentUser)
 					((CellRendererPixbuf) cell).Pixbuf = CurCardPixBuf;
 				else
 					((CellRendererPixbuf) cell).Pixbuf = UserCardPixBuf;
 			}
-*/
+			else
+			{
+				((CellRendererPixbuf) cell).Pixbuf = UserCardPixBuf;
+			}
 		}
-/*
-		private void EmailCellTextDataFunc (Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
-		{
-			Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
-			string userEmail;
 
-			userEmail = cnt.EMail;
-			if(userEmail == null)
-				userEmail = "";
 
-			((CellRendererText) cell).Text = userEmail;
-		}
-*/
+
 
 		protected virtual void OnContactsPicked(ContactsPickedEventArgs e)
 		{
@@ -363,6 +285,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		public void ShowAll()
 		{
 			if(cpwin != null)
@@ -370,6 +295,9 @@ namespace Novell.iFolder
 				cpwin.Present();
 			}
 		}
+
+
+
 
 		public bool IsValid()
 		{
@@ -379,11 +307,17 @@ namespace Novell.iFolder
 				return false;
 		}
 
+
+
+
 		private void on_contact_row_activated(object obj,
 				RowActivatedArgs args)
 		{
 			onAdd(obj, args);
 		}
+
+
+
 
 		public void onAdd(object o, EventArgs args)
 		{
@@ -403,14 +337,11 @@ namespace Novell.iFolder
 
 				OnContactsPicked(e);
 			}
-
-/*
-			cpwin.Hide();
-			cpwin.Destroy();
-			cpwin = null;
-*/
 		}
-		
+	
+
+
+
 		public void Close()
 		{
 			if(cpwin != null)
@@ -421,15 +352,24 @@ namespace Novell.iFolder
 			cpwin = null;
 		}
 
+
+
+
 		public void onCancel(object o, EventArgs args) 
 		{
 			Close();
 		}
 
+
+
+
 		public void on_delete (object o, DeleteEventArgs args) 
 		{
 			Close();
 		}
+
+
+
 
 		public void on_add_contact_clicked(object o, EventArgs args) 
 		{
@@ -441,12 +381,18 @@ namespace Novell.iFolder
 			ce.ShowAll();
 		}
 
+
+
+
 		public void on_add_book_clicked(object o, EventArgs args)
 		{
 			BookEditor be = new BookEditor();
 			be.BookEdited += new BookEditEventHandler(CreateBookEventHandler);
 			be.ShowAll();
 		}
+
+
+
 
 		public void onKeyPressed(object o, KeyPressEventArgs args)
 		{
@@ -461,6 +407,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		public void ContactCreatedEventHandler(object o,
 				ContactEventArgs args)
 		{
@@ -472,6 +421,9 @@ namespace Novell.iFolder
 
 			ContactTreeStore.AppendValues(contact);
 		}
+
+
+
 
 		public void CreateBookEventHandler(object o, BookEditEventArgs args)
 		{
@@ -489,10 +441,12 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		private void SearchAddrBook() 
 		{
 			ContactTreeStore.Clear();
-			listHash.Clear();
 
 			if(SearchEntry.Text.Length > 0)
 			{
@@ -546,7 +500,10 @@ namespace Novell.iFolder
 				}
 			}
 		}
-		
+
+
+
+
 		private int AddrBookSort(TreeModel model, TreeIter iterA, 
 				TreeIter iterB)
 		{
@@ -555,30 +512,37 @@ namespace Novell.iFolder
 			return 0;
 		}
 
+
+
+
 		public void on_contact_key_press(object o, KeyPressEventArgs args)
 		{
 			switch(args.Event.HardwareKeycode)
 			{
 				case 22:
 				case 107:
+				{
+					TreeSelection tSelect = ContactTreeView.Selection;
+					if(tSelect.CountSelectedRows() > 0)
 					{
-						TreeSelection tSelect = ContactTreeView.Selection;
-						if(tSelect.CountSelectedRows() > 0)
-						{
-							MessageDialog dialog = new MessageDialog(	cpwin,
-									DialogFlags.Modal | DialogFlags.DestroyWithParent,
-									MessageType.Question,
-									ButtonsType.YesNo,
-									"Do you want to delete the selected Contacts?");
+						MessageDialog dialog = new MessageDialog(	cpwin,
+						DialogFlags.Modal | DialogFlags.DestroyWithParent,
+						MessageType.Question,
+						ButtonsType.YesNo,
+						"Do you want to delete the selected Contacts?");
 
-							dialog.Response += new ResponseHandler(DeleteContactResponse);
-							dialog.Title = "Denali Delete Contacts";
-							dialog.Show();
-						}
-						break;					
+						dialog.Response += 
+								new ResponseHandler(DeleteContactResponse);
+						dialog.Title = "Denali Delete Contacts";
+						dialog.Show();
 					}
+					break;					
+				}
 			}
 		}
+
+
+
 
 		public void DeleteContactResponse(object sender, ResponseArgs args)
 		{
@@ -594,6 +558,9 @@ namespace Novell.iFolder
 			}
 			dialog.Destroy();
 		}
+
+
+
 
 		public void DeleteSelectedContacts()
 		{
@@ -633,6 +600,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		public void on_book_key_press(object o, KeyPressEventArgs args)
 		{
 			switch(args.Event.HardwareKeycode)
@@ -658,6 +628,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		public void DeleteBookResponse(object sender, ResponseArgs args)
 		{
 			MessageDialog dialog = (MessageDialog) sender;
@@ -672,6 +645,9 @@ namespace Novell.iFolder
 			}
 			dialog.Destroy();
 		}
+
+
+
 
 		public void DeleteSelectedBooks()
 		{
@@ -700,19 +676,21 @@ namespace Novell.iFolder
 
 				BookTreeStore.Remove(out iter);
 
-					try
-					{
-						ab.Delete();
-					}
-					catch(ApplicationException e)
-					{
-						Console.WriteLine(e);
-					}
+				try
+				{
+					ab.Delete();
+				}
+				catch(ApplicationException e)
+				{
+					Console.WriteLine(e);
+				}
 
 				ContactTreeStore.Clear();
-				listHash.Clear();
 			}
 		}
+
+
+
 
 		public void on_book_selection_changed(object o, EventArgs args)
 		{
@@ -729,7 +707,6 @@ namespace Novell.iFolder
 
 				//CreateContactButton.Sensitive = true;
 				ContactTreeStore.Clear();
-				listHash.Clear();
 
 				foreach(Contact cont in curAddrBook)
 				{
@@ -743,6 +720,9 @@ namespace Novell.iFolder
 			}
 		}
 
+
+
+
 		public void on_search_key_press(object o, KeyPressEventArgs args)
 		{
 			switch(args.Event.HardwareKeycode)
@@ -752,6 +732,9 @@ namespace Novell.iFolder
 					break;					
 			}
 		}
+
+
+
 
 		public void on_search_button_clicked(object o, EventArgs args)
 		{

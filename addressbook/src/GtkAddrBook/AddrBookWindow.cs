@@ -232,7 +232,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				((CellRendererText) cell).Text = "";
+				((CellRendererText) cell).Text = "unknown contact";
 			}
 		}
 
