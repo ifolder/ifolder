@@ -685,6 +685,13 @@ namespace Simias.mDns
 			Simias.Storage.Member rMember;
 			lock( typeof( Simias.mDns.RendezvousUsers ) )
 			{
+				// FIXME:: Debug - take out later
+				log.Debug( "Current Members" );
+				foreach( Member cMember in RendezvousUsers.memberList )
+				{
+					log.Debug( "  " + cMember.Name );
+				}
+
 				IEnumerator memberEnum = RendezvousUsers.stagedList.GetEnumerator();
 				while( memberEnum.MoveNext() )
 				{

@@ -601,6 +601,8 @@ namespace Simias
 		/// </returns>
 		public Uri ResolveLocation( string domainID )
 		{
+			log.Debug( "ResolveLocation with domainID - called" );
+
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -662,6 +664,8 @@ namespace Simias
 		/// </returns>
 		public Uri ResolveLocation( string domainID, string userID, string collectionID )
 		{
+			log.Debug( "ResolveLocation with domainID, userID and collectionID - called" );
+
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -715,6 +719,7 @@ namespace Simias
 		/// <param name="member">Member object that is about to be committed to the domain's member list.</param>
 		public void PreCommit( string domainID, Member member )
 		{
+			log.Debug( "PreCommit - called" );
 			return;
 		}
 		#endregion
