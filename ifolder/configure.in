@@ -90,7 +90,6 @@ case $IFOLDER_OS in
         LIBS=''
         MONO=mono
         MONO_PATH='$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS))):$(ADDRESSBOOK_INSTALL_PATH)/bin:$(SIMIAS_INSTALL_PATH)/bin'
-        NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS $NOBUILD_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
@@ -159,7 +158,6 @@ case $IFOLDER_OS in
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         MONO=
         MONO_PATH=
-        NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS $NOBUILD_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
@@ -210,7 +208,6 @@ AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(MONO)
 AC_SUBST(MONO_PATH)
 AC_SUBST(NOBUILD_SUBDIRS)
-AC_SUBST(NON_PLATFORM_SUBDIRS)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)

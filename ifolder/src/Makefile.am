@@ -1,6 +1,6 @@
 SUBDIRS = $(COMMON_SUBDIRS) $(PLATFORM_SUBDIRS)
 
-DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS)
+DIST_SUBDIRS = $(COMMON_SUBDIRS) $(LINUX_SUBDIRS) $(WINDOWS_SUBDIRS) $(NOBUILD_SUBDIRS)
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml
@@ -10,10 +10,6 @@ installcheck-summary:
 clean-local:
 	rm -rf stage *.suo
 
-distclean-local:
-	for subdir in $(NON_PLATFORM_SUBDIRS); do rm -rf "$$subdir/Makefile"; done
-
 maintainer-clean-local:
-	for subdir in $(NON_PLATFORM_SUBDIRS); do rm -rf "$$subdir/Makefile.in"; done
 	rm -f Makefile.in
 
