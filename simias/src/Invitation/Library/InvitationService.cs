@@ -28,24 +28,32 @@ using System.Net;
 using System.Text;
 
 using Simias;
-using Simias.Agent;
 using Simias.Storage;
 using Simias.Sync;
 
-namespace Simias.Agent
+namespace Simias.Invite
 {
 	/// <summary>
-	/// Invitation Agent Base Class
+	/// Invitation Service Class
 	/// </summary>
-	public abstract class InviteAgent : IInviteAgent
+	public class InvitationService
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(InvitationService));
+
+		/// <summary>
+		/// Hidden Constructor
+		/// </summary>
+		private InvitationService()
+		{
+		}
+
 		/// <summary>
 		/// Generate an inviation for a user to a collection
 		/// </summary>
 		/// <param name="collection">The collection object</param>
 		/// <param name="identity">The user identity</param>
 		/// <returns>The generated invitation object</returns>
-		public Invitation CreateInvitation(Collection collection, string identity)
+		public static Invitation CreateInvitation(Collection collection, string identity)
 		{
 			// open the store
 			SyncStore syncStore = new SyncStore(collection.LocalStore);
@@ -63,14 +71,22 @@ namespace Simias.Agent
 		/// Invite a user to a collection
 		/// </summary>
 		/// <param name="invitation">The invitation</param>
-		public abstract void Invite(Invitation invitation);
+		public static void Invite(Invitation invitation)
+		{
+			// TODO: remove hard-coded answer
+			IInvitationProvider ip = (IInvitationProvider)Activator.CreateInstance(
+				"SmtpInvitationProvider", "Simias.Invite.SmtpInvitationProvider").Unwrap();
+
+			// invite
+			ip.Invite(invitation);
+		}
 		
 		/// <summary>
 		/// Accept a collection invitation on the current machine
 		/// </summary>
 		/// <param name="store">The collection store object</param>
 		/// <param name="invitation">The invitation object</param>
-		public void Accept(Store store, Invitation invitation)
+		public static void Accept(Store store, Invitation invitation)
 		{
 			// default local path ?
 			if ((invitation.RootPath == null) || (invitation.RootPath.Length == 0))

@@ -23,34 +23,19 @@
 
 using System;
 
-using Simias.Storage;
+using Simias.Sync;
 
-namespace Simias.Agent
+namespace Simias.Invite
 {
 	/// <summary>
-	/// Invitation Agent Interface
+	/// Invitation Provider Interface
 	/// </summary>
-	public interface IInviteAgent
+	public interface IInvitationProvider
 	{
-		/// <summary>
-		/// Generate a collection share invitation.
-		/// </summary>
-		/// <param name="collection">The collection object.</param>
-		/// <param name="identity">The user identity.</param>
-		/// <returns>The generated invitation object.</returns>
-		Invitation CreateInvitation(Collection collection, string identity);
-
 		/// <summary>
 		/// Send a collection share invitation.
 		/// </summary>
 		/// <param name="invitation">The invitation object.</param>
 		void Invite(Invitation invitation);
-
-		/// <summary>
-		/// Accept a collection share invitation to the local machine.
-		/// </summary>
-		/// <param name="store">The collection store object.</param>
-		/// <param name="invitation">The invitation object.</param>
-		void Accept(Store store, Invitation invitation);
 	}
 }

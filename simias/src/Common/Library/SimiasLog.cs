@@ -29,7 +29,7 @@ using log4net.spi;
 namespace Simias
 {
 	/// <summary>
-	/// Simias Log
+	/// A light wrapper around the log4net ILog class.
 	/// </summary>
 	public class SimiasLog : ISimiasLog
 	{
@@ -44,6 +44,11 @@ namespace Simias
 			this.log = log;
 		}
 
+		/// <summary>
+		/// Log a DEBUG level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Debug(string format, params object[] args)
 		{
 			if (log.IsDebugEnabled)
@@ -52,6 +57,11 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a INFO level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Info(string format, params object[] args)
 		{
 			if (log.IsInfoEnabled)
@@ -60,6 +70,11 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a WARN level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Warn(string format, params object[] args)
 		{
 			if (log.IsWarnEnabled)
@@ -68,6 +83,11 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a ERROR level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Error(string format, params object[] args)
 		{
 			if (log.IsErrorEnabled)
@@ -76,6 +96,11 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a FATAL level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Fatal(string format, params object[] args)
 		{
 			if (log.IsFatalEnabled)
@@ -84,6 +109,12 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a DEBUG level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Debug(Exception e, string format, params object[] args)
 		{
 			if (log.IsDebugEnabled)
@@ -92,6 +123,12 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a INFO level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Info(Exception e, string format, params object[] args)
 		{
 			if (log.IsInfoEnabled)
@@ -100,6 +137,12 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a WARN level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Warn(Exception e, string format, params object[] args)
 		{
 			if (log.IsWarnEnabled)
@@ -108,6 +151,12 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a ERROR level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Error(Exception e, string format, params object[] args)
 		{
 			if (log.IsErrorEnabled)
@@ -116,6 +165,12 @@ namespace Simias
 			}
 		}
 
+		/// <summary>
+		/// Log a FATAL level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		public void Fatal(Exception e, string format, params object[] args)
 		{
 			if (log.IsFatalEnabled)

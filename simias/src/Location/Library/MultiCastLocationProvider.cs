@@ -26,7 +26,7 @@ using System;
 namespace Simias.Location
 {
 	/// <summary>
-	/// Multi-Cast Location Provider
+	/// Multi-Cast DNS Location Provider
 	/// </summary>
 	public class MultiCastLocationProvider : ILocationProvider
 	{

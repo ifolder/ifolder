@@ -28,7 +28,7 @@ using System.Xml.Serialization;
 using System.Collections;
 using System.Text;
 
-namespace Simias.Agent
+namespace Simias.Sync
 {
 	/// <summary>
 	/// Collection Invitation

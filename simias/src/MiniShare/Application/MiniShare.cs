@@ -30,7 +30,6 @@ using System.Collections.Specialized;
 using Simias;
 using Simias.Sync;
 using Simias.Storage;
-using Simias.Agent;
 
 namespace Simias.Mini
 {

@@ -27,18 +27,20 @@ using System.IO;
 using NUnit.Framework;
 
 using Simias;
-using Simias.Sync;
-using Simias.Agent;
 using Simias.Storage;
+using Simias.Invite;
+using Simias.Sync;
 
-namespace Simias.Agent.Tests
+namespace Simias.Invite.Tests
 {
 	/// <summary>
-	/// Agent Tests
+	/// Invitation Tests
 	/// </summary>
 	[TestFixture]
-	public class AgentTests
+	public class InvitationTests
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(InvitationTests));
+
 		string testStorePath;
 		Uri testStoreUri;
 		int id = 0;
@@ -48,7 +50,7 @@ namespace Simias.Agent.Tests
 		/// <summary>
 		/// The default constructor
 		/// </summary>
-		public AgentTests()
+		public InvitationTests()
 		{
 			MyTrace.SendToConsole();
 		}
@@ -60,7 +62,7 @@ namespace Simias.Agent.Tests
 		public void SetUp()
 		{
 			// the test store
-			testStorePath = Path.GetFullPath(".agent" + id++);
+			testStorePath = Path.GetFullPath(".invitation" + id++);
 			testStoreUri = new Uri(testStorePath);
 
 			// clear any stale store
@@ -73,7 +75,7 @@ namespace Simias.Agent.Tests
 			store = Store.Connect(testStoreUri, null);
 
 			// create collection
-			collection = store.CreateCollection("Agent Collection");
+			collection = store.CreateCollection("Invitation Collection");
 			collection.Properties.AddProperty(SyncCollection.HostPropertyName, "localhost");
 			collection.Properties.AddProperty(SyncCollection.PortPropertyName, SyncProperties.SuggestedPort);
 			collection.Commit(true);
@@ -104,8 +106,8 @@ namespace Simias.Agent.Tests
 		public void TestInvite()
 		{
 			// user
-			IInviteAgent agent = AgentFactory.GetInviteAgent();
-			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
+			Invitation invitation = InvitationService.CreateInvitation(collection,
+				collection.LocalStore.CurrentUser);
 
 			invitation.FromName = "JDoe";
 			invitation.FromEmail = "denali@novell.com";
@@ -114,7 +116,7 @@ namespace Simias.Agent.Tests
 			invitation.ToEmail = "denali@novell.com";
 
 			// invite
-			agent.Invite(invitation);
+			InvitationService.Invite(invitation);
 		}
 
 		/// <summary>
@@ -139,7 +141,7 @@ namespace Simias.Agent.Tests
 			invitation.ToName = "Denali";
 			invitation.ToEmail = "denali@novell.com";
 
-			AgentFactory.GetInviteAgent().Accept(store, invitation);
+			InvitationService.Accept(store, invitation);
 		}
 
 		/// <summary>
@@ -150,8 +152,8 @@ namespace Simias.Agent.Tests
 		public void TestBadInvite1()
 		{
 			// user
-			IInviteAgent agent = AgentFactory.GetInviteAgent();
-			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
+			Invitation invitation = InvitationService.CreateInvitation(collection,
+				collection.LocalStore.CurrentUser);
 
 			invitation.FromName = "JDoe";
 			// BAD: invitation.FromEmail = "denali@novell.com";
@@ -160,7 +162,7 @@ namespace Simias.Agent.Tests
 			invitation.ToEmail = "denali@novell.com";
 
 			// invite
-			agent.Invite(invitation);
+			InvitationService.Invite(invitation);
 		}
 		
 		/// <summary>
@@ -171,8 +173,8 @@ namespace Simias.Agent.Tests
 		public void TestBadInvite2()
 		{
 			// user
-			IInviteAgent agent = AgentFactory.GetInviteAgent();
-			Invitation invitation = agent.CreateInvitation(collection, collection.LocalStore.CurrentUser);
+			Invitation invitation = InvitationService.CreateInvitation(collection,
+				collection.LocalStore.CurrentUser);
 
 			invitation.FromName = "JDoe";
 			invitation.FromEmail = "denali@novell.com";
@@ -181,7 +183,7 @@ namespace Simias.Agent.Tests
 			// BAD: invitation.ToEmail = "denali@novell.com";
 
 			// invite
-			agent.Invite(invitation);
+			InvitationService.Invite(invitation);
 		}
 	}
 }

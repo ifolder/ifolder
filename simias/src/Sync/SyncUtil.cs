@@ -30,7 +30,6 @@ using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels.Tcp;
 
 using Simias.Storage;
-using Simias.Agent;
 
 namespace Simias.Sync
 {

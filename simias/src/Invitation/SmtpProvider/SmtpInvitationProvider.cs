@@ -24,21 +24,24 @@
 using System;
 using System.IO;
 using System.Text;
-using Simias.Mail;
-using Simias.Agent;
 
-namespace Simias.Agent
+using Simias.Sync;
+using Simias.Mail;
+
+namespace Simias.Invite
 {
 	/// <summary>
-	/// Agent Class
+	/// Smtp Invitation Provider
 	/// </summary>
-	public class EmailInviteAgent : InviteAgent
+	public class SmtpInvitationProvider : IInvitationProvider
 	{
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SmtpInvitationProvider));
+
 		/// <summary>
 		/// Invite a user to a collection
 		/// </summary>
 		/// <param name="invitation">The invitation to send</param>
-		public override void Invite(Invitation invitation)
+		public void Invite(Invitation invitation)
 		{
 			// validate
 			Validate(invitation);

@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "EmailInviteAgent"
+                AssemblyName = "SmtpInvitationProvider"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
-                RootNamespace = "Novell.iFolder.Agent"
+                RootNamespace = "Simias.Invite"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -85,23 +85,18 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
                 />
                 <Reference
-                    Name = "Agent"
-                    Project = "{9196E4EC-9EBD-4398-AE6B-B4D98F8502C3}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Common"
                     Project = "{2E918CCD-6919-4453-9BDE-1FF22657CAB5}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "InviteAgent"
-                    Project = "{DB2F7899-F3D5-4379-88A1-676F684D7588}"
+                    Name = "Smtp"
+                    Project = "{7E6DFD17-8603-4B53-B71D-AE15E441DA5E}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Smtp"
-                    Project = "{7E6DFD17-8603-4B53-B71D-AE15E441DA5E}"
+                    Name = "Invitation"
+                    Project = "{DB2F7899-F3D5-4379-88A1-676F684D7588}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
@@ -119,7 +114,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "EmailInviteAgent.cs"
+                    RelPath = "SmtpInvitationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

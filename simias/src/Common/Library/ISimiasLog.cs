@@ -33,16 +33,79 @@ namespace Simias
 	/// </summary>
 	public interface ISimiasLog
 	{
+		/// <summary>
+		/// Log a DEBUG level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Debug(string format, params object[] args);
+
+		/// <summary>
+		/// Log a INFO level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Info(string format, params object[] args);
+
+		/// <summary>
+		/// Log a WARN level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Warn(string format, params object[] args);
+
+		/// <summary>
+		/// Log a ERROR level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Error(string format, params object[] args);
+
+		/// <summary>
+		/// Log a FATAL level message.
+		/// </summary>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Fatal(string format, params object[] args);
 
+		/// <summary>
+		/// Log a DEBUG level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Debug(Exception e, string format, params object[] args);
+
+		/// <summary>
+		/// Log a INFO level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Info(Exception e, string format, params object[] args);
+
+		/// <summary>
+		/// Log a WARN level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Warn(Exception e, string format, params object[] args);
+
+		/// <summary>
+		/// Log a ERROR level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Error(Exception e, string format, params object[] args);
+
+		/// <summary>
+		/// Log a FATAL level message.
+		/// </summary>
+		/// <param name="e">An exception associated with the message.</param>
+		/// <param name="format">A string with optional format items.</param>
+		/// <param name="args">An optional array of objects to format.</param>
 		void Fatal(Exception e, string format, params object[] args);
 	}
 }

@@ -29,7 +29,6 @@ using System.Net;
 
 using Simias;
 using Simias.Storage;
-using Simias.Agent;
 
 namespace Simias.Sync
 {

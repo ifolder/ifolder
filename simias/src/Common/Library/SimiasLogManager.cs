@@ -35,7 +35,7 @@ using log4net.Layout;
 namespace Simias
 {
 	/// <summary>
-	/// Simias Log Manager
+	/// A light wrapper around the log4net LogManager class.
 	/// </summary>
 	public class SimiasLogManager
 	{
@@ -60,20 +60,28 @@ namespace Simias
 		}
 
 		/// <summary>
-		/// Get the logger for the type in the Simias domain.
+		/// Create or retrieve the logger for the type in the Simias domain.
 		/// </summary>
-		/// <param name="type">The logger type.</param>
+		/// <param name="type">The fully qualified name of the type is the name of the logger.</param>
 		/// <returns>A Simias log interface object.</returns>
 		public static ISimiasLog GetLogger(Type type)
 		{
 			return new SimiasLog(LogManager.GetLogger(type));
 		}
 
+		/// <summary>
+		/// Configure the log manager to a specific Simias store.
+		/// </summary>
+		/// <param name="configuration">A Simias configuration object.</param>
 		public static void Configure(Configuration configuration)
 		{
 			Configure(configuration.StorePath);
 		}
 
+		/// <summary>
+		/// Configure the log manater to a specific Simias store.
+		/// </summary>
+		/// <param name="storePath">The full path to the store directory.</param>
 		public static void Configure(String storePath)
 		{
 			// TEMP: log file

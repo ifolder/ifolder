@@ -33,8 +33,7 @@ namespace Simias.Location
 	/// </summary>
 	public class LocationService
 	{
-		private static readonly string section = "Location";
-		private static readonly string key = "Providers";
+		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(LocationService));
 
 		private Configuration configuration;
 
@@ -63,7 +62,7 @@ namespace Simias.Location
 			{
 				try
 				{
-					MyTrace.WriteLine("Type: {0}", type);
+					log.Debug("Quering the {0} location provider.", type);
 
 					ILocationProvider provider = (ILocationProvider)Activator.CreateInstance(type);
 
@@ -73,7 +72,7 @@ namespace Simias.Location
 				}
 				catch(Exception e)
 				{
-					MyTrace.WriteLine(e);
+					log.Debug(e, "The {0} location provider failed.");
 				}
 
 				if (result != null) break;
