@@ -90,14 +90,19 @@
                     HintPath = "..\SimiasClient\SimiasClient.dll"
                 />
                 <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\..\external\log4net\bin\net\1.1\debug\log4net.dll"
-                />
-                <Reference
                     Name = "Novell.AddressBook"
                     AssemblyName = "Novell.AddressBook"
                     HintPath = "..\..\src\AddressBook\Novell.AddressBook.dll"
+                />
+                <Reference
+                    Name = "System.Web"
+                    AssemblyName = "System.Web"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                />
+                <Reference
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
             </References>
         </Build>
@@ -105,6 +110,21 @@
             <Include>
                 <File
                     RelPath = "Authentication.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DomainInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DomainService.asmx.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ProvisionInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
