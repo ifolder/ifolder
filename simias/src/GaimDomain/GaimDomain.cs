@@ -56,7 +56,6 @@ namespace Simias.Gaim
 		private string userName;
 		private string userID;
 		private string poBoxID;
-		private static string syncMethodPref = "all";
 		private static bool bPruneOldMembers = false;
 
 		/// <summary>
@@ -115,7 +114,7 @@ namespace Simias.Gaim
 			hostName = Environment.MachineName;
 			userName = username;
 
-			domainName = "Gaim Buddy List (" + username + ")";
+			domainName = "Gaim Buddy List (" + username + "@" + hostName + ")";
 			description = "Workgroup Domain built from " + username + "'s Gaim Buddy List";
 
 			if ( init == true )
@@ -144,7 +143,6 @@ namespace Simias.Gaim
 		{
 			hostAddress = MyDns.GetHostName();
 			Store store = Store.GetStore();
-
 			try
 			{
 				Uri localUri = Manager.LocalServiceUrl;
@@ -188,7 +186,6 @@ namespace Simias.Gaim
 							Simias.Sync.SyncRoles.Master, 
 							Simias.Storage.Domain.ConfigurationType.Workgroup );
 
-					rDomain.SetType( rDomain, "GaimDomain" );
 					rDomain.SetType( rDomain, "Workgroup" );
 
 					// Create the owner member for the domain.
@@ -202,16 +199,26 @@ namespace Simias.Gaim
 
 					// Add on the SimiasURL so that the Location Provider can determine the
 					// POBoxUrl for the Gaim Domain
-					Simias.Storage.Property p = new Property("Gaim:SimiasURL", localUri.ToString());
-					p.LocalProperty = true;
-					member.Properties.AddProperty(p);
+					if (localUri == null)
+					{
+						localUri = Manager.LocalServiceUrl;
+						if (localUri != null)
+						{
+							Simias.Storage.Property p = new Property("Gaim:SimiasURL", localUri.ToString());
+							p.LocalProperty = true;
+							member.Properties.AddProperty(p);
+						}
+						else
+						{
+							log.Debug("Manager.LocalServiceUrl returned NULL!");
+						}
+					}
 
 					rDomain.Commit( new Node[] { rDomain, member } );
 
 					// Create the name mapping.
 					store.AddDomainIdentity( rDomain.ID, member.UserID );
 
-//					GaimService.RegisterLocationProvider();
 					GaimService.RegisterDomainProvider();
 				}
 
@@ -351,44 +358,6 @@ namespace Simias.Gaim
 					Simias.Gaim.Sync.UpdateSyncInterval(syncInterval);
 				}
 			}
-			
-			//
-			// Type of member sync
-			//
-			XmlNode syncMethodNode =
-				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='sync_method']/@value");
-
-			if (syncMethodNode != null)
-			{
-				string syncMethod = syncMethodNode.Value;
-				if (syncMethod != null && syncMethod != syncMethodPref)
-				{
-					syncMethodPref = syncMethod;
-				}
-			}
-			
-			//
-			// Prune old members
-			//
-			XmlNode pruneMembersNode =
-				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='prune_members']/@value");
-
-			if (pruneMembersNode != null)
-			{
-				string pruneMembers = pruneMembersNode.Value;
-				if (pruneMembers != null)
-				{
-					if (pruneMembers == "1")
-					{
-						bPruneOldMembers = true;
-					}
-					else
-					{
-						bPruneOldMembers = false;
-					}
-				}
-			}
-			
 		}
 		
 		/// <summary>
@@ -437,15 +406,7 @@ namespace Simias.Gaim
 		public static GaimBuddy[] SearchForBuddies(string attributeName, string searchString, SearchOp operation)
 		{
 			ArrayList buddies = new ArrayList();
-			GaimBuddy[] allBuddies;
-			if (syncMethodPref == "plugin-enabled")
-			{
-				allBuddies = GetBuddies(true);
-			}
-			else
-			{
-				allBuddies = GetBuddies(false);
-			}
+			GaimBuddy[] allBuddies = allBuddies = GetBuddies();
 			
 			if (allBuddies != null && allBuddies.Length > 0)
 			{
@@ -463,17 +424,17 @@ namespace Simias.Gaim
 					}
 
 					string compareString = null;
-					if (attributeName != null && attributeName == "Alias")
-					{
-						// Use the buddy alias (if one exists)
-						compareString = buddy.Alias;
-					}
+//					if (attributeName != null && attributeName == "Alias")
+//					{
+//						// Use the buddy alias (if one exists)
+//						compareString = buddy.Alias;
+//					}
 					
-					if (compareString == null)
-					{
+//					if (compareString == null)
+//					{
 						// Use the screenname
 						compareString = buddy.Name;
-					}
+//					}
 
 					if (compareString != null)
 					{
@@ -522,7 +483,7 @@ namespace Simias.Gaim
 			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 		}
 
-		public static void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName)
+		public static void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName, string MachineName)
 		{
 			Simias.Storage.Domain domain = GaimDomain.GetDomain();
 			if (domain == null) return;
@@ -539,8 +500,8 @@ namespace Simias.Gaim
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
 			string xPathQuery =
-				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}' and setting[@name='simias-user-id']]",
-				AccountName, AccountProtocolID, BuddyName);
+				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}' and setting[@name='simias-user-id:{3}']]",
+				AccountName, AccountProtocolID, BuddyName, MachineName);
 			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
 			if (buddyNode != null)
 			{
@@ -548,48 +509,48 @@ namespace Simias.Gaim
 				{
 					GaimBuddy buddy = new GaimBuddy(buddyNode);
 					Member member =
-						FindBuddyInDomain(domain, buddy);
+						FindBuddyInDomain(domain, buddy, MachineName);
 					
 					if (member != null)
 					{
-						UpdateMember(domain, member, buddy);
+						UpdateMember(domain, member, buddy, MachineName);
 					}
 				}
 				catch {}
 			}
 		}
 
-		public static void ParseGaimBuddyAlias(string alias, out string givenName, out string familyName)
-		{
-			givenName = null;
-			familyName = null;
-			if (alias != null)
-			{
-				int lastSpacePos = alias.LastIndexOf(' ');
-				if (lastSpacePos > 0)
-				{
-					familyName = alias.Substring(lastSpacePos + 1);
-
-					givenName = alias.Substring(0, lastSpacePos);
-				}
-				else
-				{
-					givenName = alias;
-				}
-			}
-		}
+//		public static void ParseGaimBuddyAlias(string alias, out string givenName, out string familyName)
+//		{
+//			givenName = null;
+//			familyName = null;
+//			if (alias != null)
+//			{
+//				int lastSpacePos = alias.LastIndexOf(' ');
+//				if (lastSpacePos > 0)
+//				{
+//					familyName = alias.Substring(lastSpacePos + 1);
+//
+//					givenName = alias.Substring(0, lastSpacePos);
+//				}
+//				else
+//				{
+//					givenName = alias;
+//				}
+//			}
+//		}
 
 		/// <summary>
 		/// Returns the Member object for a GaimBuddy if the Buddy
 		/// exists in the Domain, otherwise null is returned.
 		/// </summary>
-		public static Member FindBuddyInDomain(GaimBuddy buddy)
+		public static Member FindBuddyInDomain(GaimBuddy buddy, string machineName)
 		{
 			Member member = null;
 			Simias.Storage.Domain domain = GetDomain();
 			if (domain != null)
 			{
-				member = FindBuddyInDomain(domain, buddy);
+				member = FindBuddyInDomain(domain, buddy, machineName);
 			}
 			
 			return member;
@@ -617,7 +578,7 @@ namespace Simias.Gaim
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
 			string xPathQuery =
-				string.Format("//buddy[setting[@name='simias-user-id' and .='{0}']]",
+				string.Format("//buddy[setting[starts-with(@name, 'simias-user-id:') and .='{0}']]",
 							  simiasUserID);
 			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
 			if (buddyNode != null)
@@ -777,7 +738,7 @@ namespace Simias.Gaim
 			return (GaimAccount[])accounts.ToArray(typeof(Simias.Gaim.GaimAccount));
 		}
 		
-		internal static GaimBuddy[] GetBuddies(bool iFolderEnabledOnly)
+		internal static GaimBuddy[] GetBuddies()
 		{
 			ArrayList buddies = new ArrayList();
 			XmlDocument blistDoc = new XmlDocument();
@@ -791,15 +752,7 @@ namespace Simias.Gaim
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
-			XmlNodeList buddyNodes = null;
-			if (iFolderEnabledOnly)
-			{
-				buddyNodes = gaimElement.SelectNodes("//buddy[setting[@name='simias-url']]");
-			}
-			else
-			{
-				buddyNodes = gaimElement.SelectNodes("//buddy");
-			}
+			XmlNodeList buddyNodes = gaimElement.SelectNodes("//buddy[setting[starts-with(@name, 'simias-url:')]]");
 			if (buddyNodes == null)
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			
@@ -819,23 +772,13 @@ namespace Simias.Gaim
 			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 		}
 		
-		internal static Member FindBuddyInDomain(Simias.Storage.Domain domain, GaimBuddy buddy)
+		internal static Member FindBuddyInDomain(Simias.Storage.Domain domain, GaimBuddy buddy, string machineName)
 		{
-			// Check to see if the buddy already exists
 			Member member = null;
-			ICSList domainMembers = domain.GetNodesByName(buddy.Name);
-			foreach (ShallowNode sNode in domainMembers)
+			string simiasUserID = buddy.GetSimiasUserID(machineName);
+			if (simiasUserID != null)
 			{
-				Simias.Storage.Member aMember =	
-					new Simias.Storage.Member(domain, sNode);
-					
-				Simias.Storage.PropertyList pList = aMember.Properties;
-				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
-				if (p != null && ((string) p.Value) == buddy.MungedID)
-				{
-					member = aMember;
-					break;
-				}
+				member = domain.GetMemberByID(simiasUserID);
 			}
 
 			return member;			
@@ -843,35 +786,26 @@ namespace Simias.Gaim
 		
 		internal static void SyncBuddies(Simias.Storage.Domain domain)
 		{
-			GaimBuddy[] buddies;
-			if (syncMethodPref == "plugin-enabled")
-			{
-				log.Debug("Synching only iFolder Plugin-enabled Buddies");
-
-				// Only sync buddies that the Gaim iFolder Plugin has been able
-				// to determine have the Gaim iFolder Plugin enabled
-				buddies = GetBuddies(true);
-			}
-			else
-			{
-				log.Debug("Synching ALL Gaim Buddies");
-
-				// Sync all buddies regardless of whether they have the Gaim
-				// iFolder Plugin installed
-				buddies = GetBuddies(false);
-			}
-			
+			// Only sync buddies that the Gaim iFolder Plugin has been able
+			// to determine have the Gaim iFolder Plugin enabled
+			GaimBuddy[] buddies = GetBuddies();
 			if (buddies == null) return;
+
+			log.Debug("Synching only iFolder Plugin-enabled Buddies");
 
 			foreach (GaimBuddy buddy in buddies)
 			{
-				Member member =
-					FindBuddyInDomain(domain, buddy);
-				
-				// Only synchronize members that have been added to the domain
-				if (member != null)
+				string[] machineNames = buddy.MachineNames;
+				for (int i = 0; i < machineNames.Length; i++)
 				{
-					UpdateMember(domain, member, buddy);
+					Member member =
+						FindBuddyInDomain(domain, buddy, machineNames[i]);
+					
+					// Only synchronize members that have been added to the domain
+					if (member != null)
+					{
+						UpdateMember(domain, member, buddy, machineNames[i]);
+					}
 				}
 			}
 
@@ -881,71 +815,37 @@ namespace Simias.Gaim
 			}
 		}
 		
+		///
+		/// Update the buddy information for all machine names
+		///
 		internal static void UpdateMember(Simias.Storage.Domain domain, Member member, GaimBuddy buddy)
+		{
+			string[] machineNames = buddy.MachineNames;
+			for (int i = 0; i < machineNames.Length; i++)
+			{
+				UpdateMember(domain, member, buddy, machineNames[i]);
+			}
+		}
+		
+		///
+		/// Update the buddy information for only the specified machineName
+		///
+		internal static void UpdateMember(Simias.Storage.Domain domain, Member member, GaimBuddy buddy, string machineName)
 		{
 			Simias.Storage.PropertyList pList = member.Properties;
 			Simias.Storage.Property p;
-			
-			// Buddy Alias
-			if (buddy.Alias != null && buddy.Alias.Length > 0)
-			{
-				if (pList.HasProperty("Gaim:Alias"))
-				{
-					pList.ModifyProperty("Gaim:Alias", buddy.Alias);
-				}
-				else
-				{
-					p = new Property("Gaim:Alias", buddy.Alias);
-					p.LocalProperty = true;
-					member.Properties.AddProperty(p);
-				
-					// Use the buddy alias for the member full name
-					member.FN = string.Format("{0} ({1})", buddy.Alias, buddy.Name);
-					
-					string familyName = null;
-					string givenName = null;
-					int lastSpacePos = buddy.Alias.LastIndexOf(' ');
-					if (lastSpacePos > 0)
-					{
-						familyName = buddy.Alias.Substring(lastSpacePos + 1);
-						member.Family = familyName;
 
-						givenName = buddy.Alias.Substring(0, lastSpacePos);
-					}
-					else
-					{
-						givenName = buddy.Alias;
-					}
-					
-					member.Given = givenName;
-				}
-			}
-
-			// Simias UserID
-			if (buddy.SimiasUserID != null && buddy.SimiasUserID.Length > 0)
-			{
-				if (pList.HasProperty("Gaim:SimiasUserID"))
-				{
-					pList.ModifyProperty("Gaim:SimiasUserID", buddy.SimiasUserID);
-				}
-				else
-				{
-					p = new Property("Gaim:SimiasUserID", buddy.SimiasUserID);
-					p.LocalProperty = true;
-					member.Properties.AddProperty(p);
-				}
-			}
-			
 			// Buddy Simias URL
-			if (buddy.SimiasURL != null && buddy.SimiasURL.Length > 0)
+			string simiasURL = buddy.GetSimiasURL(machineName);
+			if (simiasURL != null && simiasURL.Length > 0)
 			{
 				if (pList.HasProperty("Gaim:SimiasURL"))
 				{
-					pList.ModifyProperty("Gaim:SimiasURL", buddy.SimiasURL);
+					pList.ModifyProperty("Gaim:SimiasURL", simiasURL);
 				}
 				else
 				{
-					p = new Property("Gaim:SimiasURL", buddy.SimiasURL);
+					p = new Property("Gaim:SimiasURL", simiasURL);
 					p.LocalProperty = true;
 					member.Properties.AddProperty(p);
 				}
@@ -1020,17 +920,17 @@ namespace Simias.Gaim
 			string b1Str;
 			string b2Str;
 			
-			string alias1 = b1.Alias;
-			string alias2 = b2.Alias;
+//			string alias1 = b1.Alias;
+//			string alias2 = b2.Alias;
 			
-			if (alias1 != null)
-				b1Str = alias1;
-			else
+//			if (alias1 != null)
+//				b1Str = alias1;
+//			else
 				b1Str = b1.Name;
 				
-			if (alias2 != null)
-				b2Str = alias2;
-			else
+//			if (alias2 != null)
+//				b2Str = alias2;
+//			else
 				b2Str = b2.Name;
 
 			b1Str = b1Str.ToLower();

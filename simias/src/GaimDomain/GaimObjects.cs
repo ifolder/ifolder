@@ -38,13 +38,24 @@ namespace Simias.Gaim
 	/// </summary>
 	public class GaimBuddy
 	{
+		internal class SimiasInfo
+		{
+			public string userID;
+			public string simiasURL;
+			
+			public SimiasInfo(string UserID, string SimiasURL)
+			{
+				userID = UserID;
+				simiasURL = SimiasURL;
+			}
+		}
+	
 		#region Class Members
 		private string accountName = null;
 		private string accountProtocolID = null;
 		private string name = null;
-		private string alias = null;
-		private string simiasUserID = null;
-		private string simiasURL = null;
+//		private string alias = null;
+		private Hashtable simiasInfos;
 		private XmlNode xmlBuddyNode = null;
 
 		#endregion
@@ -111,79 +122,41 @@ namespace Simias.Gaim
 			}
 		}
 
-		/// <summary>
-		/// Gets the buddy's alias or null if there is none
-		/// </summary>
-		public string Alias
-		{
-			get
-			{
-				if (alias != null) return alias;
-				
-				// Parse alias from the xmlBuddyNode
-				XmlNode node =
-					xmlBuddyNode.SelectSingleNode("alias/text()");
-				if (node != null)
-				{
-					alias = node.Value;
-				}
-				
-				return alias;
-			}
-		}
-
-		/// <summary>
-		/// Gets the buddy's SimiasURL or null if there is none
-		/// </summary>
-		public string SimiasUserID
-		{
-			get
-			{
-				if (simiasUserID != null) return simiasUserID;
-				
-				// Parse simiasUserID from the xmlBuddyNode
-				XmlNode node =
-					xmlBuddyNode.SelectSingleNode("setting[@name='simias-user-id']/text()");
-				if (node != null)
-				{
-					simiasUserID = node.Value;
-				}
-				
-				if (simiasUserID == null)
-				{
-					simiasUserID = Guid.NewGuid().ToString();
-				}
-				
-				return simiasUserID;
-			}
-		}
-
-		/// <summary>
-		/// Gets the buddy's SimiasURL or null if there is none
-		/// </summary>
-		public string SimiasURL
-		{
-			get
-			{
-				if (simiasURL != null) return simiasURL;
-				
-				// Parse simiasURL from the xmlBuddyNode
-				XmlNode node =
-					xmlBuddyNode.SelectSingleNode("setting[@name='simias-url']/text()");
-				if (node != null)
-				{
-					simiasURL = node.Value;
-				}
-				
-				return simiasURL;
-			}
-		}
+//		/// <summary>
+//		/// Gets the buddy's alias or null if there is none
+//		/// </summary>
+//		public string Alias
+//		{
+//			get
+//			{
+//				if (alias != null) return alias;
+//				
+//				// Parse alias from the xmlBuddyNode
+//				XmlNode node =
+//					xmlBuddyNode.SelectSingleNode("alias/text()");
+//				if (node != null)
+//				{
+//					alias = node.Value;
+//				}
+//				
+//				return alias;
+//			}
+//		}
 
 		public string MungedID
 		{
 			get
 			{
 				return AccountName + ":" + AccountProtocolID + ":" + Name;
+			}
+		}
+
+		public string[] MachineNames
+		{
+			get
+			{
+				ArrayList machineNames = new ArrayList(simiasInfos.Keys);
+				return (string[])machineNames.ToArray(typeof(string));
 			}
 		}
 		
@@ -206,12 +179,129 @@ namespace Simias.Gaim
 			{
 				throw new GaimProtocolNotSupportedException(protoID);
 			}
+			
+			simiasInfos = new Hashtable();
+			
+			ParseSimiasInfo();
 		}
 
 		#endregion
 		
-		#region Public Methods
+		#region Internal Methods
+		
+		///
+		/// Reads in the different UserIDs and SimiasURL settings
+		///
+		internal void ParseSimiasInfo()
+		{
+			XmlNodeList userIDSettings = xmlBuddyNode.SelectNodes("setting[starts-with(@name, 'simias-user-id:')]");
+			foreach(XmlNode userIDSettingNode in userIDSettings)
+			{
+				string userID = userIDSettingNode.InnerText;
+				string simiasURL = null;
+				string machineName = ParseMachineName(userIDSettingNode);
+				if (machineName != null)
+				{
+					XmlNode simiasURLSetting = 
+						xmlBuddyNode.SelectSingleNode(string.Format("setting[@name='simias-url:{0}']/text()", machineName));
+					if (simiasURLSetting != null)
+					{
+						simiasURL = simiasURLSetting.Value;
 
+						SimiasInfo simiasInfo = new SimiasInfo(userID, simiasURL);
+						simiasInfos.Add(machineName, simiasInfo);
+					}
+				}
+			}
+		}
+		
+		internal string ParseMachineName(XmlNode userIDSettingNode)
+		{
+			string machineName = null;
+
+			XmlAttributeCollection attribs = userIDSettingNode.Attributes;
+			if (attribs != null)
+			{
+				for(int i = 0; i < attribs.Count; i++)
+				{
+					XmlNode attrib = attribs.Item(i);
+					string attribValue = attrib.Value;
+					if (attribValue.StartsWith("simias-user-id:"))
+					{
+						int colonPos = attribValue.IndexOf(':');
+						if (colonPos > 0)
+						{
+							machineName = 
+								attribValue.Substring(colonPos + 1, 
+													  attribValue.Length - colonPos - 1);
+						}
+					}
+				}
+			}
+			
+			return machineName;
+		}
+		
+		#endregion
+		
+		#region Public Methods
+		
+		public static string ParseMachineName(string simiasMemberName)
+		{
+			// Make sure this ends with a )
+			int length = simiasMemberName.Length;
+			if (simiasMemberName[length - 1] != ')')
+				throw new ArgumentException("The specified simiasMemberName doesn't end with a closing parenthesis");
+				
+			int openingParen = simiasMemberName.LastIndexOf('(');
+			if (openingParen <= 0)
+				throw new ArgumentException("The specified simiasMemberName doesn't contain an opening parenthesis or it starts the string");
+			
+			return simiasMemberName.Substring(openingParen + 1, length - openingParen - 2);
+		}
+		
+		public string GetSimiasMemberName(string machineName)
+		{
+			return string.Format("{0} ({1})", name, machineName);
+		}
+
+		public string GetSimiasUserID(string machineName)
+		{
+			if (simiasInfos.Contains(machineName))
+			{
+				SimiasInfo simiasInfo = (SimiasInfo)simiasInfos[machineName];
+				return simiasInfo.userID;
+			}
+			
+			return null;
+		}
+		
+		public string GetSimiasURL(string machineName)
+		{
+			if (simiasInfos.Contains(machineName))
+			{
+				SimiasInfo simiasInfo = (SimiasInfo)simiasInfos[machineName];
+				return simiasInfo.simiasURL;
+			}
+			
+			return null;
+		}
+		
+		public string GetSimiasURLByUserID(string userID)
+		{
+			string simiasURL = null;
+			foreach (SimiasInfo simiasInfo in simiasInfos.Values)
+			{
+				if (simiasInfo.userID.Equals(userID))
+				{
+					simiasURL = simiasInfo.simiasURL;
+					break;
+				}
+			}
+			
+			return simiasURL;
+		}
+		
 		/// <summary>
 		/// Parses the mungedID into its separate parts.
 		/// </summary>
@@ -263,7 +353,7 @@ namespace Simias.Gaim
 		#region Class Members
 		private string name = null;
 		private string protoID = null;
-		private string alias = null;
+//		private string alias = null;
 		private XmlNode xmlNode = null;
 
 		#endregion
@@ -310,26 +400,26 @@ namespace Simias.Gaim
 			}
 		}
 		
-		/// <summary>
-		/// Gets the account Alias if any
-		/// </summary>
-		public string Alias
-		{
-			get
-			{
-				if (alias != null) return alias;
-				
-				// Parse alias from the xmlBuddyNode
-				XmlNode node =
-					xmlNode.SelectSingleNode("alias/text()");
-				if (node != null)
-				{
-					alias = node.Value;
-				}
-				
-				return alias;
-			}
-		}
+//		/// <summary>
+//		/// Gets the account Alias if any
+//		/// </summary>
+//		public string Alias
+//		{
+//			get
+//			{
+//				if (alias != null) return alias;
+//				
+//				// Parse alias from the xmlBuddyNode
+//				XmlNode node =
+//					xmlNode.SelectSingleNode("alias/text()");
+//				if (node != null)
+//				{
+//					alias = node.Value;
+//				}
+//				
+//				return alias;
+//			}
+//		}
 
 		#endregion
 
