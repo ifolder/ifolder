@@ -49,7 +49,7 @@ namespace Novell.iFolder.iFolderCom
 		bool GetiFolderAclInit();
 		bool GetNextiFolderAce(out string guid, out string name, out int rights);
 		void ShareiFolder(string id, int rights, bool invite);
-		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
+		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
 		bool InvokeContactPickerDlg();
 		bool GetNextAddedItem(out string guid, out string name);
 	}
@@ -323,7 +323,7 @@ namespace Novell.iFolder.iFolderCom
 			}
 		}
 
-		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string path, bool modal)
+		public void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal)
 		{
 			string windowName = "Advanced iFolder Properties for " + Path.GetFileName(path);
 
@@ -340,6 +340,7 @@ namespace Novell.iFolder.iFolderCom
 				ifolderAdvanced.Text = windowName;
 				ifolderAdvanced.ABManager = abManager;
 				ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
+				ifolderAdvanced.LoadPath = dllPath;
 
 				if (modal)
 				{

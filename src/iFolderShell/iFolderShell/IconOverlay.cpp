@@ -29,6 +29,9 @@
 // Defined in iFolderShell.cpp
 extern HINSTANCE g_hmodThisDll;
 
+// static members
+TCHAR CiFolderShell::m_szShellPath[MAX_PATH];
+
 //
 //  FUNCTION: CiFolderShell::IsMemberOf(LPCWSTR, DWORD)
 //
@@ -107,13 +110,13 @@ STDMETHODIMP CiFolderShell::GetOverlayInfo(LPWSTR pwszIconFile,
 {
     //OutputDebugString(TEXT("CiFolderShell::GetOverlayInfo()\n"));
 
-	// TODO - get this icon from the correct location based on install.
 	if(IsBadWritePtr(pIndex, sizeof(int)))
 		return E_INVALIDARG;
 	
 	if(IsBadWritePtr(pdwFlags, sizeof(DWORD)))
 		return E_INVALIDARG;
-	
+
+	// Get the path where the shell extension is running.
 	TCHAR szModule[MAX_PATH];
 	GetModuleFileName(g_hmodThisDll, szModule, MAX_PATH);
 
@@ -121,6 +124,10 @@ STDMETHODIMP CiFolderShell::GetOverlayInfo(LPWSTR pwszIconFile,
 	while (szModule[index] != '\\') index--;
 
 	szModule[++index]= '\0';
+
+	// Save this path.
+	lstrcpy(m_szShellPath, szModule);
+
 	lstrcat(szModule, TEXT("ifolder_emblem.ico"));
 
 	lstrcpyn(pwszIconFile, szModule, cchMax);
