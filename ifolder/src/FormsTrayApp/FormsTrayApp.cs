@@ -265,14 +265,25 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			try
 			{
-				Configuration conf = new Configuration();
+				Configuration config = new Configuration();
 
-				SimiasLogManager.Configure(conf);
+				// Check if this is the initial run ...
+/*				string firstRun = config.Get("iFolderApp", "First run", "true");
+				if (firstRun.Equals("true"))
+				{
+					// Set the run key in the registry.
+					GlobalProperties.SetRunValue(true);
+
+					// Set the configuration setting.
+					config.Set("iFolderApp", "First run", "false");
+				}
+*/
+				SimiasLogManager.Configure(config);
 			
-				SyncProperties props = new SyncProperties(conf);
+				SyncProperties props = new SyncProperties(config);
 				props.LogicFactory = typeof(SynkerA);
 			
-				serviceManager = new Manager(conf);
+				serviceManager = new Manager(config);
 				serviceManager.StartServices();
 
 				// Wait for the services to start.
@@ -281,6 +292,8 @@ namespace Novell.iFolder.FormsTrayApp
 					Application.DoEvents();
 					Thread.Sleep(100);
 				}
+
+				serviceManager.Shutdown += new ShutdownEventHandler(serviceManager_Shutdown);
 
 				// Now that the services are started, enable the exit menu item.
 				menuExit.Enabled = true;
@@ -331,6 +344,11 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				synkEvent.Set();
 			}
+		}
+
+		private void serviceManager_Shutdown(ShutdownEventArgs args)
+		{
+			ShutdownTrayApp();
 		}
 		#endregion
 
