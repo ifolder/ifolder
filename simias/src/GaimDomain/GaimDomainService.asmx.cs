@@ -116,6 +116,35 @@ namespace Simias.Gaim.DomainService
 		}
 
 		/// <summary>
+		/// Gets the Simias Node ID of the Gaim Domain POBox
+		/// </summary>
+		[WebMethod(Description="GetGaimPOBoxID")]
+		[SoapDocumentMethod]
+		public string GetGaimPOBoxID()
+		{
+			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain(false);
+			if (gaimDomain == null)
+			{
+				throw new SimiasException("Gaim Domain does not exist!");
+			}
+
+			Simias.POBox.POBox poBox = gaimDomain.GetGaimPOBox();
+			
+			if (poBox != null) {
+				if (poBox.ID == null) {
+					System.Console.WriteLine("poBox.ID is null");
+					return null;
+				} else {
+					System.Console.WriteLine("poBox.ID = {0}", poBox.ID);
+					return poBox.ID;
+				}
+			} else {
+				System.Console.WriteLine("poBox is null!");
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Adds a new Buddy to the Gaim Domain Roster.  If the buddy already
 		/// exists, any modified information will be updated in the roster.
 		/// </summary>
