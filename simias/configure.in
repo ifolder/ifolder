@@ -442,7 +442,7 @@ AC_OUTPUT([
 Makefile
 simias.pc
 simias-client.pc
-simias-event-client.pc
+simias-client-c.pc
 src/Makefile
 src/SimiasClient/SimiasSetup.cs
 src/Common/MyDns.cs
