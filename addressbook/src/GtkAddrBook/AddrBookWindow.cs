@@ -925,6 +925,20 @@ namespace Novell.iFolder
 			return pb;
 		}
 
+		public void on_search_changed(object o, EventArgs args)
+		{
+			if(SearchEntry.Text.Length == 0)
+			{
+				SearchAddrBook();
+			}
+		}
+
+		public void on_search_editing_done(object o, EventArgs args)
+		{
+			Console.WriteLine("Editing is done");
+		}
+
+
 		public void on_search_key_press(object o, KeyPressEventArgs args)
 		{
 			switch(args.Event.HardwareKeycode)
