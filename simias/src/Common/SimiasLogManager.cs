@@ -46,6 +46,7 @@ namespace Simias
 		private static readonly string ConfigFileExtension = ".log4net";
 
 		private static bool configured = false;
+        private static string configFile = null;
 
 		/// <summary>
 		/// Default Constructor
@@ -70,7 +71,9 @@ namespace Simias
 		/// </summary>
 		public static void ResetConfiguration()
 		{
-			LogManager.ResetConfiguration();
+            LogManager.ResetConfiguration();
+
+            log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(configFile));
 		}
 
 		/// <summary>
@@ -107,7 +110,7 @@ namespace Simias
 					}
 					
 					// config file
-					string configFile = Path.Combine(storePath, name + ConfigFileExtension);
+					configFile = Path.Combine(storePath, name + ConfigFileExtension);
 
 					// bootstrap config
 					if (!File.Exists(configFile))
@@ -157,8 +160,7 @@ namespace Simias
 						}
 					}
 
-					// file configuration
-					log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(configFile));
+					ResetConfiguration();
 
 					configured = true;
                 }
