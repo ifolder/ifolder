@@ -2,15 +2,26 @@ ShutdowniFolder_CSFILES = $(srcdir)/ShutdowniFolder/ShutdowniFolder.cs $(srcdir)
 
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder-install.sln $(srcdir)/ifolder-msi/ifolder-msi.vdproj $(srcdir)/ShutdowniFolder/ShutdowniFolder.csproj $(ShutdowniFolder_CSFILES) $(srcdir)/ShutdowniFolder/App.ico
 
+RELEASE = 1
+MSI_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msi
+MSI_LOG_FILE = devenv-ifolder-msi.log
+
 .PHONY: package package-clean package-install package-uninstall ifolder
 
 all clean:
 
-package: ifolder.msi
+package: $(MSI_FILE)
 
-ifolder.msi: ifolder ifolder-install.sln ifolder-msi/ifolder-msi.vdproj ShutdowniFolder/ShutdowniFolder.exe
-	"$(VSINSTALLDIR)/devenv.exe" ifolder-install.sln /build $(DEVENV_CONFIGURATION) /project ifolder-msi /out devenv-ifolder-msi.log
-	mv ifolder-msi/$(DEVENV_CONFIGURATION)/ifolder.msi $@
+$(MSI_FILE): ifolder ifolder-install.sln ifolder-msi/ifolder-msi.vdproj ShutdowniFolder/ShutdowniFolder.exe
+	@rm -f $(MSI_LOG_FILE) $@
+	@CMD='"$(VSINSTALLDIR)/devenv.exe" ifolder-install.sln /build $(DEVENV_CONFIGURATION) /project ifolder-msi /out $(MSI_LOG_FILE)'; \
+	echo $$CMD; \
+	if eval $$CMD; then \
+		mv ifolder-msi/$(DEVENV_CONFIGURATION)/ifolder.msi .; \
+		ln ifolder.msi $@; \
+	else \
+		grep -a "ERROR:" $(MSI_LOG_FILE); \
+	fi
 
 ifolder:
 	make -C ../.. all
@@ -18,11 +29,19 @@ ifolder:
 ShutdowniFolder/ShutdowniFolder.exe: ShutdowniFolder/ShutdowniFolder.csproj $(ShutdowniFolder_CSFILES)
 	"$(VSINSTALLDIR)/devenv.exe" ifolder-install.sln /build $(DEVENV_CONFIGURATION) /project ShutdowniFolder /out devenv-shutdown-msi.log
 
-package-install: ifolder.msi
-	msiexec /i ifolder.msi /q /L* install-msi.log
+package-install: $(MSI_FILE)
+	@CMD='msiexec /i $(MSI_FILE) /qb+ /L* install-msi.log'; \
+	echo $$CMD; \
+	if ! eval $$CMD; then \
+		grep -a "ERROR:" install-msi.log; \
+	fi
 	
 package-uninstall:
-	msiexec /x ifolder.msi /q /L* uninstall-msi.log
+	@CMD='msiexec /x $(MSI_FILE) /qb+ /L* uninstall-msi.log'; \
+	echo $$CMD; \
+	if ! eval $$CMD; then \
+		grep -a "ERROR:" uninstall-msi.log; \
+	fi
 
 package-clean clean-local:
 	rm -rf *.msi Release Debug */Release */Debug *.log *.suo
