@@ -88,15 +88,17 @@ namespace Simias
 
 			if ((args.Length > 0) && (args[0] != null) && (args[0].Length > 0) && !args[0].StartsWith("mono"))
 			{
-				file = args[0] + ".log";
+				file = Path.GetFileName(args[0]) + ".log";
 			}
 			else if ((args.Length > 1) && (args[1] != null) && (args[1].Length > 0))
 			{
-				file = args[1] + ".log";
+				file = Path.GetFileName(args[1]) + ".log";
 			}
 
+			string filePath = Path.Combine(storePath, file);
+
 			BasicConfigurator.Configure(new FileAppender(new PatternLayout(SimiasPatternLayout),
-				Path.Combine(storePath, file)));
+				filePath));
 		}
 	}
 }
