@@ -27,17 +27,15 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
-using Simias;
-using Simias.Domain;
+using System.Net;
 
-namespace Novell.iFolder.FormsTrayApp
+namespace Novell.FormsTrayApp
 {
 	/// <summary>
 	/// Summary description for ServerInfo.
 	/// </summary>
 	public class ServerInfo : System.Windows.Forms.Form
 	{
-		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(ServerInfo));
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.TextBox serverIP;
@@ -46,8 +44,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.TextBox password;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox userName;
-		private Configuration config;
 		private System.Windows.Forms.PictureBox banner;
+		private iFolderWebService ifWebService;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -56,18 +54,15 @@ namespace Novell.iFolder.FormsTrayApp
 		/// <summary>
 		/// Constructs a ServerInfo object.
 		/// </summary>
-		/// <param name="config">The Configuration object to use.</param>
-		public ServerInfo(Configuration config)
+		/// <param name="ifolderWebService">The iFolderWebService object to use.</param>
+		public ServerInfo(iFolderWebService ifolderWebService)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
-			this.config = config;
+			ifWebService = ifolderWebService;
 		}
 
 		/// <summary>
@@ -124,23 +119,23 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// userName
 			// 
-			this.userName.Location = new System.Drawing.Point(112, 88);
+			this.userName.Location = new System.Drawing.Point(96, 88);
 			this.userName.Name = "userName";
-			this.userName.Size = new System.Drawing.Size(320, 20);
+			this.userName.Size = new System.Drawing.Size(336, 20);
 			this.userName.TabIndex = 2;
 			this.userName.Text = "";
 			// 
 			// serverIP
 			// 
-			this.serverIP.Location = new System.Drawing.Point(112, 152);
+			this.serverIP.Location = new System.Drawing.Point(96, 152);
 			this.serverIP.Name = "serverIP";
-			this.serverIP.Size = new System.Drawing.Size(320, 20);
+			this.serverIP.Size = new System.Drawing.Size(336, 20);
 			this.serverIP.TabIndex = 6;
 			this.serverIP.Text = "";
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 88);
+			this.label1.Location = new System.Drawing.Point(16, 90);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(100, 16);
 			this.label1.TabIndex = 1;
@@ -148,24 +143,24 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(16, 152);
+			this.label2.Location = new System.Drawing.Point(16, 154);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(100, 16);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "Server IP address:";
+			this.label2.Text = "Server host:";
 			// 
 			// password
 			// 
-			this.password.Location = new System.Drawing.Point(112, 120);
+			this.password.Location = new System.Drawing.Point(96, 120);
 			this.password.Name = "password";
 			this.password.PasswordChar = '*';
-			this.password.Size = new System.Drawing.Size(320, 20);
+			this.password.Size = new System.Drawing.Size(336, 20);
 			this.password.TabIndex = 4;
 			this.password.Text = "";
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(16, 120);
+			this.label4.Location = new System.Drawing.Point(16, 122);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(100, 16);
 			this.label4.TabIndex = 3;
@@ -199,7 +194,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.MinimizeBox = false;
 			this.Name = "ServerInfo";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Enterprise Server Information";
+			this.Text = "iFolder Login";
 			this.Load += new System.EventHandler(this.ServerInfo_Load);
 			this.Activated += new System.EventHandler(this.ServerInfo_Activated);
 			this.ResumeLayout(false);
@@ -214,17 +209,19 @@ namespace Novell.iFolder.FormsTrayApp
 
 			try
 			{
-				DomainAgent da = new DomainAgent(config);
-				da.Attach(serverIP.Text, userName.Text, password.Text);
+				if (ifWebService != null)
+				{
+					ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
+				}
 			}
-			catch (SimiasException ex)
+			catch (WebException ex)
 			{
-				ex.LogError();
+				// TODO: Localize
 				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Connecting to server");
+				// TODO: Localize
 				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
 			}
 
@@ -241,7 +238,6 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
-				logger.Debug(ex, "Loading graphics");
 			}
 		}
 

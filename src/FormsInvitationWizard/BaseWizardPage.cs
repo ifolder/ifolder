@@ -28,7 +28,7 @@ using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 	/// <summary>
 	/// The base class for a wizard page.

@@ -66,7 +66,7 @@ namespace Novell.iFolder.Web
 		/// if it is up and running
 		/// </summary>
 		[WebMethod(Description="Allows a client to pint to make sure the Web Service is up and running")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void Ping()
 		{
 			// Nothing to do here, just return
@@ -82,10 +82,26 @@ namespace Novell.iFolder.Web
 		/// Settings
 		/// </returns>
 		[WebMethod(Description="Gets the current iFolder Settings")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderSettings GetSettings()
 		{
 			return new iFolderSettings();
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the display iFolder creation confirmation setting.
+		/// </summary>
+		/// <param name="DisplayConfirmation">
+		/// Set to <b>true</b> to enable the iFolder creation confirmation dialog.
+		/// </param>
+		[WebMethod(Description="Sets the display iFolder confirmation setting")]
+		[SoapDocumentMethod]
+		public void SetDisplayConfirmation(bool DisplayConfirmation)
+		{
+			iFolderSettings.SetDisplayConfirmation(DisplayConfirmation);
 		}
 
 
@@ -101,7 +117,7 @@ namespace Novell.iFolder.Web
 		/// true if it is an iFolder, false if it isn't
 		/// </returns>
 		[WebMethod(Description="Checks a LocalPath to see if it's an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public bool IsiFolder(string LocalPath)
 		{
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
@@ -126,7 +142,7 @@ namespace Novell.iFolder.Web
 		/// true if it can be an iFolder, otherwise false
 		/// </returns>
 		[WebMethod(Description="Checks LocalPath to see if can be an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public bool CanBeiFolder(string LocalPath)
 		{
 			return SharedCollection.CanBeCollection(LocalPath);
@@ -145,7 +161,7 @@ namespace Novell.iFolder.Web
 		///  true if it is in an iFolder, otherwise false
 		/// </returns>
 		[WebMethod(Description="Checks LocalPath to see if is in an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public bool IsPathIniFolder(string LocalPath)
 		{
 			return SharedCollection.IsPathInCollection(LocalPath);
@@ -164,7 +180,7 @@ namespace Novell.iFolder.Web
 		/// iFolder object representing the iFolder created
 		/// </returns>
 		[WebMethod(Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolder CreateLocaliFolder(string Path)
 		{
 			// TODO: Figure out who we are running as so we
@@ -187,7 +203,7 @@ namespace Novell.iFolder.Web
 		/// the ifolder this ID represents
 		/// </returns>
 		[WebMethod(Description="Get An iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolder GetiFolder(string iFolderID)
 		{
 			Store store = Store.GetStore();
@@ -211,7 +227,7 @@ namespace Novell.iFolder.Web
 		/// the ifolder this ID represents
 		/// </returns>
 		[WebMethod(Description="Get An iFolder using a LocalPath")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolder GetiFolderByLocalPath(string LocalPath)
 		{
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
@@ -236,7 +252,7 @@ namespace Novell.iFolder.Web
 		/// true if the iFolder was successfully removed
 		/// </returns>
 		[WebMethod(Description="Delete An iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void DeleteiFolder(string iFolderID)
 		{
 			SharedCollection.DeleteSharedCollection(iFolderID);
@@ -252,7 +268,7 @@ namespace Novell.iFolder.Web
 		/// An array of iFolders
 		/// </returns>
 		[WebMethod(Description="Returns all iFolders on the Server")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolder[] GetAlliFolders()
 		{
 			ArrayList list = new ArrayList();
@@ -275,14 +291,20 @@ namespace Novell.iFolder.Web
 			if(pobox != null)
 			{
 
+				// Get all of the subscription obects in the POBox
 				ICSList poList = pobox.Search(
 						PropertyTags.Types,
 						typeof(Subscription).Name,
 						SearchOp.Equal);
-			
+
 				foreach(ShallowNode sNode in poList)
 				{
 					Subscription sub = new Subscription(pobox, sNode);
+
+					// if the subscription is not for us, we don't
+					// care
+					if(sub.ToIdentity != pobox.Owner.UserID)
+						continue;
 
 					// Filter out all subscriptions that match
 					// iFolders that are already local on our machine
@@ -293,14 +315,13 @@ namespace Novell.iFolder.Web
 					}
 					// CRG: this used to check for ready but the subscriptions
 					// for other users were showing up
-//					if (sub.SubscriptionState == SubscriptionStates.Ready)
+//					if( (sub.SubscriptionState == SubscriptionStates.Ready)||
 //					{
 //					}
+
 					list.Add(new iFolder(sub));
 				}
 			}
-
-
 			return (iFolder[])list.ToArray(typeof(iFolder));
 		}
 
@@ -318,7 +339,7 @@ namespace Novell.iFolder.Web
 		/// An array of iFolders
 		/// </returns>
 		[WebMethod(Description="Returns iFolders for the specified UserID")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolder[] GetiFolders(string UserID)
 		{
 			ArrayList list = new ArrayList();
@@ -359,7 +380,7 @@ namespace Novell.iFolder.Web
 		/// True if the member was successfully added
 		/// </returns>
 		[WebMethod(Description="Set the Rights of a member of an iFolder.  The Rights can be \"Admin\", \"ReadOnly\", or \"ReadWrite\".")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void SetUserRights(	string iFolderID, 
 									string UserID,
 									string Rights)
@@ -400,7 +421,7 @@ namespace Novell.iFolder.Web
 		/// Member that is the owner of the iFolder
 		/// </returns>
 		[WebMethod(Description="Get the Owner of an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderUser GetOwner( string iFolderID )
 		{
 			Store store = Store.GetStore();
@@ -433,7 +454,7 @@ namespace Novell.iFolder.Web
 		/// True if the member was successfully added
 		/// </returns>
 		[WebMethod(Description="Changes the owner of an iFolder and sets the rights of the previous owner to the rights specified.")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void ChangeOwner(	string iFolderID, 
 									string NewOwnerUserID,
 									string OldOwnerRights)
@@ -460,11 +481,31 @@ namespace Novell.iFolder.Web
 		/// True if the member was successfully removed
 		/// </returns>
 		[WebMethod(Description="Remove a single member from an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void RemoveiFolderUser(	string iFolderID, 
 										string UserID)
 		{
 			SharedCollection.RemoveMember(iFolderID, UserID);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that removes a subscription for an iFolder.
+		/// </summary>
+		/// <param name="DomainID">
+		/// The ID of the domain that the subscription belongs to.
+		/// </param>
+		/// <param name="SubscriptionID">
+		/// The ID of the subscription to remove.
+		/// </param>
+		[WebMethod(Description="Remove a subscription.")]
+		[SoapDocumentMethod]
+		public void RemoveSubscription(string DomainID,
+									   string SubscriptionID)
+		{
+			SharedCollection.RemoveSubscription(DomainID, SubscriptionID);
 		}
 	
 
@@ -480,7 +521,7 @@ namespace Novell.iFolder.Web
 		/// An array of Members
 		/// </returns>
 		[WebMethod(Description="Get the list of iFolder Members")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderUser[] GetiFolderUsers(string iFolderID)
 		{
 			ArrayList list = new ArrayList();
@@ -501,9 +542,10 @@ namespace Novell.iFolder.Web
 				list.Add(user);
 			}
 
+			// Use the POBox for the domain that this iFolder belongs to.
 			Simias.POBox.POBox pobox = Simias.POBox.POBox.GetPOBox(
 											store,
-											store.DefaultDomain);
+											col.Domain);
 
 			ICSList poList = pobox.Search(
 					Subscription.SubscriptionCollectionIDProperty,
@@ -545,7 +587,7 @@ namespace Novell.iFolder.Web
 		/// An array of members
 		/// </returns>
 		[WebMethod(Description="Get the list of All Members")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderUser[] GetAlliFolderUsers()
 		{
 			ArrayList list = new ArrayList();
@@ -585,7 +627,7 @@ namespace Novell.iFolder.Web
 		/// Member that matches the UserID
 		/// </returns>
 		[WebMethod(Description="Lookup a single member to a collection")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderUser GetiFolderUser( string UserID )
 		{
 			Store store = Store.GetStore();
@@ -616,7 +658,7 @@ namespace Novell.iFolder.Web
 		/// Member that matches the UserID
 		/// </returns>
 		[WebMethod(Description="Lookup a single member to a collection")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderUser GetiFolderUserFromiFolder(	string UserID, 
 														string iFolderID )
 		{
@@ -654,7 +696,7 @@ namespace Novell.iFolder.Web
 		/// iFolderUser that was invited
 		/// </returns>
 		[WebMethod(Description="Invite a user to an iFolder.  This call will only work with Enterprise iFolders")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderUser InviteUser(	string iFolderID,
 										string UserID,
 										string Rights)
@@ -694,9 +736,10 @@ namespace Novell.iFolder.Web
 				throw new Exception("Invalid Rights Specified");
 
 
+			// Use the POBox for the domain that this iFolder belongs to.
 			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(
 											store, 
-											store.DefaultDomain);
+											col.Domain);
 
 			Subscription sub = poBox.CreateSubscription(col,
 										col.GetCurrentMember(),
@@ -724,7 +767,7 @@ namespace Novell.iFolder.Web
 		/// The LocalPath to to store the iFolder
 		/// </param>
 		[WebMethod(Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolder AcceptiFolderInvitation( string iFolderID, 
 												string LocalPath)
 		{
@@ -744,8 +787,10 @@ namespace Novell.iFolder.Web
 			if(node == null)
 				throw new Exception("Invalid iFolderID");
 
-			Subscription sub = new Subscription(node);
+			if(CanBeiFolder(LocalPath) == false)
+				throw new Exception("Path specified Cannot be an iFolder, it is either a parent or a child of an existing iFolder");
 
+			Subscription sub = new Subscription(node);
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
 			if(sub.SubscriptionState == SubscriptionStates.Ready)
@@ -776,7 +821,7 @@ namespace Novell.iFolder.Web
 		/// DiskSpaceQuota for the specified member
 		/// </returns>
 		[WebMethod(Description="Gets the DiskSpaceQuota for a member")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public DiskSpace GetUserDiskSpace( string UserID )
 		{
 			return DiskSpace.GetMemberDiskSpace(UserID);
@@ -795,7 +840,7 @@ namespace Novell.iFolder.Web
 		/// DiskSpaceQuota for the specified iFolder
 		/// </returns>
 		[WebMethod(Description="Gets the DiskSpaceQuota for an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public DiskSpace GetiFolderDiskSpace( string iFolderID )
 		{
 			return DiskSpace.GetiFolderDiskSpace(iFolderID);
@@ -814,10 +859,29 @@ namespace Novell.iFolder.Web
 		/// The size to set in MegaBytes
 		/// </param>
 		[WebMethod(Description="Sets the Disk Space Limit for a user")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void SetUserDiskSpaceLimit( string UserID, long Limit )
 		{
 			DiskSpace.SetUserDiskSpaceLimit(UserID, Limit);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for an iFolder.
+		/// </summary>
+		/// <param name="iFolderID">
+		/// The ID of the iFolder to set the disk space limit on.
+		/// </param>
+		/// <param name="Limit">
+		/// The size to set in megabytes.
+		/// </param>
+		[WebMethod(Description="Sets the Disk Space Limit for an iFolder")]
+		[SoapDocumentMethod]
+		public void SetiFolderDiskSpaceLimit( string iFolderID, long Limit )
+		{
+			DiskSpace.SetiFolderDiskSpaceLimit(iFolderID, Limit);
 		}
 
 
@@ -833,7 +897,7 @@ namespace Novell.iFolder.Web
 		/// The interval to set in seconds
 		/// </param>
 		[WebMethod(Description="Sets the Sync Interval for an iFolder")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void SetiFolderSyncInterval( string iFolderID, int Interval )
 		{
 			Store store = Store.GetStore();
@@ -855,7 +919,7 @@ namespace Novell.iFolder.Web
 		/// The interval to set in seconds
 		/// </param>
 		[WebMethod(Description="Sets the Default Sync Interval")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public void SetDefaultSyncInterval( int Interval )
 		{
 			Simias.Policy.SyncInterval.Set( Interval );
@@ -871,7 +935,7 @@ namespace Novell.iFolder.Web
 		/// The default sync interval
 		/// </returns>
 		[WebMethod(Description="Gets the Default Sync Interval")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public int GetDefaultSyncInterval()
 		{
 			return Simias.Policy.SyncInterval.GetInterval();
@@ -896,7 +960,7 @@ namespace Novell.iFolder.Web
 		/// The current Settings
 		/// </returns>
 		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
-		[SoapRpcMethod]
+		[SoapDocumentMethod]
 		public iFolderSettings ConnectToEnterpriseServer(	string UserName,
 															string Password,
 															string Host)
@@ -908,5 +972,177 @@ namespace Novell.iFolder.Web
 		}
 
 
+
+
+		/// <summary>
+		/// WebMethod that retuns all of an ifolder's Conflicts
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The iFolder ID to return the conflicts
+		/// </param>
+		/// <returns>
+		/// An Array of conflicts
+		/// </returns>
+		[WebMethod(Description="Connects to an iFolder Enterprise Server")]
+		[SoapDocumentMethod]
+		public Conflict[] GetiFolderConflicts(	string iFolderID )
+		{
+			ArrayList list = new ArrayList();
+
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			ICSList collisionList = col.GetCollisions();
+			foreach(ShallowNode sn in collisionList)
+			{
+				Node conflictNode = new Node(col, sn);
+
+				Conflict conflict = new Conflict(col, conflictNode);
+
+				list.Add(conflict);
+			}
+			return (Conflict[])list.ToArray(typeof(Conflict));
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that resolves a conflict
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The iFolder ID to return the conflicts
+		/// </param>
+		/// <param name = "conflictID">
+		/// The node ID that represents a conflict to resolve
+		/// </param>
+		/// <param name = "iFolderID">
+		/// A bool that determines if the local or server copies win
+		/// </param>
+		[WebMethod(Description="Resolves a file conflict in an iFolder.")]
+		[SoapDocumentMethod]
+		public void ResolveFileConflict(string iFolderID, string conflictID,
+										bool localChangesWin)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Node conflictNode = col.GetNodeByID(conflictID);
+			if(conflictNode == null)
+				throw new Exception("Invalid conflictID");
+
+			Conflict.Resolve(col, conflictNode, localChangesWin);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that resolves a name conflict
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The iFolder ID to return the conflicts
+		/// </param>
+		/// <param name = "conflictID">
+		/// The node ID that represents a conflict to resolve
+		/// </param>
+		/// <param name = "iFolderID">
+		/// A bool that determines if the local or server copies win
+		/// </param>
+		[WebMethod(Description="Resolves a name conflict")]
+		[SoapDocumentMethod]
+		public void ResolveNameConflict(string iFolderID, string conflictID,
+										string newLocalName)
+		{
+			Store store = Store.GetStore();
+
+			Collection col = store.GetCollectionByID(iFolderID);
+			if(col == null)
+				throw new Exception("Invalid iFolderID");
+
+			Node conflictNode = col.GetNodeByID(conflictID);
+			if(conflictNode == null)
+				throw new Exception("Invalid conflictID");
+
+			Conflict.Resolve(col, conflictNode, newLocalName);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that will setup the Proxy
+		/// </summary>
+		/// <param name = "Host">
+		/// The host of the proxy
+		/// </param>
+		/// <param name = "Port">
+		/// The Port on the host to use
+		/// </param>
+		[WebMethod(Description="Sets up a proxy for iFolder to use")]
+		[SoapDocumentMethod]
+		public void SetupProxy(string Host, int Port)
+		{
+			// I'm not sure what to do here
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that will setup the Proxy
+		/// </summary>
+		[WebMethod(Description="Removes proxy settings")]
+		[SoapDocumentMethod]
+		public void RemoveProxy()
+		{
+			// I'm not sure what to do here
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod to calculate the number of nodes and bytes that need sync'd.
+		/// </summary>
+		/// <param name="iFolderID">The collection ID of the iFolder to calculate the sync size of.</param>
+		/// <param name="SyncByteCount">On return, holds the number of bytes that need to be sync'd.</param>
+		/// <returns>The number of nodes that need to be sync'd.</returns>
+		[WebMethod(Description="Calculates the number of nodes and bytes that need to be sync'd.")]
+		[SoapDocumentMethod]
+		public SyncSize CalculateSyncSize(string iFolderID)
+		{
+			Collection col = Store.GetStore().GetCollectionByID(iFolderID);
+			if (col == null)
+			{
+				throw new Exception("Invalid iFolderID");
+			}
+
+			uint SyncNodeCount;
+			ulong SyncByteCount;
+			SharedCollection.CalculateSendSize(col, out SyncNodeCount, out SyncByteCount);
+			
+			return new SyncSize(SyncNodeCount, SyncByteCount);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sends a command to the sync engine to sync the iFolder of the specified ID.
+		/// </summary>
+		/// <param name="iFolderID">The collection ID of the iFolder to sync.</param>
+		[WebMethod(Description="Sends a command to the sync engine to sync the iFolder of the specified ID.")]
+		[SoapDocumentMethod]
+		public void SynciFolderNow(string iFolderID)
+		{
+			SharedCollection.SyncCollectionNow(iFolderID);
+		}
 	}
 }

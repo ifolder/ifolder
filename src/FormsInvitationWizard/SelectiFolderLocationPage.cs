@@ -31,13 +31,13 @@ using Simias;
 using Simias.Sync;
 using Simias.POBox;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 
 	/// <summary>
 	/// Class for the wizard page where the iFolder location is selected.
 	/// </summary>
-	public class SelectiFolderLocationPage : Novell.iFolder.InvitationWizard.InteriorPageTemplate
+	public class SelectiFolderLocationPage : Novell.InvitationWizard.InteriorPageTemplate
 	{
 		#region Class Members
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SelectiFolderLocationPage));
@@ -250,8 +250,8 @@ namespace Novell.iFolder.InvitationWizard
 				// Call into iFolder to make sure the directory specified is valid...
 				try
 				{
-					iFolderManager manager = iFolderManager.Connect();
-					isPathInvalid = manager.IsPathIniFolder(iFolderLocation.Text);
+					//iFolderManager manager = iFolderManager.Connect();
+					//isPathInvalid = manager.IsPathIniFolder(iFolderLocation.Text);
 				}
 				catch (SimiasException e)
 				{

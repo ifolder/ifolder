@@ -33,10 +33,10 @@ using Simias;
 using Simias.Sync;
 using Simias.POBox;
 using Simias.Storage;
-using Novell.iFolder;
+//using Novell.iFolder;
 using System.Text;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 	/// <summary>
 	/// Enumeration used to tell which wizard buttons are active.
@@ -76,7 +76,7 @@ namespace Novell.iFolder.InvitationWizard
 		private System.Windows.Forms.Button next;
 		private System.Windows.Forms.Button back;
 		internal System.Windows.Forms.GroupBox groupBox1;
-		private Novell.iFolder.InvitationWizard.WelcomePage welcomePage;
+		private Novell.InvitationWizard.WelcomePage welcomePage;
 		private SelectInvitationPage selectInvitationPage;
 		private AcceptDeclinePage acceptDeclinePage;
 		private SelectiFolderLocationPage selectiFolderLocationPage;
@@ -111,10 +111,10 @@ namespace Novell.iFolder.InvitationWizard
 
 			// Initialize the wizard pages ... I had to move this here so that
 			// dev studio wouldn't wipe it out (when it was in InitializeComponent()).
-			this.welcomePage = new Novell.iFolder.InvitationWizard.WelcomePage();
-			this.selectInvitationPage = new Novell.iFolder.InvitationWizard.SelectInvitationPage();
-			this.acceptDeclinePage = new Novell.iFolder.InvitationWizard.AcceptDeclinePage();
-			this.selectiFolderLocationPage = new Novell.iFolder.InvitationWizard.SelectiFolderLocationPage();
+			this.welcomePage = new Novell.InvitationWizard.WelcomePage();
+			this.selectInvitationPage = new Novell.InvitationWizard.SelectInvitationPage();
+			this.acceptDeclinePage = new Novell.InvitationWizard.AcceptDeclinePage();
+			this.selectiFolderLocationPage = new Novell.InvitationWizard.SelectiFolderLocationPage();
 			this.completionPage = new CompletionPage();
 			//
 			// welcomePage

@@ -52,9 +52,12 @@ namespace Novell.iFolder.Web
 		public bool Synchronizable;
 		public string Type;
 		public string Description;
-		public bool IsLocal;
-		public bool IsAccepted;
+		public string State;
 		public bool IsSubscription;
+		public int EnumeratedState;
+		public bool IsWorkgroup;
+		public bool HasConflicts;
+		public string CurrentUserID;
 
 		public iFolder()
 		{
@@ -74,29 +77,72 @@ namespace Novell.iFolder.Web
 			this.ManagedPath = collection.ManagedPath;
 			this.MasterIncarnation = collection.MasterIncarnation;
 			this.Name = collection.Name;
-			this.Owner = collection.Owner.Name;
+			if(collection.Owner != null)
+				this.Owner = collection.Owner.Name;
+			else
+				this.Owner = "Not available";
+
 			this.SyncInterval = 
 				Simias.Policy.SyncInterval.GetInterval(collection);
 			this.Synchronizable = collection.Synchronizable;
 			this.Type = iFolderType;
 			this.Description = "";
-			this.IsLocal = true;
-			this.IsAccepted = true;
+			this.State = "Local";
 			this.IsSubscription = false;
+			this.EnumeratedState = -1;
+			this.IsWorkgroup = 
+				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
+			this.HasConflicts = collection.HasCollisions();
+			// This was throwing an exception so Added this because the 
+			// current user may not be available yet
+			Member tmpMember = collection.GetCurrentMember();
+			if(tmpMember != null)
+				this.CurrentUserID = tmpMember.UserID;
 		}
 
 
 		public iFolder(Subscription subscription)
 		{
+			this.Domain = subscription.DomainID;
+			this.DomainIdentity = subscription.DomainID;
 			this.Name = subscription.SubscriptionCollectionName;
 			this.ID = subscription.ID;
 			this.Description = subscription.CollectionDescription;
-			this.IsLocal = false;
-			if (subscription.SubscriptionState == SubscriptionStates.Ready)
-				this.IsAccepted = true;
-			else
-				this.IsAccepted = false;
 			this.IsSubscription = true;
+			this.EnumeratedState = (int) subscription.SubscriptionState;
+
+			if(	(subscription.SubscriptionState == 
+								SubscriptionStates.Ready) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Received) )
+			{
+				this.State = "Available";
+			}
+			else if(subscription.SubscriptionState == 
+									SubscriptionStates.Replied)
+			{
+				this.State = "WaitConnect";
+			}
+			else if(subscription.SubscriptionState == 
+								SubscriptionStates.Delivered)
+			{
+				this.State = "WaitSync";
+			}
+/*			else if(	(subscription.SubscriptionState == 
+								SubscriptionStates.Replied) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Delivered) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Pending) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Responded) ||
+						(subscription.SubscriptionState == 
+								SubscriptionStates.Acknowledged) )
+*/
+			else
+			{
+				this.State = "Unknown";
+			}
 		}
 	}
 }

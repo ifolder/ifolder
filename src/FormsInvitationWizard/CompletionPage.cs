@@ -27,12 +27,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Novell.iFolder.InvitationWizard
+namespace Novell.InvitationWizard
 {
 	/// <summary>
 	/// Class for the completion wizard page.
 	/// </summary>
-	public class CompletionPage : Novell.iFolder.InvitationWizard.WelcomePageTemplate
+	public class CompletionPage : Novell.InvitationWizard.WelcomePageTemplate
 	{
 		#region Class Members
 		private System.ComponentModel.IContainer components = null;

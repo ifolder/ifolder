@@ -28,10 +28,10 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
-using Simias;
-using Novell.iFolder.Win32Util;
+using System.Net;
+using Novell.Win32Util;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for NewiFolder.
@@ -47,6 +47,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.CheckBox dontAsk;
 		private string folderName;
 		private string loadPath;
+		private iFolderWebService ifWebService;
 		private const int SHOP_FILEPATH = 0x2;
 		private System.Windows.Forms.LinkLabel iFolderHelp;
 		/// <summary>
@@ -219,6 +220,14 @@ namespace Novell.iFolder.iFolderCom
 				loadPath = value;
 			}
 		}
+
+		/// <summary>
+		/// Sets the iFolderService object to use.
+		/// </summary>
+		public iFolderWebService iFolderWebService
+		{
+			set { ifWebService = value; }
+		}
 		#endregion
 
 		#region Event Handlers
@@ -226,21 +235,26 @@ namespace Novell.iFolder.iFolderCom
 		{
 			// Invoke the iFolder properties dialog.
 //			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
-			iFolderComponent ifCom = new iFolderComponent();
-			ifCom.InvokeAdvancedDlg(LoadPath, FolderName, 1, false);
+			new iFolderComponent().InvokeAdvancedDlg(LoadPath, FolderName, 1, false);
 		}
 
 		private void iFolderHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
-			iFolderComponent ifCom = new iFolderComponent();
-			ifCom.ShowHelp(LoadPath);
+			new iFolderComponent().ShowHelp(LoadPath);
 		}
 
 		private void close_Click(object sender, System.EventArgs e)
 		{
 			if (dontAsk.Checked)
 			{
-				Configuration.GetConfiguration().Set("iFolderShell", "Show wizard", "false");
+				try
+				{
+					ifWebService.SetDisplayConfirmation(false);
+				}
+				catch
+				{
+					// TODO: Display message
+				}
 			}
 
 			this.Close();

@@ -28,7 +28,7 @@ using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
 
-namespace Novell.iFolder.Forms.Controls
+namespace Novell.Forms.Controls
 {
 	/// <summary>
 	/// Summary description for GaugeChart.

@@ -52,7 +52,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 											 UINT idCmdLast,
 											 UINT uFlags)
 {
-//    OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
+    //OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
 
     UINT idCmd= idCmdFirst;
 	// TODO - get these from a resource file.
@@ -314,7 +314,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 {
-//    OutputDebugString(TEXT("CiFolderShell::InvokeCommand()\n"));
+    //OutputDebugString(TEXT("CiFolderShell::InvokeCommand()\n"));
 
     HRESULT hr = E_INVALIDARG;
 
@@ -366,7 +366,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				try
 				{
 					// Invoke the conflict resolver.
-					m_spiFolder->InvokeConflictResolverDlg(m_szShellPath, m_szFileUserClickedOn);
+//					m_spiFolder->InvokeConflictResolverDlg(m_szShellPath, m_szFileUserClickedOn);
 				}
 				catch (...)
 				{
@@ -444,7 +444,7 @@ STDMETHODIMP CiFolderShell::GetCommandString(UINT_PTR idCmd,
 											 LPSTR pszName,
 											 UINT cchMax)
 {
-//    OutputDebugString(TEXT("CiFolderShell::GetCommandString()\n"));
+    //OutputDebugString(TEXT("CiFolderShell::GetCommandString()\n"));
 
 	// TODO - Do xA and xW work ... and display the correct strings.  Also, retrieve strings from resource file.
     switch (idCmd)

@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 using Simias;
 using Simias.Storage;
 
-namespace Novell.iFolder.iFolderCom
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for CollisionNode.
