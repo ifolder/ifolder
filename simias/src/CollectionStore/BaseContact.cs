@@ -27,6 +27,7 @@ using System.Security.Cryptography;
 using System.Xml;
 using System.IO;
 
+using Persist = Simias.Storage.Provider;
 using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 namespace Simias.Storage
@@ -259,6 +260,37 @@ namespace Simias.Storage
 			Property clientpkp = new Property( PropertyTags.ClientCredential, dpk.ToXmlString() );
 			clientpkp.HiddenProperty = true;
 			properties.AddNodeProperty( clientpkp );
+		}
+
+		/// <summary>
+		/// Removes the alias from the specified domain.
+		/// </summary>
+		/// <param name="storeObject">Store object.</param>
+		/// <param name="domainName">Domain of the collection that has been deleted.</param>
+		internal void CleanupAliases( Store storeObject, string domainName )
+		{
+			// Search for any collections that have the specified domain name.
+			Persist.Query query = new Persist.Query( PropertyTags.DomainName, SearchOp.Equal, domainName, Syntax.String );
+			Persist.IResultSet chunkIterator = storeObject.StorageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				if ( length == 0 )
+				{
+					// No results, okay to delete the alias for this domain.
+					Alias alias = GetAliasFromDomain( domainName );
+					if ( alias != null )
+					{
+						DeleteAlias( alias.Domain, alias.ID );
+						storeObject.GetLocalAddressBook().Commit( this );
+					}
+				}
+
+				chunkIterator.Dispose();
+			}
 		}
 
 		/// <summary>

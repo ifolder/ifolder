@@ -1052,7 +1052,7 @@ namespace Simias.Storage
 		~Store()      
 		{
 #if ( DEBUG )
-			log.Warn( "Object should have been disposed. {0}", allocator );
+//			log.Warn( "Object should have been disposed. {0}", allocator );
 #endif
 			Dispose( false );
 		}

@@ -625,6 +625,9 @@ namespace Simias.Storage
 				{
 					Directory.Delete( ManagedPath, true );
 				}
+
+				// Clean up any aliases for this collection.
+				store.CurrentIdentity.CleanupAliases( store, Domain );
 			}
 			else
 			{

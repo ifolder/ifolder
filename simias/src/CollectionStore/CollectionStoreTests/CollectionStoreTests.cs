@@ -1245,8 +1245,8 @@ namespace Simias.Storage.Tests
 				collection.Refresh( nodeA );
 				collection.Refresh();
 
-				// The incarnation number on the collection and child node should be two.
-				if ( ( collection.LocalIncarnation != 2 ) || ( nodeA.LocalIncarnation != 2 ) )
+				// The incarnation number on the collection should be one and child node should be two.
+				if ( ( collection.LocalIncarnation != 1 ) || ( nodeA.LocalIncarnation != 2 ) )
 				{
 					Console.WriteLine( "collection incarnation = {0}", collection.LocalIncarnation );
 					Console.WriteLine( "nodeA incarnation = {0}", nodeA.LocalIncarnation );
@@ -1259,10 +1259,10 @@ namespace Simias.Storage.Tests
 				collection.Refresh( nodeA );
 				collection.Refresh();
 
-				// The incarnation number on the collection should be 3 and the node should be two.
-				if ( ( collection.LocalIncarnation != 3 ) || ( nodeA.LocalIncarnation != 2 ) )
+				// The incarnation number on the collection should be 1 and the node should be two.
+				if ( ( collection.LocalIncarnation != 1 ) || ( nodeA.LocalIncarnation != 2 ) )
 				{
-					throw new ApplicationException( "Local incarnation value is not three and two." );
+					throw new ApplicationException( "Local incarnation value is not one and two." );
 				}
 
 				// Add another new child node and commit it.
@@ -1273,15 +1273,15 @@ namespace Simias.Storage.Tests
 				collection.Refresh( nodeB );
 				collection.Refresh();
 
-				// The incarnation number on the collection should be 4 and nodeA should be two
+				// The incarnation number on the collection should be 1 and nodeA should be two
 				// and nodeB should be one.
-				if ( ( collection.LocalIncarnation != 4 ) || ( nodeA.LocalIncarnation != 2 ) || ( nodeB.LocalIncarnation != 1 ) )
+				if ( ( collection.LocalIncarnation != 1 ) || ( nodeA.LocalIncarnation != 2 ) || ( nodeB.LocalIncarnation != 1 ) )
 				{
-					throw new ApplicationException( "Local incarnation value is not four, two, and one." );
+					throw new ApplicationException( "Local incarnation value is not one, two, and one." );
 				}
 
 				// Finally, set the master version of the collection.
-				collection.ImportNode( collection, true, collection.LocalIncarnation );
+				collection.ImportNode( collection, false, collection.LocalIncarnation );
 				collection.IncarnationUpdate = 1;
 				collection.Commit();
 				collection.Refresh();
@@ -1570,7 +1570,8 @@ namespace Simias.Storage.Tests
 					throw new ApplicationException( "Store managed file should not exist yet." );
 				}
 
-				collection.Commit( sfn );
+				Node[] nodeList = { collection, sfn };
+				collection.Commit( nodeList );
 
 				// Now the file should exist.
 				if ( !File.Exists( sfn.GetFullPath( collection ) ) )
