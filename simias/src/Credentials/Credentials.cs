@@ -269,10 +269,10 @@ namespace Simias.Authentication
 
 					Uri cUri = new Uri(cDomain.HostAddress.ToString());
 					realCreds = cCreds.GetCredential(cUri, "BASIC");
-					if (realCreds == null)
-					{
-						log.Debug("Credentials::GetCredentials - credentials not found");
-					}
+					//if (realCreds == null)
+					//{
+					//	log.Debug("Credentials::GetCredentials - credentials not found");
+					//}
 				}
 			}
 			catch{}

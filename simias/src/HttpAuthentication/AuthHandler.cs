@@ -548,7 +548,7 @@ namespace Simias.Security.Web
 				context.Response.StatusDescription = "Unauthorized";
 				context.Response.AddHeader( 
 					"WWW-Authenticate", 
-					String.Concat("Basic realm=\"", domain.Name, "\""));					
+					String.Concat("Basic realm=\"", (domain != null) ? domain.Name : m_authenticationRealm, "\""));					
 
 				/*
 				context.Response.AddHeader( 
@@ -696,6 +696,7 @@ namespace Simias.Security.Web
 					Property p = new Property( "LastLogin", DateTime.Now );
 					p.LocalProperty = true;
 					member.Properties.ModifyProperty( p );
+					roster.Commit( member );
 				}
 			}
 		}

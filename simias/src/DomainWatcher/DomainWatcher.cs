@@ -160,7 +160,7 @@ namespace Simias.DomainWatcher
 						if ( cDomain.Role == SyncRoles.Slave )
 						{
 							Member cMember;
-							log.Debug("checking Domain: " + cDomain.Name);
+							log.Debug( "checking Domain: " + cDomain.Name );
 
 							DomainAgent domainAgent = new DomainAgent();
 							if ( domainAgent.IsDomainActive( cDomain.ID ) == false )
@@ -170,7 +170,7 @@ namespace Simias.DomainWatcher
 							}
 
 							CredentialType credType = 
-								store.GetDomainCredentials(cDomain.ID, out userID, out credentials);
+								store.GetDomainCredentials( cDomain.ID, out userID, out credentials );
 
 							// Only basic type authentication is supported right now.
 							if ( credType != CredentialType.Basic )
@@ -180,7 +180,7 @@ namespace Simias.DomainWatcher
 							}
 							else
 							{
-								cMember = cDomain.Roster.GetMemberByID(userID);
+								cMember = cDomain.Roster.GetMemberByID( userID );
 							}
 
 							// Can we talk to the domain?
@@ -207,8 +207,8 @@ namespace Simias.DomainWatcher
 									authStatus = 
 										domainAgent.Login( 
 											cDomain.ID, 
-											DateTime.Now.ToString(), 
-											DateTime.Now.ToString() );
+											Guid.NewGuid().ToString(),
+											"12" );
 
 									if ( authStatus.statusCode == SCodes.UnknownUser )
 									{
