@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
@@ -365,6 +366,14 @@ namespace Simias.Storage
 			}
 			else
 			{
+				// DEBUG!!
+				if ( IsType( node, NodeTypes.CollectionType ) && ( node.MasterIncarnation != 0 ) )
+				{
+					log.Warn( "Incrementing collection local incarnation value." );
+					Debugger.Break();
+				}
+				// DEBUG!!
+
 				incarnationValue = node.LocalIncarnation + 1;
 			}
 
@@ -388,10 +397,14 @@ namespace Simias.Storage
 		/// Note: The database lock must be acquired before making this call.
 		/// </summary>
 		/// <param name="node">Existing node that may or may not contain changed properties.</param>
+		/// <param name="onlyLocalChanges">Is set to true if only local property changes have been made on the Node object.</param>
 		/// <returns>A node that contains the current object from the database with all of the property
 		/// changes of the current node.</returns>
-		private Node MergeNodeProperties( Node node )
+		private Node MergeNodeProperties( Node node, out bool onlyLocalChanges )
 		{
+			// Default the value.
+			onlyLocalChanges = true;
+
 			// Get this node from the database.
 			Node mergedNode = GetNodeByID( node.ID );
 			if ( mergedNode != null )
@@ -415,6 +428,12 @@ namespace Simias.Storage
 					// Walk the merge list and perform the changes specified there to the mergedNode.
 					foreach ( Property p in node.Properties.ChangeList )
 					{
+						// See if this is a local property change.
+						if ( !p.LocalProperty )
+						{
+							onlyLocalChanges = false;
+						}
+
 						p.ApplyMergeInformation( mergedNode );
 					}
 				}
@@ -449,6 +468,7 @@ namespace Simias.Storage
 				switch ( node.Properties.State )
 				{
 					case PropertyList.PropertyListState.Add:
+					{
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
@@ -468,8 +488,10 @@ namespace Simias.Storage
 						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
 						break;
+					}
 
 					case PropertyList.PropertyListState.Delete:
+					{
 						if ( IsType( node, NodeTypes.CollectionType ) )
 						{
 							deleteCollection = true;
@@ -480,7 +502,7 @@ namespace Simias.Storage
 							if ( IsTombstone( node ) )
 							{
 								// Copy the XML node over to the delete document.
-								xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
+								XmlNode xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
 								deleteDocument.DocumentElement.AppendChild( xmlNode );
 							}
 							else
@@ -509,34 +531,48 @@ namespace Simias.Storage
 								IncrementLocalIncarnation( node );
 
 								// Copy the XML node over to the modify document.
-								xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 								commitDocument.DocumentElement.AppendChild( xmlNode );
 							}
 						}
 						break;
+					}
 
 					case PropertyList.PropertyListState.Update:
-						// Merge any changes made to the object on the database before this object's
-						// changes are committed.
-						Node mergeNode = MergeNodeProperties( node );
-						if ( mergeNode != null )
+					{
+						// Make sure that there are changes to the Node object.
+						if ( node.Properties.ChangeList.Count != 0 )
 						{
-							// Validate this Collection object.
-							ValidateNodeForCommit( mergeNode );
+							// Merge any changes made to the object on the database before this object's
+							// changes are committed.
+							bool onlyLocalChanges;
+							Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
+							if ( mergeNode != null )
+							{
+								// Validate this Collection object.
+								ValidateNodeForCommit( mergeNode );
 
-							// Set the modify time for this object.
-							node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
+								// Don't bump the incarnation value if only local property changes have
+								// been made.
+								if ( !onlyLocalChanges )
+								{
+									// Set the modify time for this object.
+									node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
 
-							// Increment the local incarnation number for the object.
-							IncrementLocalIncarnation( mergeNode );
+									// Increment the local incarnation number for the object.
+									IncrementLocalIncarnation( mergeNode );
+								}
 
-							// Copy the XML node over to the modify document.
-							xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
-							commitDocument.DocumentElement.AppendChild( xmlNode );
+								// Copy the XML node over to the modify document.
+								XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
+								commitDocument.DocumentElement.AppendChild( xmlNode );
+							}
 						}
 						break;
+					}
 
 					case PropertyList.PropertyListState.Import:
+					{
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
@@ -547,21 +583,34 @@ namespace Simias.Storage
 						IncrementLocalIncarnation( node );
 
 						// Copy the XML node over to the modify document.
-						xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 						commitDocument.DocumentElement.AppendChild( xmlNode );
 						break;
+					}
 
 					case PropertyList.PropertyListState.Internal:
+					{
+						// DEBUG!!
+						if ( IsType( node, NodeTypes.CollectionType ) && ( node.MasterIncarnation != 0 ) && ( node.MasterIncarnation != node.LocalIncarnation ) )
+						{
+							log.Warn( "Incrementing collection local incarnation value." );
+							Debugger.Break();
+						}
+
+						// DEBUG!!
 						// Merge any changes made to the object on the database before this object's
 						// changes are committed.
-						mergeNode = MergeNodeProperties( node );
+
+						bool onlyLocalChanges;
+						Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
 						if ( mergeNode != null )
 						{
 							// Copy the XML node over to the modify document.
-							xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
+							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
 						}
 						break;
+					}
 				}
 			}
 
