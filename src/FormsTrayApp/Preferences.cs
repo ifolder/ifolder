@@ -157,8 +157,8 @@ namespace Novell.FormsTrayApp
 			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.tabAccounts = new System.Windows.Forms.TabPage();
 			this.accounts = new System.Windows.Forms.ListView();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.details = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.logout = new System.Windows.Forms.Button();
@@ -580,17 +580,17 @@ namespace Novell.FormsTrayApp
 			this.accounts.DoubleClick += new System.EventHandler(this.details_Click);
 			this.accounts.SelectedIndexChanged += new System.EventHandler(this.accounts_SelectedIndexChanged);
 			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = resources.GetString("columnHeader2.Text");
-			this.columnHeader2.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader2.TextAlign")));
-			this.columnHeader2.Width = ((int)(resources.GetObject("columnHeader2.Width")));
-			// 
 			// columnHeader3
 			// 
 			this.columnHeader3.Text = resources.GetString("columnHeader3.Text");
 			this.columnHeader3.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader3.TextAlign")));
 			this.columnHeader3.Width = ((int)(resources.GetObject("columnHeader3.Width")));
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = resources.GetString("columnHeader2.Text");
+			this.columnHeader2.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("columnHeader2.TextAlign")));
+			this.columnHeader2.Width = ((int)(resources.GetObject("columnHeader2.Width")));
 			// 
 			// details
 			// 
