@@ -125,18 +125,30 @@ namespace Simias.POBox
 		private bool DoInvited()
 		{
 			bool result = false;
-			log.Debug( "SubscriptionThread::DoInvited called" );
+			Store store = Store.GetStore();
 
+			log.Debug( "SubscriptionThread::DoInvited called" );
 			POBoxService poService = new POBoxService();
-			WebState webState = new WebState(subscription.DomainID, subscription.SubscriptionCollectionID);
-			try
+
+			//
+			// If the Domain Type is "ClientServer" credentials are needed for
+			// posting an invitation.  In workgroup, credentials aren't needed.
+			//
+
+			Domain domain = store.GetDomain( subscription.DomainID );
+			if ( domain.ConfigType == Simias.Storage.Domain.ConfigurationType.ClientServer )
 			{
-				webState.InitializeWebClient(poService);
-			}
-			catch (NeedCredentialsException)
-			{
-				log.Debug( "  no credentials - back to sleep" );
-				return result;
+				WebState webState = 
+					new WebState( subscription.DomainID, subscription.SubscriptionCollectionID );
+				try
+				{
+					webState.InitializeWebClient( poService );
+				}
+				catch ( NeedCredentialsException )
+				{
+					log.Debug( "  no credentials - back to sleep" );
+					return result;
+				}
 			}
 			
 			// Resolve the PO Box location for the invitee
@@ -149,7 +161,7 @@ namespace Simias.POBox
 			}
 			else
 			{
-				log.Debug( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
+				log.Error( "  Could not resolve the PO Box location for: " + subscription.FromIdentity );
 				return result;
 			}
 			
@@ -158,8 +170,8 @@ namespace Simias.POBox
 			//
 
 			Collection cSharedCollection = 
-				Store.GetStore().GetCollectionByID(subscription.SubscriptionCollectionID);
-			if (cSharedCollection == null)
+				store.GetCollectionByID( subscription.SubscriptionCollectionID );
+			if ( cSharedCollection == null )
 			{
 				return result;
 			}
@@ -170,6 +182,7 @@ namespace Simias.POBox
 				log.Debug(
 					"Failed POBoxService::Invite - collection: {0} hasn't sync'd to the server yet",
 					subscription.SubscriptionCollectionID);
+
 				return result;
 			}
 
