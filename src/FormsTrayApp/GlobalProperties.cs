@@ -1364,6 +1364,9 @@ namespace Novell.FormsTrayApp
 						ListViewItem lvi = (ListViewItem)ht[args.Node];
 						if (lvi != null)
 						{
+							// Notify the shell.
+							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ((iFolderObject)lvi.Tag).iFolderWeb.UnManagedPath, IntPtr.Zero);
+
 							lvi.Remove();
 							ht.Remove(args.Node);
 						}

@@ -222,6 +222,7 @@ namespace Novell.iFolderCom
 			this.servers.TabIndex = ((int)(resources.GetObject("servers.TabIndex")));
 			this.servers.Text = resources.GetString("servers.Text");
 			this.servers.Visible = ((bool)(resources.GetObject("servers.Visible")));
+			this.servers.SelectedIndexChanged += new System.EventHandler(this.servers_SelectedIndexChanged);
 			// 
 			// label1
 			// 
@@ -435,6 +436,11 @@ namespace Novell.iFolderCom
 		private void ifolderPath_TextChanged(object sender, System.EventArgs e)
 		{
 			ok.Enabled = (ifolderPath.Text.Length > 0) && (servers.Items.Count != 0);
+		}
+
+		private void servers_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			ok.Enabled = (ifolderPath.Text.Length > 0) && (servers.SelectedItem != null);
 		}
 
 		private void ok_Click(object sender, System.EventArgs e)

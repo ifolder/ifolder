@@ -15,6 +15,8 @@
 #define IDS_SHARE_DESC                  115
 #define IDS_PROPERTIES_DESC             116
 #define IDS_HELP_DESC                   117
+#define IDS_REVERT_TITLE                118
+#define IDS_REVERT_PROMPT               119
 #define IDC_PROPLIST                    1001
 #define IDC_EDIT1                       1002
 #define IDC_DESCRIPTION                 1002

@@ -36,6 +36,7 @@ DEFINE_GUID(CLSID_iFolderShell1, 0xaa81d831L, 0x3b41, 0x497c, 0xb5, 0x08, 0xe9, 
 
 #define MAX_ROOT_PATH 3 /* the length of a root path i.e. c:\ */
 #define MAX_MENU_LENGTH 128
+#define MAX_MESSAGE_LENGTH 1024
 
 enum iFolderClass
 {
