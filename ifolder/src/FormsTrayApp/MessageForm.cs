@@ -251,7 +251,7 @@ namespace Novell.iFolder.FormsTrayApp
 				foreach (ShallowNode sn in msgList)
 				{
 					Subscription sub = new Subscription(poBox, sn);
-					if (store.GetCollectionByID(sub.SubscriptionCollectionID) == null)
+					if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
 					{
 						string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
 						ListViewItem lvi = new ListViewItem(items, 0);
@@ -429,7 +429,7 @@ namespace Novell.iFolder.FormsTrayApp
 					if (node != null)
 					{
 						Subscription sub = new Subscription(node);
-						if (store.GetCollectionByID(sub.SubscriptionCollectionID) == null)
+						if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
 						{
 							lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
 						}
