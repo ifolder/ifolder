@@ -24,6 +24,7 @@
 	 
 using System;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Threading;
 
@@ -34,8 +35,7 @@ namespace Simias
 	/// </summary>
 	public sealed class Configuration
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Configuration));
-
+		#region Class Members
 		private static readonly string RootElementTag = "configuration";
 		private static readonly string SectionTag = "section";
 		private static readonly string SettingTag = "setting";
@@ -44,31 +44,85 @@ namespace Simias
 		private static readonly string DefaultSection = "SimiasDefault";
 		private static readonly string DefaultFileName = "Simias.config";
 
-		private string storePath;
-		private FileStream fs = null;
-		private bool modified;
-		private XmlDocument doc;
-
 		private static Configuration instance = null;
+
+		private string storePath;
+		private XmlDocument configDoc;
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Called to get the path where simias is installed.
+		/// </summary>
+		public string StorePath
+		{
+			get { return storePath; }
+		}
+
+		private string ConfigFilePath
+		{
+			get { return Path.Combine(storePath, DefaultFileName); }
+		}
+
+		private static string DefaultPath
+		{
+			get
+			{
+				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+				if ((path == null) || (path.Length == 0))
+				{
+					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				}
+
+				return fixupPath(path);
+			}
+		}
+		#endregion
 		
+		#region Constructor
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="path">The path to the configuration file.</param>
 		private Configuration(string path)
 		{
-			if (path == null)
+			this.storePath = (path == null) ? DefaultPath : fixupPath(path);
+
+			// If the file does not exist look for defaults.
+			string configFilePath = ConfigFilePath;
+			if (!File.Exists(configFilePath))
 			{
-				path = DefaultPath;
-			}
-			else
-			{
-				path = fixupPath(path);
+				string bootStrapPath = Path.Combine(SimiasSetup.sysconfdir, DefaultFileName);
+				if (File.Exists(bootStrapPath))
+				{
+					File.Copy(bootStrapPath, configFilePath);
+				}
+				else
+				{
+					FileStream fs = new FileStream(configFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
+					try
+					{
+						XmlDocument document = new XmlDocument();
+						document.AppendChild(document.CreateElement(RootElementTag));
+						document.Save(fs);
+					}
+					finally
+					{
+						fs.Close();
+					}
+				}
 			}
 
-			this.storePath = path;
-			CreateDefaults();
+			// Load the configuration document from the file.
+			configDoc = new XmlDocument();
+			configDoc.Load(configFilePath);
+			configDoc.PreserveWhitespace = true;
+
+			// Set events to watch for changes to the document.
+			configDoc.NodeChanged += new XmlNodeChangedEventHandler(UpdateConfigFile);
+			configDoc.NodeInserted += new XmlNodeChangedEventHandler(UpdateConfigFile);
 		}
+		#endregion
 
 		#region Factory  Methods
 		/// <summary>
@@ -81,6 +135,7 @@ namespace Simias
 			{
 				if (instance == null)
 					CreateDefaultConfig(null);
+
 				return instance;
 			}
 		}
@@ -98,6 +153,7 @@ namespace Simias
 				{
 					throw(new SimiasException("Configuration already exists."));
 				}
+
 				instance = new Configuration(path);
 				return instance;
 			}
@@ -118,55 +174,91 @@ namespace Simias
 		}
 		#endregion
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public void CreateDefaults()
+		#region Private Methods
+		private XmlElement GetSection(string section)
 		{
-			lock (typeof(Configuration))
+			string str = string.Format("//section[@name='{0}']", section);
+			XmlElement sectionElement = (XmlElement)configDoc.DocumentElement.SelectSingleNode(str);
+			if(sectionElement == null)
 			{
-				// If the file does not exist look for defaults.
-				if (!File.Exists(ConfigFilePath))
-				{
-					string bootStrapPath = Path.Combine(SimiasSetup.sysconfdir, DefaultFileName);
+				// Create the Section node
+				sectionElement = configDoc.CreateElement(SectionTag);
+				sectionElement.SetAttribute(NameAttr, section);
+				configDoc.DocumentElement.AppendChild(sectionElement);
+			}
 
-					if (File.Exists(bootStrapPath))
-					{
-                        log.Debug("Initializing \"{0}\" with \"{1}\"...", ConfigFilePath, bootStrapPath);
-						File.Copy(bootStrapPath, ConfigFilePath);
-					}
-					else
-					{
-						fs = new FileStream(ConfigFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None );
-                        try
-                        {
-                            doc = new XmlDocument();
-                            doc.AppendChild(doc.CreateElement(RootElementTag));
-                            doc.Save(fs);
-                        }
-                        finally
-                        {
-							doc = null;
-							fs.Close();
-                        }
-					}
+			return sectionElement;
+		}
+
+		private XmlElement GetKey(string section, string key)
+		{
+			// Get the section that the key belongs to.
+			XmlElement sectionElement = GetSection(section);
+
+			string str = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
+			XmlElement keyElement = (XmlElement)sectionElement.SelectSingleNode(str);
+			if (keyElement == null)
+			{				
+				// Create the key.
+				keyElement = configDoc.CreateElement(SettingTag);
+				keyElement.SetAttribute(NameAttr, key);
+				sectionElement.AppendChild(keyElement);
+			}
+
+			return keyElement;
+		}
+
+		private bool KeyExists(string section, string key)
+		{
+			bool foundKey = false;
+		
+			string str = string.Format("//{0}[@{1}='{2}']", SectionTag, NameAttr, section);
+			XmlElement sectionElement = (XmlElement)configDoc.DocumentElement.SelectSingleNode(str);
+			if(sectionElement != null)
+			{
+				str = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
+				if(sectionElement.SelectSingleNode(str) != null)
+				{
+					foundKey = true;
+				}
+			}
+
+			return foundKey;
+		}
+
+		private void UpdateConfigFile(object sender, XmlNodeChangedEventArgs e)
+		{
+			// Ignore all other changes.
+			if (e.Node.NodeType == XmlNodeType.Element)
+			{
+				lock(typeof(Configuration))
+				{
+					XmlTextWriter xtw = new XmlTextWriter(ConfigFilePath, Encoding.ASCII);
+					xtw.Formatting = Formatting.Indented;
+					configDoc.WriteTo(xtw);
+					xtw.Close();
 				}
 			}
 		}
-
-		/// <summary>
-		/// Called to get the path where simias is installed.
-		/// </summary>
-		public string StorePath
+		
+		private static string fixupPath(string path)
 		{
-			get { return storePath; }
-		}
+			if ((path.EndsWith("simias") == false) &&
+				(path.EndsWith("simias/") == false) &&
+				(path.EndsWith(@"simias\") == false))
+			{
+				path = Path.Combine(path, "simias");
+			}
 
-		private string ConfigFilePath
-		{
-			get { return Path.Combine(storePath, DefaultFileName); }
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+			return path;
 		}
+		#endregion
 
+		#region Public Methods
 		/// <summary>
 		/// Returns the XmlElement for the specified key.  
 		/// Creates the key if does not exist.
@@ -187,38 +279,24 @@ namespace Simias
 		/// <returns>The key as an XmlElement.</returns>
 		public XmlElement GetElement(string section, string key)
 		{
-			XmlElement keyElement = null;
-			LoadConfigDocument();
-
-			try
+			lock(typeof(Configuration))
 			{
-				keyElement = GetKey(section, key);
+				return GetKey(section, key);
 			}
-			finally
-			{
-				ReleaseConfigDocument();
-			}
-
-			return keyElement;
 		}
 
 		/// <summary>
 		/// Sets the modified element.  The element must have been retrieved from GetElement.
 		/// </summary>
-		/// <param name="keyElement">The element to save.</param>
+		/// <param name="section">Section that the key belongs in.</param>
+		/// <param name="key">Key to set new element into.</param>
+		/// <param name="newElement">The element to save.</param>
 		public void SetElement(string section, string key, XmlElement newElement)
 		{
-			LoadConfigDocument();
-
-			try
+			lock(typeof(Configuration))
 			{
 				XmlElement keyElement = GetKey(section, key);
 				keyElement.InnerXml = newElement.InnerXml;
-				modified = true;
-			}
-			finally
-			{
-				ReleaseConfigDocument();
 			}
 		}
 
@@ -242,33 +320,25 @@ namespace Simias
 		/// <returns>The value as a string.</returns>
 		public string Get(string section, string key, string defaultValue)
 		{
-			string keyValue = null;
-			LoadConfigDocument();
-
-			try
+			lock(typeof(Configuration))
 			{
 				XmlElement keyElement = GetKey(section, key);
-				keyValue = keyElement.GetAttribute(ValueAttr);
-				if (keyValue == "")
+				string keyValue = keyElement.GetAttribute(ValueAttr);
+				if (keyValue == string.Empty)
 				{
 					if (defaultValue != null )
 					{
 						keyElement.SetAttribute(ValueAttr, defaultValue);
 						keyValue = defaultValue;
-						modified = true;
 					}
 					else
 					{
 						keyValue = null;
 					}
 				}
-			}
-			finally
-			{
-				ReleaseConfigDocument();
-			}
 
-			return keyValue;
+				return keyValue;
+			}
 		}
 
 		/// <summary>
@@ -289,17 +359,10 @@ namespace Simias
 		/// <param name="keyValue">The value of the key.</param>
 		public void Set(string section, string key, string keyValue)
 		{
-			LoadConfigDocument();
-
-			try
+			lock(typeof(Configuration))
 			{
 				XmlElement keyElement = GetKey(section, key);
 				keyElement.SetAttribute(ValueAttr, keyValue);
-				modified = true;
-			}
-			finally
-			{
-				ReleaseConfigDocument();
 			}
 		}
 
@@ -308,9 +371,9 @@ namespace Simias
 		/// </summary>
 		/// <param name="key">The key to check for existence.</param>
 		/// <returns>True if the key exists, otherwise false is returned.</returns>
-		public bool Exists( string key )
+		public bool Exists(string key)
 		{
-			return Exists( DefaultSection, key );
+			return Exists(DefaultSection, key);
 		}
 
 		/// <summary>
@@ -319,181 +382,12 @@ namespace Simias
 		/// <param name="section">The section for the tuple</param>
 		/// <param name="key">The key to set.</param>
 		/// <returns>True if the section and key exists, otherwise false is returned.</returns>
-		public bool Exists( string section, string key )
+		public bool Exists(string section, string key)
 		{
-			LoadConfigDocument();
-			bool exists;
-
-			try
+			lock(typeof(Configuration))
 			{
-				exists = KeyExists(section, key);
+				return KeyExists(section, key);
 			}
-			finally
-			{
-				ReleaseConfigDocument();
-			}
-
-			return exists;
-		}
-
-		// These two methods are going to read the XML document every
-		// time they are called but it's a cheap way to have fresh data
-		// and this is probably not called all the time
-		private XmlElement GetSection(string section)
-		{
-			XmlElement sectionElement;
-
-			string str = string.Format("//section[@name='{0}']", section);
-			sectionElement = (XmlElement)doc.DocumentElement.SelectSingleNode(str);
-
-			if(sectionElement == null)
-			{
-				// Create the Section node
-				sectionElement = doc.CreateElement(SectionTag);
-				sectionElement.SetAttribute(NameAttr, section);
-				doc.DocumentElement.AppendChild(sectionElement);
-				modified = true;
-			}
-
-			return sectionElement;
-		}
-
-		private XmlElement GetKey(string section, string key)
-		{
-			XmlElement keyElement = null;
-			XmlElement sectionElement = GetSection(section);
-
-			string xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
-			keyElement = (XmlElement)sectionElement.SelectSingleNode(xpath);
-			if (keyElement == null)
-			{				
-				keyElement = (XmlElement)sectionElement.OwnerDocument.CreateNode(XmlNodeType.Element, SettingTag, "");
-				keyElement.SetAttribute(NameAttr, key);
-				sectionElement.AppendChild(keyElement);
-				modified = true;
-			}
-
-			return keyElement;
-		}
-
-		private bool KeyExists(string section, string key)
-		{
-			bool foundKey = false;
-		
-			string xpath = string.Format("//{0}[@{1}='{2}']", SectionTag, NameAttr, section);
-			XmlElement sectionElement = (XmlElement)doc.DocumentElement.SelectSingleNode(xpath);
-			if(sectionElement != null)
-			{
-				xpath = string.Format("//{0}[@{1}='{2}']/{3}[@{1}='{4}']", SectionTag, NameAttr, section, SettingTag, key);
-				if(sectionElement.SelectSingleNode(xpath) != null)
-				{
-					foundKey = true;
-				}
-			}
-
-			return foundKey;
-		}
-
-		private void LoadConfigDocument()
-		{
-			// Open the configuration file.
-			OpenConfigFile();
-
-			try
-			{
-				modified = false;
-				doc = new XmlDocument();
-				doc.Load(fs);
-			}
-			catch(Exception e)
-			{
-				doc = null;
-				fs.Close();
-				throw new SimiasException("Failed to load config document.", e);
-			}
-		}
-
-		/// <summary>
-		/// Opens the configuration file, retrying if the file is currently in use.
-		/// </summary>
-		/// <returns>A FileStream object associated with the configuration file.</returns>
-		private void OpenConfigFile()
-		{
-			FileStream fsLocal = null;
-
-			lock (typeof(Configuration))
-			{
-				// Stay in the loop until the file is opened.
-				while ( fsLocal == null )
-				{
-					try
-					{
-						// Open the configuration file.
-						fsLocal = new FileStream( ConfigFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None );
-					}
-					catch ( IOException )
-					{
-						// Wait for a moment before trying to open the file again.
-						Thread.Sleep( 100 );
-					}
-					catch ( Exception e )
-					{
-						log.Error(e, "Unhandled Exception");
-
-						throw new Exception("Unhandled Exception", e);
-					}
-				}
-
-				fs = fsLocal;
-			}
-		}
-
-		private void ReleaseConfigDocument()
-		{
-			if (modified)
-			{
-				fs.Position = 0;
-				doc.Save(fs);
-                fs.SetLength(fs.Position);
-				modified = false;
-			}
-
-			doc = null;
-
-			// No member variables should be touched after the close.
-			fs.Close();
-		}
-
-		#region Static Methods
-		
-		private static string DefaultPath
-		{
-			get
-			{
-				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				if (path == null || path.Length == 0)
-				{
-					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				}
-				path = fixupPath(path);
-				return (path);
-			}
-		}
-
-		private static string fixupPath(string path)
-		{
-			if ((path.EndsWith("simias") == false) &&
-				(path.EndsWith("simias/") == false) &&
-				(path.EndsWith(@"simias\") == false))
-			{
-				path = Path.Combine(path, "simias");
-			}
-
-			if (!Directory.Exists(path))
-			{
-				Directory.CreateDirectory(path);
-			}
-			return path;
 		}
 		#endregion
 	}
