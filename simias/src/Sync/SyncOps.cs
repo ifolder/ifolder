@@ -112,7 +112,20 @@ public struct NodeStamp: IComparable
 	// if -1, this node is not derived from BaseFileNode.
 	internal long streamsSize;
 
+	/// <summary>
+	/// 
+	/// </summary>
 	internal string name; //just for debug
+
+	/// <summary>
+	/// 
+	/// </summary>
+	internal bool isDir;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	internal ChangeLogRecord.ChangeLogOp changeType;
 
 	/// <summary> implement some convenient operator overloads </summary>
 	public int CompareTo(object obj)
@@ -121,7 +134,6 @@ public struct NodeStamp: IComparable
 			throw new ArgumentException("object is not NodeStamp");
 		return id.CompareTo(((NodeStamp)obj).id);
 	}
-
 }
 
 //---------------------------------------------------------------------------
@@ -174,6 +186,9 @@ internal class SyncOps
 {
 	Collection collection;
 	bool onServer;
+	private const string ServerChangeLogCookieProp = "ServerChangeLogCookie";
+	private const string ClientChangeLogCookieProp = "ClientChangeLogCookie";
+	EventContext eventCookie;
 
 	//TODO: remove after verifying that 'node as BaseFileNode' works for this
 	internal static BaseFileNode CastToBaseFileNode(Collection collection, Node node)
@@ -232,6 +247,8 @@ internal class SyncOps
 			stamp.masterIncarn = node.MasterIncarnation;
 			stamp.id = new Nid(node.ID);
 			stamp.name = node.Name;
+			stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
+			stamp.changeType = ChangeLogRecord.ChangeLogOp.Unknown;
 
 			//TODO: another place to handle multiple forks
 			try
@@ -362,19 +379,15 @@ internal class SyncOps
 	/// in the NodeChunks from the masterIncarn in the NodeStamp
 	///    -- only makes sense to be called on the client
 	/// </summary>
-	public NodeChunk[] GetSmallNodes(ArrayList stampsA, ArrayList stampsB)
+	public NodeChunk[] GetSmallNodes(Hashtable stamps)
 	{
-		if (stampsA.Count == 0 && stampsB.Count == 0)
+		if (stamps.Count == 0)
 			return null;
-		NodeChunk[] chunks = new NodeChunk[stampsA.Count + stampsB.Count];
+		NodeChunk[] chunks = new NodeChunk[stamps.Count];
 		uint i = 0;
-		foreach (NodeStamp stamp in stampsA)
+		foreach (DictionaryEntry item in stamps)
 		{
-			chunks[i] = GetSmallNode(stamp.id);
-			chunks[i++].expectedIncarn = stamp.masterIncarn;
-		}
-		foreach (NodeStamp stamp in stampsB)
-		{
+			NodeStamp stamp = (NodeStamp)item.Value;
 			chunks[i] = GetSmallNode(stamp.id);
 			chunks[i++].expectedIncarn = stamp.masterIncarn;
 		}
@@ -424,6 +437,123 @@ internal class SyncOps
 		//node = collection.GetNodeByID(nid);
 		//Log.Assert(node.MasterIncarnation == masterIncarn);
 		//Log.Spew("Updated master incarn to {0} on {1}", masterIncarn, node.Name);
+	}
+
+	/// <summary>
+	/// Get the changes from the change log.
+	/// </summary>
+	/// <param name="nodes">returns the list of changes.</param>
+	/// <param name="cookie">The cookie handed back the last call.</param>
+	/// <returns>false the call failed.</returns>
+	internal bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string cookie)
+	{
+		nodes = null;
+		ArrayList changeList = null;
+		ArrayList stampList = new ArrayList();
+
+		// Create a change log reader.
+		ChangeLogReader logReader = new ChangeLogReader( collection );
+		bool more = true;
+		
+		try
+		{
+			// Read the cookie from the last sync and then get the changes since then.
+			if (cookie == null)
+			{
+				eventCookie = logReader.GetEventContext();
+				cookie = eventCookie.ToString();
+				return false;
+			}
+			else
+			{
+				eventCookie = new EventContext(cookie);
+				while (more)
+				{
+					more = logReader.GetEvents(eventCookie, out changeList);
+					foreach( ChangeLogRecord rec in changeList )
+					{
+						Node node = collection.GetNodeByID(rec.nodeID);
+						if (node != null)
+						{
+							string path = OutgoingNode.GetOutNode(collection, ref node);
+							bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
+							if (onServer && tombstone)
+							{
+								collection.Commit(collection.Delete(node));
+								continue;
+							}
+							NodeStamp stamp = new NodeStamp();
+							stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
+							stamp.masterIncarn = node.MasterIncarnation;
+							stamp.id = new Nid(node.ID);
+							stamp.name = node.Name;
+							stamp.changeType = rec.operation;
+
+							//TODO: another place to handle multiple forks
+							try
+							{
+								stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+							}
+							catch (Exception e)
+							{
+								Log.Spew("Could not get file size of {0}: {1}", path, e);
+								stamp.streamsSize = 0;
+							}
+							stampList.Add(stamp);
+						}
+						else if (rec.operation != ChangeLogRecord.ChangeLogOp.Deleted)
+						{
+						}
+					}
+				}
+			}
+			Log.Spew("Found {0} changed nodes in {1}", stampList.Count, collection.Name);
+			nodes = (NodeStamp[])stampList.ToArray(typeof(NodeStamp));
+			cookie = eventCookie.ToString();
+			return true;
+		}
+		catch
+		{
+			// The cookie is invalid.  Get a valid cookie and save it for the next sync.
+			eventCookie = logReader.GetEventContext();
+			cookie = eventCookie.ToString();
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// Set the cookie for the changelog.
+	/// Used to get the next set of changes.
+	/// </summary>
+	internal void SetChangeLogCookies(string serverCookie, string clientCookie)
+	{
+		if (serverCookie != null)
+		{
+			Property sc = new Property(ServerChangeLogCookieProp, serverCookie);
+			sc.LocalProperty = true;
+			collection.Properties.ModifyProperty(sc);
+		}
+		if (clientCookie != null)
+		{
+			Property cc = new Property(ClientChangeLogCookieProp, clientCookie);
+			cc.LocalProperty = true;
+			collection.Properties.ModifyProperty(cc);
+		}
+		collection.Commit();
+	}
+
+	internal void GetChangeLogCookies(out string serverCookie, out string clientCookie)
+	{
+		try
+		{
+			serverCookie = (string)collection.Properties.GetSingleProperty(ServerChangeLogCookieProp).Value;
+			clientCookie = (string)collection.Properties.GetSingleProperty(ClientChangeLogCookieProp).Value;
+		}
+		catch
+		{
+			serverCookie = null;
+			clientCookie = null;
+		}
 	}
 }
 

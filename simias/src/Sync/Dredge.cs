@@ -62,6 +62,8 @@ public class Dredger
 	const string lastDredgeProp = "LastDredgeTime";
 	DateTime dredgeTimeStamp = DateTime.Now;
 	DateTime lastDredgeTime = DateTime.MinValue;
+	bool foundChange;
+	bool lookForFiles = false;		
 
 	//--------------------------------------------------------------------
 	// only returns true if file exists and name matches case exactly
@@ -123,7 +125,10 @@ public class Dredger
 			if (npath != null && npath == path)
 			{
 				if (!collection.IsType(n, type) || node != null && dn == null)
+				{
 					DeleteNode(n); // remove node if wrong type or duplicate file
+					foundChange = true;
+				}
 				else
 				{
 					if (dn != null)
@@ -144,6 +149,7 @@ public class Dredger
 				fnode.CreationTime = File.GetCreationTime(path);
 				Log.Spew("Dredger adding file node for {0} {1}", path, fnode.ID);
 				collection.Commit(fnode);
+				foundChange = true;
 			}
 			else
 			{
@@ -152,6 +158,7 @@ public class Dredger
 				dnode.CreationTime = Directory.GetCreationTime(path);
 				Log.Spew("Dredger adding dir node for {0} {1}", path, dnode.ID);
 				collection.Commit(dnode);
+				foundChange = true;
 				DoSubtree(dnode);
 			}
 		}
@@ -167,6 +174,7 @@ public class Dredger
 				unode.CreationTime = created;
 				Log.Spew("Dredger updating file node for {0} {1}", path, node.ID);
 				collection.Commit(unode);
+				foundChange = true;
 			}
 		}
 	}
@@ -185,14 +193,13 @@ public class Dredger
 		//Log.Spew("Dredger processing subtree of path {0}", path);
 
 		DirectoryInfo tmpDi = new DirectoryInfo(path);
-		bool lookForDeletes = false;
 		
 		if (tmpDi.LastWriteTime > lastDredgeTime)
 		{
-			lookForDeletes = true;
+			lookForFiles = true;
 		}
 		
-		if (lookForDeletes)
+		if (lookForFiles)
 		{
 			// remove all nodes from store that no longer exist in the file system
 			foreach (ShallowNode sn in collection.Search(PropertyTags.Parent, new Relationship(collection.ID, dnode.ID)))
@@ -200,7 +207,10 @@ public class Dredger
 				Node kid = new Node(collection, sn);
 				if (collection.IsType(kid, typeof(DirNode).Name) && !DirThere(path, kid.Name)
 					|| collection.IsType(kid, typeof(FileNode).Name) && !FileThere(path, kid.Name))
+				{
 					DeleteNode(kid);
+					foundChange = true;
+				}
 				// else Log.Spew("Dredger leaving node {0}", kid.Name);
 			}
 		}
@@ -208,7 +218,7 @@ public class Dredger
 		// merge files from file system to store
 		foreach (string file in Directory.GetFiles(path))
 		{
-			if (File.GetLastWriteTime(file) > lastDredgeTime || lookForDeletes)
+			if (File.GetLastWriteTime(file) > lastDredgeTime || lookForFiles)
 				DoNode(dnode, file, typeof(FileNode).Name);
 		}
 		
@@ -246,6 +256,7 @@ public class Dredger
 						unode.CreationTime = created;
 						Log.Spew("Dredger updating store file node for {0} {1}", path, file);
 						collection.Commit(unode);
+						foundChange = true;
 					}
 				}
 			}
@@ -272,12 +283,17 @@ public class Dredger
 		catch
 		{
 		}
+		foundChange = false;
+		lookForFiles = false;
 		DoSubtree(collection.GetRootDirectory());
 		DoManagedPath(collection.ManagedPath);
-		Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
-		tsp.LocalProperty = true;
-		collection.Properties.ModifyProperty(tsp);
-		collection.Commit(collection);
+		if (foundChange)
+		{
+			Property tsp = new Property(lastDredgeProp, dredgeTimeStamp);
+			tsp.LocalProperty = true;
+			collection.Properties.ModifyProperty(tsp);
+			collection.Commit(collection);
+		}
 	}
 }
 

@@ -86,6 +86,11 @@ namespace Simias.Storage
 		/// Hint to where the last record was read from in the file. It may not be valid.
 		/// </summary>
 		private long hint;
+
+		/// <summary>
+		/// Used as separator in string representation.
+		/// </summary>
+		private char valueSeparator = ':';
 		#endregion
 
 		#region Properties
@@ -130,7 +135,40 @@ namespace Simias.Storage
 			this.recordID = recordID;
 			this.hint = hint;
 		}
+
+		/// <summary>
+		/// Initializes a new instance from a string obtained from ToString
+		/// </summary>
+		/// <param name="cookie">The string representation of the context.</param>
+		internal EventContext( string cookie)
+		{
+			string [] values = cookie.Split(valueSeparator);
+			if (values.Length != 3)
+			{
+				timeStamp = DateTime.MinValue;
+				recordID = 0;
+				hint = 0;
+			}
+			else
+			{
+				timeStamp = new DateTime(long.Parse(values[0]));
+				recordID = ulong.Parse(values[1]);
+				hint = long.Parse(values[2]);
+			}
+		}
+
 		#endregion
+
+		/// <summary>
+		/// Gets a string representation of this context.
+		/// Can be used to store this cookie for latter use.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return (timeStamp.Ticks.ToString() + valueSeparator + recordID.ToString() + valueSeparator + hint.ToString());
+		}
+
 	}
 
 	/// <summary>
@@ -246,6 +284,11 @@ namespace Simias.Storage
 		/// </summary>
 		public enum ChangeLogOp
 		{
+			/// <summary>
+			/// The node exists but no log record has been created.
+			/// Do a brutt force sync.
+			/// </summary>
+			Unknown,
 			/// <summary>
 			/// Node object was created.
 			/// </summary>
@@ -504,8 +547,9 @@ namespace Simias.Storage
 			store.Revert();
 
 			// Get all of the collection objects and set up listeners for them.
-			foreach( Collection c in store )
+			foreach (ShallowNode sn in store)
 			{
+				Collection c = new Collection(store, sn);
 				lock ( logWriterTable )
 				{
 					// Make sure the entry isn't already in the table.

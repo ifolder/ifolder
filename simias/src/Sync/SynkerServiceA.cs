@@ -152,6 +152,25 @@ public class SynkerServiceA: SyncCollectionService
 	}
 
 	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="nodes"></param>
+	/// <returns></returns>
+	public bool GetChangedNodeStamps(out NodeStamp[] nodes, ref string cookie)
+	{
+		nodes = null;
+		Log.Spew("server start of GetChangedNodes");
+		try
+		{
+			return ops.GetChangedNodeStamps(out nodes, ref cookie);
+		}
+		catch (Exception e) {Log.Uncaught(e); }
+		Log.Spew("Failed to get changes");
+		return false;
+	}
+	
+
+	/// <summary>
 	/// simple version string, also useful to check remoting
 	/// </summary>
 	public string Version
