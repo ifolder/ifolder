@@ -35,21 +35,21 @@ diff -r1.23 Makefile.mingw
 Index: gifolder/gifolder.c
 ===================================================================
 RCS file: /cvsroot/gaim/gaim/plugins/gifolder/gifolder.c,v
-retrieving revision 1.19
-diff -r1.19 gifolder.c
+retrieving revision 1.20
+diff -r1.20 gifolder.c
 45c45
 < #include "prefix.h"
 ---
-> //#include "prefix.h"
+> /*#include "prefix.h"*/
 51c51
 < #include "version.h"
 ---
-> //#include "version.h"
-266,268c266
+> /*#include "version.h"*/
+296,298c296
 < 	GAIM_PLUGIN_MAGIC,
 < 	GAIM_MAJOR_VERSION,
 < 	GAIM_MINOR_VERSION,
 ---
 > 	GAIM_PLUGIN_API_VERSION,
-284a283
+314a313
 > 	NULL,
