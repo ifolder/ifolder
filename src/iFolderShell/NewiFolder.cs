@@ -373,7 +373,7 @@ namespace Novell.iFolderCom
 
 				if (ret != IntPtr.Zero)
 				{
-					Bitmap bmap = Bitmap.FromHicon(fi.hIcon);
+					Bitmap bmap = Win32Window.IconToAlphaBitmap(Icon.FromHandle(fi.hIcon));
 					e.Graphics.DrawImage(bmap, 0, 0);
 
 					IntPtr hIcon = Win32Window.LoadImageFromFile(
@@ -384,7 +384,7 @@ namespace Novell.iFolderCom
 						32,
 						Win32Window.LR_LOADFROMFILE);
 
-					bmap = Bitmap.FromHicon(hIcon);
+					bmap = Win32Window.IconToAlphaBitmap(Icon.FromHandle(hIcon));
 					e.Graphics.DrawImage(bmap, 0, 0);
 				}
 			}
