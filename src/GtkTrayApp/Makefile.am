@@ -57,7 +57,7 @@ IMAGE_FILES = collection.png Node.png Tombstone.png BaseContact.png folder.png i
 MIME_FILES = $(srcdir)/ifolder.mime $(srcdir)/ifolder.keys
 APPLICATIONS_FILES = $(srcdir)/ifolder.applications
 
-EXTRA_DIST = $(UILIB_CSFILES) $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(ReunionBrowserGtk_CSFILES) $(GLADE_FILES) $(IMAGE_FILES) $(INSTALL_BIN_FILES) $(INSTALL_LIB_FILES) ifolder.desktop.in $(MIME_FILES) $(APPLICATIONS_FILES)
+EXTRA_DIST = $(UILIB_CSFILES) $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(ReunionBrowserGtk_CSFILES) $(GLADE_FILES) $(IMAGE_FILES) collectionbrowser.in ifolder.in $(INSTALL_LIB_FILES) ifolder.desktop.in $(MIME_FILES) $(APPLICATIONS_FILES)
 
 all: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe CollectionBrowser.exe ReunionBrowser.exe 
 

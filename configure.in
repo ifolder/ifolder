@@ -509,9 +509,11 @@ src/iFolderGtkUI/collectionbrowser
 src/iFolderGtkApp/Makefile
 src/iFolderGtkApp/ifolder
 src/GtkTrayApp/Makefile
+src/GtkTrayApp/Util.cs
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolder.desktop
 src/GtkTrayApp/setup-autostart
+src/GtkTrayApp/collectionbrowser
 src/FormsTrayApp/Makefile
 src/FormsInvitationWizard/Makefile
 src/iFolderShell/Makefile
