@@ -93,7 +93,7 @@ public class Log
 		}
 	}
 
-	internal static void Info(string format, params object[] args)
+	public static void Info(string format, params object[] args)
 	{
 		if (Categorical && traceSwitch.TraceInfo)
 		{

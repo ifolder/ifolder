@@ -42,22 +42,18 @@ public class SyncTests: Assertion
 {
 	const int serverPort = 1100;
 	const string folderName = "testFolder";
-	const string invitationFile = "SyncTestInvitation.ifi";
-	const string scpCmd = "scp.exe";
-	const string sshCmd = "ssh.exe";
 	const string monoCmd = "/usr/bin/mono";
 	const string monoSyncCmd = "--debug SyncCmd.exe";
-	const bool useTCP = true;
-	const string relClientDir = "SyncTestClientData";
-	const string remoteBinDir = "$IFOLDER_BIN";
-	static readonly string serverDir = Path.GetFullPath("SyncTestServerData");
-	static readonly string clientDir = Path.GetFullPath(relClientDir);
-	static readonly string clientFolder = Path.Combine(clientDir, folderName);
-	static readonly string serverFolder = Path.Combine(serverDir, folderName);
+	static readonly string storeDirA = Path.GetFullPath("SyncTestDataA");
+	static readonly string storeDirB = Path.GetFullPath("SyncTestDataB");
+	static readonly string folderB = Path.Combine(storeDirB, folderName);
+	static readonly string folderA = Path.Combine(storeDirA, folderName);
 
+	string host = "127.0.0.1";
+	string invitationFile = Path.Combine(storeDirB, "SyncTestInvitation.ifi");
 	bool runChildProcess = true;
-	string clientAddress = null; // for use in SSH commandlines, can be user@hostname, raw IP, etc.
-	string host = "127.0.0.1"; // must be set to name or external address of this machine if clientAddress is set
+	bool useTCP = true;
+	bool useRemoteServer = false;
 
 	//---------------------------------------------------------------------------
 	static int Run(string program, string args)
@@ -72,85 +68,39 @@ public class SyncTests: Assertion
 	}
 
 	//---------------------------------------------------------------------------
-	bool RemoteRun(string cmdLine)
-	{
-		Assert(clientAddress != null);
-		int err = Run(sshCmd, String.Format("{0} 'cd {1}; {2}'",
-				clientAddress, remoteBinDir, cmdLine));
-		if (err != 0)
-			Console.WriteLine("remote command execution failed, error {0}", err);
-		return err == 0;
-	}
-
-	//---------------------------------------------------------------------------
-	static string SSHPath(string localPath)
-	{
-		localPath = localPath.Replace(Path.DirectorySeparatorChar, '/');
-		return localPath.Replace(Path.AltDirectorySeparatorChar, '/');
-	}
-
-	//---------------------------------------------------------------------------
-	bool RemoteCopy(string path, string target, bool toRemoteHost)
-	{
-		Assert(clientAddress != null);
-		string opts = String.Format(toRemoteHost? "-p -r {1}/{2} {0}:{3}/{1}": "-p -r {0}:{3}/{1}/{2} {1}",
-				clientAddress, SSHPath(path), SSHPath(target), remoteBinDir);
-		int err = Run(scpCmd, opts);
-		if (err != 0)
-			Console.WriteLine("'{0} {1}' failed, error {2}", scpCmd, opts, err);
-		return err == 0;
-	}
-
-	//---------------------------------------------------------------------------
 	bool RunClient()
 	{
 		// run client code within this process
 		if (!runChildProcess)
-			return CmdClient.RunOnce(new Uri(clientDir), new Uri(clientFolder), serverDir, useTCP);
+			return CmdClient.RunOnce(new Uri(storeDirB), new Uri(folderB), storeDirA, useTCP);
 
-		// bring up a server object within this process
-		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(serverDir), useTCP);
-		bool ok = false;
+		if (useRemoteServer)
+			return CmdClient.RunOnce(new Uri(storeDirB), new Uri(folderB), null, useTCP)
+					&& CmdClient.RunOnce(new Uri(storeDirA), new Uri(folderA), null, useTCP);
+		
+		// running local child client process
+		CmdServer cmdServer = new CmdServer(host, serverPort, new Uri(storeDirA), useTCP);
+		string syncCmdLine = String.Format(" -s {0} {1} sync {2}", storeDirB, useTCP? "": "-h", folderB);
 
-		if (clientAddress == null)
-		{
-			// run client code as local child process
-			int err;
-			string syncCmdLine = String.Format(" -s {0} {1} sync {2}", clientDir, useTCP? "": "-h", clientFolder);
+		//TODO: very gross check to determine if we are on mono, find a better way
+		int err = Path.DirectorySeparatorChar == '/'?
+				Run(monoCmd, monoSyncCmd + syncCmdLine):
+				Run("SyncCmd.exe", syncCmdLine);
 
-			//TODO: very gross check to determine if we are on mono, but what to do?
-			if (Path.DirectorySeparatorChar == '/')
-				err = Run(monoCmd, monoSyncCmd + syncCmdLine);
-			else
-				err = Run("SyncCmd.exe", syncCmdLine);
-			if (err != 0)
-				Console.WriteLine("child process execution failed, error {0}", err);
-			ok = err == 0;
-		}
-		else
-		{
-			/* run client code on remote machine. requires ssh client here and
-			 * ssh server on remote machine -- with authorized keys already set up.
-			 * Since SSH servers don't run on windows, assume the remote client
-			 * will be on mono.
-			 */
-			ok = RemoteCopy(relClientDir, folderName, true)
-					&& RemoteRun(String.Format("{0} {4} -s {1} {2} sync {1}/{3}",
-							monoCmd, relClientDir, useTCP? "": "-h", folderName, monoSyncCmd))
-					&& RemoteCopy(relClientDir, folderName, false);
-		}
+		if (err != 0)
+			Console.WriteLine("child process execution failed, error {0}", err);
 
 		cmdServer.Stop();
 		cmdServer = null;
-		GC.Collect();
-		return ok;
+		GC.Collect(); //TODO: is this necessary?
+		return err == 0;
 	}
 
 	//---------------------------------------------------------------------------
 	void DeleteFileData()
 	{
-		Directory.Delete(serverDir, true);
-		Directory.Delete(clientDir, true);
+		Directory.Delete(storeDirA, true);
+		Directory.Delete(storeDirB, true);
 	}
 
 	//---------------------------------------------------------------------------
@@ -166,15 +116,15 @@ public class SyncTests: Assertion
 			Log.SetLevel("verbose");
 
 			// set up server store and collections, and some ifolder file data
-			if (Directory.Exists(serverDir) || Directory.Exists(clientDir)
-					|| File.Exists(serverDir) || File.Exists(clientDir))
+			if (Directory.Exists(storeDirA) || Directory.Exists(storeDirB)
+					|| File.Exists(storeDirA) || File.Exists(storeDirB))
 			{
-				//throw new ApplicationException(String.Format("can't run tests: {0} or {1} already exist, remove and retry", serverDir, clientDir));
+				//throw new ApplicationException(String.Format("can't run tests: {0} or {1} already exist, remove and retry", storeDirA, storeDirB));
 				DeleteFileData();
 			}
 
-			Directory.CreateDirectory(serverFolder);
-			Directory.CreateDirectory(clientFolder);
+			Directory.CreateDirectory(folderA);
+			Directory.CreateDirectory(folderB);
 			Log.Spew("Init: created store, folders and files");
 		}
 		catch (System.Exception e)
@@ -194,9 +144,14 @@ public class SyncTests: Assertion
 
 	public bool Invite()
 	{
+		if (useRemoteServer)
+		{
+			Log.Info("Skipping creation of local invitation, must come from remote server");
+			return true;
+		}
 		Log.Spew("Creating collection and invitation");
-		FileInviter fi = new FileInviter(new Uri(serverDir));
-		return fi.Invite(null, new Uri(serverFolder), host, serverPort, Path.Combine(clientDir, invitationFile));
+		FileInviter fi = new FileInviter(new Uri(storeDirA));
+		return fi.Invite(null, new Uri(folderA), host, serverPort, invitationFile);
 	}
 
 	//---------------------------------------------------------------------------
@@ -205,27 +160,16 @@ public class SyncTests: Assertion
 	public bool Accept()
 	{
 		Log.Spew("accepting collection and invitation");
-		if (clientAddress == null)
+		if (!useRemoteServer)
 		{
-			FileInviter fi = new FileInviter(new Uri(clientDir));
-			return fi.Accept(clientDir, Path.Combine(clientDir, invitationFile));
+			FileInviter fi = new FileInviter(new Uri(storeDirB));
+			return fi.Accept(storeDirB, invitationFile);
 		}
 
-		/* run client code on remote machine. requires ssh client here and
-		 * ssh server on remote machine -- with authorized keys already set up.
-		 * Since SSH servers don't run on windows, assume the remote client
-		 * will be on mono.
-		 */
-		RemoteRun(String.Format("rm -rf {0}", relClientDir));
-		RemoteRun(String.Format("mkdir {0}", relClientDir));
-
-		if (!RemoteCopy(relClientDir, invitationFile, true))
-			return false;
-
-		string cmdLine = String.Format("{0} {4} -s {1} {2} accept {1}/{3} {1}",
-				monoCmd, relClientDir, useTCP? "": "-h", invitationFile, monoSyncCmd);
-
-		return RemoteRun(cmdLine);
+		// using remote server: accept specified invitation file into both local stores.
+		FileInviter fiA = new FileInviter(new Uri(storeDirA));
+		FileInviter fiB = new FileInviter(new Uri(storeDirB));
+		return fiA.Accept(storeDirA, invitationFile) && fiB.Accept(storeDirB, invitationFile);
 	}
 
 	//---------------------------------------------------------------------------
@@ -233,9 +177,9 @@ public class SyncTests: Assertion
 
 	public bool FirstSync()
 	{
-		string dir1 = Path.Combine(serverFolder, "subdir1");
-		string dir2 = Path.Combine(serverFolder, "sub dir with spaces2");
-		string dir3 = Path.Combine(serverFolder, "subdir3");
+		string dir1 = Path.Combine(folderA, "subdir1");
+		string dir2 = Path.Combine(folderA, "sub dir with spaces2");
+		string dir3 = Path.Combine(folderA, "subdir3");
 		Directory.CreateDirectory(dir1);
 		Directory.CreateDirectory(dir2);
 		Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
@@ -256,7 +200,7 @@ public class SyncTests: Assertion
 			Log.Spew("failed first sync");
 			return false;
 		}
-		return Differ.CompareDirectories(serverFolder, clientFolder);
+		return Differ.CompareDirectories(folderA, folderB);
 	}
 
 	//---------------------------------------------------------------------------
@@ -266,8 +210,8 @@ public class SyncTests: Assertion
 
 	public bool SimpleAdds()
 	{
-		string dirS = Path.Combine(serverFolder, "simpleTestDir");
-		string dirC = Path.Combine(clientFolder, "simpleTestDir");
+		string dirS = Path.Combine(folderA, "simpleTestDir");
+		string dirC = Path.Combine(folderB, "simpleTestDir");
 		Directory.CreateDirectory(dirS);
 		Directory.CreateDirectory(dirC);
 		const int fileCount = 43;
@@ -295,7 +239,7 @@ public class SyncTests: Assertion
 			Log.Spew("failed simpleAdds sync");
 			return false;
 		}
-		return Differ.CompareDirectories(serverFolder, clientFolder);
+		return Differ.CompareDirectories(folderA, folderB);
 	}
 
 
@@ -306,8 +250,8 @@ public class SyncTests: Assertion
 
 	public bool SimpleDeletes()
 	{
-		string dirS = Path.Combine(serverFolder, "simpleTestDir");
-		string dirC = Path.Combine(clientFolder, "simpleTestDir");
+		string dirS = Path.Combine(folderA, "simpleTestDir");
+		string dirC = Path.Combine(folderB, "simpleTestDir");
 		int[] delNums = { 8, 12, 14, 16, 22, 28 };
 
 		// delete all but last two from client
@@ -340,7 +284,7 @@ public class SyncTests: Assertion
 				worked = false;
 			}
 
-		return worked && Differ.CompareDirectories(serverFolder, clientFolder);
+		return worked && Differ.CompareDirectories(folderA, folderB);
 	}
 
 	//---------------------------------------------------------------------------
@@ -351,8 +295,8 @@ public class SyncTests: Assertion
 
 	public bool FileCreationCollision()
 	{
-		string dirS = Path.Combine(serverFolder, "simpleTestDir");
-		string dirC = Path.Combine(clientFolder, "simpleTestDir");
+		string dirS = Path.Combine(folderA, "simpleTestDir");
+		string dirC = Path.Combine(folderB, "simpleTestDir");
 		string subdirS1 = Path.Combine(dirS, "collisionDir1");
 		string subdirS2 = Path.Combine(dirS, "collisionDir2");
 		string subdirC1 = Path.Combine(dirC, "collisionDir1");
@@ -398,7 +342,7 @@ public class SyncTests: Assertion
 			return false;
 		}
 
-		return Differ.CompareDirectories(serverFolder, clientFolder);
+		return Differ.CompareDirectories(folderA, folderB);
 	}
 
 	//---------------------------------------------------------------------------
@@ -449,10 +393,7 @@ public class SyncTests: Assertion
 			{
 				SyncTests t = new SyncTests();
  				if (args.Length > 0)
-				{
-					t.clientAddress = args[0];
-					t.host = args.Length > 1? args[1]: MyDns.GetHostName();
-				}
+					t.invitationFile = Path.GetFullPath(args[0]);
 				t.Run();
 			}
 		}

@@ -108,8 +108,6 @@ public class FileInviter
 		DirNode dn = sc.GetRootDirectory();
 		Log.Spew("Created new client collection {0} {1} {2}", sc.Name, sc.ID, dn == null? "<null>": dn.GetFullPath(sc));
 
-		c = FindCollection(store, docRoot);
-		Log.Spew("Just after commit, found collection {0}",  c == null? "<null>": c.Name);
 		return true;
 	}
 
@@ -280,7 +278,10 @@ public class CmdClient
 		store.Revert();
 		Collection c = FileInviter.FindCollection(store, docRoot);
 		if (c == null)
+		{
+			Log.Error("could not find collection for folder: {0}", storeLocation.LocalPath);
 			return false;
+		}
 
 		SyncCollection csc = new SyncCollection(c);
 		if (serverStoreLocation != null)
