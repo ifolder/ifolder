@@ -54,8 +54,9 @@ namespace Simias.Sync.Web
 		[WebMethod(EnableSession = true)]
 		public SyncNodeStamp[] Start(ref SyncStartInfo si, string user)
 		{
-			SyncService ss = new SyncService(si.CollectionID);
+			SyncService ss = new SyncService();
 			Service = ss;
+			Session.Timeout = 1;
 			SyncNodeStamp[] nodes = ss.Start(ref si, user);
 			
 			// TODO:
@@ -75,12 +76,15 @@ namespace Simias.Sync.Web
 		}
 
 		/// <summary>
-		/// returns array of NodeStamps for all Nodes in this collection
+		/// 
 		/// </summary>
+		/// <returns></returns>
 		[WebMethod(EnableSession = true)]
-		public SyncNodeStamp[] GetAllNodeStamps()
+		public bool KeepAlive()
 		{
-			return Service.GetNodeStamps();
+			if (Service != null)
+				return true;
+			return false;
 		}
 
 		/// <summary>

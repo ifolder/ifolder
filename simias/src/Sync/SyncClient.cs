@@ -46,40 +46,53 @@ namespace Simias.Sync.Client
 	/// struct to represent the minimal information that the sync code would need
 	/// to know about a node to determine if it needs to be synced.
 	/// </summary>
-	[Serializable]
-	public struct NodeStamp: IComparable
+	internal class NodeStamp: SyncNodeStamp, IComparable
 	{
 		/// <summary>
-		/// The Node ID.
-		/// </summary>
-		public string id;
-
-		/// <summary>
-		/// The locale incartion of the node.
-		/// </summary>
-		public ulong localIncarn;
-
-		/// <summary>
-		/// The Master incarnation for the node.
-		/// </summary>
-		public ulong masterIncarn;
-
-		/// <summary>
 		/// 
 		/// </summary>
-		public string type;
+		/// <param name="node"></param>
+		internal NodeStamp(Node node)
+		{
+			this.ID = node.ID;
+			this.LocalIncarnation = node.LocalIncarnation;
+			this.MasterIncarnation = node.MasterIncarnation;
+			this.BaseType = node.Type;
+			this.Operation = SyncOperation.Unknown;
+		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public ChangeLogRecord.ChangeLogOp changeType;
-
+		internal NodeStamp(ChangeLogRecord record)
+		{
+			this.ID = record.EventID;
+			this.LocalIncarnation = record.SlaveRev;
+			this.MasterIncarnation = record.MasterRev;
+			this.BaseType = record.Type.ToString();
+			switch (record.Operation)
+			{
+				case ChangeLogRecord.ChangeLogOp.Changed:
+					this.Operation = SyncOperation.Change;
+					break;
+				case ChangeLogRecord.ChangeLogOp.Created:
+					this.Operation = SyncOperation.Create;
+					break;
+				case ChangeLogRecord.ChangeLogOp.Deleted:
+					this.Operation = SyncOperation.Delete;
+					break;
+				case ChangeLogRecord.ChangeLogOp.Renamed:
+					this.Operation = SyncOperation.Rename;
+					break;
+				default:
+					this.Operation = SyncOperation.Unknown;
+					break;
+			}
+		}
+		
 		/// <summary> implement some convenient operator overloads </summary>
 		public int CompareTo(object obj)
 		{
 			if (obj == null || !(obj is NodeStamp))
 				throw new ArgumentException("object is not NodeStamp");
-			return id.CompareTo(((NodeStamp)obj).id);
+			return ID.CompareTo(((NodeStamp)obj).ID);
 		}
 	}
 
@@ -334,10 +347,11 @@ namespace Simias.Sync.Client
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
 		EventPublisher	eventPublisher = new EventPublisher();
-		SimiasSyncService service;
+		SimiasSyncService	service;
 		Store			store;
 		SyncCollection	collection;
 		bool			queuedChanges;
+		SyncColStatus	serverStatus;
 //		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
@@ -431,7 +445,15 @@ namespace Simias.Sync.Client
 		internal void Reschedule()
 		{
 			if (!stopping)
-				timer.Change(collection.Interval * 1000, Timeout.Infinite);
+			{
+				int seconds = collection.Interval;
+				if (serverStatus == SyncColStatus.Busy)
+				{
+					// Reschedule to sync within 1/12 of the scheduled sync time, but no less than 2 seconds.
+					seconds = new Random().Next(seconds / 12) + 2;
+				}
+				timer.Change(seconds * 1000, Timeout.Infinite);
+			}
 		}
 
 		/// <summary>
@@ -462,6 +484,7 @@ namespace Simias.Sync.Client
 			lock (this)
 			{
 				queuedChanges = false;
+				serverStatus = SyncColStatus.Success;
 				// Refresh the collection.
 				collection.Refresh();
 			
@@ -475,7 +498,7 @@ namespace Simias.Sync.Client
 				service = new SimiasSyncService();
 				service.Url = collection.MasterUrl.ToString().TrimEnd('/') + service.Url.Substring(service.Url.LastIndexOf('/'));
 				service.CookieContainer = new CookieContainer();
-			
+				
 				SyncNodeStamp[] sstamps;
 				NodeStamp[]		cstamps;
 			
@@ -497,13 +520,11 @@ namespace Simias.Sync.Client
 
 				serverContext = si.Context;
 				rights = si.Access;
-
+				
+				serverStatus = si.Status;
 				switch (si.Status)
 				{
 					case SyncColStatus.Busy:
-						// BUGBUG. we may need to back off.
-						// Re-queue this to run.
-						callback(this);
 						break;
 					case SyncColStatus.NotFound:
 						// The collection does not exist or we do not have rights.
@@ -700,12 +721,7 @@ namespace Simias.Sync.Client
 					node = new Node(collection, sn);
 					if (collection.HasCollisions(node))
 						continue;
-					NodeStamp stamp = new NodeStamp();
-					stamp.localIncarn = node.LocalIncarnation;
-					stamp.masterIncarn = node.MasterIncarnation;
-					stamp.id = node.ID;
-					stamp.type = node.Type;
-					stamp.changeType = ChangeLogRecord.ChangeLogOp.Unknown;
+					NodeStamp stamp = new NodeStamp(node);
 					stampList.Add(stamp);
 				}
 				catch (Storage.DoesNotExistException)
@@ -747,13 +763,7 @@ namespace Simias.Sync.Client
 						more = logReader.GetEvents(eventContext, out changeList);
 						foreach( ChangeLogRecord rec in changeList )
 						{
-							// Make sure the events are not for local only changes.
-							NodeStamp stamp = new NodeStamp();
-							stamp.localIncarn = rec.SlaveRev;
-							stamp.masterIncarn = rec.MasterRev;
-							stamp.id = rec.EventID;
-							stamp.changeType = rec.Operation;
-							stamp.type = rec.Type.ToString();
+							NodeStamp stamp = new NodeStamp(rec);
 							stampList.Add(stamp);
 						}
 					}
@@ -810,7 +820,7 @@ namespace Simias.Sync.Client
 
 				// Make sure the node has been changed.
 				Node oldNode = collection.GetNodeByID(stamp.ID);
-				if (oldNode == null || oldNode.MasterIncarnation != stamp.Incarnation)
+				if (oldNode == null || oldNode.MasterIncarnation != stamp.LocalIncarnation)
 				{
 					if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
 					{
@@ -837,32 +847,32 @@ namespace Simias.Sync.Client
 		/// <param name="stamp">The SyncNodeStamp describing this node.</param>
 		private void PutNodeToServer(NodeStamp stamp)
 		{
-			if (stamp.type == NodeTypes.TombstoneType || stamp.changeType == ChangeLogRecord.ChangeLogOp.Deleted)
+			if (stamp.BaseType == NodeTypes.TombstoneType || stamp.Operation == SyncOperation.Delete)
 			{
-				DeleteOnServer[stamp.id] = stamp.type;
+				DeleteOnServer[stamp.ID] = stamp.BaseType;
 			}
 			else
 			{
 				// Remove from the delete list if it exists.
-				if (DeleteOnServer.Contains(stamp.id))
-					DeleteOnServer.Remove(stamp.id);
+				if (DeleteOnServer.Contains(stamp.ID))
+					DeleteOnServer.Remove(stamp.ID);
 
-				if (stamp.masterIncarn != stamp.localIncarn)
+				if (stamp.MasterIncarnation != stamp.LocalIncarnation)
 				{
-					if (stamp.type == NodeTypes.FileNodeType || stamp.type == NodeTypes.StoreFileNodeType)
+					if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
 					{
 						// This node is a file.
-						filesToServer[stamp.id] = stamp.type;
+						filesToServer[stamp.ID] = stamp.BaseType;
 					}
-					else if (stamp.type == NodeTypes.DirNodeType)
+					else if (stamp.BaseType == NodeTypes.DirNodeType)
 					{
 						// This node is a directory.
-						dirsToServer[stamp.id] = stamp.type;
+						dirsToServer[stamp.ID] = stamp.BaseType;
 					}
 					else
 					{
 						// This is a generic node.
-						nodesToServer[stamp.id] = stamp.type;
+						nodesToServer[stamp.ID] = stamp.BaseType;
 					}
 				}
 			}
@@ -900,13 +910,13 @@ namespace Simias.Sync.Client
 
 			foreach (NodeStamp cStamp in cstamps)
 			{
-				SyncNodeStamp sStamp = (SyncNodeStamp)tempTable[cStamp.id];
+				SyncNodeStamp sStamp = (SyncNodeStamp)tempTable[cStamp.ID];
 				if (sStamp == null)
 				{
 					// If the Master Incarnation is not 0 then this node has been deleted on the server.
-					if (cStamp.masterIncarn != 0)
+					if (cStamp.MasterIncarnation != 0)
 					{
-						DeleteOnClient[cStamp.id] = cStamp.type;
+						DeleteOnClient[cStamp.ID] = cStamp.BaseType;
 					}
 					else
 					{
@@ -918,15 +928,15 @@ namespace Simias.Sync.Client
 				{
 					// The node is on both the server and the client.  Check which way the node
 					// should go.
-					if (cStamp.type == NodeTypes.TombstoneType)
+					if (cStamp.BaseType == NodeTypes.TombstoneType)
 					{
 						// This node has been deleted on the client.
-						DeleteOnServer[cStamp.id] = cStamp.type;
+						DeleteOnServer[cStamp.ID] = cStamp.BaseType;
 					}
-					else if (cStamp.localIncarn != cStamp.masterIncarn)
+					else if (cStamp.LocalIncarnation != cStamp.MasterIncarnation)
 					{
 						// The file has been changed locally if the master is correct, push this file.
-						if (cStamp.masterIncarn == sStamp.Incarnation)
+						if (cStamp.MasterIncarnation == sStamp.LocalIncarnation)
 						{
 							PutNodeToServer(cStamp);
 						}
@@ -939,12 +949,12 @@ namespace Simias.Sync.Client
 					else
 					{
 						// The node has not been changed locally see if we need to get the node.
-						if (cStamp.masterIncarn != sStamp.Incarnation)
+						if (cStamp.MasterIncarnation != sStamp.LocalIncarnation)
 						{
 							GetNodeFromServer(sStamp);
 						}
 					}
-					tempTable.Remove(cStamp.id);
+					tempTable.Remove(cStamp.ID);
 				}
 			}
 
@@ -1567,5 +1577,48 @@ namespace Simias.Sync.Client
 		#endregion
 	}
 
+	/*
+	internal class SyncWork
+	{
+		internal class WorkNode
+		{
+			bool	ToServer;
+			string	type;
+		}
+
+		SyncCollection	collection;
+		Hashtable		nodesToServer = new Hashtable();
+		Hashtable		nodesFromServer = new Hashtable();
+
+		public SyncWork(SyncCollection collection)
+		{
+			this.collection = collection;
+		}
+	
+		void AddNodeToServer(string nodeID, string type)
+		{
+			// Make sure we are not getting this node from the server.
+			if (!nodesFromServer.Contains(nodeID))
+			{
+				nodesToServer[nodeID] = type;
+			}
+		}
+
+		void AddNodeFromServer(string nodeID, string type)
+		{
+			if (nodesToServer.Contains(nodeID))
+			{
+				nodesToServer.Remove(nodeID);
+			}
+			nodesFromServer[nodeID] = type;
+		}
+
+		bool HasNodeChanged(string nodeID)
+		{
+			Node node = collection.GetNodeByID(nodeID);
+			if (node
+		}
+	}
+	*/
 	#endregion
 }

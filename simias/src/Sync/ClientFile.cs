@@ -770,7 +770,7 @@ namespace Simias.Sync.Client
 		/// 
 		/// </summary>
 		/// <param name="webService"></param>
-		public WsServerReadFile(SimiasSyncService webService)
+		internal WsServerReadFile(SimiasSyncService webService)
 		{
 			service = webService;
 		}
@@ -826,6 +826,9 @@ namespace Simias.Sync.Client
 
 	#region WsServerWriteFile
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class WsServerWriteFile : IServerWriteFile
 	{
 		SimiasSyncService		service;
@@ -834,7 +837,7 @@ namespace Simias.Sync.Client
 		/// Constructs a object that can be used to sync a file to the server.
 		/// </summary>
 		/// <param name="webService">The Sync web service.</param>
-		public WsServerWriteFile(SimiasSyncService webService)
+		internal WsServerWriteFile(SimiasSyncService webService)
 		{
 			service = webService;
 		}

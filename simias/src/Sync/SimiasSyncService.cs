@@ -27,7 +27,7 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     public SimiasSyncService() {
-        this.Url = "http://localhost/SyncService.asmx";
+        this.Url = "http://localhost:8086/simias10/SyncService.asmx";
     }
     
     /// <remarks/>
@@ -71,21 +71,21 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetAllNodeStamps", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public SyncNodeStamp[] GetAllNodeStamps() {
-        object[] results = this.Invoke("GetAllNodeStamps", new object[0]);
-        return ((SyncNodeStamp[])(results[0]));
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/KeepAlive", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public bool KeepAlive() {
+        object[] results = this.Invoke("KeepAlive", new object[0]);
+        return ((bool)(results[0]));
     }
     
     /// <remarks/>
-    public System.IAsyncResult BeginGetAllNodeStamps(System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetAllNodeStamps", new object[0], callback, asyncState);
+    public System.IAsyncResult BeginKeepAlive(System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("KeepAlive", new object[0], callback, asyncState);
     }
     
     /// <remarks/>
-    public SyncNodeStamp[] EndGetAllNodeStamps(System.IAsyncResult asyncResult) {
+    public bool EndKeepAlive(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
-        return ((SyncNodeStamp[])(results[0]));
+        return ((bool)(results[0]));
     }
     
     /// <remarks/>
@@ -459,6 +459,9 @@ public enum SyncStatus {
     
     /// <remarks/>
     InUse,
+    
+    /// <remarks/>
+    Busy,
 }
 
 /// <remarks/>
@@ -506,7 +509,10 @@ public class SyncNodeStamp {
     public string ID;
     
     /// <remarks/>
-    public System.UInt64 Incarnation;
+    public System.UInt64 MasterIncarnation;
+    
+    /// <remarks/>
+    public System.UInt64 LocalIncarnation;
     
     /// <remarks/>
     public string BaseType;
