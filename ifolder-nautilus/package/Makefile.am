@@ -41,10 +41,10 @@ ifolder-nautilus-dist:
 	cd $(top_srcdir); make dist
 
 install: package
-	sudo "rpm -Uvh $(RPM_FILE)"
+	sudo rpm -Uvh $(RPM_FILE)
 	
 uninstall:
-	sudo "rpm -e $(PACKAGE)"
+	sudo rpm -e $(PACKAGE)
 
 clean-local:
 	rm -rf *.rpm RPM
