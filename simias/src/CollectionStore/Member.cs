@@ -126,6 +126,94 @@ namespace Simias.Storage
 		{
 			get { return ace.ID; }
 		}
+
+		/// <summary>
+		/// Gets and sets the member's given (first) name
+		/// </summary>
+		public string Given
+		{
+			get
+			{
+				Property p = properties.FindSingleValue( PropertyTags.Given );
+				if ( p != null )
+				{
+					return p.ValueString;
+				}
+
+				return null;
+			}
+
+			set
+			{
+				if ( value != null && value != "" )
+				{
+					properties.ModifyNodeProperty( PropertyTags.Given, value ); 
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.Given );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets and sets the member's family (last) name
+		/// </summary>
+		public string Family
+		{
+			get
+			{
+				Property p = properties.FindSingleValue( PropertyTags.Family );
+				if ( p != null )
+				{
+					return p.ValueString;
+				}
+
+				return null;
+			}
+
+			set
+			{
+				if ( value != null && value != "" )
+				{
+					properties.ModifyNodeProperty( PropertyTags.Family, value ); 
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.Family );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets and sets the member's full name
+		/// </summary>
+		public string FN
+		{
+			get
+			{
+				Property p = properties.FindSingleValue( PropertyTags.FullName );
+				if ( p != null )
+				{
+					return p.ValueString;
+				}
+
+				return null;
+			}
+
+			set
+			{
+				if ( value != null && value != "" )
+				{
+					properties.ModifyNodeProperty( PropertyTags.FullName, value ); 
+				}
+				else
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.FullName );
+				}
+			}
+		}
+
 		#endregion
 
 		#region Constructors
@@ -173,6 +261,27 @@ namespace Simias.Storage
 				properties.ModifyNodeProperty( PropertyTags.PublicKey, publicKey.ToXmlString( false ) );
 			}
 		}
+
+		/// <summary>
+		/// Constructor for creating a new Member object.
+		/// </summary>
+		/// <param name="userName">User name of the member.</param>
+		/// <param name="userGuid">Unique identifier for the user.</param>
+		/// <param name="rights">Collection access rights granted to the user.</param>
+		/// <param name="givenName">Given (first) name of the contact</param>
+		/// <param name="familyName">Family (last) name of the contact</param>
+		public Member( string userName, string userGuid, Access.Rights rights, string givenName, string familyName ) :
+			this ( userName, userGuid, rights, null )
+		{
+			this.Given = givenName;
+			this.Family = familyName;
+
+			if ( givenName != null && familyName != null )
+			{
+				this.FN = givenName + " " + familyName;
+			}
+		}
+
 
 		/// <summary>
 		/// Constructor that creates a Member object from a Node object.
