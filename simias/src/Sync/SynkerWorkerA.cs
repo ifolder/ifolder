@@ -435,31 +435,29 @@ public class SynkerWorkerA: SyncCollectionWorker
 						try
 						{
 							// Set the expected incarnation.
-							NodeStatus status;
 							if (updates[i].node != null)
 							{
 								NodeStamp ns = (NodeStamp)nodesFromServer[(Nid)updates[i].node.ID];
 								updates[i].expectedIncarn = ns.masterIncarn;
 
-								status = ops.PutSmallNode(updates[i]);
+								NodeStatus status = ops.PutSmallNode(updates[i]);
+								if (status == NodeStatus.Complete ||
+									status == NodeStatus.FileNameConflict ||
+									status == NodeStatus.UpdateConflict)
+								{
+									// This was successful remove the node from the hashtable.
+									nodesFromServer.Remove((Nid)updates[i].node.ID);
+								}
+								else
+								{
+									// We had an error.
+									HadErrors = true;
+								}
 							}
 							else
 							{
 								// The node no longer exists on the server
-								status = NodeStatus.Complete;
-							}
-
-							if (status == NodeStatus.Complete ||
-								status == NodeStatus.FileNameConflict ||
-								status == NodeStatus.UpdateConflict)
-							{
-								// This was successful remove the node from the hashtable.
-								nodesFromServer.Remove((Nid)updates[i].node.ID);
-							}
-							else
-							{
-								// We had an error.
-								HadErrors = true;
+								nodesFromServer.Remove(ids[i]);
 							}
 						}
 						catch

@@ -168,8 +168,9 @@ namespace Simias.Sync
 			// here we are just checking for modified files
 			FileInfo fi = new FileInfo(path);
 			DateTime fsLastWrite = fi.LastWriteTime;
+			TimeSpan ts = fsLastWrite - fn.LastWriteTime;
 			
-			if (fn.LastWriteTime != fsLastWrite)
+			if (ts.TotalSeconds > 1)
 			{
 				// Don't reset the Createion time.
 				fn.LastWriteTime = fsLastWrite;
