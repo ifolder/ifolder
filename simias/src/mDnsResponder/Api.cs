@@ -119,7 +119,7 @@ namespace Mono.P2p.mDnsResponder
 
 		public int	RegisterPointer(string domain, string target)
 		{
-			Ptr	ptr = new Ptr(domain, Defaults.timeToLive, mDnsType.ptr, mDnsClass.iNet, true);
+			Ptr	ptr = new Ptr(domain, Defaults.ptrTimeToLive, mDnsType.ptr, mDnsClass.iNet, true);
 			ptr.Target = target;
 			Resources.AddPtr(ptr); 
 			return(0);

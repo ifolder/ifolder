@@ -429,28 +429,29 @@ namespace Mono.P2p.mDnsResponder
 										HostAddress	hostAddress = new 
 											HostAddress(tmpDomain, timeToLive, rType, rClass, false);
 
-										long ipAddress = 
-											IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
-										//int		ipAddress = BitConverter.ToInt32(receiveData[offset], 0);
-									
-										byte[] bAddr = new byte[4];
+										long ipAddress = BitConverter.ToUInt32(receiveData, offset);
+										//ipAddress = IPAddress.NetworkToHostOrder(ipAddress);
+
+										/*
+										byte[] bAddr = new byte[5];
 										bAddr[0] = (byte) receiveData[offset];
 										bAddr[1] = (byte) receiveData[offset + 1];
 										bAddr[2] = (byte) receiveData[offset + 2];
 										bAddr[3] = (byte) receiveData[offset + 3];
+										bAddr[4] = 0;
+
+										string ipAddr = "";
+										ipAddr += ((byte) receiveData[offset]).ToString();
+										ipAddr += ".";
+										ipAddr += ((byte) receiveData[offset + 1]).ToString();
+										ipAddr += ".";
+										ipAddr += ((byte) receiveData[offset + 2]).ToString();
+										ipAddr += ".";
+										ipAddr += ((byte) receiveData[offset + 3]).ToString();
+										*/
 									
-										log.Info("Constructing IPAddress");
-										IPAddress addr = new IPAddress(ipAddress);
-										log.Info("Done constructing");
-										hostAddress.AddIPAddress(addr);
-
-										Console.WriteLine(
-											"   IP Address:  {0}.{1}.{2}.{3}",
-											receiveData[offset],
-											receiveData[offset + 1],
-											receiveData[offset + 2],
-											receiveData[offset + 3]);
-
+										hostAddress.AddIPAddress(new IPAddress(ipAddress));
+										Console.WriteLine("   IP Address:  " + hostAddress.PrefAddress.ToString());
 										dnsRequest.answerList.Add(hostAddress);
 									}
 									catch(Exception e)

@@ -64,8 +64,9 @@ namespace Mono.P2p.mDnsResponder
 		
 		internal static void RequestHandlerThread()
 		{
+			BaseResource	sResource;
 			DnsRequest		dnsRequest;
-			byte[]			buffer = new byte[32768];
+			//byte[]			buffer = new byte[32768];
 
 			// Setup an endpoint to multi-cast datagrams
 			UdpClient server = new UdpClient("224.0.0.251", 5353);
@@ -77,9 +78,6 @@ namespace Mono.P2p.mDnsResponder
 					return;
 				}
 
-				//Console.WriteLine("RequestHandler alive!");
-				
-				// Need an event to kick us alive
 				dnsRequest = null;
 				requestsMtx.WaitOne();
 				if (requestsQueue.Count > 0)
@@ -118,131 +116,87 @@ namespace Mono.P2p.mDnsResponder
 								else
 								if (cQuestion.RequestType == mDnsType.hostAddress)
 								{
-									int	index = 0;
-									
+									mDnsResponse cResponse = null;
 									Resources.resourceMtx.WaitOne();
 									foreach(BaseResource cResource in Resources.resourceList)
 									{
 										if (cResource.Owner == true && 
-											cResource.Type == mDnsType.ptr &&
+											cResource.Type == mDnsType.hostAddress &&
 											cResource.Name == cQuestion.DomainName)
     									{
-    										log.Info("Sending a response to a direct HA Query");
-											HostAddress ha = (HostAddress) cResource;
-											
-											index =
-												Resources.ResponseHeaderToBuffer(
-													cResource,
-													(short) dnsRequest.TransactionID,
-													(short) 0x0084,
-													1,
-													buffer);
-												
-											index = Resources.HostAddressToBuffer(ha, index, buffer);		
+											if (cResponse == null)
+											{
+												cResponse = new mDnsResponse(server);
+											}
+											cResponse.AddAnswer(cResource);
 										}	
 									}
 									Resources.resourceMtx.ReleaseMutex();
 									
-									if (index != 0)
+									if (cResponse != null)
 									{
-										try
-										{
-											server.Send(buffer, index);
-										}
-										catch(Exception e)
-										{
-										
-											log.Info("Failed sending HA record", e);
-										}
+										log.Info("Sending a response to a direct HA Query");
+										cResponse.Send();
 									}
 								}
 								else
 								if (cQuestion.RequestType == mDnsType.serviceLocation)
 								{
-									int	index = 0;
-									
+									mDnsResponse cResponse = null;
 									Resources.resourceMtx.WaitOne();
 									foreach(BaseResource cResource in Resources.resourceList)
 									{
 										if (cResource.Owner == true && 
-											cResource.Type == mDnsType.ptr &&
+											cResource.Type == mDnsType.serviceLocation &&
 											cResource.Name == cQuestion.DomainName)
     									{
-    										log.Info("Sending a response to a direct SL Query");
-											ServiceLocation sl = (ServiceLocation) cResource;
-											
-											index =
-												Resources.ResponseHeaderToBuffer(
-													cResource,
-													(short) dnsRequest.TransactionID,
-													(short) 0x0084,
-													1,
-													buffer);
-												
-											index = Resources.ServiceLocationToBuffer(sl, index, buffer);		
+											if (cResponse == null)
+											{
+												cResponse = new mDnsResponse(server);
+											}
+											cResponse.AddAnswer(cResource);
 										}	
 									}
 									Resources.resourceMtx.ReleaseMutex();
 									
-									if (index != 0)
+									if (cResponse != null)
 									{
-										try
-										{
-											server.Send(buffer, index);
-										}
-										catch(Exception e)
-										{
-										
-											log.Info("Failed sending SL record", e);
-										}
+										log.Info("Sending a response to a direct SL Query");
+										cResponse.Send();
 									}
 								}
 								else
 								if (cQuestion.RequestType == mDnsType.ptr)
 								{
-									int	index = 0;
-									
+									mDnsResponse cResponse = null;
 									Resources.resourceMtx.WaitOne();
 									foreach(BaseResource cResource in Resources.resourceList)
 									{
 										if (cResource.Owner == true && 
-											cResource.Type == mDnsType.ptr &&
-											cResource.Name == cQuestion.DomainName)
+											cResource.Type == mDnsType.ptr)
     									{
-    										log.Info("Sending a response to a direct PTR Query");
-											Ptr ptr = (Ptr) cResource;
-											
-											index =
-												Resources.ResponseHeaderToBuffer(
-													cResource,
-													(short) dnsRequest.TransactionID,
-													(short) 0x0084,
-													1,
-													buffer);
-												
-											index = Resources.PtrToBuffer(ptr, index, buffer);		
+											if (((Ptr)cResource).Target == cQuestion.DomainName)
+											{
+												if (cResponse == null)
+												{
+													cResponse = new mDnsResponse(server);
+												}
+												cResponse.AddAnswer(cResource);
+											}
 										}	
 									}
 									Resources.resourceMtx.ReleaseMutex();
 									
-									if (index != 0)
+									if (cResponse != null)
 									{
-										try
-										{
-											server.Send(buffer, index);
-										}
-										catch(Exception e)
-										{
-										
-											log.Info("Failed sending PTR record", e);
-										}
+										log.Info("Sending a response to a direct PTR Query");
+										cResponse.Send();
 									}
 								}
 								else								
 								if (cQuestion.RequestType == mDnsType.textStrings)
 								{
-									int	index = 0;
-									
+									mDnsResponse cResponse = null;
 									Resources.resourceMtx.WaitOne();
 									foreach(BaseResource cResource in Resources.resourceList)
 									{
@@ -250,33 +204,19 @@ namespace Mono.P2p.mDnsResponder
 											cResource.Type == mDnsType.textStrings &&
 											cResource.Name == cQuestion.DomainName)
     									{
-    										log.Info("Sending a response to a direct TextStrings Query");
-											TextStrings txtStrs = (TextStrings) cResource;
-											
-											index =
-												Resources.ResponseHeaderToBuffer(
-													cResource,
-													(short) dnsRequest.TransactionID,
-													(short) 0x0084,
-													1,
-													buffer);
-												
-											index = Resources.TextStringsToBuffer(txtStrs, index, buffer);		
+											if (cResponse == null)
+											{
+												cResponse = new mDnsResponse(server);
+											}
+											cResponse.AddAnswer(cResource);
 										}	
 									}
 									Resources.resourceMtx.ReleaseMutex();
 									
-									if (index != 0)
+									if (cResponse != null)
 									{
-										try
-										{
-											server.Send(buffer, index);
-										}
-										catch(Exception e)
-										{
-										
-											log.Info("Failed sending Host Address record", e);
-										}
+										log.Info("Sending a response to a direct TextStrings Query");
+										cResponse.Send();
 									}
 								}
 							}
@@ -284,7 +224,6 @@ namespace Mono.P2p.mDnsResponder
 						else
 						{
 							// Handle any responses
-							
 							ArrayList aList = dnsRequest.AnswerList;
 							foreach(BaseResource cResource in aList)
 							{
@@ -318,8 +257,6 @@ namespace Mono.P2p.mDnsResponder
 				else
 				{
 					requestsMtx.ReleaseMutex();
-					//Thread.Sleep(1000);
-					//Console.WriteLine("RequestHandlerThread - alive");
 				}
 			}
 		}

@@ -9,11 +9,14 @@ namespace Mono.P2p.mDnsResponder
 	class Defaults
 	{
 		#region Class Members
-		static internal int			timeToLive = 300;
+		static internal int			timeToLive = 300;		// 5 minutes
+		static internal int			ptrTimeToLive = 7200;	// 2 hours
 
 		// Number of seconds the maintenance thread sleeps
 		//static internal int			maintenanceNapTime = 120;
 		static internal int			maintenanceNapTime = 30;
+
+		static internal int			sendBufferSize = 32768;
 		#endregion
 
 		#region Properties
