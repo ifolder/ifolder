@@ -112,7 +112,7 @@ namespace Simias
 					Console.WriteLine("Stopping...");
 
 					// publish the shutdown event
-					EventPublisher p = new EventPublisher(config);
+					EventPublisher p = new EventPublisher();
 
 					p.RaiseEvent(new ShutdownEventArgs());
 

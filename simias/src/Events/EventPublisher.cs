@@ -39,8 +39,6 @@ namespace Simias.Event
 
 		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventPublisher));
 		EventBroker broker = null;
-		Configuration	conf;
-		bool loggedError = false;
 
 		#endregion
 			
@@ -49,10 +47,9 @@ namespace Simias.Event
 		/// <summary>
 		/// Creates an Event Publisher.
 		/// </summary>
-		/// <param name="conf">Configuration object.</param>
-		public EventPublisher(Configuration conf)
+		public EventPublisher()
 		{
-			this.conf = conf;
+			broker = EventBroker.GetBroker();
 		}
 
 		#endregion
@@ -62,31 +59,16 @@ namespace Simias.Event
 		/// <summary>
 		/// Called to publish a collection event.
 		/// </summary>
-		/// <param name="args"></param>
+		/// <param name="args">The arguments describing the event.</param>
 		public void RaiseEvent(SimiasEventArgs args)
 		{
 			try
 			{
-				if (broker == null)
-				{
-					broker = EventBroker.GetBroker(conf);
-					broker.RaiseEvent(args);
-					loggedError = false;
-				}
-				else
-				{
-					broker.RaiseEvent(args);
-				}
+				broker.RaiseEvent(args);
 			}
 			catch 
 			{
-				// Release the broker to try to connect latter.
-				broker = null;
-				if (!loggedError)
-				{
-					logger.Debug("Broker Not available");				
-					loggedError = true;
-				}
+				logger.Debug("Failed to Raise Event {0}", args.ToString());
 			}
 		}
 

@@ -3,7 +3,6 @@ AssemblyInfo.cs
 ../Events/DefaultSubscriber.cs
 ../Events/EventBroker.cs
 ../Events/EventPublisher.cs
-../Events/EventService/EventService.cs
 ../ChangeLog/ChangeLog.cs
 ../Channels/SimiasChannelSinks.cs
 ../Channels/SimiasChannel.cs

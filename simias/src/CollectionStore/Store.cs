@@ -210,7 +210,7 @@ namespace Simias.Storage
 			this.config = config;
 
 			// Setup the event publisher object.
-			eventPublisher = new EventPublisher( config );
+			eventPublisher = new EventPublisher();
 
 			// Create or open the underlying database.
 			storageProvider = Persist.Provider.Connect( new Persist.ProviderConfig(), out created );

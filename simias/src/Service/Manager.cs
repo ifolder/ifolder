@@ -82,8 +82,8 @@ namespace Simias.Service
 		public Manager(Configuration conf)
 		{
 			// Get an event subscriber to handle shutdown events.
-			subscriber = DefaultSubscriber.GetDefaultSubscriber();
-			subscriber.CollectionEvent +=new CollectionEventHandler(OnCollectionEvent);
+			subscriber = new DefaultSubscriber();
+			subscriber.SimiasEvent +=new SimiasEventHandler(OnSimiasEvent);
 
 			// configure logging
 			SimiasLogManager.Configure(conf);
@@ -134,7 +134,7 @@ namespace Simias.Service
 
 		#region Callbacks
 
-		private void OnCollectionEvent(SimiasEventArgs args)
+		private void OnSimiasEvent(SimiasEventArgs args)
 		{
 			try
 			{
