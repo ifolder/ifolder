@@ -35,10 +35,10 @@ $(API):
 	PERLLIB=/usr/share/perl5 gapi-parser libtrayicon-sources.xml
 
 install:
-	install -o root -g root -m 644 $(LIBRARY) $(PREFIX)/lib
+	install $(LIBRARY) $(prefix)/lib
 
 uninstall:
-	rm -f $(PREFIX)/lib/$(LIBRARY)
+	rm -f $(prefix)/lib/$(LIBRARY)
 
 clean:
 	rm -f generated-stamp
