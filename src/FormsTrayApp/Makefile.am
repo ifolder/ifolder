@@ -36,8 +36,8 @@ install-exec-local: iFolderApp.exe $(DATA_FILES)
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f iFolderApp.exe iFolderApp.exe.manifest $(DEBUG_FILES)
 	cd $(DESTDIR)$(bindir); rm -f $(DATA_FILES)
-	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%)
-    
+	cd $(DESTDIR)$(bindir)/res; rm -f $(RES_FILES:res/%=%) ifolder-banner.png
+     
 installcheck-local: install
 	
 CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
