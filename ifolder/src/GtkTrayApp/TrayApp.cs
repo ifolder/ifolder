@@ -230,7 +230,7 @@ namespace Novell.iFolder
 //			ifolder_browser_item.Activated += 
 //					new EventHandler(show_ifolder_browser);
 
-			MenuItem connect_item = new MenuItem ("Set Server Information");
+			MenuItem connect_item = new MenuItem ("iFolder Server Login...");
 			trayMenu.Append (connect_item);
 			connect_item.Activated += new EventHandler(show_server_info);
 
