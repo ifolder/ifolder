@@ -520,7 +520,19 @@ namespace Novell.iFolder
 
 		private void OnSyncNowClicked(object o, EventArgs args)
 		{
-			System.Console.WriteLine("OnSyncNowClicked() called");
+			try
+			{
+				ifws.SynciFolderNow(ifolder.ID);
+			}
+			catch(Exception e)
+			{
+				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+												topLevelWindow, e);
+				ied.Run();
+				ied.Hide();
+				ied.Destroy();
+				return;
+			}
 		}
 
 
