@@ -31,7 +31,7 @@ namespace Novell.iFolderCom
 	/// </summary>
 	public class Domain
 	{
-		private DomainWeb domainWeb;
+		private DomainInformation domainWeb;
 		private string name;
 		private bool showAll = false;
 
@@ -39,7 +39,7 @@ namespace Novell.iFolderCom
 		/// Constructs a Domain object.
 		/// </summary>
 		/// <param name="domainWeb">The web service domain object to base this domain object on.</param>
-		public Domain(DomainWeb domainWeb)
+		public Domain(DomainInformation domainWeb)
 		{
 			this.domainWeb = domainWeb;
 		}
@@ -58,7 +58,7 @@ namespace Novell.iFolderCom
 		/// <summary>
 		/// Gets the web service domain object.
 		/// </summary>
-		public DomainWeb DomainWeb
+		public DomainInformation DomainWeb
 		{
 			get { return domainWeb; }
 			set { domainWeb = value; }

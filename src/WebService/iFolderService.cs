@@ -1441,39 +1441,6 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that connects up an iFolder Domain
-		/// </summary>
-		/// <param name = "UserName">
-		/// The username to use to connect to the Domain
-		/// </param>
-		/// <param name = "Password">
-		/// The password to use to connect to the Domain
-		/// </param>
-		/// <param name = "Host">
-		/// The host of the enterprise server
-		/// </param>
-		/// <returns>
-		/// The Domain object associated with this Server
-		/// </returns>
-		[WebMethod(Description="Connects to an iFolder Domain")]
-		[SoapDocumentMethod]
-		public DomainWeb ConnectToDomain(	string UserName,
-											string Password,
-											string Host)
-		{
-			DomainWeb domain = null;
-			Simias.Domain.DomainAgent da = new Simias.Domain.DomainAgent();
-			string domainID = da.Attach(Host, UserName, Password);
-			domain = new DomainWeb(domainID);
-			domain.UserName = UserName;
-			return domain;
-		}
-
-
-
-
-
-		/// <summary>
 		/// WebMethod that will authenticate a domain
 		/// </summary>
 		/// <param name = "UserName">
@@ -1569,35 +1536,6 @@ namespace Novell.iFolder.Web
 			da.Unattach(DomainID, LocalOnly);
 		}
 
-
-
-
-
-		/// <summary>
-		/// WebMethod that returns all of the Domains setup in
-		/// the store including the WorkGroup Domain
-		/// </summary>
-		/// <returns>
-		/// An Array of Domain objects
-		/// </returns>
-		[WebMethod(Description="Retuns all currently configured Domains")]
-		[SoapDocumentMethod]
-		public DomainWeb[] GetDomains()
-		{
-			ArrayList list = new ArrayList();
-
-			Store store = Store.GetStore();
-			
-			ICSList domainList = store.GetDomainList();
-
-			foreach( ShallowNode sn in domainList )
-			{
-				DomainWeb dw = new DomainWeb(sn.ID);
-				list.Add(dw);
-			}
-
-			return (DomainWeb[])list.ToArray(typeof(DomainWeb));
-		}
 
 
 

@@ -358,8 +358,11 @@ namespace Novell.iFolderCom
 			{
 				try
 				{
-					DomainWeb[] domains = ifWebService.GetDomains();
-					foreach (DomainWeb domainWeb in domains)
+					SimiasWebService simiasWebService = new SimiasWebService();
+					simiasWebService.Url = Simias.Client.Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+
+					DomainInformation[] domains = simiasWebService.GetDomains(false);//ifWebService.GetDomains();
+					foreach (DomainInformation domainWeb in domains)
 					{
 						Domain domain = new Domain(domainWeb);
 						servers.Items.Add(domain);

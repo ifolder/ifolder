@@ -30,13 +30,13 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class DomainRemoveEventArgs : EventArgs
 	{
-		private DomainWeb domainWeb;
+		private DomainInformation domainWeb;
 		private string defaultDomainID;
 
 		/// <summary>
 		/// Constructs a DomainConnectEventArgs object.
 		/// </summary>
-		public DomainRemoveEventArgs(DomainWeb domainWeb, string defaultDomainID)
+		public DomainRemoveEventArgs(DomainInformation domainWeb, string defaultDomainID)
 		{
 			this.domainWeb = domainWeb;
 			this.defaultDomainID = defaultDomainID;
@@ -45,7 +45,7 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Gets the DomainWeb object.
 		/// </summary>
-		public DomainWeb DomainWeb
+		public DomainInformation DomainWeb
 		{
 			get { return domainWeb; }
 		}
