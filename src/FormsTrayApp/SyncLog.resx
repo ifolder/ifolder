@@ -421,6 +421,12 @@
 	<data name="downloadFile">
 		<value>Downloading file: {0}</value>
 	</data>
+	<data name="uploadDeltaSyncFile">
+		<value>Uploading file: {0}. Synchronizing changes only: {1}% savings.</value>
+	</data>
+	<data name="downloadDeltaSyncFile">
+		<value>Downloading file: {0}. Synchronizing changes only: {1}% savings.</value>
+	</data>
 	<data name="uploadDir">
 		<value>Uploading directory: {0}</value>
 	</data>

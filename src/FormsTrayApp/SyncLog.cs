@@ -305,9 +305,20 @@ namespace Novell.FormsTrayApp
 					switch (syncEventArgs.ObjectType)
 					{
 						case ObjectType.File:
-							message = syncEventArgs.Delete ? 
-								string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name) :
-								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+							if (syncEventArgs.Delete)
+							{
+								message = string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name);
+							}
+							else if (syncEventArgs.SizeToSync < syncEventArgs.Size)
+							{
+								// Delta sync message.
+								int savings = (int)((1 - ((double)syncEventArgs.SizeToSync / (double)syncEventArgs.Size)) * 100);
+								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDeltaSyncFile" : "downloadDeltaSyncFile"), syncEventArgs.Name, savings);
+							}
+							else
+							{
+								message = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+							}								
 							break;
 						case ObjectType.Directory:
 							message = syncEventArgs.Delete ? 
