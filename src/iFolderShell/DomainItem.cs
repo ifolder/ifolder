@@ -30,10 +30,10 @@ using Simias.Client;
 namespace Novell.iFolderCom
 {
 	/// <summary>
-	/// Summary description for Domain.
+	/// A class used to represent a domain in a list.
 	/// </summary>
 	[ComVisible(false)]
-	public class DomainInfo
+	public class DomainItem
 	{
 		private string name;
 		private string id;
@@ -43,7 +43,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		/// <param name="name">The name of the object.</param>
 		/// <param name="ID">The ID of the object.</param>
-		public DomainInfo(string name, string ID)
+		public DomainItem(string name, string ID)
 		{
 			this.name = name;
 			this.id = ID;
