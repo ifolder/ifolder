@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=iFolder
+GenericName=Collaborative File Sharing Tool
+Comment=iFolder Collaborative File Sharing Tool
+Exec=@bindir@/ifolder
+Icon=ifolder.png
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=X-Ximian-Main;Application;Internet;

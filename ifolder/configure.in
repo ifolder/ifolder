@@ -488,6 +488,7 @@ src/iFolder/ifolders
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolderbrowser
+src/GtkTrayApp/ifolder.desktop
 src/GtkTrayApp/invitationwizard
 src/GtkTrayApp/collectionbrowser
 src/GtkTrayApp/setup-autostart
