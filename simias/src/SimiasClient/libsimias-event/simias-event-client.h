@@ -35,11 +35,18 @@ typedef void * SimiasEventClient;
 
 typedef enum
 {
-	CLIENT_STATE_INITIALIZING,
+	CLIENT_STATE_INITIALIZING,	/* Used also if client is reconnecting */
 	CLIENT_STATE_REGISTERING,
 	CLIENT_STATE_RUNNING,
 	CLIENT_STATE_SHUTDOWN
 } CLIENT_STATE;
+
+typedef enum
+{
+	SEC_STATE_EVENT_CONNECTED,
+	SEC_STATE_EVENT_DISCONNECTED,
+	SEC_STATE_EVENT_ERROR
+} SEC_STATE_EVENT;
 
 /**
  * Actions that indicate what to do with the simias events
@@ -109,7 +116,7 @@ typedef struct
 } SimiasNotifyEvent;
 
 /**
- * Callback function prototypes.
+ * Callback function prototypes for Simias Events.
  * 
  * These prototypes specify the type of functions that should be passed to
  * sec_set_event () function when registering for event actions.
@@ -130,6 +137,14 @@ typedef int (*SimiasNotifyEventFunc) (SimiasNotifyEvent *, void *data);
 
 /* Prototype for convenience */
 typedef int (*SimiasEventFunc) (void *, void *);
+
+/**
+ * Callback function prototype for Simias Event Client State
+ */
+typedef int (*SECStateEventFunc) (SEC_STATE_EVENT state_event,
+								  const char *message,
+								  void *data);
+
 /**
  * Public Functions
  */
@@ -142,7 +157,8 @@ typedef int (*SimiasEventFunc) (void *, void *);
  * 
  * Returns 0 if successful or -1 if there was an error.
  */
-int sec_init (SimiasEventClient *sec, void *error_handler);
+int sec_init (SimiasEventClient *sec, SECStateEventFunc state_event_func, 
+			  void *state_event_data);
 
 /**
  * Cleans up the Simias Event Client

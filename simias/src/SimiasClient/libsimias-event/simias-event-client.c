@@ -128,8 +128,12 @@ typedef struct
 	/* Contains the address and port information for this client */
 	struct sockaddr_in local_sin;
 
-	/* Delegate and context used to indicate an error */	
-	void (*error_handler)	(void *user_data);
+	/**
+	 * Callback function for lettng the consumer know about state changes and
+	 * errors.
+	 */
+	SECStateEventFunc state_event_func;
+	void *state_event_data;
 	
 	/**
 	 * Tells the state of the registration thread.  This is a work around for
@@ -252,8 +256,9 @@ static void sec_free_event_struct (void *event_struct);
 /* #endregion */
 
 /* #region Public Functions */
-int
-sec_init (SimiasEventClient *sec, void *error_handler)
+int sec_init (SimiasEventClient *sec,
+			  SECStateEventFunc state_event_func,
+			  void *state_event_data)
 {
 printf ("SEC: sec_init () called\n");
 	int i;
@@ -281,7 +286,8 @@ printf ("SEC: sec_init () called\n");
 	ec->state = CLIENT_STATE_INITIALIZING;
 	
 	/* Save the error handling information. */
-	ec->error_handler = error_handler;
+	ec->state_event_func = state_event_func;
+	ec->state_event_data = state_event_data;
 	
 	/* Start the event thread waiting for event messages. */
 	if ((pthread_create (&(ec->event_thread), NULL, 
@@ -384,7 +390,6 @@ sec_deregister (SimiasEventClient sec)
 	}
 	
 	sec_shutdown (ec, NULL);
-	ec->error_handler = NULL;
 	
 	return 0;
 }
@@ -492,27 +497,51 @@ printf ("SEC: sec_thread () called\n");
 		printf ("SEC: sec_thread () waiting for register thread to complete\n");
 		sleep (2);
 	}
+
+	/**
+	 * Notify the state_event_function that we are now connected to the
+	 * Simias Event Server.
+	 */
+	if (ec->state_event_func) {
+		ec->state_event_func (SEC_STATE_EVENT_CONNECTED, 
+							  NULL,
+							  ec->state_event_data);
+	}
 	
-	while (ec->state != CLIENT_STATE_SHUTDOWN)
-	{
-		while (len = recv (ec->event_socket, buf, sizeof (buf), 0)) {
+	while ((len = recv (ec->event_socket, buf, sizeof (buf), 0)) > 0) {
 printf ("SEC: sec_thread: recv () called\n");
-			real_length = *((int *)buf);
-			printf ("real_length: %d\n", real_length);
-			if (real_length > 0 && (real_length == (len - 4))) {
-				real_message = malloc (sizeof (char) * real_length + 1);
-				memset (real_message, '\0', real_length + 1);
-				strncpy (real_message, buf + 4, real_length);
-				
-				printf ("Message received:\n\n%s\n\n", real_message);
-				
-				sec_process_message (ec, real_message, real_length);
-				
-				free (real_message);
-			} else {
-				printf ("SEC: recv () returned %d bytes\n", len);
+		real_length = *((int *)buf);
+		printf ("real_length: %d\n", real_length);
+		if (real_length > 0 && (real_length == (len - 4))) {
+			real_message = malloc (sizeof (char) * real_length + 1);
+			memset (real_message, '\0', real_length + 1);
+			strncpy (real_message, buf + 4, real_length);
+			
+			printf ("Message received:\n\n%s\n\n", real_message);
+			
+			sec_process_message (ec, real_message, real_length);
+			
+			free (real_message);
+		} else {
+			printf ("SEC: recv () returned %d bytes\n", len);
+			int i;
+			for (i = 0; i < len; i++) {
+				putchar (buf [i]);
 			}
 		}
+	}
+		
+	/**
+	 * If len == -1, there was some type of socket error.
+	 * If len == 0, the Simias Event Server has properly shutdown.
+	 * 
+	 * In either case, we need to put the client into a reconnect state so
+	 * that the client can reconnect with the server when it becomes
+	 * available again.
+	 */
+	printf ("\n\n*=*=*=*=*=*= RECONNECT REQUIRED: recv () error =*=*=*=*=*=*\n\n");
+	if (sec_reconnect (ec) != 0) {
+		sec_shutdown (ec, "Could not reconnect the Simias Event Client");
 	}
 }
 
@@ -602,10 +631,66 @@ printf ("SEC: sec_reg_thread () called\n");
 	ec->reg_thread_state = REG_THREAD_STATE_TERMINATED;
 }
 
+int
+sec_reconnect (RealSimiasEventClient *ec)
+{
+	printf ("SEC: sec_reconnect () called\n");
+	/**
+	 * Prevent this from executing more than once if the recv () and the send ()
+	 * happen to try to start this up at the same time.
+	 */
+	if (ec->state == CLIENT_STATE_INITIALIZING) {
+		return 0;	/* Prevent the second caller from doing anything */
+	}
+
+	/**
+	 * Set the state to CLIENT_STATE_INITIALIZING so that anyone else who tries
+	 * to call this function will not actually perform a reconnect more than
+	 * once.
+	 */
+	ec->state = CLIENT_STATE_INITIALIZING;
+
+	/* Close the old socket if it is still open */
+	if (ec->event_socket) {
+		close (ec->event_socket);
+	}
+
+	/**
+	 * Notify the state_event_function that we are now disconnected from the
+	 * Simias Event Server.
+	 */
+	if (ec->state_event_func) {
+		ec->state_event_func (SEC_STATE_EVENT_DISCONNECTED, 
+							  NULL,
+							  ec->state_event_data);
+	}
+	
+	/* Create a new socket to communicate with the event server on */
+	if ((ec->event_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
+		perror ("simias-event-client: client event socket");
+		return -1;
+	}
+	
+	/* Start the event thread waiting for event messages. */
+	if ((pthread_create (&(ec->event_thread), NULL, 
+						 sec_thread, ec)) != 0) {
+		perror ("simias-event-client reconnect: could not start event thread");
+		return -1;
+	}
+
+	if (sec_register ((SimiasEventClient)ec) != 0) {
+		sec_shutdown (ec, "Could not re-register the Simias Event Client");
+		return -1;
+	}
+
+	return 0;
+}
+
 static void
 sec_wait_for_file_change (char *file_path)
 {
 	/* FIXME: Implement this with polling using the stat () call so that we are portable on Linux, Windows, and Mac */
+	sleep (2);
 }
 
 static void
@@ -644,8 +729,12 @@ sec_shutdown (RealSimiasEventClient *ec, const char *err_msg)
 static void
 sec_report_error (RealSimiasEventClient *ec, const char *err_msg)
 {
-	if (ec->error_handler != NULL) {
-		ec->error_handler ((char *)err_msg);
+	if (ec->state_event_func != NULL) {
+		if (ec->state_event_func (SEC_STATE_EVENT_ERROR, err_msg,
+								ec->state_event_data) != 0) {
+			fprintf (stderr, "Error calling state_event_func\n");
+		}
+						
 	}
 }
 
@@ -679,7 +768,14 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 		sprintf (err_msg,
 				 "Failed to send message to server.  Socket error: %s",
 				 strerror (errno));
-		sec_shutdown (ec, err_msg);
+		/**
+		 * Something must be bad with the socket so we need to reconnect to the
+		 * Simias Event Server.
+		 */
+		printf ("\n\n*=*=*=*=*=*= RECONNECT REQUIRED: send () error =*=*=*=*=*=*\n\n");
+		if (sec_reconnect (ec) != 0) {
+			sec_shutdown (ec, "Could not reconnect the Simias Event Client");
+		}
 	} else {
 		printf ("Just sent %d bytes to the server\n", sent_length);
 	}
@@ -1111,6 +1207,16 @@ sec_add_event_handler (RealSimiasEventClient *ec,
 					   void * data)
 {
 	SimiasEventFuncInfo *func_info;
+
+	/* function must NOT be null */
+	if (!function) {
+		return -1;
+	}
+	
+	/**
+	 * If the function already exists in the list, remove it.
+	 */
+	sec_remove_event_handler (ec, action, function);
 	
 	func_info = malloc (sizeof (SimiasEventFuncInfo));
 	if (!func_info) {
@@ -1128,16 +1234,20 @@ sec_add_event_handler (RealSimiasEventClient *ec,
 	return 0;
 }
 
+/**
+ * Returns 0 if at least one function was removed or -1 otherwise.
+ */
 static int
 sec_remove_event_handler (RealSimiasEventClient *ec, 
 						  IPROC_EVENT_ACTION action,
 						  SimiasEventFunc function)
 {
 	SimiasEventFuncInfo *curr_func, *prev_func;
+	bool b_func_removed = false;
 	
 	/* If function is NULL, remove ALL functions for the specified action */
 	if (function == NULL) {
-		sec_remove_all_event_handlers (ec, action);
+		return sec_remove_all_event_handlers (ec, action);
 	} else {
 		/**
 		 * Search through the list for the specified SimiasEventFunc, remove it,
@@ -1155,10 +1265,15 @@ sec_remove_event_handler (RealSimiasEventClient *ec,
 					prev_func->next = curr_func->next;
 				}
 	
+				b_func_removed = true;
 				free (curr_func);
 				break;	/* out of the for loop */
 			}
 		}
+	}
+	
+	if (!b_func_removed) {
+		return -1;
 	}
 	
 	return 0;
@@ -1274,13 +1389,48 @@ simias_notify_event_callback (SimiasNotifyEvent *event, void *data)
 }
 
 int
+sec_state_event_callback (SEC_STATE_EVENT state_event, const char *message, void *data)
+{
+	SimiasEventClient *ec = (SimiasEventClient *)data;
+	
+	switch (state_event) {
+		case SEC_STATE_EVENT_CONNECTED:
+			fprintf (stderr, "SEC: Connected Event\n");
+
+			/* Ask to listen to some events by calling sec_set_event () */
+			sec_set_event (*ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
+			sec_set_event (*ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
+			sec_set_event (*ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
+			sec_set_event (*ec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)simias_collection_sync_event_callback, NULL);
+			sec_set_event (*ec, ACTION_FILE_SYNC, true, (SimiasEventFunc)simias_file_sync_event_callback, NULL);
+			sec_set_event (*ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
+
+			break;
+		case SEC_STATE_EVENT_DISCONNECTED:
+			fprintf (stderr, "SEC: Disconnected Event\n");
+
+			break;
+		case SEC_STATE_EVENT_ERROR:
+			if (message) {
+				fprintf (stderr, "Error in Simias Event Client: %s\n", message);
+			} else {
+				fprintf (stderr, "An unknown error occurred in Simias Event Client\n");
+			}
+			break;
+		default:
+			fprintf (stderr, "An unknown Simias Event Client State Event occurred\n");
+	}
+	return 0;
+}
+
+int
 main (int argc, char *argv[])
 {
 	SimiasEventClient ec;
 	CLIENT_STATE state;
 	char buf [256];
 	
-	if (sec_init (&ec, NULL) != 0) {
+	if (sec_init (&ec, sec_state_event_callback, &ec) != 0) {
 		fprintf (stderr, "sec_init failed\n");
 		return -1;
 	}
@@ -1291,30 +1441,6 @@ main (int argc, char *argv[])
 	}
 	
 	printf ("Registration complete\n");
-	
-	/**
-	 * Until the message queue is implemented, we need to wait for the client
-	 * to be running before continuing
-	 */
-	while ((state = sec_get_state (ec)) != CLIENT_STATE_RUNNING) {
-		if (state == CLIENT_STATE_SHUTDOWN) {
-			fprintf (stderr, "Shutdown initiated prematurely\n");
-			return -1;
-		}
-
-		fprintf (stdout, "sec_get_state () returned: %d\n", state);
-
-		fprintf (stdout, "Test code: Waiting for client to be running\n");
-		sleep (1);
-	}
-	
-	/* Ask to listen to some events by calling sec_set_event () */
-	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
-	sec_set_event (ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
-	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
-	sec_set_event (ec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)simias_collection_sync_event_callback, NULL);
-	sec_set_event (ec, ACTION_FILE_SYNC, true, (SimiasEventFunc)simias_file_sync_event_callback, NULL);
-	sec_set_event (ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
