@@ -26,14 +26,16 @@ endif
 endif
 
 install-exec-local: Simias.dll
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Simias.dll ../../external/SecureChannelSinks/*.dll $(LOG4NET_DIR)/log4net.dll $(MDNSRESPONDER_DIR)/m*.exe $(MDNSRESPONDER_DIR)/m*.dll $(DEBUG_FILES) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(srcdir)/$(SQLITELIB_PATH)/$(SQLITELIB) $(DESTDIR)$(bindir)
 
 installcheck-local: install
 	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:Simias.test.xml Simias.dll
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Simias.dll Novell.Security.SecureSink*.dll log4net.dll mDnsResponder* $(SQLITELIB) $(NUNIT_TESTS); rm -rf .cstore $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
+	cd $(DESTDIR)$(bindir); rm -f $(SQLITELIB)
 
 CLEAN_FILES = Simias.dll $(NUNIT_TESTS) Simias.doc.xml
 
