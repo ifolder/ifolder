@@ -37,4 +37,7 @@ void simias_sync_member_list();
 void simias_update_member(const char *account_name, const char *account_prpl_id,
 						  const char *buddy_name);
 
+/* The returned string, if not null, needs to be freed by the caller */
+char * simias_get_domain_user_id();
+
 #endif

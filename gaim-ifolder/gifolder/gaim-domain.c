@@ -115,6 +115,36 @@ simias_update_member(const char *account_name, const char *account_prpl_id,
 	cleanup_gsoap(&soap);
 }
 
+char * simias_get_domain_user_id()
+{
+	char *user_id = NULL;
+	char *soap_url;
+	struct soap soap;
+	struct _ns1__GetDomainUserID req;
+	struct _ns1__GetDomainUserIDResponse resp;
+	
+	soap_url = get_soap_url(FALSE);
+	if (!soap_url) {
+		return NULL;
+	}
+	
+	init_gsoap(&soap);
+	soap_call___ns1__GetDomainUserID(&soap, soap_url, NULL, &req, &resp);
+	if (soap.error) {
+		cleanup_gsoap(&soap);
+		return NULL;
+	}
+
+	if (resp.GetDomainUserIDResult)
+	{
+		user_id = strdup(resp.GetDomainUserIDResult);
+	}
+	
+	cleanup_gsoap(&soap);
+
+	return user_id;
+}
+
 /**
  * Utility functions for gSOAP
  */

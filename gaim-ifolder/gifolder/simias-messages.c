@@ -39,6 +39,11 @@
 #include "util.h"
 
 /**
+ * Global Variables
+ */
+static char *gaimDomainUserID = NULL;
+
+/**
  * Non-public Functions
  */
 static SIMIAS_MSG_TYPE get_possible_simias_msg_type(const char *buffer);
@@ -49,6 +54,7 @@ static gboolean handle_ping_request(GaimAccount *account,
 static gboolean handle_ping_response(GaimAccount *account,
 									 const char *sender,
 									 const char *buffer);
+static char * get_gaim_domain_user_id();
 
 /**
  * This function takes a generic message and sends it to the specified recipient
@@ -117,7 +123,7 @@ convert_url_to_public(const char *start_url)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-request:<simias-url>]
+ * [simias:ping-request:<sender-user-id>:<simias-url>]
  */
 int
 simias_send_ping_req(GaimBuddy *recipient)
@@ -125,6 +131,16 @@ simias_send_ping_req(GaimBuddy *recipient)
 	char msg[2048];
 	char *simias_service_url;
 	char *public_url;
+	char *userID;
+
+	/* Get the Gaim Domain UserID */
+	userID = get_gaim_domain_user_id();
+	if (!userID)
+	{
+		/* FIXME: Simias must not be up!  Figure out what to do! */
+fprintf(stderr, "Simias is not running...could not get the Gaim Domain's UserID\n");
+		return -23432;
+	}
 	
 	if (simias_get_local_service_url(&simias_service_url)) {
 		/* There was an error! */
@@ -133,10 +149,10 @@ simias_send_ping_req(GaimBuddy *recipient)
 	
 	public_url = convert_url_to_public(simias_service_url);
 	if (public_url) {
-		sprintf(msg, "%s%s]", PING_REQUEST_MSG, public_url);
+		sprintf(msg, "%s%s:%s]", PING_REQUEST_MSG, userID, public_url);
 		free(public_url);
 	} else {
-		sprintf(msg, "%s%s]", PING_REQUEST_MSG, simias_service_url);
+		sprintf(msg, "%s%s:%s]", PING_REQUEST_MSG, userID, simias_service_url);
 	}
 	free(simias_service_url);
 
@@ -146,7 +162,7 @@ simias_send_ping_req(GaimBuddy *recipient)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-response:<simias-url>]
+ * [simias:ping-response:<sender-user-id>:<simias-url>]
  */
 int
 simias_send_ping_resp(GaimBuddy *recipient)
@@ -154,7 +170,17 @@ simias_send_ping_resp(GaimBuddy *recipient)
 	char msg[2048];
 	char *simias_service_url;
 	char *public_url;
+	char *userID;
 
+	/* Get the Gaim Domain UserID */
+	userID = get_gaim_domain_user_id();
+	if (!userID)
+	{
+		/* FIXME: Simias must not be up!  Figure out what to do! */
+fprintf(stderr, "Simias is not running...could not get the Gaim Domain's UserID\n");
+		return -23432;
+	}
+	
 	if (simias_get_local_service_url(&simias_service_url)) {
 		/* There was an error! */
 		return -1;
@@ -162,10 +188,10 @@ simias_send_ping_resp(GaimBuddy *recipient)
 
 	public_url = convert_url_to_public(simias_service_url);
 	if (public_url) {
-		sprintf(msg, "%s%s]", PING_RESPONSE_MSG, public_url);
+		sprintf(msg, "%s%s:%s]", PING_RESPONSE_MSG, userID, public_url);
 		free(public_url);
 	} else {
-		sprintf(msg, "%s%s]", PING_RESPONSE_MSG, simias_service_url);
+		sprintf(msg, "%s%s:%s]", PING_RESPONSE_MSG, userID, simias_service_url);
 	}
 	free(simias_service_url);
 
@@ -265,11 +291,12 @@ handle_ping_request(GaimAccount *account, const char *sender,
 					const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *user_id;
 	char *simias_url;
 	int send_result;
 	const char *ping_reply_type;
 	
-g_print("handle_ping_request() %s -> %s entered\n",
+fprintf(stderr, "handle_ping_request() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
 		
 	/**
@@ -282,12 +309,18 @@ g_print("handle_ping_request() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-request:<simias-url>]
-	 *                           ^
+	 * 	[simias:ping-request:<sender-user-id>:<simias-url>]
+	 *                       ^
 	 */
-	simias_url = strtok((char *) buffer + strlen(PING_REQUEST_MSG), "]");
+	user_id = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
+	if (!user_id) {
+		fprintf(stderr, "handle_ping_request() couldn't parse the user id\n");
+		return FALSE;
+	}
+
+	simias_url = strtok(NULL, "]");
 	if (!simias_url) {
-		g_print("handle_ping_request() couldn't parse the simias-url\n");
+		fprintf(stderr, "handle_ping_request() couldn't parse the simias-url\n");
 		return FALSE;
 	}
 	
@@ -329,9 +362,10 @@ handle_ping_response(GaimAccount *account, const char *sender,
 					 const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *user_id;
 	char *simias_url;
 	
-g_print("handle_ping_response() %s -> %s entered\n",
+fprintf(stderr, "handle_ping_response() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
 		
 	/**
@@ -344,17 +378,24 @@ g_print("handle_ping_response() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-response:<simias-url>]
-	 *                            ^
+	 * 	[simias:ping-response:<sender-user-id>:<simias-url>]
+	 *                        ^
 	 */
-	simias_url = strtok((char *) buffer + strlen(PING_RESPONSE_MSG), "]");
+	user_id = strtok((char *) buffer + strlen(PING_RESPONSE_MSG), ":");
+	if (!user_id) {
+		fprintf(stderr, "handle_ping_response() couldn't parse the user-id\n");
+		return FALSE;
+	}
+
+	simias_url = strtok(NULL, "]");
 	if (!simias_url) {
-		g_print("handle_ping_request() couldn't parse the simias-url\n");
+		fprintf(stderr, "handle_ping_response() couldn't parse the simias-url\n");
 		return FALSE;
 	}
 
 	/* Update the buddy's simias-url in blist.xml */
 	buddy = gaim_find_buddy(account, sender);	
+	gaim_blist_node_set_string(&(buddy->node), "simias-user-id", user_id);
 	gaim_blist_node_set_string(&(buddy->node), "simias-url", simias_url);
 
 	/**
@@ -366,4 +407,15 @@ g_print("handle_ping_response() %s -> %s entered\n",
 						 sender);
 
 	return TRUE;
+}
+
+static char *
+get_gaim_domain_user_id()
+{
+	if (gaimDomainUserID == NULL)
+	{
+		gaimDomainUserID = simias_get_domain_user_id();
+	}
+	
+	return gaimDomainUserID;
 }
