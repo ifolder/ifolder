@@ -127,6 +127,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Class that represents a user in the Collection Store.
 	/// </summary>
+	[ Serializable ]
 	public class BaseContact : Node
 	{
 		#region Properties

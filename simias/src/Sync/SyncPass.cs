@@ -159,7 +159,7 @@ public class SynkerServiceA: SyncCollectionService
 		get
 		{
 			NodeChunk nc;
-			nc.node = collection.GetNodeByID(collection.ID);
+			nc.node = new Node( collection.GetNodeByID(collection.ID) );
 			nc.expectedIncarn = 7;
 			nc.totalSize = -1;
 			nc.forkChunks = null;

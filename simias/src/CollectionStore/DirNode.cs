@@ -31,6 +31,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Represents a directory entry in a external file system.
 	/// </summary>
+	[ Serializable ]
 	public class DirNode : Node
 	{
 		#region Properties

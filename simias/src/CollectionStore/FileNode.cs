@@ -30,6 +30,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Represents a file entry in an external file system.
 	/// </summary>
+	[ Serializable ]
 	public class FileNode : BaseFileNode
 	{
 		#region Constructor

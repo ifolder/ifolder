@@ -30,12 +30,14 @@ namespace Simias.Storage
 	/// <summary>
 	/// Represents a file entry that whose location is managed by the Collection Store.
 	/// </summary>
+	[ Serializable ]
 	public class StoreFileNode : BaseFileNode
 	{
 		#region Class Members
 		/// <summary>
 		/// Memory stream object used to buffer the StoreFileNode data until it is committed.
 		/// </summary>
+		[ NonSerialized() ]
 		private Stream nodeStream = null;
 		#endregion
 

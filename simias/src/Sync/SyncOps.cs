@@ -218,7 +218,7 @@ internal class SyncOutgoingNode
 	public Node Start(Nid nid)
 	{
 		nid.Validate();
-		Node node = collection.GetNodeByID(nid);
+		Node node = new Node(collection.GetNodeByID(nid));
 		forkList = null;
 		if (node == null)
 		{

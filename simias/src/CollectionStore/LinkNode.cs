@@ -29,6 +29,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Represents an object that can be used as an alias to a Node object.
 	/// </summary>
+	[ Serializable ]
 	public class LinkNode : Node
 	{
 		#region Constructor

@@ -33,6 +33,7 @@ namespace Simias.Storage
 	/// <summary>
 	/// Represents a generic file object.
 	/// </summary>
+	[ Serializable ]
 	public abstract class BaseFileNode : Node
 	{
 		#region Class Members
