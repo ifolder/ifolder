@@ -410,10 +410,12 @@ namespace Novell.iFolder.FormsAddrBook
 			// toolBarButton4
 			// 
 			this.toolBarButton4.Text = "Import vCard";
+			this.toolBarButton4.ToolTipText = "Import contact from vCard";
 			// 
 			// toolBarButton5
 			// 
 			this.toolBarButton5.Text = "Export vCard";
+			this.toolBarButton5.ToolTipText = "Export contact to vCard";
 			// 
 			// editSearchTimer
 			// 
