@@ -232,7 +232,7 @@ namespace Simias.Sync
 				if (role == SyncCollectionRoles.None)
 				{
 					// note: slave collections are always marked by the invitation
-					role = baseCollection.Synchronizeable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
+					role = baseCollection.Synchronizable ? SyncCollectionRoles.Master : SyncCollectionRoles.Local;
 				}
 
 				return role;

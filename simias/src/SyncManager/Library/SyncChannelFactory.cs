@@ -173,7 +173,7 @@ namespace Simias.Sync
 						secClientFactories[0] = (ISecurityClientFactory) new RsaSecurityClientFactory(store.BaseStore.KeyStore);
 						IClientChannelSinkProvider clientSecureProvider = (IClientChannelSinkProvider) new SecureClientSinkProvider(secClientFactories);
 						
-						// TODO: Fix / Cleaner Solution
+						// TODO: fix with cleaner solution
 						if (clientProvider.Next != null)
 						{
 							clientProvider.Next.Next = clientSecureProvider;

@@ -115,7 +115,7 @@ public class SynkerServiceA: SyncCollectionService
         {
             userId = Thread.CurrentPrincipal.Identity.Name;
         }
-        catch(Exception e)
+        catch
         {
             // kludge
             ignoreRights = true;
