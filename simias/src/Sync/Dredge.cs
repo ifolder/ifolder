@@ -284,6 +284,8 @@ public class Dredger
 		this.collection = new SyncCollection(collection);
 		this.onServer = onServer;
 		
+		foundChange = false;
+		
 		try
 		{
 			lastDredgeTime = (DateTime)(collection.Properties.GetSingleProperty(lastDredgeProp).Value);
@@ -294,7 +296,6 @@ public class Dredger
 			foundChange = true;
 			log.Debug("Failed to get the last dredge time");
 		}
-		foundChange = false;
 		// Make sure that the RootDir still exists. IF it has been deleted on a slave remove the collection
 		// And exit.
 		DirNode dn = collection.GetRootDirectory();
