@@ -161,19 +161,8 @@ namespace Simias.Domain
 
 			collection.MasterUrl = new Uri(uriString);
 			collection.CreateMaster = false;
-
-			// TODO: bump collection, magic number, etc.
-			collection.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, 1);
-			collection.Properties.ModifyNodeProperty(PropertyTags.LocalIncarnation, 1);
 			collection.Commit();
 			
-			if (rootNode != null)
-			{
-				rootNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, 1);
-				rootNode.Properties.ModifyNodeProperty(PropertyTags.LocalIncarnation, 1);
-				collection.Commit(rootNode);
-			}
-
 			// clean-up
 			channel.Dispose();
 			service = null;

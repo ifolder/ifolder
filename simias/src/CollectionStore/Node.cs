@@ -86,6 +86,13 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool mergeCollisions = true;
+
+		/// <summary>
+		/// Used to indicate that the collection is a place-holder until the real collection is
+		/// sync'ed down.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool stub = false;
 		#endregion
 
 		#region Properties
@@ -152,6 +159,16 @@ namespace Simias.Storage
 		{
 			get { return mergeCollisions; }
 			set { mergeCollisions = value; }
+		}
+
+		/// <summary>
+		/// Used to indicate if this collection is a place-holder for the real collection which will
+		/// be sync'ed down later.
+		/// </summary>
+		internal bool IsStub
+		{
+			get { return stub; }
+			set { stub = value; }
 		}
 
 		/// <summary>

@@ -60,25 +60,9 @@ namespace Simias.Storage
 		/// Used to do a quick lookup of the domain ID.
 		/// </summary>
 		string domainID = null;
-
-		/// <summary>
-		/// Used to indicate that the collection is a place-holder until the real collection is
-		/// sync'ed down.
-		/// </summary>
-		private bool stub = false;
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Used to indicate if this collection is a place-holder for the real collection which will
-		/// be sync'ed down later.
-		/// </summary>
-		internal bool IsStub
-		{
-			get { return stub; }
-			set { stub = value; }
-		}
-
 		/// <summary>
 		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
@@ -613,6 +597,16 @@ namespace Simias.Storage
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
+						}
+						else
+						{
+							// This code path is used to commit an enterprise stub node object.
+							if ( node.IsStub )
+							{
+								// Copy the XML node over to the modify document.
+								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+								commitDocument.DocumentElement.AppendChild( xmlNode );
+							}
 						}
 						break;
 					}
