@@ -574,7 +574,16 @@ namespace Novell.FormsTrayApp
 							EnterpriseConnect(this, new EventArgs());
 						}
 
-						checkForClientUpdate();
+						try
+						{
+							checkForClientUpdate();
+						}
+						catch (Exception ex)
+						{
+							MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+						}
+
 						password.Clear();
 						Close();
 					}
@@ -595,28 +604,49 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				DomainAuthentication domainAuth = new DomainAuthentication(domainID, password.Text);
-				AuthenticationStatus authStatus = domainAuth.Authenticate();
-				MyMessageBox mmb;
-				switch (authStatus)
+				try
 				{
-					case AuthenticationStatus.Success:
-						checkForClientUpdate();
-						password.Clear();
-						Close();
-						break;
-					case AuthenticationStatus.InvalidCredentials:
-						mmb = new MyMessageBox(resourceManager.GetString("badPassword"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
-					default:
-						mmb = new MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-						break;
+					DomainAuthentication domainAuth = new DomainAuthentication(domainID, password.Text);
+					AuthenticationStatus authStatus = domainAuth.Authenticate();
+					MyMessageBox mmb;
+					switch (authStatus)
+					{
+						case AuthenticationStatus.Success:
+							try
+							{
+								checkForClientUpdate();
+							}
+							catch (Exception ex)
+							{
+								mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+								mmb.ShowDialog();
+							}
+
+							password.Clear();
+							Close();
+							break;
+						case AuthenticationStatus.InvalidCredentials:
+							mmb = new MyMessageBox(resourceManager.GetString("badPassword"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+							break;
+						default:
+							mmb = new MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+							mmb.ShowDialog();
+							break;
+					}
+				}
+				catch (Exception ex)
+				{
+					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
 				}
 			}
 
 			password.Focus();
+			if (!password.Text.Equals(string.Empty))
+			{
+				password.SelectAll();
+			}
 			Cursor.Current = Cursors.Default;
 		}
 
