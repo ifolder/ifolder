@@ -22,11 +22,7 @@ Linux
       
     You will need to have the following installed and working on your machine:
      
-    - mono 0.30.2 (0.31)
-    
-        We are using mono 0.30.2 with some additional fixes that we expect to
-        be released in mono 0.31.
-    
+    - mono 0.31 (or later)
     - gtk-sharp 0.17 (or later)
     
     You can get mono and gtk-sharp from http://www.go-mono.com or Ximian Red
