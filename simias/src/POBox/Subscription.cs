@@ -518,6 +518,14 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Gets a value indicating if the collection contains a DirNode.
+		/// </summary>
+		public bool HasDirNode
+		{
+			get { return (DirNodeID != null); }
+		}
+
+		/// <summary>
 		/// Gets/sets the name of the collection's root DirNode.
 		/// </summary>
 		public string DirNodeName
