@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.IO;
+using Simias;
 using Simias.Storage;
 using Novell.AddressBook;
 
@@ -1459,7 +1460,7 @@ namespace AddressBookCmd
 							Console.WriteLine("Deleting contact: " + contactName);
 						}
 						
-						IABList cList = cAddressBook.SearchUsername(contactName, Property.Operator.Equal);
+						IABList cList = cAddressBook.SearchUsername(contactName, SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							tmpContact.Delete();
@@ -1474,7 +1475,10 @@ namespace AddressBookCmd
 				{
 					if (this.contactList != null)
 					{
-						IABList cList = cAddressBook.SearchUsername((string) this.contactList[0], Property.Operator.Equal);
+						IABList cList = 
+							cAddressBook.SearchUsername(
+								(string) this.contactList[0], 
+								Simias.Storage.SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							this.ListProperties(tmpContact);
@@ -1495,7 +1499,10 @@ namespace AddressBookCmd
 				{
 					if (this.contactList != null)
 					{
-						IABList cList = cAddressBook.SearchUsername((string) this.contactList[0], Property.Operator.Equal);
+						IABList cList = 
+							cAddressBook.SearchUsername(
+								(string) this.contactList[0], 
+								Simias.Storage.SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							if (verbose == true)
@@ -1613,7 +1620,10 @@ namespace AddressBookCmd
 				{
 					if (this.contactList != null)
 					{
-						IABList cList = cAddressBook.SearchUsername((string) this.contactList[0], Property.Operator.Equal);
+						IABList cList = 
+							cAddressBook.SearchUsername(
+								(string) this.contactList[0], 
+								Simias.Storage.SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							if (verbose == true)
@@ -1644,7 +1654,10 @@ namespace AddressBookCmd
 				{
 					if (this.contactList != null)
 					{
-						IABList cList = cAddressBook.SearchUsername((string) this.contactList[0], Property.Operator.Equal);
+						IABList cList = 
+							cAddressBook.SearchUsername(
+								(string) this.contactList[0], 
+								Simias.Storage.SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							if (verbose == true)
@@ -1675,7 +1688,10 @@ namespace AddressBookCmd
 				{
 					if (this.contactList != null)
 					{
-						IABList cList = cAddressBook.SearchUsername((string) this.contactList[0], Property.Operator.Equal);
+						IABList cList = 
+							cAddressBook.SearchUsername(
+								(string) this.contactList[0], 
+								Simias.Storage.SearchOp.Equal);
 						foreach(Contact tmpContact in cList)
 						{
 							if (verbose == true)
@@ -1720,7 +1736,10 @@ namespace AddressBookCmd
 						
 						foreach(string contactName in this.contactList)
 						{
-							IABList cList = cAddressBook.SearchUsername(contactName, Property.Operator.Equal);
+							IABList cList = 
+								cAddressBook.SearchUsername(
+									contactName, 
+									Simias.Storage.SearchOp.Equal);
 							foreach(Contact tmpContact in cList)
 							{
 								string  vCardFileName = path;
