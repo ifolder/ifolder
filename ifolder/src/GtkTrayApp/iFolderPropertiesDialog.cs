@@ -164,7 +164,7 @@ namespace Novell.iFolder
 			//-----------------------------
 			propNoteBook = new Gtk.Notebook();
 
-			SettingsPage = new iFolderPropSettingsPage(ifws);
+			SettingsPage = new iFolderPropSettingsPage(this, ifws);
 
 			propNoteBook.AppendPage(SettingsPage, new Label("General"));
 
