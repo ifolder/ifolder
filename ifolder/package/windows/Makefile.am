@@ -133,7 +133,7 @@ issabld:
 	fi
 	
 sync_build_version:
-	@CMD='"$(SYNC_BLD_VERSION)" . ../../src/FormsTrayApp'; \
+	-@CMD='"$(SYNC_BLD_VERSION)" . ../../src/FormsTrayApp'; \
 		echo $$CMD; \
 		eval $$CMD > "$(BLD_VER_LOG_FILE)" 2>&1;
 
