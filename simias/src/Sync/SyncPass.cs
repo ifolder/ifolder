@@ -39,16 +39,25 @@ namespace Simias.Sync
 /// </summary>
 public class SynkerA: SyncLogicFactory
 {
+	/// <summary>
+	/// creates a SynkerServiceA on the server
+	/// </summary>
 	public override SyncCollectionService GetCollectionService(SyncCollection collection)
 	{
 		return new SynkerServiceA(collection);
 	}
 
+	/// <summary>
+	/// creates a SynkerWorkerA on the client
+	/// </summary>
 	public override SyncCollectionWorker GetCollectionWorker(SyncCollectionService master, SyncCollection slave)
 	{
 		return new SynkerWorkerA((SynkerServiceA)master, slave);
 	}
 
+	/// <summary>
+	/// SynkerA does not watch the file system yet, always return false
+	/// </summary>
 	public override bool WatchFileSystem()
 	{
 		return false;
@@ -66,14 +75,20 @@ public class SynkerServiceA: SyncCollectionService
 	SyncIncomingNode inNode;
 	SyncOutgoingNode outNode;
 
+	/// <summary>
+	/// public ctor 
+	/// </summary>
 	public SynkerServiceA(SyncCollection collection): base(collection)
 	{
 		this.collection = collection.BaseCollection;
 	}
 
-	// TODO: fix identity and credential
+	/// <summary>
+	/// start sync of this collection -- perform basic role checks and dredge server file system
+	/// </summary>
 	public bool Start()
 	{
+		// TODO: fix identity, get it from channel?
 		try
 		{
 			collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole);
@@ -98,6 +113,9 @@ public class SynkerServiceA: SyncCollectionService
 		return false;
 	}
 
+	/// <summary>
+	/// returns array of NodeStamps for all Nodes in this collection
+	/// </summary>
 	public NodeStamp[] GetNodeStamps()
 	{
 		try
@@ -110,11 +128,17 @@ public class SynkerServiceA: SyncCollectionService
 		return null;
 	}
 
+	/// <summary>
+	/// simple version string, also useful to check remoting
+	/// </summary>
 	public string Version
 	{
 		get { return "0.0.0"; }
 	}
 
+	/// <summary>
+	/// deletes specified nodes
+	/// </summary>
 	// TODO: better handle exceptions, return array of failed deletes?
 	public bool DeleteNodes(Nid[] nodes)
 	{
@@ -133,9 +157,9 @@ public class SynkerServiceA: SyncCollectionService
 	}
 
 	/// <summary>
-	/// returns array of Nids that were not updated due to collisions
+	/// takes an array of small nodes. returns array of Nids that were not updated due to collisions
 	/// </summary>
-	public Nid[] PutSmallNodes(SmallNode[] nodes)
+	public Nid[] PutSmallNodes(NodeChunk[] nodes)
 	{
 		try
 		{
@@ -149,7 +173,10 @@ public class SynkerServiceA: SyncCollectionService
 		return null;
 	}
 
-	public SmallNode[] GetSmallNodes(Nid[] nids)
+	/// <summary>
+	/// gets an array of small nodes
+	/// </summary>
+	public NodeChunk[] GetSmallNodes(Nid[] nids)
 	{
 		try
 		{
@@ -163,6 +190,9 @@ public class SynkerServiceA: SyncCollectionService
 		return null;
 	}
 
+	/// <summary>
+	/// takes metadata and first chunk of data for a large node
+	/// </summary>
 	public bool WriteLargeNode(NodeStamp stamp, string relativePath, byte[] data)
 	{
 		try
@@ -178,6 +208,9 @@ public class SynkerServiceA: SyncCollectionService
 		return false;
 	}
 
+	/// <summary>
+	/// takes next chunk of data for a large node, completes node if metadata is given
+	/// </summary>
 	public bool WriteLargeNode(byte[] data, string metaData)
 	{
 		try
@@ -192,40 +225,27 @@ public class SynkerServiceA: SyncCollectionService
 		return false;
 	}
 
-	public byte[] ReadLargeNode(Nid nid, int maxSize, out NodeStamp stamp, out string metaData, out string relativePath)
+	/// <summary>
+	/// gets metadata and first chunk of data for a large node
+	/// </summary>
+	public NodeChunk ReadLargeNode(Nid nid, int maxSize)
 	{
 		try
 		{
 			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
 				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-			return outNode.Start(nid, out stamp, out metaData, out relativePath)? outNode.GetChunk(maxSize): null;
-		}
-		catch (Exception e) { Log.Uncaught(e); }
-		stamp = new NodeStamp();
-		metaData = null;
-		relativePath = null;
-		return null;
-	}
-
-	// right now reusing small node struct for first chunk of large node
-	public SmallNode ReadLargeNode(Nid nid, int maxSize)
-	{
-		try
-		{
-			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-				throw new UnauthorizedAccessException("Current user cannot modify this collection");
-
-			//SmallNode[] sn = new SmallNode[1];
-			//sn[0].data = outNode.Start(nid, out sn[0].stamp, out sn[0].metaData, out sn[0].relativePath)? outNode.GetChunk(maxSize): null;
-			SmallNode sn;
+			NodeChunk sn;
 			sn.data = outNode.Start(nid, out sn.stamp, out sn.metaData, out sn.relativePath)? outNode.GetChunk(maxSize): null;
 			return sn;
 		}
 		catch (Exception e) { Log.Uncaught(e); }
-		return new SmallNode();
+		return new NodeChunk();
 	}
 
+	/// <summary>
+	/// gets next chunk of data for a large node
+	/// </summary>
 	public byte[] ReadLargeNode(int maxSize)
 	{
 		try
@@ -259,7 +279,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: send small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		if (stamp.streamsSize >= SmallNode.MaxSize || small.Count > 100)
+		if (stamp.streamsSize >= NodeChunk.MaxSize || small.Count > 100)
 			large.Add(stamp.id);
 		else
 			small.Add(stamp.id);
@@ -378,14 +398,14 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 
 		// push up new small files
-		SmallNode[] updates = null;
+		NodeChunk[] updates = null;
 		ids = MoveIdsToArray(addSmallToServer);
 		if (ids != null && ids.Length > 0)
 			updates = ops.GetSmallNodes(ids);
 		if (updates != null && updates.Length > 0)
 		{
 			Nid[] rejectedUpdates = ss.PutSmallNodes(updates);
-			foreach (SmallNode sn in updates)
+			foreach (NodeChunk sn in updates)
 				if (Array.IndexOf(rejectedUpdates, sn.stamp.id) == -1)
 					ops.UpdateIncarn(sn.stamp);
 				//TODO: else
@@ -400,7 +420,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		if (updates != null && updates.Length > 0)
 		{
 			Nid[] rejectedUpdates = ss.PutSmallNodes(updates);
-			foreach (SmallNode sn in updates)
+			foreach (NodeChunk sn in updates)
 				if (Array.IndexOf(rejectedUpdates, sn.stamp.id) == -1)
 					ops.UpdateIncarn(sn.stamp);
 		}
@@ -428,15 +448,15 @@ public class SynkerWorkerA: SyncCollectionWorker
 			string metaData, relativePath;
 			if (!outNode.Start(nid, out stamp, out metaData, out relativePath))
 				continue;
-			byte[] data = outNode.GetChunk(SmallNode.MaxSize);
+			byte[] data = outNode.GetChunk(NodeChunk.MaxSize);
 			ss.WriteLargeNode(stamp, relativePath, data);
-			if (data == null || data.Length < SmallNode.MaxSize)
+			if (data == null || data.Length < NodeChunk.MaxSize)
 				data = null;
 			else
 				while (true)
 				{
-					data = outNode.GetChunk(SmallNode.MaxSize);
-					if (data == null || data.Length < SmallNode.MaxSize)
+					data = outNode.GetChunk(NodeChunk.MaxSize);
+					if (data == null || data.Length < NodeChunk.MaxSize)
 						break;
 					ss.WriteLargeNode(data, null);
 				}
@@ -450,19 +470,12 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// get large files from server
 		foreach (Nid nid in addLargeFromServer)
 		{
-			//SmallNode[] sna = ss.ReadLargeNode(nid, SmallNode.MaxSize);
-			//if (sna == null)
-			//{
-			//	Log.Here();
-			//	continue;
-			//}
-			//SmallNode sn = sna[0];
-			SmallNode sn = ss.ReadLargeNode(nid, SmallNode.MaxSize);
+			NodeChunk sn = ss.ReadLargeNode(nid, NodeChunk.MaxSize);
 			inNode.Start(sn.stamp, sn.relativePath);
 			inNode.Append(sn.data);
-			while (sn.data.Length == SmallNode.MaxSize)
+			while (sn.data.Length == NodeChunk.MaxSize)
 			{
-				sn.data = ss.ReadLargeNode(SmallNode.MaxSize);
+				sn.data = ss.ReadLargeNode(NodeChunk.MaxSize);
 				inNode.Append(sn.data);
 			}
 			if (!inNode.Complete(sn.metaData))

@@ -43,8 +43,8 @@ public class Dredger
 	bool onServer = false;
 	string docRoot = null;
 
-	public const string NodeTypeFile = "File";
-	public const string NodeTypeDir = "Directory";
+	public const string NodeTypeFile = "IfolderFile";
+	public const string NodeTypeDir = "IfolderDirectory";
 	
 	//TODO need to get StringBuilder to work for this
 	public static string FullPath(string docRoot, Node node)

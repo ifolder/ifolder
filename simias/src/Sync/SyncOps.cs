@@ -94,7 +94,7 @@ public struct NodeStamp: IComparable
 }
 
 [Serializable]
-public struct SmallNode
+public struct NodeChunk
 {
 	public const int MaxSize = 128 * 1024;
 	public NodeStamp stamp;
@@ -125,8 +125,6 @@ public class SyncOutgoingNode
 			fs = null;
 		}
 		Log.Assert(collection != null && collection.LocalStore != null);
-
-		//NodeStamp.Clear(out stamp);
 		stamp = new NodeStamp();
 		Node node = collection.GetNodeById(nid.ToString());
 		Log.Assert(collection != null && nid.Valid() && collection.LocalStore != null);
@@ -146,10 +144,11 @@ public class SyncOutgoingNode
 		stamp.masterIncarn = node.MasterIncarnation;
 		stamp.name = node.Name;
 		relativePath = null;
-		foreach (FileEntry fe in node.GetFileSystemEntryList())
+		foreach (FileSystemEntry fse in node.GetFileSystemEntryList())
 		{
-			relativePath = fe.RelativePath;
-			fs = fe.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+			relativePath = fse.RelativePath;
+			if (fse.IsFile)
+				fs = ((FileEntry)fse).Open(FileMode.Open, FileAccess.Read, FileShare.Read);
 			break; //TODO: handle multiple streams
 		}
 		return true;
@@ -378,19 +377,19 @@ public class SyncOps
 	/// <summary>
 	/// returns array of nodes with stamp, metadata and file contents
 	/// </summary>
-	public SmallNode[] GetSmallNodes(Nid[] nids)
+	public NodeChunk[] GetSmallNodes(Nid[] nids)
 	{
 		uint i = 0;
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);
-		SmallNode[] nodes = new SmallNode[nids.Length];
+		NodeChunk[] nodes = new NodeChunk[nids.Length];
 		foreach (Nid nid in nids)
 		{
 			if (outNode.Start(nid, out nodes[i].stamp, out nodes[i].metaData, out nodes[i].relativePath))
 			{
-				nodes[i].data = outNode.GetChunk(SmallNode.MaxSize);
+				nodes[i].data = outNode.GetChunk(NodeChunk.MaxSize);
 				if (nodes[i].data == null)
 					Log.Assert(nodes[i].stamp.streamsSize == 0);
-				else if (nodes[i].data.Length >= SmallNode.MaxSize)
+				else if (nodes[i].data.Length >= NodeChunk.MaxSize)
 				{   // the file grew larger than a SmallNode should handle, tell client to retry
 					nodes[i].stamp.streamsSize = (ulong)nodes[i].data.Length;
 					nodes[i].data = null;
@@ -404,13 +403,13 @@ public class SyncOps
 	/// <summary>
 	/// returns array of Nids that were not updated due to collisions
 	/// </summary>
-	public Nid[] PutSmallNodes(SmallNode[] nodes)
+	public Nid[] PutSmallNodes(NodeChunk[] nodes)
 	{
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, onServer);
 		ArrayList rejects = new ArrayList();
-		foreach (SmallNode sn in nodes)
+		foreach (NodeChunk sn in nodes)
 		{
-			if (!onServer && sn.data == null && sn.stamp.streamsSize >= SmallNode.MaxSize)
+			if (!onServer && sn.data == null && sn.stamp.streamsSize >= NodeChunk.MaxSize)
 			{
 				Log.Spew("skipping update of node {0} because server requests retry", sn.stamp.name);
 				continue;
