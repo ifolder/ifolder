@@ -88,9 +88,6 @@ namespace Novell.iFolder
 
 			cewin.TransientFor = parentwin;
 
-			if(isNew)
-				ceChangeImage.Sensitive = false;
-			
 			if(!newContact)
 			{
 				try
