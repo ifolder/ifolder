@@ -45,29 +45,36 @@ distclean-local:
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)
 
-update-strings:
+generate-strings:
 	genstrings -o $(srcdir)/English.lproj `cat intlsrcfiles`
-
-update-nibstrings:
 	nibfiles=`cat intlnibfiles`; \
 	for nibfile in $$nibfiles; do \
 		nibtool -L $$nibfile > $$nibfile.strings; \
 	done
 
-clean-nibstrings:
+clean-strings:
 	nibfiles=`cat intlnibfiles`; \
 	for nibfile in $$nibfiles; do \
-		rm $$nibfile.strings; \
+		rm -f $$nibfile.strings; \
 	done
-
-update-nibfiles:
 	lprojdirs='$(LPROJDIRS)'; \
-	echo $$lprojdirs; \
 	for lprojdir in $$lprojdirs; do \
 		nibfiles=`cat intlnibfiles`; \
 		for nibfile in $$nibfiles; do \
 			nibfile=$$lprojdir/`basename $$nibfile`; \
-			nibtool -v -d $$nibfile.strings -I $$nibfile -W $$nibfile $$nibfile; \
+			rm -f $$nibfile.strings; \
+		done; \
+	done
+
+update-strings:
+	lprojdirs='$(LPROJDIRS)'; \
+	for lprojdir in $$lprojdirs; do \
+		nibfiles=`cat intlnibfiles`; \
+		for nibfile in $$nibfiles; do \
+			nibfile=$$lprojdir/`basename $$nibfile`; \
+			mv $$nibfile/CVS $$nibfile.CVS; \
+			nibtool -r -v -d $$nibfile.strings -I $$nibfile $$nibfile; \
+			mv $$nibfile.CVS $$nibfile/CVS; \
 		done; \
 	done
 
