@@ -23,12 +23,14 @@
 
 using System;
 using System.Collections;
+using System.Net;
 using System.Threading;
 using System.Text;
 using System.IO;
 using System.Runtime.Remoting;
 
 using Simias;
+using Simias.Authentication;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Mail;
@@ -41,7 +43,7 @@ namespace Simias.POBox
 	public class SubscriptionThread
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SubscriptionThread));
-		private static readonly string	poServiceLabel = "/POBoxService.asmx";
+		private static readonly string	poServiceLabel = "/POService.asmx";
 		
 		private POBox poBox;
 		private Subscription subscription;
@@ -222,20 +224,29 @@ namespace Simias.POBox
 			else
 			{
 				log.Info("SubscriptionThread::DoInvited called");
-				// Make sure the shared collection has sync'd to the server before inviting
+				POBoxStatus			wsStatus = POBoxStatus.UnknownError;
 
 				POBoxService poService = new POBoxService();
 				poService.Url = this.poServiceUrl;
+				poService.CookieContainer = new CookieContainer();
+				poService.PreAuthenticate = true;
 
-				POBoxStatus		wsStatus = POBoxStatus.UnknownError;
+				// Make sure the shared collection has sync'd to the server before inviting
 				try
 				{
+					Credentials cSimiasCreds = 
+						new Credentials(subscription.SubscriptionCollectionID);
+					poService.Credentials = cSimiasCreds.GetCredentials();
 					wsStatus =
 						poService.VerifyCollection(
 							subscription.DomainID,
 							subscription.SubscriptionCollectionID);
 				}
-				catch{}
+				catch(Exception e)
+				{
+					log.Debug(e.Message);
+					log.Debug(e.StackTrace);
+				}
 
 				if (wsStatus == POBoxStatus.Success)
 //				if (subscription.LocalIncarnation == subscription.MasterIncarnation)
@@ -299,6 +310,9 @@ namespace Simias.POBox
 
 			try
 			{
+				Credentials cSimiasCreds = new Credentials(subscription.SubscriptionCollectionID);
+				poService.Credentials = cSimiasCreds.GetCredentials();
+
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
 				{
 					log.Info("  subscription accepted!");
@@ -365,6 +379,7 @@ namespace Simias.POBox
 
 			POBoxService poService = new POBoxService();
 			poService.Url = this.poServiceUrl;
+			poService.CookieContainer = new CookieContainer();
 
 			try
 			{
@@ -372,6 +387,9 @@ namespace Simias.POBox
 				log.Info("  domainID: " + subscription.DomainID);
 				log.Info("  fromID:   " + subscription.FromIdentity);
 				log.Info("  SubID:    " + subscription.MessageID);
+
+				Credentials cSimiasCreds = new Credentials(subscription.SubscriptionCollectionID);
+				poService.Credentials = cSimiasCreds.GetCredentials();
 
 				SubscriptionInformation subInfo =
 					poService.GetSubscriptionInfo(

@@ -19,7 +19,7 @@ System.ComponentModel.DesignerCategoryAttribute("code")]
 public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol {
 
     public POBoxService () {
-        this.Url = "http://localhost:8086/simias10/POBoxService.asmx";
+        this.Url = "http://localhost:8086/simias10/POService.asmx";
     }
 
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/Ping",RequestNamespace="http://novell.com/simias/pobox/",ResponseNamespace="http://novell.com/simias/pobox/",ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped,Use=System.Web.Services.Description.SoapBindingUse.Literal)]
