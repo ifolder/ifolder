@@ -116,8 +116,46 @@ create_local_ifolder (NautilusFileInfo *file)
 		/* FIXME: Call CreateLocaliFolder (folder_path) in iFolder.asmx */
 		
 		g_free (folder_path);
+	} else {
+		/* Error getting the folder path */
+		return -1;
 	}
-	 else {
+	
+	return 0;
+}
+
+static gchar *
+get_ifolder_id_by_local_path (gchar *path)
+{
+	gchar *ifolder_id;
+	
+	ifolder_id = NULL;
+
+	if (path != NULL) {
+		/* FIXME: Call GetiFolderByLocalPath and do a strdup () on the ID */
+		ifolder_id = strdup ("FIXME: iFolder ID goes here");
+	}
+
+	return ifolder_id;
+}
+
+static gint
+revert_ifolder (NautilusFileInfo *file)
+{
+	gchar *folder_path;
+	gchar *ifolder_id;
+	
+	folder_path = get_file_path (file);
+	if (folder_path != NULL) {
+		ifolder_id = get_ifolder_id_by_local_path (folder_path);
+		if (ifolder_id != NULL) {
+			/* FIXME: Call RevertiFolder (ifolder_id) in iFolder.asmx */
+			
+			g_free (ifolder_id);
+		}
+		
+		g_free (folder_path);
+	} else {
 		/* Error getting the folder path */
 		return -1;
 	}
@@ -165,10 +203,12 @@ ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
 static void
 create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Convert to iFolder selected\n");	
+	g_print ("Convert to iFolder selected\n");
+
 	GList *files;
 	NautilusFileInfo *file;
 	gint error;
+
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = NAUTILUS_FILE_INFO (files->data);
 	g_object_unref (G_OBJECT (files->data));
@@ -185,7 +225,23 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 static void
 revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
-	g_print ("Revert to a Normal Folder selected\n");	
+	g_print ("Revert to a Normal Folder selected\n");
+
+	GList *files;
+	NautilusFileInfo *file;
+	gint error;
+
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
+	g_object_unref (G_OBJECT (files->data));
+	if (file == NULL)
+		return;
+
+	error = revert_ifolder (file);
+	if (error) {
+		/* FIXME: Figure out how to let the user know an error happened */
+		g_print ("An error occurred reverting an iFolder\n");
+	}
 }
 
 static void
