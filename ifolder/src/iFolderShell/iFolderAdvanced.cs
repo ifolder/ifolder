@@ -1197,6 +1197,7 @@ namespace Novell.iFolder.iFolderCom
 		{
 			ConflictResolver conflictResolver = new ConflictResolver();
 			conflictResolver.IFolder = this.ifolder;
+			conflictResolver.LoadPath = loadPath;
 			conflictResolver.ConflictsResolved += new Novell.iFolder.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
 			conflictResolver.Show();		
 		}
