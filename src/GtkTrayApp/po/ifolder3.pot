@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-16 11:09-0700\n"
+"POT-Creation-Date: 2004-12-20 15:34-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../iFolderAcceptDialog.cs:44 src/GtkTrayApp/iFolderAcceptDialog.cs:44
@@ -48,7 +48,7 @@ msgstr ""
 
 #: ../iFolderAcceptDialog.cs:128 ../iFolderWindow.cs:1532
 #: src/GtkTrayApp/iFolderAcceptDialog.cs:128
-#: src/GtkTrayApp/iFolderWindow.cs:1807
+#: src/GtkTrayApp/iFolderWindow.cs:1807 src/GtkTrayApp/iFolderWindow.cs:1855
 msgid "Choose a folder..."
 msgstr ""
 
@@ -110,6 +110,7 @@ msgstr ""
 #: ../iFolderApplication.cs:462 ../iFolderWindow.cs:1028
 #: ../iFolderWindow.cs:1049 ../iFolderWindow.cs:1050 ../iFolderWindow.cs:1279
 #: ../iFolderWindow.cs:1922 src/GtkTrayApp/iFolderWindow.cs:1199
+#: src/GtkTrayApp/iFolderWindow.cs:99
 msgid "Available"
 msgstr ""
 
@@ -134,6 +135,7 @@ msgstr ""
 
 #: ../iFolderApplication.cs:654 src/GtkTrayApp/iFolderApplication.cs:277
 #: src/GtkTrayApp/iFolderApplication.cs:491
+#: src/GtkTrayApp/iFolderApplication.cs:664
 msgid "iFolder Connect Error"
 msgstr ""
 
@@ -246,7 +248,7 @@ msgstr ""
 #: ../iFolderExceptionDialog.cs:39 ../iFolderPropertiesDialog.cs:288
 #: ../iFolderWindow.cs:1378 src/GtkTrayApp/iFolderExceptionDialog.cs:39
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:354
-#: src/GtkTrayApp/iFolderWindow.cs:1600
+#: src/GtkTrayApp/iFolderWindow.cs:1600 src/GtkTrayApp/iFolderWindow.cs:1648
 msgid "iFolder Error"
 msgstr ""
 
@@ -326,13 +328,13 @@ msgstr ""
 
 #: ../iFolderPropertiesDialog.cs:289 ../iFolderWindow.cs:1379
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:355
-#: src/GtkTrayApp/iFolderWindow.cs:1601
+#: src/GtkTrayApp/iFolderWindow.cs:1601 src/GtkTrayApp/iFolderWindow.cs:1649
 msgid "Unable to launch File Browser"
 msgstr ""
 
 #: ../iFolderPropertiesDialog.cs:290 ../iFolderWindow.cs:1380
 #: src/GtkTrayApp/iFolderPropertiesDialog.cs:356
-#: src/GtkTrayApp/iFolderWindow.cs:1602
+#: src/GtkTrayApp/iFolderWindow.cs:1602 src/GtkTrayApp/iFolderWindow.cs:1650
 msgid ""
 "iFolder attempted to open the Nautilus File Manager and the Konqueror File "
 "Manager and was unable to launch either of them."
@@ -344,6 +346,9 @@ msgstr ""
 #: src/GtkTrayApp/iFolderWindow.cs:995 src/GtkTrayApp/iFolderWindow.cs:997
 #: src/GtkTrayApp/iFolderWindow.cs:999 src/GtkTrayApp/iFolderWindow.cs:1009
 #: src/GtkTrayApp/iFolderWindow.cs:1021 src/GtkTrayApp/iFolderWindow.cs:1033
+#: src/GtkTrayApp/iFolderWindow.cs:1066 src/GtkTrayApp/iFolderWindow.cs:1068
+#: src/GtkTrayApp/iFolderWindow.cs:1070 src/GtkTrayApp/iFolderWindow.cs:1080
+#: src/GtkTrayApp/iFolderWindow.cs:1092 src/GtkTrayApp/iFolderWindow.cs:1104
 msgid "N/A"
 msgstr ""
 
@@ -358,7 +363,7 @@ msgstr ""
 
 #: ../iFolderPropSettingsPage.cs:308 ../iFolderWindow.cs:578
 #: src/GtkTrayApp/iFolderPropSettingsPage.cs:311
-#: src/GtkTrayApp/iFolderWindow.cs:689
+#: src/GtkTrayApp/iFolderWindow.cs:689 src/GtkTrayApp/iFolderWindow.cs:760
 msgid "Synchronization"
 msgstr ""
 
@@ -373,7 +378,7 @@ msgstr ""
 
 #: ../iFolderPropSettingsPage.cs:343 ../iFolderWindow.cs:612
 #: src/GtkTrayApp/iFolderPropSettingsPage.cs:346
-#: src/GtkTrayApp/iFolderWindow.cs:724
+#: src/GtkTrayApp/iFolderWindow.cs:724 src/GtkTrayApp/iFolderWindow.cs:795
 msgid "seconds"
 msgstr ""
 
@@ -394,7 +399,7 @@ msgstr ""
 
 #: ../iFolderPropSettingsPage.cs:405 ../iFolderWindow.cs:777
 #: src/GtkTrayApp/iFolderPropSettingsPage.cs:408
-#: src/GtkTrayApp/iFolderWindow.cs:890
+#: src/GtkTrayApp/iFolderWindow.cs:890 src/GtkTrayApp/iFolderWindow.cs:961
 msgid "Disk Space"
 msgstr ""
 
@@ -413,6 +418,9 @@ msgstr ""
 #: src/GtkTrayApp/iFolderWindow.cs:918 src/GtkTrayApp/iFolderWindow.cs:930
 #: src/GtkTrayApp/iFolderWindow.cs:942 src/GtkTrayApp/iFolderWindow.cs:1016
 #: src/GtkTrayApp/iFolderWindow.cs:1028 src/GtkTrayApp/iFolderWindow.cs:1040
+#: src/GtkTrayApp/iFolderWindow.cs:989 src/GtkTrayApp/iFolderWindow.cs:1001
+#: src/GtkTrayApp/iFolderWindow.cs:1013 src/GtkTrayApp/iFolderWindow.cs:1087
+#: src/GtkTrayApp/iFolderWindow.cs:1099 src/GtkTrayApp/iFolderWindow.cs:1111
 msgid "MB"
 msgstr ""
 
@@ -423,13 +431,13 @@ msgstr ""
 
 #: ../iFolderPropSettingsPage.cs:474 ../iFolderWindow.cs:854
 #: src/GtkTrayApp/iFolderPropSettingsPage.cs:477
-#: src/GtkTrayApp/iFolderWindow.cs:967
+#: src/GtkTrayApp/iFolderWindow.cs:967 src/GtkTrayApp/iFolderWindow.cs:1038
 msgid "full"
 msgstr ""
 
 #: ../iFolderPropSettingsPage.cs:479 ../iFolderWindow.cs:859
 #: src/GtkTrayApp/iFolderPropSettingsPage.cs:482
-#: src/GtkTrayApp/iFolderWindow.cs:972
+#: src/GtkTrayApp/iFolderWindow.cs:972 src/GtkTrayApp/iFolderWindow.cs:1043
 msgid "empty"
 msgstr ""
 
@@ -464,7 +472,7 @@ msgstr ""
 
 #: ../iFolderPropSharingPage.cs:273 ../iFolderWindow.cs:1488
 #: ../iFolderWindow.cs:1707 src/GtkTrayApp/iFolderPropSharingPage.cs:280
-#: src/GtkTrayApp/iFolderWindow.cs:1762
+#: src/GtkTrayApp/iFolderWindow.cs:1762 src/GtkTrayApp/iFolderWindow.cs:1810
 msgid "iFolder Confirmation"
 msgstr ""
 
@@ -483,7 +491,8 @@ msgstr ""
 #: ../iFolderPropSharingPage.cs:537 ../iFolderWindow.cs:1056
 #: src/GtkTrayApp/iFolderAcceptDialog.cs:165
 #: src/GtkTrayApp/iFolderPropSharingPage.cs:567
-#: src/GtkTrayApp/iFolderWindow.cs:1205
+#: src/GtkTrayApp/iFolderWindow.cs:1205 src/GtkTrayApp/iFolderWindow.cs:105
+#: src/GtkTrayApp/iFolderWindow.cs:123
 msgid "Unknown"
 msgstr ""
 
@@ -512,7 +521,7 @@ msgid "Selected Users"
 msgstr ""
 
 #: ../iFolderWindow.cs:96 ../iFolderWindow.cs:248
-#: src/GtkTrayApp/iFolderWindow.cs:146
+#: src/GtkTrayApp/iFolderWindow.cs:146 src/GtkTrayApp/iFolderWindow.cs:217
 msgid "Server"
 msgstr ""
 
@@ -529,60 +538,73 @@ msgid "Activity Log"
 msgstr ""
 
 #: ../iFolderWindow.cs:260 src/GtkTrayApp/iFolderWindow.cs:325
-#: src/GtkTrayApp/iFolderWindow.cs:2457
+#: src/GtkTrayApp/iFolderWindow.cs:2457 src/GtkTrayApp/iFolderWindow.cs:396
+#: src/GtkTrayApp/iFolderWindow.cs:2507
 msgid "Idle..."
 msgstr ""
 
 #: ../iFolderWindow.cs:326 ../iFolderWindow.cs:506
-#: src/GtkTrayApp/iFolderWindow.cs:592
+#: src/GtkTrayApp/iFolderWindow.cs:592 src/GtkTrayApp/iFolderWindow.cs:663
 msgid "_Create"
 msgstr ""
 
 #: ../iFolderWindow.cs:340 src/GtkTrayApp/iFolderWindow.cs:426
+#: src/GtkTrayApp/iFolderWindow.cs:497
 msgid "Share _with..."
 msgstr ""
 
 #: ../iFolderWindow.cs:344 src/GtkTrayApp/iFolderWindow.cs:430
+#: src/GtkTrayApp/iFolderWindow.cs:501
 msgid "Re_solve conflicts"
 msgstr ""
 
 #: ../iFolderWindow.cs:348 src/GtkTrayApp/iFolderWindow.cs:434
+#: src/GtkTrayApp/iFolderWindow.cs:505
 msgid "Sync _now"
 msgstr ""
 
 #: ../iFolderWindow.cs:353 src/GtkTrayApp/iFolderWindow.cs:439
+#: src/GtkTrayApp/iFolderWindow.cs:510
 msgid "Re_vert to a normal folder"
 msgstr ""
 
 #: ../iFolderWindow.cs:367 src/GtkTrayApp/iFolderWindow.cs:453
+#: src/GtkTrayApp/iFolderWindow.cs:524
 msgid "i_Folder"
 msgstr ""
 
 #: ../iFolderWindow.cs:383 src/GtkTrayApp/iFolderWindow.cs:469
+#: src/GtkTrayApp/iFolderWindow.cs:540
 msgid "_View"
 msgstr ""
 
 #: ../iFolderWindow.cs:398 src/GtkTrayApp/iFolderWindow.cs:484
+#: src/GtkTrayApp/iFolderWindow.cs:555
 msgid "A_bout"
 msgstr ""
 
 #: ../iFolderWindow.cs:404 src/GtkTrayApp/iFolderWindow.cs:490
+#: src/GtkTrayApp/iFolderWindow.cs:561
 msgid "_Help"
 msgstr ""
 
 #: ../iFolderWindow.cs:451 src/GtkTrayApp/iFolderWindow.cs:537
+#: src/GtkTrayApp/iFolderWindow.cs:608
 msgid "Name"
 msgstr ""
 
 #: ../iFolderWindow.cs:463 src/GtkTrayApp/iFolderWindow.cs:549
+#: src/GtkTrayApp/iFolderWindow.cs:620
 msgid "Location"
 msgstr ""
 
 #: ../iFolderWindow.cs:476 src/GtkTrayApp/iFolderWindow.cs:562
+#: src/GtkTrayApp/iFolderWindow.cs:633
 msgid "Status"
 msgstr ""
 
 #: ../iFolderWindow.cs:542 src/GtkTrayApp/iFolderWindow.cs:628
+#: src/GtkTrayApp/iFolderWindow.cs:699
 msgid "Application"
 msgstr ""
 
@@ -601,6 +623,7 @@ msgid ""
 msgstr ""
 
 #: ../iFolderWindow.cs:626 src/GtkTrayApp/iFolderWindow.cs:738
+#: src/GtkTrayApp/iFolderWindow.cs:809
 msgid "Proxy"
 msgstr ""
 
@@ -613,36 +636,43 @@ msgid "Proxy Host:"
 msgstr ""
 
 #: ../iFolderWindow.cs:660 src/GtkTrayApp/iFolderWindow.cs:772
+#: src/GtkTrayApp/iFolderWindow.cs:843
 msgid "Port:"
 msgstr ""
 
 #: ../iFolderWindow.cs:706 src/GtkTrayApp/iFolderWindow.cs:818
+#: src/GtkTrayApp/iFolderWindow.cs:889
 msgid "Server Information"
 msgstr ""
 
 #: ../iFolderWindow.cs:729 src/GtkTrayApp/iFolderLoginDialog.cs:123
 #: src/GtkTrayApp/iFolderLoginDialog.cs:172
-#: src/GtkTrayApp/iFolderWindow.cs:841
+#: src/GtkTrayApp/iFolderWindow.cs:841 src/GtkTrayApp/iFolderWindow.cs:912
 msgid "User name:"
 msgstr ""
 
 #: ../iFolderWindow.cs:738 src/GtkTrayApp/iFolderWindow.cs:850
+#: src/GtkTrayApp/iFolderWindow.cs:921
 msgid "iFolder server:"
 msgstr ""
 
 #: ../iFolderWindow.cs:747 src/GtkTrayApp/iFolderWindow.cs:859
+#: src/GtkTrayApp/iFolderWindow.cs:930
 msgid "Server description:"
 msgstr ""
 
 #: ../iFolderWindow.cs:797 src/GtkTrayApp/iFolderWindow.cs:910
+#: src/GtkTrayApp/iFolderWindow.cs:981
 msgid "Free space on server:"
 msgstr ""
 
 #: ../iFolderWindow.cs:809 src/GtkTrayApp/iFolderWindow.cs:922
+#: src/GtkTrayApp/iFolderWindow.cs:993
 msgid "Used space on server:"
 msgstr ""
 
 #: ../iFolderWindow.cs:821 src/GtkTrayApp/iFolderWindow.cs:934
+#: src/GtkTrayApp/iFolderWindow.cs:1005
 msgid "Total space on server:"
 msgstr ""
 
@@ -651,56 +681,69 @@ msgid "This log shows current ifolder activity"
 msgstr ""
 
 #: ../iFolderWindow.cs:981 src/GtkTrayApp/iFolderWindow.cs:1094
+#: src/GtkTrayApp/iFolderWindow.cs:1165
 msgid "Log"
 msgstr ""
 
 #: ../iFolderWindow.cs:1045 src/GtkTrayApp/iFolderWindow.cs:1191
+#: src/GtkTrayApp/iFolderWindow.cs:116
 msgid "Has File Conflicts"
 msgstr ""
 
 #: ../iFolderWindow.cs:1047 src/GtkTrayApp/iFolderWindow.cs:1196
+#: src/GtkTrayApp/iFolderWindow.cs:120
 msgid "OK"
 msgstr ""
 
 #: ../iFolderWindow.cs:1052 src/GtkTrayApp/iFolderWindow.cs:1201
+#: src/GtkTrayApp/iFolderWindow.cs:101
 msgid "Waiting to Connect"
 msgstr ""
 
 #: ../iFolderWindow.cs:1054 src/GtkTrayApp/iFolderWindow.cs:1203
+#: src/GtkTrayApp/iFolderWindow.cs:103 src/GtkTrayApp/iFolderWindow.cs:112
 msgid "Waiting to Sync"
 msgstr ""
 
 #: ../iFolderWindow.cs:1234 src/GtkTrayApp/iFolderWindow.cs:1425
+#: src/GtkTrayApp/iFolderWindow.cs:1473
 msgid "Open"
 msgstr ""
 
 #: ../iFolderWindow.cs:1242 src/GtkTrayApp/iFolderWindow.cs:1433
+#: src/GtkTrayApp/iFolderWindow.cs:1481
 msgid "Share with..."
 msgstr ""
 
 #: ../iFolderWindow.cs:1251 src/GtkTrayApp/iFolderWindow.cs:1441
+#: src/GtkTrayApp/iFolderWindow.cs:1489
 msgid "Resolve conflicts"
 msgstr ""
 
 #: ../iFolderWindow.cs:1260 src/GtkTrayApp/iFolderWindow.cs:1450
+#: src/GtkTrayApp/iFolderWindow.cs:1498
 msgid "Sync now"
 msgstr ""
 
 #: ../iFolderWindow.cs:1266 src/GtkTrayApp/iFolderWindow.cs:1456
+#: src/GtkTrayApp/iFolderWindow.cs:1504
 msgid "Revert to a normal folder"
 msgstr ""
 
 #: ../iFolderWindow.cs:1274 src/GtkTrayApp/iFolderWindow.cs:1483
+#: src/GtkTrayApp/iFolderWindow.cs:1531
 msgid "Properties"
 msgstr ""
 
 #: ../iFolderWindow.cs:1282 src/GtkTrayApp/iFolderWindow.cs:1491
+#: src/GtkTrayApp/iFolderWindow.cs:1539
 msgid "Setup iFolder"
 msgstr ""
 
 #: ../iFolderWindow.cs:1288 ../iFolderWindow.cs:1300
 #: src/GtkTrayApp/iFolderWindow.cs:1473 src/GtkTrayApp/iFolderWindow.cs:1508
-#: src/GtkTrayApp/iFolderWindow.cs:1517
+#: src/GtkTrayApp/iFolderWindow.cs:1517 src/GtkTrayApp/iFolderWindow.cs:1521
+#: src/GtkTrayApp/iFolderWindow.cs:1556 src/GtkTrayApp/iFolderWindow.cs:1565
 msgid "Remove iFolder"
 msgstr ""
 
@@ -709,18 +752,22 @@ msgid "Connect now..."
 msgstr ""
 
 #: ../iFolderWindow.cs:1308 src/GtkTrayApp/iFolderWindow.cs:1527
+#: src/GtkTrayApp/iFolderWindow.cs:1575
 msgid "Create iFolder"
 msgstr ""
 
 #: ../iFolderWindow.cs:1314 src/GtkTrayApp/iFolderWindow.cs:1533
+#: src/GtkTrayApp/iFolderWindow.cs:1581
 msgid "Refresh list"
 msgstr ""
 
 #: ../iFolderWindow.cs:1489 src/GtkTrayApp/iFolderWindow.cs:1763
+#: src/GtkTrayApp/iFolderWindow.cs:1811
 msgid "Revert this iFolder?"
 msgstr ""
 
 #: ../iFolderWindow.cs:1490 src/GtkTrayApp/iFolderWindow.cs:1764
+#: src/GtkTrayApp/iFolderWindow.cs:1812
 msgid ""
 "This will revert this iFolder back to a normal folder and leave the files "
 "intact.  The iFolder will then be available from the server and will need to "
@@ -728,10 +775,12 @@ msgid ""
 msgstr ""
 
 #: ../iFolderWindow.cs:1677 src/GtkTrayApp/iFolderWindow.cs:1974
+#: src/GtkTrayApp/iFolderWindow.cs:2023
 msgid "Invalid iFolder Path"
 msgstr ""
 
 #: ../iFolderWindow.cs:1678 src/GtkTrayApp/iFolderWindow.cs:1975
+#: src/GtkTrayApp/iFolderWindow.cs:2024
 msgid "Invalid iFolder path selected"
 msgstr ""
 
@@ -766,6 +815,7 @@ msgid "Read Write"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderApplication.cs:278
+#: src/GtkTrayApp/iFolderApplication.cs:665
 msgid "Unable to Authenticate"
 msgstr ""
 
@@ -809,7 +859,7 @@ msgid "_Limit size to:"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderPropSettingsPage.cs:339
-#: src/GtkTrayApp/iFolderWindow.cs:716
+#: src/GtkTrayApp/iFolderWindow.cs:716 src/GtkTrayApp/iFolderWindow.cs:787
 msgid "Sync to host _every:"
 msgstr ""
 
@@ -825,92 +875,93 @@ msgstr ""
 msgid "_Remove"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:306
+#: src/GtkTrayApp/iFolderWindow.cs:306 src/GtkTrayApp/iFolderWindow.cs:377
 msgid "_iFolders"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:308
+#: src/GtkTrayApp/iFolderWindow.cs:308 src/GtkTrayApp/iFolderWindow.cs:379
 msgid "_Preferences"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:310
+#: src/GtkTrayApp/iFolderWindow.cs:310 src/GtkTrayApp/iFolderWindow.cs:381
 msgid "Sync _Log"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:314
+#: src/GtkTrayApp/iFolderWindow.cs:314 src/GtkTrayApp/iFolderWindow.cs:385
 msgid "Se_rver"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:395
+#: src/GtkTrayApp/iFolderWindow.cs:395 src/GtkTrayApp/iFolderWindow.cs:466
 msgid "C_reate"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:405
+#: src/GtkTrayApp/iFolderWindow.cs:405 src/GtkTrayApp/iFolderWindow.cs:476
 msgid "_Setup iFolder"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:410
+#: src/GtkTrayApp/iFolderWindow.cs:410 src/GtkTrayApp/iFolderWindow.cs:481
 msgid "_Delete iFolder"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:416
+#: src/GtkTrayApp/iFolderWindow.cs:416 src/GtkTrayApp/iFolderWindow.cs:487
 msgid "Re_move iFolder"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:648
+#: src/GtkTrayApp/iFolderWindow.cs:648 src/GtkTrayApp/iFolderWindow.cs:719
 msgid "_Show Confirmation dialog when creating iFolders"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:654
+#: src/GtkTrayApp/iFolderWindow.cs:654 src/GtkTrayApp/iFolderWindow.cs:725
 msgid "_Notify of shared iFolders"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:661
+#: src/GtkTrayApp/iFolderWindow.cs:661 src/GtkTrayApp/iFolderWindow.cs:732
 msgid "Notify of _collisions"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:667
+#: src/GtkTrayApp/iFolderWindow.cs:667 src/GtkTrayApp/iFolderWindow.cs:738
 msgid "Notify when a _user joins"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:674
+#: src/GtkTrayApp/iFolderWindow.cs:674 src/GtkTrayApp/iFolderWindow.cs:745
 msgid ""
 "To startup iFolder at login, leave iFolder running when you log out and save "
 "your current setup."
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:707
+#: src/GtkTrayApp/iFolderWindow.cs:707 src/GtkTrayApp/iFolderWindow.cs:778
 msgid ""
 "Specify the default Sync interval for synchronizing your iFolders with the "
 "host.  To specify a different Sync interval for an individual iFolder, use "
 "the iFolder's Properties dialog."
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:757
+#: src/GtkTrayApp/iFolderWindow.cs:757 src/GtkTrayApp/iFolderWindow.cs:828
 msgid "Use this proxy server to sync iFolders with the host"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:766
+#: src/GtkTrayApp/iFolderWindow.cs:766 src/GtkTrayApp/iFolderWindow.cs:837
 msgid "Proxy host:"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:1077
+#: src/GtkTrayApp/iFolderWindow.cs:1077 src/GtkTrayApp/iFolderWindow.cs:1148
 msgid "This log shows current iFolder activity"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:1188
+#: src/GtkTrayApp/iFolderWindow.cs:1188 src/GtkTrayApp/iFolderWindow.cs:110
 msgid "Synchronizing"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:1194
+#: src/GtkTrayApp/iFolderWindow.cs:1194 src/GtkTrayApp/iFolderWindow.cs:118
 msgid "Sync Failed"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:1465 src/GtkTrayApp/iFolderWindow.cs:1500
+#: src/GtkTrayApp/iFolderWindow.cs:1513 src/GtkTrayApp/iFolderWindow.cs:1548
 msgid "Delete iFolder"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:1976
+#: src/GtkTrayApp/iFolderWindow.cs:1976 src/GtkTrayApp/iFolderWindow.cs:2025
 msgid ""
 "The path you have selected is invalid for an iFolder.  iFolders cannot "
 "contain other iFolders.  The folder you selected is either inside an "
@@ -919,15 +970,17 @@ msgid ""
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2087 src/GtkTrayApp/iFolderWindow.cs:2101
+#: src/GtkTrayApp/iFolderWindow.cs:2136 src/GtkTrayApp/iFolderWindow.cs:2150
 msgid "Remove iFolder Confirmation"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2088 src/GtkTrayApp/iFolderWindow.cs:2102
+#: src/GtkTrayApp/iFolderWindow.cs:2137 src/GtkTrayApp/iFolderWindow.cs:2151
 #, csharp-format
 msgid "Remove iFolder {0}?"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2090
+#: src/GtkTrayApp/iFolderWindow.cs:2090 src/GtkTrayApp/iFolderWindow.cs:2139
 msgid ""
 "This will remove this iFolder from your local machine.  Because you are the "
 "owner of this iFolder, the iFolder will also be removed from the iFolder "
@@ -936,71 +989,79 @@ msgid ""
 "local hard drive."
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2104
+#: src/GtkTrayApp/iFolderWindow.cs:2104 src/GtkTrayApp/iFolderWindow.cs:2153
 msgid ""
 "This will remove you as a member of this iFolder.  You will not be able to "
 "access this iFolder unless the owner re-invites you to this iFolder.  The "
 "files will not be deleted from your local hard drive."
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2380
+#: src/GtkTrayApp/iFolderWindow.cs:2380 src/GtkTrayApp/iFolderWindow.cs:2429
 #, csharp-format
 msgid "Syncing: {0}"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2415
+#: src/GtkTrayApp/iFolderWindow.cs:2415 src/GtkTrayApp/iFolderWindow.cs:2464
 #, csharp-format
 msgid "Started sync of: {0}"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2460
+#: src/GtkTrayApp/iFolderWindow.cs:2460 src/GtkTrayApp/iFolderWindow.cs:2510
 #, csharp-format
 msgid "Finished sync of: {0}"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2464
+#: src/GtkTrayApp/iFolderWindow.cs:2464 src/GtkTrayApp/iFolderWindow.cs:2514
 msgid "Failed synchronization"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2467
+#: src/GtkTrayApp/iFolderWindow.cs:2467 src/GtkTrayApp/iFolderWindow.cs:2517
 #, csharp-format
 msgid "Failed Sync of: {0}"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2488 src/GtkTrayApp/iFolderWindow.cs:2492
+#: src/GtkTrayApp/iFolderWindow.cs:2538 src/GtkTrayApp/iFolderWindow.cs:2542
 #, csharp-format
 msgid "Deleting file from server: {0}"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2499 src/GtkTrayApp/iFolderWindow.cs:2503
+#: src/GtkTrayApp/iFolderWindow.cs:2549 src/GtkTrayApp/iFolderWindow.cs:2553
 #, csharp-format
 msgid "Uploading file: {0}"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2514 src/GtkTrayApp/iFolderWindow.cs:2518
+#: src/GtkTrayApp/iFolderWindow.cs:2564 src/GtkTrayApp/iFolderWindow.cs:2568
 #, csharp-format
 msgid "Deleting file: {0}"
 msgstr ""
 
 #: src/GtkTrayApp/iFolderWindow.cs:2525 src/GtkTrayApp/iFolderWindow.cs:2529
+#: src/GtkTrayApp/iFolderWindow.cs:2575 src/GtkTrayApp/iFolderWindow.cs:2579
 #, csharp-format
 msgid "Downloading file: {0}"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2591
+#: src/GtkTrayApp/iFolderWindow.cs:2591 src/GtkTrayApp/iFolderWindow.cs:2641
 msgid "Save iFolder Log..."
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2607
+#: src/GtkTrayApp/iFolderWindow.cs:2607 src/GtkTrayApp/iFolderWindow.cs:2657
 msgid "iFolder Save Log"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2608
+#: src/GtkTrayApp/iFolderWindow.cs:2608 src/GtkTrayApp/iFolderWindow.cs:2658
 msgid "Overwrite existing file?"
 msgstr ""
 
-#: src/GtkTrayApp/iFolderWindow.cs:2609
+#: src/GtkTrayApp/iFolderWindow.cs:2609 src/GtkTrayApp/iFolderWindow.cs:2659
 msgid ""
 "The file you have selected exists.  Selecting yes will overwrite the "
 "contents of this file.  Do you want to overwrite this file?"
+msgstr ""
+
+#: src/GtkTrayApp/iFolderApplication.cs:666
+msgid "The user name or password is invalid.  Please try again."
 msgstr ""
