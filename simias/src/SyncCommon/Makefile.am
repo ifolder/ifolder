@@ -1,0 +1,54 @@
+SyncCommon_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/SyncChannelFormatters.cs $(srcdir)/Library/SyncCollection.cs $(srcdir)/Library/SyncCollectionInfo.cs $(srcdir)/Library/SyncCollectionRoles.cs $(srcdir)/Library/SyncCollectionService.cs $(srcdir)/Library/SyncCollectionWorker.cs $(srcdir)/Library/SyncLogicFactory.cs $(srcdir)/Library/SyncNode.cs $(srcdir)/Library/SyncNodeInfo.cs $(srcdir)/Library/SyncNodeStream.cs $(srcdir)/Library/SyncNodeStreamInfo.cs $(srcdir)/Library/SyncProperties.cs $(srcdir)/Library/SyncStore.cs $(srcdir)/Library/SyncStoreInfo.cs $(srcdir)/Library/SyncStoreService.cs
+SyncCommon_CSFILES_CSC := $(subst /,$(SEP),$(SyncCommon_CSFILES))
+SyncCommon_INCLUDES = 
+SyncCommon_RESOURCES =
+SyncCommon_FLAGS = $(CSC_LIBFLAG)
+SyncCommon_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Identity.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll Common.dll System.Runtime.Remoting.dll Agent.dll
+SyncCommon_LIBPATH = Library ../Configuration ../Identity ../StoreProvider ../CollectionEvents ../CollectionStore ../Common ../Agent 
+
+NUNIT_TESTS := SyncCommonTests.dll
+
+SyncCommonTests_CSFILES = $(srcdir)/Tests/AssemblyInfo.cs $(srcdir)/Tests/SyncCommonTests.cs
+SyncCommonTests_CSFILES_CSC := $(subst /,$(SEP),$(SyncCommonTests_CSFILES))
+SyncCommonTests_INCLUDES = 
+SyncCommonTests_RESOURCES =
+SyncCommonTests_FLAGS = $(CSC_LIBFLAG)
+SyncCommonTests_LIBS = $(SyncCommon_LIBS) $(SYSTEM_XML) SyncCommon.dll CollectionStore.dll Common.dll Identity.dll nunit.framework.dll StoreProvider.dll
+SyncCommonTests_LIBPATH = $(SyncCommon_LIBPATH) Tests $(srcdir)/../../tools/NUnit/bin
+
+EXTRA_DIST = $(SyncCommon_CSFILES) $(SyncCommonTests_CSFILES)
+
+CUR_DIR := $(shell pwd)
+
+all: SyncCommon.dll
+
+SyncCommon.dll: $(SyncCommon_CSFILES) $(SyncCommon_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncCommon_FLAGS) $(SyncCommon_LIBS:%=/r:%) $(SyncCommon_LIBPATH:%=/lib:%) $(SyncCommon_CSFILES_CSC) /doc:SyncCommon.xml
+
+SyncCommonTests.dll: $(SyncCommonTests_CSFILES) $(SyncCommonTests_RESOURCES)
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncCommonTests_FLAGS) $(SyncCommonTests_LIBS:%=/r:%) $(SyncCommonTests_LIBPATH:%=/lib:%) $(SyncCommonTests_CSFILES_CSC)
+	
+install-exec-local: SyncCommon.dll
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) SyncCommon.dll $(DESTDIR)$(bindir)
+    
+uninstall-local:
+	cd $(DESTDIR)$(bindir); rm -f SyncCommon.dll SyncCommonTests.xml $(NUNIT_TESTS)
+    
+installcheck-local: install $(NUNIT_TESTS)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncCommonTests.xml $(NUNIT_TESTS)
+	
+CLEAN_FILES = SyncCommon.dll $(NUNIT_TESTS) SyncCommon.xml SyncCommonTests.xml
+CLEAN_DIRS = .cstore
+
+clean-local:
+	rm -f *.dbg *.exe *.dll $(CLEAN_FILES)
+	rm -rf $(CLEAN_DIRS)
+    
+distclean-local: clean
+
+maintainer-clean-local:
+	rm -f Makefile.in
+
