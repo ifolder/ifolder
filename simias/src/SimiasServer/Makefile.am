@@ -36,7 +36,7 @@ DEBUG_FILES = SimiasServer.pdb
 endif
 endif
 
-install-exec-local: SimiasServer.exe
+install-exec-local: all
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SimiasServer.exe SimiasServer.exe.config $(DEBUG_FILES) $(DESTDIR)$(bindir)
