@@ -2357,6 +2357,39 @@ namespace Simias.Storage.Tests
 				collection.Commit( collection.Delete() );
 			}
 		}
+
+		/// <summary>
+		/// Test the commit/delete api to handle holes in the array.
+		/// </summary>
+		[Test]
+		public void CommitDeleteHoleTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			collection.Commit();
+
+			try
+			{
+				Node[] list = new Node[ 10 ];
+				for ( int i = 0; i < list.Length; ++i )
+				{
+					if ( ( i % 2 ) == 0 )
+					{
+						list[ i ] = new Node( String.Format( "Test Node {0}", i ) );
+					}
+					else
+					{
+						list [ i ] = null;
+					}
+				}
+
+				collection.Commit( list );
+				collection.Commit( collection.Delete( list ) );
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
 		#endregion
 
 		#region Test Clean Up

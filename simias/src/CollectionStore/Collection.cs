@@ -501,85 +501,148 @@ namespace Simias.Storage
 
 			foreach ( Node node in nodeList )
 			{
-				switch ( node.Properties.State )
+				if ( node != null )
 				{
-					case PropertyList.PropertyListState.Add:
+					switch ( node.Properties.State )
 					{
-						// Validate this Collection object.
-						ValidateNodeForCommit( node );
-
-						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node );
-
-						// If this is a StoreFileNode, commit the buffered stream to disk.
-						if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
+						case PropertyList.PropertyListState.Add:
 						{
-							// This cast is safe because a Node object cannot be a StoreFileNode object
-							// and be in the the Add state without having been derived as the right class.
-							StoreFileNode sfn = node as StoreFileNode;
-							if ( sfn != null )
-							{
-								sfn.FlushStreamData( this );
-							}
-						}
+							// Validate this Collection object.
+							ValidateNodeForCommit( node );
 
-						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
-						commitDocument.DocumentElement.AppendChild( xmlNode );
-						break;
-					}
+							// Increment the local incarnation number for the object.
+							IncrementLocalIncarnation( node );
 
-					case PropertyList.PropertyListState.Delete:
-					{
-						if ( IsType( node, NodeTypes.CollectionType ) )
-						{
-							deleteCollection = true;
-						}
-						else
-						{
-							// If this is a StoreFileNode object, delete the store managed file.
+							// If this is a StoreFileNode, commit the buffered stream to disk.
 							if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
 							{
-								try
+								// This cast is safe because a Node object cannot be a StoreFileNode object
+								// and be in the the Add state without having been derived as the right class.
+								StoreFileNode sfn = node as StoreFileNode;
+								if ( sfn != null )
 								{
-									// Delete the file.
-									StoreFileNode sfn = new StoreFileNode( node );
-									File.Delete( sfn.GetFullPath( this ) );
+									sfn.FlushStreamData( this );
 								}
-								catch {}
 							}
 
-							// Never create Tombstones on the master or if this Node object is already a 
-							// Tombstone, delete it.
-							if ( !OnMaster && !IsTombstone( node ) )
+							// Copy the XML node over to the modify document.
+							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+							commitDocument.DocumentElement.AppendChild( xmlNode );
+							break;
+						}
+
+						case PropertyList.PropertyListState.Delete:
+						{
+							if ( IsType( node, NodeTypes.CollectionType ) )
 							{
-								// Convert this Node object to a Tombstone.
-								ChangeToTombstone( node );
-
-								// Validate this object.
-								ValidateNodeForCommit( node );
-
-								// Increment the local incarnation number for the object.
-								IncrementLocalIncarnation( node );
-
-								// Copy the XML node over to the modify document.
-								XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
-								commitDocument.DocumentElement.AppendChild( xmlNode );
+								deleteCollection = true;
 							}
 							else
 							{
-								// Never create tombstones on the server. Copy the XML node over to the delete document.
-								XmlNode xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
-								deleteDocument.DocumentElement.AppendChild( xmlNode );
-							}
-						}
-						break;
-					}
+								// If this is a StoreFileNode object, delete the store managed file.
+								if ( IsBaseType( node, NodeTypes.StoreFileNodeType ) )
+								{
+									try
+									{
+										// Delete the file.
+										StoreFileNode sfn = new StoreFileNode( node );
+										File.Delete( sfn.GetFullPath( this ) );
+									}
+									catch {}
+								}
 
-					case PropertyList.PropertyListState.Update:
-					{
-						// Make sure that there are changes to the Node object.
-						if ( IsType( node, NodeTypes.CollectionType ) || node.Properties.ChangeList.Count != 0 )
+								// Never create Tombstones on the master or if this Node object is already a 
+								// Tombstone, delete it.
+								if ( !OnMaster && !IsTombstone( node ) )
+								{
+									// Convert this Node object to a Tombstone.
+									ChangeToTombstone( node );
+
+									// Validate this object.
+									ValidateNodeForCommit( node );
+
+									// Increment the local incarnation number for the object.
+									IncrementLocalIncarnation( node );
+
+									// Copy the XML node over to the modify document.
+									XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+									commitDocument.DocumentElement.AppendChild( xmlNode );
+								}
+								else
+								{
+									// Never create tombstones on the server. Copy the XML node over to the delete document.
+									XmlNode xmlNode = deleteDocument.ImportNode( node.Properties.PropertyRoot, true );
+									deleteDocument.DocumentElement.AppendChild( xmlNode );
+								}
+							}
+							break;
+						}
+
+						case PropertyList.PropertyListState.Update:
+						{
+							// Make sure that there are changes to the Node object.
+							if ( IsType( node, NodeTypes.CollectionType ) || node.Properties.ChangeList.Count != 0 )
+							{
+								// Merge any changes made to the object on the database before this object's
+								// changes are committed.
+								bool onlyLocalChanges;
+								Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
+								if ( mergeNode != null )
+								{
+									// Remember later for event processing.
+									node.LocalChanges = onlyLocalChanges;
+
+									// Validate this Collection object.
+									ValidateNodeForCommit( mergeNode );
+
+									// Don't bump the incarnation value if only local property changes have
+									// been made.
+									if ( !onlyLocalChanges )
+									{
+										// Increment the local incarnation number for the object.
+										IncrementLocalIncarnation( mergeNode );
+									}
+
+									// Update the old node with the new merged data.
+									node.BaseName = mergeNode.Name;
+									node.InternalList = new PropertyList( mergeNode.Properties.PropertyDocument );
+
+									// Copy the XML node over to the modify document.
+									XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
+									commitDocument.DocumentElement.AppendChild( xmlNode );
+								}
+								else
+								{
+									// There is no longer a node on the disk. Don't indicate an event.
+									node.IndicateEvent = false;
+								}
+							}
+							else
+							{
+								// Nothing was changed on the node. Don't indicate an event.
+								node.IndicateEvent = false;
+							}
+							break;
+						}
+
+						case PropertyList.PropertyListState.Import:
+						{
+							// Validate this Collection object.
+							ValidateNodeForCommit( node );
+
+							// Copy over the local properties to this Node object which is being imported.
+							SetLocalProperties( node );
+
+							// Increment the local incarnation number for the object.
+							IncrementLocalIncarnation( node );
+
+							// Copy the XML node over to the modify document.
+							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+							commitDocument.DocumentElement.AppendChild( xmlNode );
+							break;
+						}
+
+						case PropertyList.PropertyListState.Internal:
 						{
 							// Merge any changes made to the object on the database before this object's
 							// changes are committed.
@@ -590,20 +653,10 @@ namespace Simias.Storage
 								// Remember later for event processing.
 								node.LocalChanges = onlyLocalChanges;
 
-								// Validate this Collection object.
-								ValidateNodeForCommit( mergeNode );
-
-								// Don't bump the incarnation value if only local property changes have
-								// been made.
-								if ( !onlyLocalChanges )
-								{
-									// Increment the local incarnation number for the object.
-									IncrementLocalIncarnation( mergeNode );
-								}
-
-								// Update the old node with the new merged data.
+								// Update the old node with the new merged data, but keep the state the same.
 								node.BaseName = mergeNode.Name;
 								node.InternalList = new PropertyList( mergeNode.Properties.PropertyDocument );
+								node.Properties.State = PropertyList.PropertyListState.Internal;
 
 								// Copy the XML node over to the modify document.
 								XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
@@ -614,83 +667,33 @@ namespace Simias.Storage
 								// There is no longer a node on the disk. Don't indicate an event.
 								node.IndicateEvent = false;
 							}
+							break;
 						}
-						else
+
+						case PropertyList.PropertyListState.Proxy:
 						{
-							// Nothing was changed on the node. Don't indicate an event.
-							node.IndicateEvent = false;
-						}
-						break;
-					}
-
-					case PropertyList.PropertyListState.Import:
-					{
-						// Validate this Collection object.
-						ValidateNodeForCommit( node );
-
-						// Copy over the local properties to this Node object which is being imported.
-						SetLocalProperties( node );
-
-						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node );
-
-						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
-						commitDocument.DocumentElement.AppendChild( xmlNode );
-						break;
-					}
-
-					case PropertyList.PropertyListState.Internal:
-					{
-						// Merge any changes made to the object on the database before this object's
-						// changes are committed.
-						bool onlyLocalChanges;
-						Node mergeNode = MergeNodeProperties( node, out onlyLocalChanges );
-						if ( mergeNode != null )
-						{
-							// Remember later for event processing.
-							node.LocalChanges = onlyLocalChanges;
-
-							// Update the old node with the new merged data, but keep the state the same.
-							node.BaseName = mergeNode.Name;
-							node.InternalList = new PropertyList( mergeNode.Properties.PropertyDocument );
-							node.Properties.State = PropertyList.PropertyListState.Internal;
+							// Validate this Collection object.
+							ValidateNodeForCommit( node );
 
 							// Copy the XML node over to the modify document.
-							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
+							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
+							break;
 						}
-						else
+
+						case PropertyList.PropertyListState.Restore:
 						{
-							// There is no longer a node on the disk. Don't indicate an event.
-							node.IndicateEvent = false;
+							// Validate this Collection object.
+							ValidateNodeForCommit( node );
+
+							// Increment the local incarnation number for the object.
+							IncrementLocalIncarnation( node );
+
+							// Copy the XML node over to the modify document.
+							XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
+							commitDocument.DocumentElement.AppendChild( xmlNode );
+							break;
 						}
-						break;
-					}
-
-					case PropertyList.PropertyListState.Proxy:
-					{
-						// Validate this Collection object.
-						ValidateNodeForCommit( node );
-
-						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
-						commitDocument.DocumentElement.AppendChild( xmlNode );
-						break;
-					}
-
-					case PropertyList.PropertyListState.Restore:
-					{
-						// Validate this Collection object.
-						ValidateNodeForCommit( node );
-
-						// Increment the local incarnation number for the object.
-						IncrementLocalIncarnation( node );
-
-						// Copy the XML node over to the modify document.
-						XmlNode xmlNode = commitDocument.ImportNode( node.Properties.PropertyRoot, true );
-						commitDocument.DocumentElement.AppendChild( xmlNode );
-						break;
 					}
 				}
 			}
@@ -716,118 +719,121 @@ namespace Simias.Storage
 			// Walk the commit list and change all states to updated.
 			foreach( Node node in nodeList )
 			{
-				// If this Node object is a Tombstone that is beinging added, then it came into the commit as
-				// an actual node being deleted. Indicate that the object has been deleted. Otherwise do not
-				// indicate an event for a Tombstone operation.
-				if ( IsBaseType( node, NodeTypes.TombstoneType ) )
+				if ( node != null )
 				{
-					if ( node.Properties.State == PropertyList.PropertyListState.Add )
+					// If this Node object is a Tombstone that is beinging added, then it came into the commit as
+					// an actual node being deleted. Indicate that the object has been deleted. Otherwise do not
+					// indicate an event for a Tombstone operation.
+					if ( IsBaseType( node, NodeTypes.TombstoneType ) )
 					{
-						string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
-						NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, 0 );
-						args.LocalOnly = node.LocalChanges;
-						store.EventPublisher.RaiseEvent( args );
-						node.Properties.State = PropertyList.PropertyListState.Disposed;
-					}
-				}
-				else
-				{
-					// If this is a file node type get the length of the file to report in the event.
-					long fileSize = IsType( node, NodeTypes.BaseFileNodeType ) ? ( node as BaseFileNode ).Length : 0;
-
-					switch ( node.Properties.State )
-					{
-						case PropertyList.PropertyListState.Add:
-						case PropertyList.PropertyListState.Proxy:
+						if ( node.Properties.State == PropertyList.PropertyListState.Add )
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
-							args.LocalOnly = node.LocalChanges;
-							store.EventPublisher.RaiseEvent( args );
-							node.Properties.State = PropertyList.PropertyListState.Update;
-							break;
-						}
-
-						case PropertyList.PropertyListState.Delete:
-						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+							string oldType = node.Properties.FindSingleValue( PropertyTags.TombstoneType ).ToString();
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, oldType, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, 0 );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Disposed;
-							break;
-						}
-
-						case PropertyList.PropertyListState.Import:
-						case PropertyList.PropertyListState.Restore:
-						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
-							args.LocalOnly = node.LocalChanges;
-							store.EventPublisher.RaiseEvent( args );
-							node.Properties.State = PropertyList.PropertyListState.Update;
-							break;
-						}
-
-						case PropertyList.PropertyListState.Update:
-						{
-							// Make sure that it is okay to indicate an event.
-							if ( node.IndicateEvent )
-							{
-								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
-								args.LocalOnly = node.LocalChanges;
-								store.EventPublisher.RaiseEvent( args );
-
-								// If this is a member Node, update the access control entry.
-								if ( IsBaseType( node, NodeTypes.MemberType ) )
-								{
-									// If the node was not instantiated as a Member, then we don't need to
-									// worry about cached access control.
-									Member member = node as Member;
-									if ( member != null )
-									{
-										member.UpdateAccessControl();
-									}
-								}
-							}
-							break;
-						}
-
-						case PropertyList.PropertyListState.Internal:
-						{
-							// See if it is okay to indicate an event.
-							if ( node.IndicateEvent )
-							{
-								// If this node state is a collision being resolved, publish an event so that sync
-								// will pick up the resolved node and push it to the server.
-								if ( node.MergeCollisions == false )
-								{
-									NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
-									args.LocalOnly = false;
-									store.EventPublisher.RaiseEvent( args );
-								}
-
-								// If this is a member Node, update the access control entry.
-								if ( IsBaseType( node, NodeTypes.MemberType ) )
-								{
-									// If the node was not instantiated as a Member, then we don't need to
-									// worry about cached access control.
-									Member member = node as Member;
-									if ( member != null )
-									{
-										member.UpdateAccessControl();
-									}
-								}
-							}
-
-							// Set the new state of the node.
-							node.Properties.State = PropertyList.PropertyListState.Update;
-							break;
 						}
 					}
-				}
+					else
+					{
+						// If this is a file node type get the length of the file to report in the event.
+						long fileSize = IsType( node, NodeTypes.BaseFileNodeType ) ? ( node as BaseFileNode ).Length : 0;
 
-				// Reset in-memory properties.
-				node.DiskNode = null;
-				node.LocalChanges = false;
-				node.IndicateEvent = true;
+						switch ( node.Properties.State )
+						{
+							case PropertyList.PropertyListState.Add:
+							case PropertyList.PropertyListState.Proxy:
+							{
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Update;
+								break;
+							}
+
+							case PropertyList.PropertyListState.Delete:
+							{
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Disposed;
+								break;
+							}
+
+							case PropertyList.PropertyListState.Import:
+							case PropertyList.PropertyListState.Restore:
+							{
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+								node.Properties.State = PropertyList.PropertyListState.Update;
+								break;
+							}
+
+							case PropertyList.PropertyListState.Update:
+							{
+								// Make sure that it is okay to indicate an event.
+								if ( node.IndicateEvent )
+								{
+									NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+									args.LocalOnly = node.LocalChanges;
+									store.EventPublisher.RaiseEvent( args );
+
+									// If this is a member Node, update the access control entry.
+									if ( IsBaseType( node, NodeTypes.MemberType ) )
+									{
+										// If the node was not instantiated as a Member, then we don't need to
+										// worry about cached access control.
+										Member member = node as Member;
+										if ( member != null )
+										{
+											member.UpdateAccessControl();
+										}
+									}
+								}
+								break;
+							}
+
+							case PropertyList.PropertyListState.Internal:
+							{
+								// See if it is okay to indicate an event.
+								if ( node.IndicateEvent )
+								{
+									// If this node state is a collision being resolved, publish an event so that sync
+									// will pick up the resolved node and push it to the server.
+									if ( node.MergeCollisions == false )
+									{
+										NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
+										args.LocalOnly = false;
+										store.EventPublisher.RaiseEvent( args );
+									}
+
+									// If this is a member Node, update the access control entry.
+									if ( IsBaseType( node, NodeTypes.MemberType ) )
+									{
+										// If the node was not instantiated as a Member, then we don't need to
+										// worry about cached access control.
+										Member member = node as Member;
+										if ( member != null )
+										{
+											member.UpdateAccessControl();
+										}
+									}
+								}
+
+								// Set the new state of the node.
+								node.Properties.State = PropertyList.PropertyListState.Update;
+								break;
+							}
+						}
+					}
+
+					// Reset in-memory properties.
+					node.DiskNode = null;
+					node.LocalChanges = false;
+					node.IndicateEvent = true;
+				}
 			}
 		}
 
@@ -889,57 +895,60 @@ namespace Simias.Storage
 
 			foreach ( Node node in nodeList )
 			{
-				// Check for BaseFileNode types because they are the only objects that contain files.
-				if ( IsType( node, NodeTypes.BaseFileNodeType ) )
+				if ( node != null )
 				{
-					// Calculate the new storage size based on the state of the Node object.
-					switch ( node.Properties.State )
+					// Check for BaseFileNode types because they are the only objects that contain files.
+					if ( IsType( node, NodeTypes.BaseFileNodeType ) )
 					{
-						case PropertyList.PropertyListState.Add:
+						// Calculate the new storage size based on the state of the Node object.
+						switch ( node.Properties.State )
 						{
-							// Add the number of bytes to the overall total.
-							BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
-							storeBytes += bfn.Length;
-							break;
-						}
-
-						case PropertyList.PropertyListState.Delete:
-						{
-							// Subtract the number of bytes from the overall total.
-							BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
-							storeBytes -= bfn.Length;
-							break;
-						}
-
-						case PropertyList.PropertyListState.Update:
-						case PropertyList.PropertyListState.Import:
-						case PropertyList.PropertyListState.Restore:
-						{
-							long oldLength = 0;
-
-							// Get the current file size from the same Node off the disk.
-							BaseFileNode diskNode = ( node.DiskNode != null ) ? node.DiskNode as BaseFileNode : GetNodeByID( node.ID ) as BaseFileNode;
-							if ( diskNode != null )
+							case PropertyList.PropertyListState.Add:
 							{
-								// Save this so it doesn't have to be looked up again by the commit code.
-								node.DiskNode = diskNode;
-
-								// Get the old file size.
-								oldLength = diskNode.Length;
+								// Add the number of bytes to the overall total.
+								BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
+								storeBytes += bfn.Length;
+								break;
 							}
 
-							BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
-							storeBytes += ( bfn.Length - oldLength );
-							break;
+							case PropertyList.PropertyListState.Delete:
+							{
+								// Subtract the number of bytes from the overall total.
+								BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
+								storeBytes -= bfn.Length;
+								break;
+							}
+
+							case PropertyList.PropertyListState.Update:
+							case PropertyList.PropertyListState.Import:
+							case PropertyList.PropertyListState.Restore:
+							{
+								long oldLength = 0;
+
+								// Get the current file size from the same Node off the disk.
+								BaseFileNode diskNode = ( node.DiskNode != null ) ? node.DiskNode as BaseFileNode : GetNodeByID( node.ID ) as BaseFileNode;
+								if ( diskNode != null )
+								{
+									// Save this so it doesn't have to be looked up again by the commit code.
+									node.DiskNode = diskNode;
+
+									// Get the old file size.
+									oldLength = diskNode.Length;
+								}
+
+								BaseFileNode bfn = Node.NodeFactory( this, node ) as BaseFileNode;
+								storeBytes += ( bfn.Length - oldLength );
+								break;
+							}
 						}
 					}
-				}
-				else if ( IsType( node, NodeTypes.CollectionType ) )
-				{
-					// It could be that there are multiple collection objects in the list. We always want
-					// the last one and we also need a reference to the object since we intend to update it
-					// and we want the update to be committed.
-					cNode = node;
+					else if ( IsType( node, NodeTypes.CollectionType ) )
+					{
+						// It could be that there are multiple collection objects in the list. We always want
+						// the last one and we also need a reference to the object since we intend to update it
+						// and we want the update to be committed.
+						cNode = node;
+					}
 				}
 			}
 
@@ -1115,47 +1124,50 @@ namespace Simias.Storage
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
 				{
-					if ( IsType( node, NodeTypes.CollectionType ) )
+					if ( node != null )
 					{
-						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
+						if ( IsType( node, NodeTypes.CollectionType ) )
 						{
-							deleteCollection = true;
-						}
-						else if ( node.Properties.State == PropertyList.PropertyListState.Add )
-						{
-							createCollection = true;
-						}
-
-						hasCollection = true;
-					}
-					else if ( IsBaseType( node, NodeTypes.MemberType ) )
-					{
-						// Administrative access needs to be checked because collection membership has changed.
-						doAdminCheck = true;
-
-						// Keep track of any ownership changes.
-						if ( node.Properties.HasProperty( PropertyTags.Owner ) )
-						{
-							// There can only be a single collection owner. Also make sure that it just isn't
-							// the same Node object being committed twice.
-							if ( ( collectionOwner != null ) && ( collectionOwner.ID != node.ID ) )
+							if ( node.Properties.State == PropertyList.PropertyListState.Delete )
 							{
-								throw new AlreadyExistsException( String.Format( "Owner {0} - ID: {1} already exists for collection {2} - ID: {3}.", collectionOwner.Name, collectionOwner.ID, name, id ) );
+								deleteCollection = true;
+							}
+							else if ( node.Properties.State == PropertyList.PropertyListState.Add )
+							{
+								createCollection = true;
 							}
 
-							collectionOwner = new Member( node );
+							hasCollection = true;
 						}
-					}
-					else if ( !doAdminCheck && IsBaseType( node, NodeTypes.PolicyType ) )
-					{
-						// Administrative access needs to be checked because system policies are controlled objects.
-						doAdminCheck = true;
-					}
-					else if ( !hasFileNode && IsType( node, NodeTypes.BaseFileNodeType ) )
-					{
-						// Need to have a collection object for file nodes, because the amount of storage is
-						// on the collection object.
-						hasFileNode = true;
+						else if ( IsBaseType( node, NodeTypes.MemberType ) )
+						{
+							// Administrative access needs to be checked because collection membership has changed.
+							doAdminCheck = true;
+
+							// Keep track of any ownership changes.
+							if ( node.Properties.HasProperty( PropertyTags.Owner ) )
+							{
+								// There can only be a single collection owner. Also make sure that it just isn't
+								// the same Node object being committed twice.
+								if ( ( collectionOwner != null ) && ( collectionOwner.ID != node.ID ) )
+								{
+									throw new AlreadyExistsException( String.Format( "Owner {0} - ID: {1} already exists for collection {2} - ID: {3}.", collectionOwner.Name, collectionOwner.ID, name, id ) );
+								}
+
+								collectionOwner = new Member( node );
+							}
+						}
+						else if ( !doAdminCheck && IsBaseType( node, NodeTypes.PolicyType ) )
+						{
+							// Administrative access needs to be checked because system policies are controlled objects.
+							doAdminCheck = true;
+						}
+						else if ( !hasFileNode && IsType( node, NodeTypes.BaseFileNodeType ) )
+						{
+							// Need to have a collection object for file nodes, because the amount of storage is
+							// on the collection object.
+							hasFileNode = true;
+						}
 					}
 				}
 
@@ -1274,7 +1286,10 @@ namespace Simias.Storage
 					// Go through each entry marking it deleted.
 					foreach( Node node in nodeList )
 					{
-						node.Properties.State = PropertyList.PropertyListState.Disposed;
+						if ( node != null )
+						{
+							node.Properties.State = PropertyList.PropertyListState.Disposed;
+						}
 					}
 				}
 			}
@@ -1348,7 +1363,10 @@ namespace Simias.Storage
 		{
 			foreach ( Node node in nodeList )
 			{
-				Delete( node, null );
+				if ( node != null )
+				{
+					Delete( node, null );
+				}
 			}
 
 			return nodeList;
