@@ -84,11 +84,21 @@ namespace Novell.iFolder
 
 			if(ifolder.Synchronizable)
 			{
-				AutoSyncCheckButton.Active = true;
-				AutoSyncCheckButton.Sensitive = true;
-				SyncSpinButton.Sensitive = true;
-				SyncUnitsLabel.Sensitive = true;
 				SyncSpinButton.Value = ifolder.SyncInterval;
+				AutoSyncCheckButton.Sensitive = true;
+
+				if(SyncSpinButton.Value == 0)
+				{
+					AutoSyncCheckButton.Active = false;
+					SyncSpinButton.Sensitive = false;
+					SyncUnitsLabel.Sensitive = false;
+				}
+				else
+				{
+					AutoSyncCheckButton.Active = true;
+					SyncSpinButton.Sensitive = true;
+					SyncUnitsLabel.Sensitive = true;
+				}
 			}
 			else
 			{
@@ -488,6 +498,7 @@ namespace Novell.iFolder
 			{
 				SyncSpinButton.Sensitive = false;
 				SyncUnitsLabel.Sensitive = false;
+				SyncSpinButton.Value = 0;
 			}
 		}
 

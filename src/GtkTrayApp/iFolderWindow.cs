@@ -133,12 +133,24 @@ namespace Novell.iFolder
 			else
 				ShowConfirmationButton.Active = false;
 
-			AutoSyncCheckButton.Active = true;
 			StartAtLoginButton.Active = false;
 			StartAtLoginButton.Sensitive = false;
 
 
 			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
+			if(SyncSpinButton.Value == 0)
+			{
+				AutoSyncCheckButton.Active = false;
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false; 
+			}
+			else
+			{
+				AutoSyncCheckButton.Active = true;
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+
 
 			// This should change to check the value but I'm not sure
 			// which value to check
@@ -1690,6 +1702,24 @@ namespace Novell.iFolder
 			{
 				SyncSpinButton.Sensitive = false;
 				SyncUnitsLabel.Sensitive = false;
+				SyncSpinButton.Value = 0;
+
+/*				try
+				{
+					ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
+					iFolderWS.SetDefaultSyncInterval(
+									ifSettings.DefaultSyncInterval);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
+*/
 			}
 		}
 
