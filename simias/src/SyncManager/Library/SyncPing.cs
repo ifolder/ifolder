@@ -69,7 +69,7 @@ namespace Simias.Sync
 
 			// server uri
 			string serverUrl = new UriBuilder("http", host, port,
-				SyncStore.GetEndPoint(port)).ToString();
+				syncStore.EndPoint).ToString();
 
 			try
 			{

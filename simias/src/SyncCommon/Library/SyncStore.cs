@@ -188,16 +188,6 @@ namespace Simias.Sync
 		}
 
 		/// <summary>
-		/// Generate the remoting end point for the collection.
-		/// </summary>
-		/// <param name="port">The remoting port of the collection.</param>
-		/// <returns>The remoting end point for the collection.</returns>
-		public static string GetEndPoint(int port)
-		{
-			return "store" + port + ".rem";
-		}
-
-		/// <summary>
 		/// Delete the collection from the store.
 		/// </summary>
 		public void Delete()
@@ -239,6 +229,14 @@ namespace Simias.Sync
 		public string ID
 		{
 			get { return baseStore.GetDatabaseObject().Id; }
+		}
+
+		/// <summary>
+		/// The remoting end point of the store.
+		/// </summary>
+		public string EndPoint
+		{
+			get { return ID + ".rem"; }
 		}
 
 		/// <summary>
