@@ -145,8 +145,22 @@ namespace Simias.POBox
 					buffer.AppendFormat("{0}\n\n", subscription.CollectionDescription);
 				}
 
+				string rights;
+				switch (subscription.SubscriptionRights)
+				{
+					case Storage.Access.Rights.Admin:
+						rights = "Full Control";
+						break;
+					case Storage.Access.Rights.ReadWrite:
+						rights = "Read/Write";
+						break;
+					default:
+						rights = "Read Only";
+						break;
+				}
+
 				buffer.AppendFormat("{0} assigned you {1} rights to this shared iFolder.\n\n",
-					subscription.FromName, subscription.SubscriptionRights);
+					subscription.FromName, rights);
 
 				buffer.Append("You can participate from one or more computers with the iFolder client. For information or download, see the iFolder Web site at http://www.ifolder.com. \n\n");
 
@@ -158,7 +172,7 @@ namespace Simias.POBox
 
 				// invitation attachment
 				string filename = Path.Combine(Path.GetTempPath(),
-					Path.GetFileNameWithoutExtension(Path.GetTempFileName())
+					subscription.SubscriptionCollectionName + "_" + subscription.FromName
 					+ SubscriptionInfo.Extension);
 
 				SubscriptionInfo info = subscription.GenerateInfo(poBox.StoreReference);
