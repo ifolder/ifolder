@@ -28,6 +28,7 @@ install-exec-local: $(ADDITIONAL_LIB_FILES)
 if WINDOWS
 if DEBUG	
 	$(INSTALL_PROGRAM) $(ADDITIONAL_LIB_FILES) $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(ADDITIONAL_LIB_FILES) $(DESTDIR)$(webbindir)
 endif
 endif
 
@@ -42,6 +43,7 @@ uninstall-local:
 if WINDOWS
 if DEBUG	
 	cd $(DESTDIR)$(libdir); rm -f $(ADDITIONAL_LIB_FILES)
+	cd $(DESTDIR)$(webbindir); rm -f $(ADDITIONAL_LIB_FILES)
 endif
 endif
 
