@@ -389,7 +389,7 @@ namespace Simias.POBoxService.Web
 		[WebMethod]
 		[SoapDocumentMethod]
 		public
-		SubscriptionInfo 
+		SubscriptionInformation 
 		GetSubscriptionInfo(string domainID, string identityID, string messageID)
 		{
 			Simias.POBox.POBox	poBox;
@@ -425,7 +425,8 @@ namespace Simias.POBoxService.Web
 
 			// generate the subscription info object and return it
 			Subscription cSub = new Subscription(poBox, sn);
-			SubscriptionInfo subInfo = cSub.GenerateInfo(store);
+			SubscriptionInformation subInfo = new SubscriptionInformation();
+			subInfo.GenerateFromSubscription(cSub);
 			return subInfo;
 		}
 
@@ -651,6 +652,48 @@ namespace Simias.POBoxService.Web
 		public string GetDefaultDomain(int dummy)
 		{
 			return(Store.GetStore().DefaultDomain);
+		}
+	}
+
+	[Serializable]
+	public class SubscriptionInformation
+	{
+		public string	MsgID;
+		public string	FromID;
+		public string	FromName;
+		public string	ToID;
+		public string	ToName;
+
+		public string	CollectionID;
+		public string	CollectionName;
+		public string	CollectionType;
+
+		public string	DomainID;
+		public string	DomainName;
+
+		public int		State;
+
+		public SubscriptionInformation()
+		{
+
+		}
+
+		internal void GenerateFromSubscription(Subscription cSub)
+		{
+			this.MsgID = cSub.MessageID;
+			this.FromID = cSub.FromIdentity;
+			this.FromName = cSub.FromName;
+			this.ToID = cSub.ToIdentity;
+			this.ToName = cSub.ToName;
+
+			this.CollectionID = cSub.SubscriptionCollectionID;
+			this.CollectionName = cSub.SubscriptionCollectionType;
+			this.CollectionType = cSub.SubscriptionCollectionURL;
+
+			this.DomainID = cSub.DomainID;
+			this.DomainName = cSub.DomainName;
+
+			this.State = (int) cSub.SubscriptionState;
 		}
 	}
 }
