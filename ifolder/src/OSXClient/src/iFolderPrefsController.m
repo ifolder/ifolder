@@ -25,6 +25,7 @@
 #import "AccountsController.h"
 #import "TimeSpan.h"
 #import "iFolderService.h"
+#import "iFolderApplication.h"
 
 @implementation iFolderPrefsController
 
@@ -318,6 +319,25 @@ static iFolderPrefsController *prefsSharedInstance = nil;
 	[toolbar setAllowsUserCustomization:NO];
 	[toolbar setAutosavesConfiguration:NO];
 	[[self window] setToolbar:toolbar];
+}
+
+
+- (IBAction)playSound:(id)sender
+{
+	NSString *sName = [[NSUserDefaults standardUserDefaults] objectForKey:PREFKEY_NOTIFYSOUND];
+	// uh... this sucks! Can you say English only?
+	if([sName compare:@"No sound"] == 0)
+		return;
+
+	NSSound *sound = [NSSound soundNamed:sName];
+	[sound setDelegate:self];
+	[sound play];
+	if( ! [sound isPlaying] ) [sound play];	
+}
+
+- (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish
+{
+	[sound autorelease];
 }
 
 

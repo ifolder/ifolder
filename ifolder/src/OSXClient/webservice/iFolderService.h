@@ -30,6 +30,7 @@
 #import "User.h"
 #import "DiskSpace.h"
 #import "SyncSize.h"
+#import "iFolderConflict.h"
 
 
 @interface iFolderService : NSObject
@@ -58,6 +59,10 @@
 -(NSArray *) GetiFolderUsers:(NSString *)ifolderID;
 -(NSArray *) GetDomainUsers:(NSString *)domainID withLimit:(int)numUsers;
 -(NSArray *) SearchDomainUsers:(NSString *)domainID withString:(NSString *)searchString;
+
+-(NSArray *) GetiFolderConflicts:(NSString *)ifolderID;
+-(void) ResolveFileConflict:(NSString *)ifolderID withID:(NSString *)conflictID localChanges:(bool)saveLocal;
+-(void) ResolveNameConflict:(NSString *)ifolderID withID:(NSString *)conflictID usingName:(NSString *)newName;
 
 -(User *) InviteUser:(NSString *)userID toiFolder:(NSString *)ifolderID withRights:(NSString *)rights;
 -(void) RemoveUser:(NSString *)userID fromiFolder:(NSString *)ifolderID;

@@ -31,6 +31,7 @@
 #define PREFKEY_NOTIFYCOLL		@"notify.collisions"
 #define PREFKEY_NOTIFYUSER		@"notify.users"
 #define PREFKEY_NOTIFYBYINDEX	@"notify.byindex"
+#define PREFKEY_NOTIFYSOUND		@"notify.soundName"
 #define STATE_SHOWMAINWINDOW	@"state.showmainwindow"
 #define STATE_SHOWLOGWINDOW		@"state.showlogwindow"
 

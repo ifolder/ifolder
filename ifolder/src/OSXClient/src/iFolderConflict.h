@@ -1,7 +1,7 @@
 /***********************************************************************
  *  $RCSfile$
  * 
- *  Copyright © 2003-2004, Timothy Hatcher
+ *  Copyright (C) 2004 Novell, Inc.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public
@@ -17,15 +17,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Authors: Timothy Hatcher <timothy@colloquy.info>
- *			 Karl Adam <karl@colloquy.info>
+ *  Author: Calvin Gaisford <cgaisford@novell.com>
  * 
  ***********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-
-@interface KABubbleWindow : NSWindow
+ /*
+ struct ns1__Conflict
 {
-	NSPoint startingPoint;
+	char *iFolderID;
+	char *ConflictID;
+	char *LocalName;
+	char *LocalDate;
+	char *LocalSize;
+	char *LocalFullPath;
+	enum xsd__boolean IsNameConflict;
+	char *ServerName;
+	char *ServerDate;
+	char *ServerSize;
+	char *ServerFullPath;
+};
+*/
+
+@interface iFolderConflict : NSObject
+{
+	NSMutableDictionary * properties;
 }
+
+-(NSMutableDictionary *) properties;
+-(void) setProperties: (NSDictionary *)newProperties;
+
+
 @end

@@ -49,7 +49,12 @@
         }, 
         {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
-            ACTIONS = {changeSyncUnits = id; toggleSyncEnabled = id; updateSyncValue = id; }; 
+            ACTIONS = {
+                changeSyncUnits = id; 
+                playSound = id; 
+                toggleSyncEnabled = id; 
+                updateSyncValue = id; 
+            }; 
             CLASS = iFolderPrefsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
