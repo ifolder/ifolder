@@ -32,7 +32,6 @@ using System.Net;
 using Simias.Client;
 using Simias.Event;
 using Simias.Storage;
-using Simias.Service;
 
 namespace Novell.iFolderCom
 {

@@ -165,15 +165,11 @@ namespace Novell.FormsTrayApp
 				XmlNode runtimeNode = configDoc.DocumentElement.SelectSingleNode("/configuration/runtime");
 				if (runtimeNode != null)
 				{
-					// Get the simias element.
+					// Get the simiasclient element.
 					XmlNode simiasNode = runtimeNode.FirstChild.FirstChild;
-
-					// Get the log4net element.
-					XmlNode log4netNode = simiasNode.NextSibling;
 
 					// Replace the codeBase element.
 					replaceCodeBase(simiasNode, installDir);
-					replaceCodeBase(log4netNode, installDir);
 				}
 
 				saveXmlFile(configDoc, configFilePath);
