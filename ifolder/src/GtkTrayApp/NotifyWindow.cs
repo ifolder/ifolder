@@ -41,28 +41,68 @@ namespace Novell.iFolder
 		private uint	closeWindowTimeoutID;
 		private bool	isSelected = false;
 		private int		wbsize = 16;
+		private uint	timeout;
 
-		public NotifyWindow(Gtk.Widget parent, string message, string details)
+		public NotifyWindow(Gtk.Widget parent, string message, string details,
+							Gtk.MessageType messageType, uint timeout)
 			: base(Gtk.WindowType.Popup)
  		{
 			this.AppPaintable = true;
 			parentWidget = parent;
+			this.timeout = timeout;
 
-			Gtk.HBox hbox = new HBox();
-			this.Add(hbox);
-			hbox.BorderWidth = (uint)wbsize + 10;
-			hbox.Spacing = 20;
+			Gtk.HBox outBox = new HBox();
+			this.Add(outBox);
+			outBox.BorderWidth = (uint)wbsize;
 
-			Gtk.Image iFolderImage = new Gtk.Image(
-					new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png")));
+			Gtk.VBox closeBox = new VBox();
+			closeBox.BorderWidth = 3;
+			outBox.PackEnd(closeBox, true, true, 0);
+			EventBox eBox = new EventBox();
+			eBox.ButtonPressEvent += 
+				new ButtonPressEventHandler(OnCloseEvent);
+			Gtk.Image closeImg = new Gtk.Image();
+			closeImg.SetFromStock(Gtk.Stock.Close, 
+											IconSize.Menu);
+			eBox.Add(closeImg);
+			closeBox.PackStart(eBox, false, false, 0);
 
-			hbox.PackStart(iFolderImage, false, true, 0);
-		
+			Label padder = new Label("");
+			outBox.PackStart(padder, false, false, 5);
+
 			Gtk.VBox vbox = new VBox();
+			outBox.PackStart(vbox, true, true, 0);
+			vbox.BorderWidth = 10;
+		
+			Gtk.HBox hbox = new HBox();
+			hbox.Spacing = 5;
+			vbox.PackStart(hbox, false, false, 0);
+
+			Gtk.Image msgImage = new Gtk.Image();
+			switch(messageType)
+			{
+				case Gtk.MessageType.Info:
+					msgImage.SetFromStock(Gtk.Stock.DialogInfo, 
+											IconSize.Button);
+					break;
+				case Gtk.MessageType.Warning:
+					msgImage.SetFromStock(Gtk.Stock.DialogWarning, 
+											IconSize.Button);
+					break;
+				case Gtk.MessageType.Question:
+					msgImage.SetFromStock(Gtk.Stock.DialogQuestion, 
+											IconSize.Button);
+					break;
+				case Gtk.MessageType.Error:
+					msgImage.SetFromStock(Gtk.Stock.DialogError, 
+											IconSize.Button);
+					break;
+			}
+
+			hbox.PackStart(msgImage, false, true, 0);
 //			vbox.Spacing = 5;
-			hbox.PackStart(vbox, true, false, 0);
 //			Label l = new Label("<span weight=\"bold\" size=\"large\">" +
-			Label l = new Label("<span weight=\"bold\">" +
+			Label l = new Label("<span size=\"small\" weight=\"bold\">" +
 							message + 
 							"</span>");
 			l.LineWrap = false;
@@ -70,10 +110,10 @@ namespace Novell.iFolder
 			l.Selectable = false;
 			l.Xalign = 0;
 			l.Yalign = 0;
-			vbox.PackStart(l, false, true, 0);
-
+			hbox.PackStart(l, false, true, 0);
 
 			Label l2 = new Label("<span size=\"small\">" + details + "</span>");
+//			l2.WidthRequest = 300;
 			l2.UseMarkup = true;
 			l2.LineWrap = true;
 			l2.Xalign = 0;
@@ -90,7 +130,7 @@ namespace Novell.iFolder
 			l.ButtonPressEvent += new ButtonPressEventHandler(
 						OnLabelClicked);
 */
-
+/*
 			HBox buttonBox = new HBox();
 			buttonBox.Spacing = 10;
 			vbox.PackStart(buttonBox, true, true, 0);
@@ -99,6 +139,7 @@ namespace Novell.iFolder
 			but.Clicked += new EventHandler(OnCloseButton);
 			but.Relief = Gtk.ReliefStyle.None;
 			buttonBox.PackEnd(but, false, true, 0);
+*/
 
 			closeWindowTimeoutID = 0;
 		}
@@ -111,7 +152,7 @@ namespace Novell.iFolder
 
 			if(closeWindowTimeoutID == 0)
 			{
-				closeWindowTimeoutID = Gtk.Timeout.Add(5000, new Gtk.Function(
+				closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
 						HideWindowCallback));
 			}
 		}
@@ -129,7 +170,7 @@ namespace Novell.iFolder
 			return false;
 		}
 
-		private void OnCloseButton(object o, EventArgs args)
+		private void OnCloseEvent(object obj, ButtonPressEventArgs args)
 		{
 			this.Hide();
 			this.Destroy();
@@ -425,7 +466,7 @@ namespace Novell.iFolder
 				closeWindowTimeoutID = 0;
 			}
 
-			closeWindowTimeoutID = Gtk.Timeout.Add(5000, new Gtk.Function(
+			closeWindowTimeoutID = Gtk.Timeout.Add(timeout, new Gtk.Function(
 						HideWindowCallback));
 
 			return false;

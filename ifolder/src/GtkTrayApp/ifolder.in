@@ -23,7 +23,7 @@
 #######################################################################
 
 # Startup iFolder
-export MONO_PATH=@prefix@/lib
+export MONO_PATH=@prefix@/lib:@webbindir@
 export LD_LIBRARY_PATH=@prefix@/lib
 cd @prefix@/bin
 mono iFolderGtkApp.exe
