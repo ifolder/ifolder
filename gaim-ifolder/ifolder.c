@@ -149,7 +149,7 @@ static GtkWidget *invitations_dialog;
 
 static GList *incoming_invitations;
 static GtkWidget *in_inv_tree;
-static GtkTreeStore *in_inv_store;
+static GtkListStore *in_inv_store;
 static GtkWidget *in_inv_accept_button;
 static GtkWidget *in_inv_reject_button;
 
@@ -501,6 +501,7 @@ init_invitations_window()
 	GtkWidget *in_inv_buttons_vbox;
 	GtkWidget *in_inv_scrolled_win;
 	GtkCellRenderer *in_inv_renderer;
+	GtkTreeIter in_inv_iter;
 
 	GtkWidget *out_inv_vbox;
 	GtkWidget *out_inv_label;
@@ -508,6 +509,7 @@ init_invitations_window()
 	GtkWidget *out_inv_buttons_vbox;
 	GtkWidget *out_inv_scrolled_win;
 	GtkCellRenderer *out_inv_renderer;
+	GtkTreeIter out_inv_iter;
 
 	invitations_dialog = gtk_dialog_new_with_buttons(
 				_("Simias Collection Invitations"),
@@ -520,7 +522,7 @@ init_invitations_window()
 	/* Setup the properties of the window */
 	gtk_dialog_set_has_separator(GTK_DIALOG(invitations_dialog), FALSE);
 	gtk_window_set_resizable(GTK_WINDOW(invitations_dialog), TRUE);
-	gtk_window_set_default_size(GTK_WINDOW(invitations_dialog), 500, 500);
+	gtk_window_set_default_size(GTK_WINDOW(invitations_dialog), 600, 500);
 
 	vbox = gtk_vbox_new(FALSE, 10);
 	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
@@ -550,7 +552,7 @@ init_invitations_window()
 			   in_inv_scrolled_win, TRUE, TRUE, 0);
 
 	/* Tree View Control Here */
-	in_inv_store = gtk_tree_store_new(N_COLS,
+	in_inv_store = gtk_list_store_new(N_COLS,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
@@ -558,6 +560,19 @@ init_invitations_window()
 					G_TYPE_STRING);
 	/* FIXME: Load in data from file */
 	/*populate_in_inv_store_from_file(in_inv_store);*/
+
+	/* Aquire an iterator */
+	gtk_list_store_append(in_inv_store, &in_inv_iter);
+
+	/* Add some things to the store */
+	gtk_list_store_set(in_inv_store, &in_inv_iter,
+		ACCOUNT_PRTL_COL, "oscar",
+		BUDDY_NAME_COL, "afrienda4gpa4",
+		TIME_COL, "02/03/2005 15:24",
+		COLLECTION_NAME_COL, "My School Projects",
+		STATE_COL, "New",
+		-1);
+
 	in_inv_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(in_inv_store));
 	/* The view now holds a reference.  We can get rid of our own
 	 * reference. */
@@ -628,7 +643,7 @@ init_invitations_window()
 			   out_inv_scrolled_win, TRUE, TRUE, 0);
 
 	/* Tree View Control Here */
-	out_inv_store = gtk_tree_store_new(N_COLS,
+	out_inv_store = gtk_list_store_new(N_COLS,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
