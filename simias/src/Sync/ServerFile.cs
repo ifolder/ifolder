@@ -92,7 +92,7 @@ namespace Simias.Sync
 				status.status = SyncStatus.Success;
 				try
 				{
-					//CreateHashMapFile();
+					CreateHashMapFile();
 					collection.Commit(node);
 				}
 				catch (CollisionException)

@@ -193,7 +193,7 @@ namespace Simias.Sync.Delta
 		
 			// Compute the hash codes.
 			inStream.Position = 0;
-			while ((bytesRead = inStream.Read(buffer, 0, HashData.BlockSize)) == HashData.BlockSize)
+			while ((bytesRead = inStream.Read(buffer, 0, HashData.BlockSize)) != 0)
 			{
 				new HashData(
 					currentBlock++,
