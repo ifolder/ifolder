@@ -336,7 +336,9 @@ namespace Simias.Sync
 				}
 			}
 			// We need to delete the temp file.
-			File.Delete(workFile);
+
+			if (workFile != null)
+				File.Delete(workFile);
 		}
 
 		#endregion
