@@ -160,7 +160,12 @@ namespace Simias.Sync
 			{
 				SyncCollectionManager scm = (SyncCollectionManager)collectionManagers[id];
 
-				service = scm.GetService();
+				if (scm == null)
+				{
+					throw new ApplicationException("The sync collection manager was not found.");
+				}
+
+                service = scm.GetService();
 			}
 
 			return service;

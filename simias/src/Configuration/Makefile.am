@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Configuration_CSFILES = $(srcdir)/Configuration.cs $(srcdir)/ICollectionService.cs
+Configuration_CSFILES = $(srcdir)/Configuration.cs
 Configuration_CSFILES_CSC := $(subst /,$(SEP),$(Configuration_CSFILES))
 Configuration_INCLUDES = 
 Configuration_RESOURCES =

@@ -30,49 +30,67 @@ namespace Simias
 {
 	public sealed class Configuration
 	{
-		private string basePath;
+		private static readonly string RootElementTag = "configuration";
+		private static readonly string SectionTag = "section";
+		private static readonly string SettingTag = "setting";
+		private static readonly string NameAttr = "name";
+		private static readonly string ValueAttr = "value";
+		private static readonly string DefaultSection = "SimiasDefault";
+		private static readonly string DefaultFileName = "simias.conf";
+
+		private string storePath;
+		
 		private Mutex mutex = new Mutex(false, "SimiasConfigMutex");
 
-		private const string RootElementTag = "configuration";
-		private const string SectionTag = "section";
-		private const string SettingTag = "setting";
-		private const string NameAttr = "name";
-		private const string ValueAttr = "value";
-		private const string DefaultSection = "SimiasDefault";
-		private const string DefaultFileName = "simias.conf";
-
+		[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
 		public Configuration() : this(null)
 		{
 		}
 
-		public Configuration(string basePath)
+		[Obsolete("Use SystemManager.Config to get the configuration object.", false)]
+		public Configuration(string path)
 		{
-			if(basePath == null)
+			if (path == null)
 			{
-				basePath = DefaultPath;
+				path = DefaultPath;
 			}
 			else
 			{
-				basePath = fixupPath(basePath);
+				path = fixupPath(path);
 			}
 
-			this.basePath = basePath;
+			this.storePath = path;
 		}
-			
+
+		internal Configuration(string path, bool remove)
+		{
+			this.storePath = path;
+
+			if (!File.Exists(ConfigFilePath))
+			{
+				// create defaults
+				CreateDefaults();
+			}
+		}
+
+		public void CreateDefaults()
+		{
+		}
+
+		[Obsolete("Use .StorePath instead of .BasePath.", false)]
 		public string BasePath
 		{
-			get
-			{
-				return basePath;
-			}
+			get { return storePath; }
+		}
+
+		public string StorePath
+		{
+			get { return storePath; }
 		}
 
 		private string ConfigFilePath
 		{
-			get
-			{
-				return Path.Combine(BasePath, DefaultFileName);
-			}
+			get { return Path.Combine(storePath, DefaultFileName); }
 		}
 
 		public string Get(string key, string defaultValue)
@@ -189,9 +207,8 @@ namespace Simias
 		}
 
 		#region Static Methods
-		/// <summary>
-		/// Gets the default database path.
-		/// </summary>
+		
+		[Obsolete("Stop using the DefaultPath.", false)]
 		public static string DefaultPath
 		{
 			get
@@ -206,6 +223,7 @@ namespace Simias
 			}
 		}
 
+		[Obsolete("Stop using the fixupPath.", false)]
 		public static string fixupPath(string path)
 		{
 			if ((path.EndsWith(".simias") == false) &&
