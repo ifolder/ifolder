@@ -69,7 +69,7 @@ namespace Simias.POBox
 			// events
 			subscriber = new EventSubscriber(config);
 			subscriber.Enabled = false;
-			subscriber.NodeTypeFilter = typeof(POBox).Name;
+			subscriber.NodeTypeFilter = NodeTypes.CollectionType;
 			subscriber.NodeCreated += new NodeEventHandler(OnPOBoxCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(OnPOBoxDeleted);
 
@@ -216,12 +216,22 @@ namespace Simias.POBox
 
 		private void OnPOBoxCreated(NodeEventArgs args)
 		{
-			AddPOBoxManager(args.ID);
+			Collection c = store.GetCollectionByID(args.ID);
+
+			if (c.IsType(c, typeof(POBox).Name))
+			{
+				AddPOBoxManager(args.ID);
+			}
 		}
 
 		private void OnPOBoxDeleted(NodeEventArgs args)
 		{
-			RemovePOBoxManager(args.ID);
+			Collection c = store.GetCollectionByID(args.ID);
+
+			if (c.IsType(c, typeof(POBox).Name))
+			{
+				RemovePOBoxManager(args.ID);
+			}
 		}
 
 		#region IDisposable Members
