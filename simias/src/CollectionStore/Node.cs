@@ -499,6 +499,15 @@ namespace Simias.Storage
 		{
 			return NodeFactory( collection.StoreReference, node.Properties.PropertyDocument );
 		}
+
+		/// <summary>
+		/// Sets the Node object to be a proxy that is to be overwritten by the next sync cycle.
+		/// </summary>
+		public void SetProxy()
+		{
+			IsStub = true;
+			properties.State = PropertyList.PropertyListState.Internal;
+		}
 		#endregion
 	}
 }
