@@ -12,7 +12,7 @@ UILIB_LIBPATH = $(srcdir)/../iFolder
 
 EXTRA_DIST = $(UILIB_CSFILES) 
 
-Util.cs: Util.cs.in
+Util.cs: $(srcdir)/Util.cs.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_PACKAGE_@,@PACKAGE@,g' $< > $@
 	chmod +x $@
 
@@ -25,7 +25,7 @@ endif
 
 all: Novell.iFolder.UI.gtk.dll
 
-Novell.iFolder.UI.gtk.dll: $(UILIB_CSFILES) $(UILIB_RESOURCES)
+Novell.iFolder.UI.gtk.dll: Util.cs $(UILIB_CSFILES) $(UILIB_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_CLIENT_LIBS) $(UILIB_FLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs $(DOC_FILE_CMD)
 
 install-exec-local: all
@@ -35,7 +35,7 @@ install-exec-local: all
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.UI.gtk.dll
 
-CLEAN_FILES = Novell.iFolder.UI.gtk.dll $(DOC_FILE_CLEAN)
+CLEAN_FILES = Novell.iFolder.UI.gtk.dll $(DOC_FILE_CLEAN) Util.cs
 
 clean-local:
 	rm -rf *.dbg $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
