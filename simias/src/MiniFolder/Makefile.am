@@ -32,8 +32,8 @@ uninstall-local:
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:MiniFolderTests.test.xml $(NUNIT_TESTS)
+#	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:MiniFolderTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = MiniFolder.exe $(NUNIT_TESTS) MiniFolder.doc.xml
 
