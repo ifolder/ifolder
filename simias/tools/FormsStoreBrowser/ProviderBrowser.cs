@@ -39,15 +39,15 @@ namespace StoreBrowser
 	{
 		TreeView tView;
 		RichTextBox  rBox;
-		Browser browser;
+		BrowserService browser;
 		bool alreadyDisposed;
 
 		public ProviderBrowser(TreeView view, RichTextBox box, string host)
 		{
 			tView = view;
 			rBox = box;
-			browser = new Browser();
-			browser.Url = String.Format("http://{0}/SimiasBrowser.asmx", host);
+			browser = new BrowserService();
+			browser.Url = host + "/SimiasBrowser.asmx";
 			rBox.Show();
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = false;
@@ -58,7 +58,7 @@ namespace StoreBrowser
 			Dispose(true);
 		}
 
-		public Browser StoreBrowser
+		public BrowserService StoreBrowser
 		{
 			get { return browser; }
 		}

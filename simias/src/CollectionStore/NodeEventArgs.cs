@@ -68,7 +68,7 @@ namespace Simias.Storage
 		/// Flags for the node event.
 		/// </summary>
 		[Flags]
-		internal enum EventFlags : ushort
+		public enum EventFlags : ushort
 		{
 			/// <summary>
 			/// The event was caused by local only properties.

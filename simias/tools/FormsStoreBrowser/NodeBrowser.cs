@@ -247,7 +247,7 @@ namespace StoreBrowser
 	/// </summary>
 	public class NodeBrowser : IStoreBrowser
 	{
-		Browser browser;
+		BrowserService browser;
 		TreeView tView;
 		ListView lView;
 		bool alreadyDisposed;
@@ -258,8 +258,8 @@ namespace StoreBrowser
 			this.lView = lView;
 			lView.BringToFront();
 			lView.Show();
-			browser = new Browser();
-			browser.Url = String.Format("http://{0}/SimiasBrowser.asmx", host);
+			browser = new BrowserService();
+			browser.Url = host + "/SimiasBrowser.asmx";
 			tView.Dock = DockStyle.Left;
 			alreadyDisposed = true;
 		}
@@ -271,7 +271,7 @@ namespace StoreBrowser
 
 		#region IStoreBrowser Members
 
-		public Browser StoreBrowser
+		public BrowserService StoreBrowser
 		{
 			get { return browser; }
 		}

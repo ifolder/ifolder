@@ -37,6 +37,14 @@ public class Conflict
 	Collection collection;
 	Node node;
 	Node conflictNode;
+	/// <summary>
+	/// The Prefix for an update conflict.
+	/// </summary>
+	static string			ConflictUpdatePrefix = ".simias.cu.";
+	/// <summary>
+	/// The prefix for a file conflict.
+	/// </summary>
+	static string			ConflictFilePrefix = ".simias.cf.";
 
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -46,7 +54,7 @@ public class Conflict
 	public Conflict(Collection collection, Node node)
 	{
 		this.collection = collection;
-		this.node = node;
+		this.node = Collection.NodeFactory(collection, node);
 		conflictNode = collection.GetNodeFromCollision(node);
 	}
 
@@ -83,7 +91,7 @@ public class Conflict
 	{
 		get
 		{
-			BaseFileNode bfn = SyncOps.CastToBaseFileNode(collection, node);
+			BaseFileNode bfn = node as BaseFileNode;
 			return bfn == null? null: bfn.GetFullPath(collection);
 		}
 	}
@@ -97,10 +105,10 @@ public class Conflict
 	{
 		get
 		{
-			if (!collection.IsType(node, typeof(BaseFileNode).Name))
+			BaseFileNode bfn = node as BaseFileNode;
+			if (bfn == null)
 				return null;
-			string path = IncomingNode.ParentPath(collection, node);
-			return path == null? null: Path.Combine(path, IncomingNode.ConflictFilePrefix + node.ID);
+			return GetFileConflictPath(collection, bfn);
 		}
 	}
 
@@ -113,13 +121,37 @@ public class Conflict
 	{
 		get
 		{
-			if (!collection.IsType(node, typeof(BaseFileNode).Name) || conflictNode == null)
+			BaseFileNode bfn = node as BaseFileNode;
+			if (bfn == null || conflictNode == null)
 				return null;
-			string path = IncomingNode.ParentPath(collection, node);
-			return path == null? null: Path.Combine(path,
-					IncomingNode.ConflictUpdatePrefix + node.ID + Path.GetExtension(conflictNode.Name));
+			return GetUpdateConflictPath(collection, bfn);
 		}
 	}
+
+	/// <summary>
+	/// Gets the file name for an update conflict.
+	/// </summary>
+	/// <param name="collection">The collection the node belongs to.</param>
+	/// <param name="bfn">The BaseFile Node.</param>
+	/// <returns>The path for the conflict file.</returns>
+	public static string GetUpdateConflictPath(Collection collection, BaseFileNode bfn)
+	{
+		string path = bfn.GetFullPath(collection);
+		return (Path.Combine(Path.GetDirectoryName(path), ConflictUpdatePrefix + bfn.ID + Path.GetExtension(path)));
+	}
+
+	/// <summary>
+	/// Gets the file name for a File name conflict.
+	/// </summary>
+	/// <param name="collection">The collection the node belongs to.</param>
+	/// <param name="bfn">The BaseFile Node.</param>
+	/// <returns>The path for the conflict file.</returns>
+	public static string GetFileConflictPath(Collection collection, BaseFileNode bfn)
+	{
+		return (Path.Combine(Path.GetDirectoryName(bfn.GetFullPath(collection)), ConflictFilePrefix + bfn.ID));
+	}
+
+	
 
 	//---------------------------------------------------------------------------
 	/// <summary>
@@ -149,7 +181,7 @@ public class Conflict
 				File.Delete(ucp);
 			node = collection.ResolveCollision(node, conflictNode.LocalIncarnation, true);
 			collection.Commit(node);
-			Log.Spew("Local changes win in conflict for {0} node {1}", node.Type, node.Name);
+			Log.log.Debug("Local changes win in conflict for {0} node {1}", node.Type, node.Name);
 			return;
 		}
 
@@ -167,7 +199,7 @@ public class Conflict
 			}
 			catch (Exception ne)
 			{
-				Log.Spew("Could not move update conflict file to {0}: {1}", path, ne.Message);
+				Log.log.Debug("Could not move update conflict file to {0}: {1}", path, ne.Message);
 				fncpath = FileNameConflictPath;
 				File.Delete(fncpath);
 				File.Move(UpdateConflictPath, fncpath);
@@ -187,7 +219,7 @@ public class Conflict
 		}
 		conflictNode = null;
 		collection.Commit(node);
-		Log.Spew("Master update wins in conflict for {0} node {1}", node.Type, node.Name);
+		Log.log.Debug("Master update wins in conflict for {0} node {1}", node.Type, node.Name);
 	}
 
 	//---------------------------------------------------------------------------
@@ -197,7 +229,7 @@ public class Conflict
 	public void Resolve(string newNodeName)
 	{
 		//TODO: what if move succeeds but node rename or commit fails?
-		File.Move(FileNameConflictPath, Path.Combine(IncomingNode.ParentPath(collection, node), newNodeName));
+		File.Move(FileNameConflictPath, Path.Combine(Path.GetDirectoryName(NonconflictedPath), newNodeName));
 		node.Name = newNodeName;
 		collection.Commit(collection.DeleteCollision(node));
 	}

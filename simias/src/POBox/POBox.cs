@@ -60,8 +60,8 @@ namespace Simias.POBox
 				}
 				else
 				{
-					// TODO: fix default
-					result = SimiasRemoting.GetServiceUrl(PostOffice.EndPoint).ToString();
+					SyncCollection sc = new SyncCollection(this);
+					result = sc.MasterUrl.ToString() + "/POBoxService.asmx";
 				}
 
 				return result;

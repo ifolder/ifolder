@@ -23,6 +23,8 @@
  ***********************************************************************/
 	 
 using System;
+using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -36,16 +38,23 @@ namespace Simias
 	public sealed class Configuration
 	{
 		#region Class Members
-		private static readonly string RootElementTag = "configuration";
-		private static readonly string SectionTag = "section";
-		private static readonly string SettingTag = "setting";
-		private static readonly string NameAttr = "name";
-		private static readonly string ValueAttr = "value";
-		private static readonly string DefaultSection = "SimiasDefault";
-		private static readonly string DefaultFileName = "Simias.config";
+		private const string RootElementTag = "configuration";
+		private const string SectionTag = "section";
+		private const string SettingTag = "setting";
+		private const string NameAttr = "name";
+		private const string ValueAttr = "value";
+		private const string DefaultSection = "SimiasDefault";
+		private const string DefaultFileName = "Simias.config";
+
+		private const string enterpriseServer = "Enterprise";
+		private const string serverBootStrapFileName = "simias-server-bootstrap.config";
+		private const string clientBootStrapFileName = "simias-client-bootstrap.config";
+		private const string storeProvider = "StoreProvider";
+		private const string storeProviderPath = "Path";
 
 		private static Configuration instance = null;
 
+		private string configFilePath;
 		private string storePath;
 		private XmlDocument configDoc;
 		#endregion
@@ -57,11 +66,6 @@ namespace Simias
 		public string StorePath
 		{
 			get { return storePath; }
-		}
-
-		private string ConfigFilePath
-		{
-			get { return Path.Combine(storePath, DefaultFileName); }
 		}
 
 		private static string DefaultPath
@@ -92,45 +96,42 @@ namespace Simias
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		/// <param name="path">The path to the configuration file.</param>
-		/// <param name="fixPath">Fix up the path to the configuration file.</param>
-		private Configuration(string path, bool fixPath)
+		private Configuration()
 		{
-			this.storePath = (path == null) ? DefaultPath : path;
+			string bootStrapFilePath = null;
+			configFilePath = Path.Combine( DefaultPath, DefaultFileName );
 
-			if (fixPath) this.storePath = fixupPath(this.storePath);
-
-			// clean-up path
-			this.storePath = Path.GetFullPath(this.storePath);
-
-			// If the file does not exist look for defaults.
-			string configFilePath = ConfigFilePath;
-			if (!File.Exists(configFilePath))
+			// See if we are running as a client or server.
+			NameValueCollection nvc = System.Configuration.ConfigurationSettings.AppSettings;
+			if (nvc.Get( enterpriseServer ) != null )
 			{
-				string bootStrapPath = Path.Combine(SimiasSetup.sysconfdir, DefaultFileName);
-				if (File.Exists(bootStrapPath))
+				// Enterprise server.
+				bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, serverBootStrapFileName );
+			}
+			else
+			{
+				// Client
+				bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, clientBootStrapFileName );
+			}
+
+			// Check to see if the file already exists.
+			if ( !File.Exists( configFilePath ) )
+			{
+				if ( !File.Exists( bootStrapFilePath ) )
 				{
-					File.Copy(bootStrapPath, configFilePath);
+					throw new SimiasException( String.Format( "Cannot locate {0} or {1}", configFilePath, bootStrapFilePath ) );
 				}
-				else
-				{
-					FileStream fs = new FileStream(configFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
-					try
-					{
-						XmlDocument document = new XmlDocument();
-						document.AppendChild(document.CreateElement(RootElementTag));
-						document.Save(fs);
-					}
-					finally
-					{
-						fs.Close();
-					}
-				}
+
+				// Copy the bootstrap file to the configuration file.
+				File.Copy( bootStrapFilePath, configFilePath );
 			}
 
 			// Load the configuration document from the file.
 			configDoc = new XmlDocument();
 			configDoc.Load(configFilePath);
+
+			// Get or set the store path.
+			storePath = fixupPath( Get( storeProvider, storeProviderPath, Path.GetDirectoryName( configFilePath ) ) );
 		}
 		#endregion
 
@@ -145,7 +146,9 @@ namespace Simias
 			lock (typeof(Configuration))
 			{
 				if (instance == null)
-					CreateDefaultConfig(null);
+				{
+					instance = new Configuration();
+				}
 
 				return instance;
 			}
@@ -156,41 +159,10 @@ namespace Simias
 		/// </summary>
 		/// <param name="path">Path to where the data store is.</param>
 		/// <returns>A reference to the configuration object.</returns>
+		[ Obsolete( "This method is obsolete. Use GetConfiguration() instead.", false ) ]
 		static public Configuration CreateDefaultConfig(string path)
 		{
-			lock (typeof(Configuration))
-			{
-				if (instance != null)
-				{
-					throw(new SimiasException("Configuration already exists."));
-				}
-
-				instance = new Configuration(path);
-				return instance;
-			}
-		}
-
-		/// <summary>
-		/// Get the boot strap version of the configuration file.
-		/// </summary>
-		/// <returns>A Configuration Object</returns>
-		public static Configuration GetBootStrapConfig()
-		{
-			return new Configuration(SimiasSetup.sysconfdir, false);
-		}
-
-		/// <summary>
-		/// Releases the instance of the configuration object for this process.
-		/// </summary>
-		static public void DisposeDefaultConfig()
-		{
-			lock (typeof(Configuration))
-			{
-				if (instance != null)
-				{
-					instance = null;
-				}
-			}
+			return GetConfiguration();
 		}
 		#endregion
 
@@ -250,7 +222,7 @@ namespace Simias
 
 		private void UpdateConfigFile()
 		{
-			XmlTextWriter xtw = new XmlTextWriter(ConfigFilePath, Encoding.ASCII);
+			XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.ASCII);
 			try
 			{
 				xtw.Formatting = Formatting.Indented;
@@ -309,7 +281,7 @@ namespace Simias
 					UpdateConfigFile();
 				}
 
-				return element;
+				return element.Clone() as XmlElement;
 			}
 		}
 

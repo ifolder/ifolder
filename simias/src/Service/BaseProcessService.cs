@@ -56,8 +56,6 @@ namespace Simias.Service
 				throw new ApplicationException("Invalid Service Arguments");
 			}
 			
-			Configuration.CreateDefaultConfig(confPath);
-			
             // configure logging
             SimiasLogManager.Configure(GetConfiguration());
 		}

@@ -17,42 +17,32 @@
  *  License along with this program; if not, write to the Free
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Author: Rob
+ *  Author: Russ Young
  *
  ***********************************************************************/
-
 using System;
+using System.Collections;
+using System.Security.Cryptography;
 
-namespace Simias.Domain
+namespace Simias.Sync
 {
 	/// <summary>
-	/// Simias Domain Service Interface
+	/// Class to compute a strong Hash for a block of data.
 	/// </summary>
-	public interface IDomainService
+	public class StrongHash
 	{
+		MD5		md5 = new MD5CryptoServiceProvider();
+			
 		/// <summary>
-		/// Get the domain information.
+		/// Computes an MD5 hash of the data block passed in.
 		/// </summary>
-		/// <returns></returns>
-		DomainInfo GetDomainInfo();
-
-		/// <summary>
-		/// Provision the user.
-		/// </summary>
-		/// <param name="user"></param>
-		/// <param name="password"></param>
-		/// <returns></returns>
-		ProvisionInfo ProvisionUser(string user, string password);
-
-		/// <summary>
-		/// Create the master on the server.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="name"></param>
-		/// <param name="rootID"></param>
-		/// <param name="rootName"></param>
-		/// <param name="user"></param>
-		/// <returns></returns>
-		string CreateMaster(string id, string name, string rootID, string rootName, string user);
+		/// <param name="buffer">The data to hash.</param>
+		/// <param name="offset">The offset in the byte array to start hashing.</param>
+		/// <param name="count">The number of bytes to include in the hash.</param>
+		/// <returns>The hash code.</returns>
+		public byte[] ComputeHash(byte[] buffer, int offset, int count)
+		{
+			return md5.ComputeHash(buffer, offset, count);
+		}
 	}
 }

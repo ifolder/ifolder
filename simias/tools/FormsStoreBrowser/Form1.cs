@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
+using System.Xml;
 
 
 namespace StoreBrowser
@@ -37,7 +38,7 @@ namespace StoreBrowser
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
-		string hostName = "localhost:8086";
+		string hostName;
 		IStoreBrowser browser = null;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
@@ -65,6 +66,9 @@ namespace StoreBrowser
 		private System.Windows.Forms.MenuItem pcmDelete;
 		private System.Windows.Forms.MenuItem pcmNew;
 		private System.Windows.Forms.MenuItem pcmEdit;
+		private System.Windows.Forms.MenuItem menuItem2;
+		private System.Windows.Forms.MenuItem MI_RecentS;
+		private System.Windows.Forms.MenuItem MI_RecentP;
 		private System.ComponentModel.IContainer components;
 
 		public Form1()
@@ -73,6 +77,24 @@ namespace StoreBrowser
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			this.hostName = GetHostName();
+			if ( this.hostName == null )
+			{
+				HostDialog hDiag = new HostDialog(this.hostName);
+				if (hDiag.ShowDialog() == DialogResult.OK)
+				{
+					hostName = hDiag.HostName;
+				}
+				else
+				{
+					this.hostName = String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
+				}
+			}
+
+			AddRecentMI();
+
+			this.Text = "Store Browser : " + hostName;
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
 			tView.Dock = DockStyle.Fill;
@@ -130,6 +152,9 @@ namespace StoreBrowser
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
 			this.CmNew = new System.Windows.Forms.MenuItem();
+			this.menuItem2 = new System.Windows.Forms.MenuItem();
+			this.MI_RecentS = new System.Windows.Forms.MenuItem();
+			this.MI_RecentP = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -148,7 +173,10 @@ namespace StoreBrowser
 																					  this.menuItem4,
 																					  this.menuItem8,
 																					  this.menuItem5,
-																					  this.menuItem6});
+																					  this.menuItem6,
+																					  this.menuItem2,
+																					  this.MI_RecentS,
+																					  this.MI_RecentP});
 			this.menuItem1.Text = "File";
 			// 
 			// MI_OpenStore
@@ -317,6 +345,21 @@ namespace StoreBrowser
 			this.CmNew.Text = "New";
 			this.CmNew.Click += new System.EventHandler(this.CmNew_Click);
 			// 
+			// menuItem2
+			// 
+			this.menuItem2.Index = 8;
+			this.menuItem2.Text = "-";
+			// 
+			// MI_RecentS
+			// 
+			this.MI_RecentS.Index = 9;
+			this.MI_RecentS.Text = "Recent Store";
+			// 
+			// MI_RecentP
+			// 
+			this.MI_RecentP.Index = 10;
+			this.MI_RecentP.Text = "Recent Provider";
+			// 
 			// Form1
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -327,7 +370,7 @@ namespace StoreBrowser
 			this.Controls.Add(this.tView);
 			this.Menu = this.mainMenu1;
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Text = "Store Browser";
 			this.ResumeLayout(false);
 
 		}
@@ -342,19 +385,58 @@ namespace StoreBrowser
 			Application.Run(new Form1());
 		}
 
+		private void On_RecentS_Click(object sender, System.EventArgs e)
+		{
+			hostName = ((MenuItem)sender).Text;
+			OpenStore();
+		}
+
+		private void OpenStore()
+		{
+			this.Text = "Store Browser : " + hostName;
+			browser = new NodeBrowser(tView, listView1, hostName);
+			browser.Show();
+		}
+
+		private void On_RecentP_Click(object sender, System.EventArgs e)
+		{
+			hostName = ((MenuItem)sender).Text;
+			OpenProvider();
+		}
+
+		private void OpenProvider()
+		{
+			this.Text = "Provider Browser : " + hostName;
+			browser = new ProviderBrowser(tView, richTextBox1, hostName);
+			browser.Show();
+		}
+
+		private void AddRecentMI()
+		{
+			bool found = false;
+			foreach (MenuItem item in MI_RecentS.MenuItems)
+			{
+				if (item.Text == hostName)
+					found = true;
+			}
+			if (!found)
+			{
+				MI_RecentS.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentS_Click)));
+				MI_RecentP.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentP_Click)));
+			}
+		}
+
 		private void MI_Open_Store_Click(object sender, System.EventArgs e)
 		{
 			tView.Nodes.Clear();
 			richTextBox1.Clear();
 
-			HostDialog hDiag = new HostDialog();
-			hDiag.HostName = hostName;
-
+			HostDialog hDiag = new HostDialog(hostName);
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
-				browser = new NodeBrowser(tView, listView1, hostName);
-				browser.Show();
+				AddRecentMI();
+				OpenStore();
 			}
 		}
 
@@ -364,14 +446,12 @@ namespace StoreBrowser
 			richTextBox1.Clear();
 			richTextBox1.BringToFront();
 
-			HostDialog hDiag = new HostDialog();
-			hDiag.HostName = hostName;
-
+			HostDialog hDiag = new HostDialog(hostName);
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
-				browser = new ProviderBrowser(tView, richTextBox1, hostName);
-				browser.Show();
+				AddRecentMI();
+				OpenProvider();
 			}
 		}
 
@@ -583,6 +663,63 @@ namespace StoreBrowser
 				}
 			}
 		}
+
+		private string GetHostName()
+		{
+			string hostName = null;
+			string configFilePath = Path.Combine( DefaultPath, "Simias.config" );
+
+			if ( File.Exists( configFilePath ) )
+			{
+				XmlDocument configDoc = new XmlDocument();
+				configDoc.Load( configFilePath );
+
+				foreach ( XmlElement e1 in configDoc.DocumentElement )
+				{
+					if ( e1.GetAttribute( "name" ) == "ServiceManager" )
+					{
+						foreach ( XmlElement e2 in e1 )
+						{
+							if ( e2.GetAttribute( "name" ) == "WebServiceUri" )
+							{
+								hostName = e2.GetAttribute( "value" );
+								break;
+							}
+						}
+
+						break;
+					}
+				}
+			}
+
+			return hostName;
+		}
+
+		private string DefaultPath
+		{
+			get
+			{
+				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+				if ((path == null) || (path.Length == 0))
+				{
+					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				}
+
+				return fixupPath(path);
+			}
+		}
+
+		private string fixupPath(string path)
+		{
+			if ((path.EndsWith("simias") == false) &&
+				(path.EndsWith("simias/") == false) &&
+				(path.EndsWith(@"simias\") == false))
+			{
+				path = Path.Combine(path, "simias");
+			}
+
+			return path;
+		}
 	}
 
 	public interface IStoreBrowser : IDisposable
@@ -590,6 +727,6 @@ namespace StoreBrowser
 		void Show();
 		void ShowNode(TreeNode node);
 		void AddChildren(TreeNode tNode);
-		Browser StoreBrowser { get; }
+		BrowserService StoreBrowser { get; }
 	}
 }

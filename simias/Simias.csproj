@@ -80,11 +80,6 @@
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "System.Runtime.Remoting"
-                    AssemblyName = "System.Runtime.Remoting"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
-                />
-                <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
                     HintPath = "external\log4net\bin\net\1.1\release\log4net.dll"
@@ -98,6 +93,21 @@
                     Name = "mDnsResponderApi"
                     AssemblyName = "mDnsResponderApi"
                     HintPath = "external\mDnsResponder\net\bin\mDnsResponderApi.dll"
+                />
+                <Reference
+                    Name = "System.Web.Services"
+                    AssemblyName = "System.Web.Services"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
+                />
+                <Reference
+                    Name = "System.Web"
+                    AssemblyName = "System.Web"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                />
+                <Reference
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
             </References>
         </Build>
@@ -284,11 +294,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\SimiasRemoting.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\Common\SimiasSetup.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -299,18 +304,8 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Domain\DomainInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Domain\IDomainService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Domain\ProvisionInfo.cs"
-                    SubType = "Code"
+                    RelPath = "src\Domain\DomainService.cs"
+                    SubType = "code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -764,37 +759,52 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\ClientFile.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\Conflict.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\Differ.cs"
+                    RelPath = "src\Sync\FileMonitor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\Dredge.cs"
+                    RelPath = "src\Sync\SimiasSyncService.cs"
+                    SubType = "code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\StrongHash.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\FileSyncEventArgs.cs"
+                    RelPath = "src\Sync\StrongWeakHashtable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\IncomingNode.cs"
+                    RelPath = "src\Sync\SyncClient.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\OutgoingNode.cs"
+                    RelPath = "src\Sync\SyncCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\SyncCmd.cs"
+                    RelPath = "src\Sync\SyncCollectionRoles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncFile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -804,97 +814,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\SyncOps.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SyncSize.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SyncUtil.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SynkerServiceA.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SynkerWorkerA.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollectionInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollectionRoles.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollectionService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncCollectionWorker.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncLogicFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncStoreInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncCommon\SyncStoreService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\SyncCollectionManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\SyncManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\SyncManagerService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\SyncMessages.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\SyncPing.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\SyncManager\SyncStoreManager.cs"
+                    RelPath = "src\Sync\WeakHash.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

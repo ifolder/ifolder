@@ -22,16 +22,16 @@ using System.Web.Services;
 /// <remarks/>
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Web.Services.WebServiceBindingAttribute(Name="BrowserSoap", Namespace="http://tempuri.org/")]
-public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
+[System.Web.Services.WebServiceBindingAttribute(Name="Browser ServiceSoap", Namespace="http://novell.com/simias/browser")]
+public class BrowserService : System.Web.Services.Protocols.SoapHttpClientProtocol {
     
     /// <remarks/>
-    public Browser() {
-        this.Url = "http://localhost:8086/SimiasBrowser.asmx";
+    public BrowserService() {
+        this.Url = "http://127.0.0.1:2602/simias10/mlasky/SimiasBrowser.asmx";
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/EnumerateCollections", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/EnumerateCollections", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public BrowserNode[] EnumerateCollections() {
         object[] results = this.Invoke("EnumerateCollections", new object[0]);
         return ((BrowserNode[])(results[0]));
@@ -49,7 +49,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/EnumerateNodes", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/EnumerateNodes", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public BrowserNode[] EnumerateNodes(string collectionID) {
         object[] results = this.Invoke("EnumerateNodes", new object[] {
                     collectionID});
@@ -69,7 +69,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetCollectionByID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/GetCollectionByID", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public BrowserNode GetCollectionByID(string collectionID) {
         object[] results = this.Invoke("GetCollectionByID", new object[] {
                     collectionID});
@@ -89,7 +89,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetNodeByID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/GetNodeByID", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public BrowserNode GetNodeByID(string collectionID, string nodeID) {
         object[] results = this.Invoke("GetNodeByID", new object[] {
                     collectionID,
@@ -111,7 +111,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/ModifyProperty", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/ModifyProperty", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public void ModifyProperty(string collectionID, string nodeID, string propertyName, string propertyType, string oldPropertyValue, string newPropertyValue, System.UInt32 propertyFlags) {
         this.Invoke("ModifyProperty", new object[] {
                     collectionID,
@@ -141,7 +141,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/AddProperty", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/AddProperty", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public void AddProperty(string collectionID, string nodeID, string propertyName, string propertyType, string propertyValue, System.UInt32 propertyFlags) {
         this.Invoke("AddProperty", new object[] {
                     collectionID,
@@ -169,7 +169,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/DeleteProperty", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/DeleteProperty", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public void DeleteProperty(string collectionID, string nodeID, string propertyName, string propertyType, string propertyValue) {
         this.Invoke("DeleteProperty", new object[] {
                     collectionID,
@@ -195,7 +195,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/DeleteCollection", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/DeleteCollection", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public void DeleteCollection(string collectionID) {
         this.Invoke("DeleteCollection", new object[] {
                     collectionID});
@@ -213,7 +213,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
     }
     
     /// <remarks/>
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/DeleteNode", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/browser/DeleteNode", RequestNamespace="http://novell.com/simias/browser", ResponseNamespace="http://novell.com/simias/browser", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public void DeleteNode(string collectionID, string nodeID) {
         this.Invoke("DeleteNode", new object[] {
                     collectionID,
@@ -234,7 +234,7 @@ public class Browser : System.Web.Services.Protocols.SoapHttpClientProtocol {
 }
 
 /// <remarks/>
-[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/browser")]
 public class BrowserNode {
     
     /// <remarks/>

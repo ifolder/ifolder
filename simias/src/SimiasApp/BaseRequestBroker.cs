@@ -15,28 +15,22 @@ namespace Mono.ASPNET
 {
 	public class BaseRequestBroker: MarshalByRefObject, IRequestBroker
 	{
-		ArrayList requests = new ArrayList ();
-		Queue freeSlots = new Queue ();
+		Hashtable requests = new Hashtable ();
 		
 		internal int RegisterRequest (IWorker worker)
 		{
-			lock (requests)
-			{
-				if (freeSlots.Count == 0)
-					return requests.Add (worker);
-				
-				int freeSlot = (int)freeSlots.Dequeue ();
-				requests [freeSlot] = worker;
-				return freeSlot;
+			int result = worker.GetHashCode ();
+			lock (requests) {
+				requests [result] = worker;
 			}
+
+			return result;
 		}
 		
 		internal void UnregisterRequest (int id)
 		{
-			lock (requests)
-			{
-				requests [id] = null;
-				freeSlots.Enqueue (id);
+			lock (requests) {
+				requests.Remove (id);
 			}
 		}
 		
@@ -47,7 +41,11 @@ namespace Mono.ASPNET
 			lock (requests) {
 				w = (IWorker) requests [requestId];
 			}
-			int nread = w.Read (buffer, 0, size);
+
+			int nread = 0;
+			if (w != null)
+				nread = w.Read (buffer, 0, size);
+
 			return nread;
 		}
 		
@@ -60,17 +58,23 @@ namespace Mono.ASPNET
 		
 		public void Write (int requestId, byte[] buffer, int position, int size)
 		{
-			GetWorker (requestId).Write (buffer, position, size);
+			IWorker worker = GetWorker (requestId);
+			if (worker != null)
+				worker.Write (buffer, position, size);
 		}
 		
 		public void Close (int requestId)
 		{
-			GetWorker (requestId).Close ();
+			IWorker worker = GetWorker (requestId);
+			if (worker != null)
+				worker.Close ();
 		}
 		
 		public void Flush (int requestId)
 		{
-			GetWorker (requestId).Flush ();
+			IWorker worker = GetWorker (requestId);
+			if (worker != null)
+				worker.Flush ();
 		}
 
 		public override object InitializeLifetimeService ()
@@ -79,3 +83,4 @@ namespace Mono.ASPNET
 		}
 	}
 }
+

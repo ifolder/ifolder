@@ -417,6 +417,7 @@ src/mDnsService/Makefile
 src/WebService/Makefile
 src/POBoxWS/Makefile
 src/SubscribeWS/Makefile
+src/SyncService/Makefile
 test/Makefile
 test/ChangeLog/Makefile
 test/Common/Makefile

@@ -28,6 +28,8 @@ using System.Collections;
 using System.Xml;
 using System.Threading;
 using System.Reflection;
+using System.Net;
+using System.Net.Sockets;
 using Simias;
 using Simias.Event;
 
@@ -45,23 +47,32 @@ namespace Simias.Service
 		/// </summary>
 		static public ISimiasLog logger = Simias.SimiasLogManager.GetLogger(typeof(Manager));
 
-		Thread startThread = null;
-		Thread stopThread = null;
-		private Configuration conf;
-		XmlElement servicesElement;
-		ArrayList serviceList = new ArrayList();
-		// Mutex serviceMutex = null;
-		const string CFG_Section = "ServiceManager";
-		const string CFG_Services = "Services";
-		const string XmlServiceTag = "Service";
-		internal static string XmlTypeAttr = "type";
-		internal static string XmlAssemblyAttr = "assembly";
-		internal static string XmlEnabledAttr = "enabled";
-		internal static string XmlNameAttr = "name";
-		internal static string MutexBaseName = "ServiceManagerMutex___";
-		ManualResetEvent servicesStarted = new ManualResetEvent(false);
-		ManualResetEvent servicesStopped = new ManualResetEvent(true);
-		DefaultSubscriber	subscriber = null;
+		static private Configuration conf;
+		static private Process webProcess = null;
+		static private EventHandler appDomainUnloadEvent;
+
+		static internal string XmlTypeAttr = "type";
+		static internal string XmlAssemblyAttr = "assembly";
+		static internal string XmlEnabledAttr = "enabled";
+		static internal string XmlNameAttr = "name";
+		static internal string MutexBaseName = "ServiceManagerMutex___";
+
+		private Thread startThread = null;
+		private Thread stopThread = null;
+		private XmlElement servicesElement;
+		private ArrayList serviceList = new ArrayList();
+
+		private const string CFG_Section = "ServiceManager";
+		private const string CFG_Services = "Services";
+		private const string CFG_WebServicePath = "WebServicePath";
+		private const string CFG_ShowOutput = "WebServiceOutput";
+		private const string CFG_WebServiceUri = "WebServiceUri";
+		private const string CFG_WebServicePort = "WebServicePort";
+		private const string XmlServiceTag = "Service";
+
+		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
+		private ManualResetEvent servicesStopped = new ManualResetEvent(true);
+		private DefaultSubscriber	subscriber = null;
 
 		#region Events
 		/// <summary>
@@ -78,12 +89,11 @@ namespace Simias.Service
 		/// <summary>
 		/// Creates a Manager for the specified Configuration.
 		/// </summary>
-		/// <param name="conf">The Configuration location to manage.</param>
-		public Manager(Configuration conf)
+		/// <param name="config">The Configuration location to manage.</param>
+		public Manager(Configuration config)
 		{
 			// configure
-			SimiasLogManager.Configure(conf);
-			SimiasRemoting.Configure(conf);
+			SimiasLogManager.Configure(config);
 
 			// Get an event subscriber to handle shutdown events.
 			subscriber = new DefaultSubscriber();
@@ -91,38 +101,27 @@ namespace Simias.Service
 
 			lock (this)
 			{
-				// string mutexName = MutexBaseName + conf.StorePath.GetHashCode().ToString();
-				// Mutex mutex = new Mutex(false, mutexName);
-				// if (serviceMutex != null || mutex.WaitOne(200, false))
+				conf = config;
+
+				// Get the XmlElement for the Services.
+				servicesElement = config.GetElement(CFG_Section, CFG_Services);
+
+				XmlNodeList serviceNodes = servicesElement.SelectNodes(XmlServiceTag);
+				foreach (XmlElement serviceNode in serviceNodes)
 				{
-					// serviceMutex = mutex;
-					this.conf = conf;
-
-					// Get the XmlElement for the Services.
-					servicesElement = conf.GetElement(CFG_Section, CFG_Services);
-
-					XmlNodeList serviceNodes = servicesElement.SelectNodes(XmlServiceTag);
-					foreach (XmlElement serviceNode in serviceNodes)
+					ServiceType sType = (ServiceType)Enum.Parse(typeof(ServiceType), serviceNode.GetAttribute(XmlTypeAttr));
+					switch (sType)
 					{
-						ServiceType sType = (ServiceType)Enum.Parse(typeof(ServiceType), serviceNode.GetAttribute(XmlTypeAttr));
-						switch (sType)
-						{
-							case ServiceType.Process:
-								serviceList.Add(new ProcessServiceCtl(conf, serviceNode));
-								break;
-							case ServiceType.Thread:
-								serviceList.Add(new ThreadServiceCtl(conf, serviceNode));
-								break;
-						}
+						case ServiceType.Process:
+							serviceList.Add(new ProcessServiceCtl(config, serviceNode));
+							break;
+						case ServiceType.Thread:
+							serviceList.Add(new ThreadServiceCtl(config, serviceNode));
+							break;
 					}
-					installDefaultServices();
 				}
-				// else
-				// {
-				//	mutex.Close();
-				//	serviceList.Clear();
-				//	throw new ApplicationException("Services Already running");
-				//}
+
+				installDefaultServices();
 
 				// Start a monitor thread to keep the services running.
 				Thread mThread = new Thread(new ThreadStart(Monitor));
@@ -244,14 +243,6 @@ namespace Simias.Service
 		/// </summary>
 		private void installDefaultServices()
 		{
-			InternalUninstall("Simias Dredge Service");
-			Install(new ThreadServiceCtl(conf, "Simias Change Log Service", "Simias", "Simias.Storage.ChangeLog"), 1);
-			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "mDnsService.exe"), 2);
-			Install(new ThreadServiceCtl(conf, "Simias Interprocess Event Service", "Simias", "Simias.Event.IProcEventServer"), 3);
-			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"), 4);
-			Install(new ThreadServiceCtl(conf, "Simias PO Service", "Simias", "Simias.POBox.POService"), 5);
-			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 6);
-//			Install(new ThreadServiceCtl(conf, "Simias Asp Service", "SimiasAspService", "Simias.Web.SimiasAspService"), 7);
 		}
 
 		/// <summary>
@@ -366,6 +357,60 @@ namespace Simias.Service
 		#endregion
 
 		#region Control Methods.
+		/// <summary>
+		/// 
+		/// </summary>
+		static public void Start()
+		{
+			lock ( typeof( Manager ) )
+			{
+				// Make sure the process is not already started.
+				if ( webProcess == null )
+				{
+					// Set up the process info to start the XSP process.
+					webProcess = new Process();
+					appDomainUnloadEvent = new EventHandler( XspProcessExited );
+					webProcess.Exited += appDomainUnloadEvent;
+
+					// Get the web service path from the configuration file.
+					Configuration config = ( conf != null ) ? conf : Configuration.GetConfiguration();
+					string webPath = config.Get( CFG_Section, CFG_WebServicePath, Directory.GetCurrentDirectory() );
+					string webApp = Path.Combine( webPath, String.Format( "bin{0}SimiasApp.exe", Path.DirectorySeparatorChar ) );
+
+					webProcess.StartInfo.FileName = webApp;
+					webProcess.StartInfo.UseShellExecute = false;
+					webProcess.StartInfo.RedirectStandardInput = true;
+					webProcess.StartInfo.CreateNoWindow = ( String.Compare( config.Get( CFG_Section, CFG_ShowOutput, false.ToString() ), "True", true ) == 0 ) ? false : true;
+					webProcess.EnableRaisingEvents = true;
+
+					if ( !Path.IsPathRooted( webPath ) )
+					{
+						throw new SimiasException( String.Format( "Web service path must be absolute: {0}", webPath ) );
+					}
+
+					// See if there is already a uri specified in the configuration file.
+					Uri uri = null;
+					if ( config.Exists( CFG_Section, CFG_WebServiceUri ) )
+					{
+						uri = new Uri( config.Get( CFG_Section, CFG_WebServiceUri, null ) );
+					}
+					else
+					{
+						// Get the dynamic port that xsp should use and write it out to the config file.
+						string virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
+						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort( config ), virtualRoot ).ToString() );
+						config.Set( CFG_Section, CFG_WebServiceUri, uri.ToString() );
+					}
+
+					// Strip off the volume if it exists and the file name and make the path absolute from the root.
+					string appPath = String.Format( "{0}{1}", Path.DirectorySeparatorChar, webPath.Remove( 0, Path.GetPathRoot( webPath ).Length ) );
+					webProcess.StartInfo.Arguments = String.Format( "--applications {0}:{1} --port {2}", uri.PathAndQuery, appPath, uri.Port.ToString() );
+					webProcess.Start();
+
+					logger.Info( "SimiasApp process has been started." );
+				}
+			}
+		}
 
 		/// <summary>
 		/// Start the installed services.
@@ -393,6 +438,27 @@ namespace Simias.Service
 			servicesStarted.Set();
 			logger.Info("Services started.");
 			startThread = null;
+		}
+
+		/// <summary>
+		/// Shuts down the XSP process.
+		/// </summary>
+		static public void Stop()
+		{
+			lock ( typeof( Manager ) )
+			{
+				if ( webProcess != null )
+				{
+					// Remove the exit event handler before shutting down the process.
+					webProcess.Exited -= appDomainUnloadEvent;
+
+					// Tell XSP to terminate and wait for it to exit.
+					webProcess.StandardInput.WriteLine( "" );
+					webProcess.WaitForExit();
+					webProcess = null;
+					logger.Info( "SimiasApp Process has been stopped." );
+				}
+			}
 		}
 	
 		/// <summary>
@@ -456,6 +522,47 @@ namespace Simias.Service
 			}
 		}
 
+		/// <summary>
+		/// Callback that gets notified when the XSP process terminates.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		static private void XspProcessExited(object sender, EventArgs e)
+		{
+			lock( typeof( Manager ) )
+			{
+				if ( webProcess != null )
+				{
+					logger.Info( "XSP process has exited. Restarting..." );
+					webProcess = null;
+					Start();
+				}
+			}
+		}
+
+		static private int GetXspPort( Configuration config )
+		{
+			// See if there is a port already configured to be used.
+			string portString = config.Get( CFG_Section, CFG_WebServicePort, null );
+			if ( portString != null )
+			{
+				return Convert.ToInt32( portString );
+			}
+			else
+			{
+				Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+				try
+				{
+					s.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
+					return ( s.LocalEndPoint as IPEndPoint ).Port;
+				}
+				finally
+				{
+					s.Close();
+				}
+			}
+		}
+
 		#endregion
 
 		#region Properties
@@ -484,6 +591,19 @@ namespace Simias.Service
 			get { return servicesStopped.WaitOne(0, false); }
 		}
 
+		/// <summary>
+		/// Gets the local service url so that applications can talk to the local webservice.
+		/// </summary>
+		static public Uri LocalServiceUrl
+		{
+			get
+			{
+				// Get the configuration object.
+				Configuration config = ( conf != null ) ? conf : Configuration.GetConfiguration();
+				string uriString = config.Get( CFG_Section, CFG_WebServiceUri, null );
+				return ( uriString != null ) ? new Uri( uriString ) : null;
+			}
+		}
 		#endregion
 
 		#region IEnumerable Members

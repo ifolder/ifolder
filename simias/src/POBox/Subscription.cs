@@ -702,7 +702,8 @@ namespace Simias.POBox
 			
 			// TODO: where should this be set?
 			// TODO: si.POServiceUrl = POServiceURL;
-			si.POServiceUrl = SimiasRemoting.GetServiceUrl("/POBoxService.asmx");
+			SyncCollection sc = new SyncCollection(store.GetCollectionByID(si.SubscriptionCollectionID));
+			si.POServiceUrl = new Uri(sc.MasterUrl.ToString() + "/POBoxService.asmx");
 			
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionCollectionName = SubscriptionCollectionName;

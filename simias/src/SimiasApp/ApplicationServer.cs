@@ -21,6 +21,9 @@ using System.IO;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
+using Simias.Service;
+using Simias.Web;
+
 namespace Mono.ASPNET
 {
 	// ApplicationServer runs the main server thread, which accepts client 
@@ -61,7 +64,7 @@ namespace Mono.ASPNET
 	//    it locates the IWorker registered with the provided request id and
 	//    forwards the call to it.
 	
-	public class ApplicationServer
+	public class ApplicationServer : MarshalByRefObject
 	{
 		IWebSource webSource;
 		bool started;
@@ -139,7 +142,6 @@ namespace Mono.ASPNET
 		{
 			XmlNode n;
 
-			string name = el.SelectSingleNode ("name").InnerText;
 			string vpath = el.SelectSingleNode ("vpath").InnerText;
 			string path = el.SelectSingleNode ("path").InnerText;
 
@@ -150,6 +152,7 @@ namespace Mono.ASPNET
 				vhost = n.InnerText;
 #else
 			// TODO: support vhosts in xsp.exe
+			string name = el.SelectSingleNode ("name").InnerText;
 			if (verbose)
 				Console.WriteLine ("Ignoring vhost {0} for {1}", n.InnerText, name);
 #endif
@@ -232,6 +235,7 @@ namespace Mono.ASPNET
  				
 			listen_socket = webSource.CreateSocket ();
 			listen_socket.Listen (500);
+//			listen_socket.Blocking = false;
 			runner = new Thread (new ThreadStart (RunServer));
 			runner.IsBackground = bgThread;
 			runner.Start ();
@@ -246,19 +250,32 @@ namespace Mono.ASPNET
 				throw new InvalidOperationException ("The server is not started.");
 
 			stop = true;	
+//			runner.Abort ();
 			listen_socket.Close ();
+			UnloadAll ();
+			WebTrace.WriteLine ("Server stopped.");
+			Environment.Exit (0);
+		}
+
+		public void UnloadAll ()
+		{
 			lock (vpathToHost) {
 				foreach (VPathToHost v in vpathToHost) {
-					v.ClearHost ();
+					v.UnloadHost ();
 				}
 			}
-			WebTrace.WriteLine ("Server stopped.");
 		}
 
 		void SetSocketOptions (Socket sock)
 		{
-			sock.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 15000); // 15s
-			sock.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 15000); // 15s
+#if !MOD_MONO_SERVER
+			try {
+				sock.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.SendTimeout, 15000); // 15s
+				sock.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 15000); // 15s
+			} catch {
+				// Ignore exceptions here for systems that do not support these options.
+			}
+#endif
 		}
 
 		ArrayList allSockets = new ArrayList ();
@@ -272,32 +289,63 @@ namespace Mono.ASPNET
 			started = true;
 			Socket client;
 			int w;
-			while (!stop){
+			while (!stop)
+			{
 				w = wSockets.Count;
-				// This is throwing an exception when we shutdown
+
+				// Added by MEL - The desired behavior is to block indefinitely, if only
+				// listening for incoming connections.
 				try
 				{
-					Socket.Select (wSockets, null, null, 1000 * 1000); // 1s
-				}
-				catch(SocketException se)
-				{
-					// CRG
-					// if we are shutting down, don't throw this exception
-					if(stop)
-						return;
+					if ( w == 1 )
+					{
+						// This is to get around the problem of not being able to indefinitely block
+						// on a select in .NET.
+						bool result = listen_socket.Poll( -1, SelectMode.SelectRead );
+						if ( !result )
+						{
+							// Some sort of error has occurred. Clear out the socket so nothing
+							// gets processed and try to re-listen.
+							wSockets.Clear();
+						}
+					}
 					else
-						throw se;
+					{
+						Socket.Select (wSockets, null, null, /*(w == 1) ? -1 :*/ 1000 * 1000); // 1s
+					}
+				}
+				catch ( SocketException ex )
+				{
+					if ( !stop )
+					{
+						throw ex;
+					}
+				}
+
+				// Check here if the thread awoke because the process is stopping.
+				if ( stop )
+				{
+					continue;
 				}
 
 				w = wSockets.Count;
-				for (int i = 0; i < w; i++) {
+				for (int i = 0; i < w; i++) 
+				{
 					Socket s = (Socket) wSockets [i];
-					if (s == listen_socket) {
-						client = s.Accept ();
+					if (s == listen_socket) 
+					{
+						try 
+						{
+							client = s.Accept ();
+						} 
+						catch 
+						{
+							continue;
+						}
 						WebTrace.WriteLine ("Accepted connection.");
 						SetSocketOptions (client);
 						allSockets.Add (client);
-						timeouts [client] = DateTime.Now;
+						timeouts [client] = DateTime.UtcNow;
 						continue;
 					}
 
@@ -308,14 +356,17 @@ namespace Mono.ASPNET
 				}
 
 				w = timeouts.Count;
-				if (w > 0) {
+				if (w > 0) 
+				{
 					Socket [] socks_timeout = new Socket [w];
 					timeouts.Keys.CopyTo (socks_timeout, 0);
-					DateTime now = DateTime.Now;
-					foreach (Socket k in socks_timeout) {
+					DateTime now = DateTime.UtcNow;
+					foreach (Socket k in socks_timeout) 
+					{
 						DateTime atime = (DateTime) timeouts [k];
 						TimeSpan diff = now - atime;
-						if (diff.TotalMilliseconds > 15 * 1000) {
+						if (diff.TotalMilliseconds > 15 * 1000) 
+						{
 							k.Close ();
 							allSockets.Remove (k);
 							timeouts.Remove (k);
@@ -325,10 +376,13 @@ namespace Mono.ASPNET
 				}
 				
 				wSockets.Clear ();
-				if (allSockets.Count == 1) {
+				if (allSockets.Count == 1) 
+				{
 					// shortcut, no foreach
 					wSockets.Add (listen_socket);
-				} else {
+				} 
+				else 
+				{
 					wSockets.AddRange (allSockets);
 				}
 			}
@@ -357,7 +411,7 @@ namespace Mono.ASPNET
 			if (bestMatch != null) {
 				lock (bestMatch) {
 					if (bestMatch.AppHost == null)
-						bestMatch.CreateHost (webSource);
+						bestMatch.CreateHost (this, webSource);
 				}
 				return bestMatch;
 			}
@@ -368,6 +422,21 @@ namespace Mono.ASPNET
 			if (verbose)
 				Console.WriteLine ("No application defined for: {0}:{1}{2}", vhost, port, path);
 
+			return null;
+		}
+
+		public void DestroyHost (IApplicationHost host)
+		{
+			// Called when the host appdomain is being unloaded
+			for (int i = vpathToHost.Count - 1; i >= 0; i--) {
+				VPathToHost v = (VPathToHost) vpathToHost [i];
+				if (v.TryClearHost (host))
+					break;
+			}
+		}
+
+		public override object InitializeLifetimeService ()
+		{
 			return null;
 		}
 	}
@@ -402,9 +471,29 @@ namespace Mono.ASPNET
 			}
 		}
 
-		public void ClearHost ()
+
+		public bool TryClearHost (IApplicationHost host)
 		{
-			this.AppHost = null;
+			if (this.AppHost == host) {
+				this.AppHost = null;
+				return true;
+			}
+
+			return false;
+		}
+
+		public void UnloadHost ()
+		{
+			if (AppHost != null)
+			{
+				// Hack put in to call back into the application domain to allow the web
+				// service be shut down. This can be removed when Application_End gets
+				// called when the application domain unloads.
+				AppHost.Domain.DoCallBack( new CrossAppDomainDelegate( Global.Shutdown ) );
+				AppDomain.Unload (AppHost.Domain);
+			}
+
+			AppHost = null;
 		}
 
 		public bool Redirect (string path, out string redirect)
@@ -461,7 +550,7 @@ namespace Mono.ASPNET
 			return (vpath.StartsWith (this.vpath));
 		}
 
-		public void CreateHost (IWebSource webSource)
+		public void CreateHost (ApplicationServer server, IWebSource webSource)
 		{
 			string v = vpath;
 			if (v != "/" && v.EndsWith ("/")) {
@@ -469,6 +558,7 @@ namespace Mono.ASPNET
 			}
 			
 			AppHost = ApplicationHost.CreateApplicationHost (webSource.GetApplicationHostType(), v, realPath) as IApplicationHost;
+			AppHost.Server = server;
 			
 			// Link the host in the application domain with a request broker in the main domain
 			RequestBroker = webSource.CreateRequestBroker ();

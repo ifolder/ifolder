@@ -424,7 +424,7 @@ namespace Simias.Storage
 		/// <param name="store">Store object.</param>
 		/// <param name="document">Xml document to construct new Node from.</param>
 		/// <returns>Downcasts the derived Node object back to a Node that can then be explicitly casted back up.</returns>
-		static internal Node NodeFactory( Store store, XmlDocument document )
+		static public Node NodeFactory( Store store, XmlDocument document )
 		{
 			XmlElement nodeObject = document.DocumentElement[ XmlTags.ObjectTag ];
 			Node rNode = null;
@@ -495,7 +495,7 @@ namespace Simias.Storage
 		/// Sets the master incarnation values on a Node object.
 		/// </summary>
 		/// <param name="incarnationValue">The master incarnation value to set.</param>
-		internal void SetMasterIncarnation( ulong incarnationValue )
+		public void SetMasterIncarnation( ulong incarnationValue )
 		{
 			properties.State = PropertyList.PropertyListState.Internal;
 			properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, incarnationValue );

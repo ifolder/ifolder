@@ -18,6 +18,8 @@ namespace Mono.ASPNET
 		const int useconds_to_linger = 2000000;
 		const int max_useconds_to_linger = 30000000;
 		bool enableLingering = true;
+		// We dont actually use the data from this buffer. So we cache it...
+		static byte [] buffer;
 
 		public LingeringNetworkStream (Socket sock, bool owns) : base (sock, owns)
 		{
@@ -32,7 +34,6 @@ namespace Mono.ASPNET
 		void LingeringClose ()
 		{
 			int waited = 0;
-			byte [] buffer = null;
 
 			Socket.Shutdown (SocketShutdown.Send);
 			while (waited < max_useconds_to_linger) {

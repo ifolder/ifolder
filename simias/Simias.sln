@@ -27,6 +27,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeWS", "src\Subscrib
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "src\SyncService\SyncService.csproj", "{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimiasWebService", "src\WebService\SimiasWebService.csproj", "{BEB45326-E6BE-45F1-B7AF-8A404656C684}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -61,6 +69,14 @@ Global
 		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Debug.Build.0 = Debug|.NET
 		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Release.ActiveCfg = Release|.NET
 		{921E6CCE-5DD8-4B20-B927-35B8077B9825}.Release.Build.0 = Release|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.ActiveCfg = Debug|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Debug.Build.0 = Debug|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.ActiveCfg = Release|.NET
+		{4C2C177D-6D5C-46F1-9345-7BE58F1422B1}.Release.Build.0 = Release|.NET
+		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Debug.ActiveCfg = Debug|.NET
+		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Debug.Build.0 = Debug|.NET
+		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Release.ActiveCfg = Release|.NET
+		{BEB45326-E6BE-45F1-B7AF-8A404656C684}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
