@@ -80,7 +80,11 @@ namespace Novell.iFolder.Web
 			// I don't know how to do this but I know we'll need it
 			UseProxy = false;
 
-			CurrentUserID = store.GetRoster(DefaultDomainID).GetCurrentMember().UserID;
+			Member currentMember = store.GetRoster(DefaultDomainID).GetCurrentMember();
+			if (currentMember != null)
+			{
+				CurrentUserID = currentMember.UserID;
+			}
 		}
 
 		public static void SetDisplayConfirmation(bool displayConfirmation)
