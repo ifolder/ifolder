@@ -92,6 +92,7 @@
           <xs:element minOccurs="1" maxOccurs="1" name="Host" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="UserID" type="xs:string" />
           <xs:element minOccurs="1" maxOccurs="1" name="UserName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsDefault" type="xs:boolean" />
         </xs:sequence>
       </xs:complexType>
       <xs:complexType name="ArrayOfDomainWeb">
@@ -221,6 +222,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsDefault" type="xs:boolean" />
         </xs:sequence>
       </xs:complexType>
       <xs:element name="DomainWeb" type="s0:DomainWeb" />
@@ -374,6 +376,13 @@
   </message>
   <message name="GetiFolderUserSoapOut">
     <part name="GetiFolderUserResult" xmlns:q13="http://novell.com/ifolder/web/encodedTypes" type="q13:iFolderUser" />
+  </message>
+  <message name="GetDomainiFolderUserSoapIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="GetDomainiFolderUserSoapOut">
+    <part name="GetDomainiFolderUserResult" xmlns:q13="http://novell.com/ifolder/web/encodedTypes" type="q13:iFolderUser" />
   </message>
   <message name="GetiFolderUserFromNodeIDSoapIn">
     <part name="CollectionID" type="s:string" />
@@ -606,6 +615,13 @@
     <part name="UserID" type="s:string" />
   </message>
   <message name="GetiFolderUserHttpGetOut">
+    <part name="Body" element="s0:iFolderUser" />
+  </message>
+  <message name="GetDomainiFolderUserHttpGetIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="GetDomainiFolderUserHttpGetOut">
     <part name="Body" element="s0:iFolderUser" />
   </message>
   <message name="GetiFolderUserFromNodeIDHttpGetIn">
@@ -841,6 +857,13 @@
   <message name="GetiFolderUserHttpPostOut">
     <part name="Body" element="s0:iFolderUser" />
   </message>
+  <message name="GetDomainiFolderUserHttpPostIn">
+    <part name="DomainID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="GetDomainiFolderUserHttpPostOut">
+    <part name="Body" element="s0:iFolderUser" />
+  </message>
   <message name="GetiFolderUserFromNodeIDHttpPostIn">
     <part name="CollectionID" type="s:string" />
     <part name="NodeID" type="s:string" />
@@ -1068,6 +1091,11 @@
       <output message="s0:GetiFolderUserSoapOut" />
       <documentation>Lookup a single member to a collection</documentation>
     </operation>
+    <operation name="GetDomainiFolderUser">
+      <input message="s0:GetDomainiFolderUserSoapIn" />
+      <output message="s0:GetDomainiFolderUserSoapOut" />
+      <documentation>Lookup a single member to a collection</documentation>
+    </operation>
     <operation name="GetiFolderUserFromNodeID">
       <input message="s0:GetiFolderUserFromNodeIDSoapIn" />
       <output message="s0:GetiFolderUserFromNodeIDSoapOut" />
@@ -1285,6 +1313,11 @@
       <output message="s0:GetiFolderUserHttpGetOut" />
       <documentation>Lookup a single member to a collection</documentation>
     </operation>
+    <operation name="GetDomainiFolderUser">
+      <input message="s0:GetDomainiFolderUserHttpGetIn" />
+      <output message="s0:GetDomainiFolderUserHttpGetOut" />
+      <documentation>Lookup a single member to a collection</documentation>
+    </operation>
     <operation name="GetiFolderUserFromNodeID">
       <input message="s0:GetiFolderUserFromNodeIDHttpGetIn" />
       <output message="s0:GetiFolderUserFromNodeIDHttpGetOut" />
@@ -1500,6 +1533,11 @@
     <operation name="GetiFolderUser">
       <input message="s0:GetiFolderUserHttpPostIn" />
       <output message="s0:GetiFolderUserHttpPostOut" />
+      <documentation>Lookup a single member to a collection</documentation>
+    </operation>
+    <operation name="GetDomainiFolderUser">
+      <input message="s0:GetDomainiFolderUserHttpPostIn" />
+      <output message="s0:GetDomainiFolderUserHttpPostOut" />
       <documentation>Lookup a single member to a collection</documentation>
     </operation>
     <operation name="GetiFolderUserFromNodeID">
@@ -1801,6 +1839,15 @@
     </operation>
     <operation name="GetiFolderUser">
       <soap:operation soapAction="http://novell.com/ifolder/web/GetiFolderUser" style="rpc" />
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
+      </output>
+    </operation>
+    <operation name="GetDomainiFolderUser">
+      <soap:operation soapAction="http://novell.com/ifolder/web/GetDomainiFolderUser" style="rpc" />
       <input>
         <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://novell.com/ifolder/web/" use="encoded" />
       </input>
@@ -2186,6 +2233,15 @@
         <mime:mimeXml part="Body" />
       </output>
     </operation>
+    <operation name="GetDomainiFolderUser">
+      <http:operation location="/GetDomainiFolderUser" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
     <operation name="GetiFolderUserFromNodeID">
       <http:operation location="/GetiFolderUserFromNodeID" />
       <input>
@@ -2537,6 +2593,15 @@
     </operation>
     <operation name="GetiFolderUser">
       <http:operation location="/GetiFolderUser" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="GetDomainiFolderUser">
+      <http:operation location="/GetDomainiFolderUser" />
       <input>
         <mime:content type="application/x-www-form-urlencoded" />
       </input>

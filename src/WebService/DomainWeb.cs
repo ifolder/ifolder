@@ -40,6 +40,7 @@ namespace Novell.iFolder.Web
 		public string Host;
 		public string UserID;
 		public string UserName;
+		public bool IsDefault;
 
 		public DomainWeb()
 		{}
@@ -55,6 +56,7 @@ namespace Novell.iFolder.Web
 			this.Description = domain.Description;
 			this.Host = domain.HostAddress.ToString();
 			this.UserID = store.GetUserIDFromDomainID(domainID);
+			this.IsDefault = domainID.Equals(store.DefaultDomain);
 
 
 			Simias.POBox.POBox poBox = Simias.POBox.POBox.FindPOBox(store, 

@@ -881,6 +881,42 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that gets a member from the default Roster
+		/// </summary>
+		/// <param name = "UserID">
+		/// The ID of the member to be added
+		/// </param>
+		/// <returns>
+		/// Member that matches the UserID
+		/// </returns>
+		[WebMethod(Description="Lookup a single member to a collection")]
+		[SoapRpcMethod]
+		public iFolderUser GetDomainiFolderUser( string DomainID, string UserID )
+		{
+			Store store = Store.GetStore();
+
+			Roster roster = 
+					store.GetDomain(DomainID).GetRoster(store);
+
+			if(roster == null)
+				throw new Exception("Unable to access user roster");
+
+			Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
+			if(simMem == null)
+				throw new Exception("Invalid UserID");
+
+			Novell.AddressBook.Manager abMan = 
+						Novell.AddressBook.Manager.Connect();
+
+			Contact c = abMan.GetContact(simMem.UserID);
+
+			return new iFolderUser(simMem, c);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets a member from the specified collection
 		/// </summary>
 		/// <param name = "CollectionID">
