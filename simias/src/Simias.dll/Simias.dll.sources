@@ -71,6 +71,7 @@ AssemblyInfo.cs
 ../POBox/SubscriptionInfo.cs
 ../POBox/SubscriptionStatus.cs
 ../POBox/SubscriptionThread.cs
+../POBox/POBoxServiceProxy.cs
 ../PresenceService/PresenceService.cs
 ../PresenceService/PublicSubscription.cs
 ../Policy/DiskSpaceQuota.cs
