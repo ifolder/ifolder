@@ -38,18 +38,20 @@ public class iFolderCmd
 
 		if(args.Length != 2)
 		{
-			Console.WriteLine("Usage: iFolderCmd create <iFolderLocalPath>");
+			DisplayUsage();
 			return true;
 		}
 
 		try
 		{
 			iFolderManager manager = iFolderManager.Connect();
-			manager.CreateiFolder(args[1]);
+			iFolder newifolder = manager.CreateiFolder(args[1]);
+			Console.WriteLine("Created ifolder: {0}:{1}:{2}",newifolder.Name, newifolder.LocalPath,newifolder.ID);
 		}
 		catch(Exception e)
 		{
 			Console.WriteLine("Failed to create iFolder: " + args[1]);
+			Console.WriteLine(e);
 		}
 		return true;
 	}
@@ -62,20 +64,19 @@ public class iFolderCmd
 		if(args[0] != "list")
 			return false;
 
+		Console.WriteLine("iFolders:");
 		try
 		{
-			Console.WriteLine(" ");
 			iFolderManager manager = iFolderManager.Connect();
 			foreach(iFolder ifolder in manager)
 			{
-				Console.WriteLine("iFolder Name: {0}", ifolder.Name);
-				Console.WriteLine("iFolder ID  : {0}", ifolder.ID);
-				Console.WriteLine("iFolder Path: {0}", ifolder.LocalPath);
+				Console.WriteLine("{0}:{1}:{2}", ifolder.Name,ifolder.LocalPath,ifolder.ID);
 			}
 		}
 		catch(Exception e)
 		{
 			Console.WriteLine("Unable to list iFolders");
+			Console.WriteLine(e);
 		}
 		return true;
 	}
@@ -90,7 +91,7 @@ public class iFolderCmd
 
 		if(args.Length != 2)
 		{
-			Console.WriteLine("Usage: iFolderCmd delete <iFolderName>");
+			DisplayUsage();
 			return true;
 		}
 
@@ -102,6 +103,7 @@ public class iFolderCmd
 				if(ifolder.Name == args[1])
 				{
 					manager.DeleteiFolderById(ifolder.ID);
+					Console.WriteLine("Deleted iFolder: " + args[1]);
 					return true;
 				}
 			}
@@ -109,7 +111,9 @@ public class iFolderCmd
 		catch(Exception e)
 		{
 			Console.WriteLine("Unable to delete iFolder: " + args[1]);
+			Console.WriteLine(e);
 		}
+
 		Console.WriteLine("iFolder not found: " + args[1]);
 		return true;
 	}
@@ -117,12 +121,55 @@ public class iFolderCmd
 
 
 
+	static bool RevertiFolder(string [] args)
+	{
+		if(args[0] != "revert")
+			return false;
+
+		if(args.Length != 2)
+		{
+			DisplayUsage();
+			return true;
+		}
+
+		try
+		{
+			iFolderManager manager = iFolderManager.Connect();
+			if(manager.IsiFolder(args[1]))
+			{
+				manager.DeleteiFolderByPath(args[1]);
+				Console.WriteLine("Reverted to a normal folder: {0}", args[1]);
+			}
+			else
+			{
+				Console.WriteLine("Not an iFolder: {0}", args[1]);
+			}
+		}
+		catch(Exception e)
+		{
+			Console.WriteLine("Unable to revert iFolder: " + args[1]);
+		}
+		return true;
+	}
+
+
+
+	static void DisplayUsage()
+	{
+		Console.WriteLine("Usage: iFolderCmd <command> [options]");
+		Console.WriteLine("  list                 : Lists all iFolders");
+		Console.WriteLine("  create <path>        : Converts <path> to an iFolder");
+		Console.WriteLine("  delete <name>        : Deletes the iFolder <name>");
+		Console.WriteLine("  revert <path>        : Reverts <path> to a normal folder");
+		return;
+	}
+
+
 	static void Main(string [] args)
 	{
 		if(args.Length < 1)
 		{
-			Console.WriteLine("Usage: iFolderCmd <command> [options]");
-			Console.WriteLine("Available commands: create list delete");
+			DisplayUsage();
 			return;
 		}
 		else
@@ -132,6 +179,8 @@ public class iFolderCmd
 			if(ListiFolders(args) == true)
 				return;
 			if(DeleteiFolder(args) == true)
+				return;
+			if(RevertiFolder(args) == true)
 				return;
 
 			Console.WriteLine("Unknown command: " + args[0]);
