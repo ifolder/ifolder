@@ -15,8 +15,8 @@ doc-clean:
 package package-clean package-install package-uninstall:
 	$(MAKE) -C package $@
 
+install-exec-local:
 if LINUX
-install-exec-local: $(srcdir)/package/linux/simias.pc
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
 	$(INSTALL_PROGRAM) $(srcdir)/package/linux/simias.pc $(DESTDIR)$(libdir)/pkgconfig
 endif
@@ -25,7 +25,9 @@ installcheck-summary:
 	$(MAKE) -C src $@
 	
 uninstall-local:
-	rm -rf $(DESTDIR)$(bindir)/.cstore
+if LINUX
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f simias.pc
+endif # LINUX
 
 clean-local:
 	rm -rf stage *.suo

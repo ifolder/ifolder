@@ -18,8 +18,8 @@ doc-clean: sub-doc-clean
 clean: sub-clean
 	rm -rf stage *.suo
 
+install-exec-local:
 if LINUX
-install-exec-local: $(srcdir)/package/linux/addressbook.pc
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
 	$(INSTALL_PROGRAM) $(srcdir)/package/linux/addressbook.pc $(DESTDIR)$(libdir)/pkgconfig
 endif
@@ -28,7 +28,9 @@ installcheck-summary: sub-installcheck-summary
 	$(MAKE) -C src $@
 
 uninstall-local: sub-uninstall
-	rm -rf $(DESTDIR)$(bindir)/.cstore
+if LINUX	
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f addressbook.pc
+endif
 
 maintainer-clean-local: sub-maintainer-clean
 	rm -f configure Makefile.in addressbook-*.tar.gz config.cache
