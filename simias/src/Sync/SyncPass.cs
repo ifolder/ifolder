@@ -72,32 +72,42 @@ public class SynkerServiceA: SyncCollectionService
 	}
 
 	// TODO: fix identity and credential
-	public void Start()
+	public bool Start()
 	{
-		collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
+		try
+		{
+			collection.LocalStore.ImpersonateUser(Access.SyncOperatorRole, null);
 		
-		Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-		new Dredger(collection, true);
-		Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
-		inNode = new SyncIncomingNode(collection, true);
-		outNode = new SyncOutgoingNode(collection);
-		ops = new SyncOps(collection, true);
+			Log.Spew("dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
+			new Dredger(collection, true);
+			Log.Spew("done dredging server at docRoot '{0}'", collection.DocumentRoot.LocalPath);
+			inNode = new SyncIncomingNode(collection, true);
+			outNode = new SyncOutgoingNode(collection);
+			ops = new SyncOps(collection, true);
 
-		//store.Revert();
-		//store.ImpersonateUser(userId, credential);
+			//store.Revert();
+			//store.ImpersonateUser(userId, credential);
 
-		//TODO: this check should be before updating the collection from the file system
-		if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
-			throw new UnauthorizedAccessException("Current user cannot read this collection");
-
-		Log.Spew("session started");
+			//TODO: this check should be before updating the collection from the file system
+			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
+				return false;
+			Log.Spew("session started");
+			return true;
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return false;
 	}
 
 	public NodeStamp[] GetNodeStamps()
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
-			throw new UnauthorizedAccessException("Current user cannot read this collection");
-		return ops.GetNodeStamps();
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
+				throw new UnauthorizedAccessException("Current user cannot read this collection");
+			return ops.GetNodeStamps();
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return null;
 	}
 
 	public string Version
@@ -105,14 +115,21 @@ public class SynkerServiceA: SyncCollectionService
 		get { return "0.0.0"; }
 	}
 
-	public void DeleteNodes(Nid[] nodes)
+	// TODO: better handle exceptions, return array of failed deletes?
+	public bool DeleteNodes(Nid[] nodes)
 	{
-		Log.Spew("SyncSession.DeleteNodes() Count {0}", nodes.Length);
+		try
+		{
+			Log.Spew("SyncSession.DeleteNodes() Count {0}", nodes.Length);
 
-		if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-			throw new UnauthorizedAccessException("Current user cannot modify this collection");
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 		
-		ops.DeleteNodes(nodes);
+			ops.DeleteNodes(nodes);
+			return true;
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return false;
 	}
 
 	/// <summary>
@@ -120,53 +137,103 @@ public class SynkerServiceA: SyncCollectionService
 	/// </summary>
 	public Nid[] PutSmallNodes(SmallNode[] nodes)
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-			throw new UnauthorizedAccessException("Current user cannot modify this collection");
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-		Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
-		return ops.PutSmallNodes(nodes);
+			Log.Spew("SyncSession.PutSmallNodes() Count {0}", nodes.Length);
+			return ops.PutSmallNodes(nodes);
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return null;
 	}
 
 	public SmallNode[] GetSmallNodes(Nid[] nids)
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
-			throw new UnauthorizedAccessException("Current user cannot read this collection");
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadOnly))
+				throw new UnauthorizedAccessException("Current user cannot read this collection");
 
-		Log.Spew("SyncSession.GetSmallNodes() Count {0}", nids.Length);
-		return ops.GetSmallNodes(nids);
+			Log.Spew("SyncSession.GetSmallNodes() Count {0}", nids.Length);
+			return ops.GetSmallNodes(nids);
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return null;
 	}
 
-	public void WriteLargeNode(NodeStamp stamp, string relativePath, byte[] data)
+	public bool WriteLargeNode(NodeStamp stamp, string relativePath, byte[] data)
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-			throw new UnauthorizedAccessException("Current user cannot modify this collection");
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-		inNode.Start(stamp, relativePath);
-		inNode.Append(data);
+			inNode.Start(stamp, relativePath);
+			inNode.Append(data);
+			return true;
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return false;
 	}
 
 	public bool WriteLargeNode(byte[] data, string metaData)
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-			throw new UnauthorizedAccessException("Current user cannot modify this collection");
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-		inNode.Append(data);
-		return metaData == null? true: inNode.Complete(metaData);
+			inNode.Append(data);
+			return metaData == null? true: inNode.Complete(metaData);
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return false;
 	}
 
 	public byte[] ReadLargeNode(Nid nid, int maxSize, out NodeStamp stamp, out string metaData, out string relativePath)
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-			throw new UnauthorizedAccessException("Current user cannot modify this collection");
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
 
-		return outNode.Start(nid, out stamp, out metaData, out relativePath)? outNode.GetChunk(maxSize): null;
+			return outNode.Start(nid, out stamp, out metaData, out relativePath)? outNode.GetChunk(maxSize): null;
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		stamp = new NodeStamp();
+		metaData = null;
+		relativePath = null;
+		return null;
+	}
+
+	// right now reusing small node struct for first chunk of large node
+	public SmallNode[] ReadLargeNode(Nid nid, int maxSize)
+	{
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
+
+			SmallNode[] sn = new SmallNode[1];
+			sn[0].data = outNode.Start(nid, out sn[0].stamp, out sn[0].metaData, out sn[0].relativePath)? outNode.GetChunk(maxSize): null;
+			return sn;
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return null;
 	}
 
 	public byte[] ReadLargeNode(int maxSize)
 	{
-		if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
-			throw new UnauthorizedAccessException("Current user cannot modify this collection");
-		return outNode.GetChunk(maxSize);
+		try
+		{
+			if (!collection.IsAccessAllowed(Access.Rights.ReadWrite))
+				throw new UnauthorizedAccessException("Current user cannot modify this collection");
+			return outNode.GetChunk(maxSize);
+		}
+		catch (Exception e) { Log.Uncaught(e); }
+		return null;
 	}
 }
 
@@ -381,18 +448,22 @@ public class SynkerWorkerA: SyncCollectionWorker
 		// get large files from server
 		foreach (Nid nid in addLargeFromServer)
 		{
-			NodeStamp stamp;
-			string metaData, relativePath;
-			byte[] data = ss.ReadLargeNode(nid, SmallNode.MaxSize, out stamp, out metaData, out relativePath);
-			inNode.Start(stamp, relativePath);
-			inNode.Append(data);
-			while (data.Length == SmallNode.MaxSize)
+			SmallNode[] sna = ss.ReadLargeNode(nid, SmallNode.MaxSize);
+			if (sna == null)
 			{
-				data = ss.ReadLargeNode(SmallNode.MaxSize);
-				inNode.Append(data);
+				Log.Here();
+				continue;
 			}
-			if (!inNode.Complete(metaData))
-				Log.Spew("skipped update of large node {0} from server due to local collision", stamp.name);
+			SmallNode sn = sna[0];
+			inNode.Start(sn.stamp, sn.relativePath);
+			inNode.Append(sn.data);
+			while (sn.data.Length == SmallNode.MaxSize)
+			{
+				sn.data = ss.ReadLargeNode(SmallNode.MaxSize);
+				inNode.Append(sn.data);
+			}
+			if (!inNode.Complete(sn.metaData))
+				Log.Spew("skipped update of large node {0} from server due to local collision", sn.stamp.name);
 		}
 		addLargeFromServer.Clear();
 	}

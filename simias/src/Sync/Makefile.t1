@@ -1,7 +1,7 @@
 TARGETS := Sync.dll SyncCmd.exe
 
-#OPTS := /warn:4 /debug+ /d:TRACE /d:DEBUG
-OPTS := /debug+ /d:TRACE /d:DEBUG
+OPTS := /warn:4 /debug+ /d:TRACE /d:DEBUG
+#OPTS := /debug+ /d:TRACE /d:DEBUG
 SIMIAS_ROOT := ../..
 
 ifeq ($(OS),Windows_NT)
