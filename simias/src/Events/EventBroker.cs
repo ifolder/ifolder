@@ -52,7 +52,7 @@ namespace Simias.Event
 		internal static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
 		static EventBroker instance = new EventBroker();
 		Queue	eventQueue = new Queue();
-		ManualResetEvent haveEvents = new ManualResetEvent(false);
+		AutoResetEvent haveEvents = new AutoResetEvent(false);
 		public event SimiasEventHandler SimiasEvent;
 
 		#endregion
@@ -95,7 +95,6 @@ namespace Simias.Event
 						}
 						else
 						{
-							haveEvents.Reset();
 							continue;
 						}
 					}
