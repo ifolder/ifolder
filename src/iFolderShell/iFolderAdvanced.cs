@@ -2401,7 +2401,7 @@ namespace Novell.iFolderCom
 								// This is the iFolder currently displayed ...
 								ifolder = ifWebService.GetiFolder(eventArgs.Collection);
 							}
-							else if (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType))
+							else if (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.SubscriptionType))
 							{
 								ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
 								if ((ifolderUser.iFolderID != null) && (!ifolderUser.iFolderID.Equals(currentiFolder.ID)))
@@ -2414,7 +2414,7 @@ namespace Novell.iFolderCom
 						}
 						case "NodeCreated":
 						{
-							if (currentiFolder.ID.Equals(eventArgs.Collection) && (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.NodeType)))
+							if (currentiFolder.ID.Equals(eventArgs.Collection) && (eventArgs.Type.Equals(NodeTypes.MemberType) || eventArgs.Type.Equals(NodeTypes.SubscriptionType)))
 							{
 								// This is the iFolder currently displayed.
 								// Get a user object.
