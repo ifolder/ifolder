@@ -185,12 +185,6 @@ namespace Novell.AddressBook
 		internal const string	countryProperty = "VC:Country";
 
 		/// <summary>
-		/// mailStop propoerty contained in a contact
-		/// NOTE! This property is not defined in the vCard schema
-		/// </summary>
-		internal const string   addressTypeProperty = "VC:AddressType";
-
-		/// <summary>
 		/// Common preferred property contained in a contact
 		/// </summary>
 		internal const string	preferredProperty = "VC:Preferred";
@@ -219,9 +213,9 @@ namespace Novell.AddressBook
 		internal const string contactListType = "AB:ContactList";
 
 		/// <summary>
-		/// AddressTypes
+		/// AddressTypes (ex. work, home, other, dom, intl etc.)
 		/// </summary>
-		internal const string addressTypesProperty = "AB:AddressTypes";
+		internal const string addressTypesProperty = "VC:AddressTypes";
 		
 		/// <summary>
 		/// A vCard LABEL property may contain the following types

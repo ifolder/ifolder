@@ -297,6 +297,7 @@ namespace Novell.AddressBook
 				if(tmpPhone.Number == this.Number)
 				{
 					contact.phoneList.Remove(tmpPhone);
+					break;
 				}
 			}
 

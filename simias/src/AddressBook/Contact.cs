@@ -82,11 +82,11 @@ namespace Novell.AddressBook
 
 		// Private members used for caching objects to the contact before
 		// the contact has been added to an address list
-		private		ArrayList		addressList = null;
-		private		ArrayList		nameList = null;
-		private		Stream			photoStream = null;
+		internal	ArrayList		addressList = null;
 		internal	ArrayList		emailList = null;
+		internal	ArrayList		nameList = null;
 		internal	ArrayList		phoneList = null;
+		private		Stream			photoStream = null;
 
 		// Map for keeping track of what properties actually changed
 		private ChangeMap		propertyChangeMap = 0;
@@ -506,11 +506,19 @@ namespace Novell.AddressBook
 		internal Contact(Collection collection)
 		{
 			this.collection = collection;
+			this.addressList = new ArrayList();
+			this.nameList = new ArrayList();
+			this.emailList = new ArrayList();
+			this.phoneList = new ArrayList();
 		}
 
 		internal Contact(Collection collection, string type)
 		{
 			this.collection = collection;
+			this.addressList = new ArrayList();
+			this.nameList = new ArrayList();
+			this.emailList = new ArrayList();
+			this.phoneList = new ArrayList();
 		}
 
 		/// <summary>
@@ -529,7 +537,7 @@ namespace Novell.AddressBook
 
 		#region Private Methods
 
-		internal void Add(Collection collection, AddressBook addressBook, string identityGuid)
+		internal void Add(Collection collection, AddressBook addressBook)
 		{
 			try
 			{
@@ -557,17 +565,21 @@ namespace Novell.AddressBook
 					// Check if any dirty data exists in the node
 					//
 
+					/*
 					foreach(Address address in this.addressList)
 					{
 						this.AddAddress(address);
 					}
 					this.addressList.Clear();
+					*/
 
+					/*
 					foreach(Name name in this.nameList)
 					{
 						this.AddName(name);
 					}
 					this.nameList.Clear();
+					*/
 
 					/*
 					foreach(Email mail in this.emailList)
@@ -616,7 +628,7 @@ namespace Novell.AddressBook
 		private	string GetFullName()
 		{
 			Name	tmpName = null;
-			string fn = null;
+			string fn = "";
 
 			try
 			{
@@ -624,7 +636,7 @@ namespace Novell.AddressBook
 			}
 			catch
 			{
-				return(null);
+				return("");
 			}
 
 			if (tmpName != null)
@@ -751,6 +763,44 @@ namespace Novell.AddressBook
 							}
 						}
 						catch{}
+
+						try
+						{
+							// Load up the addresses
+							this.addressList.Clear();
+							foreach(Node addrNode in this.thisNode)
+							{
+								if (addrNode.Type == Common.addressProperty)
+								{
+									// this.addressList.Add(new Address(this, addrNode.Id));
+
+									Address tmpAddress = new Address();
+									tmpAddress.ToObject(this, addrNode.Id);
+									this.addressList.Add(tmpAddress);
+								}
+							}
+						}
+						catch{}
+
+						try
+						{
+							// Load up the names
+							this.nameList.Clear();
+							foreach(Node addrNode in this.thisNode)
+							{
+								if (addrNode.Type == Common.nameProperty)
+								{
+									this.nameList.Add(new Name(this, addrNode.Id));
+
+									/*
+									Name tmpName = new Name();
+									tmpName.ToObject(this, addrNode.Id);
+									this.nameList.Add(tmpName);
+									*/
+								}
+							}
+						}
+						catch{}
 						return;
 					}
 				}
@@ -843,17 +893,6 @@ namespace Novell.AddressBook
 			try
 			{
 				this.phoneList.Add(telephone);
-
-				/*
-				if (this.thisNode != null)
-				{
-					telephone.Add(this.collection, this.thisNode, this);
-				}
-				else
-				{
-					this.phoneList.Add(telephone);
-				}
-				*/
 			}
 			catch{}
 			return;
@@ -1060,6 +1099,16 @@ namespace Novell.AddressBook
 						Telephone.PersistToStore(this);
 					}
 
+					if (this.addressList.Count > 0 && ((propertyChangeMap & ChangeMap.address) == ChangeMap.address))
+					{
+						Address.PersistToStore(this);
+					}
+
+					if (this.nameList.Count > 0 && ((propertyChangeMap & ChangeMap.name) == ChangeMap.name))
+					{
+						Name.PersistToStore(this);
+					}
+
 					this.collection.Commit(true);
 					propertyChangeMap = 0;
 				}
@@ -1098,20 +1147,11 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				this.propertyChangeMap |= ChangeMap.address;
-				if (this.collection != null && this.thisNode != null)
-				{
-					addr.Create(this.collection, this.thisNode, this);
-					return;
-				}
-				else
-				{
-					this.addressList.Add(addr);
-					return;
-				}
+				addr.Add(this);
+				return;
 			}
 			catch{}
-			throw new ApplicationException(Common.addressBookExceptionHeader + "Name object created");
+			throw new ApplicationException(Common.addressBookExceptionHeader + "Failed adding Address");
 		}
 
 		/// <summary>
@@ -1123,28 +1163,13 @@ namespace Novell.AddressBook
 
 			try
 			{
-				if (this.thisNode != null)
+				foreach(Address addr in this.addressList)
 				{
-					foreach(Node cNode in this.thisNode)
-					{
-						if (cNode.Type == Common.addressProperty)
-						{
-							cList.Add(GetAddress(cNode.Id));
-						}
-					}
-				}
-				else
-				{
-					foreach(Address addr in this.addressList)
-					{
-						cList.Add(addr);
-					}
+					cList.Add(addr);
 				}
 			}
 			catch{}
 			return(cList);
-
-			//			return new AddressEnumerator( this.thisNode, this );
 		}
 
 		/// <summary>
@@ -1152,9 +1177,7 @@ namespace Novell.AddressBook
 		/// </summary>
 		public Address GetPreferredAddress()
 		{
-			IABList addrList = this.GetAddresses();
-
-			foreach(Address addr in addrList)
+			foreach(Address addr in this.addressList)
 			{
 				if (addr.Preferred == true)
 				{
@@ -1173,14 +1196,17 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				Address address = new Address();
-				address.ToObject(this.collection, this.thisNode, this, addressID);
-				address.Delete();
+				foreach(Address addr in this.addressList)
+				{
+					if (addr.ID == addressID)
+					{
+						addr.Delete();
+						return;
+					}
+				}
 			}
-			catch
-			{
-				throw new ApplicationException(Common.addressBookExceptionHeader + "Address " + addressID + " not found" );
-			}
+			catch{}
+			throw new ApplicationException(Common.addressBookExceptionHeader + "Address " + addressID + " not found" );
 		}
 
 		/// <summary>
@@ -1201,14 +1227,22 @@ namespace Novell.AddressBook
 		{
 			try
 			{
+				foreach(Address addr in this.addressList)
+				{
+					if (addr.ID == addressID)
+					{
+						return(addr);
+					}
+				}
+
+				/*
 				Address address = new Address();
 				address.ToObject(this.collection, this.thisNode, this, addressID);
 				return(address);
+				*/
 			}
-			catch
-			{
-				throw new ApplicationException( Common.addressBookExceptionHeader +  "Address " + addressID + " not found" );
-			}
+			catch{}
+			throw new ApplicationException( Common.addressBookExceptionHeader +  "Address " + addressID + " not found" );
 		}
 
 		/// <summary>
@@ -1227,17 +1261,8 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				this.propertyChangeMap |= ChangeMap.name;
-				if (this.collection != null && this.thisNode != null)
-				{
-					name.Create(this.collection, thisNode, this);
-					return;
-				}
-				else
-				{
-					this.nameList.Add(name);
-					return;
-				}
+				name.Add(this);
+				return;
 			}
 			catch{}
 			throw new ApplicationException(Common.addressBookExceptionHeader + "Name object created");
@@ -1259,9 +1284,7 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				Name name = new Name();
-				name.ToObject(this.collection, this.thisNode, this, nameID);
-				return(name);
+				return( new Name(this, nameID) );
 			}
 			catch
 			{
@@ -1282,13 +1305,11 @@ namespace Novell.AddressBook
 		/// <returns>A Name object with at least valid given and family properties.</returns>
 		public Name GetPreferredName()
 		{
-			IABList names = this.GetNames();
-
-			foreach(Name name in names)
+			foreach(Name cName in this.nameList)
 			{
-				if (name.Preferred == true)
+				if (cName.Preferred == true)
 				{
-					return(name);
+					return(cName);
 				}
 			}
 
@@ -1310,22 +1331,9 @@ namespace Novell.AddressBook
 
 			try
 			{
-				if (this.thisNode != null)
+				foreach(Name cName in this.nameList)
 				{
-					foreach(Node cnode in thisNode)
-					{
-						if (cnode.Type == Common.nameProperty)
-						{
-							cList.Add(GetName(cnode.Id));
-						}
-					}
-				}
-				else
-				{
-					foreach(Name name in this.nameList)
-					{
-						cList.Add(name);
-					}
+					cList.Add(cName);
 				}
 			}
 			catch{}
@@ -1366,9 +1374,11 @@ namespace Novell.AddressBook
 			else
 			{
 				if(this.photoStream != null)
-					return this.photoStream;
-				else
-					throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
+				{
+					return(this.photoStream);
+				}
+
+				throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
 			}
 		}
 

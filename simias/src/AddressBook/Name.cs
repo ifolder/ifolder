@@ -44,14 +44,11 @@ namespace Novell.AddressBook
 		/// <summary>
 		/// Well known address book types.
 		/// </summary>
-		bool					changed = false;
 		//internal const string	nameProperty = "vCard:Name";
-		internal const string	otherProperty = "vCard:Other";
-		internal const string	prefixProperty = "vCard:Prefix";
-		internal const string	suffixProperty = "vCard:Suffix";
-		internal const string	preferredProperty = "vCard:Preferred";
-		private Collection		parentCollection;
-		private Node			parentNode;
+		internal const string	otherProperty = "VC:Other";
+		internal const string	prefixProperty = "VC:Prefix";
+		internal const string	suffixProperty = "VC:Suffix";
+		internal const string	preferredProperty = "VC:Preferred";
 		private Contact			parentContact;
 		private Node			thisNode;
 		private	bool			preferred;
@@ -60,6 +57,7 @@ namespace Novell.AddressBook
 		private string			other;
 		private string			prefix;
 		private string			suffix;
+		private string			id;
 		#endregion
 
 		#region Properties
@@ -77,26 +75,21 @@ namespace Novell.AddressBook
 		{
 			get
 			{	
-				try
+				if (this.family != null)
 				{
-					return(family);
+					return(this.family);
 				}
-				catch
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
-				family = value;
-				if (thisNode != null)
+				this.family = value;
+				if (this.parentContact != null)
 				{
-					thisNode.Properties.ModifyProperty(Common.familyProperty, family);
-					parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.name);
 				}
-
-				changed = true;
 			}
 		}
 
@@ -112,25 +105,21 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				try
+				if (this.given != null)
 				{
-					return(given);
+					return(this.given);
 				}
-				catch
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
-				given = value;
-				if (thisNode != null)
+				this.given = value;
+				if (this.parentContact != null)
 				{
-					thisNode.Name = given;
-					parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.name);
 				}
-				changed = true;
 			}
 		}
 
@@ -146,26 +135,21 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				try
+				if (this.other != null)
 				{
-					return(other);
+					return(this.other);
 				}
-				catch
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
-				other = value;
-				if (thisNode != null)
+				this.other = value;
+				if (this.parentContact != null)
 				{
-					thisNode.Properties.ModifyProperty(otherProperty, other);
-					parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.name);
 				}
-
-				changed = true;
 			}
 		}
 
@@ -181,25 +165,21 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				try
+				if (this.prefix != null)
 				{
-					return(prefix);
+					return(this.prefix);
 				}
-				catch
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
-				prefix = value;
-				if (thisNode != null)
+				this.prefix = value;
+				if (this.parentContact != null)
 				{
-					thisNode.Properties.ModifyProperty(prefixProperty, prefix);
-					parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.name);
 				}
-				changed = true;
 			}
 		}
 
@@ -215,26 +195,21 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				try
+				if (this.suffix != null)
 				{
-					return(suffix);
+					return(this.suffix);
 				}
-				catch
-				{
-					return("");
-				}
+
+				return("");
 			}
 
 			set
 			{
-				suffix = value;
-				if (thisNode != null)
+				this.suffix = value;
+				if (this.parentContact != null)
 				{
-					thisNode.Properties.ModifyProperty(suffixProperty, suffix);
-					parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.name);
 				}
-
-				changed = true;
 			}
 		}
 
@@ -267,20 +242,37 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				return(preferred);
+				return(this.preferred);
 			}
 
 			set
 			{
-				preferred = value;
-				if (thisNode != null)
+				this.preferred = value;
+				if (this.parentContact != null)
 				{
-					thisNode.Properties.ModifyProperty(preferredProperty, preferred);
-					parentContact.SetDirty();
+					this.parentContact.SetDirty(ChangeMap.name);
 				}
-				changed = true;
 			}
 		}
+
+		/// <summary>
+		/// ID - Unique ID of the N structured property
+		///
+		/// Type Value: A single text value
+		/// </summary>
+		public string ID
+		{
+			get
+			{
+				if (this.id != null)
+				{
+					return(this.id);
+				}
+
+				return("");
+			}
+		}
+
 		#endregion
 
 		#region Constructors
@@ -303,10 +295,9 @@ namespace Novell.AddressBook
 			this.family = family;
 		}
 
-		internal Name(Collection collection, Node parentNode)
+		internal Name(Contact parentContact, string nameID)
 		{
-			this.parentNode = parentNode;
-			this.parentCollection = collection;
+			this.ToObject(parentContact, nameID);
 		}
 
 		#endregion
@@ -345,51 +336,194 @@ namespace Novell.AddressBook
 			return(fn);
 		}
 
-		internal void Create(Collection collection, Node parentNode, Contact contact)
+		internal void Add(Contact parentContact)
 		{
-			this.parentCollection = collection;
-			this.parentNode = parentNode;
-			this.parentContact = contact;
+			this.parentContact = parentContact;
 
-			// Make sure the mandatory properties exist
-			this.thisNode = parentNode.CreateChild(this.given, Common.nameProperty);
-			this.thisNode.Properties.AddProperty(Common.familyProperty, this.family);
-
-			if (this.other != null && this.other != "")
+			// If we're preferred make sure nobody else is
+			if (this.Preferred == true)
 			{
-				thisNode.Properties.AddProperty(otherProperty, this.other);
+				foreach(Name cName in parentContact.nameList)
+				{
+					if (cName.Preferred == true)
+					{
+						cName.Preferred = false;
+					}
+				}
 			}
 
-			if (this.prefix != null && this.prefix != "")
-			{
-				thisNode.Properties.AddProperty(prefixProperty, this.prefix);
-			}
-
-			if (this.suffix != null && this.suffix != "")
-			{
-				thisNode.Properties.AddProperty(suffixProperty, this.suffix);
-			}
-
-			thisNode.Properties.AddProperty(preferredProperty, this.preferred);
-			contact.SetDirty();
+			this.parentContact.nameList.Add(this);
+			this.parentContact.SetDirty(ChangeMap.name);
 		}
 
-		internal void ToObject(Collection collection, Node parentNode, Contact contact, string objectID)
+		/// <summary>
+		/// Called by the static method PersistToStore
+		/// </summary>
+		/// <returns>nothing</returns>
+		private void Commit()
 		{
-			this.parentCollection = collection;
-			this.parentNode = parentNode;
+			try
+			{
+				if (this.parentContact != null)
+				{
+					// Any valid members?
+					if (this.given == null &&
+						this.family == null &&
+						this.other == null &&
+						this.prefix == null &&
+						this.suffix == null)
+					{
+						return;
+					}
+
+					// New object?
+					if (this.ID == "")
+					{
+						Node cNode = parentContact.thisNode.CreateChild(this.given, Common.nameProperty);
+						this.thisNode = cNode;
+						this.id = cNode.Id;
+					}
+
+					try
+					{
+						if (this.family != null)
+						{
+							this.thisNode.Properties.ModifyProperty( Common.familyProperty, this.family );
+						}
+						else
+						{
+							this.thisNode.Properties.DeleteProperties( Common.familyProperty );
+						}
+					}
+					catch{}
+
+					try
+					{
+						if (this.other != null)
+						{
+							this.thisNode.Properties.ModifyProperty( otherProperty, this.other );
+						}
+						else
+						{
+							this.thisNode.Properties.DeleteProperties( otherProperty );
+						}
+					}
+					catch{}
+
+					try
+					{
+						if (this.prefix != null)
+						{
+							this.thisNode.Properties.ModifyProperty( prefixProperty, this.prefix );
+						}
+						else
+						{
+							this.thisNode.Properties.DeleteProperties( prefixProperty );
+						}
+					}
+					catch{}
+
+					try
+					{
+						if (this.suffix != null)
+						{
+							this.thisNode.Properties.ModifyProperty( suffixProperty, this.suffix );
+						}
+						else
+						{
+							this.thisNode.Properties.DeleteProperties( suffixProperty );
+						}
+					}
+					catch{}
+
+					try
+					{
+						if (this.Preferred == true)
+						{
+							this.thisNode.Properties.ModifyProperty( Common.preferredProperty, this.Preferred );
+						}
+						else
+						{
+							this.thisNode.Properties.DeleteProperties( Common.preferredProperty );
+						}
+					}
+					catch{}
+		
+				}
+			}
+			catch{}
+			// FIXME - log commit errors
+		}
+
+		internal static bool PersistToStore(Contact contact)
+		{
+			// The contact needs to be attached to the store in order to persist
+			if (contact.thisNode == null)
+			{
+				return(false);
+			}
+
+			// Anything in the list to persist?
+			if (contact.nameList.Count == 0)
+			{
+				return(false);
+			}
+
+			// assume no preferred is set
+			bool foundPreferred = false;
+
+			// Make sure we have a preferred
+			foreach(Name cName in contact.nameList)
+			{
+				if (cName.Preferred == true)
+				{
+					foundPreferred = true;
+					break;
+				}
+			}
+
+			if (foundPreferred == false)
+			{
+				// Mark the first Name in the list preferred
+				foreach(Name cName in contact.nameList)
+				{
+					cName.Preferred = true;
+					break;
+				}
+			}
+
+			// To the collection store they go!
+			foreach(Name cName in contact.nameList)
+			{
+				cName.Commit();
+			}
+
+			return(true);
+		}
+
+		internal void ToObject(Contact contact, string objectID)
+		{
 			this.parentContact = contact;
 
 			try
 			{
-				this.thisNode = this.parentCollection.GetNodeById(objectID);
-
-				// Read in all the properties
+				this.thisNode = this.parentContact.collection.GetNodeById(objectID);
+				this.id = this.thisNode.Id;
 				this.given = this.thisNode.Name;
-				this.preferred = Convert.ToBoolean(thisNode.Properties.GetSingleProperty( preferredProperty ).ToString());
-				this.family = thisNode.Properties.GetSingleProperty( Common.familyProperty ).ToString();
 
-				// Non-mandatory properties may not exist
+				try
+				{
+					this.preferred = 
+						Convert.ToBoolean(thisNode.Properties.GetSingleProperty( preferredProperty ).ToString());
+				}
+				catch{}
+
+				try
+				{
+					this.family = thisNode.Properties.GetSingleProperty( Common.familyProperty ).ToString();
+				}
+				catch{}
+
 				try
 				{
 					this.other = thisNode.Properties.GetSingleProperty( otherProperty ).ToString();
@@ -417,41 +551,19 @@ namespace Novell.AddressBook
 
 		#region Public Methods
 
-		/*
-		public void Commit()
-		{
-			if (this.thisNode != null && this.parentCollection != null)
-			{
-				if (changed == true)
-				{
-					this.parentNode.Name = this.given;
-					thisNode.Properties.ModifyProperty(Common.familyProperty, this.family);
-					thisNode.Properties.ModifyProperty(otherProperty, this.other);
-					thisNode.Properties.ModifyProperty(prefixProperty, this.prefix);
-					thisNode.Properties.ModifyProperty(suffixProperty, this.suffix);
-					thisNode.Properties.ModifyProperty(preferredProperty, this.preferred);
-
-					this.thisNode.Save();
-					this.parentCollection.Commit();
-				
-					changed = false;
-					return;
-				}
-			}
-
-			throw new ApplicationException("AddressBook::Name object has not been added to a contact");
-		}
-		*/
-
-
 		/// <summary>
 		/// Delete this Name from the name list attached to the contact record
 		/// </summary>
 		public void Delete()
 		{
-			if (this.thisNode != null)
+			if (this.parentContact != null)
 			{
-				this.thisNode.Delete(true);
+				this.parentContact.nameList.Remove(this);
+
+				if (this.thisNode != null)
+				{
+					this.thisNode.Delete(true);
+				}
 			}
 		}
 

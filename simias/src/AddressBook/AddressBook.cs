@@ -589,7 +589,8 @@ namespace Novell.AddressBook
 				// is not complete
 				//
 
-				contact.Add(this.collection, this, identityId);
+				//contact.Add(this.collection, this, identityId);
+				contact.Add(this.collection, this);
 			}
 			else
 			{
@@ -614,7 +615,7 @@ namespace Novell.AddressBook
 				// is not complete
 				//
 
-				contact.Add(this.collection, this, null);
+				contact.Add(this.collection, this);
 			}
 			else
 			{
