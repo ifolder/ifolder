@@ -40,11 +40,19 @@ namespace Simias.Authentication
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Credentials));
 		private string collectionID;
 
+		/// <summary>
+		/// Constructor for checking if credentials exist for collection
+		/// </summary>
 		public Credentials(string collectionID)
 		{
 			this.collectionID = collectionID;
 		}
 
+		/// <summary>
+		/// Gets the credentials (if they exist) that are set against
+		/// the collection ID passed in the constructor.
+		/// </summary>
+		/// <returns>NetworkCredential object which can be assigned to the "Credentials" property in a proxy class.</returns>
 		public NetworkCredential GetCredentials()
 		{
 			//
