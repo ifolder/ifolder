@@ -49,6 +49,8 @@ namespace Simias.Channels
 	public class SimiasChannelFactory
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SimiasChannelFactory));
+		
+		private static readonly int TIMEOUT = TimeSpan.FromSeconds(30).Milliseconds;
 
 		private static SimiasChannelFactory singleton;
 
@@ -159,7 +161,7 @@ namespace Simias.Channels
 					ListDictionary props = new ListDictionary();
 					props.Add("name", name);
 					props.Add("port", port);
-
+					props.Add("timeout", TIMEOUT);
 					// provider notes
 					// server providers: security sink -> monitor sink -> formatter sink
 					// client providers: formatter sink -> monitor sink -> security sink

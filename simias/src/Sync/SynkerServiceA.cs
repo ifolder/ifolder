@@ -50,9 +50,9 @@ public class SynkerA: SyncLogicFactory
 	/// <summary>
 	/// creates a SynkerWorkerA on the client
 	/// </summary>
-	public override SyncCollectionWorker GetCollectionWorker(SyncCollectionService master, SyncCollection slave)
+	public override SyncCollectionWorker GetCollectionWorker(SyncCollection collection)
 	{
-		return new SynkerWorkerA((SynkerServiceA)master, slave);
+		return new SynkerWorkerA(collection);
 	}
 }
 

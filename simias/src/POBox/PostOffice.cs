@@ -105,6 +105,7 @@ namespace Simias.POBox
 						}
 					}
 					break;
+				
 				case SubscriptionStates.Pending:
 					if (workgroup)
 					{

@@ -86,8 +86,17 @@ namespace Simias.Sync
                 switch(collection.Role)
 				{
 					case SyncCollectionRoles.Master:
-                        // register with the location service
-						syncManager.Location.Register(collection.ID);
+						// check for the server
+						Storage.Domain domain = store.GetDomain(store.DefaultDomain);
+						Roster roster = domain.GetRoster(store);
+						SyncCollection sc = new SyncCollection(roster);
+
+						// only use register on client (workgroup) machines
+						if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (sc.Role == SyncCollectionRoles.Slave))
+						{
+							// register with the location service
+							syncManager.Location.Register(collection.ID);
+						}
 						break;
 
 					case SyncCollectionRoles.Slave:
@@ -261,6 +270,8 @@ namespace Simias.Sync
 						// get a proxy to the store service object
 						log.Debug("Sync Work {0} - Connecting...", collection.Name);
 						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), serviceUrl);
+						
+						// no store service
 						if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
 						// ping the store
@@ -269,6 +280,8 @@ namespace Simias.Sync
 						// get a proxy to the collection service object
 						log.Debug("Connecting to the Sync Collection Service...");
 						service = storeService.GetCollectionService(collection.ID);
+						
+						// removed collection?
 						if (service == null)
 						{
 							log.Debug("The collection is no longer on the server.");
@@ -287,12 +300,17 @@ namespace Simias.Sync
 
 						// get the collection worker
 						log.Debug("Creating a Sync Worker Object...");
-						worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);
+						if (worker == null)
+						{
+							worker = syncManager.LogicFactory.GetCollectionWorker(collection);
+						}
+						
+						// bad worker
 						if (worker == null) throw new ApplicationException("No Sync Collection Worker");
 
 						// do the work
 						log.Debug("Sync Work {0} - Worker Start", collection.Name);
-						worker.DoSyncWork();
+						worker.DoSyncWork(service);
 						log.Debug("Sync Work {0} - Worker Done", collection.Name);
 					}
 				}
@@ -302,6 +320,9 @@ namespace Simias.Sync
 
 					if (working)
 					{
+						// reset worker
+						worker = null;
+
 						try
 						{
 							// try the location service on an exception
@@ -336,7 +357,6 @@ namespace Simias.Sync
 				{
 					storeService = null;
 					service = null;
-					worker = null;
 				}
 
 				log.Info("Finished Sync Cycle: {0}", collection.Name);

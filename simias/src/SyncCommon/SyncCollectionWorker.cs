@@ -30,22 +30,20 @@ namespace Simias.Sync
 	/// </summary>
 	public class SyncCollectionWorker
 	{
-		SyncCollectionService master;
-		SyncCollection slave;
+		protected SyncCollection collection;
 
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public SyncCollectionWorker(SyncCollectionService master, SyncCollection slave)
+		public SyncCollectionWorker(SyncCollection collection)
 		{
-			this.master = master;
-			this.slave = slave;
+			this.collection = collection;
 		}
 
 		/// <summary>
 		/// Do the sync work.
 		/// </summary>
-		public virtual void DoSyncWork()
+		public virtual void DoSyncWork(SyncCollectionService service)
 		{
 		}
 

@@ -50,12 +50,11 @@ namespace Simias.Sync
 		/// <summary>
 		/// Generate a collection worker object.
 		/// </summary>
-		/// <param name="master">The master collection object.</param>
-		/// <param name="slave">The slave collection object.</param>
+		/// <param name="collection">The collection object.</param>
 		/// <returns>A new worker object.</returns>
-		public virtual SyncCollectionWorker GetCollectionWorker(SyncCollectionService master, SyncCollection slave)
+		public virtual SyncCollectionWorker GetCollectionWorker(SyncCollection collection)
 		{
-			return new SyncCollectionWorker(master, slave);
+			return new SyncCollectionWorker(collection);
 		}
 	}
 }

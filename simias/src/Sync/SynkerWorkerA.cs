@@ -41,7 +41,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 {
 	//TODO: why is the base master and slave not protected instead of private?
 	SynkerServiceA ss;
-	SyncCollection collection;
 	
 	Hashtable	largeFromServer, smallFromServer, dirsFromServer;
 	Hashtable	largeToServer, smallToServer, dirsToServer;
@@ -55,18 +54,19 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// <summary>
 	/// public constructor which accepts real or proxy objects specifying master and collection
 	/// </summary>
-	public SynkerWorkerA(SynkerServiceA master, SyncCollection slave): base(master, slave)
+	public SynkerWorkerA(SyncCollection collection): base(collection)
 	{
-		ss = master;
-		collection = slave;
 		ops = new SyncOps(collection, false);
 	}
 
 	/// <summary>
 	/// used to perform one synchronization pass on one collection
 	/// </summary>
-	public override void DoSyncWork()
+	public override void DoSyncWork(SyncCollectionService service)
 	{
+		// save service
+		ss = (SynkerServiceA)service;
+
 		stopping = false;
 		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 		try

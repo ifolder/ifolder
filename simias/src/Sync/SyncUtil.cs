@@ -295,12 +295,12 @@ public class CmdClient
 			new Dredger(servCollection, true);
 			//Log.Spew("End internal server dredge");
 			SynkerServiceA ssa = new SynkerServiceA(new SyncCollection(servCollection));
-			new SynkerWorkerA(ssa, csc).DoSyncWork();
+			new SynkerWorkerA(csc).DoSyncWork(ssa);
 		}
 		else
 		{
 			CmdClient client = new CmdClient(csc.MasterUrl.Host, csc.MasterUrl.Port, csc.ID);
-			new SynkerWorkerA(client.session, csc).DoSyncWork();
+			new SynkerWorkerA(csc).DoSyncWork(client.session);
 			client.Stop();
 		}
 		return true;
