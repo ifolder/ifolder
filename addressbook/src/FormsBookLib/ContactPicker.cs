@@ -67,13 +67,13 @@ namespace Novell.iFolder.FormsBookLib
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 			addedContacts.View = View.List;
+
 			this.add.Enabled = false;
 			this.remove.Enabled = false;
 			this.ok.Enabled = false;
+			this.toolBar1.Buttons[1].Enabled = false;
+			this.toolBar1.Buttons[2].Enabled = false;
 
 			// This is the size of the fixed area of the dialog ...
 			// Add button width
@@ -186,6 +186,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.booksContacts.Size = new System.Drawing.Size(304, 352);
 			this.booksContacts.TabIndex = 11;
 			this.booksContacts.ContactDoubleClicked += new Novell.iFolder.FormsBookLib.BooksContacts.ContactDoubleClickedDelegate(this.booksContacts_ContactDoubleClicked);
+			this.booksContacts.BookSelected += new Novell.iFolder.FormsBookLib.BooksContacts.BookSelectedDelegate(this.booksContacts_BookSelected);
 			this.booksContacts.ContactSelected += new Novell.iFolder.FormsBookLib.BooksContacts.ContactSelectedDelegate(this.booksContacts_ContactSelected);
 			// 
 			// remove
@@ -344,6 +345,17 @@ namespace Novell.iFolder.FormsBookLib
 			this.add.Enabled = false;
 		}
 
+		private void booksContacts_BookSelected(object sender, System.EventArgs e)
+		{
+			// Update state on the create contact button.
+			this.toolBar1.Buttons[2].Enabled = booksContacts.SelectedAddressBook != null;
+		}
+
+		private void booksContacts_ContactSelected(object sender, ContactSelectedEventArgs e)
+		{
+			this.add.Enabled = e.validSelected;
+		}
+
 		private void booksContacts_ContactDoubleClicked(object sender, ContactDoubleClickedEventArgs e)
 		{
 			add_Click(sender, e);
@@ -411,11 +423,6 @@ namespace Novell.iFolder.FormsBookLib
 				ListViewItem item = new ListViewItem(addrBook.Name);
 				item.Tag = addrBook;
 			}
-		}
-
-		private void booksContacts_ContactSelected(object sender, ContactSelectedEventArgs e)
-		{
-			this.add.Enabled = e.validSelected;
 		}
 
 		private void addedContacts_SelectedIndexChanged(object sender, EventArgs e)

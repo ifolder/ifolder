@@ -104,6 +104,10 @@ namespace Novell.iFolder.FormsAddrBook
 			this.booksContacts.BookSelected += new Novell.iFolder.FormsBookLib.BooksContacts.BookSelectedDelegate(booksContacts_BookSelected);
 			this.detailsView.Paint += new PaintEventHandler(detailsView_Paint);
 
+			// Disable the contact and group create buttons.
+			toolBar1.Buttons[1].Enabled = false;
+			toolBar1.Buttons[2].Enabled = false;
+
 			// Disable the vCard import and export buttons.
 			toolBar1.Buttons[3].Enabled = false;
 			toolBar1.Buttons[4].Enabled = false;
@@ -558,7 +562,12 @@ namespace Novell.iFolder.FormsAddrBook
 		private void booksContacts_BookSelected(object sender, EventArgs e)
 		{
 			selectedBook = booksContacts.SelectedAddressBook;
+
+			// Update state on the Import vCard button.
 			toolBar1.Buttons[3].Enabled = selectedBook != null;
+
+			// Update state on the create contact button.
+			toolBar1.Buttons[2].Enabled = selectedBook != null;
 		}
 
 		private void detailsView_Paint(object sender, PaintEventArgs e)
