@@ -67,5 +67,46 @@
 }
 
 
+-(void) mergeNameConflicts:(iFolderConflict *)conflict
+{
+	NSMutableDictionary *serverProps = nil;
+	NSMutableDictionary *localProps = nil;
+
+	if( ( [properties objectForKey:@"LocalName"] != nil ) &&
+		( [[conflict properties] objectForKey:@"ServerName"] != nil) )
+	{
+		serverProps = [[conflict properties] retain];
+		localProps = [properties retain];
+	}
+	else
+	{
+		localProps = [[conflict properties] retain];
+		serverProps = [properties retain];
+	}
+
+	NSString *valHolder = [localProps objectForKey:@"LocalName"];
+	if(valHolder != nil)
+		[serverProps setObject:valHolder forKey:@"LocalName"];
+
+	valHolder = [localProps objectForKey:@"LocalDate"];
+	if(valHolder != nil)
+		[serverProps setObject:valHolder forKey:@"LocalDate"];
+
+	valHolder = [localProps objectForKey:@"LocalSize"];
+	if(valHolder != nil)
+		[serverProps setObject:valHolder forKey:@"LocalSize"];
+
+	valHolder = [localProps objectForKey:@"ConflictID"];
+	if(valHolder != nil)
+		[serverProps setObject:valHolder forKey:@"LocalConflictID"];
+
+	[self setProperties:serverProps];
+
+	[serverProps release];
+	[localProps release];
+}
+
+
+
 
 @end

@@ -206,7 +206,7 @@
 		else if([ [properties objectForKey:@"State"] isEqualToString:@"Local"])
 		{
 			if([ [properties objectForKey:@"HasConflicts"] boolValue])
-				[properties setObject:@"Has File Conflicts" forKey:@"Status"];
+				[properties setObject:@"Has Conflicts" forKey:@"Status"];
 			else
 				[properties setObject:@"OK" forKey:@"Status"];
 		}
