@@ -1,0 +1,10 @@
+OutputToScreenWithAttribute,
+RegisterCommand,
+DeRegisterCommand,
+GetSystemConsoleScreen,
+OutputToScreenWithAttribute,
+GetKey,
+kMutexAlloc,
+kMutexLock,
+kMutexUnlock,
+kMutexFree
