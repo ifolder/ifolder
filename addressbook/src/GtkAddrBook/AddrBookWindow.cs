@@ -60,6 +60,7 @@ namespace Novell.iFolder
 		[Glade.Widget] TreeView	BookTreeView;
 		[Glade.Widget] TreeView	ContactTreeView;
 		[Glade.Widget] Button CreateContactButton;
+		[Glade.Widget] Button ExportButton;
 		[Glade.Widget] Entry SearchEntry;
 		[Glade.Widget] Gtk.TextView ContactTextView;
 
@@ -282,31 +283,31 @@ namespace Novell.iFolder
 				IABList clist = curAddrBook.SearchFirstName(SearchEntry.Text, Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					idHash.Add(c.Identity, c);
+					idHash.Add(c.ID, c);
 				}
 
 				// Last Name Search
 				clist = curAddrBook.SearchLastName(SearchEntry.Text, Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					if(!idHash.Contains(c.Identity))
-						idHash.Add(c.Identity, c);
+					if(!idHash.Contains(c.ID))
+						idHash.Add(c.ID, c);
 				}
 
 				// UserName Name Search
 				clist = curAddrBook.SearchUsername(SearchEntry.Text, Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					if(!idHash.Contains(c.Identity))
-						idHash.Add(c.Identity, c);
+					if(!idHash.Contains(c.ID))
+						idHash.Add(c.ID, c);
 				}
 
 				// Email Name Search
 				clist = curAddrBook.SearchEmail(SearchEntry.Text, Simias.Storage.Property.Operator.Begins);
 				foreach(Contact c in clist)
 				{
-					if(!idHash.Contains(c.Identity))
-						idHash.Add(c.Identity, c);
+					if(!idHash.Contains(c.ID))
+						idHash.Add(c.ID, c);
 				}
 
 				foreach(Contact c in idHash.Values)
@@ -345,7 +346,7 @@ namespace Novell.iFolder
 
 		public void onImportVCard(object o, EventArgs args)
 		{
-			FileSelection fs = new FileSelection ("Select VCard");
+			FileSelection fs = new FileSelection ("Select VCard to Import...");
 
 			int rc = fs.Run ();
 			fs.Hide ();
@@ -354,10 +355,37 @@ namespace Novell.iFolder
 				Contact c = curAddrBook.ImportVCard(fs.Filename);
 				if(c != null)
 				{
-					c.Commit();
-
+					//c.Commit();
 					ContactTreeStore.AppendValues(c);
 			//		curAddrBook.AddContact(c);
+				}
+			}
+		}
+
+		public void onExportVCard(object o, EventArgs args)
+		{
+			TreeSelection tSelect = ContactTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
+
+				if(cnt != null)
+				{
+					string fileName = cnt.FN + ".vcf";
+
+					FileSelection fs = new FileSelection ("Export VCard to...");
+
+					fs.Filename = fileName;
+					int rc = fs.Run ();
+					fs.Hide ();
+					if(rc == -5)
+					{
+						cnt.ExportVCard(fs.Filename);
+					}
 				}
 			}
 		}
@@ -391,14 +419,14 @@ namespace Novell.iFolder
 
 				BookTreeStore.Remove(out iter);
 
-					try
-					{
-						ab.Delete();
-					}
-					catch(ApplicationException e)
-					{
-						Console.WriteLine(e);
-					}
+				try
+				{
+					ab.Delete();
+				}
+				catch(ApplicationException e)
+				{
+					Console.WriteLine(e);
+				}
 
 				ContactTreeStore.Clear();
 				listHash.Clear();
@@ -452,6 +480,7 @@ namespace Novell.iFolder
 			{
 				TreeModel tModel;
 				TreeIter iter;
+				ExportButton.Sensitive = true;
 
 				tSelect.GetSelected(out tModel, out iter);
 				Contact c = (Contact) 
@@ -481,6 +510,7 @@ namespace Novell.iFolder
 			else
 			{
 				ClearBuffer();
+				ExportButton.Sensitive = false;
 			}
 		}
 
@@ -558,29 +588,32 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void on_contact_button_press(object o, ButtonPressEventArgs args)
-		{
-//			if(args.Event.Button == 3)
-//			{
-				Menu cMenu = new Menu();
+		/*
+		   public void on_contact_button_press(object o, ButtonPressEventArgs args)
+		   {
+		   Console.WriteLine("Hey, buttonwas pressed");
+		//			if(args.Event.Button == 3)
+		//			{
+		Menu cMenu = new Menu();
 
-				MenuItem edit_item = new MenuItem ("Edit Contact");
-				cMenu.Append (edit_item);
-				//edit_item.Activated += new EventHandler(show_browser);
-				MenuItem delete_item = new MenuItem ("Delete Contact");
-				cMenu.Append (delete_item);
-				//delete_item.Activated += new EventHandler(show_colbrowser);
+		MenuItem edit_item = new MenuItem ("Edit Contact");
+		cMenu.Append (edit_item);
+		//edit_item.Activated += new EventHandler(show_browser);
+		MenuItem delete_item = new MenuItem ("Delete Contact");
+		cMenu.Append (delete_item);
+		//delete_item.Activated += new EventHandler(show_colbrowser);
 
-				cMenu.Append(new SeparatorMenuItem());
-				MenuItem export_item = new MenuItem ("Export VCard");
-				//export_item.Activated += new EventHandler(quit_ifolder);
-				cMenu.Append (export_item);
+		cMenu.Append(new SeparatorMenuItem());
+		MenuItem export_item = new MenuItem ("Export VCard");
+		//export_item.Activated += new EventHandler(quit_ifolder);
+		cMenu.Append (export_item);
 
-				cMenu.ShowAll();
+		cMenu.ShowAll();
 
-				cMenu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
-//			}
+		cMenu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
+		//			}
 		}
+		 */
 
 		public void DeleteContactResponse(object sender, ResponseArgs args)
 		{
