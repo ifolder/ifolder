@@ -39,6 +39,7 @@ using System.Web.SessionState;
 //using Simias.Client.Authentication;
 
 using Simias.Security.Web.AuthenticationService;
+using SCodes = Simias.Authentication.StatusCodes;
 
 namespace Simias.Security.Web
 {
@@ -185,15 +186,13 @@ namespace Simias.Security.Web
 				{
 					log.Error( e.Message );
 					log.Error( e.StackTrace );
-					authStatus = 
-						new Simias.Authentication.Status( Simias.Authentication.StatusCodes.InternalException );
+					authStatus = new Simias.Authentication.Status( SCodes.InternalException );
 					authStatus.ExceptionMessage = e.Message;
 				}
 			}
 			else
 			{
-				authStatus = 
-					new Simias.Authentication.Status( Simias.Authentication.StatusCodes.Unknown );
+				authStatus = new Simias.Authentication.Status( SCodes.Unknown );
 			}
 
 			return authStatus;
@@ -278,8 +277,7 @@ namespace Simias.Security.Web
 
 		private AuthenticationEventHandler m_eventHandler = null;
 
-		private bool m_sslRequired = true;
-		//private bool m_authenticationService = true;
+		private bool m_sslRequired = false;
 		private string authenticationProvider;
 		private string m_authenticationRealm;
 		private readonly string sessionTag = "simias-user";
@@ -433,8 +431,8 @@ namespace Simias.Security.Web
 						{
 							Simias.Authentication.Status authStatus = 
 								creds.Authenticate( this.iAuthService );
-							if ( authStatus.statusCode == Simias.Authentication.StatusCodes.Success ||
-								authStatus.statusCode == Simias.Authentication.StatusCodes.SuccessInGrace )
+							if ( authStatus.statusCode == SCodes.Success ||
+								authStatus.statusCode == SCodes.SuccessInGrace )
 							{
 								authServiceUser = authStatus.UserID;
 								authenticationSuccessful = true;
@@ -660,13 +658,13 @@ namespace Simias.Security.Web
 		{
 			switch ( authStatus.statusCode )
 			{
-				case Simias.Authentication.StatusCodes.Success:
+				case SCodes.Success:
 				{
 					context.Response.StatusCode = 200;
 					break;	
 				}
 
-				case Simias.Authentication.StatusCodes.SuccessInGrace:
+				case SCodes.SuccessInGrace:
 				{
 					context.Response.StatusCode = 200;
 					context.Response.AppendHeader(
@@ -679,7 +677,7 @@ namespace Simias.Security.Web
 					break;
 				}
 
-				case Simias.Authentication.StatusCodes.AccountDisabled:
+				case SCodes.AccountDisabled:
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
@@ -688,7 +686,7 @@ namespace Simias.Security.Web
 					break;
 				}
 
-				case Simias.Authentication.StatusCodes.AccountLockout:
+				case SCodes.AccountLockout:
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
@@ -697,7 +695,7 @@ namespace Simias.Security.Web
 					break;
 				}
 
-				case Simias.Authentication.StatusCodes.AmbiguousUser:
+				case SCodes.AmbiguousUser:
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
@@ -706,7 +704,7 @@ namespace Simias.Security.Web
 					break;
 				}
 
-				case Simias.Authentication.StatusCodes.Unknown:
+				case SCodes.Unknown:
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
@@ -715,7 +713,7 @@ namespace Simias.Security.Web
 					break;
 				}
 
-				case Simias.Authentication.StatusCodes.InvalidPassword:
+				case SCodes.InvalidPassword:
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AppendHeader(
@@ -724,7 +722,7 @@ namespace Simias.Security.Web
 					break;
 				}
 
-				case Simias.Authentication.StatusCodes.InternalException:
+				case SCodes.InternalException:
 				{
 					context.Response.StatusCode = 500;
 					context.Response.AddHeader(
