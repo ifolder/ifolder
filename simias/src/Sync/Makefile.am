@@ -21,7 +21,7 @@ TestSync_CSFILES_CSC := $(subst /,$(SEP),$(TestSync_CSFILES))
 TestSync_INCLUDES = 
 TestSync_RESOURCES =
 TestSync_FLAGS = $(CSC_LIBFLAG)
-TestSync_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll CollectionStore.dll Identity.dll
+TestSync_LIBS = $(Sync_LIBS) $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Sync.dll 
 TestSync_LIBPATH = $(Sync_LIBPATH) ../../tools/NUnit/bin $(srcdir)/../../tools/NUnit/bin
 
 SyncTests_CSFILES = $(srcdir)/SyncTestStore.cs $(srcdir)/SyncTestCollection.cs $(srcdir)/Sync01Tests.cs $(srcdir)/Sync02Tests.cs
