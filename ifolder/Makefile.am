@@ -14,9 +14,9 @@ installcheck-summary: sub-installcheck-summary
 uninstall-local: sub-uninstall
 	rm -rf $(DESTDIR)$(bindir)/.cstore
 
-maintainer-clean: sub-maintainer-clean
-	rm -f configure Makefile.in ifolder-*.tar.gz
-	rm -f aclocal.m4 conf*.sh configure.lineno
+maintainer-clean-local: sub-maintainer-clean
+	rm -f configure Makefile.in ifolder-*.tar.gz config.cache
+	rm -f aclocal.m4 conf*.sh configure.lineno config.log
 	rm -f config.guess config.sub config.status
 	rm -f ltmain.sh libtool
 	rm -f install-sh install-sh.lnk INSTALL INSTALL.lnk
