@@ -28,14 +28,17 @@
 
 
 /*
-	@public
-		NSString	*ID;
-		NSString	*POBoxID;
-		NSString	*Name;
-		NSString	*Description;
-		NSString	*Host;
-		NSString	*UserID;
-		NSString	*UserName;
+	char *ID;
+	char *POBoxID;
+	char *Name;
+	char *Description;
+	char *Host;
+	char *UserID;
+	char *UserName;
+	enum xsd__boolean IsDefault;
+	enum xsd__boolean IsSlave;
+	enum xsd__boolean IsEnabled;
+	enum xsd__boolean IsConnected;
 */
 
 @interface iFolderDomain : NSObject
@@ -50,12 +53,13 @@
 -(void) setgSOAPProperties:(struct ns1__DomainWeb *)domainWeb;
 
 -(NSString *)ID;
--(NSString *)Name;
--(NSString *)UserName;
--(NSString *)Host;
--(NSString *)Password;
--(NSNumber *)IsDefault;
-
+-(NSString *)name;
+-(NSString *)userName;
+-(NSString *)host;
+-(NSString *)password;
+-(NSNumber *)isDefault;
+-(NSNumber *)isSlave;
+-(NSNumber *)isEnabled;
 
 
 @end

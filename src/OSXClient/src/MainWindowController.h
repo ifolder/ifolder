@@ -78,7 +78,6 @@
 
 - (void)doubleClickedTable:(id)sender;
 
-- (BOOL)connectToDomain:(iFolderDomain *)domain;
 - (BOOL)authenticateToDomain:(NSString *)domainID withPassword:(NSString *)password;
 - (void)createiFolder:(NSString *)path inDomain:(NSString *)domainID;
 - (void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath;
@@ -97,6 +96,8 @@
 // menu validation
 - (BOOL)validateUserInterfaceItem:(id)anItem;
 
+
+- (NSArrayController *)DomainsController;
 
 
 //==========================================

@@ -27,6 +27,8 @@
 				3E70A40B078DFCD80075681D,
 				3EB8C510079393B60082AA86,
 				3EB8C511079393B60082AA86,
+				3E3BC75307AB5B7B00D2AE46,
+				3E3BC75407AB5B7B00D2AE46,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -168,17 +170,17 @@
 		};
 		29B97317FDCFA39411CA2CEA = {
 			children = (
-				3E49BC6B0765224B0040812D,
 				8D1107310486CEB800E47090,
 				089C165CFE840E0CC02AAC07,
 				29B97318FDCFA39411CA2CEA,
 				3EF2212D07681AA400EE2EF6,
 				3E70A407078DFB8A0075681D,
+				3EB8C509079392230082AA86,
+				3E49BC6B0765224B0040812D,
 				3E8ACEF7078E4CFC0036C050,
 				3E8ACF02078E4D040036C050,
 				3EEAA53B078F167000EE44EE,
 				3EEAA53D078F167B00EE44EE,
-				3EB8C509079392230082AA86,
 				3E1DBE1407A7606200B31BA4,
 				3E1DBE1607A7607000B31BA4,
 				3E1DBE1807A7607900B31BA4,
@@ -470,6 +472,36 @@
 		};
 		3E34A2820772BF1A009AC400 = {
 			fileRef = 3E34A2810772BF1A009AC400;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3BC75307AB5B7B00D2AE46 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AccountsController.m;
+			path = src/AccountsController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3BC75407AB5B7B00D2AE46 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AccountsController.h;
+			path = src/AccountsController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3E3BC75507AB5B7B00D2AE46 = {
+			fileRef = 3E3BC75307AB5B7B00D2AE46;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3E3BC75607AB5B7B00D2AE46 = {
+			fileRef = 3E3BC75407AB5B7B00D2AE46;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1047,6 +1079,7 @@
 				3EE449E407A7DF0000B93B2F,
 				3E19255107A7E1FF00F9E44D,
 				3E19255307A7E20700F9E44D,
+				3E3BC75607AB5B7B00D2AE46,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1078,6 +1111,7 @@
 				3E4F573A078C30DA00313076,
 				3E70A40D078DFCD80075681D,
 				3EB8C512079393B60082AA86,
+				3E3BC75507AB5B7B00D2AE46,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

@@ -83,7 +83,7 @@
 		{
 			iFolderDomain *newDomain = [newDomains objectAtIndex:domainCount];
 			
-			if( [[newDomain IsDefault] boolValue] )
+			if( [[newDomain isDefault] boolValue] )
 				defaultDomain = newDomain;
 
 			[self addDomain:newDomain];
@@ -291,7 +291,7 @@
 	iFolderDomain *dom = [keyedDomains objectForKey:domainID];
 	
 	[[loginController window] center];
-	[loginController showLoginWindow:self withHost:[dom Host] withDomain:domainID];
+	[loginController showLoginWindow:self withHost:[dom host] withDomain:domainID];
 }
 
 
@@ -311,30 +311,6 @@
 }
 
 
-
-
-- (BOOL)connectToDomain:(iFolderDomain *)domain
-{
-	@try
-	{
-		iFolderDomain *newDomain = [webService ConnectToDomain:[domain UserName] 
-			usingPassword:[domain Password] andHost:[domain Host]];
-
-		[self addDomain:newDomain];
-		[self refreshWindow:self];
-
-		NSDictionary *newProps = [newDomain properties];		
-
-		[domain setProperties:newProps];
-		return YES;
-	}
-	@catch (NSException *e)
-	{
-		NSString *error = [e name];
-		NSRunAlertPanel(@"Login Error", [e name], @"OK",nil, nil);
-		return NO;
-	}
-}
 
 
 
@@ -478,6 +454,12 @@
 
 
 
+- (NSArrayController *)DomainsController
+{
+	return domainsController;
+}
+
+
 
 
 // Toobar Delegates
@@ -587,5 +569,21 @@
 	
 }
 
+
+
+/*
+static MyObject *sharedInstance = nil;
+
++ (MyObject *)sharedController
+{
+return sharedInstance;
+}
+
+- (void)awakeFromNib
+{
+sharedInstance = self;
+// etc...
+}
+*/
 
 @end
