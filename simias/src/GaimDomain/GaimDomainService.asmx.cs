@@ -251,35 +251,35 @@ namespace Simias.Gaim.DomainService
 		}
 		
 		/// <summary>
-		/// DESEncryptString() uses SymmetricKey (A Base64 encoded DES key) to
+		/// DESEncryptString() uses DESKey (A Base64 encoded DES key) to
 		/// encrypt UnencryptedString.
 		/// </summary>
-		/// <param name="SymmetricKey">The Base64 Encoded Key</param>
+		/// <param name="DESKey">The Base64 Encoded Key</param>
 		/// <param name="UnencryptedString">The string to be encrypted</param>
 		/// <returns>
 		/// Returns a string encrypted with the DES key and Base64 encoded.
 		/// </returns>
-		[WebMethod(Description="DESEncryptString() uses SymmetricKey (A Base64 encoded DES key) to encrypt UnencryptedString.")]
+		[WebMethod(Description="DESEncryptString() uses DESKey (A Base64 encoded DES key) to encrypt UnencryptedString.")]
 		[SoapDocumentMethod]
-		public string DESEncryptString(string SymmetricKey, string UnencryptedString)
+		public string DESEncryptString(string DESKey, string UnencryptedString)
 		{
-			return Crypto.EncryptData(SymmetricKey, UnencryptedString);
+			return Crypto.EncryptData(DESKey, UnencryptedString);
 		}
 
 		/// <summary>
-		/// DESDecryptString() uses SymmetricKey (A Base64 encoded DES key) to
+		/// DESDecryptString() uses DESKey (A Base64 encoded DES key) to
 		/// decrypt EncryptedString.
 		/// </summary>
-		/// <param name="SymmetricKey">The Base64 Encoded Key</param>
+		/// <param name="DESKey">The Base64 Encoded Key</param>
 		/// <param name="EncryptedString">The Base64 encoded + encrypted string to be decrypted</param>
 		/// <returns>
 		/// Returns a string decrypted with the DES key
 		/// </returns>
-		[WebMethod(Description="DESDecryptString() uses SymmetricKey (A Base64 encoded DES key) to decrypt EncryptedString.")]
+		[WebMethod(Description="DESDecryptString() uses DESKey (A Base64 encoded DES key) to decrypt EncryptedString.")]
 		[SoapDocumentMethod]
-		public string DESDecryptString(string SymmetricKey, string EncryptedString)
+		public string DESDecryptString(string DESKey, string EncryptedString)
 		{
-			return Crypto.DecryptData(SymmetricKey, EncryptedString);
+			return Crypto.DecryptData(DESKey, EncryptedString);
 		}
 
 		internal string GetMachineName()
