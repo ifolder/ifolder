@@ -89,7 +89,7 @@ namespace Novell.iFolder
 			nodeArray = new ArrayList();
 
 			nifWindow.Icon = NodePixBuf;
-			nifWindow.Title = "Denali Collection Browser";
+			nifWindow.Title = "Simias Collection Browser";
 
 			curIndex = -1;
 			enableDblClick = false;

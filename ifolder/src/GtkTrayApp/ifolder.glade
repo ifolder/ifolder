@@ -443,7 +443,7 @@
 
 <widget class="GtkWindow" id="BrowserWindow">
   <property name="visible">True</property>
-  <property name="title" translatable="yes">Denali Browser</property>
+  <property name="title" translatable="yes">iFolder Browser</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
@@ -790,12 +790,13 @@
 <widget class="GtkWindow" id="InviteWizard">
   <property name="width_request">600</property>
   <property name="visible">True</property>
-  <property name="title" translatable="yes">Denali Invitation Wizard</property>
+  <property name="title" translatable="yes">iFolder Invitation Wizard</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">ifolder.png</property>
   <signal name="delete_event" handler="on_main_delete_event" last_modification_time="Fri, 09 Jan 2004 17:02:19 GMT"/>
 
   <child>
@@ -1405,7 +1406,7 @@ drive.</property>
       <child>
 	<widget class="GtkLabel" id="label16">
 	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">Welcome to the Denali Invitation Wizard</property>
+	  <property name="label" translatable="yes">Welcome to the iFolder Invitation Wizard</property>
 	  <property name="use_underline">False</property>
 	  <property name="use_markup">False</property>
 	  <property name="justify">GTK_JUSTIFY_RIGHT</property>
