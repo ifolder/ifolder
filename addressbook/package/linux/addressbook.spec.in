@@ -131,7 +131,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Files
-%defattr(-,root,root)
+%defattr(755,root,root)
 %dir %{prefix}/bin
 %{prefix}/bin/AddressBookCmd.exe
 %{prefix}/bin/addressbookcmd
@@ -144,7 +144,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Files ui
-%defattr(-,root,root)
+%defattr(755,root,root)
 %dir %{prefix}/bin
 %{prefix}/bin/InvitationAssistant.exe
 %{prefix}/bin/ColPropViewer.exe

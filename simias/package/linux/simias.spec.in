@@ -121,7 +121,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Files
-%defattr(-,root,root)
+%defattr(755,root,root)
 %{prefix}/*
 
 
