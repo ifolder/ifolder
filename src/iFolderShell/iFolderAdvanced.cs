@@ -650,16 +650,27 @@ namespace Novell.iFolder.iFolderCom
 
 					// Take the relationship off the ShareListMember and put it on the Subscription object.  This will
 					// be used to hook up the Member and Contact objects after the subscription has been accepted.
-					Property property = slMember.Member.Properties.GetSingleProperty("Contact");
-					property.LocalProperty = true;
-					subscr.Properties.AddProperty(property);
-					Relationship relationship = (Relationship)property.Value;
+					if (ifolder.Domain.Equals(Domain.WorkGroupDomainID))
+					{
+						Property property = slMember.Member.Properties.GetSingleProperty("Contact");
+						if (property != null)
+						{
+							property.LocalProperty = true;
+							subscr.Properties.AddProperty(property);
+							Relationship relationship = (Relationship)property.Value;
 
-					// Get the contact so that we can get the e-mail address from it.
-					Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(relationship.CollectionID);
-					Contact contact = ab.GetContact(relationship.NodeID);
-					subscr.ToAddress = contact.EMail;
-					subscr.ToIdentity = contact.UserID;
+							// Get the contact so that we can get the e-mail address from it.
+							Novell.AddressBook.AddressBook ab = abManager.GetAddressBook(relationship.CollectionID);
+							Contact contact = ab.GetContact(relationship.NodeID);
+
+							subscr.ToAddress = contact.EMail;
+							subscr.ToIdentity = contact.UserID;
+						}
+					}
+					else
+					{
+						subscr.ToIdentity = slMember.Member.UserID;
+					}
 					
 					// Put the subscription in the POBox.
 					poBox.AddMessage(subscr);
