@@ -501,39 +501,70 @@ namespace Novell.FormsTrayApp
 
 		private void errorHandler(ApplicationException e, object context)
 		{
+			try
+			{
+				string errorFile = Path.Combine(Path.GetDirectoryName(new Configuration().ConfigPath), "iFolderApp.log");
+
+				// Create an instance of StreamWriter to write text to a file.
+				using (StreamWriter sw = new StreamWriter(errorFile, true))
+				{
+					// Add some text to the file.
+					sw.WriteLine("-------------------");
+					sw.WriteLine(DateTime.Now);
+					sw.WriteLine(e.Message);
+				}
+			}
+			catch {}
+
 			eventError = true;
 		}
 
 		private void trayApp_nodeEventHandler(SimiasEventArgs args)
 		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-
-			lock (eventQueue.SyncRoot)
+			try
 			{
-				// Put the event in the queue
-				eventQueue.Enqueue(eventArgs);
+				NodeEventArgs eventArgs = args as NodeEventArgs;
 
-				// Signal that there are events in the queue.
-				workEvent.Set();
+				lock (eventQueue.SyncRoot)
+				{
+					// Put the event in the queue
+					eventQueue.Enqueue(eventArgs);
+
+					// Signal that there are events in the queue.
+					workEvent.Set();
+				}
 			}
+			catch {}
 		}
 
 		private void trayApp_collectionSyncHandler(SimiasEventArgs args)
 		{
-			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
-			BeginInvoke(syncCollectionDelegate, new object[] {syncEventArgs});
+			try
+			{
+				CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
+				BeginInvoke(syncCollectionDelegate, new object[] {syncEventArgs});
+			}
+			catch {}
 		}
 
 		private void trayApp_fileSyncHandler(SimiasEventArgs args)
 		{
-			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
-			BeginInvoke(syncFileDelegate, new object[] {syncEventArgs});
+			try
+			{
+				FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
+				BeginInvoke(syncFileDelegate, new object[] {syncEventArgs});
+			}
+			catch {}
 		}
 
 		private void trayApp_notifyMessageHandler(SimiasEventArgs args)
 		{
-			NotifyEventArgs notifyEventArgs = args as NotifyEventArgs;
-			BeginInvoke(notifyMessageDelegate, new object[] {notifyEventArgs});
+			try
+			{
+				NotifyEventArgs notifyEventArgs = args as NotifyEventArgs;
+				BeginInvoke(notifyMessageDelegate, new object[] {notifyEventArgs});
+			}
+			catch {}
 		}
 
 		private void serverInfo_EnterpriseConnect(object sender, DomainConnectEventArgs e)
@@ -936,6 +967,8 @@ namespace Novell.FormsTrayApp
 
 									serverInfo = new ServerInfo(domainID);
 									serverInfo.Closed += new EventHandler(serverInfo_Closed);
+									serverInfo.CreateControl();
+									ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
 									serverInfo.Show();
 								}
 								else if (status.statusCode.Equals(StatusCodes.SuccessInGrace))
