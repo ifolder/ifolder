@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\tools\cygwin\home\banderso\code\ifolder\simias\src\stage\" >
+            <Settings ReferencePath = "C:\tools\cygwin\home\banderso\code\ifolder\simias\src\stage\;C:\code\simias\stage\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
@@ -11,7 +11,7 @@
                     RemoteDebugEnabled = "false"
                     RemoteDebugMachine = ""
                     StartAction = "Project"
-                    StartArguments = "importvcard -f  gustavo.vcf"
+                    StartArguments = "addproperty -c banderso -p tel=801-861-3130:pref:work"
                     StartPage = ""
                     StartProgram = ""
                     StartURL = ""

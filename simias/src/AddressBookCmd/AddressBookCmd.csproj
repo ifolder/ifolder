@@ -65,19 +65,19 @@
             </Settings>
             <References>
                 <Reference
-                    Name = "AddressBook"
-                    AssemblyName = "AddressBook"
-                    HintPath = "..\stage\AddressBook.dll"
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "..\..\..\..\..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "CollectionStore"
                     AssemblyName = "CollectionStore"
-                    HintPath = "..\stage\CollectionStore.dll"
+                    HintPath = "..\..\stage\CollectionStore.dll"
                 />
                 <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    Name = "AddressBook"
+                    AssemblyName = "AddressBook"
+                    HintPath = "..\..\stage\AddressBook.dll"
                 />
             </References>
         </Build>
@@ -90,6 +90,7 @@
                 />
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
             </Include>
