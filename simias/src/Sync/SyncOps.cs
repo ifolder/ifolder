@@ -208,7 +208,19 @@ internal class SyncOps
 
 		foreach (ShallowNode sn in collection)
 		{
-			Node node = new Node(collection, sn);
+			Node node;
+
+			try
+			{
+				node = new Node(collection, sn);
+			}
+			catch (Storage.DoesNotExistException e)
+			{
+				Log.Spew(e.Message);
+				Log.Spew("Node: {0} - ID: {1} - Type: {2} no longer exists.", sn.Name, sn.ID, sn.Type );
+				continue;
+			}
+
 			string path = OutgoingNode.GetOutNode(collection, ref node);
 			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
 			if (onServer && tombstone)

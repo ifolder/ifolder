@@ -237,9 +237,18 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="collection">Collection that the ShallowNode belongs to.</param>
 		/// <param name="shallowNode">ShallowNode object to create new Node object from.</param>
-		public Node( Collection collection, ShallowNode shallowNode ) :
-			this( collection.GetNodeByID( shallowNode.ID ) )
+		public Node( Collection collection, ShallowNode shallowNode )
 		{
+			Node node = collection.GetNodeByID( shallowNode.ID );
+			if ( node == null )
+			{
+				throw new DoesNotExistException( "The specified Node object does not exist." );
+			}
+
+			name = node.name;
+			id = node.id;
+			type = node.type;
+			properties = new PropertyList( node.properties );
 		}
 
 		/// <summary>
