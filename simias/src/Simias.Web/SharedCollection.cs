@@ -699,6 +699,19 @@ namespace Simias.Web
 
 
 
+
+		/// <summary>
+		/// WebMethod that causes the collection of the specified ID to be sync'd immediately.
+		/// </summary>
+		/// <param name="CollectionID">The ID of the collection to sync.</param>
+		public static void SyncCollectionNow(string CollectionID)
+		{
+			// TODO: This needs to be hooked up after sync has been 
+			// implemented through webservice.
+		}
+
+
+
 		
 		/// <summary>
 		/// Utility method that should be moved into the POBox class.
