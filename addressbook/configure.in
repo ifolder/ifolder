@@ -14,7 +14,7 @@ SPACE='$(EMPTY) $(EMPTY)'
 
 COMMON_SUBDIRS=
 LINUX_SUBDIRS="GtkAddrBook"
-WINDOWS_SUBDIRS="FormsBookLib FormsAddrBook ABGui"
+WINDOWS_SUBDIRS="FormsBookLib FormsAddrBook"
 
 #
 # Check for a valid operating system
@@ -313,7 +313,6 @@ src/Makefile
 src/FormsBookLib/Makefile
 src/FormsAddrBook/Makefile
 src/GtkAddrBook/Makefile
-src/ABGui/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
