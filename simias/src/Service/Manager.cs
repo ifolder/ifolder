@@ -145,7 +145,7 @@ namespace Simias.Service
 
 				// TODO: Remove when mono compacts the heap.
 				logger.Debug("Machine memory size = {0}MB", machineMemorySize / (1024 * 1024));
-				if (config.Exists("ClientRollOver", "MemoryUsed"))
+				if (config.Exists("ClientRollOver", "PercentMemoryUsed"))
 				{
 					string tempString = config.Get( "ClientRollOver", "PercentMemoryUsed", null);
 					memoryPercentage = Convert.ToSingle( tempString );
