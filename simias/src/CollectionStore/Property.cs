@@ -1292,7 +1292,7 @@ namespace Simias.Storage
 					foreach ( Property p in mvlDelete )
 					{
 						// Get the proper match value.
-						string matchValue = isFse ? p.xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : ValueString;
+						string matchValue = isFse ? p.xmlProperty[ Property.FileSystemEntryTag ].GetAttribute( Property.IDAttr ) : p.ValueString;
 
 						// Does the value match?
 						if ( matchValue == currentValue )
