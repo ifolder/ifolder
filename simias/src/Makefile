@@ -45,6 +45,7 @@ SUBDIRS_OS_LINUX = \
 	Identity \
 	WorkGroupIdentity \
 	CollectionStore \
+	FsWatcher \
 	Agent \
 	SyncCommon \
 	StoreWatcher \
@@ -73,6 +74,7 @@ SUBDIRS_OS_WINDOWS = \
 	Identity \
 	WorkGroupIdentity \
 	CollectionStore \
+	FsWatcher \
     Agent \
 	SyncCommon \
 	StoreWatcher \
@@ -324,6 +326,9 @@ report:
 # File CVS History:
 #
 # $Log$
+# Revision 1.4  2004/02/23 21:46:02  ryoung65
+# Added FsWatcher to the build
+#
 # Revision 1.3  2004/02/23 18:55:47  pthomas707
 # Renamed install directory to package
 #
