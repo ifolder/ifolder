@@ -32,13 +32,6 @@ namespace Simias.Storage
 	/// </summary>
 	public class DirNode : Node
 	{
-		#region Class Members
-		/// <summary>
-		/// Well known identifier that represents the root directory relationship in a dirNode.
-		/// </summary>
-		private const string RootID = "a9d9a742-fd42-492c-a7f2-4ec4f023c625";
-		#endregion
-
 		#region Properties
 		/// <summary>
 		/// Gets the directory creation time.
@@ -62,14 +55,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets whether this object is the root directory in the collection.
+		/// Gets whether this object is the root relationship.
 		/// </summary>
 		public bool IsRoot
 		{
-			get 
+			get
 			{
-				Relationship r = properties.GetSingleProperty( Property.ParentID ).Value as Relationship;
-				return ( r.NodeID == DirNode.RootID ) ? true : false;
+				Property p = properties.GetSingleProperty( Property.ParentID );
+				return ( p != null ) ? ( p.Value as Relationship ).IsRoot : false;
 			}
 		}
 
@@ -166,7 +159,7 @@ namespace Simias.Storage
 			base ( Path.GetFileName( dirPath ), dirID, NodeTypes.DirNodeType )
 		{
 			// Set the parent attribute.
-			properties.AddNodeProperty( Property.ParentID, new Relationship( collection.ID, RootID ) );
+			properties.AddNodeProperty( Property.ParentID, new Relationship( collection ) );
 
 			// Set the root path property.
 			string parentDir = Path.GetDirectoryName( dirPath );
@@ -254,7 +247,7 @@ namespace Simias.Storage
 			if ( property != null )
 			{
 				Relationship relationship = property.Value as Relationship;
-				if ( relationship.NodeID != RootID )
+				if ( !relationship.IsRoot )
 				{
 					Node node = collection.GetNodeByID( relationship.NodeID );
 					if ( node != null )

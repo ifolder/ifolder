@@ -34,6 +34,11 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Well known identifier that represents the root directory relationship in a dirNode.
+		/// </summary>
+		private const string RootID = "a9d9a742-fd42-492c-a7f2-4ec4f023c625";
+
+		/// <summary>
 		/// Collection that reference belongs to.
 		/// </summary>
 		private string collectionID;
@@ -54,6 +59,14 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets whether this object is the root relationship.
+		/// </summary>
+		public bool IsRoot
+		{
+			get { return ( nodeID == RootID ) ? true : false; }
+		}
+
+		/// <summary>
 		/// Gets the Node identifier for the relationship.
 		/// </summary>
 		public string NodeID
@@ -64,14 +77,24 @@ namespace Simias.Storage
 
 		#region Constructor
 		/// <summary>
+		/// Constructor for the Relationship object that creates a root relationship object.
+		/// </summary>
+		/// <param name="collection">Collection for the relationship.</param>
+		public Relationship( Collection collection ) :
+			this ( collection.ID, null )
+		{
+		}
+
+		/// <summary>
 		/// Constructor for the Relationship object.
 		/// </summary>
 		/// <param name="collectionID">Collection identifier for the relationship.</param>
-		/// <param name="nodeID">Node identifier for the relationship.</param>
+		/// <param name="nodeID">Node identifier for the relationship. If this parameter is null,
+		/// this object is the root of the relationship.</param>
 		public Relationship( string collectionID, string nodeID )
 		{
 			this.collectionID = collectionID.ToLower();
-			this.nodeID = nodeID.ToLower();
+			this.nodeID = ( nodeID != null ) ? nodeID.ToLower() : RootID;
 		}
 
 		/// <summary>
@@ -1222,10 +1245,10 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Determines if the propertyName is a system property.
+		/// Determines if the propertyName is a system (non-editable) property.
 		/// </summary>
-		/// <returns>true if propertyName specifies a system property.</returns>
-		internal bool IsSystemProperty()
+		/// <returns>True if propertyName specifies a system property, otherwise false is returned.</returns>
+		public bool IsSystemProperty()
 		{
 			return systemPropertyTable.Contains( xmlProperty.GetAttribute( XmlTags.NameAttr ) );
 		}
