@@ -39,6 +39,9 @@ namespace Simias.Authentication
 	{
 		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(Credentials));
 		private string collectionID;
+		private string memberID;
+		private string domainID;
+		private Store store;
 
 		/// <summary>
 		/// Constructor for checking if credentials exist for collection
@@ -46,6 +49,18 @@ namespace Simias.Authentication
 		public Credentials(string collectionID)
 		{
 			this.collectionID = collectionID;
+			this.store = Store.GetStore();
+		}
+
+		/// <summary>
+		/// Constructor for checking if credentials exist for a domain
+		/// and a member
+		/// </summary>
+		public Credentials(string domainID, string memberID)
+		{
+			this.domainID = domainID;
+			this.memberID = memberID;
+			this.store = Store.GetStore();
 		}
 
 		/// <summary>
@@ -61,55 +76,67 @@ namespace Simias.Authentication
 			//
 
 			NetworkCredential realCreds = null;
+			Simias.Storage.Domain cDomain = null;
+			Simias.Storage.Member cMember = null;
 
 			try
 			{
 				Store	store = Store.GetStore();
 
-				// Validate the shared collection
-				Collection cCol = store.GetCollectionByID(collectionID);
-				if (cCol != null)
+				if (this.collectionID != null)
 				{
-					Simias.Storage.Member cMember = cCol.GetCurrentMember();
-					if (cMember != null)
+					// Validate the shared collection
+					Collection cCol = store.GetCollectionByID(collectionID);
+					if (cCol != null)
 					{
-						Simias.Storage.Domain cDomain = store.GetDomain(cCol.Domain);
-
-						NetCredential cCreds = 
-							new NetCredential(
-							"iFolder", 
-							cDomain.ID, 
-							true, 
-							cMember.Name, 
-							null);
-
-						Uri cUri = new Uri(cDomain.HostAddress.ToString());
-						realCreds = cCreds.GetCredential(cUri, "BASIC");
-						if (realCreds == null)
+						cMember = cCol.GetCurrentMember();
+						if (cMember != null)
 						{
-							log.Info("Credentials::GetCredentials - credentials not found");
-
-							// Generate a "needs credentials" event
-							/*
-							EventPublisher cEvent = new EventPublisher();
-							Simias.Client.Event.NotifyEventArgs cArg =
-								new Simias.Client.Event.NotifyEventArgs(
-								"Need-Credentials", 
-								collectionID, 
-								System.DateTime.Now);
-
-							cEvent.RaiseEvent(cArg);
-							*/
+							cDomain = store.GetDomain(cCol.Domain);
 						}
+						else
+						{
+							log.Debug("Credentials::GetCredentials - current member not found");
+						}
+
 					}
 					else
 					{
-						log.Debug("Credentials::GetCredentials - current member not found");
+						log.Debug("Credentials::GetCredentials - collection not found");
 					}
 				}
 				else
 				{
-					log.Debug("Credentials::GetCredentials - collection not found");
+					cDomain = this.store.GetDomain(this.domainID);
+					Roster cRoster = cDomain.GetRoster(this.store);
+					cMember = cRoster.GetMemberByID(this.memberID);
+				}
+
+				NetCredential cCreds = 
+					new NetCredential(
+						"iFolder", 
+						cDomain.ID, 
+						true, 
+						cMember.Name, 
+						null);
+
+				Uri cUri = new Uri(cDomain.HostAddress.ToString());
+				realCreds = cCreds.GetCredential(cUri, "BASIC");
+				if (realCreds == null)
+				{
+					log.Info("Credentials::GetCredentials - credentials not found");
+
+					// Generate a "needs credentials" event
+					/*
+						EventPublisher cEvent = new EventPublisher();
+						Simias.Client.Event.NotifyEventArgs cArg =
+							new Simias.Client.Event.NotifyEventArgs(
+							"Need-Credentials", 
+							collectionID, 
+							System.DateTime.Now);
+
+						cEvent.RaiseEvent(cArg);
+					*/
 				}
 			}
 			catch{}

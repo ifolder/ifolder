@@ -314,16 +314,18 @@ namespace Simias.POBox
 			poService.Url = this.poServiceUrl;
 			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
 
+			// Get credentials for the request
+			Credentials cSimiasCreds = 
+				new Credentials(subscription.DomainID, subscription.ToIdentity);
+			poService.Credentials = cSimiasCreds.GetCredentials();
+			if (poService.Credentials == null)
+			{
+				log.Info("  no credentials - back to sleep");
+				return (status);
+			}
+
 			try
 			{
-				Credentials cSimiasCreds = new Credentials(subscription.SubscriptionCollectionID);
-				poService.Credentials = cSimiasCreds.GetCredentials();
-
-				if (poService.Credentials == null)
-				{
-					log.Info("  no credentials - back to sleep");
-					return (status);
-				}
 
 				if (subscription.SubscriptionDisposition == SubscriptionDispositions.Accepted)
 				{
@@ -397,18 +399,17 @@ namespace Simias.POBox
 			poService.Url = this.poServiceUrl;
 			poService.CookieContainer = new CookieContainer();
 
+			Credentials cSimiasCreds = 
+				new Credentials(subscription.DomainID, subscription.ToIdentity);
+			poService.Credentials = cSimiasCreds.GetCredentials();
+			if (poService.Credentials == null)
+			{
+				log.Info("  no credentials - back to sleep");
+				return(result);
+			}
+
 			try
 			{
-
-				Credentials cSimiasCreds = new Credentials(subscription.SubscriptionCollectionID);
-				poService.Credentials = cSimiasCreds.GetCredentials();
-
-				if (poService.Credentials == null)
-				{
-					log.Info("  no credentials - back to sleep");
-					return(result);
-				}
-
 				SubscriptionInformation subInfo =
 					poService.GetSubscriptionInfo(
 						subscription.DomainID,

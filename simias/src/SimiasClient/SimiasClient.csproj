@@ -89,12 +89,27 @@
                     AssemblyName = "System.Web.Services"
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.Services.dll"
                 />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.PasswordDialog"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.PasswordDialog"
+                    HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.PasswordDialog.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
+                    HintPath = "..\..\external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Authentication.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -186,6 +201,11 @@
                 <File
                     RelPath = "SimiasEventArgs.cs"
                     SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SimiasService.cs"
+                    SubType = "code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -114,6 +114,16 @@
                     Project = "{E38BAF80-9B31-4D15-A002-E775B96FAFA6}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.PasswordDialog"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.PasswordDialog"
+                    HintPath = "external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.PasswordDialog.dll"
+                />
+                <Reference
+                    Name = "Novell.Security.ClientPasswordManager.NetCredential"
+                    AssemblyName = "Novell.Security.ClientPasswordManager.NetCredential"
+                    HintPath = "external\Novell.Security\net\bin\Novell.Security.ClientPasswordManager.NetCredential.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -274,7 +284,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Credentials\Credentials.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Domain\DomainAgent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\DomainWatcher\DomainWatcher.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\DomainWatcher\Service.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -735,11 +760,6 @@
                 />
                 <File
                     RelPath = "src\Sync\SyncLog.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Sync\SyncPolicy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
