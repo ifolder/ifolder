@@ -802,6 +802,8 @@ namespace Simias.Web
 														Collection col,
 														string UserID)
 		{
+			// TODO: this method needs to be fixed ... this will cause a POBox
+			// to be created on the local machine for the given UserID.
 			// Get the member's POBox
 			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
 												store.DefaultDomain, 
