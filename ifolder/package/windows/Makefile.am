@@ -59,7 +59,7 @@ MSM_LOG_FILE     = issabld-$(MSM).log
 SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
 BLD_VER_LOG_FILE = bldver.log
 
-SYNC_BLD_VERSION = $(TOOLDIR)/SyncBuildVersion/bin/SyncBuildVersion.exe
+SYNC_BLD_VERSION = $(TOOLDIR)/SyncBuildVersion/SyncBuildVersion.exe
 
 ISSABLD_CONFIG  = web
 ISSABLD_RELEASE = release
