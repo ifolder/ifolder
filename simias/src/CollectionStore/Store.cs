@@ -354,6 +354,11 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		public void AddDomainIdentity( string userID, string domainName, string domainID )
 		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
 			Node[] nodeList = new Node[ 2 ];
 
 			// Create the domain object.
@@ -391,6 +396,11 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		public void DeleteDomainIdentity( string domainID )
 		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
 			Node[] nodeList = new Node[ 2 ];
 
 			// Delete the domain object.
@@ -421,10 +431,54 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		///  Gets all collections that have the specified name.
+		/// Gets all collections that belong to the specified domain.
+		/// </summary>
+		/// <param name="domainID">Domain identifier.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection
+		/// objects that matched the specified domain.</returns>
+		public ICSList GetCollectionsByDomain( string domainID )
+		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
+			// Create a container object to hold all collections that match the specified domain.
+			ICSList collectionList = new ICSList();
+
+			Persist.Query query = new Persist.Query( PropertyTags.DomainID, SearchOp.Equal, domainID, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
+				{
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						collectionList.Add( new ShallowNode( xe ) );
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
+				}
+
+				chunkIterator.Dispose();
+			}
+
+			return collectionList;
+		}
+
+		/// <summary>
+		/// Gets all collections that have the specified name.
 		/// </summary>
 		/// <param name="name">A string containing the name of the collection(s) to search for.
-		/// This parameter may be specified as a regular expression.</param>
 		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection 
 		/// objects that matched the specified name.</returns>
 		public ICSList GetCollectionsByName( string name )
@@ -437,16 +491,34 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			// Build a regular expression class to use as the comparision.
-			Regex searchName = new Regex( "^" + name + "$", RegexOptions.IgnoreCase );
-
-			// Look at each collection that this user has rights to and match up on the name.
-			foreach ( ShallowNode shallowNode in this )
+			Persist.Query query = new Persist.Query( BaseSchema.ObjectName, SearchOp.Equal, name, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
 			{
-				if ( searchName.IsMatch( shallowNode.Name ) )
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
 				{
-					collectionList.Add( shallowNode );
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						// See if this element represents a collection.
+						if ( xe.GetAttribute( XmlTags.IdAttr ) == xe.GetAttribute( XmlTags.CIdAttr ) )
+						{
+							collectionList.Add( new ShallowNode( xe ) );
+						}
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
 				}
+
+				chunkIterator.Dispose();
 			}
 
 			return collectionList;
@@ -456,7 +528,6 @@ namespace Simias.Storage
 		///  Gets all collections that have the specified type.
 		/// </summary>
 		/// <param name="type">String that contains the type of the collection(s) to search for.
-		/// This parameter may be specified as a regular expression.</param>
 		/// <returns>An ICSList object containing the ShallowNode objects that match the specified 
 		/// type.</returns>
 		public ICSList GetCollectionsByType( string type )
@@ -469,22 +540,84 @@ namespace Simias.Storage
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
-			// Build a regular expression class to use as the comparision.
-			Regex searchType = new Regex( "^" + type + "$", RegexOptions.IgnoreCase );
-
-			// Look at each collection that this user has rights to and match up on the name.
-			foreach ( ShallowNode shallowNode in this )
+			Persist.Query query = new Persist.Query( PropertyTags.Types, SearchOp.Equal, type, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
 			{
-				Collection collection = Collection.CollectionFactory( this, shallowNode );
-				MultiValuedList mvl = collection.Properties.FindValues( PropertyTags.Types );
-				foreach ( Property property in mvl )
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
 				{
-					if ( searchType.IsMatch( property.ToString() ) )
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
 					{
-						collectionList.Add( shallowNode );
-						break;
+						// See if this element represents a collection.
+						if ( xe.GetAttribute( XmlTags.IdAttr ) == xe.GetAttribute( XmlTags.CIdAttr ) )
+						{
+							collectionList.Add( new ShallowNode( xe ) );
+						}
 					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
 				}
+
+				chunkIterator.Dispose();
+			}
+
+			return collectionList;
+		}
+
+		/// <summary>
+		/// Gets all collections that belong to the specified user.
+		/// </summary>
+		/// <param name="userID">User identifier.</param>
+		/// <returns>An ICSList object containing ShallowNode objects that represent the Collection
+		/// objects that matched the specified user.</returns>
+		public ICSList GetCollectionsByUser( string userID )
+		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
+			// Create a container object to hold all collections that match the specified user.
+			ICSList collectionList = new ICSList();
+
+			Persist.Query query = new Persist.Query( PropertyTags.Ace, SearchOp.Begins, userID, Syntax.String );
+			Persist.IResultSet chunkIterator = storageProvider.Search( query );
+			if ( chunkIterator != null )
+			{
+				char[] results = new char[ 4096 ];
+
+				// Get the first set of results from the query.
+				int length = chunkIterator.GetNext( ref results );
+				while ( length > 0 )
+				{
+					// Set up the XML document so the data can be easily extracted.
+					XmlDocument document = new XmlDocument();
+					document.LoadXml( new string( results, 0, length ) );
+
+					foreach ( XmlElement xe in document.DocumentElement )
+					{
+						// Get the collection that this Member object belongs to.
+						string collectionID = xe.GetAttribute( XmlTags.CIdAttr );
+						
+						// Get the collection object.
+						XmlDocument cDoc = storageProvider.GetShallowRecord( collectionID );
+						collectionList.Add( new ShallowNode( cDoc.DocumentElement[ XmlTags.ObjectTag ] ) );
+					}
+
+					// Get the next set of results from the query.
+					length = chunkIterator.GetNext( ref results );
+				}
+
+				chunkIterator.Dispose();
 			}
 
 			return collectionList;
@@ -539,6 +672,11 @@ namespace Simias.Storage
 		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
 		public Domain GetDomain( string domainID )
 		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
 			return localDb.GetNodeByID( domainID.ToLower() ) as Domain;
 		}
 
@@ -617,6 +755,11 @@ namespace Simias.Storage
 		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
 		public string GetUserIDFromDomainID( string domainID )
 		{
+			if ( disposed )
+			{
+				throw new DisposedException( this );
+			}
+
 			return identity.GetUserIDFromDomain( localDb, domainID.ToLower() );
 		}
 		#endregion

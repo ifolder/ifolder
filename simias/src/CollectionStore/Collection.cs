@@ -73,7 +73,7 @@ namespace Simias.Storage
 				if ( domainID == null )
 				{
 					// Only look it up one time.
-					domainID = properties.FindSingleValue( PropertyTags.DomainName ).Value as string; 
+					domainID = properties.FindSingleValue( PropertyTags.DomainID ).Value as string; 
 				}
 
 				return domainID;
@@ -237,7 +237,7 @@ namespace Simias.Storage
 			}
 
 			// Add the domain ID as a property.
-			properties.AddNodeProperty( PropertyTags.DomainName, domainID );
+			properties.AddNodeProperty( PropertyTags.DomainID, domainID );
 
 			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );
@@ -460,9 +460,6 @@ namespace Simias.Storage
 						// Validate this Collection object.
 						ValidateNodeForCommit( node );
 
-						// Set the modify time for this object.
-						node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 						// Increment the local incarnation number for the object.
 						IncrementLocalIncarnation( node );
 
@@ -512,9 +509,6 @@ namespace Simias.Storage
 								// Validate this Collection object.
 								ValidateNodeForCommit( node );
 
-								// Set the modify time for this object.
-								node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 								// Increment the local incarnation number for the object.
 								IncrementLocalIncarnation( node );
 
@@ -544,9 +538,6 @@ namespace Simias.Storage
 								// been made.
 								if ( !onlyLocalChanges )
 								{
-									// Set the modify time for this object.
-									node.Properties.ModifyNodeProperty( "ModifyTime", DateTime.UtcNow );
-
 									// Increment the local incarnation number for the object.
 									IncrementLocalIncarnation( mergeNode );
 								}
