@@ -542,6 +542,16 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="SynciFolderNow">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynciFolderNowResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
       <xs:element name="boolean" type="xs:boolean" />
       <xs:element name="iFolder" type="s0:iFolder" />
@@ -775,6 +785,12 @@
   <message name="CalculateSyncSizeSoapOut">
     <part name="parameters" element="s0:CalculateSyncSizeResponse" />
   </message>
+  <message name="SynciFolderNowSoapIn">
+    <part name="parameters" element="s0:SynciFolderNow" />
+  </message>
+  <message name="SynciFolderNowSoapOut">
+    <part name="parameters" element="s0:SynciFolderNowResponse" />
+  </message>
   <message name="PingHttpGetIn" />
   <message name="PingHttpGetOut" />
   <message name="GetSettingsHttpGetIn" />
@@ -975,6 +991,10 @@
   <message name="CalculateSyncSizeHttpGetOut">
     <part name="Body" element="s0:SyncSize" />
   </message>
+  <message name="SynciFolderNowHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="SynciFolderNowHttpGetOut" />
   <message name="PingHttpPostIn" />
   <message name="PingHttpPostOut" />
   <message name="GetSettingsHttpPostIn" />
@@ -1175,6 +1195,10 @@
   <message name="CalculateSyncSizeHttpPostOut">
     <part name="Body" element="s0:SyncSize" />
   </message>
+  <message name="SynciFolderNowHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="SynciFolderNowHttpPostOut" />
   <portType name="iFolder Web ServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn" />
@@ -1360,6 +1384,11 @@
       <input message="s0:CalculateSyncSizeSoapIn" />
       <output message="s0:CalculateSyncSizeSoapOut" />
       <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
+    </operation>
+    <operation name="SynciFolderNow">
+      <input message="s0:SynciFolderNowSoapIn" />
+      <output message="s0:SynciFolderNowSoapOut" />
+      <documentation>Sends a command to the sync engine to sync the iFolder of the specified ID.</documentation>
     </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpGet">
@@ -1548,6 +1577,11 @@
       <output message="s0:CalculateSyncSizeHttpGetOut" />
       <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
     </operation>
+    <operation name="SynciFolderNow">
+      <input message="s0:SynciFolderNowHttpGetIn" />
+      <output message="s0:SynciFolderNowHttpGetOut" />
+      <documentation>Sends a command to the sync engine to sync the iFolder of the specified ID.</documentation>
+    </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpPost">
     <operation name="Ping">
@@ -1734,6 +1768,11 @@
       <input message="s0:CalculateSyncSizeHttpPostIn" />
       <output message="s0:CalculateSyncSizeHttpPostOut" />
       <documentation>Calculates the number of nodes and bytes that need sync'd.</documentation>
+    </operation>
+    <operation name="SynciFolderNow">
+      <input message="s0:SynciFolderNowHttpPostIn" />
+      <output message="s0:SynciFolderNowHttpPostOut" />
+      <documentation>Sends a command to the sync engine to sync the iFolder of the specified ID.</documentation>
     </operation>
   </portType>
   <binding name="iFolder Web ServiceSoap" type="s0:iFolder Web ServiceSoap">
@@ -2071,6 +2110,15 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="SynciFolderNow">
+      <soap:operation soapAction="http://novell.com/ifolder/web/SynciFolderNow" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpGet" type="s0:iFolder Web ServiceHttpGet">
     <http:binding verb="GET" />
@@ -2375,6 +2423,13 @@
       </input>
       <output />
     </operation>
+    <operation name="SynciFolderNow">
+      <http:operation location="/SynciFolderNow" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpPost" type="s0:iFolder Web ServiceHttpPost">
     <http:binding verb="POST" />
@@ -2674,6 +2729,13 @@
     </operation>
     <operation name="CalculateSyncSize">
       <http:operation location="/CalculateSyncSize" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="SynciFolderNow">
+      <http:operation location="/SynciFolderNow" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

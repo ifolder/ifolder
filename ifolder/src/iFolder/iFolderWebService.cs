@@ -767,6 +767,24 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
         object[] results = this.EndInvoke(asyncResult);
         return ((SyncSize)(results[0]));
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/web/SynciFolderNow", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public void SynciFolderNow(string iFolderID) {
+        this.Invoke("SynciFolderNow", new object[] {
+                    iFolderID});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginSynciFolderNow(string iFolderID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("SynciFolderNow", new object[] {
+                    iFolderID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void EndSynciFolderNow(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
 }
 
 /// <remarks/>

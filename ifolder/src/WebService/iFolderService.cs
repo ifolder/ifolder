@@ -1130,5 +1130,19 @@ namespace Novell.iFolder.Web
 			
 			return new SyncSize(SyncNodeCount, SyncByteCount);
 		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sends a command to the sync engine to sync the iFolder of the specified ID.
+		/// </summary>
+		/// <param name="iFolderID">The collection ID of the iFolder to sync.</param>
+		[WebMethod(Description="Sends a command to the sync engine to sync the iFolder of the specified ID.")]
+		[SoapDocumentMethod]
+		public void SynciFolderNow(string iFolderID)
+		{
+			SharedCollection.SyncCollectionNow(iFolderID);
+		}
 	}
 }

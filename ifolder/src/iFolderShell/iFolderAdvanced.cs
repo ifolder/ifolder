@@ -768,11 +768,9 @@ namespace Novell.iFolderCom
 				conflicts.Visible = pictureBox1.Visible = ifolder.HasConflicts;
 
 				// Get the sync node and byte counts.
-				uint nodeCount;
-				ulong bytesToSend;
-//				SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
-//				objectCount.Text = nodeCount.ToString();
-//				byteCount.Text = bytesToSend.ToString();
+				SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
+				objectCount.Text = syncSize.SyncNodeCount.ToString();
+				byteCount.Text = syncSize.SyncByteCount.ToString();
 
 				Cursor.Current = Cursors.Default;
 			}
