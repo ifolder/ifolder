@@ -30,7 +30,7 @@ namespace Novell.iFolder
 	{
 		private Entry		pathEntry;
 
-		public string Path
+		public new string Path
 		{
 			get
 			{
@@ -38,7 +38,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		public iFolderAcceptDialog(iFolder ifolder) : base()
+		public iFolderAcceptDialog(iFolderInfo ifolder) : base()
 		{
 			this.Title = 
 				string.Format(Util.GS("Setup iFolder \"{0}\""), ifolder.Name);

@@ -34,7 +34,7 @@ namespace Novell.iFolder.Web
 	/// used in association with the iFolderWebService class.
 	/// </summary>
 	[Serializable]
-	public class iFolder
+	public class iFolderInfo
 	{
 		public static readonly string FilesDirName = "SimiasFiles";
 		public static readonly string iFolderType = "iFolder";
@@ -62,11 +62,11 @@ namespace Novell.iFolder.Web
 		public string CurrentUserRights;
 		public string CollectionID;
 
-		public iFolder()
+		public iFolderInfo()
 		{
 		}
 
-		public iFolder(Collection collection)
+		public iFolderInfo(Collection collection)
 		{
 			this.Domain = collection.Domain;
 			this.DomainIdentity = collection.Domain;
@@ -110,7 +110,7 @@ namespace Novell.iFolder.Web
 		}
 
 
-		public iFolder(Subscription subscription)
+		public iFolderInfo(Subscription subscription)
 		{
 			this.Domain = subscription.DomainID;
 			this.DomainIdentity = subscription.DomainID;

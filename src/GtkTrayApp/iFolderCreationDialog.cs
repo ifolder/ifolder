@@ -39,7 +39,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		public iFolderCreationDialog(iFolder ifolder) : base()
+		public iFolderCreationDialog(iFolderInfo ifolder) : base()
 		{
 //			this.ifolder = ifolder;
 			this.Title = Util.GS("iFolder Introduction");

@@ -48,13 +48,13 @@ namespace Novell.iFolder
 
 	internal class SimiasEvent
 	{
-		private iFolder				ifolder;
+		private iFolderInfo				ifolder;
 		private iFolderUser			ifUser;
 		private string				ifolderID;
 		private string				userID;
 		private SimiasEventType		type;
 	
-		public SimiasEvent(iFolder ifldr, iFolderUser ifldrUser, 
+		public SimiasEvent(iFolderInfo ifldr, iFolderUser ifldrUser, 
 					string iFolderID, string UserID, SimiasEventType type)
 		{
 			this.ifolder = ifldr;
@@ -64,7 +64,7 @@ namespace Novell.iFolder
 			this.type = type;
 		}
 
-		public iFolder iFolder
+		public iFolderInfo iFolder
 		{
 			get{ return this.ifolder; }
 		}
@@ -93,14 +93,14 @@ namespace Novell.iFolder
 
 	public class iFolderAddedEventArgs : EventArgs
 	{
-		private iFolder	ifolder;
+		private iFolderInfo	ifolder;
 
-		public iFolderAddedEventArgs(iFolder ifldr)
+		public iFolderAddedEventArgs(iFolderInfo ifldr)
 		{
 			this.ifolder = ifldr;
 		}
 
-		public iFolder iFolder
+		public iFolderInfo iFolder
 		{
 			get{ return this.ifolder; }
 		}
@@ -111,14 +111,14 @@ namespace Novell.iFolder
 
 	public class iFolderChangedEventArgs : EventArgs
 	{
-		private iFolder	ifolder;
+		private iFolderInfo	ifolder;
 
-		public iFolderChangedEventArgs(iFolder ifldr)
+		public iFolderChangedEventArgs(iFolderInfo ifldr)
 		{
 			this.ifolder = ifldr;
 		}
 
-		public iFolder iFolder
+		public iFolderInfo iFolder
 		{
 			get{ return this.ifolder; }
 		}
@@ -466,7 +466,7 @@ namespace Novell.iFolder
 						if(	(ifSettings != null) && 
 							(nargs.Collection == ifSettings.DefaultPOBoxID) )
 						{
-							iFolder ifolder;
+							iFolderInfo ifolder;
 
 							try
 							{
@@ -484,7 +484,7 @@ namespace Novell.iFolder
 								// that's available, now check to make sure
 								// the corresponding iFolder isn't on the
 								// machine already (it was created here)
-								iFolder localiFolder;
+								iFolderInfo localiFolder;
 
 								try
 								{
@@ -521,7 +521,7 @@ namespace Novell.iFolder
 							// first test to see if this is an
 							// ifolder.  We don't care if it is
 							// not an iFolder
-							iFolder localiFolder = ifws.GetiFolder(
+							iFolderInfo localiFolder = ifws.GetiFolder(
 											nargs.Collection);
 							if(localiFolder != null)
 							{
@@ -557,7 +557,7 @@ namespace Novell.iFolder
 					{
 						try
 						{
-							iFolder ifolder = 
+							iFolderInfo ifolder = 
 									ifws.GetiFolder(nargs.Collection);
 							if(ifolder != null)
 							{
@@ -592,7 +592,7 @@ namespace Novell.iFolder
 					{
 						try
 						{
-							iFolder ifolder = 
+							iFolderInfo ifolder = 
 									ifws.GetiFolder(nargs.Collection);
 							if( (ifolder != null) && (ifolder.HasConflicts) )
 							{
@@ -653,7 +653,7 @@ namespace Novell.iFolder
 						{
 							try
 							{
-								iFolder ifolder = 
+								iFolderInfo ifolder = 
 									ifws.GetiFolder(nargs.ID);
 
 								if(ifolder != null)
@@ -719,7 +719,7 @@ namespace Novell.iFolder
 
 						try
 						{
-							iFolder ifolder = 
+							iFolderInfo ifolder = 
 								ifws.GetiFolder(nargs.Collection);
 
 							if(ifolder != null)
