@@ -428,6 +428,8 @@ namespace Simias.Sync
 		/// <returns>Array of NodeStamps</returns>
 		private NodeStamp[] GetNodeStamps()
 		{
+			// BUGBUG
+			System.Diagnostics.Debugger.Break();
 			log.Debug("GetNodeStamps start");
 			ArrayList stampList = new ArrayList();
 			foreach (ShallowNode sn in collection)
@@ -575,18 +577,18 @@ namespace Simias.Sync
 
 		void PutNodeToServer(NodeStamp stamp)
 		{
-			if (stamp.type == NodeTypes.TombstoneType)
-			{
-				if (!killOnServer.Contains(stamp.id))
-					killOnServer.Add(stamp.id, stamp.type);
-			}
-			else if (stamp.masterIncarn == stamp.localIncarn)
+			if (stamp.masterIncarn == stamp.localIncarn)
 			{
 				// This node has not changed.
 				return;
 			}
 
-			if (stamp.type == NodeTypes.FileNodeType || stamp.type == NodeTypes.StoreFileNodeType)
+			if (stamp.type == NodeTypes.TombstoneType)
+			{
+				if (!killOnServer.Contains(stamp.id))
+					killOnServer.Add(stamp.id, stamp.type);
+			}
+			else if (stamp.type == NodeTypes.FileNodeType || stamp.type == NodeTypes.StoreFileNodeType)
 			{
 				if (!filesToServer.Contains(stamp.id))
 					filesToServer.Add(stamp.id, stamp.type);
@@ -942,8 +944,20 @@ namespace Simias.Sync
 				SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
 				foreach (SyncNodeStatus status in nodeStatus)
 				{
-					if (status.status == SyncStatus.Success)
-						killOnServer.Remove(status.nodeID);
+					try
+					{
+						if (status.status == SyncStatus.Success)
+						{
+							Node node = collection.GetNodeByID(status.nodeID);
+							if (node != null)
+							{
+								// Delete the tombstone.
+								collection.Commit(collection.Delete());
+							}
+							killOnServer.Remove(status.nodeID);
+						}
+					}
+					catch {}
 				}
 			}
 		}

@@ -481,10 +481,13 @@ public class SyncService
 		{
 			try
 			{
+				nodeStatus[i] = new SyncNodeStatus();
+				nodeStatus[i].nodeID = id;
 				Node node = collection.GetNodeByID(id);
 				if (node == null)
 				{
 					log.Debug("Ignoring attempt to delete non-existent node {0}", id);
+					nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
 					continue;
 				}
 
