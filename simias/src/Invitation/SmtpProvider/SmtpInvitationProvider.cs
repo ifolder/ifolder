@@ -56,27 +56,31 @@ namespace Simias.Invite
 			message.To = invitation.ToEmail;
 
 			message.Subject =
-				String.Format("Simias Invitation - {0}", invitation.CollectionName);
+				String.Format("Shared iFolder Invitation - {0}", invitation.CollectionName);
 			
 			// body
 			StringBuilder buffer = new StringBuilder();
 			
-			buffer.AppendFormat("{0} is sharing the \"{1}\" with you.\n\n",
+			buffer.AppendFormat("{0} invites you to participate in the shared iFolder named \"{1}\".\n",
 				invitation.FromName, invitation.CollectionName);
+
+			// TODO: Owner currently cannot be resolved to a friendly name.  Also need to add "Novell iFolder server" for enterprise.
+			// buffer.AppendFormat("This iFolder is hosted by {0} on a personal computer.\n\n", invitation.Owner);
+			buffer.Append("\n");
 
 			if (invitation.Message != null)
 			{
 				buffer.AppendFormat("{0}\n\n", invitation.Message);
 			}
 
-			buffer.AppendFormat("You have been given {0} rights.\n\n",
-				invitation.CollectionRights);
+			buffer.AppendFormat("{0} assigned you {1} rights to this shared iFolder.\n\n",
+				invitation.FromName, invitation.CollectionRights);
 
-			buffer.AppendFormat("To add the collection to this client, open the attached file.\n\n");
+			buffer.Append("You can participate from one or more computers with the iFolder client. For information or download, see the iFolder Web site at http://www.ifolder.com. \n\n");
 
-			buffer.AppendFormat("Before accepting this collection you must install the Simias client.\n\n");
+			buffer.Append("To accept and set up the shared iFolder on this computer, open the attached iFolder Invitation (IFI) file. Repeat this process on each computer where you want to set up the shared iFolder.\n\n");
 
-			buffer.AppendFormat("For details, go to http://www.novell.com/ifolder .\n\n");
+			buffer.Append("If you do not accept within 7 days, the invitation  automatically expires. To decline immediately, open the IFI file and select Decline.");
 
 			message.Body = buffer.ToString();
 

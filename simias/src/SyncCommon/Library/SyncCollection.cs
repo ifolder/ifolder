@@ -144,6 +144,7 @@ namespace Simias.Sync
 			invitation.Identity = identity;
 			switch (GetUserAccess(identity).ToString())
 			{
+				// TODO: Localize.
 				case "ReadOnly":
 					invitation.CollectionRights = "Read Only";
 					break;
