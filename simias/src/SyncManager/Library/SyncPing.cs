@@ -50,13 +50,15 @@ namespace Simias.Sync
 		/// </summary>
 		/// <param name="store">The store object.</param>
 		/// <param name="url">The sync store service url.</param>
-		/// <param name="sinks">The channel sinks.</param>
-		public static SyncStoreInfo PingStore(Store store, Uri url, SyncChannelSinks sinks)
+		public static SyncStoreInfo PingStore(Store store, Uri url)
 		{
 			SyncStoreInfo info = null;
 
+			SyncProperties properties = new SyncProperties(store.Config);
+
 			// create channel
-			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store, url.Scheme, sinks);
+			SyncChannel channel = SyncChannelFactory.GetInstance().GetChannel(store,
+				url.Scheme, properties.ChannelSinks);
 
 			try
 			{

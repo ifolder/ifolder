@@ -287,10 +287,16 @@ namespace Simias.Sync
 						storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), serviceUrl);
 						if (storeService == null) throw new ApplicationException("No Sync Store Service");
 
+						// ping the store
+						log.Debug("Store Service Ping: {0}", storeService.Ping());
+
 						// get a proxy to the collection service object
 						log.Debug("Connecting to the Sync Collection Service...");
 						service = storeService.GetCollectionService(collection.ID);
 						if (service == null) throw new ApplicationException("No Sync Collection Service");
+
+						// ping the collection
+						log.Debug("Collection Service Ping: {0}", service.Ping());
 
 						// get the collection worker
 						log.Debug("Creating a Sync Worker Object...");
