@@ -216,9 +216,6 @@ namespace Simias.Event
 					}
 					catch 
 					{
-						// Remove the offending delegate.
-						CollectionEvent -= cb;
-						MyTrace.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
