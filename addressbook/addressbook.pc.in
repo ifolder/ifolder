@@ -6,7 +6,8 @@ Requires: @PKG_CONFIG_REQUIRES@
 Conflicts: @PKG_CONFIG_CONFLICTS@
 
 prefix=@prefix@
-libdir=${prefix}/lib  # todo: move files to lib (or gac)
+exec_prefix=@exec_prefix@
+libdir=@libdir@
 
 Libs:/lib:${libdir} @PKG_CONFIG_LIBS@
 

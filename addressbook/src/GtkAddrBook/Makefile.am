@@ -15,7 +15,7 @@ BookLib_INCLUDES =
 BookLib_RESOURCES = $(srcdir)/contact-browser.glade contact-picker.glade name-editor.glade contact-editor.glade
 BookLib_FLAGS = $(CSC_LIBFLAG)
 BookLib_LIBS = System.dll System.Drawing.dll System.Data.dll
-BookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib
+BookLib_LIBPATH = 
 
 GLADE_FILES = vcardimport.png vcardexport.png book.png contact.png blankhead.png contact-browser.glade contact-picker.glade name-editor.glade contact-editor.glade
 

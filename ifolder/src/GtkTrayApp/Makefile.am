@@ -7,7 +7,7 @@ UILIB_INCLUDES =
 UILIB_RESOURCES =
 UILIB_FLAGS = $(CSC_LIBFLAG)
 UILIB_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll
-UILIB_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_PATH)/lib $(srcdir)/../iFolder
+UILIB_LIBPATH = $(srcdir)/../iFolder
 
 
 TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs
@@ -16,7 +16,7 @@ TrayAppGtk_INCLUDES =
 TrayAppGtk_RESOURCES =
 TrayAppGtk_FLAGS = $(CSC_EXEFLAG)
 TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll
-TrayAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(srcdir)/../TrayIcon $(ADDRESSBOOK_INSTALL_PATH)/lib ../iFolder ../TrayIcon
+TrayAppGtk_LIBPATH = $(srcdir)/../TrayIcon ../iFolder ../TrayIcon
 
 
 InviteAppGtk_CSFILES = $(srcdir)/InviteApp.cs
@@ -25,7 +25,7 @@ InviteAppGtk_INCLUDES =
 InviteAppGtk_RESOURCES =
 InviteAppGtk_FLAGS = $(CSC_EXEFLAG)
 InviteAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.iFolder.UI.gtk.dll
-InviteAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_PATH)/lib ../iFolder
+InviteAppGtk_LIBPATH = ../iFolder
 
 
 CollectionBrowserGtk_CSFILES = $(srcdir)/CBApp.cs
@@ -34,7 +34,7 @@ CollectionBrowserGtk_INCLUDES =
 CollectionBrowserGtk_RESOURCES =
 CollectionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.iFolder.UI.gtk.dll
-CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_PATH)/lib ../iFolder
+CollectionBrowserGtk_LIBPATH = ../iFolder
 
 
 ReunionBrowserGtk_CSFILES = $(srcdir)/RBApp.cs
@@ -43,7 +43,7 @@ ReunionBrowserGtk_INCLUDES =
 ReunionBrowserGtk_RESOURCES =
 ReunionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 ReunionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll $(SYSTEM_XML) Novell.iFolder.dll Simias.dll Novell.iFolder.UI.gtk.dll
-ReunionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_PATH)/lib ../iFolder
+ReunionBrowserGtk_LIBPATH = ../iFolder
 
 
 iFolderBrowserGtk_CSFILES = $(srcdir)/FBApp.cs
@@ -52,7 +52,7 @@ iFolderBrowserGtk_INCLUDES =
 iFolderBrowserGtk_RESOURCES =
 iFolderBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 iFolderBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll $(SYSTEM_XML) Novell.iFolder.dll Novell.AddressBook.UI.gtk.dll Novell.iFolder.UI.gtk.dll
-iFolderBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib $(ADDRESSBOOK_INSTALL_PATH)/lib ../iFolder
+iFolderBrowserGtk_LIBPATH = ../iFolder
 
 
 INSTALL_BIN_FILES = $(srcdir)/invitationwizard $(srcdir)/collectionbrowser $(srcdir)/ifolder

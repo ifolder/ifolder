@@ -7,7 +7,7 @@ FormsBookLib_INCLUDES =
 FormsBookLib_RESOURCES =
 FormsBookLib_FLAGS = $(CSC_LIBFLAG)
 FormsBookLib_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Drawing.dll System.Windows.Forms.dll Simias.dll
-FormsBookLib_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib
+FormsBookLib_LIBPATH =
 
 DATA_FILES = ifolder_add_bk.ico ifolder_contact_card.ico ifolder_me_card.ico
 

@@ -7,7 +7,7 @@ InvitationWizard_INCLUDES =
 InvitationWizard_RESOURCES = $(srcdir)/App$(ICON_EXT)
 InvitationWizard_FLAGS = $(CSC_WINEXEFLAG)
 InvitationWizard_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll
-InvitationWizard_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib ../iFolder
+InvitationWizard_LIBPATH = ../iFolder
 
 DATA_FILES = App.ico Invitation.ico
 

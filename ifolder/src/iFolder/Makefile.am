@@ -7,7 +7,7 @@ iFolder_INCLUDES =
 iFolder_RESOURCES =
 iFolder_FLAGS = $(CSC_LIBFLAG)
 iFolder_LIBS = System.dll $(SYSTEM_XML)
-iFolder_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib
+iFolder_LIBPATH =
 
 iFolderCmd_CSFILES = $(srcdir)/iFolderCmd.cs
 iFolderCmd_CSFILES_CSC := $(subst /,$(SEP),$(iFolderCmd_CSFILES))
@@ -15,7 +15,7 @@ iFolderCmd_INCLUDES =
 iFolderCmd_RESOURCES =
 iFolderCmd_FLAGS = $(CSC_EXEFLAG)
 iFolderCmd_LIBS = System.dll $(SYSTEM_XML) Novell.iFolder.dll
-iFolderCmd_LIBPATH = $(SIMIAS_INSTALL_PATH)/lib
+iFolderCmd_LIBPATH =
 
 NUNIT_TESTS := iFolderTests.exe
 
@@ -25,7 +25,7 @@ iFolderTests_INCLUDES =
 iFolderTests_RESOURCES =
 iFolderTests_FLAGS = $(CSC_EXEFLAG)
 iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Novell.iFolder.dll
-iFolderTests_LIBPATH = $(NUNIT_LIBPATH) $(SIMIAS_INSTALL_PATH)/lib
+iFolderTests_LIBPATH = $(NUNIT_LIBPATH)
 
 EXTRA_DIST = $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderTests_CSFILES)
 

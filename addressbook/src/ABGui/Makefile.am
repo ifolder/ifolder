@@ -7,7 +7,7 @@ abgui_INCLUDES =
 abgui_RESOURCES = $(srcdir)/App$(ICON_EXT)
 abgui_FLAGS = $(CSC_WINEXEFLAG)
 abgui_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
-abgui_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin
+abgui_LIBPATH =
 
 EXTRA_DIST = $(abgui_CSFILES)
 
@@ -18,7 +18,7 @@ TARGETS =
 all: $(TARGETS)
 
 abgui.exe: $(abgui_CSFILES) $(abgui_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(abgui_FLAGS) $(abgui_LIBS:%=/r:%) $(abgui_LIBPATH:%=/lib:%) $(abgui_RESOURCES:%=$(ICON_FLAG)%) $(abgui_CSFILES_CSC) /doc:abgui.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(abgui_FLAGS) $(SIMIAS_LIBS) $(abgui_LIBS:%=/r:%) $(abgui_LIBPATH:%=/lib:%) $(abgui_RESOURCES:%=$(ICON_FLAG)%) $(abgui_CSFILES_CSC) /doc:abgui.doc.xml
 
 install-exec-local: abgui.exe
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
