@@ -709,6 +709,10 @@ namespace Simias.Storage.Provider.Flaim
 							{
 								throw FlaimError.GetException(rc);
 							}
+							else
+							{
+								rc = FlaimError.Error.FERR_OK;
+							}
 						}
 					}
 					Flaim.EndTrans();

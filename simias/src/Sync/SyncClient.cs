@@ -695,19 +695,26 @@ namespace Simias.Sync
 						case Access.Rights.ReadWrite:
 							try
 							{
-								// Now lets determine the files that need to be synced.
-								if (si.ChangesOnly)
+								while (true)
 								{
-									// We only need to look at the changed nodes.
-									ProcessChangedNodeStamps(cstamps, ref tempServerContext);
+									int filesFromServer;
+									// Now lets determine the files that need to be synced.
+									if (si.ChangesOnly)
+									{
+										// We only need to look at the changed nodes.
+										ProcessChangedNodeStamps(cstamps, ref tempServerContext);
+									}
+									else
+									{
+										// We don't have any state. So do a full sync.
+										ReconcileAllNodeStamps();
+									}
+									filesFromServer = workArray.DownCount;
+									queuedChanges = true;
+									ExecuteSync();
+									if (filesFromServer == 0 || filesFromServer == workArray.DownCount)
+										break;
 								}
-								else
-								{
-									// We don't have any state. So do a full sync.
-									ReconcileAllNodeStamps();
-								}
-								queuedChanges = true;
-								ExecuteSync();
 							}
 							finally
 							{
