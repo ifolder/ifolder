@@ -559,7 +559,7 @@ namespace Simias.Gaim
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
 			string xPathQuery =
-				string.Format("//buddy[setting[starts-with(name, 'simias-user-id:') and .='{0}']]",
+				string.Format("//buddy[setting[starts-with(@name, 'simias-user-id:') and .='{0}']]",
 							  simiasUserID);
 			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
 			if (buddyNode != null)
@@ -733,7 +733,7 @@ namespace Simias.Gaim
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
-			XmlNodeList buddyNodes = gaimElement.SelectNodes("//buddy[setting[starts-with(name, 'simias-url:')]]");
+			XmlNodeList buddyNodes = gaimElement.SelectNodes("//buddy[setting[starts-with(@name, 'simias-url:')]]");
 			if (buddyNodes == null)
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			

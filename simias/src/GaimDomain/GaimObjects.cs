@@ -194,7 +194,7 @@ namespace Simias.Gaim
 		///
 		internal void ParseSimiasInfo()
 		{
-			XmlNodeList userIDSettings = xmlBuddyNode.SelectNodes("setting[starts-with(name, 'simias-user-id:')]");
+			XmlNodeList userIDSettings = xmlBuddyNode.SelectNodes("setting[starts-with(@name, 'simias-user-id:')]");
 			foreach(XmlNode userIDSettingNode in userIDSettings)
 			{
 				string userID = userIDSettingNode.InnerText;
