@@ -227,19 +227,5 @@ namespace Simias.Sync
 			}
 			return list;
 		}
-
-		/// <summary>
-		/// Read binary data from the file.
-		/// </summary>
-		/// <param name="buffer">The buffer to place the data into.</param>
-		/// <param name="offset">The offset in the file where reading should begin.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <returns></returns>
-		//public int Read(byte[] buffer, long offset, int count)
-		//{
-		//	ReadPosition = offset;
-		//	return base.Read(buffer, 0, count);
-		//}
-
 	}
 }
