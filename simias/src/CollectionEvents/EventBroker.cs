@@ -135,6 +135,7 @@ namespace Simias.Event
 					{
 						// Remove the offending delegate.
 						CollectionRootChanged -= cb;
+						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
@@ -176,7 +177,21 @@ namespace Simias.Event
 					catch 
 					{
 						// Remove the offending delegate.
-						eHandler -= cb;
+						switch (args.ChangeType)
+						{
+							case NodeEventArgs.EventType.Created:
+								NodeCreated -= cb;
+								break;
+							case NodeEventArgs.EventType.Changed:
+								NodeChanged -= cb;
+								break;
+							case NodeEventArgs.EventType.Deleted:
+								NodeDeleted -= cb;
+								break;
+							default:
+								break;
+						}
+						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
@@ -218,6 +233,7 @@ namespace Simias.Event
 							{
 								// Remove the offending delegate.
 								FileRenamed -= cb;
+								System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 							}
 						}
 					}
@@ -239,7 +255,19 @@ namespace Simias.Event
 					catch 
 					{
 						// Remove the offending delegate.
-						eHandler -= cb;
+						switch (args.ChangeType)
+						{
+							case FileEventArgs.EventType.Created:
+								FileCreated -= cb;
+								break;
+							case FileEventArgs.EventType.Changed:
+								FileChanged -= cb;
+								break;
+							case FileEventArgs.EventType.Deleted:
+								FileDeleted -= cb;
+								break;
+						}
+						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}
@@ -265,6 +293,7 @@ namespace Simias.Event
 					{
 						// Remove the offending delegate.
 						ServiceControl -= cb;
+						System.Diagnostics.Debug.WriteLine(new System.Diagnostics.StackFrame().GetMethod() + ": Listener removed");
 					}
 				}
 			}

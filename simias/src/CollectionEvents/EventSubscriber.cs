@@ -259,7 +259,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Change events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnNodeChanged(NodeEventArgs args)
 		{
 			callNodeDelegate(NodeChanged, args);
@@ -269,7 +269,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Create events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnNodeCreated(NodeEventArgs args)
 		{
 			callNodeDelegate(NodeCreated, args);
@@ -279,7 +279,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Delete events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnNodeDeleted(NodeEventArgs args)
 		{
 			callNodeDelegate(NodeDeleted, args);
@@ -289,7 +289,7 @@ namespace Simias.Event
 		/// Callback for Collection Root Change events.
 		/// </summary>
 		/// <param name="args"></param>
-		[OneWay]
+		//[OneWay]
 		public void OnCollectionRootChanged(CollectionRootChangedEventArgs args)
 		{
 			if (applyNodeFilter(args))
@@ -317,7 +317,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Change events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnFileChanged(FileEventArgs args)
 		{
 			callFileDelegate(FileChanged, args);
@@ -327,7 +327,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Create events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnFileCreated(FileEventArgs args)
 		{
 			callFileDelegate(FileCreated, args);
@@ -337,7 +337,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Delete events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnFileDeleted(FileEventArgs args)
 		{
 			callFileDelegate(FileDeleted, args);
@@ -347,7 +347,7 @@ namespace Simias.Event
 		/// Callback used by the EventBroker for Rename events.
 		/// </summary>
 		/// <param name="args">Arguments for the event.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnFileRenamed(FileRenameEventArgs args)
 		{
 			if (applyFileFilter(args))
@@ -376,7 +376,7 @@ namespace Simias.Event
 		/// </summary>
 		/// <param name="targetProcess">The Id of the target process.</param>
 		/// <param name="t">The control event type.</param>
-		[OneWay]
+		//[OneWay]
 		public void OnServiceControl(ServiceEventArgs args)
 		{
 			if (ServiceControl != null)
