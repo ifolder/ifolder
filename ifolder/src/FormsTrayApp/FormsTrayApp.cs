@@ -31,7 +31,9 @@ using System.Diagnostics;
 using System.IO;
 using Simias.Sync;
 using Novell.iFolder;
+using Novell.iFolder.Win32Util;
 using Simias;
+using Simias.Event;
 
 
 namespace Novell.iFolder.FormsTrayApp
@@ -69,6 +71,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private	EventPublisher publisher;
 		System.Diagnostics.Process monitor;
+		private const int waitTime = 3000;
 		#endregion
 
 		[STAThread]
@@ -134,7 +137,7 @@ namespace Novell.iFolder.FormsTrayApp
 				this.WindowState = FormWindowState.Minimized;
 				//this.Hide();
 
-				Win32Util.Win32Window win32Window = new Win32Util.Win32Window(this.Handle);
+				Win32Window win32Window = new Win32Window(this.Handle);
 				win32Window.MakeToolWindow();
 			}
 			catch (Exception e)
@@ -202,12 +205,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 			if (publisher != null)
 			{
-				publisher.FireServiceControl(0, ServiceEventType.Shutdown);
-				Thread.Sleep(5000);
+				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEventArgs.ServiceEvent.Shutdown);
+				publisher.RaiseServiceEvent(args);
 			}
 
 			if (monitor != null)
 			{
+				// Give the broker a chance to send the shutdown event.
+				Thread.Sleep(waitTime);
 				monitor.Kill();
 			}
 
@@ -218,14 +223,30 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuItemInviteWizard_Click(object Sender, System.EventArgs e)
 		{
-			// TODO - check for currently running instance and switch to it.
-			Process.Start("InvitationWizard.exe");
+			// Check for currently running instance and switch to it.
+//			Win32Window win32Window = Win32Window.FindWindow(null, "InvitationWizard");
+//			if (win32Window != null)
+//			{
+//				win32Window.BringWindowToTop();
+//			}
+//			else
+			{
+				Process.Start("InvitationWizard.exe");
+			}
 		}
 
 		private void menuItemAddrBook_Click(object sender, System.EventArgs e)
 		{
-			// TODO - check for currently running instance and switch to it.
-			Process.Start("Book.exe");
+			// Check for currently running instance and switch to it.
+//			Win32Window win32Window = Win32Window.FindWindow(null, "FormsAddrBook");
+//			if (win32Window != null)
+//			{
+//				win32Window.BringWindowToTop();
+//			}
+//			else
+			{
+				Process.Start("Book.exe");
+			}
 		}
 
 		private void FormsTrayApp_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -243,12 +264,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 			if (publisher != null)
 			{
-				publisher.FireServiceControl(0, ServiceEventType.Shutdown);
-				Thread.Sleep(5000);
+				ServiceEventArgs args = new ServiceEventArgs(0, ServiceEventArgs.ServiceEvent.Shutdown);
+				publisher.RaiseServiceEvent(args);
 			}
 
 			if (monitor != null)
 			{
+				// Give the broker a chance to send the shutdown event.
+				Thread.Sleep(waitTime);
 				monitor.Kill();
 			}
 

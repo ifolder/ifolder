@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Win32Util
+namespace Novell.iFolder.Win32Util
 {
 	/// <summary>
 	/// Encapsulates window functions that aren't in the framework.
@@ -64,6 +64,31 @@ namespace Win32Util
 			int windowStyle = GetWindowLong(GWL_EXSTYLE);
 			SetWindowLong(GWL_EXSTYLE, windowStyle & ~WS_EX_TOOLWINDOW);
 		}
+
+		/// <summary>
+		/// Bring a window to the top
+		/// </summary>
+		public void BringWindowToTop()
+		{
+			BringWindowToTop(window);
+		}
+
+		/// <summary>
+		/// Find a window by name or class
+		/// </summary>
+		/// <param name="className">Name of the class, or null</param>
+		/// <param name="windowName">Name of the window, or null</param>
+		/// <returns></returns>
+		public static Win32Window FindWindow(string className, string windowName)
+		{
+			return (new Win32Window(FindWindowWin32(className, windowName)));
+		}
+
+		[DllImport("user32.dll")]
+		static extern bool BringWindowToTop(IntPtr window);
+		
+		[DllImport("user32.dll", EntryPoint="FindWindow")]
+		static extern IntPtr FindWindowWin32(string className, string windowName);
 
 		[DllImport("user32.dll")]
 		static extern int SetWindowLong(
