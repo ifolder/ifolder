@@ -56,6 +56,7 @@ namespace Simias.Storage
 		public Roster( Store storeObject, string rosterID, Domain domain ) :
 			base ( storeObject, domain.Name + " Roster", rosterID, NodeTypes.CollectionType, domain.ID )
 		{
+			properties.AddNodeProperty( PropertyTags.Types, NodeTypes.RosterType );
 			Sealed = true;
 		}
 
