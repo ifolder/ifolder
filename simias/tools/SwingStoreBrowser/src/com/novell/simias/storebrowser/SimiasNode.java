@@ -179,8 +179,33 @@ public class SimiasNode {
 			Node flagsNode = attribs.getNamedItem("flags");
 			if (flagsNode != null)
 			{
-				// TODO: Interpret the node flags
-				p.setFlags(flagsNode.getNodeValue());
+				// This is a BAD hack.  Eventually just store the raw integer
+				// in the SimiasNodeProperty object and have a function to
+				// return the human-readable string.
+				String flagsValue = flagsNode.getNodeValue();
+				if (flagsValue != null && flagsValue.length() > 0)
+				{
+					int flagsInt = Integer.parseInt(flagsValue);
+					String flagsBinary =	Integer.toBinaryString(flagsInt);
+					String flagsHex = Integer.toHexString(flagsInt);
+					
+					String flagsHumanReadable = "";
+					
+					if (flagsBinary.endsWith("100000000000000000"))
+					{
+						flagsHumanReadable = "(Local)";
+					}
+					else if (flagsBinary.endsWith("1000000000000000000"))
+					{
+						flagsHumanReadable = "(Multi-valued)";
+					}
+					else if (flagsBinary.endsWith("1100000000000000000"))
+					{
+						flagsHumanReadable = ("(Local, Multi-valued)");
+					}
+					
+					p.setFlags("0x" + flagsHex + " " + flagsHumanReadable);
+				}
 			}
 		}
 
