@@ -143,7 +143,7 @@
     <value>NoControl</value>
   </data>
   <data name="ok.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>320, 112</value>
+    <value>311, 83</value>
   </data>
   <data name="ok.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -152,7 +152,7 @@
     <value>75, 23</value>
   </data>
   <data name="ok.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>0</value>
+    <value>5</value>
   </data>
   <data name="ok.Text">
     <value>OK</value>
@@ -221,7 +221,7 @@
     <value>NoControl</value>
   </data>
   <data name="cancel.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 112</value>
+    <value>392, 83</value>
   </data>
   <data name="cancel.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -230,7 +230,7 @@
     <value>75, 23</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>1</value>
+    <value>6</value>
   </data>
   <data name="cancel.Text">
     <value>Cancel</value>
@@ -293,7 +293,7 @@
     <value>13</value>
   </data>
   <data name="servers.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>88, 32</value>
+    <value>80, 13</value>
   </data>
   <data name="servers.MaxDropDownItems" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>8</value>
@@ -305,10 +305,10 @@
     <value>Inherit</value>
   </data>
   <data name="servers.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>304, 21</value>
+    <value>306, 21</value>
   </data>
   <data name="servers.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="servers.Text">
     <value />
@@ -371,7 +371,7 @@
     <value>NoControl</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 34</value>
+    <value>13, 15</value>
   </data>
   <data name="label1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -380,7 +380,7 @@
     <value>100, 16</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>3</value>
+    <value>0</value>
   </data>
   <data name="label1.Text">
     <value>Server:</value>
@@ -440,7 +440,7 @@
     <value>Inherit</value>
   </data>
   <data name="ifolderPath.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>88, 72</value>
+    <value>80, 45</value>
   </data>
   <data name="ifolderPath.MaxLength" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>32767</value>
@@ -458,10 +458,10 @@
     <value>None</value>
   </data>
   <data name="ifolderPath.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>304, 20</value>
+    <value>306, 20</value>
   </data>
   <data name="ifolderPath.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="ifolderPath.Text">
     <value />
@@ -530,7 +530,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>16, 74</value>
+    <value>13, 47</value>
   </data>
   <data name="label2.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -539,7 +539,7 @@
     <value>72, 16</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>5</value>
+    <value>2</value>
   </data>
   <data name="label2.Text">
     <value>iFolder path:</value>
@@ -608,7 +608,7 @@
     <value>NoControl</value>
   </data>
   <data name="browse.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 71</value>
+    <value>392, 44</value>
   </data>
   <data name="browse.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -617,7 +617,7 @@
     <value>75, 23</value>
   </data>
   <data name="browse.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>6</value>
+    <value>4</value>
   </data>
   <data name="browse.Text">
     <value>Browse</value>
@@ -652,6 +652,9 @@
   <data name="$this.Localizable" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
+  <data name="$this.Name">
+    <value>CreateiFolder</value>
+  </data>
   <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
   </data>
@@ -660,9 +663,6 @@
   </data>
   <data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>80</value>
-  </data>
-  <data name="$this.Name">
-    <value>CreateiFolder</value>
   </data>
   <data name="$this.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -692,7 +692,7 @@
     <value />
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>482, 144</value>
+    <value>482, 120</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

@@ -75,8 +75,8 @@ namespace Novell.iFolderCom
 		private IProcEventClient eventClient;
 		private bool existingEventClient = true;
 		private bool eventError = false;
-		private int okDelta;
 		private int initTabTop;
+		private Size initMinSize;
 		private bool accessClick;
 		private iFolderWeb currentiFolder;
 		private iFolderUser currentUser;
@@ -158,10 +158,9 @@ namespace Novell.iFolderCom
 			apply.Enabled = remove.Enabled = access.Enabled = /*accept.Enabled = decline.Enabled =*/ false;
 
 			syncInterval.TextChanged += new EventHandler(syncInterval_ValueChanged);
-			okDelta = ok.Top - tabControl1.Bottom;
-			initTabTop = tabControl1.Top;
 
-			this.MinimumSize = this.Size;
+			initTabTop = tabControl1.Top;
+			initMinSize = this.Size;
 
 			currentControl = firstControl = this.ifolders;
 			lastControl = this.apply;
@@ -1539,9 +1538,9 @@ namespace Novell.iFolderCom
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.ifolders);
 			this.Controls.Add(this.open);
 			this.Controls.Add(this.ifolderLabel);
-			this.Controls.Add(this.ifolders);
 			this.Controls.Add(this.apply);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
@@ -1845,9 +1844,16 @@ namespace Novell.iFolderCom
 					// Display the conflicts message.
 					conflicts.Visible = conflictIcon.Visible = true;
 
-					// Move the controls back to the original position.
+					// Adjust the height of the controls.
+					int delta = initTabTop - conflicts.Top;
+					Height += delta;
+					tabControl1.Height -= delta;
+
+					// Move the tab control back to the original position.
 					tabControl1.Top = initTabTop;
-					tabControl1.Height -= tabControl1.Top - conflicts.Top;
+
+					// Reset the minimum size.
+					MinimumSize = initMinSize;
 				}
 			}
 			else
@@ -1857,8 +1863,16 @@ namespace Novell.iFolderCom
 					// Hide the conflicts message.
 					conflicts.Visible = conflictIcon.Visible = false;
 
-					// Move the controls up so we don't have dead space.
-					tabControl1.Height += tabControl1.Top - conflicts.Top;
+					int delta = tabControl1.Top - conflicts.Top;
+
+					// Reset the minimum size.
+					MinimumSize = new Size(initMinSize.Width, initMinSize.Height - delta);
+
+					// Adjust the height of the controls.
+					Height -= delta;
+					tabControl1.Height += delta;
+
+					// Move the tab control up so we don't have dead space.
 					tabControl1.Top = conflicts.Top;
 				}
 			}
