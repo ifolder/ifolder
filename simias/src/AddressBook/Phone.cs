@@ -219,8 +219,6 @@ namespace Novell.AddressBook
 							}
 						}
 					}
-
-					this.parentContact.SetDirty(ChangeMap.phone);
 				}
 			}
 		}
@@ -239,11 +237,6 @@ namespace Novell.AddressBook
 			set
 			{
 				this.phoneTypes = value;
-
-				if (this.parentContact != null)
-				{
-					this.parentContact.SetDirty(ChangeMap.phone);
-				}
 			}
 		}
 		#endregion
@@ -320,18 +313,12 @@ namespace Novell.AddressBook
 			//
 
 			contact.phoneList.Add(this);
-			contact.SetDirty(ChangeMap.phone);
+			//contact.SetDirty(ChangeMap.phone);
 			return(true);
 		}
 
 		internal static bool PersistToStore(Contact contact)
 		{
-			// The contact needs to be attached to the store in order to persist
-			if (contact.thisNode == null)
-			{
-				return(false);
-			}
-
 			// Anything in the list to persist?
 			if (contact.phoneList.Count == 0)
 			{
@@ -339,7 +326,7 @@ namespace Novell.AddressBook
 			}
 
 			// First delete the property
-			contact.thisNode.Properties.DeleteProperties(Common.phoneProperty);
+			contact.Properties.DeleteProperties(Common.phoneProperty);
 
 			// assume no preferred is set
 			bool foundPreferred = false;
@@ -381,7 +368,7 @@ namespace Novell.AddressBook
 			foreach(Telephone tmpPhone in contact.phoneList)
 			{
 				Property p = new Property(Common.phoneProperty, tmpPhone.Serialize());
-				contact.thisNode.Properties.AddProperty(p);
+				contact.Properties.AddProperty(p);
 			}
 
 			return(true);
@@ -448,7 +435,6 @@ namespace Novell.AddressBook
 				if (this.parentContact != null)
 				{
 					this.parentContact.phoneList.Remove(this);
-					this.parentContact.SetDirty(ChangeMap.phone);
 				}
 			}
 			catch{}

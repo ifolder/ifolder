@@ -31,28 +31,33 @@ namespace Novell.AddressBook
 	/// <summary>
 	/// Well known address book types.
 	/// </summary>
-	public enum AddressBookType
-	{ 
-		/// <summary>
-		/// indicates a global address book - ex. corporate
-		/// </summary>
-		Global, 
-
+	public enum AddressBookType : int
+	{
 		/// <summary>
 		/// indicates a private address book - non shared
 		/// </summary>
-		Private, 
+		Private,
+ 
+		/// <summary>
+		/// indicates a private address book shared to the world
+		/// </summary>
+		Public,
 
 		/// <summary>
 		/// indicates a personal but shared address book
 		/// </summary>
-		Shared
+		Shared,
+ 
+		/// <summary>
+		/// indicates a global address book - ex. corporate
+		/// </summary>
+		Global 
 	};
 
 	/// <summary>
 	/// User rights on an address book
 	/// </summary>
-	public enum AddressBookRights
+	public enum AddressBookRights : int
 	{ 
 		/// <summary>
 		/// indicates undefined rights
@@ -87,7 +92,7 @@ namespace Novell.AddressBook
 		private		AddressBookRights	addressBookRights;
 		private		bool				defaultBook;
 		private		string				friendlyName;
-		private		string				domain;
+//		private		string				domain;
 
 		#endregion
 
@@ -166,6 +171,7 @@ namespace Novell.AddressBook
 			this.addressBookRights = AddressBookRights.Undefined;
 		}
 
+		// FIXUP
 		internal void BuildVCardName(Contact cContact, IEnumerator nameEnum)
 		{
 			Name	name = new Name();
@@ -225,6 +231,7 @@ namespace Novell.AddressBook
 			catch{}
 		}
 
+		// FIXUP
 		internal void BuildVCardAddress(Contact cContact, IEnumerator propertyTokens, IEnumerator valueTokens)
 		{
 			Address address = new Address();
@@ -367,17 +374,26 @@ namespace Novell.AddressBook
 		/// </summary>
 		internal void Add(Store store)
 		{
-			// Create the address book in the default
-			this.collection = store.CreateCollection(this.friendlyName, "AB:AddressBook");
+			this.store = store;
 
-			this.collection.Properties.AddProperty( "AB:AddressBookType", (Int32) this.addressBookType);
-			this.collection.Properties.AddProperty( "AB:AddressBookRights", (Int32) this.addressBookRights);
+			// Create the address book in the default
+			//this.collection = store.CreateCollection(this.friendlyName, "AB:AddressBook");
+			this.collection = new Collection(store, this.friendlyName);
+
+			this.collection.SetType(this.collection, Common.addressBookProperty);
+			Property pType = new Property( Common.addressBookTypeProperty, (Int32) this.addressBookType);
+			this.collection.Properties.AddProperty( pType );
+			Property pRights = new Property( Common.addressBookRightsProperty, (Int32) this.addressBookRights);
+			this.collection.Properties.AddProperty( pRights );
+
+			/*
 			if (this.defaultBook == true)
 			{
-				this.collection.Properties.AddProperty( "AB:Default", this.defaultBook);
+				this.collection.Properties.AddProperty( Property.DefaultAddressBook, true );
 			}
+			*/
 
-			this.collection.Commit(true);
+			this.collection.Commit();
 			this.changed = false;
 		}
 
@@ -388,37 +404,45 @@ namespace Novell.AddressBook
 		/// </summary>
 		internal void ToObject(string addressBookID)
 		{
+			Property p;
 			if (this.store == null)
 			{
 				throw new ApplicationException("AddressBook::Missing store handle");
 			}
 
-			Collection tmpCollection = this.store.GetCollectionById(addressBookID);
+			this.collection = this.store.GetCollectionByID(addressBookID);
 
 			// Make sure the returned collection is in fact an address book
-			if (tmpCollection.Type != "AB:AddressBook")
+			if (this.collection.IsType(this.collection, Common.addressBookProperty) == false)
 			{
+				this.collection = null;
 				throw new ApplicationException("AddressBook::Invalid ID parameter - not an address book");
 			}
 
-			this.collection = tmpCollection;
-			this.friendlyName = tmpCollection.Name;
+			this.friendlyName = this.collection.Name;
 
 			// Load up the previously persisted properties
 			try
 			{
-				this.addressBookType = (AddressBookType) 
-					this.collection.Properties.GetSingleProperty("AB:AddresssBookType").Value;
+				p = this.collection.Properties.GetSingleProperty(Common.addressBookTypeProperty);
+				if (p != null)
+				{
+					this.addressBookType = (AddressBookType) p.Value;
+				}
 			}
 			catch{}
 
 			try
 			{
-				this.addressBookRights = (AddressBookRights)
-					this.collection.Properties.GetSingleProperty("AB:AddresssBookRights").Value;
+				p = this.collection.Properties.GetSingleProperty(Common.addressBookRightsProperty);
+				if (p != null)
+				{
+					this.addressBookRights = (AddressBookRights) p.Value;
+				}
 			}
 			catch{}
 
+			/*
 			// domain is not mandatory
 			try
 			{
@@ -429,17 +453,23 @@ namespace Novell.AddressBook
 			{
 				this.domain = "";
 			}
+			*/
 
 			// defaultBook is not mandatory
+
+			// FIXUP
+			this.defaultBook = false;
+			/*
 			try
 			{
 				this.defaultBook = 
-					Convert.ToBoolean(this.collection.Properties.GetSingleProperty("AB:Default").ToString());
+					Convert.ToBoolean(this.collection.Properties.GetSingleProperty(Property.DefaultAddressBook).ToString());
 			}
 			catch
 			{
 				this.defaultBook = false;
 			}
+			*/
 
 			this.deleted = false;
 		}
@@ -512,7 +542,16 @@ namespace Novell.AddressBook
 			{ 
 				try
 				{
-					return(this.domain);
+					if (this.collection != null)
+					{
+						// FIXUP
+						//return((string)this.collection.Properties.GetSingleProperty( Property.DomainName ).Value);
+						return("");
+					}
+					else
+					{
+						return("");
+					}
 				}
 				catch
 				{
@@ -520,6 +559,7 @@ namespace Novell.AddressBook
 				}
 			}
 
+			/*
 			set
 			{
 				if (this.addressBookRights != AddressBookRights.ReadOnly)
@@ -528,6 +568,7 @@ namespace Novell.AddressBook
 					this.changed = true;
 				}
 			}
+			*/
 		}
 
 		/// <summary>
@@ -667,8 +708,9 @@ namespace Novell.AddressBook
 
 		/// <summary>
 		/// Method: AddContact
-		/// Abstract: Method to create a contact in the store
-		/// this method binds the contact to a known identityId
+		/// Abstract: Method to add a contact to an address book.
+		/// The contact is not persisted to the store until the
+		/// commit method is called on the contact.
 		/// </summary>
 		public void	AddContact(Contact contact)
 		{
@@ -703,7 +745,7 @@ namespace Novell.AddressBook
 			this.collection.Properties.ModifyProperty("AB:AddressBookType", this.addressBookType);
 			this.collection.Properties.ModifyProperty("AB:AddressBookRights", this.addressBookRights);
 
-			this.collection.Commit(true);
+			this.collection.Commit();
 			//his.changed = false;
 		}
 
@@ -718,7 +760,7 @@ namespace Novell.AddressBook
 				throw new ApplicationException("AddressBook::The address book has not been added to the store");
 			}
 
-			this.collection.Delete(true);
+			this.collection.Commit( this.collection.Delete() );
 			this.deleted = true;
 		}
 
@@ -727,24 +769,33 @@ namespace Novell.AddressBook
 		/// </summary>
 		/// <param name="id">Specified contact ID</param>
 		/// <remarks>
-		/// If a contact is not found an application exception is raised
+		/// If the contact is not found a null is returned.
 		/// </remarks>
 		/// <returns>A Contact object with at minimum a valid username property.</returns>
 		public Contact GetContact(string id)
 		{
+			Contact cContact = null;
 			if (this.collection != null)
 			{
-				Contact contact = new Contact();
+				try
+				{
+					Node cNode = this.collection.GetNodeByID(id);
+					if ( cNode != null )
+					{
+						if (this.collection.IsType(cNode, Common.contactType) == true)
+						{
+							cContact = new Contact(this, cNode);
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+					cContact = null;
+				}
+			}
 
-				// ToObject will throw a not found exception if a contact
-				// can't be found with the specified id
-				contact.ToObject(this, id);
-				return(contact);
-			}
-			else
-			{
-				throw new ApplicationException(Common.addressBookExceptionHeader + "The address book has not been added to the store");
-			}
+			return(cContact);
 		}
 
 		/// <summary>
@@ -1050,7 +1101,8 @@ namespace Novell.AddressBook
 								BinaryWriter bWriter = new BinaryWriter(tmpPhoto);
 
 								bWriter.Write(binaryData, 0, binaryData.Length);
-								cContact.ImportPhoto(tmpPhoto);
+								// FIXUP
+								//cContact.ImportPhoto(tmpPhoto);
 								vCardState++;
 							}
 							catch(Exception e)
@@ -1234,25 +1286,32 @@ namespace Novell.AddressBook
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchUsername( string searchString, Property.Operator queryOperator )
+		public IABList SearchUsername( string searchString, SearchOp searchOperator )
 		{
 			if (this.collection != null)
 			{
 				try
 				{
 					IABList cList = new IABList();
-					//ArrayList cList = new ArrayList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(Property.ObjectName, searchString, queryOperator).GetEnumerator();
+						this.collection.Search("FIXME", searchString, searchOperator).GetEnumerator();
+//						this.collection.Search(Property.ObjectName, searchString, searchOperator).GetEnumerator();
 
-					while(nodeEnum.MoveNext())
+					try
 					{
-						Node cNode = (Node) nodeEnum.Current;
-						if (cNode.Type == Common.contactType)
+						while(nodeEnum.MoveNext())
 						{
-							cList.Add(this.GetContact(cNode.Id));
+							Node cNode = (Node) nodeEnum.Current;
+							if (this.collection.IsType(cNode, Common.contactType) == true)
+							{
+								cList.Add(this.GetContact(cNode.ID));
+							}
 						}
+					}
+					finally
+					{
+						nodeEnum.Dispose();
 					}
 
 					return(cList);
@@ -1275,8 +1334,16 @@ namespace Novell.AddressBook
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchEmail( string searchString, Property.Operator queryOperator )
+		public IABList SearchEmail( string searchString, string searchOperator )
 		{
+			SearchOp sOperator = SearchOp.Begins;
+			switch(searchOperator.ToLower())
+			{
+				case "begins":
+					sOperator = SearchOp.Begins;
+					break;
+			}
+
 			if (this.collection != null)
 			{
 				try
@@ -1284,15 +1351,22 @@ namespace Novell.AddressBook
 					IABList cList = new IABList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(Common.emailProperty, searchString, queryOperator).GetEnumerator();
+						this.collection.Search(Common.emailProperty, searchString, sOperator).GetEnumerator();
 
-					while(nodeEnum.MoveNext())
+					try
 					{
-						Node cNode = (Node) nodeEnum.Current;
-						if (cNode.Type == Common.contactType)
+						while(nodeEnum.MoveNext())
 						{
-							cList.Add(this.GetContact(cNode.Id));
+							Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
+							if (this.collection.IsType(cNode, Common.contactType) == true)
+							{
+								cList.Add(this.GetContact(cNode.ID));
+							}
 						}
+					}
+					finally
+					{
+						nodeEnum.Dispose();
 					}
 
 					return(cList);
@@ -1310,12 +1384,12 @@ namespace Novell.AddressBook
 		/// Find a user(s) by first name
 		/// </summary>
 		/// <param name="searchString"></param>
-		/// <param name="queryOperator"></param>
+		/// <param name="searchOperator"></param>
 		/// <remarks>
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchFirstName( string searchString, Property.Operator queryOperator )
+		public IABList SearchFirstName( string searchString, SearchOp searchOperator )
 		{
 			if (this.collection != null)
 			{
@@ -1324,14 +1398,15 @@ namespace Novell.AddressBook
 					IABList cList = new IABList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(Property.ObjectName, searchString, queryOperator).GetEnumerator();
+						this.collection.Search(/*Property.ObjectName*/ "FIXME", searchString, searchOperator).GetEnumerator();
 
 					while(nodeEnum.MoveNext())
 					{
-						Node cNode = (Node) nodeEnum.Current;
-						if (cNode.Type == Common.nameProperty)
+						Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
+						if (this.collection.IsType(cNode, Common.nameProperty) == true)
 						{
-							cList.Add(this.GetContact(cNode.GetParent().Id));
+							// Search by parent
+							cList.Add(this.GetContact(cNode.ID));
 						}
 					}
 
@@ -1350,12 +1425,12 @@ namespace Novell.AddressBook
 		/// Find a user(s) by last name
 		/// </summary>
 		/// <param name="searchString"></param>
-		/// <param name="queryOperator"></param>
+		/// <param name="searchOperator"></param>
 		/// <remarks>
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchLastName( string searchString, Property.Operator queryOperator )
+		public IABList SearchLastName( string searchString, SearchOp searchOperator )
 		{
 			if (this.collection != null)
 			{
@@ -1364,14 +1439,29 @@ namespace Novell.AddressBook
 					IABList cList = new IABList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(Common.familyProperty, searchString, queryOperator).GetEnumerator();
+						this.collection.Search(Common.familyProperty, searchString, searchOperator).GetEnumerator();
 
 					while(nodeEnum.MoveNext())
 					{
-						Node cNode = (Node) nodeEnum.Current;
-						if (cNode.Type == Common.nameProperty)
+						Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
+						if (this.collection.IsType(cNode, Common.nameProperty) == true)
 						{
-							cList.Add(this.GetContact(cNode.GetParent().Id));
+							//Name cName = new Name(this.GetContact(cNode.ID);
+
+							Relationship parentChild = 
+								new Relationship( this.collection.ID, cNode.ID );
+
+							ICSEnumerator contactEnum = (ICSEnumerator)
+								this.collection.Search("ParentContact", parentChild).GetEnumerator();
+
+							if(contactEnum.MoveNext())
+							{
+								Node cParentNode = new Node( this.collection, contactEnum.Current as ShallowNode);
+								if (this.collection.IsType(cNode, Common.contactType) == true)
+								{
+									cList.Add(this.GetContact(cParentNode.ID));
+								}
+							}
 						}
 					}
 
@@ -1417,17 +1507,12 @@ namespace Novell.AddressBook
 		/// <returns>TRUE/FALSE.</returns>
 		public bool MoveNext()
 		{
-			//
-			// TODO
-			// Make sure the node is an address book contact
-			//
-
 			try
 			{
 				while(contactEnum.MoveNext())
 				{
-					Node tmpNode = (Node) contactEnum.Current;
-					if (tmpNode.Type == Common.contactType)
+					Node cNode = new Node( this.collection, contactEnum.Current as ShallowNode);
+					if (this.collection.IsType(cNode, Common.contactType) == true)
 					{
 						return(true);
 					}
@@ -1450,8 +1535,11 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					Node cNode = (Node) contactEnum.Current;
-					return((object) this.GetContact(cNode.Id));
+					Node cNode = new Node( this.collection, contactEnum.Current as ShallowNode);
+					if (this.collection.IsType(cNode, Common.contactType) == true)
+					{
+						return((object) this.GetContact(cNode.ID));
+					}
 				}
 				catch{}
 				return(null);
@@ -1662,7 +1750,7 @@ namespace Novell.AddressBook
 					{
 						Node currentNode = (Node) bookEnum.Current;
 						AddressBook tmpBook = new AddressBook(this.myStore);
-						tmpBook.ToObject(currentNode.Id);
+						tmpBook.ToObject(currentNode.ID);
 						return((object) tmpBook);
 					}
 				}

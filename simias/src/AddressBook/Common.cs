@@ -33,6 +33,11 @@ namespace Novell.AddressBook
 	public class Common
 	{
 		#region Class Members
+
+		internal static string addressBookProperty = "AB:AddressBook";
+		internal static string addressBookTypeProperty = "AB:AddressBookType";
+		internal static string addressBookRightsProperty = "AB:AddressBookRights";
+
 		/// <summary>
 		/// email property which is contained in a contact
 		/// </summary>

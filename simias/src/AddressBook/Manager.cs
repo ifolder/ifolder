@@ -64,6 +64,7 @@ namespace Novell.AddressBook
 		#endregion
 
 		#region Private Methods
+		/*
 		private static Store GetStore(string userName, string password)
 		{
 			//bool	createStore = false;
@@ -84,6 +85,7 @@ namespace Novell.AddressBook
 
 			return Store.Connect( new Uri(path));
 		}
+		*/
 		#endregion
 
 		#region Static Methods
@@ -95,7 +97,8 @@ namespace Novell.AddressBook
 		public static Manager Connect( )
 		{
 			Manager	addressManager = null;
-			Store store = Store.Connect(new Configuration(null));
+
+			Store store = new Store( new Configuration(null) );
 			if(store != null)
 			{
 				addressManager = new Manager(store);
@@ -112,10 +115,11 @@ namespace Novell.AddressBook
 		/// Connects to the collection store with a caller defined config object. 
 		/// </summary>
 		///	<returns>An object that represents a connection to the address manager.</returns>
-		public static Manager Connect(Configuration callerConfig)
+		public static Manager Connect(Configuration cConfig)
 		{
 			Manager	addressManager = null;
-			Store store = Store.Connect(callerConfig);
+			Store store = new Store( cConfig );
+			//Store store = Store.Connect(callerConfig);
 			if(store != null)
 			{
 				addressManager = new Manager(store);
@@ -128,6 +132,7 @@ namespace Novell.AddressBook
 			return(addressManager);
 		}
 
+		/*
 		/// <summary>
 		/// Connects to the Address Book Manager using a known database path.
 		/// </summary>
@@ -149,6 +154,7 @@ namespace Novell.AddressBook
 
 			return(addressManager);
 		}
+		*/
 		#endregion
 
 		#region Public Methods
@@ -239,26 +245,36 @@ namespace Novell.AddressBook
 		///	<returns>An AddressBook object</returns>
 		public AddressBook GetAddressBookByName(string friendlyName)
 		{
-			IEnumerator	addrEnum = new AddressBookEnumerator( this.store );
-			while( addrEnum.MoveNext())
+			AddressBook cBook = null;
+			ICSList	abList = this.store.GetCollectionsByName(friendlyName);
+			IEnumerator	bookEnum = abList.GetEnumerator();
+			if(bookEnum.MoveNext())
 			{
-				AddressBook addrBook = (AddressBook) addrEnum.Current;
-				if (addrBook.Name == friendlyName)
-				{
-					return(addrBook);
-				}
+				cBook = new AddressBook(this.store);
+				cBook.ToObject(((ShallowNode) bookEnum.Current).ID);
 			}
 
-			throw new ApplicationException(Common.addressBookExceptionHeader + friendlyName + " not found");
+			return(cBook);
 		}
 
 		/// <summary>
 		/// Get an enumerator for enuming address books
 		/// </summary>
 		///	<returns>An IEnumerator object</returns>
-		public IEnumerator	GetAddressBooks()
+		public ArrayList GetAddressBooks()
 		{
-			return new AddressBookEnumerator( this.store );
+			ArrayList bookList = new ArrayList();
+			ICSList	abList = this.store.GetCollectionsByType("AB:AddressBook");
+
+			foreach(ShallowNode sNode in abList)
+			{
+				AddressBook cBook = new AddressBook(this.store);
+				cBook.ToObject(sNode.ID);
+				bookList.Add(cBook);
+			}
+
+			return(bookList);
+			//return new AddressBookEnumerator( this.store );
 		}
 		#endregion
 
@@ -307,7 +323,7 @@ namespace Novell.AddressBook
 				{
 					Node cNode = (Node) storeEnum.Current;
 					AddressBook tmpBook = new AddressBook(this.store);
-					tmpBook.ToObject(cNode.Id);
+					tmpBook.ToObject(cNode.ID);
 					return((object) tmpBook);
 				}
 				catch{}
@@ -324,6 +340,16 @@ namespace Novell.AddressBook
 			storeEnum.Reset();
         }
 
+		#endregion
+	}
+
+	public class ABManager : Manager
+	{
+		#region Constructors
+		internal ABManager(Store myStore) : base (myStore)
+		{
+			//this.store = myStore;
+		}
 		#endregion
 	}
 }

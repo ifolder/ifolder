@@ -23,6 +23,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using Simias;
 using Simias.Storage;
 
 namespace Novell.AddressBook
@@ -56,38 +57,24 @@ namespace Novell.AddressBook
 
 	/// <summary>
 	/// Summary description for contact.
-	/// A contact is equivalent to a Node in the collection server.
+	/// A contact is equivalent to a Node in the collection store.
 	/// </summary>
-	public class Contact : IEnumerable, IEnumerator
+	public class Contact : Node, IEnumerable, IEnumerator
 	{
 		#region Class Members
-		internal	Node			thisNode = null;
 		internal	AddressBook		addressBook = null;
 		private		IEnumerator		thisEnum = null;
-		private		string			userName = "";
-		private		string			id;
-		private		string			url;
-		private		string			nickName;
-		private		string			title;
-		private		string			role;
-		private		string			birthday;
-		private		string			productID;
-		private		string			workforceID;
-		private		string			note;
-		private		string			manager;
-		private		string			blogUrl;
-		private		string			organization;
 
 		// Private members used for caching objects to the contact before
 		// the contact has been added to an address list
-		internal	ArrayList		addressList = null;
-		internal	ArrayList		emailList = null;
-		internal	ArrayList		nameList = null;
-		internal	ArrayList		phoneList = null;
+		internal	ArrayList		addressList;
+		internal	ArrayList		emailList;
+		internal	ArrayList		nameList;
+		internal	ArrayList		phoneList;
 		private		Stream			photoStream = null;
 
 		// Map for keeping track of what properties actually changed
-		private		ChangeMap		propertyChangeMap = 0;
+		//private		ChangeMap		propertyChangeMap = 0;
 
 		#endregion
 
@@ -110,7 +97,9 @@ namespace Novell.AddressBook
 			{
 				try
 				{
-					return(this.GetFullName());
+					// FIXUP
+					//return(this.GetFullName());
+					return("");
 				}
 				catch
 				{
@@ -127,13 +116,24 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				return(userName);
+				try
+				{
+					return(this.Name);
+				}
+				catch{}
+				return("");
 			}
 
 			set
 			{
-				userName = value;
-				propertyChangeMap |= ChangeMap.username;
+				try
+				{
+					if (value != null)
+					{
+						this.Name = value;
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -145,18 +145,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if(this.title != null)
+				try
 				{
-					return(this.title);
+					return(this.Properties.GetSingleProperty(Common.titleProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.title = value;
-				propertyChangeMap |= ChangeMap.title;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.titleProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.titleProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -168,18 +178,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.role != null)
+				try
 				{
-					return(this.role);
+					return(this.Properties.GetSingleProperty(Common.roleProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.role = value;
-				propertyChangeMap |= ChangeMap.role;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.roleProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.roleProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -191,18 +211,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.nickName != null)
+				try
 				{
-					return(this.nickName);
+					return(this.Properties.GetSingleProperty(Common.nicknameProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.nickName = value;
-				propertyChangeMap |= ChangeMap.nickname;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.nicknameProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.nicknameProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -218,18 +248,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.birthday != null)
+				try
 				{
-					return(this.birthday);
+					return(this.Properties.GetSingleProperty(Common.birthdayProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.birthday = value;
-				propertyChangeMap |= ChangeMap.birthday;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.birthdayProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.birthdayProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -280,18 +320,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if(this.productID != null)
+				try
 				{
-					return(this.productID);
+					return(this.Properties.GetSingleProperty(Common.productIDProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.productID = value;
-				propertyChangeMap |= ChangeMap.productid;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.productIDProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.productIDProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -307,18 +357,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if(this.url != null)
+				try
 				{
-					return(this.url);
+					return(this.Properties.GetSingleProperty(Common.urlProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.url = value;
-				propertyChangeMap |= ChangeMap.url;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.urlProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.urlProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -334,18 +394,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.note != null)
+				try
 				{
-					return(this.note);
+					return(this.Properties.GetSingleProperty(Common.noteProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.note = value;
-				propertyChangeMap |= ChangeMap.note;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.noteProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.noteProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -361,18 +431,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.workforceID != null)
+				try
 				{
-					return(this.workforceID);
+					return(this.Properties.GetSingleProperty(Common.workForceIDProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.workforceID = value;
-				propertyChangeMap |= ChangeMap.workforce;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.workForceIDProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.workForceIDProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -388,18 +468,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if (this.manager != null)
+				try
 				{
-					return(this.manager);
+					return(this.Properties.GetSingleProperty(Common.managerIDProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.manager = value;
-				propertyChangeMap |= ChangeMap.manager;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.managerIDProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.managerIDProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -415,18 +505,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if(this.blogUrl != null)
+				try
 				{
-					return(this.blogUrl);
+					return(this.Properties.GetSingleProperty(Common.blogProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.blogUrl = value;
-				propertyChangeMap |= ChangeMap.blog;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.blogProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.blogProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -442,18 +542,28 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-				if(this.organization != null)
+				try
 				{
-					return(this.organization);
+					return(this.Properties.GetSingleProperty(Common.organizationProperty).ToString());
 				}
-
+				catch{}
 				return("");
 			}
 
 			set
 			{
-				this.organization = value;
-				propertyChangeMap |= ChangeMap.organization;
+				try
+				{
+					if (value != null)
+					{
+						this.Properties.ModifyProperty(Common.organizationProperty, (string) value);
+					}
+					else
+					{
+						this.Properties.DeleteProperties(Common.organizationProperty);
+					}
+				}
+				catch{}
 			}
 		}
 
@@ -471,23 +581,6 @@ namespace Novell.AddressBook
 		}
 
 		/// <summary>
-		/// ID -
-		/// !NOTE! Doc incomplete
-		/// </summary>
-		public string ID
-		{
-			get
-			{
-				if(this.id != null)
-				{
-					return(this.id);
-				}
-
-				return("");
-			}
-		}
-
-		/// <summary>
 		/// IsCurrentUser -
 		/// !NOTE! Doc incomplete
 		/// </summary>
@@ -497,10 +590,15 @@ namespace Novell.AddressBook
 			{
 				try
 				{
+					// FIXUP
+					/*
 					if (this.addressBook.store.CurrentUser == this.ID)
 					{
 						return(true);
 					}
+					*/
+
+					return(true);
 				}
 				catch{}
 				return(false);
@@ -510,21 +608,22 @@ namespace Novell.AddressBook
 
 		#region Constructors
 
-		internal Contact(AddressBook addressBook)
+		internal Contact(AddressBook addressBook, Node cNode) : base(cNode)
 		{
 			this.addressBook = addressBook;
 			this.addressList = new ArrayList();
 			this.nameList = new ArrayList();
 			this.emailList = new ArrayList();
 			this.phoneList = new ArrayList();
+
+			this.ToObject();
 		}
 
 		/// <summary>
 		/// Simple Contact constructor
 		/// </summary>
-		public Contact()
+		public Contact() : base("")
 		{
-			//this.collection = null;
 			this.addressList = new ArrayList();
 			this.nameList = new ArrayList();
 			this.emailList = new ArrayList();
@@ -539,33 +638,25 @@ namespace Novell.AddressBook
 		{
 			try
 			{
-				//this.collection = collection;
 				this.addressBook = addressBook;
-				
-				if (userName != null && userName != "")
+				if (this.Name != null && this.Name != "")
 				{
-					this.thisNode = new Node(this.addressBook.collection, userName, Guid.NewGuid().ToString(), Common.contactType);
-					//this.thisNode = new Node(this.collection, userName, userGuid, Common.contactType);
-					this.thisNode.SetParent(this.addressBook.collection);
-					this.id = this.thisNode.Id;
+					// Add a relationship that will reference the parent Node.
+					Relationship parentChild = new 
+						Relationship( addressBook.collection.ID, this.ID );
+					this.Properties.AddProperty( "ParentAddressBook", parentChild );
 
-					// Add the product ID property
-					if (this.productID == null)
+					// If any Name objects were added to the contact before it was attached
+					// to an address book, we'll need to create relationships for them as well
+					if (this.nameList.Count > 0)
 					{
-						this.productID = "Novell.AddressBook";
+						foreach(Name cName in this.nameList)
+						{
+							Relationship nameAndContact = new 
+								Relationship(addressBook.collection.ID, this.ID );
+							cName.Properties.AddProperty( "ParentContact", nameAndContact );
+						}
 					}
-
-					if (this.photoStream != null)
-					{
-						this.ImportPhoto(this.photoStream);
-						this.photoStream.Close();
-						this.photoStream = null;
-					}
-
-					//this.thisNode.Save();
-
-					//this.Create(userName);
-					//this.collection.Commit(true);
 					return;
 				}
 			}
@@ -575,12 +666,12 @@ namespace Novell.AddressBook
 
 		internal void SetDirty()
 		{
-			this.propertyChangeMap |= ChangeMap.unknown;
+			//this.propertyChangeMap |= ChangeMap.unknown;
 		}
 
 		internal void SetDirty(ChangeMap dirtyProperty)
 		{
-			this.propertyChangeMap |= dirtyProperty;
+			//this.propertyChangeMap |= dirtyProperty;
 		}
 
 		private	string GetFullName()
@@ -616,159 +707,68 @@ namespace Novell.AddressBook
 		/// specified ID
 		/// </remarks>
 		/// <returns>None</returns>
-		internal void ToObject(AddressBook parentBook, string contactID)
+		internal void ToObject()
 		{
-			this.addressBook = parentBook;
+			try
+			{
+				// Load up email addresses
+				this.emailList.Clear();
+				MultiValuedList	mList = this.Properties.GetProperties(Common.emailProperty);
+				foreach(Property p in mList)
+				{
+					this.emailList.Add(new Email(this, (string) p.Value));
+				}
+			}
+			catch{}
 
 			try
 			{
-				Node cNode = this.addressBook.collection.GetNodeById(contactID);
-				if ( cNode != null )
+				// Load up telephone numbers
+				this.phoneList.Clear();
+				MultiValuedList	mList = this.Properties.GetProperties(Common.phoneProperty);
+				foreach(Property p in mList)
 				{
-					if (cNode.Type == Common.contactType)
+					this.phoneList.Add(new Telephone(this, (string) p.Value));
+				}
+			}
+			catch{}
+
+			try
+			{
+				// Load up the names
+				this.nameList.Clear();
+				Relationship parentChild = 
+					new Relationship( this.addressBook.collection.ID, this.ID );
+				ICSList results = this.addressBook.collection.Search( "ParentContact", parentChild );
+				foreach ( ShallowNode cShallow in results )
+				{
+					Node cNode = new Node(this.addressBook.collection, cShallow);
+					if (this.addressBook.collection.IsType(cNode, Common.nameProperty) == true)
 					{
-						cNode.Refresh();
-						this.userName = cNode.Name;
-						this.id = cNode.Id;
-						this.thisNode = cNode;
-
-						try
-						{
-							this.nickName = cNode.Properties.GetSingleProperty(Common.nicknameProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.title = cNode.Properties.GetSingleProperty(Common.titleProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.role = cNode.Properties.GetSingleProperty(Common.roleProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.birthday = cNode.Properties.GetSingleProperty(Common.birthdayProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.productID = cNode.Properties.GetSingleProperty(Common.productIDProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.workforceID = cNode.Properties.GetSingleProperty(Common.workForceIDProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.note = cNode.Properties.GetSingleProperty(Common.noteProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.manager = cNode.Properties.GetSingleProperty(Common.managerIDProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.url = cNode.Properties.GetSingleProperty(Common.urlProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.organization = cNode.Properties.GetSingleProperty(Common.organizationProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							this.blogUrl = cNode.Properties.GetSingleProperty(Common.blogProperty).ToString();
-						}
-						catch{}
-
-						try
-						{
-							// Load up email addresses
-							this.emailList.Clear();
-							MultiValuedList	mList = cNode.Properties.GetProperties(Common.emailProperty);
-							foreach(Property p in mList)
-							{
-								//Email tmpMail = new Email(this.collection, this.thisNode, this, (string) p.Value);
-								this.emailList.Add(new Email(this, (string) p.Value));
-							}
-						}
-						catch{}
-
-						try
-						{
-							// Load up telephone numbers
-							this.phoneList.Clear();
-							MultiValuedList	mList = cNode.Properties.GetProperties(Common.phoneProperty);
-							foreach(Property p in mList)
-							{
-								this.phoneList.Add(new Telephone(this, (string) p.Value));
-							}
-						}
-						catch{}
-
-						try
-						{
-							// Load up the addresses
-							this.addressList.Clear();
-							foreach(Node addrNode in this.thisNode)
-							{
-								if (addrNode.Type == Common.addressProperty)
-								{
-									// this.addressList.Add(new Address(this, addrNode.Id));
-
-									Address tmpAddress = new Address();
-									tmpAddress.ToObject(this, addrNode.Id);
-									this.addressList.Add(tmpAddress);
-								}
-							}
-						}
-						catch{}
-
-						try
-						{
-							// Load up the names
-							this.nameList.Clear();
-							foreach(Node addrNode in this.thisNode)
-							{
-								if (addrNode.Type == Common.nameProperty)
-								{
-									this.nameList.Add(new Name(this, addrNode.Id));
-
-									/*
-									Name tmpName = new Name();
-									tmpName.ToObject(this, addrNode.Id);
-									this.nameList.Add(tmpName);
-									*/
-								}
-							}
-						}
-						catch{}
-						return;
+						this.nameList.Add(new Name(this, cNode));
 					}
 				}
 			}
 			catch{}
-			throw new ApplicationException(Common.addressBookExceptionHeader + "Specified contact does not exist");
+
+			try
+			{
+				// Load up the addresses
+				this.addressList.Clear();
+				Relationship parentChild = 
+					new Relationship( this.addressBook.collection.ID, this.ID );
+				ICSList results = this.addressBook.collection.Search( "AddressToContact", parentChild );
+				foreach ( ShallowNode cShallow in results )
+				{
+					Node cNode = new Node(this.addressBook.collection, cShallow);
+					if (this.addressBook.collection.IsType(cNode, Common.addressProperty) == true)
+					{
+						this.addressList.Add(new Address(this, cNode));
+					}
+				}
+			}
+			catch{}
 		}
-
-
 		#endregion
 
 		#region Public Methods
@@ -831,7 +831,8 @@ namespace Novell.AddressBook
 				}
 			}
 
-			throw new ApplicationException(Common.addressBookExceptionHeader + "A preferred email address does not exist");
+			return(null);
+			//throw new ApplicationException(Common.addressBookExceptionHeader + "A preferred email address does not exist");
 		}
 
 		/// <summary>
@@ -878,8 +879,8 @@ namespace Novell.AddressBook
 
 		/// <summary>
 		/// Gets the preferred telephone number
-		/// An exception is raised if a preferred telephone number
-		/// does not exist on the contact.
+		/// If a preferred telephone number does not exist a null 
+		/// is returned.
 		/// </summary>
 		/// <returns>The preferred Telephone object.</returns>
 		public Telephone GetPreferredTelephoneNumber()
@@ -892,7 +893,7 @@ namespace Novell.AddressBook
 				}
 			}
 
-			throw new ApplicationException(Common.addressBookExceptionHeader + "A preferred telephone number does not exist");
+			return(null);
 		}
 
 		/// <summary>
@@ -900,181 +901,46 @@ namespace Novell.AddressBook
 		/// </summary>
 		public void Commit()
 		{
-			if (propertyChangeMap != 0 && this.thisNode != null)
+			if (this.addressBook != null &&
+				this.addressBook.collection != null)
 			{
-				try
+				this.addressBook.collection.SetType(this, Common.contactType);
+
+				int nodesToCommit = 1 + this.nameList.Count + this.addressList.Count;
+
+				Node[] commitList = new Node[nodesToCommit];
+				int	i = 0;
+				commitList[i++] = this;
+
+				if (this.emailList.Count > 0)
 				{
-					this.thisNode.Name = userName;
-
-					if ((propertyChangeMap & ChangeMap.url) == ChangeMap.url)
-					{
-						if (this.url != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.urlProperty, this.url);
-						}
-						else
-						{
-							Property p = new Property(Common.urlProperty, this.url);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.nickname) == ChangeMap.nickname)
-					{
-						if (this.nickName != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.nicknameProperty, this.nickName);
-						}
-						else
-						{
-							this.thisNode.Properties.DeleteProperties(Common.nicknameProperty);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.title) == ChangeMap.title)
-					{
-						if (this.title != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.titleProperty, this.title);
-						}
-						else
-						{
-							Property p = new Property(Common.titleProperty, this.title);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.role) == ChangeMap.role)
-					{
-						if (this.role != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.roleProperty, this.role);
-						}
-						else
-						{
-							Property p = new Property(Common.roleProperty, this.role);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.birthday) == ChangeMap.birthday)
-					{
-						if (this.birthday != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.birthdayProperty, this.birthday);
-						}
-						else
-						{
-							Property p = new Property(Common.birthdayProperty, this.birthday);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.productid) == ChangeMap.productid)
-					{
-						if (this.productID != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.productIDProperty, this.productID);
-						}
-						else
-						{
-							Property p = new Property(Common.productIDProperty, this.productID);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.workforce) == ChangeMap.workforce)
-					{
-						if (this.workforceID != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.workForceIDProperty, this.workforceID);
-						}
-						else
-						{
-							Property p = new Property(Common.workForceIDProperty, this.workforceID);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.manager) == ChangeMap.manager)
-					{
-						if (this.manager != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.managerIDProperty, this.manager);
-						}
-						else
-						{
-							Property p = new Property(Common.managerIDProperty, this.manager);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.note) == ChangeMap.note)
-					{
-						if (this.note != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.noteProperty, this.note);
-						}
-						else
-						{
-							Property p = new Property(Common.noteProperty, this.note);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.blog) == ChangeMap.blog)
-					{
-						if (this.blogUrl != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.blogProperty, this.blogUrl);
-						}
-						else
-						{
-							Property p = new Property(Common.blogProperty, this.blogUrl);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if ((propertyChangeMap & ChangeMap.organization) == ChangeMap.organization)
-					{
-						if (this.organization != null)
-						{
-							this.thisNode.Properties.ModifyProperty(Common.organizationProperty, this.organization);
-						}
-						else
-						{
-							Property p = new Property(Common.organizationProperty, this.organization);
-							this.thisNode.Properties.DeleteSingleProperty(p);
-						}
-					}
-
-					if (this.emailList.Count > 0 && ((propertyChangeMap & ChangeMap.email) == ChangeMap.email))
-					{
-						Email.PersistToStore(this);
-					}
-
-					if (this.phoneList.Count > 0 && ((propertyChangeMap & ChangeMap.phone) == ChangeMap.phone))
-					{
-						Telephone.PersistToStore(this);
-					}
-
-					if (this.addressList.Count > 0 && ((propertyChangeMap & ChangeMap.address) == ChangeMap.address))
-					{
-						Address.PersistToStore(this);
-					}
-
-					if (this.nameList.Count > 0 && ((propertyChangeMap & ChangeMap.name) == ChangeMap.name))
-					{
-						Name.PersistToStore(this);
-					}
-
-					this.addressBook.collection.Commit(true);
-					propertyChangeMap = 0;
+					Email.PersistToStore(this);
 				}
-				catch
+
+				if (this.phoneList.Count > 0)
 				{
-					//this.thisNode.Abort();
+					Telephone.PersistToStore(this);
 				}
+
+				if (this.nameList.Count > 0)
+				{
+					foreach(Name cName in this.nameList)
+					{
+						this.addressBook.collection.SetType(cName, Common.nameProperty);
+						commitList[i++] = cName;
+					}
+				}
+
+				if (this.addressList.Count > 0)
+				{
+					foreach(Address cAddr in this.addressList)
+					{
+						this.addressBook.collection.SetType(cAddr, Common.addressProperty);
+						commitList[i++] = cAddr;
+					}
+				}
+
+				this.addressBook.collection.Commit(commitList);
 			}
 		}
 
@@ -1085,8 +951,9 @@ namespace Novell.AddressBook
 		{
 			try
 			{
+				// FIXUP
 				// Delete all children as well
-				this.thisNode.Delete(true);
+				this.Delete();
 			}
 			catch{}
 		}
@@ -1193,12 +1060,6 @@ namespace Novell.AddressBook
 						return(addr);
 					}
 				}
-
-				/*
-				Address address = new Address();
-				address.ToObject(this.collection, this.thisNode, this, addressID);
-				return(address);
-				*/
 			}
 			catch{}
 			throw new ApplicationException( Common.addressBookExceptionHeader +  "Address " + addressID + " not found" );
@@ -1224,7 +1085,7 @@ namespace Novell.AddressBook
 				return;
 			}
 			catch{}
-			throw new ApplicationException(Common.addressBookExceptionHeader + "Name object created");
+			throw new ApplicationException(Common.addressBookExceptionHeader + "Name object not added");
 		}
 
 		/// <summary>
@@ -1236,19 +1097,55 @@ namespace Novell.AddressBook
 		/// and Honorific Suffixes
 		/// 
 		/// If the contact does not have a Name by the specified ID 
-		/// an exception is raised.
+		/// a null is returned.
 		/// </remarks>
 		/// <returns>A Name object with at least given and family properties.</returns>
 		public Name GetName(string nameID)
 		{
-			try
+			if (this.nameList.Count > 0)
 			{
-				return( new Name(this, nameID) );
+				foreach(Name tmpName in this.nameList)
+				{
+					if (tmpName.ID == nameID)
+					{
+						return(tmpName);
+					}
+				}
 			}
-			catch
+
+			// For now I won't refresh from the database
+
+			return(null);
+
+			/*
+
+			// go see if a name object has been
+			// added underneath us
+			Name cName = null;
+
+			if (this.addressBook != null &&
+				this.addressBook.collection != null)
 			{
-				throw new ApplicationException(Common.addressBookExceptionHeader + "Name " + nameID + " not found");
+				try
+				{
+					Node cNode = this.addressBook.collection.GetNodeByID(nameID);
+					if ( cNode != null )
+					{
+						if (this.addressBook.collection.IsType(cNode, Common.nameProperty) == true)
+						{
+							cName = new Name(this, cNode);
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+					cName = null;
+				}
 			}
+
+			return(cName);
+			*/
 		}
 
 		/// <summary>
@@ -1259,7 +1156,8 @@ namespace Novell.AddressBook
 		/// Family Name, Given Name, Additional Names, Honorific Prefixes
 		/// and Honorific Suffixes
 		/// 
-		/// If the contact does not have a preferred Name an exception is raised.
+		/// If the contact does not have a preferred Name a
+		/// null is returned.
 		/// </remarks>
 		/// <returns>A Name object with at least valid given and family properties.</returns>
 		public Name GetPreferredName()
@@ -1272,7 +1170,7 @@ namespace Novell.AddressBook
 				}
 			}
 
-			throw new ApplicationException(Common.abExceptionHeader + "Preferred name was not found" );
+			return(null);
 		}
 
 		/// <summary>
@@ -1299,6 +1197,7 @@ namespace Novell.AddressBook
 			return(cList);
 		}
 
+		/*
 		/// <summary>
 		/// Export the contact photo via a binary Stream object.
 		/// </summary>
@@ -1508,18 +1407,18 @@ namespace Novell.AddressBook
 						bReader.Close();
 					}
 
-					/*
-					if (bWriter != null)
-					{
-						bWriter.Close();
-					}
-					*/
+					//if (bWriter != null)
+					//{
+					//	bWriter.Close();
+					//}
 				}
 			}
 
 			return(finished);
 		}
+		*/
 
+		/*
 		/// <summary>
 		/// Export a standard vCard to the specified file.
 		/// </summary>
@@ -1542,21 +1441,21 @@ namespace Novell.AddressBook
 					ExportVCard(dstCard);
 					dstCard.Flush();
 
-					/*
-					srcCard = ExportVCard();
+					//
+					//srcCard = ExportVCard();
 
-					int i;
-					while(true)
-					{
-						i = srcCard.ReadByte();
-						if(i == -1)
-						{
-							break;
-						}
+					//int i;
+					//while(true)
+					//{
+					//	i = srcCard.ReadByte();
+					//	if(i == -1)
+					//	{
+					//		break;
+					//	}
 
-						dstCard.WriteByte((byte) i);
-					}
-					*/
+					//	dstCard.WriteByte((byte) i);
+					//}
+					//
 				}
 			}
 			catch{}
@@ -1575,7 +1474,9 @@ namespace Novell.AddressBook
 
 			return(results);
 		}
+		*/
 
+		/*
 		/// <summary>
 		/// Export a standard vCard via a memory stream.
 		/// </summary>
@@ -2031,12 +1932,10 @@ namespace Novell.AddressBook
 						vCard.WriteByte(Convert.ToByte(c));
 					}
 
-					/*
-					if (tmpMail.Preferred == true || tmpMail.Types > 0)
-					{
-						vCard.WriteByte(Convert.ToByte(';'));
-					}
-					*/
+					//if (tmpMail.Preferred == true || tmpMail.Types > 0)
+					//{
+					//	vCard.WriteByte(Convert.ToByte(';'));
+					//}
 
 					if (tmpMail.Preferred == true)
 					{
@@ -2431,6 +2330,7 @@ namespace Novell.AddressBook
 			//vCard.Position = 0;
 			//return(vCard);
 		}
+		*/
 
 		/*
 		public IEnumerator GetTelephoneTypes()
@@ -2537,7 +2437,7 @@ namespace Novell.AddressBook
 		/// </summary>
 		public void Reset()
 		{
-			nodeEnum = this.parentNode.GetEnumerator();
+			//nodeEnum = this.parentNode.GetEnumerator();
 		}
 
 		/// <summary>
@@ -2548,8 +2448,11 @@ namespace Novell.AddressBook
 			get
 			{
 				Node cNode = (Node) this.nodeEnum.Current;
-				Address addr = this.parentContact.GetAddress(cNode.Id);
-				return(addr);
+				//Address addr = this.parentContact.GetAddress(cNode.Id);
+				//return(addr);
+
+				// remove when we fixup addr
+				return(null);
 			}
 		}
 

@@ -88,11 +88,8 @@ namespace Novell.AddressBook
 	public class Email
 	{
 		#region Class Members
-		//Collection		parentCollection;
-		//Node			thisNode;
 		Contact			parentContact;
 		string			address;
-//		string			originalSerializedMail;
 		EmailTypes		emailTypes;
 		#endregion
 
@@ -265,10 +262,10 @@ namespace Novell.AddressBook
 		internal static bool PersistToStore(Contact contact)
 		{
 			// The contact needs to be attached to the store in order to persist
-			if (contact.thisNode == null)
-			{
-				return(false);
-			}
+			//if (contact.thisNode == null)
+			//{
+			//	return(false);
+			//}
 
 			// Anything in the list to persist?
 			if (contact.emailList.Count == 0)
@@ -277,7 +274,7 @@ namespace Novell.AddressBook
 			}
 
 			// First delete the property
-			contact.thisNode.Properties.DeleteProperties(Common.emailProperty);
+			contact.Properties.DeleteProperties(Common.emailProperty);
 
 			// assume no preferred is set
 			bool foundPreferred = false;
@@ -319,7 +316,7 @@ namespace Novell.AddressBook
 			foreach(Email tmpMail in contact.emailList)
 			{
 				Property p = new Property(Common.emailProperty, tmpMail.Serialize());
-				contact.thisNode.Properties.AddProperty(p);
+				contact.Properties.AddProperty(p);
 			}
 
 			return(true);
@@ -374,7 +371,7 @@ namespace Novell.AddressBook
 			//
 
 			contact.emailList.Add(this);
-			contact.SetDirty(ChangeMap.email);
+			//contact.SetDirty(ChangeMap.email);
 			return(true);
 		}
 
@@ -456,7 +453,7 @@ namespace Novell.AddressBook
 				if (this.parentContact != null)
 				{
 					this.parentContact.emailList.Remove(this);
-					this.parentContact.SetDirty(ChangeMap.email);
+					//this.parentContact.SetDirty(ChangeMap.email);
 				}
 			}
 			catch{}
