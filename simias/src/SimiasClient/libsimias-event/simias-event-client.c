@@ -70,10 +70,26 @@ static char * sec_server_config_elements [] = {
 #define HOST_TAG "Host"
 #define PORT_TAG "Port"
 
+/* Tags used for (un)subscribing to events */
+#define ACTION_ADD_NODE_CREATED			"AddNodeCreated"
+#define ACTION_ADD_NODE_CHANGED			"AddNodeChanged"
+#define ACTION_ADD_NODE_DELETED			"AddNodeDeleted"
+#define ACTION_ADD_COLLECTION_SYNC		"AddCollectionSync"
+#define ACTION_ADD_FILE_SYNC			"AddFileSync"
+#define ACTION_ADD_NOTIFY_MESSAGE		"AddNotifyMessage"
+#define ACTION_REMOVE_NODE_CREATED		"RemoveNodeCreated"
+#define ACTION_REMOVE_NODE_CHANGED		"RemoveNodeChanged"
+#define ACTION_REMOVE_NODE_DELETED		"RemoveNodeDeleted"
+#define ACTION_REMOVE_COLLECTION_SYNC	"RemoveCollectionSync"
+#define ACTION_REMOVE_FILE_SYNC			"RemoveFileSync"
+#define ACTION_REMOVE_NOTIFY_MESSAGE	"RemoveNotifyMessage"
+
 /* File name of the IProcEvent configuration file */
 #define CONFIG_FILE_NAME "IProcEvent.cfg"
 
 #define RECEIVE_BUFFER_SIZE 2048
+
+#define NUM_OF_ACTION_TYPES 6
 
 typedef enum
 {
@@ -90,6 +106,13 @@ typedef enum
 	REG_THREAD_STATE_TERMINATED,
 	REG_THREAD_STATE_TERMINATION_ACK
 } REG_THREAD_STATE;
+
+typedef struct _SimiasEventFuncInfo
+{
+	SimiasEventFunc		function;
+	void *				data;
+	struct _SimiasEventFuncInfo *next;
+} SimiasEventFuncInfo;
 
 /**
  * This structure represents the SimiasEventClient typedef declared in the
@@ -128,6 +151,12 @@ typedef struct
 	
 	/* Thread handle to the registration thread */
 	pthread_t reg_thread;
+	
+	/** 
+	 * Array of SimiasEventFunc pointers stored in a linked-list and indexed by
+	 * IPROC_EVENT_ACTION.
+	 */
+	SimiasEventFuncInfo *event_handlers [NUM_OF_ACTION_TYPES];
 } RealSimiasEventClient;
 
 
@@ -200,11 +229,6 @@ typedef enum
 #define SIMIAS_EVENT_SERVER_HOST "127.0.0.1"
 #define SIMIAS_EVENT_SERVER_PORT 5432
 
-/* FIXME: Move this into the RealSimiasEventClient structure somehow */
-SimiasNodeEventFunc simias_node_created_function;
-SimiasNodeEventFunc simias_node_changed_function;
-SimiasNodeEventFunc simias_node_deleted_function;
-
 /* #region Forward declarations for private functions */
 static void * sec_thread (void *user_data);
 static void * sec_reg_thread (void *user_data);
@@ -223,6 +247,19 @@ static void * sec_create_struct_from_xpath (xmlXPathContext *xpath_ctx);
 static int sec_process_message (RealSimiasEventClient *ec, 
 								char *message, 
 								int length);
+static int sec_add_event_handler (RealSimiasEventClient *ec,
+								  IPROC_EVENT_ACTION action,
+								  SimiasEventFunc function,
+								  void * data);
+static int sec_remove_event_handler (RealSimiasEventClient *ec,
+									 IPROC_EVENT_ACTION action,
+									 SimiasEventFunc function);
+static int sec_notify_event_handlers (RealSimiasEventClient *ec,
+									  IPROC_EVENT_ACTION action,
+									  void *event);
+static int sec_remove_all_event_handlers (RealSimiasEventClient *ec,
+										  IPROC_EVENT_ACTION action);
+
 /* Anytime an event struct is returned, it must be freed using this function. */
 static void sec_free_event_struct (void *event_struct);
 /* #endregion */
@@ -232,6 +269,7 @@ int
 sec_init (SimiasEventClient *sec, void *error_handler)
 {
 printf ("SEC: sec_init () called\n");
+	int i;
 	RealSimiasEventClient *ec = malloc (sizeof (RealSimiasEventClient));
 	*sec = ec;
 	/**
@@ -240,6 +278,11 @@ printf ("SEC: sec_init () called\n");
 	 * actual shared library being used.
 	 */
 	LIBXML_TEST_VERSION
+	
+	/* NULL out all the linked list of event handler functions */
+	for (i = 0; i < NUM_OF_ACTION_TYPES; i++) {
+		ec->event_handlers [i] = NULL;
+	}
 	
 	/* Create a socket to communicate with the event server on */
 	if ((ec->event_socket = socket (PF_INET, SOCK_STREAM, 0)) < 0) {
@@ -268,6 +311,19 @@ printf ("SEC: sec_init () called\n");
 int
 sec_cleanup (SimiasEventClient *sec)
 {
+	int i;
+	RealSimiasEventClient *ec = (RealSimiasEventClient *)*sec;
+	
+	/**
+	 * Cleanup the memory used by the link lists storing event handler function
+	 * pointers
+	 */
+	for (i = 0; i < NUM_OF_ACTION_TYPES; i++) {
+		if (sec_remove_all_event_handlers (ec, i) != 0) {
+			fprintf (stderr, "SEC: sec_cleanup: Error calling sec_remove_all_event_handlers (%d)\n", i);
+		}
+	}
+	
 	/* Free the memory being used by SimiasEventClient */
 	free (*sec);
 	*sec = NULL;
@@ -353,48 +409,33 @@ sec_set_event (SimiasEventClient sec,
 			   void *data)
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
-	char msg [4096];
+	char msg [512];
 	char action_str [256];
 	
 	switch (action) {
-		case ACTION_ADD_NODE_CREATED:
-			sprintf (action_str, "AddNodeCreated");
-			simias_node_created_function = (SimiasNodeEventFunc)function;
+		case ACTION_NODE_CREATED:
+			sprintf (action_str, subscribe ? 
+				ACTION_ADD_NODE_CREATED : ACTION_REMOVE_NODE_CREATED);
 			break;
-		case ACTION_ADD_NODE_CHANGED:
-			sprintf (action_str, "AddNodeChanged");
-			simias_node_changed_function = (SimiasNodeEventFunc)function;
+		case ACTION_NODE_CHANGED:
+			sprintf (action_str, subscribe ? 
+				ACTION_ADD_NODE_CHANGED : ACTION_REMOVE_NODE_CHANGED);
 			break;
-		case ACTION_ADD_NODE_DELETED:
-			sprintf (action_str, "AddNodeDeleted");
-			simias_node_deleted_function = (SimiasNodeEventFunc)function;
+		case ACTION_NODE_DELETED:
+			sprintf (action_str, subscribe ? 
+				ACTION_ADD_NODE_DELETED : ACTION_REMOVE_NODE_DELETED);
 			break;
-		case ACTION_ADD_COLLECTION_SYNC:
-			sprintf (action_str, "AddCollectionSync");
+		case ACTION_COLLECTION_SYNC:
+			sprintf (action_str, subscribe ? 
+				ACTION_ADD_COLLECTION_SYNC : ACTION_REMOVE_COLLECTION_SYNC);
 			break;
-		case ACTION_ADD_FILE_SYNC:
-			sprintf (action_str, "AddFileSync");
+		case ACTION_FILE_SYNC:
+			sprintf (action_str, subscribe ? 
+				ACTION_ADD_FILE_SYNC : ACTION_REMOVE_FILE_SYNC);
 			break;
-		case ACTION_ADD_NOTIFY_MESSAGE:
-			sprintf (action_str, "AddNotifyMessage");
-			break;
-		case ACTION_REMOVE_NODE_CREATED:
-			sprintf (action_str, "RemoveNodeCreated");
-			break;
-		case ACTION_REMOVE_NODE_CHANGED:
-			sprintf (action_str, "RemoveNodeChanged");
-			break;
-		case ACTION_REMOVE_NODE_DELETED:
-			sprintf (action_str, "RemoveNodeDeleted");
-			break;
-		case ACTION_REMOVE_COLLECTION_SYNC:
-			sprintf (action_str, "RemoveCollectionSync");
-			break;
-		case ACTION_REMOVE_FILE_SYNC:
-			sprintf (action_str, "RemoveFileSync");
-			break;
-		case ACTION_REMOVE_NOTIFY_MESSAGE:
-			sprintf (action_str, "RemoveNotifyMessage");
+		case ACTION_NOTIFY_MESSAGE:
+			sprintf (action_str, subscribe ? 
+				ACTION_ADD_NOTIFY_MESSAGE : ACTION_REMOVE_NOTIFY_MESSAGE);
 			break;
 		default:
 			/* Don't know what the user is talking about */
@@ -409,10 +450,24 @@ sec_set_event (SimiasEventClient sec,
 		action_str,
 		EVENT_LISTENER_ELEMENT_NAME);
 
-	/* Send registration message */
+	/* Send set_event message */
 	if (sec_send_message (ec, msg, strlen (msg)) <= 0) {
 		/* FIXME: Handle error...no data sent */
-		perror ("simias-event-client send registration message");
+		perror ("simias-event-client send set_event message");
+	} else {
+		if (subscribe) {
+			/* Store the event handler function */
+			if (sec_add_event_handler (ec, action, function, data) != 0) {
+				fprintf (stderr, "Couldn't add event handler function\n");
+				return -1;
+			}
+		} else {
+			/* Remove the event handler function(s) */
+			if (sec_remove_event_handler (ec, action, function) != 0) {
+				fprintf (stderr, "Couldn't remove event handler function(s)\n");
+				return -1;
+			}
+		}
 	}
 	
 	return 0;
@@ -751,6 +806,7 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 	xmlDoc *doc;
 	void *message_struct;
 	char **struct_ptr;
+	int err = 0;
 
 	/* Construct an xmlDoc from the message */	
 	xmlInitParser ();
@@ -769,27 +825,35 @@ sec_process_message (RealSimiasEventClient *ec, char *message, int length)
 			SimiasNodeEvent *event = (SimiasNodeEvent *)message_struct;
 			printf ("NodeEventArgs received\n");
 
-			/* FIXME: Lookup and call the funciton handlers correctly */
 			if (strcmp ("NodeCreated", event->action) == 0) {
-				if (simias_node_created_function != NULL)
-					simias_node_created_function (event, NULL);
+				err = sec_notify_event_handlers (ec, ACTION_NODE_CREATED, event);
 			} else if (strcmp ("NodeChanged", event->action) == 0) {
-				if (simias_node_changed_function != NULL)
-					simias_node_changed_function (event, NULL);
+				err = sec_notify_event_handlers (ec, ACTION_NODE_CHANGED, event);
 			} else if (strcmp ("NodeDeleted", event->action) == 0) {
-				if (simias_node_deleted_function != NULL)
-					simias_node_deleted_function (event, NULL);
+				err = sec_notify_event_handlers (ec, ACTION_NODE_DELETED, event);
 			}
 		} else if (strcmp ("CollectionSyncEventArgs", struct_ptr [0]) == 0) {
+			SimiasCollectionSyncEvent *event = (SimiasCollectionSyncEvent *)
+												message_struct;
 			printf ("CollectionSyncEventArgs message received\n");
+			err = sec_notify_event_handlers (ec, ACTION_COLLECTION_SYNC, event);
 		} else if (strcmp ("FileSyncEventArgs", struct_ptr [0]) == 0) {
+			SimiasFileSyncEvent *event = (SimiasFileSyncEvent *)message_struct;
 			printf ("FileSyncEventArgs message received\n");
+			err = sec_notify_event_handlers (ec, ACTION_FILE_SYNC, event);
 		} else if (strcmp ("NotifyEventArgs", struct_ptr [0]) == 0) {
+			SimiasNotifyEvent *event = (SimiasNotifyEvent *)message_struct;
 			printf ("NotifyEventArgs message received\n");
+			err = sec_notify_event_handlers (ec, ACTION_NOTIFY_MESSAGE, event);
 		}
 		
 		sec_free_event_struct (message_struct);
 		xmlFreeDoc (doc);
+		
+		if (err) {
+			fprintf (stderr, "Error occurred in sec_notify_event_handlers\n");
+			return -1;
+		}
 	} else {
 		fprintf (stderr, "SEC: Invalid XML received from event server\n");
 		return -1;
@@ -1003,6 +1067,111 @@ printf ("SEC: Freeing unknown event type (memory leak possible)\n");
 	
 	free (event_struct);
 }
+
+static int
+sec_add_event_handler (RealSimiasEventClient *ec,
+					   IPROC_EVENT_ACTION action,
+					   SimiasEventFunc function,
+					   void * data)
+{
+	SimiasEventFuncInfo *func_info;
+	
+	func_info = malloc (sizeof (SimiasEventFuncInfo));
+	if (!func_info) {
+		fprintf (stderr, "SEC: sec_add_event_handler: Out of memory\n");
+		return -1;
+	}
+	
+	func_info->function	= function;
+	func_info->data		= data;
+	func_info->next		= ec->event_handlers [action];
+	
+	/* Place this new handler as the first item in the list */
+	ec->event_handlers [action] = func_info;
+
+	return 0;
+}
+
+static int
+sec_remove_event_handler (RealSimiasEventClient *ec, 
+						  IPROC_EVENT_ACTION action,
+						  SimiasEventFunc function)
+{
+	SimiasEventFuncInfo *curr_func, *prev_func;
+	
+	/* If function is NULL, remove ALL functions for the specified action */
+	if (function == NULL) {
+		sec_remove_all_event_handlers (ec, action);
+	} else {
+		/**
+		 * Search through the list for the specified SimiasEventFunc, remove it,
+		 * and free the memory used by the SimiasEventFuncInfo.
+		 */
+		prev_func = NULL;
+		
+		for (curr_func = ec->event_handlers [action]; curr_func;
+			 prev_func = curr_func, curr_func = curr_func->next) {
+			if (curr_func->function == function) {
+				if (prev_func == NULL) {
+					/* This is the first func in the list */
+					ec->event_handlers [action] = curr_func->next;
+				} else {
+					prev_func->next = curr_func->next;
+				}
+	
+				free (curr_func);
+				break;	/* out of the for loop */
+			}
+		}
+	}
+	
+	return 0;
+}
+
+static int
+sec_notify_event_handlers (RealSimiasEventClient *ec,
+						   IPROC_EVENT_ACTION action,
+						   void *event)
+{
+	SimiasEventFuncInfo *curr_func;
+	bool b_error_occurred = false;
+printf ("SEC: sec_notify_event_handlers () called\n");
+	/**
+	 * Iterate through all the event handlers for the specified action and call
+	 * them with the event and user-specified data.
+	 */
+	for (curr_func = ec->event_handlers [action]; curr_func; 
+		 curr_func = (SimiasEventFuncInfo *)curr_func->next) {
+		if (curr_func->function (event, curr_func->data) != 0) {
+			b_error_occurred = true;
+		}
+	}
+	
+	if (b_error_occurred) {
+		return -1;
+	}
+	
+	return 0;
+}
+
+static int
+sec_remove_all_event_handlers (RealSimiasEventClient *ec,
+							   IPROC_EVENT_ACTION action)
+{
+	SimiasEventFuncInfo *curr_func, *temp_func;
+
+	/**
+	 * Remove all the event handlers for the specified action */
+	for (curr_func = ec->event_handlers [action]; curr_func; ) {
+		 temp_func = curr_func->next;
+		 free (curr_func);
+		 curr_func = temp_func;
+	}
+	
+	ec->event_handlers [0] = NULL;
+
+	return 0;
+}
 /* #endregion */
 
 /* #region Testing */
@@ -1010,6 +1179,7 @@ printf ("SEC: Freeing unknown event type (memory leak possible)\n");
 void
 print_simias_node_event (SimiasNodeEvent *event)
 {
+	printf ("SimiasNodeEvent received:\n");
 	printf ("\t%s: %s\n", "action", event->action);
 	printf ("\t%s: %s\n", "time", event->time);
 	printf ("\t%s: %s\n", "source", event->source);
@@ -1024,27 +1194,11 @@ print_simias_node_event (SimiasNodeEvent *event)
 }
 
 int
-simias_node_created_callback (SimiasNodeEvent *event, void *data)
+simias_node_event_callback (SimiasNodeEvent *event, void *data)
 {
-	printf ("simias_node_created_callback () entered\n");
-	
 	print_simias_node_event (event);
-}
-
-int
-simias_node_changed_callback (SimiasNodeEvent *event, void *data)
-{
-	printf ("simias_node_changed_callback () entered\n");
 	
-	print_simias_node_event (event);
-}
-
-int
-simias_node_deleted_callback (SimiasNodeEvent *event, void *data)
-{
-	printf ("simias_node_deleted_callback () entered\n");
-	
-	print_simias_node_event (event);
+	return 0;
 }
 
 int
@@ -1080,9 +1234,9 @@ main (int argc, char *argv[])
 	}
 	
 	/* Ask to listen to some events by calling sec_set_event () */
-	sec_set_event (ec, ACTION_ADD_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_callback, NULL);
-	sec_set_event (ec, ACTION_ADD_NODE_CHANGED, true, (SimiasEventFunc)simias_node_changed_callback, NULL);
-	sec_set_event (ec, ACTION_ADD_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_callback, NULL);
+	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
+	sec_set_event (ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
+	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
