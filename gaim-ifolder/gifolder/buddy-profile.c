@@ -653,8 +653,9 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	/**
 	 * Now start parsing here:
 	 *
-	 * [simias:plugin-installed:<Base64 encoded machine name>:<Simias UserID and URL encoded with private key>]
+	 * [simias:plugin-installed:<Base64 encoded machine name>:<Simias UserID and URL encoded with DES key>]
 	 *                          ^
+	 */
 	tmp = tmp + strlen(SIMIAS_PLUGIN_INSTALLED_ID);
 	colonPos = simias_str_index_of(tmp, ':');
 	if (colonPos <= 0)

@@ -82,7 +82,7 @@ int simias_get_private_key(char **private_key);
  * error, the function returns a negative int and the encrypted_string is
  * invalid and does not need to be freed.
  */
-int simias_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_string, char **encrypted_string);
+int simias_rsa_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_string, char **encrypted_string);
 
 /**
  * Uses rsaCryptoXml (.NET XML String for a RSACryptoServiceProvider), to
@@ -91,6 +91,37 @@ int simias_encrypt_string(const char *rsaCryptoXml, const char *unencrypted_stri
  * error, the function returns a negative int and the decrypted_string is
  * invalid and does not need to be freed.
  */
-int simias_decrypt_string(const char *rsaCryptoXml, const char *encrypted_string, char **decrypted_string);
+int simias_rsa_decrypt_string(const char *rsaCryptoXml, const char *encrypted_string, char **decrypted_string);
+
+/**
+ * Gets the user's Base64 Encoded DES key.  This function first checks the
+ * plugin setting in Gaim prefs.xml.  If so, it just returns that key.
+ * Otherwise it will call the GaimDomain WebService to generate a DES key that
+ * will be stored and used from the Gaim iFolder Plugin.
+ *
+ * This method returns 0 on success.  If success is returned, the des_key
+ * will have a newly allocated char * that should be freed by the caller.  If
+ * there is an error, private_key will be invalid and does not need to be freed.
+ */
+int simias_get_des_key(char **des_key);
+
+/**
+ * Uses desKey to encrypt unencrypted_string.  The encrypted_string is returned
+ * Base64 encoded.
+ *
+ * Returns 0 if successful, in which case encrypted_string will be valid and
+ * needs to be freed.  If there was an error, the function returns a negative
+ * int and the encrypted_string is invalid and does not need to be freed.
+ */
+int simias_des_encrypt_string(const char *desKey, const char *unencrypted_string, char **encrypted_string);
+
+/**
+ * Uses desKey to decrypt encrypted_string, which is also Base64 encoded.
+ *
+ * Returns 0 if successful, in which case decrypted_string will be valid and
+ * needs to be freed.  If there was an error, the function returns a negative
+ * int and the decrypted_string is invalid and does not need to be freed.
+ */
+int simias_des_decrypt_string(const char *desKey, const char *encrypted_string, char **decrypted_string);
 
 #endif

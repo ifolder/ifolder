@@ -32,7 +32,7 @@
 #include "simias-util.h"
 #include "simias-prefs.h"
 #include "gaim-domain.h"
-#include "gaim-profile.h"
+#include "buddy-profile.h"
 
 /* Gaim Includes */
 #include "internal.h"
@@ -54,6 +54,9 @@ static gboolean handle_invitation_deny(GaimAccount *account,
 static gboolean handle_invitation_accept(GaimAccount *account,
 										 const char *sender,
 										 const char *buffer);
+static gboolean handle_invitation_complete(GaimAccount *account,
+										   const char *sender,
+										   const char *buffer);
 
 /**
  * This function takes a generic message and sends it to the specified recipient
@@ -84,70 +87,6 @@ fprintf(stderr, "gaim_account_get_connection() returned null\n");
 
 fprintf(stderr, "Sending message: %s\n", msg);
 	return serv_send_im(conn, recipient->name, msg, 0);
-}
-
-/**
- * This will either send a ping request or a ping response based
- * on the ping_type parameter.
- */
-static int
-send_ping(GaimBuddy *recipient, const char *ping_type)
-{
-	char msg[4096];
-	char *publicKey;
-	char *base64Key;
-	char *machineName;
-	char *userID;
-	char *simias_service_url;
-	char *escaped_url;
-	char *public_url;
-	int err;
-
-	/* Get the PublicKey for the user */
-	err = simias_get_public_key(&publicKey);
-	if (err != 0)
-	{
-		/**
-		 * There was an error an none of the returns are valid.  The most
-		 * likely cause is that Simias was not running.
-		 */
-fprintf(stderr, "simias_get_public_key() returned: %d\n", err);
-		return -12312;
-	}
-	
-	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
-
-	/* Get the Gaim Domain User Info */
-	err = simias_get_user_info(&machineName, &userID, &simias_service_url); 
-	if (err != 0)
-	{
-		/* There was an error and none of the returns are valid */
-fprintf(stderr, "simias_get_user_info() returned: %d\n", err);
-		return -23432;
-	}
-
-	escaped_url = simias_escape_spaces(simias_service_url);
-	free(simias_service_url);
-	
-	public_url = convert_url_to_public(escaped_url);
-	if (public_url) {
-		sprintf(msg, "%s%s:%s:%s:%s]", ping_type, base64Key, machineName, userID, public_url);
-		free(public_url);
-	} else {
-		free(machineName);
-		free(userID);
-		free(escaped_url);
-		fprintf(stderr, "convert_url_to_public() returned NULL.  Cannot send message.\n");
-		return -1234;
-	}
-	
-	free(base64Key);
-	free(publicKey);
-	free(machineName);
-	free(userID);
-	free(escaped_url);
-
-	return simias_send_msg(recipient, msg);
 }
 
 /**
@@ -193,40 +132,58 @@ simias_send_invitation_deny(GaimBuddy *recipient)
 /**
  * This function sends a message with the following format:
  *
- * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded symmetric key encrypted with the recipient's public key>]
+ * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
 int
-simias_send_invitation_accept(GaimBuddy *recipient)
+simias_send_invitation_accept(GaimBuddy *recipient, char *recipientBase64PublicKey)
 {
-	char *public_key;
 	char msg[4096];
-	char *base64Key;
-	char *symmetricKey;
+	char *public_key;
+	char *base64PublicKey;
+	char *desKey;
 	char *buddyPublicKey;
-	
-	if (simias_get_public_key(&public_key) != 0)
+	int buddyPublicKeyLen;
+	char settingName[4096];
+	char *encryptedDESKey;
+	int err;
+
+	err = simias_get_public_key(&public_key);
+	if (err != 0)
 	{
 		/* FIXME: Prompt the user to make sure iFolder is up and running...or kick Simias to start before continuing. */
-		fprintf(stderr, "Error getting public key.  Maybe iFolder is not running?\n");
+		fprintf(stderr, "simias_get_public_key() returned an error (%d).  Maybe iFolder is not running?\n", err);
 		return -1;
 	}
 	
 	/* Base64Encode the public key so it gets sent nicely (not in XML) */
-	base64Key = gaim_base64_encode(publicKey, strlen(publicKey));
+	base64PublicKey = gaim_base64_encode(publicKey, strlen(publicKey));
 	free(public_key);
 
-	symmetricKey = get_my_symmetric_key();
-	buddyPublicKey = get_buddy_public_key(recipient);
-	encryptedSymmetricKey = simias_symmetric_encrypt_string(buddyPublicKey, symmetricKey);
+	err = simias_get_des_key(&desKey);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		fprintf(stderr, "simias_get_des_key() returned an error (%d).  Maybe iFolder is not running?\n", err);
+		return -2;
+	}
 
-	/* Base64Encode the encrypted symmetric key so it gets sent nicely */
-	base64EncryptedSymmetricKey = gaim_base64_encode(encryptedSymmetricKey, strlen(encryptedSymmetricKey));
-	
+	gaim_base64_decode(recipientBase64PublicKey, &buddyPublicKey, &buddyPublicKeyLen);
+
+	err = simias_rsa_encrypt_string(buddyPublicKey, desKey, &encryptedDESKey);
+	free(buddyPublicKey);
+	free(desKey);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		fprintf(stderr, "simias_rsa_encrypt_string() had an error (%d) in simias_send_invitation_accept()\n", err);
+		return -3;
+	}
+
 	sprintf(msg, "%s%s:%s]", INVITATION_ACCEPT_MSG,
-							 base64Key,
-							 base64EncryptedSymmetricKey);
-	free(base64Key);
-	free(base64EncryptedSymmetricKey);
+							 base64PublicKey,
+							 encryptedDESKey);
+	free(base64PublicKey);
+	free(encryptedDESKey);
 
 	return simias_send_msg(recipient, msg);
 }
@@ -237,7 +194,7 @@ simias_send_invitation_accept(GaimBuddy *recipient)
  * [simias:invitation-complete:<Base64Encoded symmetric key encrypted with the recipient's public key>]
  */
 int
-simias_send_invitation_complete(GaimBuddy *recipient)
+simias_send_invitation_complete(GaimBuddy *recipient, char *recipientBase64PublicKey);
 {
 }
 
@@ -398,7 +355,7 @@ fprintf(stderr, "handle_invitation_request() %s -> %s entered\n",
 	if (response == GTK_RESPONSE_YES)
 	{
 		/* Send an accept message */
-		err = simias_send_invitation_accept(buddy);
+		err = simias_send_invitation_accept(buddy, base64Key);
 		if (err <= 0)
 		{
 			/* FIXME: Call the registered UI Handler's error handler */
@@ -467,6 +424,126 @@ handle_invitation_accept(GaimAccount *account,
 						 const char *buffer)
 {
 	GaimBuddy *buddy;
+	char *base64PublicKey;
+	int colonPos;
+	char *encryptedDESKey;
+	int closeBracketPos;
+	char *tmp;
+	char *privateKey;
+	char *decryptedDESKey;
+	GtkWidget *dialog;
+	const char *buddy_alias = NULL;
+	int err;
+
+fprintf(stderr, "handle_invitation_accept() %s -> %s entered\n",
+		sender, gaim_account_get_username(account));
+		
+	buddy = gaim_find_buddy(account, sender);
+
+	/**
+	 * Start parsing the message at this point:
+	 * 
+	 * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded DES key encrypted with the recipient's public key>]
+	 *                           ^
+	 */
+	tmp = (char *)buffer + strlen(INVITATION_ACCEPT_MSG);
+	colonPos = simias_str_index_of(tmp, ':');
+	if (colonPos <= 0)
+	{
+		fprintf(stderr, "handle_invitation_request() couldn't parse the public key\n");
+		return FALSE;
+	}
+	base64PublicKey = malloc(sizeof(char) * (colonPos + 1));
+	memset(base64PublicKey, '\0', colonPos + 1);
+	strncpy(base64PublicKey, tmp, colonPos);
+
+	/**
+	 * Add on a temporary setting for public key so get_buddy_profile()
+	 * will be able to save the public key with the correct machine name.
+	 */
+	gaim_blist_node_set_string(&(buddy->node),
+							   "simias-temp-public-key",
+							   base64PublicKey);
+
+	tmp = tmp + colonPos + 1;
+	closeBracketPos = simias_str_index_of(tmp, ']');
+	if (closeBracketPos <= 0)
+	{
+		free(base64PublicKey);
+		fprintf(stderr, "handle_invitation_request() couldn't parse the encrypted DES key\n");
+		return FALSE;
+	}
+	encryptedDESKey = malloc(sizeof(char) * (closeBracketPos + 1));
+	memset(encryptedDESKey, '\0', closeBracketPos + 1);
+	strncpy(encryptedDESKey, tmp, closeBracketPos);
+
+	/* Decrypt the DES key with our private key */
+	err = simias_get_private_key(&privateKey);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		free(encryptedDESKey);
+		fprintf(stderr, "Couldn't get our private key.  Maybe iFolder is not running?\n");
+		return FALSE;
+	}
+
+	err = simias_des_decrypt_string(privateKey, encryptedDESKey, &decryptedDESKey);
+	free(privateKey);
+	free(encryptedDESKey);
+	if (err != 0)
+	{
+		free(base64PublicKey);
+		fprintf(stderr, "simias_des_decrypt_string() returned an error (%d)\n", err);
+		return FALSE;
+	}
+
+	/**
+	 * Add on a temporary setting for DES key so that get_info has
+	 * the necessary information needed to decrypt the buddy profile.
+	 */
+	gaim_blist_node_set_string(&(buddy->node),
+							   "simias-temp-des-key",
+							   decryptedDESKey);
+	free(decryptedDESKey);
+
+	/* Queue up a call to read the buddy's profile */
+	simias_get_buddy_profile(buddy);
+
+	/* Send an invitation confirmation */
+	err = simias_send_invitation_complete(buddy, base64PublicKey);
+	free(base64PublicKey);
+	if (err <= 0)
+	{
+		fprintf(stderr, "simias_send_invitation_complete() had an error (%d)\n", err);
+		/* FIXME: Add UI callback to alert error */
+	}
+
+	/* FIXME: Add some type of UI callback to handle the accept invitation */
+
+	/* FIXME: Check the plugin preferences of whether the accept invitation confirmation dialog should be shown. */
+
+	buddy_alias = gaim_buddy_get_alias(buddy);
+
+	dialog =
+		gtk_message_dialog_new(NULL,
+								GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+								GTK_MESSAGE_INFO,
+								GTK_BUTTONS_OK,
+								_("%s has accepted your request to enable iFolder file sharing.  To share files through iFolder, use the iFolder Client, create an iFolder in the Gaim Workgroup Domain, and add %s to the iFolder's member list."),
+								buddy_alias ? buddy_alias : sender,
+								buddy_alias ? buddy_alias : sender);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+	
+	return TRUE;
+}
+
+static gboolean
+handle_invitation_complete(GaimAccount *account,
+						   const char *sender,
+						   const char *buffer)
+{
+	GaimBuddy *buddy;
 	char *base64Key;
 	int closeBracketPos;
 	char *tmp;
@@ -479,8 +556,8 @@ fprintf(stderr, "handle_invitation_accept() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:invitation-accept:<Base64Encoded Public Key>]
-	 *                            ^
+	 * 	[simias:invitation-complete:<Base64Encoded Public Key>]
+	 *                              ^
 	 */
 	tmp = (char *)buffer + strlen(INVITATION_ACCEPT_MSG);
 	closeBracketPos = simias_str_index_of(tmp, ']');

@@ -25,6 +25,8 @@
  *  distributed under the GPL.
  ***********************************************************************/
 
+#include "blist.h"
+
 #ifndef _SIMIAS_MESSAGES_H
 #define _SIMIAS_MESSAGES_H 1
 
@@ -53,7 +55,7 @@ int simias_send_msg(GaimBuddy *recipient, char *msg);
 /**
  * This function sends a message with the following format:
  *
- * [simias:invitation-request:<Base64Encoded Public Key>]
+ * [simias:invitation-request:<Base64Encoded Public Key>:<Base64Encoded Machine Name>]
  */
 int simias_send_invitation_request(GaimBuddy *recipient);
 
@@ -67,16 +69,16 @@ int simias_send_invitation_deny(GaimBuddy *recipient);
 /**
  * This function sends a message with the following format:
  *
- * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded symmetric key encrypted with the recipient's public key>]
+ * [simias:invitation-accept:<Base64Encoded Public Key>:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
-int simias_send_invitation_accept(GaimBuddy *recipient);
+int simias_send_invitation_accept(GaimBuddy *recipient, char *recipientBase64PublicKey);
 
 /**
  * This function sends a message with the following format:
  *
- * [simias:invitation-complete:<Base64Encoded symmetric key encrypted with the recipient's public key>]
+ * [simias:invitation-complete:<Base64Encoded Machine Name>:<Base64Encoded DES key encrypted with the recipient's public key>]
  */
-int simias_send_invitation_complete(GaimBuddy *recipient);
+int simias_send_invitation_complete(GaimBuddy *recipient, char *recipientBase64PublicKey);
 
 gboolean simias_receiving_im_msg_cb(GaimAccount *account, char **sender,
 									char **buffer, int *flags, void *data);
