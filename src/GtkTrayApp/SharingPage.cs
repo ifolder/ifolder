@@ -367,7 +367,7 @@ namespace Novell.iFolder
 		{
 			Contact c = args.contact;
 
-			if(!guidList.Contains(c.Identity))
+			if(!guidList.Contains(c.ID))
 			{
 				try
 				{
@@ -386,7 +386,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				Console.WriteLine("Identity Exists: " + c.Identity);
+				Console.WriteLine("Identity Exists: " + c.ID);
 			}
 		}
 
