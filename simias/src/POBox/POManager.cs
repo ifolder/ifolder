@@ -95,16 +95,12 @@ namespace Simias.POBox
 					Roster roster = domain.GetRoster(store);
 					SyncCollection sc = new SyncCollection(roster);
 
-					// only use collection managers on client machines
-					if ((domain.ID == Storage.Domain.WorkGroupDomainID) || (sc.Role == SyncCollectionRoles.Slave))
-					{
-						// start collection managers
-						subscriber.Enabled = true;
+					// start collection managers for all collection on this client machine.
+					subscriber.Enabled = true;
 						
-						foreach(ShallowNode n in store.GetCollectionsByType(typeof(POBox).Name))
-						{
-							AddPOBoxManager(n.ID);
-						}
+					foreach(ShallowNode n in store.GetCollectionsByType(typeof(POBox).Name))
+					{
+						AddPOBoxManager(n.ID);
 					}
 				}
 			}

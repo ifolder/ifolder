@@ -315,8 +315,7 @@ namespace Simias.Storage
 					member.IsOwner = true;
 
 					// Create the default workgroup domain and add an identity mapping.
-					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
-					wgDomain.HostAddress = localUri;
+					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID, localUri, Domain.DomainRole.Master );
 					owner.AddDomainIdentity( owner.ID, wgDomain.ID );
 
 					// Save the local database changes.
@@ -348,8 +347,7 @@ namespace Simias.Storage
 						string description = config.Get( Domain.SectionName, Domain.EnterpriseDescription, String.Empty );
 
 						// Create the new domain object and add the identity mapping.
-						Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
-						eDomain.HostAddress = localUri;
+						Domain eDomain = new Domain( enterpriseName, enterpriseID, localUri, Domain.DomainRole.Master, description );
 						owner.AddDomainIdentity( owner.ID, eDomain.ID );
 
 						// Add the enterprise domain as the default domain.
@@ -565,8 +563,9 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <param name="domainDescription">String that describes the specified domain.</param>
 		/// <param name="domainHost">The URI of where the domain is hosted.</param>
+		/// <param name="role">Type of domain, either Master or Slave.</param>
 		/// <returns>The created Domain object.</returns>
-		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost )
+		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost, Domain.DomainRole role )
 		{
 			Node[] nodeList = new Node[ 2 ];
 
@@ -574,13 +573,10 @@ namespace Simias.Storage
 			domainID = domainID.ToLower();
 
 			// Create the domain object.
-			Domain domain = new Domain( domainName, domainID, domainDescription );
+			Domain domain = new Domain( domainName, domainID, domainHost, role, domainDescription );
 			nodeList[ 0 ] = domain;
 			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID );
 
-			// Add the uri.
-			domain.HostAddress = domainHost;
-			
 			// Commit the changes.
 			LocalDb.Commit( nodeList );
 			return domain;

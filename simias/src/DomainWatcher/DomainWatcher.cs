@@ -143,7 +143,7 @@ namespace Simias.DomainWatcher
 				{
 					Simias.Storage.Domain cDomain = store.GetDomain(store.DefaultDomain);
 					if (cDomain != null &&
-						cDomain.ID != Simias.Storage.Domain.WorkGroupDomainID) 
+						cDomain.Role != Simias.Storage.Domain.DomainRole.Master )
 					{
 						log.Debug("checking Domain: " + cDomain.Name);
 						Roster cRoster = cDomain.GetRoster(store);

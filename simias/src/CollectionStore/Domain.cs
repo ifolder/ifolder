@@ -35,6 +35,22 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
+		/// Constants that define whether the domain is a master or slave domain.
+		/// </summary>
+		public enum DomainRole
+		{
+			/// <summary>
+			/// The domain is hosted by the local machine.
+			/// </summary>
+			Master,
+
+			/// <summary>
+			/// The domain is hosted by a remote machine.
+			/// </summary>
+			Slave
+		}
+
+		/// <summary>
 		/// Configuration section name where enterprise key value pairs are stored.
 		/// </summary>
 		static internal string SectionName = "Domain";
@@ -93,6 +109,18 @@ namespace Simias.Storage
 
 			set { properties.ModifyNodeProperty( PropertyTags.HostAddress, value ); }
 		}
+
+		/// <summary>
+		/// Gets whether this domain is a master or slave.
+		/// </summary>
+		public DomainRole Role
+		{
+			get 
+			{ 
+				Property p = properties.FindSingleValue( PropertyTags.DomainRole );
+				return ( p != null ) ? ( DomainRole )p.Value : DomainRole.Slave;
+			}
+		}
 		#endregion
 
 		#region Constructors
@@ -101,8 +129,10 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
-		internal Domain( string domainName, string domainID ) :
-			this ( domainName, domainID, null )
+		/// <param name="hostAddress">Network address of where this domain is hosted.</param>
+		/// <param name="role">Type of domain, either Master or Slave.</param>
+		internal Domain( string domainName, string domainID, Uri hostAddress, DomainRole role ) :
+			this ( domainName, domainID, hostAddress, role, null )
 		{
 		}
 
@@ -111,10 +141,18 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known unique identifier for the domain.</param>
+		/// <param name="hostAddress">Network address of where this domain is hosted.</param>
+		/// <param name="role">Type of domain, either Master or Slave.</param>
 		/// <param name="description">String that describes this domain.</param>
-		internal Domain( string domainName, string domainID, string description ) :
+		internal Domain( string domainName, string domainID, Uri hostAddress, DomainRole role, string description ) :
 			base ( domainName, domainID, NodeTypes.DomainType )
 		{
+			// Add the host uri.
+			HostAddress = hostAddress;
+
+			// Add the domain type.
+			properties.AddNodeProperty( PropertyTags.DomainRole, ( role == DomainRole.Master ) ? 0 : 1 );
+
 			// Add the description attribute.
 			if ( ( description != null ) && ( description.Length > 0 ) )
 			{

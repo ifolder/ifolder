@@ -101,7 +101,7 @@ namespace Simias.Web
 				cDomainInfo = new DomainInformation();
 
 				cDomainInfo.Type =
-					(domainID == Simias.Storage.Domain.WorkGroupDomainID)
+					(cDomain.Role == Simias.Storage.Domain.DomainRole.Master)
 						? DomainType.Workgroup
 						: DomainType.Enterprise;
 
