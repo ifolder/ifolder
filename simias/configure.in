@@ -49,26 +49,7 @@ AM_CONDITIONAL(DOTNET, test "$CSC" = "csc")
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
 
-#
-# Installation directory options.
-#
-# These are normally left unexpanded so users can "make install exec_prefix=/foo".
-# However, we want them expanded.
-#
-bindir="${exec_prefix}/bin"
-sbindir="${exec_prefix}/sbin"
-libexecdir="${exec_prefix}/libexec"
-datadir="${prefix}/share"
-sysconfdir="${prefix}/etc"
-sharedstatedir="${prefix}/com"
-localstatedir="${prefix}/var"
-libdir="${exec_prefix}/lib"
-includedir="${prefix}/include"
-oldincludedir="/usr/include"
-infodir="${prefix}/info"
-mandir="${prefix}/man"
-webdir="${exec_prefix}/web"
-webbindir="${exec_prefix}/web/bin"
+
 
 if test -z "$PKG_CONFIG_PATH"; then
     export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig"
@@ -289,12 +270,12 @@ case $SIMIAS_OS in
         #
     	# Override Linux-like directory structure
         #
-    	bindir="${exec_prefix}"
-    	sbindir="${exec_prefix}"
-    	libexecdir="${exec_prefix}"
-    	libdir="${exec_prefix}"
-		StoreProviderAssembly="Simias.dll"
-		StoreProviderType="Simias.Storage.Provider.Flaim.FlaimProvider"
+    	bindir='${exec_prefix}'
+    	sbindir='${exec_prefix}'
+    	libexecdir='${exec_prefix}'
+    	libdir='${exec_prefix}'
+		StoreProviderAssembly='Simias.dll'
+		StoreProviderType='Simias.Storage.Provider.Flaim.FlaimProvider'
     ;;
 esac
 AC_SUBST(CDEF)
@@ -330,6 +311,15 @@ AC_SUBST(webbindir)
 AC_SUBST(StoreProviderAssembly)
 AC_SUBST(StoreProviderType)
 AC_SUBST(GSOAP_PATH)
+
+#
+# We have our own "standard" directories for web services.
+#
+webdir='${libexecdir}/web'
+webbindir='${webdir}/bin'
+AC_SUBST(webdir)
+AC_SUBST(webbindir)
+
 
 #
 # Set pkg-config variables

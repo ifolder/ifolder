@@ -6,6 +6,24 @@ PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
 
 EXTRA_DIST = tools external $(srcdir)/$(PACKAGE)*.pc.in $(PROJECT_FILES)
 
+SIMIAS_PC_IN = simias.pc.in
+
+simias_pc: $(SIMIAS_PC_IN)
+	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_PKG_CONFIG_LIBS_@,@PKG_CONFIG_LIBS@,g' $< > $@
+	chmod +x $@
+	
+SIMIAS_CLEINT_PC_IN = simias-client.pc.in
+
+simias_client_pc: $(SIMIAS_CLIENT_PC_IN)
+	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_CLIENT_PKG_CONFIG_LIBS_@,@CLIENT_PKG_CONFIG_LIBS@,g' $< > $@
+	chmod +x $@
+
+SIMIAS_CLEINT_C_PC_IN = simias-client-c.pc.in
+
+simias_client_c_pc: $(SIMIAS_CLIENT_C_PC_IN)
+	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_libdir_@,@libdir@,g' $< > $@
+	chmod +x $@
+
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 install-exec-local:

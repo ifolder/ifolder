@@ -1,13 +1,13 @@
 # pkg-config metadata file for simias
 Name: Simias
 Description: Simias components
-Version: @VERSION@
-Requires: @PKG_CONFIG_REQUIRES@
-Conflicts: @PKG_CONFIG_CONFLICTS@
+Version: @_VERSION_@
+Requires: @_PKG_CONFIG_REQUIRES_@
+Conflicts: @_PKG_CONFIG_CONFLICTS_@
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-libdir=@webbindir@
+prefix=@_prefix_@
+exec_prefix=@_exec_prefix_@
+libdir=@_webbindir_@
 
-Libs:/lib:${libdir} @PKG_CONFIG_LIBS@
+Libs:/lib:${libdir} @_PKG_CONFIG_LIBS_@
 
