@@ -1,5 +1,4 @@
 #import "LoginWindowController.h"
-#import "iFolderWSStubs.h"
 
 @implementation LoginWindowController
 

@@ -4,9 +4,13 @@
 
 -(void)awakeFromNib
 {
-	webService = [[iFolderService alloc] init];
-//	domains = [[NSMutableDictionary alloc] initWithCapacity:2];
 
+	webService = [[iFolderService alloc] init];
+
+	[self showLoginWindow];
+	
+//	domains = [[NSMutableDictionary alloc] initWithCapacity:2];
+/*
 	@try
 	{
 		domains = [webService GetDomains];
@@ -23,6 +27,7 @@
 		NSString *error = [e name];
 		domains = nil;
 	}
+*/
 }
 
 - (void)showLoginWindow
@@ -38,6 +43,8 @@
 
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server
 {
+	[webService Ping];
+/*
 	Domain *domain;
 	
 	@try
@@ -69,6 +76,7 @@
 			[domains setObject:domain forKey:domain->ID];
 		[[_loginController window]  close];
 	}	
+*/
 }
 
 - (IBAction)login:(id)sender
