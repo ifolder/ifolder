@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-mDnsDomain_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/Channel.cs $(srcdir)/Location.cs 
+mDnsDomain_CSFILES1 = $(srcdir)/Service.cs $(srcdir)/Domain.cs $(srcdir)/User.cs $(srcdir)/Channel.cs $(srcdir)/Location.cs $(srcdir)/Auth.cs $(srcdir)/mDnsStub.cs 
 mDnsDomain_CSFILES := $(subst /,$(SEP),$(mDnsDomain_CSFILES1))
 mDnsDomain_INCLUDES =
 mDnsDomain_RESOURCES =
@@ -32,9 +32,11 @@ install-exec-local: Simias.mDns.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
 	$(INSTALL_PROGRAM) Simias.mDns.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) mDns.asmx $(DESTDIR)$(webdir)
 	
 uninstall-local:
 	cd $(DESTDIR)$(webbindir); rm -f Simias.mDns.dll $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir); rm -f mDns.asmx
 
 installcheck-local: install
 	
