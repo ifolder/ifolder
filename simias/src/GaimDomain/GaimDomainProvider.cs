@@ -292,7 +292,7 @@ namespace Simias.Gaim
 							string alias = buddy.Alias;
 							if (alias != null)
 							{
-								member.FN = string.format("{0} ({1})", alias, machineNames[i]);
+								member.FN = string.Format("{0} ({1})", alias, machineNames[i]);
 							}
 						}
 	
