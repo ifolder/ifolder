@@ -19,13 +19,13 @@ ndoc-nodeps:
 	rm -rf $(PACKAGE)-ndoc
 if WINDOWS
 	"$(NDOC_CMD)" \
-		`cygpath --windows "$(bindir)/Simias.dll"`,`cygpath --windows "../src/Simias.dll/Simias.doc.xml"` \
-		`cygpath --windows "$(bindir)/Novell.AddressBook.dll"`,`cygpath --windows "../src/AddressBook/AddressBook.doc.xml"` \
+		`cygpath --windows "$(webbindir)/Simias.dll"`,`cygpath --windows "../src/Simias.dll/Simias.doc.xml"` \
+		`cygpath --windows "$(webbindir)/Novell.AddressBook.dll"`,`cygpath --windows "../src/AddressBook/AddressBook.doc.xml"` \
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 else # NOT WINDOWS
 	"$(NDOC_CMD)" \
-		"$(bindir)/Simias.dll","../src/Simias.dll/Simias.doc.xml" \
-		"$(bindir)/Novell.AddressBook.dll","../src/AddressBook/AddressBook.doc.xml" \
+		"$(webbindir)/Simias.dll","../src/Simias.dll/Simias.doc.xml" \
+		"$(webbindir)/Novell.AddressBook.dll","../src/AddressBook/AddressBook.doc.xml" \
 		-documenter=MSDN -Title=Simias -OutputDirectory=$(PACKAGE)-ndoc
 endif # WINDOWS
 	tar -czf $(DOC_TARBALL) $(PACKAGE)-ndoc
