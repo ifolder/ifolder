@@ -725,12 +725,12 @@ parse_encoded_profile(GaimBuddy *buddy, const char *profile, char **machineName,
 	*userID = malloc(sizeof(char) * (colonPos + 1));
 	memset(*userID, '\0', colonPos + 1);
 	strncpy(*userID, tmp, colonPos);
-	
+
 	/* Advance the parse position past the colon */
 	tmp = tmp + colonPos + 1;
-	*simiasURL = malloc(sizeof(char) * (strlen(tmp) - colonPos));
-	memset(*simiasURL, '\0', (strlen(tmp) - colonPos));
-	strncpy(*simiasURL, tmp, (strlen(tmp) - colonPos - 1));
+	*simiasURL = malloc(sizeof(char) * strlen(tmp));
+	memset(*simiasURL, '\0', strlen(tmp));
+	strncpy(*simiasURL, tmp, strlen(tmp));
 
 	free(decryptedString);
 	
