@@ -4969,4 +4969,19 @@
 	<data name="deleteAction">
 		<value>Delete iFolder</value>
 	</data>
+	<data name="uploadDir">
+		<value>Uploading directory {0}</value>
+	</data>
+	<data name="downloadDir">
+		<value>Downloading directory {0}</value>
+	</data>
+	<data name="deleteClientFile">
+		<value>Deleting file {0} on client</value>
+	</data>
+	<data name="deleteClientDir">
+		<value>Deleting directory {0} on client</value>
+	</data>
+	<data name="deleteUnknown">
+		<value>Deleting {0} on server</value>
+	</data>
 </root>

@@ -66,7 +66,6 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
-		private string currentSyncingID = String.Empty;
 		private string longName = String.Empty;
 		private Hashtable subscrHT;
 		private Hashtable userIDHT;
@@ -2828,14 +2827,19 @@ namespace Novell.iFolderCom
 		private void collectionSyncHandler(SimiasEventArgs args)
 		{
 			CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
-			currentSyncingID = (syncEventArgs.Action == Action.StartSync) ? syncEventArgs.ID : String.Empty;
+
+			if ((syncEventArgs.Action == Action.StopSync) && currentiFolder.ID.Equals(syncEventArgs.ID))
+			{
+				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
+				BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});
+			}
 		}
 
 		private void fileSyncHandler(SimiasEventArgs args)
 		{
 			FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
 
-			if (currentSyncingID.Equals(currentiFolder.ID))
+			if (syncEventArgs.CollectionID.Equals(currentiFolder.ID))
 			{
 				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
 				BeginInvoke(syncSizeDelegate, new object[] {syncSize.SyncNodeCount});

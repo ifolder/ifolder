@@ -2029,7 +2029,23 @@ namespace Novell.FormsTrayApp
 					progressBar1.Visible = syncEventArgs.SizeToSync > 0;
 					progressBar1.Value = 0;
 					progressBar1.Maximum = (int)syncEventArgs.SizeToSync;
-					status.Text = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+
+					switch (syncEventArgs.ObjectType)
+					{
+						case ObjectType.File:
+							status.Text = syncEventArgs.Delete ? 
+								string.Format(resourceManager.GetString("deleteClientFile"), syncEventArgs.Name) :
+								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+							break;
+						case ObjectType.Directory:
+							status.Text = syncEventArgs.Delete ? 
+								string.Format(resourceManager.GetString("deleteClientDir"), syncEventArgs.Name) :
+								string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadDir" : "downloadDir"), syncEventArgs.Name);
+							break;
+						case ObjectType.Unknown:
+							status.Text = string.Format(resourceManager.GetString("deleteUnknown"), syncEventArgs.Name);
+							break;
+					}
 
 					// Add message to log.
 					addMessageToLog(syncEventArgs.TimeStamp, status.Text);// string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
