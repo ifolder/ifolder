@@ -278,7 +278,8 @@ namespace Novell.iFolder.FormsTrayApp
 				Configuration config = new Configuration();
 
 				// Check if this is the initial run ...
-/*				string firstRun = config.Get("iFolderApp", "First run", "true");
+				// TODO: TEMPORARY - remove when new install is available.
+				string firstRun = config.Get("iFolderApp", "First run", "true");
 				if (firstRun.Equals("true"))
 				{
 					// Set the run key in the registry.
@@ -286,8 +287,10 @@ namespace Novell.iFolder.FormsTrayApp
 
 					// Set the configuration setting.
 					config.Set("iFolderApp", "First run", "false");
+					Application.Exit();
 				}
-*/
+				// End TEMPORARY
+
 				SimiasLogManager.Configure(config);
 			
 				SyncProperties props = new SyncProperties(config);

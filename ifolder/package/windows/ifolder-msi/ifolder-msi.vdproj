@@ -87,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1A1C49E519704BBABF189741796CA594"
+        "OwnerKey" = "8:_81E6A706396F49689E4EB2E428019DB6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1CD6B3C8947C4C95AD697E3468D53D49"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -147,6 +153,42 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
+        "OwnerKey" = "8:_56F2016D8E8247AA9C88AD6467CB5E25"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
+        "OwnerKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
+        "OwnerKey" = "8:_4FAA01583F8744AA8A010586A2F1B00E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
+        "OwnerKey" = "8:_2F8233C054284694B305CE45E1BE309E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
+        "OwnerKey" = "8:_08EBA713ABD446C1BE883846135EC756"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
+        "OwnerKey" = "8:_863CA12CD58A44DF9107F0394EA60876"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3529E9144D5147DBB83F5F76139BD9E8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -155,12 +197,6 @@
         {
         "MsmKey" = "8:_35D3C2F0D1EE4C469684720846DC8020"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3705DF63D4874966BE14BE91F02048BA"
-        "OwnerKey" = "8:_81E6A706396F49689E4EB2E428019DB6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -495,42 +531,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-        "OwnerKey" = "8:_56F2016D8E8247AA9C88AD6467CB5E25"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-        "OwnerKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-        "OwnerKey" = "8:_4FAA01583F8744AA8A010586A2F1B00E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-        "OwnerKey" = "8:_2F8233C054284694B305CE45E1BE309E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-        "OwnerKey" = "8:_08EBA713ABD446C1BE883846135EC756"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-        "OwnerKey" = "8:_863CA12CD58A44DF9107F0394EA60876"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A42BC517790741B9A717EBFF71F547DD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -835,6 +835,20 @@
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
+            "{0C9D821E-95BB-411F-BE03-2864360EBF94}:_810B0E6B2013418B994CC3087C09FA90"
+            {
+            "Name" = "8:[TARGETDIR]iFolderApp.exe"
+            "Condition" = "8:"
+            "Object" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+            "FileType" = "3:2"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_0E2E76A6_D773_445C_A500_4763EC89749E"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
         }
         "DefaultFeature"
         {
@@ -944,7 +958,7 @@
             {
             "AssemblyRegister" = "3:2"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderComponent, Version=1.0.1622.28590, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:iFolderComponent, Version=1.0.1627.15517, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_08EBA713ABD446C1BE883846135EC756"
@@ -3117,7 +3131,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1622.23732, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1627.30772, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
@@ -3262,6 +3276,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{F27BD5C5-A65D-4608-96D4-7C5DA1F76302}:_8A49F30C1E8F4EEA84AD0DD0470951CE"
+                    {
+                    "Name" = "8:iFolder"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_70BC38C3281B406C8463683FEE4FB9E3"
+                        "Folders"
+                        {
+                        }
+                    }
                     "{F27BD5C5-A65D-4608-96D4-7C5DA1F76302}:_C538D6AD927140D5A44F1C04EF8F7A92"
                     {
                     "Name" = "8:Startup"
@@ -3676,6 +3701,76 @@
                                 {
                                 }
                             }
+                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_6BF1D5E67AFF40CCB23736DFD7BAD48F"
+                            {
+                            "Name" = "8:Microsoft"
+                            "Condition" = "8:"
+                            "AlwaysCreate" = "11:FALSE"
+                            "DeleteAtUninstall" = "11:FALSE"
+                            "Transitive" = "11:FALSE"
+                                "Keys"
+                                {
+                                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_EA48BC7A65FC4914885F76535EB2AB6F"
+                                    {
+                                    "Name" = "8:Windows"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_9664A1706CD34B59B088DAA67B7E5489"
+                                            {
+                                            "Name" = "8:CurrentVersion"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_0B39A47DE2A74DA286AA21B525C9F293"
+                                                    {
+                                                    "Name" = "8:RunOnce"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:FALSE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_22FE2CCD452E43D0A8A805EEACF542A2"
+                                                    {
+                                                    "Name" = "8:Run"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:FALSE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
+                                }
+                                "Values"
+                                {
+                                }
+                            }
                         }
                         "Values"
                         {
@@ -3871,18 +3966,18 @@
         }
         "Shortcut"
         {
-            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_823E7237637B41A48AC600DF00A89326"
+            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_FDFBE68B17AE49F29011B1C51B01BC45"
             {
-            "Name" = "8:iFolder 3"
+            "Name" = "8:iFolder"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
+            "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
             "Target" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
-            "Folder" = "8:_C538D6AD927140D5A44F1C04EF8F7A92"
+            "Folder" = "8:_8A49F30C1E8F4EEA84AD0DD0470951CE"
             "WorkingFolder" = "8:_C8C4A0E44589463EB73CBEE508221570"
-            "Icon" = "8:_46C7EA13D1E8484EB8F3B0E8A7E503A0"
+            "Icon" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
             "Feature" = "8:"
             }
         }
@@ -4268,13 +4363,27 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_3705DF63D4874966BE14BE91F02048BA"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_1A1C49E519704BBABF189741796CA594"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "SourcePath" = "8:dotnetfxredist_x86.msm"
             "LanguageId" = "3:0"
             "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_35022BF818A44BC683C53E4513B3B4E2"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:dotnetfxredist_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:1033"
+            "Exclude" = "11:TRUE"
             "Folder" = "8:"
             "Feature" = "8:"
             "IsolateTo" = "8:"
@@ -4448,20 +4557,6 @@
                     "Setting" = "3:2"
                     "Value" = "8:_F0CBA38F49314DBBB544479E1F1FC07E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "DefaultValue" = "8:_F0CBA38F49314DBBB544479E1F1FC07E.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "UsePlugInResources" = "11:FALSE"
-                    }
-                    "_3D06EDD2065621A0FEF461FCB447CE2F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    {
-                    "Name" = "8:_3D06EDD2065621A0FEF461FCB447CE2F.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DisplayName" = "8:"
-                    "Description" = "8:"
-                    "Type" = "3:2"
-                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_03F3E017436749EBA92F6024FE645A63.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "Attributes" = "3:0"
-                    "Setting" = "3:2"
-                    "Value" = "8:_03F3E017436749EBA92F6024FE645A63.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
-                    "DefaultValue" = "8:_03F3E017436749EBA92F6024FE645A63.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
@@ -4644,6 +4739,20 @@
                     "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     "UsePlugInResources" = "11:FALSE"
                     }
+                    "_DF258746012EB45546AA5C09AAB53BAF.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    {
+                    "Name" = "8:_DF258746012EB45546AA5C09AAB53BAF.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DisplayName" = "8:"
+                    "Description" = "8:"
+                    "Type" = "3:2"
+                    "ContextData" = "8:InstallToGAC=;IsolateToManifest=_3F293A1D878A40E4B103544EC2CBB763.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "Attributes" = "3:0"
+                    "Setting" = "3:2"
+                    "Value" = "8:_3F293A1D878A40E4B103544EC2CBB763.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "DefaultValue" = "8:_3F293A1D878A40E4B103544EC2CBB763.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "ParentName" = "8:_9407B4D1BD2545E59AD6ADA8B89C20D6.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
+                    "UsePlugInResources" = "11:FALSE"
+                    }
                     "_E55E53F2EDCF8561526F9E1403DDF653.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
                     {
                     "Name" = "8:_E55E53F2EDCF8561526F9E1403DDF653.B9B4A67A62EC4CAEBEEE2E16D577A9AC"
@@ -4661,20 +4770,6 @@
                 }
             "LanguageId" = "3:1033"
             "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_9FD3F9CDEABF4AB79E7239D1EFA5F8B8"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:dotnetfxredist_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:TRUE"
             "Folder" = "8:"
             "Feature" = "8:"
             "IsolateTo" = "8:"
@@ -4698,7 +4793,7 @@
         {
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_81E6A706396F49689E4EB2E428019DB6"
             {
-            "SourcePath" = "8:..\\ifolder-msm\\Debug\\ifolder.msm"
+            "SourcePath" = "8:..\\ifolder-msm\\Release\\ifolder.msm"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C8C4A0E44589463EB73CBEE508221570"
