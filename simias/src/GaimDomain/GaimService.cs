@@ -57,6 +57,7 @@ namespace Simias.Gaim
 
 		private Store store = null;
 		private static Simias.Location.GaimProvider gaimProvider = null;
+		private static Simias.Gaim.GaimDomainProvider gaimDomainProvider = null;
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
@@ -82,6 +83,18 @@ namespace Simias.Gaim
 			
 			Simias.Location.Locate.RegisterProvider(gaimProvider);
 			
+			// Fake some credentials for the domain
+			new NetCredential("iFolder", Simias.Gaim.GaimDomain.ID, true, "gaim-user", "joulupukki");
+		}
+
+		internal static void RegisterDomainProvider()
+		{
+			log.Debug("RegisterDomainProvider called");
+
+			gaimDomainProvider = new Simias.Gaim.GaimDomainProvider();
+
+			Simias.DomainProvider.RegisterProvider(gaimDomainProvider);
+
 			// Fake some credentials for the domain
 			new NetCredential("iFolder", Simias.Gaim.GaimDomain.ID, true, "gaim-user", "joulupukki");
 		}
@@ -130,6 +143,7 @@ namespace Simias.Gaim
 				if (domain != null)
 				{
 					RegisterLocationProvider();
+					RegisterDomainProvider();
 				}
 				
 				Simias.Gaim.Sync.StartSyncThread();
@@ -173,6 +187,7 @@ namespace Simias.Gaim
 			if (gaimProvider != null)
 			{
 				Simias.Location.Locate.Unregister(gaimProvider);
+				Simias.DomainProvider.Unregister(gaimDomainProvider);
 			}
 			Simias.Gaim.Sync.StopSyncThread();
 		}

@@ -35,7 +35,7 @@ using Simias.Sync;
 
 using Simias.Gaim;
 
-namespace Simias.Location
+namespace Simias.Gaim
 {
 	/// <summary>
 	/// Class to support Simias' IDomainProvider interface
