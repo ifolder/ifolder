@@ -134,6 +134,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MyMessageBox.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MyMessageBox.resx"
+                    DependentUpon = "MyMessageBox.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Win32Window.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

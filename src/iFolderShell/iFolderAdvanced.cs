@@ -396,7 +396,12 @@ namespace Novell.iFolder.iFolderCom
 				if (currentContact.FN == null ||
 					currentContact.EMail == null)
 				{
-					if (MessageBox.Show("Before you can share, you must add some data to your address book entry.  Do you want to add this information now?", "Incomplete Address Book Entry", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+					MyMessageBox mmb = new MyMessageBox();
+					mmb.Text = "Incomplete Address Book Entry";
+					mmb.Message = "Before you can share, you must add some data to your address book entry.  Do you want to add this information now?";
+					DialogResult result = mmb.ShowDialog();
+//MessageBox.Show(this, , , MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+					if (result == DialogResult.Yes)
 					{
 						ContactEditor editor = new ContactEditor();
 						editor.CurrentContact = currentContact;
