@@ -155,6 +155,7 @@ namespace Novell.iFolder
 
 			AccessButton = new Button("Set Access");
 			leftBox.PackStart(AccessButton);
+			AccessButton.Clicked += new EventHandler(OnAccessClicked);
 
 			RefreshUserList();
 		}
@@ -210,6 +211,8 @@ namespace Novell.iFolder
 		}
 
 
+
+
 		private void AccessCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
@@ -217,6 +220,9 @@ namespace Novell.iFolder
 			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = user.Rights;
 		}
+
+
+
 
 		private void OnAddUser(object o, EventArgs args)
 		{
@@ -227,6 +233,27 @@ namespace Novell.iFolder
 
 			UserSelector.ShowAll();
 		}
+
+
+
+
+		private void OnAccessClicked(object o, EventArgs args)
+		{
+			iFolderAccessDialog accDialog = new iFolderAccessDialog( 
+						topLevelWindow, "fred", "ReadWrite", false, false);
+
+			int rc = accDialog.Run();
+			accDialog.Hide();
+			if(rc == -5)
+			{
+				// Do something here	
+			}
+			accDialog.Destroy();
+			accDialog = null;
+		}
+
+
+
 
 		private void OnUserSelectorResponse(object o, ResponseArgs args)
 		{
