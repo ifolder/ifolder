@@ -8,7 +8,7 @@ endif
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CollisionNode.cs $(srcdir)/EmailPrompt.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs
+iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/ShareListMember.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs $(srcdir)/NewiFolder.cs $(srcdir)/ConflictResolver.cs $(srcdir)/CollisionNode.cs $(srcdir)/EmailPrompt.cs $(srcdir)/UserProperties.cs $(srcdir)/iFolderInfo.cs $(srcdir)/GaugeChart.cs
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES = 
 iFolderComponent_RESOURCES =

@@ -61,7 +61,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.Button add;
 
-		private double resolution;
 		private Hashtable subscrHT;
 		private EventSubscriber subscriber;
 		private POBox poBox;
@@ -106,7 +105,6 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.Label available;
 		private System.Windows.Forms.Label availableUnits;
 		private System.Windows.Forms.ComboBox ifolders;
-		private System.Windows.Forms.Label spaceChart;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Label ifolderLabel;
@@ -117,6 +115,7 @@ namespace Novell.iFolder.iFolderCom
 		private System.Windows.Forms.MenuItem menuReadWrite;
 		private System.Windows.Forms.MenuItem menuReadOnly;
 		private System.Windows.Forms.Button access;
+		private Novell.iFolder.Forms.Controls.GaugeChart gaugeChart;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -185,11 +184,11 @@ namespace Novell.iFolder.iFolderCom
 			this.label8 = new System.Windows.Forms.Label();
 			this.byteCount = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.gaugeChart = new Novell.iFolder.Forms.Controls.GaugeChart();
 			this.limit = new System.Windows.Forms.TextBox();
 			this.setLimit = new System.Windows.Forms.CheckBox();
 			this.label10 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this.spaceChart = new System.Windows.Forms.Label();
 			this.availableUnits = new System.Windows.Forms.Label();
 			this.available = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
@@ -387,11 +386,11 @@ namespace Novell.iFolder.iFolderCom
 			// 
 			// groupBox3
 			// 
+			this.groupBox3.Controls.Add(this.gaugeChart);
 			this.groupBox3.Controls.Add(this.limit);
 			this.groupBox3.Controls.Add(this.setLimit);
 			this.groupBox3.Controls.Add(this.label10);
 			this.groupBox3.Controls.Add(this.label3);
-			this.groupBox3.Controls.Add(this.spaceChart);
 			this.groupBox3.Controls.Add(this.availableUnits);
 			this.groupBox3.Controls.Add(this.available);
 			this.groupBox3.Controls.Add(this.label9);
@@ -406,6 +405,15 @@ namespace Novell.iFolder.iFolderCom
 			this.groupBox3.TabIndex = 12;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Quota";
+			// 
+			// gaugeChart
+			// 
+			this.gaugeChart.CurrentLevel = 0;
+			this.gaugeChart.Location = new System.Drawing.Point(312, 32);
+			this.gaugeChart.MaxValue = 0;
+			this.gaugeChart.Name = "gaugeChart";
+			this.gaugeChart.Size = new System.Drawing.Size(16, 72);
+			this.gaugeChart.TabIndex = 12;
 			// 
 			// limit
 			// 
@@ -443,15 +451,6 @@ namespace Novell.iFolder.iFolderCom
 			this.label3.Size = new System.Drawing.Size(48, 16);
 			this.label3.TabIndex = 10;
 			this.label3.Text = "Full";
-			// 
-			// spaceChart
-			// 
-			this.spaceChart.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.spaceChart.Location = new System.Drawing.Point(312, 32);
-			this.spaceChart.Name = "spaceChart";
-			this.spaceChart.Size = new System.Drawing.Size(16, 72);
-			this.spaceChart.TabIndex = 9;
-			this.spaceChart.Paint += new System.Windows.Forms.PaintEventHandler(this.spaceChart_Paint);
 			// 
 			// availableUnits
 			// 
@@ -745,6 +744,37 @@ namespace Novell.iFolder.iFolderCom
 		#endregion
 
 		#region Private Methods
+		private void updateDiskQuotaDisplay()
+		{
+			DiskSpaceQuota dsq = DiskSpaceQuota.Get(currentMember, ifolder);
+
+			if (dsq.Limit != 0)
+			{
+				limit.Text = ((double)Math.Round(dsq.Limit/megaByte, 2)).ToString();
+				setLimit.Checked = true;
+
+				double usedSpace = (double)ifolder.StorageSize;
+				double availableSpace = dsq.Limit - usedSpace;
+				usedSpace = Math.Round(usedSpace/megaByte, 2);
+				availableSpace = Math.Round(availableSpace/megaByte, 2);
+
+				gaugeChart.MaxValue = dsq.Limit / megaByte;
+				gaugeChart.CurrentLevel = usedSpace;
+				gaugeChart.BarColor = SystemColors.ActiveCaption;
+
+				used.Text = usedSpace.ToString();
+				available.Text = availableSpace.ToString();
+			}
+			else
+			{
+				setLimit.Checked = false;
+				used.Text = available.Text = limit.Text = "";
+				gaugeChart.CurrentLevel = 0;
+			}
+
+			gaugeChart.Invalidate(true);
+		}
+
 		private void refreshData()
 		{
 			// Used to keep track of the new owner.
@@ -756,29 +786,7 @@ namespace Novell.iFolder.iFolderCom
 
 			try
 			{
-				DiskSpaceQuota dsq = DiskSpaceQuota.Get(currentMember, ifolder);
-
-				if (dsq.Limit != long.MaxValue)
-				{
-					limit.Text = ((double)Math.Round(dsq.Limit/megaByte, 2)).ToString();
-					setLimit.Checked = true;
-
-					double usedSpace = (double)ifolder.StorageSize;
-					double availableSpace = dsq.Limit - usedSpace;
-					usedSpace = Math.Round(usedSpace/megaByte, 2);
-					availableSpace = Math.Round(availableSpace/megaByte, 2);
-
-					resolution = Math.Round((dsq.Limit/megaByte) / spaceChart.Size.Height, 2);
-
-					used.Text = usedSpace.ToString();
-					available.Text = availableSpace.ToString();
-				}
-				else
-				{
-					setLimit.Checked = false;
-					used.Text = available.Text = limit.Text = "";
-					resolution = 0;
-				}
+				updateDiskQuotaDisplay();
 
 				// Get the refresh interval.
 				syncInterval.Value = (decimal)ifolder.RefreshInterval;
@@ -1121,6 +1129,8 @@ namespace Novell.iFolder.iFolderCom
 				{
 					Simias.Policy.DiskSpaceQuota.Delete(ifolder);
 				}
+
+				updateDiskQuotaDisplay();
 			}
 			catch (SimiasException e)
 			{
@@ -1808,29 +1818,7 @@ namespace Novell.iFolder.iFolderCom
 			ifolder = ifManager.GetiFolderById(((iFolderInfo)ifolders.SelectedItem).ID);
 			currentMember = ifolder.GetCurrentMember();
 			this.Text = "iFolder Properties for " + Path.GetFileName(ifolder.LocalPath);
-			spaceChart.Invalidate();
 			refreshData();
-		}
-
-		private void spaceChart_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
-		{
-			e.Graphics.Clear(Label.DefaultBackColor);
-			Pen pen = new Pen(Color.Black);
-			e.Graphics.DrawRectangle(pen, spaceChart.ClientRectangle);
-
-			if (resolution != 0)
-			{
-				SolidBrush brush = new SolidBrush(SystemColors.ActiveCaption);//Color.LawnGreen);
-				double usedSpace = double.Parse(used.Text);
-				int height = (int)(usedSpace/resolution);
-				Rectangle rect = new Rectangle(x, spaceChart.ClientSize.Height - height, spaceChart.ClientSize.Width, height);
-				rect.Intersect(e.ClipRectangle);
-				e.Graphics.FillRectangle(brush, rect);
-
-				// Draw a black line across the top ... I like it better without.
-				//				int y = spaceChart.ClientSize.Height - height;
-				//				e.Graphics.DrawLine(pen, 0, y, spaceChart.ClientRectangle.Width, y);
-			}
 		}
 
 		private void open_Click(object sender, System.EventArgs e)
