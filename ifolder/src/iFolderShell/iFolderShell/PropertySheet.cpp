@@ -186,7 +186,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 
 					if (lpciFolderShell->m_spiFolder)
 					{
-						lpciFolderShell->m_spiFolder->InvokeAdvancedDlg(lpciFolderShell->m_szFileUserClickedOn, true);
+						lpciFolderShell->m_spiFolder->InvokeAdvancedDlg(lpciFolderShell->m_szShellPath, lpciFolderShell->m_szFileUserClickedOn, true);
 					}
 				}
 				catch (...)

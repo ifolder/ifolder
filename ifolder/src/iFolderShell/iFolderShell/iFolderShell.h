@@ -62,19 +62,6 @@ class CiFolderShell : public IContextMenu,
                          //IPersistFile,
                          //ICopyHook
 {
-public:
-    char         m_szPropSheetFileUserClickedOn[MAX_PATH];  //This will be the same as
-                                                            //m_szFileUserClickedOn but I include
-                                                            //here for demonstration.  That is,
-                                                            //m_szFileUserClickedOn gets filled in
-                                                            //as a result of this sample supporting
-                                                            //the IExtractIcon and IPersistFile
-                                                            //interface.  If this sample *only* showed
-                                                            //a Property Sheet extesion, you would
-                                                            //need to use the method I do here to find
-                                                            //the filename the user clicked on.
-
-
 protected:
     ULONG        m_cRef;
     LPDATAOBJECT m_pDataObj;
@@ -82,6 +69,7 @@ protected:
 public:
 	static IiFolderComponentPtr m_spiFolder;
     TCHAR m_szFileUserClickedOn[MAX_PATH];
+	static TCHAR m_szShellPath[MAX_PATH];
 
 public:
 	CiFolderShell();
