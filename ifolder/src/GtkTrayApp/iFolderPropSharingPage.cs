@@ -293,17 +293,18 @@ namespace Novell.iFolder
 				else
 				{
 					AddButton.Sensitive = false;
-					TreeSelection tSelect = UserTreeView.Selection;
-					if((tSelect.CountSelectedRows() < 1) || SelectionHasOwner())
-					{
-						RemoveButton.Sensitive = false;
-						AccessButton.Sensitive = false;
-					}
-					else
-					{
-						RemoveButton.Sensitive = true;
-						AccessButton.Sensitive = true;
-					}
+				}
+
+				TreeSelection tSelect = UserTreeView.Selection;
+				if((tSelect.CountSelectedRows() < 1) || SelectionHasOwner())
+				{
+					RemoveButton.Sensitive = false;
+					AccessButton.Sensitive = false;
+				}
+				else
+				{
+					RemoveButton.Sensitive = true;
+					AccessButton.Sensitive = true;
 				}
 			}
 		}
@@ -319,7 +320,6 @@ namespace Novell.iFolder
 				{
 					foreach(iFolderUser user in UserSelector.SelectedUsers)
 					{
-						Console.WriteLine("User: {0}", user.Name);
 						try
 						{
     						iFolderUser newUser = ifws.InviteUser(
