@@ -59,7 +59,7 @@ namespace Novell.iFolder
 
 	public class ContactsPickedEventArgs : EventArgs
 	{
-		private readonly string ContactName;
+		//private readonly string ContactName;
 		private readonly Contact c;
 
 		//Constructor.
@@ -82,10 +82,10 @@ namespace Novell.iFolder
 
 	public class ContactPicker
 	{
-		[Glade.Widget] Gtk.Entry ceFullName;
-		[Glade.Widget] TreeView	BookTreeView;
-		[Glade.Widget] TreeView	ContactTreeView;
-		[Glade.Widget] Gtk.Entry SearchEntry;
+		[Glade.Widget] internal Gtk.Entry ceFullName;
+		[Glade.Widget] internal TreeView	BookTreeView;
+		[Glade.Widget] internal TreeView	ContactTreeView;
+		[Glade.Widget] internal Gtk.Entry SearchEntry;
 
 		Manager 	abMan;
 		AddressBook curAddrBook;
@@ -105,6 +105,8 @@ namespace Novell.iFolder
 
 			parentWin.GetPosition(out pX, out pY);
 			parentWin.GetSize(out pdX, out pdY);
+			if(pdY == 0)
+				pdY = 0;
 			InitUI();
 			cpwin.Move(pX + pdX + 10, pY);
 		}
@@ -371,6 +373,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				Contact c = (Contact) ContactTreeStore.GetValue(iter,0);
 
 				ContactsPickedEventArgs e = new 
@@ -579,6 +583,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
 				if(cnt.IsCurrentUser)
 				{
@@ -655,6 +661,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				AddressBook ab = (AddressBook) BookTreeStore.GetValue(iter,0);
 				if(ab.Default)
 				{
@@ -694,6 +702,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				curAddrBook = (AddressBook) BookTreeStore.GetValue(iter,0);
 
 				//CreateContactButton.Sensitive = true;

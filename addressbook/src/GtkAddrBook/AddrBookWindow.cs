@@ -57,22 +57,22 @@ namespace Novell.iFolder
 
 	public class AddrBookWindow 
 	{
-		[Glade.Widget] Gtk.Window abMainWin;
-		[Glade.Widget] TreeView	BookTreeView;
-		[Glade.Widget] TreeView	ContactTreeView;
-		[Glade.Widget] Button CreateContactButton;
-		[Glade.Widget] Button ExportButton;
-		[Glade.Widget] Entry SearchEntry;
-		[Glade.Widget] Gtk.TextView PictureTextView;
-		[Glade.Widget] Gtk.TextView LabelTextView;
-		[Glade.Widget] Gtk.TextView ValueTextView;
-		[Glade.Widget] Gtk.TextView TitleTextView;
+		[Glade.Widget] internal Gtk.Window abMainWin;
+		[Glade.Widget] internal TreeView	BookTreeView;
+		[Glade.Widget] internal TreeView	ContactTreeView;
+		[Glade.Widget] internal Button CreateContactButton;
+		[Glade.Widget] internal Button ExportButton;
+		[Glade.Widget] internal Entry SearchEntry;
+		[Glade.Widget] internal Gtk.TextView PictureTextView;
+		[Glade.Widget] internal Gtk.TextView LabelTextView;
+		[Glade.Widget] internal Gtk.TextView ValueTextView;
+		[Glade.Widget] internal Gtk.TextView TitleTextView;
 
 		Manager abMan;
 		AddressBook	curAddrBook;
 		ListStore BookTreeStore;
 		ListStore ContactTreeStore;
-		ListStore GroupTreeStore;
+		//ListStore GroupTreeStore;
 		Pixbuf	UserCardPixBuf;
 		Pixbuf	CurCardPixBuf;
 		Pixbuf	BookPixBuf;
@@ -408,6 +408,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
 
 				if(cnt != null)
@@ -440,6 +442,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				AddressBook ab = (AddressBook) BookTreeStore.GetValue(iter,0);
 				if(ab.Default)
 				{
@@ -521,6 +525,8 @@ namespace Novell.iFolder
 				ExportButton.Sensitive = true;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				Contact c = (Contact) 
 					ContactTreeStore.GetValue(iter,0);
 
@@ -542,6 +548,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				curAddrBook = (AddressBook) BookTreeStore.GetValue(iter,0);
 
 				CreateContactButton.Sensitive = true;
@@ -675,6 +683,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				Contact cnt = (Contact) ContactTreeStore.GetValue(iter,0);
 				if(cnt.IsCurrentUser)
 				{
@@ -730,6 +740,8 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
+				if(tModel != null)
+					tModel = null;
 				Contact c = (Contact) 
 					ContactTreeStore.GetValue(iter,0);
 

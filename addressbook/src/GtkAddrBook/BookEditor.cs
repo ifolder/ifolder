@@ -36,7 +36,7 @@ namespace Novell.iFolder
 	public class BookEditEventArgs : EventArgs
 	{
 		private readonly string newBookName;
-		private readonly string oldBookName;
+		//private readonly string oldBookName;
 		private readonly bool changed;
 
 		//Constructor.
@@ -83,7 +83,7 @@ namespace Novell.iFolder
 
 	public class BookEditor
 	{
-		[Glade.Widget] Gtk.Entry beName;
+		[Glade.Widget] internal Gtk.Entry beName;
 
 		Gtk.Dialog 		beDlg = null;
 		public event BookEditEventHandler BookEdited;
