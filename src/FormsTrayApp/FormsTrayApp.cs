@@ -392,6 +392,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
 			this.menuMyiFolders = new System.Windows.Forms.MenuItem();
+			this.menuConnect = new System.Windows.Forms.MenuItem();
+			this.menuConnectServer = new System.Windows.Forms.MenuItem();
 			this.menuPOBox = new System.Windows.Forms.MenuItem();
 			this.menuInvitationWizard = new System.Windows.Forms.MenuItem();
 			this.menuAddressBook = new System.Windows.Forms.MenuItem();
@@ -402,8 +404,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
-			this.menuConnect = new System.Windows.Forms.MenuItem();
-			this.menuConnectServer = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -450,10 +450,23 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuMyiFolders.Text = "My iFolders";
 			this.menuMyiFolders.Visible = false;
 			// 
+			// menuConnect
+			// 
+			this.menuConnect.Index = 3;
+			this.menuConnect.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																						this.menuConnectServer});
+			this.menuConnect.Text = "Connect";
+			// 
+			// menuConnectServer
+			// 
+			this.menuConnectServer.Index = 0;
+			this.menuConnectServer.Text = "Enterprise server...";
+			this.menuConnectServer.Click += new System.EventHandler(this.menuConnectServer_Click);
+			// 
 			// menuPOBox
 			// 
 			this.menuPOBox.Index = 4;
-			this.menuPOBox.Text = "Messages...";
+			this.menuPOBox.Text = "Subscriptions...";
 			this.menuPOBox.Click += new System.EventHandler(this.menuPOBox_Click);
 			// 
 			// menuInvitationWizard
@@ -510,19 +523,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuExit.Index = 13;
 			this.menuExit.Text = "Exit";
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
-			// 
-			// menuConnect
-			// 
-			this.menuConnect.Index = 3;
-			this.menuConnect.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						this.menuConnectServer});
-			this.menuConnect.Text = "Connect";
-			// 
-			// menuConnectServer
-			// 
-			this.menuConnectServer.Index = 0;
-			this.menuConnectServer.Text = "Enterprise server...";
-			this.menuConnectServer.Click += new System.EventHandler(this.menuConnectServer_Click);
 			// 
 			// FormsTrayApp
 			// 
