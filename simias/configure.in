@@ -179,7 +179,8 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 src/Configuration/Makefile
-src/StoreProvider/Makefile
 src/Common/Makefile
 src/CommonGtkWindows/Makefile
+src/CollectionEvents/Makefile
+src/StoreProvider/Makefile
 ])

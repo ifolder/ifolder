@@ -33,7 +33,7 @@ install-exec-local: Configuration.dll
 	$(INSTALL_PROGRAM) Configuration.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Configuration.dll $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Configuration.dll ConfTests.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

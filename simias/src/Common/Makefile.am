@@ -33,7 +33,7 @@ install-exec-local: Common.dll
 	$(INSTALL_PROGRAM) Common.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Common.dll $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)

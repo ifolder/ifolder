@@ -13,8 +13,8 @@ ProviderTest_CSFILES_CSC := $(subst /,$(SEP),$(ProviderTest_CSFILES))
 ProviderTest_INCLUDES = 
 ProviderTest_RESOURCES =
 ProviderTest_FLAGS = $(CSC_LIBFLAG)
-ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll nunit.framework.dll
-ProviderTest_LIBPATH = Test $(srcdir)/../../tools/NUnit/bin
+ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll nunit.framework.dll
+ProviderTest_LIBPATH = Test $(srcdir)/../../tools/NUnit/bin ../Configuration
 
 EXTRA_DIST = $(StoreProvider_CSFILES) $(ProviderTest_CSFILES)
 
