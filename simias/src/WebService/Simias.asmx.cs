@@ -150,7 +150,7 @@ namespace Simias.Web
 				log.Error(e.StackTrace);
 			}
 
-			return((domains.Count == 0) ? null : (DomainInformation[]) domains.ToArray(typeof(DomainInformation)));
+			return((DomainInformation[]) domains.ToArray(typeof(DomainInformation)));
 		}
 
 
