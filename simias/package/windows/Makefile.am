@@ -23,8 +23,9 @@
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias-install.sln $(srcdir)/simias-msi/simias-msi.vdproj $(srcdir)/simias-msm/simias-msm.vdproj
 
 RELEASE = 1
-MSI_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msi
-MSM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
+CURDATE = $(shell date '+%Y%m%d')
+MSI_FILE = $(PACKAGE)-$(VERSION).$(CURDATE)-$(RELEASE).msi
+MSM_FILE = $(PACKAGE)-$(VERSION).$(CURDATE)-$(RELEASE).msm
 MSI_LOG_FILE = devenv-simias-msi.log
 MSM_LOG_FILE = devenv-simias-msm.log
 
