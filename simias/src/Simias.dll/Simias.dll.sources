@@ -48,7 +48,6 @@ AssemblyInfo.cs
 ../Common/MyRuntimeID.cs
 ../Common/SimiasLog.cs
 ../Common/SimiasLogManager.cs
-../Common/SimiasSetup.cs
 ../Domain/DomainAgent.cs
 ../Domain/DomainInfo.cs
 ../Domain/IDomainService.cs
