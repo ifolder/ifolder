@@ -414,7 +414,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
                 break;
 			case 5:
 				// Display the help.
-				m_spiFolder->ShowHelp(m_szShellPath);
+				m_spiFolder->ShowHelp(m_szShellPath, TEXT(""));
 				hr = NOERROR;
 				break;
         }
