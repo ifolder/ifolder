@@ -25,12 +25,13 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.Services.Protocols;
-using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -80,17 +81,14 @@ namespace Simias.Gaim
 			Simias.Storage.Member member = domain.GetCurrentMember();
 
 			GaimDomainProvider gaimDomainProvider = new GaimDomainProvider();
-
 			Uri remoteUri = gaimDomainProvider.ResolveLocation( GaimDomain.ID, collectionID );
 			if ( remoteUri == null )
 			{
+				status.statusCode = SCodes.UnknownDomain;
 				return status;
 			}
 
 			Uri loginUri = new Uri( remoteUri.ToString() + "/Login.ashx" );
-			//auth.Url = loginUri.ToString() + "/Login.ashx";
-			//auth.MemberID = domain.GetCurrentMember().UserID;
-		//	auth.DomainID = Simias.mDns.Domain.ID;
 
 			HttpWebRequest request = WebRequest.Create( loginUri ) as HttpWebRequest;
 			WebState webState = new WebState();
@@ -102,7 +100,6 @@ namespace Simias.Gaim
 				GaimDomain.ID );
 
 			request.Headers.Add( "gaim-member", member.UserID );
-			
 			request.Method = "POST";
 			request.ContentLength = 0;
 
@@ -129,13 +126,33 @@ namespace Simias.Gaim
 							HttpWebRequest request2 = WebRequest.Create( loginUri ) as HttpWebRequest;
 							WebState webState2 = new WebState();
 							webState2.InitializeWebRequest( request2 );
-							//request.Credentials = networkCredential;
-			
+
 							request2.Headers.Add( 
 								Simias.Security.Web.AuthenticationService.Login.DomainIDHeader,
 								GaimDomain.ID );
 							request2.Headers.Add( "gaim-member", member.UserID );
-							request2.Headers.Add( "gaim-secret", oneTimeChallenge );
+
+							try
+							{
+								RSACryptoServiceProvider credential = GaimDomain.GetCredential();
+								if (credential != null)
+								{
+									// Decrypt the data with the member's private key
+									byte[] oneTime = Convert.FromBase64String( oneTimeChallenge );
+									byte[] decryptedText = credential.Decrypt( oneTime, false );
+									request2.Headers.Add( "gaim-secret", Convert.ToBase64String( decryptedText ) );
+								}
+								else
+								{
+									status.statusCode = SCodes.Unknown;
+									return status;
+								}
+							}
+							catch( Exception enc )
+							{
+								log.Debug( enc.Message );
+								log.Debug( enc.StackTrace );
+							}
 			
 							request2.Method = "POST";
 							request2.ContentLength = 0;
