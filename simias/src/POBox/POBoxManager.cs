@@ -40,10 +40,7 @@ namespace Simias.POBox
 	/// </summary>
 	public class POBoxManager : IDisposable
 	{
-		private static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(POBoxManager));
-
 		private POManager poManager;
-		private Configuration config;
 		private POBox poBox;
 		private Store store;
 		private EventSubscriber subscriber;
@@ -57,7 +54,6 @@ namespace Simias.POBox
 		public POBoxManager(POManager poManager, string id)
 		{
 			this.poManager = poManager;
-			this.config = poManager.Config;
 
 			// new store
 			store = Store.GetStore();

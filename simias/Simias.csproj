@@ -329,31 +329,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\DefaultLocationProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Location\ILocationProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Location\LocationProviderList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Location\LocationService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Location\mDnsLocationProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\POBox\Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

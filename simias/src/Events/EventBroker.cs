@@ -51,8 +51,6 @@ namespace Simias.Event
 
 		internal static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(EventBroker));
 		static EventBroker instance = new EventBroker();
-		ArrayList clients = new ArrayList();
-		ArrayList failedClients = new ArrayList();
 		Queue	eventQueue = new Queue();
 		ManualResetEvent haveEvents = new ManualResetEvent(false);
 		public event SimiasEventHandler SimiasEvent;

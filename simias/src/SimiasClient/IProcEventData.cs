@@ -423,7 +423,7 @@ namespace Simias.Client.Event
 			}
 			
 			// Create the object and set the flags.
-			return new FileSyncEventArgs( name, size, sizeToSync, sizeRemaining, direction );
+			return new FileSyncEventArgs( collectionID, objectType, delete, name, size, sizeToSync, sizeRemaining, direction );
 		}
 
 		/// <summary>

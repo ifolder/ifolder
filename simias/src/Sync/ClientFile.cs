@@ -474,7 +474,7 @@ namespace Simias.Sync.Client
 			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
 			sizeRemaining = sizeToSync;
 
-			byte[] buffer = new byte[BlockSize];
+//			byte[] buffer = new byte[BlockSize];
 			long offset = 0;
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 			foreach(FileSegment segment in fileMap)

@@ -85,9 +85,6 @@ namespace Simias.POBox
 					// create service
 					//service = new PostOffice(config);
 
-					// create channel
-					string name = String.Format("PO Service [{0}]", store.ID);
-
 					log.Debug("Starting PO Service: {0}", ServiceUrl);
 
 					// marshal service

@@ -517,16 +517,19 @@ namespace Simias.Storage.Provider.Flaim
 
 		internal void Dispose(bool inFinalizer)
 		{
-			// Save the Ids that can be reused.
-			AlreadyDisposed = true;
-			if (!inFinalizer)
+			if (!AlreadyDisposed)
 			{
-				GC.SuppressFinalize(this);
+				// Save the Ids that can be reused.
+				AlreadyDisposed = true;
+				if (!inFinalizer)
+				{
+					GC.SuppressFinalize(this);
+				}
+				Stream wS = File.OpenWrite(IdPath);
+				BinaryFormatter bf = new BinaryFormatter();
+				bf.Serialize(wS, IdQueue);
+				wS.Close();
 			}
-			Stream wS = File.OpenWrite(IdPath);
-			BinaryFormatter bf = new BinaryFormatter();
-			bf.Serialize(wS, IdQueue);
-			wS.Close();
 		}
 		
 		#region Store Calls

@@ -33,7 +33,6 @@ namespace Simias.POBox
 	/// </summary>
 	public class POService : IThreadService
 	{
-		private Configuration config;
 		private POManager manager;
 
 		/// <summary>
@@ -50,10 +49,7 @@ namespace Simias.POBox
 		/// </summary>
 		public void Start(Configuration config)
 		{
-			this.config = config;
-
 			this.manager = new POManager(config);
-
 			manager.Start();
 		}
 

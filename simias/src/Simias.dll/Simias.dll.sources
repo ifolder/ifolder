@@ -40,11 +40,6 @@ AssemblyInfo.cs
 ../FlaimProvider/FlaimRecord.cs
 ../FlaimProvider/FlaimResultSet.cs
 ../FlaimProvider/FlaimServer.cs
-../Location/DefaultLocationProvider.cs
-../Location/ILocationProvider.cs
-../Location/LocationProviderList.cs
-../Location/LocationService.cs
-../Location/mDnsLocationProvider.cs
 ../POBox/Message.cs
 ../POBox/POBox.cs
 ../POBox/POBoxManager.cs
@@ -57,8 +52,6 @@ AssemblyInfo.cs
 ../POBox/SubscriptionInfo.cs
 ../POBox/SubscriptionStatus.cs
 ../POBox/SubscriptionThread.cs
-../PresenceService/PresenceService.cs
-../PresenceService/PublicSubscription.cs
 ../Policy/DiskSpaceQuota.cs
 ../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs

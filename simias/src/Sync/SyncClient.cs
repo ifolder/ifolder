@@ -338,7 +338,7 @@ namespace Simias.Sync.Client
 		Store			store;
 		SyncCollection	collection;
 		bool			queuedChanges;
-		byte[]			buffer;
+//		byte[]			buffer;
 		Timer			timer;
 		TimerCallback	callback;
 		Hashtable		DeleteOnClient;
@@ -603,7 +603,7 @@ namespace Simias.Sync.Client
 			filesToServer = new Hashtable();
 			serverContext = null;
 			clientContext = null;
-			buffer = new byte[MAX_XFER_SIZE];
+//			buffer = new byte[MAX_XFER_SIZE];
 		}
 
 		private bool SyncComplete

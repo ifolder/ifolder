@@ -65,7 +65,6 @@ namespace Simias.Storage.Provider
 		/// <returns></returns>
 		public static IProvider Connect(ProviderConfig conf, out bool created)
 		{
-			string path = conf.Path;
 			string assembly = conf.Assembly;
 			string providerType = conf.TypeName;
 			created = false;
@@ -123,7 +122,6 @@ namespace Simias.Storage.Provider
 		private const string CFG_TypeName = "Type";
 		private const string CFG_Version = "Version";
 		private const string StoreName = "simias";
-		private string path = null;
 		private string version = null;
 		private string assembly = null;
 		private string typeName = null;

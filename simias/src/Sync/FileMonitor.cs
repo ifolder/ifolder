@@ -74,7 +74,7 @@ namespace Simias.Sync
 		string rootPath;
 
 		bool						disposed;
-		string						collectionId;
+//		string						collectionId;
 		internal FileSystemWatcher	watcher;
 		Hashtable					changes = new Hashtable();
 
@@ -111,7 +111,7 @@ namespace Simias.Sync
 			// TODO: Syncronize the dredger with the sync engine.
 			this.collection = new SyncCollection(collection);
 			this.onServer = onServer;
-			this.collectionId = collection.ID;
+//			this.collectionId = collection.ID;
 			
 			if (!MyEnvironment.Mono)
 			{
@@ -155,7 +155,7 @@ namespace Simias.Sync
 		/// <returns>The new FileNode.</returns>
 		FileNode CreateFileNode(string path, DirNode parentNode)
 		{
-			FileInfo fi = new FileInfo(path);
+//			FileInfo fi = new FileInfo(path);
 			FileNode fnode = new FileNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding file node for {0} {1}", path, fnode.ID);
 			collection.Commit(fnode);
@@ -200,7 +200,7 @@ namespace Simias.Sync
 		/// <returns>The new DirNode.</returns>
 		DirNode CreateDirNode(string path, DirNode parentNode)
 		{
-			DirectoryInfo di = new DirectoryInfo(path);
+//			DirectoryInfo di = new DirectoryInfo(path);
 			DirNode dnode = new DirNode(collection, parentNode, Path.GetFileName(path));
 			log.Debug("Adding dir node for {0} {1}", path, dnode.ID);
 			collection.Commit(dnode);
@@ -471,7 +471,7 @@ namespace Simias.Sync
 		/// <param name="path"></param>
 		void DoManagedPath(string path)
 		{
-			DirectoryInfo tmpDi = new DirectoryInfo(path);
+//			DirectoryInfo tmpDi = new DirectoryInfo(path);
 		
 			// merge files from file system to store
 			foreach (string file in Directory.GetFiles(path))
