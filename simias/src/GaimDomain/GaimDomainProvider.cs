@@ -186,12 +186,11 @@ namespace Simias.Gaim
 						string givenName;
 						string familyName;
 						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
-						if (givenName != null && familyName == null)
-							familyName = "";
 
-						Member member = new Member(buddy.Name, buddy.Name /* This is used as Simias Node Name */,
+						Member member = new Member(buddy.Name, buddy.MungedID,
 												   Simias.Storage.Access.Rights.ReadWrite,
 												   givenName, familyName);
+						member.FN = buddy.Alias;
 
 						members.Add(member);
 					}
@@ -252,12 +251,12 @@ namespace Simias.Gaim
 						string givenName;
 						string familyName;
 						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
-						if (givenName != null && familyName == null)
-							familyName = "";
 
-						Member member = new Member(buddy.Name, buddy.Name /* This is used as Simias Node Name */,
+						Member member = new Member(buddy.Name, buddy.MungedID,
 							Simias.Storage.Access.Rights.ReadWrite,
 							givenName, familyName);
+
+						member.FN = buddy.Alias;
 
 						members.Add(member);
 
