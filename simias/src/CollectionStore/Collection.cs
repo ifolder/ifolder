@@ -718,7 +718,7 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Import:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 );
+							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0 );
 							args.LocalOnly = node.LocalChanges;
 							store.EventPublisher.RaiseEvent( args );
 							node.Properties.State = PropertyList.PropertyListState.Update;
@@ -790,6 +790,9 @@ namespace Simias.Storage
 			Node oldNode = ( node.DiskNode != null ) ? node.DiskNode : GetNodeByID( node.ID );
 			if ( oldNode != null )
 			{
+				// Save the node read from the disk.
+				node.DiskNode = oldNode;
+
 				// Get the local properties.
 				MultiValuedList localProps = new MultiValuedList( oldNode.Properties, Property.Local );
 				foreach ( Property p in localProps )

@@ -85,11 +85,6 @@
                     HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\..\final\Simias.dll"
-                />
-                <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
                     HintPath = "..\..\tools\NUnit\net\bin\nunit.framework.dll"
@@ -98,6 +93,11 @@
                     Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
                     AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
                     HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
+                />
+                <Reference
+                    Name = "Simias"
+                    AssemblyName = "Simias"
+                    HintPath = "..\..\..\..\final\Simias.dll"
                 />
             </References>
         </Build>
