@@ -104,7 +104,7 @@ namespace Simias.POBox
 		/// <param name="storeObject">The Store object that the POBox will belong to.</param>
 		/// <param name="collectionName">The name of the POBox.</param>
 		/// <param name="domainName">The name of the domain that the POBox belongs to.</param>
-		internal POBox(Store storeObject, string collectionName, string domainName) :
+		public POBox(Store storeObject, string collectionName, string domainName) :
 			base (storeObject, collectionName, domainName)
 		{
 			SetType(this, typeof(POBox).Name);
