@@ -44,6 +44,9 @@ AssemblyInfo.cs
 ../FlaimProvider/FlaimRecord.cs
 ../FlaimProvider/FlaimResultSet.cs
 ../FlaimProvider/FlaimServer.cs
+../Location/Locate.cs
+../Location/ILocationProvider.cs
+../Location/EnterpriseLocation.cs
 ../HttpAuthentication/AuthHandler.cs
 ../HttpAuthentication/IAuthService.cs
 ../POBox/Message.cs

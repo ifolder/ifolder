@@ -369,6 +369,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Location\EnterpriseLocation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Location\ILocationProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Location\Locate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\POBox\Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -31,6 +31,7 @@ using System.Xml;
 using Simias;
 using Simias.Authentication;
 using Simias.Client;
+using Simias.Location;
 using Simias.POBox;
 using Simias.Security.Web.AuthenticationService;
 using Simias.Storage;
@@ -326,7 +327,7 @@ namespace Simias.Domain
 		#endregion
 
 		#region Private Methods
-		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info, Uri host)
+		private void CreateRosterProxy(Store store, Storage.Domain domain, string userID, DomainInfo info)
 		{
 			// Create a new roster
 			Roster roster = new Roster(store, info.RosterID, domain);
@@ -342,7 +343,7 @@ namespace Simias.Domain
 			roster.Commit( new Node[] { roster, member } );
 		}
 
-		private void CreatePOBoxProxy(Store store, string domainID, ProvisionInfo info, Uri host)
+		private void CreatePOBoxProxy(Store store, string domainID, ProvisionInfo info)
 		{
 			// Create a new POBox
 			PostOffice.POBox poBox = new PostOffice.POBox(store, info.POBoxName, info.POBoxID, domainID);
@@ -652,6 +653,9 @@ namespace Simias.Domain
 					p.LocalProperty = true;
 					domain.Properties.ModifyProperty( p );
 
+					// Add a type to indicate that this is an enterprise domain.
+					store.LocalDb.SetType( domain, "Enterprise" );
+
 					// Commit the changes to the domain object.
 					store.LocalDb.Commit( domain );
 
@@ -659,14 +663,14 @@ namespace Simias.Domain
 					if (store.GetCollectionByID( domainInfo.RosterID ) == null)
 					{
 						// create roster proxy
-						CreateRosterProxy( store, domain, provisionInfo.UserID, domainInfo, hostUri );
+						CreateRosterProxy( store, domain, provisionInfo.UserID, domainInfo );
 						log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
 					}
 
 					if (store.GetCollectionByID( provisionInfo.POBoxID ) == null)
 					{
 						// create PO Box proxy
-						CreatePOBoxProxy( store, domainInfo.ID, provisionInfo, hostUri );
+						CreatePOBoxProxy( store, domainInfo.ID, provisionInfo );
 						log.Debug( "Creating PO Box Proxy: {0}", provisionInfo.POBoxName );
 					}
 
@@ -879,22 +883,22 @@ namespace Simias.Domain
 		/// <param name="collection">Collection to create on the enterprise server.</param>
 		public void CreateMaster(Collection collection)
 		{
-			// Get the domain object.
-			Simias.Storage.Domain domain = store.GetDomain(collection.Domain);
-			if (domain == null)
+			// Get the network location of the server where this collection is to be created.
+			Uri uri = Locate.ResolveLocation(collection);
+			if (uri == null)
 			{
-				throw new SimiasException("The domain does not exist in the store.");
+				throw new SimiasException(String.Format("The network location could not be determined for collection {0}.", collection.ID));
 			}
 
 			// Construct the web client.
 			DomainService domainService = new DomainService();
-			domainService.Url = domain.HostAddress.ToString() + "/DomainService.asmx";
+			domainService.Url = uri.ToString() + "/DomainService.asmx";
 			Credentials cSimiasCreds = new Credentials(collection.ID);
 			domainService.Credentials = cSimiasCreds.GetCredentials();
 
 			if (domainService.Credentials == null)
 			{
-				throw new ApplicationException("No credentials available for specified collection.");
+				throw new SimiasException("No credentials available for specified collection.");
 			}
 
 			domainService.PreAuthenticate = true;

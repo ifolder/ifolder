@@ -32,6 +32,7 @@ using Simias;
 using Simias.Client;
 using Simias.Client.Event;
 using Simias.Event;
+using Simias.Location;
 using Simias.POBox;
 using Simias.Policy;
 using Simias.Sync;
@@ -143,11 +144,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Uri MasterUrl
 		{
-			get 
-			{
-				Domain domain = store.GetDomain( Domain );
-				return ( domain != null ) ? domain.HostAddress : null;
-			}
+			get { return Locate.ResolveLocation( this ); }
 		}
 
 		/// <summary>
@@ -234,6 +231,15 @@ namespace Simias.Storage
 	
 				return locked;
 			}
+		}
+
+		/// <summary>
+		/// Gets whether the collection has been synchronized to its master
+		/// location.
+		/// </summary>
+		public bool IsHosted
+		{
+			get { return !CreateMaster; }
 		}
 
 		/// <summary>
