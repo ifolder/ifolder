@@ -1128,7 +1128,7 @@ namespace Simias.Storage
 //			if ( localDb == null )
 //			{
 				// Look for the address book by its name, which is the domain name.
-				Persist.Query query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Equal, Node.CollectionType + DatabaseType, Property.Syntax.String.ToString() );
+				Persist.Query query = new Persist.Query( Property.ObjectType, Persist.Query.Operator.Equal, Node.CollectionType + DatabaseType, Syntax.String );
 
 				// Do the search.
 				char[] results = new char[ 4096 ];
@@ -1168,7 +1168,7 @@ namespace Simias.Storage
 //			if ( localAb == null )
 //			{
 				// Look for the address book by its name, which is the domain name.
-				Persist.Query query = new Persist.Query( Property.LocalAddressBook, Persist.Query.Operator.Equal, "true", Property.Syntax.Boolean.ToString() );
+				Persist.Query query = new Persist.Query( Property.LocalAddressBook, Persist.Query.Operator.Equal, "true", Syntax.Boolean );
 
 				// Do the search.
 				char[] results = new char[ 4096 ];
