@@ -53,6 +53,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private MenuItem menuItemAddrBook;
 		private MenuItem menuItemTracer;
 		private MenuItem menuItemBrowser;
+		private MenuItem menuItemProperties;
 		private System.ComponentModel.IContainer components;
 
 		private Thread workerThread = null;
@@ -92,15 +93,20 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuItemAddrBook = new MenuItem("&Address Book");
 			this.menuItemTracer = new MenuItem("Trace Window");
 			this.menuItemBrowser = new MenuItem("Store Browser");
+			this.menuItemProperties = new MenuItem("Properties");
 
 			// Initialize contextMenu1
 			this.contextMenu1.MenuItems.AddRange(
-				new MenuItem[] {this.menuItemExit, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
+				new MenuItem[] {this.menuItemExit, this.menuItemProperties, this.menuItemInviteWizard, this.menuItemAddrBook, this.menuItemTracer});
 
 			// Initialize menuItemExit
 			this.menuItemExit.Index = 0;
 			this.menuItemExit.Enabled = false;
 			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
+
+			// Initialize menuItemProperties
+			this.menuItemProperties.Index = 0;
+			this.menuItemProperties.Click += new EventHandler(menuItemProperties_Click);
 
 			// Initialize menuItemInviteWizard
 			this.menuItemInviteWizard.Index = 0;
@@ -356,6 +362,12 @@ namespace Novell.iFolder.FormsTrayApp
 				if (this.contextMenu1.MenuItems.Contains(this.menuItemBrowser) == true)
 					this.contextMenu1.MenuItems.Remove(this.menuItemBrowser);
 			}
+		}
+
+		private void menuItemProperties_Click(object sender, EventArgs e)
+		{
+			GlobalProperties globalProperties = new GlobalProperties();
+			globalProperties.Show();
 		}
 		#endregion
 

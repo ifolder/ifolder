@@ -118,6 +118,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "GlobalProperties.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GlobalProperties.resx"
+                    DependentUpon = "GlobalProperties.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Win32Window.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
