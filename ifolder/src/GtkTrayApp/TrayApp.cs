@@ -47,7 +47,7 @@ namespace Novell.iFolder
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
-		static Simias.Service.Manager sManager;
+		static Simias.Service.Manager sManager = null;
 //		static Gtk.ThreadNotify mainThreadNotify;
 //		static SyncManagerStates syncState;
 
@@ -55,6 +55,11 @@ namespace Novell.iFolder
 		{
 			Application.Init();
 
+			// This is my huge try catch block to catch any exceptions
+			// that are not caught
+
+			try
+			{
 			Configuration conf = new Configuration();
 
             SimiasLogManager.Configure(conf);
@@ -92,6 +97,19 @@ namespace Novell.iFolder
 
 			Console.WriteLine("iFolder is now running.");
 			Application.Run();
+			}
+			catch(Exception bigException)
+			{
+				if(sManager != null)
+					sManager.StopServices();
+			//			syncManager.Stop();
+
+				CrashReport cr = new CrashReport();
+				cr.CrashText = bigException.ToString();
+//				cp.TransientFor = (Gtk.Window)GetWidget().Toplevel;
+				cr.Run();
+				Application.Quit();
+			}
 		}
 
 
