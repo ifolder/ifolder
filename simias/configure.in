@@ -84,7 +84,7 @@ case $SIMIAS_OS in
         LIBS=''
         MONO=mono
         MONO_PATH='$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
-	NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS"
+        NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
@@ -151,7 +151,7 @@ case $SIMIAS_OS in
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         MONO=
         MONO_PATH=
-	NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS"
+        NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
         NUNIT_LIBPATH=`echo "$TOOLDIR/NUnit/bin" | sed 's,/cygdrive/\(.\)/,\1:/,'`
@@ -228,15 +228,19 @@ AC_PROG_INSTALL
 AC_HEADER_STDC
 #AM_PROG_LIBTOOL
 
-#
-# Handle --with-cygwin-path
-#
-AC_ARG_WITH(cygwin-path,
-    [  --with-cygwin-path=PATH full path to Cygwin (default is c:/cygwin)],
-    [ CYGWIN_PATH=$withval ],
-    [ CYGWIN_PATH="c:/cygwin" ]
-    )
-AC_SUBST(CYGWIN_PATH)
+case $SIMIAS_OS in
+    windows)
+        #
+        # Handle --with-cygwin-path
+        #
+        AC_ARG_WITH(cygwin-path,
+            [  --with-cygwin-path=PATH full path to Cygwin (default is c:/cygwin)],
+            [ CYGWIN_PATH=$withval ],
+            [ CYGWIN_PATH="c:/cygwin" ]
+            )
+        AC_SUBST(CYGWIN_PATH)
+    ;;
+esac
 
 #
 # Handle --enable-debug

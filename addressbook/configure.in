@@ -226,15 +226,19 @@ AC_PROG_INSTALL
 AC_HEADER_STDC
 #AM_PROG_LIBTOOL
 
-#
-# Handle --with-cygwin-path
-#
-AC_ARG_WITH(cygwin-path,
-    [  --with-cygwin-path=PATH full path to Cygwin (default is c:/cygwin)],
-    [ CYGWIN_PATH=$withval ],
-    [ CYGWIN_PATH="c:/cygwin" ]
-    )
-AC_SUBST(CYGWIN_PATH)
+case $SIMIAS_OS in
+    windows)
+        #
+        # Handle --with-cygwin-path
+        #
+        AC_ARG_WITH(cygwin-path,
+            [  --with-cygwin-path=PATH full path to Cygwin (default is c:/cygwin)],
+            [ CYGWIN_PATH=$withval ],
+            [ CYGWIN_PATH="c:/cygwin" ]
+            )
+        AC_SUBST(CYGWIN_PATH)
+    ;;
+esac
 
 #
 # Handle --with-simias-path
