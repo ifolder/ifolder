@@ -69,6 +69,7 @@ typedef enum
 	CSP_Type_Uri,
 	CSP_Type_Xml,
 	CSP_Type_TimeSpan,
+	CSP_Type_Relationship,
 	// Not exposed to upper layers.
 	CSP_Type_Int,
 
@@ -144,21 +145,23 @@ typedef __int64				LONGLONG;
 #define CSP_Type_Uri_String (FLMUNICODE*)L"Uri"
 #define CSP_Type_Xml_String (FLMUNICODE*)L"XmlDocument"
 #define CSP_Type_TimeSpan_String (FLMUNICODE*)L"TimeSpan"
+#define CSP_Type_Relationship_String (FLMUNICODE*)L"Relationship"
 
 
-#define XmlObectListString		L"<ObjectList>"
-#define	XmlObectNameString 		L"<Object name=\""
-#define	XmlIdString 			L"\" id=\""
-#define	XmlTypeString 			L"\" type=\""
+#define XmlObectListString		L"<L>"
+#define	XmlObectNameString 		L"<O n=\""
+#define	XmlIdString 			L"\" i=\""
+#define	XmlTypeString 			L"\" t=\""
+#define	XmlColIdString 			L"\" c=\""
 #define XmlEndTag				L"\">"
 #define XmlEndTagNoChildren		L"\"/>"
-#define	XmlObjectEndString 		L"</Object>"
-#define	XmlObjectListEndString 	L"</ObjectList>"
-#define	XmlPropertyNameString 	L"<Property name=\""
-#define	XmlTypeString 			L"\" type=\""
-#define XmlFlagsString			L"\" flags=\""
+#define	XmlObjectEndString 		L"</O>"
+#define	XmlObjectListEndString 	L"</L>"
+#define	XmlPropertyNameString 	L"<P n=\""
+#define	XmlTypeString 			L"\" t=\""
+#define XmlFlagsString			L"\" f=\""
 #define XmlQEndTag				L"\">"
-#define	XmlPropertyEndString	L"</Property>"
+#define	XmlPropertyEndString	L"</P>"
 
 
 #define FLM_UNDEFINED_TYPE 0xffff
@@ -179,6 +182,7 @@ extern FLMUNICODE *CSPTypeDTimeString;
 extern FLMUNICODE *CSPTypeUriString;
 extern FLMUNICODE *CSPTypeXmlString;
 extern FLMUNICODE *CSPTypeTimeSpanString;
+extern FLMUNICODE *CSPTypeRelationshipString;
 
 extern int flmstrcpy(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size);
 extern void printflmstring(FLMUNICODE* pString);

@@ -149,7 +149,7 @@ namespace Simias.Storage.Provider.Flaim
 		/// <param name="deleteDoc">The records to delete.</param>
 		public void CommitRecords(string container, XmlDocument createDoc, XmlDocument deleteDoc)
 		{
-			Flaim.CommitRecords(container, createDoc.OuterXml, deleteDoc.OuterXml);
+			Flaim.CommitRecords(container, createDoc, deleteDoc);
 		}
 
 		/// <summary>
@@ -165,10 +165,7 @@ namespace Simias.Storage.Provider.Flaim
 			if (record != null)
 			{
 				doc = new XmlDocument();
-				XmlElement root;
-				root = doc.CreateElement(XmlTags.ObjectListTag);
-				doc.AppendChild(root);
-				root.InnerXml = record;
+				doc.LoadXml(record);
 			}
 			return (doc);
 		}

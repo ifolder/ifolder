@@ -29,7 +29,7 @@
 class CSPObjectIterator
 {
 public:
-	CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int count);
+	CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int count, FLMBOOL includeColId);
 	virtual ~CSPObjectIterator(void);
 	int NextXml(FLMUNICODE *pOriginalBuffer, int nChars);
 
@@ -38,6 +38,7 @@ private:
 	int			m_Count;
 	int			m_Index;
 	FLMUINT		*m_pRecords;
+	FLMBOOL		m_includeColId;
 };
 
 #endif // _CSPObjectIterator_H_

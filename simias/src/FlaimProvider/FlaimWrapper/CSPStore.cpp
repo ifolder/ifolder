@@ -45,6 +45,7 @@ FLMUINT	CSPTypeToFlaimTypeArray[] =
 	FLM_TEXT_TYPE,			//14 CSPUri
 	FLM_TEXT_TYPE,			//15 CSPXml
 	FLM_BINARY_TYPE,		//16 CSPTimeSpan
+	FLM_TEXT_TYPE,			//17 CSPRelationship
 	FLM_NUMBER_TYPE,		//17 not exposed CSPInt
  };
 
@@ -89,6 +90,7 @@ FLMUNICODE *CSPTypeDTimeString = CSP_Type_DTime_String;
 FLMUNICODE *CSPTypeUriString = CSP_Type_Uri_String;
 FLMUNICODE *CSPTypeXmlString = CSP_Type_Xml_String;
 FLMUNICODE *CSPTypeTimeSpanString = CSP_Type_TimeSpan_String;
+FLMUNICODE *CSPTypeRelationshipString = CSP_Type_Relationship_String;
 
 void printflmstring(FLMUNICODE* pString)
 {
@@ -789,6 +791,10 @@ CSP_TYPE CSPStore::StringToType(FLMUNICODE *pTypeName)
 			}
 			break;
 		}
+	case L'R':
+		// RelationShip
+		cspType = CSP_Type_Relationship;
+		break;
 	case L'S':
 		{
 			switch (pTypeName[1])
@@ -809,6 +815,7 @@ CSP_TYPE CSPStore::StringToType(FLMUNICODE *pTypeName)
 		}
 		break;
 	case L'T':
+		// TimeSpan
 		cspType = CSP_Type_TimeSpan;
 		break;
 	case L'U':
@@ -840,6 +847,7 @@ CSP_TYPE CSPStore::StringToType(FLMUNICODE *pTypeName)
 		}
 		break;
 	case L'X':
+		// Xml
 		cspType = CSP_Type_Xml;
 		break;
 	}
@@ -907,7 +915,7 @@ RCODE CSPStore::GetObject(FLMUNICODE *pProperty, FLMUNICODE *pValue, int* pnChar
 				{
 					nChars -= len + endTagLen;
 					pBuff += len;
-					if ((len = pObject->ToXML(pBuff, nChars, true)) != 0)
+					if ((len = pObject->ToXML(pBuff, nChars, true, false)) != 0)
 					{
 						nChars -= len;
 						pBuff += len;					
@@ -938,6 +946,7 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 	FLMUINT				fieldId;
 	CSPObjectIterator	*pIterator = 0;
 	CSPValue			*pCspValue;
+	FLMBOOL				includeColId = true;
 
 
 	pCspValue = CSPStoreObject::CreateProperty(pValue, pProperty, CSPStore::StringToType(pType));
@@ -957,21 +966,19 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 					if (RC_OK(rc))
 					{
 						rc = FlmCursorAddValue(cursor, pCspValue->GetSearchType(),	pCspValue->SearchVal(), pCspValue->SearchSize());
-						if (pCollectionId)
+						if (pCollectionId && RC_OK(rc))
 						{
+							includeColId = false;
+							rc = FlmCursorAddOp(cursor, FLM_AND_OP, 0);
 							if (RC_OK(rc))
 							{
-								rc = FlmCursorAddOp(cursor, FLM_AND_OP, 0);
+								rc = FlmCursorAddField(cursor, CS_Id_CollectionId, 0);
 								if (RC_OK(rc))
 								{
-									rc = FlmCursorAddField(cursor, CS_Id_CollectionId, 0);
+									rc = FlmCursorAddOp(cursor, FLM_EQ_OP,	0);
 									if (RC_OK(rc))
 									{
-										rc = FlmCursorAddOp(cursor, FLM_EQ_OP,	0);
-										if (RC_OK(rc))
-										{
-											rc = FlmCursorAddValue(cursor, FLM_UNICODE_VAL,	pCollectionId, 0);
-										}
+										rc = FlmCursorAddValue(cursor, FLM_UNICODE_VAL,	pCollectionId, 0);
 									}
 								}
 							}
@@ -979,11 +986,18 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 						if (RC_OK(rc))
 						{
 							rc = FlmCursorRecCount(cursor, pCount);
-							pIterator = new CSPObjectIterator(this, cursor, *pCount);
+							pIterator = new CSPObjectIterator(this, cursor, *pCount, includeColId);
 						}
 					}
 				}
 			}
+		}
+		else
+		{
+			// No properties exist with the specified name.
+			rc = FERR_OK;
+			*pCount = 0;
+			pIterator = new CSPObjectIterator(this, NULL, *pCount, includeColId);
 		}
 		delete pCspValue;
 	}

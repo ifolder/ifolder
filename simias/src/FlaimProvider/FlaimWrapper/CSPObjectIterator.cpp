@@ -22,11 +22,12 @@
  ***********************************************************************/
 #include "CSPObjectIterator.h"
 
-CSPObjectIterator::CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int count) :
+CSPObjectIterator::CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int count, FLMBOOL includeColId) :
 	m_pStore(pStore),
 	m_Count(count),
 	m_Index(0),
-	m_pRecords(0)
+	m_pRecords(0),
+	m_includeColId(includeColId)
 {
 	if (m_Count)
 	{
@@ -84,7 +85,7 @@ int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
 					CSPStoreObject *pObject = new CSPStoreObject(m_pStore, pRec);
 					if (pObject)
 					{
-						if ((len = pObject->ToXML(pBuffer, nChars, false)) != 0)
+						if ((len = pObject->ToXML(pBuffer, nChars, false, m_includeColId)) != 0)
 						{
 							nChars -= len;
 							pBuffer += len;

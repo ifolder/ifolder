@@ -56,7 +56,7 @@ public:
 	RCODE Flush();
 	void Abort();
 	RCODE Delete();
-	int ToXML(FLMUNICODE *pBuffer, int nChars, FLMBOOL includeProperties);
+	int ToXML(FLMUNICODE *pBuffer, int nChars, FLMBOOL includeProperties, FLMBOOL includeColId);
 	static CSPValue *CSPStoreObject::CreateProperty(FLMUNICODE *pStringValue, FLMUNICODE *pName, CSP_TYPE type);
 	int GetXmlSize();
 

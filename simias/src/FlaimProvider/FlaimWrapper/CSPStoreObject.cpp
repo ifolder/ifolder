@@ -297,6 +297,9 @@ CSPValue *CSPStoreObject::CreateProperty(FLMUNICODE *pStringValue, FLMUNICODE *p
 	case CSP_Type_TimeSpan:
 		pValue = new CSPTimeSpan(pStringValue, pName);
 		break;
+	case CSP_Type_Relationship:
+		pValue = new CSPRelationship(pStringValue, pName);
+		break;
 	case CSP_Type_Int:
 	case CSP_Type_Max:
 	case CSP_Type_Undefined:
@@ -549,6 +552,9 @@ CSPValue *CSPStoreObject::GetProperty(void *pvField)
 				case CSP_Type_TimeSpan:
 					pValue = new CSPTimeSpan(m_pRec, pvField, name);
 					break;
+				case CSP_Type_Relationship:
+					pValue = new CSPRelationship(m_pRec, pvField, name);
+					break;
 				case CSP_Type_Int:
 				case CSP_Type_Max:
 				case CSP_Type_Undefined:
@@ -583,7 +589,7 @@ int flmstrcpy(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size)
 }
 
 
-int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL includeProperties)
+int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL includeProperties, FLMBOOL includeColId)
 {
 	int charsWritten = nChars;
 	int len;
@@ -611,41 +617,55 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 						pBuffer += len;
 						if ((len = m_pType->ToString(pBuffer, nChars)))
 						{
-							nChars -= len;
-							pBuffer += len;
-							if (includeProperties)
+							if (includeColId)
 							{
-								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTag, nChars)) != 0)
+								nChars -= len;
+								pBuffer += len;
+								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlColIdString, nChars)) != 0)
 								{
-									nChars -= len;
-									pBuffer += len;
-									// Now Get All of the properties.
-									CSPPropertyIterator *pProperties = new CSPPropertyIterator(this);
-									CSPValue *pProperty = pProperties->Next();
-									while (pProperty != 0 && len)
+									CSPString* colId = (CSPString*)GetProperty(CS_Name_CollectionId);
+									len = colId->ToString(pBuffer, nChars);
+								}
+							}
+					
+							if (len != 0)
+							{
+								nChars -= len;
+								pBuffer += len;
+								if (includeProperties)
+								{
+									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTag, nChars)) != 0)
 									{
-										if ((len = pProperty->ToXml(pBuffer, nChars)))
+										nChars -= len;
+										pBuffer += len;
+										// Now Get All of the properties.
+										CSPPropertyIterator *pProperties = new CSPPropertyIterator(this);
+										CSPValue *pProperty = pProperties->Next();
+										while (pProperty != 0 && len)
+										{
+											if ((len = pProperty->ToXml(pBuffer, nChars)))
+											{
+												nChars -= len;
+												pBuffer += len;
+											}
+											delete pProperty;
+											pProperty = pProperties->Next();
+										}
+									
+										if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObjectEndString, nChars)) != 0)
 										{
 											nChars -= len;
 											pBuffer += len;
 										}
-										delete pProperty;
-										pProperty = pProperties->Next();
 									}
-								
-									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObjectEndString, nChars)) != 0)
+								}
+								else
+								{
+									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTagNoChildren, nChars)) != 0)
 									{
 										nChars -= len;
 										pBuffer += len;
 									}
-								}
-							}
-							else
-							{
-								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTagNoChildren, nChars)) != 0)
-								{
-									nChars -= len;
-									pBuffer += len;
 								}
 							}
 						}

@@ -932,5 +932,24 @@ public:
 	}
 }; // class CSPXml
 
+class CSPRelationship : public CSPString
+{
+public:
+	CSPRelationship(FLMUNICODE *pString, FLMUNICODE *pName) :
+		CSPString(pString, CSPTypeRelationshipString)
+	{
+	}
+
+	CSPRelationship(FlmRecord *pRec, void *pvField, FLMUNICODE *pName) :
+		CSPString(pRec, pvField, pName, CSPTypeRelationshipString)
+	{
+	}
+
+	virtual ~CSPRelationship()
+	{
+	}
+}; // class CSPRelationship
+
+
 #endif // _CSTYPE_H_
 

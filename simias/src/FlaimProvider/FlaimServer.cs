@@ -440,6 +440,7 @@ namespace Simias.Storage.Provider.Flaim
 				if (instance == null)
 				{
 					instance = new FlaimServer();
+					instance.AlreadyDisposed = false;
 				}
 				return instance;
 			}
@@ -572,12 +573,15 @@ namespace Simias.Storage.Provider.Flaim
 				IResultSet results = Search(query);
 				char []buffer = new char[4096];
 				int count;
+				
 				while ((count = results.GetNext(ref buffer)) != 0)
 				{
-					rc = CommitRecords(name, null, new string(buffer, 0, count));
+					XmlDocument delDoc = new XmlDocument();
+					delDoc.LoadXml(new string(buffer, 0, count));
+					rc = CommitRecords(name, null, delDoc);
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
 				if (FlaimError.IsSuccess(rc))
 				{
@@ -597,13 +601,11 @@ namespace Simias.Storage.Provider.Flaim
 		/// <param name="container">The container that the commit applies to.</param>
 		/// <param name="createDoc">The records to create or modify.</param>
 		/// <param name="deleteDoc">The records to delete.</param>
-		internal FlaimError.Error CommitRecords(string container, string createDoc, string deleteDoc)
+		internal FlaimError.Error CommitRecords(string container, XmlDocument createDoc, XmlDocument deleteDoc)
 		{
 			FlaimError.Error rc = FlaimError.Error.FERR_OK;
 			Flaim4 flaim = this.Flaim;
 
-			XmlDocument cDoc = null;
-			XmlDocument dDoc = null;
 			try
 			{
 				Flaim.BeginTrans();
@@ -611,9 +613,8 @@ namespace Simias.Storage.Provider.Flaim
 				{
 					if (createDoc != null)
 					{
-						cDoc = new XmlDocument();
-						cDoc.LoadXml(createDoc);
-						foreach (XmlElement recordEl in cDoc)
+						XmlNodeList recordList = createDoc.DocumentElement.SelectNodes(XmlTags.ObjectTag);
+						foreach (XmlElement recordEl in recordList)
 						{
 							bool reuseId;
 							int flmId = 0;
@@ -641,9 +642,8 @@ namespace Simias.Storage.Provider.Flaim
 					}
 					if (deleteDoc != null)
 					{
-						dDoc = new XmlDocument();
-						dDoc.LoadXml(deleteDoc);
-						foreach (XmlElement recordEl in dDoc)
+						XmlNodeList recordList = deleteDoc.DocumentElement.SelectNodes(XmlTags.ObjectTag);
+						foreach (XmlElement recordEl in recordList)
 						{
 							int flmId;
 							FlaimRecord record = new FlaimRecord(recordEl);
@@ -660,12 +660,12 @@ namespace Simias.Storage.Provider.Flaim
 					}
 					Flaim.EndTrans();
 				}
-				finally
+				catch
 				{
 					Flaim.AbortTrans();
 				}
 			}
-			catch (Exception ex)
+			catch
 			{
 				if (FlaimError.IsSuccess(rc))
 					rc = FlaimError.Error.FERR_FAILURE;
