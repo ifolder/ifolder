@@ -119,6 +119,8 @@ namespace Novell.iFolder.FormsAddrBook
 			// Disable the vCard import and export buttons.
 			toolBar1.Buttons[3].Enabled = false;
 			toolBar1.Buttons[4].Enabled = false;
+
+			this.menuFileNew.Popup += new EventHandler(menuFileNew_Popup);
 		}
 
 		/// <summary>
@@ -558,6 +560,11 @@ namespace Novell.iFolder.FormsAddrBook
 		#endregion
 
 		#region Event Handlers
+		private void menuFileNew_Popup(object sender, EventArgs e)
+		{
+			menuFileNewContact.Enabled = this.booksContacts.SelectedAddressBook != null;
+		}
+
 		private void menuFileNewAddressBook_Click(object sender, EventArgs e)
 		{
 			this.booksContacts.CreateAddressBook();
