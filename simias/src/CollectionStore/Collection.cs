@@ -42,11 +42,6 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Used to log messages.
-		/// </summary>
-		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( Collection ) );
-
-		/// <summary>
 		/// Reference to the store.
 		/// </summary>
 		private Store store;

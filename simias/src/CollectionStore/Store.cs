@@ -55,11 +55,6 @@ namespace Simias.Storage
 		static private string storeManagedDirectoryName = "CollectionFiles";
 
 		/// <summary>
-		/// Specifies whether object is viable.
-		/// </summary>
-		private bool disposed = false;
-
-		/// <summary>
 		/// Handle to the local store provider.
 		/// </summary>
 		private Persist.IProvider storageProvider = null;
@@ -155,15 +150,7 @@ namespace Simias.Storage
 		/// </summary>
 		public Configuration Config
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return config; 
-			}
+			get { return config; }
 		}
 
 		/// <summary>
@@ -184,15 +171,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string ID
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return localDb.ID; 
-			}
+			get { return localDb.ID; }
 		}
 
 		/// <summary>
@@ -200,15 +179,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string StorePath
 		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return storageProvider.StoreDirectory.LocalPath; 
-			}
+			get { return storageProvider.StoreDirectory.LocalPath; }
 		}
 		#endregion
 
@@ -372,11 +343,6 @@ namespace Simias.Storage
 		/// <returns>A path string that represents the store managed path.</returns>
 		internal string GetStoreManagedPath( string collectionID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			return Path.Combine( storeManagedPath, collectionID.ToLower() );
 		}
 
@@ -385,11 +351,6 @@ namespace Simias.Storage
 		/// </summary>
 		internal void LockStore()
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			storeMutex.WaitOne();
 		}
 
@@ -398,11 +359,6 @@ namespace Simias.Storage
 		/// </summary>
 		internal void UnlockStore()
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			storeMutex.ReleaseMutex();
 		}
 		#endregion
@@ -418,11 +374,6 @@ namespace Simias.Storage
 		/// <returns>The created Domain object.</returns>
 		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			Node[] nodeList = new Node[ 2 ];
 
 			// Create the domain object.
@@ -440,11 +391,6 @@ namespace Simias.Storage
 		/// </summary>
 		public void Delete()
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// Check if the store managed path still exists. If it does, delete it.
 			if ( Directory.Exists( storeManagedPath ) )
 			{
@@ -453,7 +399,7 @@ namespace Simias.Storage
 
 			// Say bye-bye to the store.
 			storageProvider.DeleteStore();
-			Dispose();
+			storageProvider.Dispose();
 		}
 
 		/// <summary>
@@ -462,11 +408,6 @@ namespace Simias.Storage
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		public void DeleteDomainIdentity( string domainID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			Node[] nodeList = new Node[ 2 ];
 
 			// Delete the domain object.
@@ -485,11 +426,6 @@ namespace Simias.Storage
 		/// exist a null is returned.</returns>
 		public Collection GetCollectionByID( string collectionID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// Get the specified object from the persistent store.
 			string normalizedID = collectionID.ToLower();
 			XmlDocument document = storageProvider.GetRecord( normalizedID, normalizedID );
@@ -504,11 +440,6 @@ namespace Simias.Storage
 		/// objects that matched the specified domain.</returns>
 		public ICSList GetCollectionsByDomain( string domainID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// Create a container object to hold all collections that match the specified domain.
 			ICSList collectionList = new ICSList();
 
@@ -549,11 +480,6 @@ namespace Simias.Storage
 		/// objects that matched the specified name.</returns>
 		public ICSList GetCollectionsByName( string name )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
@@ -598,11 +524,6 @@ namespace Simias.Storage
 		/// type.</returns>
 		public ICSList GetCollectionsByType( string type )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// Create a container object to hold all collections that match the specified name.
 			ICSList collectionList = new ICSList();
 
@@ -647,11 +568,6 @@ namespace Simias.Storage
 		/// objects that matched the specified user.</returns>
 		public ICSList GetCollectionsByUser( string userID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// Create a container object to hold all collections that match the specified user.
 			ICSList collectionList = new ICSList();
 
@@ -696,11 +612,6 @@ namespace Simias.Storage
 		/// the database object does not exist.</returns>
 		public LocalDatabase GetDatabaseObject()
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			// See if the local database object has already been looked up.
 			if ( localDb == null )
 			{
@@ -738,11 +649,6 @@ namespace Simias.Storage
 		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
 		public Domain GetDomain( string domainID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			return localDb.GetNodeByID( domainID.ToLower() ) as Domain;
 		}
 
@@ -773,11 +679,6 @@ namespace Simias.Storage
 		/// returned if no matching collections are found.</returns>
 		public Collection GetSingleCollectionByName( string name )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			Collection collection = null;
 			ICSList collectionList = GetCollectionsByName( name );
 			foreach ( ShallowNode sn in collectionList )
@@ -798,11 +699,6 @@ namespace Simias.Storage
 		/// returned if no matching collections are found.</returns>
 		public Collection GetSingleCollectionByType( string type )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			Collection collection = null;
 			ICSList collectionList = GetCollectionsByType( type );
 			foreach ( ShallowNode sn in collectionList )
@@ -821,11 +717,6 @@ namespace Simias.Storage
 		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
 		public string GetUserIDFromDomainID( string domainID )
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			return identity.GetUserIDFromDomain( localDb, domainID.ToLower() );
 		}
 		#endregion
@@ -838,11 +729,6 @@ namespace Simias.Storage
 		/// ShallowNode objects that represent Collection objects.</returns>
 		public IEnumerator GetEnumerator()
 		{
-			if ( disposed )
-			{
-				throw new DisposedException( this );
-			}
-
 			return new StoreEnumerator( this );
 		}
 
@@ -1064,56 +950,6 @@ namespace Simias.Storage
 				Dispose( false );
 			}
 			#endregion
-		}
-		#endregion
-		
-		#region IDisposable Members
-		/// <summary>
-		/// Allows for quick release of managed and unmanaged resources.
-		/// Called by applications.
-		/// </summary>
-		private void Dispose()
-		{
-			Dispose( true );
-			GC.SuppressFinalize( this );
-		}
-
-		/// <summary>
-		/// Dispose( bool disposing ) executes in two distinct scenarios.
-		/// If disposing equals true, the method has been called directly
-		/// or indirectly by a user's code. Managed and unmanaged resources
-		/// can be disposed.
-		/// If disposing equals false, the method has been called by the 
-		/// runtime from inside the finalizer and you should not reference 
-		/// other objects. Only unmanaged resources can be disposed.
-		/// </summary>
-		/// <param name="disposing">Specifies whether called from the finalizer or from the application.</param>
-		private void Dispose( bool disposing )
-		{
-			// Check to see if Dispose has already been called.
-			if ( !disposed )
-			{
-				// Protect callers from accessing the freed members.
-				disposed = true;
-
-				// If disposing equals true, dispose all managed and unmanaged resources.
-				if ( disposing )
-				{
-					// Dispose managed resources.
-					storageProvider.Dispose();
-				}
-			}
-		}
-		
-		/// <summary>
-		/// Use C# destructor syntax for finalization code.
-		/// This destructor will run only if the Dispose method does not get called.
-		/// It gives your base class the opportunity to finalize.
-		/// Do not provide destructors in types derived from this class.
-		/// </summary>
-		~Store()      
-		{
-			Dispose( false );
 		}
 		#endregion
 	}

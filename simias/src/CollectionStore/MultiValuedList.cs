@@ -35,11 +35,6 @@ namespace Simias.Storage
 	{
 		#region Class Members
 		/// <summary>
-		/// Name of this property.
-		/// </summary>
-		private string name;
-
-		/// <summary>
 		/// The property list where this multivalued property is stored.
 		/// </summary>
 		private PropertyList propertyList;
@@ -78,7 +73,6 @@ namespace Simias.Storage
 		internal MultiValuedList( PropertyList propertyList, string name, bool hiddenProperties )
 		{
 			this.propertyList = propertyList;
-			this.name = name;
             
 			// Build a regular expression class to use as the comparision.
 			Regex searchName = new Regex( "^" + name + "$", RegexOptions.IgnoreCase );
@@ -107,7 +101,6 @@ namespace Simias.Storage
 			Regex searchValue = null;
 
 			this.propertyList = propertyList;
-			this.name = attribute;
 
 			// Build a regular expression class to use as the comparision.
 			if ( attributeValue != null )
@@ -138,7 +131,6 @@ namespace Simias.Storage
 		internal MultiValuedList( PropertyList propertyList, uint flagBits )
 		{
 			this.propertyList = propertyList;
-			this.name = XmlTags.FlagsAttr;
 
 			// Build the list of property values.
 			// Walk each property node and do a check to see if the flagbits match.

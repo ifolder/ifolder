@@ -223,7 +223,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string ID
 		{
-			get { return ID; }
+			get { return id; }
 		}
 
 		/// <summary>

@@ -271,8 +271,6 @@ namespace Simias.Storage
 
 		#region Callbacks
 
-		static string NodeEventArgsTypeString = typeof(NodeEventArgs).ToString();
-
 		private void OnCollectionEvent(SimiasEventArgs args)
 		{
 			try
