@@ -58,6 +58,11 @@ namespace Simias.Domain
 			get { return "DomainService.rem"; }
 		}
 
+		public static int Port
+		{
+			get { return 6346; }
+		}
+
 		public Uri ServiceUrl
 		{
 			get
@@ -70,6 +75,7 @@ namespace Simias.Domain
 				{
 					UriBuilder ub = new UriBuilder(uriString);
 					ub.Path = EndPoint;
+					ub.Port = Port;
 					uri = ub.Uri;
 				}
 

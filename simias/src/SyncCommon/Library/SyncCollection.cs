@@ -174,6 +174,9 @@ namespace Simias.Sync
 		{
 			object result = value;
 
+			// refresh the collection to get the latest information
+			this.Refresh();
+
 			Property p = Properties.GetSingleProperty(name);
 
 			if (p != null)

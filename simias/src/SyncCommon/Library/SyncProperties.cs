@@ -121,6 +121,9 @@ namespace Simias.Sync
 		{
 			object result = value;
 
+			// refresh the collection to get the latest information
+			localDb.Refresh();
+
 			Property p = localDb.Properties.GetSingleProperty(name);
 
 			if (p != null)
