@@ -35,15 +35,15 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolder				ifolder;
 
-		private Gtk.TreeView		MemberTreeView;
-		private ListStore			MemberTreeStore;
+		private Gtk.TreeView		UserTreeView;
+		private ListStore			UserTreeStore;
 		private Gdk.Pixbuf			ContactPixBuf;
 		private Gtk.Window			topLevelWindow;
 
 		private Button 				AddButton;
 		private Button				RemoveButton;
 		private Button				AccessButton;
-		private iFolderMemberSelector MemberSelector;
+		private iFolderUserSelector UserSelector;
 
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
@@ -72,39 +72,39 @@ namespace Novell.iFolder
 			
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
-			MemberTreeView = new TreeView();
+			UserTreeView = new TreeView();
 			ScrolledWindow sw = new ScrolledWindow();
-			sw.Add(MemberTreeView);
+			sw.Add(UserTreeView);
 			this.PackStart(sw, true, true, 0);
 
 
 			// Setup the iFolder TreeView
-			MemberTreeStore = new ListStore(typeof(Member));
-			MemberTreeView.Model = MemberTreeStore;
+			UserTreeStore = new ListStore(typeof(iFolderUser));
+			UserTreeView.Model = UserTreeStore;
 
 			CellRendererPixbuf mcrp = new CellRendererPixbuf();
-			TreeViewColumn MemberColumn = new TreeViewColumn();
-			MemberColumn.PackStart(mcrp, false);
-			MemberColumn.SetCellDataFunc(mcrp,
-					new TreeCellDataFunc(MemberCellPixbufDataFunc));
+			TreeViewColumn UserColumn = new TreeViewColumn();
+			UserColumn.PackStart(mcrp, false);
+			UserColumn.SetCellDataFunc(mcrp,
+					new TreeCellDataFunc(UserCellPixbufDataFunc));
 
 			CellRendererText mcrt = new CellRendererText();
-			MemberColumn.PackStart(mcrt, false);
-			MemberColumn.SetCellDataFunc(mcrt,
-					new TreeCellDataFunc(MemberCellTextDataFunc));
-			MemberColumn.Title = "Members";
-			MemberTreeView.AppendColumn(MemberColumn);
+			UserColumn.PackStart(mcrt, false);
+			UserColumn.SetCellDataFunc(mcrt,
+					new TreeCellDataFunc(UserCellTextDataFunc));
+			UserColumn.Title = "Users";
+			UserTreeView.AppendColumn(UserColumn);
 
-			MemberTreeView.AppendColumn("State",
+			UserTreeView.AppendColumn("State",
 					new CellRendererText(),
 					new TreeCellDataFunc(StateCellTextDataFunc));
 
-			MemberTreeView.AppendColumn("Access",
+			UserTreeView.AppendColumn("Access",
 					new CellRendererText(),
 					new TreeCellDataFunc(AccessCellTextDataFunc));
 
-//			MemberTreeView.Selection.Changed +=
-//				new EventHandler(OnMemberSelectionChanged);
+//			UserTreeView.Selection.Changed +=
+//				new EventHandler(OnUserSelectionChanged);
 
 			ContactPixBuf = 
 					new Gdk.Pixbuf(Util.ImagesPath("contact.png"));
@@ -131,7 +131,7 @@ namespace Novell.iFolder
 
 			AddButton = new Button(Gtk.Stock.Add);
 			rightBox.PackStart(AddButton);
-			AddButton.Clicked += new EventHandler(OnAddMember);
+			AddButton.Clicked += new EventHandler(OnAddUser);
 
 			RemoveButton = new Button(Gtk.Stock.Remove);
 			rightBox.PackStart(RemoveButton);
@@ -139,16 +139,16 @@ namespace Novell.iFolder
 			AccessButton = new Button("Set Access");
 			leftBox.PackStart(AccessButton);
 
-			RefreshMemberList();
+			RefreshUserList();
 		}
 
 
-		private void RefreshMemberList()
+		private void RefreshUserList()
 		{
-    		Member[] memberlist =  ifws.GetMembers(ifolder.ID);
-			foreach(Member mem in memberlist)
+    		iFolderUser[] userlist =  ifws.GetiFolderUsers(ifolder.ID);
+			foreach(iFolderUser user in userlist)
 			{
-				MemberTreeStore.AppendValues(mem);
+				UserTreeStore.AppendValues(user);
 			}
 		}
 
@@ -156,22 +156,22 @@ namespace Novell.iFolder
 
 
 
-		private void MemberCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+		private void UserCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member member = (Member) tree_model.GetValue(iter,0);
-			((CellRendererText) cell).Text = member.Name;
+			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = user.Name;
 		}
 
 
 
 
-		private void MemberCellPixbufDataFunc(Gtk.TreeViewColumn tree_column,
+		private void UserCellPixbufDataFunc(Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member member = (Member) tree_model.GetValue(iter,0);
+//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
 			((CellRendererPixbuf) cell).Pixbuf = ContactPixBuf;
 		}
 
@@ -182,7 +182,7 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member member = (Member) tree_model.GetValue(iter,0);
+//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = "Dude";
 		}
 
@@ -191,30 +191,28 @@ namespace Novell.iFolder
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
 		{
-			Member member = (Member) tree_model.GetValue(iter,0);
+//			iFolderUser user = (iFolderUser) tree_model.GetValue(iter,0);
 			((CellRendererText) cell).Text = "No Access";
 		}
 
-		private void OnAddMember(object o, EventArgs args)
+		private void OnAddUser(object o, EventArgs args)
 		{
-			MemberSelector = new iFolderMemberSelector(
-						topLevelWindow,
-						ifolder, ifws);
+			UserSelector = new iFolderUserSelector( topLevelWindow, ifws);
 
-			MemberSelector.Response += 
-						new ResponseHandler(OnMemberSelectorResponse);
+			UserSelector.Response += 
+						new ResponseHandler(OnUserSelectorResponse);
 
-			MemberSelector.ShowAll();
+			UserSelector.ShowAll();
 		}
 
-		private void OnMemberSelectorResponse(object o, ResponseArgs args)
+		private void OnUserSelectorResponse(object o, ResponseArgs args)
 		{
 	//		if(args.ResponseId
-			if(MemberSelector != null)
+			if(UserSelector != null)
 			{
-				MemberSelector.Hide();
-				MemberSelector.Destroy();
-				MemberSelector = null;
+				UserSelector.Hide();
+				UserSelector.Destroy();
+				UserSelector = null;
 			}
 		}
 	}

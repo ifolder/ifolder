@@ -52,7 +52,7 @@ namespace Novell.iFolder
 		static Gtk.ThreadNotify		iFolderStateNotify;
 		static iFolderWebService	ifws;
 		static iFolderWindow 		ifwin;
-		static Settings				ifSettings;
+		static iFolderSettings		ifSettings;
 
 		public static void Main (string[] args)
 		{
@@ -245,7 +245,7 @@ namespace Novell.iFolder
 			{
 				try
 				{
-					Settings tmpSettings;
+					iFolderSettings tmpSettings;
 					tmpSettings = ifws.ConnectToEnterpriseServer(
 													loginDialog.UserName,
 													loginDialog.Password,
