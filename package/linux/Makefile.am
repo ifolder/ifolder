@@ -37,7 +37,7 @@ package-uninstall:
 package-clean clean-local:
 	rm -rf *.rpm RPM
 
-distclean-local:
+distclean-local: package-clean
 	rm -f ifolder.spec
 
 maintainer-clean-local:

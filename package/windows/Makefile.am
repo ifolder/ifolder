@@ -31,5 +31,5 @@ package-clean clean-local:
 distclean-local: package-clean
 
 maintainer-clean-local:
-	rm -f ../*/Makefile.in
+	rm -f Makefile.in
 
