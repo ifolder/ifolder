@@ -461,8 +461,8 @@ namespace Novell.FormsTrayApp
 							}
 							catch (Exception ex)
 							{
-								// TODO:
-								MessageBox.Show(ex.Message);
+								mmb = new MyMessageBox(resourceManager.GetString("savePasswordError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+								mmb.ShowDialog();
 							}
 						}
 
