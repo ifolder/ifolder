@@ -1,3 +1,26 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this program; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Author: Rob
+ *
+ ***********************************************************************/
+
 using System;
 
 using Simias;
@@ -9,7 +32,8 @@ namespace Simias.Domain
 	/// </summary>
 	public class DomainAgent
 	{
-		private static readonly string UrlName = "ServiceUrl";
+		private static readonly string SectionName = "Domain";
+		private static readonly string UrlKeyName = "ServiceUrl";
 
 		private Configuration config;
 
@@ -29,17 +53,24 @@ namespace Simias.Domain
 
 		#region Properties
 		
+		public static string EndPoint
+		{
+			get { return "DomainService.rem"; }
+		}
+
 		public Uri ServiceUrl
 		{
 			get
 			{
 				Uri uri = null;
 
-				string uriString = config.Get(UrlName, null);
+				string uriString = config.Get(SectionName, UrlKeyName, null);
 
 				if ((uriString != null) && (uriString.Length > 0))
 				{
-					uri = new Uri(uriString);
+					UriBuilder ub = new UriBuilder(uriString);
+					ub.Path = EndPoint;
+					uri = ub.Uri;
 				}
 
 				return uri;
@@ -47,7 +78,10 @@ namespace Simias.Domain
 
 			set
 			{
-				if (value != null) config.Set(UrlName, value.ToString());
+				if (value != null)
+				{
+					config.Set(SectionName, UrlKeyName, value.ToString());
+				}
 			}
 		}
 

@@ -37,7 +37,7 @@ namespace Simias.Sync
 	/// A sync wrapper for collection objects.  The wrapper contains property names (scheme) used
 	/// by syncing and implements serveral common tasks used by syncing on collections.
 	/// </summary>
-	public class SyncCollection : Collection
+	public class SyncCollection : Collection, IDisposable
 	{
 		/// <summary>
 		/// A collection property name for the sync role of the collection.
@@ -216,6 +216,20 @@ namespace Simias.Sync
 
 			Commit();
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			// dispose store properties
+			if (props != null)
+			{
+				props.Dispose();
+				props = null;
+			}
+		}
+
+		#endregion
 
 		#region Properties
 		

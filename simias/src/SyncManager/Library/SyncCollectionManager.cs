@@ -222,12 +222,18 @@ namespace Simias.Sync
 					{
 						DomainAgent dAgent = new DomainAgent(syncManager.Config);
 
+						log.Debug("Connecting to Domain Service: {0}", dAgent.ServiceUrl);
+
 						IDomainService dService = dAgent.Connect();
 
 						Uri master = dService.CreateMaster(collection.ID, collection.Name, collection.Owner);
 
 						if (master == null)
+						{
 							throw new ApplicationException("Unable to create remote master collection.");
+						}
+
+						log.Debug("Master URL from Domain Service: {0}", master);
 
 						collection.MasterUrl = master;
 						collection.CreateMaster = false;

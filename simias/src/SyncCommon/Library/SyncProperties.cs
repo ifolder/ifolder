@@ -32,7 +32,7 @@ namespace Simias.Sync
 	/// <summary>
 	/// Sync Properties
 	/// </summary>
-	public class SyncProperties
+	public class SyncProperties : IDisposable
 	{
 		/// <summary>
 		/// The suggested sync host or ip address for the current machine.
@@ -84,6 +84,20 @@ namespace Simias.Sync
 			store = new Store(config);
 			localDb = store.GetDatabaseObject();
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			// dispose the store
+			if (store != null)
+			{
+				store.Dispose();
+				store = null;
+			}
+		}
+
+		#endregion
 
 		#region Property Methods
 
