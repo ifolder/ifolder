@@ -161,10 +161,10 @@ namespace Simias.Security.Web
 				redirectedUri.Scheme = "https";
 				redirectedUri.Port = sslPort;
 
-				log.Debug( redirectedUri.ToString() );
+				log.Debug( redirectedUri.Uri.ToString() );
 
 				// You must have an SSL certificate configured on your web server for this to work
-				context.Response.Redirect( redirectedUri.ToString() );
+				context.Response.Redirect( redirectedUri.Uri.ToString() );
 			}
 		}
 
