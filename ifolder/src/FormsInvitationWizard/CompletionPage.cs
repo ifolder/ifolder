@@ -78,6 +78,7 @@ namespace Novell.iFolder.InvitationWizard
 		internal override void ActivatePage(int previousIndex)
 		{
 			this.DescriptionText = ((InvitationWizard)(this.Parent)).SummaryText;
+			this.ActionText = "Click Finish to process your response, or click Back to modify the settings. Click Cancel to exit without responding.";
 			base.ActivatePage (previousIndex);
 		}
 		#endregion

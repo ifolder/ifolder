@@ -41,6 +41,7 @@ namespace Novell.iFolder.InvitationWizard
 		private System.Windows.Forms.Button fileBrowser;
 		private System.Windows.Forms.TextBox invitationFile;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label3;
 		private System.ComponentModel.IContainer components = null;
 		#endregion
 
@@ -78,11 +79,12 @@ namespace Novell.iFolder.InvitationWizard
 			this.label1 = new System.Windows.Forms.Label();
 			this.fileBrowser = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// invitationFile
 			// 
-			this.invitationFile.Location = new System.Drawing.Point(72, 144);
+			this.invitationFile.Location = new System.Drawing.Point(40, 168);
 			this.invitationFile.Name = "invitationFile";
 			this.invitationFile.Size = new System.Drawing.Size(360, 20);
 			this.invitationFile.TabIndex = 3;
@@ -91,20 +93,20 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(40, 145);
+			this.label1.Location = new System.Drawing.Point(40, 152);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(32, 16);
+			this.label1.Size = new System.Drawing.Size(112, 16);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Path:";
+			this.label1.Text = "iFolder Invitation File";
 			// 
 			// fileBrowser
 			// 
-			this.fileBrowser.FlatStyle = FlatStyle.System;
-			this.fileBrowser.Location = new System.Drawing.Point(440, 142);
+			this.fileBrowser.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.fileBrowser.Location = new System.Drawing.Point(408, 166);
 			this.fileBrowser.Name = "fileBrowser";
-			this.fileBrowser.Size = new System.Drawing.Size(24, 24);
+			this.fileBrowser.Size = new System.Drawing.Size(72, 24);
 			this.fileBrowser.TabIndex = 4;
-			this.fileBrowser.Text = "...";
+			this.fileBrowser.Text = "Browse...";
 			this.fileBrowser.Click += new System.EventHandler(this.fileBrowser_Click);
 			// 
 			// label2
@@ -113,22 +115,32 @@ namespace Novell.iFolder.InvitationWizard
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(392, 32);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "Enter the location of the iFolder invitation or click the button to browse for th" +
-				"e invitation file.";
+			this.label2.Text = "Type the path, including the filename, where you saved the iFolder Invitation (IF" +
+				"I) file on this computer, or click Browse and select the file.";
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(40, 280);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(136, 16);
+			this.label3.TabIndex = 6;
+			this.label3.Text = "Click Next to continue.";
 			// 
 			// SelectInvitationPage
 			// 
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.fileBrowser);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.invitationFile);
-			this.HeaderSubTitle = "Select an iFolder invitation to accept on this computer.";
-			this.HeaderTitle = "Choose iFolder Invitation";
+			this.HeaderSubTitle = "HeaderSubTitle";
+			this.HeaderTitle = "HeaderTitle";
 			this.Name = "SelectInvitationPage";
 			this.Controls.SetChildIndex(this.invitationFile, 0);
 			this.Controls.SetChildIndex(this.label1, 0);
 			this.Controls.SetChildIndex(this.fileBrowser, 0);
 			this.Controls.SetChildIndex(this.label2, 0);
+			this.Controls.SetChildIndex(this.label3, 0);
 			this.ResumeLayout(false);
 
 		}

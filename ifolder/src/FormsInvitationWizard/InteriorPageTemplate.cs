@@ -110,7 +110,7 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			this.headerSubTitle.Location = new System.Drawing.Point(40, 32);
 			this.headerSubTitle.Name = "headerSubTitle";
-			this.headerSubTitle.Size = new System.Drawing.Size(384, 16);
+			this.headerSubTitle.Size = new System.Drawing.Size(408, 16);
 			this.headerSubTitle.TabIndex = 1;
 			this.headerSubTitle.Text = "Header subtitle";
 			// 
@@ -119,7 +119,7 @@ namespace Novell.iFolder.InvitationWizard
 			this.headerTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.headerTitle.Location = new System.Drawing.Point(24, 16);
 			this.headerTitle.Name = "headerTitle";
-			this.headerTitle.Size = new System.Drawing.Size(400, 16);
+			this.headerTitle.Size = new System.Drawing.Size(424, 16);
 			this.headerTitle.TabIndex = 0;
 			this.headerTitle.Text = "Header Title";
 			// 
