@@ -52,6 +52,7 @@ namespace Novell.iFolder.iFolderCom
 		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
 		void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
 		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
+		bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path);
 	}
 
 	/// <summary>
@@ -252,7 +253,6 @@ namespace Novell.iFolder.iFolderCom
 			propEnumerator = ( ICSEnumerator )ifoldernode.iFolder.Properties.GetEnumerator();
 
 			return (propEnumerator != null);
-			return false;
 		}
 
 		public bool GetNextiFolderProp(out string name, out string val)
@@ -331,6 +331,17 @@ namespace Novell.iFolder.iFolderCom
 				logger.Debug(e, "Opening help");
 				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
+		}
+
+		public bool HasConflicts([MarshalAs(UnmanagedType.LPWStr)] string path)
+		{
+			iFolder ifolder = manager.GetiFolderByPath(path);
+			if (ifolder != null)
+			{
+				return ifolder.HasCollisions();
+			}
+
+			return false;
 		}
 	}
 }
