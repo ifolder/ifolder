@@ -217,7 +217,11 @@ namespace Novell.FormsTrayApp
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
-			if (!globalProperties.Visible)
+			if (globalProperties.Visible)
+			{
+				globalProperties.Activate();
+			}
+			else
 			{
 				globalProperties.Show();
 			}
