@@ -112,7 +112,6 @@ namespace Simias.Event
 					catch ( SocketException e )
 					{
 						log.Error( e, "Socket exception" );
-						clientSocket.Close();
 					}
 					catch ( Exception e )
 					{
@@ -122,15 +121,11 @@ namespace Simias.Event
 				}
 				catch ( SocketException e )
 				{
-					// Check to see if the socket was closed underneath us.
-					if ( e.ErrorCode == SocketClosed )
-					{
-						exitLoop = true;
-					}
-					else
-					{
-						log.Error( e, "Socket exception" );
-					}
+					exitLoop = true;
+				}
+				catch ( Exception e )
+				{
+					// Stay in the loop until the socket is closed.
 				}
 			}
 		}

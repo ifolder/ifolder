@@ -97,9 +97,11 @@ namespace Simias.Event
 				// Send the event to the client.
 				eventSocket.Send( new IProcEventData( args ).ToBuffer() );
 			}
-			catch ( SocketException e )
+			catch ( Exception e )
 			{
-				log.Error( e, "Error processing NodeEventHandler event for client {0}.", ( eventSocket.RemoteEndPoint as IPEndPoint ).Address );
+				simiasEventSubscriber.Dispose();
+				simiasEventSubscriber = null;
+				log.Error( e, "Error processing NodeEventHandler event for client." );
 			}
 		}
 
@@ -348,12 +350,8 @@ namespace Simias.Event
 			catch ( SocketException e )
 			{
 				log.Error( e, "Error communication failure." );
-				sub.eventSocket.Close();
 			}
 		}
-		#endregion
-
-		#region Public Methods
 		#endregion
 	}
 }
