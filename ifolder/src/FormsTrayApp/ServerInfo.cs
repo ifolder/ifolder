@@ -176,6 +176,7 @@ namespace Novell.FormsTrayApp
 			this.userName.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("userName.TextAlign")));
 			this.userName.Visible = ((bool)(resources.GetObject("userName.Visible")));
 			this.userName.WordWrap = ((bool)(resources.GetObject("userName.WordWrap")));
+			this.userName.TextChanged += new System.EventHandler(this.userName_TextChanged);
 			// 
 			// serverIP
 			// 
@@ -201,6 +202,7 @@ namespace Novell.FormsTrayApp
 			this.serverIP.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("serverIP.TextAlign")));
 			this.serverIP.Visible = ((bool)(resources.GetObject("serverIP.Visible")));
 			this.serverIP.WordWrap = ((bool)(resources.GetObject("serverIP.WordWrap")));
+			this.serverIP.TextChanged += new System.EventHandler(this.serverIP_TextChanged);
 			// 
 			// label1
 			// 
@@ -419,6 +421,16 @@ namespace Novell.FormsTrayApp
 		private void ServerInfo_Activated(object sender, System.EventArgs e)
 		{
 			userName.Focus();
+		}
+
+		private void userName_TextChanged(object sender, System.EventArgs e)
+		{
+			ok.Enabled = !userName.Text.Equals(string.Empty) && !serverIP.Text.Equals(string.Empty);
+		}
+
+		private void serverIP_TextChanged(object sender, System.EventArgs e)
+		{
+			ok.Enabled = !userName.Text.Equals(string.Empty) && !serverIP.Text.Equals(string.Empty);
 		}
 		#endregion
 	}
