@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = WebService libifolder iFolder ClientUpgrade TrayIcon LinuxClient
+SUBDIRS = WebService libifolder iFolder TrayIcon LinuxClient
 endif
 
 if DARWIN
@@ -7,10 +7,10 @@ SUBDIRS = WebService libifolder OSXClient
 endif
 
 if WINDOWS
-SUBDIRS = WebService iFolder ClientUpgrade iFolderShell FormsTrayApp
+SUBDIRS = WebService iFolder iFolderShell FormsTrayApp
 endif
 
-DIST_SUBDIRS = iFolder TrayIcon LinuxClient iFolderShell FormsTrayApp WebService ClientUpgrade libifolder OSXClient
+DIST_SUBDIRS = iFolder TrayIcon LinuxClient iFolderShell FormsTrayApp WebService libifolder OSXClient
 
 # remove all of the CVS directories
 dist-hook:

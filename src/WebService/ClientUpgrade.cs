@@ -1,3 +1,25 @@
+/***********************************************************************
+ *  $RCSfile$
+ *
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License along with this program; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *  Author: Mike Lasky <mlasky@novell.com>
+ *
+ ***********************************************************************/
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -5,6 +27,7 @@ using System.IO;
 using System.Net;
 
 using Simias.Client;
+using Simias;
 
 namespace Novell.iFolder.Install
 {
@@ -31,11 +54,6 @@ namespace Novell.iFolder.Install
 		private static string FileQuery = "File";
 
 		/// <summary>
-		/// Controls the certificate policy for this process.
-		/// </summary>
-		private static CertPolicy certPolicy;
-
-		/// <summary>
 		/// Web service object to use for checking for client updates.
 		/// </summary>
 		private ClientUpdate service = null;
@@ -47,43 +65,29 @@ namespace Novell.iFolder.Install
 		#endregion
 
 		#region Constructor
-		/// <summary>
-		/// Static constructor for the object.
-		/// </summary>
-		static ClientUpgrade()
-		{
-			certPolicy = new CertPolicy();
-		}
-
+		
 		/// <summary>
 		/// Initializes a new instance of the object.
 		/// </summary>
 		/// <param name="domainID">Identifier of the domain that the user belongs to.</param>
-		/// <param name="userName">The name of the user making the request.</param>
-		/// <param name="password">The user's password.</param>
-		public ClientUpgrade( string domainID, string userName, string password )
+		private ClientUpgrade( string domainID )
 		{
 			// Connect to the local web service.
 			SimiasWebService simiasSvc = new SimiasWebService();
 			simiasSvc.Url = Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
+			WebState ws = new WebState(domainID, domainID);
+			ws.InitializeWebClient(simiasSvc);
 
 			// Get the local domain information.
 			DomainInformation domainInfo = simiasSvc.GetDomainInformation( domainID );
 			if ( domainInfo != null )
 			{
-				// Build a credential for the web service.
-				NetworkCredential credential = new NetworkCredential( domainInfo.MemberName, password, domainInfo.RemoteUrl );
-				if ( credential != null )
-				{
-					// Get the address of the host service.
-					hostAddress = domainInfo.Host;
-
-					// Setup the url to the server.
-					service = new ClientUpdate();
-					service.Url = hostAddress + "/ClientUpdate.asmx";
-					service.CookieContainer = new CookieContainer();
-					service.Credentials = credential;
-				}
+				// Get the address of the host service.
+				hostAddress = domainInfo.Host;
+				// Setup the url to the server.
+				service = new ClientUpdate();
+				service.Url = hostAddress + "/ClientUpdate.asmx";
+				ws.InitializeWebClient(service);
 			}
 		}
 		#endregion
@@ -150,15 +154,14 @@ namespace Novell.iFolder.Install
 
 			return version;
 		}
-		#endregion
-
-		#region Public Methods
+		
 		/// <summary>
 		/// Checks to see if there is a newer client application on the domain server and
 		/// prompts the user to upgrade.
 		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
 		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
-		public string CheckForUpdate()
+		private string CheckForUpdate()
 		{
 			string updateVersion = null;
 
@@ -187,12 +190,13 @@ namespace Novell.iFolder.Install
 			return updateVersion;
 		}
 
+
 		/// <summary>
 		/// Gets the updated client application and runs the installation program.
 		/// Note: This call will return before the application is updated.
 		/// </summary>
 		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
-		public bool RunUpdate()
+		private bool RunUpdate()
 		{
 			bool running = false;
 
@@ -226,6 +230,33 @@ namespace Novell.iFolder.Install
 
 			return running;
 		}
+		
+		#endregion
+
+		#region Public Methods
+		/// <summary>
+		/// Checks to see if there is a newer client application on the domain server and
+		/// prompts the user to upgrade.
+		/// </summary>
+		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
+		public static string CheckForUpdate(string domainID)
+		{
+			ClientUpgrade cu = new ClientUpgrade(domainID);
+			return cu.CheckForUpdate();
+		}
+			
+		/// <summary>
+		/// Gets the updated client application and runs the installation program.
+		/// Note: This call will return before the application is updated.
+		/// </summary>
+		/// <param name="domainID">The ID of the domain to check for updates against.</param>
+		/// <returns>True if the installation program is successfully started. Otherwise false is returned.</returns>
+		public static bool RunUpdate(string domainID)
+		{
+			ClientUpgrade cu = new ClientUpgrade(domainID);
+			return cu.RunUpdate();
+		}
+
 		#endregion
 	}
 }

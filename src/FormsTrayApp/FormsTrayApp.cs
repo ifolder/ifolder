@@ -124,6 +124,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuItem1;
 		private System.Windows.Forms.MenuItem menuAbout;
 		private System.Windows.Forms.MenuItem menuAccounts;
+		static private FormsTrayApp instance;
 		#endregion
 
 		[STAThread]
@@ -139,7 +140,8 @@ namespace Novell.FormsTrayApp
 				}
 			}
 
-			Application.Run(new FormsTrayApp());
+			instance = new FormsTrayApp();
+			Application.Run(instance);
 		}
 
 		/// <summary>
@@ -237,14 +239,11 @@ namespace Novell.FormsTrayApp
 		/// Method used to check for a client update on the server.
 		/// </summary>
 		/// <param name="domainID">The ID of the domain.</param>
-		/// <param name="userName">The name of the user.</param>
-		/// <param name="password">The user's password.</param>
 		/// <returns><b>True</b> if an update exists and has been started; otherwise, <b>False</b>.</returns>
-		static public bool CheckForClientUpdate(string domainID, string userName, string password)
+		static public bool CheckForClientUpdate(string domainID)
 		{
 			bool updateStarted = false;
-			ClientUpgrade cUpgrade = new ClientUpgrade(domainID, userName, password);
-			string version = cUpgrade.CheckForUpdate();
+			string version = instance.ifWebService.CheckForUpdatedClient(domainID);
 			if ( version != null )
 			{
 				// Pop up a dialog here and ask if the user wants to update the client.
@@ -252,7 +251,7 @@ namespace Novell.FormsTrayApp
 				DialogResult result = mmb.ShowDialog();
 				if ( result == DialogResult.Yes )
 				{
-					updateStarted = cUpgrade.RunUpdate();
+					updateStarted = instance.ifWebService.RunClientUpdate(domainID);
 					if ( updateStarted == false )
 					{
 						mmb = new MyMessageBox(resourceManager.GetString("clientUpgradeFailure"), resourceManager.GetString("clientUpgradeTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
@@ -260,7 +259,6 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-
 			return updateStarted;
 		}
 
