@@ -147,45 +147,45 @@ public:
 		int len;
 		FLMUNICODE* pBuffer = pOriginalBuffer;
 
-		if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlPropertyNameString, nChars)) != 0)
+		if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlPropertyNameString, nChars)) != -1)
 		{
 			nChars -= len;
 			pBuffer += len;
-			if ((len = flmstrcpyesc(pBuffer, m_pName, nChars)) != 0)
+			if ((len = flmstrcpyesc(pBuffer, m_pName, nChars)) != -1)
 			{
 				nChars -= len;
 				pBuffer += len;
-				if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlTypeString, nChars)) != 0)
+				if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlTypeString, nChars)) != -1)
 				{
 					nChars -= len;
 					pBuffer += len;
-					if ((len = flmstrcpy(pBuffer, m_pType, nChars)) != 0)
+					if ((len = flmstrcpy(pBuffer, m_pType, nChars)) != -1)
 					{
 						nChars -= len;
 						pBuffer += len;
 						if (m_flags)
 						{
 							// Now set the Flags.
-							if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlFlagsString, nChars)) != 0)
+							if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlFlagsString, nChars)) != -1)
 							{
 								nChars -= len;
 								pBuffer += len;
-								if ((len = CSUtil::lltofuni(m_flags, pBuffer, nChars)) != 0)
+								if ((len = CSUtil::lltofuni(m_flags, pBuffer, nChars)) != -1)
 								{
 									nChars -= len;
 									pBuffer += len;
 								}
 							}
 						}
-						if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlQEndTag, nChars)) != 0)
+						if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlQEndTag, nChars)) != -1)
 						{
 							nChars -= len;
 							pBuffer += len;
-							if ((len = ToString(pBuffer, nChars)))
+							if ((len = ToString(pBuffer, nChars)) != -1)
 							{
 								nChars -= len;
 								pBuffer += len;
-								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlPropertyEndString, nChars)) != 0)
+								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlPropertyEndString, nChars)) != -1)
 								{
 									nChars -= len;
 									pBuffer += len;
@@ -196,7 +196,7 @@ public:
 				}
 			}
 		}
-		return (len ? charsWritten - nChars : 0);
+		return (len != -1 ? charsWritten - nChars : -1);
 	}
 
 	void SetFlags(FLMUINT flags)
@@ -248,7 +248,7 @@ public:
 			}
 			return (1);
 		}
-		return (0);
+		return (-1);
 	}
 
 
@@ -351,7 +351,7 @@ public:
 			f_unicpy(pString, m_String);
 			return (m_Length);
 		}
-		return (0);
+		return (-1);
 	}
 
 	RCODE ToFlaim(FlmRecord *pRec, void *pvField)
@@ -681,7 +681,7 @@ public:
 			f_unicpy(pString, m_Value.string);
 			return (m_Value.length);
 		}
-		return (0);
+		return (-1);
 	}
 
 	RCODE ToFlaim(FlmRecord *pRec, void *pvField)
@@ -803,7 +803,7 @@ public:
 			f_unicpy(pString, m_pString);
 			return (m_Length);
 		}
-		return (0);
+		return (-1);
 	}
 
 	virtual ~CSPString()

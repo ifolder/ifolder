@@ -911,15 +911,15 @@ RCODE CSPStore::GetObject(FLMUNICODE *pProperty, FLMUNICODE *pValue, int* pnChar
 				int			endTagLen = f_unilen((FLMUNICODE*)XmlObjectListEndString);
 				FLMUNICODE *pBuff = pBuffer;
 			
-				if ((len = flmstrcpy(pBuff, (FLMUNICODE*)XmlObectListString, nChars)) != 0)
+				if ((len = flmstrcpy(pBuff, (FLMUNICODE*)XmlObectListString, nChars)) != -1)
 				{
 					nChars -= len + endTagLen;
 					pBuff += len;
-					if ((len = pObject->ToXML(pBuff, nChars, true, false)) != 0)
+					if ((len = pObject->ToXML(pBuff, nChars, true, false)) != -1)
 					{
 						nChars -= len;
 						pBuff += len;					
-						if ((len = flmstrcpy(pBuff, (FLMUNICODE*)XmlObjectListEndString, nChars + endTagLen)) != 0)
+						if ((len = flmstrcpy(pBuff, (FLMUNICODE*)XmlObjectListEndString, nChars + endTagLen)) != -1)
 						{
 							nChars++;
 							*pnChars = buffSize - nChars + 1;

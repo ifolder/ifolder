@@ -587,7 +587,7 @@ int flmstrcpy(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size)
         pDest[len] = L'\0';
 		return (len);
 	}
-	return (0);
+	return (-1);
 }
 
 int flmstrcpyesc(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size)
@@ -646,7 +646,7 @@ int flmstrcpyesc(FLMUNICODE *pDest, FLMUNICODE *pSrc, int size)
 		pDest[dlen] = L'\0';
 		return (dlen);
 	}
-	return (0);
+	return (-1);
 }
 
 
@@ -657,33 +657,33 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 	int len;
 	FLMUNICODE* pBuffer = pOriginalBuffer;
 
-	if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObectNameString, nChars)) != 0)
+	if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObectNameString, nChars)) != -1)
 	{
 		nChars -= len;
 		pBuffer += len;
-		if ((len = flmstrcpyesc(pBuffer, (FLMUNICODE*)m_pName->SearchVal(), nChars)) != 0)
+		if ((len = flmstrcpyesc(pBuffer, (FLMUNICODE*)m_pName->SearchVal(), nChars)) != -1)
 		{
 			nChars -= len;
 			pBuffer += len;
-			if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlIdString, nChars)) != 0)
+			if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlIdString, nChars)) != -1)
 			{
 				nChars -= len;
 				pBuffer += len;
-				if ((len = m_pId->ToString(pBuffer, nChars)))
+				if ((len = m_pId->ToString(pBuffer, nChars)) != -1)
 				{
 					nChars -= len;
 					pBuffer += len;
-					if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlTypeString, nChars)) != 0)
+					if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlTypeString, nChars)) != -1)
 					{
 						nChars -= len;
 						pBuffer += len;
-						if ((len = m_pType->ToString(pBuffer, nChars)))
+						if ((len = m_pType->ToString(pBuffer, nChars)) != -1)
 						{
 							if (includeColId)
 							{
 								nChars -= len;
 								pBuffer += len;
-								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlColIdString, nChars)) != 0)
+								if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlColIdString, nChars)) != -1)
 								{
 									nChars -= len;
 									pBuffer += len;
@@ -692,13 +692,13 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 								}
 							}
 					
-							if (len != 0)
+							if (len != -1)
 							{
 								nChars -= len;
 								pBuffer += len;
 								if (includeProperties)
 								{
-									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTag, nChars)) != 0)
+									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTag, nChars)) != -1)
 									{
 										nChars -= len;
 										pBuffer += len;
@@ -707,7 +707,7 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 										CSPValue *pProperty = pProperties->Next();
 										while (pProperty != 0 && len)
 										{
-											if ((len = pProperty->ToXml(pBuffer, nChars)))
+											if ((len = pProperty->ToXml(pBuffer, nChars)) != -1)
 											{
 												nChars -= len;
 												pBuffer += len;
@@ -716,7 +716,7 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 											pProperty = pProperties->Next();
 										}
 									
-										if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObjectEndString, nChars)) != 0)
+										if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObjectEndString, nChars)) != -1)
 										{
 											nChars -= len;
 											pBuffer += len;
@@ -725,7 +725,7 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 								}
 								else
 								{
-									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTagNoChildren, nChars)) != 0)
+									if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlEndTagNoChildren, nChars)) != -1)
 									{
 										nChars -= len;
 										pBuffer += len;
@@ -738,7 +738,7 @@ int CSPStoreObject::ToXML(FLMUNICODE *pOriginalBuffer, int nChars, FLMBOOL inclu
 			}
 		}
 	}
-	return (len ? charsWritten - nChars : 0);
+	return (len != -1 ? charsWritten - nChars : -1);
 } // CSPStoreObject::ToXML()
 
 

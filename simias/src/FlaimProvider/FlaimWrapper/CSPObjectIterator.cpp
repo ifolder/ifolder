@@ -72,7 +72,7 @@ int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
 
 	if (m_Index < m_Count)
 	{
-		if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObectListString, nChars)) != 0)
+		if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObectListString, nChars)) != -1)
 		{
 			nChars -= len + endTagLen;
 			pBuffer += len;
@@ -85,7 +85,7 @@ int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
 					CSPStoreObject *pObject = new CSPStoreObject(m_pStore, pRec);
 					if (pObject)
 					{
-						if ((len = pObject->ToXML(pBuffer, nChars, false, m_includeColId)) != 0)
+						if ((len = pObject->ToXML(pBuffer, nChars, false, m_includeColId)) != -1)
 						{
 							nChars -= len;
 							pBuffer += len;
@@ -110,13 +110,13 @@ int CSPObjectIterator::NextXml(FLMUNICODE *pOriginalBuffer, int nChars)
 					rc = FERR_OK;
 				}
 			}
-			if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObjectListEndString, nChars + endTagLen)) != 0)
+			if ((len = flmstrcpy(pBuffer, (FLMUNICODE*)XmlObjectListEndString, nChars + endTagLen)) != -1)
 			{
 				nChars++;
 			}
 		}
 	}
-	return (len ? charsWritten - nChars : 0);
+	return (len != -1 ? charsWritten - nChars : 0);
 }
 
 
