@@ -227,9 +227,6 @@ namespace Simias.Sync
 			{
 				Property p = new Property(name, value);
 				p.LocalProperty = local;
-				if (local)
-					Properties.State = PropertyList.PropertyListState.Internal;
-
 				Properties.ModifyProperty(p);
 			}
 			else
