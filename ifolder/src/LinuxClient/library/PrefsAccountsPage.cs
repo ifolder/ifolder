@@ -41,12 +41,25 @@ namespace Novell.iFolder
 
 		private iFolderTreeView		AccTreeView;
 		private ListStore			AccTreeStore;
-		private Gdk.Pixbuf			UserPixBuf;
 
 		private Button 				AddButton;
 		private Button				RemoveButton;
 		private Button				DetailsButton;
-
+		private bool				NewAccountMode;
+ 
+ 		private Frame		detailsFrame;
+		private Label		nameLabel;
+		private Entry		nameEntry;
+		private Label		passLabel;
+		private Entry		passEntry;
+		private Label		serverLabel;
+		private Entry		serverEntry;
+		private CheckButton	savePasswordButton;
+		private CheckButton	autoLoginButton;
+		private CheckButton	defaultAccButton;
+		private Button		proxyButton;
+		private Button		loginButton;
+		private Button		logoutButton;
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -74,6 +87,8 @@ namespace Novell.iFolder
 			this.Spacing = 10;
 			this.BorderWidth = 10;
 			
+			NewAccountMode = false;
+
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
 			AccTreeView = new iFolderTreeView();
@@ -87,12 +102,7 @@ namespace Novell.iFolder
 			AccTreeStore = new ListStore(typeof(DomainWeb));
 			AccTreeView.Model = AccTreeStore;
 
-			CellRendererPixbuf ncrp = new CellRendererPixbuf();
 			TreeViewColumn NameColumn = new TreeViewColumn();
-			NameColumn.PackStart(ncrp, false);
-			NameColumn.SetCellDataFunc(ncrp,
-					new TreeCellDataFunc(NameCellPixbufDataFunc));
-
 			CellRendererText ncrt = new CellRendererText();
 			NameColumn.PackStart(ncrt, false);
 			NameColumn.SetCellDataFunc(ncrt,
@@ -112,41 +122,144 @@ namespace Novell.iFolder
 			serverColumn.MinWidth = 150;
 
 			AccTreeView.Selection.Mode = SelectionMode.Single;
-//			AccTreeView.Selection.Changed +=
-//				new EventHandler(OnAccSelectionChanged);
-
-//			AccTreeView.ButtonPressEvent += new ButtonPressEventHandler(
-//						OnAccTreeViewButtonPressed);
-
-			UserPixBuf = 
-					new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
+			AccTreeView.Selection.Changed +=
+				new EventHandler(AccSelectionChangedHandler);
 
 			// Setup buttons for add/remove/accept/decline
-			HBox buttonBox = new HBox();
+			HButtonBox buttonBox = new HButtonBox();
 			buttonBox.Spacing = 10;
+			buttonBox.Layout = ButtonBoxStyle.End;
 			this.PackStart(buttonBox, false, false, 0);
 
-			HBox leftBox = new HBox();
-			leftBox.Spacing = 10;
-			buttonBox.PackStart(leftBox, false, false, 0);
-			HBox midBox = new HBox();
-			midBox.Spacing = 10;
-			buttonBox.PackStart(midBox, true, true, 0);
-			HBox rightBox = new HBox();
-			rightBox.Spacing = 10;
-			buttonBox.PackStart(rightBox, false, false, 0);
-
 			AddButton = new Button(Gtk.Stock.Add);
-			rightBox.PackStart(AddButton);
+			buttonBox.PackStart(AddButton);
 			AddButton.Clicked += new EventHandler(OnAddAccount);
 
 			RemoveButton = new Button(Gtk.Stock.Remove);
-			rightBox.PackStart(RemoveButton);
+			buttonBox.PackStart(RemoveButton);
 			RemoveButton.Clicked += new EventHandler(OnRemoveAccount);
 
 			DetailsButton = new Button(Util.GS("_Details"));
-			leftBox.PackStart(DetailsButton);
+			buttonBox.PackStart(DetailsButton);
 			DetailsButton.Clicked += new EventHandler(OnDetailsClicked);
+
+
+			detailsFrame = new Frame(Util.GS("Account Settings"));
+			this.PackStart(detailsFrame, false, false, 0);
+
+			VBox vbox = new VBox();
+			vbox.BorderWidth = 10;
+			detailsFrame.Add(vbox);
+
+
+			Table loginTable;
+			loginTable = new Table(5,2,false);
+
+//			loginTable.BorderWidth = 10;
+			loginTable.RowSpacing = 10;
+			loginTable.ColumnSpacing = 10;
+			loginTable.Homogeneous = false;
+
+			nameLabel = new Label(Util.GS("User name:"));
+			nameLabel.Xalign = 1; 
+			loginTable.Attach(nameLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			nameEntry = new Entry();
+			nameEntry.Changed += new EventHandler(OnFieldsChanged);
+			nameEntry.ActivatesDefault = true;
+			nameEntry.WidthChars = 35;
+			loginTable.Attach(nameEntry, 1,2,0,1, 
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+//			if(!isNewAccount)
+//			{
+//				if(domain.UserName != null)
+//					nameEntry.Text = domain.UserName;
+//				nameEntry.Editable = false;
+//			}
+
+
+			passLabel = new Label(Util.GS("Password:"));
+			passLabel.Xalign = 1;
+			loginTable.Attach(passLabel, 0,1,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			passEntry = new Entry();
+			passEntry.Changed += new EventHandler(OnFieldsChanged);
+			passEntry.ActivatesDefault = true;
+			passEntry.Visibility = false;
+			loginTable.Attach(passEntry, 1,2,1,2,
+				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+			serverLabel = new Label(Util.GS("Server host:"));
+			serverLabel.Xalign = 1;
+			loginTable.Attach(serverLabel, 0,1,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			serverEntry = new Entry();
+			serverEntry.Changed += new EventHandler(OnFieldsChanged);
+			serverEntry.ActivatesDefault = true;
+			loginTable.Attach(serverEntry, 1,2,2,3,
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+//			if(!isNewAccount)
+//			{
+//				if(domain.Host != null)
+//					serverEntry.Text = domain.Host;
+//				serverEntry.Editable = false;
+//			}
+
+			VBox optBox = new VBox();
+
+			savePasswordButton = 
+				new CheckButton(Util.GS(
+					"_Remember password"));
+
+			optBox.PackStart(savePasswordButton, false, false,0);
+
+			autoLoginButton = 
+				new CheckButton(Util.GS(
+					"_Auto Login"));
+			optBox.PackStart(autoLoginButton, false, false,0);
+
+			defaultAccButton = 
+				new CheckButton(Util.GS(
+					"_Default account"));
+			optBox.PackStart(defaultAccButton, false, false,0);
+
+			loginTable.Attach(optBox, 1,2,3,4,
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+
+			HBox proxyBox = new HBox();
+
+			proxyButton =
+				new Button(Util.GS("Proxy Settings"));
+			proxyBox.PackStart(proxyButton, false, false, 0);
+
+			loginTable.Attach(proxyBox, 1,2,4,5,
+					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
+
+
+			vbox.PackStart(loginTable, true, true, 0);
+
+
+			HButtonBox loginBox = new HButtonBox();
+			loginBox.Spacing = 10;
+			loginBox.Layout = ButtonBoxStyle.End;
+
+			logoutButton =
+				new Button(Util.GS("Log_out"));
+			loginBox.PackStart(logoutButton, false, false, 0);
+
+			loginButton =
+				new Button(Util.GS("_Login"));
+			loginBox.PackStart(loginButton, false, false, 0);
+			loginButton.Clicked += new EventHandler(OnLoginAccount);
+
+			vbox.PackStart(loginBox, false, false, 0);
+
 		}
 
 
@@ -166,7 +279,10 @@ namespace Novell.iFolder
 
 				foreach(DomainWeb dom in domains)
 				{
-					AccTreeStore.AppendValues(dom);
+					// temporary hack until we get flag to remove
+					// local domains
+					if(dom.ID != "363051d1-8841-4c7b-a1dd-71abbd0f4ada")
+						AccTreeStore.AppendValues(dom);
 				}
 			}
 			catch(Exception e)
@@ -178,6 +294,24 @@ namespace Novell.iFolder
 				ied.Destroy();
 				return;
 			}
+
+ 			detailsFrame.Sensitive = false;
+			nameEntry.Sensitive = false;
+			nameLabel.Sensitive = false;
+			passEntry.Sensitive = false;
+			passLabel.Sensitive = false;
+			serverEntry.Sensitive = false;
+			serverLabel.Sensitive = false;
+
+			savePasswordButton.Sensitive = false;
+			autoLoginButton.Sensitive = false;
+			defaultAccButton.Sensitive = false;
+			proxyButton.Sensitive = false;
+			loginButton.Sensitive = false;
+			logoutButton.Sensitive = false;
+
+			RemoveButton.Sensitive = false;
+			DetailsButton.Sensitive = false;
 		}
 
 
@@ -202,16 +336,6 @@ namespace Novell.iFolder
 
 
 
-		private void NameCellPixbufDataFunc(Gtk.TreeViewColumn tree_column,
-				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
-				Gtk.TreeIter iter)
-		{
-			((CellRendererPixbuf) cell).Pixbuf = UserPixBuf;
-		}
-
-
-
-
 		private void ServerCellTextDataFunc (Gtk.TreeViewColumn tree_column,
 				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
 				Gtk.TreeIter iter)
@@ -225,63 +349,52 @@ namespace Novell.iFolder
 
 		private void OnAddAccount(object o, EventArgs args)
 		{
-			AccountDialog accDialog = new AccountDialog();
-			accDialog.TransientFor = topLevelWindow;
-			int rc = 0;
-			do
+			if(NewAccountMode == true)
 			{
-				rc = accDialog.Run();
-				if(rc == -5)
-				{
-					try
-					{
-						DomainWeb dw = ifws.ConnectToDomain(
-											accDialog.UserName,
-											accDialog.Password,
-											accDialog.Host);
-						rc = 0;
-
-						TreeIter iter = AccTreeStore.AppendValues(dw);
-						TreeSelection sel = AccTreeView.Selection;
-						sel.SelectIter(iter);
-					}
-					catch(Exception e)
-					{
-						if(e.Message.IndexOf("HTTP status 401") != -1)
-						{
-							iFolderMsgDialog dg = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Error"),
-								Util.GS("Invalid credentials"),
-								Util.GS("The username or password entered is not valid.  Please check the values and try again."));
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-						}
-						else
-						{
-							iFolderMsgDialog dg = new iFolderMsgDialog(
-								topLevelWindow,
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Error"),
-								Util.GS("Connect Error"),
-								Util.GS("The following error occurred when attempting to authenticate: ") + e.Message);
-							dg.Run();
-							dg.Hide();
-							dg.Destroy();
-						}
-					}
-				}
-
+				// This shouldn't be possible but hey, deal with it
+				return;
 			}
-			while(rc == -5);
+			
+			AccTreeView.Selection.UnselectAll();
 
-			accDialog.Hide();
-			accDialog.Destroy();
-			accDialog = null;
+			NewAccountMode = true;
+
+			AddButton.Sensitive = false;
+			RemoveButton.Sensitive = false;
+			DetailsButton.Sensitive = false;
+
+			// Set the control states
+ 			detailsFrame.Sensitive = true;
+			nameEntry.Sensitive = true;
+			nameEntry.Editable = true;
+			nameLabel.Sensitive = true;
+			passEntry.Sensitive = true;
+			passEntry.Editable = true;
+			passLabel.Sensitive = true;
+			serverEntry.Sensitive = true;
+			serverEntry.Editable = true;
+			serverLabel.Sensitive = true; 
+
+			savePasswordButton.Sensitive = true;
+			// add these when functionality is there
+//			autoLoginButton.Sensitive = true;
+//			defaultAccButton.Sensitive = true;
+			autoLoginButton.Sensitive = false;
+			defaultAccButton.Sensitive = false;
+
+			proxyButton.Sensitive = true;
+			loginButton.Sensitive = false; 
+			logoutButton.Sensitive = false;
+
+
+			// set the control values
+			autoLoginButton.Active = true;
+
+			nameEntry.Text = "";
+			serverEntry.Text = "";
+			passEntry.Text = "";
+
+			nameEntry.HasFocus = true;
 		}
 
 
@@ -380,7 +493,174 @@ namespace Novell.iFolder
 
 
 
+		public void AccSelectionChangedHandler(object o, EventArgs args)
+		{
+			if(NewAccountMode)
+			{
+				if( (nameEntry.Text.Length > 0) ||
+					(passEntry.Text.Length > 0 ) ||
+					(serverEntry.Text.Length > 0) )
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						topLevelWindow,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("iFolder Confirmation"),
+						Util.GS("Lose current settings?"),
+						Util.GS("You are currently creating a new account.  By selecing a different account you cancel the operation.  Do you wish to continue and loose the current settings?"));
+					int rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					if(rc == -8)
+					{
+						NewAccountMode = false;
+					}
+					else
+					{
+						// disconnect the handler so we can unselect and
+						// not get called again
+						AccTreeView.Selection.Changed -=
+							new EventHandler(AccSelectionChangedHandler);
+						AccTreeView.Selection.UnselectAll();
+						// hook'r back up
+						AccTreeView.Selection.Changed +=
+							new EventHandler(AccSelectionChangedHandler);
+	
+						return;
+					}
+				}
+				else
+				{
+					// There isn't any data in the fields so just let them
+					// go ahead and quit
+					NewAccountMode = false;
+				}
+			}
 
+			TreeSelection tSelect = AccTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				DomainWeb dom = 
+						(DomainWeb) tModel.GetValue(iter, 0);
+
+				// Set the control states
+				AddButton.Sensitive = true;
+				RemoveButton.Sensitive = false;
+				DetailsButton.Sensitive = false;
+
+ 				detailsFrame.Sensitive = true;
+				nameEntry.Editable = false;
+				nameEntry.Sensitive = true;
+				nameLabel.Sensitive = false;
+				passEntry.Sensitive = true;
+				passEntry.Editable = false;
+				passLabel.Sensitive = false;
+				serverEntry.Sensitive = true;
+				serverEntry.Editable = false;
+				serverLabel.Sensitive = false;
+
+				savePasswordButton.Sensitive = true;
+				// add these when functionality is there
+//				autoLoginButton.Sensitive = true;
+//				defaultAccButton.Sensitive = true;
+				autoLoginButton.Sensitive = false;
+				defaultAccButton.Sensitive = false;
+
+				proxyButton.Sensitive = true;
+				loginButton.Sensitive = false;
+				logoutButton.Sensitive = true;
+
+
+
+				// set the control values
+
+				autoLoginButton.Active = true;
+				defaultAccButton.Active = dom.IsDefault;
+				savePasswordButton.Active = false;
+
+
+				if(dom.UserName != null)
+					nameEntry.Text = dom.UserName;
+				else
+					nameEntry.Text = "";
+				if(dom.Host != null)
+					serverEntry.Text = dom.Host;
+				else
+					serverEntry.Text = "";
+
+				passEntry.Text = "";
+
+			}
+		}
+
+
+		private void OnLoginAccount(object o, EventArgs args)
+		{
+			if(NewAccountMode)
+			{
+				try
+				{
+					DomainWeb dw = ifws.ConnectToDomain(
+										nameEntry.Text,
+										passEntry.Text,
+										serverEntry.Text);
+	
+					NewAccountMode = false;
+					TreeIter iter = AccTreeStore.AppendValues(dw);
+					TreeSelection sel = AccTreeView.Selection;
+					sel.SelectIter(iter);
+				}
+				catch(Exception e)
+				{
+					if(e.Message.IndexOf("HTTP status 401") != -1)
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Invalid credentials"),
+							Util.GS("The username or password entered is not valid.  Please check the values and try again."));
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+					}
+					else
+					{
+						iFolderMsgDialog dg = new iFolderMsgDialog(
+							topLevelWindow,
+							iFolderMsgDialog.DialogType.Error,
+							iFolderMsgDialog.ButtonSet.Ok,
+							Util.GS("iFolder Error"),
+							Util.GS("Connect Error"),
+							Util.GS("The following error occurred when attempting to authenticate: ") + e.Message);
+						dg.Run();
+						dg.Hide();
+						dg.Destroy();
+					}
+				}
+			}
+
+		}
+		
+
+
+		private void OnFieldsChanged(object obj, EventArgs args)
+		{
+			if(NewAccountMode)
+			{
+				if( (nameEntry.Text.Length > 0) &&
+					(passEntry.Text.Length > 0 ) &&
+					(serverEntry.Text.Length > 0) )
+					loginButton.Sensitive = true;
+				else
+					loginButton.Sensitive = false;
+			}
+		}
 
 
 	}

@@ -1,5 +1,4 @@
 src/LinuxClient/application/iFolderApplication.cs
-src/LinuxClient/library/CompatFileChooserDialog.cs
 src/LinuxClient/library/CreateDialog.cs
 src/LinuxClient/library/iFolderAcceptDialog.cs
 src/LinuxClient/library/iFolderAccessDialog.cs
@@ -17,4 +16,7 @@ src/LinuxClient/library/iFolderUserSelector.cs
 src/LinuxClient/library/iFolderWindow.cs
 src/LinuxClient/library/LogWindow.cs
 src/LinuxClient/library/NotifyWindow.cs
+src/LinuxClient/library/PreferencesWindow.cs
+src/LinuxClient/library/PrefsAccountsPages.cs
+src/LinuxClient/library/PrefsGeneralPage.cs
 src/LinuxClient/library/Util.cs

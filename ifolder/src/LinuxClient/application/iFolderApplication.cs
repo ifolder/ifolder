@@ -59,7 +59,7 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWindow 		ifwin;
 		private LogWindow			logwin;
-		private PreferencesDialog	prefsdialog;
+		private PreferencesWindow	prefswin;
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
@@ -700,13 +700,13 @@ namespace Novell.iFolder
 				logwin = null;
 			}
 
-			if(prefsdialog != null)
+			if(prefswin != null)
 			{
-				prefsdialog.Destroyed -=
-					new EventHandler(PrefsDialogDestroyedHandler);
-				prefsdialog.Hide();
-				prefsdialog.Destroy();
-				prefsdialog = null;
+				prefswin.Destroyed -=
+					new EventHandler(PrefsWinDestroyedHandler);
+				prefswin.Hide();
+				prefswin.Destroy();
+				prefswin = null;
 			}
 
 			if(CurrentState == iFolderState.Stopping)
@@ -742,15 +742,15 @@ namespace Novell.iFolder
 		{
 			if(CheckWebService())
 			{
-				if(prefsdialog == null)
+				if(prefswin == null)
 				{
-					prefsdialog = new PreferencesDialog(ifws);
-					prefsdialog.Destroyed +=
-							new EventHandler(PrefsDialogDestroyedHandler);
-					prefsdialog.ShowAll();
+					prefswin = new PreferencesWindow(ifws);
+					prefswin.Destroyed +=
+							new EventHandler(PrefsWinDestroyedHandler);
+					prefswin.ShowAll();
 				}
 				else
-					prefsdialog.Present();
+					prefswin.Present();
 			}
 		}
 
@@ -815,9 +815,9 @@ namespace Novell.iFolder
 		}
 
 
-		private void PrefsDialogDestroyedHandler(object o, EventArgs args)
+		private void PrefsWinDestroyedHandler(object o, EventArgs args)
 		{
-			prefsdialog = null;
+			prefswin = null;
 		}
 
 

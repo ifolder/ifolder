@@ -309,7 +309,7 @@ namespace Novell.iFolder
 				new Image(new Gdk.Pixbuf(Util.ImagesPath("conflict24.png"))),
 				new SignalFunc(ResolveConflicts));
 
-			tb.AppendSpace ();
+//			tb.AppendSpace ();
 
 			return tb;
 		}

@@ -35,7 +35,7 @@ namespace Novell.iFolder
 	/// This is the main iFolder Window.  This window implements all of the
 	/// client code for iFolder.
 	/// </summary>
-	public class PreferencesDialog : Dialog
+	public class PreferencesWindow : Window
 	{
 		private iFolderWebService		ifws;
 
@@ -47,16 +47,13 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public PreferencesDialog(iFolderWebService webService)
-			: base()
+		public PreferencesWindow(iFolderWebService webService)
+			: base(Util.GS("iFolder Preferences"))
 		{
 			if(webService == null)
 				throw new ApplicationException("iFolderWebServices was null");
 
 			ifws = webService;
-
-			this.HasSeparator = false;
-			this.Title = Util.GS("iFolder Preferences");
 
 			InitializeWidgets();
 		}
@@ -69,13 +66,13 @@ namespace Novell.iFolder
 		/// </summary>
 		private void InitializeWidgets()
 		{
-			this.SetDefaultSize (300, 480);
+			this.SetDefaultSize (480, 550);
 
 			// Create an extra vbox to add the spacing
-			VBox dialogBox = new VBox();
-			this.VBox.PackStart(dialogBox);
-			dialogBox.BorderWidth = 7;
-			dialogBox.Spacing = 7;
+			VBox winBox = new VBox();
+			this.Add (winBox);
+			winBox.BorderWidth = 7;
+			winBox.Spacing = 7;
 
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
@@ -93,60 +90,40 @@ namespace Novell.iFolder
 			PrefNoteBook.AppendPage( accountsPage,
 										new Label(Util.GS("_Accounts")));
 
-			dialogBox.PackStart(PrefNoteBook, true, true, 0);
+			winBox.PackStart(PrefNoteBook, true, true, 0);
 
-			this.AddButton(Stock.Close, ResponseType.Ok);
-			this.AddButton(Stock.Help, ResponseType.Help);
+			HButtonBox buttonBox = new HButtonBox();
+			buttonBox.BorderWidth = 10;
+			buttonBox.Spacing = 10;
+			buttonBox.Layout = ButtonBoxStyle.Edge;
+			winBox.PackStart(buttonBox, false, false, 0);
 
-			this.Response += 
-					new ResponseHandler(DialogResponseHandler);
+			Button helpButton = new Button(Gtk.Stock.Help);
+			buttonBox.PackStart(helpButton);
+			helpButton.Clicked += new EventHandler(HelpEventHandler);
 
+			Button closeButton = new Button(Gtk.Stock.Close);
+			buttonBox.PackStart(closeButton);
+			closeButton.Clicked += new EventHandler(CloseEventHandler);
 		}
 
 
 
-
-		private void DialogResponseHandler(object o, ResponseArgs args)
+		private void HelpEventHandler(object o, EventArgs args)
 		{
-			switch(args.ResponseId)
-			{
-				case Gtk.ResponseType.Help:
-					Util.ShowHelp("front.html", this);
-					break;
-				default:
-				{
-					this.Hide();
-					this.Destroy();
-					break;
-				}
-			}
+			Util.ShowHelp("front.html", this);
 		}
-
-
-
 
 		private void CloseEventHandler(object o, EventArgs args)
 		{
 			CloseWindow();
 		}
 
-
-
-
 		private void CloseWindow()
 		{
 			this.Hide();
 			this.Destroy();
 		}
-
-
-
-
-		public void HelpEventHandler(object o, EventArgs args)
-		{
-			Util.ShowHelp("front.html", this);
-		}
-
 
 	}
 }

@@ -258,7 +258,9 @@ namespace Novell.iFolder
 
 		private void OnAddUser(object o, EventArgs args)
 		{
-			UserSelector = new iFolderUserSelector( topLevelWindow, ifws);
+			UserSelector = new iFolderUserSelector( topLevelWindow, 
+													ifws,
+													ifolder.DomainID);
 
 			UserSelector.Response += 
 						new ResponseHandler(OnUserSelectorResponse);

@@ -35,6 +35,7 @@ namespace Novell.iFolder
 	public class iFolderUserSelector : Dialog
 	{
 		private iFolderWebService	ifws;
+		private string				domainID;
 		private Gtk.TreeView		UserTreeView;
 		private Gtk.ListStore		UserTreeStore;
 		private Gdk.Pixbuf			UserPixBuf;
@@ -76,13 +77,15 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderPropertiesDialog
 		/// </summary>
 		public iFolderUserSelector(	Gtk.Window parent,
-										iFolderWebService iFolderWS)
+									iFolderWebService iFolderWS,
+									string domainID)
 			: base()
 		{
 			this.Title = Util.GS("iFolder User Selector");
 			if(iFolderWS == null)
 				throw new ApplicationException("iFolderWebServices was null");
 			this.ifws = iFolderWS;
+			this.domainID = domainID;
 			this.HasSeparator = false;
 //			this.BorderWidth = 10;
 			this.Resizable = true;
@@ -336,7 +339,7 @@ namespace Novell.iFolder
 			if(SearchEntry.Text.Length > 0)
 			{
 				iFolderUser[] userlist = 
-						ifws.SearchForiFolderUsers(SearchEntry.Text);
+						ifws.SearchForDomainUsers(domainID, SearchEntry.Text);
 				foreach(iFolderUser user in userlist)
 				{
 					if(user != null)
@@ -349,7 +352,7 @@ namespace Novell.iFolder
 			{
 				// Get the first 25 users, this should return none if
 				// there are more than 25
-				iFolderUser[] userlist = ifws.GetScopediFolderUsers(25);
+				iFolderUser[] userlist = ifws.GetDomainUsers(domainID, 25);
 				foreach(iFolderUser user in userlist)
 				{
 					UserTreeStore.AppendValues(user);
