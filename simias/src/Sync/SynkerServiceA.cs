@@ -92,19 +92,18 @@ public class SynkerServiceA: SyncCollectionService
 	{
 		Access.Rights rights = Access.Rights.Deny;
 	
-		string userID = null;
-
-		try
+		string userID = Thread.CurrentPrincipal.Identity.Name;
+			
+		if (userID != null)
 		{
-			userID = Thread.CurrentPrincipal.Identity.Name;
 			member = collection.GetMember(userID);
 			collection.Impersonate(member);
 			Log.Info("Sync session starting for {0}", userID);
 		}
-		catch (Exception e)
+		else
 		{
 			// kludge
-			Log.Spew("could not get identity in sync start, error {0}", e.Message);
+			Log.Spew("could not get identity in sync start");
 			ignoreRights = true;
 			member = new Member("Root", collection.ID, Access.Rights.Admin);
 			collection.Impersonate(member);

@@ -156,7 +156,7 @@ namespace Simias.POBox
 				Path.GetFileNameWithoutExtension(Path.GetTempFileName())
 				+ SubscriptionInfo.Extension);
 
-			SubscriptionInfo info = subscription.GenerateInfo();
+			SubscriptionInfo info = subscription.GenerateInfo(poBox.StoreReference);
 			info.Save(filename);
 
 			MailAttachment attachment = new MailAttachment(filename);

@@ -151,6 +151,11 @@ namespace Simias.POBox
 		/// <summary>
 		/// The name of the property storing the collection types.
 		/// </summary>
+		public const string SubscriptionCollectionTypeProperty = "SbColType";
+
+		/// <summary>
+		/// The name of the property storing the collection types.
+		/// </summary>
 		public const string SubscriptionCollectionTypesProperty = "SbColTypes";
 
 		/// <summary>
@@ -218,6 +223,7 @@ namespace Simias.POBox
 			DomainName = subscriptionInfo.DomainName;
 			SubscriptionCollectionID = subscriptionInfo.SubscriptionCollectionID;
 			SubscriptionCollectionName = subscriptionInfo.SubscriptionCollectionName;
+			SubscriptionCollectionType = subscriptionInfo.SubscriptionCollectionType;
 			POServiceURL = subscriptionInfo.POServiceUrl;
 			Properties.AddNodeProperty(PropertyTags.Types, typeof(Subscription).Name);
 		}
@@ -391,6 +397,24 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// Gets/sets the type of the collection to share.
+		/// </summary>
+		public string SubscriptionCollectionType
+		{
+			get
+			{
+				Property p = Properties.GetSingleProperty(SubscriptionCollectionTypeProperty);
+
+				return (p != null) ? p.ToString() : null;
+			}
+			
+			set
+			{
+				Properties.AddProperty(SubscriptionCollectionTypeProperty, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets/sets the types of the collection to share.
 		/// </summary>
 		public MultiValuedList SubscriptionCollectionTypes
@@ -554,7 +578,7 @@ namespace Simias.POBox
 		/// Generates a SubscriptionInfo object from the Subscription object
 		/// </summary>
 		/// <returns>A SubscriptionInfo object</returns>
-		public SubscriptionInfo GenerateInfo()
+		public SubscriptionInfo GenerateInfo(Store store)
 		{
 			SubscriptionInfo si = new SubscriptionInfo();
 
@@ -567,8 +591,15 @@ namespace Simias.POBox
 			
 			si.SubscriptionCollectionID = SubscriptionCollectionID;
 			si.SubscriptionCollectionName = SubscriptionCollectionName;
+			si.SubscriptionCollectionType = SubscriptionCollectionType;
 			si.SubscriptionID = ID;
 
+			// dir node ?
+			Collection c = store.GetCollectionByID(SubscriptionCollectionID);
+
+			si.SubscriptionCollectionHasDirNode = 
+				(c != null) ? (c.GetRootDirectory() != null) : false;
+			
 			return si;
 		}
 		

@@ -170,6 +170,24 @@ namespace Simias.POBox
 		}
 
 		/// <summary>
+		/// The collection type
+		/// </summary>
+		public string SubscriptionCollectionType
+		{
+			get { return fields[Subscription.SubscriptionCollectionTypeProperty]; }
+			set { fields[Subscription.SubscriptionCollectionTypeProperty] = value; }
+		}
+
+		/// <summary>
+		/// Does the collection have a root dir node?
+		/// </summary>
+		public bool SubscriptionCollectionHasDirNode
+		{
+			get { return bool.Parse(fields[Subscription.SubscriptionCollectionTypeProperty]); }
+			set { fields[Subscription.SubscriptionCollectionTypeProperty] = value.ToString(); }
+		}
+
+		/// <summary>
 		/// The post office service URL
 		/// </summary>
 		public Uri POServiceUrl
