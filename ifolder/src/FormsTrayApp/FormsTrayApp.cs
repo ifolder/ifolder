@@ -76,7 +76,6 @@ namespace Novell.FormsTrayApp
 		//private Configuration config;
 		private Process simiasProc;
 		private iFolderWebService ifWebService;
-		//private EventSubscriber subscriber;
 		private iFolderSettings ifolderSettings = null;
 		private IProcEventClient eventClient;
 		private GlobalProperties globalProperties;
@@ -126,7 +125,6 @@ namespace Novell.FormsTrayApp
 
 			// Set up how the form should be displayed.
 			this.ClientSize = new System.Drawing.Size(292, 266);
-			this.Text = "iFolder Services";
 
 			// The Icon property sets the icon that will appear
 			// in the systray for this application.
@@ -225,7 +223,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuHelp_Click(object sender, System.EventArgs e)
 		{
-			// TODO - need to use locale-specific path
+			// TODO: i18n - need to use locale-specific path
 			string helpPath = Path.Combine(Application.StartupPath, @"help\en\doc\user\data\front.html");
 
 			try
@@ -309,9 +307,7 @@ namespace Novell.FormsTrayApp
 				// Start the icon animation worker thread.
 				if (workerThread == null)
 				{
-					Console.WriteLine("Creating worker thread");
 					workerThread = new Thread(new ThreadStart(AnimateWorker));
-					Console.WriteLine("Starting worker thread");
 					workerThread.Start();
 				}
 
@@ -329,12 +325,7 @@ namespace Novell.FormsTrayApp
 				}
 
 				globalProperties = new GlobalProperties(ifWebService, eventClient);
-
-/*				subscriber = new EventSubscriber();
-				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
-				subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
-				subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
-*/			}
+			}
 			catch (WebException ex)
 			{
 				ShutdownTrayApp(ex);
@@ -480,110 +471,13 @@ namespace Novell.FormsTrayApp
 				}
 			}
 		}
-
-/*		private void subscriber_NodeCreated(NodeEventArgs args)
-		{
-			try
-			{
-				POBox poBox = POBox.GetPOBoxByID(Store.GetStore(), args.Collection);
-				if (poBox != null)
-				{
-					Node node = poBox.GetNodeByID(args.ID);
-					if (node != null)
-					{
-						Subscription sub = new Subscription(node);
-
-						if ((sub.SubscriptionState == SubscriptionStates.Received) &&
-							(!poBox.Domain.Equals(Domain.WorkGroupDomainID)))
-						{
-							animateIcon = true;
-
-							// TODO: check this...
-							this.Text = "A message needs your attention";
-
-							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-							balloonTip.ShowBalloon(
-								hwnd,
-								iconID,
-								BalloonType.Info,
-								"Action Required",
-								"A subscription has just been received from " + sub.FromName);
-
-							synkEvent.Set();
-						}
-					}
-				}
-			}
-			catch (SimiasException ex)
-			{
-				ex.LogError();
-			}
-			catch (Exception ex)
-			{
-				//logger.Debug(ex, "OnNodeCreated");
-			}
-		}
-
-		private void subscriber_NodeDeleted(NodeEventArgs args)
-		{
-			// TODO: implement this if needed.
-		}
-
-		private void subscriber_NodeChanged(NodeEventArgs args)
-		{
-			POBox poBox = POBox.GetPOBoxByID(Store.GetStore(), args.Collection);
-			if (poBox != null)
-			{
-				Node node = poBox.GetNodeByID(args.ID);
-				if (node != null)
-				{
-					Subscription sub = new Subscription(node);
-
-					if (sub.SubscriptionState == SubscriptionStates.Pending)
-					{
-						animateIcon = true;
-
-						// TODO: this doesn't work.
-						this.Text = "A message needs your attention";
-
-						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-						balloonTip.ShowBalloon(
-							hwnd,
-							iconID,
-							BalloonType.Info,
-							"Action Required",
-							"A subscription from " + sub.ToName + " needs your approval.");
-						synkEvent.Set();
-					}
-				}
-			}
-			else
-			{
-				Collection c = Store.GetStore().GetCollectionByID(args.Collection);
-				if (c != null)
-				{
-					if (c.HasCollisions() && c.IsType(c, typeof(iFolder).Name))
-					{
-						animateIcon = true;
-
-						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
-						balloonTip.ShowBalloon(
-							hwnd,
-							iconID,
-							BalloonType.Info,
-							"Action Required",
-							"A collision has been detected in iFolder:\n" + c.Name);
-						synkEvent.Set();
-					}
-				}
-			}
-		}*/
 		#endregion
 
 		#region Private Methods
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuTools = new System.Windows.Forms.MenuItem();
@@ -599,8 +493,9 @@ namespace Novell.FormsTrayApp
 			// notifyIcon1
 			// 
 			this.notifyIcon1.ContextMenu = this.contextMenu1;
-			this.notifyIcon1.Text = "iFolder Services";
-			this.notifyIcon1.Visible = true;
+			this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+			this.notifyIcon1.Text = resources.GetString("notifyIcon1.Text");
+			this.notifyIcon1.Visible = ((bool)(resources.GetObject("notifyIcon1.Visible")));
 			this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
 			// 
 			// contextMenu1
@@ -613,72 +508,121 @@ namespace Novell.FormsTrayApp
 																						 this.menuHelp,
 																						 this.menuItem10,
 																						 this.menuExit});
+			this.contextMenu1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("contextMenu1.RightToLeft")));
 			this.contextMenu1.Popup += new System.EventHandler(this.contextMenu1_Popup);
 			// 
 			// menuTools
 			// 
+			this.menuTools.Enabled = ((bool)(resources.GetObject("menuTools.Enabled")));
 			this.menuTools.Index = 0;
 			this.menuTools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.menuStoreBrowser,
 																					  this.menuEventLogReader});
-			this.menuTools.Text = "Tools";
-			this.menuTools.Visible = false;
+			this.menuTools.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuTools.Shortcut")));
+			this.menuTools.ShowShortcut = ((bool)(resources.GetObject("menuTools.ShowShortcut")));
+			this.menuTools.Text = resources.GetString("menuTools.Text");
+			this.menuTools.Visible = ((bool)(resources.GetObject("menuTools.Visible")));
 			// 
 			// menuStoreBrowser
 			// 
+			this.menuStoreBrowser.Enabled = ((bool)(resources.GetObject("menuStoreBrowser.Enabled")));
 			this.menuStoreBrowser.Index = 0;
-			this.menuStoreBrowser.Text = "Store Browser";
-			this.menuStoreBrowser.Visible = false;
+			this.menuStoreBrowser.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuStoreBrowser.Shortcut")));
+			this.menuStoreBrowser.ShowShortcut = ((bool)(resources.GetObject("menuStoreBrowser.ShowShortcut")));
+			this.menuStoreBrowser.Text = resources.GetString("menuStoreBrowser.Text");
+			this.menuStoreBrowser.Visible = ((bool)(resources.GetObject("menuStoreBrowser.Visible")));
 			this.menuStoreBrowser.Click += new System.EventHandler(this.menuStoreBrowser_Click);
 			// 
 			// menuEventLogReader
 			// 
+			this.menuEventLogReader.Enabled = ((bool)(resources.GetObject("menuEventLogReader.Enabled")));
 			this.menuEventLogReader.Index = 1;
-			this.menuEventLogReader.Text = "Event Log Reader";
-			this.menuEventLogReader.Visible = false;
+			this.menuEventLogReader.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuEventLogReader.Shortcut")));
+			this.menuEventLogReader.ShowShortcut = ((bool)(resources.GetObject("menuEventLogReader.ShowShortcut")));
+			this.menuEventLogReader.Text = resources.GetString("menuEventLogReader.Text");
+			this.menuEventLogReader.Visible = ((bool)(resources.GetObject("menuEventLogReader.Visible")));
 			this.menuEventLogReader.Click += new System.EventHandler(this.menuEventLogReader_Click);
 			// 
 			// menuSeparator1
 			// 
+			this.menuSeparator1.Enabled = ((bool)(resources.GetObject("menuSeparator1.Enabled")));
 			this.menuSeparator1.Index = 1;
-			this.menuSeparator1.Text = "-";
-			this.menuSeparator1.Visible = false;
+			this.menuSeparator1.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuSeparator1.Shortcut")));
+			this.menuSeparator1.ShowShortcut = ((bool)(resources.GetObject("menuSeparator1.ShowShortcut")));
+			this.menuSeparator1.Text = resources.GetString("menuSeparator1.Text");
+			this.menuSeparator1.Visible = ((bool)(resources.GetObject("menuSeparator1.Visible")));
 			// 
 			// menuProperties
 			// 
 			this.menuProperties.DefaultItem = true;
+			this.menuProperties.Enabled = ((bool)(resources.GetObject("menuProperties.Enabled")));
 			this.menuProperties.Index = 2;
-			this.menuProperties.Text = "My iFolders...";
+			this.menuProperties.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuProperties.Shortcut")));
+			this.menuProperties.ShowShortcut = ((bool)(resources.GetObject("menuProperties.ShowShortcut")));
+			this.menuProperties.Text = resources.GetString("menuProperties.Text");
+			this.menuProperties.Visible = ((bool)(resources.GetObject("menuProperties.Visible")));
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuJoin
 			// 
+			this.menuJoin.Enabled = ((bool)(resources.GetObject("menuJoin.Enabled")));
 			this.menuJoin.Index = 3;
-			this.menuJoin.Text = "Join Enterprise Server";
+			this.menuJoin.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuJoin.Shortcut")));
+			this.menuJoin.ShowShortcut = ((bool)(resources.GetObject("menuJoin.ShowShortcut")));
+			this.menuJoin.Text = resources.GetString("menuJoin.Text");
+			this.menuJoin.Visible = ((bool)(resources.GetObject("menuJoin.Visible")));
 			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
 			// 
 			// menuHelp
 			// 
+			this.menuHelp.Enabled = ((bool)(resources.GetObject("menuHelp.Enabled")));
 			this.menuHelp.Index = 4;
-			this.menuHelp.Text = "Help...";
+			this.menuHelp.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuHelp.Shortcut")));
+			this.menuHelp.ShowShortcut = ((bool)(resources.GetObject("menuHelp.ShowShortcut")));
+			this.menuHelp.Text = resources.GetString("menuHelp.Text");
+			this.menuHelp.Visible = ((bool)(resources.GetObject("menuHelp.Visible")));
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
 			// 
 			// menuItem10
 			// 
+			this.menuItem10.Enabled = ((bool)(resources.GetObject("menuItem10.Enabled")));
 			this.menuItem10.Index = 5;
-			this.menuItem10.Text = "-";
+			this.menuItem10.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuItem10.Shortcut")));
+			this.menuItem10.ShowShortcut = ((bool)(resources.GetObject("menuItem10.ShowShortcut")));
+			this.menuItem10.Text = resources.GetString("menuItem10.Text");
+			this.menuItem10.Visible = ((bool)(resources.GetObject("menuItem10.Visible")));
 			// 
 			// menuExit
 			// 
+			this.menuExit.Enabled = ((bool)(resources.GetObject("menuExit.Enabled")));
 			this.menuExit.Index = 6;
-			this.menuExit.Text = "Exit";
+			this.menuExit.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuExit.Shortcut")));
+			this.menuExit.ShowShortcut = ((bool)(resources.GetObject("menuExit.ShowShortcut")));
+			this.menuExit.Text = resources.GetString("menuExit.Text");
+			this.menuExit.Visible = ((bool)(resources.GetObject("menuExit.Visible")));
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
 			// 
 			// FormsTrayApp
 			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(292, 266);
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "FormsTrayApp";
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.Text = resources.GetString("$this.Text");
 
 		}
 
@@ -723,14 +667,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			Cursor.Current = Cursors.Default;
-			notifyIcon1.Visible = false;
-			Application.Exit();
-		}
-
-		private void CleanupTrayApp(Exception ex)
-		{
-			// TODO: Localize.
-			MessageBox.Show("A fatal error was encountered during iFolder initialization.\n\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 			notifyIcon1.Visible = false;
 			Application.Exit();
 		}
