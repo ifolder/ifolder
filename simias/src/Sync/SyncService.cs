@@ -306,9 +306,9 @@ namespace Simias.Sync
 			}
 			else
 			{
-				for (i = 0; i < count; ++i)
+				for (i = 0; i < count;)
 				{
-					infoArray[i] = new SyncNodeInfo((ChangeLogRecord)nodeContainer.Current);
+					infoArray[i++] = new SyncNodeInfo((ChangeLogRecord)nodeContainer.Current);
 					if (!nodeContainer.MoveNext())
 					{
 						nodeContainer = null;
