@@ -203,12 +203,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.contextMenu2 = new System.Windows.Forms.ContextMenu();
+			this.menuEnabled = new System.Windows.Forms.MenuItem();
 			this.menuStart = new System.Windows.Forms.MenuItem();
 			this.menuPause = new System.Windows.Forms.MenuItem();
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
 			this.banner = new System.Windows.Forms.PictureBox();
-			this.menuEnabled = new System.Windows.Forms.MenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -638,6 +638,12 @@ namespace Novell.iFolder.FormsTrayApp
 																						 this.menuRestart});
 			this.contextMenu2.Popup += new System.EventHandler(this.contextMenu2_Popup);
 			// 
+			// menuEnabled
+			// 
+			this.menuEnabled.Index = 0;
+			this.menuEnabled.Text = "Enabled";
+			this.menuEnabled.Click += new System.EventHandler(this.menuEnabled_Click);
+			// 
 			// menuStart
 			// 
 			this.menuStart.Enabled = false;
@@ -672,12 +678,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.Size = new System.Drawing.Size(450, 65);
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
-			// 
-			// menuEnabled
-			// 
-			this.menuEnabled.Index = 0;
-			this.menuEnabled.Text = "Enabled";
-			this.menuEnabled.Click += new System.EventHandler(this.menuEnabled_Click);
 			// 
 			// GlobalProperties
 			// 
@@ -873,7 +873,7 @@ namespace Novell.iFolder.FormsTrayApp
 					ListViewItem lvi = new ListViewItem(new string[] {
                                                                          svc.Name,
 																		 svc.State.ToString()}, 0);
-					lvi.Tag = svc;
+					lvi.Tag = new ServiceWithState(svc);
 					services.Items.Add(lvi);
 				}
 			}
@@ -906,6 +906,16 @@ namespace Novell.iFolder.FormsTrayApp
 				else
 				{
 					config.Set("iFolderShell", "Show wizard", "false");
+				}
+
+				// Update any services that have been changed.
+				foreach (ListViewItem lvi in services.Items)
+				{
+					ServiceWithState service = (ServiceWithState)lvi.Tag;
+					if (service.Changed)
+					{
+						this.serviceManager.Install(service.Svc);
+					}
 				}
 			}
 			catch (SimiasException ex)
@@ -1100,20 +1110,14 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			if (services.SelectedItems.Count == 1)
 			{
-				// Get the XmlElement for the Services.
-				XmlElement servicesElement = config.GetElement(CFG_Section, CFG_Services);
+				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
 
-				XmlNodeList serviceNodes = servicesElement.SelectNodes(XmlServiceTag);
-				foreach (XmlElement serviceNode in serviceNodes)
-				{
-					if (serviceNode.GetAttribute("name").Equals(services.SelectedItems[0].Text))
-					{
-						menuEnabled.Checked = serviceNode.GetAttribute("enabled").Equals("True");
-						break;
-					}
-				}
+				// Set the state of the menu item.
+				menuEnabled.Checked = service.Svc.Enabled;
 
+				// Show the menu items.
 				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = true;
+
 				ListViewItem lvi = services.SelectedItems[0];
 				switch (lvi.SubItems[1].Text)
 				{
@@ -1131,26 +1135,33 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 			else
 			{
+				// Nothing is selected ... hide the menu items.
 				menuEnabled.Visible = menuStart.Visible = menuPause.Visible = menuStop.Visible = menuRestart.Visible = false;
 			}
 		}
 
 		private void menuEnabled_Click(object sender, System.EventArgs e)
 		{
-			menuEnabled.Checked = !menuEnabled.Checked;
-
-			// Get the XmlElement for the Services.
-			XmlElement servicesElement = config.GetElement(CFG_Section, CFG_Services);
-
-			XmlNodeList serviceNodes = servicesElement.SelectNodes(XmlServiceTag);
-			foreach (XmlElement serviceNode in serviceNodes)
+			try
 			{
-				if (serviceNode.GetAttribute("name").Equals(services.SelectedItems[0].Text))
-				{
-					serviceNode.SetAttribute("enabled", menuEnabled.Checked ? "True" : "False");
-					config.SetElement(servicesElement);
-					break;
-				}
+				ServiceWithState service = (ServiceWithState)services.SelectedItems[0].Tag;
+
+				// Toggle the enabled state.
+				service.Svc.Enabled = !menuEnabled.Checked;
+
+				// Set that the service has been changed.
+				service.Changed = true;
+
+				// Toggle the state of the menu item.
+				menuEnabled.Checked = service.Svc.Enabled;
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+			}
+			catch (Exception ex)
+			{
+				logger.Debug(ex, "Enabling/disabling service");
 			}
 		}
 
@@ -1211,5 +1222,36 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 		#endregion
+	}
+
+	internal class ServiceWithState
+	{
+		private bool changed = false;
+		private ServiceCtl svc;
+
+		public ServiceWithState(ServiceCtl svc)
+		{
+			this.svc = svc;
+		}
+
+		public bool Changed
+		{
+			get
+			{
+				return changed;
+			}
+			set
+			{
+				changed = value;
+			}
+		}
+
+		public ServiceCtl Svc
+		{
+			get
+			{
+				return svc;
+			}
+		}
 	}
 }
