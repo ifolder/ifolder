@@ -1,13 +1,13 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SimiasClient_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/SimiasSetup.cs $(srcdir)/WSInspection.cs
+SimiasClient_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/CollectionSyncEventArgs.cs $(srcdir)/FileSyncEventArgs.cs $(srcdir)/Configuration.cs $(srcdir)/DomainService.cs $(srcdir)/IProcEventClient.cs $(srcdir)/IProcEventData.cs $(srcdir)/IProcEventListener.cs $(srcdir)/IProcEventRegistration.cs $(srcdir)/IProcEventTypes.cs $(srcdir)/Manager.cs $(srcdir)/MyEnvironment.cs $(srcdir)/MyPath.cs $(srcdir)/MyPlatformID.cs $(srcdir)/MyRuntimeID.cs $(srcdir)/NodeEventArgs.cs $(srcdir)/NodeTypes.cs $(srcdir)/NotifyEventArgs.cs $(srcdir)/SimiasEventArgs.cs $(srcdir)/SimiasSetup.cs $(srcdir)/WSInspection.cs $(srcdir)/Authentication.cs $(srcdir)/SimiasService.cs
 SimiasClient_CSFILES := $(subst /,$(SEP),$(SimiasClient_CSFILES1))
 SimiasClient_INCLUDES =
 SimiasClient_RESOURCES =
 SimiasClient_FLAGS = $(CSC_LIBFLAG)
-SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll
-SimiasClient_LIBPATH =
+SimiasClient_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Web.dll System.Web.Services.dll Novell.Security.ClientPasswordManager.NetCredential.dll Novell.Security.ClientPasswordManager.PasswordDialog.dll
+SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(SimiasClient_CSFILES) $(srcdir)/SimiasSetup.cs.in
 
