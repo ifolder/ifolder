@@ -79,6 +79,7 @@ namespace Novell.iFolder
 			this.simws = new SimiasWebService();
 			simws.Url = Simias.Client.Manager.LocalServiceUrl.ToString() +
 					"/Simias.asmx";
+			LocalService.Start(simws);
 
 			ifdata = iFolderData.GetData();
 			
