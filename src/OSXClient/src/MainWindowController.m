@@ -85,6 +85,10 @@
 	{
 		[self addLog:@"Reading domains failed with exception"];
 	}
+	
+	// Setup the double click black magic
+	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];
+	
 
 	// TODO: Show all of the windows that were open when quit last
 	[self showWindow:self];
@@ -180,6 +184,9 @@
 
 - (IBAction)setupiFolder:(id)sender
 {
+	// We don't have to tell the sheet anything about the iFolder because
+	// it's all bound in the nib
+	[setupiFolderController showWindow:sender];
 }
 
 
@@ -249,8 +256,11 @@
 	
 	iFolder *ifolder = [[ifoldersController arrangedObjects] objectAtIndex:selIndex];
 	NSString *path = [ifolder Path];
-	if([path length] > 0)
+	if(	([path length] > 0) &&
+		([[ifolder IsSubscription] boolValue] == NO) )
 		[[NSWorkspace sharedWorkspace] openFile:path];
+	else
+		[self setupiFolder:sender];
 }
 
 
@@ -265,6 +275,14 @@
 
 - (IBAction)shareiFolder:(id)sender
 {
+}
+
+
+
+
+- (void)doubleClickedTable:(id)sender
+{
+	[self openiFolder:sender];
 }
 
 
@@ -431,7 +449,7 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,12)];
+	return [toolbarItemKeys subarrayWithRange:NSMakeRange(0,13)];
 }
 
 
@@ -464,8 +482,8 @@
 	[item release];
 	
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSpaceItemIdentifier];
-	[toolbarItems setObject:item forKey:@"NewSpacer"];
-	[toolbarItemKeys addObject:@"NewSpacer"];
+	[toolbarItems setObject:item forKey:NSToolbarSpaceItemIdentifier];
+	[toolbarItemKeys addObject:NSToolbarSpaceItemIdentifier];
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"RevertiFolder"];
@@ -490,10 +508,7 @@
 	[toolbarItemKeys addObject:@"DeleteiFolder"];
 	[item release];
 
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSpaceItemIdentifier];
-	[toolbarItems setObject:item forKey:@"DeleteSpacer"];
-	[toolbarItemKeys addObject:@"DeleteSpacer"];
-	[item release];
+	[toolbarItemKeys addObject:NSToolbarSpaceItemIdentifier];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"OpeniFolder"];
 	[item setPaletteLabel:@"Open iFolder"]; // name for the "Customize Toolbar" sheet
@@ -534,15 +549,26 @@
 	[toolbarItemKeys addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[item release];
 
-	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Refresh"];
-	[item setPaletteLabel:@"Refresh Window"]; // name for the "Customize Toolbar" sheet
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"RefreshiFolders"];
+	[item setPaletteLabel:@"Refresh iFolders"]; // name for the "Customize Toolbar" sheet
 	[item setLabel:@"Refresh"]; // name for the item in the toolbar
-	[item setToolTip:@"Refresh Window"]; // tooltip
+	[item setToolTip:@"Refresh iFolders"]; // tooltip
     [item setTarget:self]; // what should happen when it's clicked
     [item setAction:@selector(refreshWindow:)];
 	[item setImage:[NSImage imageNamed:@"prefs-general"]];
-    [toolbarItems setObject:item forKey:@"RefreshWindow"]; // add to toolbar list
-	[toolbarItemKeys addObject:@"RefreshWindow"];
+    [toolbarItems setObject:item forKey:@"RefreshiFolders"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"RefreshiFolders"];
+	[item release];
+
+	item=[[NSToolbarItem alloc] initWithItemIdentifier:@"Preferences"];
+	[item setPaletteLabel:@"Preferences"]; // name for the "Customize Toolbar" sheet
+	[item setLabel:@"Preferences"]; // name for the item in the toolbar
+	[item setToolTip:@"Preferences"]; // tooltip
+    [item setTarget:self]; // what should happen when it's clicked
+    [item setAction:@selector(showPrefs:)];
+	[item setImage:[NSImage imageNamed:@"prefs-general"]];
+    [toolbarItems setObject:item forKey:@"Preferences"]; // add to toolbar list
+	[toolbarItemKeys addObject:@"Preferences"];
 	[item release];
 
 	item=[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarCustomizeToolbarItemIdentifier];

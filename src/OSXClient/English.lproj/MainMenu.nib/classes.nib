@@ -23,6 +23,7 @@
             ACTIONS = {
                 customizeToolbar = id; 
                 deleteiFolder = id; 
+                doubleClickedTable = id; 
                 newiFolder = id; 
                 openiFolder = id; 
                 refreshWindow = id; 
@@ -40,6 +41,7 @@
             OUTLETS = {
                 createSheetController = CreateiFolderSheetController; 
                 domainsController = NSArrayController; 
+                iFolderTable = NSTableView; 
                 ifoldersController = NSArrayController; 
                 setupiFolderController = SetupiFolderSheetController; 
                 syncLogController = SyncLogWindowController; 
