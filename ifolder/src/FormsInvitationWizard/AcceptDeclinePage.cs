@@ -180,9 +180,9 @@ namespace Novell.iFolder.InvitationWizard
 			iFolderDetails.Items.Add(sharedBy);
 			iFolderDetails.Items.Add(blank);
 
-			string rights = "Rights: " + ((InvitationWizard)(this.Parent)).Subscription.SubscriptionRights;
-			iFolderDetails.Items.Add(rights);
-			iFolderDetails.Items.Add(blank);
+//			string rights = "Rights: " + ((InvitationWizard)(this.Parent)).Subscription.SubscriptionRights;
+//			iFolderDetails.Items.Add(rights);
+//			iFolderDetails.Items.Add(blank);
 
 			// Enable the buttons
 			((InvitationWizard)(this.Parent)).WizardButtons = WizardButtons.Next | WizardButtons.Back | WizardButtons.Cancel;
