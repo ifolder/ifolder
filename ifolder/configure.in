@@ -503,7 +503,7 @@ src/Makefile
 src/install-ifolder-to-gac
 src/iFolder/Makefile
 src/iFolder/iFolderCmd
-src/iFolder/ifolderd
+src/iFolder/ifolders
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/ifolder
 src/GtkTrayApp/ifolderbrowser

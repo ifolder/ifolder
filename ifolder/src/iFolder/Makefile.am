@@ -35,7 +35,7 @@ iFolderTests_FLAGS = $(CSC_EXEFLAG)
 iFolderTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Novell.iFolder.dll
 iFolderTests_LIBPATH = $(NUNIT_LIBPATH)
 
-EXTRA_DIST = $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderd_CSFILES) $(iFolderTests_CSFILES)
+EXTRA_DIST = ifolders $(srcdir)/iFolderCmd $(iFolder_CSFILES) $(iFolderCmd_CSFILES) $(iFolderd_CSFILES) $(iFolderTests_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
@@ -64,11 +64,11 @@ install-exec-local: Novell.iFolder.dll iFolderCmd.exe iFolderd.exe
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) Novell.iFolder.dll $(DEBUG_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderCmd.exe iFolderd.exe $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) iFolderCmd ifolderd $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) iFolderCmd ifolders $(DESTDIR)$(bindir)
 
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.dll iFolderTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
-	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd iFolderd.exe ifolderd
+	cd $(DESTDIR)$(bindir); rm -f iFolderCmd.exe iFolderCmd iFolderd.exe ifolders
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
