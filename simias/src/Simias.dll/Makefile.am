@@ -16,7 +16,7 @@ CUR_DIR := $(shell pwd)
 
 all: Simias.dll
 
-Simias.dll: $(SIMIAS_CSFILES_SRC) $(SIMIAS_RESOURCES)
+Simias.dll: $(SIMIAS_CSFILES_SRC) $(SIMIAS_RESOURCES) $(srcdir)/Simias.dll.sources
 	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES_CSC) /doc:Simias.doc.xml
 
 if DEBUG
