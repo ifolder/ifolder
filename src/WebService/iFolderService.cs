@@ -199,6 +199,28 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
+		/// WebMethod that creates an iFolder collection.
+		/// </summary>
+		/// <param name = "Path">
+		/// The full path to the iFolder on the local system
+		/// </param>
+		/// <param name="DomainID">The ID of the domain to create the iFolder in.</param>
+		/// <returns>
+		/// iFolder object representing the iFolder created
+		/// </returns>
+		[WebMethod(Description="Create an iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
+		[SoapDocumentMethod]
+		public iFolderWeb CreateiFolderInDomain(string Path, string DomainID)
+		{
+			Collection col = SharedCollection.CreateLocalSharedCollection(
+								Path, DomainID, iFolderWeb.iFolderType);
+			return new iFolderWeb(col);
+		}
+
+
+
+
+		/// <summary>
 		/// WebMethod that gets an iFolder based on an iFolderID
 		/// </summary>
 		/// <param name = "iFolderID">
@@ -222,9 +244,6 @@ namespace Novell.iFolder.Web
 				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 						store.DefaultDomain, 
 						store.GetUserIDFromDomainID(store.DefaultDomain));
-
-//				POBox poBox = Simias.POBox.POBox.GetPOBox(store, 
-//						store.DefaultDomain);
 
 				if(poBox != null)
 				{
@@ -356,9 +375,6 @@ namespace Novell.iFolder.Web
 				POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
 							sn.ID, 
 							store.GetUserIDFromDomainID(sn.ID));
-	//			POBox poBox = Simias.POBox.POBox.FindPOBox(store, 
-	//						store.DefaultDomain, 
-	//						store.GetUserIDFromDomainID(store.DefaultDomain));
 				if(poBox != null)
 				{
 	

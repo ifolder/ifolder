@@ -145,6 +145,22 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="CreateiFolderInDomain">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Path" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="DomainID" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CreateiFolderInDomainResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="CreateiFolderInDomainResult"
+                  type="s0:iFolderWeb"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="GetiFolder">
         <xs:complexType>
           <xs:sequence>
@@ -840,6 +856,12 @@
   <message name="CreateLocaliFolderSoapOut">
     <part name="parameters" element="s0:CreateLocaliFolderResponse"/>
   </message>
+  <message name="CreateiFolderInDomainSoapIn">
+    <part name="parameters" element="s0:CreateiFolderInDomain"/>
+  </message>
+  <message name="CreateiFolderInDomainSoapOut">
+    <part name="parameters" element="s0:CreateiFolderInDomainResponse"/>
+  </message>
   <message name="GetiFolderSoapIn">
     <part name="parameters" element="s0:GetiFolder"/>
   </message>
@@ -1126,6 +1148,13 @@
   <message name="CreateLocaliFolderHttpGetOut">
     <part name="Body" element="s0:iFolderWeb"/>
   </message>
+  <message name="CreateiFolderInDomainHttpGetIn">
+    <part name="Path" type="s:string"/>
+    <part name="DomainID" type="s:string"/>
+  </message>
+  <message name="CreateiFolderInDomainHttpGetOut">
+    <part name="Body" element="s0:iFolderWeb"/>
+  </message>
   <message name="GetiFolderHttpGetIn">
     <part name="iFolderID" type="s:string"/>
   </message>
@@ -1252,6 +1281,7 @@
     <part name="Body" element="s0:iFolderUser"/>
   </message>
   <message name="AcceptiFolderInvitationHttpGetIn">
+    <part name="DomainID" type="s:string"/>
     <part name="iFolderID" type="s:string"/>
     <part name="LocalPath" type="s:string"/>
   </message>
@@ -1399,6 +1429,13 @@
   <message name="CreateLocaliFolderHttpPostOut">
     <part name="Body" element="s0:iFolderWeb"/>
   </message>
+  <message name="CreateiFolderInDomainHttpPostIn">
+    <part name="Path" type="s:string"/>
+    <part name="DomainID" type="s:string"/>
+  </message>
+  <message name="CreateiFolderInDomainHttpPostOut">
+    <part name="Body" element="s0:iFolderWeb"/>
+  </message>
   <message name="GetiFolderHttpPostIn">
     <part name="iFolderID" type="s:string"/>
   </message>
@@ -1525,6 +1562,7 @@
     <part name="Body" element="s0:iFolderUser"/>
   </message>
   <message name="AcceptiFolderInvitationHttpPostIn">
+    <part name="DomainID" type="s:string"/>
     <part name="iFolderID" type="s:string"/>
     <part name="LocalPath" type="s:string"/>
   </message>
@@ -1674,6 +1712,12 @@
       <input message="s0:CreateLocaliFolderSoapIn"/>
       <output message="s0:CreateLocaliFolderSoapOut"/>
       <documentation>Create An iFolder. This will create an iFolder using the path specified. 
+            The Path must exist or an exception will be thrown.</documentation>
+    </operation>
+    <operation name="CreateiFolderInDomain">
+      <input message="s0:CreateiFolderInDomainSoapIn"/>
+      <output message="s0:CreateiFolderInDomainSoapOut"/>
+      <documentation>Create an iFolder. This will create an iFolder using the path specified. 
             The Path must exist or an exception will be thrown.</documentation>
     </operation>
     <operation name="GetiFolder">
@@ -1933,6 +1977,12 @@
       <documentation>Create An iFolder. This will create an iFolder using the path specified. 
             The Path must exist or an exception will be thrown.</documentation>
     </operation>
+    <operation name="CreateiFolderInDomain">
+      <input message="s0:CreateiFolderInDomainHttpGetIn"/>
+      <output message="s0:CreateiFolderInDomainHttpGetOut"/>
+      <documentation>Create an iFolder. This will create an iFolder using the path specified. 
+            The Path must exist or an exception will be thrown.</documentation>
+    </operation>
     <operation name="GetiFolder">
       <input message="s0:GetiFolderHttpGetIn"/>
       <output message="s0:GetiFolderHttpGetOut"/>
@@ -2188,6 +2238,12 @@
       <input message="s0:CreateLocaliFolderHttpPostIn"/>
       <output message="s0:CreateLocaliFolderHttpPostOut"/>
       <documentation>Create An iFolder. This will create an iFolder using the path specified. 
+            The Path must exist or an exception will be thrown.</documentation>
+    </operation>
+    <operation name="CreateiFolderInDomain">
+      <input message="s0:CreateiFolderInDomainHttpPostIn"/>
+      <output message="s0:CreateiFolderInDomainHttpPostOut"/>
+      <documentation>Create an iFolder. This will create an iFolder using the path specified. 
             The Path must exist or an exception will be thrown.</documentation>
     </operation>
     <operation name="GetiFolder">
@@ -2469,6 +2525,16 @@
     </operation>
     <operation name="CreateLocaliFolder">
       <soap:operation soapAction="http://novell.com/ifolder/web/CreateLocaliFolder"
+            style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="CreateiFolderInDomain">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CreateiFolderInDomain"
             style="document"/>
       <input>
         <soap:body use="literal"/>
@@ -2951,6 +3017,15 @@
         <mime:mimeXml part="Body"/>
       </output>
     </operation>
+    <operation name="CreateiFolderInDomain">
+      <http:operation location="/CreateiFolderInDomain"/>
+      <input>
+        <http:urlEncoded/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
     <operation name="GetiFolder">
       <http:operation location="/GetiFolder"/>
       <input>
@@ -3354,6 +3429,15 @@
     </operation>
     <operation name="CreateLocaliFolder">
       <http:operation location="/CreateLocaliFolder"/>
+      <input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </input>
+      <output>
+        <mime:mimeXml part="Body"/>
+      </output>
+    </operation>
+    <operation name="CreateiFolderInDomain">
+      <http:operation location="/CreateiFolderInDomain"/>
       <input>
         <mime:content type="application/x-www-form-urlencoded"/>
       </input>
