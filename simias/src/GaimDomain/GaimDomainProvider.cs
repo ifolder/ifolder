@@ -125,10 +125,10 @@ namespace Simias.Location
 		{
 			if (searchContext == null) return;
 
-			GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContext;
-			if (searchContexts.Contains(gaimDomainSearchContext.ID))
+			string searchContextID = (string)searchContext;
+			if (searchContexts.Contains(searchContextID))
 			{
-				searchContexts.Remove(gaimDomainSearchContext.ID);
+				searchContexts.Remove(searchContextID);
 			}
 		}
 
@@ -163,18 +163,62 @@ namespace Simias.Location
 		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, out Object searchContext, out Member[] memberList, out int total, int count )
 		{
 			// Ignore the domainID since we only ever have one domain to deal with
+
+			bool bMoreEntries = false;
+			ArrayList members = new ArrayList();
+			ArrayList extraBuddies = new ArrayList();
+			searchContext = null;
+			total = 0;
+
 			GaimBuddy[] buddies =
 				GaimDomain.SearchForBuddies(mapSimiasAttribToGaim(attributeName),
 											searchString,
 											operation);
 			if (buddies != null && buddies.Length > 0)
 			{
+				total = buddies.Length;
+				foreach (GaimBuddy buddy in buddies)
+				{
+					if (members.Count < count)
+					{
+						// We haven't exceeded the requested search size
+
+						string givenName;
+						string familyName;
+						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
+						if (givenName != null && familyName == null)
+							familyName = "";
+
+						Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),
+												   Simias.Storage.Access.Rights.ReadWrite,
+												   givenName, familyName);
+
+						members.Add(member);
+					}
+					else
+					{
+						// Save the extra buddies for later
+						extraBuddies.Add(buddy);
+					}
+				}
 			}
 
-			searchContext = null;
-			memberList = null;
-			total = 0;
-			return false;
+			memberList = members.ToArray(typeof(Member)) as Member[];
+
+			if (extraBuddies.Count > 0)
+			{
+				GaimDomainSearchContext newSearchContext = new GaimDomainSearchContext();
+				newSearchContext.Buddies = extraBuddies;
+				searchContext = newSearchContext.ID;
+				lock (searchContexts.SyncRoot)
+				{
+					searchContexts.Add(searchContext, newSearchContext);
+				}
+
+				bMoreEntries = true;
+			}
+
+			return bMoreEntries;
 		}
 
 		/// <summary>
@@ -186,9 +230,59 @@ namespace Simias.Location
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
 		public bool FindNextDomainMembers( ref Object searchContext, out Member[] memberList, int count )
 		{
-			// FIXME: Implement FindNextDomainMembers()
+			bool bMoreEntries = false;
+			ArrayList members = new ArrayList();
 			memberList = null;
-			return false;
+
+			if (searchContext == null)
+				throw new ArgumentNullException("searchContext cannot be null when calling FindNextDomainMembers");
+
+			string searchContextID = (string)searchContext;
+			lock (searchContexts.SyncRoot)
+			{
+				if (!searchContexts.Contains(searchContextID))
+					return false;
+
+				GaimDomainSearchContext gaimDomainSearchContext = (GaimDomainSearchContext)searchContexts[searchContextID];
+
+				foreach (GaimBuddy buddy in gaimDomainSearchContext.Buddies)
+				{
+					if (members.Count < count)
+					{
+						string givenName;
+						string familyName;
+						GaimDomain.ParseGaimBuddyAlias(buddy.Alias, out givenName, out familyName);
+						if (givenName != null && familyName == null)
+							familyName = "";
+
+						Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),
+							Simias.Storage.Access.Rights.ReadWrite,
+							givenName, familyName);
+
+						members.Add(member);
+
+						gaimDomainSearchContext.Buddies.Remove(buddy);
+					}
+					else
+					{
+						bMoreEntries = true;
+						break;
+					}
+				}
+			}
+
+			if (members.Count > 0)
+			{
+				memberList = members.ToArray(typeof (Member)) as Member[];
+			}
+
+			if (!bMoreEntries)
+			{
+				// Cleanup the searchContext just in case the caller forgets to
+				FindCloseDomainMembers(searchContext);
+			}
+
+			return bMoreEntries;
 		}
 
 		/// <summary>

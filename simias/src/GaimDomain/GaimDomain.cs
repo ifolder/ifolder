@@ -523,6 +523,71 @@ namespace Simias.Gaim
 			return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 		}
 
+		public static void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName)
+		{
+			Simias.Storage.Domain domain = GaimDomain.GetDomain();
+			if (domain == null) return;
+		
+			XmlDocument blistDoc = new XmlDocument();
+			try
+			{
+				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
+			}
+			catch (Exception e)
+			{
+				return;
+			}
+			XmlElement gaimElement = blistDoc.DocumentElement;
+			
+			string xPathQuery =
+				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}' and setting[@name='simias-url']]",
+				AccountName, AccountProtocolID, BuddyName);
+			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
+			if (buddyNode != null)
+			{
+				try
+				{
+					GaimBuddy buddy = new GaimBuddy(buddyNode);
+					Member member =
+						FindBuddyInDomain(domain, buddy);
+					
+					if (member == null)
+					{
+						// This shouldn't happen, but just in case...
+						CreateNewMember(domain, buddy);
+					}
+					else
+					{
+						UpdateMember(domain, member, buddy);
+					}
+				}
+				catch (Exception e)
+				{
+					// Intentionally left blank
+				}				
+			}
+		}
+
+		public static void ParseGaimBuddyAlias(string alias, out string givenName, out string familyName)
+		{
+			givenName = null;
+			familyName = null;
+			if (alias != null)
+			{
+				int lastSpacePos = alias.LastIndexOf(' ');
+				if (lastSpacePos > 0)
+				{
+					familyName = alias.Substring(lastSpacePos + 1);
+
+					givenName = alias.Substring(0, lastSpacePos);
+				}
+				else
+				{
+					givenName = alias;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
@@ -795,7 +860,7 @@ namespace Simias.Gaim
 			p = new Property("Gaim:AccountProto", buddy.AccountProtocolID);
 			p.LocalProperty = true;
 			member.Properties.AddProperty(p);
-			
+
 			if (buddy.Alias != null)
 			{
 				p = new Property("Gaim:Alias", buddy.Alias);
@@ -833,51 +898,6 @@ namespace Simias.Gaim
 			
 			// Commit the changes
 			domain.Commit(member);
-		}
-
-		public static void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName)
-		{
-			Simias.Storage.Domain domain = GaimDomain.GetDomain();
-			if (domain == null) return;
-		
-			XmlDocument blistDoc = new XmlDocument();
-			try
-			{
-				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
-			}
-			catch (Exception e)
-			{
-				return;
-			}
-			XmlElement gaimElement = blistDoc.DocumentElement;
-			
-			string xPathQuery =
-				string.Format("//buddy[@account='{0}' and @proto='{1}' and name='{2}' and setting[@name='simias-url']]",
-							  AccountName, AccountProtocolID, BuddyName);
-			XmlNode buddyNode = gaimElement.SelectSingleNode(xPathQuery);
-			if (buddyNode != null)
-			{
-				try
-				{
-					GaimBuddy buddy = new GaimBuddy(buddyNode);
-					Member member =
-						FindBuddyInDomain(domain, buddy);
-					
-					if (member == null)
-					{
-						// This shouldn't happen, but just in case...
-						CreateNewMember(domain, buddy);
-					}
-					else
-					{
-						UpdateMember(domain, member, buddy);
-					}
-				}
-				catch (Exception e)
-				{
-					// Intentionally left blank
-				}				
-			}
 		}
 
 		internal static void UpdateMember(Simias.Storage.Domain domain, Member member, GaimBuddy buddy)

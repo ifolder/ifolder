@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace Simias.Gaim
 {
@@ -9,6 +10,7 @@ namespace Simias.Gaim
 	{
 		#region Class Members
 		private String id;
+		private ArrayList buddies;
 		#endregion
 
 		#region Constructor
@@ -26,6 +28,37 @@ namespace Simias.Gaim
 				return id;
 			}
 		}
+
+		public ArrayList Buddies
+		{
+			get
+			{
+				return buddies;
+			}
+			set
+			{
+				if (value != null)
+				{
+					buddies = value;
+				}
+			}
+		}
+
+		public int Count
+		{
+			get
+			{
+				if (buddies != null)
+				{
+					return buddies.Count;
+				}
+				else
+					return 0;
+			}
+		}
+		#endregion
+
+		#region Public Methods
 		#endregion
 	}
 }
