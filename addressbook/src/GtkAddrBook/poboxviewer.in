@@ -24,7 +24,7 @@
 
 # Startup iFolder
 export MONO_PATH=@prefix@/lib
-export LD_LIBRARY_PATH=@prefix@/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:@prefix@/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:@prefix@/lib
 cd @prefix@/bin
 mono POBoxViewer.exe
