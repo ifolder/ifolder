@@ -124,6 +124,7 @@ enum
 
 typedef struct
 {
+	/* FIXME: Add an invitation message type so that when an accept/deny message is attempted to be sent but the buddy is not online, we can send it automatically when the buddy signs on */
 	GaimAccount *gaim_account;
 	char buddy_name[128];
 	INVITATION_STATE state;
@@ -244,8 +245,9 @@ send_msg_to_buddy(GaimBuddy *recipient, char *msg)
 	 * Make sure the buddy is online.  More information on the "present" field
 	 * can be seen here: http://gaim.sourceforge.net/api/struct__GaimBuddy.html
 	 */
-	if (recipient->present == 0) {
-		return -1; /* Buddy is offline */
+	if (recipient->present == GAIM_BUDDY_SIGNING_OFF
+		|| recipient->present == GAIM_BUDDY_OFFLINE) {
+		return recipient->present; /* Buddy is signing off or offline */
 	}
 	
 	conn = gaim_account_get_connection(recipient->account);
@@ -452,7 +454,6 @@ buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 	GaimBuddy *buddy;
 	int result;
 	char *collection_type = "ifolder";	/* FIXME: This is hardcoded.  When other Simias Collection types are supported, this shouuld be fixed. */
-	GtkWidget *err_dialog;
 	Invitation *invitation;
 	char guid[128];
 
@@ -502,43 +503,26 @@ buddylist_cb_simulate_share_ifolder(GaimBlistNode *node, gpointer user_data)
 			/* FIXME: Fix this spoofing of a Simias ID to a real Simias ID */
 			srand((unsigned) time(NULL)/2);
 			sprintf(guid, "{%d-%d}", rand(), rand());
+			
+			/* Create and fill out the Invitation */
+			invitation = malloc(sizeof(Invitation));
+			invitation->gaim_account = buddy->account;
+			sprintf(invitation->buddy_name, buddy->name);
+			invitation->state = STATE_PENDING;
+			time(&(invitation->time));
+			sprintf(invitation->collection_id, guid);
+			sprintf(invitation->collection_type, collection_type);
+			sprintf(invitation->collection_name, name);
 
-			result = send_invitation_request_msg(
-					buddy,
-					guid,
-					collection_type,
-					(char *)name);
+			result = send_invitation_request_msg(buddy, guid, collection_type,
+												(char *)name);
 			g_print("send_invitation_request_msg(): %d\n", result);
-			if (result <= 0) {
-				err_dialog = gtk_message_dialog_new(NULL,
-								GTK_DIALOG_DESTROY_WITH_PARENT,
-								GTK_MESSAGE_ERROR,
-								GTK_BUTTONS_CLOSE,
-								_("Error sending the invitation.  Error response: %d"),
-								result);
-				gtk_dialog_run(GTK_DIALOG(err_dialog));
-				gtk_widget_destroy(err_dialog);
-			} else {
-				/**
-				 * The message was sent.  So, we can now add a new Invitation
-				 * into the outgoing invitations list.
-				 */
-				invitation = malloc(sizeof(Invitation));
-				if (invitation) {
-					invitation->gaim_account = buddy->account;
-					sprintf(invitation->buddy_name, buddy->name);
-					invitation->state = STATE_SENT;
-					time(&(invitation->time));
-					sprintf(invitation->collection_id, guid);
-					sprintf(invitation->collection_type, collection_type);
-					sprintf(invitation->collection_name, name);
-					/*sprintf(invitation->ip_addr, "\0");*/
-					
-					add_invitation_to_store(out_inv_store, invitation);
-				} else {
-					g_print("Out of memory trying to create Invitation * inside buddylist_cb_simulate_share_ifolder\n");
-				}
+			if (result > 0) {
+				/* The message was sent */
+				invitation->state = STATE_SENT;
 			}
+			
+			add_invitation_to_store(out_inv_store, invitation);
 		}
 	}
 
@@ -605,11 +589,25 @@ in_inv_accept_button_cb(GtkWidget *w, GtkTreeView *tree)
 		return;
 	}
 
+	if (buddy->present == GAIM_BUDDY_SIGNING_OFF
+		|| buddy->present == GAIM_BUDDY_OFFLINE) {
+		/* FIXME: Instead of telling the user that the buddy is offline, just mark this accept message as a pending accept message and send it out when the buddy is online */
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("The buddy is not online.  Please wait for this buddy to be online before you accept this invitation."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+
 	send_result =
 		send_invitation_request_accept_msg(buddy, invitation->collection_id);
 		
 	/* FIXME: This test isn't working.  If a buddy just barely signed out, Gaim displays an error message, but we get back a 1 */
 	if (send_result <= 0) {
+		/* FIXME: Add this message to the PENDING list of messages to be sent and retry when the buddy signs on again or when we login/startup gaim again */
 		dialog = gtk_message_dialog_new(NULL,
 					GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_MESSAGE_ERROR,
@@ -681,6 +679,19 @@ in_inv_reject_button_cb(GtkWindow *w, GtkTreeView *tree)
 					GTK_MESSAGE_ERROR,
 					GTK_BUTTONS_CLOSE,
 					_("This buddy is not in your buddy list.  If you do not wish to accept this invitation, please remove it from your list."));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		return;
+	}
+
+	if (buddy->present == GAIM_BUDDY_SIGNING_OFF
+		|| buddy->present == GAIM_BUDDY_OFFLINE) {
+		/* FIXME: Instead of telling the user that the buddy is offline, just mark this accept message as a pending rejct message and send it out when the buddy is online */
+		dialog = gtk_message_dialog_new(NULL,
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("The buddy is not online.  Please wait for this buddy to be online before you reject this invitation."));
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
 		return;
@@ -900,21 +911,10 @@ add_invitation_to_store(GtkListStore *store, Invitation *invitation)
 	GtkTreeIter iter;
 	char time_str[32];
 	char state_str[32];
-	GdkPixbuf *status_icon;
-	GaimBuddy *buddy;
+	GdkPixbuf *account_icon;
 
-if (store) {
-	g_print("store is NOT NULL\n");
-} else {
-	g_print("store is NULL!\n");
-}
-
-	buddy = gaim_find_buddy(invitation->gaim_account,
-				invitation->buddy_name);
-	status_icon =
-		gaim_gtk_blist_get_status_icon((GaimBlistNode*)buddy,
-			GAIM_STATUS_ICON_SMALL);
-
+	account_icon = create_prpl_icon(invitation->gaim_account);
+	
 	/* Format the time to a string */
 	fill_time_str(time_str, 32, invitation->time);
 
@@ -929,8 +929,7 @@ if (store) {
 
 	/* Set the new row information with the invitation */
 	gtk_list_store_set(store, &iter,
-		/* FIXME: Figure out how to add the correct protocol icon as the first column */
-		ACCOUNT_PRTL_ICON_COL,	status_icon,
+		ACCOUNT_PRTL_ICON_COL,	account_icon,
 		BUDDY_NAME_COL,			invitation->buddy_name,
 		TIME_COL,				time_str,
 		COLLECTION_NAME_COL,	invitation->collection_name,
@@ -938,9 +937,8 @@ if (store) {
 		INVITATION_PTR,			invitation,
 		-1);
 		
-	if (status_icon)
-		g_object_unref(status_icon);
-	/* FIXME: Determine if we need to poke the tree view control */
+	if (account_icon)
+		g_object_unref(account_icon);
 }
 
 /**
@@ -1671,7 +1669,6 @@ handle_invitation_request_deny(GaimAccount *account,
 	
 	/* Update the out_inv_store */
 	gtk_list_store_set(out_inv_store, &iter,
-		/* FIXME: Figure out how to add the correct protocol icon as the first column */
 		TIME_COL,				time_str,
 		STATE_COL,				state_str,
 		-1);
@@ -1783,7 +1780,6 @@ handle_invitation_request_accept(GaimAccount *account,
 	
 	/* Update the out_inv_store */
 	gtk_list_store_set(out_inv_store, &iter,
-		/* FIXME: Figure out how to add the correct protocol icon as the first column */
 		TIME_COL,				time_str,
 		STATE_COL,				state_str,
 		-1);
@@ -1854,7 +1850,9 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 					-1);
 							
 		/* Check to see if this invitation is a STATE_PENDING */
-		if (invitation->state == STATE_PENDING) {
+		if (invitation->state == STATE_PENDING
+			&& buddy->present != GAIM_BUDDY_SIGNING_OFF
+			&& buddy->present != GAIM_BUDDY_OFFLINE) {
 			send_result = send_invitation_request_msg(
 					buddy,
 					invitation->collection_id,
