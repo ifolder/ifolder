@@ -46,11 +46,11 @@ namespace Novell.iFolder
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
+		static Gtk.ThreadNotify mainThreadNotify;
+		static SyncManagerStates syncState;
 
 		public static void Main (string[] args)
 		{
-			Gdk.Threads.Init();
-
 			Application.Init();
 
 			tIcon = new TrayIcon("iFolder");
@@ -70,6 +70,11 @@ namespace Novell.iFolder
 			tIcon.Add(eBox);
 
 			tIcon.ShowAll();
+
+			syncState = SyncManagerStates.Idle;
+
+			mainThreadNotify =
+				new Gtk.ThreadNotify(new Gtk.ReadyEvent(ChangeState));
 
 			Console.WriteLine("Creating sync object...");
 
@@ -93,7 +98,6 @@ namespace Novell.iFolder
 					break;
 			}
 
-
 			syncManager = new SyncManager(props);
 			syncManager.ChangedState += 
 					new ChangedSyncStateEventHandler(syncManager_ChangedState);
@@ -111,26 +115,43 @@ namespace Novell.iFolder
 			Console.WriteLine("Starting sync object...");
 			syncManager.Start();
 
-			Gdk.Threads.Enter();
 			Application.Run();
-			Gdk.Threads.Leave();
 		}
+
+
+
+
+		static void ChangeState()
+		{
+			lock(syncManager)
+			{
+				if(syncState == SyncManagerStates.Active)
+				{
+					gAppIcon.FromAnimation = gSyncAnimation;
+					Console.WriteLine("The Synker is running");
+				}
+				else
+				{
+					gAppIcon.Pixbuf = gNifPixbuf;
+					Console.WriteLine("The Synker is stopping");
+				}
+			}
+		}
+
+
+
 
 		private static void syncManager_ChangedState(SyncManagerStates state)
 		{
-			Gdk.Threads.Enter();
-			if(state == SyncManagerStates.Active)
+			lock(syncManager)
 			{
-				gAppIcon.FromAnimation = gSyncAnimation;
-				Console.WriteLine("The Synker is running");
+				syncState = state;	
+				mainThreadNotify.WakeupMain();
 			}
-			else
-			{
-				gAppIcon.Pixbuf = gNifPixbuf;
-				Console.WriteLine("The Synker is stopping");
-			}
-			Gdk.Threads.Leave();
 		}
+
+
+
 
 		static void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
@@ -149,6 +170,9 @@ namespace Novell.iFolder
 					break;
 			}
 		}
+
+
+
 
 		static void show_tray_menu()
 		{
