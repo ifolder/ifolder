@@ -1017,6 +1017,9 @@ namespace Simias.Storage.Tests
 				// Commit the collection.
 				collection.Commit();
 
+				// Get the who I am.
+				Member member = collection.GetCurrentMember();
+
 				// Serialize the collection object.
 				MemoryStream ms = new MemoryStream();
 				BinaryFormatter bf = new BinaryFormatter();
@@ -1032,6 +1035,7 @@ namespace Simias.Storage.Tests
 				collection = new Collection( store, ( Node )bf.Deserialize( ms ) );
 				collection.ImportNode( collection, true, collection.LocalIncarnation );
 				collection.IncarnationUpdate = 2;
+				collection.Impersonate( member );
 				collection.Commit();
 			}
 			finally
@@ -1646,13 +1650,13 @@ namespace Simias.Storage.Tests
 		public void Cleanup()
 		{
 			// Delete the database.  Must be store owner to delete the database.
-			store.Delete();
+//			store.Delete();
 
 			// Remove the created directory.
 			string dirPath = Path.Combine( Directory.GetCurrentDirectory(), "CollectionStoreTestDir" );
 			if ( Directory.Exists( dirPath ) )
 			{
-				Directory.Delete( dirPath, true );
+//				Directory.Delete( dirPath, true );
 			}
 		}
 		#endregion
