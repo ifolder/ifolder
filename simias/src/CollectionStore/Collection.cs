@@ -69,6 +69,25 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the sync priority for this collection.
+		/// </summary>
+		internal int Priority
+		{
+			get
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.Priority );
+				return ( p != null ) ? ( int )p.Value : -1;
+			}
+
+			set 
+			{ 
+				Property p = new Property( PropertyTags.Priority, value );
+				p.LocalProperty = true;
+				properties.ModifyNodeProperty( p ); 
+			}
+		}
+
+		/// <summary>
 		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
 		public string Domain

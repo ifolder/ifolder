@@ -151,6 +151,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string Priority = "Priority";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string PublicKey = "PublicKey";
 
 		/// <summary>
@@ -231,6 +236,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( PolicyID, null );
 			systemPropertyTable.Add( PolicyAssociation, null );
+			systemPropertyTable.Add( Priority, null );
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
 			systemPropertyTable.Add( StorageSize, null );
