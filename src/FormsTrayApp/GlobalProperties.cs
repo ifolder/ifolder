@@ -2761,12 +2761,13 @@ namespace Novell.FormsTrayApp
 			{
 				FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
 
-				status.Text = string.Format(resourceManager.GetString("syncFile"), syncEventArgs.Name);
+				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
+				{
+					status.Text = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
 
-				// TODO: may want to include the direction as part of the message.
-
-				// Add message to log.
-				addMessageToLog(syncEventArgs.TimeStamp, string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
+					// Add message to log.
+					addMessageToLog(syncEventArgs.TimeStamp, status.Text);// string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
+				}
 			}
 			catch {}
 		}
