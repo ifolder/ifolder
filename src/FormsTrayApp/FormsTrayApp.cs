@@ -266,7 +266,7 @@ namespace Novell.FormsTrayApp
 
 		private void menuHelp_Click(object sender, System.EventArgs e)
 		{
-			new iFolderComponent().ShowHelp(Application.StartupPath);
+			new iFolderComponent().ShowHelp(Application.StartupPath, string.Empty);
 		}
 
 		private void menuExit_Click(object sender, System.EventArgs e)

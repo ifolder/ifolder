@@ -1010,7 +1010,7 @@ namespace Novell.iFolderCom
 
 		private void help_Click(object sender, System.EventArgs e)
 		{
-			new iFolderComponent().ShowHelp(loadPath);
+			new iFolderComponent().ShowHelp(loadPath, string.Empty);
 		}
 
 		private void ifolderPath_Paint(object sender, System.Windows.Forms.PaintEventArgs e)

@@ -40,15 +40,12 @@ namespace Novell.iFolderCom
 	public class NewiFolder : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.Button close;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.LinkLabel iFolderProperties;
 		private System.Windows.Forms.PictureBox iFolderEmblem;
-		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.CheckBox dontAsk;
 		private string folderName;
 		private string loadPath;
 		private const int SHOP_FILEPATH = 0x2;
-		private System.Windows.Forms.LinkLabel iFolderHelp;
+		private System.Windows.Forms.LinkLabel iFolderOverview;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -92,12 +89,9 @@ namespace Novell.iFolderCom
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(NewiFolder));
 			this.close = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.iFolderProperties = new System.Windows.Forms.LinkLabel();
 			this.iFolderEmblem = new System.Windows.Forms.PictureBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.dontAsk = new System.Windows.Forms.CheckBox();
-			this.iFolderHelp = new System.Windows.Forms.LinkLabel();
+			this.iFolderOverview = new System.Windows.Forms.LinkLabel();
 			this.SuspendLayout();
 			// 
 			// close
@@ -125,53 +119,6 @@ namespace Novell.iFolderCom
 			this.close.Visible = ((bool)(resources.GetObject("close.Visible")));
 			this.close.Click += new System.EventHandler(this.close_Click);
 			// 
-			// label1
-			// 
-			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
-			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
-			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
-			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
-			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
-			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
-			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
-			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
-			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
-			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
-			this.label1.Name = "label1";
-			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
-			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
-			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
-			this.label1.Text = resources.GetString("label1.Text");
-			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
-			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
-			// 
-			// iFolderProperties
-			// 
-			this.iFolderProperties.AccessibleDescription = resources.GetString("iFolderProperties.AccessibleDescription");
-			this.iFolderProperties.AccessibleName = resources.GetString("iFolderProperties.AccessibleName");
-			this.iFolderProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("iFolderProperties.Anchor")));
-			this.iFolderProperties.AutoSize = ((bool)(resources.GetObject("iFolderProperties.AutoSize")));
-			this.iFolderProperties.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("iFolderProperties.Dock")));
-			this.iFolderProperties.Enabled = ((bool)(resources.GetObject("iFolderProperties.Enabled")));
-			this.iFolderProperties.Font = ((System.Drawing.Font)(resources.GetObject("iFolderProperties.Font")));
-			this.iFolderProperties.Image = ((System.Drawing.Image)(resources.GetObject("iFolderProperties.Image")));
-			this.iFolderProperties.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("iFolderProperties.ImageAlign")));
-			this.iFolderProperties.ImageIndex = ((int)(resources.GetObject("iFolderProperties.ImageIndex")));
-			this.iFolderProperties.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("iFolderProperties.ImeMode")));
-			this.iFolderProperties.LinkArea = ((System.Windows.Forms.LinkArea)(resources.GetObject("iFolderProperties.LinkArea")));
-			this.iFolderProperties.Location = ((System.Drawing.Point)(resources.GetObject("iFolderProperties.Location")));
-			this.iFolderProperties.Name = "iFolderProperties";
-			this.iFolderProperties.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("iFolderProperties.RightToLeft")));
-			this.iFolderProperties.Size = ((System.Drawing.Size)(resources.GetObject("iFolderProperties.Size")));
-			this.iFolderProperties.TabIndex = ((int)(resources.GetObject("iFolderProperties.TabIndex")));
-			this.iFolderProperties.TabStop = true;
-			this.iFolderProperties.Text = resources.GetString("iFolderProperties.Text");
-			this.iFolderProperties.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("iFolderProperties.TextAlign")));
-			this.iFolderProperties.Visible = ((bool)(resources.GetObject("iFolderProperties.Visible")));
-			this.iFolderProperties.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderProperties_LinkClicked);
-			// 
 			// iFolderEmblem
 			// 
 			this.iFolderEmblem.AccessibleDescription = resources.GetString("iFolderEmblem.AccessibleDescription");
@@ -193,28 +140,6 @@ namespace Novell.iFolderCom
 			this.iFolderEmblem.Text = resources.GetString("iFolderEmblem.Text");
 			this.iFolderEmblem.Visible = ((bool)(resources.GetObject("iFolderEmblem.Visible")));
 			this.iFolderEmblem.Paint += new System.Windows.Forms.PaintEventHandler(this.iFolderEmblem_Paint);
-			// 
-			// label2
-			// 
-			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
-			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
-			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
-			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
-			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
-			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
-			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
-			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
-			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// dontAsk
 			// 
@@ -241,30 +166,30 @@ namespace Novell.iFolderCom
 			this.dontAsk.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("dontAsk.TextAlign")));
 			this.dontAsk.Visible = ((bool)(resources.GetObject("dontAsk.Visible")));
 			// 
-			// iFolderHelp
+			// iFolderOverview
 			// 
-			this.iFolderHelp.AccessibleDescription = resources.GetString("iFolderHelp.AccessibleDescription");
-			this.iFolderHelp.AccessibleName = resources.GetString("iFolderHelp.AccessibleName");
-			this.iFolderHelp.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("iFolderHelp.Anchor")));
-			this.iFolderHelp.AutoSize = ((bool)(resources.GetObject("iFolderHelp.AutoSize")));
-			this.iFolderHelp.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("iFolderHelp.Dock")));
-			this.iFolderHelp.Enabled = ((bool)(resources.GetObject("iFolderHelp.Enabled")));
-			this.iFolderHelp.Font = ((System.Drawing.Font)(resources.GetObject("iFolderHelp.Font")));
-			this.iFolderHelp.Image = ((System.Drawing.Image)(resources.GetObject("iFolderHelp.Image")));
-			this.iFolderHelp.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("iFolderHelp.ImageAlign")));
-			this.iFolderHelp.ImageIndex = ((int)(resources.GetObject("iFolderHelp.ImageIndex")));
-			this.iFolderHelp.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("iFolderHelp.ImeMode")));
-			this.iFolderHelp.LinkArea = ((System.Windows.Forms.LinkArea)(resources.GetObject("iFolderHelp.LinkArea")));
-			this.iFolderHelp.Location = ((System.Drawing.Point)(resources.GetObject("iFolderHelp.Location")));
-			this.iFolderHelp.Name = "iFolderHelp";
-			this.iFolderHelp.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("iFolderHelp.RightToLeft")));
-			this.iFolderHelp.Size = ((System.Drawing.Size)(resources.GetObject("iFolderHelp.Size")));
-			this.iFolderHelp.TabIndex = ((int)(resources.GetObject("iFolderHelp.TabIndex")));
-			this.iFolderHelp.TabStop = true;
-			this.iFolderHelp.Text = resources.GetString("iFolderHelp.Text");
-			this.iFolderHelp.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("iFolderHelp.TextAlign")));
-			this.iFolderHelp.Visible = ((bool)(resources.GetObject("iFolderHelp.Visible")));
-			this.iFolderHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderHelp_LinkClicked);
+			this.iFolderOverview.AccessibleDescription = resources.GetString("iFolderOverview.AccessibleDescription");
+			this.iFolderOverview.AccessibleName = resources.GetString("iFolderOverview.AccessibleName");
+			this.iFolderOverview.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("iFolderOverview.Anchor")));
+			this.iFolderOverview.AutoSize = ((bool)(resources.GetObject("iFolderOverview.AutoSize")));
+			this.iFolderOverview.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("iFolderOverview.Dock")));
+			this.iFolderOverview.Enabled = ((bool)(resources.GetObject("iFolderOverview.Enabled")));
+			this.iFolderOverview.Font = ((System.Drawing.Font)(resources.GetObject("iFolderOverview.Font")));
+			this.iFolderOverview.Image = ((System.Drawing.Image)(resources.GetObject("iFolderOverview.Image")));
+			this.iFolderOverview.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("iFolderOverview.ImageAlign")));
+			this.iFolderOverview.ImageIndex = ((int)(resources.GetObject("iFolderOverview.ImageIndex")));
+			this.iFolderOverview.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("iFolderOverview.ImeMode")));
+			this.iFolderOverview.LinkArea = ((System.Windows.Forms.LinkArea)(resources.GetObject("iFolderOverview.LinkArea")));
+			this.iFolderOverview.Location = ((System.Drawing.Point)(resources.GetObject("iFolderOverview.Location")));
+			this.iFolderOverview.Name = "iFolderOverview";
+			this.iFolderOverview.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("iFolderOverview.RightToLeft")));
+			this.iFolderOverview.Size = ((System.Drawing.Size)(resources.GetObject("iFolderOverview.Size")));
+			this.iFolderOverview.TabIndex = ((int)(resources.GetObject("iFolderOverview.TabIndex")));
+			this.iFolderOverview.TabStop = true;
+			this.iFolderOverview.Text = resources.GetString("iFolderOverview.Text");
+			this.iFolderOverview.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("iFolderOverview.TextAlign")));
+			this.iFolderOverview.Visible = ((bool)(resources.GetObject("iFolderOverview.Visible")));
+			this.iFolderOverview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.iFolderOverview_LinkClicked);
 			// 
 			// NewiFolder
 			// 
@@ -277,12 +202,9 @@ namespace Novell.iFolderCom
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
-			this.Controls.Add(this.iFolderHelp);
+			this.Controls.Add(this.iFolderOverview);
 			this.Controls.Add(this.dontAsk);
-			this.Controls.Add(this.iFolderProperties);
-			this.Controls.Add(this.label2);
 			this.Controls.Add(this.iFolderEmblem);
-			this.Controls.Add(this.label1);
 			this.Controls.Add(this.close);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
@@ -337,7 +259,7 @@ namespace Novell.iFolderCom
 		#endregion
 
 		#region Event Handlers
-		private void iFolderProperties_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+/*		private void iFolderProperties_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			// Invoke the iFolder properties dialog.
 //			Win32Window.ShObjectProperties(IntPtr.Zero, SHOP_FILEPATH, FolderName, "iFolder");
@@ -347,6 +269,11 @@ namespace Novell.iFolderCom
 		private void iFolderHelp_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			new iFolderComponent().ShowHelp(LoadPath);
+		}*/
+
+		private void iFolderOverview_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+		{
+			new iFolderComponent().ShowHelp(LoadPath, @"doc\user\data\bq6lwle.html");
 		}
 
 		private void close_Click(object sender, System.EventArgs e)

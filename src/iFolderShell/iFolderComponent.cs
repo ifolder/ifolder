@@ -96,7 +96,7 @@ namespace Novell.iFolderCom
 		/// Display the iFolder help.
 		/// </summary>
 		/// <param name="dllPath">The path where this assembly was loaded from.</param>
-		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
+		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string helpFile);
 
 		/// <summary>
 		/// Gets the name of the language directory where resource files are installed.
@@ -393,10 +393,12 @@ namespace Novell.iFolderCom
 		/// Display the iFolder help.
 		/// </summary>
 		/// <param name="dllPath">The path where this assembly was loaded from.</param>
-		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath)
+		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string helpFile)
 		{
 			// TODO - may need to pass in a specific page to load.
-			string helpPath = Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\front.html");
+			string helpPath = helpFile.Equals(string.Empty) ? 
+				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), @"doc\user\data\front.html") :
+				Path.Combine(Path.Combine(Path.Combine(dllPath, "help"), GetLanguageDirectory()), helpFile);
 
 			try
 			{
