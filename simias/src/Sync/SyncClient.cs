@@ -1537,14 +1537,24 @@ namespace Simias.Sync.Client
 						}
 						finally
 						{
-							success = file.Close(success);
-							if (success)
+							SyncNodeStatus syncStatus = file.Close(success);
+							switch (syncStatus.status)
 							{
-								filesToServer.Remove(nodeID);
-							}
-							else
-							{
-								log.Info("Failed Uploading File {0}", file.Name);
+								case SyncStatus.Success:
+									filesToServer.Remove(nodeID);
+									break;
+								case SyncStatus.InProgess:
+								case SyncStatus.InUse:
+								case SyncStatus.ServerFailure:
+									log.Info("Failed Uploading File {0}", file.Name);
+									break;
+								case SyncStatus.FileNameConflict:
+								case SyncStatus.UpdateConflict:
+									// Since we had a conflict we need to get the conflict node down.
+									filesFromServer[nodeID] = node.Type;
+
+									log.Info("Failed Uploading File {0}", file.Name);
+									break;
 							}
 						}
 					}

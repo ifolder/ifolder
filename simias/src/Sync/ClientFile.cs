@@ -441,18 +441,17 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="commit">True if changes should be commited.</param>
 		/// <returns>true if successful.</returns>
-		public bool Close(bool commit)
+		public SyncNodeStatus Close(bool commit)
 		{
-			bool bStatus = true;
 			// Close the file on the server.
 			SyncNodeStatus status = serverFile.CloseFileNode(commit);
-			if (commit)
+			if (commit && status.status == SyncStatus.Success)
 			{
 				node.SetMasterIncarnation(node.LocalIncarnation);
 				collection.Commit(node);
 			}
 			base.Close();
-			return bStatus;
+			return status;
 		}
 
 		
