@@ -17,7 +17,6 @@
  *  CRIMINAL AND CIVIL LIABILITY.  
  *
  *  Author: Calvin Gaisford <cgaisford@novell.com>
- *          Rob Lyon <rlyon@novell.com>
  *
  ***********************************************************************/
 using System;
@@ -57,14 +56,14 @@ namespace Simias.Web
 			// update the prefix of the installed directory
 			SimiasSetup.prefix = Path.Combine(Server.MapPath(null), "..");
 			Environment.CurrentDirectory = SimiasSetup.webbindir;
-			Console.Error.WriteLine("Application Start Path: {0}", Environment.CurrentDirectory);
+			Console.Error.WriteLine("Simias Application Path: {0}", Environment.CurrentDirectory);
 
             if (serviceManager == null)
             {
                 serviceManager = new Simias.Service.Manager(Configuration.GetConfiguration());
             }
 			
-			Console.Error.WriteLine("Starting Simias Process");
+			Console.Error.WriteLine("Simias Process Starting");
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
 
@@ -135,7 +134,7 @@ namespace Simias.Web
 		/// <param name="e"></param>
 		protected void Application_End(Object sender, EventArgs e)
 		{
-            Console.Error.WriteLine("Starting Simias Process Shutdown");
+            Console.Error.WriteLine("Simias Process Starting Shutdown");
 
 			// Send the simias down event and wait for 1/2 second for the message to be routed.
 			EventPublisher eventPub = new EventPublisher();

@@ -66,6 +66,14 @@ namespace Simias
 		}
 
 		/// <summary>
+		/// Reset the log4net configuration.
+		/// </summary>
+		public static void ResetConfiguration()
+		{
+			LogManager.ResetConfiguration();
+		}
+
+		/// <summary>
 		/// Configure the log manager to a specific Simias store.
 		/// </summary>
 		/// <param name="configuration">A Simias configuration object.</param>
@@ -152,7 +160,7 @@ namespace Simias
 					// file configuration
 					log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(configFile));
 
-                    configured = true;
+					configured = true;
                 }
             }
 		}

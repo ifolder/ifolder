@@ -148,6 +148,9 @@ namespace Simias.Service
 				mThread.IsBackground = true;
 				mThread.Start();
 			}
+
+			// reset the log4net configurations after a lock on Flaim was obtained
+			SimiasLogManager.ResetConfiguration();
 		}
 
 		#endregion
