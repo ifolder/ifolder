@@ -65,6 +65,9 @@ namespace StoreBrowser
 		private System.Windows.Forms.MenuItem pcmDelete;
 		private System.Windows.Forms.MenuItem pcmNew;
 		private System.Windows.Forms.MenuItem pcmEdit;
+		private System.Windows.Forms.MenuItem menuItem2;
+		private System.Windows.Forms.MenuItem MI_RecentS;
+		private System.Windows.Forms.MenuItem MI_RecentP;
 		private System.ComponentModel.IContainer components;
 
 		public Form1()
@@ -73,6 +76,7 @@ namespace StoreBrowser
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+			AddRecentMI();
 			this.Text = "Store Browser : " + hostName;
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
@@ -131,6 +135,9 @@ namespace StoreBrowser
 			this.pcmDelete = new System.Windows.Forms.MenuItem();
 			this.pcmNew = new System.Windows.Forms.MenuItem();
 			this.pcmEdit = new System.Windows.Forms.MenuItem();
+			this.menuItem2 = new System.Windows.Forms.MenuItem();
+			this.MI_RecentS = new System.Windows.Forms.MenuItem();
+			this.MI_RecentP = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -149,7 +156,10 @@ namespace StoreBrowser
 																					  this.menuItem4,
 																					  this.menuItem8,
 																					  this.menuItem5,
-																					  this.menuItem6});
+																					  this.menuItem6,
+																					  this.menuItem2,
+																					  this.MI_RecentS,
+																					  this.MI_RecentP});
 			this.menuItem1.Text = "File";
 			// 
 			// MI_OpenStore
@@ -318,6 +328,21 @@ namespace StoreBrowser
 			this.pcmEdit.Text = "Edit";
 			this.pcmEdit.Click += new System.EventHandler(this.pcmEdit_Click);
 			// 
+			// menuItem2
+			// 
+			this.menuItem2.Index = 8;
+			this.menuItem2.Text = "-";
+			// 
+			// MI_RecentS
+			// 
+			this.MI_RecentS.Index = 9;
+			this.MI_RecentS.Text = "Recent Store";
+			// 
+			// MI_RecentP
+			// 
+			this.MI_RecentP.Index = 10;
+			this.MI_RecentP.Text = "Recent Provider";
+			// 
 			// Form1
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -343,6 +368,47 @@ namespace StoreBrowser
 			Application.Run(new Form1());
 		}
 
+		private void On_RecentS_Click(object sender, System.EventArgs e)
+		{
+			hostName = ((MenuItem)sender).Text;
+			OpenStore();
+		}
+
+		private void OpenStore()
+		{
+			this.Text = "Store Browser : " + hostName;
+			browser = new NodeBrowser(tView, listView1, hostName);
+			browser.Show();
+		}
+
+		private void On_RecentP_Click(object sender, System.EventArgs e)
+		{
+			hostName = ((MenuItem)sender).Text;
+			OpenProvider();
+		}
+
+		private void OpenProvider()
+		{
+			this.Text = "Provider Browser : " + hostName;
+			browser = new ProviderBrowser(tView, richTextBox1, hostName);
+			browser.Show();
+		}
+
+		private void AddRecentMI()
+		{
+			bool found = false;
+			foreach (MenuItem item in MI_RecentS.MenuItems)
+			{
+				if (item.Text == hostName)
+					found = true;
+			}
+			if (!found)
+			{
+				MI_RecentS.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentS_Click)));
+				MI_RecentP.MenuItems.Add(new MenuItem(hostName, new EventHandler(On_RecentP_Click)));
+			}
+		}
+
 		private void MI_Open_Store_Click(object sender, System.EventArgs e)
 		{
 			tView.Nodes.Clear();
@@ -354,9 +420,8 @@ namespace StoreBrowser
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
-				this.Text = "Store Browser : " + hostName;
-				browser = new NodeBrowser(tView, listView1, hostName);
-				browser.Show();
+				AddRecentMI();
+				OpenStore();
 			}
 		}
 
@@ -372,9 +437,8 @@ namespace StoreBrowser
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
-				this.Text = "Provider Browser : " + hostName;
-				browser = new ProviderBrowser(tView, richTextBox1, hostName);
-				browser.Show();
+				AddRecentMI();
+				OpenProvider();
 			}
 		}
 
