@@ -218,7 +218,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			get
 			{
-				return title.Text;
+				return title.Text.Trim();
 			}
 			set
 			{
@@ -230,7 +230,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			get
 			{
-				return firstName.Text;
+				return firstName.Text.Trim();
 			}
 			set
 			{
@@ -242,7 +242,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			get
 			{
-				return middleName.Text;
+				return middleName.Text.Trim();
 			}
 			set
 			{
@@ -254,7 +254,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			get
 			{
-				return lastName.Text;
+				return lastName.Text.Trim();
 			}
 			set
 			{
@@ -266,7 +266,7 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			get
 			{
-				return suffix.Text;
+				return suffix.Text.Trim();
 			}
 			set
 			{

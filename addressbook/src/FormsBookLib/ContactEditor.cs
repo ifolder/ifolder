@@ -71,6 +71,8 @@ namespace Novell.iFolder.FormsBookLib
 		private Hashtable phoneHT;
 		private Hashtable emailHT;
 		private Name name;
+		private AddressEntry homeAddrEntry;
+		private AddressEntry workAddrEntry;
 
 		private Novell.AddressBook.AddressBook addressBook = null;
 		private Contact contact = null;
@@ -116,6 +118,8 @@ namespace Novell.iFolder.FormsBookLib
 
 			phoneHT = new Hashtable();
 			emailHT = new Hashtable();
+			homeAddrEntry = new AddressEntry();
+			workAddrEntry = new AddressEntry();
 		}
 
 		/// <summary>
@@ -282,7 +286,6 @@ namespace Novell.iFolder.FormsBookLib
 															 "Other email:"});
 			this.emailSelect.Location = new System.Drawing.Point(64, 160);
 			this.emailSelect.Name = "emailSelect";
-			this.emailSelect.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.emailSelect.Size = new System.Drawing.Size(104, 21);
 			this.emailSelect.TabIndex = 6;
 			this.emailSelect.Text = "Business email:";
@@ -311,6 +314,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.addr.Size = new System.Drawing.Size(96, 23);
 			this.addr.TabIndex = 22;
 			this.addr.Text = "Address...";
+			this.addr.Click += new System.EventHandler(this.addr_Click);
 			// 
 			// groupBox4
 			// 
@@ -370,7 +374,6 @@ namespace Novell.iFolder.FormsBookLib
 															   "Home:"});
 			this.addressSelect.Location = new System.Drawing.Point(472, 160);
 			this.addressSelect.Name = "addressSelect";
-			this.addressSelect.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.addressSelect.Size = new System.Drawing.Size(96, 21);
 			this.addressSelect.TabIndex = 21;
 			this.addressSelect.Text = "Business:";
@@ -409,7 +412,6 @@ namespace Novell.iFolder.FormsBookLib
 															  "Pager:"});
 			this.phoneSelect3.Location = new System.Drawing.Point(472, 80);
 			this.phoneSelect3.Name = "phoneSelect3";
-			this.phoneSelect3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect3.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect3.TabIndex = 17;
 			this.phoneSelect3.Text = "Home:";
@@ -426,7 +428,6 @@ namespace Novell.iFolder.FormsBookLib
 															  "Pager:"});
 			this.phoneSelect4.Location = new System.Drawing.Point(472, 112);
 			this.phoneSelect4.Name = "phoneSelect4";
-			this.phoneSelect4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect4.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect4.TabIndex = 19;
 			this.phoneSelect4.Text = "Mobile:";
@@ -451,7 +452,6 @@ namespace Novell.iFolder.FormsBookLib
 															  "Pager:"});
 			this.phoneSelect1.Location = new System.Drawing.Point(472, 16);
 			this.phoneSelect1.Name = "phoneSelect1";
-			this.phoneSelect1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect1.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect1.TabIndex = 13;
 			this.phoneSelect1.Text = "Business:";
@@ -468,7 +468,6 @@ namespace Novell.iFolder.FormsBookLib
 															  "Pager:"});
 			this.phoneSelect2.Location = new System.Drawing.Point(472, 48);
 			this.phoneSelect2.Name = "phoneSelect2";
-			this.phoneSelect2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.phoneSelect2.Size = new System.Drawing.Size(96, 21);
 			this.phoneSelect2.TabIndex = 15;
 			this.phoneSelect2.Text = "Business fax:";
@@ -686,7 +685,6 @@ namespace Novell.iFolder.FormsBookLib
 				foreach(Email tmpMail in contact.GetEmailAddresses())
 				{
 					EmailEntry entry = new EmailEntry();
-					entry.Add = false;
 					entry.EMail = tmpMail;
 
 					if ((tmpMail.Types & EmailTypes.work) == EmailTypes.work)
@@ -727,7 +725,6 @@ namespace Novell.iFolder.FormsBookLib
 				foreach(Telephone tmpPhone in contact.GetTelephoneNumbers())
 				{
 					TelephoneEntry phone = new TelephoneEntry();
-					phone.Add = false;
 					phone.Phone = tmpPhone;
 
 					if ((tmpPhone.Types & (PhoneTypes.work | PhoneTypes.voice)) == (PhoneTypes.work | PhoneTypes.voice))
@@ -759,28 +756,17 @@ namespace Novell.iFolder.FormsBookLib
 			}
 			catch{}
 
-/*			foreach(Address addr in contact.GetAddresses())
+			foreach(Address addr in contact.GetAddresses())
 			{
 				if((addr.Types & AddressTypes.work) == AddressTypes.work)
 				{
-					bStreetEdit.Text = addr.Street;
-					bCityEdit.Text = addr.Locality;
-					bStateEdit.Text = addr.Region;
-					bZipEdit.Text = addr.PostalCode;
-					bCountryEdit.Text = addr.Country;
-					foundWork = true;
+					workAddrEntry.Addr = addr;
 				}
-				else
-					if((addr.Types & AddressTypes.home) == AddressTypes.home)
+				else if((addr.Types & AddressTypes.home) == AddressTypes.home)
 				{
-					hStreetEdit.Text = addr.Street;
-					hCityEdit.Text = addr.Locality;
-					hStateEdit.Text = addr.Region;
-					hZipEdit.Text = addr.PostalCode;
-					hCountryEdit.Text = addr.Country;
-					foundHome = true;
+					homeAddrEntry.Addr = addr;
 				}
-			}*/
+			}
 
 			return(true);
 		}
@@ -901,7 +887,7 @@ namespace Novell.iFolder.FormsBookLib
 				eMail_Leave(this, null);
 
 			string	username = null;
-			string	email = null;
+//			string	email = null;
 
 			username = userId.Text.Trim();
 
@@ -947,6 +933,25 @@ namespace Novell.iFolder.FormsBookLib
 					contact.Url = webAddress.Text.Trim();
 					contact.Blog = blogAddress.Text.Trim();
 
+					// Update addresses.
+					if (homeAddrEntry.Add)
+					{
+						contact.AddAddress(homeAddrEntry.Addr);
+					}
+					else if (homeAddrEntry.Remove)
+					{
+						homeAddrEntry.Addr.Delete();
+					}
+
+					if (workAddrEntry.Add)
+					{
+						contact.AddAddress(workAddrEntry.Addr);
+					}
+					else if (workAddrEntry.Remove)
+					{
+						workAddrEntry.Addr.Delete();
+					}
+
 					addressBook.AddContact(contact);
 					contact.Commit();
 				}
@@ -989,6 +994,25 @@ namespace Novell.iFolder.FormsBookLib
 					contact.Organization = organization.Text.Trim();
 					contact.Url = webAddress.Text.Trim();
 					contact.Blog = blogAddress.Text.Trim();
+
+					// Update addresses.
+					if (homeAddrEntry.Add)
+					{
+						contact.AddAddress(homeAddrEntry.Addr);
+					}
+					else if (homeAddrEntry.Remove)
+					{
+						homeAddrEntry.Addr.Delete();
+					}
+
+					if (workAddrEntry.Add)
+					{
+						contact.AddAddress(workAddrEntry.Addr);
+					}
+					else if (workAddrEntry.Remove)
+					{
+						workAddrEntry.Addr.Delete();
+					}
 
 					contact.Commit();
 				}
@@ -1220,10 +1244,10 @@ namespace Novell.iFolder.FormsBookLib
 			if (result == DialogResult.OK)
 			{
 				// Save the information.
-				name.Prefix = fullNameDlg.Title.Trim();
-				name.Given = fullNameDlg.FirstName.Trim();
-				name.Family = fullNameDlg.LastName.Trim();
-				name.Suffix = fullNameDlg.Suffix.Trim();
+				name.Prefix = fullNameDlg.Title;
+				name.Given = fullNameDlg.FirstName;
+				name.Family = fullNameDlg.LastName;
+				name.Suffix = fullNameDlg.Suffix;
 
 				fullName.Text = BuildDisplayableName(name);
 			}
@@ -1302,6 +1326,80 @@ namespace Novell.iFolder.FormsBookLib
 			if (this.phoneSelect3.SelectedIndex == this.phoneSelect4.SelectedIndex)
 			{
 				phone3.Text = phone4.Text;
+			}
+		}
+
+		private void addr_Click(object sender, System.EventArgs e)
+		{
+			AddressEntry selectedAddr;
+			
+			if (addressSelect.SelectedIndex == 0)
+			{
+				if (workAddrEntry.Addr == null)
+				{
+					workAddrEntry.Addr = new Address();
+					workAddrEntry.Add = true;
+					workAddrEntry.Addr.Types = AddressTypes.work;
+				}
+				selectedAddr = workAddrEntry;
+			}
+			else
+			{
+				if (homeAddrEntry.Addr == null)
+				{
+					homeAddrEntry.Addr = new Address();
+					homeAddrEntry.Add = true;
+					homeAddrEntry.Addr.Types = AddressTypes.home;
+				}
+				selectedAddr = homeAddrEntry;
+			}
+
+			FullAddress addrDlg = new FullAddress();
+
+			// Initialize.
+			addrDlg.Street = selectedAddr.Addr.Street;
+			addrDlg.ExtendedAddress = selectedAddr.Addr.ExtendedAddress;
+			addrDlg.Locality = selectedAddr.Addr.Locality;
+			addrDlg.RegionAddr = selectedAddr.Addr.Region;
+			addrDlg.PostalBox = selectedAddr.Addr.PostalBox;
+			addrDlg.PostalCode = selectedAddr.Addr.PostalCode;
+			addrDlg.Country = selectedAddr.Addr.Country;
+
+			DialogResult result = addrDlg.ShowDialog();
+			if (result == DialogResult.OK)
+			{
+				if (addrDlg.Street != "" ||
+					addrDlg.ExtendedAddress != "" ||
+					addrDlg.Locality != "" ||
+					addrDlg.RegionAddr != "" ||
+					addrDlg.PostalBox != "" ||
+					addrDlg.PostalCode != "" ||
+					addrDlg.Country != "")
+				{
+					selectedAddr.Addr.Street = addrDlg.Street;
+					selectedAddr.Addr.ExtendedAddress = addrDlg.ExtendedAddress;
+					selectedAddr.Addr.Locality = addrDlg.Locality;
+					selectedAddr.Addr.Region = addrDlg.RegionAddr;
+					selectedAddr.Addr.PostalBox = addrDlg.PostalBox;
+					selectedAddr.Addr.PostalCode = addrDlg.PostalCode;
+					selectedAddr.Addr.Country = addrDlg.Country;
+				}
+				else
+				{
+					if (selectedAddr.Add)
+					{
+						selectedAddr.Add = false;
+					}
+					else
+					{
+						selectedAddr.Remove = true;
+					}
+				}
+			}
+			else
+			{
+				if (selectedAddr.Add)
+					selectedAddr.Add = false;
 			}
 		}
 		#endregion
