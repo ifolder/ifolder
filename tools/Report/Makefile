@@ -20,6 +20,7 @@
 #  Author: Rob
 #
 #######################################################################
+
 CSCFLAGS = /optimize+ /d:MONO /warn:4 /d:TRACE /nologo
 #CSCFLAGS = /debug+ /d:DEBUG /d:TRACE
 
