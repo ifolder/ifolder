@@ -646,7 +646,6 @@ namespace Simias.Gaim
 		{
 			// Check to see if the buddy already exists
 			Member member = null;
-			string buddyMungedID = GetGaimMungedID(buddy);
 			ICSList domainMembers = domain.GetNodesByName(buddy.Name);
 			foreach (ShallowNode sNode in domainMembers)
 			{
@@ -655,7 +654,7 @@ namespace Simias.Gaim
 					
 				Simias.Storage.PropertyList pList = aMember.Properties;
 				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
-				if (p != null && ((string) p.Value) == buddyMungedID)
+				if (p != null && ((string) p.Value) == buddy.MungedID)
 				{
 					member = aMember;
 					break;
@@ -665,15 +664,6 @@ namespace Simias.Gaim
 			return member;			
 		}
 		
-		internal static string GetGaimMungedID(GaimBuddy buddy)
-		{
-			return buddy.AccountName 
-				+ ":" 
-				+ buddy.AccountProtocolID
-				+ ":"
-				+ buddy.Name;
-		}
-
 		internal static void SyncBuddies(Simias.Storage.Domain domain)
 		{
 			GaimBuddy[] buddies;
@@ -728,7 +718,7 @@ namespace Simias.Gaim
 			
 			// Gaim Munge ID (Account Name + Account Proto + Buddy Name) for faster lookups
 			Simias.Storage.Property p =
-				new Property("Gaim:MungedID", GetGaimMungedID(buddy));
+				new Property("Gaim:MungedID", buddy.MungedID);
 			p.LocalProperty = true;
 			member.Properties.AddProperty(p);
 			
@@ -853,7 +843,7 @@ namespace Simias.Gaim
 			{
 				Simias.Storage.PropertyList pList = member.Properties;
 				Simias.Storage.Property p = pList.GetSingleProperty("Gaim:MungedID");
-				if (p != null && ((string) p.Value) == GetGaimMungedID(buddy))
+				if (p != null && ((string) p.Value) == buddy.MungedID)
 				{
 					return true;
 				}

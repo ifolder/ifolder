@@ -152,6 +152,14 @@ namespace Simias.Gaim
 			}
 		}
 
+		public string MungedID
+		{
+			get
+			{
+				return AccountName + ":" + AccountProtocolID + ":" + Name;
+			}
+		}
+		
 		#endregion
 
 		#region Constructors
