@@ -291,7 +291,7 @@ namespace Simias.Storage
 				// This collection is not currently being impersonated, go look up the Member object of 
 				// the current identity in the store.
 				Identity identity = store.CurrentUser;
-				string userID = identity.GetUserIDFromDomain( store.LocalDb, domainID );
+				string userID = identity.GetUserIDFromDomain( domainID );
 				if ( userID == null )
 				{
 					// The domain mapping has to exist or it means that we never were invited to this domain.

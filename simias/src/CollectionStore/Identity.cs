@@ -434,29 +434,19 @@ namespace Simias.Storage
 		/// <returns>The modified identity object.</returns>
 		internal Identity AddDomainIdentity( string userID, string domainID )
 		{
-			properties.AddNodeProperty( PropertyTags.Domain, userID.ToLower() + valueSeparator + domainID );
+			properties.AddNodeProperty( PropertyTags.Domain, userID.ToLower() + valueSeparator + domainID.ToLower() );
 			return this;
 		}
 
 		/// <summary>
 		/// Removes the specified domain mapping from the identity object.
 		/// </summary>
-		/// <param name="localDb">Reference to the local database object.</param>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <returns>The modified identity object.</returns>
-		internal Identity DeleteDomainIdentity( LocalDatabase localDb, string domainID )
+		internal Identity DeleteDomainIdentity( string domainID )
 		{
 			// Find the property to be deleted.
-			Property p = GetPropertyByDomain( domainID );
-			if ( ( p == null ) && ( localDb != null ) )
-			{
-				// This may be caused by a stale node. It needs to be refreshed.
-				localDb.Refresh( this );
-				
-				// Try again.
-				p = GetPropertyByDomain( domainID );
-			}
-
+			Property p = GetPropertyByDomain( domainID.ToLower() );
 			if ( p != null )
 			{
 				p.DeleteProperty();
@@ -468,47 +458,25 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the domain associated with the specified user ID.
 		/// </summary>
-		/// <param name="localDb">Reference to the local database object.</param>
 		/// <param name="userID">User ID to find the associated domain for.</param>
 		/// <returns>Domain name associated with the specified user ID if it exists. Otherwise null is returned.</returns>
-		internal string GetDomainFromUserID( LocalDatabase localDb, string userID )
+		internal string GetDomainFromUserID( string userID )
 		{
-			string normalizedID = userID.ToLower();
-
 			// Find the property associated with the user ID.
-			Property p = GetPropertyByUserID( normalizedID );
-			if ( ( p == null ) && ( localDb != null ) )
-			{
-				// This may be caused by a stale node. It needs to be refreshed.
-				localDb.Refresh( this );
-
-				// Try again.
-				p = GetPropertyByUserID( normalizedID );
-			}
-
-			return ( p != null ) ? ( p.Value as string ).Substring( normalizedID.Length + 1 ) : null;
+			Property p = GetPropertyByUserID( userID.ToLower() );
+			return ( p != null ) ? ( p.Value as string ).Substring( userID.Length + 1 ) : null;
 		}
 
 		/// <summary>
 		/// Gets the user ID associated with the specified domain ID.
 		/// </summary>
-		/// <param name="localDb">Reference to the local database object.</param>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <returns>User ID associated with the specified domain ID if it exists. Otherwise null is returned.</returns>
-		internal string GetUserIDFromDomain( LocalDatabase localDb, string domainID )
+		internal string GetUserIDFromDomain( string domainID )
 		{
 			// Find the property associated with the user ID.
-			Property p = GetPropertyByDomain( domainID );
-			if ( ( p == null ) && ( localDb != null ) )
-			{
-				// This may be caused by a stale node. It needs to be refreshed.
-				localDb.Refresh( this );
-
-				// Try again.
-				p = GetPropertyByDomain( domainID );
-			}
-
-			return ( p != null ) ? ( p.Value as string ).Substring( 0, id.Length ) : null;
+			Property p = GetPropertyByDomain( domainID.ToLower() );
+			return ( p != null ) ? ( p.Value as string ).Substring( 0, domainID.Length ) : null;
 		}
 		#endregion
 	}

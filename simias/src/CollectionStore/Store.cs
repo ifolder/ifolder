@@ -85,15 +85,14 @@ namespace Simias.Storage
 		private EventPublisher eventPublisher;
 
 		/// <summary>
-		/// Represents the current logged on user.
+		/// Used for quick lookup of the current logged on user.
 		/// </summary>
-		private Identity identity;
+		private string identity = null;
 
 		/// <summary>
-		/// Used so the object does not have to be looked up everytime. Take caution
-		/// in using this object because it may be stale. 
+		/// Used for quick lookup of the local database.
 		/// </summary>
-		private LocalDatabase localDb = null;
+		private string localDb = null;
 
 		/// <summary>
 		/// Singleton of the store.
@@ -112,7 +111,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal Identity CurrentUser
 		{
-			get { return identity; }
+			get { return GetNodeByID( localDb, identity ) as Identity; }
 		}
 
 		/// <summary>
@@ -124,13 +123,11 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the cached (and therefore possibly stale) local database reference.
-		/// If you don't care about the properties on the object itself, it is safe
-		/// to use this object.
+		/// Gets the local database object.
 		/// </summary>
 		internal LocalDatabase LocalDb
 		{
-			get { return localDb; }
+			get { return GetNodeByID( localDb, localDb ) as LocalDatabase; }
 		}
 
 		/// <summary>
@@ -163,11 +160,12 @@ namespace Simias.Storage
 		/// </summary>
 		public string DefaultDomain
 		{
-			get { return ( localDb.Refresh() as LocalDatabase ).DefaultDomain; }
+			get { return LocalDb.DefaultDomain; }
 			set
 			{
-				localDb.DefaultDomain = value;
-				localDb.Commit();
+				LocalDatabase ldb = LocalDb;
+				ldb.DefaultDomain = value;
+				ldb.Commit();
 			}
 		}
 
@@ -176,7 +174,7 @@ namespace Simias.Storage
 		/// </summary>
 		public string ID
 		{
-			get { return localDb.ID; }
+			get { return localDb; }
 		}
 
 		/// <summary>
@@ -226,24 +224,33 @@ namespace Simias.Storage
 					ArrayList nodeList = new ArrayList();
 
 					// Create an object that represents the database collection.
-					localDb = new LocalDatabase( this );
-					nodeList.Add( localDb );
+					LocalDatabase ldb = new LocalDatabase( this );
+					localDb = ldb.ID;
+					nodeList.Add( ldb );
 
 					// Create an identity that represents the current user.  This user will become the 
 					// database owner. Add the domain mapping to the identity.
-					identity = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
-					nodeList.Add( identity );
+					Identity owner = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
+					identity = owner.ID;
+					nodeList.Add( owner );
+
+					// Create a member object that will own the local database.
+					Member member = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+					member.IsOwner = true;
+					nodeList.Add( member );
 
 					// Create the default workgroup domain.
 					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
 					nodeList.Add( wgDomain );
 
 					// Create an identity mapping for the workgroup.
-					identity.AddDomainIdentity( identity.ID, wgDomain.ID );
+					owner.AddDomainIdentity( owner.ID, wgDomain.ID );
 
 					// Create an empty roster for the workgroup domain.
 					Roster wgRoster = new Roster( this, wgDomain );
-					wgRoster.Commit();
+					Member wgRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+					wgRosterOwner.IsOwner = true;
+					wgRoster.Commit( new Node[] { wgRoster, wgRosterOwner } );
 
 					// See if there is a configuration parameter for an enterprise domain.
 					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
@@ -266,21 +273,23 @@ namespace Simias.Storage
 						nodeList.Add( eDomain );
 
 						// Add the domain identity mapping.
-						identity.AddDomainIdentity( identity.ID, eDomain.ID );
+						owner.AddDomainIdentity( owner.ID, eDomain.ID );
 
 						// Add the enterprise domain as the default domain.
-						localDb.DefaultDomain = eDomain.ID;
+						ldb.DefaultDomain = eDomain.ID;
 
 						// Create a domain roster that will contain the member of the domain.
-						Roster roster = new Roster( this, eDomain );
-						roster.Commit();
+						Roster entRoster = new Roster( this, eDomain );
+						Member entRosterOwner = new Member( owner.Name, owner.ID, Access.Rights.Admin );
+						entRosterOwner.IsOwner = true;
+						entRoster.Commit( new Node[] { entRoster, entRosterOwner } );
 						
 						// This instance is running on an enterprise server.
 						enterpriseServer = true;
 					}
 
 					// Save the local database changes.
-					localDb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
+					ldb.Commit( nodeList.ToArray( typeof( Node ) ) as Node[] );
 				}
 				catch ( Exception e )
 				{
@@ -301,18 +310,19 @@ namespace Simias.Storage
 			else
 			{
 				// Get the local database object.
-				if ( GetDatabaseObject() == null )
+				LocalDatabase ldb = GetDatabaseObject();
+				if ( ldb == null )
 				{
 					throw new DoesNotExistException( "Local database object does not exist." );
 				}
 
 				// Get the identity object that represents this logged on user.
-				ICSList list = localDb.Search( BaseSchema.ObjectType, NodeTypes.IdentityType, SearchOp.Equal );
+				ICSList list = ldb.Search( BaseSchema.ObjectType, NodeTypes.IdentityType, SearchOp.Equal );
 				foreach ( ShallowNode sn in list )
 				{
 					if ( sn.Name == Environment.UserName )
 					{
-						identity = new Identity( localDb, sn );
+						identity = sn.ID;
 						break;
 					}
 				}
@@ -356,6 +366,22 @@ namespace Simias.Storage
 			{
 				instance = null;
 			}
+		}
+		#endregion
+
+		#region Private Methods
+		/// <summary>
+		/// Returns a Node object for the specified identifier.
+		/// </summary>
+		/// <param name="collectionID">Identifier of the collection that the node is contained by.</param>
+		/// <param name="nodeID">Globally unique identifier for the object.</param>
+		/// <returns>A Node object for the specified identifier.  If the object doesn't 
+		/// exist a null is returned.</returns>
+		private Node GetNodeByID( string collectionID, string nodeID )
+		{
+			// Get the specified object from the persistent store.
+			XmlDocument document = storageProvider.GetRecord( nodeID.ToLower(), collectionID.ToLower() );
+			return ( document != null ) ? Node.NodeFactory( this, document ) : null;
 		}
 		#endregion
 
@@ -403,10 +429,10 @@ namespace Simias.Storage
 			// Create the domain object.
 			Domain domain = new Domain( domainName, domainID.ToLower(), domainDescription );
 			nodeList[ 0 ] = domain;
-			nodeList[ 1 ] = identity.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
+			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
 			
 			// Commit the changes.
-			localDb.Commit( nodeList );
+			LocalDb.Commit( nodeList );
 			return domain;
 		}
 
@@ -435,11 +461,12 @@ namespace Simias.Storage
 			Node[] nodeList = new Node[ 2 ];
 
 			// Delete the domain object.
-			nodeList[ 0 ] = localDb.Delete( GetDomain( domainID ) );
-			nodeList[ 1 ] = identity.DeleteDomainIdentity( localDb, domainID.ToLower() );
+			LocalDatabase ldb = LocalDb;
+			nodeList[ 0 ] = ldb.Delete( GetDomain( domainID ) );
+			nodeList[ 1 ] = CurrentUser.DeleteDomainIdentity( domainID.ToLower() );
 
 			// Commit the changes.
-			localDb.Commit( nodeList );
+			ldb.Commit( nodeList );
 		}
 
 		/// <summary>
@@ -675,6 +702,8 @@ namespace Simias.Storage
 		/// the database object does not exist.</returns>
 		public LocalDatabase GetDatabaseObject()
 		{
+			LocalDatabase ldb = null;
+
 			// See if the local database object has already been looked up.
 			if ( localDb == null )
 			{
@@ -691,7 +720,8 @@ namespace Simias.Storage
 						// Set up the XML document so the data can be easily extracted.
 						XmlDocument document = new XmlDocument();
 						document.LoadXml( new string( results, 0, length ) );
-						localDb = new LocalDatabase( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
+						ldb = new LocalDatabase( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
+						localDb = ldb.ID;
 					}
 
 					chunkIterator.Dispose();
@@ -699,10 +729,10 @@ namespace Simias.Storage
 			}
 			else
 			{
-				localDb.Refresh();
+				ldb = LocalDb;
 			}
 
-			return localDb;
+			return ldb;
 		}
 
 		/// <summary>
@@ -712,7 +742,7 @@ namespace Simias.Storage
 		/// <returns>Domain object that the specified ID refers to if successful. Otherwise returns a null.</returns>
 		public Domain GetDomain( string domainID )
 		{
-			return localDb.GetNodeByID( domainID.ToLower() ) as Domain;
+			return GetNodeByID( localDb, domainID ) as Domain;
 		}
 
 		/// <summary>
@@ -724,10 +754,10 @@ namespace Simias.Storage
 		{
 			Domain domain = null;
 
-			string domainID = identity.GetDomainFromUserID( localDb, userID.ToLower() );
+			string domainID = CurrentUser.GetDomainFromUserID( userID );
 			if ( domainID != null )
 			{
-				domain = localDb.GetNodeByID( domainID ) as Domain;
+				domain = GetNodeByID( localDb, domainID ) as Domain;
 			}
 
 			return domain;
@@ -804,7 +834,7 @@ namespace Simias.Storage
 		/// <returns>The user ID that the logged on user is known as in the specified domain.</returns>
 		public string GetUserIDFromDomainID( string domainID )
 		{
-			return identity.GetUserIDFromDomain( localDb, domainID.ToLower() );
+			return CurrentUser.GetUserIDFromDomain( domainID );
 		}
 		#endregion
 
