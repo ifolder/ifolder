@@ -154,11 +154,17 @@ namespace Simias.Channels
 				{
 					// soap
 					serverProvider = new SoapServerFormatterSinkProvider();
+#if !MONO
+					(serverProvider as SoapServerFormatterSinkProvider).TypeFilterLevel = TypeFilterLevel.Full;
+#endif
 				}
 				else
 				{
 					// binary
 					serverProvider = new BinaryServerFormatterSinkProvider();
+#if !MONO
+					(serverProvider as BinaryServerFormatterSinkProvider).TypeFilterLevel = TypeFilterLevel.Full;
+#endif
 				}
 
 				// setup monitor provider
