@@ -231,12 +231,12 @@ namespace Simias.Sync
 					storeService = (SyncStoreService)Activator.GetObject(typeof(SyncStoreService), collection.ServiceUrl);
 					Debug.Assert(storeService != null);
 
-					// debug
-					MyTrace.WriteLine("Sync Store Service Ping: {0}", service.Ping());
-
 					// get a proxy to the collection service object
 					service = storeService.GetCollectionService(collection.ID);
 					Debug.Assert(service != null);
+
+					// debug
+					MyTrace.WriteLine("Sync Collection Ping: {0}", service.Ping());
 
 					// get the collection worker
 					worker = syncManager.LogicFactory.GetCollectionWorker(service, collection);

@@ -164,7 +164,9 @@ namespace Novell.iFolder.Mini
 
 			MyTrace.WriteLine("Done.");
 
-			// done
+			//done
+			Environment.Exit(0);
+
 			return 0;
 		}
 
