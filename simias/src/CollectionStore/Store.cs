@@ -1359,14 +1359,18 @@ namespace Simias.Storage
 							dbDocument.LoadXml( new string( results, 0, length ) );
 							localDb = GetShallowCollection( dbDocument.DocumentElement.FirstChild );
 
-							// Set up a delegate to update the local database object if it changes.
-							string[] nodeFilter = new string[ 1 ];
-							nodeFilter[ 0 ] = localDb.Id;
-							localDb.NodeEventsSubscribe( new Collection.NodeChangeHandler( OnChangedDb ), nodeFilter );
+							//							// Set up a delegate to update the local database object if it changes.
+							//							string[] nodeFilter = new string[ 1 ];
+							//							nodeFilter[ 0 ] = localDb.Id;
+							//							localDb.NodeEventsSubscribe( new Collection.NodeChangeHandler( OnChangedDb ), nodeFilter );
 						}
 
 						chunkIterator.Dispose();
 					}
+				}
+				else
+				{
+					localDb.Refresh();
 				}
 
 				return localDb;
@@ -1406,14 +1410,18 @@ namespace Simias.Storage
 							abDocument.LoadXml( new string( results, 0, length ) );
 							localAb = new LocalAddressBook( this, GetShallowCollection( abDocument.DocumentElement.FirstChild ) );
 
-							// Set up a delegate to update the local address book object if it changes.
-							string[] nodeFilter = new string[ 1 ];
-							nodeFilter[ 0 ] = localAb.Id;
-							localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedAb ), nodeFilter );
+							//							// Set up a delegate to update the local address book object if it changes.
+							//							string[] nodeFilter = new string[ 1 ];
+							//							nodeFilter[ 0 ] = localAb.Id;
+							//							localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedAb ), nodeFilter );
 						}
 
 						chunkIterator.Dispose();
 					}
+				}
+				else
+				{
+					localAb.Refresh();
 				}
 
 				return localAb;

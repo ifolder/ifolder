@@ -112,6 +112,7 @@ namespace Simias.Storage
 						throw new ObjectDisposedException( this.ToString() );
 					}
 
+					identity.Refresh();
 					return ( impersonationId.Count == 0 ) ? identity : impersonationId.Peek() as Identity; 
 				}
 			}
@@ -164,23 +165,23 @@ namespace Simias.Storage
 			this.publicKey = new RSACryptoServiceProvider();
 			this.publicKey.ImportParameters( identity.ServerCredential.ExportParameters( false ) );
 
-			// Set up a delegate to update the identity object if it changes.
-			string[] identityFilter = new string[ 1 ];
-			identityFilter[ 0 ] = identity.Id;
-			localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedIdentity ), identityFilter );
+//			// Set up a delegate to update the identity object if it changes.
+//			string[] identityFilter = new string[ 1 ];
+//			identityFilter[ 0 ] = identity.Id;
+//			localAb.NodeEventsSubscribe( new LocalAddressBook.NodeChangeHandler( OnChangedIdentity ), identityFilter );
 		}
 		#endregion
 
 		#region Private Methods
-		/// <summary>
-		/// This method is informed of a change to the identity object and will automatically refresh it.
-		/// </summary>
-		/// <param name="args">Event context arguments.</param>
-		private void OnChangedIdentity( NodeEventArgs args )
-		{
-			MyTrace.WriteLine( "Refreshing local identity object." );
-			identity.Refresh();
-		}
+//		/// <summary>
+//		/// This method is informed of a change to the identity object and will automatically refresh it.
+//		/// </summary>
+//		/// <param name="args">Event context arguments.</param>
+//		private void OnChangedIdentity( NodeEventArgs args )
+//		{
+//			MyTrace.WriteLine( "Refreshing local identity object." );
+//			identity.Refresh();
+//		}
 		#endregion
 
 		#region Public Methods
@@ -294,6 +295,7 @@ namespace Simias.Storage
 				if ( serverRealm != domainName )
 				{
 					// Find the alias that belongs to the specified domain.
+					identity.Refresh();
 					Alias alias = identity.GetAliasFromDomain( serverRealm );
 					if ( alias == null )
 					{
@@ -358,6 +360,7 @@ namespace Simias.Storage
 				else
 				{
 					// Need to look up the alias for the specified domain and return the public key.
+					identity.Refresh();
 					Alias alias = identity.GetAliasFromDomain( realm );
 					if ( alias != null )
 					{
