@@ -264,6 +264,21 @@ namespace Simias.POBox
 				log.Debug( "  no credentials - back to sleep" );
 				return result;
 			}
+
+			// Add a new member to the domain if one doesn't exist already.  This is needed
+			// for Workgroup Domains.  If the user doesn't exist, the upcoming call to
+			// ResolvePOBoxLocation will fail.
+			try
+			{
+				Domain domain = Store.GetStore().GetDomain( subscription.DomainID );
+				Member member = domain.GetMemberByName( subscription.FromName );
+				if ( member == null )
+				{
+					member = new Member( subscription.FromName, subscription.FromIdentity, subscription.SubscriptionRights );
+					domain.Commit( member );
+				}
+			}
+			catch {}
 			
 			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
 
