@@ -212,14 +212,15 @@ namespace Novell.FormsTrayApp
 			}*/
 
 			ServerInfo serverInfo = new ServerInfo(ifWebService);
-			serverInfo.ShowDialog();
+			serverInfo.EnterpriseConnect += new Novell.FormsTrayApp.ServerInfo.EnterpriseConnectDelegate(serverInfo_EnterpriseConnect);
+			serverInfo.Show();
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
 			if (!globalProperties.Visible)
 			{
-				globalProperties.ShowDialog();
+				globalProperties.Show();
 			}
 		}
 
@@ -460,6 +461,11 @@ namespace Novell.FormsTrayApp
 					break;
 				}
 			}
+		}
+
+		private void serverInfo_EnterpriseConnect(object sender, EventArgs e)
+		{
+			globalProperties.ShowEnterpriseTab = true;
 		}
 		#endregion
 

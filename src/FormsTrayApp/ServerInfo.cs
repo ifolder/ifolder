@@ -47,7 +47,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.TextBox userName;
 		private System.Windows.Forms.PictureBox banner;
 		private iFolderWebService ifWebService;
-		private bool connected;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -149,6 +148,7 @@ namespace Novell.FormsTrayApp
 			this.cancel.Text = resources.GetString("cancel.Text");
 			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
 			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
+			this.cancel.Click += new System.EventHandler(this.cancel_Click);
 			// 
 			// userName
 			// 
@@ -347,7 +347,6 @@ namespace Novell.FormsTrayApp
 			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
 			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
-			this.Closing += new System.ComponentModel.CancelEventHandler(this.ServerInfo_Closing);
 			this.Load += new System.EventHandler(this.ServerInfo_Load);
 			this.Activated += new System.EventHandler(this.ServerInfo_Activated);
 			this.ResumeLayout(false);
@@ -355,18 +354,39 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
+		#region Events
+		/// <summary>
+		/// Delegate used when successfully connected to Enterprise Server.
+		/// </summary>
+		public delegate void EnterpriseConnectDelegate(object sender, EventArgs e);
+		/// <summary>
+		/// Occurs when all successfully connected to enterprise.
+		/// </summary>
+		public event EnterpriseConnectDelegate EnterpriseConnect;
+		#endregion
+
 		#region Event Handlers
+		private void cancel_Click(object sender, System.EventArgs e)
+		{
+			Close();
+		}
+
 		private void ok_Click(object sender, System.EventArgs e)
 		{
 			Cursor.Current = Cursors.WaitCursor;
-			connected = false;
 
 			try
 			{
 				if (ifWebService != null)
 				{
 					ifWebService.ConnectToEnterpriseServer(userName.Text, password.Text, serverIP.Text);
-					connected = true;
+
+					if (EnterpriseConnect != null)
+					{
+						EnterpriseConnect(this, new EventArgs());
+					}
+
+					Close();
 				}
 			}
 			catch (WebException ex)
@@ -408,15 +428,6 @@ namespace Novell.FormsTrayApp
 		private void ServerInfo_Activated(object sender, System.EventArgs e)
 		{
 			userName.Focus();
-		}
-
-		private void ServerInfo_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			// Don't close the dialog if we failed to connect.
-			if ((this.DialogResult == DialogResult.OK) && !connected)
-			{
-				e.Cancel = true;
-			}
 		}
 		#endregion
 	}
