@@ -421,6 +421,24 @@ namespace Simias.Sync.Client
 		private const string	ClientCLContextProp = "ClientCLContext";
 		int				nodesToSync;
 		static int		initialSyncDelay = 10 * 1000; // 10 seconds.
+		DateTime		syncStartTime; // Time stamp when sync was called.
+		const int		timeSlice = 3; //Timeslice in minutes.
+
+		/// <summary>
+		/// Returns true if we should yield our timeslice.
+		/// </summary>
+		bool Yield
+		{
+			get 
+			{	
+				if (stopping)
+					return true;
+				TimeSpan ts = DateTime.Now - syncStartTime;
+				if (ts.Minutes > timeSlice)
+					return true;
+				return false;
+			}
+		}
 
 		#endregion
 	
@@ -497,7 +515,7 @@ namespace Simias.Sync.Client
 				else 
 				{
 					int nodesLeft = workArray.Count;
-					if (nodesLeft != 0 && nodesLeft < nodesToSync)
+					if (nodesToSync != 0 && nodesLeft < nodesToSync)
 					{
 						seconds = 0;
 					}
@@ -559,12 +577,19 @@ namespace Simias.Sync.Client
 			lock (this)
 			{
 				stopping = false;
+				syncStartTime = DateTime.Now;
 			}
 			queuedChanges = false;
 			serverAlive = false;
 			serverStatus = SyncColStatus.Success;
 			// Refresh the collection.
 			collection.Refresh();
+
+			// Make sure the master exists.
+			if (collection.CreateMaster)
+			{
+				new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
+			}
 			
 			// Sync the file system with the local store.
 			fileMonitor.CheckForFileChanges();
@@ -717,10 +742,6 @@ namespace Simias.Sync.Client
 			// If the master has not been created. Do it now.
 			try
 			{
-				if (collection.CreateMaster)
-				{
-					new Simias.Domain.DomainAgent(Configuration.GetConfiguration()).CreateMaster(collection);
-				}
 				workArray = new SyncWorkArray(collection);
 				serverContext = null;
 				clientContext = null;
@@ -1021,7 +1042,7 @@ namespace Simias.Sync.Client
 			log.Info("Deleting {0} nodes on client", idList.Length);
 			foreach (string id in idList)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1107,7 +1128,7 @@ namespace Simias.Sync.Client
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1212,7 +1233,7 @@ namespace Simias.Sync.Client
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1313,7 +1334,7 @@ namespace Simias.Sync.Client
 			{
 				try
 				{
-					if (stopping)
+					if (Yield)
 					{
 						return;
 					}
@@ -1413,7 +1434,7 @@ namespace Simias.Sync.Client
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1493,7 +1514,7 @@ namespace Simias.Sync.Client
 			int offset = 0;
 			while (offset < nodeIDs.Length)
 			{
-				if (stopping)
+				if (Yield)
 				{
 					return;
 				}
@@ -1573,7 +1594,7 @@ namespace Simias.Sync.Client
 			{
 				try
 				{
-					if (stopping)
+					if (Yield)
 					{
 						return;
 					}
@@ -1642,12 +1663,12 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Node type enum.
 		/// </summary>
-		enum WorkType
+		enum ObjectType
 		{
 			Generic = 0,
 			Directory,
 			File,
-			Delete,
+			Tombstone,
 		}
 
 		/// <summary>
@@ -1687,22 +1708,22 @@ namespace Simias.Sync.Client
 				{
 					if (stamp.Operation == SyncOperation.Delete)
 					{
-						nodesFromServer[stamp.ID] = WorkType.Delete;
+						nodesFromServer[stamp.ID] = ObjectType.Tombstone;
 					}
 					else if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
 					{
 						// This is a file.
-						nodesFromServer[stamp.ID] = WorkType.File;
+						nodesFromServer[stamp.ID] = ObjectType.File;
 					}
 					else if (stamp.BaseType == NodeTypes.DirNodeType)
 					{
 						// This node represents a directory.
-						nodesFromServer[stamp.ID] = WorkType.Directory;
+						nodesFromServer[stamp.ID] = ObjectType.Directory;
 					}
 					else
 					{
 						// This is a generic node.
-						nodesFromServer[stamp.ID] = WorkType.Generic;
+						nodesFromServer[stamp.ID] = ObjectType.Generic;
 					}
 				}
 			}
@@ -1723,7 +1744,7 @@ namespace Simias.Sync.Client
 					if (stamp.Operation == SyncOperation.Delete)
 					{
 						RemoveNodeFromServer(stamp.ID);
-						nodesToServer[stamp.ID] = WorkType.Delete;
+						nodesToServer[stamp.ID] = ObjectType.Tombstone;
 					}
 				}
 				else if (rights == Rights.ReadOnly)
@@ -1737,22 +1758,22 @@ namespace Simias.Sync.Client
 				{
 					if (stamp.BaseType == NodeTypes.TombstoneType || stamp.Operation == SyncOperation.Delete)
 					{
-						nodesToServer[stamp.ID] = WorkType.Delete;
+						nodesToServer[stamp.ID] = ObjectType.Tombstone;
 					}
 					else if (stamp.BaseType == NodeTypes.FileNodeType || stamp.BaseType == NodeTypes.StoreFileNodeType)
 					{
 						// This node is a file.
-						nodesToServer[stamp.ID] = WorkType.File;
+						nodesToServer[stamp.ID] = ObjectType.File;
 					}
 					else if (stamp.BaseType == NodeTypes.DirNodeType)
 					{
 						// This node is a directory.
-						nodesToServer[stamp.ID] = WorkType.Directory;
+						nodesToServer[stamp.ID] = ObjectType.Directory;
 					}
 					else
 					{
 						// This is a generic node.
-						nodesToServer[stamp.ID] = WorkType.Generic;
+						nodesToServer[stamp.ID] = ObjectType.Generic;
 					}
 				}
 			}
@@ -1779,14 +1800,14 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Get an array of the IDs of the Nodes to retrieve from the server.
 		/// </summary>
-		/// <param name="wType">The Type of work to return.</param>
+		/// <param name="oType">The Type of objects to return.</param>
 		/// <returns></returns>
-		private string[] FromServer(WorkType wType)
+		private string[] FromServer(ObjectType oType)
 		{
 			ArrayList na = new ArrayList();
 			foreach (DictionaryEntry de in nodesFromServer)
 			{
-				if ((WorkType)de.Value == wType)
+				if ((ObjectType)de.Value == oType)
 					na.Add(de.Key);
 			}
 
@@ -1799,7 +1820,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] DeletesFromServer()
 		{
-			return FromServer(WorkType.Delete);
+			return FromServer(ObjectType.Tombstone);
 		}
 
 		/// <summary>
@@ -1808,7 +1829,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] GenericsFromServer()
 		{
-			return FromServer(WorkType.Generic);
+			return FromServer(ObjectType.Generic);
 		}
 
 		/// <summary>
@@ -1817,7 +1838,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] DirsFromServer()
 		{
-			return FromServer(WorkType.Directory);
+			return FromServer(ObjectType.Directory);
 		}
 
 		/// <summary>
@@ -1826,20 +1847,20 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] FilesFromServer()
 		{
-			return FromServer(WorkType.File);
+			return FromServer(ObjectType.File);
 		}
 
 		/// <summary>
 		/// Get an array of the IDs of the Nodes to push up to the server.
 		/// </summary>
-		/// <param name="wType">The Type of work to return.</param>
+		/// <param name="oType">The Type of objects to return.</param>
 		/// <returns></returns>
-		private string[] ToServer(WorkType wType)
+		private string[] ToServer(ObjectType oType)
 		{
 			ArrayList na = new ArrayList();
 			foreach (DictionaryEntry de in nodesToServer)
 			{
-				if ((WorkType)de.Value == wType)
+				if ((ObjectType)de.Value == oType)
 					na.Add(de.Key);
 			}
 
@@ -1852,7 +1873,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] DeletesToServer()
 		{
-			return ToServer(WorkType.Delete);
+			return ToServer(ObjectType.Tombstone);
 		}
 
 		/// <summary>
@@ -1861,7 +1882,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] GenericsToServer()
 		{
-			return ToServer(WorkType.Generic);
+			return ToServer(ObjectType.Generic);
 		}
 
 		/// <summary>
@@ -1870,7 +1891,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] DirsToServer()
 		{
-			return ToServer(WorkType.Directory);
+			return ToServer(ObjectType.Directory);
 		}
 
 		/// <summary>
@@ -1879,7 +1900,7 @@ namespace Simias.Sync.Client
 		/// <returns></returns>
 		internal string[] FilesToServer()
 		{
-			return ToServer(WorkType.File);
+			return ToServer(ObjectType.File);
 		}
 
 		/// <summary>
