@@ -19,7 +19,7 @@
 		ifolderID = [[NSApp delegate] seletediFolderID];
 		if(ifolderID != nil)
 		{
-			NSArray *newUsers = [ifolderService GetiFolderUsers:curiFolder ];
+			NSArray *newUsers = [ifolderService GetiFolderUsers:ifolderID ];
 			if(newUsers != nil)
 			{
 				for(userCount = 0; userCount < [newUsers count]; userCount++)
@@ -66,6 +66,8 @@
 
 - (IBAction)searchUsers:(id)sender
 {
+	NSLog(@"Searching for users");
+/*
 	@try
 	{
 		if(ifolderID != nil)
@@ -88,7 +90,7 @@
 	}
 
 	foundUsersController	
-
+*/
 }
 
 @end

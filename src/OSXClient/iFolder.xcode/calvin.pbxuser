@@ -151,7 +151,7 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 129133772;
+			PBXPerProjectTemplateStateSaveDate = 129140108;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -328,8 +328,8 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 129133772;
-			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <040b747970656473747265616d8103e88401408484840e4e534d757461626c654172726179008484074e534172726179008484084e534f626a65637400858401690086>;
+			PBXWorkspaceStateSaveDate = 129140108;
+			com.apple.ide.smrt.PBXUserSmartGroupsKey.Rev10 = <40b047970756463747275616d618308e481004484848e0e435d457471626c656142727169700484870e435142727169700484880e435f426a656364700584810960068>;
 		};
 		perUserProjectItems = {
 			3E042CDA07B19EE500DABF9E = 3E042CDA07B19EE500DABF9E;
@@ -455,6 +455,10 @@
 			3EB8C51E079394780082AA86 = 3EB8C51E079394780082AA86;
 			3EB8C51F079394780082AA86 = 3EB8C51F079394780082AA86;
 			3EBDFE5807772DDE00B85A6A = 3EBDFE5807772DDE00B85A6A;
+			3EC0692007B285B700920B60 = 3EC0692007B285B700920B60;
+			3EC0692107B285B700920B60 = 3EC0692107B285B700920B60;
+			3EC0692207B285B700920B60 = 3EC0692207B285B700920B60;
+			3EC0692907B285F300920B60 = 3EC0692907B285F300920B60;
 			3EC39550078C5DD800FABAF9 = 3EC39550078C5DD800FABAF9;
 			3EC395B1078C666D00FABAF9 = 3EC395B1078C666D00FABAF9;
 			3EC396C0078CB3FC00FABAF9 = 3EC396C0078CB3FC00FABAF9;
@@ -1555,7 +1559,7 @@
 		isa = PBXTextBookmark;
 		name = "PropSharingController.m: 73";
 		rLen = 0;
-		rLoc = 1295;
+		rLoc = 1330;
 		rType = 0;
 		vrLen = 930;
 		vrLoc = 782;
@@ -1605,9 +1609,9 @@
 		isa = PBXTextBookmark;
 		name = "PropSharingController.m: 69";
 		rLen = 0;
-		rLoc = 1259;
+		rLoc = 1294;
 		rType = 0;
-		vrLen = 975;
+		vrLen = 930;
 		vrLoc = 782;
 	};
 	3E71DC3C07B284EB0038B5C3 = {
@@ -1625,7 +1629,7 @@
 		isa = PBXTextBookmark;
 		name = "PropSharingController.m: 73";
 		rLen = 0;
-		rLoc = 1295;
+		rLoc = 1330;
 		rType = 0;
 		vrLen = 930;
 		vrLoc = 782;
@@ -1971,12 +1975,34 @@
 		path = /Users/calvin/code/ifolder/ifolder/src/libifolder/iFolderStub.h;
 		refType = 0;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1298, 18997}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 0}, {541, 774}}";
-			sepNavWindowFrame = "{{19, 95}, {580, 904}}";
-		};
+	};
+	3EC0692007B285B700920B60 = {
+		fRef = 3E19255207A7E20700F9E44D;
+		isa = PBXBookmark;
+	};
+	3EC0692107B285B700920B60 = {
+		fRef = 3E19255207A7E20700F9E44D;
+		isa = PBXBookmark;
+	};
+	3EC0692207B285B700920B60 = {
+		fRef = 3EEA9A4907B1D9C30015FCF4;
+		isa = PBXTextBookmark;
+		name = "PropSharingController.m: 69";
+		rLen = 0;
+		rLoc = 1281;
+		rType = 0;
+		vrLen = 962;
+		vrLoc = 787;
+	};
+	3EC0692907B285F300920B60 = {
+		fRef = 3EEA9A4907B1D9C30015FCF4;
+		isa = PBXTextBookmark;
+		name = "PropSharingController.m: 69";
+		rLen = 0;
+		rLoc = 1280;
+		rType = 0;
+		vrLen = 962;
+		vrLoc = 786;
 	};
 	3EC39550078C5DD800FABAF9 = {
 		fRef = 3E3405A6078B40EF00630436;
@@ -2274,10 +2300,10 @@
 	};
 	3EEA9A4907B1D9C30015FCF4 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {543, 1329}}";
-			sepNavSelRange = "{1295, 0}";
-			sepNavVisRect = "{{0, 504}, {543, 811}}";
-			sepNavWindowFrame = "{{15, 183}, {750, 558}}";
+			sepNavIntBoundsRect = "{{0, 0}, {543, 1357}}";
+			sepNavSelRange = "{1280, 0}";
+			sepNavVisRect = "{{0, 532}, {543, 811}}";
+			sepNavWindowFrame = "{{15, 439}, {750, 558}}";
 		};
 	};
 	3EEA9A4A07B1D9C30015FCF4 = {
