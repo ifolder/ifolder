@@ -192,7 +192,9 @@ namespace Simias
 		{
 			if (SimiasRemoting.config == null)
 			{
-				throw new Exception("SimiasRemoting.Configure() must be called first to initialize the SimiasRemoting class.");
+				// TODO: temporary fix
+				SimiasRemoting.config = Configuration.GetConfiguration();
+				//throw new Exception("SimiasRemoting.Configure() must be called first to initialize the SimiasRemoting class.");
 			}
 		}
 	}
