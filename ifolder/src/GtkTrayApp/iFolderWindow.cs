@@ -208,6 +208,7 @@ namespace Novell.iFolder
 
 
 			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
+
 			if(SyncSpinButton.Value == 0)
 			{
 				AutoSyncCheckButton.Active = false;
@@ -718,6 +719,7 @@ namespace Novell.iFolder
 			SyncSpinButton = new SpinButton(0, 99999, 5);
 			SyncSpinButton.ValueChanged += 
 					new EventHandler(OnSyncIntervalChanged);
+
 			syncHBox.PackStart(SyncSpinButton, false, false, 0);
 			SyncUnitsLabel = new Label(Util.GS("seconds"));
 			SyncUnitsLabel.Xalign = 0;
@@ -1562,7 +1564,8 @@ namespace Novell.iFolder
 						(iFolderHolder) tModel.GetValue(iter, 0);
 				if(ifHolder.iFolder.IsSubscription)
 				{
-					OnSetupiFolder(o, args);
+					if(ifHolder.iFolder.State == "Available")
+						OnSetupiFolder(o, args);
 				}
 				else
 				{
@@ -2238,20 +2241,23 @@ namespace Novell.iFolder
 
 		private void OnSyncIntervalChanged(object o, EventArgs args)
 		{
-			try
+			if(SyncSpinButton.Value != ifSettings.DefaultSyncInterval)
 			{
-				ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
-				iFolderWS.SetDefaultSyncInterval(
-									ifSettings.DefaultSyncInterval);
-			}
-			catch(Exception e)
-			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													this, e);
-				ied.Run();
-				ied.Hide();
-				ied.Destroy();
-				return;
+				try
+				{
+					ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
+					iFolderWS.SetDefaultSyncInterval(
+										ifSettings.DefaultSyncInterval);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
 			}
 		}
 
