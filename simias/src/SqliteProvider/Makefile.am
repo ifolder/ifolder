@@ -6,8 +6,8 @@ SqliteProvider_CSFILES_CSC := $(subst /,$(SEP),$(SqliteProvider_CSFILES))
 SqliteProvider_INCLUDES = 
 SqliteProvider_RESOURCES =
 SqliteProvider_FLAGS = $(CSC_LIBFLAG)
-SqliteProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Storage.dll StoreProvider.dll SqliteWrapper.dll 
-SqliteProvider_LIBPATH = ../Storage ../StoreProvider
+SqliteProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Storage.dll StoreProvider.dll SqliteWrapper.dll Common.dll
+SqliteProvider_LIBPATH = ../Storage ../StoreProvider ../Common
 
 SqliteWrapper_CSFILES := $(srcdir)/SqliteWrapper/AssemblyInfo.cs $(srcdir)/SqliteWrapper/SqliteCommand.cs $(srcdir)/SqliteWrapper/SqliteConnection.cs $(srcdir)/SqliteWrapper/SqliteDataReader.cs $(srcdir)/SqliteWrapper/SqliteParameter.cs $(srcdir)/SqliteWrapper/SqliteParameterCollection.cs $(srcdir)/SqliteWrapper/SqliteTransaction.cs
 SqliteWrapper_CSFILES_CSC := $(subst /,$(SEP),$(SqliteWrapper_CSFILES))

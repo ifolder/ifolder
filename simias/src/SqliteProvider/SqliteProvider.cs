@@ -29,7 +29,6 @@ using Simias.Storage.Provider;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
-//using System.Runtime.Remoting.Channels.Tcp;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.IO;
@@ -79,32 +78,46 @@ namespace Simias.Storage.Provider.Sqlite
 
 		public static void Create(IDbCommand command)
 		{
-			// Create the Table.
-			command.CommandText = createString;
+			try
+			{
+				// Create the Table.
+				command.CommandText = createString;
 
-			command.ExecuteNonQuery();
-			// Create the indexes for the Id, Name, and Type.
-			command.CommandText = idIndexString;
-			command.ExecuteNonQuery();
+				command.ExecuteNonQuery();
+				// Create the indexes for the Id, Name, and Type.
+				command.CommandText = idIndexString;
+				command.ExecuteNonQuery();
 
-			command.CommandText = nameIndexString;
-			command.ExecuteNonQuery();
+				command.CommandText = nameIndexString;
+				command.ExecuteNonQuery();
 
-			command.CommandText = typeIndexString;
-			command.ExecuteNonQuery();
+				command.CommandText = typeIndexString;
+				command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				throw new CreateException(command.CommandText, ex);
+			}
 		}
 
 		public static void Insert(Record record, string collectionId, IDbCommand command)
 		{
-			// Add the Record to the record table.
-			command.CommandText = string.Format(
-				"INSERT INTO {0} values('{1}','{2}','{3}','{4}')",
-				TableName,
-				record.Id,
-				record.Name.Replace("'", "''"),
-				record.Type.Replace("'", "''"),
-				collectionId);
-			command.ExecuteNonQuery();
+			try
+			{
+				// Add the Record to the record table.
+				command.CommandText = string.Format(
+					"INSERT INTO {0} values('{1}','{2}','{3}','{4}')",
+					TableName,
+					record.Id,
+					record.Name.Replace("'", "''"),
+					record.Type.Replace("'", "''"),
+					collectionId);
+				command.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				throw new CreateException(command.CommandText, ex);
+			}
 		}
 
 		public static void Delete(string recordId, IDbCommand command)
@@ -429,8 +442,8 @@ namespace Simias.Storage.Provider.Sqlite
 	{
 		#region Varibles
 
+		private static readonly ISimiasLog logger = SimiasLogManager.GetLogger(typeof(SqliteProvider));
 		Hashtable				connectionTable = new Hashtable();
-
 		ProviderConfig			conf;
 
 		/// <summary>
@@ -442,10 +455,6 @@ namespace Simias.Storage.Provider.Sqlite
 		/// All tables are prefixed with this string.
 		/// </summary>
 		const string			TablePrefix = "T_";
-		/// <summary>
-		/// All Index Table are prefixed with this string.
-		/// </summary>
-		
 		bool					AlreadyDisposed;
 		string					DbPath;
 		const string			Name = "ColSqlite.db";
@@ -493,7 +502,6 @@ namespace Simias.Storage.Provider.Sqlite
 			this.conf = conf;
 			storePath = Path.GetFullPath(conf.Path);
 			DbPath = System.IO.Path.Combine(storePath, Name);
-			//sqliteDb = new SqliteConnection();
 		}
 
 		/// <summary>
@@ -533,15 +541,7 @@ namespace Simias.Storage.Provider.Sqlite
 			// Now add to the value table.
 			ValueTable.Insert(table, record, command);
 
-			// MultiTableTable
-			//if (record.Id == collectionId)
-			//{
-			//	// Now Add the collection to the global collection Table.
-			//	// don't add it to the node table. It will be added later.
-			//	ValueTable.Delete(CollectionTable, record.Id, command);
-			//	ValueTable.Insert(CollectionTable, record, command);
-			//}
-			//
+			logger.Info("Created Record {0}.", record.Id);
 		}
 
 		/// <summary>
@@ -552,10 +552,6 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="command">Command object used to control database.</param>
 		private void RemoveCollection(string collectionId, IDbCommand command)
 		{
-			// MultiTableTable
-			//// Remove the collection table.
-			//ValueTable.Drop(TablePrefix+collectionId, command);
-			
 			// Now remove from the Collection Table.
 			ValueTable.Delete(CollectionTable, collectionId, command);
 
@@ -601,11 +597,13 @@ namespace Simias.Storage.Provider.Sqlite
 					if (id == collectionId)
 					{
 						RemoveCollection(id, command);
+						logger.Info("Deleted Collection {0}.", collectionId);
 						break;
 					}
 					else
 					{
 						InternalDeleteRecord(id, collectionId, command);
+						logger.Info("Deleted Record {0}.", id);
 					}
 				}
 			}
@@ -681,44 +679,51 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void CreateStore()
 		{
-			InternalConnection conn = sqliteConn;
-			SqliteConnection sqliteDb = conn.sqliteDb;
-			lock (sqliteDb)
+			try
 			{
-				// Make sure the Data Base does not exist.
-				if (!File.Exists(DbPath))
+				InternalConnection conn = sqliteConn;
+				SqliteConnection sqliteDb = conn.sqliteDb;
+				lock (sqliteDb)
 				{
-					// Create the store
-					sqliteDb.ConnectionString = "URI=file:" + DbPath;
-					sqliteDb.Open();
-					opened = true;
+					// Make sure the Data Base does not exist.
+					if (!File.Exists(DbPath))
+					{
+						// Create the store
+						sqliteDb.ConnectionString = "URI=file:" + DbPath;
+						sqliteDb.Open();
+						opened = true;
 
-					// Set the version.
-					conf.Version = version;
+						// Set the version.
+						conf.Version = version;
 					
-					IDbTransaction trans = sqliteDb.BeginTransaction();
-					try
-					{
-						// Create the Record Table.
-						Init(conn);
-						IDbCommand command = conn.command;
-						RecordTable.Create(command);
-						SchemaTable.Create(command);
-						ValueTable.Create(CollectionTable, command);
+						IDbTransaction trans = sqliteDb.BeginTransaction();
+						try
+						{
+							// Create the Record Table.
+							Init(conn);
+							IDbCommand command = conn.command;
+							RecordTable.Create(command);
+							SchemaTable.Create(command);
+							ValueTable.Create(CollectionTable, command);
+						}
+						catch (Exception ex)
+						{
+							trans.Rollback();
+							throw ex;
+						}
+						trans.Commit();
 					}
-					catch
+					else
 					{
-						trans.Rollback();
-						throw new CSPException("Failed to create DataBase", Provider.Error.Create);
+						throw new ExistsException(DbPath);
 					}
-					trans.Commit();
 				}
-				else
-				{
-					throw (new CSPException("DataBase already exists", Provider.Error.Exists));
-				}
+				AlreadyDisposed = false;
 			}
-			AlreadyDisposed = false;
+			catch (Exception ex)
+			{
+				throw new CreateException(DbPath, ex);
+			}
 		}
 
 
@@ -727,9 +732,16 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void DeleteStore()
 		{
-			Dispose(false);
-			File.Delete(DbPath);
-			Provider.Delete(storePath);
+			try
+			{
+				Dispose(false);
+				File.Delete(DbPath);
+				Provider.Delete(storePath);
+			}
+			catch (Exception ex)
+			{
+				throw new DeleteException(DbPath, ex);
+			}
 		}
 
 
@@ -738,24 +750,31 @@ namespace Simias.Storage.Provider.Sqlite
 		/// </summary>
 		public void OpenStore()
 		{
-			InternalConnection conn = sqliteConn;
-			SqliteConnection sqliteDb = conn.sqliteDb;
-			if (File.Exists(DbPath))
+			try
 			{
-				// Make sure the version is correct.
-				if (conf.Version != version)
+				InternalConnection conn = sqliteConn;
+				SqliteConnection sqliteDb = conn.sqliteDb;
+				if (File.Exists(DbPath))
 				{
-					throw new CSPException("Wrong DataBase Version", Provider.Error.Version);
+					// Make sure the version is correct.
+					if (conf.Version != version)
+					{
+						throw new VersionException(DbPath, conf.Version, version);
+					}
+					sqliteDb.ConnectionString = "URI=file:" + DbPath;
+					sqliteDb.Open();
+					opened = true;
+					Init(conn);
+					AlreadyDisposed = false;
 				}
-				sqliteDb.ConnectionString = "URI=file:" + DbPath;
-				sqliteDb.Open();
-				opened = true;
-				Init(conn);
-				AlreadyDisposed = false;
+				else
+				{
+					throw new System.IO.FileNotFoundException("DataBase Not found.");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				throw new CSPException("Does Not exist", 0);
+				throw new OpenException(DbPath);
 			}
 		}
 
@@ -781,18 +800,25 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="name">The name of the container.</param>
 		public void DeleteContainer(string name)
 		{
-			InternalConnection conn = sqliteConn;
-			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
-				RemoveCollection(name, conn.command);
+				InternalConnection conn = sqliteConn;
+				IDbTransaction trans = conn.sqliteDb.BeginTransaction();
+				try
+				{
+					RemoveCollection(name, conn.command);
+				}
+				catch (Exception ex)
+				{
+					trans.Rollback();
+					throw ex;
+				}
+				trans.Commit();
 			}
-			catch 
+			catch (Exception ex)
 			{
-				trans.Rollback();
-				throw; // (ex);
+				throw new DeleteException(name, ex);
 			}
-			trans.Commit();
 		}
 
 		#endregion
@@ -807,25 +833,32 @@ namespace Simias.Storage.Provider.Sqlite
 		/// <param name="deleteDoc">The records to delete.</param>
 		public void CommitRecords(string collectionId, XmlDocument createDoc, XmlDocument deleteDoc)
 		{
-			InternalConnection conn = sqliteConn;
-			IDbTransaction trans = conn.sqliteDb.BeginTransaction();
 			try
 			{
-				if (createDoc != null)
+				InternalConnection conn = sqliteConn;
+				IDbTransaction trans = conn.sqliteDb.BeginTransaction();
+				try
 				{
-					CreateRecords(createDoc, collectionId, conn.command);
+					if (createDoc != null)
+					{
+						CreateRecords(createDoc, collectionId, conn.command);
+					}
+					if (deleteDoc != null)
+					{
+						DeleteRecords(deleteDoc, collectionId, conn.command);
+					}
 				}
-				if (deleteDoc != null)
+				catch (Exception ex)
 				{
-					DeleteRecords(deleteDoc, collectionId, conn.command);
+					trans.Rollback();
+					throw ex;
 				}
+				trans.Commit();
 			}
-			catch 
+			catch (Exception ex)
 			{
-				trans.Rollback();
-				throw; // (ex);
+				throw new CommitException(createDoc, deleteDoc, ex);
 			}
-			trans.Commit();
 		}
 
 		/// <summary>
@@ -995,7 +1028,7 @@ namespace Simias.Storage.Provider.Sqlite
 							RecordTable.Type,
 							RecordTable.TableName,
 							ValueTable.RecordId,
-							ValueTable.vTableName, //CollectionTable,
+							ValueTable.vTableName,
 							ValueTable.Name,
 							safeProperty,
 							ValueTable.Value,

@@ -390,12 +390,12 @@ namespace Simias.Storage.Provider.Fs
 				// Open the store
 				if (!Directory.Exists(DbPath))
 				{
-					throw(new CSPException("Could not open CollectionStore", 0));
+					throw new OpenException(DbPath);
 				}
 				// Make sure the version is correct.
 				if (conf.Version != version)
 				{
-					throw new CSPException("Wrong DataBase Version", Provider.Error.Version);
+					throw new VersionException(conf.Version, version);
 				}
  			}
 			
@@ -678,7 +678,7 @@ namespace Simias.Storage.Provider.Fs
 											break;
 										}
 										default:
-											throw new CSPException("Invalid Search", 0);
+											throw new SearchException(query.ToString());
 									}
 								
 									switch (query.Operation)
