@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <simias/simias.h>
+#include <simias.h>
 
 #include "blist.h"
 #include "util.h"

@@ -26,14 +26,14 @@
  ***********************************************************************/
 
 #include "gaim-domain.h"
-#include <simias/simias.h>
+#include <simias.h>
 
 /* Gaim Includes */
 #include "account.h"
 #include "blist.h"
 
-#include <simias/simiasgaimStub.h>
-#include <simias/simiasgaim.nsmap>
+#include <simiasgaimStub.h>
+#include <simiasgaim.nsmap>
 
 static char *the_soap_url = NULL;
 
