@@ -90,19 +90,18 @@ namespace Simias
 		private Configuration()
 		{
 			string bootStrapFilePath = null;
+			configFilePath = Path.Combine( DefaultPath, DefaultFileName );
 
 			// See if we are running as a client or server.
 			NameValueCollection nvc = System.Configuration.ConfigurationSettings.AppSettings;
 			if (nvc.Get( enterpriseServer ) != null )
 			{
 				// Enterprise server.
-				configFilePath = Path.Combine( SimiasSetup.sysconfdir, DefaultFileName );
 				bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, serverBootStrapFileName );
 			}
 			else
 			{
 				// Client
-				configFilePath = Path.Combine( DefaultPath, DefaultFileName );
 				bootStrapFilePath = Path.Combine( SimiasSetup.sysconfdir, clientBootStrapFileName );
 			}
 
