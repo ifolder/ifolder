@@ -56,7 +56,6 @@ namespace Simias.Gaim
 		private string userName;
 		private string userID;
 		private string poBoxID;
-		private static string syncMethodPref = "all";
 		private static bool bPruneOldMembers = false;
 
 		/// <summary>
@@ -340,44 +339,6 @@ namespace Simias.Gaim
 					Simias.Gaim.Sync.UpdateSyncInterval(syncInterval);
 				}
 			}
-			
-			//
-			// Type of member sync
-			//
-			XmlNode syncMethodNode =
-				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='sync_method']/@value");
-
-			if (syncMethodNode != null)
-			{
-				string syncMethod = syncMethodNode.Value;
-				if (syncMethod != null && syncMethod != syncMethodPref)
-				{
-					syncMethodPref = syncMethod;
-				}
-			}
-			
-			//
-			// Prune old members
-			//
-			XmlNode pruneMembersNode =
-				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='prune_members']/@value");
-
-			if (pruneMembersNode != null)
-			{
-				string pruneMembers = pruneMembersNode.Value;
-				if (pruneMembers != null)
-				{
-					if (pruneMembers == "1")
-					{
-						bPruneOldMembers = true;
-					}
-					else
-					{
-						bPruneOldMembers = false;
-					}
-				}
-			}
-			
 		}
 		
 		/// <summary>
@@ -426,15 +387,7 @@ namespace Simias.Gaim
 		public static GaimBuddy[] SearchForBuddies(string attributeName, string searchString, SearchOp operation)
 		{
 			ArrayList buddies = new ArrayList();
-			GaimBuddy[] allBuddies;
-			if (syncMethodPref == "plugin-enabled")
-			{
-				allBuddies = GetBuddies(true);
-			}
-			else
-			{
-				allBuddies = GetBuddies(false);
-			}
+			GaimBuddy[] allBuddies = allBuddies = GetBuddies();
 			
 			if (allBuddies != null && allBuddies.Length > 0)
 			{
@@ -766,7 +719,7 @@ namespace Simias.Gaim
 			return (GaimAccount[])accounts.ToArray(typeof(Simias.Gaim.GaimAccount));
 		}
 		
-		internal static GaimBuddy[] GetBuddies(bool iFolderEnabledOnly)
+		internal static GaimBuddy[] GetBuddies()
 		{
 			ArrayList buddies = new ArrayList();
 			XmlDocument blistDoc = new XmlDocument();
@@ -780,15 +733,7 @@ namespace Simias.Gaim
 			}
 			XmlElement gaimElement = blistDoc.DocumentElement;
 			
-			XmlNodeList buddyNodes = null;
-			if (iFolderEnabledOnly)
-			{
-				buddyNodes = gaimElement.SelectNodes("//buddy[setting[@name='simias-url']]");
-			}
-			else
-			{
-				buddyNodes = gaimElement.SelectNodes("//buddy");
-			}
+			XmlNodeList buddyNodes = gaimElement.SelectNodes("//buddy[setting[@name='simias-url:']]");
 			if (buddyNodes == null)
 				return (GaimBuddy[])buddies.ToArray(typeof(Simias.Gaim.GaimBuddy));
 			
@@ -822,25 +767,13 @@ namespace Simias.Gaim
 		
 		internal static void SyncBuddies(Simias.Storage.Domain domain)
 		{
-			GaimBuddy[] buddies;
-			if (syncMethodPref == "plugin-enabled")
-			{
-				log.Debug("Synching only iFolder Plugin-enabled Buddies");
-
-				// Only sync buddies that the Gaim iFolder Plugin has been able
-				// to determine have the Gaim iFolder Plugin enabled
-				buddies = GetBuddies(true);
-			}
-			else
-			{
-				log.Debug("Synching ALL Gaim Buddies");
-
-				// Sync all buddies regardless of whether they have the Gaim
-				// iFolder Plugin installed
-				buddies = GetBuddies(false);
-			}
-			
+			// Only sync buddies that the Gaim iFolder Plugin has been able
+			// to determine have the Gaim iFolder Plugin enabled
+			GaimBuddy[] buddies = GetBuddies();
 			if (buddies == null) return;
+
+			log.Debug("Synching only iFolder Plugin-enabled Buddies");
+
 
 			foreach (GaimBuddy buddy in buddies)
 			{
