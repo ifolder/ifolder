@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 using Simias;
 using Simias.Storage;
@@ -92,6 +93,9 @@ namespace Novell.iFolder
 		/// </summary>
 		public static readonly string XmlEnvironmentAttr = "environment";
 
+		public static readonly string CFG_AllowedFSTypes = "Allowed fs types";
+		public static readonly string XmlTypeTag = "Type";
+
 		private static ExcludeDirectory[] linuxExcludeList = {
 			new ExcludeDirectory("/bin", false, true),
 			new ExcludeDirectory("/sbin", false, true),
@@ -104,6 +108,15 @@ namespace Novell.iFolder
 		private static ExcludeDirectory[] windowsExcludeList = {
 			new ExcludeDirectory("SystemDrive", true, false),
 			new ExcludeDirectory("windir", true, true)
+		};
+
+		private static string[] linuxIncludeTypes = new string[] {
+			"reiserfs",
+			"ext",
+			"ext2",
+			"ext3",
+			"ntfs",
+			"msdos"
 		};
 
         #endregion
@@ -168,6 +181,23 @@ namespace Novell.iFolder
 					xmlElement.SetAttribute(XmlDeepAttr, exDir.Deep.ToString());
 					pathsElement.AppendChild(xmlElement);
 					config.SetElement(CFG_Section, CFG_ExcludedPaths, pathsElement);
+				}
+			}
+
+			if (MyEnvironment.Unix)
+			{
+				// Add the allowed filesystem types for Linux.
+				XmlElement typesElement = config.GetElement(CFG_Section, CFG_AllowedFSTypes);
+
+				if (typesElement.IsEmpty)
+				{
+					foreach (string s in linuxIncludeTypes)
+					{
+						XmlElement xmlElement = typesElement.OwnerDocument.CreateElement(XmlTypeTag);
+						xmlElement.SetAttribute(XmlNameAttr, s);
+						typesElement.AppendChild(xmlElement);
+						config.SetElement(CFG_Section, CFG_AllowedFSTypes, typesElement);
+					}
 				}
 			}
 		}
@@ -356,7 +386,7 @@ namespace Novell.iFolder
 
 			// TODO: Call to Policy engine to check for directory/drive exclusions ... 
 			// the Policy overrides the config file settings.
-			if (folderAllowed(nPath))
+			if (folderAllowedByType(nPath) && !folderExcluded(nPath))
 			{
 				foreach ( iFolder ifolder in this )
 				{
@@ -438,9 +468,9 @@ namespace Novell.iFolder
 		#endregion
 		
 		#region Private Methods
-		private bool folderAllowed( Uri nPath)
+		private bool folderExcluded( Uri nPath)
 		{
-			bool folderAllowed = true;
+			bool folderExcluded = false;
 
 			XmlElement pathsElement = config.GetElement(CFG_Section, CFG_ExcludedPaths);
 			XmlNodeList pathNodes = pathsElement.SelectNodes(XmlPathTag);
@@ -467,7 +497,7 @@ namespace Novell.iFolder
 					string nPath2 = deep ? nPath.LocalPath.Substring(0, excludePath.LocalPath.Length) : nPath.LocalPath;
 					if (String.Compare(nPath2, excludePath.LocalPath, !MyEnvironment.Unix) == 0)
 					{
-						folderAllowed = false;
+						folderExcluded = true;
 						break;
 					}
 				}
@@ -476,7 +506,87 @@ namespace Novell.iFolder
 				}
 			}
 
+			return folderExcluded;
+		}
+
+		private bool folderAllowedByType(Uri nPath)
+		{
+			bool folderAllowed = false;
+			
+			if (MyEnvironment.Unix)
+			{
+				string type = getFSType(nPath);
+
+				XmlElement typesElement = config.GetElement(CFG_Section, CFG_AllowedFSTypes);
+				XmlNodeList typeNodes = typesElement.SelectNodes(XmlTypeTag);
+				foreach (XmlElement typeNode in typeNodes)
+				{
+					try
+					{
+						string allowedType = typeNode.GetAttribute(XmlNameAttr);
+
+						if (allowedType.Equals(type))
+						{
+							folderAllowed = true;
+							break;
+						}
+					}
+					catch 
+					{
+					}
+				}
+			}
+			else
+			{
+				folderAllowed = true;
+			}
+
 			return folderAllowed;
+		}
+
+		private string getFSType(Uri path)
+		{
+			string type = null;
+
+			Hashtable ht = new Hashtable();
+			StreamReader sr = null;
+			try
+			{
+				sr = new StreamReader("/etc/mtab");
+				string text;
+				Regex ex = new Regex("[ ]+");
+				while ((text = sr.ReadLine()) != null)
+				{
+					// Split the line into substrings.
+					string[] s = ex.Split(text);
+
+					// Put the values in a hashtable.
+					ht.Add(s[1], s[2]);
+				}				
+			}
+			catch (Exception e)
+			{
+			}
+
+			if (sr != null)
+			{
+				sr.Close();
+			}
+
+			string parent = path.LocalPath;
+			while (true)
+			{
+				if (ht.ContainsKey(parent))
+				{
+					break;
+				}
+
+				parent = Path.GetDirectoryName(parent);
+			}
+
+			type = (string)ht[parent];
+
+			return type;
 		}
 		#endregion
 
