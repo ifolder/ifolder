@@ -1100,6 +1100,11 @@ namespace Simias.Storage
 						XmlDocument document = new XmlDocument();
 						document.LoadXml( c.ContextData );
 						collisionNode = Node.NodeFactory( StoreReference, document );
+
+						// The incarnation values need to be set right so that the Node object will not
+						// collide again and will be in sync.
+						collisionNode.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, collisionNode.LocalIncarnation );
+						collisionNode.IncarnationUpdate = collisionNode.LocalIncarnation;
 					}
 				}
 
