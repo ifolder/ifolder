@@ -96,7 +96,9 @@ namespace Simias.Storage
 				}
 				else
 				{
-					return impersonationID.Peek() as BaseContact; 
+					BaseContact impersonatingContact = impersonationID.Peek() as BaseContact;
+					localAb.Refresh( impersonatingContact );
+					return impersonatingContact;
 				}
 			}
 		}
