@@ -141,7 +141,12 @@ namespace Simias.Sync
 		/// <param name="node">The node to delete.</param>
 		void DeleteNode(Node node)
 		{
-			Log.log.Debug("Dredger deleting orphaned node {0}, {1}", node.Name, node.ID);
+			Log.log.Debug("File Monitor deleting orphaned node {0}, {1}", node.Name, node.ID);
+			// Check to see if we have a collision.
+			if (collection.HasCollisions(node))
+			{
+				new Conflict(collection, node).DeleteConflictFile();
+			}
 			Node[] deleted = collection.Delete(node, PropertyTags.Parent);
 			collection.Commit(deleted);
 			foundChange = true;

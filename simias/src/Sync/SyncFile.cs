@@ -416,8 +416,13 @@ namespace Simias.Sync
 
 			// We need to delete the temp file if we are the master.
 			// On the client leave for a delta sync.
-			if (workFile != null && !(collection.Role == SyncRoles.Slave))
-				File.Delete(workFile);
+			if (workFile != null)
+			{
+				if (collection.Role == SyncCollectionRoles.Slave || File.Exists(file))
+				{
+					File.Delete(workFile);
+				}
+			}
 
 			if (partialFile != null)
 				File.Delete(partialFile);

@@ -99,7 +99,21 @@ public class Conflict
 		}
 	}
 
-	//---------------------------------------------------------------------------
+	/// <summary>
+	/// Delete the temporary conflict file.
+	/// </summary>
+	public void DeleteConflictFile()
+	{
+		try
+		{
+			if (this.IsFileNameConflict)
+				File.Delete(FileNameConflictPath);
+			else if (this.IsUpdateConflict)
+				File.Delete(UpdateConflictPath);
+		}
+		catch {}
+	}
+
 	/// <summary>
 	/// gets the file name of the temporary file for a node whose name conflicts
 	/// with something in the local file system.
@@ -115,7 +129,6 @@ public class Conflict
 		}
 	}
 
-	//---------------------------------------------------------------------------
 	/// <summary>
 	/// gets the full path of the file contents of the update that conflict with
 	/// the local file for this node

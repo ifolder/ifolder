@@ -637,68 +637,75 @@ namespace Simias.Sync
 
 			eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
 
-			serverContext = si.Context;
-			workArray.SetAccess = rights = si.Access;
-				
-			serverStatus = si.Status;
-			switch (si.Status)
+			try
 			{
-				case StartSyncStatus.AccessDenied:
-					log.Info("Failed authentication");
-					break;
-				case StartSyncStatus.Locked:
-					log.Info("The collection is locked");
-					break;
-				case StartSyncStatus.Busy:
-					log.Info("The server is busy");
-					break;
-				case StartSyncStatus.NotFound:
-					log.Info("The collection no longer exists");
-					// The collection does not exist or we do not have rights.
-					collection.Commit(collection.Delete());
-					break;
-				case StartSyncStatus.NoWork:
-					log.Debug("No work to do");
-					break;
-				case StartSyncStatus.Success:
-				switch (rights)
+
+				serverContext = si.Context;
+				workArray.SetAccess = rights = si.Access;
+				
+				serverStatus = si.Status;
+				switch (si.Status)
 				{
-					case Access.Rights.Deny:
+					case StartSyncStatus.AccessDenied:
+						log.Info("Failed authentication");
 						break;
-					case Access.Rights.Admin:
-					case Access.Rights.ReadOnly:
-					case Access.Rights.ReadWrite:
-						try
-						{
-							// Now lets determine the files that need to be synced.
-							if (si.ChangesOnly)
+					case StartSyncStatus.Locked:
+						log.Info("The collection is locked");
+						break;
+					case StartSyncStatus.Busy:
+						log.Info("The server is busy");
+						break;
+					case StartSyncStatus.NotFound:
+						log.Info("The collection no longer exists");
+						// The collection does not exist or we do not have rights.
+						collection.Commit(collection.Delete());
+						break;
+					case StartSyncStatus.NoWork:
+						log.Debug("No work to do");
+						break;
+					case StartSyncStatus.Success:
+					switch (rights)
+					{
+						case Access.Rights.Deny:
+							break;
+						case Access.Rights.Admin:
+						case Access.Rights.ReadOnly:
+						case Access.Rights.ReadWrite:
+							try
 							{
-								// We only need to look at the changed nodes.
-								ProcessChangedNodeStamps(cstamps);
+								// Now lets determine the files that need to be synced.
+								if (si.ChangesOnly)
+								{
+									// We only need to look at the changed nodes.
+									ProcessChangedNodeStamps(cstamps);
+								}
+								else
+								{
+									// We don't have any state. So do a full sync.
+									ReconcileAllNodeStamps();
+								}
+								queuedChanges = true;
+								ExecuteSync();
 							}
-							else
+							finally
 							{
-								// We don't have any state. So do a full sync.
-								ReconcileAllNodeStamps();
+								bool status = workArray.Complete;
+								if (queuedChanges)
+								{
+									// Save the sync state.
+									SetChangeLogContext(serverContext, clientContext, status);
+								}
+								// End the sync.
+								service.EndSync();
 							}
-							queuedChanges = true;
-							ExecuteSync();
-						}
-						finally
-						{
-							bool status = workArray.Complete;
-							if (queuedChanges)
-							{
-								// Save the sync state.
-								SetChangeLogContext(serverContext, clientContext, status);
-							}
-							// End the sync.
-							eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, status));
-							service.EndSync();
-						}
+							break;
+					}
 						break;
 				}
-					break;
+			}
+			finally
+			{
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, workArray.Complete));
 			}
 		}
 
