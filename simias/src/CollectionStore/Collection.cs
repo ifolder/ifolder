@@ -899,7 +899,7 @@ namespace Simias.Storage
 						else
 						{
 							// The tombstone has changed, update the cache.
-							store.Cache.Add( id, node );
+							store.Cache.Add( this, node );
 
 							// Indicate the event.
 							if ( node.Properties.State == PropertyList.PropertyListState.Add )
@@ -924,7 +924,7 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Proxy:
 							{
 								// Update the cache before indicating the event.
-								store.Cache.Add( id, node );
+								store.Cache.Add( this, node );
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
@@ -951,7 +951,7 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Restore:
 							{
 								// Update the cache before indicating the event.
-								store.Cache.Add( id, node );
+								store.Cache.Add( this, node );
 
 								// Indicate the event.
 								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, ( node.DiskNode != null ) ? EventType.NodeChanged : EventType.NodeCreated, 0, commitTime, node.MasterIncarnation, node.LocalIncarnation, fileSize );
@@ -964,7 +964,7 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Update:
 							{
 								// Update the cache before indicating the event.
-								store.Cache.Add( id, node );
+								store.Cache.Add( this, node );
 
 								// Make sure that it is okay to indicate an event.
 								if ( node.IndicateEvent )
@@ -991,7 +991,7 @@ namespace Simias.Storage
 							case PropertyList.PropertyListState.Internal:
 							{
 								// Update the cache before indicating the event.
-								store.Cache.Add( id, node );
+								store.Cache.Add( this, node );
 
 								// See if it is okay to indicate an event.
 								if ( node.IndicateEvent )
@@ -1821,7 +1821,7 @@ namespace Simias.Storage
 					node = Node.NodeFactory( store, document );
 
 					// Add the node object to the cache.
-					store.Cache.Add( id, node );
+					store.Cache.Add( this, node );
 				}
 			}
 
@@ -2114,7 +2114,7 @@ namespace Simias.Storage
 				// See if node needs to be added to the cache.
 				if ( tempNode == null )
 				{
-					store.Cache.Add( id, node );
+					store.Cache.Add( this, node );
 				}
 			}
 

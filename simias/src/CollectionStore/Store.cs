@@ -513,7 +513,8 @@ namespace Simias.Storage
 				if ( document != null )
 				{
 					node = Node.NodeFactory( this, document );
-					cache.Add( collectionID, node );
+					Collection collection = ( collectionID == nodeID ) ? node as Collection : GetNodeByID( collectionID, collectionID ) as Collection;
+					cache.Add( collection, node );
 				}
 			}		
 

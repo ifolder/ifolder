@@ -25,6 +25,8 @@ using System.Collections;
 using System.Threading;
 using System.Xml;
 
+using Simias.Client;
+
 namespace Simias.Storage
 {
 	/// <summary>
@@ -150,6 +152,82 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Determines if the node may be cached.
+		/// </summary>
+		/// <param name="collection">Collection that the node belongs to.</param>
+		/// <param name="node">Node object to be cached.</param>
+		/// <returns>True if the node may be cached, otherwise false is returned.</returns>
+		private bool IsCacheable( Collection collection, Node node )
+		{
+			bool cacheable = false;
+			bool isCollectionNode = false;
+			bool isMemberNode = false;
+			bool isFileNode = false;
+			bool isDirNode = false;
+
+			// Get a list of all the node types for this node. This is done rather than
+			// calling the IsType method on the collection for each type to be checked.
+			// That way the type properties are only searched for one time instead of
+			// multiple times.
+			MultiValuedList mvl = node.Properties.FindValues( PropertyTags.Types );
+			foreach( Property p in mvl )
+			{
+				string s = p.ToString();
+				if ( s.Equals( NodeTypes.CollectionType ) )
+				{
+					isCollectionNode = true;
+					break;
+				}
+				else if ( s.Equals( NodeTypes.MemberType ) )
+				{
+					isMemberNode = true;
+					break;
+				}
+				else if ( s.Equals( NodeTypes.BaseFileNodeType ) )
+				{
+					isFileNode = true;
+					break;
+				}
+				else if ( s.Equals( NodeTypes.DirNodeType ) )
+				{
+					isDirNode = true;
+					break;
+				}
+			}
+
+			// Is the node a collection?
+			if ( isCollectionNode )
+			{
+				// All collections may be cached.
+				cacheable = true;
+			}
+			else
+			{
+				// Is the node a member?
+				if ( isMemberNode )
+				{
+					// Is this collection a domain?
+					if ( !collection.IsBaseType( collection, NodeTypes.DomainType ) )
+					{
+						// All member nodes that do not belong to a domain are cacheable.
+						cacheable = true;
+					}
+				}
+				else
+				{
+					// Is the node a file node or a dirNode?
+					if ( !isFileNode && !isDirNode )
+					{
+						// All other nodes that are not file nodes or dir nodes may be cached.
+						cacheable = true;
+					}
+				}
+			}
+
+			return cacheable;
+		}
+
+		/// <summary>
 		/// Determines if a key belongs to the specified collection.
 		/// </summary>
 		/// <param name="key">Cache table key.</param>
@@ -178,24 +256,28 @@ namespace Simias.Storage
 		/// <summary>
 		/// Adds a node object to the cache.
 		/// </summary>
-		/// <param name="collectionID">The ID of the collection that the node object belongs to.</param>
+		/// <param name="collection">The collection that the node object belongs to.</param>
 		/// <param name="node">The node object to add to the cache.</param>
-		public void Add( string collectionID, Node node )
+		public void Add( Collection collection, Node node )
 		{
-			// Generate a key to use with the cache table.
-			string key = CreateKey( collectionID, node.ID );
-
-			lock ( typeof( NodeCache ) )
+			// Make sure that the node can be cached.
+			if ( IsCacheable( collection, node ) )
 			{
-				// Check to see if the entry is already in the cache.
-				NodeCacheEntry entry = cacheTable[ key ] as NodeCacheEntry;
-				if ( entry == null )
+				// Generate a key to use with the cache table.
+				string key = CreateKey( collection.ID, node.ID );
+
+				lock ( typeof( NodeCache ) )
 				{
-					cacheTable[ key ] = new NodeCacheEntry( node.Properties.ToString(), cacheTimeToLive );
-				}
-				else
-				{
-					entry.Value = node.Properties.ToString();
+					// Check to see if the entry is already in the cache.
+					NodeCacheEntry entry = cacheTable[ key ] as NodeCacheEntry;
+					if ( entry == null )
+					{
+						cacheTable[ key ] = new NodeCacheEntry( node.Properties.ToString(), cacheTimeToLive );
+					}
+					else
+					{
+						entry.Value = node.Properties.ToString();
+					}
 				}
 			}
 		}
