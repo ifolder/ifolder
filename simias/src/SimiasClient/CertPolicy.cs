@@ -18,6 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Mike Lasky <mlasky@novell.com>
+ *			Russ Young
  *
  ***********************************************************************/
 using System;
@@ -150,7 +151,7 @@ namespace Simias.Client
 				CertificateState cs = CertTable[srvPoint.Address.Host] as CertificateState;
 				if (cs != null && cs.Accepted)
 				{
-					if (cs.Certificate.GetCertHash() == certificate.GetCertHash())
+					if (cs.Certificate.Equals(certificate))
 					{
 						honorCert = true;
 					}
