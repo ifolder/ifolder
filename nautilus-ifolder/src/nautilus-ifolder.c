@@ -55,10 +55,24 @@ static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
 
 /**
- * gSOAP variables
+ * gSOAP
  */
-struct soap soap;
 char *soapURL = NULL;
+
+static void
+init_gsoap (struct soap *p_soap)
+{
+	/* Initialize gSOAP */
+	soap_init (p_soap);
+	soap_set_namespaces (p_soap, iFolderClient_namespaces);
+}
+
+static void
+cleanup_gsoap (struct soap *p_soap)
+{
+	/* Cleanup gSOAP */
+	soap_end (p_soap);
+}
 
 /**
  * Utility functions
@@ -91,6 +105,7 @@ get_file_path (NautilusFileInfo *file)
 static gboolean
 is_ifolder (NautilusFileInfo *file)
 {
+	struct soap soap;
 	gboolean b_is_ifolder = FALSE;
 	gchar *folder_path;
 	
@@ -105,11 +120,12 @@ is_ifolder (NautilusFileInfo *file)
 		struct _ns1__IsiFolder ns1__IsiFolder;
 		struct _ns1__IsiFolderResponse ns1__IsiFolderResponse;
 		ns1__IsiFolder.LocalPath = folder_path;
+		init_gsoap (&soap);
 		soap_call___ns1__IsiFolder (&soap, 
 									soapURL, 
 									NULL, 
 									&ns1__IsiFolder, 
-									&ns1__IsiFolderResponse);
+									&ns1__IsiFolderResponse);		
 		if (soap.error) {
 			g_print ("****error calling IsiFolder***\n");
 			soap_print_fault (&soap, stderr);
@@ -119,6 +135,7 @@ is_ifolder (NautilusFileInfo *file)
 				b_is_ifolder = TRUE;
 		}
 
+		cleanup_gsoap (&soap);
 		g_free (folder_path);
 	}
 
@@ -128,6 +145,7 @@ is_ifolder (NautilusFileInfo *file)
 static gboolean
 can_be_ifolder (NautilusFileInfo *file)
 {
+	struct soap soap;
 	gchar *folder_path;
 	gboolean b_can_be_ifolder = TRUE;
 	
@@ -142,6 +160,7 @@ can_be_ifolder (NautilusFileInfo *file)
 		struct _ns1__CanBeiFolder ns1__CanBeiFolder;
 		struct _ns1__CanBeiFolderResponse ns1__CanBeiFolderResponse;
 		ns1__CanBeiFolder.LocalPath = folder_path;
+		init_gsoap (&soap);
 		soap_call___ns1__CanBeiFolder (&soap,
 									   soapURL, 
 									   NULL, 
@@ -155,7 +174,8 @@ can_be_ifolder (NautilusFileInfo *file)
 			if (!ns1__CanBeiFolderResponse.CanBeiFolderResult)
 				b_can_be_ifolder = FALSE;
 		}
-		
+
+		cleanup_gsoap (&soap);
 		g_free (folder_path);
 	}
 	
@@ -165,6 +185,7 @@ can_be_ifolder (NautilusFileInfo *file)
 static gint
 create_local_ifolder (NautilusFileInfo *file)
 {
+	struct soap soap;
 	gchar *folder_path;
 	
 	folder_path = get_file_path (file);
@@ -175,6 +196,7 @@ create_local_ifolder (NautilusFileInfo *file)
 		struct _ns1__CreateLocaliFolder ns1__CreateLocaliFolder;
 		struct _ns1__CreateLocaliFolderResponse ns1__CreateLocaliFolderResponse;
 		ns1__CreateLocaliFolder.Path = folder_path;
+		init_gsoap (&soap);
 		soap_call___ns1__CreateLocaliFolder (&soap, 
 											 soapURL, 
 											 NULL, 
@@ -184,6 +206,7 @@ create_local_ifolder (NautilusFileInfo *file)
 		if (soap.error) {
 			g_print ("****error calling CreateLocaliFolder***\n");
 			soap_print_fault (&soap, stderr);
+			cleanup_gsoap (&soap);
 			return -1;
 		} else {
 			g_print ("***calling CreateLocaliFolder succeeded***\n");
@@ -191,6 +214,7 @@ create_local_ifolder (NautilusFileInfo *file)
 				ns1__CreateLocaliFolderResponse.CreateLocaliFolderResult;
 			if (ifolder == NULL) {
 				g_print ("***The created iFolder is NULL\n");
+				cleanup_gsoap (&soap);
 				return -1;
 			} else {
 				g_print ("***The created iFolder's ID is: ");
@@ -198,6 +222,8 @@ create_local_ifolder (NautilusFileInfo *file)
 				g_print ("\n");
 			}
 		}
+
+		cleanup_gsoap (&soap);
 	} else {
 		/* Error getting the folder path */
 		return -1;
@@ -209,6 +235,7 @@ create_local_ifolder (NautilusFileInfo *file)
 static gchar *
 get_ifolder_id_by_local_path (gchar *path)
 {
+	struct soap soap;
 	gchar *ifolder_id;
 	
 	ifolder_id = NULL;
@@ -220,6 +247,7 @@ get_ifolder_id_by_local_path (gchar *path)
 		struct _ns1__GetiFolderByLocalPath ns1__GetiFolderByLocalPath;
 		struct _ns1__GetiFolderByLocalPathResponse ns1__GetiFolderByLocalPathResponse;
 		ns1__GetiFolderByLocalPath.LocalPath = path;
+		init_gsoap (&soap);
 		soap_call___ns1__GetiFolderByLocalPath (&soap, 
 										soapURL, 
 										NULL, 
@@ -228,6 +256,7 @@ get_ifolder_id_by_local_path (gchar *path)
 		if (soap.error) {
 			g_print ("****error calling GetiFolderByLocalPath***\n");
 			soap_print_fault (&soap, stderr);
+			cleanup_gsoap (&soap);
 			return -1;
 		} else {
 			g_print ("***calling GetiFolderByLocalPath succeeded***\n");
@@ -235,6 +264,7 @@ get_ifolder_id_by_local_path (gchar *path)
 				ns1__GetiFolderByLocalPathResponse.GetiFolderByLocalPathResult;
 			if (ifolder == NULL) {
 				g_print ("***GetiFolderByLocalPath returned NULL\n");
+				cleanup_gsoap (&soap);
 				return -1;
 			} else {
 				g_print ("***The iFolder's ID is: ");
@@ -243,6 +273,8 @@ get_ifolder_id_by_local_path (gchar *path)
 				ifolder_id = strdup (ifolder->ID);
 			}
 		}
+
+		cleanup_gsoap (&soap);
 	}
 
 	return ifolder_id;
@@ -251,6 +283,7 @@ get_ifolder_id_by_local_path (gchar *path)
 static gint
 revert_ifolder (NautilusFileInfo *file)
 {
+	struct soap soap;
 	gchar *folder_path;
 	gchar *ifolder_id;
 	
@@ -263,6 +296,7 @@ revert_ifolder (NautilusFileInfo *file)
 			struct _ns1__RevertiFolder ns1__RevertiFolder;
 			struct _ns1__RevertiFolderResponse ns1__RevertiFolderResponse;
 			ns1__RevertiFolder.iFolderID = ifolder_id;
+			init_gsoap (&soap);
 			soap_call___ns1__RevertiFolder (&soap, 
 												 soapURL, 
 												 NULL, 
@@ -272,6 +306,7 @@ revert_ifolder (NautilusFileInfo *file)
 			if (soap.error) {
 				g_print ("****error calling RevertiFolder***\n");
 				soap_print_fault (&soap, stderr);
+				cleanup_gsoap (&soap);
 				return -1;
 			} else {
 				g_print ("***calling RevertiFolder succeeded***\n");
@@ -286,6 +321,8 @@ revert_ifolder (NautilusFileInfo *file)
 					g_print ("\n");
 				}
 			}
+
+			cleanup_gsoap (&soap);
 		}
 	} else {
 		/* Error getting the folder path */
@@ -333,6 +370,45 @@ ifolder_nautilus_info_provider_iface_init (NautilusInfoProviderIface *iface)
 /**
  * Nautilus Menu Provider Implementation
  */
+
+/**
+ * If this function returns NON-NULL, it contains a char * from the process
+ * executed by popen and should be freed.  The char * only contains the first
+ * line of output from the executed process.
+ */
+static void *
+ifolder_dialog_thread (gpointer user_data)
+{
+	FILE *output;
+	char readBuffer [1024];
+	char *args = (char *)user_data;
+	char *return_str = NULL;
+	
+	memset (readBuffer, '\0', sizeof (readBuffer));
+
+	output = popen (args, "r");
+	if (output == NULL) {
+		/* error calling mono nautilus-ifolder.exe */
+		g_print ("Error calling: ");
+		g_print (args);
+		g_print ("\n");
+		free (args);
+		return;
+	}
+	
+	if (fgets (readBuffer, 1024, output) != NULL) {
+		return_str = strdup (readBuffer);
+		g_print ("*** 1st line of STDOUT from popen: ");
+		g_print (return_str);
+		g_print ("\n");
+	}
+
+	free (args);
+	pclose (output);
+	
+	return (void *)return_str;
+}
+
 static void *
 create_ifolder_thread (gpointer user_data)
 {
@@ -445,44 +521,6 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 					NULL, 
 					revert_ifolder_thread,
 					file);
-}
-
-/**
- * If this function returns NON-NULL, it contains a char * from the process
- * executed by popen and should be freed.  The char * only contains the first
- * line of output from the executed process.
- */
-static void *
-ifolder_dialog_thread (gpointer user_data)
-{
-	FILE *output;
-	char readBuffer [1024];
-	char *args = (char *)user_data;
-	char *return_str = NULL;
-	
-	memset (readBuffer, '\0', sizeof (readBuffer));
-
-	output = popen (args, "r");
-	if (output == NULL) {
-		/* error calling mono nautilus-ifolder.exe */
-		g_print ("Error calling: ");
-		g_print (args);
-		g_print ("\n");
-		free (args);
-		return;
-	}
-	
-	if (fgets (readBuffer, 1024, output) != NULL) {
-		return_str = strdup (readBuffer);
-		g_print ("*** 1st line of STDOUT from popen: ");
-		g_print (return_str);
-		g_print ("\n");
-	}
-
-	free (args);
-	pclose (output);
-	
-	return (void *)return_str;
 }
 
 static void
@@ -798,10 +836,6 @@ nautilus_module_initialize (GTypeModule *module)
 	ifolder_extension_register_type (module);
 	provider_types[0] = ifolder_nautilus_get_type ();
 	
-	/* Initialize gSOAP */
-	soap_init (&soap);
-	soap_set_namespaces (&soap, iFolderClient_namespaces);
-
 	soapURL = getLocalServiceUrl ();
 }
 
@@ -809,9 +843,8 @@ void
 nautilus_module_shutdown (void)
 {
 	g_print ("Shutting down nautilus-ifolder extension\n");
-	
-	/* Cleanup gSOAP */
-	soap_end (&soap);
+
+	/* Cleanup soapURL */	
 	if (soapURL) {
 		free (soapURL);
 	}
