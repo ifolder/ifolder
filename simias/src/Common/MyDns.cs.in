@@ -30,6 +30,8 @@ using System.Diagnostics;
 
 using log4net;
 
+using Simias.Client;
+
 namespace Simias
 {
 	/// <summary>
