@@ -64,7 +64,6 @@
 	
 	NSLog(@"Starting Simias Process");
 	[ [Simias getInstance] start];
-//	[self startSimiasThread:self];
 
 	ifolderdata = [[iFolderData alloc] init];
 }
@@ -608,11 +607,13 @@
 
 			if(isiFolder)
 			{
-				iFolder *ifolder = [[iFolderData sharedInstance] 
+				[[iFolderData sharedInstance] 
 										readiFolder:[colNodeEvent collectionID]];
 									
-				if([ifolder HasConflicts])
-					[iFolderNotificationController collisionNotification:ifolder];								
+				// only do notifications now when the sync ends
+//				if([ifolder HasConflicts])
+//					[[iFolderData sharedInstance] setHasConflicts:[ifolder ID]];
+//					[iFolderNotificationController collisionNotification:ifolder];								
 			}
 			break;
 		}
@@ -636,7 +637,7 @@
 			iFolder *ifolder = [[iFolderData sharedInstance] 
 									readAvailableiFolder:[subNodeEvent nodeID]
 									inCollection:[subNodeEvent collectionID]];
-//			if(ifolder != nil) trigger some event
+
 			[iFolderNotificationController newiFolderNotification:ifolder];
 			break;
 		}
@@ -717,7 +718,9 @@
 	if(ifolder != nil)
 	{
 		if([cse syncAction] == SYNC_ACTION_START)
+		{
 			[ifolder setIsSynchronizing:YES];
+		}
 		else
 		{
 			[ifolder setIsSynchronizing:NO];
@@ -739,6 +742,15 @@
 		{
 			NSLog(@"handleCollectionSyncEvent calling getiFolder with updateData");
 			[[iFolderData sharedInstance] readiFolder:[cse ID]];
+		}
+		
+		if([cse syncAction] == SYNC_ACTION_STOP)
+		{
+			if([ifolder HasConflicts])
+			{
+				NSLog(@"iFolder has collisions, notifying user");
+				[iFolderNotificationController collisionNotification:ifolder];								
+			}
 		}
 	}
 
@@ -769,7 +781,7 @@
 			[self addLogTS:syncMessage];
 
 			// sending current value of -1 hides the control
-			[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];			
+			[iFolderWindowController updateProgress:-1 withMin:0 withMax:0];
 			break;
 		}
 	}

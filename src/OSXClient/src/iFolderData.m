@@ -100,7 +100,7 @@ static iFolderData *sharedInstance = nil;
 	[ifolderDataAlias release];
 	[ifoldersController release];
 	[domainsController release];
-	
+
 	[super dealloc];
 }
 
@@ -759,7 +759,6 @@ static iFolderData *sharedInstance = nil;
 	else
 		[domainsController setSelectionIndex:0];
 }
-
 
 
 @end
