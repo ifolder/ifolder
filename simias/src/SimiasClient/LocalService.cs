@@ -90,7 +90,7 @@ namespace Simias.Client
 			{
 				SimiasWebService webService = new SimiasWebService();
 				webService.Url = Manager.LocalServiceUrl.ToString() + "/Simias.asmx";
-				webService.Ping();
+				webService.PingSimias();
 			}
 			catch
 			{}
