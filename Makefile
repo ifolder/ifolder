@@ -38,7 +38,7 @@ register unregister:
 #
 AUTOGEN_CMD       = ./autogen.sh --prefix=$(PREFIX)
 AUTOGEN_DEBUG_CMD = ./autogen.sh --prefix=$(PREFIX) --enable-debug
-AUTOGEN_SDK_CMD   = ./autogen.sh --prefix=$(PREFIX) --enable-merge-module --with-ndoc-path='c:/Program Files/NDoc/bin/.net-1.1'
+AUTOGEN_SDK_CMD   = ./autogen.sh --prefix=$(PREFIX) --with-ndoc-path='c:/Program Files/NDoc/bin/.net-1.1'
 
 ag autogen:
 	rm -f */config.cache
