@@ -48,7 +48,7 @@ GLADE_FILES = $(srcdir)/pobox-viewer.glade $(srcdir)/teamspace.png $(srcdir)/col
 
 IMAGE_FILES = $(srcdir)/invitation_128.png $(srcdir)/invitation_16.png $(srcdir)/teamspace.png $(srcdir)/property.png $(srcdir)/invited-contact.png $(srcdir)/vcardimport.png $(srcdir)/vcardexport.png $(srcdir)/book.png $(srcdir)/contact.png $(srcdir)/contact_me.png $(srcdir)/blankhead.png
 
-EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(IA_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(IA_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES) $(PO_CSFILES)
+EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(IA_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(IA_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES) $(PO_CSFILES) $(CP_CSFILES)
 
 all: ColPropViewer.exe POBoxViewer.exe InvitationAssistant.exe ContactBrowser.exe Novell.AddressBook.UI.gtk.dll
 
