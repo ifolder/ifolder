@@ -640,7 +640,7 @@ namespace Novell.iFolder.iFolderCom
 					}
 
 					// TODO: change this to use an array and add them all at once.
-					Subscription subscr = poBox.CreateSubscription(ifolder, ifolder.GetCurrentMember());
+					Subscription subscr = poBox.CreateSubscription(ifolder, ifolder.GetCurrentMember(), typeof(iFolder).Name);
 
 					// Add all of the other properties (ToAddress, FromAddress, etc.)
 					subscr.FromAddress = sendersEmail;
