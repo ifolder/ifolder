@@ -1204,24 +1204,31 @@ namespace Simias.Sync.Client
 					}
 
 					ClientInFile file = new ClientInFile(collection, nodeID, new WsServerReadFile(service));
-					file.Open(rights == Rights.ReadOnly ? true : false);
-					bool success = false;
-					try
+					if (file.Open(rights == Rights.ReadOnly ? true : false))
 					{
-						log.Info("Downloading File {0} from server", file.Name);
-						success = file.DownLoadFile();
+						bool success = false;
+						try
+						{
+							log.Info("Downloading File {0} from server", file.Name);
+							success = file.DownLoadFile();
+						}
+						finally
+						{
+							success = file.Close(success);
+							if (success)
+							{
+								workArray.RemoveNodeFromServer(nodeID);
+							}
+							else
+							{
+								log.Info("Failed Downloading File {0}", file.Name);
+							}
+						}
 					}
-					finally
+					else
 					{
-						success = file.Close(success);
-						if (success)
-						{
-							workArray.RemoveNodeFromServer(nodeID);
-						}
-						else
-						{
-							log.Info("Failed Downloading File {0}", file.Name);
-						}
+						// There is no file to pull down.
+						workArray.RemoveNodeFromServer(nodeID);
 					}
 				}
 				catch 

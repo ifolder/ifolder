@@ -123,7 +123,6 @@ namespace Simias.Sync.Client
 		IServerReadFile			serverFile;
 		/// <summary>True if the node should be marked readOnly.</summary>
 		bool					readOnly = false;
-
 		
 		#endregion
 		
@@ -150,13 +149,14 @@ namespace Simias.Sync.Client
 		/// Open the file.
 		/// </summary>
 		/// <param name="readOnly">True if the file should be marked readonly.</param>
-		public void Open(bool readOnly)
+		/// <returns>True if the file was opened.</returns>
+		public bool Open(bool readOnly)
 		{
 			this.readOnly = readOnly;
 			SyncNode snode = serverFile.GetFileNode(nodeID);
 			if (snode == null)
 			{
-				throw new SimiasException(string.Format("Node {0} not found on server.", nodeID));
+				return false;
 			}
 			XmlDocument xNode = new XmlDocument();
 			xNode.LoadXml(snode.node);
@@ -164,6 +164,7 @@ namespace Simias.Sync.Client
 			collection.ImportNode(node, false, 0);
 			node.IncarnationUpdate = node.LocalIncarnation;
 			base.Open(node);
+			return true;
 		}
 
 		/// <summary>
