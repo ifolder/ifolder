@@ -1077,6 +1077,9 @@ show_ifolder_creation_dialog (void *user_data)
 	
 	parent_window = GTK_WINDOW (user_data);
 
+
+	/* FIXME: Create a dialog to look exactly like the one that the C# iFolder Client is showing */
+
 	creation_dialog = gtk_dialog_new_with_buttons (
 						_("iFolder Introduction"),
 						parent_window,
@@ -1159,6 +1162,7 @@ create_ifolder_thread (gpointer user_data)
 		errMsg->detail	= _("Sorry, unable to convert the specified folder into an iFolder.");
 		g_idle_add (show_ifolder_error_message, errMsg);
 	} else {
+		/* FIXME: Check the config setting to figure out whether the creation dialog should be shown. */
 		g_idle_add (show_ifolder_creation_dialog,
 					g_object_get_data (G_OBJECT (item), "parent_window"));
 	}
