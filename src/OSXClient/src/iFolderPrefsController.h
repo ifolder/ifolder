@@ -25,6 +25,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AccountsController;
+@class iFolderService;
 
 @interface iFolderPrefsController : NSWindowController
 {
@@ -34,12 +35,22 @@
     IBOutlet NSView				*syncView;
 	IBOutlet NSView				*blankView;
 	IBOutlet AccountsController	*accountsController;
+	IBOutlet NSButton			*enableSync;
+	IBOutlet NSPopUpButton		*syncUnits;
+	IBOutlet NSTextField		*syncValue;
+	IBOutlet NSTextField		*syncLabel;
+	
+	iFolderService				*ifolderService;	
 
 	NSToolbar				*toolbar;
 	NSMutableDictionary		*toolbarItemDict;	
 	NSMutableArray			*toolbarItemArray;
 	int						modalReturnCode;
 }
+
+- (IBAction)toggleSyncEnabled:(id)sender;
+- (IBAction)updateSyncValue:(id)sender;
+- (IBAction)changeSyncUnits:(id)sender;
 
 + (iFolderPrefsController *)sharedInstance;
 

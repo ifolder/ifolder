@@ -82,14 +82,10 @@
 }
 
 
-
-
 -(NSString *)name
 {
 	return [self valueForKeyPath:@"properties.name"]; 
 }
-
-
 
 
 -(NSString *)userName
@@ -97,8 +93,10 @@
 	return [self valueForKeyPath:@"properties.userName"]; 
 }
 
-
-
+-(NSString *)userID
+{
+	return [self valueForKeyPath:@"properties.userID"]; 
+}
 
 -(NSString *)host
 {
@@ -115,6 +113,11 @@
 -(NSString *)password
 {
 	return [self valueForKeyPath:@"properties.password"]; 
+}
+
+-(NSString *)description
+{
+	return [self valueForKeyPath:@"properties.description"]; 
 }
 
 
@@ -134,7 +137,6 @@
 {
 	return [self valueForKeyPath:@"properties.isEnabled"]; 
 }
-
 
 
 @end

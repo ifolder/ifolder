@@ -251,8 +251,43 @@
 //===================================================================
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+	[self setupApplicationDefaults];
 	[self showiFolderWindow:self];
 	[iFolderWindowController updateStatusTS:@"Loading synchronization process..."];
+}
+
+
+//===================================================================
+// setupApplicationDefaults
+// This will load the defaults and if they are not there, set them
+// up for the first time
+//===================================================================
+- (void)setupApplicationDefaults
+{
+	NSArray *keys	= [NSArray arrayWithObjects:	PREFKEY_STARTUP, 
+													PREFKEY_WINPOS,
+													PREFKEY_RESTOREWIN,
+													PREFKEY_CLICKIFOLDER,
+													PREFKEY_NOTIFYIFOLDERS,
+													PREFKEY_NOTIFYCOLL,
+													PREFKEY_NOTIFYUSER,
+													PREFKEY_NOTIFYBYINDEX,
+													nil];
+
+	NSArray *values = [NSArray arrayWithObjects:	[NSNumber numberWithBool:NO],
+													[NSNumber numberWithBool:YES],
+													[NSNumber numberWithBool:YES],
+													[NSNumber numberWithInt:0],
+													[NSNumber numberWithBool:YES],
+													[NSNumber numberWithBool:YES],
+													[NSNumber numberWithBool:YES],
+													[NSNumber numberWithInt:0],
+													nil];
+
+	NSDictionary *defaults = [[NSMutableDictionary alloc]
+								initWithObjects:values forKeys:keys];
+
+	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
 

@@ -53,9 +53,11 @@
 -(NSString *)ID;
 -(NSString *)name;
 -(NSString *)userName;
+-(NSString *)userID;
 -(NSString *)host;
 -(NSString *)password;
 -(NSString *)poBoxID;
+-(NSString *)description;
 -(NSNumber *)isDefault;
 -(NSNumber *)isSlave;
 -(NSNumber *)isEnabled;

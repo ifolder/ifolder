@@ -25,7 +25,9 @@
 
 @class iFolderDomain;
 @class SimiasService;
+@class iFolderService;
 @class LeaveDomainSheetController;
+@class VerticalBarView;
 
 @interface AccountsController : NSObject
 {
@@ -43,8 +45,16 @@
     IBOutlet NSView *view;
 	IBOutlet NSWindow	*parentWindow;
 	IBOutlet LeaveDomainSheetController	*leaveDomainController;
+	
+	IBOutlet NSTextView		*domainDescription;
+	IBOutlet NSTextField	*freeSpace;
+	IBOutlet NSTextField	*usedSpace;
+	IBOutlet NSTextField	*totalSpace;
+	IBOutlet VerticalBarView	*vertBar;
 
 	SimiasService		*simiasService;	
+	iFolderService		*ifolderService;	
+
 	NSMutableArray		*domains;
 	iFolderDomain		*selectedDomain;
 	iFolderDomain		*defaultDomain;
