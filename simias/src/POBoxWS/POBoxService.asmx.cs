@@ -670,23 +670,26 @@ namespace Simias.POBoxService.Web
 		/// <param name="toUserID"></param>
 		/// <param name="sharedCollectionID"></param>
 		/// <param name="sharedCollectionType"></param>
-		/// <returns>success subscription ID - failure empty string</returns>
+		/// <param name="rights"></param>
+		/// <param name="messageID"></param>
+		/// <returns>True if successful. False if not.</returns>
 		[WebMethod(EnableSession = true)]
 		[SoapDocumentMethod]
 		public
-		string 
+		bool
 		Invite(
 			string			domainID, 
 			string			fromUserID,
 			string			toUserID,
 			string			sharedCollectionID,
 			string			sharedCollectionType,
-			int				rights)
+			int				rights,
+			string			messageID)
 		{
+			bool				status = false;
 			Collection			sharedCollection;
 			Simias.POBox.POBox	poBox = null;
 			Store				store = Store.GetStore();
-			string				msgID = "";
 			Subscription		cSub = null;
 
 			log.Debug("Invite - called");
@@ -758,6 +761,7 @@ namespace Simias.POBoxService.Web
 				cSub.FromName = fromMember.Name;
 				cSub.FromIdentity = fromUserID;
 				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) rights;
+				cSub.MessageID = messageID;
 
 				string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
 				appPath += "/POBoxService.asmx";
@@ -798,7 +802,7 @@ namespace Simias.POBoxService.Web
 				}
 
 				poBox.Commit(cSub);
-				msgID = cSub.MessageID;
+				status = true;
 			}
 			catch(Exception e)
 			{
@@ -808,7 +812,7 @@ namespace Simias.POBoxService.Web
 			}
 
 			log.Debug("Invite - exit");
-			return(msgID);
+			return(status);
 		}
 
 		/// <summary>

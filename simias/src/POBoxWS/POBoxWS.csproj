@@ -103,6 +103,11 @@
                     SubType = "Component"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "POBoxService.asmx.resx"
+                    DependentUpon = "POBoxService.asmx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
             </Include>
         </Files>
     </CSHARP>

@@ -313,19 +313,19 @@ namespace Simias.POBox
 					subscription.FromIdentity = me.UserID;
 					subscription.FromName = me.Name;
 
-					string subID =
+					bool status =
 						poService.Invite(
 							subscription.DomainID,
 							subscription.FromIdentity,
 							subscription.ToIdentity,
 							subscription.SubscriptionCollectionID,
 							subscription.SubscriptionCollectionType,
-							(int) subscription.SubscriptionRights);
-					if (subID != null && subID != "")
+							(int) subscription.SubscriptionRights,
+							subscription.MessageID);
+					if (status)
 					{
 						// FIXME:: sync my PostOffice right now!
 						subscription.SubscriptionState = SubscriptionStates.Posted;
-						subscription.MessageID = subID;
 						poBox.Commit(subscription);
 					}
 					else

@@ -389,11 +389,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\POBox\PostOffice.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\POBox\Subscription.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
