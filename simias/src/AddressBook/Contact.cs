@@ -582,6 +582,7 @@ namespace Novell.AddressBook
 					{
 						this.ImportPhoto(this.photoStream);
 						this.photoStream.Close();
+						this.photoStream = null;
 					}
 
 					//this.thisNode.Save();
@@ -1351,18 +1352,29 @@ namespace Novell.AddressBook
 		/// <returns>A binary stream object which the caller can read from.</returns>
 		public Stream ExportPhoto()
 		{
-			try
+			if (this.thisNode != null)
 			{
-				foreach(NodeStream nodeStream in this.thisNode.GetStreamList())
+
+				try
 				{
-					if (nodeStream.Name == this.thisNode.Id + Common.photoProperty)
+					foreach(NodeStream nodeStream in this.thisNode.GetStreamList())
 					{
-						return(nodeStream.Open(FileMode.Open, FileAccess.Read));
+						if (nodeStream.Name == this.thisNode.Id + Common.photoProperty)
+						{
+							return(nodeStream.Open(FileMode.Open, FileAccess.Read));
+						}
 					}
 				}
+				catch{}
+				throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
 			}
-			catch{}
-			throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
+			else
+			{
+				if(this.photoStream != null)
+					return this.photoStream;
+				else
+					throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
+			}
 		}
 
 		/// <summary>
