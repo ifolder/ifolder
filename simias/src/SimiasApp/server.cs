@@ -36,8 +36,6 @@ using System.Reflection;
 using System.Threading;
 using System.Web.Hosting;
 
-using Simias.Client;
-
 namespace Mono.ASPNET
 {
 	public class Server
@@ -179,15 +177,15 @@ namespace Mono.ASPNET
 		private static Mutex simiasAppMutex = null;
 		static private bool IsProgramRunning()
 		{
-			// SimiasApp will always be run from webbindir. So change the current bindir
-			// which is equal to webbindir to the right place.
-			SimiasSetup.prefix = ( MyEnvironment.Platform == MyPlatformID.Unix ) ? 
-				Path.GetDirectoryName( SimiasSetup.bindir ) :
-				Path.GetDirectoryName( Path.GetDirectoryName( SimiasSetup.bindir ) );
+			// Get a path that is unique to this logged on user.
+			string path = Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData );
+			if ( ( path == null ) || ( path.Length == 0 ) )
+			{
+				path = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+			}
 
 			bool created;
-			Configuration config = new Configuration();
-			simiasAppMutex = new Mutex( true, config.StorePath.Replace( "\\", "/" ), out created );
+			simiasAppMutex = new Mutex( true, path.Replace( "\\", "/" ), out created );
 			return !created;
 		}
 	
