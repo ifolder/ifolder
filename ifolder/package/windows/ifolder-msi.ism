@@ -1271,7 +1271,7 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
-		<row><td>ifi</td><td>InvitationWizard.exe</td><td>iFolder.Invitation</td><td/><td>iFolder_Files</td></row>
+		<row><td>csi</td><td>InvitationWizard.exe</td><td>iFolder.Invitation</td><td/><td>iFolder_Files</td></row>
 	</table>
 
 	<table name="Feature">
@@ -3124,7 +3124,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
-		<row><td>ifi</td><td>Open</td><td/><td>##ID_STRING46##</td><td>##ID_STRING45##</td></row>
+		<row><td>csi</td><td>Open</td><td/><td>##ID_STRING46##</td><td>##ID_STRING45##</td></row>
 	</table>
 
 	<table name="_Validation">
