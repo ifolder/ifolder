@@ -70,6 +70,11 @@ namespace Novell.AddressBook
 		internal static string	urlProperty = "VC:URL";
 
 		/// <summary>
+		/// organization property which is contained in a contact
+		/// </summary>
+		internal static string	organizationProperty = "VC:ORG";
+
+		/// <summary>
 		/// vCard Note property which is contained in a contact
 		/// </summary>
 		internal const string noteProperty = "VC:NOTE";
@@ -83,6 +88,11 @@ namespace Novell.AddressBook
 		/// vCard schema version currently supported by the address book
 		/// </summary>
 		internal static string	vcardSchemaVersion = "3.0";
+
+		/// <summary>
+		/// blogUrl property which is contained in a contact
+		/// </summary>
+		internal static string	blogProperty = "AB:BLOG";
 
 		/// <summary>
 		/// Collection Store a contact is known by

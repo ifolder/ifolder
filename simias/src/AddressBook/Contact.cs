@@ -52,6 +52,8 @@ namespace Novell.AddressBook
 		private string			workforceID;
 		private string			note;
 		private string			manager;
+		private string			blogUrl;
+		private string			organization;
 
 		// Private members used for caching objects to the contact before
 		// the contact has been added to an address list
@@ -453,6 +455,60 @@ namespace Novell.AddressBook
 			set
 			{
 				this.manager = value;
+				propertyChanged = true;
+			}
+		}
+
+		/// <summary>
+		/// Blog: Specifies the contact's blog url
+		///
+		/// Type Value: Single text value
+		///
+		/// Example: http://johndoe.blogdomain.com
+		///
+		/// </summary>
+		public string Blog
+		{
+			get
+			{
+				if(this.blogUrl != null)
+				{
+					return(this.blogUrl);
+				}
+
+				return("");
+			}
+
+			set
+			{
+				this.blogUrl = value;
+				propertyChanged = true;
+			}
+		}
+
+		/// <summary>
+		/// Organization: Specifies the organization the contact belongs to
+		///
+		/// Type Value: Single text value
+		///
+		/// Example: finance;provo;ut;somecompany
+		///
+		/// </summary>
+		public string Organization
+		{
+			get
+			{
+				if(this.organization != null)
+				{
+					return(this.organization);
+				}
+
+				return("");
+			}
+
+			set
+			{
+				this.organization = value;
 				propertyChanged = true;
 			}
 		}
@@ -993,6 +1049,16 @@ namespace Novell.AddressBook
 					if (this.note != null)
 					{
 						this.thisNode.Properties.ModifyProperty(Common.noteProperty, this.note);
+					}
+
+					if (this.blogUrl != null)
+					{
+						this.thisNode.Properties.ModifyProperty(Common.blogProperty, this.blogUrl);
+					}
+
+					if (this.organization != null)
+					{
+						this.thisNode.Properties.ModifyProperty(Common.organizationProperty, this.organization);
 					}
 
 					this.collection.Commit(true);
