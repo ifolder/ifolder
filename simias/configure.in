@@ -140,4 +140,5 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 src/Configuration/Makefile
+src/StoreProvider/Makefile
 ])
