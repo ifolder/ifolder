@@ -58,7 +58,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Constructor for the object.
 		/// </summary>
-		internal ICSList()
+		public ICSList()
 		{
 			this.valueList = new ArrayList();
 			this.iEnumerator = null;
@@ -68,7 +68,7 @@ namespace Simias.Storage
 		/// Constructor for the object.
 		/// </summary>
 		/// <param name="icsEnumerator">Enumerator that contains objects.</param>
-		internal ICSList( ICSEnumerator icsEnumerator )
+		public ICSList( ICSEnumerator icsEnumerator )
 		{
 			this.valueList = null;
 			this.iEnumerator = icsEnumerator;

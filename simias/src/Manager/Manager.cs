@@ -9,7 +9,7 @@ namespace Simias
 	/// <summary>
 	/// Summary description for Manager.
 	/// </summary>
-	public class Manager
+	public class FactoryManager
 	{
 		#region Class Members
 		/// <summary>

@@ -11,16 +11,13 @@ namespace Simias.Storage
 	/// </summary>
 	public class SystemPolicy : Node, IPolicy
 	{
-		#region Class Members
-		#endregion
-
 		#region Properties
 		/// <summary>
 		/// Gets the strong name for this system policy.
 		/// </summary>
 		public string StrongName
 		{
-			get { return ID; }
+			get { return properties.GetSingleProperty( PropertyTags.PolicyID ).Value as string; }
 		}
 
 		/// <summary>
@@ -54,8 +51,9 @@ namespace Simias.Storage
 		/// <param name="strongName">Strong name of the policy. This should be a well-known GUID.</param>
 		/// <param name="shortDescription">A short friendly description of the policy.</param>
 		public SystemPolicy( string strongName, string shortDescription ) :
-			base( shortDescription, strongName, NodeTypes.SystemPolicyType )
+			base( shortDescription, Guid.NewGuid().ToString(), NodeTypes.SystemPolicyType )
 		{
+			properties.AddNodeProperty( PropertyTags.PolicyID, strongName );
 		}
 
 		/// <summary>
@@ -97,12 +95,6 @@ namespace Simias.Storage
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.SystemPolicyType, type ) );
 			}
 		}
-		#endregion
-
-		#region Private Methods
-		#endregion
-
-		#region Internal Methods
 		#endregion
 
 		#region Public Methods
