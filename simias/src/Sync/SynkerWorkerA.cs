@@ -42,6 +42,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	//TODO: why is the base master and slave not protected instead of private?
 	SynkerServiceA ss;
 	SyncCollection collection;
+	Member		   me;
 
 	Hashtable	largeFromServer, smallFromServer, dirsFromServer;
 	Hashtable	largeToServer, smallToServer, dirsToServer;
@@ -71,6 +72,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 		Log.Spew("-------- starting sync pass for collection {0}", collection.Name);
 		try
 		{
+			// Save off the member we are running as.
+			me = collection.GetCurrentMember();
+			// Now impersonate the collection so that we can import the nodes from the server.
 			collection.Impersonate(new Member("Root", collection.ID, Access.Rights.Admin));
 			try
 			{
@@ -173,7 +177,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	/// </summary>
 	void DoOneSyncPass()
 	{
-		Access.Rights rights = ss.Start(collection.GetCurrentMember().UserID);
+		Access.Rights rights = ss.Start(me.UserID);
 		if (rights == Access.Rights.Deny)
 		{
 			Log.Error("Sync with collection {0} denied", collection.Name);
