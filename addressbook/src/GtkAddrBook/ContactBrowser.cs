@@ -695,6 +695,25 @@ namespace Novell.AddressBook.UI.gtk
 		   }
 		 */
 
+		public void on_make_contact_me(object obj, EventArgs args)
+		{
+			TreeSelection tSelect = ContactTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+
+				Contact cnt = (Contact) tModel.GetValue(iter,0);
+				if(!cnt.IsCurrentUser)
+				{
+					cnt.IsCurrentUser = true;
+					cnt.Commit();
+				}
+			}
+		}
+
 		internal void EditSelectedContact(object obj, EventArgs args)
 		{
 			TreeSelection tSelect = ContactTreeView.Selection;

@@ -631,18 +631,31 @@ namespace Novell.AddressBook
 		{
 			get
 			{
-/*				try
+				try
 				{
-					if (this.addressBook != null &&
-						this.addressBook.store != null &&
-						this.addressBook.store.CurrentUserGuid == this.ID)
-					{
+					Member member = this.addressBook.GetCurrentMember();
+					if(member.UserID == this.UserID)
 						return(true);
+				}
+				catch{}
+				return(false);
+			}
+			set
+			{
+				try
+				{
+					Member member = this.addressBook.GetCurrentMember();
+					if(value == true)
+					{
+						this.UserID = member.UserID;
+					}
+					else
+					{
+						if(member.UserID == this.UserID)
+							this.UserID = "";
 					}
 				}
 				catch{}
-*/
-				return(false);
 			}
 		}
 
