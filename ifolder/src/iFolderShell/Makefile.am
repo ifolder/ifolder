@@ -84,8 +84,12 @@ install-exec-local: iFolderComponent.dll iFolderShell.dll $(DATA_FILES)
 	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /codebase
 
 uninstall-local:
-	$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`
-	$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister
+	if test -f $(DESTDIR)$(libdir)/iFolderShell.dll; then \
+		$(REGSVR32) /u /s `cygpath --windows $(DESTDIR)$(libdir)/iFolderShell.dll`; \
+	fi
+	if test -f $(DESTDIR)$(libdir)/iFolderComponent.dll; then \
+		$(REGASM) `cygpath --windows $(DESTDIR)$(libdir)/iFolderComponent.dll` /unregister; \
+	fi
 	cd $(DESTDIR)$(libdir); rm -f iFolderComponent.dll iFolderShell.dll iFolderShell.reg iFolderComponentTests.test.xml $(NUNIT_TESTS) $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
 	cd $(DESTDIR)$(libdir); rm -f $(DATA_FILES:$(srcdir)/iFolderShell/%=%)
