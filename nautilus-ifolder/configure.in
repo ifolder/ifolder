@@ -56,6 +56,14 @@ mandir="${prefix}/man"
 webdir="${exec_prefix}/web"
 webbindir="${exec_prefix}/web/bin"
 
+if test -z "$PKG_CONFIG_PATH"; then
+    export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig"
+else
+    export PKG_CONFIG_PATH="$prefix/$PKG_CONFIG_DIR/pkgconfig:$PKG_CONFIG_PATH"
+fi
+echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+AC_SUBST(PKG_CONFIG_PATH)
+
 dnl Check for pkgconfig first
 AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, yes, no)
 
