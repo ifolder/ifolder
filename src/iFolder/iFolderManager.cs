@@ -47,12 +47,12 @@ namespace Novell.iFolder
 		{
 			get
 			{
-				return SyncInterval.GetInterval(store.DefaultDomain);
+				return SyncInterval.GetInterval(store.GetDatabaseObject());
 			}
 
 			set
 			{
-				SyncInterval.Set(store.DefaultDomain, value);
+				SyncInterval.Set(store.GetDatabaseObject(), value);
 			}
 		}
         #endregion
