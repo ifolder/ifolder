@@ -108,7 +108,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Browser.cs"
+                    RelPath = "BrowserService.cs"
                     SubType = "code"
                     BuildAction = "Compile"
                 />

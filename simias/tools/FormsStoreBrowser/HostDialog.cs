@@ -26,16 +26,13 @@ namespace StoreBrowser
 			set { host.Text = value; }
 		}
 
-		public HostDialog()
+		public HostDialog( string hostUri )
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+			host.Text = hostUri;
 		}
 
 		/// <summary>
@@ -72,7 +69,7 @@ namespace StoreBrowser
 			this.host.Name = "host";
 			this.host.Size = new System.Drawing.Size(208, 20);
 			this.host.TabIndex = 0;
-			this.host.Text = "localhost:8086";
+			this.host.Text = "http://localhost:8086/simias10/mlasky";
 			// 
 			// label1
 			// 
@@ -80,7 +77,7 @@ namespace StoreBrowser
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(64, 23);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Host Name:";
+			this.label1.Text = "Host Uri:";
 			// 
 			// ok
 			// 

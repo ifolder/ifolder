@@ -28,6 +28,8 @@ using System.Collections;
 using System.Xml;
 using System.Threading;
 using System.Reflection;
+using System.Net;
+using System.Net.Sockets;
 using Simias;
 using Simias.Event;
 
@@ -64,6 +66,7 @@ namespace Simias.Service
 		private const string CFG_Services = "Services";
 		private const string CFG_WebServicePath = "WebServicePath";
 		private const string CFG_ShowOutput = "WebServiceOutput";
+		private const string CFG_WebServiceUri = "WebServiceUri";
 		private const string XmlServiceTag = "Service";
 
 		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
@@ -240,11 +243,6 @@ namespace Simias.Service
 		/// </summary>
 		private void installDefaultServices()
 		{
-			Install(new ThreadServiceCtl(conf, "Simias Change Log Service", "Simias", "Simias.Storage.ChangeLog"), 1);
-			Install(new ProcessServiceCtl(conf, "Simias Multi-Cast DNS Service", "mDnsService.exe"), 2);
-			Install(new ThreadServiceCtl(conf, "Simias Interprocess Event Service", "Simias", "Simias.Event.IProcEventServer"), 3);
-			Install(new ThreadServiceCtl(conf, "Simias PO Service", "Simias", "Simias.POBox.POService"), 4);
-			Install(new ThreadServiceCtl(conf, "Simias Presence Service", "Simias", "Simias.Presence.PresenceService"), 5);
 		}
 
 		/// <summary>
@@ -390,9 +388,23 @@ namespace Simias.Service
 						throw new SimiasException( String.Format( "Web service path must be absolute: {0}", webPath ) );
 					}
 
+					// See if there is already a uri specified in the configuration file.
+					Uri uri = null;
+					if ( config.Exists( CFG_Section, CFG_WebServiceUri ) )
+					{
+						uri = new Uri( config.Get( CFG_Section, CFG_WebServiceUri, null ) );
+					}
+					else
+					{
+						// Get the dynamic port that xsp should use and write it out to the config file.
+						string virtualRoot = String.Format( "/simias10/{0}", Environment.UserName );
+						uri = new Uri( new UriBuilder( "http", IPAddress.Loopback.ToString(), GetXspPort(), virtualRoot ).ToString() );
+						config.Set( CFG_Section, CFG_WebServiceUri, uri.ToString() );
+					}
+
 					// Strip off the volume if it exists and the file name and make the path absolute from the root.
 					string appPath = String.Format( "{0}{1}", Path.DirectorySeparatorChar, webPath.Remove( 0, Path.GetPathRoot( webPath ).Length ) );
-					webProcess.StartInfo.Arguments = String.Format( "--applications /:{0}", appPath );
+					webProcess.StartInfo.Arguments = String.Format( "--applications {0}:{1} --port {2}", uri.PathAndQuery, appPath, uri.Port.ToString() );
 					webProcess.Start();
 
 					logger.Info( "SimiasApp process has been started." );
@@ -528,6 +540,20 @@ namespace Simias.Service
 			}
 		}
 
+		static private int GetXspPort()
+		{
+			Socket s = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
+			try
+			{
+				s.Bind( new IPEndPoint( IPAddress.Loopback, 0 ) );
+				return ( s.LocalEndPoint as IPEndPoint ).Port;
+			}
+			finally
+			{
+				s.Close();
+			}
+		}
+
 		#endregion
 
 		#region Properties
@@ -556,6 +582,19 @@ namespace Simias.Service
 			get { return servicesStopped.WaitOne(0, false); }
 		}
 
+		/// <summary>
+		/// Gets the local service url so that applications can talk to the local webservice.
+		/// </summary>
+		static public Uri LocalServiceUrl
+		{
+			get
+			{
+				// Get the configuration object.
+				Configuration config = ( conf != null ) ? conf : Configuration.GetConfiguration();
+				string uriString = config.Get( CFG_Section, CFG_WebServiceUri, null );
+				return ( uriString != null ) ? new Uri( uriString ) : null;
+			}
+		}
 		#endregion
 
 		#region IEnumerable Members

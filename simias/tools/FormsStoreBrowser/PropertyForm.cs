@@ -11,7 +11,7 @@ namespace StoreBrowser
 	/// </summary>
 	public class PropertyForm : System.Windows.Forms.Form
 	{
-		private Browser browser;
+		private BrowserService browser;
 		private DisplayNode node;
 		private DisplayProperty property;
 		private System.Windows.Forms.Button bOK;
@@ -22,7 +22,7 @@ namespace StoreBrowser
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public PropertyForm(Browser browser, DisplayNode node, DisplayProperty property)
+		public PropertyForm(BrowserService browser, DisplayNode node, DisplayProperty property)
 		{
 			this.browser = browser;
 			this.node = node;

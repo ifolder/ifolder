@@ -295,24 +295,12 @@ namespace Simias.Domain
 		/// <param name="password"></param>
 		public void Attach(string host, string user, string password)
 		{
-			// Defaults
-			string ipAddress = host;
-			int port = 80;
-
-			// Determine if there is a port set on the host entry.
-			int length = host.IndexOf(':');
-			if (length != -1)
-			{
-				ipAddress = host.Substring(0, length);
-				port = Convert.ToInt32(host.Substring(length + 1));
-			}
-
 			// Set the url to where the enterprise server is.
-			UriBuilder ub = new UriBuilder( defaultScheme, ipAddress, port);
+			Uri uhost = new Uri( host );
 
 			// Create the domain service web client object.
 			DomainService domainService = new DomainService();
-			domainService.Url = new Uri(ub.Uri, "DomainService.asmx").ToString();
+			domainService.Url = host + "/DomainService.asmx";
 
 			// get domain info
 			DomainInfo domainInfo = domainService.GetDomainInfo();
@@ -339,20 +327,20 @@ namespace Simias.Domain
 				if (store.GetCollectionByID(domainInfo.RosterID) == null)
 				{
 					// create roster proxy
-					CreateRosterProxy(store, domain, domainInfo.RosterID, ub.Uri);
+					CreateRosterProxy(store, domain, domainInfo.RosterID, uhost);
 					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
 				}
 
 				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
 				{
 					// create PO Box proxy
-					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID, provisionInfo.POBoxName, ub.Uri);
+					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID, provisionInfo.POBoxName, uhost);
 					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
 				}
 
 				// Set the host and port number in the configuration file.
 				DomainConfig dConf = new DomainConfig(domainInfo.Name);
-				dConf.SetAttributes(domain.ID, domain.Description, ub.Uri, true);
+				dConf.SetAttributes(domain.ID, domain.Description, uhost, true);
 			}
 			catch(Exception e)
 			{
@@ -406,7 +394,7 @@ namespace Simias.Domain
 
 			// Construct the web client.
 			DomainService domainService = new DomainService();
-			domainService.Url = new Uri(dConf.ServiceUrl, "DomainService.asmx").ToString();
+			domainService.Url = dConf.ServiceUrl.ToString() + "/DomainService.asmx";
 
 			string rootID = null;
 			string rootName = null;

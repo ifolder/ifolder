@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
+using System.Xml;
 
 
 namespace StoreBrowser
@@ -37,7 +38,7 @@ namespace StoreBrowser
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
-		string hostName = "localhost:8086";
+		string hostName;
 		IStoreBrowser browser = null;
 		private System.Windows.Forms.MainMenu mainMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
@@ -76,7 +77,23 @@ namespace StoreBrowser
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+
+			this.hostName = GetHostName();
+			if ( this.hostName == null )
+			{
+				HostDialog hDiag = new HostDialog(this.hostName);
+				if (hDiag.ShowDialog() == DialogResult.OK)
+				{
+					hostName = hDiag.HostName;
+				}
+				else
+				{
+					this.hostName = String.Format( "http://localhost:8086/simias10/{0}", Environment.UserName );
+				}
+			}
+
 			AddRecentMI();
+
 			this.Text = "Store Browser : " + hostName;
 			this.listView1.Hide();
 			tView.ImageList = imageList1;
@@ -414,9 +431,7 @@ namespace StoreBrowser
 			tView.Nodes.Clear();
 			richTextBox1.Clear();
 
-			HostDialog hDiag = new HostDialog();
-			hDiag.HostName = hostName;
-
+			HostDialog hDiag = new HostDialog(hostName);
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
@@ -431,9 +446,7 @@ namespace StoreBrowser
 			richTextBox1.Clear();
 			richTextBox1.BringToFront();
 
-			HostDialog hDiag = new HostDialog();
-			hDiag.HostName = hostName;
-
+			HostDialog hDiag = new HostDialog(hostName);
 			if (hDiag.ShowDialog() == DialogResult.OK)
 			{
 				hostName = hDiag.HostName;
@@ -650,6 +663,63 @@ namespace StoreBrowser
 				}
 			}
 		}
+
+		private string GetHostName()
+		{
+			string hostName = null;
+			string configFilePath = Path.Combine( DefaultPath, "Simias.config" );
+
+			if ( File.Exists( configFilePath ) )
+			{
+				XmlDocument configDoc = new XmlDocument();
+				configDoc.Load( configFilePath );
+
+				foreach ( XmlElement e1 in configDoc.DocumentElement )
+				{
+					if ( e1.GetAttribute( "name" ) == "ServiceManager" )
+					{
+						foreach ( XmlElement e2 in e1 )
+						{
+							if ( e2.GetAttribute( "name" ) == "WebServiceUri" )
+							{
+								hostName = e2.GetAttribute( "value" );
+								break;
+							}
+						}
+
+						break;
+					}
+				}
+			}
+
+			return hostName;
+		}
+
+		private string DefaultPath
+		{
+			get
+			{
+				string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+				if ((path == null) || (path.Length == 0))
+				{
+					path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				}
+
+				return fixupPath(path);
+			}
+		}
+
+		private string fixupPath(string path)
+		{
+			if ((path.EndsWith("simias") == false) &&
+				(path.EndsWith("simias/") == false) &&
+				(path.EndsWith(@"simias\") == false))
+			{
+				path = Path.Combine(path, "simias");
+			}
+
+			return path;
+		}
 	}
 
 	public interface IStoreBrowser : IDisposable
@@ -657,6 +727,6 @@ namespace StoreBrowser
 		void Show();
 		void ShowNode(TreeNode node);
 		void AddChildren(TreeNode tNode);
-		Browser StoreBrowser { get; }
+		BrowserService StoreBrowser { get; }
 	}
 }

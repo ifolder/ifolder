@@ -279,6 +279,7 @@ namespace Novell.FormsTrayApp
 				Manager.Start();
 
 				ifWebService = new iFolderWebService();
+				ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
 				ifWebService.Ping();
 				//iFolderManager.CreateDefaultExclusions(config);
 
