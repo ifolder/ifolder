@@ -164,6 +164,11 @@ namespace Simias.POBox
 		public const string CollectionDescriptionProperty = "ColDesc";
 
 		/// <summary>
+		/// The name of the property storing the root path of the collection (on the slave).
+		/// </summary>
+		public static readonly string CollectionRootProperty = "ColRoot";
+
+		/// <summary>
 		/// The name of the property storing the DirNode ID.
 		/// </summary>
 		public const string DirNodeIdProperty = "DirNodeID";
@@ -431,6 +436,23 @@ namespace Simias.POBox
 			set
 			{
 				Properties.ModifyProperty(CollectionDescriptionProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets/sets the collection root path on the slave.
+		/// </summary>
+		public string CollectionRoot
+		{
+			get
+			{
+				return (string)Properties.GetSingleProperty(CollectionRootProperty).Value;
+			}
+			set
+			{
+				Property property = new Property(CollectionRootProperty, value);
+				property.LocalProperty = true;
+				Properties.ModifyProperty(property);
 			}
 		}
 
