@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Drawing;
 using Novell.AddressBook;
-using Simias.Storage;
 
 using Gtk;
 using Gdk;
@@ -138,7 +137,17 @@ namespace Novell.iFolder
 
 			dAddrBook = abMan.OpenDefaultAddressBook();
 
-			ICSList acl = ifldr.GetShareAccess();
+			IFAccessControlList ifacl = ifldr.GetAccessControlList();
+
+			foreach(IFAccessControlEntry iface in ifacl)
+			{
+				SharingListHolder slh = new SharingListHolder(
+					iface.Rights, iface.Contact);
+				ContactTreeStore.AppendValues(slh);
+				guidList.Add(iface.Contact.ID);
+			}
+
+/*			ICSList acl = ifldr.GetShareAccess();
 
 			foreach(AccessControlEntry ace in acl)
 			{
@@ -161,6 +170,7 @@ namespace Novell.iFolder
 					}
 				}
 			}
+*/
 			if(ifldr.IsShareable())
 				addSharingButton.Sensitive = true;
 			else

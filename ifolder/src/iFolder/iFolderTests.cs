@@ -45,18 +45,6 @@ namespace Novell.iFolder.Tests
 		private string path;
 
 
-
-/*		private iFolder CreateiFolder(string name)
-		{
-			// Create a private (not shared) iFolder
-			string iFolderPath = Path.Combine(path, name);
-			Console.WriteLine("CreateiFolder({0})", iFolderPath);
-			iFolder newiFolder = manager.CreateiFolder(iFolderPath);
-			Console.WriteLine("  Name={0}, ID={1}", newiFolder.Name, newiFolder.ID);
-			Console.WriteLine("  LocalPath={0}", newiFolder.LocalPath);
-			return newiFolder;
-		}
-*/
 		private iFolder CreateSharediFolder(string name)
 		{
 			// Create a Collection.

@@ -27,7 +27,6 @@ using System.IO;
 using System.Net;
 using Simias.Storage;
 using Simias.Agent;
-
 using Novell.AddressBook;
 
 namespace Novell.iFolder
@@ -41,6 +40,7 @@ namespace Novell.iFolder
 #region Class Members
 		private	Collection		collection = null;
 		private Store			store = null;
+		private	AddressBook		ab = null;
 
 		/// <summary>
 		/// Type of collection that represents an iFolder.
@@ -95,45 +95,6 @@ namespace Novell.iFolder
 
 #region Internal methods
 		/// <summary>
-		/// Gets the type of a file or directory.
-		/// </summary>
-		/// <param name="path">
-		/// The path and name of a file or directory for which to return
-		/// the type.
-		/// A relative path is assumed to be relative to the current working
-		/// directory.
-		/// </param>
-		/// <returns>
-		/// <b>"File"</b> if the path specifies a file; <b>"Directory"</b> 
-		/// if the path specifies a directory.
-		/// </returns>
-		/// <exception cref="ApplicationException">
-		/// The specified path does not exist.
-		/// </exception>
-		internal string GetFileType(string path)
-		{
-			string type;
-
-			if (File.Exists(path))
-			{
-				type = iFolderFileType;
-			}
-			else if (Directory.Exists(path))
-			{
-				type = iFolderDirectoryType;
-			}
-			else
-			{
-				throw new ApplicationException(path + " does not exist!");
-			}
-
-			return type;
-		}
-
-
-
-
-		/// <summary>
 		/// Add a files/directories to an iFolder recursively.
 		/// </summary>
 		/// <param name="path">The path at which to begin the recursive 
@@ -182,15 +143,37 @@ namespace Novell.iFolder
 			store = callingStore;
 			this.collection = store.GetCollectionById(iFolderID);
 
+
 			// Make sure this collection has our store propery
 			if(this.collection.Type != iFolderType)
 			{
 				// Raise an exception here
 			}
 
-			// Set the current node to this iFolder.
-			//CurrentNode= collection;
+			ConnectAddressBook();
 		}
+
+
+
+
+		/// <summary>
+		/// Method: ConnectAddressBook
+		/// Abstract: Internal method to load the correct default
+		/// AddressBook for resolving contact information
+		/// </summary>
+		///
+		internal void ConnectAddressBook()
+		{
+			// TODO: where should we discover the contact information?
+			// CRG: this was connecting to the wrong store
+			Novell.AddressBook.Manager abManager =
+				Novell.AddressBook.Manager.Connect(
+						collection.LocalStore.StorePath);
+
+			LocalAddressBook lab = store.GetLocalAddressBook();
+			this.ab = abManager.GetAddressBookByName(lab.Name);
+		}
+
 
 
 
@@ -220,8 +203,7 @@ namespace Novell.iFolder
 
 			this.collection.Commit();
 
-			// Set the current node to newly created iFolder.
-			//CurrentNode= collection;
+			ConnectAddressBook();
 		}
 
 
@@ -250,8 +232,7 @@ namespace Novell.iFolder
 
 			this.collection.Commit();
 
-			// Set the current node to newly created iFolder.
-			//CurrentNode= collection;
+			ConnectAddressBook();
 		}
 
 
@@ -273,6 +254,7 @@ namespace Novell.iFolder
 			string relativeName = Path.GetFileName(path);
 
 			// Search the collection for the leaf name.
+			// TODO - ugh, fix this unreadable line of code
 			ICSEnumerator e = (ICSEnumerator)collection.Search( Property.ObjectName, relativeName, Property.Operator.Equal).GetEnumerator();
 			try
 			{
@@ -287,11 +269,12 @@ namespace Novell.iFolder
 					// Initialize parentNode to the parent of the this node.
 					Node parentNode = ((Node)e.Current).GetParent();
 
-					// TODO - fix this.
 					if (parentNode == null)
 					{
+						// TODO - ugh, fix this unreadable line of code
 						Uri documentRoot = (Uri)((Collection)e.Current).Properties.  GetSingleProperty(Property.DocumentRoot).  Value;
-
+	
+						// TODO - ugh, fix this unreadable line of code
 						if(	((Path.DirectorySeparatorChar == Convert.ToChar("\\")) && (String.Compare(path, documentRoot.LocalPath, true) == 0)) || path.Equals(documentRoot.LocalPath))
 						{
 							node = (Node)e.Current;
@@ -306,6 +289,7 @@ namespace Novell.iFolder
 					{
 						// See if the directory name matches the parent 
 						// node name.
+						// TODO - ugh, fix this unreadable line of code
 						string parentPath = Path.GetFileName(parentName);
 						if( ((Path.DirectorySeparatorChar == Convert.ToChar("\\")) && (String.Compare(parentPath, parentNode.Name, true) != 0)) || !parentPath.Equals(parentNode.Name))
 						{
@@ -334,6 +318,7 @@ namespace Novell.iFolder
 				if (node == null)
 				{
 					// See if this path is the root of the collection.
+					// TODO - ugh, fix this unreadable line of code
 					if (((Path.DirectorySeparatorChar == Convert.ToChar("\\")) && (String.Compare(path, LocalPath, true) == 0)) || path.Equals(LocalPath))
 					{
 						node = collection;
@@ -429,6 +414,20 @@ namespace Novell.iFolder
 				return collection;
 			}
 		}
+
+
+
+
+		/// <summary>
+		/// Gets/sets the current node in the iFolder.
+		/// </summary>
+		internal Collection Collection
+		{
+			get
+			{
+				return collection;
+			}
+		}
 #endregion
 
 
@@ -477,7 +476,7 @@ namespace Novell.iFolder
 
 			// Get the leaf name from the path.
 			string name = Path.GetFileName(path);
-			string type = GetFileType(path);
+			string type;
 
 			if(File.Exists(path))
 			{
@@ -622,9 +621,27 @@ namespace Novell.iFolder
 		/// rights to the iFolder and returns an
 		/// <see cref="AccessControlEntry"/> for each user.
 		/// </returns>
+		[ Obsolete( "This method is marked for removal.  Use GetAccessControlList() instead.", false ) ]
 		public ICSList GetShareAccess()
 		{
 			return collection.GetAccessControlList();
+		}
+
+
+
+
+		/// <summary>
+		/// Returns an <see cref="IFAccessControlList"/> that iterates over 
+		/// all contacts that have rights on the iFolder.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="iFAccessControlList"/> that iterates over all 
+		/// contacts that have rights to the iFolder and returns an
+		/// <see cref="IFAccessControlEntry"/> for each contact.
+		/// </returns>
+		public IFAccessControlList GetAccessControlList()
+		{
+			return (new IFAccessControlList(collection, ab));
 		}
 
 
@@ -715,11 +732,11 @@ namespace Novell.iFolder
 							userID);
 
 					// TODO: where should we discover the contact information?
-					Novell.AddressBook.Manager abManager =
-						Novell.AddressBook.Manager.Connect(
-								collection.LocalStore.StorePath);
-					Novell.AddressBook.AddressBook ab = 
-						abManager.OpenDefaultAddressBook();
+//					Novell.AddressBook.Manager abManager =
+//						Novell.AddressBook.Manager.Connect(
+//								collection.LocalStore.StorePath);
+//					Novell.AddressBook.AddressBook ab = 
+//						abManager.OpenDefaultAddressBook();
 
 					// from
 					Contact from = ab.GetContact(collection.Owner);
@@ -759,11 +776,11 @@ namespace Novell.iFolder
 //				Novell.AddressBook.Manager.Connect(
 //						collection.LocalStore.StorePath);
 
-			Novell.AddressBook.Manager abManager =
-				Novell.AddressBook.Manager.Connect();
+//			Novell.AddressBook.Manager abManager =
+//				Novell.AddressBook.Manager.Connect();
 
-			Novell.AddressBook.AddressBook ab = 
-				abManager.OpenDefaultAddressBook();
+//			Novell.AddressBook.AddressBook ab = 
+//				abManager.OpenDefaultAddressBook();
 
 			// from
 			Contact from = ab.GetContact(collection.Owner);
@@ -799,11 +816,11 @@ namespace Novell.iFolder
 					contact.ID);
 
 			// TODO: where should we discover the contact information?
-			Novell.AddressBook.Manager abManager =
-				Novell.AddressBook.Manager.Connect(
-						collection.LocalStore.StorePath);
-			Novell.AddressBook.AddressBook ab = 
-				abManager.OpenDefaultAddressBook();
+//			Novell.AddressBook.Manager abManager =
+//				Novell.AddressBook.Manager.Connect(
+//						collection.LocalStore.StorePath);
+//			Novell.AddressBook.AddressBook ab = 
+//				abManager.OpenDefaultAddressBook();
 
 			// from
 			Contact from = ab.GetContact(collection.Owner);
