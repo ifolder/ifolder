@@ -29,7 +29,6 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Diagnostics;
 using System.Net;
-using System.Globalization;
 using Microsoft.Win32;
 using Novell.Win32Util;
 using Simias.Client;
@@ -401,29 +400,7 @@ namespace Novell.iFolderCom
 		/// <returns>The name of the language directory.</returns>
 		public String GetLanguageDirectory()
 		{
-			string languageDirectory;
-
-			switch (CultureInfo.CurrentCulture.Name)
-			{
-				case "pt-BR":
-				case "fr-FR":
-				case "de":
-				case "it-IT":
-				case "ja-JP":
-				case "ru-RU":
-				case "es":
-				{
-					languageDirectory = CultureInfo.CurrentCulture.Name;
-					break;
-				}
-				default:
-				{
-					languageDirectory = "en";
-					break;
-				}
-			}
-
-			return languageDirectory;
+			return iFolderAdvanced.GetLanguageDirectory();
 		}
 
 		private void connectToWebService()
