@@ -151,6 +151,7 @@ case $IFOLDER_OS in
         EXE_EXT=''
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
+        INSTALL_EXE_OPTS='--mode=644'
         NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/mono/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -223,6 +224,7 @@ case $IFOLDER_OS in
         EXE_EXT='.exe'
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
+        INSTALL_EXE_OPTS=''
         LDFLAGS='-nologo -machine:X86'
         LDFLAGS_DEBUG="-DEBUG"
         LDINC='-libpath:'
@@ -286,6 +288,7 @@ AC_SUBST(DEF)
 AC_SUBST(DOCDIR)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
+AC_SUBST(INSTALL_EXE_OPTS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(LDINC)
 AC_SUBST(LDOUT)

@@ -26,7 +26,7 @@ endif
 
 install-exec-local: mDnsService.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) --mode=644 mDnsService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) mDnsService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f mDnsService.exe $(DEBUG_FILES)

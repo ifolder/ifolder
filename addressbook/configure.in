@@ -142,6 +142,7 @@ case $ADDRESSBOOK_OS in
         #
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
+        INSTALL_EXE_OPTS='--mode=644'
         NUNIT="$TOOLDIR/NUnit/mono/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
         NUNIT_FLAGS='/nologo'
@@ -180,6 +181,7 @@ case $ADDRESSBOOK_OS in
     windows)
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
+        INSTALL_EXE_OPTS=''
         NUNIT="$TOOLDIR/NUnit/net/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/net/bin"
         NUNIT_FLAGS='/nologo'
@@ -215,6 +217,7 @@ AC_SUBST(SIMIAS_INSTALL_PATH)
 
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
+AC_SUBST(INSTALL_EXE_OPTS)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)

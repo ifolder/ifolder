@@ -36,7 +36,7 @@ install-exec-local: ContactBrowser.exe Novell.AddressBook.UI.gtk.dll contactbrow
 	$(INSTALL_PROGRAM) Novell.AddressBook.UI.gtk.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder/images
-	$(INSTALL_PROGRAM) --mode=644 ContactBrowser.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) ContactBrowser.exe $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(srcdir)/contactbrowser $(DESTDIR)$(bindir)
     
 uninstall-local:

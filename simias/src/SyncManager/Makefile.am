@@ -27,7 +27,7 @@ endif
 
 install-exec-local: SyncService.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) --mode=644 SyncService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) SyncService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f SyncService.exe $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
