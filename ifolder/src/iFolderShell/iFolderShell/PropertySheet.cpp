@@ -263,14 +263,13 @@ STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
 
 	return E_NOTIMPL;
 
-	// TODO - should we use pidl's instead?
 /*	STGMEDIUM medium;
 	FORMATETC fe= {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	HRESULT hr= m_pDataObj->GetData(&fe, &medium);
 	if (SUCCEEDED(hr))
 	{
 		UINT count= DragQueryFile(reinterpret_cast<HDROP>(medium.hGlobal), -1, NULL, 0);
-		// TODO - for now, we only allow one item to be selected.
+		// For now, we only allow one item to be selected.
 		if (count == 1)
 		{
 			DragQueryFile(reinterpret_cast<HDROP>(medium.hGlobal), 0, m_szFileUserClickedOn, MAX_PATH);
@@ -320,7 +319,6 @@ STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
 				psp.pcRefParent = &g_cRefThisDll;
 				psp.lParam      = (LPARAM)this;
 
-				// TODO - is this necessary???
 				AddRef();
 				HPROPSHEETPAGE hPage= CreatePropertySheetPage(&psp);
 

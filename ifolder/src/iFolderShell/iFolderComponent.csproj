@@ -139,16 +139,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "EmailPrompt.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "EmailPrompt.resx"
-                    DependentUpon = "EmailPrompt.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "GaugeChart.cs"
                     SubType = "UserControl"
                     BuildAction = "Compile"

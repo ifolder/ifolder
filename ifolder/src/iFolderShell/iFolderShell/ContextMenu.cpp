@@ -52,19 +52,20 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 											 UINT idCmdLast,
 											 UINT uFlags)
 {
-    //OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
+	//OutputDebugString(TEXT("CiFolderShell::QueryContextMenu()\n"));
 
-    UINT idCmd= idCmdFirst;
-	TCHAR sziFolderMenu[]= TEXT("iFolder");
+	UINT idCmd= idCmdFirst;
 
-    TCHAR szCreateiFolderMenu[MAX_MENU_LENGTH];
-    TCHAR szDeleteiFolderMenu[MAX_MENU_LENGTH];
+	TCHAR sziFolderMenu[MAX_MENU_LENGTH];
+	TCHAR szCreateiFolderMenu[MAX_MENU_LENGTH];
+	TCHAR szDeleteiFolderMenu[MAX_MENU_LENGTH];
 	TCHAR sziFolderConflictMenu[MAX_MENU_LENGTH];
 	TCHAR sziFolderPropMenu[MAX_MENU_LENGTH];
 	TCHAR sziFolderShareMenu[MAX_MENU_LENGTH];
 	TCHAR sziFolderHelpMenu[MAX_MENU_LENGTH];
-    BOOL bAppendItems= FALSE;
+	BOOL bAppendItems= FALSE;
 
+	LoadString(g_hmodResDll, IDS_IFOLDER, sziFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
 	LoadString(g_hmodResDll, IDS_CONVERT, szCreateiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
 	LoadString(g_hmodResDll, IDS_REVERT, szDeleteiFolderMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
 	LoadString(g_hmodResDll, IDS_RESOLVE, sziFolderConflictMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
@@ -73,14 +74,13 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 	LoadString(g_hmodResDll, IDS_HELP, sziFolderHelpMenu, MAX_MENU_LENGTH/sizeof(TCHAR));
 
 	STGMEDIUM medium;
-	// TODO - should we use pidl's instead?
 	FORMATETC fe= {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	HRESULT hr= m_pDataObj->GetData(&fe, &medium);
 	if (FAILED(hr))
 		return E_INVALIDARG;
 
 	UINT count= DragQueryFile(reinterpret_cast<HDROP>(medium.hGlobal), -1, NULL, 0);
-	// TODO - for now, we only allow one item to be selected.
+	// For now, we only allow one item to be selected.
 	if (count == 1)
 	{
 		DragQueryFile(reinterpret_cast<HDROP>(medium.hGlobal), 0, m_szFileUserClickedOn, MAX_PATH);
@@ -194,6 +194,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				mii.fState= MFS_ENABLED;
 				InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
 
+				idCmd++;
 				// Add the menu item for "iFolder".
 				mii.fMask |= MIIM_SUBMENU;
 				mii.wID= idCmd;
@@ -233,7 +234,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				bAppendItems= m_spiFolder->CanBeiFolder(m_szFileUserClickedOn);
 			}
 		}
-		// TODO - investigate case in which these flags are used.
+		// TODO: - investigate case in which these flags are used.
 //		else if (uFlags & CMF_VERBSONLY)
 //		{
 //			OutputDebugString(TEXT("CMF_VERBSONLY...\n"));
@@ -292,10 +293,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 		InsertMenuItem(hMenu, indexMenu++, TRUE, &mii);
 
-		// TODO - need to work this out ... for now we leave space for two
-		// menu items so that we can change between create and remove (even
-		// though we only added one menu item).
-		idCmd += 2;
+		idCmd++;
 
 		// Add the separator after ...
 		mii.fType= MFT_SEPARATOR;
@@ -457,24 +455,31 @@ STDMETHODIMP CiFolderShell::GetCommandString(UINT_PTR idCmd,
 {
     //OutputDebugString(TEXT("CiFolderShell::GetCommandString()\n"));
 
-	// TODO - Do xA and xW work ... and display the correct strings.  Also, localize.
     switch (idCmd)
     {
         case 0:
-            lstrcpyn((LPTSTR)pszName, TEXT("Make this folder an iFolder"), cchMax);
-            break;
+			LoadString(g_hmodResDll, IDS_CONVERT_DESC, (LPTSTR)pszName, cchMax);
+			break;
 
         case 1:
-            lstrcpyn((LPTSTR)pszName, TEXT("Change this iFolder back to a normal folder"), cchMax);
-            break;
+			LoadString(g_hmodResDll, IDS_REVERT_DESC, (LPTSTR)pszName, cchMax);
+			break;
 
         case 2:
-            lstrcpyn((LPTSTR)pszName, TEXT("iFolder menu item 3"), cchMax);
-            break;
+			LoadString(g_hmodResDll, IDS_RESOLVE_DESC, (LPTSTR)pszName, cchMax);
+			break;
 
         case 3:
-            lstrcpyn((LPTSTR)pszName, TEXT("iFolder menu item 4"), cchMax);
-            break;
+			LoadString(g_hmodResDll, IDS_SHARE_DESC, (LPTSTR)pszName, cchMax);
+			break;
+
+		case 4:
+			LoadString(g_hmodResDll, IDS_PROPERTIES_DESC, (LPTSTR)pszName, cchMax);
+			break;
+
+		case 5:
+			LoadString(g_hmodResDll, IDS_HELP_DESC, (LPTSTR)pszName, cchMax);
+			break;
     }
 
     return NOERROR;
