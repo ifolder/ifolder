@@ -145,6 +145,15 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabGeneral = new System.Windows.Forms.TabPage();
+			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.notifyCollisions = new System.Windows.Forms.CheckBox();
+			this.notifyShared = new System.Windows.Forms.CheckBox();
+			this.notifyJoins = new System.Windows.Forms.CheckBox();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.autoSync = new System.Windows.Forms.CheckBox();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.tabAccounts = new System.Windows.Forms.TabPage();
 			this.accounts = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
@@ -164,27 +173,18 @@ namespace Novell.FormsTrayApp
 			this.defaultServer = new System.Windows.Forms.CheckBox();
 			this.removeAccount = new System.Windows.Forms.Button();
 			this.addAccount = new System.Windows.Forms.Button();
-			this.tabGeneral = new System.Windows.Forms.TabPage();
-			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.notifyCollisions = new System.Windows.Forms.CheckBox();
-			this.notifyShared = new System.Windows.Forms.CheckBox();
-			this.notifyJoins = new System.Windows.Forms.CheckBox();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.autoSync = new System.Windows.Forms.CheckBox();
-			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.autoStart = new System.Windows.Forms.CheckBox();
 			this.cancel = new System.Windows.Forms.Button();
 			this.apply = new System.Windows.Forms.Button();
 			this.ok = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
-			this.tabAccounts.SuspendLayout();
-			this.groupBox2.SuspendLayout();
 			this.tabGeneral.SuspendLayout();
 			this.groupBox4.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
+			this.tabAccounts.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// defaultInterval
@@ -294,6 +294,232 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.TabIndex = ((int)(resources.GetObject("tabControl1.TabIndex")));
 			this.tabControl1.Text = resources.GetString("tabControl1.Text");
 			this.tabControl1.Visible = ((bool)(resources.GetObject("tabControl1.Visible")));
+			// 
+			// tabGeneral
+			// 
+			this.tabGeneral.AccessibleDescription = resources.GetString("tabGeneral.AccessibleDescription");
+			this.tabGeneral.AccessibleName = resources.GetString("tabGeneral.AccessibleName");
+			this.tabGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabGeneral.Anchor")));
+			this.tabGeneral.AutoScroll = ((bool)(resources.GetObject("tabGeneral.AutoScroll")));
+			this.tabGeneral.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabGeneral.AutoScrollMargin")));
+			this.tabGeneral.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabGeneral.AutoScrollMinSize")));
+			this.tabGeneral.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabGeneral.BackgroundImage")));
+			this.tabGeneral.Controls.Add(this.groupBox4);
+			this.tabGeneral.Controls.Add(this.groupBox1);
+			this.tabGeneral.Controls.Add(this.groupBox3);
+			this.tabGeneral.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabGeneral.Dock")));
+			this.tabGeneral.Enabled = ((bool)(resources.GetObject("tabGeneral.Enabled")));
+			this.tabGeneral.Font = ((System.Drawing.Font)(resources.GetObject("tabGeneral.Font")));
+			this.tabGeneral.ImageIndex = ((int)(resources.GetObject("tabGeneral.ImageIndex")));
+			this.tabGeneral.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabGeneral.ImeMode")));
+			this.tabGeneral.Location = ((System.Drawing.Point)(resources.GetObject("tabGeneral.Location")));
+			this.tabGeneral.Name = "tabGeneral";
+			this.tabGeneral.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabGeneral.RightToLeft")));
+			this.tabGeneral.Size = ((System.Drawing.Size)(resources.GetObject("tabGeneral.Size")));
+			this.tabGeneral.TabIndex = ((int)(resources.GetObject("tabGeneral.TabIndex")));
+			this.tabGeneral.Text = resources.GetString("tabGeneral.Text");
+			this.tabGeneral.ToolTipText = resources.GetString("tabGeneral.ToolTipText");
+			this.tabGeneral.Visible = ((bool)(resources.GetObject("tabGeneral.Visible")));
+			// 
+			// groupBox4
+			// 
+			this.groupBox4.AccessibleDescription = resources.GetString("groupBox4.AccessibleDescription");
+			this.groupBox4.AccessibleName = resources.GetString("groupBox4.AccessibleName");
+			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox4.Anchor")));
+			this.groupBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox4.BackgroundImage")));
+			this.groupBox4.Controls.Add(this.notifyCollisions);
+			this.groupBox4.Controls.Add(this.notifyShared);
+			this.groupBox4.Controls.Add(this.notifyJoins);
+			this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
+			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
+			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox4.Font = ((System.Drawing.Font)(resources.GetObject("groupBox4.Font")));
+			this.groupBox4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox4.ImeMode")));
+			this.groupBox4.Location = ((System.Drawing.Point)(resources.GetObject("groupBox4.Location")));
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox4.RightToLeft")));
+			this.groupBox4.Size = ((System.Drawing.Size)(resources.GetObject("groupBox4.Size")));
+			this.groupBox4.TabIndex = ((int)(resources.GetObject("groupBox4.TabIndex")));
+			this.groupBox4.TabStop = false;
+			this.groupBox4.Text = resources.GetString("groupBox4.Text");
+			this.groupBox4.Visible = ((bool)(resources.GetObject("groupBox4.Visible")));
+			// 
+			// notifyCollisions
+			// 
+			this.notifyCollisions.AccessibleDescription = resources.GetString("notifyCollisions.AccessibleDescription");
+			this.notifyCollisions.AccessibleName = resources.GetString("notifyCollisions.AccessibleName");
+			this.notifyCollisions.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyCollisions.Anchor")));
+			this.notifyCollisions.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyCollisions.Appearance")));
+			this.notifyCollisions.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.BackgroundImage")));
+			this.notifyCollisions.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.CheckAlign")));
+			this.notifyCollisions.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyCollisions.Dock")));
+			this.notifyCollisions.Enabled = ((bool)(resources.GetObject("notifyCollisions.Enabled")));
+			this.notifyCollisions.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyCollisions.FlatStyle")));
+			this.notifyCollisions.Font = ((System.Drawing.Font)(resources.GetObject("notifyCollisions.Font")));
+			this.notifyCollisions.Image = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.Image")));
+			this.notifyCollisions.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.ImageAlign")));
+			this.notifyCollisions.ImageIndex = ((int)(resources.GetObject("notifyCollisions.ImageIndex")));
+			this.notifyCollisions.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyCollisions.ImeMode")));
+			this.notifyCollisions.Location = ((System.Drawing.Point)(resources.GetObject("notifyCollisions.Location")));
+			this.notifyCollisions.Name = "notifyCollisions";
+			this.notifyCollisions.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyCollisions.RightToLeft")));
+			this.notifyCollisions.Size = ((System.Drawing.Size)(resources.GetObject("notifyCollisions.Size")));
+			this.notifyCollisions.TabIndex = ((int)(resources.GetObject("notifyCollisions.TabIndex")));
+			this.notifyCollisions.Text = resources.GetString("notifyCollisions.Text");
+			this.notifyCollisions.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.TextAlign")));
+			this.notifyCollisions.Visible = ((bool)(resources.GetObject("notifyCollisions.Visible")));
+			this.notifyCollisions.CheckedChanged += new System.EventHandler(this.notifyCollisions_CheckedChanged);
+			// 
+			// notifyShared
+			// 
+			this.notifyShared.AccessibleDescription = resources.GetString("notifyShared.AccessibleDescription");
+			this.notifyShared.AccessibleName = resources.GetString("notifyShared.AccessibleName");
+			this.notifyShared.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyShared.Anchor")));
+			this.notifyShared.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyShared.Appearance")));
+			this.notifyShared.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyShared.BackgroundImage")));
+			this.notifyShared.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.CheckAlign")));
+			this.notifyShared.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyShared.Dock")));
+			this.notifyShared.Enabled = ((bool)(resources.GetObject("notifyShared.Enabled")));
+			this.notifyShared.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyShared.FlatStyle")));
+			this.notifyShared.Font = ((System.Drawing.Font)(resources.GetObject("notifyShared.Font")));
+			this.notifyShared.Image = ((System.Drawing.Image)(resources.GetObject("notifyShared.Image")));
+			this.notifyShared.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.ImageAlign")));
+			this.notifyShared.ImageIndex = ((int)(resources.GetObject("notifyShared.ImageIndex")));
+			this.notifyShared.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyShared.ImeMode")));
+			this.notifyShared.Location = ((System.Drawing.Point)(resources.GetObject("notifyShared.Location")));
+			this.notifyShared.Name = "notifyShared";
+			this.notifyShared.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyShared.RightToLeft")));
+			this.notifyShared.Size = ((System.Drawing.Size)(resources.GetObject("notifyShared.Size")));
+			this.notifyShared.TabIndex = ((int)(resources.GetObject("notifyShared.TabIndex")));
+			this.notifyShared.Text = resources.GetString("notifyShared.Text");
+			this.notifyShared.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.TextAlign")));
+			this.notifyShared.Visible = ((bool)(resources.GetObject("notifyShared.Visible")));
+			this.notifyShared.CheckedChanged += new System.EventHandler(this.notifyShared_CheckedChanged);
+			// 
+			// notifyJoins
+			// 
+			this.notifyJoins.AccessibleDescription = resources.GetString("notifyJoins.AccessibleDescription");
+			this.notifyJoins.AccessibleName = resources.GetString("notifyJoins.AccessibleName");
+			this.notifyJoins.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyJoins.Anchor")));
+			this.notifyJoins.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyJoins.Appearance")));
+			this.notifyJoins.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyJoins.BackgroundImage")));
+			this.notifyJoins.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.CheckAlign")));
+			this.notifyJoins.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyJoins.Dock")));
+			this.notifyJoins.Enabled = ((bool)(resources.GetObject("notifyJoins.Enabled")));
+			this.notifyJoins.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyJoins.FlatStyle")));
+			this.notifyJoins.Font = ((System.Drawing.Font)(resources.GetObject("notifyJoins.Font")));
+			this.notifyJoins.Image = ((System.Drawing.Image)(resources.GetObject("notifyJoins.Image")));
+			this.notifyJoins.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.ImageAlign")));
+			this.notifyJoins.ImageIndex = ((int)(resources.GetObject("notifyJoins.ImageIndex")));
+			this.notifyJoins.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyJoins.ImeMode")));
+			this.notifyJoins.Location = ((System.Drawing.Point)(resources.GetObject("notifyJoins.Location")));
+			this.notifyJoins.Name = "notifyJoins";
+			this.notifyJoins.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyJoins.RightToLeft")));
+			this.notifyJoins.Size = ((System.Drawing.Size)(resources.GetObject("notifyJoins.Size")));
+			this.notifyJoins.TabIndex = ((int)(resources.GetObject("notifyJoins.TabIndex")));
+			this.notifyJoins.Text = resources.GetString("notifyJoins.Text");
+			this.notifyJoins.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.TextAlign")));
+			this.notifyJoins.Visible = ((bool)(resources.GetObject("notifyJoins.Visible")));
+			this.notifyJoins.CheckedChanged += new System.EventHandler(this.notifyJoins_CheckedChanged);
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
+			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
+			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Controls.Add(this.defaultInterval);
+			this.groupBox1.Controls.Add(this.autoSync);
+			this.groupBox1.Controls.Add(this.label2);
+			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
+			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
+			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
+			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
+			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
+			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
+			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = resources.GetString("groupBox1.Text");
+			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
+			// 
+			// autoSync
+			// 
+			this.autoSync.AccessibleDescription = resources.GetString("autoSync.AccessibleDescription");
+			this.autoSync.AccessibleName = resources.GetString("autoSync.AccessibleName");
+			this.autoSync.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("autoSync.Anchor")));
+			this.autoSync.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("autoSync.Appearance")));
+			this.autoSync.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("autoSync.BackgroundImage")));
+			this.autoSync.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.CheckAlign")));
+			this.autoSync.Checked = true;
+			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.autoSync.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("autoSync.Dock")));
+			this.autoSync.Enabled = ((bool)(resources.GetObject("autoSync.Enabled")));
+			this.autoSync.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoSync.FlatStyle")));
+			this.autoSync.Font = ((System.Drawing.Font)(resources.GetObject("autoSync.Font")));
+			this.autoSync.Image = ((System.Drawing.Image)(resources.GetObject("autoSync.Image")));
+			this.autoSync.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.ImageAlign")));
+			this.autoSync.ImageIndex = ((int)(resources.GetObject("autoSync.ImageIndex")));
+			this.autoSync.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("autoSync.ImeMode")));
+			this.autoSync.Location = ((System.Drawing.Point)(resources.GetObject("autoSync.Location")));
+			this.autoSync.Name = "autoSync";
+			this.autoSync.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoSync.RightToLeft")));
+			this.autoSync.Size = ((System.Drawing.Size)(resources.GetObject("autoSync.Size")));
+			this.autoSync.TabIndex = ((int)(resources.GetObject("autoSync.TabIndex")));
+			this.autoSync.Text = resources.GetString("autoSync.Text");
+			this.autoSync.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.TextAlign")));
+			this.autoSync.Visible = ((bool)(resources.GetObject("autoSync.Visible")));
+			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
+			// 
+			// groupBox3
+			// 
+			this.groupBox3.AccessibleDescription = resources.GetString("groupBox3.AccessibleDescription");
+			this.groupBox3.AccessibleName = resources.GetString("groupBox3.AccessibleName");
+			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox3.Anchor")));
+			this.groupBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox3.BackgroundImage")));
+			this.groupBox3.Controls.Add(this.autoStart);
+			this.groupBox3.Controls.Add(this.displayConfirmation);
+			this.groupBox3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox3.Dock")));
+			this.groupBox3.Enabled = ((bool)(resources.GetObject("groupBox3.Enabled")));
+			this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.groupBox3.Font = ((System.Drawing.Font)(resources.GetObject("groupBox3.Font")));
+			this.groupBox3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox3.ImeMode")));
+			this.groupBox3.Location = ((System.Drawing.Point)(resources.GetObject("groupBox3.Location")));
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox3.RightToLeft")));
+			this.groupBox3.Size = ((System.Drawing.Size)(resources.GetObject("groupBox3.Size")));
+			this.groupBox3.TabIndex = ((int)(resources.GetObject("groupBox3.TabIndex")));
+			this.groupBox3.TabStop = false;
+			this.groupBox3.Text = resources.GetString("groupBox3.Text");
+			this.groupBox3.Visible = ((bool)(resources.GetObject("groupBox3.Visible")));
+			// 
+			// autoStart
+			// 
+			this.autoStart.AccessibleDescription = resources.GetString("autoStart.AccessibleDescription");
+			this.autoStart.AccessibleName = resources.GetString("autoStart.AccessibleName");
+			this.autoStart.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("autoStart.Anchor")));
+			this.autoStart.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("autoStart.Appearance")));
+			this.autoStart.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("autoStart.BackgroundImage")));
+			this.autoStart.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.CheckAlign")));
+			this.autoStart.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("autoStart.Dock")));
+			this.autoStart.Enabled = ((bool)(resources.GetObject("autoStart.Enabled")));
+			this.autoStart.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoStart.FlatStyle")));
+			this.autoStart.Font = ((System.Drawing.Font)(resources.GetObject("autoStart.Font")));
+			this.autoStart.Image = ((System.Drawing.Image)(resources.GetObject("autoStart.Image")));
+			this.autoStart.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.ImageAlign")));
+			this.autoStart.ImageIndex = ((int)(resources.GetObject("autoStart.ImageIndex")));
+			this.autoStart.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("autoStart.ImeMode")));
+			this.autoStart.Location = ((System.Drawing.Point)(resources.GetObject("autoStart.Location")));
+			this.autoStart.Name = "autoStart";
+			this.autoStart.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoStart.RightToLeft")));
+			this.autoStart.Size = ((System.Drawing.Size)(resources.GetObject("autoStart.Size")));
+			this.autoStart.TabIndex = ((int)(resources.GetObject("autoStart.TabIndex")));
+			this.autoStart.Text = resources.GetString("autoStart.Text");
+			this.autoStart.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.TextAlign")));
+			this.autoStart.Visible = ((bool)(resources.GetObject("autoStart.Visible")));
+			this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
 			// 
 			// tabAccounts
 			// 
@@ -737,232 +963,6 @@ namespace Novell.FormsTrayApp
 			this.addAccount.Visible = ((bool)(resources.GetObject("addAccount.Visible")));
 			this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
 			// 
-			// tabGeneral
-			// 
-			this.tabGeneral.AccessibleDescription = resources.GetString("tabGeneral.AccessibleDescription");
-			this.tabGeneral.AccessibleName = resources.GetString("tabGeneral.AccessibleName");
-			this.tabGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabGeneral.Anchor")));
-			this.tabGeneral.AutoScroll = ((bool)(resources.GetObject("tabGeneral.AutoScroll")));
-			this.tabGeneral.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabGeneral.AutoScrollMargin")));
-			this.tabGeneral.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabGeneral.AutoScrollMinSize")));
-			this.tabGeneral.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabGeneral.BackgroundImage")));
-			this.tabGeneral.Controls.Add(this.groupBox4);
-			this.tabGeneral.Controls.Add(this.groupBox1);
-			this.tabGeneral.Controls.Add(this.groupBox3);
-			this.tabGeneral.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabGeneral.Dock")));
-			this.tabGeneral.Enabled = ((bool)(resources.GetObject("tabGeneral.Enabled")));
-			this.tabGeneral.Font = ((System.Drawing.Font)(resources.GetObject("tabGeneral.Font")));
-			this.tabGeneral.ImageIndex = ((int)(resources.GetObject("tabGeneral.ImageIndex")));
-			this.tabGeneral.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabGeneral.ImeMode")));
-			this.tabGeneral.Location = ((System.Drawing.Point)(resources.GetObject("tabGeneral.Location")));
-			this.tabGeneral.Name = "tabGeneral";
-			this.tabGeneral.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabGeneral.RightToLeft")));
-			this.tabGeneral.Size = ((System.Drawing.Size)(resources.GetObject("tabGeneral.Size")));
-			this.tabGeneral.TabIndex = ((int)(resources.GetObject("tabGeneral.TabIndex")));
-			this.tabGeneral.Text = resources.GetString("tabGeneral.Text");
-			this.tabGeneral.ToolTipText = resources.GetString("tabGeneral.ToolTipText");
-			this.tabGeneral.Visible = ((bool)(resources.GetObject("tabGeneral.Visible")));
-			// 
-			// groupBox4
-			// 
-			this.groupBox4.AccessibleDescription = resources.GetString("groupBox4.AccessibleDescription");
-			this.groupBox4.AccessibleName = resources.GetString("groupBox4.AccessibleName");
-			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox4.Anchor")));
-			this.groupBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox4.BackgroundImage")));
-			this.groupBox4.Controls.Add(this.notifyCollisions);
-			this.groupBox4.Controls.Add(this.notifyShared);
-			this.groupBox4.Controls.Add(this.notifyJoins);
-			this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
-			this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
-			this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox4.Font = ((System.Drawing.Font)(resources.GetObject("groupBox4.Font")));
-			this.groupBox4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox4.ImeMode")));
-			this.groupBox4.Location = ((System.Drawing.Point)(resources.GetObject("groupBox4.Location")));
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox4.RightToLeft")));
-			this.groupBox4.Size = ((System.Drawing.Size)(resources.GetObject("groupBox4.Size")));
-			this.groupBox4.TabIndex = ((int)(resources.GetObject("groupBox4.TabIndex")));
-			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = resources.GetString("groupBox4.Text");
-			this.groupBox4.Visible = ((bool)(resources.GetObject("groupBox4.Visible")));
-			// 
-			// notifyCollisions
-			// 
-			this.notifyCollisions.AccessibleDescription = resources.GetString("notifyCollisions.AccessibleDescription");
-			this.notifyCollisions.AccessibleName = resources.GetString("notifyCollisions.AccessibleName");
-			this.notifyCollisions.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyCollisions.Anchor")));
-			this.notifyCollisions.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyCollisions.Appearance")));
-			this.notifyCollisions.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.BackgroundImage")));
-			this.notifyCollisions.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.CheckAlign")));
-			this.notifyCollisions.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyCollisions.Dock")));
-			this.notifyCollisions.Enabled = ((bool)(resources.GetObject("notifyCollisions.Enabled")));
-			this.notifyCollisions.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyCollisions.FlatStyle")));
-			this.notifyCollisions.Font = ((System.Drawing.Font)(resources.GetObject("notifyCollisions.Font")));
-			this.notifyCollisions.Image = ((System.Drawing.Image)(resources.GetObject("notifyCollisions.Image")));
-			this.notifyCollisions.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.ImageAlign")));
-			this.notifyCollisions.ImageIndex = ((int)(resources.GetObject("notifyCollisions.ImageIndex")));
-			this.notifyCollisions.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyCollisions.ImeMode")));
-			this.notifyCollisions.Location = ((System.Drawing.Point)(resources.GetObject("notifyCollisions.Location")));
-			this.notifyCollisions.Name = "notifyCollisions";
-			this.notifyCollisions.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyCollisions.RightToLeft")));
-			this.notifyCollisions.Size = ((System.Drawing.Size)(resources.GetObject("notifyCollisions.Size")));
-			this.notifyCollisions.TabIndex = ((int)(resources.GetObject("notifyCollisions.TabIndex")));
-			this.notifyCollisions.Text = resources.GetString("notifyCollisions.Text");
-			this.notifyCollisions.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyCollisions.TextAlign")));
-			this.notifyCollisions.Visible = ((bool)(resources.GetObject("notifyCollisions.Visible")));
-			this.notifyCollisions.CheckedChanged += new System.EventHandler(this.notifyCollisions_CheckedChanged);
-			// 
-			// notifyShared
-			// 
-			this.notifyShared.AccessibleDescription = resources.GetString("notifyShared.AccessibleDescription");
-			this.notifyShared.AccessibleName = resources.GetString("notifyShared.AccessibleName");
-			this.notifyShared.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyShared.Anchor")));
-			this.notifyShared.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyShared.Appearance")));
-			this.notifyShared.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyShared.BackgroundImage")));
-			this.notifyShared.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.CheckAlign")));
-			this.notifyShared.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyShared.Dock")));
-			this.notifyShared.Enabled = ((bool)(resources.GetObject("notifyShared.Enabled")));
-			this.notifyShared.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyShared.FlatStyle")));
-			this.notifyShared.Font = ((System.Drawing.Font)(resources.GetObject("notifyShared.Font")));
-			this.notifyShared.Image = ((System.Drawing.Image)(resources.GetObject("notifyShared.Image")));
-			this.notifyShared.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.ImageAlign")));
-			this.notifyShared.ImageIndex = ((int)(resources.GetObject("notifyShared.ImageIndex")));
-			this.notifyShared.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyShared.ImeMode")));
-			this.notifyShared.Location = ((System.Drawing.Point)(resources.GetObject("notifyShared.Location")));
-			this.notifyShared.Name = "notifyShared";
-			this.notifyShared.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyShared.RightToLeft")));
-			this.notifyShared.Size = ((System.Drawing.Size)(resources.GetObject("notifyShared.Size")));
-			this.notifyShared.TabIndex = ((int)(resources.GetObject("notifyShared.TabIndex")));
-			this.notifyShared.Text = resources.GetString("notifyShared.Text");
-			this.notifyShared.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyShared.TextAlign")));
-			this.notifyShared.Visible = ((bool)(resources.GetObject("notifyShared.Visible")));
-			this.notifyShared.CheckedChanged += new System.EventHandler(this.notifyShared_CheckedChanged);
-			// 
-			// notifyJoins
-			// 
-			this.notifyJoins.AccessibleDescription = resources.GetString("notifyJoins.AccessibleDescription");
-			this.notifyJoins.AccessibleName = resources.GetString("notifyJoins.AccessibleName");
-			this.notifyJoins.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("notifyJoins.Anchor")));
-			this.notifyJoins.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("notifyJoins.Appearance")));
-			this.notifyJoins.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("notifyJoins.BackgroundImage")));
-			this.notifyJoins.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.CheckAlign")));
-			this.notifyJoins.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("notifyJoins.Dock")));
-			this.notifyJoins.Enabled = ((bool)(resources.GetObject("notifyJoins.Enabled")));
-			this.notifyJoins.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("notifyJoins.FlatStyle")));
-			this.notifyJoins.Font = ((System.Drawing.Font)(resources.GetObject("notifyJoins.Font")));
-			this.notifyJoins.Image = ((System.Drawing.Image)(resources.GetObject("notifyJoins.Image")));
-			this.notifyJoins.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.ImageAlign")));
-			this.notifyJoins.ImageIndex = ((int)(resources.GetObject("notifyJoins.ImageIndex")));
-			this.notifyJoins.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("notifyJoins.ImeMode")));
-			this.notifyJoins.Location = ((System.Drawing.Point)(resources.GetObject("notifyJoins.Location")));
-			this.notifyJoins.Name = "notifyJoins";
-			this.notifyJoins.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("notifyJoins.RightToLeft")));
-			this.notifyJoins.Size = ((System.Drawing.Size)(resources.GetObject("notifyJoins.Size")));
-			this.notifyJoins.TabIndex = ((int)(resources.GetObject("notifyJoins.TabIndex")));
-			this.notifyJoins.Text = resources.GetString("notifyJoins.Text");
-			this.notifyJoins.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("notifyJoins.TextAlign")));
-			this.notifyJoins.Visible = ((bool)(resources.GetObject("notifyJoins.Visible")));
-			this.notifyJoins.CheckedChanged += new System.EventHandler(this.notifyJoins_CheckedChanged);
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
-			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
-			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
-			this.groupBox1.Controls.Add(this.defaultInterval);
-			this.groupBox1.Controls.Add(this.autoSync);
-			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
-			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
-			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
-			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
-			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
-			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
-			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = resources.GetString("groupBox1.Text");
-			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
-			// 
-			// autoSync
-			// 
-			this.autoSync.AccessibleDescription = resources.GetString("autoSync.AccessibleDescription");
-			this.autoSync.AccessibleName = resources.GetString("autoSync.AccessibleName");
-			this.autoSync.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("autoSync.Anchor")));
-			this.autoSync.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("autoSync.Appearance")));
-			this.autoSync.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("autoSync.BackgroundImage")));
-			this.autoSync.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.CheckAlign")));
-			this.autoSync.Checked = true;
-			this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoSync.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("autoSync.Dock")));
-			this.autoSync.Enabled = ((bool)(resources.GetObject("autoSync.Enabled")));
-			this.autoSync.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoSync.FlatStyle")));
-			this.autoSync.Font = ((System.Drawing.Font)(resources.GetObject("autoSync.Font")));
-			this.autoSync.Image = ((System.Drawing.Image)(resources.GetObject("autoSync.Image")));
-			this.autoSync.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.ImageAlign")));
-			this.autoSync.ImageIndex = ((int)(resources.GetObject("autoSync.ImageIndex")));
-			this.autoSync.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("autoSync.ImeMode")));
-			this.autoSync.Location = ((System.Drawing.Point)(resources.GetObject("autoSync.Location")));
-			this.autoSync.Name = "autoSync";
-			this.autoSync.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoSync.RightToLeft")));
-			this.autoSync.Size = ((System.Drawing.Size)(resources.GetObject("autoSync.Size")));
-			this.autoSync.TabIndex = ((int)(resources.GetObject("autoSync.TabIndex")));
-			this.autoSync.Text = resources.GetString("autoSync.Text");
-			this.autoSync.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoSync.TextAlign")));
-			this.autoSync.Visible = ((bool)(resources.GetObject("autoSync.Visible")));
-			this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
-			// 
-			// groupBox3
-			// 
-			this.groupBox3.AccessibleDescription = resources.GetString("groupBox3.AccessibleDescription");
-			this.groupBox3.AccessibleName = resources.GetString("groupBox3.AccessibleName");
-			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox3.Anchor")));
-			this.groupBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox3.BackgroundImage")));
-			this.groupBox3.Controls.Add(this.autoStart);
-			this.groupBox3.Controls.Add(this.displayConfirmation);
-			this.groupBox3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox3.Dock")));
-			this.groupBox3.Enabled = ((bool)(resources.GetObject("groupBox3.Enabled")));
-			this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.groupBox3.Font = ((System.Drawing.Font)(resources.GetObject("groupBox3.Font")));
-			this.groupBox3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox3.ImeMode")));
-			this.groupBox3.Location = ((System.Drawing.Point)(resources.GetObject("groupBox3.Location")));
-			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox3.RightToLeft")));
-			this.groupBox3.Size = ((System.Drawing.Size)(resources.GetObject("groupBox3.Size")));
-			this.groupBox3.TabIndex = ((int)(resources.GetObject("groupBox3.TabIndex")));
-			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = resources.GetString("groupBox3.Text");
-			this.groupBox3.Visible = ((bool)(resources.GetObject("groupBox3.Visible")));
-			// 
-			// autoStart
-			// 
-			this.autoStart.AccessibleDescription = resources.GetString("autoStart.AccessibleDescription");
-			this.autoStart.AccessibleName = resources.GetString("autoStart.AccessibleName");
-			this.autoStart.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("autoStart.Anchor")));
-			this.autoStart.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("autoStart.Appearance")));
-			this.autoStart.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("autoStart.BackgroundImage")));
-			this.autoStart.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.CheckAlign")));
-			this.autoStart.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("autoStart.Dock")));
-			this.autoStart.Enabled = ((bool)(resources.GetObject("autoStart.Enabled")));
-			this.autoStart.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("autoStart.FlatStyle")));
-			this.autoStart.Font = ((System.Drawing.Font)(resources.GetObject("autoStart.Font")));
-			this.autoStart.Image = ((System.Drawing.Image)(resources.GetObject("autoStart.Image")));
-			this.autoStart.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.ImageAlign")));
-			this.autoStart.ImageIndex = ((int)(resources.GetObject("autoStart.ImageIndex")));
-			this.autoStart.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("autoStart.ImeMode")));
-			this.autoStart.Location = ((System.Drawing.Point)(resources.GetObject("autoStart.Location")));
-			this.autoStart.Name = "autoStart";
-			this.autoStart.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("autoStart.RightToLeft")));
-			this.autoStart.Size = ((System.Drawing.Size)(resources.GetObject("autoStart.Size")));
-			this.autoStart.TabIndex = ((int)(resources.GetObject("autoStart.TabIndex")));
-			this.autoStart.Text = resources.GetString("autoStart.Text");
-			this.autoStart.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("autoStart.TextAlign")));
-			this.autoStart.Visible = ((bool)(resources.GetObject("autoStart.Visible")));
-			this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
-			// 
 			// cancel
 			// 
 			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
@@ -1075,12 +1075,12 @@ namespace Novell.FormsTrayApp
 			this.VisibleChanged += new System.EventHandler(this.Preferences_VisibleChanged);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
-			this.tabAccounts.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
 			this.tabGeneral.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
+			this.tabAccounts.ResumeLayout(false);
+			this.groupBox2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
