@@ -45,7 +45,7 @@ namespace Simias.Mail
 		public static bool Send(MailMessage message)
 		{
 			string smtpServer;
-			smtpServer = Configuration.Get("Simias.Mail", "smtpServer", "mail");
+			smtpServer = new Configuration().Get("Simias.Mail", "smtpServer", "mail");
 			return Send(smtpServer, message);
 		}
 
@@ -75,7 +75,7 @@ namespace Simias.Mail
 				string subject, string messageText) 
 		{
 			string smtpServer;
-			smtpServer = Configuration.Get("Simias.Mail", "smtpServer", "localhost");
+			smtpServer = new Configuration().Get("Simias.Mail", "smtpServer", "localhost");
 			return Send(smtpServer, from, to, subject, messageText);
 		}
 
