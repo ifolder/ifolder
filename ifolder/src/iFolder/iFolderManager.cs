@@ -344,12 +344,17 @@ namespace Novell.iFolder
 		{
 			bool isiFolder = true;
 
+			// Make sure the paths end with a separator.
 			// Create a normalized path that can be compared on any platform.
-			Uri nPath = new Uri( path );
+			Uri nPath = new Uri( path.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+								path :
+								path + Path.DirectorySeparatorChar.ToString());
 
 			foreach ( iFolder ifolder in this )
 			{
-				Uri iPath = new Uri( ifolder.LocalPath );
+				Uri iPath = new Uri( ifolder.LocalPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+									ifolder.LocalPath :
+									ifolder.LocalPath + Path.DirectorySeparatorChar.ToString());
 
 				// Check if the specified path is subordinate to or a parent of the iFolder root path.
 				if ( nPath.LocalPath.StartsWith( iPath.LocalPath ) || iPath.LocalPath.StartsWith( nPath.LocalPath ) )
