@@ -1412,7 +1412,7 @@ namespace Novell.iFolder.iFolderCom
 			if (shareWith.SelectedItems.Count == 1)
 			{
 				ListViewItem lvi = shareWith.SelectedItems[0];
-				menuAccept.Visible = menuDecline.Visible = lvi.SubItems[1].Text.Equals(SubscriptionStates.Pending);
+				menuAccept.Visible = menuDecline.Visible = lvi.SubItems[1].Text.Equals(SubscriptionStates.Pending.ToString());
 			}
 			else
 			{
