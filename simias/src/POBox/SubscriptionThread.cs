@@ -227,6 +227,7 @@ namespace Simias.POBox
 				log.Info("SubscriptionThread::DoInvited called");
 				POBoxService poService = new POBoxService();
 				poService.Url = this.poServiceUrl;
+				poService.PreAuthenticate = true;
 				poService.CookieContainer = new CookieContainer();
 				Credentials cSimiasCreds = 
 					new Credentials(subscription.SubscriptionCollectionID);
@@ -236,6 +237,7 @@ namespace Simias.POBox
 					log.Info("  no credentials - back to sleep");
 					return (false);
 				}
+				
 
 				//
 				// Make sure the shared collection has sync'd to the server before inviting
@@ -355,6 +357,7 @@ namespace Simias.POBox
 			bool result = false;
 			POBoxService poService = new POBoxService();
 			poService.CookieContainer = new CookieContainer();
+			poService.PreAuthenticate = true;
 			poService.Url = this.poServiceUrl;
 			POBoxStatus	wsStatus = POBoxStatus.UnknownError;
 
@@ -456,6 +459,7 @@ namespace Simias.POBox
 
 			POBoxService poService = new POBoxService();
 			poService.Url = this.poServiceUrl;
+			poService.PreAuthenticate = true;
 			poService.CookieContainer = new CookieContainer();
 
 			Credentials cSimiasCreds = 
