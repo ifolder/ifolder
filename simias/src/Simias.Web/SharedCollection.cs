@@ -487,17 +487,35 @@ namespace Simias.Web
 		/// The ID of the collection representing this iFolder to delete
 		/// </param>
 		/// <returns>
-		/// true if the iFolder was successfully removed
+		/// The subscription for this iFolder
 		/// </returns>
-		public static void RevertSharedCollection(string CollectionID)
+		public static Subscription RevertSharedCollection(string CollectionID)
 		{
 			Store store = Store.GetStore();
 			Collection collection = store.GetCollectionByID(CollectionID);
 			if(collection == null)
 				throw new Exception("Invalid CollectionID");
 
+			
+			// Get the subscription for this iFolder to return.
+			Subscription sub = null;
+
+			// Get the member's POBox
+			Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(store,
+																   collection.Domain);
+			if (poBox != null)
+			{
+				Member member = collection.GetCurrentMember();
+
+				// Search for the matching subscription
+				sub = poBox.GetSubscriptionByCollectionID(collection.ID,
+														  member.UserID);
+			}
+
 			collection.Delete();
 			collection.Commit();
+
+			return sub;
 		}
 
 
