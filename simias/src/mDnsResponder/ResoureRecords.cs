@@ -37,10 +37,11 @@ namespace Mono.P2p.mDnsResponder
 {
 	internal class	Resources
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = 
+			log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
 		static internal Mutex		resourceMtx = new Mutex(false);
-		static	private ArrayList	resourceList = new ArrayList();
+		static	internal ArrayList	resourceList = new ArrayList();
 		static	private	ArrayList	serviceList = new ArrayList();
 
 		static public void DumpYourGuts(Question cQuestion)
@@ -64,12 +65,7 @@ namespace Mono.P2p.mDnsResponder
 					
 					try
 					{
-						if (hostAddr.TextualIPAddress != "")
-						{
-							log.Info("  IP:        " + hostAddr.TextualIPAddress);
-						}
-						
-						log.Info("  IPADDR:      " + hostAddr.IPAddress.ToString());
+						log.Info("  IP:        " + hostAddr.PrefAddress.ToString());
 					}
 					catch{}
 				}
@@ -88,6 +84,15 @@ namespace Mono.P2p.mDnsResponder
 				{
 					Ptr ptr = (Ptr) cResource;
 					log.Info("  Target:    " + ptr.Target);
+				}
+				else
+				if (cResource.Type == mDnsType.textStrings)
+				{
+					TextStrings txt = (TextStrings) cResource;
+					foreach(string txtString in txt.GetTextStrings())
+					{
+						log.Info("  " + txtString);
+					}
 				}
 				log.Info("");
 			}
@@ -190,7 +195,270 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 		}
 
-		// Used to send out the gratutious answers
+		static public void AddTextStrings(TextStrings txtStrs)
+		{
+			log.Info("AddTextStrings called");
+			bool	foundOne = false;
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == txtStrs.Name &&
+					cResource.Type == txtStrs.Type)
+				{
+					foundOne = true;
+					break;
+				}
+			}
+
+			if (foundOne == false)
+			{
+				log.Info("   Adding " + txtStrs.Name);
+				Resources.resourceList.Add(txtStrs);
+			}
+			
+			Resources.resourceMtx.ReleaseMutex();
+		}
+
+		internal static int PtrToBuffer(Ptr	ptr, int index,	byte[] buffer)
+		{
+			// Data Length
+			short dataLength = (short) ((short) ptr.Target.Length + (short) 1);
+			dataLength = IPAddress.HostToNetworkOrder(dataLength);
+			Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, buffer, index, 2);
+			index += 2;
+
+			int last = 0;
+			int current = 0;
+			string tmpName = ptr.Target;
+			while( current < tmpName.Length )
+			{
+				if (tmpName[current] == '.')
+				{
+					buffer[index++] = (byte) (current - last);
+					while( last < current )
+					{
+						buffer[index++] = (byte) tmpName[last++];
+					}
+				
+					current++;
+					last = current;
+				}
+				else
+				{	
+					current++;
+				}
+			}
+			
+			if (last < current)
+			{
+				buffer[index++] = (byte) (current - last);
+				while( last < current )
+				{
+					buffer[index++] = (byte) tmpName[last++];
+				}
+			}
+
+			buffer[index++] = 0;
+			return(index);			
+		}
+
+		internal static int HostAddressToBuffer(HostAddress	hostAddr, int index, byte[] buffer)
+		{
+			// Data Length
+			short dataLength = (short) 4;
+			dataLength = IPAddress.HostToNetworkOrder(dataLength);
+			Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, buffer, index, 2);
+			index += 2;
+
+			IPAddress	prefAddress = hostAddr.PrefAddress;
+							
+			// IP Address
+			Buffer.BlockCopy(
+				BitConverter.GetBytes(prefAddress.Address),
+				0, 
+				buffer, 
+				index, 
+				4);
+
+			index += 4;
+			return(index);
+		}
+
+		internal static int ServiceLocationToBuffer(ServiceLocation	sl, int index,	byte[] buffer)
+		{
+			// Data Length
+			short dataLength = (short) ((short) sl.Target.Length + (short) 9);
+			dataLength = IPAddress.HostToNetworkOrder(dataLength);
+			Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, buffer, index, 2);
+			index += 2;
+
+			short priority = (short) sl.Priority;
+			priority = IPAddress.HostToNetworkOrder(priority);
+			Buffer.BlockCopy(BitConverter.GetBytes(priority), 0, buffer, index, 2);
+			index += 2;
+
+			short weight = (short) sl.Weight;
+			weight = IPAddress.HostToNetworkOrder(weight);
+			Buffer.BlockCopy(BitConverter.GetBytes(weight), 0, buffer, index, 2);
+			index += 2;
+
+			short port = (short) sl.Port; 
+			port = IPAddress.HostToNetworkOrder(port);
+			Buffer.BlockCopy(BitConverter.GetBytes(port), 0, buffer, index, 2);
+			index += 2;
+
+			int last = 0;
+			int current = 0;
+			string tmpName = sl.Target;
+			while( current < tmpName.Length )
+			{
+				if (tmpName[current] == '.')
+				{
+					buffer[index++] = (byte) (current - last);
+					while( last < current )
+					{
+						buffer[index++] = (byte) tmpName[last++];
+					}
+						
+					current++;
+					last = current;
+				}
+				else
+				{	
+					current++;
+				}
+			}
+
+			if (last < current)
+			{
+				buffer[index++] = (byte) (current - last);
+				while( last < current )
+				{
+					buffer[index++] = (byte) tmpName[last++];
+				}
+			}
+
+			buffer[index++] = 0;
+			return(index);
+		}
+		
+		internal
+		static
+		int
+		TextStringsToBuffer(TextStrings	txtStrs, int index,	byte[] buffer)
+		{
+			int	dataLengthIndex = index;
+			index += 2;
+			
+			short dataLength = 0;
+			foreach(string txtString in txtStrs.GetTextStrings())
+			{
+				dataLength += (short) ((short) txtString.Length + (short) 1);
+				buffer[index++] = (byte) txtString.Length;
+				for(int i = 0; i < txtString.Length; i++)
+				{
+					buffer[index++] = (byte) txtString[i];
+				}
+			}
+			
+			dataLength = IPAddress.HostToNetworkOrder(dataLength);
+			Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, buffer, dataLengthIndex, 2);
+			
+			return(index);			
+		}
+
+		internal
+		static
+		int
+		ResponseHeaderToBuffer(
+			BaseResource 	cResource,
+			short			transactionID, 
+			short			flags,
+			short			answers,
+			byte[]			buffer)
+		{
+			int	index = 0;
+			
+			// Transaction ID
+			Buffer.BlockCopy(BitConverter.GetBytes(transactionID), 0, buffer, index, 2);
+			index += 2;
+
+			// Flags
+			Buffer.BlockCopy(BitConverter.GetBytes(flags), 0, buffer, index, 2);
+			index += 2;
+
+			// Questions
+			Buffer.BlockCopy(BitConverter.GetBytes(0), 0, buffer, index, 2);
+			index += 2;
+
+			// Answers
+			answers = IPAddress.HostToNetworkOrder(answers);
+			Buffer.BlockCopy(BitConverter.GetBytes(answers), 0,	buffer, index, 2);
+			index += 2;
+
+			// Authorities
+			Buffer.BlockCopy(BitConverter.GetBytes(0), 0, buffer, index, 2);
+			index += 2;
+
+			// Additional
+			Buffer.BlockCopy(BitConverter.GetBytes(0), 0, buffer, index, 2);
+			index += 2;
+
+			// Host Name
+			int	last = 0;
+			int	current = 0;
+			string	tmpName = cResource.Name;
+			while( current < tmpName.Length )
+			{
+				if (tmpName[current] == '.')
+				{
+					buffer[index++] = (byte) (current - last);
+					while( last < current )
+					{
+						buffer[index++] = (byte) tmpName[last++];
+					}
+						
+					current++;
+					last = current;
+				}
+				else
+				{	
+					current++;
+				}
+			}
+
+			if (last < current)
+			{
+				buffer[index++] = (byte) (current - last);
+				while( last < current )
+				{
+					buffer[index++] = (byte) tmpName[last++];
+				}
+			}
+
+			buffer[index++] = 0;
+
+			// Type
+			short hostType = (short) cResource.Type;
+			hostType = IPAddress.HostToNetworkOrder(hostType);
+			Buffer.BlockCopy(BitConverter.GetBytes(hostType), 0, buffer, index, 2);
+			index += 2;
+
+			// Class
+			short	hostClass = (short) cResource.Class;
+			hostClass = IPAddress.HostToNetworkOrder(hostClass);
+			Buffer.BlockCopy(BitConverter.GetBytes(hostClass), 0, buffer, index, 2);
+			index += 2;
+
+			// Time To Live
+			Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(cResource.Ttl)), 0, buffer, index, 4);
+			index += 4;
+			
+			return(index);
+		}
+
+ 		// Used to send out the gratutious answers
 		internal static void MaintenanceThread()
 		{
 			byte[]		answer = new byte[4096];
@@ -217,94 +485,14 @@ namespace Mono.P2p.mDnsResponder
 						{
 							HostAddress	hostAddr = (HostAddress) cResource;
 					
-							index = 0;
+							index =
+								Resources.ResponseHeaderToBuffer(
+									cResource,
+									(short) 0,
+									(short) flags,
+									1,
+									answer);
 
-							// Send the host answer
-							// Transaction ID
-							Buffer.BlockCopy(
-								BitConverter.GetBytes(0),
-								0,
-								answer,
-								index,
-								2);
-
-							index += 2;
-
-							// Flags
-							Buffer.BlockCopy(
-								BitConverter.GetBytes(flags), 
-								0, 
-								answer, 
-								index, 
-								2);
-							index += 2;
-
-							// Questions
-							Buffer.BlockCopy(
-								BitConverter.GetBytes(0),
-								0,
-								answer,
-								index,
-								2);
-
-							index += 2;
-
-							// Answers
-							short answers = 1;
-							answers = IPAddress.HostToNetworkOrder(answers);
-							Buffer.BlockCopy(BitConverter.GetBytes(answers), 0,	answer, index, 2);
-							index += 2;
-
-							// Authorities
-							Buffer.BlockCopy(BitConverter.GetBytes(0), 0, answer, index, 2);
-							index += 2;
-
-							// Additional
-							Buffer.BlockCopy(BitConverter.GetBytes(0), 0, answer, index, 2);
-							index += 2;
-
-							// Host Name
-
-							int	last = 0;
-							int	current = 0;
-							string	tmpName = hostAddr.Name;
-							while( current < tmpName.Length )
-							{
-								if (tmpName[current] == '.')
-								{
-									answer[index++] = (byte) (current - last);
-									while( last < current )
-									{
-										answer[index++] = (byte) tmpName[last++];
-									}
-						
-									current++;
-									last = current;
-								}
-								else
-								{	
-									current++;
-								}
-							}
-
-							answer[index++] = 0;
-
-							// Type
-							short	hostType = (short) hostAddr.Type;
-							hostType = IPAddress.HostToNetworkOrder(hostType);
-							Buffer.BlockCopy(BitConverter.GetBytes(hostType), 0, answer, index, 2);
-							index += 2;
-
-							// Class
-							//Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(1)), 0, answer, index, 2);
-							short	hostClass = (short) hostAddr.Class;
-							hostClass = IPAddress.HostToNetworkOrder(hostClass);
-							Buffer.BlockCopy(BitConverter.GetBytes(hostClass), 0, answer, index, 2);
-							index += 2;
-
-							// Time To Live
-							Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(hostAddr.Ttl)), 0, answer, index, 4);
-							index += 4;
 
 							// Data Length
 							short dataLength = 4;
@@ -312,10 +500,12 @@ namespace Mono.P2p.mDnsResponder
 							Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, answer, index, 2);
 							index += 2;
 
+							IPAddress	prefAddress = hostAddr.PrefAddress;
+							
 							// IP Address
 							Buffer.BlockCopy(
 								//						BitConverter.GetBytes(IPAddress.HostToNetworkOrder(host.IPV4Address)),
-								BitConverter.GetBytes(hostAddr.IPAddress),
+								BitConverter.GetBytes(prefAddress.Address),
 								0, 
 								answer, 
 								index, 
@@ -340,7 +530,7 @@ namespace Mono.P2p.mDnsResponder
 					
 							index = 0;
 
-							// Send the host answer
+							// Send the service location answer
 							// Transaction ID
 							Buffer.BlockCopy(
 								BitConverter.GetBytes(0),
@@ -406,6 +596,15 @@ namespace Mono.P2p.mDnsResponder
 									current++;
 								}
 							}
+							
+							if (last < current)
+							{
+								answer[index++] = (byte) (current - last);
+								while( last < current )
+								{
+									answer[index++] = (byte) tmpName[last++];
+								}
+							}
 
 							answer[index++] = 0;
 
@@ -434,13 +633,16 @@ namespace Mono.P2p.mDnsResponder
 							Buffer.BlockCopy(BitConverter.GetBytes(dataLength), 0, answer, index, 2);
 							index += 2;
 
-							Buffer.BlockCopy(BitConverter.GetBytes(svcLoc.Priority), 0, answer, index, 2);
+							Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(svcLoc.Priority)), 0, answer, index, 2);
 							index += 2;
 
-							Buffer.BlockCopy(BitConverter.GetBytes(svcLoc.Weight), 0, answer, index, 2);
+							Buffer.BlockCopy(BitConverter.GetBytes(IPAddress.HostToNetworkOrder(svcLoc.Weight)), 0, answer, index, 2);
 							index += 2;
 
-							Buffer.BlockCopy(BitConverter.GetBytes(svcLoc.Port), 0, answer, index, 2);
+							short port = (short) svcLoc.Port; 
+							port = IPAddress.HostToNetworkOrder(port);
+							Buffer.BlockCopy(
+								BitConverter.GetBytes(port), 0, answer, index, 2);
 							index += 2;
 
 							last = 0;
@@ -466,8 +668,16 @@ namespace Mono.P2p.mDnsResponder
 								}
 							}
 
-							answer[index++] = 0;
+							if (last < current)
+							{
+								answer[index++] = (byte) (current - last);
+								while( last < current )
+								{
+									answer[index++] = (byte) tmpName[last++];
+								}
+							}
 
+							answer[index++] = 0;
 
 							/*
 							lOffset += 6;
@@ -505,6 +715,52 @@ namespace Mono.P2p.mDnsResponder
 						{
 							Ptr ptr = (Ptr) cResource;
 							log.Info("  Target:    " + ptr.Target);
+							
+							index =
+								Resources.ResponseHeaderToBuffer(
+									cResource,
+									(short) 0,
+									(short) flags,
+									1,
+									answer);
+									
+							index = PtrToBuffer(ptr, index, answer);
+									
+							try
+							{
+								server.Send(answer, index);
+							}
+							catch(Exception e)
+							{
+								log.Info("Failed sending Host Address record", e);
+								continue;
+							}
+						}
+						else
+						if (cResource.Type == mDnsType.textStrings)
+						{
+							TextStrings txt = (TextStrings) cResource;
+							
+							index =
+								Resources.ResponseHeaderToBuffer(
+									cResource,
+									(short) 0,
+									(short) flags,
+									1,
+									answer);
+									
+							index = Resources.TextStringsToBuffer(txt, index, answer);		
+							
+							try
+							{
+								server.Send(answer, index);
+							}
+							catch(Exception e)
+							{
+								log.Info("Failed sending Host Address record", e);
+								continue;
+							}
+							
 						}
 						log.Info("");
 					}
@@ -628,67 +884,28 @@ namespace Mono.P2p.mDnsResponder
 		#region Properties
 
 		// Returns the preferred address
-		public long IPAddress
+		public IPAddress PrefAddress
 		{
 			get
 			{
-				return((long) this.ipAddresses[0]);
+				return((IPAddress) this.ipAddresses[0]);
 			}
-		}
-
-		public string TextualIPAddress
-		{
-			get
-			{
 			
-				return("192.168.1.102");
-				/*
-				string	textualIP = "";
-				
-				if (this.ipAddresses.Count >= 1)
-				{
-					long	ip = (long) this.ipAddresses[0];
-
-					textualIP += ((long)((ip & 0xFF000000) >> 24)).ToString();
-					textualIP += ".";
-					textualIP += ((long)((ip & 0x00FF0000) >> 16)).ToString();
-					textualIP += ".";
-					textualIP += ((long)((ip & 0x0000FF00) >> 8)).ToString();
-					textualIP += ".";
-					textualIP += ((long)(ip & 0x000000FF)).ToString();
-				}
-				return(textualIP);
-				*/
+			set
+			{
+				this.ipAddresses.Remove((IPAddress) value);
+				this.ipAddresses.Insert(0, (IPAddress) value);
+				this.Update();
 			}
 		}
 
 		#endregion
 
 		#region Constructors
-
-		/*
-		public HostAddress()
-		{
-		}
-		*/
-
 		public HostAddress(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
 		{
 			this.ipAddresses = new ArrayList();
 		}
-
-		/*
-		public HostAddress(string hostName, int ttl, long ipAddress, bool owner)
-		{
-			this.name = hostName;
-			this.ttl = ttl;
-			this.ipAddresses = new ArrayList();
-			this.ipAddresses.Add(ipAddress);
-			this.owner = owner;
-
-			this.update = DateTime.Now;
-		}
-		*/
 		#endregion
 
 		#region Private Methods
@@ -698,20 +915,19 @@ namespace Mono.P2p.mDnsResponder
 		#endregion
 
 		#region Public Methods
-		public void	AddIPAddress(long ipAddress)
+		public void	AddIPAddress(IPAddress ipAddress)
 		{
 			if (this.ipAddresses.Contains(ipAddress) == false)
 			{
 				this.ipAddresses.Add(ipAddress);
 				this.Update();
-				//this.update = DateTime.Now;
 			}
 		}
 
 		public ArrayList GetIPAddresses()
 		{
 			ArrayList returnedList = new ArrayList(this.ipAddresses.Count + 1);
-			foreach(long addr in this.ipAddresses)
+			foreach(IPAddress addr in this.ipAddresses)
 			{
 				returnedList.Add(addr);
 			}
@@ -719,18 +935,10 @@ namespace Mono.P2p.mDnsResponder
 			return(returnedList);
 		}
 
-		public void PreferredIPAddress(long ipAddress)
-		{
-			this.ipAddresses.Remove(ipAddress);
-			this.ipAddresses.Insert(0, ipAddress);
-			this.Update();
-			//this.update = DateTime.Now;
-		}
 
-		public void	RemoveIPAddress(long ipAddress)
+		public void	RemoveIPAddress(IPAddress ipAddress)
 		{
 			this.ipAddresses.Remove(ipAddress);
-			//this.update = DateTime.Now;
 		}
 
 		#endregion
@@ -896,12 +1104,7 @@ namespace Mono.P2p.mDnsResponder
 	{
 		#region Class Members
 
-		/*
-		static internal ArrayList	hosts = new ArrayList();
-		static internal Mutex		hostsMtx = new Mutex(false);
-		*/
-
-		string		target = "";
+		string		target;
 		#endregion
 
 		#region Properties
@@ -923,20 +1126,9 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Constructors
 
-/*
-		public ServiceResource(string service, int port, int priority, int weight)
-		{
-			this.serviceName = service;
-			this.port = port;
-			this.priority = priority;
-			this.weight = weight;
-			this.nameValues = new ArrayList();
-		}
-*/
-		
 		public Ptr(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
 		{
-			
+			this.target = "";			
 		}
 		
 		#endregion
@@ -949,6 +1141,59 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Public Methods
 
+		#endregion
+	}
+
+	/// <summary>
+	/// Summary description for TextString
+	/// </summary>
+	class TextStrings : BaseResource
+	{
+		#region Class Members
+		ArrayList	stringList = null;
+		#endregion
+
+		#region Properties
+		#endregion
+
+		#region Constructors
+
+		public TextStrings(string name, int ttl, mDnsType dnsType, mDnsClass dnsClass, bool owner) : base(name, ttl, dnsType, dnsClass, owner)
+		{
+			this.stringList = new ArrayList();
+		}
+		
+		#endregion
+
+		#region Private Methods
+		#endregion
+
+		#region Static Methods
+		#endregion
+
+		#region Public Methods
+		public bool	AddTextString(string txtString)
+		{
+			this.stringList.Add(txtString);
+			return(true);
+		}
+
+		public bool RemoveTextString(string txtString)
+		{
+			this.stringList.Remove(txtString);
+			return(true);
+		}
+		
+		public bool RemoveAllNameValues()
+		{
+			this.stringList.Clear();
+			return(true);
+		}
+
+		public ArrayList GetTextStrings()
+		{
+			return(this.stringList);
+		}
 		#endregion
 	}
 }

@@ -233,12 +233,10 @@ namespace Mono.P2p.mDnsResponder
 			{
 				dnsReceiveSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-				/*
 				dnsReceiveSocket.SetSocketOption(
 					SocketOptionLevel.Socket,
 					SocketOptionName.ReuseAddress,
 					true);
-				*/
 					
 				dnsReceiveSocket.Bind(iep);
 				dnsReceiveSocket.SetSocketOption(
@@ -423,9 +421,18 @@ namespace Mono.P2p.mDnsResponder
 
 									long ipAddress = 
 										IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
-									//int		ipAddress = BitConverter.ToInt32(receiveData, offset);
+									//int		ipAddress = BitConverter.ToInt32(receiveData[offset], 0);
 									
-									hostAddress.AddIPAddress(ipAddress);
+									byte[] bAddr = new byte[4];
+									bAddr[0] = (byte) receiveData[offset];
+									bAddr[1] = (byte) receiveData[offset + 1];
+									bAddr[2] = (byte) receiveData[offset + 2];
+									bAddr[3] = (byte) receiveData[offset + 3];
+									
+									log.Info("Constructing IPAddress");
+									IPAddress addr = new IPAddress(ipAddress);
+									log.Info("Done constructing");
+									hostAddress.AddIPAddress(addr);
 
 									Console.WriteLine(
 										"   IP Address:  {0}.{1}.{2}.{3}",
