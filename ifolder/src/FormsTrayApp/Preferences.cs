@@ -297,6 +297,7 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.TabIndex = ((int)(resources.GetObject("tabControl1.TabIndex")));
 			this.tabControl1.Text = resources.GetString("tabControl1.Text");
 			this.tabControl1.Visible = ((bool)(resources.GetObject("tabControl1.Visible")));
+			this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
 			// tabGeneral
 			// 
@@ -2004,9 +2005,8 @@ namespace Novell.FormsTrayApp
 		#region Event Handlers
 		private void Preferences_Load(object sender, System.EventArgs e)
 		{
-			// TODO: Load the correct page when it becomes available.
 			// Reference the help using locale-specific path.
-			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\front.html");
+			helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
 
 			// Load the application icon and banner image.
 			try
@@ -2606,6 +2606,20 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
+		private void tabControl1_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			switch (tabControl1.SelectedIndex)
+			{
+				case 0:
+					// Reference the help using locale-specific path.
+					helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\preferences.html");
+					break;
+				case 1:
+					// Reference the help using locale-specific path.
+					helpProvider1.HelpNamespace = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"doc\user\data\accounts.html");
+					break;
+			}
+		}
 		#endregion
 
 		private const int WM_QUERYENDSESSION = 0x0011;

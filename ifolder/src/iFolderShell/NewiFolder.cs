@@ -273,7 +273,7 @@ namespace Novell.iFolderCom
 
 		private void iFolderOverview_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
-			new iFolderComponent().ShowHelp(LoadPath, @"doc\user\data\bq6lwle.html");
+			new iFolderComponent().ShowHelp(LoadPath, @"doc\user\data\myifolders.html");
 		}
 
 		private void close_Click(object sender, System.EventArgs e)
