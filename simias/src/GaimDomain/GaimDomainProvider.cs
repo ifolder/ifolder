@@ -189,7 +189,7 @@ namespace Simias.Gaim
 						if (givenName != null && familyName == null)
 							familyName = "";
 
-						Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),
+						Member member = new Member(buddy.Name, buddy.Name /* This is used as Simias Node Name */,
 												   Simias.Storage.Access.Rights.ReadWrite,
 												   givenName, familyName);
 
@@ -255,7 +255,7 @@ namespace Simias.Gaim
 						if (givenName != null && familyName == null)
 							familyName = "";
 
-						Member member = new Member(buddy.Name, Guid.NewGuid().ToString(),
+						Member member = new Member(buddy.Name, buddy.Name /* This is used as Simias Node Name */,
 							Simias.Storage.Access.Rights.ReadWrite,
 							givenName, familyName);
 
