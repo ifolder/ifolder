@@ -100,11 +100,11 @@ namespace Simias.Domain
 			{
 				// create roster stub
 				CreateSlave(store, domainInfo.ID, domainInfo.RosterID,
-					domainInfo.RosterName, domainInfo.SyncServiceUrl);
+					domainInfo.RosterName, NodeTypes.RosterType, domainInfo.SyncServiceUrl);
 			
 				// create PO Box stub
 				Collection cStub = CreateSlave(store, domainInfo.ID, provisionInfo.POBoxID,
-					provisionInfo.POBoxName, domainInfo.SyncServiceUrl);
+					provisionInfo.POBoxName, typeof(PostOffice.POBox).Name, domainInfo.SyncServiceUrl);
 
 				// Get a POBox object from its created stub.
 				PostOffice.POBox poBox = new PostOffice.POBox(store, cStub);
@@ -128,7 +128,8 @@ namespace Simias.Domain
 			service = null;
 		}
 
-		private Collection CreateSlave(Store store, string domain, string id, string name, string url)
+		private Collection CreateSlave(Store store, string domain, string id,
+			string name, string type, string url)
 		{
 			Collection c = new Collection(store, name, id, domain);
 			
@@ -141,6 +142,9 @@ namespace Simias.Domain
 			Property pu = new Property(SyncCollection.MasterUrlPropertyName, new Uri(url));
 			pu.LocalProperty = true;
 			c.Properties.AddProperty(pu);
+
+			// type
+			c.SetType(c, type);
 
 			// commit
 			c.Sealed = true;
