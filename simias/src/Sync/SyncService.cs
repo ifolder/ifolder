@@ -201,13 +201,10 @@ namespace Simias.Sync
 			}
 		
 			// Check our rights.
+			member = null;
 			string userID = Thread.CurrentPrincipal.Identity.Name;
 			if (userID != null)
 			{
-				// BUGBUG
-				if (userID.Length == 0)
-					userID = user;
-				// End BUGBUG
 				if (userID.Length != 0)
 					member = collection.GetMemberByID(userID);
 				if (member != null)
@@ -218,7 +215,8 @@ namespace Simias.Sync
 					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
 				}
 			}
-			else
+
+			if (member == null)
 			{
 				si.Status = StartSyncStatus.AccessDenied;
 				return;

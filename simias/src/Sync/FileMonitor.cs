@@ -541,80 +541,156 @@ namespace Simias.Sync
 			
 					foreach (fileChangeEntry fc in fChanges)
 					{
-						if (((TimeSpan)(dredgeTimeStamp - fc.time)).TotalMilliseconds > 500)
+						string fullName = GetName(fc.eArgs.FullPath);
+						bool isDir = false;
+
+						if (fullName == null)
 						{
-							string fullName = GetName(fc.eArgs.FullPath);
-							bool isDir = false;
-
-							if (fullName == null)
+							lock(changes)
 							{
-								lock(changes)
-								{
-									changes.Remove(fc.eArgs.FullPath);
-								}
-								continue;
+								changes.Remove(fc.eArgs.FullPath);
 							}
-							FileInfo fi = new FileInfo(fullName);
-							isDir = (fi.Attributes & FileAttributes.Directory) > 0;
+							continue;
+						}
+						FileInfo fi = new FileInfo(fullName);
+						isDir = (fi.Attributes & FileAttributes.Directory) > 0;
 						
-							ShallowNode sn = GetShallowNodeForFile(fullName);
-							Node node = null;
-							DirNode dn = null;
-							BaseFileNode fn = null;
+						ShallowNode sn = GetShallowNodeForFile(fullName);
+						Node node = null;
+						DirNode dn = null;
+						BaseFileNode fn = null;
 
-							if (sn != null)
+						if (sn != null)
+						{
+							node = collection.GetNodeByID(sn.ID);
+							fn = node as BaseFileNode;
+							dn = node as DirNode;
+							// Make sure the type is still valid.
+							if (fi.Exists && ((isDir && fn != null) || (!isDir && dn != null)))
 							{
-								node = collection.GetNodeByID(sn.ID);
-								fn = node as BaseFileNode;
-								dn = node as DirNode;
-								// Make sure the type is still valid.
-								if (fi.Exists && ((isDir && fn != null) || (!isDir && dn != null)))
+								needToDredge = true;
+								break;
+							}
+							
+							// We have a node update it.
+							switch (fc.eArgs.ChangeType)
+							{
+								case WatcherChangeTypes.Created:
+								case WatcherChangeTypes.Changed:
+									if (!isDir)
+										ModifyFileNode(fullName, fn, false);
+									break;
+								case WatcherChangeTypes.Deleted:
+									DeleteNode(node);
+									break;
+								case WatcherChangeTypes.Renamed:
 								{
-									needToDredge = true;
+									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+									
+									// Since we are here we have a node already.
+									// This is a rename back to the original name update it.
+									if (!isDir)
+										ModifyFileNode(fullName, fn, false);
+									
+									// Make sure that there is not a node for the old name.
+									sn = GetShallowNodeForFile(args.OldFullPath);
+									if (sn != null && sn.ID != node.ID)
+									{
+										node = collection.GetNodeByID(sn.ID);
+										DeleteNode(node);
+									}
 									break;
 								}
-							
-								// We have a node update it.
-								switch (fc.eArgs.ChangeType)
-								{
-									case WatcherChangeTypes.Created:
-									case WatcherChangeTypes.Changed:
-										if (!isDir)
-											ModifyFileNode(fullName, fn, false);
-										break;
-									case WatcherChangeTypes.Deleted:
-										DeleteNode(node);
-										break;
-									case WatcherChangeTypes.Renamed:
-									{
-										RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
-									
-										// Since we are here we have a node already.
-										// This is a rename back to the original name update it.
-										if (!isDir)
-											ModifyFileNode(fullName, fn, false);
-									
-										// Make sure that there is not a node for the old name.
-										sn = GetShallowNodeForFile(args.OldFullPath);
-										if (sn != null && sn.ID != node.ID)
-										{
-											node = collection.GetNodeByID(sn.ID);
-											DeleteNode(node);
-										}
-										break;
-									}
-								}
 							}
-							else
+						}
+						else
+						{
+							// The node does not exist.
+							switch (fc.eArgs.ChangeType)
 							{
-								// The node does not exist.
-								switch (fc.eArgs.ChangeType)
-								{
-									case WatcherChangeTypes.Deleted:
-										// The node does not exist just continue.
-										break;
-									case WatcherChangeTypes.Created:
-									case WatcherChangeTypes.Changed:
+								case WatcherChangeTypes.Deleted:
+									// The node does not exist just continue.
+									break;
+								case WatcherChangeTypes.Created:
+								case WatcherChangeTypes.Changed:
+									// The node does not exist create it.
+									if (isDir)
+									{
+										CreateDirNode(fullName, GetParentNode(fullName));
+									}
+									else
+									{
+										CreateFileNode(fullName, GetParentNode(fullName));
+									}
+									break;
+
+								case WatcherChangeTypes.Renamed:
+									// Check if there is a node for the old name.
+									// Get the node from the old name.
+									RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
+									DirNode parent = null;
+									sn = GetShallowNodeForFile(args.OldFullPath);
+									if (sn != null)
+									{
+										node = collection.GetNodeByID(sn.ID);
+									
+										// Make sure the parent has not changed.
+										if (HasParentChanged(args.OldFullPath, fullName))
+										{
+											// We have a new parent find the parent node.
+											parent = GetParentNode(fullName);
+											if (parent != null)
+											{
+												// We have a parent reset the parent node.
+												node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
+											}
+											else
+											{
+												// We do not have a node for the parent.
+												// Do a dredge.
+												needToDredge = true;
+												break;
+											}
+										}
+										node.Name = Path.GetFileName(fullName);
+										string relativePath = GetNormalizedRelativePath(fullName);
+										string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
+										node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
+										if (!isDir)
+										{
+											ModifyFileNode(fullName, node as BaseFileNode, true);
+										}
+										else
+										{
+											// Commit the directory.
+											collection.Commit(node);
+											// We need to rename all of the children nodes.
+											ArrayList nodeList = new ArrayList();
+											ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
+											foreach (ShallowNode csn in csnList)
+											{
+												// Skip the collection.
+												if (csn.ID == node.ID)
+													continue;
+
+												Node childNode = collection.GetNodeByID(csn.ID);
+												if (childNode != null)
+												{
+													Property childRP = childNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
+													if (childRP != null)
+													{
+														string newRP = childRP.ValueString;
+														childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
+														childNode.Properties.ModifyNodeProperty(childRP);
+														nodeList.Add(childNode);
+													}
+												}
+											}
+											collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
+										}
+									}
+									else
+									{
 										// The node does not exist create it.
 										if (isDir)
 										{
@@ -624,94 +700,15 @@ namespace Simias.Sync
 										{
 											CreateFileNode(fullName, GetParentNode(fullName));
 										}
-										break;
-
-									case WatcherChangeTypes.Renamed:
-										// Check if there is a node for the old name.
-										// Get the node from the old name.
-										RenamedEventArgs args = (RenamedEventArgs)fc.eArgs;
-										DirNode parent = null;
-										sn = GetShallowNodeForFile(args.OldFullPath);
-										if (sn != null)
-										{
-											node = collection.GetNodeByID(sn.ID);
-									
-											// Make sure the parent has not changed.
-											if (HasParentChanged(args.OldFullPath, fullName))
-											{
-												// We have a new parent find the parent node.
-												parent = GetParentNode(fullName);
-												if (parent != null)
-												{
-													// We have a parent reset the parent node.
-													node.Properties.ModifyNodeProperty(PropertyTags.Parent, new Relationship(collection.ID, parent.ID));
-												}
-												else
-												{
-													// We do not have a node for the parent.
-													// Do a dredge.
-													needToDredge = true;
-													break;
-												}
-											}
-											node.Name = Path.GetFileName(fullName);
-											string relativePath = GetNormalizedRelativePath(fullName);
-											string oldRelativePath = node.Properties.GetSingleProperty(PropertyTags.FileSystemPath).ValueString;
-											node.Properties.ModifyNodeProperty(new Property(PropertyTags.FileSystemPath, Syntax.String, relativePath));
-											if (!isDir)
-											{
-												ModifyFileNode(fullName, node as BaseFileNode, true);
-											}
-											else
-											{
-												// Commit the directory.
-												collection.Commit(node);
-												// We need to rename all of the children nodes.
-												ArrayList nodeList = new ArrayList();
-												ICSList csnList = collection.Search(PropertyTags.FileSystemPath, oldRelativePath, SearchOp.Begins);
-												foreach (ShallowNode csn in csnList)
-												{
-													// Skip the collection.
-													if (csn.ID == node.ID)
-														continue;
-
-													Node childNode = collection.GetNodeByID(csn.ID);
-													if (childNode != null)
-													{
-														Property childRP = childNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
-														if (childRP != null)
-														{
-															string newRP = childRP.ValueString;
-															childRP.SetPropertyValue(newRP.Replace(oldRelativePath, relativePath));
-															childNode.Properties.ModifyNodeProperty(childRP);
-															nodeList.Add(childNode);
-														}
-													}
-												}
-												collection.Commit((Node[])nodeList.ToArray(typeof(Node)));
-											}
-										}
-										else
-										{
-											// The node does not exist create it.
-											if (isDir)
-											{
-												CreateDirNode(fullName, GetParentNode(fullName));
-											}
-											else
-											{
-												CreateFileNode(fullName, GetParentNode(fullName));
-											}
-										}
-										break;
-								}
-							}
-							lock(changes)
-							{
-								changes.Remove(fc.eArgs.FullPath);
+									}
+									break;
 							}
 						}
-
+						lock(changes)
+						{
+							changes.Remove(fc.eArgs.FullPath);
+						}
+					
 						if (needToDredge)
 							break;
 					}
