@@ -199,6 +199,7 @@ namespace Simias.Sync.Http
 		private HttpWebRequest GetRequest(SyncMethod method)
 		{
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+			request.UserAgent = "Simias Sync Client " + version;
 			request.ContentType = "application/octet-stream";
 			request.Credentials = credentials;
 			request.CookieContainer = cookies;
@@ -214,6 +215,33 @@ namespace Simias.Sync.Http
 			return request;
 		}
 
+		/// <summary>
+		/// Return the exception and include the returned details.
+		/// </summary>
+		/// <param name="response">The response from the server.</param>
+		/// <returns>An Exception.</returns>
+		private SimiasException GetException(HttpWebResponse response)
+		{
+			string message;
+			if (response.ContentLength != 0 && response.ContentType == "text/html")
+			{
+				StreamReader reader = new StreamReader(response.GetResponseStream());
+				try
+				{
+					char[] info = new char[response.ContentLength];
+					reader.Read(info, 0, info.Length);
+					message = string.Format("{0} \n {1}", response.StatusDescription, info);
+					return new SimiasException(message);
+				}
+				catch {/* Fall through and return the default exception.*/ }
+				finally
+				{
+					reader.Close();
+				}
+			}
+			return new SimiasException(response.StatusDescription);
+		}
+		
 		/// <summary>
 		/// Start a sync pass.
 		/// </summary>
@@ -234,7 +262,7 @@ namespace Simias.Sync.Http
 					{
 						cookie.Expired = true;
 					}
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the StartSyncInfo back;
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
@@ -262,7 +290,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Get the context;
 				context = response.Headers.Get(SyncHeaders.SyncContext);
@@ -341,7 +369,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the status.
 				int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
@@ -393,7 +421,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get Nodes.
 				SyncNode[] nodes = new SyncNode[nids.Length];
@@ -433,7 +461,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the status.
 				int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
@@ -468,7 +496,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the Status.
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
@@ -498,7 +526,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the SyncNode.
 				if (response.ContentLength != 0)
@@ -528,7 +556,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the HashData.
 				int count = int.Parse(response.Headers.Get(SyncHeaders.ObjectCount));
@@ -559,7 +587,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the Status.
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
@@ -594,7 +622,7 @@ namespace Simias.Sync.Http
 			}
 			// If we get here we had an error.
 			response.Close();
-			throw new SimiasException(response.StatusDescription);
+			throw GetException(response);
 		}
 
 		/// <summary>
@@ -619,7 +647,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 			}
 			finally
@@ -650,7 +678,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 			}
 			finally
@@ -685,7 +713,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 				// Now get the status.
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
@@ -711,7 +739,7 @@ namespace Simias.Sync.Http
 			{
 				if (response.StatusCode != HttpStatusCode.OK)
 				{
-					throw new SimiasException(response.StatusDescription);
+					throw GetException(response);
 				}
 			}
 			finally
