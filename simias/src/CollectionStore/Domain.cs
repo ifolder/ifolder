@@ -169,6 +169,15 @@ namespace Simias.Storage
 
 			return roster;
 		}
+
+		/// <summary>
+		/// Obtains the string representation of this instance.
+		/// </summary>
+		/// <returns>The friendly name of the domain.</returns>
+		public override string ToString()
+		{
+			return this.Name;
+		}
 		#endregion
 	}
 }
