@@ -79,7 +79,13 @@ namespace Novell.iFolder
 				nppage = new NodePropertyPage(ifldr.CurrentNode);
 				npwidget = nppage.GetWidget();
 				propNotebook.AppendPage(npwidget, new Label("iFolder"));
+
+				win.Icon = new Pixbuf("ifolderfolder.png");
 			}
+//			else
+//			{
+//				win.Icon = new Pixbuf("ifolderfolder.png");
+//			}
 		}
 
 		public PropertiesDialog(Node node) 

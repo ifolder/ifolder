@@ -2,6 +2,8 @@
 <!DOCTYPE glade-project SYSTEM "http://glade.gnome.org/glade-project-2.0.dtd">
 
 <glade-project>
-  <name></name>
-  <program_name></program_name>
+  <name>GtkTrayApp</name>
+  <program_name>gtktrayapp</program_name>
+  <source_directory></source_directory>
+  <pixmaps_directory></pixmaps_directory>
 </glade-project>

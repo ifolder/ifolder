@@ -62,7 +62,7 @@ namespace Novell.iFolder
 			gxml.Autoconnect (this);
 
 			nifWindow = (Gtk.Window) gxml.GetWidget("BrowserWindow");
-			nifWindow.Title = "Denali File Browser";
+			nifWindow.Title = "iFolder File Browser";
 
 			DirectoryInfo dirinfo = new DirectoryInfo(
 					Environment.GetFolderPath(
