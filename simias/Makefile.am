@@ -15,6 +15,12 @@ doc-clean:
 package package-clean package-install package-uninstall:
 	$(MAKE) -C package $@
 
+if LINUX
+install-exec-local: $(srcdir)/package/linux/simias.pc
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) $(srcdir)/package/linux/simias.pc $(DESTDIR)$(libdir)/pkgconfig
+endif
+
 installcheck-summary:
 	$(MAKE) -C src $@
 	

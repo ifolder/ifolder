@@ -75,6 +75,18 @@ if ! grep -q "^%{prefix}/bin$" /etc/ld.so.conf ; then
     echo "%{prefix}/bin" >> /etc/ld.so.conf
     /sbin/ldconfig
 fi
+# Create simias.sh in /etc/profile.d to set PKG_CONFIG_PATH
+cat<<HERE > /etc/profile.d/simias.sh
+if test -z "\$PKG_CONFIG_PATH" ; then
+    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
+else
+    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
+fi
+HERE
+
+#=============================================================================
+%Postun
+%{__rm} -f /etc/profile.d/simias.sh
 
 #=============================================================================
 %Files

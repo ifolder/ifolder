@@ -305,5 +305,6 @@ package/windows/Makefile
 package/linux/Makefile
 package/darwin/Makefile
 package/linux/simias.spec
+package/linux/simias.pc
 doc/Makefile
 ])
