@@ -234,10 +234,15 @@ public class SyncTests: Assertion
 	public bool FirstSync()
 	{
 		string dir1 = Path.Combine(serverFolder, "subdir1");
-		string dir2 = Path.Combine(serverFolder, "sub dir with spaces");
+		string dir2 = Path.Combine(serverFolder, "sub dir with spaces2");
+		string dir3 = Path.Combine(serverFolder, "subdir3");
 		Directory.CreateDirectory(dir1);
 		Directory.CreateDirectory(dir2);
 		Differ.CreateFile(Path.Combine(dir1, "file1"), "file 1 contents");
+
+		Log.Spew("+++++++++++ creating large file");
+		Directory.CreateDirectory(dir3);
+		Differ.CreateFile(Path.Combine(dir3, "file3"), 800*1024);
 
 		Log.Spew("+++++++++++ first run of client for FirstSync");
 		if (!RunClient())
@@ -381,6 +386,12 @@ public class SyncTests: Assertion
 			return false;
 		}
 		Log.Spew("+++++++++++ third run of client for FileCreationCollision");
+		if (!RunClient())
+		{
+			Log.Spew("failed sync after FileCreationCollision");
+			return false;
+		}
+		Log.Spew("+++++++++++ fourth run of client for FileCreationCollision");
 		if (!RunClient())
 		{
 			Log.Spew("failed sync after FileCreationCollision");

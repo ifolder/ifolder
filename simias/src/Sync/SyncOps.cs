@@ -431,14 +431,6 @@ internal class SyncIncomingNode
 		}
 	}
 
-	//TODO: this is just for debug, remove it when no longer needed
-	void CheckMasterIncarn(Nid nid)
-	{
-		Node n = collection.GetNodeByID(nid);
-		if (n.Properties.GetSingleProperty( PropertyTags.MasterIncarnation ) == null)
-			Log.Spew("Just completed node {0} has no MasterIncarnation", node.Name);
-	}
-
 	Node IllegalDuplicateName()
 	{
 		string parentID = ParentID(node);
@@ -492,9 +484,10 @@ internal class SyncIncomingNode
 					continue;
 				}
 				CommitFile();
+				collection.ImportNode(node, node.LocalIncarnation);
+				node.IncarnationUpdate = node.LocalIncarnation;
 				node.Properties.DeleteSingleProperty("TemporaryFileComplete");
-				collection.Commit(node);
-				CheckMasterIncarn((Nid)node.ID);
+				collection.Commit(node); //TODO: what if incarn doesn't match?
 				return NodeStatus.Complete;
 			}
 		}
@@ -517,9 +510,9 @@ internal class SyncIncomingNode
 			return NodeStatus.UpdateCollision;
 		}
 		CommitFile();
+		collection.ImportNode(node, node.LocalIncarnation);
 		node.Properties.DeleteSingleProperty("TemporaryFileComplete");
-		collection.Commit(node);
-		CheckMasterIncarn((Nid)node.ID);
+		collection.Commit(node); //TODO: what if incarn doesn't match?
 		return NodeStatus.Complete;
 	}
 }

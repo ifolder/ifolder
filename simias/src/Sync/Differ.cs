@@ -175,9 +175,17 @@ class Differ
 		s.Close();
 	}
 
-	public static void CreateFile(string name, uint size)
+	// creates a file of repeating characters of given size
+	public static void CreateFile(string name, int size)
 	{
-		// Console.WriteLine( differences in contents and attributes);
+		BinaryWriter b = new BinaryWriter(File.Create(name));
+		byte[] data = new byte[32 * 1024];
+		for (int i = 0; i < data.Length; i++)
+			data[i] = (byte)(i % 26 + 'a');
+		for (; size > data.Length; size -= data.Length)
+			b.Write(data);
+		b.Write(data, 0, size);
+		b.Close();
 	}
 }
 

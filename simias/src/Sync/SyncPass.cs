@@ -328,7 +328,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		//Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.streamsSize == -1)
 			nonFileToServer.Add(stamp);
@@ -342,7 +342,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		//Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
+		Log.Spew("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.streamsSize == -1)
 			nonFileFromServer.Add(stamp);

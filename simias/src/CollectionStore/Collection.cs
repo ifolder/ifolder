@@ -301,14 +301,14 @@ namespace Simias.Storage
 					{
 						// Update both incarnation values to the specified value.
 						node.Properties.ModifyNodeProperty( PropertyTags.MasterIncarnation, node.IncarnationUpdate );
-						node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, node.IncarnationUpdate );
+						//node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, node.IncarnationUpdate );
 						node.IncarnationUpdate = 0;
 					}
 					else
 					{
 						// Increment the property value.
-						ulong incarnationValue = node.LocalIncarnation;
-						node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
+						//ulong incarnationValue = node.LocalIncarnation;
+						//node.Properties.ModifyNodeProperty( PropertyTags.LocalIncarnation, ++incarnationValue );
 					}
 
 					// Reset the expected incarnation value.
@@ -547,25 +547,21 @@ namespace Simias.Storage
 				switch ( node.Properties.State )
 				{
 					case PropertyList.PropertyListState.Add:
-						log.Debug( "Indicating event NodeCreated: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeCreated, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
 						break;
 
 					case PropertyList.PropertyListState.Delete:
-						log.Debug( "Indicating event NodeDeleted: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeDeleted, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Disposed;
 						break;
 
 					case PropertyList.PropertyListState.Import:
-						log.Debug( "Indicating event NodeImported: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						node.Properties.State = PropertyList.PropertyListState.Update;
 						break;
 
 					case PropertyList.PropertyListState.Update:
-						log.Debug( "Indicating event NodeChanged: Node ID = {0}", node.ID );
 						store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
 						break;
 
