@@ -763,9 +763,23 @@ namespace Novell.AddressBook
 
 								if (token == "N")
 								{
-									if (enumTokens.MoveNext())
+									Regex n = new Regex(@":");
+									IEnumerator enumProperties = n.Split(line).GetEnumerator();
+
+									// Prime the enumerator and move to the first token
+									if (enumProperties.MoveNext())
 									{
-										this.BuildVCardName(cContact, enumTokens);
+										// Move past the token(s) before the : and on to the property values
+										if (enumProperties.MoveNext())
+										{
+											Regex nt = new Regex(@";");
+											IEnumerator nameTokens = 
+												nt.Split((string) enumProperties.Current).GetEnumerator();
+											if(nameTokens.MoveNext())
+											{
+												this.BuildVCardName(cContact, nameTokens);
+											}
+										}
 									}
 								}
 								else
