@@ -6,6 +6,8 @@
 //
 //  Copyright (C) 2002  Vladimir Vukicevic
 //
+//  Russ Young (Novell) Added new class to use Step Data Reader.
+//  
 
 using System;
 using System.Runtime.InteropServices;
