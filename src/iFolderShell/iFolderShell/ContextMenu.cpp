@@ -88,7 +88,6 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				return 0;
 			}
 
-//			BOOL biFolderNode= FALSE;
 			BOOL biFolder= FALSE;
 
 			try
@@ -101,7 +100,6 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 
 				if (m_spiFolder)
 				{
-//					biFolderNode= m_spiFolder->IsiFolderNode(m_szFileUserClickedOn);
 					biFolder= m_spiFolder->IsiFolder(m_szFileUserClickedOn);
 				}
 			}
@@ -110,7 +108,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 //				OutputDebugString(TEXT("Exception caught in CiFolderShell::QueryContextMenu()\n"));
 			}
 
-			if (biFolder)//(biFolderNode || biFolder)
+			if (biFolder)
 			{
 				// Create a submenu.
 				HMENU subMenu= CreateMenu();
@@ -201,10 +199,10 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 //		{
 //			OutputDebugString(TEXT("CMF_EXPLORE...\n"));
 //		}
-		else if (uFlags & CMF_DEFAULTONLY)
-		{
-			//OutputDebugString(TEXT("CMF_DEFAULTONLY...\n"));
-		}
+//		else if (uFlags & CMF_DEFAULTONLY)
+//		{
+//			OutputDebugString(TEXT("CMF_DEFAULTONLY...\n"));
+//		}
 		else
 		{
 			TCHAR szTemp[32];
@@ -288,10 +286,12 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
             case 0:
 				try
 				{
+					// Make this folder an iFolder.
 					if(m_spiFolder->CreateiFolder(m_szFileUserClickedOn))
 					{
 						// Tell the shell to refresh the icon...
 						SHChangeNotify(SHCNE_UPDATEITEM, SHCNF_PATH, m_szFileUserClickedOn, NULL);
+						m_spiFolder->NewiFolderWizard(m_szShellPath, m_szFileUserClickedOn);
 					}
 				}
 				catch (...)
@@ -303,6 +303,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
             case 1:
 				try
 				{
+					// Change this iFolder back to a regular folder.
 					m_spiFolder->DeleteiFolder(m_szFileUserClickedOn);
 
 					// Tell the shell to refresh the icon...
@@ -318,6 +319,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 				hr= NOERROR;
 				try
 				{
+					// Invoke the iFolder Advanced properties dialog.
 					m_spiFolder->InvokeAdvancedDlg(m_szShellPath, m_szFileUserClickedOn, false);
 				}
 				catch (...)
@@ -327,6 +329,7 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
                 break;
 
             case 3:
+				// Invoke the properties dialog for this folder with the iFolder tab active.
 				SHObjectProperties(NULL, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
 				hr= NOERROR;
                 break;

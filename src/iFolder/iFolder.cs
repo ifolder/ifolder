@@ -1148,6 +1148,38 @@ namespace Novell.iFolder
 			collection.RemoveUserAccess( userId );
 			collection.Commit();
 		}
+
+
+		/// <summary>
+		/// Sends an invitation to share an iFolder to the specified user.
+		/// </summary>
+		/// <param name="userId">
+		/// The ID of the user to send the invitation to.
+		/// </param>
+		public void SendInvitation(string userId)
+		{
+			// inform the notification service that we have shared
+			IInviteAgent agent = AgentFactory.GetInviteAgent();
+			Invitation invitation = agent.CreateInvitation(collection, userId);
+
+			// TODO: where should we discover the contact information?
+			Novell.AddressBook.Manager abManager =
+				Novell.AddressBook.Manager.Connect(collection.LocalStore.StorePath);
+			Novell.AddressBook.AddressBook ab = abManager.OpenDefaultAddressBook();
+
+			// from
+			Contact from = ab.GetContact(collection.Owner);
+			invitation.FromName = from.FN;
+			invitation.FromEmail = from.EMail;
+
+			// to
+			Contact to = ab.GetContact(userId);
+			invitation.ToName = to.FN;
+			invitation.ToEmail = to.EMail;
+
+			// send the invitation
+			agent.Invite(invitation);
+		}
 #endregion
 
 #region IEnumerable
