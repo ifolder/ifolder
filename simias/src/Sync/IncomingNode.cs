@@ -193,6 +193,7 @@ internal class IncomingNode
 	{
 		for (Node n = oldNode == null? node: oldNode;;)
 		{
+			n = collection.GetNodeByID(n.ID);
 			collection.ImportNode(n, n.LocalIncarnation);
 			n.Properties.DeleteSingleProperty(TempFileDone);
 			try
@@ -203,7 +204,6 @@ internal class IncomingNode
 			catch (CollisionException ce)
 			{
 				Log.Spew("Node {0} could not commit while completing an update, retrying ...", n.Name);
-				n = collection.GetNodeByID(n.ID);
 			}
 		}
 	}

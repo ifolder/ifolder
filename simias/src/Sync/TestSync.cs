@@ -445,9 +445,9 @@ public class SyncTests: Assertion
 		AccountTest("invite", Invite());
 		AccountTest("accept", Accept());
 		AccountTest("firstSync", FirstSync());
-		//AccountTest("syncSize", SizeSync());
-		//AccountTest("simpleAdds", SimpleAdds());
-		//AccountTest("simpleDeletes", SimpleDeletes());
+		AccountTest("syncSize", SizeSync());
+		AccountTest("simpleAdds", SimpleAdds());
+		AccountTest("simpleDeletes", SimpleDeletes());
 		//AccountTest("FileCreationCollision", FileCreationCollision());
 		//AccountTest("DeepSubDirs", DeepSubDirs());
 		Cleanup();

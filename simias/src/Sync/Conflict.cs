@@ -50,13 +50,14 @@ public class Conflict
 		if ((conflictNode = collection.GetNodeFromCollision(node)) != null)
 		{
 			conflictNode.IncarnationUpdate = conflictNode.LocalIncarnation;
-			Log.Spew("Reconstituted conflict node {2} local {0}, master {1}",
-					conflictNode.LocalIncarnation, conflictNode.MasterIncarnation, conflictNode.Name);
+			conflictNode.Properties.ModifyNodeProperty(PropertyTags.MasterIncarnation, conflictNode.LocalIncarnation);
+			//Log.Spew("Reconstituted conflict node {2} local {0}, master {1}",
+			//		conflictNode.LocalIncarnation, conflictNode.MasterIncarnation, conflictNode.Name);
 		}
 		else
 		{
-			Log.Spew("node {0} is not conflicted", node.Name);
-			Log.Assert(!collection.HasCollisions(node));
+			//Log.Spew("node {0} is not conflicted", node.Name);
+			//Log.Assert(!collection.HasCollisions(node));
 		}
 	}
 
@@ -166,10 +167,11 @@ public class Conflict
 		File.Move(UpdateConflictPath, path);
 		collection.ImportNode(conflictNode, node.LocalIncarnation);
 		if (fncpath == null)
-			conflictNode = collection.DeleteCollision(conflictNode);
+			node = collection.DeleteCollision(conflictNode);
 		else
-			conflictNode = collection.CreateCollision(conflictNode);
-		collection.Commit(conflictNode);
+			node = collection.CreateCollision(conflictNode);
+		conflictNode = null;
+		collection.Commit(node);
 	}
 
 	//---------------------------------------------------------------------------
