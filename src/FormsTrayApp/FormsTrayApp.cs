@@ -119,6 +119,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 			// Initialize menuItemTracer
 			this.menuItemTracer.Index = 0;
+			this.menuItemTracer.Checked = true;
 			this.menuItemTracer.Click += new System.EventHandler(menuItemTracer_Click);
 
 			// Initialize menuItemBrowser
@@ -312,8 +313,16 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuItemTracer_Click(object sender, System.EventArgs e)
 		{
-			// Display the trace window.
-			this.traceForm.Show();
+			menuItemTracer.Checked = !menuItemTracer.Checked;
+			if (menuItemTracer.Checked)
+			{
+				// Display the trace window.
+				this.traceForm.Show();
+			}
+			else
+			{
+				this.traceForm.Hide();
+			}
 		}
 
 		private void menuItemBrowser_Click(object sender, EventArgs e)
