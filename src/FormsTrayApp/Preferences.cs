@@ -1703,6 +1703,7 @@ namespace Novell.FormsTrayApp
 						break;
 					case StatusCodes.InvalidCredentials:
 					case StatusCodes.InvalidPassword:
+					case StatusCodes.UnknownUser:
 						mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 						break;
