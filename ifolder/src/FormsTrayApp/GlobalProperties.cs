@@ -96,6 +96,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuRefresh;
 		private System.Windows.Forms.MenuItem menuSeparator1;
 		private System.Windows.Forms.MenuItem menuSeparator2;
+		private System.Windows.Forms.ColumnHeader columnHeader4;
+		private System.Windows.Forms.ColumnHeader columnHeader5;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -195,6 +197,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuStop = new System.Windows.Forms.MenuItem();
 			this.menuRestart = new System.Windows.Forms.MenuItem();
 			this.banner = new System.Windows.Forms.PictureBox();
+			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -342,8 +346,11 @@ namespace Novell.iFolder.FormsTrayApp
 			// iFolderView
 			// 
 			this.iFolderView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						  this.columnHeader1});
+																						  this.columnHeader1,
+																						  this.columnHeader4,
+																						  this.columnHeader5});
 			this.iFolderView.ContextMenu = this.contextMenu1;
+			this.iFolderView.FullRowSelect = true;
 			this.iFolderView.HideSelection = false;
 			this.iFolderView.Location = new System.Drawing.Point(8, 16);
 			this.iFolderView.MultiSelect = false;
@@ -356,8 +363,8 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// columnHeader1
 			// 
-			this.columnHeader1.Text = "iFolders";
-			this.columnHeader1.Width = 404;
+			this.columnHeader1.Text = "Name";
+			this.columnHeader1.Width = 100;
 			// 
 			// contextMenu1
 			// 
@@ -590,7 +597,7 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// columnHeader3
 			// 
-			this.columnHeader3.Text = "State";
+			this.columnHeader3.Text = "Status";
 			this.columnHeader3.Width = 195;
 			// 
 			// contextMenu2
@@ -637,6 +644,16 @@ namespace Novell.iFolder.FormsTrayApp
 			this.banner.TabIndex = 9;
 			this.banner.TabStop = false;
 			// 
+			// columnHeader4
+			// 
+			this.columnHeader4.Text = "Location";
+			this.columnHeader4.Width = 240;
+			// 
+			// columnHeader5
+			// 
+			this.columnHeader5.Text = "Status";
+			this.columnHeader5.Width = 64;
+			// 
 			// GlobalProperties
 			// 
 			this.AcceptButton = this.ok;
@@ -677,6 +694,14 @@ namespace Novell.iFolder.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		private void AddiFolderToListView(iFolder ifolder)
+		{
+			string status = ifolder.HasCollisions() ? "Conflicts exist" : "OK";
+			ListViewItem lvi = new ListViewItem(new string[] {ifolder.Name, ifolder.LocalPath, status}, 0);
+			lvi.Tag = ifolder.ID;
+			iFolderView.Items.Add(lvi);
+		}
+
 		private bool IsRunEnabled()
 		{
 			RegistryKey runKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
@@ -703,12 +728,14 @@ namespace Novell.iFolder.FormsTrayApp
 			iFolderView.Items.Clear();
 			iFolderView.SelectedItems.Clear();
 
+			iFolderView.BeginUpdate();
+
 			foreach (iFolder ifolder in manager)
 			{
-				ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
-				lvi.Tag = ifolder.ID;
-				iFolderView.Items.Add(lvi);
+				AddiFolderToListView(ifolder);
 			}
+
+			iFolderView.EndUpdate();
 		}
 
 		private void invokeiFolderProperties(ListViewItem lvi, string activeTab)
@@ -964,9 +991,7 @@ namespace Novell.iFolder.FormsTrayApp
 							Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, folderBrowserDialog.SelectedPath, IntPtr.Zero);
 
 							// Add the iFolder to the listview.
-							ListViewItem lvi = new ListViewItem(ifolder.Name, 0);
-							lvi.Tag = ifolder.ID;
-							iFolderView.Items.Add(lvi);
+							AddiFolderToListView(ifolder);
 							break;
 						}
 						else

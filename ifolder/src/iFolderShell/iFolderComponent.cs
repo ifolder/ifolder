@@ -276,7 +276,7 @@ namespace Novell.iFolder.iFolderCom
 				ifolderAdvanced.Text = windowName;
 				ifolderAdvanced.CurrentiFolder = manager.GetiFolderByPath(path);
 				ifolderAdvanced.LoadPath = dllPath;
-				ifolderAdvanced.ActiveTab = "share";
+				ifolderAdvanced.ActiveTab = tabPage;
 
 				if (modal)
 				{
