@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Identity variables
@@ -86,6 +86,6 @@ Identity_LIBPATH := $(subst /,$(SEP), $(Identity_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(Identity_LIBPATH) $(Identity_INCLUDES)
 
-Identity.dll: $(Identity_SOURCES) $(Identity_LIBS) ../config.mk
+Identity.dll: $(Identity_SOURCES) $(Identity_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Identity.Doc.xml $(CSCFLAGS) $(Identity_FLAGS) $(Identity_LIBS:%=/r:%) $(Identity_LIBPATH:%=/lib:%) $(Identity_SOURCES)
 

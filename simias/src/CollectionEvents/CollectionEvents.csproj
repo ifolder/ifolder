@@ -87,7 +87,7 @@
                 <Reference
                     Name = "Configuration"
                     AssemblyName = "Configuration"
-                    HintPath = "..\stage\Configuration.dll"
+                    HintPath = "..\Configuration\Configuration.dll"
                 />
             </References>
         </Build>

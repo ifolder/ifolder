@@ -279,7 +279,7 @@ namespace Simias
 		
 		public static void RegisterClientChannel()
 		{
-			string service = Simias.Configuration.Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly);
+			string service = new Simias.Configuration().Get(CFG_Section, CFG_AssemblyKey, CFG_Assembly);
 			Process [] process = Process.GetProcessesByName(service);
 			if (process.Length >= 1)
 			{				
@@ -314,7 +314,7 @@ namespace Simias
 					ChannelServices.RegisterChannel(chan);
 
 					//ChannelServices.RegisterChannel(new TcpChannel());
-					string serviceUri = Simias.Configuration.Get(CFG_Section, CFG_UriKey, CFG_Uri);
+					string serviceUri = new Simias.Configuration().Get(CFG_Section, CFG_UriKey, CFG_Uri);
 					RemotingConfiguration.RegisterWellKnownClientType(typeof(EventBroker), serviceUri);
 				}
 			}
@@ -322,7 +322,7 @@ namespace Simias
 
 		public static void RegisterService()
 		{
-			Uri serviceUri = new Uri (Simias.Configuration.Get(CFG_Section, CFG_UriKey, CFG_Uri));
+			Uri serviceUri = new Uri (new Simias.Configuration().Get(CFG_Section, CFG_UriKey, CFG_Uri));
 			
 			Hashtable props = new Hashtable();
 			props["port"] = serviceUri.Port;

@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # StoreWatcher variables
@@ -96,7 +96,7 @@ StoreWatcher_LIBPATH := $(subst /,$(SEP), $(StoreWatcher_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(StoreWatcher_LIBPATH) $(StoreWatcher_INCLUDES)
 
-StoreWatcher.dll: $(StoreWatcher_SOURCES) $(StoreWatcher_LIBS) ../config.mk
+StoreWatcher.dll: $(StoreWatcher_SOURCES) $(StoreWatcher_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:StoreWatcher.Doc.xml $(CSCFLAGS) $(StoreWatcher_FLAGS) $(StoreWatcher_LIBS:%=/r:%) $(StoreWatcher_LIBPATH:%=/lib:%) $(StoreWatcher_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ StoreWatcherTests_LIBPATH := $(subst /,$(SEP), $(StoreWatcherTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(StoreWatcherTests_LIBPATH) $(StoreWatcherTests_INCLUDES)
 
-StoreWatcherTests.dll: $(StoreWatcherTests_SOURCES) $(StoreWatcherTests_LIBS) ../config.mk
+StoreWatcherTests.dll: $(StoreWatcherTests_SOURCES) $(StoreWatcherTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:StoreWatcherTests.Doc.xml $(CSCFLAGS) $(StoreWatcherTests_FLAGS) $(StoreWatcherTests_LIBS:%=/r:%) $(StoreWatcherTests_LIBPATH:%=/lib:%) $(StoreWatcherTests_SOURCES)
 

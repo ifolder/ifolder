@@ -32,7 +32,7 @@ use POSIX qw(strftime);
 my $MAKEFILE = 'config.mk';         # configure makefile
 
 # product information
-my $product_name = 'denali';        # default product name
+my $product_name = 'simias';        # default product name
 my $major_version = '0';            # default major version
 my $minor_version = '5';            # default minor version (iteration)
 my $patch_level = '0';              # default patch level
@@ -95,7 +95,7 @@ USAGE: configure.pl [options]
     PRODUCT INFORMATION
 
     --product-name [value]      Specify the product name
-                                    i.e. 'denali'
+                                    i.e. 'simias'
     --major-version [value]     Specify the major version
                                     i.e. '3'
     --minor-version [value]     Specify the minor version
@@ -333,7 +333,7 @@ $variables{'CVS'} = 'cvs';
 if ($opt_shell eq 'bash')
 {
     # directories
-    chdir('..');
+    # chdir('..');
     my $root_dir = `pwd`;
     chomp($root_dir);
     $variables{'ROOTDIR'} = $root_dir;
@@ -342,7 +342,7 @@ if ($opt_shell eq 'bash')
     $variables{'DOCDIR'} = "$variables{'SRCDIR'}/doc";
     $variables{'APIDOCDIR'} = "$variables{'SRCDIR'}/api-doc";
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}/stage";
-    chdir($variables{'SRCDIR'});
+    # chdir($variables{'SRCDIR'});
 
     # commands
     $variables{'RM'} = 'rm -f';
@@ -358,7 +358,7 @@ if ($opt_shell eq 'bash')
 elsif ($opt_shell eq 'cmd')
 {
     # directories
-    chdir('..');
+    # chdir('..');
     my $root_dir = `cd`;
     chomp($root_dir);
     $variables{'ROOTDIR'} = $root_dir;
@@ -367,7 +367,7 @@ elsif ($opt_shell eq 'cmd')
     $variables{'DOCDIR'} = "$variables{'SRCDIR'}\\doc";
     $variables{'APIDOCDIR'} = "$variables{'SRCDIR'}\\api-doc";
     $variables{'STAGE_DIR'} = "$variables{'SRCDIR'}\\stage";
-    chdir($variables{'SRCDIR'});
+    # chdir($variables{'SRCDIR'});
 
     # commands
     $variables{'RM'} = 'del /f /q';
@@ -757,8 +757,14 @@ close(OUT);
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/21 07:02:13  cgaisford
-# Initial revision
+# Revision 1.2  2004/02/23 19:51:02  pthomas707
+# Rename product name from denali to simias
+#
+# Revision 1.1  2004/02/21 23:59:58  cgaisford
+# Modified the build process and structure.  Now configure can be run at the root level and then make can be run.  Cleaned up configure stuff that used to be down in src
+#
+# Revision 1.1.1.1  2004/02/21 07:02:13  cgaisford
+# This is the first checkin of Simias
 #
 # Revision 1.42  2004/02/20 18:11:52  rlyon
 # Added and replaced headers.

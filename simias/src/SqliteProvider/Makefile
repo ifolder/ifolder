@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # SqliteProviderTests variables
@@ -126,7 +126,7 @@ SqliteProviderTests_LIBPATH := $(subst /,$(SEP), $(SqliteProviderTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SqliteProviderTests_LIBPATH) $(SqliteProviderTests_INCLUDES)
 
-SqliteProviderTests.dll: $(SqliteProviderTests_SOURCES) $(SqliteProviderTests_LIBS) ../config.mk
+SqliteProviderTests.dll: $(SqliteProviderTests_SOURCES) $(SqliteProviderTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SqliteProviderTests.Doc.xml $(CSCFLAGS) $(SqliteProviderTests_FLAGS) $(SqliteProviderTests_LIBS:%=/r:%) $(SqliteProviderTests_LIBPATH:%=/lib:%) $(SqliteProviderTests_SOURCES)
 
 #=============================================================================
@@ -142,7 +142,7 @@ StoreProvider_LIBPATH := $(subst /,$(SEP), $(StoreProvider_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(StoreProvider_LIBPATH) $(StoreProvider_INCLUDES)
 
-StoreProvider.dll: $(StoreProvider_SOURCES) $(StoreProvider_LIBS) ../config.mk
+StoreProvider.dll: $(StoreProvider_SOURCES) $(StoreProvider_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:StoreProvider.Doc.xml $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_SOURCES)
 
 #=============================================================================
@@ -158,7 +158,7 @@ SqliteWrapper_LIBPATH := $(subst /,$(SEP), $(SqliteWrapper_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SqliteWrapper_LIBPATH) $(SqliteWrapper_INCLUDES)
 
-SqliteWrapper.dll: $(SqliteWrapper_SOURCES) $(SqliteWrapper_LIBS) ../config.mk
+SqliteWrapper.dll: $(SqliteWrapper_SOURCES) $(SqliteWrapper_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SqliteWrapper.Doc.xml $(CSCFLAGS) $(SqliteWrapper_FLAGS) $(SqliteWrapper_LIBS:%=/r:%) $(SqliteWrapper_LIBPATH:%=/lib:%) $(SqliteWrapper_SOURCES)
 
 #=============================================================================
@@ -174,7 +174,7 @@ ProviderTest_LIBPATH := $(subst /,$(SEP), $(ProviderTest_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(ProviderTest_LIBPATH) $(ProviderTest_INCLUDES)
 
-ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../config.mk
+ProviderTest.dll: $(ProviderTest_SOURCES) $(ProviderTest_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:ProviderTest.Doc.xml $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_SOURCES)
 
 #=============================================================================
@@ -190,6 +190,6 @@ SqliteProvider_LIBPATH := $(subst /,$(SEP), $(SqliteProvider_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SqliteProvider_LIBPATH) $(SqliteProvider_INCLUDES)
 
-SqliteProvider.dll: $(SqliteProvider_SOURCES) $(SqliteProvider_LIBS) ../config.mk
+SqliteProvider.dll: $(SqliteProvider_SOURCES) $(SqliteProvider_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SqliteProvider.Doc.xml $(CSCFLAGS) $(SqliteProvider_FLAGS) $(SqliteProvider_LIBS:%=/r:%) $(SqliteProvider_LIBPATH:%=/lib:%) $(SqliteProvider_SOURCES)
 

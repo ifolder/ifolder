@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # CommonFormWindows variables
@@ -96,7 +96,7 @@ CommonFormWindows_LIBPATH := $(subst /,$(SEP), $(CommonFormWindows_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(CommonFormWindows_LIBPATH) $(CommonFormWindows_INCLUDES)
 
-CommonFormWindows.dll: $(CommonFormWindows_SOURCES) $(CommonFormWindows_LIBS) ../config.mk
+CommonFormWindows.dll: $(CommonFormWindows_SOURCES) $(CommonFormWindows_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CommonFormWindows.Doc.xml $(CSCFLAGS) $(CommonFormWindows_FLAGS) $(CommonFormWindows_LIBS:%=/r:%) $(CommonFormWindows_LIBPATH:%=/lib:%) $(CommonFormWindows_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ CommonFormWindowsTests_LIBPATH := $(subst /,$(SEP), $(CommonFormWindowsTests_LIB
 # update VPATH
 VPATH := $(VPATH) $(CommonFormWindowsTests_LIBPATH) $(CommonFormWindowsTests_INCLUDES)
 
-CommonFormWindowsTests.dll: $(CommonFormWindowsTests_SOURCES) $(CommonFormWindowsTests_LIBS) ../config.mk
+CommonFormWindowsTests.dll: $(CommonFormWindowsTests_SOURCES) $(CommonFormWindowsTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CommonFormWindowsTests.Doc.xml $(CSCFLAGS) $(CommonFormWindowsTests_FLAGS) $(CommonFormWindowsTests_LIBS:%=/r:%) $(CommonFormWindowsTests_LIBPATH:%=/lib:%) $(CommonFormWindowsTests_SOURCES)
 

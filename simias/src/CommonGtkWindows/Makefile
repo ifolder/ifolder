@@ -4,7 +4,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # CommonGtkWin variables
@@ -81,8 +81,8 @@ $(STAGE_FILES):	$(TARGETS)
 # update VPATH
 VPATH := $(VPATH) $(CommonGtkWin_LIBPATH) $(CommonGtkWin_INCLUDES) $(ComGtkWinTests_LIBPATH) $(ComGtkWinTests_INCLUDES)
 
-CommonGtkWindows.dll: $(CommonGtkWin_SOURCES) $(CommonGtkWin_RESOURCE) $(CommongtkWin_LIBS) ../config.mk
+CommonGtkWindows.dll: $(CommonGtkWin_SOURCES) $(CommonGtkWin_RESOURCE) $(CommongtkWin_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CommonGtkWin.xml $(CSCFLAGS) $(CommonGtkWin_FLAGS) $(CommonGtkWin_LIBS:%=/r:%) $(CommonGtkWin_LIBPATH:%=/lib:%) $(CommonGtkWin_SOURCES)
 
-CommonGtkWindowsTests.exe: $(ComGtkWinTests_SOURCES) $(ComGtkWinTests_RESOURCE) $(ComGtkWinTests_LIBS) ../config.mk
+CommonGtkWindowsTests.exe: $(ComGtkWinTests_SOURCES) $(ComGtkWinTests_RESOURCE) $(ComGtkWinTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:ComGtkWinTests.xml $(CSCFLAGS) $(ComGtkWinTests_FLAGS) $(ComGtkWinTests_LIBS:%=/r:%) $(ComGtkWinTests_LIBPATH:%=/lib:%) $(ComGtkWinTests_SOURCES)

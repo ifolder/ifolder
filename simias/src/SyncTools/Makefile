@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # SyncPing variables
@@ -86,6 +86,6 @@ SyncPing_LIBPATH := $(subst /,$(SEP), $(SyncPing_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncPing_LIBPATH) $(SyncPing_INCLUDES)
 
-SyncPing.exe: $(SyncPing_SOURCES) $(SyncPing_LIBS) ../config.mk
+SyncPing.exe: $(SyncPing_SOURCES) $(SyncPing_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncPing.Doc.xml $(CSCFLAGS) $(SyncPing_FLAGS) $(SyncPing_LIBS:%=/r:%) $(SyncPing_LIBPATH:%=/lib:%) $(SyncPing_SOURCES)
 

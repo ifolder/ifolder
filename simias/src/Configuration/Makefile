@@ -1,42 +1,40 @@
 #=============================================================================
-# Module:	Configuration Makefile
+# Module:	sln2mk Generated Makefile
 #
+# Source:	Configuration.sln
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
+
+#=============================================================================
+# ConfTests variables
+#=============================================================================
+ConfTests_SOURCES = ConfTests/AssemblyInfo.cs ConfTests/ConfTests.cs
+ConfTests_INCLUDES = 
+ConfTests_FLAGS = /t:library
+ConfTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.framework.dll nunit.extensions.dll Configuration.dll
+ConfTests_LIBPATH = ConfTests ConfTests/../../../tools/NUnit/bin ConfTests/../../../tools/NUnit/bin ConfTests/..
+ConfTests_LDFLAGS = 
 
 #=============================================================================
 # Configuration variables
 #=============================================================================
-Configuration_SOURCES = Configuration.cs
+Configuration_SOURCES = AssemblyInfo.cs Configuration.cs
 Configuration_INCLUDES = 
-Configuration_RESOURCES =
 Configuration_FLAGS = /t:library
-Configuration_LIBS = System.dll $(SYSTEM_XML)
-Configuration_LIBPATH = /opt/gnome2/lib /usr/lib
+Configuration_LIBS = System.dll System.Data.dll $(SYSTEM_XML)
+Configuration_LIBPATH = 
 Configuration_LDFLAGS = 
-
-#=============================================================================
-# ConfigurationTests variables
-#=============================================================================
-ConfTests_SOURCES = ConfTests/ConfTests.cs
-ConfTests_INCLUDES = 
-ConfTests_FLAGS = /t:exe
-ConfTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Configuration.dll
-ConfTests_LIBPATH = ConfTests ../../tools/NUnit/bin
-ConfTests_LDFLAGS = 
 
 #=============================================================================
 # globals
 #=============================================================================
 
-TARGETS = Configuration.dll ConfTests.exe
-CLEAN_FILES = default.conf Configuration.xml ConfTests.xml
-NUNIT_TESTS = ConfTests.exe
-# for now we are including libegg.so and egg-sharp.dll until this gets
-# distributed with gtk-sharp
-STAGE_FILES = $(TARGETS)
+TARGETS = ConfTests.dll Configuration.dll 
+CLEAN_FILES = Check.xml ConfTests.pdb ConfTests.xml Check.xml Configuration.pdb Configuration.xml  Configuration.xml Configuration.Doc.xml
+NUNIT_TESTS = ConfTests.dll 
+STAGE_FILES = $(TARGETS) ConfTests.Doc.xml Configuration.Doc.xml ConfTests.pdb Configuration.pdb 
 STAGE_FILES := $(addprefix $(STAGE_DIR)$(SEP), $(STAGE_FILES))
 
 #=============================================================================
@@ -51,42 +49,66 @@ endif
 #=============================================================================
 
 # fix path seperator
-CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
 STAGE_FILES := $(subst /,$(SEP),$(STAGE_FILES))
+EXTRA_STAGE_FILES := $(subst /,$(SEP),$(EXTRA_STAGE_FILES))
+CLEAN_FILES := $(subst /,$(SEP),$(CLEAN_FILES))
+
+# build clean file list up
+CLEAN_FILES := $(sort $(CLEAN_FILES) $(TARGETS))
+CLEAN_TARGETS := $(addprefix clean., $(CLEAN_FILES))
+
+.PHONY: $(CLEAN_TARGETS) $(EXTRA_STAGE_FILES)
 
 # all
-all: $(TARGETS) $(STAGE_FILES)
+all: $(TARGETS) $(STAGE_FILES) $(EXTRA_STAGE_FILES)
 
 # clean
-clean:
-	$(RM) $(TARGETS) $(CLEAN_FILES) $(STAGE_FILES)
+clean: $(CLEAN_TARGETS)
+
+$(CLEAN_TARGETS): 
+	$(call RM_IF_EXISTS,$(subst clean.,,$@))
 
 # test
 test:
-	$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.xml $(NUNIT_TESTS)
+	$(NUNIT) $(NUNIT_FLAGS) /xml:Configuration.Test.xml $(NUNIT_TESTS)
 
 # stage files
 $(STAGE_FILES): $(TARGETS)
-	$(CP) $(subst $(STAGE_DIR)$(SEP),,$@) $(STAGE_DIR)
+	$(call CP_IF_EXISTS,$(subst $(STAGE_DIR)$(SEP),,$@),$(STAGE_DIR))
+
+# extra stage files
+$(EXTRA_STAGE_FILES):
+	$(call CP_IF_EXISTS,$@,$(STAGE_DIR))
 
 #=============================================================================
-# TrayAppGtk targets
+# ConfTests targets
+#=============================================================================
+
+# fix path seperator
+ConfTests_SOURCES := $(subst /,$(SEP), $(ConfTests_SOURCES))
+ConfTests_INCLUDES := $(subst /,$(SEP), $(ConfTests_INCLUDES))
+ConfTests_DEF := $(subst /,$(SEP), $(ConfTests_DEF))
+ConfTests_LIBPATH := $(subst /,$(SEP), $(ConfTests_LIBPATH))
+
+# update VPATH
+VPATH := $(VPATH) $(ConfTests_LIBPATH) $(ConfTests_INCLUDES)
+
+ConfTests.dll: $(ConfTests_SOURCES) $(ConfTests_LIBS) ../../config.mk
+	$(CSC) /out:$@ /doc:ConfTests.Doc.xml $(CSCFLAGS) $(ConfTests_FLAGS) $(ConfTests_LIBS:%=/r:%) $(ConfTests_LIBPATH:%=/lib:%) $(ConfTests_SOURCES)
+
+#=============================================================================
+# Configuration targets
 #=============================================================================
 
 # fix path seperator
 Configuration_SOURCES := $(subst /,$(SEP), $(Configuration_SOURCES))
 Configuration_INCLUDES := $(subst /,$(SEP), $(Configuration_INCLUDES))
+Configuration_DEF := $(subst /,$(SEP), $(Configuration_DEF))
 Configuration_LIBPATH := $(subst /,$(SEP), $(Configuration_LIBPATH))
 
-ConfTests_SOURCES := $(subst /,$(SEP), $(ConfTests_SOURCES))
-ConfTests_INCLUDES := $(subst /,$(SEP), $(ConfTests_INCLUDES))
-ConfTests_LIBPATH := $(subst /,$(SEP), $(ConfTests_LIBPATH))
 # update VPATH
+VPATH := $(VPATH) $(Configuration_LIBPATH) $(Configuration_INCLUDES)
 
-VPATH := $(VPATH) $(Configuration_LIBPATH) $(Configuration_INCLUDES) $(ConfTests_LIBPATH) $(ConfTests_INCLUDES)
+Configuration.dll: $(Configuration_SOURCES) $(Configuration_LIBS) ../../config.mk
+	$(CSC) /out:$@ /doc:Configuration.Doc.xml $(CSCFLAGS) $(Configuration_FLAGS) $(Configuration_LIBS:%=/r:%) $(Configuration_LIBPATH:%=/lib:%) $(Configuration_SOURCES)
 
-Configuration.dll: $(Configuration_SOURCES) $(Configuration_RESOURCE) $(Configuration_LIBS) ../config.mk
-	$(CSC) /out:$@ /doc:Configuration.xml $(CSCFLAGS) $(Configuration_FLAGS) $(Configuration_LIBS:%=/r:%) $(Configuration_LIBPATH:%=/lib:%) $(Configuration_SOURCES)
-
-ConfTests.exe: $(ConfTests_SOURCES) $(ConfTests_RESOURCE) $(ConfTests_LIBS) ../config.mk
-	$(CSC) /out:$@ /doc:ConfTests.xml $(CSCFLAGS) $(ConfTests_FLAGS) $(ConfTests_LIBS:%=/r:%) $(ConfTests_LIBPATH:%=/lib:%) $(ConfTests_SOURCES)

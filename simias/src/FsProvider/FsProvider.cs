@@ -103,6 +103,7 @@ namespace Simias.Storage.Provider.Fs
 	public class FsProvider : MarshalByRefObject, IProvider
 	{
 		#region Variables
+		Configuration			conf;
 		bool					AlreadyDisposed;
 		FsDb					FsDb;
 		string					DbPath;
@@ -116,9 +117,10 @@ namespace Simias.Storage.Provider.Fs
 		/// 
 		/// </summary>
 		/// <param name="path">The path where the store exists or will be created.</param>
-		public FsProvider(string path)
+		public FsProvider(Configuration conf)
 		{
-			storePath = System.IO.Path.GetFullPath(path);
+			this.conf = conf;
+			storePath = System.IO.Path.GetFullPath(conf.Path);
 			DbPath = Path.Combine(storePath, DbName);
 			FsDb = FsDb.GetFsDb(DbPath);
 		}
@@ -318,7 +320,7 @@ namespace Simias.Storage.Provider.Fs
 				{
 					Directory.CreateDirectory(DbPath);
 					// Set the version.
-					Provider.Version = version;
+					conf.Version = version;
  				}
 			}
 
@@ -351,7 +353,7 @@ namespace Simias.Storage.Provider.Fs
 					throw(new CSPException("Could not open CollectionStore", 0));
 				}
 				// Make sure the version is correct.
-				if (Provider.Version != version)
+				if (conf.Version != version)
 				{
 					throw new CSPException("Wrong DataBase Version", Provider.Error.Version);
 				}

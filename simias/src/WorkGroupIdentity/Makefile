@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # WorkGroupIdentityTests variables
@@ -96,7 +96,7 @@ WorkGroupIdentityTests_LIBPATH := $(subst /,$(SEP), $(WorkGroupIdentityTests_LIB
 # update VPATH
 VPATH := $(VPATH) $(WorkGroupIdentityTests_LIBPATH) $(WorkGroupIdentityTests_INCLUDES)
 
-WorkGroupIdentityTests.dll: $(WorkGroupIdentityTests_SOURCES) $(WorkGroupIdentityTests_LIBS) ../config.mk
+WorkGroupIdentityTests.dll: $(WorkGroupIdentityTests_SOURCES) $(WorkGroupIdentityTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:WorkGroupIdentityTests.Doc.xml $(CSCFLAGS) $(WorkGroupIdentityTests_FLAGS) $(WorkGroupIdentityTests_LIBS:%=/r:%) $(WorkGroupIdentityTests_LIBPATH:%=/lib:%) $(WorkGroupIdentityTests_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ WorkGroupIdentity_LIBPATH := $(subst /,$(SEP), $(WorkGroupIdentity_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(WorkGroupIdentity_LIBPATH) $(WorkGroupIdentity_INCLUDES)
 
-WorkGroupIdentity.dll: $(WorkGroupIdentity_SOURCES) $(WorkGroupIdentity_LIBS) ../config.mk
+WorkGroupIdentity.dll: $(WorkGroupIdentity_SOURCES) $(WorkGroupIdentity_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:WorkGroupIdentity.Doc.xml $(CSCFLAGS) $(WorkGroupIdentity_FLAGS) $(WorkGroupIdentity_LIBS:%=/r:%) $(WorkGroupIdentity_LIBPATH:%=/lib:%) $(WorkGroupIdentity_SOURCES)
 
