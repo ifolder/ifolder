@@ -363,12 +363,12 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu iFolderMenu = new Menu();
 
-			CreateMenuItem = new ImageMenuItem (Util.GS("_Create"));
+			CreateMenuItem = new ImageMenuItem (Util.GS("C_reate"));
 			CreateMenuItem.Image = new Image(
 					new Gdk.Pixbuf(Util.ImagesPath("ifolder.png")));
 			iFolderMenu.Append(CreateMenuItem);
 			CreateMenuItem.AddAccelerator("activate", agrp,
-				new AccelKey(Gdk.Key.C, Gdk.ModifierType.ControlMask,
+				new AccelKey(Gdk.Key.N, Gdk.ModifierType.ControlMask,
 								AccelFlags.Visible));
 			CreateMenuItem.Activated += new EventHandler(OnCreateiFolder);
 
