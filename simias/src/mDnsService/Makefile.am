@@ -1,22 +1,22 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-mDnsService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/mDnsService.cs 
-Service_CSFILES_CSC := $(subst /,$(SEP),$(mDnsService_CSFILES))
+Service_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/mDnsService.cs 
+Service_CSFILES := $(subst /,$(SEP),$(Service_CSFILES1))
 Service_INCLUDES = 
 Service_RESOURCES =
 Service_FLAGS = $(CSC_EXEFLAG)
 Service_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Simias.dll mDnsResponder.dll
 Service_LIBPATH = ../Simias.dll $(MDNSRESPONDER_DIR)
 
-EXTRA_DIST = $(mDnsService_CSFILES)
+EXTRA_DIST = $(Service_CSFILES)
 
 CUR_DIR := $(shell pwd)
 
 all: Simias.Service.mDnsService.exe
 
 Simias.Service.mDnsService.exe: $(Service_CSFILES) $(Service_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Service_FLAGS) $(Service_LIBS:%=/r:%) $(Service_LIBPATH:%=/lib:%) $(Service_CSFILES_CSC) /doc:Simias.Service.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Service_FLAGS) $(Service_LIBS:%=/r:%) $(Service_LIBPATH:%=/lib:%) $(Service_CSFILES) /doc:Simias.Service.mDnsService.doc.xml
 	
 if DEBUG
 if WINDOWS
@@ -30,12 +30,6 @@ install-exec-local: Simias.Service.mDnsService.exe
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Simias.Service.mDnsService.exe $(DEBUG_FILES)
-    
-installcheck-local: install $(NUNIT_TESTS)
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(libdir)
-	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ServiceTest.test.xml $(NUNIT_TESTS)
-	
 	
 CLEAN_FILES = Simias.Service.mDnsService.exe 
 

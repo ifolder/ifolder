@@ -121,8 +121,6 @@ AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 
-#COMMON_LIBS="/r:AddressBook.dll /r:Agent.dll /r:CollectionEvents.dll /r:CollectionStore.dll /r:Common.dll /r:CommonGtkWindows.dll /r:Invitation.dll /r:Location.dll /r:RemotingSnifferLibrary.dll /r:Simias.Service.dll /r:Smtp.dll /r:SmtpInvitationProvider.dll /r:SqliteProvider.dll /r:SqliteWrapper.dll /r:Storage.dll /r:StoreProvider.dll /r:SyncCommon.dll /r:Sync.dll /r:SyncLogicLite.dll /r:SyncManager.dll"
-
 COMMON_LIBS="/r:Simias.dll"
 
 COMMON_CLEAN_FILES='*.dbg *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
@@ -341,6 +339,7 @@ simias.pc
 src/Makefile
 src/Simias.dll/Makefile
 src/mDnsService/Makefile
+src/SimiasTests.dll/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile

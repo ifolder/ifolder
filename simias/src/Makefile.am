@@ -1,6 +1,6 @@
-SUBDIRS = Simias.dll mDnsService
+SUBDIRS = Simias.dll mDnsService SimiasTests.dll
 
-DIST_SUBDIRS = Simias.dll mDnsService
+DIST_SUBDIRS = Simias.dll mDnsService SimiasTests.dll
 
 installcheck-summary:
 	rm -f $(REPORT_DIR)/*.test.xml

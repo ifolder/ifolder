@@ -1,23 +1,14 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-SIMIAS_SOURCES := $(shell cat Simias.dll.sources)
-
-SIMIAS_TMP_CSFILES = $(SIMIAS_SOURCES:%=$(srcdir)/%)
-
-SIMIAS_CSFILES := $(subst /,$(SEP),$(SIMIAS_TMP_CSFILES))
+SIMIAS_CSFILES1 := $(shell cat Simias.dll.sources)
+SIMIAS_CSFILES2 := $(SIMIAS_CSFILES1:%=$(srcdir)/%)
+SIMIAS_CSFILES := $(subst /,$(SEP),$(SIMIAS_CSFILES2))
 SIMIAS_INCLUDES =
 SIMIAS_RESOURCES =
-#SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe -warn:0
 SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
-
 SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
-
-
-SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(srcdir)/../../external/SecureChannelSinks $(MDNSRESPONDER_DIR)
-
-
-NUNIT_TESTS := 
+SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
 EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES)
 
@@ -41,12 +32,6 @@ install-exec-local: Simias.dll
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Simias.dll Novell.Security.SecureSink*.dll log4net.dll mDnsResponder* $(SQLITELIB) $(NUNIT_TESTS); rm -rf .cstore $(DEBUG_FILES) $(DEBUG_CHECK_FILES)
 
-
-installcheck-local: install $(NUNIT_TESTS)
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DEBUG_CHECK_FILES) $(DESTDIR)$(libdir)
-	cd $(DESTDIR)$(libdir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionStoreTests.test.xml $(NUNIT_TESTS)
-	
 CLEAN_FILES = Simias.dll $(NUNIT_TESTS) Simias.doc.xml
 
 clean-local:
