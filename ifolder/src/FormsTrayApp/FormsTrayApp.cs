@@ -57,7 +57,8 @@ namespace Novell.iFolder.FormsTrayApp
         private const int numberOfIcons = 2;//10;
 		private Icon[] uploadIcons = new Icon[numberOfIcons];
 
-		private SyncManagerStates syncState = SyncManagerStates.Idle;
+//		private SyncManagerStates syncState = SyncManagerStates.Idle;
+		private bool animateIcon = false;
 
 		/// <summary>
 		/// Event used to animate the notify icon.
@@ -309,13 +310,13 @@ namespace Novell.iFolder.FormsTrayApp
 		private void conflictResolver_ConflictsResolved(object sender, EventArgs e)
 		{
 			// TODO: we may need to check the state of messages before we stop animating the icon.
-			this.syncState = SyncManagerStates.Idle;
+			this.animateIcon = false;
 		}
 
 		private void messages_MessagesServiced(object sender, EventArgs e)
 		{
 			// TODO: we may need to check that no conflicts exist before we stop animating the icon.
-			this.syncState = SyncManagerStates.Idle;
+			this.animateIcon = false;
 		}
 
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
@@ -447,15 +448,15 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
-		private void syncManager_ChangedState(SyncManagerStates state)
-		{
-			syncState = state;
+//		private void syncManager_ChangedState(SyncManagerStates state)
+//		{
+//			syncState = state;
 
-			if (state == SyncManagerStates.Active)
-			{
-				synkEvent.Set();
-			}
-		}
+//			if (state == SyncManagerStates.Active)
+//			{
+//				synkEvent.Set();
+//			}
+//		}
 
 		private void serviceManager_Shutdown(ShutdownEventArgs args)
 		{
@@ -477,7 +478,7 @@ namespace Novell.iFolder.FormsTrayApp
 						if ((sub.SubscriptionState == SubscriptionStates.Received) &&
 							(!poBox.Domain.Equals(Domain.WorkGroupDomainID)))
 						{
-							syncState = SyncManagerStates.Active;
+							animateIcon = true;
 
 							// TODO: check this...
 							this.Text = "A message needs your attention";
@@ -522,7 +523,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 					if (sub.SubscriptionState == SubscriptionStates.Pending)
 					{
-						syncState = SyncManagerStates.Active;
+						animateIcon = true;
 
 						// TODO: this doesn't work.
 						this.Text = "A message needs your attention";
@@ -545,7 +546,7 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					if (c.HasCollisions() && c.IsType(c, typeof(iFolder).Name))
 					{
-						syncState = SyncManagerStates.Active;
+						animateIcon = true;
 
 						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 						balloonTip.ShowBalloon(
@@ -757,18 +758,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void AnimateIcon(int index)
 		{
-			Console.WriteLine("In AnimateIcon: state = " + syncState.ToString());
-			switch (syncState)
+			if (animateIcon)
 			{
-				case SyncManagerStates.Active:
-					notifyIcon1.Icon = uploadIcons[index];
-					break;
-				default:
-					notifyIcon1.Icon = trayIcon;
-					break;
+				notifyIcon1.Icon = uploadIcons[index];
 			}
-
-			Console.WriteLine("Leaving AnimateWorker");
+			else
+			{
+				notifyIcon1.Icon = trayIcon;
+			}
 		}
 		#endregion
 
@@ -781,9 +778,8 @@ namespace Novell.iFolder.FormsTrayApp
 			int i = 0;
 			while (true)
 			{
-				Console.WriteLine("In AnimateWorker: state = " + syncState.ToString());
 				IAsyncResult r = BeginInvoke(animateDelegate, new object[] {i});
-				if (syncState == SyncManagerStates.Active)
+				if (animateIcon)
 				{
 					Thread.Sleep(1000);
 				}
