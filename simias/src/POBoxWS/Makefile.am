@@ -25,11 +25,11 @@ endif
 install-exec-local: Simias.POBox.Web.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) web.config Global.asax POBoxService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
+	$(INSTALL_PROGRAM) POBoxService.asmx $(DEBUG_FILES) $(DESTDIR)$(webdir)
 	$(INSTALL_PROGRAM) Simias.POBox.Web.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	
 uninstall-local:
-	cd $(DESTDIR)$(webdir); rm -f web.config Global.asax POBoxService.asmx $(DEBUG_FILES)
+	cd $(DESTDIR)$(webdir); rm -f  POBoxService.asmx $(DEBUG_FILES)
 	cd $(DESTDIR)$(webbindir); rm -f Simias.POBox.Web.dll $(DEBUG_FILES)
 
 installcheck-local: install
