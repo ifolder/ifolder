@@ -476,6 +476,13 @@ case $IFOLDER_OS in
         AC_SUBST(ATK_CFLAGS)
         AC_SUBST(ATK_LIBS)
     ;;
+    darwin)
+        PKG_CHECK_MODULES(SIMIAS_CLIENT_C, simias-client-c >= 1.0)
+        SIMIAS_CLIENT_C_INCLUDES=`pkg-config --variable=includedir simias-client-c`
+        SIMIAS_CLIENT_C_LIBS=`pkg-config --variable=libdir simias-client-c`
+        AC_SUBST(SIMIAS_CLIENT_C_INCLUDES)
+        AC_SUBST(SIMIAS_CLIENT_C_LIBS)
+    ;;
 esac
 
 #
