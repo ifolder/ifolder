@@ -619,7 +619,7 @@ namespace Simias.POBox
 			sc.Role = SyncCollectionRoles.Slave;
 			
 			// member
-			Member member = new Member(this.ToName, this.ToIdentity, this.SubscriptionRights);
+			Member member = new Member(this.ToName, this.ToIdentity, Access.Rights.ReadWrite);
 
 			// impersonate the member
 			sc.Impersonate(member);
@@ -640,6 +640,25 @@ namespace Simias.POBox
 
 				sc.Commit(dn);
 			}
+		}
+
+
+		/// <summary>
+		/// Accept the subscription on the master side
+		/// </summary>
+		public void Accept(Store store, Access.Rights rights)
+		{
+			Collection c = store.GetCollectionByID(this.SubscriptionCollectionID);
+
+			// check collection
+			if (c == null)
+				throw new ApplicationException("Collection does not exist.");
+
+			// member
+			Member member = new Member(this.FromName, this.FromIdentity, rights);
+
+			// commit
+			c.Commit(member);
 		}
 
 		#endregion

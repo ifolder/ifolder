@@ -71,25 +71,34 @@ namespace Simias.POBox
 			if (box == null)
 				throw new ApplicationException("PO Box not found.");
 
-			// check that the message has already not been posted
-			if (box.GetNodeByID(message.ID) != null)
-				throw new ApplicationException("Subscription already exists.");
-
 			// subscription
-			if (message.GetType().Name == typeof(Subscription).Name)
+			if (box.IsType(message, typeof(Subscription).Name))
 			{
 				// temporary, in memory only, subscription object
 				Subscription temp = new Subscription(message);
-
+				
 				// does the collection exist
 				if (store.GetCollectionByID(temp.SubscriptionCollectionID) == null)
 					throw new ApplicationException("The subscription collection does not exist.");
 
+				// new subscription
+				Subscription subscription = null;
+
+				Node node = box.GetNodeByID(message.ID);
+
+				if (node == null)
+				{
+					subscription = new Subscription(temp.Name, temp.ID);
+				}
+				else
+				{
+					subscription = new Subscription(node);
+				}
+
 				// create a new subscription object with some of the information from temp
-				Subscription subscription = new Subscription(temp.Name, temp.ID);
 				subscription.SubscriptionState =  SubscriptionStates.Pending;
 				subscription.FromPublicKey = temp.FromPublicKey;
-				subscription.FromName = temp.FromAddress;
+				subscription.FromName = temp.FromName;
 				subscription.FromAddress = temp.FromAddress;
 				subscription.FromIdentity = temp.FromIdentity;
 				subscription.SubscriptionCollectionID = temp.SubscriptionCollectionID;
@@ -102,7 +111,7 @@ namespace Simias.POBox
 			}
 			else
 			{
-				// ignore for now
+				// ignore for now (we only have subscriptions)
 			}
 
 			return result;
