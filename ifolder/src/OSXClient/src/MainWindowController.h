@@ -47,6 +47,7 @@
 	IBOutlet SyncLogWindowController		*syncLogController;
 	IBOutlet CreateiFolderSheetController	*createSheetController;
 	IBOutlet SetupiFolderSheetController	*setupiFolderController;
+	IBOutlet NSTableView					*iFolderTable;
 
 
 	NSToolbar				*toolbar;
@@ -70,6 +71,8 @@
 - (IBAction)openiFolder:(id)sender;
 - (IBAction)showProperties:(id)sender;
 - (IBAction)shareiFolder:(id)sender;
+
+- (void)doubleClickedTable:(id)sender;
 
 
 - (void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;
