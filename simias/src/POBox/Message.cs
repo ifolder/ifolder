@@ -416,6 +416,7 @@ namespace Simias.POBox
 		public Message(string messageName, string messageType, string fromIdentity) :
 			base (messageName)
 		{
+			MessageID = Guid.NewGuid().ToString();
 			State = MessageState.New;
 			MessageType = messageType;
 			FromIdentity = fromIdentity;
