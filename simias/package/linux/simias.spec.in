@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-%define prefix /opt/ifolder
+%define prefix /usr
 
 Summary      : Simias
 Name         : @PACKAGE@
@@ -73,51 +73,51 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 #=============================================================================
 %Post
-INSTANCES_AFTER_INSTALL=$1
-if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
+#INSTANCES_AFTER_INSTALL=$1
+#if [ "$INSTANCES_AFTER_INSTALL" = "1" ]; then
     #
     # If path is not already in ld.so.conf, append it
     #
-    if ! grep -q "^%{prefix}/lib$" /etc/ld.so.conf ; then
-        echo "%{prefix}/lib" >> /etc/ld.so.conf
-        /sbin/ldconfig
-    fi
+#    if ! grep -q "^%{prefix}/lib$" /etc/ld.so.conf ; then
+#        echo "%{prefix}/lib" >> /etc/ld.so.conf
+#        /sbin/ldconfig
+#    fi
 
     #
     # Create simias.sh in /etc/profile.d to set PKG_CONFIG_PATH
     #
-    cat<<HERE > /etc/profile.d/simias.sh
-if test -z "\$PKG_CONFIG_PATH" ; then
-    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
-else
-    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
-fi
-HERE
+#    cat<<HERE > /etc/profile.d/simias.sh
+#if test -z "\$PKG_CONFIG_PATH" ; then
+#    export PKG_CONFIG_PATH="%{prefix}/lib/pkgconfig"
+#else
+#    export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
+#fi
+#HERE
     #
     # Install assemblies into the gac
     #
-    %{prefix}/bin/install-simias-to-gac -i
-fi
+#    %{prefix}/bin/install-simias-to-gac -i
+#fi
 
 #=============================================================================
 %Preun
-INSTANCES_AFTER_UNINSTALL=$1
-if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+#INSTANCES_AFTER_UNINSTALL=$1
+#if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
     # Remove assemblies from the gac
     #
-    %{prefix}/bin/install-simias-to-gac -u
-fi
+#    %{prefix}/bin/install-simias-to-gac -u
+#fi
 
 #=============================================================================
 %Postun
-INSTANCES_AFTER_UNINSTALL=$1
-if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
+#INSTANCES_AFTER_UNINSTALL=$1
+#if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     #
     # Remove simias.sh from /etc/profile.d
     #
-    %{__rm} -f /etc/profile.d/simias.sh
-fi
+#    %{__rm} -f /etc/profile.d/simias.sh
+#fi
 
 #=============================================================================
 %Files
