@@ -15,20 +15,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_117FB4A8855C413DA6DE3C5679FA8AF9"
-        "OwnerKey" = "8:_B43CA3856F88437DBF5984A27A6FA1A7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_80241273536440DBAD3871CEA163C731"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B43CA3856F88437DBF5984A27A6FA1A7"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BE259A4904B247F68BD9D14159D0AD1A"
+        "OwnerKey" = "8:_B43CA3856F88437DBF5984A27A6FA1A7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -148,22 +142,11 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_117FB4A8855C413DA6DE3C5679FA8AF9"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_BE259A4904B247F68BD9D14159D0AD1A"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "SourcePath" = "8:dotnetfxredist_x86.msm"
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_80241273536440DBAD3871CEA163C731"
-            {
-            "UseDynamicProperties" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:..\\..\\..\\..\\addressbook\\package\\windows\\addressbook.msm"
             "LanguageId" = "3:1033"
             "Exclude" = "11:FALSE"
             "Folder" = "8:"
