@@ -22,7 +22,19 @@ CATALOGS := $(subst .po,.mo,$(POFILES))
 
 EXTRA_DIST = $(POFILES)
 
-
+update-po: $(POFILES)
+	cd ../../../; \
+	pofiles='$(POFILES)'; \
+	for pofile in $$pofiles; do \
+		pofile=`basename $$pofile`; \
+		echo Updating po file: $$pofile; \
+		xgettext --output-dir=src/GtkTrayApp/po/ \
+				--files-from=src/GtkTrayApp/po/POTFILES \
+				--language=C# \
+				--join-existing \
+				--output=$$pofile \
+				--keyword="Util.GS"; \
+	done
 
 all: $(CATALOGS)
 
