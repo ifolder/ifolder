@@ -384,6 +384,7 @@ namespace Simias.Domain
 
 				// Set the new default domain.
 				ldb.DefaultDomain = defaultDomain;
+				ldb.Commit();
 			}
 
 			// Get a list of all the collections that belong to this domain and delete them.
