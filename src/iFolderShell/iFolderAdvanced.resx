@@ -4144,100 +4144,103 @@
   <data name="&gt;&gt;$this.Type">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-	<data name="diskQuotaReadError">
-		<value>An error was encountered while reading disk space restrictions.</value>
-	</data>
-	<data name="memberReadError">
-		<value>An error was encountered while reading iFolder members.</value>
-	</data>
-	<data name="Admin">
-		<value>Full Control</value>
-	</data>
-	<data name="ReadWrite">
-		<value>Read/Write</value>
-	</data>
-	<data name="ReadOnly">
-		<value>Read Only</value>
-	</data>
-	<data name="Deny">
-		<value>Deny</value>
-	</data>
-	<data name="unknown">
-		<value>Unknown</value>
-	</data>
-	<data name="Invited">
-		<value>Invited</value>
-	</data>
-	<data name="WaitSync">
-		<value>Waiting to sync</value>
-	</data>
-	<data name="AccessRequest">
-		<value>Access requested</value>
-	</data>
-	<data name="Declined">
-		<value>Declined</value>
-	</data>
-	<data name="Inviting">
-		<value>Ready to invite</value>
-	</data>
-	<data name="owner">
-		<value>Owner</value>
-	</data>
-	<data name="changeOwnerError">
-		<value>An error was encountered while attempting to change the owner of this iFolder.</value>
-	</data>
-	<data name="memberCommitError">
-		<value>An error was encountered while trying to commit changes for {0}.</value>
-	</data>
-	<data name="removeError">
-		<value>Remove failed with the following exception:</value>
-	</data>
-	<data name="policyCommitError">
-		<value>An error was encountered while committing policy changes.</value>
-	</data>
-	<data name="iFolderReadError">
-		<value>An error was encountered reading iFolder data.</value>
-	</data>
-	<data name="saveChanges">
-		<value>Do you want to save the changes you have made to this iFolder?</value>
-	</data>
-	<data name="saveChangesTitle">
-		<value>Save Changes</value>
-	</data>
-	<data name="iFolderProperties">
-		<value>iFolder Properties for {0}</value>
-	</data>
-	<data name="iFolderOpenError">
-		<value>Unable to open iFolder {0}.</value>
-	</data>
-	<data name="userProperties">
-		<value>Properties for {0}</value>
-	</data>
-	<data name="helpFileError">
-		<value>An error was encountered while opening the help file.</value>
-	</data>
-	<data name="conflictDialogError">
-		<value>An error was encountered while attempting to display the Conflict Resolver dialog.</value>
-	</data>
-	<data name="propertiesDialogError">
-		<value>An error was encountered while attempting to display the iFolder properties dialog.</value>
-	</data>
-	<data name="syncError">
-		<value>An error was encountered while sending the sync command.</value>
-	</data>
-	<data name="slaveSyncInterval">
-		<value>This iFolder will sync with the host every {0} {1}.</value>
-	</data>
-	<data name="seconds">
-		<value>second(s)</value>
-	</data>
-	<data name="minutes">
-		<value>minute(s)</value>
-	</data>
-	<data name="hours">
-		<value>hour(s)</value>
-	</data>
-	<data name="days">
-		<value>day(s)</value>
-	</data>
+  <data name="diskQuotaReadError">
+    <value>An error was encountered while reading disk space restrictions.</value>
+  </data>
+  <data name="memberReadError">
+    <value>An error was encountered while reading iFolder members.</value>
+  </data>
+  <data name="Admin">
+    <value>Full Control</value>
+  </data>
+  <data name="ReadWrite">
+    <value>Read/Write</value>
+  </data>
+  <data name="ReadOnly">
+    <value>Read Only</value>
+  </data>
+  <data name="Deny">
+    <value>Deny</value>
+  </data>
+  <data name="unknown">
+    <value>Unknown</value>
+  </data>
+  <data name="Invited">
+    <value>Invited</value>
+  </data>
+  <data name="WaitSync">
+    <value>Waiting to sync</value>
+  </data>
+  <data name="AccessRequest">
+    <value>Access requested</value>
+  </data>
+  <data name="Declined">
+    <value>Declined</value>
+  </data>
+  <data name="Inviting">
+    <value>Ready to invite</value>
+  </data>
+  <data name="owner">
+    <value>Owner</value>
+  </data>
+  <data name="user">
+    <value>iFolder User</value>
+  </data>
+  <data name="changeOwnerError">
+    <value>An error was encountered while attempting to change the owner of this iFolder.</value>
+  </data>
+  <data name="memberCommitError">
+    <value>An error was encountered while trying to commit changes for {0}.</value>
+  </data>
+  <data name="removeError">
+    <value>Remove failed with the following exception:</value>
+  </data>
+  <data name="policyCommitError">
+    <value>An error was encountered while committing policy changes.</value>
+  </data>
+  <data name="iFolderReadError">
+    <value>An error was encountered reading iFolder data.</value>
+  </data>
+  <data name="saveChanges">
+    <value>Do you want to save the changes you have made to this iFolder?</value>
+  </data>
+  <data name="saveChangesTitle">
+    <value>Save Changes</value>
+  </data>
+  <data name="iFolderProperties">
+    <value>iFolder Properties for {0}</value>
+  </data>
+  <data name="iFolderOpenError">
+    <value>Unable to open iFolder {0}.</value>
+  </data>
+  <data name="userProperties">
+    <value>Properties for {0}</value>
+  </data>
+  <data name="helpFileError">
+    <value>An error was encountered while opening the help file.</value>
+  </data>
+  <data name="conflictDialogError">
+    <value>An error was encountered while attempting to display the Conflict Resolver dialog.</value>
+  </data>
+  <data name="propertiesDialogError">
+    <value>An error was encountered while attempting to display the iFolder properties dialog.</value>
+  </data>
+  <data name="syncError">
+    <value>An error was encountered while sending the sync command.</value>
+  </data>
+  <data name="slaveSyncInterval">
+    <value>This iFolder will sync with the host every {0} {1}.</value>
+  </data>
+  <data name="seconds">
+    <value>second(s)</value>
+  </data>
+  <data name="minutes">
+    <value>minute(s)</value>
+  </data>
+  <data name="hours">
+    <value>hour(s)</value>
+  </data>
+  <data name="days">
+    <value>day(s)</value>
+  </data>
 </root>
