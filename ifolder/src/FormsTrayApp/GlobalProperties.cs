@@ -841,13 +841,13 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Adds the specified domain to the dropdown list.
 		/// </summary>
-		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
-		public void AddDomainToList(DomainInformation domainWeb)
+		/// <param name="domainInfo">The DomainInformation object to add to the list.</param>
+		public void AddDomainToList(DomainInformation domainInfo)
 		{
 			Domain domain = null;
 			foreach (Domain d in servers.Items)
 			{
-				if (d.ID.Equals(domainWeb.ID))
+				if (d.ID.Equals(domainInfo.ID))
 				{
 					// The domain is already in the list.
 					domain = d;
@@ -857,16 +857,16 @@ namespace Novell.FormsTrayApp
 			if (domain == null)
 			{
 				// The domain isn't in the list ... add it.
-				domain = new Domain(domainWeb);
+				domain = new Domain(domainInfo);
 				servers.Items.Add(domain);
 			}
 
 			// Reset the current default domain if the added domain is set to be the default.
-			if (domainWeb.IsDefault)
+			if (domainInfo.IsDefault)
 			{
 				if (defaultDomain != null)
 				{
-					defaultDomain.DomainWeb.IsDefault = false;
+					defaultDomain.DomainInfo.IsDefault = false;
 				}
 
 				// Keep track of the default domain.
@@ -877,15 +877,15 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Remove the specified domain from the dropdown list.
 		/// </summary>
-		/// <param name="domainWeb">The domainWeb object representing the domain to remove.</param>
-		public void RemoveDomainFromList(DomainInformation domainWeb, string defaultDomainID)
+		/// <param name="domainInfo">The DomainInformation object representing the domain to remove.</param>
+		public void RemoveDomainFromList(DomainInformation domainInfo, string defaultDomainID)
 		{
 			Domain domain = null;
 			Domain showAllDomain = null;
 			
 			foreach (Domain d in servers.Items)
 			{
-				if (d.ID.Equals(domainWeb.ID))
+				if (d.ID.Equals(domainInfo.ID))
 				{
 					domain = d;
 				}
@@ -898,7 +898,7 @@ namespace Novell.FormsTrayApp
 				// Reset the default domain.
 				if ((defaultDomainID != null) && d.ID.Equals(defaultDomainID))
 				{
-					d.DomainWeb.IsDefault = true;                    
+					d.DomainInfo.IsDefault = true;                    
 				}
 			}
 
@@ -940,7 +940,7 @@ namespace Novell.FormsTrayApp
 
 			foreach (Domain d in servers.Items)
 			{
-				if (!d.ShowAll && d.DomainWeb.MemberUserID.Equals(userID))
+				if (!d.ShowAll && d.DomainInfo.MemberUserID.Equals(userID))
 				{
 					result = true;
 					break;
@@ -961,7 +961,7 @@ namespace Novell.FormsTrayApp
 
 			foreach (Domain d in servers.Items)
 			{
-				if (!d.ShowAll && d.DomainWeb.POBoxID.Equals(poBoxID))
+				if (!d.ShowAll && d.DomainInfo.POBoxID.Equals(poBoxID))
 				{
 					result = true;
 					break;
@@ -994,22 +994,22 @@ namespace Novell.FormsTrayApp
 			return result;
 		}
 
-		public void UpdateDomain(DomainInformation domainWeb)
+		public void UpdateDomain(DomainInformation domainInfo)
 		{
 			foreach (Domain d in servers.Items)
 			{
-				if (d.ID.Equals(domainWeb.ID))
+				if (d.ID.Equals(domainInfo.ID))
 				{
-					d.DomainWeb = domainWeb;
+					d.DomainInfo = domainInfo;
 					break;
 				}
 			}
 
 			if ((iFolderView.SelectedItems.Count == 1) && 
 				!((iFolderWeb)iFolderView.SelectedItems[0].Tag).IsSubscription &&
-				((iFolderWeb)iFolderView.SelectedItems[0].Tag).DomainID.Equals(domainWeb.ID))
+				((iFolderWeb)iFolderView.SelectedItems[0].Tag).DomainID.Equals(domainInfo.ID))
 			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = domainWeb.Active;
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = domainInfo.Active;
 			}
 		}
 		#endregion
@@ -1630,7 +1630,7 @@ namespace Novell.FormsTrayApp
 			Domain selectedDomain = (Domain)servers.SelectedItem;
 			if (!selectedDomain.ShowAll)
 			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainWeb.Active;
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainInfo.Active;
 			}
 			else if (toolBarSync.Enabled)
 			{
@@ -1638,7 +1638,7 @@ namespace Novell.FormsTrayApp
 				{
 					if (d.ID.Equals(ifolderWeb.DomainID))
 					{
-						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainWeb.Active;
+						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainInfo.Active;
 						break;
 					}
 				}

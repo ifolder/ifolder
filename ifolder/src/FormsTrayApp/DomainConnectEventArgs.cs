@@ -30,22 +30,22 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class DomainConnectEventArgs : EventArgs
 	{
-		private DomainInformation domainWeb;
+		private DomainInformation domainInfo;
 
 		/// <summary>
 		/// Constructs a DomainConnectEventArgs object.
 		/// </summary>
-		public DomainConnectEventArgs(DomainInformation domainWeb)
+		public DomainConnectEventArgs(DomainInformation domainInfo)
 		{
-			this.domainWeb = domainWeb;
+			this.domainInfo = domainInfo;
 		}
 
 		/// <summary>
-		/// Gets the DomainWeb object.
+		/// Gets the domainInfo object.
 		/// </summary>
-		public DomainInformation DomainWeb
+		public DomainInformation DomainInfo
 		{
-			get { return domainWeb; }
+			get { return domainInfo; }
 		}
 	}
 }

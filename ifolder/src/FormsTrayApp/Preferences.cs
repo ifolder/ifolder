@@ -1418,15 +1418,15 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Adds the specified domain to the dropdown lists.
 		/// </summary>
-		/// <param name="domainWeb">The DomainWeb object to add to the list.</param>
-		public void AddDomainToList(DomainInformation domainWeb)
+		/// <param name="domainInfo">The DomainInformation object to add to the list.</param>
+		public void AddDomainToList(DomainInformation domainInfo)
 		{
 			Domain domain = null;
 			foreach (ListViewItem lvi in accounts.Items)
 			{
 				Domain d = (Domain)lvi.Tag;
 
-				if (d.ID.Equals(domainWeb.ID))
+				if (d.ID.Equals(domainInfo.ID))
 				{
 					// The domain is already in the list.
 					domain = d;
@@ -1435,14 +1435,14 @@ namespace Novell.FormsTrayApp
 
 			if (domain == null)
 			{
-				domain = new Domain(domainWeb);
+				domain = new Domain(domainInfo);
 
 				// Reset the current default domain if the added domain is set to be the default.
-				if (domainWeb.IsDefault)
+				if (domainInfo.IsDefault)
 				{
 					if (currentDefaultDomain != null)
 					{
-						currentDefaultDomain.DomainWeb.IsDefault = false;
+						currentDefaultDomain.DomainInfo.IsDefault = false;
 					}
 
 					currentDefaultDomain = domain;
@@ -1450,11 +1450,11 @@ namespace Novell.FormsTrayApp
 
 				ListViewItem lvi = new ListViewItem(
 					new string[] {domain.Name,
-									 domainWeb.MemberName,//.UserName,
-									 domainWeb.Active ? 
+									 domainInfo.MemberName,//.UserName,
+									 domainInfo.Active ? 
 									 resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled")});
 				lvi.Tag = domain;
-				lvi.Selected = domainWeb.IsDefault;
+				lvi.Selected = domainInfo.IsDefault;
 				accounts.Items.Add(lvi);
 			}
 		}
@@ -1472,7 +1472,7 @@ namespace Novell.FormsTrayApp
 			{
 				Domain d = (Domain)lvi.Tag;
 
-				if (d.DomainWeb.MemberUserID.Equals(userID))
+				if (d.DomainInfo.MemberUserID.Equals(userID))
 				{
 					result = true;
 					break;
@@ -1495,7 +1495,7 @@ namespace Novell.FormsTrayApp
 			{
 				Domain d = (Domain)lvi.Tag;
 
-				if (d.DomainWeb.POBoxID.Equals(poBoxID))
+				if (d.DomainInfo.POBoxID.Equals(poBoxID))
 				{
 					result = true;
 					break;
@@ -1515,22 +1515,22 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				DomainInformation domainWeb = simiasWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
+				DomainInformation domainInfo = simiasWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
 				// Set the credentials in the current process.
-				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainWeb.ID, password.Text);
+				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
 				AuthenticationStatus authStatus = domainAuth.Authenticate();
 
-				Domain domain = new Domain(domainWeb);
+				Domain domain = new Domain(domainInfo);
 
 				updateAccount(domain);
 
 				// Associate the new domain with the listview item.
-				newAccountLvi.SubItems[0].Text = domainWeb.Name;
+				newAccountLvi.SubItems[0].Text = domainInfo.Name;
 
 				newAccountLvi.SubItems[2].Text = resourceManager.GetString("statusEnabled");
 				newAccountLvi.Tag = domain;
-				server.Text = domainWeb.Host;
+				server.Text = domainInfo.Host;
 				newAccountLvi = null;
 
 				// Successfully joined ... don't allow the fields to be changed.
@@ -1540,22 +1540,22 @@ namespace Novell.FormsTrayApp
 				if (EnterpriseConnect != null)
 				{
 					// Fire the event telling that a new domain has been added.
-					EnterpriseConnect(this, new DomainConnectEventArgs(domainWeb));
+					EnterpriseConnect(this, new DomainConnectEventArgs(domainInfo));
 				}
 
-				if (domainWeb.IsDefault)
+				if (domainInfo.IsDefault)
 				{
 					// Remove any new default.
 					if (newDefaultDomain != null)
 					{
-						newDefaultDomain.DomainWeb.IsDefault = false;
+						newDefaultDomain.DomainInfo.IsDefault = false;
 						newDefaultDomain = null;
 					}
 
 					// Reset the current default.
 					if (currentDefaultDomain != null)
 					{
-						currentDefaultDomain.DomainWeb.IsDefault = false;
+						currentDefaultDomain.DomainInfo.IsDefault = false;
 					}
 
 					// Save the new default.
@@ -1572,7 +1572,7 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					// Check for an update.
-					bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainWeb.ID, userName.Text, password.Text);
+					bool updateStarted = FormsTrayApp.CheckForClientUpdate(domainInfo.ID, userName.Text, password.Text);
 					if (updateStarted)
 					{
 						if (ShutdownTrayApp != null)
@@ -1762,14 +1762,14 @@ namespace Novell.FormsTrayApp
 			{
 				try
 				{
-					simiasWebService.SetDefaultDomain(newDefaultDomain.DomainWeb.ID);
+					simiasWebService.SetDefaultDomain(newDefaultDomain.DomainInfo.ID);
 
 					currentDefaultDomain = newDefaultDomain;
 					newDefaultDomain = null;
 
 					if (ChangeDefaultDomain != null)
 					{
-						ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainWeb));
+						ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainInfo));
 					}
 				}
 				catch (Exception ex)
@@ -1824,12 +1824,12 @@ namespace Novell.FormsTrayApp
 						if (enableAccount.Checked)
 						{
 							simiasWebService.SetDomainActive(domain.ID);
-							domain.DomainWeb.Active = true;
+							domain.DomainInfo.Active = true;
 						}
 						else
 						{
 							simiasWebService.SetDomainInactive(domain.ID);
-							domain.DomainWeb.Active = false;
+							domain.DomainInfo.Active = false;
 						}
 
 						updateDomainStatus(domain);
@@ -1849,7 +1849,7 @@ namespace Novell.FormsTrayApp
 				Domain d = (Domain)lvi.Tag;
 				if (d.ID.Equals(domain.ID))
 				{
-					lvi.SubItems[2].Text = domain.DomainWeb.Active ? 
+					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
 						resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled");
 					break;
 				}
@@ -1857,7 +1857,7 @@ namespace Novell.FormsTrayApp
 
 			if (UpdateDomain != null)
 			{
-				UpdateDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+				UpdateDomain(this, new DomainConnectEventArgs(domain.DomainInfo));
 			}
 		}
 		#endregion
@@ -2168,16 +2168,16 @@ namespace Novell.FormsTrayApp
 					Domain domain = (Domain)accounts.SelectedItems[0].Tag;
 
 					// Reset the flag on the current default domain.
-					currentDefaultDomain.DomainWeb.IsDefault = false;
+					currentDefaultDomain.DomainInfo.IsDefault = false;
 
 					// Reset the flag on the "old" new default domain.
 					if (newDefaultDomain != null)
 					{
-						newDefaultDomain.DomainWeb.IsDefault = false;
+						newDefaultDomain.DomainInfo.IsDefault = false;
 					}
 
 					// Set the flag on the new default domain.
-					domain.DomainWeb.IsDefault = true;
+					domain.DomainInfo.IsDefault = true;
 					newDefaultDomain = domain;
 
 					// Disable the checkbox so that it cannot be unchecked and don't allow 
@@ -2276,7 +2276,7 @@ namespace Novell.FormsTrayApp
 						if (domain.Equals(newDefaultDomain))
 						{
 							// Set the current default domain back to the default.
-							currentDefaultDomain.DomainWeb.IsDefault = true;
+							currentDefaultDomain.DomainInfo.IsDefault = true;
 							newDefaultDomain = null;
 						}
 						else if (domain.Equals(currentDefaultDomain))
@@ -2288,7 +2288,7 @@ namespace Novell.FormsTrayApp
 						if (RemoveDomain != null)
 						{
 							// Call delegate to remove the domain from the server dropdown list.
-							RemoveDomain(this, new DomainRemoveEventArgs(domain.DomainWeb, defaultDomainID));
+							RemoveDomain(this, new DomainRemoveEventArgs(domain.DomainInfo, defaultDomainID));
 						}
 
 						if (defaultDomainID != null)
@@ -2302,7 +2302,7 @@ namespace Novell.FormsTrayApp
 									currentDefaultDomain = d;
 									if (newDefaultDomain == null)
 									{
-										d.DomainWeb.IsDefault = true;
+										d.DomainInfo.IsDefault = true;
 									}
 									break;
 								}
@@ -2428,11 +2428,11 @@ namespace Novell.FormsTrayApp
 						}
 						else
 						{
-							server.Text = selectedDomain.DomainWeb.Host;
+							server.Text = selectedDomain.DomainInfo.Host;
 							details.Enabled = true;
 							userName.ReadOnly = server.ReadOnly = true;
 
-							defaultServer.Checked = selectedDomain.DomainWeb.IsDefault;
+							defaultServer.Checked = selectedDomain.DomainInfo.IsDefault;
 							defaultServer.Enabled = !defaultServer.Checked;
 
 							// Check for a saved password.
@@ -2455,7 +2455,7 @@ namespace Novell.FormsTrayApp
 							}
 
 							enableAccount.Enabled = true;
-							enableAccount.Checked = selectedDomain.DomainWeb.Active;
+							enableAccount.Checked = selectedDomain.DomainInfo.Active;
 						}
 					}
 				}
