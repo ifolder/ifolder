@@ -471,18 +471,29 @@ namespace Novell.FormsTrayApp
 					}
 					else
 					{
-						// Save the path ...
-						//subscription.CollectionRoot = iFolderLocation.Text;
 						try
 						{
+							// Accept the invitation.
 							ifWebService.AcceptiFolderInvitation(ifolder.ID, iFolderLocation.Text);
 						}
 						catch (Exception ex)
 						{
 							Novell.iFolderCom.MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox();
-							mmb.Message = resourceManager.GetString("acceptError");
-							mmb.Details = ex.Message;
-							mmb.ShowDialog();
+							if (ex.Message.IndexOf("Path specified cannot be an iFolder", 0) != -1)
+							{
+								mmb.Message = resourceManager.GetString("pathInvalidError");
+								mmb.Caption = resourceManager.GetString("pathInvalidErrorTitle");
+								mmb.MessageIcon = SystemIcons.Information;
+								mmb.ShowDialog();
+								iFolderLocation.Focus();
+							}
+							else
+							{
+								mmb.Message = resourceManager.GetString("acceptError");
+								mmb.Details = ex.Message;
+								mmb.ShowDialog();
+							}
+
 							successful = false;
 						}
 					}
