@@ -417,7 +417,7 @@ namespace Simias.Sync
 				Stream inStream = response.GetResponseStream();
 				try
 				{
-					int bytesToWrite = Math.Min(sizeRemaining, (seg.EndBlock - seg.StartBlock + 1) * HashData.BlockSize);
+					int bytesToWrite = (int)Math.Min(sizeRemaining, (seg.EndBlock - seg.StartBlock + 1) * HashData.BlockSize);
 					Write(inStream, bytesToWrite);
 					sizeRemaining -= bytesToWrite;
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
