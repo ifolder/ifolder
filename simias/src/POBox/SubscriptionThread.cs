@@ -175,7 +175,6 @@ namespace Simias.POBox
 			subscription.SubscriptionState = SubscriptionStates.Posted;
 			poBox.Commit(subscription);
 
-			// always return false to drop to the next 
 			return true;
 		}
 
@@ -194,13 +193,13 @@ namespace Simias.POBox
 
 			// post subscription
 			po.Post(subscription);
-			
-			// remove channel
-			channel.Dispose();
 
 			// update subscription
 			subscription.SubscriptionState = SubscriptionStates.Delivered;
 			poBox.Commit(subscription);
+			
+			// remove channel
+			channel.Dispose();
 
 			// always return false to drop to the next state
 			return false;
@@ -222,9 +221,6 @@ namespace Simias.POBox
 			// post subscription
 			SubscriptionStatus status = po.GetSubscriptionStatus(subscription.DomainID,
 				subscription.FromIdentity, subscription.ID);
-			
-			// remove channel
-			channel.Dispose();
 
 			// update subscription
 			if (status.State == SubscriptionStates.Responded)
@@ -250,6 +246,9 @@ namespace Simias.POBox
 				// done with the subscription
 				poBox.Commit(poBox.Delete(subscription));
 			}
+			
+			// remove channel
+			channel.Dispose();
 
 			return true;
 		}
