@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-DIST_SUBDIRS = $(SUBDIRS) doc package test
+DIST_SUBDIRS = $(SUBDIRS) doc package test other/simpleserver
 
 PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
 
