@@ -117,11 +117,8 @@ namespace Mono.P2p.mDnsResponder
 
 		#region Class Members
 
-		static internal Queue		requestsQueue = new Queue();
-		static internal Mutex		requestsMtx = new Mutex(false);
-
 		static private	bool		receivingDnsRequests = false;
-		static private	bool		stoppingDnsRequests = false;
+		static private	bool		mDnsStopping = false;
 		static private	IPEndPoint	multiep = new IPEndPoint(IPAddress.Parse("224.0.0.251"), 5353);
 		static private	Thread		dnsReceiveThread = null;
 		static private	Socket		dnsReceiveSocket = null;
@@ -261,7 +258,7 @@ namespace Mono.P2p.mDnsResponder
 		internal static int	StopDnsReceive()
 		{
 			log.Info("StopDnsReceive called");
-			stoppingDnsRequests = true;
+			mDnsStopping = true;
 			dnsReceiveSocket.Close();
 			Thread.Sleep(0);
 			dnsReceiveThread.Abort();
@@ -294,14 +291,14 @@ namespace Mono.P2p.mDnsResponder
 				}
 				catch(Exception e)
 				{
-					if (stoppingDnsRequests == false)
+					if (mDnsStopping == false)
 					{
 						log.Debug("Failed calling ReceiveFrom", e);
 					}
 				}
 
 				// Outside forces telling us to stop?
-				if (stoppingDnsRequests == true)
+				if (mDnsStopping == true)
 				{
 					return;
 				}
@@ -521,19 +518,8 @@ namespace Mono.P2p.mDnsResponder
 									lOffset += 6;
 									Common.BuildDomainName(receiveData, lOffset, ref lOffset, ref target);
 									service.Target = target;
-									
 									offset += dataLength;
-									
 									dnsRequest.answerList.Add(service);
-									
-									/*
-
-									//Console.WriteLine("Found a SERVICE LOCATION RR");
-									Console.WriteLine("   Priority:    {0}", priority);
-									Console.WriteLine("   Weight:      {0}", weight);
-									Console.WriteLine("   Port:        {0}", port);
-									Console.WriteLine("   Target:      {0}", target);
-									*/
 								}
 								else
 								{
@@ -553,8 +539,6 @@ namespace Mono.P2p.mDnsResponder
 					}
 					
 					dnsRequest.Queue();
-					// FIXME - temporary
-					RequestHandler.KickRequestHandler();
 				}
 			}
 		}
@@ -568,14 +552,9 @@ namespace Mono.P2p.mDnsResponder
 		#region Public Methods
 		public	void	Queue()
 		{
-			DnsRequest.requestsMtx.WaitOne();
-			DnsRequest.requestsQueue.Enqueue(this);
-			DnsRequest.requestsMtx.ReleaseMutex();
+			RequestHandler.QueueRequest(this);
 		}
 
-		public void		Dequeue()
-		{
-		}
 		#endregion
 	}
 }

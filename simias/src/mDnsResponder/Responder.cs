@@ -44,7 +44,7 @@ namespace Mono.P2p.mDnsResponder
 			*/	
 			localHost = "BRADY-T21.local";
 			HostAddress addrHost = new HostAddress(localHost, 300, mDnsType.hostAddress, mDnsClass.iNet, true);
-			addrHost.AddIPAddress(IPAddress.Parse("151.155.9.238"));
+			addrHost.AddIPAddress(IPAddress.Parse("151.155.8.1"));
 			Resources.AddHostAddress(addrHost);
 
 			string slName = "jacko@";

@@ -125,6 +125,24 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 		}
 
+		static public void RemoveHostAddress(string host)
+		{
+			log.Info("RemoveHostAddress called");
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == host &&
+					cResource.Type == mDnsType.hostAddress)
+				{
+					Resources.resourceList.Remove(cResource);
+					break;
+				}
+			}
+
+			Resources.resourceMtx.ReleaseMutex();
+		}
+
 		static public HostAddress GetHostAddress(string host)
 		{
 			log.Info("GetHostAddress called");
@@ -148,6 +166,27 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 			return(rHost);
 		}
+		
+		static public BaseResource GetResource(string name)
+		{
+			log.Info("GetResource called");
+			
+			BaseResource	rResource = null;
+			
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == name)
+				{
+					rResource = cResource;
+					break;
+				}
+			}
+
+			Resources.resourceMtx.ReleaseMutex();
+			return(rResource);
+		}
+		
 		static public void AddServiceLocation(ServiceLocation serviceLocation)
 		{
 			log.Info("AddServiceLocation called");

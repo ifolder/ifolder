@@ -18,7 +18,18 @@ namespace Mono.P2p.mDnsResponder
 		static bool	mDnsStopping = false;
 		static Thread reqHandlerThread = null;
 		static AutoResetEvent reqHandlerEvent = null;
-	
+		
+		static internal Queue		requestsQueue = new Queue();
+		static internal Mutex		requestsMtx = new Mutex(false);
+		
+		internal static void QueueRequest(DnsRequest dnsRequest)
+		{
+			requestsMtx.WaitOne();
+			requestsQueue.Enqueue(dnsRequest);
+			requestsMtx.ReleaseMutex();
+			reqHandlerEvent.Set();
+		}
+		
 		internal static int	StartRequestHandler()
 		{
 			log.Info("StartRequestHandler called");
@@ -51,14 +62,6 @@ namespace Mono.P2p.mDnsResponder
 			return(0);
 		}
 		
-		// FIXME - temporary
-		internal static void KickRequestHandler()
-		{
-			reqHandlerEvent.Set();
-		}
-	
-		// FIXME need to setup an event which gets signaled when an object
-		// is placed in the queue
 		internal static void RequestHandlerThread()
 		{
 			DnsRequest		dnsRequest;
@@ -67,25 +70,27 @@ namespace Mono.P2p.mDnsResponder
 			// Setup an endpoint to multi-cast datagrams
 			UdpClient server = new UdpClient("224.0.0.251", 5353);
 
-			while(reqHandlerEvent.WaitOne(120000, true))
+			while(reqHandlerEvent.WaitOne(120000, false))
 			{
 				if (mDnsStopping == true)
 				{
 					return;
 				}
+
+				Console.WriteLine("RequestHandler alive!");
 				
 				// Need an event to kick us alive
 				dnsRequest = null;
-				DnsRequest.requestsMtx.WaitOne();
-				if (DnsRequest.requestsQueue.Count > 0)
+				requestsMtx.WaitOne();
+				if (requestsQueue.Count > 0)
 				{
 					try
 					{
-						dnsRequest = (DnsRequest) DnsRequest.requestsQueue.Dequeue();
+						dnsRequest = (DnsRequest) requestsQueue.Dequeue();
 					}
 					catch{}
 
-					DnsRequest.requestsMtx.ReleaseMutex();
+					requestsMtx.ReleaseMutex();
 
 					if (dnsRequest != null)
 					{
@@ -312,7 +317,7 @@ namespace Mono.P2p.mDnsResponder
 				}
 				else
 				{
-					DnsRequest.requestsMtx.ReleaseMutex();
+					requestsMtx.ReleaseMutex();
 					//Thread.Sleep(1000);
 					//Console.WriteLine("RequestHandlerThread - alive");
 				}
