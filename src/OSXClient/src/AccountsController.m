@@ -1,7 +1,31 @@
+/***********************************************************************
+ *  $RCSfile$
+ * 
+ *  Copyright (C) 2004 Novell, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Author: Calvin Gaisford <cgaisford@novell.com>
+ * 
+ ***********************************************************************/
+
 #import "AccountsController.h"
 #import "MainWindowController.h"
 #import "SimiasService.h"
 #import "iFolderDomain.h"
+#import "LeaveDomainSheetController.h"
 
 
 @implementation AccountsController
@@ -46,6 +70,8 @@
 
 			NSLog(@"Adding domain %@", [dom name]);
 			[domains addObject:dom];
+			if([[dom isDefault] boolValue])
+				defaultDomain = dom;
 		}
 	}
 	@catch(NSException ex)
@@ -72,6 +98,10 @@
 			createMode = NO;			
 			[domains addObject:newDomain];
 			[accounts reloadData];
+			if(defaultDomain != nil)
+				[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
+				
+			defaultDomain = newDomain;
 
 			NSMutableIndexSet    *childRows = [NSMutableIndexSet indexSet];
 			[childRows addIndex:([domains count] - 1)];
@@ -116,20 +146,88 @@
 	[parentWindow makeFirstResponder:host];
 }
 
+
+
+
 - (IBAction)removeAccount:(id)sender
 {
 	NSLog(@"Remove Account Clicked");
+	[leaveDomainController showWindow:self];
 }
+
+
+-(void)leaveSelectedDomain:(BOOL)localOnly
+{
+	@try
+	{
+		[simiasService LeaveDomain:[selectedDomain ID] withOption:localOnly];
+
+		[domains removeObject:selectedDomain];
+		[accounts reloadData];
+		[accounts deselectAll:self];
+		NSLog(@"SetDomainActive Succeded.");
+	}
+	@catch(NSException ex)
+	{
+		NSLog(@"SetDomainActive Failed with an exception.");
+	}
+}
+
+
 
 - (IBAction)toggleActive:(id)sender
 {
-	NSLog(@"Toggle Active Clicked");
+	if([enableAccount state] == YES)
+	{
+		@try
+		{
+			[simiasService SetDomainActive:[selectedDomain ID]];	
+			NSLog(@"SetDomainActive Succeded.");
+		}
+		@catch(NSException ex)
+		{
+			NSLog(@"SetDomainActive Failed with an exception.");
+		}
+	}
+	else
+	{
+		@try
+		{
+			[simiasService SetDomainInactive:[selectedDomain ID]];	
+			NSLog(@"SetDomainInactive Succeded.");
+		}
+		@catch(NSException ex)
+		{
+			NSLog(@"SetDomainInactive Failed with an exception.");
+		}
+	}
 }
+
+
+
 
 - (IBAction)toggleDefault:(id)sender
 {
-	NSLog(@"Toggle Default Clicked");
+	if([defaultAccount state] == YES)
+	{
+		@try
+		{
+			[simiasService SetDefaultDomain:[selectedDomain ID]];	
+			if(defaultDomain != nil)
+				[defaultDomain setValue:NO forKeyPath:@"properties.isDefault"];
+						
+			defaultDomain = selectedDomain;
+			NSLog(@"SetDefaultDomain Succeded.");
+		}
+		@catch(NSException ex)
+		{
+			NSLog(@"SetDefaultDomain Failed with an exception.");
+		}
+	}
 }
+
+
+
 
 - (IBAction)toggleSavePassword:(id)sender
 {

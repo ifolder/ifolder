@@ -18,6 +18,7 @@
                 defaultAccount = NSButton; 
                 enableAccount = NSButton; 
                 host = NSTextField; 
+                leaveDomainController = LeaveDomainSheetController; 
                 name = NSTextField; 
                 parentWindow = NSWindow; 
                 password = NSSecureTextField; 
@@ -29,6 +30,18 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {cancelLeaveDomain = id; leaveDomain = id; showWindow = id; }; 
+            CLASS = LeaveDomainSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountsController = AccountsController; 
+                leaveAll = NSButton; 
+                leaveDomainSheet = NSWindow; 
+                prefsWindow = NSWindow; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
         {
             CLASS = iFolderPrefsController; 
             LANGUAGE = ObjC; 

@@ -21,10 +21,29 @@
  * 
  ***********************************************************************/
 
+#ifndef __SimiasService__
+#define __SimiasService__
 
 #import <Cocoa/Cocoa.h>
+#include <Carbon/Carbon.h>
+#import "iFolderDomain.h"
 
-@interface PropertiesWindowController : NSWindowController
+
+@interface SimiasService : NSObject
 {
 }
+
+-(NSArray *) GetDomains:(BOOL)onlySlaves;
+-(iFolderDomain *) ConnectToDomain:(NSString *)UserName usingPassword:(NSString *)Password andHost:(NSString *)Host;
+-(void) LeaveDomain:(NSString *)domainID withOption:(BOOL)localOnly;
+-(BOOL) ValidCredentials:(NSString *)domainID forUser:(NSString *)userID;
+-(void) SaveDomainPassword:(NSString *)domainID password:(NSString *)password;
+-(NSString *) GetSavedDomainPassword:(NSString *)domainID;
+-(void) SetDomainActive:(NSString *)domainID;
+-(void) SetDomainInactive:(NSString *)domainID;
+-(void) SetDefaultDomain:(NSString *)domainID;
+
+
 @end
+
+#endif // __SimiasService__
