@@ -95,7 +95,7 @@ namespace Novell.AddressBook.UI.gtk
 
 		private void InitGlade()
 		{
-			Console.WriteLine("Initializing Sharing Glade");
+			//Console.WriteLine("Initializing Sharing Glade");
 			Glade.XML gxml = 
 				new Glade.XML (Util.GladePath("collection-properties.glade"), 
 				"SharingVBox", 
@@ -154,7 +154,7 @@ namespace Novell.AddressBook.UI.gtk
 			abMan = Novell.AddressBook.Manager.Connect( );
 
 			if(abMan == null)
-				Console.WriteLine("What is up with ABMan?");
+				Console.WriteLine("Warning: Unable to connect to AddressBook");
 
 			ICSList memList = collection.GetMemberList();
 			foreach(ShallowNode sNode in memList)
