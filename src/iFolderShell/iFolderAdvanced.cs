@@ -760,13 +760,15 @@ namespace Novell.iFolderCom
 			// Used to keep track of the new owner.
 			newOwnerLvi = null;
 
+			// Change the pointer to an hourglass.
+			Cursor = Cursors.WaitCursor;
+
 			try
 			{
 				updateDiskQuotaDisplay();
 
 				// Get the refresh interval.
 				syncInterval.Value = (decimal)ifolder.SyncInterval;
-				Cursor.Current = Cursors.WaitCursor;
 
 				// Show/hide the collision message.
 				conflicts.Visible = pictureBox1.Visible = ifolder.HasConflicts;
@@ -775,8 +777,6 @@ namespace Novell.iFolderCom
 				SyncSize syncSize = ifWebService.CalculateSyncSize(ifolder.ID);
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
 				byteCount.Text = syncSize.SyncByteCount.ToString();
-
-				Cursor.Current = Cursors.Default;
 			}
 			catch (WebException ex)
 			{
@@ -785,10 +785,9 @@ namespace Novell.iFolderCom
 			catch (Exception ex)
 			{
 				// TODO: Post message
+				//MessageBox.Show(ex.Message);
 			}
 
-			// Change the pointer to an hourglass.
-			Cursor = Cursors.WaitCursor;
 			shareWith.Items.Clear();
 			shareWith.BeginUpdate();
 
@@ -816,11 +815,11 @@ namespace Novell.iFolderCom
 					int imageIndex;
 					items[2] = rightsToString(ifolderUser.Rights, out imageIndex);
 
-					if (currentUser.UserID.Equals(ifolderUser.UserID))
+					if ((currentUser != null) && currentUser.UserID.Equals(ifolderUser.UserID))
 					{
 						imageIndex = 0;
 					}
-					else if (!ifolderUser.State.Equals(member))
+					else if ((ifolderUser.State != null) && !ifolderUser.State.Equals(member))
 					{
 						imageIndex = 5;
 					}
@@ -884,7 +883,10 @@ namespace Novell.iFolderCom
 						}
 					}
 				}
-*/			}
+*/
+				// Select the first item in the list.
+				shareWith.Items[0].Selected = true;
+			}
 			catch (WebException ex)
 			{
 				// TODO: Post message.
@@ -897,9 +899,6 @@ namespace Novell.iFolderCom
 			{
 				// TODO:
 			}
-
-			// Select the first item in the list.
-			shareWith.Items[0].Selected = true;
 
 			shareWith.EndUpdate();
 
