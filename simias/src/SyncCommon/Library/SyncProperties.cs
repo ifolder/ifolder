@@ -55,7 +55,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// The suggested sync interval in seconds.
 		/// </summary>
-		private static readonly int DefaultInterval = 5;
+		private static readonly int DefaultInterval = 60;
 		private static readonly string IntervalPropertyName = "Sync Interval";
 
 		/// <summary>
