@@ -366,7 +366,7 @@ namespace Novell.iFolderCom
 				try
 				{
 					XmlDocument domainsDoc = new XmlDocument();
-					domainsDoc.Load(Path.Combine(loadPath, "domain.list"));
+					domainsDoc.Load(Path.Combine(Path.GetDirectoryName(new Simias.Client.Configuration().ConfigPath), "domain.list"));
 
 					XmlElement element = (XmlElement)domainsDoc.SelectSingleNode("/domains");
 

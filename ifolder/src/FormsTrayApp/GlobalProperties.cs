@@ -935,7 +935,7 @@ namespace Novell.FormsTrayApp
 			servers.SelectedItem = domain;
 
 			// Initialize the domain list file.
-			domainList = Path.Combine(Application.StartupPath, "domain.list");
+			domainList = Path.Combine(Path.GetDirectoryName(new Configuration().ConfigPath), "domain.list");
 			XmlDocument domainsDoc = new XmlDocument();
 
 			try
