@@ -156,10 +156,6 @@ namespace Simias.Sync
 		{
 			lock(this)
 			{
-				// create channel
-				channel = syncManager.ChannelFactory.GetChannel(store,
-					syncManager.ServiceUrl.Scheme, syncManager.ChannelSinks);
-				
 				// create worker thread
 				syncWorkerThread = new Thread(new ThreadStart(this.DoSyncWork));
 				syncWorkerThread.Priority = ThreadPriority.BelowNormal;
@@ -227,6 +223,11 @@ namespace Simias.Sync
 
 						log.Debug("Connecting to Domain Service: {0}", dAgent.ServiceUrl);
 
+						// create channel
+						SyncChannel domainChannel = syncManager.ChannelFactory.GetChannel(store,
+							dAgent.ServiceUrl.Scheme, syncManager.ChannelSinks);
+
+						// connect
 						IDomainService dService = dAgent.Connect();
 
 						string nodeID = null;
@@ -254,12 +255,22 @@ namespace Simias.Sync
 
 						collection.MasterUrl = master;
 						collection.CreateMaster = false;
+
+						domainChannel.Dispose();
 					}
 					else
 					{
 						// get the service URL
 						string serviceUrl = collection.MasterUrl.ToString();
 						log.Debug("Sync Store Service URL: {0}", serviceUrl);
+
+						// check the channel
+						if (channel == null)
+						{
+							// create channel
+							channel = syncManager.ChannelFactory.GetChannel(store,
+								collection.MasterUrl.Scheme, syncManager.ChannelSinks);
+						}
 
 						// get a proxy to the store service object
 						log.Debug("Connecting to the Sync Store Service...");
@@ -291,10 +302,20 @@ namespace Simias.Sync
 						log.Debug("Querying the Location Service...");
 
 						// find the URL with the location service
-						Uri locationUri = syncManager.Location.Locate(collection.ID);
+						Uri locationUrl = syncManager.Location.Locate(collection.ID);
 
 						// update the URL
-						if (locationUri != null) collection.MasterUrl = locationUri;
+						if ((locationUrl != null) && (locationUrl != collection.MasterUrl))
+						{
+							collection.MasterUrl = locationUrl;
+
+							// clear channel
+							if (channel != null)
+							{
+								channel.Dispose();
+								channel = null;
+							}
+						}
 					}
 					catch(Exception e2)
 					{

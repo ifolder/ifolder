@@ -70,7 +70,7 @@ namespace Simias.Location
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="configuration">The configuration collection.</param>
+		/// <param name="collection">The configuration collection.</param>
 		private LocationProviderList(Collection collection)
 		{
 			this.store = collection.StoreReference;

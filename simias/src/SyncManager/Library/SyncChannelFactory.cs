@@ -105,6 +105,7 @@ namespace Simias.Sync
 		/// Get a sync channel
 		/// </summary>
 		/// <param name="store"></param>
+		/// <param name="scheme"></param>
 		/// <param name="sinks"></param>
 		/// <returns></returns>
 		public SyncChannel GetChannel(Store store, string scheme, SyncChannelSinks sinks)
@@ -116,6 +117,7 @@ namespace Simias.Sync
 		/// Get a sync channel
 		/// </summary>
 		/// <param name="store"></param>
+		/// <param name="scheme"></param>
 		/// <param name="sinks"></param>
 		/// <param name="port"></param>
 		/// <returns></returns>
