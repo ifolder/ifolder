@@ -1812,8 +1812,8 @@ namespace Novell.FormsTrayApp
 
 		private void menuHelpAbout_Click(object sender, System.EventArgs e)
 		{
-			// TODO:
-			MessageBox.Show("This hasn't been implemented yet.");
+			About about = new About();
+			about.ShowDialog();
 		}
 
 		private void GlobalProperties_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
