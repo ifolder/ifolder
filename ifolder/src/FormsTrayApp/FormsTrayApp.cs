@@ -410,10 +410,6 @@ namespace Novell.FormsTrayApp
 						// Pre-load the servers and accounts list.
 						globalProperties.InitializeServerList();
 
-//						DomainWeb[] domains;
-//						domains = ifWebService.GetDomains();
-//						foreach (DomainWeb dw in domains)
-
 						DomainInformation[] domains;
 						domains = this.simiasWebService.GetDomains(false);
 						foreach(DomainInformation dw in domains)
@@ -1005,14 +1001,17 @@ namespace Novell.FormsTrayApp
 							{
 								case "Collection":
 								{
-									if (eventArgs.SlaveRev == 0)
-									{
-										// The collection was just created, keep track of it and don't post
-										// any notifications until it has successfully synced.
-										initialSyncCollections.Add(eventArgs.Collection, null);
-									}
-
 									ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+
+									if (ifolder != null)
+									{
+										if (eventArgs.SlaveRev == 0)
+										{
+											// The collection was just created, keep track of it and don't post
+											// any notifications until it has successfully synced.
+											initialSyncCollections.Add(eventArgs.Collection, null);
+										}
+									}
 									break;
 								}
 								case "Node":
@@ -1031,11 +1030,6 @@ namespace Novell.FormsTrayApp
 								}
 								case "Member":
 								{
-									// TODO: This currently displays a notification for each member added to an iFolder ...
-									// so when an iFolder is accepted and synced down the first time, a notification occurs for each
-									// member of the iFolder.  A couple of ways to solve this:
-									// 1. Keep track of the first sync and don't display any notifications until the initial sync has successfully completed.
-									// 2. Queue up the added members and only display a single notification ... some sort of time interval would need to be used.
 									ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
 									if ((ifolderUser != null) && !preferences.IsCurrentUser(ifolderUser.UserID))
 									{

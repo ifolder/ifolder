@@ -1774,6 +1774,12 @@
 	<data name="statusSyncFailure">
 		<value>Out of sync</value>
 	</data>
+	<data name="statusSyncingItems">
+		<value>{0} objects to sync</value>
+	</data>
+	<data name="statusSyncItemsFailed">
+		<value>{0} objects out of sync</value>
+	</data>
 	<data name="readiFolderSettingsError">
 		<value>An error was encountered while reading the iFolder settings.</value>
 	</data>
