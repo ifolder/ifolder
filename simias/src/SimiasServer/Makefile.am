@@ -13,7 +13,7 @@ PROJECT_FILES = $(srcdir)/SimiasServer.csproj
 
 EXTRA_DIST = $(SimiasServer_CSFILES) $(PROJECT_FILES) App.ico simias.in simias.cmd SimiasServer.exe.config
 
-simias: $(simias.in)
+simias: $(srcdir)/simias.in
 	sed -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_bindir_@,@bindir@,g' $< > $@
 	chmod +x $@
 
@@ -25,7 +25,7 @@ DOC_FILE_CMD = /doc:$(DOC_FILE)
 DOC_FILE_CLEAN = *.doc.xml
 endif
 
-all: SimiasServer.exe
+all: SimiasServer.exe simias
 
 SimiasServer.exe: $(SimiasServer_CSFILES) $(SimiasServer_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasServer_FLAGS) $(SimiasServer_LIBS:%=/r:%) $(SimiasServer_LIBPATH:%=/lib:%) $(SimiasServer_CSFILES_CSC) $(DOC_FILE_CMD)
@@ -64,7 +64,7 @@ if DEBUG
 endif
 endif
 	
-CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES) $(DOC_FILE_CLEAN)
+CLEAN_FILES = SimiasServer.exe $(DEBUG_FILES) $(DOC_FILE_CLEAN) simias
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

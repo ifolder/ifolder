@@ -6,15 +6,17 @@ PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
 
 EXTRA_DIST = tools external $(srcdir)/$(PACKAGE)*.pc.in $(PROJECT_FILES)
 
-simias.pc: simias.pc.in
+all: simias.pc simias-client.pc simias-client-c.pc
+
+simias.pc: $(srcdir)/simias.pc.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_PKG_CONFIG_LIBS_@,@PKG_CONFIG_LIBS@,g' $< > $@
 	chmod +x $@
 	
-simias-client.pc: simias-client.pc.in
+simias-client.pc: $(srcdir)/simias-client.pc.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_CLIENT_PKG_CONFIG_LIBS_@,@CLIENT_PKG_CONFIG_LIBS@,g' $< > $@
 	chmod +x $@
 
-simias-client-c.pc: simias-client-c.pc.in
+simias-client-c.pc: $(srcdir)/simias-client-c.pc.in
 	sed -e 's,@_VERSION_@,@VERSION@,g' -e 's,@_PKG_CONFIG_REQUIRES_@,@PKG_CONFIG_REQUIRES@,g' -e 's,@_PKG_CONFIG_CONFLICTS_@,@PKG_CONFIG_CONFLICTS@,g' -e 's,@_prefix_@,@prefix@,g' -e 's,@_exec_prefix_@,@exec_prefix@,g' -e 's,@_libdir_@,@libdir@,g' $< > $@
 	chmod +x $@
 
@@ -39,8 +41,10 @@ if DEBUG
 endif
 endif
 
+CLEAN_FILES = simias.pc simias-client.pc simias-client-c.pc
+
 clean-local:
-	rm -rf $(COMMON_CLEAN_FILES)
+	rm -rf $(COMMON_CLEAN_FILES) $(CLEAN_FILES)
 
 distclean-local:
 	rm -rf $(COMMON_DISTCLEAN_FILES)

@@ -13,7 +13,7 @@ SimiasClient_LIBPATH = $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(SimiasClient_CSFILES1) $(srcdir)/SimiasSetup.cs.in
 
-SimiasSetup.cs: SimiasSetup.cs.in
+SimiasSetup.cs: $(srcdir)/SimiasSetup.cs.in
 	sed -e 's,@_prefix_@,@prefix@,g' -e 's,@_bindir_@,@bindir@,g' -e 's,@_datadir_@,@datadir@,g' -e 's,@_includedir_@,@includedir@,g' -e 's,@_infodir_@,@infodir@,g' -e 's,@_libexecdir_@,@libexecdir@,g' -e 's,@_libdir_@,@libdir@,g' -e 's,@_localstatedir_@,@localstatedir@,g' -e 's,@_mandir_@,@mandir@,g' -e 's,@_sbindir_@,@sbindir@,g' -e 's,@_sharedstatedir_@,@sharedstatedir@,g' -e 's,@_sysconfdir_@,@sysconfdir@,g' -e 's,@_webdir_@,@webdir@,g' -e 's,@_webbindir_@,@webbindir@,g' -e 's,@_targetdir_@,@targetdir@,g' $< > $@
 	chmod +x $@
 
@@ -36,7 +36,7 @@ if DARWIN
 	wsdl -nologo -out:SimiasService.cs $(srcdir)/../WebService/Simias.wsdl
 endif
 
-SimiasClient.dll: $(srcdir)/SimiasService.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
+SimiasClient.dll: $(srcdir)/SimiasSetup.cs $(srcdir)/SimiasService.cs $(SimiasClient_CSFILES) $(SimiasClient_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SimiasClient_FLAGS) $(SIMIAS_LIBS) $(SimiasClient_LIBS:%=/r:%) $(SimiasClient_LIBPATH:%=/lib:%) $(SimiasClient_RESOURCES:%=$(ICON_FLAG)%) $(SimiasClient_CSFILES) $(DOC_FILE_CMD)
 
 if DEBUG
@@ -56,7 +56,7 @@ uninstall-local:
 	
 installcheck-local: install
 	
-CLEAN_FILES = SimiasClient.dll $(DOC_FILE_CLEAN) $(srcdir)/SimiasService.cs
+CLEAN_FILES = SimiasClient.dll $(DOC_FILE_CLEAN) $(srcdir)/SimiasService.cs SimiasSetup.cs
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
