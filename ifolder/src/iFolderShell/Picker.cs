@@ -39,6 +39,7 @@ namespace Novell.iFolderCom
 	public class Picker : System.Windows.Forms.Form
 	{
 		#region Class Members
+		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
 		private System.Windows.Forms.Button add;
 		private System.Windows.Forms.Button remove;
 		private System.Windows.Forms.TextBox search;
@@ -49,7 +50,6 @@ namespace Novell.iFolderCom
 		private ArrayList removedList;
 		private iFolderUser currentUser;
 		private iFolderUser currentOwner;
-		private bool first = true;
 		private Hashtable ht = null;
 		private Hashtable addedHT = null;
 		private int fixedWidth;
@@ -515,12 +515,10 @@ namespace Novell.iFolderCom
 			}
 			catch (Exception ex)
 			{
-				System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Picker));
 				MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("memberReadError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 			}
 
-			first = false;
 			rosterLV.EndUpdate();
 			Cursor.Current = Cursors.Default;
 		}
@@ -579,6 +577,9 @@ namespace Novell.iFolderCom
 			}
 
 			Cursor.Current = Cursors.Default;
+
+			search.Text = resourceManager.GetString("searchPrompt");
+			search.SelectAll();
 
 			// Put the objects in the listview.
 			displayUsers(null);
@@ -681,9 +682,12 @@ namespace Novell.iFolderCom
 
 		private void search_TextChanged(object sender, System.EventArgs e)
 		{
-			// Reset the timer when search text is entered.
-			searchTimer.Stop();
-			searchTimer.Start();
+			if (search.Focused)
+			{
+				// Reset the timer when search text is entered.
+				searchTimer.Stop();
+				searchTimer.Start();
+			}
 		}
 
 		private void rosterLV_SelectedIndexChanged(object sender, System.EventArgs e)
