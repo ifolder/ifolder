@@ -695,7 +695,7 @@ namespace Simias.Web
 			}
 			else
 			{
-				// TODO: Need to rework for multi-domain.
+				// TODO: Need to rework for multi-domain ... check if this method is used anywhere.
 				// try to find a subscription with this ID
 				Simias.POBox.POBox poBox = Simias.POBox.POBox.GetPOBox(                                             store,
 									store.DefaultDomain);
@@ -892,11 +892,10 @@ namespace Simias.Web
 			if(col == null)
 				throw new Simias.NotExistException(CollectionID);
 
-			// TODO: Rework for multi-domain ... do we even use this method???
 			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
+				store.GetDomain(col.Domain).GetRoster(store);
 			if(roster == null)
-				throw new Simias.NotExistException(store.DefaultDomain);
+				throw new Simias.NotExistException(col.Domain);
 
 			Simias.Storage.Member member = roster.GetMemberByID(UserID);
 			if(member == null)
