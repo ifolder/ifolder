@@ -68,6 +68,10 @@ namespace Simias.Sync
 		/// The user is not authenticated.
 		/// </summary>
 		AccessDenied,
+		/// <summary>
+		/// The collection is locked.
+		/// </summary>
+		Locked,
 	};
 
 	#endregion
@@ -637,6 +641,9 @@ namespace Simias.Sync
 			{
 				case StartSyncStatus.AccessDenied:
 					log.Info("Failed authentication");
+					break;
+				case StartSyncStatus.Locked:
+					log.Info("The collection is locked");
 					break;
 				case StartSyncStatus.Busy:
 					log.Info("The server is busy");
@@ -1399,6 +1406,8 @@ namespace Simias.Sync
 							}
 							workArray.RemoveNodeToServer(status.nodeID);
 						}
+						else if(status.status == SyncStatus.Locked)
+							break;
 					}
 					catch 
 					{
@@ -1474,6 +1483,10 @@ namespace Simias.Sync
 								ns.MasterIncarnation++;
 								workArray.AddNodeFromServer(ns);
 								workArray.RemoveNodeToServer(node.ID);
+								break;
+							case SyncStatus.Locked:
+								// The collection is locked exit.
+								i = nodes.Length;
 								break;
 							default:
 								log.Debug("Skipping update of node {0} due to {1} on server",
@@ -1551,6 +1564,10 @@ namespace Simias.Sync
 								workArray.AddNodeFromServer(ns);
 								workArray.RemoveNodeToServer(node.ID);
 								break;
+							case SyncStatus.Locked:
+								// The collection is locked.
+								i = nodes.Length;
+								break;
 							default:
 								log.Debug("Failed update of node {0} due to {1} on server",
 									status.nodeID, status.status);
@@ -1623,6 +1640,8 @@ namespace Simias.Sync
 						else
 						{
 							log.Info("Failed Uploading File {0} : reason {1}", file.Name, status.ToString());
+							if (status == SyncStatus.Locked)
+								break;
 						}
 					}
 				}
@@ -1755,10 +1774,25 @@ namespace Simias.Sync
 		private string[] FromServer(SyncNodeType oType)
 		{
 			ArrayList na = new ArrayList();
+			bool haveCollection = false;
+			
+			// Lets sync the collection first if it is in our list.
+			if (oType == SyncNodeType.Generic)
+			{
+				haveCollection = nodesFromServer.Contains(collection.ID);
+				if (haveCollection)
+					na.Add(collection.ID);
+			}
+			
 			foreach (DictionaryEntry de in nodesFromServer)
 			{
 				if ((SyncNodeType)de.Value == oType)
-					na.Add(de.Key);
+				{
+					if (haveCollection && (String)de.Key == collection.ID)
+						haveCollection = false;
+					else
+						na.Add(de.Key);
+				}
 			}
 
 			return (string[])na.ToArray(typeof(string));
@@ -1808,10 +1842,25 @@ namespace Simias.Sync
 		private string[] ToServer(SyncNodeType oType)
 		{
 			ArrayList na = new ArrayList();
+			bool haveCollection = false;
+			
+			// Lets sync the collection first if it is in our list.
+			if (oType == SyncNodeType.Generic)
+			{
+				haveCollection = nodesFromServer.Contains(collection.ID);
+				if (haveCollection)
+					na.Add(collection.ID);
+			}
+			
 			foreach (DictionaryEntry de in nodesToServer)
 			{
 				if ((SyncNodeType)de.Value == oType)
-					na.Add(de.Key);
+				{
+					if (haveCollection && (String)de.Key == collection.ID)
+						haveCollection = false;
+					else
+						na.Add(de.Key);
+				}
 			}
 
 			return (string[])na.ToArray(typeof(string));

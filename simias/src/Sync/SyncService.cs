@@ -192,6 +192,13 @@ namespace Simias.Sync
 				si.Status = StartSyncStatus.NotFound;
 				return;
 			}
+
+			// If we are locked return busy.
+			if (col.IsLocked)
+			{
+				si.Status = StartSyncStatus.Locked;
+				return;
+			}
 		
 			collection = new SyncCollection(col);
 
@@ -471,6 +478,10 @@ namespace Simias.Sync
 							// The current node failed because of a collision.
 							statusList[i++].status = SyncStatus.UpdateConflict;
 						}
+						catch (LockException)
+						{
+							statusList[i++].status = SyncStatus.Locked;
+						}
 						catch
 						{
 							// Handle any other errors.
@@ -573,6 +584,10 @@ namespace Simias.Sync
 						// The current node failed because of a collision.
 						status.status = SyncStatus.UpdateConflict;
 					}
+					catch (LockException)
+					{
+						status.status = SyncStatus.Locked;
+					}
 					catch {}
 				}
 			}
@@ -670,6 +685,10 @@ namespace Simias.Sync
 						}
 
 						nStatus.status = SyncStatus.Success;
+					}
+					catch(LockException)
+					{
+						nStatus.status = SyncStatus.Locked;
 					}
 					catch
 					{

@@ -339,6 +339,10 @@ namespace Simias.Sync
 		/// Insuficient rights for the operation.
 		/// </summary>
 		Access,
+		/// <summary>
+		/// The collection is Locked.
+		/// </summary>
+		Locked,
 	}
 
 	#endregion
