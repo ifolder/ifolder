@@ -357,6 +357,7 @@ addressbook.pc
 src/Makefile
 src/install-addressbook-to-gac
 src/AddressBook/Makefile
+src/AddressBookTests/Makefile
 src/FormsBookLib/Makefile
 src/FormsAddrBook/Makefile
 src/GtkAddrBook/Makefile

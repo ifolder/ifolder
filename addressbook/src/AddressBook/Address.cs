@@ -553,12 +553,11 @@ namespace Novell.AddressBook
 
 			// Can't create and add the relationship object if the contact
 			// hasn't been attached to the address book
-			if (parentContact.addressBook != null &&
-				parentContact.addressBook.collection != null)
+			if (parentContact.addressBook != null)
 			{
 				Relationship parentChild = new 
 					Relationship( 
-						parentContact.addressBook.collection.ID, 
+						parentContact.addressBook.ID, 
 						parentContact.ID );
 
 				this.Properties.AddProperty( Common.addressToContact, parentChild );
@@ -599,12 +598,11 @@ namespace Novell.AddressBook
 
 			// Can't create and add the relationship object if the contact
 			// hasn't been attached to the address book
-			if (parentContact.addressBook != null &&
-				parentContact.addressBook.collection != null)
+			if (parentContact.addressBook != null)
 			{
 				Relationship parentChild = new 
 					Relationship( 
-					parentContact.addressBook.collection.ID, 
+					parentContact.addressBook.ID, 
 					parentGroup.ID );
 
 				this.Properties.AddProperty( Common.addressToGroup, parentChild );
@@ -806,10 +804,10 @@ namespace Novell.AddressBook
 			if (this.parentContact != null)
 			{
 				this.parentContact.addressList.Remove(this);
-				if (this.parentContact.addressBook.collection != null)
+				if (this.parentContact.addressBook != null)
 				{
-					this.parentContact.addressBook.collection.Commit(
-						this.parentContact.addressBook.collection.Delete(this));
+					this.parentContact.addressBook.Commit(
+						this.parentContact.addressBook.Delete(this));
 				}
 			}
 		}

@@ -23,7 +23,6 @@
 using System;
 using System.Collections;
 using System.IO;
-using NUnit.Framework;
 using Simias;
 using Simias.Storage;
 using Novell.AddressBook;
@@ -33,7 +32,6 @@ namespace Novell.AddressBook.Tests
 	/// <summary>
 	/// Summary description for Iteration0Tests.
 	/// </summary>
-	[TestFixture]
 	public class Iteration0Tests
 	{
 		private string basePath = Path.Combine( Directory.GetCurrentDirectory(), "AddressBookTestDir" );
@@ -43,7 +41,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[TestFixtureSetUp]
 		public void Init()
 		{
 			Console.WriteLine("Init called");
@@ -59,7 +56,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void EnumerateMyAddressBooks()
 		{
 			/*
@@ -81,22 +77,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
-		public void OpenDefaultBook()
-		{
-			Console.WriteLine("OpenDefaultBook called");
-			AddressBook defaultBook = abManager.OpenDefaultAddressBook();
-			Console.WriteLine("Default Book: " + defaultBook.Name);
-			Console.WriteLine("ID:           " + defaultBook.ID);
-			Console.WriteLine("Type:         " + defaultBook.Type.ToString());
-			Console.WriteLine("Rights:       " + defaultBook.Rights.ToString());
-			Console.WriteLine("OpenDefaultBook exit");
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		[Test]
 		public void BasicContactTests()
 		{
 			const string tstUsername = "ian";
@@ -109,14 +89,8 @@ namespace Novell.AddressBook.Tests
 
 			AddressBook tstBook;
 
-			tstBook = new 
-				AddressBook(
-					"TestBook1",
-					Novell.AddressBook.AddressBookType.Private,
-					Novell.AddressBook.AddressBookRights.ReadWrite,
-					false);
-
-			abManager.AddAddressBook(tstBook);
+			tstBook = abManager.CreateAddressBook("TestBook1");
+			tstBook.Commit();
 
 			// Create a contact in the new book
 
@@ -174,12 +148,12 @@ namespace Novell.AddressBook.Tests
 			}
 
 			tstBook.Delete();
+			tstBook.Commit();
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void EmailTests()
 		{
 			const string tstUsername = "emailtestuser";
@@ -189,17 +163,10 @@ namespace Novell.AddressBook.Tests
 
 			const string emailTwoAddress = "emailtestuser@hotmail.com";
 			EmailTypes emailTwoTypes = (EmailTypes.personal | EmailTypes.internet);
-
 			AddressBook tstBook;
 
-			tstBook = new 
-				AddressBook(
-					"TestBookForEmailTests",
-					Novell.AddressBook.AddressBookType.Private,
-					Novell.AddressBook.AddressBookRights.ReadWrite,
-					false);
-
-			abManager.AddAddressBook(tstBook);
+			tstBook = abManager.CreateAddressBook("TestBookForEmailTests");
+			tstBook.Commit();
 
 			// Create a contact in the new book
 
@@ -251,12 +218,12 @@ namespace Novell.AddressBook.Tests
 			}
 
 			tstBook.Delete();
+			tstBook.Commit();
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void PhoneTests()
 		{
 			Console.WriteLine("Starting \"Phone Tests\"");
@@ -274,14 +241,8 @@ namespace Novell.AddressBook.Tests
 
 			AddressBook tstBook;
 
-			tstBook = new 
-				AddressBook(
-				"TestBookForPhoneTests",
-				Novell.AddressBook.AddressBookType.Private,
-				Novell.AddressBook.AddressBookRights.ReadWrite,
-				false);
-
-			abManager.AddAddressBook(tstBook);
+			tstBook = abManager.CreateAddressBook("TestBookForPhoneTests");
+			tstBook.Commit();
 
 			// Create a contact in the new book
 
@@ -333,13 +294,13 @@ namespace Novell.AddressBook.Tests
 			}
 
 			tstBook.Delete();
+			tstBook.Commit();
 			Console.WriteLine("Ending \"Phone Tests\"");
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void CreateDeleteAddressBook()
 		{
 			Console.WriteLine("CreateDeleteAddressBook called");
@@ -350,26 +311,21 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				book1 = new 
-					AddressBook(
-						"Book1",
-						Novell.AddressBook.AddressBookType.Public,
-						Novell.AddressBook.AddressBookRights.ReadOnly,
-						false);
+				book1 = abManager.CreateAddressBook("Book1");
+				book1.Commit();
 
-				abManager.AddAddressBook(book1);
-
-				book3 = abManager.GetAddressBook(book1.ID);
-				book4 = abManager.GetAddressBookByName("Book1");
+//				book3 = abManager.GetAddressBook(book1.ID);
+//				book4 = abManager.GetAddressBookByName("Book1");
 
 				foreach(AddressBook cBook in abManager.GetAddressBooks())
 				{
 					Console.WriteLine("book name: {0}", cBook.Name);
 					Console.WriteLine("type:      " + cBook.Type.ToString());
-					Console.WriteLine("rights:    " + cBook.Rights.ToString());
+//					Console.WriteLine("rights:    " + cBook.Rights.ToString());
 				}
 
 				book1.Delete();
+				book1.Commit();
 				book1 = null;
 
 				foreach(AddressBook cBook in abManager.GetAddressBooks())
@@ -384,7 +340,10 @@ namespace Novell.AddressBook.Tests
 				}
 				*/
 			}
-			catch{}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+			}
 
 			if (book1 != null)
 			{
@@ -423,14 +382,8 @@ namespace Novell.AddressBook.Tests
 
 			AddressBook tstBook;
 
-			tstBook = new 
-				AddressBook(
-					"TestBookForSearchEmailTest",
-					Novell.AddressBook.AddressBookType.Private,
-					Novell.AddressBook.AddressBookRights.ReadWrite,
-					false);
-
-			abManager.AddAddressBook(tstBook);
+			tstBook = abManager.CreateAddressBook("TestBookForSearchEmailTest");
+			tstBook.Commit();
 
 			// Create two contacts in the new book
 
@@ -464,13 +417,13 @@ namespace Novell.AddressBook.Tests
 			}
 			
 			tstBook.Delete();
+			tstBook.Commit();
 			Console.WriteLine("Ending \"Search Email Test\"");
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void BasicNameTests()
 		{
 			Console.WriteLine("");
@@ -487,14 +440,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-						"TestBookForBasicNameTests",
-						Novell.AddressBook.AddressBookType.Private,
-						Novell.AddressBook.AddressBookRights.ReadWrite,
-						false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForBasicName");
+				tstBook.Commit();
 
 				// Create a contact in the new book
 				Contact tstContact = new Contact();
@@ -594,6 +541,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 
@@ -603,7 +551,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void BasicAddressTest()
 		{
 			Console.WriteLine("");
@@ -621,14 +568,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-						"TestBookForBasicAddressTest",
-						Novell.AddressBook.AddressBookType.Private,
-						Novell.AddressBook.AddressBookRights.ReadWrite,
-						false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForAddress");
+				tstBook.Commit();
 
 				// Create a contact in the new book
 				Contact tstContact = new Contact();
@@ -775,6 +716,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 
@@ -784,7 +726,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void SearchNameTest()
 		{
 			Console.WriteLine("");
@@ -809,14 +750,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-					"TestBookForSearchLastNameTest",
-						Novell.AddressBook.AddressBookType.Private,
-						Novell.AddressBook.AddressBookRights.ReadWrite,
-						false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForLastNameSearch");
+				tstBook.Commit();
 
 				// Create the contacts in the new book
 				Console.WriteLine("Creating test contacts");
@@ -922,6 +857,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 
@@ -931,7 +867,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void EnumContactsTest()
 		{
 			Console.WriteLine("");
@@ -950,14 +885,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-					"TestBookForEnumerateContacts",
-						Novell.AddressBook.AddressBookType.Private,
-						Novell.AddressBook.AddressBookRights.ReadWrite,
-						false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForEnumContacts");
+				tstBook.Commit();
 
 				Console.WriteLine("Adding");
 				for(int i = 0; i < contactNames.Length; i++)
@@ -1003,6 +932,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 
@@ -1012,7 +942,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void ImportPhotoTest()
 		{
 			Console.WriteLine("");
@@ -1026,14 +955,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-						"TestBookForImportPhotoTest",
-						Novell.AddressBook.AddressBookType.Private,
-						Novell.AddressBook.AddressBookRights.ReadWrite,
-						false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForImportPhoto");
+				tstBook.Commit();
 
 				// Create the contacts in the new book
 				Console.WriteLine("Creating contact");
@@ -1067,6 +990,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 
@@ -1076,7 +1000,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void InstantMessageTests()
 		{
 			Console.WriteLine("Starting \"Instant Message Tests\"");
@@ -1098,14 +1021,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-					"TestBookForIMTests",
-					Novell.AddressBook.AddressBookType.Private,
-					Novell.AddressBook.AddressBookRights.ReadWrite,
-					false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForIMTest");
+				tstBook.Commit();
 
 				// Create a contact in the new book
 
@@ -1169,6 +1086,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 			Console.WriteLine("Ending \"Instant Message Tests\"");
@@ -1177,7 +1095,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void CleanupTest()
 		{
 			Console.WriteLine("Starting \"Cleanup Test\"");
@@ -1191,14 +1108,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-					"TestBookForCleanupTest",
-					Novell.AddressBook.AddressBookType.Private,
-					Novell.AddressBook.AddressBookRights.ReadWrite,
-					false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForCleanup");
+				tstBook.Commit();
 
 				// Create a contact in the new book
 
@@ -1239,6 +1150,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 			Console.WriteLine("Ending \"Cleanup Test\"");
@@ -1247,7 +1159,6 @@ namespace Novell.AddressBook.Tests
 		/// <summary>
 		/// 
 		/// </summary>
-		[Test]
 		public void BasicGroupTest()
 		{
 			Console.WriteLine("");
@@ -1272,14 +1183,8 @@ namespace Novell.AddressBook.Tests
 
 			try
 			{
-				tstBook = new 
-					AddressBook(
-						"TestBookForSearchLastNameTest",
-						Novell.AddressBook.AddressBookType.Private,
-						Novell.AddressBook.AddressBookRights.ReadWrite,
-						false);
-
-				abManager.AddAddressBook(tstBook);
+				tstBook = abManager.CreateAddressBook("TestBookForGroups");
+				tstBook.Commit();
 
 				// Create the contacts in the new book
 				Console.WriteLine("Creating test contacts");
@@ -1350,6 +1255,7 @@ namespace Novell.AddressBook.Tests
 				if (tstBook != null)
 				{
 					tstBook.Delete();
+					tstBook.Commit();
 				}
 			}
 
@@ -1365,7 +1271,7 @@ namespace Novell.AddressBook.Tests
 			{
 				Iteration0Tests tests = new Iteration0Tests();
 				tests.Init();
-				tests.OpenDefaultBook();
+//				tests.OpenDefaultBook();
 				tests.EnumerateMyAddressBooks();
 				tests.CreateDeleteAddressBook();
 				tests.BasicContactTests();

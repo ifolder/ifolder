@@ -123,6 +123,7 @@ namespace Novell.AddressBook
 
 		#region Public Methods
 
+/*
 		/// <summary>
 		/// Adds an address book to the store
 		/// </summary>
@@ -135,7 +136,9 @@ namespace Novell.AddressBook
 		{
 			addressBook.Add(this.store);
 		}
+*/
 
+/*
 		/// <summary>
 		/// Opens the default or local address book.
 		/// The collection store always creates the local address
@@ -152,7 +155,6 @@ namespace Novell.AddressBook
 			catch{}
 			return(null);
 
-			/*
 			try
 			{
 				AddressBook addrBook = 
@@ -180,8 +182,27 @@ namespace Novell.AddressBook
 			{
 				throw new ApplicationException(Common.addressBookExceptionHeader + "failed to create the default address book");
 			}
-			*/
 		}
+*/
+
+		/// <summary>
+		/// Gets an address book object by the address book ID
+		/// </summary>
+		///	<returns>An AddressBook object</returns>
+		public AddressBook CreateAddressBook(string name)
+		{
+			AddressBook abook = null;
+			try
+			{
+				abook = new AddressBook(store, name);
+				return (abook);
+			}
+			catch
+			{
+				throw new ApplicationException("Unable to create AddressBook");
+			}
+		}
+
 
 		/// <summary>
 		/// Gets an address book object by the address book ID
@@ -189,11 +210,15 @@ namespace Novell.AddressBook
 		///	<returns>An AddressBook object</returns>
 		public AddressBook GetAddressBook(string bookID)
 		{
+			AddressBook abook = null;
 			try
 			{
-				AddressBook addressBook = new AddressBook(this.store);
-				addressBook.ToObject(bookID);
-				return(addressBook);
+				Collection collection = store.GetCollectionByID(bookID);
+				if(collection != null)
+				{
+					abook = new AddressBook(this.store, collection);
+				}
+				return(abook);
 			}
 			catch
 			{
@@ -214,8 +239,7 @@ namespace Novell.AddressBook
 			IEnumerator	bookEnum = abList.GetEnumerator();
 			if(bookEnum.MoveNext())
 			{
-				cBook = new AddressBook(this.store);
-				cBook.ToObject(((ShallowNode) bookEnum.Current).ID);
+				cBook = GetAddressBook( ((ShallowNode)bookEnum.Current).ID );
 			}
 
 			return(cBook);
@@ -228,12 +252,11 @@ namespace Novell.AddressBook
 		public ArrayList GetAddressBooks()
 		{
 			ArrayList bookList = new ArrayList();
-			ICSList	abList = this.store.GetCollectionsByType("AB:AddressBook");
+			ICSList	abList = this.store.GetCollectionsByType(Common.addressBookType);
 
 			foreach(ShallowNode sNode in abList)
 			{
-				AddressBook cBook = new AddressBook(this.store);
-				cBook.ToObject(sNode.ID);
+				AddressBook cBook = GetAddressBook(sNode.ID);
 				bookList.Add(cBook);
 			}
 
@@ -249,7 +272,7 @@ namespace Novell.AddressBook
 		///	<returns>An IEnumerator object</returns>
 		public IEnumerator GetEnumerator()
         {
-			ICSList	abList = this.store.GetCollectionsByType("AB:AddressBook");
+			ICSList	abList = this.store.GetCollectionsByType(Common.addressBookType);
 			storeEnum = abList.GetEnumerator();
 			return(this);
         }
@@ -282,8 +305,7 @@ namespace Novell.AddressBook
             {
 				try
 				{
-					AddressBook tmpBook = new AddressBook(this.store);
-					tmpBook.ToObject(((ShallowNode) storeEnum.Current).ID);
+					AddressBook tmpBook = GetAddressBook( ((ShallowNode) storeEnum.Current).ID);
 					return((object) tmpBook);
 				}
 				catch{}

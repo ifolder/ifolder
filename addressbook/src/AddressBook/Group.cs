@@ -45,7 +45,7 @@ namespace Novell.AddressBook
 	{
 		#region Class Members
 		internal	AddressBook		addressBook = null;
-		private		IEnumerator		thisEnum = null;
+//		private		IEnumerator		thisEnum = null;
 		internal	ArrayList		addressList;
 		private		Stream			logoStream = null;
 
@@ -294,7 +294,7 @@ namespace Novell.AddressBook
 				{
 					// Add a relationship that will reference the parent Node.
 					Relationship parentChild = new
-						Relationship( addressBook.collection.ID, this.ID );
+						Relationship( addressBook.ID, this.ID );
 					this.Properties.AddProperty( Common.groupToAddressBook, parentChild );
 
 					if (this.addressList.Count > 0)
@@ -302,7 +302,7 @@ namespace Novell.AddressBook
 						foreach(Address cAddress in this.addressList)
 						{
 							Relationship addressAndContact = new
-								Relationship(addressBook.collection.ID, this.ID );
+								Relationship(addressBook.ID, this.ID );
 							cAddress.Properties.AddProperty( Common.addressToGroup, addressAndContact );
 						}
 					}
@@ -332,13 +332,13 @@ namespace Novell.AddressBook
 				// Load up the addresses
 				this.addressList.Clear();
 				Relationship parentChild =
-					new Relationship( this.addressBook.collection.ID, this.ID );
+					new Relationship( this.addressBook.ID, this.ID );
 				ICSList results =
-					this.addressBook.collection.Search( Common.addressToGroup, parentChild );
+					this.addressBook.Search( Common.addressToGroup, parentChild );
 				foreach ( ShallowNode cShallow in results )
 				{
-					Node cNode = new Node(this.addressBook.collection, cShallow);
-					if (this.addressBook.collection.IsType(cNode, Common.addressProperty) == true)
+					Node cNode = new Node(this.addressBook, cShallow);
+					if (this.addressBook.IsType(cNode, Common.addressProperty) == true)
 					{
 						this.addressList.Add(new Group(this.addressBook, cNode));
 					}
@@ -355,10 +355,9 @@ namespace Novell.AddressBook
 		/// </summary>
 		public void Commit()
 		{
-			if (this.addressBook != null &&
-				this.addressBook.collection != null)
+			if (this.addressBook != null)
 			{
-				this.addressBook.collection.SetType(this, Common.groupType);
+				this.addressBook.SetType(this, Common.groupType);
 
 				int nodesToCommit = 1 + this.addressList.Count;
 
@@ -371,12 +370,12 @@ namespace Novell.AddressBook
 					Novell.AddressBook.Address.PrepareToCommit(this);
 					foreach(Address cAddr in this.addressList)
 					{
-						this.addressBook.collection.SetType(cAddr, Common.addressProperty);
+						this.addressBook.SetType(cAddr, Common.addressProperty);
 						commitList[i++] = cAddr;
 					}
 				}
 
-				this.addressBook.collection.Commit(commitList);
+				this.addressBook.Commit(commitList);
 			}
 		}
 
@@ -397,18 +396,18 @@ namespace Novell.AddressBook
 			try
 			{
 				if (this.addressBook != null &&
-					this.addressBook.collection != null)
+					this.addressBook != null)
 				{
 					nodeList[idx++] = this;
 
 					if (commit == true)
 					{
-						this.addressBook.collection.Commit(
-							this.addressBook.collection.Delete(nodeList));
+						this.addressBook.Commit(
+							this.addressBook.Delete(nodeList));
 					}
 					else
 					{
-						this.addressBook.collection.Delete(nodeList);
+						this.addressBook.Delete(nodeList);
 					}
 				}
 			}
@@ -465,8 +464,8 @@ namespace Novell.AddressBook
 							(Simias.Storage.Relationship) p.Value;
 
 						Node cContactNode = 
-							this.addressBook.collection.GetNodeByID(relationship.NodeID);
-						if (this.addressBook.collection.IsType(cContactNode, Common.contactType) == true)
+							this.addressBook.GetNodeByID(relationship.NodeID);
+						if (this.addressBook.IsType(cContactNode, Common.contactType) == true)
 						{
 							cList.Add(this.addressBook.GetContact(cContactNode.ID));
 						}
@@ -642,8 +641,7 @@ namespace Novell.AddressBook
 		/// <returns>A binary stream object which the caller can read from.</returns>
 		public Stream ExportLogo()
 		{
-			if (this.addressBook != null &&
-				this.addressBook.collection != null)
+			if (this.addressBook != null)
 			{
 				try
 				{
@@ -654,7 +652,7 @@ namespace Novell.AddressBook
 							(Simias.Storage.Relationship) p.Value;
 
 						Node cLogoNode =
-							this.addressBook.collection.GetNodeByID(relationship.NodeID);
+							this.addressBook.GetNodeByID(relationship.NodeID);
 
 						if (cLogoNode != null)
 						{
@@ -662,7 +660,7 @@ namespace Novell.AddressBook
 							
 							return(new
 								FileStream(
-									sfn.GetFullPath(this.addressBook.collection),
+									sfn.GetFullPath(this.addressBook),
 									FileMode.Open,
 									FileAccess.Read,
 									FileShare.Read ));
@@ -729,7 +727,7 @@ namespace Novell.AddressBook
 			//NodeStream		photoStream = null;
 			//Stream			dstStream = null;
 
-			if (this.addressBook != null && this.addressBook.collection != null)
+			if (this.addressBook != null)
 			{
 				try
 				{
@@ -743,11 +741,11 @@ namespace Novell.AddressBook
 							(Simias.Storage.Relationship) p.Value;
 
 						Node cLogoNode = 
-							this.addressBook.collection.GetNodeByID(relationship.NodeID);
+							this.addressBook.GetNodeByID(relationship.NodeID);
 						if (cLogoNode != null)
 						{
-							this.addressBook.collection.Delete(cLogoNode);
-							this.addressBook.collection.Commit(cLogoNode);
+							this.addressBook.Delete(cLogoNode);
+							this.addressBook.Commit(cLogoNode);
 						}
 					}
 				}
@@ -758,18 +756,18 @@ namespace Novell.AddressBook
 				{
 					sfn =
 						new StoreFileNode(
-								this.addressBook.collection, 
+								this.addressBook, 
 								Common.logoProperty, 
 								srcStream);
 
 					Relationship parentChild = new
 						Relationship(
-							this.addressBook.collection.ID,
+							this.addressBook.ID,
 							sfn.ID);
 
 					this.Properties.ModifyProperty(Common.groupToLogo, parentChild);
-					this.addressBook.collection.Commit(sfn);
-					this.addressBook.collection.Commit(this);
+					this.addressBook.Commit(sfn);
+					this.addressBook.Commit(this);
 					finished = true;
 				}
 				catch{}

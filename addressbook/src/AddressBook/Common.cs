@@ -34,6 +34,7 @@ namespace Novell.AddressBook
 	{
 		#region Class Members
 
+		internal static string addressBookType = "AB:AddressBook";
 		internal static string addressBookProperty = "AB:AddressBook";
 		internal static string addressBookTypeProperty = "AB:AddressBookType";
 		internal static string addressBookRightsProperty = "AB:AddressBookRights";
