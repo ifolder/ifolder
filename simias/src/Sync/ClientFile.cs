@@ -121,6 +121,9 @@ namespace Simias.Sync.Client
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
 		IServerReadFile			serverFile;
+		/// <summary>True if the node should be marked readOnly.</summary>
+		bool					readOnly = false;
+
 		
 		#endregion
 		
@@ -184,10 +187,8 @@ namespace Simias.Sync.Client
 					// Create an update conflict.
 					file = Conflict.GetUpdateConflictPath(collection, node);
 					collection.Commit(collection.CreateCollision(node, false));
-					base.Close(commit);
 					FileInfo fi = new FileInfo(file);
 					fi.Attributes = fi.Attributes | FileAttributes.Hidden;
-					return true;
 				}
 				catch
 				{
@@ -197,7 +198,24 @@ namespace Simias.Sync.Client
 			}
 			try
 			{
+				// Make sure the file is not read only.
+				FileInfo fi = new FileInfo(file);
+				FileAttributes fa;
+				if (fi.Exists)
+				{
+					fa = fi.Attributes;
+					fi.Attributes = fa & ~FileAttributes.ReadOnly;
+				}
+				else
+				{
+					fa = FileAttributes.Normal;
+				}
 				base.Close(commit);
+				if (readOnly)
+				{
+					fa |= FileAttributes.ReadOnly;
+				}
+				fi.Attributes = fa;
 			}
 			catch
 			{
