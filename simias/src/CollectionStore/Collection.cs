@@ -854,7 +854,7 @@ namespace Simias.Storage
 						hasMembers = true;
 
 						// Keep track of any ownership changes.
-						if ( ( node as Member ).IsOwner )
+						if ( node.Properties.HasProperty( PropertyTags.Owner ) )
 						{
 							// There can only be a single collection owner. Also make sure that it just isn't
 							// the same Node object being committed twice.
@@ -863,7 +863,7 @@ namespace Simias.Storage
 								throw new AlreadyExistsException( String.Format( "Owner {0} - ID: {1} already exists for collection {2} - ID: {3}.", collectionOwner.Name, collectionOwner.ID, name, id ) );
 							}
 
-							collectionOwner = node as Member;
+							collectionOwner = new Member( node );
 						}
 					}
 				}

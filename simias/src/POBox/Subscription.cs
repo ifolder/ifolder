@@ -617,7 +617,7 @@ namespace Simias.POBox
 				SyncCollectionRoles.Slave);
 			
 			c.Properties.AddProperty(SyncCollection.MasterUrlPropertyName,
-				this.SubscriptionCollectionURL);
+				new Uri(this.SubscriptionCollectionURL));
 
 			// member
 			Member member = new Member(this.FromName, this.FromIdentity, Access.Rights.ReadWrite);

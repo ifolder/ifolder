@@ -59,6 +59,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		ss = master;
 		collection = slave;
+		collection.Impersonate(new Member("Root", collection.ID, Access.Rights.Admin));
 		ops = new SyncOps(collection, false);
 	}
 
