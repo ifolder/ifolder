@@ -552,7 +552,7 @@ namespace Novell.FormsTrayApp
 			this.label3.TabIndex = 0;
 			this.label3.Text = "Specify the default Sync interval for synchronizing your iFolders with the host. " +
 				"To specify a different Sync interval for an individual iFolder, use the iFolder\'" +
-				"s Property dialog.";
+				"s Properties dialog.";
 			// 
 			// groupBox3
 			// 
