@@ -23,8 +23,8 @@
 #######################################################################
 
 # Startup CollectionBrowser
-export MONO_PATH=@prefix@/bin:@prefix@/lib
-export LD_LIBRARY_PATH=@prefix@/bin:@prefix@/lib
-cd @prefix@/bin
+export MONO_PATH=@prefix@/lib
+export LD_LIBRARY_PATH=@prefix@/lib
+cd @prefix@/lib
 mono CollectionBrowser.exe
 

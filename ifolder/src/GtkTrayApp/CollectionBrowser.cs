@@ -40,17 +40,13 @@ namespace Novell.iFolder
 {
 	public class CollectionBrowser
 	{
-		[Glade.Widget] Gtk.TreeView	ColTreeView;
-		[Glade.Widget] Gtk.TreeView	NodeTreeView;
-		[Glade.Widget] Gtk.Window	ColWindow;
+		[Glade.Widget] internal Gtk.TreeView	ColTreeView;
+		[Glade.Widget] internal Gtk.TreeView	NodeTreeView;
+		[Glade.Widget] internal Gtk.Window		ColWindow;
 
 		private ListStore			ColTreeStore;
 		private ListStore			NodeTreeStore;
-		int							curIndex;
-		bool						enableDblClick;
 		Pixbuf						CollectionPixBuf;
-		ArrayList					nodeArray;
-		ShallowNode					curSNode = null;
 		Collection					curCol = null;
 		Store						store;
 		Hashtable					pbTable;
@@ -142,13 +138,10 @@ namespace Novell.iFolder
 		
 			CollectionPixBuf = new Pixbuf("collection.png");
 
-			nodeArray = new ArrayList();
 
 			//			nifWindow.Icon = NodePixBuf;
 			//			nifWindow.Title = "Simias Collection Browser";
 
-			curIndex = -1;
-			enableDblClick = false;
 		}
 
 
@@ -341,8 +334,8 @@ namespace Novell.iFolder
 			}
 		}
 
-		[Glade.Widget] Gtk.TreeView	PropTreeView;
-		[Glade.Widget] Gtk.Dialog	ColPropertiesDialog;
+		[Glade.Widget] internal Gtk.TreeView	PropTreeView;
+		[Glade.Widget] internal Gtk.Dialog		ColPropertiesDialog;
 
 		private ListStore			PropTreeStore;
 		Node						node;

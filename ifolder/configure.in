@@ -124,7 +124,7 @@ AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 AC_SUBST(NOBUILD_SUBDIRS)
 
-COMMON_LIBS="/r:iFolder.dll"
+COMMON_LIBS="/r:Novell.iFolder.dll"
 
 COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
@@ -169,13 +169,13 @@ case $IFOLDER_OS in
         MONO_MINIMUM_VERSION=0.91
         AC_SUBST(MONO_MINIMUM_VERSION)
         
-        GTK_SHARP_MINIMUM_VERSION=0.17
+        GTK_SHARP_MINIMUM_VERSION=0.91.1
         AC_SUBST(GTK_SHARP_MINIMUM_VERSION)
 	
         GDK20_MINIMUM_VERSION=2.2.3
         ATK_MINIMUM_VERSION=1.2.4
         
-        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION, gdk-2.0 >= $GDK20_MINIMUM_VERSION, atk >= $ATK_MINIMUM_VERSION"
+        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
         PKG_CONFIG_CONFLICTS=""
         PKG_CONFIG_LIBS="$COMMON_LIBS /r:TrayIcon.dll"
         
@@ -398,18 +398,19 @@ AC_SUBST(ADDRESSBOOK_LIBS)
 
 case $IFOLDER_OS in
     linux)
-        PKG_CHECK_MODULES(BASE_DEPENDENCIES, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
+	PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
     GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
     GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
-#    test -x "$GTK_SHARP_PREFIX/bin/gapi-codegen" || AC_MSG_ERROR([You need to install gtk-sharp-gapi $GTK_SHARP_VERSION])
     AC_SUBST(GTK_SHARP_PREFIX)
-    
-        PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
-    AC_SUBST(GDK20_CFLAGS)
-    AC_SUBST(GDK20_LIBS)
-        PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
-    AC_SUBST(ATK_CFLAGS)
-    AC_SUBST(ATK_LIBS)
+	AC_SUBST(GTK_SHARP_LIBS)
+
+	PKG_CHECK_MODULES(GDK20, gdk-2.0 >= $GDK20_MINIMUM_VERSION)
+	AC_SUBST(GDK20_CFLAGS)
+	AC_SUBST(GDK20_LIBS)
+
+	PKG_CHECK_MODULES(ATK, atk >= $ATK_MINIMUM_VERSION)
+	AC_SUBST(ATK_CFLAGS)
+	AC_SUBST(ATK_LIBS)
     ;;
 esac
 

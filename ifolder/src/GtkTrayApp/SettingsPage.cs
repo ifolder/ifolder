@@ -50,7 +50,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		[Glade.Widget] Gtk.Entry	RefreshEntry;
+		[Glade.Widget] internal Gtk.Entry	RefreshEntry;
 
 		Gtk.Table SettingsTable;
 		iFolder  ifldr;
