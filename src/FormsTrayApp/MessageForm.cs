@@ -46,7 +46,6 @@ namespace Novell.iFolder.FormsTrayApp
 		private Configuration config;
 		private Manager abManager;
 		private EventSubscriber subscriber;
-		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ListView messages;
@@ -55,6 +54,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.Button decline;
 		private System.Windows.Forms.Button remove;
 		private Hashtable ht;
+		private System.Windows.Forms.ComboBox domains;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -71,11 +71,6 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 				this.config = config;
 				abManager = Manager.Connect();
-
-				store = Store.GetStore();
-
-				// TODO: pass in correct domain ... for now just use the default.
-				poBox = POBox.GetPOBox(store, store.DefaultDomain);
 			}
 			catch (SimiasException e)
 			{
@@ -114,7 +109,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.messages = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.domains = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.accept = new System.Windows.Forms.Button();
 			this.decline = new System.Windows.Forms.Button();
@@ -146,14 +141,13 @@ namespace Novell.iFolder.FormsTrayApp
 			this.columnHeader2.Text = "State";
 			this.columnHeader2.Width = 92;
 			// 
-			// comboBox1
+			// domains
 			// 
-			this.comboBox1.Enabled = false;
-			this.comboBox1.Location = new System.Drawing.Point(72, 56);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(176, 21);
-			this.comboBox1.TabIndex = 2;
-			this.comboBox1.Text = "Workgroup";
+			this.domains.Location = new System.Drawing.Point(72, 56);
+			this.domains.Name = "domains";
+			this.domains.Size = new System.Drawing.Size(176, 21);
+			this.domains.TabIndex = 2;
+			this.domains.SelectedIndexChanged += new System.EventHandler(this.domains_SelectedIndexChanged);
 			// 
 			// label1
 			// 
@@ -203,7 +197,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.remove);
 			this.Controls.Add(this.decline);
 			this.Controls.Add(this.accept);
-			this.Controls.Add(this.comboBox1);
+			this.Controls.Add(this.domains);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.messages);
 			this.MinimumSize = new System.Drawing.Size(336, 368);
@@ -234,29 +228,70 @@ namespace Novell.iFolder.FormsTrayApp
 				logger.Debug(ex, "Loading graphics");
 			}
 
-			subscriber = new EventSubscriber();
+			store = Store.GetStore();
+			int index = 0;
 
-			// TODO: Will need to change this when a different POBox is selectable.
+			foreach (ShallowNode sn in store.GetCollectionsByType(typeof(POBox).Name))
+			{
+				// Parse the name to get the domain ID.
+				int separatorIndex = sn.Name.IndexOf(":") + 1;
+				string domainID = sn.Name.Substring(separatorIndex, sn.Name.IndexOf(":", separatorIndex) - separatorIndex);
+
+				// Get the domain and add it to the list.
+				Domain domain = store.GetDomain(domainID);
+				domains.Items.Add(domain);
+
+				// Set the default domain as the selected domain.
+				if (domain.ID.Equals(store.DefaultDomain))
+				{
+					domains.SelectedIndex = index;
+				}
+
+				index++;
+			}
+		}
+
+		private void domains_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			// Get the selected domain
+			Domain domain = (Domain)domains.Items[domains.SelectedIndex];
+
+			// Get the POBox for the selected domain.
+			poBox = POBox.GetPOBox(store, domain.ID);
+
+			// Set up the event handlers for the POBox.
+			subscriber = new EventSubscriber();
 			subscriber.CollectionId = poBox.ID;
 			subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
 			subscriber.NodeCreated += new NodeEventHandler(subscriber_NodeCreated);
 			subscriber.NodeDeleted += new NodeEventHandler(subscriber_NodeDeleted);
 
+			// Clear the hashtable.
+			ht.Clear();
+
+			// Clear the listview.
+			messages.Items.Clear();
+
 			messages.BeginUpdate();
 
 			try
 			{
+				// Get the subscriptions from the POBox.
 				ICSList msgList = poBox.GetNodesByType(typeof(Subscription).Name);
 
 				foreach (ShallowNode sn in msgList)
 				{
 					Subscription sub = new Subscription(poBox, sn);
+
+					// If the subscription state is "Ready" and the collection exists locally, don't add it to the listview.
 					if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
 					{
 						string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
 						ListViewItem lvi = new ListViewItem(items, 0);
 						lvi.Tag = sub;
 						messages.Items.Add(lvi);
+
+						// Add the listviewitem to the hashtable so we can quickly find it.
 						ht.Add(sub.ID, lvi);
 					}
 				}
@@ -391,7 +426,11 @@ namespace Novell.iFolder.FormsTrayApp
 				{
 					Subscription sub = new Subscription(node);
 
-					if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
+					// If the subscription state is "Ready" and the collection exists locally or if the item is already in the list,
+					// don't add it to the listview.
+					if (((sub.SubscriptionState != SubscriptionStates.Ready) 
+						|| (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
+						&& (ht[args.ID] == null))
 					{
 						string[] items = new string[]{sub.Name, sub.SubscriptionState.ToString()};
 						ListViewItem lvi = new ListViewItem(items, 0);
@@ -423,15 +462,21 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void subscriber_NodeChanged(NodeEventArgs args)
 		{
+			// Get the existing item.
 			ListViewItem lvi = (ListViewItem)ht[args.Node];
 			if (lvi != null)
 			{
 				try
 				{
+					// Get the node that changed.
 					Node node = poBox.GetNodeByID(args.ID);
 					if (node != null)
 					{
+						// New up a Subscription object base on the node.
 						Subscription sub = new Subscription(node);
+
+						// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
+						// otherwise, update the status text.
 						if ((sub.SubscriptionState != SubscriptionStates.Ready) || (store.GetCollectionByID(sub.SubscriptionCollectionID) == null))
 						{
 							lvi.SubItems[1].Text = sub.SubscriptionState.ToString();
