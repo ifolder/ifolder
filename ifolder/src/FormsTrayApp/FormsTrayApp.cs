@@ -75,7 +75,6 @@ namespace Novell.FormsTrayApp
 		//private Configuration config;
 		private Process simiasProc;
 		private iFolderWebService ifWebService;
-		private iFolderSettings ifolderSettings = null;
 		//private EventSubscriber subscriber;
 		private IProcEventClient eventClient;
 		private bool eventError = false;
@@ -260,7 +259,7 @@ namespace Novell.FormsTrayApp
 				// If the join menu is already hidden, we don't need to check.
 				if (menuJoin.Visible)
 				{
-					ifolderSettings = ifWebService.GetSettings();
+					iFolderSettings ifolderSettings = ifWebService.GetSettings();
 					menuJoin.Visible = !ifolderSettings.HaveEnterprise;
 				}
 			}
@@ -381,31 +380,48 @@ namespace Novell.FormsTrayApp
 			{
 				if (eventArgs.Type != "Collection")
 				{
-					if (ifolderSettings == null)
-					{
-						ifolderSettings = ifWebService.GetSettings();
-					}
-
 					iFolder ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
 
 					// If the iFolder is available and doesn't exist locally, post a notification.
-					if ((ifolder != null) &&
-						(ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)))
+					if (ifolder != null)
 					{
-						// TODO: check this...
-						//this.Text = "A message needs your attention";
+						if (ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null))
+						{
+							// TODO: check this...
+							//this.Text = "A message needs your attention";
 
-						NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
 
-						// TODO: Localize
-						balloonTip.ShowBalloon(
-							hwnd,
-							iconID,
-							BalloonType.Info,
-							"Action Required",
-							"A subscription has just been received from " + ifolder.Owner);
+							// TODO: Localize
+							balloonTip.ShowBalloon(
+								hwnd,
+								iconID,
+								BalloonType.Info,
+								"Action Required",
+								"A subscription has just been received from " + ifolder.Owner);
 
-						// TODO: Change the icon?
+							// TODO: Change the icon?
+						}
+					}
+					else
+					{
+						iFolderUser ifolderUser = ifWebService.GetiFolderUserFromNodeID(eventArgs.Collection, eventArgs.Node);
+						if (ifolderUser != null)
+						{
+							ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+
+							NotifyIconBalloonTip balloonTip = new NotifyIconBalloonTip();
+
+							// TODO: Localize
+							balloonTip.ShowBalloon(
+								hwnd,
+								iconID,
+								BalloonType.Info,
+								"New Membership",
+								ifolderUser.Name + " has just joined iFolder " + ifolder.Name);
+
+							// TODO: Change the icon?
+						}
 					}
 				}
 			}

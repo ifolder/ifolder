@@ -85,8 +85,10 @@ namespace Novell.FormsTrayApp
 			base.Install(savedState);
 			Console.WriteLine("iFolderApp Install");
 
+			// Get the directory where the assembly is running.
 			string installDir = new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
 
+			// Get the Windows directory.
 			string windowsDir = Environment.GetEnvironmentVariable("windir");
 
 			//fixConfigFile(ifolderAppPath);
@@ -154,20 +156,27 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
+				// Load the config file.
 				configDoc = new XmlDocument();
 				configDoc.Load(configFilePath);
 
+				// Parse the config file.
 				XmlNode runtimeNode = configDoc.DocumentElement.SelectSingleNode("/configuration/runtime");
 				if (runtimeNode != null)
 				{
+					// Get the simias element.
 					XmlNode simiasNode = runtimeNode.FirstChild.FirstChild;
+
+					// Get the log4net element.
 					XmlNode log4netNode = simiasNode.NextSibling;
 
+					// Replace the codeBase element.
 					replaceCodeBase(simiasNode, installDir);
 					replaceCodeBase(log4netNode, installDir);
 				}
 
 
+				// Save the config file.
 				XmlTextWriter xtw = new XmlTextWriter(configFilePath, Encoding.ASCII);
 				try
 				{
@@ -193,11 +202,17 @@ namespace Novell.FormsTrayApp
 			XmlNode identity = node.FirstChild;
 			XmlNode codebase = identity.NextSibling;
 
+			// Build the path to the assembly
 			Uri fileURI = new Uri(Path.Combine(path, Path.Combine(@"web\bin", ((XmlElement)identity).GetAttribute("name") + ".dll")));
+
+			// Get the namespace from the node.
 			string ns = codebase.GetNamespaceOfPrefix(String.Empty);
+
+			// Create a new element with the correct path.
 			XmlElement element = configDoc.CreateElement(String.Empty, "codeBase", ns);
 			element.SetAttribute("href", fileURI.AbsoluteUri);
 
+			// Replace the element.
 			node.ReplaceChild(element, codebase);
 		}
 
