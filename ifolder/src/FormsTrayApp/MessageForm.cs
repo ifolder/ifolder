@@ -68,6 +68,13 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
+			// put the window in the bottom corner
+			Rectangle screen = SystemInformation.VirtualScreen;
+			Point point = new Point();
+			point.X = screen.Width - Size.Width;
+			point.Y = screen.Height - Size.Height - 30;
+			Location = point;
+
 			try
 			{
 				this.config = config;
@@ -216,6 +223,7 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.messages);
 			this.MinimumSize = new System.Drawing.Size(336, 368);
 			this.Name = "MessageForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Subscriptions";
 			this.Load += new System.EventHandler(this.MessageForm_Load);
 			this.ResumeLayout(false);
@@ -415,6 +423,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void decline_Click(object sender, System.EventArgs e)
 		{
+			// TODO: implement this.
 		}
 
 		private void generateCsiFile_Click(object sender, System.EventArgs e)
@@ -422,12 +431,14 @@ namespace Novell.iFolder.FormsTrayApp
 			ListViewItem lvi = messages.SelectedItems[0];
 			Subscription sub = (Subscription)lvi.Tag;
 
+			// Prompt for the filename via the SaveFileDialog.
 			SaveFileDialog saveFileDialog = new SaveFileDialog();
 			saveFileDialog.Filter = "csi files (*.csi)|*.csi" ;
 			saveFileDialog.DefaultExt = "csi";
 			saveFileDialog.RestoreDirectory = true;
 			if (saveFileDialog.ShowDialog() == DialogResult.OK)
 			{
+				// Create the file.
 				SubscriptionInfo info = sub.GenerateInfo(poBox.StoreReference);
 				info.Save(saveFileDialog.FileName);
 			}
@@ -513,7 +524,7 @@ namespace Novell.iFolder.FormsTrayApp
 					Node node = poBox.GetNodeByID(args.ID);
 					if (node != null)
 					{
-						// New up a Subscription object base on the node.
+						// New up a Subscription object based on the node.
 						Subscription sub = new Subscription(node);
 
 						// If the subscription state is "Ready" and the collection exists locally, remove the listview item; 
