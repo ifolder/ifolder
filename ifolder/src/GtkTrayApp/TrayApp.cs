@@ -229,7 +229,7 @@ namespace Novell.iFolder
 //			ifolder_browser_item.Activated += 
 //					new EventHandler(show_ifolder_browser);
 
-			MenuItem InvWizard_item = new MenuItem ("Invitation Wizard");
+			MenuItem InvWizard_item = new MenuItem ("Invitation Assistant");
 			trayMenu.Append (InvWizard_item);
 			InvWizard_item.Activated += new EventHandler(show_invwizard);
 
@@ -358,12 +358,10 @@ namespace Novell.iFolder
 
 		static void show_invwizard(object o, EventArgs args)
 		{
-/*
-			InvitationWizard iWiz;
+			InvitationAssistant iAss;
 
-			iWiz = new InvitationWizard();
-			iWiz.ShowAll();
-*/
+			iAss = new InvitationAssistant();
+			iAss.ShowAll();
 		}
 	}
 }
