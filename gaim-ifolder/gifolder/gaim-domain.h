@@ -38,6 +38,20 @@ void simias_update_member(const char *account_name, const char *account_prpl_id,
 						  const char *buddy_name, const char *machine_name);
 
 /**
+ * Gets the user public key that should be used.  This function first checks
+ * the custom plugin setting to see if we already have a public/private key
+ * stored in the Gaim configuration.  If so, it just returns the public key
+ * directly from the configuration.  If the public key is not in the Gaim
+ * configuration, it will call the GaimDomainService WebService to get the key
+ * and will store it in the Gaim configuration for future calls.
+ *
+ * This method returns 0 on success.  If success is returned, the public_key
+ * will have a newly allocated char * that should be freed by the caller.  If
+ * there is an error, public_key will be invalid and does not need to be freed.
+ */
+int simias_get_public_key(char **public_key);
+
+/**
  * Gets the machineName, userID, and simiasURL for the current Gaim Domain Owner.
  *
  * This method returns 0 on success.  If success is returned, the machineName,

@@ -159,7 +159,7 @@ simias_set_buddy_profile(GaimAccount *account, const char *profile_str)
 	conn_state = gaim_connection_get_state(gc);
 	if (conn_state == GAIM_DISCONNECTED)
 	{
-		/* This account is offline, so don't do anything.
+		/* This account is offline, so don't do anything. */
 		g_print("This account is offline, so the profile cannot be set.\n");
 		return;
 	}
