@@ -9,7 +9,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 endif
 
 if WINDOWS
-SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook
+SUBDIRS = Simias.dll SimiasApp Events POBox mDnsService SyncService AddressBook SimiasAspService WebService
 DIST_SUBDIRS = $(SUBDIRS) SimiasAspService WebService
 endif
 
