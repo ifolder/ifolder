@@ -1,4 +1,0 @@
-tsamsg.lo tsamsg.o: i18n/linux/tsamsg.c \
-  dependencies/internal/smscomp/include/smstypes.h
-
-dependencies/internal/smscomp/include/smstypes.h:
