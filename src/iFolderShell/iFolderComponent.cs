@@ -123,7 +123,7 @@ namespace Novell.iFolder.iFolderCom
 
 				// TODO - move this so that the commit can be done once at the end of
 				// a bunch of modifies.
-//				ifoldernode.iFolder.CurrentNode.Commit();
+//				ifoldernode.iFolder.Commit();
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace Novell.iFolder.iFolderCom
 			{
 				if (IsiFolder(path))
 				{
-					return manager.GetiFolderByPath(path).IsShareable();
+					return manager.GetiFolderByPath(path).Shareable;
 				}
 			}
 			catch (SimiasException e)
@@ -249,7 +249,7 @@ namespace Novell.iFolder.iFolderCom
 		public bool GetiFolderPropInit()
 		{
 			// Set up the enumerator to get the Properties on the Node.
-			propEnumerator = ( ICSEnumerator )ifoldernode.iFolder.CurrentNode.Properties.GetEnumerator();
+			propEnumerator = ( ICSEnumerator )ifoldernode.iFolder.Properties.GetEnumerator();
 
 			return (propEnumerator != null);
 			return false;
