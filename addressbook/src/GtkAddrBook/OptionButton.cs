@@ -60,6 +60,7 @@ namespace Novell.iFolder
 		internal Gtk.Menu						menu = null;
 		internal Gtk.Label						label = null;
 		internal System.Collections.ArrayList	optionArray = null;
+		internal int							curIndex;
 
 		static GLib.GType gtype = GLib.GType.Invalid;
 
@@ -81,6 +82,7 @@ namespace Novell.iFolder
 
 			hbox.PackStart(ba, false, false, 5);
 			Add(hbox);
+			curIndex = 0;
 		}
 
 
@@ -110,6 +112,27 @@ namespace Novell.iFolder
 				label.Text = value;
 			}
 		}
+		
+		
+		
+		
+		public int Index
+		{
+			get
+			{
+				return(this.curIndex);
+			}
+			set
+			{
+				if( (optionArray != null) && 
+						(value >= 0) && (value < optionArray.Count) )
+				{
+					MenuItem mItem = (MenuItem)optionArray[value];
+					label.Text = ((Label)mItem.Child).Text;
+					curIndex = value;
+				}
+			}
+		}
 
 
 
@@ -133,15 +156,13 @@ namespace Novell.iFolder
 
 		internal void handle_menu_item(object o, EventArgs args)
 		{
-			int menuIndex;
-
 			MenuItem mItem = (Gtk.MenuItem)o;
-			menuIndex = optionArray.IndexOf(mItem);
+			curIndex = optionArray.IndexOf(mItem);
 			label.Text = ((Label)mItem.Child).Text;
 
 			// signal all delegates
 			if(OptionChanged != null)
-				OptionChanged(this, new OptionChangedEventArgs(menuIndex));
+				OptionChanged(this, new OptionChangedEventArgs(curIndex));
 		}
 
 

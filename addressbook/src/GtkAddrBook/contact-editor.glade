@@ -177,7 +177,7 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkEntry" id="emailEntry">
+		<widget class="GtkEntry" id="emailOneEntry">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>
@@ -212,20 +212,6 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkHSeparator" id="hseparator37">
-		  <property name="visible">True</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">0</property>
-		  <property name="right_attach">4</property>
-		  <property name="top_attach">7</property>
-		  <property name="bottom_attach">8</property>
-		  <property name="y_padding">2</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
 		<widget class="GtkAlignment" id="alignment75">
 		  <property name="visible">True</property>
 		  <property name="xalign">0.5</property>
@@ -234,15 +220,16 @@
 		  <property name="yscale">1</property>
 
 		  <child>
-		    <widget class="GtkCheckButton" id="emailPreferredButton">
+		    <widget class="GtkEntry" id="emailTwoEntry">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">_Preferred email address</property>
-		      <property name="use_underline">True</property>
-		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <property name="active">False</property>
-		      <property name="inconsistent">False</property>
-		      <property name="draw_indicator">True</property>
+		      <property name="editable">True</property>
+		      <property name="visibility">True</property>
+		      <property name="max_length">0</property>
+		      <property name="text" translatable="yes"></property>
+		      <property name="has_frame">True</property>
+		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="activates_default">True</property>
 		    </widget>
 		  </child>
 		</widget>
@@ -301,54 +288,6 @@
 		  <property name="right_attach">3</property>
 		  <property name="top_attach">3</property>
 		  <property name="bottom_attach">4</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkLabel" id="label172">
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">_Web page address:</property>
-		  <property name="use_underline">True</property>
-		  <property name="use_markup">False</property>
-		  <property name="justify">GTK_JUSTIFY_CENTER</property>
-		  <property name="wrap">False</property>
-		  <property name="selectable">False</property>
-		  <property name="xalign">1</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">3</property>
-		  <property name="top_attach">8</property>
-		  <property name="bottom_attach">9</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkLabel" id="label173">
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Blog address:</property>
-		  <property name="use_underline">True</property>
-		  <property name="use_markup">False</property>
-		  <property name="justify">GTK_JUSTIFY_CENTER</property>
-		  <property name="wrap">False</property>
-		  <property name="selectable">False</property>
-		  <property name="xalign">1</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">3</property>
-		  <property name="top_attach">9</property>
-		  <property name="bottom_attach">10</property>
 		  <property name="x_options">fill</property>
 		  <property name="y_options"></property>
 		</packing>
@@ -443,102 +382,6 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkEntry" id="phoneFourEntry">
-		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="editable">True</property>
-		  <property name="visibility">True</property>
-		  <property name="max_length">0</property>
-		  <property name="text" translatable="yes"></property>
-		  <property name="has_frame">True</property>
-		  <property name="invisible_char" translatable="yes">*</property>
-		  <property name="activates_default">True</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">6</property>
-		  <property name="right_attach">7</property>
-		  <property name="top_attach">3</property>
-		  <property name="bottom_attach">4</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkButton" id="addrChangeButton">
-		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">A_ddress...</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">5</property>
-		  <property name="right_attach">6</property>
-		  <property name="top_attach">6</property>
-		  <property name="bottom_attach">7</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkCheckButton" id="addrMailingButton">
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">_This is the mailing address</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="active">False</property>
-		  <property name="inconsistent">False</property>
-		  <property name="draw_indicator">True</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">6</property>
-		  <property name="right_attach">7</property>
-		  <property name="top_attach">10</property>
-		  <property name="bottom_attach">11</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkScrolledWindow" id="scrolledwindow15">
-		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-		  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-		  <property name="shadow_type">GTK_SHADOW_IN</property>
-		  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
-
-		  <child>
-		    <widget class="GtkTextView" id="addrTextView">
-		      <property name="visible">True</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="justification">GTK_JUSTIFY_LEFT</property>
-		      <property name="wrap_mode">GTK_WRAP_WORD</property>
-		      <property name="cursor_visible">True</property>
-		      <property name="pixels_above_lines">0</property>
-		      <property name="pixels_below_lines">0</property>
-		      <property name="pixels_inside_wrap">0</property>
-		      <property name="left_margin">0</property>
-		      <property name="right_margin">0</property>
-		      <property name="indent">0</property>
-		      <property name="text" translatable="yes"></property>
-		    </widget>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">6</property>
-		  <property name="right_attach">7</property>
-		  <property name="top_attach">5</property>
-		  <property name="bottom_attach">10</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
 		<widget class="GtkImage" id="image6">
 		  <property name="visible">True</property>
 		  <property name="pixbuf">ico-mail.png</property>
@@ -558,25 +401,6 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkImage" id="image7">
-		  <property name="visible">True</property>
-		  <property name="pixbuf">globe.png</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">5</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">0</property>
-		  <property name="right_attach">1</property>
-		  <property name="top_attach">8</property>
-		  <property name="bottom_attach">10</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
 		<widget class="GtkImage" id="image8">
 		  <property name="visible">True</property>
 		  <property name="pixbuf">cellphone.png</property>
@@ -590,25 +414,6 @@
 		  <property name="right_attach">5</property>
 		  <property name="top_attach">0</property>
 		  <property name="bottom_attach">4</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkImage" id="image9">
-		  <property name="visible">True</property>
-		  <property name="pixbuf">house.png</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">4</property>
-		  <property name="right_attach">5</property>
-		  <property name="top_attach">5</property>
-		  <property name="bottom_attach">10</property>
 		  <property name="x_options">fill</property>
 		  <property name="y_options">fill</property>
 		</packing>
@@ -644,7 +449,7 @@
 		    <widget class="GtkButton" id="changeImageButton">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">Ch_ange</property>
+		      <property name="label" translatable="yes">Photo</property>
 		      <property name="use_underline">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <signal name="clicked" handler="on_changeImageButton_clicked" last_modification_time="Tue, 09 Mar 2004 23:37:38 GMT"/>
@@ -667,48 +472,13 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkHBox" id="hbox65">
-		  <property name="visible">True</property>
-		  <property name="homogeneous">False</property>
-		  <property name="spacing">0</property>
-
-		  <child>
-		    <widget class="GtkEntry" id="webURLEntry">
-		      <property name="visible">True</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">True</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
-		    </packing>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
-		  <property name="top_attach">8</property>
-		  <property name="bottom_attach">9</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
 		<widget class="GtkHBox" id="hbox66">
 		  <property name="visible">True</property>
 		  <property name="homogeneous">False</property>
 		  <property name="spacing">0</property>
 
 		  <child>
-		    <widget class="GtkEntry" id="blogURLEntry">
+		    <widget class="GtkEntry" id="webURLEntry">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">True</property>
@@ -758,104 +528,19 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkAlignment" id="phoneFourAlignment">
+		<widget class="GtkLabel" id="emailOneLabel">
 		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
+		  <property name="label" translatable="yes">Work Email:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
 		  <property name="yalign">0.5</property>
-		  <property name="xscale">1</property>
-		  <property name="yscale">1</property>
-
-		  <child>
-		    <placeholder/>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">5</property>
-		  <property name="right_attach">6</property>
-		  <property name="top_attach">3</property>
-		  <property name="bottom_attach">4</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkAlignment" id="phoneThreeAlignment">
-		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xscale">1</property>
-		  <property name="yscale">1</property>
-
-		  <child>
-		    <placeholder/>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">5</property>
-		  <property name="right_attach">6</property>
-		  <property name="top_attach">2</property>
-		  <property name="bottom_attach">3</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkAlignment" id="phoneTwoAlignment">
-		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xscale">1</property>
-		  <property name="yscale">1</property>
-
-		  <child>
-		    <placeholder/>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">5</property>
-		  <property name="right_attach">6</property>
-		  <property name="top_attach">1</property>
-		  <property name="bottom_attach">2</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkAlignment" id="phoneOneAlignment">
-		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xscale">1</property>
-		  <property name="yscale">1</property>
-
-		  <child>
-		    <placeholder/>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">5</property>
-		  <property name="right_attach">6</property>
-		  <property name="top_attach">0</property>
-		  <property name="bottom_attach">1</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options">fill</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkAlignment" id="emailAlignment">
-		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xscale">1</property>
-		  <property name="yscale">1</property>
-
-		  <child>
-		    <placeholder/>
-		  </child>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
 		</widget>
 		<packing>
 		  <property name="left_attach">1</property>
@@ -863,21 +548,137 @@
 		  <property name="top_attach">5</property>
 		  <property name="bottom_attach">6</property>
 		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkButton" id="phoneButton">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">Other Phone...</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <signal name="clicked" handler="on_phoneButton_clicked" last_modification_time="Fri, 12 Mar 2004 03:49:19 GMT"/>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">3</property>
+		  <property name="bottom_attach">4</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="phoneOneLabel">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Work Phone:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">0</property>
+		  <property name="bottom_attach">1</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="phoneTwoLabel">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Mobile Phone:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">1</property>
+		  <property name="bottom_attach">2</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="phoneThreeLabel">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Home Phone:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">2</property>
+		  <property name="bottom_attach">3</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkImage" id="image9">
+		  <property name="visible">True</property>
+		  <property name="pixbuf">house.png</property>
+		  <property name="xalign">0.5</property>
+		  <property name="yalign">0</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">4</property>
+		  <property name="right_attach">5</property>
+		  <property name="top_attach">5</property>
+		  <property name="bottom_attach">7</property>
+		  <property name="x_options">fill</property>
 		  <property name="y_options">fill</property>
 		</packing>
 	      </child>
 
 	      <child>
-		<widget class="GtkAlignment" id="addrAlignment">
+		<widget class="GtkLabel" id="streetLabel">
 		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
+		  <property name="label" translatable="yes">Street:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
 		  <property name="yalign">0.5</property>
-		  <property name="xscale">1</property>
-		  <property name="yscale">1</property>
-
-		  <child>
-		    <placeholder/>
-		  </child>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
 		</widget>
 		<packing>
 		  <property name="left_attach">5</property>
@@ -885,7 +686,379 @@
 		  <property name="top_attach">5</property>
 		  <property name="bottom_attach">6</property>
 		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="streetEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">False</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">6</property>
+		  <property name="right_attach">7</property>
+		  <property name="top_attach">5</property>
+		  <property name="bottom_attach">6</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="cityLabel">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">City:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">6</property>
+		  <property name="bottom_attach">7</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="stateLabel">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">State/Province:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">7</property>
+		  <property name="bottom_attach">8</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label230">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Zip Code:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">8</property>
+		  <property name="bottom_attach">9</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label231">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Country/Region:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">9</property>
+		  <property name="bottom_attach">10</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="cityEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">False</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">6</property>
+		  <property name="right_attach">7</property>
+		  <property name="top_attach">6</property>
+		  <property name="bottom_attach">7</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="stateEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">False</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">6</property>
+		  <property name="right_attach">7</property>
+		  <property name="top_attach">7</property>
+		  <property name="bottom_attach">8</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="zipEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">False</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">6</property>
+		  <property name="right_attach">7</property>
+		  <property name="top_attach">8</property>
+		  <property name="bottom_attach">9</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="countryEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">False</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">6</property>
+		  <property name="right_attach">7</property>
+		  <property name="top_attach">9</property>
+		  <property name="bottom_attach">10</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkButton" id="addrButton">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">Other Address...</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <signal name="clicked" handler="on_addrChangeButton_clicked" last_modification_time="Fri, 12 Mar 2004 03:49:28 GMT"/>
+		</widget>
+		<packing>
+		  <property name="left_attach">5</property>
+		  <property name="right_attach">6</property>
+		  <property name="top_attach">10</property>
+		  <property name="bottom_attach">11</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkEntry" id="blogURLEntry">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="editable">True</property>
+		  <property name="visibility">True</property>
+		  <property name="max_length">0</property>
+		  <property name="text" translatable="yes"></property>
+		  <property name="has_frame">True</property>
+		  <property name="invisible_char" translatable="yes">*</property>
+		  <property name="activates_default">True</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">3</property>
+		  <property name="right_attach">4</property>
+		  <property name="top_attach">10</property>
+		  <property name="bottom_attach">11</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkImage" id="image7">
+		  <property name="visible">True</property>
+		  <property name="pixbuf">globe.png</property>
+		  <property name="xalign">0.5</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">5</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">0</property>
+		  <property name="right_attach">1</property>
+		  <property name="top_attach">9</property>
+		  <property name="bottom_attach">11</property>
+		  <property name="x_options">fill</property>
 		  <property name="y_options">fill</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label173">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Blog address:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">blogURLEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">3</property>
+		  <property name="top_attach">10</property>
+		  <property name="bottom_attach">11</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label172">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">_Web page:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">3</property>
+		  <property name="top_attach">9</property>
+		  <property name="bottom_attach">10</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkButton" id="emailButton">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">Other Email...</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <signal name="clicked" handler="on_emailButton_clicked" last_modification_time="Fri, 12 Mar 2004 03:49:01 GMT"/>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">3</property>
+		  <property name="top_attach">7</property>
+		  <property name="bottom_attach">8</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="emailTwoLabel">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Home Email:</property>
+		  <property name="use_underline">True</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">1</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		  <property name="mnemonic_widget">userIDEntry</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">3</property>
+		  <property name="top_attach">6</property>
+		  <property name="bottom_attach">7</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkHSeparator" id="hseparator37">
+		  <property name="visible">True</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">0</property>
+		  <property name="right_attach">4</property>
+		  <property name="top_attach">8</property>
+		  <property name="bottom_attach">9</property>
+		  <property name="y_padding">2</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
 		</packing>
 	      </child>
 	    </widget>

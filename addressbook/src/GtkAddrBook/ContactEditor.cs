@@ -69,24 +69,28 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.Entry			phoneOneEntry;
 		[Glade.Widget] internal Gtk.Entry			phoneTwoEntry;
 		[Glade.Widget] internal Gtk.Entry			phoneThreeEntry;
-		[Glade.Widget] internal Gtk.Entry			phoneFourEntry;
-		
-		[Glade.Widget] internal Gtk.Alignment		phoneOneAlignment;
-		[Glade.Widget] internal Gtk.Alignment		phoneTwoAlignment;
-		[Glade.Widget] internal Gtk.Alignment		phoneThreeAlignment;
-		[Glade.Widget] internal Gtk.Alignment		phoneFourAlignment;
 
-		[Glade.Widget] internal Gtk.Entry			emailEntry;
-		[Glade.Widget] internal Gtk.Alignment		emailAlignment;
-		[Glade.Widget] internal Gtk.CheckButton		emailPreferredButton;
+		[Glade.Widget] internal Gtk.Label			phoneOneLabel;
+		[Glade.Widget] internal Gtk.Label			phoneTwoLabel;
+		[Glade.Widget] internal Gtk.Label			phoneThreeLabel;
+		
+		[Glade.Widget] internal Gtk.Button			phoneButton;
+
+		[Glade.Widget] internal Gtk.Entry			emailOneEntry;
+		[Glade.Widget] internal Gtk.Label			emailOneLabel;
+		[Glade.Widget] internal Gtk.Entry			emailTwoEntry;
+		[Glade.Widget] internal Gtk.Label			emailTwoLabel;
+		[Glade.Widget] internal Gtk.Button			emailButton;
 
 		[Glade.Widget] internal Gtk.Entry			webURLEntry;
 		[Glade.Widget] internal Gtk.Entry			blogURLEntry;
 
-		[Glade.Widget] internal Gtk.TextView		addrTextView;
-		[Glade.Widget] internal Gtk.Button			addrChangeButton;
-		[Glade.Widget] internal Gtk.CheckButton		addrMailingButton;
-		[Glade.Widget] internal Gtk.Alignment		addrAlignment;
+		[Glade.Widget] internal Gtk.Entry			streetEntry;
+		[Glade.Widget] internal Gtk.Entry			cityEntry;
+		[Glade.Widget] internal Gtk.Entry			stateEntry;
+		[Glade.Widget] internal Gtk.Entry			zipEntry;
+		[Glade.Widget] internal Gtk.Entry			countryEntry;
+		[Glade.Widget] internal Gtk.Button			addrButton;
 
 		[Glade.Widget] internal Gtk.Button			cancelButton;
 		[Glade.Widget] internal Gtk.Button			okButton; 
@@ -94,26 +98,19 @@ namespace Novell.iFolder
 		[Glade.Widget] internal Gtk.Table			generalTabTable;
 
 
-		internal OptionButton	emailOButton;
-		internal OptionButton	addrOButton;
+		internal Gtk.Dialog		contactEditorDialog;
+		internal Contact		currentContact;
+		internal Name			preferredName;
+		internal bool			isNewContact;
 
-		internal OptionButton	phoneOneOButton;
-		internal OptionButton	phoneTwoOButton;
-		internal OptionButton	phoneThreeOButton;
-		internal OptionButton	phoneFourOButton;
-
-
-		private Gtk.Dialog 		contactEditorDialog;
-		private Contact			currentContact;
-		private Name			preferredName;
-		private bool			isNewContact;
 		internal Email			currentEmail;
-		internal EmailTypes		currentEmailType;
-
+		internal Telephone		phoneOne;
+		internal Telephone		phoneTwo;
+		internal Telephone		phoneThree;
+		internal Address		currentAddress;
 
 		public event ContactEditedEventHandler	ContactEdited;
 		public event ContactCreatedEventHandler	ContactCreated;
-
 
 
 
@@ -164,57 +161,6 @@ namespace Novell.iFolder
 
 			generalTabTable.FocusChain = (tl);
 */		
-			phoneOneOButton = new OptionButton("Work Phone:");
-			phoneOneOButton.AddOption("Work Phone:");
-			phoneOneOButton.AddOption("Mobile Phone:");
-			phoneOneOButton.AddOption("Home Phone:");
-			phoneOneOButton.AddOption("Pager:");
-			phoneOneOButton.AddOption("Fax:");
-			phoneOneOButton.ShowAll();
-			phoneOneAlignment.Add(phoneOneOButton);
-
-			phoneTwoOButton = new OptionButton("Mobile Phone:");
-			phoneTwoOButton.AddOption("Work Phone:");
-			phoneTwoOButton.AddOption("Mobile Phone:");
-			phoneTwoOButton.AddOption("Home Phone:");
-			phoneTwoOButton.AddOption("Pager:");
-			phoneTwoOButton.AddOption("Fax:");
-			phoneTwoOButton.ShowAll();
-			phoneTwoAlignment.Add(phoneTwoOButton);
-
-			phoneThreeOButton = new OptionButton("Pager:");
-			phoneThreeOButton.AddOption("Work Phone:");
-			phoneThreeOButton.AddOption("Mobile Phone:");
-			phoneThreeOButton.AddOption("Home Phone:");
-			phoneThreeOButton.AddOption("Pager:");
-			phoneThreeOButton.AddOption("Fax:");
-			phoneThreeOButton.ShowAll();
-			phoneThreeAlignment.Add(phoneThreeOButton);
-
-			phoneFourOButton = new OptionButton("Fax:");
-			phoneFourOButton.AddOption("Work Phone:");
-			phoneFourOButton.AddOption("Mobile Phone:");
-			phoneFourOButton.AddOption("Home Phone:");
-			phoneFourOButton.AddOption("Pager:");
-			phoneFourOButton.AddOption("Fax:");
-			phoneFourOButton.ShowAll();
-			phoneFourAlignment.Add(phoneFourOButton);
-
-			emailOButton = new OptionButton("Work Email:");
-			emailOButton.AddOption("Work Email:");
-			emailOButton.AddOption("Home Email:");
-			emailOButton.AddOption("Other Email:");
-			emailOButton.ShowAll();
-			emailAlignment.Add(emailOButton);
-			emailOButton.OptionChanged += 
-					new OptionChangedEventHandler(handle_email_options);
-
-			addrOButton = new OptionButton("Work:");
-			addrOButton.AddOption("Work:");
-			addrOButton.AddOption("Home:");
-			addrOButton.AddOption("Other:");
-			addrOButton.ShowAll();
-			addrAlignment.Add(addrOButton);
 
 			try
 			{
@@ -248,6 +194,80 @@ namespace Novell.iFolder
 			if(currentContact.Organization.Length > 0)
 				organizationEntry.Text = currentContact.Organization;
 
+			if(currentContact.Url.Length > 0)
+				webURLEntry.Text = currentContact.Url;
+			if(currentContact.Blog.Length > 0)
+				blogURLEntry.Text = currentContact.Blog;
+
+			PopulateCurrentEmail();
+			PopulatePhoneNumbers();
+
+		}
+
+
+		internal Telephone GetPhoneType(PhoneTypes type)
+		{
+			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
+			{
+				if( (tel.Types & type) == type)
+					return tel;
+			}
+			return null;
+		}
+
+		internal void PopulatePhoneNumbers()
+		{
+			phoneOne = GetPhoneType(PhoneTypes.preferred);
+			if(phoneOne != null)
+			{
+				phoneOneEntry.Text = phoneOne.Number;
+				SetPhoneLabelText(phoneOneLabel, phoneOne.Types);
+			}
+
+			foreach(Telephone tel in currentContact.GetTelephoneNumbers())
+			{
+				if(phoneOne == null)
+				{
+					phoneOne = tel;
+					phoneOneEntry.Text = tel.Number;
+					SetPhoneLabelText(phoneOneLabel, tel.Types);
+				}
+				else if(phoneOne == tel)
+				{
+					// do nothing
+				}
+				else if(phoneTwo == null)
+				{
+					phoneTwo = tel;
+					phoneTwoEntry.Text = tel.Number;
+					SetPhoneLabelText(phoneTwoLabel, tel.Types);
+				}
+				else if(phoneThree == null)
+				{
+					phoneThree = tel;
+					phoneThreeEntry.Text = tel.Number;
+					SetPhoneLabelText(phoneThreeLabel, tel.Types);
+				}
+			}
+		}
+
+		internal void SetPhoneLabelText(Label label, PhoneTypes type)
+		{
+			if( (type & PhoneTypes.work) == PhoneTypes.work)
+				label.Text = "Work Phone:";
+			else if( (type & PhoneTypes.cell) == PhoneTypes.cell)
+				label.Text = "Mobile Phone:";
+			else if( (type & PhoneTypes.home) == PhoneTypes.home)
+				label.Text = "Home Phone:";
+			else if( (type & PhoneTypes.pager) == PhoneTypes.pager)
+				label.Text = "Pager Phone:";
+			else if( (type & PhoneTypes.fax) == PhoneTypes.fax)
+				label.Text = "Fax Phone:";
+		}
+
+
+		internal void PopulateCurrentEmail()
+		{
 			currentEmail = GetEmailType(EmailTypes.preferred);
 			if(currentEmail == null)
 				currentEmail = GetEmailType(EmailTypes.work);
@@ -256,15 +276,20 @@ namespace Novell.iFolder
 			if(currentEmail == null)
 				currentEmail = GetEmailType(EmailTypes.other);
 
-			PopulateCurrentEmail();
+			if(currentEmail != null)
+			{
+				emailOneEntry.Text = currentEmail.Address;
 
-			if(currentContact.Url.Length > 0)
-				webURLEntry.Text = currentContact.Url;
-			if(currentContact.Blog.Length > 0)
-				blogURLEntry.Text = currentContact.Blog;
+				if( (currentEmail.Types & EmailTypes.work) ==
+						EmailTypes.work)
+					emailOneLabel.Text = "Work Email:";
+				else if( (currentEmail.Types & EmailTypes.personal) == 
+						EmailTypes.personal)
+					emailOneLabel.Text = "Home Email:";
+				else
+					emailOneLabel.Text = "Other Email:";
+			}
 		}
-
-
 
 		internal Email GetEmailType(EmailTypes type)
 		{
@@ -276,52 +301,22 @@ namespace Novell.iFolder
 			return null;
 		}
 
-		internal void PopulateCurrentEmail()
-		{
-			if(currentEmail != null)
-			{
-				emailEntry.Text = currentEmail.Address;
-				currentEmailType = currentEmail.Types;
-			}
-			else
-			{
-				emailEntry.Text = "";
-				if(currentEmailType == 0)
-					currentEmailType = EmailTypes.work | EmailTypes.preferred;
-			}
-
-			if( (currentEmailType & EmailTypes.work) == EmailTypes.work)
-				emailOButton.Label = "Work email:";
-			else if( (currentEmailType & EmailTypes.personal) == 
-					EmailTypes.personal)
-				emailOButton.Label = "Home email:";
-			else
-				emailOButton.Label = "Other email:";
-
-			if( (currentEmailType & EmailTypes.preferred) == 
-					EmailTypes.preferred)
-				emailPreferredButton.Active = true;
-			else
-				emailPreferredButton.Active = false;
-		}
-
 		internal void SaveCurrentEmail()
 		{
 			if(currentEmail == null)
 			{
-				if(emailEntry.Text.Length > 0)
+				if(emailOneEntry.Text.Length > 0)
 				{
-					currentEmail = new Email(currentEmailType, emailEntry.Text);
+					currentEmail = new Email(EmailTypes.preferred,
+							emailOneEntry.Text);
 					currentContact.AddEmailAddress(currentEmail);
-					if(emailPreferredButton.Active)
-						SetCurrentDefaultEmail();
+					SetCurrentDefaultEmail();
 				}
 			}
 			else
 			{
-				currentEmail.Address = emailEntry.Text;
-					if(emailPreferredButton.Active)
-						SetCurrentDefaultEmail();
+				currentEmail.Address = emailOneEntry.Text;
+				SetCurrentDefaultEmail();
 			}
 		}
 
@@ -433,7 +428,20 @@ namespace Novell.iFolder
 		}
 
 
+		private void on_emailButton_clicked(object o, EventArgs args) 
+		{
+			Console.WriteLine("Edit Email here");
+		}
 
+		private void on_phoneButton_clicked(object o, EventArgs args) 
+		{
+			Console.WriteLine("Edit Phone here");
+		}
+
+		private void on_addrChangeButton_clicked(object o, EventArgs args) 
+		{
+			Console.WriteLine("Edit Address here");
+		}
 
 		private void on_fullNameButton_clicked(object o, EventArgs args) 
 		{
@@ -473,43 +481,26 @@ namespace Novell.iFolder
 		}
 
 
-
-
-/*		private void on_emailButton_clicked(object o, EventArgs args) 
+		private void handle_phone_one_options(object o,
+				OptionChangedEventArgs args)
 		{
-			Menu mailMenu = new Menu();
-
-			MenuItem work_item = new MenuItem ("Work email");
-			mailMenu.Append (work_item);
-			work_item.Activated += 
-				new EventHandler(handle_work_email);
-
-			MenuItem home_item = new MenuItem ("Home email");
-			mailMenu.Append (home_item);
-			home_item.Activated += 
-				new EventHandler(handle_home_email);
-
-			MenuItem other_item = new MenuItem ("Other email");
-			mailMenu.Append (other_item);
-			other_item.Activated += 
-				new EventHandler(handle_other_email);
-
-			mailMenu.ShowAll();
-
-			mailMenu.Popup(null, null, new MenuPositionFunc(PositionMailMenu),
-					IntPtr.Zero, 0, Gtk.Global.CurrentEventTime);
+			switch(args.OptionIndex)
+			{
+				case 0: // Work phone 
+					break;
+				case 1: // Mobile phone
+					break;
+				case 2: // Home phone
+					break;
+				case 3: // Pager
+					break;
+				case 4: // Fax
+					break;
+			}
 		}
 
-		internal void PositionMailMenu(Menu menu, out int x, out int y,
-				out bool push_in)
-		{
-			emailButton.GdkWindow.GetOrigin(out x, out y);
-			x += emailButton.Allocation.X;
-			y += emailButton.Allocation.Y;
 
-			push_in = false;
-		}
-*/
+/*
 		private void handle_email_options(object o, OptionChangedEventArgs args)
 		{
 			SaveCurrentEmail();
@@ -531,7 +522,7 @@ namespace Novell.iFolder
 
 			PopulateCurrentEmail();
 		}
-
+*/
 
 		private Pixbuf GetScaledPhoto(Contact c, int height)
 		{
