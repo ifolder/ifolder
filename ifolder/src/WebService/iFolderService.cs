@@ -928,6 +928,7 @@ namespace Novell.iFolder.Web
 					if ( matches.Contains( sNode.ID ) == false )
 					{
 						members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
+						matches.Add( sNode.ID, null );
 					}
 				}
 			}	
@@ -940,6 +941,7 @@ namespace Novell.iFolder.Web
 					if ( matches.Contains( sNode.ID ) == false )
 					{
 						members.Add( new iFolderUser( domain, new Member( domain, sNode ) ) );
+						matches.Add( sNode.ID, null );
 					}
 				}
 			}
