@@ -49,21 +49,19 @@ namespace Novell.iFolder
 
 		[Glade.Widget] private Gtk.Label		LocalNameLabel = null;
 		[Glade.Widget] private Gtk.Label		LocalDateLabel = null;
-		[Glade.Widget] private Gtk.Label		LocalLocLabel = null;
-		[Glade.Widget] private Gtk.Label		LocalTypeLabel = null;
+		[Glade.Widget] private Gtk.Label		LocalSizeLabel = null;
 		[Glade.Widget] private Gtk.Label		LNameLabel = null;
 		[Glade.Widget] private Gtk.Label		LDateLabel = null;
-		[Glade.Widget] private Gtk.Label		LLocLabel = null;
-		[Glade.Widget] private Gtk.Label		LTypeLabel = null;
+		[Glade.Widget] private Gtk.Label		LSizeLabel = null;
+		[Glade.Widget] private Gtk.Button		LocalOpenButton = null;
 
 		[Glade.Widget] private Gtk.Label		ServerNameLabel = null;
 		[Glade.Widget] private Gtk.Label		ServerDateLabel = null;
-		[Glade.Widget] private Gtk.Label		ServerLocLabel = null;
-		[Glade.Widget] private Gtk.Label		ServerTypeLabel = null;
+		[Glade.Widget] private Gtk.Label		ServerSizeLabel = null;
 		[Glade.Widget] private Gtk.Label		SNameLabel = null;
 		[Glade.Widget] private Gtk.Label		SDateLabel = null;
-		[Glade.Widget] private Gtk.Label		SLocLabel = null;
-		[Glade.Widget] private Gtk.Label		STypeLabel = null;
+		[Glade.Widget] private Gtk.Label		SSizeLabel = null;
+		[Glade.Widget] private Gtk.Button		ServerOpenButton = null;
 
 		private ListStore		ConflictTreeStore = null;
 		private Pixbuf			conflictPixBuf = null;
@@ -111,13 +109,31 @@ namespace Novell.iFolder
 			conflictColumn.PackStart(conflictRT, false);
 			conflictColumn.SetCellDataFunc(conflictRT, new TreeCellDataFunc(
 						ConflictCellTextDataFunc));
-			conflictColumn.Title = "Conflict List";
+			conflictColumn.Title = "Name";
 			ConflictTreeView.AppendColumn(conflictColumn);
+
+			TreeViewColumn pathColumn = new TreeViewColumn();
+			CellRendererText pathRT = new CellRendererText();
+			pathColumn.PackStart(pathRT, false);
+			pathColumn.SetCellDataFunc(pathRT, new TreeCellDataFunc(
+						PathCellTextDataFunc));
+			pathColumn.Title = "Path";
+			ConflictTreeView.AppendColumn(pathColumn);
+
 			ConflictTreeView.Selection.Changed += new EventHandler(
 						on_conflict_selection_changed);
 
 			conflictPixBuf = 
-				new Pixbuf(Util.ImagesPath("ifolder-collision.png"));
+				new Pixbuf(Util.ImagesPath("file.png"));
+		}
+
+		private void PathCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			Node conflictNode = (Node) tree_model.GetValue(iter,0);
+			FileNode fileNode = new FileNode(conflictNode);
+			((CellRendererText) cell).Text = fileNode.GetFullPath(ifolder);
 		}
 
 		private void ConflictCellTextDataFunc (Gtk.TreeViewColumn tree_column,
@@ -159,63 +175,60 @@ namespace Novell.iFolder
 			{
 				LocalNameLabel.Text = "";
 				LocalDateLabel.Text = "";
-				LocalLocLabel.Text = "";
-				LocalTypeLabel.Text = "";
+				LocalSizeLabel.Text = "";
 				ServerNameLabel.Text = "";
 				ServerDateLabel.Text = "";
-				ServerLocLabel.Text = "";
-				ServerTypeLabel.Text = "";
+				ServerSizeLabel.Text = "";
 
 				LocalRadioButton.Sensitive = false;
 				ServerRadioButton.Sensitive = false;
 
 				LocalNameLabel.Sensitive = false;
 				LocalDateLabel.Sensitive = false;
-				LocalLocLabel.Sensitive = false;
-				LocalTypeLabel.Sensitive = false;
+				LocalSizeLabel.Sensitive = false;
 				LNameLabel.Sensitive = false;
 				LDateLabel.Sensitive = false;
-				LLocLabel.Sensitive = false;
-				LTypeLabel.Sensitive = false;
+				LSizeLabel.Sensitive = false;
+				LocalOpenButton.Sensitive = false;
 				ServerNameLabel.Sensitive = false;
 				ServerDateLabel.Sensitive = false;
-				ServerLocLabel.Sensitive = false;
-				ServerTypeLabel.Sensitive = false;
+				ServerSizeLabel.Sensitive = false;
 				SNameLabel.Sensitive = false;
 				SDateLabel.Sensitive = false;
-				SLocLabel.Sensitive = false;
-				STypeLabel.Sensitive = false;
+				SSizeLabel.Sensitive = false;
+				ServerOpenButton.Sensitive = false;
 			}
 			else
 			{
-				LocalNameLabel.Text = "";
-				LocalDateLabel.Text = "";
-				LocalLocLabel.Text = "";
-				LocalTypeLabel.Text = "";
-				ServerNameLabel.Text = "";
-				ServerDateLabel.Text = "";
-				ServerLocLabel.Text = "";
-				ServerTypeLabel.Text = "";
+				FileNode fileNode = new FileNode(conflictNode);
+				Node localNode = ifolder.GetNodeFromCollision(conflictNode);
+				FileNode localfileNode = new FileNode(localNode);
+
+				LocalNameLabel.Text = localfileNode.GetFileName();
+				LocalDateLabel.Text = localfileNode.LastWriteTime.ToString();
+				LocalSizeLabel.Text = "N/A";
+				ServerNameLabel.Text = fileNode.GetFileName();
+				ServerDateLabel.Text = fileNode.LastWriteTime.ToString();
+				ServerSizeLabel.Text = "N/A";
+				LocalOpenButton.Sensitive = true;
+				ServerOpenButton.Sensitive = true;
 
 				LocalRadioButton.Sensitive = true;
+				LocalRadioButton.Active = true;
 				ServerRadioButton.Sensitive = true;
 
 				LocalNameLabel.Sensitive = true;
 				LocalDateLabel.Sensitive = true;
-				LocalLocLabel.Sensitive = true;
-				LocalTypeLabel.Sensitive = true;
+				LocalSizeLabel.Sensitive = true;
 				LNameLabel.Sensitive = true;
 				LDateLabel.Sensitive = true;
-				LLocLabel.Sensitive = true;
-				LTypeLabel.Sensitive = true;
+				LSizeLabel.Sensitive = true;
 				ServerNameLabel.Sensitive = true;
 				ServerDateLabel.Sensitive = true;
-				ServerLocLabel.Sensitive = true;
-				ServerTypeLabel.Sensitive = true;
+				ServerSizeLabel.Sensitive = true;
 				SNameLabel.Sensitive = true;
 				SDateLabel.Sensitive = true;
-				SLocLabel.Sensitive = true;
-				STypeLabel.Sensitive = true;
+				SSizeLabel.Sensitive = true;
 			}
 		}
 
@@ -250,21 +263,22 @@ namespace Novell.iFolder
 			TreeSelection tSelect = ConflictTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
-	//			TreeModel tModel;
-	//			TreeIter iter;
+				TreeModel tModel;
+				TreeIter iter;
 
-	//			tSelect.GetSelected(out tModel, out iter);
-	//			iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+				tSelect.GetSelected(out tModel, out iter);
+				Node conflictNode = (Node) tModel.GetValue(iter, 0);
 
-	//			This appears to hang?
-	//			SyncSize.CalculateSendSize(	ifolder, 
-	//										out nodeCount, 
-	//										out bytesToSend);
+				UpdateFields(conflictNode);
 			}
 		}
 
 
-		public void on_open(object o, EventArgs args)
+		public void on_local_open(object o, EventArgs args)
+		{
+		}
+
+		public void on_server_open(object o, EventArgs args)
 		{
 		}
 
@@ -274,11 +288,31 @@ namespace Novell.iFolder
 
 		public void on_resolve(object o, EventArgs args)
 		{
+			TreeSelection tSelect = ConflictTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				Node conflictNode = (Node) tModel.GetValue(iter, 0);
+				Simias.Sync.Conflict conflict = 
+					new Simias.Sync.Conflict(ifolder, conflictNode);
+
+				if(LocalRadioButton.Active == true)
+					conflict.Resolve(true);
+				else
+					conflict.Resolve(false);
+
+				ConflictTreeStore.Remove(ref iter);
+				UpdateFields(null);
+			}
 		}
 
 		public void on_refresh(object o, EventArgs args)
 		{
 			ConflictTreeStore.Clear();
+			UpdateFields(null);
 
 			if(ifolder != null)
 			{
@@ -288,7 +322,10 @@ namespace Novell.iFolder
 					// Get the collision node.
 					Node conflictNode = new Node(ifolder, sn);
 
-					ConflictTreeStore.AppendValues(conflictNode);
+					if(ifolder.IsType(conflictNode, typeof(BaseFileNode).Name))
+					{
+						ConflictTreeStore.AppendValues(conflictNode);
+					}
 				}
 			}
 		}
