@@ -27,6 +27,14 @@ PO_FLAGS = $(CSC_EXEFLAG)
 PO_LIBS = Novell.AddressBook.dll Novell.AddressBook.UI.gtk.dll
 PO_LIBPATH = ../AddressBook
 
+CP_CSFILES = $(srcdir)/CPApp.cs
+CP_CSFILES_CSC := $(subst /,$(SEP),$(CP_CSFILES))
+CP_INCLUDES = 
+CP_RESOURCES =
+CP_FLAGS = $(CSC_EXEFLAG)
+CP_LIBS = Novell.AddressBook.dll Novell.AddressBook.UI.gtk.dll
+CP_LIBPATH = ../AddressBook
+
 BookLib_CSFILES = $(srcdir)/POBoxViewer.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/Util.cs $(srcdir)/CollectionPicker.cs $(srcdir)/ContactBrowser.cs $(srcdir)/OptionButton.cs $(srcdir)/ContactEditor.cs $(srcdir)/../FormsBookLib/FullNameParser.cs $(srcdir)/BookEditor.cs $(srcdir)/NameEditor.cs $(srcdir)/ContactPicker.cs $(srcdir)/CollectionGeneralPage.cs $(srcdir)/ContactCollectionSharingPage.cs $(srcdir)/CollectionPropertiesPage.cs $(srcdir)/CollectionProperties.cs $(srcdir)/InvitationAssistant.cs
 
 BookLib_CSFILES_CSC := $(subst /,$(SEP),$(BookLib_CSFILES))
@@ -42,7 +50,7 @@ IMAGE_FILES = $(srcdir)/invitation_128.png $(srcdir)/invitation_16.png $(srcdir)
 
 EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(IA_CSFILES) $(Book_RESOURCES) $(BookLib_RESOURCES) $(IA_RESOURCES) $(GLADE_FILES) $(IMAGE_FILES) $(PO_CSFILES)
 
-all: POBoxViewer.exe InvitationAssistant.exe ContactBrowser.exe Novell.AddressBook.UI.gtk.dll
+all: ColPropViewer.exe POBoxViewer.exe InvitationAssistant.exe ContactBrowser.exe Novell.AddressBook.UI.gtk.dll
 
 ContactBrowser.exe: $(Book_CSFILES) $(Book_RESOURCES) Novell.AddressBook.UI.gtk.dll
 	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS)  $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:ContactBrowser.doc.xml
@@ -53,6 +61,9 @@ InvitationAssistant.exe: $(IA_CSFILES) $(IA_RESOURCES) Novell.AddressBook.UI.gtk
 POBoxViewer.exe: $(PO_CSFILES) $(PO_RESOURCES) Novell.AddressBook.UI.gtk.dll
 	$(CSC) /out:$@ $(CSCFLAGS) $(PO_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS)  $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(PO_LIBS:%=/r:%) $(PO_LIBPATH:%=/lib:%) $(PO_RESOURCES:%=$(ICON_FLAG)%) $(PO_CSFILES_CSC) /doc:POBoxViewer.doc.xml
 
+ColPropViewer.exe: $(CP_CSFILES) $(CP_RESOURCES) Novell.AddressBook.UI.gtk.dll
+	$(CSC) /out:$@ $(CSCFLAGS) $(CP_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS)  $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(CP_LIBS:%=/r:%) $(CP_LIBPATH:%=/lib:%) $(CP_RESOURCES:%=$(ICON_FLAG)%) $(CP_CSFILES_CSC) /doc:ColPropViewer.doc.xml
+
 Novell.AddressBook.UI.gtk.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(SIMIAS_LIBS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:Novell.AddressBook.UI.gtk.doc.xml
 
@@ -61,14 +72,14 @@ install-exec-local: all poboxviewer contactbrowser invitationassistant $(GLADE_F
 	$(INSTALL_PROGRAM) Novell.AddressBook.UI.gtk.dll $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder/images
-	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) InvitationAssistant.exe POBoxViewer.exe ContactBrowser.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) InvitationAssistant.exe ColPropViewer.exe POBoxViewer.exe ContactBrowser.exe $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) poboxviewer contactbrowser invitationassistant $(DESTDIR)$(bindir)
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.AddressBook.UI.gtk.dll $(BookLib_RESOURCES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(datadir)/ifolder/glade; rm -f $(GLADE_FILES:$(srcdir)/%=%)
 	cd $(DESTDIR)$(datadir)/ifolder/images; rm -f $(IMAGE_FILES:$(srcdir)/%=%)
-	cd $(DESTDIR)$(bindir); rm -f POBoxViewer.exe ContactBrowser.exe poboxviewer contactbrowser InvitationAssistant.exe invitationassistant
+	cd $(DESTDIR)$(bindir); rm -f ColPropViewer.exe POBoxViewer.exe ContactBrowser.exe poboxviewer contactbrowser InvitationAssistant.exe invitationassistant
     
 installcheck-local: install
 	
