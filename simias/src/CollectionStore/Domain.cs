@@ -151,6 +151,52 @@ namespace Simias.Storage
 
 		#region Public Methods
 		/// <summary>
+		/// Returns if the specified user's login is disabled.
+		/// </summary>
+		/// <param name="userID">User ID for the member to check.</param>
+		/// <returns>True if the login for the specified user is disabled.</returns>
+		public bool IsLoginDisabled( string userID )
+		{
+			Member member = GetMemberByID( userID );
+			if ( member == null )
+			{
+				throw new DoesNotExistException( "The specified user does not exist." );
+			}
+
+			Property p = member.Properties.GetSingleProperty( PropertyTags.LoginDisabled );
+			return ( p != null ) ? ( bool )p.Value : false;
+		}
+
+		/// <summary>
+		/// Sets the specified user's login disabled status.
+		/// </summary>
+		/// <param name="userID">User ID for the member to set the status for.</param>
+		/// <param name="disable">True to disable login or False to enable login.</param>
+		public void SetLoginDisabled( string userID, bool disable )
+		{
+			Member member = GetMemberByID( userID );
+			if ( member == null )
+			{
+				throw new DoesNotExistException( "The specified user does not exist." );
+			}
+
+			if ( disable )
+			{
+				member.Properties.ModifyNodeProperty( PropertyTags.LoginDisabled, true );
+				Commit( member );
+			}
+			else
+			{
+				Property p = member.Properties.GetSingleProperty( PropertyTags.LoginDisabled );
+				if ( p != null )
+				{
+					p.DeleteProperty();
+					Commit( member );
+				}
+			}
+		}
+
+		/// <summary>
 		/// Obtains the string representation of this instance.
 		/// </summary>
 		/// <returns>The friendly name of the domain.</returns>

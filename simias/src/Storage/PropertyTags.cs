@@ -101,6 +101,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string LoginDisabled = "LoginDisabled";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string FileSystemPath = "FsPath";
 
 		/// <summary>
@@ -268,6 +273,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( LinkReference, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( LocalPassword, null );
+			systemPropertyTable.Add( LoginDisabled, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( MasterUrl, null );
 			systemPropertyTable.Add( NodeCreationTime, null );

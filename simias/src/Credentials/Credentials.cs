@@ -85,6 +85,11 @@ namespace Simias.Authentication
 		AccountLockout = 0x1f000041,
 
 		/// <summary>
+		/// The simias account has been disabled by the administrator.
+		/// </summary>
+		SimiasLoginDisabled = 0x1f000042,
+
+		/// <summary>
 		/// The specified domain was unknown
 		/// </summary>
 		UnknownDomain = 0x1f000060,

@@ -127,6 +127,15 @@ namespace Simias.Authentication
 					break;
 				}
 
+				case StatusCodes.SimiasLoginDisabled:
+				{
+					ctx.Response.StatusCode = 401;
+					ctx.Response.AddHeader(
+						SimiasErrorHeader,
+						StatusCodes.SimiasLoginDisabled.ToString() );
+					break;
+				}
+
 				case StatusCodes.AmbiguousUser:
 				{
 					ctx.Response.StatusCode = 401;
@@ -187,17 +196,6 @@ namespace Simias.Authentication
 					ctx.Response.StatusCode = 401;
 					break;
 			}
-		}
-
-		/// <summary>
-		/// BUGBUG -- Take this out once Rob removes it from the Web Access code.
-		/// </summary>
-		/// <param name="ctx"></param>
-		/// <returns></returns>
-		[ Obsolete( "Don't use this call anymore!", false ) ]
-		static public Simias.Storage.Member GetMember( HttpContext ctx )
-		{
-			return GetMember( Store.GetStore().DefaultDomain, ctx );
 		}
 
 		/// <summary>

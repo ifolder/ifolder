@@ -268,6 +268,11 @@ namespace Simias.DomainServices
 							{
 								status.statusCode = SCodes.InvalidCredentials;
 							}
+							else
+								if ( iFolderError == StatusCodes.SimiasLoginDisabled.ToString() )
+							{
+								status.statusCode = SCodes.SimiasLoginDisabled;
+							}
 						}
 					}
 					else
