@@ -118,6 +118,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
+				3EA546A607733F5100CE56E3,
 				3E255FFC077235290062AB7A,
 				080E96DDFE201D6D7F000001,
 				29B97315FDCFA39411CA2CEA,
@@ -418,6 +419,14 @@
 			settings = {
 			};
 		};
+		3EA546A607733F5100CE56E3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = libifolder;
+			path = /Users/calvin/code/ifolder/ifolder/src/libifolder;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
 		3EAEF5050769104900B98AF6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -491,7 +500,7 @@
 				HEADER_SEARCH_PATHS = ../libifolder;
 				LIBRARY_SEARCH_PATHS = ../libifolder/.libs;
 				PREBINDING = YES;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Development;

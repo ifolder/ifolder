@@ -4,30 +4,16 @@
 
 -(void)awakeFromNib
 {
-
 	webService = [[iFolderService alloc] init];
 
-	[self showLoginWindow];
-	
-//	domains = [[NSMutableDictionary alloc] initWithCapacity:2];
-/*
-	@try
-	{
-		domains = [webService GetDomains];
+	domains = [webService GetDomains];
 
-		NSArray *keys = [domains allKeys];
+	NSArray *keys = [domains allKeys];
 
-		// if we have less than two domains, we don't have enterprise
-		// so we better ask the user to login
-		if([keys count] < 2)
-			[self showLoginWindow];
-	}
-	@catch (NSException *e)
-	{
-		NSString *error = [e name];
-		domains = nil;
-	}
-*/
+	// if we have less than two domains, we don't have enterprise
+	// so we better ask the user to login
+	if([keys count] < 2)
+		[self showLoginWindow];
 }
 
 - (void)showLoginWindow

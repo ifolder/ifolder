@@ -9,7 +9,7 @@
 {
 	LoginWindowController	*_loginController;
 	iFolderService			*webService;
-//	NSMutableDictionary		*domains;
+	NSMutableDictionary		*domains;
 }
 
 -(void)login:(NSString *)username withPassword:(NSString *)password toServer:(NSString *)server;

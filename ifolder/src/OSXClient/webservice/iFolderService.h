@@ -19,6 +19,7 @@
 }
 
 -(bool) Ping;
+-(NSMutableDictionary *) GetDomains;
 
 @end
 
