@@ -6,7 +6,7 @@ Location_CSFILES_CSC := $(subst /,$(SEP),$(Location_CSFILES))
 Location_INCLUDES = 
 Location_RESOURCES =
 Location_FLAGS = $(CSC_LIBFLAG)
-Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionStore.dll SyncCommon.dll mDnsResponderApi.dll
+Location_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Common.dll CollectionStore.dll SyncCommon.dll mDnsResponderApi.dll
 Location_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionStore ../SyncCommon $(MDNSRESPONDER_DIR)
 
 NUNIT_TESTS := LocationTests.dll
