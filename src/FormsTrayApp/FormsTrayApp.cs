@@ -134,6 +134,8 @@ namespace Novell.iFolder.FormsTrayApp
 				this.WindowState = FormWindowState.Minimized;
 				//this.Hide();
 
+				Win32Util.Win32Window win32Window = new Win32Util.Win32Window(this.Handle);
+				win32Window.MakeToolWindow();
 			}
 			catch (Exception e)
 			{
