@@ -207,6 +207,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="MemberName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="RemoteUrl" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="POBoxID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HostUrl" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="Host" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="IsSlave" type="s:boolean" />
           <s:element minOccurs="1" maxOccurs="1" name="IsDefault" type="s:boolean" />
