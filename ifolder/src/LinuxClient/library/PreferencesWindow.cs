@@ -125,7 +125,18 @@ namespace Novell.iFolder
 
 		private void HelpEventHandler(object o, EventArgs args)
 		{
-			Util.ShowHelp("front.html", this);
+			if (CurrentPage == 0)
+			{
+				Util.ShowHelp("preferences.html", this);
+			}
+			else if (CurrentPage == 1)
+			{
+				Util.ShowHelp("accounts.html", this);
+			}
+			else
+			{
+				Util.ShowHelp("front.html", this);
+			}
 		}
 
 		private void CloseEventHandler(object o, EventArgs args)

@@ -1061,7 +1061,21 @@ namespace Novell.iFolder
 			switch(args.ResponseId)
 			{
 				case Gtk.ResponseType.Help:
-					Util.ShowHelp("front.html", this);
+					if (PropertiesDialog != null)
+					{
+						if (PropertiesDialog.CurrentPage == 0)
+						{
+							Util.ShowHelp("properties.html.html", this);
+						}
+						else if (PropertiesDialog.CurrentPage == 1)
+						{
+							Util.ShowHelp("sharewith.html", this);
+						}
+						else
+						{
+							Util.ShowHelp("front.html", this);
+						}
+					}
 					break;
 				default:
 				{
@@ -1795,7 +1809,7 @@ namespace Novell.iFolder
 									createRC = dlg.Run();
 									if(createRC == (int)Gtk.ResponseType.Help)
 									{
-										Util.ShowHelp("front.html", this);
+										Util.ShowHelp("myifolders.html", this);
 									}
 								}while(createRC != (int)Gtk.ResponseType.Ok);
 	
