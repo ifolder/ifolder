@@ -99,11 +99,31 @@ is_ifolder (NautilusFileInfo *file)
 		
 		g_free (folder_path);
 	}
+
+	return b_is_ifolder;
+}
+
+static gboolean
+can_be_ifolder (NautilusFileInfo *file)
+{
+	gchar *folder_path;
+	gboolean b_can_be_ifolder = TRUE;
 	
-	if (b_is_ifolder)
-		return TRUE;
-	else
+	if (!nautilus_file_info_is_directory (file))
 		return FALSE;
+		
+	folder_path = get_file_path (file);
+	if (folder_path != NULL) {
+		/* FIXME: Call CanBeiFolder in iFolder.asmx instead of this hard-coding */
+		if ((!strcmp (folder_path, "/"))
+			|| (!strcmp (folder_path, "/usr"))
+			|| (!strcmp (folder_path, "/bin"))
+			|| (!strcmp (folder_path, "/opt"))) {
+			b_can_be_ifolder = FALSE;
+		}
+	}
+	
+	return b_can_be_ifolder;
 }
 
 static gint
@@ -289,6 +309,13 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 	 * context menus.
 	 */
 	if (!nautilus_file_info_is_directory (file))
+		return NULL;
+		
+	/**
+	 * If the iFolder API says that the current file cannot be an iFolder, don't
+	 * add any iFolder context menus.
+	 */
+	if (!can_be_ifolder (file))
 		return NULL;
 
 	items = NULL;
