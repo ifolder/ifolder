@@ -318,6 +318,13 @@ namespace Simias.Sync
 				fi.Attributes = fi.Attributes & ~FileAttributes.Hidden;
 				fi.LastWriteTime = node.LastWriteTime;
 				fi.CreationTime = node.CreationTime;
+				if (oldNode != null)
+				{
+					// Check if this was a rename.
+					string oldPath = oldNode.GetFullPath(collection);
+					if (oldPath != file)
+						File.Delete(oldPath);
+				}
 			}
 			// We need to delete the temp file.
 			File.Delete(workFile);
