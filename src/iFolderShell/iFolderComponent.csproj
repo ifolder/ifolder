@@ -134,7 +134,7 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Domain.cs"
+                    RelPath = "DomainItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -176,6 +176,16 @@
                 <File
                     RelPath = "MyMessageBox.resx"
                     DependentUpon = "MyMessageBox.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "NameConflictPrompt.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NameConflictPrompt.resx"
+                    DependentUpon = "NameConflictPrompt.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
