@@ -28,7 +28,7 @@
 #include <eel/eel-stock-dialogs.h>
 
 #include <gtk/gtk.h>
-#include <glib/gi18n-lib.h>
+#include <libintl.h>
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -41,12 +41,17 @@
 #include "iFolderClient.nsmap"
 
 #include "nautilus-ifolder.h"
+#include "../config.h"
 
 /* Turn this on to see debug messages */
 #if 0
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
 #else
 #define DEBUG_IFOLDER
+#endif
+
+#ifndef _
+#define _(STRING) gettext(STRING)
 #endif
 
 #define IFOLDER_FIFO_NAME ".nautilus-ifolder-fifo"
@@ -1359,7 +1364,12 @@ void
 nautilus_module_initialize (GTypeModule *module)
 {
 	DEBUG_IFOLDER (("Initializing nautilus-ifolder extension\n"));
+
 	ifolder_extension_register_type (module);
+	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+
 	provider_types[0] = ifolder_nautilus_get_type ();
 	
 	b_nautilus_ifolder_running = TRUE;
