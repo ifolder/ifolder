@@ -38,8 +38,9 @@ namespace Novell.Win32Util
 	[ComVisible(false)]
 	public class Win32Window
 	{
-		IntPtr window;
+		private IntPtr handle;
 
+		#region Win32 API
 		/// <summary>
 		/// Load the image from a file.
 		/// </summary>
@@ -66,23 +67,126 @@ namespace Novell.Win32Util
 		public const int SHGFI_USEFILEATTRIBUTES = 0x10;
 
 		/// <summary>
+		/// An item has changed.
+		/// </summary>
+		public const int SHCNE_UPDATEITEM = 0x00002000;
+
+		/// <summary>
+		/// Path name
+		/// </summary>
+		public const int SHCNF_PATHW = 0x0005;
+
+		const int GWL_EXSTYLE = -20;
+		const int WS_EX_TOOLWINDOW = 0x00000080;
+		const int WS_EX_APPWINDOW = 0x00040000;
+
+		const int SW_HIDE = 0;
+		const int SW_SHOWNORMAL = 1;
+		const int SW_RESTORE = 9;
+
+		[ComVisible(false)]
+		private struct ICONINFO
+		{
+			/// <summary>
+			/// Icon or cursor.
+			/// </summary>
+			public bool fIcon;
+
+			/// <summary>
+			/// x-coordinate of cursor hotspot.
+			/// </summary>
+			public int xHotspot;
+
+			/// <summary>
+			/// y-coordinate of cursor hotspot.
+			/// </summary>
+			public int yHotspot;
+
+			/// <summary>
+			/// Icon bitmask bitmap.
+			/// </summary>
+			public IntPtr hbmMask;
+
+			/// <summary>
+			/// Handle to icon color bitmap.
+			/// </summary>
+			public IntPtr hbmColor;
+		}
+
+		[DllImport("user32.dll")]
+		static extern bool SetForegroundWindow(IntPtr hWnd);
+
+		[DllImport("user32.dll")]
+		static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+
+		[DllImport("user32.dll", SetLastError=true)]
+		static extern int DestroyIcon(IntPtr hIcon);
+
+		[DllImport("user32.dll")]
+		static extern bool GetIconInfo(IntPtr hIcon, out ICONINFO piconinfo);
+
+		[DllImport("user32.dll")]
+		static extern bool BringWindowToTop(IntPtr hwnd);
+		
+		[DllImport("user32.dll", EntryPoint="FindWindow")]
+		static extern IntPtr FindWindowWin32(string className, string windowName);
+
+		[DllImport("user32.dll")]
+		static extern int SetWindowLong(IntPtr hwnd, int index,	int dwNewLong);
+
+		[DllImport("user32.dll")]
+		static extern int GetWindowLong(IntPtr hwnd, int index);
+		
+		[DllImport("shell32.dll")]
+		static extern bool SHObjectProperties(IntPtr hwnd, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
+
+		[DllImportAttribute("user32.dll")]
+		static extern IntPtr LoadImage(int hInst, string name, int type, int cx, int cy, int load);
+
+		[DllImport("shell32.dll")]
+		static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPWStr)] string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags);
+
+		[DllImport("shell32.dll")]
+		static extern void SHChangeNotify(int wEventId, int uFlags, [MarshalAs(UnmanagedType.LPWStr)] string dwItem1, IntPtr dwItem2);
+		#endregion
+
+		/// <summary>
 		/// Create a Win32Window
 		/// </summary>
 		public Win32Window()
 		{
 		}
 
+		#region Properties
 		/// <summary>
 		/// Set the window handle.
 		/// </summary>
-		public IntPtr Window
+		public IntPtr Handle
 		{
 			set
 			{
-				window = value;
+				handle = value;
 			}
 		}
 
+		public bool Visible
+		{
+			set
+			{
+				if (value)
+				{
+					ShowWindow(handle, SW_SHOWNORMAL | SW_RESTORE);
+					SetForegroundWindow(handle);
+				}
+				else
+				{
+					ShowWindow(handle, SW_HIDE);
+				}
+			}
+		}
+		#endregion
+
+		#region Public Methods
 		/// <summary>
 		/// Get a long value for this window. See GetWindowLong()
 		/// </summary>
@@ -90,7 +194,7 @@ namespace Novell.Win32Util
 		/// <returns></returns>
 		public int GetWindowLong(int index)
 		{
-			return GetWindowLong(window, index);
+			return GetWindowLong(handle, index);
 		}
 
 		/// <summary>
@@ -99,14 +203,10 @@ namespace Novell.Win32Util
 		/// <param name="index"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		public int SetWindowLong(int index, int value)
+		public int SetWindowLong(int index, int dwNewLong)
 		{
-			return SetWindowLong(window, index, value);
+			return SetWindowLong(handle, index, dwNewLong);
 		}
-
-		const int GWL_EXSTYLE = -20;
-		const int WS_EX_TOOLWINDOW = 0x00000080;
-		const int WS_EX_APPWINDOW = 0x00040000;
 
 		/// <summary>
 		/// Turn this window into a tool window, so it doesn't show up in the Alt-tab list...
@@ -129,9 +229,9 @@ namespace Novell.Win32Util
 		/// <summary>
 		/// Bring a window to the top
 		/// </summary>
-		public void BringWindowToTop()
+		public bool BringWindowToTop()
 		{
-			BringWindowToTop(window);
+			return BringWindowToTop(handle);
 		}
 
 		/// <summary>
@@ -142,12 +242,12 @@ namespace Novell.Win32Util
 		/// <returns></returns>
 		public static Win32Window FindWindow(string className, string windowName)
 		{
-			IntPtr window = FindWindowWin32(className, windowName);
+			IntPtr handle = FindWindowWin32(className, windowName);
 			Win32Window win32Window = null;
-			if (window != IntPtr.Zero)
+			if (handle != IntPtr.Zero)
 			{
 				win32Window = new Win32Window();
-				win32Window.Window = window;
+				win32Window.Handle = handle;
 			}
 
 			return win32Window;
@@ -156,14 +256,14 @@ namespace Novell.Win32Util
 		/// <summary>
 		/// Display the properties dialog for an object.
 		/// </summary>
-		/// <param name="window"></param>
+		/// <param name="handle"></param>
 		/// <param name="type"></param>
 		/// <param name="objectName"></param>
 		/// <param name="pageName"></param>
 		/// <returns></returns>
-		public static bool ShObjectProperties(IntPtr window, int type, string objectName, string pageName)
+		public static bool ShObjectProperties(IntPtr handle, int type, string objectName, string pageName)
 		{
-			return SHObjectProperties(window, type, objectName, pageName);
+			return SHObjectProperties(handle, type, objectName, pageName);
 		}
 
 		/// <summary>
@@ -179,16 +279,6 @@ namespace Novell.Win32Util
 		{
 			return SHGetFileInfo(path, attr, out fi, cbfi, flags);
 		}
-
-		/// <summary>
-		/// An item has changed.
-		/// </summary>
-		public const int SHCNE_UPDATEITEM = 0x00002000;
-
-		/// <summary>
-		/// Path name
-		/// </summary>
-		public const int SHCNF_PATHW = 0x0005;
 
 		/// <summary>
 		/// Notify the shell that something has changed.
@@ -263,70 +353,7 @@ namespace Novell.Win32Util
 			else
 				return new Bitmap(ico.ToBitmap());
 		}
-
-		[ComVisible(false)]
-		private struct ICONINFO
-		{
-			/// <summary>
-			/// Icon or cursor.
-			/// </summary>
-			public bool fIcon;
-
-			/// <summary>
-			/// x-coordinate of cursor hotspot.
-			/// </summary>
-			public int xHotspot;
-
-			/// <summary>
-			/// y-coordinate of cursor hotspot.
-			/// </summary>
-			public int yHotspot;
-
-			/// <summary>
-			/// Icon bitmask bitmap.
-			/// </summary>
-			public IntPtr hbmMask;
-
-			/// <summary>
-			/// Handle to icon color bitmap.
-			/// </summary>
-			public IntPtr hbmColor;
-		}
-
-		[DllImport("user32.dll", SetLastError=true)]
-		static extern int DestroyIcon(IntPtr hIcon);
-
-		[DllImport("user32.dll")]
-		static extern bool GetIconInfo(IntPtr hIcon, out ICONINFO piconinfo);
-
-		[DllImport("user32.dll")]
-		static extern bool BringWindowToTop(IntPtr window);
-		
-		[DllImport("user32.dll", EntryPoint="FindWindow")]
-		static extern IntPtr FindWindowWin32(string className, string windowName);
-
-		[DllImport("user32.dll")]
-		static extern int SetWindowLong(
-			IntPtr window,
-			int index,
-			int value);
-
-		[DllImport("user32.dll")]
-		static extern int GetWindowLong(
-			IntPtr window,
-			int index);
-		
-		[DllImport("shell32.dll")]
-		static extern bool SHObjectProperties(IntPtr window, int type, [MarshalAs(UnmanagedType.LPWStr)] string lpObject, [MarshalAs(UnmanagedType.LPWStr)] string lpPage);
-
-		[DllImportAttribute("user32.dll")]
-		static extern IntPtr LoadImage(int hInst, string name, int type, int cx, int cy, int load);
-
-		[DllImport("shell32.dll")]
-		static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPWStr)] string path, int attr, out IFSHFILEINFO fi, int cbfi, int flags);
-
-		[DllImport("shell32.dll")]
-		static extern void SHChangeNotify(int wEventId, int uFlags, [MarshalAs(UnmanagedType.LPWStr)] string dwItem1, IntPtr dwItem2);
+		#endregion
 	}
 }
 

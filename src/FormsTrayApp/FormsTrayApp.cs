@@ -158,7 +158,11 @@ namespace Novell.FormsTrayApp
 			Novell.Win32Util.Win32Window window = Novell.Win32Util.Win32Window.FindWindow(null, windowName);
 			if (window != null)
 			{
-				MessageBox.Show(resourceManager.GetString("iFolderRunning"));
+				// Activate the My iFolders dialog
+				window = Novell.Win32Util.Win32Window.FindWindow(null, resourceManager.GetString("myiFolders"));
+				window.Visible = true;
+
+				// Shutdown this instance.
 				shutdown = true;
 			}
 			else
@@ -195,7 +199,7 @@ namespace Novell.FormsTrayApp
 					//this.Hide();
 
 					Win32Window win32Window = new Win32Window();
-					win32Window.Window = this.Handle;
+					win32Window.Handle = this.Handle;
 					win32Window.MakeToolWindow();
 
 					shellNotifyIcon = new ShellNotifyIcon(this.Handle);
@@ -1048,9 +1052,8 @@ namespace Novell.FormsTrayApp
 
 								serverInfo = new ServerInfo(domainID);
 								serverInfo.Closed += new EventHandler(serverInfo_Closed);
-								serverInfo.CreateControl();
-								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
 								serverInfo.Show();
+								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
 							}
 							else if (status.statusCode.Equals(StatusCodes.SuccessInGrace))
 							{
@@ -1074,8 +1077,11 @@ namespace Novell.FormsTrayApp
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
-			shellNotifyIcon.Text = resourceManager.GetString("iFolderServicesStopping");
-			shellNotifyIcon.Icon = shutdownIcon;
+			if (shellNotifyIcon != null)
+			{
+				shellNotifyIcon.Text = resourceManager.GetString("iFolderServicesStopping");
+				shellNotifyIcon.Icon = shutdownIcon;
+			}
 
 			if (ex != null)
 			{

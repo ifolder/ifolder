@@ -100,9 +100,9 @@
                     HintPath = "..\..\..\..\stage\Novell.iFolder.dll"
                 />
                 <Reference
-                    Name = "Simias"
-                    AssemblyName = "Simias"
-                    HintPath = "..\..\..\..\stage\web\bin\Simias.dll"
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\..\final\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>

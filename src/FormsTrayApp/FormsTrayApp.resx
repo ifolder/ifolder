@@ -604,9 +604,6 @@
   <data name="fatalErrorTitle">
     <value>Unable to Start iFolder Services</value>
   </data>
-  <data name="iFolderRunning">
-    <value>There is already an instance of iFolder running.</value>
-  </data>
   <data name="downloading">
     <value>Downloading: {0}</value>
   </data>
@@ -669,5 +666,8 @@
   </data>
   <data name="deleteUnknown">
     <value>Deleting on server: {0}</value>
+  </data>
+  <data name="myiFolders">
+    <value>My iFolders</value>
   </data>
 </root>
