@@ -23,6 +23,7 @@
 
 using System;
 using Simias;
+using Simias.Location;
 using Simias.Storage;
 
 namespace Novell.iFolder.Web
@@ -57,7 +58,7 @@ namespace Novell.iFolder.Web
 			Domain domain = store.GetDomain(domainID);
 			this.Name = domain.Name;
 			this.Description = domain.Description;
-			this.Host = domain.HostAddress.ToString();
+			this.Host = Locate.Resolve(domainID);
 			this.UserID = store.GetUserIDFromDomainID(domainID);
 			this.IsDefault = domainID.Equals(store.DefaultDomain);
 
