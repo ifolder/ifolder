@@ -36,6 +36,7 @@ namespace Simias.Event
 		string					collection;
 		string					domainName;
 		string					type;
+		object					context;
 		EventType				changeType;
 
 		/// <summary>
@@ -84,6 +85,7 @@ namespace Simias.Event
 			this.collection = collection;
 			this.domainName = domainName;
 			this.type = type;
+			context = null;
 			this.changeType = changeType;
 		}
 
@@ -134,6 +136,15 @@ namespace Simias.Event
 		{
 			get {return changeType;}
 			set {changeType = value;}
+		}
+
+		/// <summary>
+		/// Gets a Sets a context object.  A publisher can use this to detect circular events.
+		/// </summary>
+		public object Context
+		{
+			get {return context;}
+			set {context = value;}
 		}
 	}
 }
