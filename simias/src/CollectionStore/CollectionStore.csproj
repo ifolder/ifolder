@@ -149,6 +149,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Exception.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FileNode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -311,7 +311,7 @@ namespace Simias.Storage
 				else
 				{
 					// There was a collision.
-					throw new ApplicationException( "Collision on node: " + node.ID );
+					throw new Collision( node.ID, checkNode.LocalIncarnation );
 				}
 			}
 			else
@@ -1005,6 +1005,9 @@ namespace Simias.Storage
 			// Set the current state of the node indicating that it is being imported.
 			node.Properties.State = PropertyList.PropertyListState.Import;
 			node.ExpectedIncarnation = expectedIncarnation;
+
+			// Strip any local properties that may exist on the Node object.
+			node.Properties.StripLocalProperties();
 		}
 
 		/// <summary>

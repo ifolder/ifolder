@@ -228,18 +228,6 @@ namespace Simias.Storage
 			nodeDocument.LoadXml( info.GetString( "PropertyData" ) );
 			propertyRoot = nodeDocument.DocumentElement[ XmlTags.ObjectTag ];
 			state = ( PropertyListState )Enum.Parse( typeof( PropertyListState ), info.GetString( "ListState" ) );
-
-			// Strip out any non-transient values.
-			XmlNodeList nonTransList = nodeDocument.DocumentElement.SelectNodes( "//Property[@flags]" );
-			foreach( XmlNode tempNode in nonTransList )
-			{
-				uint flags = Convert.ToUInt32( tempNode.Attributes[ XmlTags.FlagsAttr ].Value );
-				if ( ( flags & Property.Local ) == Property.Local )
-				{
-					// Remove this property out of the document.
-					tempNode.ParentNode.RemoveChild( tempNode );
-				}
-			}
 		}
 		#endregion
 
@@ -736,6 +724,33 @@ namespace Simias.Storage
 		internal void RemoveFromChangeList( Property property )
 		{
 			changeList.Remove( property );
+		}
+
+		/// <summary>
+		/// Removes all properties from the specified document that are marked as non-transient.
+		/// </summary>
+		internal void StripLocalProperties()
+		{
+			StripLocalProperties( nodeDocument );
+		}
+
+		/// <summary>
+		/// Removes all properties from the specified document that are marked as non-transient.
+		/// </summary>
+		/// <param name="document">Xml document that describes the Node object's properties.</param>
+		internal void StripLocalProperties( XmlDocument document )
+		{
+			// Strip out any non-transient values.
+			XmlNodeList nonTransList = document.DocumentElement.SelectNodes( "//Property[@flags]" );
+			foreach( XmlNode tempNode in nonTransList )
+			{
+				uint flags = Convert.ToUInt32( tempNode.Attributes[ XmlTags.FlagsAttr ].Value );
+				if ( ( flags & Property.Local ) == Property.Local )
+				{
+					// Remove this property out of the document.
+					tempNode.ParentNode.RemoveChild( tempNode );
+				}
+			}
 		}
 		#endregion
 
@@ -1331,7 +1346,13 @@ namespace Simias.Storage
 		/// <param name="context">The destination (see StreamingContext) for this serialization.</param>
 		public virtual void GetObjectData( SerializationInfo info, StreamingContext context )
 		{
-			info.AddValue( "PropertyData", nodeDocument.OuterXml );
+			// Create a copy of the property document and strip out the non-transient properties 
+			// before serializing the PropertyList object.
+			XmlDocument tempDocument = nodeDocument.Clone() as XmlDocument;
+			StripLocalProperties( tempDocument );			
+
+			// Serialize the stripped property list.
+			info.AddValue( "PropertyData", tempDocument.OuterXml );
 			info.AddValue( "ListState", Enum.GetName( typeof( PropertyListState ), state ) );
 		}
 		#endregion
