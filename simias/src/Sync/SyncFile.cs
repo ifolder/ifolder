@@ -414,12 +414,20 @@ namespace Simias.Sync
 			}
 			if (exception == null && commit)
 			{
-				string tmpFile = file + ".~stmp";
 				if (File.Exists(file))
 				{
+					string tmpFile = file + ".~stmp";
 					File.Move(file, tmpFile);
-					File.Move(workFile, file);
-					workFile = tmpFile;
+					try
+					{
+						File.Move(workFile, file);
+						File.Delete(tmpFile);
+						workFile = null;	
+					}
+					catch
+					{
+						File.Move(tmpFile, file);
+					}
 				}
 				else
 				{
