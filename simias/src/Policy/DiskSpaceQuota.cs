@@ -381,7 +381,7 @@ namespace Simias.Policy
 		/// </summary>
 		/// <param name="space">Amount of space requested.</param>
 		/// <returns>True if the requested space is under the quota limit. Otherwise false is returned.</returns>
-		public bool HasAvailableDiskSpace( long space )
+		public bool Allowed( long space )
 		{
 			bool hasSpace = true;
 

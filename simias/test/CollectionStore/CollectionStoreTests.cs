@@ -1827,13 +1827,13 @@ namespace Simias.Storage.Tests
 				}
 
 				// Now apply the quota so that it will pass.
-				if ( dsq.HasAvailableDiskSpace( 1024 ) == false )
+				if ( dsq.Allowed( 1024 ) == false )
 				{
 					throw new ApplicationException( "Domain disk quota failed." );
 				}
 
 				// Now apply the quota so that it will fail.
-				if ( dsq.HasAvailableDiskSpace( 2049 ) == true )
+				if ( dsq.Allowed( 2049 ) == true )
 				{
 					throw new ApplicationException( "Domain disk quota failed." );
 				}
@@ -1861,13 +1861,13 @@ namespace Simias.Storage.Tests
 				}
 
 				// Now apply the quota so that it will pass.
-				if ( dsq.HasAvailableDiskSpace( 512 ) == false )
+				if ( dsq.Allowed( 512 ) == false )
 				{
 					throw new ApplicationException( "Member disk quota failed." );
 				}
 
 				// Now apply the quota so that it will fail.
-				if ( dsq.HasAvailableDiskSpace( 513 ) == true )
+				if ( dsq.Allowed( 513 ) == true )
 				{
 					throw new ApplicationException( "Member disk quota failed." );
 				}
@@ -1892,13 +1892,13 @@ namespace Simias.Storage.Tests
 				}
 
 				// Now apply the quota so that it will pass.
-				if ( dsq.HasAvailableDiskSpace( 256 ) == false )
+				if ( dsq.Allowed( 256 ) == false )
 				{
 					throw new ApplicationException( "Collection disk quota failed." );
 				}
 
 				// Now apply the quota so that it will fail.
-				if ( dsq.HasAvailableDiskSpace( 257 ) == true )
+				if ( dsq.Allowed( 257 ) == true )
 				{
 					throw new ApplicationException( "Collection disk quota failed." );
 				}
@@ -1922,7 +1922,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Now apply the quota so that it will pass.
-				if ( dsq.HasAvailableDiskSpace( 128 ) == false )
+				if ( dsq.Allowed( 128 ) == false )
 				{
 					throw new ApplicationException( "Member disk quota failed." );
 				}
@@ -1939,7 +1939,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Now apply the quota so that it will fail.
-				if ( dsq.HasAvailableDiskSpace( 1 ) == true )
+				if ( dsq.Allowed( 1 ) == true )
 				{
 					throw new ApplicationException( "Member disk quota failed." );
 				}
@@ -2057,6 +2057,132 @@ namespace Simias.Storage.Tests
 				if ( ftf.Allowed( "myfile.txt" ) == true )
 				{
 					throw new ApplicationException( "Member filter failed." );
+				}
+			}
+			finally
+			{
+				collection.Commit( collection.Delete() );
+			}
+		}
+
+		/// <summary>
+		/// Tests the file size filter functionality.
+		/// </summary>
+		[Test]
+		public void FileSizeFilterTest()
+		{
+			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			collection.Commit();
+
+			try
+			{
+				Member member = collection.GetCurrentMember();
+
+				// Create a system-wide file size limit policy.
+				FileSizeFilter.CreateFileSizeFilter( store, store.DefaultDomain, 2048 );
+
+				// Make sure that there is a limit set.
+				if ( FileSizeFilter.GetFileSizeLimit( store, store.DefaultDomain ) != 2048 )
+				{
+					throw new ApplicationException( "File size limit not set." );
+				}
+
+				// Get a filter object.
+				FileSizeFilter fsf = FileSizeFilter.GetFileSizeFilter( store, member );
+				
+				// Check the aggregate limit.
+				if ( fsf.Limit != 2048 )
+				{
+					throw new ApplicationException( "Aggregate file size limit not set." );
+				}
+
+				// Now apply the size filter so that it will pass.
+				if ( fsf.Allowed( 2048 ) == false )
+				{
+					throw new ApplicationException( "Domain file size limit failed." );
+				}
+
+				// Now apply the size filter so that it will fail.
+				if ( fsf.Allowed( 2049 ) == true )
+				{
+					throw new ApplicationException( "Domain file size limit failed." );
+				}
+
+
+				// Create a PO box for the member.
+				POBox.POBox.GetPOBox( store, store.DefaultDomain, member.UserID );
+
+				// Apply a file size filter on the member.
+				FileSizeFilter.CreateFileSizeFilter( store, member, 1024 );
+
+				// Make sure that there is a limit set.
+				if ( FileSizeFilter.GetFileSizeLimit( store, member ) != 1024 )
+				{
+					throw new ApplicationException( "Member file size limit not set." );
+				}
+
+				// Get a file size filter object.
+				fsf = FileSizeFilter.GetFileSizeFilter( store, member );
+				
+				// Check the aggregate limit.
+				if ( fsf.Limit != 1024 )
+				{
+					throw new ApplicationException( "Aggregate member file size limit not set." );
+				}
+
+				// Now apply the size so that it will pass.
+				if ( fsf.Allowed( 1024 ) == false )
+				{
+					throw new ApplicationException( "Member file size limit failed." );
+				}
+
+				// Now apply the size so that it will fail.
+				if ( fsf.Allowed( 1025 ) == true )
+				{
+					throw new ApplicationException( "Member file size limit failed." );
+				}
+
+
+				// Apply a file size limit on the collection.
+				FileSizeFilter.CreateFileSizeFilter( store, collection, 512 );
+
+				// Make sure that there is a limit set.
+				if ( FileSizeFilter.GetFileSizeLimit( store, collection ) != 512 )
+				{
+					throw new ApplicationException( "Collection file size limit not set." );
+				}
+
+				// Get a file size limit object.
+				fsf = FileSizeFilter.GetFileSizeFilter( store, member, collection );
+				
+				// Check the aggregate limit.
+				if ( fsf.Limit != 512 )
+				{
+					throw new ApplicationException( "Aggregate collection file size limit not set." );
+				}
+
+				// Now apply the size so that it will pass.
+				if ( fsf.Allowed( 512 ) == false )
+				{
+					throw new ApplicationException( "Collection file size limit failed." );
+				}
+
+				// Now apply the size so that it will fail.
+				if ( fsf.Allowed( 513 ) == true )
+				{
+					throw new ApplicationException( "Collection file size limit failed." );
+				}
+
+				// Reset the member's quota lower.
+				FileSizeFilter.CreateFileSizeFilter( store, member, 128 );
+
+				// Get a file size limit object.
+				fsf = FileSizeFilter.GetFileSizeFilter( store, member, collection );
+				
+				// Check the aggregate limit.
+				if ( fsf.Limit != 128 )
+				{
+					throw new ApplicationException( "Aggregate member file size limit not set." );
 				}
 			}
 			finally

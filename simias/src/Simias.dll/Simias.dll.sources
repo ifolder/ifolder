@@ -66,6 +66,7 @@ AssemblyInfo.cs
 ../PresenceService/PresenceService.cs
 ../PresenceService/PublicSubscription.cs
 ../Policy/DiskSpaceQuota.cs
+../Policy/FileSizeFilter.cs
 ../Policy/FileTypeFilter.cs
 ../Sniffer/SnifferClientChannelSink.cs
 ../Sniffer/SnifferClientChannelSinkProvider.cs
