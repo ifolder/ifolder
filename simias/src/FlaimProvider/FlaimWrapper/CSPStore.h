@@ -77,6 +77,7 @@ typedef enum
 	CSP_Type_Max
 } CSP_TYPE;
 
+#define SIMIAS_TYPE 1000
 
 #define CS_Name_Node_Type			(FLMUNICODE*)L"Object Type"
 #define CS_Type_Node_Type			CSP_Type_String
