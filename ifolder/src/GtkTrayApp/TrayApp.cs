@@ -88,6 +88,7 @@ namespace Novell.iFolder
 
 			sManager = new Simias.Service.Manager(conf);
 			sManager.StartServices();
+			sManager.WaitForServicesStarted();
 
 			//			syncState = SyncManagerStates.Idle;
 
@@ -109,6 +110,7 @@ namespace Novell.iFolder
 				cr.CrashText = bigException.ToString();
 //				cp.TransientFor = (Gtk.Window)GetWidget().Toplevel;
 				cr.Run();
+				sManager.WaitForServicesStopped();
 				Application.Quit();
 			}
 		}
@@ -229,7 +231,7 @@ namespace Novell.iFolder
 		static void quit_ifolder(object o, EventArgs args)
 		{
 			sManager.StopServices();
-			//			syncManager.Stop();
+			sManager.WaitForServicesStopped();
 			Application.Quit();
 		}
 

@@ -171,7 +171,7 @@ namespace Novell.iFolder
 						}
 						}
 			 */
-			if(ifldr.IsShareable())
+			if(ifldr.Shareable)
 				addSharingButton.Sensitive = true;
 			else
 			{
@@ -257,7 +257,7 @@ namespace Novell.iFolder
 
 				// Check the identity here
 				// If it is the owner, dont' let them deny themselves
-				if( (!ifldr.IsShareable()) ||
+				if( (!ifldr.Shareable) ||
 						(slh.Contact.ID == ifldr.OwnerIdentity) )
 				{
 					removeSharingButton.Sensitive = false;
