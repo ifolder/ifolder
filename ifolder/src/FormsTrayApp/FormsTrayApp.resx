@@ -527,19 +527,22 @@
     <value>iFolder Services shutting down...</value>
   </data>
   <data name="collisionMessage">
-    <value>A collision has been detected in iFolder {0}.</value>
+    <value>A collision has been detected in iFolder "{0}".  Click here to resolve the conflicts in this iFolder.</value>
   </data>
   <data name="actionRequiredTitle">
     <value>Action Required</value>
   </data>
+  <data name="subscriptionTitle">
+    <value>New iFolder "{0}"</value>
+  </data>
   <data name="subscriptionMessage">
-    <value>A subscription has just been received from {0}.</value>
+    <value>{0} has invited you to participate in this shared iFolder.  Click here to setup this iFolder.</value>
   </data>
   <data name="newMemberTitle">
-    <value>New Membership</value>
+    <value>New iFolder User</value>
   </data>
   <data name="newMemberMessage">
-    <value>{0} has just joined iFolder {1}.</value>
+    <value>{0} has joined the iFolder "{1}".  Click here to view the member list for this iFolder.</value>
   </data>
   <data name="fatalErrorMessage">
     <value>A fatal error was encountered during iFolder initialization.</value>
