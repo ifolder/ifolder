@@ -43,11 +43,11 @@ AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
 # The default value of $prefix is not set until later in the script.
 # We set the default here, if needed.
 #
-echo prefix=${prefix}
+#echo prefix=${prefix}
 CONFIGURED_PREFIX="${prefix}"
 test -z "$CONFIGURED_PREFIX" -o "$CONFIGURED_PREFIX" = "NONE" && CONFIGURED_PREFIX=$ac_default_prefix
 echo CONFIGURED_PREFIX=$CONFIGURED_PREFIX
-echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
+#echo PKG_CONFIG_PATH=$PKG_CONFIG_PATH
 if test -z "$PKG_CONFIG_PATH"; then
     export PKG_CONFIG_PATH="$CONFIGURED_PREFIX/lib/pkgconfig"
 else
