@@ -115,7 +115,7 @@ namespace Simias.mDns
 		internal Domain( bool init )
 		{
 			mDnsHostName = Environment.MachineName + ".local";
-			mDnsUserName = Environment.UserName + "@" + mDnsHostName;
+			mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
 
 			description = 
 				Environment.UserName +
@@ -136,7 +136,7 @@ namespace Simias.mDns
 		internal Domain( bool init, string description ) 
 		{
 			mDnsHostName = Environment.MachineName + ".local";
-			mDnsUserName = Environment.UserName + "@" + mDnsHostName;
+			mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
 			this.description = description;
 
 			if ( init == true )

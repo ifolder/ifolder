@@ -52,6 +52,9 @@ namespace Simias.Location
 		//public static readonly string ID = "74d3a71f-daae-4a36-b9f3-6466081f6401";
 		private IResourceQuery mDnsQuery = null;
 		private IRemoteFactory mDnsFactory = null;
+	
+		private Simias.mDnsProvider mProv = null;
+
 		#endregion
 
 		#region Properties
@@ -98,6 +101,7 @@ namespace Simias.Location
 
 		public mDnsProvider()
 		{
+			/*
 			log.Debug( "Instance constructor called" );
 			try
 			{
@@ -113,83 +117,34 @@ namespace Simias.Location
 				log.Debug( e.Message );
 				log.Debug( e.StackTrace );
 			}
+			*/
 		}
+
+		public mDnsProvider( Simias.mDnsProvider prov )
+		{
+			this.mProv = prov;
+
+			/*
+			log.Debug( "Instance constructor called" );
+			try
+			{
+				mDnsFactory = 
+					(IRemoteFactory) Activator.GetObject(
+					typeof(IRemoteFactory),
+					"tcp://localhost:8091/mDnsRemoteFactory.tcp");
+					
+				mDnsQuery = mDnsFactory.GetQueryInstance();
+			}
+			catch( Exception e )
+			{
+				log.Debug( e.Message );
+				log.Debug( e.StackTrace );
+			}
+			*/
+		}
+
 
 		#endregion
-
-		private Uri MemberIDToUri( string memberID )
-		{
-			//Mono.P2p.mDnsResponderApi.ServiceLocation sl = null;
-			//Mono.P2p.mDnsResponderApi.HostAddress ha = null;
-			Uri locationUri = null;
-			string webServicePath = null;
-			Char[] sepChar = new Char [] {'='};
-
-			IResourceQuery mQuery = mDnsFactory.GetQueryInstance();
-
-			Mono.P2p.mDnsResponderApi.ServiceLocation[] sls = null;
-			if ( mQuery.GetServiceLocationResources( out sls ) == 0 )
-			{
-				foreach(ServiceLocation sl in sls)
-				{
-					if ( sl.Name == memberID )
-					{
-						Mono.P2p.mDnsResponderApi.TextStrings[] txts = null;
-						if ( mQuery.GetTextStringResources( out txts ) == 0 )
-						{
-							foreach( TextStrings ts in txts )
-							{
-								if ( ts.Name == memberID )
-								{
-									foreach( string s in ts.GetTextStrings() )
-									{
-										string[] nameValues = s.Split( sepChar );
-										if ( nameValues[0] == "ServicePath" )
-										{
-											webServicePath = nameValues[1];
-											break;
-										}
-									}
-									break;
-								}
-							}
-						}
-
-						if ( webServicePath != null )
-						{
-							Mono.P2p.mDnsResponderApi.HostAddress[] has = null;
-							if ( mQuery.GetHostAddressResources( out has ) == 0 )
-							{
-								foreach( HostAddress ha in has )
-								{
-									if ( ha.Name == sl.Target )
-									{
-										ArrayList ipAddrs = ha.GetIPAddresses();
-										if ( ipAddrs.Count > 0 )
-										{
-											string fullPath = 
-													"http://" + 
-													ipAddrs[0].ToString() + 
-													":" + 
-													System.Convert.ToString( (ushort) sl.Port ) +
-													webServicePath;
-
-											log.Debug( "fullPath: " + fullPath );
-											locationUri = new Uri( fullPath );
-										}
-										break;
-									}
-								}
-							}
-						}
-
-						break;
-					}
-				}
-			}
-
-			return locationUri;
-		}
 
 		#region ILocationProvider Members
 
@@ -236,6 +191,9 @@ namespace Simias.Location
 		{
 			log.Debug( "ResolveLocation called" );
 
+			return this.mProv.ResolveLocation( domainID );
+			
+			/*
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -244,6 +202,7 @@ namespace Simias.Location
 			}
 
 			return locationUri;
+			*/
 		}
 
 
@@ -263,6 +222,9 @@ namespace Simias.Location
 			log.Debug( "  DomainID: " + domainID );
 			log.Debug( "  CollectionID: " + collectionID );
 
+			return this.mProv.ResolveLocation( domainID, collectionID );
+
+			/*
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -285,6 +247,7 @@ namespace Simias.Location
 			}
 
 			return locationUri;
+			*/
 		}
 
 		/// <summary>
@@ -302,6 +265,9 @@ namespace Simias.Location
 		{
 			log.Debug( "ResolveLocation with userID called" );
 
+			return this.mProv.ResolveLocation( domainID, userID, collectionID );
+
+			/*
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -322,6 +288,7 @@ namespace Simias.Location
 			}
 
 			return locationUri;
+			*/
 		}
 
 		/// <summary>
@@ -336,6 +303,9 @@ namespace Simias.Location
 		{
 			log.Debug( "ResolveLocation with userID called" );
 
+			return this.mProv.ResolvePOBoxLocation( domainID, userID );
+			
+			/*
 			Uri locationUri = null;
 			if( domainID.ToLower() == Simias.mDns.Domain.ID )
 			{
@@ -356,6 +326,7 @@ namespace Simias.Location
 			}
 
 			return locationUri;
+			*/
 		}
 
 		#endregion

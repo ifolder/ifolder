@@ -62,7 +62,8 @@ namespace Simias.mDns
 		private static string inCredentialEvent = "true";
 		private	Store store = null;
 		private Simias.mDns.User mDnsUser = null;
-		private Simias.Location.mDnsProvider mDnsProvider = null;
+		private Simias.mDnsProvider mDnsProvider = null;
+		private Simias.Location.mDnsProvider locProvider = null;
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
@@ -95,22 +96,13 @@ namespace Simias.mDns
 			string myAddress = MyDns.GetHostName();
 			store = Store.GetStore();
 
-			/*
-			if ( Channel.RegisterChannel() == false )
-			{
-				log.Debug( "Failed to register the remoting channel" );
-				log.Debug(  "Rendezvous functionality is disabled!");
-				return;
-			}
-			*/
-
 			//
 			// Startup up the mDnsResponder
 			//
 
 			// TODO: Need to issue a ping call to see if the mDnsResponder
 			// is already running
-			Responder.Startup( config.StorePath );
+			//Responder.Startup( config.StorePath );
 
 			//
 			// Make sure the mDnsDomain exists
@@ -121,12 +113,20 @@ namespace Simias.mDns
 			{
 				mdnsDomain = new Simias.mDns.Domain( true );
 				this.mDnsUser = new Simias.mDns.User();
-				this.mDnsUser.BroadcastUp();
+
+				Simias.mDns.User.RegisterUser();
+				Simias.mDns.User.StartMemberBrowsing();
+
+				// Temp
 				Simias.mDns.Sync.StartSyncThread();
 
-				// Register with the location service.
-				this.mDnsProvider = new Simias.Location.mDnsProvider();
-				Simias.Location.Locate.RegisterProvider( this.mDnsProvider );
+				// Register with the DomainProvider service
+				this.mDnsProvider = new Simias.mDnsProvider();
+				Simias.DomainProvider.RegisterProvider( this.mDnsProvider );
+
+				// Temp
+				this.locProvider = new Simias.Location.mDnsProvider( this.mDnsProvider );
+				Simias.Location.Locate.RegisterProvider( this.locProvider );
 
 				// Register for authentication events
 				Simias.Authentication.NeedCredentialsEventSubscriber needCreds =
@@ -179,18 +179,21 @@ namespace Simias.mDns
 
 			if ( this.mDnsProvider != null )
 			{
-				Simias.Location.Locate.Unregister( this.mDnsProvider );
+				Simias.DomainProvider.Unregister( this.mDnsProvider );
+				Simias.Location.Locate.Unregister( this.locProvider );
 			}
 
 			if ( this.mDnsUser != null )
 			{
-				this.mDnsUser.BroadcastDown();
+				Simias.mDns.User.StopMemberBrowsing();
+				Simias.mDns.User.UnregisterUser();
 			}
 
+			// Temp
 			Simias.mDns.Sync.StopSyncThread();
 
 			//Channel.UnregisterChannel();
-			Responder.Shutdown();
+			//Responder.Shutdown();
 		}
 
 		/// <summary>
@@ -209,25 +212,28 @@ namespace Simias.mDns
 				lock ( Simias.mDns.Service.inCredentialEvent )
 				{
 					// Attempt to authenticate
-					Simias.Storage.Collection collection =
-						Store.GetStore().GetCollectionByID( args.CollectionID );
-					if ( collection != null )
-					{
+					//Simias.Storage.Collection collection =
+					//	Store.GetStore().GetCollectionByID( args.CollectionID );
+					//if ( collection != null )
+					//{
 						Simias.mDns.ClientAuthentication clientAuth =
 							new Simias.mDns.ClientAuthentication();
 
 						if ( clientAuth.Authenticate( args.CollectionID ) == true )
 						{
+							string userID = 
+								Store.GetStore().GetDomain( args.DomainID ).GetCurrentMember().UserID;
+
 							// Set credentials for this collection
 							new NetCredential( 
 								"iFolder", 
 								args.CollectionID, 
 								true, 
-								collection.GetCurrentMember().UserID,
+								userID,
 								"@PPK@" );
 
 						}
-					}
+					//}
 				}
 			}
 		}

@@ -23,40 +23,140 @@
 
 using System;
 using System.Collections;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-
+using System.Net;
+using System.Runtime.InteropServices;
+//using System.Runtime.Remoting;
+//using System.Runtime.Remoting.Channels;
+//using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 using System.Xml;
 
 using Simias;
-//using Simias.Client;
+using Simias.Client;
 using Simias.Storage;
 
-using Mono.P2p.mDnsResponderApi;
-
+//using Mono.P2p.mDnsResponderApi;
 
 namespace Simias.mDns
 {
+	// Quick and dirty - I need to clean this up and
+	// put some thought into it
+	public class RendezvousUser
+	{
+		public string ID;
+		public string FriendlyName;
+		public string Host;
+		public int	  Port;
+		public string ServicePath;
+		public string PublicKey;
+		public bool	  SimiasUser;
+
+		public RendezvousUser()
+		{
+
+		}
+	}
+
+	public class UserLock
+	{
+		private int	lockIt;
+		public UserLock()
+		{
+		}
+	}
+
 	/// <summary>
 	/// Class used to broadcast the current user
 	/// to the Rendezvous/mDns network
 	/// </summary>
 	public class User
 	{
-		#region Class Members
+		#region DllImports
+		[ DllImport( "ifolder-rendezvous" ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		RegisterLocalMember(
+			string		ID,
+			string		Name,
+			short		Port,
+			string		ServicePath,
+			int			PublicKeyLength,
+			string		PublicKey,
+			ref IntPtr	Cookie);
 
-		private static bool	mDnsChannelUp = false;
-		private string  mDnsUserName;
-		private string  mDnsUserID = "";
-		private static IResourceRegistration rr = null;
-		private static IResourceQuery query = null;
-		private readonly string memberTag = "_ifolder_member._tcp.local";
+		[ DllImport( "ifolder-rendezvous" ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		DeregisterLocalMember(string ID, int Cookie);
+
+		[ DllImport( "ifolder-rendezvous" ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		GetMemberInfo(
+			[MarshalAs(UnmanagedType.LPStr)] string	ID,
+			[In, Out] char[]	MemberName,
+			[In, Out] char[]	ServicePath,
+			[In, Out] byte[]	PublicKey,
+			[In, Out] char[]	HostName,
+			ref       int		Port);
+
+		[ DllImport( "ifolder-rendezvous" ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		BrowseMembersInit( MemberBrowseCallback	callback, ref IntPtr handle );
+		
+		[ DllImport( "ifolder-rendezvous" ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		BrowseMembersShutdown( int handle );
+
+		[ DllImport( "ifolder-rendezvous" ) ]
+		private 
+		extern 
+		static 
+		User.kErrorType
+		BrowseMembers( int handle, int timeout );
+
+		[ DllImport( "ifolder-rendezvous" ) ]
+		internal 
+		extern 
+		static 
+		User.kErrorType
+		ResolveAddress(
+			[MarshalAs(UnmanagedType.LPStr)] string	hostName,
+			int	BufferLength,
+			[In, Out] char[] TextualIPAddress);
+		#endregion
+
+		#region Class Members
+		private static bool registered = false;
+		private static string  mDnsUserName;
+		private static string  mDnsUserID = "";
+		//private readonly string memberTag = "_ifolder_member._tcp.local";
 		private static readonly string configSection = "ServiceManager";
 		private static readonly string configServices = "WebServiceUri";
-		private	IMDnsEvent cEvent = null;
 		private static Uri webServiceUri = null;
+		private static IntPtr userHandle;
+		private static IntPtr browseHandle;
+		private static Thread browseThread = null;
 
+		//private const string nativeLibrary = "ifolder-rendezvous";
+
+		// State for maintaining the Rendezvous user list
+
+		// TEMP need to fix protection level here
+		internal static UserLock	memberListLock;
+		internal static ArrayList memberList;
 
 		/// <summary>
 		/// Used to log messages.
@@ -64,16 +164,45 @@ namespace Simias.mDns
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		// possible error code values 
+		public enum kErrorType : int
+		{
+			kDNSServiceErr_NoError             = 0,
+			kDNSServiceErr_Unknown             = -65537,       /* 0xFFFE FFFF */
+			kDNSServiceErr_NoSuchName          = -65538,
+			kDNSServiceErr_NoMemory            = -65539,
+			kDNSServiceErr_BadParam            = -65540,
+			kDNSServiceErr_BadReference        = -65541,
+			kDNSServiceErr_BadState            = -65542,
+			kDNSServiceErr_BadFlags            = -65543,
+			kDNSServiceErr_Unsupported         = -65544,
+			kDNSServiceErr_NotInitialized      = -65545,
+			kDNSServiceErr_AlreadyRegistered   = -65547,
+			kDNSServiceErr_NameConflict        = -65548,
+			kDNSServiceErr_Invalid             = -65549,
+			kDNSServiceErr_Firewall            = -65550,
+			kDNSServiceErr_Incompatible        = -65551,        /* client library incompatible with daemon */
+			kDNSServiceErr_BadInterfaceIndex   = -65552,
+			kDNSServiceErr_Refused             = -65553,
+			kDNSServiceErr_NoSuchRecord        = -65554,
+			kDNSServiceErr_NoAuth              = -65555,
+			kDNSServiceErr_NoSuchKey           = -65556,
+			kDNSServiceErr_NATTraversal        = -65557,
+			kDNSServiceErr_DoubleNAT           = -65558,
+			kDNSServiceErr_BadTime             = -65559
+			/* mDNS Error codes are in the range
+				 * FFFE FF00 (-65792) to FFFE FFFF (-65537) */
+		};
+
 		#endregion
 
 		#region Properties
-
 		/// <summary>
 		/// Gets the current user's mDns ID
 		/// </summary>
 		public string ID
 		{
-			get { return( mDnsUserID ); }
+			get { return( User.mDnsUserID ); }
 		}
 
 		/// <summary>
@@ -81,7 +210,7 @@ namespace Simias.mDns
 		/// </summary>
 		public string Name
 		{
-			get { return( this.mDnsUserName ); }
+			get { return( User.mDnsUserName ); }
 		}
 		#endregion
 
@@ -97,38 +226,53 @@ namespace Simias.mDns
 			XmlElement servicesElement = 
 				Store.GetStore().Config.GetElement( configSection, configServices );
 			webServiceUri = new Uri( servicesElement.GetAttribute( "value" ) );
-
 			if ( webServiceUri != null )
 			{
 				log.Debug( "Web Service URI: " + webServiceUri.ToString() );
 				log.Debug( "Absolute Path: " + webServiceUri.AbsolutePath );
 			}
 
-			//
-			// Setup the remoting channel to the mDnsResponder
-			// this isn't thread safe but I know it won't be
-			// re-entered
-			//
+			User.memberListLock = new UserLock();
+			User.memberList = new ArrayList();
 
-			IRemoteFactory factory = 
-				(IRemoteFactory) Activator.GetObject(
-					typeof(IRemoteFactory),
-					"tcp://localhost:8091/mDnsRemoteFactory.tcp");
-				
-			Simias.mDns.User.rr = factory.GetRegistrationInstance();
-			Simias.mDns.User.query = factory.GetQueryInstance();
+			userHandle = new IntPtr(0);
 
-			mDnsChannelUp = true;
+			//Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
+			//mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
+			User.mDnsUserName = Environment.UserName + "@" + Environment.MachineName;
+
+			try
+			{
+				Simias.Storage.Domain rDomain = 
+					Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
+				if ( rDomain != null )
+				{
+					User.mDnsUserID = rDomain.GetMemberByName( mDnsUserName).UserID;
+				}
+			}
+			catch( Exception e )
+			{
+				log.Debug( e.Message );
+				log.Debug( e.StackTrace );
+			}
 		}
+
+		/*
+		/// <summary>
+		/// Constructor for newing up an mDns user object.
+		/// </summary>
+		public User()
+		{
+		}
+		*/
 
 		/// <summary>
 		/// Constructor for newing up an mDns user object.
 		/// </summary>
 		internal User()
 		{
-			Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
-			mDnsUserName = Environment.UserName + "@" + mdnsDomain.Host;
 
+			/*
 			try
 			{
 				Simias.Storage.Domain rDomain = 
@@ -143,24 +287,23 @@ namespace Simias.mDns
 				log.Debug( e.Message );
 				log.Debug( e.StackTrace );
 			}
+			*/
 		}
 
 		#endregion
 
 		#region Internal Methods
-
-		internal void BroadcastUp()
+		internal static void RegisterUser()
 		{
-			bool registered = false;
-
-			if ( mDnsChannelUp == false )
+			if ( registered == true )
 			{
-				throw new SimiasException( "Remoting channel not setup" );
+				User.UnregisterUser();
 			}
 
 			if ( webServiceUri == null )
 			{
-				throw new SimiasException( "Web Service URI not configured" );
+				//throw new SimiasException( "Web Service URI not configured" );
+				throw new ApplicationException( "Web Service URI not configured" );
 			}
 
 			//
@@ -169,213 +312,143 @@ namespace Simias.mDns
 			//
 			try
 			{
-				// Temporary to auto add all ifolder_members
-				this.AutoMembers();
+				// Temp
+				string	key = "1234567890";
+				short sport = (short) webServiceUri.Port;
 
-				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( true );
-				int status = rr.RegisterHost( mdnsDomain.Host, MyDns.GetHostName() );
-				if ( status == 0 )
+				kErrorType status =
+					RegisterLocalMember( 
+						User.mDnsUserID, 
+						User.mDnsUserName,
+						IPAddress.HostToNetworkOrder( sport ),
+						webServiceUri.AbsolutePath,
+						key.Length, 
+						key, 
+						ref userHandle );
+
+				if ( status != kErrorType.kDNSServiceErr_NoError )
 				{
-					// Register member as a service location
-					status = 
-						rr.RegisterServiceLocation(
-							mdnsDomain.Host,
-							this.mDnsUserID,
-							webServiceUri.Port,
-							0, 
-							0 );
-					if ( status == 0 )
-					{
-						status = rr.RegisterPointer( memberTag, this.mDnsUserID );
-						if ( status == 0 )
-						{
-							registered = this.RegisterTextStrings();
-						}
-						else
-						{
-							rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserID );
-							rr.DeregisterHost( mdnsDomain.Host );
-						}
-					}
-					else
-					{
-						rr.DeregisterHost( mdnsDomain.Host );
-					}
+					throw new SimiasException( "Failed to register local member with Rendezvous" );
 				}
 			}
-			catch(Exception e2)
+			catch( Exception e2 )
 			{
 				log.Error( e2.Message );
 				log.Error( e2.StackTrace );
 			}			
 		}
 
-		internal void BroadcastDown()
+		internal static void UnregisterUser()
 		{
-			if ( mDnsChannelUp == false )
+			if ( registered == true )
 			{
-				throw new SimiasException( "Remoting channel not setup" );
-			}
-
-			if ( Simias.mDns.User.rr != null )
-			{
-				Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
-				rr.DeregisterPointer( memberTag, this.mDnsUserID );
-				rr.DeregisterServiceLocation( mdnsDomain.Host, this.mDnsUserID );
-				rr.DeregisterHost( mdnsDomain.Host );
+				DeregisterLocalMember( User.mDnsUserID, userHandle.ToInt32() );
+				registered = false;
 			}
 		}
 
-		#endregion
-
-		#region Private Methods
-		private bool RegisterTextStrings()
+		internal static void StartMemberBrowsing()
 		{
-			bool status = false;
+			User.browseHandle = new IntPtr( 0 );
+			User.browseThread = new Thread( new ThreadStart( User.BrowseThread ) );
+			User.browseThread.IsBackground = true;
+			User.browseThread.Start();
+		}
 
-			Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-			if ( mdnsDomain != null )
+		internal static void StopMemberBrowsing()
+		{
+			if ( browseHandle.ToInt32() != 0 )
 			{
-				//Roster roster = mdnsDomain.Roster;
-				Member member = mdnsDomain.GetMemberByName( mDnsUserName );
-				string[] txtStrings = new string[2];
-				string memberTxtString = "MemberName=" + this.mDnsUserName;
-				string pathTxtString = "ServicePath=" + webServiceUri.AbsolutePath;
-				txtStrings[0] = memberTxtString;
-				txtStrings[1] = pathTxtString;
-
-				// Register the 
-				if ( rr.RegisterTextStrings( this.mDnsUserID, txtStrings ) == 0 )
+				BrowseMembersShutdown( browseHandle.ToInt32() );
+				Thread.Sleep( 1000 );
+				if (User.browseThread.IsAlive == true )
 				{
-					status = true;
+					// Shutdown the thread
+					//User.browseThread.Interrupt();
 				}
-				else
+			}
+		}
+
+		internal static void BrowseThread()
+		{
+			User.kErrorType status;
+			User.browseHandle = new IntPtr( 0 );
+			MemberBrowseCallback myCallback = new MemberBrowseCallback( MemberCallback );
+
+			do
+			{
+				status = BrowseMembersInit( myCallback, ref User.browseHandle );
+				if ( status == User.kErrorType.kDNSServiceErr_NoError )
 				{
-					log.Debug( "Failed registering TXT strings" );
+					// A timeout is returning success so we're OK
+					status = BrowseMembers( User.browseHandle.ToInt32(), 300 );
+				}
+			} while ( status == User.kErrorType.kDNSServiceErr_NoError );
+
+			log.Debug( "BrowseThread down..." );
+			log.Debug( "Status: " + status.ToString() );
+		}
+
+		internal
+		static 
+		bool 
+		MemberCallback( 
+			int			handle,
+			int			flags,
+			uint		ifIndex,
+			kErrorType	errorCode,
+			[MarshalAs(UnmanagedType.LPStr)] string serviceName,
+			[MarshalAs(UnmanagedType.LPStr)] string regType,
+			[MarshalAs(UnmanagedType.LPStr)] string domain,
+			[MarshalAs(UnmanagedType.I4)] int context)
+		{ 
+			if ( errorCode == kErrorType.kDNSServiceErr_NoError )
+			{
+				// FIXME:: Need to handle the case where flags isn't set
+				// to add so I can remove users as well
+
+				log.Debug( "MemberCallback for: " + serviceName );
+
+				RendezvousUser user = new RendezvousUser();
+				user.ID = serviceName;
+
+				bool found = false;
+				foreach( RendezvousUser rUser in User.memberList )
+				{
+					if ( rUser.ID == user.ID )
+					{
+						found = true;
+						break;
+					}
+				}
+
+				if ( found == false )
+				{
+					// Since we're in an mDns callback just set the ID
+					// and we'll pick up the rest of the meta-data in our
+					// context
+
+					log.Debug( "Adding: " + user.ID + " as a staged entry" );
+					lock( User.memberListLock )
+					{
+						User.memberList.Add( user );
+					}
+
+					// Force a meta-data sync
+					Simias.mDns.Sync.SyncNow("");
 				}
 			}
 			else
 			{
-				log.Debug( "Failed to get the mDns domain" );
+				log.Debug( 
+					"Received an error on MemberCallback.  status: " + errorCode.ToString() );
 			}
-
-			return status;
+			return true;
 		}
 		#endregion
 
 		#region Public Methods
 
-		/// <summary>
-		/// Event handler for capturing new _ifolder_members
-		/// </summary>
-		public
-		static
-		void 
-		OnMDnsEvent(mDnsEventAction action, mDnsType rType, BaseResource cResource)
-		{
-
-			/*
-			if (rType == mDnsType.textStrings)
-			{
-				foreach(string s in ((TextStrings) cResource).GetTextStrings())
-				{
-					Console.WriteLine("TXT:           " + s);
-				}
-			}
-			else
-			if (rType == mDnsType.hostAddress)
-			{
-				Console.WriteLine(String.Format("Address:       {0}", ((HostAddress) cResource).PrefAddress));
-			}
-			else
-			if (rType == mDnsType.serviceLocation)
-			{
-				Console.WriteLine(String.Format("Host:          {0}", ((ServiceLocation) cResource).Target));
-				Console.WriteLine(String.Format("Port:          {0}", ((ServiceLocation) cResource).Port));
-				Console.WriteLine(String.Format("Priority:      {0}", ((ServiceLocation) cResource).Priority));
-				Console.WriteLine(String.Format("Weight:        {0}", ((ServiceLocation) cResource).Weight));
-			}
-			else
-			*/
-			if ( rType == mDnsType.ptr && action == Mono.P2p.mDnsResponderApi.mDnsEventAction.added )
-			{ 
-				log.Debug("");
-				log.Debug("Event Type:    {0}", action);
-				log.Debug("Resource Type: {0}", rType);
-				log.Debug("Resource Name: " + cResource.Name);
-				log.Debug("Resource ID:   " + cResource.ID);
-				log.Debug("TTL:           " + cResource.Ttl);
-				log.Debug(String.Format("Target:        {0}", ((Ptr) cResource).Target));
-
-				if ( cResource.Name == "_ifolder_member._tcp.local" )
-				{
-					try
-					{
-						int port = 0;
-						string memberName = null;
-						string publicKey = null;
-
-						//Simias.mDns.Domain mdnsDomain = new Simias.mDns.Domain( false );
-						Simias.Storage.Domain rDomain = 
-							Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
-
-						Member mdnsMember = rDomain.GetMemberByID( ((Ptr) cResource).Target );
-						if ( mdnsMember == null )
-						{
-							log.Debug( 
-								String.Format( 
-									"Adding member: {0} to the Rendezvous Roster", 
-									((Ptr) cResource).Target) );
-
-							// FIXME::Need to query mDns to get the address where the user is located
-							// and to get his member name from the TTL resource
-
-							Mono.P2p.mDnsResponderApi.ServiceLocation svcLocation = null;
-							if ( query.GetServiceByName( ((Ptr) cResource).Target, ref svcLocation ) == 0 )
-							{
-								port = svcLocation.Port;
-							}
-
-							Mono.P2p.mDnsResponderApi.TextStrings txtStrings = null;
-							if ( query.GetTextStringsByName( ((Ptr) cResource).Target, ref txtStrings ) == 0 )
-							{
-								foreach( string s in txtStrings.GetTextStrings() )
-								{
-									string[] nameValues = s.Split( new char['='], 2 );
-									if ( nameValues[0] == "MemberName" )
-									{
-										memberName = nameValues[1];
-									}
-									else
-									if ( nameValues[0] == "PublicKey" )
-									{
-										publicKey = nameValues[1];
-									}
-								}
-
-								if ( memberName != null )
-								{
-									mdnsMember = 
-										new Member( memberName, ((Ptr) cResource).Target, Access.Rights.ReadOnly );
-
-									if ( publicKey != null )
-									{
-										mdnsMember.Properties.AddProperty( "PublicKey", publicKey );
-									}
-
-									rDomain.Commit( new Node[] { mdnsMember } );
-								}
-							}
-						}
-					}
-					catch(Exception e)
-					{
-						log.Error( e.Message );
-						log.Error( e.StackTrace );
-					}
-				}
-			}
-		}
 
 		/// <summary>
 		/// FIXME::Temporary method to automatically synchronize all mDns users
@@ -383,94 +456,91 @@ namespace Simias.mDns
 		/// <returns>n/a</returns>
 		public void SynchronizeMembers()
 		{
-			//
-			// Get the mDns roster
-			//
+			// FIXME::define sizes
+			char[] trimNull = { '\0' };
+			char[] infoHost = new char[ 64 ];
+			char[]	infoName = new char[ 128 ];
+			char[]	infoServicePath = new char[ 128 ];
+			byte[]	infoPublicKey = new byte[ 128 ];
+			//int		infoPort = 0;
 
+			log.Debug( "Syncing mDns members" );
 			Simias.Storage.Member mdnsMember = null;
 			Simias.Storage.Domain mdnsDomain = Store.GetStore().GetDomain( Simias.mDns.Domain.ID );
 
-			Char[] sepChar = new Char [] {'='};
-
-			//
-			// next get all the ifolder-members from mDnsResponder
-			//
-
-			Mono.P2p.mDnsResponderApi.Ptr[] ifolderMembers;
-			if ( query.GetPtrResourcesByName( memberTag, out ifolderMembers ) == 0 )
+			lock( User.memberListLock )
 			{
-				foreach( Mono.P2p.mDnsResponderApi.Ptr member in ifolderMembers )
+				foreach( RendezvousUser rUser in User.memberList )
 				{
-					Mono.P2p.mDnsResponderApi.TextStrings txtStrings = null;
-					string memberName = null;
-					string publicKey = null;
-
-					if ( query.GetTextStringsByName( member.Target, ref txtStrings ) == 0 )
+					// Check for a staged user
+					if ( rUser.FriendlyName == null || rUser.FriendlyName == "" )
 					{
-						foreach( string s in txtStrings.GetTextStrings() )
+						// Go get the rest of the meta-data for this user
+						User.kErrorType status;
+
+						try
 						{
-							string[] nameValues = s.Split( sepChar );
-							if ( nameValues[0] == "MemberName" )
+							log.Debug( "Calling GetMemberInfo for: " + rUser.ID );
+							status = 
+								GetMemberInfo( 
+									rUser.ID, 
+									infoName,
+									infoServicePath,
+									infoPublicKey,
+									infoHost,
+									ref rUser.Port );
+							if ( status == kErrorType.kDNSServiceErr_NoError )
 							{
-								memberName = nameValues[1];
-							}
-							else
-							if ( nameValues[0] == "PublicKey" )
-							{
-								publicKey = nameValues[1];
+								rUser.FriendlyName = (new string( infoName )).TrimEnd( trimNull );
+								rUser.Host = (new string( infoHost )).TrimEnd( trimNull );
+								rUser.ServicePath = (new string( infoServicePath )).TrimEnd( trimNull );
+								//rUser.PublicKey = (new string( infoPublicKey )).TrimEnd( trimNull );
+								log.Debug( "Adding meta-data for: " + rUser.FriendlyName );
 							}
 						}
-
-						if ( memberName != null )
+						catch ( Exception e2 )
 						{
-							mdnsMember = mdnsDomain.GetMemberByName( memberName );
-							if ( mdnsMember == null )
-							{
-								mdnsMember = 
-									new Member( memberName, member.Target, Access.Rights.ReadOnly );
-
-								if ( publicKey != null )
-								{
-									mdnsMember.Properties.AddProperty( "PublicKey", publicKey );
-								}
-
-								mdnsDomain.Commit( new Node[] { mdnsMember } );
-							}
-							else
-							{
-								// Update other info
-							}
+							log.Debug( e2.Message );
+							log.Debug( e2.StackTrace );
 						}
+					}
+
+					// If we have all the meta-data for this user
+					// see if he exists in the store.
+					if ( rUser.FriendlyName != null )
+					{
+						mdnsMember = mdnsDomain.GetMemberByName( rUser.FriendlyName );
+						if ( mdnsMember == null )
+						{
+							mdnsMember = 
+								new Member( rUser.FriendlyName, rUser.ID, Access.Rights.ReadOnly );
+
+							if ( rUser.PublicKey != null && rUser.PublicKey != "" )
+							{
+								mdnsMember.Properties.AddProperty( "PublicKey", rUser.PublicKey );
+							}
+
+							mdnsDomain.Commit( new Node[] { mdnsMember } );
+						}
+
 					}
 				}
 			}
 		}
 
-		/// <summary>
-		/// Obtains the string representation of this instance.
-		/// </summary>
-		/// <returns>The friendly name of the domain.</returns>
-		public override string ToString()
-		{
-			return this.mDnsUserName;
-		}
-		#endregion
-
-		#region Private Methods
-		// This is a temporary thing but for now
-		// we'll add any ifolder member we see to our member list
-		private void AutoMembers()
-		{
-			this.cEvent = 
-				(IMDnsEvent) Activator.GetObject(
-				typeof(Mono.P2p.mDnsResponderApi.IMDnsEvent),
-				"tcp://localhost:8091/IMDnsEvent.tcp");
-
-			mDnsEventWrapper eventWrapper = new mDnsEventWrapper();
-			eventWrapper.OnLocalEvent += new mDnsEventHandler(OnMDnsEvent);
-			mDnsEventHandler evntHandler = new mDnsEventHandler(eventWrapper.LocalOnEvent);
-			cEvent.OnEvent += evntHandler;
+		public 
+		delegate 
+		bool 
+		MemberBrowseCallback(
+			int			handle,
+			int			flags,
+			uint		ifIndex,
+			kErrorType	errorCode,
+			[MarshalAs(UnmanagedType.LPStr)] string serviceName,
+			[MarshalAs(UnmanagedType.LPStr)] string regType,
+			[MarshalAs(UnmanagedType.LPStr)] string domain,
+			[MarshalAs(UnmanagedType.I4)] int context);
 		}
 		#endregion
 	}
-}
+
