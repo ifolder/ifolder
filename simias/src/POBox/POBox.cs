@@ -48,8 +48,8 @@ namespace Simias.POBox
 		{
 		}
 
-		public POBox(Store storeObject, string name) :
-			base (storeObject, name)
+		public POBox(Store storeObject, string collectionName, string domainName) :
+			base (storeObject, collectionName, domainName)
 		{
 			SetType(this, typeof(POBox).Name);
 		}

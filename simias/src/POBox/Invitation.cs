@@ -140,7 +140,7 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="invitationName">The friendly name of the invitation.</param>
 		/// <param name="messageType">The type of the message.</param>
-		public Invitation(string invitationName, MessageType messageType) :
+		public Invitation(string invitationName, string messageType) :
 			base (invitationName, messageType)
 		{
 			InviteState = InvitationState.Pending;
@@ -152,7 +152,7 @@ namespace Simias.POBox
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The identity of the recipient.</param>
-		public Invitation(string messageName, MessageType messageType, string toIdentity) :
+		public Invitation(string messageName, string messageType, string toIdentity) :
 			base (messageName, messageType, toIdentity)
 		{
 			InviteState = InvitationState.Pending;
@@ -165,7 +165,7 @@ namespace Simias.POBox
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
-		public Invitation(string messageName, MessageType messageType, string toIdentity, string fromIdentity) :
+		public Invitation(string messageName, string messageType, string toIdentity, string fromIdentity) :
 			base (messageName, messageType, toIdentity, fromIdentity)
 		{
 			InviteState = InvitationState.Pending;
@@ -179,7 +179,7 @@ namespace Simias.POBox
 		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="toAddress">The recipient's address.</param>
-		public Invitation(string messageName, MessageType messageType, string toIdentity, string fromIdentity, string toAddress) :
+		public Invitation(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
 			base (messageName, messageType, toIdentity, fromIdentity, toAddress)
 		{
 			InviteState = InvitationState.Pending;
@@ -194,7 +194,7 @@ namespace Simias.POBox
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="toAddress">The recipient's address.</param>
 		/// <param name="fromAddress">The sender's address.</param>
-		public Invitation(string messageName, MessageType messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
+		public Invitation(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
 			base (messageName, messageType, toIdentity, fromIdentity, toAddress, fromAddress)
 		{
 			InviteState = InvitationState.Pending;

@@ -52,27 +52,21 @@ namespace Simias.POBox
 	};
 
 	/// <summary>
-	/// Message types.
-	/// </summary>
-	public enum MessageType
-	{
-		/// <summary>
-		/// The message is an inbound message.
-		/// </summary>
-		Inbound,
-
-		/// <summary>
-		/// The message is an outbound message.
-		/// </summary>
-		Outbound
-	};
-
-	/// <summary>
 	/// A Message object is a specialized node used to hold ...
 	/// </summary>
 	public class Message : Node
 	{
 		#region Class Members
+		/// <summary>
+		/// The type for an inbound message.
+		/// </summary>
+		public const string InboundMessage = "Inbound";
+
+		/// <summary>
+		/// The type for an outbound message.
+		/// </summary>
+		public const string OutboundMessage = "Outbound";
+
 		/// <summary>
 		/// The name of the property storing the message state.
 		/// </summary>
@@ -292,11 +286,11 @@ namespace Simias.POBox
 		/// </summary>
 		/// <param name="messageName">The friendly name that is used by applications to describe the object.</param>
 		/// <param name="messageType">Specifies the type of the message.</param>
-		public Message(string messageName, MessageType messageType) :
+		public Message(string messageName, string messageType) :
 			base (messageName)
 		{
 			State = MessageState.New;
-			this.Properties.AddNodeProperty(PropertyTags.Types, messageType.ToString());
+			this.Properties.AddNodeProperty(PropertyTags.Types, messageType);
 		}
 
 		/// <summary>
@@ -305,7 +299,7 @@ namespace Simias.POBox
 		/// <param name="messageName">The friendly name of the message.</param>
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The identity of the recipient.</param>
-		public Message(string messageName, MessageType messageType, string toIdentity) :
+		public Message(string messageName, string messageType, string toIdentity) :
 			this (messageName, messageType)
 		{
 			ToIdentity = toIdentity;
@@ -318,7 +312,7 @@ namespace Simias.POBox
 		/// <param name="messageType">The type of the message.</param>
 		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
-		public Message(string messageName, MessageType messageType, string toIdentity, string fromIdentity) :
+		public Message(string messageName, string messageType, string toIdentity, string fromIdentity) :
 			this (messageName, messageType, toIdentity)
 		{
 			FromIdentity = fromIdentity;
@@ -332,7 +326,7 @@ namespace Simias.POBox
 		/// <param name="toIdentity">The recipient's identity.</param>
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="toAddress">The recipient's address.</param>
-		public Message(string messageName, MessageType messageType, string toIdentity, string fromIdentity, string toAddress) :
+		public Message(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress) :
 			this (messageName, messageType, toIdentity, fromIdentity)
 		{
 			ToAddress = toAddress;
@@ -347,7 +341,7 @@ namespace Simias.POBox
 		/// <param name="fromIdentity">The sender's identity.</param>
 		/// <param name="toAddress">The recipient's address.</param>
 		/// <param name="fromAddress">The sender's address.</param>
-		public Message(string messageName, MessageType messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
+		public Message(string messageName, string messageType, string toIdentity, string fromIdentity, string toAddress, string fromAddress) :
 			this (messageName, messageType, toIdentity, fromIdentity, toAddress)
 		{
 			FromAddress = fromAddress;
