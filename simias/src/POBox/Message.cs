@@ -323,7 +323,6 @@ namespace Simias.POBox
 		{
 			State = MessageState.New;
 			MessageType = messageType;
-			Properties.AddProperty(PropertyTags.Types, typeof(Message).Name);
 			FromIdentity = fromIdentity;
 		}
 
