@@ -53,7 +53,7 @@
 #include "../config.h"
 
 /* Turn this on to see debug messages */
-#if 1
+#if DEBUG
 #define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
 #else
 #define DEBUG_IFOLDER
@@ -1358,7 +1358,6 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	parent_window = g_object_get_data (G_OBJECT (item), "parent_window");
 	
-g_print("create_ifolder_callback() called\n");	
 	/**
 	 * Make the call to get the list of domains and only continue if the call
 	 * is successful (no sense wasting time/effort dealing with a dialog if
@@ -1378,11 +1377,20 @@ g_print("create_ifolder_callback() called\n");
 	/*                                    Domain Name    Domain ID            */
 	/*                                                   (Not shown)          */
 
-g_print("2\n");	
 	i = 0;
 	domain = domainsA[i];
+
+	if (!domain) {
+		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
+		errMsg->window = parent_window;
+		errMsg->title	= _("Create iFolder");
+		errMsg->message	= _("No iFolder Domains");
+		errMsg->detail	= _("A new iFolder cannot be created because you have not attached to any iFolder domains.");
+		g_idle_add (show_ifolder_error_message, errMsg);
+		return;
+	}
+
 	while (domain) {
-g_print("3\n");	
 		gtk_list_store_append(domain_store, &iter);
 		gtk_list_store_set(domain_store, &iter,
 						   0, strdup(domain->name),
@@ -1395,12 +1403,10 @@ g_print("3\n");
 
 		domain = domainsA[++i];
 	}
-g_print("4\n");	
 	
 	/* Cleanup the memory used by domainsA */
 	simias_free_domains(&domainsA);
 
-g_print("5\n");
 
 /**
  * FIXME: Add some code to popup a message to the user if there are NO domains and
@@ -1415,7 +1421,6 @@ g_print("5\n");
 			GTK_STOCK_CANCEL,
 			GTK_RESPONSE_CANCEL,
 			NULL);
-g_print("6\n");	
 
 	gtk_dialog_set_has_separator(GTK_DIALOG(dialog), FALSE);
 	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
@@ -1450,18 +1455,16 @@ g_print("6\n");
 	gtk_misc_set_alignment(GTK_MISC(path_label), 0, 0.5);
 	gtk_box_pack_start(GTK_BOX(vbox), path_label, FALSE, FALSE, 0);
 
-	path_entry = gtk_entry_new();
-	gtk_label_set_mnemonic_widget(GTK_LABEL(path_label), path_entry);
-
 	/* Get the Folder's Path to fill in the path_entry */
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = NAUTILUS_FILE_INFO (files->data);
 	file_path = get_file_path (file);
 	
-	gtk_entry_set_text(GTK_ENTRY(path_entry), file_path);
+	path_entry = gtk_label_new(file_path);
+	gtk_misc_set_alignment(GTK_MISC(path_entry), 0, 0.5);
+
 	g_free(file_path);
 	
-	gtk_widget_set_sensitive(path_entry, FALSE); /* Gray out the entry */
 	gtk_box_pack_start(GTK_BOX(vbox), path_entry, FALSE, FALSE, 0);
 	
 	gtk_widget_show_all(vbox);
