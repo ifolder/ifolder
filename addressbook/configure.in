@@ -174,7 +174,7 @@ case $ADDRESSBOOK_OS in
         GLADE_SHARP_MINIMUM_VERSION=0.91
         AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
         PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        PKG_CONFIG_LIBS="/r:Novell.AddressBook.UI.gtk.dll"
+        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:Novell.AddressBook.UI.gtk.dll"
     ;;
     #
     # Windows-specific configuration
@@ -195,7 +195,7 @@ case $ADDRESSBOOK_OS in
         # Set pkg-config variables
         #
         PKG_CONFIG_REQUIRES=""
-        PKG_CONFIG_LIBS="/r:FormsBookLib.dll"
+        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:FormsBookLib.dll"
         #
     	# Override Linux-like directory structure
         #
