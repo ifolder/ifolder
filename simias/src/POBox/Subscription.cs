@@ -192,6 +192,15 @@ namespace Simias.POBox
 
 		#region Constructors
 		/// <summary>
+		/// Constructor for creating a Subscription object from a Node object.
+		/// </summary>
+		/// <param name="node">The Node object to create the Subscription object from.</param>
+		public Subscription(Node node) :
+			base (node)
+		{
+		}
+
+		/// <summary>
 		/// Constructor for creating a Subscription object from a SubscriptionInfo object.
 		/// </summary>
 		/// <param name="subscriptionName">The friendly name of the Subscription.</param>

@@ -292,6 +292,15 @@ namespace Simias.POBox
 
 		#region Constructors
 		/// <summary>
+		/// Constructor for creating a Message object from a Node object.
+		/// </summary>
+		/// <param name="node">The Node object to create the Message object from.</param>
+		public Message(Node node) :
+			base (node)
+		{
+		}
+
+		/// <summary>
 		/// Constructor for creating a new Message object with a specific ID.
 		/// </summary>
 		/// <param name="messageName">The friendly name of the Message object.</param>
