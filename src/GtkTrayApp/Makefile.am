@@ -90,7 +90,7 @@ install-exec-local: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe InvitationWizard
 	$(INSTALL_PROGRAM) Novell.iFolder.UI.gtk.dll $(INSTALL_LIB_FILES) $(DESTDIR)$(libdir)
 	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
 	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder/images
-	$(INSTALL_PROGRAM) --mode=644 iFolderGtkApp.exe InvitationWizard.exe CollectionBrowser.exe ReunionBrowser.exe iFolderBrowser.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderGtkApp.exe InvitationWizard.exe CollectionBrowser.exe ReunionBrowser.exe iFolderBrowser.exe $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
