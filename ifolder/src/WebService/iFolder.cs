@@ -62,6 +62,7 @@ namespace Novell.iFolder.Web
 		public string CurrentUserRights;
 		public string CollectionID;
 		public string LastSyncTime;
+		public string Role;
 
 		public iFolderWeb()
 		{
@@ -112,9 +113,14 @@ namespace Novell.iFolder.Web
 			Simias.Policy.SyncInterval si = Simias.Policy.SyncInterval.Get(tmpMember, collection);
 			this.EffectiveSyncInterval = si.Interval;
 			DateTime lastSyncTime = Simias.Sync.SyncClient.GetLastSyncTime(collection.ID);
-			if (lastSyncTime.Equals(DateTime.MinValue))
+			if (collection.Role.Equals(SyncRoles.Master))
 			{
-				this.LastSyncTime = "";
+				this.LastSyncTime = string.Empty;
+				this.State = "Local";
+			}
+			else if (lastSyncTime.Equals(DateTime.MinValue))
+			{
+				this.LastSyncTime = string.Empty;
 				this.State = "WaitSync";
 			}
 			else
@@ -122,6 +128,8 @@ namespace Novell.iFolder.Web
 				this.LastSyncTime = lastSyncTime.ToString();
 				this.State = collection.IsProxy ? "WaitSync" : "Local";
 			}
+
+			this.Role = collection.Role.ToString();
 		}
 
 

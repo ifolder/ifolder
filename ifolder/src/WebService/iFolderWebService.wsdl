@@ -94,6 +94,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="CurrentUserRights" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="CollectionID" type="xs:string"/>
           <xs:element minOccurs="0" maxOccurs="1" name="LastSyncTime" type="xs:string"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="Role" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="CreateLocaliFolderResponse">
