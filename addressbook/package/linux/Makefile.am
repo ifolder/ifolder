@@ -44,6 +44,10 @@ package: addressbook.spec addressbook-dist
 	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/addressbook.spec
 	cp RPM/RPMS/*/$(RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
+	@test "x" = "x$(INSTALL_PKGS)" || \
+		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
+		echo $$CMD; \
+		eval $$CMD
 	
 addressbook-dist:
 	cd $(top_srcdir); make dist
