@@ -328,12 +328,12 @@ namespace Mono.P2p.mDnsResponder
 					if((flags & 0x0080) == 0x0080)
 					{
 						dnsRequest.flags |= DnsFlags.response;
-						Console.WriteLine("Standard Response");
+						//Console.WriteLine("Standard Response");
 					}
 					else
 					{
 						dnsRequest.flags |= DnsFlags.request;
-						Console.WriteLine("Standard Query");
+						//Console.WriteLine("Standard Query");
 					}
 
 					dnsRequest.questions = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, 4));
@@ -344,6 +344,7 @@ namespace Mono.P2p.mDnsResponder
 
 					dnsRequest.sender = ep.ToString();
 					
+					/*
 					Console.WriteLine("Sender        : {0}", dnsRequest.sender);
 					Console.WriteLine("Transaction ID: {0}", dnsRequest.transactionID);
 					string tmpString = Convert.ToString(flags, 16);
@@ -352,6 +353,7 @@ namespace Mono.P2p.mDnsResponder
 					Console.WriteLine("Answers       : {0}", dnsRequest.answers);
 					Console.WriteLine("Authority     : {0}", dnsRequest.authorities);
 					Console.WriteLine("Additional    : {0}", dnsRequest.additionalAnswers);
+					*/
 
 					questions = dnsRequest.questions;
 					if (questions > 0 &&
@@ -363,17 +365,17 @@ namespace Mono.P2p.mDnsResponder
 						{
 							Question question = new Question();
 							
-							Console.WriteLine("");
-							Console.WriteLine("   Question");
+							//Console.WriteLine("");
+							//Console.WriteLine("   Question");
 							Common.BuildDomainName(receiveData, offset, ref offset, ref domainName);
 							question.DomainName = domainName;
-							Console.WriteLine("   Domain Name: " + domainName);
+							//Console.WriteLine("   Domain Name: " + domainName);
 
 							// Move past the class and type
 							question.RequestType = (mDnsType) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset));
 							question.RequestClass = (mDnsClass) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset + 2));
 
-							Console.WriteLine("   Class: {0}  Type: {1}", question.RequestClass, question.RequestType);
+							//Console.WriteLine("   Class: {0}  Type: {1}", question.RequestClass, question.RequestType);
 							offset += 4;
 
 							dnsRequest.questionList.Add(question);
@@ -391,10 +393,10 @@ namespace Mono.P2p.mDnsResponder
 						short answers = dnsRequest.answers;
 						while(answers-- > 0)
 						{
-							Console.WriteLine("");
-							Console.WriteLine("   Answer");
+							//Console.WriteLine("");
+							//Console.WriteLine("   Answer");
 							Common.BuildDomainName(receiveData, offset, ref offset, ref tmpDomain);
-							Console.WriteLine("   Domain Name: " + tmpDomain);
+							//Console.WriteLine("   Domain Name: " + tmpDomain);
 
 							// Move past the class and type
 							rType = (mDnsType) BitConverter.ToInt16(receiveData, offset);
@@ -402,19 +404,19 @@ namespace Mono.P2p.mDnsResponder
 							rClass = (mDnsClass) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset + 2));
 							offset += 4;
 
-							Console.WriteLine("   Type:        {0}", rType);
-							Console.WriteLine("   Class:       {0}", rClass);
+							//Console.WriteLine("   Type:        {0}", rType);
+							//Console.WriteLine("   Class:       {0}", rClass);
 
 							int timeToLive = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(receiveData, offset));
 							offset += 4;
-							Console.WriteLine("   TTL:         {0}", timeToLive);
+							//Console.WriteLine("   TTL:         {0}", timeToLive);
 
 							// Get the datalength
 							dataLength = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(receiveData, offset));
 							offset += 2;
 							if (dataLength > 0)
 							{
-								Console.WriteLine("   DLEN:        {0}", dataLength);
+								//Console.WriteLine("   DLEN:        {0}", dataLength);
 
 								if (dataLength > 1300)
 								{
@@ -451,7 +453,7 @@ namespace Mono.P2p.mDnsResponder
 										*/
 									
 										hostAddress.AddIPAddress(new IPAddress(ipAddress));
-										Console.WriteLine("   IP Address:  " + hostAddress.PrefAddress.ToString());
+										//Console.WriteLine("   IP Address:  " + hostAddress.PrefAddress.ToString());
 										dnsRequest.answerList.Add(hostAddress);
 									}
 									catch(Exception e)
@@ -468,14 +470,16 @@ namespace Mono.P2p.mDnsResponder
 										IPAddress.NetworkToHostOrder(BitConverter.ToUInt32(receiveData, offset));
 									//int		ipAddress = BitConverter.ToInt32(receiveData, offset);
 
-									Console.Write("   IPV6 Addr:   ");
+									//Console.Write("   IPV6 Addr:   ");
 
+									/*
 									for( int i = 0; i < dataLength; i++)
 									{
 										Console.Write("{0,2:x}", receiveData[offset + i]);
 									}
 
 									Console.WriteLine("");
+									*/
 									offset += dataLength;
 								}
 								else
@@ -500,6 +504,9 @@ namespace Mono.P2p.mDnsResponder
 									int	totalStringsLength = 0;
 									cOffset = offset;
 
+									TextStrings	txtStrings = new 
+										TextStrings(tmpDomain, timeToLive, rType, rClass, false);
+
 									int sLength = receiveData[cOffset++];
 									while(sLength > 0)
 									{
@@ -508,15 +515,16 @@ namespace Mono.P2p.mDnsResponder
 											break;
 										}
 
-										Console.WriteLine("   TXT:         {0}", Encoding.UTF8.GetString(receiveData, cOffset, sLength));
+										txtStrings.AddTextString(Encoding.UTF8.GetString(receiveData, cOffset, sLength));
+										//Console.WriteLine("   TXT:         {0}", Encoding.UTF8.GetString(receiveData, cOffset, sLength));
 										cOffset += sLength;
 										totalStringsLength += sLength;
-
 										sLength = receiveData[cOffset++];
 									}
 
-									Console.WriteLine("   ALEN:        {0}", totalStringsLength);
+									//Console.WriteLine("   ALEN:        {0}", totalStringsLength);
 									offset += dataLength;
+									dnsRequest.answerList.Add(txtStrings);
 								}
 								else
 								if (rType == mDnsType.serviceLocation)

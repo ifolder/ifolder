@@ -4,6 +4,13 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using log4net;
+using log4net.Config;
+using log4net.Appender;
+using log4net.Repository;
+using log4net.spi;
+using log4net.Layout;
+
 
 namespace Mono.P2p.mDnsResponder
 {
@@ -64,9 +71,7 @@ namespace Mono.P2p.mDnsResponder
 		
 		internal static void RequestHandlerThread()
 		{
-			BaseResource	sResource;
 			DnsRequest		dnsRequest;
-			//byte[]			buffer = new byte[32768];
 
 			// Setup an endpoint to multi-cast datagrams
 			UdpClient server = new UdpClient("224.0.0.251", 5353);
@@ -92,19 +97,11 @@ namespace Mono.P2p.mDnsResponder
 
 					if (dnsRequest != null)
 					{
-						if ((dnsRequest.Flags & DnsFlags.request) == DnsFlags.request)
+						if (log.IsInfoEnabled == true)
 						{
-							Console.WriteLine("  DNS:    Query");
+							RequestHandler.LogRequest(dnsRequest);
 						}
-						else
-						{
-							Console.WriteLine("  DNS:    Response");
-						}
-						
-						Console.WriteLine("Response from : {0}", dnsRequest.Sender);
-						Console.WriteLine("Transaction ID: {0}", dnsRequest.TransactionID);
-						Console.WriteLine("Questions     : {0}", dnsRequest.QuestionList.Count);
-						
+
 						if ((dnsRequest.Flags & DnsFlags.request) == DnsFlags.request)
 						{
 							foreach(Question cQuestion in dnsRequest.QuestionList)
@@ -123,7 +120,7 @@ namespace Mono.P2p.mDnsResponder
 										if (cResource.Owner == true && 
 											cResource.Type == mDnsType.hostAddress &&
 											cResource.Name == cQuestion.DomainName)
-    									{
+										{
 											if (cResponse == null)
 											{
 												cResponse = new mDnsResponse(server);
@@ -149,7 +146,7 @@ namespace Mono.P2p.mDnsResponder
 										if (cResource.Owner == true && 
 											cResource.Type == mDnsType.serviceLocation &&
 											cResource.Name == cQuestion.DomainName)
-    									{
+										{
 											if (cResponse == null)
 											{
 												cResponse = new mDnsResponse(server);
@@ -174,8 +171,8 @@ namespace Mono.P2p.mDnsResponder
 									{
 										if (cResource.Owner == true && 
 											cResource.Type == mDnsType.ptr)
-    									{
-											if (((Ptr)cResource).Target == cQuestion.DomainName)
+										{
+											if (((Ptr)cResource).Name == cQuestion.DomainName)
 											{
 												if (cResponse == null)
 												{
@@ -203,7 +200,7 @@ namespace Mono.P2p.mDnsResponder
 										if (cResource.Owner == true && 
 											cResource.Type == mDnsType.textStrings &&
 											cResource.Name == cQuestion.DomainName)
-    									{
+										{
 											if (cResponse == null)
 											{
 												cResponse = new mDnsResponse(server);
@@ -223,32 +220,58 @@ namespace Mono.P2p.mDnsResponder
 						}
 						else
 						{
+							// FIXME - need to add additional and authority to the DNS 
+							// request record
+							//
 							// Handle any responses
-							ArrayList aList = dnsRequest.AnswerList;
-							foreach(BaseResource cResource in aList)
+							foreach(BaseResource cResource in dnsRequest.AnswerList)
 							{
-								Console.WriteLine("");
-								Console.WriteLine("   Domain: " + cResource.Name);
-								Console.WriteLine("   Type:   {0}", cResource.Type);
-								Console.WriteLine("   Class:  {0}", cResource.Class);
-								Console.WriteLine("   TTL:    {0}", cResource.Ttl.ToString());
-							
 								if (cResource.Type == mDnsType.hostAddress)
 								{
-									HostAddress hostAddr = (HostAddress) cResource;
-									Resources.AddHostAddress(hostAddr);
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddHostAddress((HostAddress) cResource);
+									}
+									else
+									{
+										Resources.RemoveHostAddress(cResource.Name);
+									}
 								}
 								else
 								if (cResource.Type == mDnsType.serviceLocation)
 								{
-									ServiceLocation sl = (ServiceLocation) cResource;
-									Resources.AddServiceLocation(sl);								
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddServiceLocation((ServiceLocation) cResource);
+									}
+									else
+									{
+										Resources.RemoveServiceLocation((ServiceLocation) cResource);
+									}
 								}
 								else
 								if (cResource.Type == mDnsType.ptr)
 								{
-									Ptr ptr = (Ptr) cResource;
-									Resources.AddPtr(ptr);
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddPtr((Ptr) cResource);
+									}
+									else
+									{
+										Resources.RemovePtr((Ptr) cResource);
+									}
+								}
+								else
+								if (cResource.Type == mDnsType.textStrings)
+								{
+									if (cResource.Ttl != 0)
+									{
+										Resources.AddTextStrings((TextStrings) cResource);
+									}
+									else
+									{
+										Resources.RemoveTextStrings((TextStrings) cResource);
+									}
 								}
 							}
 						}
@@ -259,6 +282,75 @@ namespace Mono.P2p.mDnsResponder
 					requestsMtx.ReleaseMutex();
 				}
 			}
+		}
+
+		internal static void LogRequest(DnsRequest req)
+		{
+			log.Info("");
+			log.Info("   MDNS-REQUEST");
+			log.Info("   Response from : " + req.Sender.ToString());
+			log.Info(String.Format("   Transaction ID: {0}", req.TransactionID));
+			//log.Info("Transaction ID: " + dnsRequest.TransactionID.ToString());
+			log.Info("   Flags:          " + req.Flags.ToString());
+			if (req.QuestionList.Count >= 1)
+			{
+				log.Info("   Questions:      " + req.QuestionList.Count.ToString());
+			}
+			if (req.AnswerList.Count >= 1)
+			{
+				log.Info("   Answers:        " + req.AnswerList.Count.ToString());
+			}
+
+			foreach(Question cQuestion in req.QuestionList)
+			{
+				log.Info("   QUESTION");
+				log.Info("      Domain: " + cQuestion.DomainName);
+				log.Info("      Type:   " + cQuestion.RequestType.ToString());
+				log.Info("      Class:  " + cQuestion.RequestClass.ToString());
+			}
+
+			foreach(BaseResource cResource in req.AnswerList)
+			{
+				log.Info("   ANSWER");
+				if (cResource.Type == mDnsType.ptr)
+				{
+					log.Info("      Source:  " + cResource.Name);
+				}
+				else
+				{
+					log.Info("      Domain:  " + cResource.Name);
+				}
+				log.Info(String.Format("      Type:    {0}", cResource.Type));
+				log.Info(String.Format("      Class:   {0}", cResource.Class));
+				log.Info(String.Format("      TTL:     {0}", cResource.Ttl));
+
+				if (cResource.Type == mDnsType.hostAddress)
+				{
+					log.Info(String.Format("      Address: {0}", ((HostAddress) cResource).PrefAddress));
+				}
+				else
+				if (cResource.Type == mDnsType.ptr)
+				{
+					log.Info(String.Format("      Target:  {0}", ((Ptr) cResource).Target));
+				}
+				else
+				if (cResource.Type == mDnsType.serviceLocation)
+				{
+					log.Info(String.Format("      Host:    {0}", ((ServiceLocation) cResource).Target));
+					log.Info(String.Format("      Port:    {0}", ((ServiceLocation) cResource).Port));
+					log.Info(String.Format("      Priority:{0}", ((ServiceLocation) cResource).Priority));
+					log.Info(String.Format("      Weight:  {0}", ((ServiceLocation) cResource).Weight));
+				}
+				else
+				if (cResource.Type == mDnsType.textStrings)
+				{
+					foreach(string s in ((TextStrings) cResource).GetTextStrings())
+					{
+						log.Info("      TXT:     " + s);
+					}
+				}
+			}
+			log.Info("");
 		}
 	}
 }

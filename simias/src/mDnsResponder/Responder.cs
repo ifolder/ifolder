@@ -5,6 +5,11 @@ using System.Net.Sockets;
 using System.Text;
 using log4net;
 using log4net.Config;
+using log4net.Appender;
+using log4net.Repository;
+using log4net.spi;
+using log4net.Layout;
+
 
 namespace Mono.P2p.mDnsResponder
 {
@@ -16,13 +21,18 @@ namespace Mono.P2p.mDnsResponder
 		private static readonly log4net.ILog log =
 			log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
+		//		private static readonly string patternLayout = "%d [%t] %-5p %c - %m%n";
+		private static readonly string patternLayout = "%m%n";
+
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
 		static void Main(string[] args)
 		{
-			BasicConfigurator.Configure();
+			// TEMP
+			BasicConfigurator.Configure(new ConsoleAppender(new PatternLayout(patternLayout), true));
+			//BasicConfigurator.Configure();
 			log.Info("mDnsResponder starting up...");
 		
 			/*	
@@ -37,7 +47,7 @@ namespace Mono.P2p.mDnsResponder
 			*/
 
 			string localHost = Environment.MachineName + ".local";
-			log.Info("adding host");
+			//log.Info("adding host");
 		
 			/*
 				FIXME - temporarily load some records

@@ -201,12 +201,8 @@ namespace Mono.P2p.mDnsResponder
 			this.index += 2;
 
 			// Class
-			/*
-			short	hostClass = (short) cResource.Class;
-			hostClass = IPAddress.HostToNetworkOrder(hostClass);
-			*/
-
-			int	hostClass = 0x00000180;
+			//short	hostClass = 0x00000180;
+			short hostClass = IPAddress.HostToNetworkOrder((short) cResource.Class);
 			Buffer.BlockCopy(BitConverter.GetBytes(hostClass), 0, this.buffer, this.index, 2);
 			this.index += 2;
 

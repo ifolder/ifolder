@@ -91,7 +91,7 @@ namespace Mono.P2p.mDnsResponder
 					TextStrings txt = (TextStrings) cResource;
 					foreach(string txtString in txt.GetTextStrings())
 					{
-						log.Info("  " + txtString);
+						log.Info("  TXT:       " + txtString);
 					}
 				}
 				log.Info("");
@@ -148,7 +148,7 @@ namespace Mono.P2p.mDnsResponder
 						TextStrings txt = (TextStrings) cResource;
 						foreach(string txtString in txt.GetTextStrings())
 						{
-							log.Info("  " + txtString);
+							log.Info("  TXT:       " + txtString);
 						}
 					}
 					log.Info("");
@@ -171,6 +171,14 @@ namespace Mono.P2p.mDnsResponder
 					cResource.Type == hostAddr.Type)
 				{
 					foundOne = true;
+					if (hostAddr.Ttl == 0)
+					{
+						Resources.resourceList.Remove(cResource);
+					}
+					else
+					{	
+						cResource.Ttl = hostAddr.Ttl;
+					}
 					break;
 				}
 			}
@@ -179,11 +187,11 @@ namespace Mono.P2p.mDnsResponder
 			{
 				log.Info("   Adding " + hostAddr.Name);
 				// Setup an endpoint to multi-cast datagrams
-				UdpClient mDnsClient = new UdpClient("224.0.0.251", 5353);
-				mDnsResponse resp = new mDnsResponse(mDnsClient);
-				resp.AddAnswer((BaseResource) hostAddr);
-				resp.Send();
-				mDnsClient.Close();
+				//UdpClient mDnsClient = new UdpClient("224.0.0.251", 5353);
+				//mDnsResponse resp = new mDnsResponse(mDnsClient);
+				//resp.AddAnswer((BaseResource) hostAddr);
+				//resp.Send();
+				//mDnsClient.Close();
 				Resources.resourceList.Add(hostAddr);
 			}
 			
@@ -421,6 +429,22 @@ namespace Mono.P2p.mDnsResponder
 			Resources.resourceMtx.ReleaseMutex();
 		}
 
+		static public void RemoveTextStrings(TextStrings txtStrs)
+		{
+			log.Info("RemoveTextStrings called");
+			Resources.resourceMtx.WaitOne();
+			foreach(BaseResource cResource in Resources.resourceList)
+			{
+				if (cResource.Name == txtStrs.Name &&
+					cResource.Type == txtStrs.Type)
+				{
+					Resources.resourceList.Remove(cResource);
+					break;
+				}
+			}
+			Resources.resourceMtx.ReleaseMutex();
+		}
+
 		static bool	mDnsStopping = false;
 		static Thread maintenanceThread = null;
 		static AutoResetEvent maintenanceEvent = null;
@@ -586,6 +610,11 @@ namespace Mono.P2p.mDnsResponder
 			get
 			{
 				return(this.ttl);
+			}
+
+			set
+			{
+				this.ttl = value;
 			}
 		}
 		
