@@ -252,6 +252,8 @@ static void load_invitations_from_file(GtkListStore *store, const char *name);
 static void init_invitation_stores();
 static void add_new_trusted_buddy(GtkListStore *store, GaimBuddy *buddy,
 									char *ip_address, char *ip_port);
+static gboolean trusted_buddies_read(GtkListStore *store, const char *filename);
+static void load_trusted_buddies_from_file(GtkListStore *store, const char *name);
 static void init_trusted_buddies_store();
 static void init_invitations_window();
 static void show_invitations_window();
@@ -1204,18 +1206,6 @@ g_print("add_invitation_to_store() entered\n");
 static void
 init_default_prefs()
 {
-/*
-	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS,
-						SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS_DEF);
-	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS,
-						SIMIAS_PREF_NOTIFY_ACCEPT_INVITATIONS_DEF);
-	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS,
-						SIMIAS_PREF_NOTIFY_REJECT_INVITATIONS_DEF);
-	gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_ERRORS,
-						SIMIAS_PREF_NOTIFY_ERRORS_DEF);
-	gaim_prefs_add_bool(SIMIAS_PREF_SIMIAS_AUTO_START,
-						SIMIAS_PREF_SIMIAS_AUTO_START_DEF);
-*/
 	gaim_prefs_add_none(SIMIAS_PREF_PATH);
 	if (!gaim_prefs_exists(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS)) {
 		gaim_prefs_add_bool(SIMIAS_PREF_NOTIFY_RECEIVE_NEW_INVITATIONS,
@@ -1500,6 +1490,144 @@ g_print("add_new_trusted_buddy() called: %s (%s:%s)\n", buddy->name, ip_address,
 		g_object_unref(buddy_icon);
 }
 
+static gboolean
+trusted_buddies_read(GtkListStore *store, const char *filename)
+{
+	GError *error;
+	gchar *contents = NULL;
+	gsize length;
+	xmlnode *simias, *buddies;
+	
+	gaim_debug(GAIM_DEBUG_INFO, "simias",
+			   "Reading %s\n", filename);
+	if (!g_file_get_contents(filename, &contents, &length, &error)) {
+		gaim_debug(GAIM_DEBUG_ERROR, "simias",
+				   "Error reading buddies file: %s\n", error->message);
+		g_error_free(error);
+		return FALSE;
+	}
+	
+	simias = xmlnode_from_str(contents, length);
+	
+	if (!simias) {
+		FILE *backup;
+		char backup_filename[512];
+		char *name;
+		gaim_debug(GAIM_DEBUG_ERROR, "simias", "Error parsing %s\n",
+				filename);
+		sprintf(backup_filename, "%s~", filename);
+		name = g_build_filename(gaim_user_dir(), backup_filename, NULL);
+
+		if ((backup = fopen(name, "w"))) {
+			fwrite(contents, length, 1, backup);
+			fclose(backup);
+			chmod(name, S_IRUSR | S_IWUSR);
+		} else {
+			gaim_debug(GAIM_DEBUG_ERROR, "simias", "Unable to write backup %s\n",
+				   name);
+		}
+		g_free(name);
+		g_free(contents);
+		return FALSE;
+	}
+	
+	g_free(contents);
+	
+	buddies = xmlnode_get_child(simias, "buddies");
+	if (buddies) {
+		xmlnode *buddy_node;
+		for (buddy_node = xmlnode_get_child(buddies, "buddy"); buddy_node;
+				buddy_node = xmlnode_get_next_twin(buddy_node)) {
+			/**
+			 * Parse an invitation here and if successful, add it to the
+			 * GtkListStore.
+			 */
+			const char *account_name;
+			const char *account_proto;
+			const char *buddy_name;
+			const char *ip_addr;
+			const char *ip_port;
+			GaimAccount *gaim_account;
+			
+			account_name = xmlnode_get_attrib(buddy_node, "account-name");
+			account_proto = xmlnode_get_attrib(buddy_node, "account-proto");
+			buddy_name = xmlnode_get_attrib(buddy_node, "buddy-name");
+			ip_addr = xmlnode_get_attrib(buddy_node, "ip-addr");
+			ip_port = xmlnode_get_attrib(buddy_node, "ip-port");
+			
+			/* Verify we've read enough information in to construct an Invitation */
+			if (account_name == NULL || strlen(account_name) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse account-name attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (account_proto == NULL || strlen(account_proto) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse account-proto attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (buddy_name == NULL || strlen(buddy_name) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse buddy-name attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (ip_addr == NULL || strlen(ip_addr) == 0) {
+				ip_addr = "0.0.0.0";
+			} else if (ip_port == NULL || strlen(ip_port) == 0) {
+				ip_port = "0";
+			}
+			
+			gaim_account = gaim_accounts_find(account_name, account_proto);
+			if (!gaim_account) {
+				/* The account must not be valid anymore, drop the invitation */
+				continue; /* On to the next invitation */
+			}
+
+			add_new_trusted_buddy(store,
+								  gaim_find_buddy(gaim_account, buddy_name),
+								  (char *) ip_addr, (char *) ip_port);
+		}
+	}
+
+	gaim_debug(GAIM_DEBUG_INFO, "simias", "Finished reading %s\n",
+			   filename);
+
+	xmlnode_free(simias);
+	return TRUE;
+}
+
+static void
+load_trusted_buddies_from_file(GtkListStore *store, const char *name)
+{
+	char *user_dir;
+	char *filename;
+	char *msg;
+
+	gaim_debug(GAIM_DEBUG_INFO, "simias", "load_trusted_buddies_from_file() entered\n");
+	user_dir = gaim_user_dir();
+	
+	if (!user_dir) {
+		g_print("load_trusted_buddies_from_file() got NULL response from gaim_user_dir()\n");
+	}
+	
+	filename = g_build_filename(user_dir, name, NULL);
+	
+	if (g_file_test(filename, G_FILE_TEST_EXISTS)) {
+		if (!trusted_buddies_read(store, filename)) {
+			msg = g_strdup_printf(_("An error was encountered parsing your "
+					"trusted buddies file.  It has not been loaded, "
+					"and the old file has been moved to %s~."), name);
+			gaim_notify_error(NULL, NULL, _("Simias Trusted Buddies File Error"), msg);
+			g_free(msg);
+		}
+	} else {
+		gaim_debug(GAIM_DEBUG_INFO, "simias", "load_trusted_buddies_from_file() file does not exist: %s\n",
+					filename);
+	}
+	
+	g_free(filename);
+}
+
 /**
  * When the plugin first loads (when Gaim starts or the user enables this
  * plugin), fill the trusted_buddies_store with the information persited in the
@@ -1521,7 +1649,8 @@ init_trusted_buddies_store()
 			G_TYPE_STRING,		/* TRUSTED_BUDDY_IP_PORT_COL */
 			G_TYPE_POINTER);	/* GaimAccount * */
 	
-	/* FIXME: Load in the data from a config file */
+	/* Load in the data from a config file */
+	load_trusted_buddies_from_file(trusted_buddies_store, "simias-trusted-buddies.xml");
 }
 
 /**
