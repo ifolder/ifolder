@@ -20,22 +20,16 @@
  *  Author: Calvin Gaisford <cgaisford@novell.com>
  *
  ***********************************************************************/
- 
-
 // This class is a temporary hack to get around the problems that
 // exist with a Mutex and multiple processes
-
-/// It's slow, it's dirty, but it's damn solid
-
+// It's slow, it's dirty, but it's damn solid
 // TODO: Take this out once Paul puts in the platform defines. Mac is broken until then.
 #define LINUX
-
 using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
 namespace Simias
 {
 	/// <summary>
@@ -45,8 +39,8 @@ namespace Simias
 	{
 		#region Class Members
 #if MONO
+		// TODO: Remove for debug purposes only.
 		static private readonly ISimiasLog log = SimiasLogManager.GetLogger( typeof( SimiasMutex ) );
-
 		[Flags]
 		enum Operation
 		{
@@ -55,17 +49,14 @@ namespace Simias
 			LOCK_NB = 4,
 			LOCK_UN = 8
 		};
-
 #if LINUX
         private static int O_CREAT = 0100;
 #elif DARWIN
         private static int O_CREAT = 0x200;
 #endif
-
 		private static int Success = 0;
 		private static string dirPath = null;
 		private static string lockDir = "Locks";
-
 		private string name;
 		private int acquired;
 		private int fd;
@@ -73,10 +64,8 @@ namespace Simias
 
 		[DllImport ("libc")]
         static extern int open(string name, int flags);
-
 		[DllImport ("libc")]
         static extern int close(int fd);
-
 		[DllImport ("libc")]
 		static extern int flock(int fd, int operation);
 #else
@@ -95,7 +84,6 @@ namespace Simias
 #if MONO
 			this.name = name;
 			this.acquired = 0;
-
 			if (dirPath == null)
 			{
 				// Setup the path to the Lock directory.
@@ -106,10 +94,8 @@ namespace Simias
 					log.Debug("Created lock path {0}", dirPath);
 				}
 			}
-
 			// Build the path to the mutex file.
 			this.name = Path.Combine(dirPath, name);
-
 			// Try to create the file.
 			log.Debug("Creating mutex: {0}", name);
             fd = open(this.name, O_CREAT);
@@ -138,7 +124,6 @@ namespace Simias
 			mux.Close();
 #endif
 		}
-
 		/// <summary>
 		/// Waits to acquire the mutext.
 		/// </summary>
@@ -159,7 +144,6 @@ namespace Simias
 					}
 				}
 			}
-
 			// If we get here we need to acquire the lock.
 			int error = flock(fd, (int)Operation.LOCK_EX);
 			if (error == Success)
@@ -179,7 +163,6 @@ namespace Simias
 			mux.WaitOne();
 #endif
 		}
-
 		/// <summary>
 		/// Releases the mutex.
 		/// </summary>
@@ -187,7 +170,6 @@ namespace Simias
 		{
 #if MONO
 			bool needToRelease = false;
-
 			lock (this)
 			{
 				if (acquired != 0)
@@ -204,7 +186,6 @@ namespace Simias
 					}
 				}
 			}
-			
 			if (needToRelease)
 			{
 				int error = flock(fd, (int)Operation.LOCK_UN);
@@ -215,7 +196,6 @@ namespace Simias
 						log.Debug("Failed to release mutex");
 						++acquired;
 					}
-
 					// This thread does not own the mutex. Exception.
 					throw new ApplicationException("Failed To release mutex.");
 				}
@@ -234,7 +214,6 @@ namespace Simias
 		{
 			Dispose(true);
 		}
-
 		/// <summary>
 		/// Disposes of owned resources.
 		/// </summary>
