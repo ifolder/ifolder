@@ -627,7 +627,11 @@ namespace Novell.FormsTrayApp
 				// Keep track of the cancelled state.
 				if (serverInfo.Cancelled)
 				{
-					simiasWebService.DisableDomainAutoLogin(serverInfo.DomainID);
+					simiasWebService.DisableDomainAutoLogin(serverInfo.DomainInfo.ID);
+				}
+				else
+				{
+					preferences.UpdateDomainStatus(new Domain(serverInfo.DomainInfo));
 				}
 
 				bool update = serverInfo.UpdateStarted;
@@ -1099,6 +1103,11 @@ namespace Novell.FormsTrayApp
 								serverInfo.Show();
 								ShellNotifyIcon.SetForegroundWindow(serverInfo.Handle);
 							}
+						}
+						else
+						{
+							domainInfo.Authenticated = true;
+							preferences.UpdateDomainStatus(new Domain(domainInfo));
 						}
 					}
 					catch //(Exception ex)

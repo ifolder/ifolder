@@ -465,11 +465,11 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
-		/// Gets the domain ID for this instance.
+		/// Gets the DomainInformation object for this instance.
 		/// </summary>
-		public string DomainID
+		public DomainInformation DomainInfo
 		{
-			get { return domainInfo.ID; }
+			get { return domainInfo; }
 		}
 		#endregion
 
@@ -579,6 +579,7 @@ namespace Novell.FormsTrayApp
 		{
 			if (authenticate())
 			{
+				domainInfo.Authenticated = true;
 				password.Clear();
 				Close();
 			}
