@@ -21,19 +21,19 @@
 # 
 #========================================================================
 
-%define prefix /opt/novell/ifolder3
+%define prefix /opt/ifolder
 
-Summary      : Simias
+Summary      : Address Book
 Name         : @PACKAGE@
 Version      : @VERSION@
 Release      : 1
 Copyright    : GPL
-Group        : Desktop/Applications
+Group        : Applications/Productivity
 Source       : %{name}-%{version}.tar.gz
 URL          : http://forge.novell.com/modules/xfmod/project/?ifolder
 #Distribution : 
-Vendor       : Novell, Inc.
-Packager     : Novell, Inc.
+Vendor       : <unknown>
+Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
 Requires     : simias = %{version}
@@ -43,7 +43,9 @@ Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
 %Description
-Description of Simias
+AddressBook is a project started because the iFolder project needed an
+AddressBook.  The specifications for a "Common AddressBook" were not being
+met so the iFolder team wrote AddressBook to the "Common AddressBook" spec. 
 
 #=============================================================================
 %ChangeLog
@@ -55,7 +57,7 @@ Description of Simias
 
 #=============================================================================
 %Build
-./configure --prefix=%{prefix}
+./configure --prefix=%{prefix} --with-simias-install-path=@SIMIAS_INSTALL_PATH@
 make
 
 #=============================================================================

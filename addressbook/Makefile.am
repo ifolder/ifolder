@@ -50,30 +50,18 @@ sub-all:
 	done
 
 # pass these targets on to subprojects (stripping off sub-)
-sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean:
+sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall sub-distclean sub-maintainer-clean sub-package-clean:
 	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
 	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
 		cd $$subproj; $(MAKE) $(subst sub-,,$@); \
 	done
 
-if WINDOWS
-# for package on Windows, install subprojects then build subproject packages
+# for package, install subprojects then build subproject packages
 sub-package:
 	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
 	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
 		cd $$subproj; $(MAKE) install package; \
 	done
-endif
-
-#if LINUX
-# for package on Linux, install subprojects then build subproject packages
-# (TO DO: need to configure install-paths during RPM build)
-#sub-package:
-#	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
-#	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
-#		cd $$subproj; $(MAKE) install; \
-#	done
-#endif
 
 #
 # Targets to use if not building subprojects
