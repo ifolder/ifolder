@@ -5,15 +5,10 @@ namespace GtkSharp.TrayIcon {
 
 	public class ObjectManager {
 
-		static bool initialized = false;
 		// Call this method from the appropriate module init function.
 		public static void Initialize ()
 		{
-			if (initialized)
-				return;
-
-			initialized = true;
-			GLib.ObjectManager.RegisterType("EggTrayIcon", "Egg.TrayIcon,TrayIcon");
+			GtkSharp.ObjectManager.RegisterType("EggTrayIcon", "Egg.TrayIcon,TrayIcon");
 		}
 	}
 }
