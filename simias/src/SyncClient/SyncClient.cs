@@ -398,7 +398,7 @@ namespace Simias.Sync
 			fileMonitor.CheckForFileChanges();
 
 			// We may have just created or deleted nodes wait for the events to settle.
-			Thread.Sleep(5000);
+			Thread.Sleep(500);
 
 			// Setup the url to the server.
 			service = new SimiasSyncService();

@@ -339,14 +339,14 @@ namespace Simias.Domain
 				if (store.GetCollectionByID(domainInfo.RosterID) == null)
 				{
 					// create roster proxy
-					CreateRosterProxy(store, domain, domainInfo.RosterID);
+					CreateRosterProxy(store, domain, domainInfo.RosterID, ub.Uri);
 					log.Debug("Creating Roster Proxy: {0}", domainInfo.RosterName);
 				}
 
 				if (store.GetCollectionByID(provisionInfo.POBoxID) == null)
 				{
 					// create PO Box proxy
-					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID, provisionInfo.POBoxName);
+					CreatePOBoxProxy(store, domainInfo.ID, provisionInfo.POBoxID, provisionInfo.POBoxName, ub.Uri);
 					log.Debug("Creating PO Box Proxy: {0}", provisionInfo.POBoxName);
 				}
 
@@ -362,10 +362,11 @@ namespace Simias.Domain
 			}
 		}
 
-		private void CreateRosterProxy(Store store, Storage.Domain domain, string id)
+		private void CreateRosterProxy(Store store, Storage.Domain domain, string id, Uri host)
 		{
 			// Create a new roster
-			Roster roster = new Roster(store, id, domain);
+			SyncCollection roster = new SyncCollection(new Roster(store, id, domain));
+			
 			
 			// sync information
 			Property pr = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
@@ -374,13 +375,14 @@ namespace Simias.Domain
 			
 			// commit
 			roster.Proxy = true;
+			roster.MasterUrl = host;
 			roster.Commit();
 		}
 
-		private void CreatePOBoxProxy(Store store, string domain, string id, string name)
+		private void CreatePOBoxProxy(Store store, string domain, string id, string name, Uri host)
 		{
 			// Create a new POBox
-			PostOffice.POBox poBox = new PostOffice.POBox(store, name, id, domain);
+			SyncCollection poBox = new SyncCollection(new PostOffice.POBox(store, name, id, domain));
 			
 			// sync information
 			Property pr = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
@@ -389,6 +391,7 @@ namespace Simias.Domain
 			
 			// commit
 			poBox.Proxy = true;
+			poBox.MasterUrl = host;
 			poBox.Commit();
 		}
 
