@@ -6,16 +6,16 @@ CollectionEvents_CSFILES_CSC := $(subst /,$(SEP),$(CollectionEvents_CSFILES))
 CollectionEvents_INCLUDES = 
 CollectionEvents_RESOURCES =
 CollectionEvents_FLAGS = $(CSC_LIBFLAG)
-CollectionEvents_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Common.dll
-CollectionEvents_LIBPATH = /opt/gnome2/lib /usr/lib ../Common
+CollectionEvents_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll Common.dll
+CollectionEvents_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common
 
 CsEventBroker_CSFILES = $(srcdir)/CsEventBroker/AssemblyInfo.cs $(srcdir)/CsEventBroker/CsEventBroker.cs
 CsEventBroker_CSFILES_CSC := $(subst /,$(SEP),$(CsEventBroker_CSFILES))
 CsEventBroker_INCLUDES = 
 CsEventBroker_RESOURCES =
 CsEventBroker_FLAGS = $(CSC_EXEFLAG)
-CsEventBroker_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Common.dll CollectionEvents.dll
-CsEventBroker_LIBPATH = /opt/gnome2/lib /usr/lib ../Common
+CsEventBroker_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll Configuration.dll Common.dll CollectionEvents.dll
+CsEventBroker_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common
 
 NUNIT_TESTS := CollectionEventTests.exe
 
@@ -24,8 +24,8 @@ CollectionEventTests_CSFILES_CSC := $(subst /,$(SEP),$(CollectionEventTests_CSFI
 CollectionEventTests_INCLUDES = 
 CollectionEventTests_RESOURCES =
 CollectionEventTests_FLAGS = $(CSC_EXEFLAG)
-CollectionEventTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll CollectionEvents.dll
-CollectionEventTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
+CollectionEventTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Configuration.dll Common.dll CollectionEvents.dll
+CollectionEventTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common ../Configuration 
 
 EXTRA_DIST = $(CollectionEvents_CSFILES) $(CsEventBroker_CSFILES) $(CollectionEventTests_CSFILES)
 

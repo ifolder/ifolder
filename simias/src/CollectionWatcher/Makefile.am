@@ -6,8 +6,8 @@ CollectionWatcher_CSFILES_CSC := $(subst /,$(SEP),$(CollectionWatcher_CSFILES))
 CollectionWatcher_INCLUDES =
 CollectionWatcher_RESOURCES =
 CollectionWatcher_FLAGS = $(CSC_LIBFLAG)
-CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Common.dll Agent.dll SyncCommon.dll
-CollectionWatcher_LIBPATH = Library ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../Common ../SyncCommon ../Common ../CollectionEvents ../Agent
+CollectionWatcher_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Common.dll Agent.dll SyncCommon.dll
+CollectionWatcher_LIBPATH = Library ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../Common ../SyncCommon ../Configuration ../Common ../CollectionEvents ../Agent
 
 NUNIT_TESTS := CollectionWatcherTests.dll
 

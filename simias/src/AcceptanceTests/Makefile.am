@@ -8,8 +8,8 @@ AcceptanceTests_CSFILES_CSC := $(subst /,$(SEP),$(AcceptanceTests_CSFILES))
 AcceptanceTests_INCLUDES =
 AcceptanceTests_RESOURCES =
 AcceptanceTests_FLAGS = $(CSC_LIBFLAG)
-AcceptanceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll SyncManager.dll Sync.dll SyncLogicLite.dll System.Runtime.Remoting.dll StoreWatcher.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll RemotingSnifferLibrary.dll nunit.framework.dll
-AcceptanceTests_LIBPATH = ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher ../RemotingSniffer $(srcdir)/../../tools/NUnit/bin
+AcceptanceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll StoreProvider.dll Common.dll CollectionEvents.dll CollectionStore.dll Agent.dll SyncCommon.dll CollectionWatcher.dll SyncManager.dll Sync.dll SyncLogicLite.dll System.Runtime.Remoting.dll StoreWatcher.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll RemotingSnifferLibrary.dll nunit.framework.dll
+AcceptanceTests_LIBPATH = ../SyncCommon ../SyncManager ../SyncLogicLite ../Sync ../CollectionEvents ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../Configuration ../StoreProvider ../Common ../CollectionWatcher ../Agent ../StoreWatcher ../RemotingSniffer $(srcdir)/../../tools/NUnit/bin
 
 EXTRA_DIST = $(AcceptanceTests_CSFILES)
 

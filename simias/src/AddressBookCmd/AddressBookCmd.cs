@@ -156,14 +156,6 @@ namespace AddressBookCmd
 			Console.WriteLine("   PCODE=<postal code>");
 			Console.WriteLine("   PBOX=<postal box>");
 			Console.WriteLine("   COUNTRY=<country>");
-			Console.WriteLine("   PREF");
-			Console.WriteLine("   WORK");
-			Console.WriteLine("   HOME");
-			Console.WriteLine("   OTHER");
-			Console.WriteLine("   POSTAL");
-			Console.WriteLine("   PARCEL");
-			Console.WriteLine("   DOM - Domestic address");
-			Console.WriteLine("   INTL - International address");
 			Console.WriteLine("\nIf no address book argument is given the default address book is assumed");
 		}
 
@@ -1156,74 +1148,69 @@ namespace AddressBookCmd
 
 				if (cAddress.Street != "")
 				{
-					Console.Write(";STREET=" + cAddress.Street);
-				}
-
-				if (cAddress.Locality != "")
-				{
-					Console.Write(";LOCALITY=" + cAddress.Locality);
+					Console.Write(";Street=" + cAddress.Street);
 				}
 
 				if (cAddress.Region != "")
 				{
-					Console.Write(";REGION=" + cAddress.Region);
+					Console.Write(";Region=" + cAddress.Region);
+				}
+
+				if (cAddress.Locality != "")
+				{
+					Console.Write(";Locality=" + cAddress.Locality);
 				}
 
 				if (cAddress.PostalCode != "")
 				{
-					Console.Write(";PCODE=" + cAddress.PostalCode);
-				}
-
-				if (cAddress.PostalBox != "")
-				{
-					Console.Write(";PBOX=" + cAddress.PostalBox);
+					Console.Write(";PostalCode=" + cAddress.PostalCode);
 				}
 
 				if (cAddress.Country != "")
 				{
-					Console.Write(";COUNTRY=" + cAddress.Country);
+					Console.Write(";Country=" + cAddress.Country);
 				}
 
 				if (cAddress.Types != 0)
 				{
 					if ((cAddress.Types & AddressTypes.preferred) == AddressTypes.preferred)
 					{
-						Console.Write(";PREF");
+						Console.Write(";pref");
 					}								  
 		
 					if ((cAddress.Types & AddressTypes.home) == AddressTypes.home)
 					{
-						Console.Write(";HOME");
+						Console.Write(";home");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.work) == AddressTypes.work)
 					{
-						Console.Write(";WORK");
+						Console.Write(";work");
 					}					
 			  
 					if ((cAddress.Types & AddressTypes.other) == AddressTypes.other)
 					{
-						Console.Write(";OTHER");
+						Console.Write(";other");
 					}
 					
 					if ((cAddress.Types & AddressTypes.postal) == AddressTypes.postal)
 					{
-						Console.Write(";POSTAL");
+						Console.Write(";postal");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.parcel) == AddressTypes.parcel)
 					{
-						Console.Write(";PARCEL");
+						Console.Write(";parcel");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.dom) == AddressTypes.dom)
 					{
-						Console.Write(";DOM");
+						Console.Write(";dom");
 					}								  
 
 					if ((cAddress.Types & AddressTypes.intl) == AddressTypes.intl)
 					{
-						Console.Write(";INTL");
+						Console.Write(";intl");
 					}								  
 				}
 

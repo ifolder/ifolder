@@ -6,8 +6,8 @@ AddressBookCmd_CSFILES_CSC := $(subst /,$(SEP),$(AddressBookCmd_CSFILES))
 AddressBookCmd_INCLUDES =
 AddressBookCmd_RESOURCES =
 AddressBookCmd_FLAGS = $(CSC_EXEFLAG) $(ICON_FLAG)$(srcdir)/App$(ICON_EXT)
-AddressBookCmd_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
-AddressBookCmd_LIBPATH = ../Common ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../AddressBook
+AddressBookCmd_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Common.dll StoreProvider.dll CollectionEvents.dll CollectionStore.dll AddressBook.dll
+AddressBookCmd_LIBPATH = ../Configuration ../Common ../StoreProvider ../CollectionStore $(srcdir)/../../external/SecureChannelSinks ../CollectionEvents ../AddressBook
 
 NUNIT_TESTS :=
 

@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-Common_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/MyDns.cs $(srcdir)/Library/MyEnvironment.cs $(srcdir)/Library/MyPath.cs $(srcdir)/Library/MyPlatformID.cs $(srcdir)/Library/MyRuntimeID.cs $(srcdir)/Library/MyTrace.cs $(srcdir)/Library/MyTraceListener.cs $(srcdir)/Library/Configuration.cs
+Common_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/MyDns.cs $(srcdir)/Library/MyEnvironment.cs $(srcdir)/Library/MyPath.cs $(srcdir)/Library/MyPlatformID.cs $(srcdir)/Library/MyRuntimeID.cs $(srcdir)/Library/MyTrace.cs $(srcdir)/Library/MyTraceListener.cs
 Common_CSFILES_CSC := $(subst /,$(SEP),$(Common_CSFILES))
 Common_INCLUDES = 
 Common_RESOURCES =
@@ -11,7 +11,7 @@ Common_LIBPATH = /opt/gnome2/lib /usr/lib
 
 NUNIT_TESTS := CommonTests.dll
 
-CommonTests_CSFILES = $(srcdir)/Tests/AssemblyInfo.cs $(srcdir)/Tests/CommonTests.cs $(srcdir)/Tests/ConfigurationTests.cs
+CommonTests_CSFILES = $(srcdir)/Tests/AssemblyInfo.cs $(srcdir)/Tests/CommonTests.cs
 CommonTests_CSFILES_CSC := $(subst /,$(SEP),$(CommonTests_CSFILES))
 CommonTests_INCLUDES = 
 CommonTests_RESOURCES =

@@ -54,92 +54,92 @@ namespace Simias.Tests
 		}
 
 		/// <summary>
-		/// Trace Test 1
+		/// My Trace Test 1
 		/// </summary>
 		[Test]
-		public void TestTrace1()
+		public void TestMyTrace1()
 		{
 			MyTrace.WriteLine("Test 1");
 		}
 
 		/// <summary>
-		/// Trace Test 2
+		/// My Trace Test 2
 		/// </summary>
 		[Test]
-		public void TestTrace2()
+		public void TestMyTrace2()
 		{
 			MyTrace.WriteLine("Test 2 : {0}", "hello");
 		}
 
 		/// <summary>
-		/// Trace Test 3
+		/// My Trace Test 3
 		/// </summary>
 		[Test]
-		public void TestTrace3()
+		public void TestMyTrace3()
 		{
 			MyTrace.WriteLine(new Exception());
 		}
 
 		/// <summary>
-		/// Trace Test 1a
+		/// My Trace Test 1a
 		/// </summary>
 		[Test]
-		public void TestTrace1a()
+		public void TestMyTrace1a()
 		{
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 			MyTrace.WriteLine("Test 1");
 		}
 
 		/// <summary>
-		/// Trace Test 2a
+		/// My Trace Test 2a
 		/// </summary>
 		[Test]
-		public void TestTrace2a()
+		public void TestMyTrace2a()
 		{
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 			MyTrace.WriteLine("Test 2 : {0}", "hello");
 		}
 
 		/// <summary>
-		/// Trace Test 3a
+		/// My Trace Test 3a
 		/// </summary>
 		[Test]
-		public void TestTrace3a()
+		public void TestMyTrace3a()
 		{
 			MyTrace.Switch.Level = TraceLevel.Verbose;
 			MyTrace.WriteLine(new Exception());
 		}
 
 		/// <summary>
-		/// Dns Test
+		/// My Dns Test
 		/// </summary>
 		[Test]
-		public void TestDns()
+		public void TestMyDns()
 		{
-			Console.WriteLine("Host: {0}", MyDns.GetHostName());
+			Console.WriteLine("My Host: {0}", MyDns.GetHostName());
 		}
 
 		/// <summary>
-		/// Environment Test
+		/// My Environment Test
 		/// </summary>
 		[Test]
-		public void TestEnvironment()
+		public void TestMyEnvironment()
 		{
-			Console.WriteLine("Platform: {0}", MyEnvironment.Platform);
-			Console.WriteLine("Runtime: {0}", MyEnvironment.Runtime);
+			Console.WriteLine("My Platform: {0}", MyEnvironment.Platform);
+			Console.WriteLine("My Runtime: {0}", MyEnvironment.Runtime);
 		}
 
 		/// <summary>
-		/// Path Test
+		/// My Path Test
 		/// </summary>
 		[Test]
-		public void TestPath()
+		public void TestMyPath()
 		{
 			string path1 = @"/home/jdoe";
 			string path2 = @"c:\home\jdoe";
 
-			Console.WriteLine("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path1), path1);
-			Console.WriteLine("Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path2), path2);
+			Console.WriteLine("My Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path1), path1);
+			Console.WriteLine("My Full Local Path: {0} ({1})", MyPath.GetFullLocalPath(path2), path2);
 		}
 	}
 }

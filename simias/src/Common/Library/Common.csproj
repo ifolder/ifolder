@@ -89,11 +89,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "MyDns.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

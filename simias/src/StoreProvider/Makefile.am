@@ -6,8 +6,8 @@ StoreProvider_CSFILES_CSC := $(subst /,$(SEP),$(StoreProvider_CSFILES))
 StoreProvider_INCLUDES = 
 StoreProvider_RESOURCES =
 StoreProvider_FLAGS = $(CSC_LIBFLAG)
-StoreProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Storage.dll
-StoreProvider_LIBPATH = ../Common ../Storage
+StoreProvider_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Storage.dll
+StoreProvider_LIBPATH = ../Configuration ../Storage
 
 NUNIT_TESTS := ProviderTest.dll
 
@@ -16,8 +16,8 @@ ProviderTest_CSFILES_CSC := $(subst /,$(SEP),$(ProviderTest_CSFILES))
 ProviderTest_INCLUDES = 
 ProviderTest_RESOURCES =
 ProviderTest_FLAGS = $(CSC_LIBFLAG)
-ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll Storage.dll StoreProvider.dll nunit.framework.dll
-ProviderTest_LIBPATH = ../Common Test $(srcdir)/../../tools/NUnit/bin ../Storage
+ProviderTest_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Storage.dll StoreProvider.dll nunit.framework.dll
+ProviderTest_LIBPATH = Test $(srcdir)/../../tools/NUnit/bin ../Configuration ../Storage
 
 EXTRA_DIST = $(StoreProvider_CSFILES) $(ProviderTest_CSFILES)
 

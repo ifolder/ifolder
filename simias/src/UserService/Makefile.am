@@ -6,8 +6,8 @@ UserService_CSFILES_CSC := $(subst /,$(SEP),$(UserService_CSFILES))
 UserService_INCLUDES = 
 UserService_RESOURCES =
 UserService_FLAGS = $(CSC_LIBFLAG)
-UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Common.dll CollectionEvents.dll
-UserService_LIBPATH = /opt/gnome2/lib /usr/lib ../Common ../CollectionEvents
+UserService_LIBS = System.dll System.Data.dll $(SYSTEM_XML) Configuration.dll Common.dll CollectionEvents.dll
+UserService_LIBPATH = /opt/gnome2/lib /usr/lib ../Configuration ../Common ../CollectionEvents
 
 NUNIT_TESTS := ServiceTests.exe
 
@@ -16,8 +16,8 @@ ServiceTests_CSFILES_CSC := $(subst /,$(SEP),$(ServiceTests_CSFILES))
 ServiceTests_INCLUDES = 
 ServiceTests_RESOURCES =
 ServiceTests_FLAGS = $(CSC_EXEFLAG)
-ServiceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Common.dll UserService.dll
-ServiceTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common 
+ServiceTests_LIBS = System.dll System.Data.dll $(SYSTEM_XML) nunit.util.dll nunit.framework.dll Configuration.dll Common.dll UserService.dll
+ServiceTests_LIBPATH = $(srcdir)/../../tools/NUnit/bin ../Common ../Configuration 
 
 
 
