@@ -13,7 +13,7 @@ EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES)
 all: iFolderApp.exe
 
 iFolderApp.exe: $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
 
 install-exec-local: iFolderApp.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -26,7 +26,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = iFolderApp.exe iFolderApp.xml
+CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

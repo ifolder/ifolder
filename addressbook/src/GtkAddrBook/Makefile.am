@@ -21,10 +21,10 @@ EXTRA_DIST = $(Book_CSFILES) $(BookLib_CSFILES) $(Book_RESOURCES) $(BookLib_RESO
 all: Book.exe BookLib.dll
 
 Book.exe: $(Book_CSFILES) $(Book_RESOURCES) BookLib.dll
-	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.doc.xml
 
 BookLib.dll: $(BookLib_CSFILES) $(BookLib_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:BookLib.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(BookLib_FLAGS) $(BookLib_LIBS:%=/r:%) $(BookLib_LIBPATH:%=/lib:%) $(BookLib_RESOURCES:%=$(ICON_FLAG)%) $(BookLib_CSFILES_CSC) /doc:BookLib.doc.xml
 
 install-exec-local: Book.exe BookLib.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -35,7 +35,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = Book.exe Book.xml BookLib.dll BookLib.xml
+CLEAN_FILES = Book.exe Book.doc.xml BookLib.dll BookLib.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

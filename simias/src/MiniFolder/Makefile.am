@@ -15,7 +15,7 @@ CUR_DIR := $(shell pwd)
 all: MiniFolder.exe
 
 MiniFolder.exe: $(MiniFolder_CSFILES) $(MiniFolder_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(MiniFolder_FLAGS) $(MiniFolder_LIBS:%=/r:%) $(MiniFolder_LIBPATH:%=/lib:%) $(MiniFolder_CSFILES_CSC) /doc:MiniFolder.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(MiniFolder_FLAGS) $(MiniFolder_LIBS:%=/r:%) $(MiniFolder_LIBPATH:%=/lib:%) $(MiniFolder_CSFILES_CSC) /doc:MiniFolder.doc.xml
 
 install-exec-local: MiniFolder.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -27,9 +27,9 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.xml $(NUNIT_TESTS)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = MiniFolder.exe $(NUNIT_TESTS) MiniFolder.xml
+CLEAN_FILES = MiniFolder.exe $(NUNIT_TESTS) MiniFolder.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

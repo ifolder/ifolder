@@ -31,10 +31,10 @@ CUR_DIR := $(shell pwd)
 all: CollectionEvents.dll CsEventBroker.exe
 
 CollectionEvents.dll: $(CollectionEvents_CSFILES) $(CollectionEvents_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionEvents_FLAGS) $(CollectionEvents_LIBS:%=/r:%) $(CollectionEvents_LIBPATH:%=/lib:%) $(CollectionEvents_CSFILES_CSC) /doc:CollectionEvents.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionEvents_FLAGS) $(CollectionEvents_LIBS:%=/r:%) $(CollectionEvents_LIBPATH:%=/lib:%) $(CollectionEvents_CSFILES_CSC) /doc:CollectionEvents.doc.xml
 
 CsEventBroker.exe: $(CsEventBroker_CSFILES) $(CsEventBroker_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CsEventBroker_FLAGS) $(CsEventBroker_LIBS:%=/r:%) $(CsEventBroker_LIBPATH:%=/lib:%) $(CsEventBroker_CSFILES_CSC) /doc:CsEventBroker.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(CsEventBroker_FLAGS) $(CsEventBroker_LIBS:%=/r:%) $(CsEventBroker_LIBPATH:%=/lib:%) $(CsEventBroker_CSFILES_CSC) /doc:CsEventBroker.doc.xml
 
 CollectionEventTests.exe: $(CollectionEventTests_CSFILES) $(CollectionEventTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionEventTests_FLAGS) $(CollectionEventTests_LIBS:%=/r:%) $(CollectionEventTests_LIBPATH:%=/lib:%) $(CollectionEventTests_CSFILES_CSC)
@@ -44,14 +44,14 @@ install-exec-local: CollectionEvents.dll CsEventBroker.exe
 	$(INSTALL_PROGRAM) CollectionEvents.dll CsEventBroker.exe $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CollectionEvents.dll CsEventBroker.exe CollectionEventTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f CollectionEvents.dll CsEventBroker.exe CollectionEventTests.test.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionEventTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionEventTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = CollectionEvents.dll CsEventBroker.exe $(NUNIT_TESTS) CollectionEvents.xml CsEventBroker.xml
+CLEAN_FILES = CollectionEvents.dll CsEventBroker.exe $(NUNIT_TESTS) CollectionEvents.doc.xml CsEventBroker.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

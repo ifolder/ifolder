@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: Common.dll
 
 Common.dll: $(Common_CSFILES) $(Common_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Common_FLAGS) $(Common_LIBS:%=/r:%) $(Common_LIBPATH:%=/lib:%) $(Common_CSFILES_CSC) /doc:Common.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Common_FLAGS) $(Common_LIBS:%=/r:%) $(Common_LIBPATH:%=/lib:%) $(Common_CSFILES_CSC) /doc:Common.doc.xml
 
 CommonTests.dll: $(CommonTests_CSFILES) $(CommonTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CommonTests_FLAGS) $(CommonTests_LIBS:%=/r:%) $(CommonTests_LIBPATH:%=/lib:%) $(CommonTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: Common.dll
 	$(INSTALL_PROGRAM) Common.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Common.dll CommonTests.test.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = Common.dll $(NUNIT_TESTS) Common.xml CommonTests.xml
+CLEAN_FILES = Common.dll $(NUNIT_TESTS) Common.doc.xml CommonTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

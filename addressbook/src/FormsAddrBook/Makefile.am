@@ -13,7 +13,7 @@ EXTRA_DIST = $(Book_CSFILES) $(DATA_FILES)
 all: Book.exe
 
 Book.exe: $(Book_CSFILES) $(Book_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Book_FLAGS) $(Book_LIBS:%=/r:%) $(Book_LIBPATH:%=/lib:%) $(Book_RESOURCES:%=$(ICON_FLAG)%) $(Book_CSFILES_CSC) /doc:Book.doc.xml
 
 install-exec-local: Book.exe $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -24,7 +24,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = Book.exe Book.xml
+CLEAN_FILES = Book.exe Book.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

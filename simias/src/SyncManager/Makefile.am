@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: SyncManager.dll
 
 SyncManager.dll: $(SyncManager_CSFILES) $(SyncManager_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncManager_FLAGS) $(SyncManager_LIBS:%=/r:%) $(SyncManager_LIBPATH:%=/lib:%) $(SyncManager_CSFILES_CSC) /doc:SyncManager.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncManager_FLAGS) $(SyncManager_LIBS:%=/r:%) $(SyncManager_LIBPATH:%=/lib:%) $(SyncManager_CSFILES_CSC) /doc:SyncManager.doc.xml
 
 SyncManagerTests.dll: $(SyncManagerTests_CSFILES) $(SyncManagerTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncManagerTests_FLAGS) $(SyncManagerTests_LIBS:%=/r:%) $(SyncManagerTests_LIBPATH:%=/lib:%) $(SyncManagerTests_CSFILES_CSC)
@@ -34,15 +34,15 @@ install-exec-local: SyncManager.dll
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f SyncManager.dll SyncManagerTests.xml $(NUNIT_TESTS); \
+		rm -f SyncManager.dll SyncManagerTests.test.xml $(NUNIT_TESTS); \
 		rm -rf manager1
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncManagerTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncManagerTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = SyncManager.dll $(NUNIT_TESTS) SyncManager.xml SyncManagerTests.xml
+CLEAN_FILES = SyncManager.dll $(NUNIT_TESTS) SyncManager.doc.xml SyncManagerTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

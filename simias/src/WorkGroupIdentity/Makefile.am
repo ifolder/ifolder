@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: WorkGroupIdentity.dll
 
 WorkGroupIdentity.dll: $(WorkGroupIdentity_CSFILES) $(WorkGroupIdentity_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(WorkGroupIdentity_FLAGS) $(WorkGroupIdentity_LIBS:%=/r:%) $(WorkGroupIdentity_LIBPATH:%=/lib:%) $(WorkGroupIdentity_CSFILES_CSC) /doc:WorkGroupIdentity.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(WorkGroupIdentity_FLAGS) $(WorkGroupIdentity_LIBS:%=/r:%) $(WorkGroupIdentity_LIBPATH:%=/lib:%) $(WorkGroupIdentity_CSFILES_CSC) /doc:WorkGroupIdentity.doc.xml
 
 WorkGroupIdentityTests.dll: $(WorkGroupIdentityTests_CSFILES) $(WorkGroupIdentityTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(WorkGroupIdentityTests_FLAGS) $(WorkGroupIdentityTests_LIBS:%=/r:%) $(WorkGroupIdentityTests_LIBPATH:%=/lib:%) $(WorkGroupIdentityTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: WorkGroupIdentity.dll
 	$(INSTALL_PROGRAM) WorkGroupIdentity.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f WorkGroupIdentity.dll WorkGroupIdentityTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f WorkGroupIdentity.dll WorkGroupIdentityTests.test.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:WorkGroupIdentityTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:WorkGroupIdentityTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = WorkGroupIdentity.dll $(NUNIT_TESTS) WorkGroupIdentity.xml WorkGroupIdentityTests.xml
+CLEAN_FILES = WorkGroupIdentity.dll $(NUNIT_TESTS) WorkGroupIdentity.doc.xml WorkGroupIdentityTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

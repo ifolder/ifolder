@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: CommonFormWindows.dll
 
 CommonFormWindows.dll: $(CommonFormWindows_CSFILES) $(CommonFormWindows_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CommonFormWindows_FLAGS) $(CommonFormWindows_LIBS:%=/r:%) $(CommonFormWindows_LIBPATH:%=/lib:%) $(CommonFormWindows_CSFILES_CSC) /doc:CommonFormWindows.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(CommonFormWindows_FLAGS) $(CommonFormWindows_LIBS:%=/r:%) $(CommonFormWindows_LIBPATH:%=/lib:%) $(CommonFormWindows_CSFILES_CSC) /doc:CommonFormWindows.doc.xml
 
 CommonFormWindowsTests.dll: $(CommonFormWindowsTests_CSFILES) $(CommonFormWindowsTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CommonFormWindowsTests_FLAGS) $(CommonFormWindowsTests_LIBS:%=/r:%) $(CommonFormWindowsTests_LIBPATH:%=/lib:%) $(CommonFormWindowsTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: CommonFormWindows.dll
 	$(INSTALL_PROGRAM) CommonFormWindows.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CommonFormWindows.dll CommonFormWindowsTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f CommonFormWindows.dll CommonFormWindowsTests.test.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonFormWindowsTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CommonFormWindowsTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = CommonFormWindows.dll $(NUNIT_TESTS) CommonFormWindows.xml CommonFormWindowsTests.xml
+CLEAN_FILES = CommonFormWindows.dll $(NUNIT_TESTS) CommonFormWindows.doc.xml CommonFormWindowsTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

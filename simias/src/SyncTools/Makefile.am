@@ -11,7 +11,7 @@ EXTRA_DIST = $(SyncPing_CSFILES) $(SyncPing_RESOURCES)
 all: SyncPing.exe
 
 SyncPing.exe: $(SyncPing_CSFILES) $(SyncPing_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncPing_FLAGS) $(SyncPing_LIBS:%=/r:%) $(SyncPing_LIBPATH:%=/lib:%) $(SyncPing_RESOURCES:%=$(ICON_FLAG)%) $(SyncPing_CSFILES_CSC) /doc:SyncPing.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncPing_FLAGS) $(SyncPing_LIBS:%=/r:%) $(SyncPing_LIBPATH:%=/lib:%) $(SyncPing_RESOURCES:%=$(ICON_FLAG)%) $(SyncPing_CSFILES_CSC) /doc:SyncPing.doc.xml
 
 install-exec-local: SyncPing.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -23,9 +23,9 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncPingTests.xml $(NUNIT_TESTS)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncPingTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = SyncPing.exe $(NUNIT_TESTS) SyncPing.xml SyncPingTests.xml
+CLEAN_FILES = SyncPing.exe $(NUNIT_TESTS) SyncPing.doc.xml SyncPingTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: StoreProvider.dll
 
 StoreProvider.dll: $(StoreProvider_CSFILES) $(StoreProvider_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_CSFILES_CSC) /doc:StoreProvider.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(StoreProvider_FLAGS) $(StoreProvider_LIBS:%=/r:%) $(StoreProvider_LIBPATH:%=/lib:%) $(StoreProvider_CSFILES_CSC) /doc:StoreProvider.doc.xml
 
 ProviderTest.dll: $(ProviderTest_CSFILES) $(ProviderTest_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(ProviderTest_FLAGS) $(ProviderTest_LIBS:%=/r:%) $(ProviderTest_LIBPATH:%=/lib:%) $(ProviderTest_CSFILES_CSC)
@@ -38,9 +38,9 @@ uninstall-local:
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.xml $(NUNIT_TESTS)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = StoreProvider.dll $(NUNIT_TESTS) StoreProvider.xml ConfTests.xml
+CLEAN_FILES = StoreProvider.dll $(NUNIT_TESTS) StoreProvider.doc.xml ConfTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

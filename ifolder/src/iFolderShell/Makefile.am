@@ -51,7 +51,7 @@ iFolderComponent.tlb: iFolderComponent.dll
 	$(TLBX) $< $(LDOUT)$@
 
 iFolderComponent.dll: $(iFolderComponent_CSFILES) $(iFolderComponent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponent_FLAGS) $(iFolderComponent_LIBS:%=/r:%) $(iFolderComponent_LIBPATH:%=/lib:%) $(iFolderComponent_CSFILES_CSC) /doc:iFolderComponent.doc.xml
 
 iFolderComponentTests.dll: $(iFolderComponentTests_CSFILES) $(iFolderComponentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderComponentTests_FLAGS) $(iFolderComponentTests_LIBS:%=/r:%) $(iFolderComponentTests_LIBPATH:%=/lib:%) $(iFolderComponentTests_CSFILES_CSC)
@@ -61,14 +61,14 @@ install-exec-local: iFolderComponent.dll iFolderShell.dll
 	$(INSTALL_PROGRAM) iFolderComponent.dll iFolderShell.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f iFolderComponent.dll iFolderShell.dll iFolderComponentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f iFolderComponent.dll iFolderShell.dll iFolderComponentTests.test.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderComponentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:iFolderComponentTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(NUNIT_TESTS) iFolderComponent.xml iFolderComponentTests.xml iFolderShell.exp iFolderShell.lib
+CLEAN_FILES = iFolderShell.dll iFolderComponent.tlb iFolderComponent.dll $(iFolderShell_OBJFILES) iFolderShell/ifoldercomponent.tlh iFolderShell/ifoldercomponent.tli $(NUNIT_TESTS) iFolderComponent.doc.xml iFolderComponentTests.test.xml iFolderShell.exp iFolderShell.lib
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

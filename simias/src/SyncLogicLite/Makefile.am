@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: SyncLogicLite.dll
 
 SyncLogicLite.dll: $(SyncLogicLite_CSFILES) $(SyncLogicLite_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncLogicLite_FLAGS) $(SyncLogicLite_LIBS:%=/r:%) $(SyncLogicLite_LIBPATH:%=/lib:%) $(SyncLogicLite_CSFILES_CSC) /doc:SyncLogicLite.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncLogicLite_FLAGS) $(SyncLogicLite_LIBS:%=/r:%) $(SyncLogicLite_LIBPATH:%=/lib:%) $(SyncLogicLite_CSFILES_CSC) /doc:SyncLogicLite.doc.xml
 
 SyncLogicLiteTests.dll: $(SyncLogicLiteTests_CSFILES) $(SyncLogicLiteTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(SyncLogicLiteTests_FLAGS) $(SyncLogicLiteTests_LIBS:%=/r:%) $(SyncLogicLiteTests_LIBPATH:%=/lib:%) $(SyncLogicLiteTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: SyncLogicLite.dll
 	$(INSTALL_PROGRAM) SyncLogicLite.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f SyncLogicLite.dll SyncLogicLiteTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f SyncLogicLite.dll SyncLogicLiteTests.test.xml $(NUNIT_TESTS)
 	
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncLogicLiteTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:SyncLogicLiteTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = SyncLogicLite.dll $(NUNIT_TESTS) SyncLogicLite.xml SyncLogicLiteTests.xml
+CLEAN_FILES = SyncLogicLite.dll $(NUNIT_TESTS) SyncLogicLite.doc.xml SyncLogicLiteTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

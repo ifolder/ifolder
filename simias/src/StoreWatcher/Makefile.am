@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: StoreWatcher.dll
 
 StoreWatcher.dll: $(StoreWatcher_CSFILES) $(StoreWatcher_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(StoreWatcher_FLAGS) $(StoreWatcher_LIBS:%=/r:%) $(StoreWatcher_LIBPATH:%=/lib:%) $(StoreWatcher_CSFILES_CSC) /doc:StoreWatcher.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(StoreWatcher_FLAGS) $(StoreWatcher_LIBS:%=/r:%) $(StoreWatcher_LIBPATH:%=/lib:%) $(StoreWatcher_CSFILES_CSC) /doc:StoreWatcher.doc.xml
 
 StoreWatcherTests.dll: $(StoreWatcherTests_CSFILES) $(StoreWatcherTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(StoreWatcherTests_FLAGS) $(StoreWatcherTests_LIBS:%=/r:%) $(StoreWatcherTests_LIBPATH:%=/lib:%) $(StoreWatcherTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: StoreWatcher.dll
 	$(INSTALL_PROGRAM) StoreWatcher.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f StoreWatcher.dll StoreWatcherTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f StoreWatcher.dll StoreWatcherTests.test.xml $(NUNIT_TESTS)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:StoreWatcherTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:StoreWatcherTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = StoreWatcher.dll $(NUNIT_TESTS) StoreWatcher.xml StoreWatcherTests.xml
+CLEAN_FILES = StoreWatcher.dll $(NUNIT_TESTS) StoreWatcher.doc.xml StoreWatcherTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

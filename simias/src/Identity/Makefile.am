@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: Identity.dll
 
 Identity.dll: $(Identity_CSFILES) $(Identity_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Identity_FLAGS) $(Identity_LIBS:%=/r:%) $(Identity_LIBPATH:%=/lib:%) $(Identity_CSFILES_CSC) /doc:Identity.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Identity_FLAGS) $(Identity_LIBS:%=/r:%) $(Identity_LIBPATH:%=/lib:%) $(Identity_CSFILES_CSC) /doc:Identity.doc.xml
 
 #IdentityTests.exe: $(IdentityTests_CSFILES) $(IdentityTests_RESOURCES)
 #	$(CSC) /out:$@ $(CSCFLAGS) $(IdentityTests_FLAGS) $(IdentityTests_LIBS:%=/r:%) $(IdentityTests_LIBPATH:%=/lib:%) $(IdentityTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: Identity.dll
 	$(INSTALL_PROGRAM) Identity.dll $(DESTDIR)$(bindir)
     
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Identity.dll IdentityTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Identity.dll IdentityTests.test.xml $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:IdentityTests.xml $(NUNIT_TESTS)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:IdentityTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = Identity.dll $(NUNIT_TESTS) Identity.xml IdentityTests.xml
+CLEAN_FILES = Identity.dll $(NUNIT_TESTS) Identity.doc.xml IdentityTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -31,10 +31,10 @@ CUR_DIR := $(shell pwd)
 all: InviteAgent.dll EmailInviteAgent.dll
 
 InviteAgent.dll: $(InviteAgent_CSFILES) $(InviteAgent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAgent_FLAGS) $(InviteAgent_LIBS:%=/r:%) $(InviteAgent_LIBPATH:%=/lib:%) $(InviteAgent_CSFILES_CSC) /doc:InviteAgent.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAgent_FLAGS) $(InviteAgent_LIBS:%=/r:%) $(InviteAgent_LIBPATH:%=/lib:%) $(InviteAgent_CSFILES_CSC) /doc:InviteAgent.doc.xml
 
 EmailInviteAgent.dll: $(EmailInviteAgent_CSFILES) $(EmailInviteAgent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(EmailInviteAgent_FLAGS) $(EmailInviteAgent_LIBS:%=/r:%) $(EmailInviteAgent_LIBPATH:%=/lib:%) $(EmailInviteAgent_CSFILES_CSC) /doc:EmailInviteAgent.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(EmailInviteAgent_FLAGS) $(EmailInviteAgent_LIBS:%=/r:%) $(EmailInviteAgent_LIBPATH:%=/lib:%) $(EmailInviteAgent_CSFILES_CSC) /doc:EmailInviteAgent.doc.xml
 
 InviteAgentTests.dll: $(InviteAgentTests_CSFILES) $(InviteAgentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(InviteAgentTests_FLAGS) $(InviteAgentTests_LIBS:%=/r:%) $(InviteAgentTests_LIBPATH:%=/lib:%) $(InviteAgentTests_CSFILES_CSC)
@@ -44,14 +44,14 @@ install-exec-local: InviteAgent.dll EmailInviteAgent.dll
 	$(INSTALL_PROGRAM) InviteAgent.dll EmailInviteAgent.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll EmailInviteAgent.dll InviteAgentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f InviteAgent.dll EmailInviteAgent.dll InviteAgentTests.test.xml $(NUNIT_TESTS)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:InviteAgentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:InviteAgentTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = InviteAgent.dll EmailInviteAgent.dll $(NUNIT_TESTS) InviteAgent.xml EmailInviteAgent.xml InviteAgentTests.xml
+CLEAN_FILES = InviteAgent.dll EmailInviteAgent.dll $(NUNIT_TESTS) InviteAgent.doc.xml EmailInviteAgent.doc.xml InviteAgentTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

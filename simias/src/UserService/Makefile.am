@@ -14,7 +14,7 @@ CUR_DIR := $(shell pwd)
 all: UserService.dll
 
 UserService.dll: $(UserService_CSFILES) $(UserService_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(UserService_FLAGS) $(UserService_LIBS:%=/r:%) $(UserService_LIBPATH:%=/lib:%) $(UserService_CSFILES_CSC) /doc:UserService.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(UserService_FLAGS) $(UserService_LIBS:%=/r:%) $(UserService_LIBPATH:%=/lib:%) $(UserService_CSFILES_CSC) /doc:UserService.doc.xml
 
 install-exec-local: UserService.dll
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -25,7 +25,7 @@ uninstall-local:
     
 installcheck-local: install $(NUNIT_TESTS)
 	
-CLEAN_FILES = UserService.dll $(NUNIT_TESTS) UserService.xml
+CLEAN_FILES = UserService.dll $(NUNIT_TESTS) UserService.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

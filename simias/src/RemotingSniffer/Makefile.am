@@ -23,24 +23,24 @@ CUR_DIR := $(shell pwd)
 all: RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe
 
 RemotingMonitorLibrary.dll: $(RemotingMonitorLibrary_CSFILES) $(RemotingMonitorLibrary_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(RemotingMonitorLibrary_FLAGS) $(RemotingMonitorLibrary_LIBS:%=/r:%) $(RemotingMonitorLibrary_LIBPATH:%=/lib:%) $(RemotingMonitorLibrary_CSFILES_CSC) /doc:RemotingMonitorLibrary.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(RemotingMonitorLibrary_FLAGS) $(RemotingMonitorLibrary_LIBS:%=/r:%) $(RemotingMonitorLibrary_LIBPATH:%=/lib:%) $(RemotingMonitorLibrary_CSFILES_CSC) /doc:RemotingMonitorLibrary.doc.xml
 
 RemotingMonitorApplication.exe: $(RemotingMonitorApplication_CSFILES) $(RemotingMonitorApplication_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(RemotingMonitorApplication_FLAGS) $(RemotingMonitorApplication_LIBS:%=/r:%) $(RemotingMonitorApplication_LIBPATH:%=/lib:%) $(RemotingMonitorApplication_RESOURCES:%=$(ICON_FLAG)%) $(RemotingMonitorApplication_CSFILES_CSC) /doc:RemotingMonitorApplication.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(RemotingMonitorApplication_FLAGS) $(RemotingMonitorApplication_LIBS:%=/r:%) $(RemotingMonitorApplication_LIBPATH:%=/lib:%) $(RemotingMonitorApplication_RESOURCES:%=$(ICON_FLAG)%) $(RemotingMonitorApplication_CSFILES_CSC) /doc:RemotingMonitorApplication.doc.xml
 
 install-exec-local: RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe RemotingMonitorLibraryTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe RemotingMonitorLibraryTests.test.xml $(NUNIT_TESTS)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:RemotingMonitorLibraryTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:RemotingMonitorLibraryTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe $(NUNIT_TESTS) RemotingMonitorLibrary.xml EmailRemotingMonitorLibrary.xml RemotingMonitorApplication.xml RemotingMonitorLibraryGui.xml RemotingMonitorLibraryTests.xml
+CLEAN_FILES = RemotingMonitorLibrary.dll EmailRemotingMonitorLibrary.dll RemotingMonitorApplication.exe RemotingMonitorLibraryGui.exe $(NUNIT_TESTS) RemotingMonitorLibrary.doc.xml EmailRemotingMonitorLibrary.doc.xml RemotingMonitorApplication.doc.xml RemotingMonitorLibraryGui.xml RemotingMonitorLibraryTests.test.xml
 CLEAN_DIRS = .cstore
 
 clean-local:

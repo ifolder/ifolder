@@ -13,7 +13,7 @@ EXTRA_DIST = $(FormsBookLib_CSFILES) $(DATA_FILES)
 all: FormsBookLib.dll
 
 FormsBookLib.dll: $(FormsBookLib_CSFILES) $(FormsBookLib_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(FormsBookLib_FLAGS) $(FormsBookLib_LIBS:%=/r:%) $(FormsBookLib_LIBPATH:%=/lib:%) $(FormsBookLib_CSFILES_CSC) /doc:FormsBookLib.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(FormsBookLib_FLAGS) $(FormsBookLib_LIBS:%=/r:%) $(FormsBookLib_LIBPATH:%=/lib:%) $(FormsBookLib_CSFILES_CSC) /doc:FormsBookLib.doc.xml
 
 install-exec-local: FormsBookLib.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -24,7 +24,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = FormsBookLib.dll FormsBookLib.xml
+CLEAN_FILES = FormsBookLib.dll FormsBookLib.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

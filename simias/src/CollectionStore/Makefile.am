@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: CollectionStore.dll
 
 CollectionStore.dll: $(CollectionStore_CSFILES) $(CollectionStore_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionStore_FLAGS) $(CollectionStore_LIBS:%=/r:%) $(CollectionStore_LIBPATH:%=/lib:%) $(CollectionStore_CSFILES_CSC) /doc:CollectionStore.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionStore_FLAGS) $(CollectionStore_LIBS:%=/r:%) $(CollectionStore_LIBPATH:%=/lib:%) $(CollectionStore_CSFILES_CSC) /doc:CollectionStore.doc.xml
 
 CollectionStoreTests.dll: $(CollectionStoreTests_CSFILES) $(CollectionStoreTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(CollectionStoreTests_FLAGS) $(CollectionStoreTests_LIBS:%=/r:%) $(CollectionStoreTests_LIBPATH:%=/lib:%) $(CollectionStoreTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: CollectionStore.dll
 	$(INSTALL_PROGRAM) CollectionStore.dll ../../external/SecureChannelSinks/*.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f CollectionStore.dll CollectionStoreTests.xml $(NUNIT_TESTS); rm -rf CollectionStoreTestDir .cstore
+	cd $(DESTDIR)$(bindir); rm -f CollectionStore.dll CollectionStoreTests.test.xml $(NUNIT_TESTS); rm -rf CollectionStoreTestDir .cstore
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionStoreTests.xml $(NUNIT_TESTS)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:CollectionStoreTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = CollectionStore.dll $(NUNIT_TESTS) CollectionStore.xml
+CLEAN_FILES = CollectionStore.dll $(NUNIT_TESTS) CollectionStore.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: FsWatcher.exe
 
 FsWatcher.exe: $(FsWatcher_CSFILES) $(FsWatcher_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(FsWatcher_FLAGS) $(FsWatcher_LIBS:%=/r:%) $(FsWatcher_LIBPATH:%=/lib:%) $(FsWatcher_CSFILES_CSC) /doc:FsWatcher.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(FsWatcher_FLAGS) $(FsWatcher_LIBS:%=/r:%) $(FsWatcher_LIBPATH:%=/lib:%) $(FsWatcher_CSFILES_CSC) /doc:FsWatcher.doc.xml
 
 #FsWatcherTests.dll: $(FsWatcherTests_CSFILES) $(FsWatcherTests_RESOURCES)
 #	$(CSC) /out:$@ $(CSCFLAGS) $(FsWatcherTests_FLAGS) $(FsWatcherTests_LIBS:%=/r:%) $(FsWatcherTests_LIBPATH:%=/lib:%) $(FsWatcherTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: FsWatcher.exe
 	$(INSTALL_PROGRAM) FsWatcher.exe $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f FsWatcher.exe FsWatcherTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f FsWatcher.exe FsWatcherTests.test.xml $(NUNIT_TESTS)
 
 installcheck-local: install $(NUNIT_TESTS)
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
 #	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:FsWatcherTests.xml $(NUNIT_TESTS)
+#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:FsWatcherTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = FsWatcher.exe $(NUNIT_TESTS) FsWatcher.xml FsWatcherTests.xml
+CLEAN_FILES = FsWatcher.exe $(NUNIT_TESTS) FsWatcher.doc.xml FsWatcherTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

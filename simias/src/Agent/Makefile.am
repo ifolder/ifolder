@@ -23,7 +23,7 @@ CUR_DIR := $(shell pwd)
 all: Agent.dll
 
 Agent.dll: $(Agent_CSFILES) $(Agent_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Agent_FLAGS) $(Agent_LIBS:%=/r:%) $(Agent_LIBPATH:%=/lib:%) $(Agent_CSFILES_CSC) /doc:Agent.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Agent_FLAGS) $(Agent_LIBS:%=/r:%) $(Agent_LIBPATH:%=/lib:%) $(Agent_CSFILES_CSC) /doc:Agent.doc.xml
 
 AgentTests.dll: $(AgentTests_CSFILES) $(AgentTests_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(AgentTests_FLAGS) $(AgentTests_LIBS:%=/r:%) $(AgentTests_LIBPATH:%=/lib:%) $(AgentTests_CSFILES_CSC)
@@ -33,14 +33,14 @@ install-exec-local: Agent.dll
 	$(INSTALL_PROGRAM) Agent.dll $(DESTDIR)$(bindir)
 
 uninstall-local:
-	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.xml invitation.ifi $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); rm -f Agent.dll AgentTests.test.xml invitation.ifi $(NUNIT_TESTS)
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:AgentTests.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:AgentTests.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = Agent.dll $(NUNIT_TESTS) Agent.xml AgentTests.xml
+CLEAN_FILES = Agent.dll $(NUNIT_TESTS) Agent.doc.xml AgentTests.test.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

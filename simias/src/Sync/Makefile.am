@@ -31,10 +31,10 @@ CUR_DIR := $(shell pwd)
 all: Sync.dll SyncCmd.exe
 
 Sync.dll: $(Sync_CSFILES) $(Sync_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(Sync_FLAGS) $(Sync_LIBS:%=/r:%) $(Sync_LIBPATH:%=/lib:%) $(Sync_CSFILES_CSC) /doc:Sync.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(Sync_FLAGS) $(Sync_LIBS:%=/r:%) $(Sync_LIBPATH:%=/lib:%) $(Sync_CSFILES_CSC) /doc:Sync.doc.xml
 
 SyncCmd.exe: $(SyncCmd_CSFILES) $(SyncCmd_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(SyncCmd_FLAGS) $(SyncCmd_LIBS:%=/r:%) $(SyncCmd_LIBPATH:%=/lib:%) $(SyncCmd_CSFILES_CSC) /doc:SyncCmd.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(SyncCmd_FLAGS) $(SyncCmd_LIBS:%=/r:%) $(SyncCmd_LIBPATH:%=/lib:%) $(SyncCmd_CSFILES_CSC) /doc:SyncCmd.doc.xml
 
 TestSync.exe: $(TestSync_CSFILES) $(TestSync_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(TestSync_FLAGS) $(TestSync_LIBS:%=/r:%) $(TestSync_LIBPATH:%=/lib:%) $(TestSync_CSFILES_CSC)
@@ -45,15 +45,15 @@ install-exec-local: Sync.dll SyncCmd.exe
 
 uninstall-local:
 	cd $(DESTDIR)$(bindir); \
-		rm -f Sync.dll SyncCmd.exe TestSync.xml SyncTests.xml $(NUNIT_TESTS); \
+		rm -f Sync.dll SyncCmd.exe TestSync.doc.test.xml SyncTests.xml $(NUNIT_TESTS); \
 		rm -rf tmpS tmpStoreC tmpStoreS
 
 installcheck-local: install $(NUNIT_TESTS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:TestSync.xml $(NUNIT_TESTS)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:TestSync.doc.test.xml $(NUNIT_TESTS)
 	
-CLEAN_FILES = Sync.dll SyncCmd.exe TestSync.exe $(NUNIT_TESTS) Sync.xml SyncCmd.xml TestSync.xml SyncTests.xml
+CLEAN_FILES = Sync.dll SyncCmd.exe TestSync.exe $(NUNIT_TESTS) Sync.doc.xml SyncCmd.doc.xml TestSync.doc.test.xml SyncTests.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)

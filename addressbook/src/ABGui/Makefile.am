@@ -15,7 +15,7 @@ TARGETS =
 all: $(TARGETS)
 
 abgui.exe: $(abgui_CSFILES) $(abgui_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(abgui_FLAGS) $(abgui_LIBS:%=/r:%) $(abgui_LIBPATH:%=/lib:%) $(abgui_RESOURCES:%=$(ICON_FLAG)%) $(abgui_CSFILES_CSC) /doc:abgui.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(abgui_FLAGS) $(abgui_LIBS:%=/r:%) $(abgui_LIBPATH:%=/lib:%) $(abgui_RESOURCES:%=$(ICON_FLAG)%) $(abgui_CSFILES_CSC) /doc:abgui.doc.xml
 
 install-exec-local: abgui.exe
 #	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -26,7 +26,7 @@ uninstall-local:
     
 installcheck-local: install
 	
-CLEAN_FILES = $(TARGETS) abgui.xml
+CLEAN_FILES = $(TARGETS) abgui.doc.xml
 
 clean-local:
 	rm -rf *.dbg *.exe *.dll $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
