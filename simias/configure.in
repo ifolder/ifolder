@@ -252,7 +252,6 @@ case $host_os in
     ;;
 esac
 
-
 #
 # Configure files
 #
@@ -285,4 +284,5 @@ src/Smtp/Makefile
 src/InviteAgent/Makefile
 src/package/Makefile
 src/package/windows/Makefile
+src/package/linux/Makefile
 ])
