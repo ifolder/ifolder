@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 using Simias.Storage;
@@ -899,7 +900,17 @@ namespace Simias.Policy
 			/// <summary>
 			/// Used to compare if a value is less than or equal to another value.
 			/// </summary>
-			Less_Equal
+			Less_Equal,
+
+			/// <summary>
+			/// Used to compare two values using regular expression syntax.
+			/// </summary>
+			RegExp,
+
+			/// <summary>
+			/// Used to compare two values without regard for case using regular expression syntax.
+			/// </summary>
+			RegExp_IgnoreCase
 		};
 
 		/// <summary>
@@ -922,6 +933,11 @@ namespace Simias.Policy
 		/// Result to return when operation is true.
 		/// </summary>
 		private Result result;
+
+		/// <summary>
+		/// Used by the Operation.RegExp.
+		/// </summary>
+		private Regex regExpRule;
 		#endregion
 
 		#region Properties
@@ -981,6 +997,8 @@ namespace Simias.Policy
 			this.operand = operand;
 			this.operation = operation;
 			this.result = result;
+
+			InitializeSearchPattern( operand, operation );
 		}
 
 		/// <summary>
@@ -1006,6 +1024,8 @@ namespace Simias.Policy
 			syntax = ( Syntax )Enum.Parse( typeof( Syntax ), element.GetAttribute( RuleSyntaxTag ) );
 			Property p = new Property( String.Empty, syntax, element.InnerText );
 			operand = p.Value;
+
+			InitializeSearchPattern( operand, operation );
 		}
 
 		/// <summary>
@@ -1026,6 +1046,8 @@ namespace Simias.Policy
 			syntax = ( Syntax )Enum.Parse( typeof( Syntax ), element.GetAttribute( RuleSyntaxTag ) );
 			Property p = new Property( String.Empty, syntax, element.InnerText );
 			operand = p.Value;
+
+			InitializeSearchPattern( operand, operation );
 		}
 		#endregion
 
@@ -1057,6 +1079,8 @@ namespace Simias.Policy
 			switch ( operation )
 			{
 				case Operation.Equal:
+				case Operation.RegExp:
+				case Operation.RegExp_IgnoreCase:
 				{
 					status = ( cmpValue == 0 ) ? true : false;
 					break;
@@ -1104,6 +1128,25 @@ namespace Simias.Policy
 		}
 
 		/// <summary>
+		/// Initializes search pattern for specified operand.
+		/// </summary>
+		/// <param name="operand">Object that is used to match against the input object when the Apply method is called.
+		/// The type of object must be one of the Simias.Syntax types.</param>
+		/// <param name="operation">Operation to perform between input and operand.</param>
+		private void InitializeSearchPattern( object operand, Operation operation )
+		{
+			// If the operation is Operation.RegExp create the regular expression now.
+			if ( operation == Operation.RegExp )
+			{
+				regExpRule = new Regex( operand as string );
+			}
+			else if ( operation == Operation.RegExp_IgnoreCase )
+			{
+				regExpRule = new Regex( operand as string, RegexOptions.IgnoreCase );
+			}
+		}
+
+		/// <summary>
 		/// Checks if the object type is valid for the operation.
 		/// </summary>
 		/// <param name="operand">Object to perform operation on.</param>
@@ -1141,6 +1184,15 @@ namespace Simias.Policy
 				case Syntax.UInt64:
 				case Syntax.DateTime:
 				case Syntax.TimeSpan:
+				{
+					// Regular expression matching and ignore case is not allowed.
+					if ( ( operation == Operation.RegExp ) || ( operation == Operation.RegExp_IgnoreCase ) )
+					{
+						throw new CollectionStoreException( "Invalid operation for rule object type." );
+					}
+					break;
+				}
+
 				case Syntax.String:
 				{
 					// All operations are supported.
@@ -1326,7 +1378,14 @@ namespace Simias.Policy
 
 				case Syntax.String:
 				{
-					ruleResult = GetResult( ( input as string ).CompareTo( operand ) );
+					if ( ( operation == Operation.RegExp ) || ( operation == Operation.RegExp_IgnoreCase ) )
+					{
+						ruleResult = GetResult( regExpRule.IsMatch( input as string ) ? 0 : 1 );
+					}
+					else
+					{
+						ruleResult = GetResult( ( input as string ).CompareTo( operand ) );
+					}
 					break;
 				}
 			}

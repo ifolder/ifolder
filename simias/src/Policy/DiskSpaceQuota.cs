@@ -118,20 +118,28 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The quota policy does not exist, create a new one and add the rule.
-				policy = new Policy( DiskSpaceQuotaPolicyID, DiskSpaceQuotaShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rule.
-				policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The quota policy does not exist, create a new one and add the rule.
+					policy = new Policy( DiskSpaceQuotaPolicyID, DiskSpaceQuotaShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rule.
+					policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
+				}
 
-			// Add the new rule and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitPolicy( policy, domainID );
+				// Add the new rule and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitPolicy( policy, domainID );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -146,20 +154,28 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The quota policy does not exist, create a new one and add the rule.
-				policy = new Policy( DiskSpaceQuotaPolicyID, DiskSpaceQuotaShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rule.
-				policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The quota policy does not exist, create a new one and add the rule.
+					policy = new Policy( DiskSpaceQuotaPolicyID, DiskSpaceQuotaShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rule.
+					policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
+				}
 
-			// Add the new rule and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitPolicy( policy, member );
+				// Add the new rule and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitPolicy( policy, member );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -174,20 +190,28 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The quota policy does not exist, create a new one and add the rule.
-				policy = new Policy( DiskSpaceQuotaPolicyID, DiskSpaceQuotaShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rule.
-				policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The quota policy does not exist, create a new one and add the rule.
+					policy = new Policy( DiskSpaceQuotaPolicyID, DiskSpaceQuotaShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rule.
+					policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
+				}
 
-			// Add the new rule and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitPolicy( policy, collection );
+				// Add the new rule and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitPolicy( policy, collection );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -278,7 +302,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
-			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -290,7 +314,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
-			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -302,7 +326,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
-			return ( policy != null ) ? ( long )DiskSpaceQuota.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -312,18 +336,7 @@ namespace Simias.Policy
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
 		static public void Set( string domainID, long limit )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, domainID );
-			if ( policy == null )
-			{
-				DiskSpaceQuota.Create( domainID, limit );
-			}
-			else
-			{
-				policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitPolicy( policy, domainID );
-			}
+			Create( domainID, limit );
 		}
 
 		/// <summary>
@@ -333,18 +346,7 @@ namespace Simias.Policy
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
 		static public void Set( Member member, long limit )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, member );
-			if ( policy == null )
-			{
-				DiskSpaceQuota.Create( member, limit );
-			}
-			else
-			{
-				policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitPolicy( policy, member );
-			}
+			Create( member, limit );
 		}
 
 		/// <summary>
@@ -354,18 +356,7 @@ namespace Simias.Policy
 		/// <param name="limit">Amount of disk space that all users in the domain will be limited to.</param>
 		static public void Set( Collection collection, long limit )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( DiskSpaceQuotaPolicyID, collection );
-			if ( policy == null )
-			{
-				DiskSpaceQuota.Create( collection, limit );
-			}
-			else
-			{
-				policy.DeleteRule( DiskSpaceQuota.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitPolicy( policy, collection );
-			}
+			Create( collection, limit );
 		}
 		#endregion
 

@@ -130,11 +130,14 @@ namespace Simias.Storage.Provider.Flaim
 		{
 			lock (handleTable)
 			{
-				FWCloseStore(pStore);
-				handleTable.Remove(pStore);
-				pStore = IntPtr.Zero;
-				if (handleTable.Count == 0)
-					pDB = IntPtr.Zero;
+				if (pStore != IntPtr.Zero)
+				{
+					FWCloseStore(pStore);
+					handleTable.Remove(pStore);
+					pStore = IntPtr.Zero;
+					if (handleTable.Count == 0)
+						pDB = IntPtr.Zero;
+				}
 			}
 		}
 

@@ -77,31 +77,33 @@ namespace Simias.Policy
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
 		static public void Create( string domainID, long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rule.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rule.
+					policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
+				}
 
-			// Add the new rule and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitPolicy( policy, domainID );
+				// Add the new rule and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitPolicy( policy, domainID );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -111,31 +113,33 @@ namespace Simias.Policy
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
 		static public void Create( Member member, long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rule.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rule.
+					policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
+				}
 
-			// Add the new rule and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitPolicy( policy, member );
+				// Add the new rule and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitPolicy( policy, member );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -145,31 +149,33 @@ namespace Simias.Policy
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
 		static public void Create( Collection collection, long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rules.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rules.
+					policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
+				}
 
-			// Add the new rules and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitPolicy( policy, collection );
+				// Add the new rules and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitPolicy( policy, collection );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -178,31 +184,33 @@ namespace Simias.Policy
 		/// <param name="limit">Size of file in bytes that all users in the domain will be limited to.</param>
 		static public void Create( long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
 			// Need a policy manager.
 			PolicyManager pm = new PolicyManager();
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
-			if ( policy == null )
+			if ( limit > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rules.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileSizeFilterPolicyID, FileSizeFilterShortDescription );
+				}
+				else
+				{
+					// The policy already exists, delete the old rules.
+					policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
+				}
 
-			// Add the new rules and save the policy.
-			policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-			pm.CommitLocalMachinePolicy( policy );
+				// Add the new rules and save the policy.
+				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
+				pm.CommitLocalMachinePolicy( policy );
+			}
+			else if ( policy != null )
+			{
+				// Setting the limit to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -310,7 +318,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
-			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -322,7 +330,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
-			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -334,7 +342,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
-			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -345,7 +353,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
-			return ( policy != null ) ? ( long )FileSizeFilter.GetRule( policy ).Operand : 0;
+			return ( policy != null ) ? ( long )GetRule( policy ).Operand : 0;
 		}
 
 		/// <summary>
@@ -355,25 +363,7 @@ namespace Simias.Policy
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
 		static public void Set( string domainID, long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, domainID );
-			if ( policy == null )
-			{
-				FileSizeFilter.Create( domainID, limit );
-			}
-			else
-			{
-				// Remove the existing rule and add the new one.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitPolicy( policy, domainID );
-			}
+			Create( domainID, limit );
 		}
 
 		/// <summary>
@@ -383,25 +373,7 @@ namespace Simias.Policy
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
 		static public void Set( Member member, long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, member );
-			if ( policy == null )
-			{
-				FileSizeFilter.Create( member, limit );
-			}
-			else
-			{
-				// Remove the existing rule and add the new one.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitPolicy( policy, member );
-			}
+			Create( member, limit );
 		}
 
 		/// <summary>
@@ -411,25 +383,7 @@ namespace Simias.Policy
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
 		static public void Set( Collection collection, long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID, collection );
-			if ( policy == null )
-			{
-				FileSizeFilter.Create( collection, limit );
-			}
-			else
-			{
-				// Remove the existing rule and add the new one.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitPolicy( policy, collection );
-			}
+			Create( collection, limit );
 		}
 
 		/// <summary>
@@ -438,25 +392,7 @@ namespace Simias.Policy
 		/// <param name="limit">Size of files that all users in the domain will be limited to.</param>
 		static public void Set( long limit )
 		{
-			// Don't allow the limit to be zero.
-			if ( limit == 0 )
-			{
-				throw new SimiasException( "Limit size cannot be zero." );
-			}
-
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileSizeFilterPolicyID );
-			if ( policy == null )
-			{
-				FileSizeFilter.Create( limit );
-			}
-			else
-			{
-				// Remove the existing rule and add the new one.
-				policy.DeleteRule( FileSizeFilter.GetRule( policy ) );
-				policy.AddRule( new Rule( limit, Rule.Operation.Less_Equal, Rule.Result.Allow ) );
-				pm.CommitLocalMachinePolicy( policy );
-			}
+			Create( limit );
 		}
 		#endregion
 

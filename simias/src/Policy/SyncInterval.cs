@@ -101,15 +101,23 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, domainID );
-			if ( policy == null )
+			if ( interval > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
+				}
 
-			// Add the new value and save the policy.
-			policy.AddValue( IntervalTag, interval );
-			pm.CommitPolicy( policy, domainID );
+				// Add the new value and save the policy.
+				policy.AddValue( IntervalTag, interval );
+				pm.CommitPolicy( policy, domainID );
+			}
+			else if ( policy != null )
+			{
+				// Setting the interval to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -124,15 +132,23 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, member );
-			if ( policy == null )
+			if ( interval > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
+				}
 
-			// Add the new value and save the policy.
-			policy.AddValue( IntervalTag, interval );
-			pm.CommitPolicy( policy, member );
+				// Add the new value and save the policy.
+				policy.AddValue( IntervalTag, interval );
+				pm.CommitPolicy( policy, member );
+			}
+			else if ( policy != null )
+			{
+				// Setting the interval to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -147,15 +163,23 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, collection );
-			if ( policy == null )
+			if ( interval > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
+				}
 
-			// Add the new value and save the policy.
-			policy.AddValue( IntervalTag, interval );
-			pm.CommitPolicy( policy, collection );
+				// Add the new value and save the policy.
+				policy.AddValue( IntervalTag, interval );
+				pm.CommitPolicy( policy, collection );
+			}
+			else if ( policy != null )
+			{
+				// Setting the interval to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -169,15 +193,23 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( SyncIntervalPolicyID );
-			if ( policy == null )
+			if ( interval > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
-			}
+				if ( policy == null )
+				{
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( SyncIntervalPolicyID, SyncIntervalShortDescription );
+				}
 
-			// Add the new value and save the policy.
-			policy.AddValue( IntervalTag, interval );
-			pm.CommitLocalMachinePolicy( policy );
+				// Add the new value and save the policy.
+				policy.AddValue( IntervalTag, interval );
+				pm.CommitLocalMachinePolicy( policy );
+			}
+			else if ( policy != null )
+			{
+				// Setting the interval to zero is the same as deleting the policy.
+				pm.DeletePolicy( policy );
+			}
 		}
 
 		/// <summary>
@@ -332,18 +364,7 @@ namespace Simias.Policy
 		/// <param name="interval">Sync interval in seconds that all users in the domain will be set to.</param>
 		static public void Set( string domainID, int interval )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, domainID );
-			if ( policy == null )
-			{
-				SyncInterval.Create( domainID, interval );
-			}
-			else
-			{
-				// Add the new interval.
-				policy.AddValue( IntervalTag, interval );
-				pm.CommitPolicy( policy, domainID );
-			}
+			Create( domainID, interval );
 		}
 
 		/// <summary>
@@ -353,18 +374,7 @@ namespace Simias.Policy
 		/// <param name="interval">Sync interval in seconds that the associated member will be set to.</param>
 		static public void Set( Member member, int interval )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, member );
-			if ( policy == null )
-			{
-				SyncInterval.Create( member, interval );
-			}
-			else
-			{
-				// Add the new interval.
-				policy.AddValue( IntervalTag, interval );
-				pm.CommitPolicy( policy, member );
-			}
+			Create( member, interval );
 		}
 
 		/// <summary>
@@ -374,18 +384,7 @@ namespace Simias.Policy
 		/// <param name="interval">Sync interval in seconds that the collection will be set to.</param>
 		static public void Set( Collection collection, int interval )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( SyncIntervalPolicyID, collection );
-			if ( policy == null )
-			{
-				SyncInterval.Create( collection, interval );
-			}
-			else
-			{
-				// Add the new interval.
-				policy.AddValue( IntervalTag, interval );
-				pm.CommitPolicy( policy, collection );
-			}
+			Create( collection, interval );
 		}
 
 		/// <summary>
@@ -394,18 +393,7 @@ namespace Simias.Policy
 		/// <param name="interval">Sync interval in seconds that the current user will be set to.</param>
 		static public void Set( int interval )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( SyncIntervalPolicyID );
-			if ( policy == null )
-			{
-				SyncInterval.Create( interval );
-			}
-			else
-			{
-				// Add the new interval.
-				policy.AddValue( IntervalTag, interval );
-				pm.CommitLocalMachinePolicy( policy );
-			}
+			Create( interval );
 		}
 		#endregion
 	}

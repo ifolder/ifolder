@@ -23,6 +23,11 @@ namespace Simias.Policy
 		/// If false then file will be disallowed to pass through the filter.
 		/// </summary>
 		private bool allowed;
+
+		/// <summary>
+		/// If true then filter comparision will be case-insensitive.
+		/// </summary>
+		private bool ignoreCase;
 		#endregion
 
 		#region Properties
@@ -41,6 +46,14 @@ namespace Simias.Policy
 		{
 			get { return allowed; }
 		}
+
+		/// <summary>
+		/// Gets whether the filter comparision will be case-insensitive.
+		/// </summary>
+		public bool IgnoreCase
+		{
+			get { return ignoreCase; }
+		}
 		#endregion
 
 		#region Constructor
@@ -50,10 +63,23 @@ namespace Simias.Policy
 		/// <param name="fileNameExtension">Filename extension to use as a filter.</param>
 		/// <param name="allowed">If true then all files that have extensions that match the 
 		/// fileNameExtension parameter will be allowed to pass through the filter.</param>
-		public FileTypeEntry( string fileNameExtension, bool allowed )
+		public FileTypeEntry( string fileNameExtension, bool allowed ) :
+			this ( fileNameExtension, allowed, false )
+		{
+		}
+
+		/// <summary>
+		/// Initializes an instance of the object.
+		/// </summary>
+		/// <param name="fileNameExtension">Filename extension to use as a filter.</param>
+		/// <param name="allowed">If true then all files that have extensions that match the 
+		/// fileNameExtension parameter will be allowed to pass through the filter.</param>
+		/// <param name="ignoreCase">If true filter comparision will be case-insensitive.</param>
+		public FileTypeEntry( string fileNameExtension, bool allowed, bool ignoreCase )
 		{
 			this.fileNameExtension = fileNameExtension;
 			this.allowed = allowed;
+			this.ignoreCase = ignoreCase;
 		}
 		#endregion
 	}
@@ -86,7 +112,7 @@ namespace Simias.Policy
 		/// </summary>
 		public FileTypeEntry[] FilterList
 		{
-			get { return FileTypeFilter.GetPatterns( policy ); }
+			get { return GetPatterns( policy ); }
 		}
 		#endregion
 
@@ -114,27 +140,35 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, domainID );
-			if ( policy == null )
+			if ( patterns.Length > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rules.
-				foreach ( Rule r in policy.Rules )
+				if ( policy == null )
 				{
-					policy.DeleteRule( r );
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
 				}
-			}
+				else
+				{
+					// The policy already exists, delete the old rules.
+					foreach ( Rule r in policy.Rules )
+					{
+						policy.DeleteRule( r );
+					}
+				}
 
-			// Add the new rules and save the policy.
-			foreach( FileTypeEntry fte in patterns )
+				// Add the new rules and save the policy.
+				foreach( FileTypeEntry fte in patterns )
+				{
+					policy.AddRule( new Rule( fte.Name, fte.IgnoreCase ? Rule.Operation.RegExp_IgnoreCase : Rule.Operation.RegExp, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				}
+
+				pm.CommitPolicy( policy, domainID );
+			}
+			else if ( policy != null )
 			{
-				policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				// An empty array is the same thing as deleting the policy.
+				pm.DeletePolicy( policy );
 			}
-
-			pm.CommitPolicy( policy, domainID );
 		}
 
 		/// <summary>
@@ -149,27 +183,35 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, member );
-			if ( policy == null )
+			if ( patterns.Length > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rules.
-				foreach ( Rule r in policy.Rules )
+				if ( policy == null )
 				{
-					policy.DeleteRule( r );
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
 				}
-			}
+				else
+				{
+					// The policy already exists, delete the old rules.
+					foreach ( Rule r in policy.Rules )
+					{
+						policy.DeleteRule( r );
+					}
+				}
 
-			// Add the new rules and save the policy.
-			foreach( FileTypeEntry fte in patterns )
+				// Add the new rules and save the policy.
+				foreach( FileTypeEntry fte in patterns )
+				{
+					policy.AddRule( new Rule( fte.Name, fte.IgnoreCase ? Rule.Operation.RegExp_IgnoreCase : Rule.Operation.RegExp, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				}
+
+				pm.CommitPolicy( policy, member );
+			}
+			else if ( policy != null )
 			{
-				policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				// An empty array is the same thing as deleting the policy.
+				pm.DeletePolicy( policy );
 			}
-
-			pm.CommitPolicy( policy, member );
 		}
 
 		/// <summary>
@@ -184,27 +226,35 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, collection );
-			if ( policy == null )
+			if ( patterns.Length > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rules.
-				foreach ( Rule r in policy.Rules )
+				if ( policy == null )
 				{
-					policy.DeleteRule( r );
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
 				}
-			}
+				else
+				{
+					// The policy already exists, delete the old rules.
+					foreach ( Rule r in policy.Rules )
+					{
+						policy.DeleteRule( r );
+					}
+				}
 
-			// Add the new rules and save the policy.
-			foreach( FileTypeEntry fte in patterns )
+				// Add the new rules and save the policy.
+				foreach( FileTypeEntry fte in patterns )
+				{
+					policy.AddRule( new Rule( fte.Name, fte.IgnoreCase ? Rule.Operation.RegExp_IgnoreCase : Rule.Operation.RegExp, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				}
+
+				pm.CommitPolicy( policy, collection );
+			}
+			else if ( policy != null )
 			{
-				policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				// An empty array is the same thing as deleting the policy.
+				pm.DeletePolicy( policy );
 			}
-
-			pm.CommitPolicy( policy, collection );
 		}
 
 		/// <summary>
@@ -218,27 +268,35 @@ namespace Simias.Policy
 			
 			// See if the policy already exists.
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID );
-			if ( policy == null )
+			if ( patterns.Length > 0 )
 			{
-				// The policy does not exist, create a new one and add the rules.
-				policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
-			}
-			else
-			{
-				// The policy already exists, delete the old rules.
-				foreach ( Rule r in policy.Rules )
+				if ( policy == null )
 				{
-					policy.DeleteRule( r );
+					// The policy does not exist, create a new one and add the rules.
+					policy = new Policy( FileTypeFilterPolicyID, FileTypeFilterShortDescription );
 				}
-			}
+				else
+				{
+					// The policy already exists, delete the old rules.
+					foreach ( Rule r in policy.Rules )
+					{
+						policy.DeleteRule( r );
+					}
+				}
 
-			// Add the new rules and save the policy.
-			foreach( FileTypeEntry fte in patterns )
+				// Add the new rules and save the policy.
+				foreach( FileTypeEntry fte in patterns )
+				{
+					policy.AddRule( new Rule( fte.Name, fte.IgnoreCase ? Rule.Operation.RegExp_IgnoreCase : Rule.Operation.RegExp, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				}
+
+				pm.CommitLocalMachinePolicy( policy );
+			}
+			else if ( policy != null )
 			{
-				policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
+				// An empty array is the same thing as deleting the policy.
+				pm.DeletePolicy( policy );
 			}
-
-			pm.CommitLocalMachinePolicy( policy );
 		}
 
 		/// <summary>
@@ -347,7 +405,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, domainID );
-			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
+			return ( policy != null ) ? GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -360,7 +418,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, member );
-			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
+			return ( policy != null ) ? GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -373,7 +431,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, collection );
-			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
+			return ( policy != null ) ? GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -385,7 +443,7 @@ namespace Simias.Policy
 		{
 			PolicyManager pm = new PolicyManager();
 			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID );
-			return ( policy != null ) ? FileTypeFilter.GetPatterns( policy ) : null;
+			return ( policy != null ) ? GetPatterns( policy ) : null;
 		}
 
 		/// <summary>
@@ -395,28 +453,7 @@ namespace Simias.Policy
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
 		static public void Set( string domainID, FileTypeEntry[] patterns )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, domainID );
-			if ( policy == null )
-			{
-				FileTypeFilter.Create( domainID, patterns );
-			}
-			else
-			{
-				// Remove the existing rules.
-				foreach ( Rule r in policy.Rules )
-				{
-					policy.DeleteRule( r );
-				}
-
-				// Add the new rules.
-				foreach ( FileTypeEntry fte in patterns )
-				{
-					policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
-				}
-
-				pm.CommitPolicy( policy, domainID );
-			}
+			Create( domainID, patterns );
 		}
 
 		/// <summary>
@@ -426,28 +463,7 @@ namespace Simias.Policy
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
 		static public void Set( Member member, FileTypeEntry[] patterns )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, member );
-			if ( policy == null )
-			{
-				FileTypeFilter.Create( member, patterns );
-			}
-			else
-			{
-				// Remove the existing rules.
-				foreach ( Rule r in policy.Rules )
-				{
-					policy.DeleteRule( r );
-				}
-
-				// Add the new rules.
-				foreach ( FileTypeEntry fte in patterns )
-				{
-					policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
-				}
-
-				pm.CommitPolicy( policy, member );
-			}
+			Create( member, patterns );
 		}
 
 		/// <summary>
@@ -457,28 +473,7 @@ namespace Simias.Policy
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
 		static public void Set( Collection collection, FileTypeEntry[] patterns )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID, collection );
-			if ( policy == null )
-			{
-				FileTypeFilter.Create( collection, patterns );
-			}
-			else
-			{
-				// Remove the existing rules.
-				foreach ( Rule r in policy.Rules )
-				{
-					policy.DeleteRule( r );
-				}
-
-				// Add the new rules.
-				foreach ( FileTypeEntry fte in patterns )
-				{
-					policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
-				}
-
-				pm.CommitPolicy( policy, collection );
-			}
+			Create( collection, patterns );
 		}
 
 		/// <summary>
@@ -487,28 +482,7 @@ namespace Simias.Policy
 		/// <param name="patterns">File type patterns that will be used to filter files.</param>
 		static public void Set( FileTypeEntry[] patterns )
 		{
-			PolicyManager pm = new PolicyManager();
-			Policy policy = pm.GetPolicy( FileTypeFilterPolicyID );
-			if ( policy == null )
-			{
-				FileTypeFilter.Create( patterns );
-			}
-			else
-			{
-				// Remove the existing rules.
-				foreach ( Rule r in policy.Rules )
-				{
-					policy.DeleteRule( r );
-				}
-
-				// Add the new rules.
-				foreach ( FileTypeEntry fte in patterns )
-				{
-					policy.AddRule( new Rule( fte.Name, Rule.Operation.Equal, fte.Allowed ? Rule.Result.Allow : Rule.Result.Deny ) );
-				}
-
-				pm.CommitLocalMachinePolicy( policy );
-			}
+			Create( patterns );
 		}
 		#endregion
 
@@ -528,7 +502,7 @@ namespace Simias.Policy
 			{
 				foreach ( Rule rule in policy.Rules )
 				{
-					FileTypeEntry fte = new FileTypeEntry( rule.Operand as string, ( rule.RuleResult == Rule.Result.Allow ) ? true : false );
+					FileTypeEntry fte = new FileTypeEntry( rule.Operand as string, ( rule.RuleResult == Rule.Result.Allow ) ? true : false, ( rule.RuleOperation == Rule.Operation.RegExp ) ? false : true );
 					tempList.Add( fte );
 				}
 			}
@@ -545,7 +519,7 @@ namespace Simias.Policy
 		/// <returns>True if the file is allowed to pass through the filter. Otherwise false is returned.</returns>
 		public bool Allowed( string fileName )
 		{
-			return ( ( policy == null ) || ( policy.Apply( Path.GetExtension( fileName ) ) == Rule.Result.Allow ) ) ? true : false;
+			return ( ( policy == null ) || ( policy.Apply( Path.GetFileName( fileName ) ) == Rule.Result.Allow ) ) ? true : false;
 		}
 		#endregion
 	}

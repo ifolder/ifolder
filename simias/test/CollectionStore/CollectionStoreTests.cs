@@ -31,10 +31,10 @@ using System.Xml;
 using NUnit.Framework;
 
 using Simias;
+using Simias.Client;
 using Simias.Policy;
 using Simias.POBox;
 using Simias.Storage;
-using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 
 namespace Simias.Storage.Tests
@@ -64,7 +64,6 @@ namespace Simias.Storage.Tests
 		public void Init()
 		{
 			// Connect to the store.
-			Configuration.CreateDefaultConfig( basePath );
 			store = Store.GetStore();
 		}
 		#endregion
@@ -1977,8 +1976,8 @@ namespace Simias.Storage.Tests
 			try
 			{
 				Member member = collection.GetCurrentMember();
-				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".mp3", false ), 
-															 new FileTypeEntry( ".avi", false ) };
+				FileTypeEntry[] dfte = new FileTypeEntry[] { new FileTypeEntry( ".mP3$", false, true ), 
+															 new FileTypeEntry( ".avi$", false ) };
 
 				// Create a system-wide file filter policy.
 				FileTypeFilter.Create( store.DefaultDomain, dfte );
@@ -2199,6 +2198,9 @@ namespace Simias.Storage.Tests
 				{
 					throw new ApplicationException( "Aggregate member file size limit not set." );
 				}
+
+				// Remove the file size limit by setting it to zero.
+				FileSizeFilter.Create( member, 0 );
 			}
 			finally
 			{

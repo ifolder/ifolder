@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = "copy $(TargetFileName) $(SolutionDir)..\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)..\stage\&#xd;&#xa;"
+                PostBuildEvent = "copy $(TargetFileName) $(SolutionDir)..\stage\web\bin&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)..\stage\web\bin&#xd;&#xa;copy $(SolutionDir)..\tools\nunit\net\bin\nunit.core.dll $(SolutionDir)..\stage\web\bin&#xd;&#xa;copy $(SolutionDir)..\tools\nunit\net\bin\nunit.framework.dll $(SolutionDir)..\stage\web\bin&#xd;&#xa;"
                 RootNamespace = "CollectionStoreTests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -90,14 +90,14 @@
                     HintPath = "..\..\tools\NUnit\net\bin\nunit.framework.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    HintPath = "..\..\external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
-                />
-                <Reference
                     Name = "Simias"
                     AssemblyName = "Simias"
                     HintPath = "..\..\stage\web\bin\Simias.dll"
+                />
+                <Reference
+                    Name = "SimiasClient"
+                    AssemblyName = "SimiasClient"
+                    HintPath = "..\..\stage\web\bin\SimiasClient.dll"
                 />
             </References>
         </Build>
