@@ -255,12 +255,11 @@ namespace Mono.ASPNET
 						rdata.Path, rdata.PathInfo, rdata.QueryString,
 						rdata.Protocol, rdata.InputBuffer, redirect);
 			} catch (Exception e) {
-				bool ignore = ((e is RequestLineException) || (e is IOException));
-				if (!ignore)
+				if (!(e is RequestLineException))
 					Console.WriteLine (e);
 
 				try {
-					if (!ignore) {
+					if (!(e is IOException)) {
 						byte [] error = HttpErrors.ServerError ();
 						Write (error, 0, error.Length);
 					}
@@ -291,9 +290,10 @@ namespace Mono.ASPNET
 
 		public void Close (bool keepAlive)
 		{
-			if (!keepAlive || !IsConnected ()) {
+			if (!keepAlive) {
 				stream.Close ();
-				server.CloseSocket (sock);
+				sock.Close ();
+				server.RemoveSocket (sock);
 				return;
 			}
 

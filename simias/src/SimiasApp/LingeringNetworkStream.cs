@@ -53,9 +53,6 @@ namespace Mono.ASPNET
 		{
 			int waited = 0;
 
-			if (!Connected)
-				return;
-
 			Socket.Shutdown (SocketShutdown.Send);
 			while (waited < max_useconds_to_linger) {
 				int nread = 0;

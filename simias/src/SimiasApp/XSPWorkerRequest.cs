@@ -68,7 +68,6 @@ namespace Mono.ASPNET
 		XSPRequestBroker requestBroker;
 		bool keepAlive;
 		bool haveContentLength;
-		bool isclosed;
 		
 		static string serverHeader;
 
@@ -299,9 +298,6 @@ namespace Mono.ASPNET
 
 		public override void FlushResponse (bool finalFlush)
 		{
-			if (requestBroker == null)
-				return;
-
 			try {
 				if (!headersSent) {
 					responseHeaders.Insert (0, status);
@@ -344,7 +340,6 @@ namespace Mono.ASPNET
 				}
 			} catch (Exception e) {
 				WebTrace.WriteLine (e.ToString ());
-				CloseConnection ();
 			}
 		}
 
@@ -521,7 +516,7 @@ namespace Mono.ASPNET
 		public override bool IsClientConnected ()
 		{
 			WebTrace.WriteLine ("IsClientConnected()");
-			return (requestBroker != null && requestBroker.IsConnected (requestId));
+			return requestBroker.IsConnected (requestId);
 		}
 
 		public override bool IsEntireEntityBodyIsPreloaded ()
@@ -600,7 +595,7 @@ namespace Mono.ASPNET
 		public override void SendResponseFromMemory (byte [] data, int length)
 		{
 			WebTrace.WriteLine ("SendResponseFromMemory ()");
-			if (requestBroker == null || length <= 0)
+			if (length <= 0)
 				return;
 
 			if (data.Length < length)
