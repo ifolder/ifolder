@@ -1,13 +1,10 @@
 AssemblyInfo.cs
-../AcceptanceTests/SyncTests.cs
 ../Events/SimiasEventArgs.cs
 ../Events/DefaultSubscriber.cs
 ../Events/EventBroker.cs
 ../Events/EventPublisher.cs
 ../Events/EventService/EventService.cs
 ../ChangeLog/ChangeLog.cs
-../ChangeLog/ChangeLogTests.cs
-../CollectionStore/CollectionEventsTests/CollectionEventsTests.cs
 ../CollectionStore/CollectionRootChangedEventArgs.cs
 ../CollectionStore/EventSubscriber.cs
 ../CollectionStore/FileEventArgs.cs
@@ -16,7 +13,6 @@ AssemblyInfo.cs
 ../CollectionStore/AccessControl.cs
 ../CollectionStore/BaseFileNode.cs
 ../CollectionStore/Collection.cs
-../CollectionStore/CollectionStoreTests/CollectionStoreTests.cs
 ../CollectionStore/Collision.cs
 ../CollectionStore/DirNode.cs
 ../CollectionStore/Exception.cs
@@ -45,22 +41,17 @@ AssemblyInfo.cs
 ../Common/Library/SimiasLog.cs
 ../Common/Library/SimiasLogManager.cs
 ../Common/Library/SimiasSetup.cs
-../Common/Tests/CommonTests.cs
-../Common/Tests/ConfigurationTests.cs
 ../Domain/IDomainService.cs
 ../Domain/DomainAgent.cs
-../FsProvider/FsProviderTests/FsTests1.cs
 ../FsWatcher/FsWatcher.cs
 ../Invitation/Library/IInvitationProvider.cs
 ../Invitation/Library/InvitationService.cs
 ../Invitation/SmtpProvider/SmtpInvitationProvider.cs
-../Invitation/Tests/InvitationTests.cs
 ../Location/Library/DefaultLocationProvider.cs
 ../Location/Library/ILocationProvider.cs
 ../Location/Library/LocationProviderList.cs
 ../Location/Library/LocationService.cs
 ../Location/Library/mDnsLocationProvider.cs
-../Location/Tests/LocationTests.cs
 ../POBox/POBox.cs
 ../POBox/Message.cs
 ../POBox/Invitation.cs
@@ -75,7 +66,6 @@ AssemblyInfo.cs
 ../Service/Message.cs
 ../Service/ProcessServiceCtl.cs
 ../Service/ServiceCtl.cs
-../Service/ServiceTests/ServiceTests.cs
 ../Service/ServiceType.cs
 ../Service/State.cs
 ../Service/ThreadServiceCtl.cs
@@ -96,11 +86,9 @@ AssemblyInfo.cs
 ../Smtp/SmtpMail.cs
 ../Smtp/SmtpResponse.cs
 ../Smtp/SmtpStream.cs
-../Smtp/SmtpTests.cs
 ../Smtp/ToUUEncodingTransform.cs
 ../Smtp/UUAttachmentEncoder.cs
 ../SqliteProvider/SqliteProvider.cs
-../SqliteProvider/SqliteProviderTests/SqliteTests1.cs
 ../SqliteProvider/SqliteResultSet.cs
 ../SqliteProvider/SqliteWrapper/SqliteCommand.cs
 ../SqliteProvider/SqliteWrapper/SqliteConnection.cs
@@ -118,7 +106,6 @@ AssemblyInfo.cs
 ../StoreProvider/Provider.cs
 ../StoreProvider/Query.cs
 ../StoreProvider/Record.cs
-../StoreProvider/Test/ProviderTests1.cs
 ../SyncCommon/Library/Invitation.cs
 ../SyncCommon/Library/SyncChannelSinks.cs
 ../SyncCommon/Library/SyncCollection.cs
@@ -129,9 +116,7 @@ AssemblyInfo.cs
 ../SyncCommon/Library/SyncLogicFactory.cs
 ../SyncCommon/Library/SyncProperties.cs
 ../SyncCommon/Library/SyncStoreInfo.cs
-../SyncCommon/Tests/SyncCommonTests.cs
 ../SyncCommon/Library/SyncStoreService.cs
-../SyncLogicLite/Tests/SyncLogicLiteTests.cs
 ../SyncManager/Library/SyncChannel.cs
 ../SyncManager/Library/SyncChannelFactory.cs
 ../SyncManager/Library/SyncCollectionManager.cs
@@ -140,7 +125,6 @@ AssemblyInfo.cs
 ../SyncManager/Library/SyncMessages.cs
 ../SyncManager/Library/SyncPing.cs
 ../SyncManager/Library/SyncStoreManager.cs
-../SyncManager/Tests/SyncManagerTests.cs
 ../Sync/Conflict.cs
 ../Sync/Differ.cs
 ../Sync/Dredge.cs
@@ -153,4 +137,3 @@ AssemblyInfo.cs
 ../Sync/SyncUtil.cs
 ../Sync/SynkerServiceA.cs
 ../Sync/SynkerWorkerA.cs
-../Sync/TestSync.cs
