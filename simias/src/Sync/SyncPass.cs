@@ -114,7 +114,7 @@ public class SynkerServiceA: SyncCollectionService
 		{
 			//collection.StoreReference.Revert(); //TODO: what if this is second time for this collection?
 			Log.Spew("dredging server for collection '{0}'", collection.Name);
-			new Dredger(collection, true);
+			//new Dredger(collection, true);
 			Log.Spew("done dredging server for collection '{0}'", collection.Name);
 			inNode = new SyncIncomingNode(collection, true);
 			outNode = new SyncOutgoingNode(collection);
@@ -382,7 +382,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 		//TODO: we don't know the previous state of collection identity, will this always work?
 		//collection.StoreReference.Revert();
 
-		new Dredger(collection, false);
+		// new Dredger(collection, false);
 
 		SyncIncomingNode inNode = new SyncIncomingNode(collection, false);
 		SyncOutgoingNode outNode = new SyncOutgoingNode(collection);

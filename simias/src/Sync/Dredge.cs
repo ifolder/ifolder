@@ -21,12 +21,14 @@
  *
  ***********************************************************************/
 using System;
+using System.Threading;
 using System.Collections;
 using System.IO;
 using System.Diagnostics;
 
 using Simias.Storage;
 using Simias;
+using Simias.Service;
 
 namespace Simias.Sync
 {
@@ -44,7 +46,7 @@ namespace Simias.Sync
  * it as a delete and create. Dredger should always be case sensitive.
  */
 
-internal class Dredger
+public class Dredger
 {
 	Collection collection = null;
 
@@ -189,4 +191,81 @@ internal class Dredger
 }
 
 //===========================================================================
+
+	/// <summary>
+	/// Service to control the dredger.
+	/// </summary>
+	public class DredgeService : IThreadService
+	{
+		Store	store = null;
+		Thread  thread = null;
+		bool	shuttingDown;
+		bool	paused;
+		
+		private void DoDredge()
+		{
+			while (!shuttingDown)
+			{
+				try
+				{
+					if (!paused)
+					{
+						foreach (ShallowNode sn in store)
+						{
+							Collection col = new Collection(store, sn);
+							SyncCollection sCol = new SyncCollection(col);
+							switch (sCol.Role)
+							{
+								case SyncCollectionRoles.Master:
+									new Dredger(col, true);
+									break;
+								case SyncCollectionRoles.Local:
+									new Dredger(col, false);
+									break;
+							}
+						}
+					}
+					Thread.Sleep(1000 * 60);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+		#region IThreadService Members
+
+		public void Start(Simias.Configuration conf)
+		{
+			store = new Store(conf);
+			paused = shuttingDown = false;
+			thread = new Thread(new ThreadStart(DoDredge));
+			thread.IsBackground = true;
+			thread.Priority = ThreadPriority.Lowest;
+			thread.Start();
+		}
+
+		public void Resume()
+		{
+			paused = false;
+		}
+
+		public void Pause()
+		{
+			paused = true;
+		}
+
+		public void Custom(int message, string data)
+		{
+		}
+
+		public void Stop()
+		{
+			shuttingDown = true;
+			thread.Interrupt();
+			store.Dispose();
+		}
+
+		#endregion
+	}
 }

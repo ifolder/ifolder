@@ -190,9 +190,9 @@ namespace Simias.Service
 		private void installDefaultServices()
 		{
 			Install(new ProcessServiceCtl(conf, "Simias Event Service", "EventService.exe"));
-			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
 			Install(new ThreadServiceCtl(conf, "Simias File Monitor Service", "Simias", "Simias.Event.FsWatcher"));
-			//Install(new ThreadServiceCtl(conf, "multi-cast DNS Service", "mDnsService", "Simias.Service.mDnsService"));
+			Install(new ThreadServiceCtl(conf, "Simias Dredge Service", "Simias", "Simias.Sync.DredgeService"));
+			Install(new ThreadServiceCtl(conf, "Simias Sync Service", "Simias", "Simias.Sync.SyncManagerService"));
 			Install(new ProcessServiceCtl(conf, "multi-cast DNS Service", "Simias.Service.mDnsService.exe"));
 		}
 
@@ -236,7 +236,6 @@ namespace Simias.Service
 				}
 				else
 				{
-					/*
 					// Replace the existing service
 					lock (this)
 					{
@@ -245,12 +244,13 @@ namespace Simias.Service
 							ServiceCtl oldSvc = (ServiceCtl)serviceList[i];
 							if (oldSvc.Name.Equals(svc.Name))
 							{
-								serviceList[i] = svc;
+								svc.enabled = oldSvc.enabled;
+								Uninstall(oldSvc.Name);
+								Install(svc, i);
 								break;
 							}
 						}
 					}
-					*/
 				}
 			}
 		}
