@@ -79,7 +79,7 @@ namespace Novell.iFolder
 			loginTable.ColumnSpacing = 10;
 			loginTable.Homogeneous = false;
 	
-			Label nameLabel = new Label(Util.GS("User Name:"));
+			Label nameLabel = new Label(Util.GS("User name:"));
 			nameLabel.Xalign = 0;
 			loginTable.Attach(nameLabel, 0,1,0,1,
 					AttachOptions.Shrink, 0,0,0);
@@ -102,7 +102,7 @@ namespace Novell.iFolder
 			loginTable.Attach(passEntry, 1,2,1,2,
 					AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 	
-			Label serverLabel = new Label(Util.GS("Server Host:"));
+			Label serverLabel = new Label(Util.GS("Server host:"));
 			serverLabel.Xalign = 0;
 			loginTable.Attach(serverLabel, 0,1,2,3,
 					AttachOptions.Shrink, 0,0,0);
