@@ -3355,17 +3355,6 @@ buddy_signed_on_cb(GaimBuddy *buddy, void *user_data)
 static gboolean
 plugin_load(GaimPlugin *plugin)
 {
-	GaimBuddyList *blist;
-
-	blist = gaim_get_blist();
-	if (blist) {
-		g_hash_table_foreach(blist->buddies,
-							 sync_buddy_with_simias_roster,
-							 NULL);
-	} else {
-		g_print("gaim_get_blist() returned NULL\n");
-	}
-
 	gaim_signal_connect(gaim_blist_get_handle(),
 				"blist-node-extended-menu",
 				plugin,

@@ -34,6 +34,9 @@
 
 #include <simias/simias.h>
 
+#include "blist.h"
+#include "util.h"
+
 static char *po_box_id = NULL;
 
 int
@@ -42,6 +45,8 @@ on_sec_state_event(SEC_STATE_EVENT state_event, const char *message, void *data)
 	SimiasEventClient *ec = (SimiasEventClient *)data;
 	SIMIAS_NODE_TYPE node_type;
 	SimiasEventFilter event_filter;
+	GaimBuddyList *blist;
+		
 	
 	switch (state_event) {
 		case SEC_STATE_EVENT_CONNECTED:
@@ -72,7 +77,15 @@ on_sec_state_event(SEC_STATE_EVENT state_event, const char *message, void *data)
 			event_filter.data = &node_type;
 			sec_set_filter (*ec, &event_filter);
 
-			/* FIXME: Move the Sync Buddies Call from plugin_load to here */
+			/* Sync Gaim Buddies */
+			blist = gaim_get_blist();
+			if (blist) {
+				g_hash_table_foreach(blist->buddies, 
+									 sync_buddy_with_simias_roster,
+									 NULL);
+			} else {
+				g_print("gaim_get_blist() returned NULL\n");
+			}
 
 			break;
 		case SEC_STATE_EVENT_DISCONNECTED:
@@ -133,7 +146,6 @@ on_simias_node_created(SimiasNodeEvent *event, void *data)
 	int err;
 	char *ip_addr = NULL;
 	char ip_port[16];
-	char *temp;
 	
 	char *ret_host = NULL;
 	int   ret_port = 0;
