@@ -40,11 +40,9 @@ simias-dist:
 
 simias-pkg:
 	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -build -p $(PACKAGE_DIR)/Simias.pkg -f $(TMPDIR)/$(PACKAGE)-$(VERSION)/temp/Simias.dst/opt/novell/ifolder3/ -r $(PACKAGE_DIR)/Install_Resources -i $(PACKAGE_DIR)/Info.plist -d $(PACKAGE_DIR)/Description.plist
-	hdiutil create -srcfolder Simias.pkg $(PACKAGE)-$(VERSION).dmg
 
 clean-local:
 	rm -rf *.pkg
-	rm -rf *.dmg
 	rm -rf $(TMPDIR)
 
 distclean-local:
