@@ -26,7 +26,7 @@ endif
 endif
 
 install-exec-local: EventService.exe
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) --mode=644 EventService.exe $(DEBUG_FILES) $(DESTDIR)$(bindir)
     
 uninstall-local:
