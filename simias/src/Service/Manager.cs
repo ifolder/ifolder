@@ -69,6 +69,8 @@ namespace Simias.Service
 		private ManualResetEvent servicesStopped = new ManualResetEvent(true);
 		private DefaultSubscriber	subscriber = null;
 		static private long machineMemorySize = 0;
+		static private int thresholdValue = 10;
+		static private float memoryPercentage = 20;
 
 		#region Events
 		/// <summary>
@@ -143,6 +145,19 @@ namespace Simias.Service
 
 				// TODO: Remove when mono compacts the heap.
 				logger.Debug("Machine memory size = {0}MB", machineMemorySize / (1024 * 1024));
+				if (config.Exists("ClientRollOver", "MemoryUsed"))
+				{
+					string tempString = config.Get( "ClientRollOver", "PercentMemoryUsed", null);
+					memoryPercentage = Convert.ToSingle( tempString );
+					logger.Debug("Simias memory limit is {0}% of available memory ({1} bytes)", memoryPercentage, machineMemorySize);
+				}
+
+				if (config.Exists("ClientRollOver", "ThresholdTime"))
+				{
+					string tempString = config.Get("ClientRollOver", "ThresholdTime", null);
+					thresholdValue = Convert.ToInt32( tempString );
+					logger.Debug("Simias memory must exceed {0}% for {1} minutes before restarting.", memoryPercentage, thresholdValue);
+				}
 				// TODO: End
 
 				// Start a monitor thread to keep the services running.
@@ -311,7 +326,7 @@ namespace Simias.Service
 		private void Monitor()
 		{
 			// TODO: This can be removed when mono compacts the heap.
-			DateTime thresholdTime = DateTime.Now + new TimeSpan(0, 10, 0);
+			DateTime thresholdTime = DateTime.Now + new TimeSpan(0, thresholdValue, 0);
 			// TODO: End
 
 			while (true)
@@ -340,7 +355,7 @@ namespace Simias.Service
 						long simiasMemory = GetSimiasMemorySize();
 						logger.Debug("Current memory size for SimiasApp = {0}KB", simiasMemory / 1024);
 						float percentUsed = (Convert.ToSingle(GetSimiasMemorySize()) / Convert.ToSingle(machineMemorySize)) * 100;
-						if (percentUsed > 20)
+						if (percentUsed > memoryPercentage)
 						{
 							// See if the memory useage has been up for a sufficient period of time.
 							if ( DateTime.Now >= thresholdTime )
@@ -354,7 +369,7 @@ namespace Simias.Service
 						else
 						{
 							// The memory has fallen below the threshold. Restart the time.
-							thresholdTime = DateTime.Now + new TimeSpan(0, 10, 0);
+							thresholdTime = DateTime.Now + new TimeSpan(0, thresholdValue, 0);
 						}
 					}
 					// TODO: End
