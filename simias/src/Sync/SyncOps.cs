@@ -517,7 +517,7 @@ internal class SyncOps
 							}
 							stampList.Add(stamp);
 						}
-						else if (rec.Operation != ChangeLogRecord.ChangeLogOp.Deleted)
+						else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
 						{
 							NodeStamp stamp = new NodeStamp();
 							stamp.localIncarn = UInt64.MaxValue;
