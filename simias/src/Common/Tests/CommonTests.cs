@@ -120,15 +120,6 @@ namespace Simias.Tests
 		}
 
 		/// <summary>
-		/// My Dns Test
-		/// </summary>
-		[Test]
-		public void TestMyDnsExternal()
-		{
-			Console.WriteLine("My External Host: {0}", MyDns.GetExternalHostName());
-		}
-
-		/// <summary>
 		/// My Environment Test
 		/// </summary>
 		[Test]

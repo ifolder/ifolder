@@ -71,58 +71,5 @@ namespace Simias
 
 			return host;
 		}
-
-		/// <summary>
-		/// Lookup the host name of the local computer from an external source.
-		/// </summary>
-		/// <returns>The DNS host name of the local computer.</returns>
-		public static string GetExternalHostName()
-		{
-			string host = null;
-
-			try 
-			{
-				Uri uri = new Uri("http://www.ipchicken.com");
-
-				WebRequest req = WebRequest.Create(uri);
-
-				WebResponse result = req.GetResponse();
-				Stream stream = result.GetResponseStream();
-
-				StreamReader reader = new StreamReader(result.GetResponseStream(), Encoding.UTF8);
-				string html = reader.ReadToEnd();
-
-				// regular expression to find host
-				Regex regex = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
-			
-				Match match = regex.Match(html);
-
-				// found
-				if (match.Success)
-				{
-					host = match.Value;
-
-					MyTrace.WriteLine("External IP Address: {0}", host);
-				}
-
-				// regular expression to find host
-				regex = new Regex(@"Name\s+Address:\s+(?<host>\S+)\s+"); 
-			
-				match = regex.Match(html);
-
-				// found
-				if (match.Success)
-				{
-					host = match.Groups["host"].Value;
-
-					MyTrace.WriteLine("External Host: {0}", host);
-				}
-			} 
-			catch 
-			{
-			}
-
-			return host;
-		}
 	}
 }
