@@ -1,4 +1,6 @@
 #import "iFolderPrefsController.h"
+#import "iFolderDomain.h"
+#import "iFolderService.h"
 
 @implementation iFolderPrefsController
 
@@ -15,6 +17,43 @@
 
 	[toolbar setSelectedItemIdentifier:@"General"];
 
+//	NSTableColumn *tableColumn;
+	
+	// binding for "name" column
+//    tableColumn = [accounts tableColumnWithIdentifier:@"Accounts"];
+	
+//	[tableColumn bind:@"value" toObject: [[NSApp delegate] DomainsController]
+//	  withKeyPath:@"arrangedObjects.properties.Name" options:nil];
+
+
+	webService = [[iFolderService alloc] init];
+
+	@try
+	{
+		int x;
+		
+		NSArray *newDomains = [webService GetDomains];
+	
+		// add all domains that are not workgroup
+		for(x=0; x < [newDomains count]; x++)
+		{
+			iFolderDomain *dom = [newDomains objectAtIndex:x];
+			NSString *dname = [[dom properties] valueForKey:@"ID"];
+			
+			if([dname compare:WORKGROUP_DOMAIN] != 0)
+			{
+				[domainsController addObject:dom];
+			}
+		}
+
+//		[domainsController addObjects:newDomains];
+	}
+	@catch (NSException *e)
+	{
+		[[NSApp delegate] addLog:@"Reading domains failed with exception"];
+	}
+
+	modalReturnCode = 0;
 	// Setup the controls
 }
 
@@ -191,6 +230,64 @@
 	[toolbar setAllowsUserCustomization:NO];
 	[toolbar setAutosavesConfiguration:NO];
 	[[self window] setToolbar:toolbar];
+}
+
+
+
+
+- (BOOL)selectionShouldChangeInTableView:(NSTableView *)aTableView
+{
+	int selIndex = [domainsController selectionIndex];
+	iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:selIndex];
+	if([[dom properties] objectForKey:@"Authenticated"] != nil)
+	{
+		NSBeginAlertSheet(@"Save Account", @"Save", @"Don't Save", @"Cancel", 
+			[self window], self, @selector(changeSelectionResponse:returnCode:contextInfo:), nil, (void *)selIndex, 
+			@"The selected account has not been logged in to and saved.  Would you like to login and save it now?");
+	}
+	return YES;
+}
+
+
+
+- (IBAction)addDomain:(id)sender
+{
+	[domainsController add:sender];
+}
+
+
+
+- (IBAction)removeDomain:(id)sender
+{
+	[domainsController remove:sender];
+}
+
+
+
+- (IBAction)loginToDomain:(id)sender
+{
+
+}
+
+
+
+- (void)changeSelectionResponse:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	switch(returnCode)
+	{
+		case NSAlertDefaultReturn:
+			[domainsController setSelectionIndex:(int)contextInfo];
+			// login 
+//			iFolderDomain *dom = [[domainsController arrangedObjects] objectAtIndex:(int)contextInfo];
+			break;
+		case NSAlertAlternateReturn:
+			[domainsController removeObjectAtArrangedObjectIndex:(int)contextInfo];
+			break;
+		case NSAlertOtherReturn:
+		case NSAlertErrorReturn:
+			[domainsController setSelectionIndex:(int)contextInfo];
+			break;
+	}
 }
 
 @end

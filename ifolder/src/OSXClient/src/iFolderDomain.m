@@ -30,8 +30,8 @@
 {
 	if(self = [super init])
 	{
-		NSArray *keys	= [NSArray arrayWithObjects: @"Name", nil];
-		NSArray *values = [NSArray arrayWithObjects: @"New Domain", nil];
+		NSArray *keys	= [NSArray arrayWithObjects: @"Name", @"Authenticated", nil];
+		NSArray *values = [NSArray arrayWithObjects: @"New Domain", @"NO", nil];
 		
 		properties = [[NSMutableDictionary alloc]
 			initWithObjects:values forKeys:keys];
