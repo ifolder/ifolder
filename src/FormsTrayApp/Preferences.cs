@@ -1596,6 +1596,38 @@ namespace Novell.FormsTrayApp
 			}
 			catch {}
 		}
+
+		/// <summary>
+		/// Updates the domain status in the Accounts page.
+		/// </summary>
+		/// <param name="domain">The domain to update.</param>
+		public void UpdateDomainStatus(Domain domain)
+		{
+			foreach (ListViewItem lvi in accounts.Items)
+			{
+				Domain d = (Domain)lvi.Tag;
+				if (d.ID.Equals(domain.ID))
+				{
+					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
+						(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
+						: resourceManager.GetString("statusDisabled");
+
+					if (lvi.Selected)
+					{
+						login.Enabled = logout.Enabled = enableAccount.Checked = 
+							domain.DomainInfo.Active;
+						login.Visible = !domain.DomainInfo.Authenticated;
+						logout.Visible = domain.DomainInfo.Authenticated;
+					}
+					break;
+				}
+			}
+
+			if (UpdateDomain != null)
+			{
+				UpdateDomain(this, new DomainConnectEventArgs(domain.DomainInfo));
+			}
+		}
 		#endregion
 
 		#region Private Methods
@@ -2076,15 +2108,15 @@ namespace Novell.FormsTrayApp
 						if (enableAccount.Checked)
 						{
 							simiasWebService.SetDomainActive(domain.ID);
-							domain.DomainInfo.Active = login.Enabled = logout.Enabled = true;
+							domain.DomainInfo.Active = true;
 						}
 						else
 						{
 							simiasWebService.SetDomainInactive(domain.ID);
-							domain.DomainInfo.Active = login.Enabled = logout.Enabled = false;
+							domain.DomainInfo.Active = false;
 						}
 
-						updateDomainStatus(domain);
+						UpdateDomainStatus(domain);
 						updateEnabled = false;
 					}
 					catch {}
@@ -2092,26 +2124,6 @@ namespace Novell.FormsTrayApp
 			}
 
 			return result;
-		}
-
-		private void updateDomainStatus(Domain domain)
-		{
-			foreach (ListViewItem lvi in accounts.Items)
-			{
-				Domain d = (Domain)lvi.Tag;
-				if (d.ID.Equals(domain.ID))
-				{
-					lvi.SubItems[2].Text = domain.DomainInfo.Active ? 
-						(domain.DomainInfo.Authenticated ? resourceManager.GetString("statusLoggedIn") : resourceManager.GetString("statusLoggedOut"))
-						: resourceManager.GetString("statusDisabled");
-					break;
-				}
-			}
-
-			if (UpdateDomain != null)
-			{
-				UpdateDomain(this, new DomainConnectEventArgs(domain.DomainInfo));
-			}
 		}
 		#endregion
 
