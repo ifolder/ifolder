@@ -122,6 +122,11 @@ namespace Simias.Service
 				//	serviceList.Clear();
 				//	throw new ApplicationException("Services Already running");
 				//}
+
+				// Start a monitor thread to keep the services running.
+				Thread mThread = new Thread(new ThreadStart(Monitor));
+				mThread.IsBackground = true;
+				mThread.Start();
 			}
 		}
 
@@ -199,6 +204,37 @@ namespace Simias.Service
 		
 		#endregion
 
+		#region Monitor
+
+		private void Monitor()
+		{
+			while (true)
+			{
+				try
+				{
+					lock (this)
+					{
+						// Make sure all running processes are still running.
+						foreach (ServiceCtl svc in serviceList)
+						{
+							if (svc.state == State.Running && svc.HasExited)
+							{
+								// The service has exited. Restart it.
+								svc.state = State.Stopped;
+								svc.Start();
+							}
+						}
+					}
+				}
+				catch
+				{
+				}
+				Thread.Sleep(1000 * 60);
+			}
+		}
+
+		#endregion
+
 		#region Installation methods.
 
 		/// <summary>
@@ -264,7 +300,7 @@ namespace Simias.Service
 							if (oldSvc.Name.Equals(svc.Name))
 							{
 								svc.enabled = oldSvc.enabled;
-								Uninstall(oldSvc.Name);
+								InternalUninstall(oldSvc.Name);
 								if (index < i)
 									Install(svc, index);
 								else
@@ -292,6 +328,23 @@ namespace Simias.Service
 		/// <param name="svcName">The name of the service.</param>
 		public void Uninstall(string svcName)
 		{
+			if (InternalUninstall(svcName))
+			{
+				logger.Info("{0} service uninstalled", svcName);
+			}
+			else
+			{
+				logger.Warn("{0} service not installed", svcName);
+			}
+		}
+
+		/// <summary>
+		/// Unistall the specified service.
+		/// </summary>
+		/// <param name="svcName">The name of the service.</param>
+		private bool InternalUninstall(string svcName)
+		{
+			bool bStatus = false;
 			lock (this)
 			{
 				serviceList.Remove(GetService(svcName));
@@ -300,14 +353,12 @@ namespace Simias.Service
 				{
 					servicesElement.RemoveChild(el);
 					conf.SetElement(CFG_Section, CFG_Services, servicesElement);
-					logger.Info("{0} service uninstalled", svcName);
-				}
-				else
-				{
-					logger.Warn("{0} service not installed", svcName);
+					bStatus = true;
 				}
 			}
+			return bStatus;
 		}
+
 
 		#endregion
 

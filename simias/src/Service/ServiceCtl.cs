@@ -148,5 +148,10 @@ namespace Simias.Service
 			get { return enabled;}
 			set { enabled = value;}
 		}
+
+		public abstract bool HasExited
+		{
+			get;
+		}
 	}
 }

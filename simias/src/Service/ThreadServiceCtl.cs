@@ -164,6 +164,14 @@ namespace Simias.Service
 			element.SetAttribute(XmlClassAttr, classType);
 		}
 
+		public override bool HasExited
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		#endregion
 	}
 }

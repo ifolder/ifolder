@@ -222,6 +222,22 @@ namespace Simias.Service
 			element.SetAttribute(Manager.XmlTypeAttr, ServiceType.Process.ToString());
 		}
 
+		public override bool HasExited
+		{
+			get
+			{
+				if (process != null)
+				{
+					return process.HasExited;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+
 		#endregion
 	}
 }
