@@ -54,9 +54,11 @@ namespace Novell.FormsTrayApp
 		private bool shutdown = false;
 		private Domain currentDefaultDomain = null;
 		private Domain newDefaultDomain = null;
+		private Domain selectedDomain = null;
 		private ListViewItem newAccountLvi = null;
 		private bool processing = false;
 		private bool successful;
+		private bool updatePassword = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
@@ -1361,12 +1363,15 @@ namespace Novell.FormsTrayApp
 		{
 			bool result = true;
 
+			Cursor.Current = Cursors.WaitCursor;
+
 			try
 			{
 				DomainWeb domainWeb = ifWebService.ConnectToDomain(userName.Text, password.Text, server.Text);
 
 				Domain domain = new Domain(domainWeb);
-//				ListViewItem lvi = accounts.SelectedItems[0];
+
+				// Associate the new domain with the listview item.
 				newAccountLvi.SubItems[1].Text = domainWeb.Name;
 				newAccountLvi.Tag = domain;
 				newAccountLvi = null;
@@ -1377,27 +1382,35 @@ namespace Novell.FormsTrayApp
 
 				if (EnterpriseConnect != null)
 				{
+					// Fire the event telling that a new domain has been added.
 					EnterpriseConnect(this, new DomainConnectEventArgs(domainWeb));
 				}
 
-				// Update default.
 				if (domainWeb.IsDefault)
 				{
+					// Don't allow the new default to be removed.
+					removeAccount.Enabled = false;
+
+					// Remove any new default.
 					if (newDefaultDomain != null)
 					{
 						newDefaultDomain.DomainWeb.IsDefault = false;
 						newDefaultDomain = null;
 					}
 
+					// Reset the current default.
 					currentDefaultDomain.DomainWeb.IsDefault = false;
+
+					// Save the new default.
 					currentDefaultDomain = domain;
+
 					defaultServer.Checked = true;
 					defaultServer.Enabled = false;
 				}
 
-				updateAccount();
+				updateAccount(domain);
 
-				addAccount.Enabled = true;
+				addAccount.Enabled = details.Enabled = true;
 
 				try
 				{
@@ -1414,6 +1427,8 @@ namespace Novell.FormsTrayApp
 				}
 				catch (Exception ex)
 				{
+					Cursor.Current = Cursors.Default;
+
 					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("checkUpdateError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 					mmb.ShowDialog();
 				}
@@ -1425,6 +1440,8 @@ namespace Novell.FormsTrayApp
 			}
 			catch (Exception ex)
 			{
+				Cursor.Current = Cursors.Default;
+
 				result = false;
 				if (ex.Message.IndexOf("HTTP status 401") != -1)
 				{
@@ -1437,6 +1454,8 @@ namespace Novell.FormsTrayApp
 					mmb.ShowDialog();
 				}
 			}
+
+			Cursor.Current = Cursors.Default;
 
 			return result;
 		}
@@ -1473,9 +1492,12 @@ namespace Novell.FormsTrayApp
 			{
 				result = connectToEnterprise();
 			}
-			else if (!updateAccount())
+			else if (accounts.SelectedItems.Count == 1)
 			{
-				result = false;
+				if (!updateAccount((Domain)accounts.SelectedItems[0].Tag))
+				{
+					result = false;
+				}
 			}
 
 			// Check and update auto start setting.
@@ -1533,6 +1555,13 @@ namespace Novell.FormsTrayApp
 					{
 						ChangeDefaultDomain(this, new DomainConnectEventArgs(currentDefaultDomain.DomainWeb));
 					}
+
+					// If the currently selected account is not the default, enable the remove button.
+					if ((accounts.SelectedItems.Count == 1) && 
+						!((Domain)accounts.SelectedItems[0].Tag).ID.Equals(currentDefaultDomain.ID))
+					{
+						removeAccount.Enabled = true;
+					}
 				}
 				catch (Exception ex)
 				{
@@ -1548,30 +1577,18 @@ namespace Novell.FormsTrayApp
 			return result;
 		}
 
-		private bool updateAccount()
+		private bool updateAccount(Domain domain)
 		{
 			bool result = true;
 
-			if (accounts.SelectedItems.Count != 0)
+			if (domain != null)
 			{
-				Domain domain = (Domain)accounts.SelectedItems[0].Tag;
-
-/*				string userID;
-				string credentials;
-
-				// See if there is a password saved on this domain.
-				CredentialType credType = simiasWebService.GetSavedDomainCredentials(domain.ID, out userID, out credentials);
-				if ((credType == CredentialType.Basic) && (credentials != null))
-				{
-					// There are credentials saved on the domain. 
-					simiasWebService.SaveDomainCredentials(domainID, null, CredentialType.None);
-				}*/
-
-				if (!domain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
+				// Update the password, if this is not the workgroup account and the 
+				// password settings have changed.
+				if (!domain.ID.Equals(FormsTrayApp.WorkGroupDomainID) && updatePassword)
 				{
 					try
 					{
-						// TODO: only call this if the password has been changed or the state of the checkbox has changed.
 						if (rememberPassword.Checked)
 						{
 							simiasWebService.SaveDomainCredentials(domain.ID, password.Text, CredentialType.Basic);
@@ -1580,6 +1597,8 @@ namespace Novell.FormsTrayApp
 						{
 							simiasWebService.SaveDomainCredentials(domain.ID, null, CredentialType.None);
 						}
+
+						updatePassword = false;
 					}
 					catch (Exception ex)
 					{
@@ -1824,8 +1843,9 @@ namespace Novell.FormsTrayApp
 					domain.DomainWeb.IsDefault = true;
 					newDefaultDomain = domain;
 
-					// Disable the checkbox so that it cannot be unchecked.
-					defaultServer.Enabled = false;
+					// Disable the checkbox so that it cannot be unchecked and don't allow 
+					// the new default to be removed.
+					defaultServer.Enabled = removeAccount.Enabled = false;
 
 					apply.Enabled = true;
 				}
@@ -1875,11 +1895,10 @@ namespace Novell.FormsTrayApp
 
 		private void password_TextChanged(object sender, System.EventArgs e)
 		{
-			// TODO: Need to have an accountChanged variable ...
-
 			if (password.Focused)
 			{
-				apply.Enabled = true;
+				apply.Enabled = rememberPassword.Checked;
+				updatePassword = rememberPassword.Checked;
 			}
 		}
 
@@ -1893,6 +1912,7 @@ namespace Novell.FormsTrayApp
 				// Remove the new account
 				newAccountLvi = null;
 				lvi.Remove();
+				updatePassword = false;
 				addAccount.Enabled = true;
 			}
 			else
@@ -1914,6 +1934,8 @@ namespace Novell.FormsTrayApp
 							// Call delegate to remove the domain from the server dropdown list.
 							RemoveDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
 						}
+
+						updatePassword = false;
 					}
 					catch
 					{
@@ -1927,9 +1949,8 @@ namespace Novell.FormsTrayApp
 			if (rememberPassword.Focused)
 			{
 				apply.Enabled = true;
+				updatePassword = true;
 			}
-
-			// TODO: Set accountChanged variable.
 		}
 
 		private void autoLogin_CheckedChanged(object sender, System.EventArgs e)
@@ -1937,9 +1958,9 @@ namespace Novell.FormsTrayApp
 			if (autoLogin.Focused)
 			{
 				apply.Enabled = true;
-			}
 
-			// TODO: Set accountChanged variable.
+				// TODO: Set accountChanged variable.
+			}
 		}
 
 		private void timer1_Tick(object sender, System.EventArgs e)
@@ -1959,19 +1980,29 @@ namespace Novell.FormsTrayApp
 				if (MessageBox.Show(resourceManager.GetString("saveAccountPrompt"), resourceManager.GetString("saveAccountTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 				{
 					processing = true;
-//					processChanges();
 					if (!connectToEnterprise())
 					{
 						timer1.Start();
 						return;
 					}
-//					apply.Enabled = false;
 				}
 				else
 				{
 					addAccount.Enabled = true;
 					newAccountLvi.Remove();
 					newAccountLvi = null;
+				}
+			}
+
+			if (updatePassword)
+			{
+				if (MessageBox.Show(resourceManager.GetString("updatePrompt"), resourceManager.GetString("updateTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+				{
+					updateAccount(selectedDomain);
+				}
+				else
+				{
+					updatePassword = false;
 				}
 			}
 
@@ -1989,9 +2020,9 @@ namespace Novell.FormsTrayApp
 						server.Text = lvi.SubItems[1].Text;
 						password.Text = string.Empty;
 
-						Domain domain = (Domain)lvi.Tag;
+						selectedDomain = (Domain)lvi.Tag;
 
-						if (domain == null)
+						if (selectedDomain == null)
 						{
 							// This is a new account.
 							newAccountLvi = lvi;
@@ -2005,13 +2036,13 @@ namespace Novell.FormsTrayApp
 							details.Enabled = true;
 							userName.ReadOnly = server.ReadOnly = true;
 
-							defaultServer.Checked = domain.DomainWeb.IsDefault;
+							defaultServer.Checked = selectedDomain.DomainWeb.IsDefault;
 							defaultServer.Enabled = !defaultServer.Checked;
 
-							// Don't allow the default account to be removed.
-							removeAccount.Enabled = !defaultServer.Checked;
+							// Don't allow the current or new default account to be removed.
+							removeAccount.Enabled = !currentDefaultDomain.ID.Equals(selectedDomain.ID) && !defaultServer.Checked;
 
-							if (domain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
+							if (selectedDomain.ID.Equals(FormsTrayApp.WorkGroupDomainID))
 							{
 								// Don't allow the workgroup account to be modified or removed.
 								rememberPassword.Enabled = autoLogin.Enabled = 
@@ -2025,7 +2056,7 @@ namespace Novell.FormsTrayApp
 							{
 								string userID;
 								string credentials;
-								CredentialType credType = simiasWebService.GetSavedDomainCredentials(domain.ID, out userID, out credentials);
+								CredentialType credType = simiasWebService.GetSavedDomainCredentials(selectedDomain.ID, out userID, out credentials);
 								if ((credType == CredentialType.Basic) && (credentials != null))
 								{
 									// There are credentials that were saved on the domain.
@@ -2039,14 +2070,15 @@ namespace Novell.FormsTrayApp
 								MessageBox.Show(ex.Message);
 							}
 
-
-							// TODO: set auto login setting.
+							// TODO: display the auto login setting.
 						}
 					}
 				}
 			}
 			else
 			{
+				selectedDomain = null;
+
 				// Reset the controls.
 				userName.Text = server.Text = password.Text = string.Empty;
 				rememberPassword.Checked = autoLogin.Checked = defaultServer.Checked = false;

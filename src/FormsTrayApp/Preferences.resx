@@ -2902,4 +2902,10 @@
 	<data name="savePasswordError">
 		<value>An error was encountered while saving the password.</value>
 	</data>
+	<data name="updatePrompt">
+		<value>Do you want to save the changes made to this account?</value>
+	</data>
+	<data name="updateTitle">
+		<value>Save account</value>
+	</data>
 </root>
