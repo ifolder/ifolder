@@ -39,6 +39,7 @@ using Simias.POBox;
 using Simias.Service;
 using Simias.Storage;
 
+using Novell.Security.ClientPasswordManager;
 
 namespace Simias.Gaim
 {
@@ -53,6 +54,9 @@ namespace Simias.Gaim
 		/// </summary>
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private Store store = null;
+		private Simias.Location.GaimProvider gaimProvider = null;
 
 		/// <summary>
 		/// Configuration object for the Collection Store.
@@ -82,7 +86,30 @@ namespace Simias.Gaim
 			log.Debug("Start called");
 			this.config = config;
 
-			Simias.Gaim.Sync.StartSyncThread();
+			store = Store.GetStore();
+
+			//
+			// Make sure the Gaim Domain exists
+			//
+			Simias.Gaim.GaimDomain gaimDomain = null;
+			try
+			{
+				gaimDomain = new Simias.Gaim.GaimDomain(true);
+				Simias.Gaim.Sync.StartSyncThread();
+
+				// Register with the location service
+				this.gaimProvider = new Simias.Location.GaimProvider();
+
+				Simias.Location.Locate.RegisterProvider(this.gaimProvider);
+
+				// Lastly, add some fake credentials for the Gaim Domain
+				new NetCredential("iFolder", Simias.Gaim.GaimDomain.ID, true, "gaim-user", "blah");
+			}
+			catch(Exception e)
+			{
+				log.Error(e.Message);
+				log.Error(e.StackTrace);
+			}
 		}
 
 		/// <summary>
@@ -114,6 +141,10 @@ namespace Simias.Gaim
 		public void Stop()
 		{
 			log.Debug("Stop called");
+			if (this.gaimProvider != null)
+			{
+				Simias.Location.Locate.Unregister(this.gaimProvider);
+			}
 			Simias.Gaim.Sync.StopSyncThread();
 		}
 		#endregion
@@ -139,32 +170,38 @@ namespace Simias.Gaim
 		internal static int StartSyncThread()
 		{
 			log.Debug("StartSyncThread called");
+			int status = 0;
 
 			try
 			{
 				gaimDomain = new Simias.Gaim.GaimDomain(true);
+				if ( gaimDomain != null )
+				{
+					exiting = false;
+					syncEvent = new AutoResetEvent(false);
+					syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
+					syncThread.IsBackground = true;
+					syncThread.Start();
+				}
+				else
+				{
+					log.Debug("Failed to initialize the Gaim domain");
+				}
 			}
-			catch{}
-
-			if ( gaimDomain != null )
+			catch(SimiasException e)
 			{
-				exiting = false;
-				syncEvent = new AutoResetEvent(false);
-				syncThread = new Thread( new ThreadStart( Sync.SyncThread ) );
-				syncThread.IsBackground = true;
-				syncThread.Start();
-			}
-			else
-			{
-				log.Debug("Failed to initialize the Gaim domain");
+				log.Debug( e.Message );
+				log.Debug( e.StackTrace );
+				status = -1;
 			}
 
 			log.Debug("StartSyncThread finished");
-			return(0);
+			return status;
 		}
 
 		internal static int StopSyncThread()
 		{
+			int status = 0;
 			log.Debug("StopSyncThread called");
 			exiting = true;
 			try
@@ -175,14 +212,15 @@ namespace Simias.Gaim
 				Thread.Sleep(0);
 				gaimDomain = null;
 				log.Debug("StopSyncThread finished");
-				return(0);
 			}
 			catch(Exception e)
 			{
 				log.Debug("StopSyncThread failed with an exception");
 				log.Debug(e.Message);
+				status = -1;
 			}
-			return(-1);
+
+			return status;
 		}
 
 		public static int SyncNow(string data)
@@ -204,7 +242,7 @@ namespace Simias.Gaim
 
 				// Always wait after the first iteration
 				syncOnStart = false;
-				gaimDomain.SynchronizeMembers();
+//				gaimDomain.SynchronizeMembers();
 			}
 		}
 	}

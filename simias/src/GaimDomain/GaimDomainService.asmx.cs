@@ -69,7 +69,7 @@ namespace Simias.Gaim.DomainService
 		{
 			// domain
 			Simias.Gaim.GaimDomain gaimDomain = new Simias.Gaim.GaimDomain( false );
-			Simias.Storage.Domain domain = gaimDomain.GetDomain( false, "" );
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
 			if ( domain == null )
 			{
 				throw new SimiasException( "Gaim domain does not exist" );
@@ -86,7 +86,7 @@ namespace Simias.Gaim.DomainService
 		internal Member FindBuddyInDomain(Simias.Gaim.GaimDomain gaimDomain, string accountName,
 										  string accountProto, string buddyName)
 		{
-			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
 			if (domain == null) {
 				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
 			}
@@ -130,6 +130,11 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
+			if (domain == null) {
+				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
+			}
+		
 //			Simias.POBox.POBox poBox = gaimDomain.GetGaimPOBox();
 			
 //			if (poBox != null) {
@@ -168,7 +173,7 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
 			if (domain == null)
 			{
 				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
@@ -250,7 +255,7 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
 			if (domain == null)
 			{
 				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
@@ -274,7 +279,7 @@ namespace Simias.Gaim.DomainService
 			Simias.Storage.PropertyList pList = member.Properties;
 			Simias.Storage.Property p;
 			
-			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
 			if (domain == null)
 			{
 				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
@@ -375,7 +380,7 @@ namespace Simias.Gaim.DomainService
 				throw new SimiasException("Gaim Domain does not exist!");
 			}
 			
-			Simias.Storage.Domain domain = gaimDomain.GetDomain(false, null);
+			Simias.Storage.Domain domain = gaimDomain.GetDomain();
 			if (domain == null)
 			{
 				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");

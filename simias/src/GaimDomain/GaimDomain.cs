@@ -19,9 +19,6 @@
  *
  *  Author(s):
  *		Boyd Timothy <btimothy@novell.com>
- *		Brady Anderson <banderso@novell.com>
- *		(this code is a mostly copy-n-paste from SimpleServer code, which
- *		 Brady wrote)
  *
  ***********************************************************************/
 
@@ -45,24 +42,20 @@ namespace Simias.Gaim
 		#region Class Members
 
 		/// <summary>
-		/// GUID for this Gaim domain
+		/// Well known ID for Gaim Workgroup Domain
 		/// </summary>
-		private string id = "";
+		public static readonly string ID = "4a9ff9d6-8139-11d9-960e-000d936ac9c4";
 
 		/// <summary>
 		/// Friendly name for the workgroup domain.
 		/// </summary>
 		private string domainName = "Gaim Buddy List";
 		private string hostAddress;
-		private string description = "This domain consists of buddies in your Gaim Buddy List.  Add/Remove users in Gaim to add them to this domain.";
-		private string ownerMember;
-
-/*
-		private string firstName;
-		private string lastName;
-		private string emailAddress;
-		private string im;
-*/
+		private string description = "";
+		private string hostName;
+		private string userName;
+		private string userID;
+		private string poBoxID;
 
 		/// <summary>
 		/// Used to log messages.
@@ -70,20 +63,9 @@ namespace Simias.Gaim
 		private static readonly ISimiasLog log = 
 			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-/*		private string serverDocumentPath = "../../etc/SimpleServer.xml";*/
-/*		private XmlDocument serverDoc;*/
-
 		#endregion
 
 		#region Properties
-
-		/// <summary>
-		/// Gets the Gaim domain's unique ID
-		/// </summary>
-		public string ID
-		{
-			get { return(this.id); }
-		}
 
 		/// <summary>
 		/// Gets the Gaim domain's friendly ID
@@ -106,18 +88,32 @@ namespace Simias.Gaim
 		/// </summary>
 		public string Host
 		{
-			get { return(this.hostAddress); }
+			get { return(this.hostName); }
 		}
-
+		
+		/// <summary>
+		/// Gets the Gaim Domain's current user
+		/// </summary>
+		public string User
+		{
+			get { return( this.userName ); }
+		}
 		#endregion
 
 		#region Constructors
-
+		
 		/// <summary>
-		/// Constructor for creating a new GaimDomain object.
+		/// Constructor for creating a new Gaim Domain object.
 		/// </summary>
-		public GaimDomain( bool init )
+		internal GaimDomain( bool init )
 		{
+			hostName = Environment.MachineName;
+			userName = Environment.UserName + ".gaim";
+
+			description = 
+				Environment.UserName +
+				"'s Gaim Buddy List Domain";
+
 			if ( init == true )
 			{
 				this.Init();
@@ -125,11 +121,13 @@ namespace Simias.Gaim
 		}
 
 		/// <summary>
-		/// Constructor for creating a new GaimDomain object.
+		/// Constructor for creating a new Gaim Domain object.
 		/// </summary>
 		/// <param name="description">String that describes this domain.</param>
 		internal GaimDomain( bool init, string description ) 
 		{
+			hostName = Environment.MachineName;
+			userName = Environment.UserName + ".gaim";
 			this.description = description;
 
 			if ( init == true )
@@ -142,88 +140,90 @@ namespace Simias.Gaim
 		internal void Init()
 		{
 			hostAddress = MyDns.GetHostName();
-			//log.Debug("  My Address: " + hostAddress);
 			Store store = Store.GetStore();
 
 			try
 			{
-				// FIXME: Possibly ask Gaim what the user's screenname is for
-				// their default (AOL) account.
-				if (ownerMember == null || ownerMember == "")
-				{
-					ownerMember = "GaimDomainOwner";
-					// throw new Exception("Couldn't determine host username");
-				}
+				Uri localUri = Manager.LocalServiceUrl;
 
-				// The current owner of the local database will be the Gaim
-				// Domain's owner.
-				Member ldbMember = null;
+				//
+				// Verify the local Rendezvous user exists in the local database
+				//
 				LocalDatabase ldb = store.GetDatabaseObject();
-				
-				ICSList memberList = ldb.GetNodesByName(ownerMember);
-				foreach(ShallowNode shallowNode in memberList)
-				{
-					Node cNode = new Node(ldb, shallowNode);
-					Simias.Storage.Property simpleProp =
-						cNode.Properties.GetSingleProperty("GaimDomainOwner");
-					if (simpleProp != null)
-					{
-						ldbMember = new Member(cNode);
-						break;
-					}
-				}
-
-				if (ldbMember == null)
+				Member ldbMember;
+				Node memberNode = ldb.GetSingleNodeByName( userName );
+				if (memberNode == null)
 				{
 					// Create a local member which is the owner of the Gaim Domain
-					ldbMember = new Member(ownerMember, Guid.NewGuid().ToString(),
-										   Access.Rights.Admin);
-					ldbMember.IsOwner = false;
-					
-					Simias.Storage.Property simpleProp =
-						new Property("GaimDomainOwner", true);
-					simpleProp.LocalProperty = true;
-					ldbMember.Properties.AddProperty(simpleProp);
-					
-					ldb.Commit(new Node[] {ldbMember});
-				}
+					ldbMember = new Member( userName, Guid.NewGuid().ToString(), Access.Rights.Admin );
+					ldbMember.IsOwner = true;
 
-				//
-				// Verify the GaimDomain exists
-				//
-				
-				Simias.Storage.Domain gaimDomain =
-					this.GetDomain(true, ldbMember.ID);
-					
-				if (gaimDomain == null)
+					// Save the local database changes.
+					ldb.Commit( new Node[] { ldbMember } );
+				}
+				else
 				{
-					log.Error("Coudln't create or verify the Gaim domain");
-					return;
+					ldbMember = new Member( memberNode );
+				}
+
+				userID = ldbMember.ID;
+
+				//
+				// Verify the Gaim workgroup domain exists
+				//
+
+				Simias.Storage.Domain rDomain = store.GetDomain( ID );
+				if (rDomain == null)
+				{
+					// Create the Gaim Workgroup Domain
+					rDomain = 
+						new Simias.Storage.Domain(
+							store, 
+							this.domainName,
+							Simias.Gaim.GaimDomain.ID,
+							this.description, 
+							Simias.Sync.SyncRoles.Master, 
+							localUri );
+
+					rDomain.SetType( rDomain, "GaimDomain" );
+					rDomain.SetType( rDomain, "AB:AddressBook" );
+					rDomain.SetType( rDomain, "Workgroup" );
+
+					// Create the owner member for the domain.
+					Member member = 
+						new Member(
+							userName, 
+							ldbMember.ID,
+							Access.Rights.Admin );
+
+					member.IsOwner = true;
+
+					rDomain.Commit( new Node[] { rDomain, member } );
+
+					// Create the name mapping.
+					store.AddDomainIdentity( rDomain.ID, member.UserID );
 				}
 
 				//
-				// Verify the POBox for the local SimpleServer owner
+				// Verify the POBox for the local Rendezvous user
 				//
-
+			
 				Member pMember;
 				Simias.POBox.POBox poBox = null;
-				string poBoxName = "POBox:" + gaimDomain.ID + ":" + ldbMember.ID;
+				string poBoxName = "POBox:" + Simias.Gaim.GaimDomain.ID + ":" + ldbMember.ID;
 
 				try
 				{
-					poBox = Simias.POBox.POBox.FindPOBox( store, gaimDomain.ID, ldbMember.ID );
+					poBox = Simias.POBox.POBox.FindPOBox( store, Simias.Gaim.GaimDomain.ID, ldbMember.ID );
 				}
 				catch{}
 				if (poBox == null)
 				{
-					poBox = new Simias.POBox.POBox( store, poBoxName, gaimDomain.ID );
-					poBox.CreateMaster = false;
-
+					poBox = new Simias.POBox.POBox( store, poBoxName, ID );
 					pMember = 
 						new Member( ldbMember.Name, ldbMember.ID, Access.Rights.ReadWrite );
 					pMember.IsOwner = true;
 					poBox.Commit(new Node[] { poBox, pMember });
-					poBox.Commit(new Node[] { poBox });
 				}
 				else
 				{
@@ -237,77 +237,64 @@ namespace Simias.Gaim
 						poBox.Commit(new Node[] { pMember });
 					}
 				}
+
+				poBoxID = poBox.ID;
 			}
-			catch(Exception e1)
+			catch( Exception e1 )
 			{
 				log.Error(e1.Message);
 				log.Error(e1.StackTrace);
 
-				//throw e1;
+				throw e1;
 				// FIXME:: rethrow the exception
 			}			
 		}
 
-
 		#region Public Methods
 
-
-
 		/// <summary>
-		/// Method to get the Gaim Domain
-		/// If the the domain does not exist and the create flag is true
-		/// the domain will be created.  If create == false, ownerID is ignored
+		/// Checks if the local/master Gaim Domain exists.
 		/// </summary>
-		public Simias.Storage.Domain GetDomain( bool create, string ownerID )
+		/// <returns>true if the domain exists otherwise false</returns>
+		public bool Exists()
 		{
-			//
-			//  Check if the Gaim Domain exists in the store
-			//
-
+			bool exists = false;
 			Simias.Storage.Domain gaimDomain = null;
 
 			try
 			{
 				Store store = Store.GetStore();
-
-				foreach( ShallowNode sNode in store.GetDomainList() )
+				gaimDomain = store.GetDomain( ID );
+				if ( gaimDomain != null )
 				{
-					Simias.Storage.Domain tmpDomain = store.GetDomain( sNode.ID );
-					Property p = tmpDomain.Properties.GetSingleProperty( "GaimDomain" );
-					if ( p != null && (bool) p.Value == true )
-					{
-						gaimDomain = tmpDomain;
-						this.id = tmpDomain.ID;
-						break;
-					}
+					userID = gaimDomain.GetMemberByName( userName ).ID;
+					Simias.POBox.POBox pobox = 
+						Simias.POBox.POBox.FindPOBox( store, ID, userID );
+					poBoxID = pobox.ID;
+					exists = true;
 				}
+			}
+			catch{}
+			return exists;
+		}
 
-				if ( gaimDomain == null && create == true )
+		/// <summary>
+		/// Method to get the Gaim Domain
+		/// </summary>
+		public Simias.Storage.Domain GetDomain()
+		{
+			//
+			//  Check if the Gaim Domain exists in the store
+			//
+			Simias.Storage.Domain gaimDomain = null;
+
+			try
+			{
+				Store store = Store.GetStore();
+				gaimDomain = store.GetDomain(ID);
+				if (gaimDomain != null)
 				{
-					string id = Guid.NewGuid().ToString();
-					Uri localUri = Manager.LocalServiceUrl;
-
-					gaimDomain = new Simias.Storage.Domain(store, this.domainName, id,
-														   this.description,
-														   Simias.Sync.SyncRoles.Master,
-														   localUri);
-					Member domainOwner = new Member("GaimDomainOwner", ownerID, Access.Rights.Admin);
-					domainOwner.IsOwner = true;
-
-					Property p = new Property( "GaimDomain", true );
-					p.LocalProperty = true;
-					gaimDomain.Properties.AddProperty( p );
-
-					//
-					// Make sure this is an Address Book
-					//
-					gaimDomain.SetType(gaimDomain, "AB:AddressBook");
-					
-					gaimDomain.Commit(new Node[] {gaimDomain, domainOwner});
-
-					store.AddDomainIdentity(this.id, ownerID);
-
-					this.id = gaimDomain.ID;
+					return gaimDomain;
 				}
 			}
 			catch(Exception ggd)
@@ -317,15 +304,6 @@ namespace Simias.Gaim
 			}
 
 			return gaimDomain;
-		}
-
-
-
-		/// <summary>
-		/// Synchronize the Gaim Domain members to the Simias member list
-		/// </summary>
-		public void SynchronizeMembers()
-		{
 		}
 
 		/// <summary>
