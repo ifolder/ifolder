@@ -27,6 +27,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Collections;
+using System.Diagnostics;
 using Novell.iFolder;
 using Simias.Storage;
 using Novell.AddressBook;
@@ -49,6 +50,7 @@ namespace Novell.iFolder.iFolderCom
 		bool GetNextiFolderProp(out string name, out string val);
 		void InvokeAdvancedDlg([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path, bool modal);
 		void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path);
+		void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath);
 	}
 
 	/// <summary>
@@ -292,6 +294,21 @@ namespace Novell.iFolder.iFolderCom
 				newiFolder.FolderName = path;
 				newiFolder.LoadPath = dllPath;
 				newiFolder.Show();
+			}
+		}
+
+		public void ShowHelp([MarshalAs(UnmanagedType.LPWStr)] string dllPath)
+		{
+			// TODO - need to use locale-specific path
+			string helpPath = Path.Combine(dllPath, @"help\en\doc\user\data\front.html");
+
+			try
+			{
+				Process.Start(helpPath);
+			}
+			catch
+			{
+				MessageBox.Show("Unable to open help file: \n" + helpPath, "Help File Not Found");
 			}
 		}
 	}

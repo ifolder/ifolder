@@ -59,6 +59,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 	TCHAR sziFolderMenu[]= TEXT("iFolder");
 	TCHAR sziFolderPropMenu[]= TEXT("iFolder Properties...");
 	TCHAR sziFolderShareMenu[]= TEXT("Share with...");
+	TCHAR sziFolderHelpMenu[] = TEXT("Help...");
     BOOL bAppendItems= FALSE;
 
 	STGMEDIUM medium;
@@ -157,6 +158,13 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
 
 				idCmd++;
+
+				// Add the menu item for iFolder help.
+				mii.wID = idCmd;
+				mii.fType = MFT_STRING;
+				mii.dwTypeData = sziFolderHelpMenu;
+				mii.cch = lstrlen(sziFolderHelpMenu);
+				InsertMenuItem(subMenu, indexSubMenu++, TRUE, &mii);
 
 				// Add a separator before...
 				mii.fType= MFT_SEPARATOR;
@@ -327,9 +335,14 @@ STDMETHODIMP CiFolderShell::InvokeCommand(LPCMINVOKECOMMANDINFO lpcmi)
 
             case 3:
 				// Invoke the properties dialog for this folder with the iFolder tab active.
-				SHObjectProperties(NULL, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
+				SHObjectProperties(lpcmi->hwnd, SHOP_FILEPATH, m_szFileUserClickedOn, TEXT("iFolder"));
 				hr= NOERROR;
                 break;
+			case 4:
+				// Display the help.
+				m_spiFolder->ShowHelp(m_szShellPath);
+				hr = NOERROR;
+				break;
         }
     }
 
