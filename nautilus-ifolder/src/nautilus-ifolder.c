@@ -385,7 +385,7 @@ ifolder_nautilus_update_file_info (NautilusInfoProvider 	*provider,
 	} else {
 		g_print ("*** iFolder is NOT running\n");
 	}
-											 
+
 	return NAUTILUS_OPERATION_COMPLETE;
 }
 
@@ -425,10 +425,14 @@ show_ifolder_error_message (void *user_data)
 static void *
 ifolder_dialog_thread (gpointer user_data)
 {
+	NautilusMenuItem *item;
 	FILE *output;
 	char readBuffer [1024];
 	char *args = (char *)user_data;
 	char *return_str = NULL;
+
+	item = (NautilusMenuItem *)user_data;
+	args = g_object_get_data (G_OBJECT (item), "ifolder_args");
 	
 	memset (readBuffer, '\0', sizeof (readBuffer));
 
@@ -439,6 +443,12 @@ ifolder_dialog_thread (gpointer user_data)
 		g_print (args);
 		g_print ("\n");
 		free (args);
+		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
+		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
+		errMsg->title	= _("iFolder Error");
+		errMsg->message	= _("Error opening dialog.");
+		errMsg->detail	= _("Sorry, unable to open the window to perform the specified action.");
+		g_idle_add (show_ifolder_error_message, errMsg);
 		return;
 	}
 	
@@ -458,15 +468,24 @@ ifolder_dialog_thread (gpointer user_data)
 static void *
 create_ifolder_thread (gpointer user_data)
 {
+	NautilusMenuItem *item;
+	GList *files;
 	NautilusFileInfo *file;
 	gint error;
 	
-	file = (NautilusFileInfo *)user_data;
+	item = (NautilusMenuItem *)user_data;
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = NAUTILUS_FILE_INFO (files->data);
 
 	error = create_local_ifolder (file);
 	if (error) {
-		/* FIXME: Figure out how to let the user know an error happened */
 		g_print ("An error occurred creating an iFolder\n");
+		iFolderErrorMessage *errMsg = malloc (sizeof (iFolderErrorMessage));
+		errMsg->window = g_object_get_data (G_OBJECT (item), "parent_window");
+		errMsg->title	= _("iFolder Error");
+		errMsg->message	= _("The folder could not be converted.");
+		errMsg->detail	= _("Sorry, unable to convert the specified folder into an iFolder.");
+		g_idle_add (show_ifolder_error_message, errMsg);
 	} else {
 		nautilus_file_info_invalidate_extension_info (file);
 	}
@@ -477,20 +496,12 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	g_print ("Convert to iFolder selected\n");
 
-	GList *files;
-	NautilusFileInfo *file;
 	pthread_t thread;
-
-	files = g_object_get_data (G_OBJECT (item), "files");
-	file = NAUTILUS_FILE_INFO (files->data);
-//	g_object_unref (G_OBJECT (files->data));
-	if (file == NULL)
-		return;
 
 	pthread_create (&thread, 
 					NULL, 
 					create_ifolder_thread,
-					file);
+					item);
 }
 
 static void *
@@ -585,10 +596,14 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	if (strlen (args) <= 0)
 		return;
 		
+	g_object_set_data (G_OBJECT (item),
+				"ifolder_args",
+				strdup(args));
+		
 	pthread_create (&thread, 
 					NULL, 
 					ifolder_dialog_thread,
-					strdup (args));
+					item);
 }
 
 static void
@@ -627,10 +642,14 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 	if (strlen (args) <= 0)
 		return;
 		
+	g_object_set_data (G_OBJECT (item),
+				"ifolder_args",
+				strdup(args));
+		
 	pthread_create (&thread, 
 					NULL, 
 					ifolder_dialog_thread,
-					strdup (args));
+					item);
 }
 
 static void
@@ -649,10 +668,14 @@ ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 	if (strlen (args) <= 0)
 		return;
 		
+	g_object_set_data (G_OBJECT (item),
+				"ifolder_args",
+				strdup(args));
+		
 	pthread_create (&thread, 
 					NULL, 
 					ifolder_dialog_thread,
-					strdup (args));
+					item);
 }
  
 static GList *
