@@ -567,7 +567,19 @@ namespace Simias.POBoxService.Web
 			this.CollectionID = cSub.SubscriptionCollectionID;
 			this.CollectionName = cSub.SubscriptionCollectionName;
 			this.CollectionType = cSub.SubscriptionCollectionType;
-			this.CollectionUrl = cSub.SubscriptionCollectionURL;
+
+			// FIXME: got to be a better way
+			this.CollectionUrl =
+				(this.Context.Request.IsSecureConnection == true)
+				? "https://" : "http://";
+
+			this.CollectionUrl +=
+				this.Context.Request.Url.Host +
+				":" +
+				this.Context.Request.Url.Port.ToString() +
+				"/SyncService.asmx";
+
+			//this.CollectionUrl = cSub.SubscriptionCollectionURL;
 
 			this.DirNodeID = cSub.DirNodeID;
 			this.DirNodeName = cSub.DirNodeName;
