@@ -168,11 +168,12 @@ namespace Simias.Sync
 			}
 			else
 			{
-				log.Debug("No collection service for unknown collection: {0}", id);
+				log.Debug("No collection service for collection: {0}", id);
 	
-				foreach(string key in collectionManagers.Keys)
+				if (store.GetCollectionByID(id) != null)
 				{
-					log.Debug("Known collection: {0}", key);
+					// we are in a bad state with now collection manager / service
+					throw new ApplicationException("No service found for an existing collection: {0}");
 				}
 			}
 
