@@ -501,7 +501,6 @@ src/WebService/Makefile
 src/libifolder/Makefile
 src/OSXClient/Makefile
 src/OSXClient/src/config.h
-src/ClientUpgrade/Makefile
 test/Makefile
 test/iFolder/Makefile
 test/iFolderComponent/Makefile
