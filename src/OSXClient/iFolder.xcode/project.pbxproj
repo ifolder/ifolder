@@ -13,8 +13,6 @@
 				3E4F5738078C30DA00313076,
 				3E6F7ACD07B3E55A00F46F36,
 				3E6F7ACE07B3E55A00F46F36,
-				3E15669C07C5330600972388,
-				3E15669B07C5330600972388,
 			);
 			isa = PBXGroup;
 			name = OtherWIndows;
@@ -815,6 +813,10 @@
 				3EE886E907B92E8B00484B9F,
 				3EB62D0D07B9C907000C8112,
 				3EB62D0E07B9C907000C8112,
+				3E15669C07C5330600972388,
+				3E15669B07C5330600972388,
+				3EDA494207C681B7007CD1E0,
+				3EDA494307C681B7007CD1E0,
 			);
 			isa = PBXGroup;
 			name = Application;
@@ -1222,6 +1224,36 @@
 		};
 		3EB8C513079393B60082AA86 = {
 			fileRef = 3EB8C511079393B60082AA86;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDA494207C681B7007CD1E0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = MCTableView.h;
+			path = src/MCTableView.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDA494307C681B7007CD1E0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = MCTableView.m;
+			path = src/MCTableView.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EDA494407C681B7007CD1E0 = {
+			fileRef = 3EDA494207C681B7007CD1E0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EDA494507C681B7007CD1E0 = {
+			fileRef = 3EDA494307C681B7007CD1E0;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1863,6 +1895,7 @@
 				3EE2787D07C45E2100A645A0,
 				3EE278EE07C46CD500A645A0,
 				3E15669E07C5330600972388,
+				3EDA494407C681B7007CD1E0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1911,6 +1944,7 @@
 				3EE2787E07C45E2100A645A0,
 				3EE278EF07C46CD500A645A0,
 				3E15669D07C5330600972388,
+				3EDA494507C681B7007CD1E0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

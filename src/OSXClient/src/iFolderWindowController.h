@@ -93,8 +93,6 @@
 // menu validation
 - (BOOL)validateUserInterfaceItem:(id)anItem;
 
-- (NSArrayController *)DomainsController;
-
 //==========================================
 // Toolbar Methods
 //==========================================

@@ -75,7 +75,6 @@ static iFolderData *sharedInstance = nil;
 			[ifoldersController bind:@"contentArray" toObject:ifolderDataAlias
 					withKeyPath:@"selection.ifolders" options:nil];	
 
-
 		}
 		return sharedInstance;
 	}
