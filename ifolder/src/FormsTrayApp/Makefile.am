@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs
+iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdir)/GlobalProperties.cs $(srcdir)/MessageForm.cs
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
 iFolderApp_INCLUDES = 
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
@@ -10,7 +10,7 @@ iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.F
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
 DATA_FILES = App.ico ifolder_app.ico
-RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico $(srcdir)/../GtkTrayApp/ifolder-banner.png
+RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico $(srcdir)/../GtkTrayApp/ifolder-banner.png res/mail_opened.ico res/mail_closed.ico
 RESX_FILES = FormsTrayApp.resx GlobalProperties.resx
 
 EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFolderApp.exe.manifest

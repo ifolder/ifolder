@@ -137,6 +137,16 @@
                     DependentUpon = "GlobalProperties.cs"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "MessageForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MessageForm.resx"
+                    DependentUpon = "MessageForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
             </Include>
         </Files>
     </CSHARP>
