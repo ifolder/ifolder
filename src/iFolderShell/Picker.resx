@@ -1327,6 +1327,9 @@
 	<data name="memberReadError">
 		<value>An error was encountered while reading the member list.</value>
 	</data>
+	<data name="rosterNotSynced">
+		<value>The user list has not finished synchronizing from the server.  Please try again later.</value>
+	</data>
 	<data name="searchPrompt">
 		<value>&lt;Enter text to find a user&gt;</value>
 	</data>
