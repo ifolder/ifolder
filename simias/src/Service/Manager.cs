@@ -236,6 +236,7 @@ namespace Simias.Service
 				}
 				else
 				{
+					/*
 					// Replace the existing service
 					lock (this)
 					{
@@ -249,6 +250,7 @@ namespace Simias.Service
 							}
 						}
 					}
+					*/
 				}
 			}
 		}
