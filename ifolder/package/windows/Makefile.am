@@ -21,7 +21,7 @@
 #
 #######################################################################
 
-EXTRA_DIST = $(srcdir)/$(PACKAGE)-msi.ism $(srcdir)/$(PACKAGE)-msm.ism $(srcdir)/$(PACKAGE)-sdk-msm.ism
+EXTRA_DIST = $(srcdir)/ifolder-msi.ism $(srcdir)/ifolder-msm.ism $(srcdir)/ifolder-sdk-msm.ism
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
@@ -47,9 +47,9 @@ MSM_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
 SDK_MSM_FILE = $(PACKAGE)-sdk-$(VERSION)-$(RELEASE).msm
 endif
 
-MSI = $(PACKAGE)-msi
-MSM = $(PACKAGE)-msm
-SDK_MSM = $(PACKAGE)-sdk-msm
+MSI = ifolder-msi
+MSM = ifolder-msm
+SDK_MSM = ifolder-sdk-msm
 
 MSI_LOG_FILE     = issabld-$(MSI).log
 MSM_LOG_FILE     = issabld-$(MSM).log
@@ -60,8 +60,8 @@ ISSABLD_RELEASE = release
 
 DISK1         = $(ISSABLD_CONFIG)/$(ISSABLD_RELEASE)/DiskImages/DISK1
 MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
-MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,$(PACKAGE)).msm
-SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,$(PACKAGE))_sdk.msm
+MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,ifolder).msm
+SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,ifolder)_sdk.msm
 
 all: $(MSI_FILE)
 
@@ -158,7 +158,7 @@ clean-local:
 	rm -rf MSI $(MSI) $(MSM) $(SDK_MSM)
 
 distclean-local:
-	rm -rf $(COMMON_DISTCLEAN_FILES) $(PACKAGE).spec $(PACKAGE)-sdk.spec
+	rm -rf $(COMMON_DISTCLEAN_FILES) ifolder.spec
 
 maintainer-clean-local:
 	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)

@@ -1,6 +1,6 @@
 AC_INIT(src/FormsBookLib/BooksContacts.cs)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(addressbook, 0.12)
+AM_INIT_AUTOMAKE(addressbook, 1.0)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 
@@ -173,8 +173,8 @@ case $ADDRESSBOOK_OS in
 
         GLADE_SHARP_MINIMUM_VERSION=0.91
         AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
-        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:Novell.AddressBook.UI.gtk.dll"
+        UI_PKG_CONFIG_REQUIRES="addressbook = $VERSION gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
+        UI_PKG_CONFIG_LIBS="/r:Novell.AddressBook.UI.gtk.dll"
     ;;
     #
     # Linux-specific configuration
@@ -205,8 +205,8 @@ case $ADDRESSBOOK_OS in
 
         GLADE_SHARP_MINIMUM_VERSION=0.91
         AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
-        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
-        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:Novell.AddressBook.UI.gtk.dll"
+        UI_PKG_CONFIG_REQUIRES="addressbook = $VERSION gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
+        UI_PKG_CONFIG_LIBS="/r:Novell.AddressBook.UI.gtk.dll"
     ;;
     #
     # Windows-specific configuration
@@ -226,8 +226,8 @@ case $ADDRESSBOOK_OS in
         #
         # Set pkg-config variables
         #
-        PKG_CONFIG_REQUIRES=""
-        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:FormsBookLib.dll"
+        UI_PKG_CONFIG_REQUIRES="addressbook = $VERSION"
+        UI_PKG_CONFIG_LIBS="/r:FormsBookLib.dll"
         #
     	# Override Linux-like directory structure
         #
@@ -250,10 +250,17 @@ AC_SUBST(SEP)
 #
 # Set pkg-config variables
 #
+PKG_CONFIG_REQUIRES="simias >= 1.0"
 PKG_CONFIG_CONFLICTS=""
+PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll"
 AC_SUBST(PKG_CONFIG_REQUIRES)
-AC_SUBST(PKG_CONFIG_CONFLICTS)
 AC_SUBST(PKG_CONFIG_LIBS)
+AC_SUBST(PKG_CONFIG_CONFLICTS)
+
+UI_PKG_CONFIG_CONFLICTS=""
+AC_SUBST(UI_PKG_CONFIG_REQUIRES)
+AC_SUBST(UI_PKG_CONFIG_LIBS)
+AC_SUBST(UI_PKG_CONFIG_CONFLICTS)
 
 #
 # Run standard macros
@@ -331,8 +338,11 @@ fi
 #
 # Check for required packages
 #
-PKG_CHECK_MODULES(SIMIAS, simias >= 0)
+PKG_CHECK_MODULES(SIMIAS, simias >= 1.0)
 AC_SUBST(SIMIAS_LIBS)
+
+PKG_CHECK_MODULES(SIMIAS_UI, simias-ui >= 1.0)
+AC_SUBST(SIMIAS_UI_LIBS)
 
 # if using csc, convert /lib paths using cygpath
 case $CSC in
@@ -340,6 +350,7 @@ case $CSC in
         libdir_pkg=`pkg-config --variable=libdir simias`
 	libdir_cyg=`cygpath --windows $libdir_pkg | sed 's,\\\\,/,g'`
 	SIMIAS_LIBS=`echo $SIMIAS_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
+	SIMIAS_UI_LIBS=`echo $SIMIAS_UI_LIBS | sed "s,$libdir_pkg,$libdir_cyg,g"`
     ;;
 esac
 
@@ -384,6 +395,7 @@ esac
 AC_OUTPUT([
 Makefile
 addressbook.pc
+addressbook-ui.pc
 src/Makefile
 src/install-addressbook-to-gac
 src/AddressBookCmd/Makefile

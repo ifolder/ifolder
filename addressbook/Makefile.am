@@ -2,17 +2,17 @@ SUBDIRS = src
 
 DIST_SUBDIRS = $(SUBDIRS) doc package test
 
-EXTRA_DIST = tools $(srcdir)/$(PACKAGE).pc.in
+EXTRA_DIST = tools $(srcdir)/$(PACKAGE)*.pc.in
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
-	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) $(PACKAGE)*.pc $(DESTDIR)$(libdir)/pkgconfig
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE).pc
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE)*.pc
 	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
 
 clean-local:

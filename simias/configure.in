@@ -1,6 +1,6 @@
 AC_INIT(src/Common/Configuration.cs)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(simias, 0.12)
+AM_INIT_AUTOMAKE(simias, 1.0)
 VERSION=$VERSION.`date +%Y%m%d`
 AM_MAINTAINER_MODE
 
@@ -244,6 +244,13 @@ AC_SUBST(PKG_CONFIG_REQUIRES)
 AC_SUBST(PKG_CONFIG_CONFLICTS)
 AC_SUBST(PKG_CONFIG_LIBS)
 
+UI_PKG_CONFIG_REQUIRES=""
+UI_PKG_CONFIG_CONFLICTS=""
+UI_PKG_CONFIG_LIBS="/r:Simias.dll"
+AC_SUBST(UI_PKG_CONFIG_REQUIRES)
+AC_SUBST(UI_PKG_CONFIG_CONFLICTS)
+AC_SUBST(UI_PKG_CONFIG_LIBS)
+
 #
 # Run standard macros
 #
@@ -323,6 +330,7 @@ fi
 AC_OUTPUT([
 Makefile
 simias.pc
+simias-ui.pc
 src/Makefile
 src/install-simias-to-gac
 src/Common/SimiasSetup.cs

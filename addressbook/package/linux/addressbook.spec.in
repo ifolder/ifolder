@@ -36,12 +36,11 @@ Vendor       : <unknown>
 Packager     : <unknown>
 BuildRoot    : %{_tmppath}/%{name}-%{version}
 
-Requires     : simias = %{version}
+Requires     : simias >= 1.0
 Requires     : mono-core >= 1.0
 Requires     : mono-data >= 1.0
 Requires     : mono-remoting >= 1.0
 Requires     : mono-nunit >= 1.0
-Requires     : gtk-sharp >= 1.0
 Obsoletes    : %{name} <= %{version}
 
 #=============================================================================
@@ -49,6 +48,16 @@ Obsoletes    : %{name} <= %{version}
 AddressBook is a project started because the iFolder project needed an
 AddressBook.  The specifications for a "Common AddressBook" were not being
 met so the iFolder team wrote AddressBook to the "Common AddressBook" spec. 
+
+#=============================================================================
+%Package ui
+Summary      : Address Book UI
+Group        : Applications/Productivity
+Requires     : %{name} = %{version}
+Requires     : simias-ui >= 1.0
+Requires     : gtk-sharp >= 1.0
+%Description ui
+User interface components of Address Book.
 
 #=============================================================================
 %ChangeLog
@@ -123,5 +132,60 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 %Files
 %defattr(-,root,root)
-%{prefix}/*
+%dir %{prefix}/bin
+%{prefix}/bin/AddressBookCmd.exe
+%{prefix}/bin/addressbookcmd
+%{prefix}/bin/install-addressbook-to-gac
+%dir %{prefix}/lib
+%dir %{prefix}/lib/pkgconfig
+%{prefix}/lib/pkgconfig/addressbook.pc
+%dir %{prefix}/share/addressbook
+%{prefix}/share/addressbook/COPYING
+
+#=============================================================================
+%Files ui
+%defattr(-,root,root)
+%dir %{prefix}/bin
+%{prefix}/bin/InvitationAssistant.exe
+%{prefix}/bin/ColPropViewer.exe
+%{prefix}/bin/POBoxViewer.exe
+%{prefix}/bin/ContactBrowser.exe
+%{prefix}/bin/poboxviewer
+%{prefix}/bin/contactbrowser
+%{prefix}/bin/invitationassistant
+%dir %{prefix}/lib
+%dir %{prefix}/lib/pkgconfig
+%{prefix}/lib/pkgconfig/addressbook-ui.pc
+%{prefix}/lib/Novell.AddressBook.UI.gtk.dll
+%dir %{prefix}/share
+%dir %{prefix}/share/ifolder
+%dir %{prefix}/share/ifolder/glade
+%{prefix}/share/ifolder/glade/pobox-viewer.glade
+%{prefix}/share/ifolder/glade/teamspace.png
+%{prefix}/share/ifolder/glade/collection-picker.glade
+%{prefix}/share/ifolder/glade/invitation-assistant.glade
+%{prefix}/share/ifolder/glade/invitation.png
+%{prefix}/share/ifolder/glade/collection-properties.glade
+%{prefix}/share/ifolder/glade/vcardimport.png
+%{prefix}/share/ifolder/glade/vcardexport.png
+%{prefix}/share/ifolder/glade/book.png
+%{prefix}/share/ifolder/glade/contact_me.png
+%{prefix}/share/ifolder/glade/contact.png
+%{prefix}/share/ifolder/glade/blankhead.png
+%{prefix}/share/ifolder/glade/contact-browser.glade
+%{prefix}/share/ifolder/glade/contact-picker.glade
+%{prefix}/share/ifolder/glade/name-editor.glade
+%{prefix}/share/ifolder/glade/contact-editor.glade
+%dir %{prefix}/share/ifolder/images
+%{prefix}/share/ifolder/images/invitation_128.png
+%{prefix}/share/ifolder/images/invitation_16.png
+%{prefix}/share/ifolder/images/teamspace.png
+%{prefix}/share/ifolder/images/property.png
+%{prefix}/share/ifolder/images/invited-contact.png
+%{prefix}/share/ifolder/images/vcardimport.png
+%{prefix}/share/ifolder/images/vcardexport.png
+%{prefix}/share/ifolder/images/book.png
+%{prefix}/share/ifolder/images/contact.png
+%{prefix}/share/ifolder/images/contact_me.png
+%{prefix}/share/ifolder/images/blankhead.png
 

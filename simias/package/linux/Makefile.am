@@ -23,13 +23,13 @@
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/simias.spec.in
 
 RELEASE = 1
-RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
-SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
+RPM_FILE    = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
+UI_RPM_FILE = $(PACKAGE)-ui-$(VERSION)-$(RELEASE).$(target_cpu).rpm
+SRPM_FILE   = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
 
 .PHONY: simias-dist
 
-all: simias.spec simias-dist
-	rm -rf RPM
+all: simias.spec simias-dist clean
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
 	mkdir -p RPM/BUILD
@@ -41,9 +41,10 @@ all: simias.spec simias-dist
 	cp $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz RPM/SOURCES
 	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/simias.spec
 	cp RPM/RPMS/*/$(RPM_FILE) .
+	cp RPM/RPMS/*/$(UI_RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
 	@test "x" = "x$(INSTALL_PKGS)" || \
-		CMD='cp -f $(RPM_FILE) $(SRPM_FILE) "$(INSTALL_PKGS)"'; \
+		CMD='cp -f $(RPM_FILE) $(UI_RPM_FILE) $(SRPM_FILE) "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
 
@@ -54,11 +55,11 @@ simias-dist:
 		echo $$CMD; \
 		eval $$CMD
 
-install: $(RPM_FILE)
-	sudo rpm -Uvh $(RPM_FILE)
+install: $(RPM_FILE) $(UI_RPM_FILE)
+	sudo rpm -Uvh $(RPM_FILE) $(UI_RPM_FILE)
 	
 uninstall:
-	sudo rpm -e $(PACKAGE)
+	sudo rpm -e $(PACKAGE) $(PACKAGE)-ui
 
 clean-local:
 	rm -rf *.rpm RPM

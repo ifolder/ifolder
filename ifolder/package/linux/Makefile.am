@@ -23,13 +23,14 @@
 EXTRA_DIST = $(srcdir)/Makefile.am $(srcdir)/ifolder.spec.in
 
 RELEASE = 1
-RPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
-SRPM_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
+SRPM_FILE   = $(PACKAGE)-$(VERSION)-$(RELEASE).src.rpm
+RPM_FILE    = $(PACKAGE)-$(VERSION)-$(RELEASE).$(target_cpu).rpm
+UI_RPM_FILE = $(PACKAGE)-ui-$(VERSION)-$(RELEASE).$(target_cpu).rpm
+CLIENT_RPM_FILE = $(PACKAGE)-client-$(VERSION)-$(RELEASE).$(target_cpu).rpm
 
 .PHONY: ifolder-dist
 
-all: ifolder.spec ifolder-dist
-	rm -rf RPM
+all: ifolder.spec ifolder-dist clean
 	mkdir RPM
 	echo %_topdir `pwd`/RPM > $(HOME)/.rpmmacros
 	mkdir -p RPM/BUILD
@@ -40,10 +41,12 @@ all: ifolder.spec ifolder-dist
 	cp ifolder.spec RPM/SPECS
 	cp $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz RPM/SOURCES
 	rpmbuild -ba --target=$(target_triplet) RPM/SPECS/ifolder.spec
-	cp RPM/RPMS/*/$(RPM_FILE) .
 	cp RPM/SRPMS/$(SRPM_FILE) .
+	cp RPM/RPMS/*/$(RPM_FILE) .
+	cp RPM/RPMS/*/$(UI_RPM_FILE) .
+	cp RPM/RPMS/*/$(CLIENT_RPM_FILE) .
 	@test "x" = "x$(INSTALL_PKGS)" || \
-		CMD='cp -f $(RPM_FILE) $(SRPM_FILE) "$(INSTALL_PKGS)"'; \
+		CMD='cp -f $(SRPM_FILE) $(RPM_FILE) $(UI_RPM_FILE) $(CLIENT_RPM_FILE) "$(INSTALL_PKGS)"'; \
 		echo $$CMD; \
 		eval $$CMD
 	
@@ -54,11 +57,11 @@ ifolder-dist:
 		echo $$CMD; \
 		eval $$CMD
 
-install: $(RPM_FILE)
-	sudo rpm -Uvh $(RPM_FILE)
+install: $(RPM_FILE) $(UI_RPM_FILE) $(CLIENT_RPM_FILE)
+	sudo rpm -Uvh $(RPM_FILE) $(UI_RPM_FILE) $(CLIENT_RPM_FILE)
 	
 uninstall:
-	sudo rpm -e $(PACKAGE)
+	sudo rpm -e $(PACKAGE) $(PACKAGE)-ui $(PACKAGE)-client
 
 clean-local:
 	rm -rf *.rpm RPM

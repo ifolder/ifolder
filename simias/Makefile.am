@@ -4,14 +4,14 @@ DIST_SUBDIRS = $(SUBDIRS) doc package test
 
 PROJECT_FILES = $(srcdir)/Simias.sln $(srcdir)/Simias.csproj
 
-EXTRA_DIST = tools external $(srcdir)/$(PACKAGE).pc.in $(PROJECT_FILES)
+EXTRA_DIST = tools external $(srcdir)/$(PACKAGE)*.pc.in $(PROJECT_FILES)
 
 export PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 install-exec-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(INSTALL_PROGRAM) $(srcdir)/COPYING $(DESTDIR)$(datadir)/$(PACKAGE)
-	$(INSTALL_PROGRAM) $(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) $(PACKAGE)*.pc $(DESTDIR)$(libdir)/pkgconfig
 if WINDOWS
 if DEBUG	
 	$(INSTALL_PROGRAM) $(PROJECT_FILES) $(DESTDIR)$(libdir)
@@ -19,7 +19,7 @@ endif
 endif
 
 uninstall-local:
-	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE).pc
+	cd $(DESTDIR)$(libdir)/pkgconfig; rm -f $(PACKAGE)*.pc
 	cd $(DESTDIR)$(datadir)/$(PACKAGE); rm -f COPYING
 if WINDOWS
 if DEBUG	
