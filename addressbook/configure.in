@@ -95,6 +95,8 @@ case $ADDRESSBOOK_OS in
         OPTIMIZE_LDFLAGS=""
         OPTIMIZE_NUNIT_FLAGS=''
         PLATFORM_SUBDIRS=$LINUX_SUBDIRS
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
         SEP='/'
         SHARED_LIB_EXT='.so'
         SHARED_LIB_FLAG='-shared'
@@ -163,6 +165,8 @@ case $ADDRESSBOOK_OS in
         PLATFORM_SUBDIRS=$WINDOWS_SUBDIRS
         RC='rc'
         RC_FLAGS='-r'
+        REPORT_DIR='$(CYGWIN_PATH)/$(DESTDIR)$(bindir)'
+        REPORT_EXE='$(top_srcdir)/tools/Report/Report.exe'
         RES_EXT='.res'
         SEP='$(EMPTY)\\$(EMPTY)'
         SHARED_LIB_EXT='.dll'
@@ -207,6 +211,8 @@ AC_SUBST(OBJ_EXT)
 AC_SUBST(PLATFORM_SUBDIRS)
 AC_SUBST(RC)
 AC_SUBST(RCFLAGS)
+AC_SUBST(REPORT_DIR)
+AC_SUBST(REPORT_EXE)
 AC_SUBST(RES_EXT)
 AC_SUBST(ROOTDIR)
 AC_SUBST(SEP)
