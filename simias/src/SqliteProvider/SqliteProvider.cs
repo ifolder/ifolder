@@ -1230,7 +1230,7 @@ namespace Simias.Storage.Provider.Sqlite
 					{
 						// Only look for collection nodes.
 						selectNodes = string.Format(
-							"SELECT DISTINCT {0},{1},{2} FROM {3} WHERE {4} {5} AND {2} LIKE 'Collection%'", 
+							"SELECT DISTINCT {0},{1},{2} FROM {3} WHERE {4} {5}", 
 							RecordTable.Id,
 							RecordTable.Name,
 							RecordTable.Type,

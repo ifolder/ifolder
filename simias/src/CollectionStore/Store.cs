@@ -108,6 +108,14 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
+		/// Gets the Identity object that represents the currently logged on user.
+		/// </summary>
+		internal Identity CurrentUser
+		{
+			get { return identity; }
+		}
+
+		/// <summary>
 		/// Gets the event publisher object.
 		/// </summary>
 		internal EventPublisher EventPublisher
@@ -155,22 +163,6 @@ namespace Simias.Storage
 				}
 
 				return config; 
-			}
-		}
-
-		/// <summary>
-		/// Gets the Identity object that represents the currently logged on user.
-		/// </summary>
-		public Identity CurrentUser
-		{
-			get 
-			{ 
-				if ( disposed )
-				{
-					throw new DisposedException( this );
-				}
-
-				return identity; 
 			}
 		}
 
@@ -283,7 +275,7 @@ namespace Simias.Storage
 					// Make sure that the identity was found.
 					if ( identity == null )
 					{
-						throw new AccessException( localDb, String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
+						throw new DoesNotExistException( String.Format( "User {0} does not exist in the database.", Environment.UserName ) );
 					}
 
 					// Create the database lock.

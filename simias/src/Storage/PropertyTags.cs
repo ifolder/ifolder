@@ -46,21 +46,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-//		static public string Alias = "Alias";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-//		static public string ClientCredential = "ClientCredential";
-
-		/// <summary>
-		/// Well known property name;
-		/// </summary>
-//		static public string ClientPublicKey = "ClientPublicKey";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
 		static public string Collision = "Collision";
 
 		/// <summary>
@@ -146,11 +131,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-//		static public string LocalDatabase = "LocalDatabase";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
 		static public string LocalIncarnation = "LocalIncarnation";
 
 		/// <summary>
@@ -186,11 +166,6 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
-		static public string Shareable = "Shareable";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
 		static public string Syncable = "Syncable";
 
 		/// <summary>
@@ -222,13 +197,10 @@ namespace Simias.Storage
 			// with them.  Just need to know if they exist.
 			systemPropertyTable.Add( Ace, null );
 //			systemPropertyTable.Add( AddressBookType, null );
-//			systemPropertyTable.Add( Alias, null );
 			systemPropertyTable.Add( BaseSchema.ObjectId, null );
 			systemPropertyTable.Add( BaseSchema.ObjectName, null );
 			systemPropertyTable.Add( BaseSchema.ObjectType, null );
 			systemPropertyTable.Add( BaseSchema.CollectionId, null );
-//			systemPropertyTable.Add( ClientCredential, null );
-//			systemPropertyTable.Add( ClientPublicKey, null );
 			systemPropertyTable.Add( Collision, null );
 			systemPropertyTable.Add( CreationTime, null );
 			systemPropertyTable.Add( Credential, null );
@@ -245,7 +217,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( LinkReference, null );
 //			systemPropertyTable.Add( LocalAddressBook, null );
-//			systemPropertyTable.Add( LocalDatabase, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( ModifyTime, null );
@@ -253,7 +224,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( Parent, null );
 			systemPropertyTable.Add( PublicKey, null );
 			systemPropertyTable.Add( Root, null );
-			systemPropertyTable.Add( Shareable, null );
 			systemPropertyTable.Add( Syncable, null );
 			systemPropertyTable.Add( TombstoneType, null );
 			systemPropertyTable.Add( Types, null );

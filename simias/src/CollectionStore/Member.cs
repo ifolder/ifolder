@@ -40,7 +40,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the access control entry stored on this object.
 		/// </summary>
-		internal AccessControlEntry Ace
+		public AccessControlEntry Ace
 		{
 			get
 			{
@@ -58,12 +58,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets or sets whether this Member object is the collection owner.
 		/// </summary>
-		internal bool IsOwner
+		public bool IsOwner
 		{
 			get { return properties.HasProperty( PropertyTags.Owner ); }
 			set 
 			{ 
-				if ( value == true )
+				if ( value )
 				{
 					properties.ModifyNodeProperty( PropertyTags.Owner, true ); 
 				}
@@ -77,7 +77,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the public key stored on this Member object. May return null if no public key is set on the object.
 		/// </summary>
-		internal RSACryptoServiceProvider PublicKey
+		public RSACryptoServiceProvider PublicKey
 		{
 			get
 			{

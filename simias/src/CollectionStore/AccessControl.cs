@@ -185,6 +185,11 @@ namespace Simias.Storage
 		public Access.Rights Rights
 		{
 			get { return rights; }
+			set 
+			{
+				rights = value;
+				aceProperty.SetPropertyValue( id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
+			}
 		}
 		#endregion
 
@@ -251,16 +256,6 @@ namespace Simias.Storage
 				member.Properties.AddNodeProperty( aceProperty );
 			}
 		}
-
-		/// <summary>
-		/// Sets the desired access rights on the object.
-		/// </summary>
-		/// <param name="desiredRights">Rights to set on the object.</param>
-		internal void SetRights( Access.Rights desiredRights )
-		{
-			rights = desiredRights;
-			aceProperty.SetPropertyValue( id + ":" + Enum.GetName( typeof( Access.Rights ), rights ) );
-		}
 		#endregion
 	}
 
@@ -285,7 +280,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the Member object of the currently impersonating user.
 		/// </summary>
-		private Member ImpersonationMember
+		public Member ImpersonationMember
 		{
 			get { return IsImpersonating ? impersonationList.Peek() as Member : null; }
 		}
@@ -293,22 +288,9 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets whether there is a user being impersonated.
 		/// </summary>
-		private bool IsImpersonating
+		public bool IsImpersonating
 		{
 			get { return ( impersonationList.Count > 0 ) ? true : false; }
-		}
-
-		/// <summary>
-		/// Gets the current user ID if there is a user being impersonated on the collection. Otherwise
-		/// null is returned.
-		/// </summary>
-		internal string CurrentUserID
-		{
-			get 
-			{
-				Member member = ImpersonationMember;
-				return ( member != null ) ? member.UserID : null;
-			}
 		}
 		#endregion
 
@@ -320,9 +302,6 @@ namespace Simias.Storage
 		public AccessControl( Collection collection )
 		{
 			this.collection = collection;
-
-			// Start impersonating the current user on this collection so that access control will be enforced.
-			Impersonate( GetCurrentMember() );
 		}
 		#endregion
 
@@ -334,7 +313,7 @@ namespace Simias.Storage
 		/// <returns>True if the world role has the desired access rights, otherwise false.</returns>
 		private bool IsWorldAccessAllowed( Access.Rights desiredRights )
 		{
-			Member member = GetMemberFromStore( Access.World );
+			Member member = GetMember( Access.World );
 			return ( ( member != null ) && ( member.Ace.Rights >= desiredRights ) ) ? true : false;
 		}
 		#endregion
@@ -343,13 +322,13 @@ namespace Simias.Storage
 		/// <summary>
 		/// Makes the specified user owner of the collection that this object protects.
 		/// </summary>
-		/// <param name="newOwnerID">User ID to make new collection owner.</param>
+		/// <param name="newOwner">Member object that is to become the new owner.</param>
 		/// <param name="oldOwnerRight">The rights that the old owner should be assigned.</param>
 		/// <returns>An array of Nodes which need to be committed to make this operation permanent.</returns>
-		public Node[] ChangeOwner( string newOwnerID, Access.Rights oldOwnerRight )
+		public Node[] ChangeOwner( Member newOwner, Access.Rights oldOwnerRight )
 		{
 			// Find the existing owner.
-			Member oldOwner = GetMemberFromStore( collection.Owner );
+			Member oldOwner = collection.Owner;
 			if ( oldOwner == null )
 			{
 				throw new DoesNotExistException( String.Format( "The collection: {0} - ID: {1} does not have an owner.", collection.Name, collection.ID ) );
@@ -364,19 +343,12 @@ namespace Simias.Storage
 			else
 			{
 				// Set the new right for the old owner.
-				oldOwner.Ace.SetRights( oldOwnerRight );
+				oldOwner.Ace.Rights = oldOwnerRight;
 				oldOwner.IsOwner = false;
 			}
 
-			// Find the new owner.
-			Member newOwner = GetMemberFromStore( newOwnerID );
-			if ( newOwner == null )
-			{
-				throw new DoesNotExistException( String.Format( "The specified new owner - ID: {0} does not exist.", newOwnerID ) );
-			}
-
 			// Just change the rights on the current ace and reset it.
-			newOwner.Ace.SetRights( Access.Rights.Admin );
+			newOwner.Ace.Rights = Access.Rights.Admin;
 			newOwner.IsOwner = true;
 
 			Node[] nodeList = { oldOwner, newOwner };
@@ -384,44 +356,52 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the current Member object that represents the logged on user. If the Member object does
-		/// not exist, one is created.
+		/// Gets the Member object that represents the currently executing security context.
 		/// </summary>
-		/// <returns>A Member object that represents the currently logged on user.</returns>
-		public Member GetCurrentMember()
+		/// <param name="store">Store object.</param>
+		/// <param name="domainName">The domain used to map the current user to.</param>
+		/// <param name="createMember">If true, creates Member object if it does not exist.</param>
+		/// <returns>A Member object that represents the currently executing security context.</returns>
+		public Member GetCurrentMember( Store store, string domainName, bool createMember )
 		{
 			// See if there is a currently impersonating user.
 			Member member = ImpersonationMember;
 			if ( member == null )
 			{
-				// This collection is not being impersonated, go look up the Member object of the current identity
-				// in the store.
-				Identity identity = collection.StoreReference.CurrentUser;
-				string userID = identity.GetUserIDFromDomain( collection.StoreReference.LocalDb, collection.Domain );
+				// This collection is not currently being impersonated, go look up the Member object of 
+				// the current identity in the store.
+				Identity identity = store.CurrentUser;
+				string userID = identity.GetUserIDFromDomain( store.LocalDb, domainName );
 				if ( userID == null )
 				{
 					// The domain mapping has to exist or it means that we never were invited to this domain.
-					throw new DoesNotExistException( String.Format( "There is no identity mapping for domain {0}.", collection.Domain ) );
+					throw new DoesNotExistException( String.Format( "There is no identity mapping for identity {0} to domain {1}.", identity.ID, domainName ) );
 				}
 
-				// Check in the local store to see if there is an existing member. If there is not, then create
-				// a new one.
-				member = GetMemberFromStore( userID );
+				// Check in the local store to see if there is an existing member.
+				member = GetMember( userID );
 				if ( member == null )
 				{
-					// Create the Member object with all access rights and make it the owner of the collection.
-					// If the userGuid is equal to the identity.ID, then this is a workgoup domain and the public
-					// key needs to be added to the member object.
-					if ( identity.ID == userID )
+					// The Member object does not exist, we were specified to create it with full rights.
+					if ( createMember )
 					{
-						member = new Member( identity.Name, userID, Access.Rights.Admin, identity.PublicKey );
+						// If the userID is equal to the Identity ID, then the domain is the local workgroup
+						// and the public key must be used.
+						if ( userID == identity.ID )
+						{
+							member = new Member( identity.Name, userID, Access.Rights.Admin, identity.PublicKey );
+						}
+						else
+						{
+							member = new Member( identity.Name, userID, Access.Rights.Admin );
+						}
+
+						member.IsOwner = true;
 					}
 					else
 					{
-						member = new Member( identity.Name, userID, Access.Rights.Admin );
+						throw new DoesNotExistException( String.Format( "The identity {0} - ID: {1} is not a member of collection {2} - ID: {3}.", identity.Name, identity.ID, collection.Name, collection.ID ) );
 					}
-
-					member.IsOwner = true;
 				}
 			}
 
@@ -433,24 +413,13 @@ namespace Simias.Storage
 		/// </summary>
 		/// <param name="userID">User ID of the member to find.</param>
 		/// <returns>The Member object represented by the specified user guid.</returns>
-		public Member GetMemberFromStore( string userID )
+		public Member GetMember( string userID )
 		{
 			ICSList list = collection.Search( PropertyTags.Ace, userID, SearchOp.Begins );
 			ICSEnumerator e = list.GetEnumerator() as ICSEnumerator;
 			Member member = e.MoveNext() ? new Member( collection, e.Current as ShallowNode ) : null;
 			e.Dispose();
 			return member;
-		}
-
-		/// <summary>
-		/// Gets the access rights for the specified user on the collection protected by this object.
-		/// </summary>
-		/// <param name="userID">User ID to get rights for.</param>
-		/// <returns>Access rights for the specified user ID.</returns>
-		public Access.Rights GetUserRights( string userID )
-		{
-			Member member = GetMemberFromStore( userID );
-			return ( member != null ) ? member.Ace.Rights : Access.Rights.Deny;
 		}
 
 		/// <summary>
@@ -466,47 +435,20 @@ namespace Simias.Storage
 		/// <summary>
 		/// Determines if the current user has the desired access rights.
 		/// </summary>
+		/// <param name="member">Member object to check access for.</param>
 		/// <param name="desiredRights">Desired rights.</param>
 		/// <returns>True if the user has the desired access rights, otherwise false.</returns>
-		public bool IsAccessAllowed( Access.Rights desiredRights )
+		public bool IsAccessAllowed( Member member, Access.Rights desiredRights )
 		{
 			bool allowed = true;
 
-			// Is this user the database owner?
-			Member member = ImpersonationMember;
-			if ( member != null )
+			// Check if the member has sufficient rights.
+			if ( ( member.UserID != collection.ID ) && ( member.Ace.Rights < desiredRights ) )
 			{
-				// Check if the member has sufficient rights.
-				if ( member.Ace.Rights < desiredRights )
-				{
-					allowed = IsWorldAccessAllowed( desiredRights );
-				}
+				allowed = IsWorldAccessAllowed( desiredRights );
 			}
 
 			return allowed;
-		}
-
-		/// <summary>
-		/// Determines if the current user has owner rights to this collection.  This means that the
-		/// current user must be either the database owner or the collection owner.
-		/// </summary>
-		/// <returns>True if the current user is a database owner or collection owner. Otherwise false is returned.</returns>
-		public bool IsOwnerAccessAllowed()
-		{
-			// Is this user the collection owner?
-			Member member = ImpersonationMember;
-			return ( member != null ) ? member.IsOwner : true;
-		}
-
-		/// <summary>
-		/// Removes all access rights on the collection for the specified user.
-		/// </summary>
-		/// <param name="userID">User ID to remove rights for.</param>
-		/// <returns>The Node object that need to be committed in order to make this operation permanent.</returns>
-		public Node RemoveUserRights( string userID )
-		{
-			Member member = GetMemberFromStore( userID );
-			return ( member != null ) ? collection.Delete( member ) : null;
 		}
 
 		/// <summary>
@@ -519,44 +461,6 @@ namespace Simias.Storage
 			{
 				impersonationList.Pop();
 			}
-		}
-
-		/// <summary>
-		/// Sets the specified access rights for the specified user on the collection protected by this object.
-		/// </summary>
-		/// <param name="userName">Name of the user for whom rights are being set.</param>
-		/// <param name="userID">User ID to set rights for.</param>
-		/// <param name="rights">Access rights to set for the user.</param>
-		/// <param name="publicKey">Optional public key for the user. This parameter may be null.</param>
-		/// <returns>The Node object that needs to be committed in order to make the operation permanent.</returns>
-		public Node SetUserRights( string userName, string userID, Access.Rights rights, RSACryptoServiceProvider publicKey )
-		{
-			// Check if there is an existing Member object for the specified user.
-			Member member = GetMemberFromStore( userID );
-			if ( member != null )
-			{
-				if ( rights == Access.Rights.Deny )
-				{
-					// Remove the current Member object.
-					collection.Delete( member );
-				}
-				else
-				{
-					// Just change the rights on the current object.
-					member.Ace.SetRights( rights );
-				}
-			}
-			else
-			{
-				// The Member object did not exist.  If this is a deny, we don't have to do anything.
-				if ( rights != Access.Rights.Deny )
-				{
-					// Create a new member object to set on the collection.
-					member = ( publicKey == null ) ? new Member( userName, userID, rights ) : new Member( userName, userID, rights, publicKey );
-				}
-			}
-
-			return member;
 		}
 		#endregion
 	}

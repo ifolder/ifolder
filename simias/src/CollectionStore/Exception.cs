@@ -128,9 +128,10 @@ namespace Simias.Storage
 		/// Initializes a new instance of the object class where access is being requested.
 		/// </summary>
 		/// <param name="collection">Collection where access violation occurred.</param>
+		/// <param name="member">Member that is requesting the access.</param>
 		/// <param name="desiredRights">Requested access rights.</param>
-		public AccessException( Collection collection, Access.Rights desiredRights ) :
-			this ( collection, desiredRights, "Current user does not have collection modify rights." )
+		public AccessException( Collection collection, Member member, Access.Rights desiredRights ) :
+			this ( collection, member, desiredRights, "Current user does not have collection modify rights." )
 		{
 		}
 
@@ -138,14 +139,15 @@ namespace Simias.Storage
 		/// Initializes a new instance of the object class where access is being requested.
 		/// </summary>
 		/// <param name="collection">Collection where access violation occurred.</param>
+		/// <param name="member">Member that is requesting the access.</param>
 		/// <param name="desiredRights">Requested access rights.</param>
 		/// <param name="message">Message to pass to exception.</param>
-		public AccessException( Collection collection, Access.Rights desiredRights, string message ) :
+		public AccessException( Collection collection, Member member, Access.Rights desiredRights, string message ) :
 			base ( message )
 		{
 			this.collection = collection;
 			this.desiredRights = desiredRights;
-			this.currentUserGuid = collection.CurrentUserID;
+			this.currentUserGuid = member.UserID;
 			this.ownerAccess = false;
 		}
 
@@ -153,13 +155,14 @@ namespace Simias.Storage
 		/// Initializes a new instance of the object class where owner access is being requested.
 		/// </summary>
 		/// <param name="collection">Collection where access violation occurred.</param>
+		/// <param name="member">Member that is requesting the access.</param>
 		/// <param name="message">Message to pass to exception.</param>
-		public AccessException( Collection collection, string message ) :
+		public AccessException( Collection collection, Member member, string message ) :
 			base( message )
 		{
 			this.collection = collection;
 			this.desiredRights = Access.Rights.Admin;
-			this.currentUserGuid = collection.CurrentUserID;
+			this.currentUserGuid = member.UserID;
 			this.ownerAccess = true;
 		}
 		#endregion

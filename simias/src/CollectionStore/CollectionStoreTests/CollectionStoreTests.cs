@@ -48,7 +48,7 @@ namespace Simias.Storage.Tests
 		private enum TestType { TestType1, TestType2 };
 
 		// Domain to use to test with.
-		private string domainName = "CSTestDomain";
+		private string domainName = "WorkGroup";
 
 		// Object used to access the store.
 		private Store store = null;
@@ -66,12 +66,6 @@ namespace Simias.Storage.Tests
 		{
 			// Connect to the store.
 			store = new Store( new Configuration( basePath ) );
-
-			// Add a new domain to the identity object.
-			LocalDatabase localDb = store.GetDatabaseObject();
-			Identity identity = store.CurrentUser;
-			identity.AddDomainIdentity( Guid.NewGuid().ToString(), domainName );
-			localDb.Commit( identity );
 		}
 		#endregion
 
@@ -950,22 +944,21 @@ namespace Simias.Storage.Tests
 				collection2.Commit();
 
 				// Get a user that can be impersonated.
-				string userID = Guid.NewGuid().ToString();
-				collection1.SetUserAccess( "cameron", userID, Access.Rights.ReadWrite );
-				collection1.Commit();
+				Member member = new Member( "cameron", Guid.NewGuid().ToString(), Access.Rights.ReadWrite );
+				collection1.Commit( member );
 
 				collection3 = store.GetCollectionByID( collection1.ID );
 
 				try
 				{
-					collection3.Impersonate( userID );
+					collection3.Impersonate( member );
 					collection3.Properties.AddProperty( "DisplayName", "Access Collection" );
 					collection3.Commit();
 
 					try
 					{
 						// Try to change the collection ownership.
-						collection3.ChangeOwner( userID, Access.Rights.ReadOnly );
+						collection3.Commit( collection3.ChangeOwner( member, Access.Rights.ReadOnly ) );
 						throw new ApplicationException( "Change ownership access control check on impersonation failed" );
 					}
 					catch ( AccessException )
@@ -982,7 +975,9 @@ namespace Simias.Storage.Tests
 				try
 				{
 					// Try and down-grade the owner's rights.
-					collection1.ModifyUserAccess( collection1.Owner, Access.Rights.ReadWrite );
+					Member owner = collection1.Owner;
+					owner.Ace.Rights = Access.Rights.ReadOnly;
+					collection1.Commit( owner );
 					throw new ApplicationException( "Block owner rights change failed" );
 				}
 				catch ( AccessException )
@@ -991,18 +986,18 @@ namespace Simias.Storage.Tests
 				}
 
 				// Change the ownership on the collection.
-				collection3.ChangeOwner( userID, Access.Rights.ReadOnly );
+				collection3.ChangeOwner( member, Access.Rights.ReadOnly );
 				collection3.Commit();
 
 				// Make sure that it changed.
-				if ( collection3.Owner != userID )
+				if ( collection3.Owner.UserID != member.UserID )
 				{
 					throw new ApplicationException( "Collection ownership did not change" );
 				}
 
 				// Set world rights on collection2.
-				collection2.SetUserAccess( "World", Access.World, Access.Rights.ReadWrite );
-				collection2.Commit();
+				Member world = new Member( "World", Access.World, Access.Rights.ReadWrite );
+				collection2.Commit( world );
 			}
 			finally
 			{

@@ -59,15 +59,6 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
-		/// Gets the current user ID if there is a user being impersonated on the collection. Otherwise
-		/// null is returned.
-		/// </summary>
-		internal string CurrentUserID
-		{
-			get { return accessControl.CurrentUserID; }
-		}
-
-		/// <summary>
 		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
 		public string Domain
@@ -86,40 +77,22 @@ namespace Simias.Storage
 		/// <summary>
 		///  Gets the current owner of the collection.
 		/// </summary>
-		public string Owner
+		public Member Owner
 		{
 			get 
 			{ 
-				string owner = null;
+				Member owner = null;
 
 				// Find the Member object where the Owner tag exists.
 				ICSList list = Search( PropertyTags.Owner, Syntax.Boolean );
 				foreach ( ShallowNode sn in list )
 				{
-					owner = new Member( this, sn ).UserID;
+					owner = new Member( this, sn );
 					break;
 				}
 
 				return owner;
 			}
-		}
-
-		/// <summary>
-		/// Gets or sets whether this collection can be shared.  By default, a collection is always shareable.
-		/// The Collection Store cannot prevent an application from sharing a collection even though this
-		/// property is set non-shareable.  This property is only meant as a common means to indicate
-		/// shareability and must be enforced at a higher layer.
-		/// </summary>
-		public bool Shareable
-		{
-			get
-			{
-				Property p = properties.FindSingleValue( PropertyTags.Shareable );
-				bool shareable = ( p != null ) ? ( bool )p.Value : true;
-				return ( IsAccessAllowed( Access.Rights.Admin ) && shareable && Synchronizable ) ? true : false;
-			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.Shareable, value ); }
 		}
 
 		/// <summary>
@@ -138,13 +111,18 @@ namespace Simias.Storage
 		/// </summary>
 		public bool Synchronizable
 		{
-			get
-			{
-				Property p = properties.FindSingleValue( PropertyTags.Syncable );
-				return ( p != null ) ? ( bool )p.Value : true;
+			get	{ return properties.HasProperty( PropertyTags.Syncable ) ? false : true; }
+			set 
+			{ 
+				if ( value )
+				{
+					properties.DeleteSingleNodeProperty( PropertyTags.Syncable );
+				}
+				else
+				{
+					properties.ModifyNodeProperty( PropertyTags.Syncable, false ); 
+				}
 			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.Syncable, value ); }
 		}
 		#endregion
 
@@ -765,11 +743,12 @@ namespace Simias.Storage
 		/// Changes the owner of the collection and assigns the specified right to the old owner.
 		/// Only the current owner can set new ownership on the collection.
 		/// </summary>
-		/// <param name="newOwnerId">User identifier of the new owner.</param>
+		/// <param name="newOwner">Member object that is to become the new owner.</param>
 		/// <param name="oldOwnerRights">Rights to give the old owner of the collection.</param>
-		public void ChangeOwner( string newOwnerId, Access.Rights oldOwnerRights )
+		/// <returns>An array of Nodes which need to be committed to make this operation permanent.</returns>
+		public Node[] ChangeOwner( Member newOwner, Access.Rights oldOwnerRights )
 		{
-			accessControl.ChangeOwner( newOwnerId.ToLower(), oldOwnerRights );
+			return accessControl.ChangeOwner( newOwner, oldOwnerRights );
 		}
 
 		/// <summary>
@@ -833,10 +812,10 @@ namespace Simias.Storage
 			// Make sure that something is in the list.
 			if ( nodeList.Length > 0 )
 			{
-				bool performedAccessCheck = false;
-				string currentOwner = Owner;
-				Collection deleteCollection = null;
-				Collection createCollection = null;
+				bool createCollection = false;
+				bool deleteCollection = false;
+				bool hasMembers = false;
+				Member collectionOwner = null;
 
 				// Walk the commit list to see if there are any creation and deletion of the collection states.
 				foreach( Node node in nodeList )
@@ -845,73 +824,109 @@ namespace Simias.Storage
 					{
 						if ( node.Properties.State == PropertyList.PropertyListState.Delete )
 						{
-							deleteCollection = node as Collection;
+							deleteCollection = true;
 						}
 						else if ( node.Properties.State == PropertyList.PropertyListState.Add )
 						{
-							createCollection = node as Collection;
+							createCollection = true;
 						}
 					}
 					else if ( IsType( node, NodeTypes.MemberType ) )
 					{
-						if ( !performedAccessCheck )
-						{
-							// Don't need to check this again.
-							performedAccessCheck = true;
+						// Administrative access needs to be checked because collection membership has changed.
+						hasMembers = true;
 
-							// Must be admin level in order to add, modify or delete a Member object.
-							if ( !IsAccessAllowed( Access.Rights.Admin ) )
-							{
-								throw new AccessException( this, Access.Rights.ReadWrite, "Current user does not have sufficient rights to change Member objects." );
-							}
-						}
-
-						// Check to see if the owner is being changed on an existing collection.
-						if ( node.Properties.HasProperty( PropertyTags.Owner ) )
+						// Keep track of any ownership changes.
+						if ( ( node as Member ).IsOwner )
 						{
-							// This node is marked as the owner. If it is different than the current owner,
-							// make sure the current user has rights to change it.
-							if ( ( currentOwner != null ) && ( ( node as Member ).UserID != currentOwner ) )
+							// There can only be a single collection owner. Also make sure that it just isn't
+							// the same Node object being committed twice.
+							if ( ( collectionOwner != null ) && ( collectionOwner.ID != node.ID ) )
 							{
-								if ( !IsOwnerAccessAllowed() )
-								{
-									throw new AccessException( this, "Current user does not have sufficient rights to change the collection owner." );
-								}
+								throw new AlreadyExistsException( String.Format( "Owner {0} - ID: {1} already exists for collection {2} - ID: {3}.", collectionOwner.Name, collectionOwner.ID, name, id ) );
 							}
+
+							collectionOwner = node as Member;
 						}
 					}
 				}
 
 				// If the collection is both created and deleted, then there is nothing to do.
-				if ( ( deleteCollection == null ) || ( createCollection == null ) )
+				if ( !deleteCollection || !createCollection )
 				{
 					Node[] commitList;
 
 					// Delete of a collection supercedes all other operations.  It also is not subject to
 					// a rights check.
-					if ( deleteCollection != null )
+					if ( deleteCollection )
 					{
+						// Only the collection needs to be processed. All other Node objects will automatically
+						// be deleted when the collection is deleted.
 						commitList = new Node[ 1 ];
-						commitList[ 0 ] = deleteCollection;
+						commitList[ 0 ] = this;
 					}
-					else if ( createCollection != null )
+					else if ( createCollection )
 					{
-						// If a collection is being created, then a Member object containing the owner of the
-						// collection needs to be created also.
-						commitList = new Node[ nodeList.Length + 1 ];
-						nodeList.CopyTo( commitList, 0 );
-						commitList[ commitList.Length - 1 ] = accessControl.GetCurrentMember();
+						// If there is no collection owner specified, then one needs to be created.
+						if ( collectionOwner == null )
+						{
+							// If a collection is being created, then a Member object containing the owner of the
+							// collection needs to be created also.
+							commitList = new Node[ nodeList.Length + 1 ];
+							nodeList.CopyTo( commitList, 0 );
+							commitList[ commitList.Length - 1 ] = accessControl.GetCurrentMember( store, Domain, true );
+						}
+						else
+						{
+							// The owner is already specified in the list. Use the list as is.
+							commitList = nodeList;
+						}
 					}
 					else
 					{
+						// Need to get who I am in this collection so that access control can be checked.
+						Member member = accessControl.GetCurrentMember( store, Domain, false );
+
+						// If membership is changing on the collection, make sure that the current
+						// user has sufficient rights.
+						if ( hasMembers )
+						{
+							if ( !IsAccessAllowed( member, Access.Rights.Admin ) )
+							{
+								throw new AccessException( this, member, Access.Rights.Admin, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the member list.", member.Name, member.UserID ) );
+							}
+
+							// If ownership rights are changing, make sure the current user has sufficient rights.
+							if ( collectionOwner != null )
+							{
+								// Get the current owner of the collection.
+								Member currentOwner = Owner;
+
+								// See if ownership is changing and if it is, then the current user has to be
+								// the current owner.
+								if ( ( collectionOwner.UserID != currentOwner.UserID ) && ( currentOwner.UserID != member.UserID ) )
+								{
+									throw new AccessException( this, member, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection ownership.", member.Name, member.UserID ) );
+								}
+
+								// Don't allow the owner's rights to be set below admin level.
+								if ( collectionOwner.Ace.Rights != Access.Rights.Admin )
+								{
+									throw new AccessException( this, member, String.Format( "Owner {0} - ID: {1} rights cannot be downgraded.", collectionOwner.Name, collectionOwner.UserID ) );
+								}
+							}
+						}
+						else
+						{
+							// Make sure that current user has write rights to this collection.
+							if ( !IsAccessAllowed( member, Access.Rights.ReadWrite ) )
+							{
+								throw new AccessException( this, member, Access.Rights.ReadWrite, String.Format( "User {0} - ID: {1} does not have sufficient rights to change the collection.", member.Name, member.UserID ) );
+							}
+						}
+
 						// Use the passed in list.
 						commitList = nodeList;
-
-						// Make sure that current user has write rights to this collection.
-						if ( !IsAccessAllowed( Access.Rights.ReadWrite ) )
-						{
-							throw new AccessException( this, Access.Rights.ReadWrite );
-						}
 					}
 
 					try
@@ -928,7 +943,7 @@ namespace Simias.Storage
 				}
 
 				// Check if the collection was deleted.
-				if ( deleteCollection != null )
+				if ( deleteCollection )
 				{
 					// Go through each entry marking it deleted.
 					foreach( Node node in nodeList )
@@ -1094,6 +1109,26 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets the Member object that represents the currently executing security context.
+		/// </summary>
+		/// <returns>A Member object that represents the currently executing security context.</returns>
+		public Member GetCurrentMember()
+		{
+			return accessControl.GetCurrentMember( store, Domain, false );
+		}
+
+		/// <summary>
+		/// Gets the Member object associated with the specified user ID.
+		/// </summary>
+		/// <param name="userID">Identifier to look up the Member object with.</param>
+		/// <returns>The Member object associated with the specified user ID. May return null if the
+		/// Member object does not exist in the collection.</returns>
+		public Member GetMember( string userID )
+		{
+			return accessControl.GetMember( userID.ToLower() );
+		}
+
+		/// <summary>
 		/// Gets a Node object for the specified identifier.
 		/// </summary>
 		/// <param name="nodeID">Identifier uniquely naming the node.</param>
@@ -1225,16 +1260,6 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Gets the access rights for the specified user on the collection.
-		/// </summary>
-		/// <param name="userID">User ID to get rights for.</param>
-		/// <returns>Access rights for the specified user ID.</returns>
-		public Access.Rights GetUserAccess( string userID )
-		{
-			return accessControl.GetUserRights( userID.ToLower() );
-		}
-
-		/// <summary>
 		/// Returns whether the collection has collisions.
 		/// </summary>
 		/// <returns>True if the collection contains collisions, otherwise false is returned.</returns>
@@ -1259,16 +1284,9 @@ namespace Simias.Storage
 		/// <summary>
 		/// Impersonates the specified identity, if the user ID is verified.
 		/// </summary>
-		/// <param name="userID">User ID to impersonate.</param>
-		public void Impersonate( string userID )
+		/// <param name="member">Member object to impersonate.</param>
+		public void Impersonate( Member member )
 		{
-			// Is the specified user a member of this collection.
-			Member member = accessControl.GetMemberFromStore( userID.ToLower() );
-			if ( member == null )
-			{
-				throw new DoesNotExistException( String.Format( "The specified identity: {0} does not exist.", userID ) );
-			}
-
 			accessControl.Impersonate( member );
 		}
 
@@ -1291,22 +1309,23 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
-		/// Checks whether the current user has sufficient access rights for an operation.
+		/// Checks whether the specified user has sufficient access rights for an operation.
 		/// </summary>
+		/// <param name="member">Member object to check access for.</param>
 		/// <param name="desiredRights">Desired access rights.</param>
 		/// <returns>True if the user has the desired access rights, otherwise false.</returns>
-		public bool IsAccessAllowed( Access.Rights desiredRights )
+		public bool IsAccessAllowed( Member member, Access.Rights desiredRights )
 		{
-			return accessControl.IsAccessAllowed( desiredRights );
+			return accessControl.IsAccessAllowed( member, desiredRights );
 		}
 
 		/// <summary>
-		/// Checks whether the current user has sufficient owner access rights for an operation.
+		/// Gets whether the specified member has sufficient rights to share this collection.
 		/// </summary>
-		/// <returns>True if the user has owner access rights, otherwise false.</returns>
-		public bool IsOwnerAccessAllowed()
+		/// <param name="member">Member object contained by this collection.</param>
+		public bool IsShareable( Member member )
 		{
-			return accessControl.IsOwnerAccessAllowed();
+			return ( member.Ace.Rights == Access.Rights.Admin ) ? true : false;
 		}
 
 		/// <summary>
@@ -1329,24 +1348,6 @@ namespace Simias.Storage
 			}
 
 			return isType;
-		}
-
-		/// <summary>
-		/// Modifies the access rights for the specified user on the collection.
-		/// </summary>
-		/// <param name="userID">User to who's access rights are to be modified. The specified user must 
-		/// already be a member of the collection.</param>
-		/// <param name="desiredRights">New rights to assign to user.</param>
-		/// <returns>The Node object that needs to be committed in order to make the operation permanent.</returns>
-		public Node ModifyUserAccess( string userID, Access.Rights desiredRights )
-		{
-			Member member = accessControl.GetMemberFromStore( userID.ToLower() );
-			if ( member == null )
-			{
-				throw new DoesNotExistException( String.Format( "User - ID: {0} does not exist as a member of the collection.", userID ) );
-			}
-
-			return accessControl.SetUserRights( member.Name, member.UserID, desiredRights, member.PublicKey );
 		}
 
 		/// <summary>
@@ -1404,16 +1405,6 @@ namespace Simias.Storage
 					break;
 				}
 			}
-		}
-
-		/// <summary>
-		/// Removes all access rights on the collection for the specified user.
-		/// </summary>
-		/// <param name="userID">User ID to remove rights for.</param>
-		/// <returns>The Node object that needs to be committed in order for the operation to be permanent.</returns>
-		public Node RemoveUserAccess( string userID )
-		{
-			return accessControl.RemoveUserRights( userID.ToLower() );
 		}
 
 		/// <summary>
@@ -1745,31 +1736,6 @@ namespace Simias.Storage
 
 			// Set the new type.
 			node.Properties.AddNodeProperty( PropertyTags.Types, type );
-		}
-
-		/// <summary>
-		/// Sets the specified access rights for the specified user on the collection.
-		/// </summary>
-		/// <param name="userName">Name of the user for whom rights are being set.</param>
-		/// <param name="userID">User to add to the collection's access control list.</param>
-		/// <param name="desiredRights">Rights to assign to user.</param>
-		/// <returns>The Node object that needs to be committed in order to make the operation permanent.</returns>
-		public Node SetUserAccess( string userName, string userID, Access.Rights desiredRights )
-		{
-			return accessControl.SetUserRights( userName, userID.ToLower(), desiredRights, null );
-		}
-
-		/// <summary>
-		/// Sets the specified access rights for the specified user on the collection.
-		/// </summary>
-		/// <param name="userName">Name of the user for whom rights are being set.</param>
-		/// <param name="userID">User to add to the collection's access control list.</param>
-		/// <param name="desiredRights">Rights to assign to user.</param>
-		/// <param name="publicKey">Optional public key for the user. This parameter may be null.</param>
-		/// <returns>The Node object that needs to be committed in order to make the operation permanent.</returns>
-		public Node SetUserAccess( string userName, string userID, Access.Rights desiredRights, RSACryptoServiceProvider publicKey )
-		{
-			return accessControl.SetUserRights( userName, userID.ToLower(), desiredRights, publicKey );
 		}
 		#endregion
 
