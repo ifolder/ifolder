@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Agent variables
@@ -96,7 +96,7 @@ Agent_LIBPATH := $(subst /,$(SEP), $(Agent_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(Agent_LIBPATH) $(Agent_INCLUDES)
 
-Agent.dll: $(Agent_SOURCES) $(Agent_LIBS) ../config.mk
+Agent.dll: $(Agent_SOURCES) $(Agent_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Agent.Doc.xml $(CSCFLAGS) $(Agent_FLAGS) $(Agent_LIBS:%=/r:%) $(Agent_LIBPATH:%=/lib:%) $(Agent_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ AgentTests_LIBPATH := $(subst /,$(SEP), $(AgentTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(AgentTests_LIBPATH) $(AgentTests_INCLUDES)
 
-AgentTests.dll: $(AgentTests_SOURCES) $(AgentTests_LIBS) ../config.mk
+AgentTests.dll: $(AgentTests_SOURCES) $(AgentTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:AgentTests.Doc.xml $(CSCFLAGS) $(AgentTests_FLAGS) $(AgentTests_LIBS:%=/r:%) $(AgentTests_LIBPATH:%=/lib:%) $(AgentTests_SOURCES)
 

@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # CollectionStoreTests variables
@@ -96,7 +96,7 @@ CollectionStoreTests_LIBPATH := $(subst /,$(SEP), $(CollectionStoreTests_LIBPATH
 # update VPATH
 VPATH := $(VPATH) $(CollectionStoreTests_LIBPATH) $(CollectionStoreTests_INCLUDES)
 
-CollectionStoreTests.dll: $(CollectionStoreTests_SOURCES) $(CollectionStoreTests_LIBS) ../config.mk
+CollectionStoreTests.dll: $(CollectionStoreTests_SOURCES) $(CollectionStoreTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionStoreTests.Doc.xml $(CSCFLAGS) $(CollectionStoreTests_FLAGS) $(CollectionStoreTests_LIBS:%=/r:%) $(CollectionStoreTests_LIBPATH:%=/lib:%) $(CollectionStoreTests_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ CollectionStore_LIBPATH := $(subst /,$(SEP), $(CollectionStore_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(CollectionStore_LIBPATH) $(CollectionStore_INCLUDES)
 
-CollectionStore.dll: $(CollectionStore_SOURCES) $(CollectionStore_LIBS) ../config.mk
+CollectionStore.dll: $(CollectionStore_SOURCES) $(CollectionStore_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:CollectionStore.Doc.xml $(CSCFLAGS) $(CollectionStore_FLAGS) $(CollectionStore_LIBS:%=/r:%) $(CollectionStore_LIBPATH:%=/lib:%) $(CollectionStore_SOURCES)
 

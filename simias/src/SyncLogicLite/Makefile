@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # SyncLogicLite variables
@@ -96,7 +96,7 @@ SyncLogicLite_LIBPATH := $(subst /,$(SEP), $(SyncLogicLite_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncLogicLite_LIBPATH) $(SyncLogicLite_INCLUDES)
 
-SyncLogicLite.dll: $(SyncLogicLite_SOURCES) $(SyncLogicLite_LIBS) ../config.mk
+SyncLogicLite.dll: $(SyncLogicLite_SOURCES) $(SyncLogicLite_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncLogicLite.Doc.xml $(CSCFLAGS) $(SyncLogicLite_FLAGS) $(SyncLogicLite_LIBS:%=/r:%) $(SyncLogicLite_LIBPATH:%=/lib:%) $(SyncLogicLite_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ SyncLogicLiteTests_LIBPATH := $(subst /,$(SEP), $(SyncLogicLiteTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncLogicLiteTests_LIBPATH) $(SyncLogicLiteTests_INCLUDES)
 
-SyncLogicLiteTests.dll: $(SyncLogicLiteTests_SOURCES) $(SyncLogicLiteTests_LIBS) ../config.mk
+SyncLogicLiteTests.dll: $(SyncLogicLiteTests_SOURCES) $(SyncLogicLiteTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncLogicLiteTests.Doc.xml $(CSCFLAGS) $(SyncLogicLiteTests_FLAGS) $(SyncLogicLiteTests_LIBS:%=/r:%) $(SyncLogicLiteTests_LIBPATH:%=/lib:%) $(SyncLogicLiteTests_SOURCES)
 

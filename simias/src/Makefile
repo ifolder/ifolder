@@ -22,7 +22,7 @@
 #***********************************************************************/
 
 # configure makefile
-include config.mk
+include ../config.mk
 
 #=============================================================================
 # os independent component list
@@ -193,7 +193,6 @@ $(CLEAN_SUBDIRS):
 
 distclean: clean package-clean api-doc-clean doc-clean mkfiles-clean
 	$(call RM_IF_EXISTS,$(PRODUCT_NAME)-$(PRODUCT_VERSION).$(ZIP_EXT))
-	$(call RM_IF_EXISTS,config.mk)
 
 #=============================================================================
 # test
@@ -235,7 +234,6 @@ dist: clean
 	$(MKDIR) ..$(SEP)$(SOURCE_DIST)
 	$(CP_R) * ..$(SEP)$(SOURCE_DIST)
 	$(MV) ..$(SEP)$(SOURCE_DIST) $(SOURCE_DIST)
-	-$(RM) $(SOURCE_DIST)$(SEP)config.mk
 	-$(RM) $(SOURCE_DIST).$(ZIP_EXT)
 	$(ZIP_CREATE) $(SOURCE_DIST).$(ZIP_EXT)  $(SOURCE_DIST)$(SEP)\*
 	-$(RMDIR) $(SOURCE_DIST)
@@ -326,8 +324,11 @@ report:
 # File CVS History:
 #
 # $Log$
-# Revision 1.1  2004/02/21 07:02:13  cgaisford
-# Initial revision
+# Revision 1.2  2004/02/21 23:59:59  cgaisford
+# Modified the build process and structure.  Now configure can be run at the root level and then make can be run.  Cleaned up configure stuff that used to be down in src
+#
+# Revision 1.1.1.1  2004/02/21 07:02:13  cgaisford
+# This is the first checkin of Simias
 #
 #
 #=============================================================================

@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # SyncCommon variables
@@ -96,7 +96,7 @@ SyncCommon_LIBPATH := $(subst /,$(SEP), $(SyncCommon_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncCommon_LIBPATH) $(SyncCommon_INCLUDES)
 
-SyncCommon.dll: $(SyncCommon_SOURCES) $(SyncCommon_LIBS) ../config.mk
+SyncCommon.dll: $(SyncCommon_SOURCES) $(SyncCommon_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncCommon.Doc.xml $(CSCFLAGS) $(SyncCommon_FLAGS) $(SyncCommon_LIBS:%=/r:%) $(SyncCommon_LIBPATH:%=/lib:%) $(SyncCommon_SOURCES)
 
 #=============================================================================
@@ -112,6 +112,6 @@ SyncCommonTests_LIBPATH := $(subst /,$(SEP), $(SyncCommonTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(SyncCommonTests_LIBPATH) $(SyncCommonTests_INCLUDES)
 
-SyncCommonTests.dll: $(SyncCommonTests_SOURCES) $(SyncCommonTests_LIBS) ../config.mk
+SyncCommonTests.dll: $(SyncCommonTests_SOURCES) $(SyncCommonTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SyncCommonTests.Doc.xml $(CSCFLAGS) $(SyncCommonTests_FLAGS) $(SyncCommonTests_LIBS:%=/r:%) $(SyncCommonTests_LIBPATH:%=/lib:%) $(SyncCommonTests_SOURCES)
 

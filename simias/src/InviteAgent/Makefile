@@ -5,7 +5,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # InviteAgent variables
@@ -126,7 +126,7 @@ InviteAgent_LIBPATH := $(subst /,$(SEP), $(InviteAgent_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(InviteAgent_LIBPATH) $(InviteAgent_INCLUDES)
 
-InviteAgent.dll: $(InviteAgent_SOURCES) $(InviteAgent_LIBS) ../config.mk
+InviteAgent.dll: $(InviteAgent_SOURCES) $(InviteAgent_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:InviteAgent.Doc.xml $(CSCFLAGS) $(InviteAgent_FLAGS) $(InviteAgent_LIBS:%=/r:%) $(InviteAgent_LIBPATH:%=/lib:%) $(InviteAgent_SOURCES)
 
 #=============================================================================
@@ -142,7 +142,7 @@ InviteAgentConsole_LIBPATH := $(subst /,$(SEP), $(InviteAgentConsole_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(InviteAgentConsole_LIBPATH) $(InviteAgentConsole_INCLUDES)
 
-InviteAgentConsole.exe: $(InviteAgentConsole_SOURCES) $(InviteAgentConsole_LIBS) ../config.mk
+InviteAgentConsole.exe: $(InviteAgentConsole_SOURCES) $(InviteAgentConsole_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:InviteAgentConsole.Doc.xml $(CSCFLAGS) $(InviteAgentConsole_FLAGS) $(InviteAgentConsole_LIBS:%=/r:%) $(InviteAgentConsole_LIBPATH:%=/lib:%) $(InviteAgentConsole_SOURCES)
 
 #=============================================================================
@@ -158,7 +158,7 @@ InviteAgentGui_LIBPATH := $(subst /,$(SEP), $(InviteAgentGui_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(InviteAgentGui_LIBPATH) $(InviteAgentGui_INCLUDES)
 
-InviteAgentGui.exe: $(InviteAgentGui_SOURCES) $(InviteAgentGui_LIBS) ../config.mk
+InviteAgentGui.exe: $(InviteAgentGui_SOURCES) $(InviteAgentGui_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:InviteAgentGui.Doc.xml $(CSCFLAGS) $(InviteAgentGui_FLAGS) $(InviteAgentGui_LIBS:%=/r:%) $(InviteAgentGui_LIBPATH:%=/lib:%) $(InviteAgentGui_SOURCES)
 
 #=============================================================================
@@ -174,7 +174,7 @@ EmailInviteAgent_LIBPATH := $(subst /,$(SEP), $(EmailInviteAgent_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(EmailInviteAgent_LIBPATH) $(EmailInviteAgent_INCLUDES)
 
-EmailInviteAgent.dll: $(EmailInviteAgent_SOURCES) $(EmailInviteAgent_LIBS) ../config.mk
+EmailInviteAgent.dll: $(EmailInviteAgent_SOURCES) $(EmailInviteAgent_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:EmailInviteAgent.Doc.xml $(CSCFLAGS) $(EmailInviteAgent_FLAGS) $(EmailInviteAgent_LIBS:%=/r:%) $(EmailInviteAgent_LIBPATH:%=/lib:%) $(EmailInviteAgent_SOURCES)
 
 #=============================================================================
@@ -190,6 +190,6 @@ InviteAgentTests_LIBPATH := $(subst /,$(SEP), $(InviteAgentTests_LIBPATH))
 # update VPATH
 VPATH := $(VPATH) $(InviteAgentTests_LIBPATH) $(InviteAgentTests_INCLUDES)
 
-InviteAgentTests.dll: $(InviteAgentTests_SOURCES) $(InviteAgentTests_LIBS) ../config.mk
+InviteAgentTests.dll: $(InviteAgentTests_SOURCES) $(InviteAgentTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:InviteAgentTests.Doc.xml $(CSCFLAGS) $(InviteAgentTests_FLAGS) $(InviteAgentTests_LIBS:%=/r:%) $(InviteAgentTests_LIBPATH:%=/lib:%) $(InviteAgentTests_SOURCES)
 

@@ -4,7 +4,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Smtp variables
@@ -90,8 +90,8 @@ SmtpTests_LIBPATH := $(subst /,$(SEP), $(SmtpTests_LIBPATH))
 
 VPATH := $(VPATH) $(Smtp_LIBPATH) $(Smtp_INCLUDES) $(SmtpTests_LIBPATH) $(SmtpTests_INCLUDES)
 
-Smtp.dll: $(Smtp_SOURCES) $(Smtp_RESOURCE) $(Smtp_LIBS) ../config.mk
+Smtp.dll: $(Smtp_SOURCES) $(Smtp_RESOURCE) $(Smtp_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Smtp.xml $(CSCFLAGS) $(Smtp_FLAGS) $(Smtp_LIBS:%=/r:%) $(Smtp_LIBPATH:%=/lib:%) $(Smtp_SOURCES)
 
-SmtpTests.exe: $(SmtpTests_SOURCES) $(SmtpTests_RESOURCE) $(SmtpTests_LIBS) ../config.mk
+SmtpTests.exe: $(SmtpTests_SOURCES) $(SmtpTests_RESOURCE) $(SmtpTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:SmtpTests.xml $(CSCFLAGS) $(SmtpTests_FLAGS) $(SmtpTests_LIBS:%=/r:%) $(SmtpTests_LIBPATH:%=/lib:%) $(SmtpTests_SOURCES)

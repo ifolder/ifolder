@@ -4,7 +4,7 @@
 #=============================================================================
 
 # configure makefile
-include ../config.mk
+include ../../config.mk
 
 #=============================================================================
 # Configuration variables
@@ -85,8 +85,8 @@ ConfTests_LIBPATH := $(subst /,$(SEP), $(ConfTests_LIBPATH))
 
 VPATH := $(VPATH) $(Configuration_LIBPATH) $(Configuration_INCLUDES) $(ConfTests_LIBPATH) $(ConfTests_INCLUDES)
 
-Configuration.dll: $(Configuration_SOURCES) $(Configuration_RESOURCE) $(Configuration_LIBS) ../config.mk
+Configuration.dll: $(Configuration_SOURCES) $(Configuration_RESOURCE) $(Configuration_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:Configuration.xml $(CSCFLAGS) $(Configuration_FLAGS) $(Configuration_LIBS:%=/r:%) $(Configuration_LIBPATH:%=/lib:%) $(Configuration_SOURCES)
 
-ConfTests.exe: $(ConfTests_SOURCES) $(ConfTests_RESOURCE) $(ConfTests_LIBS) ../config.mk
+ConfTests.exe: $(ConfTests_SOURCES) $(ConfTests_RESOURCE) $(ConfTests_LIBS) ../../config.mk
 	$(CSC) /out:$@ /doc:ConfTests.xml $(CSCFLAGS) $(ConfTests_FLAGS) $(ConfTests_LIBS:%=/r:%) $(ConfTests_LIBPATH:%=/lib:%) $(ConfTests_SOURCES)
