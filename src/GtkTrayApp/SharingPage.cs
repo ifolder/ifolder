@@ -141,10 +141,13 @@ namespace Novell.iFolder
 
 			foreach(IFAccessControlEntry iface in ifacl)
 			{
-				SharingListHolder slh = new SharingListHolder(
+				if(iface.Contact != null)
+				{
+					SharingListHolder slh = new SharingListHolder(
 						iface.Rights, iface.Contact);
-				ContactTreeStore.AppendValues(slh);
-				guidList.Add(iface.Contact.ID);
+					ContactTreeStore.AppendValues(slh);
+					guidList.Add(iface.Contact.ID);
+				}
 			}
 
 			/*			ICSList acl = ifldr.GetShareAccess();

@@ -40,7 +40,6 @@ namespace Novell.iFolder
 		[Glade.Widget] Notebook propNoteBook = null;
 
 		Gtk.Dialog dialog; 
-		iFolderManager ifmgr;
 		SharingPage	spage;
 		SettingsPage settingsPage;
 		NodePropertyPage	nppage;
@@ -70,6 +69,19 @@ namespace Novell.iFolder
 			set
 			{
 				path = value;
+			}
+		}
+
+		public iFolder iFolder
+		{
+			get
+			{
+				return ifldr;
+			}
+
+			set
+			{
+				ifldr = value;
 			}
 		}
 
@@ -115,12 +127,20 @@ namespace Novell.iFolder
 			int rc = 0;
 			if(dialog != null)
 			{
-				ifmgr = iFolderManager.Connect();
-
-				if(ifmgr.IsiFolder(path))
+				if(ifldr == null)
 				{
-					ifldr = ifmgr.GetiFolderByPath(path);
+					iFolderManager ifmgr;
 
+					ifmgr = iFolderManager.Connect();
+
+					if(ifmgr.IsiFolder(path))
+					{
+						ifldr = ifmgr.GetiFolderByPath(path);
+					}
+				}
+
+				if(ifldr != null)
+				{
 					settingsPage = new SettingsPage();
 					settingsPage.iFolder = ifldr;
 					propNoteBook.AppendPage(settingsPage.GetWidget(), 

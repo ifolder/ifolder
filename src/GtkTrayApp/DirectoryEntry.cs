@@ -27,6 +27,22 @@ namespace Novell.iFolder
 
 	public class DirectoryEntry
 	{
+		public DirectoryInfo DirectoryInfo
+		{
+			get
+			{
+				return dirInfo;
+			}
+		}
+
+		public FileInfo FileInfo
+		{
+			get
+			{
+				return fileInfo;
+			}
+		}
+
 		private Boolean			isDirectory;
 		private DirectoryInfo	dirInfo;
 		private FileInfo		fileInfo;
@@ -42,7 +58,7 @@ namespace Novell.iFolder
 			isDirectory = false;
 			fileInfo = fInfo;
 		}
-		
+
 		private DirectoryEntry()
 		{
 			isDirectory = true;
