@@ -156,12 +156,12 @@ namespace Simias.Sync.Http
 	/// </summary>
 	public class HttpSyncProxy
 	{
-		Collection			collection;
-		string				url;
-		string				userName;
-		string				userID;
-		CookieContainer		cookies;
-		NetworkCredential	credentials;
+		Collection					collection;
+		string						url;
+		string						userName;
+		string						userID;
+		static CookieContainer		cookies = new CookieContainer();
+		NetworkCredential			credentials;
 
 
 		/// <summary>
@@ -176,7 +176,6 @@ namespace Simias.Sync.Http
 			url = collection.MasterUrl.ToString().TrimEnd('/') + "/SyncHandler.ashx";
 			this.userName = userName;
 			this.userID = userID;
-			cookies = new CookieContainer();
 			
 			// credentials
 			credentials = new Credentials(collection.ID).GetCredentials();

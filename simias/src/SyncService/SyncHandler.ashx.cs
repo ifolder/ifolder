@@ -50,7 +50,7 @@ namespace Simias.Sync.Web
 				{
 					if (method == SyncMethod.StartSync)
 					{
-						Session.Timeout = 5;
+						Session.Timeout = 2;
 						Service = new HttpService();
 						Session[ServiceString] = Service;
 						Service.StartSync(Request, Response, Session);
@@ -109,7 +109,7 @@ namespace Simias.Sync.Web
 							break;
 						case SyncMethod.EndSync:
 							Service.EndSync(Request, Response);
-							Session.Clear();
+							Session.Remove(ServiceString);
 							break;
 						default:
 							Response.StatusCode = (int)HttpStatusCode.BadRequest;
