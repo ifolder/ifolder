@@ -78,4 +78,98 @@ namespace Simias
 				logger.Fatal(this.Message, this);
 		}
 	}
+
+	/// <summary>
+	/// Version Exception.
+	/// </summary>
+	public class VersionException : SimiasException
+	{
+		/// <summary>
+		/// Generate a version exception.
+		/// </summary>
+		/// <param name="obj">The object whose version was invalid.</param>
+		/// <param name="v1">The version.</param>
+		/// <param name="v2">The expected version.</param>
+		public VersionException(string obj, string v1, string v2) :
+			base(string.Format("The {0} Version is {0} expected {1}.", obj, v1, v2))
+		{
+		}
+	}
+
+	/// <summary>
+	/// Create Exception
+	/// </summary>
+	public class CreateException : SimiasException
+	{
+		/// <summary>
+		/// Create a CreateException
+		/// </summary>
+		/// <param name="obj">The object that failed to be created.</param>
+		/// <param name="ex">The exception that caused this exception.</param>
+		public CreateException(string obj, Exception ex) :
+			base(string.Format("Failed to create {0}.", obj), ex)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Exists Exception
+	/// </summary>
+	public class ExistsException : SimiasException
+	{
+		/// <summary>
+		/// Create a ExistsException.
+		/// </summary>
+		/// <param name="obj">The object that already existed.</param>
+		public ExistsException(string obj) :
+			base(string.Format("{0} already exists.", obj))
+		{
+		}
+	}
+
+	/// <summary>
+	/// Malformed Exception
+	/// </summary>
+	public class MalformedException : SimiasException
+	{
+		/// <summary>
+		/// Create a MalformedException
+		/// </summary>
+		/// <param name="obj">The malformed object.</param>
+		public MalformedException(string obj) :
+			base(string.Format("Malformed {0} object.", obj))
+		{
+		}
+	}
+
+	/// <summary>
+	/// Open Exception
+	/// </summary>
+	public class OpenException : SimiasException
+	{
+		/// <summary>
+		/// Create an OpenException
+		/// </summary>
+		/// <param name="obj">The object that could not be opened.</param>
+		public OpenException(string obj) :
+			base(string.Format("Failed to open {0}.", obj))
+		{
+		}
+	}
+
+	/// <summary>
+	/// Search Exception.
+	/// </summary>
+	public class SearchException : SimiasException
+	{
+		/// <summary>
+		/// Create a SearchException.
+		/// </summary>
+		/// <param name="expression">The search expression.</param>
+		public SearchException(string expression) :
+			base(string.Format("Invalid Search expression = {0}.", expression))
+		{
+		}
+	}
+
 }
