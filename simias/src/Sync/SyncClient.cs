@@ -605,7 +605,7 @@ namespace Simias.Sync.Client
 			
 			// BUGBUG
 			int oldTimeout = service.Timeout;
-			service.Timeout = 5 * 1000;
+			service.Timeout = 5 * 60000;
 			// Start the Sync pass and save the rights.
 			sstamps = service.Start(si, store.GetUserIDFromDomainID(collection.Domain), out si);
 			// BUGBUG
