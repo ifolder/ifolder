@@ -145,7 +145,7 @@ namespace Simias.Tests
 				// set the sync properties for store C
 				syncPropsC = new SyncProperties(configC);
 				syncPropsC.LogicFactory = syncLogicType;
-				syncPropsB.Port = syncPropsA.Port + 2;
+				syncPropsC.Port = syncPropsA.Port + 2;
 				syncPropsC.ChannelSinks = SyncChannelSinks.Binary | SyncChannelSinks.Monitor | SyncChannelSinks.Security;
 				
 				// start the service for store A

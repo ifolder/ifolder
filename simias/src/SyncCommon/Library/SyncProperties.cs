@@ -195,8 +195,8 @@ namespace Simias.Sync
 		/// </summary>
 		public Type LogicFactory
 		{
-			get { return (Type)GetProperty(LogicFactoryPropertyName, DefaultLogicFactory); }
-			set { SetProperty(LogicFactoryPropertyName, value, true); }
+			get { return Type.GetType((string)GetProperty(LogicFactoryPropertyName, DefaultLogicFactory.AssemblyQualifiedName)); }
+			set { SetProperty(LogicFactoryPropertyName, value.AssemblyQualifiedName, true); }
 		}
 
 		/// <summary>
