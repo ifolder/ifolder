@@ -27,13 +27,18 @@
 #import "Simias.h"
 #import "AuthStatus.h"
 
+typedef struct gsoap_creds
+{
+	char *username;
+	char *password;
+} GSOAP_CREDS;
+
 @implementation SimiasService
 
-void init_simias_gsoap(struct soap *pSoap);
-void cleanup_simias_gsoap(struct soap *pSoap);
+void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
+void cleanup_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds);
 NSDictionary *getDomainProperties(struct ns1__DomainInformation *domainInfo);
 NSDictionary *getAuthStatus(struct ns1__Status *status);
-
 
 - (id)init 
 {
@@ -58,12 +63,13 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 {
 	BOOL validCreds = NO;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
     struct _ns1__ValidCredentials ns1__validCreds;
     struct _ns1__ValidCredentialsResponse ns1__validCredsResponse;
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__ValidCredentials (&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
             NULL,
@@ -75,7 +81,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		validCreds = (BOOL) ns1__validCredsResponse.ValidCredentialsResult;
     }
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return validCreds;
 }
@@ -92,6 +98,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	NSMutableArray *domains = nil;
 	
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	struct _ns1__GetDomains getDomainsMessage;
@@ -99,7 +106,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	getDomainsMessage.onlySlaves = onlySlaves;
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
     err_code = soap_call___ns1__GetDomains(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -134,7 +141,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		}
     }
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return domains;
 }
@@ -150,6 +157,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 {
 	iFolderDomain *domain = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (UserName != nil), @"UserName was nil");
@@ -163,7 +171,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	connectToDomainMessage.Password = (char *)[Password cString];
 	connectToDomainMessage.Host = (char *)[Host cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__ConnectToDomain(
 			&soap,
@@ -182,7 +190,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		curDomain = connectToDomainResponse.ConnectToDomainResult;
 		if(curDomain == NULL)
 		{
-			cleanup_simias_gsoap(&soap);
+			cleanup_simias_gsoap(&soap, &creds);
 			[NSException raise:@"Unable to connect to domain"
 							format:@"Error in ConnectToDomain"];		
 		}
@@ -191,7 +199,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		[domain setProperties:getDomainProperties(curDomain)];
     }
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return domain;
 }
@@ -205,6 +213,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void) LeaveDomain:(NSString *)domainID withOption:(BOOL)localOnly
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -215,7 +224,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	leaveDomainMessage.DomainID = (char *)[domainID cString];
 	leaveDomainMessage.LocalOnly = localOnly;
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__LeaveDomain(
 			&soap,
@@ -230,7 +239,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 					format:@"Error in LeaveDomain"];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -243,6 +252,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void)SetDomainPassword:(NSString *)domainID password:(NSString *)password
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -263,7 +273,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		saveDomainCredsMessage.type = ns1__CredentialType__Basic;
 	}
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__SetDomainCredentials(
 			&soap,
@@ -278,7 +288,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 					format:@"Error in SaveDomainCredentials"];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -292,6 +302,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 {
 	NSString *password = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -301,7 +312,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	getDomainCredsMessage.domainID = (char *)[domainID cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__GetDomainCredentials(
 			&soap,
@@ -323,7 +334,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		}
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return password;
 }
@@ -338,6 +349,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void)SetDomainActive:(NSString *)domainID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -347,7 +359,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	setDomainActiveMessage.domainID = (char *)[domainID cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__SetDomainActive(
 			&soap,
@@ -362,7 +374,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 					format:@"Error in SetDomainActive"];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -375,6 +387,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void)SetDomainInactive:(NSString *)domainID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -384,7 +397,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	setDomainInactiveMessage.domainID = (char *)[domainID cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__SetDomainInactive(
 			&soap,
@@ -399,7 +412,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 					format:@"Error in SetDomainInactive"];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -412,6 +425,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void) SetDefaultDomain:(NSString *)domainID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -421,7 +435,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	setDefaultDomainMessage.domainID = (char *)[domainID cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__SetDefaultDomain(
 			&soap,
@@ -436,7 +450,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 					format:@"Error in SetDefaultDomain"];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -450,6 +464,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 {
 	AuthStatus *authStatus = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -461,7 +476,8 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	loginToDomainMessage.domainID = (char *)[domainID cString];
 	loginToDomainMessage.password = (char *)[password cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
+
     err_code = soap_call___ns1__LoginToRemoteDomain(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -480,7 +496,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		status = loginToDomainResponse.LoginToRemoteDomainResult;
 		if(status == NULL)
 		{
-			cleanup_simias_gsoap(&soap);
+			cleanup_simias_gsoap(&soap, &creds);
 			[NSException raise:@"Authentication returned null object"
 							format:@"Error in AuthenticateToDomain"];		
 		}
@@ -489,7 +505,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		[authStatus setProperties:getAuthStatus(status)];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return authStatus;
 }
@@ -506,6 +522,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	SecCertificateRef certRef = NULL;
 
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (host != nil), @"host was nil");
@@ -515,7 +532,8 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 	
 	getCertMessage.host = (char *)[host cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
+
     err_code = soap_call___ns1__GetCertificate(
 			&soap,
             [simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -535,7 +553,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		certResult = getCertResponse.GetCertificateResult;
 		if(certResult == NULL)
 		{
-			cleanup_simias_gsoap(&soap);
+			cleanup_simias_gsoap(&soap, &creds);
 			[NSException raise:@"GetCertificate returned null object"
 							format:@"Error in GetCertificate"];		
 		}
@@ -553,7 +571,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		}
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return certRef;
 }
@@ -567,6 +585,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void) StoreCertificate:(SecCertificateRef)cert forHost:(NSString *)host
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (host != nil), @"host was nil");
@@ -589,7 +608,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		storeCertMessage.host = (char *)[host cString];
 		storeCertMessage.certificate = &certBinary;
 
-		init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 		err_code = soap_call___ns1__StoreCertificate(
 				&soap,
 				[simiasURL cString], //http://127.0.0.1:8086/simias10/Simias.asmx
@@ -604,7 +623,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		}
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -617,6 +636,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 -(void) DisableDomainAutoLogin:(NSString *)domainID
 {
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -626,7 +646,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	disableDomainMessage.domainID = (char *)[domainID cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__DisableDomainAutoLogin(
 			&soap,
@@ -641,7 +661,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 					format:@"Error in DisableDomainAutoLogin"];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 }
 
 
@@ -655,6 +675,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 {
 	AuthStatus *authStatus = nil;
     struct soap soap;
+	GSOAP_CREDS creds;
     int err_code;
 
 	NSAssert( (domainID != nil), @"domainID was nil");
@@ -664,7 +685,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 
 	logoutDomainMessage.domainID = (char *)[domainID cString];
 
-    init_simias_gsoap (&soap);
+    init_simias_gsoap (&soap, &creds);
 
     err_code = soap_call___ns1__LogoutFromRemoteDomain(
 			&soap,
@@ -684,7 +705,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		status = logoutDomainResponse.LogoutFromRemoteDomainResult;
 		if(status == NULL)
 		{
-			cleanup_simias_gsoap(&soap);
+			cleanup_simias_gsoap(&soap, &creds);
 			[NSException raise:@"Authentication returned null object"
 							format:@"Error in AuthenticateToDomain"];		
 		}
@@ -693,7 +714,7 @@ NSDictionary *getAuthStatus(struct ns1__Status *status);
 		[authStatus setProperties:getAuthStatus(status)];
 	}
 
-    cleanup_simias_gsoap(&soap);
+    cleanup_simias_gsoap(&soap, &creds);
 
 	return authStatus;
 }
@@ -766,18 +787,48 @@ NSDictionary *getAuthStatus(struct ns1__Status *status)
 
 
 
-
-void init_simias_gsoap(struct soap *pSoap)
+void init_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 {
 	soap_init(pSoap);
 	soap_set_namespaces(pSoap, simias_namespaces);
+
+	creds->username = malloc(1024);
+	if(creds->username != NULL)
+	{
+		memset(creds->username, 0, 1024);
+	}
+	creds->password = malloc(1024);
+	if(creds->password != NULL)
+	{
+		memset(creds->password, 0, 1024);
+	}
+
+	if( (creds->username != NULL) && (creds->password != NULL) )
+	{
+		if(simias_get_web_service_credential(creds->username, creds->password) == 0)
+		{
+			pSoap->userid = creds->username;
+			pSoap->passwd = creds->password;
+		}
+	}
 }
 
 
 
 
-void cleanup_simias_gsoap(struct soap *pSoap)
+void cleanup_simias_gsoap(struct soap *pSoap, GSOAP_CREDS *creds)
 {
+	if(creds->username != NULL)
+	{
+		free(creds->username);
+		creds->username = NULL;
+	}
+	if(creds->password != NULL)
+	{
+		free(creds->password);
+		creds->password = NULL;
+	}
+
 	soap_end(pSoap);
 }
 
