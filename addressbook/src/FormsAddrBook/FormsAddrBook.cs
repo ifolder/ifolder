@@ -30,6 +30,7 @@ using System.IO;
 using System.Diagnostics;
 using Novell.iFolder.FormsBookLib;
 using Novell.AddressBook;
+using Simias;
 
 namespace Novell.iFolder.FormsAddrBook
 {
@@ -101,7 +102,10 @@ namespace Novell.iFolder.FormsAddrBook
 			{
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\address_app.ico"));
 			}
-			catch{}
+			catch (Exception e)
+			{
+				new SimiasException("Loading icon", e);
+			}
 
 			this.booksContacts.ContactSelected += new Novell.iFolder.FormsBookLib.BooksContacts.ContactSelectedDelegate(booksContacts_ContactSelected);
 			this.booksContacts.BookSelected += new Novell.iFolder.FormsBookLib.BooksContacts.BookSelectedDelegate(booksContacts_BookSelected);
@@ -455,7 +459,16 @@ namespace Novell.iFolder.FormsAddrBook
 					Cursor.Current = Cursors.Default;
 					booksContacts.AddContactToListView(contact, 1, true);
 				}
-				catch{}
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("An error occurred while importing the vCard.  Please see the log file for additional information", "vCard Import Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception e)
+				{
+					new SimiasException("Importing vCard", e);
+					MessageBox.Show("An error occurred while importing the vCard.  Please see the log file for additional information", "vCard Import Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -474,7 +487,16 @@ namespace Novell.iFolder.FormsAddrBook
 					contact.ExportVCard(saveFileDialog.FileName);
 					Cursor.Current = Cursors.Default;
 				}
-				catch{}
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception e)
+				{
+					new SimiasException("Exporting vCard", e);
+					MessageBox.Show("An error occurred while exporting the vCard.  Please see the log file for additional information", "vCard Export Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 		#endregion
@@ -808,7 +830,16 @@ namespace Novell.iFolder.FormsAddrBook
 						}
 					}
 				}
-				catch{}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while displaying contact data.  Please see the log file for additional information", "Display Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Displaying contact", ex);
+					MessageBox.Show("An error occurred while displaying contact data.  Please see the log file for additional information", "Display Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 			else
 			{

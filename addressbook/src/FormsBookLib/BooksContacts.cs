@@ -29,6 +29,7 @@ using System.Data;
 using System.Windows.Forms;
 using System.IO;
 using Novell.AddressBook;
+using Simias;
 using Simias.Storage;
 
 namespace Novell.iFolder.FormsBookLib
@@ -443,7 +444,16 @@ namespace Novell.iFolder.FormsBookLib
 						AddContactToListView(c, -1, false);
 					}
 				}
-				catch{}
+				catch (SimiasException e)
+				{
+					e.LogError();
+					MessageBox.Show("An error was encountered while searching.  Please see the log file for additional information.", "Search Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception e)
+				{
+					new SimiasException("Searching.", e);
+					MessageBox.Show("An error was encountered while searching.  Please see the log file for additional information.", "Search Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 			else
 			{
@@ -531,7 +541,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.contacts.View = View.Details;
 			this.contacts.Columns.Add("Contacts", this.contacts.Size.Width - 4, HorizontalAlignment.Left);
 
-			if (manager != null)
+			try
 			{
 				// Put all the address books in the books listview.
 				AddressBook.AddressBook defaultBook = manager.OpenDefaultAddressBook();
@@ -558,6 +568,16 @@ namespace Novell.iFolder.FormsBookLib
 					item.Tag = book;
 					this.books.Items.Add(item);
 				}
+			}
+			catch (SimiasException ex)
+			{
+				ex.LogFatal();
+				MessageBox.Show("A fatal error occurred during initialization.  Please see the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+			}
+			catch (Exception ex)
+			{
+				new SimiasException("Initialization.", ex);
+				MessageBox.Show("A fatal error occurred during initialization.  Please see the log file for additional information.", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 			}
 		}
 
@@ -662,11 +682,24 @@ namespace Novell.iFolder.FormsBookLib
 			if (result == DialogResult.OK)
 			{
 				// Create address book and add it to the books listview.
-				Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(addBook.Name);
-				this.manager.AddAddressBook(addrBook);
-				ListViewItem item = new ListViewItem(addrBook.Name, 0);
-				item.Tag = addrBook;
-				this.books.Items.Add(item);
+				try
+				{
+					Novell.AddressBook.AddressBook addrBook = new Novell.AddressBook.AddressBook(addBook.Name);
+					this.manager.AddAddressBook(addrBook);
+					ListViewItem item = new ListViewItem(addrBook.Name, 0);
+					item.Tag = addrBook;
+					this.books.Items.Add(item);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while creating the address book.  Please see the log file for additional information.", "Create Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Creating address book.", ex);
+					MessageBox.Show("An error occurred while creating the address book.  Please see the log file for additional information.", "Create Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -700,8 +733,21 @@ namespace Novell.iFolder.FormsBookLib
 				Contact contact = (Contact)lvitem.Tag;
 				if (!contact.IsCurrentUser)
 				{
-					contact.Delete();
-					lvitem.Remove();
+					try
+					{
+						contact.Delete();
+						lvitem.Remove();
+					}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+						MessageBox.Show("An error occurred while deleting the contact.  Please see the log file for additional information.", "Delete Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
+					catch (Exception ex)
+					{
+						new SimiasException("Deleting contact.", ex);
+						MessageBox.Show("An error occurred while deleting the contact.  Please see the log file for additional information.", "Delete Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
 				}
 				else
 				{
@@ -742,8 +788,21 @@ namespace Novell.iFolder.FormsBookLib
 				{
 					if (MessageBox.Show("Are you sure you want to delete this address book?", lvitem.Text.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
 					{
-						book.Delete();
-						lvitem.Remove();
+						try
+						{
+							book.Delete();
+							lvitem.Remove();
+						}
+						catch (SimiasException ex)
+						{
+							ex.LogError();
+							MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						}
+						catch (Exception ex)
+						{
+							new SimiasException("Deleting address book.", ex);
+							MessageBox.Show("An error occurred while deleting the address book.  Please see the log file for additional information.", "Delete Address Book Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						}
 					}
 				}
 				else

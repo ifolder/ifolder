@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 using Novell.AddressBook;
+using Simias;
 
 namespace Novell.iFolder.FormsBookLib
 {
@@ -1672,7 +1673,7 @@ namespace Novell.iFolder.FormsBookLib
 		#endregion
 
 		#region Private Methods
-		private bool LoadAddresses()
+		private void LoadAddresses()
 		{
 			try
 			{
@@ -1727,7 +1728,16 @@ namespace Novell.iFolder.FormsBookLib
 					}
 				}
 			}
-			catch{}
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while reading email addresses.  Please see the log file for additional information.", "Email Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Reading email addresses.", e);
+				MessageBox.Show("An error occurred while reading email addresses.  Please see the log file for additional information.", "Email Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 
 			// Deal with phone numbers
 			try
@@ -1791,7 +1801,16 @@ namespace Novell.iFolder.FormsBookLib
 					}
 				}
 			}
-			catch{}
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while reading telephone numbers.  Please see the log file for additional information.", "Telephone Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Reading telephone numbers.", e);
+				MessageBox.Show("An error occurred while reading telephone numbers.  Please see the log file for additional information.", "Telephone Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 
 			// IM Addresses
 			try
@@ -1843,53 +1862,75 @@ namespace Novell.iFolder.FormsBookLib
 					}
 				}
 			}
-			catch{}
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while reading IM addresses.  Please see the log file for additional information.", "IM Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Reading IM addresses.", e);
+				MessageBox.Show("An error occurred while reading IM addresses.  Please see the log file for additional information.", "IM Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 
 			// Addresses
-			foreach(Address addr in contact.GetAddresses())
+			try
 			{
-				if((addr.Types & AddressTypes.work) == AddressTypes.work)
+				foreach(Address addr in contact.GetAddresses())
 				{
-					if (workAddress == null)
+					if((addr.Types & AddressTypes.work) == AddressTypes.work)
 					{
-						workAddress = addr;
-						workStreet.DataBindings.Add("Text", workAddress, "Street");
-						workAddress2.DataBindings.Add("Text", workAddress, "ExtendedAddress");
-						workCity.DataBindings.Add("Text", workAddress, "Locality");
-						workState.DataBindings.Add("Text", workAddress, "Region");
-						workZip.DataBindings.Add("Text", workAddress, "PostalCode");
-						workCountry.DataBindings.Add("Text", workAddress, "Country");
+						if (workAddress == null)
+						{
+							workAddress = addr;
+							workStreet.DataBindings.Add("Text", workAddress, "Street");
+							workAddress2.DataBindings.Add("Text", workAddress, "ExtendedAddress");
+							workCity.DataBindings.Add("Text", workAddress, "Locality");
+							workState.DataBindings.Add("Text", workAddress, "Region");
+							workZip.DataBindings.Add("Text", workAddress, "PostalCode");
+							workCountry.DataBindings.Add("Text", workAddress, "Country");
+						}
 					}
-				}
-				else if((addr.Types & AddressTypes.home) == AddressTypes.home)
-				{
-					if (homeAddress == null)
+					else if((addr.Types & AddressTypes.home) == AddressTypes.home)
 					{
-						homeAddress = addr;
-						homeStreet.DataBindings.Add("Text", homeAddress, "Street");
-						homeAddress2.DataBindings.Add("Text", homeAddress, "ExtendedAddress");
-						homeCity.DataBindings.Add("Text", homeAddress, "Locality");
-						homeState.DataBindings.Add("Text", homeAddress, "Region");
-						homeZip.DataBindings.Add("Text", homeAddress, "PostalCode");
-						homeCountry.DataBindings.Add("Text", homeAddress, "Country");
+						if (homeAddress == null)
+						{
+							homeAddress = addr;
+							homeStreet.DataBindings.Add("Text", homeAddress, "Street");
+							homeAddress2.DataBindings.Add("Text", homeAddress, "ExtendedAddress");
+							homeCity.DataBindings.Add("Text", homeAddress, "Locality");
+							homeState.DataBindings.Add("Text", homeAddress, "Region");
+							homeZip.DataBindings.Add("Text", homeAddress, "PostalCode");
+							homeCountry.DataBindings.Add("Text", homeAddress, "Country");
+						}
 					}
-				}
-				else
-				{
-					if (otherAddress == null)
+					else
 					{
-						otherAddress = addr;
-						otherStreet.DataBindings.Add("Text", otherAddress, "Street");
-						otherAddress2.DataBindings.Add("Text", otherAddress, "ExtendedAddress");
-						otherCity.DataBindings.Add("Text", otherAddress, "Locality");
-						otherState.DataBindings.Add("Text", otherAddress, "Region");
-						otherZip.DataBindings.Add("Text", otherAddress, "PostalCode");
-						otherCountry.DataBindings.Add("Text", otherAddress, "Country");
+						if (otherAddress == null)
+						{
+							otherAddress = addr;
+							otherStreet.DataBindings.Add("Text", otherAddress, "Street");
+							otherAddress2.DataBindings.Add("Text", otherAddress, "ExtendedAddress");
+							otherCity.DataBindings.Add("Text", otherAddress, "Locality");
+							otherState.DataBindings.Add("Text", otherAddress, "Region");
+							otherZip.DataBindings.Add("Text", otherAddress, "PostalCode");
+							otherCountry.DataBindings.Add("Text", otherAddress, "Country");
+						}
 					}
 				}
 			}
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while reading addresses.  Please see the log file for additional information.", "Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Reading addresses.", e);
+				MessageBox.Show("An error occurred while reading addresses.  Please see the log file for additional information.", "Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 
-			return(true);
+			return;
 		}
 
 		private string ConvertDateToString(DateTime dt)
@@ -1904,9 +1945,18 @@ namespace Novell.iFolder.FormsBookLib
 			try
 			{
 				editBox.DataBindings.Add("Text", email, "Address");
+				contact.AddEmailAddress(email);
 			}
-			catch{}
-			contact.AddEmailAddress(email);
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while adding the email addresses.  Please see the log file for additional information.", "Add Email Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Adding email address.", e);
+				MessageBox.Show("An error occurred while adding the email addresses.  Please see the log file for additional information.", "Add Email Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 		}
 
 		private void SetEmailType(ref Email email, ref DomainUpDown type)
@@ -1935,9 +1985,18 @@ namespace Novell.iFolder.FormsBookLib
 			try
 			{
 				editBox.DataBindings.Add("Text", telephone, "Number");
+				contact.AddTelephoneNumber(telephone);
 			}
-			catch{}
-			contact.AddTelephoneNumber(telephone);
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while adding the telephone number.  Please see the log file for additional information.", "Add Telephone Number Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Adding telephone number.", e);
+				MessageBox.Show("An error occurred while adding the telephone number.  Please see the log file for additional information.", "Add Telephone Number Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 		}
 
 		private void SetTelephoneType(ref Telephone telephone, ref DomainUpDown type)
@@ -1973,9 +2032,18 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				editBox.DataBindings.Add("Text", im, "Address");
 				labelBox.DataBindings.Add("Text", im, "Provider");
+				contact.AddInstantMessage(im);
 			}
-			catch{}
-			contact.AddInstantMessage(im);
+			catch (SimiasException e)
+			{
+				e.LogError();
+				MessageBox.Show("An error occurred while adding the IM address.  Please see the log file for additional information.", "Add IM Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception e)
+			{
+				new SimiasException("Adding IM address.", e);
+				MessageBox.Show("An error occurred while adding the IM address.  Please see the log file for additional information.", "Add IM Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 		}
 
 		private void SetIMType(ref IM im, ref DomainUpDown type)
@@ -2001,46 +2069,34 @@ namespace Novell.iFolder.FormsBookLib
 		private void AddNewWorkAddress()
 		{
 			workAddress.Types = AddressTypes.work;
-			try
-			{
-				workStreet.DataBindings.Add("Text", workAddress, "Street");
-				workAddress2.DataBindings.Add("Text", workAddress, "ExtendedAddress");
-				workCity.DataBindings.Add("Text", workAddress, "Locality");
-				workState.DataBindings.Add("Text", workAddress, "Region");
-				workZip.DataBindings.Add("Text", workAddress, "PostalCode");
-				workCountry.DataBindings.Add("Text", workAddress, "Country");
-			}
-			catch{}
+			workStreet.DataBindings.Add("Text", workAddress, "Street");
+			workAddress2.DataBindings.Add("Text", workAddress, "ExtendedAddress");
+			workCity.DataBindings.Add("Text", workAddress, "Locality");
+			workState.DataBindings.Add("Text", workAddress, "Region");
+			workZip.DataBindings.Add("Text", workAddress, "PostalCode");
+			workCountry.DataBindings.Add("Text", workAddress, "Country");
 		}
 
 		private void AddNewHomeAddress()
 		{
 			homeAddress.Types = AddressTypes.home;
-			try
-			{
-				homeStreet.DataBindings.Add("Text", homeAddress, "Street");
-				homeAddress2.DataBindings.Add("Text", homeAddress, "ExtendedAddress");
-				homeCity.DataBindings.Add("Text", homeAddress, "Locality");
-				homeState.DataBindings.Add("Text", homeAddress, "Region");
-				homeZip.DataBindings.Add("Text", homeAddress, "PostalCode");
-				homeCountry.DataBindings.Add("Text", homeAddress, "Country");
-			}
-			catch{}
+			homeStreet.DataBindings.Add("Text", homeAddress, "Street");
+			homeAddress2.DataBindings.Add("Text", homeAddress, "ExtendedAddress");
+			homeCity.DataBindings.Add("Text", homeAddress, "Locality");
+			homeState.DataBindings.Add("Text", homeAddress, "Region");
+			homeZip.DataBindings.Add("Text", homeAddress, "PostalCode");
+			homeCountry.DataBindings.Add("Text", homeAddress, "Country");
 		}
 
 		private void AddNewOtherAddress()
 		{
 			otherAddress.Types = AddressTypes.other;
-			try
-			{
-				otherStreet.DataBindings.Add("Text", otherAddress, "Street");
-				otherAddress2.DataBindings.Add("Text", otherAddress, "ExtendedAddress");
-				otherCity.DataBindings.Add("Text", otherAddress, "Locality");
-				otherState.DataBindings.Add("Text", otherAddress, "Region");
-				otherZip.DataBindings.Add("Text", otherAddress, "PostalCode");
-				otherCountry.DataBindings.Add("Text", otherAddress, "Country");
-			}
-			catch{}
+			otherStreet.DataBindings.Add("Text", otherAddress, "Street");
+			otherAddress2.DataBindings.Add("Text", otherAddress, "ExtendedAddress");
+			otherCity.DataBindings.Add("Text", otherAddress, "Locality");
+			otherState.DataBindings.Add("Text", otherAddress, "Region");
+			otherZip.DataBindings.Add("Text", otherAddress, "PostalCode");
+			otherCountry.DataBindings.Add("Text", otherAddress, "Country");
 		}
 
 		private void SetEditBoxSizeAndLocation(Control box1, Control label1, Control box2, int fixedSpace)
@@ -2125,28 +2181,41 @@ namespace Novell.iFolder.FormsBookLib
 					pictureContact.Image = Image.FromFile(Path.Combine(basePath, "blankhead.png"));
 				}
 
-				bool results = LoadAddresses();
+				LoadAddresses();
 			}
 		}
 
 		private void ok_Click(object sender, System.EventArgs e)
 		{
-			if (newContact)
+			try
 			{
-				// Generate a username.
-				if (email1.Text != String.Empty)
+				if (newContact)
 				{
-					contact.UserName = email1.Text.Substring(0, email1.Text.IndexOf("@"));
-				}
-				else
-				{
-					contact.UserName = name.Given + name.Family;
+					// Generate a username.
+					if (email1.Text != String.Empty)
+					{
+						contact.UserName = email1.Text.Substring(0, email1.Text.IndexOf("@"));
+					}
+					else
+					{
+						contact.UserName = name.Given + name.Family;
+					}
+
+					addressBook.AddContact(contact);
 				}
 
-				addressBook.AddContact(contact);
+				contact.Commit();
 			}
-
-			contact.Commit();		
+			catch (SimiasException ex)
+			{
+				ex.LogError();
+				MessageBox.Show("An error occurred while adding the contact.  Please see the log file for additional information.", "Add Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+			catch (Exception ex)
+			{
+				new SimiasException("Adding contact.", ex);
+				MessageBox.Show("An error occurred while adding the contact.  Please see the log file for additional information.", "Add Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
 		}
 
 		private void pictureContact_Click(object sender, System.EventArgs e)
@@ -2162,7 +2231,16 @@ namespace Novell.iFolder.FormsBookLib
 					contact.ImportPhoto(openFileDialog.OpenFile());
 					pictureContact.Image = Image.FromStream(contact.ExportPhoto());
 				}
-				catch{}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the contact photo.  Please see the log file for additional information.", "Add Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding photo.", ex);
+					MessageBox.Show("An error occurred while adding the contact photo.  Please see the log file for additional information.", "Add Contact Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2191,7 +2269,6 @@ namespace Novell.iFolder.FormsBookLib
 				// Save the information.
 				if (name.Prefix != fullNameDlg.Title)
 					name.Prefix = fullNameDlg.Title;
-				// BUGBUG - Given name changes aren't sticking
 				if (name.Given != fullNameDlg.FirstName)
 					name.Given = fullNameDlg.FirstName;
 				if (name.Other != fullNameDlg.MiddleName)
@@ -2204,7 +2281,20 @@ namespace Novell.iFolder.FormsBookLib
 				if (newName && (contact != null))
 				{
 					name.Preferred = true;
-					contact.AddName(name);
+					try
+					{
+						contact.AddName(name);
+					}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+						MessageBox.Show("An error occurred while adding the name.  Please see the log file for additional information.", "Add Name Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
+					catch (Exception ex)
+					{
+						new SimiasException("Adding name.", ex);
+						MessageBox.Show("An error occurred while adding the name.  Please see the log file for additional information.", "Add Name Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					}
 				}
 
 				fullName.Text = name.FN;
@@ -2225,7 +2315,6 @@ namespace Novell.iFolder.FormsBookLib
 		private void fullName_Leave(object sender, System.EventArgs e)
 		{
 			// Parse name...
-			// TODO - much more to be done here ... this is just a starting point.
 
 			// If the Cancel button was clicked, we're done.
 			if (cancel.Focused)
@@ -2617,8 +2706,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				workAddress = new Address();
 				workAddress.Street = workStreet.Text;
-				AddNewWorkAddress();
-				contact.AddAddress(workAddress);
+				try
+				{
+					AddNewWorkAddress();
+					contact.AddAddress(workAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding work address.", ex);
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2628,8 +2730,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				workAddress = new Address();
 				workAddress.ExtendedAddress = workAddress2.Text;
-				AddNewWorkAddress();
-				contact.AddAddress(workAddress);
+				try
+				{
+					AddNewWorkAddress();
+					contact.AddAddress(workAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding work address.", ex);
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2639,8 +2754,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				workAddress = new Address();
 				workAddress.Locality = workCity.Text;
-				AddNewWorkAddress();
-				contact.AddAddress(workAddress);
+				try
+				{
+					AddNewWorkAddress();
+					contact.AddAddress(workAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding work address.", ex);
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2650,8 +2778,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				workAddress = new Address();
 				workAddress.Region = workState.Text;
-				AddNewWorkAddress();
-				contact.AddAddress(workAddress);
+				try
+				{
+					AddNewWorkAddress();
+					contact.AddAddress(workAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding work address.", ex);
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2661,8 +2802,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				workAddress = new Address();
 				workAddress.PostalCode = workZip.Text;
-				AddNewWorkAddress();
-				contact.AddAddress(workAddress);
+				try
+				{
+					AddNewWorkAddress();
+					contact.AddAddress(workAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding work address.", ex);
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2672,8 +2826,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				workAddress = new Address();
 				workAddress.Country = workCountry.Text;
-				AddNewWorkAddress();
-				contact.AddAddress(workAddress);
+				try
+				{
+					AddNewWorkAddress();
+					contact.AddAddress(workAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding work address.", ex);
+					MessageBox.Show("An error occurred while adding the work address.  Please see the log file for additional information", "Add Work Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2683,8 +2850,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				homeAddress = new Address();
 				homeAddress.Street = homeStreet.Text;
-				AddNewHomeAddress();
-				contact.AddAddress(homeAddress);
+				try
+				{
+					AddNewHomeAddress();
+					contact.AddAddress(homeAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding home address.", ex);
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2694,8 +2874,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				homeAddress = new Address();
 				homeAddress.ExtendedAddress = homeAddress2.Text;
-				AddNewHomeAddress();
-				contact.AddAddress(homeAddress);
+				try
+				{
+					AddNewHomeAddress();
+					contact.AddAddress(homeAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding home address.", ex);
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2705,8 +2898,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				homeAddress = new Address();
 				homeAddress.Locality = homeCity.Text;
-				AddNewHomeAddress();
-				contact.AddAddress(homeAddress);
+				try
+				{
+					AddNewHomeAddress();
+					contact.AddAddress(homeAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding home address.", ex);
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2716,8 +2922,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				homeAddress = new Address();
 				homeAddress.Region = homeState.Text;
-				AddNewHomeAddress();
-				contact.AddAddress(homeAddress);
+				try
+				{
+					AddNewHomeAddress();
+					contact.AddAddress(homeAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding home address.", ex);
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2727,8 +2946,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				homeAddress = new Address();
 				homeAddress.PostalCode = homeZip.Text;
-				AddNewHomeAddress();
-				contact.AddAddress(homeAddress);
+				try
+				{
+					AddNewHomeAddress();
+					contact.AddAddress(homeAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding home address.", ex);
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2738,8 +2970,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				homeAddress = new Address();
 				homeAddress.Country = homeCountry.Text;
-				AddNewHomeAddress();
-				contact.AddAddress(homeAddress);
+				try
+				{
+					AddNewHomeAddress();
+					contact.AddAddress(homeAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding home address.", ex);
+					MessageBox.Show("An error occurred while adding the home address.  Please see the log file for additional information", "Add Home Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2749,8 +2994,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				otherAddress = new Address();
 				otherAddress.Street = otherStreet.Text;
-				AddNewOtherAddress();
-				contact.AddAddress(otherAddress);
+				try
+				{
+					AddNewOtherAddress();
+					contact.AddAddress(otherAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding other address.", ex);
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2760,8 +3018,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				otherAddress = new Address();
 				otherAddress.ExtendedAddress = otherAddress2.Text;
-				AddNewOtherAddress();
-				contact.AddAddress(otherAddress);
+				try
+				{
+					AddNewOtherAddress();
+					contact.AddAddress(otherAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding other address.", ex);
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2771,8 +3042,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				otherAddress = new Address();
 				otherAddress.Locality = otherCity.Text;
-				AddNewOtherAddress();
-				contact.AddAddress(otherAddress);
+				try
+				{
+					AddNewOtherAddress();
+					contact.AddAddress(otherAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding other address.", ex);
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2782,8 +3066,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				otherAddress = new Address();
 				otherAddress.Region = otherState.Text;
-				AddNewOtherAddress();
-				contact.AddAddress(otherAddress);
+				try
+				{
+					AddNewOtherAddress();
+					contact.AddAddress(otherAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding other address.", ex);
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2793,8 +3090,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				otherAddress = new Address();
 				otherAddress.PostalCode = otherZip.Text;
-				AddNewOtherAddress();
-				contact.AddAddress(otherAddress);
+				try
+				{
+					AddNewOtherAddress();
+					contact.AddAddress(otherAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding other address.", ex);
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 
@@ -2804,8 +3114,21 @@ namespace Novell.iFolder.FormsBookLib
 			{
 				otherAddress = new Address();
 				otherAddress.Country = otherCountry.Text;
-				AddNewOtherAddress();
-				contact.AddAddress(otherAddress);
+				try
+				{
+					AddNewOtherAddress();
+					contact.AddAddress(otherAddress);
+				}
+				catch (SimiasException ex)
+				{
+					ex.LogError();
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+				catch (Exception ex)
+				{
+					new SimiasException("Adding other address.", ex);
+					MessageBox.Show("An error occurred while adding the other address.  Please see the log file for additional information", "Add Other Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
 			}
 		}
 		#endregion

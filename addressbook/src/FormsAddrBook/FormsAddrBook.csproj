@@ -104,6 +104,11 @@
                     AssemblyName = "CollectionStore"
                     HintPath = "..\..\..\simias\src\CollectionStore\CollectionStore.dll"
                 />
+                <Reference
+                    Name = "Common"
+                    AssemblyName = "Common"
+                    HintPath = "..\..\..\simias\src\Common\Common.dll"
+                />
             </References>
         </Build>
         <Files>

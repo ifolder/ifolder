@@ -27,6 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Novell.AddressBook;
+using Simias;
 
 namespace Novell.iFolder.FormsBookLib
 {
@@ -402,8 +403,15 @@ namespace Novell.iFolder.FormsBookLib
 				DialogResult result = editor.ShowDialog();
 				if (result == DialogResult.OK)
 				{
-					Name name = editor.CurrentContact.GetPreferredName();
-					item.Text = name.Given + " " + name.Family;
+					try
+					{
+						item.Text = editor.CurrentContact.FN;
+					}
+					catch (SimiasException ex)
+					{
+						ex.LogError();
+						item.Text = editor.CurrentContact.UserName;
+					}
 				}
 			}
 		}
