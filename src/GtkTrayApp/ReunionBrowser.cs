@@ -139,11 +139,8 @@ namespace Novell.iFolder
 						(SubscriptionInfo) tModel.GetValue(iter, 0);
 				if(si != null)
 				{
-					Subscription sub = 
-						new Subscription("Rendezvous", si);
-					
 					InvitationAssistant ia = 
-						new InvitationAssistant(sub);
+						new InvitationAssistant(si);
 
 					ia.ShowAll();	
 				}
