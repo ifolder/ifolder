@@ -24,8 +24,6 @@ INSTALL_BIN_FILES = $(srcdir)/ifolder
 
 INSTALL_LIB_FILES = $(srcdir)/setup-autostart
 
-GLADE_FILES = application-properties.glade ifolder-banner.png ifolder.glade collection.png folder.png ifolder-collision.png ifolder.png invitewiz.png
-
 IMAGE_FILES = inviteduser.png ifolderuser.png serverifolder.png collection.png Node.png Tombstone.png BaseContact.png folder.png ifolder.png ifolder-banner.png ifolder-collision.png ifolder-shutdown.png ifolder-startup.png ifolderfolder.png file.png ifolder.gif property.png ifolder-crash.png ifolder-crash.gif
 
 MIME_FILES = $(srcdir)/ifolder.mime $(srcdir)/ifolder.keys
@@ -44,11 +42,9 @@ iFolderGtkApp.exe: $(TrayAppGtk_CSFILES) $(TrayAppGtk_RESOURCES)
 
 
 install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)
-	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/ifolder/glade $(DESTDIR)$(datadir)/ifolder/images $(DESTDIR)$(datadir)/applications $(DESTDIR)$(datadir)/pixmaps $(DESTDIR)$(datadir)/mime-info $(DESTDIR)$(datadir)/application-registry
+	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(libdir) $(DESTDIR)$(datadir)/ifolder3/images $(DESTDIR)$(datadir)/applications $(DESTDIR)$(datadir)/pixmaps $(DESTDIR)$(datadir)/mime-info $(DESTDIR)$(datadir)/application-registry
 	$(INSTALL_PROGRAM) Novell.iFolder.UI.gtk.dll $(INSTALL_LIB_FILES) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) $(GLADE_FILES) $(DESTDIR)$(datadir)/ifolder/glade
-	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder/images
-#	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderGtkApp.exe CollectionBrowser.exe ReunionBrowser.exe $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(IMAGE_FILES) $(DESTDIR)$(datadir)/ifolder3/images
 	$(INSTALL_PROGRAM) $(INSTALL_EXE_OPTS) iFolderGtkApp.exe $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_FILES) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) ifolder.desktop $(DESTDIR)$(datadir)/applications
@@ -58,9 +54,7 @@ install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)
     
 uninstall-local:
 	cd $(DESTDIR)$(libdir); rm -f Novell.iFolder.UI.gtk.dll $(notdir $(INSTALL_LIB_FILES))
-	cd $(DESTDIR)$(datadir)/ifolder/glade; rm -f $(GLADE_FILES)
-	cd $(DESTDIR)$(datadir)/ifolder/images; rm -f $(IMAGE_FILES)
-#	cd $(DESTDIR)$(bindir); rm -f iFolderGtkApp.exe CollectionBrowser.exe ReunionBrowser.exe $(notdir $(INSTALL_BIN_FILES))
+	cd $(DESTDIR)$(datadir)/ifolder3/images; rm -f $(IMAGE_FILES)
 	cd $(DESTDIR)$(bindir); rm -f iFolderGtkApp.exe $(notdir $(INSTALL_BIN_FILES))
 	cd $(DESTDIR)$(datadir)/applications; rm -f ifolder.desktop
 	cd $(DESTDIR)$(datadir)/pixmaps; rm -f ifolder.png

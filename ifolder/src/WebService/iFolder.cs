@@ -92,7 +92,9 @@ namespace Novell.iFolder.Web
 			this.EnumeratedState = -1;
 			this.IsWorkgroup = 
 				(collection.Domain == Simias.Storage.Domain.WorkGroupDomainID);
-			this.HasConflicts = collection.HasCollisions();
+//			CRG: Testing
+//			this.HasConflicts = collection.HasCollisions();
+			this.HasConflicts = true;
 			// This was throwing an exception so Added this because the 
 			// current user may not be available yet
 			Member tmpMember = collection.GetCurrentMember();

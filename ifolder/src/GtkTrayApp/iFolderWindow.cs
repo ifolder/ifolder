@@ -47,6 +47,12 @@ namespace Novell.iFolder
 		private Gtk.TreeView		iFolderTreeView;
 		private Gtk.ListStore		iFolderTreeStore;
 
+		// Preferences widgets
+		private Gtk.Button			AutoSyncCheckButton;
+		private Gtk.Button			StartAtLoginButton;
+		private Gtk.Button			ShowConfirmationButton; 
+		private Gtk.Button			UseProxyButton; 
+
 		private ImageMenuItem		CreateMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
 		private ImageMenuItem		OpenMenuItem;
@@ -112,6 +118,11 @@ namespace Novell.iFolder
 			MainNoteBook = new Notebook();
 			MainNoteBook.AppendPage(	CreateiFoldersPage(), 
 										new Label("iFolders"));
+			MainNoteBook.AppendPage( CreatePreferencesPage(),
+										new Label("Preferences"));
+			MainNoteBook.AppendPage( CreateLogPage(),
+										new Label("Activity Log"));
+
 			vbox.PackStart(MainNoteBook, true, true, 0);
 
 
@@ -252,14 +263,15 @@ namespace Novell.iFolder
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
 			VBox vbox = new VBox();
-			vbox.Spacing = 6;
-			vbox.BorderWidth = 6;
+			vbox.Spacing = 10;
+			vbox.BorderWidth = 10;
 			
 			// Create the main TreeView and add it to a scrolled
 			// window, then add it to the main vbox widget
 			iFolderTreeView = new TreeView();
 			ScrolledWindow sw = new ScrolledWindow();
 			sw.Add(iFolderTreeView);
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
 			vbox.PackStart(sw, true, true, 0);
 
 
@@ -337,6 +349,180 @@ namespace Novell.iFolder
 			hbox.PackEnd(leftHBox, false, false, 0);
 			vbox.PackStart(hbox, false, false, 0);
 		
+			return vbox;
+		}
+	
+
+
+
+		/// <summary>
+		/// Creates the Preferences Page
+		/// </summary>
+		/// <returns>
+		/// Widget to display
+		/// </returns>
+		private Widget CreatePreferencesPage()
+		{
+			// Create a new VBox and place 10 pixels between
+			// each item in the vBox
+			VBox vbox = new VBox();
+			vbox.Spacing = 10;
+			vbox.BorderWidth = 10;
+
+
+			//------------------------------
+			// Application Frame
+			//------------------------------
+			Frame ApplicationFrame = new Frame("Application");
+
+			VBox appBox = new VBox();
+			appBox.Spacing = 10;
+			appBox.BorderWidth = 10;
+
+			StartAtLoginButton = 
+				new CheckButton("Startup iFolder at Login");
+			appBox.PackStart(StartAtLoginButton, false, true, 0);
+
+			ShowConfirmationButton = 
+				new CheckButton("Show creation dialog when creating iFolders");
+			appBox.PackStart(ShowConfirmationButton, false, true, 0);
+
+			ApplicationFrame.Add(appBox);
+
+			vbox.PackStart(ApplicationFrame, false, true, 0);
+
+
+			//------------------------------
+			// Sync Frame
+			//------------------------------
+			Frame SyncFrame = new Frame("Synchronization");
+			VBox syncBox = new VBox();
+			syncBox.Spacing = 10;
+			syncBox.BorderWidth = 10;
+			SyncFrame.Add(syncBox);
+			vbox.PackStart(SyncFrame, false, true, 0);
+
+			AutoSyncCheckButton = 
+					new CheckButton("Automatically Sync iFolders");
+			syncBox.PackStart(AutoSyncCheckButton, false, true, 0);
+
+			Frame SyncToHostFrame = new Frame("Synchronize to host");
+			syncBox.PackStart(SyncToHostFrame, false, true, 0);
+
+			VBox syncVBox = new VBox();
+			syncVBox.Spacing = 10;
+			syncVBox.BorderWidth = 10;
+
+			Label syncHelp = new Label("This sets the default value for how often the hosts for all iFolders will be contacted to perform a sync.  This value can can be overriden by setting a value on an individual iFolder.");
+			syncHelp.LineWrap = true;
+			syncHelp.Xalign = 0;
+			syncVBox.PackStart(syncHelp, false, true, 0);
+
+			HBox syncHBox = new HBox();
+			syncHBox.Spacing = 10;
+
+			Label syncLabel = new Label("Sync to host every:");
+			syncHBox.PackStart(syncLabel, false, false, 0);
+
+			SpinButton syncSpinButton = new SpinButton(0, 99999, 1);
+			syncHBox.PackStart(syncSpinButton, false, false, 0);
+
+			Label syncValue = new Label("seconds");
+			syncValue.Xalign = 0;
+			syncHBox.PackEnd(syncValue, true, true, 0);
+			syncVBox.PackEnd(syncHBox, false, false, 0);
+			SyncToHostFrame.Add(syncVBox);
+
+
+			//------------------------------
+			// Proxy Frame
+			//------------------------------
+			Frame ProxyFrame = new Frame("Proxy");
+			VBox proxyBox = new VBox();
+			proxyBox.Spacing = 10;
+			proxyBox.BorderWidth = 10;
+			ProxyFrame.Add(proxyBox);
+			vbox.PackStart(ProxyFrame, false, true, 0);
+
+			UseProxyButton = new CheckButton("Use a proxy to sync iFolders");
+			proxyBox.PackStart(UseProxyButton, false, true, 0);
+
+			HBox pSettingBox = new HBox();
+			pSettingBox.Spacing = 10;
+//			pSettingBox.BorderWidth = 10;
+			proxyBox.PackStart(pSettingBox, false, true, 0);
+
+			Label hostLabel = new Label("Proxy Host:");
+			pSettingBox.PackStart(hostLabel, false, true, 0);
+			Entry hostEntry = new Entry();
+			pSettingBox.PackStart(hostEntry, true, true, 0);
+			Label portLabel = new Label("Port:");
+			pSettingBox.PackStart(portLabel, false, true, 0);
+			SpinButton portSpinButton = new SpinButton(0, 99999, 1);
+			pSettingBox.PackStart(portSpinButton, false, true, 0);
+
+			return vbox;
+		}
+
+
+
+
+		/// <summary>
+		/// Creates the Log tab
+		/// </summary>
+		/// <returns>
+		/// Widget to display
+		/// </returns>
+		private Widget CreateLogPage()
+		{
+			// Create a new VBox and place 10 pixels between
+			// each item in the vBox
+			VBox vbox = new VBox();
+			vbox.Spacing = 10;
+			vbox.BorderWidth = 10;
+		
+			Label lbl = new Label("This log shows current ifolder activity");
+			vbox.PackStart(lbl, false, true, 0);
+			lbl.Xalign = 0;
+
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			vbox.PackStart(sw, true, true, 0);
+			TreeView LogTreeView = new TreeView();
+			sw.Add(LogTreeView);
+			LogTreeView.HeadersVisible = false;
+
+			// Setup the iFolder TreeView
+			ListStore LogTreeStore = new ListStore(typeof(string));
+			LogTreeView.Model = LogTreeStore;
+
+			CellRendererText logcr = new CellRendererText();
+			logcr.Xpad = 10;
+			LogTreeView.AppendColumn("Log", logcr, "text", 0);
+
+
+			// Setup buttons for add/remove/accept/decline
+			HBox buttonBox = new HBox();
+			buttonBox.Spacing = 6;
+			vbox.PackStart(buttonBox, false, false, 0);
+
+			HBox leftBox = new HBox();
+			leftBox.Spacing = 6;
+			buttonBox.PackStart(leftBox, false, false, 0);
+			HBox midBox = new HBox();
+			midBox.Spacing = 6;
+			buttonBox.PackStart(midBox, true, true, 0);
+			HBox rightBox = new HBox();
+			rightBox.Spacing = 6;
+			buttonBox.PackStart(rightBox, false, false, 0);
+
+			Button SaveButton = new Button(Gtk.Stock.Save);
+			rightBox.PackStart(SaveButton);
+//			AddButton.Clicked += new EventHandler(OnAddUser);
+
+			Button ClearButton = new Button(Gtk.Stock.Clear);
+			rightBox.PackStart(ClearButton);
+
 			return vbox;
 		}
 
