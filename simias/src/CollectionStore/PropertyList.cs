@@ -71,12 +71,12 @@ namespace Simias.Storage
 		/// <summary>
 		/// DOM document containing the property list for this Collection Store object.
 		/// </summary>
-		private XmlDocument nodeDocument = null;
+		private XmlDocument nodeDocument;
 
 		/// <summary>
 		/// Xml element that all properties are subordinate to.
 		/// </summary>
-		private XmlElement propertyRoot = null;
+		private XmlElement propertyRoot;
 
 		/// <summary>
 		/// List used to hold changes to the Property objects in this list.
@@ -163,16 +163,16 @@ namespace Simias.Storage
 		internal PropertyList( string name, string ID, string type )
 		{
 			// Create an empty DOM document that will hold the properties.
-			XmlDocument document = new XmlDocument();
-			XmlElement element = document.CreateElement( XmlTags.ObjectListTag );
-			document.AppendChild( element );
+			nodeDocument = new XmlDocument();
+			XmlElement element = nodeDocument.CreateElement( XmlTags.ObjectListTag );
+			nodeDocument.AppendChild( element );
 
 			// Set the attributes in the XML document.
-			propertyRoot = document.CreateElement( XmlTags.ObjectTag );
+			propertyRoot = nodeDocument.CreateElement( XmlTags.ObjectTag );
 			propertyRoot.SetAttribute( XmlTags.NameAttr, name );
 			propertyRoot.SetAttribute( XmlTags.IdAttr, ID );
 			propertyRoot.SetAttribute( XmlTags.TypeAttr, type );
-			document.DocumentElement.AppendChild( propertyRoot );
+			nodeDocument.DocumentElement.AppendChild( propertyRoot );
 
 			state = PropertyListState.Add;
 

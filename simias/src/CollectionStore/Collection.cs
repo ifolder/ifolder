@@ -697,9 +697,10 @@ namespace Simias.Storage
 		/// Deletes the specified collection from the persistent store.  If there are nodes
 		/// subordinate to this collection, an exception will be thrown.
 		/// </summary>
-		public void Delete()
+		/// <returns>The Node object that has been deleted.</returns>
+		public Node Delete()
 		{
-			Delete( this );
+			return Delete( this );
 		}
 
 		/// <summary>
@@ -710,9 +711,11 @@ namespace Simias.Storage
 		/// rules which must be followed.  Use DirNode.Delete() instead.
 		/// </summary>
 		/// <param name="deep">Indicates whether to all children nodes of this node are deleted also.</param>
-		public void Delete( Node node )
+		/// <returns>The Node object that has been deleted.</returns>
+		public Node Delete( Node node )
 		{
-			Delete( node, null );
+			Node[] nodeList = Delete( node, null );
+			return nodeList[ 0 ];
 		}
 
 		/// <summary>
@@ -915,7 +918,7 @@ namespace Simias.Storage
 				else
 				{
 					// The user must have owner access in order to set the new owner.
-					if ( !accessControl.IsOwner( store.CurrentUserGuid ) )
+					if ( !accessControl.IsOwnerAccessAllowed() )
 					{
 						importCollection.accessControl.ChangeCollectionOwner( Owner, Access.Rights.Deny );
 					}

@@ -84,7 +84,7 @@ namespace Simias.Storage
 		/// </summary>
 		internal bool IsImpersonating
 		{
-			get { return identityManager.IsImpersonating; }
+			get { return ( identityManager != null ) ? identityManager.IsImpersonating : false; }
 		}
 
 		/// <summary>
@@ -238,6 +238,9 @@ namespace Simias.Storage
 					// Create an identifier for the owner of this Collection Store.
 					string ownerGuid = Guid.NewGuid().ToString();
 
+					// Create the database lock.
+					storeMutex = new Mutex( false, domainName );
+
 					// Create the local address book.
 					LocalAddressBook localAb = new LocalAddressBook( this, domainName, Guid.NewGuid().ToString(), ownerGuid, domainName );
 
@@ -290,10 +293,10 @@ namespace Simias.Storage
 
 				// Create a identity manager object that will be used by the store object from here on out.
 				identityManager = new IdentityManager( localAb.Name, localAb, identity );
-			}
 
-			// Create the database lock.
-			storeMutex = new Mutex( false, identityManager.DomainName );
+				// Create the database lock.
+				storeMutex = new Mutex( false, identityManager.DomainName );
+			}
 		}
 		#endregion
 
@@ -493,8 +496,8 @@ namespace Simias.Storage
 				{
 					// Set up the XML document so the data can be easily extracted.
 					XmlDocument document = new XmlDocument();
-					document.LoadXml( new string( results, 0 , length ) );
-					localDb = new Collection( this, document );
+					document.LoadXml( new string( results, 0, length ) );
+					localDb = new Collection( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
 				}
 
 				chunkIterator.Dispose();
@@ -529,7 +532,7 @@ namespace Simias.Storage
 					// Set up the XML document so the data can be easily extracted.
 					XmlDocument document = new XmlDocument();
 					document.LoadXml( new string( results, 0, length ) );
-					localAb = new LocalAddressBook( this, document );
+					localAb = new LocalAddressBook( this, new ShallowNode( document.DocumentElement[ XmlTags.ObjectTag ] ) );
 				}
 
 				chunkIterator.Dispose();

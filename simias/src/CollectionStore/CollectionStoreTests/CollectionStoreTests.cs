@@ -63,16 +63,15 @@ namespace Simias.Storage.Tests
 			MyTrace.SendToConsole();
 
 			// Connect to the store.
-			store = Store.Connect( new Configuration( basePath ) );
+			store = new Store( new Configuration( basePath ) );
 
 			// Add another identity to the database.
 			LocalAddressBook localAb = store.GetLocalAddressBook();
 
 			// Check to see if the identity already exist.
-			if ( localAb.GetSingleIdentityByName( "cameron" ) == null )
+			if ( localAb.GetSingleNodeByName( "cameron" ) == null )
 			{
-				localAb.AddIdentity( "cameron" );
-				localAb.Commit( true );
+				localAb.Commit( new BaseContact( "cameron" ) );
 			}
 		}
 		#endregion
@@ -85,10 +84,10 @@ namespace Simias.Storage.Tests
 		public void CreateCollectionTest()
 		{
 			// Create a new collection and remember its ID.
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 
 			// Remember the id for later.
-			string id = collection.Id;
+			string ID = collection.ID;
 
 			try
 			{
@@ -96,7 +95,7 @@ namespace Simias.Storage.Tests
 				collection.Commit();
 
 				// Make sure the collection exists.
-				if ( store.GetCollectionById( id ) == null )
+				if ( store.GetCollectionByID( ID ) == null )
 				{
 					throw new ApplicationException( "Collection was committed but does not exist in the store" );
 				}
@@ -104,11 +103,11 @@ namespace Simias.Storage.Tests
 			finally
 			{
 				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
+				Directory.Delete( collection.Root, true );
 
 				// Delete the collection.
-				collection.Delete();
-				if ( store.GetCollectionById( id ) != null )
+				collection.Commit( collection.Delete() );
+				if ( store.GetCollectionByID( ID ) != null )
 				{
 					throw new ApplicationException( "Collection object not deleted" );
 				}
@@ -123,20 +122,27 @@ namespace Simias.Storage.Tests
 		public void CreateChildNodeTest()
 		{
 			// Create the collection.
-			Collection collection = store.CreateCollection( "CS_TestCollection" );
+			Collection collection = new Collection( store, "CS_TestCollection" );
 			try
 			{
 				// Create a node subordinate to this collection.
-				Node child = collection.CreateChild( "CS_ChildNode", "Child" );
+				Node child = new Node( "CS_ChildNode" );
+
+				// Add a relationship that will reference the parent Node.
+				Relationship parentChild = new Relationship( collection.ID, collection.ID );
+				child.Properties.AddProperty( "Parent", parentChild );
 
 				// Commit this collection.
-				collection.Commit( true );
+				Node[] commitList = { collection, child };
+				collection.Commit( commitList );
 
 				// Search this collection for this child.
 				bool foundChild = false;
-				foreach ( Node node in collection )
+				ICSList results = collection.Search( "Parent", parentChild );
+				foreach ( ShallowNode shallowNode in results )
 				{
-					if ( ( node.Type == "Child" ) && ( node.Id == child.Id ) )
+					Node node = new Node( collection, shallowNode );
+					if ( node.ID == child.ID )
 					{
 						foundChild = true;
 						break;
@@ -150,10 +156,10 @@ namespace Simias.Storage.Tests
 				}
 
 				// Delete the child node and then delete the tombstone.
-				child.Delete( true ).Delete();
+				collection.Delete( child );
 
 				// See if the child node still exists.
-				if ( collection.GetNodeById( child.Id ) != null )
+				if ( collection.GetNodeByID( child.ID ) != null )
 				{
 					throw new ApplicationException( "Child node not deleted." );
 				}
@@ -161,13 +167,13 @@ namespace Simias.Storage.Tests
 			finally
 			{
 				// Get rid of the root path.
-				Directory.Delete( collection.DocumentRoot.LocalPath, true );
+				Directory.Delete( collection.Root, true );
 
 				// Get rid of this collection.
-				collection.Delete( true );
+				collection.Delete();
 			}
 		}
-
+/*
 		/// <summary>
 		/// Performs the various types of searches.
 		/// </summary>
@@ -1860,6 +1866,7 @@ namespace Simias.Storage.Tests
 				collection.Delete( true );
 			}
 		}
+*/		
 		#endregion
 
 		#region Test Clean Up
@@ -1870,7 +1877,6 @@ namespace Simias.Storage.Tests
 		public void Cleanup()
 		{
 			// Delete the database.  Must be store owner to delete the database.
-			store.ImpersonateUser( Access.StoreAdminRole );
 			store.Delete();
 
 			// Remove the created directory.

@@ -2226,6 +2226,10 @@ namespace Simias.Storage
 				case Syntax.TimeSpan:
 					output = ( ( TimeSpan )GetValue() ).ToString();
 					break;
+					
+				case Syntax.Relationship:
+					output = ( ( Relationship )GetValue() ).ToString();
+					break;
 			}
 
 			return output;

@@ -310,6 +310,16 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Returns whether the user has owner rights to the collection.
+		/// </summary>
+		/// <param name="userID">User id to check for owner rights.</param>
+		/// <returns>True if userId has owner rights on the collection, otherwise false.</returns>
+		private bool IsOwner( string userID )
+		{
+			return ( userID == ownerID ) ? true : false;
+		}
+
+		/// <summary>
 		/// Determines if the world role has the desired access rights.
 		/// </summary>
 		/// <param name="desiredRights">Desired rights.</param>
@@ -445,38 +455,31 @@ namespace Simias.Storage
 		public bool IsAccessAllowed( Access.Rights desiredRights )
 		{
 			bool allowed = true;
-			string currentID = collection.DomainIdentity;
 
 			// Is this user the database owner?
-			if ( collection.StoreReference.IsImpersonating && ( currentID != ownerID ) )
+			if ( collection.StoreReference.IsImpersonating )
 			{
-				// Check if the current identity's ace has already been found.
-				if ( impersonatingAce == null || ( currentID != impersonatingAce.ID ) )
+				string currentID = collection.DomainIdentity;
+				if ( currentID != ownerID )
 				{
-					// Check the rights on the owner ace.
-					impersonatingAce = FindAce( currentID );
-					if ( ( impersonatingAce == null ) || ( impersonatingAce.Rights < desiredRights ) )
+					// Check if the current identity's ace has already been found.
+					if ( impersonatingAce == null || ( currentID != impersonatingAce.ID ) )
+					{
+						// Check the rights on the owner ace.
+						impersonatingAce = FindAce( currentID );
+						if ( ( impersonatingAce == null ) || ( impersonatingAce.Rights < desiredRights ) )
+						{
+							allowed = IsWorldAccessAllowed( desiredRights );
+						}
+					}
+					else if ( impersonatingAce.Rights < desiredRights )
 					{
 						allowed = IsWorldAccessAllowed( desiredRights );
 					}
 				}
-				else if ( impersonatingAce.Rights < desiredRights )
-				{
-					allowed = IsWorldAccessAllowed( desiredRights );
-				}
 			}
 
 			return allowed;
-		}
-
-		/// <summary>
-		/// Returns whether the user has owner rights to the collection.
-		/// </summary>
-		/// <param name="userID">User id to check for owner rights.</param>
-		/// <returns>True if userId has owner rights on the collection, otherwise false.</returns>
-		public bool IsOwner( string userID )
-		{
-			return ( !collection.StoreReference.IsImpersonating || ( userID == ownerID ) ) ? true : false;
 		}
 
 		/// <summary>
@@ -486,8 +489,15 @@ namespace Simias.Storage
 		/// <returns>True if the current user is a database owner or collection owner. Otherwise false is returned.</returns>
 		public bool IsOwnerAccessAllowed()
 		{
+			bool allowed = true;
+
 			// Is this user the collection owner?
-			return IsOwner( collection.DomainIdentity );
+			if ( collection.StoreReference.IsImpersonating )
+			{
+				allowed = IsOwner( collection.DomainIdentity );
+			}
+
+			return allowed;
 		}
 
 		/// <summary>

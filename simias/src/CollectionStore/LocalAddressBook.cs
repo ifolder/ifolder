@@ -74,6 +74,16 @@ namespace Simias.Storage
 				throw new ApplicationException( "Cannot construct object from specified type." );
 			}
 		}
+
+		/// <summary>
+		/// Constructor for creating an existing LocalAddressBook object from a ShallowNode.
+		/// </summary>
+		/// <param name="storeObject">Store object that this collection belongs to.</param>
+		/// <param name="shallowNode">A ShallowNode object.</param>
+		internal LocalAddressBook( Store storeObject, ShallowNode shallowNode ) :
+			base( storeObject, shallowNode )
+		{
+		}
 		#endregion
 	}
 }
