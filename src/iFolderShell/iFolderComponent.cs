@@ -31,7 +31,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Globalization;
 using Novell.Win32Util;
-using Simias.Service;
+using Simias.Client;
 
 namespace Novell.iFolderCom
 {
@@ -390,9 +390,9 @@ namespace Novell.iFolderCom
 		/// <param name="path">The path of the iFolder.</param>
 		public void NewiFolderWizard([MarshalAs(UnmanagedType.LPWStr)] string dllPath, [MarshalAs(UnmanagedType.LPWStr)] string path)
 		{
-			connectToWebService();
 			try
 			{
+				connectToWebService();
 				iFolderSettings ifSettings = ifWebService.GetSettings();
 				if (ifSettings.DisplayConfirmation)
 				{
@@ -457,8 +457,12 @@ namespace Novell.iFolderCom
 				if ((currentTime.Ticks - ticks) > delta)
 				{
 					ticks = currentTime.Ticks;
-					ifWebService = new iFolderWebService();
-					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+					Uri uri = Simias.Client.Manager.LocalServiceUrl;
+					if (uri != null)
+					{
+						ifWebService = new iFolderWebService();
+						ifWebService.Url = uri.ToString() + "/iFolder.asmx";
+					}
 				}
 			}
 		}
