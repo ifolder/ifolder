@@ -145,6 +145,7 @@ namespace Simias
 			this.logTreeView.SelectedImageIndex = -1;
 			this.logTreeView.Size = new System.Drawing.Size(280, 454);
 			this.logTreeView.TabIndex = 1;
+			this.logTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.logTreeView_AfterCheck);
 			// 
 			// logListView
 			// 
@@ -203,7 +204,7 @@ namespace Simias
 			// logListPanel
 			// 
 			this.logListPanel.Controls.Add(this.logListView);
-			this.logListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.logListPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.logListPanel.Location = new System.Drawing.Point(0, 0);
 			this.logListPanel.Name = "logListPanel";
 			this.logListPanel.Size = new System.Drawing.Size(349, 454);
@@ -213,11 +214,13 @@ namespace Simias
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(632, 454);
+			this.ControlBox = false;
 			this.Controls.Add(this.logListPanel);
 			this.Controls.Add(this.splitter);
 			this.Controls.Add(this.logTreeView);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.Name = "MyTraceForm";
+			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Denali Trace Window";
 			this.SizeChanged += new System.EventHandler(this.MyTraceForm_SizeChanged);
@@ -257,6 +260,10 @@ namespace Simias
 		{
 			// update the width of the column
 			logListView.Columns[0].Width = (logListView.Size.Width - SCROLLBAR_WIDTH - 1);
+		}
+
+		private void logTreeView_AfterCheck(object sender, TreeViewEventArgs e)
+		{
 		}
 
 		#endregion

@@ -26,6 +26,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace Simias
 {
@@ -85,18 +86,30 @@ namespace Simias
 		public override void WriteLine(string message, string category)
 		{
 			// add category
-			TreeNode node = AddCategory(category);
+			TreeNode node = GetCategory(category);
 
 			// add message
 			ListViewItem item = list.Items.Add(message);
 			
-			if (!scrollLock)
+			// associate category and message
+			if ((node.Tag == null) || (node.GetType() != typeof(ArrayList)))
 			{
-				item.EnsureVisible();
+				node.Tag = new ArrayList();
+			}
+
+			// TODO: a database of options?
+			if (node.Checked)
+			{
+				(node.Tag as ArrayList).Add(item);
+
+				if (!scrollLock)
+				{
+					item.EnsureVisible();
+				}
 			}
 		}
 
-		private TreeNode AddCategory(string category)
+		private TreeNode GetCategory(string category)
 		{
 			TreeNode node = null;
 
