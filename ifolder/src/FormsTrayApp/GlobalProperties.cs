@@ -50,7 +50,7 @@ namespace Novell.FormsTrayApp
 		private const string iFolderRun = "iFolder";
 
 		private const double megaByte = 1048576;
-		private const int maxMessages = 300;
+		private const int maxMessages = 500;
 		private Hashtable ht;
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
@@ -1030,7 +1030,7 @@ namespace Novell.FormsTrayApp
 			this.status.Name = "status";
 			this.status.Size = new System.Drawing.Size(432, 16);
 			this.status.TabIndex = 10;
-			this.status.Text = "Idle";
+			this.status.Text = "Idle...";
 			// 
 			// GlobalProperties
 			// 
@@ -1144,7 +1144,8 @@ namespace Novell.FormsTrayApp
 				log.SelectedIndex = log.Items.Count - 1;
 				saveLog.Enabled = clearLog.Enabled = true;
 
-				if (log.Items.Count > maxMessages)
+				// This should only have to execute once.
+				while (log.Items.Count > maxMessages)
 				{
 					log.Items.RemoveAt(0);
 				}
@@ -1899,7 +1900,7 @@ namespace Novell.FormsTrayApp
 				case Action.StopSync:
 				{
 					message = syncEventArgs.Name + (syncEventArgs.Successful ? " synchronization succeeded." : " synchronization failed.");
-					status.Text = "Idle";
+					status.Text = "Idle...";
 					break;
 				}
 			}
