@@ -212,7 +212,9 @@ namespace Simias.DomainWatcher
 								{
 									log.Debug("Calling remote domain at: " + domainSvc.Url);
 									domainSvc.GetDomainInfo(userID);
-									status = 0;
+									// CRG: Change this to a one so
+									// we don't cause an event to happen
+									status = 1;
 								}
 								catch(WebException webEx)
 								{
