@@ -19,7 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Author: Boyd Timothy <btimothy@novell.com>
- *
+ * 
+ *  Some code in this file is directly based on code found in Gaim's
+ *  core & plugin files, which is distributed under the GPL.
  ***********************************************************************/
 
 #include "internal.h"
@@ -37,6 +39,8 @@
 #include <time.h>
 #include "gtkprefs.h"
 #include "gtkutils.h"
+#include "notify.h"
+#include "xmlnode.h"
 
 #include "debug.h"
 #include "prefs.h"
@@ -60,6 +64,8 @@
 #define INVITATION_REQUEST_ACCEPT_MSG	"[simias:invitation-request-accept:"
 #define PING_REQUEST_MSG		"[simias:ping-request:"
 #define PING_RESPONSE_MSG		"[simias:ping-response:"
+
+#define TIMESTAMP_FORMAT "%I/%d/%Y %H:%M %p"
 
 #define SIMIAS_PREF_PATH "/plugins/gtk/simias"
 
@@ -241,6 +247,8 @@ static char * fill_state_str(char *state_str, INVITATION_STATE state);
 static void add_invitation_to_store(GtkListStore *store,
 									Invitation *invitation);
 static void init_default_prefs();
+static gboolean invitations_read(GtkListStore *store, const char *filename);
+static void load_invitations_from_file(GtkListStore *store, const char *name);
 static void init_invitation_stores();
 static void add_new_trusted_buddy(GtkListStore *store, GaimBuddy *buddy,
 									char *ip_address, char *ip_port);
@@ -1106,7 +1114,7 @@ fill_time_str(char *time_str, int buf_len, time_t time)
 	struct tm *time_ptr;
 	
 	time_ptr = localtime(&time);
-	strftime(time_str, buf_len, "%I/%d/%Y %H:%M %p", time_ptr);
+	strftime(time_str, buf_len, TIMESTAMP_FORMAT, time_ptr);
 	
 	return time_str;
 }
@@ -1235,6 +1243,193 @@ init_default_prefs()
 	}
 }
 
+static gboolean
+invitations_read(GtkListStore *store, const char *filename)
+{
+	GError *error;
+	gchar *contents = NULL;
+	gsize length;
+	xmlnode *simias, *invitations;
+	
+	gaim_debug(GAIM_DEBUG_INFO, "simias",
+			   "Reading %s\n", filename);
+	if (!g_file_get_contents(filename, &contents, &length, &error)) {
+		gaim_debug(GAIM_DEBUG_ERROR, "simias",
+				   "Error reading invitations file: %s\n", error->message);
+		g_error_free(error);
+		return FALSE;
+	}
+	
+	simias = xmlnode_from_str(contents, length);
+	
+	if (!simias) {
+		FILE *backup;
+		char backup_filename[512];
+		char *name;
+		gaim_debug(GAIM_DEBUG_ERROR, "simias", "Error parsing %s\n",
+				filename);
+		sprintf(backup_filename, "%s~", filename);
+		name = g_build_filename(gaim_user_dir(), backup_filename, NULL);
+
+		if ((backup = fopen(name, "w"))) {
+			fwrite(contents, length, 1, backup);
+			fclose(backup);
+			chmod(name, S_IRUSR | S_IWUSR);
+		} else {
+			gaim_debug(GAIM_DEBUG_ERROR, "simias", "Unable to write backup %s\n",
+				   name);
+		}
+		g_free(name);
+		g_free(contents);
+		return FALSE;
+	}
+	
+	g_free(contents);
+	
+	invitations = xmlnode_get_child(simias, "invitations");
+	if (invitations) {
+		xmlnode *invitation_node;
+		for (invitation_node = xmlnode_get_child(invitations, "invitation"); invitation_node;
+				invitation_node = xmlnode_get_next_twin(invitation_node)) {
+			/**
+			 * Parse an invitation here and if successful, add it to the
+			 * GtkListStore.
+			 */
+			const char *account_name;
+			const char *account_proto;
+			const char *buddy_name;
+			const char *state_str;
+			const char *time_str;
+			const char *collection_id;
+			const char *collection_type;
+			const char *collection_name;
+			const char *ip_addr;
+			const char *ip_port;
+			Invitation *invitation;
+			struct tm *time_ptr;
+			
+			account_name = xmlnode_get_attrib(invitation_node, "account-name");
+			account_proto = xmlnode_get_attrib(invitation_node, "account-proto");
+			buddy_name = xmlnode_get_attrib(invitation_node, "buddy-name");
+			state_str = xmlnode_get_attrib(invitation_node, "state");
+			time_str = xmlnode_get_attrib(invitation_node, "time");
+			collection_id = xmlnode_get_attrib(invitation_node, "collection-id");
+			collection_type = xmlnode_get_attrib(invitation_node, "collection-type");
+			collection_name = xmlnode_get_attrib(invitation_node, "collection-name");
+			ip_addr = xmlnode_get_attrib(invitation_node, "ip-addr");
+			ip_port = xmlnode_get_attrib(invitation_node, "ip-port");
+			
+			/* Verify we've read enough information in to construct an Invitation */
+			if (account_name == NULL || strlen(account_name) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse account-name attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (account_proto == NULL || strlen(account_proto) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse account-proto attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (buddy_name == NULL || strlen(buddy_name) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse buddy-name attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (state_str == NULL || strlen(state_str) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse state attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (time_str == NULL || strlen(time_str) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse time attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (collection_id == NULL || strlen(collection_id) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse collection-id attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (collection_type == NULL || strlen(collection_type) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse collection-type attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (collection_name == NULL || strlen(collection_name) == 0) {
+				gaim_debug(GAIM_DEBUG_ERROR, "simias",
+					"Unable to parse collection-name attribute\n");
+				xmlnode_free(simias);
+				return TRUE;
+			} else if (ip_addr == NULL || strlen(ip_addr) == 0) {
+				ip_addr = "0.0.0.0";
+			} else if (ip_port == NULL || strlen(ip_port) == 0) {
+				ip_port = "0";
+			}
+
+			invitation = malloc(sizeof(Invitation));
+			invitation->gaim_account =
+				gaim_accounts_find(account_name, account_proto);
+			if (!invitation->gaim_account) {
+				/* The account must not be valid anymore, drop the invitation */
+				free(invitation);
+				continue; /* On to the next invitation */
+			}
+			
+			sprintf(invitation->buddy_name, buddy_name);
+			invitation->state = atoi(state_str);
+
+			/* FIXME: Figure out how to read in the timestamp */
+			time_ptr = localtime(&invitation->time);
+
+			sprintf(invitation->collection_id, collection_id);
+			sprintf(invitation->collection_type, collection_type);
+			sprintf(invitation->collection_name, collection_name);
+			sprintf(invitation->ip_addr, ip_addr);
+			sprintf(invitation->ip_port, ip_port);
+			
+			add_invitation_to_store(store, invitation);
+		}
+	}
+
+	gaim_debug(GAIM_DEBUG_INFO, "simias", "Finished reading %s\n",
+			   filename);
+
+	xmlnode_free(simias);
+	return TRUE;
+}
+
+static void
+load_invitations_from_file(GtkListStore *store, const char *name)
+{
+	char *user_dir;
+	char *filename;
+	char *msg;
+
+	gaim_debug(GAIM_DEBUG_INFO, "simias", "load_invitations_from_file() entered\n");
+	user_dir = gaim_user_dir();
+	
+	if (!user_dir) {
+		g_print("load_invitations_from_file() got NULL response from gaim_user_dir()\n");
+	}
+	
+	filename = g_build_filename(user_dir, name, NULL);
+	
+	if (g_file_test(filename, G_FILE_TEST_EXISTS)) {
+		if (!invitations_read(store, filename)) {
+			msg = g_strdup_printf(_("An error was encountered parsing your "
+					"saved invitations file.  It has not been loaded, "
+					"and the old file has been moved to %s~."), name);
+			gaim_notify_error(NULL, NULL, _("Simias Invitations File Error"), msg);
+			g_free(msg);
+		}
+	} else {
+		gaim_debug(GAIM_DEBUG_INFO, "simias", "load_invitations_from_file() file does not exist: %s\n",
+					filename);
+	}
+	
+	g_free(filename);
+}
+
 /**
  * When Gaim first starts up, load the invitation information from a data file
  * and populate the in_inv_store and out_inv_store.
@@ -1254,7 +1449,8 @@ g_print("init_invitation_stores() entered\n");
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(in_inv_store),
 										1, GTK_SORT_ASCENDING);
 
-	/* FIXME: Load in data from file */
+	/* Load in data from file */
+	load_invitations_from_file(in_inv_store, "simias-in-invitations.xml");
 
 	out_inv_store = gtk_list_store_new(N_COLS,
 					GDK_TYPE_PIXBUF,
@@ -1265,8 +1461,8 @@ g_print("init_invitation_stores() entered\n");
 					G_TYPE_POINTER);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(out_inv_store),
 										1, GTK_SORT_ASCENDING);
-	/* FIXME: Load in data from file */
-	/*populate_out_inv_store_from_file(out_inv_store);*/
+	/* Load in data from file */
+	load_invitations_from_file(out_inv_store, "simias-out-invitations.xml");
 }
 
 static void
@@ -1285,13 +1481,11 @@ g_print("add_new_trusted_buddy() called: %s (%s:%s)\n", buddy->name, ip_address,
 	 * of the invitation icon similar to how emblems are overlaid in Nautilus.
 	 */
 	buddy_icon = create_prpl_icon(buddy->account);
-g_print("0\n");	
 	/**
 	 * Aquire an iterator.  This appends an empty row in the store and the row
 	 * must be filled in with gtk_list_store_set() or gtk_list_store_set_value().
 	 */
 	gtk_list_store_append(store, &iter);
-g_print("1\n");	
 
 	/* Set the new row information with the invitation */
 	gtk_list_store_set(store, &iter,
@@ -1301,11 +1495,9 @@ g_print("1\n");
 		TRUSTED_BUDDY_IP_PORT_COL,	ip_port,
 		GAIM_ACCOUNT_PTR_COL,		buddy->account,
 		-1);
-g_print("2\n");	
 
 	if (buddy_icon)
 		g_object_unref(buddy_icon);
-g_print("3\n");	
 }
 
 /**
