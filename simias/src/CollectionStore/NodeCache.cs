@@ -139,6 +139,28 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Creates a key to use in the cache table.
+		/// </summary>
+		/// <param name="collectionID">Collection ID</param>
+		/// <param name="nodeID">Node ID</param>
+		/// <returns>A string to use as a key in the cache table.</returns>
+		private string CreateKey( string collectionID, string nodeID )
+		{
+			return collectionID + ":" + nodeID;
+		}
+
+		/// <summary>
+		/// Determines if a key belongs to the specified collection.
+		/// </summary>
+		/// <param name="key">Cache table key.</param>
+		/// <param name="collectionID">Collection ID.</param>
+		/// <returns>True if key belongs to collection. Otherwise False is returned.</returns>
+		private bool IsFromCollection( string collectionID, string key )
+		{
+			return key.StartsWith( collectionID );
+		}
+
+		/// <summary>
 		/// Constructs a node object from its string representation.
 		/// </summary>
 		/// <param name="nodeString">String containing node object information.</param>
@@ -156,16 +178,20 @@ namespace Simias.Storage
 		/// <summary>
 		/// Adds a node object to the cache.
 		/// </summary>
+		/// <param name="collectionID">The ID of the collection that the node object belongs to.</param>
 		/// <param name="node">The node object to add to the cache.</param>
-		public void Add( Node node )
+		public void Add( string collectionID, Node node )
 		{
+			// Generate a key to use with the cache table.
+			string key = CreateKey( collectionID, node.ID );
+
 			lock ( typeof( NodeCache ) )
 			{
 				// Check to see if the entry is already in the cache.
-				NodeCacheEntry entry = cacheTable[ node.ID ] as NodeCacheEntry;
+				NodeCacheEntry entry = cacheTable[ key ] as NodeCacheEntry;
 				if ( entry == null )
 				{
-					cacheTable[ node.ID ] = new NodeCacheEntry( node.Properties.ToString(), cacheTimeToLive );
+					cacheTable[ key ] = new NodeCacheEntry( node.Properties.ToString(), cacheTimeToLive );
 				}
 				else
 				{
@@ -175,20 +201,52 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Empties out the cache.
+		/// </summary>
+		public void DumpCache()
+		{
+			lock ( typeof( NodeCache ) )
+			{
+				cacheTable.Clear();
+			}
+		}
+
+		/// <summary>
+		/// Removes all nodes from the specified collection from the cache.
+		/// </summary>
+		/// <param name="collectionID">The ID of the collection to remove.</param>
+		public void DumpCache( string collectionID )
+		{
+			lock ( typeof( NodeCache ) )
+			{
+				ArrayList keyList = new ArrayList( cacheTable.Keys );
+				foreach( string key in keyList )
+				{
+					if ( IsFromCollection( collectionID, key ) )
+					{
+						cacheTable.Remove( key );
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets a node object from the cache table.
 		/// </summary>
+		/// <param name="collectionID">The ID of the collection that the node belongs to.</param>
 		/// <param name="nodeID">The ID of the node object.</param>
 		/// <returns>A node object if the ID exists in the cache. Otherwise a null is returned.</returns>
-		public Node Get( string nodeID )
+		public Node Get( string collectionID, string nodeID )
 		{
 			string cacheValue = null;
+			string key = CreateKey( collectionID, nodeID );
 
 			lock ( typeof( NodeCache ) )
 			{
 				// TODO: Remove
 				accessCount++;
 
-				NodeCacheEntry entry = cacheTable[ nodeID ] as NodeCacheEntry;
+				NodeCacheEntry entry = cacheTable[ key ] as NodeCacheEntry;
 				if ( entry != null )
 				{
 					// Keep this entry in the cache.
@@ -206,12 +264,14 @@ namespace Simias.Storage
 		/// <summary>
 		/// Removes a node object from the cache.
 		/// </summary>
+		/// <param name="collectionID">The ID of the collection that the node belongs to.</param>
 		/// <param name="nodeID">The ID of the node object to remove from the cache.</param>
-		public void Remove( string nodeID )
+		public void Remove( string collectionID, string nodeID )
 		{
+			string key = CreateKey( collectionID, nodeID );
 			lock ( typeof( NodeCache ) )
 			{
-				cacheTable.Remove( nodeID );
+				cacheTable.Remove( key );
 			}
 		}
 		#endregion

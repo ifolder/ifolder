@@ -488,16 +488,20 @@ namespace Simias.Storage
 		/// exist a null is returned.</returns>
 		private Node GetNodeByID( string collectionID, string nodeID )
 		{
+			// Normalize the collectionID and node ID.
+			collectionID = collectionID.ToLower();
+			nodeID = nodeID.ToLower();
+
 			// See if the node exists in the cache first.
-			Node node = cache.Get( nodeID.ToLower() );
+			Node node = cache.Get( collectionID, nodeID );
 			if ( node == null )
 			{
 				// Get the specified object from the persistent store.
-				XmlDocument document = storageProvider.GetRecord( nodeID.ToLower(), collectionID.ToLower() );
+				XmlDocument document = storageProvider.GetRecord( nodeID, collectionID );
 				if ( document != null )
 				{
 					node = Node.NodeFactory( this, document );
-					cache.Add( node );
+					cache.Add( collectionID, node );
 				}
 			}		
 
@@ -566,10 +570,13 @@ namespace Simias.Storage
 		{
 			Node[] nodeList = new Node[ 2 ];
 
+			// Normalize the domain ID.
+			domainID = domainID.ToLower();
+
 			// Create the domain object.
-			Domain domain = new Domain( domainName, domainID.ToLower(), domainDescription );
+			Domain domain = new Domain( domainName, domainID, domainDescription );
 			nodeList[ 0 ] = domain;
-			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
+			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID );
 
 			// Add the uri.
 			domain.HostAddress = domainHost;
@@ -743,16 +750,16 @@ namespace Simias.Storage
 		/// the owner of.</returns>
 		public ICSList GetCollectionsByOwner( string userID, string domainID )
 		{
-			string normUserID = userID.ToLower();
-			string normDomainID = ( domainID != null ) ? domainID.ToLower() : null;
+			userID = userID.ToLower();
+			domainID = ( domainID != null ) ? domainID.ToLower() : null;
 			ICSList ownerList = new ICSList();
 
 			// Get all of the collections that the user is a member of in the specified domain.
-			ICSList collectionList = GetCollectionsByUser( normUserID );
+			ICSList collectionList = GetCollectionsByUser( userID );
 			foreach ( ShallowNode sn in collectionList )
 			{
 				Collection c = new Collection( this, sn );
-				if ( ( c.Owner.UserID == normUserID ) && ( ( normDomainID == null ) || ( c.Domain == normDomainID ) ) )
+				if ( ( c.Owner.UserID == userID ) && ( ( domainID == null ) || ( c.Domain == domainID ) ) )
 				{
 					ownerList.Add( sn );
 				}
@@ -945,13 +952,13 @@ namespace Simias.Storage
 		public Roster GetRoster( string domainID )
 		{
 			Roster roster = null;
-			string normDomainID = domainID.ToLower();
+			domainID = domainID.ToLower();
 
 			ICSList rosterList = GetCollectionsByType( NodeTypes.RosterType );
 			foreach ( ShallowNode sn in rosterList )
 			{
 				Roster r = new Roster( this, sn );
-				if ( r.Domain == normDomainID )
+				if ( r.Domain == domainID )
 				{
 					roster = r;
 					break;
