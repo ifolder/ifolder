@@ -96,7 +96,7 @@ namespace Simias.Location
 			// query
 			IResourceQuery query = factory.GetQueryInstance();
 
-			RServiceLocation sl = null;
+			ServiceLocation sl = null;
 		
 			string service = String.Format("{0}.{1}", collection, SUFFIX);
 
@@ -106,7 +106,7 @@ namespace Simias.Location
 
 				int port = sl.Port;
 
-				RHostAddress ha = null;
+				HostAddress ha = null;
 
 				if (query.GetHostByName(sl.Target, ref ha) == 0)
 				{
@@ -133,7 +133,7 @@ namespace Simias.Location
 			// host
 			IResourceQuery query = factory.GetQueryInstance();
 
-			RHostAddress ha = null;
+			HostAddress ha = null;
 
 			if (query.GetDefaultHost(ref ha) == 0)
 			{
