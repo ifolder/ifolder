@@ -515,20 +515,56 @@ namespace Novell.iFolder.Web
 
 
 		/// <summary>
-		/// WebMethod that sets the disk space limit for an iFolder 
+		/// WebMethod that sets an iFolders SyncInterval
 		/// </summary>
 		/// <param name = "iFolderID">
-		/// The ID of the iFolder to set the disk space limit
+		/// The ID of the iFolder to set the syncinterval
 		/// </param>
-		/// <param name = "Limit">
-		/// The size to set in MegaBytes
+		/// <param name = "Interval">
+		/// The interval to set in seconds
 		/// </param>
-		[WebMethod(Description="Sets the Disk Space Limit for an iFolder")]
+		[WebMethod(Description="Sets the Sync Interval for an iFolder")]
 		[SoapRpcMethod]
-		public void SetiFolderSpaceLimit( string iFolderID, long Limit )
+		public void SetiFolderSyncInterval( string iFolderID, int Interval )
 		{
-			SharedCollection.SetCollectionSpaceLimit(iFolderID, Limit);
+			SharedCollection.SetCollectionSyncInterval(iFolderID, Interval);
 		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the default SyncInterval
+		/// </summary>
+		/// <param name = "Interval">
+		/// The interval to set in seconds
+		/// </param>
+		[WebMethod(Description="Sets the Default Sync Interval")]
+		[SoapRpcMethod]
+		public void SetDefaultSyncInterval( int Interval )
+		{
+			SharedCollection.SetDefaultSyncInterval(Interval);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that gets the default SyncInterval
+		/// </summary>
+		/// <returns>
+		/// The default sync interval
+		/// </returns>
+		[WebMethod(Description="Gets the Default Sync Interval")]
+		[SoapRpcMethod]
+		public int GetDefaultSyncInterval()
+		{
+			return SharedCollection.GetDefaultSyncInterval();
+		}
+
+
+
+
 
 	}
 }
