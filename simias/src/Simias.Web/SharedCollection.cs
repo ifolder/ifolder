@@ -29,7 +29,6 @@ using Simias;
 using Simias.Client;
 using Simias.Storage;
 using Simias.Sync;
-using Simias.Sync.Client;
 using Simias.POBox;
 
 #if MONO

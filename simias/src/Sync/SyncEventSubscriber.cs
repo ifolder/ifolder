@@ -78,7 +78,6 @@ namespace Simias.Sync
 		/// <summary>
 		/// Creates a Subscriber to watch for sync events.
 		/// </summary>
-		/// <param name="collectionId">The collection to watch for events.</param>
 		public SyncEventSubscriber()
 		{
 			enabled = true;

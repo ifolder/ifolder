@@ -109,7 +109,7 @@ namespace Novell.iFolder.Web
 
 			Simias.Policy.SyncInterval si = Simias.Policy.SyncInterval.Get(tmpMember, collection);
 			this.EffectiveSyncInterval = si.Interval;
-			DateTime lastSyncTime = Simias.Sync.Client.SyncClient.GetLastSyncTime(collection.ID);
+			DateTime lastSyncTime = Simias.Sync.SyncClient.GetLastSyncTime(collection.ID);
 			if (lastSyncTime.Equals(DateTime.MinValue))
 			{
 				this.LastSyncTime = "";

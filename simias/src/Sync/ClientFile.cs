@@ -29,12 +29,12 @@ using System.Threading;
 using System.Net;
 using Simias.Client.Event;
 using Simias.Storage;
-using Simias.Sync;
+using Simias.Sync.Http;
+using Simias.Sync.Delta;
 using Simias.Event;
 
-namespace Simias.Sync.Client
+namespace Simias.Sync
 {
-	
 	#region FileSegment
 
 	/// <summary>
@@ -43,6 +43,10 @@ namespace Simias.Sync.Client
 	[Serializable]
 	public abstract class FileSegment
 	{
+		/// <summary>
+		/// The offset of where the data goes.
+		/// </summary>
+		public long Offset;
 	}
 
 	#endregion
@@ -61,21 +65,67 @@ namespace Simias.Sync.Client
 		/// </summary>
 		public int				StartBlock;
 		/// <summary>
-		/// This is the end block for the unchanged segment of data.
+		/// The ending block in the range of contiguous blocks.
 		/// </summary>
 		public int				EndBlock;
-
+		
+		public static int		InstanceSize = (8 + 4 + 4);
 		/// <summary>
 		/// Initialize a new Offset Segment.
 		/// </summary>
-		/// <param name="startBlock">The start block.</param>
-		/// <param name="endBlock">The end block.</param>
-		public BlockSegment(int startBlock, int endBlock)
+		/// <param name="offset">The offset of where to copy.</param>
+		/// <param name="block">The block to copy.</param>
+		public BlockSegment(long offset, int block)
 		{
-			this.StartBlock = startBlock;
-			this.EndBlock = endBlock;
+			this.Offset = offset;
+			this.StartBlock = block;
+			this.EndBlock = block;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="reader"></param>
+		public BlockSegment(BinaryReader reader)
+		{
+			Offset = reader.ReadInt64();
+			StartBlock = reader.ReadInt32();
+			EndBlock = reader.ReadInt32();
+		}
+
+		/// <summary>
+		/// Adds the segment to the array.  If this segment is contiguous with the last segment
+		/// combine them.
+		/// </summary>
+		/// <param name="segArray">The array to add the segment to.</param>
+		/// <param name="seg">The new segment to add.</param>
+		public static void AddToArray(ArrayList segArray, BlockSegment seg)
+		{
+			BlockSegment lastSeg;
+			if (segArray.Count > 0)
+			{
+				lastSeg = segArray[segArray.Count -1] as BlockSegment;
+				// Make sure the source and destination are contiguous.
+				if ((lastSeg.EndBlock + 1 == seg.StartBlock) 
+					&& ((lastSeg.Offset + (HashData.BlockSize * (lastSeg.EndBlock - lastSeg.StartBlock))) == seg.Offset))
+				{
+					lastSeg.EndBlock = seg.StartBlock;
+					return;
+				}
+			}
+			segArray.Add(seg);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="writer"></param>
+		public void Serialize(BinaryWriter writer)
+		{
+			writer.Write(Offset);
+			writer.Write(StartBlock);
+			writer.Write(EndBlock);
+		}
 	}
 
 	#endregion
@@ -91,58 +141,147 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// The length of the segment.
 		/// </summary>
-		public int		Length;
-		/// <summary>
-		/// The offset in the local file of the segment.
-		/// </summary>
-		public long		Offset;
-
+		public long		Length;
+		
 		/// <summary>
 		/// Initialize a new Offset Segment.
 		/// </summary>
 		/// <param name="length">The length of the segment.</param>
 		/// <param name="offset">The offset of the segment.</param>
-		public OffsetSegment(int length, long offset)
+		public OffsetSegment(long length, long offset)
 		{
 			this.Length = length;
 			this.Offset = offset;
+		}
+
+		/// <summary>
+		/// Adds the segment to the array.  If this segment is contiguous with the last segment
+		/// combine them.
+		/// </summary>
+		/// <param name="segArray">The array to add the segment to.</param>
+		/// <param name="seg">The new segment to add.</param>
+		public static void AddToArray(ArrayList segArray, OffsetSegment seg)
+		{
+			OffsetSegment lastSeg;
+			if (segArray.Count > 0)
+			{
+				lastSeg = segArray[segArray.Count -1] as OffsetSegment;
+				if (seg.Offset - lastSeg.Length == lastSeg.Offset)
+				{
+					lastSeg.Length += seg.Length;
+					return;
+				}
+			}
+			segArray.Add(seg);
 		}
 	}
 
 	#endregion
 
-	#region WsClientInFile
+	#region DownloadSegment
 
 	/// <summary>
-	/// Used to find the deltas between
-	/// the local file and the server file.
+	/// Describes a file segment using a block from the remote file. Can be a
+	/// Range of blocks.
 	/// </summary>
-	public class WsClientInFile : InFile
+	public class DownloadSegment
+	{
+		/// <summary>
+		/// This is the start block for the unchanged segment of data.
+		/// </summary>
+		public int				StartBlock;
+		/// <summary>
+		/// The ending block in the range of contiguous blocks.
+		/// </summary>
+		public int				EndBlock;
+		
+		public static int		InstanceSize = (4 + 4);
+		/// <summary>
+		/// Initialize a new Offset Segment.
+		/// </summary>
+		/// <param name="block">The block to copy.</param>
+		public DownloadSegment(int block)
+		{
+			this.StartBlock = block;
+			this.EndBlock = block;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="reader"></param>
+		public DownloadSegment(BinaryReader reader)
+		{
+			StartBlock = reader.ReadInt32();
+			EndBlock = reader.ReadInt32();
+		}
+
+		/// <summary>
+		/// Adds the segment to the array.  If this segment is contiguous with the last segment
+		/// combine them.
+		/// </summary>
+		/// <param name="segArray">The array to add the segment to.</param>
+		/// <param name="seg">The new segment to add.</param>
+		public static void AddToArray(ArrayList segArray, DownloadSegment seg)
+		{
+			DownloadSegment lastSeg;
+			if (segArray.Count > 0)
+			{
+				lastSeg = segArray[segArray.Count -1] as DownloadSegment;
+				// Make sure the source and destination are contiguous.
+				if (lastSeg.EndBlock + 1 == seg.StartBlock && lastSeg.EndBlock - lastSeg.StartBlock < 100) 
+				{
+					lastSeg.EndBlock = seg.StartBlock;
+					return;
+				}
+			}
+			segArray.Add(seg);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="writer"></param>
+		public void Serialize(BinaryWriter writer)
+		{
+			writer.Write(StartBlock);
+			writer.Write(EndBlock);
+		}
+	}
+
+	#endregion
+
+	#region HttpClientInFile
+
+	/// <summary>
+	/// ClientInFile class that uses HTTP to download the file from the server.
+	/// </summary>
+	public class HttpClientInFile : InFile
 	{
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		WsServerFile				serverFile;
+		HttpSyncProxy				syncService;
 		/// <summary>True if the node should be marked readOnly.</summary>
 		bool					readOnly = false;
 		
 		#endregion
 		
-		#region Constructors
+		#region Constructor
 
 		/// <summary>
-		/// Constructs a ClientFile object that can be used to sync a file down from the server.
+		/// Constructs a HttpClientFile object that can be used to sync a file down from the server.
 		/// </summary>
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
-		/// <param name="service">The service to access the server side sync.</param>
-		public WsClientInFile(SyncCollection collection, string nodeID, SimiasSyncService service) :
+		/// <param name="syncService">The client used to access the server.</param>
+		public HttpClientInFile(SyncCollection collection, string nodeID, HttpSyncProxy syncService) :
 			base(collection)
 		{
-			serverFile = new WsServerFile(service);
+			this.syncService = syncService;
 			this.nodeID = nodeID;
 		}
-		
+
 		#endregion
 
 		#region publics
@@ -155,7 +294,7 @@ namespace Simias.Sync.Client
 		public bool Open(bool readOnly)
 		{
 			this.readOnly = readOnly;
-			SyncNode snode = serverFile.GetFileNode(nodeID);
+			SyncNode snode = syncService.OpenFileGet(nodeID);
 			if (snode == null)
 			{
 				return false;
@@ -179,7 +318,11 @@ namespace Simias.Sync.Client
 			Log.log.Debug("Closing File success = {0}", commit);
 			bool bStatus = commit;
 			// Close the file on the server.
-			serverFile.CloseFileNode();
+			try
+			{
+				syncService.CloseFile();
+			}
+			catch {}
 			if (commit)
 			{
 				try
@@ -219,7 +362,8 @@ namespace Simias.Sync.Client
 					// BUGBUG this is commented out until we decide what to do with readonly collections.
 					//fa |= FileAttributes.ReadOnly;
 				}
-				fi.Attributes = fa;
+				if (fi.Exists)
+					fi.Attributes = fa;
 			}
 			catch (Exception ex)
 			{
@@ -232,114 +376,123 @@ namespace Simias.Sync.Client
 			return bStatus;
 		}
 
+
 		/// <summary>
 		/// Downloads the file from the server.
 		/// </summary>
-		public virtual bool DownLoadFile()
+		public bool DownLoadFile()
 		{
 			long	fileSize = Length;
 			long	sizeToSync;
 			long	sizeRemaining;
-			long[] fileMap = this.GetDownloadFileMap(out sizeToSync);
+			long[] fileMap = GetDownloadFileMap(out sizeToSync);
 			sizeRemaining = sizeToSync;
 			WritePosition = 0;
 				
 			Log.log.Debug("Downloading {0} bytes, filesize = {1}", sizeToSync, fileSize); 
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
-			try
-			{
-				for (int i = 0; i < fileMap.Length; ++i)
-				{
-					if (fileMap[i] != -1)
-					{
-						Copy(fileMap[i], WritePosition, BlockSize);
-					}
-					else
-					{
-						// We need to get this block from the server.
-						// Check if we have more consecutive blocks to get from the server.
-						int readBufferSize = BlockSize;
-						int offset = i * BlockSize;
-						for (int j = i + 1; j < fileMap.Length; ++j)
-						{
-							if (fileMap[j] == -1)
-							{
-								// We need to get the next segment.
-								// Add the segment size to this read and skip over the segment.
-								if ((readBufferSize + BlockSize) >= MaxXFerSize)
-								{
-									// We don't allow bigger XFers than this get out.
-									break;
-								}
-								else
-								{
-									readBufferSize += BlockSize;
-									i++;
-								}
-							}
-							else
-							{
-								// The next segment is already local.
-								break;
-							}
-						}
+			// If We don't have any entries in the file map the file is of length 0.
+			if (fileMap.Length == 0)
+				return true;
 
-						byte[] readBuffer;
-						readBufferSize = (readBufferSize > sizeRemaining) ? (int)sizeRemaining : readBufferSize;
-						int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
-						if (bytesRead == 0)
-							break;
-						Write(readBuffer, 0, bytesRead);
-						sizeRemaining -= bytesRead;
-						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
-					}
+			ArrayList downloadMap = new ArrayList();
+			// Copy the matches from the local file.
+			for (int i = 0; i < fileMap.Length; ++i)
+			{
+				if (fileMap[i] != -1)
+				{
+					Copy(fileMap[i], WritePosition, HashData.BlockSize);
+				}
+				else
+				{
+					DownloadSegment.AddToArray(downloadMap, new DownloadSegment(i));
 				}
 			}
-			finally
+				
+			
+			// Get the file blocks from the server.
+			byte[] buffer = new byte[HashData.BlockSize];
+			foreach (DownloadSegment seg in downloadMap)
 			{
-				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
-				Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
+				HttpWebResponse response = syncService.ReadFile(seg, HashData.BlockSize);
+				Stream inStream = response.GetResponseStream();
+				try
+				{
+					for (int i = seg.StartBlock; i <= seg.EndBlock; ++i)
+					{
+						int buffOffset = 0;
+						int bytesInBuffer = 0;
+						while (bytesInBuffer < HashData.BlockSize)
+						{
+							int bytesRead = 0;
+							bytesRead = inStream.Read(buffer, buffOffset, HashData.BlockSize - bytesInBuffer);
+							if (bytesRead == 0)
+								break;
+							bytesInBuffer += bytesRead;
+							buffOffset += bytesRead;
+						}
+						WritePosition = i * HashData.BlockSize;
+						Write(buffer, 0, bytesInBuffer);
+						sizeRemaining -= bytesInBuffer;
+						if ((i % 16) == 15)
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+					}
+				}
+				finally
+				{
+					inStream.Close();
+					response.Close();
+				}
 			}
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
+			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 			if (sizeRemaining != 0)
 				return false;
 			return true;
 		}
 
 		#endregion
-		
-		#region protected
+
+		#region private
 		
 		/// <summary>
 		/// Compute the Blocks that need to be downloaded from the server. This builds
 		/// an array of offsets where the blocks need to be placed in the local file.
-		/// The block is represented by the index of the array.
+		/// The block number is represented by the index of the array. -1 means no match.
 		/// </summary>
 		/// <param name="sizeToSync">The number of bytes that need to be synced.</param>
 		/// <returns>The file map.</returns>
-		protected long[] GetDownloadFileMap(out long sizeToSync)
+		private long[] GetDownloadFileMap(out long sizeToSync)
 		{
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
-			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
+			HashData[] serverHashMap;
 			long[] fileMap;
-			if (serverHashMap == null)
+			
+			if (ReadStream != null)
+				serverHashMap = syncService.GetHashMap();
+			else
+				serverHashMap = new HashData[0];
+
+			if (serverHashMap.Length == 0)
 			{
 				sizeToSync = node.Length;
-				fileMap = new long[1];
-				fileMap[0] = -1;
+				fileMap = new long[HashMap.GetBlockCount(node.Length)];
+				for (int i = 0; i < fileMap.Length; ++i)
+					fileMap[i] = -1;
 				return fileMap;
 			}
 			
-			sizeToSync = BlockSize * serverHashMap.Length;
-			long remainingBytes = node.Length % BlockSize;
+			sizeToSync = HashData.BlockSize * serverHashMap.Length;
+			long remainingBytes = node.Length % HashData.BlockSize;
 			if (remainingBytes != 0)
-				sizeToSync = sizeToSync - BlockSize + remainingBytes;
+				sizeToSync = sizeToSync - HashData.BlockSize + remainingBytes;
 			table.Add(serverHashMap);
 			fileMap = new long[serverHashMap.Length];
 
-			int				bytesRead = BlockSize * 16;
-			byte[]			buffer = new byte[BlockSize * 16];
+			int				bytesRead = HashData.BlockSize * 16;
+			byte[]			buffer = new byte[HashData.BlockSize * 16];
 			int				readOffset = 0;
 			WeakHash		wh = new WeakHash();
 			StrongHash		sh = new StrongHash();
@@ -362,28 +515,35 @@ namespace Simias.Sync.Client
 					break;
 				bytesRead = bytesRead == 0 ? bytesRead : bytesRead + readOffset;
 				
-				if (bytesRead >= BlockSize)
+				if (bytesRead >= HashData.BlockSize)
 				{
-					endByte = startByte + BlockSize - 1;
+					endByte = startByte + HashData.BlockSize - 1;
 					HashEntry entry = new HashEntry();
 					while (endByte < bytesRead)
 					{
 						if (recomputeWeakHash)
 						{
-							entry.WeakHash = wh.ComputeHash(buffer, startByte, BlockSize);
+							entry.WeakHash = wh.ComputeHash(buffer, startByte, (ushort)HashData.BlockSize);
 							recomputeWeakHash = false;
 						}
 						else
-							entry.WeakHash = wh.RollHash(BlockSize, dropByte, buffer[endByte]);
+							entry.WeakHash = wh.RollHash(HashData.BlockSize, dropByte, buffer[endByte]);
 						if (table.Contains(entry.WeakHash))
 						{
-							entry.StrongHash = sh.ComputeHash(buffer, startByte, BlockSize);
+							entry.StrongHash = sh.ComputeHash(buffer, startByte, HashData.BlockSize);
 							HashEntry match = table.GetEntry(entry);
 							if (match != null)
 							{
 								// We found a match save the match;
-								fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
-								sizeToSync -= BlockSize;
+								if (fileMap[match.BlockNumber] == -1)
+								{
+									fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
+									sizeToSync -= HashData.BlockSize;
+								}
+								startByte += HashData.BlockSize;
+								endByte += HashData.BlockSize;
+								recomputeWeakHash = true;
+								continue;
 							}
 						}
 						dropByte = buffer[startByte];
@@ -408,7 +568,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="fileMap">The filmap array.</param>
 		/// <returns>The string description.</returns>
-		protected string ReportDiffs(long[] fileMap)
+		private string ReportDiffs(long[] fileMap)
 		{
 			StringWriter sw = new StringWriter();
 			int startBlock = -1;
@@ -440,18 +600,17 @@ namespace Simias.Sync.Client
 
 	#endregion
 
-	#region WsClientOutFile
+	#region HttpClientOutFile
 
 	/// <summary>
-	/// Used to find the deltas between
-	/// the local file and the server file.
+	/// Class used to push a file to the server using HTTP.
 	/// </summary>
-	public class WsClientOutFile : OutFile
+	class HttpClientOutFile : OutFile
 	{
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		WsServerFile			serverFile;
+		HttpSyncProxy				syncService;
 		
 		#endregion
 		
@@ -462,12 +621,12 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync up.</param>
-		/// <param name="service">The service to access the server side sync.</param>
-		public WsClientOutFile(SyncCollection collection, BaseFileNode node, SimiasSyncService service) :
+		/// <param name="syncService">The service to access the server side sync.</param>
+		public HttpClientOutFile(SyncCollection collection, BaseFileNode node, HttpSyncProxy syncService) :
 			base(collection)
 		{
-			serverFile = new WsServerFile(service);
 			this.node = node;
+			this.syncService = syncService;
 		}
 
 		#endregion
@@ -480,11 +639,8 @@ namespace Simias.Sync.Client
 		/// <returns>The status of the open.</returns>
 		public virtual SyncStatus Open()
 		{
-			SyncNode snode = new SyncNode();
-			snode.nodeID = node.ID;
-			snode.node = node.Properties.ToString(true);
-			snode.expectedIncarn = node.MasterIncarnation;
-			SyncStatus status = serverFile.PutFileNode(snode);
+			SyncNode snode = new SyncNode(node);
+			SyncStatus status = syncService.OpenFilePut(snode);
 			if (status == SyncStatus.Success)
 			{
 				base.Open(node, "");
@@ -500,7 +656,7 @@ namespace Simias.Sync.Client
 		public virtual SyncNodeStatus Close(bool commit)
 		{
 			// Close the file on the server.
-			SyncNodeStatus status = serverFile.CloseFileNode(commit);
+			SyncNodeStatus status = syncService.CloseFile(commit);
 			if (commit && status.status == SyncStatus.Success)
 			{
 				node.SetMasterIncarnation(node.LocalIncarnation);
@@ -509,92 +665,86 @@ namespace Simias.Sync.Client
 			base.Close();
 			return status;
 		}
-
 		
 		/// <summary>
 		/// Uploads the file to the server.
 		/// </summary>
-		public virtual bool UploadFile()
+		public bool UploadFile()
 		{
 			long	fileSize = Length;
 			long	sizeToSync;
 			long	sizeRemaining;
-			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
+			ArrayList copyArray;
+			ArrayList writeArray;
+			GetUploadFileMap(out sizeToSync, out copyArray, out writeArray);
 			sizeRemaining = sizeToSync;
-//			byte[]	dataBuffer = new byte[MaxXFerSize];
 			
-			long offset = 0;
 			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
-			foreach(FileSegment segment in fileMap)
+
+			if (copyArray.Count > 0)
 			{
-				if (segment is BlockSegment)
+				syncService.CopyFile(copyArray);
+			}
+			
+			foreach(OffsetSegment seg in writeArray)
+			{
+				// Write the bytes to the output stream.
+				if (seg.Length > 0)
 				{
-					BlockSegment bs = (BlockSegment)segment;
-					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
-					serverFile.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
-					offset += bytesToWrite;
-				}
-				else
-				{
-					// Write the bytes to the output stream.
-					OffsetSegment seg = (OffsetSegment)segment;
-					byte[] dataBuffer = new byte[seg.Length];
+					long leftToSend = seg.Length;
 					ReadPosition = seg.Offset;
-					int bytesRead = Read(dataBuffer, 0, seg.Length);
-					serverFile.Write(dataBuffer, offset, bytesRead);
-					sizeRemaining -= bytesRead;
-					offset += seg.Length;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+					while (leftToSend > 0)
+					{	
+						int bytesToSend = Math.Min(MaxXFerSize, (int)leftToSend);
+						syncService.WriteFile(OutStream, ReadPosition, bytesToSend);
+						leftToSend -= bytesToSend;
+						sizeRemaining -= bytesToSend;
+						eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+					}
 				}
 			}
 			if (sizeRemaining == 0)
 				return true;
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Uploading));
 			return false;
 		}
 
 		#endregion
 
-		#region protected
+		#region private
 
 		/// <summary>
-		/// Gets an ArrayList of all the changes that need to be made to the server file
-		/// to make the files identical.
+		/// Gets the copy and write arrays that are used to create the file on the server.
 		/// </summary>
-		/// <returns></returns>
-		protected ArrayList GetUploadFileMap(out long sizeToSync)
+		/// <param name="sizeToSync"></param>
+		/// <param name="copyArray">The array of BlockSegments that need to be copied from the old file.</param>
+		/// <param name="writeArray">The array of OffsetSegments that need to be sent from the client.</param>
+		private void GetUploadFileMap(out long sizeToSync, out ArrayList copyArray, out ArrayList writeArray)
 		{
 			sizeToSync = 0;
-			ArrayList fileMap = new ArrayList();
+			copyArray = new ArrayList();
+			writeArray = new ArrayList();
 
 			// Get the hash map from the server.
-			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
+			HashData[] serverHashMap = syncService.GetHashMap();
 			
-			if (serverHashMap == null)
+			if (serverHashMap.Length == 0)
 			{
 				// Send the whole file.
-				long offset = 0;
-				long fileSize = sizeToSync = Length;
-				while (offset < fileSize)
-				{
-					long bytesLeft = fileSize - offset;
-					int size = (int)((bytesLeft > MaxXFerSize) ? MaxXFerSize : bytesLeft);
-					OffsetSegment seg = new OffsetSegment(size, offset);
-					fileMap.Add(seg);
-					offset += size;
-				}
-				return fileMap;
+				sizeToSync = Length;
+				writeArray.Add(new OffsetSegment(sizeToSync, 0));
+				return;
 			}
 
 			table.Clear();
 			table.Add(serverHashMap);
 			
-			int				bytesRead = BlockSize * 16;
-			byte[]			buffer = new byte[BlockSize * 16];
+			int				bytesRead = HashData.BlockSize * 16;
+			byte[]			buffer = new byte[HashData.BlockSize * 16];
 			int				readOffset = 0;
 			WeakHash		wh = new WeakHash();
 			StrongHash		sh = new StrongHash();
 			bool			recomputeWeakHash = true;
-			BlockSegment	lastBS = null;
 			int				startByte = 0;
 			int				endByte = 0;
 			int				endOfLastMatch = 0;
@@ -609,47 +759,42 @@ namespace Simias.Sync.Client
 
 				bytesRead = bytesRead + readOffset;
 				
-				if (bytesRead >= BlockSize)
+				if (bytesRead >= HashData.BlockSize)
 				{
-					endByte = startByte + BlockSize - 1;
+					endByte = startByte + HashData.BlockSize - 1;
 					HashEntry entry = new HashEntry();
 					while (endByte < bytesRead)
 					{
 						if (recomputeWeakHash)
 						{
-							entry.WeakHash = wh.ComputeHash(buffer, startByte, BlockSize);
+							entry.WeakHash = wh.ComputeHash(buffer, startByte, (ushort)HashData.BlockSize);
 							recomputeWeakHash = false;
 						}
 						else
-							entry.WeakHash = wh.RollHash(BlockSize, dropByte, buffer[endByte]);
+							entry.WeakHash = wh.RollHash(HashData.BlockSize, dropByte, buffer[endByte]);
 						if (table.Contains(entry.WeakHash))
 						{
-							entry.StrongHash = sh.ComputeHash(buffer, startByte, BlockSize);
+							entry.StrongHash = sh.ComputeHash(buffer, startByte, HashData.BlockSize);
 							HashEntry match = table.GetEntry(entry);
 							if (match != null)
 							{
 								// We found a match save the data that does not match;
 								if (endOfLastMatch != startByte)
 								{
-									OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
-									fileMap.Add(seg);
-									sizeToSync += seg.Length;
+									long segLen = startByte - endOfLastMatch;
+									long segOffset = ReadPosition - bytesRead + endOfLastMatch;
+									OffsetSegment seg = new OffsetSegment(segLen, segOffset);
+									OffsetSegment.AddToArray(writeArray, seg);
+									sizeToSync += segLen;
 								}
+								// Save the matched block.
+								long blockOffset = ReadPosition - bytesRead + startByte;
+								BlockSegment.AddToArray(copyArray, new BlockSegment(blockOffset, match.BlockNumber));
+								
 								startByte = endByte + 1;
-								endByte = startByte + BlockSize - 1;
+								endByte = startByte + HashData.BlockSize - 1;
 								endOfLastMatch = startByte;
 								recomputeWeakHash = true;
-
-								if (lastBS != null && lastBS.EndBlock == match.BlockNumber -1)
-								{
-									lastBS.EndBlock = match.BlockNumber;
-								}
-								else
-								{
-									// Save the matched block.
-									lastBS = new BlockSegment(match.BlockNumber, match.BlockNumber);
-									fileMap.Add(lastBS);
-								}
 								continue;
 							}
 						}
@@ -661,11 +806,12 @@ namespace Simias.Sync.Client
 					// We need to copy any data that has not been saved.
 					if (endOfLastMatch == 0)
 					{
-						// We don't want to send to large of a buffer. Create a DiffRecord
-						// for the data in the buffer.
-						OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
-						fileMap.Add(seg);
-						sizeToSync += seg.Length;
+						// Add this segment to the array.
+						long segOffset = ReadPosition - bytesRead + endOfLastMatch;
+						long segLen = startByte - endOfLastMatch;
+						OffsetSegment seg = new OffsetSegment(segLen, segOffset);
+						OffsetSegment.AddToArray(writeArray, seg);
+						sizeToSync += segLen;
 						endOfLastMatch = startByte;
 					}
 					readOffset = bytesRead - endOfLastMatch;
@@ -682,15 +828,32 @@ namespace Simias.Sync.Client
 			}
 
 			// Get the remaining changes.
-			if (endOfLastMatch != endByte)//== 0 && endByte != 0)
+			if ((endOfLastMatch + 1) != endByte)//== 0 && endByte != 0)
 			{
-				int len = endByte - endOfLastMatch + 1;
-				OffsetSegment seg = new OffsetSegment(len, ReadPosition - len);
-				fileMap.Add(seg);
-				sizeToSync += seg.Length;
+				long segLen = endByte - endOfLastMatch + 1;
+				long segOffset = ReadPosition - segLen;
+				OffsetSegment seg = new OffsetSegment(segLen, segOffset);
+				OffsetSegment.AddToArray(writeArray, seg);
+				sizeToSync += segLen;
 			}
+		}
 
-			return fileMap;
+		/// <summary>
+		/// Send the hash map to the server.
+		/// </summary>
+		/// <returns></returns>
+        private SyncStatus UploadHashMap()
+		{
+			return syncService.PutHashMap(outStream);
+		}
+
+		/// <summary>
+		/// Gets the hash map for the file on the server.
+		/// </summary>
+		/// <returns>The hash map.</returns>
+		private HashData[] DownloadHashMap()
+		{
+			return syncService.GetHashMap();
 		}
 
 		/// <summary>
@@ -698,7 +861,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="segments">An array of segment descriptions.</param>
 		/// <returns>The string description.</returns>
-		protected string ReportDiffs(ArrayList segments)
+		private string ReportDiffs(ArrayList segments)
 		{
 			StringWriter sw = new StringWriter();
 			foreach (FileSegment segment in segments)
@@ -706,7 +869,7 @@ namespace Simias.Sync.Client
 				if (segment is BlockSegment)
 				{
 					BlockSegment bs = (BlockSegment)segment;
-					sw.WriteLine("Found Match Block {0} to Block {1}", bs.StartBlock, bs.EndBlock);
+					sw.WriteLine("Found Match Offset = {0} Block {1} - {2}", bs.Offset, bs.StartBlock, bs.EndBlock);
 				}
 				else
 				{
@@ -715,596 +878,6 @@ namespace Simias.Sync.Client
 				}
 			}
 			return sw.ToString();
-		}
-
-		#endregion
-	}
-
-	#endregion
-
-	#region HttpClientInFile
-
-	/// <summary>
-	/// ClientInFile class that uses HTTP to download the file from the server.
-	/// </summary>
-	public class HttpClientInFile : WsClientInFile
-	{
-		HttpServerFile	serverFile;
-		/// <summary>
-		/// Constructs a HttpClientFile object that can be used to sync a file down from the server.
-		/// </summary>
-		/// /// <param name="collection">The collection the node belongs to.</param>
-		/// <param name="nodeID">The id of the node to sync down</param>
-		/// <param name="service">The service to access the server side sync.</param>
-		public HttpClientInFile(SyncCollection collection, string nodeID, SimiasSyncService service) :
-			base(collection, nodeID, service)
-		{
-			serverFile = new HttpServerFile(service);
-		}
-
-		/// <summary>
-		/// Downloads the file from the server.
-		/// </summary>
-		public override bool DownLoadFile()
-		{
-			long	fileSize = Length;
-			long	sizeToSync;
-			long	sizeRemaining;
-			long[] fileMap = this.GetDownloadFileMap(out sizeToSync);
-			sizeRemaining = sizeToSync;
-			WritePosition = 0;
-				
-			Log.log.Debug("Downloading {0} bytes, filesize = {1}", sizeToSync, fileSize); 
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
-			
-			// Get the file blocks from the server.
-			byte[] buffer = new byte[BlockSize];
-			HttpWebResponse response = serverFile.Read(fileMap, BlockSize);
-			Stream inStream = response.GetResponseStream();
-			try
-			{
-				for (int i = 0; i < fileMap.Length; ++i)
-				{
-					if (fileMap[i] != -1)
-					{
-						Copy(fileMap[i], WritePosition, BlockSize);
-					}
-					else
-					{
-						int buffOffset = 0;
-						int bytesInBuffer = 0;
-						while (bytesInBuffer < BlockSize)
-						{
-							int bytesRead = 0;
-							bytesRead = inStream.Read(buffer, buffOffset, BlockSize - bytesInBuffer);
-							if (bytesRead == 0)
-								break;
-							bytesInBuffer += bytesRead;
-							buffOffset += bytesRead;
-						}
-						Write(buffer, 0, bytesInBuffer);
-						sizeRemaining -= bytesInBuffer;
-						if ((i % 16) == 15)
-							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
-					}
-				}
-			}
-			finally
-			{
-				inStream.Close();
-				response.Close();
-				eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
-				Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
-			}
-			if (sizeRemaining != 0)
-				return false;
-			return true;
-		}
-	}
-
-	#endregion
-
-	#region HttpClientOutFile
-
-	/// <summary>
-	/// Class used to push a file to the server using HTTP.
-	/// </summary>
-	class HttpClientOutFile : WsClientOutFile
-	{
-		#region fields
-
-		HttpServerFile			serverFile;
-		
-		#endregion
-		
-		#region Constructors
-
-		/// <summary>
-		/// Contructs a ClientFile object that can be used to sync a file up to the server.
-		/// </summary>
-		/// <param name="collection">The collection the node belongs to.</param>
-		/// <param name="node">The node to sync up.</param>
-		/// <param name="service">The service to access the server side sync.</param>
-		public HttpClientOutFile(SyncCollection collection, BaseFileNode node, SimiasSyncService service) :
-			base(collection, node, service)
-		{
-			serverFile = new HttpServerFile(service);
-		}
-
-		#endregion
-
-		#region publics
-
-		/// <summary>
-		/// Uploads the file to the server.
-		/// </summary>
-		public override bool UploadFile()
-		{
-			long	fileSize = Length;
-			long	sizeToSync;
-			long	sizeRemaining;
-			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
-			sizeRemaining = sizeToSync;
-			
-			long offset = 0;
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
-			foreach(FileSegment segment in fileMap)
-			{
-				if (segment is BlockSegment)
-				{
-					BlockSegment bs = (BlockSegment)segment;
-					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
-					serverFile.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
-					offset += bytesToWrite;
-				}
-				else
-				{
-					// Write the bytes to the output stream.
-					OffsetSegment seg = (OffsetSegment)segment;
-					byte[] dataBuffer = new byte[seg.Length];
-					ReadPosition = seg.Offset;
-					//int bytesRead = Read(dataBuffer, 0, seg.Length);
-					serverFile.Write(OutStream, offset, seg.Length);
-					sizeRemaining -= seg.Length;
-					//serverFile.Write(dataBuffer, offset, bytesRead);
-					//sizeRemaining -= bytesRead;
-					offset += seg.Length;
-					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
-				}
-			}
-			if (sizeRemaining == 0)
-				return true;
-			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Uploading));
-			return false;
-		}
-
-		#endregion
-	}
-
-	#endregion
-
-	#region IServerFile
-
-	/// <summary>
-	/// Interface to access a file on the server.
-	/// </summary>
-	public interface IServerFile
-	{
-		/// <summary>
-		/// Get the Node that represents this file from the server.
-		/// The file must be closed if null is not returned.
-		/// </summary>
-		/// <param name="nodeID">The ID of the node to get.</param>
-		/// <returns>The node. null if failed.</returns>
-		SyncNode GetFileNode(string nodeID);
-
-		/// <summary>
-		/// Put the node that represents the file to the server.
-		/// </summary>
-		/// <param name="snode">The node to put.</param>
-		/// <returns>The status of the put.</returns>
-		SyncStatus PutFileNode(SyncNode snode);
-
-		/// <summary>
-		/// Get the hash map of the file. This can be used to do a delta sync.
-		/// </summary>
-		/// <param name="BlockSize">The size of chuncks to hash.</param>
-		/// <returns>The hash map or null if failed.</returns>
-		HashData[] GetHashMap(int BlockSize);
-
-		/// <summary>
-		/// Copy data from the current file to the new file.
-		/// </summary>
-		/// <param name="originalOffset">The offset in the original file.</param>
-		/// <param name="offset">The offset in the new file.</param>
-		/// <param name="count">The number of bytes to copy.</param>
-		void Copy(long originalOffset, long offset, int count);
-
-		/// <summary>
-		/// Read data from the server file.
-		/// </summary>
-		/// <param name="offset">The offset in the file to begin the read.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <param name="buffer">The data that was read.</param>
-		/// <returns>The number of bytes read.</returns>
-		int Read(long offset, int count, out byte[] buffer);
-
-		/// <summary>
-		/// Write data to the file.
-		/// </summary>
-		/// <param name="buffer">The data to write.</param>
-		/// <param name="offset">The offset to write at.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		void Write(byte[] buffer, long offset, int count);
-
-		/// <summary>
-		/// Close the file and cleanup any resources.
-		/// This must be called ater a successful call to PutFileNode.
-		/// </summary>
-		/// <param name="commit">true if the files should be commited.</param>
-		/// <returns>The status of the commit.</returns>
-		SyncNodeStatus CloseFileNode(bool commit);
-
-		/// <summary>
-		/// Close the file and cleanup any resources.
-		/// This must be called ater a successful call to GetFileNode.
-		/// </summary>
-		void CloseFileNode();
-	}
-
-	#endregion
-
-	#region WsServerFile
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public class WsServerFile : IServerFile
-	{
-		protected SimiasSyncService		service;
-		Exception				exception;
-		ManualResetEvent		asyncEvent = new ManualResetEvent(true);
-		
-
-		/// <summary>
-		/// Constructs a object that can be used to sync a file to the server.
-		/// </summary>
-		/// <param name="webService">The Sync web service.</param>
-		internal WsServerFile(SimiasSyncService webService)
-		{
-			service = webService;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="result"></param>
-		private void WriteCallback(IAsyncResult result)
-		{
-			try
-			{
-				service.EndWrite(result);
-			}
-			catch (Exception ex)
-			{
-				exception = ex;
-			}
-			asyncEvent.Set();
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="result"></param>
-		private void CopyCallback(IAsyncResult result)
-		{
-			try
-			{
-				service.EndCopy(result);
-			}
-			catch (Exception ex)
-			{
-				exception = ex;
-			}
-			asyncEvent.Set();
-		}
-
-		#region IServerFile Members
-
-		/// <summary>
-		/// Get the Node that represents this file from the server.
-		/// The file must be closed if null is not returned.
-		/// </summary>
-		/// <param name="nodeID">The ID of the node to get.</param>
-		/// <returns>The node. null if failed.</returns>
-		public virtual SyncNode GetFileNode(string nodeID)
-		{
-			return service.GetFileNode(nodeID);
-		}
-
-		/// <summary>
-		/// Put the node that represents the file to the server.
-		/// </summary>
-		/// <param name="snode">The node to put.</param>
-		/// <returns>The status of the put.</returns>
-		public virtual SyncStatus PutFileNode(SyncNode snode)
-		{
-			return service.PutFileNode(snode);
-		}
-
-		/// <summary>
-		/// Get the hash map of the file. This can be used to do a delta sync.
-		/// </summary>
-		/// <param name="blockSize">The size of chuncks to hash.</param>
-		/// <returns>The hash map or null if failed.</returns>
-		public virtual HashData[] GetHashMap(int blockSize)
-		{
-			return service.GetHashMap(blockSize);
-		}
-
-		/// <summary>
-		/// Copy data from the current file to the new file.
-		/// </summary>
-		/// <param name="originalOffset">The offset in the original file.</param>
-		/// <param name="offset">The offset in the new file.</param>
-		/// <param name="count">The number of bytes to copy.</param>
-		public virtual void Copy(long originalOffset, long offset, int count)
-		{
-			/*
-			asyncEvent.WaitOne();
-			if (exception == null)
-			{
-				asyncEvent.Reset();
-				service.BeginCopy(originalOffset, offset, count, new AsyncCallback(CopyCallback), null);
-			}
-			else
-			{
-				throw(exception);
-			}
-			*/
-			service.Copy(originalOffset, offset, count);
-		}
-
-		/// <summary>
-		/// Read data from the server file.
-		/// </summary>
-		/// <param name="offset">The offset in the file to begin the read.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <param name="buffer">The data that was read.</param>
-		/// <returns>The number of bytes read.</returns>
-		public virtual int Read(long offset, int count, out byte[] buffer)
-		{
-			return service.Read(out buffer, offset, count);
-		}
-
-		/// <summary>
-		/// Write data to the file.
-		/// </summary>
-		/// <param name="buffer">The data to write.</param>
-		/// <param name="offset">The offset to write at.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public virtual void Write(byte[] buffer, long offset, int count)
-		{
-			/*
-			asyncEvent.WaitOne();
-			if (exception == null)
-			{
-				asyncEvent.Reset();
-				service.BeginWrite(buffer, offset, count, new AsyncCallback(WriteCallback), null);
-			}
-			else
-			{
-				throw(exception);
-			}
-			*/
-			service.Write(buffer, offset, count);
-		}
-
-		/// <summary>
-		/// Close the file and cleanup any resources.
-		/// This must be called ater a successful call to PutFileNode.
-		/// </summary>
-		/// <param name="commit">true if the files should be commited.</param>
-		/// <returns>The status of the commit.</returns>
-		public virtual SyncNodeStatus CloseFileNode(bool commit)
-		{
-			return service.CloseFileNode(commit);
-		}
-
-		/// <summary>
-		/// Close the file and cleanup any resources.
-		/// This must be called ater a successful call to GetFileNode.
-		/// </summary>
-		public virtual void CloseFileNode()
-		{
-			service.CloseFileNode(false);
-		}
-		#endregion
-	}
-
-	#endregion
-
-	#region HttpServerFile
-
-	class HttpServerFile : WsServerFile
-	{
-		string url;
-		/// <summary>
-		/// Construct an HttpServerWriteFile to upload a file to the server.
-		/// </summary>
-		/// <param name="webService">The web service.</param>
-		internal HttpServerFile(SimiasSyncService webService) :
-			base(webService)
-		{
-			url = service.Url;
-			url = url.Substring(0, url.LastIndexOf('/') + 1) + "SyncHandler.ashx";
-		}
-
-		private HttpWebRequest GetRequest()
-		{
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-			request.ContentType = "application/octet-stream";
-			request.Credentials = service.Credentials;
-			request.CookieContainer = service.CookieContainer;
-			return request;
-		}
-
-		#region IServerFile Members
-
-		/// <summary>
-		/// Copy data from the current file to the new file.
-		/// </summary>
-		/// <param name="originalOffset">The offset in the original file.</param>
-		/// <param name="offset">The offset in the new file.</param>
-		/// <param name="count">The number of bytes to copy.</param>
-		public override void Copy(long originalOffset, long offset, int count)
-		{
-			HttpWebRequest request = GetRequest();
-			WebHeaderCollection headers = request.Headers;
-			request.Method = "POST";
-			request.ContentLength = 0;
-			headers.Add(SyncHttp.CopyOffset, originalOffset.ToString());
-			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
-			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Copy.ToString());
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			response.Close();
-			if (response.StatusCode != HttpStatusCode.OK)
-			{
-				throw new SimiasException(response.StatusDescription);
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="blocks"></param>
-		/// <param name="blockSize"></param>
-		/// <returns></returns>
-		public HttpWebResponse Read(long[] blocks, int blockSize)
-		{
-			HttpWebRequest request = GetRequest();
-			WebHeaderCollection headers = request.Headers;
-			request.Method = "POST";
-			headers.Add(SyncHttp.SyncBlocks, blocks.Length.ToString());
-			headers.Add(SyncHttp.BlockSize, blockSize.ToString());
-			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
-			request.ContentLength = blocks.Length * 8;
-			Stream outStream = request.GetRequestStream();
-			foreach (long block in blocks)
-			{
-				outStream.Write(BitConverter.GetBytes(block), 0, 8);
-			}
-			outStream.Close();
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			if (response.StatusCode == HttpStatusCode.OK)
-			{
-				return response;
-			}
-			response.Close();
-			throw new SimiasException(response.StatusDescription);
-		}
-
-		/// <summary>
-		/// Read data from the server file.
-		/// </summary>
-		/// <param name="offset">The offset in the file to begin the read.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <param name="buffer">The data that was read.</param>
-		/// <returns>The number of bytes read.</returns>
-		public override int Read(long offset, int count, out byte[] buffer)
-		{
-			HttpWebRequest request = GetRequest();
-			WebHeaderCollection headers = request.Headers;
-			request.Method = "GET";
-			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
-			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			try
-			{
-				if (response.StatusCode == HttpStatusCode.OK)
-				{
-					buffer = new byte[count];
-					int length = response.GetResponseStream().Read(buffer, 0, count);
-					return length;
-				}
-			}
-			finally
-			{
-				response.Close();
-			}
-			throw new SimiasException(response.StatusDescription);
-		}
-
-		/// <summary>
-		/// Write data to the file.
-		/// </summary>
-		/// <param name="buffer">The data to write.</param>
-		/// <param name="offset">The offset to write at.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public override void Write(byte[] buffer, long offset, int count)
-		{
-			HttpWebRequest request = GetRequest();
-			WebHeaderCollection headers = request.Headers;
-			request.Method = "POST";
-			request.ContentLength = count;
-			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Write.ToString());
-			headers.Add(SyncHttp.SyncRange, offset.ToString() + "-" + ((long)(offset + count)).ToString());
-			Stream outStream = request.GetRequestStream();
-			outStream.Write(buffer, 0, count);
-			outStream.Close();
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			try
-			{
-				if (response.StatusCode != HttpStatusCode.OK)
-				{
-					throw new SimiasException(response.StatusDescription);
-				}
-			}
-			finally
-			{
-				response.Close();
-			}
-		}
-
-		/// <summary>
-		/// Write data to the file.
-		/// </summary>
-		/// <param name="inStream">The data to write.</param>
-		/// <param name="offset">The offset to write at.</param>
-		/// <param name="count">The number of bytes to write.</param>
-		public void Write(Stream inStream, long offset, long count)
-		{
-			HttpWebRequest request = GetRequest();
-			HttpWebResponse response = null;
-			WebHeaderCollection headers = request.Headers;
-			request.Method = "POST";
-			request.ContentLength = count;
-			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Write.ToString());
-			headers.Add(SyncHttp.SyncRange, offset.ToString() + "-" + ((long)(offset + count)).ToString());
-			Stream outStream = request.GetRequestStream();
-			byte[] buffer = new byte[4096];
-			long bytesSent = 0;
-			while (bytesSent < count)
-			{
-				int bytesRead = inStream.Read(buffer, 0, Math.Min(buffer.Length, (int)(count - bytesSent)));
-				if (bytesRead == 0)
-					break;
-				outStream.Write(buffer, 0, bytesRead);
-				bytesSent += bytesRead;
-			}
-			outStream.Close();
-			response = (HttpWebResponse)request.GetResponse();
-			try
-			{
-				if (response.StatusCode != HttpStatusCode.OK)
-				{
-					throw new SimiasException(response.StatusDescription);
-				}
-			}
-			finally
-			{
-				response.Close();
-			}
 		}
 
 		#endregion

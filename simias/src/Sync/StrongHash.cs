@@ -24,7 +24,7 @@ using System;
 using System.Collections;
 using System.Security.Cryptography;
 
-namespace Simias.Sync
+namespace Simias.Sync.Delta
 {
 	/// <summary>
 	/// Class to compute a strong Hash for a block of data.

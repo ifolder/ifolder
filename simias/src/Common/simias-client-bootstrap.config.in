@@ -5,7 +5,7 @@
       <Service name="Simias Change Log Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Storage.ChangeLog" />
       <Service name="Simias Interprocess Event Service" assembly="Simias" enabled="True" type="Thread" class="Simias.Event.IProcEventServer" />
       <Service name="Simias PO Service" assembly="Simias" enabled="True" type="Thread" class="Simias.POBox.POService" />
-      <Service name="Simias Sync Client" assembly="Simias" enabled="True" type="Thread" class="Simias.Sync.Client.SyncClient" />
+      <Service name="Simias Sync Client" assembly="Simias" enabled="True" type="Thread" class="Simias.Sync.SyncClient" />
       <Service name="Simias Domain Watcher" assembly="Simias" enabled="True" type="Thread" class="Simias.DomainWatcher.Service" />
     </setting>
   </section>

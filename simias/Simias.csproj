@@ -714,8 +714,23 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Sync\SimiasSyncService.cs"
-                    SubType = "code"
+                    RelPath = "src\Sync\HashMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\Http.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\ServerFile.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\StartSyncInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -759,7 +774,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\SyncNode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\SyncPolicy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

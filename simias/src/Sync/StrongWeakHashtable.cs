@@ -25,7 +25,7 @@ using System.IO;
 using System.Collections;
 using System.Security.Cryptography;
 
-namespace Simias.Sync.Client
+namespace Simias.Sync.Delta
 {
 	/// <summary>
 	/// Hashtable class that contains a strong and a weak hash code for the value.
@@ -50,7 +50,8 @@ namespace Simias.Sync.Client
 					entryArray = new ArrayList();
 					table.Add(entry.WeakHash, entryArray);
 				}
-				entryArray.Add(entry);
+				if (!entryArray.Contains(entry))
+					entryArray.Add(entry);
 			}
 		}
 

@@ -101,7 +101,10 @@ AssemblyInfo.cs
 ../Sync/ClientFile.cs
 ../Sync/Conflict.cs
 ../Sync/FileMonitor.cs
-../Sync/SimiasSyncService.cs
+../Sync/HashMap.cs
+../Sync/Http.cs
+../Sync/ServerFile.cs
+../Sync/StartSyncInfo.cs
 ../Sync/StrongHash.cs
 ../Sync/StrongWeakHashtable.cs
 ../Sync/SyncClient.cs
@@ -110,6 +113,8 @@ AssemblyInfo.cs
 ../Sync/SyncEventSubscriber.cs
 ../Sync/SyncFile.cs
 ../Sync/SyncLog.cs
+../Sync/SyncNode.cs
 ../Sync/SyncPolicy.cs
+../Sync/SyncService.cs
 ../Sync/WeakHash.cs
 
