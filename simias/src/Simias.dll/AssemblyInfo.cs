@@ -57,5 +57,5 @@ using System.Runtime.InteropServices;
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: ComVisible(false)]
 
-//[assembly: AssemblyDelaySign(false)]
-//[assembly: AssemblyKeyFile("")]
+[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyKeyFile("../simias-snakeoil.keys")]
