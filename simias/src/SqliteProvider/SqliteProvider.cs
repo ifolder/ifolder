@@ -654,6 +654,7 @@ namespace Simias.Storage.Provider.Sqlite
 			object threadId = Thread.CurrentThread.GetHashCode();
 			lock (connTable)
 			{
+				/*
 				// See if we need to cleanup handles
 				if (threadCount == 0)
 				{
@@ -680,6 +681,7 @@ namespace Simias.Storage.Provider.Sqlite
 						}
 					}
 				}
+				*/
 				if (connTable.Contains(threadId))
 				{
 					instance = (InternalConnection)connTable[threadId];	
