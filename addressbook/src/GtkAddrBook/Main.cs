@@ -26,7 +26,7 @@ using System;
 using Gtk;
 using Gdk;
 using GtkSharp;
-using Novell.AddressBook.UI;
+using Novell.AddressBook.UI.gtk;
 
 namespace ContactBrowser
 {
