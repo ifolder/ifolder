@@ -9,6 +9,9 @@ TOOLDIR='$(top_srcdir)/tools'
 DOCDIR="$SRCDIR/doc"
 APIDOCDIR="$SRCDIR/api-doc"
 
+EMPTY=
+SPACE='$(EMPTY) $(EMPTY)'
+
 COMMON_SUBDIRS="iFolder"
 LINUX_SUBDIRS="GtkTrayApp"
 WINDOWS_SUBDIRS="FormsTrayApp FormsInvitationWizard iFolderShell"
@@ -80,6 +83,7 @@ case $IFOLDER_OS in
         LIBFLAG='-l'
         LIBS=''
         MONO=mono
+        MONO_PATH='$(top_srcdir)/external/SecureChannelSinks:$(subst $(SPACE),:,$(addprefix $(SRCDIR)$(SEP),$(COMMON_SUBDIRS)))'
         NON_PLATFORM_SUBDIRS="$WINDOWS_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
@@ -146,6 +150,7 @@ case $IFOLDER_OS in
         LIBFLAG=''
         LIBS='kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib'
         MONO=
+        MONO_PATH=
         NON_PLATFORM_SUBDIRS="$LINUX_SUBDIRS"
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_FLAGS='/nologo'
@@ -193,6 +198,7 @@ AC_SUBST(LDOUT)
 AC_SUBST(LIBS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(MONO)
+AC_SUBST(MONO_PATH)
 AC_SUBST(NON_PLATFORM_SUBDIRS)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
@@ -205,6 +211,7 @@ AC_SUBST(RES_EXT)
 AC_SUBST(ROOTDIR)
 AC_SUBST(SEP)
 AC_SUBST(SHARED_LIB_FLAG)
+AC_SUBST(SPACE)
 AC_SUBST(SRCDIR)
 AC_SUBST(SYSTEM_XML)
 AC_SUBST(TLBX)
