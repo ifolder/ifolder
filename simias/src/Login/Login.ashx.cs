@@ -71,6 +71,7 @@ namespace Simias
 				else
 				{
 					log.Debug( "Error: Invalid http method - {0}", request.HttpMethod );
+					response.StatusCode = ( int ) HttpStatusCode.BadRequest;
 				}
 			}
 			catch ( Exception ex )
