@@ -157,7 +157,6 @@ namespace Simias.Sync
 	/// </summary>
 	public class ServerOutFile : OutFile
 	{
-		SyncNode snode;
 		#region Constructors
 
 		/// <summary>
@@ -182,7 +181,7 @@ namespace Simias.Sync
 		/// Called to close the file.
 		/// </summary>
 		/// <returns>The status of the sync.</returns>
-		public SyncNodeStatus Close()
+		public new SyncNodeStatus Close()
 		{
 			SyncNodeStatus status = new SyncNodeStatus();
 			status.nodeID = node.ID;
