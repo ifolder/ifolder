@@ -1052,7 +1052,11 @@ namespace Novell.iFolder.Web
 
 			Subscription sub = new Subscription(node);
 
-			if(CanBeiFolder(Path.Combine(LocalPath, sub.DirNodeName)) == false)
+			string path = Path.Combine(LocalPath, sub.DirNodeName);
+			if (Directory.Exists(path))
+				throw new Exception("Path specified cannot be an iFolder, a directory by this name already exists.");
+
+			if(CanBeiFolder(path) == false)
 				throw new Exception("Path specified cannot be an iFolder, it is either a parent or a child of an existing iFolder");
 
 			sub.CollectionRoot = Path.GetFullPath(LocalPath);
