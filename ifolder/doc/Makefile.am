@@ -14,7 +14,7 @@ if NDOC
 ndoc: ifolder-install ndoc-nodeps
 
 ndoc-nodeps: ndoc-clean
-	@echo "$(NDOC) ... -documenter=MSDN -Title=iFolder -OutputDirectory=ndoc"
+	@echo "$(NDOC_CMD) ... -documenter=MSDN -Title=iFolder -OutputDirectory=ndoc"
 if WINDOWS
 	@ifolder_dir=`cd .. && pwd`; \
 	cd $(bindir); \
@@ -24,7 +24,7 @@ if WINDOWS
 		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
 	done; \
 	output_dir=`cygpath --windows "$$ifolder_dir/doc/ndoc"`; \
-	"$(NDOC)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
+	"$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
 else # NOT WINDOWS
 	@ifolder_dir=`cd .. && pwd`; \
 	cd $(bindir); \
@@ -34,7 +34,7 @@ else # NOT WINDOWS
 		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
 	done; \
 	output_dir="$$ifolder_dir/doc/ndoc"; \
-	$(MONO) "$(NDOC)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
+	$(MONO) "$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title=iFolder -OutputDirectory=$$output_dir
 endif # WINDOWS
 
 ndoc-clean:

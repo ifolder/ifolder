@@ -113,7 +113,6 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
-        NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -138,7 +137,6 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/resource:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/mono/1.0/release"
-        NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH="$TOOLDIR/NUnit/bin"
         NUNIT_FLAGS='/nologo'
@@ -159,7 +157,6 @@ case $SIMIAS_OS in
         ICON_EXT='.ico'
         ICON_FLAG='/win32icon:'
         LOG4NET_DIR="$EXTERNAL_DIR/log4net/bin/net/1.0/release"
-        NDOC='$(NDOC_BINDIR)/NDocConsole.exe'
         NUNIT="$TOOLDIR/NUnit/bin/nunit-console.exe"
         NUNIT_LIBPATH='$(shell cygpath --windows "$TOOLDIR/NUnit/bin")'
         NUNIT_FLAGS='/nologo'
@@ -177,7 +174,6 @@ AC_SUBST(COMMON_CLEAN_FILES)
 AC_SUBST(ICON_EXT)
 AC_SUBST(ICON_FLAG)
 AC_SUBST(LOG4NET_DIR)
-AC_SUBST(NDOC)
 AC_SUBST(NUNIT)
 AC_SUBST(NUNIT_FLAGS)
 AC_SUBST(NUNIT_LIBPATH)
@@ -197,23 +193,36 @@ AC_HEADER_STDC
 #AM_PROG_LIBTOOL
 
 #
-# Handle --with-ndoc-bindir
+# Handle --with-ndoc-path
 #
-AC_ARG_WITH(ndoc-bindir, [
-  --with-ndoc-bindir=DIR
-                          path to NDoc executables [[NONE]]],
-    [ NDOC_BINDIR="$withval" ],
-    [ NDOC_BINDIR=NONE ]
+AC_ARG_WITH(ndoc-path, [
+  --with-ndoc-path=PATH        path to dir that contains NDocConsole.exe [[NONE]]],
+    [ NDOC_PATH="$withval" ],
+    [ NDOC_PATH=NONE ]
     )
-if test "$NDOC_BINDIR" = "NONE"; then
-    NDOC_BINDIR=''
+if test "$NDOC_PATH" = "NONE"; then
+    NDOC_PATH=''
 else
-    test -d "$NDOC_BINDIR" || AC_MSG_ERROR([$NDOC_BINDIR does not exist])
-    NDOC_BINDIR=`cd "$NDOC_BINDIR" && pwd`
+    if test `basename "$NDOC_PATH"` = "NDocConsole.exe"; then
+        NDOC_PATH=`dirname "$NDOC_PATH"`
+    fi
+    test -d "$NDOC_PATH" || AC_MSG_ERROR([$NDOC_PATH does not exist])
+    NDOC_PATH=`cd "$NDOC_PATH" && pwd`
 fi
-echo NDOC_BINDIR=$NDOC_BINDIR
-AC_SUBST(NDOC_BINDIR)
-AM_CONDITIONAL(NDOC, test -n "$NDOC_BINDIR")
+if test $NDOC_PATH; then
+    if test -e "$NDOC_PATH/NDocConsole.exe"; then
+        NDOC_CMD="$NDOC_PATH/NDocConsole.exe"
+    else
+        find_array=(`find "$NDOC_PATH" -name NDocConsole.exe`)
+        if test `basename "${find_array[[0]]}"` = "NDocConsole.exe"; then
+            NDOC_CMD="${find_array[[0]]}"
+        fi
+    fi
+    test -e "$NDOC_CMD" || AC_MSG_ERROR([NDocConsole.exe not found in $NDOC_PATH])
+fi
+echo NDOC_CMD=$NDOC_CMD
+AC_SUBST(NDOC_CMD)
+AM_CONDITIONAL(NDOC, test -n "$NDOC_CMD")
 
 #
 # Handle --enable-debug

@@ -17,7 +17,7 @@ if NDOC
 ndoc: addressbook-install ndoc-nodeps
 
 ndoc-nodeps: ndoc-clean
-	@echo "$(NDOC) ... -documenter=MSDN -Title=\"Address Book\" -OutputDirectory=ndoc"
+	@echo "$(NDOC_CMD) ... -documenter=MSDN -Title=\"Address Book\" -OutputDirectory=ndoc"
 if WINDOWS
 	@addressbook_dir=`cd .. && pwd`; \
 	cd $(bindir); \
@@ -27,7 +27,7 @@ if WINDOWS
 		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
 	done; \
 	output_dir=`cygpath --windows "$$addressbook_dir/doc/ndoc"`; \
-	"$(NDOC)" $$asmbly_list -documenter=MSDN -Title="Address Book" -OutputDirectory=$$output_dir
+	"$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title="Address Book" -OutputDirectory=$$output_dir
 else # NOT WINDOWS
 	@addressbook_dir=`cd .. && pwd`; \
 	cd $(bindir); \
@@ -37,7 +37,7 @@ else # NOT WINDOWS
 		asmbly_list="$$asmbly_list $$asmbly,$$doc_xml"; \
 	done; \
 	output_dir="$$addressbook_dir/doc/ndoc"; \
-	$(MONO) "$(NDOC)" $$asmbly_list -documenter=MSDN -Title="Address Book" -OutputDirectory=$$output_dir
+	$(MONO) "$(NDOC_CMD)" $$asmbly_list -documenter=MSDN -Title="Address Book" -OutputDirectory=$$output_dir
 endif # WINDOWS
 
 ndoc-clean:
