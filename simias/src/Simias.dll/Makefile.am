@@ -10,7 +10,7 @@ SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
 SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll SimiasClient.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll
 SIMIAS_LIBPATH = $(LOG4NET_DIR) $(MDNSRESPONDER_DIR) ../SimiasClient
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config ../Common/MyDns.cs.in
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/Simias.log4net ../Common/simias-client-bootstrap.config.in ../Common/MyDns.cs.in
 
 CUR_DIR := $(shell pwd)
 
