@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Xml;
 
@@ -256,16 +257,17 @@ namespace Simias.Storage
 				{
 					// Default the user name to the machine user name.
 					string userName = Environment.UserName;
-
-					// Create an object that represents the database collection.
-					LocalDatabase ldb = new LocalDatabase( this );
-					localDb = ldb.ID;
+					Uri localUri = null;
 
 					// Does the configuration indicate that this is an enterprise server?
 					if ( config.Exists( Domain.SectionName, Domain.EnterpriseName ) )
 					{
 						// This instance is running on an enterprise server.
 						enterpriseServer = true;
+
+						// Set the local uri address for the domains. This will have to change
+						// when we support upstream servers.
+						localUri = new UriBuilder( Uri.UriSchemeHttp, IPAddress.Loopback.ToString() ).Uri;
 
 						// Get the name of the user to create as the identity.
 						string proxyName = config.Get( LdapAuthenticationTag, ProxyDNTag, null );
@@ -274,6 +276,15 @@ namespace Simias.Storage
 							userName = ParseUserName( proxyName );
 						}
 					}
+					else
+					{
+						// Set the local uri address from the config file since this is a workgroup machine.
+						localUri = Manager.LocalServiceUrl;
+					}
+
+					// Create an object that represents the database collection.
+					LocalDatabase ldb = new LocalDatabase( this, localUri );
+					localDb = ldb.ID;
 
 					// Create an identity that represents the current user.  This user will become the 
 					// database owner. Add the domain mapping to the identity.
@@ -286,6 +297,7 @@ namespace Simias.Storage
 
 					// Create the default workgroup domain and add an identity mapping.
 					Domain wgDomain = new Domain( Domain.WorkGroupDomainName, Domain.WorkGroupDomainID );
+					wgDomain.HostAddress = localUri;
 					owner.AddDomainIdentity( owner.ID, wgDomain.ID );
 
 					// Save the local database changes.
@@ -315,6 +327,7 @@ namespace Simias.Storage
 
 						// Create the new domain object and add the identity mapping.
 						Domain eDomain = new Domain( enterpriseName, enterpriseID, description );
+						eDomain.HostAddress = localUri;
 						owner.AddDomainIdentity( owner.ID, eDomain.ID );
 
 						// Add the enterprise domain as the default domain.
@@ -485,8 +498,9 @@ namespace Simias.Storage
 		/// <param name="domainName">Name of the domain.</param>
 		/// <param name="domainID">Well known identity for the specified domain.</param>
 		/// <param name="domainDescription">String that describes the specified domain.</param>
+		/// <param name="domainHost">The URI of where the domain is hosted.</param>
 		/// <returns>The created Domain object.</returns>
-		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription )
+		public Domain AddDomainIdentity( string userID, string domainName, string domainID, string domainDescription, Uri domainHost )
 		{
 			Node[] nodeList = new Node[ 2 ];
 
@@ -494,6 +508,9 @@ namespace Simias.Storage
 			Domain domain = new Domain( domainName, domainID.ToLower(), domainDescription );
 			nodeList[ 0 ] = domain;
 			nodeList[ 1 ] = CurrentUser.AddDomainIdentity( userID.ToLower(), domainID.ToLower() );
+
+			// Add the uri.
+			domain.HostAddress = domainHost;
 			
 			// Commit the changes.
 			LocalDb.Commit( nodeList );

@@ -339,10 +339,16 @@ namespace Simias.Domain
 			// get domain info
 			DomainInfo domainInfo = domainService.GetDomainInfo(provisionInfo.UserID);
 
-			// create domain node
 			Store store = Store.GetStore();
-			Storage.Domain domain = store.AddDomainIdentity(provisionInfo.UserID,
-				domainInfo.Name, domainInfo.ID, domainInfo.Description);
+
+			// create domain node
+			Storage.Domain domain = 
+				store.AddDomainIdentity(
+					provisionInfo.UserID,
+					domainInfo.Name, 
+					domainInfo.ID, 
+					domainInfo.Description,
+					hostUri);
 
 			// set the default domain
 			string previousDomain = store.DefaultDomain;
@@ -372,8 +378,6 @@ namespace Simias.Domain
 				domainConfiguration = new DomainConfig(domainInfo.Name);
 				domainConfiguration.SetAttributes(domain.ID, domain.Description, hostUri, true);
 
-				// Set the host address in the domain object.
-				domain.Properties.ModifyNodeProperty( PropertyTags.HostAddress, hostUri );
 				store.LocalDb.Commit( domain );
 			}
 			catch(Exception e)
@@ -395,11 +399,6 @@ namespace Simias.Domain
 			p.LocalProperty = true;
 			roster.Properties.AddProperty(p);
 
-			// url information
-			p = new Property(SyncCollection.MasterUrlPropertyName, host);
-			p.LocalProperty = true;
-			roster.Properties.AddProperty(p);
-
 			// Create roster member.
 			Access.Rights rights = ( Access.Rights )Enum.Parse( typeof( Access.Rights ), info.MemberRights );
 			Member member = new Member( info.MemberNodeName, info.MemberNodeID, userID, rights, null );
@@ -417,11 +416,6 @@ namespace Simias.Domain
 			
 			// sync information
 			Property p = new Property(SyncCollection.RolePropertyName, SyncCollectionRoles.Slave);
-			p.LocalProperty = true;
-			poBox.Properties.AddProperty(p);
-
-			// url information
-			p = new Property(SyncCollection.MasterUrlPropertyName, host);
 			p.LocalProperty = true;
 			poBox.Properties.AddProperty(p);
 
@@ -464,38 +458,18 @@ namespace Simias.Domain
 			}
 
 			Member member = collection.Owner;
-			string uriString = 
-				domainService.CreateMaster(
-					collection.ID, collection.Name, rootID, rootName, 
-					member.UserID, member.Name, member.ID, member.Rights.ToString() );
 
-			if (uriString == null)
-				throw new ApplicationException("Unable to create remote master collection.");
+			domainService.CreateMaster(
+				collection.ID, 
+				collection.Name, 
+				rootID, rootName, 
+				member.UserID, 
+				member.Name, 
+				member.ID, 
+				member.Rights.ToString() );
 
-			collection.MasterUrl = new Uri(uriString);
 			collection.CreateMaster = false;
 			collection.Commit();
-		}
-
-		/// <summary>
-		/// Deletes the specified collection off of the enterprise server.
-		/// </summary>
-		/// <param name="collection">Collection to delete from the server.</param>
-		public void DeleteMaster(Collection collection)
-		{
-			// Construct the web client.
-			DomainService domainService = new DomainService();
-			domainService.Url = domainConfiguration.ServiceUrl.ToString() + "/DomainService.asmx";
-
-			Credentials cSimiasCreds = new Credentials(collection.ID);
-			domainService.Credentials = cSimiasCreds.GetCredentials();
-
-			/* FIXME:: 
-			if (domainService.Credentials == null)
-				throw new ApplicationException("No credentials available for specified collection.");
-			*/
-
-			domainService.DeleteMaster(collection.ID);
 		}
 
 		#region Properties

@@ -94,6 +94,18 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Get the master url where the collection is hosted.
+		/// </summary>
+		public Uri MasterUrl
+		{
+			get 
+			{
+				Property p = properties.GetSingleProperty( PropertyTags.MasterUrl );
+				return ( p != null ) ? p.Value as Uri : null;
+			}
+		}
+
+		/// <summary>
 		///  Gets the current owner of the collection.
 		/// </summary>
 		public Member Owner
@@ -205,7 +217,7 @@ namespace Simias.Storage
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="domainID">The domain that this object is stored in.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID, string domainID ) :
-			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainID )
+			this( storeObject, collectionName, collectionID, NodeTypes.CollectionType, domainID, storeObject.GetDomain( domainID ).HostAddress )
 		{
 		}
 
@@ -257,7 +269,8 @@ namespace Simias.Storage
 		/// <param name="collectionID">The globally unique identifier for this object.</param>
 		/// <param name="collectionType">Base type of collection object.</param>
 		/// <param name="domainID">The domain that this object is stored in.</param>
-		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainID ) :
+		/// <param name="domainHost">The address of where the domain is hosted.</param>
+		internal protected Collection( Store storeObject, string collectionName, string collectionID, string collectionType, string domainID, Uri domainHost ) :
 			base( collectionName, collectionID, collectionType )
 		{
 			store = storeObject;
@@ -282,6 +295,11 @@ namespace Simias.Storage
 
 			// Add the domain ID as a property.
 			properties.AddNodeProperty( PropertyTags.DomainID, domainID );
+
+			// Add the Url where this collection is hosted.
+			Property p = new Property( PropertyTags.MasterUrl, domainHost );
+			p.LocalProperty = true;
+			properties.AddNodeProperty( p );
 
 			// Setup the access control for this collection.
 			accessControl = new AccessControl( this );

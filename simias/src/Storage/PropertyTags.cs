@@ -116,6 +116,11 @@ namespace Simias.Storage
 		/// <summary>
 		/// Well known property name.
 		/// </summary>
+		static public string MasterUrl = "Master Url";
+
+		/// <summary>
+		/// Well known property name.
+		/// </summary>
 		static public string NodeCreationTime = "NodeCreate";
 
 		/// <summary>
@@ -219,6 +224,7 @@ namespace Simias.Storage
 			systemPropertyTable.Add( LinkReference, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
+			systemPropertyTable.Add( MasterUrl, null );
 			systemPropertyTable.Add( NodeCreationTime, null );
 			systemPropertyTable.Add( NodeUpdateTime, null );
 			systemPropertyTable.Add( Owner, null );

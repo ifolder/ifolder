@@ -47,11 +47,6 @@ namespace Simias.Sync
 		public static readonly string RolePropertyName = "Sync Role";
 
 		/// <summary>
-		/// A collection property name for the master URL of the collection.
-		/// </summary>
-		public static readonly string MasterUrlPropertyName = "Master Url";
-		
-		/// <summary>
 		/// Does the master collection need to be created?
 		/// </summary>
 		public static readonly string CreateMasterPropertyName = "Create Master Collection";
@@ -172,41 +167,6 @@ namespace Simias.Sync
 			}
 
 			set	{ SetProperty(RolePropertyName, value, true); }
-		}
-
-		/// <summary>
-		/// The syncing URL of the master collection.
-		/// </summary>
-		public Uri MasterUrl
-		{
-			get
-			{
-				Uri result = (Uri)GetProperty(MasterUrlPropertyName);
-
-				if (result == null)
-				{
-					result = Simias.Client.Manager.LocalServiceUrl;
-					if ( result != null )
-					{
-						// There will only ever be one listener in workgroup. Therefore URL is
-						// the same as the one that gets used by the local web service except
-						// the host name is not loopback.
-						UriBuilder ub = new UriBuilder( Simias.Client.Manager.LocalServiceUrl );
-						ub.Host = MyDns.GetHostName();
-						result = ub.Uri;
-					}
-					else
-					{
-						result = new UriBuilder( "http", MyDns.GetHostName() ).Uri;
-					}
-				}
-
-				return result;
-			}
-			
-			set
-			{
-				SetProperty(MasterUrlPropertyName, value, true); }
 		}
 
 		/// <summary>

@@ -802,13 +802,6 @@ namespace Simias.POBox
 			pr.LocalProperty = true;
 			c.Properties.AddProperty(pr);
 			
-			Property pu = 
-				new Property(
-						SyncCollection.MasterUrlPropertyName,
-						new Uri(this.SubscriptionCollectionURL));
-			pu.LocalProperty = true;
-			c.Properties.AddProperty(pu);
-
 			// Create the member as well
 			if (this.ToMemberNodeID != null && this.ToMemberNodeID != "")
 			{
