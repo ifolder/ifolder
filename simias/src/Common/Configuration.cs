@@ -123,9 +123,6 @@ namespace Simias
 		/// </summary>
 		static Configuration()
 		{
-			// Certificate policy for the simias process. This is put here because this
-			// class is guaranteed to run before any network access can be made.
-			certPolicy = new CertPolicy();
 		}
 
 		/// <summary>

@@ -29,6 +29,7 @@ AssemblyInfo.cs
 ../CollectionStore/ShallowNode.cs
 ../CollectionStore/Store.cs
 ../CollectionStore/StoreFileNode.cs
+../Common/CertificateStore.cs
 ../Common/Configuration.cs
 ../Common/Exception.cs
 ../Common/ISimiasLog.cs

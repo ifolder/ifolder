@@ -401,6 +401,8 @@ namespace Simias.Storage
 				if ( instance == null )
 				{
 					instance = new Store( Configuration.GetConfiguration() );
+					new CertPolicy();
+					Simias.Security.CertificateStore.LoadCertsFromStore();
 				}
 
 				return instance;

@@ -35,29 +35,64 @@ namespace Simias.Client
 	/// </summary>
 	public class CertPolicy : ICertificatePolicy
 	{
-		internal class CertificateState
+		/// <summary>
+		/// Class used to verify a cert.
+		/// </summary>
+		public class CertificateState
 		{
-			internal X509Certificate	Certificate;
-			internal bool				Accepted;
+			/// <summary>The certificate.</summary>
+			public X509Certificate		Certificate;
+			bool						accepted;
+			CertificateProblem			problem;
+			
 
-			internal CertificateState(X509Certificate certificate, bool accepted)
+			/// <summary>
+			/// Creates a new certificateState object.
+			/// </summary>
+			/// <param name="certificate">The certificate.</param>
+			/// <param name="accepted">If true accept the certificate.</param>
+			/// <param name="problem">The problem with the certificate.</param>
+			public CertificateState(X509Certificate certificate, bool accepted, CertificateProblem problem)
 			{
 				this.Certificate = certificate;
-				this.Accepted = accepted;
+				this.accepted = accepted;
+				this.problem = problem;
+			}
+
+			/// <summary>
+			/// Is the certificate valid.
+			/// </summary>
+			/// <param name="certificate">The certificate to check.</param>
+			/// <returns></returns>
+			public bool IsValid(X509Certificate certificate)
+			{
+				if (accepted && this.Certificate.Equals(certificate))
+					return true;
+				else
+					return false;
+			}
+
+			/// <summary>
+			/// Get the reason the certificate failed.
+			/// </summary>
+			public CertificateProblem Problem
+			{
+				get { return problem; }
 			}
 		}
 
 		#region Class Members
 
-		static public Hashtable CertTable = new Hashtable();
+		static public Hashtable CertTable = Hashtable.Synchronized(new Hashtable());
 
 		/// <summary>
 		/// The default certificate policy.
 		/// </summary>
 		private ICertificatePolicy defaultCertPolicy;
 
-		private  enum    CertificateProblem  : uint
+		public enum CertificateProblem  : uint
 		{
+			CertOK						  = 0,
 			CertEXPIRED                   = 0x800B0101,
 			CertVALIDITYPERIODNESTING     = 0x800B0102,
 			CertROLE                      = 0x800B0103,
@@ -96,12 +131,12 @@ namespace Simias.Client
 		/// </summary>
 		/// <param name="host">The host who owns the certificate.</param>
 		/// <returns>The certificate as a byte array.</returns>
-		public static byte[] GetCertificate(string host)
+		public static CertificateState GetCertificate(string host)
 		{
 			CertificateState cs = CertTable[host] as CertificateState;
 			if (cs != null)
 			{
-				return cs.Certificate.GetRawCertData();
+				return cs;
 			}
 			return null;
 		}
@@ -111,21 +146,9 @@ namespace Simias.Client
 		/// </summary>
 		/// <param name="certificate">The certificate to store.</param>
 		/// <param name="host">The host the certificate belongs to.</param>
-		/// <param name="persist">If true save in store.</param>
-		public static void StoreCertificate(byte[] certificate, string host, bool persist)
+		public static void StoreCertificate(byte[] certificate, string host)
 		{
-			CertTable[host] = new CertificateState(new X509Certificate(certificate), true);
-			if (persist)
-			{
-				// Save the cert in the store.
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private void LoadCertsFromStore()
-		{
+			CertTable[host] = new CertificateState(new X509Certificate(certificate), true, CertificateProblem.CertOK);
 		}
 
 		#region ICertificatePolicy Members
@@ -140,7 +163,7 @@ namespace Simias.Client
 		/// <returns>True if the certificate is to be honored. Otherwise, false is returned.</returns>
 		public bool CheckValidationResult( ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem )
 		{
-			bool honorCert = true;
+			bool honorCert = false;
 
 			if ((certificateProblem == 0) || (CertificateProblem.CertEXPIRED.Equals(certificateProblem)))
 			{
@@ -149,17 +172,14 @@ namespace Simias.Client
 			else
 			{
 				CertificateState cs = CertTable[srvPoint.Address.Host] as CertificateState;
-				if (cs != null && cs.Accepted)
+				if (cs != null && cs.IsValid(certificate))
 				{
-					if (cs.Certificate.Equals(certificate))
-					{
-						honorCert = true;
-					}
+					honorCert = true;
 				}
 				else
 				{
 					// This is a new cert replace the certificate.
-					CertTable[srvPoint.Address.Host] = new CertificateState(certificate, false);
+					CertTable[srvPoint.Address.Host] = new CertificateState(certificate, false, (CertificateProblem)certificateProblem);
 				}
 			}
 			return honorCert;

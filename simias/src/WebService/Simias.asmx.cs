@@ -916,7 +916,7 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public byte[] GetCertificate(string host)
 		{
-			return Simias.Client.CertPolicy.GetCertificate(host);
+			return Simias.Security.CertificateStore.GetCertificate(host);
 		}
 
 		/// <summary>
@@ -928,7 +928,7 @@ namespace Simias.Web
 		[SoapDocumentMethod]
 		public void StoreCertificate(byte[] certificate, string host)
 		{
-			Simias.Client.CertPolicy.StoreCertificate(certificate, host, true);
+			Simias.Security.CertificateStore.StoreCertificate(certificate, host, true);
 		}
 	}
 
