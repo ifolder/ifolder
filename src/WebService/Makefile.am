@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-iFolderWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderService.cs $(srcdir)/iFolder.cs $(srcdir)/DiskSpace.cs $(srcdir)/iFolderUser.cs $(srcdir)/iFolderSettings.cs $(srcdir)/Conflict.cs $(srcdir)/SyncSize.cs
+iFolderWebService_CSFILES1 = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderService.cs $(srcdir)/iFolder.cs $(srcdir)/DiskSpace.cs $(srcdir)/iFolderUser.cs $(srcdir)/Conflict.cs $(srcdir)/SyncSize.cs
 iFolderWebService_CSFILES := $(subst /,$(SEP),$(iFolderWebService_CSFILES1))
 iFolderWebService_INCLUDES =
 iFolderWebService_RESOURCES =
