@@ -115,30 +115,60 @@ namespace Novell.iFolder
 		{
 			try
 			{
-				// Replace this with the logo graphic when we get it
-				//Pixbuf logo = new Pixbuf(ImagesPath("ifolder24.png"));
 				string[] authors = new string[]
 				{
-					"Jared Allen <jpallen@novell.com>",
-					"Brady Anderson <banderso@novell.com>",
-					"James Bell",
-					"Doug Eddy",
-					"Calvin Gaisford <cgaisford@novell.com>",
-					"Bruce Getter",
-					"Mike Lasky",
-					"Rob Lyon",
-					"Dale Olds",
-					"Sharon Smith",
-					"Joe Stark",
-					"Paul Thomas",
-					"Russ Young",
+					Util.GS("Developers:"),
+					"  Boyd Timothy",
+					"  Brady Anderson",
+					"  Bruce Bergeson",
+					"  Calvin Gaisford",
+					"  Daniel Shelley",
+					"  Mike Lasky",
+					"  Paul Thomas",
+					"  Rob Lyon",
+					"  Russ Young",
+					"  Scott Reeves",
+					"  Tim Mellor",
+					"",
+					Util.GS("Quality Assurance:"),
+					"  James Bell",
+					"  Sharon Smith",
+					"  Victor Billings",
+					"",
+					Util.GS("Product Management:"),
+					"  Jared Allen",
+					"  Trent Badger",
+					"",
+					Util.GS("Retired Contributers:"),
+					"  Dale Olds",
+					"  Joe Stark",
+					"  Doug Eddy",
+					"",
+					Util.GS("Organizations:"),
+					"  Mono Team",
+					"  Novell, Inc.",
+					"",
+					Util.GS("Other Contributors:"),
+					"  Dave Camp",
+					"  Nat Friedman",
+					"  Edd Dumbill",
+					"    (Mono: A Developer's Notebook)",
+					"  Jakub Steiner",
+					Util.GS("    (some \"borrowed\" graphics)"),
+					"  Niel M. Bornstein",
+					"    (Mono: A Developer's Notebook)",
+				};
+				
+				string[] documentors = new string[]
+				{
+					"Catherine Craft",
 				};
 
-				About about = new About("iFolder", "0.10",
-										"Copyright (C) 2004 Novell, Inc.",
-										"The iFolder Project is a file sharing solution for workgroup environments. The project is built on the mono/.Net framework to integrate seamlessly into existing desktop environments.",
+				About about = new About("iFolder", "@VERSION@",
+										Util.GS("Copyright (C) 2004-2005 Novell, Inc."),
+										Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system.  This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."),
 										authors,
-										null,
+										documentors,
 										null,
 										new Gdk.Pixbuf(Util.ImagesPath(
 											"ifolder128.png")));
