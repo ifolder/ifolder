@@ -1258,8 +1258,9 @@ namespace Simias.Sync.Client
 						workArray.RemoveNodeFromServer(nodeID);
 					}
 				}
-				catch 
+				catch (Exception ex)
 				{
+					Log.log.Debug(ex, "Failed Downloading File");
 				}
 			}
 		}
@@ -1529,8 +1530,9 @@ namespace Simias.Sync.Client
 						}
 					}
 				}
-				catch 
+				catch (Exception ex)
 				{
+					Log.log.Debug(ex, "Failed Uploading File");
 				}
 			}
 		}
