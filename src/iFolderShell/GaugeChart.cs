@@ -29,7 +29,7 @@ using System.Data;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-namespace Novell.Forms.Controls
+namespace Novell.iFolderCom
 {
 	/// <summary>
 	/// Summary description for GaugeChart.
@@ -81,23 +81,50 @@ namespace Novell.Forms.Controls
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(GaugeChart));
 			this.gauge = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// gauge
 			// 
+			this.gauge.AccessibleDescription = resources.GetString("gauge.AccessibleDescription");
+			this.gauge.AccessibleName = resources.GetString("gauge.AccessibleName");
+			this.gauge.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("gauge.Anchor")));
+			this.gauge.AutoSize = ((bool)(resources.GetObject("gauge.AutoSize")));
 			this.gauge.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.gauge.Location = new System.Drawing.Point(0, 0);
+			this.gauge.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("gauge.Dock")));
+			this.gauge.Enabled = ((bool)(resources.GetObject("gauge.Enabled")));
+			this.gauge.Font = ((System.Drawing.Font)(resources.GetObject("gauge.Font")));
+			this.gauge.Image = ((System.Drawing.Image)(resources.GetObject("gauge.Image")));
+			this.gauge.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("gauge.ImageAlign")));
+			this.gauge.ImageIndex = ((int)(resources.GetObject("gauge.ImageIndex")));
+			this.gauge.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("gauge.ImeMode")));
+			this.gauge.Location = ((System.Drawing.Point)(resources.GetObject("gauge.Location")));
 			this.gauge.Name = "gauge";
-			this.gauge.Size = new System.Drawing.Size(16, 72);
-			this.gauge.TabIndex = 0;
+			this.gauge.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("gauge.RightToLeft")));
+			this.gauge.Size = ((System.Drawing.Size)(resources.GetObject("gauge.Size")));
+			this.gauge.TabIndex = ((int)(resources.GetObject("gauge.TabIndex")));
+			this.gauge.Text = resources.GetString("gauge.Text");
+			this.gauge.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("gauge.TextAlign")));
+			this.gauge.Visible = ((bool)(resources.GetObject("gauge.Visible")));
 			this.gauge.Paint += new System.Windows.Forms.PaintEventHandler(this.gauge_Paint);
 			// 
 			// GaugeChart
 			// 
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.Controls.Add(this.gauge);
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.Name = "GaugeChart";
-			this.Size = new System.Drawing.Size(16, 72);
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.Size = ((System.Drawing.Size)(resources.GetObject("$this.Size")));
 			this.ResumeLayout(false);
 
 		}

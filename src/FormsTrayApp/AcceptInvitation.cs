@@ -36,6 +36,7 @@ namespace Novell.FormsTrayApp
 	/// </summary>
 	public class AcceptInvitation : System.Windows.Forms.Form
 	{
+		private System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(AcceptInvitation));
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.Button cancel;
@@ -93,6 +94,7 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(AcceptInvitation));
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
@@ -106,88 +108,223 @@ namespace Novell.FormsTrayApp
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Location = new System.Drawing.Point(4, 264);
+			this.groupBox1.AccessibleDescription = resources.GetString("groupBox1.AccessibleDescription");
+			this.groupBox1.AccessibleName = resources.GetString("groupBox1.AccessibleName");
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("groupBox1.Anchor")));
+			this.groupBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("groupBox1.BackgroundImage")));
+			this.groupBox1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox1.Dock")));
+			this.groupBox1.Enabled = ((bool)(resources.GetObject("groupBox1.Enabled")));
+			this.groupBox1.Font = ((System.Drawing.Font)(resources.GetObject("groupBox1.Font")));
+			this.groupBox1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("groupBox1.ImeMode")));
+			this.groupBox1.Location = ((System.Drawing.Point)(resources.GetObject("groupBox1.Location")));
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(480, 4);
-			this.groupBox1.TabIndex = 0;
+			this.groupBox1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("groupBox1.RightToLeft")));
+			this.groupBox1.Size = ((System.Drawing.Size)(resources.GetObject("groupBox1.Size")));
+			this.groupBox1.TabIndex = ((int)(resources.GetObject("groupBox1.TabIndex")));
 			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = resources.GetString("groupBox1.Text");
+			this.groupBox1.Visible = ((bool)(resources.GetObject("groupBox1.Visible")));
 			// 
 			// ok
 			// 
+			this.ok.AccessibleDescription = resources.GetString("ok.AccessibleDescription");
+			this.ok.AccessibleName = resources.GetString("ok.AccessibleName");
+			this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("ok.Anchor")));
+			this.ok.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ok.BackgroundImage")));
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.Enabled = false;
-			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(328, 280);
+			this.ok.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ok.Dock")));
+			this.ok.Enabled = ((bool)(resources.GetObject("ok.Enabled")));
+			this.ok.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("ok.FlatStyle")));
+			this.ok.Font = ((System.Drawing.Font)(resources.GetObject("ok.Font")));
+			this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
+			this.ok.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.ImageAlign")));
+			this.ok.ImageIndex = ((int)(resources.GetObject("ok.ImageIndex")));
+			this.ok.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("ok.ImeMode")));
+			this.ok.Location = ((System.Drawing.Point)(resources.GetObject("ok.Location")));
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 1;
-			this.ok.Text = "Accept";
+			this.ok.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ok.RightToLeft")));
+			this.ok.Size = ((System.Drawing.Size)(resources.GetObject("ok.Size")));
+			this.ok.TabIndex = ((int)(resources.GetObject("ok.TabIndex")));
+			this.ok.Text = resources.GetString("ok.Text");
+			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
+			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
 			this.ok.Click += new System.EventHandler(this.ok_Click);
 			// 
 			// cancel
 			// 
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(408, 280);
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 2;
-			this.cancel.Text = "Cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
 			// 
 			// iFolderDetails
 			// 
-			this.iFolderDetails.Location = new System.Drawing.Point(16, 32);
+			this.iFolderDetails.AccessibleDescription = resources.GetString("iFolderDetails.AccessibleDescription");
+			this.iFolderDetails.AccessibleName = resources.GetString("iFolderDetails.AccessibleName");
+			this.iFolderDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("iFolderDetails.Anchor")));
+			this.iFolderDetails.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("iFolderDetails.BackgroundImage")));
+			this.iFolderDetails.ColumnWidth = ((int)(resources.GetObject("iFolderDetails.ColumnWidth")));
+			this.iFolderDetails.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("iFolderDetails.Dock")));
+			this.iFolderDetails.Enabled = ((bool)(resources.GetObject("iFolderDetails.Enabled")));
+			this.iFolderDetails.Font = ((System.Drawing.Font)(resources.GetObject("iFolderDetails.Font")));
+			this.iFolderDetails.HorizontalExtent = ((int)(resources.GetObject("iFolderDetails.HorizontalExtent")));
+			this.iFolderDetails.HorizontalScrollbar = ((bool)(resources.GetObject("iFolderDetails.HorizontalScrollbar")));
+			this.iFolderDetails.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("iFolderDetails.ImeMode")));
+			this.iFolderDetails.IntegralHeight = ((bool)(resources.GetObject("iFolderDetails.IntegralHeight")));
+			this.iFolderDetails.ItemHeight = ((int)(resources.GetObject("iFolderDetails.ItemHeight")));
+			this.iFolderDetails.Location = ((System.Drawing.Point)(resources.GetObject("iFolderDetails.Location")));
 			this.iFolderDetails.Name = "iFolderDetails";
-			this.iFolderDetails.Size = new System.Drawing.Size(456, 95);
-			this.iFolderDetails.TabIndex = 3;
+			this.iFolderDetails.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("iFolderDetails.RightToLeft")));
+			this.iFolderDetails.ScrollAlwaysVisible = ((bool)(resources.GetObject("iFolderDetails.ScrollAlwaysVisible")));
+			this.iFolderDetails.Size = ((System.Drawing.Size)(resources.GetObject("iFolderDetails.Size")));
+			this.iFolderDetails.TabIndex = ((int)(resources.GetObject("iFolderDetails.TabIndex")));
+			this.iFolderDetails.Visible = ((bool)(resources.GetObject("iFolderDetails.Visible")));
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 16);
+			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
+			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
+			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
+			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
+			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
+			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(100, 16);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "iFolder Details:";
+			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
+			this.label1.Text = resources.GetString("label1.Text");
+			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
 			// 
 			// iFolderLocation
 			// 
-			this.iFolderLocation.Location = new System.Drawing.Point(16, 208);
+			this.iFolderLocation.AccessibleDescription = resources.GetString("iFolderLocation.AccessibleDescription");
+			this.iFolderLocation.AccessibleName = resources.GetString("iFolderLocation.AccessibleName");
+			this.iFolderLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("iFolderLocation.Anchor")));
+			this.iFolderLocation.AutoSize = ((bool)(resources.GetObject("iFolderLocation.AutoSize")));
+			this.iFolderLocation.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("iFolderLocation.BackgroundImage")));
+			this.iFolderLocation.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("iFolderLocation.Dock")));
+			this.iFolderLocation.Enabled = ((bool)(resources.GetObject("iFolderLocation.Enabled")));
+			this.iFolderLocation.Font = ((System.Drawing.Font)(resources.GetObject("iFolderLocation.Font")));
+			this.iFolderLocation.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("iFolderLocation.ImeMode")));
+			this.iFolderLocation.Location = ((System.Drawing.Point)(resources.GetObject("iFolderLocation.Location")));
+			this.iFolderLocation.MaxLength = ((int)(resources.GetObject("iFolderLocation.MaxLength")));
+			this.iFolderLocation.Multiline = ((bool)(resources.GetObject("iFolderLocation.Multiline")));
 			this.iFolderLocation.Name = "iFolderLocation";
-			this.iFolderLocation.Size = new System.Drawing.Size(376, 20);
-			this.iFolderLocation.TabIndex = 5;
-			this.iFolderLocation.Text = "";
+			this.iFolderLocation.PasswordChar = ((char)(resources.GetObject("iFolderLocation.PasswordChar")));
+			this.iFolderLocation.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("iFolderLocation.RightToLeft")));
+			this.iFolderLocation.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("iFolderLocation.ScrollBars")));
+			this.iFolderLocation.Size = ((System.Drawing.Size)(resources.GetObject("iFolderLocation.Size")));
+			this.iFolderLocation.TabIndex = ((int)(resources.GetObject("iFolderLocation.TabIndex")));
+			this.iFolderLocation.Text = resources.GetString("iFolderLocation.Text");
+			this.iFolderLocation.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("iFolderLocation.TextAlign")));
+			this.iFolderLocation.Visible = ((bool)(resources.GetObject("iFolderLocation.Visible")));
+			this.iFolderLocation.WordWrap = ((bool)(resources.GetObject("iFolderLocation.WordWrap")));
 			this.iFolderLocation.TextChanged += new System.EventHandler(this.iFolderLocation_TextChanged);
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(16, 192);
+			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
+			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
+			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
+			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
+			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(128, 16);
-			this.label2.TabIndex = 6;
-			this.label2.Text = "iFolder Location:";
+			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
+			this.label2.Text = resources.GetString("label2.Text");
+			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// browse
 			// 
-			this.browse.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.browse.Location = new System.Drawing.Point(400, 207);
+			this.browse.AccessibleDescription = resources.GetString("browse.AccessibleDescription");
+			this.browse.AccessibleName = resources.GetString("browse.AccessibleName");
+			this.browse.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("browse.Anchor")));
+			this.browse.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("browse.BackgroundImage")));
+			this.browse.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("browse.Dock")));
+			this.browse.Enabled = ((bool)(resources.GetObject("browse.Enabled")));
+			this.browse.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("browse.FlatStyle")));
+			this.browse.Font = ((System.Drawing.Font)(resources.GetObject("browse.Font")));
+			this.browse.Image = ((System.Drawing.Image)(resources.GetObject("browse.Image")));
+			this.browse.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("browse.ImageAlign")));
+			this.browse.ImageIndex = ((int)(resources.GetObject("browse.ImageIndex")));
+			this.browse.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("browse.ImeMode")));
+			this.browse.Location = ((System.Drawing.Point)(resources.GetObject("browse.Location")));
 			this.browse.Name = "browse";
-			this.browse.Size = new System.Drawing.Size(72, 23);
-			this.browse.TabIndex = 7;
-			this.browse.Text = "Browse...";
+			this.browse.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("browse.RightToLeft")));
+			this.browse.Size = ((System.Drawing.Size)(resources.GetObject("browse.Size")));
+			this.browse.TabIndex = ((int)(resources.GetObject("browse.TabIndex")));
+			this.browse.Text = resources.GetString("browse.Text");
+			this.browse.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("browse.TextAlign")));
+			this.browse.Visible = ((bool)(resources.GetObject("browse.Visible")));
 			this.browse.Click += new System.EventHandler(this.browse_Click);
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(32, 168);
+			this.label3.AccessibleDescription = resources.GetString("label3.AccessibleDescription");
+			this.label3.AccessibleName = resources.GetString("label3.AccessibleName");
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label3.Anchor")));
+			this.label3.AutoSize = ((bool)(resources.GetObject("label3.AutoSize")));
+			this.label3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label3.Dock")));
+			this.label3.Enabled = ((bool)(resources.GetObject("label3.Enabled")));
+			this.label3.Font = ((System.Drawing.Font)(resources.GetObject("label3.Font")));
+			this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
+			this.label3.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.ImageAlign")));
+			this.label3.ImageIndex = ((int)(resources.GetObject("label3.ImageIndex")));
+			this.label3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label3.ImeMode")));
+			this.label3.Location = ((System.Drawing.Point)(resources.GetObject("label3.Location")));
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(352, 16);
-			this.label3.TabIndex = 8;
-			this.label3.Text = "Choose a location for the iFolder to be created on this computer.";
+			this.label3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label3.RightToLeft")));
+			this.label3.Size = ((System.Drawing.Size)(resources.GetObject("label3.Size")));
+			this.label3.TabIndex = ((int)(resources.GetObject("label3.TabIndex")));
+			this.label3.Text = resources.GetString("label3.Text");
+			this.label3.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label3.TextAlign")));
+			this.label3.Visible = ((bool)(resources.GetObject("label3.Visible")));
 			// 
 			// AcceptInvitation
 			// 
 			this.AcceptButton = this.ok;
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(490, 310);
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.browse);
 			this.Controls.Add(this.label2);
@@ -197,11 +334,20 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox1);
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.MaximizeBox = false;
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimizeBox = false;
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "AcceptInvitation";
-			this.Text = "Setup iFolder <name>";
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.Text = resources.GetString("$this.Text");
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.AcceptInvitation_Closing);
 			this.Load += new System.EventHandler(this.AcceptInvitation_Load);
 			this.ResumeLayout(false);
@@ -214,27 +360,19 @@ namespace Novell.FormsTrayApp
 		{
 			string rightsString;
 
-			// TODO: Localize
 			switch (rights)
 			{
 				case "Admin":
-				{
-					rightsString = "Full Control";
-					break;
-				}
 				case "ReadWrite":
-				{
-					rightsString = "Read/Write";
-					break;
-				}
 				case "ReadOnly":
+				case "Deny":
 				{
-					rightsString = "Read Only";
+					rightsString = resourceManager.GetString(rights);
 					break;
 				}
 				default:
 				{
-					rightsString = "Unknown";
+					rightsString = resourceManager.GetString("unknownRights");
 					break;
 				}
 			}
@@ -309,13 +447,11 @@ namespace Novell.FormsTrayApp
 					}
 					catch (WebException ex)
 					{
-						// TODO: Localize
-						MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show(resourceManager.GetString("pathValidationError") + "\n\n" + ex.Message, resourceManager.GetString("pathValidationErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					}
 					catch (Exception ex)
 					{
-						// TODO: Localize
-						MessageBox.Show("An exception occurred while validating the path.\n\n" + ex.Message, "Path Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show(resourceManager.GetString("pathValidationError") + "\n\n" + ex.Message, resourceManager.GetString("pathValidationErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 					}
 
 					// Restore the cursor.
@@ -324,8 +460,7 @@ namespace Novell.FormsTrayApp
 					if (isPathInvalid)
 					{
 						// The directory is under an existing iFolder ... 
-						// TODO: Localize
-						MessageBox.Show("The location selected for the new iFolder is below an existing iFolder and cannot be used.  Please select a new location.", "Invalid Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show(resourceManager.GetString("pathInvalidError"), resourceManager.GetString("pathInvalidErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
 						iFolderLocation.Focus();
 
 						successful = false;
@@ -340,14 +475,12 @@ namespace Novell.FormsTrayApp
 						}
 						catch (WebException ex)
 						{
-							// TODO: Localize
-							MessageBox.Show("An exception occurred while accepting the invitation.\n\n" + ex.Message, "Accept Error");
+							MessageBox.Show(resourceManager.GetString("acceptError") + "\n\n" + ex.Message);
 							successful = false;
 						}
 						catch (Exception ex)
 						{
-							// TODO: Localize
-							MessageBox.Show("An exception occurred while accepting the invitation.\n\n" + ex.Message, "Accept Error");
+							MessageBox.Show(resourceManager.GetString("acceptError") + "\n\n" + ex.Message);
 							successful = false;
 						}
 					}
@@ -355,7 +488,7 @@ namespace Novell.FormsTrayApp
 			}
 			else
 			{
-				MessageBox.Show("iFolders cannot be placed in a network drive.");
+				MessageBox.Show(resourceManager.GetString("networkPath"));
 				iFolderLocation.Focus();
 				successful = false;
 			}
@@ -365,8 +498,7 @@ namespace Novell.FormsTrayApp
 		{
 			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
 
-			// TODO: Localize
-			folderBrowserDialog.Description = "Select a location for the iFolder.";
+			folderBrowserDialog.Description = resourceManager.GetString("selectLocation");
 
 			// If a valid directory is specified, set it in the browser dialog.
 			if ((iFolderLocation.Text != "") && Directory.Exists(iFolderLocation.Text))
@@ -387,16 +519,16 @@ namespace Novell.FormsTrayApp
 
 		private void AcceptInvitation_Load(object sender, System.EventArgs e)
 		{
-			this.Text = this.Text.Replace("<name>", ifolder.Name);
+			this.Text = string.Format(this.Text, ifolder.Name);
+
 			// Add the iFolder details to the list box.
-			// TODO: Localize
-			string name = "iFolder name: " + ifolder.Name;
+			string name = string.Format(resourceManager.GetString("iFolderName"), ifolder.Name);
 			iFolderDetails.Items.Add(name);
 
-			string sharedBy = "Shared by: " + ifolder.Owner;
+			string sharedBy = string.Format(resourceManager.GetString("sharedBy"), ifolder.Owner);
 			iFolderDetails.Items.Add(sharedBy);
 
-			string rights = "Rights: " + rightsToString(ifolder.CurrentUserRights);
+			string rights = string.Format(resourceManager.GetString("rights"), rightsToString(ifolder.CurrentUserRights));
 			iFolderDetails.Items.Add(rights);
 		}
 

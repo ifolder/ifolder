@@ -85,6 +85,7 @@ namespace Novell.iFolderCom
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(UserProperties));
 			this.accessButtons = new System.Windows.Forms.GroupBox();
 			this.readOnly = new System.Windows.Forms.RadioButton();
 			this.readWrite = new System.Windows.Forms.RadioButton();
@@ -97,87 +98,206 @@ namespace Novell.iFolderCom
 			// 
 			// accessButtons
 			// 
+			this.accessButtons.AccessibleDescription = resources.GetString("accessButtons.AccessibleDescription");
+			this.accessButtons.AccessibleName = resources.GetString("accessButtons.AccessibleName");
+			this.accessButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("accessButtons.Anchor")));
+			this.accessButtons.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("accessButtons.BackgroundImage")));
 			this.accessButtons.Controls.Add(this.readOnly);
 			this.accessButtons.Controls.Add(this.readWrite);
 			this.accessButtons.Controls.Add(this.fullControl);
+			this.accessButtons.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("accessButtons.Dock")));
+			this.accessButtons.Enabled = ((bool)(resources.GetObject("accessButtons.Enabled")));
 			this.accessButtons.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.accessButtons.Location = new System.Drawing.Point(14, 16);
+			this.accessButtons.Font = ((System.Drawing.Font)(resources.GetObject("accessButtons.Font")));
+			this.accessButtons.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("accessButtons.ImeMode")));
+			this.accessButtons.Location = ((System.Drawing.Point)(resources.GetObject("accessButtons.Location")));
 			this.accessButtons.Name = "accessButtons";
-			this.accessButtons.Size = new System.Drawing.Size(264, 104);
-			this.accessButtons.TabIndex = 2;
+			this.accessButtons.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("accessButtons.RightToLeft")));
+			this.accessButtons.Size = ((System.Drawing.Size)(resources.GetObject("accessButtons.Size")));
+			this.accessButtons.TabIndex = ((int)(resources.GetObject("accessButtons.TabIndex")));
 			this.accessButtons.TabStop = false;
-			this.accessButtons.Text = "Access";
+			this.accessButtons.Text = resources.GetString("accessButtons.Text");
+			this.accessButtons.Visible = ((bool)(resources.GetObject("accessButtons.Visible")));
 			// 
 			// readOnly
 			// 
-			this.readOnly.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.readOnly.Location = new System.Drawing.Point(16, 72);
+			this.readOnly.AccessibleDescription = resources.GetString("readOnly.AccessibleDescription");
+			this.readOnly.AccessibleName = resources.GetString("readOnly.AccessibleName");
+			this.readOnly.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("readOnly.Anchor")));
+			this.readOnly.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("readOnly.Appearance")));
+			this.readOnly.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("readOnly.BackgroundImage")));
+			this.readOnly.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("readOnly.CheckAlign")));
+			this.readOnly.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("readOnly.Dock")));
+			this.readOnly.Enabled = ((bool)(resources.GetObject("readOnly.Enabled")));
+			this.readOnly.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("readOnly.FlatStyle")));
+			this.readOnly.Font = ((System.Drawing.Font)(resources.GetObject("readOnly.Font")));
+			this.readOnly.Image = ((System.Drawing.Image)(resources.GetObject("readOnly.Image")));
+			this.readOnly.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("readOnly.ImageAlign")));
+			this.readOnly.ImageIndex = ((int)(resources.GetObject("readOnly.ImageIndex")));
+			this.readOnly.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("readOnly.ImeMode")));
+			this.readOnly.Location = ((System.Drawing.Point)(resources.GetObject("readOnly.Location")));
 			this.readOnly.Name = "readOnly";
-			this.readOnly.Size = new System.Drawing.Size(232, 16);
-			this.readOnly.TabIndex = 2;
-			this.readOnly.Text = "Read Only";
+			this.readOnly.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("readOnly.RightToLeft")));
+			this.readOnly.Size = ((System.Drawing.Size)(resources.GetObject("readOnly.Size")));
+			this.readOnly.TabIndex = ((int)(resources.GetObject("readOnly.TabIndex")));
+			this.readOnly.Text = resources.GetString("readOnly.Text");
+			this.readOnly.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("readOnly.TextAlign")));
+			this.readOnly.Visible = ((bool)(resources.GetObject("readOnly.Visible")));
 			// 
 			// readWrite
 			// 
-			this.readWrite.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.readWrite.Location = new System.Drawing.Point(16, 48);
+			this.readWrite.AccessibleDescription = resources.GetString("readWrite.AccessibleDescription");
+			this.readWrite.AccessibleName = resources.GetString("readWrite.AccessibleName");
+			this.readWrite.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("readWrite.Anchor")));
+			this.readWrite.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("readWrite.Appearance")));
+			this.readWrite.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("readWrite.BackgroundImage")));
+			this.readWrite.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("readWrite.CheckAlign")));
+			this.readWrite.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("readWrite.Dock")));
+			this.readWrite.Enabled = ((bool)(resources.GetObject("readWrite.Enabled")));
+			this.readWrite.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("readWrite.FlatStyle")));
+			this.readWrite.Font = ((System.Drawing.Font)(resources.GetObject("readWrite.Font")));
+			this.readWrite.Image = ((System.Drawing.Image)(resources.GetObject("readWrite.Image")));
+			this.readWrite.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("readWrite.ImageAlign")));
+			this.readWrite.ImageIndex = ((int)(resources.GetObject("readWrite.ImageIndex")));
+			this.readWrite.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("readWrite.ImeMode")));
+			this.readWrite.Location = ((System.Drawing.Point)(resources.GetObject("readWrite.Location")));
 			this.readWrite.Name = "readWrite";
-			this.readWrite.Size = new System.Drawing.Size(232, 16);
-			this.readWrite.TabIndex = 1;
-			this.readWrite.Text = "Read/Write";
+			this.readWrite.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("readWrite.RightToLeft")));
+			this.readWrite.Size = ((System.Drawing.Size)(resources.GetObject("readWrite.Size")));
+			this.readWrite.TabIndex = ((int)(resources.GetObject("readWrite.TabIndex")));
+			this.readWrite.Text = resources.GetString("readWrite.Text");
+			this.readWrite.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("readWrite.TextAlign")));
+			this.readWrite.Visible = ((bool)(resources.GetObject("readWrite.Visible")));
 			// 
 			// fullControl
 			// 
-			this.fullControl.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.fullControl.Location = new System.Drawing.Point(16, 24);
+			this.fullControl.AccessibleDescription = resources.GetString("fullControl.AccessibleDescription");
+			this.fullControl.AccessibleName = resources.GetString("fullControl.AccessibleName");
+			this.fullControl.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("fullControl.Anchor")));
+			this.fullControl.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("fullControl.Appearance")));
+			this.fullControl.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("fullControl.BackgroundImage")));
+			this.fullControl.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("fullControl.CheckAlign")));
+			this.fullControl.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("fullControl.Dock")));
+			this.fullControl.Enabled = ((bool)(resources.GetObject("fullControl.Enabled")));
+			this.fullControl.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("fullControl.FlatStyle")));
+			this.fullControl.Font = ((System.Drawing.Font)(resources.GetObject("fullControl.Font")));
+			this.fullControl.Image = ((System.Drawing.Image)(resources.GetObject("fullControl.Image")));
+			this.fullControl.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("fullControl.ImageAlign")));
+			this.fullControl.ImageIndex = ((int)(resources.GetObject("fullControl.ImageIndex")));
+			this.fullControl.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("fullControl.ImeMode")));
+			this.fullControl.Location = ((System.Drawing.Point)(resources.GetObject("fullControl.Location")));
 			this.fullControl.Name = "fullControl";
-			this.fullControl.Size = new System.Drawing.Size(232, 16);
-			this.fullControl.TabIndex = 0;
-			this.fullControl.Text = "Full Control";
+			this.fullControl.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("fullControl.RightToLeft")));
+			this.fullControl.Size = ((System.Drawing.Size)(resources.GetObject("fullControl.Size")));
+			this.fullControl.TabIndex = ((int)(resources.GetObject("fullControl.TabIndex")));
+			this.fullControl.Text = resources.GetString("fullControl.Text");
+			this.fullControl.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("fullControl.TextAlign")));
+			this.fullControl.Visible = ((bool)(resources.GetObject("fullControl.Visible")));
 			// 
 			// owner
 			// 
-			this.owner.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.owner.Location = new System.Drawing.Point(14, 152);
+			this.owner.AccessibleDescription = resources.GetString("owner.AccessibleDescription");
+			this.owner.AccessibleName = resources.GetString("owner.AccessibleName");
+			this.owner.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("owner.Anchor")));
+			this.owner.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("owner.Appearance")));
+			this.owner.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("owner.BackgroundImage")));
+			this.owner.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("owner.CheckAlign")));
+			this.owner.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("owner.Dock")));
+			this.owner.Enabled = ((bool)(resources.GetObject("owner.Enabled")));
+			this.owner.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("owner.FlatStyle")));
+			this.owner.Font = ((System.Drawing.Font)(resources.GetObject("owner.Font")));
+			this.owner.Image = ((System.Drawing.Image)(resources.GetObject("owner.Image")));
+			this.owner.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("owner.ImageAlign")));
+			this.owner.ImageIndex = ((int)(resources.GetObject("owner.ImageIndex")));
+			this.owner.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("owner.ImeMode")));
+			this.owner.Location = ((System.Drawing.Point)(resources.GetObject("owner.Location")));
 			this.owner.Name = "owner";
-			this.owner.Size = new System.Drawing.Size(264, 16);
-			this.owner.TabIndex = 3;
-			this.owner.Text = "Make this user the owner of the collection";
+			this.owner.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("owner.RightToLeft")));
+			this.owner.Size = ((System.Drawing.Size)(resources.GetObject("owner.Size")));
+			this.owner.TabIndex = ((int)(resources.GetObject("owner.TabIndex")));
+			this.owner.Text = resources.GetString("owner.Text");
+			this.owner.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("owner.TextAlign")));
+			this.owner.Visible = ((bool)(resources.GetObject("owner.Visible")));
 			this.owner.CheckedChanged += new System.EventHandler(this.owner_CheckedChanged);
 			// 
 			// ok
 			// 
+			this.ok.AccessibleDescription = resources.GetString("ok.AccessibleDescription");
+			this.ok.AccessibleName = resources.GetString("ok.AccessibleName");
+			this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("ok.Anchor")));
+			this.ok.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ok.BackgroundImage")));
 			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(128, 184);
+			this.ok.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("ok.Dock")));
+			this.ok.Enabled = ((bool)(resources.GetObject("ok.Enabled")));
+			this.ok.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("ok.FlatStyle")));
+			this.ok.Font = ((System.Drawing.Font)(resources.GetObject("ok.Font")));
+			this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
+			this.ok.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.ImageAlign")));
+			this.ok.ImageIndex = ((int)(resources.GetObject("ok.ImageIndex")));
+			this.ok.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("ok.ImeMode")));
+			this.ok.Location = ((System.Drawing.Point)(resources.GetObject("ok.Location")));
 			this.ok.Name = "ok";
-			this.ok.TabIndex = 4;
-			this.ok.Text = "OK";
+			this.ok.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("ok.RightToLeft")));
+			this.ok.Size = ((System.Drawing.Size)(resources.GetObject("ok.Size")));
+			this.ok.TabIndex = ((int)(resources.GetObject("ok.TabIndex")));
+			this.ok.Text = resources.GetString("ok.Text");
+			this.ok.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("ok.TextAlign")));
+			this.ok.Visible = ((bool)(resources.GetObject("ok.Visible")));
 			// 
 			// cancel
 			// 
+			this.cancel.AccessibleDescription = resources.GetString("cancel.AccessibleDescription");
+			this.cancel.AccessibleName = resources.GetString("cancel.AccessibleName");
+			this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("cancel.Anchor")));
+			this.cancel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cancel.BackgroundImage")));
 			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(208, 184);
+			this.cancel.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("cancel.Dock")));
+			this.cancel.Enabled = ((bool)(resources.GetObject("cancel.Enabled")));
+			this.cancel.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("cancel.FlatStyle")));
+			this.cancel.Font = ((System.Drawing.Font)(resources.GetObject("cancel.Font")));
+			this.cancel.Image = ((System.Drawing.Image)(resources.GetObject("cancel.Image")));
+			this.cancel.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.ImageAlign")));
+			this.cancel.ImageIndex = ((int)(resources.GetObject("cancel.ImageIndex")));
+			this.cancel.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("cancel.ImeMode")));
+			this.cancel.Location = ((System.Drawing.Point)(resources.GetObject("cancel.Location")));
 			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 5;
-			this.cancel.Text = "Cancel";
+			this.cancel.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("cancel.RightToLeft")));
+			this.cancel.Size = ((System.Drawing.Size)(resources.GetObject("cancel.Size")));
+			this.cancel.TabIndex = ((int)(resources.GetObject("cancel.TabIndex")));
+			this.cancel.Text = resources.GetString("cancel.Text");
+			this.cancel.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("cancel.TextAlign")));
+			this.cancel.Visible = ((bool)(resources.GetObject("cancel.Visible")));
 			// 
 			// UserProperties
 			// 
 			this.AcceptButton = this.ok;
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
+			this.AccessibleName = resources.GetString("$this.AccessibleName");
+			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
+			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(292, 214);
+			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.accessButtons);
 			this.Controls.Add(this.owner);
+			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
+			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
 			this.MaximizeBox = false;
+			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
 			this.MinimizeBox = false;
+			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "UserProperties";
-			this.Text = "Properties for Multiple Users";
+			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.Text = resources.GetString("$this.Text");
 			this.Load += new System.EventHandler(this.TestForm_Load);
 			this.accessButtons.ResumeLayout(false);
 			this.ResumeLayout(false);

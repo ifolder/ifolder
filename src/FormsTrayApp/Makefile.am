@@ -9,13 +9,14 @@ iFolderApp_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsTrayApp.cs $(srcdi
 iFolderApp_CSFILES_CSC := $(subst /,$(SEP),$(iFolderApp_CSFILES))
 iFolderApp_INCLUDES = 
 iFolderApp_RESOURCES = $(srcdir)/App$(ICON_EXT)
+iFolderApp_RESOURCES_FILES = FormsTrayApp.resources GlobalProperties.resources ServerInfo.resources AcceptInvitation.resources
 iFolderApp_FLAGS = $(CSC_WINEXEFLAG)
 iFolderApp_LIBS = System.dll System.Data.dll System.Drawing.dll System.Windows.Forms.dll $(SYSTEM_XML) Novell.iFolder.dll iFolderComponent.dll Simias.dll
 iFolderApp_LIBPATH = ../iFolderShell ../iFolder
 
 DATA_FILES = App.ico ifolder_app.ico
 RES_FILES = res/ifolder_disconnect.ico res/ifolder_loaded.ico res/ifolder_message.ico res/ifolder_sync1.ico res/ifolder_sync2.ico res/ifolder_sync3.ico res/ifolder_sync4.ico res/ifolder_sync5.ico res/ifolder_sync6.ico res/ifolder_sync7.ico res/ifolder_sync8.ico res/ifolder_sync9.ico res/ifolder_sync10.ico $(srcdir)/../GtkTrayApp/ifolder-banner.png res/ifolder_contact_card.ico res/inviteduser.ico res/ifolder_me_card.ico res/serverifolder.ico res/ifolderconflict.ico res/ifolder-startup.ico res/ifolder.ico
-RESX_FILES = FormsTrayApp.resx GlobalProperties.resx
+RESX_FILES = FormsTrayApp.resx GlobalProperties.resx ServerInfo.resx AcceptInvitation.resx
 
 PROJECT_FILES = $(srcdir)/FormsTrayApp.csproj $(srcdir)/FormsTrayApp.sln
 
@@ -23,8 +24,11 @@ EXTRA_DIST = $(iFolderApp_CSFILES) $(DATA_FILES) $(RES_FILES) $(RESX_FILES) iFol
 
 all: iFolderApp.exe
 
-iFolderApp.exe: $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
+iFolderApp.exe: $(iFolderApp_RESOURCES_FILES) $(iFolderApp_CSFILES) $(iFolderApp_RESOURCES) 
+	$(CSC) /out:$@ $(CSCFLAGS) $(iFolderApp_FLAGS) $(SIMIAS_LIBS) $(iFolderApp_LIBS:%=/r:%) $(iFolderApp_LIBPATH:%=/lib:%) $(iFolderApp_RESOURCES:%=$(ICON_FLAG)%) $(iFolderApp_RESOURCES_FILES:%=/res:Novell.FormsTrayApp.%) $(iFolderApp_CSFILES_CSC) /doc:iFolderApp.doc.xml
+	
+%.resources : %.resx
+	$(RESG) $< Novell.FormsTrayApp.$@
 
 if DEBUG
 if WINDOWS
@@ -60,7 +64,7 @@ if DEBUG
 endif
 endif
      
-CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml
+CLEAN_FILES = iFolderApp.exe iFolderApp.doc.xml $(iFolderApp_RESOURCES_FILES:%=Novell.FormsTrayApp.%)
 
 clean-local:
 	rm -rf $(CLEAN_FILES) $(COMMON_CLEAN_FILES)
