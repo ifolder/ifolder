@@ -38,7 +38,7 @@ namespace Novell.iFolder
 			}
 		}
 
-		public iFolderAcceptDialog(iFolderInfo ifolder) : base()
+		public iFolderAcceptDialog(iFolderWeb ifolder) : base()
 		{
 			this.Title = 
 				string.Format(Util.GS("Setup iFolder \"{0}\""), ifolder.Name);

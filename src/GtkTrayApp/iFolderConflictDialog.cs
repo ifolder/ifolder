@@ -35,7 +35,7 @@ namespace Novell.iFolder
 	public class iFolderConflictDialog : Dialog
 	{
 		private iFolderWebService	ifws;
-		private iFolderInfo			ifolder;
+		private iFolderWeb			ifolder;
 		private Gtk.TreeView		ConflictTreeView;
 		private Gtk.ListStore		ConflictTreeStore;
 		private Gdk.Pixbuf			ConflictPixBuf;
@@ -63,7 +63,7 @@ namespace Novell.iFolder
 		/// Default constructor for iFolderConflictResolver
 		/// </summary>
 		public iFolderConflictDialog(	Gtk.Window parent,
-										iFolderInfo ifolder,
+										iFolderWeb ifolder,
 										iFolderWebService iFolderWS)
 			: base()
 		{

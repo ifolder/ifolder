@@ -36,18 +36,18 @@ namespace Novell.iFolder
 	/// </summary>
 	public class iFolderHolder
 	{
-		private iFolderInfo	ifolder;
+		private iFolderWeb	ifolder;
 		private bool		isSyncing;
 		private bool		syncSuccessful;
 
-		public iFolderHolder(iFolderInfo ifolder)
+		public iFolderHolder(iFolderWeb ifolder)
 		{
 			this.ifolder = ifolder;
 			isSyncing = false;
 			syncSuccessful = true;
 		}
 
-		public iFolderInfo iFolder
+		public iFolderWeb iFolder
 		{
 			get{ return ifolder; }
 			set{ this.ifolder = value; }
@@ -1173,7 +1173,7 @@ namespace Novell.iFolder
 
 		public void RefreshiFolderTreeView(object o, EventArgs args)
 		{
-			iFolderInfo[]	iFolderArray;
+			iFolderWeb[]	iFolderArray;
 			try
 			{
 				iFolderArray = iFolderWS.GetAlliFolders();
@@ -1191,7 +1191,7 @@ namespace Novell.iFolder
 			curiFolders.Clear();
 			iFolderTreeStore.Clear();
 
-			foreach(iFolderInfo ifolder in iFolderArray)
+			foreach(iFolderWeb ifolder in iFolderArray)
 			{
 				iFolderHolder holder = 
 					new iFolderHolder(ifolder);
@@ -1508,7 +1508,7 @@ namespace Novell.iFolder
 
 				// build an array of all current iFolders and
 				// hand it to the Properties Dialog
-				iFolderInfo[] ifList;
+				iFolderWeb[] ifList;
 				ArrayList list = new ArrayList();
 
 				if(iFolderTreeStore.GetIterFirst(out iter))
@@ -1523,7 +1523,7 @@ namespace Novell.iFolder
 					while(iFolderTreeStore.IterNext(ref iter));
 				}
 
-				ifList = (iFolderInfo[])(list.ToArray(typeof(iFolderInfo)));
+				ifList = (iFolderWeb[])(list.ToArray(typeof(iFolderWeb)));
 
 				try
 				{
@@ -1609,7 +1609,7 @@ namespace Novell.iFolder
 				{
 					try
 					{
-    					iFolderInfo newiFolder = 
+    					iFolderWeb newiFolder = 
 								iFolderWS.RevertiFolder(ifHolder.iFolder.ID);
 						curiFolders.Remove(ifHolder.iFolder.ID);
 
@@ -1661,7 +1661,7 @@ namespace Novell.iFolder
 					rc = 0;
 					try
 					{
-   		 				iFolderInfo newiFolder = 
+   		 				iFolderWeb newiFolder = 
 							iFolderWS.CreateLocaliFolder(selectedFolder);
 						if(newiFolder == null)
 							throw new Exception("Simias returned null");
@@ -1748,7 +1748,7 @@ namespace Novell.iFolder
 				try
 				{
 					curiFolders.Remove(ifHolder.iFolder.ID);
-   		 			iFolderInfo newiFolder = iFolderWS.AcceptiFolderInvitation(
+   		 			iFolderWeb newiFolder = iFolderWS.AcceptiFolderInvitation(
 											ifHolder.iFolder.ID,
 											newPath);
 	
@@ -2066,7 +2066,7 @@ namespace Novell.iFolder
 
 		// update the data value in the iFolderTreeStore so the ifolder
 		// will switch to one that has conflicts
-		public void iFolderHasConflicts(iFolderInfo ifolder)
+		public void iFolderHasConflicts(iFolderWeb ifolder)
 		{
 			if(curiFolders.ContainsKey(ifolder.ID))
 			{
@@ -2081,7 +2081,7 @@ namespace Novell.iFolder
 
 
 
-		public void iFolderChanged(iFolderInfo ifolder)
+		public void iFolderChanged(iFolderWeb ifolder)
 		{
 			if(curiFolders.ContainsKey(ifolder.ID))
 			{
@@ -2092,7 +2092,7 @@ namespace Novell.iFolder
 					// this is a subscription, check to see if we
 					// have a matching ifolder to yank this one
 					// out if we need to
-					iFolderInfo realiFolder = iFolderWS.GetiFolder(
+					iFolderWeb realiFolder = iFolderWS.GetiFolder(
 							ifolder.CollectionID);
 					if(realiFolder != null)
 					{
@@ -2120,7 +2120,7 @@ namespace Novell.iFolder
 
 
 
-		public void iFolderCreated(iFolderInfo ifolder)
+		public void iFolderCreated(iFolderWeb ifolder)
 		{
 			if(!curiFolders.ContainsKey(ifolder.ID))
 			{
@@ -2155,7 +2155,7 @@ namespace Novell.iFolder
 						if( (ifHolder.iFolder.UnManagedPath == null) ||
 								(ifHolder.iFolder.UnManagedPath.Length == 0) )
 						{
-							iFolderInfo updatediFolder;
+							iFolderWeb updatediFolder;
 
 							try
 							{
@@ -2200,7 +2200,7 @@ namespace Novell.iFolder
 						if( (ifHolder.iFolder.CurrentUserID == null) ||
 								(ifHolder.iFolder.CurrentUserID.Length == 0) )
 						{
-							iFolderInfo updatediFolder;
+							iFolderWeb updatediFolder;
 							try
 							{
 								updatediFolder = iFolderWS.GetiFolder(

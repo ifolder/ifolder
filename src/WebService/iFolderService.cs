@@ -125,7 +125,7 @@ namespace Novell.iFolder.Web
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
 			if(col != null)
 			{
-				if(col.IsType(col, iFolderInfo.iFolderType))
+				if(col.IsType(col, iFolderWeb.iFolderType))
 					return true;
 			}
 			return false;
@@ -183,13 +183,13 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapDocumentMethod]
-		public iFolderInfo CreateLocaliFolder(string Path)
+		public iFolderWeb CreateLocaliFolder(string Path)
 		{
 			// TODO: Figure out who we are running as so we
 			// can create the ifolder as the correct user
 			Collection col = SharedCollection.CreateLocalSharedCollection(
-								Path, iFolderInfo.iFolderType);
-			return new iFolderInfo(col);
+								Path, iFolderWeb.iFolderType);
+			return new iFolderWeb(col);
 		}
 
 
@@ -206,9 +206,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Get An iFolder")]
 		[SoapDocumentMethod]
-		public iFolderInfo GetiFolder(string iFolderID)
+		public iFolderWeb GetiFolder(string iFolderID)
 		{
-			iFolderInfo ifolder = null;
+			iFolderWeb ifolder = null;
 
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
@@ -228,14 +228,14 @@ namespace Novell.iFolder.Web
 					Node node = poBox.GetNodeByID(iFolderID);
 					if (node != null)
 					{
-						ifolder = new iFolderInfo(new Subscription(node));
+						ifolder = new iFolderWeb(new Subscription(node));
 					}
 				}
 			}
 			else
 			{
-				if(col.IsType(col, iFolderInfo.iFolderType))
-					ifolder = new iFolderInfo(col);
+				if(col.IsType(col, iFolderWeb.iFolderType))
+					ifolder = new iFolderWeb(col);
 				else
 					ifolder = null;
 			}
@@ -257,13 +257,13 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Get An iFolder using a LocalPath")]
 		[SoapDocumentMethod]
-		public iFolderInfo GetiFolderByLocalPath(string LocalPath)
+		public iFolderWeb GetiFolderByLocalPath(string LocalPath)
 		{
-			iFolderInfo ifolder = null;
+			iFolderWeb ifolder = null;
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
 			if(col != null)
 			{
-				ifolder = new iFolderInfo(col);
+				ifolder = new iFolderWeb(col);
 			}
 
 			return ifolder;
@@ -306,13 +306,13 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Revert an iFolder on the local computer but remain a member")]
 		[SoapDocumentMethod]
-		public iFolderInfo RevertiFolder(string iFolderID)
+		public iFolderWeb RevertiFolder(string iFolderID)
 		{
-			iFolderInfo ifolder = null;
+			iFolderWeb ifolder = null;
 			Subscription sub = SharedCollection.RevertSharedCollection(iFolderID);
 			if (sub != null)
 			{
-				ifolder = new iFolderInfo(sub);
+				ifolder = new iFolderWeb(sub);
 			}
 
 			return ifolder;
@@ -329,19 +329,19 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Returns all iFolders on the Server")]
 		[SoapDocumentMethod]
-		public iFolderInfo[] GetAlliFolders()
+		public iFolderWeb[] GetAlliFolders()
 		{
 			ArrayList list = new ArrayList();
 
 			Store store = Store.GetStore();
 
 			ICSList iFolderList = 
-					store.GetCollectionsByType(iFolderInfo.iFolderType);
+					store.GetCollectionsByType(iFolderWeb.iFolderType);
 
 			foreach(ShallowNode sn in iFolderList)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
-				list.Add(new iFolderInfo(col));
+				list.Add(new iFolderWeb(col));
 			}
 
 
@@ -385,10 +385,10 @@ namespace Novell.iFolder.Web
 						continue;
 					}
 
-					list.Add(new iFolderInfo(sub));
+					list.Add(new iFolderWeb(sub));
 				}
 			}
-			return (iFolderInfo[])list.ToArray(typeof(iFolderInfo));
+			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
 
 
@@ -406,7 +406,7 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Returns iFolders for the specified UserID")]
 		[SoapDocumentMethod]
-		public iFolderInfo[] GetiFolders(string UserID)
+		public iFolderWeb[] GetiFolders(string UserID)
 		{
 			ArrayList list = new ArrayList();
 
@@ -419,11 +419,11 @@ namespace Novell.iFolder.Web
 			foreach(ShallowNode sn in iFolderList)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
-				if(col.IsType(col, iFolderInfo.iFolderType))
-					list.Add(new iFolderInfo(col));
+				if(col.IsType(col, iFolderWeb.iFolderType))
+					list.Add(new iFolderWeb(col));
 			}
 
-			return (iFolderInfo[])list.ToArray(typeof(iFolderInfo));
+			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
 
 
@@ -920,7 +920,7 @@ namespace Novell.iFolder.Web
 		/// </param>
 		[WebMethod(Description="Accept an invitation fo an iFolder.  The iFolder ID represents a Subscription object")]
 		[SoapDocumentMethod]
-		public iFolderInfo AcceptiFolderInvitation( string iFolderID, 
+		public iFolderWeb AcceptiFolderInvitation( string iFolderID, 
 												string LocalPath)
 		{
 			Store store = Store.GetStore();
@@ -959,7 +959,7 @@ namespace Novell.iFolder.Web
 				poBox.Commit(sub);
 			}
 
-			iFolderInfo ifolder = new iFolderInfo(sub);
+			iFolderWeb ifolder = new iFolderWeb(sub);
 			return ifolder;
 		}
 
