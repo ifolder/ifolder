@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Common_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/MyDns.cs $(srcdir)/Library/MyEnvironment.cs $(srcdir)/Library/MyPath.cs $(srcdir)/Library/MyPlatformID.cs $(srcdir)/Library/MyRuntimeID.cs $(srcdir)/Library/MyTrace.cs
 Common_CSFILES_CSC := $(subst /,$(SEP),$(Common_CSFILES))
 Common_INCLUDES = 

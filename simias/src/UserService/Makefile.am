@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 UserService_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/UserService.cs
 UserService_CSFILES_CSC := $(subst /,$(SEP),$(UserService_CSFILES))
 UserService_INCLUDES = 

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 iFolderComponent_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/iFolderAdvanced.cs $(srcdir)/MyMessageBox.cs $(srcdir)/Win32Window.cs $(srcdir)/iFolderComponent.cs
 iFolderComponent_CSFILES_CSC := $(subst /,$(SEP),$(iFolderComponent_CSFILES))
 iFolderComponent_INCLUDES = 

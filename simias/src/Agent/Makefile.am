@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Agent_CSFILES = $(srcdir)/Library/AgentFactory.cs $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/IInviteAgent.cs $(srcdir)/Library/Invitation.cs
 Agent_CSFILES_CSC := $(subst /,$(SEP),$(Agent_CSFILES))
 Agent_INCLUDES =

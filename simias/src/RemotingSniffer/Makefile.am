@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 RemotingMonitorLibrary_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/InviteAgent.cs
 RemotingMonitorLibrary_CSFILES_CSC := $(subst /,$(SEP),$(InviteAgent_CSFILES))
 RemotingMonitorLibrary_INCLUDES =

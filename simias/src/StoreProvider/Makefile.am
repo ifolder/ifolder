@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 StoreProvider_CSFILES := $(srcdir)/AssemblyInfo.cs $(srcdir)/CSPException.cs $(srcdir)/IProvider.cs $(srcdir)/IResultSet.cs $(srcdir)/Provider.cs $(srcdir)/Query.cs $(srcdir)/Record.cs
 StoreProvider_CSFILES_CSC := $(subst /,$(SEP),$(StoreProvider_CSFILES))
 StoreProvider_INCLUDES = 

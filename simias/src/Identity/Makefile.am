@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Identity_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/IIdentity.cs
 Identity_CSFILES_CSC := $(subst /,$(SEP),$(Identity_CSFILES))
 Identity_INCLUDES = 

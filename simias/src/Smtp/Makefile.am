@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Smtp_CSFILES = $(srcdir)/Base64AttachmentEncoder.cs $(srcdir)/IAttachmentEncoder.cs $(srcdir)/MailAddress.cs $(srcdir)/MailAddressCollection.cs $(srcdir)/MailAttachment.cs $(srcdir)/MailEncoding.cs $(srcdir)/MailFormat.cs $(srcdir)/MailHeader.cs $(srcdir)/MailMessage.cs $(srcdir)/MailMessageWrapper.cs $(srcdir)/MailPriority.cs $(srcdir)/MailUtil.cs $(srcdir)/SmtpClient.cs $(srcdir)/SmtpException.cs $(srcdir)/SmtpMail.cs $(srcdir)/SmtpResponse.cs $(srcdir)/SmtpStream.cs $(srcdir)/ToUUEncodingTransform.cs $(srcdir)/UUAttachmentEncoder.cs
 Smtp_CSFILES_CSC := $(subst /,$(SEP),$(Smtp_CSFILES))
 Smtp_INCLUDES = 

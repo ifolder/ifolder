@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 abgui_CSFILES = $(srcdir)/ABGui.cs $(srcdir)/AssemblyInfo.cs
 abgui_CSFILES_CSC := $(subst /,$(SEP),$(abgui_CSFILES))
 abgui_INCLUDES = 

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 SyncPing_CSFILES = $(srcdir)/Ping/AssemblyInfo.cs $(srcdir)/Ping/SyncPinger.cs
 SyncPing_CSFILES_CSC := $(subst /,$(SEP),$(SyncPing_CSFILES))
 SyncPing_INCLUDES =

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 MiniFolder_CSFILES = $(srcdir)/Application/AssemblyInfo.cs $(srcdir)/Application/MiniFolder.cs
 MiniFolder_CSFILES_CSC := $(subst /,$(SEP),$(MiniFolder_CSFILES))
 MiniFolder_INCLUDES = 
@@ -17,6 +20,9 @@ all: MiniFolder.exe
 MiniFolder.exe: $(MiniFolder_CSFILES) $(MiniFolder_RESOURCES)
 	$(CSC) /out:$@ $(CSCFLAGS) $(MiniFolder_FLAGS) $(MiniFolder_LIBS:%=/r:%) $(MiniFolder_LIBPATH:%=/lib:%) $(MiniFolder_CSFILES_CSC) /doc:MiniFolder.doc.xml
 
+echopath:
+	echo $(MONO_PATH)
+	
 install-exec-local: MiniFolder.exe
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) MiniFolder.exe $(DESTDIR)$(bindir)
@@ -25,9 +31,9 @@ uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f MiniFolder.exe $(NUNIT_TESTS)
     
 installcheck-local: install $(NUNIT_TESTS)
-#	$(mkinstalldirs) $(DESTDIR)$(bindir)
-#	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
-#	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:ConfTests.test.xml $(NUNIT_TESTS)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(INSTALL_PROGRAM) $(NUNIT_TESTS) $(DESTDIR)$(bindir)
+	cd $(DESTDIR)$(bindir); $(MONO) $(CUR_DIR)/$(NUNIT) $(NUNIT_FLAGS) /xml:MiniFolderTests.test.xml $(NUNIT_TESTS)
 	
 CLEAN_FILES = MiniFolder.exe $(NUNIT_TESTS) MiniFolder.doc.xml
 

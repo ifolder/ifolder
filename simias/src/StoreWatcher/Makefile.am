@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 StoreWatcher_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/StoreWatcher.cs
 StoreWatcher_CSFILES_CSC := $(subst /,$(SEP),$(StoreWatcher_CSFILES))
 StoreWatcher_INCLUDES =

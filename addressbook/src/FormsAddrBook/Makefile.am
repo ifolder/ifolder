@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Book_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FormsAddrBook.cs
 Book_CSFILES_CSC := $(subst /,$(SEP),$(Book_CSFILES))
 Book_INCLUDES = 

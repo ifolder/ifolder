@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 TrayAppGtk_CSFILES = $(srcdir)/TrayApp.cs $(srcdir)/SharingPage.cs $(srcdir)/FileBrowser.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/PropertiesDialog.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/InvitationWizard.cs $(srcdir)/NodePropertyPage.cs
 TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 

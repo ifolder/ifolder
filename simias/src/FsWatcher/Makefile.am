@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 FsWatcher_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/FsWatcher.cs
 FsWatcher_CSFILES_CSC := $(subst /,$(SEP),$(FsWatcher_CSFILES))
 FsWatcher_INCLUDES =

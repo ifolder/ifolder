@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 CollectionStore_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/Identity.cs $(srcdir)/IdentityManager.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/CacheNode.cs $(srcdir)/Collection.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/FileEntry.cs $(srcdir)/FileSystemEntry.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/NodeStream.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/Store.cs
 CollectionStore_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStore_CSFILES))
 CollectionStore_INCLUDES =

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 SqliteProvider_CSFILES := $(srcdir)/AssemblyInfo.cs $(srcdir)/SqliteProvider.cs $(srcdir)/SqliteResultSet.cs
 SqliteProvider_CSFILES_CSC := $(subst /,$(SEP),$(SqliteProvider_CSFILES))
 SqliteProvider_INCLUDES = 

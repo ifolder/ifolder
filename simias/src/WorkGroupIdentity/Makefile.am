@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 WorkGroupIdentity_CSFILES = $(srcdir)/AssemblyInfo.cs $(srcdir)/WorkGroupIdentity.cs
 WorkGroupIdentity_CSFILES_CSC := $(subst /,$(SEP),$(WorkGroupIdentity_CSFILES))
 WorkGroupIdentity_INCLUDES = 

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 FsProvider_CSFILES := $(srcdir)/AssemblyInfo.cs $(srcdir)/FsProvider.cs $(srcdir)/FsResultSet.cs
 FsProvider_CSFILES_CSC := $(subst /,$(SEP),$(FsProvider_CSFILES))
 FsProvider_INCLUDES = 

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 CommonGtkWin_CSFILES =	$(srcdir)/GtkTraceWindow.cs
 CommonGtkWin_CSFILES_CSC := $(subst /,$(SEP),$(CommonGtkWin_CSFILES))
 CommonGtkWin_INCLUDES = 

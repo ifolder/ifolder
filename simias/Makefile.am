@@ -1,5 +1,3 @@
-export MONO_PATH=$(PWD)/external/SecureChannelSinks:$(PWD)/src/Configuration:$(PWD)/src/Common:$(PWD)/src/CollectionEvents:$(PWD)/src/SqliteWrapper:$(PWD)/src/StoreProvider:$(PWD)/src/SqliteProvider:$(PWD)/src/CollectionStore:$(PWD)/src/Agent:$(PWD)/src/SyncCommon:$(PWD)/src/CollectionWatcher:$(PWD)/src/AddressBook:$(PWD)/src/StoreWatcher:$(PWD)/src/UserService:$(PWD)/src/SyncLogicLite:$(PWD)/src/SyncManager:$(PWD)/src/InviteAgent:$(PWD)/src/Smtp:$(PWD)/src/FsWatcher:$(PWD)/src/Sync
-
 SUBDIRS = src package
 
 EXTRA_DIST = tools external

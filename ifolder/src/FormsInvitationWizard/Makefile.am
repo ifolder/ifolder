@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 InvitationWizard_CSFILES = $(srcdir)/AcceptDeclinePage.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseWizardPage.cs $(srcdir)/CompletionPage.cs $(srcdir)/InteriorPageTemplate.cs $(srcdir)/InvitationWizard.cs $(srcdir)/SelectiFolderLocationPage.cs $(srcdir)/SelectInvitationPage.cs $(srcdir)/WelcomePage.cs $(srcdir)/WelcomePageTemplate.cs
 InvitationWizard_CSFILES_CSC := $(subst /,$(SEP),$(InvitationWizard_CSFILES))
 InvitationWizard_INCLUDES = 

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 Sync_CSFILES = $(srcdir)/SyncPass.cs $(srcdir)/SyncOps.cs $(srcdir)/Dredge.cs $(srcdir)/SyncLog.cs
 Sync_CSFILES_CSC := $(subst /,$(SEP),$(Sync_CSFILES))
 Sync_INCLUDES =

@@ -1,3 +1,6 @@
+# handle Mono secondary dependencies
+export MONO_PATH := $(MONO_PATH)
+
 SyncManager_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/DebugServerChannelSink.cs $(srcdir)/Library/DebugServerChannelSinkProvider.cs $(srcdir)/Library/SyncChannel.cs $(srcdir)/Library/SyncChannelFactory.cs $(srcdir)/Library/SyncCollectionManager.cs $(srcdir)/Library/SyncCredentialCache.cs $(srcdir)/Library/SyncManager.cs $(srcdir)/Library/SyncPing.cs $(srcdir)/Library/SyncStoreManager.cs
 SyncManager_CSFILES_CSC := $(subst /,$(SEP),$(SyncManager_CSFILES))
 SyncManager_INCLUDES =
