@@ -1197,10 +1197,10 @@ namespace Novell.FormsTrayApp
 				}
 				lvi.ImageIndex = imageIndex;
 
-				if (lvi.Selected && (iFolderView.SelectedItems.Count == 1) && !ifolder.IsSubscription)
+				// If this item is the only one selected, update the menus.
+				if (lvi.Selected && (iFolderView.SelectedItems.Count == 1))
 				{
-					// Enable/disable the resolve menu based on if conflicts exist in the iFolder.
-					menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled = ifolder.HasConflicts;
+					updateMenus(ifolder);
 				}
 			}
 		}
@@ -1310,6 +1310,68 @@ namespace Novell.FormsTrayApp
 			{
 				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("syncError"), string.Empty, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
+			}
+		}
+
+		private void updateMenus(iFolderWeb ifolderWeb)
+		{
+			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
+				menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
+				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
+				menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
+				menuSeparator1.Visible = menuSeparator2.Visible = 				
+				(ifolderWeb != null) && !ifolderWeb.IsSubscription;
+
+			Domain selectedDomain = (Domain)servers.SelectedItem;
+			if (!selectedDomain.ShowAll)
+			{
+				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainInfo.Active;
+			}
+			else if (toolBarSync.Enabled)
+			{
+				foreach (Domain d in servers.Items)
+				{
+					if (d.ID.Equals(ifolderWeb.DomainID))
+					{
+						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainInfo.Active;
+						break;
+					}
+				}
+			}
+
+			menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
+				(ifolderWeb != null) && ifolderWeb.HasConflicts;
+
+			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
+
+			// Display the accept menu item if the selected item is a subscription with state "Available"
+			menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
+				menuActionSeparator2.Visible =
+				(ifolderWeb != null) &&
+				ifolderWeb.IsSubscription &&
+				ifolderWeb.State.Equals("Available");
+
+			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
+			menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
+				menuActionSeparator2.Visible =
+				(ifolderWeb != null) &&
+				(!ifolderWeb.IsSubscription ||
+				ifolderWeb.State.Equals("Available"));
+
+			if (menuRemove.Visible)
+			{
+				if (IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID))
+				{
+					menuRemove.Text = menuActionRemove.Text = /*toolBarRemove.ToolTipText =*/
+						resourceManager.GetString("deleteAction");
+				}
+				else
+				{
+					menuRemove.Text = resourceManager.GetString("menuRemove.Text");
+					menuActionRemove.Text = resourceManager.GetString("menuActionRemove.Text");
+					/*toolBarRemove.ToolTipText = resourceManager.GetString("toolBarRemove.ToolTipText");*/
+				}
 			}
 		}
 
@@ -1624,64 +1686,7 @@ namespace Novell.FormsTrayApp
 				ifolderWeb = (iFolderWeb)iFolderView.SelectedItems[0].Tag;
 			}
 
-			menuShare.Visible = menuActionShare.Enabled = toolBarShare.Enabled =
-				menuProperties.Visible = menuActionProperties.Enabled = /*toolBarProperties.Enabled =*/
-				menuRevert.Visible = menuActionRevert.Enabled = /*toolBarRevert.Enabled =*/
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled =
-				menuOpen.Visible = menuActionOpen.Enabled = /*toolBarOpen.Enabled =*/
-				menuSeparator1.Visible = menuSeparator2.Visible = 				
-				(ifolderWeb != null) && !ifolderWeb.IsSubscription;
-
-			Domain selectedDomain = (Domain)servers.SelectedItem;
-			if (!selectedDomain.ShowAll)
-			{
-				menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = selectedDomain.DomainInfo.Active;
-			}
-			else if (toolBarSync.Enabled)
-			{
-				foreach (Domain d in servers.Items)
-				{
-					if (d.ID.Equals(ifolderWeb.DomainID))
-					{
-						menuSyncNow.Visible = menuActionSync.Enabled = toolBarSync.Enabled = d.DomainInfo.Active;
-						break;
-					}
-				}
-			}
-
-			menuResolve.Visible = menuActionResolve.Visible = toolBarResolve.Enabled =
-				(ifolderWeb != null) && ifolderWeb.HasConflicts;
-
-			menuRefresh.Visible = menuCreate.Visible = iFolderView.SelectedItems.Count == 0;
-
-			// Display the accept menu item if the selected item is a subscription with state "Available"
-			menuAccept.Visible = menuActionAccept.Visible = toolBarSetup.Enabled =
-				menuActionSeparator2.Visible =
-				(ifolderWeb != null) &&
-				ifolderWeb.IsSubscription &&
-				ifolderWeb.State.Equals("Available");
-
-			// Display the decline menu item if the selected item is a subscription with state "Available" and from someone else.
-			menuRemove.Visible = menuActionRemove.Visible = /*toolBarRemove.Enabled =*/
-				menuActionSeparator2.Visible =
-				(ifolderWeb != null) &&
-				(!ifolderWeb.IsSubscription ||
-				ifolderWeb.State.Equals("Available"));
-
-			if (menuRemove.Visible)
-			{
-				if (IsCurrentUser(((iFolderWeb)iFolderView.SelectedItems[0].Tag).OwnerID))
-				{
-					menuRemove.Text = menuActionRemove.Text = /*toolBarRemove.ToolTipText =*/
-						resourceManager.GetString("deleteAction");
-				}
-				else
-				{
-					menuRemove.Text = resourceManager.GetString("menuRemove.Text");
-					menuActionRemove.Text = resourceManager.GetString("menuActionRemove.Text");
-					/*toolBarRemove.ToolTipText = resourceManager.GetString("toolBarRemove.ToolTipText");*/
-				}
-			}
+			updateMenus(ifolderWeb);
 		}
 
 		private void iFolderView_DoubleClick(object sender, System.EventArgs e)
