@@ -135,9 +135,11 @@ if exist $(IntDir)\$(TargetName).pdb copy $(IntDir)\$(TargetName).pdb $(Solution
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist $(SolutionDir)\..\stage mkdir $(SolutionDir)\..\stage
-copy $(IntDir)\$(TargetFileName) $(SolutionDir)\..\stage\
-if exist $(IntDir)\$(TargetName).pdb copy $(IntDir)\$(TargetName).pdb $(SolutionDir)\..\stage\
+				CommandLine="if not exist $(SolutionDir)stage mkdir $(SolutionDir)stage
+if not exist $(SolutionDir)stage\web mkdir $(SolutionDir)stage\web
+if not exist $(SolutionDir)stage\web\bin mkdir $(SolutionDir)stage\web\bin
+copy $(IntDir)\$(TargetFileName) $(SolutionDir)stage\web\bin
+if exist $(IntDir)\$(TargetName).pdb copy $(IntDir)\$(TargetName).pdb $(SolutionDir)stage\web\bin
 "/>
 			<Tool
 				Name="VCPreBuildEventTool"/>

@@ -108,7 +108,7 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-		<File
+                <File
                     RelPath = "Simias.asmx"
                     BuildAction = "Content"
                 />

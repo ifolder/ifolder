@@ -284,7 +284,7 @@ namespace Simias
 					UpdateConfigFile();
 				}
 
-				return element;
+				return element.Clone() as XmlElement;
 			}
 		}
 

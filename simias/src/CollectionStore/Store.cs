@@ -23,17 +23,14 @@
 
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
+//using System.Text.RegularExpressions;
 using System.Threading;
-using System.Security.Cryptography;
 using System.Xml;
 
 using Simias;
 using Simias.Event;
 using Persist = Simias.Storage.Provider;
-using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
 
 namespace Simias.Storage
 {
@@ -230,7 +227,7 @@ namespace Simias.Storage
 
 					// Create an identity that represents the current user.  This user will become the 
 					// database owner. Add the domain mapping to the identity.
-					Identity owner = new Identity( this, Environment.UserName, Guid.NewGuid().ToString() );
+					Identity owner = new Identity( Environment.UserName, Guid.NewGuid().ToString() );
 					identity = owner.ID;
 					nodeList.Add( owner );
 

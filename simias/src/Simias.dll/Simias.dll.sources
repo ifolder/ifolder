@@ -3,6 +3,7 @@ AssemblyInfo.cs
 ../Events/DefaultSubscriber.cs
 ../Events/EventBroker.cs
 ../Events/EventPublisher.cs
+../Events/IProcEventClient.cs
 ../Events/IProcEventData.cs
 ../Events/IProcEventListener.cs
 ../Events/IProcEventRegistration.cs
@@ -46,9 +47,7 @@ AssemblyInfo.cs
 ../Common/SimiasLogManager.cs
 ../Common/SimiasRemoting.cs
 ../Domain/DomainAgent.cs
-../Domain/DomainInfo.cs
-../Domain/IDomainService.cs
-../Domain/ProvisionInfo.cs
+../Domain/DomainService.cs
 ../FlaimProvider/FlaimError.cs
 ../FlaimProvider/FlaimProvider.cs
 ../FlaimProvider/FlaimRecord.cs

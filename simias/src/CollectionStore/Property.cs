@@ -404,7 +404,7 @@ namespace Simias.Storage
 		/// <param name="name">Name of the property to construct.</param>
 		/// <param name="syntax">Syntax type of the value.</param>
 		/// <param name="propertyValue">Value of the property.</param>
-		internal Property( string name, Syntax syntax, string propertyValue )
+		public Property( string name, Syntax syntax, string propertyValue )
 		{
 			XmlDocument propDoc = new XmlDocument();
 			xmlProperty = propDoc.CreateElement( XmlTags.PropertyTag );
@@ -1658,7 +1658,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1673,7 +1673,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1688,7 +1688,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1703,7 +1703,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1718,7 +1718,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1733,7 +1733,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1748,7 +1748,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1763,7 +1763,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1778,7 +1778,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1793,7 +1793,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1808,7 +1808,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1823,7 +1823,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1838,7 +1838,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1853,7 +1853,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1868,7 +1868,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1883,7 +1883,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1898,7 +1898,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1913,7 +1913,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );
@@ -1928,7 +1928,7 @@ namespace Simias.Storage
 			// Make sure this is not a system property
 			if ( IsSystemProperty() )
 			{
-				throw new InvalidOperationException( "Cannot delete a system property" );
+				throw new InvalidOperationException( "Cannot modify a system property" );
 			}
 
 			SetPropertyValue( propertyValue );

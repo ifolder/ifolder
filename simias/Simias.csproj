@@ -80,11 +80,6 @@
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "System.Runtime.Remoting"
-                    AssemblyName = "System.Runtime.Remoting"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
-                />
-                <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
                     HintPath = "external\log4net\bin\net\1.1\release\log4net.dll"
@@ -95,29 +90,9 @@
                     HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Security.dll"
                 />
                 <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaKeyStore"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll"
-                />
-                <Reference
                     Name = "mDnsResponderApi"
                     AssemblyName = "mDnsResponderApi"
                     HintPath = "external\mDnsResponder\net\bin\mDnsResponderApi.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    AssemblyName = "Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll"
-                />
-                <Reference
-                    Name = "Novell.Security.SecureSink"
-                    AssemblyName = "Novell.Security.SecureSink"
-                    HintPath = "external\SecureChannelSinks\Novell.Security.SecureSink.dll"
                 />
                 <Reference
                     Name = "System.Web.Services"
@@ -128,6 +103,11 @@
                     Name = "System.Web"
                     AssemblyName = "System.Web"
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                />
+                <Reference
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
             </References>
         </Build>
@@ -329,18 +309,8 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Domain\DomainInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Domain\IDomainService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\Domain\ProvisionInfo.cs"
-                    SubType = "Code"
+                    RelPath = "src\Domain\DomainService.cs"
+                    SubType = "code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -402,11 +372,6 @@
                     RelPath = "src\FlaimProvider\FlaimProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\FlaimProvider\FlaimProvider.resx"
-                    DependentUpon = "FlaimProvider.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "src\FlaimProvider\FlaimRecord.cs"

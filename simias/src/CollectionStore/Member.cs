@@ -26,8 +26,6 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Xml;
 
-using Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider;
-
 namespace Simias.Storage
 {
 	/// <summary>

@@ -1,2 +1,2 @@
-<%@ WebService Language="c#" Codebehind="SimiasService.cs" Class="Simias.Web.SimiasService,Simias.Web" %>
+<%@ WebService Language="c#" Codebehind="Simias.asmx.cs" Class="Simias.Web.SimiasService,Simias.Web" %>
 
