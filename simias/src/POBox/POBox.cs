@@ -23,6 +23,7 @@
 
 using System;
 using Simias.Storage;
+using Simias.Sync;
 
 namespace Simias.POBox
 {
@@ -49,9 +50,24 @@ namespace Simias.POBox
 		{
 			get
 			{
+				string result = null;
+
 				Property p = Properties.GetSingleProperty(POServiceUrlProperty);
 
-				return (p != null) ? p.ToString() : PostOffice.DefaultServiceUrl.ToString();
+				if (p != null)
+				{
+					result = p.ToString();
+				}
+				else
+				{
+					// TODO: fix default
+					UriBuilder url = new UriBuilder(PostOffice.DefaultServiceUrl);
+					SyncProperties props = new SyncProperties(this.StoreReference.Config);
+					url.Host = props.ServiceUrl.Host;
+					result = url.ToString();
+				}
+
+				return result;
 			}
 			set
 			{
