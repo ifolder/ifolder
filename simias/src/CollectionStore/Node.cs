@@ -100,6 +100,12 @@ namespace Simias.Storage
 		/// </summary>
 		[ NonSerialized() ]
 		protected bool localChanges = false;
+
+		/// <summary>
+		/// Indicates to the commit code whether to generate an event for this node.
+		/// </summary>
+		[ NonSerialized() ]
+		protected bool indicateEvent = true;
 		#endregion
 
 		#region Properties
@@ -204,6 +210,15 @@ namespace Simias.Storage
 				p.LocalProperty = true;
 				properties.ModifyNodeProperty( p );
 			}
+		}
+
+		/// <summary>
+		/// Gets or sets whether the commit code should indicate and event for this node.
+		/// </summary>
+		internal bool IndicateEvent
+		{
+			get { return indicateEvent; }
+			set { indicateEvent = value; }
 		}
 
 		/// <summary>

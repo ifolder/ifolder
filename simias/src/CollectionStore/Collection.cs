@@ -623,6 +623,16 @@ namespace Simias.Storage
 								XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 								commitDocument.DocumentElement.AppendChild( xmlNode );
 							}
+							else
+							{
+								// There is no longer a node on the disk. Don't indicate an event.
+								node.IndicateEvent = false;
+							}
+						}
+						else
+						{
+							// Nothing was changed on the node. Don't indicate an event.
+							node.IndicateEvent = false;
 						}
 						break;
 					}
@@ -663,6 +673,11 @@ namespace Simias.Storage
 							// Copy the XML node over to the modify document.
 							XmlNode xmlNode = commitDocument.ImportNode( mergeNode.Properties.PropertyRoot, true );
 							commitDocument.DocumentElement.AppendChild( xmlNode );
+						}
+						else
+						{
+							// There is no longer a node on the disk. Don't indicate an event.
+							node.IndicateEvent = false;
 						}
 						break;
 					}
@@ -752,19 +767,23 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Update:
 						{
-							NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
-							args.LocalOnly = node.LocalChanges;
-							store.EventPublisher.RaiseEvent( args );
-
-							// If this is a member Node, update the access control entry.
-							if ( IsType( node, NodeTypes.MemberType ) )
+							// Make sure that it is okay to indicate an event.
+							if ( node.IndicateEvent )
 							{
-								// If the node was not instantiated as a Member, then we don't need to
-								// worry about cached access control.
-								Member member = node as Member;
-								if ( member != null )
+								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
+								args.LocalOnly = node.LocalChanges;
+								store.EventPublisher.RaiseEvent( args );
+
+								// If this is a member Node, update the access control entry.
+								if ( IsType( node, NodeTypes.MemberType ) )
 								{
-									member.UpdateAccessControl();
+									// If the node was not instantiated as a Member, then we don't need to
+									// worry about cached access control.
+									Member member = node as Member;
+									if ( member != null )
+									{
+										member.UpdateAccessControl();
+									}
 								}
 							}
 							break;
@@ -772,29 +791,33 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Internal:
 						{
-							// If this node state is a collision being resolved, publish an event so that sync
-							// will pick up the resolved node and push it to the server.
-							if ( node.MergeCollisions == false )
+							// See if it is okay to indicate an event.
+							if ( node.IndicateEvent )
 							{
-								NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
-								args.LocalOnly = false;
-								store.EventPublisher.RaiseEvent( args );
+								// If this node state is a collision being resolved, publish an event so that sync
+								// will pick up the resolved node and push it to the server.
+								if ( node.MergeCollisions == false )
+								{
+									NodeEventArgs args = new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0, nodeStamp );
+									args.LocalOnly = false;
+									store.EventPublisher.RaiseEvent( args );
+								}
+
+								// If this is a member Node, update the access control entry.
+								if ( IsType( node, NodeTypes.MemberType ) )
+								{
+									// If the node was not instantiated as a Member, then we don't need to
+									// worry about cached access control.
+									Member member = node as Member;
+									if ( member != null )
+									{
+										member.UpdateAccessControl();
+									}
+								}
 							}
 
 							// Set the new state of the node.
 							node.Properties.State = PropertyList.PropertyListState.Update;
-
-							// If this is a member Node, update the access control entry.
-							if ( IsType( node, NodeTypes.MemberType ) )
-							{
-								// If the node was not instantiated as a Member, then we don't need to
-								// worry about cached access control.
-								Member member = node as Member;
-								if ( member != null )
-								{
-									member.UpdateAccessControl();
-								}
-							}
 							break;
 						}
 					}
@@ -803,6 +826,7 @@ namespace Simias.Storage
 				// Reset in-memory properties.
 				node.DiskNode = null;
 				node.LocalChanges = false;
+				node.IndicateEvent = true;
 			}
 		}
 

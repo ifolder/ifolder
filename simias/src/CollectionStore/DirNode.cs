@@ -69,34 +69,6 @@ namespace Simias.Storage
 				return ( p != null ) ? ( p.Value as Relationship ).IsRoot : false;
 			}
 		}
-
-		/// <summary>
-		/// Gets the directory last access time.
-		/// </summary>
-		public DateTime LastAccessTime
-		{
-			get 
-			{ 
-				Property p = properties.FindSingleValue( PropertyTags.LastAccessTime );
-				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
-			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.LastAccessTime, value ); }
-		}
-
-		/// <summary>
-		/// Gets the directory last write time.
-		/// </summary>
-		public DateTime LastWriteTime
-		{
-			get 
-			{ 
-				Property p = properties.FindSingleValue( PropertyTags.LastWriteTime );
-				return ( p != null ) ? ( DateTime )p.Value : DateTime.MinValue;
-			}
-
-			set { properties.ModifyNodeProperty( PropertyTags.LastWriteTime, value ); }
-		}
 		#endregion
 
 		#region Constructors
@@ -131,6 +103,12 @@ namespace Simias.Storage
 
 			// Set the parent attribute.
 			properties.AddNodeProperty( PropertyTags.Parent, new Relationship( collection.ID, parentNode.ID ) );
+
+			// Set the create time for the directory.
+			if ( Directory.Exists( path ) )
+			{
+				properties.AddNodeProperty( PropertyTags.CreationTime, Directory.GetCreationTime( path ) );
+			}
 		}
 
 		/// <summary>
@@ -174,6 +152,12 @@ namespace Simias.Storage
 			Property p = new Property( PropertyTags.Root, new Uri( parentDir ) );
 			p.LocalProperty = true;
 			properties.AddNodeProperty( p );
+
+			// Set the create time for the directory.
+			if ( Directory.Exists( path ) )
+			{
+				properties.AddNodeProperty( PropertyTags.CreationTime, Directory.GetCreationTime( path ) );
+			}
 		}
 
 		/// <summary>
