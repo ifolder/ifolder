@@ -594,7 +594,7 @@ namespace Simias.Domain
 			if ( status.statusCode != SCodes.Success && 
 				status.statusCode != SCodes.SuccessInGrace )
 			{	
-				return "";
+				return string.Empty;
 			}
 
 			// Get just the path portion of the URL.

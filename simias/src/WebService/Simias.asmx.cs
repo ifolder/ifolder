@@ -138,20 +138,28 @@ namespace Simias.Web
 				ICSList domainList = store.GetDomainList();
 				foreach( ShallowNode shallowNode in domainList )
 				{
-					// Get them all?
-					if ( onlySlaves == false )
+					try
 					{
-						DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
-						domains.Add(domainInfo);
-					}
-					else
-					{
-						Roster cRoster = store.GetRoster( shallowNode.ID );
-						if ( ( cRoster != null ) && ( cRoster.Role == SyncRoles.Slave ) )
+						// Get them all?
+						if ( onlySlaves == false )
 						{
 							DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
 							domains.Add(domainInfo);
 						}
+						else
+						{
+							Roster cRoster = store.GetRoster( shallowNode.ID );
+							if ( ( cRoster != null ) && ( cRoster.Role == SyncRoles.Slave ) )
+							{
+								DomainInformation domainInfo = new DomainInformation(shallowNode.ID);
+								domains.Add(domainInfo);
+							}
+						}
+					}
+					catch(Exception e)
+					{
+						log.Error(e.Message);
+						log.Error(e.StackTrace);
 					}
 				}
 			}
@@ -398,8 +406,11 @@ namespace Simias.Web
 			DomainInformation domainInfo = null;
 			DomainAgent da = new DomainAgent();
 			string domainID = da.Attach(Host, UserName, Password);
-			domainInfo = new DomainInformation(domainID);
-			domainInfo.MemberName = UserName;
+			if (!domainID.Equals(string.Empty))
+			{
+				domainInfo = new DomainInformation(domainID);
+				domainInfo.MemberName = UserName;
+			}
 			return domainInfo;
 		}
 

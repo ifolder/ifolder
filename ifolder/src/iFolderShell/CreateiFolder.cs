@@ -207,6 +207,7 @@ namespace Novell.iFolderCom
 			this.servers.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("servers.Anchor")));
 			this.servers.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("servers.BackgroundImage")));
 			this.servers.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("servers.Dock")));
+			this.servers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.servers.Enabled = ((bool)(resources.GetObject("servers.Enabled")));
 			this.servers.Font = ((System.Drawing.Font)(resources.GetObject("servers.Font")));
 			this.servers.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("servers.ImeMode")));
