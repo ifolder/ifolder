@@ -27,6 +27,10 @@ using System.Web.SessionState;
 using System.Net;
 using System.Collections;
 using Simias;
+
+using Simias.Event;
+using Simias.Client.Event;
+
 using Simias.Storage;
 using Simias.Sync;
 using Simias.Sync.Delta;
@@ -169,6 +173,13 @@ namespace Simias.Sync.Http
 		string						userName;
 		string						userID;
 		WebState					webState;
+
+		/// <summary>
+		/// Sorry Russ Used to log messages.
+		/// </summary>
+		private static readonly ISimiasLog log = 
+			SimiasLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		
 
 		/// <summary>
@@ -246,7 +257,28 @@ namespace Simias.Sync.Http
 			BinaryWriter writer = new BinaryWriter(request.GetRequestStream());
 			si.Serialize(writer);
 			writer.Close();
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+			HttpWebResponse response = null;
+			try
+			{
+				response = (HttpWebResponse)request.GetResponse();
+			}
+			catch( WebException webEx )
+			{
+				HttpWebResponse resp = webEx.Response as HttpWebResponse;
+				if ( resp != null )
+				{
+					if ( resp.StatusCode == HttpStatusCode.BadRequest )
+					{
+						log.Debug( "Russ Fix ME!" );
+						Collection collection = Store.GetStore().GetCollectionByID( si.CollectionID );
+						new EventPublisher().RaiseEvent( new NeedCredentialsEventArgs( collection.Domain, collection.ID ) );
+					}
+				}
+
+				throw webEx;
+			}
+
 			try
 			{
 				if (response.StatusCode != HttpStatusCode.OK)

@@ -56,7 +56,7 @@ namespace Simias.Sync.Web
 					switch (method)
 					{
 						case SyncMethod.StartSync:
-							Session.Timeout = 2;
+							Session.Timeout = 6;
 							Service = new HttpService();
 							Session[ServiceString] = Service;
 							Service.StartSync(Request, Response, Session);
