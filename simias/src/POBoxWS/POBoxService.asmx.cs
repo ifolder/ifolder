@@ -380,6 +380,56 @@ namespace Simias.POBoxService.Web
 		}
 
 		/// <summary>
+		/// Get the subscription information
+		/// </summary>
+		/// <param name="domainID"></param>
+		/// <param name="identityID"></param>
+		/// <param name="messageID"></param>
+		/// <returns></returns>
+		[WebMethod]
+		[SoapDocumentMethod]
+		public
+		SubscriptionInfo 
+		GetSubscriptionInfo(string domainID, string identityID, string messageID)
+		{
+			Simias.POBox.POBox	poBox;
+			Store store = Store.GetStore();
+
+			// open the post office box
+			poBox =
+				(domainID == Simias.Storage.Domain.WorkGroupDomainID)
+				? Simias.POBox.POBox.GetPOBox(store, domainID)
+				: Simias.POBox.POBox.GetPOBox(store, domainID, identityID);
+			
+			// check the post office box
+			if (poBox == null)
+			{
+				throw new ApplicationException("PO Box not found.");
+			}
+
+			// check that the message has already not been posted
+			IEnumerator e = 
+				poBox.Search(Message.MessageIDProperty, messageID, SearchOp.Equal).GetEnumerator();
+			
+			ShallowNode sn = null;
+
+			if (e.MoveNext())
+			{
+				sn = (ShallowNode) e.Current;
+			}
+
+			if (sn == null)
+			{
+				throw new ApplicationException("Subscription does not exists.");
+			}
+
+			// generate the subscription info object and return it
+			Subscription cSub = new Subscription(poBox, sn);
+			SubscriptionInfo subInfo = cSub.GenerateInfo(store);
+			return subInfo;
+		}
+
+		/// <summary>
 		/// Invite a user to a shared collection
 		/// </summary>
 		/// <param name="domainID"></param>
@@ -502,7 +552,6 @@ namespace Simias.POBoxService.Web
 			string			collectionID,
 			string			subscriptionName)
 		{
-			bool			result = false;
 			bool			workgroup;
 			Simias.POBox.POBox	poBox = null;
 			Store			store = Store.GetStore();
