@@ -1307,43 +1307,23 @@ namespace Novell.AddressBook
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchUsername( string searchString, Novell.AddressBook.SearchOp searchOperator )
+		public IABList SearchUsername( string searchString, Simias.Storage.SearchOp searchOperator )
 		{
+			Node cNode;
 			if (this.collection != null)
 			{
 				try
 				{
-					Simias.Storage.SearchOp simiasOp;
-					switch(searchOperator)
-					{
-						case Novell.AddressBook.SearchOp.begins:
-							simiasOp = Simias.Storage.SearchOp.Begins;
-							break;
-
-						case Novell.AddressBook.SearchOp.equals:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-
-						case Novell.AddressBook.SearchOp.contains:
-							simiasOp = Simias.Storage.SearchOp.Contains;
-							break;
-
-						default:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-					}
-
 					IABList cList = new IABList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search("FIXME", searchString, simiasOp).GetEnumerator();
-//						this.collection.Search(Property.ObjectName, searchString, searchOperator).GetEnumerator();
+						this.collection.Search(BaseSchema.ObjectName, searchString, searchOperator).GetEnumerator();
 
 					try
 					{
 						while(nodeEnum.MoveNext())
 						{
-							Node cNode = (Node) nodeEnum.Current;
+							cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
 							if (this.collection.IsType(cNode, Common.contactType) == true)
 							{
 								cList.Add(this.GetContact(cNode.ID));
@@ -1375,42 +1355,28 @@ namespace Novell.AddressBook
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchEmail( string searchString, Novell.AddressBook.SearchOp searchOperator )
+		public
+		IABList
+		SearchEmail( string searchString, Simias.Storage.SearchOp searchOperator )
 		{
+			Node cNode;
 			if (this.collection != null)
 			{
 				try
 				{
-					Simias.Storage.SearchOp simiasOp;
-					switch(searchOperator)
-					{
-						case Novell.AddressBook.SearchOp.begins:
-							simiasOp = Simias.Storage.SearchOp.Begins;
-							break;
-
-						case Novell.AddressBook.SearchOp.equals:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-
-						case Novell.AddressBook.SearchOp.contains:
-							simiasOp = Simias.Storage.SearchOp.Contains;
-							break;
-
-						default:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-					}
-
 					IABList cList = new IABList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(Common.emailProperty, searchString, simiasOp).GetEnumerator();
+						this.collection.Search(
+							Common.emailProperty, 
+							searchString, 
+							searchOperator).GetEnumerator();
 
 					try
 					{
 						while(nodeEnum.MoveNext())
 						{
-							Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
+							cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
 							if (this.collection.IsType(cNode, Common.contactType) == true)
 							{
 								cList.Add(this.GetContact(cNode.ID));
@@ -1442,45 +1408,48 @@ namespace Novell.AddressBook
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchFirstName( string searchString, Novell.AddressBook.SearchOp searchOperator )
+		public
+		IABList 
+		SearchFirstName( string searchString, Simias.Storage.SearchOp searchOperator )
 		{
 			if (this.collection != null)
 			{
 				try
 				{
-					Simias.Storage.SearchOp simiasOp;
-					switch(searchOperator)
-					{
-						case Novell.AddressBook.SearchOp.begins:
-							simiasOp = Simias.Storage.SearchOp.Begins;
-							break;
-
-						case Novell.AddressBook.SearchOp.equals:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-
-						case Novell.AddressBook.SearchOp.contains:
-							simiasOp = Simias.Storage.SearchOp.Contains;
-							break;
-
-						default:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-					}
-
 					IABList cList = new IABList();
 
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(/*Property.ObjectName*/ "FIXME", searchString, simiasOp).GetEnumerator();
+						this.collection.Search(
+							BaseSchema.ObjectName, 
+							searchString, 
+							searchOperator).GetEnumerator();
 
-					while(nodeEnum.MoveNext())
+					try
 					{
-						Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
-						if (this.collection.IsType(cNode, Common.nameProperty) == true)
+						while(nodeEnum.MoveNext())
 						{
-							// Search by parent
-							cList.Add(this.GetContact(cNode.ID));
+							Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
+							if (this.collection.IsType(cNode, Common.nameProperty) == true)
+							{
+								Property p = 
+									cNode.Properties.GetSingleProperty(Common.nameToContact);
+								if (p != null)
+								{
+									Simias.Storage.Relationship relationship = 
+										(Simias.Storage.Relationship) p.Value;
+
+									Node cParentNode = this.collection.GetNodeByID(relationship.NodeID);
+									if (this.collection.IsType(cParentNode, Common.contactType) == true)
+									{
+										cList.Add(this.GetContact(cParentNode.ID));
+									}
+								}
+							}
 						}
+					}
+					finally
+					{
+						nodeEnum.Dispose();
 					}
 
 					return(cList);
@@ -1503,7 +1472,7 @@ namespace Novell.AddressBook
 		/// !FINISH API DOC!
 		/// </remarks>
 		/// <returns>A list of contacts which matched the search string.</returns>
-		public IABList SearchLastName( string searchString, Novell.AddressBook.SearchOp searchOperator )
+		public IABList SearchLastName( string searchString, Simias.Storage.SearchOp searchOperator )
 		{
 			if (this.collection != null)
 			{
@@ -1511,48 +1480,39 @@ namespace Novell.AddressBook
 				{
 					IABList cList = new IABList();
 
-					Simias.Storage.SearchOp simiasOp;
-					switch(searchOperator)
-					{
-						case Novell.AddressBook.SearchOp.begins:
-							simiasOp = Simias.Storage.SearchOp.Begins;
-							break;
-
-						case Novell.AddressBook.SearchOp.equals:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-
-						case Novell.AddressBook.SearchOp.contains:
-							simiasOp = Simias.Storage.SearchOp.Contains;
-							break;
-
-						default:
-							simiasOp = Simias.Storage.SearchOp.Equal;
-							break;
-					}
-
 					ICSEnumerator	nodeEnum = (ICSEnumerator) 
-						this.collection.Search(Common.familyProperty, searchString, simiasOp).GetEnumerator();
+						this.collection.Search(
+							Common.familyProperty, 
+							searchString, 
+							searchOperator).GetEnumerator();
 
-					while(nodeEnum.MoveNext())
+					try
 					{
-						Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
-						if (this.collection.IsType(cNode, Common.nameProperty) == true)
+						while(nodeEnum.MoveNext())
 						{
-							Property p = cNode.Properties.GetSingleProperty(Common.nameToContact);
-							if (p != null)
+							Node cNode = new Node( this.collection, nodeEnum.Current as ShallowNode);
+							if (this.collection.IsType(cNode, Common.nameProperty) == true)
 							{
-								Simias.Storage.Relationship relationship = 
-									(Simias.Storage.Relationship) p.Value;
-
-								//colNode = tmp.Split(sep);
-								Node cParentNode = this.collection.GetNodeByID(relationship.NodeID);
-								if (this.collection.IsType(cParentNode, Common.contactType) == true)
+								Property p = 
+									cNode.Properties.GetSingleProperty(Common.nameToContact);
+								if (p != null)
 								{
-									cList.Add(this.GetContact(cParentNode.ID));
+									Simias.Storage.Relationship relationship = 
+										(Simias.Storage.Relationship) p.Value;
+
+									Node cParentNode = 
+										this.collection.GetNodeByID(relationship.NodeID);
+									if (this.collection.IsType(cParentNode, Common.contactType) == true)
+									{
+										cList.Add(this.GetContact(cParentNode.ID));
+									}
 								}
 							}
 						}
+					}
+					finally
+					{
+						nodeEnum.Dispose();
 					}
 
 					return(cList);
