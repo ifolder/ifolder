@@ -1,4 +1,4 @@
-AC_INIT(src/Common/Library/Configuration.cs)
+AC_INIT(src/Common/Configuration.cs)
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE(simias, 0.10)
 VERSION=$VERSION.`date +%Y%m%d`
@@ -342,7 +342,7 @@ Makefile
 simias.pc
 src/Makefile
 src/install-simias-to-gac
-src/Common/Library/SimiasSetup.cs
+src/Common/SimiasSetup.cs
 src/Simias.dll/Makefile
 src/Events/Makefile
 src/POBox/Makefile
@@ -353,6 +353,10 @@ test/Common/Makefile
 test/Configuration/Makefile
 test/CollectionStore/Makefile
 test/Smtp/Makefile
+test/Location/Makefile
+test/SyncCommon/Makefile
+test/SyncManager/Makefile
+test/SyncEndToEnd/Makefile
 test/POBox/Makefile
 package/Makefile
 package/windows/Makefile

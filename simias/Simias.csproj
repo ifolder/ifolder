@@ -274,57 +274,57 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\Configuration.cs"
+                    RelPath = "src\Common\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\Exception.cs"
+                    RelPath = "src\Common\Exception.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\ISimiasLog.cs"
+                    RelPath = "src\Common\ISimiasLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\MyDns.cs"
+                    RelPath = "src\Common\MyDns.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\MyEnvironment.cs"
+                    RelPath = "src\Common\MyEnvironment.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\MyPath.cs"
+                    RelPath = "src\Common\MyPath.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\MyPlatformID.cs"
+                    RelPath = "src\Common\MyPlatformID.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\MyRuntimeID.cs"
+                    RelPath = "src\Common\MyRuntimeID.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\SimiasLog.cs"
+                    RelPath = "src\Common\SimiasLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\SimiasLogManager.cs"
+                    RelPath = "src\Common\SimiasLogManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Common\Library\SimiasSetup.cs"
+                    RelPath = "src\Common\SimiasSetup.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -364,27 +364,27 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\Library\DefaultLocationProvider.cs"
+                    RelPath = "src\Location\DefaultLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\Library\ILocationProvider.cs"
+                    RelPath = "src\Location\ILocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\Library\LocationProviderList.cs"
+                    RelPath = "src\Location\LocationProviderList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\Library\LocationService.cs"
+                    RelPath = "src\Location\LocationService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\Location\Library\mDnsLocationProvider.cs"
+                    RelPath = "src\Location\mDnsLocationProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -734,77 +734,77 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncCollection.cs"
+                    RelPath = "src\SyncCommon\SyncCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncCollectionInfo.cs"
+                    RelPath = "src\SyncCommon\SyncCollectionInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncCollectionRoles.cs"
+                    RelPath = "src\SyncCommon\SyncCollectionRoles.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncCollectionService.cs"
+                    RelPath = "src\SyncCommon\SyncCollectionService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncCollectionWorker.cs"
+                    RelPath = "src\SyncCommon\SyncCollectionWorker.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncLogicFactory.cs"
+                    RelPath = "src\SyncCommon\SyncLogicFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncProperties.cs"
+                    RelPath = "src\SyncCommon\SyncProperties.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncStoreInfo.cs"
+                    RelPath = "src\SyncCommon\SyncStoreInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncCommon\Library\SyncStoreService.cs"
+                    RelPath = "src\SyncCommon\SyncStoreService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncCollectionManager.cs"
+                    RelPath = "src\SyncManager\SyncCollectionManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncCredentialCache.cs"
+                    RelPath = "src\SyncManager\SyncCredentialCache.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncManager.cs"
+                    RelPath = "src\SyncManager\SyncManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncMessages.cs"
+                    RelPath = "src\SyncManager\SyncMessages.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncPing.cs"
+                    RelPath = "src\SyncManager\SyncPing.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\SyncManager\Library\SyncStoreManager.cs"
+                    RelPath = "src\SyncManager\SyncStoreManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -2,7 +2,12 @@ SUBDIRS = \
 	Common \
 	Configuration \
 	CollectionStore \
-	Smtp
+	Smtp \
+	Location \
+	SyncCommon \
+	SyncManager \
+	SyncEndToEnd \
+	POBox
 	
 DIST_SUBDIRS = $(SUBDIRS)
 
