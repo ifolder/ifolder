@@ -1057,9 +1057,11 @@ namespace Novell.FormsTrayApp
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.KeyPreview = true;
 			this.Menu = this.mainMenu1;
 			this.Name = "GlobalProperties";
 			this.Text = "iFolder";
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlobalProperties_KeyDown);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
@@ -1425,6 +1427,15 @@ namespace Novell.FormsTrayApp
 		{
 			// TODO:
 			MessageBox.Show("This hasn't been implemented yet.");
+		}
+
+		private void GlobalProperties_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			// Pressing the F5 key will cause a refresh to occur.
+			if (e.KeyCode == Keys.F5)
+			{
+				refreshiFolders();
+			}
 		}
 
 		#region iFolders Tab
