@@ -179,9 +179,6 @@ namespace Simias.Sync
 		{
 			while(monitoring)
 			{
-				// get permission from sync manager
-				syncManager.ReadyToWork();
-
 				MyTrace.WriteLine("Sync Store Monitor Starting: {0}", service.Ping().StoreID);
 
 				try
