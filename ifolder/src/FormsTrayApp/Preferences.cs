@@ -1613,7 +1613,6 @@ namespace Novell.FormsTrayApp
 				switch (domainInfo.StatusCode)
 				{
 					case StatusCodes.InvalidCertificate:
-					{
 						byte[] byteArray = simiasWebService.GetCertificate(server.Text);
 						System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
 						mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), server.Text), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
@@ -1623,7 +1622,6 @@ namespace Novell.FormsTrayApp
 							result = connectToEnterprise();
 						}
 						break;
-					}
 					case StatusCodes.Success:
 					case StatusCodes.SuccessInGrace:
 						// Set the credentials in the current process.
@@ -1808,25 +1806,84 @@ namespace Novell.FormsTrayApp
 			defaultInterval.Value = displayValue;
 		}
 
-		/// <summary>
-		/// Set the auto-run value in the Windows registery.
-		/// </summary>
-		/// <param name="disable"><b>True</b> will disable auto-run.</param>
-		private void setAutoRunValue(bool disable)
+		private bool loginToDomain(DomainInformation domainInfo)
 		{
-			// Open/create the iFolder key.
-			RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+			bool result = false;
 
-			if (disable)
+			Cursor.Current = Cursors.WaitCursor;
+			DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainInfo.ID, password.Text);
+			Status authStatus = domainAuth.Authenticate();
+			Cursor.Current = Cursors.Default;
+			MyMessageBox mmb;
+			switch (authStatus.statusCode)
 			{
-				// Set the disable value.
-				regKey.SetValue(iFolderRun, 1);
+				case StatusCodes.InvalidCertificate:
+					byte[] byteArray = simiasWebService.GetCertificate(domainInfo.Host);
+					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
+					mmb = new MyMessageBox(string.Format(resourceManager.GetString("verifyCert"), domainInfo.Host), resourceManager.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+					if (mmb.ShowDialog() == DialogResult.Yes)
+					{
+						simiasWebService.StoreCertificate(byteArray, domainInfo.Host);
+						result = loginToDomain(domainInfo);
+					}
+					break;
+				case StatusCodes.Success:
+				case StatusCodes.SuccessInGrace:
+					result = true;
+					if (authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+					{
+						mmb = new MyMessageBox(
+							string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+							resourceManager.GetString("graceLoginTitle"),
+							string.Empty,
+							MyMessageBoxButtons.OK,
+							MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+					}
+						
+					// Don't burn a grace login looking for an update.
+					if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+					{
+						try
+						{
+							Cursor.Current = Cursors.WaitCursor;
+							bool update = FormsTrayApp.CheckForClientUpdate(domainInfo.ID);
+							Cursor.Current = Cursors.Default;
+							if (update)
+							{
+								if (ShutdownTrayApp != null)
+								{
+									// Shut down the tray app.
+									ShutdownTrayApp(this, new EventArgs());
+								}
+							}
+						}
+						catch // Ignore
+						{
+						}
+					}
+					break;
+				case StatusCodes.InvalidCredentials:
+				case StatusCodes.InvalidPassword:
+				case StatusCodes.UnknownUser:
+					mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					break;
+				case StatusCodes.AccountDisabled:
+					mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
+					break;
+				case StatusCodes.AccountLockout:
+					mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+					mmb.ShowDialog();
+					break;
+				default:
+					mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					mmb.ShowDialog();
+					break;
 			}
-			else
-			{
-				// Delete the value.
-				regKey.DeleteValue(iFolderRun, false);
-			}
+
+			return result;
 		}
 
 		private bool processChanges()
@@ -1958,6 +2015,27 @@ namespace Novell.FormsTrayApp
 			Cursor.Current = Cursors.Default;
 
 			return result;
+		}
+
+		/// <summary>
+		/// Set the auto-run value in the Windows registery.
+		/// </summary>
+		/// <param name="disable"><b>True</b> will disable auto-run.</param>
+		private void setAutoRunValue(bool disable)
+		{
+			// Open/create the iFolder key.
+			RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+			if (disable)
+			{
+				// Set the disable value.
+				regKey.SetValue(iFolderRun, 1);
+			}
+			else
+			{
+				// Delete the value.
+				regKey.DeleteValue(iFolderRun, false);
+			}
 		}
 
 		private bool updateAccount(Domain domain)
@@ -2708,72 +2786,13 @@ namespace Novell.FormsTrayApp
 				Domain domain = (Domain)lvi.Tag;
 				if (domain != null)
 				{
-					Cursor.Current = Cursors.WaitCursor;
-					DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domain.ID, password.Text);
-					Status authStatus = domainAuth.Authenticate();
-					Cursor.Current = Cursors.Default;
-					MyMessageBox mmb;
-					switch (authStatus.statusCode)
+					if (loginToDomain(domain.DomainInfo))
 					{
-						case StatusCodes.Success:
-						case StatusCodes.SuccessInGrace:
-							logout.Visible = true;
-							login.Visible = false;
+						logout.Visible = true;
+						login.Visible = false;
 
-							lvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
-							domain.DomainInfo.Authenticated = true;
-
-							if (authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
-							{
-								mmb = new MyMessageBox(
-									string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
-									resourceManager.GetString("graceLoginTitle"),
-									string.Empty,
-									MyMessageBoxButtons.OK,
-									MyMessageBoxIcon.Information);
-								mmb.ShowDialog();
-							}
-						
-							// Don't burn a grace login looking for an update.
-							if (!authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
-							{
-								try
-								{
-									Cursor.Current = Cursors.WaitCursor;
-									bool update = FormsTrayApp.CheckForClientUpdate(domain.ID);
-									Cursor.Current = Cursors.Default;
-									if (update)
-									{
-										if (ShutdownTrayApp != null)
-										{
-											// Shut down the tray app.
-											ShutdownTrayApp(this, new EventArgs());
-										}
-									}
-								}
-								catch // Ignore
-								{
-								}
-							}
-							break;
-						case StatusCodes.InvalidCredentials:
-						case StatusCodes.InvalidPassword:
-						case StatusCodes.UnknownUser:
-							mmb = new MyMessageBox(resourceManager.GetString("failedAuth"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-							break;
-						case StatusCodes.AccountDisabled:
-							mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
-							break;
-						case StatusCodes.AccountLockout:
-							mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
-							mmb.ShowDialog();
-							break;
-						default:
-							mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-							mmb.ShowDialog();
-							break;
+						lvi.SubItems[2].Text = resourceManager.GetString("statusLoggedIn");
+						domain.DomainInfo.Authenticated = true;
 					}
 				}
 				else
