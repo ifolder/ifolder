@@ -2,6 +2,10 @@ if LINUX
 SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
 endif
 
+if DARWIN
+SUBDIRS = AddressBook AddressBookCmd GtkAddrBook
+endif
+
 if WINDOWS
 SUBDIRS = AddressBook FormsBookLib FormsAddrBook
 endif

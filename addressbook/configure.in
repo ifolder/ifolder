@@ -145,6 +145,38 @@ AC_SUBST(COMMON_MAINTAINER_CLEAN_FILES)
 #
 case $ADDRESSBOOK_OS in
     #
+    # darwin-specific configuration
+    #
+    darwin)
+        #
+        # Set variables
+        #
+        ICON_EXT='.ico'
+        ICON_FLAG='/resource:'
+        INSTALL_EXE_OPTS='--mode=644'
+        NUNIT="mono nunit-console.exe"
+        NUNIT_LIBPATH="$TOOLDIR/NUnit/mono/bin"
+        NUNIT_FLAGS='/nologo'
+        NUNITFLAGS_DEBUG=''
+        NUNITFLAGS_OPTIMIZE=''
+        REPORT_DIR='$(DESTDIR)$(bindir)'
+        REPORT_EXE='mono $(top_srcdir)/tools/Report/Report.exe'
+        SEP='/'
+        #
+        # Set pkg-config variables
+        #
+        GTK_SHARP_MINIMUM_VERSION=0.91
+        AC_SUBST(GTK_SHARP_MINIMUM_VERSION)
+
+        GNOME_SHARP_MINIMUM_VERSION=0.91
+        AC_SUBST(GNOME_SHARP_MINIMUM_VERSION)
+
+        GLADE_SHARP_MINIMUM_VERSION=0.91
+        AC_SUBST(GLADE_SHARP_MINIMUM_VERSION)
+        PKG_CONFIG_REQUIRES="gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION"
+        PKG_CONFIG_LIBS="/r:Novell.AddressBook.dll /r:Novell.AddressBook.UI.gtk.dll"
+    ;;
+    #
     # Linux-specific configuration
     #
     linux)
@@ -329,6 +361,21 @@ case $CSC in
 esac
 
 case $ADDRESSBOOK_OS in
+	darwin)
+		PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
+		GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
+		GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp`
+		AC_SUBST(GTK_SHARP_PREFIX)
+		AC_SUBST(GTK_SHARP_LIBS)
+
+		PKG_CHECK_MODULES(GNOME_SHARP, gnome-sharp >= $GNOME_SHARP_MINIMUM_VERSION)
+		AC_SUBST(GNOME_SHARP_PREFIX)
+		AC_SUBST(GNOME_SHARP_LIBS)
+
+		PKG_CHECK_MODULES(GLADE_SHARP, glade-sharp >= $GLADE_SHARP_MINIMUM_VERSION)
+		AC_SUBST(GLADE_SHARP_PREFIX)
+		AC_SUBST(GLADE_SHARP_LIBS)
+    ;;
 	linux)
 		PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp >= $GTK_SHARP_MINIMUM_VERSION)
 		GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp`
