@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-CommonFormWindows_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/MyTraceForm.cs $(srcdir)/Library/MyTraceFormListener.cs
+CommonFormWindows_CSFILES = $(srcdir)/Library/AssemblyInfo.cs $(srcdir)/Library/MyTraceForm.cs $(srcdir)/Library/MyTraceFormListener.cs $(srcdir)/Library/LimitSize.cs
 CommonFormWindows_CSFILES_CSC := $(subst /,$(SEP),$(CommonFormWindows_CSFILES))
 CommonFormWindows_INCLUDES = 
 CommonFormWindows_RESOURCES =

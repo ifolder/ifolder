@@ -55,6 +55,7 @@ namespace Simias
 		private System.Windows.Forms.Panel logListPanel;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
+		private System.Windows.Forms.MenuItem limitMenuItem;
 		private bool shutdown = false;
 
 		/// <summary>
@@ -134,6 +135,7 @@ namespace Simias
 			this.scrollLockMenuItem = new System.Windows.Forms.MenuItem();
 			this.copyMenuItem = new System.Windows.Forms.MenuItem();
 			this.clearMenuItem = new System.Windows.Forms.MenuItem();
+			this.limitMenuItem = new System.Windows.Forms.MenuItem();
 			this.splitter = new System.Windows.Forms.Splitter();
 			this.logListPanel = new System.Windows.Forms.Panel();
 			this.logListPanel.SuspendLayout();
@@ -185,11 +187,11 @@ namespace Simias
 			this.logContextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																						   this.scrollLockMenuItem,
 																						   this.copyMenuItem,
-																						   this.clearMenuItem});
+																						   this.clearMenuItem,
+																						   this.limitMenuItem});
 			// 
 			// scrollLockMenuItem
 			// 
-			this.scrollLockMenuItem.Checked = true;
 			this.scrollLockMenuItem.Index = 0;
 			this.scrollLockMenuItem.Text = "Scroll Lock";
 			this.scrollLockMenuItem.Click += new System.EventHandler(this.scrollLockMenuItem_Click);
@@ -205,6 +207,12 @@ namespace Simias
 			this.clearMenuItem.Index = 2;
 			this.clearMenuItem.Text = "Clear All";
 			this.clearMenuItem.Click += new System.EventHandler(this.clearMenuItem_Click);
+			// 
+			// limitMenuItem
+			// 
+			this.limitMenuItem.Index = 3;
+			this.limitMenuItem.Text = "Limit Size";
+			this.limitMenuItem.Click += new System.EventHandler(this.limitMenuItem_Click);
 			// 
 			// splitter
 			// 
@@ -268,6 +276,16 @@ namespace Simias
 		private void clearMenuItem_Click(object sender, EventArgs e)
 		{
 			logListView.Items.Clear();
+		}
+
+		private void limitMenuItem_Click(object sender, System.EventArgs e)
+		{
+			LimitSize limitSize = new LimitSize();
+			limitSize.SizeLimit = traceListener.SizeLimit;
+			if (limitSize.ShowDialog() == DialogResult.OK)
+			{
+				traceListener.SizeLimit = limitSize.SizeLimit;
+			}		
 		}
 
 		private void MyTraceForm_SizeChanged(object sender, EventArgs e)

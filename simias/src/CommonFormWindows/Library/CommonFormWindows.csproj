@@ -104,6 +104,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "LimitSize.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LimitSize.resx"
+                    DependentUpon = "LimitSize.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "MyTraceForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

@@ -40,6 +40,7 @@ namespace Simias
 		private ListView list;
 		private TreeView tree;
 		private bool scrollLock = false;
+		private decimal sizeLimit = -1;
 
 		public delegate void WriteDelegate(string message, string category);
 
@@ -104,6 +105,14 @@ namespace Simias
 					DateTime.Now.ToShortTimeString() + " "
 					+ DateTime.Now.ToShortDateString() });
 			item = list.Items.Add(item);
+
+			if ((sizeLimit != -1) && (list.Items.Count > sizeLimit))
+			{
+				while (list.Items.Count > sizeLimit)
+				{
+					list.Items.RemoveAt(0);
+				}
+			}
 			
 			// associate category and message
 			if ((node.Tag == null) || (node.GetType() != typeof(ArrayList)))
@@ -183,6 +192,15 @@ namespace Simias
 		public bool ScrollLock
 		{
 			set { scrollLock = value; }
+		}
+
+		/// <summary>
+		/// The number of entries the list view will hold.
+		/// </summary>
+		public decimal SizeLimit
+		{
+			get { return sizeLimit; }
+			set { sizeLimit = value; }
 		}
 	}
 }
