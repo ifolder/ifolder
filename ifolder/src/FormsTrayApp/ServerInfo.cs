@@ -429,7 +429,18 @@ namespace Novell.FormsTrayApp
 				switch (authStatus.statusCode)
 				{
 					case StatusCodes.Success:
-					case StatusCodes.SuccessInGrace:  // FIXME:: need to handle grace
+					case StatusCodes.SuccessInGrace:
+						if (authStatus.statusCode.Equals(StatusCodes.SuccessInGrace))
+						{
+							mmb = new MyMessageBox(
+								string.Format(resourceManager.GetString("graceLogin"), authStatus.RemainingGraceLogins),
+								resourceManager.GetString("graceLoginTitle"),
+								string.Empty,
+								MyMessageBoxButtons.OK,
+								MyMessageBoxIcon.Information);
+							mmb.ShowDialog();
+						}
+						
 						try
 						{
 							updateStarted = FormsTrayApp.CheckForClientUpdate(domainID, userName.Text, password.Text);
@@ -462,8 +473,16 @@ namespace Novell.FormsTrayApp
 						mmb = new MyMessageBox(resourceManager.GetString("badPassword"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 						break;
+					case StatusCodes.AccountDisabled:
+						mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+						break;
+					case StatusCodes.AccountLockout:
+						mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+						mmb.ShowDialog();
+						break;
 					default:
-						mmb = new MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+						mmb = new MyMessageBox(string.Format(resourceManager.GetString("serverReconnectError"), authStatus.statusCode.ToString()), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 						mmb.ShowDialog();
 						break;
 				}

@@ -868,10 +868,31 @@ namespace Novell.FormsTrayApp
 										// If the authentication fails for any reason, pop up and ask for new credentials.
 										domainAuth = new DomainAuthentication("iFolder", domainID, credentials);
 										Status authStatus = domainAuth.Authenticate();
-										if ( authStatus.statusCode == StatusCodes.Success ||
-											authStatus.statusCode == StatusCodes.SuccessInGrace )
+										if (authStatus.statusCode == StatusCodes.Success)
 										{
 											break;
+										}
+										else if (authStatus.statusCode == StatusCodes.SuccessInGrace)
+										{
+											MyMessageBox mmb = new MyMessageBox(
+												string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
+												resourceManager.GetString("graceLoginTitle"),
+												string.Empty,
+												MyMessageBoxButtons.OK,
+												MyMessageBoxIcon.Information);
+											mmb.ShowDialog();
+
+											break;
+										}
+										else if (authStatus.statusCode.Equals(StatusCodes.AccountDisabled))
+										{
+											MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accountDisabled"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+											mmb.ShowDialog();
+										}
+										else if (authStatus.statusCode.Equals(StatusCodes.AccountLockout))
+										{
+											MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("accountLockout"), resourceManager.GetString("serverConnectErrorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
+											mmb.ShowDialog();
 										}
 										else if (authStatus.statusCode == StatusCodes.UnknownUser ||
 											authStatus.statusCode == StatusCodes.InvalidPassword ||
@@ -885,6 +906,16 @@ namespace Novell.FormsTrayApp
 									serverInfo = new ServerInfo(domainID);
 									serverInfo.Closed += new EventHandler(serverInfo_Closed);
 									serverInfo.Show();
+								}
+								else if (status.statusCode.Equals(StatusCodes.SuccessInGrace))
+								{
+									MyMessageBox mmb = new MyMessageBox(
+										string.Format(resourceManager.GetString("graceLogin"), status.RemainingGraceLogins),
+										resourceManager.GetString("graceLoginTitle"),
+										string.Empty,
+										MyMessageBoxButtons.OK,
+										MyMessageBoxIcon.Information);
+									mmb.ShowDialog();
 								}
 							}
 						}
