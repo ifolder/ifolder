@@ -36,11 +36,18 @@ namespace Simias.Storage
 	[ Serializable ]
 	public class Member : Node
 	{
+		#region Class Members
+		/// <summary>
+		/// Cached access control entry that is used when validating access check operations.
+		/// </summary>
+		private AccessControlEntry ace;
+		#endregion
+
 		#region Properties
 		/// <summary>
 		/// Gets the access control entry stored on this object.
 		/// </summary>
-		public AccessControlEntry Ace
+		private AccessControlEntry AceProperty
 		{
 			get
 			{
@@ -53,6 +60,14 @@ namespace Simias.Storage
 
 				return new AccessControlEntry( p );
 			}
+		}
+
+		/// <summary>
+		/// Get the cached ACE that is used to validate access.
+		/// </summary>
+		internal AccessControlEntry ValidateAce
+		{
+			get { return ace; }
 		}
 
 		/// <summary>
@@ -95,11 +110,20 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the members's access rights.
+		/// </summary>
+		public Access.Rights Rights
+		{
+			get { return AceProperty.Rights; }
+			set { AceProperty.Rights = value; }
+		}
+
+		/// <summary>
 		/// Gets the user identitifer for this object.
 		/// </summary>
 		public string UserID
 		{
-			get { return Ace.ID; }
+			get { return ace.ID; }
 		}
 		#endregion
 
@@ -111,11 +135,8 @@ namespace Simias.Storage
 		/// <param name="userGuid">Unique identifier for the user.</param>
 		/// <param name="rights">Collection access rights granted to the user.</param>
 		public Member( string userName, string userGuid, Access.Rights rights ) :
-			base ( userName, Guid.NewGuid().ToString(), NodeTypes.MemberType )
+			this ( userName, userGuid, rights, null )
 		{
-			// Create an access control entry and store it on the object.
-			AccessControlEntry ace = new AccessControlEntry( userGuid, rights );
-			ace.Set( this );
 		}
 
 		/// <summary>
@@ -126,10 +147,23 @@ namespace Simias.Storage
 		/// <param name="rights">Collection access rights granted to the user.</param>
 		/// <param name="publicKey">Public key that will be used to authenticate the user.</param>
 		public Member( string userName, string userGuid, Access.Rights rights, RSACryptoServiceProvider publicKey ) :
-			base ( userName, Guid.NewGuid().ToString(), NodeTypes.MemberType )
+			this ( userName, Guid.NewGuid().ToString(), userGuid, rights, publicKey )
+		{
+		}
+
+		/// <summary>
+		/// Constructor for creating a new Member object.
+		/// </summary>
+		/// <param name="userName">User name of the member.</param>
+		/// <param name="nodeID">Identifier for the Node object.</param>
+		/// <param name="userGuid">Unique identifier for the user.</param>
+		/// <param name="rights">Collection access rights granted to the user.</param>
+		/// <param name="publicKey">Public key that will be used to authenticate the user.</param>
+		public Member( string userName, string nodeID, string userGuid, Access.Rights rights, RSACryptoServiceProvider publicKey ) :
+			base ( userName, nodeID, NodeTypes.MemberType )
 		{
 			// Create an access control entry and store it on the object.
-			AccessControlEntry ace = new AccessControlEntry( userGuid, rights );
+			ace = new AccessControlEntry( userGuid, rights );
 			ace.Set( this );
 
 			// Add the public key as a property of the object.
@@ -150,6 +184,8 @@ namespace Simias.Storage
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.MemberType, type ) );
 			}
+
+			ace = AceProperty;
 		}
 
 		/// <summary>
@@ -164,6 +200,8 @@ namespace Simias.Storage
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.MemberType, type ) );
 			}
+
+			ace = AceProperty;
 		}
 
 		/// <summary>
@@ -177,6 +215,18 @@ namespace Simias.Storage
 			{
 				throw new CollectionStoreException( String.Format( "Cannot construct an object type of {0} from an object of type {1}.", NodeTypes.MemberType, type ) );
 			}
+
+			ace = AceProperty;
+		}
+		#endregion
+
+		#region Internal Methods
+		/// <summary>
+		/// Updates the cached access control after the object has been committed.
+		/// </summary>
+		internal void UpdateAccessControl()
+		{
+			ace.Rights = AceProperty.Rights;
 		}
 		#endregion
 	}

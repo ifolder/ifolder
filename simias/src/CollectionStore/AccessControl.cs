@@ -314,7 +314,7 @@ namespace Simias.Storage
 		private bool IsWorldAccessAllowed( Access.Rights desiredRights )
 		{
 			Member member = GetMember( Access.World );
-			return ( ( member != null ) && ( member.Ace.Rights >= desiredRights ) ) ? true : false;
+			return ( ( member != null ) && ( member.ValidateAce.Rights >= desiredRights ) ) ? true : false;
 		}
 		#endregion
 
@@ -343,12 +343,12 @@ namespace Simias.Storage
 			else
 			{
 				// Set the new right for the old owner.
-				oldOwner.Ace.Rights = oldOwnerRight;
+				oldOwner.Rights = oldOwnerRight;
 				oldOwner.IsOwner = false;
 			}
 
 			// Just change the rights on the current ace and reset it.
-			newOwner.Ace.Rights = Access.Rights.Admin;
+			newOwner.Rights = Access.Rights.Admin;
 			newOwner.IsOwner = true;
 
 			Node[] nodeList = { oldOwner, newOwner };
@@ -443,7 +443,7 @@ namespace Simias.Storage
 			bool allowed = true;
 
 			// Check if the member has sufficient rights.
-			if ( ( member.UserID != collection.ID ) && ( member.Ace.Rights < desiredRights ) )
+			if ( ( member.UserID != collection.ID ) && ( member.ValidateAce.Rights < desiredRights ) )
 			{
 				allowed = IsWorldAccessAllowed( desiredRights );
 			}

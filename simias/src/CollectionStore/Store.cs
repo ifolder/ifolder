@@ -167,6 +167,19 @@ namespace Simias.Storage
 		}
 
 		/// <summary>
+		/// Gets or sets the default domain name.
+		/// </summary>
+		public string DefaultDomain
+		{
+			get { return ( localDb.Refresh() as LocalDatabase ).DefaultDomain; }
+			set
+			{
+				localDb.DefaultDomain = value;
+				localDb.Commit();
+			}
+		}
+
+		/// <summary>
 		/// Gets the identifier for this Collection Store.
 		/// </summary>
 		public string ID

@@ -35,11 +35,12 @@ namespace Simias.Storage
 	{
 		#region Properties
 		/// <summary>
-		/// Gets the default domain name.
+		/// Gets or sets the default domain name.
 		/// </summary>
 		public string DefaultDomain
 		{
 			get { return properties.GetSingleProperty( PropertyTags.DefaultDomain ).ToString(); }
+			set { properties.ModifyNodeProperty( PropertyTags.DefaultDomain, value ); }
 		}
 		#endregion
 

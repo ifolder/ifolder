@@ -39,19 +39,9 @@ namespace Simias.Storage
 		static public string Ace = "Ace";
 
 		/// <summary>
-		/// Well know property name.
-		/// </summary>
-//		static public string AddressBookType = "AB:AddressBook";
-
-		/// <summary>
 		/// Well known property name.
 		/// </summary>
 		static public string Collision = "Collision";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-//		static public string ContactType = "AB:Contact";
 
 		/// <summary>
 		/// Well known property name.
@@ -62,11 +52,6 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		static public string Credential = "Credential";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-//		static public string DefaultAddressBook = "AB:Default";
 
 		/// <summary>
 		/// Well known property name.
@@ -117,11 +102,6 @@ namespace Simias.Storage
 		/// Well known property name.
 		/// </summary>
 		static public string FileLength = "FileLength";
-
-		/// <summary>
-		/// Well known property name.
-		/// </summary>
-//		static public string LocalAddressBook = "AB:Local";
 
 		/// <summary>
 		/// Well known property name.
@@ -196,7 +176,6 @@ namespace Simias.Storage
 			// Add the well-known system properties to the hashtable.  Don't need to add values
 			// with them.  Just need to know if they exist.
 			systemPropertyTable.Add( Ace, null );
-//			systemPropertyTable.Add( AddressBookType, null );
 			systemPropertyTable.Add( BaseSchema.ObjectId, null );
 			systemPropertyTable.Add( BaseSchema.ObjectName, null );
 			systemPropertyTable.Add( BaseSchema.ObjectType, null );
@@ -208,7 +187,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( DirLastAccessTime, null );
 			systemPropertyTable.Add( DirLastWriteTime, null );
 			systemPropertyTable.Add( DefaultDomain, null );
-//			systemPropertyTable.Add( DefaultAddressBook, null );
 			systemPropertyTable.Add( Domain, null );
 			systemPropertyTable.Add( DomainName, null );
 			systemPropertyTable.Add( FileCreationTime, null );
@@ -216,7 +194,6 @@ namespace Simias.Storage
 			systemPropertyTable.Add( FileLastWriteTime, null );
 			systemPropertyTable.Add( FileLength, null );
 			systemPropertyTable.Add( LinkReference, null );
-//			systemPropertyTable.Add( LocalAddressBook, null );
 			systemPropertyTable.Add( LocalIncarnation, null );
 			systemPropertyTable.Add( MasterIncarnation, null );
 			systemPropertyTable.Add( ModifyTime, null );

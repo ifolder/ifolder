@@ -633,10 +633,22 @@ namespace Simias.Storage
 
 						case PropertyList.PropertyListState.Update:
 							store.EventPublisher.RaiseEvent( new NodeEventArgs( store.Publisher, node.ID, id, node.Type, EventType.NodeChanged, 0 ) );
+
+							// If this is a member Node, update the access control entry.
+							if ( IsType( node, NodeTypes.MemberType ) )
+							{
+								( node as Member ).UpdateAccessControl();
+							}
 							break;
 
 						case PropertyList.PropertyListState.Internal:
 							node.Properties.State = PropertyList.PropertyListState.Update;
+
+							// If this is a member Node, update the access control entry.
+							if ( IsType( node, NodeTypes.MemberType ) )
+							{
+								( node as Member ).UpdateAccessControl();
+							}
 							break;
 					}
 				}
@@ -910,7 +922,7 @@ namespace Simias.Storage
 								}
 
 								// Don't allow the owner's rights to be set below admin level.
-								if ( collectionOwner.Ace.Rights != Access.Rights.Admin )
+								if ( collectionOwner.Rights != Access.Rights.Admin )
 								{
 									throw new AccessException( this, member, String.Format( "Owner {0} - ID: {1} rights cannot be downgraded.", collectionOwner.Name, collectionOwner.UserID ) );
 								}
@@ -1325,7 +1337,7 @@ namespace Simias.Storage
 		/// <param name="member">Member object contained by this collection.</param>
 		public bool IsShareable( Member member )
 		{
-			return ( member.Ace.Rights == Access.Rights.Admin ) ? true : false;
+			return ( member.ValidateAce.Rights == Access.Rights.Admin ) ? true : false;
 		}
 
 		/// <summary>

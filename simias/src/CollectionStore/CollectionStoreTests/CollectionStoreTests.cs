@@ -976,7 +976,7 @@ namespace Simias.Storage.Tests
 				{
 					// Try and down-grade the owner's rights.
 					Member owner = collection1.Owner;
-					owner.Ace.Rights = Access.Rights.ReadOnly;
+					owner.Rights = Access.Rights.ReadOnly;
 					collection1.Commit( owner );
 					throw new ApplicationException( "Block owner rights change failed" );
 				}
@@ -986,8 +986,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Change the ownership on the collection.
-				collection3.ChangeOwner( member, Access.Rights.ReadOnly );
-				collection3.Commit();
+				collection3.Commit( collection3.ChangeOwner( member, Access.Rights.ReadOnly ) );
 
 				// Make sure that it changed.
 				if ( collection3.Owner.UserID != member.UserID )

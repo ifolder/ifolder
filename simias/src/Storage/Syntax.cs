@@ -25,6 +25,9 @@ using System;
 
 namespace Simias.Storage
 {
+	/// <summary>
+	/// Represents syntax types that are supported by the simias database.
+	/// </summary>
 	public enum Syntax 
 	{
 		/// <summary>
@@ -143,17 +146,4 @@ namespace Simias.Storage
 		/// </summary>
 		Relationship
 	};
-
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-//	public class Schema/
-//	{
-//		public Schema()
-//		{
-			//
-			// TODO: Add constructor logic here
-			//
-//		}
-//	}
 }
