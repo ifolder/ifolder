@@ -147,6 +147,8 @@ namespace Novell.iFolder
 	{
 		// for the statusbar
 		const int ctx = 1;
+		private string				SyncFileName = "";
+
 		private iFolderWebService	iFolderWS;
 		private Gdk.Pixbuf			iFolderPixBuf;
 		private Gdk.Pixbuf			ServeriFolderPixBuf;
@@ -154,9 +156,24 @@ namespace Novell.iFolder
 
 		private Statusbar			MainStatusBar;
 		private ProgressBar			SyncBar;
+		private Gtk.Notebook		MainNoteBook;
 		private Gtk.TreeView		iFolderTreeView;
 		private Gtk.ListStore		iFolderTreeStore;
 
+		// Preferences widgets
+		private Gtk.CheckButton			AutoSyncCheckButton;
+		private Gtk.SpinButton			SyncSpinButton;
+		private Gtk.Label				SyncUnitsLabel;
+
+		private Gtk.CheckButton			ShowConfirmationButton; 
+		private Gtk.CheckButton			NotifyUsersButton; 
+		private Gtk.CheckButton			NotifyCollisionsButton; 
+		private Gtk.CheckButton			NotifyiFoldersButton; 
+		private Gtk.CheckButton			UseProxyButton; 
+		private Gtk.Entry				ProxyHostEntry;
+		private Gtk.SpinButton			ProxyPortSpinButton;
+		private Gtk.Label				ProxyHostLabel;
+		private Gtk.Label				ProxyPortLabel;
 
 		private ImageMenuItem		CreateMenuItem;
 		private Gtk.MenuItem		ShareMenuItem;
@@ -175,23 +192,137 @@ namespace Novell.iFolder
 
 		private iFolderConflictDialog ConflictDialog;
 		private iFolderPropertiesDialog PropertiesDialog;
+		private Image				 iFolderBanner;
+		private Image				 iFolderScaledBanner;
+		private Gdk.Pixbuf			 ScaledPixbuf;
 
+		private iFolderSettings		ifSettings;
 		private Hashtable			curiFolders;
+
+		private TreeView			LogTreeView;
+		private ListStore			LogTreeStore;
+		private Button				SaveButton;
+		private Button				ClearButton;
+
+		public iFolderSettings GlobalSettings
+		{
+			set
+			{
+				if(value.HaveEnterprise != ifSettings.HaveEnterprise)
+				{
+					ifSettings = value;
+					if(value.HaveEnterprise = true)
+					{
+						MainNoteBook.AppendPage( CreateEnterprisePage(),
+											new Label(Util.GS("Server")));
+						MainNoteBook.ShowAll();
+					}
+				}
+				ifSettings = value;
+				RefreshWidgets();
+			}
+		}
+
 
 
 
 		/// <summary>
 		/// Default constructor for iFolderWindow
 		/// </summary>
-		public iFolderWindow(iFolderWebService ifws)
+		public iFolderWindow(iFolderWebService ifws, iFolderSettings settings)
 			: base ("iFolder")
 		{
 			if(ifws == null)
 				throw new ApplicationException("iFolderWebServices was null");
-
 			iFolderWS = ifws;
+			ifSettings = settings;
 			curiFolders = new Hashtable();
 			CreateWidgets();
+			RefreshWidgets();
+		}
+
+
+
+
+		/// <summary>
+		/// Refresh the values that are in the widgets and add or remove the
+		/// Enterprise tab depending on our state
+		/// </summary>
+		private void RefreshWidgets()
+		{
+			//------------------------------
+			// Setup all of the default values
+			//------------------------------
+			if(ClientConfig.Get(ClientConfig.KEY_SHOW_CREATION, "true")
+										== "true")
+				ShowConfirmationButton.Active = true;
+			else
+				ShowConfirmationButton.Active = false;
+
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_USERS, "true")
+										== "true")
+				NotifyUsersButton.Active = true;
+			else
+				NotifyUsersButton.Active = false;
+
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_COLLISIONS, "true")
+										== "true")
+				NotifyCollisionsButton.Active = true;
+			else
+				NotifyCollisionsButton.Active = false;
+
+			if(ClientConfig.Get(ClientConfig.KEY_NOTIFY_IFOLDERS, "true")
+										== "true")
+				NotifyiFoldersButton.Active = true;
+			else
+				NotifyiFoldersButton.Active = false;
+
+
+			SyncSpinButton.Value = ifSettings.DefaultSyncInterval;
+
+			if(SyncSpinButton.Value == 0)
+			{
+				AutoSyncCheckButton.Active = false;
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false; 
+			}
+			else
+			{
+				AutoSyncCheckButton.Active = true;
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+
+			if(AutoSyncCheckButton.Active == true)
+			{
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+			else
+			{
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false;
+			}
+
+
+			if(ifSettings.UseProxy)
+			{
+				ProxyHostEntry.Sensitive = true;
+				ProxyPortSpinButton.Sensitive = true;
+				ProxyHostLabel.Sensitive = true;
+				ProxyPortLabel.Sensitive = true;
+				UseProxyButton.Active = true; 
+				ProxyHostEntry.Text = ifSettings.ProxyHost;
+				ProxyPortSpinButton.Value = ifSettings.ProxyPort;
+			}
+			else
+			{
+				ProxyHostEntry.Sensitive = false;
+				ProxyPortSpinButton.Sensitive = false;
+				ProxyHostLabel.Sensitive = false;
+				ProxyPortLabel.Sensitive = false;
+				UseProxyButton.Active = false; 
+			}
 		}
 
 
@@ -203,6 +334,7 @@ namespace Novell.iFolder
 		private void CreateWidgets()
 		{
 			this.SetDefaultSize (540, 480);
+			this.DeleteEvent += new DeleteEventHandler (WindowDelete);
 			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolder.png"));
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
@@ -220,9 +352,41 @@ namespace Novell.iFolder
 
 
 			//-----------------------------
-			// Create the Tree View
+			// Add iFolderGraphic
 			//-----------------------------
-			vbox.PackStart(SetupTreeView(), true, true, 0);
+			HBox imagebox = new HBox();
+			imagebox.Spacing = 0;
+			iFolderBanner = new Image(
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-banner.png")));
+			imagebox.PackStart(iFolderBanner, false, false, 0);
+
+			ScaledPixbuf = 
+				new Gdk.Pixbuf(Util.ImagesPath("ifolder-banner-scaled.png"));
+			iFolderScaledBanner = new Image(ScaledPixbuf);
+			iFolderScaledBanner.ExposeEvent += 
+					new ExposeEventHandler(OnBannerExposed);
+			imagebox.PackStart(iFolderScaledBanner, true, true, 0);
+			vbox.PackStart (imagebox, false, true, 0);
+
+			//-----------------------------
+			// Create Tabs
+			//-----------------------------
+			MainNoteBook = new Notebook();
+//			MainNoteBook.BorderWidth = 10;
+			MainNoteBook.AppendPage(	CreateiFoldersPage(), 
+										new Label(Util.GS("_iFolders")));
+			MainNoteBook.AppendPage( CreatePreferencesPage(),
+										new Label(Util.GS("_Preferences")));
+			MainNoteBook.AppendPage( CreateLogPage(),
+										new Label(Util.GS("Sync _Log")));
+			if(ifSettings.HaveEnterprise)
+			{
+				MainNoteBook.AppendPage( CreateEnterprisePage(),
+											new Label(Util.GS("Se_rver")));
+			}
+			vbox.PackStart(MainNoteBook, true, true, 0);
+			MainNoteBook.SwitchPage += 
+					new SwitchPageHandler(OnSwitchPage);
 
 
 			//-----------------------------
@@ -251,6 +415,32 @@ namespace Novell.iFolder
 			// Setup an event to refresh when the window is
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
+		}
+
+
+
+
+		private void OnBannerExposed(object o, ExposeEventArgs args)
+		{
+			if(args.Event.Count > 0)
+				return;
+
+			Gdk.Pixbuf spb = 
+				ScaledPixbuf.ScaleSimple(iFolderScaledBanner.Allocation.Width,
+										iFolderScaledBanner.Allocation.Height,
+										Gdk.InterpType.Nearest);
+
+			Gdk.GC gc = new Gdk.GC(iFolderScaledBanner.GdkWindow);
+
+			spb.RenderToDrawable(iFolderScaledBanner.GdkWindow,
+											gc,
+											0, 0,
+											args.Event.Area.X,
+											args.Event.Area.Y,
+											args.Event.Area.Width,
+											args.Event.Area.Height,
+											Gdk.RgbDither.Normal,
+											0, 0);
 		}
 
 
@@ -353,7 +543,7 @@ namespace Novell.iFolder
 
 
 			//----------------------------
-			// Help Menu
+			// View Menu
 			//----------------------------
 			Menu HelpMenu = new Menu();
 
@@ -384,7 +574,7 @@ namespace Novell.iFolder
 		/// <returns>
 		/// Widget to display
 		/// </returns>
-		private Widget SetupTreeView()
+		private Widget CreateiFoldersPage()
 		{
 			// Create a new VBox and place 10 pixels between
 			// each item in the vBox
@@ -481,6 +671,553 @@ namespace Novell.iFolder
 			return vbox;
 		}
 	
+
+
+
+		/// <summary>
+		/// Creates the Preferences Page
+		/// </summary>
+		/// <returns>
+		/// Widget to display
+		/// </returns>
+		private Widget CreatePreferencesPage()
+		{
+			// Create a new VBox and place 10 pixels between
+			// each item in the vBox
+			VBox vbox = new VBox();
+			vbox.Spacing = Util.SectionSpacing;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
+
+			//------------------------------
+			// Application Settings
+			//------------------------------
+			// create a section box
+			VBox appSectionBox = new VBox();
+			appSectionBox.Spacing = Util.SectionTitleSpacing;
+			vbox.PackStart(appSectionBox, false, true, 0);
+			Label appSectionLabel = new Label("<span weight=\"bold\">" +
+												Util.GS("Application") +
+												"</span>");
+			appSectionLabel.UseMarkup = true;
+			appSectionLabel.Xalign = 0;
+			appSectionBox.PackStart(appSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox appSpacerBox = new HBox();
+			appSectionBox.PackStart(appSpacerBox, false, true, 0);
+			Label appSpaceLabel = new Label("    "); // four spaces
+			appSpacerBox.PackStart(appSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox appWidgetBox = new VBox();
+			appSpacerBox.PackStart(appWidgetBox, false, true, 0);
+			appWidgetBox.Spacing = Util.SectionTitleSpacing;
+
+
+			ShowConfirmationButton = 
+				new CheckButton(Util.GS(
+					"_Show Confirmation dialog when creating iFolders"));
+			appWidgetBox.PackStart(ShowConfirmationButton, false, true, 0);
+			ShowConfirmationButton.Toggled += 
+						new EventHandler(OnShowConfButton);
+
+			NotifyiFoldersButton =
+				new CheckButton(Util.GS("_Notify of shared iFolders")); 
+			appWidgetBox.PackStart(NotifyiFoldersButton, false, true, 0);
+
+			NotifyiFoldersButton.Toggled += 
+						new EventHandler(OnNotifyiFoldersButton);
+
+			NotifyCollisionsButton =
+				new CheckButton(Util.GS("Notify of _collisions")); 
+			appWidgetBox.PackStart(NotifyCollisionsButton, false, true, 0);
+			NotifyCollisionsButton.Toggled += 
+						new EventHandler(OnNotifyCollisionsButton);
+
+			NotifyUsersButton =
+				new CheckButton(Util.GS("Notify when a _user joins")); 
+			appWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
+
+			NotifyUsersButton.Toggled += 
+						new EventHandler(OnNotifyUsersButton);
+
+			
+			Label strtlabel = new Label("<span style=\"italic\">" + Util.GS("To startup iFolder at login, leave iFolder running when you log out and save your current setup.") + "</span>");
+			strtlabel.UseMarkup = true;
+			strtlabel.LineWrap = true;
+			appWidgetBox.PackStart(strtlabel, false, true, 0);
+
+
+
+			//------------------------------
+			// Sync Settings
+			//------------------------------
+			// create a section box
+			VBox syncSectionBox = new VBox();
+			syncSectionBox.Spacing = Util.SectionTitleSpacing;
+			vbox.PackStart(syncSectionBox, false, true, 0);
+			Label syncSectionLabel = new Label("<span weight=\"bold\">" +
+												Util.GS("Synchronization") +
+												"</span>");
+			syncSectionLabel.UseMarkup = true;
+			syncSectionLabel.Xalign = 0;
+			syncSectionBox.PackStart(syncSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox syncSpacerBox = new HBox();
+			syncSectionBox.PackStart(syncSpacerBox, false, true, 0);
+			Label syncSpaceLabel = new Label("    "); // four spaces
+			syncSpacerBox.PackStart(syncSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox syncWidgetBox = new VBox();
+			syncSpacerBox.PackStart(syncWidgetBox, false, true, 0);
+			syncWidgetBox.Spacing = 10;
+
+
+			Label syncHelpLabel = new Label(Util.GS("Specify the default Sync interval for synchronizing your iFolders with the host.  To specify a different Sync interval for an individual iFolder, use the iFolder's Properties dialog."));
+			syncHelpLabel.LineWrap = true;
+			syncHelpLabel.Xalign = 0;
+			syncWidgetBox.PackStart(syncHelpLabel, false, true, 0);
+
+			HBox syncHBox = new HBox();
+			syncWidgetBox.PackStart(syncHBox, false, true, 0);
+			syncHBox.Spacing = 10;
+			AutoSyncCheckButton = 
+					new CheckButton(Util.GS("Sync to host _every:"));
+			AutoSyncCheckButton.Toggled += new EventHandler(OnAutoSyncButton);
+			syncHBox.PackStart(AutoSyncCheckButton, false, false, 0);
+			SyncSpinButton = new SpinButton(0, 99999, 5);
+			SyncSpinButton.ValueChanged += 
+					new EventHandler(OnSyncIntervalChanged);
+
+			syncHBox.PackStart(SyncSpinButton, false, false, 0);
+			SyncUnitsLabel = new Label(Util.GS("seconds"));
+			SyncUnitsLabel.Xalign = 0;
+			syncHBox.PackEnd(SyncUnitsLabel, true, true, 0);
+
+
+
+			//------------------------------
+			// Proxy Frame
+			//------------------------------
+			// create a section box
+			VBox proxySectionBox = new VBox();
+			proxySectionBox.Spacing = Util.SectionTitleSpacing;
+			vbox.PackStart(proxySectionBox, true, true, 0);
+			Label proxySectionLabel = new Label("<span weight=\"bold\">" +
+												Util.GS("Proxy") +
+												"</span>");
+			proxySectionLabel.UseMarkup = true;
+			proxySectionLabel.Xalign = 0;
+			proxySectionBox.PackStart(proxySectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox proxySpacerBox = new HBox();
+			proxySectionBox.PackStart(proxySpacerBox, false, true, 0);
+			Label proxySpaceLabel = new Label("    "); // four spaces
+			proxySpacerBox.PackStart(proxySpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox proxyWidgetBox = new VBox();
+			proxySpacerBox.PackStart(proxyWidgetBox, true, true, 0);
+			proxyWidgetBox.Spacing = 5;
+
+
+			UseProxyButton = 
+				new CheckButton(Util.GS("Use this proxy server to sync iFolders with the host"));
+			proxyWidgetBox.PackStart(UseProxyButton, false, true, 0);
+			UseProxyButton.Toggled += new EventHandler(OnUseProxyButton);
+
+
+			HBox pSettingBox = new HBox();
+			pSettingBox.Spacing = 10;
+			proxyWidgetBox.PackStart(pSettingBox, true, true, 0);
+
+			ProxyHostLabel = new Label(Util.GS("Proxy host:"));
+			pSettingBox.PackStart(ProxyHostLabel, false, true, 0);
+			ProxyHostEntry = new Entry();
+			ProxyHostEntry.Changed += new EventHandler(OnProxySettingsChanged);
+
+			pSettingBox.PackStart(ProxyHostEntry, true, true, 0);
+			ProxyPortLabel = new Label(Util.GS("Port:"));
+			pSettingBox.PackStart(ProxyPortLabel, false, true, 0);
+			ProxyPortSpinButton = new SpinButton(0, 99999, 1);
+
+			ProxyPortSpinButton.ValueChanged += 
+					new EventHandler(OnProxySettingsChanged);
+			pSettingBox.PackStart(ProxyPortSpinButton, false, true, 0);
+
+
+			// Disable all proxy stuff right now
+			proxySectionLabel.Sensitive = false;
+			UseProxyButton.Sensitive = false;
+			ProxyHostLabel.Sensitive = false;
+			ProxyHostEntry.Sensitive = false;
+			ProxyPortSpinButton.Sensitive = false;
+			ProxyPortLabel.Sensitive = false;
+
+			return vbox;
+		}
+
+
+
+
+		/// <summary>
+		/// Creates the Enterprise Page
+		/// </summary>
+		/// <returns>
+		/// Widget to display
+		/// </returns>
+		private Widget CreateEnterprisePage()
+		{
+			// Create a new VBox and place 10 pixels between
+			// each item in the vBox
+			VBox vbox = new VBox();
+			vbox.Spacing = Util.SectionSpacing;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
+
+
+			//------------------------------
+			// Server Information
+			//------------------------------
+			// create a section box
+			VBox srvSectionBox = new VBox();
+			srvSectionBox.Spacing = Util.SectionTitleSpacing;
+			vbox.PackStart(srvSectionBox, false, true, 0);
+			Label srvSectionLabel = new Label("<span weight=\"bold\">" +
+												Util.GS("Server Information") +
+												"</span>");
+			srvSectionLabel.UseMarkup = true;
+			srvSectionLabel.Xalign = 0;
+			srvSectionBox.PackStart(srvSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox srvSpacerBox = new HBox();
+			srvSpacerBox.Spacing = 10;
+			srvSectionBox.PackStart(srvSpacerBox, false, true, 0);
+			Label srvSpaceLabel = new Label("");
+			srvSpacerBox.PackStart(srvSpaceLabel, false, true, 0);
+
+			// create a vbox to actually place the widgets in for section
+			VBox srvWidgetBox = new VBox();
+			srvSpacerBox.PackStart(srvWidgetBox, true, true, 0);
+
+			// create a table to hold the values
+			Table srvTable = new Table(3,2,false);
+			srvWidgetBox.PackStart(srvTable, true, true, 0);
+			srvTable.ColumnSpacing = 20;
+			srvTable.RowSpacing = 5;
+
+			Label usrNameLabel = new Label(Util.GS("User name:"));
+			usrNameLabel.Xalign = 0;
+			srvTable.Attach(usrNameLabel, 0,1,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label usrNameValue = new Label(ifSettings.CurrentUserName);
+			usrNameValue.Xalign = 0;
+			srvTable.Attach(usrNameValue, 1,2,0,1);
+
+
+			Label srvNameLabel = new Label(Util.GS("iFolder server:"));
+			srvNameLabel.Xalign = 0;
+			srvTable.Attach(srvNameLabel, 0,1,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			Label srvNameValue = new Label(ifSettings.EnterpriseName);
+			srvNameValue.Xalign = 0;
+			srvTable.Attach(srvNameValue, 1,2,1,2);
+
+			Label srvDescLabel = new Label(Util.GS("Server description:"));
+			srvDescLabel.Xalign = 0;
+			srvDescLabel.Yalign = 0;
+			srvTable.Attach(srvDescLabel, 0,1,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 
+					AttachOptions.Fill,0,0);
+
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			TextView srvDescValue = new TextView();
+			if(ifSettings.EnterpriseDescription != null)
+				srvDescValue.Buffer.Text = ifSettings.EnterpriseDescription;
+			srvDescValue.WrapMode = Gtk.WrapMode.Word;
+			srvDescValue.Editable = false;
+			srvDescValue.CursorVisible = false;
+			srvDescValue.RightMargin = 5;
+			srvDescValue.LeftMargin = 5;
+			sw.Add(srvDescValue);
+			srvTable.Attach(sw, 1,2,2,3,
+					AttachOptions.Expand | AttachOptions.Fill , 0,0,0);
+
+
+
+			//------------------------------
+			// Disk Space
+			//------------------------------
+			// create a section box
+			VBox diskSectionBox = new VBox();
+			diskSectionBox.Spacing = Util.SectionTitleSpacing;
+			vbox.PackStart(diskSectionBox, false, true, 0);
+			Label diskSectionLabel = new Label("<span weight=\"bold\">" +
+												Util.GS("Disk Space") +
+												"</span>");
+			diskSectionLabel.UseMarkup = true;
+			diskSectionLabel.Xalign = 0;
+			diskSectionBox.PackStart(diskSectionLabel, false, true, 0);
+
+			// create a hbox to provide spacing
+			HBox diskSpacerBox = new HBox();
+			diskSpacerBox.Spacing = 10;
+			diskSectionBox.PackStart(diskSpacerBox, true, true, 0);
+			Label diskSpaceLabel = new Label("");
+			diskSpacerBox.PackStart(diskSpaceLabel, false, true, 0);
+
+
+			// create a table to hold the values
+			Table diskTable = new Table(3,3,false);
+			diskSpacerBox.PackStart(diskTable, true, true, 0);
+			diskTable.ColumnSpacing = 20;
+			diskTable.RowSpacing = 5;
+
+			Label totalLabel = new Label(Util.GS("Free space on server:"));
+			totalLabel.Xalign = 0;
+			diskTable.Attach(totalLabel, 0,1,0,1,
+					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			Label totalValue = new Label("0");
+			totalValue.Xalign = 1;
+			diskTable.Attach(totalValue, 1,2,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label totalUnit = new Label(Util.GS("MB"));
+			diskTable.Attach(totalUnit, 2,3,0,1,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			Label usedLabel = new Label(Util.GS("Used space on server:"));
+			usedLabel.Xalign = 0;
+			diskTable.Attach(usedLabel, 0,1,1,2,
+					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			Label usedValue = new Label("0");
+			usedValue.Xalign = 1;
+			diskTable.Attach(usedValue, 1,2,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label usedUnit = new Label(Util.GS("MB"));
+			diskTable.Attach(usedUnit, 2,3,1,2,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+			Label availLabel = new Label(Util.GS("Total space on server:"));
+			availLabel.Xalign = 0;
+			diskTable.Attach(availLabel, 0,1,2,3,
+					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
+			Label availValue = new Label("0");
+			availValue.Xalign = 1;
+			diskTable.Attach(availValue, 1,2,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+			Label availUnit = new Label(Util.GS("MB"));
+			diskTable.Attach(availUnit, 2,3,2,3,
+					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
+
+
+			Frame graphFrame = new Frame();
+			graphFrame.Shadow = Gtk.ShadowType.EtchedOut;
+			graphFrame.ShadowType = Gtk.ShadowType.EtchedOut;
+			diskSpacerBox.PackStart(graphFrame, false, true, 0);
+			HBox graphBox = new HBox();
+			graphBox.Spacing = 5;
+			graphBox.BorderWidth = 5;
+			graphFrame.Add(graphBox);
+
+			ProgressBar diskGraph = new ProgressBar();
+			graphBox.PackStart(diskGraph, false, true, 0);
+
+			diskGraph.Orientation = Gtk.ProgressBarOrientation.BottomToTop;
+//			diskGraph.Text = "%3";
+			diskGraph.PulseStep = .10;
+			diskGraph.Fraction = 0;
+
+			VBox graphLabelBox = new VBox();
+			graphBox.PackStart(graphLabelBox, false, true, 0);
+
+			Label fullLabel = new Label(Util.GS("full"));
+			fullLabel.Xalign = 0;
+			fullLabel.Yalign = 0;
+			graphLabelBox.PackStart(fullLabel, true, true, 0);
+
+			Label emptyLabel = new Label(Util.GS("empty"));
+			emptyLabel.Xalign = 0;
+			emptyLabel.Yalign = 1;
+			graphLabelBox.PackStart(emptyLabel, true, true, 0);
+
+
+			DiskSpace ds = null;
+			try
+			{
+				ds = iFolderWS.GetUserDiskSpace(ifSettings.CurrentUserID);
+			}
+			catch(Exception e)
+			{
+//				iFolderExceptionDialog ied = new iFolderExceptionDialog(
+//													null, e);
+//				ied.Run();
+//				ied.Hide();
+//				ied.Destroy();
+//				ds = null;
+			}
+
+			if(ds == null)
+			{
+				totalValue.Text = Util.GS("N/A");
+				totalUnit.Text = "";
+				availValue.Text = Util.GS("N/A");
+				availUnit.Text = "";
+				usedValue.Text = Util.GS("N/A");
+				usedUnit.Text = "";
+				diskGraph.Fraction = 0;
+			}
+			else
+			{
+				int tmpValue;
+
+				if(ds.Limit == 0)
+				{
+					totalValue.Text = Util.GS("N/A");
+					totalUnit.Text = "";
+				}
+				else
+				{
+					tmpValue = (int)(ds.Limit / (1024 * 1024));
+					totalValue.Text = string.Format("{0}", tmpValue);
+					totalUnit.Text = Util.GS("MB");
+				}
+
+				if(ds.AvailableSpace == 0)
+				{
+					availValue.Text = Util.GS("N/A");
+					availUnit.Text = "";
+				}
+				else
+				{
+					tmpValue = (int)(ds.AvailableSpace / (1024 * 1024));
+					availValue.Text = string.Format("{0}",tmpValue);
+					availUnit.Text = Util.GS("MB");
+				}
+
+				if(ds.UsedSpace == 0)
+				{
+					usedValue.Text = Util.GS("N/A");
+					usedUnit.Text = "";
+				}
+				else
+				{
+					tmpValue = (int)(ds.UsedSpace / (1024 * 1024)) + 1;
+					usedValue.Text = string.Format("{0}", tmpValue);
+					usedUnit.Text = Util.GS("MB");
+				}
+
+				if(ds.Limit == 0)
+				{
+					diskGraph.Fraction = 0;
+				}
+				else
+				{
+					if(ds.Limit < ds.UsedSpace)
+						diskGraph.Fraction = 1;
+					else
+						diskGraph.Fraction = ((double)ds.UsedSpace) / 
+												((double)ds.Limit);
+				}
+			}
+
+			return vbox;
+		}
+
+
+
+
+		/// <summary>
+		/// Creates the Log tab
+		/// </summary>
+		/// <returns>
+		/// Widget to display
+		/// </returns>
+		private Widget CreateLogPage()
+		{
+			// Create a new VBox and place 10 pixels between
+			// each item in the vBox
+			VBox vbox = new VBox();
+			vbox.Spacing = 10;
+			vbox.BorderWidth = Util.DefaultBorderWidth;
+		
+			Label lbl = new Label(Util.GS("This log shows current iFolder activity"));
+			vbox.PackStart(lbl, false, true, 0);
+			lbl.Xalign = 0;
+
+			ScrolledWindow sw = new ScrolledWindow();
+			sw.ShadowType = Gtk.ShadowType.EtchedIn;
+			vbox.PackStart(sw, true, true, 0);
+			LogTreeView = new TreeView();
+			sw.Add(LogTreeView);
+			LogTreeView.HeadersVisible = false;
+
+			// Setup the iFolder TreeView
+			LogTreeStore = new ListStore(typeof(string));
+			LogTreeView.Model = LogTreeStore;
+
+			CellRendererText logcr = new CellRendererText();
+			logcr.Xpad = 10;
+			LogTreeView.AppendColumn(Util.GS("Log"), logcr, "text", 0);
+
+
+			// Setup buttons for add/remove/accept/decline
+			HBox buttonBox = new HBox();
+			buttonBox.Spacing = 10;
+			vbox.PackStart(buttonBox, false, false, 0);
+
+			HBox leftBox = new HBox();
+			leftBox.Spacing = 10;
+			buttonBox.PackStart(leftBox, false, false, 0);
+			HBox midBox = new HBox();
+			midBox.Spacing = 10;
+			buttonBox.PackStart(midBox, true, true, 0);
+			HBox rightBox = new HBox();
+			rightBox.Spacing = 10;
+			buttonBox.PackStart(rightBox, false, false, 0);
+
+			SaveButton = new Button(Gtk.Stock.Save);
+			rightBox.PackStart(SaveButton);
+			SaveButton.Clicked += new EventHandler(OnSaveLog);
+			SaveButton.Sensitive = false;
+
+			ClearButton = new Button(Gtk.Stock.Clear);
+			rightBox.PackStart(ClearButton);
+			ClearButton.Clicked += new EventHandler(OnClearLog);
+			ClearButton.Sensitive = false;
+
+			return vbox;
+		}
+
+
+
+		private void LogMessage(string logEntry)
+		{
+			TreeIter iter;
+
+			while(LogTreeStore.IterNChildren() > 500)
+			{
+				if(LogTreeStore.GetIterFirst(out iter))
+				{
+					LogTreeStore.Remove(ref iter);
+				}
+			}
+
+			iter = LogTreeStore.AppendValues(string.Format(
+							"{0} {1}", DateTime.Now.ToString(), logEntry));
+
+			TreePath path = LogTreeStore.GetPath(iter);
+
+			LogTreeView.ScrollToCell(path, null, true, 1, 1);	
+
+			SaveButton.Sensitive = true;
+			ClearButton.Sensitive = true;
+		}
+
 
 
 
@@ -582,14 +1319,22 @@ namespace Novell.iFolder
 		}
 
 
+		// This message is sent when the window is deleted 
+		// or the X is clicked.  We just want to hide it so
+		// we set the args.RetVal to true saying we handled the
+		// delete even when we didn't
+		private void WindowDelete (object o, DeleteEventArgs args)
+		{
+			OnCloseWindow(o, args);
+			args.RetVal = true;
+		}
+
 
 
 		private void OnCloseWindow(object o, EventArgs args)
 		{
-			this.Hide();
-			this.Destroy();
+			this.Hide ();
 		}
-
 
 
 
@@ -607,12 +1352,22 @@ namespace Novell.iFolder
 			TreeSelection tSelect = iFolderTreeView.Selection;
 			if(tSelect.CountSelectedRows() == 1)
 			{
+//				uint nodeCount = 47;
+//				ulong bytesToSend = 121823;
 				TreeModel tModel;
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
 				iFolderHolder ifHolder = 
 						(iFolderHolder) tModel.GetValue(iter, 0);
+
+	//			This appears to hang?
+	//			SyncSize.CalculateSendSize(	ifolder, 
+	//										out nodeCount, 
+	//										out bytesToSend);
+
+	//			UploadLabel.Text = bytesToSend.ToString();
+	//			SyncFilesLabel.Text = nodeCount.ToString();
 
 				if(	(ifHolder.iFolder != null) && 
 									(ifHolder.iFolder.HasConflicts) )
@@ -643,8 +1398,9 @@ namespace Novell.iFolder
 					PropMenuItem.Sensitive = false;
 				}
 
+
 				if(ifHolder.iFolder.OwnerID == 
-						ifHolder.iFolder.CurrentUserID)
+						ifSettings.CurrentUserID)
 				{
 					DeleteMenuItem.Sensitive = true;
 					DeleteMenuItem.Visible = true;
@@ -751,7 +1507,7 @@ namespace Novell.iFolder
 										OnRevertiFolder);
 
 								if(ifHolder.iFolder.OwnerID == 
-												ifHolder.iFolder.CurrentUserID)
+												ifSettings.CurrentUserID)
 								{
 									MenuItem item_delete = new MenuItem (
 											Util.GS("Delete iFolder"));
@@ -786,7 +1542,7 @@ namespace Novell.iFolder
 										OnSetupiFolder);
 
 								if(ifHolder.iFolder.OwnerID == 
-												ifHolder.iFolder.CurrentUserID)
+												ifSettings.CurrentUserID)
 								{
 									MenuItem item_decline = 
 										new MenuItem(Util.GS("Delete iFolder"));
@@ -1146,6 +1902,8 @@ namespace Novell.iFolder
 							{
 								ClientConfig.Set(
 									ClientConfig.KEY_SHOW_CREATION, "false");
+								if(ShowConfirmationButton != null)
+									ShowConfirmationButton.Active = false;
 							}
 
 							dlg.Destroy();
@@ -1369,7 +2127,7 @@ namespace Novell.iFolder
 		{
 			int rc = 0;
 
-			if(ifHolder.iFolder.OwnerID == ifHolder.iFolder.CurrentUserID)
+			if(ifHolder.iFolder.OwnerID == ifSettings.CurrentUserID)
 			{
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
 					this,
@@ -1438,6 +2196,157 @@ namespace Novell.iFolder
 			// CRG: TODO
 			// At this point, refresh the selected iFolder to see if it
 			// has any more conflicts
+		}
+
+
+		private void OnUseProxyButton(object o, EventArgs args)
+		{
+			if(UseProxyButton.Active == true)
+			{
+				ProxyHostEntry.Sensitive = true;
+				ProxyPortSpinButton.Sensitive = true;
+				ProxyHostLabel.Sensitive = true;
+				ProxyPortLabel.Sensitive = true;
+			}
+			else
+			{
+				ProxyHostEntry.Sensitive = false;
+				ProxyPortSpinButton.Sensitive = false;
+				ProxyHostLabel.Sensitive = false;
+				ProxyPortLabel.Sensitive = false;
+			}
+		}
+
+
+		private void OnNotifyUsersButton(object o, EventArgs args)
+		{
+			if(NotifyUsersButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, "false");
+		}
+
+		private void OnNotifyCollisionsButton(object o, EventArgs args)
+		{
+			if(NotifyCollisionsButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_COLLISIONS, "false");
+		}
+
+		private void OnNotifyiFoldersButton(object o, EventArgs args)
+		{
+			if(NotifyiFoldersButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_IFOLDERS, "false");
+		}
+
+
+		private void OnShowConfButton(object o, EventArgs args)
+		{
+			if(ShowConfirmationButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, "true");
+			else
+				ClientConfig.Set(ClientConfig.KEY_SHOW_CREATION, "false");
+		}
+
+
+
+
+		private void OnProxySettingsChanged(object o, EventArgs args)
+		{
+			Console.WriteLine("Save ProxySettings here");
+			// Save the settings here?
+		}
+
+
+
+
+		private void OnAutoSyncButton(object o, EventArgs args)
+		{
+			if(AutoSyncCheckButton.Active == true)
+			{
+				SyncSpinButton.Sensitive = true;
+				SyncUnitsLabel.Sensitive = true;
+			}
+			else
+			{
+				SyncSpinButton.Sensitive = false;
+				SyncUnitsLabel.Sensitive = false;
+				SyncSpinButton.Value = 0;
+
+/*				try
+				{
+					ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
+					iFolderWS.SetDefaultSyncInterval(
+									ifSettings.DefaultSyncInterval);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+													this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
+*/
+			}
+		}
+
+
+
+
+		private void OnSyncIntervalChanged(object o, EventArgs args)
+		{
+			if(SyncSpinButton.Value != ifSettings.DefaultSyncInterval)
+			{
+				try
+				{
+					ifSettings.DefaultSyncInterval = (int)SyncSpinButton.Value;
+					iFolderWS.SetDefaultSyncInterval(
+										ifSettings.DefaultSyncInterval);
+				}
+				catch(Exception e)
+				{
+					iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														this, e);
+					ied.Run();
+					ied.Hide();
+					ied.Destroy();
+					return;
+				}
+			}
+		}
+
+
+
+
+		private void OnSwitchPage(object o, SwitchPageArgs args)
+		{
+			if(MainNoteBook.CurrentPage != 0)
+			{
+				CreateMenuItem.Sensitive = false;
+				ShareMenuItem.Sensitive = false;
+				OpenMenuItem.Sensitive = false;
+				SyncNowMenuItem.Sensitive = false;
+				ConflictMenuItem.Sensitive = false;
+				RevertMenuItem.Sensitive = false;
+				DeleteMenuItem.Sensitive = false;
+//				DeleteMenuItem.Visible = false;
+				RemoveMenuItem.Sensitive = false;
+//				RemoveMenuItem.Visible = false;
+				PropMenuItem.Sensitive = false;;
+				RefreshMenuItem.Sensitive = false;
+				SetupMenuItem.Sensitive = false;
+			}
+			else
+			{
+				CreateMenuItem.Sensitive = true;
+				RefreshMenuItem.Sensitive = true;
+				OniFolderSelectionChanged(o, args);
+			}
 		}
 
 
@@ -1550,6 +2459,10 @@ namespace Novell.iFolder
 						}
 						iFolderTreeStore.SetValue(iter, 0, ifHolder);
 					}
+
+					LogMessage(string.Format(Util.GS(
+						"Started sync of: {0}"), args.Name));
+
 					break;
 				}
 				case Action.StopSync:
@@ -1592,10 +2505,16 @@ namespace Novell.iFolder
 					if(args.Successful)
 					{
 						UpdateStatus(Util.GS("Idle..."));
+
+						LogMessage(string.Format(Util.GS(
+							"Finished sync of: {0}"), args.Name));
 					}
 					else
 					{
 						UpdateStatus(Util.GS("Failed synchronization"));
+
+						LogMessage(string.Format(Util.GS(
+							"Failed Sync of: {0}"), args.Name));
 					}
 					break;
 				}
@@ -1617,11 +2536,23 @@ namespace Novell.iFolder
 					{
 						UpdateStatus(string.Format(Util.GS(
 								"Deleting file from server: {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+								"Deleting file from server: {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
 					}
 					else
 					{
 						UpdateStatus(string.Format(Util.GS(
 									"Uploading file: {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+									"Uploading file: {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
 					}
 					break;
 				}
@@ -1631,11 +2562,23 @@ namespace Novell.iFolder
 					{
 						UpdateStatus(string.Format(Util.GS(
 									"Deleting file: {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+									"Deleting file: {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
 					}
 					else
 					{
 						UpdateStatus(string.Format(Util.GS(
 									"Downloading file: {0}"), args.Name));
+						if(SyncFileName != args.Name)
+						{
+							LogMessage(string.Format(Util.GS(
+									"Downloading file: {0}"), args.Name));
+							SyncFileName = args.Name;
+						}
 					}
 					break;
 				}
@@ -1684,6 +2627,84 @@ namespace Novell.iFolder
 		private void OnAbout(object o, EventArgs args)
 		{
 			Util.ShowAbout();
+		}
+
+
+		public void OnSaveLog(object o, EventArgs args)
+		{
+			int rc = 0;
+			bool saveFile = false;
+			string filename = null;
+
+			// Switched out to use the compatible file selector
+			CompatFileChooserDialog cfcd = new CompatFileChooserDialog(
+				Util.GS("Save iFolder Log..."), this, 
+				CompatFileChooserDialog.Action.Save);
+
+			rc = cfcd.Run();
+			cfcd.Hide();
+
+			if(rc == -5)
+			{
+				filename = cfcd.Selections[0];
+
+				if(File.Exists(filename))
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						this,
+						iFolderMsgDialog.DialogType.Question,
+						iFolderMsgDialog.ButtonSet.YesNo,
+						Util.GS("iFolder Save Log"),
+						Util.GS("Overwrite existing file?"),
+						Util.GS("The file you have selected exists.  Selecting yes will overwrite the contents of this file.  Do you want to overwrite this file?"));
+					rc = dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					if(rc == -8)
+					{
+						saveFile = true;
+					}
+				}
+				else
+					saveFile = true;
+			}
+
+			if(saveFile)
+			{
+				FileStream fs = File.Create(filename);
+				if(fs != null)
+				{
+					TreeIter iter;
+					StreamWriter w = new StreamWriter(fs);
+
+					if(LogTreeStore.GetIterFirst(out iter))
+					{
+						string logEntry = 
+							(string)LogTreeStore.GetValue(iter, 0);
+
+						w.WriteLine(logEntry);
+
+						while(LogTreeStore.IterNext(ref iter))
+						{
+							logEntry = 
+								(string)LogTreeStore.GetValue(iter, 0);
+
+							w.WriteLine(logEntry);
+						}
+					}
+					
+					w.Close();
+				}
+			}
+		}
+
+
+
+		public void OnClearLog(object o, EventArgs args)
+		{
+			LogTreeStore.Clear();
+			SaveButton.Sensitive = false;
+			ClearButton.Sensitive = false;
 		}
 
 	}

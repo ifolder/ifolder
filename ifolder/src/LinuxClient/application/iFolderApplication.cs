@@ -62,13 +62,11 @@ namespace Novell.iFolder
 		private TrayIcon			tIcon;
 		private iFolderWebService	ifws;
 		private iFolderWindow 		ifwin;
-		private iFolderSettings		ifSettings;
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
 		private SimiasEventBroker	EventBroker;
 		private	iFolderLoginDialog	LoginDialog;
-		private bool				winShown;
 		private bool				ShowReLoginWindow;
 		private string				redomainID;
 
@@ -103,7 +101,6 @@ namespace Novell.iFolder
 
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
-			winShown = false;
 			ShowReLoginWindow = true;
 		}
 
@@ -150,12 +147,13 @@ namespace Novell.iFolder
 					{
 						simiasRunning = false;
 					}
+
+					// Wait and ping it again
+					System.Threading.Thread.Sleep(10);
 				}
 
 				try
 				{
-					ifSettings = ifws.GetSettings();
-
 					EventBroker = new SimiasEventBroker();
 
 					EventBroker.Register();
@@ -164,7 +162,6 @@ namespace Novell.iFolder
 				{
 					Console.WriteLine(e);
 					ifws = null;
-					ifSettings = null;
 				}
 			}
 
@@ -470,14 +467,14 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Running:
-					if(ifSettings != null)
+/*					if(ifSettings != null)
 					{
 						ifwin = new iFolderWindow(ifws, ifSettings);
 
 						if(!ifSettings.HaveEnterprise)
 							OnJoinEnterprise(null, null);
 					}
-
+*/
 
 					if(EventBroker != null)
 					{
@@ -528,12 +525,10 @@ namespace Novell.iFolder
 				try
 				{
 					ifws = new iFolderWebService();
-	
-					ifSettings = ifws.GetSettings();
+					ifws.Ping();
 				}
 				catch(System.Net.WebException we)
 				{
-					ifSettings = null;
 					ifws = null;
 
 					if(we.Message == "Error: ConnectFailure")
@@ -555,7 +550,6 @@ namespace Novell.iFolder
 				}
 				catch(Exception e)
 				{
-					ifSettings = null;
 					ifws = null;
 
 					iFolderExceptionDialog ied = new iFolderExceptionDialog(
@@ -583,11 +577,7 @@ namespace Novell.iFolder
 				case 1: // first mouse button
 					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
 					{
-						if( (ifSettings != null) && 
-							(!ifSettings.HaveEnterprise) )
-							OnJoinEnterprise(obj, args);
-						else
-							show_properties(obj, args);
+						showiFolderWindow(obj, args);
 					}
 					break;
 				case 2: // second mouse button
@@ -606,16 +596,15 @@ namespace Novell.iFolder
 			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
-			if( (ifSettings != null) && (ifSettings.HaveEnterprise) )
-			{
-				MenuItem iFolders_item = 
-						new MenuItem (Util.GS("My iFolders..."));
-				trayMenu.Append (iFolders_item);
-				iFolders_item.Activated += 
-						new EventHandler(show_properties);
-			}
+
+			MenuItem iFolders_item = 
+					new MenuItem (Util.GS("My iFolders..."));
+			trayMenu.Append (iFolders_item);
+			iFolders_item.Activated += 
+					new EventHandler(showiFolderWindow);
+
 			
-			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
+/*			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
 				MenuItem connect_item = 
 						new MenuItem (Util.GS("Join Enterprise Server"));
@@ -630,6 +619,7 @@ namespace Novell.iFolder
 				trayMenu.Append(show_relogin);
 				show_relogin.Activated += new EventHandler(OnShowReLogin);
 			}
+*/
 
 			ImageMenuItem help_item = new ImageMenuItem (Gtk.Stock.Help, agrp);
 			trayMenu.Append (help_item);
@@ -654,6 +644,14 @@ namespace Novell.iFolder
 
 		private void quit_ifolder(object o, EventArgs args)
 		{
+			if(ifwin != null)
+			{
+				ifwin.Destroyed -= new EventHandler(OniFolderWindowDestroyed);
+				ifwin.Hide();
+				ifwin.Destroy();
+				ifwin = null;
+			}
+
 			if(CurrentState == iFolderState.Stopping)
 			{
 				System.Environment.Exit(1);
@@ -668,83 +666,6 @@ namespace Novell.iFolder
 
 
 
-		private void OnJoinEnterprise(object o, EventArgs args)
-		{
-			if(LoginDialog == null)
-			{
-				LoginDialog = new iFolderLoginDialog();
-				LoginDialog.Response +=
-					new ResponseHandler(OnLoginDialogResponse);
-				LoginDialog.ShowAll();
-			}
-			else
-				LoginDialog.Present();
-		}
-
-
-		private void OnLoginDialogResponse(object o, ResponseArgs args)
-		{
-			switch(args.ResponseId)
-			{
-				case Gtk.ResponseType.Ok:
-				{
-					try
-					{
-						iFolderSettings tmpSettings;
-						tmpSettings = ifws.ConnectToEnterpriseServer(
-														LoginDialog.UserName,
-														LoginDialog.Password,
-														LoginDialog.Host);
-						ifSettings = tmpSettings;
-	
-						EventBroker.RefreshSettings();
-						
-						if(ifwin != null)
-						{
-							ifwin.GlobalSettings = ifSettings;
-						}
-						LoginDialog.Hide();
-						LoginDialog.Destroy();
-						LoginDialog = null;
-					}
-					catch(Exception e)
-					{
-						if(e.Message.IndexOf("HTTP status 401") != -1)
-						{
-							iFolderMsgDialog mDialog = new iFolderMsgDialog(
-								LoginDialog, 
-								iFolderMsgDialog.DialogType.Error,
-								iFolderMsgDialog.ButtonSet.Ok,
-								Util.GS("iFolder Connect Error"),
-								Util.GS("Unable to Authenticate"),
-								Util.GS("The user name or password is invalid.  Please try again."));
-							mDialog.Run();
-							mDialog.Hide();
-							mDialog.Destroy();
-							mDialog = null;
-						}
-						else
-						{
-							iFolderExceptionDialog ied = 
-									new iFolderExceptionDialog(LoginDialog, e);
-							ied.Run();
-							ied.Hide();
-							ied.Destroy();
-							ied = null;
-						}
-					}
-					break;
-				}
-				default:
-				{
-					LoginDialog.Hide();
-					LoginDialog.Destroy();
-					LoginDialog = null;
-					break;
-				}
-			}
-		}
-
 
 		private void show_help(object o, EventArgs args)
 		{
@@ -754,18 +675,28 @@ namespace Novell.iFolder
 
 
 
-		private void show_properties(object o, EventArgs args)
+		private void showiFolderWindow(object o, EventArgs args)
 		{
 			if(CheckWebService())
 			{
-				if(!winShown)
+				if(ifwin == null)
 				{
+					ifwin = new iFolderWindow(ifws);
+					ifwin.Destroyed += 
+							new EventHandler(OniFolderWindowDestroyed);
 					ifwin.ShowAll();
-					winShown = true;
 				}
 				else
 					ifwin.Present();
 			}
+		}
+
+
+
+
+		private void OniFolderWindowDestroyed(object o, EventArgs args)
+		{
+			ifwin = null;
 		}
 
 
