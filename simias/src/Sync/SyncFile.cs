@@ -583,6 +583,14 @@ namespace Simias.Sync
 		/// <summary>
 		/// 
 		/// </summary>
+		public static string	SyncBlocks = "SyncBlocks";
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string	BlockSize = "SyncBlockSize";
+		/// <summary>
+		/// 
+		/// </summary>
 		public enum Operation
 		{
 			/// <summary>

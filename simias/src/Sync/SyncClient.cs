@@ -340,7 +340,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		public void Resume()
 		{
-			foreach(CollectionSyncClient cClient in collections)
+			foreach(CollectionSyncClient cClient in collections.Values)
 			{
 				cClient.Reschedule(true);
 			}
@@ -352,7 +352,7 @@ namespace Simias.Sync.Client
 		public void Pause()
 		{
 			paused = true;
-			foreach(CollectionSyncClient cClient in collections)
+			foreach(CollectionSyncClient cClient in collections.Values)
 			{
 				cClient.Stop();
 			}
@@ -374,7 +374,7 @@ namespace Simias.Sync.Client
 		public void Stop()
 		{
 			shuttingDown = true;
-			foreach(CollectionSyncClient cClient in collections)
+			foreach(CollectionSyncClient cClient in collections.Values)
 			{
 				cClient.Stop();
 			}
@@ -1299,7 +1299,7 @@ namespace Simias.Sync.Client
 						return;
 					}
 
-					ClientInFile file = new ClientInFile(collection, nodeID, new WsServerReadFile(service));
+					WsClientInFile file = new WsClientInFile(collection, nodeID, service);
 					if (file.Open(rights == Rights.ReadOnly ? true : false))
 					{
 						bool success = false;
@@ -1562,7 +1562,7 @@ namespace Simias.Sync.Client
 					BaseFileNode node = collection.GetNodeByID(nodeID) as BaseFileNode;
 					if (node != null)
 					{
-						ClientOutFile file = new ClientOutFile(collection, node, new WsServerWriteFile(service));
+						WsClientOutFile file = new WsClientOutFile(collection, node, service);
 						SyncStatus status = file.Open();
 						if (status == SyncStatus.Success)
 						{

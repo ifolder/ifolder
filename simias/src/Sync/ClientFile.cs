@@ -111,18 +111,18 @@ namespace Simias.Sync.Client
 
 	#endregion
 
-	#region ClientInFile
+	#region WsClientInFile
 
 	/// <summary>
 	/// Used to find the deltas between
 	/// the local file and the server file.
 	/// </summary>
-	public class ClientInFile : InFile
+	public class WsClientInFile : InFile
 	{
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		IServerReadFile			serverFile;
+		WsServerFile				serverFile;
 		/// <summary>True if the node should be marked readOnly.</summary>
 		bool					readOnly = false;
 		
@@ -135,14 +135,14 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// /// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="nodeID">The id of the node to sync down</param>
-		/// <param name="serverFile">The service to access the server file.</param>
-		public ClientInFile(SyncCollection collection, string nodeID, IServerReadFile serverFile) :
+		/// <param name="service">The service to access the server side sync.</param>
+		public WsClientInFile(SyncCollection collection, string nodeID, SimiasSyncService service) :
 			base(collection)
 		{
-			this.serverFile = serverFile;
+			serverFile = new WsServerFile(service);
 			this.nodeID = nodeID;
 		}
-
+		
 		#endregion
 
 		#region publics
@@ -235,7 +235,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Downloads the file from the server.
 		/// </summary>
-		public bool DownLoadFile()
+		public virtual bool DownLoadFile()
 		{
 			long	fileSize = Length;
 			long	sizeToSync;
@@ -289,16 +289,16 @@ namespace Simias.Sync.Client
 						return false;
 					Write(readBuffer, 0, bytesRead);
 					sizeRemaining -= bytesRead;
-					Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 				}
 			}
+			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
 			return true;
 		}
 
 		#endregion
 		
-		#region privates
+		#region protected
 		
 		/// <summary>
 		/// Compute the Blocks that need to be downloaded from the server. This builds
@@ -307,7 +307,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="sizeToSync">The number of bytes that need to be synced.</param>
 		/// <returns>The file map.</returns>
-		private long[] GetDownloadFileMap(out long sizeToSync)
+		protected long[] GetDownloadFileMap(out long sizeToSync)
 		{
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
@@ -399,7 +399,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="fileMap">The filmap array.</param>
 		/// <returns>The string description.</returns>
-		private string ReportDiffs(long[] fileMap)
+		protected string ReportDiffs(long[] fileMap)
 		{
 			StringWriter sw = new StringWriter();
 			int startBlock = -1;
@@ -431,18 +431,18 @@ namespace Simias.Sync.Client
 
 	#endregion
 
-	#region ClientOutFile
+	#region WsClientOutFile
 
 	/// <summary>
 	/// Used to find the deltas between
 	/// the local file and the server file.
 	/// </summary>
-	public class ClientOutFile : OutFile
+	public class WsClientOutFile : OutFile
 	{
 		#region fields
 
 		StrongWeakHashtable		table = new StrongWeakHashtable();
-		IServerWriteFile		serverFile;
+		WsServerFile			serverFile;
 		
 		#endregion
 		
@@ -453,11 +453,11 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="collection">The collection the node belongs to.</param>
 		/// <param name="node">The node to sync up.</param>
-		/// <param name="serverFile">The service to access the server file.</param>
-		public ClientOutFile(SyncCollection collection, BaseFileNode node, IServerWriteFile serverFile) :
+		/// <param name="service">The service to access the server side sync.</param>
+		public WsClientOutFile(SyncCollection collection, BaseFileNode node, SimiasSyncService service) :
 			base(collection)
 		{
-			this.serverFile = serverFile;
+			serverFile = new WsServerFile(service);
 			this.node = node;
 		}
 
@@ -469,7 +469,7 @@ namespace Simias.Sync.Client
 		/// Open the file.
 		/// </summary>
 		/// <returns>The status of the open.</returns>
-		public SyncStatus Open()
+		public virtual SyncStatus Open()
 		{
 			SyncNode snode = new SyncNode();
 			snode.nodeID = node.ID;
@@ -488,7 +488,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="commit">True if changes should be commited.</param>
 		/// <returns>true if successful.</returns>
-		public SyncNodeStatus Close(bool commit)
+		public virtual SyncNodeStatus Close(bool commit)
 		{
 			// Close the file on the server.
 			SyncNodeStatus status = serverFile.CloseFileNode(commit);
@@ -505,7 +505,7 @@ namespace Simias.Sync.Client
 		/// <summary>
 		/// Uploads the file to the server.
 		/// </summary>
-		public bool UploadFile()
+		public virtual bool UploadFile()
 		{
 			long	fileSize = Length;
 			long	sizeToSync;
@@ -545,14 +545,14 @@ namespace Simias.Sync.Client
 
 		#endregion
 
-		#region privates
+		#region protected
 
 		/// <summary>
 		/// Gets an ArrayList of all the changes that need to be made to the server file
 		/// to make the files identical.
 		/// </summary>
 		/// <returns></returns>
-		private ArrayList GetUploadFileMap(out long sizeToSync)
+		protected ArrayList GetUploadFileMap(out long sizeToSync)
 		{
 			sizeToSync = 0;
 			ArrayList fileMap = new ArrayList();
@@ -689,7 +689,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="segments">An array of segment descriptions.</param>
 		/// <returns>The string description.</returns>
-		private string ReportDiffs(ArrayList segments)
+		protected string ReportDiffs(ArrayList segments)
 		{
 			StringWriter sw = new StringWriter();
 			foreach (FileSegment segment in segments)
@@ -713,12 +713,172 @@ namespace Simias.Sync.Client
 
 	#endregion
 
-	#region IServerReadFile
+	#region HttpClientInFile
 
 	/// <summary>
-	/// Interface to Read the file on the server.
+	/// ClientInFile class that uses HTTP to download the file from the server.
 	/// </summary>
-	public interface IServerReadFile
+	public class HttpClientInFile : WsClientInFile
+	{
+		HttpServerFile	serverFile;
+		/// <summary>
+		/// Constructs a HttpClientFile object that can be used to sync a file down from the server.
+		/// </summary>
+		/// /// <param name="collection">The collection the node belongs to.</param>
+		/// <param name="nodeID">The id of the node to sync down</param>
+		/// <param name="service">The service to access the server side sync.</param>
+		public HttpClientInFile(SyncCollection collection, string nodeID, SimiasSyncService service) :
+			base(collection, nodeID, service)
+		{
+			serverFile = new HttpServerFile(service);
+		}
+
+		/// <summary>
+		/// Downloads the file from the server.
+		/// </summary>
+		public override bool DownLoadFile()
+		{
+			long	fileSize = Length;
+			long	sizeToSync;
+			long	sizeRemaining;
+			long[] fileMap = this.GetDownloadFileMap(out sizeToSync);
+			sizeRemaining = sizeToSync;
+			WritePosition = 0;
+				
+			Log.log.Debug("Downloading {0} bytes, filesize = {1}", sizeToSync, fileSize); 
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+			
+			// Get the file blocks from the server.
+			byte[] buffer = new byte[BlockSize];
+			HttpWebResponse response = serverFile.Read(fileMap, BlockSize);
+			Stream inStream = response.GetResponseStream();
+			try
+			{
+				for (int i = 0; i < fileMap.Length; ++i)
+				{
+					if (fileMap[i] != -1)
+					{
+						Copy(fileMap[i], WritePosition, BlockSize);
+					}
+					else
+					{
+						int buffOffset = 0;
+						int bytesInBuffer = 0;
+						do
+						{
+							int bytesRead = 0;
+							bytesRead = inStream.Read(buffer, buffOffset, BlockSize - bytesInBuffer);
+							if (bytesRead == 0)
+								break;
+							bytesInBuffer += bytesRead;
+							buffOffset += bytesRead;
+						} while (bytesInBuffer != BlockSize);
+						Write(buffer, 0, bytesInBuffer);
+						sizeRemaining -= bytesInBuffer;
+						if ((i % 16) == 15)
+							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
+					}
+				}
+			}
+			finally
+			{
+				inStream.Close();
+				response.Close();
+			}
+
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Downloading));
+			Log.log.Debug("Finished Download bytes remaining = {0}", sizeRemaining);
+			if (sizeRemaining != 0)
+				return false;
+			return true;
+		}
+	}
+
+	#endregion
+
+	#region HttpClientOutFile
+
+	/// <summary>
+	/// Class used to push a file to the server using HTTP.
+	/// </summary>
+	class HttpClientOutFile : WsClientOutFile
+	{
+		#region fields
+
+		HttpServerFile			serverFile;
+		
+		#endregion
+		
+		#region Constructors
+
+		/// <summary>
+		/// Contructs a ClientFile object that can be used to sync a file up to the server.
+		/// </summary>
+		/// <param name="collection">The collection the node belongs to.</param>
+		/// <param name="node">The node to sync up.</param>
+		/// <param name="service">The service to access the server side sync.</param>
+		public HttpClientOutFile(SyncCollection collection, BaseFileNode node, SimiasSyncService service) :
+			base(collection, node, service)
+		{
+			serverFile = new HttpServerFile(service);
+		}
+
+		#endregion
+
+		#region publics
+
+		/// <summary>
+		/// Uploads the file to the server.
+		/// </summary>
+		public override bool UploadFile()
+		{
+			long	fileSize = Length;
+			long	sizeToSync;
+			long	sizeRemaining;
+			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
+			sizeRemaining = sizeToSync;
+			
+			long offset = 0;
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+			foreach(FileSegment segment in fileMap)
+			{
+				if (segment is BlockSegment)
+				{
+					BlockSegment bs = (BlockSegment)segment;
+					int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
+					serverFile.Copy(bs.StartBlock * BlockSize, offset, bytesToWrite);
+					offset += bytesToWrite;
+				}
+				else
+				{
+					// Write the bytes to the output stream.
+					OffsetSegment seg = (OffsetSegment)segment;
+					byte[] dataBuffer = new byte[seg.Length];
+					ReadPosition = seg.Offset;
+					int bytesRead = Read(dataBuffer, 0, seg.Length);
+					serverFile.Write(dataBuffer, offset, bytesRead);
+					sizeRemaining -= bytesRead;
+					offset += seg.Length;
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
+				}
+			}
+			if (sizeRemaining == 0)
+				return true;
+			eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, false, Name, fileSize, sizeToSync, 0, Direction.Uploading));
+			return false;
+		}
+
+		#endregion
+	}
+
+	#endregion
+
+	#region IServerFile
+
+	/// <summary>
+	/// Interface to access a file on the server.
+	/// </summary>
+	public interface IServerFile
 	{
 		/// <summary>
 		/// Get the Node that represents this file from the server.
@@ -728,38 +888,6 @@ namespace Simias.Sync.Client
 		/// <returns>The node. null if failed.</returns>
 		SyncNode GetFileNode(string nodeID);
 
-		/// <summary>
-		/// Get the hash map of the file. This can be used to do a delta sync.
-		/// </summary>
-		/// <param name="blockSize">The size of chuncks to hash.</param>
-		/// <returns>The hash map or null if failed.</returns>
-		HashData[] GetHashMap(int blockSize);
-
-		/// <summary>
-		/// Read data from the server file.
-		/// </summary>
-		/// <param name="offset">The offset in the file to begin the read.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <param name="buffer">The data that was read.</param>
-		/// <returns>The number of bytes read.</returns>
-		int Read(long offset, int count, out byte[] buffer);
-
-		/// <summary>
-		/// Close the file and cleanup any resources.
-		/// This must be called ater a successful call to GetFileNode.
-		/// </summary>
-		void CloseFileNode();
-	}
-
-	#endregion
-
-	#region IServerWriteFile
-
-	/// <summary>
-	/// Interface to access a file on the server.
-	/// </summary>
-	public interface IServerWriteFile
-	{
 		/// <summary>
 		/// Put the node that represents the file to the server.
 		/// </summary>
@@ -783,6 +911,15 @@ namespace Simias.Sync.Client
 		void Copy(long originalOffset, long offset, int count);
 
 		/// <summary>
+		/// Read data from the server file.
+		/// </summary>
+		/// <param name="offset">The offset in the file to begin the read.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <param name="buffer">The data that was read.</param>
+		/// <returns>The number of bytes read.</returns>
+		int Read(long offset, int count, out byte[] buffer);
+
+		/// <summary>
 		/// Write data to the file.
 		/// </summary>
 		/// <param name="buffer">The data to write.</param>
@@ -797,83 +934,22 @@ namespace Simias.Sync.Client
 		/// <param name="commit">true if the files should be commited.</param>
 		/// <returns>The status of the commit.</returns>
 		SyncNodeStatus CloseFileNode(bool commit);
-	}
-
-	#endregion
-
-	#region WsServerReadFile
-
-	/// <summary>
-	/// Webservice class to access a file on the server.
-	/// </summary>
-	public class WsServerReadFile : IServerReadFile
-	{
-		protected SimiasSyncService		service;
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="webService"></param>
-		internal WsServerReadFile(SimiasSyncService webService)
-		{
-			service = webService;
-		}
-		
-		#region IServerReadFile Members
-
-		/// <summary>
-		/// Get the Node that represents this file from the server.
-		/// The file must be closed if null is not returned.
-		/// </summary>
-		/// <param name="nodeID">The ID of the node to get.</param>
-		/// <returns>The node. null if failed.</returns>
-		public SyncNode GetFileNode(string nodeID)
-		{
-			return service.GetFileNode(nodeID);
-		}
-
-		/// <summary>
-		/// Get the hash map of the file. This can be used to do a delta sync.
-		/// </summary>
-		/// <param name="blockSize">The size of chuncks to hash.</param>
-		/// <returns>The hash map or null if failed.</returns>
-		public HashData[] GetHashMap(int blockSize)
-		{
-			return service.GetHashMap(blockSize);
-		}
-
-		/// <summary>
-		/// Read data from the server file.
-		/// </summary>
-		/// <param name="offset">The offset in the file to begin the read.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <param name="buffer">The data that was read.</param>
-		/// <returns>The number of bytes read.</returns>
-		public virtual int Read(long offset, int count, out byte[] buffer)
-		{
-			return service.Read(out buffer, offset, count);
-		}
 
 		/// <summary>
 		/// Close the file and cleanup any resources.
 		/// This must be called ater a successful call to GetFileNode.
 		/// </summary>
-		public void CloseFileNode()
-		{
-			service.CloseFileNode(false);
-		}
-
-		#endregion
+		void CloseFileNode();
 	}
 
 	#endregion
 
-	#region WsServerWriteFile
+	#region WsServerFile
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public class WsServerWriteFile : IServerWriteFile
+	public class WsServerFile : IServerFile
 	{
 		protected SimiasSyncService		service;
 		Exception				exception;
@@ -884,7 +960,7 @@ namespace Simias.Sync.Client
 		/// Constructs a object that can be used to sync a file to the server.
 		/// </summary>
 		/// <param name="webService">The Sync web service.</param>
-		internal WsServerWriteFile(SimiasSyncService webService)
+		internal WsServerFile(SimiasSyncService webService)
 		{
 			service = webService;
 		}
@@ -923,14 +999,25 @@ namespace Simias.Sync.Client
 			asyncEvent.Set();
 		}
 
-		#region IServerWriteFile Members
+		#region IServerFile Members
+
+		/// <summary>
+		/// Get the Node that represents this file from the server.
+		/// The file must be closed if null is not returned.
+		/// </summary>
+		/// <param name="nodeID">The ID of the node to get.</param>
+		/// <returns>The node. null if failed.</returns>
+		public virtual SyncNode GetFileNode(string nodeID)
+		{
+			return service.GetFileNode(nodeID);
+		}
 
 		/// <summary>
 		/// Put the node that represents the file to the server.
 		/// </summary>
 		/// <param name="snode">The node to put.</param>
 		/// <returns>The status of the put.</returns>
-		public SyncStatus PutFileNode(SyncNode snode)
+		public virtual SyncStatus PutFileNode(SyncNode snode)
 		{
 			return service.PutFileNode(snode);
 		}
@@ -940,7 +1027,7 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="blockSize">The size of chuncks to hash.</param>
 		/// <returns>The hash map or null if failed.</returns>
-		public HashData[] GetHashMap(int blockSize)
+		public virtual HashData[] GetHashMap(int blockSize)
 		{
 			return service.GetHashMap(blockSize);
 		}
@@ -966,6 +1053,18 @@ namespace Simias.Sync.Client
 			}
 			*/
 			service.Copy(originalOffset, offset, count);
+		}
+
+		/// <summary>
+		/// Read data from the server file.
+		/// </summary>
+		/// <param name="offset">The offset in the file to begin the read.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <param name="buffer">The data that was read.</param>
+		/// <returns>The number of bytes read.</returns>
+		public virtual int Read(long offset, int count, out byte[] buffer)
+		{
+			return service.Read(out buffer, offset, count);
 		}
 
 		/// <summary>
@@ -997,85 +1096,34 @@ namespace Simias.Sync.Client
 		/// </summary>
 		/// <param name="commit">true if the files should be commited.</param>
 		/// <returns>The status of the commit.</returns>
-		public SyncNodeStatus CloseFileNode(bool commit)
+		public virtual SyncNodeStatus CloseFileNode(bool commit)
 		{
 			return service.CloseFileNode(commit);
 		}
 
+		/// <summary>
+		/// Close the file and cleanup any resources.
+		/// This must be called ater a successful call to GetFileNode.
+		/// </summary>
+		public virtual void CloseFileNode()
+		{
+			service.CloseFileNode(false);
+		}
 		#endregion
 	}
 
 	#endregion
 
-	#region HttpServerReadFile
+	#region HttpServerFile
 
-	class HttpServerReadFile : WsServerReadFile
-	{
-		string url;
-		/// <summary>
-		/// Constructs an HttpServerReadFile to sync a file down from the server.
-		/// </summary>
-		/// <param name="webService">The web service to use.</param>
-		internal HttpServerReadFile(SimiasSyncService webService) :
-			base(webService)
-		{
-			url = service.Url;
-			url = url.Substring(0, url.LastIndexOf('/') + 1) + "SyncHandler.ashx";
-		}
-
-		private HttpWebRequest GetRequest()
-		{
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-			request.ContentType = "application/octet-stream";
-			request.Credentials = service.Credentials;
-			request.CookieContainer = service.CookieContainer;
-			return request;
-		}
-
-
-		#region IServerReadFile Members
-
-		/// <summary>
-		/// Read data from the server file.
-		/// </summary>
-		/// <param name="offset">The offset in the file to begin the read.</param>
-		/// <param name="count">The number of bytes to read.</param>
-		/// <param name="buffer">The data that was read.</param>
-		/// <returns>The number of bytes read.</returns>
-		public override int Read(long offset, int count, out byte[] buffer)
-		{
-			HttpWebRequest request = GetRequest();
-			WebHeaderCollection headers = request.Headers;
-			request.Method = "GET";
-			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
-			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
-			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-			if (response.StatusCode == HttpStatusCode.OK)
-			{
-				buffer = new byte[count];
-				int length = response.GetResponseStream().Read(buffer, 0, count);
-				response.Close();
-				return length;
-			}
-
-			throw new SimiasException(response.StatusDescription);
-		}
-		
-		#endregion
-	}
-	
-	#endregion
-
-	#region HttpServerWriteFile
-
-	class HttpServerWriteFile : WsServerWriteFile
+	class HttpServerFile : WsServerFile
 	{
 		string url;
 		/// <summary>
 		/// Construct an HttpServerWriteFile to upload a file to the server.
 		/// </summary>
 		/// <param name="webService">The web service.</param>
-		internal HttpServerWriteFile(SimiasSyncService webService) :
+		internal HttpServerFile(SimiasSyncService webService) :
 			base(webService)
 		{
 			url = service.Url;
@@ -1091,7 +1139,7 @@ namespace Simias.Sync.Client
 			return request;
 		}
 
-		#region IServerWriteFile Members
+		#region IServerFile Members
 
 		/// <summary>
 		/// Copy data from the current file to the new file.
@@ -1117,6 +1165,62 @@ namespace Simias.Sync.Client
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="blocks"></param>
+		/// <param name="blockSize"></param>
+		/// <returns></returns>
+		public HttpWebResponse Read(long[] blocks, int blockSize)
+		{
+			HttpWebRequest request = GetRequest();
+			WebHeaderCollection headers = request.Headers;
+			request.Method = "POST";
+			headers.Add(SyncHttp.SyncBlocks, blocks.Length.ToString());
+			headers.Add(SyncHttp.BlockSize, blockSize.ToString());
+			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
+			request.ContentLength = blocks.Length * 8;
+			Stream outStream = request.GetRequestStream();
+			foreach (long block in blocks)
+			{
+				outStream.Write(BitConverter.GetBytes(block), 0, 8);
+			}
+			outStream.Close();
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			if (response.StatusCode == HttpStatusCode.OK)
+			{
+				return response;
+			}
+			response.Close();
+			throw new SimiasException(response.StatusDescription);
+		}
+
+		/// <summary>
+		/// Read data from the server file.
+		/// </summary>
+		/// <param name="offset">The offset in the file to begin the read.</param>
+		/// <param name="count">The number of bytes to read.</param>
+		/// <param name="buffer">The data that was read.</param>
+		/// <returns>The number of bytes read.</returns>
+		public override int Read(long offset, int count, out byte[] buffer)
+		{
+			HttpWebRequest request = GetRequest();
+			WebHeaderCollection headers = request.Headers;
+			request.Method = "GET";
+			headers.Add(SyncHttp.SyncRange, offset.ToString() + '-' + (offset + count).ToString());
+			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Read.ToString());
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			if (response.StatusCode == HttpStatusCode.OK)
+			{
+				buffer = new byte[count];
+				int length = response.GetResponseStream().Read(buffer, 0, count);
+				response.Close();
+				return length;
+			}
+			response.Close();
+			throw new SimiasException(response.StatusDescription);
+		}
+
+		/// <summary>
 		/// Write data to the file.
 		/// </summary>
 		/// <param name="buffer">The data to write.</param>
@@ -1132,6 +1236,40 @@ namespace Simias.Sync.Client
 			headers.Add(SyncHttp.SyncRange, offset.ToString() + "-" + ((long)(offset + count)).ToString());
 			Stream outStream = request.GetRequestStream();
 			outStream.Write(buffer, 0, count);
+			outStream.Close();
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			response.Close();
+			if (response.StatusCode != HttpStatusCode.OK)
+			{
+				throw new SimiasException(response.StatusDescription);
+			}
+		}
+
+		/// <summary>
+		/// Write data to the file.
+		/// </summary>
+		/// <param name="inStream">The data to write.</param>
+		/// <param name="offset">The offset to write at.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void Write(Stream inStream, long offset, long count)
+		{
+			HttpWebRequest request = GetRequest();
+			WebHeaderCollection headers = request.Headers;
+			request.Method = "POST";
+			request.ContentLength = count;
+			headers.Add(SyncHttp.SyncOperation, SyncHttp.Operation.Write.ToString());
+			headers.Add(SyncHttp.SyncRange, offset.ToString() + "-" + ((long)(offset + count)).ToString());
+			Stream outStream = request.GetRequestStream();
+			byte[] buffer = new byte[4096];
+			long bytesSent = 0;
+			while (bytesSent < count)
+			{
+				int bytesRead = inStream.Read(buffer, 0, buffer.Length);
+				if (bytesRead == 0)
+					break;
+				outStream.Write(buffer, 0, bytesRead);
+				bytesSent += bytesRead;
+			}
 			outStream.Close();
 			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 			response.Close();

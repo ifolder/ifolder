@@ -96,6 +96,53 @@ namespace Simias.Sync.Web
 							}
 							break;
 						}
+						case SyncHttp.Operation.Read:
+						{
+							string sBlockCount = Request.Headers.Get(SyncHttp.SyncBlocks);
+							string sBlockSize = Request.Headers.Get(SyncHttp.BlockSize);
+							if (sBlockCount != null && sBlockSize != null)
+							{
+								int blockCount = int.Parse(sBlockCount);
+								int blockSize = int.Parse(sBlockSize);
+								long[] fileMap = new long[blockCount];
+								byte[] input = new byte[Request.ContentLength];
+								Request.InputStream.Read(input, 0, Request.ContentLength);
+								int readOffset = 0;
+								for (int i = 0; i < blockCount; ++i)
+								{
+									fileMap[i] = BitConverter.ToInt64(input,readOffset);
+									readOffset += 8;
+								}
+
+								// Now send the data back;
+								byte[] outBuffer = new byte[blockSize];
+								long offset = 0;
+								for (int i = 0; i < blockCount; ++i)
+								{
+									if (fileMap[i] == -1)
+									{
+										int bytesRead = service.Read(out outBuffer, offset, blockSize);
+										if (bytesRead != blockSize && bytesRead != 0)
+										{
+											byte[] tempArray = new byte[bytesRead];
+											Array.Copy(outBuffer, tempArray, bytesRead);
+											Response.BinaryWrite(tempArray);
+										}
+										else
+										{
+											Response.BinaryWrite(outBuffer);
+										}
+									}
+									offset += blockSize;
+								}
+								Response.End();
+							}
+							else
+							{
+								Response.StatusCode = (int)HttpStatusCode.BadRequest;
+							}
+							break;
+						}
 						default:
 							Response.StatusCode = (int)HttpStatusCode.BadRequest;
 							break;
