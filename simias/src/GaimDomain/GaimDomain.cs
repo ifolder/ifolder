@@ -737,6 +737,26 @@ namespace Simias.Gaim
 				p = new Property("Gaim:Alias", buddy.Alias);
 				p.LocalProperty = true;
 				member.Properties.AddProperty(p);
+				
+				// Use the buddy alias for the member full name
+				member.FN = buddy.Alias;
+
+				string familyName = null;
+				string givenName = null;
+				int lastSpacePos = buddy.Alias.LastIndexOf(' ');
+				if (lastSpacePos > 0)
+				{
+					familyName = buddy.Alias.Substring(lastSpacePos + 1);
+					member.Family = familyName;
+
+					givenName = buddy.Alias.Substring(0, lastSpacePos);
+				}
+				else
+				{
+					givenName = buddy.Alias;
+				}
+					
+				member.Given = givenName;
 			}
 			
 			// Buddy Simias URL
@@ -815,6 +835,26 @@ namespace Simias.Gaim
 					p = new Property("Gaim:Alias", buddy.Alias);
 					p.LocalProperty = true;
 					member.Properties.AddProperty(p);
+				
+					// Use the buddy alias for the member full name
+					member.FN = buddy.Alias;
+					
+					string familyName = null;
+					string givenName = null;
+					int lastSpacePos = buddy.Alias.LastIndexOf(' ');
+					if (lastSpacePos > 0)
+					{
+						familyName = buddy.Alias.Substring(lastSpacePos + 1);
+						member.Family = familyName;
+
+						givenName = buddy.Alias.Substring(0, lastSpacePos);
+					}
+					else
+					{
+						givenName = buddy.Alias;
+					}
+					
+					member.Given = givenName;
 				}
 			}
 			
