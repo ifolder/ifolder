@@ -539,8 +539,8 @@ namespace Simias.Storage.Provider.Fs
 			
 				switch (query.Operation)
 				{
-					case Query.Operator.Equal:
-					case Query.Operator.Not_Equal:
+					case SearchOp.Equal:
+					case SearchOp.Not_Equal:
 						if (isAttribute)
 						{
 							pattern = string.Format("<{0}[^>]*{1}=\"{2}\"[^>]*", XmlTags.ObjectTag, attribute, query.Value);
@@ -550,7 +550,7 @@ namespace Simias.Storage.Provider.Fs
 							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>{3}</{0}>", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
-					case Query.Operator.Begins:
+					case SearchOp.Begins:
 						if (isAttribute)
 						{
 							pattern = string.Format("<{0}[^>]*{1}=\"{2}", XmlTags.ObjectTag, attribute, query.Value);
@@ -560,7 +560,7 @@ namespace Simias.Storage.Provider.Fs
 							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>{3}", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
-					case Query.Operator.Ends:
+					case SearchOp.Ends:
 						if (isAttribute)
 						{
 							pattern = string.Format("<{0}[^>]*{1}=\"[^\"]*{2}\"", XmlTags.ObjectTag, attribute, query.Value);
@@ -570,7 +570,7 @@ namespace Simias.Storage.Provider.Fs
 							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>.*{3}</{0}>", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
-					case Query.Operator.Contains:
+					case SearchOp.Contains:
 						if (isAttribute)
 						{
 							pattern = string.Format("<{0}[^>]*{1}=\"[^\"]*{2}", XmlTags.ObjectTag, attribute, query.Value);
@@ -580,14 +580,14 @@ namespace Simias.Storage.Provider.Fs
 							pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\".*>.*{3}.*</{0}>", XmlTags.PropertyTag, query.Property, query.Type, query.Value);
 						}
 						break;
-					case Query.Operator.Greater:
-					case Query.Operator.Less:
-					case Query.Operator.Greater_Equal:
-					case Query.Operator.Less_Equal:
+					case SearchOp.Greater:
+					case SearchOp.Less:
+					case SearchOp.Greater_Equal:
+					case SearchOp.Less_Equal:
 						pattern = string.Format("<{0} name=\"{1}\" type=\"{2}\"[^>]*>", XmlTags.PropertyTag, query.Property, query.Type);
 						valueCompare = true;
 						break;
-					case Query.Operator.Exists:
+					case SearchOp.Exists:
 						if (isAttribute)
 						{
 							pattern = string.Format("<{0}[^>]*{1}=\"[^>]*", XmlTags.ObjectTag, attribute, query.Value);
@@ -691,16 +691,16 @@ namespace Simias.Storage.Provider.Fs
 								
 									switch (query.Operation)
 									{
-										case Query.Operator.Greater:
+										case SearchOp.Greater:
 											if (diff > 0) found = true;
 											break;
-										case Query.Operator.Less:
+										case SearchOp.Less:
 											if (diff < 0) found = true;
 											break;
-										case Query.Operator.Greater_Equal:
+										case SearchOp.Greater_Equal:
 											if (diff > 0 || diff == 0) found = true;
 											break;
-										case Query.Operator.Less_Equal:
+										case SearchOp.Less_Equal:
 											if (diff < 0 || diff == 0) found = true;
 											break;
 									}
@@ -724,7 +724,7 @@ namespace Simias.Storage.Provider.Fs
 								resultQ.Enqueue(sObject);
 							}
 						}
-						else if (query.Operation == Query.Operator.Not_Equal)
+						else if (query.Operation == SearchOp.Not_Equal)
 						{
 							// Save this as a miss.
 							string sObject = xmlString.Substring(0, xmlString.IndexOf('>')) + "/>";
