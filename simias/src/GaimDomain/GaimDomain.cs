@@ -333,6 +333,43 @@ namespace Simias.Gaim
 
 			return gaimDomain;
 		}
+
+		/// <summary>
+		/// This function will read the ~/.gaim/prefs.xml and update any
+		/// preferences that have changed so the Synchronize Members function
+		/// will behave accordingly.
+		/// </summary>
+		public static void UpdatePreferences()
+		{
+			// The only preference right now (that the GaimDomain service needs
+			// to pay attention to is the Sync Interval.
+			XmlDocument prefsDoc = new XmlDocument();
+			try
+			{
+				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
+			}
+			catch (Exception e)
+			{
+				log.Error( e.Message );
+				log.Error( e.StackTrace );
+				return;
+			}
+			XmlElement topPrefElement = prefsDoc.DocumentElement;
+
+			XmlNode syncIntervalNode = 
+				topPrefElement.SelectSingleNode("//pref[@name='plugins']/pref[@name='simias']/pref[@name='sync_interval']/@value");
+
+			if (syncIntervalNode != null)
+			{
+				string syncIntervalString = syncIntervalNode.Value;
+				if (syncIntervalString != null)
+				{
+					int syncInterval = Int32.Parse(syncIntervalString);
+					
+					Simias.Gaim.Sync.UpdateSyncInterval(syncInterval);
+				}
+			}		
+		}
 		
 		/// <summary>
 		/// This function is called each time a sync interval is called.  If a
@@ -405,9 +442,7 @@ namespace Simias.Gaim
 			XmlDocument prefsDoc = new XmlDocument();
 			try
 			{
-				prefsDoc.Load(GetGaimConfigDir()
-								 /* FIXME: use proper path separator */
-								 + "/prefs.xml");
+				prefsDoc.Load(GetGaimConfigDir() + "/prefs.xml");
 			}
 			catch (Exception e)
 			{
@@ -468,9 +503,7 @@ namespace Simias.Gaim
 			XmlDocument accountsDoc = new XmlDocument();
 			try
 			{
-				accountsDoc.Load(GetGaimConfigDir()
-								 /* FIXME: use proper path separator */
-								 + "/accounts.xml");
+				accountsDoc.Load(GetGaimConfigDir() + "/accounts.xml");
 			}
 			catch (Exception e)
 			{
@@ -508,9 +541,7 @@ namespace Simias.Gaim
 			XmlDocument blistDoc = new XmlDocument();
 			try
 			{
-				blistDoc.Load(GetGaimConfigDir()
-							 /* FIXME: use proper path separator */
-							 + "/blist.xml");
+				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
 			}
 			catch (Exception e)
 			{
@@ -659,9 +690,7 @@ namespace Simias.Gaim
 			XmlDocument blistDoc = new XmlDocument();
 			try
 			{
-				blistDoc.Load(GetGaimConfigDir()
-							 /* FIXME: use proper path separator */
-							 + "/blist.xml");
+				blistDoc.Load(GetGaimConfigDir() + "/blist.xml");
 			}
 			catch (Exception e)
 			{

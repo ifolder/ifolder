@@ -271,9 +271,11 @@ namespace Simias.Gaim
 		
 		public static void UpdateSyncInterval(int newSyncInterval)
 		{
-			if (newSyncInterval != syncInterval)
+			int syncIntervalInMillis = newSyncInterval * 60 * 1000;
+		
+			if (syncIntervalInMillis != syncInterval)
 			{
-				syncInterval = newSyncInterval;
+				syncInterval = syncIntervalInMillis;
 			}
 		}
 
@@ -288,6 +290,7 @@ namespace Simias.Gaim
 
 				// Always wait after the first iteration
 				syncOnStart = false;
+				GaimDomain.UpdatePreferences();
 				GaimDomain.SynchronizeMembers();
 			}
 		}
