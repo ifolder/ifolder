@@ -4,11 +4,13 @@
 <glade-interface>
 
 <widget class="GtkDialog" id="ConflictDialog">
+  <property name="width_request">600</property>
+  <property name="height_request">480</property>
   <property name="title" translatable="yes">iFolder Conflict Resolver</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
-  <property name="resizable">True</property>
+  <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="has_separator">True</property>
 
@@ -69,34 +71,20 @@
 	      <property name="tooltips">True</property>
 
 	      <child>
-		<widget class="button" id="OpenButton">
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Open file selected from conflict</property>
-		  <property name="label">gtk-open</property>
-		  <property name="use_stock">True</property>
-		  <signal name="clicked" handler="on_open" last_modification_time="Wed, 16 Jun 2004 03:16:05 GMT"/>
-		</widget>
-	      </child>
-
-	      <child>
 		<widget class="button" id="AutoButton">
 		  <property name="visible">True</property>
 		  <property name="tooltip" translatable="yes">Automatically resolve all conflicts</property>
 		  <property name="label" translatable="yes">_Auto</property>
 		  <property name="use_underline">True</property>
 		  <property name="icon">ifolder.png</property>
-		  <property name="new_group">True</property>
 		  <signal name="clicked" handler="on_auto" last_modification_time="Wed, 16 Jun 2004 03:16:14 GMT"/>
 		</widget>
-		<packing>
-		  <property name="new_group">True</property>
-		</packing>
 	      </child>
 
 	      <child>
 		<widget class="button" id="ResolveButton">
 		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Resolve using the selected file</property>
+		  <property name="tooltip" translatable="yes">Resolve using the selected Copy</property>
 		  <property name="label" translatable="yes">R_esolve</property>
 		  <property name="use_underline">True</property>
 		  <property name="stock_pixmap">gtk-ok</property>
@@ -163,7 +151,7 @@
 		      <child>
 			<widget class="GtkLabel" id="label5">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Conflicts were found in this iFolder.  Select a conflict from the list below to resolve it.</property>
+			  <property name="label" translatable="yes">Conflicts were found in this iFolder.  Select a conflict from the list below.  Select a Copy and click &quot;Resolve&quot;.</property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -406,56 +394,6 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="LLocLabel">
-			      <property name="visible">True</property>
-			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">Location:</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">False</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">1</property>
-			      <property name="top_attach">2</property>
-			      <property name="bottom_attach">3</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkLabel" id="LTypeLabel">
-			      <property name="visible">True</property>
-			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">Type:</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">False</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">1</property>
-			      <property name="top_attach">3</property>
-			      <property name="bottom_attach">4</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-
-			  <child>
 			    <widget class="GtkLabel" id="LocalNameLabel">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
@@ -504,10 +442,35 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="LocalLocLabel">
+			    <widget class="GtkLabel" id="LSizeLabel">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">&lt;location&gt;</property>
+			      <property name="label" translatable="yes">Size:</property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">False</property>
+			      <property name="xalign">0</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
+			      <property name="top_attach">2</property>
+			      <property name="bottom_attach">3</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="LocalSizeLabel">
+			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
+			      <property name="label" translatable="yes">&lt;size&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -523,30 +486,27 @@
 			      <property name="right_attach">2</property>
 			      <property name="top_attach">2</property>
 			      <property name="bottom_attach">3</property>
+			      <property name="x_options">fill</property>
 			      <property name="y_options"></property>
 			    </packing>
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="LocalTypeLabel">
+			    <widget class="GtkButton" id="LocalOpenButton">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">&lt;type&gt;</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">False</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
+			      <property name="can_focus">True</property>
+			      <property name="label">gtk-open</property>
+			      <property name="use_stock">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <signal name="clicked" handler="on_local_open" last_modification_time="Wed, 16 Jun 2004 06:36:37 GMT"/>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">1</property>
-			      <property name="right_attach">2</property>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
 			      <property name="top_attach">3</property>
 			      <property name="bottom_attach">4</property>
+			      <property name="x_options">fill</property>
 			      <property name="y_options"></property>
 			    </packing>
 			  </child>
@@ -645,56 +605,6 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="SLocLabel">
-			      <property name="visible">True</property>
-			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">Location:</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">False</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">1</property>
-			      <property name="top_attach">2</property>
-			      <property name="bottom_attach">3</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkLabel" id="STypeLabel">
-			      <property name="visible">True</property>
-			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">Type:</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">False</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">1</property>
-			      <property name="top_attach">3</property>
-			      <property name="bottom_attach">4</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-
-			  <child>
 			    <widget class="GtkLabel" id="ServerNameLabel">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
@@ -743,10 +653,35 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="ServerLocLabel">
+			    <widget class="GtkLabel" id="SSizeLabel">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">&lt;location&gt;</property>
+			      <property name="label" translatable="yes">Size:</property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">False</property>
+			      <property name="xalign">0</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
+			      <property name="top_attach">2</property>
+			      <property name="bottom_attach">3</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="ServerSizeLabel">
+			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
+			      <property name="label" translatable="yes">&lt;size&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -762,30 +697,27 @@
 			      <property name="right_attach">2</property>
 			      <property name="top_attach">2</property>
 			      <property name="bottom_attach">3</property>
+			      <property name="x_options">fill</property>
 			      <property name="y_options"></property>
 			    </packing>
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="ServerTypeLabel">
+			    <widget class="GtkButton" id="ServerOpenButton">
 			      <property name="visible">True</property>
 			      <property name="sensitive">False</property>
-			      <property name="label" translatable="yes">&lt;type&gt;</property>
-			      <property name="use_underline">False</property>
-			      <property name="use_markup">False</property>
-			      <property name="justify">GTK_JUSTIFY_LEFT</property>
-			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
-			      <property name="xalign">0</property>
-			      <property name="yalign">0.5</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
+			      <property name="can_focus">True</property>
+			      <property name="label">gtk-open</property>
+			      <property name="use_stock">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <signal name="clicked" handler="on_server_open" last_modification_time="Wed, 16 Jun 2004 06:36:51 GMT"/>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">1</property>
-			      <property name="right_attach">2</property>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
 			      <property name="top_attach">3</property>
 			      <property name="bottom_attach">4</property>
+			      <property name="x_options">fill</property>
 			      <property name="y_options"></property>
 			    </packing>
 			  </child>

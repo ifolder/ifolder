@@ -178,7 +178,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(!ifolder.HasCollisions())
+			if(ifolder.HasCollisions())
 				((CellRendererText) cell).Text = "Has File Conflicts";
 			else
 				((CellRendererText) cell).Text = "OK";
@@ -197,7 +197,7 @@ namespace Novell.iFolder
 				Gtk.TreeIter iter)
 		{
 			iFolder ifolder = (iFolder) tree_model.GetValue(iter,0);
-			if(!ifolder.HasCollisions())
+			if(ifolder.HasCollisions())
 				((CellRendererPixbuf) cell).Pixbuf = CollisionPixBuf;
 			else
 				((CellRendererPixbuf) cell).Pixbuf = iFolderPixBuf;
@@ -335,7 +335,7 @@ namespace Novell.iFolder
 
 						ifMenu.Append(new SeparatorMenuItem());
 
-						if(	(ifolder != null) && (!ifolder.HasCollisions()) )
+						if(	(ifolder != null) && (ifolder.HasCollisions()) )
 						{
 							MenuItem item_resolve = 
 								new MenuItem ("Resolve Conflicts");
