@@ -56,8 +56,6 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
-		private System.Windows.Forms.Button ok;
-		private System.Windows.Forms.Button cancel;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
@@ -140,6 +138,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox useProxy;
 		private System.Windows.Forms.NumericUpDown port;
 		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label status;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -202,8 +201,6 @@ namespace Novell.FormsTrayApp
 		{
 			this.defaultInterval = new System.Windows.Forms.NumericUpDown();
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
-			this.ok = new System.Windows.Forms.Button();
-			this.cancel = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -285,6 +282,7 @@ namespace Novell.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
+			this.status = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -319,6 +317,7 @@ namespace Novell.FormsTrayApp
 			this.defaultInterval.Name = "defaultInterval";
 			this.defaultInterval.Size = new System.Drawing.Size(64, 20);
 			this.defaultInterval.TabIndex = 2;
+			this.defaultInterval.Leave += new System.EventHandler(this.defaultInterval_Leave);
 			// 
 			// displayConfirmation
 			// 
@@ -328,26 +327,7 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation.Size = new System.Drawing.Size(368, 24);
 			this.displayConfirmation.TabIndex = 1;
 			this.displayConfirmation.Text = "Show &confirmation dialog when creating iFolders.";
-			// 
-			// ok
-			// 
-			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.ok.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.ok.Location = new System.Drawing.Point(288, 496);
-			this.ok.Name = "ok";
-			this.ok.TabIndex = 5;
-			this.ok.Text = "OK";
-			this.ok.Click += new System.EventHandler(this.ok_Click);
-			// 
-			// cancel
-			// 
-			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.cancel.Location = new System.Drawing.Point(368, 496);
-			this.cancel.Name = "cancel";
-			this.cancel.TabIndex = 6;
-			this.cancel.Text = "Cancel";
-			this.cancel.Click += new System.EventHandler(this.cancel_Click);
+			this.displayConfirmation.CheckedChanged += new System.EventHandler(this.displayConfirmation_CheckedChanged);
 			// 
 			// label2
 			// 
@@ -360,8 +340,8 @@ namespace Novell.FormsTrayApp
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Location = new System.Drawing.Point(8, 72);
 			this.tabControl1.Name = "tabControl1";
@@ -591,6 +571,7 @@ namespace Novell.FormsTrayApp
 			this.autoStart.Size = new System.Drawing.Size(368, 24);
 			this.autoStart.TabIndex = 0;
 			this.autoStart.Text = "&Startup iFolder at login.";
+			this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
 			// 
 			// groupBox5
 			// 
@@ -615,6 +596,7 @@ namespace Novell.FormsTrayApp
 			this.proxy.Size = new System.Drawing.Size(168, 20);
 			this.proxy.TabIndex = 2;
 			this.proxy.Text = "";
+			this.proxy.Leave += new System.EventHandler(this.proxy_Leave);
 			// 
 			// port
 			// 
@@ -623,9 +605,11 @@ namespace Novell.FormsTrayApp
 			this.port.Name = "port";
 			this.port.Size = new System.Drawing.Size(72, 20);
 			this.port.TabIndex = 4;
+			this.port.Leave += new System.EventHandler(this.port_Leave);
 			// 
 			// useProxy
 			// 
+			this.useProxy.Enabled = false;
 			this.useProxy.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.useProxy.Location = new System.Drawing.Point(16, 24);
 			this.useProxy.Name = "useProxy";
@@ -1037,16 +1021,21 @@ namespace Novell.FormsTrayApp
 			this.menuHelpAbout.Text = "About";
 			this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
 			// 
+			// status
+			// 
+			this.status.Location = new System.Drawing.Point(8, 490);
+			this.status.Name = "status";
+			this.status.Size = new System.Drawing.Size(432, 16);
+			this.status.TabIndex = 10;
+			this.status.Text = "Idle";
+			// 
 			// GlobalProperties
 			// 
-			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(450, 523);
+			this.ClientSize = new System.Drawing.Size(450, 507);
+			this.Controls.Add(this.status);
 			this.Controls.Add(this.banner);
 			this.Controls.Add(this.tabControl1);
-			this.Controls.Add(this.cancel);
-			this.Controls.Add(this.ok);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
@@ -1366,57 +1355,42 @@ namespace Novell.FormsTrayApp
 			}
 		}
 
-		private void ok_Click(object sender, System.EventArgs e)
-		{
-			Cursor.Current = Cursors.WaitCursor;
-
-			try
-			{
-				// Save the default sync interval.
-				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
-
-				// Save the auto start value.
-				SetRunValue(autoStart.Checked);
-
-				// Save the display confirmation setting.
-				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
-
-				// Save the proxy settings.
-				if (useProxy.Checked)
-				{
-					ifWebService.SetupProxy(proxy.Text, (int)port.Value);
-				}
-				else
-				{
-					ifWebService.RemoveProxy();
-				}
-			}
-			catch (WebException ex)
-			{
-				// TODO: change message displayed
-				MessageBox.Show(ex.Message);
-			}
-			catch (Exception ex)
-			{
-				// TODO: change message displayed
-				MessageBox.Show(ex.Message);
-			}
-
-			Cursor.Current = Cursors.Default;
-		}
-
 		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			// Remove event handlers for this object.
 			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
 			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+
+			if (defaultInterval.Focused)
+			{
+				try
+				{
+					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+				}
+				catch
+				{
+					// TODO: Localize.
+					MessageBox.Show("An error was encountered while saving the default sync interval.");
+				}
+			}
+			else if (proxy.Focused || port.Focused)
+			{
+				try
+				{
+					// Save the proxy settings.
+					ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+				}
+				catch
+				{
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while saving the proxy settings.");
+				}
+			}
 		}
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
 		{
-			this.ok_Click(this, e);
-
 			this.Close();
 		}
 
@@ -1667,17 +1641,107 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Preferences Tab
-		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
+		private void autoStart_CheckedChanged(object sender, System.EventArgs e)
 		{
-			proxy.Enabled = port.Enabled = useProxy.Checked;
+			// Save the auto start value.
+			SetRunValue(autoStart.Checked);
+		}
+
+		private void displayConfirmation_CheckedChanged(object sender, System.EventArgs e)
+		{
+			try
+			{
+				// Save the display confirmation setting.
+				ifWebService.SetDisplayConfirmation(displayConfirmation.Checked);
+			}
+			catch
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while saving the display confirmation setting.");
+			}
 		}
 
 		private void autoSync_CheckedChanged(object sender, System.EventArgs e)
 		{
-			defaultInterval.Enabled = autoSync.Checked;
-			if (!autoSync.Checked)
+			try
 			{
-				defaultInterval.Value = System.Threading.Timeout.Infinite;
+				defaultInterval.Enabled = autoSync.Checked;
+				if (!autoSync.Checked)
+				{
+					//defaultInterval.Value = System.Threading.Timeout.Infinite;
+				
+					// Save the default sync interval.
+					ifWebService.SetDefaultSyncInterval(System.Threading.Timeout.Infinite);
+				}
+				else
+				{
+					ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+				}
+			}
+			catch
+			{
+				// TODO: Localize.
+				MessageBox.Show("An error was encountered while saving the default sync interval.");
+			}
+		}
+
+		private void defaultInterval_Leave(object sender, System.EventArgs e)
+		{
+			try
+			{
+				ifWebService.SetDefaultSyncInterval((int)defaultInterval.Value);
+			}
+			catch
+			{
+				// TODO: Localize.
+				MessageBox.Show("An error was encountered while saving the default sync interval.");
+			}
+		}
+
+		private void useProxy_CheckedChanged(object sender, System.EventArgs e)
+		{
+			proxy.Enabled = port.Enabled = useProxy.Checked;
+
+			// Save the proxy settings.
+			if (!useProxy.Checked)
+			{
+				try
+				{
+					ifWebService.RemoveProxy();
+				}
+				catch
+				{
+					// TODO: Localize
+					MessageBox.Show("An error was encountered while saving the proxy settings.");
+				}
+			}
+		}
+
+		private void proxy_Leave(object sender, System.EventArgs e)
+		{
+			try
+			{
+				// Save the proxy settings.
+				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+			}
+			catch
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while saving the proxy settings.");
+			}
+		}
+
+		private void port_Leave(object sender, System.EventArgs e)
+		{
+			try
+			{
+				// Save the proxy settings.
+				ifWebService.SetupProxy(proxy.Text, (int)port.Value);
+			}
+			catch
+			{
+				// TODO: Localize
+				MessageBox.Show("An error was encountered while saving the proxy settings.");
 			}
 		}
 		#endregion
@@ -1774,10 +1838,5 @@ namespace Novell.FormsTrayApp
 
 		[DllImport("kernel32.dll")]
 		internal static extern uint GetDriveType(string rootPathName);
-
-		private void cancel_Click(object sender, System.EventArgs e)
-		{
-		
-		}
 	}
 }
