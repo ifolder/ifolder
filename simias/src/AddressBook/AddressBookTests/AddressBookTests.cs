@@ -971,6 +971,67 @@ namespace Novell.AddressBook.Tests
 
 			Console.WriteLine("Ending \"Enumerate Contacts Test\"");
 		}
+
+		[Test]
+		public void ImportPhotoTest()
+		{
+			Console.WriteLine("");
+			Console.WriteLine("Starting \"Import Photo Test\"");
+			const string userOne = "smele";
+			const string userOneFirst = "Stone";
+			const string userOneLast = "Mele";
+			const string userOneMail = "smele@yahoo.com";
+
+			AddressBook tstBook = null;
+
+			try
+			{
+				tstBook = new 
+					AddressBook(
+						"TestBookForImportPhotoTest",
+						Novell.AddressBook.AddressBookType.Private,
+						Novell.AddressBook.AddressBookRights.ReadWrite,
+						false);
+
+				abManager.AddAddressBook(tstBook);
+
+				// Create the contacts in the new book
+				Console.WriteLine("Creating contact");
+				Console.WriteLine("   Adding " + userOne);
+				Contact user1 = new Contact();
+				user1.UserName = userOne;
+				user1.EMail = userOneMail;
+				Name user1name = new Name(userOneFirst, userOneLast);
+				user1.AddName(user1name);
+				tstBook.AddContact(user1);
+
+				Console.WriteLine("Importing photo");
+				string picPath = 
+					".." + 
+					Path.DirectorySeparatorChar + 
+					".." + 
+					Path.DirectorySeparatorChar + 
+					"02480.jpg";
+				user1.ImportPhoto(picPath);
+				user1.Commit();
+
+				// Import it again to test the delete and add case
+				user1.ImportPhoto(picPath);
+				user1.Commit();
+
+				Stream fsOut = user1.ExportPhoto();
+				fsOut.Close();
+			}
+			finally
+			{
+				if (tstBook != null)
+				{
+					tstBook.Delete();
+				}
+			}
+
+			Console.WriteLine("Ending \"Import Photo Test\"");
+		}
 	
 		public class Tests
 		{
@@ -979,6 +1040,7 @@ namespace Novell.AddressBook.Tests
 				Iteration0Tests tests = new Iteration0Tests();
 				tests.Init();
 				tests.OpenDefaultBook();
+				/*
 				tests.EnumerateMyAddressBooks();
 				tests.CreateDeleteAddressBook();
 				tests.BasicContactTests();
@@ -989,6 +1051,8 @@ namespace Novell.AddressBook.Tests
 				tests.EnumContactsTest();
 				tests.BasicAddressTest();
 				tests.SearchNameTest();
+				*/
+				tests.ImportPhotoTest();
 			}
 		}
 	}

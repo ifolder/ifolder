@@ -1206,19 +1206,31 @@ namespace Novell.AddressBook
 		/// <returns>A binary stream object which the caller can read from.</returns>
 		public Stream ExportPhoto()
 		{
-			return(null);
-
-			/*
-			if (this.thisNode != null)
+			if (this.addressBook != null &&
+				this.addressBook.collection != null)
 			{
-
 				try
 				{
-					foreach(NodeStream nodeStream in this.thisNode.GetStreamList())
+					Property p = this.Properties.GetSingleProperty(Common.contactToPhoto);
+					if (p != null)
 					{
-						if (nodeStream.Name == this.thisNode.Id + Common.photoProperty)
+						Simias.Storage.Relationship relationship = 
+							(Simias.Storage.Relationship) p.Value;
+
+						Node cPhotoNode = 
+							this.addressBook.collection.GetNodeByID(relationship.NodeID);
+
+						if (cPhotoNode != null)
 						{
-							return(nodeStream.Open(FileMode.Open, FileAccess.Read));
+							StoreFileNode sfn =
+								new StoreFileNode(this.addressBook.collection, cPhotoNode);
+							
+							return(new 
+								FileStream( 
+									sfn.GetFullPath(this.addressBook.collection),
+									FileMode.Open, 
+									FileAccess.Read, 
+									FileShare.Read ));
 						}
 					}
 				}
@@ -1234,7 +1246,6 @@ namespace Novell.AddressBook
 
 				throw new ApplicationException(Common.addressBookExceptionHeader + "Photo property does not exist");
 			}
-			*/
 		}
 
 		/// <summary>
@@ -1279,8 +1290,6 @@ namespace Novell.AddressBook
 		public bool	ImportPhoto(Stream srcStream)
 		{
 			bool			finished = false;
-			BinaryReader	bReader = null;
-			BinaryWriter	bWriter = null;
 			StoreFileNode	sfn = null;
 			//NodeStream		photoStream = null;
 			//Stream			dstStream = null;
@@ -1302,6 +1311,7 @@ namespace Novell.AddressBook
 						if (cPhotoNode != null)
 						{
 							this.addressBook.collection.Delete(cPhotoNode);
+							this.addressBook.collection.Commit(cPhotoNode);
 						}
 					}
 				}
@@ -1318,7 +1328,7 @@ namespace Novell.AddressBook
 							this.addressBook.collection.ID,
 							sfn.ID);
 
-					sfn.Properties.ModifyProperty(Common.contactToPhoto, parentChild);
+					this.Properties.ModifyProperty(Common.contactToPhoto, parentChild);
 					this.addressBook.collection.Commit(sfn);
 					this.addressBook.collection.Commit(this);
 					finished = true;
@@ -1327,6 +1337,9 @@ namespace Novell.AddressBook
 			}
 			else
 			{
+				BinaryReader	bReader = null;
+				BinaryWriter	bWriter = null;
+
 				// Copy the photo into the cached stream
 				try
 				{
@@ -2283,13 +2296,6 @@ namespace Novell.AddressBook
 			//vCard.Position = 0;
 			//return(vCard);
 		}
-
-		/*
-		public IEnumerator GetTelephoneTypes()
-		{
-			return(new TelephoneTypes());
-		}
-		*/
 
 		#endregion
 
