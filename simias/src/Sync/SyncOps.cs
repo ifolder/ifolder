@@ -503,6 +503,12 @@ internal class SyncOps
 						}
 						else if (rec.operation != ChangeLogRecord.ChangeLogOp.Deleted)
 						{
+							NodeStamp stamp = new NodeStamp();
+							stamp.localIncarn = UInt64.MaxValue;
+							stamp.masterIncarn = 0;
+							stamp.id = new Nid(rec.nodeID);
+							stamp.name = "";
+							stamp.changeType = rec.operation;
 						}
 					}
 				}

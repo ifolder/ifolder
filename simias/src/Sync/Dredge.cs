@@ -92,8 +92,8 @@ public class Dredger
 		 * such that we only leave tombstones when this collection has an
 		 * upstream master.
 		 */
-		if (onServer)
-			collection.Commit(collection.Delete(deleted));
+		//if (onServer)
+		//	collection.Commit(collection.Delete(deleted));
 	}
 
 	//--------------------------------------------------------------------
@@ -624,7 +624,7 @@ public class Dredger
 			if (sCol.Role == SyncCollectionRoles.Master)
 			{
 				// if we are the master do not leave the tombstone.
-				collection.Commit(collection.Delete(node));
+				//collection.Commit(collection.Delete(node));
 			}
 		}
 
