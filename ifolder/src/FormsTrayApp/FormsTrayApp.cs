@@ -276,7 +276,7 @@ namespace Novell.FormsTrayApp
 				preferences.Show();
 			}
 
-			preferences.AddAccount();
+			preferences.SelectAccounts();
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
@@ -379,18 +379,21 @@ namespace Novell.FormsTrayApp
 						eventClient.SetEvent(IProcEventAction.AddNotifyMessage, new IProcEventHandler(trayApp_notifyMessageHandler));
 					}
 
-					// Instantiate the GlobalProperties dialog so we can log sync events.
+					// Instantiate the GlobalProperties dialog.
 					globalProperties = new GlobalProperties(ifWebService, eventClient);
-					preferences = new Preferences(ifWebService);
-					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
-					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
-					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
-					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
 					globalProperties.CreateControl();
 					IntPtr handle = globalProperties.Handle;
+
+					preferences = new Preferences(ifWebService);
+					preferences.EnterpriseConnect += new Novell.FormsTrayApp.Preferences.EnterpriseConnectDelegate(preferences_EnterpriseConnect);
+					preferences.ChangeDefaultDomain += new Novell.FormsTrayApp.Preferences.ChangeDefaultDomainDelegate(preferences_EnterpriseConnect);
+					preferences.RemoveDomain += new Novell.FormsTrayApp.Preferences.RemoveDomainDelegate(preferences_RemoveDomain);
+					preferences.ShutdownTrayApp += new Novell.FormsTrayApp.Preferences.ShutdownTrayAppDelegate(preferences_ShutdownTrayApp);
+					preferences.CreateControl();
+					handle = preferences.Handle;
 
 					syncLog = new SyncLog(eventClient);
 					syncLog.CreateControl();
@@ -398,6 +401,18 @@ namespace Novell.FormsTrayApp
 
 					// Cause the web service to start.
 					ifWebService.Ping();
+
+					try
+					{
+						// Pre-load the accounts list so that we can use it when processing events.
+						DomainWeb[] domains;
+						domains = ifWebService.GetDomains();
+						foreach (DomainWeb dw in domains)
+						{
+							preferences.AddDomainToList(dw);
+						}
+					}
+					catch{}
 
 					if (worker == null)
 					{

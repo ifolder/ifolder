@@ -1237,21 +1237,11 @@ namespace Novell.FormsTrayApp
 		}
 
 		/// <summary>
-		/// Selects the Accounts tab and clicks the New Account button.
+		/// Selects the Accounts tab.
 		/// </summary>
-		public void AddAccount()
+		public void SelectAccounts()
 		{
-			// Show the first tab page by default.
 			tabControl1.SelectedTab = tabAccounts;
-
-/*			if (addAccount.Enabled)
-			{
-				this.addAccount_Click(this, new EventArgs());
-			}
-			else
-			{
-				userName.Focus();
-			}*/
 		}
 
 		/// <summary>
