@@ -28,10 +28,17 @@ install-exec-local: SimiasApp.exe $(DATA_FILES)
 if LINUX
 	$(INSTALL_PROGRAM) simias $(DESTDIR)$(bindir)
 endif
+if DARWIN
+	$(INSTALL_PROGRAM) simias $(DESTDIR)$(bindir)
+endif
+
 	
 uninstall-local:
 	cd $(DESTDIR)$(bindir); rm -f SimiasApp.exe $(DEBUG_FILES)
 if LINUX
+	cd $(DESTDIR)$(bindir); rm -f simias
+endif
+if DARWIN 
 	cd $(DESTDIR)$(bindir); rm -f simias
 endif
     
