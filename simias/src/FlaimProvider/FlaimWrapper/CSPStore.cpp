@@ -994,6 +994,7 @@ RCODE CSPStore::Search(FLMUNICODE *pCollectionId, FLMUNICODE *pProperty, FLMINT 
 						}
 					}
 				}
+				FlmCursorFree(&cursor);
 			}
 		}
 		else

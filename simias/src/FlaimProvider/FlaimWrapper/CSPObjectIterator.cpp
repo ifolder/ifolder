@@ -47,10 +47,6 @@ CSPObjectIterator::CSPObjectIterator(CSPStore *pStore, HFCURSOR cursor, int coun
 			}
 		}
 	}
-	if (cursor)
-	{
-		FlmCursorFree(&cursor);
-	}
 }
 
 CSPObjectIterator::~CSPObjectIterator(void)

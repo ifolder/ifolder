@@ -35,7 +35,7 @@ namespace Simias.Storage.Provider.Flaim
 	internal class Flaim4
 	{
 		IntPtr					pStore;
-		IntPtr					pHFlaim;
+		static IntPtr			pDB;
 		string					DbPath;
 		static bool				opened = false;
 		static Hashtable		handleTable = new Hashtable();
@@ -55,10 +55,10 @@ namespace Simias.Storage.Provider.Flaim
 			FlaimError.Error rc = FlaimError.Error.FERR_FAILURE;
 			lock (handleTable)
 			{
-				rc = FWCreateStore(DbPath, out pStore, out pHFlaim);
+				rc = FWCreateStore(DbPath, out pStore, out pDB);
 				if (FlaimError.IsSuccess(rc))
 				{
-					handleTable.Add(pStore, pHFlaim);
+					handleTable.Add(pStore, pStore);
 					opened = true;
 				}
 			}
@@ -79,10 +79,10 @@ namespace Simias.Storage.Provider.Flaim
 			FlaimError.Error rc = FlaimError.Error.FERR_FAILURE;
 			lock (handleTable)
 			{
-				rc = FWOpenStore(DbPath, out pStore, out pHFlaim);
+				rc = FWOpenStore(DbPath, out pStore, out pDB);
 				if (FlaimError.IsSuccess(rc))
 				{
-					handleTable.Add(pStore, pHFlaim);
+					handleTable.Add(pStore, pStore);
 					opened = true;
 				}
 			}
@@ -109,12 +109,14 @@ namespace Simias.Storage.Provider.Flaim
 				{
 					FWCloseStore(p);
 				}
+				handleTable.Clear();
 				rc = FWDeleteStore(DbPath);
 				if (FlaimError.IsSuccess(rc))
 				{
 					opened = false;
 				}
 			}
+			pDB = IntPtr.Zero;
 			return rc;
 		}
 
@@ -130,7 +132,9 @@ namespace Simias.Storage.Provider.Flaim
 			{
 				FWCloseStore(pStore);
 				handleTable.Remove(pStore);
-				pHFlaim = IntPtr.Zero;
+				pStore = IntPtr.Zero;
+				if (handleTable.Count == 0)
+					pDB = IntPtr.Zero;
 			}
 		}
 
