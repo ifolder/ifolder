@@ -685,6 +685,20 @@ namespace Simias.Web
 
 
 
+
+		/// <summary>
+		/// WebMethod that calculates the number of nodes and bytes that need to be sync'd.
+		/// </summary>
+		/// <param name="collection">The collection to calculate the sync size.</param>
+		/// <param name="nodeCount">On return, contains the number of nodes that need to be sync'd.</param>
+		/// <param name="maxBytesToSend">On return, contains the number of bytes that need to be sync'd.</param>
+		public static void CalculateSendSize(Collection collection,	out uint nodeCount, out ulong maxBytesToSend)
+		{
+			SyncSize.CalculateSendSize(collection, out nodeCount, out maxBytesToSend);
+		}
+
+
+
 		
 		/// <summary>
 		/// Utility method that should be moved into the POBox class.
@@ -809,6 +823,5 @@ namespace Simias.Web
 				}
 			}
 		}
-
 	}
 }
