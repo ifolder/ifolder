@@ -382,6 +382,7 @@ namespace Novell.FormsTrayApp
 
 					// Instantiate the GlobalProperties dialog.
 					globalProperties = new GlobalProperties(ifWebService, simiasWebService, eventClient);
+					globalProperties.RemoveDomain += new Novell.FormsTrayApp.GlobalProperties.RemoveDomainDelegate(globalProperties_RemoveDomain);
 
 					// Create the control so that we can use the delegate to write sync events to the log.
 					// For some reason, the handle isn't created until it is referenced.
@@ -484,6 +485,10 @@ namespace Novell.FormsTrayApp
 			globalProperties.AddDomainToList(e.DomainInfo);
 		}
 
+		private void globalProperties_RemoveDomain(object sender, DomainRemoveEventArgs e)
+		{
+			preferences.RemoveDomainFromList(e.DomainInfo, e.DefaultDomainID);
+		}
 
 		private void preferences_EnterpriseConnect(object sender, DomainConnectEventArgs e)
 		{
@@ -1043,7 +1048,7 @@ namespace Novell.FormsTrayApp
 						}
 						case "NodeDeleted":
 						{
-							BeginInvoke(globalProperties.deleteEventDelegate, new object[] {eventArgs.Node});
+							BeginInvoke(globalProperties.deleteEventDelegate, new object[] {eventArgs});
 							break;
 						}
 					}

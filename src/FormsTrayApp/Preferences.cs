@@ -1432,6 +1432,7 @@ namespace Novell.FormsTrayApp
 				{
 					// The domain is already in the list.
 					domain = d;
+					break;
 				}
 			}
 
@@ -1452,7 +1453,7 @@ namespace Novell.FormsTrayApp
 
 				ListViewItem lvi = new ListViewItem(
 					new string[] {domain.Name,
-									 domainInfo.MemberName,//.UserName,
+									 domainInfo.MemberName,
 									 domainInfo.Active ? 
 									 resourceManager.GetString("statusEnabled") : resourceManager.GetString("statusDisabled")});
 				lvi.Tag = domain;
@@ -1505,6 +1506,53 @@ namespace Novell.FormsTrayApp
 			}
 
 			return result;
+		}
+
+		/// <summary>
+		/// Removes the specified domain to the dropdown lists.
+		/// </summary>
+		/// <param name="domainInfo">The DomainInformation object to remove from the list.</param>
+		/// <param name="defaultDomainID">The ID of the new default domain.</param>
+		public void RemoveDomainFromList(DomainInformation domainInfo, string defaultDomainID)
+		{
+			ListViewItem lvitem = null;
+			Domain defaultDomain = null;
+			foreach (ListViewItem lvi in accounts.Items)
+			{
+				Domain d = (Domain)lvi.Tag;
+
+				if (d.ID.Equals(domainInfo.ID))
+				{
+					// The domain is in the list.
+					lvitem = lvi;
+				}
+				else if (d.ID.Equals(defaultDomainID))
+				{
+					defaultDomain = d;
+				}
+			}
+
+			if (lvitem != null)
+			{
+				lvitem.Remove();
+			}
+
+			if (defaultDomain != null)
+			{
+				// Reset the current default domain.
+				if ((currentDefaultDomain != null) && !currentDefaultDomain.ID.Equals(defaultDomainID))
+				{
+					currentDefaultDomain.DomainInfo.IsDefault = false;
+				}
+
+				currentDefaultDomain = defaultDomain;
+
+				if (newDefaultDomain != null)
+				{
+					newDefaultDomain.DomainInfo.IsDefault = false;
+					newDefaultDomain = null;
+				}
+			}
 		}
 		#endregion
 
@@ -2046,7 +2094,6 @@ namespace Novell.FormsTrayApp
 				e.Cancel = true;
 				currentDefaultDomain = newDefaultDomain = null;
 				newAccountLvi = null;
-				updatePassword = updateEnabled = false;
 
 				// Reset the controls.
 				userName.Text = server.Text = password.Text = string.Empty;
@@ -2057,6 +2104,8 @@ namespace Novell.FormsTrayApp
 				userName.Enabled = server.Enabled = password.Enabled = rememberPassword.Enabled =
 					enableAccount.Enabled = defaultServer.Enabled = details.Enabled = 
 					removeAccount.Enabled = proxy.Enabled = activate.Enabled = false;
+
+				updatePassword = updateEnabled = false;
 
 				Hide();
 			}
