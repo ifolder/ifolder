@@ -151,6 +151,8 @@
 				8D1107310486CEB800E47090,
 				089C165CFE840E0CC02AAC07,
 				29B97318FDCFA39411CA2CEA,
+				3EF2210D0768180B00EE2EF6,
+				3EF2212D07681AA400EE2EF6,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -244,6 +246,44 @@
 			settings = {
 			};
 		};
+		3EF2210D0768180B00EE2EF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "ifolder-banner.png";
+			path = "/Users/calvin/code/ifolder/ifolder/src/GtkTrayApp/ifolder-banner.png";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		3EF2210E0768180B00EE2EF6 = {
+			fileRef = 3EF2210D0768180B00EE2EF6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3EF2212D07681AA400EE2EF6 = {
+			children = (
+				3EF2212E07681AA400EE2EF6,
+			);
+			isa = PBXVariantGroup;
+			name = LoginWindow.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EF2212E07681AA400EE2EF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = English.lproj/LoginWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3EF2212F07681AA400EE2EF6 = {
+			fileRef = 3EF2212D07681AA400EE2EF6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //3E0
 //3E1
 //3E2
@@ -317,6 +357,8 @@
 				8D11072A0486CEB800E47090,
 				8D11072B0486CEB800E47090,
 				3E49BC6C0765224B0040812D,
+				3EF2210E0768180B00EE2EF6,
+				3EF2212F07681AA400EE2EF6,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
