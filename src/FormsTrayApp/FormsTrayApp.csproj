@@ -109,6 +109,16 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AcceptInvitation.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AcceptInvitation.resx"
+                    DependentUpon = "AcceptInvitation.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "App.ico"
                     BuildAction = "Content"
                 />
