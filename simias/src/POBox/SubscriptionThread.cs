@@ -222,24 +222,22 @@ namespace Simias.POBox
 			else
 			{
 				log.Info("SubscriptionThread::DoInvited called");
-				// Make sure the local (from) subscription and the shared collection
-				// have sync'd to the server before inviting
+				// Make sure the shared collection has sync'd to the server before inviting
 
-				SubscriptionInformation subInfo = null;
 				POBoxService poService = new POBoxService();
 				poService.Url = this.poServiceUrl;
 
+				POBoxStatus		wsStatus = POBoxStatus.UnknownError;
 				try
 				{
-					subInfo =
-						poService.GetSubscriptionInfo(
+					wsStatus =
+						poService.VerifyCollection(
 							subscription.DomainID,
-							subscription.FromIdentity,
-							subscription.MessageID);
+							subscription.SubscriptionCollectionID);
 				}
 				catch{}
 
-				if (subInfo != null)
+				if (wsStatus == POBoxStatus.Success)
 //				if (subscription.LocalIncarnation == subscription.MasterIncarnation)
 				{
 					// This is an enterprise pobox contact the POService.
@@ -280,6 +278,10 @@ namespace Simias.POBox
 				}
 				else
 				{
+					log.Debug(
+						"Failed POBoxService::Invite - collection: {0} doesn't exist on the server",
+						subscription.SubscriptionCollectionID);
+
 					returnStatus = false;
 				}
 			}

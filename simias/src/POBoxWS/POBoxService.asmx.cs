@@ -69,6 +69,11 @@ namespace Simias.POBoxService.Web
 		UnknownSubscription,
 
 		/// <summary>
+		/// The specified collection was not found.
+		/// </summary>
+		UnknownCollection,
+
+		/// <summary>
 		/// The suscription was in an invalid state for the method
 		/// </summary>
 		InvalidState,
@@ -439,6 +444,36 @@ namespace Simias.POBoxService.Web
 
 			log.Info("POBoxService::GetSubscriptionInfo - exit");
 			return subInfo;
+		}
+
+		/// <summary>
+		/// Verify that a collection exists
+		/// </summary>
+		/// <param name="domainID"></param>
+		/// <param name="identityID"></param>
+		/// <param name="messageID"></param>
+		/// <returns>success:subinfo  failure:null</returns>
+		[WebMethod]
+		[SoapDocumentMethod]
+		public
+		POBoxStatus
+		VerifyCollection(string domainID, string collectionID)
+		{
+			Store store = Store.GetStore();
+
+			log.Info("POBoxService::VerifyCollection - called");
+			log.Info("  for collection: " + collectionID);
+
+			// Validate the shared collection
+			Collection cSharedCollection = store.GetCollectionByID(collectionID);
+			if (cSharedCollection == null)
+			{
+				log.Debug("POBoxService::VerifyCollection - Collection not found");
+				return(POBoxStatus.UnknownCollection);
+			}
+
+			log.Info("POBoxService::VerifyCollection - exit");
+			return(POBoxStatus.Success);
 		}
 
 		/// <summary>

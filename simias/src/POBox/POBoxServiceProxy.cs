@@ -153,6 +153,28 @@ public class POBoxService : System.Web.Services.Protocols.SoapHttpClientProtocol
     }
     
     /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/VerifyCollection", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public POBoxStatus VerifyCollection(string domainID, string collectionID) {
+        object[] results = this.Invoke("VerifyCollection", new object[] {
+                    domainID,
+                    collectionID});
+        return ((POBoxStatus)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginVerifyCollection(string domainID, string collectionID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("VerifyCollection", new object[] {
+                    domainID,
+                    collectionID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public POBoxStatus EndVerifyCollection(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((POBoxStatus)(results[0]));
+    }
+    
+    /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/pobox/Invite", RequestNamespace="http://novell.com/simias/pobox/", ResponseNamespace="http://novell.com/simias/pobox/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public string Invite(string domainID, string fromUserID, string toUserID, string sharedCollectionID, string sharedCollectionType, int rights) {
         object[] results = this.Invoke("Invite", new object[] {
@@ -218,6 +240,9 @@ public enum POBoxStatus {
     
     /// <remarks/>
     UnknownSubscription,
+    
+    /// <remarks/>
+    UnknownCollection,
     
     /// <remarks/>
     InvalidState,
