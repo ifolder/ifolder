@@ -24,14 +24,14 @@ namespace Simias.Mail {
         private string server;
         private TcpClient tcpConnection;
         private SmtpStream smtp;
-        private Encoding encoding;
+//        private Encoding encoding;
 
     //Initialise the variables and connect
         public SmtpClient( string server )
         {
 
             this.server = server;
-            encoding = new ASCIIEncoding( );
+//            encoding = new ASCIIEncoding( );
 
             Connect();
         }

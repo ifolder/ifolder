@@ -95,7 +95,7 @@ namespace Simias.Sync.Client
 		#region Fields
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(SyncClient));
-		Configuration		conf;
+//		Configuration		conf;
 		Store				store;
 		static Hashtable	collections;
 		EventSubscriber		storeEvents;
@@ -249,7 +249,7 @@ namespace Simias.Sync.Client
 		{
 			shuttingDown = false;
 			paused = false;
-			this.conf = conf;
+//			this.conf = conf;
 			store = Store.GetStore();
 
 			// Subscribe for node events so that we can add new CollectionSyncClients.
@@ -354,7 +354,7 @@ namespace Simias.Sync.Client
 		Rights			rights;
 		string			serverContext;
 		string			clientContext;
-		int				MAX_XFER_SIZE = 1024 * 64;
+//		int				MAX_XFER_SIZE = 1024 * 64;
 		static int		BATCH_SIZE = 50;
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
