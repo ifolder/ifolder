@@ -779,6 +779,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\Sync\FileSyncEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\Sync\SimiasSyncService.cs"
                     SubType = "code"
                     BuildAction = "Compile"
@@ -805,6 +810,11 @@
                 />
                 <File
                     RelPath = "src\Sync\SyncCollectionRoles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\Sync\SyncEventSubscriber.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

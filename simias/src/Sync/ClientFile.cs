@@ -27,6 +27,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using Simias.Storage;
 using Simias.Sync;
+using Simias.Event;
 
 namespace Simias.Sync.Client
 {
@@ -208,7 +209,11 @@ namespace Simias.Sync.Client
 		/// </summary>
 		public bool DownLoadFile()
 		{
-			long[] fileMap = this.GetDownloadFileMap();
+			long	fileSize = Length;
+			long	sizeToSync;
+			long	sizeRemaining;
+			long[] fileMap = this.GetDownloadFileMap(out sizeToSync);
+			sizeRemaining = sizeToSync;
 			//byte[] buffer = new byte[BlockSize];
 			WritePosition = 0;
 				
@@ -246,13 +251,10 @@ namespace Simias.Sync.Client
 					}
 
 					byte[] readBuffer;
-					//if (readBufferSize != BlockSize)
-					//	readBuffer = new byte[readBufferSize];
-					//else
-					//	readBuffer = buffer;
-
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Downloading));
 					int bytesRead = serverFile.Read(offset, readBufferSize, out readBuffer);
 					Write(readBuffer, 0, bytesRead);
+					sizeRemaining -= bytesRead;
 				}
 			}
 			return true;
@@ -267,13 +269,16 @@ namespace Simias.Sync.Client
 		/// an array of offsets where the blocks need to be placed in the local file.
 		/// The block is represented by the index of the array.
 		/// </summary>
+		/// <param name="sizeToSync">The number of bytes that need to be synced.</param>
 		/// <returns>The file map.</returns>
-		private long[] GetDownloadFileMap()
+		private long[] GetDownloadFileMap(out long sizeToSync)
 		{
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
 			table.Clear();
 			HashData[] serverHashMap = serverFile.GetHashMap(BlockSize);
+			sizeToSync = BlockSize * serverHashMap.Length;
+
 			if (serverHashMap == null)
 			{
 				return new long[0];
@@ -290,7 +295,7 @@ namespace Simias.Sync.Client
 			int				startByte = 0;
 			int				endByte = 0;
 			byte			dropByte = 0;
-
+			
 			// Set the file map to not match anything.
 			for (int i = 0; i < fileMap.Length; ++ i)
 			{
@@ -326,6 +331,7 @@ namespace Simias.Sync.Client
 							{
 								// We found a match save the match;
 								fileMap[match.BlockNumber] = ReadPosition - bytesRead + startByte;
+								sizeToSync -= BlockSize;
 							}
 						}
 						dropByte = buffer[startByte];
@@ -454,7 +460,11 @@ namespace Simias.Sync.Client
 		/// </summary>
 		public bool UploadFile()
 		{
-			ArrayList fileMap = GetUploadFileMap();
+			long	fileSize = Length;
+			long	sizeToSync;
+			long	sizeRemaining;
+			ArrayList fileMap = GetUploadFileMap(out sizeToSync);
+			sizeRemaining = sizeToSync;
 
 			byte[] buffer = new byte[BlockSize];
 			long offset = 0;
@@ -473,8 +483,10 @@ namespace Simias.Sync.Client
 					OffsetSegment seg = (OffsetSegment)segment;
 					byte[] dataBuffer = new byte[seg.Length];
 					ReadPosition = seg.Offset;
+					eventPublisher.RaiseEvent(new FileSyncEventArgs(Name, fileSize, sizeToSync, sizeRemaining, Direction.Uploading));
 					int bytesRead = Read(dataBuffer, 0, seg.Length);
 					serverFile.Write(dataBuffer, offset, bytesRead);
+					sizeRemaining -= bytesRead;
 					offset += seg.Length;
 				}
 			}
@@ -490,8 +502,9 @@ namespace Simias.Sync.Client
 		/// to make the files identical.
 		/// </summary>
 		/// <returns></returns>
-		private ArrayList GetUploadFileMap()
+		private ArrayList GetUploadFileMap(out long sizeToSync)
 		{
+			sizeToSync = 0;
 			ArrayList fileMap = new ArrayList();
 
 			// Get the hash map from the server.
@@ -501,7 +514,7 @@ namespace Simias.Sync.Client
 			{
 				// Send the whole file.
 				long offset = 0;
-				long fileSize = Length;
+				long fileSize = sizeToSync = Length;
 				while (offset < fileSize)
 				{
 					long bytesLeft = fileSize - offset;
@@ -561,6 +574,7 @@ namespace Simias.Sync.Client
 								{
 									OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
 									fileMap.Add(seg);
+									sizeToSync += seg.Length;
 								}
 								startByte = endByte + 1;
 								endByte = startByte + BlockSize - 1;
@@ -592,6 +606,7 @@ namespace Simias.Sync.Client
 						// for the data in the buffer.
 						OffsetSegment seg = new OffsetSegment(startByte - endOfLastMatch, ReadPosition - bytesRead + endOfLastMatch);
 						fileMap.Add(seg);
+						sizeToSync += seg.Length;
 						endOfLastMatch = startByte;
 					}
 					readOffset = bytesRead - endOfLastMatch;
@@ -613,6 +628,7 @@ namespace Simias.Sync.Client
 				int len = endByte - endOfLastMatch + 1;
 				OffsetSegment seg = new OffsetSegment(len, ReadPosition - len);
 				fileMap.Add(seg);
+				sizeToSync += seg.Length;
 			}
 
 			return fileMap;

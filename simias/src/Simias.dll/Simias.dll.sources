@@ -138,6 +138,7 @@ AssemblyInfo.cs
 ../Sync/SyncClient.cs
 ../Sync/SyncCollection.cs
 ../Sync/SyncCollectionRoles.cs
+../Sync/SyncEventSubscriber.cs
 ../Sync/SyncFile.cs
 ../Sync/SyncLog.cs
 ../Sync/WeakHash.cs

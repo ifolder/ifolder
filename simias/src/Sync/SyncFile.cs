@@ -26,6 +26,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using Simias.Storage;
 using Simias.Sync.Client;
+using Simias.Event;
 
 namespace Simias.Sync
 {
@@ -369,6 +370,8 @@ namespace Simias.Sync
 		protected string		workFile;
 		/// <summary>The Prefix of the working file.</summary>
 		const string			WorkFilePrefix = ".simias.wf.";
+		/// <summary>Used to publish Sync events.</summary>
+		static protected EventPublisher	eventPublisher = new EventPublisher();
 
 		#endregion
 

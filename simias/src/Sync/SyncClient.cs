@@ -332,6 +332,7 @@ namespace Simias.Sync.Client
 		#region fields
 
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(CollectionSyncClient));
+		EventPublisher	eventPublisher = new EventPublisher();
 		SimiasSyncService service;
 		Store			store;
 		SyncCollection	collection;
@@ -515,6 +516,8 @@ namespace Simias.Sync.Client
 				// Start the Sync pass and save the rights.
 				sstamps = service.Start(ref si, store.GetUserIDFromDomainID(collection.Domain));
 
+				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
+
 				serverContext = si.Context;
 				rights = si.Access;
 
@@ -558,8 +561,10 @@ namespace Simias.Sync.Client
 							finally
 							{
 								// Save the sync state.
-								SetChangeLogContext(serverContext, clientContext, SyncComplete);
+								bool status = SyncComplete;
+								SetChangeLogContext(serverContext, clientContext, status);
 								// End the sync.
+								eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StopSync, status));
 								service.Stop();
 							}
 							break;
