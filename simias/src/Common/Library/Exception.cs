@@ -38,7 +38,7 @@ namespace Simias
 		/// </summary>
 		public SimiasException()
 		{
-			logger.Debug(this, this.GetType().ToString(), null);
+			logger.Debug(this, this.GetType().ToString());
 		}
 		
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Simias
 		public SimiasException(string message) :
 			base(message)
 		{
-			logger.Debug(this, Message, null);
+			logger.Debug(this, Message);
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Simias
 		public SimiasException(string message, Exception innerException) :
 			base(message, innerException)
 		{
-			logger.Debug(this, Message, null);
+			logger.Debug(this, Message);
 		}
 
 		/// <summary>
@@ -104,10 +104,26 @@ namespace Simias
 		/// <summary>
 		/// Create a CreateException
 		/// </summary>
-		/// <param name="obj">The object that failed to be created.</param>
+		/// <param name="obj">The object that failed to create.</param>
 		/// <param name="ex">The exception that caused this exception.</param>
 		public CreateException(string obj, Exception ex) :
 			base(string.Format("Failed to create {0}.", obj), ex)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Delete Exception
+	/// </summary>
+	public class DeleteException : SimiasException
+	{
+		/// <summary>
+		/// Create a DeleteException
+		/// </summary>
+		/// <param name="obj">The object that failed to delete.</param>
+		/// <param name="ex">The exception that caused this exception.</param>
+		public DeleteException(string obj, Exception ex) :
+			base(string.Format("Failed to delete {0}.", obj), ex)
 		{
 		}
 	}
