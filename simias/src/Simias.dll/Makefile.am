@@ -10,14 +10,14 @@ SIMIAS_FLAGS = $(CSC_LIBFLAG) /unsafe
 SIMIAS_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Security.dll System.Runtime.Remoting.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.SecureSink.SecurityProvider.RsaKeyStore.dll Novell.Security.SecureSink.dll Novell.Security.SecureSink.SecurityProvider.dll Novell.Security.SecureSink.SecurityProvider.RsaSecurityProvider.dll 
 SIMIAS_LIBPATH = $(srcdir)/../../external/SecureChannelSinks $(LOG4NET_DIR) $(MDNSRESPONDER_DIR)
 
-EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in
+EXTRA_DIST = $(srcdir)/Simias.dll.sources $(SIMIAS_CSFILES) ../Common/SimiasSetup.cs.in ../Common/MyDns.cs.in
 
 CUR_DIR := $(shell pwd)
 
 all: Simias.dll
 
-Simias.dll: $(SIMIAS_CSFILES_SRC) ../Common/SimiasSetup.cs $(SIMIAS_RESOURCES) $(srcdir)/Simias.dll.sources
-	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES_CSC) $(subst /,$(SEP),../Common/SimiasSetup.cs) /doc:Simias.doc.xml
+Simias.dll: $(SIMIAS_CSFILES_SRC) ../Common/SimiasSetup.cs  ../Common/MyDns.cs $(SIMIAS_RESOURCES) $(srcdir)/Simias.dll.sources
+	$(CSC) /out:$@ $(CSCFLAGS) $(SIMIAS_FLAGS) $(SIMIAS_LIBS:%=/r:%) $(SIMIAS_LIBPATH:%=/lib:%) $(SIMIAS_CSFILES_CSC) $(subst /,$(SEP),../Common/SimiasSetup.cs) $(subst /,$(SEP),../Common/MyDns.cs) /doc:Simias.doc.xml
 
 if DEBUG
 if WINDOWS
