@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 using Simias;
+using Simias.Domain;
 
 namespace Novell.iFolder.FormsTrayApp
 {
@@ -46,12 +47,13 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.TextBox password;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox userName;
+		private Configuration config;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public ServerInfo()
+		public ServerInfo(Configuration config)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -61,6 +63,7 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			// TODO: Add any constructor code after InitializeComponent call
 			//
+			this.config = config;
 		}
 
 		/// <summary>
@@ -206,6 +209,8 @@ namespace Novell.iFolder.FormsTrayApp
 			Cursor.Current = Cursors.WaitCursor;
 
 			// TODO: call method to connect to server.
+			DomainAgent da = new DomainAgent(config);
+			da.Attach(serverIP.Text, userName.Text, password.Text);
 
 			Cursor.Current = Cursors.Default;
 		}
