@@ -58,13 +58,11 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TabControl tabControl1;
-		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox autoSync;
 		private System.Windows.Forms.CheckBox autoStart;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TabPage tabPage5;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Button apply;
 		private System.Windows.Forms.Button cancel;
@@ -90,6 +88,8 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button connect;
 		private System.Windows.Forms.Button ok;
 		private System.Windows.Forms.GroupBox groupBox4;
+		private System.Windows.Forms.TabPage tabGeneral;
+		private System.Windows.Forms.TabPage tabAccounts;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -104,9 +104,6 @@ namespace Novell.FormsTrayApp
 			InitializeComponent();
 
 			defaultInterval.TextChanged += new EventHandler(defaultInterval_ValueChanged);
-
-			// Show the first tab page by default.
-//			tabControl1.SelectedTab = tabPage1;
 
 			ifWebService = ifolderWebService;
 
@@ -140,7 +137,7 @@ namespace Novell.FormsTrayApp
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.tabGeneral = new System.Windows.Forms.TabPage();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.notifyCollisions = new System.Windows.Forms.CheckBox();
 			this.notifyShared = new System.Windows.Forms.CheckBox();
@@ -150,7 +147,7 @@ namespace Novell.FormsTrayApp
 			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.autoStart = new System.Windows.Forms.CheckBox();
-			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.tabAccounts = new System.Windows.Forms.TabPage();
 			this.accounts = new System.Windows.Forms.ListView();
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
@@ -174,11 +171,11 @@ namespace Novell.FormsTrayApp
 			this.ok = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
-			this.tabPage2.SuspendLayout();
+			this.tabGeneral.SuspendLayout();
 			this.groupBox4.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
-			this.tabPage5.SuspendLayout();
+			this.tabAccounts.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -272,8 +269,8 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabControl1.Anchor")));
 			this.tabControl1.Appearance = ((System.Windows.Forms.TabAppearance)(resources.GetObject("tabControl1.Appearance")));
 			this.tabControl1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabControl1.BackgroundImage")));
-			this.tabControl1.Controls.Add(this.tabPage2);
-			this.tabControl1.Controls.Add(this.tabPage5);
+			this.tabControl1.Controls.Add(this.tabAccounts);
+			this.tabControl1.Controls.Add(this.tabGeneral);
 			this.tabControl1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabControl1.Dock")));
 			this.tabControl1.Enabled = ((bool)(resources.GetObject("tabControl1.Enabled")));
 			this.tabControl1.Font = ((System.Drawing.Font)(resources.GetObject("tabControl1.Font")));
@@ -290,31 +287,31 @@ namespace Novell.FormsTrayApp
 			this.tabControl1.Text = resources.GetString("tabControl1.Text");
 			this.tabControl1.Visible = ((bool)(resources.GetObject("tabControl1.Visible")));
 			// 
-			// tabPage2
+			// tabGeneral
 			// 
-			this.tabPage2.AccessibleDescription = resources.GetString("tabPage2.AccessibleDescription");
-			this.tabPage2.AccessibleName = resources.GetString("tabPage2.AccessibleName");
-			this.tabPage2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage2.Anchor")));
-			this.tabPage2.AutoScroll = ((bool)(resources.GetObject("tabPage2.AutoScroll")));
-			this.tabPage2.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMargin")));
-			this.tabPage2.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage2.AutoScrollMinSize")));
-			this.tabPage2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage2.BackgroundImage")));
-			this.tabPage2.Controls.Add(this.groupBox4);
-			this.tabPage2.Controls.Add(this.groupBox1);
-			this.tabPage2.Controls.Add(this.groupBox3);
-			this.tabPage2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage2.Dock")));
-			this.tabPage2.Enabled = ((bool)(resources.GetObject("tabPage2.Enabled")));
-			this.tabPage2.Font = ((System.Drawing.Font)(resources.GetObject("tabPage2.Font")));
-			this.tabPage2.ImageIndex = ((int)(resources.GetObject("tabPage2.ImageIndex")));
-			this.tabPage2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage2.ImeMode")));
-			this.tabPage2.Location = ((System.Drawing.Point)(resources.GetObject("tabPage2.Location")));
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage2.RightToLeft")));
-			this.tabPage2.Size = ((System.Drawing.Size)(resources.GetObject("tabPage2.Size")));
-			this.tabPage2.TabIndex = ((int)(resources.GetObject("tabPage2.TabIndex")));
-			this.tabPage2.Text = resources.GetString("tabPage2.Text");
-			this.tabPage2.ToolTipText = resources.GetString("tabPage2.ToolTipText");
-			this.tabPage2.Visible = ((bool)(resources.GetObject("tabPage2.Visible")));
+			this.tabGeneral.AccessibleDescription = resources.GetString("tabGeneral.AccessibleDescription");
+			this.tabGeneral.AccessibleName = resources.GetString("tabGeneral.AccessibleName");
+			this.tabGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabGeneral.Anchor")));
+			this.tabGeneral.AutoScroll = ((bool)(resources.GetObject("tabGeneral.AutoScroll")));
+			this.tabGeneral.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabGeneral.AutoScrollMargin")));
+			this.tabGeneral.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabGeneral.AutoScrollMinSize")));
+			this.tabGeneral.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabGeneral.BackgroundImage")));
+			this.tabGeneral.Controls.Add(this.groupBox4);
+			this.tabGeneral.Controls.Add(this.groupBox1);
+			this.tabGeneral.Controls.Add(this.groupBox3);
+			this.tabGeneral.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabGeneral.Dock")));
+			this.tabGeneral.Enabled = ((bool)(resources.GetObject("tabGeneral.Enabled")));
+			this.tabGeneral.Font = ((System.Drawing.Font)(resources.GetObject("tabGeneral.Font")));
+			this.tabGeneral.ImageIndex = ((int)(resources.GetObject("tabGeneral.ImageIndex")));
+			this.tabGeneral.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabGeneral.ImeMode")));
+			this.tabGeneral.Location = ((System.Drawing.Point)(resources.GetObject("tabGeneral.Location")));
+			this.tabGeneral.Name = "tabGeneral";
+			this.tabGeneral.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabGeneral.RightToLeft")));
+			this.tabGeneral.Size = ((System.Drawing.Size)(resources.GetObject("tabGeneral.Size")));
+			this.tabGeneral.TabIndex = ((int)(resources.GetObject("tabGeneral.TabIndex")));
+			this.tabGeneral.Text = resources.GetString("tabGeneral.Text");
+			this.tabGeneral.ToolTipText = resources.GetString("tabGeneral.ToolTipText");
+			this.tabGeneral.Visible = ((bool)(resources.GetObject("tabGeneral.Visible")));
 			// 
 			// groupBox4
 			// 
@@ -539,33 +536,33 @@ namespace Novell.FormsTrayApp
 			this.autoStart.Visible = ((bool)(resources.GetObject("autoStart.Visible")));
 			this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
 			// 
-			// tabPage5
+			// tabAccounts
 			// 
-			this.tabPage5.AccessibleDescription = resources.GetString("tabPage5.AccessibleDescription");
-			this.tabPage5.AccessibleName = resources.GetString("tabPage5.AccessibleName");
-			this.tabPage5.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabPage5.Anchor")));
-			this.tabPage5.AutoScroll = ((bool)(resources.GetObject("tabPage5.AutoScroll")));
-			this.tabPage5.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabPage5.AutoScrollMargin")));
-			this.tabPage5.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabPage5.AutoScrollMinSize")));
-			this.tabPage5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabPage5.BackgroundImage")));
-			this.tabPage5.Controls.Add(this.accounts);
-			this.tabPage5.Controls.Add(this.details);
-			this.tabPage5.Controls.Add(this.groupBox2);
-			this.tabPage5.Controls.Add(this.removeAccount);
-			this.tabPage5.Controls.Add(this.addAccount);
-			this.tabPage5.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabPage5.Dock")));
-			this.tabPage5.Enabled = ((bool)(resources.GetObject("tabPage5.Enabled")));
-			this.tabPage5.Font = ((System.Drawing.Font)(resources.GetObject("tabPage5.Font")));
-			this.tabPage5.ImageIndex = ((int)(resources.GetObject("tabPage5.ImageIndex")));
-			this.tabPage5.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabPage5.ImeMode")));
-			this.tabPage5.Location = ((System.Drawing.Point)(resources.GetObject("tabPage5.Location")));
-			this.tabPage5.Name = "tabPage5";
-			this.tabPage5.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabPage5.RightToLeft")));
-			this.tabPage5.Size = ((System.Drawing.Size)(resources.GetObject("tabPage5.Size")));
-			this.tabPage5.TabIndex = ((int)(resources.GetObject("tabPage5.TabIndex")));
-			this.tabPage5.Text = resources.GetString("tabPage5.Text");
-			this.tabPage5.ToolTipText = resources.GetString("tabPage5.ToolTipText");
-			this.tabPage5.Visible = ((bool)(resources.GetObject("tabPage5.Visible")));
+			this.tabAccounts.AccessibleDescription = resources.GetString("tabAccounts.AccessibleDescription");
+			this.tabAccounts.AccessibleName = resources.GetString("tabAccounts.AccessibleName");
+			this.tabAccounts.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("tabAccounts.Anchor")));
+			this.tabAccounts.AutoScroll = ((bool)(resources.GetObject("tabAccounts.AutoScroll")));
+			this.tabAccounts.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("tabAccounts.AutoScrollMargin")));
+			this.tabAccounts.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("tabAccounts.AutoScrollMinSize")));
+			this.tabAccounts.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabAccounts.BackgroundImage")));
+			this.tabAccounts.Controls.Add(this.accounts);
+			this.tabAccounts.Controls.Add(this.details);
+			this.tabAccounts.Controls.Add(this.groupBox2);
+			this.tabAccounts.Controls.Add(this.removeAccount);
+			this.tabAccounts.Controls.Add(this.addAccount);
+			this.tabAccounts.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("tabAccounts.Dock")));
+			this.tabAccounts.Enabled = ((bool)(resources.GetObject("tabAccounts.Enabled")));
+			this.tabAccounts.Font = ((System.Drawing.Font)(resources.GetObject("tabAccounts.Font")));
+			this.tabAccounts.ImageIndex = ((int)(resources.GetObject("tabAccounts.ImageIndex")));
+			this.tabAccounts.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("tabAccounts.ImeMode")));
+			this.tabAccounts.Location = ((System.Drawing.Point)(resources.GetObject("tabAccounts.Location")));
+			this.tabAccounts.Name = "tabAccounts";
+			this.tabAccounts.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("tabAccounts.RightToLeft")));
+			this.tabAccounts.Size = ((System.Drawing.Size)(resources.GetObject("tabAccounts.Size")));
+			this.tabAccounts.TabIndex = ((int)(resources.GetObject("tabAccounts.TabIndex")));
+			this.tabAccounts.Text = resources.GetString("tabAccounts.Text");
+			this.tabAccounts.ToolTipText = resources.GetString("tabAccounts.ToolTipText");
+			this.tabAccounts.Visible = ((bool)(resources.GetObject("tabAccounts.Visible")));
 			// 
 			// accounts
 			// 
@@ -1086,11 +1083,11 @@ namespace Novell.FormsTrayApp
 			this.VisibleChanged += new System.EventHandler(this.Preferences_VisibleChanged);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.tabControl1.ResumeLayout(false);
-			this.tabPage2.ResumeLayout(false);
+			this.tabGeneral.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
-			this.tabPage5.ResumeLayout(false);
+			this.tabAccounts.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -1253,6 +1250,13 @@ namespace Novell.FormsTrayApp
 			}
 
 			return (run == 0);
+		}
+
+		public void AddAccount()
+		{
+			// Show the first tab page by default.
+			tabControl1.SelectedTab = tabAccounts;
+			this.addAccount_Click(this, new EventArgs());
 		}
 
 		/// <summary>
@@ -1481,6 +1485,13 @@ namespace Novell.FormsTrayApp
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, @"res\ifolder_loaded.ico"));
 			}
 			catch {} // Non-fatal ...
+
+			if(Environment.OSVersion.Version.Major > 4 
+				& Environment.OSVersion.Version.Minor > 0 
+				& System.IO.File.Exists(Application.ExecutablePath + ".manifest"))
+			{
+				tabGeneral.BackColor = tabAccounts.BackColor = Color.FromKnownColor(KnownColor.ControlLightLight);
+			}
 		}
 
 		private void Preferences_VisibleChanged(object sender, System.EventArgs e)
@@ -1657,6 +1668,9 @@ namespace Novell.FormsTrayApp
 
 		private void addAccount_Click(object sender, System.EventArgs e)
 		{
+			// Only allow one-at-a-time account creation.
+			addAccount.Enabled = false;
+
 			ListViewItem lvi = new ListViewItem(new string[] {string.Empty, string.Empty});
 			accounts.Items.Add(lvi);
 			accounts.SelectedItems.Clear();
@@ -1667,8 +1681,12 @@ namespace Novell.FormsTrayApp
 		{
 			if (userName.Focused)
 			{
-				ListViewItem lvi = accounts.SelectedItems[0];
-				lvi.SubItems[0].Text = userName.Text;
+				try
+				{
+					ListViewItem lvi = accounts.SelectedItems[0];
+					lvi.SubItems[0].Text = userName.Text;
+				}
+				catch {}
 			}
 		}
 
@@ -1676,14 +1694,26 @@ namespace Novell.FormsTrayApp
 		{
 			if (server.Focused)
 			{
-				ListViewItem lvi = accounts.SelectedItems[0];
-				lvi.SubItems[1].Text = server.Text;
+				try
+				{
+					ListViewItem lvi = accounts.SelectedItems[0];
+					lvi.SubItems[1].Text = server.Text;
+				}
+				catch {}
 			}
 		}
 
 		private void removeAccount_Click(object sender, System.EventArgs e)
 		{
-			// TODO:
+			ListViewItem lvi = accounts.SelectedItems[0];
+
+			if (lvi.Tag == null)
+			{
+				lvi.Remove();
+				addAccount.Enabled = true;
+			}
+
+			// TODO: Handle accounts that have already joined the enterprise.
 		}
 
 		private void rememberPassword_CheckedChanged(object sender, System.EventArgs e)
@@ -1703,6 +1733,8 @@ namespace Novell.FormsTrayApp
 				ListViewItem lvi = accounts.SelectedItems[0];
 				if (lvi != null)
 				{
+					userName.Enabled = server.Enabled = password.Enabled = true;
+
 					userName.Text = lvi.SubItems[0].Text;
 					server.Text = lvi.SubItems[1].Text;
 					password.Text = string.Empty;
@@ -1711,8 +1743,7 @@ namespace Novell.FormsTrayApp
 					{
 						// This is a new account.
 						userName.ReadOnly = server.ReadOnly = false;
-						userName.Enabled = server.Enabled = password.Enabled = 
-							rememberPassword.Enabled = autoLogin.Enabled = 
+						rememberPassword.Enabled = autoLogin.Enabled = 
 							removeAccount.Enabled = true;
 						details.Enabled = defaultServer.Checked = defaultServer.Enabled = false;
 						userName.Focus();
@@ -1730,7 +1761,6 @@ namespace Novell.FormsTrayApp
 						removeAccount.Enabled = !defaultServer.Checked;
 
 						// TODO: Fill in password with fixed long length of characters if it is currently remembered.
-						password.Enabled = true;
 
 						// TODO: set remember password and auto login settings.
 					}
@@ -1768,6 +1798,9 @@ namespace Novell.FormsTrayApp
 				lvi.SubItems[1].Text = domainWeb.Name;
 				lvi.Tag = domain;
 
+				// Successfully joined ... don't allow the fields to be changed.
+				userName.ReadOnly = server.ReadOnly = true;
+
 				if (EnterpriseConnect != null)
 				{
 					EnterpriseConnect(this, new DomainConnectEventArgs(domainWeb));
@@ -1789,6 +1822,8 @@ namespace Novell.FormsTrayApp
 				}
 
 				// TODO: save state of checkboxes.
+
+				addAccount.Enabled = true;
 
 				try
 				{

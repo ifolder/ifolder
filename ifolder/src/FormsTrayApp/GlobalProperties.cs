@@ -891,11 +891,16 @@ namespace Novell.FormsTrayApp
 		public bool IsSelected(string domainID)
 		{
 			bool result = false;
-			Domain domain = (Domain)servers.SelectedItem;
-			if (domain.ShowAll || domain.ID.Equals(domainID))
+
+			try
 			{
-				result = true;
+				Domain domain = (Domain)servers.SelectedItem;
+				if (domain.ShowAll || domain.ID.Equals(domainID))
+				{
+					result = true;
+				}
 			}
+			catch {}
 
 			return result;
 		}
