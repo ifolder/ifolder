@@ -27,6 +27,7 @@ using System.IO;
 using System.Net;
 
 using Simias;
+using Simias.POBox;
 using Simias.Storage;
 using Simias.Sync;
 
@@ -63,23 +64,8 @@ namespace Novell.iFolder
 		/// <param name="name">The friendly name that is used by applications to describe the iFolder.</param>
 		/// <param name="path">The full path of the iFolder.</param>
 		internal iFolder(Store store, string name, string path) :
-			base(store, name, store.DefaultDomain)
+			this(store, name, path, store.DefaultDomain)
 		{
-			// Make sure the path doesn't end with a separator character.
-			if ( path.EndsWith( Path.DirectorySeparatorChar.ToString() ) )
-			{
-				path = path.Substring( 0, path.Length - 1 );
-			}
-
-			// Set the type of the collection.
-			this.SetType(this, iFolderType);
-
-			// Create the DirNode object that will represent the root of the iFolder.
-			DirNode dirNode = new DirNode( this, path );
-
-			// Commit the changes.
-			Node[] nodeList = { this, dirNode };
-			this.Commit( nodeList );
 		}
 
 
@@ -108,6 +94,9 @@ namespace Novell.iFolder
 			// Commit the changes.
 			Node[] nodeList = { this, dirNode };
 			this.Commit( nodeList );
+
+			// Create an invitation in the POBox of the current user for this iFolder.
+			CreatePersonalInvitation( store, domainName );
 		}
 
 		/// <summary>
@@ -221,6 +210,35 @@ namespace Novell.iFolder
 				throw new FileNotFoundException();
 			}
 		}
+
+		/// <summary>
+		/// Creates a personal invitation for an iFolder that can be used by this user on another
+		/// machine to sync down this iFolder.
+		/// </summary>
+		/// <param name="store">Store where iFolder was created.</param>
+		/// <param name="domain">Domain that the iFolder belongs to.</param>
+		private void CreatePersonalInvitation( Store store, string domain )
+		{
+			// Get the current member for this iFolder.
+			Member member = GetCurrentMember();
+
+			// Get or create a POBox for the user.
+			POBox poBox = POBox.GetPOBox( store, domain, member.UserID );
+
+			// Create a subscription for this iFolder in the POBox.
+			Subscription subscription = poBox.CreateSubscription( this, member, typeof( iFolder ).Name );
+
+			// Set the 'To:' field in the subscription the the current user, so that this subscription cannot
+			// be used by any other person.
+			subscription.ToName = member.Name;
+			subscription.ToIdentity = member.UserID;
+			subscription.ToPublicKey = member.PublicKey;
+			subscription.SubscriptionRights = member.Rights;
+			subscription.SubscriptionState = SubscriptionStates.Ready;
+			
+			// Commit the subscription to the POBox.
+			poBox.Commit( subscription );
+		}
 		#endregion
 
 		#region Internal methods
@@ -325,9 +343,8 @@ namespace Novell.iFolder
 		/// iFolder.
 		/// </summary>
 		/// <param name="path">
-		/// The path and name of a file or directory in the iFolder for which
-		/// to return an <see cref="iFolderNode"/>.
-		/// </param>
+		/// The path and name of a file or directory in the iFolder for which to return an 
+		/// <see cref="iFolderNode"/>.</param>
 		/// <returns>
 		/// An <see cref="iFolderNode"/> for the file or directory specified
 		/// by <paramref name="path"/>, or <b>null</b> if it does not exist in the iFolder.
