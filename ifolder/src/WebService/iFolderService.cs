@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Web;
+using System.Web.SessionState;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 using System.IO;
@@ -34,6 +35,7 @@ using Simias;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
+using Simias.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -49,12 +51,53 @@ namespace Novell.iFolder.Web
 	Description="Web Service providing access to iFolder")]
 	public class iFolderService : WebService
 	{
-
 		/// <summary>
 		/// Creates the iFolderService and sets up logging
 		/// </summary>
 		public iFolderService()
 		{
+		}
+	
+
+
+
+		/// <summary>
+		/// WebMethod that creates and iFolder collection.
+		/// </summary>
+		/// <param name = "Path">
+		/// The full path to the iFolder on the local system
+		/// </param>
+		/// <returns>
+		/// iFolder object representing the iFolder created
+		/// </returns>
+		[WebMethod(Description="Prove Brady is Wrong", EnableSession=true)]
+		[SoapRpcMethod]
+		public bool IsBradyWrong(string message)
+		{
+			int count;
+
+			if(Session["count"] == null)
+				count = 0;
+			else
+				count = (int)Session["count"];
+
+			count++;
+
+/*			HttpSessionState hss = Session;
+
+			if( (hss != null) && (hss.IsNewSession) )
+			{
+				Console.WriteLine("Hey, this is a new session!");	
+			}
+			else
+				Console.WriteLine("Either session is null, or it aint");
+*/
+
+			Console.WriteLine("This client has called me {0} times", count);
+
+			Session["count"] = count;
+
+			return true;
 		}
 
 
@@ -63,64 +106,22 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that creates and iFolder collection.
 		/// </summary>
-		/// <param name = "iFolderPath">
-		/// The path to the ifolder
+		/// <param name = "Path">
+		/// The full path to the iFolder on the local system
 		/// </param>
 		/// <returns>
-		/// iFolder object representing the Collection created
+		/// iFolder object representing the iFolder created
 		/// </returns>
-		[WebMethod(Description="Create An iFolder.")]
+		[WebMethod(Description="Create An iFolder. This will create an iFolder using the path specified.  The Path must exist or an exception will be thrown.")]
 		[SoapRpcMethod]
-		public iFolder CreateiFolder(string iFolderPath)
+		public iFolder CreateiFolder(string Path)
 		{
-			ArrayList nodeList = new ArrayList();
 
-			Store store = Store.GetStore();
-
-			string name = Path.GetFileName(iFolderPath);
-
-			// Create the Collection and set it as an iFolder
-			Collection c = 
-					new Collection(store, name, store.DefaultDomain);
-			c.SetType(c, iFolder.iFolderType);
-			nodeList.Add(c);
-
-			// Create the member and add it as the owner
-			Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-			if(roster == null)
-			{
-				throw new Exception("Unable to obtain default Roster");
-			}
-
-			Simias.Storage.Member member = roster.Owner;
-			if(member == null)
-			{
-				throw new Exception("UserID is invalid");
-			}
-				
-			Simias.Storage.Member newMember = 
-					new Simias.Storage.Member(	member.Name,
-												member.UserID,
-												Access.Rights.Admin);
-			newMember.IsOwner = true;
-			nodeList.Add(newMember);
-
-			// create root directory node
-			DirNode dn = new DirNode(c, iFolderPath);
-			nodeList.Add(dn);
-
-			if(!Directory.Exists(iFolderPath) )
-				throw new Exception("Path did not exist");
-
-			// Commit the new collection and the fileNode at the root
-			c.Commit(nodeList.ToArray( typeof( Node) ) as Node[] );
-
-			AddSubscription( store, c, member, 
-					member, SubscriptionStates.Ready);
-
-			return new iFolder(c);
+			// TODO: Figure out who we are running as so we
+			// can create the ifolder as the correct user
+			Collection col = SharedCollection.CreateLocalSharedCollection(
+								Path, iFolder.iFolderType);
+			return new iFolder(col);
 		}
 
 
@@ -141,12 +142,10 @@ namespace Novell.iFolder.Web
 		{
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
-			if(col != null)
-			{
-				return new iFolder(col);
-			}
-			else
+			if(col == null)
 				throw new Exception("Invalid iFolderID");
+
+			return new iFolder(col);
 		}
 
 
@@ -165,23 +164,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Delete An iFolder")]
 		[SoapRpcMethod]
-		public bool DeleteiFolder(string iFolderID)
+		public void DeleteiFolder(string iFolderID)
 		{
-			try
-			{
-				Store store = Store.GetStore();
-				Collection collection = store.GetCollectionByID(iFolderID);
-				if(collection != null)
-				{
-					RemoveAllSubscriptions(store, collection);
-					collection.Delete();
-					collection.Commit();
-					return true;
-				}
-			}
-			catch{}
-
-			return false;
+			SharedCollection.DeleteSharedCollection(iFolderID);
 		}
 
 
@@ -254,7 +239,7 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that to set the Rights of a user on an iFolder
 		/// </summary>
-		/// <param name = "CollectionID">
+		/// <param name = "iFolderID">
 		/// The ID of the collection representing the iFolder to which
 		/// the member is to be added
 		/// </param>
@@ -267,72 +252,42 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully added
 		/// </returns>
-		[WebMethod(Description="Set the Rights of a member of a collection")]
+		[WebMethod(Description="Set the Rights of a member of an iFolder.  The Rights can be \"Admin\", \"ReadOnly\", or \"ReadWrite\".")]
 		[SoapRpcMethod]
-		public bool SetMemberRights(	string CollectionID, 
+		public void SetMemberRights(	string iFolderID, 
 										string UserID,
 										string Rights)
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
-			{
-				Simias.Storage.Member member = col.GetMemberByID(UserID);
-				if(member != null)
-				{
-					if(Rights == "Admin")
-						member.Rights = Access.Rights.Admin;
-					else if(Rights == "ReadOnly")
-						member.Rights = Access.Rights.ReadOnly;
-					else if(Rights == "ReadWrite")
-						member.Rights = Access.Rights.ReadWrite;
-					else
-						throw new ApplicationException("Invalid Rights");
-
-					col.Commit(member);
-
-					return true;
-				}
-			}
-			return false;
+			SharedCollection.SetMemberRights(iFolderID, UserID, Rights);
 		}
 
 
 
 
 		/// <summary>
-		/// WebMethod that gets the owner of a Collection
+		/// WebMethod that gets the owner of an iFolder
 		/// </summary>
-		/// <param name = "CollectionID">
+		/// <param name = "iFolderID">
 		/// The ID of the collection representing the iFolder to which
 		/// the member is to be added
 		/// </param>
 		/// <returns>
-		/// Member that is the owner of the Collection
+		/// Member that is the owner of the iFolder
 		/// </returns>
-		[WebMethod(Description="Get the Owner of a Collection")]
+		[WebMethod(Description="Get the Owner of an iFolder")]
 		[SoapRpcMethod]
-		public Member GetOwner( string CollectionID )
+		public Simias.Web.Member GetOwner( string iFolderID )
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
-			{
-				Member member = new Member(col.Owner);
-				return member;
-			}
-			throw new Exception("Invalid Collection ID");
+			return SharedCollection.GetOwner(iFolderID);
 		}
 
 
 
 
 		/// <summary>
-		/// WebMethod that sets the owner of a Collection
+		/// WebMethod that sets the owner of an iFolder
 		/// </summary>
-		/// <param name = "CollectionID">
+		/// <param name = "iFolderID">
 		/// The ID of the collection representing the iFolder to which
 		/// the member is to be added
 		/// </param>
@@ -345,44 +300,14 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully added
 		/// </returns>
-		[WebMethod(Description="Set the Rights of a member of a collection")]
+		[WebMethod(Description="Changes the owner of an iFolder and sets the rights of the previous owner to the rights specified.")]
 		[SoapRpcMethod]
-		public bool ChangeOwner(	string CollectionID, 
+		public void ChangeOwner(	string iFolderID, 
 									string NewOwnerUserID,
 									string OldOwnerRights)
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
-			{
-				Simias.Storage.Member member = 
-						col.GetMemberByID(NewOwnerUserID);
-
-				if(member != null)
-				{
-					Access.Rights rights;
-
-					if(OldOwnerRights == "Admin")
-						rights = Access.Rights.Admin;
-					else if(OldOwnerRights == "ReadOnly")
-						rights = Access.Rights.ReadOnly;
-					else if(OldOwnerRights == "ReadWrite")
-						rights = Access.Rights.ReadWrite;
-					else
-						throw new Exception("Invalid Rights");
-
-					Node[] nodes = col.ChangeOwner(member, rights);
-
-					col.Commit(nodes);
-
-					return true;
-				}
-				else
-					throw new Exception("UserID is not a member of Collection");
-			}
-			else
-				throw new Exception("Invalid Collection specified");
+			SharedCollection.ChangeOwner(iFolderID, NewOwnerUserID, 
+														OldOwnerRights);
 		}
 
 
@@ -394,7 +319,7 @@ namespace Novell.iFolder.Web
 		/// adding them and placing a subscription in the "ready" state in
 		/// their POBox.
 		/// </summary>
-		/// <param name = "CollectionID">
+		/// <param name = "iFolderID">
 		/// The ID of the collection representing the iFolder to which
 		/// the member is to be added
 		/// </param>
@@ -407,49 +332,13 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully added
 		/// </returns>
-		[WebMethod(Description="Add a single member to a collection")]
+		[WebMethod(Description="Add a single member to an iFolder")]
 		[SoapRpcMethod]
-		public bool AddMember(	string CollectionID, 
+		public void AddMember(	string iFolderID, 
 								string UserID,
 								string Rights)
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
-			{
-				Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-				if(roster != null)
-				{
-					Simias.Storage.Member member = roster.GetMemberByID(UserID);
-					if(member != null)
-					{
-						Access.Rights newRights;
-
-						if(Rights == "Admin")
-							newRights = Access.Rights.Admin;
-						else if(Rights == "ReadOnly")
-							newRights = Access.Rights.ReadOnly;
-						else if(Rights == "ReadWrite")
-							newRights = Access.Rights.ReadWrite;
-						else
-							throw new ApplicationException("Invalid Rights");
-
-						Simias.Storage.Member newMember = 
-							new Simias.Storage.Member(	member.Name,
-														member.UserID,
-														newRights);
-						col.Commit(newMember);
-
-						AddSubscription( store, col, 
-								newMember, newMember, SubscriptionStates.Ready);
-						return true;
-					}
-				}
-			}
-			return false;
+			SharedCollection.AddMember(iFolderID, UserID, Rights);
 		}
 
 
@@ -459,7 +348,7 @@ namespace Novell.iFolder.Web
 		/// WebMethod that removes a member from an ifolder.  The subscription
 		/// is also removed from the member's POBox.
 		/// </summary>
-		/// <param name = "CollectionID">
+		/// <param name = "iFolderID">
 		/// The ID of the collection representing the iFolder from which
 		/// the member is to be removed
 		/// </param>
@@ -469,33 +358,12 @@ namespace Novell.iFolder.Web
 		/// <returns>
 		/// True if the member was successfully removed
 		/// </returns>
-		[WebMethod(Description="Remove a single member from a collection")]
+		[WebMethod(Description="Remove a single member from an iFolder")]
 		[SoapRpcMethod]
-		public bool RemoveMember(	string CollectionID, 
+		public void RemoveMember(	string iFolderID, 
 									string UserID)
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
-			{
-				Simias.Storage.Member member = col.GetMemberByID(UserID);
-				if(member != null)
-				{
-					if(member.IsOwner)
-						return false;
-
-					col.Delete(member);
-					col.Commit(member);
-				}
-
-				// even if the member is null, try to clean up the subscription
-				RemoveMemberSubscription(	store, 
-											col,
-											UserID);
-				return true;
-			}
-			return false;
+			SharedCollection.RemoveMember(iFolderID, UserID);
 		}
 	
 
@@ -504,34 +372,17 @@ namespace Novell.iFolder.Web
 		/// <summary>
 		/// WebMethod that Lists all members of a Collection
 		/// </summary>
-		/// <param name = "CollectionID">
+		/// <param name = "iFolderID">
 		/// The ID of the Collection representing the iFolder 
 		/// </param>
 		/// <returns>
 		/// An array of Members
 		/// </returns>
-		[WebMethod(Description="Get the list of Collection Members")]
+		[WebMethod(Description="Get the list of iFolder Members")]
 		[SoapRpcMethod]
-		public Member[] GetMembers(string CollectionID)
+		public Simias.Web.Member[] GetMembers(string iFolderID)
 		{
-			ArrayList list = new ArrayList();
-
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(CollectionID);
-			if(col != null)
-			{
-				ICSList memberlist = col.GetMemberList();
-				foreach(ShallowNode sNode in memberlist)
-				{
-					Simias.Storage.Member simMem =
-						new Simias.Storage.Member(col, sNode);
-
-					Member member = new Member(simMem);
-					list.Add(member);
-				}
-			}
-			return (Member[])(list.ToArray(typeof(Member)));
+			return SharedCollection.GetMembers(iFolderID);
 		}
 
 
@@ -547,29 +398,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Get the list of All Members")]
 		[SoapRpcMethod]
-		public Member[] GetAllMembers()
+		public Simias.Web.Member[] GetAllMembers()
 		{
-			ArrayList list = new ArrayList();
-
-			Store store = Store.GetStore();
-
-			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-			if(roster != null)
-			{
-				ICSList memberlist = roster.GetMemberList();
-				foreach(ShallowNode sNode in memberlist)
-				{
-					Simias.Storage.Member simMem =
-						new Simias.Storage.Member(roster, sNode);
-
-					Member member = new Member(simMem);
-					list.Add(member);
-				}
-			}
-
-			return (Member[])(list.ToArray(typeof(Member)));
+			return SharedCollection.GetAllMembers();
 		}
 
 
@@ -586,25 +417,9 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Lookup a single member to a collection")]
 		[SoapRpcMethod]
-		public Member GetMember( string UserID )
+		public Simias.Web.Member GetMember( string UserID )
 		{
-			Store store = Store.GetStore();
-
-			Roster roster = 
-					store.GetDomain(store.DefaultDomain).GetRoster(store);
-
-			if(roster != null)
-			{
-				Simias.Storage.Member simMem = roster.GetMemberByID(UserID);
-				if(simMem != null)
-				{
-					return new Member(simMem);
-				}
-				else
-					throw new Exception("Invalid UserID");
-			}
-			else
-				throw new Exception("Unable to access user roster");
+			return SharedCollection.GetMember(UserID);
 		}
 
 
@@ -621,145 +436,86 @@ namespace Novell.iFolder.Web
 		/// </returns>
 		[WebMethod(Description="Lookup a single member to a collection")]
 		[SoapRpcMethod]
-		public Member GetiFolderMember( string UserID, string iFolderID )
+		public Simias.Web.Member GetiFolderMember( string UserID, 
+													string iFolderID )
 		{
-			Store store = Store.GetStore();
-
-			Collection col = store.GetCollectionByID(iFolderID);
-			if(col != null)
-			{
-				Simias.Storage.Member simMem = col.GetMemberByID(UserID);
-				if(simMem != null)
-				{
-					return new Member(simMem);
-				}
-				else
-					throw new Exception("Invalid UserID");
-			}
-			else
-				throw new Exception("Invalid iFolderID");
+			return SharedCollection.GetCollectionMember(UserID, iFolderID);
 		}
 
 
 
 
 		/// <summary>
-		/// Utility method that should be moved into the POBox class.
-		/// This will create a subscription and place it in the POBox
-		/// of the invited user.
+		/// WebMethod that gets the DiskSpaceQuota for a given member
 		/// </summary>
-		/// <param name = "store">
-		/// The store where the POBox and collection for this subscription
-		/// is to be found.
-		/// </param>
-		/// <param name = "collection">
-		/// The Collection for which the subscription is being created
-		/// </param>
-		/// <param name = "inviteMember">
-		/// The Member from which the subscription is being created
-		/// </param>
-		/// <param name = "newMember">
-		/// The Member being invited
-		/// </param>
-		/// <param name = "state">
-		/// The initial state of the subscription when placed in the POBox
-		/// of the invited Member
-		/// </param>
-		private void AddSubscription(	Store store, 
-										Collection collection, 
-										Simias.Storage.Member inviteMember,
-										Simias.Storage.Member newMember,
-										SubscriptionStates state)
-		{
-			POBox poBox = 
-				POBox.GetPOBox(store, store.DefaultDomain, newMember.UserID );
-
-			Subscription sub = poBox.CreateSubscription(collection,
-														inviteMember,
-														iFolder.iFolderType);
-			sub.ToName = newMember.Name;
-			sub.ToIdentity = newMember.UserID;
-			sub.ToPublicKey = newMember.PublicKey;
-			sub.SubscriptionRights = newMember.Rights;
-			sub.SubscriptionState = state;
-
-			// copied from the iFolder code, this may need to change
-			// in the future
-			Roster roster = 
-				store.GetDomain(store.DefaultDomain).GetRoster(store);
-			SyncCollection sc = new SyncCollection(roster);
-			sub.SubscriptionCollectionURL = sc.MasterUrl.ToString();
-
-			DirNode dirNode = collection.GetRootDirectory();
-			if(dirNode != null)
-			{
-				sub.DirNodeID = dirNode.ID;
-				sub.DirNodeName = dirNode.Name;
-			}
-
-			poBox.Commit(sub);
-		}
-
-
-
-
-		/// <summary>
-		/// Utility method that will find all members of a collection
-		/// and remove the subscription to this collection from their
-		/// POBox
-		/// </summary>
-		/// <param name = "store">
-		/// The store where the POBox and collection for this subscription
-		/// is to be found.
-		/// </param>
-		/// <param name = "collection">
-		/// The Collection for which the subscription is being removed
-		/// </param>
-		private void RemoveAllSubscriptions(Store store, Collection col)
-		{
-			ICSList memberlist = col.GetMemberList();
-			foreach(ShallowNode sNode in memberlist)
-			{
-				// Get the member from the list
-				Simias.Storage.Member member =
-					new Simias.Storage.Member(col, sNode);
-
-				RemoveMemberSubscription(store, col, member.UserID);
-			}
-		}
-
-
-
-
-		/// <summary>
-		/// Utility method that removes a subscription for the specified
-		/// collection from the specified UserID
-		/// </summary>
-		/// <param name = "store">
-		/// The store where the POBox and collection for this subscription
-		/// is to be found.
-		/// </param>
-		/// <param name = "collection">
-		/// The Collection for which the subscription is being removed
-		/// </param>
 		/// <param name = "UserID">
-		/// The UserID from which to remove the subscription
+		/// The ID of the member to get the DiskSpaceQuota
 		/// </param>
-		private void RemoveMemberSubscription(	Store store, 
-												Collection col,
-												string UserID)
+		/// <returns>
+		/// DiskSpaceQuota for the specified member
+		/// </returns>
+		[WebMethod(Description="Gets the DiskSpaceQuota for a member")]
+		[SoapRpcMethod]
+		public Simias.Web.DiskSpaceQuota GetMemberDiskSpaceQuota( string UserID )
 		{
-			// Get the member's POBox
-			POBox poBox = POBox.GetPOBox(store, store.DefaultDomain, 
-								UserID );
+			return SharedCollection.GetMemberDiskQuota( UserID );
+		}
 
-			// Search for the matching subscription
-			Subscription sub = poBox.GetSubscriptionByCollectionID(col.ID);
-			if(sub != null)
-			{
-				poBox.Delete(sub);
-				poBox.Commit(sub);
-			}
+
+
+
+		/// <summary>
+		/// WebMethod that gets the DiskSpaceQuota for a given iFolder
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the iFolder to get the DiskSpaceQuota
+		/// </param>
+		/// <returns>
+		/// DiskSpaceQuota for the specified iFolder
+		/// </returns>
+		[WebMethod(Description="Gets the DiskSpaceQuota for an iFolder")]
+		[SoapRpcMethod]
+		public Simias.Web.DiskSpaceQuota GetiFolderDiskSpaceQuota( string iFolderID )
+		{
+			return SharedCollection.GetCollectionDiskQuota( iFolderID );
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for a member
+		/// </summary>
+		/// <param name = "UserID">
+		/// The ID of the member to set the disk space limit
+		/// </param>
+		/// <param name = "Limit">
+		/// The size to set in MegaBytes
+		/// </param>
+		[WebMethod(Description="Sets the Disk Space Limit for a user")]
+		[SoapRpcMethod]
+		public void SetMemberSpaceLimit( string UserID, long Limit )
+		{
+			SharedCollection.SetMemberSpaceLimit(UserID, Limit);
+		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that sets the disk space limit for an iFolder 
+		/// </summary>
+		/// <param name = "iFolderID">
+		/// The ID of the iFolder to set the disk space limit
+		/// </param>
+		/// <param name = "Limit">
+		/// The size to set in MegaBytes
+		/// </param>
+		[WebMethod(Description="Sets the Disk Space Limit for an iFolder")]
+		[SoapRpcMethod]
+		public void SetiFolderSpaceLimit( string iFolderID, long Limit )
+		{
+			SharedCollection.SetCollectionSpaceLimit(iFolderID, Limit);
 		}
 
 	}
