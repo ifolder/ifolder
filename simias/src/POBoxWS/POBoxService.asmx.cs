@@ -682,12 +682,10 @@ namespace Simias.POBoxService.Web
 			// Verify the fromMember is the caller
 			log.Info("Current Principal: " + Thread.CurrentPrincipal.Identity.Name);
 
-			/*
-			if (fromUserID != Thread.CurrentPrincipal)
+			if (fromUserID != Thread.CurrentPrincipal.Identity.Name)
 			{
 				throw new ApplicationException("Specified \"fromUserID\" is not the caller");
 			}
-			*/
 
 			sharedCollection = store.GetCollectionByID(sharedCollectionID); 
 			if (sharedCollection == null)
