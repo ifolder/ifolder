@@ -69,6 +69,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.PictureBox pictureAddress;
 		private System.Windows.Forms.PictureBox pictureWeb;
 		private Hashtable phoneHT;
+		private Hashtable emailHT;
 		private Name name;
 
 		private Novell.AddressBook.AddressBook addressBook = null;
@@ -76,7 +77,6 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.Button addr;
 		private System.Windows.Forms.TextBox blogAddress;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Button webConnect;
 		private System.Windows.Forms.Button blogConnect;
 		private System.Windows.Forms.Button fullNameButton;
@@ -85,6 +85,7 @@ namespace Novell.iFolder.FormsBookLib
 		private System.Windows.Forms.TextBox organization;
 		private System.Windows.Forms.TextBox fullName;
 		private System.Windows.Forms.TextBox jobTitle;
+		private System.Windows.Forms.ComboBox emailSelect;
 
 		/// <summary>
 		/// Required designer variable.
@@ -99,9 +100,6 @@ namespace Novell.iFolder.FormsBookLib
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 			try
 			{
 				// Load the images.
@@ -115,6 +113,9 @@ namespace Novell.iFolder.FormsBookLib
 				pictureWeb.Image = Image.FromFile(Path.Combine(basePath, "globe.png"));
 			}
 			catch{}
+
+			phoneHT = new Hashtable();
+			emailHT = new Hashtable();
 		}
 
 		/// <summary>
@@ -145,7 +146,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.fullNameButton = new System.Windows.Forms.Button();
 			this.blogConnect = new System.Windows.Forms.Button();
 			this.webConnect = new System.Windows.Forms.Button();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.emailSelect = new System.Windows.Forms.ComboBox();
 			this.blogAddress = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.addr = new System.Windows.Forms.Button();
@@ -200,7 +201,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.tabPage1.Controls.Add(this.fullNameButton);
 			this.tabPage1.Controls.Add(this.blogConnect);
 			this.tabPage1.Controls.Add(this.webConnect);
-			this.tabPage1.Controls.Add(this.comboBox1);
+			this.tabPage1.Controls.Add(this.emailSelect);
 			this.tabPage1.Controls.Add(this.blogAddress);
 			this.tabPage1.Controls.Add(this.label5);
 			this.tabPage1.Controls.Add(this.addr);
@@ -272,15 +273,20 @@ namespace Novell.iFolder.FormsBookLib
 			this.webConnect.TabIndex = 10;
 			this.webConnect.Text = "button1";
 			// 
-			// comboBox1
+			// emailSelect
 			// 
-			this.comboBox1.BackColor = System.Drawing.SystemColors.Control;
-			this.comboBox1.Location = new System.Drawing.Point(64, 160);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.comboBox1.Size = new System.Drawing.Size(104, 21);
-			this.comboBox1.TabIndex = 6;
-			this.comboBox1.Text = "Primary e-mail:";
+			this.emailSelect.BackColor = System.Drawing.SystemColors.Control;
+			this.emailSelect.Items.AddRange(new object[] {
+															 "Business email:",
+															 "Personal email:",
+															 "Other email:"});
+			this.emailSelect.Location = new System.Drawing.Point(64, 160);
+			this.emailSelect.Name = "emailSelect";
+			this.emailSelect.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.emailSelect.Size = new System.Drawing.Size(104, 21);
+			this.emailSelect.TabIndex = 6;
+			this.emailSelect.Text = "Business email:";
+			this.emailSelect.SelectedIndexChanged += new System.EventHandler(this.emailSelect_SelectedIndexChanged);
 			// 
 			// blogAddress
 			// 
@@ -539,6 +545,7 @@ namespace Novell.iFolder.FormsBookLib
 			this.eMail.Size = new System.Drawing.Size(192, 20);
 			this.eMail.TabIndex = 7;
 			this.eMail.Text = "";
+			this.eMail.Leave += new System.EventHandler(this.eMail_Leave);
 			// 
 			// groupBox1
 			// 
@@ -675,11 +682,40 @@ namespace Novell.iFolder.FormsBookLib
 		{
 			try
 			{
+				// Get the e-mail addresses.
 				foreach(Email tmpMail in contact.GetEmailAddresses())
 				{
+					EmailEntry entry = new EmailEntry();
+					entry.Add = false;
+					entry.EMail = tmpMail;
+
 					if ((tmpMail.Types & EmailTypes.work) == EmailTypes.work)
 					{
-						eMail.Text = tmpMail.Address;
+						emailHT.Add((string)emailSelect.Items[0], entry);
+
+						if ((tmpMail.Types & EmailTypes.preferred) == EmailTypes.preferred)
+						{
+							emailSelect.SelectedIndex = 0;
+							eMail.Text = tmpMail.Address;
+						}
+					}
+					else if ((tmpMail.Types & EmailTypes.personal) == EmailTypes.personal)
+					{
+						emailHT.Add((string)emailSelect.Items[1], entry);
+						if ((tmpMail.Types & EmailTypes.preferred) == EmailTypes.preferred)
+						{
+							emailSelect.SelectedIndex = 1;
+							eMail.Text = tmpMail.Address;
+						}
+					}
+					else if ((tmpMail.Types & EmailTypes.other) == EmailTypes.other)
+					{
+						emailHT.Add((string)emailSelect.Items[2], entry);
+						if ((tmpMail.Types & EmailTypes.preferred) == EmailTypes.preferred)
+						{
+							emailSelect.SelectedIndex = 2;
+							eMail.Text = tmpMail.Address;
+						}
 					}
 				}
 			}
@@ -688,7 +724,6 @@ namespace Novell.iFolder.FormsBookLib
 			// Deal with phone numbers
 			try
 			{
-				phoneHT = new Hashtable();
 				foreach(Telephone tmpPhone in contact.GetTelephoneNumbers())
 				{
 					TelephoneEntry phone = new TelephoneEntry();
@@ -752,26 +787,21 @@ namespace Novell.iFolder.FormsBookLib
 
 		private void SetPhoneInEdit(int index, string number)
 		{
-			if (this.phoneSelect1.SelectedIndex == index)
+			if (phoneSelect1.SelectedIndex == index)
 				phone1.Text = number;
 			
-			if (this.phoneSelect2.SelectedIndex == index)
+			if (phoneSelect2.SelectedIndex == index)
 				phone2.Text = number;
 
-			if (this.phoneSelect3.SelectedIndex == index)
+			if (phoneSelect3.SelectedIndex == index)
 				phone3.Text = number;
 
-			if (this.phoneSelect4.SelectedIndex == index)
+			if (phoneSelect4.SelectedIndex == index)
 				phone4.Text = number;
 		}
 
 		private void UpdatePhoneTable(ComboBox select, TextBox phone)
 		{
-			if (phoneHT == null)
-			{
-				phoneHT = new Hashtable();
-			}
-
 			TelephoneEntry entry = (TelephoneEntry)phoneHT[select.Text];
 			if (entry != null)
 			{
@@ -867,15 +897,19 @@ namespace Novell.iFolder.FormsBookLib
 				UpdatePhoneTable(phoneSelect3, phone3);
 			else if (phone4.Focused)
 				UpdatePhoneTable(phoneSelect4, phone4);
+			else if (eMail.Focused)
+				eMail_Leave(this, null);
 
 			string	username = null;
 			string	email = null;
 
 			username = userId.Text.Trim();
-			email = eMail.Text.Trim();
+
+			// TODO - will e-mail address be a required attribute?
+//			email = eMail.Text.Trim();
 
 			if (username != "" &&
-				email != "" &&
+//				email != "" &&
 				name != null &&
 				name.Given != null &&
 				name.Given != "" &&
@@ -895,24 +929,17 @@ namespace Novell.iFolder.FormsBookLib
 					}
 					catch{}
 
-					if (eMail.Text != null && eMail.Text != "")
+					IDictionaryEnumerator enumerator = emailHT.GetEnumerator();
+					while (enumerator.MoveNext())
 					{
-						Email tmpMail = new Email((EmailTypes.internet | EmailTypes.work), eMail.Text);
-						tmpMail.Preferred = true;
-						// BUGBUG temp
-						tmpMail.Preferred = false;
-						tmpMail.Preferred = true;
-						contact.AddEmailAddress(tmpMail);
+						contact.AddEmailAddress(((EmailEntry)enumerator.Value).EMail);
 					}
 
 					// Add the phone numbers.
-					if (phoneHT != null)
+					enumerator = phoneHT.GetEnumerator();
+					while (enumerator.MoveNext())
 					{
-						IDictionaryEnumerator enumerator = phoneHT.GetEnumerator();
-						while (enumerator.MoveNext())
-						{
-							contact.AddTelephoneNumber(((TelephoneEntry)enumerator.Value).Phone);
-						}
+						contact.AddTelephoneNumber(((TelephoneEntry)enumerator.Value).Phone);
 					}
 
 					contact.Organization = organization.Text.Trim();
@@ -925,30 +952,21 @@ namespace Novell.iFolder.FormsBookLib
 				}
 				else
 				{
+					// Update email.
 					try
 					{
-						// First let's just delete all the existing email addresses
-						try
+						IDictionaryEnumerator enumerator = emailHT.GetEnumerator();
+						while (enumerator.MoveNext())
 						{
-							foreach(Email tmpEmail in contact.GetEmailAddresses())
+							if (((EmailEntry)enumerator.Value).Add)
 							{
-								tmpEmail.Delete();
+								contact.AddEmailAddress(((EmailEntry)enumerator.Value).EMail);
 							}
 						}
-						catch{}
-
-						if (eMail.Text != null && eMail.Text != "")
-						{
-							// For the business email address use the helper
-							// function directly off the contact
-							contact.EMail = eMail.Text;
-						}
 					}
-					catch(System.NullReferenceException)
-					{
-						//contact.EMail = email;
-					}
+					catch{}
 
+					// Update phone numbers.
 					try
 					{
 						IDictionaryEnumerator enumerator = phoneHT.GetEnumerator();
@@ -980,14 +998,15 @@ namespace Novell.iFolder.FormsBookLib
 		private void ContactEditor_Closing(object sender, CancelEventArgs e)
 		{
 			string user = this.userId.Text.Trim();
-			string email = this.eMail.Text.Trim();
+			// TODO - will e-mail address be a required attribute?
+//			string email = this.eMail.Text.Trim();
 
 			// Make sure the mandatory fields are filled in if OK was clicked.
-			if ((user == "" ||
-				email == "" ||
+			if (this.DialogResult == DialogResult.OK &&
+				(user == "" ||
+//				email == "" ||
 				name == null ||
-				((name != null) && ((name.Given == null || name.Given == "") ||	(name.Family == null || name.Family == "")))) &&
-				this.DialogResult == DialogResult.OK)
+				((name != null) && ((name.Given == null || name.Given == "") ||	(name.Family == null || name.Family == "")))))
 			{
 				MessageBox.Show("User ID, first name, last name, and e-mail are required attributes.", "Missing Required Attributes", MessageBoxButtons.OK);
 
@@ -1036,6 +1055,101 @@ namespace Novell.iFolder.FormsBookLib
 		private void phone4_Leave(object sender, System.EventArgs e)
 		{
 			UpdatePhoneTable(phoneSelect4, phone4);
+		}
+
+		private void emailSelect_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			EmailEntry entry = (EmailEntry)emailHT[emailSelect.Text];
+			if ((entry != null) && !entry.Remove)
+			{
+				eMail.Text = entry.EMail.Address;
+			}
+			else
+			{
+				eMail.Text = "";
+			}
+		}
+
+		private void eMail_Leave(object sender, System.EventArgs e)
+		{
+			EmailEntry entry = (EmailEntry)emailHT[emailSelect.Text];
+			if (entry != null)
+			{
+				if (entry.EMail.Address != eMail.Text)
+				{
+					emailHT.Remove(emailSelect.Text);
+
+					if ((eMail.Text == "") && !entry.Add)
+					{
+						entry.Remove = true;
+
+						// If this was the preferred address, we need to make a different
+						// address the preferred one.
+						// TODO - preferred should probably be added to the UI
+						if ((entry.EMail.Types & EmailTypes.preferred) == EmailTypes.preferred)
+						{
+							if (emailHT.Count > 0)
+							{
+								bool preferredSet = false;
+								IEnumerator enumerator = emailHT.Values.GetEnumerator();
+
+								while (enumerator.MoveNext())
+								{
+									EmailEntry ee = (EmailEntry)enumerator.Current;
+									if ((ee.EMail.Types & EmailTypes.work) == EmailTypes.work)
+									{
+										ee.EMail.Types |= EmailTypes.preferred;
+										preferredSet = true;
+									}
+								}
+
+								if (!preferredSet)
+								{
+									enumerator.Reset();
+									enumerator.MoveNext();
+									((EmailEntry)enumerator.Current).EMail.Types |= EmailTypes.preferred;
+								}
+							}
+						}
+					}
+
+					entry.EMail.Address = eMail.Text;
+					emailHT.Add(emailSelect.Text, entry);
+				}
+			}
+			else
+			{
+				if (eMail.Text != "")
+				{
+					entry = new EmailEntry();
+					entry.Add = true;
+					entry.EMail = new Email();
+					entry.EMail.Address = eMail.Text.Trim();
+
+					switch (emailSelect.SelectedIndex)
+					{
+						case 0:
+							entry.EMail.Types = EmailTypes.work;
+							break;
+						case 1:
+							entry.EMail.Types = EmailTypes.personal;
+							break;
+						case 2:
+							entry.EMail.Types = EmailTypes.other;
+							break;
+						default:
+							entry.EMail.Types = 0;
+							break;
+					}
+
+					// The first entry is set as the preferred address.
+					// TODO - preferred should probably be added to the UI
+					if (emailHT.Count == 0)
+						entry.EMail.Types |= EmailTypes.preferred;
+
+					emailHT.Add(emailSelect.Text, entry);
+				}
+			}
 		}
 
 		private void phoneSelect1_SelectedIndexChanged(object sender, System.EventArgs e)
