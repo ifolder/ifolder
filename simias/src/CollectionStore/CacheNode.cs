@@ -126,6 +126,22 @@ namespace Simias.Storage
 		/// <param name="cNode">Cache node object to copy.</param>
 		internal void Copy( CacheNode cNode )
 		{
+			// Check first to see if this is a shallow node.
+			if ( this.properties == null )
+			{
+				// This cache node's properties have never been accessed.  Fill them in now.
+				Node node = new Node( this, true );
+				node.SetNodeProperties();
+			}
+
+			// Do the same thing for the destination node.
+			if ( cNode.properties == null )
+			{
+				Node node = new Node( cNode, true );
+				node.SetNodeProperties();
+			}
+
+			// Now we are working with two fully filled out cache nodes.
 			this.properties.Copy( cNode.properties );
 			this.name = cNode.name;
 			this.type = cNode.type;
