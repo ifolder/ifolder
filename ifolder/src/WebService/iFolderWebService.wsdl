@@ -228,6 +228,17 @@
       <xs:element name="RemoveiFolderUserResponse">
         <xs:complexType />
       </xs:element>
+      <xs:element name="RemoveSubscription">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="UserID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveSubscriptionResponse">
+        <xs:complexType />
+      </xs:element>
       <xs:element name="GetiFolderUsers">
         <xs:complexType>
           <xs:sequence>
@@ -521,6 +532,12 @@
   <message name="RemoveiFolderUserSoapOut">
     <part name="parameters" element="s0:RemoveiFolderUserResponse" />
   </message>
+  <message name="RemoveSubscriptionSoapIn">
+    <part name="parameters" element="s0:RemoveSubscription" />
+  </message>
+  <message name="RemoveSubscriptionSoapOut">
+    <part name="parameters" element="s0:RemoveSubscriptionResponse" />
+  </message>
   <message name="GetiFolderUsersSoapIn">
     <part name="parameters" element="s0:GetiFolderUsers" />
   </message>
@@ -684,6 +701,11 @@
     <part name="UserID" type="s:string" />
   </message>
   <message name="RemoveiFolderUserHttpGetOut" />
+  <message name="RemoveSubscriptionHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="RemoveSubscriptionHttpGetOut" />
   <message name="GetiFolderUsersHttpGetIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -844,6 +866,11 @@
     <part name="UserID" type="s:string" />
   </message>
   <message name="RemoveiFolderUserHttpPostOut" />
+  <message name="RemoveSubscriptionHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+    <part name="UserID" type="s:string" />
+  </message>
+  <message name="RemoveSubscriptionHttpPostOut" />
   <message name="GetiFolderUsersHttpPostIn">
     <part name="iFolderID" type="s:string" />
   </message>
@@ -1001,6 +1028,11 @@
       <output message="s0:RemoveiFolderUserSoapOut" />
       <documentation>Remove a single member from an iFolder</documentation>
     </operation>
+    <operation name="RemoveSubscription">
+      <input message="s0:RemoveSubscriptionSoapIn" />
+      <output message="s0:RemoveSubscriptionSoapOut" />
+      <documentation>Remove a subscription for an iFolder</documentation>
+    </operation>
     <operation name="GetiFolderUsers">
       <input message="s0:GetiFolderUsersSoapIn" />
       <output message="s0:GetiFolderUsersSoapOut" />
@@ -1148,6 +1180,11 @@
       <output message="s0:RemoveiFolderUserHttpGetOut" />
       <documentation>Remove a single member from an iFolder</documentation>
     </operation>
+    <operation name="RemoveSubscription">
+      <input message="s0:RemoveSubscriptionHttpGetIn" />
+      <output message="s0:RemoveSubscriptionHttpGetOut" />
+      <documentation>Remove a subscription for an iFolder</documentation>
+    </operation>
     <operation name="GetiFolderUsers">
       <input message="s0:GetiFolderUsersHttpGetIn" />
       <output message="s0:GetiFolderUsersHttpGetOut" />
@@ -1294,6 +1331,11 @@
       <input message="s0:RemoveiFolderUserHttpPostIn" />
       <output message="s0:RemoveiFolderUserHttpPostOut" />
       <documentation>Remove a single member from an iFolder</documentation>
+    </operation>
+    <operation name="RemoveSubscription">
+      <input message="s0:RemoveSubscriptionHttpPostIn" />
+      <output message="s0:RemoveSubscriptionHttpPostOut" />
+      <documentation>Remove a subscription for an iFolder</documentation>
     </operation>
     <operation name="GetiFolderUsers">
       <input message="s0:GetiFolderUsersHttpPostIn" />
@@ -1496,6 +1538,15 @@
     </operation>
     <operation name="RemoveiFolderUser">
       <soap:operation soapAction="http://novell.com/ifolder/web/RemoveiFolderUser" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="RemoveSubscription">
+      <soap:operation soapAction="http://novell.com/ifolder/web/RemoveSubscription" style="document" />
       <input>
         <soap:body use="literal" />
       </input>
@@ -1757,6 +1808,13 @@
       </input>
       <output />
     </operation>
+    <operation name="RemoveSubscription">
+      <http:operation location="/RemoveSubscription" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
     <operation name="GetiFolderUsers">
       <http:operation location="/GetiFolderUsers" />
       <input>
@@ -1998,6 +2056,13 @@
     </operation>
     <operation name="RemoveiFolderUser">
       <http:operation location="/RemoveiFolderUser" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="RemoveSubscription">
+      <http:operation location="/RemoveSubscription" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

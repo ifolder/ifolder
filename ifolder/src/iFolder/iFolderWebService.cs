@@ -325,6 +325,26 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/web/RemoveSubscription", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public void RemoveSubscription(string iFolderID, string UserID) {
+        this.Invoke("RemoveSubscription", new object[] {
+                    iFolderID,
+                    UserID});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginRemoveSubscription(string iFolderID, string UserID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("RemoveSubscription", new object[] {
+                    iFolderID,
+                    UserID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void EndRemoveSubscription(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/web/GetiFolderUsers", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public iFolderUser[] GetiFolderUsers(string iFolderID) {
         object[] results = this.Invoke("GetiFolderUsers", new object[] {

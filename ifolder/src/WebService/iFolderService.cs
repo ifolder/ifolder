@@ -477,6 +477,27 @@ namespace Novell.iFolder.Web
 		{
 			SharedCollection.RemoveMember(iFolderID, UserID);
 		}
+
+
+
+
+		/// <summary>
+		/// WebMethod that removes a subscription for an iFolder.
+		/// </summary>
+		/// <param name="iFolderID">
+		/// The ID of the collection representing the iFolder for which
+		/// the subscription will be removed.
+		/// </param>
+		/// <param name="UserID">
+		/// The ID of the member to which the subscription was sent.
+		/// </param>
+		[WebMethod(Description="Remove a subscription for an iFolder")]
+		[SoapDocumentMethod]
+		public void RemoveSubscription(string iFolderID,
+									   string UserID)
+		{
+			SharedCollection.RemoveSubscription(iFolderID, UserID);
+		}
 	
 
 
