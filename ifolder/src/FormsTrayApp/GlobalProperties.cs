@@ -571,6 +571,7 @@ namespace Novell.FormsTrayApp
 			// 
 			// menuOpen
 			// 
+			this.menuOpen.DefaultItem = true;
 			this.menuOpen.Enabled = ((bool)(resources.GetObject("menuOpen.Enabled")));
 			this.menuOpen.Index = 0;
 			this.menuOpen.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuOpen.Shortcut")));
@@ -601,6 +602,7 @@ namespace Novell.FormsTrayApp
 			// 
 			// menuAccept
 			// 
+			this.menuAccept.DefaultItem = true;
 			this.menuAccept.Enabled = ((bool)(resources.GetObject("menuAccept.Enabled")));
 			this.menuAccept.Index = 3;
 			this.menuAccept.Shortcut = ((System.Windows.Forms.Shortcut)(resources.GetObject("menuAccept.Shortcut")));

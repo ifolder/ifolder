@@ -52,11 +52,6 @@ namespace Novell.iFolderCom
 		private iFolderUser currentOwner;
 		private Hashtable ht = null;
 		private Hashtable addedHT = null;
-		private int fixedWidth;
-		private int addOffset;
-		private int addedLVOffset;
-		private int dividerOffset;
-		private double rosterLVRatio;
 		private string loadPath;
 		private iFolderWebService ifWebService;
 		private System.Windows.Forms.ListView rosterLV;
@@ -64,6 +59,11 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.ColumnHeader columnHeader1;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.Timer searchTimer;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.Panel panel3;
+		private System.Windows.Forms.Panel panel4;
+		private System.Windows.Forms.Label label2;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -79,26 +79,6 @@ namespace Novell.iFolderCom
 
 			removedList = new ArrayList();
 			addedHT = new Hashtable();
-
-			// Calculate the distance between the add button and the right side of the roster listview.
-			addOffset = add.Left - rosterLV.Right;
-
-			// Calculate the distance between the right side of the add button and the added listview.
-			addedLVOffset = addedLV.Left - add.Right;
-
-			// Calculate the size of the fixed area of the dialog ...
-			fixedWidth = 
-				rosterLV.Left +
-				addOffset +
-				add.Size.Width +
-                addedLVOffset +
-				this.Right - addedLV.Right;
-
-			// Calculate the size ratio of the roster listview.
-			rosterLVRatio = (double)rosterLV.Size.Width / (double)(this.Right - fixedWidth);
-
-			// Calculate the offset of the divider.
-			dividerOffset = ok.Top - groupBox1.Top;
 
 			this.StartPosition = FormStartPosition.CenterParent;
 		}
@@ -139,6 +119,15 @@ namespace Novell.iFolderCom
 			this.ok = new System.Windows.Forms.Button();
 			this.cancel = new System.Windows.Forms.Button();
 			this.searchTimer = new System.Windows.Forms.Timer(this.components);
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.panel4 = new System.Windows.Forms.Panel();
+			this.panel3 = new System.Windows.Forms.Panel();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.label2 = new System.Windows.Forms.Label();
+			this.panel1.SuspendLayout();
+			this.panel4.SuspendLayout();
+			this.panel3.SuspendLayout();
+			this.panel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// rosterLV
@@ -374,6 +363,119 @@ namespace Novell.iFolderCom
 			this.searchTimer.Interval = 500;
 			this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
 			// 
+			// panel1
+			// 
+			this.panel1.AccessibleDescription = resources.GetString("panel1.AccessibleDescription");
+			this.panel1.AccessibleName = resources.GetString("panel1.AccessibleName");
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel1.Anchor")));
+			this.panel1.AutoScroll = ((bool)(resources.GetObject("panel1.AutoScroll")));
+			this.panel1.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMargin")));
+			this.panel1.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel1.AutoScrollMinSize")));
+			this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
+			this.panel1.Controls.Add(this.panel4);
+			this.panel1.Controls.Add(this.panel3);
+			this.panel1.Controls.Add(this.panel2);
+			this.panel1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel1.Dock")));
+			this.panel1.Enabled = ((bool)(resources.GetObject("panel1.Enabled")));
+			this.panel1.Font = ((System.Drawing.Font)(resources.GetObject("panel1.Font")));
+			this.panel1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel1.ImeMode")));
+			this.panel1.Location = ((System.Drawing.Point)(resources.GetObject("panel1.Location")));
+			this.panel1.Name = "panel1";
+			this.panel1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel1.RightToLeft")));
+			this.panel1.Size = ((System.Drawing.Size)(resources.GetObject("panel1.Size")));
+			this.panel1.TabIndex = ((int)(resources.GetObject("panel1.TabIndex")));
+			this.panel1.Text = resources.GetString("panel1.Text");
+			this.panel1.Visible = ((bool)(resources.GetObject("panel1.Visible")));
+			// 
+			// panel4
+			// 
+			this.panel4.AccessibleDescription = resources.GetString("panel4.AccessibleDescription");
+			this.panel4.AccessibleName = resources.GetString("panel4.AccessibleName");
+			this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel4.Anchor")));
+			this.panel4.AutoScroll = ((bool)(resources.GetObject("panel4.AutoScroll")));
+			this.panel4.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel4.AutoScrollMargin")));
+			this.panel4.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel4.AutoScrollMinSize")));
+			this.panel4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel4.BackgroundImage")));
+			this.panel4.Controls.Add(this.addedLV);
+			this.panel4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel4.Dock")));
+			this.panel4.Enabled = ((bool)(resources.GetObject("panel4.Enabled")));
+			this.panel4.Font = ((System.Drawing.Font)(resources.GetObject("panel4.Font")));
+			this.panel4.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel4.ImeMode")));
+			this.panel4.Location = ((System.Drawing.Point)(resources.GetObject("panel4.Location")));
+			this.panel4.Name = "panel4";
+			this.panel4.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel4.RightToLeft")));
+			this.panel4.Size = ((System.Drawing.Size)(resources.GetObject("panel4.Size")));
+			this.panel4.TabIndex = ((int)(resources.GetObject("panel4.TabIndex")));
+			this.panel4.Text = resources.GetString("panel4.Text");
+			this.panel4.Visible = ((bool)(resources.GetObject("panel4.Visible")));
+			// 
+			// panel3
+			// 
+			this.panel3.AccessibleDescription = resources.GetString("panel3.AccessibleDescription");
+			this.panel3.AccessibleName = resources.GetString("panel3.AccessibleName");
+			this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel3.Anchor")));
+			this.panel3.AutoScroll = ((bool)(resources.GetObject("panel3.AutoScroll")));
+			this.panel3.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel3.AutoScrollMargin")));
+			this.panel3.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel3.AutoScrollMinSize")));
+			this.panel3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel3.BackgroundImage")));
+			this.panel3.Controls.Add(this.add);
+			this.panel3.Controls.Add(this.remove);
+			this.panel3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel3.Dock")));
+			this.panel3.Enabled = ((bool)(resources.GetObject("panel3.Enabled")));
+			this.panel3.Font = ((System.Drawing.Font)(resources.GetObject("panel3.Font")));
+			this.panel3.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel3.ImeMode")));
+			this.panel3.Location = ((System.Drawing.Point)(resources.GetObject("panel3.Location")));
+			this.panel3.Name = "panel3";
+			this.panel3.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel3.RightToLeft")));
+			this.panel3.Size = ((System.Drawing.Size)(resources.GetObject("panel3.Size")));
+			this.panel3.TabIndex = ((int)(resources.GetObject("panel3.TabIndex")));
+			this.panel3.Text = resources.GetString("panel3.Text");
+			this.panel3.Visible = ((bool)(resources.GetObject("panel3.Visible")));
+			// 
+			// panel2
+			// 
+			this.panel2.AccessibleDescription = resources.GetString("panel2.AccessibleDescription");
+			this.panel2.AccessibleName = resources.GetString("panel2.AccessibleName");
+			this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("panel2.Anchor")));
+			this.panel2.AutoScroll = ((bool)(resources.GetObject("panel2.AutoScroll")));
+			this.panel2.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("panel2.AutoScrollMargin")));
+			this.panel2.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("panel2.AutoScrollMinSize")));
+			this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
+			this.panel2.Controls.Add(this.rosterLV);
+			this.panel2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("panel2.Dock")));
+			this.panel2.Enabled = ((bool)(resources.GetObject("panel2.Enabled")));
+			this.panel2.Font = ((System.Drawing.Font)(resources.GetObject("panel2.Font")));
+			this.panel2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("panel2.ImeMode")));
+			this.panel2.Location = ((System.Drawing.Point)(resources.GetObject("panel2.Location")));
+			this.panel2.Name = "panel2";
+			this.panel2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("panel2.RightToLeft")));
+			this.panel2.Size = ((System.Drawing.Size)(resources.GetObject("panel2.Size")));
+			this.panel2.TabIndex = ((int)(resources.GetObject("panel2.TabIndex")));
+			this.panel2.Text = resources.GetString("panel2.Text");
+			this.panel2.Visible = ((bool)(resources.GetObject("panel2.Visible")));
+			// 
+			// label2
+			// 
+			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
+			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
+			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
+			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
+			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
+			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			this.label2.Name = "label2";
+			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
+			this.label2.Text = resources.GetString("label2.Text");
+			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
+			// 
 			// Picker
 			// 
 			this.AcceptButton = this.ok;
@@ -386,15 +488,13 @@ namespace Novell.iFolderCom
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.CancelButton = this.cancel;
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.cancel);
 			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.search);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.remove);
-			this.Controls.Add(this.add);
-			this.Controls.Add(this.addedLV);
-			this.Controls.Add(this.rosterLV);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
 			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -410,6 +510,10 @@ namespace Novell.iFolderCom
 			this.Text = resources.GetString("$this.Text");
 			this.SizeChanged += new System.EventHandler(this.Picker_SizeChanged);
 			this.Load += new System.EventHandler(this.Picker_Load);
+			this.panel1.ResumeLayout(false);
+			this.panel4.ResumeLayout(false);
+			this.panel3.ResumeLayout(false);
+			this.panel2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -589,24 +693,7 @@ namespace Novell.iFolderCom
 
 		private void Picker_SizeChanged(object sender, System.EventArgs e)
 		{
-			// Relocate the divider line.
-			groupBox1.Top = ok.Top - dividerOffset;
-
-			// Resize the listviews.
-			int x = this.Width - fixedWidth;
-
-			// Calculate the new widths based on the initial ratios.
-			rosterLV.Width = (int)(x * rosterLVRatio);
-			addedLV.Width = (int)(x * (1 - rosterLVRatio));
-
-			// Relocate the add button.
-			add.Left = rosterLV.Right + addOffset;
-
-			// Relocate the remove button.
-			remove.Left = add.Left;
-
-			// Relocate the added listview.
-			addedLV.Left = add.Right + addedLVOffset;
+			panel2.Width = (panel1.Width - panel3.Width) / 2;
 		}
 
 		private void add_Click(object sender, System.EventArgs e)
