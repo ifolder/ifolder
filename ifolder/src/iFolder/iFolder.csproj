@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "Library"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = "if not exist $(SolutionDir)\stage mkdir $(SolutionDir)\stage&#xd;&#xa;copy $(TargetFileName) $(SolutionDir)\stage\&#xd;&#xa;if exist $(TargetName).pdb copy $(TargetName).pdb $(SolutionDir)\stage\"
                 RootNamespace = "iFolder"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
@@ -72,17 +72,37 @@
                 <Reference
                     Name = "CollectionStore"
                     AssemblyName = "CollectionStore"
-                    HintPath = "..\..\..\simias\src\CollectionStore\bin\Debug\CollectionStore.dll"
+                    HintPath = "..\..\..\final\bin\CollectionStore.dll"
                 />
                 <Reference
                     Name = "Storage"
                     AssemblyName = "Storage"
-                    HintPath = "..\..\..\simias\src\Storage\bin\Debug\Storage.dll"
+                    HintPath = "..\..\..\final\bin\Storage.dll"
                 />
                 <Reference
                     Name = "Common"
                     AssemblyName = "Common"
-                    HintPath = "..\..\..\simias\src\Common\Common.dll"
+                    HintPath = "..\..\..\final\bin\Common.dll"
+                />
+                <Reference
+                    Name = "AddressBook"
+                    AssemblyName = "AddressBook"
+                    HintPath = "..\..\..\final\bin\AddressBook.dll"
+                />
+                <Reference
+                    Name = "Invitation"
+                    AssemblyName = "Invitation"
+                    HintPath = "..\..\..\final\bin\Invitation.dll"
+                />
+                <Reference
+                    Name = "SyncCommon"
+                    AssemblyName = "SyncCommon"
+                    HintPath = "..\..\..\final\bin\SyncCommon.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.XML"
+                    HintPath = "..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
         </Build>

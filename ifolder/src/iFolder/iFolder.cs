@@ -109,7 +109,7 @@ namespace Novell.iFolder
 		/// </summary>
 		/// <param name="dirPath">The path to the directory to add.</param>
 		/// <param name="dirNode">Parent DirNode.</param>
-		private iFolderNode AddiFolderDirNode( string dirPath, DirNode dirNode )
+		private DirNode AddiFolderDirNode( string dirPath, DirNode dirNode )
 		{
 			// Make sure the node doesn't already exist.
 			iFolderNode ifNode = GetiFolderNodeByPath( dirPath );
@@ -130,7 +130,7 @@ namespace Novell.iFolder
 				ifNode = new iFolderNode( this, childDirNode );
 			}
 
-			return ifNode;
+			return ifNode.Node as DirNode;
 		}
 
 		/// <summary>
@@ -138,7 +138,7 @@ namespace Novell.iFolder
 		/// </summary>
 		/// <param name="filePath">The path to the file to add.</param>
 		/// <param name="dirNode">Parent DirNode.</param>
-		private iFolderNode AddiFolderFileNode( string filePath, DirNode dirNode )
+		private void AddiFolderFileNode( string filePath, DirNode dirNode )
 		{
 			// Make sure the node doesn't already exist.
 			iFolderNode ifNode = GetiFolderNodeByPath( filePath );
@@ -158,8 +158,6 @@ namespace Novell.iFolder
 				collection.Commit( fileNode );
 				ifNode = new iFolderNode( this, fileNode );
 			}
-
-			return ifNode;
 		}
 
 		/// <summary>
@@ -215,7 +213,7 @@ namespace Novell.iFolder
 			collection = store.GetCollectionByID( iFolderID );
 
 			// Make sure this collection has our store propery
-			if ( ( collection == null ) || !collection.IsType( iFolderType ) )
+			if ( ( collection == null ) || !collection.IsType( collection, iFolderType ) )
 			{
 				// Raise an exception here
 				throw new ApplicationException( "Invalid iFolder collection." );
@@ -269,7 +267,7 @@ namespace Novell.iFolder
 
 			// Create the collection.
 			collection = new Collection( store, name );
-			collection.Properties.AddProperty( Property.Types, iFolderType );
+			collection.SetType( collection, iFolderType );
 
 			// Create the DirNode object that will represent the root of the iFolder.
 			DirNode dirNode = new DirNode( collection, path );
@@ -326,7 +324,7 @@ namespace Novell.iFolder
 
 				// Normalize each path by using a Uri object to do the compare.
 				bool ignoreCase = MyEnvironment.Unix ? false : true;
-				if ( !String.Compare( normalizedPath.LocalPath, fullPath.LocalPath, ignoreCase ) )
+				if ( String.Compare( normalizedPath.LocalPath, fullPath.LocalPath, ignoreCase ) == 0 )
 				{
 					// We found our Node object.
 					node = tempNode;
