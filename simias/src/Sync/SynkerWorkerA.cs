@@ -112,7 +112,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.log.Debug("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 
 		if (stamp.isDir)
@@ -141,13 +140,11 @@ public class SynkerWorkerA: SyncCollectionWorker
 	{
 		// TODO: deal with small files in pages, right now we just limit the
 		// first small file page and then consider everything a large file
-		Log.log.Debug("{0} {1} incarn {2} {3}", stamp.id, stamp.name, stamp.localIncarn, message);
 		Log.Assert(stamp.streamsSize >= -1);
 		if (stamp.isDir)
 		{
 			if(!dirsFromServer.Contains(stamp.id))
 				dirsFromServer.Add(stamp.id, stamp);
-
 		}
 		else if (stamp.streamsSize == -1)
 		{
@@ -166,9 +163,9 @@ public class SynkerWorkerA: SyncCollectionWorker
 		}
 	}
 
-	static Nid[] MoveIdsToArray(ArrayList idList)
+	static string[] MoveIdsToArray(ArrayList idList)
 	{
-		Nid[] ids = (Nid[])idList.ToArray(typeof(Nid));
+		string[] ids = (string[])idList.ToArray(typeof(string));
 		idList.Clear();
 		return ids;
 	}
@@ -260,8 +257,6 @@ public class SynkerWorkerA: SyncCollectionWorker
 					PutNodeToServer(ref cstamps[ci], "is new on the client, send to server");
 				else
 				{
-					Log.log.Debug("{1} {0} has been killed or synced before or is RO, but is not on the server, just kill it locally",
-						cstamps[ci].name, cstamps[ci].id);
 					if (!killOnClient.Contains(cstamps[ci].id))
 						killOnClient.Add(cstamps[ci].id, cstamps[ci]);
 				}
@@ -420,7 +415,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 			while (offset < smallStamps.Length)
 			{
 				int batchCount = smallStamps.Length - offset < BATCH_SIZE ? smallStamps.Length - offset : BATCH_SIZE;
-				Nid[] ids = new Nid[batchCount];
+				string[] ids = new string[batchCount];
 				for (int i = 0; i < batchCount; ++i)
 				{
 					ids[i] = smallStamps[offset + i].id;
@@ -437,7 +432,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 							// Set the expected incarnation.
 							if (updates[i].node != null)
 							{
-								NodeStamp ns = (NodeStamp)nodesFromServer[(Nid)updates[i].node.ID];
+								NodeStamp ns = (NodeStamp)nodesFromServer[updates[i].node.ID];
 								updates[i].expectedIncarn = ns.masterIncarn;
 
 								NodeStatus status = ops.PutSmallNode(updates[i]);
@@ -446,7 +441,7 @@ public class SynkerWorkerA: SyncCollectionWorker
 									status == NodeStatus.UpdateConflict)
 								{
 									// This was successful remove the node from the hashtable.
-									nodesFromServer.Remove((Nid)updates[i].node.ID);
+									nodesFromServer.Remove(updates[i].node.ID);
 								}
 								else
 								{
@@ -532,13 +527,13 @@ public class SynkerWorkerA: SyncCollectionWorker
 					if (updateIncarn == true)
 					{
 						if (collection.IsType(nc.node, NodeTypes.TombstoneType))
-							ops.DeleteNode((Nid)nc.node.ID, false);
+							ops.DeleteNode(nc.node.ID, false);
 						else
-							ops.UpdateIncarn((Nid)nc.node.ID, nc.node.LocalIncarnation);
+							ops.UpdateIncarn(nc.node.ID, nc.node.LocalIncarnation);
 					}
 					if (removeFromList)
 					{
-						nodesToServer.Remove((Nid)nc.node.ID);
+						nodesToServer.Remove(nc.node.ID);
 					}
 				}
 			}
@@ -570,37 +565,33 @@ public class SynkerWorkerA: SyncCollectionWorker
 
 					if ((node = outNode.Start(stamp.id)) == null)
 					{
-						largeToServer.Remove((Nid)node.ID);
+						largeToServer.Remove(node.ID);
 						continue;
 					}
 
 					int totalSize;
-					ForkChunk[] chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-					if (!ss.WriteLargeNode(node, chunks))
+					byte[] data = outNode.ReadChunk(NodeChunk.MaxSize, out totalSize);
+					if (!ss.WriteLargeNode(node, data))
 					{
 						Log.log.Debug("Could not write large node {0}", node.Name);
 						HadErrors = true;
 						continue;
 					}
-					if (chunks == null || totalSize < NodeChunk.MaxSize)
+
+					while (true)
 					{
-						chunks = null;
+						data = outNode.ReadChunk(NodeChunk.MaxSize, out totalSize);
+						if (data != null && totalSize >= NodeChunk.MaxSize)
+							ss.WriteLargeNode(data, 0, false);
+						else
+							break;
 					}
-					else
-					{
-						while (true)
-						{
-							chunks = outNode.ReadChunks(NodeChunk.MaxSize, out totalSize);
-							if (chunks == null || totalSize < NodeChunk.MaxSize)
-								break;
-							ss.WriteLargeNode(chunks, 0, false);
-						}
-					}
-					NodeStatus status = ss.WriteLargeNode(chunks, stamp.masterIncarn, true);
+
+					NodeStatus status = ss.WriteLargeNode(data, stamp.masterIncarn, true);
 					if (status == NodeStatus.Complete || status == NodeStatus.FileNameConflict)
 					{
-						ops.UpdateIncarn((Nid)node.ID, node.LocalIncarnation);
-						largeToServer.Remove((Nid)node.ID);
+						ops.UpdateIncarn(node.ID, node.LocalIncarnation);
+						largeToServer.Remove(node.ID);
 					}
 					else
 					{
@@ -634,25 +625,23 @@ public class SynkerWorkerA: SyncCollectionWorker
 						return;
 					NodeChunk nc = ss.ReadLargeNode(stamp.id, NodeChunk.MaxSize);
 					inNode.Start(nc.node, null);
-					inNode.BlowChunks(nc.forkChunks);
+					inNode.BlowChunk(nc.data);
 					while (nc.totalSize >= NodeChunk.MaxSize)
 					{
-						nc.forkChunks = ss.ReadLargeNode(NodeChunk.MaxSize);
-						inNode.BlowChunks(nc.forkChunks);
-						nc.totalSize = 0;
-						foreach (ForkChunk chunk in nc.forkChunks)
-							nc.totalSize += chunk.data.Length;
+						nc.data = ss.ReadLargeNode(NodeChunk.MaxSize);
+						inNode.BlowChunk(nc.data);
+						nc.totalSize = nc.data.Length;
 					}
 					NodeStatus status = inNode.Complete(stamp.masterIncarn);
 					if (status == NodeStatus.Complete || 
 						status == NodeStatus.FileNameConflict ||
 						status == NodeStatus.UpdateConflict)
 					{
-						largeFromServer.Remove((Nid)stamp.id);
+						largeFromServer.Remove(nc.node.ID);
 					}
 					else
 					{
-						Log.log.Debug("failed to update large node {0} from master, status {1}", stamp.name, status);
+						Log.log.Debug("failed to update large node {0} from master, status {1}", nc.node.Name, status);
 						HadErrors = true;
 					}
 				}

@@ -42,7 +42,7 @@ namespace Simias.Sync
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="collection"></param>
+		/// <param name="col"></param>
 		/// <param name="nodeCount"></param>
 		/// <param name="maxBytesToSend"></param>
 		public static void CalculateSendSize(Collection col, out uint nodeCount, out ulong maxBytesToSend)
@@ -89,6 +89,13 @@ namespace Simias.Sync
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <param name="node"></param>
+		/// <param name="nodeCount"></param>
+		/// <param name="maxBytesToSend"></param>
 		public static void AddNodeToCount(SyncCollection collection, Node node, ref uint nodeCount, ref ulong maxBytesToSend)
 		{
 			if (node.MasterIncarnation != node.LocalIncarnation)

@@ -164,6 +164,9 @@ namespace Simias.Service
 			element.SetAttribute(XmlClassAttr, classType);
 		}
 
+		/// <summary>
+		/// Called to check if the service has exited.
+		/// </summary>
 		public override bool HasExited
 		{
 			get

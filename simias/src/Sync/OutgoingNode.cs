@@ -36,168 +36,141 @@ namespace Simias.Sync
 /// <summary>
 /// class to dish out Node information in pieces.
 /// </summary>
-internal class OutgoingNode
-{
-	Collection collection;
-	class Fork { public string name; public Stream stream; };
-	ArrayList forkList;
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="collection"></param>
-	public OutgoingNode(Collection collection)
+	internal class OutgoingNode
 	{
-		this.collection = collection;
-	}
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="collection"></param>
-	/// <param name="node"></param>
-	/// <returns></returns>
-	public static string GetOutNode(Collection collection, ref Node node)
-	{
-		string path;
-		Conflict cf = new Conflict(collection, node);
-		if (cf.IsUpdateConflict)
+		Collection collection;
+		Stream stream;
+	
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection"></param>
+		public OutgoingNode(Collection collection)
 		{
-			path = cf.UpdateConflictPath;
-			node = cf.UpdateConflictNode;
-		}
-		else if (cf.IsFileNameConflict)
-			path = cf.FileNameConflictPath;
-		else
-			path = cf.NonconflictedPath;
-		return path;
-	}
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="collection"></param>
-	/// <param name="node"></param>
-	/// <returns></returns>
-	public static NodeStamp GetOutNodeStamp(Collection collection, ref Node node, ChangeLogRecord.ChangeLogOp changeType)
-	{
-		string path;
-		NodeStamp stamp = new NodeStamp();
-				
-		Conflict cf = new Conflict(collection, node);
-		if (cf.IsUpdateConflict)
-		{
-			path = cf.UpdateConflictPath;
-			node = cf.UpdateConflictNode;
-		}
-		else if (cf.IsFileNameConflict)
-			path = cf.FileNameConflictPath;
-		else
-			path = cf.NonconflictedPath;
-		
-		bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
-		stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
-		stamp.masterIncarn = cf.IsUpdateConflict ? node.LocalIncarnation : node.MasterIncarnation;
-		stamp.id = (Nid)node.ID;
-		stamp.name = node.Name;
-		stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
-		stamp.changeType = changeType;
-
-		//TODO: another place to handle multiple forks
-		try
-		{
-			stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
-		}
-		catch (Exception e)
-		{
-			Log.Spew("Could not get file size of {0}: {1}", path, e);
-			stamp.streamsSize = 0;
+			this.collection = collection;
 		}
 
-		return stamp;
-	}
-
-
-	public Node Start(Nid nid)
-	{
-		nid.Validate();
-		forkList = null;
-
-		/* always construct a plain node instead of the one returned by
-		 * GetNodeByID in case it is a Collection node which is not
-		 * serializable (but a raw node is).
-		 */
-		Node node = collection.GetNodeByID(nid);
-		// If the node does not exist or it has collisions do not sync.
-		if (node == null || collection.HasCollisions(node))
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <param name="node"></param>
+		/// <returns></returns>
+		public static string GetOutNode(Collection collection, ref Node node)
 		{
-			string errorString;
-			if (node == null)
-				errorString = "Node does not exist";
-			else
-				errorString = "Node has collision";
-
-			Log.log.Debug("ignoring attempt to start outgoing sync for node {0}. {1}", nid, errorString);
-			return null;
-		}
-
-		node = new Node(node);
-		
-		string path = GetOutNode(collection, ref node);
-		if (path != null)
-		{
-			/* TODO: handle multiple forks (streams), EAs, etc. For right now
-			 * this is just a guess at how to do it. The idea is that we loop
-			 * though all known streams, read them from the local file system
-			 * or from those stored in the collection store area
-			 * (similar to StoreFiles) if not supported by the local file system.
-			 */
-			forkList = new ArrayList();
-			string forkName = ForkChunk.DataForkName;
-			//foreach (string forkName in forkNameList)
+			string path;
+			Conflict cf = new Conflict(collection, node);
+			if (cf.IsUpdateConflict)
 			{
-				Fork fork = new Fork();
-				fork.name = forkName;
-				fork.stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-				forkList.Add(fork);
+				path = cf.UpdateConflictPath;
+				node = cf.UpdateConflictNode;
 			}
+			else if (cf.IsFileNameConflict)
+				path = cf.FileNameConflictPath;
+			else
+				path = cf.NonconflictedPath;
+			return path;
 		}
-		return node;
-	}
 
-	public ForkChunk[] ReadChunks(int maxSize, out int totalSize)
-	{
-		if (maxSize < 4096)
-			maxSize = 4096;
-		ArrayList chunks = new ArrayList();
-		totalSize = 0;
-		if (forkList != null)
-			foreach (Fork fork in forkList)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="collection"></param>
+		/// <param name="node"></param>
+		/// <param name="changeType"></param>
+		/// <returns></returns>
+		public static NodeStamp GetOutNodeStamp(Collection collection, ref Node node, ChangeLogRecord.ChangeLogOp changeType)
+		{
+			string path;
+			NodeStamp stamp = new NodeStamp();
+				
+			Conflict cf = new Conflict(collection, node);
+			if (cf.IsUpdateConflict)
 			{
-				if (fork.name == null)
-					continue;
+				path = cf.UpdateConflictPath;
+				node = cf.UpdateConflictNode;
+			}
+			else if (cf.IsFileNameConflict)
+				path = cf.FileNameConflictPath;
+			else
+				path = cf.NonconflictedPath;
+		
+			bool tombstone = collection.IsType(node, NodeTypes.TombstoneType);
+			stamp.localIncarn = tombstone? UInt64.MaxValue: node.LocalIncarnation;
+			stamp.masterIncarn = cf.IsUpdateConflict ? node.LocalIncarnation : node.MasterIncarnation;
+			stamp.id = node.ID;
+			stamp.isDir = collection.IsType(node, NodeTypes.DirNodeType);
+			stamp.changeType = changeType;
 
-				ForkChunk chunk = new ForkChunk();
-				chunk.name = fork.name;
-				long remaining = fork.stream.Length - fork.stream.Position;
+			//TODO: another place to handle multiple forks
+			try
+			{
+				stamp.streamsSize = path == null? -1: new FileInfo(path).Length;
+			}
+			catch (Exception e)
+			{
+				Log.Spew("Could not get file size of {0}: {1}", path, e);
+				stamp.streamsSize = 0;
+			}
+
+			return stamp;
+		}
+
+
+		public Node Start(string nid)
+		{
+			stream = null;
+
+			/* always construct a plain node instead of the one returned by
+			 * GetNodeByID in case it is a Collection node which is not
+			 * serializable (but a raw node is).
+			 */
+			Node node = collection.GetNodeByID(nid);
+			// If the node does not exist or it has collisions do not sync.
+			if (node == null || collection.HasCollisions(node))
+			{
+				string errorString;
+				if (node == null)
+					errorString = "Node does not exist";
+				else
+					errorString = "Node has collision";
+
+				Log.log.Debug("ignoring attempt to start outgoing sync for node {0}. {1}", nid, errorString);
+				return null;
+			}
+
+			node = new Node(node);
+		
+			string path = GetOutNode(collection, ref node);
+			if (path != null)
+			{
+				stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+			}
+			return node;
+		}
+
+		public byte[] ReadChunk(int maxSize, out int totalSize)
+		{
+			totalSize = 0;
+			if (stream != null)
+			{
+				long remaining = stream.Length - stream.Position;
 				int chunkSize = remaining < maxSize? (int)remaining: maxSize;
-				chunk.data = new byte[chunkSize];
-				int bytesRead = fork.stream.Read(chunk.data, 0, chunkSize);
+				byte[] data = new byte[chunkSize];
+				int bytesRead = stream.Read(data, 0, chunkSize);
 				Log.Assert(bytesRead == chunkSize);
 				if (chunkSize < maxSize)
 				{
-					fork.stream.Close();
-					fork.stream = null;
-					fork.name = null;
+					// We have read to the end of the file.
+					stream.Close();
+					stream = null;
 				}
 				totalSize += chunkSize;
-				chunks.Add(chunk);
-				if (totalSize >= maxSize)
-					break;
+				return data;
 			}
-		return chunks.Count == 0? null: (ForkChunk[])chunks.ToArray(typeof(ForkChunk));
+			return null;
+		}
 	}
-}
 
 //===========================================================================
 }

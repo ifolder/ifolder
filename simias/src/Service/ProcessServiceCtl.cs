@@ -222,6 +222,9 @@ namespace Simias.Service
 			element.SetAttribute(Manager.XmlTypeAttr, ServiceType.Process.ToString());
 		}
 
+		/// <summary>
+		/// Called to check if the Service has exited.
+		/// </summary>
 		public override bool HasExited
 		{
 			get

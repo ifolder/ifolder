@@ -51,6 +51,9 @@ namespace Simias.Sync
 	{
 		internal static readonly ISimiasLog log = SimiasLogManager.GetLogger(typeof(FileWatcher));
 
+		/// <summary>
+		/// The collection to monitor.
+		/// </summary>
 		public SyncCollection collection = null;
 
 		/* TODO: onServer needs to be removed. It controls how tombstones are handled:
@@ -737,6 +740,9 @@ namespace Simias.Sync
 
 		
 
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
 		~FileWatcher()
 		{
 			Dispose(true);
@@ -860,6 +866,9 @@ namespace Simias.Sync
 
 		#region IDisposable Members
 
+		/// <summary>
+		/// Called to cleanup unmanaged resources.
+		/// </summary>
 		public void Dispose()
 		{
 			Dispose(false);

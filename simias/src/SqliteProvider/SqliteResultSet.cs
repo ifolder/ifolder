@@ -42,6 +42,7 @@ namespace Simias.Storage.Provider.Sqlite
 		/// Constructor.
 		/// </summary>
 		/// <param name="reader">IDataReader to read the data from this resultset.</param>
+		/// <param name="includeCid">If true include the collection ID.</param>
 		public SqliteResultSet(IDataReader reader, bool includeCid)
 		{
 			this.includeCid = includeCid;

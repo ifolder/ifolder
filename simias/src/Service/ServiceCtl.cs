@@ -32,31 +32,31 @@ namespace Simias.Service
 	public abstract class ServiceCtl
 	{
 		/// <summary>
-		/// 
+		/// The service name.
 		/// </summary>
 		internal string		name;
 		/// <summary>
-		/// 
+		/// The assembly the service is in.
 		/// </summary>
 		internal string		assembly;
 		/// <summary>
-		/// 
+		/// The configuration for this service.
 		/// </summary>
 		internal Configuration	conf;
 		/// <summary>
-		/// 
+		/// Used to enable or disable the service.
 		/// </summary>
 		internal bool			enabled = true;
 		/// <summary>
-		/// 
+		/// The running state of the service.
 		/// </summary>
 		internal State			state = State.Stopped;
 		
 		/// <summary>
-		/// 
+		/// Initializes the Service Control object.
 		/// </summary>
-		/// <param name="conf"></param>
-		/// <param name="serviceElement"></param>
+		/// <param name="conf">The configuration to use.</param>
+		/// <param name="serviceElement">XML element that describes the service.</param>
 		protected ServiceCtl(Configuration conf, XmlElement serviceElement)
 		{
 			this.conf = conf;
@@ -66,11 +66,11 @@ namespace Simias.Service
 		}
 
 		/// <summary>
-		/// 
+		/// Initializes the Service Control object.
 		/// </summary>
-		/// <param name="conf"></param>
-		/// <param name="name"></param>
-		/// <param name="assembly"></param>
+		/// <param name="conf">The configuration to use.</param>
+		/// <param name="name">The name of ther service.</param>
+		/// <param name="assembly">The assembly where the service exists.</param>
 		protected ServiceCtl(Configuration conf, string name, string assembly)
 		{
 			this.conf = conf;
@@ -79,36 +79,37 @@ namespace Simias.Service
 		}
 			
 		/// <summary>
-		/// 
+		/// Called to start the service.
 		/// </summary>
 		public abstract void Start();
 		/// <summary>
-		/// 
+		/// Called to stop the service.
 		/// </summary>
 		public abstract void Stop();
 		/// <summary>
-		/// 
+		/// Called to Kill the service. Stop should be used instead.
+		/// This will force the service down.
 		/// </summary>
 		public abstract void Kill();
 		/// <summary>
-		/// 
+		/// Called to pause the service.
 		/// </summary>
 		public abstract void Pause();
 		/// <summary>
-		/// 
+		/// Called to resume a paused service.
 		/// </summary>
 		public abstract void Resume();
 		/// <summary>
-		/// 
+		/// Called to send a custom control to the service.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="data"></param>
+		/// <param name="message">The message for the service.</param>
+		/// <param name="data">The data of the message.</param>
 		public abstract void Custom(int message, string data);
 
 		/// <summary>
-		/// 
+		/// Sets the service parameters in the XML element.
 		/// </summary>
-		/// <param name="element"></param>
+		/// <param name="element">The element to initialize.</param>
 		public virtual void ToXml(XmlElement element)
 		{
 			element.SetAttribute(Manager.XmlNameAttr, name);
@@ -117,7 +118,7 @@ namespace Simias.Service
 		}
 		
 		/// <summary>
-		/// 
+		/// Gets the service name.
 		/// </summary>
 		public string Name
 		{
@@ -125,7 +126,7 @@ namespace Simias.Service
 		}
 
 		/// <summary>
-		/// 
+		/// Gets the assembly that contains this service.
 		/// </summary>
 		public string Assembly
 		{
@@ -133,7 +134,7 @@ namespace Simias.Service
 		}
 
 		/// <summary>
-		/// 
+		/// Gets the running state of the service.
 		/// </summary>
 		public State State
 		{
@@ -141,7 +142,7 @@ namespace Simias.Service
 		}
 
 		/// <summary>
-		/// 
+		/// Gets or Sets the enabled state of the service.
 		/// </summary>
 		public bool Enabled
 		{
@@ -149,6 +150,9 @@ namespace Simias.Service
 			set { enabled = value;}
 		}
 
+		/// <summary>
+		/// Called to check if the service has exited.
+		/// </summary>
 		public abstract bool HasExited
 		{
 			get;

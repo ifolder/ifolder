@@ -36,65 +36,6 @@ using Simias;
 
 namespace Simias.Sync
 {
-
-//---------------------------------------------------------------------------
-/// <summary>
-/// struct to encapsulate a GUID string, provides a case-insensitive compare,
-/// ensures proper format and characters, etc.
-/// </summary>
-[Serializable]
-public struct Nid
-{
-	private string g;
-
-	/// <summary>
-	/// runs string through Guid constructor to throw exception if bad format
-	/// </summary>
-	public Nid(string s)
-	{
-		try { g = new Guid(s).ToString(); }
-		catch (FormatException) { Log.Spew("'{0}' is not a valid guid", s); throw; }
-	}
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static explicit operator Nid(string s) { return new Nid(s); }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static implicit operator string(Nid n) { return n.g; }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public override bool Equals(object o) { return CompareTo(o) == 0; }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static bool operator==(Nid a, Nid b) { return a.Equals(b); }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public static bool operator!=(Nid a, Nid b) { return !a.Equals(b); }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public override string ToString() { return g; }
-
-	/// <summary> implement some convenient operator overloads </summary>
-	public override int GetHashCode() { return g.GetHashCode(); }
-
-	internal bool Valid() { return Valid(g); }
-	internal void Validate() { Log.Assert(Valid(g)); }
-	static internal void Validate(string g) { Log.Assert(Valid(g)); }
-
-	static internal bool Valid(string g)
-	{
-		try { return String.Compare(new Nid(g).ToString(), g, true) == 0; }
-		catch (FormatException) { return false; }
-	}
-
-	internal int CompareTo(object obj)
-	{
-		if (!(obj is Nid))
-			throw new ArgumentException("object is not Nid");
-		return String.Compare(((Nid)obj).g, g, true);
-	}
-}
-
 //---------------------------------------------------------------------------
 /// <summary>
 /// struct to represent the minimal information that the sync code would need
@@ -103,29 +44,24 @@ public struct Nid
 [Serializable]
 public struct NodeStamp: IComparable
 {
-	internal Nid id;
+	public string id;
 
 	// if localIncarn == UInt64.MaxValue, node is a tombstone
-	internal ulong localIncarn, masterIncarn;
+	public ulong localIncarn, masterIncarn;
 
 	// total size of all streams, expected to be used for sync progress meter
 	// if -1, this node is not derived from BaseFileNode.
-	internal long streamsSize;
+	public long streamsSize;
 
 	/// <summary>
 	/// 
 	/// </summary>
-	internal string name; //just for debug
+	public bool isDir;
 
 	/// <summary>
 	/// 
 	/// </summary>
-	internal bool isDir;
-
-	/// <summary>
-	/// 
-	/// </summary>
-	internal ChangeLogRecord.ChangeLogOp changeType;
+	public ChangeLogRecord.ChangeLogOp changeType;
 
 	/// <summary> implement some convenient operator overloads </summary>
 	public int CompareTo(object obj)
@@ -138,30 +74,18 @@ public struct NodeStamp: IComparable
 
 //---------------------------------------------------------------------------
 /// <summary>
-/// a chunk of data from a particular data stream (fork) of a node
-/// </summary>
-// TODO: should this just be a nested class in ForkChunk
-[Serializable]
-public struct ForkChunk
-{
-	internal const string DataForkName = "data";
-	internal string name;
-	internal byte[] data;
-}
-
-//---------------------------------------------------------------------------
-/// <summary>
 /// a chunk of data about a particular incarnation of a node
 /// </summary>
 [Serializable]
 public struct NodeChunk
 {
-	internal const int MaxSize = 128 * 1024;
 	internal Node node;
-	internal ulong expectedIncarn;
-	internal int totalSize;
-	internal string relativePath;
-	internal ForkChunk[] forkChunks;
+	public const int MaxSize = 128 * 1024;
+	public string nodeString;
+	public ulong expectedIncarn;
+	public int totalSize;
+	public string relativePath;
+	public byte[] data;
 }
 
 //---------------------------------------------------------------------------
@@ -171,9 +95,9 @@ public struct NodeChunk
 [Serializable]
 public struct RejectedNode
 {
-	internal Nid nid;
-	internal NodeStatus status;
-	internal RejectedNode(Nid nid, NodeStatus status)
+	public string nid;
+	public NodeStatus status;
+	internal RejectedNode(string nid, NodeStatus status)
 	{
 		this.nid = nid;
 		this.status = status;
@@ -253,7 +177,7 @@ internal class SyncOps
 	/// deletes a list of nodes from a collection and deals with
 	/// tombstones, files, and directories
 	/// </summary>
-	public void DeleteNode(Nid nid, bool whackFile)
+	public void DeleteNode(string nid, bool whackFile)
 	{
 		Node node = collection.GetNodeByID(nid);
 		if (node == null)
@@ -262,6 +186,7 @@ internal class SyncOps
 			return;
 		}
 
+		Log.log.Info("Deleting {0}", node.Name);
 		if (whackFile)
 		{
 			// If this is a collision node then delete the collision file.
@@ -307,29 +232,28 @@ internal class SyncOps
 	/// <summary>
 	/// returns a node chunk
 	/// </summary>
-	public NodeChunk GetSmallNode(Nid nid)
+	public NodeChunk GetSmallNode(string nid)
 	{
 		OutgoingNode ogn = new OutgoingNode(collection);
 		NodeChunk chunk = new NodeChunk();
 		chunk.totalSize = 0;
-		chunk.forkChunks = null;
+		chunk.data = null;
 		chunk.expectedIncarn = 0;
 		chunk.relativePath = null;
 		if ((chunk.node = ogn.Start(nid)) != null)
 		{
+			Log.log.Info("Synchronizing {0} to {1}", chunk.node.Name, onServer ? "client" : "server");
 			chunk.relativePath = GetDirNodePath(chunk.node);
-			if ((chunk.forkChunks = ogn.ReadChunks(NodeChunk.MaxSize, out chunk.totalSize)) == null)
+			if ((chunk.data = ogn.ReadChunk(NodeChunk.MaxSize, out chunk.totalSize)) == null)
 				Log.Assert(chunk.totalSize == 0);
 			else if (chunk.totalSize >= NodeChunk.MaxSize)
+			{
 				/* the file grew larger than a SmallNode should handle,
 				 * indicate client should retry as large node
 				 */
-				chunk.forkChunks = null;
+				chunk.data = null;
+			}
 		}
-
-		//Log.Spew("chunk: {0}, expIncarn {1}, totalSize {2}, forkCount {3}, relPath {4}",
-		//		chunk.node.Name, chunk.expectedIncarn, chunk.totalSize,
-		//		chunk.forkChunks == null? -1: chunk.forkChunks.Length, chunk.relativePath);
 		return chunk;
 	}
 
@@ -338,11 +262,11 @@ internal class SyncOps
 	/// this one takes Nids and does not fill in the expectedIncarn
 	/// in the NodeChunks -- only called on the server
 	/// </summary>
-	public NodeChunk[] GetSmallNodes(Nid[] nids)
+	public NodeChunk[] GetSmallNodes(string[] nids)
 	{
 		NodeChunk[] chunks = new NodeChunk[nids.Length];
 		uint i = 0;
-		foreach (Nid nid in nids)
+		foreach (string nid in nids)
 		{
 			chunks[i++] = GetSmallNode(nid);
 		}	
@@ -378,7 +302,7 @@ internal class SyncOps
 	public NodeStatus PutSmallNode(NodeChunk nc)
 	{
 		IncomingNode inNode = new IncomingNode(collection, onServer);
-		if (nc.forkChunks == null && nc.totalSize >= NodeChunk.MaxSize)
+		if (nc.data == null && nc.totalSize >= NodeChunk.MaxSize)
 		{
 			Log.Spew("skipping update of node {0}, retry next sync", nc.node.Name);
 			return NodeStatus.ServerFailure;
@@ -386,12 +310,13 @@ internal class SyncOps
 		if (collection.IsType(nc.node, NodeTypes.TombstoneType))
 		{
 			//Log.Assert(onServer); // should not get tombstones on client from server
-			DeleteNode((Nid)nc.node.ID, true);
+			DeleteNode(nc.node.ID, true);
 			return NodeStatus.Complete;
 		}
 		
+		Log.log.Info("Synchronizing {0} from {1}", nc.node.Name, onServer ? "client" : "server");
 		inNode.Start(nc.node, nc.relativePath);
-		inNode.BlowChunks(nc.forkChunks);
+		inNode.BlowChunk(nc.data);
 		NodeStatus status = inNode.Complete(nc.expectedIncarn);
 		return status == NodeStatus.FileNameConflict ? NodeStatus.Complete : status;
 	}
@@ -410,7 +335,7 @@ internal class SyncOps
 				NodeStatus status = PutSmallNode(nc);
 				if (status != NodeStatus.Complete)
 				{
-					rejects.Add(new RejectedNode((Nid)nc.node.ID, status));
+					rejects.Add(new RejectedNode(nc.node.ID, status));
 				}
 			}
 		}
@@ -421,7 +346,7 @@ internal class SyncOps
 	/// only called on the client after the node has been updated on the
 	/// server. Just sets the MasterIncarnation to the LocalIncarnation
 	/// </summary>
-	public void UpdateIncarn(Nid nid, ulong masterIncarn)
+	public void UpdateIncarn(string nid, ulong masterIncarn)
 	{
 		Log.Assert(!onServer);
         Node node = collection.GetNodeByID(nid);
@@ -469,21 +394,33 @@ internal class SyncOps
 						// Make sure the events are not for local only changes.
 						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
 						{
-							Node node = collection.GetNodeByID(rec.EventID);
-							if (node != null)
-							{
-								NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, rec.Operation);
-								stampList.Add(stamp);
-							}
-							else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
+							if (onServer)
 							{
 								NodeStamp stamp = new NodeStamp();
-								stamp.localIncarn = UInt64.MaxValue;
-								stamp.masterIncarn = 0;
-								stamp.id = new Nid(rec.EventID);
-								stamp.name = "";
+								stamp.localIncarn = rec.SlaveRev;
+								stamp.masterIncarn = rec.MasterRev;
+								stamp.id = rec.EventID;
 								stamp.changeType = rec.Operation;
+								stamp.streamsSize = rec.FileLength;
 								stampList.Add(stamp);
+							}
+							else
+							{
+								Node node = collection.GetNodeByID(rec.EventID);
+								if (node != null)
+								{
+									NodeStamp stamp = OutgoingNode.GetOutNodeStamp(collection, ref node, rec.Operation);
+									stampList.Add(stamp);
+								}
+								else if (rec.Operation == ChangeLogRecord.ChangeLogOp.Deleted)
+								{
+									NodeStamp stamp = new NodeStamp();
+									stamp.localIncarn = UInt64.MaxValue;
+									stamp.masterIncarn = 0;
+									stamp.id = rec.EventID;
+									stamp.changeType = rec.Operation;
+									stampList.Add(stamp);
+								}
 							}
 						}
 					}
