@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <simias/simias-event-client.h>
+
 #include "iFolderClientStub.h"
 #include "iFolderClient.nsmap"
 
@@ -64,6 +66,11 @@ static void ifolder_nautilus_instance_init (iFolderNautilus *ifn);
 static GObjectClass * parent_class = NULL;
 static GType ifolder_nautilus_type;
 
+static SimiasEventClient ec;
+static pthread_t ec_register_handlers_thread;
+
+static gboolean b_nautilus_ifolder_running;
+
 /**
  * FIXME: Once nautilus-extension provides nautilus_file_info_get_existing () we
  * can change our implementation to use the functions defined in the internal
@@ -71,6 +78,20 @@ static GType ifolder_nautilus_type;
  */
 extern NautilusFile *
 nautilus_file_get_existing (const char *uri);
+
+/**
+ * Private function forward declarations
+ */
+static void init_gsoap (struct soap *p_soap);
+static void cleanup_gsoap (struct soap *p_soap);
+gchar * get_file_path (NautilusFileInfo *file);
+gboolean is_ifolder_running ();
+gboolean is_ifolder (NautilusFileInfo *file);
+gboolean can_be_ifolder (NautilusFileInfo *file);
+gint create_local_ifolder (NautilusFileInfo *file);
+gchar * get_ifolder_id_by_local_path (gchar *path);
+gint revert_ifolder (NautilusFileInfo *file);
+gchar * get_unmanaged_path (gchar *ifolder_id);
 
 /**
  * This function is intended to be called using g_idle_add by the event system
@@ -158,6 +179,120 @@ named_pipe_listener_thread (gpointer user_data)
 			perror ("close");
 		}
 	}
+}
+
+int
+simias_node_created_cb (SimiasNodeEvent *event, void *data)
+{
+	char file_uri [IFOLDER_BUF_SIZE];
+	gchar *unmanaged_path;
+	NautilusFile *file;
+	printf ("nautilus-ifolder: simias_node_created_cb () entered\n");
+	
+	unmanaged_path = get_unmanaged_path (event->node);
+	if (unmanaged_path != NULL) {
+		sprintf (file_uri, "file://%s", unmanaged_path);
+		free (unmanaged_path);
+
+		/**
+		 * If the extension has ever been asked to provide information about the
+		 * folder, it needs to be invalidated so that nautilus will ask for the
+		 * information again.  This will allow the iFolder emblem to appear when
+		 * a new iFolder is created.
+		 */		
+		/* FIXME: Change the following to be nautilus_file_info_get_existing () once it's available in the Nautilus Extension API */
+		file = nautilus_file_get_existing (file_uri);
+													 
+		if (file) {
+			g_printf ("Found NautilusFile: %s\n", file_uri);
+			/* Let nautilus run this in the main loop */
+			g_idle_add (invalidate_ifolder_extension_info, file);
+		}
+	}
+	
+	return 0;
+}
+
+int
+simias_node_deleted_cb (SimiasNodeEvent *event, void *data)
+{
+	printf ("nautilus-ifolder: simias_node_deleted_cb () entered\n");
+	
+	return 0;
+}
+
+int
+simias_node_changed_cb (SimiasNodeEvent *event, void *data)
+{
+	printf ("nautilus-ifolder: simias_node_changed_cb () entered\n");
+	printf ("\t%s: %s\n", "action", event->action);
+	printf ("\t%s: %s\n", "time", event->time);
+	printf ("\t%s: %s\n", "source", event->source);
+	printf ("\t%s: %s\n", "collection", event->collection);
+	printf ("\t%s: %s\n", "type", event->type);
+	printf ("\t%s: %s\n", "event_id", event->event_id);
+	printf ("\t%s: %s\n", "node", event->node);
+	printf ("\t%s: %s\n", "flags", event->flags);
+	printf ("\t%s: %s\n", "master_rev", event->master_rev);
+	printf ("\t%s: %s\n", "slave_rev", event->slave_rev);
+	printf ("\t%s: %s\n", "file_size", event->file_size);
+	
+	return 0;
+}
+
+static void *
+ec_register_event_handlers (gpointer user_data)
+{
+	CLIENT_STATE state;
+	/**
+	 * Wait until the event client is attached to the event server and then
+	 * register to listen to the following event types.
+	 */
+	while ((state = sec_get_state (ec)) != CLIENT_STATE_RUNNING) {
+		if (state == CLIENT_STATE_SHUTDOWN
+				|| b_nautilus_ifolder_running == FALSE) {
+			return NULL; /* end this thread */
+		}
+		
+		/* FIXME: Figure out a better way to wait besides a sleep () */
+		sleep (2);
+	}
+	
+	/* Register our event handler */
+	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_created_cb, NULL);
+	sec_set_event (ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_changed_cb, NULL);
+	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_deleted_cb, NULL);
+	
+	g_printf ("nautilus-ifolder: finished registering for simias events\n");
+	
+	return NULL;
+}
+
+static int
+start_simias_event_client ()
+{
+	if (sec_init (&ec, NULL) != 0) {
+		g_printf ("sec_init failed\n");
+		return -1;
+	}
+	
+	if (sec_register (ec) != 0) {
+		g_printf ("sec_register failed\n");
+		return -1;
+	}
+	
+	printf ("Registration complete\n");
+
+	/**
+	 * Start a thread that will wait until the event client is running and then
+	 * register for events.
+	 */
+	pthread_create (&ec_register_handlers_thread, 
+					NULL, 
+					ec_register_event_handlers,
+					NULL);
+
+	return 0;
 }
 
 /**
@@ -459,6 +594,56 @@ revert_ifolder (NautilusFileInfo *file)
 	}
 	
 	return 0;
+}
+
+gchar *
+get_unmanaged_path (gchar *ifolder_id)
+{
+	struct soap soap;
+	gchar *unmanaged_path;
+	
+	unmanaged_path = NULL;
+
+	if (ifolder_id != NULL) {
+		g_print ("****About to call GetiFolder (");
+		g_print (ifolder_id);
+		g_print (")...\n");
+		struct _ns1__GetiFolder ns1__GetiFolder;
+		struct _ns1__GetiFolderResponse ns1__GetiFolderResponse;
+		ns1__GetiFolder.iFolderID = ifolder_id;
+		init_gsoap (&soap);
+		soap_call___ns1__GetiFolder (&soap,
+									 soapURL,
+									 NULL,
+									 &ns1__GetiFolder,
+									 &ns1__GetiFolderResponse);
+		if (soap.error) {
+			g_print ("****error calling GetiFolder***\n");
+			soap_print_fault (&soap, stderr);
+			cleanup_gsoap (&soap);
+			return NULL;
+		} else {
+			g_print ("***calling GetiFolder succeeded***\n");
+			struct ns1__iFolderWeb *ifolder = 
+				ns1__GetiFolderResponse.GetiFolderResult;
+			if (ifolder == NULL) {
+				g_print ("***GetiFolder returned NULL\n");
+				cleanup_gsoap (&soap);
+				return NULL;
+			} else {
+				if (ifolder->UnManagedPath != NULL) {
+					g_print ("***The iFolder's Unmanaged Path is: ");
+					g_print (ifolder->UnManagedPath);
+					g_print ("\n");
+					unmanaged_path = strdup (ifolder->UnManagedPath);
+				}
+			}
+		}
+
+		cleanup_gsoap (&soap);
+	}
+
+	return unmanaged_path;
 }
 
 /**
@@ -1020,6 +1205,8 @@ nautilus_module_initialize (GTypeModule *module)
 	ifolder_extension_register_type (module);
 	provider_types[0] = ifolder_nautilus_get_type ();
 	
+	b_nautilus_ifolder_running = TRUE;
+	
 	soapURL = getLocalServiceUrl ();
 	
 	/* Start the named pipe listener thread */
@@ -1027,6 +1214,9 @@ nautilus_module_initialize (GTypeModule *module)
 					NULL, 
 					named_pipe_listener_thread,
 					NULL);
+					
+	/* Start the Simias Event Client */
+	start_simias_event_client ();
 }
 
 void
@@ -1034,9 +1224,28 @@ nautilus_module_shutdown (void)
 {
 	g_print ("Shutting down nautilus-ifolder extension\n");
 
+	b_nautilus_ifolder_running = FALSE;
+
 	/* Cleanup soapURL */	
 	if (soapURL) {
 		free (soapURL);
+	}
+
+	/* Cleanup the Simias Event Client */	
+	if (sec_get_state (ec) == CLIENT_STATE_RUNNING) {
+		if (sec_deregister (ec) != 0) {
+			fprintf (stderr, "sec_deregister failed\n");
+			return;
+		}
+	}
+	
+	/**
+	 * Since we called sec_init (), call sec_cleanup () regardless if the event
+	 * client is running or not.
+	 */
+	if (sec_cleanup (&ec) != 0) {
+		fprintf (stderr, "sec_cleanup failed\n");
+		return;
 	}
 }
 

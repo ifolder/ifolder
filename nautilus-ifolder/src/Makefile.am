@@ -17,7 +17,8 @@ INCLUDES =						\
 	$(DISABLE_DEPRECATED_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)						\
 	$(NONAMESPACE_CFLAGS)					\
-	$(GSOAP_INCLUDES)
+	$(GSOAP_INCLUDES)				\
+	$(SIMIAS_EVENT_CLIENT_CFLAGS)
 
 EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.png ifolder-folder.png stdsoap2.h
 
@@ -36,7 +37,7 @@ libnautilus_ifolder_la_SOURCES =     \
 	envC.c iFolderClientClientLib.c stdsoap2.c nautilus-ifolder.c
 
 libnautilus_ifolder_la_LDFLAGS = -module -export-dynamic -avoid-version
-libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
+libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS) $(SIMIAS_EVENT_CLIENT_LIBS)
 
 # FIXME: Figure out a better way to force nautilus-ifolder.exe to be built
 iFolderClient.h:	$(IFOLDER_CLIENT_WSDL) nautilus-ifolder.exe
