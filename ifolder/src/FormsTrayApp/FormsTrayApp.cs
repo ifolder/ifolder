@@ -70,6 +70,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		//private Configuration config;
+		private Process simiasProc;
 		private iFolderWebService ifWebService;
 		//private EventSubscriber subscriber;
 		private IntPtr hwnd;
@@ -98,6 +99,7 @@ namespace Novell.FormsTrayApp
 				}
 				else
 				{
+					// TODO: Localize
 					MessageBox.Show("There is already an instance of iFolder running.");
 				}
 			}
@@ -200,23 +202,12 @@ namespace Novell.FormsTrayApp
 			}*/
 
 			ServerInfo serverInfo = new ServerInfo(ifWebService);
-			if (DialogResult.OK != serverInfo.ShowDialog())
-			{
-				// TODO: post a message.
-			}
-		}
-
-		private void menuPOBox_Click(object sender, System.EventArgs e)
-		{
-//			MessageForm messages = new MessageForm(config);
-//			messages.MessagesServiced += new Novell.iFolder.FormsTrayApp.MessageForm.MessagesServicedDelegate(messages_MessagesServiced);
-//			messages.ShowDialog();
+			serverInfo.ShowDialog();
 		}
 
 		private void menuProperties_Click(object sender, System.EventArgs e)
 		{
 			GlobalProperties globalProperties = new GlobalProperties(ifWebService);
-//			globalProperties.ServiceManager = this.serviceManager;
 			globalProperties.ShowDialog();
 		}
 
@@ -263,13 +254,9 @@ namespace Novell.FormsTrayApp
 				iFolderSettings ifolderSettings = ifWebService.GetSettings();
 				menuJoin.Visible = !ifolderSettings.HaveEnterprise;
 			}
-			catch (WebException ex)
+			catch
 			{
-				// TODO: Post a message.
-			}
-			catch (Exception ex)
-			{
-				// TODO:
+				// Ignore.
 			}
 		}
 
@@ -287,6 +274,14 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
+				simiasProc = new Process();
+				ProcessStartInfo simiasStartInfo = new ProcessStartInfo(Path.Combine(Application.StartupPath, "simias.cmd"));
+				simiasStartInfo.CreateNoWindow = true;
+				simiasStartInfo.UseShellExecute = false;
+				simiasStartInfo.RedirectStandardInput = true;
+				simiasProc.StartInfo = simiasStartInfo;
+				simiasProc.Start();
+
 				ifWebService = new iFolderWebService();
 				ifWebService.Ping();
 				//iFolderManager.CreateDefaultExclusions(config);
@@ -534,6 +529,19 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
+				if ((simiasProc != null) && !simiasProc.HasExited)
+				{
+					StreamWriter simiasStdIn = simiasProc.StandardInput;
+					simiasStdIn.Write(simiasStdIn.NewLine);
+				}
+
+				// TODO: shutdown gracefully
+				Process[] simiasAppProcess = Process.GetProcessesByName("SimiasApp");
+				if (simiasAppProcess.Length == 1)
+				{
+					simiasAppProcess[0].Kill();
+				}
+
 				if ((workerThread != null) && workerThread.IsAlive)
 				{
 					workerThread.Abort();

@@ -229,6 +229,8 @@ namespace Novell.FormsTrayApp
 				MessageBox.Show("A fatal error was encountered while connecting to the server.\n\n" + ex.Message, "Server Connect Error");
 			}
 
+			password.Clear();
+
 			Cursor.Current = Cursors.Default;
 		}
 
