@@ -54,6 +54,7 @@ namespace AddressBookCmd
 		private	ArrayList		propertyList = null;
 		private ArrayList       deletePropertyList = null;
 		private ArrayList		addAddressList = null;
+		private ArrayList		addNameList = null;
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -182,6 +183,15 @@ namespace AddressBookCmd
 								cAbc.AddAddress(args[++i]);
 							}
 						}
+						else
+						if (args[i][2] == 'n')
+						{
+							// Add name property
+							if (i + 1 <= args.Length)
+							{
+								cAbc.AddName(args[++i]);
+							}
+						}
 					}
 					else
 					if (args[i][0] == '/' && args[i][1] == 'd')
@@ -244,6 +254,7 @@ namespace AddressBookCmd
 			Console.WriteLine("   /c <contact> - contact to execute commands against");
 			Console.WriteLine("   /av <vcard file> - add or import vcard file");
 			Console.WriteLine("   /aa <address> - add address property (ex. zip=84604;country=usa)");
+			Console.WriteLine("   /an <name> - add name property (ex. given=brady;family=anderson)");
 			Console.WriteLine("   /ab <address book> - add/create a new address book");
 			Console.WriteLine("   /ac <username> - add/create a new contact");
 			Console.WriteLine("   /db <address book> - delete an address book");
@@ -261,25 +272,71 @@ namespace AddressBookCmd
 
 		private void ListProperties(Contact	cContact)
 		{
-			Console.WriteLine("Listing properties for contact: " + cContact.UserName);
+			Console.WriteLine("ID=" + cContact.ID);
+			Console.WriteLine("Username=" + cContact.UserName);
+
 			if (cContact.FN != "")
 			{
-				Console.WriteLine("   FN:            " + cContact.FN);
+				Console.WriteLine("FN=" + cContact.FN);
+			}
+
+			IABList nList = cContact.GetNames();
+			foreach(Name cName in nList)
+			{
+				Console.Write("N=(");
+				Console.Write("ID=" + cName.ID);
+
+				if (cName.Prefix != "")
+				{
+					Console.Write(";Prefix=");
+					Console.Write(cName.Prefix);
+				}
+
+				if (cName.Given != "")
+				{
+					Console.Write(";Given=");
+					Console.Write(cName.Given);
+				}
+
+				if (cName.Other != "")
+				{
+					Console.Write(";Other=");
+					Console.Write(cName.Other);
+				}
+
+				if (cName.Family != "")
+				{
+					Console.Write(";Family=");
+					Console.Write(cName.Family);
+				}
+
+				if (cName.Suffix != "")
+				{
+					Console.Write(";Suffix=");
+					Console.Write(cName.Suffix);
+				}
+
+				if (cName.Preferred == true)
+				{
+					Console.Write(";PREF");
+				}
+
+				Console.WriteLine(")");
 			}
 
 			if (cContact.Nickname != "")
 			{
-				Console.WriteLine("   Nickname:      " + cContact.Nickname);
+				Console.WriteLine("Nickname=" + cContact.Nickname);
 			}
 
 			if (cContact.Title != "")
 			{
-				Console.WriteLine("   Title:         " + cContact.Title);
+				Console.WriteLine("Title=" + cContact.Title);
 			}
 
 			if (cContact.Role != "")
 			{
-				Console.WriteLine("   Role:          " + cContact.Role);
+				Console.WriteLine("Role=" + cContact.Role);
 			}
 
 			IABList mList = cContact.GetEmailAddresses();
@@ -374,16 +431,21 @@ namespace AddressBookCmd
 			IABList aList = cContact.GetAddresses();
 			foreach(Address cAddress in aList)
 			{
-				Console.WriteLine("   Address:     ");
+				Console.WriteLine("   Address");
+
+				if (cAddress.ID != "")
+				{
+					Console.WriteLine("     ID:       " + cAddress.ID);
+				}
 
 				if (cAddress.Street != "")
 				{
-					Console.WriteLine("     Street: " + cAddress.Street);
+					Console.WriteLine("     Street:   " + cAddress.Street);
 				}
 
 				if (cAddress.Region != "")
 				{
-					Console.WriteLine("     Region: " + cAddress.Region);
+					Console.WriteLine("     Region:   " + cAddress.Region);
 				}
 
 				if (cAddress.Locality != "")
@@ -393,12 +455,54 @@ namespace AddressBookCmd
 
 				if (cAddress.PostalCode != "")
 				{
-					Console.WriteLine("     Zip:    " + cAddress.PostalCode);
+					Console.WriteLine("     Zip:      " + cAddress.PostalCode);
 				}
 
 				if (cAddress.Country != "")
 				{
-					Console.WriteLine("     Country: " + cAddress.Country);
+					Console.WriteLine("     Country:  " + cAddress.Country);
+				}
+
+				if (cAddress.Types != 0)
+				{
+					Console.Write("     Types:    ");
+
+					if ((cAddress.Types & AddressTypes.preferred) == AddressTypes.preferred)
+					{
+						Console.Write("PREFERRED ");
+					}								  
+		
+					if ((cAddress.Types & AddressTypes.home) == AddressTypes.home)
+					{
+						Console.Write("HOME ");
+					}								  
+
+					if ((cAddress.Types & AddressTypes.work) == AddressTypes.work)
+					{
+						Console.Write("WORK ");
+					}					
+			  
+					if ((cAddress.Types & AddressTypes.postal) == AddressTypes.postal)
+					{
+						Console.Write("POSTAL ");
+					}								  
+
+					if ((cAddress.Types & AddressTypes.parcel) == AddressTypes.parcel)
+					{
+						Console.Write("PARCEL ");
+					}								  
+
+					if ((cAddress.Types & AddressTypes.dom) == AddressTypes.dom)
+					{
+						Console.Write("DOMESTIC ");
+					}								  
+
+					if ((cAddress.Types & AddressTypes.intl) == AddressTypes.intl)
+					{
+						Console.Write("INTL ");
+					}								  
+
+					Console.WriteLine("");
 				}
 			}
 
@@ -439,6 +543,17 @@ namespace AddressBookCmd
 			}
 
 			this.addAddressList.Add(addressValue);
+		}
+
+		// Name value string in the following format: given=value;family=value;   etc.
+		public void AddName(string nameValue)
+		{
+			if (this.addNameList == null)
+			{
+				this.addNameList = new ArrayList();
+			}
+
+			this.addNameList.Add(nameValue);
 		}
 
 		// Property value string in the following format: property=value
@@ -642,7 +757,6 @@ namespace AddressBookCmd
 					while(enumTokens.MoveNext())
 					{
 						string token = (string) enumTokens.Current;
-						token.ToLower();
 
 						Regex t = new Regex(@"=");
 						IEnumerator memberValueTokens = t.Split(token).GetEnumerator();
@@ -650,6 +764,7 @@ namespace AddressBookCmd
 						if(memberValueTokens.MoveNext())
 						{
 							string member = (string) memberValueTokens.Current;
+							member.ToLower();
 							string memberValue;
 
 							if (memberValueTokens.MoveNext())
@@ -661,7 +776,13 @@ namespace AddressBookCmd
 								memberValue = null;
 							}
 
-							if (member == "postalcode")
+							if (member == "zip")
+							{
+								cAddress.PostalCode = memberValue;
+								cUpdated = true;
+							}
+							else
+								if (member == "postalcode")
 							{
 								cAddress.PostalCode = memberValue;
 								cUpdated = true;
@@ -696,6 +817,51 @@ namespace AddressBookCmd
 								cAddress.MailStop = memberValue;
 								cUpdated = true;
 							}
+							else
+							if (member == "types")
+							{
+								cAddress.Types = 0;
+
+								Regex y = new Regex(@":");
+								IEnumerator addrTypes = y.Split(memberValue).GetEnumerator();
+								while(addrTypes.MoveNext())
+								{
+									switch((string) addrTypes.Current)
+									{
+										case "preferred":
+											cAddress.Preferred = true;
+											break;
+
+										case "work":
+											cAddress.Types |= AddressTypes.work;
+											break;
+
+										case "home":
+											cAddress.Types |= AddressTypes.home;
+											break;
+
+										case "other":
+											cAddress.Types |= AddressTypes.other;
+											break;
+		
+										case "dom":
+											cAddress.Types |= AddressTypes.dom;
+											break;
+
+										case "intl":
+											cAddress.Types |= AddressTypes.intl;
+											break;
+
+										case "postal":
+											cAddress.Types |= AddressTypes.postal;
+											break;
+
+										case "parcel":
+											cAddress.Types |= AddressTypes.parcel;
+											break;
+									}
+								}	
+							}
 						}
 					}
 				}
@@ -708,6 +874,92 @@ namespace AddressBookCmd
 					}
 					cContact.AddAddress(cAddress);
 					cContact.Commit();
+				}
+			}
+
+			// Adding name(s) to a contact?
+			if (this.addNameList != null && cContact != null)
+			{
+				bool	cUpdated = false;
+				foreach(string nameString in this.addNameList)
+				{
+					Name cName = new Name();
+
+					Regex o = new Regex(@";");
+					IEnumerator enumTokens = o.Split(nameString).GetEnumerator();
+					while(enumTokens.MoveNext())
+					{
+						string token = (string) enumTokens.Current;
+
+						Regex t = new Regex(@"=");
+						IEnumerator memberValueTokens = t.Split(token).GetEnumerator();
+
+						if(memberValueTokens.MoveNext())
+						{
+							string member = (string) memberValueTokens.Current;
+							member.ToLower();
+							string memberValue;
+
+							if (memberValueTokens.MoveNext())
+							{
+								memberValue = (string) memberValueTokens.Current;
+							}
+							else
+							{
+								memberValue = null;
+							}
+
+							if (member == "given")
+							{
+								cName.Given = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "family")
+							{
+								cName.Family = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "other")
+							{
+								cName.Other = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "prefix")
+							{
+								cName.Prefix = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "suffix")
+							{
+								cName.Suffix = memberValue;
+								cUpdated = true;
+							}
+							else
+							if (member == "preferred")
+							{
+								cName.Preferred = true;
+							}
+							else
+							if (member == "pref")
+							{
+								cName.Preferred = true;
+							}
+						}
+					}
+
+					if (cUpdated == true)
+					{
+						if (verbose == true)
+						{
+							Console.WriteLine("Adding new Name to Contact: " + cContact.UserName);
+						}
+						cContact.AddName(cName);
+						cContact.Commit();
+					}
 				}
 			}
 
