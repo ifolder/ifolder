@@ -74,8 +74,8 @@ namespace Simias.Storage.Tests
 		[Test]
 		public void CreateCollectionTest()
 		{
-			// Create a new collection and remember its ID.
-			Collection collection = new Collection( store, "CS_TestCollection", store.DefaultDomain );
+			// Create a new collection and remember its ID. Use all the special XML characters in the name.
+			Collection collection = new Collection( store, "&<>\"\'CS_TestCollection", store.DefaultDomain );
 
 			// Remember the id for later.
 			string ID = collection.ID;
@@ -89,6 +89,15 @@ namespace Simias.Storage.Tests
 				if ( store.GetCollectionByID( ID ) == null )
 				{
 					throw new ApplicationException( "Collection was committed but does not exist in the store" );
+				}
+
+				// This was added to make sure that we handle all the XML special characters in the ShallowNode list.
+				foreach( ShallowNode sn in collection )
+				{
+					if ( ( sn.ID == collection.ID ) && ( sn.Name != collection.Name ) )
+					{
+						throw new ApplicationException( "Special XML characters not being handled properly." );
+					}
 				}
 			}
 			finally

@@ -143,7 +143,7 @@ namespace Simias.Storage.Provider.Sqlite
 						string cid;
 						if (includeCid)
 						{
-							cid = string.Format(" {0}=\"{1}\"", XmlTags.CIdAttr, Reader[3].ToString());
+							cid = string.Format(" {0}=\"{1}\"", XmlTags.CIdAttr, TranslateStringToXml(Reader[3].ToString()));
 						}
 						else
 						{
@@ -158,7 +158,7 @@ namespace Simias.Storage.Provider.Sqlite
 								TranslateStringToXml(name),
 								XmlTags.TypeAttr,
 								TranslateStringToXml(type),
-								TranslateStringToXml(cid));
+								cid);
 
 						stringLen = objectXml.Length;
 						if (length > stringLen)
