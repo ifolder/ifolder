@@ -150,7 +150,7 @@ namespace Simias.POBox
 				
 				Member current = roster.GetMemberByID(userId);
 
-				Member member = new Member(current);
+				Member member = new Member(current.Name, current.UserID, Access.Rights.Admin);
 				member.IsOwner = true;
 
 				poBox.Commit(new Node[] { poBox, member });
