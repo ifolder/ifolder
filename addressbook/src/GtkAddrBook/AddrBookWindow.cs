@@ -1,4 +1,4 @@
-/***********************************************************************
+
  *  $RCSfile$
  *
  *  Copyright (C) 2004 Novell, Inc.
@@ -498,7 +498,7 @@ namespace Novell.iFolder
 
 							dialog.Response += new ResponseHandler(
 									DeleteBookResponse);
-							dialog.Title = "Denali Delete Books";
+							dialog.Title = "Delete Books";
 							dialog.Show();
 						}
 						break;					
@@ -614,7 +614,7 @@ namespace Novell.iFolder
 
 							dialog.Response += new ResponseHandler(
 									DeleteContactResponse);
-							dialog.Title = "Denali Delete Contacts";
+							dialog.Title = "Delete Contacts";
 							dialog.Show();
 						}
 						break;					

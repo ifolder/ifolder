@@ -533,7 +533,7 @@ namespace Novell.iFolder
 
 						dialog.Response += 
 								new ResponseHandler(DeleteContactResponse);
-						dialog.Title = "Denali Delete Contacts";
+						dialog.Title = "Delete Contacts";
 						dialog.Show();
 					}
 					break;					
@@ -620,7 +620,7 @@ namespace Novell.iFolder
 									"Do you want to delete the selected Address Books?");
 
 							dialog.Response += new ResponseHandler(DeleteBookResponse);
-							dialog.Title = "Denali Delete Books";
+							dialog.Title = "Delete Books";
 							dialog.Show();
 						}
 						break;					
