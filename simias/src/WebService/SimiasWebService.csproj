@@ -129,6 +129,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Simias.asmx.resx"
+                    DependentUpon = "Simias.asmx.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "SimiasBrowser.asmx"
                     BuildAction = "Content"
                 />

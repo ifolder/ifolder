@@ -30,6 +30,7 @@ using System.Threading;
 using System.Reflection;
 using Simias;
 using Simias.Event;
+using Simias.Client;
 using Simias.Client.Event;
 
 namespace Simias.Service
@@ -67,6 +68,7 @@ namespace Simias.Service
 		private ManualResetEvent servicesStarted = new ManualResetEvent(false);
 		private ManualResetEvent servicesStopped = new ManualResetEvent(true);
 		private DefaultSubscriber	subscriber = null;
+		static private long machineMemorySize = 0;
 
 		#region Events
 		/// <summary>
@@ -79,6 +81,20 @@ namespace Simias.Service
 		#endregion
 		
 		#region Constructor
+
+		/// <summary>
+		/// Static constructor for this class.
+		/// </summary>
+		static Manager()
+		{
+			// TODO: This can be removed when mono compacts the heap.
+			// Get the amount of memory on this machine.
+			if ( MyEnvironment.Mono )
+			{
+				machineMemorySize = GetMachineMemorySize();
+			}
+			// TODO: End
+		}
 
 		/// <summary>
 		/// Creates a Manager for the specified Configuration.
@@ -124,6 +140,10 @@ namespace Simias.Service
 				}
 
 				installDefaultServices();
+
+				// TODO: Remove when mono compacts the heap.
+				logger.Debug("Machine memory size = {0}MB", machineMemorySize / (1024 * 1024));
+				// TODO: End
 
 				// Start a monitor thread to keep the services running.
 				Thread mThread = new Thread(new ThreadStart(Monitor));
@@ -208,8 +228,92 @@ namespace Simias.Service
 
 		#region Monitor
 
+		/// <summary>
+		/// Hack used to get the total memory size of the machine. This
+		/// is only used on Linux to determine if the SimiasApp process needs to be
+		/// restarted in order to get around the non-compacting heap problem on mono.
+		/// TODO: Can be removed when mono compacts the heap.
+		/// </summary>
+		/// <returns>The size in bytes of the memory on this machine.</returns>
+		static private long GetMachineMemorySize()
+		{
+			long memSize = 0;
+
+			Process p = new Process();
+			p.StartInfo = new ProcessStartInfo( "free", "-b" );
+			p.StartInfo.CreateNoWindow = true;
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.Start();
+
+			string output = p.StandardOutput.ReadToEnd();
+
+			string[] split = output.Split( new char[] { '\n' } );
+			foreach ( string s in split )
+			{
+				string line = s.Trim();
+				if ( line.StartsWith( "Mem:" ) )
+				{
+					string memString = line.Substring( 4 ).Trim();
+					int index = memString.IndexOf( ' ' );
+					if ( index != -1 )
+					{
+						memSize = Convert.ToInt64( memString.Substring( 0, index ) );
+						break;
+					}
+				}
+			}
+
+			p.WaitForExit();
+			return memSize;
+		}
+
+		/// <summary>
+		/// Hack used to get the virtual memory size of the SimiasApp process. This
+		/// is only used on Linux to determine if the SimiasApp process needs to be
+		/// restarted in order to get around the non-compacting heap problem on mono.
+		/// TODO: Can be removed when mono compacts the heap.
+		/// </summary>
+		/// <returns>The amount of memory in bytes consumed by the SimiasApp process.</returns>
+		private long GetSimiasMemorySize()
+		{
+			long memSize = 0;
+
+			Process p = new Process();
+			p.StartInfo = new ProcessStartInfo( "ps", "-C mono -o vsz,args" );
+			p.StartInfo.CreateNoWindow = true;
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.Start();
+
+			string output = p.StandardOutput.ReadToEnd();
+
+			string[] split = output.Split( new char[] {'\n'} );
+			foreach ( string s in split )
+			{
+				string line = s.Trim();
+				if ( line.IndexOf( "SimiasApp.exe" ) != -1 )
+				{
+					int index = line.IndexOf( ' ' );
+					if ( index != -1 )
+					{
+						string memoryString = line.Substring( 0, index );
+						memSize = Convert.ToInt64( memoryString ) * 1024;
+						break;
+					}
+				}
+			}
+
+			p.WaitForExit();
+			return memSize;
+		}
+
 		private void Monitor()
 		{
+			// TODO: This can be removed when mono compacts the heap.
+			DateTime thresholdTime = DateTime.Now + new TimeSpan(0, 10, 0);
+			// TODO: End
+
 			while (true)
 			{
 				try
@@ -228,10 +332,37 @@ namespace Simias.Service
 							}
 						}
 					}
+
+					// TODO: This can be removed when mono compacts the heap.
+					// Check how much memory is being used by the process.
+					if (MyEnvironment.Mono)
+					{
+						long simiasMemory = GetSimiasMemorySize();
+						logger.Debug("Current memory size for SimiasApp = {0}KB", simiasMemory / 1024);
+						float percentUsed = (Convert.ToSingle(GetSimiasMemorySize()) / Convert.ToSingle(machineMemorySize)) * 100;
+						if (percentUsed > 20)
+						{
+							// See if the memory useage has been up for a sufficient period of time.
+							if ( DateTime.Now >= thresholdTime )
+							{
+								// Send out an event that will cause the application to restart.
+								logger.Info( "Hit memory threshold. Restarting SimiasApp." );
+								EventPublisher publisher = new EventPublisher();
+								publisher.RaiseEvent(new NotifyEventArgs("Simias-Restart", "The application is restarting.", DateTime.Now));
+							}
+						}
+						else
+						{
+							// The memory has fallen below the threshold. Restart the time.
+							thresholdTime = DateTime.Now + new TimeSpan(0, 10, 0);
+						}
+					}
+					// TODO: End
 				}
 				catch
 				{
 				}
+
 				Thread.Sleep(1000 * 60);
 			}
 		}

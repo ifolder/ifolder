@@ -364,6 +364,11 @@ namespace Simias.Storage
 		/// <returns>The modified identity object.</returns>
 		internal Identity DeleteDomainIdentity( string domainID )
 		{
+			if ( domainID == Domain.WorkGroupDomainID )
+			{
+				throw new CollectionStoreException( "Cannot remove the WorkGroup domain." );
+			}
+
 			// Find the property to be deleted.
 			Property p = GetPropertyByDomain( domainID.ToLower() );
 			if ( p != null )
@@ -471,6 +476,11 @@ namespace Simias.Storage
 			XmlDocument mapDoc = p.Value as XmlDocument;
 			if ( type == CredentialType.None )
 			{
+				if ( domainID == Domain.WorkGroupDomainID )
+				{
+					throw new CollectionStoreException( "Cannot remove the WorkGroup domain credentials." );
+				}
+
 				mapDoc.DocumentElement.RemoveAttribute( CredentialTag );
 			}
 			else

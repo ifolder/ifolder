@@ -27,7 +27,10 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Xml;
+
+using Simias.Client.Event;
 
 namespace Simias.Client
 {
@@ -49,6 +52,7 @@ namespace Simias.Client
 
 		static private Process webProcess = null;
 		static private EventHandler appDomainUnloadEvent;
+		static private IProcEventClient eventClient = null;
 		#endregion
 
 		#region Properties
@@ -157,6 +161,32 @@ namespace Simias.Client
 		}
 
 		/// <summary>
+		/// Error handler for event listener.
+		/// </summary>
+		/// <param name="ex">The error that occurred.</param>
+		/// <param name="context">Context</param>
+		static private void ErrorHandler( ApplicationException ex, object context )
+		{
+			// Don't inform about any errors. The event service should heal itself.
+		}
+
+		/// <summary>
+		/// Event handler that subscribes to NotifyEvents.
+		/// </summary>
+		/// <param name="args">Event data.</param>
+		static private void EventHandler( SimiasEventArgs args )
+		{
+			NotifyEventArgs nea = args as NotifyEventArgs;
+			if ( nea.EventData == "Simias-Restart" )
+			{
+				// Restart the SimiasApp.exe service.
+				Stop();
+				Start();
+				Ping();
+			}
+		}
+
+		/// <summary>
 		/// Gets a specified range of ports to use as the local listener.
 		/// </summary>
 		/// <param name="config">Configuration object.</param>
@@ -231,6 +261,30 @@ namespace Simias.Client
 
 			// No available port could be found.
 			throw new ApplicationException( "No ports available" );
+		}
+
+		/// <summary>
+		/// Starts the simias web service.
+		/// </summary>
+		static private void Ping()
+		{
+			SimiasWebService service = new SimiasWebService();
+			service.Url = Manager.LocalServiceUrl + "/Simias.asmx";
+
+			// Stay in the ping loop until the service comes up successfully.
+			bool serviceStarted = false;
+			while ( !serviceStarted )
+			{
+				try
+				{
+					service.GetSimiasInformation();
+					serviceStarted = true;
+				}
+				catch
+				{
+					Thread.Sleep( 100 );
+				}
+			}
 		}
 
 		/// <summary>
@@ -323,6 +377,16 @@ namespace Simias.Client
 					appDomainUnloadEvent = new EventHandler( XspProcessExited );
 					webProcess.Exited += appDomainUnloadEvent;
 
+					// TODO: Remove this when the mono heap doesn't grow forever.
+					// Setup an event listener waiting for a restart event.
+					if ( MyEnvironment.Mono )
+					{
+						eventClient = new IProcEventClient( new IProcEventError( ErrorHandler ), null );
+						eventClient.SetEvent( IProcEventAction.AddNotifyMessage, new IProcEventHandler( EventHandler ) );
+						eventClient.Register();
+					}
+					// TODO: End
+
 					// Get the web service path from the configuration file.
 					Configuration config = new Configuration();
 					string webPath = config.Get( CFG_Section, CFG_WebServicePath );
@@ -398,6 +462,15 @@ namespace Simias.Client
 			{
 				if ( webProcess != null )
 				{
+					// TODO: Remove this when mono compacts the heap.
+					// Unregister the event listener.
+					if ( MyEnvironment.Mono && ( eventClient != null ) )
+					{
+						eventClient.Deregister();
+						eventClient = null;
+					}
+					// TODO: End
+
 					// Remove the exit event handler before shutting down the process.
 					webProcess.Exited -= appDomainUnloadEvent;
 

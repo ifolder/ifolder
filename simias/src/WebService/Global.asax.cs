@@ -26,9 +26,12 @@ using System.ComponentModel;
 using System.Web;
 using System.Web.SessionState;
 using System.IO;
+using System.Threading;
 
 using Simias;
 using Simias.Client;
+using Simias.Client.Event;
+using Simias.Event;
 
 namespace Simias.Web
 {
@@ -61,6 +64,10 @@ namespace Simias.Web
 			Console.WriteLine("Starting Simias Process");
 			serviceManager.StartServices();
 			serviceManager.WaitForServicesStarted();
+
+			// Send the simias up event.
+			EventPublisher eventPub = new EventPublisher();
+			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Up", "The simias service is running", DateTime.Now) );
 			Console.WriteLine("Simias Process Running");
 		}
  
@@ -126,6 +133,12 @@ namespace Simias.Web
 		protected void Application_End(Object sender, EventArgs e)
 		{
 			Console.WriteLine("Starting Simias Process Shutdown");
+
+			// Send the simias down event and wait for 1/2 second for the message to be routed.
+			EventPublisher eventPub = new EventPublisher();
+			eventPub.RaiseEvent( new NotifyEventArgs("Simias-Down", "The simias service is terminating", DateTime.Now) );
+			Thread.Sleep( 500 );
+
 			serviceManager.StopServices();
 			serviceManager.WaitForServicesStopped();
 			serviceManager = null;

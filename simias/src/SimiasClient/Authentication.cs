@@ -103,6 +103,7 @@ namespace Simias.Client
 	/// </summary>
 	public class DomainAuthentication
 	{
+		private string serviceName;
 		private string domainID;
 		private string password;
 		private static CertPolicy certPolicy;
@@ -133,8 +134,9 @@ namespace Simias.Client
 		/// <summary>
 		/// Static constructor to authenticate straight-away
 		/// </summary>
-		public DomainAuthentication(string domainID, string password)
+		public DomainAuthentication(string serviceName, string domainID, string password)
 		{
+			this.serviceName = serviceName;
 			this.domainID = domainID;
 			this.password = password;
 		}
@@ -157,15 +159,33 @@ namespace Simias.Client
 				DomainInformation cInfo = simiasSvc.GetDomainInformation(this.domainID);
 				if (cInfo != null)
 				{
-					// If the user constructed without a password - popup
-					// CRG: This creates a dependency in Simias we can't have
-					// namely, a dependency on a GUI
+					// If the password is null, then check and see if credentials have
+					// been set on this process previously.
 					if (this.password == null)
 					{
-//						PasswordDialog pwdDlg = 
-//							new PasswordDialog(this.dialogTitle, cInfo.Name);
-//						pwdDlg.Invoke(this.owner);
-//						this.password = pwdDlg.password;
+						NetCredential netCredential = new NetCredential(
+							this.serviceName, 
+							this.domainID, 
+							true, 
+							cInfo.MemberName, 
+							null);
+
+						NetworkCredential credentials = 
+							netCredential.GetCredential(
+								new Uri(cInfo.RemoteUrl), 
+								"BASIC");
+
+						if (credentials != null)
+						{
+							this.password = credentials.Password;
+						}
+						else
+						{
+//							PasswordDialog pwdDlg = 
+//								new PasswordDialog(this.dialogTitle, cInfo.Name);
+//							pwdDlg.Invoke(this.owner);
+//							this.password = pwdDlg.password;
+						}
 					}
 
 					// Remote domain
@@ -204,6 +224,14 @@ namespace Simias.Client
 								cInfo.ID, cInfo.MemberID, this.password);
 						if (lStatus == 0)
 						{
+							// Set the credentials in this process.
+							new NetCredential(
+								this.serviceName, 
+								this.domainID, 
+								true, 
+								cInfo.MemberName, 
+								this.password);
+
 							status = AuthenticationStatus.Success;
 						}
 						else

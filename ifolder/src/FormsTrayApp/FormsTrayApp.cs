@@ -824,7 +824,7 @@ namespace Novell.FormsTrayApp
 							{
 								// There are credentials that were saved on the domain. Use them to authenticate.
 								// If the authentication fails for any reason, pop up and ask for new credentials.
-								DomainAuthentication domainAuth = new DomainAuthentication(domainID, credentials);
+								DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainID, credentials);
 								AuthenticationStatus authStatus = domainAuth.Authenticate();
 								if (authStatus == AuthenticationStatus.Success)
 								{

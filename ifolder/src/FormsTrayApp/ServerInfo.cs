@@ -436,7 +436,7 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
-				DomainAuthentication domainAuth = new DomainAuthentication(domainID, password.Text);
+				DomainAuthentication domainAuth = new DomainAuthentication("iFolder", domainID, password.Text);
 				AuthenticationStatus authStatus = domainAuth.Authenticate();
 				MyMessageBox mmb;
 				switch (authStatus)
