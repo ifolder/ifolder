@@ -201,7 +201,7 @@ convert_url_to_public(const char *start_url)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-request:<po-box-url>]
+ * [simias:ping-request:<simias-url>]
  */
 int
 simias_send_ping_req(GaimBuddy *recipient)
@@ -230,7 +230,7 @@ simias_send_ping_req(GaimBuddy *recipient)
 /**
  * This function will send a message with the following format:
  * 
- * [simias:ping-response:<po-box-url>]
+ * [simias:ping-response:<simias-url>]
  */
 int
 simias_send_ping_resp(GaimBuddy *recipient)
@@ -784,7 +784,7 @@ handle_ping_request(GaimAccount *account, const char *sender,
 					const char *buffer)
 {
 	GaimBuddy *buddy;
-	char *po_box_url;
+	char *simias_url;
 	int send_result;
 	
 g_print("handle_ping_request() %s -> %s entered\n",
@@ -800,19 +800,17 @@ g_print("handle_ping_request() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-request:<po-box-url>]
-	 *                       ^
+	 * 	[simias:ping-request:<simias-url>]
+	 *                           ^
 	 */
-	po_box_url = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
-	if (!po_box_url) {
-		g_print("handle_ping_request() couldn't parse the po-box-url\n");
+	simias_url = strtok((char *) buffer + strlen(PING_REQUEST_MSG), "]");
+	if (!simias_url) {
+		g_print("handle_ping_request() couldn't parse the simias-url\n");
 		return FALSE;
 	}
 
-	/* Update the buddy's po_box_url in blist.xml */
+	/* Don't do anything with the URL.  If we got to this point, it's a valid message */
 	buddy = gaim_find_buddy(account, sender);	
-	gaim_blist_node_set_string(&(buddy->node), "simias-po-box-url",
-							   gaim_url_encode(po_box_url));
 
 	/* Send a ping-response message */
 	send_result = simias_send_ping_resp(buddy);
@@ -835,7 +833,7 @@ handle_ping_response(GaimAccount *account, const char *sender,
 					 const char *buffer)
 {
 	GaimBuddy *buddy;
-	char *po_box_url;
+	char *simias_url;
 	
 g_print("handle_ping_response() %s -> %s entered\n",
 		sender, gaim_account_get_username(account));
@@ -850,19 +848,19 @@ g_print("handle_ping_response() %s -> %s entered\n",
 	/**
 	 * Start parsing the message at this point:
 	 * 
-	 * 	[simias:ping-response:<po-box-url>]
-	 *                       ^
+	 * 	[simias:ping-response:<simias-url>]
+	 *                            ^
 	 */
-	po_box_url = strtok((char *) buffer + strlen(PING_REQUEST_MSG), ":");
-	if (!po_box_url) {
-		g_print("handle_ping_request() couldn't parse the po-box-url\n");
+	simias_url = strtok((char *) buffer + strlen(PING_RESPONSE_MSG), "]");
+	if (!simias_url) {
+		g_print("handle_ping_request() couldn't parse the simias-url\n");
 		return FALSE;
 	}
 
-	/* Update the buddy's po_box_url in blist.xml */
+	/* Update the buddy's simias-url in blist.xml */
 	buddy = gaim_find_buddy(account, sender);	
-	gaim_blist_node_set_string(&(buddy->node), "simias-po-box-url",
-							   gaim_url_encode(po_box_url));
+	gaim_blist_node_set_string(&(buddy->node), "simias-url", simias_url);
 
 	return TRUE;
 }
+
