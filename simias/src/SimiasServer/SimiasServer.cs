@@ -97,21 +97,17 @@ namespace Simias.Server
             ub.Path = String.Format("{0}/{1}", Path, Page);
 
             Console.WriteLine("Pinging: {0}", ub);
-            try
+
+			try
             {
 				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ub.Uri);
 				request.CookieContainer = new CookieContainer();
-
 				request.GetResponse().Close();
             }
             catch(Exception e)
             {
-				if (!p.HasExited)
-				{
-					Console.WriteLine(e);
-					Console.WriteLine(e.StackTrace);
-				}
-            }
+				// ignore
+			}
 
 			if (!p.HasExited)
 			{
