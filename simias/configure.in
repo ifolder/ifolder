@@ -121,7 +121,9 @@ AC_SUBST(COMMON_SUBDIRS)
 AC_SUBST(LINUX_SUBDIRS)
 AC_SUBST(WINDOWS_SUBDIRS)
 
-COMMON_LIBS="/r:AddressBook.dll /r:Agent.dll /r:CollectionEvents.dll /r:CollectionStore.dll /r:Common.dll /r:CommonGtkWindows.dll /r:Invitation.dll /r:Location.dll /r:RemotingSnifferLibrary.dll /r:Simias.Service.dll /r:Smtp.dll /r:SmtpInvitationProvider.dll /r:SqliteProvider.dll /r:SqliteWrapper.dll /r:Storage.dll /r:StoreProvider.dll /r:SyncCommon.dll /r:Sync.dll /r:SyncLogicLite.dll /r:SyncManager.dll"
+#COMMON_LIBS="/r:AddressBook.dll /r:Agent.dll /r:CollectionEvents.dll /r:CollectionStore.dll /r:Common.dll /r:CommonGtkWindows.dll /r:Invitation.dll /r:Location.dll /r:RemotingSnifferLibrary.dll /r:Simias.Service.dll /r:Smtp.dll /r:SmtpInvitationProvider.dll /r:SqliteProvider.dll /r:SqliteWrapper.dll /r:Storage.dll /r:StoreProvider.dll /r:SyncCommon.dll /r:Sync.dll /r:SyncLogicLite.dll /r:SyncManager.dll"
+
+COMMON_LIBS="/r:Simias.dll"
 
 COMMON_CLEAN_FILES='*.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml'
 COMMON_DISTCLEAN_FILES='*.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj'
@@ -337,31 +339,6 @@ AC_OUTPUT([
 Makefile
 simias.pc
 src/Makefile
-src/Common/Makefile
-src/CommonGtkWindows/Makefile
-src/CommonFormWindows/Makefile
-src/Service/Makefile
-src/CollectionEvents/Makefile
-src/Storage/Makefile
-src/StoreProvider/Makefile
-src/FsProvider/Makefile
-src/SqliteProvider/Makefile
-src/CollectionStore/Makefile
-src/FsWatcher/Makefile
-src/RemotingSniffer/Makefile
-src/SyncCommon/Makefile
-src/Location/Makefile
-src/Agent/Makefile
-src/SyncManager/Makefile
-src/SyncLogicLite/Makefile
-src/SyncTools/Makefile
-src/Sync/Makefile
-src/AddressBook/Makefile
-src/AddressBookCmd/Makefile
-src/Smtp/Makefile
-src/Invitation/Makefile
-src/MiniShare/Makefile
-src/AcceptanceTests/Makefile
 package/Makefile
 package/windows/Makefile
 package/linux/Makefile
