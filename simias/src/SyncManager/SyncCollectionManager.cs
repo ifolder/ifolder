@@ -286,12 +286,6 @@ namespace Simias.Sync
 							log.Debug("Connecting to the Sync Collection Service...");
 							collectionService = storeService.GetCollectionService(collection.ID);
 						
-							// TODO: temp code to work around Mono returning a bad URI
-							string objectUri = RemotingServices.GetObjectUri(collectionService);
-							UriBuilder fixedUri = new UriBuilder(objectUri);
-							fixedUri.Host = collection.MasterUrl.Host;
-							RemotingServices.SetObjectUriForMarshal(collectionService, fixedUri.ToString());
-
 							// removed collection?
 							if (collectionService == null)
 							{
