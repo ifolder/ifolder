@@ -124,6 +124,16 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "About.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "About.resx"
+                    DependentUpon = "About.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "AcceptInvitation.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -156,6 +166,16 @@
                     RelPath = "BalloonType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Credits.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Credits.resx"
+                    DependentUpon = "Credits.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Domain.cs"
