@@ -522,6 +522,21 @@
       <xs:element name="RemoveProxyResponse">
         <xs:complexType />
       </xs:element>
+      <xs:element name="CalculateSyncSize">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="iFolderID" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CalculateSyncSizeResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="SyncNodeCount" type="xs:unsignedInt" />
+            <xs:element minOccurs="1" maxOccurs="1" name="SyncByteCount" type="xs:unsignedLong" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="iFolderSettings" type="s0:iFolderSettings" />
       <xs:element name="boolean" type="xs:boolean" />
       <xs:element name="iFolder" type="s0:iFolder" />
@@ -749,6 +764,12 @@
   <message name="RemoveProxySoapOut">
     <part name="parameters" element="s0:RemoveProxyResponse" />
   </message>
+  <message name="CalculateSyncSizeSoapIn">
+    <part name="parameters" element="s0:CalculateSyncSize" />
+  </message>
+  <message name="CalculateSyncSizeSoapOut">
+    <part name="parameters" element="s0:CalculateSyncSizeResponse" />
+  </message>
   <message name="PingHttpGetIn" />
   <message name="PingHttpGetOut" />
   <message name="GetSettingsHttpGetIn" />
@@ -943,6 +964,13 @@
   <message name="SetupProxyHttpGetOut" />
   <message name="RemoveProxyHttpGetIn" />
   <message name="RemoveProxyHttpGetOut" />
+  <message name="CalculateSyncSizeHttpGetIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="CalculateSyncSizeHttpGetOut">
+    <part name="SyncNodeCount" type="s:uint" />
+    <part name="SyncByteCount" type="s:ulong" />
+  </message>
   <message name="PingHttpPostIn" />
   <message name="PingHttpPostOut" />
   <message name="GetSettingsHttpPostIn" />
@@ -1137,6 +1165,13 @@
   <message name="SetupProxyHttpPostOut" />
   <message name="RemoveProxyHttpPostIn" />
   <message name="RemoveProxyHttpPostOut" />
+  <message name="CalculateSyncSizeHttpPostIn">
+    <part name="iFolderID" type="s:string" />
+  </message>
+  <message name="CalculateSyncSizeHttpPostOut">
+    <part name="SyncNodeCount" type="s:uint" />
+    <part name="SyncByteCount" type="s:ulong" />
+  </message>
   <portType name="iFolder Web ServiceSoap">
     <operation name="Ping">
       <input message="s0:PingSoapIn" />
@@ -1317,6 +1352,11 @@
       <input message="s0:RemoveProxySoapIn" />
       <output message="s0:RemoveProxySoapOut" />
       <documentation>Removes proxy settings</documentation>
+    </operation>
+    <operation name="CalculateSyncSize">
+      <input message="s0:CalculateSyncSizeSoapIn" />
+      <output message="s0:CalculateSyncSizeSoapOut" />
+      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
     </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpGet">
@@ -1500,6 +1540,11 @@
       <output message="s0:RemoveProxyHttpGetOut" />
       <documentation>Removes proxy settings</documentation>
     </operation>
+    <operation name="CalculateSyncSize">
+      <input message="s0:CalculateSyncSizeHttpGetIn" />
+      <output message="s0:CalculateSyncSizeHttpGetOut" />
+      <documentation>Calculates the number of nodes and bytes that need to be sync'd</documentation>
+    </operation>
   </portType>
   <portType name="iFolder Web ServiceHttpPost">
     <operation name="Ping">
@@ -1681,6 +1726,11 @@
       <input message="s0:RemoveProxyHttpPostIn" />
       <output message="s0:RemoveProxyHttpPostOut" />
       <documentation>Removes proxy settings</documentation>
+    </operation>
+    <operation name="CalculateSyncSize">
+      <input message="s0:CalculateSyncSizeHttpPostIn" />
+      <output message="s0:CalculateSyncSizeHttpPostOut" />
+      <documentation>Calculates the number of nodes and bytes that need to be sync'd.</documentation>
     </operation>
   </portType>
   <binding name="iFolder Web ServiceSoap" type="s0:iFolder Web ServiceSoap">
@@ -2009,6 +2059,15 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="CalculateSyncSize">
+      <soap:operation soapAction="http://novell.com/ifolder/web/CalculateSyncSize" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpGet" type="s0:iFolder Web ServiceHttpGet">
     <http:binding verb="GET" />
@@ -2306,6 +2365,13 @@
       </input>
       <output />
     </operation>
+    <operation name="CalculateSyncSize">
+      <http:operation location="/CalculateSyncSize" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output />
+    </operation>
   </binding>
   <binding name="iFolder Web ServiceHttpPost" type="s0:iFolder Web ServiceHttpPost">
     <http:binding verb="POST" />
@@ -2598,6 +2664,13 @@
     </operation>
     <operation name="RemoveProxy">
       <http:operation location="/RemoveProxy" />
+      <input>
+        <mime:content part="" type="application/x-www-form-urlencoded" />
+      </input>
+      <output />
+    </operation>
+    <operation name="CalculateSyncSize">
+      <http:operation location="/CalculateSyncSize" />
       <input>
         <mime:content part="" type="application/x-www-form-urlencoded" />
       </input>

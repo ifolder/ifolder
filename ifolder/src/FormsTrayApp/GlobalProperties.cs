@@ -1780,20 +1780,20 @@ namespace Novell.FormsTrayApp
 				try
 				{
 					// Get the sync node and byte counts.
-					uint nodeCount;
-					ulong bytesToSend;
-					/*iFolder ifolder = manager.GetiFolderById((string)lvi.Tag);
-					SyncSize.CalculateSendSize(ifolder, out nodeCount, out bytesToSend);
-					objectCount.Text = nodeCount.ToString();
-					byteCount.Text = bytesToSend.ToString();*/
+					iFolder ifolder = (iFolder)lvi.Tag;
+
+					ulong syncByteCount;;
+					uint syncNodeCount = ifWebService.CalculateSyncSize(ifolder.ID, out syncByteCount);
+					objectCount.Text = syncNodeCount.ToString();
+					byteCount.Text = syncByteCount.ToString();
 				}
-				catch (SimiasException ex)
+				catch (WebException ex)
 				{
-					ex.LogError();
+					// TODO:
 				}
 				catch (Exception ex)
 				{
-					//logger.Debug(ex, "Selecting iFolder");
+					// TODO:
 				}
 
 				Cursor.Current = Cursors.Default;

@@ -747,6 +747,29 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     public void EndRemoveProxy(System.IAsyncResult asyncResult) {
         this.EndInvoke(asyncResult);
     }
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/ifolder/web/CalculateSyncSize", RequestNamespace="http://novell.com/ifolder/web/", ResponseNamespace="http://novell.com/ifolder/web/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [return: System.Xml.Serialization.XmlElementAttribute("SyncNodeCount")]
+    public System.UInt32 CalculateSyncSize(string iFolderID, out System.UInt64 SyncByteCount) {
+        object[] results = this.Invoke("CalculateSyncSize", new object[] {
+                    iFolderID});
+        SyncByteCount = ((System.UInt64)(results[1]));
+        return ((System.UInt32)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginCalculateSyncSize(string iFolderID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("CalculateSyncSize", new object[] {
+                    iFolderID}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public System.UInt32 EndCalculateSyncSize(System.IAsyncResult asyncResult, out System.UInt64 SyncByteCount) {
+        object[] results = this.EndInvoke(asyncResult);
+        SyncByteCount = ((System.UInt64)(results[1]));
+        return ((System.UInt32)(results[0]));
+    }
 }
 
 /// <remarks/>
