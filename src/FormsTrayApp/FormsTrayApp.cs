@@ -72,10 +72,8 @@ namespace Novell.iFolder.FormsTrayApp
 		private AnimateDelegate animateDelegate;
 		private System.Windows.Forms.MenuItem menuItem7;
 		private System.Windows.Forms.MenuItem menuItem10;
-		private System.Windows.Forms.MenuItem menuStoreBrowser;
 		private System.Windows.Forms.MenuItem menuSeparator1;
 		private System.Windows.Forms.MenuItem menuInvitationWizard;
-		private System.Windows.Forms.MenuItem menuAddressBook;
 		private System.Windows.Forms.MenuItem menuTraceWindow;
 		private System.Windows.Forms.MenuItem menuProperties;
 		private System.Windows.Forms.MenuItem menuHelp;
@@ -86,13 +84,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private Simias.Service.Manager serviceManager;
 		private System.Windows.Forms.MenuItem menuPOBox;
-		private System.Windows.Forms.MenuItem menuConnect;
-		private System.Windows.Forms.MenuItem menuConnectServer;
 		private iFolderManager ifManager;
 		private System.Windows.Forms.MenuItem menuEventLogReader;
 		private Configuration config;
 		private EventSubscriber subscriber;
 		private IntPtr hwnd;
+		private System.Windows.Forms.MenuItem menuJoin;
+		private System.Windows.Forms.MenuItem menuStoreBrowser;
+		private System.Windows.Forms.MenuItem menuTools;
 		private int iconID;
 		//private const int waitTime = 3000;
 		#endregion
@@ -199,7 +198,7 @@ namespace Novell.iFolder.FormsTrayApp
 			Process.Start(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
 		}
 
-		private void menuConnectServer_Click(object sender, System.EventArgs e)
+		private void menuJoin_Click(object sender, System.EventArgs e)
 		{
 			// TODO: this may need to move if the server connect dialog goes away.
 			// Check for old versions of the iFolder client.
@@ -243,20 +242,6 @@ namespace Novell.iFolder.FormsTrayApp
 //			else
 			{
 				Process.Start(Path.Combine(Application.StartupPath, "InvitationWizard.exe"));
-			}
-		}
-
-		private void menuAddressBook_Click(object sender, System.EventArgs e)
-		{
-// Check for currently running instance and switch to it.
-//			Win32Window win32Window = Win32Window.FindWindow(null, "FormsAddrBook");
-//			if (win32Window != null)
-//			{
-//				win32Window.BringWindowToTop();
-//			}
-//			else
-			{
-				Process.Start(Path.Combine(Application.StartupPath, "ContactBrowser.exe"));
 			}
 		}
 
@@ -336,10 +321,11 @@ namespace Novell.iFolder.FormsTrayApp
 		private void contextMenu1_Popup(object sender, System.EventArgs e)
 		{
 			// Show/hide store browser menu item based on whether or not the file is installed.
-			this.menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
-			this.menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
-			this.menuSeparator1.Visible = this.menuStoreBrowser.Visible | this.menuEventLogReader.Visible;
+			menuStoreBrowser.Visible = File.Exists(Path.Combine(Application.StartupPath, "StoreBrowser.exe"));
+			menuEventLogReader.Visible = File.Exists(Path.Combine(Application.StartupPath, "EventLogReader.exe"));
+			menuSeparator1.Visible = menuTools.Visible = menuStoreBrowser.Visible | menuEventLogReader.Visible;
 
+			// Check for collisions.
 			bool collisions = false;
 			foreach (iFolder ifolder in ifManager)
 			{
@@ -350,7 +336,21 @@ namespace Novell.iFolder.FormsTrayApp
 				}
 			}
 
-			this.menuConflictResolver.Enabled = collisions;
+			menuConflictResolver.Enabled = collisions;
+
+			// Check to see if we have already connected to an enterprise server.
+			Store store = Store.GetStore();
+			LocalDatabase localDB = store.GetDatabaseObject();
+			menuJoin.Visible = true;
+			ICSList domainList = localDB.GetNodesByType(typeof(Domain).Name);
+			foreach (ShallowNode sn in domainList)
+			{
+				if (!sn.Name.Equals(Domain.WorkGroupDomainName))
+				{
+					menuJoin.Visible = false;
+					break;
+				}
+			}
 		}
 
 		private void notifyIcon1_DoubleClick(object sender, System.EventArgs e)
@@ -568,13 +568,10 @@ namespace Novell.iFolder.FormsTrayApp
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			this.menuEventLogReader = new System.Windows.Forms.MenuItem();
-			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			this.menuSeparator1 = new System.Windows.Forms.MenuItem();
-			this.menuConnect = new System.Windows.Forms.MenuItem();
-			this.menuConnectServer = new System.Windows.Forms.MenuItem();
+			this.menuJoin = new System.Windows.Forms.MenuItem();
 			this.menuPOBox = new System.Windows.Forms.MenuItem();
 			this.menuInvitationWizard = new System.Windows.Forms.MenuItem();
-			this.menuAddressBook = new System.Windows.Forms.MenuItem();
 			this.menuConflictResolver = new System.Windows.Forms.MenuItem();
 			this.menuTraceWindow = new System.Windows.Forms.MenuItem();
 			this.menuItem7 = new System.Windows.Forms.MenuItem();
@@ -582,6 +579,8 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuHelp = new System.Windows.Forms.MenuItem();
 			this.menuItem10 = new System.Windows.Forms.MenuItem();
 			this.menuExit = new System.Windows.Forms.MenuItem();
+			this.menuTools = new System.Windows.Forms.MenuItem();
+			this.menuStoreBrowser = new System.Windows.Forms.MenuItem();
 			// 
 			// notifyIcon1
 			// 
@@ -593,13 +592,11 @@ namespace Novell.iFolder.FormsTrayApp
 			// contextMenu1
 			// 
 			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						 this.menuEventLogReader,
-																						 this.menuStoreBrowser,
+																						 this.menuTools,
 																						 this.menuSeparator1,
-																						 this.menuConnect,
+																						 this.menuJoin,
 																						 this.menuPOBox,
 																						 this.menuInvitationWizard,
-																						 this.menuAddressBook,
 																						 this.menuConflictResolver,
 																						 this.menuTraceWindow,
 																						 this.menuItem7,
@@ -611,97 +608,93 @@ namespace Novell.iFolder.FormsTrayApp
 			// 
 			// menuEventLogReader
 			// 
-			this.menuEventLogReader.Index = 0;
+			this.menuEventLogReader.Index = 1;
 			this.menuEventLogReader.Text = "Event Log Reader";
 			this.menuEventLogReader.Visible = false;
 			this.menuEventLogReader.Click += new System.EventHandler(this.menuEventLogReader_Click);
 			// 
-			// menuStoreBrowser
-			// 
-			this.menuStoreBrowser.Index = 1;
-			this.menuStoreBrowser.Text = "Store Browser";
-			this.menuStoreBrowser.Visible = false;
-			this.menuStoreBrowser.Click += new System.EventHandler(this.menuStoreBrowser_Click);
-			// 
 			// menuSeparator1
 			// 
-			this.menuSeparator1.Index = 2;
+			this.menuSeparator1.Index = 1;
 			this.menuSeparator1.Text = "-";
 			this.menuSeparator1.Visible = false;
 			// 
-			// menuConnect
+			// menuJoin
 			// 
-			this.menuConnect.Index = 3;
-			this.menuConnect.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																						this.menuConnectServer});
-			this.menuConnect.Text = "Connect";
-			// 
-			// menuConnectServer
-			// 
-			this.menuConnectServer.Index = 0;
-			this.menuConnectServer.Text = "Enterprise server...";
-			this.menuConnectServer.Click += new System.EventHandler(this.menuConnectServer_Click);
+			this.menuJoin.Index = 2;
+			this.menuJoin.Text = "Join Enterprise...";
+			this.menuJoin.Click += new System.EventHandler(this.menuJoin_Click);
 			// 
 			// menuPOBox
 			// 
-			this.menuPOBox.Index = 4;
+			this.menuPOBox.Index = 3;
 			this.menuPOBox.Text = "Subscriptions...";
 			this.menuPOBox.Click += new System.EventHandler(this.menuPOBox_Click);
 			// 
 			// menuInvitationWizard
 			// 
-			this.menuInvitationWizard.Index = 5;
+			this.menuInvitationWizard.Index = 4;
 			this.menuInvitationWizard.Text = "Invitation Wizard...";
 			this.menuInvitationWizard.Click += new System.EventHandler(this.menuInvitationWizard_Click);
 			// 
-			// menuAddressBook
-			// 
-			this.menuAddressBook.Index = 6;
-			this.menuAddressBook.Text = "Address Book...";
-			this.menuAddressBook.Click += new System.EventHandler(this.menuAddressBook_Click);
-			// 
 			// menuConflictResolver
 			// 
-			this.menuConflictResolver.Index = 7;
+			this.menuConflictResolver.Index = 5;
 			this.menuConflictResolver.Text = "Conflict Resolver...";
 			this.menuConflictResolver.Click += new System.EventHandler(this.menuConflictResolver_Click);
 			// 
 			// menuTraceWindow
 			// 
-			this.menuTraceWindow.Index = 8;
+			this.menuTraceWindow.Index = 6;
 			this.menuTraceWindow.Text = "Trace Window";
 			this.menuTraceWindow.Visible = false;
 			this.menuTraceWindow.Click += new System.EventHandler(this.menuTraceWindow_Click);
 			// 
 			// menuItem7
 			// 
-			this.menuItem7.Index = 9;
+			this.menuItem7.Index = 7;
 			this.menuItem7.Text = "-";
 			// 
 			// menuProperties
 			// 
 			this.menuProperties.DefaultItem = true;
-			this.menuProperties.Index = 10;
+			this.menuProperties.Index = 8;
 			this.menuProperties.Text = "My iFolders...";
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
 			// menuHelp
 			// 
-			this.menuHelp.Index = 11;
+			this.menuHelp.Index = 9;
 			this.menuHelp.Text = "Help...";
 			this.menuHelp.Click += new System.EventHandler(this.menuHelp_Click);
 			// 
 			// menuItem10
 			// 
-			this.menuItem10.Index = 12;
+			this.menuItem10.Index = 10;
 			this.menuItem10.Text = "-";
 			// 
 			// menuExit
 			// 
 			this.menuExit.Enabled = false;
-			this.menuExit.Index = 13;
+			this.menuExit.Index = 11;
 			this.menuExit.Text = "Exit";
 			this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+			// 
+			// menuTools
+			// 
+			this.menuTools.Index = 0;
+			this.menuTools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					  this.menuStoreBrowser,
+																					  this.menuEventLogReader});
+			this.menuTools.Text = "Tools";
+			this.menuTools.Visible = false;
+			// 
+			// menuStoreBrowser
+			// 
+			this.menuStoreBrowser.Index = 0;
+			this.menuStoreBrowser.Text = "Store Browser";
+			this.menuStoreBrowser.Visible = false;
+			this.menuStoreBrowser.Click += new System.EventHandler(this.menuStoreBrowser_Click);
 			// 
 			// FormsTrayApp
 			// 
