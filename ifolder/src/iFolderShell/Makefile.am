@@ -30,7 +30,7 @@ iFolderShell_DEF = $(srcdir)/iFolderShell/iFolderShell.Def
 
 DATA_FILES = $(srcdir)/iFolderShell/ifolder_emblem.ico $(srcdir)/iFolderShell/ifolder_conflict_emb.ico $(srcdir)/iFolderShell/images.bmp
 RESX_FILES = $(srcdir)/ConflictResolver.resx $(srcdir)/MyMessageBox.resx $(srcdir)/NewiFolder.resx $(srcdir)/iFolderAdvanced.resx $(srcdir)/UserProperties.resx
-WINDOWS_FILES = $(srcdir)/explorer.exe.manifest
+WINDOWS_FILES = $(srcdir)/explorer.exe.manifest $(srcdir)/explorer.exe.config
 
 PROJECT_FILES = $(srcdir)/iFolderComponent.csproj $(srcdir)/iFolderComponent.sln
 
