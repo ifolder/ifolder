@@ -137,6 +137,11 @@
                     DependentUpon = "GlobalProperties.cs"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "iFolderAppInstallerClass.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>
