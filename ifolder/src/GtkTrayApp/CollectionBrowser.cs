@@ -263,6 +263,14 @@ namespace Novell.iFolder
 
 		public void on_properties(object o, EventArgs args)
 		{
+			if(ColTreeView.HasFocus)
+			{
+				on_ColTreeView_row_activated(o, args);
+			}
+			else if(NodeTreeView.HasFocus)
+			{
+				on_NodeTreeView_row_activated(o, args);
+			}
 		}
 		
 		public void on_quit(object o, EventArgs args)
@@ -322,6 +330,25 @@ namespace Novell.iFolder
 						npd.ShowAll();
 					}
 				}
+			}
+		}
+
+
+		public void on_ColTreeView_row_activated(object o, EventArgs args)
+		{
+			TreeSelection tSelect = ColTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				Collection col = (Collection) tModel.GetValue(iter, 0);
+				NodePropertiesDialog npd = new NodePropertiesDialog();
+				npd.Node = col;
+				npd.Pixbuf = CollectionPixBuf;
+				npd.Title = col.Name + " Properties";
+				npd.ShowAll();
 			}
 		}
 	}
