@@ -142,5 +142,6 @@ AC_SUBST(IFOLDER_LIBS)
 AC_OUTPUT([
 Makefile
 src/Makefile
+package/Makefile
 ])
 
