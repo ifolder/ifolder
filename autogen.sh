@@ -29,8 +29,8 @@ rm -f config.log
 	DIE=1
 }
 
-AUTOMAKE=automake-1.7
-ACLOCAL=aclocal-1.7
+AUTOMAKE=automake-1.9
+ACLOCAL=aclocal-1.9
 
 ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
         AUTOMAKE=automake
