@@ -43,9 +43,7 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
@@ -60,6 +58,8 @@ import com.novell.simias.browser.Browser_x0020_ServiceSoap;
  * @author Boyd Timothy <btimothy@novell.com>
  */
 public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelectionListener, TreeWillExpandListener {
+
+	private static final long serialVersionUID = 12345L;
 
 	private javax.swing.JPanel jContentPane = null;
 
@@ -96,7 +96,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	private void initialize() {
 		this.setTitle("Simias Store Browser");
 		this.setName("SimiasStoreBrowser");
-		this.setSize(600, 600);
+		this.setSize(800, 600);
 		this.setContentPane(getJContentPane());
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -172,7 +172,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	 */
 	protected void openStore() {
 		
-		// TODO: Prompt the user for a URL
+		// TODO: Figure out how to retrieve the most recently used URLs
 		String url = (String) JOptionPane.showInputDialog(this, "Simias Store URL", "Open Simias Store",
 												 JOptionPane.QUESTION_MESSAGE, null, null,
 												 "http://bht-linux.provo.novell.com:49448/simias10/boyd/SimiasBrowser.asmx");
@@ -180,10 +180,6 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 		{
 			return;
 		}
-//		URLPrompt urlPrompt = new URLPrompt(this, true);
-//		urlPrompt.show();
-
-//		String url = "http://bht-linux.provo.novell.com:49448/simias10/boyd/SimiasBrowser.asmx";
 		
 		try {
 			service = SwingStoreBrowser.getSoapService(url);
@@ -251,6 +247,8 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	
 	private void addChildNodes(DefaultMutableTreeNode parentNode, BrowserNode[] childNodesA)
 	{
+		System.out.println("File | Exit Button Selected");
+		System.out.println("childNodesA.length: " + String.valueOf(childNodesA.length));
 		for (int i = 0; i < childNodesA.length; i++)
 		{
 			String nodeData = childNodesA[i].getNodeData();
@@ -261,6 +259,12 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			}
 			
 			SimiasNode simiasNode = new SimiasNode(nodeData);
+			
+			// Don't add the node if it's the same as the parent
+			SimiasNode parentSimiasNode = (SimiasNode) parentNode.getUserObject();
+			if (parentSimiasNode.getId() == simiasNode.getId()) {
+				continue;
+			}
 			
 			DefaultMutableTreeNode childNode = new DefaultMutableTreeNode();
 			childNode.setUserObject(simiasNode);
@@ -324,6 +328,7 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 	private JSplitPane getJSplitPane() {
 		if (jSplitPane == null) {
 			jSplitPane = new JSplitPane();
+			jSplitPane.setDividerLocation(200);
 			jSplitPane.setLeftComponent(getJScrollPane());
 			jSplitPane.setRightComponent(getJScrollPane1());
 		}
@@ -352,6 +357,10 @@ public class StoreBrowserWindow extends javax.swing.JFrame implements TreeSelect
 			jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 			jTree.addTreeSelectionListener(this);
 			jTree.addTreeWillExpandListener(this);
+			
+			// Make sure there's no children when the app opens
+			jTree.setModel(new DefaultTreeModel(tree_top));
+			
 			jTree.setShowsRootHandles(true);
 		}
 		return jTree;
