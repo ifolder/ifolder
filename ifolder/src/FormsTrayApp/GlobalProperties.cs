@@ -2786,6 +2786,7 @@ namespace Novell.FormsTrayApp
 				iFolderWeb ifolder = (iFolderWeb)lvi.Tag;
 
 				MyMessageBox mmb = new Novell.iFolderCom.MyMessageBox(
+					resourceManager.GetString("revertiFolder") + "\n\n" +
 					resourceManager.GetString("revertPrompt"), 
 					resourceManager.GetString("revertTitle"),
 					string.Empty,
@@ -2918,12 +2919,14 @@ namespace Novell.FormsTrayApp
 
 				if (ifolder.OwnerID.Equals(currentUserID))
 				{
-					message = resourceManager.GetString("deletePrompt");
-					caption = resourceManager.GetString("deleteTitle");
+					message = resourceManager.GetString("deleteiFolder") + "\n\n" + 
+						resourceManager.GetString("removePrompt");
+					caption = resourceManager.GetString("removeTitle");
 				}
 				else
 				{
-					message = resourceManager.GetString("removePrompt");
+					message = resourceManager.GetString("removeiFolder")  + "\n\n" + 
+						resourceManager.GetString("removePrompt");
 					caption = resourceManager.GetString("removeTitle");
 				}
 

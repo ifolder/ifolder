@@ -5231,24 +5231,27 @@
 		<value>Delete iFolder</value>
 	</data>
 	<data name="revertTitle">
-		<value>Revert this iFolder?</value>
+		<value>Revert iFolder Confirmation</value>
 	</data>
 	<data name="revertPrompt">
 		<value>Are you sure you want to revert this iFolder to a normal folder?</value>
 	</data>
-	<data name="deleteTitle">
-		<value>Delete this iFolder?</value>
-	</data>
-	<data name="deletePrompt">
-		<value>Are you sure you want to delete this iFolder?</value>
-	</data>
 	<data name="removeTitle">
-		<value>Remove this iFolder?</value>
+		<value>Remove iFolder Confirmation</value>
 	</data>
 	<data name="removePrompt">
-		<value>Are you sure you want to remove this iFolder.</value>
+		<value>Are you sure you want to remove this iFolder?</value>
 	</data>
 	<data name="notApplicable">
 		<value>N/A</value>
+	</data>
+	<data name="removeiFolder">
+		<value>This will remove you as a member of this iFolder.  You will not be able to access this iFolder unless the owner re-invites you to this iFolder.  The files will not be deleted from your local hard drive.</value>
+	</data>
+	<data name="deleteiFolder">
+		<value>This will remove this iFolder from your local machine.  Because you are the owner of this iFolder, the iFolder will also be removed from the iFolder server and all users you have shared with.  The iFolder cannot be recovered or re-shared on another machine.  The files will not be deleted from your local hard drive.</value>
+	</data>
+	<data name="revertiFolder">
+		<value>This will revert this iFolder back to a normal folder and leave the files intact.  The iFolder will then be available from the server and will need to be setup in a different location in order to sync.</value>
 	</data>
 </root>
