@@ -47,7 +47,7 @@ public class FileInviter
 
 	public FileInviter(Uri storeLocation)
 	{
-		syncStore = new SyncStore(storeLocation.LocalPath);
+		syncStore = new SyncStore(storeLocation == null? null: storeLocation.LocalPath);
 		store = syncStore.BaseStore;
 	}
 
@@ -89,6 +89,13 @@ public class FileInviter
 		 */
 		Invitation invitation = new Invitation(fileName);
 		invitation.RootPath = docRootParent;
+
+		if (invitation.CollectionType != Dredger.NodeTypeDir)
+		{
+			Log.Error("This utility only handles invitations to collections of type {0}", Dredger.NodeTypeDir);
+			Log.Error("This invitation is of type {0}", invitation.CollectionType);
+			return false;
+		}
 
 		Uri docRoot = new Uri(Path.Combine(Path.GetFullPath(docRootParent), invitation.CollectionName));
 		Collection c = FindCollection(store, docRoot);
