@@ -172,6 +172,11 @@ namespace Simias
 		{
 		}
 
+		/// <summary>
+		/// Could not open exception.
+		/// </summary>
+		/// <param name="obj">The object that could not be opened.</param>
+		/// <param name="ex">The internal exception that caused this one.</param>
 		public OpenException(string obj, Exception ex) :
 			base(string.Format("Failed to open {0}.", obj), ex)
 		{
