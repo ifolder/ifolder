@@ -38,8 +38,8 @@ package-clean clean-local:
 	rm -rf *.rpm RPM
 
 distclean-local:
-	rm -f ../*/Makefile ifolder.spec
+	rm -f ifolder.spec
 
 maintainer-clean-local:
-	rm -f ../*/Makefile.in
+	rm -f Makefile.in
 

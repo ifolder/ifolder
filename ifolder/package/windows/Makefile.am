@@ -29,7 +29,6 @@ package-clean clean-local:
 	cd ShutdowniFolder; rm -rf ShutdowniFolder.exe bin obj *.log *.suo *.csproj.user
 
 distclean-local: package-clean
-	rm -f ../*/Makefile ../linux/ifolder.spec
 
 maintainer-clean-local:
 	rm -f ../*/Makefile.in
