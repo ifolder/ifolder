@@ -46,6 +46,7 @@ namespace Novell.FormsTrayApp
 		private Thread workerThread = null;
 
 		private Icon trayIcon;
+		private Icon startupIcon;
         private const int numberOfIcons = 2;//10;
 		private Icon[] uploadIcons = new Icon[numberOfIcons];
 
@@ -123,6 +124,7 @@ namespace Novell.FormsTrayApp
 				this.Icon = new Icon(Path.Combine(Application.StartupPath, "ifolder_app.ico"));
 
 				trayIcon = new Icon(Path.Combine(basePath, "ifolder_loaded.ico"));
+				startupIcon = new Icon(Path.Combine(basePath, "ifolder-startup.ico"));
 				uploadIcons[0] = new Icon(trayIcon, trayIcon.Size);
 				uploadIcons[1] = new Icon(Path.Combine(basePath, "ifolder_message.ico"));
 //				for (int i = 0; i < numberOfIcons; i++)
@@ -131,7 +133,7 @@ namespace Novell.FormsTrayApp
 //					uploadIcons[i] = new Icon(upIcon);
 //				}
 			
-				notifyIcon1.Icon = trayIcon;
+				notifyIcon1.Icon = startupIcon;
 				this.ShowInTaskbar = false;
 				this.WindowState = FormWindowState.Minimized;
 				//this.Hide();
@@ -302,6 +304,8 @@ namespace Novell.FormsTrayApp
 					workerThread.Start();
 				}
 
+				notifyIcon1.Icon = trayIcon;
+
 				// Set up the event handlers to watch for create, delete, and change events.
 /*				subscriber = new EventSubscriber();
 				subscriber.NodeChanged += new NodeEventHandler(subscriber_NodeChanged);
@@ -310,11 +314,11 @@ namespace Novell.FormsTrayApp
 */			}
 			catch (WebException ex)
 			{
-				CleanupTrayApp();
+				CleanupTrayApp(ex);
 			}
 			catch (Exception ex)
 			{
-				CleanupTrayApp();
+				CleanupTrayApp(ex);
 			}
 		}
 
@@ -545,11 +549,11 @@ namespace Novell.FormsTrayApp
 			Application.Exit();
 		}
 
-		private void CleanupTrayApp()
+		private void CleanupTrayApp(Exception ex)
 		{
 			// TODO: Localize.
-			MessageBox.Show("A fatal error was encountered during iFolder initialization.  Please see the log file for additional information", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-
+			MessageBox.Show("A fatal error was encountered during iFolder initialization.\n\n" + ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+			notifyIcon1.Visible = false;
 			Application.Exit();
 		}
 
