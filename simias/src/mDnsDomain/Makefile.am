@@ -28,17 +28,17 @@ DEBUG_FILES = Simias.mDns.pdb
 endif
 endif
 
+if WINDOWS
+OTHER_FILES = ../libsimdezvous/simdezvous.dll
+endif
+
 install-exec-local: Simias.mDns.dll $(DATA_FILES)
 	$(mkinstalldirs) $(DESTDIR)$(webdir)
 	$(mkinstalldirs) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) Simias.mDns.dll $(DEBUG_FILES) $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) mDns.asmx $(DESTDIR)$(webdir)
-	$(INSTALL_PROGRAM) ./external/mDnsResponder.dll $(DESTDIR)$(webbindir)
-	$(INSTALL_PROGRAM) ./external/mDnsResponderApi.dll $(DESTDIR)$(webbindir)
+	$(INSTALL_PROGRAM) Simias.mDns.dll $(OTHER_FILES) $(DEBUG_FILES) $(DESTDIR)$(webbindir)
 	
 uninstall-local:
-	cd $(DESTDIR)$(webbindir); rm -f Simias.mDns.dll mDnsResponder.dll mDnsResponderApi.dll $(DEBUG_FILES)
-	cd $(DESTDIR)$(webdir); rm -f mDns.asmx
+	cd $(DESTDIR)$(webbindir); rm -f Simias.mDns.dll $(OTHER_FILES) $(DEBUG_FILES)
 
 installcheck-local: install
 	
