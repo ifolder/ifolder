@@ -22,11 +22,10 @@
  ***********************************************************************/
 
 using System;
-using Novell.AddressBook.UI.gtk;
 using System.Collections;
-using Simias;
-using Simias.Sync;
-using Simias.Domain;
+//using Simias;
+//using Simias.Sync;
+//using Simias.Domain;
 using System.Diagnostics;
 using System.Threading;
 

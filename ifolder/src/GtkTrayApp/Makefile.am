@@ -2,7 +2,7 @@
 export MONO_PATH := $(MONO_PATH)
 
 #UILIB_CSFILES = $(srcdir)/ServerInfoDialog.cs $(srcdir)/ConflictResolver.cs $(srcdir)/ApplicationProperties.cs $(srcdir)/DirectoryEntry.cs $(srcdir)/CollectionBrowser.cs $(srcdir)/IntroDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/CrashReport.cs $(srcdir)/ReunionBrowser.cs
-UILIB_CSFILES = $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/SettingsPage.cs $(srcdir)/iFolderExceptionDialog.cs
+UILIB_CSFILES = $(srcdir)/iFolderAcceptDialog.cs $(srcdir)/iFolderUserSelector.cs $(srcdir)/iFolderLoginDialog.cs $(srcdir)/iFolderPropSettingsPage.cs $(srcdir)/iFolderPropSharingPage.cs $(srcdir)/iFolderPropertiesDialog.cs $(srcdir)/iFolderCrashDialog.cs $(srcdir)/iFolderMsgDialog.cs $(srcdir)/iFolderWindow.cs $(srcdir)/iFolderCreationDialog.cs $(srcdir)/iFolderExceptionDialog.cs
 UILIB_CSFILES_CSC := $(subst /,$(SEP),$(UILIB_CSFILES))
 UILIB_INCLUDES = 
 UILIB_RESOURCES =
@@ -37,10 +37,10 @@ all: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe
 #all: Novell.iFolder.UI.gtk.dll iFolderGtkApp.exe CollectionBrowser.exe ReunionBrowser.exe 
 
 Novell.iFolder.UI.gtk.dll: $(UILIB_CSFILES) $(UILIB_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(UILIB_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_LIBS) $(SIMIAS_UI_LIBS) $(ADDRESSBOOK_LIBS) $(ADDRESSBOOK_UI_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs /doc:Novell.iFolder.UI.gtk.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(UILIB_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(UILIB_LIBS:%=/r:%) $(UILIB_LIBPATH:%=/lib:%) $(UILIB_RESOURCES:%=$(ICON_FLAG)%) $(UILIB_CSFILES_CSC) Util.cs /doc:Novell.iFolder.UI.gtk.doc.xml
 
 iFolderGtkApp.exe: $(TrayAppGtk_CSFILES) $(TrayAppGtk_RESOURCES)
-	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_LIBS) $(SIMIAS_UI_LIBS) $(ADDRESSBOOK_LIBS) $(ADDRESSBOOK_UI_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
+	$(CSC) /out:$@ $(CSCFLAGS) $(TrayAppGtk_FLAGS) $(GLADE_SHARP_LIBS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(TrayAppGtk_LIBS:%=/r:%) $(TrayAppGtk_LIBPATH:%=/lib:%) $(TrayAppGtk_RESOURCES:%=$(ICON_FLAG)%) $(TrayAppGtk_CSFILES_CSC) Util.cs /doc:iFolderGtkApp.doc.xml
 
 
 install-exec-local: all $(GLADE_FILES) $(IMAGE_FILES)

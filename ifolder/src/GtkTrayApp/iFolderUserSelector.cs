@@ -96,7 +96,7 @@ namespace Novell.iFolder
 		private void InitializeWidgets()
 		{
 			this.SetDefaultSize (300, 400);
-			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("contact.png"));
+			this.Icon = new Gdk.Pixbuf(Util.ImagesPath("ifolderuser.png"));
 
 
 			// Create the main TreeView and add it to a scrolled
