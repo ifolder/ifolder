@@ -1173,9 +1173,32 @@ namespace Simias.Storage
 		/// <param name="userID">Identifier to look up the Member object with.</param>
 		/// <returns>The Member object associated with the specified user ID. May return null if the
 		/// Member object does not exist in the collection.</returns>
-		public Member GetMember( string userID )
+		public Member GetMemberByID( string userID )
 		{
 			return accessControl.GetMember( userID.ToLower() );
+		}
+
+		/// <summary>
+		/// Gets the first Member object associated with the specified name.
+		/// </summary>
+		/// <param name="name">Name to look up the Member object with.</param>
+		/// <returns>The first Member object associated with the specified name. May return null if the
+		/// Member object does not exist in the collection.</returns>
+		public Member GetMemberByName( string name )
+		{
+			Member member = null;
+
+			ICSList list = Search( BaseSchema.ObjectName, name, SearchOp.Equal );
+			foreach ( ShallowNode sn in list )
+			{
+				if ( sn.Type == NodeTypes.MemberType )
+				{
+					member = new Member( this, sn );
+					break;
+				}
+			}
+
+			return member;
 		}
 
 		/// <summary>

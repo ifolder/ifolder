@@ -100,7 +100,7 @@ public class SynkerServiceA: SyncCollectionService
 			userID = user;
 		}
 		
-		member = collection.GetMember(userID);
+		member = collection.GetMemberByID(userID);
 		collection.Impersonate(member);
 		Log.Info("Sync session starting for {0}", member.Name);
 
