@@ -1845,20 +1845,25 @@ namespace Novell.FormsTrayApp
 			else
 			{
 				// Remove the enterprise account.
-				// TODO: localize
 				string message = resourceManager.GetString("deleteAccountPrompt") + "\n\n" +
 					resourceManager.GetString("deleteAccountInfo");
 				DialogResult dialogResult = MessageBox.Show(message, resourceManager.GetString("deleteAccountTitle"),
 					MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 				if (dialogResult != DialogResult.Cancel)
 				{
-					ifWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
-					lvi.Remove();
-
-					if (RemoveDomain != null)
+					try
 					{
-						// Call delegate to remove the domain from the server dropdown list.
-						RemoveDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+						ifWebService.LeaveDomain(domain.ID, dialogResult == DialogResult.No);
+						lvi.Remove();
+
+						if (RemoveDomain != null)
+						{
+							// Call delegate to remove the domain from the server dropdown list.
+							RemoveDomain(this, new DomainConnectEventArgs(domain.DomainWeb));
+						}
+					}
+					catch
+					{
 					}
 				}
 			}
