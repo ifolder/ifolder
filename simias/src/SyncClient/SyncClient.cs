@@ -222,7 +222,7 @@ namespace Simias.Sync
 		string			serverContext;
 		string			clientContext;
 		int				MAX_XFER_SIZE = 1024 * 64;
-		static int		BATCH_SIZE = 10;
+		static int		BATCH_SIZE = 50;
 		bool			HadErrors;
 		private const string	ServerCLContextProp = "ServerCLContext";
 		private const string	ClientCLContextProp = "ClientCLContext";
@@ -483,7 +483,8 @@ namespace Simias.Sync
 					foreach( ChangeLogRecord rec in changeList )
 					{
 						// Make sure the events are not for local only changes.
-						if (((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0)
+						if ((((NodeEventArgs.EventFlags)rec.Flags & NodeEventArgs.EventFlags.LocalOnly) == 0) &&
+							(rec.MasterRev != rec.SlaveRev))
 						{
 							NodeStamp stamp = new NodeStamp();
 							stamp.localIncarn = rec.SlaveRev;
@@ -933,6 +934,18 @@ namespace Simias.Sync
 
 		void ProcessKillOnServer()
 		{
+			// remove deleted nodes from server
+			if (killOnServer.Count > 0 && ! stopping)
+			{
+				string[] idList = new string[killOnServer.Count];
+				killOnServer.Keys.CopyTo(idList, 0);
+				SyncNodeStatus[] nodeStatus = service.DeleteNodes(idList);
+				foreach (SyncNodeStatus status in nodeStatus)
+				{
+					if (status.status == SyncStatus.Success)
+						killOnServer.Remove(status.nodeID);
+				}
+			}
 		}
 
 		void ProcessNodesToServer()

@@ -174,6 +174,17 @@ namespace Simias.Sync.Web
 		}
 
 		/// <summary>
+		/// Delete the nodes listed.
+		/// </summary>
+		/// <param name="nodeIDs">An array of IDs of the nodes to delete.</param>
+		/// <returns>The status of the deletes.</returns>
+		[WebMethod(EnableSession = true)]
+		public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
+		{
+			return Service.DeleteNodes(nodeIDs);
+		}
+
+		/// <summary>
 		/// Get a HashMap of the file.
 		/// </summary>
 		/// <param name="blockSize">The block size to be hashed.</param>

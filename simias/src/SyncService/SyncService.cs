@@ -472,6 +472,52 @@ public class SyncService
 	}
 	
 
+	public SyncNodeStatus[] DeleteNodes(string[] nodeIDs)
+	{
+		SyncNodeStatus[] nodeStatus = new SyncNodeStatus[nodeIDs.Length];
+		
+		int i = 0;
+		foreach (string id in nodeIDs)
+		{
+			try
+			{
+				Node node = collection.GetNodeByID(id);
+				if (node == null)
+				{
+					log.Debug("Ignoring attempt to delete non-existent node {0}", id);
+					continue;
+				}
+
+				log.Info("Deleting {0}", node.Name);
+				BaseFileNode bfn = node as BaseFileNode;
+				if (bfn != null)
+				{
+					// If this is a file delete the file.
+					File.Delete(bfn.GetFullPath(collection));
+				}
+				else
+				{
+					// If this is a directory remove the directory.
+					DirNode dn = node as DirNode;
+					if (dn != null)
+						Directory.Delete(dn.GetFullPath(collection), true);
+				}
+						
+				// Do a deep delete.
+				Node[] deleted = collection.Delete(node, PropertyTags.Parent);
+				collection.Commit(deleted);
+
+				nodeStatus[i].status = SyncNodeStatus.SyncStatus.Success;
+			}
+			catch
+			{
+				nodeStatus[i].status = SyncNodeStatus.SyncStatus.ServerFailure;
+			}
+			i++;
+		}
+		return nodeStatus;
+	}
+
 
 
 

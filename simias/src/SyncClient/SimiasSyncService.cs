@@ -251,6 +251,26 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/DeleteNodes", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    public SyncNodeStatus[] DeleteNodes(string[] nodeIDs) {
+        object[] results = this.Invoke("DeleteNodes", new object[] {
+                    nodeIDs});
+        return ((SyncNodeStatus[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginDeleteNodes(string[] nodeIDs, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("DeleteNodes", new object[] {
+                    nodeIDs}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public SyncNodeStatus[] EndDeleteNodes(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((SyncNodeStatus[])(results[0]));
+    }
+    
+    /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/GetHashMap", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public HashEntry[] GetHashMap(int blockSize) {
         object[] results = this.Invoke("GetHashMap", new object[] {
