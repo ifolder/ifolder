@@ -7,7 +7,7 @@ mDnsDomain_INCLUDES =
 mDnsDomain_RESOURCES =
 mDnsDomain_FLAGS = $(CSC_LIBFLAG)
 mDnsDomain_LIBS = System.dll System.Data.dll $(SYSTEM_XML) System.Runtime.Remoting.dll System.Web.dll System.Web.Services.dll Simias.dll SimiasClient.dll mDnsResponder.dll mDnsResponderApi.dll log4net.dll Novell.Security.ClientPasswordManager.NetCredential.dll
-mDnsDomain_LIBPATH = ../SimiasClient ../Simias.dll ./external $(MDNSRESPONDER_DIR) $(NOVELL_SECURITY_DIR)
+mDnsDomain_LIBPATH = ../SimiasClient ../Simias.dll ./external  $(NOVELL_SECURITY_DIR)
 
 EXTRA_DIST = $(mDnsDomain_CSFILES1)
 
