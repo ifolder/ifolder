@@ -73,15 +73,16 @@ namespace Simias.Client
 		{
 			bool honorCert = false;
 
+			// TODO: Everybody's our friend...
 			// TODO: Accept self-signed certificates for now.
-			if ( ( certificateProblem == 0 ) || ( Convert.ToInt64( certificateProblem ) == CertUNTRUSTEDROOT ) )
-			{
+//			if ( ( certificateProblem == 0 ) || ( Convert.ToInt64( certificateProblem ) == CertUNTRUSTEDROOT ) )
+//			{
 				honorCert = true;
-			}
-			else
-			{
-				honorCert = defaultCertPolicy.CheckValidationResult( srvPoint, certificate, request, certificateProblem );
-			}
+//			}
+//			else
+//			{
+//				honorCert = defaultCertPolicy.CheckValidationResult( srvPoint, certificate, request, certificateProblem );
+//			}
 
 			return honorCert;
 		}
