@@ -100,9 +100,9 @@ namespace Novell.iFolder.InvitationWizard
 			// 
 			this.label1.Location = new System.Drawing.Point(40, 152);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(112, 16);
+			this.label1.Size = new System.Drawing.Size(360, 16);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "iFolder Invitation File";
+			this.label1.Text = "Collection Subscription Information File";
 			// 
 			// fileBrowser
 			// 
@@ -198,15 +198,28 @@ namespace Novell.iFolder.InvitationWizard
 				{
 					InvitationWizard invitationWizard = (InvitationWizard)this.Parent;
 
+					Cursor.Current = Cursors.WaitCursor;
+
 					// Get the subscription.
 					Subscription subscription  = Subscription.GetSubscriptionFromSubscriptionInfo(invitationWizard.Store, invitationFile.Text);
 
+					// Make sure the collection doesn't already exist in the store.
+					if (invitationWizard.Store.GetCollectionByID(subscription.SubscriptionCollectionID) != null)
+					{
+						MessageBox.Show("The collection for the selected subscription already exists.  Please choose a different CSI file.", "Shared Collection Exists");
+						invitationFile.Focus();
+						Cursor.Current = Cursors.Default;
+						return currentIndex;
+					}
+
 					// Save the subscription.
 					invitationWizard.Subscription = subscription;
+					Cursor.Current = Cursors.Default;
 				}
 				catch (SimiasException e)
 				{
 					e.LogError();
+					Cursor.Current = Cursors.Default;
 					MessageBox.Show("The file specified is not a valid Collection Subscription Information file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					invitationFile.Focus();
 
@@ -216,6 +229,7 @@ namespace Novell.iFolder.InvitationWizard
 				{
 					// TODO - resource strings.
 					logger.Debug(e, "Invalid file");
+					Cursor.Current = Cursors.Default;
 					MessageBox.Show("The file specified is not a valid Collection Subscription Information file.\n\n" + e.Message, "Invalid File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					invitationFile.Focus();
 
