@@ -497,7 +497,16 @@ namespace Novell.iFolder.FormsAddrBook
 							Contact c = (Contact)lvi.Tag;
 							Name name = c.GetPreferredName();
 							string fileName = Path.Combine(folderBrowserDialog.SelectedPath, name.Given + name.Family + ".vcf");
-							c.ExportVCard(fileName);
+							DialogResult dialogResult = DialogResult.Yes;
+							if (File.Exists(fileName))
+							{
+								dialogResult = MessageBox.Show(fileName + " already exists.\nDo you want to replace it?", "Export vCard for " + c.FN, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+								if (dialogResult == DialogResult.Cancel)
+									break;
+							}
+
+							if (dialogResult == DialogResult.Yes)
+								c.ExportVCard(fileName);
 						}
 						catch (SimiasException e)
 						{
