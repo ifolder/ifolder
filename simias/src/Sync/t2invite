@@ -1,3 +1,0 @@
-#!/bin/bash
-
-mono --debug SyncCmd.exe -n 127.0.0.1 -s tmpServerData invite tmpServerData/testFolder ~/invitation
