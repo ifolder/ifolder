@@ -3515,10 +3515,44 @@ namespace Novell.FormsTrayApp
 		{
 			if (defaultServer.Checked)
 			{
-				// TODO: set this domain as the default.
+				// Set this domain as the default.
+				try
+				{
+					Domain domain = (Domain)servers.SelectedItem;
+					ifWebService.SetDefaultDomain(domain.DomainWeb.ID);
 
+					// Reset the flag on the current default domain.
+					foreach (Domain d in servers.Items)
+					{
+						if (d.DomainWeb.IsDefault)
+						{
+							d.DomainWeb.IsDefault = false;
+							break;
+						}
+					}
 
-				defaultServer.Enabled = false;
+					// Set the flag on the new default domain.
+					domain.DomainWeb.IsDefault = true;
+
+					// Disable the checkbox so that it cannot be unchecked.
+					defaultServer.Enabled = false;
+
+					// Fix the default domain in the other server list.
+					foreach (Domain d in servers2.Items)
+					{
+						if (d.DomainWeb.IsDefault)
+						{
+							d.DomainWeb.IsDefault = false;
+						}
+
+						if (d.DomainWeb.ID.Equals(domain.DomainWeb.ID))
+						{
+							d.DomainWeb.IsDefault = true;
+						}
+					}
+				}
+				catch
+				{}
 			}
 		}
 		#endregion
