@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = WebService iFolder ClientUpgrade TrayIcon GtkTrayApp
+SUBDIRS = WebService iFolder ClientUpgrade TrayIcon LinuxClient
 endif
 
 if DARWIN
@@ -10,7 +10,11 @@ if WINDOWS
 SUBDIRS = WebService iFolder ClientUpgrade iFolderShell FormsTrayApp
 endif
 
-DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp WebService	ClientUpgrade libifolder OSXClient
+DIST_SUBDIRS = images iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp WebService ClientUpgrade libifolder OSXClient
+
+# remove all of the CVS directories
+dist-hook:
+	rm -rf `find $(distdir) -name CVS`
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys
 
