@@ -74,7 +74,7 @@ namespace Simias
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers or
 		/// FindNextDomainMembers methods.</param>
-		void FindCloseDomainMembers( Object searchContext );
+		void FindCloseDomainMembers( string searchContext );
 
 		/// <summary>
 		/// Starts a search for all domain members.
@@ -85,7 +85,7 @@ namespace Simias
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindFirstDomainMembers( string domainID, int count, out Object searchContext, out Member[] memberList, out int total );
+		bool FindFirstDomainMembers( string domainID, int count, out string searchContext, out Member[] memberList, out int total );
 
 		/// <summary>
 		/// Starts a search for a specific set of domain members.
@@ -99,25 +99,35 @@ namespace Simias
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out Object searchContext, out Member[] memberList, out int total );
+		bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out string searchContext, out Member[] memberList, out int total );
 
 		/// <summary>
-		/// Continues the search for all domain members started by calling the FindFirstDomainMembers method.
+		/// Continues the search for domain members from the current record location.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindNextDomainMembers( ref Object searchContext, int count, out Member[] memberList );
+		bool FindNextDomainMembers( ref string searchContext, int count, out Member[] memberList );
 
 		/// <summary>
-		/// Continues the search for domain members from a previous cursor.
+		/// Continues the search for domain members previous to the current record location.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		bool FindPreviousDomainMembers( ref Object searchContext, int count, out Member[] memberList );
+		bool FindPreviousDomainMembers( ref string searchContext, int count, out Member[] memberList );
+
+		/// <summary>
+		/// Continues the search for domain members from the specified record location.
+		/// </summary>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="offset">Record offset to return members from.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		bool FindSeekDomainMembers( ref string searchContext, int offset, int count, out Member[] memberList );
 
 		/// <summary>
 		/// Determines if the provider claims ownership for the 

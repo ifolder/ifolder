@@ -121,7 +121,7 @@ namespace Simias.Gaim
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers or
 		/// FindNextDomainMembers methods.</param>
-		public void FindCloseDomainMembers( Object searchContext )
+		public void FindCloseDomainMembers( string searchContext )
 		{
 			if (searchContext == null) return;
 
@@ -141,7 +141,7 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, int count, out Object searchContext, out Member[] memberList, out int total )
+		public bool FindFirstDomainMembers( string domainID, int count, out string searchContext, out Member[] memberList, out int total )
 		{
 			return FindFirstDomainMembers(domainID, PropertyTags.FullName, String.Empty, SearchOp.Contains, count, out searchContext, out memberList, out total);
 		}
@@ -158,7 +158,7 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out Object searchContext, out Member[] memberList, out int total )
+		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out string searchContext, out Member[] memberList, out int total )
 		{
 			// Ignore the domainID since we only ever have one domain to deal with
 
@@ -225,7 +225,7 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindNextDomainMembers( ref Object searchContext, int count, out Member[] memberList )
+		public bool FindNextDomainMembers( ref string searchContext, int count, out Member[] memberList )
 		{
 			bool bMoreEntries = false;
 			ArrayList members = new ArrayList();
@@ -289,9 +289,25 @@ namespace Simias.Gaim
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindPreviousDomainMembers( ref Object searchContext, int count, out Member[] memberList )
+		public bool FindPreviousDomainMembers( ref string searchContext, int count, out Member[] memberList )
 		{
 			// FIXME: Implement FindPreviousDomainMembers()
+			memberList = null;
+			return false;
+		}
+
+		/// <summary>
+		/// Continues the search from the specified record location for domain members.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="offset">Record offset to return members from.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		public bool FindSeekDomainMembers( ref string searchContext, int offset, int count, out Member[] memberList )
+		{
+			// FIXME: Implement FindSeekDomainMembers()
 			memberList = null;
 			return false;
 		}

@@ -32,7 +32,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -47,6 +47,21 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="FindFirstMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindFirstMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
+            <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfMemberInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MemberInfo" nillable="true" type="tns:MemberInfo" />
+        </s:sequence>
+      </s:complexType>
       <s:complexType name="MemberInfo">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="ObjectID" type="s:string" />
@@ -59,21 +74,6 @@
           <s:element minOccurs="1" maxOccurs="1" name="IsOwner" type="s:boolean" />
         </s:sequence>
       </s:complexType>
-      <s:complexType name="ArrayOfMemberInfo">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="unbounded" name="MemberInfo" nillable="true" type="tns:MemberInfo" />
-        </s:sequence>
-      </s:complexType>
-      <s:element name="FindFirstMembersResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="FindFirstMembersResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
-            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
-            <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="FindFirstSpecificMembers">
         <s:complexType>
           <s:sequence>
@@ -104,7 +104,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindFirstSpecificMembersResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
             <s:element minOccurs="1" maxOccurs="1" name="totalMembers" type="s:int" />
           </s:sequence>
@@ -114,7 +114,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
           </s:sequence>
         </s:complexType>
@@ -123,7 +123,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindNextMembersResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
           </s:sequence>
         </s:complexType>
@@ -132,7 +132,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
           </s:sequence>
         </s:complexType>
@@ -141,7 +141,26 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="FindPreviousMembersResult" type="s:boolean" />
-            <s:element minOccurs="0" maxOccurs="1" name="searchContext" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindSeekMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="offset" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="count" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindSeekMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindSeekMembersResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchContext" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="memberList" type="tns:ArrayOfMemberInfo" />
           </s:sequence>
         </s:complexType>
@@ -160,6 +179,13 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDomainInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainInformationResult" type="tns:DomainInformation" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -206,17 +232,17 @@
           <s:enumeration value="Unknown" />
         </s:restriction>
       </s:simpleType>
-      <s:element name="GetDomainInformationResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDomainInformationResult" type="tns:DomainInformation" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="GetDomains">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="onlySlaves" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDomainsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDomainsResult" type="tns:ArrayOfDomainInformation" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -225,18 +251,18 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="DomainInformation" nillable="true" type="tns:DomainInformation" />
         </s:sequence>
       </s:complexType>
-      <s:element name="GetDomainsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetDomainsResult" type="tns:ArrayOfDomainInformation" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="LoginToRemoteDomain">
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="domainID" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginToRemoteDomainResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginToRemoteDomainResult" type="tns:Status" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -252,13 +278,6 @@
           <s:element minOccurs="1" maxOccurs="1" name="RemainingGraceLogins" type="s:int" />
         </s:sequence>
       </s:complexType>
-      <s:element name="LoginToRemoteDomainResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="LoginToRemoteDomainResult" type="tns:Status" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
       <s:element name="LogoutFromRemoteDomain">
         <s:complexType>
           <s:sequence>
@@ -467,6 +486,12 @@
   <wsdl:message name="FindPreviousMembersSoapOut">
     <wsdl:part name="parameters" element="tns:FindPreviousMembersResponse" />
   </wsdl:message>
+  <wsdl:message name="FindSeekMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:FindSeekMembers" />
+  </wsdl:message>
+  <wsdl:message name="FindSeekMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:FindSeekMembersResponse" />
+  </wsdl:message>
   <wsdl:message name="GetSimiasInformationSoapIn">
     <wsdl:part name="parameters" element="tns:GetSimiasInformation" />
   </wsdl:message>
@@ -575,29 +600,34 @@
       <wsdl:output message="tns:RemoveMemberFromDomainSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="FindCloseMembers">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Ends the search for the members in a specified domain.</documentation>
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">End the search for domain members.</documentation>
       <wsdl:input message="tns:FindCloseMembersSoapIn" />
       <wsdl:output message="tns:FindCloseMembersSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="FindFirstMembers">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Start the search for all of the members in a specified domain.</documentation>
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Starts a search for all domain members.</documentation>
       <wsdl:input message="tns:FindFirstMembersSoapIn" />
       <wsdl:output message="tns:FindFirstMembersSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="FindFirstSpecificMembers">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Start the search for specific members in a specified domain.</documentation>
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Starts a search for a specific set of domain members.</documentation>
       <wsdl:input message="tns:FindFirstSpecificMembersSoapIn" />
       <wsdl:output message="tns:FindFirstSpecificMembersSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="FindNextMembers">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for the next members in a specified domain.</documentation>
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members from the current record location.</documentation>
       <wsdl:input message="tns:FindNextMembersSoapIn" />
       <wsdl:output message="tns:FindNextMembersSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="FindPreviousMembers">
-      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for the previous members in a specified domain.</documentation>
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members previous to the current record location.</documentation>
       <wsdl:input message="tns:FindPreviousMembersSoapIn" />
       <wsdl:output message="tns:FindPreviousMembersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekMembers">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Continues the search for domain members from the specified record location.</documentation>
+      <wsdl:input message="tns:FindSeekMembersSoapIn" />
+      <wsdl:output message="tns:FindSeekMembersSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetSimiasInformation">
       <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">GetSimiasInformation</documentation>
@@ -738,6 +768,15 @@
     </wsdl:operation>
     <wsdl:operation name="FindPreviousMembers">
       <soap:operation soapAction="http://novell.com/simias/web/FindPreviousMembers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindSeekMembers">
+      <soap:operation soapAction="http://novell.com/simias/web/FindSeekMembers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

@@ -322,10 +322,10 @@ namespace Simias
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers or
 		/// FindNextDomainMembers methods.</param>
-		public void FindCloseDomainMembers( Object searchContext )
+		public void FindCloseDomainMembers( string searchContext )
 		{
 			// See if there is a valid search context.
-			SearchState searchState = SearchState.GetSearchState( searchContext as String );
+			SearchState searchState = SearchState.GetSearchState( searchContext );
 			if ( searchState != null )
 			{
 				searchState.Dispose();
@@ -341,7 +341,7 @@ namespace Simias
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, int count, out Object searchContext, out Member[] memberList, out int total )
+		public bool FindFirstDomainMembers( string domainID, int count, out string searchContext, out Member[] memberList, out int total )
 		{
 			return FindFirstDomainMembers( domainID, PropertyTags.FullName, String.Empty, SearchOp.Exists, count, out searchContext, out memberList, out total );
 		}
@@ -358,7 +358,7 @@ namespace Simias
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <param name="total">Receives the total number of objects found in the search.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out Object searchContext, out Member[] memberList, out int total )
+		public bool FindFirstDomainMembers( string domainID, string attributeName, string searchString, SearchOp operation, int count, out string searchContext, out Member[] memberList, out int total )
 		{
 			bool moreEntries = false;
 
@@ -382,13 +382,13 @@ namespace Simias
 		}
 
 		/// <summary>
-		/// Continues the search for all domain members started by calling the FindFirstDomainMembers method.
+		/// Continues the search for domain members from the current record location.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindNextDomainMembers( ref Object searchContext, int count, out Member[] memberList )
+		public bool FindNextDomainMembers( ref string searchContext, int count, out Member[] memberList )
 		{
 			bool moreEntries = false;
 
@@ -396,7 +396,7 @@ namespace Simias
 			memberList = null;
 
 			// See if there is a valid search context.
-			SearchState searchState = SearchState.GetSearchState( searchContext as String );
+			SearchState searchState = SearchState.GetSearchState( searchContext );
 			if ( searchState != null )
 			{
 				// Get the domain being searched.
@@ -430,13 +430,13 @@ namespace Simias
 		}
 
 		/// <summary>
-		/// Continues the search for domain members from a previous cursor.
+		/// Continues the search for domain members previous to the current record location.
 		/// </summary>
 		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
 		/// <param name="count">Maximum number of member objects to return.</param>
 		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
 		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
-		public bool FindPreviousDomainMembers( ref Object searchContext, int count, out Member[] memberList )
+		public bool FindPreviousDomainMembers( ref string searchContext, int count, out Member[] memberList )
 		{
 			bool moreEntries = false;
 
@@ -444,7 +444,7 @@ namespace Simias
 			memberList = null;
 
 			// See if there is a valid search context.
-			SearchState searchState = SearchState.GetSearchState( searchContext as String );
+			SearchState searchState = SearchState.GetSearchState( searchContext );
 			if ( searchState != null )
 			{
 				// Backup the current cursor, but don't go passed the first record.
@@ -456,6 +456,44 @@ namespace Simias
 
 					// Complete the search.
 					moreEntries = FindNextDomainMembers( ref searchContext, count, out memberList );
+				}
+			}
+
+			return moreEntries;
+		}
+
+		/// <summary>
+		/// Continues the search for domain members from the specified record location.
+		/// </summary>
+		/// <param name="domainID">The identifier of the domain to search for members in.</param>
+		/// <param name="searchContext">Domain provider specific search context returned by FindFirstDomainMembers method.</param>
+		/// <param name="offset">Record offset to return members from.</param>
+		/// <param name="count">Maximum number of member objects to return.</param>
+		/// <param name="memberList">Receives an array object that contains the domain Member objects.</param>
+		/// <returns>True if there are more domain members. Otherwise false is returned.</returns>
+		public bool FindSeekDomainMembers( ref string searchContext, int offset, int count, out Member[] memberList )
+		{
+			bool moreEntries = false;
+
+			// Initialize the outputs.
+			memberList = null;
+
+			// See if there is a valid search context.
+			SearchState searchState = SearchState.GetSearchState( searchContext );
+			if ( searchState != null )
+			{
+				// Make sure that the specified offset is valid.
+				if ( ( offset >= 0 ) && ( offset < searchState.TotalRecords ) )
+				{
+					// Set the cursor to the specified offset.
+					if ( searchState.Enumerator.SetCursor( Simias.Storage.Provider.IndexOrigin.SET, offset ) )
+					{
+						// Reset the current record.
+						searchState.CurrentRecord = offset;
+
+						// Complete the search.
+						moreEntries = FindNextDomainMembers( ref searchContext, count, out memberList );
+					}
 				}
 			}
 
