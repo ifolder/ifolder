@@ -1156,7 +1156,7 @@ namespace Simias.Web
 			//     http(s)://servername[:optional port]/simias10
 			//               ^^We're after this part^^^
 			
-			if (hostUrl == null) return "";	// Prevent a null return
+			if (hostUrl == null || hostUrl == "") return "";	// Prevent a null return
 
 			int doubleSlashPos = hostUrl.IndexOf("//");
 			int lastSlashPos   = hostUrl.IndexOf('/', doubleSlashPos + 2);
