@@ -470,11 +470,13 @@ public class SyncOps
 			}
 			inNode.Start(nc.stamp);
 			inNode.WriteChunks(nc.fseChunks);
-			// BSK: switch (inNode.Complete(nc.metaData))
-			// BSK: {
+			switch (inNode.Complete(nc.metaData))
+			{
 				// BSK: case SyncIncomingNode.Status.UpdateCollision: updateRejects.Add(nc.stamp.id); break;
 				// BSK: case SyncIncomingNode.Status.FileSystemEntryCollision: fseRejects.Add(nc.stamp.id); break;
-			// BSK: }
+            default:
+                break;
+            }
 		}
 		
         // BSK: RejectedNodes rejects;
