@@ -228,107 +228,111 @@ namespace Simias.POBoxService.Web
 		public POBoxStatus AcceptedSubscription( SubscriptionMsg subMsg )
 		{
 			POBoxStatus			status = POBoxStatus.UnknownError;
-			Simias.POBox.POBox	poBox;
-			Store				store = Store.GetStore();
 
-			log.Debug( "AcceptedSubscription - called" );
-			log.Debug( "  subscription ID: " + subMsg.SubscriptionID );
-			log.Debug( "  collection ID: " + subMsg.SharedCollectionID );
-
-			// Verify the caller
-			log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
-
-			try
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				/* FIXME:: uncomment when everybody is running with authentication
-				if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
-				{
-					log.Error( "Specified \"toIdentity\" is not the caller" );
-					return( POBoxStatus.UnknownIdentity );
-				}
-				*/
+				Simias.POBox.POBox	poBox;
+				Store				store = Store.GetStore();
 
-				// open the post office box
-				poBox = Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID );
-				if ( poBox != null )
+				log.Debug( "AcceptedSubscription - called" );
+				log.Debug( "  subscription ID: " + subMsg.SubscriptionID );
+				log.Debug( "  collection ID: " + subMsg.SharedCollectionID );
+
+				// Verify the caller
+				log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
+
+				try
 				{
-					// check that the message has already not been posted
-					IEnumerator e = 
-						poBox.Search(
-						Message.MessageIDProperty, 
-						subMsg.SubscriptionID,
-						SearchOp.Equal).GetEnumerator();
-					ShallowNode sn = null;
-					if (e.MoveNext())
+					/* FIXME:: uncomment when everybody is running with authentication
+					if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
 					{
-						sn = (ShallowNode) e.Current;
+						log.Error( "Specified \"toIdentity\" is not the caller" );
+						return( POBoxStatus.UnknownIdentity );
 					}
+					*/
 
-					if ( sn == null )
+					// open the post office box
+					poBox = Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID );
+					if ( poBox != null )
 					{
-						log.Debug( "AcceptedSubscription - Subscription does not exist" );
-
-						// See if the toIdentity already exists in the memberlist
-						// of the shared collection
-
-						Collection sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID );
-						if ( sharedCollection != null )
+						// check that the message has already not been posted
+						IEnumerator e = 
+							poBox.Search(
+							Message.MessageIDProperty, 
+							subMsg.SubscriptionID,
+							SearchOp.Equal).GetEnumerator();
+						ShallowNode sn = null;
+						if (e.MoveNext())
 						{
-							Simias.Storage.Member toMember = 
-								sharedCollection.GetMemberByID( subMsg.ToID );
-							if ( toMember != null )
+							sn = (ShallowNode) e.Current;
+						}
+
+						if ( sn == null )
+						{
+							log.Debug( "AcceptedSubscription - Subscription does not exist" );
+
+							// See if the toIdentity already exists in the memberlist
+							// of the shared collection
+
+							Collection sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID );
+							if ( sharedCollection != null )
 							{
-						 		log.Debug( "  already a member!" );
-								status = POBoxStatus.Success;
+								Simias.Storage.Member toMember = 
+									sharedCollection.GetMemberByID( subMsg.ToID );
+								if ( toMember != null )
+								{
+									log.Debug( "  already a member!" );
+									status = POBoxStatus.Success;
+								}
+								else
+								{
+									status = POBoxStatus.UnknownSubscription;
+								}
 							}
 							else
 							{
-								status = POBoxStatus.UnknownSubscription;
+								status = POBoxStatus.UnknownCollection;
 							}
 						}
 						else
 						{
-							status = POBoxStatus.UnknownCollection;
+							//
+							// Subscription exists in the inviters PO box
+							// 
+							Subscription cSub = new Subscription( poBox, sn );
+
+							// Identities need to match up
+							if ( subMsg.FromID == cSub.FromIdentity )
+							{
+								if ( subMsg.ToID == cSub.ToIdentity )
+								{
+									cSub.Accept( store, cSub.SubscriptionRights );
+									poBox.Commit( cSub );
+									status = POBoxStatus.Success;
+								}
+								else
+								{
+									log.Debug( "  to identity does not match" );
+									status = POBoxStatus.UnknownIdentity;
+								}
+							}
+							else
+							{
+								log.Debug( "  from identity does not match" );
+								status = POBoxStatus.UnknownIdentity;
+							}
 						}
 					}
 					else
 					{
-						//
-						// Subscription exists in the inviters PO box
-						// 
-						Subscription cSub = new Subscription( poBox, sn );
-
-						// Identities need to match up
-						if ( subMsg.FromID == cSub.FromIdentity )
-						{
-							if ( subMsg.ToID == cSub.ToIdentity )
-							{
-								cSub.Accept( store, cSub.SubscriptionRights );
-								poBox.Commit( cSub );
-								status = POBoxStatus.Success;
-							}
-							else
-							{
-								log.Debug( "  to identity does not match" );
-								status = POBoxStatus.UnknownIdentity;
-							}
-						}
-						else
-						{
-							log.Debug( "  from identity does not match" );
-							status = POBoxStatus.UnknownIdentity;
-						}
+						status = POBoxStatus.UnknownPOBox;
 					}
 				}
-				else
+				catch(Exception e)
 				{
-					status = POBoxStatus.UnknownPOBox;
+					log.Error( e.Message );
+					log.Error( e.StackTrace );
 				}
-			}
-			catch(Exception e)
-			{
-				log.Error( e.Message );
-				log.Error( e.StackTrace );
 			}
 			
 			log.Debug( "AcceptedSubscription exit  status: " + status.ToString() );
@@ -343,230 +347,237 @@ namespace Simias.POBoxService.Web
 		[SoapDocumentMethod]
 		public POBoxStatus DeclinedSubscription( SubscriptionMsg subMsg )
 		{
-			Simias.POBox.POBox	toPOBox;
-			Store				store = Store.GetStore();
+			POBoxStatus	status = POBoxStatus.UnknownError;
+
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			{
+				Simias.POBox.POBox	toPOBox;
+				Store				store = Store.GetStore();
 			
-			log.Debug( "DeclinedSubscription - called" );
-			log.Debug( "  subscription ID: " + subMsg.SubscriptionID );
+				log.Debug( "DeclinedSubscription - called" );
+				log.Debug( "  subscription ID: " + subMsg.SubscriptionID );
 
-			// Verify the caller
-			log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
-			/* FIXME:: uncomment when everybody is running with authentication
-			if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
-			{
-				log.Error( "Specified \"toIdentity\" is not the caller" );
-				return POBoxStatus.UnknownIdentity;
-			}
-			*/
-
-			// open the post office box of the From user
-			toPOBox = Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.ToID );
-			if ( toPOBox == null )
-			{
-				log.Debug( "DeclinedSubscription - PO Box not found" );
-				return POBoxStatus.UnknownPOBox;
-			}
-
-			// Get the subscription from the caller's PO box
-			IEnumerator e = 
-				toPOBox.Search(
-				Message.MessageIDProperty, 
-				subMsg.SubscriptionID,
-				SearchOp.Equal).GetEnumerator();
-			ShallowNode sn = null;
-			if ( e.MoveNext() )
-			{
-				sn = (ShallowNode) e.Current;
-			}
-
-			if ( sn == null )
-			{
-				log.Debug(
-					"DeclinedSubscription - Subscription: " +
-					subMsg.SubscriptionID +
-					" does not exist");
-
-				//
-				// See if the toIdentity already exists in the memberlist
-				// of the shared collection.  If he has already accepted
-				// he can't decline from another machine
-				//
-
-				Collection sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID );
-				if ( sharedCollection == null )
+				// Verify the caller
+				log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
+				/* FIXME:: uncomment when everybody is running with authentication
+				if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
 				{
-					log.Debug( "DeclinedSubscription - shared collection does not exist" );
+					log.Error( "Specified \"toIdentity\" is not the caller" );
+					return POBoxStatus.UnknownIdentity;
+				}
+				*/
+
+				// open the post office box of the From user
+				toPOBox = Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.ToID );
+				if ( toPOBox == null )
+				{
+					log.Debug( "DeclinedSubscription - PO Box not found" );
+					return POBoxStatus.UnknownPOBox;
+				}
+
+				// Get the subscription from the caller's PO box
+				IEnumerator e = 
+					toPOBox.Search(
+					Message.MessageIDProperty, 
+					subMsg.SubscriptionID,
+					SearchOp.Equal).GetEnumerator();
+				ShallowNode sn = null;
+				if ( e.MoveNext() )
+				{
+					sn = (ShallowNode) e.Current;
+				}
+
+				if ( sn == null )
+				{
+					log.Debug(
+						"DeclinedSubscription - Subscription: " +
+						subMsg.SubscriptionID +
+						" does not exist");
+
+					//
+					// See if the toIdentity already exists in the memberlist
+					// of the shared collection.  If he has already accepted
+					// he can't decline from another machine
+					//
+
+					Collection sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID );
+					if ( sharedCollection == null )
+					{
+						log.Debug( "DeclinedSubscription - shared collection does not exist" );
+						return POBoxStatus.UnknownCollection;
+					}
+
+					Simias.Storage.Member cMember = sharedCollection.GetMemberByID( subMsg.ToID );
+					if ( cMember != null )
+					{
+						log.Debug("DeclinedSubscription - already a member returning success");
+						return POBoxStatus.Success;
+					}
+
+					return POBoxStatus.UnknownSubscription;
+				}
+
+				// get the subscription object
+				Subscription cSub = new Subscription( toPOBox, sn );
+
+				// Identities need to match up
+				if ( subMsg.FromID != cSub.FromIdentity )
+				{
+					log.Debug( "DeclinedSubscription - Identity does not match" );
+					return POBoxStatus.UnknownIdentity;
+				}
+
+				if ( subMsg.ToID != cSub.ToIdentity )
+				{
+					log.Debug( "DeclinedSubscription - Identity does not match" );
+					return POBoxStatus.UnknownIdentity;
+				}
+
+				// Validate the shared collection
+				Collection cCol = store.GetCollectionByID( cSub.SubscriptionCollectionID );
+				if ( cCol == null )
+				{
+					// FIXEME:: Do we want to still try and cleanup the subscriptions?
+					log.Debug( "DeclinedSubscription - Collection not found" );
 					return POBoxStatus.UnknownCollection;
 				}
 
-				Simias.Storage.Member cMember = sharedCollection.GetMemberByID( subMsg.ToID );
-				if ( cMember != null )
-				{
-					log.Debug("DeclinedSubscription - already a member returning success");
-					return POBoxStatus.Success;
-				}
-
-				return POBoxStatus.UnknownSubscription;
-			}
-
-			// get the subscription object
-			Subscription cSub = new Subscription( toPOBox, sn );
-
-			// Identities need to match up
-			if ( subMsg.FromID != cSub.FromIdentity )
-			{
-				log.Debug( "DeclinedSubscription - Identity does not match" );
-				return POBoxStatus.UnknownIdentity;
-			}
-
-			if ( subMsg.ToID != cSub.ToIdentity )
-			{
-				log.Debug( "DeclinedSubscription - Identity does not match" );
-				return POBoxStatus.UnknownIdentity;
-			}
-
-			// Validate the shared collection
-			Collection cCol = store.GetCollectionByID( cSub.SubscriptionCollectionID );
-			if ( cCol == null )
-			{
-				// FIXEME:: Do we want to still try and cleanup the subscriptions?
-				log.Debug( "DeclinedSubscription - Collection not found" );
-				return POBoxStatus.UnknownCollection;
-			}
-
-			//
-			// Actions taken when a subscription is declined
-			//
-			// If I'm the owner of the shared collection then the
-			// decline is treated as a delete of the shared collection
-			// so we must.
-			// 1) Delete all the subscriptions in all members PO boxes
-			// 2) Delete the shared collection itself
-			//
-			// If I'm already a member of the shared collection but not
-			// the owner.
-			// 1) Remove myself from the member list of the shared collection
-			// 2) Delete my subscription to the shared collection
-			//
-			// If I'm not yet a member of the shared collection but declined
-			// an invitation from another user in the system.  In this case
-			// the From and To identies will be different.
-			// 1) Delete my subscription to the shared collection.
-			// 2) Set the state of the subscription in the inviter's PO
-			//    Box to "declined".
-			//
-
-			Simias.Storage.Member toMember = cCol.GetMemberByID( subMsg.ToID );
-			if ( toMember == null )
-			{
-				log.Debug( "  handling case where identity is declining a subscription" );
-				// I am not a member of this shared collection and want to
-				// decline the subscription.
-
-				// open the post office box of the from and decline the subscription
-				Simias.POBox.POBox fromPOBox = 
-					Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID );
-				if ( fromPOBox != null )
-				{
-					Subscription cFromMemberSub = 
-						fromPOBox.GetSubscriptionByCollectionID( cCol.ID );
-					if( cFromMemberSub != null )
-					{
-						cFromMemberSub.Decline();
-						fromPOBox.Commit( cFromMemberSub );
-					}
-				}
-
-				// Remove the subscription from the "toIdentity" PO box
-				toPOBox.Delete( cSub );
-				toPOBox.Commit( toPOBox.Delete( cSub ) );
-			}
-			else
-			if ( toMember.IsOwner == true )
-			{
-				// Am I the owner of the shared collection?
-				log.Debug( "  handling case where identity is owner of collection" );
-
-				ICSList memberlist = cCol.GetMemberList();
-				foreach( ShallowNode sNode in memberlist )
-				{
-					Simias.Storage.Member cMember =	
-						new Simias.Storage.Member( cCol, sNode );
-
-					// Get the member's POBox
-					Simias.POBox.POBox memberPOBox = 
-						Simias.POBox.POBox.FindPOBox(
-						 store, 
-						 cCol.Domain, 
-						 cMember.UserID );
-					if ( memberPOBox != null )
-					{
-						// Search for the matching subscription
-						Subscription memberSub = 
-							memberPOBox.GetSubscriptionByCollectionID( cCol.ID );
-						if( memberSub != null )
-						{
-							memberPOBox.Delete( memberSub );
-							memberPOBox.Commit( memberSub );
-						}
-					}
-				}
-
 				//
-				// If the collection has unmanaged files we need
-				// to delete those as well
-				// FIXME:: this may need to be queued off asynchronously
-				// since it could take a long time to delete a directory
-				// with thousands of files
+				// Actions taken when a subscription is declined
+				//
+				// If I'm the owner of the shared collection then the
+				// decline is treated as a delete of the shared collection
+				// so we must.
+				// 1) Delete all the subscriptions in all members PO boxes
+				// 2) Delete the shared collection itself
+				//
+				// If I'm already a member of the shared collection but not
+				// the owner.
+				// 1) Remove myself from the member list of the shared collection
+				// 2) Delete my subscription to the shared collection
+				//
+				// If I'm not yet a member of the shared collection but declined
+				// an invitation from another user in the system.  In this case
+				// the From and To identies will be different.
+				// 1) Delete my subscription to the shared collection.
+				// 2) Set the state of the subscription in the inviter's PO
+				//    Box to "declined".
 				//
 
-				try
+				Simias.Storage.Member toMember = cCol.GetMemberByID( subMsg.ToID );
+				if ( toMember == null )
 				{
-					DirNode dirNode = cCol.GetRootDirectory();
-					if( dirNode != null )
-					{
-						Directory.Delete( dirNode.GetFullPath( cCol ), true );
-					}
-				}
-				catch{}
+					log.Debug( "  handling case where identity is declining a subscription" );
+					// I am not a member of this shared collection and want to
+					// decline the subscription.
 
-				// Delete the shared collection itself
-				cCol.Commit( cCol.Delete() );
-			}
-			else
-			{
-				// Am I a member of the shared collection?
-				log.Debug( "  handling case where identity is a member of the collection" );
-				cCol.Commit( cCol.Delete( toMember ) );
-
-				// Remove the subscription from the "toIdentity" PO box
-				Subscription cMemberSub = 
-					toPOBox.GetSubscriptionByCollectionID( cCol.ID );
-				if( cMemberSub != null )
-				{
-					toPOBox.Commit( toPOBox.Delete( cMemberSub ) );
-				}
-
-				if ( subMsg.FromID != subMsg.ToID )
-				{
-					// open the post office box of the From user
+					// open the post office box of the from and decline the subscription
 					Simias.POBox.POBox fromPOBox = 
-						Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID ); 
+						Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID );
 					if ( fromPOBox != null )
 					{
-						// Remove the subscription from the "fromIdentity" PO box
 						Subscription cFromMemberSub = 
 							fromPOBox.GetSubscriptionByCollectionID( cCol.ID );
 						if( cFromMemberSub != null )
 						{
-							fromPOBox.Commit( fromPOBox.Delete( cFromMemberSub ) );
+							cFromMemberSub.Decline();
+							fromPOBox.Commit( cFromMemberSub );
+						}
+					}
+
+					// Remove the subscription from the "toIdentity" PO box
+					toPOBox.Delete( cSub );
+					toPOBox.Commit( toPOBox.Delete( cSub ) );
+				}
+				else
+					if ( toMember.IsOwner == true )
+				{
+					// Am I the owner of the shared collection?
+					log.Debug( "  handling case where identity is owner of collection" );
+
+					ICSList memberlist = cCol.GetMemberList();
+					foreach( ShallowNode sNode in memberlist )
+					{
+						Simias.Storage.Member cMember =	
+							new Simias.Storage.Member( cCol, sNode );
+
+						// Get the member's POBox
+						Simias.POBox.POBox memberPOBox = 
+							Simias.POBox.POBox.FindPOBox(
+							store, 
+							cCol.Domain, 
+							cMember.UserID );
+						if ( memberPOBox != null )
+						{
+							// Search for the matching subscription
+							Subscription memberSub = 
+								memberPOBox.GetSubscriptionByCollectionID( cCol.ID );
+							if( memberSub != null )
+							{
+								memberPOBox.Delete( memberSub );
+								memberPOBox.Commit( memberSub );
+							}
+						}
+					}
+
+					//
+					// If the collection has unmanaged files we need
+					// to delete those as well
+					// FIXME:: this may need to be queued off asynchronously
+					// since it could take a long time to delete a directory
+					// with thousands of files
+					//
+
+					try
+					{
+						DirNode dirNode = cCol.GetRootDirectory();
+						if( dirNode != null )
+						{
+							Directory.Delete( dirNode.GetFullPath( cCol ), true );
+						}
+					}
+					catch{}
+
+					// Delete the shared collection itself
+					cCol.Commit( cCol.Delete() );
+				}
+				else
+				{
+					// Am I a member of the shared collection?
+					log.Debug( "  handling case where identity is a member of the collection" );
+					cCol.Commit( cCol.Delete( toMember ) );
+
+					// Remove the subscription from the "toIdentity" PO box
+					Subscription cMemberSub = 
+						toPOBox.GetSubscriptionByCollectionID( cCol.ID );
+					if( cMemberSub != null )
+					{
+						toPOBox.Commit( toPOBox.Delete( cMemberSub ) );
+					}
+
+					if ( subMsg.FromID != subMsg.ToID )
+					{
+						// open the post office box of the From user
+						Simias.POBox.POBox fromPOBox = 
+							Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID ); 
+						if ( fromPOBox != null )
+						{
+							// Remove the subscription from the "fromIdentity" PO box
+							Subscription cFromMemberSub = 
+								fromPOBox.GetSubscriptionByCollectionID( cCol.ID );
+							if( cFromMemberSub != null )
+							{
+								fromPOBox.Commit( fromPOBox.Delete( cFromMemberSub ) );
+							}
 						}
 					}
 				}
+
+				status = POBoxStatus.Success;
 			}
 
 			log.Debug("DeclinedSubscription - exit");
-			return POBoxStatus.Success;
+			return status;
 		}
 
 		/// <summary>
@@ -579,95 +590,101 @@ namespace Simias.POBoxService.Web
 		POBoxStatus
 		AckSubscription( SubscriptionMsg subMsg )
 		{
-			Simias.POBox.POBox	poBox;
-			Store				store = Store.GetStore();
+			POBoxStatus	status = POBoxStatus.UnknownError;
+
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			{
+				Simias.POBox.POBox	poBox;
+				Store				store = Store.GetStore();
 			
-			log.Debug( "Acksubscription - called" );
-			log.Debug( "  subscription: " + subMsg.SubscriptionID );
+				log.Debug( "Acksubscription - called" );
+				log.Debug( "  subscription: " + subMsg.SubscriptionID );
 
-			// Verify the caller
-			log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
-			/*
-			if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
-			{
-				log.Error( "specified \"toIdentity\" is not the caller" );
-				return POBoxStatus.UnknownIdentity;
-			}
-			*/
+				// Verify the caller
+				log.Debug("  current Principal: " + Thread.CurrentPrincipal.Identity.Name);
+				/*
+				if ( subMsg.ToID != Thread.CurrentPrincipal.Identity.Name )
+				{
+					log.Error( "specified \"toIdentity\" is not the caller" );
+					return POBoxStatus.UnknownIdentity;
+				}
+				*/
 
-			// open the post office box
-			poBox = Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID );
-			if (poBox == null)
-			{
-				log.Debug("AckSubscription - PO Box not found");
-				return POBoxStatus.UnknownPOBox;
-			}
+				// open the post office box
+				poBox = Simias.POBox.POBox.FindPOBox( store, subMsg.DomainID, subMsg.FromID );
+				if (poBox == null)
+				{
+					log.Debug("AckSubscription - PO Box not found");
+					return POBoxStatus.UnknownPOBox;
+				}
 
-			// check that the message has already not been posted
-			IEnumerator e = 
-				poBox.Search(
+				// check that the message has already not been posted
+				IEnumerator e = 
+					poBox.Search(
 					Message.MessageIDProperty, 
 					subMsg.SubscriptionID,
 					SearchOp.Equal).GetEnumerator();
-			ShallowNode sn = null;
-			if (e.MoveNext())
-			{
-				sn = (ShallowNode) e.Current;
-			}
-
-			if ( sn == null )
-			{
-				log.Debug("AckSubscription - Subscription does not exist.");
-
-				//
-				// See if the toIdentity already exists in the memberlist
-				// of the shared collection
-				//
-
-				Collection sharedCollection = 
-					store.GetCollectionByID( subMsg.SharedCollectionID );
-				if ( sharedCollection == null )
+				ShallowNode sn = null;
+				if (e.MoveNext())
 				{
-					log.Debug("AckSubscription - shared collection does not exist");
-					return POBoxStatus.UnknownCollection;
+					sn = (ShallowNode) e.Current;
 				}
 
-				Simias.Storage.Member toMember = sharedCollection.GetMemberByID( subMsg.ToID );
-				if ( toMember != null )
+				if ( sn == null )
 				{
-					log.Debug( "AckSubscription - already a member returning success" );
-					return POBoxStatus.Success;
+					log.Debug("AckSubscription - Subscription does not exist.");
+
+					//
+					// See if the toIdentity already exists in the memberlist
+					// of the shared collection
+					//
+
+					Collection sharedCollection = 
+						store.GetCollectionByID( subMsg.SharedCollectionID );
+					if ( sharedCollection == null )
+					{
+						log.Debug("AckSubscription - shared collection does not exist");
+						return POBoxStatus.UnknownCollection;
+					}
+
+					Simias.Storage.Member toMember = sharedCollection.GetMemberByID( subMsg.ToID );
+					if ( toMember != null )
+					{
+						log.Debug( "AckSubscription - already a member returning success" );
+						return POBoxStatus.Success;
+					}
+
+					return POBoxStatus.UnknownSubscription;
 				}
 
-				return POBoxStatus.UnknownSubscription;
+				// get the subscription object
+				Subscription cSub = new Subscription( poBox, sn );
+
+				// Identities need to match up
+				if ( subMsg.FromID != cSub.FromIdentity )
+				{
+					log.Debug( "AckSubscription - Identity does not match" );
+					return POBoxStatus.UnknownIdentity;
+				}
+
+				if ( subMsg.ToID != cSub.ToIdentity )
+				{
+					log.Debug( "AckSubscription - Identity does not match" );
+					return POBoxStatus.UnknownIdentity;
+				}
+
+				//
+				// Delete the subscription from the inviters PO box
+				//
+
+				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Acknowledged;
+				poBox.Commit( cSub );
+				poBox.Commit( poBox.Delete(cSub) );
+				status = POBoxStatus.Success;
 			}
-
-			// get the subscription object
-			Subscription cSub = new Subscription( poBox, sn );
-
-			// Identities need to match up
-			if ( subMsg.FromID != cSub.FromIdentity )
-			{
-				log.Debug( "AckSubscription - Identity does not match" );
-				return POBoxStatus.UnknownIdentity;
-			}
-
-			if ( subMsg.ToID != cSub.ToIdentity )
-			{
-				log.Debug( "AckSubscription - Identity does not match" );
-				return POBoxStatus.UnknownIdentity;
-			}
-
-			//
-			// Delete the subscription from the inviters PO box
-			//
-
-			cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Acknowledged;
-			poBox.Commit( cSub );
-			poBox.Commit( poBox.Delete(cSub) );
 
 			log.Debug( "Acksubscription - exit" );
-			return POBoxStatus.Success;
+			return status;
 		}
 
 		/// <summary>
@@ -683,58 +700,63 @@ namespace Simias.POBoxService.Web
 		SubscriptionInformation 
 		GetSubscriptionInfo(string domainID, string identityID, string subscriptionID)
 		{
-			Simias.POBox.POBox	poBox;
-			Store store = Store.GetStore();
+			SubscriptionInformation subInfo = null;
 
-			log.Debug("GetSubscriptionInfo - called");
-			log.Debug("  for subscription: " + subscriptionID);
-
-			// open the post office box
-			poBox =	Simias.POBox.POBox.FindPOBox(store, domainID, identityID);
-			if (poBox == null)
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				log.Debug("GetSubscriptionInfo - PO Box not found");
-				return(null);
-			}
+				Simias.POBox.POBox	poBox;
+				Store store = Store.GetStore();
 
-			// check that the message has already not been posted
-			IEnumerator e = 
-				poBox.Search(Message.MessageIDProperty, subscriptionID, SearchOp.Equal).GetEnumerator();
+				log.Debug("GetSubscriptionInfo - called");
+				log.Debug("  for subscription: " + subscriptionID);
+
+				// open the post office box
+				poBox =	Simias.POBox.POBox.FindPOBox(store, domainID, identityID);
+				if (poBox == null)
+				{
+					log.Debug("GetSubscriptionInfo - PO Box not found");
+					return(null);
+				}
+
+				// check that the message has already not been posted
+				IEnumerator e = 
+					poBox.Search(Message.MessageIDProperty, subscriptionID, SearchOp.Equal).GetEnumerator();
 			
-			ShallowNode sn = null;
+				ShallowNode sn = null;
 
-			if (e.MoveNext())
-			{
-				sn = (ShallowNode) e.Current;
-			}
+				if (e.MoveNext())
+				{
+					sn = (ShallowNode) e.Current;
+				}
 
-			if (sn == null)
-			{
-				log.Debug("GetSubscriptionInfo - Subscription does not exist");
-				return(null);
-			}
+				if (sn == null)
+				{
+					log.Debug("GetSubscriptionInfo - Subscription does not exist");
+					return(null);
+				}
 
-			// generate the subscription info object and return it
-			Subscription cSub = new Subscription(poBox, sn);
+				// generate the subscription info object and return it
+				Subscription cSub = new Subscription(poBox, sn);
 
-			// Validate the shared collection
-			Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
-			if (cSharedCollection == null)
-			{
-				log.Debug("GetSubscriptionInfo - Collection not found");
-				return(null);
-			}
+				// Validate the shared collection
+				Collection cSharedCollection = store.GetCollectionByID(cSub.SubscriptionCollectionID);
+				if (cSharedCollection == null)
+				{
+					log.Debug("GetSubscriptionInfo - Collection not found");
+					return(null);
+				}
 
-			UriBuilder colUri = 
-				new UriBuilder(
+				UriBuilder colUri = 
+					new UriBuilder(
 					this.Context.Request.Url.Scheme,
 					this.Context.Request.Url.Host,
 					this.Context.Request.Url.Port,
 					this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
 
-			log.Debug("  URI: " + colUri.ToString());
-			SubscriptionInformation subInfo = new SubscriptionInformation(colUri.ToString());
-			subInfo.GenerateFromSubscription(cSub);
+				log.Debug("  URI: " + colUri.ToString());
+				subInfo = new SubscriptionInformation(colUri.ToString());
+				subInfo.GenerateFromSubscription(cSub);
+			}
 
 			log.Debug("GetSubscriptionInfo - exit");
 			return subInfo;
@@ -752,30 +774,34 @@ namespace Simias.POBoxService.Web
 		POBoxStatus
 		VerifyCollection(string domainID, string collectionID)
 		{
-			Store store = Store.GetStore();
-
-			log.Debug("VerifyCollection - called");
-			log.Debug("  for collection: " + collectionID);
-
 			POBoxStatus	wsStatus = POBoxStatus.UnknownCollection;
 
-			// Validate the shared collection
-			Collection cSharedCollection = store.GetCollectionByID(collectionID);
-			if (cSharedCollection != null)
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				// Make sure the collection is not in a proxy state
-				if (cSharedCollection.IsProxy == false)
+				Store store = Store.GetStore();
+
+				log.Debug("VerifyCollection - called");
+				log.Debug("  for collection: " + collectionID);
+
+
+				// Validate the shared collection
+				Collection cSharedCollection = store.GetCollectionByID(collectionID);
+				if (cSharedCollection != null)
 				{
-					wsStatus = POBoxStatus.Success;
+					// Make sure the collection is not in a proxy state
+					if (cSharedCollection.IsProxy == false)
+					{
+						wsStatus = POBoxStatus.Success;
+					}
+					else
+					{
+						log.Debug("  collection is in the proxy state");
+					}
 				}
 				else
 				{
-					log.Debug("  collection is in the proxy state");
+					log.Debug("  collection not found");
 				}
-			}
-			else
-			{
-				log.Debug("  collection not found");
 			}
 
 			log.Debug("VerifyCollection - exit");
@@ -793,169 +819,173 @@ namespace Simias.POBoxService.Web
 		POBoxStatus
 		Invite( SubscriptionMsg subMsg )
 		{
-			Collection			sharedCollection = null;
-			POBoxStatus			status = POBoxStatus.UnknownError;
-			Simias.POBox.POBox	poBox = null;
-			Store				store = Store.GetStore();
-			Subscription		cSub = null;
+			POBoxStatus				status = POBoxStatus.UnknownError;
 
-			log.Debug( "Invite - called" );
-			log.Debug( "  DomainID: " + subMsg.DomainID );
-			log.Debug( "  FromUserID: " + subMsg.FromID );
-			log.Debug( "  ToUserID: " + subMsg.ToID );
-
-			// Verify the fromMember is the caller
-			log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
-			/*
-			if ( subMsg.FromID != Thread.CurrentPrincipal.Identity.Name )
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
 			{
-				return POBoxStatus.UnknownIdentity;
-			}
-			*/
+				Collection			sharedCollection = null;
+				Simias.POBox.POBox	poBox = null;
+				Store				store = Store.GetStore();
+				Subscription		cSub = null;
 
-			/*  FIXME::don't think we need this check anymore
-			if (domainID == null || domainID == "")
-			{
-				domainID = store.DefaultDomain;
-			}
-			*/
+				log.Debug( "Invite - called" );
+				log.Debug( "  DomainID: " + subMsg.DomainID );
+				log.Debug( "  FromUserID: " + subMsg.FromID );
+				log.Debug( "  ToUserID: " + subMsg.ToID );
 
-			// Verify domain
-			Simias.Storage.Domain cDomain = store.GetDomain( subMsg.DomainID );
-			if ( cDomain == null )
-			{
-				log.Debug( "  invalid Domain ID!" );
-				return POBoxStatus.UnknownDomain;
-			}
+				// Verify the fromMember is the caller
+				log.Debug( "  current Principal: " + Thread.CurrentPrincipal.Identity.Name );
+				/*
+				if ( subMsg.FromID != Thread.CurrentPrincipal.Identity.Name )
+				{
+					return POBoxStatus.UnknownIdentity;
+				}
+				*/
 
-			// Verify and get additional information about the "To" user
-			Member toMember = cDomain.GetMemberByID( subMsg.ToID );
-			if ( toMember == null )
-			{
-				log.Debug( "  specified \"toUserID\" does not exist in the domain!" );
-				return POBoxStatus.UnknownIdentity;
-			}
+				/*  FIXME::don't think we need this check anymore
+				if (domainID == null || domainID == "")
+				{
+					domainID = store.DefaultDomain;
+				}
+				*/
 
-			Member fromMember = cDomain.GetMemberByID( subMsg.FromID );
-			if ( fromMember == null )
-			{
-				log.Debug( "  specified \"fromUserID\" does not exist in the domain!" );
-				return POBoxStatus.UnknownIdentity;
-			}
+				// Verify domain
+				Simias.Storage.Domain cDomain = store.GetDomain( subMsg.DomainID );
+				if ( cDomain == null )
+				{
+					log.Debug( "  invalid Domain ID!" );
+					return POBoxStatus.UnknownDomain;
+				}
 
-			// In peer-to-peer the collection won't exist 
-			sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID ); 
-			if ( sharedCollection == null )
-			{
-				log.Debug( "  shared collection does not exist" );
-			}
+				// Verify and get additional information about the "To" user
+				Member toMember = cDomain.GetMemberByID( subMsg.ToID );
+				if ( toMember == null )
+				{
+					log.Debug( "  specified \"toUserID\" does not exist in the domain!" );
+					return POBoxStatus.UnknownIdentity;
+				}
 
-			if ( subMsg.AccessRights > (int) Simias.Storage.Access.Rights.Admin)
-			{
-				return POBoxStatus.InvalidAccessRights;
-			}
+				Member fromMember = cDomain.GetMemberByID( subMsg.FromID );
+				if ( fromMember == null )
+				{
+					log.Debug( "  specified \"fromUserID\" does not exist in the domain!" );
+					return POBoxStatus.UnknownIdentity;
+				}
 
-			try
-			{
-				log.Debug( "  looking up POBox for: " + subMsg.ToID );
-				poBox = POBox.POBox.GetPOBox( store, subMsg.DomainID, subMsg.ToID );
+				// In peer-to-peer the collection won't exist 
+				sharedCollection = store.GetCollectionByID( subMsg.SharedCollectionID ); 
+				if ( sharedCollection == null )
+				{
+					log.Debug( "  shared collection does not exist" );
+				}
 
-				cSub = 
-					new Subscription( 
+				if ( subMsg.AccessRights > (int) Simias.Storage.Access.Rights.Admin)
+				{
+					return POBoxStatus.InvalidAccessRights;
+				}
+
+				try
+				{
+					log.Debug( "  looking up POBox for: " + subMsg.ToID );
+					poBox = POBox.POBox.GetPOBox( store, subMsg.DomainID, subMsg.ToID );
+
+					cSub = 
+						new Subscription( 
 						subMsg.SharedCollectionName + " subscription", 
 						"Subscription", 
 						subMsg.FromID );
 
-				cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
-				cSub.ToName = toMember.Name;
-				cSub.ToIdentity = subMsg.ToID;
-				cSub.FromName = fromMember.Name;
-				cSub.FromIdentity = subMsg.FromID;
-				cSub.SubscriptionRights = (Simias.Storage.Access.Rights) subMsg.AccessRights;
-				cSub.MessageID = subMsg.SubscriptionID;
+					cSub.SubscriptionState = Simias.POBox.SubscriptionStates.Received;
+					cSub.ToName = toMember.Name;
+					cSub.ToIdentity = subMsg.ToID;
+					cSub.FromName = fromMember.Name;
+					cSub.FromIdentity = subMsg.FromID;
+					cSub.SubscriptionRights = (Simias.Storage.Access.Rights) subMsg.AccessRights;
+					cSub.MessageID = subMsg.SubscriptionID;
 
-				string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
-				appPath += "/POBoxService.asmx";
+					string appPath = this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} );
+					appPath += "/POBoxService.asmx";
 
-				log.Debug("  application path: " + appPath);
+					log.Debug("  application path: " + appPath);
 
-				/*
-				// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-				try
-				{
-					UriBuilder poUri = 
-						new UriBuilder(
-						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
-						this.Context.Request.Url.Host,
-						this.Context.Request.Url.Port,
-						appPath);
-
-					cSub.POServiceURL = poUri.Uri;
-				}
-				catch( Exception e1 )
-				{
-					log.Debug( "Failed creating POBox Uri" );
-					log.Debug( e1.Message );
-					log.Debug( e1.StackTrace );
-
-					// For now we won't error out cause I don't think we need
-					// URLs in the subscription itself
-				}
-				*/
-
-				cSub.SubscriptionCollectionID = subMsg.SharedCollectionID;
-				cSub.SubscriptionCollectionType = subMsg.SharedCollectionType;
-				cSub.SubscriptionCollectionName = subMsg.SharedCollectionName;
-				cSub.DomainID = cDomain.ID;
-				cSub.DomainName = cDomain.Name;
-				cSub.SubscriptionKey = Guid.NewGuid().ToString();
-				cSub.MessageType = "Outbound";  // ????
-
-				/*
-				try
-				{
+					/*
 					// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
-					UriBuilder coUri = 
-						new UriBuilder(
-						(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
-						this.Context.Request.Url.Host,
-						this.Context.Request.Url.Port,
-						this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
-
-					cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
-					log.Debug( "  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL );
-				}
-				catch( Exception e2 )
-				{
-					log.Debug( "Failed creating Collection Uri" );
-					log.Debug( e2.Message );
-					log.Debug( e2.StackTrace );
-				}
-				*/
- 
-				if ( sharedCollection != null )
-				{
-					DirNode dirNode = sharedCollection.GetRootDirectory();
-					if( dirNode != null )
+					try
 					{
-						cSub.DirNodeID = dirNode.ID;
-						cSub.DirNodeName = dirNode.Name;
-					}
-				}
-				else
-				{
-					cSub.DirNodeID = subMsg.DirNodeID;
-					cSub.DirNodeName = subMsg.DirNodeName;
-				}
+						UriBuilder poUri = 
+							new UriBuilder(
+							(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
+							this.Context.Request.Url.Host,
+							this.Context.Request.Url.Port,
+							appPath);
 
-				poBox.Commit( cSub );
-				status = POBoxStatus.Success;
-			}
-			catch(Exception e)
-			{
-				log.Error("  failed creating subscription");
-				log.Error(e.Message);
-				log.Error(e.StackTrace);
+						cSub.POServiceURL = poUri.Uri;
+					}
+					catch( Exception e1 )
+					{
+						log.Debug( "Failed creating POBox Uri" );
+						log.Debug( e1.Message );
+						log.Debug( e1.StackTrace );
+
+						// For now we won't error out cause I don't think we need
+						// URLs in the subscription itself
+					}
+					*/
+
+					cSub.SubscriptionCollectionID = subMsg.SharedCollectionID;
+					cSub.SubscriptionCollectionType = subMsg.SharedCollectionType;
+					cSub.SubscriptionCollectionName = subMsg.SharedCollectionName;
+					cSub.DomainID = cDomain.ID;
+					cSub.DomainName = cDomain.Name;
+					cSub.SubscriptionKey = Guid.NewGuid().ToString();
+					cSub.MessageType = "Outbound";  // ????
+
+					/*
+					try
+					{
+						// TODO: Need to fix how we detect SSL. Waiting for a fix in mod_mono.
+						UriBuilder coUri = 
+							new UriBuilder(
+							(this.Context.Request.Url.Port == 443) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp ,
+							this.Context.Request.Url.Host,
+							this.Context.Request.Url.Port,
+							this.Context.Request.ApplicationPath.TrimStart( new char[] {'/'} ));
+
+						cSub.SubscriptionCollectionURL = coUri.Uri.ToString();
+						log.Debug( "  SubscriptionCollectionURL: " + cSub.SubscriptionCollectionURL );
+					}
+					catch( Exception e2 )
+					{
+						log.Debug( "Failed creating Collection Uri" );
+						log.Debug( e2.Message );
+						log.Debug( e2.StackTrace );
+					}
+					*/
+ 
+					if ( sharedCollection != null )
+					{
+						DirNode dirNode = sharedCollection.GetRootDirectory();
+						if( dirNode != null )
+						{
+							cSub.DirNodeID = dirNode.ID;
+							cSub.DirNodeName = dirNode.Name;
+						}
+					}
+					else
+					{
+						cSub.DirNodeID = subMsg.DirNodeID;
+						cSub.DirNodeName = subMsg.DirNodeName;
+					}
+
+					poBox.Commit( cSub );
+					status = POBoxStatus.Success;
+				}
+				catch(Exception e)
+				{
+					log.Error("  failed creating subscription");
+					log.Error(e.Message);
+					log.Error(e.StackTrace);
+				}
 			}
 
 			log.Debug( "Invite - exit" );
@@ -970,7 +1000,14 @@ namespace Simias.POBoxService.Web
 		[WebMethod(EnableSession = true)]
 		public string GetDefaultDomain(int dummy)
 		{
-			return(Store.GetStore().DefaultDomain);
+			if ( Simias.Authentication.Http.GetMember( Context ) != null )
+			{
+				return(Store.GetStore().DefaultDomain);
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 
