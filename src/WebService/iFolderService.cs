@@ -34,7 +34,6 @@ using System.IO;
 using System.Net;
 using Simias;
 using Simias.Client;
-using Simias.Location;
 using Simias.Storage;
 using Simias.Sync;
 using Simias.POBox;
@@ -1769,7 +1768,7 @@ namespace Novell.iFolder.Web
 
 			DomainService domainSvc = new DomainService();
 
-			Uri uri = Locate.ResolveLocation(DomainID);
+			Uri uri = DomainProvider.ResolveLocation(DomainID);
 			if (uri == null)
 				throw new Exception("ERROR:No host address for domain");
 
