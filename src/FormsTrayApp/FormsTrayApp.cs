@@ -283,7 +283,24 @@ namespace Novell.FormsTrayApp
 
 					ifWebService = new iFolderWebService();
 					ifWebService.Url = Manager.LocalServiceUrl.ToString() + "/iFolder.asmx";
+
+					// Set up the event handlers to watch for create, delete, and change events.
+					eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
+					eventClient.Register();
+					if (!eventError)
+					{
+						eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeChangeHandler));
+						eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeCreateHandler));
+						eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeDeleteHandler));
+						eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
+					}
+
+					// Instantiate the GlobalProperties dialog so we can log sync events.
+					globalProperties = new GlobalProperties(ifWebService, eventClient);
+
+					// Cause the web service to start.
 					ifWebService.Ping();
+
 					//iFolderManager.CreateDefaultExclusions(config);
 
 					synkEvent = new AutoResetEvent(false);
@@ -298,19 +315,6 @@ namespace Novell.FormsTrayApp
 					}
 
 					notifyIcon1.Icon = trayIcon;
-
-					// Set up the event handlers to watch for create, delete, and change events.
-					eventClient = new IProcEventClient(new IProcEventError(errorHandler), null);
-					eventClient.Register();
-					if (!eventError)
-					{
-						eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(trayApp_nodeChangeHandler));
-						eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(trayApp_nodeCreateHandler));
-						eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(trayApp_nodeDeleteHandler));
-						eventClient.SetEvent(IProcEventAction.AddCollectionSync, new IProcEventHandler(trayApp_collectionSyncHandler));
-					}
-
-					globalProperties = new GlobalProperties(ifWebService, eventClient);
 				}
 				catch (Exception ex)
 				{
