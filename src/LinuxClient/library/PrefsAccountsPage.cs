@@ -434,7 +434,7 @@ namespace Novell.iFolder
 
 					try
 					{
-						ifws.LeaveDomain(dom.ID, rad.RemoveFromAll);
+						ifws.LeaveDomain(dom.ID, !(rad.RemoveFromAll));
 					}
 					catch(Exception e)
 					{
