@@ -39,10 +39,9 @@ namespace Simias.Event
 
 		internal CollectionFilesWatcher(Collection col)
 		{
-			this.collectionId = col.Id;
-			publish = new EventPublisher(new Configuration(col.LocalStore.StorePath.LocalPath));
-			Uri pathUri = (Uri)col.Properties.GetSingleProperty(Property.DocumentRoot).Value;
-			string rootPath = pathUri.LocalPath;
+			this.collectionId = col.ID;
+			publish = new EventPublisher(col.StoreReference.Config);
+			string rootPath = col.GetRootDirectory().GetFullPath(col);
 			watcher = new FileSystemWatcher(rootPath);
 			watcher.Changed += new FileSystemEventHandler(OnChanged);
 			watcher.Created += new FileSystemEventHandler(OnCreated);
@@ -107,14 +106,14 @@ namespace Simias.Event
 			watcherTable = new Hashtable();
 			if (args.Length == 1)
 			{
-				store = Store.Connect(new Uri(args[0]), this.GetType().FullName);
+				conf = new Configuration(args[0]);
 			}
 			else
 			{
-				store = Store.Connect(this.GetType().FullName);
+				conf = new Configuration();
 			}
-			conf = new Configuration(store.StorePath.LocalPath);
-			collectionWatcher = new EventSubscriber(new Configuration(store.StorePath.LocalPath));
+			store = new Store(conf);
+			collectionWatcher = new EventSubscriber(conf);
 			collectionWatcher.NodeCreated += new NodeEventHandler(OnNewCollection);
 			collectionWatcher.NodeDeleted += new NodeEventHandler(OnDeleteNode);
 			foreach (Collection col in store)
@@ -130,7 +129,7 @@ namespace Simias.Event
 
 		private void WatchCollection(Collection col)
 		{
-			watcherTable.Add(col.Id, new CollectionFilesWatcher(col));
+			watcherTable.Add(col.ID, new CollectionFilesWatcher(col));
 		}
 
 
@@ -140,7 +139,7 @@ namespace Simias.Event
 			{
 				if (args.ID == args.Collection)
 				{
-					Collection col = store.GetCollectionById(args.ID);
+					Collection col = store.GetCollectionByID(args.ID);
 					if (col != null)
 					{
 						WatchCollection(col);
