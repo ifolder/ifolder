@@ -60,6 +60,14 @@ namespace Simias
 
 		#region Properties
 		/// <summary>
+		/// Called to get the path where Simias.config is installed.
+		/// </summary>
+		public string ConfigPath
+		{
+			get { return this.configFilePath; }
+		}
+
+		/// <summary>
 		/// Called to get the path where simias is installed.
 		/// </summary>
 		public string StorePath
@@ -90,9 +98,18 @@ namespace Simias
 		/// <param name="path">A hard path to a configuration file.</param>
 		private Configuration(string path)
 		{
-			// Load the configuration document from the file.
+			// load a configuration file, if it exists
+			if (!File.Exists(path))
+			{
+				XmlDocument document = new XmlDocument();
+				document.AppendChild(document.CreateElement(RootElementTag));
+				document.Save(path);
+			}
+
+			// create the configuration document
 			configDoc = new XmlDocument();
-			configDoc.Load(path);
+			this.configFilePath = path;
+			configDoc.Load(this.configFilePath);
 		}
 
 		/// <summary>
