@@ -69,28 +69,25 @@ namespace FileDelta
 	class DataSegment : FileSegment
 	{
 		public int		length;
-		public byte[]	Data;
+		public long		offset;
 	}
 
-	class ServerFile : FileDelta
+	public class ServerFile : FileDelta
 	{
-		FileStream		stream;
-		
-		public ServerFile(string file, bool writeAccess) :
+		public ServerFile(string file) :
 			base(file)
 		{
-			if (writeAccess)
-				stream = File.Open(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
-			else
-				stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-			
 		}
 
-		public ArrayList GetHashMap()
+		/// <summary>
+		/// Get a hashed map of the file.  This can then be
+		/// used to create an upload or download filemap.
+		/// </summary>
+		/// <returns></returns>
+		public HashEntry[] GetHashMap()
 		{
-			FileInfo		fi = new FileInfo(file);
-			int				blockCount = (int)(fi.Length / BlockSize) + 1;
-			ArrayList		list = new ArrayList(blockCount);
+			int				blockCount = (int)(stream.Length / BlockSize) + 1;
+			HashEntry[]		list = new HashEntry[blockCount];
 			byte[]			buffer = new byte[BlockSize];
 			StrongHash		sh = new StrongHash();
 			WeakHash		wh = new WeakHash();
@@ -101,13 +98,14 @@ namespace FileDelta
 			{
 				// Compute the hash codes.
 				stream.Position = 0;
+				int i = 0;
 				while ((bytesRead = stream.Read(buffer, 0, BlockSize)) != 0)
 				{
 					HashEntry entry = new HashEntry();
 					entry.WeakHash = wh.ComputeHash(buffer, 0, (UInt16)bytesRead);
 					entry.StrongHash =  sh.ComputeHash(buffer, 0, bytesRead);
 					entry.BlockNumber = currentBlock++;
-					list.Add(entry);
+					list[i++] = entry;
 				}
 			}
 			return list;
@@ -139,49 +137,42 @@ namespace FileDelta
 		{
 			lock (this)
 			{
-				stream.Position = offset;
-				stream.Write(buffer, 0, count);
+				outStream.Position = offset;
+				outStream.Write(buffer, 0, count);
 			}
 		}
 
 		/// <summary>
-		/// Writes the new file based on The DiffRecord array.
+		/// Write the data from the original file into the new file.
 		/// </summary>
-		/// <param name="changes"></param>
-		public void WriteChanges(ArrayList fileMap, string outFile)
+		/// <param name="originalOffset">The offset in the original file to copy from.</param>
+		/// <param name="offset">The offset in the file where the data is to be written.</param>
+		/// <param name="count">The number of bytes to write.</param>
+		public void WriteFromOriginal(long originalOffset, long offset, int count)
 		{
-			byte[] buffer = new byte[BlockSize];
-			outStream = new BinaryWriter(File.Open(outFile, FileMode.CreateNew, FileAccess.Write, FileShare.None));
-			foreach(FileSegment segment in fileMap)
+			int bufferSize = count > BlockSize ? BlockSize : count;
+			byte[] buffer = new byte[bufferSize];
+
+			lock (this)
 			{
-				switch (segment.Type)
+				stream.Position = originalOffset;
+				outStream.Position = offset;
+				while (count > 0)
 				{
-					case FileSegmentType.Block:
-						BlockSegment bs = (BlockSegment)segment;
-						stream.Position = bs.StartBlock * BlockSize;
-						for (int i = bs.StartBlock; i <= bs.EndBlock; ++i)
-						{
-							int bytesRead = stream.Read(buffer, 0, BlockSize);
-							outStream.Write(buffer, 0, BlockSize);
-						}
-						break;
-					case FileSegmentType.Data:
-						// Write the bytes to the output stream.
-						DataSegment ds = (DataSegment)segment;
-						outStream.Write(ds.Data, 0, ds.length);
-						break;
+					int bytesRead = stream.Read(buffer, 0, bufferSize);
+					outStream.Write(buffer, 0, bytesRead);
+					count -= bytesRead;
 				}
 			}
-			outStream.Close();
 		}
 	}
 
-	class ClientFile : FileDelta
+	public class ClientFile : FileDelta
 	{
-		StrongWeakHashtable table = new StrongWeakHashtable();
-		ArrayList	serverHashMap;
-
-		public ClientFile(string clientFile, ArrayList serverHashMap) :
+		StrongWeakHashtable		table = new StrongWeakHashtable();
+		HashEntry[]				serverHashMap;
+		
+		public ClientFile(string clientFile, HashEntry[] serverHashMap) :
 			base(clientFile)
 		{
 			this.serverHashMap = serverHashMap;
@@ -198,7 +189,6 @@ namespace FileDelta
 			table.Add(serverHashMap);
 			ArrayList fileMap = new ArrayList();
 
-			BinaryReader	reader = new BinaryReader(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read));
 			int				bytesRead = BlockSize * 16;
 			byte[]			buffer = new byte[BlockSize * 16];
 			int				readOffset = 0;
@@ -210,13 +200,15 @@ namespace FileDelta
 			int				endByte = 0;
 			int				endOfLastMatch = 0;
 			byte			dropByte = 0;
-								
+			
+			stream.Position = 0;		
 			while (bytesRead != 0)
 			{
-				bytesRead = reader.Read(buffer, readOffset, bytesRead - readOffset);
+				bytesRead = stream.Read(buffer, readOffset, bytesRead - readOffset);
 				if (bytesRead == 0)
 					break;
-				bytesRead = bytesRead == 0 ? bytesRead : bytesRead + readOffset;
+
+				bytesRead = bytesRead + readOffset;
 				
 				if (bytesRead >= BlockSize)
 				{
@@ -245,8 +237,7 @@ namespace FileDelta
 									DataSegment ds = new DataSegment();
 									ds.Type = FileSegmentType.Data;
 									ds.length = startByte - endOfLastMatch;
-									ds.Data = new byte[ds.length];
-									Array.Copy(buffer, endOfLastMatch, ds.Data, 0, ds.length);
+									ds.offset = stream.Position - bytesRead + endOfLastMatch;
 									fileMap.Add(ds);
 								}
 								startByte = endByte + 1;
@@ -278,13 +269,12 @@ namespace FileDelta
 					// We need to copy any data that has not been saved.
 					if (endOfLastMatch == 0)
 					{
-						// We don't want to send to large of a buffer create a DiffRecord
+						// We don't want to send to large of a buffer. Create a DiffRecord
 						// for the data in the buffer.
 						DataSegment ds = new DataSegment();
 						ds.Type = FileSegmentType.Data;
 						ds.length = startByte - endOfLastMatch;
-						ds.Data = new byte[ds.length];
-						Array.Copy(buffer, endOfLastMatch, ds.Data, 0, ds.length);
+						ds.offset = stream.Position - bytesRead + endOfLastMatch;
 						fileMap.Add(ds);
 						endOfLastMatch = startByte;
 					}
@@ -307,12 +297,10 @@ namespace FileDelta
 				DataSegment ds = new DataSegment();
 				ds.Type = FileSegmentType.Data;
 				ds.length = endByte - endOfLastMatch + 1;
-				ds.Data = new byte[ds.length];
-				Array.Copy(buffer, endOfLastMatch, ds.Data, 0, ds.length);
+				ds.offset = stream.Position - ds.length;
 				fileMap.Add(ds);
 			}
 
-			reader.Close();
 			return fileMap;
 		}
 
@@ -320,11 +308,10 @@ namespace FileDelta
 		{
 			// Since we are doing the diffing on the client we will download all blocks that
 			// don't match.
-			//table.Clear();
-			//table.Add(serverHashMap);
-			long[] fileMap = new long[serverHashMap.Count];
+			table.Clear();
+			table.Add(serverHashMap);
+			long[] fileMap = new long[serverHashMap.Length];
 
-			BinaryReader	reader = new BinaryReader(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read));
 			int				bytesRead = BlockSize * 16;
 			byte[]			buffer = new byte[BlockSize * 16];
 			int				readOffset = 0;
@@ -340,10 +327,11 @@ namespace FileDelta
 			{
 				fileMap[i] = -1;
 			}
-								
+
+			stream.Position = 0;					
 			while (bytesRead != 0)
 			{
-				bytesRead = reader.Read(buffer, readOffset, bytesRead - readOffset);
+				bytesRead = stream.Read(buffer, readOffset, bytesRead - readOffset);
 				if (bytesRead == 0)
 					break;
 				bytesRead = bytesRead == 0 ? bytesRead : bytesRead + readOffset;
@@ -370,7 +358,7 @@ namespace FileDelta
 							{
 								HashEntry match = (HashEntry)entryList[eIndex];
 								// We found a match save the match;
-								fileMap[match.BlockNumber] = reader.BaseStream.Position - bytesRead + startByte;
+								fileMap[match.BlockNumber] = stream.Position - bytesRead + startByte;
 
 								startByte = endByte + 1;
 								endByte = startByte + BlockSize - 1;
@@ -392,57 +380,23 @@ namespace FileDelta
 					break;
 				}
 			}
-
-			
-			reader.Close();
 			return fileMap;
 		}
-
-		/// <summary>
-		/// Writes the new file based on The fileMap.
-		/// </summary>
-		/// <param name="changes"></param>
-		public void WriteChanges(long[] fileMap, string outFile, ServerFile server)
-		{
-			byte[] buffer = new byte[BlockSize];
-			inStream = new BinaryReader(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read));
-			outStream = new BinaryWriter(File.Open(outFile, FileMode.CreateNew, FileAccess.Write, FileShare.None));
-
-			for (int i = 0; i < fileMap.Length; ++i)
-			{
-				if (fileMap[i] != -1)
-				{
-					outStream.BaseStream.Position = i * BlockSize;
-					inStream.BaseStream.Position = fileMap[i];
-					int bytesRead = inStream.Read(buffer, 0, BlockSize);
-					outStream.Write(buffer, 0, bytesRead);
-				}
-				else
-				{
-					// We need to get this block from the server.
-					outStream.BaseStream.Position = i * BlockSize;
-					int bytesRead = server.Read(buffer, i * BlockSize, BlockSize);
-					outStream.Write(buffer, 0, bytesRead);
-				}
-			}
-			inStream.Close();
-			outStream.Close();
-		}
-
-		//Close();
 	}
 
 	/// <summary>
 	/// Class used to determine the common data between two files.
 	/// This is done from a copy of the local file and a map of hash code for the server file.
 	/// </summary>
-	class FileDelta
+	public class FileDelta
 	{
 		protected string		file;
+		protected string		tmpFile;
+		protected FileStream	stream;
 		protected const int		BlockSize = 4096;
-		protected BinaryReader	inStream;
-		protected BinaryWriter	outStream;
-
+		protected const int		MaxXFerSize = 1024 * 64;
+		protected FileStream	outStream;
+				
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
@@ -458,24 +412,34 @@ namespace FileDelta
 			string file1 = Path.GetFullPath(args[0]);
 			string file2 = Path.GetFullPath(args[1]);
 			
-			ServerFile sFile = new ServerFile(file1, true);
-			ArrayList fileMap = sFile.GetHashMap();
-			ClientFile cFile = new ClientFile(file2, fileMap);
-			ArrayList uploadMap = cFile.GetUploadFileMap();
-			long[] downloadMap = cFile.GetDownloadFileMap();
-
-			string UpFile = Path.Combine(Path.GetDirectoryName(file1), "Upload");
+			// Get the file from the server.
+			ServerFile sFile = new ServerFile(file1);
+			sFile.Open(null);
+			ClientFile cFile = new ClientFile(file2, sFile.GetHashMap());
 			string DownFile = Path.Combine(Path.GetDirectoryName(file1), "Download");
-
-			File.Delete(UpFile);
 			File.Delete(DownFile);
-			
-			Console.WriteLine("Upload Changes");
-			ReportUploadDiffs(uploadMap);
-			sFile.WriteChanges(uploadMap, UpFile);
+			cFile.Open(DownFile);
+			long[] downloadMap = cFile.GetDownloadFileMap();
 			Console.WriteLine("Download Changes");
 			ReportDownloadDiffs(downloadMap);
-			cFile.WriteChanges(downloadMap, DownFile, sFile);
+			cFile.DownLoadFile(downloadMap, sFile);
+			sFile.Close();
+			cFile.Close();
+
+
+			// Push the changes to the server.
+			sFile = new ServerFile(file1);
+			string UpFile = Path.Combine(Path.GetDirectoryName(file1), "Upload");
+			File.Delete(UpFile);
+			sFile.Open(UpFile);
+			cFile = new ClientFile(file2, sFile.GetHashMap());
+			cFile.Open(null);
+			ArrayList uploadMap = cFile.GetUploadFileMap();
+			Console.WriteLine("Upload Changes");
+			cFile.ReportUploadDiffs(uploadMap);
+			cFile.UploadFile(uploadMap, sFile);
+			sFile.Close();
+			cFile.Close();
 		}
 
 		public FileDelta(string file)
@@ -483,7 +447,135 @@ namespace FileDelta
 			this.file = file;
 		}
 
-		private static void ReportUploadDiffs(ArrayList segments)
+		~FileDelta()
+		{
+			Close (true);
+		}
+
+		public void Open(string tmpFile)
+		{
+			this.tmpFile = tmpFile;
+			stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+			if (tmpFile != null)
+				outStream = File.Open(tmpFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+		}
+
+		private void Close(bool InFinalizer)
+		{
+			if (!InFinalizer)
+				GC.SuppressFinalize(this);
+
+			if (stream != null)
+			{
+				stream.Close();
+				stream = null;
+			}
+			if (outStream != null)
+			{
+				outStream.Close();
+				outStream = null;
+			}
+		}
+
+		public void Close()
+		{
+			Close (false);
+		}
+
+		/// <summary>
+		/// Writes the new file based on The fileMap.
+		/// </summary>
+		/// <param name="changes"></param>
+		public void DownLoadFile(long[] fileMap, ServerFile server)
+		{
+			lock (this)
+			{
+				byte[] buffer = new byte[BlockSize];
+				outStream.Position = 0;
+				
+				for (int i = 0; i < fileMap.Length; ++i)
+				{
+					if (fileMap[i] != -1)
+					{
+						stream.Position = fileMap[i];
+						int bytesRead = stream.Read(buffer, 0, BlockSize);
+						outStream.Write(buffer, 0, bytesRead);
+					}
+					else
+					{
+						// We need to get this block from the server.
+						// Check if we have more consecutive blocks to get from the server.
+						int readBufferSize = BlockSize;
+						int offset = i * BlockSize;
+						for (int j = i + 1; j < fileMap.Length; ++j)
+						{
+							if (fileMap[j] == -1)
+							{
+								// We need to get the next segment.
+								// Add the segment size to this read and skip over the segment.
+								readBufferSize += BlockSize;
+								i++;
+								if (readBufferSize >= MaxXFerSize)
+								{
+									// We don't allow bigger XFers than this get out.
+									break;
+								}
+							}
+							else
+							{
+								// The next segment is already local.
+								break;
+							}
+						}
+
+						byte[] readBuffer;
+						if (readBufferSize != BlockSize)
+							readBuffer = new byte[readBufferSize];
+						else
+							readBuffer = buffer;
+
+						int bytesRead = server.Read(readBuffer, offset, readBufferSize);
+						outStream.Write(readBuffer, 0, bytesRead);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Writes the new file based on The fileMap array.
+		/// </summary>
+		/// <param name="changes"></param>
+		public void UploadFile(ArrayList fileMap, ServerFile sFile)
+		{
+			byte[] buffer = new byte[BlockSize];
+			long offset = 0;
+			foreach(FileSegment segment in fileMap)
+			{
+				switch (segment.Type)
+				{
+					case FileSegmentType.Block:
+						BlockSegment bs = (BlockSegment)segment;
+						stream.Position = bs.StartBlock * BlockSize;
+						int bytesToWrite = (bs.EndBlock - bs.StartBlock + 1) * BlockSize;
+						sFile.WriteFromOriginal(bs.StartBlock * BlockSize, offset, bytesToWrite);
+						offset += bytesToWrite;
+						break;
+					case FileSegmentType.Data:
+						// Write the bytes to the output stream.
+						DataSegment ds = (DataSegment)segment;
+						byte[] dataBuffer = new byte[ds.length];
+						stream.Position = ds.offset;
+						int bytesRead = stream.Read(dataBuffer, 0, ds.length);
+						sFile.Write(dataBuffer, offset, ds.length);
+						//outStream.Write(ds.Data, 0, ds.length);
+						offset += ds.length;
+						break;
+				}
+			}
+		}
+
+		private void ReportUploadDiffs(ArrayList segments)
 		{
 			Console.WriteLine("*****************************************");
 			foreach (FileSegment segment in segments)
@@ -497,15 +589,6 @@ namespace FileDelta
 					case FileSegmentType.Data:
 						DataSegment ds = (DataSegment)segment;
 						Console.WriteLine("Found change size = {0}", ds.length);
-						if (ds.length < 80)
-						{
-							foreach(byte b in ds.Data)
-							{
-								char c = (char)b;
-								Console.Write(c);
-							}
-							Console.WriteLine();
-						}
 						break;
 				}
 			}
@@ -534,6 +617,8 @@ namespace FileDelta
 					startBlock = -1;
 				}
 			}
+			if (startBlock != -1)
+				Console.WriteLine("Found Missing Block {0} to Block {1}", startBlock, endBlock);
 			Console.WriteLine("*****************************************");
 		}
 	}
@@ -542,7 +627,7 @@ namespace FileDelta
 	/// Class used to keep track of the file Blocks and hash
 	/// codes assosiated with the block.
 	/// </summary>
-	class HashEntry
+	public class HashEntry
 	{
 		public int		BlockNumber;
 		public UInt32	WeakHash;
@@ -573,8 +658,7 @@ namespace FileDelta
 		/// <returns></returns>
 		public override int GetHashCode()
 		{
-			//return base.GetHashCode ();
-			return (StrongHash.GetHashCode());
+			return base.GetHashCode ();
 		}
 	}
 
@@ -662,7 +746,7 @@ namespace FileDelta
 		/// Add the List of entries to the table.
 		/// </summary>
 		/// <param name="entryList">The list of entries to add.</param>
-		public void Add(ArrayList entryList)
+		public void Add(HashEntry[] entryList)
 		{
 			foreach (HashEntry entry in entryList)
 			{
