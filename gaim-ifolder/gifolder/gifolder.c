@@ -1776,6 +1776,14 @@ g_print("add_new_trusted_buddy() called: %s (%s:%s)\n", buddy->name, ip_address,
 	if (buddy_icon)
 		g_object_unref(buddy_icon);
 
+	/* Add/Update this trusted buddy in Simias */
+	gaim_domain_add_gaim_buddy(gaim_account_get_name(buddy->account),
+							   gaim_account_get_protocol_id(buddy->account),
+							   buddy->name,
+							   gaim_buddy_get_alias(buddy),
+							   ip_address,
+							   ip_port);
+
 	/* Update the trusted buddies file */
 	save_trusted_buddies(trusted_buddies_store);
 }
