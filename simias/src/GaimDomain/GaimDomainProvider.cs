@@ -132,6 +132,7 @@ namespace Simias.Gaim
 
 					// Fixme
 					string oneTimePassword = DateTime.Now.ToString();
+					gaimSession.OneTimePassword = oneTimePassword;
 
 					// Set the one time password in the response
 					ctx.Response.AddHeader(

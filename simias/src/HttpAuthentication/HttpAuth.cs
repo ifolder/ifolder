@@ -48,8 +48,9 @@ namespace Simias.Authentication
 			Requests = 0;
 		}
 
-		public string	MemberID;
-		public UInt64	Requests;
+		public GenericPrincipal User;
+		public string			MemberID;
+		public UInt64			Requests;
 	}
 
 	/// <summary>
@@ -225,6 +226,10 @@ namespace Simias.Authentication
 
 			if ( ctx.Session != null )
 			{
+				simiasSession = ctx.Session[ sessionTag ] as Simias.Authentication.Session;
+				if (simiasSession != null)
+					ctx.User = simiasSession.User;
+
 				if ( ctx.User.Identity.IsAuthenticated == false )
 				{
 					status = DomainProvider.Authenticate( domain, ctx );
@@ -268,7 +273,7 @@ namespace Simias.Authentication
 					ctx.Session[ sessionTag ] = simiasSession;
 
 					// Setup a principal
-					ctx.User = 
+					simiasSession.User = 
 						new GenericPrincipal(
 						new GenericIdentity(
 						member.UserID,
@@ -276,11 +281,11 @@ namespace Simias.Authentication
 						//"Basic authentication"), 
 						rolesArray);
 
+					ctx.User = simiasSession.User;
 					Thread.CurrentPrincipal = ctx.User;
 				}
 				else
 				{
-					simiasSession = ctx.Session[ sessionTag ] as Simias.Authentication.Session;
 					simiasSession.Requests++;
 					Thread.CurrentPrincipal = ctx.User;
 					member = domain.GetMemberByID( simiasSession.MemberID );
