@@ -33,6 +33,34 @@ using Simias;
 
 namespace Simias.Sync
 {
+	public enum SyncAccess
+	{
+		/// <summary>
+		/// The collection was not found.
+		/// </summary>
+		NotFound,
+		/// <summary>
+		/// Someone is sync-ing now come back latter.
+		/// </summary>
+		Busy,
+		/// <summary>
+		/// User has no rights to the collection.
+		/// </summary>
+		Deny,
+		/// <summary>
+		/// User can view information in a collection.
+		/// </summary>
+		ReadOnly,
+		/// <summary>
+		/// User can view and modify information in a collection.
+		/// </summary>
+		ReadWrite,
+		/// <summary>
+		/// User can view, modify and change rights in a collection.
+		/// </summary>
+		Admin
+	};
+	
 	/// <summary>
 	/// The node represented as the XML string.
 	/// </summary>
@@ -195,8 +223,10 @@ public class SyncService
 	/// <summary>
 	/// start sync of this collection -- perform basic role checks and dredge server file system
 	/// </summary>
-	public Access.Rights Start(string user)
+	public SyncAccess Start(string user)
 	{
+		SyncAccess access = SyncAccess.Busy;
+
 		string userID = Thread.CurrentPrincipal.Identity.Name;
 			
 		if ((userID == null) || (userID.Length == 0))
@@ -211,14 +241,16 @@ public class SyncService
 		{
 			collection.Impersonate(member);
 			rights = member.Rights;
+			access = (SyncAccess)Enum.Parse(typeof(SyncAccess), rights.ToString(), true);
 			log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
 		}
 		else if (userID == collection.ProxyUserID)
 		{
 			rights = Access.Rights.Admin;
+			access = SyncAccess.Admin;
 			log.Info("Sync session starting for {0}", userID);
 		}
-		return rights;
+		return access;
 	}
 
 	/// <summary>

@@ -32,11 +32,11 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     
     /// <remarks/>
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://novell.com/simias/sync/Start", RequestNamespace="http://novell.com/simias/sync/", ResponseNamespace="http://novell.com/simias/sync/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public Rights Start(string collectionID, string user) {
+    public SyncAccess Start(string collectionID, string user) {
         object[] results = this.Invoke("Start", new object[] {
                     collectionID,
                     user});
-        return ((Rights)(results[0]));
+        return ((SyncAccess)(results[0]));
     }
     
     /// <remarks/>
@@ -47,9 +47,9 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
     }
     
     /// <remarks/>
-    public Rights EndStart(System.IAsyncResult asyncResult) {
+    public SyncAccess EndStart(System.IAsyncResult asyncResult) {
         object[] results = this.EndInvoke(asyncResult);
-        return ((Rights)(results[0]));
+        return ((SyncAccess)(results[0]));
     }
     
     /// <remarks/>
@@ -383,7 +383,13 @@ public class SimiasSyncService : System.Web.Services.Protocols.SoapHttpClientPro
 
 /// <remarks/>
 [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://novell.com/simias/sync/")]
-public enum Rights {
+public enum SyncAccess {
+    
+    /// <remarks/>
+    NotFound,
+    
+    /// <remarks/>
+    Busy,
     
     /// <remarks/>
     Deny,

@@ -53,7 +53,7 @@ namespace Simias.Sync.Web
 		/// <param name="collectionID">The ID of the collection to Sync.</param>
 		/// <param name="user">This is here temporarily. Used to do access checks.</param>
 		[WebMethod(EnableSession = true)]
-		public Access.Rights Start(string collectionID, string user)
+		public SyncAccess Start(string collectionID, string user)
 		{
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(collectionID);
@@ -63,7 +63,7 @@ namespace Simias.Sync.Web
 				Service = new SyncService(sCol);
 				return Service.Start(user);
 			}
-			return Access.Rights.Deny;
+			return SyncAccess.NotFound;
 		}
 
 		/// <summary>
