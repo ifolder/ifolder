@@ -386,7 +386,9 @@ namespace Novell.iFolder
 
 				tSelect.GetSelected(out tModel, out iter);
 				iFolder ifolder = (iFolder) tModel.GetValue(iter, 0);
+
 				ConflictResolver conres = new ConflictResolver();
+				conres.iFolder = ifolder;
 				conres.TransientFor = ApplicationPropDialog;
 				conres.Run();
 			}

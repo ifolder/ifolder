@@ -4,7 +4,6 @@
 <glade-interface>
 
 <widget class="GtkDialog" id="ConflictDialog">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">iFolder Conflict Resolver</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -194,7 +193,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="label6">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Name:</property>
+			      <property name="label" translatable="yes">iFolder Name:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -218,7 +217,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="label7">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Path:</property>
+			      <property name="label" translatable="yes">iFolder Path:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -240,7 +239,7 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="iFolerNameLabel">
+			    <widget class="GtkLabel" id="iFolderNameLabel">
 			      <property name="visible">True</property>
 			      <property name="label" translatable="yes">&lt;ifolder name&gt;</property>
 			      <property name="use_underline">False</property>
@@ -312,7 +311,7 @@
 		  <property name="can_focus">True</property>
 		  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
 		  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-		  <property name="shadow_type">GTK_SHADOW_NONE</property>
+		  <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
 		  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
 
 		  <child>
@@ -357,8 +356,9 @@
 			  <property name="column_spacing">10</property>
 
 			  <child>
-			    <widget class="GtkLabel" id="label10">
+			    <widget class="GtkLabel" id="LNameLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Name:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -381,8 +381,9 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="label11">
+			    <widget class="GtkLabel" id="LDateLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Date:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -405,8 +406,9 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="label12">
+			    <widget class="GtkLabel" id="LLocLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Location:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -429,8 +431,9 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="label13">
+			    <widget class="GtkLabel" id="LTypeLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Type:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -455,6 +458,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="LocalNameLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;name&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -478,6 +482,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="LocalDateLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;date&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -501,6 +506,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="LocalLocLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;location&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -524,6 +530,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="LocalTypeLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;type&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -549,6 +556,7 @@
 		      <child>
 			<widget class="GtkRadioButton" id="LocalRadioButton">
 			  <property name="visible">True</property>
+			  <property name="sensitive">False</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Local Copy</property>
 			  <property name="use_underline">True</property>
@@ -587,8 +595,9 @@
 			  <property name="column_spacing">10</property>
 
 			  <child>
-			    <widget class="GtkLabel" id="label14">
+			    <widget class="GtkLabel" id="SNameLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Name:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -611,8 +620,9 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="label15">
+			    <widget class="GtkLabel" id="SDateLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Date:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -635,8 +645,9 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="label16">
+			    <widget class="GtkLabel" id="SLocLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Location:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -659,8 +670,9 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="label17">
+			    <widget class="GtkLabel" id="STypeLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">Type:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -685,6 +697,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="ServerNameLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;name&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -708,6 +721,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="ServerDateLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;date&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -731,6 +745,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="ServerLocLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;location&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -754,6 +769,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="ServerTypeLabel">
 			      <property name="visible">True</property>
+			      <property name="sensitive">False</property>
 			      <property name="label" translatable="yes">&lt;type&gt;</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
@@ -779,6 +795,7 @@
 		      <child>
 			<widget class="GtkRadioButton" id="ServerRadioButton">
 			  <property name="visible">True</property>
+			  <property name="sensitive">False</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Server Copy</property>
 			  <property name="use_underline">True</property>
