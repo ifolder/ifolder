@@ -181,18 +181,17 @@ namespace Simias.Sync.Client
 				catch (CollisionException)
 				{
 					// Create an update conflict.
-					string collisionName = Conflict.GetUpdateConflictPath(collection, node);
-					File.Copy(workFile, collisionName, true);
-					FileInfo fi = new FileInfo(collisionName);
+					file = Conflict.GetUpdateConflictPath(collection, node);
+					collection.Commit(collection.CreateCollision(node, false));
+					base.Close(commit);
+					FileInfo fi = new FileInfo(file);
 					fi.Attributes = fi.Attributes | FileAttributes.Hidden;
-					fi.LastWriteTime = node.LastWriteTime;
-					fi.CreationTime = node.CreationTime;
-					collection.CreateCollision(node, false);
-					collection.Commit(node);
+					return true;
 				}
 				catch
 				{
 					bStatus = false;
+					commit = false;
 				}
 			}
 			try
@@ -201,15 +200,16 @@ namespace Simias.Sync.Client
 				if (readOnly)
 				{
 					FileInfo fi = new FileInfo(file);
-					fi.Attributes = fi.Attributes | FileAttributes.ReadOnly;
+					//BUGBUG
+					//fi.Attributes = fi.Attributes | FileAttributes.ReadOnly;
 				}
 			}
 			catch
 			{
 				string collisionName = Conflict.GetFileConflictPath(collection, node);
-				File.Copy(workFile, collisionName, true);
-				collection.CreateCollision(node, true);
-				collection.Commit(node);
+				File.Delete(collisionName);
+				File.Move(workFile, collisionName);
+				collection.Commit(collection.CreateCollision(node, true));
 			}
 			return bStatus;
 		}

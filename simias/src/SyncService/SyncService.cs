@@ -414,7 +414,7 @@ namespace Simias.Sync
 					collection.Impersonate(member);
 					rights = member.Rights;
 					si.Access = rights;
-					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection, member.Name, rights);
+					log.Info("Starting Sync of {0} for {1} rights : {2}.", collection.Name, member.Name, rights);
 				}
 
 			switch (rights)

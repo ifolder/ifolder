@@ -538,7 +538,7 @@ namespace Simias.Sync.Client
 				eventPublisher.RaiseEvent(new CollectionSyncEventArgs(collection.Name, collection.ID, Action.StartSync, true));
 
 				serverContext = si.Context;
-				rights = si.Access;
+				workArray.SetAccess = rights = si.Access;
 				
 				serverStatus = si.Status;
 				switch (si.Status)
@@ -955,7 +955,10 @@ namespace Simias.Sync.Client
 						if (bfn != null)
 						{
 							eventPublisher.RaiseEvent(new FileSyncEventArgs(collection.ID, ObjectType.File, true, node.Name, 0, 0, 0, Direction.Downloading));
-							File.Delete(bfn.GetFullPath(collection));
+							FileInfo fi = new FileInfo(bfn.GetFullPath(collection));
+							if (rights == Rights.ReadOnly)
+								fi.Attributes = fi.Attributes & ~FileAttributes.ReadOnly;
+							fi.Delete();
 						}
 						else
 						{
@@ -1501,6 +1504,7 @@ namespace Simias.Sync.Client
 		Collection		collection;
 		Hashtable		nodesFromServer;
 		Hashtable		nodesToServer;
+		Rights			rights;
 		
 		/// <summary>
 		/// Node type enum.
@@ -1537,7 +1541,7 @@ namespace Simias.Sync.Client
 		internal void AddNodeFromServer(SyncNodeStamp stamp)
 		{
 			// Make sure the node does not exist in the nodesToServer table.
-			if (NodeHasChanged(stamp.ID, stamp.LocalIncarnation))
+			if (NodeHasChanged(stamp.ID, stamp.LocalIncarnation) || stamp.Operation == SyncOperation.Delete)
 			{
 				if (nodesToServer.Contains(stamp.ID))
 				{
@@ -1579,6 +1583,13 @@ namespace Simias.Sync.Client
 				if (nodesFromServer.Contains(stamp.ID))
 				{
 					// This node has changed on the server we have a collision that we need to get.
+				}
+				else if (rights == Rights.ReadOnly)
+				{
+					// We need to get this node from the server.
+					stamp.Operation = SyncOperation.Change;
+					stamp.LocalIncarnation = stamp.MasterIncarnation + 1;
+					AddNodeFromServer(stamp);
 				}
 				else
 				{
@@ -1764,6 +1775,17 @@ namespace Simias.Sync.Client
 				count += nodesToServer.Count;
 				
 				return count == 0 ? true : false;
+			}
+		}
+
+		/// <summary>
+		/// Set the Access that is allowed to the collection.
+		/// </summary>
+		internal Rights SetAccess
+		{
+			set
+			{
+				rights = value;
 			}
 		}
 	}
