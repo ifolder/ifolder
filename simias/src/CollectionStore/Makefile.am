@@ -1,7 +1,7 @@
 # handle Mono secondary dependencies
 export MONO_PATH := $(MONO_PATH)
 
-CollectionStore_CSFILES = $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseContact.cs $(srcdir)/BaseFileNode.cs $(srcdir)/Collection.cs $(srcdir)/DirNode.cs $(srcdir)/FileNode.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/IdentityManager.cs $(srcdir)/LinkNode.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/ShallowNode.cs $(srcdir)/Store.cs $(srcdir)/StoreFileNode.cs
+CollectionStore_CSFILES = $(srcdir)/AccessControl.cs $(srcdir)/Alias.cs $(srcdir)/AssemblyInfo.cs $(srcdir)/BaseContact.cs $(srcdir)/BaseFileNode.cs $(srcdir)/Collection.cs $(srcdir)/DirNode.cs $(srcdir)/FileNode.cs $(srcdir)/ICSEnumerator.cs $(srcdir)/IdentityManager.cs $(srcdir)/LinkNode.cs $(srcdir)/LocalAddressBook.cs $(srcdir)/MultiValuedList.cs $(srcdir)/Node.cs $(srcdir)/NodeTypes.cs $(srcdir)/Property.cs $(srcdir)/PropertyList.cs $(srcdir)/ShallowNode.cs $(srcdir)/Store.cs $(srcdir)/StoreFileNode.cs
 CollectionStore_CSFILES_CSC := $(subst /,$(SEP),$(CollectionStore_CSFILES))
 CollectionStore_INCLUDES =
 CollectionStore_RESOURCES =
