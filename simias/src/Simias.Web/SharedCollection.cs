@@ -309,21 +309,34 @@ namespace Simias.Web
 			}
 
 #if MONO
-			/*   Check for rights here
-			// this call will check for rights once it's done
+			//   Check for rights here
+			/* It appears the access call is not implemented right now
+				If I leave the code in and run I get this:
+
+				System.EntryPointNotFoundException: syscall_access
+				in <0x00050> (wrapper managed-to-native) Mono.Posix.Syscall:syscall_access (string,int)
+				in <0x00027> Mono.Posix.Syscall:access (string,Mono.Posix.AccessMode)
+				in <0x00147> Simias.Web.SharedCollection:CanBeCollection (string)
+
 			try
 			{
-				if(Mono.Posix.Syscall.access(path, 
+				if(Mono.Posix.Syscall.access(testPath, 
 							Mono.Posix.AccessMode.W_OK) != 0)
 				{
 					return false;
 				}
 			}
-			catch{}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+			}
 			*/
 
 
-			/*
+			// put an ugly try catch around this to see what is 
+			// happening
+			try
+			{
 			// This will check on Linux to see if a path is on a physical
 			// drive and not mounted off the network
 			if(File.Exists("/proc/mounts"))
@@ -361,10 +374,20 @@ namespace Simias.Web
 					}
 					sr.Close();
 				}
+				else
+					Console.WriteLine("ERROR: Unable to open /proc/mounts");
+
 				if(!retval)
+				{
+					Console.WriteLine("Unable to find a physical device for: {0}", path);
 					return retval;
+				}
 			}
-			*/
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+			}
 #endif
 
 
