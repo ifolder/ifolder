@@ -60,44 +60,46 @@ namespace Novell.iFolder
 	public class ContactEditor
 	{
 		// Glade "autoconnected" members
-		[Glade.Widget] protected Gtk.Image			userImage;
-		[Glade.Widget] protected Gtk.Entry			fullNameEntry;
-		[Glade.Widget] protected Gtk.Entry			jobTitleEntry;
-		[Glade.Widget] protected Gtk.Entry			organizationEntry;
-		[Glade.Widget] protected Gtk.Entry			userIDEntry;
+		[Glade.Widget] internal Gtk.Image			userImage;
+		[Glade.Widget] internal Gtk.Entry			fullNameEntry;
+		[Glade.Widget] internal Gtk.Entry			jobTitleEntry;
+		[Glade.Widget] internal Gtk.Entry			organizationEntry;
+		[Glade.Widget] internal Gtk.Entry			userIDEntry;
 
-		[Glade.Widget] protected Gtk.Entry			phoneOneEntry;
-		[Glade.Widget] protected Gtk.Entry			phoneTwoEntry;
-		[Glade.Widget] protected Gtk.Entry			phoneFourEntry;
-		[Glade.Widget] protected Gtk.Label			phoneOneLabel;
-		[Glade.Widget] protected Gtk.Label			phoneTwoLabel;
-		[Glade.Widget] protected Gtk.Label			phoneThreeLabel;
-		[Glade.Widget] protected Gtk.Label			phoneFourLabel;
+		[Glade.Widget] internal Gtk.Entry			phoneOneEntry;
+		[Glade.Widget] internal Gtk.Entry			phoneTwoEntry;
+		[Glade.Widget] internal Gtk.Entry			phoneFourEntry;
+		[Glade.Widget] internal Gtk.Label			phoneOneLabel;
+		[Glade.Widget] internal Gtk.Label			phoneTwoLabel;
+		[Glade.Widget] internal Gtk.Label			phoneThreeLabel;
+		[Glade.Widget] internal Gtk.Label			phoneFourLabel;
 
-		[Glade.Widget] protected Gtk.Entry			emailEntry;
-		[Glade.Widget] protected Gtk.Label			emailLabel;
-		[Glade.Widget] protected Gtk.CheckButton	emailHTMLButton;
+		[Glade.Widget] internal Gtk.Entry			emailEntry;
+		[Glade.Widget] internal Gtk.Label			emailLabel;
+		[Glade.Widget] internal Gtk.Button			emailButton;
+		[Glade.Widget] internal Gtk.CheckButton		emailPreferredButton;
 
-		[Glade.Widget] protected Gtk.Entry			webURLEntry;
-		[Glade.Widget] protected Gtk.Button			webURLButton;
-		[Glade.Widget] protected Gtk.Entry			blogURLEntry;
-		[Glade.Widget] protected Gtk.Button			blogURLButton;
+		[Glade.Widget] internal Gtk.Entry			webURLEntry;
+		[Glade.Widget] internal Gtk.Entry			blogURLEntry;
 
-		[Glade.Widget] protected Gtk.Label			addrLabel;
-		[Glade.Widget] protected Gtk.TextView		addrTextView;
-		[Glade.Widget] protected Gtk.Button			addrChangeButton;
-		[Glade.Widget] protected Gtk.CheckButton	addrMailingButton;
+		[Glade.Widget] internal Gtk.Label			addrLabel;
+		[Glade.Widget] internal Gtk.TextView		addrTextView;
+		[Glade.Widget] internal Gtk.Button			addrChangeButton;
+		[Glade.Widget] internal Gtk.CheckButton	addrMailingButton;
 
-		[Glade.Widget] protected Gtk.Button			cancelButton;
-		[Glade.Widget] protected Gtk.Button			okButton; 
+		[Glade.Widget] internal Gtk.Button			cancelButton;
+		[Glade.Widget] internal Gtk.Button			okButton; 
 
-		[Glade.Widget] protected Gtk.Table			generalTabTable;
+		[Glade.Widget] internal Gtk.Table			generalTabTable;
 
 
 		private Gtk.Dialog 		contactEditorDialog;
 		private Contact			currentContact;
 		private Name			preferredName;
 		private bool			isNewContact;
+		internal Email			currentEmail;
+		internal EmailTypes		currentEmailType;
+
 
 		public event ContactEditedEventHandler	ContactEdited;
 		public event ContactCreatedEventHandler	ContactCreated;
@@ -181,9 +183,99 @@ namespace Novell.iFolder
 				userIDEntry.Text = currentContact.UserName;
 			if(currentContact.Title.Length > 0)
 				jobTitleEntry.Text = currentContact.Title;
+			if(currentContact.Organization.Length > 0)
+				organizationEntry.Text = currentContact.Organization;
+
+			currentEmail = GetEmailType(EmailTypes.preferred);
+			if(currentEmail == null)
+				currentEmail = GetEmailType(EmailTypes.work);
+			if(currentEmail == null)
+				currentEmail = GetEmailType(EmailTypes.personal);
+			if(currentEmail == null)
+				currentEmail = GetEmailType(EmailTypes.other);
+
+			PopulateCurrentEmail();
+
 			if(currentContact.Url.Length > 0)
 				webURLEntry.Text = currentContact.Url;
+			if(currentContact.Blog.Length > 0)
+				blogURLEntry.Text = currentContact.Blog;
 		}
+
+
+
+		internal Email GetEmailType(EmailTypes type)
+		{
+			foreach(Email e in currentContact.GetEmailAddresses())
+			{
+				if( (e.Types & type) == type)
+					return e;
+			}
+			return null;
+		}
+
+		internal void PopulateCurrentEmail()
+		{
+			if(currentEmail != null)
+			{
+				emailEntry.Text = currentEmail.Address;
+				currentEmailType = currentEmail.Types;
+			}
+			else
+			{
+				emailEntry.Text = "";
+				if(currentEmailType == 0)
+					currentEmailType = EmailTypes.work | EmailTypes.preferred;
+			}
+
+			if( (currentEmailType & EmailTypes.work) == EmailTypes.work)
+				emailLabel.Text = "Work email:";
+			else if( (currentEmailType & EmailTypes.personal) == 
+					EmailTypes.personal)
+				emailLabel.Text = "Home email:";
+			else
+				emailLabel.Text = "Other email:";
+
+			if( (currentEmailType & EmailTypes.preferred) == 
+					EmailTypes.preferred)
+				emailPreferredButton.Active = true;
+			else
+				emailPreferredButton.Active = false;
+		}
+
+		internal void SaveCurrentEmail()
+		{
+			if(currentEmail == null)
+			{
+				if(emailEntry.Text.Length > 0)
+				{
+					currentEmail = new Email(currentEmailType, emailEntry.Text);
+					currentContact.AddEmailAddress(currentEmail);
+					if(emailPreferredButton.Active)
+						SetCurrentDefaultEmail();
+				}
+			}
+			else
+			{
+				currentEmail.Address = emailEntry.Text;
+					if(emailPreferredButton.Active)
+						SetCurrentDefaultEmail();
+			}
+		}
+
+		internal void SetCurrentDefaultEmail()
+		{
+			foreach(Email e in currentContact.GetEmailAddresses())
+			{
+				e.Types &= ~EmailTypes.preferred;
+			}
+			currentEmail.Types |= EmailTypes.preferred;
+		}
+
+
+
+
+
 
 		public void ShowAll()
 		{
@@ -207,14 +299,39 @@ namespace Novell.iFolder
 
 
 
+		/// <summary>
+		/// Method used to gather data from entry fields that are not tied
+		/// in any way to the actual Contact object.
+		/// </summary>
 		private void SaveContact()
 		{
+			// UserID
 			if(userIDEntry.Text.Length > 0)
 				currentContact.UserName = userIDEntry.Text;
+			else
+				currentContact.UserName = null;
+			// Job Title
 			if(jobTitleEntry.Text.Length > 0)
 				currentContact.Title = jobTitleEntry.Text;
+			else
+				currentContact.Title = null;
+			// Organization
+			if(organizationEntry.Text.Length > 0)
+				currentContact.Organization = organizationEntry.Text;
+			else
+				currentContact.Organization = null;
+			// Web URL
 			if(webURLEntry.Text.Length > 0)
 				currentContact.Url = webURLEntry.Text;
+			else
+				currentContact.Url = null;
+			// Blog URL
+			if(blogURLEntry.Text.Length > 0)
+				currentContact.Blog = blogURLEntry.Text;
+			else
+				currentContact.Blog = null;
+			// Email
+			SaveCurrentEmail();
 		}
 
 
@@ -347,6 +464,68 @@ namespace Novell.iFolder
 						userImage.FromPixbuf = pb;
 				}
 			}
+		}
+
+
+
+
+		private void on_emailButton_clicked(object o, EventArgs args) 
+		{
+			Menu mailMenu = new Menu();
+
+			MenuItem work_item = new MenuItem ("Work email");
+			mailMenu.Append (work_item);
+			work_item.Activated += 
+				new EventHandler(handle_work_email);
+
+			MenuItem home_item = new MenuItem ("Home email");
+			mailMenu.Append (home_item);
+			home_item.Activated += 
+				new EventHandler(handle_home_email);
+
+			MenuItem other_item = new MenuItem ("Other email");
+			mailMenu.Append (other_item);
+			other_item.Activated += 
+				new EventHandler(handle_other_email);
+
+			mailMenu.ShowAll();
+
+			mailMenu.Popup(null, null, new MenuPositionFunc(PositionMailMenu),
+					IntPtr.Zero, 0, Gtk.Global.CurrentEventTime);
+		}
+
+		internal void PositionMailMenu(Menu menu, out int x, out int y,
+				out bool push_in)
+		{
+			emailButton.GdkWindow.GetOrigin(out x, out y);
+			x += emailButton.Allocation.X;
+			y += emailButton.Allocation.Y;
+
+			push_in = false;
+		}
+
+		private void handle_work_email(object o, EventArgs args)
+		{
+			SaveCurrentEmail();
+			currentEmailType = EmailTypes.work;
+			currentEmail = GetEmailType(currentEmailType);
+			PopulateCurrentEmail();
+		}
+
+		private void handle_home_email(object o, EventArgs args)
+		{
+			SaveCurrentEmail();
+			currentEmailType = EmailTypes.personal;
+			currentEmail = GetEmailType(currentEmailType);
+			PopulateCurrentEmail();
+		}
+
+		private void handle_other_email(object o, EventArgs args)
+		{
+			SaveCurrentEmail();
+			currentEmailType = EmailTypes.other;
+			currentEmail = GetEmailType(currentEmailType);
+			PopulateCurrentEmail();
 		}
 
 
