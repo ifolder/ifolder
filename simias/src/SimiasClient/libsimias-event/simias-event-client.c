@@ -337,11 +337,12 @@ static void *
 sec_thread (void *user_data)
 {
 	SimiasEventClient *ec = (SimiasEventClient *)user_data;
-	int new_s, sin_size, len;
+	int new_s, sin_size, len, real_length;
 	char my_host_name [512];
 	struct hostent *hp;
 	char err_msg [2048];
-	char buf [256];
+	char buf [4096];
+	char * real_message = NULL;
 	
 printf ("SEC: sec_thread () called\n");	
 
@@ -357,8 +358,19 @@ printf ("SEC: sec_thread () called\n");
 	while (ec->state != CLIENT_STATE_SHUTDOWN)
 	{
 		while (len = recv (ec->event_socket, buf, sizeof (buf), 0)) {
-printf ("SEC: sec_thread: recv () called\n");	
-			fputs (buf, stdout);
+printf ("SEC: sec_thread: recv () called\n");
+			real_length = *((int *)buf);
+			printf ("real_length: %d\n", real_length);
+			if (real_length > 0) {
+				real_message = malloc (sizeof (char) * real_length + 1);
+				
+				strncpy (real_message, buf + 4, real_length);
+				real_message [real_length] = '\0';
+				
+				printf ("Message received:\n\n%s\n\n", real_message);
+				
+				free (real_message);
+			}
 		}
 	}
 }
