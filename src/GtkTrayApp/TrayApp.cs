@@ -47,6 +47,7 @@ namespace Novell.iFolder
 		static Gtk.EventBox eBox;
 		static TrayIcon tIcon;
 		static GtkTraceWindow twin;
+		static Simias.Service.Manager sManager;
 //		static Gtk.ThreadNotify mainThreadNotify;
 //		static SyncManagerStates syncState;
 
@@ -75,6 +76,9 @@ namespace Novell.iFolder
 			tIcon.Add(eBox);
 
 			tIcon.ShowAll();
+
+			sManager = new Simias.Service.Manager(conf);
+			sManager.StartServices();
 
 //			syncState = SyncManagerStates.Idle;
 
@@ -202,6 +206,7 @@ namespace Novell.iFolder
 
 		static void quit_ifolder(object o, EventArgs args)
 		{
+			sManager.StopServices();
 //			syncManager.Stop();
 			Application.Quit();
 		}

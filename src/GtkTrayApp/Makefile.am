@@ -6,7 +6,7 @@ TrayAppGtk_CSFILES_CSC := $(subst /,$(SEP),$(TrayAppGtk_CSFILES))
 TrayAppGtk_INCLUDES = 
 TrayAppGtk_RESOURCES =
 TrayAppGtk_FLAGS = $(CSC_EXEFLAG)
-TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionStore.dll AddressBook.dll iFolder.dll egg-sharp.dll CBLib.dll Sync.dll SyncCommon.dll Invitation.dll SyncManager.dll Common.dll CommonGtkWindows.dll SyncLogicLite.dll
+TrayAppGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionStore.dll AddressBook.dll iFolder.dll egg-sharp.dll CBLib.dll Sync.dll SyncCommon.dll Invitation.dll SyncManager.dll Common.dll CommonGtkWindows.dll SyncLogicLite.dll Simias.Service.dll
 TrayAppGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
 
 
