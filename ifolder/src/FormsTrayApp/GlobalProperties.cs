@@ -13,15 +13,20 @@ namespace Novell.iFolder.FormsTrayApp
 	/// </summary>
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
+		#region Class Members
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.Button ok;
+		private System.Windows.Forms.Button cancel;
+		private System.Windows.Forms.Label label2;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+		#endregion
 
 		public GlobalProperties()
 		{
@@ -30,9 +35,6 @@ namespace Novell.iFolder.FormsTrayApp
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
 		}
 
 		/// <summary>
@@ -62,6 +64,9 @@ namespace Novell.iFolder.FormsTrayApp
 			this.displayConfirmation = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.ok = new System.Windows.Forms.Button();
+			this.cancel = new System.Windows.Forms.Button();
+			this.label2 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -80,7 +85,7 @@ namespace Novell.iFolder.FormsTrayApp
 																			  0,
 																			  0,
 																			  0});
-			this.defaultInterval.Location = new System.Drawing.Point(248, 16);
+			this.defaultInterval.Location = new System.Drawing.Point(200, 16);
 			this.defaultInterval.Maximum = new System.Decimal(new int[] {
 																			86400,
 																			0,
@@ -92,10 +97,12 @@ namespace Novell.iFolder.FormsTrayApp
 																			0,
 																			-2147483648});
 			this.defaultInterval.Name = "defaultInterval";
+			this.defaultInterval.Size = new System.Drawing.Size(80, 20);
 			this.defaultInterval.TabIndex = 1;
 			// 
 			// displayConfirmation
 			// 
+			this.displayConfirmation.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.displayConfirmation.Location = new System.Drawing.Point(8, 64);
 			this.displayConfirmation.Name = "displayConfirmation";
 			this.displayConfirmation.Size = new System.Drawing.Size(360, 24);
@@ -118,10 +125,40 @@ namespace Novell.iFolder.FormsTrayApp
 			this.groupBox2.TabIndex = 4;
 			this.groupBox2.TabStop = false;
 			// 
+			// ok
+			// 
+			this.ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.ok.Location = new System.Drawing.Point(216, 352);
+			this.ok.Name = "ok";
+			this.ok.TabIndex = 5;
+			this.ok.Text = "OK";
+			this.ok.Click += new System.EventHandler(this.ok_Click);
+			// 
+			// cancel
+			// 
+			this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancel.Location = new System.Drawing.Point(296, 352);
+			this.cancel.Name = "cancel";
+			this.cancel.TabIndex = 6;
+			this.cancel.Text = "Cancel";
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(288, 18);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(72, 16);
+			this.label2.TabIndex = 7;
+			this.label2.Text = "seconds";
+			// 
 			// GlobalProperties
 			// 
+			this.AcceptButton = this.ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(384, 382);
+			this.CancelButton = this.cancel;
+			this.ClientSize = new System.Drawing.Size(376, 382);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.cancel);
+			this.Controls.Add(this.ok);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.displayConfirmation);
@@ -129,7 +166,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.Controls.Add(this.label1);
 			this.Name = "GlobalProperties";
 			this.Text = "Global iFolder Properties";
-			this.Closing += new System.ComponentModel.CancelEventHandler(this.GlobalProperties_Closing);
 			this.Load += new System.EventHandler(this.GlobalProperties_Load);
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
 			this.ResumeLayout(false);
@@ -137,6 +173,7 @@ namespace Novell.iFolder.FormsTrayApp
 		}
 		#endregion
 
+		#region Event Handlers
 		private void GlobalProperties_Load(object sender, System.EventArgs e)
 		{
 			try
@@ -160,7 +197,7 @@ namespace Novell.iFolder.FormsTrayApp
 			}
 		}
 
-		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void ok_Click(object sender, System.EventArgs e)
 		{
 			try
 			{
@@ -186,5 +223,6 @@ namespace Novell.iFolder.FormsTrayApp
 			{
 			}
 		}
+		#endregion
 	}
 }

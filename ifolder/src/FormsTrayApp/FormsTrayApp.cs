@@ -367,7 +367,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private void menuItemProperties_Click(object sender, EventArgs e)
 		{
 			GlobalProperties globalProperties = new GlobalProperties();
-			globalProperties.Show();
+			globalProperties.ShowDialog();
 		}
 		#endregion
 
