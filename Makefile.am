@@ -18,6 +18,12 @@ doc-clean: sub-doc-clean
 clean: sub-clean
 	rm -rf stage *.suo
 
+if LINUX
+install-exec-local: $(srcdir)/package/linux/ifolder.pc
+	$(mkinstalldirs) $(DESTDIR)$(libdir)/pkgconfig
+	$(INSTALL_PROGRAM) $(srcdir)/package/linux/ifolder.pc $(DESTDIR)$(libdir)/pkgconfig
+endif
+
 installcheck-summary: sub-installcheck-summary
 	$(MAKE) -C src $@
 
