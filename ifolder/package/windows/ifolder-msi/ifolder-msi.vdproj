@@ -87,12 +87,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1A1C49E519704BBABF189741796CA594"
-        "OwnerKey" = "8:_81E6A706396F49689E4EB2E428019DB6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1CD6B3C8947C4C95AD697E3468D53D49"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -149,42 +143,6 @@
         {
         "MsmKey" = "8:_345BA9614C154BE8AF43B33C09279617"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
-        "OwnerKey" = "8:_56F2016D8E8247AA9C88AD6467CB5E25"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
-        "OwnerKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
-        "OwnerKey" = "8:_4FAA01583F8744AA8A010586A2F1B00E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
-        "OwnerKey" = "8:_2F8233C054284694B305CE45E1BE309E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
-        "OwnerKey" = "8:_08EBA713ABD446C1BE883846135EC756"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_35022BF818A44BC683C53E4513B3B4E2"
-        "OwnerKey" = "8:_863CA12CD58A44DF9107F0394EA60876"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -447,6 +405,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_87C207EDD3D642E183CB0609FA372DBF"
+        "OwnerKey" = "8:_81E6A706396F49689E4EB2E428019DB6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8B064EEB700C4DC1AE8C250B75DFCDDF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -569,6 +533,42 @@
         {
         "MsmKey" = "8:_B42DEEC2BD3A40D6B3BFF1AE77B64FAE"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6F44661EC44462F9913231297754064"
+        "OwnerKey" = "8:_56F2016D8E8247AA9C88AD6467CB5E25"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6F44661EC44462F9913231297754064"
+        "OwnerKey" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6F44661EC44462F9913231297754064"
+        "OwnerKey" = "8:_4FAA01583F8744AA8A010586A2F1B00E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6F44661EC44462F9913231297754064"
+        "OwnerKey" = "8:_2F8233C054284694B305CE45E1BE309E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6F44661EC44462F9913231297754064"
+        "OwnerKey" = "8:_08EBA713ABD446C1BE883846135EC756"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6F44661EC44462F9913231297754064"
+        "OwnerKey" = "8:_863CA12CD58A44DF9107F0394EA60876"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -842,7 +842,7 @@
             "Object" = "8:_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
-            "Arguments" = "8:"
+            "Arguments" = "8:-configure"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
             "Identifier" = "8:_0E2E76A6_D773_445C_A500_4763EC89749E"
@@ -3131,7 +3131,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1627.30772, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:iFolderApp, Version=1.0.1628.14279, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_F7D396E8B9F74DCCB3C84C32B5E4DDF5"
@@ -4363,31 +4363,6 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_1A1C49E519704BBABF189741796CA594"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:dotnetfxredist_x86.msm"
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_35022BF818A44BC683C53E4513B3B4E2"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:dotnetfxredist_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:TRUE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
             "{35A69C6E-5BA4-440D-803D-762B59A45393}:_56F2016D8E8247AA9C88AD6467CB5E25"
             {
             "UseDynamicProperties" = "11:TRUE"
@@ -4770,6 +4745,31 @@
                 }
             "LanguageId" = "3:1033"
             "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_87C207EDD3D642E183CB0609FA372DBF"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:dotnetfxredist_x86.msm"
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_B6F44661EC44462F9913231297754064"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:dotnetfxredist_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:1033"
+            "Exclude" = "11:TRUE"
             "Folder" = "8:"
             "Feature" = "8:"
             "IsolateTo" = "8:"
