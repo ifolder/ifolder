@@ -202,7 +202,9 @@ case $SIMIAS_OS in
         SHARED_LIB_FLAG='-shared'
         STORELIB="libsqlite.so"
         STORELIB_PATH="$EXTERNAL_DIR/sqlite/linux"
-	LDOUT='-o'
+		LDOUT='-o'
+		# have to add this check on redhat for some reason
+        AC_CHECK_PROG(CXX, g++, g++)
     ;;
     #
     # Windows-specific configuration
