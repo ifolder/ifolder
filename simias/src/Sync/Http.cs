@@ -227,6 +227,7 @@ namespace Simias.Sync.Http
 				// Now get the StartSyncInfo back;
 				BinaryReader reader = new BinaryReader(response.GetResponseStream());
 				si = new StartSyncInfo(reader);
+				cookies.Add(response.Cookies);
 			}
 			finally
 			{
