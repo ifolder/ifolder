@@ -83,40 +83,30 @@ namespace Simias.Gaim.DomainService
 		}
 
 		/// <summary>
-		/// Get all the users in the Gaim Domain
-		/// </summary>
-		[WebMethod(Description="GetAllBuddies")]
-		[SoapDocumentMethod]
-		public GaimBuddy[] GetAllBuddies()
-		{
-			ArrayList buddies = new ArrayList();
-			Simias.Storage.Domain domain = GaimDomain.GetDomain();
-			if (domain == null)
-			{
-				throw new SimiasException("Could not get Simias.Storage.Domain from GaimDomain!");
-			}
-			
-			ICSList domainMembers = domain.GetMemberList();
-			foreach (ShallowNode sNode in domainMembers)
-			{
-				Simias.Storage.Member member =	
-					new Simias.Storage.Member(domain, sNode);
-
-				GaimBuddy buddy = new GaimBuddy(member);
-				buddies.Add(buddy);
-			}
-
-			return (GaimBuddy[]) buddies.ToArray(typeof(GaimBuddy));
-		}
-		
-		/// <summary>
 		/// Pokes the Synchronization Thread to run/update
 		/// </summary>
 		[WebMethod(Description="SynchronizeMemberList")]
 		[SoapDocumentMethod]
 		public void SynchronizeMemberList()
 		{
-			GaimDomain.SynchronizeMembers();
+			Simias.Gaim.Sync.SyncNow(null);
+		}
+		
+		/// <summary>
+		/// This method is called by the Gaim iFolder Plugin when it
+		/// receives a ping response message (which contains a Simias
+		/// URL for a buddy.
+		///
+		/// Causes the Gaim Domain to re-read/sync the specified buddy's
+		/// information into Simias.  We don't want to provide the ability
+		/// to directly update the SimiasURL from the WebService so that
+		/// any random program can't just muck with the data.
+		/// </summary>
+		[WebMethod(Description="UpdateMember")]
+		[SoapDocumentMethod]
+		public void UpdateMember(string AccountName, string AccountProtocolID, string BuddyName)
+		{
+			GaimDomain.UpdateMember(AccountName, AccountProtocolID, BuddyName);
 		}
 	}
 

@@ -27,7 +27,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-using Simias;
+//using Simias;
 
 namespace Simias.Gaim
 {
@@ -45,9 +45,6 @@ namespace Simias.Gaim
 		private string alias = null;
 		private string simiasURL = null;
 		private XmlNode xmlBuddyNode = null;
-
-		private static readonly ISimiasLog log = 
-			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		#endregion
 
@@ -103,7 +100,7 @@ namespace Simias.Gaim
 				
 				// Parse name from the xmlBuddyNode
 				XmlNode node =
-					xmlBuddyNode.SelectSingleNode("//name/text()");
+					xmlBuddyNode.SelectSingleNode("name/text()");
 				if (node != null)
 				{
 					name = node.Value;
@@ -124,7 +121,7 @@ namespace Simias.Gaim
 				
 				// Parse alias from the xmlBuddyNode
 				XmlNode node =
-					xmlBuddyNode.SelectSingleNode("//alias/text()");
+					xmlBuddyNode.SelectSingleNode("alias/text()");
 				if (node != null)
 				{
 					alias = node.Value;
@@ -145,7 +142,7 @@ namespace Simias.Gaim
 				
 				// Parse simiasURL from the xmlBuddyNode
 				XmlNode node =
-					xmlBuddyNode.SelectSingleNode("//setting[@name='simias-url']/text()");
+					xmlBuddyNode.SelectSingleNode("setting[@name='simias-url']/text()");
 				if (node != null)
 				{
 					simiasURL = node.Value;
@@ -192,9 +189,6 @@ namespace Simias.Gaim
 		private string alias = null;
 		private XmlNode xmlNode = null;
 
-		private static readonly ISimiasLog log = 
-			SimiasLogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
-
 		#endregion
 
 		#region Properties
@@ -209,11 +203,10 @@ namespace Simias.Gaim
 				
 				// Parse name from the XmlNode
 				XmlNode node =
-					xmlNode.SelectSingleNode("//name/text()");
+					xmlNode.SelectSingleNode("name/text()");
 				if (node != null)
 				{
 					name = node.Value;
-log.Debug("GaimAccount.Name = {0}", name);
 				}
 				
 				return name;
@@ -230,7 +223,7 @@ log.Debug("GaimAccount.Name = {0}", name);
 				if (protoID != null) return protoID;
 				// Parse name from the XmlNode
 				XmlNode node =
-					xmlNode.SelectSingleNode("//protocol/text()");
+					xmlNode.SelectSingleNode("protocol/text()");
 				if (node != null)
 				{
 					protoID = node.Value;
@@ -251,7 +244,7 @@ log.Debug("GaimAccount.Name = {0}", name);
 				
 				// Parse alias from the xmlBuddyNode
 				XmlNode node =
-					xmlNode.SelectSingleNode("//alias/text()");
+					xmlNode.SelectSingleNode("alias/text()");
 				if (node != null)
 				{
 					alias = node.Value;
@@ -281,7 +274,7 @@ log.Debug("GaimAccount.Name = {0}", name);
 	/// matter of time...if you've got time to add in support for other
 	/// protocols, jump right in. :)
 	/// </summary>
-	public class GaimProtocolNotSupportedException : Simias.SimiasException
+	public class GaimProtocolNotSupportedException : Exception
 	{
 		/// <summary>
 		/// Create a GaimProtocolNotSupportedException.

@@ -30,6 +30,8 @@ using System.Text.RegularExpressions;
 using Simias.Storage;
 using Simias.Sync;
 
+using Simias.Gaim;
+
 namespace Simias.Location
 {
 	/// <summary>
@@ -80,11 +82,19 @@ namespace Simias.Location
 
 		#endregion
 
-		private Uri MemberIDToUri( string memberID )
+		private Uri MemberToUri(Simias.Storage.Domain domain, Member member)
 		{
 			Uri locationUri = null;
+			
+			if (domain == null || member == null) return null;			
 
-			locationUri = new Uri( "http://127.0.0.1:8086/simias10" );
+			// Since we store the Buddy's SimiasURL right in the Simias Store,
+			// we can just retrieve the information from the database.
+			Simias.Storage.PropertyList pList = member.Properties;
+			Simias.Storage.Property p = pList.GetSingleProperty("Gaim:SimiasURL");
+			if (p == null) return null;
+			
+			locationUri = new Uri((string) p.Value);
 
 			return locationUri;
 		}
@@ -141,8 +151,13 @@ namespace Simias.Location
 			{
 				try
 				{
+					Simias.Storage.Domain domain = GaimDomain.GetDomain();
 					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					locationUri = MemberIDToUri( collection.Owner.UserID );
+					Member member = collection.GetMemberByID(collection.Owner.UserID);
+					if ( member != null )
+					{
+						locationUri = MemberToUri(domain, member);
+					}
 				}
 				catch ( Exception e )
 				{
@@ -174,11 +189,11 @@ namespace Simias.Location
 			{
 				try
 				{
-					Collection collection = Store.GetStore().GetCollectionByID( collectionID );
-					Member member = collection.GetMemberByID( userID );
+					Simias.Storage.Domain domain = GaimDomain.GetDomain();
+					Member member = domain.GetMemberByID(userID);
 					if ( member != null )
 					{
-						locationUri = MemberIDToUri( member.UserID );
+						locationUri = MemberToUri(domain, member);
 					}
 				}
 				catch ( Exception e )
@@ -208,11 +223,11 @@ namespace Simias.Location
 			{
 				try
 				{
-					Simias.Storage.Domain domain = Store.GetStore().GetDomain( Simias.Gaim.GaimDomain.ID );
-					Member member = domain.GetMemberByID( userID );
+					Simias.Storage.Domain domain = GaimDomain.GetDomain();
+					Member member = domain.GetMemberByID(userID);
 					if ( member != null )
 					{
-						locationUri = MemberIDToUri( member.UserID );
+						locationUri = MemberToUri(domain, member);
 					}
 				}
 				catch ( Exception e )
