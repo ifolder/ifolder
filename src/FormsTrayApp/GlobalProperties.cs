@@ -418,6 +418,11 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuSyncNow = new System.Windows.Forms.MenuItem();
 			this.menuSeparator2 = new System.Windows.Forms.MenuItem();
 			this.menuProperties = new System.Windows.Forms.MenuItem();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.clearLog = new System.Windows.Forms.Button();
+			this.saveLog = new System.Windows.Forms.Button();
+			this.log = new System.Windows.Forms.ListBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -431,11 +436,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.proxy = new System.Windows.Forms.TextBox();
 			this.useProxy = new System.Windows.Forms.RadioButton();
 			this.noProxy = new System.Windows.Forms.RadioButton();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.clearLog = new System.Windows.Forms.Button();
-			this.saveLog = new System.Windows.Forms.Button();
-			this.log = new System.Windows.Forms.ListBox();
-			this.label6 = new System.Windows.Forms.Label();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.label18 = new System.Windows.Forms.Label();
@@ -479,12 +479,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox4.SuspendLayout();
+			this.tabPage3.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox5.SuspendLayout();
-			this.tabPage3.SuspendLayout();
 			this.tabPage5.SuspendLayout();
 			this.groupBox6.SuspendLayout();
 			this.SuspendLayout();
@@ -559,8 +559,8 @@ namespace Novell.iFolder.FormsTrayApp
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Location = new System.Drawing.Point(8, 72);
 			this.tabControl1.Name = "tabControl1";
@@ -740,6 +740,53 @@ namespace Novell.iFolder.FormsTrayApp
 			this.menuProperties.Visible = false;
 			this.menuProperties.Click += new System.EventHandler(this.menuProperties_Click);
 			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.clearLog);
+			this.tabPage3.Controls.Add(this.saveLog);
+			this.tabPage3.Controls.Add(this.log);
+			this.tabPage3.Controls.Add(this.label6);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(426, 390);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Log";
+			// 
+			// clearLog
+			// 
+			this.clearLog.Enabled = false;
+			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.clearLog.Location = new System.Drawing.Point(88, 288);
+			this.clearLog.Name = "clearLog";
+			this.clearLog.TabIndex = 4;
+			this.clearLog.Text = "&Clear";
+			// 
+			// saveLog
+			// 
+			this.saveLog.Enabled = false;
+			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			this.saveLog.Location = new System.Drawing.Point(8, 288);
+			this.saveLog.Name = "saveLog";
+			this.saveLog.TabIndex = 3;
+			this.saveLog.Text = "&Save...";
+			// 
+			// log
+			// 
+			this.log.HorizontalScrollbar = true;
+			this.log.Location = new System.Drawing.Point(8, 48);
+			this.log.Name = "log";
+			this.log.ScrollAlwaysVisible = true;
+			this.log.Size = new System.Drawing.Size(408, 225);
+			this.log.TabIndex = 2;
+			// 
+			// label6
+			// 
+			this.label6.Location = new System.Drawing.Point(8, 16);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(296, 16);
+			this.label6.TabIndex = 0;
+			this.label6.Text = "This log shows current iFolder activity.";
+			// 
 			// tabPage2
 			// 
 			this.tabPage2.Controls.Add(this.groupBox1);
@@ -878,53 +925,6 @@ namespace Novell.iFolder.FormsTrayApp
 			this.noProxy.Size = new System.Drawing.Size(88, 24);
 			this.noProxy.TabIndex = 0;
 			this.noProxy.Text = "No Proxy";
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.Controls.Add(this.clearLog);
-			this.tabPage3.Controls.Add(this.saveLog);
-			this.tabPage3.Controls.Add(this.log);
-			this.tabPage3.Controls.Add(this.label6);
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(426, 390);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Log";
-			// 
-			// clearLog
-			// 
-			this.clearLog.Enabled = false;
-			this.clearLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.clearLog.Location = new System.Drawing.Point(88, 288);
-			this.clearLog.Name = "clearLog";
-			this.clearLog.TabIndex = 4;
-			this.clearLog.Text = "&Clear";
-			// 
-			// saveLog
-			// 
-			this.saveLog.Enabled = false;
-			this.saveLog.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.saveLog.Location = new System.Drawing.Point(8, 288);
-			this.saveLog.Name = "saveLog";
-			this.saveLog.TabIndex = 3;
-			this.saveLog.Text = "&Save...";
-			// 
-			// log
-			// 
-			this.log.HorizontalScrollbar = true;
-			this.log.Location = new System.Drawing.Point(8, 48);
-			this.log.Name = "log";
-			this.log.ScrollAlwaysVisible = true;
-			this.log.Size = new System.Drawing.Size(408, 225);
-			this.log.TabIndex = 2;
-			// 
-			// label6
-			// 
-			this.label6.Location = new System.Drawing.Point(8, 16);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(296, 16);
-			this.label6.TabIndex = 0;
-			this.label6.Text = "This log shows current iFolder activity.";
 			// 
 			// tabPage5
 			// 
@@ -1260,12 +1260,12 @@ namespace Novell.iFolder.FormsTrayApp
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.groupBox4.ResumeLayout(false);
+			this.tabPage3.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox5.ResumeLayout(false);
-			this.tabPage3.ResumeLayout(false);
 			this.tabPage5.ResumeLayout(false);
 			this.groupBox6.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -1492,13 +1492,14 @@ namespace Novell.iFolder.FormsTrayApp
 
 				if (enterpriseDomain != null)
 				{
+					// An enterprise domain was found ... display the Enterprise tab.
 					ShowEnterpriseTab = true;
 					enterpriseName.Text = enterpriseDomain.Name;
 					enterpriseDescription.Text = enterpriseDomain.Description;
 
 					Member member = store.GetRoster(enterpriseDomain.ID).GetCurrentMember();
-//					Member member = localDB.GetMemberByID(store.GetUserIDFromDomainID(enterpriseDomain.ID));
 
+					// Get and display the quota for the current member.
 					double used = 0;
 					double total = 0;
 					double free;
