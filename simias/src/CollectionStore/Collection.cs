@@ -51,19 +51,19 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
-		/// Gets the identity that the current user is known as in the collection's domain.
-		/// </summary>
-		internal string DomainIdentity
-		{
-			get { return store.CurrentIdentity.GetDomainUserGuid( store.DomainName, Domain ); }
-		}
-
-		/// <summary>
 		/// Gets the name of the domain that this collection belongs to.
 		/// </summary>
 		public string Domain
 		{
 			get { return properties.FindSingleValue( Property.DomainName ).Value as string; }
+		}
+
+		/// <summary>
+		/// Gets the identity that the current user is known as in the collection's domain.
+		/// </summary>
+		public string DomainIdentity
+		{
+			get { return store.CurrentIdentity.GetDomainUserGuid( store, Domain ); }
 		}
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace Simias.Storage
 		/// <param name="collectionName">This is the friendly name that is used by applications to describe the collection.</param>
 		/// <param name="collectionID">The globally unique identifier for this Collection object.</param>
 		public Collection( Store storeObject, string collectionName, string collectionID ) :
-			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.DomainName )
+			this ( storeObject, collectionName, collectionID, storeObject.CurrentUserGuid, storeObject.LocalDomain )
 		{
 		}
 

@@ -156,7 +156,7 @@ namespace Simias.Storage
 		/// <summary>
 		/// Gets the domain name for the current user.
 		/// </summary>
-		public string DomainName
+		public string LocalDomain
 		{
 			get 
 			{ 

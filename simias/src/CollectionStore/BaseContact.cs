@@ -413,16 +413,16 @@ namespace Simias.Storage
 		/// <summary>
 		/// Returns the user guid that the current user is known as in the specified domain.
 		/// </summary>
-		/// <param name="localDomain">The domain name of the local domain.</param>
+		/// <param name="storeObject">The store object for the local domain.</param>
 		/// <param name="userDomain">The domain that the user is in.</param>
 		/// <returns>A string representing the user's guid in the specified domain.  If the user does not exist
 		/// in the specified domain, the current user guid is returned.</returns>
-		public string GetDomainUserGuid( string localDomain, string userDomain )
+		public string GetDomainUserGuid( Store storeObject, string userDomain )
 		{
 			string userGuid = id;
 
 			// If no domain is specified or it is the current domain, use the current identity.
-			if ( ( userDomain != null ) && ( userDomain != localDomain ) )
+			if ( ( userDomain != null ) && ( userDomain != storeObject.LocalDomain ) )
 			{
 				// This is not the store's domain.  Look through the list of aliases that this
 				// identity is known by in other domains.

@@ -52,14 +52,6 @@ namespace Simias.Storage
 
 		#region Properties
 		/// <summary>
-		/// Gets the base type (Collection or Node) for this object.
-		/// </summary>
-		internal string Type
-		{
-			get { return type; }
-		}
-
-		/// <summary>
 		/// Gets the globally unique identifier for this object.
 		/// </summary>
 		public string ID
@@ -73,6 +65,14 @@ namespace Simias.Storage
 		public string Name
 		{
 			get { return name; }
+		}
+
+		/// <summary>
+		/// Gets the base type (Collection or Node) for this object.
+		/// </summary>
+		public string Type
+		{
+			get { return type; }
 		}
 		#endregion
 
