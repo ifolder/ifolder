@@ -1068,7 +1068,7 @@ namespace Simias.Sync
 				if (ProcessDirsFromServer())
 					ProcessFilesFromServer();
 			}
-			else
+			if (workArray.UpCount != 0)
 			{
 				// Push the updates from the client.
 				ProcessDeleteOnServer();
