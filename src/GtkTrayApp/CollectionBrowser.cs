@@ -38,129 +38,219 @@ using GLib;
 
 namespace Novell.iFolder
 {
-
 	public class CollectionBrowser
 	{
-		[Glade.Widget] IconList		BrowserIconList = null;
-		//[Glade.Widget] TreeView	BrowserTreeView;
+		[Glade.Widget] Gtk.TreeView	ColTreeView;
+		[Glade.Widget] Gtk.TreeView	NodeTreeView;
+		[Glade.Widget] Gtk.Window	ColWindow;
 
-		Gtk.Window nifWindow; 
-		Pixbuf	NodePixBuf;
-		Pixbuf	LeafNodePixBuf;
+		private ListStore			ColTreeStore;
+		private ListStore			NodeTreeStore;
 		int							curIndex;
 		bool						enableDblClick;
+		Pixbuf						CollectionPixBuf;
+		Pixbuf						NodePixBuf;
 		ArrayList					nodeArray;
-		Simias.Storage.Node			curNode;
+		ShallowNode					curSNode = null;
+		Collection					curCol = null;
 		Store						store;
+		Hashtable					pbTable;
 
 		public event EventHandler BrowserClosed;
 
-		public CollectionBrowser(Store store) 
-		{
-			Init();
-
-			this.store = store;
-
-			SetCurrentNode(null);
-		}
-
 		public CollectionBrowser() 
 		{
-			Init();
+			InitUI();
 
 			Configuration config = new Configuration();
 			store = new Store(config);
 
-			SetCurrentNode(null);
+			RefreshCollections();
+			//			SetCurrentNode(null);
 		}
 
-		public CollectionBrowser(string storeLocation) 
+		private void InitUI()
 		{
-			Init();
-
-			Configuration config = new Configuration(storeLocation);
-			store = new Store(config);
-
-			SetCurrentNode(null);
-		}
-
-		private void Init()
-		{
-			Glade.XML gxml = new Glade.XML ("ifolder.glade", 
-					"BrowserWindow", 
+			Glade.XML gxml = new Glade.XML ("collection-browser.glade", 
+					"ColWindow", 
 					null);
 			gxml.Autoconnect (this);
 
-			nifWindow = (Gtk.Window) gxml.GetWidget("BrowserWindow");
+			// Setup the Collection TreeView
+			ColTreeStore = new ListStore(typeof(Collection));
+			ColTreeView.Model = ColTreeStore;
+			CellRendererPixbuf colcrp = new CellRendererPixbuf();
+			TreeViewColumn coltvc = new TreeViewColumn();
+			coltvc.PackStart(colcrp, false);
+			coltvc.SetCellDataFunc(colcrp, new TreeCellDataFunc(
+						ColCellPixbufDataFunc));
 
-			NodePixBuf = new Pixbuf("node.png");
-			LeafNodePixBuf = new Pixbuf("leafnode.png");
+			CellRendererText colcrt = new CellRendererText();
+			coltvc.PackStart(colcrt, false);
+			coltvc.SetCellDataFunc(colcrt, new TreeCellDataFunc(
+						ColCellTextDataFunc));
+			coltvc.Title = "Collections";
+			ColTreeView.AppendColumn(coltvc);
+			ColTreeView.Selection.Changed += new EventHandler(
+						on_collection_selection_changed);
+
+
+			// Setup the Node TreeView
+			NodeTreeStore = new ListStore(typeof(ShallowNode));
+			NodeTreeView.Model = NodeTreeStore;
+			CellRendererPixbuf nodecrp = new CellRendererPixbuf();
+			TreeViewColumn nodeNameColumn = new TreeViewColumn();
+			nodeNameColumn.PackStart(nodecrp, false);
+			nodeNameColumn.SetCellDataFunc(nodecrp, new TreeCellDataFunc(
+						NodeCellPixbufDataFunc));
+
+			CellRendererText nodecrt = new CellRendererText();
+			nodeNameColumn.PackStart(nodecrt, false);
+			nodeNameColumn.SetCellDataFunc(nodecrt, new TreeCellDataFunc(
+						NodeNameCellTextDataFunc));
+			nodeNameColumn.Title = "Name";
+			NodeTreeView.AppendColumn(nodeNameColumn);
+			NodeTreeView.Selection.Mode = SelectionMode.Multiple;
+
+			TreeViewColumn nodeTypeColumn = new TreeViewColumn();
+			CellRendererText nodeTypecrt = new CellRendererText();
+			nodeTypeColumn.PackStart(nodeTypecrt, false);
+			nodeTypeColumn.SetCellDataFunc(nodeTypecrt, new TreeCellDataFunc(
+						NodeTypeCellTextDataFunc));
+			nodeTypeColumn.Title = "Type";
+			NodeTreeView.AppendColumn(nodeTypeColumn);
+
+			TreeViewColumn nodeIDColumn = new TreeViewColumn();
+			CellRendererText nodeIDcrt = new CellRendererText();
+			nodeIDColumn.PackStart(nodeIDcrt, false);
+			nodeIDColumn.SetCellDataFunc(nodeIDcrt, new TreeCellDataFunc(
+						NodeIDCellTextDataFunc));
+			nodeIDColumn.Title = "ID";
+			NodeTreeView.AppendColumn(nodeIDColumn);
+
+
+			pbTable = new Hashtable();
+
+			string[] pixbufs = System.IO.Directory.GetFiles(".", "*.png");
+			foreach(string filename in pixbufs)
+			{
+				FileInfo fi = new FileInfo(filename);
+				String typeName = 
+						fi.Name.Substring(0, fi.Name.LastIndexOf('.'));
+				Pixbuf pb = new Pixbuf(filename);
+				pbTable.Add(typeName, pb);
+			}
+		
+			CollectionPixBuf = new Pixbuf("collection.png");
+			NodePixBuf = new Pixbuf("unknown-node.png");
 
 			nodeArray = new ArrayList();
 
-			nifWindow.Icon = NodePixBuf;
-			nifWindow.Title = "Simias Collection Browser";
+			//			nifWindow.Icon = NodePixBuf;
+			//			nifWindow.Title = "Simias Collection Browser";
 
 			curIndex = -1;
 			enableDblClick = false;
 		}
 
 
-		private void SetCurrentNode(Simias.Storage.Node nifNode)
+		private void ColCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
 		{
-			BrowserIconList.Clear();
-			nodeArray.Clear();
+			Collection col = (Collection) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = col.Name;
+		}
 
-			curNode = nifNode;
 
-			if(nifNode == null)
+		private void ColCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			((CellRendererPixbuf) cell).Pixbuf = CollectionPixBuf;
+		}
+
+		private void NodeNameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			ShallowNode sn = (ShallowNode) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = sn.Name;
+		}
+
+		private void NodeTypeCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			ShallowNode sn = (ShallowNode) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = sn.Type;
+		}
+
+		private void NodeIDCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			ShallowNode sn = (ShallowNode) tree_model.GetValue(iter,0);
+			((CellRendererText) cell).Text = sn.ID;
+		}
+
+		private void NodeCellPixbufDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			ShallowNode sn = (ShallowNode) tree_model.GetValue(iter,0);
+			if(pbTable.Contains(sn.Type) == true)
 			{
-				curIndex = -1;
-				foreach(Simias.Storage.Node node in store)
-				{
-					nodeArray.Add(node);
-				/*	if(!node.HasChildren)
-						BrowserIconList.AppendPixbuf(LeafNodePixBuf,
-										null,
-										node.Name);
-					else
-				*/
-						BrowserIconList.AppendPixbuf(NodePixBuf,
-										null,
-										node.Name);
-				}
+				((CellRendererPixbuf) cell).Pixbuf = (Pixbuf) pbTable[sn.Type];
 			}
-/*
 			else
+				((CellRendererPixbuf) cell).Pixbuf = (Pixbuf) pbTable["Node"];
+		}
+
+		private void RefreshCollections()
+		{
+			ColTreeStore.Clear();
+
+			foreach(ShallowNode sn in store)
 			{
-				foreach(Simias.Storage.Node node in nifNode)
+				Collection col = store.GetCollectionByID(sn.ID);
+				ColTreeStore.AppendValues(col);
+			}
+		}
+
+
+		private void RefreshNodes()
+		{
+			NodeTreeStore.Clear();
+			curCol = null;
+
+			TreeSelection tSelect = ColTreeView.Selection;
+			if(tSelect.CountSelectedRows() == 1)
+			{
+				TreeModel tModel;
+				TreeIter iter;
+
+				tSelect.GetSelected(out tModel, out iter);
+				Collection col = (Collection) tModel.GetValue(iter, 0);
+				curCol = col;
+				foreach(ShallowNode sn in col)
 				{
-					nodeArray.Add(node);
-					if(!node.HasChildren)
-						BrowserIconList.AppendPixbuf(LeafNodePixBuf,
-										null,
-										node.Name);
-					else
-						BrowserIconList.AppendPixbuf(NodePixBuf,
-										null,
-										node.Name);
+					if(col.ID != sn.ID)
+					{
+						NodeTreeStore.AppendValues(sn);
+					}
 				}
 			}
-*/
 		}
 
 		public void ShowAll()
 		{
-			if(nifWindow != null)
-				nifWindow.ShowAll();
+			if(ColWindow != null)
+				ColWindow.ShowAll();
 		}
 
-		private void on_browser_delete_event (object o, DeleteEventArgs args) 
+		private void on_ColWindow_delete_event (object o, DeleteEventArgs args) 
 		{
-			nifWindow.Hide();
-			nifWindow.Destroy();
-			nifWindow = null;
-
 			if(BrowserClosed != null)
 			{
 				EventArgs e = new EventArgs();
@@ -168,210 +258,190 @@ namespace Novell.iFolder
 			}
 		}
 
-		public void on_UpButton_clicked(object o, EventArgs args)
+		public void on_refreshCollections(object o, EventArgs args)
 		{
-//			if(curNode != null)
-//				SetCurrentNode(curNode.GetParent());
+			RefreshCollections();
 		}
 
-		public void on_HomeButton_clicked(object o, EventArgs args)
+		public void on_refreshNodes(object o, EventArgs args)
 		{
-			SetCurrentNode(null);
+			RefreshNodes();
 		}
 
-		private void on_select_icon(object obj, 
-				IconSelectedArgs args)
+		public void on_collection_selection_changed(object o, EventArgs args)
 		{
-			if(args.Event != null)
+			RefreshNodes();
+		}
+
+		public void on_NodeTreeView_row_activated(object o, EventArgs args)
+		{
+			TreeModel tModel;
+
+			TreeSelection tSelect = NodeTreeView.Selection;
+			Array treePaths = tSelect.GetSelectedRows(out tModel);
+			// remove compiler warning
+			if(tModel != null)
+				tModel = null;
+
+			foreach(TreePath tPath in treePaths)
 			{
-				int idx = args.Num;
+				TreeIter iter;
 
-				EventButton ev = new EventButton(args.Event.Handle);
-
-				if(	(args.Event.Type == EventType.TwoButtonPress) && 
-						(ev.Button == 1) &&
-						(enableDblClick) )
+				if(NodeTreeStore.GetIter(out iter, tPath))
 				{
-					on_open_context_menu(obj, args);
+					ShallowNode sn = 
+							(ShallowNode) NodeTreeStore.GetValue(iter,0);
+					if(curCol != null)
+					{
+						Node node = curCol.GetNodeByID(sn.ID);
+						NodePropertiesDialog npd = 
+							new NodePropertiesDialog();
+						npd.Node = node;
+
+						if(pbTable.Contains(sn.Type) == true)
+						{
+							npd.Pixbuf = (Pixbuf) pbTable[sn.Type];
+						}
+						else
+						{
+							npd.Pixbuf = (Pixbuf) pbTable["Node"];
+						}
+						npd.Title = sn.Name + " Properties";
+						npd.ShowAll();
+					}
 				}
+			}
+		}
+	}
 
-				if(args.Event.Type == EventType.ButtonPress)
+
+
+
+	public class NodePropertiesDialog
+	{
+		public string Title
+		{
+			set
+			{
+				this.title = value;
+			}
+		}
+
+		public Node Node
+		{
+			set
+			{
+				this.node = value;
+			}
+		}
+
+		public Pixbuf Pixbuf
+		{
+			set
+			{
+				this.pb = value;
+			}
+		}
+
+		[Glade.Widget] Gtk.TreeView	PropTreeView;
+		[Glade.Widget] Gtk.Dialog	ColPropertiesDialog;
+
+		private ListStore			PropTreeStore;
+		Node						node;
+		Pixbuf						pb;
+		string						title;
+
+		public NodePropertiesDialog() 
+		{
+		}
+
+		private void InitUI()
+		{
+			Glade.XML gxml = new Glade.XML ("collection-browser.glade", 
+					"ColPropertiesDialog", 
+					null);
+			gxml.Autoconnect (this);
+
+			if(pb != null)
+				ColPropertiesDialog.Icon = pb;
+			if(title.Length > 0)
+			{
+				ColPropertiesDialog.Title = title;	
+			}
+
+			// Setup the Node TreeView
+			PropTreeStore = new ListStore(typeof(Simias.Storage.Property));
+			PropTreeView.Model = PropTreeStore;
+			TreeViewColumn propNameColumn = new TreeViewColumn();
+
+			CellRendererText propcrt = new CellRendererText();
+			propNameColumn.PackStart(propcrt, false);
+			propNameColumn.SetCellDataFunc(propcrt, new TreeCellDataFunc(
+						PropNameCellTextDataFunc));
+			propNameColumn.Title = "Name";
+			PropTreeView.AppendColumn(propNameColumn);
+			PropTreeView.Selection.Mode = SelectionMode.Multiple;
+
+			TreeViewColumn propValueColumn = new TreeViewColumn();
+			CellRendererText propValuecrt = new CellRendererText();
+			propValueColumn.PackStart(propValuecrt, false);
+			propValueColumn.SetCellDataFunc(propValuecrt, new TreeCellDataFunc(
+						PropValueCellTextDataFunc));
+			propValueColumn.Title = "Value";
+			PropTreeView.AppendColumn(propValueColumn);
+
+			if(node != null)
+			{
+				foreach(Simias.Storage.Property prop in node.Properties)
 				{
-					if(idx == curIndex)
-						enableDblClick = true;
-					else
-						enableDblClick = false;
-
-					curIndex = idx;
-				}
-
-				if(ev.Button == 3)
-				{
-					show_context_menu(idx);
+					PropTreeStore.AppendValues(prop);
 				}
 			}
 		}
 
-		private Node GetSelectedItem()
+
+
+		private void PropNameCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
 		{
-			Node node = (Node) nodeArray[curIndex];
-
-			return node;
-		}
-
-		private void set_item_pixBuf(int idx, Pixbuf itemPixbuf)
-		{
-			Gnome.CanvasPixbuf cPixbuf = BrowserIconList.GetIconPixbufItem(idx);
-			cPixbuf.Pixbuf = itemPixbuf;
-		}
-
-		private void show_context_menu(int idx)
-		{
-			Node node = (Node) nodeArray[idx];
-
-			Menu trayMenu = new Menu();
-			if(node != null)
+			Simias.Storage.Property prop = 
+					(Simias.Storage.Property) PropTreeStore.GetValue(iter,0);
+			if(prop != null)
 			{
-				MenuItem open_item = new MenuItem ("Open");
-				open_item.Activated += new EventHandler(
-						on_open_context_menu);
-				trayMenu.Append (open_item);
-
-				/*
-				if(!node.HasChildren)
-				{
-					MenuItem delete_item = new MenuItem ("Delete");
-					delete_item.Activated += new EventHandler(
-						on_delete_context_menu);
-					trayMenu.Append (delete_item);
-				}
-				*/
-				trayMenu.Append(new SeparatorMenuItem());
-
-				MenuItem properties_item = new MenuItem (
-						"Properties");
-				properties_item.Activated += new EventHandler(
-						on_properties_context_menu);
-				trayMenu.Append (properties_item);
+				((CellRendererText) cell).Text = prop.Name;
 			}
 			else
+				((CellRendererText) cell).Text = "** unknown **";
+		}
+
+		private void PropValueCellTextDataFunc (Gtk.TreeViewColumn tree_column,
+				Gtk.CellRenderer cell, Gtk.TreeModel tree_model,
+				Gtk.TreeIter iter)
+		{
+			Simias.Storage.Property prop = 
+					(Simias.Storage.Property) PropTreeStore.GetValue(iter,0);
+			if(prop != null)
 			{
-				MenuItem broken_item = new MenuItem ("Nada Para Fazer");
-				trayMenu.Append (broken_item);
+				((CellRendererText) cell).Text = prop.Value.ToString();
 			}
-
-			trayMenu.ShowAll();
-
-			trayMenu.Popup(null, null, null, IntPtr.Zero, 3, 
-					Gtk.Global.CurrentEventTime);
+			else
+				((CellRendererText) cell).Text = "** unknown **";
 		}
 
-		public void on_properties_context_menu(object o, EventArgs args)
+		public void ShowAll()
 		{
-			Node node = GetSelectedItem();
-			if(node != null)
-			{
-				PropertiesDialog pd = new PropertiesDialog();
-				pd.Node = node;
-				pd.TransientFor = nifWindow; 
-				pd.ActiveTag = 1;
-				pd.Run();
-			}
+			InitUI();
+
+			if(ColPropertiesDialog != null)
+				ColPropertiesDialog.ShowAll();
 		}
 
-		public void on_refresh()
+		public void on_CancelButton_clicked(object o, EventArgs args)
 		{
-			SetCurrentNode(curNode);
+			ColPropertiesDialog.Hide();
+			ColPropertiesDialog.Destroy();
 		}
-
-		public void on_delete_context_menu(object o, EventArgs args)
-		{
-			Node node = GetSelectedItem();
-
-			//node.Delete(true);
-
-			on_refresh();
-		}
-
-		public void on_open_context_menu(object o, EventArgs args)
-		{
-			Node node = GetSelectedItem();
-
-			if(node != null)
-			{
-				/*
-				if(node.HasChildren)
-				{
-					SetCurrentNode(node);
-				}
-				else
-				*/
-				{
-					PropertiesDialog pd = new PropertiesDialog();
-					pd.Node = node;
-					pd.TransientFor = nifWindow; 
-					pd.ActiveTag = 1;
-					pd.Run();
-				}
-			}
-		}
-/*
-		public void on_shareifolder_context_menu(object o, EventArgs args)
-		{
-			DirectoryEntry de = GetSelectedItem();
-			if(de != null)
-			{
-				PropertiesDialog pd = new PropertiesDialog(de.FullName);
-				pd.ShowAll(1);
-			}
-		}
-
-		public void on_makeifolder_context_menu(object o, EventArgs args)
-		{
-			DirectoryEntry de = GetSelectedItem();
-			if(de != null)
-			{
-				try
-				{
-					int count;
-					iFolder ifldr = ifmgr.CreateiFolder(de.FullName);
-					set_item_pixBuf(curIndex, iFolderPixBuf);
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine("Failed to create iFolder " + e);
-				}
-			}
-		}
-
-		public void on_unmakeifolder_context_menu(object o, EventArgs args)
-		{
-			DirectoryEntry de = GetSelectedItem();
-			if(de != null)
-			{
-				try
-				{
-					ifmgr.DeleteiFolderByName(de.FullName);
-					set_item_pixBuf(curIndex, FolderPixBuf);
-				}
-				catch(Exception e)
-				{
-					Console.WriteLine("Failed to delete iFolder " + e);
-				}
-			}
-		}
-
-		public void on_open_context_menu(object o, EventArgs args)
-		{
-			DirectoryEntry de = GetSelectedItem();
-			if(de != null)
-			{
-				if(de.IsDirectory)
-				{
-					SetCurrentDir(de.GetDirectoryInfo());
-				}
-			}
-		}
-*/
 	}
+
 }

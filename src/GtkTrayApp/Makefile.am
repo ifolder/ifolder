@@ -27,9 +27,9 @@ CollectionBrowserGtk_FLAGS = $(CSC_EXEFLAG)
 CollectionBrowserGtk_LIBS = System.dll System.Drawing.dll System.Data.dll gtk-sharp.dll gnome-sharp.dll glib-sharp.dll glade-sharp.dll gdk-sharp.dll $(SYSTEM_XML) Common.dll StoreProvider.dll CollectionStore.dll AddressBook.dll SyncCommon.dll iFolder.dll CBLib.dll
 CollectionBrowserGtk_LIBPATH = $(SIMIAS_INSTALL_PATH)/bin $(ADDRESSBOOK_INSTALL_PATH)/bin ../iFolder
 
-INSTALL_FILES = $(srcdir)/invitationwizard $(srcdir)/ifolder $(srcdir)/setup-autostart
+INSTALL_FILES = $(srcdir)/invitationwizard $(srcdir)/collectionbrowser $(srcdir)/ifolder $(srcdir)/setup-autostart
 
-DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/crash-report.glade  $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/nuke.png
+DATA_FILES = $(srcdir)/ifolder.glade $(srcdir)/collection-browser.glade $(srcdir)/ifolder-confirmation.glade $(srcdir)/properties-dialog.glade $(srcdir)/crash-report.glade  $(srcdir)/collection.png $(srcdir)/Tombstone.png $(srcdir)/BaseContact.png $(srcdir)/node.png $(srcdir)/folder.png $(srcdir)/ifolder.png $(srcdir)/ifolderfolder.png $(srcdir)/invitewiz.png $(srcdir)/leafnode.png $(srcdir)/Node.png $(srcdir)/file.xpm $(srcdir)/ifolder.gif $(srcdir)/property.png $(srcdir)/nuke.png
 
 EXTRA_DIST = $(TrayAppGtk_CSFILES) $(InviteAppGtk_CSFILES) $(CollectionBrowserGtk_CSFILES) $(DATA_FILES) $(INSTALL_FILES)
 
@@ -60,6 +60,8 @@ clean-local:
     
 distclean-local: clean
 	rm -f ifolder
+	rm -f invitationwizard
+	rm -f collectionbrowser
 
 maintainer-clean-local:
 	rm -f Makefile.in
