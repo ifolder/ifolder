@@ -592,13 +592,9 @@ namespace Simias.Sync
 									{
 										Directory.Move(oldPath, path);
 									}
-									catch (DirectoryNotFoundException ex)
+									catch (IOException ex)
 									{
 										// This directory has already been moved by the parent move.
-										if (!Directory.Exists(path))
-										{
-											throw ex;
-										}
 									}
 								}
 							}
