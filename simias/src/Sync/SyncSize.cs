@@ -39,7 +39,12 @@ namespace Simias.Sync
 /// </summary>
 public class SyncSize
 {
-	//--------------------------------------------------------------------
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="collection"></param>
+	/// <param name="nodeCount"></param>
+	/// <param name="maxBytesToSend"></param>
 	public static void CalculateSendSize(Collection collection, out uint nodeCount, out ulong maxBytesToSend)
 	{
 		maxBytesToSend = 0;
@@ -47,7 +52,7 @@ public class SyncSize
 		Log.Spew("starting to calculate size to send to master for collection {0}", collection.Name);
 
 		// TODO: this call can leave tombstones on the server. see note in Dredger
-		new Dredger(collection, false);
+		new Dredger(collection, false); 
 
 		// TODO: would be nice to have the database find all nodes for which MasterIncarnation != LocalIncarnation
 		foreach (ShallowNode sn in collection)
