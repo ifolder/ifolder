@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\dev\denali\src\Agent\;C:\dev\denali\src\iFolder\" >
+            <Settings ReferencePath = "C:\dev\ifolder\src\iFolder\;C:\dev\simias\src\Agent\;C:\dev\denali\src\Agent\;C:\dev\denali\src\iFolder\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
