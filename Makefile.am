@@ -34,8 +34,7 @@ package-install package-uninstall:
 #
 # Targets to use if building subprojects
 #
-ifneq "$(strip $(SUBPROJECT_BUILD_PATHS))" ""
-
+if BUILD_SUBPROJECTS
 all install installcheck: %: sub-%
 	@echo $@ sub done
 
@@ -56,8 +55,8 @@ sub-clean sub-install sub-installcheck sub-installcheck-summary sub-uninstall su
 		cd $$subproj; $(MAKE) $(subst sub-,,$@); \
 	done
 
-ifeq "$(strip $(IFOLDER_OS))" "windows"
-# for package on Windows, install subprojects then build subproject packages
+if WINDOWS
+ for package on Windows, install subprojects then build subproject packages
 sub-package:
 	@echo SUBPROJECT_BUILD_PATHS=$(SUBPROJECT_BUILD_PATHS)
 	for subproj in $(SUBPROJECT_BUILD_PATHS); do \
@@ -65,7 +64,7 @@ sub-package:
 	done
 endif
 
-#ifeq "$(strip $(IFOLDER_OS))" "linux"
+#if LINUX
 # for package on Linux, install subprojects then build subproject packages
 # (TO DO: need to configure install-paths during RPM build)
 #sub-package:

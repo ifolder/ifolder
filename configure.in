@@ -35,7 +35,9 @@ case $host_os in
     ;;
 esac
 AC_SUBST(IFOLDER_OS)
-        
+AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
+AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
+
 #
 # Set platform-specific variables
 #
@@ -440,6 +442,7 @@ if test -n "$ADDRESSBOOK_BUILD_PATH"; then
     echo "continuing configure in `pwd`"
 fi
 AC_SUBST(SUBPROJECT_BUILD_PATHS)
+AM_CONDITIONAL(BUILD_SUBPROJECTS, test -n "$SUBPROJECT_BUILD_PATHS")
 
 #
 # Configure files
