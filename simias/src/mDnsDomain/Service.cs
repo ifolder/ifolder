@@ -114,7 +114,8 @@ namespace Simias.mDns
 				Simias.Location.Locate.RegisterProvider( this.mDnsProvider );
 
 				// Last add some fake credentials for the mDns domain
-				new NetCredential( "iFolder", Simias.mDns.Domain.ID, true, mDnsUser.Name, "blah" );
+				string mDnsTagAndUser = "@ppk@" + mDnsUser.ID;
+				new NetCredential( "iFolder", Simias.mDns.Domain.ID, true, mDnsTagAndUser, "blah" );
 			}
 			catch(Exception e)
 			{
