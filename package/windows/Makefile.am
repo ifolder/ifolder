@@ -28,13 +28,16 @@ RELEASE = 1
 MSI_FILE = $(PACKAGE)-$(VERSION)-$(RELEASE).msi
 MSI_LOG_FILE = devenv-ifolder-msi.log
 
-.PHONY: package package-clean package-install package-uninstall ifolder
+.PHONY: package package-clean package-install package-uninstall ifolder devenv
 
 all clean:
 
 package: $(MSI_FILE)
 
-$(MSI_FILE): ifolder ifolder-install.sln ifolder-msi/ifolder-msi.vdproj ShutdowniFolder/ShutdowniFolder.exe
+devenv:
+	@if ! test -x "$(VSINSTALLDIR)/devenv.exe"; then echo "Error: Microsoft Visual Studio .NET is currently required to build MSI packages"; exit 1; fi
+
+$(MSI_FILE): devenv ifolder ifolder-install.sln ifolder-msi/ifolder-msi.vdproj ShutdowniFolder/ShutdowniFolder.exe
 	@rm -f $(MSI_LOG_FILE) $@
 	@CMD='"$(VSINSTALLDIR)/devenv.exe" ifolder-install.sln /build $(DEVENV_CONFIGURATION) /project ifolder-msi /out $(MSI_LOG_FILE)'; \
 	echo $$CMD; \
