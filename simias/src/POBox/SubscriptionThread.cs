@@ -142,7 +142,7 @@ namespace Simias.POBox
 
 		private bool DoInvited()
 		{
-			bool returnStatus = true;
+			bool result = true;
 			if (poBox.Domain == Simias.Storage.Domain.WorkGroupDomainID)
 			{
 				// TODO: Localize
@@ -224,24 +224,54 @@ namespace Simias.POBox
 			else
 			{
 				log.Info("SubscriptionThread::DoInvited called");
-				POBoxStatus wsStatus = POBoxStatus.UnknownError;
-
 				POBoxService poService = new POBoxService();
 				poService.Url = this.poServiceUrl;
 				poService.CookieContainer = new CookieContainer();
 				Credentials cSimiasCreds = 
 					new Credentials(subscription.SubscriptionCollectionID);
 				poService.Credentials = cSimiasCreds.GetCredentials();
-
 				if (poService.Credentials == null)
 				{
 					log.Info("  no credentials - back to sleep");
 					return (false);
 				}
 
+				//
 				// Make sure the shared collection has sync'd to the server before inviting
+				//
+
+				Collection cSharedCollection = 
+					Store.GetStore().GetCollectionByID(subscription.SubscriptionCollectionID);
+				if (cSharedCollection == null)
+				{
+					return (false);
+				}
+
+				if (cSharedCollection.MasterIncarnation == 0)
+				{
+					log.Debug(
+						"Failed POBoxService::Invite - collection: {0} hasn't sync'd to the server yet",
+						subscription.SubscriptionCollectionID);
+					return (false);
+				}
+
+				//
+				// Make sure the subscription node has sync'd to the server as well
+				//
+				
+				if (subscription.MasterIncarnation == 0)
+				{
+					log.Debug(
+						"Failed POBoxService::Invite - inviter's subscription {0) hasn't sync'd to the server yet",
+						subscription.MessageID);
+					return (false);
+				}
+			
+				/*
+				POBoxStatus wsStatus;
 				try
 				{
+					wsStatus = POBoxStatus.UnknownError;
 					wsStatus =
 						poService.VerifyCollection(
 							subscription.DomainID,
@@ -249,60 +279,61 @@ namespace Simias.POBox
 				}
 				catch(Exception e)
 				{
+					log.Debug("failed verifying remote collection");
 					log.Debug(e.Message);
 					log.Debug(e.StackTrace);
 				}
 
-				if (wsStatus == POBoxStatus.Success)
-//				if (subscription.LocalIncarnation == subscription.MasterIncarnation)
-				{
-					// This is an enterprise pobox contact the POService.
-					log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
-
-					try
-					{
-						// Set the remote state to received.
-						// And post the subscription to the server.
-						Simias.Storage.Member me = poBox.GetCurrentMember();
-						subscription.FromIdentity = me.UserID;
-						subscription.FromName = me.Name;
-
-						string subID =
-							poService.Invite(
-								subscription.DomainID,
-								subscription.FromIdentity,
-								subscription.ToIdentity,
-								subscription.SubscriptionCollectionID,
-								subscription.SubscriptionCollectionType,
-								(int) subscription.SubscriptionRights);
-						if (subID != null && subID != "")
-						{
-							subscription.SubscriptionState = SubscriptionStates.Posted;
-							subscription.MessageID = subID;
-							poBox.Commit(subscription);
-						}
-						else
-						{
-							returnStatus = false;
-						}
-					}
-					catch
-					{
-						log.Debug("Failed POBoxService::Invite - target: " + poService.Url);
-						returnStatus = false;
-					}
-				}
-				else
+				if (wsStatus != POBoxStatus.Success)
 				{
 					log.Debug(
-						"Failed POBoxService::Invite - collection: {0} doesn't exist on the server",
+						"Failed POBoxService::Invite - collection: {0} hasn't sync'd to the server yet",
 						subscription.SubscriptionCollectionID);
+					log.Debug("POBoxStatus: " + wsStatus.ToString());
+					return (false);
+				}
+				*/
 
-					returnStatus = false;
+				// This is an enterprise pobox contact the POService.
+				log.Debug("Connecting to the Post Office Service : {0}", subscription.POServiceURL);
+
+				try
+				{
+					// Set the remote state to received.
+					// And post the subscription to the server.
+					Simias.Storage.Member me = poBox.GetCurrentMember();
+					subscription.FromIdentity = me.UserID;
+					subscription.FromName = me.Name;
+
+					string subID =
+						poService.Invite(
+							subscription.DomainID,
+							subscription.FromIdentity,
+							subscription.ToIdentity,
+							subscription.SubscriptionCollectionID,
+							subscription.SubscriptionCollectionType,
+							(int) subscription.SubscriptionRights);
+					if (subID != null && subID != "")
+					{
+						// FIXME:: sync my PostOffice right now!
+						subscription.SubscriptionState = SubscriptionStates.Posted;
+						subscription.MessageID = subID;
+						poBox.Commit(subscription);
+					}
+					else
+					{
+						log.Debug("Failed the remote invite call");
+						result = false;
+					}
+				}
+				catch
+				{
+					log.Debug("Failed POBoxService::Invite - target: " + poService.Url);
+					result = false;
 				}
 			}
 
-			return returnStatus;
+			return result;
 		}
 
 		private bool DoReplied()
