@@ -98,7 +98,6 @@ namespace Novell.iFolder.Web
 			UseProxy = false;
 
 			CurrentUserID = store.GetUserIDFromDomainID(DefaultDomainID);
-			Console.WriteLine("User ID: {0}", CurrentUserID);
 
 			try
 			{

@@ -1909,44 +1909,28 @@ namespace Novell.iFolder
 
 
 
-		public void iFolderChanged(string iFolderID)
+		public void iFolderChanged(iFolder ifolder)
 		{
-			if(curiFolders.ContainsKey(iFolderID))
+			if(curiFolders.ContainsKey(ifolder.ID))
 			{
-				TreeIter iter = (TreeIter)curiFolders[iFolderID];
-				iFolder ifolder;
+				TreeIter iter = (TreeIter)curiFolders[ifolder.ID];
 
-				try
+				if( ifolder.State == "Available" )
 				{
-					ifolder = iFolderWS.GetiFolder(iFolderID);
-					if(ifolder != null)
+					// this is a subscription, check to see if we
+					// have a matching ifolder to yank this one
+					// out if we need to
+					iFolder realiFolder = iFolderWS.GetiFolder(
+							ifolder.CollectionID);
+					if(realiFolder != null)
 					{
-						if( ifolder.State == "Available" )
-						{
-							// this is a subscription, check to see if we
-							// have a matching ifolder to yank this one
-							// out if we need to
-							iFolder realiFolder = iFolderWS.GetiFolder(
-									ifolder.CollectionID);
-							if(realiFolder != null)
-							{
-								iFolderTreeStore.Remove(ref iter);
-								curiFolders.Remove(iFolderID);
-								return;
-							}
-						}
-
-						iFolderTreeStore.SetValue(iter, 0, ifolder);
+						iFolderTreeStore.Remove(ref iter);
+						curiFolders.Remove(ifolder.ID);
+						return;
 					}
 				}
-				catch(Exception e)
-				{
-//					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-//													null, e);
-//					ied.Run();
-//					ied.Hide();
-//					ied.Destroy();
-				}
+
+				iFolderTreeStore.SetValue(iter, 0, ifolder);
 			}
 		}
 

@@ -53,64 +53,6 @@ namespace Novell.iFolder
 	}
 
 
-	public enum iFolderEventTypes : uint
-	{
-		NodeCreated		= 0x0001,
-		NodeChanged		= 0x0002,
-		NodeDeleted		= 0x0003,
-		Exception		= 0x0004
-	}
-
-	public class iFolderEvent
-	{
-		private NodeEventArgs		eventArgs;
-		private iFolderEventTypes	eventType;
-		private string				exceptionMessage;
-	
-		public iFolderEvent(NodeEventArgs args, iFolderEventTypes type)
-		{
-			this.eventArgs = args;
-			this.eventType = type;
-		}
-
-		public iFolderEvent(string exceptionMessage)
-		{
-			this.exceptionMessage = exceptionMessage;
-			this.eventType = iFolderEventTypes.Exception;
-		}
-
-		public string Message
-		{
-			get{ return exceptionMessage; }
-		}
-
-		public iFolderEventTypes EventType
-		{
-			get{ return eventType; }
-		}
-
-		public string NodeID
-		{
-			get{return eventArgs.Node;}
-		}
-
-		public string CollectionID
-		{
-			get{return eventArgs.Collection;}
-		}
-
-		public string NodeType
-		{
-			get{return eventArgs.Type;}
-		}
-
-		public bool LocalOnly
-		{
-			get{ return eventArgs.LocalOnly; }
-		}
-	}
-	
-
 	public class iFolderApplication : Gnome.Program
 	{
 		private Gtk.Image			gAppIcon;
@@ -122,13 +64,11 @@ namespace Novell.iFolder
 		private iFolderWebService	ifws;
 		private iFolderWindow 		ifwin;
 		private iFolderSettings		ifSettings;
-		private IProcEventClient	simiasEventClient;
 
 		private iFolderState 		CurrentState;
 		private Gtk.ThreadNotify	iFolderStateChanged;
-		private Gtk.ThreadNotify	SimiasEventFired;
-		private Queue				EventQueue;
-
+		private SimiasEventBroker	EventBroker;
+		private	iFolderLoginDialog	LoginDialog;
 
 		public iFolderApplication(string[] args)
 			: base("iFolder", "1.0", Modules.UI, args)
@@ -155,12 +95,10 @@ namespace Novell.iFolder
 			tIcon.Add(eBox);
 			tIcon.ShowAll();	
 
-			EventQueue = new Queue();
+			LoginDialog = null;
 
 			iFolderStateChanged = new Gtk.ThreadNotify(
 							new Gtk.ReadyEvent(OniFolderStateChanged));
-			SimiasEventFired = new Gtk.ThreadNotify(
-							new Gtk.ReadyEvent(OnSimiasEventFired) );
 		}
 
 
@@ -178,85 +116,6 @@ namespace Novell.iFolder
 
 
 
-
-		private void SetupSimiasEventHandlers()
-		{
-			simiasEventClient = new IProcEventClient( 
-					new IProcEventError( ErrorHandler), null);
-
-			simiasEventClient.Register();
-
-			simiasEventClient.SetEvent( IProcEventAction.AddNodeCreated,
-				new IProcEventHandler( SimiasEventNodeCreatedHandler ) );
-
-			simiasEventClient.SetEvent( IProcEventAction.AddNodeChanged,
-				new IProcEventHandler( SimiasEventNodeChangedHandler ) );
-
-			simiasEventClient.SetEvent( IProcEventAction.AddNodeDeleted,
-				new IProcEventHandler( SimiasEventNodeDeletedHandler ) );
-		}
-
-
-
-
-		private void ErrorHandler( ApplicationException e, object context )
-		{
-			lock(EventQueue)
-			{
-				EventQueue.Enqueue(new iFolderEvent(e.Message));
-				SimiasEventFired.WakeupMain();
-			}
-		}
-
-
-
-
-		private void SimiasEventNodeCreatedHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs nargs = args as NodeEventArgs;
-//			Console.WriteLine("Received a Node Created Event");
-			lock(EventQueue)
-			{
-				EventQueue.Enqueue(new iFolderEvent(nargs, 
-						iFolderEventTypes.NodeCreated));
-				SimiasEventFired.WakeupMain();
-			}
-		}
-
-
-
-
-		private void SimiasEventNodeChangedHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs nargs = args as NodeEventArgs;
-//			Console.WriteLine("Received a Node Changed Event");
-			lock(EventQueue)
-			{
-				EventQueue.Enqueue(new iFolderEvent(nargs, 
-						iFolderEventTypes.NodeChanged));
-				SimiasEventFired.WakeupMain();
-			}
-		}
-
-
-
-
-		private void SimiasEventNodeDeletedHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs nargs = args as NodeEventArgs;
-//			Console.WriteLine("Received a Node Deleted Event");
-			lock(EventQueue)
-			{
-				EventQueue.Enqueue(new iFolderEvent(nargs, 
-						iFolderEventTypes.NodeDeleted));
-				SimiasEventFired.WakeupMain();
-			}
-		}
-
-
-
-
-
 		private void StartiFolder()
 		{
 			CurrentState = iFolderState.Starting;
@@ -266,18 +125,24 @@ namespace Novell.iFolder
 			{
 				try
 				{
-//					Simias.Service.Manager.Start();
+//					Simias.Client.Manager.Start();
 
 					ifws = new iFolderWebService();
 //					ifws.Url = 
-//						Simias.ServiceManager.LocalServiceUrl.ToString() +
+//						Simias.Client.Manager.LocalServiceUrl.ToString() +
 //							"/iFolder.asmx";
+
 					ifws.Ping();
 	
 					ifSettings = ifws.GetSettings();
+
+					EventBroker = new SimiasEventBroker();
+
+					EventBroker.Register();
 				}
 				catch(Exception e)
 				{
+					Console.WriteLine(e);
 					ifws = null;
 					ifSettings = null;
 				}
@@ -297,10 +162,8 @@ namespace Novell.iFolder
 
 			try
 			{
-				simiasEventClient.Deregister();
-
-//				Simias.Service.Manager.Stop();
-
+				EventBroker.Deregister();
+//				Simias.Client.Manager.Stop();
 			}
 			catch(Exception e)
 			{
@@ -314,256 +177,67 @@ namespace Novell.iFolder
 
 
 
-
-		// ThreadNotify Method that will react to a fired event
-		private void OnSimiasEventFired()
+		private void OniFolderAddedEvent(object o, iFolderAddedEventArgs args)
 		{
-			iFolderEvent iEvent;
-			bool hasmore = false;
-			// at this point, we are running in the same thread
-			// so we can safely show events
-			lock(EventQueue)
-			{
-				hasmore = (EventQueue.Count > 0);
-			}
+			NotifyWindow notifyWin = new NotifyWindow(
+						tIcon, 
+						string.Format(Util.GS("New iFolder \"{0}\""), 
+													args.iFolder.Name),
+						string.Format(Util.GS("This iFolder is owned by {0} and is available to sync on this computer"), args.iFolder.Owner),
+						Gtk.MessageType.Info, 5000);
+			notifyWin.ShowAll();
 
-			while(hasmore)
+			if(ifwin != null)
+				ifwin.iFolderCreated(args.iFolder);
+		}
+
+
+		private void OniFolderChangedEvent(object o, 
+									iFolderChangedEventArgs args)
+		{
+			if(args.iFolder.IsSubscription)
 			{
-				lock(EventQueue)
-				{
-					iEvent = (iFolderEvent)EventQueue.Dequeue();
-					hasmore = (EventQueue.Count > 0);
-				}
-				
-				switch(iEvent.EventType)
-				{
-					case iFolderEventTypes.Exception:
-					{
-						// TODO: Not sure what to do here
-						break;
-					}
-	
-					case iFolderEventTypes.NodeCreated:
-					{
-						HandleNodeCreatedEvent(iEvent);
-						break;
-					}
-	
-					case iFolderEventTypes.NodeChanged:
-					{
-						HandleNodeChangedEvent(iEvent);
-						break;
-					}
-	
-					case iFolderEventTypes.NodeDeleted:
-					{
-						HandleNodeDeletedEvent(iEvent);
-						break;
-					}
-				}
+				if(ifwin != null)
+					ifwin.iFolderChanged(args.iFolder);
+			}
+			else
+			{
+				NotifyWindow notifyWin = new NotifyWindow(
+						tIcon, Util.GS("Action Required"),
+						string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), args.iFolder.Name),
+						Gtk.MessageType.Info, 5000);
+				notifyWin.ShowAll();
+
+				if(ifwin != null)
+					ifwin.iFolderHasConflicts(args.iFolder);
 			}
 		}
 
 
-
-
-		private void HandleNodeChangedEvent(iFolderEvent iEvent)
+		private void OniFolderDeletedEvent(object o, 
+									iFolderDeletedEventArgs args)
 		{
-			switch(iEvent.NodeType)
-			{
-				case "Collection":
-				{
-					try
-					{
-						iFolder ifolder = 
-								ifws.GetiFolder(iEvent.CollectionID);
-						if( (ifolder != null) && (ifolder.HasConflicts) )
-						{
-							NotifyWindow notifyWin = new NotifyWindow(
-									tIcon, Util.GS("Action Required"),
-									string.Format(Util.GS("A collision has been detected in iFolder \"{0}\""), ifolder.Name),
-									Gtk.MessageType.Info, 5000);
-							notifyWin.ShowAll();
-
-							if(ifwin != null)
-								ifwin.iFolderHasConflicts(ifolder);
-						}
-					}
-					catch(Exception e)
-					{
-//						iFolderExceptionDialog ied = 
-//								new iFolderExceptionDialog(null, e);
-//						ied.Run();
-//						ied.Hide();
-//						ied.Destroy();
-//						ied = null;
-					}
-
-					break;
-				}
-
-				case "Node":
-				{
-					// Check to see if the Node that changed is part of
-					// the POBox
-					if(iEvent.CollectionID == ifSettings.DefaultPOBoxID)
-					{
-						if(ifwin != null)
-							ifwin.iFolderChanged(iEvent.NodeID);
-					}
-					break;
-				}					
-			}
+			if(ifwin != null)
+				ifwin.iFolderDeleted(args.iFolderID);
 		}
 
-
-
-
-		private void HandleNodeCreatedEvent(iFolderEvent iEvent)
+/*
+		private void OnUserCreatedEvent(object o,
+									iFolderUserCreatedEventArgs args)
 		{
-			switch(iEvent.NodeType)
-			{
-				case "Node":
-				{
-//					Console.WriteLine("Handling a node CreatedEvent");
-					// Check to see if the Node that changed is part of
-					// the POBox
-					if((ifSettings != null) && (iEvent.CollectionID == ifSettings.DefaultPOBoxID) )
-					{
-						iFolder ifolder;
-						try
-						{
-							ifolder = ifws.GetiFolder(iEvent.NodeID);
-						}
-						catch(Exception e)
-						{
-							ifolder = null;
-						}
-
-						if(	(ifolder != null) &&
-							(ifolder.State == "Available") )
-						{
-							// At this point we know it's a new subscription
-							// that's available, now check to make sure
-							// the corresponding iFolder isn't on the
-							// machine already (it was created here)
-							iFolder localiFolder;
-							try
-							{
-								localiFolder = 
-									ifws.GetiFolder(ifolder.CollectionID);
-							}
-							catch(Exception e)
-							{
-								localiFolder = null;
-							}
-
-							if(localiFolder != null)
-								return;
-								
-							NotifyWindow notifyWin = new NotifyWindow(
-								tIcon, 
-								string.Format(Util.GS("New iFolder \"{0}\""), 
-													ifolder.Name),
-								string.Format(Util.GS("This iFolder is owned by {0} and is available to sync on this computer"), ifolder.Owner),
-									Gtk.MessageType.Info, 5000);
-								notifyWin.ShowAll();
-	
-							if(ifwin != null)
-								ifwin.iFolderCreated(ifolder);
-						}
-					}
-					break;
-				}					
-
-				case "Member":
-				{
-					try
-					{
-						iFolderUser newuser = ifws.GetiFolderUserFromNodeID(
-							iEvent.CollectionID, iEvent.NodeID);
-						if( (newuser != null) &&
-							(newuser.UserID != ifSettings.CurrentUserID) )
-						{
-							iFolder ifolder = 
-									ifws.GetiFolder(iEvent.CollectionID);
 						
-							NotifyWindow notifyWin = new NotifyWindow(
-									tIcon, Util.GS("New iFolder User"), 
-									string.Format(Util.GS("{0} has just joined iFolder {1}"), newuser.Name, ifolder.Name),
-									Gtk.MessageType.Info, 5000);
+				NotifyWindow notifyWin = new NotifyWindow(
+					tIcon, Util.GS("New iFolder User"), 
+					string.Format(Util.GS("{0} has just joined iFolder {1}"), newuser.Name, ifolder.Name),
+					Gtk.MessageType.Info, 5000);
 
-							notifyWin.ShowAll();
+				notifyWin.ShowAll();
 							
-							// TODO: update any open windows?
-//							if(ifwin != null)
-//								ifwin.NewiFolderUser(ifolder, newuser);
-						}
-					}
-					catch(Exception e)
-					{
-//						iFolderExceptionDialog ied = 
-//								new iFolderExceptionDialog(null, e);
-//						ied.Run();
-//						ied.Hide();
-//						ied.Destroy();
-//						ied = null;
-					}
-					break;
-				}
-
-				case "Collection":
-				{
-					try
-					{
-						iFolder ifolder = 
-								ifws.GetiFolder(iEvent.CollectionID);
-						if(ifolder != null)
-						{
-							// This is happening because we have an iFolder
-							// that we accepted down on this machine
-							if(ifwin != null)
-								ifwin.iFolderCreated(ifolder);
-						}
-					}
-					catch(Exception e)
-					{
-//						iFolderExceptionDialog ied = 
-//								new iFolderExceptionDialog(null, e);
-//						ied.Run();
-//						ied.Hide();
-//						ied.Destroy();
-//						ied = null;
-					}
-
-					break;
-				}
-			}
+				// TODO: update any open windows?
+//				if(ifwin != null)
+//				ifwin.NewiFolderUser(ifolder, newuser);
 		}
-
-
-		private void HandleNodeDeletedEvent(iFolderEvent iEvent)
-		{
-			switch(iEvent.NodeType)
-			{
-				case "Node":
-				{
-					if( (ifSettings != null) && (iEvent.CollectionID == ifSettings.DefaultPOBoxID) )
-					{
-						if(ifwin != null)
-							ifwin.iFolderDeleted(iEvent.NodeID);
-					}
-					break;
-				}
-				case "Collection":
-				{
-					if(ifwin != null)
-						ifwin.iFolderDeleted(iEvent.NodeID);
-					break;
-				}
-			}
-		}
-
+*/
 
 
 		// ThreadNotify Method that will react to a fired event
@@ -576,8 +250,17 @@ namespace Novell.iFolder
 					break;
 
 				case iFolderState.Running:
+					if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
+						OnJoinEnterprise(null, null);
+
+					EventBroker.iFolderAdded +=
+						new iFolderAddedEventHandler(OniFolderAddedEvent);
+					EventBroker.iFolderChanged +=
+						new iFolderChangedEventHandler(OniFolderChangedEvent);
+					EventBroker.iFolderDeleted +=
+						new iFolderDeletedEventHandler(OniFolderDeletedEvent);
+
 					gAppIcon.Pixbuf = RunningPixbuf;
-					SetupSimiasEventHandlers();
 					break;
 
 				case iFolderState.Stopping:
@@ -587,25 +270,6 @@ namespace Novell.iFolder
 				case iFolderState.Stopped:
 					Application.Quit();
 					break;
-/*				case iFolderState.NewFolder:
-				{
-					NotifyWindow notifyWin = new NotifyWindow(tIcon,
-									"Node Created!",
-									"Simias Reports a new node!", 4000);
-					notifyWin.ShowAll();
-					break;
-				}
-				case iFolderState.NewMember:
-				case iFolderEvent.NewConflict:
-				case iFolderEvent.NewERROR:
-				{
-					NotifyWindow notifyWin = new NotifyWindow(tIcon,
-									"Simias Error Occurred!",
-									"Something very baaaad happened", 4000);
-					notifyWin.ShowAll();
-					break;
-				}
-*/
 			}
 		}
 
@@ -666,12 +330,19 @@ namespace Novell.iFolder
 
 		private void trayapp_clicked(object obj, ButtonPressEventArgs args)
 		{
+			if(CurrentState == iFolderState.Starting)
+				return;
+
 			switch(args.Event.Button)
 			{
 				case 1: // first mouse button
 					if(args.Event.Type == Gdk.EventType.TwoButtonPress)
 					{
-						show_properties(obj, args);
+						if( (ifSettings != null) && 
+							(!ifSettings.HaveEnterprise) )
+							OnJoinEnterprise(obj, args);
+						else
+							show_properties(obj, args);
 					}
 					break;
 				case 2: // second mouse button
@@ -690,10 +361,14 @@ namespace Novell.iFolder
 			AccelGroup agrp = new AccelGroup();
 			Menu trayMenu = new Menu();
 
-			MenuItem iFolders_item = new MenuItem (Util.GS("My iFolders..."));
-			trayMenu.Append (iFolders_item);
-			iFolders_item.Activated += 
-					new EventHandler(show_properties);
+			if( (ifSettings != null) && (ifSettings.HaveEnterprise) )
+			{
+				MenuItem iFolders_item = 
+						new MenuItem (Util.GS("My iFolders..."));
+				trayMenu.Append (iFolders_item);
+				iFolders_item.Activated += 
+						new EventHandler(show_properties);
+			}
 			
 			if( (ifSettings != null) && (!ifSettings.HaveEnterprise) )
 			{
@@ -740,43 +415,65 @@ namespace Novell.iFolder
 
 
 
-
 		private void OnJoinEnterprise(object o, EventArgs args)
 		{
-			iFolderLoginDialog loginDialog = new iFolderLoginDialog();
-
-			int rc = loginDialog.Run();
-			loginDialog.Hide();
-			loginDialog.Destroy();
-			if(rc == -5)
+			if(LoginDialog == null)
 			{
-				try
-				{
-					iFolderSettings tmpSettings;
-					tmpSettings = ifws.ConnectToEnterpriseServer(
-													loginDialog.UserName,
-													loginDialog.Password,
-													loginDialog.Host);
-					ifSettings = tmpSettings;
-
-					if(ifwin != null)
-					{
-						ifwin.GlobalSettings = ifSettings;
-					}
-				}
-				catch(Exception e)
-				{
-					iFolderExceptionDialog ied = new iFolderExceptionDialog(
-													null, e);
-					ied.Run();
-					ied.Hide();
-					ied.Destroy();
-					ied = null;
-				}
+				LoginDialog = new iFolderLoginDialog();
+				LoginDialog.Response +=
+					new ResponseHandler(OnLoginDialogResponse);
+				LoginDialog.ShowAll();
 			}
+			else
+				LoginDialog.Present();
 		}
 
 
+		private void OnLoginDialogResponse(object o, ResponseArgs args)
+		{
+			switch(args.ResponseId)
+			{
+				case Gtk.ResponseType.Ok:
+				{
+					LoginDialog.Hide();
+					try
+					{
+						iFolderSettings tmpSettings;
+						tmpSettings = ifws.ConnectToEnterpriseServer(
+														LoginDialog.UserName,
+														LoginDialog.Password,
+														LoginDialog.Host);
+						ifSettings = tmpSettings;
+	
+						EventBroker.RefreshSettings();
+						
+						if(ifwin != null)
+						{
+							ifwin.GlobalSettings = ifSettings;
+						}
+					}
+					catch(Exception e)
+					{
+						iFolderExceptionDialog ied = new iFolderExceptionDialog(
+														null, e);
+						ied.Run();
+						ied.Hide();
+						ied.Destroy();
+						ied = null;
+					}
+					LoginDialog.Destroy();
+					LoginDialog = null;
+					break;
+				}
+				default:
+				{
+					LoginDialog.Hide();
+					LoginDialog.Destroy();
+					LoginDialog = null;
+					break;
+				}
+			}
+		}
 
 
 		private void show_help(object o, EventArgs args)
@@ -843,6 +540,7 @@ namespace Novell.iFolder
 			}
 			catch(Exception bigException)
 			{
+				Console.WriteLine(bigException);
 				iFolderCrashDialog cd = new iFolderCrashDialog(bigException);
 				cd.Run();
 				cd.Hide();
