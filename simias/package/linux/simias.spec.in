@@ -92,7 +92,11 @@ else
     export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:%{prefix}/lib/pkgconfig"
 fi
 HERE
-
+    #
+    # Copy log4net.dll to /usr/lib
+    # TODO: log4net.dll should be put in the gac
+    #
+    cp -f %{prefix}/lib/log4net.dll /usr/lib
 fi
 
 #=============================================================================
@@ -103,10 +107,14 @@ if [ "$INSTANCES_AFTER_UNINSTALL" = "0" ]; then
     # Remove simias.sh from /etc/profile.d
     #
     %{__rm} -f /etc/profile.d/simias.sh
+    #
+    # Remove log4net.dll from /usr/lib
+    # TODO: log4net.dll should be put in the gac
+    #
+    %{__rm} -f /usr/lib/log4net.dll
 fi
 
 #=============================================================================
 %Files
 %defattr(-,root,root)
 %{prefix}/*
-
