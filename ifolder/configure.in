@@ -481,11 +481,6 @@ ifolder3-ui.pc
 src/Makefile
 src/install-ifolder-to-gac
 src/iFolder/Makefile
-src/iFolderGtkUI/Makefile
-src/iFolderGtkUI/Util.cs
-src/iFolderGtkUI/collectionbrowser
-src/iFolderGtkApp/Makefile
-src/iFolderGtkApp/ifolder
 src/GtkTrayApp/Makefile
 src/GtkTrayApp/Util.cs
 src/GtkTrayApp/ifolder

@@ -1,5 +1,5 @@
 if LINUX
-SUBDIRS = WebService iFolder TrayIcon GtkTrayApp WebService
+SUBDIRS = WebService iFolder TrayIcon GtkTrayApp
 endif
 
 if DARWIN
@@ -10,7 +10,7 @@ if WINDOWS
 SUBDIRS = WebService iFolder iFolderShell FormsTrayApp FormsInvitationWizard
 endif
 
-DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp FormsInvitationWizard iFolderGtkUI iFolderGtkApp WebService
+DIST_SUBDIRS = iFolder TrayIcon GtkTrayApp iFolderShell FormsTrayApp FormsInvitationWizard WebService
 
 EXTRA_DIST = $(srcdir)/ifolder-snakeoil.keys $(srcdir)/install-ifolder-to-gac.in
 
