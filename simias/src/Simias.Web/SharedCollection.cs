@@ -646,17 +646,16 @@ namespace Simias.Web
 
 			Collection col = store.GetCollectionByID(CollectionID);
 			if(col == null)
-				throw new Exception("Invalid CollectionID");
+				throw new Simias.NotExistException(CollectionID);
 
 			Roster roster = 
 				store.GetDomain(store.DefaultDomain).GetRoster(store);
-
 			if(roster == null)
-				throw new Exception("Unable to access user roster");
+				throw new Simias.NotExistException(store.DefaultDomain);
 
 			Simias.Storage.Member member = roster.GetMemberByID(UserID);
 			if(member == null)
-				throw new Exception("Invalid UserID");
+				throw new Simias.NotExistException(UserID);
 
 			Access.Rights newRights;
 
@@ -669,15 +668,23 @@ namespace Simias.Web
 			else
 				throw new Exception("Invalid Rights Specified");
 
-			Simias.Storage.Member newMember = 
+			// Check to see if the user is already a member of the collection.
+			Simias.Storage.Member newMember = col.GetMemberByID(member.UserID);
+			if(newMember != null)
+			{
+				throw new Simias.ExistsException(member.UserID);
+			}
+
+			newMember = 
 				new Simias.Storage.Member(	member.Name,
-											member.UserID,
-											newRights);
+				member.UserID,
+				newRights);
+
 			col.Commit(newMember);
 
 			AddSubscription( store, col, 
-					newMember, newMember, SubscriptionStates.Ready,
-					collectionType);
+				newMember, newMember, SubscriptionStates.Ready,
+				collectionType);
 		}
 
 

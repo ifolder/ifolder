@@ -159,6 +159,21 @@ namespace Simias
 	}
 
 	/// <summary>
+	/// Not exist Exception
+	/// </summary>
+	public class NotExistException : SimiasException
+	{
+		/// <summary>
+		/// Create a NotExistsException.
+		/// </summary>
+		/// <param name="obj">The object that does not exist.</param>
+		public NotExistException(string obj) :
+			base(string.Format("{0} does not exist.", obj))
+		{
+		}
+	}
+
+	/// <summary>
 	/// Open Exception
 	/// </summary>
 	public class OpenException : SimiasException
