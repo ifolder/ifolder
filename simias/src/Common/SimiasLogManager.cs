@@ -87,10 +87,24 @@ namespace Simias
                 // only configure once
                 if (!configured)
                 {
-					// file configuration
-					log4net.Config.DOMConfigurator.ConfigureAndWatch(
-						new FileInfo(Path.Combine(storePath, SimiasLogConfigFile)));
+					// config file
+					string configFile = Path.Combine(storePath, SimiasLogConfigFile);
 
+					// bootstrap config
+					if (!File.Exists(configFile))
+					{
+						string bootStrapFile = Path.Combine(SimiasSetup.sysconfdir, SimiasLogConfigFile);
+
+						if (File.Exists(bootStrapFile))
+						{
+							File.Copy(bootStrapFile, configFile);
+						}
+					}
+
+					// file configuration
+					log4net.Config.DOMConfigurator.ConfigureAndWatch(new FileInfo(configFile));
+
+					// TODO: remove default appender
 					// TODO: temp code for log file name
         			string[] args = Environment.GetCommandLineArgs();
         
