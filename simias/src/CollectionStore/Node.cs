@@ -527,7 +527,8 @@ namespace Simias.Storage
 			Property p = properties.GetSingleProperty( PropertyTags.NodeUpdateTime );
 			if ( p != null )
 			{
-				p.Delete();
+				// BUGBUG
+                //p.Delete();
 			}
 		}
 		#endregion
