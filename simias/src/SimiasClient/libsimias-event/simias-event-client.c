@@ -271,6 +271,7 @@ sec_init (SimiasEventClient *sec, void *error_handler)
 printf ("SEC: sec_init () called\n");
 	int i;
 	RealSimiasEventClient *ec = malloc (sizeof (RealSimiasEventClient));
+	memset (ec, '\0', sizeof (RealSimiasEventClient));
 	*sec = ec;
 	/**
 	 * The following macro/function initializes the XML library and checks for
@@ -409,7 +410,7 @@ sec_set_event (SimiasEventClient sec,
 			   void *data)
 {
 	RealSimiasEventClient *ec = (RealSimiasEventClient *)sec;
-	char msg [512];
+	char msg [1024];
 	char action_str [256];
 	
 	switch (action) {
@@ -504,8 +505,8 @@ printf ("SEC: sec_thread: recv () called\n");
 			real_length = *((int *)buf);
 			printf ("real_length: %d\n", real_length);
 			if (real_length > 0 && (real_length == (len - 4))) {
-				real_message = malloc (sizeof (char) * real_length);
-				
+				real_message = malloc (sizeof (char) * real_length + 1);
+				memset (real_message, '\0', real_length + 1);
 				strncpy (real_message, buf + 4, real_length);
 				
 				printf ("Message received:\n\n%s\n\n", real_message);
@@ -663,11 +664,13 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 	char err_msg [2048];
 	void *real_message;
 	
-	real_message = (void *)malloc (len + 4);
+	real_message = (void *)malloc ((sizeof (char) * len) + 5);
 	if (!real_message) {
 		fprintf (stderr, "Out of memory\n");
 		return 0;
 	}
+
+	memset (real_message, '\0', len + 5);
 	
 	*((int *)real_message) = len;
 	sprintf (real_message + 4, "%s", message);
@@ -686,7 +689,7 @@ sec_send_message (RealSimiasEventClient *ec, char * message, int len)
 		printf ("Just sent %d bytes to the server\n", sent_length);
 	}
 	
-	return (int) sent_length;
+	return sent_length;
 }
 
 /**
@@ -1273,9 +1276,9 @@ main (int argc, char *argv[])
 	sec_set_event (ec, ACTION_NODE_CREATED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
 	sec_set_event (ec, ACTION_NODE_CHANGED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
 	sec_set_event (ec, ACTION_NODE_DELETED, true, (SimiasEventFunc)simias_node_event_callback, NULL);
-//	sec_set_event (ec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)simias_collection_sync_event_callback, NULL);
-//	sec_set_event (ec, ACTION_FILE_SYNC, true, (SimiasEventFunc)simias_file_sync_event_callback, NULL);
-//	sec_set_event (ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
+	sec_set_event (ec, ACTION_COLLECTION_SYNC, true, (SimiasEventFunc)simias_collection_sync_event_callback, NULL);
+	sec_set_event (ec, ACTION_FILE_SYNC, true, (SimiasEventFunc)simias_file_sync_event_callback, NULL);
+	sec_set_event (ec, ACTION_NOTIFY_MESSAGE, true, (SimiasEventFunc)simias_notify_event_callback, NULL);
 	
 	fprintf (stdout, "Press <Enter> to stop the client...");
 	fgets (buf, sizeof (buf), stdin);
