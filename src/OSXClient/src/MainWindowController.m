@@ -407,7 +407,8 @@
 	@try
 	{
 		iFolder *newiFolder = [ifolderService AcceptiFolderInvitation:iFolderID InDomain:domainID toPath:localPath];
-		[ifoldersController addObject:newiFolder];
+		iFolder *oldiFolder = [self selectediFolder];
+		[oldiFolder setProperties:[newiFolder properties]];
 	}
 	@catch (NSException *e)
 	{

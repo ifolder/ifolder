@@ -71,12 +71,12 @@
 	if( ( [ [iFolderID stringValue] length] > 0) &&
 		( [ [pathField stringValue] length] > 0 ) )
 	{
+		[setupSheet orderOut:nil];
+		[NSApp endSheet:setupSheet];
+
 		[[NSApp delegate] acceptiFolderInvitation:[iFolderID stringValue]
 							InDomain:[domainID stringValue]
 							toPath:[pathField stringValue] ];
-
-		[setupSheet orderOut:nil];
-		[NSApp endSheet:setupSheet];
 	}
 }
 
