@@ -34,6 +34,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Http;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Runtime.Remoting.Channels;
 using Mono.P2p.mDnsResponderApi;
 
@@ -246,7 +247,7 @@ namespace Mono.P2p.mDnsResponder
 	/// <summary>
 	/// Summary description for ResourceQuery
 	/// </summary>'
-	public class mDnsLog : MarshalByRefObject, ImDnsLog
+	public class mDnsLog : MarshalByRefObject, IMDnsLog
 	{
 		#region Constructors
 		public mDnsLog()
@@ -289,9 +290,84 @@ namespace Mono.P2p.mDnsResponder
 			return(new ResourceQuery());
 		}
 
-		public ImDnsLog GetLogInstance()
+		public IMDnsLog GetLogInstance()
 		{
 			return(new mDnsLog());
+		}
+
+		/*
+		public IMDnsEvent GetEventInstance()
+		{
+			return(new MDnsEvent());
+		}
+		*/
+	}
+
+	public class MDnsEvent : MarshalByRefObject, IMDnsEvent
+	{
+		public event Mono.P2p.mDnsResponderApi.mDnsEventHandler OnEvent;
+
+		/*
+		public void Publish(mDnsEvent mEvent, Mono.P2p.mDnsResponderApi.mDnsType mType, string resourceID)
+		{
+			Console.WriteLine("Publish called");
+			this.MyPublish(mEvent, mType, resourceID);
+		}
+
+		private void MyPublish(mDnsEvent mEvent, Mono.P2p.mDnsResponderApi.mDnsType mType, string resourceID)
+		{
+			if (OnEvent != null)
+			{
+				mDnsEventHandler lEvent = null;
+				foreach( Delegate cDelegate in OnEvent.GetInvocationList())
+				{
+					try
+					{
+						lEvent = (mDnsEventHandler) cDelegate;
+						lEvent(mEvent, mType, resourceID);
+					}
+					catch
+					{
+						OnEvent -= lEvent;
+					}
+				}
+			}
+		}
+		*/
+
+		public void Publish(string resourceID)
+		{
+			Console.WriteLine("Publish called");
+			this.MyPublish(resourceID);
+		}
+
+		private void MyPublish(string resourceID)
+		{
+			if (OnEvent != null)
+			{
+				Console.WriteLine("OnEvent is good here");
+				mDnsEventHandler lEvent = null;
+				foreach( Delegate cDelegate in OnEvent.GetInvocationList())
+				{
+					try
+					{
+						lEvent = (mDnsEventHandler) cDelegate;
+						lEvent(resourceID);
+//						lEvent(mEvent, mType, resourceID);
+					}
+					catch
+					{
+						Console.WriteLine("failing in delegate call");
+						OnEvent -= lEvent;
+					}
+				}
+			}
+		}
+
+		public override object InitializeLifetimeService()
+		{
+			// live forever and ever and ever
+			return(null);
 		}
 	}
 	
@@ -315,18 +391,56 @@ namespace Mono.P2p.mDnsResponder
 		#region Static Methods
 		public static int Startup()
 		{
-			HttpChannel chnl = new HttpChannel(8091);
+			/*
+			Hashtable props = new Hashtable();
+			props["port"] = 8091;
+
+			SoapServerFormatterSinkProvider
+				serverProvider = new SoapServerFormatterSinkProvider();
+
+			SoapClientFormatterSinkProvider
+				clientProvider = new SoapClientFormatterSinkProvider();
+#if !MONO
+			serverProvider.TypeFilterLevel =
+				System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+			HttpChannel chnl = new HttpChannel(props, clientProvider, serverProvider);
+
+			//HttpChannel chnl = new HttpChannel(8091);
+
 			ChannelServices.RegisterChannel(chnl);
 			
 			RemotingConfiguration.RegisterWellKnownServiceType(
 				typeof(mDnsRemoteFactory),
 				"factory.soap",
 				WellKnownObjectMode.Singleton);
+			*/
+
+			Hashtable propsTcp = new Hashtable();
+			propsTcp["port"] = 8092;
+			propsTcp["rejectRemoteRequests"] = true;
+
+			BinaryServerFormatterSinkProvider
+				serverBinaryProvider = new BinaryServerFormatterSinkProvider();
+
+			BinaryClientFormatterSinkProvider
+				clientBinaryProvider = new BinaryClientFormatterSinkProvider();
+#if !MONO
+			serverBinaryProvider.TypeFilterLevel =
+				System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+#endif
+			TcpChannel tcpChnl = new TcpChannel(propsTcp, clientBinaryProvider, serverBinaryProvider);
+			ChannelServices.RegisterChannel(tcpChnl);
+			
+			RemotingConfiguration.RegisterWellKnownServiceType(
+				typeof(MDnsEvent),
+				"IMDnsEvent.tcp",
+				WellKnownObjectMode.Singleton);
 				
 			return(0);
 		}
 		
-		public static int Shtudown()
+		public static int Shutdown()
 		{
 			return(0);
 		}

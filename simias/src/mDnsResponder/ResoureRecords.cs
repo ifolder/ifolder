@@ -32,6 +32,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Mono.P2p.mDnsResponderApi;
 
 namespace Mono.P2p.mDnsResponder
 {
@@ -43,6 +44,7 @@ namespace Mono.P2p.mDnsResponder
 		static internal Mutex		resourceMtx = new Mutex(false);
 		static	internal ArrayList	resourceList = new ArrayList();
 		static	private	ArrayList	serviceList = new ArrayList();
+		static  private MDnsEvent	eventPublish = new MDnsEvent();
 
 		static public void DumpYourGuts(Question cQuestion)
 		{
@@ -193,6 +195,10 @@ namespace Mono.P2p.mDnsResponder
 				//resp.Send();
 				//mDnsClient.Close();
 				Resources.resourceList.Add(hostAddr);
+
+				// Publish the event
+				//Resources.eventPublish.Publish(mDnsEvent.added, Mono.P2p.mDnsResponderApi.mDnsType.hostAddress, "1");
+				Resources.eventPublish.Publish("1");
 			}
 			
 			Resources.resourceMtx.ReleaseMutex();
@@ -209,6 +215,8 @@ namespace Mono.P2p.mDnsResponder
 					cResource.Type == mDnsType.hostAddress)
 				{
 					Resources.resourceList.Remove(cResource);
+//					Resources.eventPublish.Publish(mDnsEvent.removed, Mono.P2p.mDnsResponderApi.mDnsType.hostAddress, "1");
+					Resources.eventPublish.Publish("2");
 					break;
 				}
 			}
@@ -287,6 +295,8 @@ namespace Mono.P2p.mDnsResponder
 			{
 				log.Info("   Adding " + serviceLocation.Name);
 				Resources.resourceList.Add(serviceLocation);
+//				Resources.eventPublish.Publish(mDnsEvent.added, Mono.P2p.mDnsResponderApi.mDnsType.serviceLocation, "2");
+				Resources.eventPublish.Publish("3");
 			}
 			
 			Resources.resourceMtx.ReleaseMutex();
