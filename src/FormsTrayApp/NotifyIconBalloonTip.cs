@@ -93,7 +93,7 @@ namespace CustomUIControls
 			nData.hwnd = hwnd;
 			nData.uID = ID;
 			nData.uFlags = NIF_INFO;// | NIF_MESSAGE;
-			// TODO: need to investigate why the callback doesn't work ... it may on work with NIM_ADD.
+			// TODO: need to investigate why the callback doesn't work ... it may only work with NIM_ADD.
 			//nData.uCallbackMessage = 0xbd1;
 			nData.uTimeoutAndVersion = 10 * 1000;
 			nData.dwInfoFlags = type;

@@ -45,6 +45,14 @@ namespace Novell.FormsTrayApp
 	public class GlobalProperties : System.Windows.Forms.Form
 	{
 		#region Class Members
+		// Delegates used to marshal back to the control's creation thread.
+		private delegate void SyncCollectionDelegate(CollectionSyncEventArgs syncEventArgs);
+		private SyncCollectionDelegate syncCollectionDelegate;
+		private delegate void SyncFileDelegate(FileSyncEventArgs syncEventArgs);
+		private SyncFileDelegate syncFileDelegate;
+		private delegate void NodeDelegate(NodeEventArgs nodeEventArgs);
+		private NodeDelegate nodeDelegate;
+
 		System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(GlobalProperties));
 		private const string iFolderRun = "DisableAutoStart";
 		private const string iFolderKey = @"SOFTWARE\Novell2\iFolder";
@@ -55,6 +63,7 @@ namespace Novell.FormsTrayApp
 		private iFolderWebService ifWebService;
 		private IProcEventClient eventClient;
 		private string currentUserID;
+		private string currentPOBoxID;
 		private bool initialConnect = false;
 		private System.Windows.Forms.NumericUpDown defaultInterval;
 		private System.Windows.Forms.CheckBox displayConfirmation;
@@ -140,6 +149,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label status;
 		private System.Windows.Forms.TextBox enterpriseDescription;
+		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.ComponentModel.IContainer components;
 		#endregion
 
@@ -148,12 +158,17 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		public GlobalProperties(iFolderWebService ifolderWebService, IProcEventClient eventClient)
 		{
+			syncCollectionDelegate = new SyncCollectionDelegate(syncCollection);
+			syncFileDelegate = new SyncFileDelegate(syncFile);
+			nodeDelegate = new NodeDelegate(nodeEvent);
+
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
 			ShowEnterpriseTab = false;
+			progressBar1.Visible = false;
 
 			// Show the first tab page by default.
 			tabControl1.SelectedTab = tabPage1;
@@ -174,6 +189,8 @@ namespace Novell.FormsTrayApp
 			// Set the min/max values for port.
 			port.Minimum = IPEndPoint.MinPort;
 			port.Maximum = IPEndPoint.MaxPort;
+
+			progressBar1.Minimum = 0;
 
 			this.StartPosition = FormStartPosition.CenterScreen;
 		}
@@ -285,6 +302,7 @@ namespace Novell.FormsTrayApp
 			this.menuHelpHelp = new System.Windows.Forms.MenuItem();
 			this.menuHelpAbout = new System.Windows.Forms.MenuItem();
 			this.status = new System.Windows.Forms.Label();
+			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -1789,6 +1807,24 @@ namespace Novell.FormsTrayApp
 			this.status.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("status.TextAlign")));
 			this.status.Visible = ((bool)(resources.GetObject("status.Visible")));
 			// 
+			// progressBar1
+			// 
+			this.progressBar1.AccessibleDescription = resources.GetString("progressBar1.AccessibleDescription");
+			this.progressBar1.AccessibleName = resources.GetString("progressBar1.AccessibleName");
+			this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("progressBar1.Anchor")));
+			this.progressBar1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("progressBar1.BackgroundImage")));
+			this.progressBar1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("progressBar1.Dock")));
+			this.progressBar1.Enabled = ((bool)(resources.GetObject("progressBar1.Enabled")));
+			this.progressBar1.Font = ((System.Drawing.Font)(resources.GetObject("progressBar1.Font")));
+			this.progressBar1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("progressBar1.ImeMode")));
+			this.progressBar1.Location = ((System.Drawing.Point)(resources.GetObject("progressBar1.Location")));
+			this.progressBar1.Name = "progressBar1";
+			this.progressBar1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("progressBar1.RightToLeft")));
+			this.progressBar1.Size = ((System.Drawing.Size)(resources.GetObject("progressBar1.Size")));
+			this.progressBar1.TabIndex = ((int)(resources.GetObject("progressBar1.TabIndex")));
+			this.progressBar1.Text = resources.GetString("progressBar1.Text");
+			this.progressBar1.Visible = ((bool)(resources.GetObject("progressBar1.Visible")));
+			// 
 			// GlobalProperties
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
@@ -1799,6 +1835,7 @@ namespace Novell.FormsTrayApp
 			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.Controls.Add(this.progressBar1);
 			this.Controls.Add(this.status);
 			this.Controls.Add(this.banner);
 			this.Controls.Add(this.tabControl1);
@@ -1899,6 +1936,166 @@ namespace Novell.FormsTrayApp
 		#endregion
 
 		#region Private Methods
+		private void syncCollection(CollectionSyncEventArgs syncEventArgs)
+		{
+			try
+			{
+				progressBar1.Visible = false;
+
+				string message = null;
+				switch (syncEventArgs.Action)
+				{
+					case Action.StartSync:
+					{
+						message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
+						status.Text = message;
+						lock (ht)
+						{
+							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
+							if (lvi != null)
+							{
+								lvi.SubItems[2].Text = resourceManager.GetString("statusSyncing");
+							}
+						}
+						break;
+					}
+					case Action.StopSync:
+					{
+						lock(ht)
+						{
+							ListViewItem lvi = (ListViewItem)ht[syncEventArgs.ID];
+
+							message = string.Format(syncEventArgs.Successful ? resourceManager.GetString("syncSucceeded") : resourceManager.GetString("syncFailed"), syncEventArgs.Name);
+							if (lvi != null)
+							{
+								lvi.SubItems[2].Text = syncEventArgs.Successful ? resourceManager.GetString("statusOK") : resourceManager.GetString("statusSyncFailure");
+							}
+						}
+
+						status.Text = resourceManager.GetString("status.Text");
+						if (initialConnect)
+						{
+							initialConnect = false;
+							updateEnterpriseTimer.Start();
+						}
+						break;
+					}
+				}
+
+				// Add message to log.
+				addMessageToLog(syncEventArgs.TimeStamp, message);
+			}
+			catch {}
+		}
+
+		private void syncFile(FileSyncEventArgs syncEventArgs)
+		{
+			try
+			{
+				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
+				{
+					progressBar1.Visible = syncEventArgs.SizeToSync > 0;
+					progressBar1.Value = 0;
+					progressBar1.Maximum = (int)syncEventArgs.SizeToSync;
+					status.Text = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
+
+					// Add message to log.
+					addMessageToLog(syncEventArgs.TimeStamp, status.Text);// string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
+				}
+				else
+				{
+					status.Text = syncEventArgs.Name;
+					progressBar1.Value = syncEventArgs.SizeToSync > 0 ? (int)(syncEventArgs.SizeToSync - syncEventArgs.SizeRemaining) : progressBar1.Maximum;
+				}
+			}
+			catch {}
+		}
+
+		private void nodeEvent(NodeEventArgs eventArgs)
+		{
+			try
+			{
+				switch (eventArgs.EventData)
+				{
+					case "NodeChanged":
+					{
+						iFolder ifolder = null;
+						if (eventArgs.Type.Equals("Collection"))
+						{
+							ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+						}
+						else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(currentPOBoxID))
+						{
+							ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+						}
+
+						if (ifolder != null)
+						{
+							ListViewItem lvi;
+							lock (ht)
+							{
+								// Get the corresponding listview item.
+								lvi = (ListViewItem)ht[eventArgs.Node];
+							}
+
+							if (lvi != null)
+							{
+								// Update the tag data.
+								lvi.Tag = ifolder;
+								updateListViewItem(lvi);
+							}
+						}
+						break;
+					}
+					case "NodeCreated":
+					{
+						iFolder ifolder = null;
+						if (eventArgs.Type.Equals("Collection"))
+						{
+							// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
+							// need to put some extra code in to handle this.
+							ifolder = ifWebService.GetiFolder(eventArgs.Collection);
+
+							if (ifolder != null)
+							{
+								// Notify the shell.
+								Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
+							}
+						}
+						else if (eventArgs.Type.Equals("Node") && eventArgs.Collection.Equals(currentPOBoxID))
+						{
+							ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
+						}
+
+						if ((ifolder != null) &&
+							((ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)) ||
+							ifolder.State.Equals("Local")))
+						{
+							addiFolderToListView(ifolder);
+						}
+						break;
+					}
+					case "NodeDeleted":
+					{
+						lock (ht)
+						{
+							ListViewItem lvi = (ListViewItem)ht[eventArgs.Node];
+							if (lvi != null)
+							{
+								lvi.Remove();
+								ht.Remove(eventArgs.Node);
+							}
+						}
+						break;
+					}
+				}
+			}
+			catch
+			{
+				// Ignore.
+			}
+		}
+
 		private void addiFolderToListView(iFolder ifolder)
 		{
 			lock (ht)
@@ -1958,7 +2155,13 @@ namespace Novell.FormsTrayApp
 				int imageIndex;
 				lvi.SubItems[0].Text = ifolder.Name;
 				lvi.SubItems[1].Text = ifolder.IsSubscription ? "" : ifolder.UnManagedPath;
-				lvi.SubItems[2].Text = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
+				string statusSync = resourceManager.GetString("statusSyncing");
+				string statusSyncFail = resourceManager.GetString("statusSyncFailure");
+				string status = stateToString(ifolder.State, ifolder.HasConflicts, out imageIndex);
+				if (!lvi.SubItems[2].Text.Equals(statusSync) && !lvi.SubItems[2].Text.Equals(statusSyncFail))
+				{
+					lvi.SubItems[2].Text = status;
+				}
 				lvi.ImageIndex = imageIndex;
 			}
 		}
@@ -2082,6 +2285,8 @@ namespace Novell.FormsTrayApp
 
 		private void updateEnterpriseData(iFolderSettings ifSettings)
 		{
+			currentUserID = ifSettings.CurrentUserID;
+			currentPOBoxID = ifSettings.DefaultPOBoxID;
 			iFolderUser ifolderUser = ifWebService.GetiFolderUser(ifSettings.CurrentUserID);
 			userName.Text = ifolderUser.Name;
 			enterpriseName.Text = ifSettings.EnterpriseName;
@@ -2143,12 +2348,13 @@ namespace Novell.FormsTrayApp
 				{
 					// Set up the event handlers to watch for iFolder creates/deletes ... these only need to be active
 					// while the form is displayed.
-					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
-					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
-					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeChanged, new IProcEventHandler(global_nodeEventHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeCreated, new IProcEventHandler(global_nodeEventHandler));
+					eventClient.SetEvent(IProcEventAction.AddNodeDeleted, new IProcEventHandler(global_nodeEventHandler));
 
 					iFolderSettings ifSettings = ifWebService.GetSettings();
 					currentUserID = ifSettings.CurrentUserID;
+					currentPOBoxID = ifSettings.DefaultPOBoxID;
 					displayConfirmation.Checked = ifSettings.DisplayConfirmation;
 					if (ifSettings.HaveEnterprise)
 					{
@@ -2181,9 +2387,9 @@ namespace Novell.FormsTrayApp
 		private void GlobalProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			// Remove event handlers for this object.
-			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeChangeHandler));
-			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeCreateHandler));
-			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeDeleteHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeChanged, new IProcEventHandler(global_nodeEventHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeCreated, new IProcEventHandler(global_nodeEventHandler));
+			eventClient.SetEvent(IProcEventAction.RemoveNodeDeleted, new IProcEventHandler(global_nodeEventHandler));
 
 			if (defaultInterval.Focused)
 			{
@@ -2631,94 +2837,11 @@ namespace Novell.FormsTrayApp
 		}
 		#endregion
 
-		#region Node Event Handlers
-		private void global_nodeChangeHandler(SimiasEventArgs args)
+		#region Node and Sync Event Handlers
+		private void global_nodeEventHandler(SimiasEventArgs args)
 		{
 			NodeEventArgs eventArgs = args as NodeEventArgs;
-
-			try
-			{
-				iFolder ifolder = null;
-				if (eventArgs.Type.Equals("Collection"))
-				{
-					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
-				}
-				else if (eventArgs.Type.Equals("Node"))
-				{
-					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
-				}
-
-				if (ifolder != null)
-				{
-					ListViewItem lvi;
-					lock (ht)
-					{
-						// Get the corresponding listview item.
-						lvi = (ListViewItem)ht[eventArgs.Node];
-					}
-
-					if (lvi != null)
-					{
-						// Update the tag data.
-						lvi.Tag = ifolder;
-						updateListViewItem(lvi);
-					}
-				}
-			}
-			catch
-			{
-				// Ignore.
-			}
-		}
-
-		private void global_nodeCreateHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-
-			try
-			{
-				iFolder ifolder = null;
-				if (eventArgs.Type.Equals("Collection"))
-				{
-					// TODO: for some reason this iFolder is not coming back with the UnManagedPath set ...
-					// need to put some extra code in to handle this.
-					ifolder = ifWebService.GetiFolder(eventArgs.Collection);
-					if (ifolder != null)
-					{
-						// Notify the shell.
-						Win32Window.ShChangeNotify(Win32Window.SHCNE_UPDATEITEM, Win32Window.SHCNF_PATHW, ifolder.UnManagedPath, IntPtr.Zero);
-					}
-				}
-				else if (eventArgs.Type.Equals("Node"))
-				{
-					ifolder = ifWebService.GetSubscription(eventArgs.Collection, eventArgs.Node);
-				}
-
-				if ((ifolder != null) &&
-					((ifolder.State.Equals("Available") && (ifWebService.GetiFolder(ifolder.CollectionID) == null)) ||
-					ifolder.State.Equals("Local")))
-				{
-					addiFolderToListView(ifolder);
-				}
-			}
-			catch
-			{
-				// Ignore.
-			}
-		}
-
-		private void global_nodeDeleteHandler(SimiasEventArgs args)
-		{
-			NodeEventArgs eventArgs = args as NodeEventArgs;
-			lock (ht)
-			{
-				ListViewItem lvi = (ListViewItem)ht[eventArgs.Node];
-				if (lvi != null)
-				{
-					lvi.Remove();
-					ht.Remove(eventArgs.Node);
-				}
-			}
+			BeginInvoke(nodeDelegate, new object[] {eventArgs});
 		}
 
 		private void global_collectionSyncHandler(SimiasEventArgs args)
@@ -2726,31 +2849,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				CollectionSyncEventArgs syncEventArgs = args as CollectionSyncEventArgs;
-
-				string message = null;
-				switch (syncEventArgs.Action)
-				{
-					case Action.StartSync:
-					{
-						message = string.Format(resourceManager.GetString("synciFolder"), syncEventArgs.Name);
-						status.Text = message;
-						break;
-					}
-					case Action.StopSync:
-					{
-						message = string.Format(syncEventArgs.Successful ? resourceManager.GetString("syncSucceeded") : resourceManager.GetString("syncFailed"), syncEventArgs.Name);
-						status.Text = resourceManager.GetString("status.Text");
-						if (initialConnect)
-						{
-							initialConnect = false;
-							updateEnterpriseTimer.Start();
-						}
-						break;
-					}
-				}
-
-				// Add message to log.
-				addMessageToLog(syncEventArgs.TimeStamp, message);
+				BeginInvoke(syncCollectionDelegate, new object[] {syncEventArgs});
 			}
 			catch {}
 		}
@@ -2760,14 +2859,7 @@ namespace Novell.FormsTrayApp
 			try
 			{
 				FileSyncEventArgs syncEventArgs = args as FileSyncEventArgs;
-
-				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
-				{
-					status.Text = string.Format(resourceManager.GetString(syncEventArgs.Direction == Direction.Uploading ? "uploadFile" : "downloadFile"), syncEventArgs.Name);
-
-					// Add message to log.
-					addMessageToLog(syncEventArgs.TimeStamp, status.Text);// string.Format(resourceManager.GetString("syncFileDetails"), syncEventArgs.Name, syncEventArgs.Size, syncEventArgs.SizeToSync, syncEventArgs.SizeRemaining));
-				}
+				BeginInvoke(syncFileDelegate, new object[] {syncEventArgs});
 			}
 			catch {}
 		}
