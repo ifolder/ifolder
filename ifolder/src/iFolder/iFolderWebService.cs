@@ -42,18 +42,18 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     ///Gets the current iFolder Settings
     ///</remarks>
     [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetSettings",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Settings GetSettings() {
+    public virtual iFolderSettings GetSettings() {
         System.Object[] results = this.Invoke("GetSettings", new object[0]);
-        return ((Settings)(results[0]));
+        return ((iFolderSettings)(results[0]));
     }
 
     public virtual System.IAsyncResult BeginGetSettings(System.AsyncCallback callback, object asyncState) {
         return this.BeginInvoke("GetSettings", new object[0], callback, asyncState);
     }
 
-    public virtual Settings EndGetSettings(System.IAsyncResult asyncResult) {
+    public virtual iFolderSettings EndGetSettings(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Settings)(results[0]));
+        return ((iFolderSettings)(results[0]));
     }
 
     /// <remarks>
@@ -99,19 +99,19 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     /// <remarks>
     ///Checks LocalPath to see if is in an iFolder
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/IsPathInCollection",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual bool IsPathInCollection(string LocalPath) {
-        System.Object[] results = this.Invoke("IsPathInCollection", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/IsPathIniFolder",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual bool IsPathIniFolder(string LocalPath) {
+        System.Object[] results = this.Invoke("IsPathIniFolder", new object[] {
             LocalPath});
         return ((bool)(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginIsPathInCollection(string LocalPath, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("IsPathInCollection", new object[] {
+    public virtual System.IAsyncResult BeginIsPathIniFolder(string LocalPath, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("IsPathIniFolder", new object[] {
             LocalPath}, callback, asyncState);
     }
 
-    public virtual bool EndIsPathInCollection(System.IAsyncResult asyncResult) {
+    public virtual bool EndIsPathIniFolder(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
         return ((bool)(results[0]));
     }
@@ -235,22 +235,22 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     /// <remarks>
     ///Set the Rights of a member of an iFolder.  The Rights can be "Admin", "ReadOnly", or "ReadWrite".
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/SetMemberRights",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual void SetMemberRights(string iFolderID, string UserID, string Rights) {
-        this.Invoke("SetMemberRights", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/SetUserRights",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual void SetUserRights(string iFolderID, string UserID, string Rights) {
+        this.Invoke("SetUserRights", new object[] {
             iFolderID,
             UserID,
             Rights});
     }
 
-    public virtual System.IAsyncResult BeginSetMemberRights(string iFolderID, string UserID, string Rights, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("SetMemberRights", new object[] {
+    public virtual System.IAsyncResult BeginSetUserRights(string iFolderID, string UserID, string Rights, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("SetUserRights", new object[] {
             iFolderID,
             UserID,
             Rights}, callback, asyncState);
     }
 
-    public virtual void EndSetMemberRights(System.IAsyncResult asyncResult) {
+    public virtual void EndSetUserRights(System.IAsyncResult asyncResult) {
         this.EndInvoke(asyncResult);
     }
 
@@ -258,10 +258,10 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     ///Get the Owner of an iFolder
     ///</remarks>
     [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetOwner",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Member GetOwner(string iFolderID) {
+    public virtual iFolderUser GetOwner(string iFolderID) {
         System.Object[] results = this.Invoke("GetOwner", new object[] {
             iFolderID});
-        return ((Member)(results[0]));
+        return ((iFolderUser)(results[0]));
     }
 
     public virtual System.IAsyncResult BeginGetOwner(string iFolderID, System.AsyncCallback callback, object asyncState) {
@@ -269,9 +269,9 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
             iFolderID}, callback, asyncState);
     }
 
-    public virtual Member EndGetOwner(System.IAsyncResult asyncResult) {
+    public virtual iFolderUser EndGetOwner(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Member)(results[0]));
+        return ((iFolderUser)(results[0]));
     }
 
     /// <remarks>
@@ -299,160 +299,160 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     /// <remarks>
     ///Remove a single member from an iFolder
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/RemoveMember",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual void RemoveMember(string iFolderID, string UserID) {
-        this.Invoke("RemoveMember", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/RemoveiFolderUser",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual void RemoveiFolderUser(string iFolderID, string UserID) {
+        this.Invoke("RemoveiFolderUser", new object[] {
             iFolderID,
             UserID});
     }
 
-    public virtual System.IAsyncResult BeginRemoveMember(string iFolderID, string UserID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("RemoveMember", new object[] {
+    public virtual System.IAsyncResult BeginRemoveiFolderUser(string iFolderID, string UserID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("RemoveiFolderUser", new object[] {
             iFolderID,
             UserID}, callback, asyncState);
     }
 
-    public virtual void EndRemoveMember(System.IAsyncResult asyncResult) {
+    public virtual void EndRemoveiFolderUser(System.IAsyncResult asyncResult) {
         this.EndInvoke(asyncResult);
     }
 
     /// <remarks>
     ///Get the list of iFolder Members
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetMembers",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Member[] GetMembers(string iFolderID) {
-        System.Object[] results = this.Invoke("GetMembers", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetiFolderUsers",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual iFolderUser[] GetiFolderUsers(string iFolderID) {
+        System.Object[] results = this.Invoke("GetiFolderUsers", new object[] {
             iFolderID});
-        return ((Member[])(results[0]));
+        return ((iFolderUser[])(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginGetMembers(string iFolderID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetMembers", new object[] {
+    public virtual System.IAsyncResult BeginGetiFolderUsers(string iFolderID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetiFolderUsers", new object[] {
             iFolderID}, callback, asyncState);
     }
 
-    public virtual Member[] EndGetMembers(System.IAsyncResult asyncResult) {
+    public virtual iFolderUser[] EndGetiFolderUsers(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Member[])(results[0]));
+        return ((iFolderUser[])(results[0]));
     }
 
     /// <remarks>
     ///Get the list of All Members
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetAllMembers",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Member[] GetAllMembers() {
-        System.Object[] results = this.Invoke("GetAllMembers", new object[0]);
-        return ((Member[])(results[0]));
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetAlliFolderUsers",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual iFolderUser[] GetAlliFolderUsers() {
+        System.Object[] results = this.Invoke("GetAlliFolderUsers", new object[0]);
+        return ((iFolderUser[])(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginGetAllMembers(System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetAllMembers", new object[0], callback, asyncState);
+    public virtual System.IAsyncResult BeginGetAlliFolderUsers(System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetAlliFolderUsers", new object[0], callback, asyncState);
     }
 
-    public virtual Member[] EndGetAllMembers(System.IAsyncResult asyncResult) {
+    public virtual iFolderUser[] EndGetAlliFolderUsers(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Member[])(results[0]));
+        return ((iFolderUser[])(results[0]));
     }
 
     /// <remarks>
     ///Lookup a single member to a collection
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetMember",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Member GetMember(string UserID) {
-        System.Object[] results = this.Invoke("GetMember", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetiFolderUser",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual iFolderUser GetiFolderUser(string UserID) {
+        System.Object[] results = this.Invoke("GetiFolderUser", new object[] {
             UserID});
-        return ((Member)(results[0]));
+        return ((iFolderUser)(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginGetMember(string UserID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetMember", new object[] {
+    public virtual System.IAsyncResult BeginGetiFolderUser(string UserID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetiFolderUser", new object[] {
             UserID}, callback, asyncState);
     }
 
-    public virtual Member EndGetMember(System.IAsyncResult asyncResult) {
+    public virtual iFolderUser EndGetiFolderUser(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Member)(results[0]));
+        return ((iFolderUser)(results[0]));
     }
 
     /// <remarks>
     ///Lookup a single member to a collection
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetiFolderMember",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Member GetiFolderMember(string UserID, string iFolderID) {
-        System.Object[] results = this.Invoke("GetiFolderMember", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetiFolderUserFromiFolder",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual iFolderUser GetiFolderUserFromiFolder(string UserID, string iFolderID) {
+        System.Object[] results = this.Invoke("GetiFolderUserFromiFolder", new object[] {
             UserID,
             iFolderID});
-        return ((Member)(results[0]));
+        return ((iFolderUser)(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginGetiFolderMember(string UserID, string iFolderID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetiFolderMember", new object[] {
+    public virtual System.IAsyncResult BeginGetiFolderUserFromiFolder(string UserID, string iFolderID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetiFolderUserFromiFolder", new object[] {
             UserID,
             iFolderID}, callback, asyncState);
     }
 
-    public virtual Member EndGetiFolderMember(System.IAsyncResult asyncResult) {
+    public virtual iFolderUser EndGetiFolderUserFromiFolder(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Member)(results[0]));
+        return ((iFolderUser)(results[0]));
     }
 
     /// <remarks>
     ///Gets the DiskSpaceQuota for a member
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetMemberDiskSpaceQuota",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual DiskSpaceQuota GetMemberDiskSpaceQuota(string UserID) {
-        System.Object[] results = this.Invoke("GetMemberDiskSpaceQuota", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetUserDiskSpace",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual DiskSpace GetUserDiskSpace(string UserID) {
+        System.Object[] results = this.Invoke("GetUserDiskSpace", new object[] {
             UserID});
-        return ((DiskSpaceQuota)(results[0]));
+        return ((DiskSpace)(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginGetMemberDiskSpaceQuota(string UserID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetMemberDiskSpaceQuota", new object[] {
+    public virtual System.IAsyncResult BeginGetUserDiskSpace(string UserID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetUserDiskSpace", new object[] {
             UserID}, callback, asyncState);
     }
 
-    public virtual DiskSpaceQuota EndGetMemberDiskSpaceQuota(System.IAsyncResult asyncResult) {
+    public virtual DiskSpace EndGetUserDiskSpace(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((DiskSpaceQuota)(results[0]));
+        return ((DiskSpace)(results[0]));
     }
 
     /// <remarks>
     ///Gets the DiskSpaceQuota for an iFolder
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetiFolderDiskSpaceQuota",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual DiskSpaceQuota GetiFolderDiskSpaceQuota(string iFolderID) {
-        System.Object[] results = this.Invoke("GetiFolderDiskSpaceQuota", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/GetiFolderDiskSpace",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual DiskSpace GetiFolderDiskSpace(string iFolderID) {
+        System.Object[] results = this.Invoke("GetiFolderDiskSpace", new object[] {
             iFolderID});
-        return ((DiskSpaceQuota)(results[0]));
+        return ((DiskSpace)(results[0]));
     }
 
-    public virtual System.IAsyncResult BeginGetiFolderDiskSpaceQuota(string iFolderID, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("GetiFolderDiskSpaceQuota", new object[] {
+    public virtual System.IAsyncResult BeginGetiFolderDiskSpace(string iFolderID, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("GetiFolderDiskSpace", new object[] {
             iFolderID}, callback, asyncState);
     }
 
-    public virtual DiskSpaceQuota EndGetiFolderDiskSpaceQuota(System.IAsyncResult asyncResult) {
+    public virtual DiskSpace EndGetiFolderDiskSpace(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((DiskSpaceQuota)(results[0]));
+        return ((DiskSpace)(results[0]));
     }
 
     /// <remarks>
     ///Sets the Disk Space Limit for a user
     ///</remarks>
-    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/SetMemberSpaceLimit",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual void SetMemberSpaceLimit(string UserID, long Limit) {
-        this.Invoke("SetMemberSpaceLimit", new object[] {
+    [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/SetUserDiskSpaceLimit",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
+    public virtual void SetUserDiskSpaceLimit(string UserID, long Limit) {
+        this.Invoke("SetUserDiskSpaceLimit", new object[] {
             UserID,
             Limit});
     }
 
-    public virtual System.IAsyncResult BeginSetMemberSpaceLimit(string UserID, long Limit, System.AsyncCallback callback, object asyncState) {
-        return this.BeginInvoke("SetMemberSpaceLimit", new object[] {
+    public virtual System.IAsyncResult BeginSetUserDiskSpaceLimit(string UserID, long Limit, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("SetUserDiskSpaceLimit", new object[] {
             UserID,
             Limit}, callback, asyncState);
     }
 
-    public virtual void EndSetMemberSpaceLimit(System.IAsyncResult asyncResult) {
+    public virtual void EndSetUserDiskSpaceLimit(System.IAsyncResult asyncResult) {
         this.EndInvoke(asyncResult);
     }
 
@@ -516,12 +516,12 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
     ///Connects to an iFolder Enterprise Server
     ///</remarks>
     [System.Web.Services.Protocols.SoapRpcMethodAttribute("http://novell.com/ifolder/web/encodedTypes/ConnectToEnterpriseServer",RequestNamespace="http://novell.com/ifolder/web/",ResponseNamespace="http://novell.com/ifolder/web/")]
-    public virtual Settings ConnectToEnterpriseServer(string UserName, string Password, string Host) {
+    public virtual iFolderSettings ConnectToEnterpriseServer(string UserName, string Password, string Host) {
         System.Object[] results = this.Invoke("ConnectToEnterpriseServer", new object[] {
             UserName,
             Password,
             Host});
-        return ((Settings)(results[0]));
+        return ((iFolderSettings)(results[0]));
     }
 
     public virtual System.IAsyncResult BeginConnectToEnterpriseServer(string UserName, string Password, string Host, System.AsyncCallback callback, object asyncState) {
@@ -531,15 +531,15 @@ public class iFolderWebService : System.Web.Services.Protocols.SoapHttpClientPro
             Host}, callback, asyncState);
     }
 
-    public virtual Settings EndConnectToEnterpriseServer(System.IAsyncResult asyncResult) {
+    public virtual iFolderSettings EndConnectToEnterpriseServer(System.IAsyncResult asyncResult) {
         System.Object[] results = this.EndInvoke(asyncResult);
-        return ((Settings)(results[0]));
+        return ((iFolderSettings)(results[0]));
     }
 }
 
 /// <remarks/>
 [System.Xml.Serialization.SoapType(Namespace="http://novell.com/ifolder/web/encodedTypes")]
-public class Settings {
+public class iFolderSettings {
 
     /// <remarks/>
     public string DefaultDomainID;
@@ -599,8 +599,8 @@ public class iFolder {
 }
 
 /// <remarks/>
-[System.Xml.Serialization.SoapType("Member",Namespace="http://novell.com/ifolder/web/encodedTypes")]
-public class Member {
+[System.Xml.Serialization.SoapType("iFolderUser",Namespace="http://novell.com/ifolder/web/encodedTypes")]
+public class iFolderUser {
 
     /// <remarks/>
     public string Name;
@@ -616,8 +616,8 @@ public class Member {
 }
 
 /// <remarks/>
-[System.Xml.Serialization.SoapType("DiskSpaceQuota",Namespace="http://novell.com/ifolder/web/encodedTypes")]
-public class DiskSpaceQuota {
+[System.Xml.Serialization.SoapType("DiskSpace",Namespace="http://novell.com/ifolder/web/encodedTypes")]
+public class DiskSpace {
 
     /// <remarks/>
     public long AvailableSpace;
