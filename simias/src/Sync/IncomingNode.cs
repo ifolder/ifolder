@@ -279,7 +279,7 @@ internal class IncomingNode
 				return NodeStatus.ServerFailure;
 			}
 			status = NodeStatus.FileNameConflict;
-			node = collection.CreateCollision(node.ID);
+			node = collection.CreateCollision(node);
 		}
 		try
 		{
@@ -336,8 +336,9 @@ internal class IncomingNode
 				node.Properties.DeleteSingleProperty(TempFileDone);
 				for (;;)
 				{
-					oldNode = collection.CreateCollision(node);
+					oldNode = collection.GetNodeByID(node.ID);
 					collection.ImportNode(oldNode, expectedIncarn);
+					collection.CreateCollision(oldNode, node);
 					oldNode.Properties.ModifyProperty(TempFileDone, true);
 					try
 					{

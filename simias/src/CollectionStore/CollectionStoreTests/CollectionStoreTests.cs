@@ -1620,7 +1620,7 @@ namespace Simias.Storage.Tests
 
 				// Create a collision Node that represents the collection object and commit it to the collision
 				// collection.
-				Node collisionNode = collection.CreateCollision( node );
+				Node collisionNode = collection.CreateCollision( node, node );
 				collection.Commit( collisionNode );
 
 				// Should have a collision.
@@ -1669,7 +1669,7 @@ namespace Simias.Storage.Tests
 				}
 
 				// Create a file collision.
-				collisionNode = collection.CreateCollision( collisionNode.ID );
+				collisionNode = collection.CreateCollision( collisionNode );
 				collection.Commit( collisionNode );
 
 				// Get the collision back.

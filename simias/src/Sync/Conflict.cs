@@ -168,7 +168,7 @@ public class Conflict
 		if (fncpath == null)
 			conflictNode = collection.DeleteCollision(conflictNode);
 		else
-			conflictNode = collection.CreateCollision(conflictNode.ID);
+			conflictNode = collection.CreateCollision(conflictNode);
 		collection.Commit(conflictNode);
 	}
 

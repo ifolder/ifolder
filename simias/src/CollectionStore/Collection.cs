@@ -876,55 +876,44 @@ namespace Simias.Storage
 		/// Creates a property on a Node object that represents the collision of the specified Node object 
 		/// with another instance.
 		/// </summary>
+		/// <param name="localNode">The Node object where the collision will be stored.</param>
 		/// <param name="collisionNode">Node object that has collided with another instance.</param>
-		/// <returns>A Node object that the collision was stored on.</returns>
-		public Node CreateCollision( Node collisionNode )
+		/// <returns>The Node object that the collision was stored on.</returns>
+		public Node CreateCollision( Node localNode, Node collisionNode )
 		{
-			// Look up the Node by ID.
-			Node node = GetNodeByID( collisionNode.ID );
-			if ( node != null )
-			{
-				// See if a collision property already exists.
-				Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
-				CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+			// See if a collision property already exists.
+			Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
+			CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
 
-				// Add the new collision to the collision list.
-				cList.Add( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
+			// Add the new collision to the collision list.
+			cList.Add( new Collision( Collision.CollisionType.Node, collisionNode.Properties.PropertyDocument.InnerXml ) );
 
-				// Modify or add the collision list.
-				p = new Property( PropertyTags.Collision, cList.Document );
-				p.LocalProperty = true;
-				node.Properties.ModifyNodeProperty( p );
-			}
-
-			return node;
+			// Modify or add the collision list.
+			p = new Property( PropertyTags.Collision, cList.Document );
+			p.LocalProperty = true;
+			localNode.Properties.ModifyNodeProperty( p );
+			return localNode;
 		}
 
 		/// <summary>
 		/// Creates a property on a Node object that represents a file conflict.
 		/// </summary>
-		/// <param name="id">Node identifier where file conflict should be stored.</param>
-		/// <returns>A Node object that the collision was stored on.</returns>
-		public Node CreateCollision( string id )
+		/// <param name="localNode">The Node object where the collision will be stored.</param>
+		/// <returns>The Node object that the collision was stored on.</returns>
+		public Node CreateCollision( Node localNode )
 		{
-			// Look up the Node by ID.
-			Node node = GetNodeByID( id );
-			if ( node != null )
-			{
-				// See if a collision property already exists.
-				Property p = node.Properties.GetSingleProperty( PropertyTags.Collision );
-				CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
+			// See if a collision property already exists.
+			Property p = localNode.Properties.GetSingleProperty( PropertyTags.Collision );
+			CollisionList cList = ( p == null ) ? new CollisionList() : new CollisionList( p.Value as XmlDocument );
 
-				// Add the new collision to the collision list.
-				cList.Add( new Collision( Collision.CollisionType.File, String.Empty ) );
+			// Add the new collision to the collision list.
+			cList.Add( new Collision( Collision.CollisionType.File, String.Empty ) );
 
-				// Modify or add the collision list.
-				p = new Property( PropertyTags.Collision, cList.Document );
-				p.LocalProperty = true;
-				node.Properties.ModifyNodeProperty( p );
-			}
-
-			return node;
+			// Modify or add the collision list.
+			p = new Property( PropertyTags.Collision, cList.Document );
+			p.LocalProperty = true;
+			localNode.Properties.ModifyNodeProperty( p );
+			return localNode;
 		}
 
 		/// <summary>
