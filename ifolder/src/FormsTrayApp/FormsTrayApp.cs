@@ -83,6 +83,7 @@ namespace Novell.iFolder.FormsTrayApp
 		private System.Windows.Forms.MenuItem menuConnect;
 		private System.Windows.Forms.MenuItem menuConnectServer;
 		private iFolderManager ifManager;
+		private Configuration config;
 		//private const int waitTime = 3000;
 		#endregion
 
@@ -170,7 +171,7 @@ namespace Novell.iFolder.FormsTrayApp
 
 		private void menuConnectServer_Click(object sender, System.EventArgs e)
 		{
-			ServerInfo serverInfo = new ServerInfo();
+			ServerInfo serverInfo = new ServerInfo(this.config);
 			if (DialogResult.OK != serverInfo.ShowDialog())
 			{
 				// TODO: post a message.
@@ -304,7 +305,7 @@ namespace Novell.iFolder.FormsTrayApp
 		{
 			try
 			{
-				Configuration config = new Configuration();
+				config = new Configuration();
 
 				SimiasLogManager.Configure(config);
 			
